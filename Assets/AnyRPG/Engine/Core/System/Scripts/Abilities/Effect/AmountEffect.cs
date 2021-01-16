@@ -102,7 +102,6 @@ namespace AnyRPG {
                 }
             }
 
-            // put this in a for loop
             foreach (ResourceAmountNode resourceAmountNode in resourceAmounts) {
                 int finalAmount = 0;
                 CombatMagnitude combatMagnitude = CombatMagnitude.normal;

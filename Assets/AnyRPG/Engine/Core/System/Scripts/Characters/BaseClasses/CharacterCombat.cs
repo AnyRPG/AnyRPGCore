@@ -225,7 +225,13 @@ namespace AnyRPG {
                         combatTextType = CombatTextType.ability;
                     }
                     */
-                    if ((abilityEffectContext.baseAbility is AnimatedAbility) && (abilityEffectContext.baseAbility as AnimatedAbility).IsAutoAttack) {
+                    // this code has issues.  status effects spawned by auto-attacks show wrong color
+                    // on-hit effects spawned by auto-attacks show wrong color
+                    // testing - add physical requirement
+                    //if ((abilityEffectContext.baseAbility is AnimatedAbility) && (abilityEffectContext.baseAbility as AnimatedAbility).IsAutoAttack) {
+                    if ((abilityEffectContext.baseAbility is AnimatedAbility)
+                        && (abilityEffectContext.baseAbility as AnimatedAbility).IsAutoAttack
+                        && (abilityEffect as AttackEffect).DamageType == DamageType.physical) {
                         combatTextType = CombatTextType.normal;
                     } else {
                         combatTextType = CombatTextType.ability;

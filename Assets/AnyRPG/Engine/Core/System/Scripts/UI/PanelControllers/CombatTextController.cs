@@ -16,16 +16,22 @@ namespace AnyRPG {
         [SerializeField]
         private Image image = null;
 
+        [Tooltip("Text will always be placed this many pixels to the left or right of the target center")]
         [SerializeField]
-        private float xUIOffset = 50f;
+        private float xUIOffset = 25f;
 
+        // keep track of current y scrolling position
+        private float yUIOffset = 0f;
+
+        [Tooltip("Distance (in game units) above the target pivot to place the text")]
         [SerializeField]
         private float yUnitOffset = 2.2f;
 
-        // pixels to move over the total fade time
-        //[SerializeField]
+        [Tooltip("pixels to move over the total fade time")]
+        [SerializeField]
         private float distanceToMove = 200f;
 
+        [Tooltip("Text will fade and disappear over this much time")]
         [SerializeField]
         private float fadeTime = 3f;
 
@@ -43,13 +49,19 @@ namespace AnyRPG {
         private CombatTextType textType;
         private AbilityEffectContext abilityEffectContext = null;
 
+        [SerializeField]
         private float randomXLimit = 100f;
-        private float randomYLimit = 100f;
+
+        [SerializeField]
+        private float randomYLimit = 25f;
+
         private float randomX;
         private float randomY;
 
         // change direction to downward text for hits against player
         private int directionMultiplier = 1;
+
+        private int fontSizeMultiplier = 1;
 
         public void InitializeCombatTextController(Interactable mainTarget, Sprite sprite, string displayText, CombatTextType combatTextType, CombatMagnitude combatMagnitude = CombatMagnitude.normal, AbilityEffectContext abilityEffectContext = null) {
             this.mainTarget = mainTarget;
@@ -74,10 +86,11 @@ namespace AnyRPG {
             targetPos = CameraManager.MyInstance.MyActiveMainCamera.WorldToScreenPoint(mainTarget.InteractableGameObject.transform.position);
             //alpha = text.color.a;
             alpha = 1f;
-            tmpProtext.fontSize = defaultFontSize;
             fadeOutTimer = fadeTime;
             fadeRate = 1.0f / fadeTime;
             directionMultiplier = 1;
+            fontSizeMultiplier = 1;
+            yUIOffset = 0f;
 
             string preText = string.Empty;
             string postText = string.Empty;
@@ -101,7 +114,7 @@ namespace AnyRPG {
                         textColor = Color.yellow;
                         preText += "+";
                         postText += " XP";
-                        tmpProtext.fontSize = tmpProtext.fontSize * 2;
+                        fontSizeMultiplier *= 2;
                         break;
                     case CombatTextType.gainBuff:
                         textColor = Color.cyan;
@@ -116,7 +129,7 @@ namespace AnyRPG {
                     case CombatTextType.ability:
                         textColor = Color.magenta;
                         preText += "-";
-                        tmpProtext.fontSize = tmpProtext.fontSize * 2;
+                        fontSizeMultiplier *= 2;
                         break;
                     default:
                         break;
@@ -128,7 +141,7 @@ namespace AnyRPG {
                         break;
                     case CombatTextType.ability:
                         textColor = Color.yellow;
-                        tmpProtext.fontSize = tmpProtext.fontSize * 2;
+                        fontSizeMultiplier *= 2;
                         break;
                     default:
                         break;
@@ -139,7 +152,7 @@ namespace AnyRPG {
                 case CombatTextType.gainHealth:
                     textColor = Color.green;
                     preText += "+";
-                    tmpProtext.fontSize = tmpProtext.fontSize * 2;
+                    fontSizeMultiplier *= 2;
                     break;
                 case CombatTextType.miss:
                     textColor = Color.white;
@@ -170,8 +183,14 @@ namespace AnyRPG {
             string finalString = preText + displayText + postText;
             tmpProtext.text = finalString;
             if (combatMagnitude == CombatMagnitude.critical) {
-                tmpProtext.fontSize = tmpProtext.fontSize * 2;
+                fontSizeMultiplier *= 2;
             }
+            tmpProtext.fontSize = defaultFontSize * fontSizeMultiplier;
+
+            // make criticals and other large text go farther up and to the right to avoid covering smaller text
+            randomY += (fontSizeMultiplier / 2f) * randomYLimit;
+            randomX += (fontSizeMultiplier / 2f) * randomXLimit;
+
             RunCombatTextUpdate();
         }
 
@@ -181,9 +200,7 @@ namespace AnyRPG {
                 //Debug.Log("CombatTextController.FixedUpdate(): maintarget is not null");
                 targetPos = CameraManager.MyInstance.MyActiveMainCamera.WorldToScreenPoint(mainTarget.InteractableGameObject.transform.position + new Vector3(0, yUnitOffset, 0));
                 //Debug.Log("CombatTextController.FixedUpdate(): targetpos:" + targetPos);
-                transform.position = targetPos + new Vector2(randomX + xUIOffset, randomY);
-            } else {
-                //Debug.Log("CombatTextController.FixedUpdate(): maintarget is null");
+                transform.position = targetPos + new Vector2(randomX + xUIOffset, yUIOffset + randomY);
             }
             if (fadeOutTimer > 0) {
                 fadeOutTimer -= Time.deltaTime;
@@ -203,7 +220,7 @@ namespace AnyRPG {
                 }
 
                 //randomY += (movementSpeed * directionMultiplier);
-                randomY = distanceToMove * (((fadeOutTimer - fadeTime) * -1) / fadeTime) * directionMultiplier;
+                yUIOffset = distanceToMove * (((fadeOutTimer - fadeTime) * -1) / fadeTime) * directionMultiplier;
             } else {
                 CombatTextManager.MyInstance.returnControllerToPool(this);
                 //Destroy(this.gameObject);
