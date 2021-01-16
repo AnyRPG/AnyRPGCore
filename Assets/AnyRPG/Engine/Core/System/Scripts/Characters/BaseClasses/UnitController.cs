@@ -1563,6 +1563,7 @@ namespace AnyRPG {
         public void NotifyOnReviveComplete() {
             FreezeRotation();
             InitializeNamePlate();
+            //UpdateNamePlateImage();
             CharacterUnit.HandleReviveComplete();
 
             OnReviveComplete();

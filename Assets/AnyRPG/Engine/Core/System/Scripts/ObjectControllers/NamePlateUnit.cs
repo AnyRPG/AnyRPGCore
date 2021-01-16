@@ -106,28 +106,22 @@ namespace AnyRPG {
             foreach (InteractableOptionComponent interactableOption in currentInteractables) {
                 if (interactableOption is QuestGiverComponent) {
                     questGiverCurrent = true;
+                    (interactableOption as QuestGiverComponent).UpdateQuestStatus();
                 }
             }
-            //Debug.Log(gameObject.name + ".DialogInteractable.UpdateDialogStatus(): MADE IT PAST QUESTIVER CHECK!!");
 
             if (currentInteractableCount == 0 || questGiverCurrent == true) {
                 // questgiver should override all other nameplate images since it's special and appears separately
-                //Debug.Log(gameObject.name + ".NamePlateUnit.UpdateNamePlateImage() set image inactive; currentInteractableCount: " + currentInteractableCount + "; questGiverCurrent: " + questGiverCurrent);
                 NamePlateController.NamePlate.GenericIndicatorImage.gameObject.SetActive(false);
-                //Debug.Log(gameObject.name + ".Interactable.UpdateNamePlateImage(): interactable count is zero or questgiver is true");
             } else {
-                //Debug.Log(gameObject.name + ".Interactable.UpdateNamePlateImage(): Our count is 1 or more");
                 if (currentInteractableCount == 1) {
-                    //Debug.Log(gameObject.name + ".Interactable.UpdateNamePlateImage(): Our count is 1");
+                    // there is only one interactable.  set the specific nameplate image for it
                     if (currentInteractables[0].InteractableOptionProps.NamePlateImage != null) {
-                        //Debug.Log(gameObject.name + ".NamePlateUnit.UpdateNamePlateImage(): Our count is 1 and image is not null");
                         NamePlateController.NamePlate.GenericIndicatorImage.gameObject.SetActive(true);
                         NamePlateController.NamePlate.GenericIndicatorImage.sprite = currentInteractables[0].InteractableOptionProps.NamePlateImage;
-                    } else {
-                        //Debug.Log(gameObject.name + ".Interactable.UpdateNamePlateImage(): Our count is 1 and image is null");
                     }
                 } else {
-                    //Debug.Log(gameObject.name + ".Interactable.UpdateNamePlateImage(): Our count is MORE THAN 1");
+                    // set a generic indicator if there is more than 1 interactable
                     NamePlateController.NamePlate.GenericIndicatorImage.gameObject.SetActive(true);
                     NamePlateController.NamePlate.GenericIndicatorImage.sprite = SystemConfigurationManager.MyInstance.MultipleInteractionNamePlateImage;
                 }
