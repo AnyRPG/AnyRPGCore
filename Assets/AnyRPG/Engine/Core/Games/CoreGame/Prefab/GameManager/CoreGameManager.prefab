@@ -84,6 +84,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8448294747759913886, guid: 940327016906947448ca06fe7bf422fb,
         type: 3}
+      propertyPath: deathEffectName
+      value: Death
+      objectReference: {fileID: 0}
+    - target: {fileID: 8448294747759913886, guid: 940327016906947448ca06fe7bf422fb,
+        type: 3}
       propertyPath: deathAbilityName
       value: Death
       objectReference: {fileID: 0}
@@ -96,6 +101,11 @@ PrefabInstance:
         type: 3}
       propertyPath: currencyGroupName
       value: Coins
+      objectReference: {fileID: 0}
+    - target: {fileID: 8448294747759913886, guid: 940327016906947448ca06fe7bf422fb,
+        type: 3}
+      propertyPath: levelUpEffectName
+      value: Level Up
       objectReference: {fileID: 0}
     - target: {fileID: 8448294747759913886, guid: 940327016906947448ca06fe7bf422fb,
         type: 3}
@@ -131,6 +141,11 @@ PrefabInstance:
         type: 3}
       propertyPath: equipDefaultBackPack
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8448294747759913886, guid: 940327016906947448ca06fe7bf422fb,
+        type: 3}
+      propertyPath: lootSparkleEffectName
+      value: Loot Sparkle
       objectReference: {fileID: 0}
     - target: {fileID: 8448294747759913886, guid: 940327016906947448ca06fe7bf422fb,
         type: 3}

@@ -15,6 +15,28 @@ namespace AnyRPG {
         private bool windowEventSubscriptionsInitialized = false;
 
         public SpecializationChangeComponent(Interactable interactable, SpecializationChangeProps interactableOptionProps) : base(interactable, interactableOptionProps) {
+            if (interactableOptionProps.GetInteractionPanelTitle() == string.Empty) {
+                interactableOptionProps.InteractionPanelTitle = Props.ClassSpecialization.DisplayName + " Specialization";
+            }
+        }
+
+        public override void CreateEventSubscriptions() {
+            //Debug.Log("GatheringNode.CreateEventSubscriptions()");
+            if (eventSubscriptionsInitialized) {
+                return;
+            }
+            base.CreateEventSubscriptions();
+
+            // because the class is a special type of prerequisite, we need to be notified when it changes
+            if (SystemEventManager.MyInstance == null) {
+                Debug.LogError("SystemEventManager Not Found.  Is the GameManager prefab in the scene?");
+                return;
+            }
+            SystemEventManager.StartListening("OnSpecializationChange", HandleSpecializationChange);
+            if (SystemEventManager.MyInstance != null) {
+                SystemEventManager.MyInstance.OnClassChange += HandleClassChange;
+            }
+
         }
 
         public void CleanupEventSubscriptions(ICloseableWindowContents windowContents) {
@@ -34,6 +56,10 @@ namespace AnyRPG {
             //Debug.Log(gameObject.name + ".ClassChangeInteractable.CleanupEventSubscriptions()");
             base.CleanupEventSubscriptions();
             CleanupWindowEventSubscriptions();
+            SystemEventManager.StopListening("OnSpecializationChange", HandleSpecializationChange);
+            if (SystemEventManager.MyInstance != null) {
+                SystemEventManager.MyInstance.OnClassChange -= HandleClassChange;
+            }
         }
 
         public override void HandleConfirmAction() {
@@ -92,10 +118,32 @@ namespace AnyRPG {
             MiniMapStatusUpdateHandler(this);
         }
 
+        public void HandleSpecializationChange(string eventName, EventParamProperties eventParamProperties) {
+            HandlePrerequisiteUpdates();
+        }
+
+        public void HandleClassChange(CharacterClass oldCharacterClass, CharacterClass newCharacterClass) {
+            HandlePrerequisiteUpdates();
+        }
+
         public override void HandlePlayerUnitSpawn() {
             base.HandlePlayerUnitSpawn();
             MiniMapStatusUpdateHandler(this);
         }
+
+        // specialization is a special type of prerequisite
+        public override bool MyPrerequisitesMet {
+            get {
+                if (PlayerManager.MyInstance.MyCharacter.ClassSpecialization == Props.ClassSpecialization) {
+                    return false;
+                }
+                if (Props.ClassSpecialization.CharacterClasses.Contains(PlayerManager.MyInstance.MyCharacter.CharacterClass) == false) {
+                    return false;
+                }
+                return base.MyPrerequisitesMet;
+            }
+        }
+
 
     }
 

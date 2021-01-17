@@ -15,6 +15,24 @@ namespace AnyRPG {
         private bool windowEventSubscriptionsInitialized = false;
 
         public FactionChangeComponent(Interactable interactable, FactionChangeProps interactableOptionProps) : base(interactable, interactableOptionProps) {
+            if (interactableOptionProps.GetInteractionPanelTitle() == string.Empty) {
+                interactableOptionProps.InteractionPanelTitle = Props.Faction.DisplayName + " Faction";
+            }
+        }
+
+        public override void CreateEventSubscriptions() {
+            //Debug.Log("GatheringNode.CreateEventSubscriptions()");
+            if (eventSubscriptionsInitialized) {
+                return;
+            }
+            base.CreateEventSubscriptions();
+
+            // because the class is a special type of prerequisite, we need to be notified when it changes
+            if (SystemEventManager.MyInstance == null) {
+                Debug.LogError("SystemEventManager Not Found.  Is the GameManager prefab in the scene?");
+                return;
+            }
+            SystemEventManager.StartListening("OnFactionChange", HandleFactionChange);
         }
 
         public void CleanupEventSubscriptions(ICloseableWindowContents windowContents) {
@@ -36,6 +54,7 @@ namespace AnyRPG {
             //Debug.Log(gameObject.name + ".FactionChangeInteractable.CleanupEventSubscriptions()");
             base.CleanupEventSubscriptions();
             CleanupWindowEventSubscriptions();
+            SystemEventManager.StopListening("OnFactionChange", HandleFactionChange);
         }
 
         public override void HandleConfirmAction() {
@@ -44,6 +63,10 @@ namespace AnyRPG {
 
             // just to be safe
             CleanupWindowEventSubscriptions();
+        }
+
+        public void HandleFactionChange(string eventName, EventParamProperties eventParamProperties) {
+            HandlePrerequisiteUpdates();
         }
 
         public override bool Interact(CharacterUnit source, int optionIndex = 0) {
@@ -96,6 +119,16 @@ namespace AnyRPG {
         public override void HandlePlayerUnitSpawn() {
             base.HandlePlayerUnitSpawn();
             MiniMapStatusUpdateHandler(this);
+        }
+
+        // faction is a special type of prerequisite
+        public override bool MyPrerequisitesMet {
+            get {
+                if (PlayerManager.MyInstance.MyCharacter.Faction == Props.Faction) {
+                    return false;
+                }
+                return base.MyPrerequisitesMet;
+            }
         }
 
     }

@@ -13,7 +13,6 @@ namespace AnyRPG {
 
         public MusicPlayerComponent(Interactable interactable, MusicPlayerProps interactableOptionProps) : base(interactable, interactableOptionProps) {
             if (interactableOptionProps.GetInteractionPanelTitle() == string.Empty) {
-                //Debug.Log("SkillTrainer.Start(): interactionPanelTitle is empty: setting to default (Train Me)!!!");
                 interactableOptionProps.InteractionPanelTitle = "Music Player";
             }
         }

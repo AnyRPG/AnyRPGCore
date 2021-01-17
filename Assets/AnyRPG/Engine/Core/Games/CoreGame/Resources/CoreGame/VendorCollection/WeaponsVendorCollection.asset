@@ -23,3 +23,33 @@ MonoBehaviour:
   - itemName: One Hand Sword
     quantity: 0
     unlimited: 1
+  - itemName: Two Hand Sword
+    quantity: 0
+    unlimited: 1
+  - itemName: One Hand Mace
+    quantity: 0
+    unlimited: 1
+  - itemName: Two Hand Mace
+    quantity: 0
+    unlimited: 1
+  - itemName: Two Hand Axe
+    quantity: 0
+    unlimited: 1
+  - itemName: Staff
+    quantity: 0
+    unlimited: 1
+  - itemName: Left Claw
+    quantity: 0
+    unlimited: 1
+  - itemName: Right Claw
+    quantity: 0
+    unlimited: 1
+  - itemName: Shield
+    quantity: 0
+    unlimited: 1
+  - itemName: Bow
+    quantity: 0
+    unlimited: 1
+  - itemName: Dagger
+    quantity: 0
+    unlimited: 1

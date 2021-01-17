@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   resourceName: Bag
   displayName: 
-  icon: {fileID: 21300000, guid: c10f80eb1400aaf42b1333fdbefde130, type: 3}
+  icon: {fileID: 21300000, guid: 229b21505cd8e9345b3ec15b2e692bdd, type: 3}
   iconBackgroundImage: {fileID: 0}
   description: not quite as big as a backpack
   useRegionalDescription: 0

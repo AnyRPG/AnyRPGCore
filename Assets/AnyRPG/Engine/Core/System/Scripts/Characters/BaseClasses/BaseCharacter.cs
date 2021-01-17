@@ -245,7 +245,7 @@ namespace AnyRPG {
 
         public void ChangeClassSpecialization(ClassSpecialization newClassSpecialization) {
             //Debug.Log(gameObject.name + ".PlayerCharacter.Joinfaction(" + newFaction + ")");
-            if (newClassSpecialization != null && newClassSpecialization != classSpecialization) {
+            if (newClassSpecialization != classSpecialization) {
                 characterStats.ClearStatusEffects();
                 characterPetManager.DespawnAllPets();
                 SetClassSpecialization(newClassSpecialization);
@@ -257,6 +257,7 @@ namespace AnyRPG {
             if (newCharacterClass != null && newCharacterClass != characterClass) {
                 characterStats.ClearStatusEffects();
                 characterPetManager.DespawnAllPets();
+                ChangeClassSpecialization(null);
                 SetCharacterClass(newCharacterClass);
             }
         }
@@ -473,7 +474,7 @@ namespace AnyRPG {
 
             CapabilityConsumerSnapshot oldSnapshot = null;
 
-            if (newClassSpecialization != null) {
+            //if (newClassSpecialization != null) {
                 if (notify) {
                     // get a snapshot of the current state
                     oldSnapshot = new CapabilityConsumerSnapshot(this);
@@ -502,7 +503,7 @@ namespace AnyRPG {
                 if (resetStats == true && characterStats != null) {
                     characterStats.SetLevel(characterStats.Level);
                 }
-            }
+            //}
         }
 
         public void SetCharacterClass(CharacterClass newCharacterClass, bool notify = true, bool resetStats = true) {

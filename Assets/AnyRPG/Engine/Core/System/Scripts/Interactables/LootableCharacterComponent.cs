@@ -120,13 +120,11 @@ namespace AnyRPG {
                 lootCount = GetLootCount();
             }
             lootCalculated = true;
-            if (lootCount > 0 && SystemConfigurationManager.MyInstance?.LootSparkleAbility != null) {
+            if (lootCount > 0 && SystemConfigurationManager.MyInstance?.LootSparkleEffect != null) {
                 //Debug.Log(gameObject.name + "LootableCharacter.HandleDeath(): Loot count: " + MyLootTable.MyDroppedItems.Count + "; performing loot sparkle");
 
                 //SystemAbilityController.MyInstance.BeginAbility(SystemConfigurationManager.MyInstance.MyLootSparkleAbility as IAbility, gameObject);
-                AbilityEffectContext abilityEffectContext = new AbilityEffectContext();
-                abilityEffectContext.baseAbility = SystemConfigurationManager.MyInstance.LootSparkleAbility;
-                SystemConfigurationManager.MyInstance.LootSparkleAbility.Cast(SystemAbilityController.MyInstance, interactable, new AbilityEffectContext());
+                SystemConfigurationManager.MyInstance.LootSparkleEffect.Cast(SystemAbilityController.MyInstance, interactable, interactable, new AbilityEffectContext());
             }
             TryToDespawn();
         }
@@ -152,14 +150,9 @@ namespace AnyRPG {
                 SystemEventManager.MyInstance.OnTakeLoot -= TryToDespawn;
 
                 // cancel loot sparkle here because despawn takes a while
-                // TODO : this will always be the same no matter who calls it.  Better to just have the effects directly in the system configuration manager
-                List<AbilityEffect> sparkleEffects = SystemConfigurationManager.MyInstance.LootSparkleAbility.GetAbilityEffects(PlayerManager.MyInstance.MyCharacter);
-                foreach (AbilityEffect abilityEffect in sparkleEffects) {
-                    //Debug.Log(gameObject.name + ".LootableCharacter.TryToDespawn(): found a sparkle effect: " + SystemResourceManager.prepareStringForMatch(abilityEffect.MyName) + "; character effects: ");
-                    if (characterUnit.BaseCharacter.CharacterStats.StatusEffects.ContainsKey(SystemResourceManager.prepareStringForMatch(abilityEffect.DisplayName))) {
-                        //Debug.Log(gameObject.name + ".LootableCharacter.TryToDespawn(): found a sparkle effect: " + SystemResourceManager.prepareStringForMatch(abilityEffect.MyName) + " and now cancelling it");
-                        characterUnit.BaseCharacter.CharacterStats.StatusEffects[SystemResourceManager.prepareStringForMatch(abilityEffect.DisplayName)].CancelStatusEffect();
-                    }
+                if (characterUnit.BaseCharacter.CharacterStats.StatusEffects.ContainsKey(SystemResourceManager.prepareStringForMatch(SystemConfigurationManager.MyInstance.LootSparkleEffect.DisplayName))) {
+                    //Debug.Log(gameObject.name + ".LootableCharacter.TryToDespawn(): found a sparkle effect: " + SystemResourceManager.prepareStringForMatch(abilityEffect.MyName) + " and now cancelling it");
+                    characterUnit.BaseCharacter.CharacterStats.StatusEffects[SystemResourceManager.prepareStringForMatch(SystemConfigurationManager.MyInstance.LootSparkleEffect.DisplayName)].CancelStatusEffect();
                 }
                 AdvertiseLootComplete();
                 Despawn();

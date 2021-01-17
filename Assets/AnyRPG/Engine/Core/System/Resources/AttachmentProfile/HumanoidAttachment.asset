@@ -139,6 +139,13 @@ MonoBehaviour:
     scale: {x: 1, y: 1, z: 1}
     targetBone: OneHandMaceSheathedAttachment
     audioProfileName: 
+  - nodeName: Main Hand Dagger Sheathed
+    position: {x: 0, y: 0, z: 0}
+    rotationIsGlobal: 0
+    rotation: {x: 0, y: 0, z: 0}
+    scale: {x: 1, y: 1, z: 1}
+    targetBone: MainHandDaggerSheathedAttachment
+    audioProfileName: 
   - nodeName: SpellSource
     position: {x: 0, y: 0, z: 0}
     rotationIsGlobal: 0

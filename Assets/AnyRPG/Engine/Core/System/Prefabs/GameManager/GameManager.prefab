@@ -10150,6 +10150,7 @@ MonoBehaviour:
   initializationScene: 
   mainMenuScene: 
   defaultStartingZone: 
+  defaultPlayerName: New Player
   useNewGameWindow: 1
   newGameAppearance: 1
   newGameUMAAppearance: 1
@@ -10160,7 +10161,7 @@ MonoBehaviour:
   defaultPlayerUnitProfileName: DefaultPlayer
   alwaysShowDefaultProfiles: 0
   characterCreatorProfileNames: []
-  defaultPlayerName: New Player
+  useFirstCreatorProfile: 0
   equipDefaultBackPack: 0
   defaultBackpackItem: 
   defaultBankBagItem: 
@@ -10186,7 +10187,7 @@ MonoBehaviour:
   defaultUIFillColor: {r: 0.8588236, g: 0.5176471, b: 0, a: 1}
   defaultUIPanelFrame: {fileID: 21300000, guid: 0281ba7261dc9534981ec2c944a817d9,
     type: 3}
-  defaultFactionIcon: {fileID: 21300000, guid: 96d53b94892bd744d9560c10fad1bb03, type: 3}
+  defaultFactionIcon: {fileID: 21300000, guid: a5049d8fafbe58a47989c22139dbbe65, type: 3}
   systemBarMainMenu: {fileID: 21300000, guid: 1ea4d08ccd2c0714c97384ae4a49668b, type: 3}
   systemBarAbilityBook: {fileID: 21300000, guid: abed47c01cc09b34590ac7c32bb8fb5c,
     type: 3}
@@ -10221,9 +10222,9 @@ MonoBehaviour:
   powerResources: []
   defaultCharacterUnitLayer: CharacterUnit
   defaultPlayerUnitLayer: Player
-  levelUpAbilityName: 
-  deathAbilityName: 
-  lootSparkleAbilityName: 
+  levelUpEffectName: 
+  deathEffectName: 
+  lootSparkleEffectName: 
   vendorAudioProfileName: 
   maxChatTextDistance: 25
   temporaryMaterial: {fileID: 2100000, guid: 41a797d66a16d984e9d7de6fc6b78a57, type: 2}

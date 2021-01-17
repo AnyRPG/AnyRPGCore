@@ -1,0 +1,36 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c7f2ef4c68ea0a9458250ff77379cc9e, type: 3}
+  m_Name: FighterSpecialization
+  m_EditorClassIdentifier: 
+  resourceName: Fighter
+  displayName: 
+  icon: {fileID: 21300000, guid: 59463d1e84bc03a44b4f4c81002123a1, type: 3}
+  iconBackgroundImage: {fileID: 0}
+  description: 
+  useRegionalDescription: 0
+  resourceDescriptionProfile: 
+  newGameOption: 0
+  equipmentNames:
+  - Left Claw
+  - Right Claw
+  classNames:
+  - Melee
+  capabilities:
+    abilityNames: []
+    traitNames: []
+    armorClassList: []
+    weaponSkills:
+    - Fist
+  primaryStats: []
+  powerResources: []
+  powerEnhancerStats: []

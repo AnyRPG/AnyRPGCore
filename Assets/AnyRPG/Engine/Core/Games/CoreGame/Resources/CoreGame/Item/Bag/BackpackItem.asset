@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   resourceName: Backpack
   displayName: 
-  icon: {fileID: 21300000, guid: b5af9643ab11a204191a8ccccdee9cae, type: 3}
+  icon: {fileID: 21300000, guid: 63cb0d21d60422d4882b978378a7c4ce, type: 3}
   iconBackgroundImage: {fileID: 0}
   description: A Gift from a travelling salesman.
   useRegionalDescription: 0

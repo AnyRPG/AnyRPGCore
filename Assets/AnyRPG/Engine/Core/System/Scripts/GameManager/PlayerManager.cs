@@ -252,26 +252,24 @@ namespace AnyRPG {
 
         public void PlayLevelUpEffects(int newLevel) {
             //Debug.Log("PlayerManager.PlayLevelUpEffect()");
-            if (PlayerUnitSpawned == false || SystemConfigurationManager.MyInstance?.LevelUpAbility == null) {
+            if (PlayerUnitSpawned == false || SystemConfigurationManager.MyInstance?.LevelUpEffect == null) {
                 return;
             }
             // 0 to allow playing this effect for different reasons than levelup
             if (newLevel == 0 || newLevel != 1) {
                 AbilityEffectContext abilityEffectContext = new AbilityEffectContext();
-                abilityEffectContext.baseAbility = SystemConfigurationManager.MyInstance.LevelUpAbility;
 
-                SystemConfigurationManager.MyInstance.LevelUpAbility.Cast(SystemAbilityController.MyInstance, activeUnitController, abilityEffectContext);
+                SystemConfigurationManager.MyInstance.LevelUpEffect.Cast(SystemAbilityController.MyInstance, activeUnitController, activeUnitController, abilityEffectContext);
             }
         }
 
         public void PlayDeathEffect() {
             //Debug.Log("PlayerManager.PlayDeathEffect()");
-            if (PlayerUnitSpawned == false || SystemConfigurationManager.MyInstance?.DeathAbility == null) {
+            if (PlayerUnitSpawned == false || SystemConfigurationManager.MyInstance?.DeathEffect == null) {
                 return;
             }
             AbilityEffectContext abilityEffectContext = new AbilityEffectContext();
-            abilityEffectContext.baseAbility = SystemConfigurationManager.MyInstance.DeathAbility;
-            SystemConfigurationManager.MyInstance.DeathAbility.Cast(SystemAbilityController.MyInstance, activeUnitController, abilityEffectContext);
+            SystemConfigurationManager.MyInstance.DeathEffect.Cast(SystemAbilityController.MyInstance, activeUnitController, activeUnitController, abilityEffectContext);
         }
 
         /*

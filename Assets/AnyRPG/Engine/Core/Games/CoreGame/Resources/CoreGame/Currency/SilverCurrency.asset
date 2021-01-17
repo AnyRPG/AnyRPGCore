@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   resourceName: Silver
   displayName: 
-  icon: {fileID: 21300000, guid: 732b1730b8f6a15489390987a90d888e, type: 3}
+  icon: {fileID: 21300000, guid: ade2bc5614baa0e4bb264e68f613cf21, type: 3}
   iconBackgroundImage: {fileID: 0}
   description: A currency accepted almost everywhere
   useRegionalDescription: 0

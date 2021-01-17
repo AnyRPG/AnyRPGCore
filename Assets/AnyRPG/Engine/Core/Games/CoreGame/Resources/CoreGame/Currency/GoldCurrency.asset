@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   resourceName: Gold
   displayName: 
-  icon: {fileID: 21300000, guid: 69e3aeb0157dfcc40b21461169d86081, type: 3}
+  icon: {fileID: 21300000, guid: 42449c11df8b9a344b4da10606cec123, type: 3}
   iconBackgroundImage: {fileID: 0}
   description: A valuable currency accepted almost everywhere
   useRegionalDescription: 0

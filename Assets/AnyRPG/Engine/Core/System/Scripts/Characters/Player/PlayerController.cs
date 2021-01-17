@@ -704,6 +704,8 @@ namespace AnyRPG {
             PlayerManager.MyInstance.ActiveUnitController.UnitAnimator.OnStartRevive += HandleStartRevive;
             PlayerManager.MyInstance.ActiveUnitController.UnitAnimator.OnDeath += HandleDeath;
             PlayerManager.MyInstance.ActiveUnitController.OnClassChange += HandleClassChange;
+            PlayerManager.MyInstance.ActiveUnitController.OnFactionChange += HandleFactionChange;
+            PlayerManager.MyInstance.ActiveUnitController.OnSpecializationChange += HandleSpecializationChange;
             PlayerManager.MyInstance.ActiveUnitController.OnActivateMountedState += HandleActivateMountedState;
             PlayerManager.MyInstance.ActiveUnitController.OnDeActivateMountedState += HandleDeActivateMountedState;
             PlayerManager.MyInstance.ActiveUnitController.OnMessageFeed += HandleMessageFeed;
@@ -727,6 +729,8 @@ namespace AnyRPG {
             PlayerManager.MyInstance.ActiveUnitController.UnitAnimator.OnStartRevive -= HandleStartRevive;
             PlayerManager.MyInstance.ActiveUnitController.UnitAnimator.OnDeath -= HandleDeath;
             PlayerManager.MyInstance.ActiveUnitController.OnClassChange -= HandleClassChange;
+            PlayerManager.MyInstance.ActiveUnitController.OnFactionChange -= HandleFactionChange;
+            PlayerManager.MyInstance.ActiveUnitController.OnSpecializationChange -= HandleSpecializationChange;
             PlayerManager.MyInstance.ActiveUnitController.OnActivateMountedState -= HandleActivateMountedState;
             PlayerManager.MyInstance.ActiveUnitController.OnDeActivateMountedState -= HandleDeActivateMountedState;
             PlayerManager.MyInstance.ActiveUnitController.OnMessageFeed -= HandleMessageFeed;
@@ -778,10 +782,23 @@ namespace AnyRPG {
 
         }
 
+        public void HandleFactionChange(Faction newFaction, Faction oldFaction) {
+            SystemEventManager.TriggerEvent("OnFactionChange", new EventParamProperties());
+            MessageFeedManager.MyInstance.WriteMessage("Changed faction to " + newFaction.DisplayName);
+        }
+
         public void HandleClassChange(CharacterClass newCharacterClass, CharacterClass oldCharacterClass) {
             SystemEventManager.MyInstance.NotifyOnClassChange(newCharacterClass, oldCharacterClass);
             MessageFeedManager.MyInstance.WriteMessage("Changed class to " + newCharacterClass.DisplayName);
         }
+
+        public void HandleSpecializationChange(ClassSpecialization newSpecialization, ClassSpecialization oldSpecialization) {
+            SystemEventManager.TriggerEvent("OnSpecializationChange", new EventParamProperties());
+            if (newSpecialization != null) {
+                MessageFeedManager.MyInstance.WriteMessage("Changed specialization to " + newSpecialization.DisplayName);
+            }
+        }
+
 
         public void HandleDeath() {
             //Debug.Log(gameObject.name + ".PlayerController.HandleDeath()");

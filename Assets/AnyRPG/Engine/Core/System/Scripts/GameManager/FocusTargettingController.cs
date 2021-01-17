@@ -183,7 +183,7 @@ namespace AnyRPG {
             this.transform.position = new Vector3(target.transform.position.x, target.transform.position.y + 1, target.transform.position.z);
             this.transform.forward = target.transform.forward;
             transform.Rotate(new Vector3(90f, 0f, 0f));
-            if (characterUnit.BaseCharacter.CharacterStats.IsAlive == false && targetingProjector.material != colorDictionary[ColorUtility.ToHtmlStringRGBA(Color.gray)]) {
+            if (characterUnit?.BaseCharacter?.CharacterStats.IsAlive == false && targetingProjector.material != colorDictionary[ColorUtility.ToHtmlStringRGBA(Color.gray)]) {
                 //SetCircleColor(Color.gray);
                 SetMaterial(Color.gray);
             }

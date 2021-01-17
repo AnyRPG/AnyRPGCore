@@ -321,20 +321,26 @@ namespace AnyRPG {
 
         [Header("SYSTEM ABILITIES")]
 
+        [Tooltip("The ability effect to cast on a player when they level up")]
+        [FormerlySerializedAs("levelUpAbilityName")]
         [SerializeField]
-        private string levelUpAbilityName = string.Empty;
+        private string levelUpEffectName = string.Empty;
 
-        private BaseAbility levelUpAbility = null;
+        private AbilityEffect levelUpEffect = null;
 
+        [Tooltip("The ability effect to cast on a player when they die")]
+        [FormerlySerializedAs("deathAbilityName")]
         [SerializeField]
-        private string deathAbilityName = string.Empty;
+        private string deathEffectName = string.Empty;
 
-        private BaseAbility deathAbility = null;
+        private AbilityEffect deathEffect = null;
 
+        [Tooltip("The ability effect to cast on any character when it has loot that can be collected")]
+        [FormerlySerializedAs("lootSparkleAbilityName")]
         [SerializeField]
-        private string lootSparkleAbilityName = string.Empty;
+        private string lootSparkleEffectName = string.Empty;
 
-        private BaseAbility lootSparkleAbility = null;
+        private AbilityEffect lootSparkleEffect = null;
 
         [Header("SYSTEM AUDIO")]
 
@@ -451,9 +457,9 @@ namespace AnyRPG {
 
         protected bool eventSubscriptionsInitialized = false;
 
-        public BaseAbility LootSparkleAbility { get => lootSparkleAbility; set => lootSparkleAbility = value; }
+        public AbilityEffect LootSparkleEffect { get => lootSparkleEffect; set => lootSparkleEffect = value; }
         public Material TemporaryMaterial { get => temporaryMaterial; set => temporaryMaterial = value; }
-        public BaseAbility LevelUpAbility { get => levelUpAbility; set => levelUpAbility = value; }
+        public AbilityEffect LevelUpEffect { get => levelUpEffect; set => levelUpEffect = value; }
         public Sprite QuestGiverInteractionPanelImage { get => questGiverInteractionPanelImage; set => questGiverInteractionPanelImage = value; }
         public Sprite QuestGiverNamePlateImage { get => questGiverNamePlateImage; set => questGiverNamePlateImage = value; }
         public Sprite DialogInteractionPanelImage { get => dialogInteractionPanelImage; set => dialogInteractionPanelImage = value; }
@@ -474,7 +480,7 @@ namespace AnyRPG {
         public Sprite PortalNamePlateImage { get => portalNamePlateImage; set => portalNamePlateImage = value; }
         public Sprite SkillTrainerInteractionPanelImage { get => skillTrainerInteractionPanelImage; set => skillTrainerInteractionPanelImage = value; }
         public Sprite SkillTrainerNamePlateImage { get => skillTrainerNamePlateImage; set => skillTrainerNamePlateImage = value; }
-        public BaseAbility DeathAbility { get => deathAbility; set => deathAbility = value; }
+        public AbilityEffect DeathEffect { get => deathEffect; set => deathEffect = value; }
         public Sprite MultipleInteractionNamePlateImage { get => multipleInteractionNamePlateImage; set => multipleInteractionNamePlateImage = value; }
         public float DefaultDespawnTimer { get => defaultDespawnTimer; set => defaultDespawnTimer = value; }
         public Sprite BankInteractionPanelImage { get => bankInteractionPanelImage; set => bankInteractionPanelImage = value; }
@@ -604,33 +610,32 @@ namespace AnyRPG {
         // verify that system abilities are available through the factory
         public void SetupScriptableObjects() {
 
-            BaseAbility testAbility = null;
-            if (levelUpAbilityName != null && levelUpAbilityName != string.Empty) {
-                testAbility = SystemAbilityManager.MyInstance.GetResource(levelUpAbilityName);
+            if (levelUpEffectName != null && levelUpEffectName != string.Empty) {
+                AbilityEffect testAbility = SystemAbilityEffectManager.MyInstance.GetResource(levelUpEffectName);
                 if (testAbility == null) {
-                    Debug.LogError("SystemConfigurationManager.SetupScriptableObjects(): " + levelUpAbilityName + " could not be found in factory.  CHECK INSPECTOR");
+                    Debug.LogError("SystemConfigurationManager.SetupScriptableObjects(): " + levelUpEffectName + " could not be found in factory.  CHECK INSPECTOR");
                     return;
                 } else {
-                    levelUpAbility = testAbility;
+                    levelUpEffect = testAbility;
                 }
             }
 
-            if (deathAbilityName != null && deathAbilityName != string.Empty) {
-                testAbility = SystemAbilityManager.MyInstance.GetResource(deathAbilityName);
+            if (deathEffectName != null && deathEffectName != string.Empty) {
+                AbilityEffect testAbility = SystemAbilityEffectManager.MyInstance.GetResource(deathEffectName);
                 if (testAbility == null) {
-                    Debug.LogError("SystemConfigurationManager.SetupScriptableObjects(): " + deathAbilityName + " could not be found in factory.  CHECK INSPECTOR");
+                    Debug.LogError("SystemConfigurationManager.SetupScriptableObjects(): " + deathEffectName + " could not be found in factory.  CHECK INSPECTOR");
                     return;
                 } else {
-                    deathAbility = testAbility;
+                    deathEffect = testAbility;
                 }
             }
-            if (lootSparkleAbilityName != null && lootSparkleAbilityName != string.Empty) {
-                testAbility = SystemAbilityManager.MyInstance.GetResource(lootSparkleAbilityName);
+            if (lootSparkleEffectName != null && lootSparkleEffectName != string.Empty) {
+                AbilityEffect testAbility = SystemAbilityEffectManager.MyInstance.GetResource(lootSparkleEffectName);
                 if (testAbility == null) {
-                    Debug.LogError("SystemConfigurationManager.SetupScriptableObjects(): " + lootSparkleAbilityName + " could not be found in factory.  CHECK INSPECTOR");
+                    Debug.LogError("SystemConfigurationManager.SetupScriptableObjects(): " + lootSparkleEffectName + " could not be found in factory.  CHECK INSPECTOR");
                     return;
                 } else {
-                    lootSparkleAbility = testAbility;
+                    lootSparkleEffect = testAbility;
                 }
             }
             if (currencyGroupName != null && currencyGroupName != string.Empty) {

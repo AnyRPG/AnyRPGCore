@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   resourceName: One Hand Sword
   displayName: 
-  icon: {fileID: 21300000, guid: 9c14ac78d557b564ca3f02251233740e, type: 3}
+  icon: {fileID: 21300000, guid: c01e7fa649a19614eac6a70f9ebedac8, type: 3}
   iconBackgroundImage: {fileID: 0}
   description: 
   useRegionalDescription: 0
@@ -22,7 +22,7 @@ MonoBehaviour:
   stackSize: 1
   itemQuality: 
   randomItemQuality: 0
-  dynamicLevel: 0
+  dynamicLevel: 1
   freezeDropLevel: 0
   levelCap: 0
   itemLevel: 1
@@ -52,7 +52,7 @@ MonoBehaviour:
   secondaryStats: []
   onEquipAbilityName: 
   learnedAbilityNames: []
-  weaponType: 
+  weaponType: One Hand Sword
   defaultHitEffects: []
   onHitEffects: []
   animationProfileName: 

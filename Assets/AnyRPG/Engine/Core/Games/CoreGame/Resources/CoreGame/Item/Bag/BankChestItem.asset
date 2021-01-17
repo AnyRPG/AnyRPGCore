@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   resourceName: Bank Chest
   displayName: 
-  icon: {fileID: 21300000, guid: 2da7f4ac72267c24383663562678c96e, type: 3}
+  icon: {fileID: 21300000, guid: 48bf813e1f163744b911194e1f519d92, type: 3}
   iconBackgroundImage: {fileID: 0}
   description: A 48 slot bag for the bank
   useRegionalDescription: 0
