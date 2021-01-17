@@ -24,7 +24,7 @@ namespace AnyRPG {
             if (unitController.UnitControllerMode == UnitControllerMode.AI
                 && unitController.PatrolController != null
                 && unitController.PatrolController.CurrentPatrol != null
-                && unitController.PatrolController.CurrentPatrol.PatrolComplete() == false) {
+                && unitController.PatrolController.CurrentPatrolSaveState.PatrolComplete() == false) {
                 unitController.ChangeState(new PatrolState());
                 return;
             }/*

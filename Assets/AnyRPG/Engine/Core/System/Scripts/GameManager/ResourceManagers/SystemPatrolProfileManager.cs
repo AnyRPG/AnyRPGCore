@@ -49,19 +49,6 @@ namespace AnyRPG {
             return null;
         }
 
-        public PatrolProfile GetNewResource(string resourceName) {
-            //Debug.Log(this.GetType().Name + ".GetResource(" + resourceName + ")");
-            if (!RequestIsEmpty(resourceName)) {
-                string keyName = prepareStringForMatch(resourceName);
-                if (resourceList.ContainsKey(keyName)) {
-                    PatrolProfile returnValue = ScriptableObject.Instantiate(resourceList[keyName]) as PatrolProfile;
-                    returnValue.SetupScriptableObjects();
-                    return returnValue;
-                }
-            }
-            return null;
-        }
-
         public List<PatrolProfile> GetResourceList() {
             List<PatrolProfile> returnList = new List<PatrolProfile>();
 

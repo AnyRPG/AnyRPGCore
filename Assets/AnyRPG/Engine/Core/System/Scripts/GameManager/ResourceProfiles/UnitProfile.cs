@@ -170,6 +170,10 @@ namespace AnyRPG {
 
         [Header("Patrol")]
 
+        [Tooltip("If true, the patrol configuration below will be used for this unit.")]
+        [SerializeField]
+        private bool useInlinePatrol = false;
+
         [Tooltip("Inline patrol configuration.  Useful if no other unit will need to re-use this configuration.")]
         [SerializeField]
         private PatrolProps patrolConfig = new PatrolProps();
@@ -326,6 +330,8 @@ namespace AnyRPG {
         public bool ForceUpdateUUID { get => forceUpdateUUID; set => forceUpdateUUID = value; }
         public bool OverwriteUnitUUID { get => overwriteUnitUUID; set => overwriteUnitUUID = value; }
         public bool IgnoreDuplicateUUID { get => ignoreDuplicateUUID; set => ignoreDuplicateUUID = value; }
+        public bool UseInlinePatrol { get => useInlinePatrol; set => useInlinePatrol = value; }
+        public PatrolProps PatrolConfig { get => patrolConfig; set => patrolConfig = value; }
 
         // disabled because it was too high maintenance
         /*

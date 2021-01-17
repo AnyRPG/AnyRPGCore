@@ -9,19 +9,21 @@ namespace AnyRPG {
         // references
         private UnitController unitController;
 
-        private List<PatrolProfile> patrolProfiles = new List<PatrolProfile>();
+        private List<PatrolProps> patrolPropsList = new List<PatrolProps>();
+        private Dictionary<PatrolProps, PatrolSaveState> patrolSaveStates = new Dictionary<PatrolProps, PatrolSaveState>();
 
-        public List<PatrolProfile> PatrolProfiles { get => patrolProfiles; set => patrolProfiles = value; }
+        private PatrolProps currentPatrolProps = null;
 
-
-        // state
-        private PatrolProfile currentPatrol = null;
-
-        public PatrolProfile CurrentPatrol {
+        public PatrolProps CurrentPatrol { get => currentPatrolProps; }
+        public PatrolProps CurrentPatrolProps { get => currentPatrolProps; }
+        public UnitController UnitController { get => unitController; }
+        public PatrolSaveState CurrentPatrolSaveState {
             get {
-                return currentPatrol;
+                if (CurrentPatrol != null) {
+                    return patrolSaveStates[CurrentPatrol];
+                }
+                return null;
             }
-            set => currentPatrol = value;
         }
 
         public PatrolController(UnitController unitController) {
@@ -38,29 +40,42 @@ namespace AnyRPG {
         }
 
         public void BeginPatrolByIndex(int patrolIndex) {
-            if (patrolIndex < 0 || patrolIndex >= patrolProfiles.Count) {
+            if (patrolIndex < 0 || patrolIndex >= patrolPropsList.Count) {
                 //Debug.Log("PatrolController.BeginPatrolByIndex(" + patrolIndex + "): invalid index");
                 return;
             }
-            string patrolName = patrolProfiles[patrolIndex].DisplayName;
-            BeginPatrol(patrolName);
+            BeginPatrol(patrolPropsList[patrolIndex]);
         }
 
         public void BeginPatrol(string patrolName) {
             //Debug.Log(unitController.gameObject.name + ".PatrolController.BeginPatrol(" + (patrolName != null ? patrolName : "null" ) + ")");
-            PatrolProfile tmpPatrolProfile = SystemPatrolProfileManager.MyInstance.GetNewResource(patrolName);
+            PatrolProfile tmpPatrolProfile = SystemPatrolProfileManager.MyInstance.GetResource(patrolName);
             if (tmpPatrolProfile != null) {
-                tmpPatrolProfile.CurrentUnitController = unitController;
-                SetCurrentPatrol(tmpPatrolProfile);
-                unitController.ChangeState(new PatrolState());
+                if (patrolSaveStates.ContainsKey(tmpPatrolProfile.PatrolProperties) == false) {
+                    AddPatrolState(tmpPatrolProfile.PatrolProperties);
+                }
+                BeginPatrol(tmpPatrolProfile.PatrolProperties);
                 return;
             } else {
                 Debug.LogError(unitController.gameObject.name + ".PatrolController.BeginPatrol() could not find patrol: " + (patrolName != null ? patrolName : "null") + ")");
             }
         }
 
-        public void SetCurrentPatrol(PatrolProfile newPatrolProfile) {
-            currentPatrol = newPatrolProfile;
+        public void BeginPatrol(PatrolProps patrolProps) {
+            //Debug.Log(unitController.gameObject.name + ".PatrolController.BeginPatrol(" + (patrolName != null ? patrolName : "null" ) + ")");
+                SetCurrentPatrol(patrolProps);
+                unitController.ChangeState(new PatrolState());
+                return;
+        }
+
+        private void AddPatrolState(PatrolProps patrolProps) {
+            patrolPropsList.Add(patrolProps);
+            patrolSaveStates.Add(patrolProps, new PatrolSaveState(this, patrolProps));
+        }
+
+
+        public void SetCurrentPatrol(PatrolProps newPatrolProps) {
+            currentPatrolProps = newPatrolProps;
         }
 
         private void FindAutomaticPatrol() {
@@ -69,12 +84,11 @@ namespace AnyRPG {
                 return;
             }
 
-            foreach (PatrolProfile patrolProfile in patrolProfiles) {
+            foreach (PatrolProps patrolProps in patrolPropsList) {
                 //Debug.Log(unitController.gameObject.name + ".patrolController.FindAutomaticPatrol(): found patrol profile: " + patrolProfile.DisplayName);
-                if (patrolProfile.PatrolProperties.AutoStart == true) {
+                if (patrolProps.AutoStart == true) {
                     //Debug.Log(unitController.gameObject.name + ".patrolController.FindAutomaticPatrol(): found autostart profile");
-                    currentPatrol = patrolProfile;
-                    currentPatrol.CurrentUnitController = unitController;
+                    BeginPatrol(patrolProps);
                     break;
                 }
             }
@@ -83,14 +97,13 @@ namespace AnyRPG {
         private void SetupScriptableObjects() {
             //Debug.Log(unitController.gameObject.name + ".patrolController.SetupScriptableObjects()");
 
-
             // local patrols
-            if (unitController.PatrolNames != null) {
+            if (unitController?.PatrolNames != null) {
                 foreach (string patrolName in unitController.PatrolNames) {
                     if (patrolName != null && patrolName != string.Empty) {
-                        PatrolProfile _tmpPatrolProfile = SystemPatrolProfileManager.MyInstance.GetNewResource(patrolName);
+                        PatrolProfile _tmpPatrolProfile = SystemPatrolProfileManager.MyInstance.GetResource(patrolName);
                         if (_tmpPatrolProfile != null) {
-                            patrolProfiles.Add(_tmpPatrolProfile);
+                            AddPatrolState(_tmpPatrolProfile.PatrolProperties);
                         } else {
                             Debug.LogError("PatrolController.SetupScriptableObjects: could not find patrol name: " + patrolName);
                         }
@@ -99,18 +112,23 @@ namespace AnyRPG {
             }
 
             // patrols from unit profile
-            if (unitController != null && unitController.UnitProfile != null && unitController.UnitProfile.PatrolNames != null) {
+            if (unitController?.UnitProfile?.PatrolNames != null) {
                 foreach (string patrolName in unitController.UnitProfile.PatrolNames) {
                     if (patrolName != null && patrolName != string.Empty) {
-                        PatrolProfile _tmpPatrolProfile = SystemPatrolProfileManager.MyInstance.GetNewResource(patrolName);
+                        PatrolProfile _tmpPatrolProfile = SystemPatrolProfileManager.MyInstance.GetResource(patrolName);
                         if (_tmpPatrolProfile != null) {
-                            patrolProfiles.Add(_tmpPatrolProfile);
+                            AddPatrolState(_tmpPatrolProfile.PatrolProperties);
                         } else {
                             Debug.LogError("PatrolController.SetupScriptableObjects: could not find patrol name: " + patrolName);
                         }
                     }
                 }
             }
+
+            if (unitController?.UnitProfile?.UseInlinePatrol == true) {
+                AddPatrolState(unitController.UnitProfile.PatrolConfig);
+            }
+
 
         }
 

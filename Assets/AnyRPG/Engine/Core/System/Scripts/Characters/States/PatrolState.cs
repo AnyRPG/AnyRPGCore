@@ -18,12 +18,12 @@ namespace AnyRPG {
         public void Enter(UnitController baseController) {
             //Debug.Log(baseController.gameObject.name + ".PatrolState.Enter() position: " + baseController.transform.position);
             this.baseController = baseController;
-            if (!baseController.PatrolController.CurrentPatrol.PatrolComplete()) {
+            if (baseController.PatrolController.CurrentPatrolSaveState.PatrolComplete() == false) {
                 originalMovementSpeed = this.baseController.UnitMotor.MovementSpeed;
                 SetMovementSpeed();
 
                 // set destination
-                Vector3 tmpDestination = baseController.PatrolController.CurrentPatrol.GetDestination(false);
+                Vector3 tmpDestination = baseController.PatrolController.CurrentPatrolSaveState.GetDestination(false);
                 if (tmpDestination != Vector3.zero) {
                     currentDestination = this.baseController.SetDestination(tmpDestination);
                 }
@@ -44,10 +44,10 @@ namespace AnyRPG {
 
         public void SetMovementSpeed() {
             //Debug.Log(baseController.gameObject.name + ".PatrolState.SetMovementSpeed() patrol: " + baseController.PatrolController.CurrentPatrol.MovementSpeed + " motor: " + this.baseController.UnitMotor.MovementSpeed + "; " + "; aicontroller: " + this.baseController.MovementSpeed);
-            if (baseController.PatrolController.CurrentPatrol.PatrolProperties.MovementSpeed == 0) {
+            if (baseController.PatrolController.CurrentPatrol.MovementSpeed == 0) {
                 this.baseController.UnitMotor.MovementSpeed = this.baseController.MovementSpeed;
             } else {
-                this.baseController.UnitMotor.MovementSpeed = baseController.PatrolController.CurrentPatrol.PatrolProperties.MovementSpeed;
+                this.baseController.UnitMotor.MovementSpeed = baseController.PatrolController.CurrentPatrol.MovementSpeed;
             }
         }
 
@@ -82,8 +82,8 @@ namespace AnyRPG {
                 //Debug.Log(aiController.gameObject.name + ".PatrolState.Update(): Destination Reached!");
 
                 // destination reached
-                if (baseController.PatrolController.CurrentPatrol.PatrolComplete()) {
-                    if (baseController.PatrolController.CurrentPatrol.PatrolProperties.DespawnOnCompletion) {
+                if (baseController.PatrolController.CurrentPatrolSaveState.PatrolComplete()) {
+                    if (baseController.PatrolController.CurrentPatrol.DespawnOnCompletion) {
                         if (baseController.CharacterUnit != null) {
                             baseController.CharacterUnit.Despawn(0, false, true);
                         }
@@ -118,7 +118,7 @@ namespace AnyRPG {
         private void GetNewDestination() {
             //Debug.Log(baseController.gameObject.name + ".PatrolState.GetNewDestination() patrol: " + (baseController?.PatrolController?.CurrentPatrol == null ? "null" : baseController.PatrolController.CurrentPatrol.DisplayName));
             TrySavePersistentData();
-            Vector3 tmpDestination = baseController.PatrolController.CurrentPatrol.GetDestination(true);
+            Vector3 tmpDestination = baseController.PatrolController.CurrentPatrolSaveState.GetDestination(true);
             if (tmpDestination == Vector3.zero) {
                 //Debug.Log(baseController.gameObject.name + ".PatrolState.Update(): GOT ZERO DESTINATION, SKIPPING TO NEXT UPDATE");
                 return;
@@ -132,7 +132,7 @@ namespace AnyRPG {
 
         public void TrySavePersistentData() {
             //Debug.Log(aiController.gameObject.name + ".PatrolState.TrySavePersistentData()");
-            if (baseController != null && baseController.PatrolController != null && baseController.PatrolController.CurrentPatrol != null && baseController.PatrolController.CurrentPatrol.PatrolProperties.SavePositionAtDestination) {
+            if (baseController?.PatrolController?.CurrentPatrol != null && baseController.PatrolController.CurrentPatrol.SavePositionAtDestination) {
                 if (baseController.PersistentObjectComponent != null) {
                     baseController.PersistentObjectComponent.SaveProperties();
                 }
@@ -142,7 +142,7 @@ namespace AnyRPG {
         public IEnumerator PauseForNextDestination(Vector3 nextDestination) {
             //Debug.Log(baseController.gameObject.name + ".PatrolState.PauseForNextDestination(" + nextDestination + ")");
 
-            float remainingPauseTime = baseController.PatrolController.CurrentPatrol.PatrolProperties.DestinationPauseTime;
+            float remainingPauseTime = baseController.PatrolController.CurrentPatrol.DestinationPauseTime;
             while (remainingPauseTime > 0f) {
                 yield return null;
                 remainingPauseTime -= Time.deltaTime;
