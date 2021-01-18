@@ -48,7 +48,7 @@ MonoBehaviour:
   skillRewardNames: []
   collectObjectives:
   - amount: 1
-    type: Sword
+    type: Dagger
     overrideDisplayName: 
   - amount: 0
     type: Shield

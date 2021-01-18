@@ -6,7 +6,7 @@ using UnityEngine.SceneManagement;
 using UnityEngine.Serialization;
 
 namespace AnyRPG {
-    public class SystemConfigurationManager : MonoBehaviour {
+    public class SystemConfigurationManager : MonoBehaviour, IStatProvider {
 
         #region Singleton
         private static SystemConfigurationManager instance;

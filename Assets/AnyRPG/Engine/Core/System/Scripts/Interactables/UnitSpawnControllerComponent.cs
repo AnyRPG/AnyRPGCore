@@ -14,6 +14,9 @@ namespace AnyRPG {
         public UnitSpawnControllerProps Props { get => interactableOptionProps as UnitSpawnControllerProps; }
 
         public UnitSpawnControllerComponent(Interactable interactable, UnitSpawnControllerProps interactableOptionProps) : base(interactable, interactableOptionProps) {
+            if (interactableOptionProps.GetInteractionPanelTitle() == string.Empty) {
+                interactableOptionProps.InteractionPanelTitle = "Spawn Characters";
+            }
         }
 
         public void CleanupEventSubscriptions(ICloseableWindowContents windowContents) {

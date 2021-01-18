@@ -12,6 +12,10 @@ namespace AnyRPG {
         public event System.Action OnConfirmAction = delegate { };
         public override event Action<ICloseableWindowContents> OnCloseWindow = delegate { };
 
+        [Tooltip("If no next text is provided for a dialog, this text will be used")]
+        [SerializeField]
+        private string defaultNextText = "Next";
+
         [SerializeField]
         private TextMeshProUGUI characterNameText = null;
 
@@ -154,7 +158,11 @@ namespace AnyRPG {
             }
 
             if (buttonText != null) {
-                buttonText.text = MyDialog.MyDialogNodes[dialogIndex].MyNextOption;
+                if (MyDialog.MyDialogNodes[dialogIndex].MyNextOption != string.Empty) {
+                    buttonText.text = MyDialog.MyDialogNodes[dialogIndex].MyNextOption;
+                } else {
+                    buttonText.text = defaultNextText;
+                }
                 //Debug.Log("DialogPanelController.OnOpenWindow(): ButtonText is not null, rebuilding layout");
                 //LayoutRebuilder.ForceRebuildLayoutImmediate(rectTransform);
                 LayoutRebuilder.ForceRebuildLayoutImmediate(continueButton.GetComponent<RectTransform>());

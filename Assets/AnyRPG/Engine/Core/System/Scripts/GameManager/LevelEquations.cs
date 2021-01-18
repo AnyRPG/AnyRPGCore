@@ -155,12 +155,15 @@ namespace AnyRPG {
                 }
             }
 
+            // not needed because it should be part of stat providers already ?
+            /*
             foreach (StatScalingNode statScalingNode in SystemConfigurationManager.MyInstance.PrimaryStats) {
                 if (statScalingNode.StatName == statName) {
                     extraStatPerLevel += statScalingNode.BudgetPerLevel;
                     break;
                 }
             }
+            */
 
             return SystemConfigurationManager.MyInstance.StatBudgetPerLevel + extraStatPerLevel;
         }
