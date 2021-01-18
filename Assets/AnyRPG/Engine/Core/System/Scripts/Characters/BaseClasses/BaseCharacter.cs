@@ -191,6 +191,7 @@ namespace AnyRPG {
         }
 
         public void ApplyCapabilityConsumerSnapshot(CapabilityConsumerSnapshot capabilityConsumerSnapshot) {
+            //Debug.Log(gameObject.name + ".ApplyCapabilityConsumerSnapshot()");
 
             // get initial snapshot
             CapabilityConsumerSnapshot oldSnapshot = new CapabilityConsumerSnapshot(this);
@@ -274,11 +275,11 @@ namespace AnyRPG {
         public void SetUnitProfile(string unitProfileName, bool notify = true, int unitLevel = -1) {
             //Debug.Log(gameObject.name + ".BaseCharacter.SetUnitProfile(" + unitProfileName + ")");
 
-            SetUnitProfile(UnitProfile.GetUnitProfileReference(unitProfileName), notify);
+            SetUnitProfile(UnitProfile.GetUnitProfileReference(unitProfileName), notify, unitLevel);
         }
 
         public void SetUnitProfile (UnitProfile unitProfile, bool notify = true, int unitLevel = -1) {
-            //Debug.Log(gameObject.name + ".BaseCharacter.SetUnitProfile(" + (unitProfile == null ? "null" : unitProfile.DisplayName) + ")");
+            //Debug.Log(gameObject.name + ".BaseCharacter.SetUnitProfile(" + (unitProfile == null ? "null" : unitProfile.DisplayName) + ", " + notify + ", " + unitLevel + ")");
 
             // get a snapshot of the current state
             CapabilityConsumerSnapshot oldSnapshot = new CapabilityConsumerSnapshot(this);

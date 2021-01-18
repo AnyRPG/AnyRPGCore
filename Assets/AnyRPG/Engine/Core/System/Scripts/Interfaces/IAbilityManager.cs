@@ -29,6 +29,8 @@ namespace AnyRPG {
 
         bool CanCastAbility(BaseAbility ability, bool playerInitiated = false);
 
+        Dictionary<string, BaseAbility> RawAbilityList { get; }
+
         AudioClip GetAnimatedAbilityHitSound();
 
         //Interactable ReturnTarget(AbilityEffect abilityEffect, Interactable target);

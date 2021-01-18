@@ -32,7 +32,6 @@ MonoBehaviour:
   requiredLevel: 1
   characterClassRequirements: []
   useableWithoutLearning: 0
-  autoLearn: 0
   autoAddToBars: 1
   canSimultaneousCast: 0
   canCastWhileMoving: 0
@@ -73,4 +72,4 @@ MonoBehaviour:
   isAutoAttack: 1
   useUnitAttackAnimations: 1
   useAutoAttackAnimations: 0
-  useWeaponHitSound: 0
+  useWeaponHitSound: 1

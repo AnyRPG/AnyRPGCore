@@ -135,14 +135,15 @@ namespace AnyRPG {
         public BaseAbility AutoAttackAbility { get => autoAttackAbility; set => autoAttackAbility = value; }
 
         // direct access for save manager so we don't miss saving abilities we know but belong to another class
-        public Dictionary<string, BaseAbility> RawAbilityList { get => abilityList; set => abilityList = value; }
+        public override Dictionary<string, BaseAbility> RawAbilityList { get => abilityList; }
 
         public CharacterAbilityManager(BaseCharacter baseCharacter) : base(baseCharacter) {
             this.baseCharacter = baseCharacter;
         }
 
         public void Init() {
-            UpdateAbilityList(baseCharacter.CharacterStats.Level);
+            // testing - disable this because there is no way in which any unit profile properties are set at this point
+            //UpdateAbilityList(baseCharacter.CharacterStats.Level);
             LearnDefaultAutoAttackAbility();
         }
 
@@ -785,13 +786,13 @@ namespace AnyRPG {
         }
 
         public void LearnDefaultAutoAttackAbility() {
-            //Debug.Log(gameObject.name + ".CharacterAbilityManager.LearnDefaultAutoAttackAbility()");
+            //Debug.Log(baseCharacter.gameObject.name + ".CharacterAbilityManager.LearnDefaultAutoAttackAbility()");
             if (autoAttackAbility != null) {
                 //Debug.Log(gameObject.name + ".CharacterAbilityManager.LearnDefaultAutoAttackAbility(): auto-attack already know, exiting");
                 // can't learn two auto-attacks at the same time
                 return;
             }
-            if (baseCharacter != null && baseCharacter.UnitProfile != null && baseCharacter.UnitProfile.DefaultAutoAttackAbility != null) {
+            if (baseCharacter.UnitProfile?.DefaultAutoAttackAbility != null) {
                 //Debug.Log(gameObject.name + ".CharacterAbilityManager.LearnDefaultAutoAttackAbility(): learning default auto attack ability");
                 LearnAbility(baseCharacter.UnitProfile.DefaultAutoAttackAbility);
             }
@@ -799,10 +800,14 @@ namespace AnyRPG {
 
         public void HandleCapabilityProviderChange(CapabilityConsumerSnapshot oldSnapshot, CapabilityConsumerSnapshot newSnapshot) {
             //Debug.Log(baseCharacter.gameObject.name + ".CharacterAbilityManager.HandleCapabilityProviderChange()");
-            RemoveCapabilityProviderTraits(oldSnapshot.GetTraitsToRemove(newSnapshot));
-            UnLearnCapabilityProviderAbilities(oldSnapshot.GetAbilitiesToRemove(newSnapshot));
-            LearnCapabilityProviderAbilities(oldSnapshot.GetAbilitiesToAdd(newSnapshot));
+
             ApplyCapabilityProviderTraits(oldSnapshot.GetTraitsToAdd(newSnapshot));
+            // doing abilities to add first because we have to learn some abilities before we check the removed list for system abilities to work
+            LearnCapabilityProviderAbilities(oldSnapshot.GetAbilitiesToAdd(newSnapshot, this));
+
+            // now its safe to remove old ones
+            UnLearnCapabilityProviderAbilities(oldSnapshot.GetAbilitiesToRemove(newSnapshot));
+            RemoveCapabilityProviderTraits(oldSnapshot.GetTraitsToRemove(newSnapshot));
         }
 
         public void ApplyCapabilityProviderTraits(List<StatusEffect> statusEffects) {
@@ -861,20 +866,6 @@ namespace AnyRPG {
                     baseCharacter.CharacterStats.StatusEffects[SystemResourceManager.prepareStringForMatch(statusEffect.DisplayName)].CancelStatusEffect();
                 }
             }
-        }
-
-        public void LearnSystemAbilities() {
-            //Debug.Log(gameObject.name + ".CharacterAbilityManager.LearnSystemAbilities(" + newFaction + ")");
-            foreach (BaseAbility ability in SystemAbilityManager.MyInstance.GetResourceList()) {
-                if (ability.RequiredLevel <= baseCharacter.CharacterStats.Level && ability.AutoLearn == true) {
-                    if (!HasAbility(ability)) {
-                        LearnAbility(ability);
-                    } else {
-                        //Debug.Log(ability.MyName + " already known, no need to re-learn");
-                    }
-                }
-            }
-
         }
 
         public void LearnCapabilityProviderAbilities(List<BaseAbility> abilities) {
@@ -994,8 +985,6 @@ namespace AnyRPG {
 
         public void UpdateAbilityList(int newLevel) {
             //Debug.Log(baseCharacter.gameObject.name + ".CharacterAbilityManager.UpdateAbilityList(). length: " + abilityList.Count);
-
-            LearnSystemAbilities();
 
             CapabilityConsumerSnapshot capabilityConsumerSnapshot = new CapabilityConsumerSnapshot(baseCharacter);
 
@@ -1667,8 +1656,8 @@ namespace AnyRPG {
         }
 
         public override AudioClip GetAnimatedAbilityHitSound() {
-            //Debug.Log(gameObject.name + ".CharacterAbilitymanager.GetAnimatedAbilityHitSound()");
-            if (baseCharacter != null && baseCharacter.CharacterCombat != null && baseCharacter.CharacterCombat.DefaultHitSoundEffects.Count > 0) {
+            //Debug.Log(baseCharacter.gameObject.name + ".CharacterAbilitymanager.GetAnimatedAbilityHitSound()");
+            if (baseCharacter?.CharacterCombat != null && baseCharacter.CharacterCombat.DefaultHitSoundEffects.Count > 0) {
                 return baseCharacter.CharacterCombat.DefaultHitSoundEffects[UnityEngine.Random.Range(0, baseCharacter.CharacterCombat.DefaultHitSoundEffects.Count)];
             }
             return base.GetAnimatedAbilityHitSound();

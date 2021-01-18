@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 1618727331483160263}
   - component: {fileID: 5479680714945150727}
   - component: {fileID: 7174115319239062773}
-  m_Layer: 22
+  m_Layer: 17
   m_Name: Handle
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -88,7 +88,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5439804075397033143}
-  m_Layer: 22
+  m_Layer: 17
   m_Name: BowHandle
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -180,8 +180,18 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: 34221671180c3104db109cad6788103d,
         type: 3}
+      propertyPath: m_Layer
+      value: 17
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 34221671180c3104db109cad6788103d,
+        type: 3}
       propertyPath: m_IsActive
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8164078558771037576, guid: 34221671180c3104db109cad6788103d,
+        type: 3}
+      propertyPath: m_Layer
+      value: 17
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 34221671180c3104db109cad6788103d, type: 3}

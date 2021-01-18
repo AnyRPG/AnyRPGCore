@@ -24,8 +24,9 @@ namespace AnyRPG {
         public ClassSpecialization ClassSpecialization { get => classSpecialization; set => classSpecialization = value; }
 
         public void AddClassSpecialization(ClassSpecialization newClassSpecialization) {
+            //Debug.Log("NewGameClassSpecializationbutton.AddClassSpecialization(" + (newClassSpecialization == null ? "null" : newClassSpecialization.DisplayName) + ")");
             classSpecialization = newClassSpecialization;
-            icon.sprite = this.classSpecialization.Icon;
+            icon.sprite = classSpecialization.Icon;
             icon.color = Color.white;
             characterClassName.text = classSpecialization.DisplayName;
             //description.text = this.faction.GetSummary();

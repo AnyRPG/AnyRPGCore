@@ -38,6 +38,17 @@ namespace AnyRPG {
         [SerializeField]
         private CanvasGroup canvasGroup = null;
 
+        /*
+        private bool validFactionExists = false;
+        private bool validClassExists = false;
+        private bool validSpecializationExists = false;
+        */
+
+        public override void Awake() {
+            base.Awake();
+
+        }
+
 
         public override void RecieveClosedWindowNotification() {
             //Debug.Log("CharacterCreatorPanel.OnCloseWindow()");
@@ -53,10 +64,40 @@ namespace AnyRPG {
         public void ClearLabels() {
             factionLabel.SetActive(false);
             factionButton.gameObject.SetActive(false);
+            if (SystemConfigurationManager.MyInstance.NewGameFaction == true) {
+                foreach (Faction faction in SystemFactionManager.MyInstance.GetResourceList()) {
+                    if (faction.NewGameOption == true) {
+                        factionLabel.SetActive(true);
+                        factionButton.gameObject.SetActive(true);
+                        break;
+                    }
+                }
+            }
+            
             characterClassLabel.SetActive(false);
             characterClassButton.gameObject.SetActive(false);
+            if (SystemConfigurationManager.MyInstance.NewGameClass == true) {
+                foreach (CharacterClass characterClass in SystemCharacterClassManager.MyInstance.GetResourceList()) {
+                    if (characterClass.NewGameOption == true) {
+                        characterClassLabel.SetActive(true);
+                        characterClassButton.gameObject.SetActive(true);
+                        break;
+                    }
+                }
+            }
+
             classSpecializationLabel.SetActive(false);
             classSpecializationButton.gameObject.SetActive(false);
+            if (SystemConfigurationManager.MyInstance.NewGameSpecialization == true) {
+                foreach (ClassSpecialization classSpecialization in SystemClassSpecializationManager.MyInstance.GetResourceList()) {
+                    if (classSpecialization.NewGameOption == true) {
+                        classSpecializationLabel.SetActive(true);
+                        classSpecializationButton.gameObject.SetActive(true);
+                        break;
+                    }
+                }
+            }
+
         }
 
         public void SetPlayerName(string newPlayerName) {
@@ -82,7 +123,8 @@ namespace AnyRPG {
         }
 
         public void SetCharacterClass(CharacterClass newCharacterClass) {
-            if (newCharacterClass != null && SystemConfigurationManager.MyInstance.NewGameClass == true) {
+            //if (newCharacterClass != null && SystemConfigurationManager.MyInstance.NewGameClass == true) {
+            if (SystemConfigurationManager.MyInstance.NewGameClass == true) {
                 characterClassLabel.SetActive(true);
                 characterClassButton.gameObject.SetActive(true);
                 characterClassButton.AddCharacterClass(newCharacterClass);
@@ -93,7 +135,8 @@ namespace AnyRPG {
         }
 
         public void SetFaction(Faction newfaction) {
-            if (newfaction != null && SystemConfigurationManager.MyInstance.NewGameFaction == true) {
+            //if (newfaction != null && SystemConfigurationManager.MyInstance.NewGameFaction == true) {
+            if (SystemConfigurationManager.MyInstance.NewGameFaction == true) {
                 factionLabel.SetActive(true);
                 factionButton.gameObject.SetActive(true);
                 factionButton.AddFaction(newfaction);
@@ -104,7 +147,8 @@ namespace AnyRPG {
         }
 
         public void SetClassSpecialization(ClassSpecialization newClassSpecialization) {
-            if (newClassSpecialization != null && SystemConfigurationManager.MyInstance.NewGameSpecialization == true) {
+            //if (newClassSpecialization != null && SystemConfigurationManager.MyInstance.NewGameSpecialization == true) {
+            if (SystemConfigurationManager.MyInstance.NewGameSpecialization == true) {
                 classSpecializationLabel.SetActive(true);
                 classSpecializationButton.gameObject.SetActive(true);
                 classSpecializationButton.AddClassSpecialization(newClassSpecialization);

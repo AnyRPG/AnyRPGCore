@@ -6,7 +6,7 @@ using UnityEngine.SceneManagement;
 using UnityEngine.Serialization;
 
 namespace AnyRPG {
-    public class SystemConfigurationManager : MonoBehaviour, IStatProvider {
+    public class SystemConfigurationManager : MonoBehaviour, IStatProvider, ICapabilityProvider {
 
         #region Singleton
         private static SystemConfigurationManager instance;
@@ -144,48 +144,7 @@ namespace AnyRPG {
         [SerializeField]
         private GameObject thirdPartyCamera = null;
 
-        [Header("UI")]
-
-        [SerializeField]
-        private Material defaultCastingLightProjector;
-
-        [SerializeField]
-        private List<ProjectorColorMapNode> focusProjectorColorMap = new List<ProjectorColorMapNode>();
-
-        [Tooltip("default UI color for static elements that have no additional transparency applied to them")]
-        [SerializeField]
-        private Color defaultUIColor;
-
-        [Tooltip("defaultUIColor with full opacity for button frames")]
-        [SerializeField]
-        private Color defaultUISolidColor;
-
-        [SerializeField]
-        private Color defaultUIFillColor;
-
-        [SerializeField]
-        private Sprite defaultUIPanelFrame;
-
-        [Tooltip("The faction icon to show on the load game screen when the player has no faction.")]
-        [SerializeField]
-        private Sprite defaultFactionIcon;
-
-        [Header("SYSTEM BAR")]
-
-        [SerializeField]
-        private Sprite systemBarMainMenu;
-
-        [SerializeField]
-        private Sprite systemBarAbilityBook;
-
-        [SerializeField]
-        private Sprite systemBarCharacter;
-
-        [SerializeField]
-        private Sprite systemBarQuestLog;
-
-        [SerializeField]
-        private Sprite systemBarMap;
+       
 
         [Header("ANIMATION")]
 
@@ -309,6 +268,12 @@ namespace AnyRPG {
         // reference to the actual power resources
         private List<PowerResource> powerResourceList = new List<PowerResource>();
 
+        [Header("Capabilities")]
+
+        [Tooltip("Capabilities that apply to all units")]
+        [SerializeField]
+        private CapabilityProps capabilities = new CapabilityProps();
+
         [Header("Layer")]
 
         [Tooltip("character units will automatically be set to this layer so they can respond to AOE / looting and other things that filter by this layer.")]
@@ -353,6 +318,49 @@ namespace AnyRPG {
         private float maxChatTextDistance = 25f;
 
         private AudioProfile vendorAudioProfile = null;
+
+        [Header("UI")]
+
+        [SerializeField]
+        private Material defaultCastingLightProjector;
+
+        [SerializeField]
+        private List<ProjectorColorMapNode> focusProjectorColorMap = new List<ProjectorColorMapNode>();
+
+        [Tooltip("default UI color for static elements that have no additional transparency applied to them")]
+        [SerializeField]
+        private Color defaultUIColor;
+
+        [Tooltip("defaultUIColor with full opacity for button frames")]
+        [SerializeField]
+        private Color defaultUISolidColor;
+
+        [SerializeField]
+        private Color defaultUIFillColor;
+
+        [SerializeField]
+        private Sprite defaultUIPanelFrame;
+
+        [Tooltip("The faction icon to show on the load game screen when the player has no faction.")]
+        [SerializeField]
+        private Sprite defaultFactionIcon;
+
+        [Header("SYSTEM BAR")]
+
+        [SerializeField]
+        private Sprite systemBarMainMenu;
+
+        [SerializeField]
+        private Sprite systemBarAbilityBook;
+
+        [SerializeField]
+        private Sprite systemBarCharacter;
+
+        [SerializeField]
+        private Sprite systemBarQuestLog;
+
+        [SerializeField]
+        private Sprite systemBarMap;
 
         [Header("INTERACTABLE CONFIGURATION")]
 
@@ -573,6 +581,10 @@ namespace AnyRPG {
         public string InitializationScene { get => initializationScene; set => initializationScene = value; }
         public bool UseFirstCreatorProfile { get => useFirstCreatorProfile; set => useFirstCreatorProfile = value; }
 
+        public CapabilityProps GetFilteredCapabilities(ICapabilityConsumer capabilityConsumer, bool returnAll = true) {
+            return capabilities;
+        }
+
         private void Start() {
             //Debug.Log("PlayerManager.Start()");
             CreateEventSubscriptions();
@@ -688,6 +700,8 @@ namespace AnyRPG {
             foreach (StatScalingNode statScalingNode in primaryStats) {
                 statScalingNode.SetupScriptableObjects();
             }
+
+            capabilities.SetupScriptableObjects();
 
             if (vendorAudioProfileName != null && vendorAudioProfileName != string.Empty) {
                 AudioProfile tmpAudioProfile = SystemAudioProfileManager.MyInstance.GetResource(vendorAudioProfileName);

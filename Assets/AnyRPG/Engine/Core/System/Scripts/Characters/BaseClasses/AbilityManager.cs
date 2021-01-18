@@ -63,6 +63,10 @@ namespace AnyRPG {
             }
         }
 
+        public virtual Dictionary<string, BaseAbility> RawAbilityList {
+            get => new Dictionary<string, BaseAbility>();
+        }
+
         public List<GameObject> AbilityEffectGameObjects { get => abilityEffectGameObjects; set => abilityEffectGameObjects = value; }
         public Coroutine DestroyAbilityEffectObjectCoroutine { get => destroyAbilityEffectObjectCoroutine; set => destroyAbilityEffectObjectCoroutine = value; }
 

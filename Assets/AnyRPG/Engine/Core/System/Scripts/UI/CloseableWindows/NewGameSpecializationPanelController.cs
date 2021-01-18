@@ -71,9 +71,13 @@ namespace AnyRPG {
             }
             if (optionButtons.Count > 0) {
                 optionButtons[0].Select();
-            } else {
+            }
+            // that should not be needed
+            /*
+            else {
                 NewGamePanel.MyInstance.ShowClassSpecialization(null);
             }
+            */
         }
 
 

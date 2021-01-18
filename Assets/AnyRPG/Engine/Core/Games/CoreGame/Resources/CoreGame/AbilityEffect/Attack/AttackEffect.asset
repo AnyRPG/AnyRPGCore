@@ -37,7 +37,8 @@ MonoBehaviour:
   chanceToCast: 100
   effectMaterialName: 
   materialChangeDuration: 2
-  onHitAudioProfileNames: []
+  onHitAudioProfileNames:
+  - Weapon Miss
   randomAudioProfiles: 0
   hitAbilityEffectNames: []
   inputMultiplier: 1

@@ -124,6 +124,7 @@ namespace AnyRPG {
             }
 
             // disable faction button if option not allowed or no faction exists
+            factionButton.gameObject.SetActive(false);
             if (SystemConfigurationManager.MyInstance.NewGameFaction == true) {
                 foreach (Faction faction in SystemFactionManager.MyInstance.GetResourceList()) {
                     if (faction.NewGameOption == true) {
@@ -131,12 +132,10 @@ namespace AnyRPG {
                         break;
                     }
                 }
-                factionButton.gameObject.SetActive(false);
-            } else {
-                factionButton.gameObject.SetActive(false);
             }
 
             // disable class button if option not allowed or no faction exists
+            classButton.gameObject.SetActive(false);
             if (SystemConfigurationManager.MyInstance.NewGameClass == true) {
                 foreach (CharacterClass characterClass in SystemCharacterClassManager.MyInstance.GetResourceList()) {
                     if (characterClass.NewGameOption == true) {
@@ -144,9 +143,6 @@ namespace AnyRPG {
                         break;
                     }
                 }
-                classButton.gameObject.SetActive(false);
-            } else {
-                classButton.gameObject.SetActive(false);
             }
 
             // disable specialization button if option not allowed or class button disabled (specializations do not have a specific new game option)

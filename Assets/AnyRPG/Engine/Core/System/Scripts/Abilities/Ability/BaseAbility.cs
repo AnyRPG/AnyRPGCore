@@ -87,10 +87,6 @@ namespace AnyRPG {
         [SerializeField]
         protected bool useableWithoutLearning = false;
 
-        [Tooltip("Will this ability be automatically added to the player spellbook if they are of the required level?")]
-        [SerializeField]
-        protected bool autoLearn = false;
-
         [Tooltip("When learned, should the ability be automatically placed on the player action bars in an available slot?")]
         [SerializeField]
         protected bool autoAddToBars = true;
@@ -213,7 +209,6 @@ namespace AnyRPG {
             }
         }
         public int RequiredLevel { get => requiredLevel; }
-        public bool AutoLearn { get => autoLearn; }
         public bool AutoAddToBars { get => autoAddToBars; }
         public bool UseableWithoutLearning { get => useableWithoutLearning; }
 

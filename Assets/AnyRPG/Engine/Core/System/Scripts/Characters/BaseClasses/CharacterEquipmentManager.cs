@@ -443,7 +443,7 @@ namespace AnyRPG {
             // updated oldItem to null here because this call is already done in Unequip.
             // having it here also was leading to duplicate stat removal when gear was changed.
             //Debug.Log(gameObject.name + ".CharacterEquipmentManager.Equip() FIRING ONEQUIPMENTCHANGED");
-            NotifyEquipmentChanged(newItem, null, -1);
+            NotifyEquipmentChanged(newItem, null, -1, emptySlotProfile);
 
             //Debug.Log("CharacterEquipmentManager.Equip(" + (newItem != null ? newItem.DisplayName : "null") + "; successfully equipped");
 
@@ -469,11 +469,11 @@ namespace AnyRPG {
             }
         }
 
-        public void NotifyEquipmentChanged(Equipment newItem, Equipment oldItem, int slotIndex) {
+        public void NotifyEquipmentChanged(Equipment newItem, Equipment oldItem, int slotIndex, EquipmentSlotProfile equipmentSlotProfile) {
             HandleWeaponHoldableObjects(newItem, oldItem);
             OnEquipmentChanged(newItem, oldItem, slotIndex);
             baseCharacter.CharacterStats.HandleEquipmentChanged(newItem, oldItem, slotIndex);
-            baseCharacter.CharacterCombat.HandleEquipmentChanged(newItem, oldItem, slotIndex);
+            baseCharacter.CharacterCombat.HandleEquipmentChanged(newItem, oldItem, slotIndex, equipmentSlotProfile);
             baseCharacter.CharacterAbilityManager.HandleEquipmentChanged(newItem, oldItem, slotIndex);
             if (baseCharacter.UnitController != null) {
                 baseCharacter.UnitController.UnitAnimator.HandleEquipmentChanged(newItem, oldItem, slotIndex);
@@ -559,7 +559,7 @@ namespace AnyRPG {
 
                 //Debug.Log("zeroing equipment slot: " + equipmentSlot.ToString());
                 currentEquipment[equipmentSlot] = null;
-                NotifyEquipmentChanged(null, oldItem, slotIndex);
+                NotifyEquipmentChanged(null, oldItem, slotIndex, equipmentSlot);
                 return oldItem;
             }
             return null;

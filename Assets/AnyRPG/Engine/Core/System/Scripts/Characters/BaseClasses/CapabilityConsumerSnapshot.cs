@@ -31,6 +31,7 @@ namespace AnyRPG {
         public CapabilityConsumerProcessor CapabilityConsumerProcessor { get => capabilityConsumerProcessor; }
 
         public CapabilityConsumerSnapshot(ICapabilityConsumer capabilityConsumer) {
+            capabilityProviders.Add(SystemConfigurationManager.MyInstance);
             if (capabilityConsumer.UnitProfile != null) {
                 unitProfile = capabilityConsumer.UnitProfile;
                 capabilityProviders.Add(capabilityConsumer.UnitProfile);
@@ -58,6 +59,7 @@ namespace AnyRPG {
         }
 
         public CapabilityConsumerSnapshot() {
+            //capabilityProviders.Add(SystemConfigurationManager.MyInstance);
         }
 
         public List<StatusEffect> GetTraitList() {
@@ -136,12 +138,17 @@ namespace AnyRPG {
         /// </summary>
         /// <param name="capabilityConsumerSnapshot"></param>
         /// <returns></returns>
-        public List<BaseAbility> GetAbilitiesToAdd(CapabilityConsumerSnapshot capabilityConsumerSnapshot) {
+        public List<BaseAbility> GetAbilitiesToAdd(CapabilityConsumerSnapshot capabilityConsumerSnapshot, CharacterAbilityManager sourceAbilityManager) {
             List<BaseAbility> returnList = new List<BaseAbility>();
 
             List<BaseAbility> currentList = GetAbilityList();
 
             returnList.AddRange(capabilityConsumerSnapshot.GetAbilityList().Except(currentList));
+            foreach (BaseAbility baseAbility in GetAbilityList()) {
+                if (sourceAbilityManager.RawAbilityList.ContainsValue(baseAbility) == false) {
+                    sourceAbilityManager.LearnAbility(baseAbility);
+                }
+            }
 
             return returnList;
         }

@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 1152268501467727480}
   - component: {fileID: 6161150125097039800}
   - component: {fileID: 8792401041651973194}
-  m_Layer: 22
+  m_Layer: 17
   m_Name: Handle
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -88,7 +88,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5977790778655450120}
-  m_Layer: 22
+  m_Layer: 17
   m_Name: OneHandSwordHandle
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -180,8 +180,18 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: 6c8738b741b3e6c4cb9b7384a3488dbc,
         type: 3}
+      propertyPath: m_Layer
+      value: 17
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 6c8738b741b3e6c4cb9b7384a3488dbc,
+        type: 3}
       propertyPath: m_IsActive
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8164078558771037576, guid: 6c8738b741b3e6c4cb9b7384a3488dbc,
+        type: 3}
+      propertyPath: m_Layer
+      value: 17
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 6c8738b741b3e6c4cb9b7384a3488dbc, type: 3}

@@ -13,7 +13,7 @@ namespace AnyRPG {
         /// </summary>
         //CapabilityProps Capabilities { get; }
 
-            string DisplayName { get; }
+            //string DisplayName { get; }
 
         /// <summary>
         /// common capabilities, plus capabilites that only apply based on character configuration

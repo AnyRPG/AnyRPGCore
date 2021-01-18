@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 6502550751416191825}
   - component: {fileID: 61214532216709574}
   - component: {fileID: 5415849999654114357}
-  m_Layer: 22
+  m_Layer: 17
   m_Name: Handle
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -88,7 +88,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7245246098033066605}
-  m_Layer: 22
+  m_Layer: 17
   m_Name: QuiverHandle
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -180,8 +180,18 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: 8314fe7857ba3cb4fa72330484a6224e,
         type: 3}
+      propertyPath: m_Layer
+      value: 17
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 8314fe7857ba3cb4fa72330484a6224e,
+        type: 3}
       propertyPath: m_IsActive
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8164078558771037576, guid: 8314fe7857ba3cb4fa72330484a6224e,
+        type: 3}
+      propertyPath: m_Layer
+      value: 17
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 8314fe7857ba3cb4fa72330484a6224e, type: 3}
