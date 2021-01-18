@@ -859,19 +859,32 @@ namespace AnyRPG {
             }
 
             currentLevel = newLevel;
-            if (baseCharacter != null && baseCharacter.UnitToughness != null) {
-                foreach (primaryStatMultiplierNode primaryStatMultiplierNode in baseCharacter.UnitToughness.PrimaryStatMultipliers) {
+            float primaryStatMultiplier = 1;
+            if (baseCharacter?.UnitToughness != null) {
+                primaryStatMultiplier = baseCharacter.UnitToughness.DefaultPrimaryStatMultiplier;
+
+                foreach (PrimaryStatMultiplierNode primaryStatMultiplierNode in baseCharacter.UnitToughness.PrimaryStatMultipliers) {
                     multiplierValues[primaryStatMultiplierNode.StatName] = primaryStatMultiplierNode.StatMultiplier;
                 }
                 resourceMultipliers = new Dictionary<string, float>();
-                foreach (resourceMultiplierNode resourceStatMultiplierNode in baseCharacter.UnitToughness.ResourceMultipliers) {
-                    resourceMultipliers.Add(resourceStatMultiplierNode.ResourceName, resourceStatMultiplierNode.ValueMultiplier);
+                if (baseCharacter.UnitToughness.DefaultResourceMultiplier != 1f) {
+                    foreach (PowerResource powerResource in powerResourceDictionary.Keys) {
+                        resourceMultipliers.Add(powerResource.ResourceName, baseCharacter.UnitToughness.DefaultResourceMultiplier);
+                    }
                 }
+                foreach (ResourceMultiplierNode resourceMultiplierNode in baseCharacter.UnitToughness.ResourceMultipliers) {
+                    if (resourceMultipliers.ContainsKey(resourceMultiplierNode.ResourceName) == false) {
+                        resourceMultipliers.Add(resourceMultiplierNode.ResourceName, resourceMultiplierNode.ValueMultiplier);
+                    } else {
+                        resourceMultipliers[resourceMultiplierNode.ResourceName] = resourceMultipliers[resourceMultiplierNode.ResourceName] * resourceMultiplierNode.ValueMultiplier;
+                    }
+                }
+
             }
 
             // calculate base values independent of any modifiers
             foreach (string statName in primaryStats.Keys) {
-                primaryStats[statName].BaseValue = (int)(currentLevel * LevelEquations.GetPrimaryStatForLevel(statName, currentLevel, baseCharacter) * multiplierValues[statName]);
+                primaryStats[statName].BaseValue = (int)(currentLevel * LevelEquations.GetPrimaryStatForLevel(statName, currentLevel, baseCharacter) * multiplierValues[statName] * primaryStatMultiplier);
             }
 
             // reset any amounts from equipment to deal with item level scaling before performing the calculations that include those equipment stat values

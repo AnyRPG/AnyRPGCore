@@ -25,7 +25,9 @@ MonoBehaviour:
   characterCreatorProfileNames: []
   equipmentNames: []
   defaultDisposition: 0
-  dispositionList: []
+  dispositionList:
+  - factionName: Red
+    disposition: -1
   capabilities:
     abilityNames: []
     traitNames: []

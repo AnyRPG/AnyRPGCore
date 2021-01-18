@@ -739,11 +739,11 @@ namespace AnyRPG {
             }
         }
 
-        public void ConfigureAnimator(GameObject unitModel = null) {
-            //Debug.Log(gameObject.name + "UnitController.ConfigureAnimator()");
+        public void ConfigureAnimator(GameObject newUnitModel = null) {
+            //Debug.Log(gameObject.name + "UnitController.ConfigureAnimator(" + (newUnitModel == null ? "null" : newUnitModel.name) + ")");
 
-            if (unitModel != null) {
-                this.unitModel = unitModel;
+            if (newUnitModel != null) {
+                unitModel = newUnitModel;
             }
 
             // most (but not all) units have animators
@@ -756,6 +756,7 @@ namespace AnyRPG {
                 // if so, the model is the animator gameobject, since no model will have been passed to this call
                 if (unitModel == null) {
                     unitModel = animator.gameObject;
+                    //Debug.Log(gameObject.name + "UnitController.ConfigureAnimator(" + (newUnitModel == null ? "null" : newUnitModel.name) + "): " + animator.gameObject);
                 }
             }
 
@@ -783,7 +784,7 @@ namespace AnyRPG {
         }
 
         public void SetModelReady() {
-            //Debug.Log(gameObject.name + "UnitController.SetModelReady()");
+            //Debug.Log(gameObject.name + ".UnitController.SetModelReady()");
             modelReady = true;
             characterUnit.BaseCharacter.HandleCharacterUnitSpawn();
             OnModelReady();

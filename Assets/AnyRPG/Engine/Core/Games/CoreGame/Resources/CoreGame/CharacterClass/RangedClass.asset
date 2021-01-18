@@ -21,7 +21,7 @@ MonoBehaviour:
   resourceDescriptionProfile: 
   newGameOption: 0
   equipmentNames:
-  - Staff
+  - Bow
   capabilities:
     abilityNames: []
     traitNames: []

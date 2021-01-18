@@ -20,7 +20,8 @@ MonoBehaviour:
   useRegionalDescription: 0
   resourceDescriptionProfile: 
   newGameOption: 0
-  equipmentNames: []
+  equipmentNames:
+  - Staff
   capabilities:
     abilityNames: []
     traitNames: []

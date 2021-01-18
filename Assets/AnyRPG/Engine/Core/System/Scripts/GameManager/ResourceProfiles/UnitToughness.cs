@@ -32,25 +32,35 @@ namespace AnyRPG {
 
         [Header("Resource Multiplier")]
 
-        [Tooltip("Multiply resources")]
+        [Tooltip("Multiply all resources")]
         [SerializeField]
-        private List<resourceMultiplierNode> resourceMultipliers = new List<resourceMultiplierNode>();
+        private float defaultResourceMultiplier = 1f;
+
+        [Tooltip("Multiply specific resources")]
+        [SerializeField]
+        private List<ResourceMultiplierNode> resourceMultipliers = new List<ResourceMultiplierNode>();
 
         [Header("Stat Multiplier")]
 
+        [Tooltip("Multiply all primary stats")]
+        [SerializeField]
+        private float defaultPrimaryStatMultiplier = 1f;
+
         [Tooltip("Multiply primary stats")]
         [SerializeField]
-        private List<primaryStatMultiplierNode> primaryStatMultipliers = new List<primaryStatMultiplierNode>();
+        private List<PrimaryStatMultiplierNode> primaryStatMultipliers = new List<PrimaryStatMultiplierNode>();
 
         public List<ProjectorColorMapNode> FocusProjectorOverrideMap { get => focusProjectorOverrideMap; set => focusProjectorOverrideMap = value; }
         public float ExperienceMultiplier { get => experienceMultiplier; set => experienceMultiplier = value; }
-        public List<primaryStatMultiplierNode> PrimaryStatMultipliers { get => primaryStatMultipliers; set => primaryStatMultipliers = value; }
-        public List<resourceMultiplierNode> ResourceMultipliers { get => resourceMultipliers; set => resourceMultipliers = value; }
+        public List<PrimaryStatMultiplierNode> PrimaryStatMultipliers { get => primaryStatMultipliers; set => primaryStatMultipliers = value; }
+        public List<ResourceMultiplierNode> ResourceMultipliers { get => resourceMultipliers; set => resourceMultipliers = value; }
         public float CurrencyMultiplier { get => currencyMultiplier; set => currencyMultiplier = value; }
+        public float DefaultResourceMultiplier { get => defaultResourceMultiplier; set => defaultResourceMultiplier = value; }
+        public float DefaultPrimaryStatMultiplier { get => defaultPrimaryStatMultiplier; set => defaultPrimaryStatMultiplier = value; }
     }
 
     [System.Serializable]
-    public class primaryStatMultiplierNode {
+    public class PrimaryStatMultiplierNode {
 
         [Tooltip("The name of the stat to multiply")]
         [SerializeField]
@@ -65,7 +75,7 @@ namespace AnyRPG {
     }
 
     [System.Serializable]
-    public class resourceMultiplierNode {
+    public class ResourceMultiplierNode {
 
         [Tooltip("The name of the resource to multiply")]
         [SerializeField]
