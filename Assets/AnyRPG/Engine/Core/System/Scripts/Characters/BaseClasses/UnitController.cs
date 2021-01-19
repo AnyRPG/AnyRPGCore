@@ -644,14 +644,14 @@ namespace AnyRPG {
         }
 
         /// <summary>
-        /// This method is meant to be called after Awake() (automatically run on gameobject creation) and before Start()
+        /// This method is meant to be called after Awake() and before Start()
         /// </summary>
         /// <param name="unitProfile"></param>
         public void SetUnitProfile(UnitProfile unitProfile, UnitControllerMode unitControllerMode, int unitLevel = -1) {
             //Debug.Log(gameObject.name + "UnitController.SetUnitProfile()");
             this.unitProfile = unitProfile;
             if (characterUnit.BaseCharacter != null) {
-                characterUnit.BaseCharacter.SetUnitProfile(unitProfile, true, unitLevel);
+                characterUnit.BaseCharacter.SetUnitProfile(unitProfile, true, unitLevel, (unitControllerMode == UnitControllerMode.Player ? false : true));
             }
             SetUnitControllerMode(unitControllerMode);
 

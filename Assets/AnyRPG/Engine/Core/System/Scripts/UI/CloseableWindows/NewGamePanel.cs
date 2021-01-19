@@ -363,7 +363,7 @@ namespace AnyRPG {
         public void SetCharacterProperties() {
             //Debug.Log("NewGameCharacterPanelController.SetCharacterProperties()");
 
-            CharacterCreatorManager.MyInstance.PreviewUnitController.CharacterUnit.BaseCharacter.SetUnitProfile(UnitProfile);
+            CharacterCreatorManager.MyInstance.PreviewUnitController.CharacterUnit.BaseCharacter.SetUnitProfile(UnitProfile, true, -1, false);
             CharacterCreatorManager.MyInstance.PreviewUnitController.CharacterUnit.BaseCharacter.SetUnitType(UnitType);
             CharacterCreatorManager.MyInstance.PreviewUnitController.CharacterUnit.BaseCharacter.SetCharacterRace(CharacterRace);
             CharacterCreatorManager.MyInstance.PreviewUnitController.CharacterUnit.BaseCharacter.SetCharacterClass(CharacterClass);

@@ -112,7 +112,7 @@ namespace AnyRPG {
             Vector3 currentPlayerLocation = PlayerManager.MyInstance.ActiveUnitController.transform.position;
             LevelManager.MyInstance.SpawnRotationOverride = PlayerManager.MyInstance.ActiveUnitController.transform.forward;
             PlayerManager.MyInstance.DespawnPlayerUnit();
-            PlayerManager.MyInstance.MyCharacter.SetUnitProfile(unitProfile.DisplayName);
+            PlayerManager.MyInstance.MyCharacter.SetUnitProfile(unitProfile.DisplayName, true, -1, false);
             PlayerManager.MyInstance.SpawnPlayerUnit(currentPlayerLocation);
             if (PlayerManager.MyInstance.MyCharacter.CharacterAbilityManager != null) {
                 PlayerManager.MyInstance.MyCharacter.CharacterAbilityManager.LearnDefaultAutoAttackAbility();

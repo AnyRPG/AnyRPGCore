@@ -150,6 +150,7 @@ MonoBehaviour:
   combatStrategyName: 
   primaryStats: []
   powerResources: []
+  useProviderEquipment: 1
   equipmentNameList: []
   isMobile: 1
   playOnFootstep: 0
@@ -206,4 +207,4 @@ MonoBehaviour:
     vendorCollectionNames: []
   interactableOptions: []
   overwriteUnitUUID: 0
-  m_UUID: 2923cf3a-7711-4c11-a18a-0ad5ed51ee20
+  m_UUID: d974a194-032a-4b51-a4a7-97e3151f7638

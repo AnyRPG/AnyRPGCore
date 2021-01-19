@@ -190,6 +190,7 @@ namespace AnyRPG {
             }
         }
 
+        // currently this is only used for load game panel and loading game, so it's always a player
         public void ApplyCapabilityConsumerSnapshot(CapabilityConsumerSnapshot capabilityConsumerSnapshot) {
             //Debug.Log(gameObject.name + ".ApplyCapabilityConsumerSnapshot()");
 
@@ -197,7 +198,9 @@ namespace AnyRPG {
             CapabilityConsumerSnapshot oldSnapshot = new CapabilityConsumerSnapshot(this);
 
             // there is no need to perform notifications since the level is not loaded and the player isn't physically spawned yet
-            SetUnitProfile(capabilityConsumerSnapshot.UnitProfile, false);
+            // do not let unit profile load provider equipment.  player equipment was decided by the new game panel or saved equipment if loaded from save file
+            SetUnitProfile(capabilityConsumerSnapshot.UnitProfile, false, -1, false);
+
             SetCharacterRace(capabilityConsumerSnapshot.CharacterRace, false, false);
             SetCharacterFaction(capabilityConsumerSnapshot.Faction, false, false);
             SetCharacterClass(capabilityConsumerSnapshot.CharacterClass, false, false);
@@ -272,13 +275,13 @@ namespace AnyRPG {
         }
         */
 
-        public void SetUnitProfile(string unitProfileName, bool notify = true, int unitLevel = -1) {
+        public void SetUnitProfile(string unitProfileName, bool notify = true, int unitLevel = -1, bool loadProviderEquipment = true) {
             //Debug.Log(gameObject.name + ".BaseCharacter.SetUnitProfile(" + unitProfileName + ")");
 
-            SetUnitProfile(UnitProfile.GetUnitProfileReference(unitProfileName), notify, unitLevel);
+            SetUnitProfile(UnitProfile.GetUnitProfileReference(unitProfileName), notify, unitLevel, loadProviderEquipment);
         }
 
-        public void SetUnitProfile (UnitProfile unitProfile, bool notify = true, int unitLevel = -1) {
+        public void SetUnitProfile (UnitProfile unitProfile, bool notify = true, int unitLevel = -1, bool loadProviderEquipment = true) {
             //Debug.Log(gameObject.name + ".BaseCharacter.SetUnitProfile(" + (unitProfile == null ? "null" : unitProfile.DisplayName) + ", " + notify + ", " + unitLevel + ")");
 
             // get a snapshot of the current state
@@ -294,7 +297,7 @@ namespace AnyRPG {
                 ProcessCapabilityConsumerChange(oldSnapshot, newSnapshot);
             }
 
-            SetUnitProfileProperties(notify, unitLevel);
+            SetUnitProfileProperties(notify, unitLevel, loadProviderEquipment);
 
             // Trying to spawn dead relies on reading properties set in the previous method
             characterStats.TrySpawnDead();
@@ -303,7 +306,7 @@ namespace AnyRPG {
         /// <summary>
         /// This will retrieve a unit profile from the system unit profile manager
         /// </summary>
-        private void SetUnitProfileProperties(bool notify = true, int unitLevel = -1) {
+        private void SetUnitProfileProperties(bool notify = true, int unitLevel = -1, bool loadProviderEquipment = true) {
             //Debug.Log(gameObject.name + ".BaseCharacter.SetUnitProfileProperties()");
 
             if (unitProfile != null) {
@@ -337,7 +340,7 @@ namespace AnyRPG {
             if (notify) {
                 capabilityConsumerProcessor.UpdateCapabilityProviderList();
 
-                characterEquipmentManager.LoadDefaultEquipment();
+                characterEquipmentManager.LoadDefaultEquipment(loadProviderEquipment);
 
                 UpdateStatProviderList();
 

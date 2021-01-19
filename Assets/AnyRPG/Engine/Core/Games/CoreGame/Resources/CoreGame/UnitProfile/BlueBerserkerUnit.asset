@@ -150,6 +150,7 @@ MonoBehaviour:
   combatStrategyName: 
   primaryStats: []
   powerResources: []
+  useProviderEquipment: 1
   equipmentNameList: []
   isMobile: 1
   playOnFootstep: 0

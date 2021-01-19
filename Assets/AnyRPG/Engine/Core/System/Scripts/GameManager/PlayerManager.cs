@@ -340,7 +340,7 @@ namespace AnyRPG {
                 SpawnPlayerConnection();
             }
             if (activeCharacter.UnitProfile == null) {
-                activeCharacter.SetUnitProfile(SystemConfigurationManager.MyInstance.DefaultPlayerUnitProfileName);
+                activeCharacter.SetUnitProfile(SystemConfigurationManager.MyInstance.DefaultPlayerUnitProfileName, true, -1, false);
             }
 
             // spawn the player unit and set references

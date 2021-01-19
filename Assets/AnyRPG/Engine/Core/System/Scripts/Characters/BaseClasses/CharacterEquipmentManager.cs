@@ -60,18 +60,47 @@ namespace AnyRPG {
         /// <summary>
         /// meant to be called by SetUnitProfile since it relies on that for the equipment list
         /// </summary>
-        public void LoadDefaultEquipment() {
+        public void LoadDefaultEquipment(bool loadProviderEquipment) {
             //Debug.Log(gameObject.name + ".CharacterEquipmentManager.LoadDefaultEquipment()");
 
-            if (baseCharacter == null || baseCharacter.UnitProfile == null || baseCharacter.UnitProfile.EquipmentList == null) {
+            if (baseCharacter?.UnitProfile?.EquipmentList == null) {
                 return;
             }
 
+            // load the unit profile equipment
             foreach (Equipment equipment in baseCharacter.UnitProfile.EquipmentList) {
                 if (equipment != null) {
                     Equip(equipment, null, true);
                 }
             }
+
+            if (loadProviderEquipment == false || baseCharacter.UnitProfile.UseProviderEquipment == false) {
+                return;
+            }
+
+            if (baseCharacter.CharacterRace != null) {
+                foreach (Equipment equipment in baseCharacter.CharacterRace.EquipmentList) {
+                    Equip(equipment, null, true);
+                }
+            }
+
+            if (baseCharacter.CharacterClass != null) {
+                foreach (Equipment equipment in baseCharacter.CharacterClass.EquipmentList) {
+                    Equip(equipment, null, true);
+                }
+                if (baseCharacter.ClassSpecialization != null) {
+                    foreach (Equipment equipment in baseCharacter.ClassSpecialization.EquipmentList) {
+                        Equip(equipment, null, true);
+                    }
+                }
+            }
+
+            if (baseCharacter.Faction != null) {
+                foreach (Equipment equipment in baseCharacter.Faction.EquipmentList) {
+                    Equip(equipment, null, true);
+                }
+            }
+
         }
 
         public void ClearEquipment() {
@@ -383,7 +412,7 @@ namespace AnyRPG {
         }
 
         public bool Equip(Equipment newItem, EquipmentSlotProfile equipmentSlotProfile = null, bool skipModels = false, bool rebuildUMA = true) {
-            //Debug.Log(gameObject.name + ".CharacterEquipmentManager.Equip(" + (newItem != null ? newItem.DisplayName : "null") + ", " + (equipmentSlotProfile == null ? "null" : equipmentSlotProfile.DisplayName)+ ")");
+            //Debug.Log(baseCharacter.gameObject.name + ".CharacterEquipmentManager.Equip(" + (newItem != null ? newItem.DisplayName : "null") + ", " + (equipmentSlotProfile == null ? "null" : equipmentSlotProfile.DisplayName) + ")");
             //Debug.Break();
             if (newItem == null) {
                 Debug.Log("Instructed to Equip a null item!");

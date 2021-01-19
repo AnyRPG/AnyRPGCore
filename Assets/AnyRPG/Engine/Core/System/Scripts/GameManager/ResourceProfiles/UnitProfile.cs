@@ -146,6 +146,10 @@ namespace AnyRPG {
 
         [Header("Equipment")]
 
+        [Tooltip("By default, NPCS only equip the specific equipment in the list below.  If this box is checked, NPCs will equip all default equipment from their character class, specialization, faction, etc.")]
+        [SerializeField]
+        bool useProviderEquipment = false;
+
         [Tooltip("This equipment will be equipped by default on this unit")]
         [SerializeField]
         private List<string> equipmentNameList = new List<string>();
@@ -332,6 +336,7 @@ namespace AnyRPG {
         public bool IgnoreDuplicateUUID { get => ignoreDuplicateUUID; set => ignoreDuplicateUUID = value; }
         public bool UseInlinePatrol { get => useInlinePatrol; set => useInlinePatrol = value; }
         public PatrolProps PatrolConfig { get => patrolConfig; set => patrolConfig = value; }
+        public bool UseProviderEquipment { get => useProviderEquipment; set => useProviderEquipment = value; }
 
         // disabled because it was too high maintenance
         /*
@@ -478,7 +483,7 @@ namespace AnyRPG {
                 if (tmpFaction != null) {
                     faction = tmpFaction;
                 } else {
-                    Debug.LogError("UnitProfile.SetupScriptableObjects(): Could not find faction : " + factionName + " while inititalizing " + name + ".  CHECK INSPECTOR");
+                    Debug.LogError("UnitProfile.SetupScriptableObjects(): Could not find faction : " + factionName + " while inititalizing " + DisplayName + ".  CHECK INSPECTOR");
                 }
             }
 
@@ -487,7 +492,16 @@ namespace AnyRPG {
                 if (tmpCharacterClass != null) {
                     characterClass = tmpCharacterClass;
                 } else {
-                    Debug.LogError("UnitProfile.SetupScriptableObjects(): Could not find faction : " + characterClassName + " while inititalizing " + name + ".  CHECK INSPECTOR");
+                    Debug.LogError("UnitProfile.SetupScriptableObjects(): Could not find class : " + characterClassName + " while inititalizing " + DisplayName + ".  CHECK INSPECTOR");
+                }
+            }
+
+            if (classSpecializationName != null && classSpecializationName != string.Empty) {
+                ClassSpecialization tmpSpecialization = SystemClassSpecializationManager.MyInstance.GetResource(classSpecializationName);
+                if (tmpSpecialization != null) {
+                    classSpecialization = tmpSpecialization;
+                } else {
+                    Debug.LogError("UnitProfile.SetupScriptableObjects(): Could not find specialization : " + classSpecializationName + " while inititalizing " + DisplayName + ".  CHECK INSPECTOR");
                 }
             }
 
@@ -496,7 +510,7 @@ namespace AnyRPG {
                 if (tmpCharacterRace != null) {
                     characterRace = tmpCharacterRace;
                 } else {
-                    Debug.LogError("UnitProfile.SetupScriptableObjects(): Could not find race : " + characterRaceName + " while inititalizing " + name + ".  CHECK INSPECTOR");
+                    Debug.LogError("UnitProfile.SetupScriptableObjects(): Could not find race : " + characterRaceName + " while inititalizing " + DisplayName + ".  CHECK INSPECTOR");
                 }
             }
 
@@ -506,7 +520,7 @@ namespace AnyRPG {
                     unitType = tmpUnitType;
                     //Debug.Log(gameObject.name + ".BaseCharacter.SetupScriptableObjects(): successfully set unit type to: " + unitType.MyName);
                 } else {
-                    Debug.LogError("UnitProfile.SetupScriptableObjects(): Could not find unit type : " + unitTypeName + " while inititalizing " + name + ".  CHECK INSPECTOR");
+                    Debug.LogError("UnitProfile.SetupScriptableObjects(): Could not find unit type : " + unitTypeName + " while inititalizing " + DisplayName + ".  CHECK INSPECTOR");
                 }
             }
 
