@@ -29,6 +29,13 @@ MonoBehaviour:
     weaponSkills:
     - Staff
   unitTypeCapabilities: []
-  primaryStats: []
-  powerResources: []
+  primaryStats:
+  - statName: Intellect
+    budgetPerLevel: 5
+    primaryToSecondaryConversion: []
+    primaryToResourceConversion:
+    - resourceName: Mana
+      resourcePerPoint: 10
+  powerResources:
+  - Mana
   validPetTypes: []
