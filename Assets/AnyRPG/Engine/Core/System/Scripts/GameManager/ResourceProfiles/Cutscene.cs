@@ -90,6 +90,8 @@ namespace AnyRPG {
                 }
             }
 
+            subtitleProperties.SetupScriptableObjects();
+
         }
     }
 
