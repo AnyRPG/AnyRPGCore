@@ -36,23 +36,21 @@ namespace AnyRPG {
 
         private int textFadeInTime = 3;
 
-        private int dialogIndex = 0;
+        private int subtitleIndex = 0;
 
-        private float maxDialogTime = 300f;
+        private float maxSubtitleTime = 300f;
 
-        private Coroutine dialogCoroutine = null;
+        private Coroutine subtitleCoroutine = null;
         private Coroutine fadeCoroutine = null;
         private Coroutine barsCoroutine = null;
-
-        private Dialog currentDialog = null;
 
         private Cutscene currentCutscene = null;
 
         public Cutscene CurrentCutscene { get => currentCutscene; set => currentCutscene = value; }
 
         public void ClearCoRoutine() {
-            if (dialogCoroutine != null) {
-                StopCoroutine(dialogCoroutine);
+            if (subtitleCoroutine != null) {
+                StopCoroutine(subtitleCoroutine);
             }
             if (fadeCoroutine != null) {
                 StopCoroutine(fadeCoroutine);
@@ -62,27 +60,14 @@ namespace AnyRPG {
             }
         }
 
-        /*
-        public void OnDisable() {
-            //Debug.Log("ActionBarController.OnDisable()");
-            //RebuildLayout();
-            EndCutScene();
-        }
-        */
-
-            // this method exists to ensure that a cutscene can be considered active even if it loads late in the scene load order
+       
+        // ensure that a cutscene can be considered active even if it loads late in the scene load order
         public void AssignCutScene(Cutscene cutscene) {
             currentCutscene = cutscene;
         }
 
         public void StartCutScene(Cutscene cutscene) {
             //Debug.Log("CutSceneBarController.StartCutScene(" + cutscene.DisplayName + ")");
-
-            /*
-            if (currentCutscene != null) {
-                return;
-            }
-            */
 
             if (cutscene.TimelineName != null
                 && cutscene.TimelineName != string.Empty
@@ -94,7 +79,7 @@ namespace AnyRPG {
             CameraManager.MyInstance.EnableCutsceneCamera();
 
             currentCutscene = cutscene;
-            currentDialog = cutscene.MyDialog;
+            //currentDialog = cutscene.MyDialog;
             captionText.color = new Color32(255, 255, 255, 0);
             gameObject.SetActive(true);
             topBarLayoutElement.preferredHeight = 0;
@@ -129,22 +114,14 @@ namespace AnyRPG {
             bottomBar.gameObject.SetActive(false);
             captionBar.gameObject.SetActive(false);
             UIManager.MyInstance.CutSceneBarsCanvas.SetActive(false);
-            /*
-            UIManager.MyInstance.MyPlayerInterfaceCanvas.SetActive(true);
-            UIManager.MyInstance.MyPopupWindowContainer.SetActive(true);
-            UIManager.MyInstance.MyPopupPanelContainer.SetActive(true);
-            UIManager.MyInstance.MyCombatTextCanvas.SetActive(true);
-            */
+           
             ClearCoRoutine();
             gameObject.SetActive(false);
+
             if (currentCutscene != null) {
-                //Debug.Log("CutSceneBarController.EndCutScene(): setting currentcutscene viewed to true");
                 currentCutscene.Viewed = true;
             }
-            // if this is not a cutscene that should return, then do not, else do
-            //if (currentCutscene.MyUnloadSceneOnEnd) {
             LevelManager.MyInstance.EndCutscene(currentCutscene);
-            //}
             currentCutscene = null;
         }
 
@@ -161,74 +138,64 @@ namespace AnyRPG {
                 bottomBarLayoutElement.preferredHeight = newHeight;
 
             }
-            if (currentDialog != null) {
-                dialogIndex = 0;
-                if (currentDialog.MyAutomatic == true) {
-                    dialogCoroutine = StartCoroutine(playDialog());
+            if (currentCutscene.SubtitleProperties.SubtitleNodes.Count > 0) {
+                subtitleIndex = 0;
+                if (currentCutscene.AutoAdvanceSubtitles == true) {
+                    subtitleCoroutine = StartCoroutine(playSubtitles());
                 } else {
-                    ProcessDialogNode(dialogIndex);
-                    dialogIndex++;
+                    ProcessSubtitleNode(subtitleIndex);
+                    subtitleIndex++;
                 }
             }
         }
 
         public void AdvanceDialog() {
             //Debug.Log("CharacterAbilitymanager.AdvanceDialog()");
-            if (currentDialog.MyDialogNodes.Count > dialogIndex) {
-                ProcessDialogNode(dialogIndex);
-                dialogIndex++;
+            if (currentCutscene.SubtitleProperties.SubtitleNodes.Count > subtitleIndex) {
+                ProcessSubtitleNode(subtitleIndex);
+                subtitleIndex++;
             }
         }
 
-        private void ProcessDialogNode(int dialogIndex) {
+        private void ProcessSubtitleNode(int subtitleIndex) {
             //Debug.Log("CharacterAbilitymanager.ProcessDialogNode()");
-            DialogNode currentDialogNode = currentDialog.MyDialogNodes[dialogIndex];
-            captionText.text = currentDialogNode.MyDescription;
+            SubtitleNode currentSubtitleNode = currentCutscene.SubtitleProperties.SubtitleNodes[subtitleIndex];
+            captionText.text = currentSubtitleNode.MyDescription;
             captionText.color = new Color32(255, 255, 255, 0);
-            dialogCoroutine = StartCoroutine(FadeInText());
+            subtitleCoroutine = StartCoroutine(FadeInText());
 
-            if (AudioManager.MyInstance != null && currentDialog.MyAudioProfile != null && currentDialog.MyAudioProfile.AudioClips != null && currentDialog.MyAudioProfile.AudioClips.Count > dialogIndex) {
-                AudioManager.MyInstance.PlayVoice(currentDialog.MyAudioProfile.AudioClips[dialogIndex]);
+            if (AudioManager.MyInstance != null && currentCutscene?.SubtitleProperties.AudioProfile != null && currentCutscene.SubtitleProperties.AudioProfile.AudioClips != null && currentCutscene.SubtitleProperties.AudioProfile.AudioClips.Count > subtitleIndex) {
+                AudioManager.MyInstance.PlayVoice(currentCutscene.SubtitleProperties.AudioProfile.AudioClips[subtitleIndex]);
             }
 
-
-            currentDialogNode.Shown = true;
+            currentSubtitleNode.Shown = true;
         }
 
 
-        public IEnumerator playDialog() {
+        public IEnumerator playSubtitles() {
             //Debug.Log("CharacterAbilitymanager.playDialog()");
             float elapsedTime = 0f;
-            DialogNode currentdialogNode = null;
+            SubtitleNode currentSubtitleNode = null;
 
-            // this needs to be reset to allow for repeatable dialogs to replay
-            currentDialog.ResetStatus();
+            // set all nodes to not shown
+            currentCutscene.ResetSubtitles();
 
-            while (currentDialog.TurnedIn == false) {
-                foreach (DialogNode dialogNode in currentDialog.MyDialogNodes) {
-                    if (dialogNode.MyStartTime <= elapsedTime && dialogNode.Shown == false) {
-                        currentdialogNode = dialogNode;
+            while (elapsedTime < maxSubtitleTime) {
+                foreach (SubtitleNode subtitleNode in currentCutscene.SubtitleProperties.SubtitleNodes) {
+                    if (subtitleNode.MyStartTime <= elapsedTime && subtitleNode.Shown == false) {
+                        currentSubtitleNode = subtitleNode;
 
-                        ProcessDialogNode(dialogIndex);
-                        dialogIndex++;
+                        ProcessSubtitleNode(subtitleIndex);
+                        subtitleIndex++;
                     }
                 }
-                /*
-                if (dialogIndex >= currentDialog.MyDialogNodes.Count) {
-                    currentDialog.TurnedIn = true;
-                }
-                */
+
                 elapsedTime += Time.deltaTime;
 
-                // circuit breaker
-                if (elapsedTime >= maxDialogTime) {
-                    break;
-                }
                 yield return null;
-                dialogCoroutine = null;
             }
+            subtitleCoroutine = null;
 
-            //yield return new WaitForSeconds(currentdialogNode.MyShowTime);
         }
 
         public IEnumerator FadeInText() {
@@ -245,7 +212,7 @@ namespace AnyRPG {
 
         public void OnDisable() {
             ClearCoRoutine();
-            dialogIndex = 0;
+            subtitleIndex = 0;
         }
     }
 

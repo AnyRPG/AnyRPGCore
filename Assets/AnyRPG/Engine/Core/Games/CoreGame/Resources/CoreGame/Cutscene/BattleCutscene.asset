@@ -20,9 +20,22 @@ MonoBehaviour:
   useRegionalDescription: 0
   resourceDescriptionProfile: 
   repeatable: 1
+  requirePlayerUnitSpawn: 0
+  useDefaultFactionColors: 0
+  timelineName: 
   loadSceneName: CoreCutsceneZone
   unloadSceneOnEnd: 1
-  useDefaultFactionColors: 0
   dialogName: Battle Cutscene
-  timelineName: 
-  requirePlayerUnitSpawn: 0
+  autoAdvanceSubtitles: 1
+  subtitleProperties:
+    audioProfileName: 
+    subtitleNodes:
+    - startTime: 0
+      showTime: 5
+      description: This is a cutscene
+    - startTime: 5
+      showTime: 5
+      description: Cutscenes can have subtitles
+    - startTime: 10
+      showTime: 5
+      description: The start time and duration of each subtitle can be customized

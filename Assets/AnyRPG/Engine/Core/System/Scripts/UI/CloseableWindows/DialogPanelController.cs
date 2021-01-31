@@ -86,7 +86,7 @@ namespace AnyRPG {
         public void ConfirmAction() {
             //Debug.Log("NewGameMenuController.ConfirmAction(): dialogIndex: " + dialogIndex + "; DialogNode Count: " + MyDialog.MyDialogNodes.Count);
             dialogIndex++;
-            if (dialogIndex >= MyDialog.MyDialogNodes.Count) {
+            if (dialogIndex >= MyDialog.DialogNodes.Count) {
                 MyDialog.TurnedIn = true;
                 if (quest == null) {
 
@@ -140,7 +140,7 @@ namespace AnyRPG {
         }
 
         public void DisplayNodeText() {
-            if (dialogIndex > MyDialog.MyDialogNodes.Count + 1) {
+            if (dialogIndex > MyDialog.DialogNodes.Count + 1) {
                 //Debug.Log("Past last node index.  will not display");
                 return;
             }
@@ -149,17 +149,17 @@ namespace AnyRPG {
             }
             
             if (dialogText != null) {
-                dialogText.text = string.Format("<size={0}>{1}</size>", dialogFontSize, MyDialog.MyDialogNodes[dialogIndex].MyDescription);
+                dialogText.text = string.Format("<size={0}>{1}</size>", dialogFontSize, MyDialog.DialogNodes[dialogIndex].MyDescription);
             }
 
-            CombatLogUI.MyInstance.WriteChatMessage(MyDialog.MyDialogNodes[dialogIndex].MyDescription);
-            if (AudioManager.MyInstance != null && MyDialog.MyAudioProfile != null && MyDialog.MyAudioProfile.AudioClips != null && MyDialog.MyAudioProfile.AudioClips.Count > dialogIndex) {
-                AudioManager.MyInstance.PlayVoice(MyDialog.MyAudioProfile.AudioClips[dialogIndex]);
+            CombatLogUI.MyInstance.WriteChatMessage(MyDialog.DialogNodes[dialogIndex].MyDescription);
+            if (AudioManager.MyInstance != null && MyDialog.AudioProfile != null && MyDialog.AudioProfile.AudioClips != null && MyDialog.AudioProfile.AudioClips.Count > dialogIndex) {
+                AudioManager.MyInstance.PlayVoice(MyDialog.AudioProfile.AudioClips[dialogIndex]);
             }
 
             if (buttonText != null) {
-                if (MyDialog.MyDialogNodes[dialogIndex].MyNextOption != string.Empty) {
-                    buttonText.text = MyDialog.MyDialogNodes[dialogIndex].MyNextOption;
+                if (MyDialog.DialogNodes[dialogIndex].MyNextOption != string.Empty) {
+                    buttonText.text = MyDialog.DialogNodes[dialogIndex].MyNextOption;
                 } else {
                     buttonText.text = defaultNextText;
                 }

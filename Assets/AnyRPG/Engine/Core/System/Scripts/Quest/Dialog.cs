@@ -13,15 +13,17 @@ namespace AnyRPG {
 
         public event System.Action OnDialogCompleted = delegate { };
 
-        [Header("Dialog")]
+        [Header("Dialog Settings")]
 
-        [Tooltip("This should be set to true for cutscene subtitles and npc speech bubble monologues to allow them to advance on a timer")]
+        [Tooltip("This should be set to true for npc speech bubble monologues to allow them to advance on a timer")]
         [SerializeField]
         private bool automatic = false;
 
-        [Tooltip("This should be set to true for dialogs that will be included in cutscenes to allow cutscene replay.")]
+        [Tooltip("If true, this dialog can be completed more than once")]
         [SerializeField]
         private bool repeatable = false;
+
+        [Header("Dialog Properties")]
 
         [Tooltip("The name of an audio profile to play when this dialog is started.")]
         [SerializeField]
@@ -31,6 +33,8 @@ namespace AnyRPG {
 
         [SerializeField]
         private List<DialogNode> dialogNodes = new List<DialogNode>();
+
+        [Header("Prerequisites")]
 
         [Tooltip("Game conditions that must be satisfied for this dialog to be available")]
         [SerializeField]
@@ -93,9 +97,9 @@ namespace AnyRPG {
 
 
 
-        public List<DialogNode> MyDialogNodes { get => dialogNodes; set => dialogNodes = value; }
-        public bool MyAutomatic { get => automatic; set => automatic = value; }
-        public AudioProfile MyAudioProfile { get => audioProfile; set => audioProfile = value; }
+        public List<DialogNode> DialogNodes { get => dialogNodes; set => dialogNodes = value; }
+        public bool Automatic { get => automatic; set => automatic = value; }
+        public AudioProfile AudioProfile { get => audioProfile; set => audioProfile = value; }
         public bool Repeatable { get => repeatable; set => repeatable = value; }
 
         /// <summary>
@@ -121,12 +125,13 @@ namespace AnyRPG {
                     }
                 }
             }
+
             if (audioProfileName != null && audioProfileName != string.Empty) {
                 AudioProfile tmpAudioProfile = SystemAudioProfileManager.MyInstance.GetResource(audioProfileName);
                 if (tmpAudioProfile != null) {
                     audioProfile = tmpAudioProfile;
                 } else {
-                    Debug.LogError("Dialog.SetupScriptableObjects(): COULD NOT FIND audioProfile " + audioProfileName + " WHILE INITIALIZING " + DisplayName);
+                    Debug.LogError("Dialog.SetupScriptableObjects(): Could not find audioProfile " + audioProfileName + " while initializing " + DisplayName);
                 }
             }
         }

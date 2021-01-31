@@ -77,7 +77,7 @@ namespace AnyRPG {
             if (currentList.Count == 0) {
                 return false;
             } else /*if (currentList.Count == 1)*/ {
-                if (currentList[optionIndex].MyAutomatic) {
+                if (currentList[optionIndex].Automatic) {
                     interactable.DialogController.BeginDialog(currentList[optionIndex]);
                 } else {
                     (PopupWindowManager.MyInstance.dialogWindow.CloseableWindowContents as DialogPanelController).Setup(currentList[optionIndex], this.interactable);
