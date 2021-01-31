@@ -27,7 +27,7 @@ namespace AnyRPG {
         }
 
         public Vector3 GetDestination(bool destinationReached) {
-            //Debug.Log("PatrolProfile.GetDestination(" + destinationReached + ")");
+            //Debug.Log("PatrolSaveState.GetDestination(" + destinationReached + ")");
             Vector3 returnValue = Vector3.zero;
 
             if (destinationReached || destinationRetrievedCount == 0) {
@@ -66,7 +66,7 @@ namespace AnyRPG {
             //Debug.Log("PatrolProfile.PatrolComplete(): loopDestination: " + patrolProperties.LoopDestinations + "; destinationReachedCount: " + destinationReachedCount + "; maxDestinations: " + patrolProperties.MaxDestinations + "; destinationCount: " + DestinationCount);
 
             if (patrolProperties.RandomDestinations && (patrolProperties.MaxDestinations == 0 || destinationReachedCount < patrolProperties.MaxDestinations)) {
-                //Debug.Log("AIPatrol.PatrolComplete() randomDestinations && (maxDestinations == 0 || destinationReachedCount < maxDestinations); return false");
+                //Debug.Log("PatrolSaveState.PatrolComplete() randomDestinations && (maxDestinations == 0 || destinationReachedCount < maxDestinations); return false");
                 return false;
             }
 
@@ -87,7 +87,7 @@ namespace AnyRPG {
         /// </summary>
         /// <returns></returns>
         public Vector3 GetRandomDestination() {
-            //Debug.Log(MyName + ".AIPatrol.GetRandomDestination()");
+            //Debug.Log("PatrolSaveState.GetRandomDestination()");
             if (patrolProperties.DestinationCount > 0) {
                 // get destination from list
                 int randomNumber = Random.Range(0, patrolProperties.DestinationCount);

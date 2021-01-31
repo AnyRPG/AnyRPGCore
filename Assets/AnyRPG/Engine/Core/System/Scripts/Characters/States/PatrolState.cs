@@ -11,7 +11,7 @@ namespace AnyRPG {
 
         private Vector3 currentDestination = Vector3.zero;
 
-        private Coroutine coroutine;
+        private Coroutine pauseCoroutine;
 
         private float originalMovementSpeed = 0f;
 
@@ -36,8 +36,8 @@ namespace AnyRPG {
 
         public void Exit() {
             //Debug.Log(baseController.gameObject.name + ".PatrolState.Exit()");
-            if (coroutine != null) {
-                baseController.StopCoroutine(coroutine);
+            if (pauseCoroutine != null) {
+                baseController.StopCoroutine(pauseCoroutine);
             }
             this.baseController.UnitMotor.MovementSpeed = originalMovementSpeed;
         }
@@ -69,17 +69,17 @@ namespace AnyRPG {
             }
 
             // if no combat was needed, check if current wait is in progress for a new stage of the patrol
-            if (coroutine != null) {
+            if (pauseCoroutine != null) {
                 return;
             }
 
             // check if a new patrol destination is needed
-            if (currentDestination == Vector3.zero && coroutine == null) {
+            if (currentDestination == Vector3.zero && pauseCoroutine == null) {
                 //Debug.Log(baseController.gameObject.name + ".PatrolState.Update(): getNewDestination: destination was vector3.zero");
                 GetNewDestination();
                 return;
             } else if (Vector3.Distance(baseController.transform.position, currentDestination) <= baseController.NavMeshAgent.stoppingDistance + baseController.UnitMotor.NavMeshDistancePadding) {
-                //Debug.Log(aiController.gameObject.name + ".PatrolState.Update(): Destination Reached!");
+                //Debug.Log(baseController.gameObject.name + ".PatrolState.Update(): Destination Reached!");
 
                 // destination reached
                 if (baseController.PatrolController.CurrentPatrolSaveState.PatrolComplete()) {
@@ -113,10 +113,12 @@ namespace AnyRPG {
                 GetNewDestination();
                 return;
             }
+
+            //Debug.Log(baseController.gameObject.name + ".PatrolState.Update(): end of update and no action taken");
         }
 
         private void GetNewDestination() {
-            //Debug.Log(baseController.gameObject.name + ".PatrolState.GetNewDestination() patrol: " + (baseController?.PatrolController?.CurrentPatrol == null ? "null" : baseController.PatrolController.CurrentPatrol.DisplayName));
+            //Debug.Log(baseController.gameObject.name + ".PatrolState.GetNewDestination() patrol: " + (baseController?.PatrolController?.CurrentPatrol == null ? "null" : "valid"));
             TrySavePersistentData();
             Vector3 tmpDestination = baseController.PatrolController.CurrentPatrolSaveState.GetDestination(true);
             if (tmpDestination == Vector3.zero) {
@@ -127,7 +129,7 @@ namespace AnyRPG {
             currentDestination = tmpDestination;
 
             SetMovementSpeed();
-            coroutine = baseController.StartCoroutine(PauseForNextDestination(currentDestination));
+            pauseCoroutine = baseController.StartCoroutine(PauseForNextDestination(currentDestination));
         }
 
         public void TrySavePersistentData() {
@@ -149,6 +151,7 @@ namespace AnyRPG {
                 //Debug.Log(aiController.gameObject.name + ".PatrolState.PauseForNextDestination(" + nextDestination + "): remainingPauseTime: " + remainingPauseTime);
             }
             currentDestination = this.baseController.SetDestination(nextDestination);
+            pauseCoroutine = null;
         }
     }
 
