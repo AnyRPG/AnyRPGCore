@@ -10,9 +10,9 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 4e31818c35d6ab14fbf88410e7e18453, type: 3}
-  m_Name: RandomPatrolNPCUnit
+  m_Name: SavePositionNPCUnit
   m_EditorClassIdentifier: 
-  resourceName: Random Patrol NPC
+  resourceName: Save Position NPC
   displayName: 
   icon: {fileID: 21300000, guid: 9176b48a2857c364280b4f5b9d620852, type: 3}
   iconBackgroundImage: {fileID: 0}
@@ -129,7 +129,7 @@ MonoBehaviour:
     attachmentProfileName: Humanoid
   isUMAUnit: 0
   isPet: 0
-  characterName: Random Patrol
+  characterName: Save Position
   factionName: 
   title: 
   characterClassName: 
@@ -158,11 +158,11 @@ MonoBehaviour:
   - Footstep Hits
   useInlinePatrol: 1
   patrolConfig:
-    autoStart: 1
+    autoStart: 0
     destinationList: []
     useTags: 0
     destinationTagList: []
-    randomDestinations: 1
+    randomDestinations: 0
     loopDestinations: 0
     despawnOnCompletion: 0
     maxDestinations: 0
@@ -176,7 +176,9 @@ MonoBehaviour:
     interactionPanelImage: {fileID: 0}
     namePlateImage: {fileID: 0}
     prerequisiteConditions: []
-    behaviorNames: []
+    behaviorNames:
+    - Go To The Green Pole
+    - Go To The Red Pole
     useBehaviorCopy: 0
   interactionMaxRange: 3
   lootableCharacter:
@@ -206,5 +208,8 @@ MonoBehaviour:
     prerequisiteConditions: []
     vendorCollectionNames: []
   interactableOptions: []
-  overwriteUnitUUID: 0
-  m_UUID: 40b76856-9850-46b4-8760-e5be3e213732
+  persistObjectPosition: 1
+  saveOnLevelUnload: 1
+  saveOnGameSave: 1
+  overwriteUnitUUID: 1
+  m_UUID: 6c744236-df97-48c7-936e-b510aedfc63e
