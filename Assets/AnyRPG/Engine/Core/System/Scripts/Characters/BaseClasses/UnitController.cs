@@ -644,12 +644,30 @@ namespace AnyRPG {
         }
 
         /// <summary>
+        /// transfer any persistence settings from the unit profile to the persistent object component
+        /// </summary>
+        private void SetPersistenceProperties() {
+            if (UnitProfile.PersistObjectPosition == true) {
+                persistentObjectComponent.PersistObjectPosition = true;
+            }
+            if (UnitProfile.SaveOnGameSave == true) {
+                persistentObjectComponent.SaveOnGameSave = true;
+            }
+            if (UnitProfile.SaveOnLevelUnload == true) {
+                persistentObjectComponent.SaveOnLevelUnload = true;
+            }
+        }
+
+        /// <summary>
         /// This method is meant to be called after Awake() and before Start()
         /// </summary>
         /// <param name="unitProfile"></param>
         public void SetUnitProfile(UnitProfile unitProfile, UnitControllerMode unitControllerMode, int unitLevel = -1) {
             //Debug.Log(gameObject.name + "UnitController.SetUnitProfile()");
             this.unitProfile = unitProfile;
+
+            SetPersistenceProperties();
+
             if (characterUnit.BaseCharacter != null) {
                 characterUnit.BaseCharacter.SetUnitProfile(unitProfile, true, unitLevel, (unitControllerMode == UnitControllerMode.Player ? false : true));
             }
@@ -905,7 +923,7 @@ namespace AnyRPG {
             }
             UpdateApparentVelocity();
             if (ApparentVelocity > 0.1f) {
-                characterUnit.BaseCharacter.CharacterAbilityManager.HandleManualMovement();
+                characterUnit?.BaseCharacter?.CharacterAbilityManager?.HandleManualMovement();
             }
             HandleMovementAudio();
         }

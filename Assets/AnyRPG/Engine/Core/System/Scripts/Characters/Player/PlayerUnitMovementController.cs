@@ -158,7 +158,7 @@ namespace AnyRPG {
                 }
                 if (localVelocity.x != 0f || localVelocity.z != 0f || localVelocity.y != 0f) {
                     //Debug.Log("Character is moving at velocity: " + PlayerManager.MyInstance.ActiveUnitController.MyRigidBody.velocity + "; local: " + localVelocity + ", but no input was given.  Stopping Character!");
-                    PlayerManager.MyInstance.ActiveUnitController.UnitMotor.Move(new Vector3(0, Mathf.Clamp(localVelocity.y, -53, 0), 0));
+                    PlayerManager.MyInstance.ActiveUnitController.UnitMotor?.Move(new Vector3(0, Mathf.Clamp(localVelocity.y, -53, 0), 0));
                 }
             }
 

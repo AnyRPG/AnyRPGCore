@@ -35,6 +35,8 @@ namespace AnyRPG {
 
         public bool MoveOnStart { get => moveOnStart; set => moveOnStart = value; }
         public bool PersistObjectPosition { get => persistObjectPosition; set => persistObjectPosition = value; }
+        public bool SaveOnLevelUnload { get => saveOnLevelUnload; set => saveOnLevelUnload = value; }
+        public bool SaveOnGameSave { get => saveOnGameSave; set => saveOnGameSave = value; }
 
         public PersistentObjectComponent() {
         }
@@ -58,7 +60,7 @@ namespace AnyRPG {
         }
 
         public PersistentState GetPersistentState() {
-            //Debug.Log(gameObject.name + "PersistentObject.GetPersistentState()");
+            //Debug.Log(persistentObjectOwner.gameObject.name + "PersistentObjectComponent.GetPersistentState()");
             if (persistentObjectOwner.UUID != null) {
                 if (LevelManager.MyInstance != null) {
                     SceneNode activeSceneNode = LevelManager.MyInstance.GetActiveSceneNode();
@@ -132,6 +134,7 @@ namespace AnyRPG {
         }
 
         public void SaveProperties() {
+            //Debug.Log(persistentObjectOwner.gameObject.name + "PersistentObjectComponent.SaveProperties()");
 
             // since all units automatically have this component, give it a chance to not save based on configuration
             if (persistObjectPosition == false) {
@@ -156,7 +159,7 @@ namespace AnyRPG {
         }
 
         public PersistentObjectSaveData MakeSaveData() {
-            //Debug.Log(gameObject.name + "PersistentObject.MakeSaveData()");
+            //Debug.Log(persistentObjectOwner.gameObject.name + ".PersistentObjectComponent.MakeSaveData()");
             PersistentObjectSaveData returnValue = new PersistentObjectSaveData();
             returnValue.UUID = storedUUID;
             returnValue.LocationX = storedPosition.x;

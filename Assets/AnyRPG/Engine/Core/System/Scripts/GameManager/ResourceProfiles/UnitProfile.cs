@@ -248,6 +248,20 @@ namespace AnyRPG {
 
         private List<InteractableOptionConfig> interactableOptionConfigs = new List<InteractableOptionConfig>();
 
+        [Header("Object Persistence")]
+
+        [Tooltip("If true, the object position is saved based on selected settings. NOTE: at least one save option must be chosen (below or in patrol etc)")]
+        [SerializeField]
+        private bool persistObjectPosition = false;
+
+        [Tooltip("If true, this object will save it's position when switching from one scene to another (including the main menu).  It will not save if the game is quit directly from the main menu.")]
+        [SerializeField]
+        private bool saveOnLevelUnload = false;
+
+        [Tooltip("If true, this object will save it's position when the player saves the game.")]
+        [SerializeField]
+        private bool saveOnGameSave = false;
+
         [Header("UUID")]
 
         [Tooltip("If true, this UUID will overwrite any UUID on the spawned unit.  Only use this for unique units")]
@@ -337,6 +351,9 @@ namespace AnyRPG {
         public bool UseInlinePatrol { get => useInlinePatrol; set => useInlinePatrol = value; }
         public PatrolProps PatrolConfig { get => patrolConfig; set => patrolConfig = value; }
         public bool UseProviderEquipment { get => useProviderEquipment; set => useProviderEquipment = value; }
+        public bool PersistObjectPosition { get => persistObjectPosition; set => persistObjectPosition = value; }
+        public bool SaveOnLevelUnload { get => saveOnLevelUnload; set => saveOnLevelUnload = value; }
+        public bool SaveOnGameSave { get => saveOnGameSave; set => saveOnGameSave = value; }
 
         // disabled because it was too high maintenance
         /*

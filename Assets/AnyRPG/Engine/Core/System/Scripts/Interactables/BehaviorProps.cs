@@ -26,6 +26,10 @@ namespace AnyRPG {
         public bool UseBehaviorCopy { get => useBehaviorCopy; }
         public List<string> BehaviorNames { get => behaviorNames; }
 
+        public override string GetInteractionPanelTitle(int optionIndex = 0) {
+            return (behaviorNames.Count > optionIndex ? behaviorNames[optionIndex] : base.GetInteractionPanelTitle(optionIndex));
+        }
+
         public override InteractableOptionComponent GetInteractableOption(Interactable interactable, InteractableOption interactableOption = null) {
             InteractableOptionComponent returnValue = new BehaviorComponent(interactable, this);
             if (interactableOption != null) {

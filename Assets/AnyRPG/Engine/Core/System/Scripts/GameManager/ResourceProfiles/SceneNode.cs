@@ -112,6 +112,7 @@ namespace AnyRPG {
         public bool AllowMount { get => allowMount; set => allowMount = value; }
 
         public void SavePersistentObject(string UUID, PersistentObjectSaveData persistentObjectSaveData) {
+            //Debug.Log(DisplayName + ".SceneNode.SavePersistentObject(" + UUID + ")");
             SceneNodeSaveData saveData = SaveManager.MyInstance.GetSceneNodeSaveData(this);
             foreach (PersistentObjectSaveData _persistentObjectSaveData in saveData.persistentObjects) {
                 if (_persistentObjectSaveData.UUID == UUID) {

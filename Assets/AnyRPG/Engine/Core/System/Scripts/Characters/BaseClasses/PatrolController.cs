@@ -51,9 +51,9 @@ namespace AnyRPG {
             //Debug.Log(unitController.gameObject.name + ".PatrolController.BeginPatrol(" + (patrolName != null ? patrolName : "null" ) + ")");
             PatrolProfile tmpPatrolProfile = SystemPatrolProfileManager.MyInstance.GetResource(patrolName);
             if (tmpPatrolProfile != null) {
-                if (patrolSaveStates.ContainsKey(tmpPatrolProfile.PatrolProperties) == false) {
+                //if (patrolSaveStates.ContainsKey(tmpPatrolProfile.PatrolProperties) == false) {
                     AddPatrolState(tmpPatrolProfile.PatrolProperties);
-                }
+                //}
                 BeginPatrol(tmpPatrolProfile.PatrolProperties);
                 return;
             } else {
@@ -70,7 +70,11 @@ namespace AnyRPG {
 
         private void AddPatrolState(PatrolProps patrolProps) {
             patrolPropsList.Add(patrolProps);
-            patrolSaveStates.Add(patrolProps, new PatrolSaveState(this, patrolProps));
+            if (patrolSaveStates.ContainsKey(patrolProps)) {
+                patrolSaveStates[patrolProps] = new PatrolSaveState(this, patrolProps);
+            } else {
+                patrolSaveStates.Add(patrolProps, new PatrolSaveState(this, patrolProps));
+            }
         }
 
 
