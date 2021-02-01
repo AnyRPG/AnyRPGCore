@@ -42,21 +42,15 @@ namespace AnyRPG {
         [SerializeField]
         protected string characterName;
 
+        [Tooltip("If set, this will show in the nameplate instead of the faction")]
+        [SerializeField]
+        protected string title = string.Empty;
+
         [Tooltip("The name of the faction this character belongs to")]
         [SerializeField]
         protected string factionName;
 
         protected Faction faction;
-
-        [Tooltip("If set, this will show in the nameplate instead of the faction")]
-        [SerializeField]
-        protected string title = string.Empty;
-
-        [Tooltip("The name of the character class")]
-        [SerializeField]
-        protected string characterClassName;
-
-        protected CharacterClass characterClass;
 
         [Tooltip("The name of the unit type")]
         [SerializeField]
@@ -69,6 +63,12 @@ namespace AnyRPG {
         protected string characterRaceName;
 
         protected CharacterRace characterRace;
+
+        [Tooltip("The name of the character class")]
+        [SerializeField]
+        protected string characterClassName;
+
+        protected CharacterClass characterClass;
 
         [Tooltip("The name of the class specialization")]
         [SerializeField]

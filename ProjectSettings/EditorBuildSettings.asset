@@ -81,15 +81,15 @@ EditorBuildSettings:
     path: Assets/AnyRPG/Engine/Core/Games/CoreGame/Scenes/CoreGame/CoreGame.unity
     guid: a6d195ea807f74f4cb08c65ff65b1e52
   - enabled: 1
-    path: Assets/AnyRPG/Engine/Core/Games/CoreGame/Scenes/CoreZone/CoreZone.unity
+    path: Assets/AnyRPG/Engine/Core/Games/CoreGame/Scenes/CoreDungeon/CoreDungeon.unity
     guid: c094c26c9175d674fafcb14b9282a864
-  - enabled: 1
-    path: 
-    guid: dbfa95eec486b8349b872d13aa8ce873
   - enabled: 1
     path: Assets/AnyRPG/Engine/Core/Games/EmptyGame/Scenes/EmptyGame/EmptyGame.unity
     guid: 7f52814d565a8844ba1d58d1b9dc3001
   - enabled: 1
     path: Assets/AnyRPG/Engine/Core/Games/CoreGame/Scenes/CoreCutsceneZone/CoreCutsceneZone.unity
     guid: b9ce6cec24f88e343bdd24c31d295b8a
+  - enabled: 1
+    path: Assets/AnyRPG/Engine/Core/Games/CoreGame/Scenes/CoreZone/CoreZone.unity
+    guid: a847437ee17c7aa4f98c2d363f671f1d
   m_configObjects: {}

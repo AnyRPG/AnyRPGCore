@@ -474,7 +474,7 @@ namespace AnyRPG {
         }
 
         public void InterActWithTarget(Interactable interactable) {
-            //Debug.Log(gameObject.name + ".InterActWithTarget(" + interactable.MyName + ", " + _gameObject.name.ToString() + "); my current target: " + target);
+            //Debug.Log(gameObject.name + ".InterActWithTarget(" + interactable.gameObject.name + ")");
             if (PlayerManager.MyInstance.UnitController.Target != interactable) {
                 PlayerManager.MyInstance.UnitController.ClearTarget();
                 PlayerManager.MyInstance.UnitController.SetTarget(interactable);
