@@ -1,0 +1,70 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aca3af34465aca242bf5a72591e68f68, type: 3}
+  m_Name: CraftConsumableAbility
+  m_EditorClassIdentifier: 
+  resourceName: Craft Consumable
+  displayName: 
+  icon: {fileID: 21300000, guid: e029593ae7518d743830eccfc3e4e2b7, type: 3}
+  iconBackgroundImage: {fileID: 0}
+  description: Make consumables
+  useRegionalDescription: 0
+  resourceDescriptionProfile: 
+  requireOutOfCombat: 0
+  weaponAffinityNames: []
+  holdableObjectList: []
+  abilityPrefabSource: 0
+  animatorCreatePrefabs: 0
+  prefabDestroyDelay: 0
+  animationProfileName: Craft Consumables
+  useUnitCastAnimations: 0
+  animationHitAudioProfileName: 
+  castingAudioProfileName: Bubbles
+  requiredLevel: 1
+  characterClassRequirements: []
+  useableWithoutLearning: 0
+  autoAddToBars: 0
+  canSimultaneousCast: 0
+  canCastWhileMoving: 0
+  ignoreGlobalCoolDown: 0
+  powerResourceName: 
+  baseResourceCost: 0
+  resourceCostPerLevel: 5
+  spendDelay: 0
+  generatePowerResourceName: 
+  baseResourceGain: 0
+  resourceGainPerLevel: 0
+  useSpeedMultipliers: 1
+  useAnimationCastTime: 1
+  abilityCastingTime: 1.2
+  abilityCoolDown: 0
+  coolDownOnCast: 0
+  useAbilityEffectTargetting: 0
+  targetOptions:
+    requireTarget: 1
+    requireLineOfSight: 0
+    requireLiveTarget: 0
+    requireDeadTarget: 0
+    canCastOnSelf: 0
+    canCastOnOthers: 0
+    canCastOnEnemy: 0
+    canCastOnNeutral: 0
+    canCastOnFriendly: 0
+    autoSelfCast: 0
+    useMeleeRange: 0
+    maxRange: 0
+    requiresGroundTarget: 0
+    groundTargetColor: {r: 1, g: 1, b: 1, a: 1}
+    groundTargetRadius: 0
+  abilityEffectNames: []
+  tickRate: 1
+  channeledAbilityEffectnames: []

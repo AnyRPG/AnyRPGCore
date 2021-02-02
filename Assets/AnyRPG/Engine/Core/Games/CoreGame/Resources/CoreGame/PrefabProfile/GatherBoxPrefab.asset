@@ -10,16 +10,16 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 086cc19bb10d93146806ca499cfd21c7, type: 3}
-  m_Name: OneHandSwordPrefab
+  m_Name: GatherBoxPrefab
   m_EditorClassIdentifier: 
-  resourceName: One Hand Sword
+  resourceName: Gather Box
   displayName: 
   icon: {fileID: 0}
   iconBackgroundImage: {fileID: 0}
   description: 
   useRegionalDescription: 0
   resourceDescriptionProfile: 
-  prefab: {fileID: 1148443773253860121, guid: 8ce3ed43a8649d743a7f8bf704a81ea5, type: 3}
+  prefab: {fileID: 6884621815412460400, guid: ce70f95aa0d468d49ab73e18870b9921, type: 3}
   position: {x: 0, y: 0, z: 0}
   rotationIsGlobal: 0
   rotation: {x: 0, y: 0, z: 0}
@@ -31,7 +31,7 @@ MonoBehaviour:
   sheathedScale: {x: 1, y: 1, z: 1}
   sheathedTargetBone: 
   sheathAudioProfileName: 
-  useItemPickup: 1
-  pickupPosition: {x: 0, y: 0.05, z: 0}
-  pickupRotation: {x: 0, y: 90, z: 270}
+  useItemPickup: 0
+  pickupPosition: {x: 0, y: 0, z: 0}
+  pickupRotation: {x: 0, y: 0, z: 0}
   pickupScale: {x: 1, y: 1, z: 1}
