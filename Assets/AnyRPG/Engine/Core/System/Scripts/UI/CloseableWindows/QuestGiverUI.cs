@@ -417,7 +417,7 @@ namespace AnyRPG {
             }
 
             if (!itemCountMatches || !abilityCountMatches || !factionCountMatches) {
-                MessageFeedManager.MyInstance.WriteMessage("You must choose rewards before turning in this quest(!itemCountMatches || !abilityCountMatches || !factionCountMatches): " + !itemCountMatches + !abilityCountMatches + !factionCountMatches);
+                MessageFeedManager.MyInstance.WriteMessage("You must choose rewards before turning in this quest");
                 return;
             }
 

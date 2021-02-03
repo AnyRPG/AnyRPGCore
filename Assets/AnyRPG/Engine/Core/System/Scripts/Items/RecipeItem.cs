@@ -47,9 +47,9 @@ namespace AnyRPG {
                 }
                 string abilityKnownString = string.Empty;
                 if (PlayerManager.MyInstance.MyCharacter.CharacterAbilityManager.AbilityList.ContainsValue(recipe.CraftAbility)) {
-                    abilityKnownString = "<color=white>requires: " + recipe.CraftAbility.DisplayName  + "</color>\n";
+                    abilityKnownString = "<color=white>Requires: " + recipe.CraftAbility.DisplayName  + "</color>\n";
                 } else {
-                    abilityKnownString = "<color=red>requires: " + recipe.CraftAbility.DisplayName + "</color>\n";
+                    abilityKnownString = "<color=red>Requires: " + recipe.CraftAbility.DisplayName + "</color>\n";
                 }
                 returnString += string.Format("\n<color=green>Recipe</color>\n{0}{1}{2}", alreadyKnownString, abilityKnownString, recipe.MyOutput.GetSummary());
             }
