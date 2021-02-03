@@ -10,25 +10,25 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: c6b2325cf322104478c3c6aa91e88306, type: 3}
-  m_Name: StaffItem
+  m_Name: EnhancedTwoHandAxeItem
   m_EditorClassIdentifier: 
-  resourceName: Staff
+  resourceName: Enhanced Two Hand Axe
   displayName: 
-  icon: {fileID: 21300000, guid: 8b04cac8505abbb47bd5c91db3229c44, type: 3}
+  icon: {fileID: 21300000, guid: d27a2139b4dd9d24ca4eac37a5ffd7c4, type: 3}
   iconBackgroundImage: {fileID: 0}
-  description: a simple staff
+  description: a simple two hand axe
   useRegionalDescription: 0
   resourceDescriptionProfile: 
   stackSize: 0
-  itemQuality: 
+  itemQuality: Enhanced
   randomItemQuality: 0
   dynamicLevel: 1
   freezeDropLevel: 0
   levelCap: 0
   itemLevel: 1
-  currencyName: 
+  currencyName: Gold
   dynamicCurrencyAmount: 1
-  pricePerLevel: 10
+  pricePerLevel: 1
   basePrice: 0
   uniqueItem: 0
   characterClassRequirementList: []
@@ -39,20 +39,26 @@ MonoBehaviour:
   holdableObjectList:
   - attachmentNodes:
     - equipmentSlotProfileName: Main Hand
-      holdableObjectName: Staff
+      holdableObjectName: Two Hand Axe
       useUniversalAttachment: 1
-      primaryAttachmentName: Staff Sheathed
+      primaryAttachmentName: Two Hand Axe Sheathed
       unsheathedAttachmentName: Right Hand
   useArmorModifier: 0
   useManualArmor: 0
   manualValueIsScale: 0
   armorModifier: 0
-  primaryStats: []
+  primaryStats:
+  - statName: Stamina
+    useManualValue: 0
+    manualModifierValue: 0
+  - statName: Strength
+    useManualValue: 0
+    manualModifierValue: 0
   randomSecondaryStats: 0
   secondaryStats: []
   onEquipAbilityName: 
   learnedAbilityNames: []
-  weaponType: Staff
+  weaponType: Two Hand Axe
   defaultHitEffects: []
   onHitEffects: []
   animationProfileName: 

@@ -9,65 +9,63 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: aca3af34465aca242bf5a72591e68f68, type: 3}
-  m_Name: CraftEquipmentAbility
+  m_Script: {fileID: 11500000, guid: c80d744dccc642148ab1014a88212085, type: 3}
+  m_Name: BuffEverythingAbility
   m_EditorClassIdentifier: 
-  resourceName: Craft Equipment
+  resourceName: Buff Everything
   displayName: 
-  icon: {fileID: 21300000, guid: 957bbeabbf5f0d145a36adaf44bfa888, type: 3}
+  icon: {fileID: 21300000, guid: 36e004af4694cd145883cbc5091dad6d, type: 3}
   iconBackgroundImage: {fileID: 0}
-  description: Create equipment
+  description: Make the character more powerful
   useRegionalDescription: 0
   resourceDescriptionProfile: 
   requireOutOfCombat: 0
   weaponAffinityNames: []
-  holdableObjectList:
-  - holdableObjectName: One Hand Mace
-    useUniversalAttachment: 1
-    attachmentName: Right Hand
+  holdableObjectList: []
   abilityPrefabSource: 0
   animatorCreatePrefabs: 0
   prefabDestroyDelay: 0
-  animationProfileName: Craft Equipment
+  animationProfileName: 
   useUnitCastAnimations: 0
-  animationHitAudioProfileName: Light Tap
+  animationHitAudioProfileName: 
   castingAudioProfileName: 
   requiredLevel: 1
   characterClassRequirements: []
-  useableWithoutLearning: 0
-  autoAddToBars: 0
+  useableWithoutLearning: 1
+  autoAddToBars: 1
   canSimultaneousCast: 0
   canCastWhileMoving: 0
   ignoreGlobalCoolDown: 0
   powerResourceName: 
   baseResourceCost: 0
-  resourceCostPerLevel: 5
+  resourceCostPerLevel: 0
   spendDelay: 0
   generatePowerResourceName: 
   baseResourceGain: 0
   resourceGainPerLevel: 0
   useSpeedMultipliers: 1
   useAnimationCastTime: 1
-  abilityCastingTime: 1.2
+  abilityCastingTime: 0
   abilityCoolDown: 0
   coolDownOnCast: 0
   useAbilityEffectTargetting: 0
   targetOptions:
     requireTarget: 1
     requireLineOfSight: 0
-    requireLiveTarget: 0
+    requireLiveTarget: 1
     requireDeadTarget: 0
-    canCastOnSelf: 0
+    canCastOnSelf: 1
     canCastOnOthers: 0
     canCastOnEnemy: 0
     canCastOnNeutral: 0
     canCastOnFriendly: 0
-    autoSelfCast: 0
+    autoSelfCast: 1
     useMeleeRange: 0
     maxRange: 0
     requiresGroundTarget: 0
     groundTargetColor: {r: 1, g: 1, b: 1, a: 1}
     groundTargetRadius: 0
-  abilityEffectNames: []
+  abilityEffectNames:
+  - Increased Stats
   tickRate: 1
   channeledAbilityEffectnames: []

@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   resourceName: Craft Consumable
   displayName: 
-  icon: {fileID: 21300000, guid: e029593ae7518d743830eccfc3e4e2b7, type: 3}
+  icon: {fileID: 21300000, guid: d2b7e5e5ac220e14fb556d58f06c1232, type: 3}
   iconBackgroundImage: {fileID: 0}
   description: Make consumables
   useRegionalDescription: 0

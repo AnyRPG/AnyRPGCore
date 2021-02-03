@@ -9,32 +9,32 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: aca3af34465aca242bf5a72591e68f68, type: 3}
-  m_Name: CraftEquipmentAbility
+  m_Script: {fileID: 11500000, guid: 66414ec95fa1fc84bac2299ba70c520c, type: 3}
+  m_Name: EatBreadAbility
   m_EditorClassIdentifier: 
-  resourceName: Craft Equipment
+  resourceName: Eat Bread
   displayName: 
-  icon: {fileID: 21300000, guid: 957bbeabbf5f0d145a36adaf44bfa888, type: 3}
+  icon: {fileID: 21300000, guid: 63e8efad0672eaf4cb990d8084dd3305, type: 3}
   iconBackgroundImage: {fileID: 0}
-  description: Create equipment
+  description: Refill 250 health per second for 6 seconds.
   useRegionalDescription: 0
   resourceDescriptionProfile: 
   requireOutOfCombat: 0
   weaponAffinityNames: []
   holdableObjectList:
-  - holdableObjectName: One Hand Mace
+  - holdableObjectName: Sphere Brown
     useUniversalAttachment: 1
     attachmentName: Right Hand
   abilityPrefabSource: 0
   animatorCreatePrefabs: 0
   prefabDestroyDelay: 0
-  animationProfileName: Craft Equipment
+  animationProfileName: Kneel
   useUnitCastAnimations: 0
-  animationHitAudioProfileName: Light Tap
+  animationHitAudioProfileName: 
   castingAudioProfileName: 
   requiredLevel: 1
   characterClassRequirements: []
-  useableWithoutLearning: 0
+  useableWithoutLearning: 1
   autoAddToBars: 0
   canSimultaneousCast: 0
   canCastWhileMoving: 0
@@ -48,26 +48,27 @@ MonoBehaviour:
   resourceGainPerLevel: 0
   useSpeedMultipliers: 1
   useAnimationCastTime: 1
-  abilityCastingTime: 1.2
+  abilityCastingTime: 6
   abilityCoolDown: 0
   coolDownOnCast: 0
   useAbilityEffectTargetting: 0
   targetOptions:
     requireTarget: 1
     requireLineOfSight: 0
-    requireLiveTarget: 0
+    requireLiveTarget: 1
     requireDeadTarget: 0
-    canCastOnSelf: 0
+    canCastOnSelf: 1
     canCastOnOthers: 0
     canCastOnEnemy: 0
     canCastOnNeutral: 0
     canCastOnFriendly: 0
-    autoSelfCast: 0
+    autoSelfCast: 1
     useMeleeRange: 0
-    maxRange: 0
+    maxRange: 10
     requiresGroundTarget: 0
     groundTargetColor: {r: 1, g: 1, b: 1, a: 1}
     groundTargetRadius: 0
   abilityEffectNames: []
   tickRate: 1
-  channeledAbilityEffectnames: []
+  channeledAbilityEffectnames:
+  - Restore 250 Health

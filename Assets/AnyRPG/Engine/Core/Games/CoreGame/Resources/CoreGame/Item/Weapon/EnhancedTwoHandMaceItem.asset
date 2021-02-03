@@ -10,38 +10,38 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: c6b2325cf322104478c3c6aa91e88306, type: 3}
-  m_Name: StaffItem
+  m_Name: EnhancedTwoHandMaceItem
   m_EditorClassIdentifier: 
-  resourceName: Staff
+  resourceName: Enhanced Two Hand Mace
   displayName: 
-  icon: {fileID: 21300000, guid: 8b04cac8505abbb47bd5c91db3229c44, type: 3}
+  icon: {fileID: 21300000, guid: 14aad50d59f4ede4dac32492f4f4886e, type: 3}
   iconBackgroundImage: {fileID: 0}
-  description: a simple staff
+  description: a simple two hand mace
   useRegionalDescription: 0
   resourceDescriptionProfile: 
   stackSize: 0
-  itemQuality: 
+  itemQuality: Enhanced
   randomItemQuality: 0
   dynamicLevel: 1
   freezeDropLevel: 0
   levelCap: 0
   itemLevel: 1
-  currencyName: 
+  currencyName: Gold
   dynamicCurrencyAmount: 1
-  pricePerLevel: 10
+  pricePerLevel: 1
   basePrice: 0
   uniqueItem: 0
   characterClassRequirementList: []
-  equipmentSlotType: Two Hand
+  equipmentSlotType: Main Hand
   equipmentSetName: 
   useUMARecipe: 0
   umaRecipeProfileName: 
   holdableObjectList:
   - attachmentNodes:
     - equipmentSlotProfileName: Main Hand
-      holdableObjectName: Staff
+      holdableObjectName: Two Hand Mace
       useUniversalAttachment: 1
-      primaryAttachmentName: Staff Sheathed
+      primaryAttachmentName: Two Hand Mace Sheathed
       unsheathedAttachmentName: Right Hand
   useArmorModifier: 0
   useManualArmor: 0
@@ -52,7 +52,7 @@ MonoBehaviour:
   secondaryStats: []
   onEquipAbilityName: 
   learnedAbilityNames: []
-  weaponType: Staff
+  weaponType: Two Hand Mace
   defaultHitEffects: []
   onHitEffects: []
   animationProfileName: 

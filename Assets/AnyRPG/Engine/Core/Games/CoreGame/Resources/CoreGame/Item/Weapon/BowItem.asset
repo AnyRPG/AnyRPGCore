@@ -30,7 +30,7 @@ MonoBehaviour:
   dynamicCurrencyAmount: 1
   pricePerLevel: 10
   basePrice: 0
-  uniqueItem: 1
+  uniqueItem: 0
   characterClassRequirementList: []
   equipmentSlotType: Two Hand
   equipmentSetName: 
