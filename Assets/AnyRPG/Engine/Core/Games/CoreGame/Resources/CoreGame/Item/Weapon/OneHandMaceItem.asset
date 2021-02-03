@@ -20,15 +20,15 @@ MonoBehaviour:
   useRegionalDescription: 0
   resourceDescriptionProfile: 
   stackSize: 0
-  itemQuality: 
+  itemQuality: Average
   randomItemQuality: 0
-  dynamicLevel: 1
+  dynamicLevel: 0
   freezeDropLevel: 0
   levelCap: 0
   itemLevel: 1
-  currencyName: 
+  currencyName: Silver
   dynamicCurrencyAmount: 1
-  pricePerLevel: 10
+  pricePerLevel: 1
   basePrice: 0
   uniqueItem: 0
   characterClassRequirementList: []

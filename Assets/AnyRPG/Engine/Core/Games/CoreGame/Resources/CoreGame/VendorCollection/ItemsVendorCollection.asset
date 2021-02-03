@@ -23,3 +23,18 @@ MonoBehaviour:
   - itemName: Bag
     quantity: 0
     unlimited: 1
+  - itemName: Health Potion
+    quantity: 0
+    unlimited: 1
+  - itemName: Bread
+    quantity: 0
+    unlimited: 1
+  - itemName: Scroll
+    quantity: 0
+    unlimited: 1
+  - itemName: Quest Start
+    quantity: 0
+    unlimited: 1
+  - itemName: Gain Currency
+    quantity: 0
+    unlimited: 1

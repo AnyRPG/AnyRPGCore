@@ -184,8 +184,9 @@ MonoBehaviour:
     interactionPanelImage: {fileID: 0}
     namePlateImage: {fileID: 0}
     prerequisiteConditions: []
-    automaticCurrency: 0
-    lootTableNames: []
+    automaticCurrency: 1
+    lootTableNames:
+    - Dungeon
   dialogConfig:
     interactionPanelTitle: 
     interactionPanelImage: {fileID: 0}

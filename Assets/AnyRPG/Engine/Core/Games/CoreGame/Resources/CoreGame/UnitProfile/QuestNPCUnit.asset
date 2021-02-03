@@ -219,6 +219,12 @@ MonoBehaviour:
     - startQuest: 1
       endQuest: 1
       questName: Visit Zone
+    - startQuest: 1
+      endQuest: 1
+      questName: Learn Trade Skill
+    - startQuest: 1
+      endQuest: 1
+      questName: Use Ability
     questGiverProfileNames: []
   vendorConfig:
     interactionPanelTitle: 

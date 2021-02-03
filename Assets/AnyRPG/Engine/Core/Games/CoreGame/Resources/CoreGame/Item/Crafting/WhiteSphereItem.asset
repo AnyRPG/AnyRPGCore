@@ -20,7 +20,7 @@ MonoBehaviour:
   useRegionalDescription: 0
   resourceDescriptionProfile: 
   stackSize: 5
-  itemQuality: 
+  itemQuality: Average
   randomItemQuality: 0
   dynamicLevel: 0
   freezeDropLevel: 0
