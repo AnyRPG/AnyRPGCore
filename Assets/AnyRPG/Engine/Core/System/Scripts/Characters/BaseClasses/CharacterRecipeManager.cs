@@ -48,6 +48,9 @@ namespace AnyRPG {
 
         public void LearnRecipe(Recipe newRecipe) {
             //Debug.Log("CharacterRecipeManager.LearnRecipe(" + newRecipe.name + ")");
+            if (newRecipe == null) {
+                return;
+            }
             if (!recipeList.ContainsValue(newRecipe)) {
                 recipeList[SystemResourceManager.prepareStringForMatch(newRecipe.DisplayName)] = newRecipe;
                 EventParamProperties eventParamProperties = new EventParamProperties();
@@ -61,6 +64,10 @@ namespace AnyRPG {
             string keyName = SystemResourceManager.prepareStringForMatch(recipeName);
             if (!recipeList.ContainsKey(keyName)) {
                 recipeList[keyName] = SystemRecipeManager.MyInstance.GetResource(recipeName);
+                if (recipeList[keyName] == null) {
+                    // failed to get a valid recipe
+                    recipeList.Remove(keyName);
+                }
             }
         }
 
