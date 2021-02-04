@@ -39,7 +39,7 @@ MonoBehaviour:
   holdableObjectList:
   - attachmentNodes:
     - equipmentSlotProfileName: Main Hand
-      holdableObjectName: Two Hand Mace
+      holdableObjectName: Best Two Hand Mace
       useUniversalAttachment: 1
       primaryAttachmentName: Two Hand Mace Sheathed
       unsheathedAttachmentName: Right Hand

@@ -39,12 +39,12 @@ MonoBehaviour:
   holdableObjectList:
   - attachmentNodes:
     - equipmentSlotProfileName: Main Hand
-      holdableObjectName: Dagger
+      holdableObjectName: Best Dagger
       useUniversalAttachment: 1
       primaryAttachmentName: Main Hand Dagger Sheathed
       unsheathedAttachmentName: Right Hand
     - equipmentSlotProfileName: Off Hand
-      holdableObjectName: Dagger
+      holdableObjectName: Best Dagger
       useUniversalAttachment: 1
       primaryAttachmentName: One Hand Sword Sheathed
       unsheathedAttachmentName: Left Hand

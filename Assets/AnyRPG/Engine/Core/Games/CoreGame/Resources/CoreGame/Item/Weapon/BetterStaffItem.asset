@@ -39,7 +39,7 @@ MonoBehaviour:
   holdableObjectList:
   - attachmentNodes:
     - equipmentSlotProfileName: Main Hand
-      holdableObjectName: Staff
+      holdableObjectName: Better Staff
       useUniversalAttachment: 1
       primaryAttachmentName: Staff Sheathed
       unsheathedAttachmentName: Right Hand

@@ -39,7 +39,7 @@ MonoBehaviour:
   holdableObjectList:
   - attachmentNodes:
     - equipmentSlotProfileName: Off Hand
-      holdableObjectName: Shield
+      holdableObjectName: Better Shield
       useUniversalAttachment: 1
       primaryAttachmentName: Shield Sheathed
       unsheathedAttachmentName: Shield

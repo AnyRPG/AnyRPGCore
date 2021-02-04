@@ -39,7 +39,7 @@ MonoBehaviour:
   holdableObjectList:
   - attachmentNodes:
     - equipmentSlotProfileName: Main Hand
-      holdableObjectName: Two Hand Axe
+      holdableObjectName: Best Two Hand Axe
       useUniversalAttachment: 1
       primaryAttachmentName: Two Hand Axe Sheathed
       unsheathedAttachmentName: Right Hand

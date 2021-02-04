@@ -25,7 +25,8 @@ MonoBehaviour:
   capabilities:
     abilityNames: []
     traitNames: []
-    armorClassList: []
+    armorClassList:
+    - Leather
     weaponSkills:
     - Bow
   unitTypeCapabilities: []

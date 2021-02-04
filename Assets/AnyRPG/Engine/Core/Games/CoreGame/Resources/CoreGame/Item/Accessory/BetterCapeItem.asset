@@ -1,0 +1,60 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 784e129910873d342b920f361940ade1, type: 3}
+  m_Name: BetterCapeItem
+  m_EditorClassIdentifier: 
+  resourceName: Better Cape
+  displayName: 
+  icon: {fileID: 21300000, guid: 5896a20d585243045a187b7da3e69fb6, type: 3}
+  iconBackgroundImage: {fileID: 0}
+  description: made by an apprentice
+  useRegionalDescription: 0
+  resourceDescriptionProfile: 
+  stackSize: 0
+  itemQuality: Better
+  randomItemQuality: 0
+  dynamicLevel: 1
+  freezeDropLevel: 0
+  levelCap: 0
+  itemLevel: 1
+  currencyName: Silver
+  dynamicCurrencyAmount: 1
+  pricePerLevel: 10
+  basePrice: 0
+  uniqueItem: 0
+  characterClassRequirementList: []
+  equipmentSlotType: Cape
+  equipmentSetName: 
+  useUMARecipe: 0
+  umaRecipeProfileName: 
+  holdableObjectList: []
+  useArmorModifier: 0
+  useManualArmor: 0
+  manualValueIsScale: 0
+  armorModifier: 0
+  primaryStats:
+  - statName: Stamina
+    useManualValue: 0
+    manualModifierValue: 0
+  - statName: Intellect
+    useManualValue: 0
+    manualModifierValue: 0
+  - statName: Agility
+    useManualValue: 0
+    manualModifierValue: 0
+  - statName: Strength
+    useManualValue: 0
+    manualModifierValue: 0
+  randomSecondaryStats: 0
+  secondaryStats: []
+  onEquipAbilityName: 
+  learnedAbilityNames: []

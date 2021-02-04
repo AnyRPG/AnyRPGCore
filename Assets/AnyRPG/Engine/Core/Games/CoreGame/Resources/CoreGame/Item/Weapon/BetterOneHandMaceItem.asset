@@ -39,7 +39,7 @@ MonoBehaviour:
   holdableObjectList:
   - attachmentNodes:
     - equipmentSlotProfileName: Main Hand
-      holdableObjectName: One Hand Mace
+      holdableObjectName: Better One Hand Mace
       useUniversalAttachment: 1
       primaryAttachmentName: One Hand Mace Sheathed
       unsheathedAttachmentName: Right Hand

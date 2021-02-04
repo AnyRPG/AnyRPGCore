@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 086cc19bb10d93146806ca499cfd21c7, type: 3}
   m_Name: BowPrefab
   m_EditorClassIdentifier: 
-  resourceName: bow
+  resourceName: Bow
   displayName: 
   icon: {fileID: 0}
   iconBackgroundImage: {fileID: 0}

@@ -39,12 +39,12 @@ MonoBehaviour:
   holdableObjectList:
   - attachmentNodes:
     - equipmentSlotProfileName: Main Hand
-      holdableObjectName: Bow
+      holdableObjectName: Better Bow
       useUniversalAttachment: 1
       primaryAttachmentName: Bow Sheathed
       unsheathedAttachmentName: Left Hand
     - equipmentSlotProfileName: Main Hand
-      holdableObjectName: Quiver
+      holdableObjectName: Better Quiver
       useUniversalAttachment: 1
       primaryAttachmentName: Quiver
       unsheathedAttachmentName: 

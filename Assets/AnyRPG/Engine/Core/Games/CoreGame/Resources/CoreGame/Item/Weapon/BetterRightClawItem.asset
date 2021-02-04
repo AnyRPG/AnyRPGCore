@@ -39,7 +39,7 @@ MonoBehaviour:
   holdableObjectList:
   - attachmentNodes:
     - equipmentSlotProfileName: Main Hand
-      holdableObjectName: Right Claw
+      holdableObjectName: Better Right Claw
       useUniversalAttachment: 1
       primaryAttachmentName: Fist Main Hand Sheathed
       unsheathedAttachmentName: Right Hand
