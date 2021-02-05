@@ -16,7 +16,7 @@ MonoBehaviour:
   displayName: 
   icon: {fileID: 21300000, guid: 068618f626fbf69448d14da271218015, type: 3}
   iconBackgroundImage: {fileID: 0}
-  description: a simple shield
+  description: better than all the rest
   useRegionalDescription: 0
   resourceDescriptionProfile: 
   stackSize: 0

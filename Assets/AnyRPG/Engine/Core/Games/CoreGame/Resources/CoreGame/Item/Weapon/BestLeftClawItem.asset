@@ -16,7 +16,7 @@ MonoBehaviour:
   displayName: 
   icon: {fileID: 21300000, guid: 59463d1e84bc03a44b4f4c81002123a1, type: 3}
   iconBackgroundImage: {fileID: 0}
-  description: A fist weapon that has seen many battles
+  description: better than all the rest
   useRegionalDescription: 0
   resourceDescriptionProfile: 
   stackSize: 0

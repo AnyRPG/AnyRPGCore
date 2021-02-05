@@ -16,7 +16,7 @@ MonoBehaviour:
   displayName: 
   icon: {fileID: 21300000, guid: 14aad50d59f4ede4dac32492f4f4886e, type: 3}
   iconBackgroundImage: {fileID: 0}
-  description: a simple two hand mace
+  description: better than all the rest
   useRegionalDescription: 0
   resourceDescriptionProfile: 
   stackSize: 0

@@ -28,7 +28,7 @@ MonoBehaviour:
   abilityPrefabSource: 0
   animatorCreatePrefabs: 0
   prefabDestroyDelay: 0
-  animationProfileName: Cast 2H Forward 2s
+  animationProfileName: Cast 1H Forward
   useUnitCastAnimations: 0
   animationHitAudioProfileName: 
   castingAudioProfileName: Ice Spell

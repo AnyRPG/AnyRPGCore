@@ -23,7 +23,8 @@ MonoBehaviour:
   equipmentNames:
   - Dagger
   capabilities:
-    abilityNames: []
+    abilityNames:
+    - Stun Kick
     traitNames: []
     armorClassList:
     - Leather

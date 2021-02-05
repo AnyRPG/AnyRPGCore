@@ -26,6 +26,8 @@ MonoBehaviour:
   capabilities:
     abilityNames:
     - Ice Projectile
+    - Fire Projectile
+    - Meteor Shower
     traitNames: []
     armorClassList: []
     weaponSkills: []

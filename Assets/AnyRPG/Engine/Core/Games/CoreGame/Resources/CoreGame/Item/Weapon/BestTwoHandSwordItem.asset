@@ -16,7 +16,7 @@ MonoBehaviour:
   displayName: 
   icon: {fileID: 21300000, guid: 67ca09946d54b184d8de70d57d473b9c, type: 3}
   iconBackgroundImage: {fileID: 0}
-  description: a simple two hand sword
+  description: better than all the rest
   useRegionalDescription: 0
   resourceDescriptionProfile: 
   stackSize: 0

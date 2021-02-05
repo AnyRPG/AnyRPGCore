@@ -10,9 +10,9 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 621a5f1f29fd4ac41a1db478d5473374, type: 3}
-  m_Name: Cast2HForward2sAnimation
+  m_Name: Cast2HForwardAnimation
   m_EditorClassIdentifier: 
-  resourceName: Cast 2H Forward 2s
+  resourceName: Cast 2H Forward
   displayName: 
   icon: {fileID: 0}
   iconBackgroundImage: {fileID: 0}
@@ -24,7 +24,7 @@ MonoBehaviour:
     suppressAdjustAnimatorSpeed: 0
     attackClips: []
     castClips:
-    - {fileID: -1912065119680088509, guid: 4e624a4c0a2b91a4bb2d7b1f9bfecba9, type: 3}
+    - {fileID: -4898621576706478923, guid: 1ec2282f87aa24246b6886f971ab0829, type: 3}
     takeDamageClips: []
     idleClip: {fileID: 0}
     jumpClip: {fileID: 0}
