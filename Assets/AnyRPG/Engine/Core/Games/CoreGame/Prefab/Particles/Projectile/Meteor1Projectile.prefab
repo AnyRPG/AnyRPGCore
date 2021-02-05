@@ -4752,7 +4752,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 31d5bda4a68b0034c8243923a994e8fe, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  audioSource: {fileID: 0}
+  audioSource: {fileID: 7888731704711242277}
 --- !u!135 &8072670817385608498
 SphereCollider:
   m_ObjectHideFlags: 0

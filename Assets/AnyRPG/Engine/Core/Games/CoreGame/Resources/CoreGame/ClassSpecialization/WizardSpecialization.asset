@@ -28,6 +28,7 @@ MonoBehaviour:
     - Ice Projectile
     - Fire Projectile
     - Meteor Shower
+    - Tornado
     traitNames: []
     armorClassList: []
     weaponSkills: []
