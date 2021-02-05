@@ -24,7 +24,8 @@ MonoBehaviour:
   classNames:
   - Magic
   capabilities:
-    abilityNames: []
+    abilityNames:
+    - Ice Projectile
     traitNames: []
     armorClassList: []
     weaponSkills: []
