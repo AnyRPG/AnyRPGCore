@@ -48,7 +48,7 @@ MonoBehaviour:
   - holdableObjectName: Green Hit
     useUniversalAttachment: 0
     attachmentName: 
-  prefabSpawnLocation: 3
+  prefabSpawnLocation: 2
   prefabDestroyDelay: 0
   destroyOnEndCast: 0
   tickRate: 0
