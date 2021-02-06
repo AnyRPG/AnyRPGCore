@@ -96,6 +96,18 @@ namespace AnyRPG {
                 }
             }
 
+            powerResourceList = new List<PowerResource>();
+            if (powerResources != null) {
+                foreach (string powerResourcename in powerResources) {
+                    PowerResource tmpPowerResource = SystemPowerResourceManager.MyInstance.GetResource(powerResourcename);
+                    if (tmpPowerResource != null) {
+                        powerResourceList.Add(tmpPowerResource);
+                    } else {
+                        Debug.LogError("CharacterClass.SetupScriptableObjects(): Could not find power resource : " + powerResourcename + " while inititalizing " + DisplayName + ".  CHECK INSPECTOR");
+                    }
+                }
+            }
+
             capabilities.SetupScriptableObjects();
 
         }
