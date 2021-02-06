@@ -22,6 +22,7 @@ MonoBehaviour:
   requireOutOfCombat: 0
   weaponAffinityNames:
   - Unarmed
+  - Fist
   holdableObjectList: []
   abilityPrefabSource: 0
   animatorCreatePrefabs: 0
@@ -30,7 +31,7 @@ MonoBehaviour:
   useUnitCastAnimations: 0
   animationHitAudioProfileName: 
   castingAudioProfileName: 
-  requiredLevel: 10
+  requiredLevel: 1
   characterClassRequirements: []
   useableWithoutLearning: 0
   autoAddToBars: 1
@@ -73,4 +74,4 @@ MonoBehaviour:
   isAutoAttack: 0
   useUnitAttackAnimations: 0
   useAutoAttackAnimations: 0
-  useWeaponHitSound: 0
+  useWeaponHitSound: 1
