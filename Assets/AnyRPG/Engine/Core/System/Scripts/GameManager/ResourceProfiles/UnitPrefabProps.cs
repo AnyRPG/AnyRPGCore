@@ -101,7 +101,7 @@ namespace AnyRPG {
                 if (tmpAttachmentProfile != null) {
                     attachmentProfile = tmpAttachmentProfile;
                 } else {
-                    Debug.LogError("UnitPrefabProps.SetupScriptableObjects(): UNABLE TO FIND AudioProfile " + attachmentProfileName + " while initializing. CHECK INSPECTOR!");
+                    Debug.LogError("UnitPrefabProps.SetupScriptableObjects(): UNABLE TO FIND Attachment Profile " + attachmentProfileName + " while initializing. CHECK INSPECTOR!");
                 }
             }
         }
