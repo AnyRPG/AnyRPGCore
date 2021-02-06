@@ -10,11 +10,11 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 112af3617e1a7764995fb750dc36e2ea, type: 3}
-  m_Name: ReviveAllyEffect
+  m_Name: ReviveEnemyEffect
   m_EditorClassIdentifier: 
-  resourceName: Revive Ally
+  resourceName: Revive Enemy
   displayName: 
-  icon: {fileID: 21300000, guid: d816099ac60642e42ad491a31f38ea8b, type: 3}
+  icon: {fileID: 0}
   iconBackgroundImage: {fileID: 0}
   description: 
   useRegionalDescription: 0
@@ -26,9 +26,9 @@ MonoBehaviour:
     requireDeadTarget: 1
     canCastOnSelf: 0
     canCastOnOthers: 1
-    canCastOnEnemy: 0
+    canCastOnEnemy: 1
     canCastOnNeutral: 0
-    canCastOnFriendly: 1
+    canCastOnFriendly: 0
     autoSelfCast: 0
     useMeleeRange: 0
     maxRange: 0
@@ -37,16 +37,16 @@ MonoBehaviour:
   chanceToCast: 100
   effectMaterialName: 
   materialChangeDuration: 2
-  onHitAudioProfileNames:
-  - Resurrect Spell
+  onHitAudioProfileNames: []
   randomAudioProfiles: 0
-  hitAbilityEffectNames: []
+  hitAbilityEffectNames:
+  - Player Control
   inputMultiplier: 0
   threatMultiplier: 1
   abilityPrefabSource: 1
   randomPrefabs: 0
   abilityObjectList:
-  - holdableObjectName: Resurrection Circle
+  - holdableObjectName: Black Resurrection Circle
     useUniversalAttachment: 0
     attachmentName: 
   prefabSpawnLocation: 2

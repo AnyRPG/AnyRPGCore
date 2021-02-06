@@ -29,6 +29,7 @@ MonoBehaviour:
     - Fire Projectile
     - Meteor Shower
     - Tornado
+    - Revive Enemy
     traitNames: []
     armorClassList: []
     weaponSkills: []
