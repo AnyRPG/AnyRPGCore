@@ -44,7 +44,10 @@ MonoBehaviour:
   threatMultiplier: 1
   abilityPrefabSource: 1
   randomPrefabs: 0
-  abilityObjectList: []
+  abilityObjectList:
+  - holdableObjectName: Green Energy Pulse
+    useUniversalAttachment: 0
+    attachmentName: 
   prefabSpawnLocation: 2
   prefabDestroyDelay: 0
   destroyOnEndCast: 0
@@ -54,7 +57,7 @@ MonoBehaviour:
   onTickAudioProfileNames: []
   randomTickAudioProfiles: 0
   completeAbilityEffectNames: []
-  defaultPrefabLifetime: 3
+  defaultPrefabLifetime: 2
   allowCriticalStrike: 0
   resourceAmounts:
   - resourceName: Health

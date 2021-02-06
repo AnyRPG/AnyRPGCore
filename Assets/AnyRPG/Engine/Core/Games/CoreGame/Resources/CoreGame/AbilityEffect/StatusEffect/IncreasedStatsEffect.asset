@@ -73,8 +73,8 @@ MonoBehaviour:
   secondaryStatBuffsTypes: 0000000001000000020000000300000004000000050000000600000007000000
   secondaryStatAmount: 1
   secondaryStatMultiplier: 1.1
-  outgoingDamageMultiplier: 1.1
-  incomingDamageMultiplier: 0.9
+  outgoingDamageMultiplier: 1
+  incomingDamageMultiplier: 1
   factionModifiers: []
   disableAnimator: 0
   stun: 0

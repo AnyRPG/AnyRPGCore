@@ -25,7 +25,9 @@ MonoBehaviour:
   capabilities:
     abilityNames:
     - Stun Kick
-    traitNames: []
+    - Poison Weapons
+    traitNames:
+    - Faster Attack Speed
     armorClassList:
     - Leather
     weaponSkills:

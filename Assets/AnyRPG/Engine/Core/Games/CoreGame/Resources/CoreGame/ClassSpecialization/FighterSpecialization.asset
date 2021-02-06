@@ -32,5 +32,6 @@ MonoBehaviour:
     weaponSkills:
     - Fist
   primaryStats: []
-  powerResources: []
+  powerResources:
+  - Energy
   powerEnhancerStats: []

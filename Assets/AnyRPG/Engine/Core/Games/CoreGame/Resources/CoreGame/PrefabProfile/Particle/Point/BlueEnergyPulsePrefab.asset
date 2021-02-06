@@ -10,20 +10,20 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 086cc19bb10d93146806ca499cfd21c7, type: 3}
-  m_Name: DefaultBlueHitPrefab
+  m_Name: BlueEnergyPulsePrefab
   m_EditorClassIdentifier: 
-  resourceName: Default Blue Hit
+  resourceName: Blue Energy Pulse
   displayName: 
   icon: {fileID: 0}
   iconBackgroundImage: {fileID: 0}
   description: 
   useRegionalDescription: 0
   resourceDescriptionProfile: 
-  prefab: {fileID: 6760841765996351095, guid: 1c6fb037bfe8c6a48af6e84f0c328550, type: 3}
+  prefab: {fileID: 100004, guid: 325aecd1797384b4597a33bab8431248, type: 3}
   position: {x: 0, y: 1, z: 0}
   rotationIsGlobal: 0
   rotation: {x: 0, y: 0, z: 0}
-  scale: {x: 1, y: 1, z: 1}
+  scale: {x: 0.5, y: 0.5, z: 0.5}
   targetBone: 
   unsheathAudioProfileName: 
   sheathedPosition: {x: 0, y: 0, z: 0}

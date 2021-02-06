@@ -23,8 +23,10 @@ MonoBehaviour:
   equipmentNames:
   - Staff
   capabilities:
-    abilityNames: []
-    traitNames: []
+    abilityNames:
+    - Restore Mana
+    traitNames:
+    - Increased Critical Strike
     armorClassList:
     - Cloth
     weaponSkills:

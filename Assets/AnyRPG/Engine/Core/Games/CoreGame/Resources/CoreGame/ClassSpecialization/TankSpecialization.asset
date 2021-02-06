@@ -27,7 +27,8 @@ MonoBehaviour:
   - Melee
   capabilities:
     abilityNames: []
-    traitNames: []
+    traitNames:
+    - Take Less Damage
     armorClassList: []
     weaponSkills:
     - One Hand Sword

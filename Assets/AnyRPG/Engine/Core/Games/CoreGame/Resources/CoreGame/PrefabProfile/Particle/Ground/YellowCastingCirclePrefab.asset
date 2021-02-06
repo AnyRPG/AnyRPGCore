@@ -10,17 +10,17 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 086cc19bb10d93146806ca499cfd21c7, type: 3}
-  m_Name: DefaultWhiteHitPrefab
+  m_Name: YellowCastingCirclePrefab
   m_EditorClassIdentifier: 
-  resourceName: Default White Hit
+  resourceName: Yellow Casting Circle
   displayName: 
   icon: {fileID: 0}
   iconBackgroundImage: {fileID: 0}
   description: 
   useRegionalDescription: 0
   resourceDescriptionProfile: 
-  prefab: {fileID: 6760841765996351095, guid: b4f3331f430dc554482194474c5141e4, type: 3}
-  position: {x: 0, y: 1, z: 0}
+  prefab: {fileID: 197712, guid: 25e1a7f6d485872409c710e5076f7825, type: 3}
+  position: {x: 0, y: 0, z: 0}
   rotationIsGlobal: 0
   rotation: {x: 0, y: 0, z: 0}
   scale: {x: 1, y: 1, z: 1}

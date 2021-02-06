@@ -10,20 +10,20 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 086cc19bb10d93146806ca499cfd21c7, type: 3}
-  m_Name: DefaultPoisonHitPrefab
+  m_Name: GreenEnergyPulsePrefab
   m_EditorClassIdentifier: 
-  resourceName: Default Poison Hit
+  resourceName: Green Energy Pulse
   displayName: 
   icon: {fileID: 0}
   iconBackgroundImage: {fileID: 0}
   description: 
   useRegionalDescription: 0
   resourceDescriptionProfile: 
-  prefab: {fileID: 6760841765996351095, guid: 8fd3f7ad2041bb24c98d5e691377db16, type: 3}
+  prefab: {fileID: 100004, guid: f58165a075cd0e945a5f948287169de7, type: 3}
   position: {x: 0, y: 1, z: 0}
   rotationIsGlobal: 0
   rotation: {x: 0, y: 0, z: 0}
-  scale: {x: 1, y: 1, z: 1}
+  scale: {x: 0.5, y: 0.5, z: 0.5}
   targetBone: 
   unsheathAudioProfileName: 
   sheathedPosition: {x: 0, y: 0, z: 0}

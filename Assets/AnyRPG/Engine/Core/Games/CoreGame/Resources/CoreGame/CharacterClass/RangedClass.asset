@@ -24,7 +24,8 @@ MonoBehaviour:
   - Bow
   capabilities:
     abilityNames: []
-    traitNames: []
+    traitNames:
+    - Do More Damage
     armorClassList:
     - Leather
     weaponSkills:

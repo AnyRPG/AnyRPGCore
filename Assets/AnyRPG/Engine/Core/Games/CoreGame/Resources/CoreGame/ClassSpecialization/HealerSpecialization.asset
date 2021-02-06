@@ -24,7 +24,8 @@ MonoBehaviour:
   classNames:
   - Magic
   capabilities:
-    abilityNames: []
+    abilityNames:
+    - Heal
     traitNames: []
     armorClassList: []
     weaponSkills: []
