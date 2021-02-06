@@ -89,6 +89,11 @@ namespace AnyRPG {
 
         protected void CheckSetMoveDestination() {
             //Debug.Log(unitController.gameObject.name + ": UnitMotor.CheckSetMoveDestination()");
+            if (unitController?.CharacterUnit?.BaseCharacter?.CharacterStats.IsReviving == true) {
+                // cannot issue move command while revive in progress
+                return;
+            }
+
             if (setMoveDestination && unitController.NavMeshAgent.pathPending == false && unitController.NavMeshAgent.hasPath == false) {
                 //Debug.Log(unitController.gameObject.name + ".UnitMotor.CheckSetMoveDestination(): setMoveDestination: true.  Set move destination: " + destinationPosition + "; current location: " + unitController.transform.position);
                 unitController.EnableAgent();

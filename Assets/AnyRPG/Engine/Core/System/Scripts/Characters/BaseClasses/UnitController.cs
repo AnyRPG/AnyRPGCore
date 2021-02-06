@@ -1097,7 +1097,8 @@ namespace AnyRPG {
 
         public Vector3 SetDestination(Vector3 destination) {
             //Debug.Log(gameObject.name + ".UnitController.SetDestination(" + destination + "). current location: " + transform.position);
-            if (!(currentState is DeathState)) {
+            if ((currentState is DeathState) == false) {
+                //if ((currentState is DeathState) == false && characterUnit?.BaseCharacter?.CharacterStats?.IsReviving == false) {
                 CommonMovementNotifier();
                 return UnitMotor.MoveToPoint(destination);
             } else {
@@ -1506,6 +1507,9 @@ namespace AnyRPG {
         }
 
         public void CommonMovementNotifier() {
+            if ((currentState is DeathState) == true || characterUnit?.BaseCharacter?.CharacterStats?.IsReviving == true) {
+                return;
+            }
             OnManualMovement();
         }
 
