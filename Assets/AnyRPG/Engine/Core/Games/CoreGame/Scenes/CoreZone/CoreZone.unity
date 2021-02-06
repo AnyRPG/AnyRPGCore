@@ -21689,6 +21689,7 @@ MonoBehaviour:
     - Red Wizard
     - Red Archer
     - Red PetTamer
+    - Dragon
     unitSpawnNodeList:
     - {fileID: 1804240351}
 --- !u!1 &925332853284332765

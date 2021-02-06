@@ -26,7 +26,8 @@ MonoBehaviour:
   classNames:
   - Melee
   capabilities:
-    abilityNames: []
+    abilityNames:
+    - Punch Combo
     traitNames: []
     armorClassList: []
     weaponSkills:

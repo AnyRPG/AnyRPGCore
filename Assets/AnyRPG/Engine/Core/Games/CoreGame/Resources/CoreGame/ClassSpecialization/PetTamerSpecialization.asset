@@ -24,7 +24,8 @@ MonoBehaviour:
   classNames:
   - Ranged
   capabilities:
-    abilityNames: []
+    abilityNames:
+    - Capture Beast
     traitNames: []
     armorClassList: []
     weaponSkills: []

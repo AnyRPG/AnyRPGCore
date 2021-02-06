@@ -9,14 +9,14 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 499bdf3134e84df4c99414d0ac47ec01, type: 3}
-  m_Name: DoMoreDamageEffect
+  m_Script: {fileID: 11500000, guid: 11d7ca95ab41d1d4daf1af28628c8580, type: 3}
+  m_Name: TauntEffect
   m_EditorClassIdentifier: 
-  resourceName: Do More Damage
+  resourceName: Taunt
   displayName: 
-  icon: {fileID: 21300000, guid: 14aad50d59f4ede4dac32492f4f4886e, type: 3}
+  icon: {fileID: 21300000, guid: f628827764ea9d147a6d68fc62c826e2, type: 3}
   iconBackgroundImage: {fileID: 0}
-  description: outgoing damage is increased
+  description: Threatened
   useRegionalDescription: 0
   resourceDescriptionProfile: 
   targetOptions:
@@ -24,14 +24,14 @@ MonoBehaviour:
     requireLineOfSight: 0
     requireLiveTarget: 1
     requireDeadTarget: 0
-    canCastOnSelf: 1
-    canCastOnOthers: 0
-    canCastOnEnemy: 0
+    canCastOnSelf: 0
+    canCastOnOthers: 1
+    canCastOnEnemy: 1
     canCastOnNeutral: 0
     canCastOnFriendly: 0
-    autoSelfCast: 1
+    autoSelfCast: 0
     useMeleeRange: 0
-    maxRange: 0
+    maxRange: 30
     lineOfSightSourceLocation: 0
     targetRangeSourceLocation: 0
   chanceToCast: 100
@@ -54,14 +54,14 @@ MonoBehaviour:
   onTickAudioProfileNames: []
   randomTickAudioProfiles: 0
   completeAbilityEffectNames: []
-  statusEffectAlignment: 0
+  statusEffectAlignment: 2
   statusEffectTypeName: 
-  classTrait: 1
+  classTrait: 0
   requiredLevel: 1
   sceneNames: []
-  limitedDuration: 0
-  refreshableDuration: 0
-  duration: 0
+  limitedDuration: 1
+  refreshableDuration: 1
+  duration: 5
   maxStacks: 1
   statBuffTypeNames: []
   statAmount: 0
@@ -69,7 +69,7 @@ MonoBehaviour:
   secondaryStatBuffsTypes: 
   secondaryStatAmount: 0
   secondaryStatMultiplier: 1
-  outgoingDamageMultiplier: 1.1
+  outgoingDamageMultiplier: 1
   incomingDamageMultiplier: 1
   factionModifiers: []
   disableAnimator: 0

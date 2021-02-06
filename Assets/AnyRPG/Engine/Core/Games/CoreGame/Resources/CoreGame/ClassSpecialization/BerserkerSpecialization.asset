@@ -25,13 +25,16 @@ MonoBehaviour:
   classNames:
   - Melee
   capabilities:
-    abilityNames: []
-    traitNames: []
+    abilityNames:
+    - Berserker Strikes
+    traitNames:
+    - Rage Generation
     armorClassList: []
     weaponSkills:
     - Two Hand Sword
     - Two Hand Mace
     - Two Hand Axe
   primaryStats: []
-  powerResources: []
+  powerResources:
+  - Rage
   powerEnhancerStats: []

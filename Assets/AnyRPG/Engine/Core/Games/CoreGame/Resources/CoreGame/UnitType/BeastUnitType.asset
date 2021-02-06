@@ -9,30 +9,20 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d67e3801170622341be03526c0ae62e0, type: 3}
-  m_Name: RangedClass
+  m_Script: {fileID: 11500000, guid: c6045bf13b28c6949afdea630b3a24a0, type: 3}
+  m_Name: BeastUnitType
   m_EditorClassIdentifier: 
-  resourceName: Ranged
+  resourceName: Beast
   displayName: 
-  icon: {fileID: 21300000, guid: 85c1dd9f802166240ae6b7da8067caab, type: 3}
+  icon: {fileID: 21300000, guid: 05f2fe84823627b4b994b1d5bd39b25b, type: 3}
   iconBackgroundImage: {fileID: 0}
   description: 
   useRegionalDescription: 0
   resourceDescriptionProfile: 
-  newGameOption: 0
-  equipmentNames:
-  - Bow
   capabilities:
-    abilityNames:
-    - Charm Pet
-    traitNames:
-    - Do More Damage
-    armorClassList:
-    - Leather
-    weaponSkills:
-    - Bow
-  unitTypeCapabilities: []
+    abilityNames: []
+    traitNames: []
+    armorClassList: []
+    weaponSkills: []
   primaryStats: []
   powerResources: []
-  validPetTypes:
-  - Beast
