@@ -35,7 +35,13 @@ MonoBehaviour:
   primaryStats:
   - statName: Intellect
     budgetPerLevel: 5
-    primaryToSecondaryConversion: []
+    primaryToSecondaryConversion:
+    - secondaryStatType: 6
+      conversionRatio: 1
+      ratedConversion: 0
+    - secondaryStatType: 2
+      conversionRatio: 0.5
+      ratedConversion: 1
     primaryToResourceConversion:
     - resourceName: Mana
       resourcePerPoint: 10
