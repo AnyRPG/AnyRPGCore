@@ -356,16 +356,16 @@ namespace AnyRPG {
                 && baseCharacter.UnitProfile.UnitPrefabProps.AnimationProps != null) {
                 return baseCharacter.UnitProfile.UnitPrefabProps.AnimationProps;
             }
+            if (SystemConfigurationManager.MyInstance?.DefaultAnimationProfile != null) {
+                return SystemConfigurationManager.MyInstance.DefaultAnimationProfile.AnimationProps;
+            }
             return base.GetUnitAnimationProps();
         }
 
         public override List<AnimationClip> GetUnitCastAnimations() {
             //Debug.Log(gameObject.name + ".GetDefaultAttackAnimations()");
-            // TODO : use current cast animation set instead, which should include overwritten weapon base casts
-            if (baseCharacter.UnitProfile != null
-                && baseCharacter.UnitProfile != null
-                && baseCharacter.UnitProfile.UnitPrefabProps.AnimationProps != null) {
-                return baseCharacter.UnitProfile.UnitPrefabProps.AnimationProps.CastClips;
+            if (baseCharacter?.UnitController?.UnitAnimator?.CurrentAnimations != null) {
+                return baseCharacter.UnitController.UnitAnimator.CurrentAnimations.CastClips;
             }
             return base.GetUnitCastAnimations();
         }
