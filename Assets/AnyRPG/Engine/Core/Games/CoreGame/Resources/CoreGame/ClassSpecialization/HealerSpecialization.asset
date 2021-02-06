@@ -26,6 +26,7 @@ MonoBehaviour:
   capabilities:
     abilityNames:
     - Heal
+    - Revive Ally
     traitNames: []
     armorClassList: []
     weaponSkills: []

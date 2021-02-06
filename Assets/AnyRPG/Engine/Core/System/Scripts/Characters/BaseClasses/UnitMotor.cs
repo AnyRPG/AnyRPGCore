@@ -413,7 +413,7 @@ namespace AnyRPG {
         }
 
         public void RotateToward(Vector3 rotateDirection) {
-            //Debug.Log(gameObject.name + ".UnitMotor.RotateToward(): " + rotateDirection);
+            //Debug.Log(unitController.gameObject.name + ".UnitMotor.RotateToward(): " + rotateDirection);
             if (frozen) {
                 return;
             }
@@ -430,7 +430,7 @@ namespace AnyRPG {
         }
 
         public void Rotate(Vector3 rotateDirection) {
-            //Debug.Log(gameObject.name + ".UnitMotor.Rotate(): " + rotateDirection);
+            //Debug.Log(unitController.gameObject.name + ".UnitMotor.Rotate(): " + rotateDirection);
             if (frozen) {
                 return;
             }
@@ -479,25 +479,25 @@ namespace AnyRPG {
         }
 
         public void FaceTarget(Interactable newTarget) {
-            //Debug.Log(gameObject.name + ".UnitMotor.FaceTarget(" + newTarget.name + ")");
+            //Debug.Log(unitController.gameObject.name + ".UnitMotor.FaceTarget(" + newTarget.name + ")");
             if (frozen) {
                 return;
             }
             Vector3 direction = (newTarget.transform.position - unitController.transform.position).normalized;
+
+            // prevent turning updward
+            direction = new Vector3(direction.x, 0f, direction.z);
+
             //Quaternion lookRotation = Quaternion.LookRotation(new Vector3(direction.x, 0f, direction.z));
             if (unitController.NavMeshAgent.enabled) {
                 unitController.NavMeshAgent.updateRotation = false;
-                //unitController.MyAgent.r
             }
-            //transform.rotation = Quaternion.RotateTowards(transform.rotation, lookRotation, Time.deltaTime * 500);
-            //transform.rotation = lookRotation;
-            //Debug.Log(gameObject.name + ".UnitMotor.FaceTarget(" + newTarget.name + "): direction: " + direction);
+            //Debug.Log(unitController.gameObject.name + ".UnitMotor.FaceTarget(" + newTarget.name + "): direction: " + direction + "; current: " + unitController.transform.forward);
             if (direction != Vector3.zero) {
                 unitController.transform.forward = direction;
             }
             if (unitController.NavMeshAgent.enabled) {
                 unitController.NavMeshAgent.updateRotation = true;
-                //unitController.MyAgent.r
             }
         }
 
