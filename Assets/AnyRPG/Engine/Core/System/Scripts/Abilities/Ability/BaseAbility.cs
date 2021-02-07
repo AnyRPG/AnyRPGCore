@@ -230,7 +230,7 @@ namespace AnyRPG {
         public AudioClip AnimationHitAudioClip { get => (animationHitAudioProfile == null ? null : animationHitAudioProfile.AudioClip); }
         public bool AnimatorCreatePrefabs { get => animatorCreatePrefabs; set => animatorCreatePrefabs = value; }
         public List<AnimationClip> AttackClips { get => (animationProfile != null ? animationProfile.AnimationProps.AttackClips : null); }
-        public List<AnimationClip> CastClips { get => (animationProfile != null ? animationProfile.AnimationProps.CastClips : null); }
+        public List<AnimationClip> CastClips { get => (animationProfile != null ? animationProfile.AnimationProps.CastClips : new List<AnimationClip>()); }
         public List<string> WeaponAffinityNames { get => weaponAffinityNames; set => weaponAffinityNames = value; }
         public bool RequireOutOfCombat { get => requireOutOfCombat; set => requireOutOfCombat = value; }
         public List<string> AbilityEffectNames { get => abilityEffectNames; set => abilityEffectNames = value; }

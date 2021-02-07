@@ -27,6 +27,7 @@ MonoBehaviour:
   capabilities:
     abilityNames:
     - Berserker Strikes
+    - Life Drain Strikes
     traitNames:
     - Rage Generation
     armorClassList: []
