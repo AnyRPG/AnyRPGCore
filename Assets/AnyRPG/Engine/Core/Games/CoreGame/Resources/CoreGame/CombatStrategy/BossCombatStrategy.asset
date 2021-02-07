@@ -33,3 +33,4 @@ MonoBehaviour:
     maintainBuffNames: []
     attackAbilityNames:
     - Knock Back
+    - Ground Slam

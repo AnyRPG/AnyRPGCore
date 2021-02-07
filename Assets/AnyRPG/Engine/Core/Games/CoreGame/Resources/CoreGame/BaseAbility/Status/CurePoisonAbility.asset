@@ -10,47 +10,47 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: c80d744dccc642148ab1014a88212085, type: 3}
-  m_Name: Restore1000HealthAbility
+  m_Name: CurePoisonAbility
   m_EditorClassIdentifier: 
-  resourceName: Restore 1000 Health
+  resourceName: Cure Poison
   displayName: 
-  icon: {fileID: 21300000, guid: 753f7584cf233ff4186f953048bf35c9, type: 3}
+  icon: {fileID: 21300000, guid: 4934638cea763774484de4256678d5df, type: 3}
   iconBackgroundImage: {fileID: 0}
-  description: Restore 1000 Health
+  description: Cure poison
   useRegionalDescription: 0
   resourceDescriptionProfile: 
   requireOutOfCombat: 0
   weaponAffinityNames: []
   holdableObjectList:
-  - holdableObjectName: Health Potion
-    useUniversalAttachment: 1
-    attachmentName: Right Hand
+  - holdableObjectName: Yellow Casting Circle
+    useUniversalAttachment: 0
+    attachmentName: 
   abilityPrefabSource: 0
   animatorCreatePrefabs: 0
   prefabDestroyDelay: 0
-  animationProfileName: Drink
-  useUnitCastAnimations: 0
+  animationProfileName: 
+  useUnitCastAnimations: 1
   animationHitAudioProfileName: 
-  castingAudioProfileName: 
-  requiredLevel: 5
+  castingAudioProfileName: Restore Spell
+  requiredLevel: 1
   characterClassRequirements: []
-  useableWithoutLearning: 1
-  autoAddToBars: 0
+  useableWithoutLearning: 0
+  autoAddToBars: 1
   canSimultaneousCast: 0
   canCastWhileMoving: 0
   ignoreGlobalCoolDown: 0
-  powerResourceName: 
+  powerResourceName: Mana
   baseResourceCost: 0
   resourceCostPerLevel: 5
   spendDelay: 0
   generatePowerResourceName: 
   baseResourceGain: 0
   resourceGainPerLevel: 0
-  useSpeedMultipliers: 0
+  useSpeedMultipliers: 1
   useAnimationCastTime: 1
-  abilityCastingTime: 2.6
-  abilityCoolDown: 10
-  coolDownOnCast: 1
+  abilityCastingTime: 0
+  abilityCoolDown: 0
+  coolDownOnCast: 0
   useAbilityEffectTargetting: 0
   targetOptions:
     requireTarget: 1
@@ -58,17 +58,17 @@ MonoBehaviour:
     requireLiveTarget: 1
     requireDeadTarget: 0
     canCastOnSelf: 1
-    canCastOnOthers: 0
+    canCastOnOthers: 1
     canCastOnEnemy: 0
     canCastOnNeutral: 0
-    canCastOnFriendly: 0
+    canCastOnFriendly: 1
     autoSelfCast: 1
     useMeleeRange: 0
-    maxRange: 0
+    maxRange: 40
     requiresGroundTarget: 0
     groundTargetColor: {r: 1, g: 1, b: 1, a: 1}
     groundTargetRadius: 0
-  abilityEffectNames: []
-  tickRate: 0.83
-  channeledAbilityEffectnames:
-  - Restore 250 Health
+  abilityEffectNames:
+  - Cure Poison
+  tickRate: 1
+  channeledAbilityEffectnames: []

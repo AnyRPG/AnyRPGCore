@@ -28,6 +28,7 @@ MonoBehaviour:
     - Heal
     - Healing Circle
     - Revive Ally
+    - Cure Poison
     traitNames: []
     armorClassList: []
     weaponSkills: []

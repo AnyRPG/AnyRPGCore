@@ -143,6 +143,7 @@ MonoBehaviour:
     abilityNames:
     - Laser Explosion
     - Knock Back
+    - Ground Slam
     traitNames: []
     armorClassList: []
     weaponSkills: []

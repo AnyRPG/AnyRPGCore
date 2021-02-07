@@ -9,66 +9,67 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c80d744dccc642148ab1014a88212085, type: 3}
-  m_Name: Restore1000HealthAbility
+  m_Script: {fileID: 11500000, guid: d7f20dbf54d5643499578902863f014d, type: 3}
+  m_Name: GroundSlamAbility
   m_EditorClassIdentifier: 
-  resourceName: Restore 1000 Health
+  resourceName: Ground Slam
   displayName: 
-  icon: {fileID: 21300000, guid: 753f7584cf233ff4186f953048bf35c9, type: 3}
+  icon: {fileID: 21300000, guid: afb80656e2525e64c972a922e0664689, type: 3}
   iconBackgroundImage: {fileID: 0}
-  description: Restore 1000 Health
+  description: Slam the Ground
   useRegionalDescription: 0
   resourceDescriptionProfile: 
   requireOutOfCombat: 0
   weaponAffinityNames: []
-  holdableObjectList:
-  - holdableObjectName: Health Potion
-    useUniversalAttachment: 1
-    attachmentName: Right Hand
+  holdableObjectList: []
   abilityPrefabSource: 0
   animatorCreatePrefabs: 0
   prefabDestroyDelay: 0
-  animationProfileName: Drink
+  animationProfileName: Ground Slam
   useUnitCastAnimations: 0
   animationHitAudioProfileName: 
   castingAudioProfileName: 
-  requiredLevel: 5
+  requiredLevel: 1
   characterClassRequirements: []
-  useableWithoutLearning: 1
-  autoAddToBars: 0
+  useableWithoutLearning: 0
+  autoAddToBars: 1
   canSimultaneousCast: 0
   canCastWhileMoving: 0
   ignoreGlobalCoolDown: 0
   powerResourceName: 
   baseResourceCost: 0
-  resourceCostPerLevel: 5
+  resourceCostPerLevel: 0
   spendDelay: 0
   generatePowerResourceName: 
   baseResourceGain: 0
   resourceGainPerLevel: 0
-  useSpeedMultipliers: 0
+  useSpeedMultipliers: 1
   useAnimationCastTime: 1
-  abilityCastingTime: 2.6
+  abilityCastingTime: 0
   abilityCoolDown: 10
-  coolDownOnCast: 1
+  coolDownOnCast: 0
   useAbilityEffectTargetting: 0
   targetOptions:
-    requireTarget: 1
+    requireTarget: 0
     requireLineOfSight: 0
-    requireLiveTarget: 1
+    requireLiveTarget: 0
     requireDeadTarget: 0
-    canCastOnSelf: 1
+    canCastOnSelf: 0
     canCastOnOthers: 0
     canCastOnEnemy: 0
     canCastOnNeutral: 0
     canCastOnFriendly: 0
-    autoSelfCast: 1
-    useMeleeRange: 0
-    maxRange: 0
+    autoSelfCast: 0
+    useMeleeRange: 1
+    maxRange: 5
     requiresGroundTarget: 0
     groundTargetColor: {r: 1, g: 1, b: 1, a: 1}
     groundTargetRadius: 0
-  abilityEffectNames: []
-  tickRate: 0.83
-  channeledAbilityEffectnames:
-  - Restore 250 Health
+  abilityEffectNames:
+  - Ground Slam
+  tickRate: 1
+  channeledAbilityEffectnames: []
+  isAutoAttack: 0
+  useUnitAttackAnimations: 0
+  useAutoAttackAnimations: 0
+  useWeaponHitSound: 0

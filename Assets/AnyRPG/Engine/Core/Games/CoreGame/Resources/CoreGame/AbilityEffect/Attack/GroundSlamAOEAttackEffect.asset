@@ -9,12 +9,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 499bdf3134e84df4c99414d0ac47ec01, type: 3}
-  m_Name: PoisonGasEffect
+  m_Script: {fileID: 11500000, guid: 64ae32e0f65707642b93e38c0d965969, type: 3}
+  m_Name: GroundSlamAOEAttackEffect
   m_EditorClassIdentifier: 
-  resourceName: Poison Gas
+  resourceName: Ground Slam AOE Attack
   displayName: 
-  icon: {fileID: 21300000, guid: cce0806b281c17647b08510d251a730b, type: 3}
+  icon: {fileID: 21300000, guid: afb80656e2525e64c972a922e0664689, type: 3}
   iconBackgroundImage: {fileID: 0}
   description: 
   useRegionalDescription: 0
@@ -26,12 +26,12 @@ MonoBehaviour:
     requireDeadTarget: 0
     canCastOnSelf: 0
     canCastOnOthers: 1
-    canCastOnEnemy: 0
+    canCastOnEnemy: 1
     canCastOnNeutral: 0
     canCastOnFriendly: 0
     autoSelfCast: 0
     useMeleeRange: 0
-    maxRange: 0
+    maxRange: 40
     lineOfSightSourceLocation: 0
     targetRangeSourceLocation: 0
   chanceToCast: 100
@@ -48,37 +48,20 @@ MonoBehaviour:
   prefabSpawnLocation: 0
   prefabDestroyDelay: 0
   destroyOnEndCast: 0
-  tickRate: 1
-  castZeroTick: 1
-  tickAbilityEffectNames:
-  - Poison
+  tickRate: 0
+  castZeroTick: 0
+  tickAbilityEffectNames: []
   onTickAudioProfileNames: []
   randomTickAudioProfiles: 0
   completeAbilityEffectNames: []
-  statusEffectAlignment: 2
-  statusEffectTypeName: Poison
-  classTrait: 0
-  requiredLevel: 1
-  sceneNames: []
-  limitedDuration: 1
-  refreshableDuration: 1
-  duration: 10
-  maxStacks: 1
-  statBuffTypeNames: []
-  statAmount: 0
-  statMultiplier: 1
-  secondaryStatBuffsTypes: 
-  secondaryStatAmount: 0
-  secondaryStatMultiplier: 1
-  outgoingDamageMultiplier: 1
-  incomingDamageMultiplier: 1
-  factionModifiers: []
-  disableAnimator: 0
-  stun: 0
-  levitate: 0
-  immuneDisableAnimator: 0
-  immuneStun: 0
-  immuneLevitate: 0
-  controlTarget: 0
-  reflectAbilityEffectNames: []
-  weaponHitAbilityEffectNames: []
+  defaultPrefabLifetime: 10
+  allowCriticalStrike: 1
+  resourceAmounts:
+  - resourceName: Health
+    inputRemap: 
+    addPower: 1
+    minAmount: 0
+    baseAmount: 0
+    amountPerLevel: 5
+    maxAmount: 0
+  damageType: 0

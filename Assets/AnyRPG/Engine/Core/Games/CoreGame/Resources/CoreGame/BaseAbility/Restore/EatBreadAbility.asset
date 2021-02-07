@@ -22,7 +22,7 @@ MonoBehaviour:
   requireOutOfCombat: 0
   weaponAffinityNames: []
   holdableObjectList:
-  - holdableObjectName: Sphere Brown
+  - holdableObjectName: Edible Bread
     useUniversalAttachment: 1
     attachmentName: Right Hand
   abilityPrefabSource: 0

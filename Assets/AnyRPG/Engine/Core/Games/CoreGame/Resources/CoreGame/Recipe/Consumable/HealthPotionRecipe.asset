@@ -28,6 +28,6 @@ MonoBehaviour:
   outputCount: 1
   craftAbilityName: Craft Consumable
   holdableObjectList:
-  - holdableObjectName: Sphere White
+  - holdableObjectName: Health Potion Fill
     useUniversalAttachment: 1
     attachmentName: Left Hand
