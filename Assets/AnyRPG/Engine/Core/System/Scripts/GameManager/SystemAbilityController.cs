@@ -36,7 +36,7 @@ namespace AnyRPG {
         }
 
         public IEnumerator DestroyAbilityEffectObject(Dictionary<PrefabProfile, GameObject> abilityEffectObjects, IAbilityCaster source, Interactable target, float timer, AbilityEffectContext abilityEffectInput, FixedLengthEffect fixedLengthEffect) {
-            //Debug.Log("CharacterAbilityManager.DestroyAbilityEffectObject(" + (source == null ? "null" : source.name) + ", " + (target == null ? "null" : target.name) + ", " + timer + ")");
+            //Debug.Log("SystemAbilityController.DestroyAbilityEffectObject(" + (source == null ? "null" : source.AbilityManager.Name) + ", " + (target == null ? "null" : target.name) + ", " + timer + ")");
             float timeRemaining = timer;
 
             // keep track of temporary elapsed time between ticks
@@ -68,7 +68,7 @@ namespace AnyRPG {
                 yield return null;
 
                 if (nullTarget == false && (targetStats == null || fixedLengthEffect == null)) {
-                    //Debug.Log(gameObject.name + ".CharacterAbilityManager.DestroyAbilityEffectObject: BREAKING!!!!!!!!!!!!!!!!!: fixedLengthEffect: " + (fixedLengthEffect == null ? "null" : fixedLengthEffect.MyName) + "; targetstats: " + (targetStats == null ? "null" : targetStats.name));
+                    //Debug.Log("SystemAbilityController.DestroyAbilityEffectObject: BREAKING!: fixedLengthEffect: " + (fixedLengthEffect == null ? "null" : fixedLengthEffect.DisplayName) + "; targetstats: " + (targetStats == null ? "null" : targetStats.BaseCharacter.CharacterName));
                     break;
                 }
 
@@ -79,14 +79,15 @@ namespace AnyRPG {
                     break;
                 } else {
                     timeRemaining -= Time.deltaTime;
+                    elapsedTime += Time.deltaTime;
                     if (elapsedTime > finalTickRate) {
-                        //Debug.Log(abilityEffectName + ".FixedLengthEffect.Tick() TickTime!");
+                        //Debug.Log(fixedLengthEffect.DisplayName + ".FixedLengthEffect.Tick() TickTime!");
                         fixedLengthEffect.CastTick(source, target, abilityEffectInput);
                         elapsedTime -= finalTickRate;
                     }
                 }
             }
-            //Debug.Log(fixedLengthEffect.MyName + ".FixedLengthEffect.Tick() Done ticking and about to perform ability affects.");
+            //Debug.Log(fixedLengthEffect.DisplayName + ".FixedLengthEffect.Tick() Done ticking and about to perform ability affects.");
             fixedLengthEffect.CastComplete(source, target, abilityEffectInput);
             foreach (GameObject go in abilityEffectObjects.Values) {
                 if (abilityManager.AbilityEffectGameObjects.Contains(go)) {

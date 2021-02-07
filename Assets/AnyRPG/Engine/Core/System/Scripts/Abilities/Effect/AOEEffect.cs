@@ -60,7 +60,7 @@ namespace AnyRPG {
         }
 
         public override void CastTick(IAbilityCaster source, Interactable target, AbilityEffectContext abilityEffectContext) {
-            //Debug.Log(resourceName + ".AOEEffect.CastTick(" + (source == null ? "null" : source.name) + ", " + (target == null ? "null" : target.name) + ")");
+            //Debug.Log(DisplayName + ".AOEEffect.CastTick(" + (source == null ? "null" : source.AbilityManager.Name) + ", " + (target == null ? "null" : target.name) + ")");
             base.CastTick(source, target, abilityEffectContext);
             TargetAOETick(source, target, abilityEffectContext);
         }
@@ -82,6 +82,7 @@ namespace AnyRPG {
         }
 
         protected virtual float TargetAOETick(IAbilityCaster source, Interactable target, AbilityEffectContext abilityEffectInput) {
+            //Debug.Log(DisplayName + "AOEEffect.TargetAOETick(" + (source == null ? "null" : source.AbilityManager.Name) + ", " + (target == null ? "null" : target.name) + ")");
             List<AOETargetNode> validTargets = GetValidTargets(source, target, abilityEffectInput, tickAbilityEffectList);
             float accumulatedDelay = 0f;
             foreach (AOETargetNode validTarget in validTargets) {
@@ -106,7 +107,7 @@ namespace AnyRPG {
         }
 
         protected virtual List<AOETargetNode> GetValidTargets(IAbilityCaster source, Interactable target, AbilityEffectContext abilityEffectContext, List<AbilityEffect> abilityEffectList) {
-            //Debug.Log(MyName + ".AOEEffect.GetValidTargets()");
+            //Debug.Log(DisplayName + ".AOEEffect.GetValidTargets()");
 
             Vector3 aoeSpawnCenter = Vector3.zero;
             if (prefabSpawnLocation == PrefabSpawnLocation.Target && target != null) {
@@ -138,7 +139,7 @@ namespace AnyRPG {
             //Debug.Log("AOEEffect.Cast(): Casting OverlapSphere with radius: " + aoeRadius);
             List<AOETargetNode> validTargets = new List<AOETargetNode>();
             foreach (Collider collider in colliders) {
-                //Debug.Log(MyName + "AOEEffect.Cast() hit: " + collider.gameObject.name + "; layer: " + collider.gameObject.layer);
+                //Debug.Log(DisplayName + ".AOEEffect.Cast() hit: " + collider.gameObject.name + "; layer: " + collider.gameObject.layer);
                 bool canAdd = true;
                 Interactable targetInteractable = collider.gameObject.GetComponent<Interactable>();
                 foreach (AbilityEffect abilityEffect in abilityEffectList) {

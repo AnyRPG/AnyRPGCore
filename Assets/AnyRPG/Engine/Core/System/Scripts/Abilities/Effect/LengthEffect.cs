@@ -216,7 +216,7 @@ namespace AnyRPG {
         }
 
         public virtual void CastTick(IAbilityCaster source, Interactable target, AbilityEffectContext abilityEffectInput) {
-            //Debug.Log(abilityEffectName + ".AbilityEffect.CastTick(" +source.AbilityManager.name + ", " + (target ? target.name : "null") + ")");
+            //Debug.Log(DisplayName + ".AbilityEffect.CastTick(" +source.AbilityManager.Name + ", " + (target ? target.name : "null") + ")");
             // play tick audio effects
             PlayAudioEffects(onTickAudioProfiles, target);
         }
