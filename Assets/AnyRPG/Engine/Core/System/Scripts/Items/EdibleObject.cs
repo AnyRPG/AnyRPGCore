@@ -14,10 +14,10 @@ namespace AnyRPG {
         private float interval = 1f;
 
         void Start() {
-            bool skipFirst = transform.childCount > 4;
-            portions = new GameObject[skipFirst ? transform.childCount - 1 : transform.childCount];
+            lastChange = Time.time;
+            portions = new GameObject[transform.childCount];
             for (int i = 0; i < portions.Length; i++) {
-                portions[i] = transform.GetChild(skipFirst ? i + 1 : i).gameObject;
+                portions[i] = transform.GetChild(i).gameObject;
                 if (portions[i].activeInHierarchy)
                     currentIndex = i;
             }
