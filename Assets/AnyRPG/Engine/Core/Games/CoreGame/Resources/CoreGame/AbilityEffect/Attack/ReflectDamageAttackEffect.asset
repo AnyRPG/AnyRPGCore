@@ -10,11 +10,11 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 64ae32e0f65707642b93e38c0d965969, type: 3}
-  m_Name: IceAttackEffect
+  m_Name: ReflectDamageAttackEffect
   m_EditorClassIdentifier: 
-  resourceName: Ice Attack
+  resourceName: Reflect Damage Attack
   displayName: 
-  icon: {fileID: 21300000, guid: 36dccc72c89e61b48958ecb60b28abed, type: 3}
+  icon: {fileID: 21300000, guid: 068618f626fbf69448d14da271218015, type: 3}
   iconBackgroundImage: {fileID: 0}
   description: 
   useRegionalDescription: 0
@@ -31,18 +31,16 @@ MonoBehaviour:
     canCastOnFriendly: 0
     autoSelfCast: 0
     useMeleeRange: 0
-    maxRange: 0
+    maxRange: 5
     lineOfSightSourceLocation: 0
     targetRangeSourceLocation: 0
   chanceToCast: 100
   effectMaterialName: 
   materialChangeDuration: 2
-  onHitAudioProfileNames:
-  - Ice Hit
+  onHitAudioProfileNames: []
   randomAudioProfiles: 0
-  hitAbilityEffectNames:
-  - Frozen
-  inputMultiplier: 0
+  hitAbilityEffectNames: []
+  inputMultiplier: 1
   threatMultiplier: 1
   abilityPrefabSource: 1
   randomPrefabs: 0
@@ -64,6 +62,6 @@ MonoBehaviour:
     addPower: 1
     minAmount: 0
     baseAmount: 0
-    amountPerLevel: 5
+    amountPerLevel: 0
     maxAmount: 0
   damageType: 0

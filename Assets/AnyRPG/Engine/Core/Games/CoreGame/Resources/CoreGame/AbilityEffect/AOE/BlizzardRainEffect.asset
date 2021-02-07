@@ -9,24 +9,24 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 64ae32e0f65707642b93e38c0d965969, type: 3}
-  m_Name: IceAttackEffect
+  m_Script: {fileID: 11500000, guid: c0c4e359d2d1273498c3ba66499dc20f, type: 3}
+  m_Name: BlizzardRainEffect
   m_EditorClassIdentifier: 
-  resourceName: Ice Attack
+  resourceName: Blizzard Rain
   displayName: 
-  icon: {fileID: 21300000, guid: 36dccc72c89e61b48958ecb60b28abed, type: 3}
+  icon: {fileID: 0}
   iconBackgroundImage: {fileID: 0}
   description: 
   useRegionalDescription: 0
   resourceDescriptionProfile: 
   targetOptions:
-    requireTarget: 1
+    requireTarget: 0
     requireLineOfSight: 0
-    requireLiveTarget: 1
+    requireLiveTarget: 0
     requireDeadTarget: 0
     canCastOnSelf: 0
-    canCastOnOthers: 1
-    canCastOnEnemy: 1
+    canCastOnOthers: 0
+    canCastOnEnemy: 0
     canCastOnNeutral: 0
     canCastOnFriendly: 0
     autoSelfCast: 0
@@ -37,17 +37,16 @@ MonoBehaviour:
   chanceToCast: 100
   effectMaterialName: 
   materialChangeDuration: 2
-  onHitAudioProfileNames:
-  - Ice Hit
+  onHitAudioProfileNames: []
   randomAudioProfiles: 0
   hitAbilityEffectNames:
-  - Frozen
+  - Blizzard Shards
   inputMultiplier: 0
   threatMultiplier: 1
   abilityPrefabSource: 1
   randomPrefabs: 0
   abilityObjectList: []
-  prefabSpawnLocation: 0
+  prefabSpawnLocation: 3
   prefabDestroyDelay: 0
   destroyOnEndCast: 0
   tickRate: 0
@@ -57,13 +56,11 @@ MonoBehaviour:
   randomTickAudioProfiles: 0
   completeAbilityEffectNames: []
   defaultPrefabLifetime: 10
-  allowCriticalStrike: 1
-  resourceAmounts:
-  - resourceName: Health
-    inputRemap: 
-    addPower: 1
-    minAmount: 0
-    baseAmount: 0
-    amountPerLevel: 5
-    maxAmount: 0
-  damageType: 0
+  aoeRadius: 2.5
+  useRadius: 1
+  useExtents: 0
+  aoeCenter: {x: 0, y: 5, z: 0}
+  aoeExtents: {x: 0, y: 0, z: 0}
+  maxTargets: 10
+  preferClosestTargets: 0
+  interTargetDelay: 0.01

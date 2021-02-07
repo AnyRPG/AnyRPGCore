@@ -26,9 +26,12 @@ MonoBehaviour:
   capabilities:
     abilityNames:
     - Ice Projectile
+    - Ice Shards
+    - Blizzard
     - Fire Projectile
     - Meteor Shower
     - Tornado
+    - Life Drain
     - Revive Enemy
     traitNames: []
     armorClassList: []

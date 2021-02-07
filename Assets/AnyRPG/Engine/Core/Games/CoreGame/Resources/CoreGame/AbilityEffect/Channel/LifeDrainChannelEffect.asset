@@ -9,12 +9,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 64ae32e0f65707642b93e38c0d965969, type: 3}
-  m_Name: IceAttackEffect
+  m_Script: {fileID: 11500000, guid: 9606a6bfb8cdb204fa16126081317938, type: 3}
+  m_Name: LifeDrainChannelEffect
   m_EditorClassIdentifier: 
-  resourceName: Ice Attack
+  resourceName: Life Drain Channel
   displayName: 
-  icon: {fileID: 21300000, guid: 36dccc72c89e61b48958ecb60b28abed, type: 3}
+  icon: {fileID: 21300000, guid: b768a1f4121f78743909c86aaeb8dde7, type: 3}
   iconBackgroundImage: {fileID: 0}
   description: 
   useRegionalDescription: 0
@@ -31,39 +31,32 @@ MonoBehaviour:
     canCastOnFriendly: 0
     autoSelfCast: 0
     useMeleeRange: 0
-    maxRange: 0
+    maxRange: 40
     lineOfSightSourceLocation: 0
     targetRangeSourceLocation: 0
   chanceToCast: 100
   effectMaterialName: 
   materialChangeDuration: 2
-  onHitAudioProfileNames:
-  - Ice Hit
+  onHitAudioProfileNames: []
   randomAudioProfiles: 0
   hitAbilityEffectNames:
-  - Frozen
-  inputMultiplier: 0
+  - Life Drain Attack
+  inputMultiplier: 1
   threatMultiplier: 1
   abilityPrefabSource: 1
   randomPrefabs: 0
-  abilityObjectList: []
-  prefabSpawnLocation: 0
+  abilityObjectList:
+  - holdableObjectName: Violet Laser
+    useUniversalAttachment: 1
+    attachmentName: SpellSource
+  prefabSpawnLocation: 1
   prefabDestroyDelay: 0
-  destroyOnEndCast: 0
+  destroyOnEndCast: 1
   tickRate: 0
   castZeroTick: 0
   tickAbilityEffectNames: []
   onTickAudioProfileNames: []
   randomTickAudioProfiles: 0
   completeAbilityEffectNames: []
-  defaultPrefabLifetime: 10
-  allowCriticalStrike: 1
-  resourceAmounts:
-  - resourceName: Health
-    inputRemap: 
-    addPower: 1
-    minAmount: 0
-    baseAmount: 0
-    amountPerLevel: 5
-    maxAmount: 0
-  damageType: 0
+  defaultPrefabLifetime: 1
+  effectDelay: 0

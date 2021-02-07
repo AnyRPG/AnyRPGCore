@@ -29,6 +29,7 @@ MonoBehaviour:
     abilityNames:
     - Threatening Strike
     - Taunt
+    - Reflect Damage
     traitNames:
     - Take Less Damage
     armorClassList: []

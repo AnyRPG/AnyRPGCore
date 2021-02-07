@@ -10,11 +10,11 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 64ae32e0f65707642b93e38c0d965969, type: 3}
-  m_Name: IceAttackEffect
+  m_Name: LifeDrainAttackEffect
   m_EditorClassIdentifier: 
-  resourceName: Ice Attack
+  resourceName: Life Drain Attack
   displayName: 
-  icon: {fileID: 21300000, guid: 36dccc72c89e61b48958ecb60b28abed, type: 3}
+  icon: {fileID: 21300000, guid: b768a1f4121f78743909c86aaeb8dde7, type: 3}
   iconBackgroundImage: {fileID: 0}
   description: 
   useRegionalDescription: 0
@@ -31,17 +31,16 @@ MonoBehaviour:
     canCastOnFriendly: 0
     autoSelfCast: 0
     useMeleeRange: 0
-    maxRange: 0
+    maxRange: 40
     lineOfSightSourceLocation: 0
     targetRangeSourceLocation: 0
   chanceToCast: 100
   effectMaterialName: 
   materialChangeDuration: 2
-  onHitAudioProfileNames:
-  - Ice Hit
+  onHitAudioProfileNames: []
   randomAudioProfiles: 0
   hitAbilityEffectNames:
-  - Frozen
+  - Life Drain AOE Heal Effect
   inputMultiplier: 0
   threatMultiplier: 1
   abilityPrefabSource: 1

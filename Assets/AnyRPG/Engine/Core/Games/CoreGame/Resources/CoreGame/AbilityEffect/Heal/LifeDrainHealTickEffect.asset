@@ -9,12 +9,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 64ae32e0f65707642b93e38c0d965969, type: 3}
-  m_Name: IceAttackEffect
+  m_Script: {fileID: 11500000, guid: 6fda6fdfefd604e44a751298c9631a82, type: 3}
+  m_Name: LifeDrainHealTickEffect
   m_EditorClassIdentifier: 
-  resourceName: Ice Attack
+  resourceName: Life Drain Heal Tick
   displayName: 
-  icon: {fileID: 21300000, guid: 36dccc72c89e61b48958ecb60b28abed, type: 3}
+  icon: {fileID: 21300000, guid: b768a1f4121f78743909c86aaeb8dde7, type: 3}
   iconBackgroundImage: {fileID: 0}
   description: 
   useRegionalDescription: 0
@@ -24,12 +24,12 @@ MonoBehaviour:
     requireLineOfSight: 0
     requireLiveTarget: 1
     requireDeadTarget: 0
-    canCastOnSelf: 0
+    canCastOnSelf: 1
     canCastOnOthers: 1
-    canCastOnEnemy: 1
+    canCastOnEnemy: 0
     canCastOnNeutral: 0
-    canCastOnFriendly: 0
-    autoSelfCast: 0
+    canCastOnFriendly: 1
+    autoSelfCast: 1
     useMeleeRange: 0
     maxRange: 0
     lineOfSightSourceLocation: 0
@@ -37,12 +37,10 @@ MonoBehaviour:
   chanceToCast: 100
   effectMaterialName: 
   materialChangeDuration: 2
-  onHitAudioProfileNames:
-  - Ice Hit
+  onHitAudioProfileNames: []
   randomAudioProfiles: 0
-  hitAbilityEffectNames:
-  - Frozen
-  inputMultiplier: 0
+  hitAbilityEffectNames: []
+  inputMultiplier: 0.5
   threatMultiplier: 1
   abilityPrefabSource: 1
   randomPrefabs: 0
@@ -57,13 +55,13 @@ MonoBehaviour:
   randomTickAudioProfiles: 0
   completeAbilityEffectNames: []
   defaultPrefabLifetime: 10
-  allowCriticalStrike: 1
+  allowCriticalStrike: 0
   resourceAmounts:
   - resourceName: Health
     inputRemap: 
-    addPower: 1
+    addPower: 0
     minAmount: 0
     baseAmount: 0
-    amountPerLevel: 5
+    amountPerLevel: 0
     maxAmount: 0
   damageType: 0
