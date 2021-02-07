@@ -24,7 +24,10 @@ MonoBehaviour:
   classNames:
   - Ranged
   capabilities:
-    abilityNames: []
+    abilityNames:
+    - Arrow AOE
+    - Slowing Shot
+    - Piercing Shot
     traitNames: []
     armorClassList: []
     weaponSkills: []
