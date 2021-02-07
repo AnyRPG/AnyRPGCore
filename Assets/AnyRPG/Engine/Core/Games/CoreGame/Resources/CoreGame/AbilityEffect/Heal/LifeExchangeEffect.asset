@@ -49,7 +49,7 @@ MonoBehaviour:
   - holdableObjectName: Red Energy Pulse
     useUniversalAttachment: 0
     attachmentName: 
-  prefabSpawnLocation: 1
+  prefabSpawnLocation: 2
   prefabDestroyDelay: 0
   destroyOnEndCast: 0
   tickRate: 0

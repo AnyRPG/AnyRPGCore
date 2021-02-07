@@ -25,10 +25,10 @@ MonoBehaviour:
     requireLiveTarget: 1
     requireDeadTarget: 0
     canCastOnSelf: 1
-    canCastOnOthers: 1
+    canCastOnOthers: 0
     canCastOnEnemy: 0
     canCastOnNeutral: 0
-    canCastOnFriendly: 1
+    canCastOnFriendly: 0
     autoSelfCast: 1
     useMeleeRange: 0
     maxRange: 0
@@ -37,7 +37,8 @@ MonoBehaviour:
   chanceToCast: 100
   effectMaterialName: 
   materialChangeDuration: 2
-  onHitAudioProfileNames: []
+  onHitAudioProfileNames:
+  - Cure Spell
   randomAudioProfiles: 0
   hitAbilityEffectNames: []
   inputMultiplier: 0

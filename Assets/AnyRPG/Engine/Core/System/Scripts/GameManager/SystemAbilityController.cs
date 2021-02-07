@@ -94,7 +94,6 @@ namespace AnyRPG {
                     abilityManager.AbilityEffectGameObjects.Remove(go);
                 }
                 if (go != null) {
-                    Debug.Log("destroy " + go.name);
                     Destroy(go, fixedLengthEffect.MyPrefabDestroyDelay);
                 }
             }
