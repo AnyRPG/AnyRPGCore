@@ -45,6 +45,8 @@ namespace AnyRPG {
 
         public override void SetupScriptableObjects() {
 
+            base.SetupScriptableObjects();
+
             if (effectTypeNames != null) {
                 foreach (string statusEffectType in effectTypeNames) {
                     StatusEffectType tmpStatusEffectType = SystemStatusEffectTypeManager.MyInstance.GetResource(statusEffectType);

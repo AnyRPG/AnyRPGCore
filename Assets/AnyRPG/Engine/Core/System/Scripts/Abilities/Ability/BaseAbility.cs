@@ -214,19 +214,15 @@ namespace AnyRPG {
         /// <summary>
         /// return the casting time of the ability without any speed modifiers applied
         /// </summary>
-        public virtual float BaseAbilityCastingTime {
-            get {
-                if (useAnimationCastTime == false) {
-                    return abilityCastingTime;
-                } else {
-                    // TODO : FIX : get casting animation clip based on source caster
-                    if (CastingAnimationClip != null) {
-                        return CastingAnimationClip.length;
-                    }
-                    return abilityCastingTime;
+        public virtual float GetBaseAbilityCastingTime(IAbilityCaster source) {
+            if (useAnimationCastTime == false) {
+                return abilityCastingTime;
+            } else {
+                if (GetCastClips(source).Count > 0) {
+                    return GetCastClips(source)[0].length;
                 }
+                return abilityCastingTime;
             }
-            set => abilityCastingTime = value;
         }
         public bool CanSimultaneousCast { get => canSimultaneousCast; set => canSimultaneousCast = value; }
         public bool IgnoreGlobalCoolDown { get => ignoreGlobalCoolDown; set => ignoreGlobalCoolDown = value; }
@@ -375,9 +371,9 @@ namespace AnyRPG {
 
         public virtual float GetAbilityCastingTime(IAbilityCaster abilityCaster) {
             if (useSpeedMultipliers) {
-                return BaseAbilityCastingTime * abilityCaster.AbilityManager.GetSpeed();
+                return GetBaseAbilityCastingTime(abilityCaster) * abilityCaster.AbilityManager.GetSpeed();
             }
-            return BaseAbilityCastingTime;
+            return GetBaseAbilityCastingTime(abilityCaster);
         }
 
         public List<AnimationClip> GetCastClips(IAbilityCaster sourceCharacter) {
@@ -710,7 +706,7 @@ namespace AnyRPG {
             // overwrite me
             if (currentCastPercent >= nextTickPercent) {
                 PerformChanneledEffect(source, target, abilityEffectContext);
-                nextTickPercent += (tickRate / BaseAbilityCastingTime);
+                nextTickPercent += (tickRate / GetBaseAbilityCastingTime(source));
             }
             return nextTickPercent;
         }

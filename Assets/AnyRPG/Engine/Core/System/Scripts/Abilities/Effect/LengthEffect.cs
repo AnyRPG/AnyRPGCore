@@ -112,7 +112,7 @@ namespace AnyRPG {
         }
 
         public override Dictionary<PrefabProfile, GameObject> Cast(IAbilityCaster source, Interactable target, Interactable originalTarget, AbilityEffectContext abilityEffectInput) {
-            //Debug.Log(DisplayName + ".LengthEffect.Cast(" + (source == null ? "null" :source.AbilityManager.Name) + ", " + (originalTarget == null ? "null" : originalTarget.name) + ", " + (target == null ? "null" : target.name) + ")");
+            //Debug.Log(DisplayName + ".LengthEffect.Cast(" + (source == null ? "null" :source.AbilityManager.Name) + ", " + (target == null ? "null" : target.name) + ", " + (originalTarget == null ? "null" : originalTarget.name) + ")");
             
             base.Cast(source, target, originalTarget, abilityEffectInput);
             if (GetPrefabProfileList(source) != null) {
@@ -193,9 +193,9 @@ namespace AnyRPG {
                                 Quaternion.LookRotation(usedForwardDirection) * Quaternion.Euler(nodeRotation),
                                 prefabParent);
                             if (prefabObject == null) {
-                                //Debug.Log(MyName + ".LengthEffect.Cast(): prefabObject = null");
+                                //Debug.Log(DisplayName + ".LengthEffect.Cast(): prefabObject = null");
                             } else {
-                                //Debug.Log(MyName + ".LengthEffect.Cast(): PREFAB SPAWNED PROPERLY AND IS NAMED: " + prefabObject.name);
+                                //Debug.Log(DisplayName + ".LengthEffect.Cast(): PREFAB SPAWNED PROPERLY AND IS NAMED: " + prefabObject.name);
                             }
                             prefabObject.transform.localScale = nodeScale;
                             prefabObjects[abilityAttachmentNode.HoldableObject] = prefabObject;

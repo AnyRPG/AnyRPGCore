@@ -11,7 +11,7 @@ namespace AnyRPG {
         public override bool PerformAbilityEffects(IAbilityCaster source, Interactable target, AbilityEffectContext abilityEffectContext) {
 
             //float abilityCastingTime = GetAbilityCastingTime(source);
-            float abilityCastingTime = BaseAbilityCastingTime;
+            float abilityCastingTime = GetBaseAbilityCastingTime(source);
             //if (abilityCastingTime > 1) {
                 abilityEffectContext.castTimeMultiplier = abilityCastingTime;
             //}
