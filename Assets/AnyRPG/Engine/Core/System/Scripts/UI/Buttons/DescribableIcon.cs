@@ -169,7 +169,7 @@ namespace AnyRPG {
 
         public virtual void CheckMouse() {
             if (UIManager.MouseInRect(MyIcon.rectTransform)) {
-                UIManager.MyInstance.HideToolTip();
+                UIManager.MyInstance?.HideToolTip();
             }
         }
 

@@ -1249,8 +1249,21 @@ namespace AnyRPG {
         }
 
         public override void ProcessWeaponHitEffects(AttackEffect attackEffect, Interactable target, AbilityEffectContext abilityEffectContext) {
+            //Debug.Log(baseCharacter.gameObject.name + ".CharacterAbilityManager.ProcessWeaponHitEffects(" + (abilityEffectContext == null ? "null" : "valid") + ")");
             base.ProcessWeaponHitEffects(attackEffect, target, abilityEffectContext);
             if (attackEffect.DamageType == DamageType.physical) {
+
+                // perform default weapon hit sound
+                /*
+                if (abilityEffectContext.baseAbility == null) {
+                    Debug.Log(baseCharacter.gameObject.name + ".CharacterAbilityManager.ProcessWeaponHitEffects() baseAbility is null");
+                }
+                */
+                AudioClip audioClip = abilityEffectContext.baseAbility.GetHitSound(baseCharacter);
+                if (audioClip != null) {
+                    baseCharacter.UnitController.UnitComponentController.PlayEffect(audioClip);
+                }
+
                 if (baseCharacter?.CharacterCombat?.OnHitEffects != null) {
                     // handle weapon on hit effects
                     List<AbilityEffect> onHitEffectList = new List<AbilityEffect>();

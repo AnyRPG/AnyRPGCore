@@ -482,9 +482,6 @@ namespace AnyRPG {
 
             if (BaseCharacter.UnitController.Target != null && targetCharacterUnit != null) {
 
-                // OnHitEvent is responsible for performing ability effects for animated abilities, and needs to fire no matter what because those effects may not require targets
-                //OnHitEvent(baseCharacter as BaseCharacter, MyBaseCharacter.MyCharacterController.MyTarget);
-
                 BaseAbility animatorCurrentAbility = null;
                 bool attackLanded = true;
                 if (usedAbilityEffectContext != null) {
@@ -502,6 +499,8 @@ namespace AnyRPG {
                     return false;
                 }
 
+                // moved to attack effect for archer compatibility (not doing hit sound when arrow launches)
+                /*
                 if (animatorCurrentAbility != null) {
                     AudioClip audioClip = animatorCurrentAbility.GetHitSound(baseCharacter);
                     if (audioClip != null) {
@@ -509,9 +508,11 @@ namespace AnyRPG {
                     }
                     //AudioManager.MyInstance.PlayEffect(overrideHitSoundEffect);
                 }
+                */
 
                 return true;
             } else {
+                // OnHitEvent is responsible for performing ability effects for animated abilities, and needs to fire no matter what because those effects may not require targets
                 if (usedAbilityEffectContext != null) {
                     if (usedAbilityEffectContext.baseAbility.GetTargetOptions(baseCharacter).RequireTarget == false) {
                         OnHitEvent(baseCharacter as BaseCharacter, BaseCharacter.UnitController.Target);

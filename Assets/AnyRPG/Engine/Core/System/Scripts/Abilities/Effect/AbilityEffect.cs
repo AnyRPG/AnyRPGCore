@@ -211,7 +211,8 @@ namespace AnyRPG {
             if (GetTargetOptions(source).RequireTarget == false || target != null) {
                 //Debug.Log(DisplayName + ".AbilityEffect.PerformAbilityEffects(): Target: " + (target == null ? "null" : target.name) + " is valid. CASTING ABILITY effect: " + abilityEffect);
                 AbilityEffect _abilityEffect = SystemAbilityEffectManager.MyInstance.GetNewResource(abilityEffect.DisplayName);
-                returnObjects = _abilityEffect.Cast(source, finalTarget, target, abilityEffectContext);
+                // testing : send in copy of ability effect so that a status effect will not remove baseability for following effects
+                returnObjects = _abilityEffect.Cast(source, finalTarget, target, abilityEffectContext.GetCopy());
             } else {
                 //Debug.Log(DisplayName + ".AbilityEffect.PerformAbilityEffects(): Target: " + (target == null ? "null" : target.name) + " is NOT VALID.");
             }
