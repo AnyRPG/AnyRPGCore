@@ -202,6 +202,7 @@ namespace AnyRPG {
                 attachmentPointNode.Position = attachmentNode.HoldableObject.Position;
                 attachmentPointNode.Rotation = attachmentNode.HoldableObject.Rotation;
                 attachmentPointNode.RotationIsGlobal = attachmentNode.HoldableObject.RotationIsGlobal;
+                attachmentPointNode.Scale = attachmentNode.HoldableObject.Scale;
                 return attachmentPointNode;
             } else {
                 // find unit profile, find prefab profile, find universal attachment profile, find universal attachment node

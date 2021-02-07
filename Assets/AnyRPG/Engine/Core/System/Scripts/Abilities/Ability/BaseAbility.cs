@@ -200,8 +200,7 @@ namespace AnyRPG {
 
         public AnimationClip CastingAnimationClip {
             get {
-                if (animationProfile != null
-                    && animationProfile.AnimationProps.CastClips != null
+                if (animationProfile?.AnimationProps?.CastClips != null
                     && animationProfile.AnimationProps.CastClips.Count > 0) {
                     return animationProfile.AnimationProps.CastClips[0];
                 }

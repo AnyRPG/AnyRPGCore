@@ -58,6 +58,7 @@ namespace AnyRPG {
                 nullEndObject = true;
             }
             MyEndPosition = endPosition;
+            UpdateTransform();
         }
 
         private void Update() {
