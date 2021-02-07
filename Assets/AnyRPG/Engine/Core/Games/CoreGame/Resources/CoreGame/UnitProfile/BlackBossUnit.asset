@@ -140,14 +140,16 @@ MonoBehaviour:
   preventAutoDespawn: 0
   defaultToughness: Boss
   capabilities:
-    abilityNames: []
+    abilityNames:
+    - Laser Explosion
+    - Knock Back
     traitNames: []
     armorClassList: []
     weaponSkills: []
   isAggressive: 1
   aggroRadius: 20
   automaticCombatStrategy: 0
-  combatStrategyName: 
+  combatStrategyName: Boss
   primaryStats: []
   powerResources: []
   useProviderEquipment: 1
