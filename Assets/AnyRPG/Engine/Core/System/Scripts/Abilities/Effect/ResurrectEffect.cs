@@ -12,12 +12,15 @@ namespace AnyRPG {
         /// <param name="ability"></param>
         /// <param name="source"></param>
         /// <param name="target"></param>
-        public override void PerformAbilityHit(IAbilityCaster source, Interactable target, AbilityEffectContext abilityEffectInput) {
+        public override void PerformAbilityHit(IAbilityCaster source, Interactable target, AbilityEffectContext abilityEffectContext) {
             //Debug.Log(resourceName + ".ResurrectEffect.PerformAbilityEffect(" + source.name + ", " + (target == null ? "null" : target.name) + ") effect: " + resourceName);
+            // is there a reason why there is no copy here ?
+            /*
             AbilityEffectContext abilityEffectOutput = new AbilityEffectContext();
             abilityEffectOutput.groundTargetLocation = abilityEffectInput.groundTargetLocation;
+            */
             ResurrectTarget(target);
-            base.PerformAbilityHit(source, target, abilityEffectOutput);
+            base.PerformAbilityHit(source, target, abilityEffectContext);
         }
 
         private void ResurrectTarget(Interactable target) {

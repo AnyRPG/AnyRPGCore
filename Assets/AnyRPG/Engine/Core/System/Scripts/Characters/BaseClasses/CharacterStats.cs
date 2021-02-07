@@ -748,7 +748,7 @@ namespace AnyRPG {
                 }
                 StatusEffectNode newStatusEffectNode = new StatusEffectNode();
                 statusEffects.Add(SystemResourceManager.prepareStringForMatch(_statusEffect.DisplayName), newStatusEffectNode);
-                
+
                 // set base ability to null so that all damage taken by a status effect tick is considered ability damage for combat text purposes
                 abilityEffectContext.baseAbility = null;
 

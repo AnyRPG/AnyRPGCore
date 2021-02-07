@@ -37,8 +37,10 @@ namespace AnyRPG {
                 AOETargetNode validTargetNode = new AOETargetNode();
                 validTargetNode.targetGameObject = null;
                 //abilityEffectInput.prefabLocation = new Vector3(aoeSpawnCenter.x + Random.Range(-aoeRadius, aoeRadius), aoeSpawnCenter.y + aoeCenter.y, aoeSpawnCenter.z + Random.Range(-aoeRadius, aoeRadius));
-                validTargetNode.abilityEffectInput = new AbilityEffectContext();
-
+                // testing make copy instead
+                //validTargetNode.abilityEffectInput = new AbilityEffectContext();
+                validTargetNode.abilityEffectInput = abilityEffectInput.GetCopy(); ;
+                /*
                 foreach (ResourceInputAmountNode resourceInputAmountNode in abilityEffectInput.resourceAmounts) {
                     validTargetNode.abilityEffectInput.AddResourceAmount(resourceInputAmountNode.resourceName, (int)resourceInputAmountNode.amount);
                 }
@@ -50,6 +52,7 @@ namespace AnyRPG {
                 //validTargetNode.abilityEffectInput.prefabLocation = abilityEffectInput.prefabLocation;
                 //validTargetNode.abilityEffectInput = abilityEffectInput;
                 validTargetNode.abilityEffectInput.groundTargetLocation = new Vector3(aoeSpawnCenter.x + Random.Range(-aoeRadius, aoeRadius), aoeSpawnCenter.y + aoeCenter.y, aoeSpawnCenter.z + Random.Range(-aoeRadius, aoeRadius));
+                */
                 //Debug.Log(MyName + ".RainEffect.GetValidTargets(). prefabLocation: " + validTargetNode.abilityEffectInput.prefabLocation);
                 validTargets.Add(validTargetNode);
             }

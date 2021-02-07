@@ -184,13 +184,14 @@ namespace AnyRPG {
         }
 
         protected virtual AbilityEffectContext GetSharedOutput(float outputShare, AbilityEffectContext abilityEffectInput) {
-            AbilityEffectContext modifiedOutput = new AbilityEffectContext();
 
+            // modify the resource amounts by multiplying them by the output share
+            AbilityEffectContext modifiedOutput = abilityEffectInput.GetCopy();
+            modifiedOutput.resourceAmounts.Clear();
             foreach (ResourceInputAmountNode resourceInputAmountNode in abilityEffectInput.resourceAmounts) {
                 modifiedOutput.AddResourceAmount(resourceInputAmountNode.resourceName, (int)(resourceInputAmountNode.amount * outputShare));
             }
 
-            modifiedOutput.groundTargetLocation = abilityEffectInput.groundTargetLocation;
             return modifiedOutput;
         }
 
