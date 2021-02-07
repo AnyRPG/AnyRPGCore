@@ -10,11 +10,11 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 6fda6fdfefd604e44a751298c9631a82, type: 3}
-  m_Name: HealOverTimeTickEffect
+  m_Name: HealingCircleTickEffect
   m_EditorClassIdentifier: 
-  resourceName: Heal Over Time Tick
+  resourceName: Healing Circle Tick
   displayName: 
-  icon: {fileID: 21300000, guid: 9544d85ce7a4da64d90d376dc637b5c9, type: 3}
+  icon: {fileID: 21300000, guid: 34893c1a3874370428e4e6d8e2098ed1, type: 3}
   iconBackgroundImage: {fileID: 0}
   description: 
   useRegionalDescription: 0
@@ -32,8 +32,8 @@ MonoBehaviour:
     autoSelfCast: 1
     useMeleeRange: 0
     maxRange: 40
-    lineOfSightSourceLocation: 0
-    targetRangeSourceLocation: 0
+    lineOfSightSourceLocation: 1
+    targetRangeSourceLocation: 1
   chanceToCast: 100
   effectMaterialName: 
   materialChangeDuration: 2

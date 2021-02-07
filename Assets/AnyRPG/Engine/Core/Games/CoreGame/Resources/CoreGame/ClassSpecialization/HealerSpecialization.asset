@@ -26,6 +26,7 @@ MonoBehaviour:
   capabilities:
     abilityNames:
     - Heal
+    - Healing Circle
     - Revive Ally
     traitNames: []
     armorClassList: []

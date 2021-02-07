@@ -25,6 +25,7 @@ MonoBehaviour:
   capabilities:
     abilityNames:
     - Restore Mana
+    - Life Exchange
     traitNames:
     - Increased Critical Strike
     armorClassList:
