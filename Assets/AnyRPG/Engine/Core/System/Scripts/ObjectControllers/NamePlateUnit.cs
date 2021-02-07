@@ -209,6 +209,16 @@ namespace AnyRPG {
             }
         }
 
+        // some nameplates seem to get removed late due to async loading
+        // attempt to remove them before the level load to avoid this
+        public override void ProcessLevelUnload() {
+            base.ProcessLevelUnload();
+            if (NamePlateManager.MyInstance != null) {
+                NamePlateManager.MyInstance.RemoveNamePlate(this);
+            }
+        }
+
+
     }
 
 }
