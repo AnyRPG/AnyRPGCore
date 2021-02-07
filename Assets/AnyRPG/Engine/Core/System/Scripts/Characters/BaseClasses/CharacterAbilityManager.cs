@@ -1254,14 +1254,11 @@ namespace AnyRPG {
             if (attackEffect.DamageType == DamageType.physical) {
 
                 // perform default weapon hit sound
-                /*
-                if (abilityEffectContext.baseAbility == null) {
-                    Debug.Log(baseCharacter.gameObject.name + ".CharacterAbilityManager.ProcessWeaponHitEffects() baseAbility is null");
-                }
-                */
-                AudioClip audioClip = abilityEffectContext.baseAbility.GetHitSound(baseCharacter);
-                if (audioClip != null) {
-                    baseCharacter.UnitController.UnitComponentController.PlayEffect(audioClip);
+                if (abilityEffectContext.baseAbility != null) {
+                    AudioClip audioClip = abilityEffectContext.baseAbility.GetHitSound(baseCharacter);
+                    if (audioClip != null) {
+                        baseCharacter.UnitController.UnitComponentController.PlayEffect(audioClip);
+                    }
                 }
 
                 if (baseCharacter?.CharacterCombat?.OnHitEffects != null) {
