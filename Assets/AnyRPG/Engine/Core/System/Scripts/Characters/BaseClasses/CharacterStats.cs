@@ -348,12 +348,16 @@ namespace AnyRPG {
 
 
         public void CalculateRunSpeed() {
+            //Debug.Log(baseCharacter.gameObject.name + ".CharacterStats.CalculateRunSpeed() current: " + currentRunSpeed);
             float oldRunSpeed = currentRunSpeed;
             float oldSprintSpeed = currentSprintSpeed;
             currentRunSpeed = (runSpeed + GetSecondaryAddModifiers(SecondaryStatType.MovementSpeed)) * GetSecondaryMultiplyModifiers(SecondaryStatType.MovementSpeed);
             currentSprintSpeed = currentRunSpeed * sprintSpeedModifier;
             OnCalculateRunSpeed(oldRunSpeed, currentRunSpeed, oldSprintSpeed, currentSprintSpeed);
-            //Debug.Log(gameObject.name + ".CharacterStats.CalculateRunSpeed(): runSpeed: " + runSpeed + "; current: " + currentRunSpeed);
+            if (baseCharacter?.UnitController != null) {
+                baseCharacter.UnitController.HandleMovementSpeedUpdate();
+            }
+            //Debug.Log(baseCharacter.gameObject.name + ".CharacterStats.CalculateRunSpeed(): runSpeed: " + runSpeed + "; current: " + currentRunSpeed + "; old: " + oldRunSpeed);
         }
 
         public void HandleMovementSpeedUpdate(string secondaryStatName) {
@@ -786,7 +790,7 @@ namespace AnyRPG {
         }
 
         public void HandleChangedNotifications(StatusEffect statusEffect) {
-            //Debug.Log(gameObject.name + ".CharacterStats.HandleChangedNotifications(" + (statusEffect == null ? "null" : statusEffect.MyName) + ")");
+            //Debug.Log(baseCharacter.gameObject.name + ".CharacterStats.HandleChangedNotifications(" + (statusEffect == null ? "null" : statusEffect.DisplayName) + ")");
 
             //statusEffect.StatBuffTypeNames
             if (statusEffect.StatBuffTypeNames.Count > 0) {
@@ -799,6 +803,7 @@ namespace AnyRPG {
 
             if (statusEffect.SecondaryStatBuffsTypes.Contains(SecondaryStatType.MovementSpeed)) {
                 CalculateRunSpeed();
+                // if unit is currently moving, the motor must be informed of any movement speed change as it is usually only informed on state change
             }
             if (statusEffect.SecondaryStatBuffsTypes.Count > 0) {
                 CalculateSecondaryStats();

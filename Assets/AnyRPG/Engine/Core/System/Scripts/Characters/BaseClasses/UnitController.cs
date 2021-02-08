@@ -1128,6 +1128,8 @@ namespace AnyRPG {
             }
         }
 
+
+
         public void DisableAggro() {
             //Debug.Log(gameObject.name + "AIController.DisableAggro()");
             if (unitComponentController.AggroRangeController != null) {
@@ -1580,6 +1582,12 @@ namespace AnyRPG {
 
             behaviorController.HandlePlayerUnitSpawn();
             base.ProcessPlayerUnitSpawn();
+        }
+
+        public void HandleMovementSpeedUpdate() {
+            if (UnitMotor != null) {
+                UnitMotor.MovementSpeed = MovementSpeed;
+            }
         }
 
         #region EventNotifications
