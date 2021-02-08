@@ -49,7 +49,7 @@ MonoBehaviour:
   - holdableObjectName: Ground Shock
     useUniversalAttachment: 0
     attachmentName: 
-  prefabSpawnLocation: 1
+  prefabSpawnLocation: 6
   prefabDestroyDelay: 1
   destroyOnEndCast: 0
   tickRate: 0.25

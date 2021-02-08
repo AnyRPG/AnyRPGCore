@@ -20,7 +20,7 @@ MonoBehaviour:
   useRegionalDescription: 0
   resourceDescriptionProfile: 
   prefab: {fileID: 6760841765996351095, guid: 0c046dd96c589d24593facfb7921bee1, type: 3}
-  position: {x: 0, y: 1, z: 0}
+  position: {x: 0, y: 0, z: 0}
   rotationIsGlobal: 0
   rotation: {x: 0, y: 0, z: 0}
   scale: {x: 1, y: 1, z: 1}

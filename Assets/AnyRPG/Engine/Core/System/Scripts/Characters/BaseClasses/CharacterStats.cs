@@ -1191,7 +1191,7 @@ namespace AnyRPG {
             //Debug.Log(abilityEffectName + ".StatusEffect.Tick() milliseconds: " + milliseconds);
             //TimeSpan tickRateTimeSpan = new TimeSpan(0, 0, 0, (statusEffect.MyTickRate == 0f ? (int)statusEffect.MyDuration + 1 : (int)statusEffect.MyTickRate), milliseconds);
             //Debug.Log(abilityEffectName + ".StatusEffect.Tick() tickRateTimeSpan: " + tickRateTimeSpan);
-            if (statusEffect.MyCastZeroTick) {
+            if (statusEffect.CastZeroTick) {
                 if (baseCharacter != null && baseCharacter.UnitController != null && characterSource != null) {
                     statusEffect.CastTick(characterSource, baseCharacter.UnitController, abilityEffectContext);
                 }

@@ -79,10 +79,10 @@ namespace AnyRPG {
         public List<AbilityEffect> MyTickAbilityEffectList { get => tickAbilityEffectList; set => tickAbilityEffectList = value; }
         public List<AbilityEffect> MyCompleteAbilityEffectList { get => completeAbilityEffectList; set => completeAbilityEffectList = value; }
         public float TickRate { get => tickRate; set => tickRate = value; }
-        public float MyPrefabDestroyDelay { get => prefabDestroyDelay; set => prefabDestroyDelay = value; }
-        public PrefabSpawnLocation MyPrefabSpawnLocation { get => prefabSpawnLocation; set => prefabSpawnLocation = value; }
+        public float PrefabDestroyDelay { get => prefabDestroyDelay; set => prefabDestroyDelay = value; }
+        public PrefabSpawnLocation PrefabSpawnLocation { get => prefabSpawnLocation; set => prefabSpawnLocation = value; }
         //public GameObject MyAbilityEffectPrefab { get => abilityEffectPrefab; set => abilityEffectPrefab = value; }
-        public bool MyCastZeroTick { get => castZeroTick; set => castZeroTick = value; }
+        public bool CastZeroTick { get => castZeroTick; set => castZeroTick = value; }
         protected Dictionary<PrefabProfile, GameObject> MyPrefabObjects { get => prefabObjects; set => prefabObjects = value; }
 
         public List<AbilityAttachmentNode> GetPrefabProfileList(IAbilityCaster abilityCaster) {
@@ -142,7 +142,7 @@ namespace AnyRPG {
                             spawnLocation = target.transform.position;
                             prefabParent = null;
                         }
-                        if (prefabSpawnLocation == PrefabSpawnLocation.Caster) {
+                        if (prefabSpawnLocation == PrefabSpawnLocation.Caster || prefabSpawnLocation == PrefabSpawnLocation.CasterPoint) {
                             //Debug.Log(MyName + ".LengthEffect.Cast(): PrefabSpawnLocation is Caster");
                             //spawnLocation =source.AbilityManager.GetComponent<Collider>().bounds.center;
                             AttachmentPointNode attachmentPointNode = source.AbilityManager.GetHeldAttachmentPointNode(abilityAttachmentNode);
@@ -150,13 +150,17 @@ namespace AnyRPG {
                             nodeRotation = attachmentPointNode.Rotation;
                             nodeScale = attachmentPointNode.Scale;
                             spawnLocation = source.AbilityManager.UnitGameObject.transform.position;
-                            prefabParent = source.AbilityManager.UnitGameObject.transform;
-                            Transform usedPrefabSourceBone = null;
-                            if (attachmentPointNode.TargetBone != null && attachmentPointNode.TargetBone != string.Empty) {
-                                usedPrefabSourceBone = prefabParent.FindChildByRecursive(attachmentPointNode.TargetBone);
-                            }
-                            if (usedPrefabSourceBone != null) {
-                                prefabParent = usedPrefabSourceBone;
+                            if (prefabSpawnLocation == PrefabSpawnLocation.CasterPoint) {
+                                prefabParent = null;
+                            } else {
+                                prefabParent = source.AbilityManager.UnitGameObject.transform;
+                                Transform usedPrefabSourceBone = null;
+                                if (attachmentPointNode.TargetBone != null && attachmentPointNode.TargetBone != string.Empty) {
+                                    usedPrefabSourceBone = prefabParent.FindChildByRecursive(attachmentPointNode.TargetBone);
+                                }
+                                if (usedPrefabSourceBone != null) {
+                                    prefabParent = usedPrefabSourceBone;
+                                }
                             }
                         }
                         if (prefabSpawnLocation == PrefabSpawnLocation.Target && target != null) {

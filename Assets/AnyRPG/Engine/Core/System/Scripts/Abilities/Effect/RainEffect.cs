@@ -19,7 +19,7 @@ namespace AnyRPG {
             if (prefabSpawnLocation == PrefabSpawnLocation.Target && target != null) {
                 //Debug.Log("AOEEffect.Cast(): Setting AOE center to target");
                 aoeSpawnCenter = target.transform.position;
-            } else if (prefabSpawnLocation == PrefabSpawnLocation.Caster) {
+            } else if (prefabSpawnLocation == PrefabSpawnLocation.Caster || prefabSpawnLocation == PrefabSpawnLocation.CasterPoint) {
                 //Debug.Log("AOEEffect.Cast(): Setting AOE center to caster");
                 aoeSpawnCenter = source.AbilityManager.UnitGameObject.transform.position;
             } else if (prefabSpawnLocation == PrefabSpawnLocation.GroundTarget) {

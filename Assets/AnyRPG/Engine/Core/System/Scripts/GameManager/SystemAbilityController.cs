@@ -89,7 +89,7 @@ namespace AnyRPG {
                     break;
                 }
 
-                if (fixedLengthEffect.MyPrefabSpawnLocation != PrefabSpawnLocation.GroundTarget
+                if (fixedLengthEffect.PrefabSpawnLocation != PrefabSpawnLocation.GroundTarget
                     && fixedLengthEffect.GetTargetOptions(source).RequireTarget == true
                     && (target == null || (targetStats.IsAlive == true && fixedLengthEffect.GetTargetOptions(source).RequireDeadTarget == true) || (targetStats.IsAlive == false && fixedLengthEffect.GetTargetOptions(source).RequireLiveTarget == true))) {
                     //Debug.Log("BREAKING!!!!!!!!!!!!!!!!!");
@@ -111,7 +111,7 @@ namespace AnyRPG {
                     abilityManager.AbilityEffectGameObjects.Remove(go);
                 }
                 if (go != null) {
-                    Destroy(go, fixedLengthEffect.MyPrefabDestroyDelay);
+                    Destroy(go, fixedLengthEffect.PrefabDestroyDelay);
                 }
             }
             abilityEffectObjects.Clear();
