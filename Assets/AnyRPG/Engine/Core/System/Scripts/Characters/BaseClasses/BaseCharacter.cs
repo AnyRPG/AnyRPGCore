@@ -628,7 +628,7 @@ namespace AnyRPG {
 
         public void ProcessCapabilityConsumerChange(CapabilityConsumerSnapshot oldSnapshot, CapabilityConsumerSnapshot newSnapshot) {
             //Debug.Log(gameObject.name + ".BaseCharacter.ProcessCapabilityConsumerChange()");
-            characterEquipmentManager.UnequipUnwearableEquipment();
+            characterEquipmentManager.HandleCapabilityConsumerChange();
             characterAbilityManager.HandleCapabilityProviderChange(oldSnapshot, newSnapshot);
         }
 

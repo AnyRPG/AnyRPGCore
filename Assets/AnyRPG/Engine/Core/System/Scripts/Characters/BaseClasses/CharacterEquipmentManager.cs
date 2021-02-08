@@ -35,7 +35,7 @@ namespace AnyRPG {
             this.baseCharacter = baseCharacter;
         }
 
-        public void UnequipUnwearableEquipment() {
+        public void HandleCapabilityConsumerChange() {
             List<Equipment> equipmentToRemove = new List<Equipment>();
             foreach (Equipment equipment in currentEquipment.Values) {
                 if (equipment != null && equipment.CanEquip(baseCharacter) == false) {
@@ -44,6 +44,13 @@ namespace AnyRPG {
             }
             foreach (Equipment equipment in equipmentToRemove) {
                 Unequip(equipment);
+            }
+
+            // since all status effects were cancelled on the change, it is necessary to re-apply set bonuses
+            foreach (Equipment equipment in currentEquipment.Values) {
+                if (equipment != null) {
+                    baseCharacter.CharacterAbilityManager.UpdateEquipmentTraits(equipment);
+                }
             }
         }
 
