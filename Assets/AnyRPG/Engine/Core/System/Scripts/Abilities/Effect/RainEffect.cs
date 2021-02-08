@@ -53,6 +53,8 @@ namespace AnyRPG {
                 //validTargetNode.abilityEffectInput = abilityEffectInput;
                 validTargetNode.abilityEffectInput.groundTargetLocation = new Vector3(aoeSpawnCenter.x + Random.Range(-aoeRadius, aoeRadius), aoeSpawnCenter.y + aoeCenter.y, aoeSpawnCenter.z + Random.Range(-aoeRadius, aoeRadius));
                 */
+                validTargetNode.abilityEffectInput.groundTargetLocation = new Vector3(aoeSpawnCenter.x + Random.Range(-aoeRadius, aoeRadius), aoeSpawnCenter.y + aoeCenter.y, aoeSpawnCenter.z + Random.Range(-aoeRadius, aoeRadius));
+
                 //Debug.Log(MyName + ".RainEffect.GetValidTargets(). prefabLocation: " + validTargetNode.abilityEffectInput.prefabLocation);
                 validTargets.Add(validTargetNode);
             }
