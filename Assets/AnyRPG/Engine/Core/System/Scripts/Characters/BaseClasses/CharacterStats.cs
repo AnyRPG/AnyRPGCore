@@ -250,6 +250,13 @@ namespace AnyRPG {
             return false;
         }
 
+        public void HandleCharacterUnitSpawn() {
+            foreach (StatusEffectNode statusEffectNode in StatusEffects.Values) {
+                //Debug.Log("PlayerStats.HandlePlayerUnitSpawn(): re-applying effect object for: " + statusEffectNode.MyStatusEffect.MyName);
+                statusEffectNode.StatusEffect.RawCast(baseCharacter, baseCharacter.UnitController, baseCharacter.UnitController, new AbilityEffectContext());
+            }
+        }
+
         public void HandleUpdateStatProviders() {
             //Debug.Log(gameObject.name + ".CharacterStats.HandleSetUnitProfile()");
             SetPrimaryStatModifiers();

@@ -23,7 +23,7 @@ namespace AnyRPG {
 
         [Tooltip("Automatically cast on the character, active at all times, and do not appear on the status bar. Useful for class traits and equipment set bonuses.")]
         [SerializeField]
-        protected bool classTrait;
+        protected bool classTrait = false;
 
         [Tooltip("The required level to automatically cast this if it is a trait")]
         [SerializeField]
@@ -305,7 +305,7 @@ namespace AnyRPG {
 
 
         public override Dictionary<PrefabProfile, GameObject> Cast(IAbilityCaster source, Interactable target, Interactable originalTarget, AbilityEffectContext abilityEffectContext) {
-            //Debug.Log("StatusEffect.Cast(" + source.AbilityManager.Name + ", " + (target? target.name : "null") + ")");
+            //Debug.Log(DisplayName + ".StatusEffect.Cast(" + source.AbilityManager.Name + ", " + (target? target.name : "null") + ")");
             if (abilityEffectContext.savedEffect == false && !CanUseOn(target, source)) {
                 return null;
             }
@@ -325,7 +325,7 @@ namespace AnyRPG {
 
             StatusEffectNode _statusEffectNode = targetCharacterStats.ApplyStatusEffect(SystemAbilityEffectManager.MyInstance.GetNewResource(DisplayName) as StatusEffect, source, abilityEffectContext);
             if (_statusEffectNode == null) {
-                //Debug.Log("StatusEffect.Cast(). statuseffect was null.  This could likely happen if the character already had the status effect max stack on them");
+                //Debug.Log(DisplayName + ".StatusEffect.Cast(). statuseffect was null.  This could likely happen if the character already had the status effect max stack on them");
             } else {
                 returnObjects = base.Cast(source, target, originalTarget, abilityEffectContext);
                 if (returnObjects != null) {

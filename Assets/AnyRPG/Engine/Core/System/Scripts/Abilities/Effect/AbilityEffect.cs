@@ -60,30 +60,13 @@ namespace AnyRPG {
         protected Dictionary<PrefabProfile, GameObject> prefabObjects = new Dictionary<PrefabProfile, GameObject>();
 
         public List<AbilityEffect> MyHitAbilityEffectList { get => hitAbilityEffectList; set => hitAbilityEffectList = value; }
-        //public bool RequireDeadTarget { get => requireDeadTarget; set => requireDeadTarget = value; }
-        //public bool RequiresLiveTarget { get => requiresLiveTarget; set => requiresLiveTarget = value; }
-        //public bool RequiresTarget { get => requiresTarget; set => requiresTarget = value; }
-        //public int MaxRange { get => maxRange; set => maxRange = value; }
-        //public bool AutoSelfCast { get => autoSelfCast; set => autoSelfCast = value; }
-        //public bool CanCastOnFriendly { get => canCastOnFriendly; set => canCastOnFriendly = value; }
-        //public bool CanCastOnEnemy { get => canCastOnEnemy; set => canCastOnEnemy = value; }
-        //public bool CanCastOnSelf { get => canCastOnSelf; set => canCastOnSelf = value; }
-        //public bool UseMeleeRange { get => useMeleeRange; set => useMeleeRange = value; }
         public IAbilityCaster SourceCharacter { get => sourceCharacter; set => sourceCharacter = value; }
         public float ThreatMultiplier { get => threatMultiplier; set => threatMultiplier = value; }
         public float ChanceToCast { get => chanceToCast; set => chanceToCast = value; }
 
-        //public bool RequireLineOfSight { get => requireLineOfSight; set => requireLineOfSight = value; }
-        //public LineOfSightSourceLocation LineOfSightSourceLocation { get => lineOfSightSourceLocation; set => lineOfSightSourceLocation = value; }
-        //public TargetRangeSourceLocation TargetRangeSourceLocation { get => targetRangeSourceLocation; set => targetRangeSourceLocation = value; }
-        //public bool RequiresGroundTarget { get => false; }
-        //public bool CanCastOnNeutral { get => canCastOnNeutral; set => canCastOnNeutral = value; }
-        //public bool CanCastOnOthers { get => canCastOnOthers; set => canCastOnOthers = value; }
         public TargetProps GetTargetOptions(IAbilityCaster abilityCaster) {
             return targetOptions;
         }
-
-        //public List<AudioClip> MyOnHitAudioClips { get => (onHitAudioProfiles == null ? null : onHitAudioProfile.MyAudioClip ); }
 
         public virtual void Initialize(IAbilityCaster source, BaseCharacter target, AbilityEffectContext abilityEffectInput) {
             //Debug.Log("AbilityEffect.Initialize(" + source.MyCharacterName + ", " + target.MyCharacterName + ")");

@@ -409,10 +409,13 @@ namespace AnyRPG {
             //Debug.Log("PlayerManager.HandlePlayerUnitSpawn(): calling SystemEventManager.MyInstance.NotifyOnPlayerUnitSpawn()");
             playerUnitSpawned = true;
 
+            // testing - move this to on model ready so npcs can show their trait visuals
+            /*
             foreach (StatusEffectNode statusEffectNode in MyCharacter.CharacterStats.StatusEffects.Values) {
                 //Debug.Log("PlayerStats.HandlePlayerUnitSpawn(): re-applying effect object for: " + statusEffectNode.MyStatusEffect.MyName);
                 statusEffectNode.StatusEffect.RawCast(MyCharacter, activeUnitController, activeUnitController, new AbilityEffectContext());
             }
+            */
 
             SystemEventManager.TriggerEvent("OnPlayerUnitSpawn", new EventParamProperties());
 

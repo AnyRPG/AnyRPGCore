@@ -826,9 +826,13 @@ namespace AnyRPG {
                 AbilityEffectContext abilityEffectContext = new AbilityEffectContext();
                 abilityEffectContext.overrideDuration = overrideDuration;
                 // rememeber this method is meant for saved status effects
+                // and traits
                 abilityEffectContext.savedEffect = true;
                 AbilityEffect _abilityEffect = SystemAbilityEffectManager.MyInstance.GetNewResource(statusEffect.DisplayName);
                 if (_abilityEffect != null) {
+                    // testing : to allow npcs to get their visuals from traits, send in unit controller if it exists
+                    //_abilityEffect.Cast(baseCharacter, baseCharacter?.UnitController, null, abilityEffectContext);
+                    // testing prevent spawn of object since unitController now handles notifications that do that for all characters, not just the player
                     _abilityEffect.Cast(baseCharacter, null, null, abilityEffectContext);
                 }
             }
