@@ -22,10 +22,9 @@ MonoBehaviour:
   repeatable: 1
   requirePlayerUnitSpawn: 0
   useDefaultFactionColors: 0
-  timelineName: 
+  timelineName: CoreCutscene
   loadSceneName: CoreCutsceneZone
   unloadSceneOnEnd: 1
-  dialogName: Battle Cutscene
   autoAdvanceSubtitles: 1
   subtitleProperties:
     audioProfileName: 
@@ -39,3 +38,6 @@ MonoBehaviour:
     - startTime: 10
       showTime: 5
       description: The start time and duration of each subtitle can be customized
+    - startTime: 15
+      showTime: 10
+      description: Cutscenes can also control the skybox with Unity Timelines

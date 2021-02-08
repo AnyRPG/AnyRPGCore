@@ -48,7 +48,7 @@ MonoBehaviour:
   abilityObjectList:
   - holdableObjectName: Violet Laser
     useUniversalAttachment: 1
-    attachmentName: SpellSource
+    attachmentName: Right Hand
   prefabSpawnLocation: 1
   prefabDestroyDelay: 0
   destroyOnEndCast: 1

@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.44657844, g: 0.49641222, b: 0.57481694, a: 1}
+  m_IndirectSpecularColor: {r: 0, g: 0, b: 0, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -877,6 +877,119 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &934670410
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 934670413}
+  - component: {fileID: 934670412}
+  - component: {fileID: 934670411}
+  - component: {fileID: 934670414}
+  m_Layer: 0
+  m_Name: TimelineController
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &934670411
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 934670410}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2e805c7a9b9724841a300728976c3075, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!320 &934670412
+PlayableDirector:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 934670410}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_PlayableAsset: {fileID: 11400000, guid: 3ee2671d7bb24d04f85c9a84e249a2f9, type: 2}
+  m_InitialState: 1
+  m_WrapMode: 2
+  m_DirectorUpdateMode: 1
+  m_InitialTime: 0
+  m_SceneBindings:
+  - key: {fileID: 0}
+    value: {fileID: 0}
+  - key: {fileID: 0}
+    value: {fileID: 0}
+  - key: {fileID: 2313845119044685411, guid: 7eadd2b45ee6c3040850fecbe25d95c3, type: 2}
+    value: {fileID: 0}
+  - key: {fileID: 0}
+    value: {fileID: 0}
+  - key: {fileID: 0}
+    value: {fileID: 0}
+  - key: {fileID: 1711971018927338779, guid: 7eadd2b45ee6c3040850fecbe25d95c3, type: 2}
+    value: {fileID: 0}
+  - key: {fileID: -5740772148072661272, guid: e62bb6a38c24fa84789f3eaabdc9c627, type: 2}
+    value: {fileID: 0}
+  - key: {fileID: -1233093387107326035, guid: e62bb6a38c24fa84789f3eaabdc9c627, type: 2}
+    value: {fileID: 0}
+  - key: {fileID: 2313845119044685411, guid: 8a8fc6b0a12f85b46ba957a7b9057328, type: 2}
+    value: {fileID: 0}
+  - key: {fileID: 1711971018927338779, guid: 8a8fc6b0a12f85b46ba957a7b9057328, type: 2}
+    value: {fileID: 0}
+  - key: {fileID: -2249771132335803693, guid: 3ee2671d7bb24d04f85c9a84e249a2f9, type: 2}
+    value: {fileID: 934670414}
+  m_ExposedReferences:
+    m_References: []
+--- !u!4 &934670413
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 934670410}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 5
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &934670414
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 934670410}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e52de21a22b6dd44c9cc19f810c65059, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Events:
+    m_Signals:
+    - {fileID: 11400000, guid: cc4bfb7371a66854d9a1cae3a527decd, type: 2}
+    m_Events:
+    - m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 1573606358}
+          m_MethodName: ActivateEnvironmentStateByIndex
+          m_Mode: 3
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 1
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
 --- !u!1001 &999471657
 PrefabInstance:
   m_ObjectHideFlags: 0

@@ -47,8 +47,8 @@ MonoBehaviour:
   randomPrefabs: 0
   abilityObjectList:
   - holdableObjectName: Red laser
-    useUniversalAttachment: 0
-    attachmentName: 
+    useUniversalAttachment: 1
+    attachmentName: Right Hand
   prefabSpawnLocation: 1
   prefabDestroyDelay: 0
   destroyOnEndCast: 0

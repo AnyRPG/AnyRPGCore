@@ -29,4 +29,6 @@ MonoBehaviour:
   suppressCharacterSpawn: 1
   suppressMainCamera: 1
   autoPlayCutsceneName: Battle
-  environmentStateNames: []
+  environmentStateNames:
+  - Day
+  - Night
