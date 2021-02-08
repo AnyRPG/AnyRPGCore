@@ -133,7 +133,7 @@ MonoBehaviour:
   title: 
   factionName: Blue
   unitTypeName: 
-  characterRaceName: 
+  characterRaceName: Blue
   characterClassName: 
   classSpecializationName: 
   spawnDead: 0

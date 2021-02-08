@@ -130,11 +130,11 @@ MonoBehaviour:
   isUMAUnit: 0
   isPet: 0
   characterName: Red Tank
-  factionName: Red
   title: 
-  characterClassName: Melee
+  factionName: Red
   unitTypeName: 
-  characterRaceName: 
+  characterRaceName: Red
+  characterClassName: Melee
   classSpecializationName: Tank
   spawnDead: 0
   preventAutoDespawn: 0
@@ -206,5 +206,8 @@ MonoBehaviour:
     prerequisiteConditions: []
     vendorCollectionNames: []
   interactableOptions: []
+  persistObjectPosition: 0
+  saveOnLevelUnload: 0
+  saveOnGameSave: 0
   overwriteUnitUUID: 0
   m_UUID: 508206d4-1484-4340-babd-d8446364ff65

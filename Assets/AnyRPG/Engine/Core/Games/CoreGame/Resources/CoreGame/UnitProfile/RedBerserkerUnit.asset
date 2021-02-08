@@ -130,11 +130,11 @@ MonoBehaviour:
   isUMAUnit: 0
   isPet: 0
   characterName: Red Berserker
-  factionName: Red
   title: 
-  characterClassName: Melee
+  factionName: Red
   unitTypeName: 
-  characterRaceName: 
+  characterRaceName: Red
+  characterClassName: Melee
   classSpecializationName: Berserker
   spawnDead: 0
   preventAutoDespawn: 0
@@ -206,5 +206,8 @@ MonoBehaviour:
     prerequisiteConditions: []
     vendorCollectionNames: []
   interactableOptions: []
+  persistObjectPosition: 0
+  saveOnLevelUnload: 0
+  saveOnGameSave: 0
   overwriteUnitUUID: 0
   m_UUID: 51297176-badf-420a-8542-af7f785efb34

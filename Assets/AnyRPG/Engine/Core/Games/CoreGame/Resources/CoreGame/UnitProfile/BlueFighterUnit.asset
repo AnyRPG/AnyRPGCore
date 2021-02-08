@@ -130,11 +130,11 @@ MonoBehaviour:
   isUMAUnit: 0
   isPet: 0
   characterName: Blue Fighter
-  factionName: Blue
   title: 
-  characterClassName: Melee
+  factionName: Blue
   unitTypeName: 
-  characterRaceName: 
+  characterRaceName: Blue
+  characterClassName: Melee
   classSpecializationName: Fighter
   spawnDead: 0
   preventAutoDespawn: 0
@@ -206,5 +206,8 @@ MonoBehaviour:
     prerequisiteConditions: []
     vendorCollectionNames: []
   interactableOptions: []
+  persistObjectPosition: 0
+  saveOnLevelUnload: 0
+  saveOnGameSave: 0
   overwriteUnitUUID: 0
   m_UUID: 369d02d9-1909-4cff-a262-8d42a077741b

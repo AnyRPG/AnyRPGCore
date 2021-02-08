@@ -130,11 +130,11 @@ MonoBehaviour:
   isUMAUnit: 0
   isPet: 0
   characterName: Blue Magic
-  factionName: Blue
   title: 
-  characterClassName: Magic
+  factionName: Blue
   unitTypeName: 
-  characterRaceName: 
+  characterRaceName: Blue
+  characterClassName: Magic
   classSpecializationName: 
   spawnDead: 0
   preventAutoDespawn: 0
@@ -206,5 +206,8 @@ MonoBehaviour:
     prerequisiteConditions: []
     vendorCollectionNames: []
   interactableOptions: []
+  persistObjectPosition: 0
+  saveOnLevelUnload: 0
+  saveOnGameSave: 0
   overwriteUnitUUID: 0
   m_UUID: 2b96a2e9-f1b5-4675-89d7-3a43d118317e

@@ -130,11 +130,11 @@ MonoBehaviour:
   isUMAUnit: 0
   isPet: 0
   characterName: Blue Healer
-  factionName: Blue
   title: 
-  characterClassName: Magic
+  factionName: Blue
   unitTypeName: 
-  characterRaceName: 
+  characterRaceName: Blue
+  characterClassName: Magic
   classSpecializationName: Healer
   spawnDead: 0
   preventAutoDespawn: 0
@@ -206,5 +206,8 @@ MonoBehaviour:
     prerequisiteConditions: []
     vendorCollectionNames: []
   interactableOptions: []
+  persistObjectPosition: 0
+  saveOnLevelUnload: 0
+  saveOnGameSave: 0
   overwriteUnitUUID: 0
   m_UUID: a4388465-2df9-487c-a4b9-0d74f977c6c9

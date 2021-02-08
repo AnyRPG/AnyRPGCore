@@ -130,11 +130,11 @@ MonoBehaviour:
   isUMAUnit: 0
   isPet: 0
   characterName: Red Pet Tamer
-  factionName: Red
   title: 
-  characterClassName: Ranged
+  factionName: Red
   unitTypeName: 
-  characterRaceName: 
+  characterRaceName: Red
+  characterClassName: Ranged
   classSpecializationName: Pet Tamer
   spawnDead: 0
   preventAutoDespawn: 0
@@ -206,5 +206,8 @@ MonoBehaviour:
     prerequisiteConditions: []
     vendorCollectionNames: []
   interactableOptions: []
+  persistObjectPosition: 0
+  saveOnLevelUnload: 0
+  saveOnGameSave: 0
   overwriteUnitUUID: 0
   m_UUID: 8416af5d-7762-48ff-a75d-3dff6a5ec3a5
