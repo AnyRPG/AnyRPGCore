@@ -29,9 +29,9 @@ MonoBehaviour:
     canCastOnEnemy: 0
     canCastOnNeutral: 0
     canCastOnFriendly: 1
-    autoSelfCast: 1
+    autoSelfCast: 0
     useMeleeRange: 0
-    maxRange: 40
+    maxRange: 0
     lineOfSightSourceLocation: 0
     targetRangeSourceLocation: 0
   chanceToCast: 100
