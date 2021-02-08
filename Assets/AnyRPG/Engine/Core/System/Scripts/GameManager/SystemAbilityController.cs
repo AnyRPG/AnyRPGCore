@@ -26,13 +26,30 @@ namespace AnyRPG {
 
         private void Awake() {
             abilityManager = new AbilityManager(this);
-    }
+            SystemEventManager.StartListening("OnLevelUnload", HandleLevelUnload);
+        }
+
+        // ensure that no coroutine continues or other spell effects exist past the end of a level
+        public void HandleLevelUnload(string eventName, EventParamProperties eventParamProperties) {
+            foreach (Coroutine coroutine in abilityManager.DestroyAbilityEffectObjectCoroutines) {
+                StopCoroutine(coroutine);
+            }
+            abilityManager.DestroyAbilityEffectObjectCoroutines.Clear();
+
+            foreach (GameObject go in abilityManager.AbilityEffectGameObjects) {
+                if (go != null) {
+                    Destroy(go);
+                }
+            }
+            abilityManager.AbilityEffectGameObjects.Clear();
+
+        }
 
         public void BeginDestroyAbilityEffectObject(Dictionary<PrefabProfile, GameObject> abilityEffectObjects, IAbilityCaster source, Interactable target, float timer, AbilityEffectContext abilityEffectInput, FixedLengthEffect fixedLengthEffect) {
             foreach (GameObject go in abilityEffectObjects.Values) {
                 abilityManager.AbilityEffectGameObjects.Add(go);
             }
-            abilityManager.DestroyAbilityEffectObjectCoroutine = StartCoroutine(DestroyAbilityEffectObject(abilityEffectObjects, source, target, timer, abilityEffectInput, fixedLengthEffect));
+            abilityManager.AddDestroyAbilityEffectObjectCoroutine(StartCoroutine(DestroyAbilityEffectObject(abilityEffectObjects, source, target, timer, abilityEffectInput, fixedLengthEffect)));
         }
 
         public IEnumerator DestroyAbilityEffectObject(Dictionary<PrefabProfile, GameObject> abilityEffectObjects, IAbilityCaster source, Interactable target, float timer, AbilityEffectContext abilityEffectInput, FixedLengthEffect fixedLengthEffect) {
@@ -128,6 +145,7 @@ namespace AnyRPG {
 
         public void OnDestroy() {
             StopAllCoroutines();
+            SystemEventManager.StopListening("OnLevelUnload", HandleLevelUnload);
         }
     }
 

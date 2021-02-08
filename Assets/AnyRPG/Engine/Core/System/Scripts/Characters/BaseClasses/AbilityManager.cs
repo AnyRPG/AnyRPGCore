@@ -11,6 +11,7 @@ namespace AnyRPG {
         protected Coroutine currentCastCoroutine = null;
         protected Coroutine abilityHitDelayCoroutine = null;
         protected Coroutine destroyAbilityEffectObjectCoroutine = null;
+        protected List<Coroutine> destroyAbilityEffectObjectCoroutines = new List<Coroutine>();
 
         protected bool eventSubscriptionsInitialized = false;
 
@@ -69,6 +70,7 @@ namespace AnyRPG {
 
         public List<GameObject> AbilityEffectGameObjects { get => abilityEffectGameObjects; set => abilityEffectGameObjects = value; }
         public Coroutine DestroyAbilityEffectObjectCoroutine { get => destroyAbilityEffectObjectCoroutine; set => destroyAbilityEffectObjectCoroutine = value; }
+        public List<Coroutine> DestroyAbilityEffectObjectCoroutines { get => destroyAbilityEffectObjectCoroutines; set => destroyAbilityEffectObjectCoroutines = value; }
 
         public virtual void SetMountedState(UnitController mountUnitController, UnitProfile mountUnitProfile) {
             // nothing here for now
@@ -78,7 +80,9 @@ namespace AnyRPG {
             // nothing here for now
         }
 
-
+        public virtual void AddDestroyAbilityEffectObjectCoroutine(Coroutine coroutine) {
+            destroyAbilityEffectObjectCoroutines.Add(coroutine);
+        }
 
         public AbilityManager(MonoBehaviour abilityCaster) {
             this.abilityCaster = abilityCaster;

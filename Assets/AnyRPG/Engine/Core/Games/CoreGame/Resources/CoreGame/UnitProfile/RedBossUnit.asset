@@ -148,7 +148,7 @@ MonoBehaviour:
     armorClassList: []
     weaponSkills: []
   isAggressive: 1
-  aggroRadius: 20
+  aggroRadius: 25
   automaticCombatStrategy: 0
   combatStrategyName: Boss
   primaryStats: []
