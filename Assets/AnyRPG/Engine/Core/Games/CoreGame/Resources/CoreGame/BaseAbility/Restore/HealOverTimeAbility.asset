@@ -10,13 +10,13 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: c80d744dccc642148ab1014a88212085, type: 3}
-  m_Name: HealAbility
+  m_Name: HealOverTimeAbility
   m_EditorClassIdentifier: 
-  resourceName: Heal
+  resourceName: Heal Over Time
   displayName: 
   icon: {fileID: 21300000, guid: 9544d85ce7a4da64d90d376dc637b5c9, type: 3}
   iconBackgroundImage: {fileID: 0}
-  description: heal instantly
+  description: heal over time
   useRegionalDescription: 0
   resourceDescriptionProfile: 
   requireOutOfCombat: 0
@@ -69,6 +69,6 @@ MonoBehaviour:
     groundTargetColor: {r: 1, g: 1, b: 1, a: 1}
     groundTargetRadius: 0
   abilityEffectNames:
-  - Heal
+  - Heal Over Time
   tickRate: 1
   channeledAbilityEffectnames: []

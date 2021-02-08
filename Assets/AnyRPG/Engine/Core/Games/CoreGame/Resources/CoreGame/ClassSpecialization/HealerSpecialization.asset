@@ -26,7 +26,11 @@ MonoBehaviour:
   capabilities:
     abilityNames:
     - Heal
+    - Heal Over Time
+    - Healing Projectile
+    - Healing Channel
     - Healing Circle
+    - Healing Explosion
     - Revive Ally
     - Cure Poison
     traitNames: []

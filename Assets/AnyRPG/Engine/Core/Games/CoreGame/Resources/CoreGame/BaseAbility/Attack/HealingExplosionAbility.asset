@@ -10,28 +10,26 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: c80d744dccc642148ab1014a88212085, type: 3}
-  m_Name: HealAbility
+  m_Name: HealingExplosionAbility
   m_EditorClassIdentifier: 
-  resourceName: Heal
+  resourceName: Healing Explosion
   displayName: 
-  icon: {fileID: 21300000, guid: 9544d85ce7a4da64d90d376dc637b5c9, type: 3}
+  icon: {fileID: 21300000, guid: d816099ac60642e42ad491a31f38ea8b, type: 3}
   iconBackgroundImage: {fileID: 0}
-  description: heal instantly
+  description: A powerful blast of light eminates from the caster, causing damage
+    to all nearby enemies and healing all nearby allies for the damage done
   useRegionalDescription: 0
   resourceDescriptionProfile: 
   requireOutOfCombat: 0
   weaponAffinityNames: []
-  holdableObjectList:
-  - holdableObjectName: Green Casting Circle
-    useUniversalAttachment: 0
-    attachmentName: 
+  holdableObjectList: []
   abilityPrefabSource: 0
   animatorCreatePrefabs: 0
-  prefabDestroyDelay: 0
-  animationProfileName: Cast 2H Up
+  prefabDestroyDelay: 1
+  animationProfileName: 
   useUnitCastAnimations: 0
   animationHitAudioProfileName: 
-  castingAudioProfileName: Restore Spell
+  castingAudioProfileName: 
   requiredLevel: 1
   characterClassRequirements: []
   useableWithoutLearning: 0
@@ -45,30 +43,30 @@ MonoBehaviour:
   spendDelay: 0
   generatePowerResourceName: 
   baseResourceGain: 0
-  resourceGainPerLevel: 5
+  resourceGainPerLevel: 0
   useSpeedMultipliers: 1
-  useAnimationCastTime: 1
-  abilityCastingTime: 1.5
-  abilityCoolDown: 0
+  useAnimationCastTime: 0
+  abilityCastingTime: 0
+  abilityCoolDown: 5
   coolDownOnCast: 0
   useAbilityEffectTargetting: 0
   targetOptions:
-    requireTarget: 1
+    requireTarget: 0
     requireLineOfSight: 0
-    requireLiveTarget: 1
+    requireLiveTarget: 0
     requireDeadTarget: 0
-    canCastOnSelf: 1
-    canCastOnOthers: 1
+    canCastOnSelf: 0
+    canCastOnOthers: 0
     canCastOnEnemy: 0
     canCastOnNeutral: 0
-    canCastOnFriendly: 1
-    autoSelfCast: 1
+    canCastOnFriendly: 0
+    autoSelfCast: 0
     useMeleeRange: 0
-    maxRange: 40
+    maxRange: 15
     requiresGroundTarget: 0
     groundTargetColor: {r: 1, g: 1, b: 1, a: 1}
     groundTargetRadius: 0
   abilityEffectNames:
-  - Heal
+  - Healing Explosion AOE
   tickRate: 1
   channeledAbilityEffectnames: []

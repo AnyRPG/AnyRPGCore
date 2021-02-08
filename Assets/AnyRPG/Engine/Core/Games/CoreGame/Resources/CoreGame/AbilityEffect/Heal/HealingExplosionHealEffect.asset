@@ -9,14 +9,14 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 499bdf3134e84df4c99414d0ac47ec01, type: 3}
-  m_Name: HealOverTimeStatusEffect
+  m_Script: {fileID: 11500000, guid: 6fda6fdfefd604e44a751298c9631a82, type: 3}
+  m_Name: HealingExplosionHealEffect
   m_EditorClassIdentifier: 
-  resourceName: Heal Over Time
+  resourceName: Healing Explosion Heal
   displayName: 
-  icon: {fileID: 21300000, guid: 9544d85ce7a4da64d90d376dc637b5c9, type: 3}
+  icon: {fileID: 21300000, guid: d816099ac60642e42ad491a31f38ea8b, type: 3}
   iconBackgroundImage: {fileID: 0}
-  description: restore life over time
+  description: 
   useRegionalDescription: 0
   resourceDescriptionProfile: 
   targetOptions:
@@ -40,45 +40,28 @@ MonoBehaviour:
   onHitAudioProfileNames: []
   randomAudioProfiles: 0
   hitAbilityEffectNames: []
-  inputMultiplier: 0
+  inputMultiplier: 1
   threatMultiplier: 1
   abilityPrefabSource: 1
   randomPrefabs: 0
   abilityObjectList: []
-  prefabSpawnLocation: 2
-  prefabDestroyDelay: 1
+  prefabSpawnLocation: 0
+  prefabDestroyDelay: 0
   destroyOnEndCast: 0
-  tickRate: 5
-  castZeroTick: 1
-  tickAbilityEffectNames:
-  - Heal Over Time Tick
+  tickRate: 0
+  castZeroTick: 0
+  tickAbilityEffectNames: []
   onTickAudioProfileNames: []
   randomTickAudioProfiles: 0
   completeAbilityEffectNames: []
-  statusEffectAlignment: 0
-  statusEffectTypeName: 
-  classTrait: 0
-  requiredLevel: 1
-  sceneNames: []
-  limitedDuration: 1
-  refreshableDuration: 1
-  duration: 20
-  maxStacks: 1
-  statBuffTypeNames: []
-  statAmount: 0
-  statMultiplier: 0
-  secondaryStatBuffsTypes: 
-  secondaryStatAmount: 0
-  secondaryStatMultiplier: 1
-  outgoingDamageMultiplier: 1
-  incomingDamageMultiplier: 1
-  factionModifiers: []
-  disableAnimator: 0
-  stun: 0
-  levitate: 0
-  immuneDisableAnimator: 0
-  immuneStun: 0
-  immuneLevitate: 0
-  controlTarget: 0
-  reflectAbilityEffectNames: []
-  weaponHitAbilityEffectNames: []
+  defaultPrefabLifetime: 10
+  allowCriticalStrike: 0
+  resourceAmounts:
+  - resourceName: Health
+    inputRemap: 
+    addPower: 0
+    minAmount: 0
+    baseAmount: 0
+    amountPerLevel: 0
+    maxAmount: 0
+  damageType: 0
