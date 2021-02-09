@@ -1332,7 +1332,7 @@ namespace AnyRPG {
         }
 
         protected bool BeginAbilityCommon(BaseAbility ability, Interactable target, bool playerInitiated = false) {
-            //Debug.Log(baseCharacter.gameObject.name + ".CharacterAbilityManager.BeginAbilityCommon(" + (ability == null ? "null" : ability.DisplayName) + ", " + (target == null ? "null" : target.name) + ")");
+            //Debug.Log(baseCharacter.gameObject.name + ".CharacterAbilityManager.BeginAbilityCommon(" + (ability == null ? "null" : ability.DisplayName) + ", " + (target == null ? "null" : target.gameObject.name) + ")");
             BaseAbility usedAbility = SystemAbilityManager.MyInstance.GetResource(ability.DisplayName);
             if (usedAbility == null) {
                 Debug.LogError("CharacterAbilityManager.BeginAbilityCommon(" + (ability == null ? "null" : ability.DisplayName) + ", " + (target == null ? "null" : target.name) + ") NO ABILITY FOUND");
@@ -1569,18 +1569,13 @@ namespace AnyRPG {
         /// <param name="ability"></param>
         /// <param name="target"></param>
         public void PerformAbility(BaseAbility ability, Interactable target, AbilityEffectContext abilityEffectContext) {
-            //Debug.Log(baseCharacter.gameObject.name + ".CharacterAbilityManager.PerformAbility(" + ability.DisplayName + ")");
+            //Debug.Log(baseCharacter.gameObject.name + ".CharacterAbilityManager.PerformAbility(" + ability.DisplayName + ", " + target.gameObject.name + ")");
             if (abilityEffectContext == null) {
                 abilityEffectContext = new AbilityEffectContext();
                 abilityEffectContext.baseAbility = ability;
             }
             abilityEffectContext.originalTarget = target;
             Interactable finalTarget = target;
-            if (finalTarget != null) {
-                //Debug.Log(gameObject.name + ": performing ability: " + ability.MyName + " on " + finalTarget.name);
-            } else {
-                //Debug.Log(gameObject.name + ": performing ability: " + ability.MyName + ": finalTarget is null");
-            }
 
             if (!PerformPowerResourceCheck(ability)) {
                 return;

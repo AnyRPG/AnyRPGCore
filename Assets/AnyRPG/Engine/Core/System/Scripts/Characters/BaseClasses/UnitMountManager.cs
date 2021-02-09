@@ -68,6 +68,8 @@ namespace AnyRPG {
 
         public void ActivateMountedState() {
 
+            unitController?.CharacterUnit?.BaseCharacter?.CharacterEquipmentManager?.SheathWeapons();
+
             unitController.FreezeAll();
 
             // set player animator to riding state
@@ -142,7 +144,9 @@ namespace AnyRPG {
 
                 mountUnitController = null;
                 mountUnitProfile = null;
-
+            }
+            if (unitController?.CharacterUnit?.BaseCharacter?.CharacterCombat?.GetInCombat() == true) {
+                unitController?.CharacterUnit?.BaseCharacter?.CharacterEquipmentManager.HoldWeapons();
             }
         }
 

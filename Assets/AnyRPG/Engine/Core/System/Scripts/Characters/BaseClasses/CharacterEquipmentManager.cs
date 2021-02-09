@@ -252,6 +252,12 @@ namespace AnyRPG {
 
         public void HoldWeapons() {
             //Debug.Log(baseCharacter.gameObject.name + ".CharacterEquipmentManager.HoldWeapons()");
+
+            // when mounted, weapons should stay sheathed
+            if (baseCharacter?.UnitController?.Mounted == true) {
+                return;
+            }
+
             foreach (EquipmentSlotProfile equipmentSlotProfile in currentEquipment.Keys) {
                 if (currentEquipment[equipmentSlotProfile] != null && currentEquipmentPhysicalObjects.ContainsKey(equipmentSlotProfile)) {
                     //foreach (KeyValuePair<PrefabProfile, GameObject> holdableObjectReference in currentEquipmentPhysicalObjects[equipmentSlotProfile]) {
