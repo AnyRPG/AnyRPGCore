@@ -1,0 +1,102 @@
+00 Ouch SFX
+01 Character Dead 1
+02 Character Dead 2
+03 Monster Hurt 0
+04 Monster Hurt 1
+05 Monster Hurt 2
+06 Weapon Miss
+07 Heal Spell
+08 Cure Spell
+09 Spell Success
+10 Spell Failure
+11 Resurrect Spell
+12 Avalanche
+13 Bonus Spell
+14 Reserved
+15 Reserved
+16 Reserved
+17 Restore Spell
+18 Youth Spell
+19 Dispel Spell
+20 Light Spell
+21 Trap Destruction Spell
+22 Scry Sight Spell
+23 Phase Door Spell
+24 Teleport Spell
+25 Insanity Spell
+26 Paralyze Spell
+27 Poison Spell
+28 Stone Spell
+29 Kill Spell
+30 Summon Spell
+31 Possession Spell
+32 Age Spell
+33 Reserved
+34 Fire Spell
+35 Water Spell
+36 Earth Spell
+37 Air Spell
+38 Electricity Spell
+39 Ice Spell
+40 Hit SFX
+41 Reserved
+42 Bell Toll
+43 Coins Thrown
+44 Bubbles
+45 Switch 1
+46 Switch 2
+47 Switch 3
+48 Chop
+49 Creak 1
+50 Creak 2
+51 Knife Being Sharpened
+52 Gadget 1
+53 Gadget 2
+54 Gadget 3
+55 Gadget 4
+56 Gadget 5
+57 Gadget 6
+58 Footsteps
+59 Echoing Foosteps
+60 Creature Footsteps 1
+61 Creature Footsteps 2
+62 Marching Footsteps
+63 Door Slam
+64 Door Close
+65 Trap Door
+66 Cell Door
+67 Creaking Door
+68 Trap Arrow
+69 Trap Gas
+70 Trap Collapsing Wall
+71 Trap Fireball
+72 Trap Flame Arrow
+73 Earthquake
+74 Reserved
+75 Reserved
+76 Reserved
+77 Reserved
+78 Reserved
+79 Reserved
+80 Reserved
+81 Reserved
+82 Reserved
+83 Reserved
+84 Reserved
+85 Reserved
+86 Reserved
+87 Reserved
+88 Reserved
+89 Reserved
+90 Reserved
+91 Reserved
+92 Reserved
+93 Reserved
+94 Reserved
+95 Reserved
+96 Reserved
+97 Reserved
+98 Reserved
+99 Reserved
+100+ User Defined
+
