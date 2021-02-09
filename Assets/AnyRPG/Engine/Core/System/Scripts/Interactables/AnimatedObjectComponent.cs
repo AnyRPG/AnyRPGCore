@@ -13,8 +13,14 @@ namespace AnyRPG {
         // by default it is considered closed when not using the sheathed position
         private bool objectOpen = false;
 
+        // track state of looping
+        private bool looping = false;
+
         // keep track of opening and closing
-        private Coroutine coroutine = null;
+        private Coroutine moveCoroutine = null;
+
+        // keep track of looping
+        private Coroutine loopCoroutine = null;
 
         public AnimatedObjectComponent(Interactable interactable, AnimatedObjectProps interactableOptionProps) : base(interactable, interactableOptionProps) {
             interactableOptionProps.InteractionPanelTitle = "Interactable";
@@ -22,8 +28,13 @@ namespace AnyRPG {
 
         public override void Cleanup() {
             base.Cleanup();
-            if (coroutine != null) {
-                coroutine = null;
+            if (moveCoroutine != null) {
+                interactable.StopCoroutine(moveCoroutine);
+                moveCoroutine = null;
+            }
+            if (loopCoroutine != null) {
+                interactable.StopCoroutine(loopCoroutine);
+                loopCoroutine = null;
             }
         }
 
@@ -42,14 +53,43 @@ namespace AnyRPG {
                 Debug.Log("AnimatedObject.Interact(): prefabprofile was null");
                 return false;
             }
-            if (objectOpen) {
-                coroutine = interactable.StartCoroutine(animateObject(interactable.MyPrefabProfile.SheathedRotation, interactable.MyPrefabProfile.SheathedPosition, interactable.MyPrefabProfile.SheathAudioProfile));
+            if (Props.Loop == true) {
+                if (looping == true) {
+                    looping = false;
+                } else {
+                    looping = true;
+                    loopCoroutine = interactable.StartCoroutine(LoopAnimation());
+                }
             } else {
-                coroutine = interactable.StartCoroutine(animateObject(interactable.MyPrefabProfile.Rotation, interactable.MyPrefabProfile.Position, interactable.MyPrefabProfile.UnsheathAudioProfile));
+                ChooseMovement();
             }
             // lerp them to the other state, using the values defined in their sheathed and regular positions
 
             return false;
+        }
+
+        private void ChooseMovement() {
+            if (objectOpen) {
+                moveCoroutine = interactable.StartCoroutine(animateObject(interactable.MyPrefabProfile.SheathedRotation, interactable.MyPrefabProfile.SheathedPosition, interactable.MyPrefabProfile.SheathAudioProfile));
+            } else {
+                moveCoroutine = interactable.StartCoroutine(animateObject(interactable.MyPrefabProfile.Rotation, interactable.MyPrefabProfile.Position, interactable.MyPrefabProfile.UnsheathAudioProfile));
+            }
+        }
+
+        private IEnumerator LoopAnimation() {
+            while (looping == true) {
+                if (moveCoroutine == null) {
+                    ChooseMovement();
+                }
+                yield return null;
+            }
+
+            // looping could be turned off in the middle of a movement so give a chance to clean it up
+            if (moveCoroutine != null) {
+                interactable.StopCoroutine(moveCoroutine);
+                moveCoroutine = null;
+            }
+
         }
 
         private IEnumerator animateObject(Vector3 newAngle, Vector3 newPosition, AudioProfile audioProfile) {
@@ -86,7 +126,7 @@ namespace AnyRPG {
             }
             //objectOpen = !objectOpen;
             //Debug.Log(gameObject.name + ".AnimatedObject.animateObject(" + newAngle + ", " + newPosition + "): localEulerAngles: " + interactable.MySpawnReference.transform.localEulerAngles + "; position: " + interactable.MySpawnReference.transform.localPosition + "; COMPLETE ANIMATION");
-            coroutine = null;
+            moveCoroutine = null;
         }
 
         /*
