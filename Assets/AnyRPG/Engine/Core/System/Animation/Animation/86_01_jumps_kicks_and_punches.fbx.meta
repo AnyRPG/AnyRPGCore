@@ -5,10 +5,10 @@ ModelImporter:
   internalIDToNameTable:
   - first:
       74: 8976197992841701070
-    second: AnyRPGExampleLeftRightJabCombo
+    second: AnyRPGLeftRightJabCombo
   - first:
       74: 5913221249527592199
-    second: AnyRPGExampleRightStraightKick
+    second: AnyRPGRightStraightKick
   - first:
       74: 6632340966235130917
     second: 86_01
@@ -44,7 +44,7 @@ ModelImporter:
     extraUserProperties: []
     clipAnimations:
     - serializedVersion: 16
-      name: AnyRPGExampleLeftRightJabCombo
+      name: AnyRPGLeftRightJabCombo
       takeName: 86_01
       internalID: 8976197992841701070
       firstFrame: 452
@@ -87,7 +87,7 @@ ModelImporter:
       maskSource: {instanceID: 0}
       additiveReferencePoseFrame: 0
     - serializedVersion: 16
-      name: AnyRPGExampleRightStraightKick
+      name: AnyRPGRightStraightKick
       takeName: 86_01
       internalID: 5913221249527592199
       firstFrame: 768

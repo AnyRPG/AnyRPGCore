@@ -25,7 +25,7 @@ MonoBehaviour:
   abilityPrefabSource: 0
   animatorCreatePrefabs: 0
   prefabDestroyDelay: 0
-  animationProfileName: Front Kick
+  animationProfileName: Right Straight Kick
   useUnitCastAnimations: 0
   animationHitAudioProfileName: 
   castingAudioProfileName: 

@@ -10,9 +10,9 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 621a5f1f29fd4ac41a1db478d5473374, type: 3}
-  m_Name: FrontKickAnimation
+  m_Name: AttackRightTripleAnimation
   m_EditorClassIdentifier: 
-  resourceName: Front Kick
+  resourceName: Attack Right Triple
   displayName: 
   icon: {fileID: 0}
   iconBackgroundImage: {fileID: 0}
@@ -23,7 +23,7 @@ MonoBehaviour:
     useRootMotion: 0
     suppressAdjustAnimatorSpeed: 0
     attackClips:
-    - {fileID: 5913221249527592199, guid: 6e2419dd3ba133846a62009f8b440270, type: 3}
+    - {fileID: 7400000, guid: 7586df338e9de2d48865acf578f14f3c, type: 2}
     castClips: []
     takeDamageClips: []
     idleClip: {fileID: 0}
