@@ -11590,10 +11590,10 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1167479051}
-  - component: {fileID: 1167479055}
   - component: {fileID: 1167479054}
   - component: {fileID: 1167479053}
   - component: {fileID: 1167479052}
+  - component: {fileID: 1167479055}
   m_Layer: 0
   m_Name: RedDoorTimelineController
   m_TagString: Untagged
@@ -11696,22 +11696,6 @@ PlayableDirector:
   m_DirectorUpdateMode: 1
   m_InitialTime: 0
   m_SceneBindings:
-  - key: {fileID: 0}
-    value: {fileID: 0}
-  - key: {fileID: 0}
-    value: {fileID: 0}
-  - key: {fileID: 2313845119044685411, guid: 7eadd2b45ee6c3040850fecbe25d95c3, type: 2}
-    value: {fileID: 0}
-  - key: {fileID: 0}
-    value: {fileID: 0}
-  - key: {fileID: 0}
-    value: {fileID: 0}
-  - key: {fileID: 1711971018927338779, guid: 7eadd2b45ee6c3040850fecbe25d95c3, type: 2}
-    value: {fileID: 0}
-  - key: {fileID: -5740772148072661272, guid: e62bb6a38c24fa84789f3eaabdc9c627, type: 2}
-    value: {fileID: 0}
-  - key: {fileID: -1233093387107326035, guid: e62bb6a38c24fa84789f3eaabdc9c627, type: 2}
-    value: {fileID: 0}
   - key: {fileID: 2313845119044685411, guid: 8a8fc6b0a12f85b46ba957a7b9057328, type: 2}
     value: {fileID: 1573606356}
   - key: {fileID: 1711971018927338779, guid: 8a8fc6b0a12f85b46ba957a7b9057328, type: 2}
