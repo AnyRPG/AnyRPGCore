@@ -1302,6 +1302,7 @@ namespace AnyRPG {
 
             SetAttacking(false, false);
             SetCasting(false, false);
+            SetJumping(0);
 
             SetTrigger("DeathTrigger");
             SetBool("IsDead", true);

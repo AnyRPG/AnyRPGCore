@@ -46,6 +46,9 @@ namespace AnyRPG {
                 return;
             }
             foreach (Renderer renderer in meshRenderers) {
+                if (renderer.gameObject.layer == LayerMask.NameToLayer("SpellEffects")) {
+                    continue;
+                }
                 originalMaterials.Add(renderer, renderer.materials);
                 //Debug.Log("MaterialChangeController.PerformMaterialChange(): material length: " + originalMaterials[renderer].Length);
                 temporaryMaterials = new Material[originalMaterials[renderer].Length];
@@ -68,6 +71,9 @@ namespace AnyRPG {
             }
 
             foreach (Renderer renderer in meshRenderers) {
+                if (renderer.gameObject.layer == LayerMask.NameToLayer("SpellEffects")) {
+                    continue;
+                }
                 if (renderer != null && originalMaterials.ContainsKey(renderer)) {
                     renderer.materials = originalMaterials[renderer];
                 }

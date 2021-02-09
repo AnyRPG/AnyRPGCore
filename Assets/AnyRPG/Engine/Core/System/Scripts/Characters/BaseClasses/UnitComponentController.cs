@@ -21,9 +21,15 @@ namespace AnyRPG {
         [SerializeField]
         private UnitAudioEmitter unitAudioEmitter = null;
 
+        [Tooltip("A reference to the highlight circle")]
+        [SerializeField]
+        private HighlightController highlightController = null;
+
         public Transform NamePlateTransform { get => namePlateTransform; set => namePlateTransform = value; }
         public AggroRange AggroRangeController { get => aggroRangeController; set => aggroRangeController = value; }
         public InteractableRange InteractableRange { get => interactableRange; set => interactableRange = value; }
+        public HighlightController HighlightController { get => highlightController; set => highlightController = value; }
+
         //public UnitAudioEmitter UnitAudioEmitter { get => unitAudioEmitter; set => unitAudioEmitter = value; }
 
         private void Awake() {

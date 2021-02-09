@@ -11,7 +11,7 @@ namespace AnyRPG {
     public class UnitController : NamePlateUnit, IPersistentObjectOwner {
 
         public event System.Action<Interactable> OnSetTarget = delegate { };
-        public event System.Action OnClearTarget = delegate { };
+        public event System.Action<Interactable> OnClearTarget = delegate { };
         public event System.Action OnManualMovement = delegate { };
         public event System.Action OnModelReady = delegate { };
         public event System.Action OnReputationChange = delegate { };
@@ -643,6 +643,9 @@ namespace AnyRPG {
                 characterUnit = new CharacterUnit(this as Interactable, new InteractableOptionProps());
                 characterUnit.SetBaseCharacter(baseCharacter);
                 baseCharacter.SetUnitController(this);
+
+                // now that the characterUnit is available
+                unitComponentController.HighlightController.ConfigureOwner(characterUnit);
                 AddInteractable(characterUnit);
             }
 
@@ -991,10 +994,10 @@ namespace AnyRPG {
                     //Debug.Log(gameObject.name + ".AIController.ApplyControlEffects(): masterUnit is null, returning");
                     return;
                 }
-                masterUnit.UnitController.OnClearTarget += ClearTarget;
-                masterUnit.CharacterAbilityManager.OnAttack += OnMasterAttack;
-                masterUnit.CharacterCombat.OnDropCombat += OnMasterDropCombat;
-                masterUnit.UnitController.OnManualMovement += OnMasterMovement;
+                masterUnit.UnitController.OnClearTarget += HandleClearTarget;
+                masterUnit.CharacterAbilityManager.OnAttack += HandleMasterAttack;
+                masterUnit.CharacterCombat.OnDropCombat += HandleMasterDropCombat;
+                masterUnit.UnitController.OnManualMovement += HandleMasterMovement;
 
                 // CLEAR AGRO TABLE OR NOTIFY REPUTATION CHANGE - THIS SHOULD PREVENT ATTACKING SOMETHING THAT SUDDENLY IS UNDER CONTROL AND NOW YOUR FACTION WHILE YOU ARE INCOMBAT WITH IT
                 characterUnit.BaseCharacter.CharacterCombat.AggroTable.ClearTable();
@@ -1007,10 +1010,10 @@ namespace AnyRPG {
         public void RemoveControlEffects() {
             if (underControl && masterUnit != null) {
                 //masterUnit.MyCharacterController.OnSetTarget -= SetTarget;
-                masterUnit.UnitController.OnClearTarget -= ClearTarget;
-                masterUnit.CharacterAbilityManager.OnAttack -= OnMasterAttack;
-                masterUnit.CharacterCombat.OnDropCombat -= OnMasterDropCombat;
-                masterUnit.UnitController.OnManualMovement -= OnMasterMovement;
+                masterUnit.UnitController.OnClearTarget -= HandleClearTarget;
+                masterUnit.CharacterAbilityManager.OnAttack -= HandleMasterAttack;
+                masterUnit.CharacterCombat.OnDropCombat -= HandleMasterDropCombat;
+                masterUnit.UnitController.OnManualMovement -= HandleMasterMovement;
             }
             masterUnit = null;
             underControl = false;
@@ -1018,7 +1021,7 @@ namespace AnyRPG {
             // should we reset leash position to start position here ?
         }
 
-        public void OnMasterMovement() {
+        public void HandleMasterMovement() {
             //Debug.Log(gameObject.name + ".AIController.OnMasterMovement()");
             SetMasterRelativeDestination();
         }
@@ -1053,12 +1056,12 @@ namespace AnyRPG {
 
         }
 
-        public void OnMasterAttack(BaseCharacter target) {
+        public void HandleMasterAttack(BaseCharacter target) {
             //Debug.Log(gameObject.name + ".OnMasterAttack()");
             SetTarget(target.UnitController);
         }
 
-        public void OnMasterDropCombat() {
+        public void HandleMasterDropCombat() {
             characterUnit.BaseCharacter.CharacterCombat.TryToDropCombat();
             SetMasterRelativeDestination(true);
         }
@@ -1434,19 +1437,28 @@ namespace AnyRPG {
                     Agro(targetCharacterUnit);
                 }
             } else {
+                if (target != null) {
+                    ClearTarget();
+                }
                 target = newTarget;
             }
             OnSetTarget(target);
         }
 
+        // receive messages from master and pass them on
+        public void HandleClearTarget(Interactable oldTarget) {
+            ClearTarget();
+        }
+
         public void ClearTarget() {
             //Debug.Log(gameObject.name + ": basecontroller.ClearTarget()");
+            Interactable oldTarget = target;
             target = null;
             // FIX ME (reenable possibly?)
             if (UnitMotor != null) {
                 UnitMotor.StopFollowingTarget();
             }
-            OnClearTarget();
+            OnClearTarget(oldTarget);
         }
 
         private Vector3 GetHitBoxCenter() {
@@ -1614,19 +1626,25 @@ namespace AnyRPG {
             characterUnit.CallMiniMapStatusUpdateHandler();
             OnReputationChange();
         }
+
         public void NotifyOnBeforeDie(CharacterStats characterStats) {
             unitComponentController.StopMovement();
+            unitComponentController.HighlightController.UpdateColors();
             OnBeforeDie(characterStats);
         }
+
         public void NotifyOnReviveComplete() {
             FreezeRotation();
             InitializeNamePlate();
             CharacterUnit.HandleReviveComplete();
+            unitComponentController.HighlightController.UpdateColors();
             OnReviveComplete();
         }
+
         public void NotifyOnLevelChanged(int newLevel) {
             OnLevelChanged(newLevel);
         }
+
         public void NotifyOnUnitTypeChange(UnitType newUnitType, UnitType oldUnitType) {
             OnUnitTypeChange(newUnitType, oldUnitType);
         }

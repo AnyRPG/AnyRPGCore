@@ -324,8 +324,9 @@ namespace AnyRPG {
         [SerializeField]
         private Material defaultCastingLightProjector;
 
+        [FormerlySerializedAs("focusProjectorColorMap")]
         [SerializeField]
-        private List<ProjectorColorMapNode> focusProjectorColorMap = new List<ProjectorColorMapNode>();
+        private List<ProjectorColorMapNode> highlightCircleColorMap = new List<ProjectorColorMapNode>();
 
         [Tooltip("default UI color for static elements that have no additional transparency applied to them")]
         [SerializeField]
@@ -521,7 +522,7 @@ namespace AnyRPG {
         public float WeaponDPSBudgetPerLevel { get => weaponDPSBudgetPerLevel; set => weaponDPSBudgetPerLevel = value; }
         public string DefaultCharacterUnitLayer { get => defaultCharacterUnitLayer; set => defaultCharacterUnitLayer = value; }
         public AnimationProfile SystemAnimationProfile { get => systemAnimationProfile; set => systemAnimationProfile = value; }
-        public List<ProjectorColorMapNode> FocusProjectorColorMap { get => focusProjectorColorMap; set => focusProjectorColorMap = value; }
+        public List<ProjectorColorMapNode> FocusProjectorColorMap { get => highlightCircleColorMap; set => highlightCircleColorMap = value; }
         public bool UseThirdPartyMovementControl { get => useThirdPartyMovementControl; set => useThirdPartyMovementControl = value; }
         public bool UseThirdPartyCameraControl { get => useThirdPartyCameraControl; set => useThirdPartyCameraControl = value; }
         public bool AllowAutoAttack { get => allowAutoAttack; set => allowAutoAttack = value; }

@@ -87,7 +87,7 @@ namespace AnyRPG {
             //Debug.Log("ActionBarmanager.HandlePlayerUnitDespawn()");
 
             // this needs to be called manually here because if the character controller processes the player unit despawn after us, we will miss the event
-            HandleClearTarget();
+            HandleClearTarget(null);
 
             PlayerManager.MyInstance.UnitController.OnSetTarget -= HandleSetTarget;
             PlayerManager.MyInstance.UnitController.OnClearTarget -= HandleClearTarget;
@@ -101,7 +101,7 @@ namespace AnyRPG {
             }
         }
 
-        public void HandleClearTarget() {
+        public void HandleClearTarget(Interactable oldTarget) {
             //Debug.Log("ActionBarmanager.HandleClearTarget()");
             if (targetRangeRoutine != null) {
                 StopCoroutine(targetRangeRoutine);

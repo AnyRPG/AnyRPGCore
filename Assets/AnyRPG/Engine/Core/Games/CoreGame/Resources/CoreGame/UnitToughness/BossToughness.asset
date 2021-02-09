@@ -19,7 +19,10 @@ MonoBehaviour:
   description: 
   useRegionalDescription: 0
   resourceDescriptionProfile: 
-  focusProjectorOverrideMap: []
+  focusProjectorOverrideMap:
+  - sourceColor: {r: 1, g: 0, b: 0, a: 1}
+    projectorMaterial: {fileID: 2100000, guid: 5f73f5bd0785d794cb56cf8f089d065a, type: 2}
+    tintMaterial: 0
   currencyMultiplier: 2
   experienceMultiplier: 2
   defaultResourceMultiplier: 2
