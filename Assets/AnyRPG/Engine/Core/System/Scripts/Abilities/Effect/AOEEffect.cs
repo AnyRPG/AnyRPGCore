@@ -153,7 +153,7 @@ namespace AnyRPG {
                 //Debug.Log(MyName + "performing AOE ability  on " + collider.gameObject);
                 if (canAdd) {
                     AOETargetNode validTargetNode = new AOETargetNode();
-                    validTargetNode.targetGameObject = targetInteractable;
+                    validTargetNode.targetGameObject = targetInteractable.InteractableTarget;
                     validTargetNode.abilityEffectInput = abilityEffectContext;
                     validTargets.Add(validTargetNode);
                 }

@@ -268,6 +268,23 @@ namespace AnyRPG {
             }
         }
 
+        public override Interactable InteractableTarget {
+            get {
+                // allow collider checks to consider this collider to be the collider of the rider when this unit is the mount
+                // this allows things like the mount hittin a portal or entering an enemy agro range to trigger the player interaction
+                if (unitControllerMode == UnitControllerMode.Mount && riderUnitController != null) {
+                    return riderUnitController;
+                }
+                // allow collider checks to consider this collider to be the collider of the mount when the unit is mounted
+                // this allows things like projectile effects and hitbox collider checks to aim for the active collider on the mount
+                // instead of the inactive one on the rider
+                if (mounted && unitMountManager.MountUnitController != null) {
+                    return unitMountManager.MountUnitController;
+                }
+                return base.InteractableTarget;
+            }
+        }
+
         public override float InteractionMaxRange {
             get {
                 if (unitProfile != null) {

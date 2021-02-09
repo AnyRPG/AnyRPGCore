@@ -169,9 +169,21 @@ namespace AnyRPG {
             }
         }
 
+        /// <summary>
+        /// this is the gameobject that should be targeted by abilities
+        /// </summary>
         public virtual GameObject InteractableGameObject {
             get {
                 return gameObject;
+            }
+        }
+
+        /// <summary>
+        /// this is the interactable that should be targeted by abilities
+        /// </summary>
+        public virtual Interactable InteractableTarget {
+            get {
+                return this;
             }
         }
 
