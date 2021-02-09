@@ -494,7 +494,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: fc77166418e3e3041824c470471e4cfd, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 869cbad36890a684b88ec52e39a1e142, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -10169,31 +10169,6 @@ MonoBehaviour:
   allowAutoAttack: 1
   useThirdPartyCameraControl: 0
   thirdPartyCamera: {fileID: 0}
-  defaultCastingLightProjector: {fileID: 2100000, guid: bc15116564fa55d4cb0a21220ca6e449,
-    type: 2}
-  focusProjectorColorMap:
-  - sourceColor: {r: 1, g: 0, b: 0, a: 1}
-    projectorMaterial: {fileID: 2100000, guid: e5e4a204c97d47d4694bf40e000da561, type: 2}
-  - sourceColor: {r: 0, g: 1, b: 0, a: 1}
-    projectorMaterial: {fileID: 2100000, guid: 9aab5930d4bb1be49b1004fad806613e, type: 2}
-  - sourceColor: {r: 1, g: 0.922, b: 0.016, a: 1}
-    projectorMaterial: {fileID: 2100000, guid: be5ca103acbac2d419640c1d15aced38, type: 2}
-  - sourceColor: {r: 1, g: 0.49019608, b: 0, a: 1}
-    projectorMaterial: {fileID: 2100000, guid: ea2a3b4a82e8c2244a5cf563ec070db5, type: 2}
-  - sourceColor: {r: 0.5, g: 0.5, b: 0.5, a: 1}
-    projectorMaterial: {fileID: 2100000, guid: 1977e5c29139c8248b42f576dbd02a3b, type: 2}
-  defaultUIColor: {r: 0.9960785, g: 0.68235296, b: 0.007843138, a: 0.153}
-  defaultUISolidColor: {r: 0.9960785, g: 0.68235296, b: 0.007843138, a: 1}
-  defaultUIFillColor: {r: 0.8588236, g: 0.5176471, b: 0, a: 1}
-  defaultUIPanelFrame: {fileID: 21300000, guid: 0281ba7261dc9534981ec2c944a817d9,
-    type: 3}
-  defaultFactionIcon: {fileID: 21300000, guid: a5049d8fafbe58a47989c22139dbbe65, type: 3}
-  systemBarMainMenu: {fileID: 21300000, guid: 1ea4d08ccd2c0714c97384ae4a49668b, type: 3}
-  systemBarAbilityBook: {fileID: 21300000, guid: abed47c01cc09b34590ac7c32bb8fb5c,
-    type: 3}
-  systemBarCharacter: {fileID: 21300000, guid: cd7ceadb20d51b24493744dc9b9039d0, type: 3}
-  systemBarQuestLog: {fileID: 21300000, guid: f59d9e6e0cdb2b1469bd9eacf47a8fda, type: 3}
-  systemBarMap: {fileID: 21300000, guid: 32c21f6777b4c754f80bee0b05d1986f, type: 3}
   systemAnimationProfile: {fileID: 11400000, guid: 0b6c96b1386813a478955ebd352f885d,
     type: 2}
   defaultAnimationProfile: {fileID: 11400000, guid: e8b7eb79ad08d5d4f8bfe735cd9eb840,
@@ -10220,6 +10195,11 @@ MonoBehaviour:
   statBudgetPerLevel: 0
   primaryStats: []
   powerResources: []
+  capabilities:
+    abilityNames: []
+    traitNames: []
+    armorClassList: []
+    weaponSkills: []
   defaultCharacterUnitLayer: CharacterUnit
   defaultPlayerUnitLayer: Player
   levelUpEffectName: 
@@ -10227,6 +10207,31 @@ MonoBehaviour:
   lootSparkleEffectName: 
   vendorAudioProfileName: 
   maxChatTextDistance: 25
+  defaultCastingLightProjector: {fileID: 2100000, guid: bc15116564fa55d4cb0a21220ca6e449,
+    type: 2}
+  focusProjectorColorMap:
+  - sourceColor: {r: 1, g: 0, b: 0, a: 1}
+    projectorMaterial: {fileID: 2100000, guid: e5e4a204c97d47d4694bf40e000da561, type: 2}
+  - sourceColor: {r: 0, g: 1, b: 0, a: 1}
+    projectorMaterial: {fileID: 2100000, guid: 9aab5930d4bb1be49b1004fad806613e, type: 2}
+  - sourceColor: {r: 1, g: 0.922, b: 0.016, a: 1}
+    projectorMaterial: {fileID: 2100000, guid: be5ca103acbac2d419640c1d15aced38, type: 2}
+  - sourceColor: {r: 1, g: 0.49019608, b: 0, a: 1}
+    projectorMaterial: {fileID: 2100000, guid: ea2a3b4a82e8c2244a5cf563ec070db5, type: 2}
+  - sourceColor: {r: 0.5, g: 0.5, b: 0.5, a: 1}
+    projectorMaterial: {fileID: 2100000, guid: 1977e5c29139c8248b42f576dbd02a3b, type: 2}
+  defaultUIColor: {r: 0.9960785, g: 0.68235296, b: 0.007843138, a: 0.153}
+  defaultUISolidColor: {r: 0.9960785, g: 0.68235296, b: 0.007843138, a: 1}
+  defaultUIFillColor: {r: 0.8588236, g: 0.5176471, b: 0, a: 1}
+  defaultUIPanelFrame: {fileID: 21300000, guid: 0281ba7261dc9534981ec2c944a817d9,
+    type: 3}
+  defaultFactionIcon: {fileID: 21300000, guid: a5049d8fafbe58a47989c22139dbbe65, type: 3}
+  systemBarMainMenu: {fileID: 21300000, guid: 1ea4d08ccd2c0714c97384ae4a49668b, type: 3}
+  systemBarAbilityBook: {fileID: 21300000, guid: abed47c01cc09b34590ac7c32bb8fb5c,
+    type: 3}
+  systemBarCharacter: {fileID: 21300000, guid: cd7ceadb20d51b24493744dc9b9039d0, type: 3}
+  systemBarQuestLog: {fileID: 21300000, guid: f59d9e6e0cdb2b1469bd9eacf47a8fda, type: 3}
+  systemBarMap: {fileID: 21300000, guid: 32c21f6777b4c754f80bee0b05d1986f, type: 3}
   temporaryMaterial: {fileID: 2100000, guid: 41a797d66a16d984e9d7de6fc6b78a57, type: 2}
   multipleInteractionNamePlateImage: {fileID: 21300000, guid: cd62bacdc6666fa4c88ff42d8cb179fa,
     type: 3}
