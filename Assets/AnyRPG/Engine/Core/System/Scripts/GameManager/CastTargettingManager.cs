@@ -23,7 +23,7 @@ namespace AnyRPG {
         #endregion
 
         [SerializeField]
-        private CastTargettingController castTargettingController = null;
+        private CastTargetController castTargetController = null;
 
         [SerializeField]
         private Vector3 offset = Vector3.zero;
@@ -71,8 +71,8 @@ namespace AnyRPG {
 
         public void ConfigureDefaultMaterial() {
             if (SystemConfigurationManager.MyInstance != null) {
-                if (castTargettingController != null ) {
-                    castTargettingController.SetupController();
+                if (castTargetController != null ) {
+                    castTargetController.SetupController();
                 }
             }
         }
@@ -83,18 +83,18 @@ namespace AnyRPG {
 
         public void DisableProjector() {
             //Debug.Log("CastTargettingmanager.DisableProjector()");
-            castTargettingController.gameObject.SetActive(false);
+            castTargetController.gameObject.SetActive(false);
         }
 
         public void EnableProjector(BaseAbility baseAbility) {
             //Debug.Log("CastTargettingmanager.EnableProjector()");
-            castTargettingController.gameObject.SetActive(true);
-            castTargettingController.SetCircleColor((baseAbility.GetTargetOptions(PlayerManager.MyInstance.MyCharacter) as AbilityTargetProps).GroundTargetColor);
-            castTargettingController.SetCircleRadius((baseAbility.GetTargetOptions(PlayerManager.MyInstance.MyCharacter) as AbilityTargetProps).GroundTargetRadius);
+            castTargetController.gameObject.SetActive(true);
+            castTargetController.SetCircleColor((baseAbility.GetTargetOptions(PlayerManager.MyInstance.MyCharacter) as AbilityTargetProps).GroundTargetColor);
+            castTargetController.SetCircleRadius((baseAbility.GetTargetOptions(PlayerManager.MyInstance.MyCharacter) as AbilityTargetProps).GroundTargetRadius);
         }
 
         public bool ProjectorIsActive() {
-            return castTargettingController.gameObject.activeSelf;
+            return castTargetController.gameObject.activeSelf;
         }
 
     }

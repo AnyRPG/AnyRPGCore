@@ -322,7 +322,7 @@ namespace AnyRPG {
         [Header("UI")]
 
         [SerializeField]
-        private Material defaultCastingLightProjector;
+        private Material defaultCastTargetCircle;
 
         [FormerlySerializedAs("focusProjectorColorMap")]
         [SerializeField]
@@ -510,7 +510,7 @@ namespace AnyRPG {
         public Sprite MusicPlayerNamePlateImage { get => musicPlayerNamePlateImage; set => musicPlayerNamePlateImage = value; }
         public RuntimeAnimatorController DefaultAnimatorController { get => defaultAnimatorController; set => defaultAnimatorController = value; }
         public AnimationProfile DefaultAnimationProfile { get => defaultAnimationProfile; set => defaultAnimationProfile = value; }
-        public Material DefaultCastingLightProjector { get => defaultCastingLightProjector; set => defaultCastingLightProjector = value; }
+        public Material DefaultCastingLightProjector { get => defaultCastTargetCircle; set => defaultCastTargetCircle = value; }
         public Color DefaultUIColor { get => defaultUIColor; set => defaultUIColor = value; }
         public Color DefaultUIFillColor { get => defaultUIFillColor; set => defaultUIFillColor = value; }
         public Color DefaultUISolidColor { get => defaultUISolidColor; set => defaultUISolidColor = value; }

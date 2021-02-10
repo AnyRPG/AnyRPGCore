@@ -6,10 +6,11 @@ using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 namespace AnyRPG {
-    public class CastTargettingController : MonoBehaviour {
+    public class CastTargetController : MonoBehaviour {
 
+        [Tooltip("A reference to the renderer that contains the material with the highlight circle")]
         [SerializeField]
-        private Projector castTargettingProjector = null;
+        private MeshRenderer meshRenderer = null;
 
         [SerializeField]
         private Vector3 offset = Vector3.zero;
@@ -24,11 +25,11 @@ namespace AnyRPG {
         }
 
         public void SetupController() {
-            if (castTargettingProjector != null) {
-                castTargettingProjector.material = SystemConfigurationManager.MyInstance.DefaultCastingLightProjector;
+            if (meshRenderer != null) {
+                meshRenderer.material = new Material(SystemConfigurationManager.MyInstance.DefaultCastingLightProjector);
             }
 
-            circleColor = castTargettingProjector.material.color;
+            circleColor = meshRenderer.material.color;
         }
 
         void Update() {
@@ -39,12 +40,12 @@ namespace AnyRPG {
         private void SetOutOfRange(bool outOfRange) {
             //Debug.Log("CastTargettingController.HandleOutOfRange()");
             if (outOfRange == true) {
-                if (castTargettingProjector.enabled) {
-                    castTargettingProjector.enabled = false;
+                if (meshRenderer.enabled) {
+                    meshRenderer.enabled = false;
                 }
             } else {
-                if (!castTargettingProjector.enabled) {
-                    castTargettingProjector.enabled = true;
+                if (!meshRenderer.enabled) {
+                    meshRenderer.enabled = true;
                 }
             }
         }
@@ -60,7 +61,7 @@ namespace AnyRPG {
                 //if (Physics.Raycast(ray, out hit, 100)) {
                 if (Physics.Raycast(ray, out hit, 100, PlayerManager.MyInstance.PlayerController.movementMask.value)) {
                     //Debug.Log("CastTargettingController.FollowMouse() hit movement mask at hit.point: " + hit.point + "; gameObject: " + hit.transform.gameObject.name + hit.transform.gameObject.layer);
-                    Vector3 cameraPoint = new Vector3(hit.point.x, hit.point.y + 4, hit.point.z);
+                    Vector3 cameraPoint = new Vector3(hit.point.x, hit.point.y + 0.1f, hit.point.z);
                     if (Vector3.Distance(hit.point, PlayerManager.MyInstance.ActiveUnitController.transform.position) < 40f) {
                         //Debug.Log("CastTargettingController.FollowMouse() hit movement mask and was within 40 meters from player");
                         this.transform.position = cameraPoint;
@@ -75,13 +76,13 @@ namespace AnyRPG {
         public void SetCircleColor(Color newColor) {
             //Debug.Log("CastTargettingController.SetCircleColor()");
             circleColor = newColor;
-            castTargettingProjector.material.color = circleColor;
+            meshRenderer.material.color = circleColor;
         }
 
         public void SetCircleRadius(float newRadius) {
             //Debug.Log("CastTargettingController.SetCircleRadius()");
             circleRadius = newRadius;
-            castTargettingProjector.orthographicSize = circleRadius;
+            transform.localScale = new Vector3(circleRadius * 2f, circleRadius * 2f, 1f);
         }
 
 

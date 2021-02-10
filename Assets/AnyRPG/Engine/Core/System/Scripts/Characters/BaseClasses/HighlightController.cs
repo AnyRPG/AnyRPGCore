@@ -18,8 +18,6 @@ namespace AnyRPG {
 
         private float circleRadius = 0f;
 
-        //private Material materialCopy = null;
-
         void Start() {
             SetupController();
             meshRenderer.enabled = false;
