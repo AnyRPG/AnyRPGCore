@@ -66,6 +66,7 @@ namespace AnyRPG {
                         //Debug.Log("CastTargettingController.FollowMouse() hit movement mask and was within 40 meters from player");
                         this.transform.position = cameraPoint;
                     }
+                    SetOutOfRange(false);
                 } else {
                     //Debug.Log("CastTargettingController.FollowMouse() did not hit movement mask: " + hit.transform.gameObject.name);
                     SetOutOfRange(true);
