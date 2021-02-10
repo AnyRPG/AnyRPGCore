@@ -4808,7 +4808,7 @@ GameObject:
   - component: {fileID: 1196587225186367632}
   - component: {fileID: 4907004792766518031}
   m_Layer: 20
-  m_Name: AnyRPGGreenCloudMist
+  m_Name: GreenCloudMist
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -9452,7 +9452,7 @@ ParticleSystemRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 10308, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 10301, guid: 0000000000000000f000000000000000, type: 0}
   - {fileID: 0}
   m_StaticBatchInfo:
     firstSubMesh: 0
@@ -9522,3 +9522,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 31d5bda4a68b0034c8243923a994e8fe, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  audioSource: {fileID: 0}
