@@ -73,7 +73,7 @@ namespace AnyRPG {
             // initialize the scene dictionary
             foreach (SceneNode sceneNode in SystemSceneNodeManager.MyInstance.GetResourceList()) {
                 if (sceneNode.SceneFile != null && sceneNode.SceneFile != string.Empty) {
-                    sceneDictionary.Add(sceneNode.SceneFile, sceneNode);
+                    sceneDictionary.Add(sceneNode.SceneFile.ToLower(), sceneNode);
                 }
             }
 
@@ -170,8 +170,8 @@ namespace AnyRPG {
 
             activeSceneName = SceneManager.GetActiveScene().name;
 
-            if (sceneDictionary.ContainsKey(activeSceneName)) {
-                activeSceneNode = sceneDictionary[activeSceneName];
+            if (sceneDictionary.ContainsKey(activeSceneName.ToLower())) {
+                activeSceneNode = sceneDictionary[activeSceneName.ToLower()];
             } else {
                 activeSceneNode = null;
             }
