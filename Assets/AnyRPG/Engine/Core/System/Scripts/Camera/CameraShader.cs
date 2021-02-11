@@ -73,13 +73,15 @@ namespace AnyRPG {
         }
 
         public void CaptureFrame() {
+            // NOTE: Disabled the rendering here.  Not sure what else this is used for besides minimap,
+            // but you may want to remove it.  Tried to change as little as possible.
             if (renderBase == true) {
                 miniMapCamera.cullingMask = miniMapMask;
                 miniMapCamera.clearFlags = CameraClearFlags.Skybox;
                 if (miniMapShader != null) {
-                    miniMapCamera.RenderWithShader(miniMapShader, "");
+                    //miniMapCamera.RenderWithShader(miniMapShader, "");
                 } else {
-                    miniMapCamera.Render();
+                    //miniMapCamera.Render();
                 }
             }
 
@@ -87,9 +89,9 @@ namespace AnyRPG {
                 miniMapCamera.cullingMask = overlayMask;
                 miniMapCamera.clearFlags = CameraClearFlags.Nothing;
                 if (overlayShader != null) {
-                    miniMapCamera.RenderWithShader(overlayShader, "");
+                    //miniMapCamera.RenderWithShader(overlayShader, "");
                 } else {
-                    miniMapCamera.Render();
+                    //miniMapCamera.Render();
                 }
             }
         }
