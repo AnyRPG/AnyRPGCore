@@ -227,21 +227,19 @@ namespace AnyRPG {
         }
 
         /*
+         * Thin static wrapper around method to create minimapTextures and provide toolbar item.
          * NOTE:  Not sure if you want to have a reference to the UnityEditor package here, but I added the
          * static method here just to keep the code in one place
-         */
-        [MenuItem("Tools/AnyRPG/DeleteMePause")]
-        public static void DeleteMePause()
-        {
-            Debug.Log("Pause");
-        }
-
-        /*
-         * Thin static wrapper around method to create minimapTextures and provide toolbar item.
          */
         [MenuItem("Tools/AnyRPG/Minimap/Generate Minimap")]
         public static void GenerateMinimapTextures()
         {
+            if (!Application.isPlaying)
+            {
+                Debug.LogError("Application must be in play mode to use Minimap Generator");
+                return;
+            }
+
             MiniMapController.MyInstance.StartCoroutine(MiniMapController.MyInstance.CreateMinimapTextures());
         }
 
@@ -276,18 +274,24 @@ namespace AnyRPG {
 
             float yMin = sceneBounds.min.y;
             float yMax = sceneBounds.max.y;
-
+            Debug.Log("Found Y min max bounds at " + yMin + " / " + yMax);
             // Place the camera at the top of the the level right in the center
-            camera.transform.position = new Vector3(sceneBounds.center.x, sceneBounds.max.y, sceneBounds.center.z);
+            Vector3 cameraPosition = new Vector3(sceneBounds.center.x, sceneBounds.max.y, sceneBounds.center.z);
+            camera.transform.position = cameraPosition;
+            Debug.Log("Pointing camera at  " + cameraPosition.x + " / " + cameraPosition.y + " / " + cameraPosition.z);
             // Look at the middle of the map
-            camera.transform.LookAt(new Vector3(sceneBounds.center.x, sceneBounds.center.y, sceneBounds.center.z));
+            Vector3 lookAt = new Vector3(sceneBounds.center.x, sceneBounds.center.y, sceneBounds.center.z);
+            camera.transform.LookAt(lookAt);
+            Debug.Log("Pointing camera at  " + lookAt.x + " / " + lookAt.y + " / " + lookAt.z);
 
             // Set the far clip to reach all the way to the Y middle of the map so that is captured
             camera.farClipPlane = sceneBounds.max.y - sceneBounds.min.y;
+            Debug.Log("Setting far clip plane to " + camera.farClipPlane);
             yield return new WaitForSeconds(snapDelay);
 
             string screenshotFilename = GetScreenshotFilename();
-            yield return takeAndSaveSnapshot(camera, screenshotFilename, (int)cameraSize * superSize, (int)cameraSize * superSize);
+            Debug.Log("Taking screenshot...");
+            yield return TakeAndSaveSnapshot(camera, screenshotFilename, (int)cameraSize * superSize, (int)cameraSize * superSize);
 
             /*  NOTE: Multiple y-levels code below
             // Loop over all the Y "levels" and grab snapshots of all of them
@@ -304,22 +308,21 @@ namespace AnyRPG {
                 yield return takeAndSaveSnapshot(camera, screenshotFilename, (int)cameraSize * superSize, (int)cameraSize * superSize);
             }
             */
+            Debug.Log("Destroying camera object " + minimapGenerator.name);
+            UnityEngine.Object.Destroy(minimapGenerator);
 
-            //UnityEngine.Object.Destroy(minimapGenerator);
+            Debug.Log("Minimap generation complete!  Output at " + minimapTextureFolder + "/" + screenshotFilename);
         }
 
         /*
          * Renders a snapshot from the given camera and saves it to the filename provided at the resolution provided.
          * Needs to wait for a certain number of seconds (snapDelay) to give the camera time to render
          */
-        IEnumerator takeAndSaveSnapshot(Camera camera, string filename, int captureWidth, int captureHeight)
+        IEnumerator TakeAndSaveSnapshot(Camera camera, string filename, int captureWidth, int captureHeight)
         {
-
             RenderTexture renderTexture;
-            Texture2D screenShot;
             Rect rect = new Rect(0, 0, captureWidth, captureHeight);
             renderTexture = new RenderTexture(captureWidth, captureHeight, 24);
-            screenShot = new Texture2D(captureWidth, captureHeight, TextureFormat.RGB24, false);
             camera.targetTexture = renderTexture;
             camera.Render();
             yield return new WaitForSeconds(snapDelay);
@@ -327,6 +330,8 @@ namespace AnyRPG {
             // read pixels will read from the currently active render texture so make our offscreen 
             // render texture active and then read the pixels
             RenderTexture.active = renderTexture;
+            Texture2D screenShot;
+            screenShot = new Texture2D(captureWidth, captureHeight, TextureFormat.RGB24, false);
             screenShot.ReadPixels(rect, 0, 0);
 
             // reset active camera texture and render texture
@@ -339,6 +344,9 @@ namespace AnyRPG {
             System.IO.FileStream fStream = System.IO.File.Create(screenshotFilename);
             fStream.Write(screenshotData, 0, screenshotData.Length);
             fStream.Close();
+
+            GameObject.Destroy(screenShot);
+            GameObject.Destroy(renderTexture);
         }
 
         /*
