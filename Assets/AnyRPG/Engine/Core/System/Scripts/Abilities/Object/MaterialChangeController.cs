@@ -20,26 +20,38 @@ namespace AnyRPG {
         public void Initialize(float changeDuration, Material temporaryMaterial) {
             this.changeDuration = changeDuration;
             this.temporaryMaterial = temporaryMaterial;
+
             meshRenderers = GetComponentsInChildren<MeshRenderer>();
 
+            List<Renderer> tempList = new List<Renderer>();
             if (meshRenderers == null || meshRenderers.Length == 0) {
-                //Debug.Log("MaterialChangeController.Initialize(): Unable to find mesh renderer in target.");
-                meshRenderers = GetComponentsInChildren<SkinnedMeshRenderer>();
-                if (meshRenderers == null || meshRenderers.Length == 0) {
-                    //Debug.Log("MaterialChangeController.Initialize(): Unable to find skinned mesh renderer in target.");
-                    return;
-                } else {
-                    //Debug.Log("MaterialChangeController.Initialize(): Found " + meshRenderers.Length + " Skinned Mesh Renderers");
-                }
+                //Debug.Log(gameObject.name + ".Interactable.InitializeMaterialsNew(): Unable to find mesh renderer in target.");
             } else {
-                //Debug.Log("MaterialChangeController.Initialize(): Found " + meshRenderers.Length + " Mesh Renderers");
+                //Debug.Log(gameObject.name + ".Interactable.InitializeMaterialsNew(): Found " + meshRenderers.Length + " Mesh Renderers");
+                foreach (Renderer renderer in meshRenderers) {
+                    if (renderer.gameObject.layer != LayerMask.NameToLayer("SpellEffects")) {
+                        tempList.Add(renderer);
+                    }
+                }
             }
+            Renderer[] skinnedMeshRenderers = GetComponentsInChildren<SkinnedMeshRenderer>();
+            if (skinnedMeshRenderers == null || skinnedMeshRenderers.Length == 0) {
+                //Debug.Log(gameObject.name + ".Interactable.InitializeMaterialsNew(): Unable to find skinned mesh renderer in target.");
+            } else {
+                //Debug.Log(gameObject.name + ".Interactable.InitializeMaterialsNew(): Found " + skinnedMeshRenderers.Length + " Skinned Mesh Renderers");
+                foreach (Renderer renderer in skinnedMeshRenderers) {
+                    if (renderer.gameObject.layer != LayerMask.NameToLayer("SpellEffects")) {
+                        tempList.Add(renderer);
+                    }
+                }
+            }
+            meshRenderers = tempList.ToArray();
 
             PerformMaterialChange();
         }
 
         public void PerformMaterialChange() {
-            //Debug.Log("MaterialChangeController.PerformMaterialChange()");
+            //Debug.Log(gameObject.name + ".MaterialChangeController.PerformMaterialChange()");
 
             if (meshRenderers == null) {
                 //Debug.Log("MaterialChangeController.PerformMaterialChange(): meshRender is null.  This shouldn't happen because we checked before instantiating this!");
@@ -60,10 +72,16 @@ namespace AnyRPG {
                 renderer.materials = temporaryMaterials;
             }
 
+            //Debug.Log(gameObject.name + ".MaterialChangeController.PerformMaterialChange(): Invoke RevertMaterialChange in duration: " + changeDuration);
             Invoke("RevertMaterialChange", changeDuration);
         }
 
+        public void OnDisable() {
+            //Debug.Log(gameObject.name + ".MaterialChangeController.OnDisable()");
+        }
+
         public void RevertMaterialChange() {
+            //Debug.Log(gameObject.name + ".MaterialChangeController.RevertMaterialChange()");
 
             if (meshRenderers == null) {
                 //Debug.Log("meshRender is null.  This shouldn't happen because we checked before instantiating this!");
@@ -71,7 +89,7 @@ namespace AnyRPG {
             }
 
             foreach (Renderer renderer in meshRenderers) {
-                if (renderer.gameObject.layer == LayerMask.NameToLayer("SpellEffects")) {
+                if (renderer != null && renderer.gameObject.layer == LayerMask.NameToLayer("SpellEffects")) {
                     continue;
                 }
                 if (renderer != null && originalMaterials.ContainsKey(renderer)) {
