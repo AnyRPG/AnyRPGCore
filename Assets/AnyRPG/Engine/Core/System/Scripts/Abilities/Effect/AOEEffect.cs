@@ -44,16 +44,16 @@ namespace AnyRPG {
         public override Dictionary<PrefabProfile, GameObject> Cast(IAbilityCaster source, Interactable target, Interactable originalTarget, AbilityEffectContext abilityEffectContext) {
             //Debug.Log(DisplayName + ".AOEEffect.Cast(" + (source == null ? "null" : source.AbilityManager.UnitGameObject.name) + ", " + (target == null ? "null" : target.name) + ")");
             if (abilityEffectContext == null) {
-                abilityEffectContext = new AbilityEffectContext();
+                abilityEffectContext = new AbilityEffectContext(source);
             }
             Dictionary<PrefabProfile, GameObject> returnObjects = base.Cast(source, target, originalTarget, abilityEffectContext);
             TargetAOEHit(source, target, abilityEffectContext);
 
             // ground targeted spells should play the audio on the prefab object, not the character
             if (prefabSpawnLocation == PrefabSpawnLocation.GroundTarget) {
-                base.PlayAudioEffects(onHitAudioProfiles, null);
+                base.PlayAudioEffects(onHitAudioProfiles, null, abilityEffectContext);
             } else {
-                base.PlayAudioEffects(onHitAudioProfiles, target);
+                base.PlayAudioEffects(onHitAudioProfiles, target, abilityEffectContext);
             }
 
             return returnObjects;
@@ -241,7 +241,8 @@ namespace AnyRPG {
             PerformAbilityComplete(source, target, modifiedOutput);
         }
 
-        public override void PlayAudioEffects(List<AudioProfile> audioProfiles, Interactable target) {
+
+        public override void PlayAudioEffects(List<AudioProfile> audioProfiles, Interactable target, AbilityEffectContext abilityEffectContext) {
             // aoe effects are special.  They are considered to have hit, whether or not they found any valid targets
             // this override prevents the audio from playing multiple times if the aoe effects multiple targets
             //base.PlayAudioEffects(audioProfiles, target);

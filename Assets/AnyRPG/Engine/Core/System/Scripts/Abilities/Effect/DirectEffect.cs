@@ -15,16 +15,16 @@ namespace AnyRPG {
             return base.Cast(source, target, originalTarget, abilityEffectInput);
         }
 
-        public override void CastTick(IAbilityCaster source, Interactable target, AbilityEffectContext abilityEffectInput) {
+        public override void CastTick(IAbilityCaster source, Interactable target, AbilityEffectContext abilityEffectContext) {
             //Debug.Log(abilityEffectName + ".DirectEffect.CastTick()");
-            base.CastTick(source, target, abilityEffectInput);
-            PerformAbilityTick(source, target, abilityEffectInput);
+            base.CastTick(source, target, abilityEffectContext);
+            PerformAbilityTick(source, target, abilityEffectContext);
         }
 
-        public override void CastComplete(IAbilityCaster source, Interactable target, AbilityEffectContext abilityEffectInput) {
+        public override void CastComplete(IAbilityCaster source, Interactable target, AbilityEffectContext abilityEffectContext) {
             //Debug.Log(abilityEffectName + ".DirectEffect.CastComplete()");
-            base.CastComplete(source, target, abilityEffectInput);
-            PerformAbilityComplete(source, target, abilityEffectInput);
+            base.CastComplete(source, target, abilityEffectContext);
+            PerformAbilityComplete(source, target, abilityEffectContext);
         }
 
     }

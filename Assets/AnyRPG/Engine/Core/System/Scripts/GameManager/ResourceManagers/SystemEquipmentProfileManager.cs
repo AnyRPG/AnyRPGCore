@@ -49,19 +49,6 @@ namespace AnyRPG {
             return null;
         }
 
-        public EquipmentProfile GetNewResource(string resourceName) {
-            //Debug.Log(this.GetType().Name + ".GetResource(" + resourceName + ")");
-            if (!RequestIsEmpty(resourceName)) {
-                string keyName = prepareStringForMatch(resourceName);
-                if (resourceList.ContainsKey(keyName)) {
-                    EquipmentProfile returnValue = ScriptableObject.Instantiate(resourceList[keyName]) as EquipmentProfile;
-                    returnValue.SetupScriptableObjects();
-                    return returnValue;
-                }
-            }
-            return null;
-        }
-
         public List<EquipmentProfile> GetResourceList() {
             List<EquipmentProfile> returnList = new List<EquipmentProfile>();
 

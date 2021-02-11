@@ -497,12 +497,11 @@ namespace AnyRPG {
         public virtual void PerformChanneledEffect(IAbilityCaster source, Interactable target, AbilityEffectContext abilityEffectContext) {
             //Debug.Log("BaseAbility.PerformChanneledEffect(" + MyName + ", " + (source == null ? "null" : source.name) + ", " + (target == null ? "null" : target.name) + ")");
             foreach (AbilityEffect abilityEffect in channeledAbilityEffects) {
-                AbilityEffect _abilityEffect = SystemAbilityEffectManager.MyInstance.GetNewResource(abilityEffect.DisplayName);
 
                 // channeled effects need to override the object lifetime so they get destroyed at the tickrate
                 //_abilityEffect.MyAbilityEffectObjectLifetime = tickRate;
-                if (_abilityEffect.ChanceToCast >= 100f || _abilityEffect.ChanceToCast >= UnityEngine.Random.Range(0f, 100f)) {
-                    _abilityEffect.Cast(source, target, target, abilityEffectContext);
+                if (abilityEffect.ChanceToCast >= 100f || abilityEffect.ChanceToCast >= UnityEngine.Random.Range(0f, 100f)) {
+                    abilityEffect.Cast(source, target, target, abilityEffectContext);
                 }
             }
         }
@@ -623,11 +622,10 @@ namespace AnyRPG {
                     Debug.Log("Forgot to set ability affect in inspector?");
                 }
                 AbilityEffectContext abilityEffectOutput = abilityEffectContext.GetCopy();
-                AbilityEffect _abilityEffect = SystemAbilityEffectManager.MyInstance.GetNewResource(abilityEffect.DisplayName);
-                if (_abilityEffect != null
-                    && _abilityEffect.CanUseOn(target, source, abilityEffectContext)
-                    && (_abilityEffect.ChanceToCast >= 100f || _abilityEffect.ChanceToCast >= UnityEngine.Random.Range(0f, 100f))) {
-                    _abilityEffect.Cast(source, target, target, abilityEffectOutput);
+                if (abilityEffect != null
+                    && abilityEffect.CanUseOn(target, source, abilityEffectContext)
+                    && (abilityEffect.ChanceToCast >= 100f || abilityEffect.ChanceToCast >= UnityEngine.Random.Range(0f, 100f))) {
+                    abilityEffect.Cast(source, target, target, abilityEffectOutput);
                 } else {
                     //Debug.Log(DisplayName + ".BaseAbility.PerformAbilityEffects(" + source.AbilityManager.Name + ", " + (target ? target.name : "null") + ") COULD NOT FIND " + abilityEffect.DisplayName);
                     //return;

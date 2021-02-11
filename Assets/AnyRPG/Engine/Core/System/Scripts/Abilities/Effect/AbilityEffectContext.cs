@@ -31,11 +31,27 @@ namespace AnyRPG {
         // prevent multiple onHit effects from casting each other
         public bool weaponHitHasCast = false;
 
+        private IAbilityCaster abilityCaster = null;
+
+        // these are intentionally not copied as we want them associated only with the ability effect that cast them
+        private Dictionary<PrefabProfile, GameObject> prefabObjects = new Dictionary<PrefabProfile, GameObject>();
+
+        public Dictionary<PrefabProfile, GameObject> PrefabObjects { get => prefabObjects; set => prefabObjects = value; }
+        public IAbilityCaster AbilityCaster { get => abilityCaster; set => abilityCaster = value; }
+
+        public AbilityEffectContext() {
+        }
+
+        public AbilityEffectContext(IAbilityCaster abilityCaster) {
+            this.abilityCaster = abilityCaster;
+        }
+
         public AbilityEffectContext GetCopy() {
             // make a new ability effect context
             AbilityEffectContext returnValue = new AbilityEffectContext();
 
             // copy all properties
+            returnValue.abilityCaster = abilityCaster;
             returnValue.resourceAmounts = resourceAmounts.ToList();
             returnValue.overrideDuration = overrideDuration;
             returnValue.savedEffect = savedEffect;

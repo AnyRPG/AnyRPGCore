@@ -823,17 +823,16 @@ namespace AnyRPG {
         public void ApplyStatusEffect(AbilityEffect statusEffect, int overrideDuration = 0) {
             //Debug.Log(baseCharacter.gameObject.name + ".CharacterAbilityManager.ApplyStatusEffect(" + statusEffect.DisplayName + ")");
             if (baseCharacter.CharacterStats != null) {
-                AbilityEffectContext abilityEffectContext = new AbilityEffectContext();
+                AbilityEffectContext abilityEffectContext = new AbilityEffectContext(baseCharacter);
                 abilityEffectContext.overrideDuration = overrideDuration;
                 // rememeber this method is meant for saved status effects
                 // and traits
                 abilityEffectContext.savedEffect = true;
-                AbilityEffect _abilityEffect = SystemAbilityEffectManager.MyInstance.GetNewResource(statusEffect.DisplayName);
-                if (_abilityEffect != null) {
+                if (statusEffect != null) {
                     // testing : to allow npcs to get their visuals from traits, send in unit controller if it exists
                     //_abilityEffect.Cast(baseCharacter, baseCharacter?.UnitController, null, abilityEffectContext);
                     // testing prevent spawn of object since unitController now handles notifications that do that for all characters, not just the player
-                    _abilityEffect.Cast(baseCharacter, null, null, abilityEffectContext);
+                    statusEffect.Cast(baseCharacter, null, null, abilityEffectContext);
                 }
             }
         }
@@ -859,7 +858,7 @@ namespace AnyRPG {
         }
 
         public void ApplySavedStatusEffects(StatusEffectSaveData statusEffectSaveData) {
-            ApplyStatusEffect(SystemAbilityEffectManager.MyInstance.GetNewResource(statusEffectSaveData.MyName), statusEffectSaveData.remainingSeconds);
+            ApplyStatusEffect(SystemAbilityEffectManager.MyInstance.GetResource(statusEffectSaveData.MyName), statusEffectSaveData.remainingSeconds);
         }
 
         public void RemoveCapabilityProviderTraits(List<StatusEffect> statusEffects) {
@@ -1206,8 +1205,6 @@ namespace AnyRPG {
         public override bool BeginAbility(string abilityName) {
             //Debug.Log(baseCharacter.gameObject.name + "CharacterAbilitymanager.BeginAbility(" + (abilityName == null ? "null" : abilityName) + ")");
             BaseAbility baseAbility = SystemAbilityManager.MyInstance.GetResource(abilityName);
-            // these have to be new resources because the ability stores a tick time
-            //BaseAbility baseAbility = SystemAbilityManager.MyInstance.GetNewResource(abilityName);
             if (baseAbility != null) {
                 return BeginAbility(baseAbility);
             }
@@ -1351,7 +1348,7 @@ namespace AnyRPG {
                 return false;
             }
 
-            AbilityEffectContext abilityEffectContext = new AbilityEffectContext();
+            AbilityEffectContext abilityEffectContext = new AbilityEffectContext(baseCharacter);
             abilityEffectContext.baseAbility = ability;
 
             // testing - if this was player initiated, the attack attempt came through right click or action button press
@@ -1571,7 +1568,7 @@ namespace AnyRPG {
         public void PerformAbility(BaseAbility ability, Interactable target, AbilityEffectContext abilityEffectContext) {
             //Debug.Log(baseCharacter.gameObject.name + ".CharacterAbilityManager.PerformAbility(" + ability.DisplayName + ", " + target.gameObject.name + ")");
             if (abilityEffectContext == null) {
-                abilityEffectContext = new AbilityEffectContext();
+                abilityEffectContext = new AbilityEffectContext(baseCharacter);
                 abilityEffectContext.baseAbility = ability;
             }
             abilityEffectContext.originalTarget = target;

@@ -53,19 +53,6 @@ namespace AnyRPG {
             return null;
         }
 
-        public AbilityEffect GetNewResource(string resourceName) {
-            //Debug.Log(this.GetType().Name + ".GetResource(" + resourceName + ")");
-            if (!RequestIsEmpty(resourceName)) {
-                string keyName = prepareStringForMatch(resourceName);
-                if (resourceList.ContainsKey(keyName)) {
-                    AbilityEffect returnValue = ScriptableObject.Instantiate(resourceList[keyName]) as AbilityEffect;
-                    returnValue.SetupScriptableObjects();
-                    return returnValue;
-                }
-            }
-            return null;
-        }
-
         public List<AbilityEffect> GetResourceList() {
             List<AbilityEffect> returnList = new List<AbilityEffect>();
 

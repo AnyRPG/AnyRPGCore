@@ -49,21 +49,6 @@ namespace AnyRPG {
             return null;
         }
 
-
-        public AttachmentProfile GetNewResource(string resourceName) {
-            //Debug.Log(this.GetType().Name + ".GetResource(" + resourceName + ")");
-            if (!RequestIsEmpty(resourceName)) {
-                string keyName = prepareStringForMatch(resourceName);
-                if (resourceList.ContainsKey(keyName)) {
-                    AttachmentProfile returnValue = ScriptableObject.Instantiate(resourceList[keyName]) as AttachmentProfile;
-                    returnValue.SetupScriptableObjects();
-                    return returnValue;
-                }
-            }
-            return null;
-        }
-
-
         public List<AttachmentProfile> GetResourceList() {
             List<AttachmentProfile> returnList = new List<AttachmentProfile>();
 

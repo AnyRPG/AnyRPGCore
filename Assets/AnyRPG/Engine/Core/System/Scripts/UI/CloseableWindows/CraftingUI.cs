@@ -103,6 +103,7 @@ namespace AnyRPG {
         public void ViewRecipes(CraftAbility craftAbility) {
             this.craftAbility = craftAbility;
             PopupWindowManager.MyInstance.craftingWindow.OpenWindow();
+            ResetWindow();
             ShowRecipes(craftAbility);
         }
 
@@ -248,11 +249,12 @@ namespace AnyRPG {
             base.ReceiveOpenWindowNotification();
 
             craftingQueue.Clear();
+        }
 
+        private void ResetWindow() {
             ClearDescription();
             UpdateCraftAmountArea();
             PopupWindowManager.MyInstance.craftingWindow.SetWindowTitle(craftAbility.DisplayName);
-
         }
 
         private void ClearInputIcons() {

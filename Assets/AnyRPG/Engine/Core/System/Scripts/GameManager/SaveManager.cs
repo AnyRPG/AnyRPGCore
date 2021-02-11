@@ -681,7 +681,7 @@ namespace AnyRPG {
 
             foreach (StatusEffectNode statusEffectNode in PlayerManager.MyInstance.MyCharacter.CharacterStats.StatusEffects.Values) {
                 if (statusEffectNode.StatusEffect.ClassTrait == false
-                    && statusEffectNode.StatusEffect.SourceCharacter == (PlayerManager.MyInstance.MyCharacter as IAbilityCaster)) {
+                    && statusEffectNode.AbilityEffectContext.AbilityCaster == (PlayerManager.MyInstance.MyCharacter as IAbilityCaster)) {
                     StatusEffectSaveData statusEffectSaveData = new StatusEffectSaveData();
                     statusEffectSaveData.MyName = statusEffectNode.StatusEffect.DisplayName;
                     statusEffectSaveData.remainingSeconds = (int)statusEffectNode.StatusEffect.GetRemainingDuration();

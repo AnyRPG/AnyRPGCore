@@ -49,12 +49,12 @@ namespace AnyRPG {
             }
             if (characterUnit.BaseCharacter.CharacterStats.IsAlive == true) {
                 if (playerInitiated) {
-                    sourceCharacter.AbilityManager.ReceiveCombatMessage("Cannot cast " + resourceName + ". Target is already alive");
+                    source.AbilityManager.ReceiveCombatMessage("Cannot cast " + resourceName + ". Target is already alive");
                 }
             }
             if (characterUnit.BaseCharacter.CharacterStats.IsReviving == true) {
                 if (playerInitiated) {
-                    sourceCharacter.AbilityManager.ReceiveCombatMessage("Cannot cast " + resourceName + ". Target is already reviving");
+                    source.AbilityManager.ReceiveCombatMessage("Cannot cast " + resourceName + ". Target is already reviving");
                 }
             }
             return false;

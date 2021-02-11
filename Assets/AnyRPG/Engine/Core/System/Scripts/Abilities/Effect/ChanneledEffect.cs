@@ -11,7 +11,7 @@ namespace AnyRPG {
         // the amount of time to delay damage after spawning the prefab
         public float effectDelay = 0f;
 
-        public override Dictionary<PrefabProfile, GameObject> Cast(IAbilityCaster source, Interactable target, Interactable originalTarget, AbilityEffectContext abilityEffectInput) {
+        public override Dictionary<PrefabProfile, GameObject> Cast(IAbilityCaster source, Interactable target, Interactable originalTarget, AbilityEffectContext abilityEffectContext) {
             //Debug.Log(MyName + "ChanneledEffect.Cast(" + source + ", " + (target == null ? "null" : target.name) + ")");
             if (target == null) {
                 // maybe target died or despawned in the middle of cast?
@@ -19,23 +19,23 @@ namespace AnyRPG {
 
                 return null;
             }
-            if (abilityEffectInput == null) {
-                abilityEffectInput = new AbilityEffectContext();
+            if (abilityEffectContext == null) {
+                abilityEffectContext = new AbilityEffectContext(source);
             }
-            Dictionary<PrefabProfile, GameObject> returnObjects = base.Cast(source, target, originalTarget, abilityEffectInput);
-            if (prefabObjects != null) {
+            Dictionary<PrefabProfile, GameObject> returnObjects = base.Cast(source, target, originalTarget, abilityEffectContext);
+            if (returnObjects != null) {
                 //Debug.Log(MyName + "ChanneledEffect.Cast(" + source + ", " + (target == null ? "null" : target.name) + ") PREFABOBJECTS WAS NOT NULL");
 
-                foreach (PrefabProfile prefabProfile in prefabObjects.Keys) {
+                foreach (PrefabProfile prefabProfile in returnObjects.Keys) {
 
                     // recently added code will properly spawn the object based on universal attachments
                     // get references to the parent and rotation to pass them onto the channeled object script
                     // since this object will switch parents to avoid moving/rotating with the character body
-                    GameObject prefabParent = prefabObjects[prefabProfile].transform.parent.gameObject;
-                    Vector3 sourcePosition = prefabObjects[prefabProfile].transform.localPosition;
+                    GameObject prefabParent = returnObjects[prefabProfile].transform.parent.gameObject;
+                    Vector3 sourcePosition = returnObjects[prefabProfile].transform.localPosition;
 
-                    prefabObjects[prefabProfile].transform.parent = PlayerManager.MyInstance.EffectPrefabParent.transform;
-                    IChanneledObject channeledObjectScript = prefabObjects[prefabProfile].GetComponent<IChanneledObject>();
+                    returnObjects[prefabProfile].transform.parent = PlayerManager.MyInstance.EffectPrefabParent.transform;
+                    IChanneledObject channeledObjectScript = returnObjects[prefabProfile].GetComponent<IChanneledObject>();
                     if (channeledObjectScript != null) {
                         /*
                         GameObject prefabParent = source.AbilityManager.UnitGameObject;
@@ -49,8 +49,8 @@ namespace AnyRPG {
                         */
                         Vector3 endPosition = Vector3.zero;
                         Interactable usedTarget = target;
-                        if (abilityEffectInput.baseAbility != null && abilityEffectInput.baseAbility.GetTargetOptions(source).RequiresGroundTarget == true) {
-                            endPosition = abilityEffectInput.groundTargetLocation;
+                        if (abilityEffectContext.baseAbility != null && abilityEffectContext.baseAbility.GetTargetOptions(source).RequiresGroundTarget == true) {
+                            endPosition = abilityEffectContext.groundTargetLocation;
                             usedTarget = null;
                             //Debug.Log(MyName + "ChanneledEffect.Cast() abilityEffectInput.prefabLocation: " + abilityEffectInput.prefabLocation);
                         } else {
@@ -71,7 +71,7 @@ namespace AnyRPG {
 
                 // delayed damage
                 //source.StartCoroutine(PerformAbilityHitDelay(source, target, abilityEffectInput));
-                source.AbilityManager.BeginPerformAbilityHitDelay(source, target, abilityEffectInput, this);
+                source.AbilityManager.BeginPerformAbilityHitDelay(source, target, abilityEffectContext, this);
             } else {
                 //Debug.Log(MyName + ".ChanneledEffect.Cast(" + source + ", " + (target == null ? "null" : target.name) + ") PREFABOBJECTS WAS NULL");
 

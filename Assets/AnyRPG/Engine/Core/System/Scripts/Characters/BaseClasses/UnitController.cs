@@ -88,6 +88,8 @@ namespace AnyRPG {
         // targeting
         private Interactable target;
         private float distanceToTarget = 0f;
+        // keep track of target position to determine of distance check is needed
+        private Vector3 lastTargetPosition = Vector3.zero;
 
         // track current state
         private bool mounted = false;
@@ -950,8 +952,13 @@ namespace AnyRPG {
 
         public void FixedUpdate() {
             if (target != null) {
-                distanceToTarget = Vector3.Distance(target.transform.position, transform.position);
+                // prevent distance calculation if no movement has occured
+                if (transform.position != lastPosition || target.transform.position != lastTargetPosition) {
+                    distanceToTarget = Vector3.Distance(target.transform.position, transform.position);
+                }
+                lastTargetPosition = target.transform.position;
             }
+            lastPosition = transform.position;
             if (ControlLocked) {
                 // can't allow any action if we are stunned/frozen/etc
                 //Debug.Log(gameObject.name + ".AIController.FixedUpdate(): controlLocked: " + MyControlLocked);

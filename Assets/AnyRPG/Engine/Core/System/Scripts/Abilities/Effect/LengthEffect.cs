@@ -83,7 +83,6 @@ namespace AnyRPG {
         public PrefabSpawnLocation PrefabSpawnLocation { get => prefabSpawnLocation; set => prefabSpawnLocation = value; }
         //public GameObject MyAbilityEffectPrefab { get => abilityEffectPrefab; set => abilityEffectPrefab = value; }
         public bool CastZeroTick { get => castZeroTick; set => castZeroTick = value; }
-        protected Dictionary<PrefabProfile, GameObject> MyPrefabObjects { get => prefabObjects; set => prefabObjects = value; }
 
         public List<AbilityAttachmentNode> GetPrefabProfileList(IAbilityCaster abilityCaster) {
             if (abilityPrefabSource == AbilityPrefabSource.Both) {
@@ -113,8 +112,8 @@ namespace AnyRPG {
 
         public override Dictionary<PrefabProfile, GameObject> Cast(IAbilityCaster source, Interactable target, Interactable originalTarget, AbilityEffectContext abilityEffectInput) {
             //Debug.Log(DisplayName + ".LengthEffect.Cast(" + (source == null ? "null" :source.AbilityManager.Name) + ", " + (target == null ? "null" : target.gameObject.name) + ", " + (originalTarget == null ? "null" : originalTarget.name) + ")");
-            
-            base.Cast(source, target, originalTarget, abilityEffectInput);
+
+            Dictionary<PrefabProfile, GameObject> prefabObjects = base.Cast(source, target, originalTarget, abilityEffectInput);
             if (GetPrefabProfileList(source) != null) {
                 List<AbilityAttachmentNode> usedAbilityAttachmentNodeList = new List<AbilityAttachmentNode>();
                 if (randomPrefabs == false) {
@@ -212,6 +211,7 @@ namespace AnyRPG {
                 }
                 BeginMonitoring(prefabObjects, source, target, abilityEffectInput);
             }
+            abilityEffectInput.PrefabObjects = prefabObjects;
             return prefabObjects;
         }
 
@@ -219,10 +219,10 @@ namespace AnyRPG {
 
         }
 
-        public virtual void CastTick(IAbilityCaster source, Interactable target, AbilityEffectContext abilityEffectInput) {
+        public virtual void CastTick(IAbilityCaster source, Interactable target, AbilityEffectContext abilityEffectContext) {
             //Debug.Log(DisplayName + ".AbilityEffect.CastTick(" +source.AbilityManager.Name + ", " + (target ? target.name : "null") + ")");
             // play tick audio effects
-            PlayAudioEffects(onTickAudioProfiles, target);
+            PlayAudioEffects(onTickAudioProfiles, target, abilityEffectContext);
         }
 
         public virtual void CastComplete(IAbilityCaster source, Interactable target, AbilityEffectContext abilityEffectInput) {
@@ -253,14 +253,15 @@ namespace AnyRPG {
         }
 
         public virtual void CancelEffect(BaseCharacter targetCharacter) {
-            //Debug.Log(MyName + ".LengthEffect.CancelEffect(" + targetCharacter.MyName + ")");
+            //Debug.Log(DisplayName + ".LengthEffect.CancelEffect(" + targetCharacter.MyName + ")");
+            /*
             if (prefabObjects != null) {
                 foreach (GameObject go in prefabObjects.Values) {
                     //Debug.Log(MyName + ".LengthEffect.CancelEffect(" + targetCharacter.MyName + "): Destroy: " + go.name);
                     Destroy(go, prefabDestroyDelay);
                 }
-                // give slight delay to allow for graphic effects to finish
             }
+            */
 
         }
 

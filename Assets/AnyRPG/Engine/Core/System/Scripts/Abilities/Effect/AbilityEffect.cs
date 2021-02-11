@@ -48,19 +48,13 @@ namespace AnyRPG {
         //[SerializeField]
         protected List<AbilityEffect> hitAbilityEffectList = new List<AbilityEffect>();
 
-        // the character that cast the spell
-        protected IAbilityCaster sourceCharacter;
-
         [Tooltip("amount to multiply inputs by when adding their amount to this effect")]
         public float inputMultiplier = 0f;
 
         [SerializeField]
         protected float threatMultiplier = 1f;
 
-        protected Dictionary<PrefabProfile, GameObject> prefabObjects = new Dictionary<PrefabProfile, GameObject>();
-
         public List<AbilityEffect> MyHitAbilityEffectList { get => hitAbilityEffectList; set => hitAbilityEffectList = value; }
-        public IAbilityCaster SourceCharacter { get => sourceCharacter; set => sourceCharacter = value; }
         public float ThreatMultiplier { get => threatMultiplier; set => threatMultiplier = value; }
         public float ChanceToCast { get => chanceToCast; set => chanceToCast = value; }
 
@@ -68,26 +62,9 @@ namespace AnyRPG {
             return targetOptions;
         }
 
-        public virtual void Initialize(IAbilityCaster source, BaseCharacter target, AbilityEffectContext abilityEffectInput) {
-            //Debug.Log("AbilityEffect.Initialize(" + source.MyCharacterName + ", " + target.MyCharacterName + ")");
-            this.sourceCharacter = source;
-            //this.target = target;
-            /*
-            if (abilityEffectPrefab != null) {
-                Vector3 spawnLocation = target.MyCharacterUnit.gameObject.GetComponent<Collider>().bounds.center;
-                abilityEffectObject = Instantiate(abilityEffectPrefab, spawnLocation, Quaternion.identity, target.MyCharacterUnit.gameObject.transform);
-            }
-            */
-        }
-
-        public virtual void OnDisable() {
-            //Debug.Log(abilityEffectName + ".AbilityEffect.OnDisable()");
-        }
-
         public string GetShortDescription() {
             return description;
         }
-
 
         public virtual bool CanUseOn(Interactable target, IAbilityCaster sourceCharacter, AbilityEffectContext abilityEffectContext = null, bool playerInitiated = false, bool performRangeCheck = true) {
             //Debug.Log(DisplayName + ".AbilityEffect.CanUseOn(" + (target == null ? "null " : target.gameObject.name) + ", " + sourceCharacter.AbilityManager.Name + ")");
@@ -102,7 +79,7 @@ namespace AnyRPG {
                 this.abilityEffectInput = abilityEffectInput;
             }
             */
-            return null;
+            return new Dictionary<PrefabProfile, GameObject>();
         }
 
 
@@ -193,9 +170,8 @@ namespace AnyRPG {
             // null targets must be allowed for things like meteors or other projectiles that are colission based
             if (GetTargetOptions(source).RequireTarget == false || target != null) {
                 //Debug.Log(DisplayName + ".AbilityEffect.PerformAbilityEffects(): Target: " + (target == null ? "null" : target.name) + " is valid. CASTING ABILITY effect: " + abilityEffect);
-                AbilityEffect _abilityEffect = SystemAbilityEffectManager.MyInstance.GetNewResource(abilityEffect.DisplayName);
-                // testing : send in copy of ability effect so that a status effect will not remove baseability for following effects
-                returnObjects = _abilityEffect.Cast(source, finalTarget, target, abilityEffectContext.GetCopy());
+                // testing : send in copy of ability effect context so that a status effect will not remove baseability for following effects
+                returnObjects = abilityEffect.Cast(source, finalTarget, target, abilityEffectContext.GetCopy());
             } else {
                 //Debug.Log(DisplayName + ".AbilityEffect.PerformAbilityEffects(): Target: " + (target == null ? "null" : target.name) + " is NOT VALID.");
             }
@@ -207,14 +183,15 @@ namespace AnyRPG {
             return PerformAbilityEffects(source, target, effectOutput, hitAbilityEffectList);
         }
 
-        public virtual void PlayAudioEffects(List<AudioProfile> audioProfiles, Interactable target) {
+        public virtual void PlayAudioEffects(List<AudioProfile> audioProfiles, Interactable target, AbilityEffectContext abilityEffectContext) {
             //Debug.Log(DisplayName + ".AbilityEffect.PlayAudioEffects(" + (target == null ? "null" : target.name) + ")");
             if (audioProfiles != null) {
                 AudioSource audioSource = null;
                 if (target == null || target.UnitComponentController == null) {
-                    if (prefabObjects != null && prefabObjects.Count > 0) {
+
+                    if (abilityEffectContext.PrefabObjects != null && abilityEffectContext.PrefabObjects.Count > 0) {
                         //prefabObjects.First();
-                        audioSource = prefabObjects.First().Value.GetComponent<AudioSource>();
+                        audioSource = abilityEffectContext.PrefabObjects.First().Value.GetComponent<AudioSource>();
                     }
                 }
                 if (audioSource != null || (target != null && target.UnitComponentController != null)) {
@@ -240,11 +217,11 @@ namespace AnyRPG {
 
         public virtual void PerformAbilityHit(IAbilityCaster source, Interactable target, AbilityEffectContext abilityEffectInput) {
             //Debug.Log(DisplayName + ".AbilityEffect.PerformAbilityHit(" + source.AbilityManager.Name + ", " + (target == null ? "null" : target.name) + ")");
-            Dictionary<PrefabProfile, GameObject> effectObjects = PerformAbilityHitEffects(source, target, abilityEffectInput);
+            PerformAbilityHitEffects(source, target, abilityEffectInput);
             if (target == null) {
                 return;
             }
-            PlayAudioEffects(onHitAudioProfiles, target);
+            PlayAudioEffects(onHitAudioProfiles, target, abilityEffectInput);
             //PerformMaterialChange(source, target);
             PerformMaterialChange(target);
         }

@@ -15,11 +15,11 @@ namespace AnyRPG {
 
         private List<SummonEffect> petEffectList = new List<SummonEffect>();
 
-        public override void CastTick(IAbilityCaster source, Interactable target, AbilityEffectContext abilityEffectInput) {
+        public override void CastTick(IAbilityCaster source, Interactable target, AbilityEffectContext abilityEffectContext) {
             //Debug.Log(DisplayName + ".PetControlEffect.CastTick()");
-            base.CastTick(source, target, abilityEffectInput);
+            base.CastTick(source, target, abilityEffectContext);
 
-            CheckPetSpawn(source, target, abilityEffectInput);
+            CheckPetSpawn(source, target, abilityEffectContext);
         }
 
         public void CheckPetSpawn(IAbilityCaster source, Interactable target, AbilityEffectContext abilityEffectInput) {

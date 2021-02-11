@@ -8,14 +8,14 @@ namespace AnyRPG {
     [CreateAssetMenu(fileName = "New InstantEffect", menuName = "AnyRPG/Abilities/Effects/InstantEffect")]
     public class InstantEffect : DirectEffect {
 
-        public override Dictionary<PrefabProfile, GameObject> Cast(IAbilityCaster source, Interactable target, Interactable originalTarget, AbilityEffectContext abilityEffectInput) {
+        public override Dictionary<PrefabProfile, GameObject> Cast(IAbilityCaster source, Interactable target, Interactable originalTarget, AbilityEffectContext abilityEffectContext) {
             //Debug.Log(DisplayName + ".InstantEffect.Cast()");
-            if (abilityEffectInput == null) {
-                abilityEffectInput = new AbilityEffectContext();
+            if (abilityEffectContext == null) {
+                abilityEffectContext = new AbilityEffectContext(source);
             }
-            Dictionary<PrefabProfile, GameObject> returnObjects = base.Cast(source, target, originalTarget, abilityEffectInput);
+            Dictionary<PrefabProfile, GameObject> returnObjects = base.Cast(source, target, originalTarget, abilityEffectContext);
 
-            PerformAbilityHit(source, target, abilityEffectInput);
+            PerformAbilityHit(source, target, abilityEffectContext);
             return returnObjects;
         }
 

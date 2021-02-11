@@ -323,14 +323,14 @@ namespace AnyRPG {
             // prevent status effect from sending scaled up damage to its ticks
             abilityEffectContext.castTimeMultiplier = 1f;
 
-            StatusEffectNode _statusEffectNode = targetCharacterStats.ApplyStatusEffect(SystemAbilityEffectManager.MyInstance.GetNewResource(DisplayName) as StatusEffect, source, abilityEffectContext);
+            StatusEffectNode _statusEffectNode = targetCharacterStats.ApplyStatusEffect(this, source, abilityEffectContext);
             if (_statusEffectNode == null) {
                 //Debug.Log(DisplayName + ".StatusEffect.Cast(). statuseffect was null.  This could likely happen if the character already had the status effect max stack on them");
             } else {
                 returnObjects = base.Cast(source, target, originalTarget, abilityEffectContext);
                 if (returnObjects != null) {
                     // pass in the ability effect object so we can independently destroy it and let it last as long as the status effect (which could be refreshed).
-                    _statusEffectNode.StatusEffect.MyPrefabObjects = returnObjects;
+                    _statusEffectNode.PrefabObjects = returnObjects;
                 }
                 PerformAbilityHit(source, target, abilityEffectContext);
             }
@@ -364,21 +364,12 @@ namespace AnyRPG {
             return remainingDuration;
         }
 
-        public override void Initialize(IAbilityCaster source, BaseCharacter target, AbilityEffectContext abilityEffectInput) {
-            //Debug.Log(MyAbilityEffectName + ".StatusEffect.Initialize(" + source.name + ", " + target.name + ")");
-            base.Initialize(source, target, abilityEffectInput);
-            //co = (target.MyCharacterStats as CharacterStats).StartCoroutine(Tick(source, abilityEffectInput, target));
-            //co = (target.MyCharacterStats as CharacterStats).StartCoroutine(Tick(source, abilityEffectInput, target, this));
-        }
-
-        //public void HandleStatusEffectEnd(
-
         // THESE TWO EXIST IN DIRECTEFFECT ALSO BUT I COULD NOT FIND A GOOD WAY TO SHARE THEM
-        public override void CastTick(IAbilityCaster source, Interactable target, AbilityEffectContext abilityEffectInput) {
+        public override void CastTick(IAbilityCaster source, Interactable target, AbilityEffectContext abilityEffectContext) {
             //Debug.Log(abilityEffectName + ".StatusEffect.CastTick()");
-            abilityEffectInput.spellDamageMultiplier = tickRate / Duration;
-            base.CastTick(source, target, abilityEffectInput);
-            PerformAbilityTick(source, target, abilityEffectInput);
+            abilityEffectContext.spellDamageMultiplier = tickRate / Duration;
+            base.CastTick(source, target, abilityEffectContext);
+            PerformAbilityTick(source, target, abilityEffectContext);
         }
 
         public override void CastComplete(IAbilityCaster source, Interactable target, AbilityEffectContext abilityEffectInput) {

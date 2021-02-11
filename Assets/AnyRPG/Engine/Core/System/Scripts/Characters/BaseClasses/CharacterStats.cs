@@ -253,7 +253,7 @@ namespace AnyRPG {
         public void HandleCharacterUnitSpawn() {
             foreach (StatusEffectNode statusEffectNode in StatusEffects.Values) {
                 //Debug.Log("PlayerStats.HandlePlayerUnitSpawn(): re-applying effect object for: " + statusEffectNode.MyStatusEffect.MyName);
-                statusEffectNode.StatusEffect.RawCast(baseCharacter, baseCharacter.UnitController, baseCharacter.UnitController, new AbilityEffectContext());
+                statusEffectNode.StatusEffect.RawCast(baseCharacter, baseCharacter.UnitController, baseCharacter.UnitController, new AbilityEffectContext(baseCharacter));
             }
         }
 
@@ -752,20 +752,18 @@ namespace AnyRPG {
             } else {
 
                 // add to effect list since it was not in there
-                StatusEffect _statusEffect = SystemAbilityEffectManager.MyInstance.GetNewResource(statusEffect.DisplayName) as StatusEffect;
-                if (_statusEffect == null) {
+                if (statusEffect == null) {
                     Debug.LogError("CharacterStats.ApplyStatusEffect(): Could not get status effect " + statusEffect.DisplayName);
                     return null;
                 }
                 StatusEffectNode newStatusEffectNode = new StatusEffectNode();
-                statusEffects.Add(SystemResourceManager.prepareStringForMatch(_statusEffect.DisplayName), newStatusEffectNode);
+                statusEffects.Add(SystemResourceManager.prepareStringForMatch(statusEffect.DisplayName), newStatusEffectNode);
 
                 // set base ability to null so that all damage taken by a status effect tick is considered ability damage for combat text purposes
                 abilityEffectContext.baseAbility = null;
 
-                _statusEffect.Initialize(sourceCharacter, baseCharacter, abilityEffectContext);
-                newStatusEffectNode.Setup(this, _statusEffect, abilityEffectContext);
-                Coroutine newCoroutine = baseCharacter.StartCoroutine(Tick(sourceCharacter, abilityEffectContext, _statusEffect));
+                newStatusEffectNode.Setup(this, statusEffect, abilityEffectContext);
+                Coroutine newCoroutine = baseCharacter.StartCoroutine(Tick(sourceCharacter, abilityEffectContext, statusEffect));
                 newStatusEffectNode.MyMonitorCoroutine = newCoroutine;
                 //newStatusEffectNode.Setup(this, _statusEffect, newCoroutine);
 

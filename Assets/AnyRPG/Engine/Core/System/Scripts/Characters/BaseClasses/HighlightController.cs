@@ -65,7 +65,9 @@ namespace AnyRPG {
 
         public void HandleClearTarget() {
             //Debug.Log("FocusTargettingController.HandleClearTarget()");
-            meshRenderer.enabled = false;
+            if (meshRenderer != null) {
+                meshRenderer.enabled = false;
+            }
         }
 
         public void SetMaterial(Color materialColor) {
