@@ -240,6 +240,11 @@ namespace AnyRPG {
                 return;
             }
 
+            if (MiniMapController.MyInstance == null)
+            {
+                Debug.LogError("MiniMapController not found in scene. Aborting...");
+                return;
+            }
             MiniMapController.MyInstance.StartCoroutine(MiniMapController.MyInstance.CreateMinimapTextures());
         }
 
