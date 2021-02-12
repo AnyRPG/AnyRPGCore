@@ -42,7 +42,7 @@ namespace AnyRPG {
             icon.sprite = statusEffectNode.StatusEffect.Icon;
             this.statusEffectNode = statusEffectNode;
             this.target = target;
-            statusEffectNode.StatusEffect.SetStatusNode(this);
+            statusEffectNode.SetStatusNode(this);
         }
 
         public void OnPointerClick(PointerEventData eventData) {

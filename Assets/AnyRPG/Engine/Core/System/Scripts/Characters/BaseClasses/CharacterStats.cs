@@ -487,7 +487,7 @@ namespace AnyRPG {
             float returnValue = 0;
             foreach (StatusEffectNode statusEffectNode in StatusEffects.Values) {
                 if (statusEffectNode.StatusEffect.SecondaryStatBuffsTypes.Contains(secondaryStatType)) {
-                    returnValue += statusEffectNode.StatusEffect.CurrentStacks * statusEffectNode.StatusEffect.SecondaryStatAmount;
+                    returnValue += statusEffectNode.CurrentStacks * statusEffectNode.StatusEffect.SecondaryStatAmount;
                 }
             }
             if (secondaryStats.ContainsKey(secondaryStatType)) {
@@ -501,7 +501,7 @@ namespace AnyRPG {
             float returnValue = 1f;
             foreach (StatusEffectNode statusEffectNode in StatusEffects.Values) {
                 if (statusEffectNode.StatusEffect.SecondaryStatBuffsTypes.Contains(secondaryStatType)) {
-                    returnValue *= (float)statusEffectNode.StatusEffect.CurrentStacks * statusEffectNode.StatusEffect.SecondaryStatMultiplier;
+                    returnValue *= (float)statusEffectNode.CurrentStacks * statusEffectNode.StatusEffect.SecondaryStatMultiplier;
                     //Debug.Log(gameObject.name + ".CharacterStats.GetMultiplyModifiers(" + secondaryStatType.ToString() + "): return: " + returnValue + "; stack: " + statusEffectNode.MyStatusEffect.MyCurrentStacks + "; multiplier: " + statusEffectNode.MyStatusEffect.MyStatMultiplier);
                 }
             }
@@ -523,7 +523,7 @@ namespace AnyRPG {
             float returnValue = 0;
             foreach (StatusEffectNode statusEffectNode in StatusEffects.Values) {
                 if (statusEffectNode.StatusEffect.StatBuffTypeNames.Contains(statName)) {
-                    returnValue += statusEffectNode.StatusEffect.CurrentStacks * statusEffectNode.StatusEffect.StatAmount;
+                    returnValue += statusEffectNode.CurrentStacks * statusEffectNode.StatusEffect.StatAmount;
                 }
             }
             if (primaryStats.ContainsKey(statName)) {
@@ -542,7 +542,7 @@ namespace AnyRPG {
             float returnValue = 1f;
             foreach (StatusEffectNode statusEffectNode in StatusEffects.Values) {
                 if (statusEffectNode.StatusEffect.StatBuffTypeNames.Contains(statName)) {
-                    returnValue *= statusEffectNode.StatusEffect.CurrentStacks * statusEffectNode.StatusEffect.StatMultiplier;
+                    returnValue *= statusEffectNode.CurrentStacks * statusEffectNode.StatusEffect.StatMultiplier;
                 }
             }
             if (primaryStats.ContainsKey(statName)) {
@@ -560,7 +560,7 @@ namespace AnyRPG {
                 if (statusEffectNode.StatusEffect != null) {
                     if (statusEffectNode.StatusEffect.IncomingDamageMultiplier != 1) {
                         //Debug.Log("CharacterStats.GetDamageModifiers(): looping through status effects: ");
-                        returnValue *= statusEffectNode.StatusEffect.CurrentStacks * statusEffectNode.StatusEffect.IncomingDamageMultiplier;
+                        returnValue *= statusEffectNode.CurrentStacks * statusEffectNode.StatusEffect.IncomingDamageMultiplier;
                     }
                 }
             }
@@ -616,7 +616,7 @@ namespace AnyRPG {
                 //Debug.Log("CharacterStats.GetDamageModifiers(): looping through status effects");
                 if (statusEffectNode.StatusEffect.ThreatMultiplier != 1) {
                     //Debug.Log("CharacterStats.GetDamageModifiers(): looping through status effects: ");
-                    returnValue *= (float)statusEffectNode.StatusEffect.CurrentStacks * statusEffectNode.StatusEffect.ThreatMultiplier;
+                    returnValue *= (float)statusEffectNode.CurrentStacks * statusEffectNode.StatusEffect.ThreatMultiplier;
                 }
             }
             //Debug.Log("CharacterStats.GetDamageModifiers() returning: " + returnValue);
@@ -630,7 +630,7 @@ namespace AnyRPG {
                 //Debug.Log("CharacterStats.GetDamageModifiers(): looping through status effects");
                 if (statusEffectNode.StatusEffect.OutgoingDamageMultiplier != 1) {
                     //Debug.Log("CharacterStats.GetDamageModifiers(): looping through status effects: " + statusEffectNode.StatusEffect.DisplayName);
-                    returnValue *= (float)statusEffectNode.StatusEffect.CurrentStacks * statusEffectNode.StatusEffect.OutgoingDamageMultiplier;
+                    returnValue *= (float)statusEffectNode.CurrentStacks * statusEffectNode.StatusEffect.OutgoingDamageMultiplier;
                 }
             }
             //Debug.Log("CharacterStats.GetDamageModifiers() returning: " + returnValue);
@@ -742,7 +742,7 @@ namespace AnyRPG {
 
             //Debug.Log("comparedStatusEffect: " + comparedStatusEffect);
             if (comparedStatusEffect != null) {
-                if (!comparedStatusEffect.AddStack()) {
+                if (!statusEffects[peparedString].AddStack()) {
                     //Debug.Log("Could not apply " + statusEffect.MyAbilityEffectName + ".  Max stack reached");
                 } else {
                     //AddStatusEffectModifiers(statusEffect);
@@ -763,7 +763,7 @@ namespace AnyRPG {
                 abilityEffectContext.baseAbility = null;
 
                 newStatusEffectNode.Setup(this, statusEffect, abilityEffectContext);
-                Coroutine newCoroutine = baseCharacter.StartCoroutine(Tick(sourceCharacter, abilityEffectContext, statusEffect));
+                Coroutine newCoroutine = baseCharacter.StartCoroutine(Tick(sourceCharacter, abilityEffectContext, statusEffect, newStatusEffectNode));
                 newStatusEffectNode.MyMonitorCoroutine = newCoroutine;
                 //newStatusEffectNode.Setup(this, _statusEffect, newCoroutine);
 
@@ -783,6 +783,20 @@ namespace AnyRPG {
 
                 return newStatusEffectNode;
             }
+        }
+
+        public bool HasStatusEffect(StatusEffect statusEffect) {
+            if (statusEffects.ContainsKey(SystemResourceManager.prepareStringForMatch(statusEffect.DisplayName))) {
+                return true;
+            }
+            return false;
+        }
+
+        public StatusEffectNode GetStatusEffectNode(StatusEffect statusEffect) {
+            if (statusEffects.ContainsKey(SystemResourceManager.prepareStringForMatch(statusEffect.DisplayName))) {
+                return StatusEffects[SystemResourceManager.prepareStringForMatch(statusEffect.DisplayName)];
+            }
+            return null;
         }
 
         private void HandleAddNotifications(StatusEffectNode statusEffectNode) {
@@ -1172,15 +1186,15 @@ namespace AnyRPG {
 
         }
 
-        public IEnumerator Tick(IAbilityCaster characterSource, AbilityEffectContext abilityEffectContext, StatusEffect statusEffect) {
+        public IEnumerator Tick(IAbilityCaster characterSource, AbilityEffectContext abilityEffectContext, StatusEffect statusEffect, StatusEffectNode statusEffectNode) {
             //Debug.Log(gameObject.name + ".StatusEffect.Tick() start");
             float elapsedTime = 0f;
 
             statusEffect.ApplyControlEffects(baseCharacter);
             if (abilityEffectContext.overrideDuration != 0) {
-                statusEffect.SetRemainingDuration(abilityEffectContext.overrideDuration);
+                statusEffectNode.SetRemainingDuration(abilityEffectContext.overrideDuration);
             } else {
-                statusEffect.SetRemainingDuration(statusEffect.Duration);
+                statusEffectNode.SetRemainingDuration(statusEffect.Duration);
             }
             //Debug.Log("duration: " + duration);
             //nextTickTime = remainingDuration - tickRate;
@@ -1196,10 +1210,10 @@ namespace AnyRPG {
             }
             //Debug.Log(abilityEffectName + ".StatusEffect.Tick() nextTickTime: " + nextTickTime);
 
-            while ((statusEffect.LimitedDuration == false || statusEffect.ClassTrait == true || statusEffect.GetRemainingDuration() > 0f) && baseCharacter != null) {
+            while ((statusEffect.LimitedDuration == false || statusEffect.ClassTrait == true || statusEffectNode.GetRemainingDuration() > 0f) && baseCharacter != null) {
                 yield return null;
                 //Debug.Log(gameObject.name + ".CharacterStats.Tick(): statusEffect: " + statusEffect.MyName + "; remaining: " + statusEffect.GetRemainingDuration());
-                statusEffect.SetRemainingDuration(statusEffect.GetRemainingDuration() - Time.deltaTime);
+                statusEffectNode.SetRemainingDuration(statusEffectNode.GetRemainingDuration() - Time.deltaTime);
                 elapsedTime += Time.deltaTime;
                 // check for tick first so we can do final tick;
 
@@ -1210,7 +1224,7 @@ namespace AnyRPG {
                         elapsedTime -= statusEffect.TickRate;
                     }
                 }
-                statusEffect.UpdateStatusNode();
+                statusEffectNode.UpdateStatusNode();
             }
             //Debug.Log(gameObject.name + ".CharacterStats.Tick(): statusEffect: " + statusEffect.MyName + "; remaining: " + statusEffect.GetRemainingDuration());
             if (baseCharacter != null) {

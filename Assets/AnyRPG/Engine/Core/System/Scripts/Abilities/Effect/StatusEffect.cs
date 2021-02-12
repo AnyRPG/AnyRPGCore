@@ -42,7 +42,7 @@ namespace AnyRPG {
         protected bool limitedDuration;
 
         [Tooltip("when an attempt to apply the effect is made, is the duration refreshed")]
-        public bool refreshableDuration = true;
+        protected bool refreshableDuration = true;
 
         [Tooltip("If limited duration is true, the number of seconds this will be active for without haste or slow")]
         [SerializeField]
@@ -51,9 +51,8 @@ namespace AnyRPG {
         [Header("Stack Size")]
 
         [Tooltip("the maximum number of stacks of this effect that can be applied at once")]
-        public int maxStacks = 1;
-
-        private int currentStacks = 1;
+        [SerializeField]
+        private int maxStacks = 1;
 
         [Header("Primary Stat Buffs and Debuffs")]
 
@@ -132,13 +131,9 @@ namespace AnyRPG {
         [SerializeField]
         protected bool controlTarget = false;
 
-        protected float remainingDuration;
-
-        // list of status effect nodes to send updates to so multiple effects panels and bars can access this
-        private List<StatusEffectNodeScript> statusEffectNodeScripts = new List<StatusEffectNodeScript>();
-
         [Header("Reflect Effects")]
 
+        [Tooltip("Ability Effects to cast when the character is hit with an attack")]
         [SerializeField]
         protected List<string> reflectAbilityEffectNames = new List<string>();
 
@@ -146,6 +141,7 @@ namespace AnyRPG {
 
         [Header("Weapon Hit Effects")]
 
+        [Tooltip("Ability Effects to cast when a weapon hit is scored on an enemy")]
         [SerializeField]
         protected List<string> weaponHitAbilityEffectNames = new List<string>();
 
@@ -153,7 +149,6 @@ namespace AnyRPG {
 
         public int StatAmount { get => statAmount; }
         public float StatMultiplier { get => statMultiplier; set => statMultiplier = value; }
-        public int CurrentStacks { get => currentStacks; set => currentStacks = value; }
         public float IncomingDamageMultiplier { get => incomingDamageMultiplier; set => incomingDamageMultiplier = value; }
         public List<FactionDisposition> FactionModifiers { get => factionModifiers; set => factionModifiers = value; }
         public bool ControlTarget { get => controlTarget; set => controlTarget = value; }
@@ -185,88 +180,12 @@ namespace AnyRPG {
         public int SecondaryStatAmount { get => secondaryStatAmount; set => secondaryStatAmount = value; }
         public float SecondaryStatMultiplier { get => secondaryStatMultiplier; set => secondaryStatMultiplier = value; }
         public List<string> SceneNames { get => sceneNames; set => sceneNames = value; }
+        public bool RefreshableDuration { get => refreshableDuration; set => refreshableDuration = value; }
+        public int MaxStacks { get => maxStacks; set => maxStacks = value; }
 
         public override void CancelEffect(BaseCharacter targetCharacter) {
             base.CancelEffect(targetCharacter);
             RemoveControlEffects(targetCharacter);
-            ClearNodeScripts();
-        }
-
-        public void ClearNodeScripts() {
-            foreach (StatusEffectNodeScript statusEffectNodeScript in statusEffectNodeScripts) {
-                if (statusEffectNodeScript != null) {
-                    //Debug.Log("AbilityEffect.OnDestroy() statusEffectNodeScript is not null. destroying gameobject");
-                    Destroy(statusEffectNodeScript.gameObject);
-                } else {
-                    //Debug.Log("AbilityEffect.OnDestroy() statusEffectNodeScript is null!");
-                }
-            }
-            statusEffectNodeScripts.Clear();
-        }
-
-        public void SetStatusNode(StatusEffectNodeScript statusEffectNodeScript) {
-            //Debug.Log("StatusEffect.SetStatusNode()");
-            statusEffectNodeScripts.Add(statusEffectNodeScript);
-            UpdateStatusNode();
-        }
-
-        public void UpdateStatusNode() {
-            //Debug.Log(GetInstanceID() + ".StatusEffect.UpdateStatusNode(): COUNT statusEffectNodeScript: " + statusEffectNodeScripts.Count);
-            foreach (StatusEffectNodeScript statusEffectNodeScript in statusEffectNodeScripts) {
-                //Debug.Log("StatusEffect.UpdateStatusNode(): got statuseffectnodescript");
-                if (statusEffectNodeScript != null) {
-                    string statusText = string.Empty;
-                    string stackText = string.Empty;
-                    if (currentStacks > 1) {
-                        stackText = currentStacks.ToString();
-                    }
-                    if (limitedDuration == true && classTrait == false) {
-                        //Debug.Log(GetInstanceID() + MyName + ".StatusEffect.UpdateStatusNode(): limted");
-                        float printedDuration = (int)remainingDuration;
-                        if (printedDuration < 60 && printedDuration >= 0) {
-                            // less than 1 minute
-                            statusText = ((int)printedDuration).ToString() + "s";
-                        } else if (printedDuration < 3600) {
-                            //less than 1 hour
-                            statusText = ((int)(printedDuration / 60)).ToString() + "m";
-                        } else if (printedDuration > 3600f) {
-                            //greater than 1 hour
-                            statusText = ((int)(printedDuration / 3600)).ToString() + "h";
-                        }
-                    }
-
-                    // set updated values
-                    if (statusEffectNodeScript.MyUseTimerText == true && statusText != string.Empty) {
-                        if (statusEffectNodeScript.MyTimer != null) {
-                            if (statusEffectNodeScript.MyTimer.isActiveAndEnabled == false) {
-                                statusEffectNodeScript.MyTimer.gameObject.SetActive(true);
-                            }
-                            statusEffectNodeScript.MyTimer.text = statusText;
-                        }
-                    } else {
-                        if (statusEffectNodeScript.MyTimer != null) {
-                            statusEffectNodeScript.MyTimer.gameObject.SetActive(false);
-                        }
-                    }
-                    if (statusEffectNodeScript.MyUseStackText == true) {
-                        if (statusEffectNodeScript.MyStackCount.isActiveAndEnabled == false) {
-                            statusEffectNodeScript.MyStackCount.gameObject.SetActive(true);
-                        }
-                        statusEffectNodeScript.MyStackCount.gameObject.SetActive(true);
-                        statusEffectNodeScript.MyStackCount.text = stackText;
-                    } else {
-                        if (statusEffectNodeScript.MyStackCount != null) {
-                            statusEffectNodeScript.MyStackCount.gameObject.SetActive(false);
-                        }
-                    }
-                    if (Duration == 0f) {
-                        statusEffectNodeScript.UpdateFillIcon(0f);
-                    } else {
-                        float usedFillAmount = remainingDuration / Duration;
-                        statusEffectNodeScript.UpdateFillIcon(usedFillAmount);
-                    }
-                }
-            }
         }
 
         // bypass the creation of the status effect and just make its visual prefab
@@ -340,28 +259,6 @@ namespace AnyRPG {
         public override void PerformAbilityHit(IAbilityCaster source, Interactable target, AbilityEffectContext abilityEffectInput) {
             //Debug.Log("DirectEffect.PerformAbilityEffect()");
             base.PerformAbilityHit(source, target, abilityEffectInput);
-        }
-
-
-        public bool AddStack() {
-            bool returnValue = false;
-            if (currentStacks < maxStacks) {
-                currentStacks++;
-                // refresh the duration
-                returnValue = true;
-            }
-            if (refreshableDuration) {
-                SetRemainingDuration(Duration);
-            }
-            return returnValue;
-        }
-
-        public void SetRemainingDuration(float remainingDuration) {
-            this.remainingDuration = remainingDuration;
-        }
-
-        public float GetRemainingDuration() {
-            return remainingDuration;
         }
 
         // THESE TWO EXIST IN DIRECTEFFECT ALSO BUT I COULD NOT FIND A GOOD WAY TO SHARE THEM
@@ -456,6 +353,10 @@ namespace AnyRPG {
             string durationString = string.Empty;
 
             if (limitedDuration == true && classTrait == false) {
+                float remainingDuration = 0f;
+                if (PlayerManager.MyInstance?.MyCharacter?.CharacterStats?.HasStatusEffect(this) == true) {
+                    remainingDuration = PlayerManager.MyInstance.MyCharacter.CharacterStats.GetStatusEffectNode(this).RemainingDuration;
+                }
                 if (remainingDuration != 0f) {
                     durationLabel = "Remaining Duration: ";
                     printedDuration = (int)remainingDuration;
