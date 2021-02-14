@@ -71,7 +71,7 @@ namespace AnyRPG {
                 if (InputManager.MyInstance.KeyBindWasPressed("REPUTATIONBOOK")) {
                     reputationBookWindow.ToggleOpenClose();
                 }
-                if (InputManager.MyInstance.KeyBindWasPressed("CURRENCYLIST")) {
+                if (InputManager.MyInstance.KeyBindWasPressed("CURRENCYPANEL")) {
                     currencyListWindow.ToggleOpenClose();
                 }
                 if (InputManager.MyInstance.KeyBindWasPressed("CHARACTERPANEL")) {
