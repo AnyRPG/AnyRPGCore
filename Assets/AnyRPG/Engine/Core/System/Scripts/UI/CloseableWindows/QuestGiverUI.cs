@@ -433,7 +433,7 @@ namespace AnyRPG {
             // item rewards first in case not enough space in inventory
             // TO FIX: THIS CODE DOES NOT DEAL WITH PARTIAL STACKS AND WILL REQUEST ONE FULL SLOT FOR EVERY REWARD
             if (questDetailsArea.GetHighlightedItemRewardIcons().Count > 0) {
-                if (InventoryManager.MyInstance.MyEmptySlotCount() < questDetailsArea.GetHighlightedItemRewardIcons().Count) {
+                if (InventoryManager.MyInstance.EmptySlotCount() < questDetailsArea.GetHighlightedItemRewardIcons().Count) {
                     MessageFeedManager.MyInstance.WriteMessage("Not enough room in inventory!");
                     return;
                 }

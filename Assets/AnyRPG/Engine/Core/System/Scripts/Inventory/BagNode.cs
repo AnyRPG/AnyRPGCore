@@ -33,17 +33,17 @@ namespace AnyRPG {
                 } else {
                     //Debug.Log("BagNode.MyBag = null");
                     OnRemoveBagHandler();
-                    if (MyBagPanel != null) {
-                        MyBagPanel.ClearSlots();
+                    if (BagPanel != null) {
+                        BagPanel.ClearSlots();
                     }
                 }
             }
         }
 
-        public BagPanel MyBagPanel { get => bagPanel; set => bagPanel = value; }
-        public bool MyIsBankNode { get => isBankNode; set => isBankNode = value; }
-        public BagButton MyBagButton { get => bagButton; set => bagButton = value; }
-        public CloseableWindow MyBagWindow { get => bagWindow; set => bagWindow = value; }
+        public BagPanel BagPanel { get => bagPanel; set => bagPanel = value; }
+        public bool IsBankNode { get => isBankNode; set => isBankNode = value; }
+        public BagButton BagButton { get => bagButton; set => bagButton = value; }
+        public CloseableWindow BagWindow { get => bagWindow; set => bagWindow = value; }
     }
 
 }

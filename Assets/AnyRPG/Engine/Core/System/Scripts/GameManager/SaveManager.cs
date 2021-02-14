@@ -753,12 +753,12 @@ namespace AnyRPG {
 
         public void SaveEquippedBagData(AnyRPGSaveData anyRPGSaveData) {
             //Debug.Log("Savemanager.SaveEquippedBagData()");
-            foreach (BagNode bagNode in InventoryManager.MyInstance.MyBagNodes) {
+            foreach (BagNode bagNode in InventoryManager.MyInstance.BagNodes) {
                 //Debug.Log("Savemanager.SaveEquippedBagData(): got bagNode");
                 EquippedBagSaveData saveData = new EquippedBagSaveData();
                 saveData.MyName = (bagNode.MyBag != null ? bagNode.MyBag.DisplayName : string.Empty);
                 saveData.slotCount = (bagNode.MyBag != null ? bagNode.MyBag.MySlots : 0);
-                saveData.isBankBag = bagNode.MyIsBankNode;
+                saveData.isBankBag = bagNode.IsBankNode;
                 anyRPGSaveData.equippedBagSaveData.Add(saveData);
             }
         }
@@ -1447,12 +1447,12 @@ namespace AnyRPG {
             PlayerPrefs.SetFloat("MouseOverWindowX", UIManager.MyInstance.MouseOverWindow.transform.position.x);
             PlayerPrefs.SetFloat("MouseOverWindowY", UIManager.MyInstance.MouseOverWindow.transform.position.y);
 
-            if (InventoryManager.MyInstance.MyBagNodes != null && InventoryManager.MyInstance.MyBagNodes.Count > 0) {
+            if (InventoryManager.MyInstance.BagNodes != null && InventoryManager.MyInstance.BagNodes.Count > 0) {
                 for (int i = 0; i < 13; i++) {
                     //Debug.Log("SaveManager.SaveWindowPositions(): " + i);
-                    if (InventoryManager.MyInstance.MyBagNodes[i].MyBagWindow.IsOpen) {
-                        PlayerPrefs.SetFloat("InventoryWindowX" + i, InventoryManager.MyInstance.MyBagNodes[i].MyBagWindow.transform.position.x);
-                        PlayerPrefs.SetFloat("InventoryWindowY" + i, InventoryManager.MyInstance.MyBagNodes[i].MyBagWindow.transform.position.y);
+                    if (InventoryManager.MyInstance.BagNodes[i].BagWindow.IsOpen) {
+                        PlayerPrefs.SetFloat("InventoryWindowX" + i, InventoryManager.MyInstance.BagNodes[i].BagWindow.transform.position.x);
+                        PlayerPrefs.SetFloat("InventoryWindowY" + i, InventoryManager.MyInstance.BagNodes[i].BagWindow.transform.position.y);
                     } else {
                         //Debug.Log("SaveManager.SaveWindowPositions(): " + i + "X: " + InventoryManager.MyInstance.MyBagNodes[i].MyBagWindow.transform.position.x + "; y: " + InventoryManager.MyInstance.MyBagNodes[i].MyBagWindow.transform.position.y + " WINDOW CLOSED@!!!!, NOT SAVING");
                     }

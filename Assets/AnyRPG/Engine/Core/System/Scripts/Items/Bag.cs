@@ -53,7 +53,7 @@ namespace AnyRPG {
             }
             bool addToBank = false;
             if (MyBagNode != null) {
-                addToBank = MyBagNode.MyIsBankNode;
+                addToBank = MyBagNode.IsBankNode;
             }
             if (InventoryManager.MyInstance.CanAddBag(addToBank)) {
                 //Debug.Log("Bag.Use(): we can add the bag");

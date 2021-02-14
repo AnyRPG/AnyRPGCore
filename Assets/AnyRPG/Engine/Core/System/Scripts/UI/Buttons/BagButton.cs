@@ -123,7 +123,7 @@ namespace AnyRPG {
                     //Debug.Log("InventoryManager.RemoveBag(): Found matching bag in bagNode: " + bagNode.MyBag.GetInstanceID() + "; " + bag.GetInstanceID());
                     HandScript.MyInstance.TakeMoveable(MyBagNode.MyBag);
                 } else if (bagNode?.MyBag != null) {
-                    bagNode.MyBagWindow.ToggleOpenClose();
+                    bagNode.BagWindow.ToggleOpenClose();
                 }
             }
         }

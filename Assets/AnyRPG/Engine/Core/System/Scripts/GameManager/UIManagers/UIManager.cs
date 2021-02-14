@@ -824,15 +824,15 @@ namespace AnyRPG {
 
             int opacityLevel = (int)(PlayerPrefs.GetFloat("InventoryOpacity") * 255);
             int slotOpacityLevel = (int)(PlayerPrefs.GetFloat("InventorySlotOpacity") * 255);
-            foreach (BagNode bagNode in InventoryManager.MyInstance.MyBagNodes) {
+            foreach (BagNode bagNode in InventoryManager.MyInstance.BagNodes) {
                 //Debug.Log("UIManager.UpdateInventoryOpacity(): found bagNode");
-                if (bagNode.MyBagPanel != null) {
+                if (bagNode.BagPanel != null) {
                     //Debug.Log("UIManager.UpdateInventoryOpacity(): found bagNode and bagpanel is not null!");
-                    bagNode.MyBagPanel.SetBackGroundColor(new Color32(0, 0, 0, (byte)opacityLevel));
-                    bagNode.MyBagPanel.SetSlotColor();
+                    bagNode.BagPanel.SetBackGroundColor(new Color32(0, 0, 0, (byte)opacityLevel));
+                    bagNode.BagPanel.SetSlotColor();
                 }
-                if (bagNode.MyBagButton != null) {
-                    bagNode.MyBagButton.SetBackGroundColor();
+                if (bagNode.BagButton != null) {
+                    bagNode.BagButton.SetBackGroundColor();
                 }
             }
             if (PopupWindowManager.MyInstance.bankWindow.CloseableWindowContents != null) {

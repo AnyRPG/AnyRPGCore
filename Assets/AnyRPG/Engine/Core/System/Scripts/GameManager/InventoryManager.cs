@@ -59,18 +59,31 @@ namespace AnyRPG {
         private int bagCount = 5;
         private int bankCount = 8;
 
-        public int MyTotalSlotCount {
+        public int CurrentBagCount {
             get {
                 int count = 0;
                 foreach (BagNode bagNode in bagNodes) {
-                    if (bagNode.MyBag != null) {
-                        count += bagNode.MyBagPanel.MySlots.Count;
+                    if (bagNode.MyBag != null && bagNode.IsBankNode == false) {
+                        count++;
                     }
                 }
                 return count;
             }
         }
-        public int MyFullSlotCount { get => MyTotalSlotCount - MyEmptySlotCount(); }
+
+        public int TotalSlotCount {
+            get {
+                int count = 0;
+                foreach (BagNode bagNode in bagNodes) {
+                    if (bagNode.MyBag != null) {
+                        count += bagNode.BagPanel.MySlots.Count;
+                    }
+                }
+                return count;
+            }
+        }
+
+        public int FullSlotCount { get => TotalSlotCount - EmptySlotCount(); }
 
         public SlotScript FromSlot {
             get {
@@ -85,8 +98,8 @@ namespace AnyRPG {
             }
         }
 
-        public List<BagNode> MyBagNodes { get => bagNodes; set => bagNodes = value; }
-        public List<BagNode> MyBankNodes { get => bagNodes; set => bagNodes = value; }
+        public List<BagNode> BagNodes { get => bagNodes; set => bagNodes = value; }
+        public List<BagNode> BankNodes { get => bagNodes; set => bagNodes = value; }
 
         private void Awake() {
             //Debug.Log("InventoryManager.Awake()");
@@ -127,7 +140,7 @@ namespace AnyRPG {
             foreach (BagNode bagNode in bagNodes) {
                 //Debug.Log("InventoryManager.ClearData(): got a bag node");
                 //bagNode.MyBag = null;
-                if (bagNode.MyIsBankNode == false) {
+                if (bagNode.IsBankNode == false) {
                     //Debug.Log("Got a bag node, removing!");
                     RemoveBag(bagNode.MyBag, true);
                 } else {
@@ -139,11 +152,11 @@ namespace AnyRPG {
             //MyBagNodes.Clear();
         }
 
-        public int MyEmptySlotCount(bool bankSlot = false) {
+        public int EmptySlotCount(bool bankSlot = false) {
             int count = 0;
             foreach (BagNode bagNode in bagNodes) {
-                if (bagNode.MyBag != null && bagNode.MyIsBankNode == bankSlot) {
-                    count += bagNode.MyBagPanel.MyEmptySlotCount;
+                if (bagNode.MyBag != null && bagNode.IsBankNode == bankSlot) {
+                    count += bagNode.BagPanel.MyEmptySlotCount;
                 }
             }
             return count;
@@ -153,7 +166,7 @@ namespace AnyRPG {
         public bool CanAddBag(bool addToBank = false) {
             int counter = 0;
             foreach (BagNode bagNode in bagNodes) {
-                if (bagNode.MyIsBankNode == addToBank) {
+                if (bagNode.IsBankNode == addToBank) {
                     //Debug.Log("Checking BagNode for the presence of a bag: " + counter);
                     if (bagNode.MyBag == null) {
                         //Debug.Log("found empty bagnode at:" + counter);
@@ -202,7 +215,7 @@ namespace AnyRPG {
                 if (saveData.slotCount > 0) {
                     Bag newBag = SystemItemManager.MyInstance.GetNewResource(saveData.MyName) as Bag;
                     if (newBag != null) {
-                        AddBag(newBag, MyBagNodes[counter]);
+                        AddBag(newBag, BagNodes[counter]);
                     } else {
                         //Debug.Log("InventoryManager.LoadEquippedBagData(): COULD NOT FIND BAG WITH NAME: " + saveData.MyName);
                     }
@@ -230,37 +243,37 @@ namespace AnyRPG {
 
                 if (i < bagCount) {
                     // create a new BagWindow to show the contents of this bag Nodes' bag
-                    bagNode.MyBagWindow = Instantiate(windowPrefab, inventoryWindowHolders[i].transform).GetComponent<CloseableWindow>();
-                    bagNode.MyBagWindow.transform.GetComponent<RectTransform>().pivot = new Vector2(1, 1);
+                    bagNode.BagWindow = Instantiate(windowPrefab, inventoryWindowHolders[i].transform).GetComponent<CloseableWindow>();
+                    bagNode.BagWindow.transform.GetComponent<RectTransform>().pivot = new Vector2(1, 1);
                     // create a bagbutton to access this bag node
 
-                    bagNode.MyBagButton = bagBarController.AddBagButton();
-                    if (bagNode.MyBagButton != null) {
-                        bagNode.MyBagButton.MyBagNode = bagNode;
+                    bagNode.BagButton = bagBarController.AddBagButton();
+                    if (bagNode.BagButton != null) {
+                        bagNode.BagButton.MyBagNode = bagNode;
                     } else {
                         //Debug.Log("InventoryManager.InitializeBagWindows(): create element " + i + " bagNode.MyBagButton is null!!!");
                     }
                     // give the bagbutton a reference back to the bag node that holds its data
-                    bagNode.MyIsBankNode = false;
+                    bagNode.IsBankNode = false;
                 } else {
                     if (i == bagCount) {
                         //Debug.Log("InventoryManager.InitializeBagWindows(): create element " + i + " setting bag window to bank window");
-                        bagNode.MyBagWindow = PopupWindowManager.MyInstance.bankWindow;
+                        bagNode.BagWindow = PopupWindowManager.MyInstance.bankWindow;
                     } else {
                         //Debug.Log("InventoryManager.InitializeBagWindows(): create element " + i + " creating bag window");
-                        bagNode.MyBagWindow = Instantiate(windowPrefab, inventoryWindowHolders[i - 1].transform).GetComponent<CloseableWindow>();
-                        bagNode.MyBagWindow.transform.GetComponent<RectTransform>().pivot = new Vector2(1, 1);
+                        bagNode.BagWindow = Instantiate(windowPrefab, inventoryWindowHolders[i - 1].transform).GetComponent<CloseableWindow>();
+                        bagNode.BagWindow.transform.GetComponent<RectTransform>().pivot = new Vector2(1, 1);
                     }
 
-                    bagNode.MyBagButton = (PopupWindowManager.MyInstance.bankWindow.CloseableWindowContents as BankPanel).MyBagBarController.AddBagButton();
+                    bagNode.BagButton = (PopupWindowManager.MyInstance.bankWindow.CloseableWindowContents as BankPanel).MyBagBarController.AddBagButton();
 
-                    if (bagNode.MyBagButton != null) {
-                        bagNode.MyBagButton.MyBagNode = bagNode;
+                    if (bagNode.BagButton != null) {
+                        bagNode.BagButton.MyBagNode = bagNode;
                     } else {
                         //Debug.Log("InventoryManager.InitializeBagWindows(): create element " + i + " bagNode.MyBagButton is null!!!");
                     }
 
-                    bagNode.MyIsBankNode = true;
+                    bagNode.IsBankNode = true;
                 }
 
                 // save a reference to this bagNode in the main list of bagNodes
@@ -272,7 +285,7 @@ namespace AnyRPG {
                 //Debug.Log("Bag Nodes initialized. Checking node: " + i);
                 if (PlayerPrefs.HasKey("InventoryWindowX" + i) && PlayerPrefs.HasKey("InventoryWindowY" + i)) {
                     //InventoryManager.MyInstance.MyBagNodes[i].MyBagWindow.transform.position = new Vector3(PlayerPrefs.GetFloat("InventoryWindowX" + i), PlayerPrefs.GetFloat("InventoryWindowY" + i), 0);
-                    MyBagNodes[i].MyBagWindow.transform.position = new Vector3(PlayerPrefs.GetFloat("InventoryWindowX" + i), PlayerPrefs.GetFloat("InventoryWindowY" + i), 0);
+                    BagNodes[i].BagWindow.transform.position = new Vector3(PlayerPrefs.GetFloat("InventoryWindowX" + i), PlayerPrefs.GetFloat("InventoryWindowY" + i), 0);
                     //Debug.Log("setting node:" + i + "; to: " + new Vector3(PlayerPrefs.GetFloat("InventoryWindowX" + i), PlayerPrefs.GetFloat("InventoryWindowY" + i), 0));
                 } else {
                     //Debug.Log(WE DON'T HAVE A WINDOW HERE!!!!!!! " + i);
@@ -286,7 +299,7 @@ namespace AnyRPG {
             //Debug.Log("InventoryManager.AddBag(Bag, " + addBank + ")");
 
             foreach (BagNode bagNode in bagNodes) {
-                if (bagNode.MyBag == null && bagNode.MyIsBankNode == addBank) {
+                if (bagNode.MyBag == null && bagNode.IsBankNode == addBank) {
                     PopulateBagNode(bagNode, bag);
                     //bags.Add(bag);
                     //bag.MyBagButton = bagButton;
@@ -313,21 +326,21 @@ namespace AnyRPG {
             //Debug.Log("InventoryManager.PopulateBagNode(" + (bagNode != null ? bagNode.ToString() : "null") + ", " + (bag != null ? bag.DisplayName : "null") + ")");
             if (bag != null) {
                 bagNode.MyBag = bag;
-                if (bagNode.MyIsBankNode) {
-                    if (bagNode.MyBagWindow != null) {
-                        bagNode.MyBagWindow.InitalizeWindowContents(bankBagPrefab, bag.DisplayName);
+                if (bagNode.IsBankNode) {
+                    if (bagNode.BagWindow != null) {
+                        bagNode.BagWindow.InitalizeWindowContents(bankBagPrefab, bag.DisplayName);
                     } else {
                         //Debug.Log("InventoryManager.PopulateBagNode(BagNode, Bag): bagwindow was null");
                     }
                 } else {
-                    bagNode.MyBagWindow.InitalizeWindowContents(bagPrefab, bag.DisplayName);
+                    bagNode.BagWindow.InitalizeWindowContents(bagPrefab, bag.DisplayName);
                 }
-                bagNode.MyBagPanel = bagNode.MyBagWindow.CloseableWindowContents as BagPanel;
-                if (bagNode.MyBagPanel != null) {
+                bagNode.BagPanel = bagNode.BagWindow.CloseableWindowContents as BagPanel;
+                if (bagNode.BagPanel != null) {
                     //Debug.Log("InventoryManager.PopulateBagNode() bagPanel: " + bagNode.MyBagPanel.gameObject.GetInstanceID() + " for window: " + bagNode.MyBagWindow.gameObject.name);
-                    bagNode.MyBagPanel.AddSlots(bag.MySlots);
+                    bagNode.BagPanel.AddSlots(bag.MySlots);
                     bag.MyBagNode = bagNode;
-                    bag.MyBagPanel = bagNode.MyBagPanel;
+                    bag.MyBagPanel = bagNode.BagPanel;
                 }
             }
 
@@ -341,16 +354,16 @@ namespace AnyRPG {
 
         public void CloseBank() {
             foreach (BagNode bagNode in bagNodes) {
-                if (bagNode.MyBagWindow != null && bagNode.MyIsBankNode) {
-                    bagNode.MyBagWindow.CloseWindow();
+                if (bagNode.BagWindow != null && bagNode.IsBankNode) {
+                    bagNode.BagWindow.CloseWindow();
                 }
             }
         }
 
         public void OpenBank() {
             foreach (BagNode bagNode in bagNodes) {
-                if (bagNode.MyBagWindow != null && bagNode.MyIsBankNode && bagNode.MyBagWindow.IsOpen == false) {
-                    bagNode.MyBagWindow.OpenWindow();
+                if (bagNode.BagWindow != null && bagNode.IsBankNode && bagNode.BagWindow.IsOpen == false) {
+                    bagNode.BagWindow.OpenWindow();
                 }
             }
         }
@@ -358,8 +371,8 @@ namespace AnyRPG {
         public void Close() {
 
             foreach (BagNode bagNode in bagNodes) {
-                if (bagNode.MyBagWindow != null) {
-                    bagNode.MyBagWindow.CloseWindow();
+                if (bagNode.BagWindow != null) {
+                    bagNode.BagWindow.CloseWindow();
                 }
             }
         }
@@ -373,7 +386,7 @@ namespace AnyRPG {
             foreach (BagNode bagNode in bagNodes) {
                 if (bagNode.MyBag == bag) {
                     // give the old bagNode a temp location so we can add its items back to the inventory
-                    BagPanel tmpBagPanel = bagNode.MyBagPanel;
+                    BagPanel tmpBagPanel = bagNode.BagPanel;
 
                     // make item list before nulling the bag, because that will clear the pane slots
                     List<Item> itemsToAddBack = new List<Item>();
@@ -394,13 +407,13 @@ namespace AnyRPG {
                     }
 
                     // destroy the bagpanel gameobject before setting its reference to null
-                    bagNode.MyBagWindow.DestroyWindowContents();
+                    bagNode.BagWindow.DestroyWindowContents();
 
                     // MAKE EMPTY TITLE BAR GO AWAY
-                    bagNode.MyBagWindow.CloseWindow();
+                    bagNode.BagWindow.CloseWindow();
 
 
-                    bagNode.MyBagPanel = null;
+                    bagNode.BagPanel = null;
 
                     // remove references the bag held to the node it belonged to and the panel it spawned
                     if (bag != null) {
@@ -421,9 +434,9 @@ namespace AnyRPG {
         }
 
         public void SwapBags(Bag oldBag, Bag newBag) {
-            int newSlotCount = (MyTotalSlotCount - oldBag.MySlots) + newBag.MySlots;
+            int newSlotCount = (TotalSlotCount - oldBag.MySlots) + newBag.MySlots;
 
-            if (newSlotCount - MyFullSlotCount >= 0) {
+            if (newSlotCount - FullSlotCount >= 0) {
                 // do swap
                 List<Item> bagItems = oldBag.MyBagPanel.GetItems();
 
@@ -476,7 +489,7 @@ namespace AnyRPG {
                 //Debug.Log("InventoryManager.RemoveItem(" + item.itemName + "): checking bagNode");
                 if (bagNode.MyBag != null) {
                     //Debug.Log("InventoryManager.RemoveItem(" + item.itemName + "): checking bagNode and bag is not null");
-                    foreach (SlotScript slot in bagNode.MyBagPanel.MySlots) {
+                    foreach (SlotScript slot in bagNode.BagPanel.MySlots) {
                         //Debug.Log("InventoryManager.RemoveItem(" + item.itemName + "): checking bagNode and bag is not null and checking slotscript");
                         if (!slot.IsEmpty && SystemResourceManager.MatchResource(slot.MyItem.DisplayName, item.DisplayName)) {
                             //Debug.Log("InventoryManager.RemoveItem(" + item.itemName + "): about to remove item from slot");
@@ -490,14 +503,14 @@ namespace AnyRPG {
 
         private bool PlaceInEmpty(Item item, bool addToBank = false) {
             foreach (BagNode bagNode in bagNodes) {
-                if (bagNode.MyBag != null && bagNode.MyIsBankNode == addToBank) {
-                    if (bagNode.MyBagPanel.AddItem(item)) {
+                if (bagNode.MyBag != null && bagNode.IsBankNode == addToBank) {
+                    if (bagNode.BagPanel.AddItem(item)) {
                         OnItemCountChanged(item);
                         return true;
                     }
                 }
             }
-            if (MyEmptySlotCount(addToBank) == 0) {
+            if (EmptySlotCount(addToBank) == 0) {
                 //Debug.Log("No empty slots");
                 MessageFeedManager.MyInstance.WriteMessage((addToBank == false ? "Inventory" : "Bank") + " is full!");
             }
@@ -506,8 +519,8 @@ namespace AnyRPG {
 
         private bool PlaceInStack(Item item, bool addToBank = false) {
             foreach (BagNode bagNode in bagNodes) {
-                if (bagNode.MyBag != null && bagNode.MyIsBankNode == addToBank) {
-                    foreach (SlotScript slotScript in bagNode.MyBagPanel.MySlots) {
+                if (bagNode.MyBag != null && bagNode.IsBankNode == addToBank) {
+                    foreach (SlotScript slotScript in bagNode.BagPanel.MySlots) {
                         if (slotScript.StackItem(item)) {
                             OnItemCountChanged(item);
                             return true;
@@ -537,7 +550,7 @@ namespace AnyRPG {
         public bool BankClosed() {
             //Debug.Log("InventoryManager.BankClosed()");
             foreach (BagNode bagNode in bagNodes) {
-                if (bagNode.MyBagWindow.IsOpen && bagNode.MyIsBankNode == true) {
+                if (bagNode.BagWindow.IsOpen && bagNode.IsBankNode == true) {
                     //Debug.Log("InventoryManager.BagsClosed(); isOpen: " + bagNode.MyBagWindow.IsOpen + "; isBankNode: " + bagNode.MyIsBankNode);
                     return false;
                 }
@@ -548,7 +561,7 @@ namespace AnyRPG {
         public bool BagsClosed() {
             //Debug.Log("InventoryManager.BagsClosed()");
             foreach (BagNode bagNode in bagNodes) {
-                if (bagNode.MyBagWindow.IsOpen && bagNode.MyIsBankNode == false) {
+                if (bagNode.BagWindow.IsOpen && bagNode.IsBankNode == false) {
                     //Debug.Log("InventoryManager.BagsClosed(); isOpen: " + bagNode.MyBagWindow.IsOpen + "; isBankNode: " + bagNode.MyIsBankNode);
                     return false;
                 }
@@ -561,11 +574,15 @@ namespace AnyRPG {
             // if the closed bag is true, open all closed bags
             // if closed bag is false, then close all open bags
             bool inventoryClosed = InventoryClosed();
+            if (CurrentBagCount == 0) {
+                MessageFeedManager.MyInstance.WriteMessage("You do not have any bags equipped");
+                return;
+            }
             //Debug.Log("Inventory is closed: " + inventoryClosed);
             foreach (BagNode bagNode in bagNodes) {
-                if (bagNode.MyBagWindow.IsOpen != inventoryClosed && bagNode.MyIsBankNode == false) {
+                if (bagNode.BagWindow.IsOpen != inventoryClosed && bagNode.IsBankNode == false) {
                     //Debug.Log("Inventory is closed: " + inventoryClosed + "; isOpen: " + bagNode.MyBagWindow.IsOpen + "; isBankNode: " + bagNode.MyIsBankNode);
-                    bagNode.MyBagWindow.ToggleOpenClose();
+                    bagNode.BagWindow.ToggleOpenClose();
                 }
             }
             UIManager.MyInstance.UpdateInventoryOpacity();
@@ -584,9 +601,9 @@ namespace AnyRPG {
                 if (PlayerPrefs.HasKey("InventoryWindowX" + i) && PlayerPrefs.HasKey("InventoryWindowY" + i)) {
                     //InventoryManager.MyInstance.MyBagNodes[i].MyBagWindow.transform.position = new Vector3(PlayerPrefs.GetFloat("InventoryWindowX" + i), PlayerPrefs.GetFloat("InventoryWindowY" + i), 0);
                     //Debug.Log("setting node:" + i + "; to: " + new Vector3(PlayerPrefs.GetFloat("InventoryWindowX" + i), PlayerPrefs.GetFloat("InventoryWindowY" + i), 0));
-                    if (MyBagNodes[i].MyBagWindow.IsOpen) {
+                    if (BagNodes[i].BagWindow.IsOpen) {
                         //Debug.Log("Window was open, moving it");
-                        MyBagNodes[i].MyBagWindow.transform.position = new Vector3(PlayerPrefs.GetFloat("InventoryWindowX" + i), PlayerPrefs.GetFloat("InventoryWindowY" + i), 0);
+                        BagNodes[i].BagWindow.transform.position = new Vector3(PlayerPrefs.GetFloat("InventoryWindowX" + i), PlayerPrefs.GetFloat("InventoryWindowY" + i), 0);
                         //Debug.Log("Window was open, moving it: " + MyBagNodes[i].MyBagWindow.transform.position);
                     } else {
                         //Debug.Log("Window was closed, not moving it");
@@ -599,7 +616,7 @@ namespace AnyRPG {
             //IUseable useable = new Stack<IUseable>();
             foreach (BagNode bagNode in bagNodes) {
                 if (bagNode.MyBag != null) {
-                    foreach (SlotScript slot in bagNode.MyBagPanel.MySlots) {
+                    foreach (SlotScript slot in bagNode.BagPanel.MySlots) {
                         if (!slot.IsEmpty && SystemResourceManager.MatchResource(slot.MyItem.DisplayName, useable.DisplayName)) {
                             return (slot.MyItem as IUseable);
                         }
@@ -614,7 +631,7 @@ namespace AnyRPG {
             int count = 0;
             foreach (BagNode bagNode in bagNodes) {
                 if (bagNode.MyBag != null) {
-                    foreach (SlotScript slot in bagNode.MyBagPanel.MySlots) {
+                    foreach (SlotScript slot in bagNode.BagPanel.MySlots) {
                         if (!slot.IsEmpty && SystemResourceManager.MatchResource(slot.MyItem.DisplayName, useable.DisplayName)) {
                             count += slot.MyCount;
                         }
@@ -634,7 +651,7 @@ namespace AnyRPG {
 
             foreach (BagNode bagNode in bagNodes) {
                 if (bagNode.MyBag != null) {
-                    foreach (SlotScript slot in bagNode.MyBagPanel.MySlots) {
+                    foreach (SlotScript slot in bagNode.BagPanel.MySlots) {
                         if (!slot.IsEmpty && SystemResourceManager.MatchResource(slot.MyItem.DisplayName, type)) {
                             itemCount += slot.MyCount;
                         }
@@ -652,7 +669,7 @@ namespace AnyRPG {
                 //Debug.Log("InventoryManager.GetItems() got bagnode");
                 if (bagNode.MyBag != null) {
                     //Debug.Log("InventoryManager.GetItems() got bagnode and it has a bag");
-                    foreach (SlotScript slot in bagNode.MyBagPanel.MySlots) {
+                    foreach (SlotScript slot in bagNode.BagPanel.MySlots) {
                         //Debug.Log("InventoryManager.GetItems() got bagnode and it has a bag and we are looking in a slotscript");
                         if (!slot.IsEmpty && SystemResourceManager.MatchResource(slot.MyItem.DisplayName, itemType)) {
                             //Debug.Log("InventoryManager.GetItems() got bagnode and it has a bag and we are looking in a slotscript and the slot is not empty and it matches");
@@ -675,7 +692,7 @@ namespace AnyRPG {
             List<SlotScript> items = new List<SlotScript>();
             foreach (BagNode bagNode in bagNodes) {
                 if (bagNode.MyBag != null) {
-                    foreach (SlotScript slot in bagNode.MyBagPanel.MySlots) {
+                    foreach (SlotScript slot in bagNode.BagPanel.MySlots) {
                         items.Add(slot);
                     }
                 }
