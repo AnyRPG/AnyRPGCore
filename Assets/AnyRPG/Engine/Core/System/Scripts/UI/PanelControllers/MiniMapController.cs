@@ -61,7 +61,7 @@ namespace AnyRPG {
         public float snapDelay = 2f;
         
         [SerializeField] 
-        public int superSize = 20;
+        public int superSize = 10;
 
         //private float cameraOffsetZ = 0f;
         private float cameraOffsetY = 0f;
@@ -294,6 +294,11 @@ namespace AnyRPG {
             Debug.Log("Setting far clip plane to " + camera.farClipPlane);
             yield return new WaitForSeconds(snapDelay);
 
+            if (!System.IO.Directory.Exists(minimapTextureFolder))
+            {
+                System.IO.Directory.CreateDirectory(minimapTextureFolder);
+            }
+
             string screenshotFilename = GetScreenshotFilename();
             Debug.Log("Taking screenshot...");
             yield return TakeAndSaveSnapshot(camera, screenshotFilename, (int)cameraSize * superSize, (int)cameraSize * superSize);
@@ -310,7 +315,7 @@ namespace AnyRPG {
 
                 // Take the snapshot
                 string screenshotFilename = sceneName + "_" + y + "_minimap.png";
-                yield return takeAndSaveSnapshot(camera, screenshotFilename, (int)cameraSize * superSize, (int)cameraSize * superSize);
+                yield return TakeAndSaveSnapshot(camera, screenshotFilename, (int)cameraSize * superSize, (int)cameraSize * superSize);
             }
             */
             Debug.Log("Destroying camera object " + minimapGenerator.name);
