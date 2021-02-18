@@ -514,7 +514,7 @@ namespace AnyRPG {
         }
 
         public void HandleReputationChange() {
-            if (PlayerManager.MyInstance.PlayerUnitSpawned == false) {
+            if (PlayerManager.MyInstance == null || PlayerManager.MyInstance.PlayerUnitSpawned == false) {
                 return;
             }
             if (namePlateController == null) {

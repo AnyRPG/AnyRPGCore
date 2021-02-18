@@ -1025,6 +1025,10 @@ namespace AnyRPG {
             masterUnit = null;
             underControl = false;
 
+            // CLEAR AGRO TABLE OR NOTIFY REPUTATION CHANGE - THIS SHOULD PREVENT ATTACKING SOMETHING THAT SUDDENLY IS UNDER CONTROL AND NOW YOUR FACTION WHILE YOU ARE INCOMBAT WITH IT
+            characterUnit.BaseCharacter.CharacterCombat.AggroTable.ClearTable();
+            characterUnit.BaseCharacter.CharacterFactionManager.NotifyOnReputationChange();
+
             // should we reset leash position to start position here ?
         }
 
@@ -1632,6 +1636,7 @@ namespace AnyRPG {
             // minimap indicator can change color if reputation changed
             characterUnit.CallMiniMapStatusUpdateHandler();
             OnReputationChange();
+            unitComponentController.HighlightController.UpdateColors();
         }
 
         public void NotifyOnBeforeDie(CharacterStats characterStats) {
