@@ -111,7 +111,7 @@ TagManager:
   - BodyPart
   - BlockAIRayCast
   - Equipment
-  - FireLayer
+  - CharacterModel
   - PlayerPreview
   - SpellEffects
   - MiniMap
