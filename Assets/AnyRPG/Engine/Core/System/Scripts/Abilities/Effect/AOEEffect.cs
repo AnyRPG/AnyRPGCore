@@ -142,42 +142,39 @@ namespace AnyRPG {
                 //Debug.Log(DisplayName + ".AOEEffect.Cast() hit: " + collider.gameObject.name + "; layer: " + collider.gameObject.layer);
                 bool canAdd = true;
                 Interactable targetInteractable = collider.gameObject.GetComponent<Interactable>();
+                if (targetInteractable == null) {
+                    continue;
+                }
                 foreach (AbilityEffect abilityEffect in abilityEffectList) {
                     if (abilityEffect.CanUseOn(targetInteractable, source, abilityEffectContext) == false) {
                         canAdd = false;
                     }
                 }
-                //if (CanUseOn(collider.gameObject, source)) {
-                // next line was preventing aoe from hitting current target
-                //if (collider.gameObject != target && CanUseOn(collider.gameObject, source)) {
-                //Debug.Log(MyName + "performing AOE ability  on " + collider.gameObject);
                 if (canAdd) {
                     AOETargetNode validTargetNode = new AOETargetNode();
                     validTargetNode.targetGameObject = targetInteractable.InteractableTarget;
                     validTargetNode.abilityEffectInput = abilityEffectContext;
                     validTargets.Add(validTargetNode);
                 }
+            }
+            if (maxTargets > 0) {
                 //Debug.Log(MyName + "AOEEffect.GetValidTargets(). maxTargets: " + maxTargets + "; validTargets.Count: " + validTargets.Count);
-                if (maxTargets > 0) {
-                    //Debug.Log(MyName + "AOEEffect.GetValidTargets(). maxTargets: " + maxTargets + "; validTargets.Count: " + validTargets.Count);
-                    while (validTargets.Count > maxTargets) {
-                        int removeNumber = 0;
-                        if (preferClosestTargets == true) {
-                            int counter = 0;
-                            foreach (AOETargetNode validTarget in validTargets) {
-                                if (Vector3.Distance(validTarget.targetGameObject.transform.position, source.AbilityManager.UnitGameObject.transform.position) > Vector3.Distance(validTargets[removeNumber].targetGameObject.transform.position, source.AbilityManager.UnitGameObject.transform.position)) {
-                                    removeNumber = counter;
-                                }
-                                counter++;
+                while (validTargets.Count > maxTargets) {
+                    int removeNumber = 0;
+                    if (preferClosestTargets == true) {
+                        int counter = 0;
+                        foreach (AOETargetNode validTarget in validTargets) {
+                            if (Vector3.Distance(validTarget.targetGameObject.transform.position, source.AbilityManager.UnitGameObject.transform.position) > Vector3.Distance(validTargets[removeNumber].targetGameObject.transform.position, source.AbilityManager.UnitGameObject.transform.position)) {
+                                removeNumber = counter;
                             }
-                        } else {
-                            removeNumber = Random.Range(0, validTargets.Count);
+                            counter++;
                         }
-                        //Debug.Log("AOEEffect.GetValidTargets(). maxTargets: " + maxTargets + "; validTargets.Count: " + validTargets.Count + "; randomNumber: " + randomNumber);
-                        validTargets.RemoveAt(removeNumber);
+                    } else {
+                        removeNumber = Random.Range(0, validTargets.Count);
                     }
+                    //Debug.Log("AOEEffect.GetValidTargets(). maxTargets: " + maxTargets + "; validTargets.Count: " + validTargets.Count + "; randomNumber: " + randomNumber);
+                    validTargets.RemoveAt(removeNumber);
                 }
-                //}
             }
             //Debug.Log(abilityEffectName + ".AOEEffect.Cast(). Valid targets count: " + validTargets.Count);
             return validTargets;
