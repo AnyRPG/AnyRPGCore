@@ -1232,7 +1232,7 @@ namespace AnyRPG {
         }
 
         public override float GetSpeed() {
-            return 1f / (baseCharacter.CharacterStats.SecondaryStats[SecondaryStatType.Speed].CurrentValue / 100f);
+            return baseCharacter.CharacterStats.SecondaryStats[SecondaryStatType.Speed].CurrentValue / 100f;
         }
 
         public override float GetAnimationLengthMultiplier() {

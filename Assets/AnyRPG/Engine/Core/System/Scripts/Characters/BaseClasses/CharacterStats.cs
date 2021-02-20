@@ -47,7 +47,7 @@ namespace AnyRPG {
         protected float currentSprintSpeed = 0f;
 
         protected Dictionary<string, StatusEffectNode> statusEffects = new Dictionary<string, StatusEffectNode>();
-        protected BaseCharacter baseCharacter;
+        protected BaseCharacter baseCharacter = null;
 
         private bool isReviving = false;
         private bool isAlive = true;
