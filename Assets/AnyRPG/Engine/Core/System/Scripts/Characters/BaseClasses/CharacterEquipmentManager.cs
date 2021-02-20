@@ -513,13 +513,16 @@ namespace AnyRPG {
 
         public void NotifyEquipmentChanged(Equipment newItem, Equipment oldItem, int slotIndex, EquipmentSlotProfile equipmentSlotProfile) {
             HandleWeaponHoldableObjects(newItem, oldItem);
-            OnEquipmentChanged(newItem, oldItem, slotIndex);
+            //OnEquipmentChanged(newItem, oldItem, slotIndex);
             baseCharacter.CharacterStats.HandleEquipmentChanged(newItem, oldItem, slotIndex);
             baseCharacter.CharacterCombat.HandleEquipmentChanged(newItem, oldItem, slotIndex, equipmentSlotProfile);
             baseCharacter.CharacterAbilityManager.HandleEquipmentChanged(newItem, oldItem, slotIndex);
             if (baseCharacter.UnitController != null) {
                 baseCharacter.UnitController.UnitAnimator.HandleEquipmentChanged(newItem, oldItem, slotIndex);
             }
+
+            // now that all stats have been recalculated, it's safe to fire this event, so things that listen will show the correct values
+            OnEquipmentChanged(newItem, oldItem, slotIndex);
         }
 
         public int GetEquipmentSetCount(EquipmentSet equipmentSet) {

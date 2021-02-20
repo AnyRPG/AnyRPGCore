@@ -413,7 +413,7 @@ namespace AnyRPG {
         }
 
         private void CalculateEquipmentChanged(Equipment newItem, Equipment oldItem, bool recalculate = true) {
-            //Debug.Log(gameObject.name + ".CharacterStats.CalculateEquipmentChanged(" + (newItem != null ? newItem.MyName : "null") + ", " + (oldItem != null ? oldItem.MyName : "null") + ")");
+            //Debug.Log(baseCharacter.gameObject.name + ".CharacterStats.CalculateEquipmentChanged(" + (newItem != null ? newItem.DisplayName : "null") + ", " + (oldItem != null ? oldItem.DisplayName : "null") + ", " + recalculate + ")");
             if (newItem != null) {
 
                 foreach (ItemPrimaryStatNode itemPrimaryStatNode in newItem.PrimaryStats) {
