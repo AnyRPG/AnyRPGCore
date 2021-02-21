@@ -72,6 +72,10 @@ namespace AnyRPG {
 
         public void SetMaterial(Color materialColor) {
             //Debug.Log("FocusTargettingController.SetMaterial(" + (materialColor == null ? "null" : materialColor.ToString()) + ")");
+            if (SystemConfigurationManager.MyInstance == null) {
+                return;
+            }
+
             /*
             foreach (string tmpColor in colorDictionary.Keys) {
                 Debug.Log("Dictionary contains key: " + tmpColor.ToString());
