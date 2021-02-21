@@ -516,7 +516,7 @@ namespace AnyRPG {
         }
 
         public void ProcessPointerExit() {
-            if (unitNamePlateController?.Interactable != null) {
+            if (unitNamePlateController?.Interactable != null && unitNamePlateController.Interactable.IsMouseOverNameplate == true) {
                 unitNamePlateController.Interactable.IsMouseOverNameplate = false;
                 unitNamePlateController.Interactable.OnMouseOut();
             }
