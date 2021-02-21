@@ -1026,8 +1026,8 @@ namespace AnyRPG {
             underControl = false;
 
             // CLEAR AGRO TABLE OR NOTIFY REPUTATION CHANGE - THIS SHOULD PREVENT ATTACKING SOMETHING THAT SUDDENLY IS UNDER CONTROL AND NOW YOUR FACTION WHILE YOU ARE INCOMBAT WITH IT
-            characterUnit.BaseCharacter.CharacterCombat.AggroTable.ClearTable();
-            characterUnit.BaseCharacter.CharacterFactionManager.NotifyOnReputationChange();
+            characterUnit?.BaseCharacter?.CharacterCombat?.AggroTable?.ClearTable();
+            characterUnit?.BaseCharacter?.CharacterFactionManager?.NotifyOnReputationChange();
 
             // should we reset leash position to start position here ?
         }

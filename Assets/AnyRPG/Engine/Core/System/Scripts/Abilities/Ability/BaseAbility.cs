@@ -371,7 +371,7 @@ namespace AnyRPG {
 
         public virtual float GetAbilityCastingTime(IAbilityCaster abilityCaster) {
             if (useSpeedMultipliers) {
-                return GetBaseAbilityCastingTime(abilityCaster) * abilityCaster.AbilityManager.GetSpeed();
+                return GetBaseAbilityCastingTime(abilityCaster) * (1f / abilityCaster.AbilityManager.GetSpeed());
             }
             return GetBaseAbilityCastingTime(abilityCaster);
         }

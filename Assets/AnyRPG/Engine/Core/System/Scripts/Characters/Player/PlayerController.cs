@@ -573,7 +573,7 @@ namespace AnyRPG {
 
             UIManager.MyInstance.FocusUnitFrameController.ClearTarget();
             NamePlateManager.MyInstance.ClearFocus();
-            oldTarget?.UnitComponentController?.HighlightController.HandleClearTarget();
+            oldTarget?.UnitComponentController?.HighlightController?.HandleClearTarget();
         }
 
         public void HandleSetTarget(Interactable newTarget) {
@@ -582,14 +582,14 @@ namespace AnyRPG {
                 return;
             }
             NamePlateUnit namePlateUnit = (newTarget as NamePlateUnit);
-            if (namePlateUnit != null && namePlateUnit.NamePlateController != null && namePlateUnit.NamePlateController.SuppressNamePlate == false) {
+            if (namePlateUnit?.NamePlateController != null && namePlateUnit.NamePlateController.SuppressNamePlate == false) {
                 //Debug.Log("PlayerController.SetTarget(): InamePlateUnit is not null");
                 UIManager.MyInstance.FocusUnitFrameController.SetTarget(namePlateUnit.NamePlateController);
                 NamePlateManager.MyInstance.SetFocus(namePlateUnit);
             } else {
                 //Debug.Log("PlayerController.SetTarget(): InamePlateUnit is null ???!?");
             }
-            newTarget?.UnitComponentController?.HighlightController.HandleSetTarget();
+            newTarget?.UnitComponentController?.HighlightController?.HandleSetTarget();
         }
 
         /// <summary>
