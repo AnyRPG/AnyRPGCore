@@ -116,7 +116,9 @@ namespace AnyRPG {
 
         public override int GetCurrentOptionCount() {
             //Debug.Log(gameObject.name + ".GatheringNode.GetCurrentOptionCount()");
-            return ((PlayerManager.MyInstance.MyCharacter.CharacterAbilityManager.HasAbility(GatheringNodeProps.BaseAbility) == true && interactable.MySpawnReference != null) ? 1 : 0);
+            return ((PlayerManager.MyInstance.MyCharacter.CharacterAbilityManager.HasAbility(GatheringNodeProps.BaseAbility) == true
+                && interactable.MySpawnReference != null
+                && currentTimer <= 0f) ? 1 : 0);
         }
 
         /*
