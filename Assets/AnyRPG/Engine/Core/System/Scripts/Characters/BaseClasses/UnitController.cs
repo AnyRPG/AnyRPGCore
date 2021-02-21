@@ -623,6 +623,14 @@ namespace AnyRPG {
             //Debug.Log(gameObject.name + ".UnitController.OnDisable()");
             base.OnDisable();
             RemoveControlEffects();
+            ProcessPointerExit();
+        }
+
+        private void ProcessPointerExit() {
+            if (isMouseOverUnit == true) {
+                isMouseOverUnit = false;
+                OnMouseOut();
+            }
         }
 
         // for interactions
