@@ -789,11 +789,8 @@ namespace AnyRPG {
                 // there was nothing to interact with on mouseover so just exit instead of trying to reset materials
                 return;
             }
-            if (hasMeshRenderer) {
-                isFlashing = false;
-                RevertMaterialChange();
-                // return emission enabled, emission color, and emission texture to their previous values
-            }
+            RevertMaterialChange();
+            // return emission enabled, emission color, and emission texture to their previous values
         }
 
         protected void OnMouseDown() {
@@ -1010,6 +1007,13 @@ namespace AnyRPG {
 
         public void RevertMaterialChange() {
             //Debug.Log(gameObject.name + ".Interactable.RevertMaterialChange()");
+            if (hasMeshRenderer && isFlashing) {
+                isFlashing = false;
+                // return emission enabled, emission color, and emission texture to their previous values
+            } else {
+                return;
+            }
+
 
             if (meshRenderers == null || originalMaterials.Count == 0) {
                 //Debug.Log("meshRender is null.  This shouldn't happen because we checked before instantiating this!");

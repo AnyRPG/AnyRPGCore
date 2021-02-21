@@ -1651,6 +1651,13 @@ namespace AnyRPG {
             unitComponentController.StopMovement();
             unitComponentController.HighlightController.UpdateColors();
             OnBeforeDie(characterStats);
+
+        }
+
+        public void NotifyOnAfterDie(CharacterStats characterStats) {
+            if (GetCurrentInteractables().Count == 0) {
+                RevertMaterialChange();
+            }
         }
 
         public void NotifyOnReviveComplete() {
