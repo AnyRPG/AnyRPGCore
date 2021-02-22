@@ -62,6 +62,6 @@ MonoBehaviour:
     addPower: 1
     minAmount: 0
     baseAmount: 0
-    amountPerLevel: 5
+    amountPerLevel: 1
     maxAmount: 0
   damageType: 0

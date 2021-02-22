@@ -10054,7 +10054,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameName: AnyRPG Engine
-  gameVersion: v0.10a
+  gameVersion: v0.10.1a
   loadResourcesFolders: []
   initializationScene: 
   mainMenuScene: 

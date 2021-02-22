@@ -63,8 +63,8 @@ MonoBehaviour:
   aoeRadius: 5
   useRadius: 0
   useExtents: 1
-  aoeCenter: {x: 0, y: 1, z: 15}
-  aoeExtents: {x: 5, y: 2, z: 30}
+  aoeCenter: {x: 0, y: 1, z: 5}
+  aoeExtents: {x: 3, y: 2, z: 10}
   maxTargets: 0
   preferClosestTargets: 0
   interTargetDelay: 0
