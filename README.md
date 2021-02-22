@@ -44,6 +44,7 @@ A Unity package that includes this repository (and a complex sample game) is ava
 
 ### Github Installation
 
+1. Install the correct Unity version to open this project.  The current project Unity version is 2019.4.20f1
 1. Clone this repository into a directory on your computer
 1. Open the Unity Hub and add the project
 1. Open the project and install the following Unity packages:
