@@ -157,8 +157,20 @@ namespace AnyRPG {
             }
         }
 
+        private void ClearData() {
+            unitProfile = null;
+            unitType = null;
+            characterRace = null;
+            characterClass = null;
+            classSpecialization = null;
+            faction = null;
+            capabilityConsumerProcessor = null;
+        }
+
         public override void ReceiveOpenWindowNotification() {
             //Debug.Log("LoadGamePanel.OnOpenWindow()");
+            ClearData();
+
             ClearButtons();
 
             SaveManager.MyInstance.ClearSharedData();
