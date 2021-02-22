@@ -271,31 +271,85 @@ namespace AnyRPG {
         }
 
         public void OpenSpecializationPanel() {
-            ClosePanels();
-            specializationPanel.ShowPanel();
+            // this is only called from buttons, so safe to assume it's already been populated with buttons when the window opened or a class was selected
+            if (specializationPanel.OptionButtons.Count > 0) {
+                ClosePanels();
+                specializationPanel.ShowPanel();
+            }
         }
 
         public void ShowCharacterClass(NewGameCharacterClassButton newGameCharacterClassButton) {
-            classPanel.ShowCharacterClass(newGameCharacterClassButton);
-            characterClass = newGameCharacterClassButton.CharacterClass;
+            //Debug.Log("NewGamePanel.ShowCharacterClass()");
 
-            // since a new character class is chosen, the specialization list must be updated to match the class
-            specializationPanel.ShowOptionButtonsCommon();
+            classPanel.ShowCharacterClass(newGameCharacterClassButton);
+            if (characterClass != newGameCharacterClassButton.CharacterClass) {
+                classSpecialization = null;
+                characterClass = newGameCharacterClassButton.CharacterClass;
+                detailsPanel.SetCharacterClass(characterClass);
+
+                // since a new character class is chosen, the specialization list must be updated to match the class
+                specializationPanel.ShowOptionButtonsCommon();
+
+                // the specialization must also be updated on the details panel
+                detailsPanel.SetClassSpecialization(classSpecialization);
+
+                saveData.characterClass = characterClass.DisplayName;
+
+                if (classSpecialization != null) {
+                    saveData.classSpecialization = classSpecialization.DisplayName;
+                    specializationButton.interactable = true;
+                } else {
+                    saveData.classSpecialization = string.Empty;
+                    // only update equipment if specialization is null.  otherwise it has already been updated
+                    UpdateEquipmentList();
+                    specializationButton.interactable = false;
+                }
+            }
+        }
+
+        public void ShowClassSpecialization(NewGameClassSpecializationButton newGameClassSpecializationButton) {
+            specializationPanel.ShowClassSpecialization(newGameClassSpecializationButton);
+            if (newGameClassSpecializationButton == null) {
+                classSpecialization = null;
+            } else {
+                classSpecialization = newGameClassSpecializationButton.ClassSpecialization;
+            }
 
             UpdateEquipmentList();
 
-            detailsPanel.SetCharacterClass(characterClass);
-
-            // the specialization must also be updated on the details panel
             detailsPanel.SetClassSpecialization(classSpecialization);
-
-            saveData.characterClass = characterClass.DisplayName;
 
             if (classSpecialization != null) {
                 saveData.classSpecialization = classSpecialization.DisplayName;
             } else {
                 saveData.classSpecialization = string.Empty;
             }
+
+        }
+
+        public void ShowFaction(NewGameFactionButton newGameFactionButton) {
+            //Debug.Log("NewGamePanel.ShowFaction()");
+
+            factionPanel.ShowFaction(newGameFactionButton);
+            faction = newGameFactionButton.Faction;
+
+            UpdateEquipmentList();
+
+            detailsPanel.SetFaction(faction);
+
+            saveData.playerFaction = faction.DisplayName;
+            if (faction != null && faction.DefaultStartingZone != null && faction.DefaultStartingZone != string.Empty) {
+                saveData.CurrentScene = faction.DefaultStartingZone;
+            } else {
+                saveData.CurrentScene = SystemConfigurationManager.MyInstance.DefaultStartingZone;
+            }
+
+            /*
+            if (SystemConfigurationManager.MyInstance.NewGameUMAAppearance == false) {
+                characterPanel.ShowOptionButtonsCommon();
+            }
+            */
+
         }
 
         public void UpdateEquipmentList() {
@@ -439,50 +493,7 @@ namespace AnyRPG {
             }
         }
 
-        public void ShowClassSpecialization(NewGameClassSpecializationButton newGameClassSpecializationButton) {
-            specializationPanel.ShowClassSpecialization(newGameClassSpecializationButton);
-            if (newGameClassSpecializationButton == null) {
-                classSpecialization = null;
-            } else {
-                classSpecialization = newGameClassSpecializationButton.ClassSpecialization;
-            }
-
-            UpdateEquipmentList();
-
-            detailsPanel.SetClassSpecialization(classSpecialization);
-
-            if (classSpecialization != null) {
-                saveData.classSpecialization = classSpecialization.DisplayName;
-            } else {
-                saveData.classSpecialization = string.Empty;
-            }
-
-        }
-
-        public void ShowFaction(NewGameFactionButton newGameFactionButton) {
-            //Debug.Log("NewGamePanel.ShowFaction()");
-
-            factionPanel.ShowFaction(newGameFactionButton);
-            faction = newGameFactionButton.Faction;
-
-            UpdateEquipmentList();
-
-            detailsPanel.SetFaction(faction);
-
-            saveData.playerFaction = faction.DisplayName;
-            if (faction != null && faction.DefaultStartingZone != null && faction.DefaultStartingZone != string.Empty) {
-                saveData.CurrentScene = faction.DefaultStartingZone;
-            } else {
-                saveData.CurrentScene = SystemConfigurationManager.MyInstance.DefaultStartingZone;
-            }
-
-            /*
-            if (SystemConfigurationManager.MyInstance.NewGameUMAAppearance == false) {
-                characterPanel.ShowOptionButtonsCommon();
-            }
-            */
-
-        }
+       
 
         public void ClosePanel() {
             //Debug.Log("CharacterCreatorPanel.ClosePanel()");

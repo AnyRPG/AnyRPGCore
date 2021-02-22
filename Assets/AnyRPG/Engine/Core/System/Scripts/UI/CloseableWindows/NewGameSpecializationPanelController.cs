@@ -41,6 +41,7 @@ namespace AnyRPG {
 
         private List<NewGameClassSpecializationButton> optionButtons = new List<NewGameClassSpecializationButton>();
 
+        public List<NewGameClassSpecializationButton> OptionButtons { get => optionButtons; }
 
         public void ClearOptionButtons() {
             // clear the quest list so any quests left over from a previous time opening the window aren't shown
@@ -54,8 +55,9 @@ namespace AnyRPG {
         }
 
         public void ShowOptionButtonsCommon() {
-            //Debug.Log("LoadGamePanel.ShowLoadButtonsCommon()");
+            //Debug.Log("LoadGamePanel.ShowOptionButtonsCommon()");
             ClearOptionButtons();
+            classSpecialization = null;
 
             foreach (ClassSpecialization classSpecialization in SystemClassSpecializationManager.MyInstance.GetResourceList()) {
                 //Debug.Log("LoadGamePanel.ShowLoadButtonsCommon(): setting a button with saved game data");

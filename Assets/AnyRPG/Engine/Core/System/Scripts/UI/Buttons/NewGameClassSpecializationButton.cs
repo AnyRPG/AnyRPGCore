@@ -26,11 +26,19 @@ namespace AnyRPG {
         public void AddClassSpecialization(ClassSpecialization newClassSpecialization) {
             //Debug.Log("NewGameClassSpecializationbutton.AddClassSpecialization(" + (newClassSpecialization == null ? "null" : newClassSpecialization.DisplayName) + ")");
             classSpecialization = newClassSpecialization;
-            icon.sprite = classSpecialization.Icon;
-            icon.color = Color.white;
-            characterClassName.text = classSpecialization.DisplayName;
-            //description.text = this.faction.GetSummary();
-            description.text = classSpecialization.GetSummary();
+            if (classSpecialization != null) {
+                icon.sprite = classSpecialization.Icon;
+                icon.color = Color.white;
+                characterClassName.text = classSpecialization.DisplayName;
+                //description.text = this.faction.GetSummary();
+                description.text = classSpecialization.GetSummary();
+            } else {
+                icon.sprite = SystemConfigurationManager.MyInstance.DefaultFactionIcon;
+                icon.color = Color.white;
+                characterClassName.text = "None";
+                //description.text = this.faction.GetSummary();
+                description.text = "No specialization available";
+            }
 
         }
 
