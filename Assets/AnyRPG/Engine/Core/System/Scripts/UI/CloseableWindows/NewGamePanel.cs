@@ -158,6 +158,7 @@ namespace AnyRPG {
         }
 
         private void ClearData() {
+            playerName = "Player Name";
             unitProfile = null;
             unitType = null;
             characterRace = null;
