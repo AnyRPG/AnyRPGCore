@@ -104,23 +104,24 @@ namespace AnyRPG {
                         usedTag = overrideSpawnLocationTag;
                     }
                     //Debug.Log("Levelmanager.GetSpawnLocation(). usedTag: " + usedTag);
-                    GameObject defaultspawnLocationMarker = GameObject.FindWithTag(usedTag);
+                    GameObject spawnLocationMarker = GameObject.FindWithTag(usedTag);
                     overrideSpawnLocationTag = string.Empty;
 
                     // if the prefered tag was found, us it, otherwise fall back to the default tag
-                    if (defaultspawnLocationMarker != null) {
+                    if (spawnLocationMarker != null) {
                         //Debug.Log("Levelmanager.GetSpawnLocation(). Found an object tagged " + usedTag + ". returning " + defaultspawnLocationMarker.transform.position);
-                        spawnRotationOverride = defaultspawnLocationMarker.transform.forward;
-                        return defaultspawnLocationMarker.transform.position;
-                    } else {
-                        defaultspawnLocationMarker = GameObject.FindWithTag(defaultSpawnLocationTag);
-                        if (defaultspawnLocationMarker != null) {
-                            //Debug.Log("Levelmanager.GetSpawnLocation(). Found an object tagged " + defaultSpawnLocationTag + ". returning " + defaultspawnLocationMarker.transform.position);
-                            spawnRotationOverride = defaultspawnLocationMarker.transform.forward;
-                            return defaultspawnLocationMarker.transform.position;
-                        }
+                        spawnRotationOverride = spawnLocationMarker.transform.forward;
+                        return spawnLocationMarker.transform.position;
                     }
                 }
+            }
+
+            // no override was set.  fall back to default
+            GameObject defaultspawnLocationMarker = GameObject.FindWithTag(defaultSpawnLocationTag);
+            if (defaultspawnLocationMarker != null) {
+                //Debug.Log("Levelmanager.GetSpawnLocation(). Found an object tagged " + defaultSpawnLocationTag + ". returning " + defaultspawnLocationMarker.transform.position);
+                spawnRotationOverride = defaultspawnLocationMarker.transform.forward;
+                return defaultspawnLocationMarker.transform.position;
             }
 
             //Debug.Log("LevelManager.GetSpawnLocation(): Could not find level in configured list.  Return default(0,0,0)");
@@ -273,8 +274,8 @@ namespace AnyRPG {
                     }
                     //Debug.Log("Levelmanager.ActivateSceneCamera(): activating cutscene camera");
                     //if (GetActiveSceneNode().MyIsCutScene == true || GetActiveSceneNode().MySuppressMainCamera == true) {
-                        //Debug.Log("Levelmanager.ActivateSceneCamera(): activating cutscene bars");
-                        UIManager.MyInstance.CutSceneBarController.StartCutScene(activeSceneNode.AutoPlayCutscene);
+                    //Debug.Log("Levelmanager.ActivateSceneCamera(): activating cutscene bars");
+                    UIManager.MyInstance.CutSceneBarController.StartCutScene(activeSceneNode.AutoPlayCutscene);
                     //}
                 } else {
                     CameraManager.MyInstance.ActivateMainCamera();
