@@ -54,9 +54,17 @@ namespace AnyRPG {
             optionButtons.Clear();
         }
 
+        private void HideInfoArea() {
+            traitLabel.SetActive(false);
+            abilityLabel.SetActive(false);
+            ClearTraitRewardIcons();
+            ClearAbilityRewardIcons();
+        }
+
         public void ShowOptionButtonsCommon() {
             //Debug.Log("LoadGamePanel.ShowOptionButtonsCommon()");
             ClearOptionButtons();
+            HideInfoArea();
             classSpecialization = null;
 
             foreach (ClassSpecialization classSpecialization in SystemClassSpecializationManager.MyInstance.GetResourceList()) {
@@ -143,7 +151,7 @@ namespace AnyRPG {
         public void ShowAbilityRewards() {
             //Debug.Log("ClassChangePanelController.ShowAbilityRewards()");
 
-            ClearRewardIcons();
+            ClearAbilityRewardIcons();
             // show ability rewards
             if (classSpecialization != null && classSpecialization.GetFilteredCapabilities(NewGamePanel.MyInstance).AbilityList.Count > 0) {
                 CapabilityProps capabilityProps = classSpecialization.GetFilteredCapabilities(NewGamePanel.MyInstance);
@@ -176,7 +184,7 @@ namespace AnyRPG {
             traitRewardIcons.Clear();
         }
 
-        private void ClearRewardIcons() {
+        private void ClearAbilityRewardIcons() {
             //Debug.Log("ClassChangePanelController.ClearRewardIcons()");
 
             foreach (NewGameAbilityButton rewardIcon in abilityRewardIcons) {

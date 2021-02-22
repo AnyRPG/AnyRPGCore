@@ -159,6 +159,7 @@ namespace AnyRPG {
 
         private void ClearData() {
             playerName = "Player Name";
+            detailsPanel.ResetInputText(playerName);
             unitProfile = null;
             unitType = null;
             characterRace = null;
@@ -166,6 +167,7 @@ namespace AnyRPG {
             classSpecialization = null;
             faction = null;
             capabilityConsumerProcessor = null;
+
         }
 
         public override void ReceiveOpenWindowNotification() {

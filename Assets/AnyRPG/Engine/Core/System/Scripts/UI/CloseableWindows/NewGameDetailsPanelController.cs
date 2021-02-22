@@ -46,9 +46,11 @@ namespace AnyRPG {
 
         public override void Awake() {
             base.Awake();
-
         }
 
+        public void ResetInputText(string newText) {
+            textInput.text = newText;
+        }
 
         public override void RecieveClosedWindowNotification() {
             //Debug.Log("CharacterCreatorPanel.OnCloseWindow()");
