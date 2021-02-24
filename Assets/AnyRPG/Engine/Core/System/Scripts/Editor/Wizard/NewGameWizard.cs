@@ -140,24 +140,8 @@ namespace AnyRPG {
             // Create a variant of the GameManager & UMA prefabs
             EditorUtility.DisplayProgressBar("New Game Wizard", "Making prefab variants...", 0.7f);
             string prefabPath = FileUtil.GetProjectRelativePath(newGameFolder + "/Prefab");
-            GameObject gameManagerVariant = MakePrefabVariant(gameManagerGameObject, prefabPath + "/GameManager.prefab", fileSystemGameName);
-            MakePrefabVariant(umaGameObject, prefabPath + "/UMA_DCS.prefab", fileSystemGameName);
-
-            // Set the properties of the GameManager for this game
-            SystemConfigurationManager systemConfigurationManager = gameManagerVariant.GetComponent<SystemConfigurationManager>();
-            systemConfigurationManager.GameName = gameName;
-            systemConfigurationManager.GameVersion = gameVersion;
-            systemConfigurationManager.InitializationScene = fileSystemGameName;
-            systemConfigurationManager.MainMenuScene = "MainMenu";
-            systemConfigurationManager.DefaultStartingZone = fileSystemFirstSceneName;
-
-            EditorUtility.DisplayProgressBar("New Game Wizard", "Copying resources...", 0.8f);
-            // Create a Resources folder and point the game manager to it
-            if (systemConfigurationManager.LoadResourcesFolders == null) {
-                systemConfigurationManager.LoadResourcesFolders = new List<string>();
-            }
-            string newResourcesFolderName = fileSystemGameName;
-            systemConfigurationManager.LoadResourcesFolders.Add(newResourcesFolderName);
+            MakeGameManagerPrefabVariant(gameManagerGameObject, prefabPath + "/GameManager.prefab");
+            MakeUMAPrefabVariant(umaGameObject, prefabPath + "/UMA_DCS.prefab", fileSystemGameName);
 
             /*
             // Copy over all folders
@@ -181,6 +165,7 @@ namespace AnyRPG {
             EditorUtility.DisplayProgressBar("New Game Wizard", "Saving scene...", 0.9f);
             // Save changes to the scene
             EditorSceneManager.SaveScene(newScene);
+
             EditorUtility.ClearProgressBar();
             EditorUtility.DisplayDialog("New Game Wizard", "New Game Wizard Complete! The game loading scene can be found at " + newGameLoadScenePath, "OK");
 
@@ -232,19 +217,58 @@ namespace AnyRPG {
             EditorUtility.DisplayDialog("Error", message, "OK");
         }
 
-        private GameObject MakePrefabVariant(GameObject goToMakeVariantOf, string newPath, string gameName) {
+        private void MakeGameManagerPrefabVariant(GameObject goToMakeVariantOf, string newPath) {
 
             // instantiate original
             GameObject instantiatedGO = (GameObject)PrefabUtility.InstantiatePrefab(goToMakeVariantOf);
+            instantiatedGO.name = fileSystemGameName + instantiatedGO.name;
+
+            // Set the properties of the GameManager for this game
+            EditorUtility.DisplayProgressBar("New Game Wizard", "Configuration Game Settings...", 0.75f);
+            SystemConfigurationManager systemConfigurationManager = instantiatedGO.GetComponent<SystemConfigurationManager>();
+            systemConfigurationManager.GameName = gameName;
+            systemConfigurationManager.GameVersion = gameVersion;
+            systemConfigurationManager.InitializationScene = fileSystemGameName;
+            systemConfigurationManager.MainMenuScene = "MainMenu";
+            systemConfigurationManager.DefaultStartingZone = fileSystemFirstSceneName;
+
+            EditorUtility.DisplayProgressBar("New Game Wizard", "Copying resources...", 0.8f);
+            // Create a Resources folder and point the game manager to it
+            if (systemConfigurationManager.LoadResourcesFolders == null) {
+                systemConfigurationManager.LoadResourcesFolders = new List<string>();
+            }
+
+            string newResourcesFolderName = fileSystemGameName;
+            systemConfigurationManager.LoadResourcesFolders.Add(newResourcesFolderName);
 
             // make variant on disk
             GameObject variant = PrefabUtility.SaveAsPrefabAsset(instantiatedGO, newPath);
 
+            // remove original from scene
+            GameObject.DestroyImmediate(instantiatedGO);
+
             // instantiate new variant in scene
-            Object sceneVariant = PrefabUtility.InstantiatePrefab(variant);
+            //PrefabUtility.InstantiatePrefab(variant);
+            GameObject sceneVariant = (GameObject)PrefabUtility.InstantiatePrefab(variant);
+            sceneVariant.name = goToMakeVariantOf.name;
+        }
+
+        private GameObject MakeUMAPrefabVariant(GameObject goToMakeVariantOf, string newPath, string gameName) {
+
+            // instantiate original
+            GameObject instantiatedGO = (GameObject)PrefabUtility.InstantiatePrefab(goToMakeVariantOf);
+            instantiatedGO.name = gameName + instantiatedGO.name;
+            
+            // make variant on disk
+            GameObject variant = PrefabUtility.SaveAsPrefabAsset(instantiatedGO, newPath);
 
             // remove original from scene
             GameObject.DestroyImmediate(instantiatedGO);
+
+            // instantiate new variant in scene
+            //PrefabUtility.InstantiatePrefab(variant);
+            GameObject sceneVariant = (GameObject)PrefabUtility.InstantiatePrefab(variant);
+            sceneVariant.name = goToMakeVariantOf.name;
 
             return variant;
         }
