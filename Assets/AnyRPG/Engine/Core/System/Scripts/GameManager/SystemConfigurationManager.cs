@@ -556,7 +556,14 @@ namespace AnyRPG {
         public string DefaultPlayerName { get => defaultPlayerName; set => defaultPlayerName = value; }
         public string DefaultPlayerUnitProfileName { get => defaultPlayerUnitProfileName; set => defaultPlayerUnitProfileName = value; }
         public UnitProfile DefaultPlayerUnitProfile { get => defaultPlayerUnitProfile; set => defaultPlayerUnitProfile = value; }
-        public string CharacterCreatorUnitProfileName { get => characterCreatorProfileNames[0]; }
+        public string CharacterCreatorUnitProfileName {
+            get {
+                if (characterCreatorProfileNames.Count > 0) {
+                    return characterCreatorProfileNames[0];
+                }
+                return null;
+            }
+        }
         public List<UnitProfile> CharacterCreatorProfiles { get => characterCreatorProfiles; set => characterCreatorProfiles = value; }
         public string DefaultStartingZone { get => defaultStartingZone; set => defaultStartingZone = value; }
         public SceneNode InitializationSceneNode { get => initializationSceneNode; set => initializationSceneNode = value; }
@@ -751,13 +758,16 @@ namespace AnyRPG {
                 }
             }
 
+
             if (initializationScene != null && initializationScene != string.Empty) {
                 SceneNode tmpSceneNode = SystemSceneNodeManager.MyInstance.GetResource(initializationScene);
                 if (tmpSceneNode != null) {
                     initializationSceneNode = tmpSceneNode;
-                } else {
-                    Debug.LogError("LevelManager.SetupScriptableObjects: could not find scene node " + initializationScene + ". Check inspector.");
                 }
+                // it shouldn't be required to have this scene node
+                /* else {
+                    Debug.LogError("LevelManager.SetupScriptableObjects: could not find scene node " + initializationScene + ". Check inspector.");
+                }*/
             }
 
             if (mainMenuScene != null && mainMenuScene != string.Empty) {

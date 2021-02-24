@@ -476,7 +476,7 @@ namespace AnyRPG {
 
         public void DespawnPlayerConnection() {
             if (playerConnectionObject == null) {
-                Debug.Log("PlayerManager.SpawnPlayerConnection(): The Player Connection is null.  exiting.");
+                //Debug.Log("PlayerManager.SpawnPlayerConnection(): The Player Connection is null.  exiting.");
                 return;
             }
             UnsubscribeFromPlayerEvents();

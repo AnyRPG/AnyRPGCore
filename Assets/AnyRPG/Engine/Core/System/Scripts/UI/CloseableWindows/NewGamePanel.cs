@@ -198,10 +198,14 @@ namespace AnyRPG {
             characterPreviewPanel.CapabilityConsumer = this;
             characterPreviewPanel.ReceiveOpenWindowNotification();
 
+            // attempt to open the UMA window first
             if (SystemConfigurationManager.MyInstance.NewGameUMAAppearance == true) {
                 umaCharacterPanel.ReceiveOpenWindowNotification();
             }
-            if (SystemConfigurationManager.MyInstance.NewGameUMAAppearance == false) {
+
+            // if the UMA window is not in use, or there was no UMA unit available, try the mecanim window
+            if (SystemConfigurationManager.MyInstance.NewGameUMAAppearance == false
+                || (SystemConfigurationManager.MyInstance.NewGameUMAAppearance == true && CharacterCreatorManager.MyInstance.PreviewUnitController == null)) {
                 characterPanel.ReceiveOpenWindowNotification();
             }
 

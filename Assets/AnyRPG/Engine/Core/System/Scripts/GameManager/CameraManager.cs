@@ -130,9 +130,8 @@ namespace AnyRPG {
                 // can't get camera settings, so just return
                 return;
             }
-            SceneNode activeScene = LevelManager.MyInstance.GetActiveSceneNode();
-            if (activeScene == SystemConfigurationManager.MyInstance?.MainMenuSceneNode
-                || activeScene == SystemConfigurationManager.MyInstance?.InitializationSceneNode
+            if (LevelManager.MyInstance.IsMainMenu()
+                || LevelManager.MyInstance.IsInitializationScene()
                 || SystemConfigurationManager.MyInstance.UseThirdPartyCameraControl == false) {
                 MainCameraGameObject.SetActive(true);
                 return;

@@ -64,15 +64,10 @@ namespace AnyRPG {
             ClearOptionButtons();
 
             if ((NewGamePanel.MyInstance.Faction != null && NewGamePanel.MyInstance.Faction.HideDefaultProfiles == false)
-                || SystemConfigurationManager.MyInstance.AlwaysShowDefaultProfiles == true) {
+                || SystemConfigurationManager.MyInstance.AlwaysShowDefaultProfiles == true
+                || NewGamePanel.MyInstance.Faction == null) {
                 //Debug.Log("NewGameMecanimCharacterPanelController.ShowOptionButtonsCommon(): showing default profiles");
-                foreach (UnitProfile unitProfile in SystemConfigurationManager.MyInstance.CharacterCreatorProfiles) {
-                    //Debug.Log("NewGameMecanimCharacterPanelController.ShowOptionButtonsCommon(): found valid unit profile: " + unitProfile.DisplayName);
-                    GameObject go = Instantiate(buttonPrefab, buttonArea.transform);
-                    NewGameUnitButton optionButton = go.GetComponent<NewGameUnitButton>();
-                    optionButton.AddUnitProfile(unitProfile);
-                    optionButtons.Add(optionButton);
-                }
+                AddDefaultProfiles();
             }
             if (NewGamePanel.MyInstance.Faction != null) {
                 foreach (UnitProfile unitProfile in NewGamePanel.MyInstance.Faction.CharacterCreatorProfiles) {
@@ -85,6 +80,22 @@ namespace AnyRPG {
             }
             if (optionButtons.Count > 0) {
                 optionButtons[0].Select();
+            }
+        }
+
+        private void AddDefaultProfiles() {
+            if (SystemConfigurationManager.MyInstance.DefaultPlayerUnitProfile != null) {
+                GameObject go = Instantiate(buttonPrefab, buttonArea.transform);
+                NewGameUnitButton optionButton = go.GetComponent<NewGameUnitButton>();
+                optionButton.AddUnitProfile(SystemConfigurationManager.MyInstance.DefaultPlayerUnitProfile);
+                optionButtons.Add(optionButton);
+            }
+            foreach (UnitProfile unitProfile in SystemConfigurationManager.MyInstance.CharacterCreatorProfiles) {
+                //Debug.Log("NewGameMecanimCharacterPanelController.ShowOptionButtonsCommon(): found valid unit profile: " + unitProfile.DisplayName);
+                GameObject go = Instantiate(buttonPrefab, buttonArea.transform);
+                NewGameUnitButton optionButton = go.GetComponent<NewGameUnitButton>();
+                optionButton.AddUnitProfile(unitProfile);
+                optionButtons.Add(optionButton);
             }
         }
 

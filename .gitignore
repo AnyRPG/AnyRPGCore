@@ -49,5 +49,8 @@ Assets/UMA*
 Assets/UnusedExternalContent*
 AssetBundles/
 
+# AnyRPG User Created Game Content
+Assets/Games*
+
 #Visual Studio
 .leu

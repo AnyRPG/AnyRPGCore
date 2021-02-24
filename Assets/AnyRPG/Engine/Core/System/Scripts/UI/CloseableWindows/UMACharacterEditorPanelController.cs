@@ -51,9 +51,7 @@ namespace AnyRPG {
             canvasGroup.blocksRaycasts = true;
             canvasGroup.interactable = true;
 
-            if (CharacterCreatorManager.MyInstance.PreviewUnitController.ModelReady == true) {
-                SetupOptions();
-            }
+            SetupOptions();
         }
 
         public void SetupOptions() {
@@ -62,13 +60,15 @@ namespace AnyRPG {
             mainButtonsArea.SetActive(false);
             mainNoOptionsArea.SetActive(false);
             // there are no options to show if this is not an UMA
-            if (CharacterCreatorManager.MyInstance.PreviewUnitController.DynamicCharacterAvatar == null) {
+            if (CharacterCreatorManager.MyInstance.PreviewUnitController?.DynamicCharacterAvatar == null) {
                 mainNoOptionsArea.SetActive(true);
                 return;
             }
-            mainButtonsArea.SetActive(true);
-            OpenAppearanceOptionsArea();
-            InitializeSexButtons();
+            if (CharacterCreatorManager.MyInstance?.PreviewUnitController?.ModelReady == true) {
+                mainButtonsArea.SetActive(true);
+                OpenAppearanceOptionsArea();
+                InitializeSexButtons();
+            }
         }
 
         public void HandleTargetReady() {

@@ -206,13 +206,8 @@ namespace AnyRPG {
             if (activeSceneNode != null) {
                 activeSceneNode.Visit();
             }
-            if (activeSceneName == SystemConfigurationManager.MyInstance.InitializationSceneNode?.SceneFile) {
-                //Debug.Log("Levelmanager.OnLoadLevel(): Loading Main Menu");
-                if (SystemConfigurationManager.MyInstance.MainMenuSceneNode != null) {
-                    LoadLevel(SystemConfigurationManager.MyInstance.MainMenuSceneNode.DisplayName);
-                } else {
-                    LoadLevel(SystemResourceManager.prepareStringForMatch(SystemConfigurationManager.MyInstance.MainMenuScene));
-                }
+            if (IsInitializationScene()) {
+                LoadMainMenu();
                 return;
             }
 
@@ -384,7 +379,11 @@ namespace AnyRPG {
 
         public void LoadMainMenu() {
             SystemEventManager.MyInstance.NotifyOnExitGame();
-            LoadLevel(SystemConfigurationManager.MyInstance?.MainMenuSceneNode?.DisplayName);
+            if (SystemConfigurationManager.MyInstance.MainMenuSceneNode != null) {
+                LoadLevel(SystemConfigurationManager.MyInstance.MainMenuSceneNode.DisplayName);
+            } else {
+                LoadLevel(SystemResourceManager.prepareStringForMatch(SystemConfigurationManager.MyInstance.MainMenuScene));
+            }
         }
 
         public void LoadFirstScene() {

@@ -19,6 +19,8 @@ namespace AnyRPG {
         // track whether targetreadycallback has been activated or not
         private bool characterReady = false;
 
+        private bool windowOpened = false;
+
         // need a reference to the capabilityConsumer calling window to get Unit Profile
         private ICapabilityConsumer capabilityConsumer = null;
 
@@ -37,14 +39,14 @@ namespace AnyRPG {
 
         public override void ReceiveOpenWindowNotification() {
             //Debug.Log("CharacterPreviewPanelController.ReceiveOpenWindowNotification()");
-
+            windowOpened = true;
             characterReady = false;
             SetPreviewTarget();
         }
 
         public void ReloadUnit() {
             //Debug.Log("CharacterPreviewPanelController.ReloadUnit()");
-            if (characterReady == false) {
+            if (windowOpened == false) {
                 // the window has not been opened (initialized) yet, so don't try to spawn any unit
                 return;
             }
@@ -102,13 +104,13 @@ namespace AnyRPG {
         public void RebuildUMA() {
             //Debug.Log("CharacterCreatorPanel.RebuildUMA()");
             //Debug.Log("CharacterPreviewPanelController.RebuildUMA(): BuildCharacter(): buildenabled: " + umaAvatar.BuildCharacterEnabled + "; frame: " + Time.frameCount);
-            if (CharacterCreatorManager.MyInstance.PreviewUnitController.DynamicCharacterAvatar != null) {
+            if (CharacterCreatorManager.MyInstance.PreviewUnitController?.DynamicCharacterAvatar != null) {
                 CharacterCreatorManager.MyInstance.PreviewUnitController.DynamicCharacterAvatar.BuildCharacter();
             }
         }
 
         public string GetCurrentRecipe() {
-            if (CharacterCreatorManager.MyInstance.PreviewUnitController.DynamicCharacterAvatar == null) {
+            if (CharacterCreatorManager.MyInstance.PreviewUnitController?.DynamicCharacterAvatar == null) {
                 return string.Empty;
             }
             return CharacterCreatorManager.MyInstance.PreviewUnitController.DynamicCharacterAvatar.GetCurrentRecipe();
