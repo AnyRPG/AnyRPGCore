@@ -120,6 +120,10 @@ namespace AnyRPG {
             UpdateCameraPosition();
             CameraManager.MyInstance.MainMapCamera.Render();
         }
+        
+        public Bounds GetSceneBounds() {
+            return sceneBounds;
+        }
 
         private void SetSceneBounds() {
             //Debug.Log("MainMapController.SetSceneBounds()");
