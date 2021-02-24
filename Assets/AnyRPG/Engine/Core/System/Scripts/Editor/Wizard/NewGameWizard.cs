@@ -139,7 +139,9 @@ namespace AnyRPG {
 
             // Create a variant of the GameManager & UMA prefabs
             EditorUtility.DisplayProgressBar("New Game Wizard", "Making prefab variants...", 0.7f);
-            string prefabPath = FileUtil.GetProjectRelativePath(newGameFolder + "/Prefab");
+            string prefabFolder = newGameFolder + "/Prefab";
+            string prefabPath = FileUtil.GetProjectRelativePath(prefabFolder);
+            CreateFolderIfNotExists(prefabFolder);
             MakeGameManagerPrefabVariant(gameManagerGameObject, prefabPath + "/GameManager.prefab");
             MakeUMAPrefabVariant(umaGameObject, prefabPath + "/UMA_DCS.prefab", fileSystemGameName);
 
