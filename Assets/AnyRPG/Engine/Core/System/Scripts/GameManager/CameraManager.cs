@@ -52,13 +52,9 @@ namespace AnyRPG {
         [SerializeField]
         private Camera petPreviewCamera = null;
 
-        //[SerializeField]
         private GameObject thirdPartyCameraGameObject = null;
 
-        //[SerializeField]
         private Camera thirdPartyCamera = null;
-
-
 
         private AnyRPGCameraController mainCameraController;
 
@@ -111,6 +107,7 @@ namespace AnyRPG {
             DisablePreviewCameras();
             DisableThirdPartyCamera();
             DisableFocusCamera();
+            DisableMiniMapCamera();
         }
 
         private void Start() {
@@ -213,6 +210,12 @@ namespace AnyRPG {
 
         private void DisableFocusCamera() {
             focusPortraitCamera.enabled = false;
+        }
+
+        private void DisableMiniMapCamera() {
+            if (SystemConfigurationManager.MyInstance.RealTimeMiniMap == false) {
+                miniMapCamera.gameObject.SetActive(false);
+            }
         }
 
         private void CreateEventSubscriptions() {

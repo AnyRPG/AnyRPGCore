@@ -319,6 +319,12 @@ namespace AnyRPG {
 
         private AudioProfile vendorAudioProfile = null;
 
+        [Header("Performance")]
+
+        [Tooltip("Using a minimap that renders using a real-time camera instead of a pre-rendered texture will result in reduced frame rates")]
+        [SerializeField]
+        private bool realTimeMiniMap = false;
+
         [Header("UI")]
 
         [SerializeField]
@@ -588,6 +594,7 @@ namespace AnyRPG {
         public string MainMenuScene { get => mainMenuScene; set => mainMenuScene = value; }
         public string InitializationScene { get => initializationScene; set => initializationScene = value; }
         public bool UseFirstCreatorProfile { get => useFirstCreatorProfile; set => useFirstCreatorProfile = value; }
+        public bool RealTimeMiniMap { get => realTimeMiniMap; set => realTimeMiniMap = value; }
 
         public CapabilityProps GetFilteredCapabilities(ICapabilityConsumer capabilityConsumer, bool returnAll = true) {
             return capabilities;
