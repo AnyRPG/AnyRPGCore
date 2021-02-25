@@ -61,7 +61,7 @@ namespace AnyRPG {
 
         private Renderer[] renderers;
         private Bounds sceneBounds;
-        private Vector3[] worldCorners = new Vector3[4];
+        //private Vector3[] worldCorners = new Vector3[4];
 
         protected bool eventSubscriptionsInitialized = false;
 

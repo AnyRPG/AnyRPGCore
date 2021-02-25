@@ -34,7 +34,7 @@ namespace AnyRPG {
         public bool addFirstSceneToBuild = true;
         public string umaRoot = "Assets/UMA/";
 
-        [MenuItem("Tools/AnyRPG/New Game Wizard")]
+        [MenuItem("Tools/AnyRPG/Wizard/New Game Wizard")]
         static void CreateWizard() {
             ScriptableWizard.DisplayWizard<NewGameWizard>("New Game Wizard", "Create");
         }
