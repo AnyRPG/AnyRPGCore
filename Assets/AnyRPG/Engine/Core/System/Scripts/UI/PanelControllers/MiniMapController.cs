@@ -24,8 +24,8 @@ namespace AnyRPG {
 
         #endregion
 
-        public const string minimapTextureFolder = "Assets/Minimap/Textures";
-
+        private const string minimapTextureFolderBase = "Assets/Games/";
+        private string minimapTextureFolder = string.Empty;
 
         // objects in the player stats window
 
@@ -75,6 +75,7 @@ namespace AnyRPG {
 
         public override void Awake() {
             base.Awake();
+            minimapTextureFolder = minimapTextureFolderBase + SystemConfigurationManager.MyInstance.GameName.Replace(" ", "") + "/Images/MiniMap/";
             //Debug.Log(gameObject.name + ": MiniMapController.Awake()");
             //instantiate singleton
             MiniMapController tempcontroller = MyInstance;
