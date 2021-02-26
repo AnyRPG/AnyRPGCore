@@ -22288,16 +22288,6 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 265839231101156335, guid: 3da7d818e0f8efd44afe89bd0290cc18,
         type: 3}
-      propertyPath: m_SizeDelta.x
-      value: 150
-      objectReference: {fileID: 0}
-    - target: {fileID: 265839231101156335, guid: 3da7d818e0f8efd44afe89bd0290cc18,
-        type: 3}
-      propertyPath: m_SizeDelta.y
-      value: 170
-      objectReference: {fileID: 0}
-    - target: {fileID: 265839231101156335, guid: 3da7d818e0f8efd44afe89bd0290cc18,
-        type: 3}
       propertyPath: m_LocalScale.x
       value: 1
       objectReference: {fileID: 0}
@@ -22371,26 +22361,6 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 2080649409569813321, guid: 3da7d818e0f8efd44afe89bd0290cc18,
-        type: 3}
-      propertyPath: m_textAlignment
-      value: 65535
-      objectReference: {fileID: 0}
-    - target: {fileID: 2080649409569813321, guid: 3da7d818e0f8efd44afe89bd0290cc18,
-        type: 3}
-      propertyPath: m_TextStyleHashCode
-      value: -1183493901
-      objectReference: {fileID: 0}
-    - target: {fileID: 2080649409569813321, guid: 3da7d818e0f8efd44afe89bd0290cc18,
-        type: 3}
-      propertyPath: m_VerticalAlignment
-      value: 512
-      objectReference: {fileID: 0}
-    - target: {fileID: 2080649409569813321, guid: 3da7d818e0f8efd44afe89bd0290cc18,
-        type: 3}
-      propertyPath: m_HorizontalAlignment
-      value: 2
-      objectReference: {fileID: 0}
     - target: {fileID: 2373370134500859150, guid: 3da7d818e0f8efd44afe89bd0290cc18,
         type: 3}
       propertyPath: m_Name
@@ -22406,21 +22376,6 @@ PrefabInstance:
       propertyPath: cameraTransform
       value: 
       objectReference: {fileID: 8037148449663331025}
-    - target: {fileID: 5132089869992324418, guid: 3da7d818e0f8efd44afe89bd0290cc18,
-        type: 3}
-      propertyPath: m_textAlignment
-      value: 65535
-      objectReference: {fileID: 0}
-    - target: {fileID: 5132089869992324418, guid: 3da7d818e0f8efd44afe89bd0290cc18,
-        type: 3}
-      propertyPath: m_TextStyleHashCode
-      value: -1183493901
-      objectReference: {fileID: 0}
-    - target: {fileID: 5132089869992324418, guid: 3da7d818e0f8efd44afe89bd0290cc18,
-        type: 3}
-      propertyPath: m_VerticalAlignment
-      value: 512
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 3da7d818e0f8efd44afe89bd0290cc18, type: 3}
 --- !u!114 &2786633768438977612 stripped

@@ -120,6 +120,7 @@ namespace AnyRPG {
         // attached components
         protected Collider myCollider;
         protected GameObject miniMapIndicator = null;
+        protected GameObject mainMapIndicator = null;
 
         // created components
         protected CharacterUnit characterUnit = null;
@@ -441,6 +442,9 @@ namespace AnyRPG {
                 if (interactables.Count > 0) {
                     //Debug.Log(gameObject.name + ".Interactable.InstantiateMiniMapIndicator(): interactables.length > 0");
                     miniMapIndicator = MiniMapController.MyInstance.AddIndicator(this);
+                    if (CombatOnly) {
+                        mainMapIndicator = MainMapController.MyInstance.AddIndicator(this);
+                    }
                     miniMapIndicatorReady = true;
                     return true;
                 }
@@ -452,16 +456,25 @@ namespace AnyRPG {
             // nothing here for now - meant to be overwritten by unit controllers
         }
 
+        public virtual void UpdateMainMapIndicator() {
+            // nothing here for now - meant to be overwritten by unit controllers
+        }
+
         public void CleanupMiniMapIndicator() {
             //Debug.Log(gameObject.name + ".Interactable.CleanupMiniMapIndicator()");
             if (miniMapIndicator != null) {
-                Debug.Log(gameObject.name + ".Interactable.CleanupMiniMapIndicator(): " + miniMapIndicator.name);
+                //Debug.Log(gameObject.name + ".Interactable.CleanupMiniMapIndicator(): " + miniMapIndicator.name);
                 MiniMapController.MyInstance.RemoveIndicator(this);
 
                 // keeping this set to true so any other update can't respawn it
                 // if there is a situation where we re-enable interactables, then we should set it to false in OnEnable instead
                 // miniMapIndicatorReady = false;
             }
+            if (mainMapIndicator != null) {
+                //Debug.Log(gameObject.name + ".Interactable.CleanupMiniMapIndicator(): " + miniMapIndicator.name);
+                MainMapController.MyInstance.RemoveIndicator(this);
+            }
+
         }
 
         /*

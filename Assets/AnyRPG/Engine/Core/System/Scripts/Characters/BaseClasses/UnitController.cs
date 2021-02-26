@@ -1630,6 +1630,19 @@ namespace AnyRPG {
                 //miniMapIndicator.transform.rotation = Quaternion.Euler(0, transform.eulerAngles.y, 0);
                 //miniMapIndicator.transform.rotation = Quaternion.Euler(0, 0, transform.eulerAngles.y * -1f) * Quaternion.LookRotation(SystemConfigurationManager.MyInstance.PlayerMiniMapIconForward);
                 miniMapIndicator.transform.rotation = Quaternion.Euler(0, 0, (transform.eulerAngles.y - SystemConfigurationManager.MyInstance.PlayerMiniMapIconRotation) * -1f);
+                if (mainMapIndicator != null) {
+                    mainMapIndicator.transform.rotation = miniMapIndicator.transform.rotation;
+                }
+            }
+        }
+
+        public override void UpdateMainMapIndicator() {
+            if (unitControllerMode != UnitControllerMode.Player) {
+                return;
+            }
+            base.UpdateMainMapIndicator();
+            if (miniMapIndicatorReady == true && mainMapIndicator != null) {
+                mainMapIndicator.transform.rotation = Quaternion.Euler(0, 0, (transform.eulerAngles.y - SystemConfigurationManager.MyInstance.PlayerMiniMapIconRotation) * -1f);
             }
         }
 

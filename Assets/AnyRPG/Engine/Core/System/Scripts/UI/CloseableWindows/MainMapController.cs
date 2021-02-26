@@ -1,6 +1,7 @@
 using AnyRPG;
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
@@ -23,30 +24,7 @@ namespace AnyRPG {
 
         #endregion
 
-        // objects in the player stats window
-
-        /*
-    [SerializeField]
-    private Transform cameraTransform;
-    */
-
-        //[SerializeField]
-        //private float cameraOffsetYDefault = 25f;
-
-        //[SerializeField]
-        //private float cameraSizeDefault = 500f;
-
-        //[SerializeField]
-        //private float minZoom = 5f;
-
-        //[SerializeField]
-        //private float maxZoom = 25f;
-
-        //[SerializeField]
-        //private float zoomSpeed = 4f;
-
-        //[SerializeField]
-        //private LayoutElement panelLayoutElement = null;
+        [Header("Map")]
 
         [SerializeField]
         private LayoutElement graphicLayoutElement = null;
@@ -54,18 +32,21 @@ namespace AnyRPG {
         [SerializeField]
         private RectTransform mainMapBackground = null;
 
-        //private float cameraOffsetY = 0f;
+        [SerializeField]
+        private GameObject mapGraphic = null;
+
+        [SerializeField]
+        private GameObject mapIndicatorPrefab = null;
+
         private float cameraSize = 0f;
 
-        //private bool initialized = false;
-
-        private Renderer[] renderers;
-        private Bounds sceneBounds;
-        //private Vector3[] worldCorners = new Vector3[4];
+        // the number of pixels per meter of level based on the total map pixels
+        private float levelScaleFactor = 1f;
 
         protected bool eventSubscriptionsInitialized = false;
 
-        //public override event Action<ICloseableWindowContents> OnOpenWindow;
+        private Dictionary<Interactable, MiniMapIndicatorController> mapIndicatorControllers = new Dictionary<Interactable, MiniMapIndicatorController>();
+
 
         public override void Awake() {
             //Debug.Log(gameObject.name + ": MiniMapController.Awake()");
@@ -73,6 +54,63 @@ namespace AnyRPG {
             //instantiate singleton
             MainMapController tempcontroller = MyInstance;
             CameraManager.MyInstance.MainMapCamera.enabled = false;
+
+            SystemEventManager.StartListening("AfterCameraUpdate", HandleAfterCameraUpdate);
+            SystemEventManager.StartListening("OnLevelUnload", HandleLevelUnload);
+        }
+
+        public void HandleAfterCameraUpdate(string eventName, EventParamProperties eventParamProperties) {
+            UpdateMainMap();
+        }
+
+        void UpdateMainMap() {
+            if (PopupWindowManager.MyInstance.mainMapWindow.IsOpen == false) {
+                return;
+            }
+
+            UpdateIndicatorPositions();
+        }
+
+        private void UpdateIndicatorPositions() {
+            foreach (Interactable interactable in mapIndicatorControllers.Keys) {
+                if (mapIndicatorControllers[interactable].gameObject.activeSelf == true) {
+                    mapIndicatorControllers[interactable].transform.localPosition = new Vector3((interactable.transform.position.x - LevelManager.MyInstance.SceneBounds.center.x) * levelScaleFactor, (interactable.transform.position.z - LevelManager.MyInstance.SceneBounds.center.z) * levelScaleFactor, 0);
+                    mapIndicatorControllers[interactable].transform.localScale = new Vector3(1f / mapGraphic.transform.localScale.x, 1f / mapGraphic.transform.localScale.y, 1f / mapGraphic.transform.localScale.z);
+                    interactable.UpdateMainMapIndicator();
+                }
+            }
+        }
+
+        public void HandleLevelUnload(string eventName, EventParamProperties eventParamProperties) {
+            List<Interactable> removeList = new List<Interactable>();
+            removeList.AddRange(mapIndicatorControllers.Keys);
+            foreach (Interactable interactable in removeList) {
+                RemoveIndicator(interactable);
+            }
+        }
+
+        public GameObject AddIndicator(Interactable interactable) {
+            //Debug.Log("MinimapController.AddIndicator(" + interactable.gameObject.name + ")");
+            if (mapIndicatorControllers.ContainsKey(interactable) == false) {
+                GameObject miniMapIndicator = Instantiate(mapIndicatorPrefab, mapGraphic.transform);
+                MiniMapIndicatorController mapIndicatorController = miniMapIndicator.GetComponent<MiniMapIndicatorController>();
+                mapIndicatorControllers.Add(interactable, mapIndicatorController);
+                mapIndicatorController.SetInteractable(interactable);
+                /*
+                if (miniMapEnabled == false) {
+                    miniMapIndicatorController.gameObject.SetActive(false);
+                }
+                */
+            }
+
+            return mapIndicatorControllers[interactable].gameObject;
+        }
+
+        public void RemoveIndicator(Interactable interactable) {
+            if (mapIndicatorControllers.ContainsKey(interactable)) {
+                Destroy(mapIndicatorControllers[interactable].gameObject);
+                mapIndicatorControllers.Remove(interactable);
+            }
         }
 
         protected void Start() {
@@ -115,41 +153,27 @@ namespace AnyRPG {
 
         public void InitializeMap() {
             //Debug.Log(gameObject.name + ": MainMapController.InitializeMap()");
+            // scale factor gives the number of pixels per meter for the image
             UpdateCameraSize();
             UpdateCameraPosition();
             CameraManager.MyInstance.MainMapCamera.Render();
-        }
-        
-        void OnDrawGizmosSelected() {
-            // A sphere that fully encloses the bounding box.
-            Vector3 center = sceneBounds.center;
-            float radius = sceneBounds.extents.magnitude;
+            //levelScaleFactor = mapGraphicRawImage.texture.width / LevelManager.MyInstance.SceneBounds.size.x;
+            //levelScaleFactor = graphicLayoutElement.preferredWidth / LevelManager.MyInstance.SceneBounds.size.x;
 
-            Gizmos.color = Color.white;
-            Gizmos.DrawWireSphere(center, radius);
         }
-
-        /*
-        void Update() {
-            if (!initialized) {
-                //Debug.Log("MiniMapController.Update(): not initialized yet.  Exiting!");
-                return;
-            }
-        }
-        */
 
         private void UpdateCameraSize() {
             //Debug.Log("MainMapController.UpdateCameraSize()");
             //float newCameraSize = cameraSizeDefault;
-            cameraSize = Mathf.Max(sceneBounds.extents.x, sceneBounds.extents.z);
+            cameraSize = Mathf.Max(LevelManager.MyInstance.SceneBounds.extents.x, LevelManager.MyInstance.SceneBounds.extents.z);
             CameraManager.MyInstance.MainMapCamera.orthographicSize = cameraSize;
         }
 
         private void UpdateCameraPosition() {
             //Debug.Log("MainMapController.UpdateCameraPosition()");
-            Vector3 wantedPosition = new Vector3(sceneBounds.center.x, sceneBounds.center.y + sceneBounds.extents.y, sceneBounds.center.z);
+            Vector3 wantedPosition = new Vector3(LevelManager.MyInstance.SceneBounds.center.x, LevelManager.MyInstance.SceneBounds.center.y + LevelManager.MyInstance.SceneBounds.extents.y, LevelManager.MyInstance.SceneBounds.center.z);
             //Debug.Log("MainMapController.UpdateCameraPosition() wantedposition: " + wantedPosition);
-            Vector3 wantedLookPosition = new Vector3(sceneBounds.center.x, sceneBounds.center.y, sceneBounds.center.z);
+            Vector3 wantedLookPosition = new Vector3(LevelManager.MyInstance.SceneBounds.center.x, LevelManager.MyInstance.SceneBounds.center.y, LevelManager.MyInstance.SceneBounds.center.z);
             //Debug.Log("MainMapController.UpdateCameraPosition() wantedLookPosition: " + wantedLookPosition);
             CameraManager.MyInstance.MainMapCamera.transform.position = wantedPosition;
             CameraManager.MyInstance.MainMapCamera.transform.LookAt(wantedLookPosition);
@@ -182,15 +206,16 @@ namespace AnyRPG {
             LayoutRebuilder.ForceRebuildLayoutImmediate(rectTransform);
             float graphicScale = Mathf.Min(mainMapBackground.rect.width, mainMapBackground.rect.height);
             //Debug.Log("MainMapController.OnOpenWindow(); graphicScale: " + graphicScale);
-            float extentsRatio = sceneBounds.extents.x / sceneBounds.extents.z;
+            float extentsRatio = LevelManager.MyInstance.SceneBounds.extents.x / LevelManager.MyInstance.SceneBounds.extents.z;
             //Debug.Log("MainMapController.OnOpenWindow(); sceneBounds.extents.x: " + sceneBounds.extents.x + "; extentsRatio: " + extentsRatio + ";sceneBounds.extents.z: " + sceneBounds.extents.z);
             //Debug.Log("MainMapController.OnOpenWindow(); mainMapBackground.rect.width: " + mainMapBackground.rect.width);
             //Debug.Log("MainMapController.OnOpenWindow(); mainMapBackground.rect.height: " + mainMapBackground.rect.height);
 
-            graphicLayoutElement.preferredWidth = (graphicScale / (sceneBounds.extents.x * 2)) * (sceneBounds.extents.x * 2) * extentsRatio;
-            graphicLayoutElement.preferredHeight = (graphicScale / (sceneBounds.extents.z * 2)) * (sceneBounds.extents.z * 2);
+            graphicLayoutElement.preferredWidth = (graphicScale / (LevelManager.MyInstance.SceneBounds.extents.x * 2)) * (LevelManager.MyInstance.SceneBounds.extents.x * 2) * extentsRatio;
+            graphicLayoutElement.preferredHeight = (graphicScale / (LevelManager.MyInstance.SceneBounds.extents.z * 2)) * (LevelManager.MyInstance.SceneBounds.extents.z * 2);
             //Debug.Log("MainMapController.OnOpenWindow(); graphicLayoutElement.preferredWidth: " + graphicLayoutElement.preferredWidth);
             //Debug.Log("MainMapController.OnOpenWindow(); graphicLayoutElement.preferredHeight: " + graphicLayoutElement.preferredHeight);
+            levelScaleFactor = graphicLayoutElement.preferredWidth / LevelManager.MyInstance.SceneBounds.size.x;
         }
     }
 
