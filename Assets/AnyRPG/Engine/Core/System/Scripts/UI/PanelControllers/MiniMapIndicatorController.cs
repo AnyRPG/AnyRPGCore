@@ -30,8 +30,6 @@ namespace AnyRPG {
 
         private bool setupComplete = false;
 
-        protected bool eventSubscriptionsInitialized = false;
-
         private void Awake() {
             //Debug.Log("MiniMapIndicatorController.Awake()");
             canvas = GetComponent<Canvas>();
@@ -42,43 +40,19 @@ namespace AnyRPG {
             //Debug.Log("MiniMapIndicatorController.Awake(): rectTransform.sizeDelta: " + rectTransform.sizeDelta + "; uiOffset" + uiOffset);
         }
 
-        private void Start() {
-            //Debug.Log("MiniMapIndicatorController.Start()");
-            CreateEventSubscriptions();
-        }
-
-        private void CreateEventSubscriptions() {
-            //Debug.Log("PlayerManager.CreateEventSubscriptions()");
-            if (eventSubscriptionsInitialized) {
-                return;
-            }
-            SystemEventManager.StartListening("OnLevelUnload", HandleLevelUnload);
-            eventSubscriptionsInitialized = true;
-        }
-
         private void CleanupEventSubscriptions() {
             //Debug.Log("MiniMapIndicatorController.CleanupEventSubscriptions()");
-            if (!eventSubscriptionsInitialized) {
-                return;
-            }
-            SystemEventManager.StopListening("OnLevelUnload", HandleLevelUnload);
             foreach (InteractableOptionComponent _interactable in interactable.Interactables) {
                 if (_interactable.HasMiniMapIcon() || _interactable.HasMiniMapText()) {
                     _interactable.MiniMapStatusUpdateHandler -= HandleMiniMapStatusUpdate;
                 }
             }
-            eventSubscriptionsInitialized = false;
         }
 
         public void OnDisable() {
             //Debug.Log("PlayerManager.OnDisable()");
             CleanupEventSubscriptions();
         }
-
-        public void HandleLevelUnload(string eventName, EventParamProperties eventParamProperties) {
-            ProcessLevelUnload();
-        }
-
 
         public void SetupMiniMap() {
             //Debug.Log(transform.parent.gameObject.name + ".MiniMapIndicatorController.SetupMiniMap(): interactable: " + (interactable == null ? "null" : interactable.name));
@@ -124,12 +98,12 @@ namespace AnyRPG {
         }
 
         public void HandleInteractableDestroy() {
-            if (gameObject != null) {
-                Destroy(gameObject, 0);
-            }
+            MiniMapController.MyInstance.RemoveIndicator(interactable);
         }
 
-        private void LateUpdate() {
+        // testing : not in use.  updated directly by minimap controller instead
+        /*
+        public void UpdatePosition() {
             //Debug.Log("MiniMapIndicatorController.LateUpdate(): interactable: " + (interactable == null ? "null" : (interactable.MyName == string.Empty ? interactable.name : interactable.MyName)) );
             if (setupComplete == false) {
                 //Debug.Log("MiniMapIndicatorController.LateUpdate(): namePlateUnit: " + (interactable == null ? "null" : interactable.MyName) + ": setup has not completed yet!");
@@ -141,6 +115,7 @@ namespace AnyRPG {
             //Debug.Log(interactable.gameObject.name + ".MiniMapIndicatorController.LateUpdate(). interactable position: " + interactable.gameObject.transform.position + "; viewportPosition: " + viewportPosition + "; proportionalPosition: " + proportionalPosition);
             contentParent.localPosition = proportionalPosition - uiOffset;
         }
+        */
 
         public void HandleMiniMapStatusUpdate(InteractableOptionComponent _interactable) {
             //Debug.Log(_interactable.Interactable.gameObject.name + ".MiniMapIndicatorController.HandleMiniMapStatusUpdate()");
@@ -158,11 +133,6 @@ namespace AnyRPG {
                 _interactable.SetMiniMapText(miniMapLayers[_interactable].GetComponent<TextMeshProUGUI>());
             }
             //}
-        }
-
-        public void ProcessLevelUnload() {
-            //Debug.Log("MiniMapIndicatorController.HandleLevelUnload(): interactable: " + interactable.MyName);
-            Destroy(gameObject, 0);
         }
 
         private void OnDestroy() {

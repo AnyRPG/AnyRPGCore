@@ -163,7 +163,7 @@ namespace AnyRPG {
 
         public void CleanupEventSubscriptions() {
             SystemEventManager.StopListening("AfterCameraUpdate", HandleAfterCameraUpdate);
-            SystemEventManager.StopListening("OnLevelUnload", HandleAfterCameraUpdate);
+            SystemEventManager.StopListening("OnLevelUnload", HandleLevelUnload);
 
         }
 

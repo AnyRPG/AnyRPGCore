@@ -438,25 +438,12 @@ namespace AnyRPG {
                     //Debug.Log(gameObject.name + ".Interactable.InstantiateMiniMapIndicator(): MiniMapController.MyInstance is null");
                     return false;
                 }
-                if (MiniMapController.MyInstance.MyMiniMapIndicatorPrefab == null) {
-                    //Debug.Log(gameObject.name + ".Interactable.InstantiateMiniMapIndicator(): indicator prefab is null");
-                    return false;
-                }
                 if (interactables.Count > 0) {
                     //Debug.Log(gameObject.name + ".Interactable.InstantiateMiniMapIndicator(): interactables.length > 0");
-                    Vector3 spawnPosition = new Vector3(gameObject.transform.position.x, gameObject.transform.position.y + 9, gameObject.transform.position.z);
-                    //miniMapIndicator = Instantiate(MiniMapController.MyInstance.MyMiniMapIndicatorPrefab, spawnPosition, Quaternion.identity, gameObject.transform);
-                    miniMapIndicator = Instantiate(MiniMapController.MyInstance.MyMiniMapIndicatorPrefab, spawnPosition, Quaternion.identity, UIManager.MyInstance.MiniMapCanvasParent.transform);
-                    miniMapIndicator.GetComponent<MiniMapIndicatorController>().SetInteractable(this);
-                    miniMapIndicator.transform.localScale = new Vector3(0.0390625f, 0.0390625f, 0.0390625f);
-                    miniMapIndicator.transform.Rotate(90f, 0f, 0f);
+                    miniMapIndicator = MiniMapController.MyInstance.AddIndicator(this);
                     miniMapIndicatorReady = true;
                     return true;
-                } else {
-                    //Debug.Log(gameObject.name + ".Interactable.InstantiateMiniMapIndicator(): interactables.length == 0!!!!!");
                 }
-            } else {
-                //Debug.Log("Already Instantiated");
             }
             return false;
         }
@@ -465,7 +452,7 @@ namespace AnyRPG {
             //Debug.Log(gameObject.name + ".Interactable.CleanupMiniMapIndicator()");
             if (miniMapIndicator != null) {
                 Debug.Log(gameObject.name + ".Interactable.CleanupMiniMapIndicator(): " + miniMapIndicator.name);
-                Destroy(miniMapIndicator);
+                MiniMapController.MyInstance.RemoveIndicator(this);
 
                 // keeping this set to true so any other update can't respawn it
                 // if there is a situation where we re-enable interactables, then we should set it to false in OnEnable instead

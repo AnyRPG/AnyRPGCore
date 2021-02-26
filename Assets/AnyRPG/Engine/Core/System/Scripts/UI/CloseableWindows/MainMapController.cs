@@ -115,32 +115,11 @@ namespace AnyRPG {
 
         public void InitializeMap() {
             //Debug.Log(gameObject.name + ": MainMapController.InitializeMap()");
-            SetSceneBounds();
             UpdateCameraSize();
             UpdateCameraPosition();
             CameraManager.MyInstance.MainMapCamera.Render();
         }
         
-        public Bounds GetSceneBounds() {
-            return sceneBounds;
-        }
-
-        private void SetSceneBounds() {
-            //Debug.Log("MainMapController.SetSceneBounds()");
-            renderers = GameObject.FindObjectsOfType<Renderer>();
-            if (renderers.Length == 0) {
-                //Debug.Log("MainMapController.SetSceneBounds(). No Renderers Available!");
-                return; // nothing to see here, go on
-            }
-
-            sceneBounds = renderers[0].bounds;
-            for (int i = 1; i < renderers.Length; i++) {
-                sceneBounds.Encapsulate(renderers[i].bounds);
-                //Debug.Log("MainMapController.SetSceneBounds(). Encapsulating: " + renderers[i].bounds);
-            }
-            //Debug.Log("MainMapController.SetSceneBounds(). New Bounds: " + sceneBounds);
-        }
-
         void OnDrawGizmosSelected() {
             // A sphere that fully encloses the bounding box.
             Vector3 center = sceneBounds.center;

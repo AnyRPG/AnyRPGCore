@@ -319,11 +319,15 @@ namespace AnyRPG {
 
         private AudioProfile vendorAudioProfile = null;
 
-        [Header("Performance")]
+        [Header("MINI MAP")]
 
         [Tooltip("Using a minimap that renders using a real-time camera instead of a pre-rendered texture will result in reduced frame rates")]
         [SerializeField]
         private bool realTimeMiniMap = false;
+
+        [Tooltip("If the real time minimap is disabled, and the minimap texture cannot be found, what type of map display should be used")]
+        [SerializeField]
+        private MiniMapFallBackMode miniMapFallBackMode = MiniMapFallBackMode.None;
 
         [Header("UI")]
 

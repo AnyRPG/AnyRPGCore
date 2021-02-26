@@ -23,40 +23,6 @@ namespace AnyRPG
         [SerializeField]
         public string minimapTextureFolder = "Assets/Minimap/Textures";
 
-        public Bounds GetSceneBounds() {
-            Renderer[] renderers;
-            TerrainCollider[] terrainColliders;
-            Bounds sceneBounds = new Bounds();
-            renderers = GameObject.FindObjectsOfType<Renderer>();
-            terrainColliders = GameObject.FindObjectsOfType<TerrainCollider>();
-
-            Debug.Log("Found " + renderers.Length + " renderers");
-            Debug.Log("Found " + terrainColliders.Length + " terrain colliders");
-
-            // add bounds of renderers in case there are structures higher or lower than terrain bounds
-            if (renderers.Length != 0) {
-                for (int i = 0; i < renderers.Length; i++) {
-                    if (renderers[i].enabled == true) {
-                        sceneBounds.Encapsulate(renderers[i].bounds);
-                    }
-                    //Debug.Log("MainMapController.SetSceneBounds(). Encapsulating: " + renderers[i].bounds);
-                }
-            }
-
-            // add bounds of terrain colliders to get 'main' bounds
-            if (terrainColliders.Length != 0) {
-                for (int i = 0; i < terrainColliders.Length; i++) {
-                    if (terrainColliders[i].enabled == true) {
-                        sceneBounds.Encapsulate(terrainColliders[i].bounds);
-                    }
-                    //Debug.Log("MiniMapGeneratorController.GetSceneBounds(). Encapsulating terrain bounds: " + terrainColliders[i].bounds);
-                }
-            }
-
-            return sceneBounds;
-        }
-
-        
         /*
          * Creates the file(s) necessary to pre-generate a minimap for the _active_ scene.  Files will be saved
          * with a naming convention that indicates the scene that they were saved from.
@@ -73,7 +39,7 @@ namespace AnyRPG
 
             EditorUtility.DisplayProgressBar("Generating Minimap...", "Please wait", 0.5f);
 
-            Bounds sceneBounds = GetSceneBounds();
+            Bounds sceneBounds = LevelManager.GetSceneBounds();
             mapCamera.orthographic = true;
 
             float cameraSize = System.Math.Max(sceneBounds.size.x, sceneBounds.size.z);
