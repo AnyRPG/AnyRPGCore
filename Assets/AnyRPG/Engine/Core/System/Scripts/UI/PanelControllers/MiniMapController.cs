@@ -57,14 +57,14 @@ namespace AnyRPG {
 
         [Tooltip("The smallest number of meters to display on the minimap (full zoomed in)")]
         [SerializeField]
-        private float minZoom = 10f;
+        private float minZoom = 20f;
 
         [Tooltip("The largest number of meters to display on the minimap (full zoomed out)")]
         [SerializeField]
         private float maxZoom = 50f;
 
         [SerializeField]
-        private float zoomSpeed = 4f;
+        private float zoomSpeed = 10f;
 
         [SerializeField]
         private GameObject followGameObject = null;
@@ -78,7 +78,7 @@ namespace AnyRPG {
         //private float zoomMultiplier = 1f;
 
         private bool initialized = false;
-        private bool sceneTextureFound = false;
+        //private bool sceneTextureFound = false;
 
         // keep track of the width in pixels of the map window
         private float windowSize = 150f;
@@ -99,6 +99,8 @@ namespace AnyRPG {
 
         private Dictionary<Interactable, MiniMapIndicatorController> miniMapIndicatorControllers = new Dictionary<Interactable, MiniMapIndicatorController>();
 
+        // track current minimap status and state
+        private bool miniMapEnabled = false;
         private MiniMapSource miniMapSource = MiniMapSource.Disk;
 
         public override void Awake() {
@@ -154,7 +156,7 @@ namespace AnyRPG {
         }
 
         void UpdateMiniMap() {
-            if (initialized == false) {
+            if (initialized == false || miniMapEnabled == false) {
                 //Debug.Log("MiniMapController.Update(): not initialized yet.  Exiting!");
                 return;
             }
@@ -162,9 +164,11 @@ namespace AnyRPG {
                 //Debug.Log("MiniMapController.Update(): followTransform is null.  Exiting!");
                 return;
             }
+            /*
             if (sceneTextureFound == false) {
                 return;
             }
+            */
 
             UpdateCameraSize();
             HandleCameraZoom();
@@ -175,6 +179,8 @@ namespace AnyRPG {
         private void UpdateIndicatorPositions() {
             foreach (Interactable interactable in miniMapIndicatorControllers.Keys) {
                 miniMapIndicatorControllers[interactable].transform.localPosition = new Vector3((interactable.transform.position.x - levelOffset.x) * levelScaleFactor, (interactable.transform.position.z - levelOffset.z) * levelScaleFactor, 0);
+                miniMapIndicatorControllers[interactable].transform.localScale = new Vector3(1f / miniMapGraphic.transform.localScale.x, 1f / miniMapGraphic.transform.localScale.y, 1f / miniMapGraphic.transform.localScale.z);
+                interactable.UpdateMiniMapIndicator();
             }
         }
 
@@ -306,33 +312,36 @@ namespace AnyRPG {
         /// No pre-rendered minimap is found.
         /// </summary>
         void InitRenderedMinimap() {
-            sceneTextureFound = false;
+            //sceneTextureFound = false;
 
             // First, try to find the minimap
+            Texture2D mapTexture = new Texture2D((int)LevelManager.MyInstance.SceneBounds.size.x, (int)LevelManager.MyInstance.SceneBounds.size.z);
             string textureFilePath = minimapTextureFolder + GetScreenshotFilename();
-            if (!System.IO.File.Exists(textureFilePath))
-            {
+            if (System.IO.File.Exists(textureFilePath)) {
+                //sceneTextureFound = true;
+                miniMapEnabled = true;
+                byte[] fileData = System.IO.File.ReadAllBytes(textureFilePath);
+                mapTexture.LoadImage(fileData);
+                // Normalize to the width/height of the image
+            } else {
                 Debug.Log("No minimap texture exists at " + textureFilePath + ".  Please run \"Minimap Wizard\" from the Tools menu under AnyRPG.");
-                return;
+                if (SystemConfigurationManager.MyInstance.MiniMapFallBackMode == MiniMapFallBackMode.None) {
+                    return;
+                }
+                miniMapEnabled = true;
+                //miniMapGraphicRect.sizeDelta = new Vector2(mapTexture.width, mapTexture.height);
+                //return;
             }
-            sceneTextureFound = true;
-            byte[] fileData = System.IO.File.ReadAllBytes(textureFilePath);
-            Texture2D mapTexture = new Texture2D(2, 2);
-            mapTexture.LoadImage(fileData);
-
             miniMapGraphicRawImage.texture = mapTexture;
-            // Normalize to the width/height of the image
             miniMapGraphicRect.sizeDelta = new Vector2(mapTexture.width, mapTexture.height);
 
             GameObject parentObject = miniMapGraphic.transform.parent.gameObject;
-            if (parentObject == null)
-            {
+            if (parentObject == null) {
                 Debug.LogError("Could not find parent object of minimap raw image.  Unable to set rectangle mask on pre-rendered minimap image.");
             }
             windowSize = parentObject.GetComponent<RectTransform>().rect.width;
             RectMask2D rectMask = parentObject.GetComponent<RectMask2D>();
-            if (rectMask == null)
-            {
+            if (rectMask == null) {
                 parentObject.AddComponent<RectMask2D>();
             }
 
@@ -361,5 +370,5 @@ namespace AnyRPG {
     }
 
     public enum MiniMapSource { Disk, Camera };
-    public enum MiniMapFallBackMode { None, Render, RealTime };
+    public enum MiniMapFallBackMode { None, Empty, Render, RealTime };
 }

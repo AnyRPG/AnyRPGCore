@@ -10054,7 +10054,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameName: AnyRPG Engine
-  gameVersion: v0.10.1a
+  gameVersion: v0.10.2a
   loadResourcesFolders: []
   initializationScene: 
   mainMenuScene: 
@@ -10116,6 +10116,10 @@ MonoBehaviour:
   lootSparkleEffectName: 
   vendorAudioProfileName: 
   maxChatTextDistance: 25
+  realTimeMiniMap: 0
+  miniMapFallBackMode: 0
+  playerMiniMapIcon: {fileID: 21300000, guid: 2f39e3921edeb8c4991f2e809481b8d6, type: 3}
+  playerMiniMapIconRotation: 90
   defaultCastTargetCircle: {fileID: 2100000, guid: bc15116564fa55d4cb0a21220ca6e449,
     type: 2}
   highlightCircleColorMap:

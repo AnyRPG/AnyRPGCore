@@ -329,6 +329,14 @@ namespace AnyRPG {
         [SerializeField]
         private MiniMapFallBackMode miniMapFallBackMode = MiniMapFallBackMode.None;
 
+        [Tooltip("The faction icon to show on the load game screen when the player has no faction.")]
+        [SerializeField]
+        private Sprite playerMiniMapIcon = null;
+
+        [Tooltip("If the icon does not face up on the screen, enter the number of clockwise degrees the image is naturally rotated.  This will be subtracted from the player angle at run-time")]
+        [SerializeField]
+        private float playerMiniMapIconRotation = 0f;
+
         [Header("UI")]
 
         [SerializeField]
@@ -599,6 +607,9 @@ namespace AnyRPG {
         public string InitializationScene { get => initializationScene; set => initializationScene = value; }
         public bool UseFirstCreatorProfile { get => useFirstCreatorProfile; set => useFirstCreatorProfile = value; }
         public bool RealTimeMiniMap { get => realTimeMiniMap; set => realTimeMiniMap = value; }
+        public MiniMapFallBackMode MiniMapFallBackMode { get => miniMapFallBackMode; set => miniMapFallBackMode = value; }
+        public Sprite PlayerMiniMapIcon { get => playerMiniMapIcon; set => playerMiniMapIcon = value; }
+        public float PlayerMiniMapIconRotation { get => playerMiniMapIconRotation; set => playerMiniMapIconRotation = value; }
 
         public CapabilityProps GetFilteredCapabilities(ICapabilityConsumer capabilityConsumer, bool returnAll = true) {
             return capabilities;

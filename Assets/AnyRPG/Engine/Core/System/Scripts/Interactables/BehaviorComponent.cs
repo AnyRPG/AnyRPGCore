@@ -110,7 +110,6 @@ namespace AnyRPG {
                 return false;
             }
             text.text = "o";
-            text.fontSize = 50;
             text.color = Color.white;
             return true;
         }

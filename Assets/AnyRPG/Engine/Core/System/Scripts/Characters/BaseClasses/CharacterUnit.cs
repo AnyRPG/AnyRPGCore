@@ -117,10 +117,19 @@ namespace AnyRPG {
         }
 
         public override bool HasMiniMapText() {
-            if (baseCharacter.UnitController.UnitControllerMode == UnitControllerMode.Preview || baseCharacter.UnitController.UnitControllerMode == UnitControllerMode.Mount) {
+            if (baseCharacter.UnitController.UnitControllerMode == UnitControllerMode.Preview
+                || baseCharacter.UnitController.UnitControllerMode == UnitControllerMode.Mount
+                || baseCharacter.UnitController.UnitControllerMode == UnitControllerMode.Player) {
                 return false;
             }
             return true;
+        }
+
+        public override bool HasMiniMapIcon() {
+            if (baseCharacter.UnitController.UnitControllerMode == UnitControllerMode.Player) {
+                return true;
+            }
+            return base.HasMiniMapIcon();
         }
 
         public override bool SetMiniMapText(TextMeshProUGUI text) {
@@ -131,7 +140,6 @@ namespace AnyRPG {
                 return false;
             }
             text.text = "o";
-            text.fontSize = 50;
             if (baseCharacter != null && baseCharacter.Faction != null) {
                 text.color = Faction.GetFactionColor(PlayerManager.MyInstance.MyCharacter, baseCharacter);
             }

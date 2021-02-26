@@ -299,11 +299,11 @@ MonoBehaviour:
   miniMapGraphicRect: {fileID: 2157056075697029872}
   miniMapIndicatorPrefab: {fileID: 7971569521143729688, guid: 35303de981ce2f743b3bc2426219e058,
     type: 3}
-  cameraOffsetYDefault: 10
+  cameraOffsetYDefault: 20
   cameraSizeDefault: 20
-  minZoom: 10
+  minZoom: 20
   maxZoom: 50
-  zoomSpeed: 4
+  zoomSpeed: 10
   followGameObject: {fileID: 0}
 --- !u!223 &5019711724893543674
 Canvas:

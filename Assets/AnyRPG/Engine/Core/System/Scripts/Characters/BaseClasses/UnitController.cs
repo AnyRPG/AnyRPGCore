@@ -1620,11 +1620,26 @@ namespace AnyRPG {
             unitMountManager.DeActivateMountedState();
         }
 
+        public override void UpdateMiniMapIndicator() {
+            if (unitControllerMode != UnitControllerMode.Player) {
+                return;
+            }
+            base.UpdateMiniMapIndicator();
+            if (miniMapIndicatorReady == true && miniMapIndicator != null) {
+                //miniMapIndicator.transform.forward = new Vector3(0f, transform.forward.x, transform.forward.z);
+                //miniMapIndicator.transform.rotation = Quaternion.Euler(0, transform.eulerAngles.y, 0);
+                //miniMapIndicator.transform.rotation = Quaternion.Euler(0, 0, transform.eulerAngles.y * -1f) * Quaternion.LookRotation(SystemConfigurationManager.MyInstance.PlayerMiniMapIconForward);
+                miniMapIndicator.transform.rotation = Quaternion.Euler(0, 0, (transform.eulerAngles.y - SystemConfigurationManager.MyInstance.PlayerMiniMapIconRotation) * -1f);
+            }
+        }
+
         public override void ProcessPlayerUnitSpawn() {
             //Debug.Log(gameObject.name + ".UnitController.ProcessPlayerUnitSpawn()");
 
             // players do not need to react to their own spawn, and previews should never react
-            if (unitControllerMode == UnitControllerMode.Player || unitControllerMode == UnitControllerMode.Preview) {
+            // now players do because they need their minimap to show up
+            //if (unitControllerMode == UnitControllerMode.Player || unitControllerMode == UnitControllerMode.Preview) {
+            if (unitControllerMode == UnitControllerMode.Preview) {
                 return;
             }
 

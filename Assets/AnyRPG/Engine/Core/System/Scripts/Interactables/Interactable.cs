@@ -448,6 +448,10 @@ namespace AnyRPG {
             return false;
         }
 
+        public virtual void UpdateMiniMapIndicator() {
+            // nothing here for now - meant to be overwritten by unit controllers
+        }
+
         public void CleanupMiniMapIndicator() {
             //Debug.Log(gameObject.name + ".Interactable.CleanupMiniMapIndicator()");
             if (miniMapIndicator != null) {
