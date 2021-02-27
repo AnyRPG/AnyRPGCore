@@ -319,6 +319,20 @@ namespace AnyRPG {
 
         private AudioProfile vendorAudioProfile = null;
 
+        [Header("MINI MAP")]
+
+        [Tooltip("If the the minimap texture for a scene cannot be found, what type of map display should be used")]
+        [SerializeField]
+        private MiniMapFallBackMode miniMapFallBackMode = MiniMapFallBackMode.Empty;
+
+        [Tooltip("The faction icon to show on the load game screen when the player has no faction.")]
+        [SerializeField]
+        private Sprite playerMiniMapIcon = null;
+
+        [Tooltip("If the icon does not face up on the screen, enter the number of clockwise degrees the image is naturally rotated.  This will be subtracted from the player angle at run-time")]
+        [SerializeField]
+        private float playerMiniMapIconRotation = 0f;
+
         [Header("UI")]
 
         [SerializeField]
@@ -588,6 +602,9 @@ namespace AnyRPG {
         public string MainMenuScene { get => mainMenuScene; set => mainMenuScene = value; }
         public string InitializationScene { get => initializationScene; set => initializationScene = value; }
         public bool UseFirstCreatorProfile { get => useFirstCreatorProfile; set => useFirstCreatorProfile = value; }
+        public MiniMapFallBackMode MiniMapFallBackMode { get => miniMapFallBackMode; set => miniMapFallBackMode = value; }
+        public Sprite PlayerMiniMapIcon { get => playerMiniMapIcon; set => playerMiniMapIcon = value; }
+        public float PlayerMiniMapIconRotation { get => playerMiniMapIconRotation; set => playerMiniMapIconRotation = value; }
 
         public CapabilityProps GetFilteredCapabilities(ICapabilityConsumer capabilityConsumer, bool returnAll = true) {
             return capabilities;

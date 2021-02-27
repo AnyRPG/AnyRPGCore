@@ -168,7 +168,11 @@ namespace AnyRPG {
         public virtual void SetMiniMapIcon(Image icon) {
             //Debug.Log(gameObject.name + ".InteractableOption.SetMiniMapIcon()");
             if (CanShowMiniMapIcon()) {
-                icon.sprite = interactableOptionProps.NamePlateImage;
+                if (interactable.CombatOnly == true) {
+                    icon.sprite = SystemConfigurationManager.MyInstance.PlayerMiniMapIcon;
+                } else {
+                    icon.sprite = interactableOptionProps.NamePlateImage;
+                }
                 icon.color = Color.white;
             } else {
                 icon.sprite = null;
@@ -180,7 +184,7 @@ namespace AnyRPG {
         public virtual bool CanShowMiniMapIcon() {
             //Debug.Log(gameObject.name + ".InteractableOption.CanShowMiniMapIcon()");
             if (interactable.CombatOnly) {
-                return false;
+                return true;
             }
             return (GetCurrentOptionCount() > 0);
         }

@@ -29,9 +29,6 @@ namespace AnyRPG {
         private GameObject mainCameraGameObject = null;
 
         [SerializeField]
-        private Camera miniMapCamera = null;
-
-        [SerializeField]
         private Camera mainMapCamera = null;
 
         [SerializeField]
@@ -52,13 +49,9 @@ namespace AnyRPG {
         [SerializeField]
         private Camera petPreviewCamera = null;
 
-        //[SerializeField]
         private GameObject thirdPartyCameraGameObject = null;
 
-        //[SerializeField]
         private Camera thirdPartyCamera = null;
-
-
 
         private AnyRPGCameraController mainCameraController;
 
@@ -66,7 +59,6 @@ namespace AnyRPG {
 
         public Camera MainCamera { get => mainCamera; set => mainCamera = value; }
         public GameObject MainCameraGameObject { get => mainCameraGameObject; }
-        public Camera MiniMapCamera { get => miniMapCamera; set => miniMapCamera = value; }
         public Camera MainMapCamera { get => mainMapCamera; set => mainMapCamera = value; }
         public Camera CharacterPortraitCamera { get => characterPortraitCamera; set => characterPortraitCamera = value; }
         public Camera FocusPortraitCamera { get => focusPortraitCamera; set => focusPortraitCamera = value; }

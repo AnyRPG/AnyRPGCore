@@ -362,7 +362,6 @@ namespace AnyRPG {
             }
             text.text = "o";
             text.color = Color.gray;
-            text.fontSize = 50;
             return true;
         }
 

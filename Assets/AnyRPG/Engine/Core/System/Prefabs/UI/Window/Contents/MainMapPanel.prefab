@@ -59,9 +59,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   backGroundImage: {fileID: 0}
-  panelLayoutElement: {fileID: 0}
   graphicLayoutElement: {fileID: 1670371087685149445}
   mainMapBackground: {fileID: 2399952160041757219}
+  mapGraphic: {fileID: 2780258617087811045}
+  mapIndicatorPrefab: {fileID: 7971569521143729688, guid: 35303de981ce2f743b3bc2426219e058,
+    type: 3}
 --- !u!1 &2780258617087811045
 GameObject:
   m_ObjectHideFlags: 0
@@ -180,6 +182,7 @@ GameObject:
   - component: {fileID: 2399952160041757219}
   - component: {fileID: 8893762944104363776}
   - component: {fileID: 1512356644590182804}
+  - component: {fileID: 876011679725063604}
   m_Layer: 5
   m_Name: MainMapBackground
   m_TagString: Untagged
@@ -244,6 +247,20 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!114 &876011679725063604
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3998280941138512178}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3312d7739989d2b4e91e6319e9a96d76, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Padding: {x: 0, y: 0, z: 0, w: 0}
+  m_Softness: {x: 0, y: 0}
 --- !u!1 &5343279677398454361
 GameObject:
   m_ObjectHideFlags: 0

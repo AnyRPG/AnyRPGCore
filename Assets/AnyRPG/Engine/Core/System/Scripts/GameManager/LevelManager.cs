@@ -31,6 +31,7 @@ namespace AnyRPG {
         private Vector3 spawnLocationOverride = Vector3.zero;
         private Vector3 spawnRotationOverride = Vector3.zero;
         private string returnSceneName = string.Empty;
+        private Bounds sceneBounds;
 
         private Coroutine loadCutSceneCoroutine = null;
         private bool loadingLevel = false;
@@ -54,6 +55,7 @@ namespace AnyRPG {
         public string OverrideSpawnLocationTag { get => overrideSpawnLocationTag; set => overrideSpawnLocationTag = value; }
         public bool LoadingLevel { get => loadingLevel; set => loadingLevel = value; }
         public string ActiveSceneName { get => activeSceneName; set => activeSceneName = value; }
+        public Bounds SceneBounds { get => sceneBounds; }
 
         public void PerformSetupActivities() {
             InitializeLevelManager();
@@ -78,6 +80,36 @@ namespace AnyRPG {
             }
 
             SetupScriptableObjects();
+        }
+
+        public static Bounds GetSceneBounds() {
+            Renderer[] renderers;
+            TerrainCollider[] terrainColliders;
+            Bounds sceneBounds = new Bounds();
+            renderers = GameObject.FindObjectsOfType<Renderer>();
+            terrainColliders = GameObject.FindObjectsOfType<TerrainCollider>();
+
+            // add bounds of renderers in case there are structures higher or lower than terrain bounds
+            if (renderers.Length != 0) {
+                for (int i = 0; i < renderers.Length; i++) {
+                    if (renderers[i].enabled == true && renderers[i].gameObject.layer == LayerMask.NameToLayer("Default")) {
+                        sceneBounds.Encapsulate(renderers[i].bounds);
+                        //Debug.Log("MainMapController.SetSceneBounds(). Encapsulating: " + renderers[i].bounds);
+                    }
+                }
+            }
+
+            // add bounds of terrain colliders to get 'main' bounds
+            if (terrainColliders.Length != 0) {
+                for (int i = 0; i < terrainColliders.Length; i++) {
+                    if (terrainColliders[i].enabled == true) {
+                        sceneBounds.Encapsulate(terrainColliders[i].bounds);
+                        //Debug.Log("MiniMapGeneratorController.GetSceneBounds(). Encapsulating terrain bounds: " + terrainColliders[i].bounds);
+                    }
+                }
+            }
+
+            return sceneBounds;
         }
 
         public SceneNode GetActiveSceneNode() {
@@ -223,6 +255,9 @@ namespace AnyRPG {
                 // just in case
                 SystemWindowManager.MyInstance.CloseMainMenu();
             }
+
+            // get level boundaries
+            sceneBounds = GetSceneBounds();
 
             // determine if a navmesh is available
             DetectNavMesh();
