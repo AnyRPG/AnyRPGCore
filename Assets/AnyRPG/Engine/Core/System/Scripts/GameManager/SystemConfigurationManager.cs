@@ -333,6 +333,12 @@ namespace AnyRPG {
         [SerializeField]
         private float playerMiniMapIconRotation = 0f;
 
+        [Header("UNIT FRAMES")]
+
+        [Tooltip("Using a real time camera will reduce performance")]
+        [SerializeField]
+        private bool realTimeUnitFrameCamera = false;
+
         [Header("UI")]
 
         [SerializeField]
@@ -605,6 +611,7 @@ namespace AnyRPG {
         public MiniMapFallBackMode MiniMapFallBackMode { get => miniMapFallBackMode; set => miniMapFallBackMode = value; }
         public Sprite PlayerMiniMapIcon { get => playerMiniMapIcon; set => playerMiniMapIcon = value; }
         public float PlayerMiniMapIconRotation { get => playerMiniMapIconRotation; set => playerMiniMapIconRotation = value; }
+        public bool RealTimeUnitFrameCamera { get => realTimeUnitFrameCamera; set => realTimeUnitFrameCamera = value; }
 
         public CapabilityProps GetFilteredCapabilities(ICapabilityConsumer capabilityConsumer, bool returnAll = true) {
             return capabilities;
