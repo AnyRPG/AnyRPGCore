@@ -10116,7 +10116,7 @@ MonoBehaviour:
   lootSparkleEffectName: 
   vendorAudioProfileName: 
   maxChatTextDistance: 25
-  miniMapFallBackMode: 0
+  miniMapFallBackMode: 1
   playerMiniMapIcon: {fileID: 21300000, guid: 2f39e3921edeb8c4991f2e809481b8d6, type: 3}
   playerMiniMapIconRotation: 90
   defaultCastTargetCircle: {fileID: 2100000, guid: bc15116564fa55d4cb0a21220ca6e449,

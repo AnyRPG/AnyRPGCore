@@ -45,10 +45,6 @@ namespace AnyRPG {
 
         [Header("Unit Preview")]
 
-        [Tooltip("If false, a single snapshot is taken of the unit, instead of a real-time video in the preview image")]
-        [SerializeField]
-        private bool realTimeCamera = false;
-
         // the next 2 things need to be updated to focus on the right character
         [SerializeField]
         private Transform cameraTransform = null;
@@ -143,7 +139,13 @@ namespace AnyRPG {
             //Debug.Log(gameObject.name + ": UnitFrameController.Awake() originalHealthSliderWidth: " + originalHealthSliderWidth);
         }
 
-        private void Update() {
+        private void LateUpdate() {
+            if (SystemConfigurationManager.MyInstance.RealTimeUnitFrameCamera) {
+                UpdateCameraPosition();
+            }
+        }
+
+        private void UpdateCameraPosition() {
             if (!targetInitialized || UnitNamePlateController?.NamePlateUnit?.CameraTargetReady == false) {
                 //Debug.Log("UnitFrameController.Update(). Not initialized yet.  Exiting.");
                 return;
@@ -177,9 +179,10 @@ namespace AnyRPG {
             if (isActiveAndEnabled) {
                 if (namePlateController.NamePlateUnit.CameraTargetReady) {
                     HandleTargetReady();
-                } else {
+                }// else {
+                // testing subscribe no matter what in case unit appearance changes
                     SubscribeToTargetReady();
-                }
+                //}
             } else {
                 //Debug.Log(gameObject.name + ".UnitFrameController.SetTarget(): Unit Frame Not active after activate command.  Likely gameobject under inactive canvas.  Will run StartCoroutien() on enable instead.");
             }
@@ -196,8 +199,10 @@ namespace AnyRPG {
         }
 
         public void HandleTargetReady() {
-            UnsubscribeFromTargetReady();
+            //UnsubscribeFromTargetReady();
             GetFollowTarget();
+            UpdateCameraPosition();
+            StartCoroutine(WaitForCamera());
         }
 
         public void InitializePosition() {
@@ -240,7 +245,7 @@ namespace AnyRPG {
             } else {
                 //Debug.Log(gameObject.name + ".UnitFrameController.SetTarget(): Unit Frame Not active after activate command.  Likely gameobject under inactive canvas.  Will run TargetInitialization() on enable instead.");
             }
-            if (realTimeCamera == true) {
+            if (SystemConfigurationManager.MyInstance.RealTimeUnitFrameCamera == true) {
                 previewCamera.enabled = true;
             } else {
                 //previewCamera.Render();
@@ -275,6 +280,7 @@ namespace AnyRPG {
         }
 
         private IEnumerator WaitForCamera() {
+            //yield return new WaitForEndOfFrame();
             yield return null;
             previewCamera.Render();
         }

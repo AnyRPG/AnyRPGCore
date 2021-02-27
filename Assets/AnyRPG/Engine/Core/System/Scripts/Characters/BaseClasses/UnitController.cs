@@ -624,6 +624,7 @@ namespace AnyRPG {
             base.OnDisable();
             RemoveControlEffects();
             ProcessPointerExit();
+            UnsubscribeFromUMACreate();
         }
 
         private void ProcessPointerExit() {
@@ -833,16 +834,18 @@ namespace AnyRPG {
 
         public void SetModelReady() {
             //Debug.Log(gameObject.name + ".UnitController.SetModelReady()");
+            if (modelReady == false) {
+                characterUnit.BaseCharacter.HandleCharacterUnitSpawn();
+            }
             modelReady = true;
-            characterUnit.BaseCharacter.HandleCharacterUnitSpawn();
             OnModelReady();
             OnCameraTargetReady();
         }
 
         public void UnsubscribeFromUMACreate() {
-            if (dynamicCharacterAvatar != null) {
+            if (dynamicCharacterAvatar?.umaData != null) {
                 dynamicCharacterAvatar.umaData.OnCharacterCreated -= HandleCharacterCreated;
-                //dynamicCharacterAvatar.umaData.OnCharacterUpdated -= HandleCharacterUpdated;
+                dynamicCharacterAvatar.umaData.OnCharacterUpdated -= HandleCharacterUpdated;
             }
         }
 
@@ -859,7 +862,7 @@ namespace AnyRPG {
 
         public void HandleCharacterCreated(UMAData umaData) {
             //Debug.Log("PreviewCameraController.HandleCharacterCreated(): " + umaData);
-            UnsubscribeFromUMACreate();
+            //UnsubscribeFromUMACreate();
             SetModelReady();
         }
 
@@ -878,6 +881,7 @@ namespace AnyRPG {
         public void HandleCharacterUpdated(UMAData umaData) {
             //Debug.Log("PreviewCameraController.HandleCharacterUpdated(): " + umaData + "; frame: " + Time.frameCount);
             //HandleCharacterCreated(umaData);
+            SetModelReady();
         }
 
         public void SetMovementSoundArea(MovementSoundArea movementSoundArea) {
