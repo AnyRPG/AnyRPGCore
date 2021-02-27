@@ -321,13 +321,9 @@ namespace AnyRPG {
 
         [Header("MINI MAP")]
 
-        [Tooltip("Using a minimap that renders using a real-time camera instead of a pre-rendered texture will result in reduced frame rates")]
+        [Tooltip("If the the minimap texture for a scene cannot be found, what type of map display should be used")]
         [SerializeField]
-        private bool realTimeMiniMap = false;
-
-        [Tooltip("If the real time minimap is disabled, and the minimap texture cannot be found, what type of map display should be used")]
-        [SerializeField]
-        private MiniMapFallBackMode miniMapFallBackMode = MiniMapFallBackMode.None;
+        private MiniMapFallBackMode miniMapFallBackMode = MiniMapFallBackMode.Empty;
 
         [Tooltip("The faction icon to show on the load game screen when the player has no faction.")]
         [SerializeField]
@@ -606,7 +602,6 @@ namespace AnyRPG {
         public string MainMenuScene { get => mainMenuScene; set => mainMenuScene = value; }
         public string InitializationScene { get => initializationScene; set => initializationScene = value; }
         public bool UseFirstCreatorProfile { get => useFirstCreatorProfile; set => useFirstCreatorProfile = value; }
-        public bool RealTimeMiniMap { get => realTimeMiniMap; set => realTimeMiniMap = value; }
         public MiniMapFallBackMode MiniMapFallBackMode { get => miniMapFallBackMode; set => miniMapFallBackMode = value; }
         public Sprite PlayerMiniMapIcon { get => playerMiniMapIcon; set => playerMiniMapIcon = value; }
         public float PlayerMiniMapIconRotation { get => playerMiniMapIconRotation; set => playerMiniMapIconRotation = value; }

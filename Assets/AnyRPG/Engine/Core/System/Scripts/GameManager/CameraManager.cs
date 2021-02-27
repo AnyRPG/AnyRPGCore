@@ -29,9 +29,6 @@ namespace AnyRPG {
         private GameObject mainCameraGameObject = null;
 
         [SerializeField]
-        private Camera miniMapCamera = null;
-
-        [SerializeField]
         private Camera mainMapCamera = null;
 
         [SerializeField]
@@ -62,7 +59,6 @@ namespace AnyRPG {
 
         public Camera MainCamera { get => mainCamera; set => mainCamera = value; }
         public GameObject MainCameraGameObject { get => mainCameraGameObject; }
-        public Camera MiniMapCamera { get => miniMapCamera; set => miniMapCamera = value; }
         public Camera MainMapCamera { get => mainMapCamera; set => mainMapCamera = value; }
         public Camera CharacterPortraitCamera { get => characterPortraitCamera; set => characterPortraitCamera = value; }
         public Camera FocusPortraitCamera { get => focusPortraitCamera; set => focusPortraitCamera = value; }
@@ -107,7 +103,6 @@ namespace AnyRPG {
             DisablePreviewCameras();
             DisableThirdPartyCamera();
             DisableFocusCamera();
-            DisableMiniMapCamera();
         }
 
         private void Start() {
@@ -210,12 +205,6 @@ namespace AnyRPG {
 
         private void DisableFocusCamera() {
             focusPortraitCamera.enabled = false;
-        }
-
-        private void DisableMiniMapCamera() {
-            if (SystemConfigurationManager.MyInstance.RealTimeMiniMap == false) {
-                miniMapCamera.gameObject.SetActive(false);
-            }
         }
 
         private void CreateEventSubscriptions() {

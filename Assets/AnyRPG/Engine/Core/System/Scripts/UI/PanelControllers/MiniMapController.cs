@@ -40,9 +40,6 @@ namespace AnyRPG {
         private Image mapButtonImage = null;
 
         [SerializeField]
-        private Transform cameraTransform = null;
-
-        [SerializeField]
         private GameObject miniMapGraphic = null;
 
         [SerializeField]
@@ -53,9 +50,6 @@ namespace AnyRPG {
 
         [SerializeField]
         private GameObject miniMapIndicatorPrefab = null;
-
-        [SerializeField]
-        private float cameraOffsetYDefault = 5f;
 
         [Tooltip("The default number of meters to display on the minimap")]
         [SerializeField]
@@ -75,13 +69,11 @@ namespace AnyRPG {
         [SerializeField]
         private GameObject followGameObject = null;
 
-        //private float cameraOffsetZ = 0f;
-        private float cameraOffsetY = 0f;
+        // the diameter in game meters that should be shown on the map
         private float cameraSize = 0f;
 
+        // the object the map should center over
         private Transform followTransform = null;
-
-        //private float zoomMultiplier = 1f;
 
         private bool initialized = false;
         //private bool sceneTextureFound = false;
@@ -101,15 +93,17 @@ namespace AnyRPG {
         // rect transform of the object this script is on
         private RectTransform rectTransform = null;
 
+        // keep track if mouse is in window bounds
         private Vector3[] worldCorners = new Vector3[4];
 
+        // track all active indicators
         private Dictionary<Interactable, MiniMapIndicatorController> miniMapIndicatorControllers = new Dictionary<Interactable, MiniMapIndicatorController>();
 
         // track current minimap status and state
         private bool miniMapEnabled = false;
-        private MiniMapSource miniMapSource = MiniMapSource.Disk;
 
         public override void Awake() {
+            //Debug.Log(gameObject.name + ": MiniMapController.Awake()");
             base.Awake();
             if (SystemConfigurationManager.MyInstance.SystemBarMap != null) {
                 mapButtonImage.sprite = SystemConfigurationManager.MyInstance.SystemBarMap;
@@ -122,7 +116,7 @@ namespace AnyRPG {
             }
 
             minimapTextureFolder = minimapTextureFolderBase + SystemConfigurationManager.MyInstance.GameName.Replace(" ", "") + "/Images/MiniMap/";
-            //Debug.Log(gameObject.name + ": MiniMapController.Awake()");
+            
             //instantiate singleton
             MiniMapController tempcontroller = MyInstance;
 
@@ -134,7 +128,6 @@ namespace AnyRPG {
             } else {
                 cameraSize = cameraSizeDefault;
             }
-            UpdateCameraSize();
 
             SystemEventManager.StartListening("AfterCameraUpdate", HandleAfterCameraUpdate);
             SystemEventManager.StartListening("OnLevelUnload", HandleLevelUnload);
@@ -150,15 +143,11 @@ namespace AnyRPG {
             foreach (Interactable interactable in removeList) {
                 RemoveIndicator(interactable);
             }
-
         }
 
-        // Start is called before the first frame update
         void Start() {
             //Debug.Log(gameObject.name + ": MiniMapController.Start()");
-            if (followGameObject != null) {
-                CommonInitialization();
-            } else {
+            if (followGameObject == null) {
                 this.gameObject.SetActive(false);
             }
         }
@@ -180,13 +169,7 @@ namespace AnyRPG {
                 //Debug.Log("MiniMapController.Update(): followTransform is null.  Exiting!");
                 return;
             }
-            /*
-            if (sceneTextureFound == false) {
-                return;
-            }
-            */
 
-            UpdateCameraSize();
             HandleCameraZoom();
             UpdateMapPosition();
             UpdateIndicatorPositions();
@@ -239,13 +222,9 @@ namespace AnyRPG {
         private void HandleCameraZoom(bool force = false) {
             if (InputManager.MyInstance.mouseScrolled || force) {
 
+                // determine if mouse is inside this object
                 rectTransform.GetWorldCorners(worldCorners);
                 Vector3 mousePosition = Input.mousePosition;
-                //Debug.Log("mouse position: " + mousePosition);
-                //Debug.Log("World Corners");
-                for (var i = 0; i < 4; i++) {
-                    //Debug.Log("World Corner " + i + " : " + worldCorners[i]);
-                }
                 if (force != true && (mousePosition.x < worldCorners[0].x || mousePosition.x > worldCorners[2].x || mousePosition.y < worldCorners[0].y || mousePosition.y > worldCorners[2].y)) {
                     //Debug.Log("mouse scroll was outside of onscreen bounds.  ignoring!");
                     return;
@@ -253,54 +232,36 @@ namespace AnyRPG {
 
                 cameraSize += (Input.GetAxis("Mouse ScrollWheel") * zoomSpeed * -1);
                 cameraSize = Mathf.Clamp(cameraSize, minZoom, maxZoom);
-                if (miniMapSource == MiniMapSource.Camera) {
-                    // nothing here yet
-                } else if (miniMapSource == MiniMapSource.Disk) {
 
-                    // camera size is the number of meters we want to show in the minimap window
-                    // requiredPixels is the number of pixels we need to display to show the requested number of meters
-                    float requiredPixels = levelScaleFactor * cameraSize;
+                // camera size is the number of meters we want to show in the minimap window
+                // requiredPixels is the number of pixels we need to display to show the requested number of meters
+                float requiredPixels = levelScaleFactor * cameraSize;
 
-                    // a multiplier to determine what the image scale will need to be to fit the requested 'real pixels' into the space available in the minimap window
-                    imageScaleFactor = windowSize / requiredPixels;
+                // a multiplier to determine what the image scale will need to be to fit the requested 'real pixels' into the space available in the minimap window
+                imageScaleFactor = windowSize / requiredPixels;
 
-                    miniMapGraphic.transform.localScale = new Vector3(imageScaleFactor, imageScaleFactor, 1);
+                miniMapGraphic.transform.localScale = new Vector3(imageScaleFactor, imageScaleFactor, 1);
 
-                }
                 PlayerPrefs.SetFloat("MiniMapZoomLevel", cameraSize);
             }
 
         }
-        private void UpdateCameraSize() {
-            CameraManager.MyInstance.MiniMapCamera.orthographicSize = cameraSize;
-        }
 
         private void UpdateMapPosition() {
+            // Position the texture such that the position desired is in the middle of the viewable rectangle
+            // My coordinates on the image are = my world coordinates
+            float playerX = followTransform.position.x;
+            float playerZ = followTransform.position.z;
 
-            if (miniMapSource == MiniMapSource.Camera) {
-                //Vector3 wantedPosition = followTransform.TransformPoint(0, cameraOffsetY, cameraOffsetZ);
-                // position the camera over top of the player
-                Vector3 wantedPosition = new Vector3(followTransform.position.x, followTransform.position.y + cameraOffsetY, followTransform.position.z);
-                Vector3 wantedLookPosition = new Vector3(followTransform.position.x, followTransform.position.y, followTransform.position.z);
-                cameraTransform.position = wantedPosition;
-                cameraTransform.LookAt(wantedLookPosition);
-            } else if (miniMapSource == MiniMapSource.Disk) {
-                // Position the texture such that the position desired is in the middle of the viewable rectangle
+            // the image center is the player actual position modified by the offset (center of map compared to vector3.zero)
+            // this value is then multiplied by the level scale factor (number of pixels per meter) and the image scale factor (current zoom level)
+            // and made negative to account for the fact that we are moving the image center
+            float imageCenterX = -1f * ((playerX - levelOffset.x) * levelScaleFactor) * imageScaleFactor;
+            float imageCenterY = -1f * ((playerZ - levelOffset.z) * levelScaleFactor) * imageScaleFactor;
 
-                // My coordinates on the image are = my world coordinates
-                float playerX = followTransform.position.x;
-                float playerZ = followTransform.position.z;
+            //Debug.Log("scaleFactor: " + levelScaleFactor + "; player: " + followTransform.position + "; imageScaleFactor: " + imageScaleFactor + "; rawWidth: " + miniMapGraphicRawImage.texture.width + "; cameraSize: " + cameraSize + "; sceneBounds: " + LevelManager.MyInstance.SceneBounds.size);
 
-                // the image center is the player actual position modified by the offset (center of map compared to vector3.zero)
-                // this value is then multiplied by the level scale factor (number of pixels per meter) and the image scale factor (current zoom level)
-                // and made negative to account for the fact that we are moving the image center
-                float imageCenterX = -1f * ((playerX - levelOffset.x) * levelScaleFactor) * imageScaleFactor;
-                float imageCenterY = -1f * ((playerZ - levelOffset.z) * levelScaleFactor) * imageScaleFactor;
-
-                //Debug.Log("scaleFactor: " + levelScaleFactor + "; player: " + followTransform.position + "; imageScaleFactor: " + imageScaleFactor + "; rawWidth: " + miniMapGraphicRawImage.texture.width + "; cameraSize: " + cameraSize + "; sceneBounds: " + LevelManager.MyInstance.SceneBounds.size);
-
-                miniMapGraphicRect.anchoredPosition = new Vector2(imageCenterX, imageCenterY);
-            }
+            miniMapGraphicRect.anchoredPosition = new Vector2(imageCenterX, imageCenterY);
         }
 
         private void CommonInitialization() {
@@ -313,10 +274,8 @@ namespace AnyRPG {
             this.gameObject.SetActive(true);
             StartCoroutine(WaitForFollowTarget());
 
-            if (SystemConfigurationManager.MyInstance.RealTimeMiniMap == false) {
-                InitRenderedMinimap();
-                HandleCameraZoom(true); // Force the image to be zoomed correctly for the first rendering
-            }
+            InitRenderedMinimap();
+            HandleCameraZoom(true); // Force the image to be zoomed correctly for the first rendering
         }
 
         public void SetTarget(GameObject target) {
@@ -333,7 +292,6 @@ namespace AnyRPG {
 
         private IEnumerator WaitForFollowTarget() {
             Transform targetBone = followGameObject.transform;
-            cameraOffsetY = cameraOffsetYDefault;
 
             this.followTransform = targetBone;
             initialized = true;
@@ -341,11 +299,9 @@ namespace AnyRPG {
         }
 
         /// <summary>
-        /// Loads the pre-rendered minimap texture into the appropriate component.  Logs error and does nothing if 
-        /// No pre-rendered minimap is found.
+        /// Load the pre-rendered minimap texture into the appropriate component
         /// </summary>
         void InitRenderedMinimap() {
-            //sceneTextureFound = false;
 
             // First, try to find the minimap
             Texture2D mapTexture = new Texture2D((int)LevelManager.MyInstance.SceneBounds.size.x, (int)LevelManager.MyInstance.SceneBounds.size.z);
@@ -357,7 +313,7 @@ namespace AnyRPG {
                 mapTexture.LoadImage(fileData);
                 // Normalize to the width/height of the image
             } else {
-                Debug.Log("No minimap texture exists at " + textureFilePath + ".  Please run \"Minimap Wizard\" from the Tools menu under AnyRPG.");
+                //Debug.Log("No minimap texture exists at " + textureFilePath + ".  Please run \"Minimap Wizard\" from the Tools menu under AnyRPG.");
                 if (SystemConfigurationManager.MyInstance.MiniMapFallBackMode == MiniMapFallBackMode.None) {
                     DisableIndicators();
                     return;
@@ -405,6 +361,5 @@ namespace AnyRPG {
 
     }
 
-    public enum MiniMapSource { Disk, Camera };
-    public enum MiniMapFallBackMode { None, Empty, Render, RealTime };
+    public enum MiniMapFallBackMode { None, Empty };
 }

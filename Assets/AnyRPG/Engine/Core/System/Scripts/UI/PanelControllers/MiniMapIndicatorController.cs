@@ -34,8 +34,8 @@ namespace AnyRPG {
             //Debug.Log("MiniMapIndicatorController.Awake()");
             canvas = GetComponent<Canvas>();
             rectTransform = GetComponent<RectTransform>();
-            canvas.worldCamera = CameraManager.MyInstance.MiniMapCamera;
-            canvas.planeDistance = 1f;
+            //canvas.worldCamera = CameraManager.MyInstance.MiniMapCamera;
+            //canvas.planeDistance = 1f;
             uiOffset = new Vector2((float)rectTransform.sizeDelta.x / 2f, (float)rectTransform.sizeDelta.y / 2f);
             //Debug.Log("MiniMapIndicatorController.Awake(): rectTransform.sizeDelta: " + rectTransform.sizeDelta + "; uiOffset" + uiOffset);
         }
