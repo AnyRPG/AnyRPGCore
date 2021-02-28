@@ -656,7 +656,7 @@ namespace AnyRPG {
                 baseCharacter.SetUnitController(this);
 
                 // now that the characterUnit is available
-                unitComponentController.HighlightController.ConfigureOwner(characterUnit);
+                unitComponentController?.HighlightController?.ConfigureOwner(characterUnit);
                 AddInteractable(characterUnit);
             }
 

@@ -14,6 +14,9 @@ namespace AnyRPG {
         private const string templateName = "TemplateGame";
         private const string pathToNewGameTemplate = "/AnyRPG/Engine/Core/Templates/Game/" + templateName;
 
+        // for now this is necessary due to git not saving empty folders
+        private const string pathToResourcesTemplateFolder = "/AnyRPG/Engine/Core/Games/CoreGame/Resources/CoreGame";
+
         private const string pathToGameManagerPrefab = "Assets/AnyRPG/Engine/Core/System/Prefabs/GameManager/GameManager.prefab";
         private const string pathToUMADCSPrefab = "Getting Started/UMA_DCS.prefab";
 
@@ -34,9 +37,23 @@ namespace AnyRPG {
         public bool addFirstSceneToBuild = true;
         public string umaRoot = "Assets/UMA/";
 
+        [Header("Third Party Controller")]
+        public bool useThirdPartyController = false;
+
+        [Tooltip("This should be a unit in the scene")]
+        public GameObject thirdPartyCharacterUnit = null;
+
+        // the version that is saved on disk
+        private GameObject thirdPartyCharacterPrefab = null;
+        private GameObject thirdPartyCameraPrefab = null;
+
         [MenuItem("Tools/AnyRPG/Wizard/New Game Wizard")]
         static void CreateWizard() {
             ScriptableWizard.DisplayWizard<NewGameWizard>("New Game Wizard", "Create");
+        }
+
+        void OnEnable() {
+            thirdPartyCharacterUnit = Selection.activeGameObject;
         }
 
         void OnWizardCreate() {
@@ -61,7 +78,6 @@ namespace AnyRPG {
                 return;
             }
 
-
             // Set default values of game properties just in case they are somehow missing
             if (gameVersion == null || gameVersion.Trim() == "") {
                 gameVersion = "0.1a";
@@ -74,16 +90,22 @@ namespace AnyRPG {
                 Debug.Log("Empty first scene name.  Defaulting to \"" + fileSystemFirstSceneName + "\"");
             }
 
-            EditorUtility.DisplayProgressBar("New Game Wizard", "Creating folders...", 0.2f);
+            EditorUtility.DisplayProgressBar("New Game Wizard", "Creating Game Folder...", 0.2f);
             // Create root game folder
             string newGameFolder = GetNewGameFolder();
-            // Copy template game to newly created folder
+            string resourcesFolder = newGameFolder + "/Resources/" + fileSystemGameName;
+
+            // create base games folder
             CreateFolderIfNotExists(Application.dataPath + newGameParentFolder);
+
+            EditorUtility.DisplayProgressBar("New Game Wizard", "Copying Game Template Directory...", 0.3f);
+
+            // create game folder structure
             FileUtil.CopyFileOrDirectory(Application.dataPath + pathToNewGameTemplate, newGameFolder);
 
             AssetDatabase.Refresh();
 
-            EditorUtility.DisplayProgressBar("New Game Wizard", "Renaming folders...", 0.3f);
+            EditorUtility.DisplayProgressBar("New Game Wizard", "Renaming Template Folders...", 0.4f);
 
             // Find every folder with the name of the new game template "TemplateGame" and rename it as necessary
             // This assumes that all folders that have the template name should have their name changed and that only 
@@ -99,6 +121,75 @@ namespace AnyRPG {
             }
             AssetDatabase.Refresh();
 
+            EditorUtility.DisplayProgressBar("New Game Wizard", "Create Resource Folder If Necessary...", 0.5f);
+
+            // create resources folder if one didn't already get created by the copy operation
+            CreateFolderIfNotExists(resourcesFolder);
+
+            EditorUtility.DisplayProgressBar("New Game Wizard", "Making resource folder structure...", 0.6f);
+            // Copy over all folders because git won't commit empty folders
+            if (System.IO.Directory.Exists(Application.dataPath + pathToResourcesTemplateFolder)) {
+                string[] resourceAssets = AssetDatabase.FindAssets("*", new string[] { "Assets" + pathToResourcesTemplateFolder });
+                foreach (string resourceAssetGuid in resourceAssets) {
+                    string resourceAssetPath = AssetDatabase.GUIDToAssetPath(resourceAssetGuid);
+                    string resourceAssetPathRoot = pathToResourcesTemplateFolder;
+                    string relativeAssetPath = resourceAssetPath.Replace("Assets" + resourceAssetPathRoot + "/", "");
+                    // Only directories!
+                    //Debug.Log("Checking for " + Application.dataPath + resourceAssetPathRoot + "/" + relativeAssetPath);
+                    if (System.IO.Directory.Exists(Application.dataPath + resourceAssetPathRoot + "/" + relativeAssetPath)) {
+                        System.IO.Directory.CreateDirectory(resourcesFolder + "/" + relativeAssetPath);
+                    }
+                }
+                AssetDatabase.Refresh();
+            } else {
+                Debug.LogWarning(pathToResourcesTemplateFolder + " was not found.  Resources folder will be empty.");
+            }
+
+            // create prefab folder
+            string prefabFolder = newGameFolder + "/Prefab";
+            string prefabPath = FileUtil.GetProjectRelativePath(prefabFolder);
+            CreateFolderIfNotExists(prefabFolder);
+
+
+            if (useThirdPartyController == true) {
+                EditorUtility.DisplayProgressBar("New Game Wizard", "Creating Third Party Prefabs and Resources...", 0.65f);
+
+                // copy unit profile
+                string unitProfileTemplatePath = "/AnyRPG/Engine/Core/Templates/Resource/UnitProfile/InvectorUMAPlayerUnitTemplate.asset";
+                FileUtil.CopyFileOrDirectory(Application.dataPath + unitProfileTemplatePath, resourcesFolder + "/UnitProfile/InvectorUMAPlayerUnit.asset");
+                //AssetDatabase.RenameAsset(resourcesFolder + "/UnitProfile/InvectorUMAPlayerUnitTemplate.asset", "InvectorUMAPlayerUnit.asset");
+                
+                // make prefab on disk
+                if (thirdPartyCharacterUnit != null) {
+                    string thirdpartyCharacterPrefabPath = FileUtil.GetProjectRelativePath(prefabFolder) + "/" + thirdPartyCharacterUnit.name + ".prefab";
+                    thirdPartyCharacterPrefab = PrefabUtility.SaveAsPrefabAsset(thirdPartyCharacterUnit, thirdpartyCharacterPrefabPath);
+
+                    AssetDatabase.Refresh();
+
+                    // link disk prefab into unit profile
+                    string unitProfilePath = fileSystemGameName + "/UnitProfile/InvectorUMAPlayerUnit";
+                    UnitProfile unitProfile = Resources.Load<UnitProfile>(unitProfilePath);
+                    if (unitProfile != null) {
+                        unitProfile.UnitPrefabProps.UnitPrefab = thirdPartyCharacterPrefab;
+                    } else {
+                        Debug.Log("Could not load resource at " + unitProfilePath);
+                    }
+                }
+
+                AssetDatabase.Refresh();
+
+                // load the invector basic locomotion demo scene and make a prefab out of the camera
+                
+                EditorSceneManager.OpenScene("Assets/Invector-3rdPersonController/Basic Locomotion/DemoScenes/Invector_BasicLocomotion.unity");
+                GameObject thirdPartyCameraGameObject = GameObject.Find("ThirdPersonCamera");
+                if (thirdPartyCameraGameObject != null) {
+                    string thirdpartyCameraPrefabPath = FileUtil.GetProjectRelativePath(prefabFolder) + "/" + thirdPartyCameraGameObject.name + ".prefab";
+                    thirdPartyCameraPrefab = PrefabUtility.SaveAsPrefabAsset(thirdPartyCameraGameObject, thirdpartyCameraPrefabPath);
+                }
+                
+
+            }
+
             // setup first scene paths
             string existingFirstSceneFolder = FileUtil.GetProjectRelativePath(newGameFolder + "/Scenes/" + defaultFirstSceneName);
             string newFirstSceneFolder = FileUtil.GetProjectRelativePath(newGameFolder + "/Scenes/" + fileSystemFirstSceneName);
@@ -108,7 +199,7 @@ namespace AnyRPG {
 
             // Rename the first scene if necessary
             if (fileSystemFirstSceneName != defaultFirstSceneName) {
-                EditorUtility.DisplayProgressBar("New Game Wizard", "Renaming First Scene...", 0.4f);
+                EditorUtility.DisplayProgressBar("New Game Wizard", "Renaming First Scene...", 0.7f);
                 AssetDatabase.RenameAsset(existingFirstScenePath, newFirstSceneFileName);
                 AssetDatabase.RenameAsset(existingFirstSceneFolder, fileSystemFirstSceneName);
                 AssetDatabase.Refresh();
@@ -116,14 +207,14 @@ namespace AnyRPG {
 
             // add the first scene to the build if the option was chosen
             if (addFirstSceneToBuild) {
-                EditorUtility.DisplayProgressBar("New Game Wizard", "Adding First Scene To Build Settings...", 0.5f);
+                EditorUtility.DisplayProgressBar("New Game Wizard", "Adding First Scene To Build Settings...", 0.75f);
                 List<EditorBuildSettingsScene> currentSceneList = EditorBuildSettings.scenes.ToList();
                 currentSceneList.Add(new EditorBuildSettingsScene(newFirstScenePath, true));
                 EditorBuildSettings.scenes = currentSceneList.ToArray();
             }
 
             // Rename the game load scene
-            EditorUtility.DisplayProgressBar("New Game Wizard", "Renaming Game Load Scene...", 0.55f);
+            EditorUtility.DisplayProgressBar("New Game Wizard", "Renaming Game Load Scene...", 0.8f);
             string gameLoadSceneFolder = FileUtil.GetProjectRelativePath(newGameFolder + "/Scenes/" + fileSystemGameName);
             string newGameLoadSceneFileName = fileSystemGameName + ".unity";
             string newGameLoadScenePath = gameLoadSceneFolder + "/" + newGameLoadSceneFileName;
@@ -133,38 +224,17 @@ namespace AnyRPG {
             AssetDatabase.RenameAsset(existingGameLoadScenePath, newGameLoadSceneFileName);
             AssetDatabase.Refresh();
 
-            EditorUtility.DisplayProgressBar("New Game Wizard", "Modifying scene...", 0.6f);
+            EditorUtility.DisplayProgressBar("New Game Wizard", "Modifying scene...", 0.85f);
             // Open the scene to add the necessary elements
+            Debug.Log("Loading Scene at " + newGameLoadScenePath);
             Scene newScene = EditorSceneManager.OpenScene(newGameLoadScenePath);
 
             // Create a variant of the GameManager & UMA prefabs
-            EditorUtility.DisplayProgressBar("New Game Wizard", "Making prefab variants...", 0.7f);
-            string prefabFolder = newGameFolder + "/Prefab";
-            string prefabPath = FileUtil.GetProjectRelativePath(prefabFolder);
-            CreateFolderIfNotExists(prefabFolder);
+            EditorUtility.DisplayProgressBar("New Game Wizard", "Making prefab variants...", 0.9f);
             MakeGameManagerPrefabVariant(gameManagerGameObject, prefabPath + "/GameManager.prefab");
             MakeUMAPrefabVariant(umaGameObject, prefabPath + "/UMA_DCS.prefab", fileSystemGameName);
 
-            /*
-            // Copy over all folders
-            if (System.IO.Directory.Exists(Application.dataPath + pathToResourcesFolder)) {
-                string[] resourceAssets = AssetDatabase.FindAssets("*", new string[] { "Assets" + pathToResourcesFolder });
-                foreach (string resourceAssetGuid in resourceAssets) {
-                    string resourceAssetPath = AssetDatabase.GUIDToAssetPath(resourceAssetGuid);
-                    string resourceAssetPathRoot = pathToResourcesFolder;
-                    string relativeAssetPath = resourceAssetPath.Replace("Assets" + resourceAssetPathRoot + "/", "");
-                    // Only directories!
-                    if (System.IO.Directory.Exists(Application.dataPath + resourceAssetPathRoot + "/" + relativeAssetPath)) {
-                        System.IO.Directory.CreateDirectory(newResourcesRootPath + "/" + relativeAssetPath);
-                    }
-                }
-                AssetDatabase.Refresh();
-            } else {
-                Debug.LogWarning(pathToResourcesFolder + " was not found.  Resources folder will be empty.");
-            }
-            */
-
-            EditorUtility.DisplayProgressBar("New Game Wizard", "Saving scene...", 0.9f);
+            EditorUtility.DisplayProgressBar("New Game Wizard", "Saving scene...", 0.95f);
             // Save changes to the scene
             EditorSceneManager.SaveScene(newScene);
 
@@ -226,7 +296,7 @@ namespace AnyRPG {
             instantiatedGO.name = fileSystemGameName + instantiatedGO.name;
 
             // Set the properties of the GameManager for this game
-            EditorUtility.DisplayProgressBar("New Game Wizard", "Configuration Game Settings...", 0.75f);
+            EditorUtility.DisplayProgressBar("New Game Wizard", "Configuration Game Settings...", 0.91f);
             SystemConfigurationManager systemConfigurationManager = instantiatedGO.GetComponent<SystemConfigurationManager>();
             systemConfigurationManager.GameName = gameName;
             systemConfigurationManager.GameVersion = gameVersion;
@@ -234,7 +304,18 @@ namespace AnyRPG {
             systemConfigurationManager.MainMenuScene = "MainMenu";
             systemConfigurationManager.DefaultStartingZone = fileSystemFirstSceneName;
 
-            EditorUtility.DisplayProgressBar("New Game Wizard", "Copying resources...", 0.8f);
+            if (useThirdPartyController == true) {
+                systemConfigurationManager.UseThirdPartyMovementControl = true;
+                systemConfigurationManager.AllowAutoAttack = false;
+                systemConfigurationManager.UseThirdPartyCameraControl = true;
+                systemConfigurationManager.DefaultPlayerUnitProfileName = "Invector UMA Player";
+                if (thirdPartyCameraPrefab != null) {
+                    systemConfigurationManager.ThirdPartyCamera = thirdPartyCameraPrefab;
+                }
+                //systemConfigurationManager.CharacterCreatorProfileNames = new List<string>() { "Invector UMA Player" };
+            }
+
+            EditorUtility.DisplayProgressBar("New Game Wizard", "Copying resources...", 0.92f);
             // Create a Resources folder and point the game manager to it
             if (systemConfigurationManager.LoadResourcesFolders == null) {
                 systemConfigurationManager.LoadResourcesFolders = new List<string>();
@@ -244,6 +325,7 @@ namespace AnyRPG {
             systemConfigurationManager.LoadResourcesFolders.Add(newResourcesFolderName);
 
             // make variant on disk
+            Debug.Log("saving " + newPath);
             GameObject variant = PrefabUtility.SaveAsPrefabAsset(instantiatedGO, newPath);
 
             // remove original from scene
@@ -277,6 +359,7 @@ namespace AnyRPG {
 
         private void CreateFolderIfNotExists(string folderName) {
             if (!System.IO.Directory.Exists(folderName)) {
+                Debug.Log("Create folder " + folderName);
                 System.IO.Directory.CreateDirectory(folderName);
             }
 

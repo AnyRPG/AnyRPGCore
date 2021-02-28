@@ -71,6 +71,17 @@ namespace AnyRPG {
             UpdateIndicatorPositions();
         }
 
+        public void LateUpdate() {
+            if (PopupWindowManager.MyInstance.mainMapWindow.IsOpen == false) {
+                return;
+            }
+            if (SystemConfigurationManager.MyInstance.UseThirdPartyCameraControl == true
+                && CameraManager.MyInstance.ThirdPartyCamera.activeInHierarchy == true
+                && PlayerManager.MyInstance.PlayerUnitSpawned == true) {
+                UpdateMainMap();
+            }
+        }
+
         private void UpdateIndicatorPositions() {
             foreach (Interactable interactable in mapIndicatorControllers.Keys) {
                 if (mapIndicatorControllers[interactable].gameObject.activeSelf == true) {
@@ -171,7 +182,7 @@ namespace AnyRPG {
 
         private void UpdateCameraPosition() {
             //Debug.Log("MainMapController.UpdateCameraPosition()");
-            Vector3 wantedPosition = new Vector3(LevelManager.MyInstance.SceneBounds.center.x, LevelManager.MyInstance.SceneBounds.center.y + LevelManager.MyInstance.SceneBounds.extents.y, LevelManager.MyInstance.SceneBounds.center.z);
+            Vector3 wantedPosition = new Vector3(LevelManager.MyInstance.SceneBounds.center.x, LevelManager.MyInstance.SceneBounds.center.y + LevelManager.MyInstance.SceneBounds.extents.y + 1f, LevelManager.MyInstance.SceneBounds.center.z);
             //Debug.Log("MainMapController.UpdateCameraPosition() wantedposition: " + wantedPosition);
             Vector3 wantedLookPosition = new Vector3(LevelManager.MyInstance.SceneBounds.center.x, LevelManager.MyInstance.SceneBounds.center.y, LevelManager.MyInstance.SceneBounds.center.z);
             //Debug.Log("MainMapController.UpdateCameraPosition() wantedLookPosition: " + wantedLookPosition);
