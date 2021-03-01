@@ -21,7 +21,7 @@ namespace AnyRPG {
         #endregion
 
         [SerializeField]
-        private NamePlateController namePlatePrefab = null;
+        private GameObject namePlatePrefab = null;
 
         [SerializeField]
         private Transform namePlateContainer = null;
@@ -83,7 +83,7 @@ namespace AnyRPG {
 
         public NamePlateController SpawnNamePlate(NamePlateUnit namePlateUnit, bool usePositionOffset) {
             //Debug.Log("NamePlateManager.SpawnNamePlate(" + namePlateUnit.DisplayName + ")");
-            NamePlateController namePlate = Instantiate(namePlatePrefab, namePlateContainer);
+            NamePlateController namePlate = ObjectPooler.MyInstance.GetPooledObject(namePlatePrefab, namePlateContainer).GetComponent<NamePlateController>();
             namePlates.Add(namePlateUnit, namePlate);
             namePlate.SetNamePlateUnit(namePlateUnit, usePositionOffset);
             return namePlate;
@@ -107,7 +107,7 @@ namespace AnyRPG {
             }
             if (namePlates.ContainsKey(namePlateUnit)) {
                 if (namePlates[namePlateUnit] != null && namePlates[namePlateUnit].gameObject != null) {
-                    Destroy(namePlates[namePlateUnit].gameObject);
+                    ObjectPooler.MyInstance.ReturnObjectToPool(namePlates[namePlateUnit].gameObject);
                 }
                 namePlates.Remove(namePlateUnit);
             }

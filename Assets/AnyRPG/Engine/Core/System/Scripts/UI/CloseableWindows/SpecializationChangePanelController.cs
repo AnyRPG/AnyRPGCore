@@ -61,7 +61,7 @@ namespace AnyRPG {
             }
             for (int i = 0; i < capabilityProps.TraitList.Count; i++) {
                 if (capabilityProps.TraitList[i] != null) {
-                    RewardButton rewardIcon = Instantiate(rewardIconPrefab, traitIconsArea.transform).GetComponent<RewardButton>();
+                    RewardButton rewardIcon = ObjectPooler.MyInstance.GetPooledObject(rewardIconPrefab, traitIconsArea.transform).GetComponent<RewardButton>();
                     rewardIcon.SetDescribable(capabilityProps.TraitList[i]);
                     traitRewardIcons.Add(rewardIcon);
                     if ((capabilityProps.TraitList[i] as StatusEffect).RequiredLevel > PlayerManager.MyInstance.MyCharacter.CharacterStats.Level) {
@@ -86,7 +86,7 @@ namespace AnyRPG {
             }
             for (int i = 0; i < capabilityProps.AbilityList.Count; i++) {
                 if (capabilityProps.AbilityList[i] != null) {
-                    RewardButton rewardIcon = Instantiate(rewardIconPrefab, abilityIconsArea.transform).GetComponent<RewardButton>();
+                    RewardButton rewardIcon = ObjectPooler.MyInstance.GetPooledObject(rewardIconPrefab, abilityIconsArea.transform).GetComponent<RewardButton>();
                     rewardIcon.SetDescribable(capabilityProps.AbilityList[i]);
                     abilityRewardIcons.Add(rewardIcon);
                     if (capabilityProps.AbilityList[i].RequiredLevel > PlayerManager.MyInstance.MyCharacter.CharacterStats.Level) {
@@ -101,7 +101,7 @@ namespace AnyRPG {
             //Debug.Log("ClassChangePanelController.ClearRewardIcons()");
 
             foreach (RewardButton rewardIcon in traitRewardIcons) {
-                Destroy(rewardIcon.gameObject);
+                ObjectPooler.MyInstance.ReturnObjectToPool(rewardIcon.gameObject);
             }
             traitRewardIcons.Clear();
         }
@@ -110,7 +110,7 @@ namespace AnyRPG {
             //Debug.Log("ClassChangePanelController.ClearRewardIcons()");
 
             foreach (RewardButton rewardIcon in abilityRewardIcons) {
-                Destroy(rewardIcon.gameObject);
+                ObjectPooler.MyInstance.ReturnObjectToPool(rewardIcon.gameObject);
             }
             abilityRewardIcons.Clear();
         }

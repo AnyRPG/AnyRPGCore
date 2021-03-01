@@ -228,16 +228,10 @@ namespace AnyRPG {
                 yUIOffset = distanceToMove * (((fadeOutTimer - fadeTime) * -1) / fadeTime) * directionMultiplier;
             } else {
                 CombatTextManager.MyInstance.returnControllerToPool(this);
-                //Destroy(this.gameObject);
             }
 
         }
 
-        /*
-        void FixedUpdate() {
-            RunCombatTextUpdate();
-        }
-        */
     }
 
 }

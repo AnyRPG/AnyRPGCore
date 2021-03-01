@@ -684,19 +684,7 @@ namespace AnyRPG {
             // DISABLING SINCE IT IS CAUSING INSTANT CASTS TO STOP CHARACTER WHILE MOVING.  MAYBE CHECK IF CAST TIMER AND THEN DO IT?
             // NEXT LINE NO LONGER NEEDED SINCE WE NOW ACTUALLY CHECK THE REAL DISTANCE MOVED BY THE CHARACTER AND DON'T CANCEL CAST UNTIL DISTANCE IS > 0.1F
             //source.MyRigidBody.constraints = RigidbodyConstraints.FreezeAll;
-            /*
-            if (abilityCastingPrefab != null) {
-                if (abilityCastingPrefabRef == null) {
-                    //Vector3 relativePrefabOffset = source.AbilityManager.UnitGameObject.transform.TransformPoint(prefabOffset);
-                    //Vector3 spawnLocation = new Vector3(source.AbilityManager.UnitGameObject.transform.position.x + relativePrefabOffset.x, source.MyCharacterUnit.transform.position.y + relativePrefabOffset.y, source.MyCharacterUnit.transform.position.z + relativePrefabOffset.z);
-                    Vector3 spawnLocation = source.AbilityManager.UnitGameObject.transform.TransformPoint(prefabOffset);
-                    //Debug.Log("BaseAbility.OnCastStart(): Instantiating spell casting prefab at " + source.transform.position + "; spawnLocation is : " + spawnLocation);
-                    //abilityCastingPrefabRef = Instantiate(abilityCastingPrefab, spawnLocation, source.AbilityManager.UnitGameObject.transform.rotation * Quaternion.Euler(source.MyCharacterUnit.transform.TransformDirection(prefabRotation)), source.transform);
-                    abilityCastingPrefabRef = Instantiate(abilityCastingPrefab, spawnLocation, Quaternion.LookRotation(source.AbilityManager.UnitGameObject.transform.forward) * Quaternion.Euler(prefabRotation), source.MyCharacterUnit.transform);
-                }
-            }
-            */
-            //source.MyCharacterAbilityManager.OnCastStop += HandleCastStop;
+            
         }
 
         public virtual float OnCastTimeChanged(float currentCastPercent, float nextTickPercent, IAbilityCaster source, Interactable target, AbilityEffectContext abilityEffectContext) {

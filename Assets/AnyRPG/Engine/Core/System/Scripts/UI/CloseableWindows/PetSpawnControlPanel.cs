@@ -202,7 +202,7 @@ namespace AnyRPG {
             foreach (UnitProfile unitProfile in unitProfileList) {
                 //Debug.Log("PetSpawnControlPanel.ShowLoadButtonsCommon() unitprofile: " + unitProfile.DisplayName);
                 if (PlayerManager.MyInstance.MyCharacter.CharacterClass.ValidPetTypeList.Contains(unitProfile.UnitType)) {
-                    GameObject go = Instantiate(buttonPrefab, buttonArea.transform);
+                    GameObject go = ObjectPooler.MyInstance.GetPooledObject(buttonPrefab, buttonArea.transform);
                     PetSpawnButton petSpawnButton = go.GetComponent<PetSpawnButton>();
                     if (petSpawnButton != null) {
                         petSpawnButton.AddUnitProfile(unitProfile);
@@ -221,7 +221,7 @@ namespace AnyRPG {
             //Debug.Log("LoadGamePanel.ClearLoadButtons()");
             foreach (PetSpawnButton petSpawnButton in petSpawnButtons) {
                 if (petSpawnButton != null) {
-                    Destroy(petSpawnButton.gameObject);
+                    ObjectPooler.MyInstance.ReturnObjectToPool(petSpawnButton.gameObject);
                 }
             }
             petSpawnButtons.Clear();

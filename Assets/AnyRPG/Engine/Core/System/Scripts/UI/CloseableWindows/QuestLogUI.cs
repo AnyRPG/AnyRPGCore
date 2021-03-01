@@ -74,7 +74,7 @@ namespace AnyRPG {
             QuestScript firstAvailableQuest = null;
 
             foreach (Quest quest in QuestLog.MyInstance.MyQuests.Values) {
-                GameObject go = Instantiate(questPrefab, questParent);
+                GameObject go = ObjectPooler.MyInstance.GetPooledObject(questPrefab, questParent);
 
                 QuestScript qs = go.GetComponent<QuestScript>();
                 qs.SetQuest(quest);
@@ -173,7 +173,7 @@ namespace AnyRPG {
         public void ClearQuests() {
             //Debug.Log("QuestLogUI.ClearQuests()");
             foreach (QuestScript _questScript in questScripts) {
-                Destroy(_questScript.gameObject);
+                ObjectPooler.MyInstance.ReturnObjectToPool(_questScript.gameObject);
             }
             questScripts.Clear();
             selectedQuestScript = null;

@@ -298,7 +298,7 @@ namespace AnyRPG {
             // set active false first because destroy is not done until the end of frame
             // use regular unitController in case player is mounted
             unitController.gameObject.SetActive(false);
-            Destroy(unitController.gameObject);
+            ObjectPooler.MyInstance.ReturnObjectToPool(unitController.gameObject);
             activeUnitController = null;
             playerUnitSpawned = false;
         }
@@ -459,7 +459,7 @@ namespace AnyRPG {
                 //Debug.Log("PlayerManager.SpawnPlayerConnection(): The Player Connection is not null.  exiting.");
                 return;
             }
-            playerConnectionObject = Instantiate(playerConnectionPrefab, playerConnectionParent.transform);
+            playerConnectionObject = ObjectPooler.MyInstance.GetPooledObject(playerConnectionPrefab, playerConnectionParent.transform);
             character = playerConnectionObject.GetComponent<BaseCharacter>();
             activeCharacter = character;
             playerController = playerConnectionObject.GetComponent<PlayerController>();
@@ -481,7 +481,7 @@ namespace AnyRPG {
             }
             UnsubscribeFromPlayerEvents();
             SystemEventManager.MyInstance.NotifyOnPlayerConnectionDespawn();
-            Destroy(playerConnectionObject);
+            ObjectPooler.MyInstance.ReturnObjectToPool(playerConnectionObject);
             character = null;
             activeCharacter = null;
             playerUnitMovementController = null;

@@ -85,7 +85,7 @@ namespace AnyRPG {
             MusicPlayerHighlightButton firstAvailableMusicProfile = null;
 
             foreach (AudioProfile musicProfile in musicPlayer.Props.MusicProfileList) {
-                GameObject go = Instantiate(highlightButtonPrefab, availableArea.transform);
+                GameObject go = ObjectPooler.MyInstance.GetPooledObject(highlightButtonPrefab, availableArea.transform);
                 MusicPlayerHighlightButton qs = go.GetComponent<MusicPlayerHighlightButton>();
                 qs.MyText.text = musicProfile.DisplayName;
                 qs.MyText.color = Color.white;
@@ -185,7 +185,7 @@ namespace AnyRPG {
             foreach (MusicPlayerHighlightButton musicPlayerHighlightButton in musicPlayerHighlightButtons) {
                 if (musicPlayerHighlightButton != null) {
                     musicPlayerHighlightButton.gameObject.transform.SetParent(null);
-                    Destroy(musicPlayerHighlightButton.gameObject);
+                    ObjectPooler.MyInstance.ReturnObjectToPool(musicPlayerHighlightButton.gameObject);
                 }
             }
             musicPlayerHighlightButtons.Clear();

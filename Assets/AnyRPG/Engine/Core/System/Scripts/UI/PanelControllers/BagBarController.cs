@@ -79,7 +79,7 @@ public class BagBarController : MonoBehaviour {
 
     public BagButton InstantiateBagButton() {
         //Debug.Log("BagBarController.InstantiateBagButton()");
-        BagButton bagButton = Instantiate(BagButtonPrefab, this.gameObject.transform).GetComponent<BagButton>();
+        BagButton bagButton = ObjectPooler.MyInstance.GetPooledObject(BagButtonPrefab, this.gameObject.transform).GetComponent<BagButton>();
         bagButtons.Add(bagButton);
         return bagButton;
     }

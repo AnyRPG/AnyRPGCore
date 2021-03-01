@@ -91,7 +91,7 @@ namespace AnyRPG {
 
             foreach (Quest quest in QuestLog.MyInstance.MyQuests.Values) {
                 //Debug.Log("QuestTrackerUI.ShowQuestsCommon(): quest: " + quest);
-                GameObject go = Instantiate(questPrefab, questParent);
+                GameObject go = ObjectPooler.MyInstance.GetPooledObject(questPrefab, questParent);
                 QuestTrackerQuestScript qs = go.GetComponent<QuestTrackerQuestScript>();
                 qs.MyQuest = quest;
                 if (qs == null) {
@@ -131,7 +131,7 @@ namespace AnyRPG {
                 if (qs.gameObject != null) {
                     //Debug.Log("The questnode has a gameobject we need to clear");
                     qs.gameObject.transform.SetParent(null);
-                    Destroy(qs.gameObject);
+                    ObjectPooler.MyInstance.ReturnObjectToPool(qs.gameObject);
                 }
             }
             questScripts.Clear();

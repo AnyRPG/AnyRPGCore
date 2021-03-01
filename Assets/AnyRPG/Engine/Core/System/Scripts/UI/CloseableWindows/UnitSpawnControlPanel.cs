@@ -214,7 +214,7 @@ namespace AnyRPG {
 
             foreach (UnitProfile unitProfile in unitProfileList) {
                 //Debug.Log("LoadGamePanel.ShowLoadButtonsCommon(): setting a button with saved game data");
-                GameObject go = Instantiate(buttonPrefab, buttonArea.transform);
+                GameObject go = ObjectPooler.MyInstance.GetPooledObject(buttonPrefab, buttonArea.transform);
                 UnitSpawnButton unitSpawnButton = go.GetComponent<UnitSpawnButton>();
                 if (unitSpawnButton != null) {
                     unitSpawnButton.AddUnitProfile(unitProfile);
@@ -233,7 +233,7 @@ namespace AnyRPG {
             //Debug.Log("LoadGamePanel.ClearLoadButtons()");
             foreach (UnitSpawnButton unitSpawnButton in unitSpawnButtons) {
                 if (unitSpawnButton != null) {
-                    Destroy(unitSpawnButton.gameObject);
+                    ObjectPooler.MyInstance.ReturnObjectToPool(unitSpawnButton.gameObject);
                 }
             }
             unitSpawnButtons.Clear();

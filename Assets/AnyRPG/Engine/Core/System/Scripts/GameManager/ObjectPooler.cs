@@ -92,11 +92,15 @@ namespace AnyRPG {
             }
         }
 
-        public GameObject GetPooledObject(GameObject pooledGameObject) {
-            return GetPooledObject(pooledGameObject, defaultObjectParent.transform);
+        public GameObject GetPooledObject(GameObject pooledGameObject, Transform parentTransform) {
+            return GetPooledObject(pooledGameObject, Vector3.zero, Quaternion.identity, parentTransform, false);
         }
 
-        public GameObject GetPooledObject(GameObject pooledGameObject, Transform parentTransform) {
+        public GameObject GetPooledObject(GameObject pooledGameObject) {
+            return GetPooledObject(pooledGameObject, defaultObjectParent.transform.position, defaultObjectParent.transform.rotation, defaultObjectParent.transform, false);
+        }
+
+        public GameObject GetPooledObject(GameObject pooledGameObject, Vector3 spawnLocation, Quaternion spawnRotation, Transform parentTransform, bool worldPositionStays = false) {
             GameObject returnValue = null;
             AddKeyIfNeeded(pooledGameObject);
 
@@ -104,13 +108,16 @@ namespace AnyRPG {
             if (freeObjects[pooledGameObject].Count > 0) {
                 returnValue = freeObjects[pooledGameObject][0];
                 returnValue.transform.SetParent(parentTransform, false);
+                returnValue.transform.position = spawnLocation;
+                returnValue.transform.rotation = spawnRotation;
                 usedObjects[pooledGameObject].Add(freeObjects[pooledGameObject][0]);
                 freeObjects[pooledGameObject].RemoveAt(0);
+                returnValue.SetActive(true);
             } else {
                 // there were no free objects.  check if the list is allowed to expand and instantiate if necessary
                 int maxObjectCount = GetMaximumObjectCount(pooledGameObject);
                 if (maxObjectCount == 0 || usedObjects[pooledGameObject].Count < maxObjectCount) {
-                    returnValue = Instantiate(pooledGameObject, parentTransform);
+                    returnValue = Instantiate(pooledGameObject, spawnLocation, spawnRotation, parentTransform);
                     usedObjects[pooledGameObject].Add(returnValue);
                 }
             }
@@ -129,15 +136,32 @@ namespace AnyRPG {
             return returnValue;
         }
 
+        public void ReturnObjectToPool(GameObject pooledGameObject, float delayTime = 0f) {
+            if (delayTime == 0f) {
+                ReturnObjectToPool(pooledGameObject);
+                return;
+            }
+            StartCoroutine(ReturnDelay(pooledGameObject, delayTime));
+        }
+
+        public IEnumerator ReturnDelay(GameObject pooledGameObject, float delayTime) {
+            yield return new WaitForSeconds(delayTime);
+            ReturnObjectToPool(pooledGameObject);
+        }
+
         public void ReturnObjectToPool(GameObject pooledGameObject) {
             foreach (GameObject gameObjectKey in usedObjects.Keys) {
                 if (usedObjects[gameObjectKey].Contains(pooledGameObject)) {
                     usedObjects[gameObjectKey].Remove(pooledGameObject);
                     freeObjects[gameObjectKey].Add(pooledGameObject);
+
                     break;
                 }
             }
+
+            // move pooled object to pool transform
             pooledGameObject.SetActive(false);
+            pooledGameObject.transform.parent = defaultObjectParent.transform;
         }
 
     }

@@ -39,7 +39,7 @@ namespace AnyRPG {
         public void HandleCloseWindow() {
             //Debug.Log("PreviewManager.HandleCloseWindow()");
             if (unitController != null) {
-                Destroy(unitController.gameObject);
+                ObjectPooler.MyInstance.ReturnObjectToPool(unitController.gameObject);
                 unitController = null;
             }
         }

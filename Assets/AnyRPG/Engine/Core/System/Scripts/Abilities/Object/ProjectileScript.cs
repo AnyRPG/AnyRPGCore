@@ -95,13 +95,6 @@ namespace AnyRPG {
             }
         }
 
-        private void OnCollisionEnter(Collision collision) {
-            //Debug.Log("ProjectileScript.OnCollissionEnter()");
-        }
-
-        private void OnDestroy() {
-            //Debug.Log(abilityEffectInput.baseAbility + ".ProjectileScript.OnDestroy()");
-        }
     }
 
 }

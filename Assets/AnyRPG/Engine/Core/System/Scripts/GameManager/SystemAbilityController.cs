@@ -38,7 +38,7 @@ namespace AnyRPG {
 
             foreach (GameObject go in abilityManager.AbilityEffectGameObjects) {
                 if (go != null) {
-                    Destroy(go);
+                    ObjectPooler.MyInstance.ReturnObjectToPool(go);
                 }
             }
             abilityManager.AbilityEffectGameObjects.Clear();
@@ -111,7 +111,7 @@ namespace AnyRPG {
                     abilityManager.AbilityEffectGameObjects.Remove(go);
                 }
                 if (go != null) {
-                    Destroy(go, fixedLengthEffect.PrefabDestroyDelay);
+                    ObjectPooler.MyInstance.ReturnObjectToPool(go, fixedLengthEffect.PrefabDestroyDelay);
                 }
             }
             abilityEffectObjects.Clear();

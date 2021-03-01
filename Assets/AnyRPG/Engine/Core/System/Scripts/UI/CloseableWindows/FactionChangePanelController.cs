@@ -49,7 +49,7 @@ namespace AnyRPG {
                 return;
             }
             for (int i = 0; i < capabilityProps.AbilityList.Count; i++) {
-                RewardButton rewardIcon = Instantiate(rewardIconPrefab, abilityIconsArea.transform).GetComponent<RewardButton>();
+                RewardButton rewardIcon = ObjectPooler.MyInstance.GetPooledObject(rewardIconPrefab, abilityIconsArea.transform).GetComponent<RewardButton>();
                 rewardIcon.SetDescribable(capabilityProps.AbilityList[i]);
                 abilityRewardIcons.Add(rewardIcon);
                 if (capabilityProps.AbilityList[i].RequiredLevel > PlayerManager.MyInstance.MyCharacter.CharacterStats.Level) {
@@ -63,7 +63,7 @@ namespace AnyRPG {
             //Debug.Log("FactionChangePanelController.ClearRewardIcons()");
 
             foreach (RewardButton rewardIcon in abilityRewardIcons) {
-                Destroy(rewardIcon.gameObject);
+                ObjectPooler.MyInstance.ReturnObjectToPool(rewardIcon.gameObject);
             }
             abilityRewardIcons.Clear();
         }

@@ -343,7 +343,7 @@ namespace AnyRPG {
             foreach (UMA.OverlayColorData overlayColorData in CharacterCreatorManager.MyInstance.PreviewUnitController.DynamicCharacterAvatar.CurrentSharedColors) {
                 //Debug.Log("CharacterCreatorPanel.ColorsClick(): overlayColorData.name: " + overlayColorData.name);
 
-                GameObject go = GameObject.Instantiate(ColorPrefab);
+                GameObject go = ObjectPooler.MyInstance.GetPooledObject(ColorPrefab);
                 AvailableColorsHandler availableColorsHandler = go.GetComponent<AvailableColorsHandler>();
 
                 SharedColorTable currColors = ClothingColor;

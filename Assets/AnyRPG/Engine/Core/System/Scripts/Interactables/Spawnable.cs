@@ -222,8 +222,7 @@ namespace AnyRPG {
                     usedRotation = prefabProfile.PickupRotation;
                 }
 
-                //spawnReference = Instantiate(prefabProfile.MyPrefab, transform.TransformPoint(usedPosition), Quaternion.LookRotation(transform.forward), transform);
-                spawnReference = Instantiate(prefabProfile.Prefab, transform.TransformPoint(usedPosition), transform.localRotation, transform);
+                spawnReference = ObjectPooler.MyInstance.GetPooledObject(prefabProfile.Prefab, transform.TransformPoint(usedPosition), transform.localRotation, transform);
 
                 // updated scale from normal to sheathed this allows pickup nodes for things you can't equip to show a different size in hand than on the ground
                 spawnReference.transform.localScale = usedScale;
@@ -249,7 +248,7 @@ namespace AnyRPG {
             //Debug.Log(gameObject.name + ".Spawnable.DestroySpawn()");
             if (spawnReference != null) {
                 //Debug.Log(gameObject.name + ".Spawnable.DestroySpawn(): destroying spawn");
-                Destroy(spawnReference);
+                ObjectPooler.MyInstance.ReturnObjectToPool(spawnReference);
                 spawnReference = null;
             }
         }

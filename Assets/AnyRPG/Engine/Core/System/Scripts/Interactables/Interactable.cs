@@ -1032,8 +1032,6 @@ namespace AnyRPG {
             }
 
             originalMaterials.Clear();
-
-            //Destroy(this);
         }
 
         #endregion

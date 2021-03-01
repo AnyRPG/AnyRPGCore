@@ -65,7 +65,7 @@ namespace AnyRPG {
 
             if (MyStartObject == null || (nullEndObject == false && (endObject == null || endObject.activeInHierarchy == false))) {
                 // need to be able to shoot at ground, but should still exit if we had an actual original target
-                Destroy(gameObject);
+                ObjectPooler.MyInstance.ReturnObjectToPool(gameObject);
                 return;
             }
             UpdateTransform();
@@ -81,7 +81,7 @@ namespace AnyRPG {
         private void UpdateTransform() {
             if (MyStartObject == null || (nullEndObject == false && (endObject == null || endObject.activeInHierarchy == false))) {
                 // need to be able to shoot at ground, but should still exit if we had an actual original target
-                Destroy(gameObject);
+                ObjectPooler.MyInstance.ReturnObjectToPool(gameObject);
                 return;
             }
             Vector3 absoluteStartPosition = MyStartObject.transform.TransformPoint(MyStartPosition);

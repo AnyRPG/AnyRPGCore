@@ -419,9 +419,8 @@ namespace AnyRPG {
             if (spawnPrefab == null) {
                 return null;
             }
-
             
-            GameObject prefabObject = Instantiate(spawnPrefab, position, (forward == Vector3.zero ? Quaternion.identity : Quaternion.LookRotation(forward)), parentTransform);
+            GameObject prefabObject = ObjectPooler.MyInstance.GetPooledObject(spawnPrefab, position, (forward == Vector3.zero ? Quaternion.identity : Quaternion.LookRotation(forward)), parentTransform);
 
             return prefabObject;
         }

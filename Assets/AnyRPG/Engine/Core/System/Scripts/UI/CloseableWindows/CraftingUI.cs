@@ -125,7 +125,7 @@ namespace AnyRPG {
             foreach (Recipe recipe in GetRecipes()) {
                 //Debug.Log("craftingUI.ShowRecipesCommon(" + craftAbility.name + ") : adding recipe:" + recipe.MyOutput.itemName);
                 if (recipe.MyOutput != null) {
-                    GameObject go = Instantiate(recipePrefab, recipeParent);
+                    GameObject go = ObjectPooler.MyInstance.GetPooledObject(recipePrefab, recipeParent);
                     RecipeScript qs = go.GetComponentInChildren<RecipeScript>();
                     if (firstScript == null) {
                         firstScript = qs;
@@ -231,7 +231,7 @@ namespace AnyRPG {
             foreach (RecipeScript recipeScript in recipeScripts) {
                 //Debug.Log("The recipenode has a gameobject we need to clear");
                 recipeScript.gameObject.transform.SetParent(null);
-                Destroy(recipeScript.gameObject);
+                ObjectPooler.MyInstance.ReturnObjectToPool(recipeScript.gameObject);
             }
             recipeScripts.Clear();
         }

@@ -73,7 +73,7 @@ namespace AnyRPG {
         }
 
         public CombatTextController GetCombatTextController() {
-            GameObject pooledObject = ObjectPooler.MyInstance.GetPooledObject(combatTextPrefab, combatTextCanvas.transform);
+            GameObject pooledObject = ObjectPooler.MyInstance.GetPooledObject(combatTextPrefab, combatTextCanvas.transform.position, combatTextCanvas.transform.rotation, combatTextCanvas.transform);
             if (pooledObject != null) {
                 return pooledObject.GetComponent<CombatTextController>();
             }
@@ -136,7 +136,6 @@ namespace AnyRPG {
                 return;
             }
             //Debug.Log("Combat Text manager Spawning Combat Text attached to: " + target.name);
-            //GameObject _gameObject = Instantiate(combatTextPrefab, target.transform.position, Quaternion.identity, combatTextCanvas.transform);
             //Debug.Log("About to Set MainTarget on combat text");
             CombatTextController combatTextController = GetCombatTextController();
             if (combatTextController != null) {

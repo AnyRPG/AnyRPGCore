@@ -87,7 +87,7 @@ namespace AnyRPG {
 
             foreach (Skill skill in skillTrainer.Props.Skills) {
                 if (!PlayerManager.MyInstance.MyCharacter.CharacterSkillManager.HasSkill(skill)) {
-                    GameObject go = Instantiate(skillPrefab, availableArea.transform);
+                    GameObject go = ObjectPooler.MyInstance.GetPooledObject(skillPrefab, availableArea.transform);
                     SkillTrainerSkillScript qs = go.GetComponent<SkillTrainerSkillScript>();
                     qs.MyText.text = skill.DisplayName;
                     qs.MyText.color = Color.white;
@@ -197,7 +197,7 @@ namespace AnyRPG {
             foreach (SkillTrainerSkillScript skill in skillScripts) {
                 if (skill != null) {
                     skill.gameObject.transform.SetParent(null);
-                    Destroy(skill.gameObject);
+                    ObjectPooler.MyInstance.ReturnObjectToPool(skill.gameObject);
                 }
             }
             skillScripts.Clear();

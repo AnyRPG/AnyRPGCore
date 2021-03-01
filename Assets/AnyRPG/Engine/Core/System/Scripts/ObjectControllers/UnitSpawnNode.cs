@@ -460,7 +460,7 @@ namespace AnyRPG {
             //Debug.Log(gameObject.name + ".UnitSpawnNode.DestroySpawn(): Destroying spawns");
             foreach (UnitController unitController in spawnReferences) {
                 //Debug.Log(gameObject.name + ".UnitSpawnNode.DestroySpawn(): Destroying spawn: " + unitController.gameObject.name + "; delay: " + despawnDelay);
-                Destroy(unitController.gameObject, despawnDelay);
+                ObjectPooler.MyInstance.ReturnObjectToPool(unitController.gameObject, despawnDelay);
             }
             spawnReferences.Clear();
         }

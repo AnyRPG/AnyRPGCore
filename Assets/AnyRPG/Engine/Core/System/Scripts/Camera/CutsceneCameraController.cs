@@ -21,26 +21,6 @@ namespace AnyRPG {
 
         // public variables
 
-        private void Awake() {
-            //Debug.Log("CutsceneCameraController.Awake()");
-        }
-
-        private void Start() {
-            //Debug.Log("CutsceneCameraController.Start()");
-        }
-
-        public void OnEnable() {
-            //Debug.Log("CutsceneCameraController.OnEnable()");
-        }
-
-        private void OnDisable() {
-            //Debug.Log("CutsceneCameraController.OnDisable()");
-        }
-
-        private void OnDestroy() {
-            //Debug.Log("AnyRPGCutsceneCameraController.OnDestroy()");
-        }
-
         private void LateUpdate() {
             if (InputManager.MyInstance == null) {
                 Debug.LogError("InputManager not found in scene.  Is the GameManager in the scene?");

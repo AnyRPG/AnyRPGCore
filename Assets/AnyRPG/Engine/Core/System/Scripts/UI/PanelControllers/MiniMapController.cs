@@ -200,7 +200,7 @@ namespace AnyRPG {
         public GameObject AddIndicator(Interactable interactable) {
             //Debug.Log("MinimapController.AddIndicator(" + interactable.gameObject.name + ")");
             if (miniMapIndicatorControllers.ContainsKey(interactable) == false) {
-                GameObject miniMapIndicator = Instantiate(miniMapIndicatorPrefab, miniMapGraphic.transform);
+                GameObject miniMapIndicator = ObjectPooler.MyInstance.GetPooledObject(miniMapIndicatorPrefab, miniMapGraphic.transform);
                 MiniMapIndicatorController miniMapIndicatorController = miniMapIndicator.GetComponent<MiniMapIndicatorController>();
                 miniMapIndicatorControllers.Add(interactable, miniMapIndicatorController);
                 miniMapIndicatorController.SetInteractable(interactable);
@@ -214,7 +214,7 @@ namespace AnyRPG {
 
         public void RemoveIndicator(Interactable interactable) {
             if (miniMapIndicatorControllers.ContainsKey(interactable)) {
-                Destroy(miniMapIndicatorControllers[interactable].gameObject);
+                ObjectPooler.MyInstance.ReturnObjectToPool(miniMapIndicatorControllers[interactable].gameObject);
                 miniMapIndicatorControllers.Remove(interactable);
             }
         }

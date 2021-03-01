@@ -71,7 +71,7 @@ namespace AnyRPG {
             }
             for (int i = 0; i < traitList.Count; i++) {
                 if (traitList[i] != null) {
-                    RewardButton rewardIcon = Instantiate(rewardIconPrefab, traitIconsArea.transform).GetComponent<RewardButton>();
+                    RewardButton rewardIcon = ObjectPooler.MyInstance.GetPooledObject(rewardIconPrefab, traitIconsArea.transform).GetComponent<RewardButton>();
                     rewardIcon.SetDescribable(traitList[i]);
                     traitRewardIcons.Add(rewardIcon);
                     if (traitList[i].RequiredLevel > PlayerManager.MyInstance.MyCharacter.CharacterStats.Level) {
@@ -103,7 +103,7 @@ namespace AnyRPG {
             }
             for (int i = 0; i < abilityList.Count; i++) {
                 if (abilityList[i] != null) {
-                    RewardButton rewardIcon = Instantiate(rewardIconPrefab, abilityIconsArea.transform).GetComponent<RewardButton>();
+                    RewardButton rewardIcon = ObjectPooler.MyInstance.GetPooledObject(rewardIconPrefab, abilityIconsArea.transform).GetComponent<RewardButton>();
                     rewardIcon.SetDescribable(abilityList[i]);
                     abilityRewardIcons.Add(rewardIcon);
                     if (abilityList[i].RequiredLevel > PlayerManager.MyInstance.MyCharacter.CharacterStats.Level) {
@@ -118,7 +118,7 @@ namespace AnyRPG {
             //Debug.Log("ClassChangePanelController.ClearRewardIcons()");
 
             foreach (RewardButton rewardIcon in traitRewardIcons) {
-                Destroy(rewardIcon.gameObject);
+                ObjectPooler.MyInstance.ReturnObjectToPool(rewardIcon.gameObject);
             }
             traitRewardIcons.Clear();
         }
@@ -127,7 +127,7 @@ namespace AnyRPG {
             //Debug.Log("ClassChangePanelController.ClearRewardIcons()");
 
             foreach (RewardButton rewardIcon in abilityRewardIcons) {
-                Destroy(rewardIcon.gameObject);
+                ObjectPooler.MyInstance.ReturnObjectToPool(rewardIcon.gameObject);
             }
             abilityRewardIcons.Clear();
         }

@@ -50,7 +50,7 @@ namespace AnyRPG {
         public void HandleCollission(IAbilityCaster source, Interactable target, GameObject _abilityEffectObject, AbilityEffectContext abilityEffectInput) {
             //Debug.Log(MyName + ".ProjectileEffect.HandleCollission()");
             PerformAbilityHit(source, target, abilityEffectInput);
-            Destroy(_abilityEffectObject);
+            ObjectPooler.MyInstance.ReturnObjectToPool(_abilityEffectObject);
         }
 
         public override void SetupScriptableObjects() {

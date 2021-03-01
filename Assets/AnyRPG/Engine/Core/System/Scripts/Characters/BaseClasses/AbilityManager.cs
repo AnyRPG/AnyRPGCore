@@ -225,7 +225,7 @@ namespace AnyRPG {
         public virtual void CleanupAbilityEffectGameObjects() {
             foreach (GameObject go in abilityEffectGameObjects) {
                 if (go != null) {
-                    UnityEngine.Object.Destroy(go);
+                    ObjectPooler.MyInstance.ReturnObjectToPool(go);
                 }
             }
             abilityEffectGameObjects.Clear();

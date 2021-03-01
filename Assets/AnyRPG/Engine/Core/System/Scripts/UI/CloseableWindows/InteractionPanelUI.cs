@@ -159,7 +159,7 @@ namespace AnyRPG {
                             // only display complete and available quests here
 
                             if (displayText != string.Empty) {
-                                GameObject go = Instantiate(questPrefab, availableQuestArea.transform);
+                                GameObject go = ObjectPooler.MyInstance.GetPooledObject(questPrefab, availableQuestArea.transform);
                                 InteractionPanelQuestScript qs = go.GetComponent<InteractionPanelQuestScript>();
                                 qs.MyQuest = quest;
                                 qs.MyQuestGiver = (_interactable as QuestGiverComponent);
@@ -188,7 +188,7 @@ namespace AnyRPG {
                     if (_interactable.DisplayName != null && _interactable.DisplayName != string.Empty && _interactable.GetCurrentOptionCount() > 0) {
                         //Debug.Log("InteractionPanelUI.ShowInteractablesCommon(" + interactable.name + "): Instantiating button");
                         for (int i = 0; i < _interactable.GetCurrentOptionCount(); i++) {
-                            GameObject go = Instantiate(interactableButtonPrefab, interactableButtonParent);
+                            GameObject go = ObjectPooler.MyInstance.GetPooledObject(interactableButtonPrefab, interactableButtonParent);
                             InteractionPanelScript iPS = go.GetComponent<InteractionPanelScript>();
                             if (iPS != null) {
                                 iPS.Setup(_interactable, i);
@@ -268,14 +268,14 @@ namespace AnyRPG {
             // clear the skill list so any skill left over from a previous time opening the window aren't shown
             foreach (InteractionPanelQuestScript qs in questScripts) {
                 qs.transform.SetParent(null);
-                Destroy(qs.gameObject);
+                ObjectPooler.MyInstance.ReturnObjectToPool(qs.gameObject);
             }
             questScripts.Clear();
 
             foreach (GameObject go in interactionPanelScripts) {
                 InteractionPanelScript iPS = go.GetComponent<InteractionPanelScript>();
                 go.transform.SetParent(null);
-                Destroy(go);
+                ObjectPooler.MyInstance.ReturnObjectToPool(go);
             }
             interactionPanelScripts.Clear();
         }

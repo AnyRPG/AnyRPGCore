@@ -11317,7 +11317,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ab01cde68dc177e4ba473e27e672b447, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  namePlatePrefab: {fileID: 746073631134800511, guid: e45329e5905fd8e4694401238ea01160,
+  namePlatePrefab: {fileID: 8019714001840586131, guid: e45329e5905fd8e4694401238ea01160,
     type: 3}
   namePlateContainer: {fileID: 8723808694216694768}
 --- !u!1 &6420953126111558378
@@ -20661,16 +20661,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: PlayMenuWindow
-      objectReference: {fileID: 0}
-    - target: {fileID: 5120163514250653680, guid: 68f5ca014f941464fb2050af8153f198,
-        type: 3}
-      propertyPath: m_SizeDelta.x
-      value: -100
-      objectReference: {fileID: 0}
-    - target: {fileID: 5120163514250653680, guid: 68f5ca014f941464fb2050af8153f198,
-        type: 3}
-      propertyPath: m_SizeDelta.y
-      value: -100
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 68f5ca014f941464fb2050af8153f198, type: 3}

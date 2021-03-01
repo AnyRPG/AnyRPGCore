@@ -325,7 +325,7 @@ namespace AnyRPG {
                 if (questNode.MyGameObject != null) {
                     //Debug.Log("The questnode has a gameobject we need to clear");
                     questNode.MyGameObject.transform.SetParent(null);
-                    Destroy(questNode.MyGameObject);
+                    ObjectPooler.MyInstance.ReturnObjectToPool(questNode.MyGameObject);
                     questNode.MyGameObject = null;
                 }
             }

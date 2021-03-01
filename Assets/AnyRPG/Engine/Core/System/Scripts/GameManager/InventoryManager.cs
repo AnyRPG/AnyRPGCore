@@ -243,7 +243,7 @@ namespace AnyRPG {
 
                 if (i < bagCount) {
                     // create a new BagWindow to show the contents of this bag Nodes' bag
-                    bagNode.BagWindow = Instantiate(windowPrefab, inventoryWindowHolders[i].transform).GetComponent<CloseableWindow>();
+                    bagNode.BagWindow = ObjectPooler.MyInstance.GetPooledObject(windowPrefab, Vector3.zero, Quaternion.identity, inventoryWindowHolders[i].transform).GetComponent<CloseableWindow>();
                     bagNode.BagWindow.transform.GetComponent<RectTransform>().pivot = new Vector2(1, 1);
                     // create a bagbutton to access this bag node
 
@@ -261,7 +261,7 @@ namespace AnyRPG {
                         bagNode.BagWindow = PopupWindowManager.MyInstance.bankWindow;
                     } else {
                         //Debug.Log("InventoryManager.InitializeBagWindows(): create element " + i + " creating bag window");
-                        bagNode.BagWindow = Instantiate(windowPrefab, inventoryWindowHolders[i - 1].transform).GetComponent<CloseableWindow>();
+                        bagNode.BagWindow = ObjectPooler.MyInstance.GetPooledObject(windowPrefab, inventoryWindowHolders[i - 1].transform).GetComponent<CloseableWindow>();
                         bagNode.BagWindow.transform.GetComponent<RectTransform>().pivot = new Vector2(1, 1);
                     }
 

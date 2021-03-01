@@ -205,7 +205,7 @@ namespace AnyRPG {
 
                                     if (targetBone != null) {
                                         //Debug.Log("EquipmentManager.HandleWeaponSlot(): " + newItem.name + " has a physical prefab. targetbone is not null: equipSlot: " + newItem.equipSlot);
-                                        GameObject newEquipmentPrefab = UnityEngine.Object.Instantiate(attachmentNode.HoldableObject.Prefab, targetBone, false);
+                                        GameObject newEquipmentPrefab = ObjectPooler.MyInstance.GetPooledObject(attachmentNode.HoldableObject.Prefab, Vector3.zero, Quaternion.identity, targetBone, false);
                                         //holdableObjects.Add(attachmentNode.MyHoldableObject, newEquipmentPrefab);
                                         holdableObjects.Add(attachmentNode, newEquipmentPrefab);
                                         //currentEquipmentPhysicalObjects[equipmentSlotProfile] = newEquipmentPrefab;
@@ -582,12 +582,12 @@ namespace AnyRPG {
                     foreach (KeyValuePair<AttachmentNode, GameObject> holdableObjectReference in currentEquipmentPhysicalObjects[equipmentSlot]) {
                         GameObject destroyObject = holdableObjectReference.Value;
                         //Debug.Log("equipment manager trying to unequip item in slot " + equipmentSlot.ToString() + "; destroying object: " + destroyObject.name);
-                        GameObject.Destroy(destroyObject);
+                        ObjectPooler.MyInstance.ReturnObjectToPool(destroyObject);
                     }
                 }
                 Equipment oldItem = currentEquipment[equipmentSlot];
 
-                if (oldItem.MyUMARecipes != null && oldItem.MyUMARecipes.Count > 0 && baseCharacter.UnitController != null && baseCharacter.UnitController.DynamicCharacterAvatar != null) {
+                if (oldItem.MyUMARecipes != null && oldItem.MyUMARecipes.Count > 0 && baseCharacter.UnitController?.DynamicCharacterAvatar != null) {
                     // Clear the item from the UMA slot on the UMA character
                     //Debug.Log("Clearing UMA slot " + oldItem.UMARecipe.wardrobeSlot);
                     //avatar.SetSlot(newItem.UMARecipe.wardrobeSlot, newItem.UMARecipe.name);

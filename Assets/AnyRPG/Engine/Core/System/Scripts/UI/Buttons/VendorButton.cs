@@ -82,7 +82,6 @@ namespace AnyRPG {
 
         public void OnPointerClick(PointerEventData eventData) {
             if (vendorItem.MyItem.BuyPrice == 0 || vendorItem.MyItem.MyCurrency == null || (CurrencyConverter.GetConvertedValue(vendorItem.MyItem.MyCurrency, vendorItem.MyItem.BuyPrice) <= PlayerManager.MyInstance.MyCharacter.CharacterCurrencyManager.GetBaseCurrencyValue(vendorItem.MyItem.MyCurrency))) {
-                //Item tmpItem = Instantiate(vendorItem.MyItem);
                 Item tmpItem = SystemItemManager.MyInstance.GetNewResource(vendorItem.MyItem.DisplayName);
                 //Debug.Log("Instantiated an item with id: " + tmpItem.GetInstanceID().ToString());
                 if (InventoryManager.MyInstance.AddItem(tmpItem)) {

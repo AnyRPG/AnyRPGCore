@@ -228,10 +228,7 @@ namespace AnyRPG {
         
 
         public void WriteChatMessage(string newMessage) {
-            //float scrollBarValue = chatScrollBar.value;
-            //GameObject go = Instantiate(textPrefab, chatContentArea.transform);
             TextLogController textLogController = GetTextLogController(ref chatLogControllers, ref usedChatLogControllers);
-            //chatMessageList.Add(go);
             textLogController.InitializeTextLogController(newMessage);
             LayoutRebuilder.ForceRebuildLayoutImmediate(chatRectTranform);
 
@@ -240,11 +237,6 @@ namespace AnyRPG {
         public void WriteCombatMessage(string newMessage) {
             //Debug.Log("CombatLogUI.WriteCombatMessage(" + newMessage + ")");
 
-            //float scrollBarValue = combatScrollBar.value;
-            //Debug.Log("CombatLogUI.WriteCombatMessage(" + newMessage + "): scrollbarValue: " + combatScrollBar.value);
-
-            //GameObject go = Instantiate(textPrefab, combatContentArea.transform);
-            //combatMessageList.Add(go);
             TextLogController textLogController = GetTextLogController(ref combatLogControllers, ref usedCombatLogControllers);
             textLogController.InitializeTextLogController(newMessage);
 
@@ -253,9 +245,6 @@ namespace AnyRPG {
         }
 
         public void WriteSystemMessage(string newMessage) {
-            //float scrollBarValue = systemScrollBar.value;
-            //GameObject go = Instantiate(textPrefab, systemContentArea.transform);
-            //systemMessageList.Add(go);
             TextLogController textLogController = GetTextLogController(ref systemLogControllers, ref usedSystemLogControllers);
 
             textLogController.InitializeTextLogController(newMessage);

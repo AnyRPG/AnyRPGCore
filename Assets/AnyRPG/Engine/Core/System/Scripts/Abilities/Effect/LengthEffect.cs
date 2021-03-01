@@ -173,17 +173,12 @@ namespace AnyRPG {
                             prefabParent = originalTarget.transform;
                         }
                         if (prefabSpawnLocation != PrefabSpawnLocation.None && (target != null || prefabSpawnLocation == PrefabSpawnLocation.GroundTarget || GetTargetOptions(source).RequireTarget == false)) {
-                            //float finalX = (prefabParent == null ? prefabOffset.x : prefabParent.TransformPoint(prefabOffset).x);
-                            //float finalY = (prefabParent == null ? prefabOffset.y : prefabParent.TransformPoint(prefabOffset).x);
-                            //float finalZ = (prefabParent == null ? prefabOffset.z : prefabParent.TransformPoint(prefabOffset).z);
                             float finalX = (prefabParent == null ? spawnLocation.x + nodePosition.x : prefabParent.TransformPoint(nodePosition).x);
                             float finalY = (prefabParent == null ? spawnLocation.y + nodePosition.y : prefabParent.TransformPoint(nodePosition).y);
                             float finalZ = (prefabParent == null ? spawnLocation.z + nodePosition.z : prefabParent.TransformPoint(nodePosition).z);
                             //Vector3 finalSpawnLocation = new Vector3(spawnLocation.x + finalX, spawnLocation.y + prefabOffset.y, spawnLocation.z + finalZ);
                             Vector3 finalSpawnLocation = new Vector3(finalX, finalY, finalZ);
                             //Debug.Log("Instantiating Ability Effect Prefab for: " + MyName + " at " + finalSpawnLocation + "; prefabParent: " + (prefabParent == null ? "null " : prefabParent.name) + ";");
-                            // CORRECT WAY BELOW
-                            //abilityEffectObject = Instantiate(abilityEffectPrefab, finalSpawnLocation, Quaternion.LookRotation(source.AbilityManager.UnitGameObject.transform.forward) * Quaternion.Euler(prefabRotation), PlayerManager.MyInstance.MyEffectPrefabParent.transform);
                             Vector3 usedForwardDirection = Vector3.forward;
                             if (source != null && source.AbilityManager.UnitGameObject != null) {
                                 usedForwardDirection = source.AbilityManager.UnitGameObject.transform.forward;
@@ -191,21 +186,15 @@ namespace AnyRPG {
                             if (prefabParent != null) {
                                 usedForwardDirection = prefabParent.transform.forward;
                             }
-                            GameObject prefabObject = Instantiate(abilityAttachmentNode.HoldableObject.Prefab,
+                            GameObject prefabObject = ObjectPooler.MyInstance.GetPooledObject(abilityAttachmentNode.HoldableObject.Prefab,
                                 finalSpawnLocation,
                                 Quaternion.LookRotation(usedForwardDirection) * Quaternion.Euler(nodeRotation),
                                 prefabParent);
-                            if (prefabObject == null) {
-                                //Debug.Log(DisplayName + ".LengthEffect.Cast(): prefabObject = null");
-                            } else {
-                                //Debug.Log(DisplayName + ".LengthEffect.Cast(): PREFAB SPAWNED PROPERLY AND IS NAMED: " + prefabObject.name);
-                            }
                             prefabObject.transform.localScale = nodeScale;
                             prefabObjects[abilityAttachmentNode.HoldableObject] = prefabObject;
                             if (destroyOnEndCast) {
                                 source.AbilityManager.AddAbilityObject(abilityAttachmentNode, prefabObject);
                             }
-                            //abilityEffectObject =
                         }
                     }
                 }
@@ -254,15 +243,6 @@ namespace AnyRPG {
 
         public virtual void CancelEffect(BaseCharacter targetCharacter) {
             //Debug.Log(DisplayName + ".LengthEffect.CancelEffect(" + targetCharacter.MyName + ")");
-            /*
-            if (prefabObjects != null) {
-                foreach (GameObject go in prefabObjects.Values) {
-                    //Debug.Log(MyName + ".LengthEffect.CancelEffect(" + targetCharacter.MyName + "): Destroy: " + go.name);
-                    Destroy(go, prefabDestroyDelay);
-                }
-            }
-            */
-
         }
 
         public override void SetupScriptableObjects() {

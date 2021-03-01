@@ -142,7 +142,7 @@ namespace AnyRPG {
             //Debug.Log("LoadGamePanel.ClearLoadButtons()");
             foreach (LoadGameButton loadGameButton in loadGameButtons) {
                 if (loadGameButton != null) {
-                    Destroy(loadGameButton.gameObject);
+                    ObjectPooler.MyInstance.ReturnObjectToPool(loadGameButton.gameObject);
                 }
             }
             loadGameButtons.Clear();
@@ -169,7 +169,7 @@ namespace AnyRPG {
 
             foreach (AnyRPGSaveData anyRPGSaveData in SaveManager.MyInstance.GetSaveDataList()) {
                 //Debug.Log("LoadGamePanel.ShowLoadButtonsCommon(): setting a button with saved game data");
-                GameObject go = Instantiate(buttonPrefab, buttonArea.transform);
+                GameObject go = ObjectPooler.MyInstance.GetPooledObject(buttonPrefab, buttonArea.transform);
                 LoadGameButton loadGameButton = go.GetComponent<LoadGameButton>();
                 loadGameButton.AddSaveData(anyRPGSaveData);
                 //quests.Add(go);

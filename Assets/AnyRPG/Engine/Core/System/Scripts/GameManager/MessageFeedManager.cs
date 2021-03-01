@@ -42,18 +42,18 @@ namespace AnyRPG {
             if (PlayerPrefs.GetInt("UseMessageFeed") == 0) {
                 return;
             }
-            GameObject go = Instantiate(messagePrefab, messageFeedGameObject.transform);
+            GameObject go = ObjectPooler.MyInstance.GetPooledObject(messagePrefab, messageFeedGameObject.transform);
             go.GetComponent<TextMeshProUGUI>().text = message;
             //uncomment the next line to make the messages spawn at the top instead of the bottom
             //go.transform.SetAsFirstSibling();
-            Destroy(go, 2);
+            ObjectPooler.MyInstance.ReturnObjectToPool(go, 2);
             if (CombatLogUI.MyInstance != null) {
                 CombatLogUI.MyInstance.WriteSystemMessage(message);
             } else {
                 //Debug.Log("CombatLogUI.Myinstance was null!!");
             }
         }
-
+        
         public void LockUI() {
             if (PlayerPrefs.HasKey("LockUI")) {
                 if (PlayerPrefs.GetInt("LockUI") == 0) {

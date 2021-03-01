@@ -37,7 +37,7 @@ public class KeyBindMenuController : WindowContentController {
             } else if (keyBindNode.MyKeyBindType == KeyBindType.Constant) {
                 nodeParent = systemKeyParent.transform;
             }
-            KeyBindSlotScript keyBindSlotScript = Instantiate(keyBindButtonPrefab, nodeParent).GetComponent<KeyBindSlotScript>();
+            KeyBindSlotScript keyBindSlotScript = ObjectPooler.MyInstance.GetPooledObject(keyBindButtonPrefab, nodeParent).GetComponent<KeyBindSlotScript>();
             keyBindSlotScript.Initialize(keyBindNode);
             keyBindNode.SetSlotScript(keyBindSlotScript);
         }

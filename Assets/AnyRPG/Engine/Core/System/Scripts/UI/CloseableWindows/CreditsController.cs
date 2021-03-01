@@ -26,14 +26,14 @@ namespace AnyRPG {
             foreach (CreditsCategory creditsCategory in SystemCreditsCategoryManager.MyInstance.GetResourceList()) {
                 GameObject go = null;
                 if (firstCategoryPassed) {
-                    go = Instantiate(creditCategoryTemplate, creditsContainer);
+                    go = ObjectPooler.MyInstance.GetPooledObject(creditCategoryTemplate, creditsContainer);
                     go.GetComponent<CreditCategoryController>().MyTitleText.text = " ";
                 }
-                go = Instantiate(creditCategoryTemplate, creditsContainer);
+                go = ObjectPooler.MyInstance.GetPooledObject(creditCategoryTemplate, creditsContainer);
                 go.GetComponent<CreditCategoryController>().MyTitleText.text = creditsCategory.DisplayName;
                 firstCategoryPassed = true;
                 foreach (CreditsNode creditsNode in creditsCategory.MyCreditsNodes) {
-                    go = Instantiate(creditTemplate, creditsContainer);
+                    go = ObjectPooler.MyInstance.GetPooledObject(creditTemplate, creditsContainer);
                     CreditController creditController = go.GetComponent<CreditController>();
                     creditController.MyCreditNameText.text = creditsNode.CreditName;
                     creditController.MyAttributionText.text = creditsNode.CreditAttribution;
