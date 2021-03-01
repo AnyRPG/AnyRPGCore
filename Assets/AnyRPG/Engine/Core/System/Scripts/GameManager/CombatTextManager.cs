@@ -28,7 +28,7 @@ namespace AnyRPG {
         [SerializeField]
         private Canvas combatTextCanvas;
 
-        private List<CombatTextController> combatTextControllers = new List<CombatTextController>();
+        //private List<CombatTextController> combatTextControllers = new List<CombatTextController>();
 
         private List<CombatTextController> inUseCombatTextControllers = new List<CombatTextController>();
 
@@ -38,11 +38,6 @@ namespace AnyRPG {
             //Debug.Log("NamePlateManager.Awake(): " + NamePlateManager.MyInstance.gameObject.name);
             SystemEventManager.StartListening("AfterCameraUpdate", HandleAfterCameraUpdate);
             SystemEventManager.StartListening("OnLevelUnload", HandleLevelUnload);
-        }
-
-        public void Start() {
-            //List<GameObject> foundObjects = combatTextCanvas.transform.fi
-            PopulateObjectPool();
         }
 
         public void HandleAfterCameraUpdate(string eventName, EventParamProperties eventParamProperties) {
@@ -77,42 +72,28 @@ namespace AnyRPG {
             }
         }
 
-        public void PopulateObjectPool() {
-            foreach (Transform child in combatTextCanvas.transform) {
-                CombatTextController combatTextController = child.GetComponent<CombatTextController>();
-                if (combatTextController != null) {
-                    combatTextControllers.Add(combatTextController);
-                }
-            }
-        }
-
         public CombatTextController GetCombatTextController() {
-            CombatTextController returnValue = null;
-            if (combatTextControllers.Count > 0) {
-                returnValue = combatTextControllers[0];
-                inUseCombatTextControllers.Add(combatTextControllers[0]);
-                combatTextControllers.RemoveAt(0);
-            } else {
-                if (inUseCombatTextControllers.Count > 0) {
-                    returnValue = inUseCombatTextControllers[0];
-                    inUseCombatTextControllers.RemoveAt(0);
-                    inUseCombatTextControllers.Add(returnValue);
-                }
+            GameObject pooledObject = ObjectPooler.MyInstance.GetPooledObject(combatTextPrefab, combatTextCanvas.transform);
+            if (pooledObject != null) {
+                return pooledObject.GetComponent<CombatTextController>();
             }
-            return returnValue;
+
+            return null;
         }
 
+        /// <summary>
+        /// wait until the end of the frame and then return the object to the pool to avoid modifying the collection in the foreach loop
+        /// </summary>
+        /// <param name="combatTextController"></param>
         public void returnControllerToPool(CombatTextController combatTextController) {
-            StartCoroutine(ReturnAtEndOFFrame(combatTextController));
+            StartCoroutine(ReturnAtEndOfFrame(combatTextController));
         }
 
-        public IEnumerator ReturnAtEndOFFrame(CombatTextController combatTextController) {
+        public IEnumerator ReturnAtEndOfFrame(CombatTextController combatTextController) {
             yield return new WaitForEndOfFrame();
-            if (inUseCombatTextControllers.Contains(combatTextController)) {
-                inUseCombatTextControllers.Remove(combatTextController);
-                combatTextControllers.Add(combatTextController);
-            }
-            combatTextController.gameObject.SetActive(false);
+            inUseCombatTextControllers.Remove(combatTextController);
+            ObjectPooler.MyInstance.ReturnObjectToPool(combatTextController.gameObject);
+
         }
 
         public void SpawnCombatText(Interactable target, int damage, CombatTextType combatType, CombatMagnitude combatMagnitude, AbilityEffectContext abilityEffectContext) {
@@ -120,10 +101,16 @@ namespace AnyRPG {
             if (PlayerPrefs.GetInt("UseFloatingCombatText") == 0) {
                 return;
             }
-            //GameObject _gameObject = Instantiate(combatTextPrefab, target.transform.position, Quaternion.identity, combatTextCanvas.transform);
             CombatTextController combatTextController = GetCombatTextController();
             if (combatTextController != null) {
                 //Debug.Log("About to Set MainTarget on combat text");
+                inUseCombatTextControllers.Add(combatTextController);
+                /*
+                Rect rectTransform = combatTextController.RectTransform.rect;
+                rectTransform.width = 0;
+                rectTransform.height = 0;
+                */
+                combatTextController.RectTransform.rect.Set(combatTextController.RectTransform.rect.x, combatTextController.RectTransform.rect.y, 0, 0);
                 combatTextController.InitializeCombatTextController(target,
                     null,
                     GetDisplayText(combatType, damage),

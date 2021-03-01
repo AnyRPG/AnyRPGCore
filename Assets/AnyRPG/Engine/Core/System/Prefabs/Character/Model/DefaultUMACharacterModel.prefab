@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 6973582095505325909}
   - component: {fileID: 3309121852376907503}
   m_Layer: 8
-  m_Name: DefaultUMAModel
+  m_Name: DefaultUMACharacterModel
   m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -46,11 +46,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   context: {fileID: 0}
   umaData: {fileID: 0}
+  defaultRendererAsset: {fileID: 0}
   umaRecipe: {fileID: 0}
   umaAdditionalRecipes:
   - {fileID: 11400000, guid: 920d59ac577b2d9449aa36a4d9e86f10, type: 2}
   umaGenerator: {fileID: 0}
-  animationController: {fileID: 0}
+  animationController: {fileID: 9100000, guid: 547e6a8928ecb2d49b24c599db6d49c9, type: 2}
   CharacterCreated:
     m_PersistentCalls:
       m_Calls: []
@@ -66,7 +67,22 @@ MonoBehaviour:
   CharacterDnaUpdated:
     m_PersistentCalls:
       m_Calls: []
+  AnimatorStateSaved:
+    m_PersistentCalls:
+      m_Calls: []
+  AnimatorStateRestored:
+    m_PersistentCalls:
+      m_Calls: []
+  DelayUnload: 2
+  BundleCheck: 1
+  KeepAnimatorController: 0
   RecipeUpdated:
+    m_PersistentCalls:
+      m_Calls: []
+  WardrobeAdded:
+    m_PersistentCalls:
+      m_Calls: []
+  WardrobeRemoved:
     m_PersistentCalls:
       m_Calls: []
   hide: 0
@@ -77,6 +93,7 @@ MonoBehaviour:
   defaultChangeRaceOptions: 8
   cacheCurrentState: 1
   rebuildSkeleton: 0
+  alwaysRebuildSkeleton: 0
   preloadWardrobeRecipes:
     loadDefaultRecipes: 1
     recipes:
@@ -93,12 +110,11 @@ MonoBehaviour:
       - HumanMale
       - HumanMaleHighPoly
   raceAnimationControllers:
-    defaultAnimationController: {fileID: 0}
+    defaultAnimationController: {fileID: 9100000, guid: 547e6a8928ecb2d49b24c599db6d49c9,
+      type: 2}
     animators: []
     dynamicallyAddFromResources: 0
     resourcesFolderPath: 
-    dynamicallyAddFromAssetBundles: 1
-    assetBundleNames: 
   characterColors:
     _colors:
     - name: Skin
@@ -110,9 +126,12 @@ MonoBehaviour:
       - {r: 0, g: 0, b: 0, a: 0}
       - {r: 0, g: 0, b: 0, a: 0}
       - {r: 0, g: 0, b: 0, a: 0}
+      PropertyBlock:
+        serializedProperties: []
       _name: 
       _color: {r: 1, g: 1, b: 1, a: 1}
       _metallicGloss: {r: 0, g: 0, b: 0, a: 0}
+      Raw: 0
       valuesConverted: 0
     - name: Hair
       channelMask:
@@ -123,9 +142,12 @@ MonoBehaviour:
       - {r: 0, g: 0, b: 0, a: 0}
       - {r: 0, g: 0, b: 0, a: 0}
       - {r: 0, g: 0, b: 0, a: 0}
+      PropertyBlock:
+        serializedProperties: []
       _name: 
       _color: {r: 1, g: 1, b: 1, a: 1}
       _metallicGloss: {r: 0, g: 0, b: 0, a: 0}
+      Raw: 0
       valuesConverted: 0
     - name: Eyes
       channelMask:
@@ -136,9 +158,12 @@ MonoBehaviour:
       - {r: 0, g: 0, b: 0, a: 0}
       - {r: 0, g: 0, b: 0, a: 0}
       - {r: 0, g: 0, b: 0, a: 0}
+      PropertyBlock:
+        serializedProperties: []
       _name: 
       _color: {r: 1, g: 1, b: 1, a: 1}
       _metallicGloss: {r: 0, g: 0, b: 0, a: 0}
+      Raw: 0
       valuesConverted: 0
   predefinedDNA:
     PreloadValues: []
@@ -147,7 +172,8 @@ MonoBehaviour:
   loadFilename: 
   loadString: 
   loadFileOnStart: 0
-  waitForBundles: 1
+  ForceSlotMaterials: 0
+  AtlasResolutionScale: 1
   defaultLoadOptions: 31
   savePathType: 0
   savePath: 
@@ -156,6 +182,7 @@ MonoBehaviour:
   ensureSharedColors: 0
   defaultSaveOptions: 15
   BoundsOffset: {x: 0, y: 0, z: 0}
+  editorTimeGeneration: 1
   showPlaceholder: 1
   previewModel: 0
   customModel: {fileID: 0}

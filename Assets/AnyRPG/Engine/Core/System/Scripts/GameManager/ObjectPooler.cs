@@ -86,25 +86,31 @@ namespace AnyRPG {
                     AddKeyIfNeeded(pooledObjectConfig.PooledObject);
                     for (int i = 0; i < pooledObjectConfig.PreloadCount; i++) {
                         freeObjects[pooledObjectConfig.PooledObject].Add(Instantiate(pooledObjectConfig.PooledObject, defaultObjectParent.transform));
+                        freeObjects[pooledObjectConfig.PooledObject][i].SetActive(false);
                     }
                 }
             }
         }
 
         public GameObject GetPooledObject(GameObject pooledGameObject) {
+            return GetPooledObject(pooledGameObject, defaultObjectParent.transform);
+        }
+
+        public GameObject GetPooledObject(GameObject pooledGameObject, Transform parentTransform) {
             GameObject returnValue = null;
             AddKeyIfNeeded(pooledGameObject);
 
             // attempt to find a free object
             if (freeObjects[pooledGameObject].Count > 0) {
                 returnValue = freeObjects[pooledGameObject][0];
+                returnValue.transform.SetParent(parentTransform, false);
                 usedObjects[pooledGameObject].Add(freeObjects[pooledGameObject][0]);
                 freeObjects[pooledGameObject].RemoveAt(0);
             } else {
                 // there were no free objects.  check if the list is allowed to expand and instantiate if necessary
                 int maxObjectCount = GetMaximumObjectCount(pooledGameObject);
                 if (maxObjectCount == 0 || usedObjects[pooledGameObject].Count < maxObjectCount) {
-                    returnValue = Instantiate(pooledGameObject, defaultObjectParent.transform);
+                    returnValue = Instantiate(pooledGameObject, parentTransform);
                     usedObjects[pooledGameObject].Add(returnValue);
                 }
             }
@@ -124,13 +130,6 @@ namespace AnyRPG {
         }
 
         public void ReturnObjectToPool(GameObject pooledGameObject) {
-            StartCoroutine(ReturnAtEndOFFrame(pooledGameObject));
-        }
-
-        // was this because some objects will attempt to run their update method?
-        public IEnumerator ReturnAtEndOFFrame(GameObject pooledGameObject) {
-            yield return new WaitForEndOfFrame();
-            // bad code because of loop but for now until a better way to compare the index 
             foreach (GameObject gameObjectKey in usedObjects.Keys) {
                 if (usedObjects[gameObjectKey].Contains(pooledGameObject)) {
                     usedObjects[gameObjectKey].Remove(pooledGameObject);

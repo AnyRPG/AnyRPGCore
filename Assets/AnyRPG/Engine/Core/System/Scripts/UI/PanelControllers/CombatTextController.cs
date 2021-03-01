@@ -16,6 +16,9 @@ namespace AnyRPG {
         [SerializeField]
         private Image image = null;
 
+        [SerializeField]
+        private RectTransform rectTransform = null;
+
         [Tooltip("Text will always be placed this many pixels to the left or right of the target center")]
         [SerializeField]
         private float xUIOffset = 25f;
@@ -62,6 +65,8 @@ namespace AnyRPG {
         private int directionMultiplier = 1;
 
         private int fontSizeMultiplier = 1;
+
+        public RectTransform RectTransform { get => rectTransform; set => rectTransform = value; }
 
         public void InitializeCombatTextController(Interactable mainTarget, Sprite sprite, string displayText, CombatTextType combatTextType, CombatMagnitude combatMagnitude = CombatMagnitude.normal, AbilityEffectContext abilityEffectContext = null) {
             this.mainTarget = mainTarget;
