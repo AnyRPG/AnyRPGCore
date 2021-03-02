@@ -243,7 +243,7 @@ namespace AnyRPG {
 
                 if (i < bagCount) {
                     // create a new BagWindow to show the contents of this bag Nodes' bag
-                    bagNode.BagWindow = ObjectPooler.MyInstance.GetPooledObject(windowPrefab, Vector3.zero, Quaternion.identity, inventoryWindowHolders[i].transform).GetComponent<CloseableWindow>();
+                    bagNode.BagWindow = ObjectPooler.MyInstance.GetPooledObject(windowPrefab, inventoryWindowHolders[i].transform).GetComponent<CloseableWindow>();
                     bagNode.BagWindow.transform.GetComponent<RectTransform>().pivot = new Vector2(1, 1);
                     // create a bagbutton to access this bag node
 

@@ -73,7 +73,7 @@ namespace AnyRPG {
         }
 
         public CombatTextController GetCombatTextController() {
-            GameObject pooledObject = ObjectPooler.MyInstance.GetPooledObject(combatTextPrefab, combatTextCanvas.transform.position, combatTextCanvas.transform.rotation, combatTextCanvas.transform);
+            GameObject pooledObject = ObjectPooler.MyInstance.GetPooledObject(combatTextPrefab, combatTextCanvas.transform);
             if (pooledObject != null) {
                 return pooledObject.GetComponent<CombatTextController>();
             }

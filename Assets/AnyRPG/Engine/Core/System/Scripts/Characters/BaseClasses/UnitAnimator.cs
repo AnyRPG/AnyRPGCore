@@ -173,10 +173,11 @@ namespace AnyRPG {
             }
 
             if (overrideController == null) {
-                //Debug.Log(gameObject.name + ": override controller was null. creating new override controller");
+                //Debug.Log(unitController.gameObject.name + ".UnitAnimator.InitializeAnimator() override controller was null");
                 if (animatorController == null) {
-                    //Debug.Log(gameObject.name + ".CharacterAnimator.InitializeAnimator() animatorController is null");
+                    //Debug.Log(unitController.gameObject.name + ".UnitAnimator.InitializeAnimator() animatorController is null");
                 } else {
+                    //Debug.Log(unitController.gameObject.name + ".UnitAnimator.InitializeAnimator() creating new override controller");
                     overrideController = new AnimatorOverrideController(animatorController);
                     //SetOverrideController(overrideController);
                     SetCorrectOverrideController(false);
@@ -194,7 +195,7 @@ namespace AnyRPG {
         }
 
         public void SetCorrectOverrideController(bool runUpdate = true) {
-            //Debug.Log(unitController.gameObject.name + ".CharacterAnimator.SetCorrectOverrideController()");
+            //Debug.Log(unitController.gameObject.name + ".UnitAnimator.SetCorrectOverrideController()");
             if (unitController.UnitControllerMode == UnitControllerMode.Player && SystemConfigurationManager.MyInstance.UseThirdPartyMovementControl == true) {
                 SetOverrideController(thirdPartyOverrideController, runUpdate);
                 return;
@@ -205,18 +206,21 @@ namespace AnyRPG {
         }
 
         public void SetDefaultOverrideController(bool runUpdate = true) {
-            //Debug.Log(unitController.gameObject.name + ".CharacterAnimator.SetDefaultOverrideController()");
+            //Debug.Log(unitController.gameObject.name + ".UnitAnimator.SetDefaultOverrideController()");
             SetOverrideController(overrideController, runUpdate);
         }
 
         public void SetOverrideController(AnimatorOverrideController animatorOverrideController, bool runUpdate = true) {
+            //Debug.Log(unitController.gameObject.name + ".UnitAnimator.SetOverrideController()");
 
             if (animator.runtimeAnimatorController != animatorOverrideController && animatorOverrideController != null) {
+                //Debug.Log(unitController.gameObject.name + ".UnitAnimator.SetOverrideController(): setting animator override");
                 animator.runtimeAnimatorController = animatorOverrideController;
 
                 // set animator on UMA if one exists
                 if (unitController.DynamicCharacterAvatar != null) {
                     unitController.DynamicCharacterAvatar.raceAnimationControllers.defaultAnimationController = animatorOverrideController;
+                    unitController.DynamicCharacterAvatar.animationController = animatorOverrideController;
                 }
                 //animator.updateMode = AnimatorUpdateMode.
                 if (runUpdate) {
@@ -226,14 +230,14 @@ namespace AnyRPG {
         }
 
         public void SetAnimationProfileOverride(AnimationProps animationProps) {
-            //Debug.Log(gameObject.name + ".CharacterAnimator.SetAnimationProfileOverride(" + (animationProfile == null ? "null" : animationProfile.MyProfileName) + ")");
+            //Debug.Log(gameObject.name + ".UnitAnimator.SetAnimationProfileOverride(" + (animationProfile == null ? "null" : animationProfile.MyProfileName) + ")");
             //AnimationProfile oldAnimationProfile = currentAnimationProfile;
             currentAnimationProps = animationProps;
             SetAnimationClipOverrides();
         }
 
         public void ResetAnimationProfile() {
-            //Debug.Log(gameObject.name + ".CharacterAnimator.ResetAnimationProfile()");
+            //Debug.Log(gameObject.name + ".UnitAnimator.ResetAnimationProfile()");
             //AnimationProfile oldAnimationProfile = currentAnimationProfile;
             currentAnimationProps = defaultAnimationProps;
             // change back to the original animations

@@ -264,7 +264,7 @@ namespace AnyRPG {
 
                             if (targetBone != null) {
                                 //Debug.Log("EquipmentManager.HandleWeaponSlot(): " + newItem.name + " has a physical prefab. targetbone is not null: equipSlot: " + newItem.equipSlot);
-                                GameObject newEquipmentPrefab = ObjectPooler.MyInstance.GetPooledObject(abilityAttachmentNode.HoldableObject.Prefab, Vector3.zero, Quaternion.identity, targetBone, false);
+                                GameObject newEquipmentPrefab = ObjectPooler.MyInstance.GetPooledObject(abilityAttachmentNode.HoldableObject.Prefab, targetBone);
                                 //holdableObjects.Add(attachmentNode.MyHoldableObject, newEquipmentPrefab);
                                 holdableObjects.Add(abilityAttachmentNode, newEquipmentPrefab);
                                 //currentEquipmentPhysicalObjects[equipmentSlotProfile] = newEquipmentPrefab;
