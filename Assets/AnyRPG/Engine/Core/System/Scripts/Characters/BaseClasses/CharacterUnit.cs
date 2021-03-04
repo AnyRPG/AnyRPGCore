@@ -176,7 +176,7 @@ namespace AnyRPG {
                 // this character could have been ressed while waiting to despawn.  don't let it despawn if that happened unless forceDesapwn is true (such as at the end of a patrol)
                 // we are going to send this ondespawn call now to allow another unit to respawn from a spawn node without a long wait during events that require rapid mob spawning
                 OnDespawn(baseCharacter.UnitController);
-                ObjectPooler.MyInstance.ReturnObjectToPool(baseCharacter.UnitController.gameObject);
+                baseCharacter.UnitController.Despawn();
             } else {
                 //Debug.Log(gameObject.name + ".CharacterUnit.PerformDespawnDelay(" + despawnDelay + ", " + addSystemDefaultTime + ", " + forceDespawn + "): unit is alive!! NOT DESPAWNING");
             }

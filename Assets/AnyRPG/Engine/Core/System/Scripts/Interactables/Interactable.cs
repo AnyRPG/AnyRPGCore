@@ -10,7 +10,7 @@ namespace AnyRPG {
     public class Interactable : Spawnable, IDescribable {
 
         public event System.Action OnPrerequisiteUpdates = delegate { };
-        public event System.Action OnInteractableDestroy = delegate { };
+        public event System.Action OnInteractableDisable = delegate { };
 
         // this field does not do anything, but is needed to satisfy the IDescribable interface
         protected Sprite interactableIcon = null;
@@ -1070,20 +1070,8 @@ namespace AnyRPG {
                     interactableOptionComponent.Cleanup();
                 }
             }
-        }
 
-        protected override void OnDestroy() {
-            base.OnDestroy();
-            /*
-            foreach (InteractableOptionComponent interactableOptionComponent in interactables) {
-                //Debug.Log(gameObject.name + ".Interactable.Awake(): Found InteractableOptionComponent: " + interactable.ToString());
-                if (interactableOptionComponent != null) {
-                    // in rare cases where a script is missing or has been made abstract, but not updated, this can return a null interactable option
-                    interactableOptionComponent.Cleanup();
-                }
-            }
-            */
-            OnInteractableDestroy();
+            OnInteractableDisable();
         }
 
 

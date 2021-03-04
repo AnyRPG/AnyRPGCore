@@ -22,31 +22,6 @@ namespace AnyRPG {
         [SerializeField]
         protected List<CurrencyAmountController> currencyAmountControllers = new List<CurrencyAmountController>();
 
-        public void Awake() {
-            CreateEventSubscriptions();
-        }
-
-        private void CreateEventSubscriptions() {
-            //Debug.Log("VendorUI.CreateEventSubscriptions()");
-            if (eventSubscriptionsInitialized) {
-                return;
-            }
-            eventSubscriptionsInitialized = true;
-        }
-
-        private void CleanupEventSubscriptions() {
-            //Debug.Log("UnitSpawnNode.CleanupEventSubscriptions()");
-            if (!eventSubscriptionsInitialized) {
-                return;
-            }
-            eventSubscriptionsInitialized = false;
-        }
-
-        public void OnDestroy() {
-            //Debug.Log("UnitSpawnNode.OnDisable(): stopping any outstanding coroutines");
-            CleanupEventSubscriptions();
-        }
-
         public void ClearCurrencyAmounts() {
             foreach (CurrencyAmountController currencyAmountController in currencyAmountControllers) {
                 currencyAmountController.gameObject.SetActive(false);

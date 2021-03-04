@@ -1112,7 +1112,7 @@ namespace AnyRPG {
                 baseCharacter.CharacterAbilityManager.HandleDie(this);
                 baseCharacter.UnitController.FreezePositionXZ();
                 baseCharacter.UnitController.UnitAnimator.HandleDie(this);
-                baseCharacter.UnitController.NamePlateController.HandleNamePlateNeedsRemoval(this);
+                baseCharacter.UnitController.CleanupNameplate();
                 baseCharacter.UnitController.CharacterUnit.HandleDie(this);
                 baseCharacter.UnitController.NotifyOnAfterDie(this);
             }

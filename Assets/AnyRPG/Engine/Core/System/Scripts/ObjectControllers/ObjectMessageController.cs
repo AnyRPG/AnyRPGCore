@@ -543,8 +543,8 @@ namespace AnyRPG {
             }
         }
 
-        public void OnDestroy() {
-            //Debug.Log(gameObject.name + "ObjectMessageController.OnDestroy()");
+        public void OnDisable() {
+            //Debug.Log(gameObject.name + "ObjectMessageController.OnDisable()");
             CleanupEventResponses();
         }
 

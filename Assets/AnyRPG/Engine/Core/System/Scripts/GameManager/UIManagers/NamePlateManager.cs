@@ -92,9 +92,7 @@ namespace AnyRPG {
         public NamePlateController AddNamePlate(NamePlateUnit interactable, bool usePositionOffset) {
             //Debug.Log("NamePlateManager.AddNamePlate(" + interactable.DisplayName + ")");
             if (namePlates.ContainsKey(interactable) == false) {
-                NamePlateController namePlate = SpawnNamePlate(interactable, usePositionOffset);
-                interactable.NamePlateController.NamePlateNeedsRemoval += RemoveNamePlate;
-                return namePlate;
+                return SpawnNamePlate(interactable, usePositionOffset);
             }
             //Debug.Log("NamePlateManager.AddNamePlate(" + namePlateUnit.DisplayName + "): key already existed.  returning null!!!");
             return null;
@@ -102,9 +100,6 @@ namespace AnyRPG {
 
         public void RemoveNamePlate(NamePlateUnit namePlateUnit) {
             //Debug.Log("NamePlatemanager.RemoveNamePlate(" + namePlateUnit.DisplayName + ")");
-            if (namePlateUnit?.NamePlateController != null) {
-                namePlateUnit.NamePlateController.NamePlateNeedsRemoval -= RemoveNamePlate;
-            }
             if (namePlates.ContainsKey(namePlateUnit)) {
                 if (namePlates[namePlateUnit] != null && namePlates[namePlateUnit].gameObject != null) {
                     ObjectPooler.MyInstance.ReturnObjectToPool(namePlates[namePlateUnit].gameObject);

@@ -94,25 +94,6 @@ namespace AnyRPG {
         public CapabilityConsumerProcessor CapabilityConsumerProcessor { get => capabilityConsumerProcessor; }
         public string UnitProfileName { get => unitProfileName; }
 
-        /*
-        private void Awake() {
-            Debug.Log(gameObject.name + ": BaseCharacter.Awake()");
-
-            // react to level load and unload events
-            CreateEventSubscriptions();
-
-            // find out if this character is on a unit
-            GetComponentReferences();
-
-            // get reference to any hard coded unit profile
-            SetupScriptableObjects();
-
-            // setup the objects that handle different character mechanics
-            CreateCharacterComponents();
-
-        }
-        */
-
         // baseCharacter does not initialize itself.  It is initialized by the PlayerManager (player case), or the UnitController (AI case)
         public void Init() {
             //Debug.Log(gameObject.name + ".BaseCharacter.Init()");
@@ -638,6 +619,11 @@ namespace AnyRPG {
             characterStats.HandleCharacterUnitSpawn();
         }
 
+        public void HandleCharacterUnitDespawn() {
+            //Debug.Log(gameObject.name + ".BaseCharacter.HandleCharacterUnitSpawn()");
+            characterEquipmentManager.HandleCharacterUnitDespawn();
+        }
+
         public void DespawnImmediate() {
             //Debug.Log(gameObject.name + ".BaseCharacter.DespawnImmediate()");
             if (unitController != null && unitController.CharacterUnit != null) {
@@ -664,15 +650,7 @@ namespace AnyRPG {
             Despawn();
         }
 
-        public void SetupScriptableObjects() {
-            /*
-            if (unitProfileName != null && unitProfileName != string.Empty) {
-                SetUnitProfile(UnitProfile.GetUnitProfileReference(unitProfileName));
-            }
-            */
-        }
-
-        public void OnDestroy() {
+        private void OnDisable() {
             StopAllCoroutines();
             CleanupEventSubscriptions();
         }

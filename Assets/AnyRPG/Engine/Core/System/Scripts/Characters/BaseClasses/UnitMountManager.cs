@@ -140,7 +140,7 @@ namespace AnyRPG {
                 unitController.NotifyOnDeActivateMountedState();
             }
             if (mountUnitController != null) {
-                ObjectPooler.MyInstance.ReturnObjectToPool(mountUnitController.gameObject);
+                mountUnitController.Despawn();
 
                 mountUnitController = null;
                 mountUnitProfile = null;

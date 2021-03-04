@@ -12,7 +12,6 @@ namespace AnyRPG {
     public class UnitNamePlateController : BaseNamePlateController {
 
         public override event System.Action OnInitializeNamePlate = delegate { };
-        public override event Action<NamePlateUnit> NamePlateNeedsRemoval = delegate { };
         public override event Action OnNameChange = delegate { };
 
         private UnitController unitController = null;
@@ -139,16 +138,6 @@ namespace AnyRPG {
                 return unitController.CharacterUnit.BaseCharacter.CharacterStats.HasHealthResource;
             }
             return base.HasHealth();
-        }
-
-
-        public override void HandleNamePlateNeedsRemoval(CharacterStats _characterStats) {
-            //Debug.Log(gameObject.name + ".CharacterUnit.HandleNamePlateNeedsRemoval()");
-            if (unitController != null && _characterStats != null) {
-                //Debug.Log(gameObject.name + ".CharacterUnit.HandleNamePlateNeedsRemoval(" + _characterStats + ")");
-                NamePlateNeedsRemoval(unitController);
-            }
-            //baseCharacter.MyCharacterStats.OnHealthChanged -= HealthBarNeedsUpdate;
         }
 
         public override float GetPowerResourceMaxAmount(PowerResource powerResource) {

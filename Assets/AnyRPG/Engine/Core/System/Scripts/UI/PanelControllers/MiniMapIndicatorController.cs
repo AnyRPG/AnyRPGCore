@@ -93,11 +93,11 @@ namespace AnyRPG {
         public void SetInteractable(Interactable interactable) {
             //Debug.Log(gameObject.name + ".MiniMapIndicatorController.SetInteractable(" + interactable.gameObject.name + "): instance: " + instanceNumber);
             this.interactable = interactable;
-            interactable.OnInteractableDestroy += HandleInteractableDestroy;
+            interactable.OnInteractableDisable += HandleInteractableDisable;
             SetupMiniMap();
         }
 
-        public void HandleInteractableDestroy() {
+        public void HandleInteractableDisable() {
             MiniMapController.MyInstance.RemoveIndicator(interactable);
         }
 
@@ -138,7 +138,7 @@ namespace AnyRPG {
         private void OnDestroy() {
             //Debug.Log(gameObject.name + ".MiniMapIndicatorController.OnDestroy(): interactable: " + interactable.gameObject.name);
             if (interactable != null) {
-                interactable.OnInteractableDestroy -= HandleInteractableDestroy;
+                interactable.OnInteractableDisable -= HandleInteractableDisable;
             }
         }
 

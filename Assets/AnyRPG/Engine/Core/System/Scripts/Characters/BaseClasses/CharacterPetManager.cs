@@ -80,7 +80,7 @@ namespace AnyRPG {
             //Debug.Log(baseCharacter.gameObject.name + ".CharacterPetManager.DeSpawnPet(" + unitProfile.DisplayName + ")");
             if (activeUnitProfiles.ContainsKey(unitProfile)) {
                 if (activeUnitProfiles[unitProfile] != null) {
-                    ObjectPooler.MyInstance.ReturnObjectToPool(activeUnitProfiles[unitProfile].gameObject);
+                    activeUnitProfiles[unitProfile].Despawn();
                 }
             }
             activeUnitProfiles.Remove(unitProfile);
@@ -90,7 +90,7 @@ namespace AnyRPG {
             foreach (UnitProfile unitProfile in activeUnitProfiles.Keys) {
                 // check that the controller is not null.  It may have already been destroyed somehow
                 if (activeUnitProfiles[unitProfile] != null) {
-                    ObjectPooler.MyInstance.ReturnObjectToPool(activeUnitProfiles[unitProfile].gameObject);
+                    activeUnitProfiles[unitProfile].Despawn();
                 }
             }
             activeUnitProfiles.Clear();
@@ -99,6 +99,7 @@ namespace AnyRPG {
         public virtual void HandleUnitDestroy(UnitProfile unitProfile) {
             //Debug.Log(baseCharacter.gameObject.name + ".CharacterPetManager.HandleUnitDestroy(" + unitProfile.DisplayName + ")");
             if (activeUnitProfiles.ContainsKey(unitProfile)) {
+                activeUnitProfiles[unitProfile].OnUnitDestroy -= HandleUnitDestroy;
                 activeUnitProfiles.Remove(unitProfile);
             }
         }

@@ -115,7 +115,7 @@ namespace AnyRPG {
         }
 
         // This method does not actually equip the character, just apply models from already equipped equipment
-        public void EquipCharacter() {
+        public void EquipEquipmentModels() {
             //Debug.Log(gameObject.name + ".CharacterEquipmentManager.EquipCharacter()");
             if (currentEquipment == null) {
                 //Debug.Log(gameObject.name + ".CharacterEquipmentManager.EquipCharacter(): currentEquipment == null!");
@@ -573,6 +573,16 @@ namespace AnyRPG {
         }
         */
 
+        public void RemoveEquipmentObjects() {
+            foreach (Dictionary<AttachmentNode, GameObject> holdableObjectReferences in currentEquipmentPhysicalObjects.Values) {
+                //Debug.Log("equipment manager trying to unequip item in slot " + equipmentSlot.ToString() + "; destroying object: " + destroyObject.name);
+                foreach (GameObject holdableObjectReference in holdableObjectReferences.Values) {
+                    ObjectPooler.MyInstance.ReturnObjectToPool(holdableObjectReference);
+                }
+            }
+            currentEquipmentPhysicalObjects.Clear();
+        }
+
         public Equipment Unequip(EquipmentSlotProfile equipmentSlot, int slotIndex = -1, bool rebuildUMA = true) {
             //Debug.Log(gameObject.name + ".CharacterEquipmentManager.Unequip(" + equipmentSlot.ToString() + ", " + slotIndex + ")");
             if (currentEquipment.ContainsKey(equipmentSlot) && currentEquipment[equipmentSlot] != null) {
@@ -682,8 +692,14 @@ namespace AnyRPG {
 
         public void HandleCharacterUnitSpawn() {
             //Debug.Log(baseCharacter.gameObject.name + ".CharacterEquipmentManager.HandleCharacterUnitSpawn()");
-            EquipCharacter();
+            EquipEquipmentModels();
         }
+
+        public void HandleCharacterUnitDespawn() {
+            //Debug.Log(baseCharacter.gameObject.name + ".CharacterEquipmentManager.HandleCharacterUnitSpawn()");
+            RemoveEquipmentObjects();
+        }
+
 
     }
 

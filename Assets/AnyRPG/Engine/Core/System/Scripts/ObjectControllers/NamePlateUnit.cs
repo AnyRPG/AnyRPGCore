@@ -185,17 +185,13 @@ namespace AnyRPG {
             return base.GetTitleString();
         }
 
-        protected override void OnDestroy() {
-            base.OnDestroy();
-            //Debug.Log(gameObject.name + ".NamePlateUnit.OnDestroy()");
-            if (NamePlateController != null) {
-                NamePlateController.Cleanup();
-            }
-        }
-
         public override void OnDisable() {
             //Debug.Log(gameObject.name + ".UnitController.OnDisable()");
             base.OnDisable();
+            CleanupNameplate();
+        }
+
+        public virtual void CleanupNameplate() {
             if (NamePlateManager.MyInstance != null) {
                 NamePlateManager.MyInstance.RemoveNamePlate(this);
             }

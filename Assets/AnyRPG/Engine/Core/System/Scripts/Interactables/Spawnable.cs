@@ -147,12 +147,14 @@ namespace AnyRPG {
 
         public virtual void OnDisable() {
             //Debug.Log(gameObject.name + ".Spawnable.OnDisable()");
+            CleanupEventSubscriptions();
             CleanupEverything();
         }
 
         public virtual void CleanupEverything() {
             //Debug.Log(gameObject.name + ".Spawnable.CleanupEverything()");
             // moved to OnDestroy so disabled object can still respond to levelUnload
+            // which disabled objects?  had to move back to ondisable for object pooling
             //CleanupEventSubscriptions();
             CleanupScriptableObjects();
         }
@@ -282,11 +284,6 @@ namespace AnyRPG {
             //Debug.Log(gameObject.name + ".Spawnable.UpdateOnPlayerUnitSpawn()");
             return PrerequisiteCheck();
             //HandlePrerequisiteUpdates();
-        }
-
-        protected virtual void OnDestroy() {
-            //Debug.Log(gameObject.name + ".Spawnable.OnDestroy()");
-            CleanupEventSubscriptions();
         }
 
         public virtual void SetupScriptableObjects() {

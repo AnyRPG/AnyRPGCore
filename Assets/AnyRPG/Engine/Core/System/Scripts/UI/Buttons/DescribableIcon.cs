@@ -177,9 +177,11 @@ namespace AnyRPG {
             CheckMouse();
         }
 
+        /*
         public virtual void OnDestroy() {
             //Debug.Log("DescribableIcon.OnDestroy()");
         }
+        */
     }
 
 }

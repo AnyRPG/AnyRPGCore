@@ -72,21 +72,18 @@ namespace AnyRPG {
         private PatrolController patrolController = null;
         private BehaviorController behaviorController = null;
         private UnitMountManager unitMountManager = null;
-        //private UnitNamePlateController namePlateController = null;
         private UUID uuid = null;
-        private GameObject unitModel = null;
 
-        // track startup state
-        //private bool profileReady = false;
+        // track model
+        private GameObject unitModel = null;
         private bool modelReady = false;
 
         // control logic
         private IState currentState;
         private List<CombatStrategyNode> startedPhaseNodes = new List<CombatStrategyNode>();
-        //private INamePlateTarget namePlateTarget = null;
 
         // targeting
-        private Interactable target;
+        private Interactable target = null;
         private float distanceToTarget = 0f;
         // keep track of target position to determine of distance check is needed
         private Vector3 lastTargetPosition = Vector3.zero;
@@ -110,9 +107,6 @@ namespace AnyRPG {
         // movement tracking
         private float apparentVelocity = 0f;
         private Vector3 lastPosition = Vector3.zero;
-
-        // disabled for now, should not have this number in multiple places, just increased hitbox size instead and multiplied capsule height by hitbox size directly.  end numbers should be the same
-        //private float hitBoxSizeMultiplier = 1.5f;
 
         // is this unit under the control of a master unit
         private bool underControl = false;
@@ -619,12 +613,80 @@ namespace AnyRPG {
             }
         }
 
-        public override void OnDisable() {
-            //Debug.Log(gameObject.name + ".UnitController.OnDisable()");
-            base.OnDisable();
+        public void Despawn(float delayTime = 0f) {
+            if (delayTime == 0f) {
+                DespawnImmediate();
+                return;
+            }
+            StartCoroutine(DespawnDelay(delayTime));
+        }
+
+        private IEnumerator DespawnDelay(float delayTime) {
+            yield return new WaitForSeconds(delayTime);
+            DespawnImmediate();
+        }
+
+        private void DespawnImmediate() {
+            StopAllCoroutines();
             RemoveControlEffects();
             ProcessPointerExit();
             UnsubscribeFromUMACreate();
+
+            // give the equipment manager a chance to remove the equipment models
+            characterUnit?.BaseCharacter?.HandleCharacterUnitDespawn();
+
+            // now that the model is unequipped, return the model to the pool
+            if (unitProfile?.UnitPrefabProps?.ModelPrefab != null) {
+                ObjectPooler.MyInstance.ReturnObjectToPool(unitModel);
+            }
+
+            persistentObjectComponent.Cleanup();
+            if (behaviorController != null) {
+                behaviorController.Cleanup();
+            }
+            OnUnitDestroy(unitProfile);
+            ResetSettings();
+            ObjectPooler.MyInstance.ReturnObjectToPool(gameObject);
+        }
+
+        /// <summary>
+        /// reset all variables to default values for object pooling
+        /// </summary>
+        private void ResetSettings() {
+            unitProfile = null;
+            unitModel = null;
+            modelReady = false;
+            target = null;
+            distanceToTarget = 0f;
+            lastTargetPosition = Vector3.zero;
+
+            mounted = false;
+            walking = false;
+            frozen = false;
+            stunned = false;
+            levitated = false;
+            motorEnabled = true;
+
+            useAgent = false;
+            startPosition = Vector3.zero;
+            evadeSpeed = 5f;
+            leashDistance = 40f;
+            maxDistanceFromMasterOnMove = 3f;
+            maxCombatDistanceFromMasterOnMove = 15f;
+
+            apparentVelocity = 0f;
+            lastPosition = Vector3.zero;
+            underControl = false;
+            masterUnit = null;
+            riderUnitController = null;
+            movementSoundArea = null;
+        }
+
+        public override void OnDisable() {
+            //Debug.Log(gameObject.name + ".UnitController.OnDisable()");
+            base.OnDisable();
+            // code here was moved to
+            //DespawnImmediate();
         }
 
         private void ProcessPointerExit() {
@@ -1322,6 +1384,7 @@ namespace AnyRPG {
             base.ProcessLevelUnload();
             ClearTarget();
             CancelMountEffects();
+            Despawn();
         }
 
         public void Agro(CharacterUnit agroTarget) {
@@ -1548,16 +1611,6 @@ namespace AnyRPG {
                 Gizmos.matrix = Matrix4x4.TRS(transform.position, transform.rotation, Vector3.one);
                 Gizmos.DrawWireCube(transform.InverseTransformPoint(GetHitBoxCenter()), GetHitBoxSize());
             }
-        }
-
-        protected override void OnDestroy() {
-            base.OnDestroy();
-            StopAllCoroutines();
-            persistentObjectComponent.Cleanup();
-            if (behaviorController != null) {
-                behaviorController.Cleanup();
-            }
-            OnUnitDestroy(unitProfile);
         }
 
         public void CommonMovementNotifier() {

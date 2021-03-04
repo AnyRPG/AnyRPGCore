@@ -121,13 +121,7 @@ namespace AnyRPG {
             }
         }
 
-        public void OnDisable() {
-            //Debug.Log(gameObject.name + gameObject.GetInstanceID() + ".BagPanel.OnDisable()");
-        }
-
-        public void OnDestroy() {
-            //Debug.Log(gameObject.name + gameObject.GetInstanceID() + ".BagPanel.OnDestroy()");
-        }
+       
     }
 
 }

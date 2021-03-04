@@ -11,8 +11,6 @@ namespace AnyRPG {
     public class BaseNamePlateController {
 
         public virtual event System.Action OnInitializeNamePlate = delegate { };
-        public virtual event Action<NamePlateUnit> NamePlateNeedsRemoval = delegate { };
-        //public virtual event Action<int, int> ResourceBarNeedsUpdate = delegate { };
         public virtual event Action OnNameChange = delegate { };
 
         protected NamePlateController namePlate;
@@ -122,12 +120,6 @@ namespace AnyRPG {
             this.namePlateUnit = namePlateUnit;
         }
 
-        public virtual void Cleanup() {
-            if (namePlateUnit != null) {
-                NamePlateNeedsRemoval(namePlateUnit);
-            }
-        }
-
         public void SetNamePlatePosition() {
             if (OverrideNamePlatePosition) {
                 //_namePlate.transform.localPosition = NamePlatePosition;
@@ -178,14 +170,6 @@ namespace AnyRPG {
         public virtual bool HasHealth() {
             //Debug.Log(gameObject.name + ".CharacterUnit.HasHealth(): return true");
             return false;
-        }
-
-        public virtual void HandleNamePlateNeedsRemoval(CharacterStats _characterStats) {
-            //Debug.Log(gameObject.name + ".CharacterUnit.HandleNamePlateNeedsRemoval()");
-            //if (namePlateUnit != null && _characterStats != null) {
-            if (namePlateUnit != null) {
-                NamePlateNeedsRemoval(namePlateUnit);
-            }
         }
 
         public virtual float GetPowerResourceMaxAmount(PowerResource powerResource) {

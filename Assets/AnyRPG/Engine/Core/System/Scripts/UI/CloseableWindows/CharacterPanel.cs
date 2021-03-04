@@ -332,7 +332,7 @@ namespace AnyRPG {
             if (characterEquipmentManager != null) {
                 if (PlayerManager.MyInstance != null && PlayerManager.MyInstance.MyCharacter != null && PlayerManager.MyInstance.MyCharacter.CharacterEquipmentManager != null) {
                     characterEquipmentManager.CurrentEquipment = PlayerManager.MyInstance.MyCharacter.CharacterEquipmentManager.CurrentEquipment;
-                    characterEquipmentManager.EquipCharacter();
+                    characterEquipmentManager.EquipEquipmentModels();
                 }
             }
 

@@ -297,8 +297,9 @@ namespace AnyRPG {
 
             // set active false first because destroy is not done until the end of frame
             // use regular unitController in case player is mounted
-            unitController.gameObject.SetActive(false);
-            ObjectPooler.MyInstance.ReturnObjectToPool(unitController.gameObject);
+            // testing new despawn - check for what was needing it be not be active for
+            //unitController.gameObject.SetActive(false);
+            unitController.Despawn();
             activeUnitController = null;
             playerUnitSpawned = false;
         }
