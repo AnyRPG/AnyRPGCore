@@ -39,7 +39,7 @@ namespace AnyRPG {
             if (targetCharacterUnit != null) {
                 if (targetCharacterUnit.BaseCharacter != null && targetCharacterUnit.BaseCharacter.CharacterCombat != null && targetCharacterUnit.BaseCharacter.CharacterCombat.AggroTable != null) {
                     //Debug.Log("StatusEffect.Cast(" + source.name + ", " + (target ? target.name : "null") + ") CHARACTER COMBAT IS NOT NULL");
-                    AggroNode AgroNode = targetCharacterUnit.BaseCharacter.CharacterCombat.AggroTable.MyTopAgroNode;
+                    AggroNode AgroNode = targetCharacterUnit.BaseCharacter.CharacterCombat.AggroTable.TopAgroNode;
                     float usedAgroValue = 0f;
                     if (AgroNode != null) {
                         usedAgroValue = AgroNode.aggroValue;

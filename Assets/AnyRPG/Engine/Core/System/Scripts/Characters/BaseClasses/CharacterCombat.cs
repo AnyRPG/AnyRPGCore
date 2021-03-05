@@ -121,7 +121,7 @@ namespace AnyRPG {
             }
 
             if (baseCharacter.UnitController.Target == null
-                || aggroTable.MyTopAgroNode == null) {
+                || aggroTable.TopAgroNode == null) {
                 TryToDropCombat();
             }
 
@@ -264,14 +264,14 @@ namespace AnyRPG {
                 return;
             }
             //Debug.Log(gameObject.name + " trying to drop combat.");
-            if (aggroTable.MyTopAgroNode == null) {
+            if (aggroTable.TopAgroNode == null) {
                 //Debug.Log(gameObject.name + ".TryToDropCombat(): topAgroNode is null. Dropping combat.");
                 DropCombat();
             } else {
                 //Debug.Log(gameObject.name + ".TryToDropCombat(): topAgroNode was not null");
                 // this next condition should prevent crashes as a result of level unloads
                 if (BaseCharacter.UnitController.CharacterUnit != null) {
-                    foreach (AggroNode aggroNode in AggroTable.MyAggroNodes) {
+                    foreach (AggroNode aggroNode in AggroTable.AggroNodes) {
                         UnitController _aiController = aggroNode.aggroTarget.BaseCharacter.UnitController as UnitController;
                         // since players don't have an agro radius, we can skip the check and drop combat automatically
                         if (_aiController != null) {
@@ -627,7 +627,7 @@ namespace AnyRPG {
                 // putting this here because it can be overwritten easier than the event handler that calls it
                 //Debug.Log(gameObject.name + " broadcasting death to aggro table");
                 Dictionary<CharacterCombat, float> broadcastDictionary = new Dictionary<CharacterCombat, float>();
-                foreach (AggroNode _aggroNode in AggroTable.MyAggroNodes) {
+                foreach (AggroNode _aggroNode in AggroTable.AggroNodes) {
                     if (_aggroNode.aggroTarget == null) {
                         //Debug.Log(gameObject.name + ": aggronode.aggrotarget is null!");
                     } else {

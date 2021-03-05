@@ -1099,7 +1099,7 @@ namespace AnyRPG {
         }
 
         public void Die() {
-            //Debug.Log(gameObject.name + ".CharacterStats.Die()");
+            //Debug.Log(baseCharacter.gameObject.name + ".CharacterStats.Die()");
             if (isAlive) {
                 isAlive = false;
                 ClearStatusEffects(false);

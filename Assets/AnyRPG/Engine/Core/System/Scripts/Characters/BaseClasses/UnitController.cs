@@ -87,6 +87,9 @@ namespace AnyRPG {
         private float distanceToTarget = 0f;
         // keep track of target position to determine of distance check is needed
         private Vector3 lastTargetPosition = Vector3.zero;
+        // avoid use of local variables for garbage collection
+        private AggroNode topNode = null;
+
 
         // track current state
         private bool mounted = false;
@@ -95,6 +98,7 @@ namespace AnyRPG {
         private bool stunned = false;
         private bool levitated = false;
         private bool motorEnabled = true;
+        private bool despawning = false;
 
         // movement parameters
         private bool useAgent = false;
@@ -476,7 +480,7 @@ namespace AnyRPG {
         /// set this unit to be a player
         /// </summary>
         private void EnablePlayer() {
-            Debug.Log(gameObject.name + "UnitController.EnablePlayer()");
+            //Debug.Log(gameObject.name + "UnitController.EnablePlayer()");
             InitializeNamePlateController();
 
             SetDefaultLayer(SystemConfigurationManager.MyInstance.DefaultPlayerUnitLayer);
@@ -626,6 +630,7 @@ namespace AnyRPG {
         }
 
         private void DespawnImmediate() {
+            despawning = true;
             StopAllCoroutines();
             RemoveControlEffects();
             ProcessPointerExit();
@@ -659,6 +664,7 @@ namespace AnyRPG {
             target = null;
             distanceToTarget = 0f;
             lastTargetPosition = Vector3.zero;
+            topNode = null;
 
             mounted = false;
             walking = false;
@@ -666,6 +672,7 @@ namespace AnyRPG {
             stunned = false;
             levitated = false;
             motorEnabled = true;
+            despawning = false;
 
             useAgent = false;
             startPosition = Vector3.zero;
@@ -1101,6 +1108,11 @@ namespace AnyRPG {
 
             // CLEAR AGRO TABLE OR NOTIFY REPUTATION CHANGE - THIS SHOULD PREVENT ATTACKING SOMETHING THAT SUDDENLY IS UNDER CONTROL AND NOW YOUR FACTION WHILE YOU ARE INCOMBAT WITH IT
             characterUnit?.BaseCharacter?.CharacterCombat?.AggroTable?.ClearTable();
+
+            // nothing past this point needs to happen if the unit is despawning
+            if (despawning) {
+                return;
+            }
             characterUnit?.BaseCharacter?.CharacterFactionManager?.NotifyOnReputationChange();
 
             // should we reset leash position to start position here ?
@@ -1165,15 +1177,13 @@ namespace AnyRPG {
                 //Debug.Log(gameObject.name + ": UpdateTarget(): characterUnit.BaseCharacter.MyCharacterCombat.MyAggroTable is null!!!");
                 return;
             }
-            AggroNode topNode;
+            topNode = null;
             if (underControl) {
-                topNode = masterUnit.CharacterCombat.AggroTable.MyTopAgroNode;
+                topNode = masterUnit.CharacterCombat.AggroTable.TopAgroNode;
             } else {
-                topNode = characterUnit.BaseCharacter.CharacterCombat.AggroTable.MyTopAgroNode;
+                topNode = characterUnit.BaseCharacter.CharacterCombat.AggroTable.TopAgroNode;
             }
-
             if (topNode == null) {
-                //Debug.Log(gameObject.name + ": UpdateTarget() and the topnode was null");
                 if (Target != null) {
                     ClearTarget();
                 }
