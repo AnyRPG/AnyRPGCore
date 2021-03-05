@@ -57,7 +57,7 @@ namespace AnyRPG {
                 if (unitController.CharacterUnit.BaseCharacter != null) {
                     unitController.CharacterUnit.BaseCharacter.CharacterEquipmentManager.AttachmentProfile = cloneSource.UnitPrefabProps.AttachmentProfile;
                 }
-
+                unitController.Init();
             }
         }
 

@@ -47,17 +47,15 @@ namespace AnyRPG {
         public List<Interactable> MyInteractables { get => interactables; }
         public RaycastHit MyMouseOverhit { get => mouseOverhit; set => mouseOverhit = value; }
 
-        protected void Awake() {
+        protected void OnEnable() {
             // put this in player spawn
             allowedInput = true;
             lastTabTargetTime = DateTime.Now;
-        }
 
-        protected void Start() {
-            //Debug.Log(gameObject.name + ".PlayerController.Start()");
-
+            // moved from Start(). monitor for breakage
+            // testing : disabled since this would only do something if the actual keybind was pressed, which it could not have been before Start() anyway
             // run by default
-            ToggleRun();
+            //ToggleRun();
         }
 
         public void ProcessLevelUnload() {

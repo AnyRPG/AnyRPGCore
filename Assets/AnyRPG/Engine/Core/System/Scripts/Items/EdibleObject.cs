@@ -13,7 +13,7 @@ namespace AnyRPG {
         [SerializeField]
         private float interval = 1f;
 
-        void Start() {
+        void OnEnable() {
             lastChange = Time.time;
             portions = new GameObject[transform.childCount];
             for (int i = 0; i < portions.Length; i++) {

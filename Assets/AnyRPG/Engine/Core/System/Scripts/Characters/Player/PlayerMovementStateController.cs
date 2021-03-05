@@ -14,9 +14,6 @@ namespace AnyRPG {
         public delegate void UpdateDelegate();
         public event UpdateDelegate AfterSingleUpdate;
 
-        void Awake() {
-        }
-
         public void Init() {
             //Debug.Log(gameObject.name + ".AnyRPGCharacterController.OrchestrateStartup()");
             gameObject.SendMessage("StateStart", SendMessageOptions.DontRequireReceiver);

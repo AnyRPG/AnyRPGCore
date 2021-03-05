@@ -14,14 +14,19 @@ namespace AnyRPG {
         public IUUID UUID { get => uuid; }
         public PersistentObjectComponent PersistentObjectComponent { get => persistentObjectComponent; set => persistentObjectComponent = value; }
 
-        private void Awake() {
+        private void OnEnable() {
             GetComponentReferences();
             persistentObjectComponent.Setup(this);
+
+            // testing : moved here from start() for object pooling.  monitor for breakage
+            persistentObjectComponent.Init();
         }
 
+        /*
         void Start() {
             persistentObjectComponent.Init();
         }
+        */
 
         public void GetComponentReferences() {
             uuid = GetComponent<UUID>();

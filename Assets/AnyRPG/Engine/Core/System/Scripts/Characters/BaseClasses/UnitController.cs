@@ -35,7 +35,7 @@ namespace AnyRPG {
         public event System.Action<string> OnMessageFeed = delegate { };
         public override event System.Action OnCameraTargetReady = delegate { };
 
-        // by default, a unit will enter AI mode if no mode is set before Start()
+        // by default, a unit will enter AI mode if no mode is set before Init()
         [SerializeField]
         private UnitControllerMode unitControllerMode = UnitControllerMode.AI;
 
@@ -368,6 +368,7 @@ namespace AnyRPG {
                     gameObject.layer = defaultLayer;
                     //Debug.Log(gameObject.name + ".UnitController.SetDefaultLayer(): object was not set to correct layer: " + layerName + ". Setting automatically");
                 }
+                Debug.Log(gameObject.name + ".UnitController.SetDefaultLayer(): unitModel: " + (unitModel == null ? "null" : unitModel.name));
                 if (unitModel != null && !IsInLayerMask(unitModel.layer, finalmask)) {
                     UIManager.MyInstance.SetLayerRecursive(unitModel, defaultLayer);
                     //Debug.Log(gameObject.name + ".UnitController.SetDefaultLayer(): model was not set to correct layer: " + layerName + ". Setting automatically");
@@ -380,7 +381,7 @@ namespace AnyRPG {
         /// set this unit to be a stationary preview
         /// </summary>
         private void SetPreviewMode() {
-            //Debug.Log(gameObject.name + ".UnitController.SetPreviewMode()");
+            Debug.Log(gameObject.name + ".UnitController.SetPreviewMode()");
             SetUnitControllerMode(UnitControllerMode.Preview);
             SetDefaultLayer(SystemConfigurationManager.MyInstance.DefaultCharacterUnitLayer);
             useAgent = false;
@@ -472,7 +473,7 @@ namespace AnyRPG {
         /// set this unit to be a player
         /// </summary>
         private void EnablePlayer() {
-            //Debug.Log(gameObject.name + "UnitController.EnablePlayer()");
+            Debug.Log(gameObject.name + "UnitController.EnablePlayer()");
             InitializeNamePlateController();
 
             SetDefaultLayer(SystemConfigurationManager.MyInstance.DefaultPlayerUnitLayer);
@@ -555,9 +556,9 @@ namespace AnyRPG {
             }
         }
 
-        protected override void Awake() {
-            //Debug.Log(gameObject.name + ".UnitController.Awake()");
-            base.Awake();
+        protected override void OnEnable() {
+            //Debug.Log(gameObject.name + ".UnitController.OnEnable()");
+            base.OnEnable();
 
             // create components here instead?  which ones rely on other things like unit profile being set before start?
             namePlateController = new UnitNamePlateController(this);
@@ -572,8 +573,8 @@ namespace AnyRPG {
             characterUnit.BaseCharacter.Init();
         }
 
-        protected override void Start() {
-
+        public override void ProcessInit() {
+            Debug.Log(gameObject.name + ".UnitController.ProcessInit()");
             if (characterUnit.BaseCharacter.UnitProfile == null
                 && characterUnit.BaseCharacter.UnitProfileName != null
                 && characterUnit.BaseCharacter.UnitProfileName != string.Empty) {
@@ -587,16 +588,11 @@ namespace AnyRPG {
                 ConfigureAnimator();
             }
 
-
-            base.Start();
-            //Debug.Log(gameObject.name + ".UnitController.Start()");
+            base.ProcessInit();
 
             persistentObjectComponent.Init();
 
             SetStartPosition();
-
-            // testing move to individual controller modes
-            //InitializeNamePlateController();
 
             ActivateUnitControllerMode();
 
@@ -653,6 +649,7 @@ namespace AnyRPG {
         /// reset all variables to default values for object pooling
         /// </summary>
         private void ResetSettings() {
+            Debug.Log(gameObject.name + ".UnitController.ResetSettings()");
             unitProfile = null;
             unitModel = null;
             modelReady = false;
@@ -702,7 +699,7 @@ namespace AnyRPG {
         }
 
         public override void GetComponentReferences() {
-            //Debug.Log(gameObject.name + ".UnitController.GetComponentReferences()");
+            Debug.Log(gameObject.name + ".UnitController.GetComponentReferences()");
 
             if (componentReferencesInitialized == true) {
                 return;
@@ -752,7 +749,7 @@ namespace AnyRPG {
         }
 
         /// <summary>
-        /// This method is meant to be called after Awake() and before Start()
+        /// This method is meant to be called after OnEnable() and before Init()
         /// </summary>
         /// <param name="unitProfile"></param>
         public void SetUnitProfile(UnitProfile unitProfile, UnitControllerMode unitControllerMode, int unitLevel = -1) {
@@ -761,12 +758,13 @@ namespace AnyRPG {
 
             SetPersistenceProperties();
 
-            if (characterUnit.BaseCharacter != null) {
+            if (characterUnit?.BaseCharacter != null) {
                 characterUnit.BaseCharacter.SetUnitProfile(unitProfile, true, unitLevel, (unitControllerMode == UnitControllerMode.Player ? false : true));
             }
             SetUnitControllerMode(unitControllerMode);
 
-            Init();
+            // testing - not necessary here since it was actually not doing anything and code is now in Init that used to be in Start which requires the model spawned
+            //Init();
 
             SpawnUnitModel();
 
@@ -843,7 +841,7 @@ namespace AnyRPG {
         }
 
         public void SpawnUnitModel() {
-            //Debug.Log(gameObject.name + "UnitController.SpawnUnitModel()");
+            Debug.Log(gameObject.name + ".UnitController.SpawnUnitModel()");
             if (unitProfile?.UnitPrefabProps?.ModelPrefab != null) {
                 unitModel = unitProfile.SpawnModelPrefab(transform, transform.position, transform.forward);
                 ConfigureAnimator(unitModel);
@@ -851,7 +849,7 @@ namespace AnyRPG {
         }
 
         public void ConfigureAnimator(GameObject newUnitModel = null) {
-            //Debug.Log(gameObject.name + "UnitController.ConfigureAnimator(" + (newUnitModel == null ? "null" : newUnitModel.name) + ")");
+            Debug.Log(gameObject.name + ".UnitController.ConfigureAnimator(" + (newUnitModel == null ? "null" : newUnitModel.name) + ")");
 
             if (newUnitModel != null) {
                 unitModel = newUnitModel;
@@ -1048,7 +1046,6 @@ namespace AnyRPG {
 
         public void SetAggroRange() {
             if (unitComponentController.AggroRangeController != null) {
-                //Debug.Log(gameObject.name + ".AIController.Awake(): setting aggro range");
                 unitComponentController.AggroRangeController.SetAgroRange(AggroRadius, characterUnit.BaseCharacter);
                 if (!(currentState is DeathState)) {
                     unitComponentController.AggroRangeController.StartEnableAggro();

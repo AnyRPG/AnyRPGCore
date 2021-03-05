@@ -373,6 +373,7 @@ namespace AnyRPG {
                 // handle spawn immediately since this is a non UMA unit and waiting should not be necessary
                 HandlePlayerUnitSpawn();
             }
+            activeUnitController.Init();
         }
 
         public void SetActiveUnitController(UnitController unitController) {

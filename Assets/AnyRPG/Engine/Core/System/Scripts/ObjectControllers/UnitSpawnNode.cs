@@ -385,6 +385,7 @@ namespace AnyRPG {
                 //Debug.Log("UnitSpawnNode.Spawn(): setting toughness to null on gameObject: " + spawnReference.name);
                 _characterUnit.BaseCharacter.SetUnitToughness(toughness, true);
             }
+            unitController.Init();
             spawnReferences.Add(unitController);
         }
 

@@ -34,7 +34,7 @@ namespace AnyRPG {
         // common access to properties that provide stats
         private List<IStatProvider> statProviders = new List<IStatProvider>();
 
-        // properties
+        // components
         private CharacterCombat characterCombat = null;
         private CharacterAbilityManager characterAbilityManager = null;
         private CharacterSkillManager characterSkillManager = null;
@@ -50,8 +50,6 @@ namespace AnyRPG {
 
         // components
         private UnitController unitController = null;
-
-        //private bool animationEnabled = false;
 
         // track state
         private bool characterInitialized = false;
@@ -653,6 +651,40 @@ namespace AnyRPG {
         private void OnDisable() {
             StopAllCoroutines();
             CleanupEventSubscriptions();
+            ResetSettings();
+        }
+
+        private void ResetSettings() {
+            characterName = string.Empty;
+            title = string.Empty;
+            faction = null;
+            unitType = null;
+            characterRace = null;
+            characterClass = null;
+            classSpecialization = null;
+            spawnDead = false;
+            unitToughness = null;
+
+            unitProfile = null;
+
+            statProviders = new List<IStatProvider>();
+
+            characterCombat = null;
+            characterAbilityManager = null;
+            characterSkillManager = null;
+            characterPetManager = null;
+            characterFactionManager = null;
+            characterEquipmentManager = null;
+            characterStats = null;
+            characterCurrencyManager = null;
+            characterRecipeManager = null;
+
+            capabilityConsumerProcessor = null;
+
+            unitController = null;
+
+            characterInitialized = false;
+            eventSubscriptionsInitialized = false;
         }
 
     }

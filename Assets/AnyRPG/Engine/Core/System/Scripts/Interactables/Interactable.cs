@@ -191,8 +191,8 @@ namespace AnyRPG {
         public bool IsMouseOverUnit { get => isMouseOverUnit; set => isMouseOverUnit = value; }
         public bool IsMouseOverNameplate { get => isMouseOverNameplate; set => isMouseOverNameplate = value; }
 
-        protected override void Awake() {
-            base.Awake();
+        protected override void OnEnable() {
+            base.OnEnable();
             dialogController = new DialogController(this);
             DisableInteraction();
             temporaryMaterials = null;
@@ -209,20 +209,6 @@ namespace AnyRPG {
                 glowOnMouseOver = false;
             }
 
-        }
-
-        public override void ProcessInit() {
-            base.ProcessInit();
-            // moved to processInit()
-            /*
-            foreach (InteractableOptionComponent interactable in interactables) {
-                //Debug.Log(gameObject.name + ".Interactable.Awake(): Found InteractableOptionComponent: " + interactable.ToString());
-                if (interactable != null) {
-                    // in rare cases where a script is missing or has been made abstract, but not updated, this can return a null interactable option
-                    interactable.Init();
-                }
-            }
-            */
         }
 
         public override void GetComponentReferences() {
@@ -1036,31 +1022,6 @@ namespace AnyRPG {
 
         #endregion
 
-        public override void SetupScriptableObjects() {
-            //Debug.Log(gameObject.name + ".Interactable.SetupScriptableObjects()");
-            base.SetupScriptableObjects();
-
-            //Init functionality moved to constructor : monitor for breakage
-            /*
-            // moved here from processInit
-            foreach (InteractableOptionComponent interactable in interactables) {
-                //Debug.Log(gameObject.name + ".Interactable.Awake(): Found InteractableOptionComponent: " + interactable.ToString());
-                if (interactable != null) {
-                    // in rare cases where a script is missing or has been made abstract, but not updated, this can return a null interactable option
-                    interactable.Init();
-                }
-            }
-            */
-        }
-
-        public virtual void OnEnable() {
-            // NOTE : any interactable that gets disabled and then enabled will not have subscriptions to events from prerequisites on its options anymore
-            // this could be fixed if interactables were part of a pool by re-adding the Init() method to the interactable options or something similar
-            // currently the only interactables that get disabled and then re-enabled are the LunaMechs in the ManaSeal cutscene
-            // and they shouldn't require any specific interactable to be subscribed to anything since they just respond to cutscene timeline events
-            // and the objects that carry out those actions are permanent controllers, not interactable components
-        }
-
         public override void OnDisable() {
             base.OnDisable();
             foreach (InteractableOptionComponent interactableOptionComponent in interactables) {
@@ -1070,8 +1031,31 @@ namespace AnyRPG {
                     interactableOptionComponent.Cleanup();
                 }
             }
-
             OnInteractableDisable();
+
+            interactables = new List<InteractableOptionComponent>();
+
+            originalMaterials = new Dictionary<Renderer, Material[]>();
+
+            temporaryMaterials = null;
+            meshRenderers = null;
+
+            shaderList = new List<Shader>();
+            emissionColorList = new List<Color>();
+            emissionTextureList = new List<Texture>();
+            emissionEnabledList = new List<bool>();
+
+            isInteracting = false;
+            isFlashing = false;
+            hasMeshRenderer = false;
+            miniMapIndicatorReady = false;
+            isMouseOverUnit = false;
+            isMouseOverNameplate = false;
+
+            miniMapIndicator = null;
+            mainMapIndicator = null;
+
+            characterUnit = null;
         }
 
 

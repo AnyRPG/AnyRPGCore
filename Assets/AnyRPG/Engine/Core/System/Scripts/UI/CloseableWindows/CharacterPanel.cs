@@ -335,17 +335,6 @@ namespace AnyRPG {
                     characterEquipmentManager.EquipEquipmentModels();
                 }
             }
-
-            // SEE WEAPONS AND ARMOR IN PLAYER PREVIEW SCREEN
-            // should not be necessary anymore - handled in unitcontroller
-            //CharacterCreatorManager.MyInstance.PreviewUnitController.gameObject.layer = LayerMask.NameToLayer("PlayerPreview");
-            /*
-            foreach (Transform childTransform in CharacterCreatorManager.MyInstance.PreviewUnitController.GetComponentsInChildren<Transform>(true)) {
-                childTransform.gameObject.layer = CharacterCreatorManager.MyInstance.PreviewUnitController.gameObject.layer;
-            }
-            */
-
-            // new code for weapons
         }
 
 

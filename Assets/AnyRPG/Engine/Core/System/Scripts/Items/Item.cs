@@ -200,9 +200,6 @@ namespace AnyRPG {
             }
         }
 
-        public virtual void Awake() {
-        }
-
         public IUseable GetFactoryUseable() {
             return SystemItemManager.MyInstance.GetResource(DisplayName);
         }

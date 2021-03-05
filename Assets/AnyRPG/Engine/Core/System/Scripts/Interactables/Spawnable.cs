@@ -59,8 +59,8 @@ namespace AnyRPG {
             }
         }
 
-        protected virtual void Awake() {
-            //Debug.Log(gameObject.name + ".Spawnable.Awake()");
+        protected virtual void OnEnable() {
+            //Debug.Log(gameObject.name + ".Spawnable.OnEnable()");
             if (SystemGameManager.MyInstance == null) {
                 Debug.LogError(gameObject.name + ": SystemGameManager not found. Is the Game Manager in the scene?");
                 return;
@@ -80,13 +80,14 @@ namespace AnyRPG {
             }
             ProcessInit();
 
-            // moved here from awake because processinit must run to get scriptableobject references
-            /*
-            if (PlayerManager.MyInstance.PlayerUnitSpawned == false) {
-                //this allows us to spawn things with no prerequisites that don't need to check against the player
-                PrerequisiteCheck();
+            // moved here from CreateEventSubscriptions.  Init should have time to occur before processing this
+            if (PlayerManager.MyInstance.PlayerUnitSpawned) {
+                //Debug.Log(gameObject.name + ".Spawnable.CreateEventSubscriptions(): Player Unit is spawned.  Handling immediate spawn!");
+                ProcessPlayerUnitSpawn();
+            } else {
+                //Debug.Log(gameObject.name + ".Spawnable.CreateEventSubscriptions(): Player Unit is not spawned. Added Handle Spawn listener");
             }
-            */
+            startHasRun = true;
             initialized = true;
         }
 
@@ -97,15 +98,6 @@ namespace AnyRPG {
         protected virtual void Start() {
             //Debug.Log(gameObject.name + ".Spawnable.Start()");
             Init();
-
-            // moved here from CreateEventSubscriptions.  Init should have time to occur before processing this
-            if (PlayerManager.MyInstance.PlayerUnitSpawned) {
-                //Debug.Log(gameObject.name + ".Spawnable.CreateEventSubscriptions(): Player Unit is spawned.  Handling immediate spawn!");
-                ProcessPlayerUnitSpawn();
-            } else {
-                //Debug.Log(gameObject.name + ".Spawnable.CreateEventSubscriptions(): Player Unit is not spawned. Added Handle Spawn listener");
-            }
-            startHasRun = true;
         }
 
         public virtual void CreateEventSubscriptions() {
@@ -149,6 +141,11 @@ namespace AnyRPG {
             //Debug.Log(gameObject.name + ".Spawnable.OnDisable()");
             CleanupEventSubscriptions();
             CleanupEverything();
+
+            startHasRun = false;
+            componentReferencesInitialized = false;
+            initialized = false;
+            eventSubscriptionsInitialized = false;
         }
 
         public virtual void CleanupEverything() {

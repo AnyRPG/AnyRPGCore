@@ -22,10 +22,6 @@ namespace AnyRPG {
 
         private int pageIndex;
 
-        private void Start() {
-            //Debug.Log("AbilityBookUI.Start()");
-        }
-
         [SerializeField]
         private Image backGroundImage;
 

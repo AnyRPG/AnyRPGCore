@@ -165,7 +165,6 @@ namespace AnyRPG {
 
         public void SetPlayerOwnerShip() {
             //Debug.Log("NamePlateController.SetPlayerOwnerShip()");
-            //Debug.Log("NamePlateController.Start(). Setting Player healthbar to ignore raycast");
             namePlateCanvasGroup.blocksRaycasts = false;
             UIManager.MyInstance.SetLayerRecursive(gameObject, LayerMask.NameToLayer("Ignore Raycast"));
             isPlayerUnitNamePlate = true;

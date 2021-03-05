@@ -106,6 +106,11 @@ namespace AnyRPG {
             MyStartPosition = startPosition;
             MyEndObject = endObject;
             MyEndPosition = endPosition;
+
+            orthographic = (CameraManager.MyInstance.MyActiveMainCamera != null && CameraManager.MyInstance.MyActiveMainCamera.orthographic);
+            lineRenderer = GetComponent<LineRenderer>();
+            lineRenderer.positionCount = 0;
+            UpdateFromMaterialChange();
         }
 
         private void GetPerpendicularVector(ref Vector3 directionNormalized, out Vector3 side) {
@@ -254,13 +259,6 @@ namespace AnyRPG {
             segments.Clear();
 
             SelectOffsetFromAnimationMode();
-        }
-
-        private void Start() {
-            orthographic = (CameraManager.MyInstance.MyActiveMainCamera != null && CameraManager.MyInstance.MyActiveMainCamera.orthographic);
-            lineRenderer = GetComponent<LineRenderer>();
-            lineRenderer.positionCount = 0;
-            UpdateFromMaterialChange();
         }
 
         private void Update() {

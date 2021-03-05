@@ -60,7 +60,6 @@ namespace AnyRPG {
                 return;
             }
             if (interactable == null) {
-                //Debug.Log(".MiniMapIndicatorController.Start(): interactable is null");
                 return;
             }
             foreach (InteractableOptionComponent _interactable in interactable.Interactables) {
@@ -68,13 +67,11 @@ namespace AnyRPG {
                 if (_interactable.HasMiniMapIcon()) {
                     //else if (_interactable.HasMiniMapIcon()) {
                     // do both now!
-                    //Debug.Log(interactable.MyName + ".MiniMapIndicatorController.Start(): interactable has minimapicon");
                     GameObject go = ObjectPooler.MyInstance.GetPooledObject(miniMapImageLayerPrefab, contentParent);
                     Image _image = go.GetComponent<Image>();
                     _interactable.SetMiniMapIcon(_image);
                     miniMapLayers.Add(_interactable, go);
                 } else if (_interactable.HasMiniMapText()) {
-                    //Debug.Log(transform.parent.gameObject.name + ".MiniMapIndicatorController.Start(): interactable has minimaptext");
                     GameObject go = ObjectPooler.MyInstance.GetPooledObject(miniMapTextLayerPrefab, contentParent);
                     TextMeshProUGUI _text = go.GetComponent<TextMeshProUGUI>();
                     _interactable.SetMiniMapText(_text);

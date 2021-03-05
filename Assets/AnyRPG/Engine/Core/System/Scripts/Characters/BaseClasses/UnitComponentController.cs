@@ -32,12 +32,12 @@ namespace AnyRPG {
 
         //public UnitAudioEmitter UnitAudioEmitter { get => unitAudioEmitter; set => unitAudioEmitter = value; }
 
-        private void Awake() {
+        private void OnEnable() {
             if (unitAudioEmitter == null) {
                 unitAudioEmitter = GetComponentInChildren<UnitAudioEmitter>();
-                Debug.Log(gameObject.name + "UnitAudioController.Awake(): UnitAudioEmitter was not set.  Searching children.");
+                Debug.Log(gameObject.name + "UnitAudioController.OnEnable(): UnitAudioEmitter was not set.  Searching children.");
                 if (unitAudioEmitter == null) {
-                    Debug.LogError(gameObject.name + "UnitAudioController.Awake(): Could not find UnitAudioEmitter in children.  Check object.");
+                    Debug.LogError(gameObject.name + "UnitAudioController.OnEnable(): Could not find UnitAudioEmitter in children.  Check object.");
                 }
             }
         }

@@ -113,6 +113,7 @@ namespace AnyRPG {
             UnitController unitController = unitProfile.SpawnUnitPrefab(baseCharacter.UnitController.transform.parent, baseCharacter.UnitController.transform.position, baseCharacter.UnitController.transform.forward, UnitControllerMode.Pet);
             if (unitController != null) {
                 unitController.SetPetMode(baseCharacter);
+                unitController.Init();
                 unitController.OnUnitDestroy += HandleUnitDestroy;
                 activeUnitProfiles.Add(unitProfile, unitController);
             }

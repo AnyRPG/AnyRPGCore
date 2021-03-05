@@ -88,11 +88,14 @@ namespace AnyRPG {
         // the minimum height at which a collision is considered valid to calculate a forward or backward angle.  This is to prevent bottom collions that falsely register as front or back collisions
         private float collisionMinimumHeight = 0.05f;
 
-        private void Awake() {
+        private void OnEnable() {
             if (PlayerManager.MyInstance != null) {
                 groundMask = PlayerManager.MyInstance.DefaultGroundMask;
             }
             GetComponentReferences();
+            if (movementStateController != null) {
+                movementStateController.enabled = true;
+            }
         }
 
         public void Init() {
@@ -101,7 +104,6 @@ namespace AnyRPG {
             ConfigureStateMachine();
             SwitchCollisionOn();
         }
-
 
         public void ConfigureStateMachine() {
             //Debug.Log(gameObject.name + ".PlayerUnitMovementController.ConfigureStateMachine()");
@@ -850,13 +852,6 @@ namespace AnyRPG {
 
             Gizmos.color = Color.yellow;
             Gizmos.DrawWireCube(PlayerManager.MyInstance.ActiveUnitController.transform.position, maintainingGroundExtents * 2);
-        }
-
-        public void OnEnable() {
-            //Debug.Log(gameObject.name + ".PlayerUnitMovementController.OnEnable()");
-            if (movementStateController != null) {
-                movementStateController.enabled = true;
-            }
         }
 
         public void OnDisable() {

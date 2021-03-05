@@ -13,7 +13,6 @@ namespace AnyRPG {
 
         public SkillTrainerComponent(Interactable interactable, SkillTrainerProps interactableOptionProps) : base(interactable, interactableOptionProps) {
             if (interactableOptionProps.GetInteractionPanelTitle() == string.Empty) {
-                //Debug.Log("SkillTrainer.Start(): interactionPanelTitle is empty: setting to default (Train Me)!!!");
                 interactableOptionProps.InteractionPanelTitle = "Train Me";
             }
             SystemEventManager.MyInstance.OnSkillListChanged += HandleSkillListChanged;

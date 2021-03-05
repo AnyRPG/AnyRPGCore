@@ -36,19 +36,6 @@ namespace AnyRPG {
 
         public virtual bool CameraTargetReady { get => cameraTargetReady; }
 
-        protected override void Awake() {
-            base.Awake();
-            namePlateController = new BaseNamePlateController(this);
-        }
-
-        public override void ProcessInit() {
-            //Debug.Log(gameObject.name + ".NamePlateUnit.ProcessInit()");
-            base.ProcessInit();
-
-            // InitializeNamePlateController called from interactable.HandlePrerequisiteUpdates
-            //InitializeNamePlateController();
-        }
-
         /// <summary>
         /// initialize a nameplate if it has not been initialied yet
         /// </summary>
@@ -189,17 +176,20 @@ namespace AnyRPG {
             //Debug.Log(gameObject.name + ".UnitController.OnDisable()");
             base.OnDisable();
             CleanupNameplate();
-        }
+            cameraTargetReady = true;
+    }
 
         public virtual void CleanupNameplate() {
             if (NamePlateManager.MyInstance != null) {
                 NamePlateManager.MyInstance.RemoveNamePlate(this);
             }
+            namePlateReady = false;
         }
 
-        public override void OnEnable() {
+        protected override void OnEnable() {
             // characters can get disabled by cutscenes, so need to initialize nameplate on re-enable
             base.OnEnable();
+            namePlateController = new BaseNamePlateController(this);
             if (startHasRun && namePlateController != null) {
                 namePlateController.InitializeNamePlate();
             }

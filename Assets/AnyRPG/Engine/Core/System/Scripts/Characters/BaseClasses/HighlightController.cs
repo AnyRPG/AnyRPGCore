@@ -18,7 +18,7 @@ namespace AnyRPG {
 
         private float circleRadius = 0f;
 
-        void Start() {
+        void OnEnable() {
             SetupController();
             meshRenderer.enabled = false;
         }

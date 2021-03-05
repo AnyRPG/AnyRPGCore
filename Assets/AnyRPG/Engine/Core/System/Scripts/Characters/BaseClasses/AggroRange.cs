@@ -20,7 +20,7 @@ namespace AnyRPG {
 
         public BaseCharacter BaseCharacter { get => baseCharacter; set => baseCharacter = value; }
 
-        private void Awake() {
+        private void OnEnable() {
             SetLayer();
             DisableAggro();
         }
