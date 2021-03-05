@@ -485,6 +485,12 @@ namespace AnyRPG {
 
             SetDefaultLayer(SystemConfigurationManager.MyInstance.DefaultPlayerUnitLayer);
             DisableAggro();
+
+            rigidBody.useGravity = true;
+            rigidBody.isKinematic = false;
+            rigidBody.collisionDetectionMode = CollisionDetectionMode.ContinuousDynamic;
+            rigidBody.constraints = RigidbodyConstraints.FreezeRotation;
+
             unitComponentController.InteractableRange.gameObject.SetActive(false);
             useAgent = false;
             DisableAgent();
@@ -531,8 +537,10 @@ namespace AnyRPG {
 
             // ensure player cannot physically push AI units around
             // first set collision mode to avoid unity errors about dynamic detection not supported for kinematic rigidbodies
+            rigidBody.useGravity = true;
             rigidBody.collisionDetectionMode = CollisionDetectionMode.ContinuousSpeculative;
             rigidBody.isKinematic = true;
+            rigidBody.constraints = RigidbodyConstraints.FreezeRotation;
 
             // ensure player is not physically blocked or pushed around by AI units
             myCollider.isTrigger = true;
