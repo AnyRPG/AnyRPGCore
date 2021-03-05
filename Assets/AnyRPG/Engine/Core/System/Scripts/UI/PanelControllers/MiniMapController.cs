@@ -197,19 +197,21 @@ namespace AnyRPG {
             }
         }
 
-        public GameObject AddIndicator(Interactable interactable) {
+        public MiniMapIndicatorController AddIndicator(Interactable interactable) {
             //Debug.Log("MinimapController.AddIndicator(" + interactable.gameObject.name + ")");
             if (miniMapIndicatorControllers.ContainsKey(interactable) == false) {
                 GameObject miniMapIndicator = ObjectPooler.MyInstance.GetPooledObject(miniMapIndicatorPrefab, miniMapGraphic.transform);
-                MiniMapIndicatorController miniMapIndicatorController = miniMapIndicator.GetComponent<MiniMapIndicatorController>();
-                miniMapIndicatorControllers.Add(interactable, miniMapIndicatorController);
-                miniMapIndicatorController.SetInteractable(interactable);
-                if (miniMapEnabled == false) {
-                    miniMapIndicatorController.gameObject.SetActive(false);
+                if (miniMapIndicator != null) {
+                    MiniMapIndicatorController miniMapIndicatorController = miniMapIndicator.GetComponent<MiniMapIndicatorController>();
+                    miniMapIndicatorControllers.Add(interactable, miniMapIndicatorController);
+                    miniMapIndicatorController.SetInteractable(interactable);
+                    if (miniMapEnabled == false) {
+                        miniMapIndicatorController.gameObject.SetActive(false);
+                    }
                 }
             }
 
-            return miniMapIndicatorControllers[interactable].gameObject;
+            return miniMapIndicatorControllers[interactable];
         }
 
         public void RemoveIndicator(Interactable interactable) {

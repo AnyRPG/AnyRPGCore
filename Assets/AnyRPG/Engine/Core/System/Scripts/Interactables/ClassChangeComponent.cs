@@ -8,8 +8,6 @@ using UnityEngine.UI;
 namespace AnyRPG {
     public class ClassChangeComponent : InteractableOptionComponent {
 
-        public override event Action<InteractableOptionComponent> MiniMapStatusUpdateHandler = delegate { };
-
         public ClassChangeProps Props { get => interactableOptionProps as ClassChangeProps; }
 
         private bool windowEventSubscriptionsInitialized = false;
@@ -111,16 +109,6 @@ namespace AnyRPG {
             //Debug.Log(gameObject.name + ".CharacterCreatorInteractable.GetCurrentOptionCount()");
             return GetValidOptionCount();
         }
-
-        public override void CallMiniMapStatusUpdateHandler() {
-            MiniMapStatusUpdateHandler(this);
-        }
-
-        public override void HandlePlayerUnitSpawn() {
-            base.HandlePlayerUnitSpawn();
-            MiniMapStatusUpdateHandler(this);
-        }
-
 
         // character class is a special type of prerequisite
         public override bool MyPrerequisitesMet {

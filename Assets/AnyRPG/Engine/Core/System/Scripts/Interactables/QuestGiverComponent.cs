@@ -10,8 +10,6 @@ using UnityEngine.UI;
 namespace AnyRPG {
     public class QuestGiverComponent : InteractableOptionComponent, IQuestGiver {
 
-        public override event System.Action<InteractableOptionComponent> MiniMapStatusUpdateHandler = delegate { };
-
         private bool questGiverInitialized = false;
 
         public QuestGiverProps Props { get => interactableOptionProps as QuestGiverProps; }
@@ -90,7 +88,7 @@ namespace AnyRPG {
             }
 
             UpdateQuestStatus();
-            MiniMapStatusUpdateHandler(this);
+            CallMiniMapStatusUpdateHandler();
 
             /*
             bool statusChanged = false;
@@ -278,11 +276,6 @@ namespace AnyRPG {
             base.HandlePrerequisiteUpdates();
             //UpdateQuestStatus();
         }
-
-        public override void CallMiniMapStatusUpdateHandler() {
-            MiniMapStatusUpdateHandler(this);
-        }
-
 
         public bool EndsQuest(string questName) {
             foreach (QuestNode questNode in Props.Quests) {

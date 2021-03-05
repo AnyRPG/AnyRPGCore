@@ -8,8 +8,6 @@ using UnityEngine.UI;
 namespace AnyRPG {
     public class SpecializationChangeComponent : InteractableOptionComponent {
 
-        public override event Action<InteractableOptionComponent> MiniMapStatusUpdateHandler = delegate { };
-
         public SpecializationChangeProps Props { get => interactableOptionProps as SpecializationChangeProps; }
 
         private bool windowEventSubscriptionsInitialized = false;
@@ -113,21 +111,12 @@ namespace AnyRPG {
             return GetValidOptionCount();
         }
 
-        public override void CallMiniMapStatusUpdateHandler() {
-            MiniMapStatusUpdateHandler(this);
-        }
-
         public void HandleSpecializationChange(string eventName, EventParamProperties eventParamProperties) {
             HandlePrerequisiteUpdates();
         }
 
         public void HandleClassChange(CharacterClass oldCharacterClass, CharacterClass newCharacterClass) {
             HandlePrerequisiteUpdates();
-        }
-
-        public override void HandlePlayerUnitSpawn() {
-            base.HandlePlayerUnitSpawn();
-            MiniMapStatusUpdateHandler(this);
         }
 
         // specialization is a special type of prerequisite

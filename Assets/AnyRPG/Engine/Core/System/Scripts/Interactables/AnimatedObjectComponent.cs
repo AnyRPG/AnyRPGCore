@@ -6,8 +6,6 @@ using UnityEngine;
 namespace AnyRPG {
     public class AnimatedObjectComponent : InteractableOptionComponent {
 
-        public override event System.Action<InteractableOptionComponent> MiniMapStatusUpdateHandler = delegate { };
-
         public AnimatedObjectProps Props { get => interactableOptionProps as AnimatedObjectProps; }
 
         // by default it is considered closed when not using the sheathed position
@@ -135,15 +133,6 @@ namespace AnyRPG {
             PopupWindowManager.MyInstance.AnimatedObjectWindow.CloseWindow();
         }
         */
-
-        public override void CallMiniMapStatusUpdateHandler() {
-            MiniMapStatusUpdateHandler(this);
-        }
-
-        public override void HandlePlayerUnitSpawn() {
-            base.HandlePlayerUnitSpawn();
-            MiniMapStatusUpdateHandler(this);
-        }
 
     }
 

@@ -8,8 +8,6 @@ using UnityEngine.UI;
 namespace AnyRPG {
     public abstract class PortalComponent : InteractableOptionComponent {
 
-        public override event Action<InteractableOptionComponent> MiniMapStatusUpdateHandler = delegate { };
-
         public PortalProps Props { get => interactableOptionProps as PortalProps; }
 
         public PortalComponent(Interactable interactable, PortalProps interactableOptionProps) : base(interactable, interactableOptionProps) {
@@ -52,15 +50,6 @@ namespace AnyRPG {
             return GetValidOptionCount();
         }
 
-        public override void CallMiniMapStatusUpdateHandler() {
-            MiniMapStatusUpdateHandler(this);
-        }
-
-        public override void HandlePlayerUnitSpawn() {
-            base.HandlePlayerUnitSpawn();
-            MiniMapStatusUpdateHandler(this);
-        }
-
-
     }
+
 }

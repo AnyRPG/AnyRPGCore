@@ -8,8 +8,6 @@ using UnityEngine.UI;
 namespace AnyRPG {
     public abstract class InteractableOptionComponent : IPrerequisiteOwner {
 
-        public abstract event System.Action<InteractableOptionComponent> MiniMapStatusUpdateHandler;
-
         protected Interactable interactable = null;
         protected InteractableOptionProps interactableOptionProps = null;
 
@@ -216,6 +214,8 @@ namespace AnyRPG {
                 //HandlePrerequisiteUpdates();
             }
             //HandlePrerequisiteUpdates();
+
+            CallMiniMapStatusUpdateHandler();
         }
 
 
@@ -249,8 +249,8 @@ namespace AnyRPG {
             CallMiniMapStatusUpdateHandler();
         }
 
-        public virtual void CallMiniMapStatusUpdateHandler() {
-            //MiniMapStatusUpdateHandler(this);
+        public void CallMiniMapStatusUpdateHandler() {
+            interactable?.HandleMiniMapStatusUpdate(this);
         }
 
         public virtual void SetupScriptableObjects() {

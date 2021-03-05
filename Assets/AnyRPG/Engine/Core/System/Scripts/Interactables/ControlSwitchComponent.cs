@@ -6,8 +6,6 @@ using UnityEngine;
 namespace AnyRPG {
     public class ControlSwitchComponent : InteractableOptionComponent {
 
-        public override event System.Action<InteractableOptionComponent> MiniMapStatusUpdateHandler = delegate { };
-
         public ControlSwitchProps Props { get => interactableOptionProps as ControlSwitchProps; }
 
         // keep track of the number of times this switch has been activated
@@ -55,15 +53,6 @@ namespace AnyRPG {
             
 
             return false;
-        }
-
-        public override void CallMiniMapStatusUpdateHandler() {
-            MiniMapStatusUpdateHandler(this);
-        }
-
-        public override void HandlePlayerUnitSpawn() {
-            base.HandlePlayerUnitSpawn();
-            MiniMapStatusUpdateHandler(this);
         }
 
     }

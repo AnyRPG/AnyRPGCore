@@ -8,8 +8,6 @@ using UnityEngine.UI;
 namespace AnyRPG {
     public class NameChangeComponent : InteractableOptionComponent {
 
-        public override event Action<InteractableOptionComponent> MiniMapStatusUpdateHandler = delegate { };
-
         public NameChangeProps Props { get => interactableOptionProps as NameChangeProps; }
 
         private bool windowEventSubscriptionsInitialized = false;
@@ -89,15 +87,6 @@ namespace AnyRPG {
         public override int GetCurrentOptionCount() {
             //Debug.Log(interactable.gameObject.name + ".NameChangeInteractable.GetCurrentOptionCount(): returning " + GetValidOptionCount());
             return GetValidOptionCount();
-        }
-
-        public override void CallMiniMapStatusUpdateHandler() {
-            MiniMapStatusUpdateHandler(this);
-        }
-
-        public override void HandlePlayerUnitSpawn() {
-            base.HandlePlayerUnitSpawn();
-            MiniMapStatusUpdateHandler(this);
         }
 
     }

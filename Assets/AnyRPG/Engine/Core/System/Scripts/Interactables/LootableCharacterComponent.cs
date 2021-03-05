@@ -12,7 +12,6 @@ namespace AnyRPG {
     /// </summary>
     public class LootableCharacterComponent : InteractableOptionComponent {
 
-        public override event Action<InteractableOptionComponent> MiniMapStatusUpdateHandler = delegate { };
         public event System.Action<UnitController> OnLootComplete = delegate { };
 
         public LootableCharacterProps Props { get => interactableOptionProps as LootableCharacterProps; }
@@ -402,15 +401,6 @@ namespace AnyRPG {
                     lootTable.HandleRevive();
                 }
             }
-        }
-
-        public override void CallMiniMapStatusUpdateHandler() {
-            MiniMapStatusUpdateHandler(this);
-        }
-
-        public override void HandlePlayerUnitSpawn() {
-            base.HandlePlayerUnitSpawn();
-            MiniMapStatusUpdateHandler(this);
         }
 
         public override string GetSummary() {

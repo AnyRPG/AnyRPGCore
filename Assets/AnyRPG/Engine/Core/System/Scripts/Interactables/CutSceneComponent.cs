@@ -9,8 +9,6 @@ using UnityEngine.UI;
 namespace AnyRPG {
     public class CutSceneComponent : InteractableOptionComponent {
 
-        public override event Action<InteractableOptionComponent> MiniMapStatusUpdateHandler = delegate { };
-
         public CutsceneProps Props { get => interactableOptionProps as CutsceneProps; }
 
         public CutSceneComponent(Interactable interactable, CutsceneProps interactableOptionProps) : base(interactable, interactableOptionProps) {
@@ -62,15 +60,6 @@ namespace AnyRPG {
             text.text = "o";
             text.color = Color.white;
             return true;
-        }
-
-        public override void CallMiniMapStatusUpdateHandler() {
-            MiniMapStatusUpdateHandler(this);
-        }
-
-        public override void HandlePlayerUnitSpawn() {
-            base.HandlePlayerUnitSpawn();
-            MiniMapStatusUpdateHandler(this);
         }
 
     }

@@ -10,8 +10,6 @@ using UnityEngine.UI;
 namespace AnyRPG {
     public class CraftingNodeComponent : InteractableOptionComponent {
 
-        public override event Action<InteractableOptionComponent> MiniMapStatusUpdateHandler = delegate { };
-
         public CraftingNodeProps Props { get => interactableOptionProps as CraftingNodeProps; }
 
         public CraftingNodeComponent(Interactable interactable, CraftingNodeProps interactableOptionProps) : base(interactable, interactableOptionProps) {
@@ -98,15 +96,6 @@ namespace AnyRPG {
             text.text = "o";
             text.color = Color.blue;
             return true;
-        }
-
-        public override void CallMiniMapStatusUpdateHandler() {
-            MiniMapStatusUpdateHandler(this);
-        }
-
-        public override void HandlePlayerUnitSpawn() {
-            base.HandlePlayerUnitSpawn();
-            MiniMapStatusUpdateHandler(this);
         }
 
     }

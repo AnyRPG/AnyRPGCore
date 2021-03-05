@@ -119,8 +119,8 @@ namespace AnyRPG {
 
         // attached components
         protected Collider myCollider;
-        protected GameObject miniMapIndicator = null;
-        protected GameObject mainMapIndicator = null;
+        protected MiniMapIndicatorController miniMapIndicator = null;
+        protected MiniMapIndicatorController mainMapIndicator = null;
 
         // created components
         protected CharacterUnit characterUnit = null;
@@ -1022,6 +1022,10 @@ namespace AnyRPG {
 
         #endregion
 
+        public void HandleMiniMapStatusUpdate(InteractableOptionComponent interactableOptionComponent) {
+            miniMapIndicator?.HandleMiniMapStatusUpdate(interactableOptionComponent);
+        }
+
         public override void OnDisable() {
             base.OnDisable();
             foreach (InteractableOptionComponent interactableOptionComponent in interactables) {
@@ -1031,6 +1035,7 @@ namespace AnyRPG {
                     interactableOptionComponent.Cleanup();
                 }
             }
+            CleanupMiniMapIndicator();
             OnInteractableDisable();
 
             interactables = new List<InteractableOptionComponent>();

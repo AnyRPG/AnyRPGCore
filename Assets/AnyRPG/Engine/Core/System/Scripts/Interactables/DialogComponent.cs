@@ -9,8 +9,6 @@ using UnityEngine.UI;
 namespace AnyRPG {
     public class DialogComponent : InteractableOptionComponent {
 
-        public override event Action<InteractableOptionComponent> MiniMapStatusUpdateHandler = delegate { };
-
         public DialogProps Props { get => interactableOptionProps as DialogProps; }
 
         public DialogComponent(Interactable interactable, DialogProps interactableOptionProps) : base(interactable, interactableOptionProps) {
@@ -131,14 +129,10 @@ namespace AnyRPG {
             return GetCurrentOptionList().Count;
         }
 
-        public override void CallMiniMapStatusUpdateHandler() {
-            MiniMapStatusUpdateHandler(this);
-        }
 
         public override void HandlePlayerUnitSpawn() {
-            base.HandlePlayerUnitSpawn();
             UpdateDialogStatuses();
-            MiniMapStatusUpdateHandler(this);
+            base.HandlePlayerUnitSpawn();
         }
 
         public void UpdateDialogStatuses() {

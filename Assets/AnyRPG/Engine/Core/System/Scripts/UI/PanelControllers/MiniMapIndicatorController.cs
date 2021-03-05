@@ -40,20 +40,6 @@ namespace AnyRPG {
             //Debug.Log("MiniMapIndicatorController.Awake(): rectTransform.sizeDelta: " + rectTransform.sizeDelta + "; uiOffset" + uiOffset);
         }
 
-        private void CleanupEventSubscriptions() {
-            //Debug.Log("MiniMapIndicatorController.CleanupEventSubscriptions()");
-            foreach (InteractableOptionComponent _interactable in interactable.Interactables) {
-                if (_interactable.HasMiniMapIcon() || _interactable.HasMiniMapText()) {
-                    _interactable.MiniMapStatusUpdateHandler -= HandleMiniMapStatusUpdate;
-                }
-            }
-        }
-
-        public void OnDisable() {
-            //Debug.Log("PlayerManager.OnDisable()");
-            CleanupEventSubscriptions();
-        }
-
         public void SetupMiniMap() {
             //Debug.Log(transform.parent.gameObject.name + ".MiniMapIndicatorController.SetupMiniMap(): interactable: " + (interactable == null ? "null" : interactable.name));
             if (setupComplete == true) {
@@ -77,12 +63,6 @@ namespace AnyRPG {
                     _interactable.SetMiniMapText(_text);
                     miniMapLayers.Add(_interactable, go);
                 }
-                if (_interactable.HasMiniMapIcon() || _interactable.HasMiniMapText()) {
-                    //Debug.Log(interactable.name + ".MiniMapIndicatorController.SetupMiniMap(): adding minimap status handler");
-                    _interactable.MiniMapStatusUpdateHandler += HandleMiniMapStatusUpdate;
-                } else {
-                    //Debug.Log(interactable.name + ".MiniMapIndicatorController.SetupMiniMap(): unit had no icon or text, not setting up status handler");
-                }
             }
             setupComplete = true;
         }
@@ -90,29 +70,8 @@ namespace AnyRPG {
         public void SetInteractable(Interactable interactable) {
             //Debug.Log(gameObject.name + ".MiniMapIndicatorController.SetInteractable(" + interactable.gameObject.name + "): instance: " + instanceNumber);
             this.interactable = interactable;
-            interactable.OnInteractableDisable += HandleInteractableDisable;
             SetupMiniMap();
         }
-
-        public void HandleInteractableDisable() {
-            MiniMapController.MyInstance.RemoveIndicator(interactable);
-        }
-
-        // testing : not in use.  updated directly by minimap controller instead
-        /*
-        public void UpdatePosition() {
-            //Debug.Log("MiniMapIndicatorController.LateUpdate(): interactable: " + (interactable == null ? "null" : (interactable.MyName == string.Empty ? interactable.name : interactable.MyName)) );
-            if (setupComplete == false) {
-                //Debug.Log("MiniMapIndicatorController.LateUpdate(): namePlateUnit: " + (interactable == null ? "null" : interactable.MyName) + ": setup has not completed yet!");
-                return;
-            }
-
-            Vector2 viewportPosition = CameraManager.MyInstance.MiniMapCamera.WorldToViewportPoint(interactable.gameObject.transform.position);
-            Vector2 proportionalPosition = new Vector2(viewportPosition.x * rectTransform.sizeDelta.x, viewportPosition.y * rectTransform.sizeDelta.y);
-            //Debug.Log(interactable.gameObject.name + ".MiniMapIndicatorController.LateUpdate(). interactable position: " + interactable.gameObject.transform.position + "; viewportPosition: " + viewportPosition + "; proportionalPosition: " + proportionalPosition);
-            contentParent.localPosition = proportionalPosition - uiOffset;
-        }
-        */
 
         public void HandleMiniMapStatusUpdate(InteractableOptionComponent _interactable) {
             //Debug.Log(_interactable.Interactable.gameObject.name + ".MiniMapIndicatorController.HandleMiniMapStatusUpdate()");
@@ -130,13 +89,6 @@ namespace AnyRPG {
                 _interactable.SetMiniMapText(miniMapLayers[_interactable].GetComponent<TextMeshProUGUI>());
             }
             //}
-        }
-
-        private void OnDestroy() {
-            //Debug.Log(gameObject.name + ".MiniMapIndicatorController.OnDestroy(): interactable: " + interactable.gameObject.name);
-            if (interactable != null) {
-                interactable.OnInteractableDisable -= HandleInteractableDisable;
-            }
         }
 
         /*

@@ -8,8 +8,6 @@ using UnityEngine.UI;
 namespace AnyRPG {
     public class FactionChangeComponent : InteractableOptionComponent {
 
-        public override event Action<InteractableOptionComponent> MiniMapStatusUpdateHandler = delegate { };
-
         public FactionChangeProps Props { get => interactableOptionProps as FactionChangeProps; }
 
         private bool windowEventSubscriptionsInitialized = false;
@@ -109,15 +107,6 @@ namespace AnyRPG {
         public override int GetCurrentOptionCount() {
             //Debug.Log(gameObject.name + ".CharacterCreatorInteractable.GetCurrentOptionCount()");
             return GetValidOptionCount();
-        }
-
-        public override void CallMiniMapStatusUpdateHandler() {
-            MiniMapStatusUpdateHandler(this);
-        }
-
-        public override void HandlePlayerUnitSpawn() {
-            base.HandlePlayerUnitSpawn();
-            MiniMapStatusUpdateHandler(this);
         }
 
         // faction is a special type of prerequisite

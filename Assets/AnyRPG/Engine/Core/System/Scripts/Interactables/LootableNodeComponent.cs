@@ -9,8 +9,6 @@ using UnityEngine.UI;
 namespace AnyRPG {
     public abstract class LootableNodeComponent : InteractableOptionComponent {
 
-        public override event Action<InteractableOptionComponent> MiniMapStatusUpdateHandler = delegate { };
-
         public LootableNodeProps Props { get => interactableOptionProps as LootableNodeProps; }
 
         protected float currentTimer = 0f;
@@ -199,17 +197,6 @@ namespace AnyRPG {
             return (PlayerManager.MyInstance.MyCharacter.MyCharacterAbilityManager.HasAbility(MyAbility.MyName) == true && interactable.MySpawnReference != null ? 1 : 0);
         }
         */
-
-        public override void CallMiniMapStatusUpdateHandler() {
-            MiniMapStatusUpdateHandler(this);
-        }
-
-        public override void HandlePlayerUnitSpawn() {
-            //Debug.Log(gameObject.name + ".LootableNode.HandlePlayerUnitSpawn()");
-            base.HandlePlayerUnitSpawn();
-            MiniMapStatusUpdateHandler(this);
-        }
-
 
         public override bool CanInteract(bool processRangeCheck = false, bool passedRangeCheck = false, float factionValue = 0f, bool processNonCombatCheck = true) {
             //Debug.Log(interactable.gameObject.name + ".LootableNode.CanInteract()");

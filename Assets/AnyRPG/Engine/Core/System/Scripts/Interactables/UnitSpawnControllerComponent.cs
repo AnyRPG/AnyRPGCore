@@ -9,8 +9,6 @@ using UnityEngine.UI;
 namespace AnyRPG {
     public class UnitSpawnControllerComponent : InteractableOptionComponent {
 
-        public override event Action<InteractableOptionComponent> MiniMapStatusUpdateHandler = delegate { };
-
         public UnitSpawnControllerProps Props { get => interactableOptionProps as UnitSpawnControllerProps; }
 
         public UnitSpawnControllerComponent(Interactable interactable, UnitSpawnControllerProps interactableOptionProps) : base(interactable, interactableOptionProps) {
@@ -75,15 +73,6 @@ namespace AnyRPG {
             return GetValidOptionCount();
         }
 
-        public override void CallMiniMapStatusUpdateHandler() {
-            MiniMapStatusUpdateHandler(this);
-        }
-
-        public override void HandlePlayerUnitSpawn() {
-            base.HandlePlayerUnitSpawn();
-            MiniMapStatusUpdateHandler(this);
-        }
-
-
     }
+
 }

@@ -8,8 +8,6 @@ using UnityEngine.UI;
 namespace AnyRPG {
     public class LoadSceneComponent : PortalComponent {
 
-        public override event Action<InteractableOptionComponent> MiniMapStatusUpdateHandler = delegate { };
-
         public LoadSceneProps LoadSceneProps { get => interactableOptionProps as LoadSceneProps; }
 
         public LoadSceneComponent(Interactable interactable, LoadSceneProps interactableOptionProps) : base(interactable, interactableOptionProps) {

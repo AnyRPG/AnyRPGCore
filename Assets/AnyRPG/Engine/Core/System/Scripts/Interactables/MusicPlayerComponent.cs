@@ -7,8 +7,6 @@ using UnityEngine;
 namespace AnyRPG {
     public class MusicPlayerComponent : InteractableOptionComponent {
 
-        public override event System.Action<InteractableOptionComponent> MiniMapStatusUpdateHandler = delegate { };
-
         public MusicPlayerProps Props { get => interactableOptionProps as MusicPlayerProps; }
 
         public MusicPlayerComponent(Interactable interactable, MusicPlayerProps interactableOptionProps) : base(interactable, interactableOptionProps) {
@@ -34,15 +32,6 @@ namespace AnyRPG {
             base.StopInteract();
             //vendorUI.ClearPages();
             PopupWindowManager.MyInstance.musicPlayerWindow.CloseWindow();
-        }
-
-        public override void CallMiniMapStatusUpdateHandler() {
-            MiniMapStatusUpdateHandler(this);
-        }
-
-        public override void HandlePlayerUnitSpawn() {
-            base.HandlePlayerUnitSpawn();
-            MiniMapStatusUpdateHandler(this);
         }
 
     }

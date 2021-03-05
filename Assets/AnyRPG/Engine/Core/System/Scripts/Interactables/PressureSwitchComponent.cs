@@ -6,8 +6,6 @@ using UnityEngine;
 namespace AnyRPG {
     public class PressureSwitchComponent : ControlSwitchComponent {
 
-        public override event System.Action<InteractableOptionComponent> MiniMapStatusUpdateHandler = delegate { };
-
         public PressureSwitchProps PressureSwitchProps { get => interactableOptionProps as PressureSwitchProps; }
 
         public PressureSwitchComponent(Interactable interactable, PressureSwitchProps interactableOptionProps) : base(interactable, interactableOptionProps) {

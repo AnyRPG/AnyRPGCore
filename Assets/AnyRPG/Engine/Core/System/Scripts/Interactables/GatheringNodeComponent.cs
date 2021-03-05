@@ -8,8 +8,6 @@ using UnityEngine.UI;
 namespace AnyRPG {
     public class GatheringNodeComponent : LootableNodeComponent {
 
-        public override event Action<InteractableOptionComponent> MiniMapStatusUpdateHandler = delegate { };
-
         public GatheringNodeProps GatheringNodeProps { get => interactableOptionProps as GatheringNodeProps; }
 
         public GatheringNodeComponent(Interactable interactable, GatheringNodeProps interactableOptionProps) : base(interactable, interactableOptionProps) {
@@ -22,11 +20,6 @@ namespace AnyRPG {
                 }
                 return base.MyPrerequisitesMet;
             }
-        }
-
-        public override void CallMiniMapStatusUpdateHandler() {
-            base.CallMiniMapStatusUpdateHandler();
-            MiniMapStatusUpdateHandler(this);
         }
 
         public override void CreateEventSubscriptions() {

@@ -334,6 +334,9 @@ namespace AnyRPG {
 
         public void HandleReputationChange(string eventName, EventParamProperties eventParamProperties) {
             // minimap indicator can change color if reputation changed
+            if (unitControllerMode == UnitControllerMode.Preview) {
+                return;
+            }
             characterUnit.CallMiniMapStatusUpdateHandler();
         }
 
@@ -368,7 +371,7 @@ namespace AnyRPG {
                     gameObject.layer = defaultLayer;
                     //Debug.Log(gameObject.name + ".UnitController.SetDefaultLayer(): object was not set to correct layer: " + layerName + ". Setting automatically");
                 }
-                Debug.Log(gameObject.name + ".UnitController.SetDefaultLayer(): unitModel: " + (unitModel == null ? "null" : unitModel.name));
+                //Debug.Log(gameObject.name + ".UnitController.SetDefaultLayer(): unitModel: " + (unitModel == null ? "null" : unitModel.name));
                 if (unitModel != null && !IsInLayerMask(unitModel.layer, finalmask)) {
                     UIManager.MyInstance.SetLayerRecursive(unitModel, defaultLayer);
                     //Debug.Log(gameObject.name + ".UnitController.SetDefaultLayer(): model was not set to correct layer: " + layerName + ". Setting automatically");
@@ -381,7 +384,7 @@ namespace AnyRPG {
         /// set this unit to be a stationary preview
         /// </summary>
         private void SetPreviewMode() {
-            Debug.Log(gameObject.name + ".UnitController.SetPreviewMode()");
+            //Debug.Log(gameObject.name + ".UnitController.SetPreviewMode()");
             SetUnitControllerMode(UnitControllerMode.Preview);
             SetDefaultLayer(SystemConfigurationManager.MyInstance.DefaultCharacterUnitLayer);
             useAgent = false;
@@ -574,7 +577,7 @@ namespace AnyRPG {
         }
 
         public override void ProcessInit() {
-            Debug.Log(gameObject.name + ".UnitController.ProcessInit()");
+            //Debug.Log(gameObject.name + ".UnitController.ProcessInit()");
             if (characterUnit.BaseCharacter.UnitProfile == null
                 && characterUnit.BaseCharacter.UnitProfileName != null
                 && characterUnit.BaseCharacter.UnitProfileName != string.Empty) {
@@ -649,7 +652,7 @@ namespace AnyRPG {
         /// reset all variables to default values for object pooling
         /// </summary>
         private void ResetSettings() {
-            Debug.Log(gameObject.name + ".UnitController.ResetSettings()");
+            //Debug.Log(gameObject.name + ".UnitController.ResetSettings()");
             unitProfile = null;
             unitModel = null;
             modelReady = false;
@@ -699,7 +702,7 @@ namespace AnyRPG {
         }
 
         public override void GetComponentReferences() {
-            Debug.Log(gameObject.name + ".UnitController.GetComponentReferences()");
+            //Debug.Log(gameObject.name + ".UnitController.GetComponentReferences()");
 
             if (componentReferencesInitialized == true) {
                 return;
@@ -841,7 +844,7 @@ namespace AnyRPG {
         }
 
         public void SpawnUnitModel() {
-            Debug.Log(gameObject.name + ".UnitController.SpawnUnitModel()");
+            //Debug.Log(gameObject.name + ".UnitController.SpawnUnitModel()");
             if (unitProfile?.UnitPrefabProps?.ModelPrefab != null) {
                 unitModel = unitProfile.SpawnModelPrefab(transform, transform.position, transform.forward);
                 ConfigureAnimator(unitModel);
@@ -849,7 +852,7 @@ namespace AnyRPG {
         }
 
         public void ConfigureAnimator(GameObject newUnitModel = null) {
-            Debug.Log(gameObject.name + ".UnitController.ConfigureAnimator(" + (newUnitModel == null ? "null" : newUnitModel.name) + ")");
+            //Debug.Log(gameObject.name + ".UnitController.ConfigureAnimator(" + (newUnitModel == null ? "null" : newUnitModel.name) + ")");
 
             if (newUnitModel != null) {
                 unitModel = newUnitModel;
@@ -1724,6 +1727,9 @@ namespace AnyRPG {
 
         public void NotifyOnReputationChange() {
             // minimap indicator can change color if reputation changed
+            if (unitControllerMode == UnitControllerMode.Preview) {
+                return;
+            }
             characterUnit.CallMiniMapStatusUpdateHandler();
             OnReputationChange();
             unitComponentController.HighlightController.UpdateColors();

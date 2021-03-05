@@ -7,8 +7,6 @@ using UnityEngine;
 namespace AnyRPG {
     public class SkillTrainerComponent : InteractableOptionComponent {
 
-        public override event System.Action<InteractableOptionComponent> MiniMapStatusUpdateHandler = delegate { };
-
         public SkillTrainerProps Props { get => interactableOptionProps as SkillTrainerProps; }
 
         public SkillTrainerComponent(Interactable interactable, SkillTrainerProps interactableOptionProps) : base(interactable, interactableOptionProps) {
@@ -87,15 +85,6 @@ namespace AnyRPG {
         public override bool CanShowMiniMapIcon() {
             float relationValue = interactable.PerformFactionCheck(PlayerManager.MyInstance.MyCharacter);
             return CanInteract(false, false, relationValue);
-        }
-
-        public override void CallMiniMapStatusUpdateHandler() {
-            MiniMapStatusUpdateHandler(this);
-        }
-
-        public override void HandlePlayerUnitSpawn() {
-            base.HandlePlayerUnitSpawn();
-            MiniMapStatusUpdateHandler(this);
         }
 
     }

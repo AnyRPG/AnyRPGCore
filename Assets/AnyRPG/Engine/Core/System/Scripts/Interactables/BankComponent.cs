@@ -6,8 +6,6 @@ using UnityEngine;
 namespace AnyRPG {
     public class BankComponent : InteractableOptionComponent {
 
-        public override event System.Action<InteractableOptionComponent> MiniMapStatusUpdateHandler = delegate { };
-
         public BankProps Props { get => interactableOptionProps as BankProps; }
 
         public BankComponent(Interactable interactable, BankProps interactableOptionProps) : base(interactable, interactableOptionProps) {
@@ -28,15 +26,6 @@ namespace AnyRPG {
         public override void StopInteract() {
             base.StopInteract();
             PopupWindowManager.MyInstance.bankWindow.CloseWindow();
-        }
-
-        public override void CallMiniMapStatusUpdateHandler() {
-            MiniMapStatusUpdateHandler(this);
-        }
-
-        public override void HandlePlayerUnitSpawn() {
-            base.HandlePlayerUnitSpawn();
-            MiniMapStatusUpdateHandler(this);
         }
 
     }

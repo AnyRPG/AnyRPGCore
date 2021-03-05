@@ -9,8 +9,6 @@ using UnityEngine.UI;
 namespace AnyRPG {
     public class BehaviorComponent : InteractableOptionComponent {
 
-        public override event Action<InteractableOptionComponent> MiniMapStatusUpdateHandler = delegate { };
-
         public BehaviorProps Props { get => interactableOptionProps as BehaviorProps; }
 
         private UnitController unitController = null;
@@ -138,11 +136,7 @@ namespace AnyRPG {
         public void ProcessBehaviorBeginEnd() {
             //Debug.Log(interactable.gameObject.name + ".BehaviorComponent.ProcessBehaviorBeginEnd()");
             base.HandlePrerequisiteUpdates();
-            MiniMapStatusUpdateHandler(this);
-        }
-
-        public override void CallMiniMapStatusUpdateHandler() {
-            MiniMapStatusUpdateHandler(this);
+            CallMiniMapStatusUpdateHandler();
         }
 
         // testing - since behavior component requires behavior controller, let it handle player unit spawn calls for proper ordering

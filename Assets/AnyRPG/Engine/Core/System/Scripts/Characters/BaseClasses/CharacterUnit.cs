@@ -8,8 +8,6 @@ using UnityEngine;
 namespace AnyRPG {
     public class CharacterUnit : InteractableOptionComponent {
 
-        public override event Action<InteractableOptionComponent> MiniMapStatusUpdateHandler = delegate { };
-
         public event System.Action<UnitController> OnDespawn = delegate { };
 
         protected float despawnDelay = 20f;
@@ -203,15 +201,6 @@ namespace AnyRPG {
         public override int GetCurrentOptionCount() {
             //Debug.Log(gameObject.name + ".CharacterUnit.GetCurrentOptionCount()");
             return GetValidOptionCount();
-        }
-
-        public override void CallMiniMapStatusUpdateHandler() {
-            MiniMapStatusUpdateHandler(this);
-        }
-
-        public override void HandlePlayerUnitSpawn() {
-            base.HandlePlayerUnitSpawn();
-            MiniMapStatusUpdateHandler(this);
         }
 
 
