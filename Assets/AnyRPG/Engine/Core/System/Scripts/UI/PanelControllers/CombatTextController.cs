@@ -41,6 +41,12 @@ namespace AnyRPG {
         [SerializeField]
         private int defaultFontSize = 30;
 
+        [SerializeField]
+        private float randomXLimit = 100f;
+
+        [SerializeField]
+        private float randomYLimit = 25f;
+
         private string displayText = string.Empty;
         private Interactable mainTarget = null;
         private float alpha;
@@ -52,12 +58,6 @@ namespace AnyRPG {
         private CombatTextType textType;
         private AbilityEffectContext abilityEffectContext = null;
 
-        [SerializeField]
-        private float randomXLimit = 100f;
-
-        [SerializeField]
-        private float randomYLimit = 25f;
-
         private float randomX;
         private float randomY;
 
@@ -65,6 +65,10 @@ namespace AnyRPG {
         private int directionMultiplier = 1;
 
         private int fontSizeMultiplier = 1;
+
+        // reduce use of local variables for garbage collection
+        string preText = string.Empty;
+        string postText = string.Empty;
 
         public RectTransform RectTransform { get => rectTransform; set => rectTransform = value; }
 
@@ -97,8 +101,8 @@ namespace AnyRPG {
             fontSizeMultiplier = 1;
             yUIOffset = 0f;
 
-            string preText = string.Empty;
-            string postText = string.Empty;
+            preText = string.Empty;
+            postText = string.Empty;
 
             if (image.sprite == null) {
                 image.color = new Color32(0, 0, 0, 0);
@@ -185,8 +189,7 @@ namespace AnyRPG {
             }
 
             tmpProtext.color = textColor;
-            string finalString = preText + displayText + postText;
-            tmpProtext.text = finalString;
+            tmpProtext.text = preText + displayText + postText;
             if (combatMagnitude == CombatMagnitude.critical) {
                 fontSizeMultiplier *= 2;
             }
@@ -200,14 +203,14 @@ namespace AnyRPG {
         }
 
         public void RunCombatTextUpdate() {
-            //Debug.Log("CombatTextController.FixedUpdate()");
+            //Debug.Log("CombatTextController.RunCombatTextUpdate() fadeOutTimer: " + fadeOutTimer + " " + tmpProtext.text);
             if (mainTarget != null) {
                 //Debug.Log("CombatTextController.FixedUpdate(): maintarget is not null");
                 targetPos = CameraManager.MyInstance.MyActiveMainCamera.WorldToScreenPoint(mainTarget.InteractableGameObject.transform.position + new Vector3(0, yUnitOffset, 0));
                 //Debug.Log("CombatTextController.FixedUpdate(): targetpos:" + targetPos);
                 transform.position = targetPos + new Vector2(randomX + xUIOffset, yUIOffset + randomY);
             }
-            if (fadeOutTimer > 0) {
+            if (fadeOutTimer > 0f) {
                 fadeOutTimer -= Time.deltaTime;
 
                 alpha -= fadeRate * Time.deltaTime;

@@ -139,6 +139,7 @@ namespace AnyRPG {
             //Debug.Log("About to Set MainTarget on combat text");
             CombatTextController combatTextController = GetCombatTextController();
             if (combatTextController != null) {
+                inUseCombatTextControllers.Add(combatTextController);
                 combatTextController.InitializeCombatTextController(target,
                     statusEffect.Icon,
                     statusEffect.DisplayName,

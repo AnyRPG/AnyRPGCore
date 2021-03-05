@@ -358,7 +358,7 @@ namespace AnyRPG {
         }
 
         public void Move(Vector3 moveDirection, bool isKnockBack = false) {
-            //Debug.Log(gameObject.name + ".UnitMotor.Move(" + moveDirection + "). current position: " + transform.position);
+            //Debug.Log(unitController.gameObject.name + ".UnitMotor.Move(" + moveDirection + "). current position: " + unitController.transform.position);
             if (isKnockBack
                 && unitController != null
                 && unitController.UnitControllerMode == UnitControllerMode.Player) {
@@ -383,7 +383,7 @@ namespace AnyRPG {
                 //float currentYVelocity = moveDirection.y != 0 ? moveDirection.y : unitController.MyRigidBody.velocity.y;
                 //Debug.Log("characterUnit.yVelocity is " + currentYVelocity);
                 //Vector3 newMoveDirection = new Vector3(moveDirection.x, currentYVelocity, moveDirection.z);
-                //Debug.Log(gameObject.name + ".UnitMotor.Move() newMoveDirection: " + moveDirection + "; unitController.MyRigidBody.constraints: " + unitController.MyRigidBody.constraints);
+                //Debug.Log(unitController.gameObject.name + ".UnitMotor.Move() newMoveDirection: " + moveDirection + "; unitController.MyRigidBody.constraints: " + unitController.RigidBody.constraints);
                 unitController.RigidBody.velocity = moveDirection;
                 //unitController.MyRigidBody.MovePosition(transform.position + moveDirection);
                 //unitController.MyRigidBody.AddForce(moveDirection, ForceMode.VelocityChange);
