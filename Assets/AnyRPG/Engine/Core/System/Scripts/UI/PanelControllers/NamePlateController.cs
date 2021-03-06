@@ -16,6 +16,9 @@ namespace AnyRPG {
         private GameObject healthBar = null;
 
         [SerializeField]
+        private RectTransform healthBarBackground = null;
+
+        [SerializeField]
         private TextMeshProUGUI characterName = null;
 
         [SerializeField]
@@ -59,7 +62,7 @@ namespace AnyRPG {
 
         private BaseNamePlateController unitNamePlateController = null;
 
-        private int healthSliderWidth;
+        private int healthSliderWidth = 0;
 
         private bool isPlayerUnitNamePlate = false;
 
@@ -77,7 +80,7 @@ namespace AnyRPG {
         public Canvas NamePlateCanvas { get => namePlateCanvas; set => namePlateCanvas = value; }
         public Canvas SpeechBubbleCanvas { get => speechBubbleCanvas; set => speechBubbleCanvas = value; }
 
-        private void Awake() {
+        private void OnEnable() {
             //Debug.Log("NamePlateController.Awake()");
             CreateEventSubscriptions();
             HideSpeechBubble();
@@ -133,24 +136,13 @@ namespace AnyRPG {
                 return;
             }
 
-            if (healthSlider != null) {
-                //Debug.Log(namePlateUnit.DisplayName + "NamePlateController.InitializeLocalComponents(): healthSlider != null");
-            }
-            if (healthSlider.GetComponent<LayoutElement>() != null) {
-                //Debug.Log(namePlateUnit.DisplayName + "NamePlateController.InitializeLocalComponents(): healthSlider.GetComponent<LayoutElement>() != null: " + healthSlider.GetComponent<LayoutElement>().preferredWidth);
-            }
-            healthSliderWidth = (int)(healthSlider.GetComponent<LayoutElement>().preferredWidth);
+            healthSliderWidth = (int)(healthBarBackground.rect.width);
             //Debug.Log(namePlateUnit.DisplayName + "NamePlateController.InitializeLocalComponents(): healthSliderWidth: " + healthSliderWidth);
             QuestIndicatorBackground.SetActive(false);
             GenericIndicatorImage.gameObject.SetActive(false);
 
             // ensure we update the nameplate color when the player spawns
             SetFactionColor();
-            if (CharacterName != null) {
-                //Debug.Log("starting nameplate on " + MyCharacterName.text);
-            } else {
-                //Debug.Log("starting nameplate on unknown character");
-            }
             namePlateCanvasGroup.blocksRaycasts = true;
             //Debug.Log("NamePlateController: PlayerUnitSpawned: " + PlayerManager.MyInstance.MyPlayerUnitSpawned);
 
@@ -283,7 +275,7 @@ namespace AnyRPG {
         /// <param name="currentHealth"></param>
         /// <param name="maxHealth"></param>
         public void HandleResourceAmountChanged(PowerResource powerResource, int currentHealth, int maxHealth) {
-            //Debug.Log(gameObject.name + ".CharacterUnit.HandleHealthBarNeedsUpdate(" + currentHealth + ", " + maxHealth + ")");
+            Debug.Log(gameObject.name + ".CharacterUnit.HandleResourceAmountChanged(" + currentHealth + ", " + maxHealth + ")");
             if (unitNamePlateController.HasHealth()
                 && (unitNamePlateController as UnitNamePlateController).UnitController.CharacterUnit.BaseCharacter != null
                 && (unitNamePlateController as UnitNamePlateController).UnitController.CharacterUnit.BaseCharacter.CharacterStats != null
@@ -332,7 +324,7 @@ namespace AnyRPG {
         }
 
         public void ProcessHealthChanged(int maxHealth, int currentHealth) {
-            //Debug.Log("NamePlateController.ProcessHealthChanged()");
+            Debug.Log("NamePlateController.ProcessHealthChanged(" + maxHealth + ", " + currentHealth + ")");
             float healthPercent = (float)currentHealth / maxHealth;
             //Debug.Log(MyCharacterName.text + ".NamePlateController.OnHealthChanged(" + maxHealth + ", " + currentHealth + "): healthsliderwidth: " + healthSliderWidth.ToString() + "; healthPercent: " + healthPercent.ToString());
             if (HealthSlider == null) {
@@ -450,12 +442,6 @@ namespace AnyRPG {
             CheckForDisabledHealthBar();
         }
 
-        public void OnDisable() {
-            //Debug.Log(unitNamePlateController.UnitDisplayName + ".NamePlateController.OnDisable()");
-            ProcessPointerExit();
-            CleanupEventSubscriptions();
-        }
-
         public void OnClick(BaseEventData eventData) {
             //Debug.Log("NamePlateController: OnClick()");
             if (PlayerManager.MyInstance.PlayerUnitSpawned == false) {
@@ -472,6 +458,7 @@ namespace AnyRPG {
         }
 
         public void OnPointerEnter(PointerEventData eventData) {
+            NamePlateManager.MyInstance.AddMouseOver(this);
             if (unitNamePlateController.Interactable != null) {
                 unitNamePlateController.Interactable.IsMouseOverNameplate = true;
                 unitNamePlateController.Interactable.OnMouseHover();
@@ -483,6 +470,7 @@ namespace AnyRPG {
         }
 
         public void ProcessPointerExit() {
+            NamePlateManager.MyInstance.RemoveMouseOver(this);
             if (unitNamePlateController?.Interactable != null && unitNamePlateController.Interactable.IsMouseOverNameplate == true) {
                 unitNamePlateController.Interactable.IsMouseOverNameplate = false;
                 unitNamePlateController.Interactable.OnMouseOut();
@@ -526,6 +514,19 @@ namespace AnyRPG {
             if (speechBubbleText != null && newSpeechText != null) {
                 speechBubbleText.text = newSpeechText;
             }
+        }
+
+        public void OnDisable() {
+            //Debug.Log(unitNamePlateController.UnitDisplayName + ".NamePlateController.OnDisable()");
+            ProcessPointerExit();
+            CleanupEventSubscriptions();
+
+            // reset settings
+            unitNamePlateController = null;
+            healthSliderWidth = 0;
+            isPlayerUnitNamePlate = false;
+            localComponentsInitialized = false;
+            eventSubscriptionsInitialized = false;
         }
 
     }

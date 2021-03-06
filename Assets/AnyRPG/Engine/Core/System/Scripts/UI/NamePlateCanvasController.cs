@@ -7,7 +7,6 @@ using System.Collections.Generic;
 namespace AnyRPG {
     // responsible for detecting mouseover the nameplate canvas to allow override of overgameobject detection
     public class NamePlateCanvasController : MonoBehaviour {
-
         GraphicRaycaster m_Raycaster;
         PointerEventData m_PointerEventData;
         EventSystem m_EventSystem;
@@ -30,6 +29,7 @@ namespace AnyRPG {
 
             LocalComponentsInitialized = true;
         }
+        /*
 
         public bool MouseOverNamePlate() {
             if (LocalComponentsInitialized == false) {
@@ -61,6 +61,7 @@ namespace AnyRPG {
 
             return gotMiniMap;
         }
+        */
     }
 
 }

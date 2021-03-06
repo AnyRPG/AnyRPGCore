@@ -31,19 +31,32 @@ namespace AnyRPG {
         /// </summary>
         private NamePlateUnit focus;
 
+        private List<NamePlateController> mouseOverList = new List<NamePlateController>();
+
         private Dictionary<NamePlateUnit, NamePlateController> namePlates = new Dictionary<NamePlateUnit, NamePlateController>();
 
         private void Awake() {
             //Debug.Log("NamePlateManager.Awake(): " + NamePlateManager.MyInstance.gameObject.name);
             SystemEventManager.StartListening("AfterCameraUpdate", HandleAfterCameraUpdate);
+            SystemEventManager.StartListening("OnLevelUnload", HandleLevelUnload);
         }
 
-        private void Start() {
-            //Debug.Log(gameObject.name + ".NamePlateManager.Start()");
+        public void AddMouseOver(NamePlateController namePlateController) {
+            if (!mouseOverList.Contains(namePlateController)) {
+                mouseOverList.Add(namePlateController);
+            }
+        }
+
+        public void RemoveMouseOver(NamePlateController namePlateController) {
+            mouseOverList.Remove(namePlateController);
         }
 
         public void HandleAfterCameraUpdate(string eventName, EventParamProperties eventParamProperties) {
             UpdateNamePlates();
+        }
+
+        public void HandleLevelUnload(string eventName, EventParamProperties eventParamProperties) {
+            mouseOverList.Clear();
         }
 
         public void LateUpdate() {
@@ -109,16 +122,20 @@ namespace AnyRPG {
         }
 
         public bool MouseOverNamePlate() {
+            /*
             foreach (NamePlateController namePlateController in namePlates.Values) {
                 if (namePlateController.NamePlateCanvasController.MouseOverNamePlate() == true) {
                     return true;
                 }
             }
             return false;
+            */
+            return (mouseOverList.Count > 0);
         }
 
         public void CleanupEventSubscriptions() {
             SystemEventManager.StopListening("AfterCameraUpdate", HandleAfterCameraUpdate);
+            SystemEventManager.StopListening("OnLevelUnload", HandleLevelUnload);
         }
 
         public void OnDestroy() {
