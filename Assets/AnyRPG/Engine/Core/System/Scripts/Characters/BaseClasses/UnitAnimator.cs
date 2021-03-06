@@ -2,6 +2,7 @@ using AnyRPG;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 namespace AnyRPG {
@@ -34,6 +35,9 @@ namespace AnyRPG {
 
         private RuntimeAnimatorController thirdPartyAnimatorController = null;
         private AnimatorOverrideController thirdPartyOverrideController = null;
+
+        // have to keep track of current override controller separately
+        private AnimatorOverrideController currentOverrideController = null;
 
         private UnitController unitController = null;
 
@@ -94,6 +98,8 @@ namespace AnyRPG {
 
         // a reference to any current ability we are casting
         private AbilityEffectContext currentAbilityEffectContext = null;
+
+        private Dictionary<AnimatorOverrideController, List<string>> animatorParameters = new Dictionary<AnimatorOverrideController, List<string>>();
 
         protected bool componentReferencesInitialized = false;
 
@@ -215,7 +221,16 @@ namespace AnyRPG {
 
             if (animator.runtimeAnimatorController != animatorOverrideController && animatorOverrideController != null) {
                 //Debug.Log(unitController.gameObject.name + ".UnitAnimator.SetOverrideController(): setting animator override");
+                currentOverrideController = animatorOverrideController;
                 animator.runtimeAnimatorController = animatorOverrideController;
+
+                // since getting animator parameters is expensive, we only want to do it the first time an override controller is set
+                if (animatorParameters.ContainsKey(animatorOverrideController) == false) {
+                    animatorParameters.Add(animatorOverrideController, new List<string>());
+                    foreach (AnimatorControllerParameter animatorControllerParameter in animator.parameters) {
+                        animatorParameters[animatorOverrideController].Add(animatorControllerParameter.name);
+                    }
+                }
 
                 // set animator on UMA if one exists
                 if (unitController.DynamicCharacterAvatar != null) {
@@ -1278,13 +1293,10 @@ namespace AnyRPG {
         }
 
         private bool ParameterExists(string parameterName) {
-            if (animator != null) {
-                AnimatorControllerParameter[] animatorControllerParameters = animator.parameters;
-                foreach (AnimatorControllerParameter animatorControllerParameter in animatorControllerParameters) {
-                    if (animatorControllerParameter.name == parameterName) {
-                        return true;
-                    }
-                }
+            if (animator != null
+                && animatorParameters.ContainsKey(currentOverrideController)
+                && animatorParameters[currentOverrideController].Contains(parameterName)) {
+                return true;
             }
             return false;
         }
