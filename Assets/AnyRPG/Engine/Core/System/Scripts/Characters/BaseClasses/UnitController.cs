@@ -638,6 +638,7 @@ namespace AnyRPG {
         }
 
         private void DespawnImmediate() {
+            //Debug.Log(gameObject.name + ".UnitController.DespawnImmediate()");
             despawning = true;
             StopAllCoroutines();
             RemoveControlEffects();
@@ -664,7 +665,7 @@ namespace AnyRPG {
         /// <summary>
         /// reset all variables to default values for object pooling
         /// </summary>
-        private void ResetSettings() {
+        public override void ResetSettings() {
             //Debug.Log(gameObject.name + ".UnitController.ResetSettings()");
             unitProfile = null;
             unitModel = null;
@@ -695,13 +696,8 @@ namespace AnyRPG {
             masterUnit = null;
             riderUnitController = null;
             movementSoundArea = null;
-        }
 
-        public override void OnDisable() {
-            //Debug.Log(gameObject.name + ".UnitController.OnDisable()");
-            base.OnDisable();
-            // code here was moved to
-            //DespawnImmediate();
+            base.ResetSettings();
         }
 
         private void ProcessPointerExit() {

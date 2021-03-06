@@ -164,7 +164,9 @@ namespace AnyRPG {
                 yield return null;
                 timeRemaining -= Time.deltaTime;
             }
-            channeledEffect.PerformAbilityHit(source, target, abilityEffectInput);
+            if (target == null || (target != null && target.gameObject.activeSelf == true)) {
+                channeledEffect.PerformAbilityHit(source, target, abilityEffectInput);
+            }
             abilityHitDelayCoroutine = null;
         }
 

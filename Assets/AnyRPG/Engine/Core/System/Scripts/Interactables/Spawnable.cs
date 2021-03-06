@@ -139,6 +139,10 @@ namespace AnyRPG {
 
         public virtual void OnDisable() {
             //Debug.Log(gameObject.name + ".Spawnable.OnDisable()");
+            ResetSettings();
+        }
+
+        public virtual void ResetSettings() {
             CleanupEventSubscriptions();
             CleanupEverything();
 

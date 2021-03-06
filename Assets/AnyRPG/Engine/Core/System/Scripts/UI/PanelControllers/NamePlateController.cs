@@ -120,12 +120,6 @@ namespace AnyRPG {
             SetFactionColor();
         }
 
-        public void OnDisable() {
-            //Debug.Log(unitNamePlateController.UnitDisplayName + ".NamePlateController.OnDisable()");
-            ProcessPointerExit();
-            CleanupEventSubscriptions();
-        }
-
         public void HandleReputationChange(string eventName, EventParamProperties eventParam) {
             //Debug.Log(unitNamePlateController.UnitDisplayName + ".NamePlateController.HandleReputationChange()");
             SetFactionColor();
@@ -270,21 +264,6 @@ namespace AnyRPG {
 
             InitializeLocalComponents();
 
-            if (unitNamePlateController.Interactable.CharacterUnit != null) {
-                if (unitNamePlateController.HasHealth() == true) {
-                    ProcessHealthChanged(unitNamePlateController.MaxHealth(), unitNamePlateController.CurrentHealth());
-                }
-                if ((unitNamePlateController as UnitNamePlateController).UnitController != null) {
-                    (unitNamePlateController as UnitNamePlateController).UnitController.OnResourceAmountChanged += HandleResourceAmountChanged;
-                    (unitNamePlateController as UnitNamePlateController).UnitController.OnReputationChange += HandleReputationChange;
-                    (unitNamePlateController as UnitNamePlateController).UnitController.OnNameChange += HandleNameChange;
-                    (unitNamePlateController as UnitNamePlateController).UnitController.OnTitleChange += HandleTitleChange;
-                }
-            } else {
-                HealthBar.SetActive(false);
-            }
-            unitNamePlateController.NamePlate = this;
-
             // testing - does this prevent nameplate blinks on bottom of screen as units spawn
             UpdatePosition();
         }
@@ -352,7 +331,7 @@ namespace AnyRPG {
             }
         }
 
-        void ProcessHealthChanged(int maxHealth, int currentHealth) {
+        public void ProcessHealthChanged(int maxHealth, int currentHealth) {
             //Debug.Log("NamePlateController.ProcessHealthChanged()");
             float healthPercent = (float)currentHealth / maxHealth;
             //Debug.Log(MyCharacterName.text + ".NamePlateController.OnHealthChanged(" + maxHealth + ", " + currentHealth + "): healthsliderwidth: " + healthSliderWidth.ToString() + "; healthPercent: " + healthPercent.ToString());
@@ -471,20 +450,9 @@ namespace AnyRPG {
             CheckForDisabledHealthBar();
         }
 
-        private void OnDestroy() {
-            //Debug.Log((unitNamePlateController == null ? "null" : unitNamePlateController.UnitDisplayName) + ".NamePlateController.OnDestroy()");
+        public void OnDisable() {
+            //Debug.Log(unitNamePlateController.UnitDisplayName + ".NamePlateController.OnDisable()");
             ProcessPointerExit();
-            if (unitNamePlateController != null) {
-                //Debug.Log(gameObject.name + ".NamePlateController.OnDestroy(): removing onhealthchanged and setting mynameplate to null");
-
-                if (unitNamePlateController.Interactable.CharacterUnit != null) {
-                    (unitNamePlateController as UnitNamePlateController).UnitController.OnResourceAmountChanged -= HandleResourceAmountChanged;
-                    (unitNamePlateController as UnitNamePlateController).UnitController.OnReputationChange -= HandleReputationChange;
-                    (unitNamePlateController as UnitNamePlateController).UnitController.OnNameChange -= HandleNameChange;
-                    (unitNamePlateController as UnitNamePlateController).UnitController.OnTitleChange -= HandleTitleChange;
-                }
-                unitNamePlateController.NamePlate = null;
-            }
             CleanupEventSubscriptions();
         }
 

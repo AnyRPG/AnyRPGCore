@@ -71,6 +71,7 @@ namespace AnyRPG {
             }
         }
 
+        /*
         public override void InitializeNamePlate() {
             //Debug.Log(unitController.gameObject.name + ".UnitNamePlateController.InitializeNamePlate()");
             if (SuppressNamePlate == true) {
@@ -85,15 +86,66 @@ namespace AnyRPG {
                     return;
                 }
                 SetNamePlatePosition();
-                NamePlateController _namePlate = NamePlateManager.MyInstance.AddNamePlate(unitController, (unitController.UnitComponentController.NamePlateTransform == null ? true : false));
-                if (_namePlate != null) {
-                    namePlate = _namePlate;
-                }
+                
                 BroadcastInitializeNamePlate();
             } else {
                 //Debug.Log(gameObject.name + ".CharacterUnit.InitializeNamePlate(): Character is null or start has not been run yet. exiting.");
                 return;
             }
+        }
+        */
+
+        public override NamePlateController AddNamePlate() {
+            return NamePlateManager.MyInstance.AddNamePlate(unitController, (unitController.UnitComponentController.NamePlateTransform == null ? true : false));
+        }
+
+        public override void RemoveNamePlate() {
+            unitController.OnResourceAmountChanged -= HandleResourceAmountChanged;
+            unitController.OnTitleChange -= HandleTitleChange;
+            unitController.OnNameChange -= HandleNameChange;
+            unitController.OnReputationChange -= HandleReputationChange;
+
+            base.RemoveNamePlate();
+        }
+
+        public override void SetupNamePlate() {
+            // intentionally not calling base because it disables the healthbar
+            if (HasHealth() == true) {
+                namePlate.ProcessHealthChanged(MaxHealth(), CurrentHealth());
+            }
+            unitController.OnResourceAmountChanged += HandleResourceAmountChanged;
+            unitController.OnTitleChange += HandleTitleChange;
+            unitController.OnNameChange += HandleNameChange;
+            unitController.OnReputationChange += HandleReputationChange;
+        }
+
+        public void HandleReputationChange() {
+            namePlate.HandleReputationChange();
+        }
+
+        public void HandleTitleChange(string newTitle) {
+            namePlate.HandleTitleChange(newTitle);
+        }
+
+        public void HandleNameChange(string newName) {
+            namePlate.HandleNameChange(newName);
+        }
+
+        public void HandleResourceAmountChanged(PowerResource powerResource, int maxAmount, int currentAmount) {
+            namePlate.HandleResourceAmountChanged(powerResource, maxAmount, currentAmount);
+        }
+
+        public override bool CanSpawnNamePlate() {
+            if (unitController == null) {
+                return false;
+            }
+            if (unitController.CharacterUnit.BaseCharacter.CharacterStats != null
+                                && unitController.CharacterUnit.BaseCharacter.CharacterStats.IsAlive == false
+                                && unitController.CharacterUnit.BaseCharacter.SpawnDead == false) {
+                // if this is not a character that spawns dead, and is currently dead, then there is no reason to display a nameplate as dead characters usually cannot have nameplates
+                return false;
+            }
+            return base.CanSpawnNamePlate();
         }
 
         public override void BroadcastInitializeNamePlate() {
@@ -134,6 +186,12 @@ namespace AnyRPG {
 
         public override bool HasHealth() {
             //Debug.Log(gameObject.name + ".CharacterUnit.HasHealth(): return true");
+            if (unitController == null) {
+                Debug.Log("UnitNamePlateController.HasHealth(): unitcontroller is null");
+            }
+            if (unitController.CharacterUnit == null) {
+                Debug.Log(unitController.gameObject.name + ".UnitNamePlateController.HasHealth(): unitcontroller.CharacterUnit is null");
+            }
             if (unitController.CharacterUnit.BaseCharacter != null && unitController.CharacterUnit.BaseCharacter.CharacterStats != null) {
                 return unitController.CharacterUnit.BaseCharacter.CharacterStats.HasHealthResource;
             }

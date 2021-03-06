@@ -172,17 +172,16 @@ namespace AnyRPG {
             return base.GetTitleString();
         }
 
-        public override void OnDisable() {
-            //Debug.Log(gameObject.name + ".UnitController.OnDisable()");
-            base.OnDisable();
-            CleanupNameplate();
+        public override void ResetSettings() {
+            RemoveNamePlate();
             cameraTargetReady = true;
-    }
 
-        public virtual void CleanupNameplate() {
-            if (NamePlateManager.MyInstance != null) {
-                NamePlateManager.MyInstance.RemoveNamePlate(this);
-            }
+            // base is intentionally last because we want to uninitialize children first
+            base.ResetSettings();
+        }
+
+        public void RemoveNamePlate() {
+            namePlateController?.RemoveNamePlate();
             namePlateReady = false;
         }
 
@@ -199,9 +198,7 @@ namespace AnyRPG {
         // attempt to remove them before the level load to avoid this
         public override void ProcessLevelUnload() {
             base.ProcessLevelUnload();
-            if (NamePlateManager.MyInstance != null) {
-                NamePlateManager.MyInstance.RemoveNamePlate(this);
-            }
+            RemoveNamePlate();
         }
 
 

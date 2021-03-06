@@ -1026,8 +1026,7 @@ namespace AnyRPG {
             miniMapIndicator?.HandleMiniMapStatusUpdate(interactableOptionComponent);
         }
 
-        public override void OnDisable() {
-            base.OnDisable();
+        public override void ResetSettings() {
             foreach (InteractableOptionComponent interactableOptionComponent in interactables) {
                 //Debug.Log(gameObject.name + ".Interactable.Awake(): Found InteractableOptionComponent: " + interactable.ToString());
                 if (interactableOptionComponent != null) {
@@ -1061,6 +1060,9 @@ namespace AnyRPG {
             mainMapIndicator = null;
 
             characterUnit = null;
+
+            // base is intentionally last because we want to unitialize children first
+            base.ResetSettings();
         }
 
 

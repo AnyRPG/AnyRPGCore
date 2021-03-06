@@ -17,7 +17,7 @@ namespace AnyRPG {
 
         protected NamePlateUnit namePlateUnit;
 
-        public virtual NamePlateController NamePlate { get => namePlate; set => namePlate = value; }
+        public virtual NamePlateController NamePlate { get => namePlate; }
 
         public virtual string UnitFrameTarget {
             get {
@@ -129,18 +129,37 @@ namespace AnyRPG {
 
         public virtual void InitializeNamePlate() {
             //Debug.Log(namePlateUnit.gameObject.name + "BasenamePlateController.InitializeNamePlate()");
-            if (namePlateUnit.NamePlateProps.SuppressNamePlate == true) {
+            if (SuppressNamePlate == true) {
                 return;
             }
-            if (namePlateUnit != null) {
+            if (CanSpawnNamePlate()) {
                 //NamePlateController _namePlate = NamePlateManager.MyInstance.AddNamePlate(namePlateUnit, (unitController.UnitComponentController.NamePlateTransform == null ? true : false));
                 SetNamePlatePosition();
-                NamePlateController _namePlate = NamePlateManager.MyInstance.AddNamePlate(namePlateUnit, false);
-                if (_namePlate != null) {
-                    namePlate = _namePlate;
-                }
+                namePlate = AddNamePlate();
+                SetupNamePlate();
                 BroadcastInitializeNamePlate();
             }
+        }
+
+        public virtual NamePlateController AddNamePlate() {
+            return NamePlateManager.MyInstance.AddNamePlate(namePlateUnit, false);
+        }
+
+        public virtual void RemoveNamePlate() {
+            if (NamePlateManager.MyInstance != null) {
+                NamePlateManager.MyInstance.RemoveNamePlate(namePlateUnit);
+            }
+        }
+
+        public virtual bool CanSpawnNamePlate() {
+            if (namePlateUnit == null) {
+                return false;
+            }
+            return true;
+        }
+
+        public virtual void SetupNamePlate() {
+            namePlate.HealthBar.SetActive(false);
         }
 
         public virtual void BroadcastInitializeNamePlate() {

@@ -217,7 +217,9 @@ namespace AnyRPG {
 
         public virtual void PerformAbilityHit(IAbilityCaster source, Interactable target, AbilityEffectContext abilityEffectInput) {
             //Debug.Log(DisplayName + ".AbilityEffect.PerformAbilityHit(" + source.AbilityManager.Name + ", " + (target == null ? "null" : target.name) + ")");
-            PerformAbilityHitEffects(source, target, abilityEffectInput);
+            if (target == null || target != null && target.gameObject.activeSelf == true) {
+                PerformAbilityHitEffects(source, target, abilityEffectInput);
+            }
             if (target == null) {
                 return;
             }
