@@ -667,19 +667,21 @@ namespace AnyRPG {
             return currentInteractables;
         }
 
-        public void OnMouseHover() {
+        /// <summary>
+        /// native unity mouse enter message
+        /// </summary>
+        public void OnMouseEnter() {
+            isMouseOverUnit = true;
+            OnMouseIn();
+        }
+
+        /// <summary>
+        /// called manually after mouse enters nameplate or interactable
+        /// </summary>
+        public void OnMouseIn() {
             //Debug.Log(gameObject.name + ".Interactable.OnMouseHover()");
-            // rename from onMouseOver to OnMouseHover to avoid unity senting it mouse events.
             if (!isActiveAndEnabled) {
                 // this interactable is inactive, there is no reason to do anything
-                return;
-            }
-
-            if (notInteractable == true) {
-                return;
-            }
-
-            if (showTooltip == false) {
                 return;
             }
 
@@ -687,6 +689,16 @@ namespace AnyRPG {
                 return;
             }
             if (PlayerManager.MyInstance.PlayerUnitSpawned == false) {
+                return;
+            }
+
+            if (notInteractable == true) {
+                return;
+            }
+
+            PlayerManager.MyInstance.PlayerController.HandleMouseOver(this);
+
+            if (showTooltip == false) {
                 return;
             }
 
@@ -727,30 +739,20 @@ namespace AnyRPG {
                 //Debug.Log(gameObject.name + ".Interactable.OnMouseEnter(): hasMeshRenderer && glowOnMouseOver == true");
                 if (isFlashing == false) {
                     isFlashing = true;
-                    //InitializeMaterialsOld();
-                    //InitializeMaterialsNew(temporaryMaterial);
                     InitializeMaterialsNew();
-                } else {
-                    //Debug.Log(gameObject.name + ".Interactable.OnMouseEnter(): This object is already flashing!!!  Try to get find what event we missed and clear materials list on that event");
                 }
-
-            } else {
-                //Debug.Log(gameObject.name + ".Interactable.OnMouseEnter(): hasMeshRenderer: " + hasMeshRenderer + "; glowOnMouseOver: " + glowOnMouseOver);
             }
 
+        }
+
+        public void OnMouseExit() {
+            isMouseOverUnit = false;
+            OnMouseOut();
         }
 
         public void OnMouseOut() {
             // renamed from OnMouseOver to OnMouseOut to stop automatic events from being received
             //Debug.Log(gameObject.name + ".Interactable.OnMouseOut()");
-
-            if (notInteractable == true) {
-                return;
-            }
-
-            if (showTooltip == false) {
-                return;
-            }
 
             if (PlayerManager.MyInstance == null) {
                 return;
@@ -763,12 +765,22 @@ namespace AnyRPG {
                 return;
             }
 
-            if (MyPrerequisitesMet == false) {
+            if (notInteractable == true) {
                 return;
             }
 
             // prevent moving mouse from unit to namePlate from stopping glow or hiding tooltip
             if (isMouseOverNameplate || isMouseOverUnit) {
+                return;
+            }
+
+            PlayerManager.MyInstance.PlayerController.HandleMouseOut(this);
+
+            if (showTooltip == false) {
+                return;
+            }
+
+            if (MyPrerequisitesMet == false) {
                 return;
             }
 

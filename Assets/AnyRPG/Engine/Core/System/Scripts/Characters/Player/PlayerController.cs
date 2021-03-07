@@ -277,6 +277,22 @@ namespace AnyRPG {
         }
         */
 
+        public void HandleMouseOver(Interactable newInteractable) {
+            //Debug.Log(gameObject.name + ".PlayerController.HandleMouseOver()");
+            if (CameraManager.MyInstance.MyActiveMainCamera == null) {
+                // we are in a cutscene and shouldn't be dealing with mouseover
+                return;
+            }
+
+            mouseOverInteractable = newInteractable;
+        }
+
+        public void HandleMouseOut(Interactable oldInteractable) {
+
+            if (mouseOverInteractable == oldInteractable) {
+                mouseOverInteractable = null;
+            }
+        }
 
         private void HandleRightMouseClick() {
             //Debug.Log(gameObject.name + ".PlayerController.HandleRightMouseClick()");

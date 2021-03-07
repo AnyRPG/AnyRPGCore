@@ -467,7 +467,7 @@ namespace AnyRPG {
             NamePlateManager.MyInstance.AddMouseOver(this);
             if (unitNamePlateController.Interactable != null) {
                 unitNamePlateController.Interactable.IsMouseOverNameplate = true;
-                unitNamePlateController.Interactable.OnMouseHover();
+                unitNamePlateController.Interactable.OnMouseIn();
             }
         }
 
