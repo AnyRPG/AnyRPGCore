@@ -301,7 +301,7 @@ namespace AnyRPG {
 
 
         public virtual void PerformAbilityReflectEffects(IAbilityCaster source, Interactable target, AbilityEffectContext abilityEffectContext) {
-            //Debug.Log(DisplayName + ".AbilityEffect.PerformAbilityReflectEffects(" + source.Name + ", " + (target == null ? "null" : target.name) + ")");
+            //Debug.Log(DisplayName + ".AbilityEffect.PerformAbilityReflectEffects(" + source.AbilityManager.UnitGameObject.name + ", " + (target == null ? "null" : target.gameObject.name) + ")");
             abilityEffectContext.reflectDamage = true;
             PerformAbilityEffects(source, target, abilityEffectContext, reflectAbilityEffectList);
         }

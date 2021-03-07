@@ -215,15 +215,15 @@ namespace AnyRPG {
             }
         }
 
-        public virtual void PerformAbilityHit(IAbilityCaster source, Interactable target, AbilityEffectContext abilityEffectInput) {
+        public virtual void PerformAbilityHit(IAbilityCaster source, Interactable target, AbilityEffectContext abilityEffectContext) {
             //Debug.Log(DisplayName + ".AbilityEffect.PerformAbilityHit(" + source.AbilityManager.Name + ", " + (target == null ? "null" : target.name) + ")");
             if (target == null || target != null && target.gameObject.activeSelf == true) {
-                PerformAbilityHitEffects(source, target, abilityEffectInput);
+                PerformAbilityHitEffects(source, target, abilityEffectContext);
             }
             if (target == null) {
                 return;
             }
-            PlayAudioEffects(onHitAudioProfiles, target, abilityEffectInput);
+            PlayAudioEffects(onHitAudioProfiles, target, abilityEffectContext);
             //PerformMaterialChange(source, target);
             PerformMaterialChange(target);
         }
@@ -266,9 +266,9 @@ namespace AnyRPG {
             //Debug.Log(MyName + ".AbilityEffect.ApplyInputMultiplier()");
 
             foreach (ResourceInputAmountNode resourceInputAmountNode in abilityEffectContext.resourceAmounts) {
-                //Debug.Log(MyName + ".AbilityEffect.ApplyInputMultiplier(): before: " + resourceInputAmountNode.amount);
+                //Debug.Log(DisplayName + ".AbilityEffect.ApplyInputMultiplier(): before: " + resourceInputAmountNode.amount);
                 resourceInputAmountNode.amount = (int)(resourceInputAmountNode.amount * inputMultiplier);
-                //Debug.Log(MyName + ".AbilityEffect.ApplyInputMultiplier(): after: " + resourceInputAmountNode.amount);
+                //Debug.Log(DisplayName + ".AbilityEffect.ApplyInputMultiplier(): resource: " + resourceInputAmountNode.resourceName + "; after: " + resourceInputAmountNode.amount);
             }
 
             return abilityEffectContext;

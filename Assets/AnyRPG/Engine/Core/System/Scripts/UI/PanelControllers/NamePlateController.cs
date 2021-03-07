@@ -10,13 +10,19 @@ namespace AnyRPG {
     public class NamePlateController : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler {
 
         [SerializeField]
-        private Image healthSlider = null;
-
-        [SerializeField]
         private GameObject healthBar = null;
 
         [SerializeField]
-        private RectTransform healthBarBackground = null;
+        private Image healthBarOutline = null;
+
+        [SerializeField]
+        private LayoutElement healthBarBackground = null;
+
+        [SerializeField]
+        private Image healthSlider = null;
+
+        [SerializeField]
+        private LayoutElement sliderLayoutElement = null;
 
         [SerializeField]
         private TextMeshProUGUI characterName = null;
@@ -62,7 +68,7 @@ namespace AnyRPG {
 
         private BaseNamePlateController unitNamePlateController = null;
 
-        private int healthSliderWidth = 0;
+        //private int healthSliderWidth = 0;
 
         private bool isPlayerUnitNamePlate = false;
 
@@ -81,7 +87,9 @@ namespace AnyRPG {
         public Canvas SpeechBubbleCanvas { get => speechBubbleCanvas; set => speechBubbleCanvas = value; }
 
         private void OnEnable() {
-            //Debug.Log("NamePlateController.Awake()");
+            //Debug.Log("NamePlateController.OnEnable()");
+            //healthSliderWidth = (int)(healthBarBackground.preferredWidth);
+            //Debug.Log("NamePlateController.Awake(): healthSliderWidth" + healthSliderWidth);
             CreateEventSubscriptions();
             HideSpeechBubble();
         }
@@ -136,7 +144,6 @@ namespace AnyRPG {
                 return;
             }
 
-            healthSliderWidth = (int)(healthBarBackground.rect.width);
             //Debug.Log(namePlateUnit.DisplayName + "NamePlateController.InitializeLocalComponents(): healthSliderWidth: " + healthSliderWidth);
             QuestIndicatorBackground.SetActive(false);
             GenericIndicatorImage.gameObject.SetActive(false);
@@ -158,12 +165,12 @@ namespace AnyRPG {
         }
 
         public void Highlight() {
-            healthBar.GetComponent<Image>().color = Color.white;
+            healthBarOutline.color = Color.white;
             namePlateCanvas.sortingOrder = 1;
         }
 
         public void UnHighlight() {
-            healthBar.GetComponent<Image>().color = Color.black;
+            healthBarOutline.color = Color.black;
             namePlateCanvas.sortingOrder = 0;
         }
 
@@ -275,7 +282,7 @@ namespace AnyRPG {
         /// <param name="currentHealth"></param>
         /// <param name="maxHealth"></param>
         public void HandleResourceAmountChanged(PowerResource powerResource, int currentHealth, int maxHealth) {
-            Debug.Log(gameObject.name + ".CharacterUnit.HandleResourceAmountChanged(" + currentHealth + ", " + maxHealth + ")");
+            //Debug.Log(unitNamePlateController.NamePlateUnit.gameObject.name + ".CharacterUnit.HandleResourceAmountChanged(" + currentHealth + ", " + maxHealth + ")");
             if (unitNamePlateController.HasHealth()
                 && (unitNamePlateController as UnitNamePlateController).UnitController.CharacterUnit.BaseCharacter != null
                 && (unitNamePlateController as UnitNamePlateController).UnitController.CharacterUnit.BaseCharacter.CharacterStats != null
@@ -324,19 +331,18 @@ namespace AnyRPG {
         }
 
         public void ProcessHealthChanged(int maxHealth, int currentHealth) {
-            Debug.Log("NamePlateController.ProcessHealthChanged(" + maxHealth + ", " + currentHealth + ")");
+            //Debug.Log(unitNamePlateController.NamePlateUnit.gameObject.name + ".NamePlateController.ProcessHealthChanged(" + maxHealth + ", " + currentHealth + ")");
             float healthPercent = (float)currentHealth / maxHealth;
             //Debug.Log(MyCharacterName.text + ".NamePlateController.OnHealthChanged(" + maxHealth + ", " + currentHealth + "): healthsliderwidth: " + healthSliderWidth.ToString() + "; healthPercent: " + healthPercent.ToString());
             if (HealthSlider == null) {
                 //Debug.Log("NamePlateController.OnHealthChanged() MyHealthSlider == null!");
                 return;
             }
-            LayoutElement layoutElement = HealthSlider.GetComponent<LayoutElement>();
-            if (layoutElement == null) {
+            if (sliderLayoutElement == null) {
                 //Debug.Log("NamePlateController.OnHealthChanged() MyHealthSlider.layoutElement == null!");
                 return;
             }
-            layoutElement.preferredWidth = healthPercent * healthSliderWidth;
+            sliderLayoutElement.preferredWidth = healthPercent * healthBarBackground.preferredWidth;
             CheckForDisabledHealthBar();
         }
 
@@ -517,13 +523,13 @@ namespace AnyRPG {
         }
 
         public void OnDisable() {
-            //Debug.Log(unitNamePlateController.UnitDisplayName + ".NamePlateController.OnDisable()");
+            //Debug.Log(unitNamePlateController.NamePlateUnit.gameObject.name + ".NamePlateController.OnDisable()");
             ProcessPointerExit();
             CleanupEventSubscriptions();
 
             // reset settings
             unitNamePlateController = null;
-            healthSliderWidth = 0;
+            //healthSliderWidth = 0;
             isPlayerUnitNamePlate = false;
             localComponentsInitialized = false;
             eventSubscriptionsInitialized = false;

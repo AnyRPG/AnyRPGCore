@@ -109,6 +109,7 @@ namespace AnyRPG {
         }
 
         public override void SetupNamePlate() {
+            //Debug.Log(unitController.gameObject.name + ".UnitNamePlateController.SetupNamePlate()");
             // intentionally not calling base because it disables the healthbar
             if (HasHealth() == true) {
                 namePlate.ProcessHealthChanged(MaxHealth(), CurrentHealth());

@@ -6,7 +6,7 @@ using UnityEngine;
 namespace AnyRPG {
     public class ProjectileScript : MonoBehaviour {
 
-        public event System.Action<IAbilityCaster, Interactable, GameObject, AbilityEffectContext> OnCollission = delegate { };
+        public event System.Action<IAbilityCaster, Interactable, GameObject, AbilityEffectContext, ProjectileScript> OnCollission = delegate { };
 
         [SerializeField]
         private AudioSource audioSource = null;
@@ -15,29 +15,27 @@ namespace AnyRPG {
 
         private Interactable target = null;
 
-        private Vector3 positionOffset;
+        private Vector3 positionOffset = Vector3.zero;
 
-        private Vector3 targetPosition;
+        private Vector3 targetPosition = Vector3.zero;
 
-        private float velocity;
+        private float velocity = 0f;
 
         private bool initialized = false;
 
-        private AbilityEffectContext abilityEffectInput = null;
-
-        //public AudioSource AudioSource { get => audioSource; }
+        private AbilityEffectContext abilityEffectContext = null;
 
         private void Update() {
             MoveTowardTarget();
         }
 
-        public void Initialize(float velocity, IAbilityCaster source, Interactable target, Vector3 positionOffset, AbilityEffectContext abilityEffectInput) {
+        public void Initialize(float velocity, IAbilityCaster source, Interactable target, Vector3 positionOffset, AbilityEffectContext abilityEffectContext) {
             //Debug.Log("ProjectileScript.Initialize(" + velocity + ", " + source.name + ", " + (target == null ? "null" : target.name) + ", " + positionOffset + ")");
             this.source = source;
             this.velocity = velocity;
             this.target = target;
             this.positionOffset = positionOffset;
-            this.abilityEffectInput = abilityEffectInput;
+            this.abilityEffectContext = abilityEffectContext;
             initialized = true;
         }
 
@@ -86,13 +84,29 @@ namespace AnyRPG {
         }
 
         private void OnTriggerEnter(Collider other) {
-            //Debug.Log("ProjectileScript.OnTriggerEnter(" + other.name + ")");
-            if ((target != null && other.gameObject == target.InteractableGameObject) || target == null) {
-                if (abilityEffectInput != null && abilityEffectInput.groundTargetLocation != null) {
-                    abilityEffectInput.groundTargetLocation = transform.position;
-                }
-                OnCollission(source, target, gameObject, abilityEffectInput);
+            //Debug.Log(gameObject.name + ".ProjectileScript.OnTriggerEnter(" + other.name + ")");
+            if (!initialized) {
+                // could potentially respawn from pool on top of old target
+                return;
             }
+            if ((target != null && other.gameObject == target.InteractableGameObject) || target == null) {
+                if (abilityEffectContext != null && abilityEffectContext.groundTargetLocation != null) {
+                    abilityEffectContext.groundTargetLocation = transform.position;
+                }
+                OnCollission(source, target, gameObject, abilityEffectContext, this);
+            }
+        }
+
+        private void OnDisable() {
+            //Debug.Log(gameObject.name + " " + gameObject.GetInstanceID() + ".ProjectileScript.OnDisable()");
+            source = null;
+            target = null;
+            positionOffset = Vector3.zero;
+            targetPosition = Vector3.zero;
+            velocity = 0f;
+            initialized = false;
+            abilityEffectContext = null;
+            OnCollission = delegate { };
         }
 
     }

@@ -47,9 +47,10 @@ namespace AnyRPG {
             return returnObjects;
         }
 
-        public void HandleCollission(IAbilityCaster source, Interactable target, GameObject _abilityEffectObject, AbilityEffectContext abilityEffectInput) {
-            //Debug.Log(MyName + ".ProjectileEffect.HandleCollission()");
+        public void HandleCollission(IAbilityCaster source, Interactable target, GameObject _abilityEffectObject, AbilityEffectContext abilityEffectInput, ProjectileScript projectileScript) {
+            //Debug.Log(DisplayName + ".ProjectileEffect.HandleCollission()");
             PerformAbilityHit(source, target, abilityEffectInput);
+            projectileScript.OnCollission -= HandleCollission;
             ObjectPooler.MyInstance.ReturnObjectToPool(_abilityEffectObject);
         }
 

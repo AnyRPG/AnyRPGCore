@@ -184,7 +184,7 @@ namespace AnyRPG {
         }
 
         public void ProcessTakeDamage(AbilityEffectContext abilityEffectContext, PowerResource powerResource, int damage, IAbilityCaster target, CombatMagnitude combatMagnitude, AbilityEffect abilityEffect) {
-            //Debug.Log(gameObject.name + ".CharacterCombat.ProcessTakeDamage(" + damage + ", " + (target == null ? "null" : target.Name) + ", " + combatMagnitude.ToString() + ", " + abilityEffect.MyName);
+            //Debug.Log(baseCharacter.gameObject.name + ".CharacterCombat.ProcessTakeDamage(" + damage + ", " + (target == null ? "null" : target.AbilityManager.UnitGameObject.name) + ", " + combatMagnitude.ToString() + ", " + abilityEffect.DisplayName);
             /*
             if (abilityEffectContext == null) {
                 abilityEffectContext = new AbilityEffectContext();

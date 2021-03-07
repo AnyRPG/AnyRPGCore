@@ -52,7 +52,13 @@ namespace AnyRPG {
 
             // copy all properties
             returnValue.abilityCaster = abilityCaster;
-            returnValue.resourceAmounts = resourceAmounts.ToList();
+            
+            // resource amounts must be copied.  ToList() or other methods don't work because you end up with a new list of references to the same old nodes
+            returnValue.resourceAmounts = new List<ResourceInputAmountNode>();
+            foreach (ResourceInputAmountNode resourceInputAmountNode in resourceAmounts) {
+                returnValue.resourceAmounts.Add(new ResourceInputAmountNode(resourceInputAmountNode.resourceName, resourceInputAmountNode.amount));
+            }
+
             returnValue.overrideDuration = overrideDuration;
             returnValue.savedEffect = savedEffect;
             returnValue.castTimeMultiplier = castTimeMultiplier;

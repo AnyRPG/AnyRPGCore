@@ -1579,8 +1579,10 @@ namespace AnyRPG {
             }
 
             if (ability.GetResourceCost(baseCharacter) != 0 && ability.PowerResource != null) {
+                // testing - should add ever be used?
+                //abilityEffectContext.AddResourceAmount(ability.PowerResource.DisplayName, ability.GetResourceCost(baseCharacter));
+                abilityEffectContext.SetResourceAmount(ability.PowerResource.DisplayName, ability.GetResourceCost(baseCharacter));
                 // intentionally not keeping track of this coroutine.  many of these could be in progress at once.
-                abilityEffectContext.AddResourceAmount(ability.PowerResource.DisplayName, ability.GetResourceCost(baseCharacter));
                 abilityCaster.StartCoroutine(UsePowerResourceDelay(ability.PowerResource, (int)ability.GetResourceCost(baseCharacter), ability.SpendDelay));
             }
 

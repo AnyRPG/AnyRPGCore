@@ -969,16 +969,17 @@ namespace AnyRPG {
             }
         }
 
-        public void NotifyOnResourceAmountChanged(PowerResource powerResource, int maxValue, int CurrentValue) {
-            OnResourceAmountChanged(powerResource, maxValue, CurrentValue);
+        public void NotifyOnResourceAmountChanged(PowerResource powerResource, int maxValue, int currentValue) {
+            //Debug.Log(baseCharacter.gameObject.name + ".CharacterStats.NotifyOnResourceAmountChanged(" + powerResource.DisplayName + ", " + maxValue + ", " + currentValue + ")");
+            OnResourceAmountChanged(powerResource, maxValue, currentValue);
             if (baseCharacter.UnitController != null) {
-                baseCharacter.UnitController.NotifyOnResourceAmountChanged(powerResource, maxValue, CurrentValue);
+                baseCharacter.UnitController.NotifyOnResourceAmountChanged(powerResource, maxValue, currentValue);
             }
 
         }
 
         public void SetResourceAmount(string resourceName, float newAmount) {
-            //Debug.Log(gameObject.name + ".CharacterStats.SetResourceAmount(" + resourceName + ", " + newAmount + "): current " + CurrentPrimaryResource);
+            //Debug.Log(baseCharacter.gameObject.name + ".CharacterStats.SetResourceAmount(" + resourceName + ", " + newAmount + "): current " + CurrentPrimaryResource);
             newAmount = Mathf.Clamp(newAmount, 0, int.MaxValue);
             PowerResource tmpPowerResource = SystemPowerResourceManager.MyInstance.GetResource(resourceName);
 
@@ -1000,7 +1001,7 @@ namespace AnyRPG {
         /// <param name="newAmount"></param>
         /// <returns></returns>
         public bool AddResourceAmount(string resourceName, float newAmount) {
-            //Debug.Log(gameObject.name + ".CharacterStats.SetResourceAmount(" + resourceName + ", " + newAmount + "): current " + CurrentPrimaryResource);
+            //Debug.Log(baseCharacter.gameObject.name + ".CharacterStats.AddResourceAmount(" + resourceName + ", " + newAmount + ")");
             newAmount = Mathf.Clamp(newAmount, 0, int.MaxValue);
             PowerResource tmpPowerResource = SystemPowerResourceManager.MyInstance.GetResource(resourceName);
 
@@ -1019,7 +1020,7 @@ namespace AnyRPG {
         }
 
         public bool RecoverResource(AbilityEffectContext abilityEffectContext, PowerResource powerResource, int amount, IAbilityCaster source, bool showCombatText = true, CombatMagnitude combatMagnitude = CombatMagnitude.normal) {
-            //Debug.Log(baseCharacter.gameObject.name + ".CharacterStats.RecoverResource(" + amount + ")");
+            //Debug.Log(baseCharacter.gameObject.name + ".CharacterStats.RecoverResource(" + powerResource.DisplayName + ", " + amount + ")");
 
             bool returnValue = AddResourceAmount(powerResource.DisplayName, amount);
             if (returnValue == false) {

@@ -124,7 +124,7 @@ namespace AnyRPG {
 
             HandleCancelButtonPressed();
 
-            HandleMouseOver();
+            //HandleMouseOver();
 
             if (PlayerManager.MyInstance?.MyCharacter?.CharacterStats?.IsAlive == false) {
                 // can't interact, perform abilities or handle movement when dead
@@ -214,6 +214,7 @@ namespace AnyRPG {
             //CheckForInteraction();
         }
 
+        /*
         private void HandleMouseOver() {
             //Debug.Log(gameObject.name + ".PlayerController.HandleMouseOver()");
             if (CameraManager.MyInstance.MyActiveMainCamera == null) {
@@ -274,6 +275,7 @@ namespace AnyRPG {
             }
 
         }
+        */
 
 
         private void HandleRightMouseClick() {

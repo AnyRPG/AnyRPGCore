@@ -186,7 +186,9 @@ namespace AnyRPG {
             AbilityEffectContext modifiedOutput = abilityEffectInput.GetCopy();
             modifiedOutput.resourceAmounts.Clear();
             foreach (ResourceInputAmountNode resourceInputAmountNode in abilityEffectInput.resourceAmounts) {
-                modifiedOutput.AddResourceAmount(resourceInputAmountNode.resourceName, (int)(resourceInputAmountNode.amount * outputShare));
+                // testing - should add ever be used instead of set?
+                //modifiedOutput.AddResourceAmount(resourceInputAmountNode.resourceName, (int)(resourceInputAmountNode.amount * outputShare));
+                modifiedOutput.SetResourceAmount(resourceInputAmountNode.resourceName, (int)(resourceInputAmountNode.amount * outputShare));
             }
 
             return modifiedOutput;

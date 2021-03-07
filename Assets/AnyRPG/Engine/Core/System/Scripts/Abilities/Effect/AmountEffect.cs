@@ -21,6 +21,12 @@ namespace AnyRPG {
         [SerializeField]
         protected DamageType damageType;
 
+        [Header("Accuracy")]
+
+        [Tooltip("If true, this effect will always hit regardless of current accuracy")]
+        [SerializeField]
+        protected bool ignoreAccuracy = false;
+
         public DamageType DamageType { get => damageType; set => damageType = value; }
 
         protected KeyValuePair<float, CombatMagnitude> CalculateAbilityAmount(float abilityBaseAmount, IAbilityCaster sourceCharacter, CharacterUnit target, AbilityEffectContext abilityEffectContext, ResourceAmountNode resourceAmountNode) {
@@ -87,30 +93,31 @@ namespace AnyRPG {
         }
 
         public override void PerformAbilityHit(IAbilityCaster source, Interactable target, AbilityEffectContext abilityEffectContext) {
-            if (abilityEffectContext == null) {
-                //Debug.Log("AttackEffect.PerformAbilityHit() abilityEffectInput is null!");
-            }
+            //Debug.Log(DisplayName + ".AmountEffect.PerformAbilityHit(" + (source == null ? "null" : source.AbilityManager.UnitGameObject.name) + ", " + (target == null ? "null" : target.gameObject.name) + ")");
             if (source == null || target == null) {
                 // something died or despawned mid cast
                 return;
             }
 
             // check ability context ?  if base ability was animated, then no need to check because we already checked
-            if (!((abilityEffectContext.baseAbility as AnimatedAbility) is AnimatedAbility)) {
+            if (ignoreAccuracy == false && !((abilityEffectContext.baseAbility as AnimatedAbility) is AnimatedAbility)) {
                 if (!source.AbilityManager.AbilityHit(target, abilityEffectContext)) {
                     return;
                 }
             }
 
+            // this potentially triggered off a status effect.  We don't want to add amounts to the base context so we need to make a new one now
+            AbilityEffectContext abilityEffectOutput = abilityEffectContext.GetCopy();
+
             foreach (ResourceAmountNode resourceAmountNode in resourceAmounts) {
                 int finalAmount = 0;
                 CombatMagnitude combatMagnitude = CombatMagnitude.normal;
                 float effectTotalAmount = resourceAmountNode.BaseAmount + (resourceAmountNode.AmountPerLevel * source.AbilityManager.Level);
-                KeyValuePair<float, CombatMagnitude> abilityKeyValuePair = CalculateAbilityAmount(effectTotalAmount, source, CharacterUnit.GetCharacterUnit(target), abilityEffectContext, resourceAmountNode);
+                KeyValuePair<float, CombatMagnitude> abilityKeyValuePair = CalculateAbilityAmount(effectTotalAmount, source, CharacterUnit.GetCharacterUnit(target), abilityEffectOutput, resourceAmountNode);
                 finalAmount = (int)abilityKeyValuePair.Key;
                 combatMagnitude = abilityKeyValuePair.Value;
                 float inputAmount = 0f;
-                foreach (ResourceInputAmountNode _resourceAmountNode in abilityEffectContext.resourceAmounts) {
+                foreach (ResourceInputAmountNode _resourceAmountNode in abilityEffectOutput.resourceAmounts) {
                     string matchName = resourceAmountNode.ResourceName;
                     if (resourceAmountNode.InputRemap != null && resourceAmountNode.InputRemap != string.Empty) {
                         matchName = resourceAmountNode.InputRemap;
@@ -120,26 +127,29 @@ namespace AnyRPG {
                     }
                 }
                 finalAmount += (int)(inputAmount * inputMultiplier);
-                //Debug.Log(DisplayName + ".AmountEffect.PerformAbilityHit() input: " + inputAmount + "; multiplier: " + inputMultiplier + "; final: " + finalAmount);
+                //Debug.Log(DisplayName + ".AmountEffect.PerformAbilityHit(" + (source == null ? "null" : source.AbilityManager.UnitGameObject.name) + ", " + (target == null ? "null" : target.gameObject.name) + ") finalAmount : " + finalAmount + "; input: " + inputAmount + "; multiplier: " + inputMultiplier);
+
 
                 //abilityEffectOutput.AddResourceAmount(resourceAmountNode.ResourceName, finalAmount);
-                abilityEffectContext.AddResourceAmount(resourceAmountNode.ResourceName, finalAmount);
+                //abilityEffectContext.AddResourceAmount(resourceAmountNode.ResourceName, finalAmount);
+                abilityEffectOutput.SetResourceAmount(resourceAmountNode.ResourceName, finalAmount);
 
                 if (finalAmount > 0) {
                     // this effect may not have any damage and only be here for spawning a prefab or making a sound
-                    if (!ProcessAbilityHit(target, finalAmount, source, combatMagnitude, this, abilityEffectContext, resourceAmountNode.PowerResource)) {
+                    if (!ProcessAbilityHit(target, finalAmount, source, combatMagnitude, this, abilityEffectOutput, resourceAmountNode.PowerResource)) {
                         // if we didn't successfully hit, we can't continue on 
                         return;
                     }
                 }
             }
 
-            abilityEffectContext.castTimeMultiplier = 1f;
+            abilityEffectOutput.castTimeMultiplier = 1f;
 
             //abilityEffectOutput.groundTargetLocation = abilityEffectContext.groundTargetLocation;
-            AbilityEffectContext abilityEffectOutput = ProcessAbilityEffectContext(source, target, abilityEffectContext);
+            abilityEffectOutput = ProcessAbilityEffectContext(source, target, abilityEffectOutput);
 
-            base.PerformAbilityHit(source, target, abilityEffectContext);
+            //base.PerformAbilityHit(source, target, abilityEffectContext);
+            base.PerformAbilityHit(source, target, abilityEffectOutput);
         }
 
         /// <summary>
