@@ -49,7 +49,7 @@ MonoBehaviour:
   defaultRendererAsset: {fileID: 0}
   umaRecipe: {fileID: 0}
   umaAdditionalRecipes:
-  - {fileID: 11400000, guid: 920d59ac577b2d9449aa36a4d9e86f10, type: 2}
+  - {fileID: 0}
   umaGenerator: {fileID: 0}
   animationController: {fileID: 9100000, guid: 547e6a8928ecb2d49b24c599db6d49c9, type: 2}
   CharacterCreated:
