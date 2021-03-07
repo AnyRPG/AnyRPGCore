@@ -49,6 +49,9 @@ namespace AnyRPG {
         private bool cameraPan = false;
         private bool cameraZoom = false;
 
+        // avoid use of local variables
+        RaycastHit wallHit = new RaycastHit();
+
         public Transform MyTarget { get => target; set => target = value; }
         public Vector3 MyWantedDirection { get => wantedDirection; set => wantedDirection = value; }
 
@@ -122,12 +125,6 @@ namespace AnyRPG {
             lastPlayerPosition = target.position;
             SetTargetPosition();
 
-            // get the current distance from the target
-            Vector3 heading = targetPosition - transform.position;
-            float distance = heading.magnitude;
-
-            //Debug.Log("distance to target (x,y,z): " + heading.ToString() + "; actual distance: " + heading.magnitude.ToString() + "; currentzoom: " + currentZoomDistance);
-
             // handleZoom
             // added code at end to check if over nameplate and allow scrolling
             if (InputManager.MyInstance.mouseScrolled && (!EventSystem.current.IsPointerOverGameObject() || (NamePlateManager.MyInstance != null ? NamePlateManager.MyInstance.MouseOverNamePlate() : false))) {
@@ -141,21 +138,23 @@ namespace AnyRPG {
             // IF START HAVING MORE ISSUES WITH PAN AND TURN IN FUTURE, JUST COMMENT BELOW LINE AND RE-ENABLE COMMENTED LINE BELOW IT SINCE QUATERNIONS ARE NOW ALWAYS CALCULATED IN SETWANTEDPOSITION
             if (!UIManager.MyInstance.DragInProgress && ((InputManager.MyInstance.rightMouseButtonDown && !InputManager.MyInstance.rightMouseButtonClickedOverUI) || (InputManager.MyInstance.leftMouseButtonDown && !InputManager.MyInstance.leftMouseButtonClickedOverUI))) {
                 //if (!UIManager.MyInstance.MyDragInProgress && ((InputManager.MyInstance.rightMouseButtonDown && !InputManager.MyInstance.rightMouseButtonClickedOverUI && InputManager.MyInstance.rightMouseButtonDownPosition != Input.mousePosition) || (InputManager.MyInstance.leftMouseButtonDown && !InputManager.MyInstance.leftMouseButtonClickedOverUI && InputManager.MyInstance.leftMouseButtonDownPosition != Input.mousePosition))) {
-                float xInput = Input.GetAxis("Mouse X") * yawSpeed;
+                //float xInput = Input.GetAxis("Mouse X") * yawSpeed;
                 float usedTurnSpeed = 0f;
                 if (InputManager.MyInstance.rightMouseButtonDown) {
                     usedTurnSpeed = PlayerPrefs.GetFloat("MouseTurnSpeed") + 0.5f;
                 } else {
                     usedTurnSpeed = PlayerPrefs.GetFloat("MouseLookSpeed") + 0.5f;
                 }
-                currentXDegrees += xInput * usedTurnSpeed;
+                //currentXDegrees += xInput * usedTurnSpeed;
+                currentXDegrees += Input.GetAxis("Mouse X") * yawSpeed * usedTurnSpeed;
                 //Debug.Log("xInput: " + xInput + "; currentXDegrees: " + currentXDegrees + "; xQuaternion: " + xQuaternion);
                 //Quaternion camTurnAngle = Quaternion.AngleAxis(Input.GetAxis("Mouse X") * yawSpeed, Vector3.up);
                 //cameraOffsetVector = camTurnAngle * cameraOffsetVector;
                 //Debug.Log("Camera Offset Vector after rotationX: " + cameraOffsetVector);
                 //camTurnAngle = Quaternion.AngleAxis(-Input.GetAxis("Mouse Y") * yawSpeed, transform.right);
-                float yInput = Input.GetAxis("Mouse Y") * yawSpeed;
-                currentYDegrees += (yInput * usedTurnSpeed) * (PlayerPrefs.GetInt("MouseInvert") == 0 ? 1 : -1);
+                //float yInput = Input.GetAxis("Mouse Y") * yawSpeed;
+                //currentYDegrees += (yInput * usedTurnSpeed) * (PlayerPrefs.GetInt("MouseInvert") == 0 ? 1 : -1);
+                currentYDegrees += (Input.GetAxis("Mouse Y") * yawSpeed * usedTurnSpeed) * (PlayerPrefs.GetInt("MouseInvert") == 0 ? 1 : -1);
                 currentYDegrees = Mathf.Clamp(currentYDegrees, minVerticalPan, maxVerticalPan);
 
                 cameraPan = true;
@@ -183,7 +182,7 @@ namespace AnyRPG {
         private void CompensateForWalls() {
             //Debug.Log("drawing Camera debug line from targetPosition: " + targetPosition + " to wantedPosition: " + wantedPosition);
             Debug.DrawLine(targetPosition, wantedPosition, Color.cyan);
-            RaycastHit wallHit = new RaycastHit();
+            //wallHit = new RaycastHit();
             if (Physics.Linecast(targetPosition, wantedPosition, out wallHit, ~ignoreMask)) {
                 //Debug.Log("hit: " + wallHit.transform.name);
                 Debug.DrawRay(wallHit.point, wallHit.point - targetPosition, Color.red);
@@ -196,9 +195,13 @@ namespace AnyRPG {
         private void SetWantedPosition() {
             //Debug.Log("SetWantedPosition(): targetPosition: " + targetPosition);
 
+            /*
             Quaternion xQuaternion = Quaternion.AngleAxis(currentXDegrees, Vector3.up);
             Quaternion yQuaternion = Quaternion.AngleAxis(currentYDegrees, -Vector3.right);
             cameraOffsetVector = xQuaternion * yQuaternion * initialCameraOffset;
+            */
+            // reduce use of local variables
+            cameraOffsetVector = Quaternion.AngleAxis(currentXDegrees, Vector3.up) * Quaternion.AngleAxis(currentYDegrees, -Vector3.right) * initialCameraOffset;
 
             wantedPosition = target.TransformPoint((cameraOffsetVector.normalized * currentZoomDistance) + new Vector3(0, pitch, 0));
             //Debug.Log("SetWantedPosition(): wantedPosition: " + wantedPosition + "; currentZoomDistance: " + currentZoomDistance);
