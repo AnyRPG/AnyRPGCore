@@ -19,6 +19,9 @@ namespace AnyRPG {
         [SerializeField]
         private RectTransform rectTransform = null;
 
+        [SerializeField]
+        private RectTransform textRectTransform = null;
+
         [Tooltip("Text will always be placed this many pixels to the left or right of the target center")]
         [SerializeField]
         private float xUIOffset = 25f;
@@ -64,7 +67,11 @@ namespace AnyRPG {
         // change direction to downward text for hits against player
         private int directionMultiplier = 1;
 
+        // make text bigger for crits and non white damage
         private int fontSizeMultiplier = 1;
+
+        // for players, make negative amounts go on the opposite side
+        private int xDirectionMultiplier = 1;
 
         // reduce use of local variables for garbage collection
         string preText = string.Empty;
@@ -117,6 +124,7 @@ namespace AnyRPG {
                         int parseResult;
                         if (int.TryParse(displayText, out parseResult)) {
                             preText += parseResult > 0 ? "-" : "";
+                            xDirectionMultiplier = parseResult > 0 ? 1 : -1;
                         }
                         break;
                     case CombatTextType.gainXP:
@@ -124,21 +132,30 @@ namespace AnyRPG {
                         preText += "+";
                         postText += " XP";
                         fontSizeMultiplier *= 2;
+                        xDirectionMultiplier = -1;
                         break;
                     case CombatTextType.gainBuff:
                         textColor = Color.cyan;
                         preText += "+";
                         //text.fontSize = text.fontSize * 2;
+                        xDirectionMultiplier = -1;
                         break;
                     case CombatTextType.loseBuff:
                         textColor = Color.cyan;
                         preText += "+";
                         //text.fontSize = text.fontSize * 2;
+                        xDirectionMultiplier = -1;
                         break;
                     case CombatTextType.ability:
                         textColor = Color.magenta;
                         preText += "-";
                         fontSizeMultiplier *= 2;
+                        break;
+                    case CombatTextType.gainHealth:
+                        xDirectionMultiplier = -1;
+                        break;
+                    case CombatTextType.gainResource:
+                        xDirectionMultiplier = -1;
                         break;
                     default:
                         break;
@@ -199,6 +216,8 @@ namespace AnyRPG {
             randomY += (fontSizeMultiplier / 2f) * randomYLimit;
             randomX += (fontSizeMultiplier / 2f) * randomXLimit;
 
+            // before running the first combat text update, the layout should be updated, or the rect for the text will still have the old width before the end of the current frame
+            LayoutRebuilder.ForceRebuildLayoutImmediate(textRectTransform);
             RunCombatTextUpdate();
         }
 
@@ -208,7 +227,7 @@ namespace AnyRPG {
                 //Debug.Log("CombatTextController.FixedUpdate(): maintarget is not null");
                 targetPos = CameraManager.MyInstance.MyActiveMainCamera.WorldToScreenPoint(mainTarget.InteractableGameObject.transform.position + new Vector3(0, yUnitOffset, 0));
                 //Debug.Log("CombatTextController.FixedUpdate(): targetpos:" + targetPos);
-                transform.position = targetPos + new Vector2(randomX + xUIOffset, yUIOffset + randomY);
+                transform.position = targetPos + new Vector2((randomX + xUIOffset + (xDirectionMultiplier == 1 ? 0 : textRectTransform.rect.width)) * xDirectionMultiplier, yUIOffset + randomY);
             }
             if (fadeOutTimer > 0f) {
                 fadeOutTimer -= Time.deltaTime;

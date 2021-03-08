@@ -275,6 +275,7 @@ MonoBehaviour:
   tmpProtext: {fileID: 534061263041118330}
   image: {fileID: 6183030939840713891}
   rectTransform: {fileID: 3858983003836995666}
+  textRectTransform: {fileID: 4471730623831048276}
   xUIOffset: 25
   yUnitOffset: 2.2
   distanceToMove: 200
