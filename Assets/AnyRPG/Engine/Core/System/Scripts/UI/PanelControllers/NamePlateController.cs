@@ -536,6 +536,9 @@ namespace AnyRPG {
             ProcessPointerExit();
             CleanupEventSubscriptions();
 
+            // this could have been disabled while it was still the focus so it needs to be unhighlited just in case
+            UnHighlight();
+
             // reset settings
             unitNamePlateController = null;
             //healthSliderWidth = 0;
