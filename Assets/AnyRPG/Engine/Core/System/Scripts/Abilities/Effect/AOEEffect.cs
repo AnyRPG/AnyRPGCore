@@ -110,13 +110,19 @@ namespace AnyRPG {
             //Debug.Log(DisplayName + ".AOEEffect.GetValidTargets()");
 
             Vector3 aoeSpawnCenter = Vector3.zero;
+            Quaternion aoeSpawnRotation = source.AbilityManager.UnitGameObject.transform.rotation;
             if (prefabSpawnLocation == PrefabSpawnLocation.Target && target != null) {
                 //Debug.Log("AOEEffect.Cast(): Setting AOE center to target");
                 aoeSpawnCenter = target.transform.position;
-            } else if (prefabSpawnLocation == PrefabSpawnLocation.Caster || prefabSpawnLocation == PrefabSpawnLocation.CasterPoint) {
+            } else if (prefabSpawnLocation == PrefabSpawnLocation.Caster) {
                 //Debug.Log("AOEEffect.Cast(): Setting AOE center to caster");
                 aoeSpawnCenter = source.AbilityManager.UnitGameObject.transform.position;
                 aoeSpawnCenter += source.AbilityManager.UnitGameObject.transform.TransformDirection(aoeCenter);
+            } else if (prefabSpawnLocation == PrefabSpawnLocation.CasterPoint) {
+                //Debug.Log("AOEEffect.Cast(): Setting AOE center to caster");
+                aoeSpawnRotation = abilityEffectContext.AbilityCasterRotation;
+                aoeSpawnCenter = abilityEffectContext.AbilityCasterLocation;
+                aoeSpawnCenter += aoeSpawnRotation * aoeCenter;
             } else if (prefabSpawnLocation == PrefabSpawnLocation.GroundTarget) {
                 //Debug.Log("AOEEffect.Cast(): Setting AOE center to groundTarget at: " + abilityEffectInput.prefabLocation);
                 aoeSpawnCenter = abilityEffectContext.groundTargetLocation;
@@ -134,7 +140,7 @@ namespace AnyRPG {
             }
             if (useExtents) {
                 //Debug.Log(MyName + ".AOEEffect.GetValidTargets(): using aoeSpawnCenter: " + aoeSpawnCenter + ", extents: " + aoeExtents);
-                colliders = Physics.OverlapBox(aoeSpawnCenter, aoeExtents / 2f, source.AbilityManager.UnitGameObject.transform.rotation, validMask);
+                colliders = Physics.OverlapBox(aoeSpawnCenter, aoeExtents / 2f, aoeSpawnRotation, validMask);
             }
             //Debug.Log("AOEEffect.Cast(): Casting OverlapSphere with radius: " + aoeRadius);
             List<AOETargetNode> validTargets = new List<AOETargetNode>();
