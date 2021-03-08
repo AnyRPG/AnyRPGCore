@@ -91,6 +91,13 @@ namespace AnyRPG {
             //}
         }
 
+        public void CleanupLayers() {
+            foreach (GameObject go in miniMapLayers.Values) {
+                ObjectPooler.MyInstance.ReturnObjectToPool(go);
+            }
+            miniMapLayers.Clear();
+        }
+
         /*
         public void OnPointerEnter(BaseEventData eventData) {
             if (characterUnit.MyInteractable != null) {
