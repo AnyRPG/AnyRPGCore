@@ -22,6 +22,8 @@ namespace AnyRPG {
         // user modified variables
         public string gameName = "";
         public int pixelsPerMeter = 10;
+        public CameraClearFlags cameraClearFlags = CameraClearFlags.Skybox;
+        public Color backgroundColor = Color.black;
 
         [MenuItem("Tools/AnyRPG/Wizard/MiniMap Wizard")]
         static void CreateWizard() {
@@ -55,6 +57,8 @@ namespace AnyRPG {
 
             EditorUtility.DisplayProgressBar(wizardTitle, "Calling Minimap Generator...", 0.4f);
 
+            camera.clearFlags = cameraClearFlags;
+            camera.backgroundColor = backgroundColor;
             miniMapGeneratorController.mapCamera = camera;
             miniMapGeneratorController.minimapTextureFolder = newGameImagesFolder;
             miniMapGeneratorController.pixelsPerMeter = pixelsPerMeter;
