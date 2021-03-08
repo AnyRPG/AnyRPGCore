@@ -1155,6 +1155,20 @@ namespace AnyRPG {
             ResetResourceAmounts();
         }
 
+        /// <summary>
+        /// when a body despawns, all effect prefabs should be cleared
+        /// </summary>
+        public void ClearStatusEffectPrefabs() {
+            foreach (StatusEffectNode statusEffectNode in statusEffects.Values) {
+                statusEffectNode.ClearEffectPrefabs();
+            }
+        }
+
+
+        public void HandleCharacterUnitDespawn() {
+            ClearStatusEffectPrefabs();
+        }
+
         public void ClearStatusEffects(bool clearAll = true) {
             //Debug.Log(gameObject.name + ".CharacterStatus.ClearStatusEffects()");
             List<StatusEffectNode> statusEffectNodes = new List<StatusEffectNode>();

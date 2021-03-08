@@ -620,6 +620,7 @@ namespace AnyRPG {
         public void HandleCharacterUnitDespawn() {
             //Debug.Log(gameObject.name + ".BaseCharacter.HandleCharacterUnitSpawn()");
             characterEquipmentManager.HandleCharacterUnitDespawn();
+            characterStats.HandleCharacterUnitDespawn();
         }
 
         public void DespawnImmediate() {

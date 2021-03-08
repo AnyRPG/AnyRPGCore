@@ -43,14 +43,18 @@ namespace AnyRPG {
             //this.monitorCoroutine = newCoroutine;
         }
 
-        public void CancelStatusEffect() {
-            //Debug.Log("StatusEffectNode.CancelStatusEffect(): " + StatusEffect.DisplayName);
+        public void ClearEffectPrefabs() {
             if (prefabObjects != null) {
                 foreach (GameObject go in prefabObjects.Values) {
                     //Debug.Log(MyName + ".LengthEffect.CancelEffect(" + targetCharacter.MyName + "): Destroy: " + go.name);
                     ObjectPooler.MyInstance.ReturnObjectToPool(go, StatusEffect.PrefabDestroyDelay);
                 }
             }
+        }
+
+        public void CancelStatusEffect() {
+            //Debug.Log("StatusEffectNode.CancelStatusEffect(): " + StatusEffect.DisplayName);
+            ClearEffectPrefabs();
             StatusEffect.CancelEffect(characterStats.BaseCharacter);
             characterStats.HandleStatusEffectRemoval(statusEffect);
             ClearNodeScripts();
