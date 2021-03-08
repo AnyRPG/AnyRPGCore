@@ -335,7 +335,8 @@ namespace AnyRPG {
             windowSize = parentObject.GetComponent<RectTransform>().rect.width;
 
             // scale factor gives the number of pixels per meter for this image
-            levelScaleFactor = miniMapGraphicRawImage.texture.width / LevelManager.MyInstance.SceneBounds.size.x;
+            // it assumes a square image whose factor is based on the largest scene dimension
+            levelScaleFactor = miniMapGraphicRawImage.texture.width / (LevelManager.MyInstance.SceneBounds.size.x > LevelManager.MyInstance.SceneBounds.size.z ? LevelManager.MyInstance.SceneBounds.size.x : LevelManager.MyInstance.SceneBounds.size.z);
             levelOffset = LevelManager.MyInstance.SceneBounds.center;
 
             EnableIndicators();
