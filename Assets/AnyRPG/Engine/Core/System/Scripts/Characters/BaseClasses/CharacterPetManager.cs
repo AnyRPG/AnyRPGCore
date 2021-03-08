@@ -2,6 +2,7 @@ using AnyRPG;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -87,7 +88,7 @@ namespace AnyRPG {
         }
 
         public void DespawnAllPets() {
-            foreach (UnitProfile unitProfile in activeUnitProfiles.Keys) {
+            foreach (UnitProfile unitProfile in activeUnitProfiles.Keys.ToArray()) {
                 // check that the controller is not null.  It may have already been destroyed somehow
                 if (activeUnitProfiles[unitProfile] != null) {
                     activeUnitProfiles[unitProfile].Despawn();

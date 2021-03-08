@@ -727,6 +727,7 @@ namespace AnyRPG {
             PlayerManager.MyInstance.ActiveUnitController.OnActivateMountedState += HandleActivateMountedState;
             PlayerManager.MyInstance.ActiveUnitController.OnDeActivateMountedState += HandleDeActivateMountedState;
             PlayerManager.MyInstance.ActiveUnitController.OnMessageFeed += HandleMessageFeed;
+            PlayerManager.MyInstance.ActiveUnitController.OnUnitDestroy += HandleUnitDestroy;
 
             // subscribe and call in case the namePlate is already spawned
             PlayerManager.MyInstance.ActiveUnitController.OnInitializeNamePlate += HandleInitializeNamePlate;
@@ -753,6 +754,8 @@ namespace AnyRPG {
             PlayerManager.MyInstance.ActiveUnitController.OnDeActivateMountedState -= HandleDeActivateMountedState;
             PlayerManager.MyInstance.ActiveUnitController.OnMessageFeed -= HandleMessageFeed;
             PlayerManager.MyInstance.ActiveUnitController.OnInitializeNamePlate -= HandleInitializeNamePlate;
+            PlayerManager.MyInstance.ActiveUnitController.OnUnitDestroy -= HandleUnitDestroy;
+
         }
 
         public void HandleInitializeNamePlate() {
@@ -760,6 +763,12 @@ namespace AnyRPG {
             if (PlayerManager.MyInstance?.ActiveUnitController?.NamePlateController?.NamePlate != null) {
                 PlayerManager.MyInstance.ActiveUnitController.NamePlateController.NamePlate.SetPlayerOwnerShip();
             }
+        }
+
+        public void HandleUnitDestroy(UnitProfile unitProfile) {
+            SystemEventManager.TriggerEvent("OnPlayerUnitDespawn", new EventParamProperties());
+            UnsubscribeFromUnitEvents();
+            PlayerManager.MyInstance.SetUnitController(null);
         }
 
         public void HandleMessageFeed(string message) {

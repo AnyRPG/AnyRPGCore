@@ -40,7 +40,7 @@ namespace AnyRPG {
             }
             if (SystemEventManager.MyInstance != null) {
                 SystemEventManager.StartListening("OnPlayerUnitSpawn", HandlePlayerUnitSpawn);
-                SystemEventManager.MyInstance.OnPlayerUnitDespawn += HandlePlayerUnitDespawn;
+                SystemEventManager.StartListening("OnPlayerUnitDespawn", HandlePlayerUnitDespawn);
                 SystemEventManager.MyInstance.OnPlayerConnectionDespawn += HandlePlayerConnectionDespawn;
                 SystemEventManager.MyInstance.OnEquipmentChanged += HandleEquipmentChange;
             }
@@ -54,7 +54,7 @@ namespace AnyRPG {
             }
             if (SystemEventManager.MyInstance != null) {
                 SystemEventManager.StopListening("OnPlayerUnitSpawn", HandlePlayerUnitSpawn);
-                SystemEventManager.MyInstance.OnPlayerUnitDespawn -= HandlePlayerUnitDespawn;
+                SystemEventManager.StopListening("OnPlayerUnitDespawn", HandlePlayerUnitDespawn);
                 SystemEventManager.MyInstance.OnPlayerConnectionDespawn -= HandlePlayerConnectionDespawn;
                 SystemEventManager.MyInstance.OnEquipmentChanged -= HandleEquipmentChange;
             }
@@ -83,7 +83,7 @@ namespace AnyRPG {
             PlayerManager.MyInstance.UnitController.OnClearTarget += HandleClearTarget;
         }
 
-        public void HandlePlayerUnitDespawn() {
+        public void HandlePlayerUnitDespawn(string eventName, EventParamProperties eventParamProperties) {
             //Debug.Log("ActionBarmanager.HandlePlayerUnitDespawn()");
 
             // this needs to be called manually here because if the character controller processes the player unit despawn after us, we will miss the event

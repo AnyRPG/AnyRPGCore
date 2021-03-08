@@ -34,6 +34,7 @@ namespace AnyRPG {
         public event System.Action OnDeActivateMountedState = delegate { };
         public event System.Action<string> OnMessageFeed = delegate { };
         public override event System.Action OnCameraTargetReady = delegate { };
+        //public event System.Action OnDespawn = delegate { };
 
         // by default, a unit will enter AI mode if no mode is set before Init()
         [SerializeField]
@@ -490,6 +491,8 @@ namespace AnyRPG {
             rigidBody.isKinematic = false;
             rigidBody.collisionDetectionMode = CollisionDetectionMode.ContinuousDynamic;
             rigidBody.constraints = RigidbodyConstraints.FreezeRotation;
+
+            myCollider.isTrigger = false;
 
             unitComponentController.InteractableRange.gameObject.SetActive(false);
             useAgent = false;
@@ -1398,7 +1401,8 @@ namespace AnyRPG {
             base.ProcessLevelUnload();
             ClearTarget();
             CancelMountEffects();
-            Despawn();
+            // moved to baseCharacter
+            //Despawn();
         }
 
         public void Agro(CharacterUnit agroTarget) {

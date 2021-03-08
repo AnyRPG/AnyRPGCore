@@ -133,6 +133,7 @@ namespace AnyRPG {
         }
 
         public void HandleResourceAmountChanged(PowerResource powerResource, int maxAmount, int currentAmount) {
+            //Debug.Log(unitController.gameObject.name + ".UnitNamePlateController.HandleResourceAmountChanged()");
             namePlate.HandleResourceAmountChanged(powerResource, maxAmount, currentAmount);
         }
 

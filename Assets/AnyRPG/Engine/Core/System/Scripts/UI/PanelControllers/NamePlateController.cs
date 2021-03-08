@@ -99,10 +99,10 @@ namespace AnyRPG {
             if (eventSubscriptionsInitialized) {
                 return;
             }
-            SystemEventManager.MyInstance.OnPlayerUnitDespawn += CleanupEventSubscriptions;
             //Debug.Log("NamePlateController.CreateEventSubscriptions()");
             SystemEventManager.StartListening("OnReputationChange", HandleReputationChange);
             SystemEventManager.StartListening("OnPlayerUnitSpawn", HandlePlayerUnitSpawn);
+            SystemEventManager.StartListening("OnPlayerUnitDespawn", HandlePlayerUnitDespawn);
             //if (PlayerManager.MyInstance.MyPlayerUnitSpawned) {
             ProcessPlayerUnitSpawn();
             //}
@@ -115,10 +115,15 @@ namespace AnyRPG {
                 return;
             }
             SystemEventManager.StopListening("OnPlayerUnitSpawn", HandlePlayerUnitSpawn);
+            SystemEventManager.StopListening("OnPlayerUnitDespawn", HandlePlayerUnitDespawn);
             SystemEventManager.StopListening("OnReputationChange", HandleReputationChange);
-            SystemEventManager.MyInstance.OnPlayerUnitDespawn -= CleanupEventSubscriptions;
 
             eventSubscriptionsInitialized = false;
+        }
+
+        public void HandlePlayerUnitDespawn(string eventName, EventParamProperties eventParamProperties) {
+            //Debug.Log(gameObject.name + ".InanimateUnit.HandlePlayerUnitSpawn()");
+            CleanupEventSubscriptions();
         }
 
         public void HandlePlayerUnitSpawn(string eventName, EventParamProperties eventParamProperties) {

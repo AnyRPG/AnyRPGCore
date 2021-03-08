@@ -184,7 +184,7 @@ namespace AnyRPG {
 
         public void ExitGameHandler() {
             //Debug.Log("PlayerManager.ExitGameHandler()");
-            DespawnPlayerUnit();
+            //DespawnPlayerUnit();
             DespawnPlayerConnection();
             SaveManager.MyInstance.ClearSystemManagedCharacterData();
         }
@@ -280,9 +280,11 @@ namespace AnyRPG {
         }
         */
 
+            /*
         public void ProcessLevelUnload() {
             DespawnPlayerUnit();
         }
+        */
 
         public void DespawnPlayerUnit() {
             //Debug.Log("PlayerManager.DespawnPlayerUnit()");
@@ -290,18 +292,8 @@ namespace AnyRPG {
                 //Debug.Log("Player Unit is not spawned.  Nothing to despawn.  returning");
                 return;
             }
-            // trying this at top so subscribers can remove their methods before the object is destroyed
-            SystemEventManager.MyInstance.NotifyOnPlayerUnitDespawn();
 
-            playerController.UnsubscribeFromUnitEvents();
-
-            // set active false first because destroy is not done until the end of frame
-            // use regular unitController in case player is mounted
-            // testing new despawn - check for what was needing it be not be active for
-            //unitController.gameObject.SetActive(false);
             unitController.Despawn();
-            activeUnitController = null;
-            playerUnitSpawned = false;
         }
 
         public void HandlePlayerDeath(string eventName, EventParamProperties eventParam) {
@@ -389,6 +381,11 @@ namespace AnyRPG {
 
             activeCharacter.SetUnitController(activeUnitController);
 
+            if (unitController == null) {
+                playerUnitSpawned = false;
+                return;
+            }
+
             if (unitController.CharacterUnit != null) {
                 // erase the connection from the base character on the unit, back to its unit controller so it doesn't fire events
                 unitController.CharacterUnit.BaseCharacter.SetUnitController(null);
@@ -407,18 +404,10 @@ namespace AnyRPG {
         }
 
         private void HandlePlayerUnitSpawn() {
-            // inform any subscribers that we just spawned a player unit
-            //Debug.Log("PlayerManager.HandlePlayerUnitSpawn(): calling SystemEventManager.MyInstance.NotifyOnPlayerUnitSpawn()");
+            //Debug.Log("PlayerManager.HandlePlayerUnitSpawn()");
             playerUnitSpawned = true;
 
-            // testing - move this to on model ready so npcs can show their trait visuals
-            /*
-            foreach (StatusEffectNode statusEffectNode in MyCharacter.CharacterStats.StatusEffects.Values) {
-                //Debug.Log("PlayerStats.HandlePlayerUnitSpawn(): re-applying effect object for: " + statusEffectNode.MyStatusEffect.MyName);
-                statusEffectNode.StatusEffect.RawCast(MyCharacter, activeUnitController, activeUnitController, new AbilityEffectContext());
-            }
-            */
-
+            // inform any subscribers that we just spawned a player unit
             SystemEventManager.TriggerEvent("OnPlayerUnitSpawn", new EventParamProperties());
 
             playerController.SubscribeToUnitEvents();

@@ -180,7 +180,7 @@ namespace AnyRPG {
             }
             SystemEventManager.StartListening("OnLevelLoad", HandleLevelLoad);
             SystemEventManager.StartListening("OnPlayerUnitSpawn", HandlePlayerUnitSpawn);
-            SystemEventManager.MyInstance.OnPlayerUnitDespawn += HandlePlayerUnitDespawn;
+            SystemEventManager.StartListening("OnPlayerUnitDespawn", HandlePlayerUnitDespawn);
             SystemEventManager.MyInstance.OnBeforePlayerConnectionSpawn += HandleBeforePlayerConnectionSpawn;
             SystemEventManager.MyInstance.OnPlayerConnectionDespawn += HandlePlayerConnectionDespawn;
             eventSubscriptionsInitialized = true;
@@ -194,7 +194,7 @@ namespace AnyRPG {
             if (SystemEventManager.MyInstance != null) {
                 SystemEventManager.StopListening("OnLevelLoad", HandleLevelLoad);
                 SystemEventManager.StopListening("OnPlayerUnitSpawn", HandlePlayerUnitSpawn);
-                SystemEventManager.MyInstance.OnPlayerUnitDespawn -= HandlePlayerUnitDespawn;
+                SystemEventManager.StopListening("OnPlayerUnitDespawn", HandlePlayerUnitDespawn);
                 SystemEventManager.StopListening("OnPlayerUnitSpawn", HandleMainCamera);
                 SystemEventManager.MyInstance.OnBeforePlayerConnectionSpawn -= HandleBeforePlayerConnectionSpawn;
                 SystemEventManager.MyInstance.OnPlayerConnectionDespawn -= HandlePlayerConnectionDespawn;
@@ -350,7 +350,7 @@ namespace AnyRPG {
             InitializeMiniMapTarget(PlayerManager.MyInstance.ActiveUnitController.gameObject);
         }
 
-        public void HandlePlayerUnitDespawn() {
+        public void HandlePlayerUnitDespawn(string eventName, EventParamProperties eventParamProperties) {
             //Debug.Log("UIManager.HandleCharacterDespawn()");
             //SystemEventManager.MyInstance.OnAbilityListChanged -= HandleAbilityListChanged;
             DeInitializeMiniMapTarget();
@@ -358,7 +358,7 @@ namespace AnyRPG {
             focusUnitFrameController.ClearTarget();
             floatingCastBarController.ClearTarget();
             playerUnitFrameController.ClearTarget();
-            DeactivatePlayerUI();
+            //DeactivatePlayerUI();
         }
 
         public void InitializeMiniMapTarget(GameObject target) {

@@ -388,11 +388,13 @@ namespace AnyRPG {
                 return;
             }
 
-            PlayerManager.MyInstance.ProcessLevelUnload();
-
             SystemEventManager.TriggerEvent("OnLevelUnload", new EventParamProperties());
-            // playerManager needs to do this last so other objects can respond before we despawn the character
 
+            // playerManager needs to do this last so other objects can respond before we despawn the character
+            // testing - let playerController handle passing on player despawn event
+            //PlayerManager.MyInstance.ProcessLevelUnload();
+
+            UIManager.MyInstance.DeactivatePlayerUI();
             UIManager.MyInstance.DeactivateInGameUI();
             UIManager.MyInstance.DeactivateSystemMenuUI();
 

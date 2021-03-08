@@ -74,7 +74,7 @@ namespace AnyRPG {
             }
             if (SystemEventManager.MyInstance != null) {
                 SystemEventManager.StartListening("OnPlayerUnitSpawn", HandlePlayerUnitSpawn);
-                SystemEventManager.MyInstance.OnPlayerUnitDespawn += HandlePlayerUnitDespawn;
+                SystemEventManager.StartListening("OnPlayerUnitDespawn", HandlePlayerUnitDespawn);
             }
             if (PlayerManager.MyInstance != null && PlayerManager.MyInstance.PlayerUnitSpawned == true) {
                 ProcessPlayerUnitSpawn();
@@ -86,7 +86,7 @@ namespace AnyRPG {
             //Debug.Log("PlayerCombat.CleanupEventSubscriptions()");
             if (SystemEventManager.MyInstance != null) {
                 SystemEventManager.StopListening("OnPlayerUnitSpawn", HandlePlayerUnitSpawn);
-                SystemEventManager.MyInstance.OnPlayerUnitDespawn -= HandlePlayerUnitDespawn;
+                SystemEventManager.StopListening("OnPlayerUnitDespawn", HandlePlayerUnitDespawn);
             }
         }
 
@@ -122,7 +122,7 @@ namespace AnyRPG {
 
         }
 
-        public void HandlePlayerUnitDespawn() {
+        public void HandlePlayerUnitDespawn(string eventName, EventParamProperties eventParamProperties) {
             //Debug.Log("CharacterPanel.HandlePlayerUnitDespawn()");
             if (PlayerManager.MyInstance != null && PlayerManager.MyInstance.MyCharacter != null && PlayerManager.MyInstance.MyCharacter.CharacterStats != null) {
                 PlayerManager.MyInstance.MyCharacter.CharacterStats.OnStatChanged -= UpdateStatsDescription;

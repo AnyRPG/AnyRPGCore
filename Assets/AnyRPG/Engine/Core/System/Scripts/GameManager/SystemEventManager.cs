@@ -60,7 +60,6 @@ namespace AnyRPG {
         public event System.Action OnPlayerConnectionSpawn = delegate { };
         public event System.Action OnBeforePlayerConnectionSpawn = delegate { };
         public event System.Action OnPlayerConnectionDespawn = delegate { };
-        public event System.Action OnPlayerUnitDespawn = delegate { };
         public event System.Action OnPlayerUMACreated = delegate { };
         public event System.Action OnPlayerNameChanged = delegate { };
 
@@ -92,6 +91,7 @@ namespace AnyRPG {
         public static void StartListening(string eventName, Action<string, EventParamProperties> listener) {
             Action<string, EventParamProperties> thisEvent;
             if (MyInstance.singleEventDictionary.TryGetValue(eventName, out thisEvent)) {
+
                 //Add more event to the existing one
                 thisEvent += listener;
 
@@ -100,15 +100,16 @@ namespace AnyRPG {
             } else {
                 //Add event to the Dictionary for the first time
                 thisEvent += listener;
+
                 MyInstance.singleEventDictionary.Add(eventName, thisEvent);
             }
         }
 
         public static void StopListening(string eventName, Action<string, EventParamProperties> listener) {
             if (MyInstance == null) return;
+
             Action<string, EventParamProperties> thisEvent;
             if (MyInstance.singleEventDictionary.TryGetValue(eventName, out thisEvent)) {
-                //Debug.Log("SystemEventManager.StopListening(" + eventName + ")");
 
                 //Remove event from the existing one
                 thisEvent -= listener;
@@ -123,8 +124,6 @@ namespace AnyRPG {
             if (MyInstance.singleEventDictionary.TryGetValue(eventName, out thisEvent)) {
                 if (thisEvent != null) {
                     thisEvent.Invoke(eventName, eventParam);
-                } else {
-                    //Debug.Log("SystemEventManager.TriggerEvent(" + eventName + "): event was null");
                 }
                 // OR USE  instance.eventDictionary[eventName](eventParam);
             }
@@ -180,10 +179,6 @@ namespace AnyRPG {
 
         public void NotifyOnPlayerConnectionDespawn() {
             OnPlayerConnectionDespawn();
-        }
-
-        public void NotifyOnPlayerUnitDespawn() {
-            OnPlayerUnitDespawn();
         }
 
         public void NotifyOnPlayerUMACreated() {

@@ -347,10 +347,7 @@ namespace AnyRPG {
 
 
         public void ProcessLevelUnload() {
-            // commented out for now.  should not clear all effects because some are self casted buffs
-            // i think the point was to dismount, but unit controller now handles that
-            // TODO: possibly should clear pet effects ?
-            //ClearStatusEffects();
+            ClearStatusEffectPrefabs();
         }
 
 

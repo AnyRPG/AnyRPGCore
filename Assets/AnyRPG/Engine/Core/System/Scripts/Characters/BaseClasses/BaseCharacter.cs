@@ -203,10 +203,15 @@ namespace AnyRPG {
         }
 
         public void HandleLevelUnload(string eventName, EventParamProperties eventParamProperties) {
+            //Debug.Log(gameObject.name + ".BaseCharacter.HandleLevelUnload(): instanceID: " + gameObject.GetInstanceID());
+            if (characterInitialized == false) {
+                return;
+            }
             characterStats.ProcessLevelUnload();
             characterAbilityManager.ProcessLevelUnload();
             characterCombat.ProcessLevelUnload();
             characterPetManager.ProcessLevelUnload();
+            unitController?.Despawn();
         }
 
         public void HandleLevelLoad(string eventName, EventParamProperties eventParamProperties) {
@@ -656,6 +661,7 @@ namespace AnyRPG {
         }
 
         private void ResetSettings() {
+            //Debug.Log(gameObject.name + ".BaseCharacter.ResetSettings()");
             characterName = string.Empty;
             title = string.Empty;
             faction = null;
