@@ -667,13 +667,18 @@ namespace AnyRPG {
             return currentInteractables;
         }
 
+        /*
         /// <summary>
         /// native unity mouse enter message
         /// </summary>
         public void OnMouseEnter() {
+            if (PlayerManager.MyInstance.UnitController.gameObject == gameObject) {
+                return;
+            }
             isMouseOverUnit = true;
             OnMouseIn();
         }
+        */
 
         /// <summary>
         /// called manually after mouse enters nameplate or interactable
@@ -692,11 +697,15 @@ namespace AnyRPG {
                 return;
             }
 
+            if (PlayerManager.MyInstance.ActiveUnitController.gameObject == gameObject) {
+                return;
+            }
+
             if (notInteractable == true) {
                 return;
             }
 
-            PlayerManager.MyInstance.PlayerController.HandleMouseOver(this);
+            //PlayerManager.MyInstance.PlayerController.HandleMouseOver(this);
 
             if (showTooltip == false) {
                 return;
@@ -717,9 +726,7 @@ namespace AnyRPG {
                 return;
             }
             */
-            if (PlayerManager.MyInstance.ActiveUnitController.gameObject == gameObject) {
-                return;
-            }
+           
 
             if (MyPrerequisitesMet == false) {
                 return;
@@ -745,10 +752,16 @@ namespace AnyRPG {
 
         }
 
+        /*
         public void OnMouseExit() {
+            if (PlayerManager.MyInstance?.UnitController?.gameObject == gameObject) {
+                return;
+            }
+
             isMouseOverUnit = false;
             OnMouseOut();
         }
+        */
 
         public void OnMouseOut() {
             // renamed from OnMouseOver to OnMouseOut to stop automatic events from being received
@@ -774,7 +787,7 @@ namespace AnyRPG {
                 return;
             }
 
-            PlayerManager.MyInstance.PlayerController.HandleMouseOut(this);
+            //PlayerManager.MyInstance.PlayerController.HandleMouseOut(this);
 
             if (showTooltip == false) {
                 return;

@@ -204,6 +204,12 @@ namespace AnyRPG {
 
         public void HandleLevelUnload(string eventName, EventParamProperties eventParamProperties) {
             //Debug.Log(gameObject.name + ".BaseCharacter.HandleLevelUnload(): instanceID: " + gameObject.GetInstanceID());
+
+            // There are multiple situations where a baseCharacter could receive this event after they already despawned.
+            // This is because the event that is invoked will not update its list until the loop is complete.
+            // Things like pets being despawned or player units being despawned as part of the level unload
+            // will result in the object being returned to the pool before the invoke gets to it
+            // so it is necessary to check if this character is already uninitialized
             if (characterInitialized == false) {
                 return;
             }

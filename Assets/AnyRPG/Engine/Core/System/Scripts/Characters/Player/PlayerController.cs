@@ -124,7 +124,7 @@ namespace AnyRPG {
 
             HandleCancelButtonPressed();
 
-            //HandleMouseOver();
+            HandleMouseOver();
 
             if (PlayerManager.MyInstance?.MyCharacter?.CharacterStats?.IsAlive == false) {
                 // can't interact, perform abilities or handle movement when dead
@@ -214,7 +214,10 @@ namespace AnyRPG {
             //CheckForInteraction();
         }
 
-        /*
+        /// <summary>
+        /// this code is necessary because the only other solution to mouseover through the player is to set the player to layer Ignore Raycast
+        /// which breaks the invector controller
+        /// </summary>
         private void HandleMouseOver() {
             //Debug.Log(gameObject.name + ".PlayerController.HandleMouseOver()");
             if (CameraManager.MyInstance.MyActiveMainCamera == null) {
@@ -255,7 +258,7 @@ namespace AnyRPG {
                             // we have a new interactable, activate mouseover
                             //Debug.Log("We hit " + mouseOverhit.collider.name + " " + mouseOverhit.point + " and it had an interactable.  activating mouseover");
                             newInteractable.IsMouseOverUnit = true;
-                            newInteractable.OnMouseHover();
+                            newInteractable.OnMouseIn();
                         }
                         mouseOverInteractable = newInteractable;
                     }
@@ -275,8 +278,8 @@ namespace AnyRPG {
             }
 
         }
-        */
 
+        /*
         public void HandleMouseOver(Interactable newInteractable) {
             //Debug.Log(gameObject.name + ".PlayerController.HandleMouseOver()");
             if (CameraManager.MyInstance.MyActiveMainCamera == null) {
@@ -293,6 +296,7 @@ namespace AnyRPG {
                 mouseOverInteractable = null;
             }
         }
+        */
 
         private void HandleRightMouseClick() {
             //Debug.Log(gameObject.name + ".PlayerController.HandleRightMouseClick()");

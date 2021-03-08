@@ -469,10 +469,12 @@ namespace AnyRPG {
         }
 
         public void OnPointerEnter(PointerEventData eventData) {
-            NamePlateManager.MyInstance.AddMouseOver(this);
-            if (unitNamePlateController.Interactable != null) {
-                unitNamePlateController.Interactable.IsMouseOverNameplate = true;
-                unitNamePlateController.Interactable.OnMouseIn();
+            if (unitNamePlateController?.Interactable != PlayerManager.MyInstance?.UnitController?.gameObject) {
+                NamePlateManager.MyInstance.AddMouseOver(this);
+                if (unitNamePlateController.Interactable != null) {
+                    unitNamePlateController.Interactable.IsMouseOverNameplate = true;
+                    unitNamePlateController.Interactable.OnMouseIn();
+                }
             }
         }
 
@@ -481,10 +483,12 @@ namespace AnyRPG {
         }
 
         public void ProcessPointerExit() {
-            NamePlateManager.MyInstance.RemoveMouseOver(this);
-            if (unitNamePlateController?.Interactable != null && unitNamePlateController.Interactable.IsMouseOverNameplate == true) {
-                unitNamePlateController.Interactable.IsMouseOverNameplate = false;
-                unitNamePlateController.Interactable.OnMouseOut();
+            if (unitNamePlateController?.Interactable != PlayerManager.MyInstance?.UnitController?.gameObject) {
+                NamePlateManager.MyInstance.RemoveMouseOver(this);
+                if (unitNamePlateController?.Interactable != null && unitNamePlateController.Interactable.IsMouseOverNameplate == true) {
+                    unitNamePlateController.Interactable.IsMouseOverNameplate = false;
+                    unitNamePlateController.Interactable.OnMouseOut();
+                }
             }
         }
 
