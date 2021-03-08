@@ -18,16 +18,16 @@ namespace AnyRPG {
             base.PerformAbilityHit(source, target, abilityEffectInput);
         }
 
-        public override bool ProcessAbilityHit(Interactable target, int finalAmount, IAbilityCaster source, CombatMagnitude combatMagnitude, AbilityEffect abilityEffect, AbilityEffectContext abilityEffectInput, PowerResource powerResource) {
+        public override bool ProcessAbilityHit(Interactable target, int finalAmount, IAbilityCaster source, CombatMagnitude combatMagnitude, AbilityEffect abilityEffect, AbilityEffectContext abilityEffectContext, PowerResource powerResource) {
             //Debug.Log(DisplayName + ".HealEffect.ProcessAbilityHit(" + (target == null ? "null" : target.gameObject.name) + ", " + finalAmount + ", " + source.AbilityManager.UnitGameObject.name + ")");
 
-            abilityEffectInput.powerResource = powerResource;
-            bool returnValue = CharacterUnit.GetCharacterUnit(target).BaseCharacter.CharacterStats.RecoverResource(abilityEffectInput, powerResource, finalAmount, source, true, combatMagnitude);
+            abilityEffectContext.powerResource = powerResource;
+            bool returnValue = CharacterUnit.GetCharacterUnit(target).BaseCharacter.CharacterStats.RecoverResource(abilityEffectContext, powerResource, finalAmount, source, true, combatMagnitude);
             if (returnValue == false) {
                 return false;
             }
 
-            return base.ProcessAbilityHit(target, finalAmount, source, combatMagnitude, abilityEffect, abilityEffectInput, powerResource);
+            return base.ProcessAbilityHit(target, finalAmount, source, combatMagnitude, abilityEffect, abilityEffectContext, powerResource);
         }
 
 

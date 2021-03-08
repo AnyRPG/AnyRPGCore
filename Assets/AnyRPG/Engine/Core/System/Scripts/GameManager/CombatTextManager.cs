@@ -97,7 +97,7 @@ namespace AnyRPG {
         }
 
         public void SpawnCombatText(Interactable target, int damage, CombatTextType combatType, CombatMagnitude combatMagnitude, AbilityEffectContext abilityEffectContext) {
-            //Debug.Log("Combat Text manager Spawning Combat Text attached to: " + target.name + "; damage: " + damage + "; type: " + combatType);
+            //Debug.Log("CombatTextManager.SpawnCombatText(" + target.name + ", " + damage + ", " + combatType + ", " + combatMagnitude + ")");
             if (PlayerPrefs.GetInt("UseFloatingCombatText") == 0) {
                 return;
             }

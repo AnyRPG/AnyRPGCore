@@ -62,32 +62,36 @@ namespace AnyRPG {
                 }
             }
 
-            if (damageType == DamageType.physical) {
+            // reflected damage can only have critical strike and base power added. It should not be getting a boost from weapon damage, status effects, cast time multipliers etc
+            if (abilityEffectContext.reflectDamage == false) {
+                if (damageType == DamageType.physical) {
 
-                // additive damage from weapons
-                amountAddModifier += sourceCharacter.AbilityManager.GetPhysicalDamage();
+                    // additive damage from weapons
+                    amountAddModifier += sourceCharacter.AbilityManager.GetPhysicalDamage();
 
-                // since all damage so far is DPS, we need to multiply it by the attack length.
-                // Since global cooldown is 1 second, all abilities less than one second should have their damage increased to one second worth of damage to prevent dps loss
-                if (abilityEffectContext.weaponHitHasCast == false) {
-                    // the first attack effect cast from an ability is considered the primary hit
-                    // everything after is an onHit effect and should not be multiplied by animation time
-                    amountMultiplyModifier *= Mathf.Clamp(sourceCharacter.AbilityManager.GetAnimationLengthMultiplier(), 1, Mathf.Infinity);
+                    // since all damage so far is DPS, we need to multiply it by the attack length.
+                    // Since global cooldown is 1 second, all abilities less than one second should have their damage increased to one second worth of damage to prevent dps loss
+                    if (abilityEffectContext.weaponHitHasCast == false) {
+                        // the first attack effect cast from an ability is considered the primary hit
+                        // everything after is an onHit effect and should not be multiplied by animation time
+                        amountMultiplyModifier *= Mathf.Clamp(sourceCharacter.AbilityManager.GetAnimationLengthMultiplier(), 1, Mathf.Infinity);
+                    }
+
+                } else if (damageType == DamageType.ability) {
+                    if (abilityEffectContext.weaponHitHasCast == false) {
+                        // the first attack effect cast from an ability is considered the primary hit
+                        // everything after is an onHit effect and should not be multiplied by animation time
+                        amountMultiplyModifier *= Mathf.Clamp(abilityEffectContext.castTimeMultiplier, 1, Mathf.Infinity);
+                        //Debug.Log(DisplayName + ".AmountEffect.CalculateAbilityAmount() weapon hit has not cast yet target: " + target.BaseCharacter.UnitController.gameObject.name + "; cast: " + abilityEffectContext.castTimeMultiplier);
+                    } else {
+                        //Debug.Log(DisplayName + ".AmountEffect.CalculateAbilityAmount(): weaponHit has cast.  not multiplying ability damage");
+                    }
                 }
-
-            } else if (damageType == DamageType.ability) {
-                if (abilityEffectContext.weaponHitHasCast == false) {
-                    // the first attack effect cast from an ability is considered the primary hit
-                    // everything after is an onHit effect and should not be multiplied by animation time
-                    amountMultiplyModifier *= Mathf.Clamp(abilityEffectContext.castTimeMultiplier, 1, Mathf.Infinity);
-                    //Debug.Log(DisplayName + ".AmountEffect.CalculateAbilityAmount(): weaponHit has not cast.  multiplying ability damage");
-                } else {
-                    //Debug.Log(DisplayName + ".AmountEffect.CalculateAbilityAmount(): weaponHit has cast.  not multiplying ability damage");
-                }
+                // multiplicative damage modifiers
+                amountMultiplyModifier *= sourceCharacter.AbilityManager.GetOutgoingDamageModifiers();
             }
-            // multiplicative damage modifiers
-            amountMultiplyModifier *= sourceCharacter.AbilityManager.GetOutgoingDamageModifiers();
-            //Debug.Log(DisplayName + ".AmountEffect.CalculateAbilityAmount(): amountMultiplyModifier is " + amountMultiplyModifier);
+            
+            //Debug.Log(DisplayName + ".AmountEffect.CalculateAbilityAmount(): amountMultiplyModifier: " + amountMultiplyModifier + "; critDamageModifier: " + critDamageModifier + "; amountAddModifier: " + amountAddModifier + "; abilityBaseAmount: " + abilityBaseAmount + "; source: " + sourceCharacter.AbilityManager.UnitGameObject.name + "; target: " + target.BaseCharacter.UnitController.gameObject.name + "; castTimeMultiplier: " + abilityEffectContext.castTimeMultiplier);
 
             return new KeyValuePair<float, CombatMagnitude>(((abilityBaseAmount + amountAddModifier) * amountMultiplyModifier * critDamageModifier), (critDamageModifier == 1f ? CombatMagnitude.normal : CombatMagnitude.critical));
         }
@@ -110,33 +114,39 @@ namespace AnyRPG {
             AbilityEffectContext abilityEffectOutput = abilityEffectContext.GetCopy();
 
             foreach (ResourceAmountNode resourceAmountNode in resourceAmounts) {
-                int finalAmount = 0;
                 CombatMagnitude combatMagnitude = CombatMagnitude.normal;
-                float effectTotalAmount = resourceAmountNode.BaseAmount + (resourceAmountNode.AmountPerLevel * source.AbilityManager.Level);
-                KeyValuePair<float, CombatMagnitude> abilityKeyValuePair = CalculateAbilityAmount(effectTotalAmount, source, CharacterUnit.GetCharacterUnit(target), abilityEffectOutput, resourceAmountNode);
-                finalAmount = (int)abilityKeyValuePair.Key;
-                combatMagnitude = abilityKeyValuePair.Value;
-                float inputAmount = 0f;
+                float effectTotalAmount = 0f;
+
+                // add inputs to total amount, accounting for remaps
                 foreach (ResourceInputAmountNode _resourceAmountNode in abilityEffectOutput.resourceAmounts) {
                     string matchName = resourceAmountNode.ResourceName;
                     if (resourceAmountNode.InputRemap != null && resourceAmountNode.InputRemap != string.Empty) {
                         matchName = resourceAmountNode.InputRemap;
                     }
                     if (_resourceAmountNode.resourceName == matchName) {
-                        inputAmount += _resourceAmountNode.amount;
+                        effectTotalAmount += _resourceAmountNode.amount;
                     }
                 }
-                finalAmount += (int)(inputAmount * inputMultiplier);
+                // multiply inputs by the input multiplier for this effect
+                effectTotalAmount *= inputMultiplier;
+
+                // add basic effect amounts to the total inputs
+                effectTotalAmount += resourceAmountNode.BaseAmount + (resourceAmountNode.AmountPerLevel * source.AbilityManager.Level);
+
+                // calculate total ability amount based on character power, stats, and modifiers
+                KeyValuePair<float, CombatMagnitude> abilityKeyValuePair = CalculateAbilityAmount(effectTotalAmount, source, CharacterUnit.GetCharacterUnit(target), abilityEffectOutput, resourceAmountNode);
+                effectTotalAmount = (int)abilityKeyValuePair.Key;
+                combatMagnitude = abilityKeyValuePair.Value;
+                
                 //Debug.Log(DisplayName + ".AmountEffect.PerformAbilityHit(" + (source == null ? "null" : source.AbilityManager.UnitGameObject.name) + ", " + (target == null ? "null" : target.gameObject.name) + ") finalAmount : " + finalAmount + "; input: " + inputAmount + "; multiplier: " + inputMultiplier);
 
-
                 //abilityEffectOutput.AddResourceAmount(resourceAmountNode.ResourceName, finalAmount);
-                //abilityEffectContext.AddResourceAmount(resourceAmountNode.ResourceName, finalAmount);
-                abilityEffectOutput.SetResourceAmount(resourceAmountNode.ResourceName, finalAmount);
+                abilityEffectOutput.SetResourceAmount(resourceAmountNode.ResourceName, effectTotalAmount);
 
-                if (finalAmount > 0) {
+                if (effectTotalAmount > 0) {
                     // this effect may not have any damage and only be here for spawning a prefab or making a sound
-                    if (!ProcessAbilityHit(target, finalAmount, source, combatMagnitude, this, abilityEffectOutput, resourceAmountNode.PowerResource)) {
+                    // ^ is that comment valid?  spawning a prefab can be done with instantEffect and doesn't require amount effects
+                    if (!ProcessAbilityHit(target, (int)effectTotalAmount, source, combatMagnitude, this, abilityEffectOutput, resourceAmountNode.PowerResource)) {
                         // if we didn't successfully hit, we can't continue on 
                         return;
                     }
