@@ -73,7 +73,7 @@ namespace AnyRPG {
         }
 
         public void HandleMainMapStatusUpdate(InteractableOptionComponent _interactable) {
-            Debug.Log(_interactable.Interactable.gameObject.name + ".MainMapIndicatorController.HandleMainMapStatusUpdate()");
+            //Debug.Log(_interactable.Interactable.gameObject.name + ".MainMapIndicatorController.HandleMainMapStatusUpdate()");
             if (mainMapLayers.ContainsKey(_interactable) == false ||  mainMapLayers[_interactable] == null) {
                 //Debug.Log(_interactable.DisplayName + ".MainMapIndicatorController.HandleMainMapStatusUpdate(): mainMapLayers[_interactable] is null! Exiting");
                 return;

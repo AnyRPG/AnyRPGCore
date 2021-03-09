@@ -73,6 +73,7 @@ namespace AnyRPG {
             base.ReceiveOpenWindowNotification();
             saveButton.interactable = false;
             umaCharacterPanel.ReceiveOpenWindowNotification();
+            umaCharacterPanel.ShowPanel();
 
             // set unit profile to default
             if (SystemConfigurationManager.MyInstance.UseFirstCreatorProfile) {
@@ -89,6 +90,7 @@ namespace AnyRPG {
         }
 
         public void LoadUMARecipe() {
+            Debug.Log("CharacterCreatorWindowPanel.LoadUMARecipe()");
             //SaveManager.MyInstance.SaveUMASettings();
             SaveManager.MyInstance.LoadUMASettings(CharacterCreatorManager.MyInstance.PreviewUnitController.DynamicCharacterAvatar, false);
         }
@@ -127,7 +129,7 @@ namespace AnyRPG {
         }
 
         public void HandleTargetReady() {
-            //Debug.Log("CharacterCreatorWindowPanel.HandleTargetReady()");
+            Debug.Log("CharacterCreatorWindowPanel.HandleTargetReady()");
             LoadUMARecipe();
             umaCharacterPanel.HandleTargetReady();
             if (umaCharacterPanel.MainNoOptionsArea.activeSelf == false) {

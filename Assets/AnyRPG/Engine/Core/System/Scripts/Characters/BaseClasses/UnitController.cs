@@ -481,7 +481,7 @@ namespace AnyRPG {
         /// set this unit to be a player
         /// </summary>
         private void EnablePlayer() {
-            Debug.Log(gameObject.name + "UnitController.EnablePlayer()");
+            //Debug.Log(gameObject.name + "UnitController.EnablePlayer()");
             InitializeNamePlateController();
 
             SetDefaultLayer(SystemConfigurationManager.MyInstance.DefaultPlayerUnitLayer);
@@ -673,6 +673,10 @@ namespace AnyRPG {
         /// </summary>
         public override void ResetSettings() {
             //Debug.Log(gameObject.name + ".UnitController.ResetSettings()");
+            
+            // agents should be disabled so when pool and re-activated they don't throw errors if they are a preview unit
+            DisableAgent();
+
             unitProfile = null;
             unitModel = null;
             modelReady = false;
@@ -899,7 +903,7 @@ namespace AnyRPG {
         }
 
         public void ConfigureUnitModel() {
-            //Debug.Log(gameObject.name + "UnitController.ConfigureUnitModel()");
+            Debug.Log(gameObject.name + "UnitController.ConfigureUnitModel()");
 
             if (unitModel != null && dynamicCharacterAvatar == null) {
                 dynamicCharacterAvatar = unitModel.GetComponent<DynamicCharacterAvatar>();
@@ -909,7 +913,16 @@ namespace AnyRPG {
             }
             if (unitModel != null || dynamicCharacterAvatar != null) {
                 if (dynamicCharacterAvatar != null) {
-                    dynamicCharacterAvatar.Initialize();
+                    Debug.Log(gameObject.name + "UnitController.ConfigureUnitModel(): calling initialize");
+
+                    // testing - pooled UMA units will already be initialized
+                    // so they should be considered ready if they have umaData
+                    if (dynamicCharacterAvatar.umaData == null) {
+                        dynamicCharacterAvatar.Initialize();
+                    } else {
+                        SetModelReady();
+                    }
+
                     SubscribeToUMACreate();
                 } else {
                     // this is not an UMA model, therefore it is ready and its bone structure is already created
@@ -937,13 +950,14 @@ namespace AnyRPG {
 
         public void SubscribeToUMACreate() {
 
-            UMAData umaData = dynamicCharacterAvatar.umaData;
-            umaData.OnCharacterCreated += HandleCharacterCreated;
+            dynamicCharacterAvatar.umaData.OnCharacterCreated += HandleCharacterCreated;
+            /*
             umaData.OnCharacterBeforeDnaUpdated += HandleCharacterBeforeDnaUpdated;
             umaData.OnCharacterBeforeUpdated += HandleCharacterBeforeUpdated;
             umaData.OnCharacterDnaUpdated += HandleCharacterDnaUpdated;
             umaData.OnCharacterDestroyed += HandleCharacterDestroyed;
-            umaData.OnCharacterUpdated += HandleCharacterUpdated;
+            */
+            dynamicCharacterAvatar.umaData.OnCharacterUpdated += HandleCharacterUpdated;
         }
 
         public void HandleCharacterCreated(UMAData umaData) {

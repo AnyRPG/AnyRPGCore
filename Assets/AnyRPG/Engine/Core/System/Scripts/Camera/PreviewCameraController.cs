@@ -90,11 +90,11 @@ namespace AnyRPG {
             //Debug.Log("AnyRPGCharacterPreviewCameraController.Awake()");
 
             rectTransform = gameObject.GetComponent<RectTransform>();
-
         }
 
         public void ClearTarget() {
             //Debug.Log("PreviewCameraController.ClearTarget()");
+            UnsubscribeFromModelReady();
             unitController = null;
             followTransform = null;
             initialTargetString = string.Empty;
@@ -376,12 +376,15 @@ namespace AnyRPG {
         }
 
         public void UnsubscribeFromModelReady() {
+            Debug.Log("PreviewCameraController.UnsubscribeFromModelReady()");
+
             if (unitController != null) {
                 unitController.OnModelReady -= HandleModelReady;
             }
         }
 
         public void SubscribeToModelReady() {
+            Debug.Log("PreviewCameraController.SubscribeToModelReady()");
 
             if (unitController != null) {
                 unitController.OnModelReady += HandleModelReady;
@@ -389,7 +392,7 @@ namespace AnyRPG {
         }
 
         private void FindFollowTarget() {
-            //Debug.Log("PreviewCameraController.FindFollowTarget()");
+            Debug.Log("PreviewCameraController.FindFollowTarget()");
             Transform targetBone = null;
             Vector3 unitTargetOffset = Vector3.zero;
 
@@ -450,6 +453,7 @@ namespace AnyRPG {
         }
 
         public void OnDisable() {
+            UnsubscribeFromModelReady();
             StopAllCoroutines();
         }
     }
