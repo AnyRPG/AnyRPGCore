@@ -155,8 +155,16 @@ namespace AnyRPG {
             return false;
         }
 
+        public virtual bool HasMainMapText() {
+            return false;
+        }
+
         public virtual bool HasMiniMapIcon() {
             return (interactableOptionProps.NamePlateImage != null);
+        }
+
+        public virtual bool HasMainMapIcon() {
+            return false;
         }
 
         public virtual bool SetMiniMapText(TextMeshProUGUI text) {
@@ -166,11 +174,7 @@ namespace AnyRPG {
         public virtual void SetMiniMapIcon(Image icon) {
             //Debug.Log(gameObject.name + ".InteractableOption.SetMiniMapIcon()");
             if (CanShowMiniMapIcon()) {
-                if (interactable.CombatOnly == true) {
-                    icon.sprite = SystemConfigurationManager.MyInstance.PlayerMiniMapIcon;
-                } else {
-                    icon.sprite = interactableOptionProps.NamePlateImage;
-                }
+                icon.sprite = GetMiniMapIcon();
                 icon.color = Color.white;
             } else {
                 icon.sprite = null;
@@ -179,11 +183,12 @@ namespace AnyRPG {
             return;
         }
 
+        public virtual Sprite GetMiniMapIcon() {
+            return interactableOptionProps.NamePlateImage;
+        }
+
         public virtual bool CanShowMiniMapIcon() {
             //Debug.Log(gameObject.name + ".InteractableOption.CanShowMiniMapIcon()");
-            if (interactable.CombatOnly) {
-                return true;
-            }
             return (GetCurrentOptionCount() > 0);
         }
 

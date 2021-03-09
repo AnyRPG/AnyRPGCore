@@ -238,7 +238,12 @@ namespace AnyRPG {
         }
 
         public override bool HasMiniMapText() {
-            //Debug.Log(gameObject.name + ".QuestGiver.HasMiniMapText()");
+            //Debug.Log(gameObject.name + ".QuestGiverComponent.HasMiniMapText()");
+            return true;
+        }
+
+        public override bool HasMainMapText() {
+            //Debug.Log(gameObject.name + ".QuestGiverComponent.HasMiniMapText()");
             return true;
         }
 

@@ -20,8 +20,6 @@ namespace AnyRPG {
 
         private Interactable interactable = null;
 
-        private Canvas canvas = null;
-
         private RectTransform rectTransform = null;
 
         private Vector2 uiOffset = Vector2.zero;
@@ -32,7 +30,6 @@ namespace AnyRPG {
 
         private void Awake() {
             //Debug.Log("MiniMapIndicatorController.Awake()");
-            canvas = GetComponent<Canvas>();
             rectTransform = GetComponent<RectTransform>();
             //canvas.worldCamera = CameraManager.MyInstance.MiniMapCamera;
             //canvas.planeDistance = 1f;

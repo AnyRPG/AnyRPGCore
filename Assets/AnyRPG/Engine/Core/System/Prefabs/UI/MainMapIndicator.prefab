@@ -53,9 +53,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3858983003836995666}
-  - component: {fileID: 8605723085861969892}
+  - component: {fileID: 5337021711963232046}
   m_Layer: 21
-  m_Name: MiniMapIndicator
+  m_Name: MainMapIndicator
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -81,7 +81,7 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &8605723085861969892
+--- !u!114 &5337021711963232046
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -90,11 +90,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 7971569521143729688}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c4204934c9a7b474d8df4fb7b0409954, type: 3}
+  m_Script: {fileID: 11500000, guid: 152f8d6aeb0a4d549a8b2aedc4ee76fe, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  miniMapTextLayerPrefab: {fileID: 8019714001840586131, guid: 26fb2eb3130fbda4eb8fabe8be9cd9f8,
+  mainMapTextLayerPrefab: {fileID: 8019714001840586131, guid: 26fb2eb3130fbda4eb8fabe8be9cd9f8,
     type: 3}
-  miniMapImageLayerPrefab: {fileID: 8019714001840586131, guid: 761c3a902b6eb0c4bbce6400d326a9b4,
+  mainMapImageLayerPrefab: {fileID: 8019714001840586131, guid: 761c3a902b6eb0c4bbce6400d326a9b4,
     type: 3}
   contentParent: {fileID: 4702739804872470228}

@@ -120,7 +120,7 @@ namespace AnyRPG {
         // attached components
         protected Collider myCollider;
         protected MiniMapIndicatorController miniMapIndicator = null;
-        protected MiniMapIndicatorController mainMapIndicator = null;
+        protected MainMapIndicatorController mainMapIndicator = null;
 
         // created components
         protected CharacterUnit characterUnit = null;
@@ -428,9 +428,10 @@ namespace AnyRPG {
                 if (interactables.Count > 0) {
                     //Debug.Log(gameObject.name + ".Interactable.InstantiateMiniMapIndicator(): interactables.length > 0");
                     miniMapIndicator = MiniMapController.MyInstance.AddIndicator(this);
-                    if (CombatOnly) {
+                    //if (CombatOnly) {
+                    // testing put everything on the main map and let the interactables control whether or not they are visible
                         mainMapIndicator = MainMapController.MyInstance.AddIndicator(this);
-                    }
+                    //}
                     miniMapIndicatorReady = true;
                     return true;
                 }
@@ -1049,6 +1050,7 @@ namespace AnyRPG {
 
         public void HandleMiniMapStatusUpdate(InteractableOptionComponent interactableOptionComponent) {
             miniMapIndicator?.HandleMiniMapStatusUpdate(interactableOptionComponent);
+            mainMapIndicator?.HandleMainMapStatusUpdate(interactableOptionComponent);
         }
 
         public override void ResetSettings() {

@@ -42,8 +42,8 @@ namespace AnyRPG {
         [SerializeField]
         private GameObject mapIndicatorPrefab = null;
 
-        private const string minimapTextureFolderBase = "Assets/Games/";
-        private string minimapTextureFolder = string.Empty;
+        private const string mainmapTextureFolderBase = "Assets/Games/";
+        private string mainmapTextureFolder = string.Empty;
 
         private string loadedMapName = string.Empty;
 
@@ -54,17 +54,17 @@ namespace AnyRPG {
 
         protected bool eventSubscriptionsInitialized = false;
 
-        private Dictionary<Interactable, MiniMapIndicatorController> mapIndicatorControllers = new Dictionary<Interactable, MiniMapIndicatorController>();
+        private Dictionary<Interactable, MainMapIndicatorController> mapIndicatorControllers = new Dictionary<Interactable, MainMapIndicatorController>();
 
 
         public override void Awake() {
-            //Debug.Log(gameObject.name + ": MiniMapController.Awake()");
+            //Debug.Log("MainMapController.Awake()");
             base.Awake();
             //instantiate singleton
             MainMapController tempcontroller = MyInstance;
             CameraManager.MyInstance.MainMapCamera.enabled = false;
 
-            minimapTextureFolder = minimapTextureFolderBase + SystemConfigurationManager.MyInstance.GameName.Replace(" ", "") + "/Images/MiniMap/";
+            mainmapTextureFolder = mainmapTextureFolderBase + SystemConfigurationManager.MyInstance.GameName.Replace(" ", "") + "/Images/MiniMap/";
 
             SystemEventManager.StartListening("AfterCameraUpdate", HandleAfterCameraUpdate);
             SystemEventManager.StartListening("OnLevelUnload", HandleLevelUnload);
@@ -111,19 +111,16 @@ namespace AnyRPG {
             }
         }
 
-        public MiniMapIndicatorController AddIndicator(Interactable interactable) {
-            //Debug.Log("MinimapController.AddIndicator(" + interactable.gameObject.name + ")");
+        public MainMapIndicatorController AddIndicator(Interactable interactable) {
+            //Debug.Log("MainMapController.AddIndicator(" + interactable.gameObject.name + ")");
             if (mapIndicatorControllers.ContainsKey(interactable) == false) {
-                GameObject miniMapIndicator = ObjectPooler.MyInstance.GetPooledObject(mapIndicatorPrefab, mapGraphic.transform);
-                if (miniMapIndicator != null) {
-                    MiniMapIndicatorController mapIndicatorController = miniMapIndicator.GetComponent<MiniMapIndicatorController>();
-                    mapIndicatorControllers.Add(interactable, mapIndicatorController);
-                    mapIndicatorController.SetInteractable(interactable);
-                    /*
-                    if (miniMapEnabled == false) {
-                        miniMapIndicatorController.gameObject.SetActive(false);
+                GameObject mainMapIndicator = ObjectPooler.MyInstance.GetPooledObject(mapIndicatorPrefab, mapGraphic.transform);
+                if (mainMapIndicator != null) {
+                    MainMapIndicatorController mapIndicatorController = mainMapIndicator.GetComponent<MainMapIndicatorController>();
+                    if (mapIndicatorController != null) {
+                        mapIndicatorControllers.Add(interactable, mapIndicatorController);
+                        mapIndicatorController.SetInteractable(interactable);
                     }
-                    */
                 }
             }
 
@@ -185,13 +182,12 @@ namespace AnyRPG {
 
             // First, try to find the the map image
             Texture2D mapTexture = new Texture2D((int)LevelManager.MyInstance.SceneBounds.size.x, (int)LevelManager.MyInstance.SceneBounds.size.z);
-            string textureFilePath = minimapTextureFolder + GetScreenshotFilename();
+            string textureFilePath = mainmapTextureFolder + GetScreenshotFilename();
             if (System.IO.File.Exists(textureFilePath)) {
                 //sceneTextureFound = true;
                 byte[] fileData = System.IO.File.ReadAllBytes(textureFilePath);
                 mapTexture.LoadImage(fileData);
                 mapRawImage.texture = mapTexture;
-                //miniMapGraphicRect.sizeDelta = new Vector2(mapTexture.width, mapTexture.height);
             } else {
                 // if a map image could not be found, take a picture
                 UpdateCameraSize();
@@ -202,7 +198,7 @@ namespace AnyRPG {
         }
 
         /// <summary>
-        /// Return the standardized name of the minimap image file
+        /// Return the standardized name of the map image file
         /// </summary>
         /// <returns></returns>
         public string GetScreenshotFilename() {

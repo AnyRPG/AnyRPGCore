@@ -130,6 +130,13 @@ namespace AnyRPG {
             return base.HasMiniMapIcon();
         }
 
+        public override bool HasMainMapIcon() {
+            if (baseCharacter.UnitController.UnitControllerMode == UnitControllerMode.Player) {
+                return true;
+            }
+            return base.HasMainMapIcon();
+        }
+
         public override bool SetMiniMapText(TextMeshProUGUI text) {
             //Debug.Log(gameObject.name + ".CharacterUnit.SetMiniMapText()");
             if (!base.SetMiniMapText(text)) {
@@ -179,6 +186,22 @@ namespace AnyRPG {
                 //Debug.Log(gameObject.name + ".CharacterUnit.PerformDespawnDelay(" + despawnDelay + ", " + addSystemDefaultTime + ", " + forceDespawn + "): unit is alive!! NOT DESPAWNING");
             }
         }
+
+        public override bool CanShowMiniMapIcon() {
+            if (interactable.CombatOnly) {
+                return true;
+            }
+            return base.CanShowMiniMapIcon();
+        }
+
+        public override Sprite GetMiniMapIcon() {
+            if (interactable.CombatOnly) {
+                return SystemConfigurationManager.MyInstance.PlayerMiniMapIcon;
+            }
+
+            return base.GetMiniMapIcon();
+        }
+
         /*
         public override string GetDescription() {
             //Debug.Log(gameObject.name + ".CharacterUnit.GetDescription()");
