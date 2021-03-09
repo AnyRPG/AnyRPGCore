@@ -428,10 +428,7 @@ namespace AnyRPG {
                 if (interactables.Count > 0) {
                     //Debug.Log(gameObject.name + ".Interactable.InstantiateMiniMapIndicator(): interactables.length > 0");
                     miniMapIndicator = MiniMapController.MyInstance.AddIndicator(this);
-                    //if (CombatOnly) {
-                    // testing put everything on the main map and let the interactables control whether or not they are visible
-                        mainMapIndicator = MainMapController.MyInstance.AddIndicator(this);
-                    //}
+                    mainMapIndicator = MainMapController.MyInstance.AddIndicator(this);
                     miniMapIndicatorReady = true;
                     return true;
                 }

@@ -68,7 +68,6 @@ namespace AnyRPG {
         private Rigidbody rigidBody = null;
         private UnitMotor unitMotor = null;
         private UnitAnimator unitAnimator = null;
-        private DynamicCharacterAvatar dynamicCharacterAvatar = null;
         private LootableCharacter lootableCharacter = null;
         private PatrolController patrolController = null;
         private BehaviorController behaviorController = null;
@@ -78,6 +77,7 @@ namespace AnyRPG {
         // track model
         private GameObject unitModel = null;
         private bool modelReady = false;
+        private DynamicCharacterAvatar dynamicCharacterAvatar = null;
 
         // control logic
         private IState currentState;
@@ -481,7 +481,7 @@ namespace AnyRPG {
         /// set this unit to be a player
         /// </summary>
         private void EnablePlayer() {
-            //Debug.Log(gameObject.name + "UnitController.EnablePlayer()");
+            Debug.Log(gameObject.name + "UnitController.EnablePlayer()");
             InitializeNamePlateController();
 
             SetDefaultLayer(SystemConfigurationManager.MyInstance.DefaultPlayerUnitLayer);
@@ -550,10 +550,12 @@ namespace AnyRPG {
         }
 
         public void ConfigurePlayer() {
+            //Debug.Log(gameObject.name + ".UnitController.ConfigurePlayer()");
             PlayerManager.MyInstance.SetUnitController(this);
         }
 
         public void SetUnitControllerMode(UnitControllerMode unitControllerMode) {
+            //Debug.Log(gameObject.name + ".UnitController.SetUnitControllerMode(" + unitControllerMode + ")");
             this.unitControllerMode = unitControllerMode;
             if (unitControllerMode == UnitControllerMode.Player) {
                 ConfigurePlayer();
@@ -561,6 +563,7 @@ namespace AnyRPG {
         }
 
         public void ActivateUnitControllerMode() {
+            //Debug.Log(gameObject.name + ".UnitController.ActivateUnitControllerMode() to " + unitControllerMode);
             if (unitControllerMode == UnitControllerMode.AI) {
                 EnableAI();
             } else if (unitControllerMode == UnitControllerMode.Player) {
@@ -673,6 +676,7 @@ namespace AnyRPG {
             unitProfile = null;
             unitModel = null;
             modelReady = false;
+            dynamicCharacterAvatar = null;
             target = null;
             distanceToTarget = 0f;
             lastTargetPosition = Vector3.zero;
@@ -804,31 +808,31 @@ namespace AnyRPG {
             if (unitProfile.LootableCharacterProps.AutomaticCurrency == true || unitProfile.LootableCharacterProps.LootTableNames.Count > 0) {
                 InteractableOptionComponent interactableOptionComponent = unitProfile.LootableCharacterProps.GetInteractableOption(this);
                 interactables.Add(interactableOptionComponent);
-                interactableOptionComponent.HandlePrerequisiteUpdates();
+                //interactableOptionComponent.HandlePrerequisiteUpdates();
             }
 
             if (unitProfile.DialogProps.DialogList.Count > 0) {
                 InteractableOptionComponent interactableOptionComponent = unitProfile.DialogProps.GetInteractableOption(this);
                 interactables.Add(interactableOptionComponent);
-                interactableOptionComponent.HandlePrerequisiteUpdates();
+                //interactableOptionComponent.HandlePrerequisiteUpdates();
             }
 
             if (unitProfile.QuestGiverProps.Quests.Count > 0) {
                 InteractableOptionComponent interactableOptionComponent = unitProfile.QuestGiverProps.GetInteractableOption(this);
                 interactables.Add(interactableOptionComponent);
-                interactableOptionComponent.HandlePrerequisiteUpdates();
+                //interactableOptionComponent.HandlePrerequisiteUpdates();
             }
 
             if (unitProfile.VendorProps.VendorCollections.Count > 0) {
                 InteractableOptionComponent interactableOptionComponent = unitProfile.VendorProps.GetInteractableOption(this);
                 interactables.Add(interactableOptionComponent);
-                interactableOptionComponent.HandlePrerequisiteUpdates();
+                //interactableOptionComponent.HandlePrerequisiteUpdates();
             }
 
             if (unitProfile.BehaviorProps.BehaviorNames.Count > 0) {
                 InteractableOptionComponent interactableOptionComponent = unitProfile.BehaviorProps.GetInteractableOption(this);
                 interactables.Add(interactableOptionComponent);
-                interactableOptionComponent.HandlePrerequisiteUpdates();
+                //interactableOptionComponent.HandlePrerequisiteUpdates();
             }
 
             // named interactable options
@@ -836,8 +840,13 @@ namespace AnyRPG {
                 if (interactableOption.InteractableOptionProps != null) {
                     InteractableOptionComponent interactableOptionComponent = interactableOption.InteractableOptionProps.GetInteractableOption(this);
                     interactables.Add(interactableOptionComponent);
-                    interactableOptionComponent.HandlePrerequisiteUpdates();
+                    //interactableOptionComponent.HandlePrerequisiteUpdates();
                 }
+            }
+
+            // this will cause the minimap to be instantiated so it should be done after all interactables are added so the layers can be created properly
+            foreach (InteractableOptionComponent interactableOptionComponent in interactables) {
+                interactableOptionComponent.HandlePrerequisiteUpdates();
             }
         }
 

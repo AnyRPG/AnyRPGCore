@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 121181615461139694}
   - component: {fileID: 4152173557280714822}
   m_Layer: 21
-  m_Name: MiniMapTextLayer
+  m_Name: MainMapTextLayer
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -91,8 +91,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 16
-  m_fontSizeBase: 16
+  m_fontSize: 24
+  m_fontSizeBase: 24
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18

@@ -233,20 +233,20 @@ namespace AnyRPG {
         }
 
         public void HandlePlayerUnitSpawn(string eventName, EventParamProperties eventParamProperties) {
-            //Debug.Log(gameObject.name + ".InanimateUnit.HandlePlayerUnitSpawn()");
+            //Debug.Log(gameObject.name + ".CameraManager.HandlePlayerUnitSpawn()");
             ProcessPlayerUnitSpawn();
         }
 
 
         public void ProcessPlayerUnitSpawn() {
-            //Debug.Log("CameraManager.HandlePlayerUnitSpawn()");
+            //Debug.Log("CameraManager.ProcessPlayerUnitSpawn()");
             if (LevelManager.MyInstance.GetActiveSceneNode() == null) {
-                //Debug.Log("CameraManager.HandlePlayerUnitSpawn(): ACTIVE SCENE NODE WAS NULL");
+                //Debug.Log("CameraManager.ProcessPlayerUnitSpawn(): ACTIVE SCENE NODE WAS NULL");
                 return;
             }
 
             if (LevelManager.MyInstance.GetActiveSceneNode().SuppressMainCamera != true) {
-                //Debug.Log("CameraManager.HandlePlayerUnitSpawn(): suppressed by level = false, spawning camera");
+                //Debug.Log("CameraManager.ProcessPlayerUnitSpawn(): suppressed by level = false, spawning camera");
                 mainCamera.GetComponent<AnyRPGCameraController>().InitializeCamera(PlayerManager.MyInstance.ActiveUnitController.transform);
             }
         }

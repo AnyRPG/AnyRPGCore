@@ -141,7 +141,7 @@ namespace AnyRPG {
         }
 
         public void UpdateQuestStatus() {
-            //Debug.Log(gameObject.name + ".QuestGiver.UpdateQuestStatus()");
+            //Debug.Log(interactable.gameObject.name + ".QuestGiver.UpdateQuestStatus()");
             if (PlayerManager.MyInstance == null) {
                 Debug.LogError("PlayerManager not found.  Is the GameManager in the scene?");
                 return;
@@ -221,7 +221,7 @@ namespace AnyRPG {
         }
 
         public void SetIndicatorText(string indicatorType, TextMeshProUGUI text) {
-            //Debug.Log(gameObject.name + ".QuestGiver.SetIndicatorText(" + indicatorType + ")");
+            //Debug.Log(interactable.gameObject.name + ".QuestGiver.SetIndicatorText(" + indicatorType + ")");
             if (indicatorType == "complete") {
                 text.text = "?";
                 text.color = Color.yellow;
@@ -248,8 +248,9 @@ namespace AnyRPG {
         }
 
         public override bool SetMiniMapText(TextMeshProUGUI text) {
-            //Debug.Log(gameObject.name + ".QuestGiver.SetMiniMapText()");
+            //Debug.Log(interactable.gameObject.name + ".QuestGiver.SetMiniMapText()");
             if (!base.SetMiniMapText(text)) {
+                //Debug.Log(interactable.gameObject.name + ".QuestGiver.SetMiniMapText(): hiding text");
                 text.text = "";
                 text.color = new Color32(0, 0, 0, 0);
                 return false;

@@ -770,6 +770,7 @@ namespace AnyRPG {
         }
 
         public void HandleUnitDestroy(UnitProfile unitProfile) {
+            Debug.Log("PlayerController.HandleUnitDestroy()");
             SystemEventManager.TriggerEvent("OnPlayerUnitDespawn", new EventParamProperties());
             UnsubscribeFromUnitEvents();
             PlayerManager.MyInstance.SetUnitController(null);

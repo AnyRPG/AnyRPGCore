@@ -38,7 +38,7 @@ namespace AnyRPG {
         }
 
         public void SetupMainMap() {
-            //Debug.Log(transform.parent.gameObject.name + ".MainMapIndicatorController.SetupMainMap(): interactable: " + (interactable == null ? "null" : interactable.name));
+            //Debug.Log((interactable == null ? "null" : interactable.name) + ".MainMapIndicatorController.SetupMainMap()");
             if (setupComplete == true) {
                 return;
             }
@@ -46,15 +46,17 @@ namespace AnyRPG {
                 return;
             }
             foreach (InteractableOptionComponent _interactable in interactable.Interactables) {
+                //Debug.Log((interactable == null ? "null" : interactable.name) + ".MainMapIndicatorController.SetupMainMap(): checking " + _interactable.ToString());
+
                 // prioritize images - DICTIONARY DOESN'T CURRENTLY SUPPORT BOTH
                 if (_interactable.HasMainMapIcon()) {
-                    //else if (_interactable.HasMainMapIcon()) {
-                    // do both now!
+                    //Debug.Log((interactable == null ? "null" : interactable.name) + ".MainMapIndicatorController.SetupMainMap(): adding icon : " + _interactable.ToString());
                     GameObject go = ObjectPooler.MyInstance.GetPooledObject(mainMapImageLayerPrefab, contentParent);
                     Image _image = go.GetComponent<Image>();
                     _interactable.SetMiniMapIcon(_image);
                     mainMapLayers.Add(_interactable, go);
                 } else if (_interactable.HasMainMapText()) {
+                    //Debug.Log((interactable == null ? "null" : interactable.name) + ".MainMapIndicatorController.SetupMainMap(): adding text layer: " + _interactable.ToString());
                     GameObject go = ObjectPooler.MyInstance.GetPooledObject(mainMapTextLayerPrefab, contentParent);
                     TextMeshProUGUI _text = go.GetComponent<TextMeshProUGUI>();
                     _interactable.SetMiniMapText(_text);
@@ -71,7 +73,7 @@ namespace AnyRPG {
         }
 
         public void HandleMainMapStatusUpdate(InteractableOptionComponent _interactable) {
-            //Debug.Log(_interactable.Interactable.gameObject.name + ".MainMapIndicatorController.HandleMainMapStatusUpdate()");
+            Debug.Log(_interactable.Interactable.gameObject.name + ".MainMapIndicatorController.HandleMainMapStatusUpdate()");
             if (mainMapLayers.ContainsKey(_interactable) == false ||  mainMapLayers[_interactable] == null) {
                 //Debug.Log(_interactable.DisplayName + ".MainMapIndicatorController.HandleMainMapStatusUpdate(): mainMapLayers[_interactable] is null! Exiting");
                 return;

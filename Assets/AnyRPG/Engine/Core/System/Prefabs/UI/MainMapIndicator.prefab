@@ -93,7 +93,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 152f8d6aeb0a4d549a8b2aedc4ee76fe, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  mainMapTextLayerPrefab: {fileID: 8019714001840586131, guid: 26fb2eb3130fbda4eb8fabe8be9cd9f8,
+  mainMapTextLayerPrefab: {fileID: 8019714001840586131, guid: a286d28d87e0a754c889b5d435755c48,
     type: 3}
   mainMapImageLayerPrefab: {fileID: 8019714001840586131, guid: 761c3a902b6eb0c4bbce6400d326a9b4,
     type: 3}

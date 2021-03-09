@@ -369,6 +369,7 @@ namespace AnyRPG {
         }
 
         public void SetActiveUnitController(UnitController unitController) {
+            //Debug.Log("PlayerManager.SetActiveUnitController(" + unitController.gameObject.name + ")");
             activeUnitController = unitController;
 
             // this should not be needed, baseCharacter should always point to the proper unit
@@ -376,6 +377,7 @@ namespace AnyRPG {
         }
 
         public void SetUnitController(UnitController unitController) {
+            //Debug.Log("PlayerManager.SetUnitController(" + unitController.gameObject.name + ")");
             this.unitController = unitController;
             activeUnitController = unitController;
 
@@ -404,7 +406,7 @@ namespace AnyRPG {
         }
 
         private void HandlePlayerUnitSpawn() {
-            //Debug.Log("PlayerManager.HandlePlayerUnitSpawn()");
+            Debug.Log("PlayerManager.HandlePlayerUnitSpawn()");
             playerUnitSpawned = true;
 
             // inform any subscribers that we just spawned a player unit
@@ -432,7 +434,7 @@ namespace AnyRPG {
         }
 
         public void SubscribeToModelReady() {
-            //Debug.Log("PlayerManager.InitializeUMA()");
+            Debug.Log("PlayerManager.SubscribeToModelReady()");
 
             // try this earlier
             SaveManager.MyInstance.LoadUMASettings(false);
