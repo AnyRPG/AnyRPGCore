@@ -24,10 +24,14 @@ namespace AnyRPG {
 
         #endregion
 
+
         [Header("Map")]
 
         [SerializeField]
         private LayoutElement graphicLayoutElement = null;
+
+        [SerializeField]
+        private RawImage mapRawImage = null;
 
         [SerializeField]
         private RectTransform mainMapBackground = null;
@@ -37,6 +41,11 @@ namespace AnyRPG {
 
         [SerializeField]
         private GameObject mapIndicatorPrefab = null;
+
+        private const string minimapTextureFolderBase = "Assets/Games/";
+        private string minimapTextureFolder = string.Empty;
+
+        private string loadedMapName = string.Empty;
 
         private float cameraSize = 0f;
 
@@ -54,6 +63,8 @@ namespace AnyRPG {
             //instantiate singleton
             MainMapController tempcontroller = MyInstance;
             CameraManager.MyInstance.MainMapCamera.enabled = false;
+
+            minimapTextureFolder = minimapTextureFolderBase + SystemConfigurationManager.MyInstance.GameName.Replace(" ", "") + "/Images/MiniMap/";
 
             SystemEventManager.StartListening("AfterCameraUpdate", HandleAfterCameraUpdate);
             SystemEventManager.StartListening("OnLevelUnload", HandleLevelUnload);
@@ -166,13 +177,36 @@ namespace AnyRPG {
 
         public void InitializeMap() {
             //Debug.Log(gameObject.name + ": MainMapController.InitializeMap()");
-            // scale factor gives the number of pixels per meter for the image
-            UpdateCameraSize();
-            UpdateCameraPosition();
-            CameraManager.MyInstance.MainMapCamera.Render();
-            //levelScaleFactor = mapGraphicRawImage.texture.width / LevelManager.MyInstance.SceneBounds.size.x;
-            //levelScaleFactor = graphicLayoutElement.preferredWidth / LevelManager.MyInstance.SceneBounds.size.x;
 
+            if (loadedMapName == SceneManager.GetActiveScene().name) {
+                // current map is already loaded or rendered
+                return;
+            }
+
+            // First, try to find the the map image
+            Texture2D mapTexture = new Texture2D((int)LevelManager.MyInstance.SceneBounds.size.x, (int)LevelManager.MyInstance.SceneBounds.size.z);
+            string textureFilePath = minimapTextureFolder + GetScreenshotFilename();
+            if (System.IO.File.Exists(textureFilePath)) {
+                //sceneTextureFound = true;
+                byte[] fileData = System.IO.File.ReadAllBytes(textureFilePath);
+                mapTexture.LoadImage(fileData);
+                mapRawImage.texture = mapTexture;
+                //miniMapGraphicRect.sizeDelta = new Vector2(mapTexture.width, mapTexture.height);
+            } else {
+                // if a map image could not be found, take a picture
+                UpdateCameraSize();
+                UpdateCameraPosition();
+                CameraManager.MyInstance.MainMapCamera.Render();
+            }
+            loadedMapName = SceneManager.GetActiveScene().name;
+        }
+
+        /// <summary>
+        /// Return the standardized name of the minimap image file
+        /// </summary>
+        /// <returns></returns>
+        public string GetScreenshotFilename() {
+            return SceneManager.GetActiveScene().name + ".png";
         }
 
         private void UpdateCameraSize() {
@@ -206,29 +240,18 @@ namespace AnyRPG {
 
         public override void ReceiveOpenWindowNotification() {
             //Debug.Log("MainMapController.OnOpenWindow()");
-            // TESTING DID PUTTING THE EVENT CLEANUP IN ONDESTROY FIX THIS SO THE NEXT LINE ISN'T NEEDED?
             // re-adding this back here.  Not sure why, but possible the level objects aren't rendered by the time this gets called in onlevelload.  Trying on every open window
             InitializeMap();
-            //CameraManager.MyInstance.MyMainMapCamera.enabled = true;
+            loadedMapName = SceneManager.GetActiveScene().name;
 
-            //panelLayoutElement.preferredWidth = Screen.width - 50;
-            //panelLayoutElement.preferredHeight = Screen.height - 50;
-
-            //Debug.Log("MainMapController.OnOpenWindow(); panelLayoutElement.preferredWidth: " + panelLayoutElement.preferredWidth);
-            //Debug.Log("MainMapController.OnOpenWindow(); panelLayoutElement.preferredHeight: " + panelLayoutElement.preferredHeight);
             LayoutRebuilder.ForceRebuildLayoutImmediate(rectTransform);
-            float graphicScale = Mathf.Min(mainMapBackground.rect.width, mainMapBackground.rect.height);
-            //Debug.Log("MainMapController.OnOpenWindow(); graphicScale: " + graphicScale);
-            float extentsRatio = LevelManager.MyInstance.SceneBounds.extents.x / LevelManager.MyInstance.SceneBounds.extents.z;
-            //Debug.Log("MainMapController.OnOpenWindow(); sceneBounds.extents.x: " + sceneBounds.extents.x + "; extentsRatio: " + extentsRatio + ";sceneBounds.extents.z: " + sceneBounds.extents.z);
-            //Debug.Log("MainMapController.OnOpenWindow(); mainMapBackground.rect.width: " + mainMapBackground.rect.width);
-            //Debug.Log("MainMapController.OnOpenWindow(); mainMapBackground.rect.height: " + mainMapBackground.rect.height);
 
-            graphicLayoutElement.preferredWidth = (graphicScale / (LevelManager.MyInstance.SceneBounds.extents.x * 2)) * (LevelManager.MyInstance.SceneBounds.extents.x * 2) * extentsRatio;
-            graphicLayoutElement.preferredHeight = (graphicScale / (LevelManager.MyInstance.SceneBounds.extents.z * 2)) * (LevelManager.MyInstance.SceneBounds.extents.z * 2);
-            //Debug.Log("MainMapController.OnOpenWindow(); graphicLayoutElement.preferredWidth: " + graphicLayoutElement.preferredWidth);
-            //Debug.Log("MainMapController.OnOpenWindow(); graphicLayoutElement.preferredHeight: " + graphicLayoutElement.preferredHeight);
-            levelScaleFactor = graphicLayoutElement.preferredWidth / LevelManager.MyInstance.SceneBounds.size.x;
+            // set the width and height of the image to a square the size of the smallest side
+            graphicLayoutElement.preferredWidth = Mathf.Min(mainMapBackground.rect.width, mainMapBackground.rect.height);
+            graphicLayoutElement.preferredHeight = graphicLayoutElement.preferredWidth;
+
+            // the image will be scaled to the largest dimension
+            levelScaleFactor = graphicLayoutElement.preferredWidth / (LevelManager.MyInstance.SceneBounds.size.x > LevelManager.MyInstance.SceneBounds.size.z ? LevelManager.MyInstance.SceneBounds.size.x : LevelManager.MyInstance.SceneBounds.size.z);
         }
     }
 

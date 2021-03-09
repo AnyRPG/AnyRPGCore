@@ -314,7 +314,6 @@ namespace AnyRPG {
                 miniMapEnabled = true;
                 byte[] fileData = System.IO.File.ReadAllBytes(textureFilePath);
                 mapTexture.LoadImage(fileData);
-                // Normalize to the width/height of the image
             } else {
                 //Debug.Log("No minimap texture exists at " + textureFilePath + ".  Please run \"Minimap Wizard\" from the Tools menu under AnyRPG.");
                 if (SystemConfigurationManager.MyInstance.MiniMapFallBackMode == MiniMapFallBackMode.None) {

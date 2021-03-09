@@ -60,6 +60,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   backGroundImage: {fileID: 0}
   graphicLayoutElement: {fileID: 1670371087685149445}
+  mapRawImage: {fileID: 5062099781006031626}
   mainMapBackground: {fileID: 2399952160041757219}
   mapGraphic: {fileID: 2780258617087811045}
   mapIndicatorPrefab: {fileID: 7971569521143729688, guid: 35303de981ce2f743b3bc2426219e058,
