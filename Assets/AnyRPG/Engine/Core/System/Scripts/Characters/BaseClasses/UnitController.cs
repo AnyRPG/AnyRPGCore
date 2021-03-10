@@ -903,7 +903,7 @@ namespace AnyRPG {
         }
 
         public void ConfigureUnitModel() {
-            Debug.Log(gameObject.name + "UnitController.ConfigureUnitModel()");
+            //Debug.Log(gameObject.name + "UnitController.ConfigureUnitModel()");
 
             if (unitModel != null && dynamicCharacterAvatar == null) {
                 dynamicCharacterAvatar = unitModel.GetComponent<DynamicCharacterAvatar>();

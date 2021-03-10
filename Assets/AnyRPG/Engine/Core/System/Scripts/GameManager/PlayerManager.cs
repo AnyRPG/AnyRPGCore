@@ -344,6 +344,14 @@ namespace AnyRPG {
                 return;
             }
 
+            if (activeUnitController.DynamicCharacterAvatar != null) {
+                if (activeUnitController.ModelReady == false) {
+                    SaveManager.MyInstance.LoadUMASettings(false);
+                } else {
+                    SaveManager.MyInstance.LoadUMASettings(false);
+                }
+            }
+
             if (LevelManager.MyInstance.NavMeshAvailable == true && autoDetectNavMeshes) {
                 //Debug.Log("PlayerManager.SpawnPlayerUnit(): Enabling NavMeshAgent()");
                 activeUnitController.EnableAgent();
@@ -358,6 +366,9 @@ namespace AnyRPG {
                 }
             }
 
+            // testing - move this to before the below calls so its initialized if a model is already ready
+            activeUnitController.Init();
+
             if (activeUnitController.ModelReady == false) {
                 // do UMA spawn stuff to wait for UMA to spawn
                 SubscribeToModelReady();
@@ -365,7 +376,7 @@ namespace AnyRPG {
                 // handle spawn immediately since this is a non UMA unit and waiting should not be necessary
                 HandlePlayerUnitSpawn();
             }
-            activeUnitController.Init();
+            //activeUnitController.Init();
         }
 
         public void SetActiveUnitController(UnitController unitController) {
@@ -437,7 +448,7 @@ namespace AnyRPG {
             Debug.Log("PlayerManager.SubscribeToModelReady()");
 
             // try this earlier
-            SaveManager.MyInstance.LoadUMASettings(false);
+            //SaveManager.MyInstance.LoadUMASettings(false);
 
             activeUnitController.OnModelReady += HandleModelReady;
         }

@@ -376,7 +376,7 @@ namespace AnyRPG {
         }
 
         public void UnsubscribeFromModelReady() {
-            Debug.Log("PreviewCameraController.UnsubscribeFromModelReady()");
+            //Debug.Log("PreviewCameraController.UnsubscribeFromModelReady()");
 
             if (unitController != null) {
                 unitController.OnModelReady -= HandleModelReady;
@@ -384,7 +384,7 @@ namespace AnyRPG {
         }
 
         public void SubscribeToModelReady() {
-            Debug.Log("PreviewCameraController.SubscribeToModelReady()");
+            //Debug.Log("PreviewCameraController.SubscribeToModelReady()");
 
             if (unitController != null) {
                 unitController.OnModelReady += HandleModelReady;
@@ -392,7 +392,7 @@ namespace AnyRPG {
         }
 
         private void FindFollowTarget() {
-            Debug.Log("PreviewCameraController.FindFollowTarget()");
+            //Debug.Log("PreviewCameraController.FindFollowTarget()");
             Transform targetBone = null;
             Vector3 unitTargetOffset = Vector3.zero;
 

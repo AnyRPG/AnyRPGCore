@@ -184,11 +184,9 @@ namespace AnyRPG {
 
 
         public void LoadUMARecipe() {
-            if (CharacterCreatorManager.MyInstance.PreviewUnitController == null) {
-                //Debug.Log("CharacterCreatorPanel.LoadUMARecipe(): previewunit is null");
-                return;
+            if (CharacterCreatorManager.MyInstance?.PreviewUnitController?.DynamicCharacterAvatar != null) {
+                SaveManager.MyInstance.LoadUMASettings(CharacterCreatorManager.MyInstance.PreviewUnitController.DynamicCharacterAvatar, false);
             }
-            SaveManager.MyInstance.LoadUMASettings(CharacterCreatorManager.MyInstance.PreviewUnitController.DynamicCharacterAvatar, false);
         }
 
         public void HandleTargetReady() {

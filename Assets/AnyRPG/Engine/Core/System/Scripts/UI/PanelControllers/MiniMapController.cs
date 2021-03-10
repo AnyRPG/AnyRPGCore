@@ -25,9 +25,6 @@ namespace AnyRPG {
 
         #endregion
 
-        private const string minimapTextureFolderBase = "Assets/Games/";
-        private string minimapTextureFolder = string.Empty;
-
         [Header("MiniMap")]
 
         [SerializeField]
@@ -101,6 +98,12 @@ namespace AnyRPG {
 
         // track current minimap status and state
         private bool miniMapEnabled = false;
+
+        private const string minimapTextureFolderBase = "Assets/Games/";
+        private string minimapTextureFolder = string.Empty;
+
+        private string loadedMapName = string.Empty;
+
 
         public override void Awake() {
             //Debug.Log(gameObject.name + ": MiniMapController.Awake()");
@@ -183,7 +186,7 @@ namespace AnyRPG {
 
         private void DisableIndicators() {
             foreach (MiniMapIndicatorController miniMapIndicatorController in miniMapIndicatorControllers.Values) {
-                miniMapIndicatorController.gameObject.SetActive(true);
+                miniMapIndicatorController.gameObject.SetActive(false);
             }
         }
 
@@ -306,6 +309,11 @@ namespace AnyRPG {
         /// </summary>
         void InitRenderedMinimap() {
 
+            if (loadedMapName == SceneManager.GetActiveScene().name) {
+                // current map is already loaded or rendered
+                return;
+            }
+
             // First, try to find the minimap
             Texture2D mapTexture = new Texture2D((int)LevelManager.MyInstance.SceneBounds.size.x, (int)LevelManager.MyInstance.SceneBounds.size.z);
             string textureFilePath = minimapTextureFolder + GetScreenshotFilename();
@@ -339,6 +347,8 @@ namespace AnyRPG {
             levelOffset = LevelManager.MyInstance.SceneBounds.center;
 
             EnableIndicators();
+
+            loadedMapName = SceneManager.GetActiveScene().name;
         }
 
         /// <summary>

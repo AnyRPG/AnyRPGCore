@@ -262,7 +262,7 @@ namespace AnyRPG {
         }
 
         public void LoadUMASettings(bool rebuild = true) {
-            //Debug.Log("Savemanager.LoadUMASettings()");
+            Debug.Log("Savemanager.LoadUMASettings(" + rebuild + ")");
             if (recipeString == string.Empty) {
                 //Debug.Log("Savemanager.LoadUMASettings(): recipe string is empty. exiting!");
                 return;
@@ -271,7 +271,7 @@ namespace AnyRPG {
         }
 
         public void LoadUMASettings(DynamicCharacterAvatar _dynamicCharacterAvatar, bool rebuild = true) {
-            //Debug.Log("Savemanager.LoadUMASettings(DynamicCharacterAvatar)");
+            Debug.Log("Savemanager.LoadUMASettings(" + _dynamicCharacterAvatar.gameObject.name + ", " + rebuild + ")");
             if (recipeString == string.Empty) {
                 //Debug.Log("Savemanager.LoadUMASettings(): recipe string is empty. exiting!");
                 return;
@@ -279,9 +279,8 @@ namespace AnyRPG {
             LoadUMASettings(recipeString, _dynamicCharacterAvatar, rebuild);
         }
 
-
         public void LoadUMASettings(string _recipeString, DynamicCharacterAvatar _dynamicCharacterAvatar, bool rebuild = true) {
-            //Debug.Log("Savemanager.LoadUMASettings(string, DynamicCharacterAvatar)");
+            Debug.Log("Savemanager.LoadUMASettings(string, " + _dynamicCharacterAvatar.gameObject.name + ", " + rebuild + ")");
             if (_recipeString == null || _recipeString == string.Empty || _dynamicCharacterAvatar == null) {
                 //Debug.Log("Savemanager.LoadUMASettings(): _recipeString is empty. exiting!");
                 return;
@@ -289,12 +288,11 @@ namespace AnyRPG {
             _dynamicCharacterAvatar.ClearSlots();
             //Debug.Log("Savemanager.LoadUMASettings(): " + recipeString);
             _dynamicCharacterAvatar.SetLoadString(_recipeString);
-            //_dynamicCharacterAvatar.LoadFromRecipeString(_recipeString, DynamicCharacterAvatar.LoadOptions.);
-            /*
+            
             if (rebuild) {
                 _dynamicCharacterAvatar.BuildCharacter();
             }
-            */
+            
         }
 
         /*
