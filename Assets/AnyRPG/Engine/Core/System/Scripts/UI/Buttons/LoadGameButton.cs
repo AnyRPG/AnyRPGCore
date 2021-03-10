@@ -31,15 +31,15 @@ namespace AnyRPG {
 
         private UnitProfile unitProfile;
 
-        public AnyRPGSaveData MySaveData { get => mySaveData; set => mySaveData = value; }
-        public UnitProfile MyUnitProfile { get => unitProfile; set => unitProfile = value; }
+        public AnyRPGSaveData SaveData { get => mySaveData; set => mySaveData = value; }
+        public UnitProfile UnitProfile { get => unitProfile; set => unitProfile = value; }
 
         public void AddSaveData(AnyRPGSaveData mySaveData) {
             //Debug.Log("LoadGameButton.AddSaveData()");
             this.mySaveData = mySaveData;
 
             icon.sprite = null;
-            if (mySaveData.playerFaction != null && MySaveData.playerFaction != string.Empty) {
+            if (mySaveData.playerFaction != null && SaveData.playerFaction != string.Empty) {
                 Faction playerFaction = SystemFactionManager.MyInstance.GetResource(mySaveData.playerFaction);
                 // needs to be checked anyway.  could have invalid faction in save data
                 if (playerFaction != null) {
@@ -62,7 +62,7 @@ namespace AnyRPG {
             descriptionText += "Class: " + (mySaveData.characterClass == null || mySaveData.characterClass == string.Empty ? "None" : mySaveData.characterClass) + "\n";
             descriptionText += "Level: " + mySaveData.PlayerLevel + "\n";
             descriptionText += "Experience: " + mySaveData.currentExperience + "\n";
-            descriptionText += "Faction: " + (mySaveData.playerFaction == string.Empty ? "None" : MySaveData.playerFaction) + "\n";
+            descriptionText += "Faction: " + (mySaveData.playerFaction == string.Empty ? "None" : SaveData.playerFaction) + "\n";
             descriptionText += "Created: " + mySaveData.DataCreatedOn + "\n";
             descriptionText += "Saved: " + mySaveData.DataSavedOn + "\n";
             descriptionText += "FileName: " + mySaveData.DataFileName + "\n";
