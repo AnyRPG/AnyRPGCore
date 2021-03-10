@@ -18,24 +18,11 @@ namespace AnyRPG {
         [SerializeField]
         private Transform contentParent = null;
 
-        private Interactable interactable = null;
-
-        private RectTransform rectTransform = null;
-
-        private Vector2 uiOffset = Vector2.zero;
-
         private Dictionary<InteractableOptionComponent, GameObject> miniMapLayers = new Dictionary<InteractableOptionComponent, GameObject>();
 
-        private bool setupComplete = false;
+        private Interactable interactable = null;
 
-        private void Awake() {
-            //Debug.Log("MiniMapIndicatorController.Awake()");
-            rectTransform = GetComponent<RectTransform>();
-            //canvas.worldCamera = CameraManager.MyInstance.MiniMapCamera;
-            //canvas.planeDistance = 1f;
-            uiOffset = new Vector2((float)rectTransform.sizeDelta.x / 2f, (float)rectTransform.sizeDelta.y / 2f);
-            //Debug.Log("MiniMapIndicatorController.Awake(): rectTransform.sizeDelta: " + rectTransform.sizeDelta + "; uiOffset" + uiOffset);
-        }
+        private bool setupComplete = false;
 
         public void SetupMiniMap() {
             //Debug.Log(transform.parent.gameObject.name + ".MiniMapIndicatorController.SetupMiniMap(): interactable: " + (interactable == null ? "null" : interactable.name));
@@ -72,7 +59,7 @@ namespace AnyRPG {
 
         public void HandleMiniMapStatusUpdate(InteractableOptionComponent _interactable) {
             //Debug.Log(_interactable.Interactable.gameObject.name + ".MiniMapIndicatorController.HandleMiniMapStatusUpdate()");
-            if (miniMapLayers.ContainsKey(_interactable) == false ||  miniMapLayers[_interactable] == null) {
+            if (miniMapLayers.ContainsKey(_interactable) == false || miniMapLayers[_interactable] == null) {
                 //Debug.Log(_interactable.DisplayName + ".MiniMapIndicatorController.HandleMiniMapStatusUpdate(): miniMapLayers[_interactable] is null! Exiting");
                 return;
             }
@@ -88,11 +75,13 @@ namespace AnyRPG {
             //}
         }
 
-        public void CleanupLayers() {
+        public void ResetSettings() {
             foreach (GameObject go in miniMapLayers.Values) {
                 ObjectPooler.MyInstance.ReturnObjectToPool(go);
             }
             miniMapLayers.Clear();
+            interactable = null;
+            setupComplete = false;
         }
 
         /*

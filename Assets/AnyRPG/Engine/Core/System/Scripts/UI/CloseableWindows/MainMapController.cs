@@ -129,6 +129,7 @@ namespace AnyRPG {
 
         public void RemoveIndicator(Interactable interactable) {
             if (mapIndicatorControllers.ContainsKey(interactable)) {
+                mapIndicatorControllers[interactable].ResetSettings();
                 ObjectPooler.MyInstance.ReturnObjectToPool(mapIndicatorControllers[interactable].gameObject);
                 mapIndicatorControllers.Remove(interactable);
             }

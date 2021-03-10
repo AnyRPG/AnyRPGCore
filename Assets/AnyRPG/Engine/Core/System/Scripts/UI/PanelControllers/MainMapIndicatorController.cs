@@ -18,24 +18,11 @@ namespace AnyRPG {
         [SerializeField]
         private Transform contentParent = null;
 
-        private Interactable interactable = null;
-
-        private RectTransform rectTransform = null;
-
-        private Vector2 uiOffset = Vector2.zero;
-
         private Dictionary<InteractableOptionComponent, GameObject> mainMapLayers = new Dictionary<InteractableOptionComponent, GameObject>();
 
-        private bool setupComplete = false;
+        private Interactable interactable = null;
 
-        private void Awake() {
-            //Debug.Log("MainMapIndicatorController.Awake()");
-            rectTransform = GetComponent<RectTransform>();
-            //canvas.worldCamera = CameraManager.MyInstance.MainMapCamera;
-            //canvas.planeDistance = 1f;
-            uiOffset = new Vector2((float)rectTransform.sizeDelta.x / 2f, (float)rectTransform.sizeDelta.y / 2f);
-            //Debug.Log("MainMapIndicatorController.Awake(): rectTransform.sizeDelta: " + rectTransform.sizeDelta + "; uiOffset" + uiOffset);
-        }
+        private bool setupComplete = false;
 
         public void SetupMainMap() {
             //Debug.Log((interactable == null ? "null" : interactable.name) + ".MainMapIndicatorController.SetupMainMap()");
@@ -90,11 +77,13 @@ namespace AnyRPG {
             //}
         }
 
-        public void CleanupLayers() {
+        public void ResetSettings() {
             foreach (GameObject go in mainMapLayers.Values) {
                 ObjectPooler.MyInstance.ReturnObjectToPool(go);
             }
             mainMapLayers.Clear();
+            interactable = null;
+            setupComplete = false;
         }
 
         /*
