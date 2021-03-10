@@ -262,7 +262,7 @@ namespace AnyRPG {
         }
 
         public void LoadUMASettings(bool rebuild = true) {
-            Debug.Log("Savemanager.LoadUMASettings(" + rebuild + ")");
+            //Debug.Log("Savemanager.LoadUMASettings(" + rebuild + ")");
             if (recipeString == string.Empty) {
                 //Debug.Log("Savemanager.LoadUMASettings(): recipe string is empty. exiting!");
                 return;
@@ -271,7 +271,7 @@ namespace AnyRPG {
         }
 
         public void LoadUMASettings(DynamicCharacterAvatar _dynamicCharacterAvatar, bool rebuild = true) {
-            Debug.Log("Savemanager.LoadUMASettings(" + _dynamicCharacterAvatar.gameObject.name + ", " + rebuild + ")");
+            //Debug.Log("Savemanager.LoadUMASettings(" + _dynamicCharacterAvatar.gameObject.name + ", " + rebuild + ")");
             if (recipeString == string.Empty) {
                 //Debug.Log("Savemanager.LoadUMASettings(): recipe string is empty. exiting!");
                 return;
@@ -280,16 +280,17 @@ namespace AnyRPG {
         }
 
         public void LoadUMASettings(string _recipeString, DynamicCharacterAvatar _dynamicCharacterAvatar, bool rebuild = true) {
-            Debug.Log("Savemanager.LoadUMASettings(string, " + _dynamicCharacterAvatar.gameObject.name + ", " + rebuild + ")");
+            //Debug.Log("Savemanager.LoadUMASettings(string, " + _dynamicCharacterAvatar.gameObject.name + ", " + rebuild + ")");
             if (_recipeString == null || _recipeString == string.Empty || _dynamicCharacterAvatar == null) {
                 //Debug.Log("Savemanager.LoadUMASettings(): _recipeString is empty. exiting!");
                 return;
             }
-            _dynamicCharacterAvatar.ClearSlots();
             //Debug.Log("Savemanager.LoadUMASettings(): " + recipeString);
+            //Debug.Log("Savemanager.LoadUMASettings(string, " + _dynamicCharacterAvatar.gameObject.name + ", " + rebuild + "): dynamicCharacterAvatar.SetLoadString()");
             _dynamicCharacterAvatar.SetLoadString(_recipeString);
             
             if (rebuild) {
+                //Debug.Log("Savemanager.LoadUMASettings(string, " + _dynamicCharacterAvatar.gameObject.name + ", " + rebuild + "): dynamicCharacterAvatar.BuildCharacter()");
                 _dynamicCharacterAvatar.BuildCharacter();
             }
             

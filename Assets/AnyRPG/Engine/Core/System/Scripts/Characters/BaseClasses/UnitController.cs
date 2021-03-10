@@ -677,6 +677,14 @@ namespace AnyRPG {
             // agents should be disabled so when pool and re-activated they don't throw errors if they are a preview unit
             DisableAgent();
 
+            if (dynamicCharacterAvatar != null) {
+                dynamicCharacterAvatar.ClearSlots();
+                dynamicCharacterAvatar.RestoreCachedBodyColors();
+                dynamicCharacterAvatar.LoadDefaultWardrobe();
+                // doing the rebuild on despawn so there isn't a frame with this appearance until a rebuild happens when re-using the avatar
+                dynamicCharacterAvatar.BuildCharacter();
+            }
+
             unitProfile = null;
             unitModel = null;
             modelReady = false;
@@ -913,13 +921,14 @@ namespace AnyRPG {
             }
             if (unitModel != null || dynamicCharacterAvatar != null) {
                 if (dynamicCharacterAvatar != null) {
-                    Debug.Log(gameObject.name + "UnitController.ConfigureUnitModel(): calling initialize");
 
                     // testing - pooled UMA units will already be initialized
                     // so they should be considered ready if they have umaData
                     if (dynamicCharacterAvatar.umaData == null) {
+                        //Debug.Log(gameObject.name + "UnitController.ConfigureUnitModel(): dynamicCharacterAvatar.Initialize()");
                         dynamicCharacterAvatar.Initialize();
                     } else {
+                        //Debug.Log(gameObject.name + "UnitController.ConfigureUnitModel(): dynamicCharacterAvatar has been re-used and is already initialized");
                         SetModelReady();
                     }
 
