@@ -41,19 +41,19 @@ namespace AnyRPG {
         }
 
         public override void ReceiveOpenWindowNotification() {
-            Debug.Log("UMACharacterEditorPanelController.ReceiveOpenWindowNotification()");
+            //Debug.Log("UMACharacterEditorPanelController.ReceiveOpenWindowNotification()");
             base.ReceiveOpenWindowNotification();
         }
 
         public void HidePanel() {
-            Debug.Log("UMACharacterEditorPanelController.HidePanel()");
+            //Debug.Log("UMACharacterEditorPanelController.HidePanel()");
             canvasGroup.alpha = 0;
             canvasGroup.blocksRaycasts = false;
             canvasGroup.interactable = false;
         }
 
         public void ShowPanel() {
-            Debug.Log("UMACharacterEditorPanelController.ShowPanel()");
+            //Debug.Log("UMACharacterEditorPanelController.ShowPanel()");
             canvasGroup.alpha = 1;
             canvasGroup.blocksRaycasts = true;
             canvasGroup.interactable = true;
@@ -62,7 +62,7 @@ namespace AnyRPG {
         }
 
         public void SetupOptions() {
-            Debug.Log("UMACharacterEditorPanelController.SetupOptions()");
+            //Debug.Log("UMACharacterEditorPanelController.SetupOptions()");
             CloseOptionsAreas();
             mainButtonsArea.SetActive(false);
             mainNoOptionsArea.SetActive(false);
@@ -79,7 +79,7 @@ namespace AnyRPG {
         }
 
         public void HandleTargetReady() {
-            Debug.Log("UMACharacterEditorPanelController.HandleTargetReady()");
+            //Debug.Log("UMACharacterEditorPanelController.HandleTargetReady()");
             SetupOptions();
         }
 

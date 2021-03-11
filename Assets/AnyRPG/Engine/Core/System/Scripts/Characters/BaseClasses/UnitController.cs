@@ -1579,6 +1579,11 @@ namespace AnyRPG {
                 target = newTarget;
             }
             OnSetTarget(target);
+            target.OnInteractableDisable += HandleTargetDisable;
+        }
+
+        public void HandleTargetDisable() {
+            ClearTarget();
         }
 
         // receive messages from master and pass them on
@@ -1588,6 +1593,9 @@ namespace AnyRPG {
 
         public void ClearTarget() {
             //Debug.Log(gameObject.name + ": basecontroller.ClearTarget()");
+            if (target != null) {
+                target.OnInteractableDisable -= HandleTargetDisable;
+            }
             Interactable oldTarget = target;
             target = null;
             // FIX ME (reenable possibly?)

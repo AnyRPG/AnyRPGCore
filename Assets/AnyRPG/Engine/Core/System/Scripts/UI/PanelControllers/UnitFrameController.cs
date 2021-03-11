@@ -22,6 +22,13 @@ namespace AnyRPG {
 
         [Header("Resources")]
 
+        [SerializeField]
+        private LayoutElement primaryResourceSliderLayout = null;
+
+        [SerializeField]
+        private LayoutElement secondaryResourceSliderLayout = null;
+
+
         [FormerlySerializedAs("healthSlider")]
         [SerializeField]
         private Image primaryResourceSlider = null;
@@ -72,10 +79,7 @@ namespace AnyRPG {
         private float originalPrimaryResourceSliderWidth = 0f;
         private float originalSecondaryResourceSliderWidth = 0f;
 
-        //private GameObject followGameObject = null;
-
         private BaseNamePlateController namePlateController = null;
-        //private CharacterUnit characterUnit = null;
 
         [Header("Status Effects")]
 
@@ -86,9 +90,6 @@ namespace AnyRPG {
 
         private PowerResource primaryPowerResource = null;
         private PowerResource secondaryPowerResource = null;
-
-        private LayoutElement primaryResourceSliderLayout = null;
-        private LayoutElement secondaryResourceSliderLayout = null;
 
         private Color powerResourceColor1 = Color.green;
         private Color powerResourceColor2 = Color.blue;
@@ -126,12 +127,6 @@ namespace AnyRPG {
                 return;
             }
             portraitImage.texture = portraitTexture;
-            if (primaryResourceSliderLayout == null) {
-                primaryResourceSliderLayout = primaryResourceSlider.GetComponent<LayoutElement>();
-            }
-            if (secondaryResourceSliderLayout == null) {
-                secondaryResourceSliderLayout = secondaryResourceSlider.GetComponent<LayoutElement>();
-            }
             originalPrimaryResourceSliderWidth = primaryResourceSliderLayout.preferredWidth;
             originalSecondaryResourceSliderWidth = secondaryResourceSliderLayout.preferredWidth;
             DeActivateCastBar();
@@ -220,7 +215,7 @@ namespace AnyRPG {
         }
 
         public void SetTarget(BaseNamePlateController namePlateController) {
-            //Debug.Log(gameObject.name + ".UnitFrameController.SetTarget()");
+            //Debug.Log(gameObject.name + ".UnitFrameController.SetTarget(" + namePlateController.Interactable.name + ")");
 
             // prevent old target from still sending us updates while we are focused on a new target
             ClearTarget(false);
@@ -286,10 +281,11 @@ namespace AnyRPG {
         }
 
         public void ClearTarget(bool closeWindowOnClear = true) {
-            //Debug.Log(gameObject.name + ".UnitFrameController.ClearTarget()");
+            //Debug.Log(gameObject.name + ".UnitFrameController.ClearTarget(" + closeWindowOnClear + ")");
             UnsubscribeFromTargetReady();
 
             if (namePlateController != null && namePlateController.Interactable.CharacterUnit != null) {
+                //Debug.Log(gameObject.name + ".UnitFrameController.ClearTarget(" + closeWindowOnClear + "). Unsubscribing from " + namePlateController.Interactable?.gameObject.name);
                 (namePlateController as UnitNamePlateController).UnitController.OnResourceAmountChanged -= HandleResourceAmountChanged;
                 (namePlateController as UnitNamePlateController).UnitController.OnNameChange -= HandleNameChange;
                 (namePlateController as UnitNamePlateController).UnitController.OnClassChange -= HandleClassChange;

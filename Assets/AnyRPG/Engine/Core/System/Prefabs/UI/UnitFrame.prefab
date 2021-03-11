@@ -759,12 +759,13 @@ MonoBehaviour:
   unitNameText: {fileID: 2860310455526464969}
   unitLevelText: {fileID: 1516751444195513170}
   unitNameBackground: {fileID: 7550185118670049065}
+  primaryResourceSliderLayout: {fileID: 949358307014643735}
+  secondaryResourceSliderLayout: {fileID: 4503922059968319904}
   primaryResourceSlider: {fileID: 5338910660532069424}
   primaryResourceText: {fileID: 39295611012727031}
   secondaryResourceSlider: {fileID: 8755140770981246165}
   secondaryResourceText: {fileID: 5833588733546192760}
   castBarController: {fileID: 8875474365726998410}
-  realTimeCamera: 1
   cameraTransform: {fileID: 0}
   previewCamera: {fileID: 0}
   portraitTexture: {fileID: 0}

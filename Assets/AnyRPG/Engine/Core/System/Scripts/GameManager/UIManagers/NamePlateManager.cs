@@ -99,6 +99,9 @@ namespace AnyRPG {
             NamePlateController namePlate = ObjectPooler.MyInstance.GetPooledObject(namePlatePrefab, namePlateContainer).GetComponent<NamePlateController>();
             namePlates.Add(namePlateUnit, namePlate);
             namePlate.SetNamePlateUnit(namePlateUnit, usePositionOffset);
+
+            // testing - so nameplates spawned after setting target don't end up in front of the target
+            namePlate.transform.SetAsFirstSibling();
             return namePlate;
         }
 

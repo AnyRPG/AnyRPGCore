@@ -445,7 +445,7 @@ namespace AnyRPG {
         }
 
         public void SubscribeToModelReady() {
-            Debug.Log("PlayerManager.SubscribeToModelReady()");
+            //Debug.Log("PlayerManager.SubscribeToModelReady()");
 
             // try this earlier
             //SaveManager.MyInstance.LoadUMASettings(false);

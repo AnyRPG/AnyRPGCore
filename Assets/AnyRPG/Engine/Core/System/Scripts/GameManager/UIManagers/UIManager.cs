@@ -37,12 +37,6 @@ namespace AnyRPG {
         private GameObject loadingCanvas = null;
 
         [SerializeField]
-        private GameObject inventoryCanvas = null;
-
-        [SerializeField]
-        private GameObject miniMapCanvasParent = null;
-
-        [SerializeField]
         private GameObject cutSceneBarsCanvas = null;
 
         [SerializeField]
@@ -119,7 +113,6 @@ namespace AnyRPG {
         public StatusEffectPanelController StatusEffectPanelController { get => statusEffectPanelController; }
         public UnitFrameController FocusUnitFrameController { get => focusUnitFrameController; }
         public ActionBarManager ActionBarManager { get => actionBarManager; set => actionBarManager = value; }
-        public GameObject MiniMapCanvasParent { get => miniMapCanvasParent; }
         public UnitFrameController PlayerUnitFrameController { get => playerUnitFrameController; set => playerUnitFrameController = value; }
         public CloseableWindow QuestTrackerWindow { get => questTrackerWindow; set => questTrackerWindow = value; }
         public CloseableWindow CombatLogWindow { get => combatLogWindow; set => combatLogWindow = value; }
@@ -138,7 +131,6 @@ namespace AnyRPG {
         public GameObject CombatTextCanvas { get => combatTextCanvas; set => combatTextCanvas = value; }
         public bool DragInProgress { get => dragInProgress; set => dragInProgress = value; }
         public GameObject CutSceneBarsCanvas { get => cutSceneBarsCanvas; set => cutSceneBarsCanvas = value; }
-        public GameObject InventoryCanvas { get => inventoryCanvas; set => inventoryCanvas = value; }
         public CurrencyBarController ToolTipCurrencyBarController { get => toolTipCurrencyBarController; set => toolTipCurrencyBarController = value; }
         public GameObject PlayerUI { get => playerUI; }
 

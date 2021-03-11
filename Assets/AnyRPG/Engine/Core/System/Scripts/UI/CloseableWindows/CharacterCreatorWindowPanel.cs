@@ -90,7 +90,7 @@ namespace AnyRPG {
         }
 
         public void LoadUMARecipe() {
-            Debug.Log("CharacterCreatorWindowPanel.LoadUMARecipe()");
+            //Debug.Log("CharacterCreatorWindowPanel.LoadUMARecipe()");
             //SaveManager.MyInstance.SaveUMASettings();
             SaveManager.MyInstance.LoadUMASettings(CharacterCreatorManager.MyInstance.PreviewUnitController.DynamicCharacterAvatar, false);
         }
@@ -129,7 +129,7 @@ namespace AnyRPG {
         }
 
         public void HandleTargetReady() {
-            Debug.Log("CharacterCreatorWindowPanel.HandleTargetReady()");
+            //Debug.Log("CharacterCreatorWindowPanel.HandleTargetReady()");
             LoadUMARecipe();
             umaCharacterPanel.HandleTargetReady();
             if (umaCharacterPanel.MainNoOptionsArea.activeSelf == false) {

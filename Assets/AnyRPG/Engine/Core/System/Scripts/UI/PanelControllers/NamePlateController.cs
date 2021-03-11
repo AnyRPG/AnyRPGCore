@@ -60,15 +60,7 @@ namespace AnyRPG {
         [SerializeField]
         private Transform speechBubbleContents = null;
 
-        [SerializeField]
-        private Canvas namePlateCanvas = null;
-
-        [SerializeField]
-        private Canvas speechBubbleCanvas = null;
-
         private BaseNamePlateController unitNamePlateController = null;
-
-        //private int healthSliderWidth = 0;
 
         private bool isPlayerUnitNamePlate = false;
 
@@ -83,13 +75,9 @@ namespace AnyRPG {
         public GameObject QuestIndicatorBackground { get => questIndicatorBackground; set => questIndicatorBackground = value; }
         public Image GenericIndicatorImage { get => genericIndicatorImage; set => genericIndicatorImage = value; }
         public NamePlateCanvasController NamePlateCanvasController { get => namePlateCanvasController; set => namePlateCanvasController = value; }
-        public Canvas NamePlateCanvas { get => namePlateCanvas; set => namePlateCanvas = value; }
-        public Canvas SpeechBubbleCanvas { get => speechBubbleCanvas; set => speechBubbleCanvas = value; }
 
         private void OnEnable() {
             //Debug.Log("NamePlateController.OnEnable()");
-            //healthSliderWidth = (int)(healthBarBackground.preferredWidth);
-            //Debug.Log("NamePlateController.Awake(): healthSliderWidth" + healthSliderWidth);
             CreateEventSubscriptions();
             HideSpeechBubble();
         }
@@ -171,12 +159,12 @@ namespace AnyRPG {
 
         public void Highlight() {
             healthBarOutline.color = Color.white;
-            namePlateCanvas.sortingOrder = 1;
+            transform.SetAsLastSibling();
         }
 
         public void UnHighlight() {
             healthBarOutline.color = Color.black;
-            namePlateCanvas.sortingOrder = 0;
+            transform.SetAsFirstSibling();
         }
 
         private void SetCharacterName() {
