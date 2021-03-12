@@ -7,7 +7,7 @@ using System.Collections.Generic;
 namespace AnyRPG {
     // responsible for detecting mouseover the nameplate canvas to allow override of overgameobject detection
     public class NamePlateCanvasController : MonoBehaviour {
-        GraphicRaycaster m_Raycaster;
+        //GraphicRaycaster m_Raycaster;
         PointerEventData m_PointerEventData;
         EventSystem m_EventSystem;
 
@@ -23,7 +23,7 @@ namespace AnyRPG {
                 return;
             }
             //Fetch the Raycaster from the GameObject (the Canvas)
-            m_Raycaster = GetComponent<GraphicRaycaster>();
+            //m_Raycaster = GetComponent<GraphicRaycaster>();
             //Fetch the Event System from the Scene
             m_EventSystem = GetComponent<EventSystem>();
 

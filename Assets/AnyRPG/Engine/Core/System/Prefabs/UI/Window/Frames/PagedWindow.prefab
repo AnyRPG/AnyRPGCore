@@ -59,7 +59,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_RaycastTarget: 1
+  m_RaycastTarget: 0
   m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
@@ -115,7 +115,7 @@ MonoBehaviour:
   m_enableKerning: 1
   m_enableExtraPadding: 0
   checkPaddingRequired: 0
-  m_isRichText: 1
+  m_isRichText: 0
   m_parseCtrlCharacters: 1
   m_isOrthographic: 1
   m_isCullingEnabled: 0
@@ -499,7 +499,6 @@ GameObject:
   - component: {fileID: 5515843363502165383}
   - component: {fileID: 5515843363502165382}
   - component: {fileID: -4893917323880431361}
-  - component: {fileID: 5515843363502165381}
   m_Layer: 5
   m_Name: PagedWindow
   m_TagString: Untagged
@@ -587,18 +586,6 @@ MonoBehaviour:
   pageNumber: {fileID: 597201360853164623}
   previousBtn: {fileID: 5515843363233495109}
   nextBtn: {fileID: 5515843363676385684}
---- !u!225 &5515843363502165381
-CanvasGroup:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5515843363502165378}
-  m_Enabled: 1
-  m_Alpha: 1
-  m_Interactable: 0
-  m_BlocksRaycasts: 0
-  m_IgnoreParentGroups: 0
 --- !u!1 &5515843363559119463
 GameObject:
   m_ObjectHideFlags: 0
@@ -659,7 +646,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
   m_Color: {r: 0, g: 0, b: 0, a: 1}
-  m_RaycastTarget: 1
+  m_RaycastTarget: 0
   m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:

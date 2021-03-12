@@ -10,8 +10,6 @@ GameObject:
   m_Component:
   - component: {fileID: 1388518728828843406}
   - component: {fileID: 566656112978533573}
-  - component: {fileID: 8730790549097772055}
-  - component: {fileID: 3246878117160248380}
   m_Layer: 5
   m_Name: CopyGameMenuWindow
   m_TagString: Untagged
@@ -58,26 +56,6 @@ MonoBehaviour:
   windowTitle: 
   windowText: {fileID: 0}
   backGroundImage: {fileID: 0}
---- !u!225 &8730790549097772055
-CanvasGroup:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1388518728828843405}
-  m_Enabled: 1
-  m_Alpha: 0
-  m_Interactable: 0
-  m_BlocksRaycasts: 0
-  m_IgnoreParentGroups: 0
---- !u!222 &3246878117160248380
-CanvasRenderer:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1388518728828843405}
-  m_CullTransparentMesh: 0
 --- !u!1 &4336510194897801960
 GameObject:
   m_ObjectHideFlags: 0
@@ -123,17 +101,17 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 2382909202382707813, guid: aa7b18c612a6c6c4a80aff39e080092d,
         type: 3}
+      propertyPath: m_RootOrder
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2382909202382707813, guid: aa7b18c612a6c6c4a80aff39e080092d,
+        type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2382909202382707813, guid: aa7b18c612a6c6c4a80aff39e080092d,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2382909202382707813, guid: aa7b18c612a6c6c4a80aff39e080092d,
-        type: 3}
-      propertyPath: m_RootOrder
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2382909202382707813, guid: aa7b18c612a6c6c4a80aff39e080092d,
@@ -155,6 +133,66 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: ConfirmCopyGamePanel
+      objectReference: {fileID: 0}
+    - target: {fileID: 5624070766237405995, guid: aa7b18c612a6c6c4a80aff39e080092d,
+        type: 3}
+      propertyPath: m_textAlignment
+      value: 65535
+      objectReference: {fileID: 0}
+    - target: {fileID: 5624070766237405995, guid: aa7b18c612a6c6c4a80aff39e080092d,
+        type: 3}
+      propertyPath: m_TextStyleHashCode
+      value: -1183493901
+      objectReference: {fileID: 0}
+    - target: {fileID: 5624070766237405995, guid: aa7b18c612a6c6c4a80aff39e080092d,
+        type: 3}
+      propertyPath: m_VerticalAlignment
+      value: 512
+      objectReference: {fileID: 0}
+    - target: {fileID: 5624070766237405995, guid: aa7b18c612a6c6c4a80aff39e080092d,
+        type: 3}
+      propertyPath: m_HorizontalAlignment
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 5903586500235375704, guid: aa7b18c612a6c6c4a80aff39e080092d,
+        type: 3}
+      propertyPath: m_textAlignment
+      value: 65535
+      objectReference: {fileID: 0}
+    - target: {fileID: 5903586500235375704, guid: aa7b18c612a6c6c4a80aff39e080092d,
+        type: 3}
+      propertyPath: m_TextStyleHashCode
+      value: -1183493901
+      objectReference: {fileID: 0}
+    - target: {fileID: 5903586500235375704, guid: aa7b18c612a6c6c4a80aff39e080092d,
+        type: 3}
+      propertyPath: m_VerticalAlignment
+      value: 512
+      objectReference: {fileID: 0}
+    - target: {fileID: 5903586500235375704, guid: aa7b18c612a6c6c4a80aff39e080092d,
+        type: 3}
+      propertyPath: m_HorizontalAlignment
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 7481351062511796134, guid: aa7b18c612a6c6c4a80aff39e080092d,
+        type: 3}
+      propertyPath: m_textAlignment
+      value: 65535
+      objectReference: {fileID: 0}
+    - target: {fileID: 7481351062511796134, guid: aa7b18c612a6c6c4a80aff39e080092d,
+        type: 3}
+      propertyPath: m_TextStyleHashCode
+      value: -1183493901
+      objectReference: {fileID: 0}
+    - target: {fileID: 7481351062511796134, guid: aa7b18c612a6c6c4a80aff39e080092d,
+        type: 3}
+      propertyPath: m_VerticalAlignment
+      value: 512
+      objectReference: {fileID: 0}
+    - target: {fileID: 7481351062511796134, guid: aa7b18c612a6c6c4a80aff39e080092d,
+        type: 3}
+      propertyPath: m_HorizontalAlignment
+      value: 2
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: aa7b18c612a6c6c4a80aff39e080092d, type: 3}

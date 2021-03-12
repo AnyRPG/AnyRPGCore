@@ -10,8 +10,6 @@ GameObject:
   m_Component:
   - component: {fileID: 4759218684814125540}
   - component: {fileID: 6238625657946701999}
-  - component: {fileID: 2909565052013111421}
-  - component: {fileID: 8954875906208168022}
   m_Layer: 5
   m_Name: ConfirmNewGameMenuWindow
   m_TagString: Untagged
@@ -58,26 +56,6 @@ MonoBehaviour:
   windowTitle: 
   windowText: {fileID: 0}
   backGroundImage: {fileID: 0}
---- !u!225 &2909565052013111421
-CanvasGroup:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4759218684814125543}
-  m_Enabled: 1
-  m_Alpha: 0
-  m_Interactable: 0
-  m_BlocksRaycasts: 0
-  m_IgnoreParentGroups: 0
---- !u!222 &8954875906208168022
-CanvasRenderer:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4759218684814125543}
-  m_CullTransparentMesh: 0
 --- !u!1 &7883348060532690562
 GameObject:
   m_ObjectHideFlags: 0
@@ -112,7 +90,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: -100, y: -100}
+  m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1001 &6389197328540594713
 PrefabInstance:
@@ -123,17 +101,17 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 2382909202382707813, guid: b302e05e93c09364a8c67e99b7d2ed5d,
         type: 3}
+      propertyPath: m_RootOrder
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2382909202382707813, guid: b302e05e93c09364a8c67e99b7d2ed5d,
+        type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2382909202382707813, guid: b302e05e93c09364a8c67e99b7d2ed5d,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2382909202382707813, guid: b302e05e93c09364a8c67e99b7d2ed5d,
-        type: 3}
-      propertyPath: m_RootOrder
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2382909202382707813, guid: b302e05e93c09364a8c67e99b7d2ed5d,

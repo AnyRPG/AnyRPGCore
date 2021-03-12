@@ -139,7 +139,6 @@ GameObject:
   m_Component:
   - component: {fileID: 8003030515149041748}
   - component: {fileID: 8901453779206117663}
-  - component: {fileID: 395336039252586957}
   - component: {fileID: 7944561072204028489}
   - component: {fileID: 6636403064414649829}
   - component: {fileID: 8866396909724673870}
@@ -190,18 +189,6 @@ MonoBehaviour:
   windowTitle: 
   windowText: {fileID: 0}
   backGroundImage: {fileID: 0}
---- !u!225 &395336039252586957
-CanvasGroup:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8003030515149041751}
-  m_Enabled: 1
-  m_Alpha: 0
-  m_Interactable: 0
-  m_BlocksRaycasts: 0
-  m_IgnoreParentGroups: 0
 --- !u!222 &7944561072204028489
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -341,7 +328,7 @@ MonoBehaviour:
   m_Material: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 0.078}
   m_RaycastTarget: 0
-  m_Maskable: 1
+  m_Maskable: 0
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
@@ -464,7 +451,7 @@ MonoBehaviour:
   m_Material: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 0.078}
   m_RaycastTarget: 0
-  m_Maskable: 1
+  m_Maskable: 0
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
@@ -587,7 +574,7 @@ MonoBehaviour:
   m_Material: {fileID: 0}
   m_Color: {r: 0.50994813, g: 0.5294118, b: 0.5294118, a: 0.078}
   m_RaycastTarget: 0
-  m_Maskable: 1
+  m_Maskable: 0
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []

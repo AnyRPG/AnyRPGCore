@@ -171,8 +171,8 @@ namespace AnyRPG {
             // move pooled object to pool transform
             // that would be great if this could be done by setting active false first,
             // but Unity gives an error message that you can't set parent while deactivating
-            pooledGameObject.transform.SetParent(defaultObjectParent.transform);
             pooledGameObject.SetActive(false);
+            pooledGameObject.transform.SetParent(defaultObjectParent.transform);
         }
 
     }

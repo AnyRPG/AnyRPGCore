@@ -9,6 +9,7 @@ using UnityEngine.SceneManagement;
 namespace AnyRPG {
     public class MainMapController : WindowContentController {
 
+        /*
         #region Singleton
         private static MainMapController instance;
 
@@ -23,7 +24,7 @@ namespace AnyRPG {
         }
 
         #endregion
-
+        */
 
         [Header("Map")]
 
@@ -39,9 +40,6 @@ namespace AnyRPG {
         [SerializeField]
         private GameObject mapGraphic = null;
 
-        [SerializeField]
-        private GameObject mapIndicatorPrefab = null;
-
         private const string mainmapTextureFolderBase = "Assets/Games/";
         private string mainmapTextureFolder = string.Empty;
 
@@ -54,20 +52,16 @@ namespace AnyRPG {
 
         protected bool eventSubscriptionsInitialized = false;
 
-        private Dictionary<Interactable, MainMapIndicatorController> mapIndicatorControllers = new Dictionary<Interactable, MainMapIndicatorController>();
-
+        public GameObject MapGraphic { get => mapGraphic; }
 
         public override void Awake() {
             //Debug.Log("MainMapController.Awake()");
             base.Awake();
             //instantiate singleton
-            MainMapController tempcontroller = MyInstance;
             CameraManager.MyInstance.MainMapCamera.enabled = false;
 
             mainmapTextureFolder = mainmapTextureFolderBase + SystemConfigurationManager.MyInstance.GameName.Replace(" ", "") + "/Images/MiniMap/";
 
-            SystemEventManager.StartListening("AfterCameraUpdate", HandleAfterCameraUpdate);
-            SystemEventManager.StartListening("OnLevelUnload", HandleLevelUnload);
         }
 
         public void HandleAfterCameraUpdate(string eventName, EventParamProperties eventParamProperties) {
@@ -94,50 +88,13 @@ namespace AnyRPG {
         }
 
         private void UpdateIndicatorPositions() {
-            foreach (Interactable interactable in mapIndicatorControllers.Keys) {
-                if (mapIndicatorControllers[interactable].gameObject.activeSelf == true) {
-                    mapIndicatorControllers[interactable].transform.localPosition = new Vector3((interactable.transform.position.x - LevelManager.MyInstance.SceneBounds.center.x) * levelScaleFactor, (interactable.transform.position.z - LevelManager.MyInstance.SceneBounds.center.z) * levelScaleFactor, 0);
-                    mapIndicatorControllers[interactable].transform.localScale = new Vector3(1f / mapGraphic.transform.localScale.x, 1f / mapGraphic.transform.localScale.y, 1f / mapGraphic.transform.localScale.z);
+            foreach (Interactable interactable in MainMapManager.MyInstance.MapIndicatorControllers.Keys) {
+                if (MainMapManager.MyInstance.MapIndicatorControllers[interactable].gameObject.activeSelf == true) {
+                    MainMapManager.MyInstance.MapIndicatorControllers[interactable].transform.localPosition = new Vector3((interactable.transform.position.x - LevelManager.MyInstance.SceneBounds.center.x) * levelScaleFactor, (interactable.transform.position.z - LevelManager.MyInstance.SceneBounds.center.z) * levelScaleFactor, 0);
+                    MainMapManager.MyInstance.MapIndicatorControllers[interactable].transform.localScale = new Vector3(1f / mapGraphic.transform.localScale.x, 1f / mapGraphic.transform.localScale.y, 1f / mapGraphic.transform.localScale.z);
                     interactable.UpdateMainMapIndicator();
                 }
             }
-        }
-
-        public void HandleLevelUnload(string eventName, EventParamProperties eventParamProperties) {
-            List<Interactable> removeList = new List<Interactable>();
-            removeList.AddRange(mapIndicatorControllers.Keys);
-            foreach (Interactable interactable in removeList) {
-                RemoveIndicator(interactable);
-            }
-        }
-
-        public MainMapIndicatorController AddIndicator(Interactable interactable) {
-            //Debug.Log("MainMapController.AddIndicator(" + interactable.gameObject.name + ")");
-            if (mapIndicatorControllers.ContainsKey(interactable) == false) {
-                GameObject mainMapIndicator = ObjectPooler.MyInstance.GetPooledObject(mapIndicatorPrefab, mapGraphic.transform);
-                if (mainMapIndicator != null) {
-                    MainMapIndicatorController mapIndicatorController = mainMapIndicator.GetComponent<MainMapIndicatorController>();
-                    if (mapIndicatorController != null) {
-                        mapIndicatorControllers.Add(interactable, mapIndicatorController);
-                        mapIndicatorController.SetInteractable(interactable);
-                    }
-                }
-            }
-
-            return mapIndicatorControllers[interactable];
-        }
-
-        public void RemoveIndicator(Interactable interactable) {
-            if (mapIndicatorControllers.ContainsKey(interactable)) {
-                mapIndicatorControllers[interactable].ResetSettings();
-                ObjectPooler.MyInstance.ReturnObjectToPool(mapIndicatorControllers[interactable].gameObject);
-                mapIndicatorControllers.Remove(interactable);
-            }
-        }
-
-        protected void Start() {
-            //Debug.Log(gameObject.name + ".MainMapController.Start()");
-            CreateEventSubscriptions();
         }
 
         private void OnEnable() {
@@ -150,7 +107,7 @@ namespace AnyRPG {
             if (eventSubscriptionsInitialized) {
                 return;
             }
-            SystemEventManager.StartListening("OnLevelLoad", HandleLevelLoad);
+            SystemEventManager.StartListening("AfterCameraUpdate", HandleAfterCameraUpdate);
             eventSubscriptionsInitialized = true;
         }
 
@@ -159,19 +116,20 @@ namespace AnyRPG {
             if (!eventSubscriptionsInitialized) {
                 return;
             }
-            SystemEventManager.StopListening("OnLevelLoad", HandleLevelLoad);
+            SystemEventManager.StopListening("AfterCameraUpdate", HandleAfterCameraUpdate);
             eventSubscriptionsInitialized = false;
         }
 
-        // onDestroy instead of OnDisable so not accidentally removing these since the map is always disabled until the window is opened
-        public void OnDestroy() {
+        public void OnDisable() {
             //Debug.Log("PlayerManager.OnDisable()");
             CleanupEventSubscriptions();
         }
 
+        /*
         public void HandleLevelLoad(string eventName, EventParamProperties eventParamProperties) {
             InitializeMap();
         }
+        */
 
         public void InitializeMap() {
             //Debug.Log(gameObject.name + ": MainMapController.InitializeMap()");
@@ -196,6 +154,15 @@ namespace AnyRPG {
                 CameraManager.MyInstance.MainMapCamera.Render();
             }
             loadedMapName = SceneManager.GetActiveScene().name;
+
+            LayoutRebuilder.ForceRebuildLayoutImmediate(rectTransform);
+
+            // set the width and height of the image to a square the size of the smallest side
+            graphicLayoutElement.preferredWidth = Mathf.Min(mainMapBackground.rect.width, mainMapBackground.rect.height);
+            graphicLayoutElement.preferredHeight = graphicLayoutElement.preferredWidth;
+
+            // the image will be scaled to the largest dimension
+            levelScaleFactor = graphicLayoutElement.preferredWidth / (LevelManager.MyInstance.SceneBounds.size.x > LevelManager.MyInstance.SceneBounds.size.z ? LevelManager.MyInstance.SceneBounds.size.x : LevelManager.MyInstance.SceneBounds.size.z);
         }
 
         /// <summary>
@@ -223,32 +190,13 @@ namespace AnyRPG {
             CameraManager.MyInstance.MainMapCamera.transform.LookAt(wantedLookPosition);
         }
 
-        private void CommonInitialization() {
-            //Debug.Log("MainMapController.CommonInitialization()");
-            //zoneNameText.text = SceneManager.GetActiveScene().name;
-            this.gameObject.SetActive(true);
-        }
-
-        public override void RecieveClosedWindowNotification() {
-            //Debug.Log("MainMapController.OnCloseWindow()");
-            base.RecieveClosedWindowNotification();
-            CameraManager.MyInstance.MainMapCamera.enabled = false;
-        }
-
         public override void ReceiveOpenWindowNotification() {
             //Debug.Log("MainMapController.OnOpenWindow()");
-            // re-adding this back here.  Not sure why, but possible the level objects aren't rendered by the time this gets called in onlevelload.  Trying on every open window
+            // take snapshot of map or load from file
             InitializeMap();
-            loadedMapName = SceneManager.GetActiveScene().name;
 
-            LayoutRebuilder.ForceRebuildLayoutImmediate(rectTransform);
-
-            // set the width and height of the image to a square the size of the smallest side
-            graphicLayoutElement.preferredWidth = Mathf.Min(mainMapBackground.rect.width, mainMapBackground.rect.height);
-            graphicLayoutElement.preferredHeight = graphicLayoutElement.preferredWidth;
-
-            // the image will be scaled to the largest dimension
-            levelScaleFactor = graphicLayoutElement.preferredWidth / (LevelManager.MyInstance.SceneBounds.size.x > LevelManager.MyInstance.SceneBounds.size.z ? LevelManager.MyInstance.SceneBounds.size.x : LevelManager.MyInstance.SceneBounds.size.z);
+            // update indicators so their positions are correct before first update
+            UpdateMainMap();
         }
     }
 

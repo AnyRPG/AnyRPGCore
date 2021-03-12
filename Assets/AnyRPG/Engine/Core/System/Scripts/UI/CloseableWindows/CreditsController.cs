@@ -35,8 +35,8 @@ namespace AnyRPG {
                 foreach (CreditsNode creditsNode in creditsCategory.MyCreditsNodes) {
                     go = ObjectPooler.MyInstance.GetPooledObject(creditTemplate, creditsContainer);
                     CreditController creditController = go.GetComponent<CreditController>();
-                    creditController.MyCreditNameText.text = creditsNode.CreditName;
-                    creditController.MyAttributionText.text = creditsNode.CreditAttribution;
+                    creditController.CreditNameText.text = creditsNode.CreditName;
+                    creditController.AttributionText.text = creditsNode.CreditAttribution;
                     creditController.UserUrl = creditsNode.MyUrl;
                     creditController.DownloadUrl = creditsNode.DownloadUrl;
                 }

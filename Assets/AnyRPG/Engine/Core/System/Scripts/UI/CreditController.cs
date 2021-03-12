@@ -17,8 +17,8 @@ namespace AnyRPG {
         private string url = string.Empty;
         private string downloadUrl = string.Empty;
 
-        public TextMeshProUGUI MyCreditNameText { get => creditNameText; set => creditNameText = value; }
-        public TextMeshProUGUI MyAttributionText { get => attributionText; set => attributionText = value; }
+        public TextMeshProUGUI CreditNameText { get => creditNameText; set => creditNameText = value; }
+        public TextMeshProUGUI AttributionText { get => attributionText; set => attributionText = value; }
         public string UserUrl { get => url; set => url = value; }
         public string DownloadUrl { get => downloadUrl; set => downloadUrl = value; }
 

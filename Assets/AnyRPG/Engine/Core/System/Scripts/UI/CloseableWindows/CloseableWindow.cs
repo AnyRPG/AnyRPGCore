@@ -35,7 +35,10 @@ namespace AnyRPG {
         [SerializeField]
         protected Image backGroundImage;
 
+        /*
+        [SerializeField]
         protected CanvasGroup canvasGroup;
+        */
 
         protected bool windowInitialized = false;
 
@@ -43,7 +46,8 @@ namespace AnyRPG {
 
         public bool IsOpen {
             get {
-                return (canvasGroup == null ? false : canvasGroup.alpha > 0);
+                //return (canvasGroup == null ? false : canvasGroup.alpha > 0);
+                return gameObject.activeSelf == true;
             }
         }
 
@@ -58,13 +62,10 @@ namespace AnyRPG {
         protected virtual void InitializeWindow() {
             //Debug.Log(gameObject.name + ".CloseableWindow.InitializeWindow()");
             if (windowInitialized) {
-                //Debug.Log(gameObject.name + ".CloseableWindow.InitializeWindow(): window already initialized, returning");
                 return;
             }
-            canvasGroup = GetComponent<CanvasGroup>();
             if (windowText != null) {
                 windowText.text = windowTitle;
-                //Debug.Log("CloseableWindow.InitializeWindow(): windowTitle: " + windowTitle);
             }
             InitializeWindowContentsCommon();
             windowInitialized = true;
@@ -109,36 +110,29 @@ namespace AnyRPG {
             //Debug.Log(gameObject.name + ".CloseableWindow.OpenWindow()");
             InitializeWindow();
             if (IsOpen) {
-                //Debug.Log(gameObject.name + ".CloseableWindow.OpenWindow(): window already open.  doing nothing");
                 return;
-            } else {
-                //Debug.Log(gameObject.name + ".CloseableWindow.OpenWindow(): window was not open, proceeding");
             }
             if (windowContents != null) {
                 //Debug.Log(gameObject.name + ".CloseableWindow.OpenWindow(): turning up alpha and setting to interactable");
+                /*
                 canvasGroup.alpha = 1;
                 canvasGroup.interactable = true;
                 canvasGroup.blocksRaycasts = true;
-            } else {
-                //Debug.Log(gameObject.name + ".CloseableWindow.OpenWindow():  + windowContents was null!");
+                */
+                gameObject.SetActive(true);
             }
 
-            // THIS MUST BE HERE SO WINDOWS THAT NEED TO AUTO-CLOSE THEMSELVES ON OPEN IN THE OPEN WINDOW HANDLER DON'T END UP JUST RE-ENABLING THEMSELVES WITH THE ABOVE CODE AFTER THE CLOSE FUNCTION IS RUN
             if (windowContents != null) {
-                //Debug.Log(gameObject.name + ".CloseableWindow.OpenWindow(): window contents was not null, calling openwindow");
                 windowContents.ReceiveOpenWindowNotification();
-            } else {
-                //Debug.Log(gameObject.name + ".CloseableWindow.OpenWindow():  + windowContents is null!");
             }
-            //Debug.Log(gameObject.name + ".CloseableWindow.OpenWindow(): calling onopenwindowcallback");
-            OnOpenWindowCallback();
 
+            OnOpenWindowCallback();
         }
 
         public virtual void CloseWindow() {
             //Debug.Log(gameObject.name + ".CloseableWindow.CloseWindow()");
             InitializeWindow();
-            if (canvasGroup.alpha == 0) {
+            if (IsOpen == false) {
                 RawCloseWindow();
                 return;
             }
@@ -154,14 +148,17 @@ namespace AnyRPG {
         }
 
         public void RawCloseWindow() {
+            /*
             canvasGroup.alpha = 0;
             canvasGroup.interactable = false;
             canvasGroup.blocksRaycasts = false;
+            */
+            gameObject.SetActive(false);
         }
 
         public void ToggleOpenClose() {
             //Debug.Log("CloseableWindow.ToggleOpenClose()");
-            if (canvasGroup.alpha > 0) {
+            if (IsOpen) {
                 CloseWindow();
             } else {
                 OpenWindow();

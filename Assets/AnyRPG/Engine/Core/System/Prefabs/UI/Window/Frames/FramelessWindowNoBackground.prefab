@@ -10,8 +10,6 @@ GameObject:
   m_Component:
   - component: {fileID: 70325021750468947}
   - component: {fileID: 1468719844742416408}
-  - component: {fileID: -1543285591412793142}
-  - component: {fileID: 8883893033863630393}
   m_Layer: 5
   m_Name: FramelessWindowNoBackground
   m_TagString: Untagged
@@ -57,26 +55,6 @@ MonoBehaviour:
   windowTitle: 
   windowText: {fileID: 0}
   backGroundImage: {fileID: 0}
---- !u!225 &-1543285591412793142
-CanvasGroup:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 70325021750468944}
-  m_Enabled: 1
-  m_Alpha: 0
-  m_Interactable: 0
-  m_BlocksRaycasts: 0
-  m_IgnoreParentGroups: 0
---- !u!222 &8883893033863630393
-CanvasRenderer:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 70325021750468944}
-  m_CullTransparentMesh: 0
 --- !u!1 &3428008264492484149
 GameObject:
   m_ObjectHideFlags: 0

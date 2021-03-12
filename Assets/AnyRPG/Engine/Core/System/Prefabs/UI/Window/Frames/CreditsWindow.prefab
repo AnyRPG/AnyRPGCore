@@ -46,7 +46,6 @@ GameObject:
   m_Component:
   - component: {fileID: 7636224136102189044}
   - component: {fileID: 9034636134664175295}
-  - component: {fileID: 258302454770964077}
   m_Layer: 5
   m_Name: CreditsWindow
   m_TagString: Untagged
@@ -92,18 +91,6 @@ MonoBehaviour:
   windowTitle: 
   windowText: {fileID: 0}
   backGroundImage: {fileID: 0}
---- !u!225 &258302454770964077
-CanvasGroup:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7636224136102189047}
-  m_Enabled: 1
-  m_Alpha: 0
-  m_Interactable: 0
-  m_BlocksRaycasts: 0
-  m_IgnoreParentGroups: 0
 --- !u!1001 &7037903022179094364
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -111,6 +98,36 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 7852884530385818080}
     m_Modifications:
+    - target: {fileID: 2698383802237378752, guid: 6ad7fe8c870c7a943b3b07f76aed39eb,
+        type: 3}
+      propertyPath: m_textAlignment
+      value: 65535
+      objectReference: {fileID: 0}
+    - target: {fileID: 2698383802237378752, guid: 6ad7fe8c870c7a943b3b07f76aed39eb,
+        type: 3}
+      propertyPath: m_TextStyleHashCode
+      value: -1183493901
+      objectReference: {fileID: 0}
+    - target: {fileID: 2698383802237378752, guid: 6ad7fe8c870c7a943b3b07f76aed39eb,
+        type: 3}
+      propertyPath: m_VerticalAlignment
+      value: 512
+      objectReference: {fileID: 0}
+    - target: {fileID: 2698383802237378752, guid: 6ad7fe8c870c7a943b3b07f76aed39eb,
+        type: 3}
+      propertyPath: m_HorizontalAlignment
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 3414227744206962600, guid: 6ad7fe8c870c7a943b3b07f76aed39eb,
+        type: 3}
+      propertyPath: m_textAlignment
+      value: 65535
+      objectReference: {fileID: 0}
+    - target: {fileID: 3414227744206962600, guid: 6ad7fe8c870c7a943b3b07f76aed39eb,
+        type: 3}
+      propertyPath: m_TextStyleHashCode
+      value: -1183493901
+      objectReference: {fileID: 0}
     - target: {fileID: 3678365974540255524, guid: 6ad7fe8c870c7a943b3b07f76aed39eb,
         type: 3}
       propertyPath: m_SizeDelta.y
@@ -123,17 +140,17 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4154079069261091183, guid: 6ad7fe8c870c7a943b3b07f76aed39eb,
         type: 3}
+      propertyPath: m_RootOrder
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4154079069261091183, guid: 6ad7fe8c870c7a943b3b07f76aed39eb,
+        type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4154079069261091183, guid: 6ad7fe8c870c7a943b3b07f76aed39eb,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4154079069261091183, guid: 6ad7fe8c870c7a943b3b07f76aed39eb,
-        type: 3}
-      propertyPath: m_RootOrder
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4154079069261091183, guid: 6ad7fe8c870c7a943b3b07f76aed39eb,

@@ -428,7 +428,7 @@ namespace AnyRPG {
                 if (interactables.Count > 0) {
                     //Debug.Log(gameObject.name + ".Interactable.InstantiateMiniMapIndicator(): interactables.length > 0");
                     miniMapIndicator = MiniMapController.MyInstance.AddIndicator(this);
-                    mainMapIndicator = MainMapController.MyInstance.AddIndicator(this);
+                    mainMapIndicator = MainMapManager.MyInstance.AddIndicator(this);
                     miniMapIndicatorReady = true;
                     return true;
                 }
@@ -456,7 +456,7 @@ namespace AnyRPG {
             }
             if (mainMapIndicator != null) {
                 //Debug.Log(gameObject.name + ".Interactable.CleanupMiniMapIndicator(): " + miniMapIndicator.name);
-                MainMapController.MyInstance.RemoveIndicator(this);
+                MainMapManager.MyInstance.RemoveIndicator(this);
             }
 
         }

@@ -10,7 +10,6 @@ GameObject:
   m_Component:
   - component: {fileID: 5395280372232818115}
   - component: {fileID: 6793620935290217608}
-  - component: {fileID: 2356261371496991834}
   - component: {fileID: 7843531045587995651}
   - component: {fileID: 8847076486274004456}
   m_Layer: 5
@@ -58,18 +57,6 @@ MonoBehaviour:
   windowTitle: 
   windowText: {fileID: 0}
   backGroundImage: {fileID: 0}
---- !u!225 &2356261371496991834
-CanvasGroup:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5395280372232818112}
-  m_Enabled: 1
-  m_Alpha: 0
-  m_Interactable: 0
-  m_BlocksRaycasts: 0
-  m_IgnoreParentGroups: 0
 --- !u!222 &7843531045587995651
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -152,12 +139,12 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 247571088715292050, guid: 5e84c8b2aca48fd4f86bfa1c88b2ac1f,
         type: 3}
-      propertyPath: m_AnchorMin.y
+      propertyPath: m_AnchorMax.y
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 247571088715292050, guid: 5e84c8b2aca48fd4f86bfa1c88b2ac1f,
         type: 3}
-      propertyPath: m_AnchorMax.y
+      propertyPath: m_AnchorMin.y
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 247571088715292050, guid: 5e84c8b2aca48fd4f86bfa1c88b2ac1f,
@@ -172,12 +159,12 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 754719696787958953, guid: 5e84c8b2aca48fd4f86bfa1c88b2ac1f,
         type: 3}
-      propertyPath: m_AnchorMin.y
+      propertyPath: m_AnchorMax.y
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 754719696787958953, guid: 5e84c8b2aca48fd4f86bfa1c88b2ac1f,
         type: 3}
-      propertyPath: m_AnchorMax.y
+      propertyPath: m_AnchorMin.y
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 754719696787958953, guid: 5e84c8b2aca48fd4f86bfa1c88b2ac1f,
@@ -202,12 +189,12 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3079021019195353617, guid: 5e84c8b2aca48fd4f86bfa1c88b2ac1f,
         type: 3}
-      propertyPath: m_AnchorMin.y
+      propertyPath: m_AnchorMax.y
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3079021019195353617, guid: 5e84c8b2aca48fd4f86bfa1c88b2ac1f,
         type: 3}
-      propertyPath: m_AnchorMax.y
+      propertyPath: m_AnchorMin.y
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3079021019195353617, guid: 5e84c8b2aca48fd4f86bfa1c88b2ac1f,
@@ -262,12 +249,12 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7195280223593465446, guid: 5e84c8b2aca48fd4f86bfa1c88b2ac1f,
         type: 3}
-      propertyPath: m_AnchorMin.y
+      propertyPath: m_AnchorMax.y
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7195280223593465446, guid: 5e84c8b2aca48fd4f86bfa1c88b2ac1f,
         type: 3}
-      propertyPath: m_AnchorMax.y
+      propertyPath: m_AnchorMin.y
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7195280223593465446, guid: 5e84c8b2aca48fd4f86bfa1c88b2ac1f,
@@ -297,17 +284,17 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7389602725390465841, guid: 5e84c8b2aca48fd4f86bfa1c88b2ac1f,
         type: 3}
+      propertyPath: m_RootOrder
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7389602725390465841, guid: 5e84c8b2aca48fd4f86bfa1c88b2ac1f,
+        type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7389602725390465841, guid: 5e84c8b2aca48fd4f86bfa1c88b2ac1f,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 7389602725390465841, guid: 5e84c8b2aca48fd4f86bfa1c88b2ac1f,
-        type: 3}
-      propertyPath: m_RootOrder
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7389602725390465841, guid: 5e84c8b2aca48fd4f86bfa1c88b2ac1f,

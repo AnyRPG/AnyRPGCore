@@ -46,8 +46,6 @@ GameObject:
   m_Component:
   - component: {fileID: 7554688837236451767}
   - component: {fileID: 8957533963604459772}
-  - component: {fileID: 196848499789719598}
-  - component: {fileID: 6241317712192403461}
   m_Layer: 5
   m_Name: ConfirmSellItemWindow
   m_TagString: Untagged
@@ -93,26 +91,6 @@ MonoBehaviour:
   windowTitle: 
   windowText: {fileID: 0}
   backGroundImage: {fileID: 0}
---- !u!225 &196848499789719598
-CanvasGroup:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7554688837236451764}
-  m_Enabled: 1
-  m_Alpha: 0
-  m_Interactable: 0
-  m_BlocksRaycasts: 0
-  m_IgnoreParentGroups: 0
---- !u!222 &6241317712192403461
-CanvasRenderer:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7554688837236451764}
-  m_CullTransparentMesh: 0
 --- !u!1001 &6537824316573545432
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -122,13 +100,38 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 1080942738304786436, guid: 3a8ab688516710b478427cad17c8cf41,
         type: 3}
-      propertyPath: m_firstOverflowCharacterIndex
-      value: -1
+      propertyPath: m_textAlignment
+      value: 65535
+      objectReference: {fileID: 0}
+    - target: {fileID: 1080942738304786436, guid: 3a8ab688516710b478427cad17c8cf41,
+        type: 3}
+      propertyPath: m_TextStyleHashCode
+      value: -1183493901
+      objectReference: {fileID: 0}
+    - target: {fileID: 1080942738304786436, guid: 3a8ab688516710b478427cad17c8cf41,
+        type: 3}
+      propertyPath: m_VerticalAlignment
+      value: 512
       objectReference: {fileID: 0}
     - target: {fileID: 1080942738304786436, guid: 3a8ab688516710b478427cad17c8cf41,
         type: 3}
       propertyPath: m_textInfo.lineCount
       value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 1080942738304786436, guid: 3a8ab688516710b478427cad17c8cf41,
+        type: 3}
+      propertyPath: m_HorizontalAlignment
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 1080942738304786436, guid: 3a8ab688516710b478427cad17c8cf41,
+        type: 3}
+      propertyPath: m_firstOverflowCharacterIndex
+      value: -1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2382909202382707813, guid: 3a8ab688516710b478427cad17c8cf41,
+        type: 3}
+      propertyPath: m_RootOrder
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2382909202382707813, guid: 3a8ab688516710b478427cad17c8cf41,
         type: 3}
@@ -138,11 +141,6 @@ PrefabInstance:
     - target: {fileID: 2382909202382707813, guid: 3a8ab688516710b478427cad17c8cf41,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2382909202382707813, guid: 3a8ab688516710b478427cad17c8cf41,
-        type: 3}
-      propertyPath: m_RootOrder
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2382909202382707813, guid: 3a8ab688516710b478427cad17c8cf41,
@@ -164,6 +162,46 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: ConfirmSellItemPanel
+      objectReference: {fileID: 0}
+    - target: {fileID: 2922326602026054096, guid: 3a8ab688516710b478427cad17c8cf41,
+        type: 3}
+      propertyPath: m_textAlignment
+      value: 65535
+      objectReference: {fileID: 0}
+    - target: {fileID: 2922326602026054096, guid: 3a8ab688516710b478427cad17c8cf41,
+        type: 3}
+      propertyPath: m_TextStyleHashCode
+      value: -1183493901
+      objectReference: {fileID: 0}
+    - target: {fileID: 2922326602026054096, guid: 3a8ab688516710b478427cad17c8cf41,
+        type: 3}
+      propertyPath: m_VerticalAlignment
+      value: 512
+      objectReference: {fileID: 0}
+    - target: {fileID: 2922326602026054096, guid: 3a8ab688516710b478427cad17c8cf41,
+        type: 3}
+      propertyPath: m_HorizontalAlignment
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 4124320936048764547, guid: 3a8ab688516710b478427cad17c8cf41,
+        type: 3}
+      propertyPath: m_textAlignment
+      value: 65535
+      objectReference: {fileID: 0}
+    - target: {fileID: 4124320936048764547, guid: 3a8ab688516710b478427cad17c8cf41,
+        type: 3}
+      propertyPath: m_TextStyleHashCode
+      value: -1183493901
+      objectReference: {fileID: 0}
+    - target: {fileID: 4124320936048764547, guid: 3a8ab688516710b478427cad17c8cf41,
+        type: 3}
+      propertyPath: m_VerticalAlignment
+      value: 512
+      objectReference: {fileID: 0}
+    - target: {fileID: 4124320936048764547, guid: 3a8ab688516710b478427cad17c8cf41,
+        type: 3}
+      propertyPath: m_HorizontalAlignment
+      value: 2
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 3a8ab688516710b478427cad17c8cf41, type: 3}

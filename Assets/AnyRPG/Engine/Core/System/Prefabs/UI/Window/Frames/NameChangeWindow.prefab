@@ -10,8 +10,6 @@ GameObject:
   m_Component:
   - component: {fileID: 4759218684814125540}
   - component: {fileID: 6238625657946701999}
-  - component: {fileID: 2909565052013111421}
-  - component: {fileID: 8954875906208168022}
   m_Layer: 5
   m_Name: NameChangeWindow
   m_TagString: Untagged
@@ -57,26 +55,6 @@ MonoBehaviour:
   windowTitle: 
   windowText: {fileID: 0}
   backGroundImage: {fileID: 0}
---- !u!225 &2909565052013111421
-CanvasGroup:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4759218684814125543}
-  m_Enabled: 1
-  m_Alpha: 0
-  m_Interactable: 0
-  m_BlocksRaycasts: 0
-  m_IgnoreParentGroups: 0
---- !u!222 &8954875906208168022
-CanvasRenderer:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4759218684814125543}
-  m_CullTransparentMesh: 0
 --- !u!1 &7883348060532690562
 GameObject:
   m_ObjectHideFlags: 0
@@ -122,17 +100,17 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 2382909202382707813, guid: f1522bcc56d2d5a4fb0625113281b6cd,
         type: 3}
+      propertyPath: m_RootOrder
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2382909202382707813, guid: f1522bcc56d2d5a4fb0625113281b6cd,
+        type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2382909202382707813, guid: f1522bcc56d2d5a4fb0625113281b6cd,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2382909202382707813, guid: f1522bcc56d2d5a4fb0625113281b6cd,
-        type: 3}
-      propertyPath: m_RootOrder
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2382909202382707813, guid: f1522bcc56d2d5a4fb0625113281b6cd,
@@ -157,13 +135,13 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5911998557073091075, guid: f1522bcc56d2d5a4fb0625113281b6cd,
         type: 3}
-      propertyPath: m_firstOverflowCharacterIndex
-      value: -1
+      propertyPath: m_textInfo.lineCount
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5911998557073091075, guid: f1522bcc56d2d5a4fb0625113281b6cd,
         type: 3}
-      propertyPath: m_textInfo.lineCount
-      value: 1
+      propertyPath: m_firstOverflowCharacterIndex
+      value: -1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: f1522bcc56d2d5a4fb0625113281b6cd, type: 3}

@@ -10,8 +10,6 @@ GameObject:
   m_Component:
   - component: {fileID: 5381701411353746509}
   - component: {fileID: 6789049158361101574}
-  - component: {fileID: 2360828735087435220}
-  - component: {fileID: 8423311263667834367}
   m_Layer: 5
   m_Name: ExitToMainMenuWindow
   m_TagString: Untagged
@@ -58,26 +56,6 @@ MonoBehaviour:
   windowTitle: 
   windowText: {fileID: 0}
   backGroundImage: {fileID: 0}
---- !u!225 &2360828735087435220
-CanvasGroup:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5381701411353746510}
-  m_Enabled: 1
-  m_Alpha: 1
-  m_Interactable: 0
-  m_BlocksRaycasts: 0
-  m_IgnoreParentGroups: 0
---- !u!222 &8423311263667834367
-CanvasRenderer:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5381701411353746510}
-  m_CullTransparentMesh: 0
 --- !u!1 &7333205502586452779
 GameObject:
   m_ObjectHideFlags: 0
@@ -123,6 +101,11 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 2382909202382707813, guid: 5035ee9bccc56d2498d29c86ff70436f,
         type: 3}
+      propertyPath: m_RootOrder
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2382909202382707813, guid: 5035ee9bccc56d2498d29c86ff70436f,
+        type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
       objectReference: {fileID: 0}
@@ -134,11 +117,6 @@ PrefabInstance:
     - target: {fileID: 2382909202382707813, guid: 5035ee9bccc56d2498d29c86ff70436f,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2382909202382707813, guid: 5035ee9bccc56d2498d29c86ff70436f,
-        type: 3}
-      propertyPath: m_RootOrder
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2382909202382707813, guid: 5035ee9bccc56d2498d29c86ff70436f,
