@@ -1371,6 +1371,8 @@ namespace AnyRPG {
 
         }
 
+       
+
         public void SaveWindowPositions() {
             //Debug.Log("Savemanager.SaveWindowPositions()");
 

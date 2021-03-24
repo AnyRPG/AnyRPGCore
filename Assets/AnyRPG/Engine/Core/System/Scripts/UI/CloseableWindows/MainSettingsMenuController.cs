@@ -129,6 +129,11 @@ namespace AnyRPG {
 
         }
 
+        public void ResetWindowPositions() {
+            UIManager.MyInstance.LoadDefaultWindowPositions();
+            SaveManager.MyInstance.SaveWindowPositions();
+        }
+
         private void LoadUISettings() {
             if (!PlayerPrefs.HasKey("InventoryOpacity")) {
                 PlayerPrefs.SetFloat("InventoryOpacity", defaultInventoryOpacity);

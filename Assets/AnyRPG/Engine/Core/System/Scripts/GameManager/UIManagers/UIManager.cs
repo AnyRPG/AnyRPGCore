@@ -105,6 +105,9 @@ namespace AnyRPG {
         private TextMeshProUGUI mouseOverText;
         private GameObject mouseOverTarget;
 
+        // keep track of window positions at startup in case of need to reset
+        private Dictionary<string, float> defaultWindowPositions = new Dictionary<string, float>();
+
         // is a window currently being dragged.  used to suppres camera turn and pan
         private bool dragInProgress = false;
 
@@ -133,9 +136,16 @@ namespace AnyRPG {
         public GameObject CutSceneBarsCanvas { get => cutSceneBarsCanvas; set => cutSceneBarsCanvas = value; }
         public CurrencyBarController ToolTipCurrencyBarController { get => toolTipCurrencyBarController; set => toolTipCurrencyBarController = value; }
         public GameObject PlayerUI { get => playerUI; }
+        public Dictionary<string, float> DefaultWindowPositions { get => defaultWindowPositions; }
 
         public void PerformSetupActivities() {
             //Debug.Log("UIManager.PerformSetupActivities()");
+
+            // activate in game UI to get default positions
+            ActivateInGameUI();
+            ActivatePlayerUI();
+            GetDefaultWindowPositions();
+
             // deactivate all UIs
             DeactivateInGameUI();
             DeactivateLoadingUI();
@@ -157,6 +167,114 @@ namespace AnyRPG {
             mouseOverText = mouseOverWindow.transform.GetComponentInChildren<TextMeshProUGUI>();
 
             DeActivateMouseOverWindow();
+        }
+
+        private void GetDefaultWindowPositions() {
+            //Debug.Log("Savemanager.GetDefaultWindowPositions()");
+            defaultWindowPositions.Add("AbilityBookWindowX", PopupWindowManager.MyInstance.abilityBookWindow.transform.position.x);
+            defaultWindowPositions.Add("AbilityBookWindowY", PopupWindowManager.MyInstance.abilityBookWindow.transform.position.y);
+
+            defaultWindowPositions.Add("SkillBookWindowX", PopupWindowManager.MyInstance.skillBookWindow.transform.position.x);
+            defaultWindowPositions.Add("SkillBookWindowY", PopupWindowManager.MyInstance.skillBookWindow.transform.position.y);
+
+            //Debug.Log("abilityBookWindowX: " + abilityBookWindowX + "; abilityBookWindowY: " + abilityBookWindowY);
+            defaultWindowPositions.Add("ReputationBookWindowX", PopupWindowManager.MyInstance.reputationBookWindow.transform.position.x);
+            defaultWindowPositions.Add("ReputationBookWindowY", PopupWindowManager.MyInstance.reputationBookWindow.transform.position.y);
+            defaultWindowPositions.Add("CurrencyListWindowX", PopupWindowManager.MyInstance.currencyListWindow.transform.position.x);
+            defaultWindowPositions.Add("CurrencyListWindowY", PopupWindowManager.MyInstance.currencyListWindow.transform.position.y);
+
+            defaultWindowPositions.Add("CharacterPanelWindowX", PopupWindowManager.MyInstance.characterPanelWindow.transform.position.x);
+            defaultWindowPositions.Add("CharacterPanelWindowY", PopupWindowManager.MyInstance.characterPanelWindow.transform.position.y);
+            defaultWindowPositions.Add("LootWindowX", PopupWindowManager.MyInstance.lootWindow.transform.position.x);
+            defaultWindowPositions.Add("LootWindowY", PopupWindowManager.MyInstance.lootWindow.transform.position.y);
+            defaultWindowPositions.Add("VendorWindowX", PopupWindowManager.MyInstance.vendorWindow.transform.position.x);
+            defaultWindowPositions.Add("VendorWindowY", PopupWindowManager.MyInstance.vendorWindow.transform.position.y);
+            defaultWindowPositions.Add("ChestWindowX", PopupWindowManager.MyInstance.chestWindow.transform.position.x);
+            defaultWindowPositions.Add("ChestWindowY", PopupWindowManager.MyInstance.chestWindow.transform.position.y);
+            defaultWindowPositions.Add("BankWindowX", PopupWindowManager.MyInstance.bankWindow.transform.position.x);
+            defaultWindowPositions.Add("BankWindowY", PopupWindowManager.MyInstance.bankWindow.transform.position.y);
+            defaultWindowPositions.Add("QuestLogWindowX", PopupWindowManager.MyInstance.questLogWindow.transform.position.x);
+            defaultWindowPositions.Add("QuestLogWindowY", PopupWindowManager.MyInstance.questLogWindow.transform.position.y);
+            defaultWindowPositions.Add("AchievementListWindowX", PopupWindowManager.MyInstance.achievementListWindow.transform.position.x);
+            defaultWindowPositions.Add("AchievementListWindowY", PopupWindowManager.MyInstance.achievementListWindow.transform.position.y);
+            defaultWindowPositions.Add("QuestGiverWindowX", PopupWindowManager.MyInstance.questGiverWindow.transform.position.x);
+            defaultWindowPositions.Add("QuestGiverWindowY", PopupWindowManager.MyInstance.questGiverWindow.transform.position.y);
+            defaultWindowPositions.Add("SkillTrainerWindowX", PopupWindowManager.MyInstance.skillTrainerWindow.transform.position.x);
+            defaultWindowPositions.Add("SkillTrainerWindowY", PopupWindowManager.MyInstance.skillTrainerWindow.transform.position.y);
+            defaultWindowPositions.Add("InteractionWindowX", PopupWindowManager.MyInstance.interactionWindow.transform.position.x);
+            defaultWindowPositions.Add("InteractionWindowY", PopupWindowManager.MyInstance.interactionWindow.transform.position.y);
+            defaultWindowPositions.Add("CraftingWindowX", PopupWindowManager.MyInstance.craftingWindow.transform.position.x);
+            defaultWindowPositions.Add("CraftingWindowY", PopupWindowManager.MyInstance.craftingWindow.transform.position.y);
+            defaultWindowPositions.Add("MainMapWindowX", PopupWindowManager.MyInstance.mainMapWindow.transform.position.x);
+            defaultWindowPositions.Add("MainMapWindowY", PopupWindowManager.MyInstance.mainMapWindow.transform.position.y);
+            defaultWindowPositions.Add("QuestTrackerWindowX", QuestTrackerWindow.transform.position.x);
+            defaultWindowPositions.Add("QuestTrackerWindowY", QuestTrackerWindow.transform.position.y);
+            defaultWindowPositions.Add("CombatLogWindowX", CombatLogWindow.transform.position.x);
+            defaultWindowPositions.Add("CombatLogWindowY", CombatLogWindow.transform.position.y);
+
+            defaultWindowPositions.Add("MessageFeedManagerX", MessageFeedManager.MyInstance.MessageFeedGameObject.transform.position.x);
+            defaultWindowPositions.Add("MessageFeedManagerY", MessageFeedManager.MyInstance.MessageFeedGameObject.transform.position.y);
+
+            //Debug.Log("Saving FloatingCastBarController: " + MyFloatingCastBarController.transform.position.x + "; " + MyFloatingCastBarController.transform.position.y);
+            defaultWindowPositions.Add("FloatingCastBarControllerX", FloatingCastBarController.transform.position.x);
+            defaultWindowPositions.Add("FloatingCastBarControllerY", FloatingCastBarController.transform.position.y);
+
+            defaultWindowPositions.Add("StatusEffectPanelControllerX", StatusEffectPanelController.transform.position.x);
+            defaultWindowPositions.Add("StatusEffectPanelControllerY", StatusEffectPanelController.transform.position.y);
+
+            defaultWindowPositions.Add("PlayerUnitFrameControllerX", PlayerUnitFrameController.transform.position.x);
+            defaultWindowPositions.Add("PlayerUnitFrameControllerY", PlayerUnitFrameController.transform.position.y);
+
+            defaultWindowPositions.Add("FocusUnitFrameControllerX", FocusUnitFrameController.transform.position.x);
+            defaultWindowPositions.Add("FocusUnitFrameControllerY", FocusUnitFrameController.transform.position.y);
+
+            defaultWindowPositions.Add("MiniMapControllerX", MiniMapController.transform.position.x);
+            defaultWindowPositions.Add("MiniMapControllerY", MiniMapController.transform.position.y);
+
+            defaultWindowPositions.Add("XPBarControllerX", XPBarController.transform.position.x);
+            defaultWindowPositions.Add("XPBarControllerY", XPBarController.transform.position.y);
+
+            defaultWindowPositions.Add("BottomPanelX", BottomPanel.transform.position.x);
+            defaultWindowPositions.Add("BottomPanelY", BottomPanel.transform.position.y);
+
+            defaultWindowPositions.Add("SidePanelX", SidePanel.transform.position.x);
+            defaultWindowPositions.Add("SidePanelY", SidePanel.transform.position.y);
+
+            defaultWindowPositions.Add("MouseOverWindowX", MouseOverWindow.transform.position.x);
+            defaultWindowPositions.Add("MouseOverWindowY", MouseOverWindow.transform.position.y);
+        }
+
+        public void LoadDefaultWindowPositions() {
+            //Debug.Log("UIManager.LoadDefaultWindowPositions()");
+
+            PopupWindowManager.MyInstance.abilityBookWindow.transform.position = new Vector3(defaultWindowPositions["AbilityBookWindowX"], defaultWindowPositions["AbilityBookWindowY"], 0);
+            PopupWindowManager.MyInstance.skillBookWindow.transform.position = new Vector3(defaultWindowPositions["SkillBookWindowX"], defaultWindowPositions["SkillBookWindowY"], 0);
+            PopupWindowManager.MyInstance.reputationBookWindow.transform.position = new Vector3(defaultWindowPositions["ReputationBookWindowX"], defaultWindowPositions["ReputationBookWindowY"], 0);
+            PopupWindowManager.MyInstance.currencyListWindow.transform.position = new Vector3(defaultWindowPositions["CurrencyListWindowX"], defaultWindowPositions["CurrencyListWindowY"], 0);
+            PopupWindowManager.MyInstance.characterPanelWindow.transform.position = new Vector3(defaultWindowPositions["CharacterPanelWindowX"], defaultWindowPositions["CharacterPanelWindowY"], 0);
+            PopupWindowManager.MyInstance.lootWindow.transform.position = new Vector3(defaultWindowPositions["LootWindowX"], defaultWindowPositions["LootWindowY"], 0);
+            PopupWindowManager.MyInstance.vendorWindow.transform.position = new Vector3(defaultWindowPositions["VendorWindowX"], defaultWindowPositions["VendorWindowY"], 0);
+            PopupWindowManager.MyInstance.chestWindow.transform.position = new Vector3(defaultWindowPositions["ChestWindowX"], defaultWindowPositions["ChestWindowY"], 0);
+            PopupWindowManager.MyInstance.bankWindow.transform.position = new Vector3(defaultWindowPositions["BankWindowX"], defaultWindowPositions["BankWindowY"], 0);
+            PopupWindowManager.MyInstance.questLogWindow.transform.position = new Vector3(defaultWindowPositions["QuestLogWindowX"], defaultWindowPositions["QuestLogWindowY"], 0);
+            PopupWindowManager.MyInstance.achievementListWindow.transform.position = new Vector3(defaultWindowPositions["AchievementListWindowX"], defaultWindowPositions["AchievementListWindowY"], 0);
+            PopupWindowManager.MyInstance.questGiverWindow.transform.position = new Vector3(defaultWindowPositions["QuestGiverWindowX"], defaultWindowPositions["QuestGiverWindowY"], 0);
+            PopupWindowManager.MyInstance.skillTrainerWindow.transform.position = new Vector3(defaultWindowPositions["SkillTrainerWindowX"], defaultWindowPositions["SkillTrainerWindowY"], 0);
+            PopupWindowManager.MyInstance.interactionWindow.transform.position = new Vector3(defaultWindowPositions["InteractionWindowX"], defaultWindowPositions["InteractionWindowY"], 0);
+            PopupWindowManager.MyInstance.craftingWindow.transform.position = new Vector3(defaultWindowPositions["CraftingWindowX"], defaultWindowPositions["CraftingWindowY"], 0);
+            PopupWindowManager.MyInstance.mainMapWindow.transform.position = new Vector3(defaultWindowPositions["MainMapWindowX"], defaultWindowPositions["MainMapWindowY"], 0);
+            QuestTrackerWindow.transform.position = new Vector3(defaultWindowPositions["QuestTrackerWindowX"], defaultWindowPositions["QuestTrackerWindowY"], 0);
+            CombatLogWindow.transform.position = new Vector3(defaultWindowPositions["CombatLogWindowX"], defaultWindowPositions["CombatLogWindowY"], 0);
+            MessageFeedManager.MyInstance.MessageFeedGameObject.transform.position = new Vector3(defaultWindowPositions["MessageFeedManagerX"], defaultWindowPositions["MessageFeedManagerY"], 0);
+            FloatingCastBarController.transform.position = new Vector3(defaultWindowPositions["FloatingCastBarControllerX"], defaultWindowPositions["FloatingCastBarControllerY"], 0);
+            StatusEffectPanelController.transform.position = new Vector3(defaultWindowPositions["StatusEffectPanelControllerX"], defaultWindowPositions["StatusEffectPanelControllerY"], 0);
+            PlayerUnitFrameController.transform.position = new Vector3(defaultWindowPositions["PlayerUnitFrameControllerX"], defaultWindowPositions["PlayerUnitFrameControllerY"], 0);
+            FocusUnitFrameController.transform.position = new Vector3(defaultWindowPositions["FocusUnitFrameControllerX"], defaultWindowPositions["FocusUnitFrameControllerY"], 0);
+            MiniMapController.transform.position = new Vector3(defaultWindowPositions["MiniMapControllerX"], defaultWindowPositions["MiniMapControllerY"], 0);
+            XPBarController.transform.position = new Vector3(defaultWindowPositions["XPBarControllerX"], defaultWindowPositions["XPBarControllerY"], 0);
+            BottomPanel.transform.position = new Vector3(defaultWindowPositions["BottomPanelX"], defaultWindowPositions["BottomPanelY"], 0);
+            SidePanel.transform.position = new Vector3(defaultWindowPositions["SidePanelX"], defaultWindowPositions["SidePanelY"], 0);
+            MouseOverWindow.transform.position = new Vector3(defaultWindowPositions["MouseOverWindowX"], defaultWindowPositions["MouseOverWindowY"], 0);
         }
 
         public void CheckMissingConfiguration() {
