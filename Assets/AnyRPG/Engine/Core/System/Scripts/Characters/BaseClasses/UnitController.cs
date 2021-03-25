@@ -686,6 +686,18 @@ namespace AnyRPG {
             }
 
             unitProfile = null;
+
+            // components
+            agent = null;
+            rigidBody = null;
+            unitMotor = null;
+            unitAnimator = null;
+            lootableCharacter = null;
+            patrolController = null;
+            behaviorController = null;
+            unitMountManager = null;
+            uuid = null;
+
             unitModel = null;
             modelReady = false;
             dynamicCharacterAvatar = null;
@@ -896,15 +908,24 @@ namespace AnyRPG {
             // most (but not all) units have animators
             // find an animator if one exists and initialize it
             Animator animator = GetComponentInChildren<Animator>();
+            
+            // this may have been called from a unit which already had a model attached
+            // if so, the model is the animator gameobject, since no model will have been passed to this call
+            if (animator != null && unitModel == null) {
+                unitModel = animator.gameObject;
+            }
+
+            // references to the dynamicCharacterAvatar must exist before the unit animator is initialized
+            // they are needed for the animator to properly set the override controller on the avatar
+            if (unitModel != null && dynamicCharacterAvatar == null) {
+                dynamicCharacterAvatar = unitModel.GetComponent<DynamicCharacterAvatar>();
+            }
+            if (dynamicCharacterAvatar == null) {
+                dynamicCharacterAvatar = GetComponentInChildren<DynamicCharacterAvatar>();
+            }
+
             if (animator != null) {
                 unitAnimator.Init(animator);
-
-                // this may have been called from a unit which already had a model attached
-                // if so, the model is the animator gameobject, since no model will have been passed to this call
-                if (unitModel == null) {
-                    unitModel = animator.gameObject;
-                    //Debug.Log(gameObject.name + "UnitController.ConfigureAnimator(" + (newUnitModel == null ? "null" : newUnitModel.name) + "): " + animator.gameObject);
-                }
             }
 
             ConfigureUnitModel();
@@ -913,12 +934,14 @@ namespace AnyRPG {
         public void ConfigureUnitModel() {
             //Debug.Log(gameObject.name + "UnitController.ConfigureUnitModel()");
 
+            /*
             if (unitModel != null && dynamicCharacterAvatar == null) {
                 dynamicCharacterAvatar = unitModel.GetComponent<DynamicCharacterAvatar>();
             }
             if (dynamicCharacterAvatar == null) {
                 dynamicCharacterAvatar = GetComponentInChildren<DynamicCharacterAvatar>();
             }
+            */
             if (unitModel != null || dynamicCharacterAvatar != null) {
                 if (dynamicCharacterAvatar != null) {
 

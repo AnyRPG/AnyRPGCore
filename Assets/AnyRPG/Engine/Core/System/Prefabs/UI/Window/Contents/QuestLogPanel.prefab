@@ -4437,6 +4437,11 @@ PrefabInstance:
       propertyPath: m_TextStyleHashCode
       value: -1183493901
       objectReference: {fileID: 0}
+    - target: {fileID: 5780368107545972101, guid: 5ba04b1a8182f0246bdbec0017c83899,
+        type: 3}
+      propertyPath: m_PreferredWidth
+      value: 385
+      objectReference: {fileID: 0}
     - target: {fileID: 6302889223571313728, guid: 5ba04b1a8182f0246bdbec0017c83899,
         type: 3}
       propertyPath: m_textAlignment

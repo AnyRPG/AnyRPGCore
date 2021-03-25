@@ -161,7 +161,7 @@ namespace AnyRPG {
         }
 
         public void InitializeAnimator() {
-            //Debug.Log(gameObject.name + ": CharacterAnimator.InitializeAnimator()");
+            //Debug.Log(unitController.gameObject.name + ": UnitAnimator.InitializeAnimator()");
             if (initialized) {
                 return;
             }
@@ -217,7 +217,7 @@ namespace AnyRPG {
         }
 
         public void SetOverrideController(AnimatorOverrideController animatorOverrideController, bool runUpdate = true) {
-            //Debug.Log(unitController.gameObject.name + ".UnitAnimator.SetOverrideController()");
+            //Debug.Log(unitController.gameObject.name + ".UnitAnimator.SetOverrideController(" + animatorOverrideController.name + ", " + runUpdate + ")");
 
             if (animator.runtimeAnimatorController != animatorOverrideController && animatorOverrideController != null) {
                 //Debug.Log(unitController.gameObject.name + ".UnitAnimator.SetOverrideController(): setting animator override");
@@ -234,8 +234,11 @@ namespace AnyRPG {
 
                 // set animator on UMA if one exists
                 if (unitController.DynamicCharacterAvatar != null) {
+                    //Debug.Log(unitController.gameObject.name + ".UnitAnimator.SetOverrideController(" + animatorOverrideController.name + ") setting override controller on UMA");
                     unitController.DynamicCharacterAvatar.raceAnimationControllers.defaultAnimationController = animatorOverrideController;
                     unitController.DynamicCharacterAvatar.animationController = animatorOverrideController;
+                } else {
+                    //Debug.Log(unitController.gameObject.name + ".UnitAnimator.SetOverrideController(" + animatorOverrideController.name + ") could not find an UMA");
                 }
                 //animator.updateMode = AnimatorUpdateMode.
                 if (runUpdate) {
@@ -245,16 +248,15 @@ namespace AnyRPG {
         }
 
         public void SetAnimationProfileOverride(AnimationProps animationProps) {
-            //Debug.Log(gameObject.name + ".UnitAnimator.SetAnimationProfileOverride(" + (animationProfile == null ? "null" : animationProfile.MyProfileName) + ")");
-            //AnimationProfile oldAnimationProfile = currentAnimationProfile;
+            //Debug.Log(unitController.gameObject.name + ".UnitAnimator.SetAnimationProfileOverride()");
             currentAnimationProps = animationProps;
             SetAnimationClipOverrides();
         }
 
         public void ResetAnimationProfile() {
             //Debug.Log(gameObject.name + ".UnitAnimator.ResetAnimationProfile()");
-            //AnimationProfile oldAnimationProfile = currentAnimationProfile;
             currentAnimationProps = defaultAnimationProps;
+
             // change back to the original animations
             SetAnimationClipOverrides();
         }
@@ -1715,11 +1717,12 @@ namespace AnyRPG {
         }
 
         public void PerformEquipmentChange(Equipment newItem) {
+            //Debug.Log(unitController.gameObject.name + ".CharacterAnimator.PerformEquipmentChange(" + newItem.DisplayName + ")");
             HandleEquipmentChanged(newItem, null, -1);
         }
 
         public void HandleEquipmentChanged(Equipment newItem, Equipment oldItem, int slotIndex = -1) {
-            //Debug.Log("UnitAnimator.HandleEquipmentChanged(" + (newItem == null ? "null" : newItem.DisplayName) + ", " + (oldItem == null ? "null" : oldItem.DisplayName) + ")");
+            //Debug.Log(unitController.gameObject.name + ".UnitAnimator.HandleEquipmentChanged(" + (newItem == null ? "null" : newItem.DisplayName) + ", " + (oldItem == null ? "null" : oldItem.DisplayName) + ")");
             if (animator == null) {
                 // this unit isn't animated
                 return;
@@ -1732,7 +1735,7 @@ namespace AnyRPG {
                 && (newItem as Weapon).AnimationProfile.AnimationProps != null) {
                 //Debug.Log(gameObject.name + ".CharacterAnimator.PerformEquipmentChange: we are animating the weapon");
                 //animator.SetLayerWeight(1, 1);
-                //if (weaponAnimationsDict.ContainsKey(newItem)) {
+                //Debug.Log(unitController.gameObject.name + ".UnitAnimator.HandleEquipmentChanged() animation profile: " + (newItem as Weapon).AnimationProfile.DisplayName);
                 SetAnimationProfileOverride((newItem as Weapon).AnimationProfile.AnimationProps);
             } else if (newItem == null
                 && oldItem != null
