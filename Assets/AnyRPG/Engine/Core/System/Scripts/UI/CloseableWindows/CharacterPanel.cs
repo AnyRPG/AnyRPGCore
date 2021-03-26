@@ -153,6 +153,7 @@ namespace AnyRPG {
         public override void ReceiveOpenWindowNotification() {
             //Debug.Log("CharacterPanel.OnOpenWindow()");
             base.ReceiveOpenWindowNotification();
+            SetBackGroundColor(new Color32(0, 0, 0, (byte)(int)(PlayerPrefs.GetFloat("PopupWindowOpacity") * 255)));
             SetPreviewTarget();
             UpdateStatsDescription();
             if (PlayerManager.MyInstance.MyCharacter != null) {

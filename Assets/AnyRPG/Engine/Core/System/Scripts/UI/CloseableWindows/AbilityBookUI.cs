@@ -100,6 +100,7 @@ namespace AnyRPG {
         }
 
         public void ReceiveOpenWindowNotification() {
+            SetBackGroundColor(new Color32(0, 0, 0, (byte)(int)(PlayerPrefs.GetFloat("PopupWindowOpacity") * 255)));
             CreatePages();
         }
 

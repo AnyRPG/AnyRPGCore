@@ -290,6 +290,7 @@ namespace AnyRPG {
 
         public override void ReceiveOpenWindowNotification() {
             //Debug.Log("InteractionPanelUI.OnOpenWindow()");
+            SetBackGroundColor(new Color32(0, 0, 0, (byte)(int)(PlayerPrefs.GetFloat("PopupWindowOpacity") * 255)));
 
             // this has to be done first, because the next line after could close the window and set the interactable to null
             if (PopupWindowManager.MyInstance != null) {

@@ -177,6 +177,7 @@ namespace AnyRPG {
         public override void ReceiveOpenWindowNotification() {
             //Debug.Log("DialogPanelController.OnOpenWindow()");
             base.ReceiveOpenWindowNotification();
+            SetBackGroundColor(new Color32(0, 0, 0, (byte)(int)(PlayerPrefs.GetFloat("PopupWindowOpacity") * 255)));
 
             // these go first or they will squish the text of the continue button out of place
             viewQuestButton.SetActive(false);

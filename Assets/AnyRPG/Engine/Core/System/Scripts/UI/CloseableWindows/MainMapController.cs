@@ -9,23 +9,6 @@ using UnityEngine.SceneManagement;
 namespace AnyRPG {
     public class MainMapController : WindowContentController {
 
-        /*
-        #region Singleton
-        private static MainMapController instance;
-
-        public static MainMapController MyInstance {
-            get {
-                if (instance == null) {
-                    instance = FindObjectOfType<MainMapController>();
-                }
-
-                return instance;
-            }
-        }
-
-        #endregion
-        */
-
         [Header("Map")]
 
         [SerializeField]
@@ -192,6 +175,8 @@ namespace AnyRPG {
 
         public override void ReceiveOpenWindowNotification() {
             //Debug.Log("MainMapController.OnOpenWindow()");
+            SetBackGroundColor(new Color32(0, 0, 0, (byte)(int)(PlayerPrefs.GetFloat("PopupWindowOpacity") * 255)));
+
             // take snapshot of map or load from file
             InitializeMap();
 

@@ -517,6 +517,7 @@ namespace AnyRPG {
 
         public override void ReceiveOpenWindowNotification() {
             //Debug.Log("QuestGiverUI.OnOpenWindow()");
+            SetBackGroundColor(new Color32(0, 0, 0, (byte)(int)(PlayerPrefs.GetFloat("PopupWindowOpacity") * 255)));
             // clear first because open window handler could show a description
             ClearDescription();
             if (interactable != null) {
