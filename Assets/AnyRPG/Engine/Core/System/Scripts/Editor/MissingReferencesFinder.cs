@@ -33,9 +33,9 @@ public class MissingReferencesFinder : MonoBehaviour {
     [MenuItem("Tools/AnyRPG/Find Missing References/In current prefab", false, 51)]
     public static void FindMissingReferencesInCurrentPrefab() {
         var prefabStage = PrefabStageUtility.GetCurrentPrefabStage();
-        showInitialProgressBar(prefabStage.prefabAssetPath);
+        showInitialProgressBar(prefabStage.assetPath);
 
-        var count = findMissingReferences(prefabStage.prefabAssetPath, prefabStage.prefabContentsRoot, true);
+        var count = findMissingReferences(prefabStage.assetPath, prefabStage.prefabContentsRoot, true);
         showFinishDialog(false, count);
     }
 

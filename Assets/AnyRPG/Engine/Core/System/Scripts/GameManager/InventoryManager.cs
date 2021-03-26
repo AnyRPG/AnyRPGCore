@@ -346,8 +346,6 @@ namespace AnyRPG {
 
             //Debug.Log("InventoryManager.PopulateBagNode(): bagNode.MyBag: " + bagNode.MyBag.GetInstanceID() + "; bagNode.MyBag.MyBagPanel: " + bagNode.MyBag.MyBagPanel.GetInstanceID() + "; bag" + bag.GetInstanceID() + "; bag.MyBagPanel: " + bag.MyBagPanel.GetInstanceID());
 
-            //UIManager.MyInstance.CheckUISettings();
-            // try that instead since we dont' need to actively update anything else
             UIManager.MyInstance.UpdateInventoryOpacity();
 
         }

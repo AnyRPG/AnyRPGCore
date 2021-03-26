@@ -8,71 +8,34 @@ using UnityEngine.UI;
 namespace AnyRPG {
     public class LootUI : WindowContentController, IPagedWindowContents {
 
-        #region Singleton
-        private static LootUI instance;
-
-        public static LootUI MyInstance {
-            get {
-                if (instance == null) {
-                    instance = FindObjectOfType<LootUI>();
-                }
-
-                return instance;
-            }
-        }
-
-        #endregion
-
         [SerializeField]
         private List<LootButton> lootButtons = new List<LootButton>();
 
-        private List<List<LootDrop>> pages = new List<List<LootDrop>>();
-
-        private List<LootDrop> droppedLoot = new List<LootDrop>();
-
         private int pageIndex = 0;
+
+        public List<LootButton> LootButtons { get => lootButtons; set => lootButtons = value; }
 
         public event System.Action<bool> OnPageCountUpdate = delegate { };
         public override event Action<ICloseableWindowContents> OnCloseWindow = delegate { };
 
-        public void CreatePages(List<LootDrop> items) {
-            //Debug.Log("LootUI.CreatePages()");
-            ClearPages();
-            //Debug.Log("LootUI.CreatePages(): done clearing pages");
-            List<LootDrop> page = new List<LootDrop>();
-            droppedLoot = items;
-            for (int i = 0; i < items.Count; i++) {
-                page.Add(items[i]);
-                if (page.Count == 4 || i == items.Count - 1) {
-                    pages.Add(page);
-                    page = new List<LootDrop>();
-                }
-            }
-            //Debug.Log("LootUI.CreatePages(): pages.count: " + pages.Count);
-
-            AddLoot();
-
-            OnPageCountUpdate(true);
-        }
-
-        private void AddLoot() {
+        public void AddLoot() {
             //Debug.Log("LootUI.AddLoot()");
-            if (pages.Count > 0) {
+            if (LootManager.MyInstance.Pages.Count > 0) {
                 //Debug.Log("LootUI.AddLoot() pages.count: " + pages.Count);
 
-                for (int i = 0; i < pages[pageIndex].Count; i++) {
-                    if (pages[pageIndex][i] != null) {
+                for (int i = 0; i < LootManager.MyInstance.Pages[pageIndex].Count; i++) {
+                    if (LootManager.MyInstance.Pages[pageIndex][i] != null) {
                         // set the loot drop
-                        lootButtons[i].LootDrop = pages[pageIndex][i];
+                        lootButtons[i].LootDrop = LootManager.MyInstance.Pages[pageIndex][i];
 
                         // make sure the loot button is visible
                         lootButtons[i].gameObject.SetActive(true);
 
                         string colorString = "white";
-                        if (pages[pageIndex][i].MyItemQuality != null) {
-                            colorString = "#" + ColorUtility.ToHtmlStringRGB(pages[pageIndex][i].MyItemQuality.MyQualityColor);
+                        if (LootManager.MyInstance.Pages[pageIndex][i].MyItemQuality != null) {
+                            colorString = "#" + ColorUtility.ToHtmlStringRGB(LootManager.MyInstance.Pages[pageIndex][i].MyItemQuality.MyQualityColor);
                         }
-                        string title = string.Format("<color={0}>{1}</color>", colorString, pages[pageIndex][i].DisplayName);
+                        string title = string.Format("<color={0}>{1}</color>", colorString, LootManager.MyInstance.Pages[pageIndex][i].DisplayName);
                         // set the title
                         lootButtons[i].MyTitle.text = title;
                     }
@@ -82,6 +45,14 @@ namespace AnyRPG {
             }
         }
 
+        public void TakeAllLoot() {
+            LootManager.MyInstance.TakeAllLoot();
+        }
+
+        public void BroadcastPageCountUpdate() {
+            OnPageCountUpdate(true);
+        }
+
         public void ClearButtons() {
             //Debug.Log("LootUI.ClearButtons()");
             foreach (LootButton button in lootButtons) {
@@ -89,51 +60,20 @@ namespace AnyRPG {
             }
         }
 
-        public void TakeAllLoot() {
-            //Debug.Log("LootUI.TakeAllLoot()");
-
-            // added emptyslotcount to prevent game from freezup when no bag space left and takeall button pressed
-            int maximumLoopCount = droppedLoot.Count;
-            int currentLoopCount = 0;
-            while (pages.Count > 0 && InventoryManager.MyInstance.EmptySlotCount() > 0 && currentLoopCount < maximumLoopCount && lootButtons.Count > 0) {
-                foreach (LootButton lootButton in lootButtons) {
-                    //Debug.Log("LootUI.TakeAllLoot(): droppedItems.Count: " + droppedLoot.Count);
-                    if (lootButton.gameObject.activeSelf == true) {
-                        lootButton.TakeLoot();
-                    }
-                    currentLoopCount++;
-                }
-            }
-
-            if (pages.Count > 0 && InventoryManager.MyInstance.EmptySlotCount() == 0) {
-                if (InventoryManager.MyInstance.EmptySlotCount() == 0) {
-                    //Debug.Log("No space left in inventory");
-                }
-                MessageFeedManager.MyInstance.WriteMessage("Inventory is full!");
-            }
-        }
-
-        private void RemoveFromDroppedItems(LootDrop lootDrop) {
-
-            if (droppedLoot.Contains(lootDrop)) {
-                droppedLoot.Remove(lootDrop);
-            }
-        }
-
         public void TakeLoot(LootDrop lootDrop) {
             //Debug.Log("LootUI.TakeLoot(" + loot.MyName + ")");
 
-            pages[pageIndex].Remove(lootDrop);
-            RemoveFromDroppedItems(lootDrop);
+            LootManager.MyInstance.Pages[pageIndex].Remove(lootDrop);
+            LootManager.MyInstance.RemoveFromDroppedItems(lootDrop);
             lootDrop.Remove();
             SystemEventManager.MyInstance.NotifyOnTakeLoot();
 
-            if (pages[pageIndex].Count == 0) {
+            if (LootManager.MyInstance.Pages[pageIndex].Count == 0) {
 
                 // removes the empty page
-                pages.Remove(pages[pageIndex]);
+                LootManager.MyInstance.Pages.Remove(LootManager.MyInstance.Pages[pageIndex]);
 
-                if (pageIndex == pages.Count && pageIndex > 0) {
+                if (pageIndex == LootManager.MyInstance.Pages.Count && pageIndex > 0) {
                     pageIndex--;
                 }
                 AddLoot();
@@ -147,7 +87,7 @@ namespace AnyRPG {
             foreach (LootButton lootButton in lootButtons) {
                 lootButton.CheckMouse();
             }
-            ClearPages();
+            LootManager.MyInstance.ClearPages();
             OnCloseWindow(this);
         }
 
@@ -157,23 +97,23 @@ namespace AnyRPG {
             OnPageCountUpdate(true);
         }
 
-        public int GetPageCount() {
-            //Debug.Log("LootUI.GetPageCount()");
-
-            return pages.Count;
-        }
-
         public void LoadPage(int pageIndex) {
             this.pageIndex = pageIndex;
             ClearButtons();
             AddLoot();
         }
 
-        private void ClearPages() {
+        public void ClearPages() {
             ClearButtons();
-            pages.Clear();
             pageIndex = 0;
         }
+
+        public int GetPageCount() {
+            //Debug.Log("LootUI.GetPageCount()");
+
+            return LootManager.MyInstance.Pages.Count;
+        }
+
 
     }
 

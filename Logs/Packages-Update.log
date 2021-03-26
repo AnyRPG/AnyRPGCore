@@ -207,3 +207,16 @@ Update Mode: updateDependencies
 
 The following packages were updated:
   com.unity.timeline from version 1.2.15 to 1.2.18
+
+=== Thu Mar 25 19:38:18 2021
+
+Packages were changed.
+Update Mode: updateDependencies
+
+The following packages were added:
+  com.unity.ide.visualstudio@2.0.7
+The following packages were updated:
+  com.unity.collab-proxy from version 1.2.16 to 1.3.9
+  com.unity.ide.rider from version 1.1.4 to 2.0.7
+  com.unity.textmeshpro from version 2.1.1 to 3.0.1
+  com.unity.timeline from version 1.2.18 to 1.4.6

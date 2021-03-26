@@ -316,7 +316,7 @@ namespace AnyRPG {
 
                 if (drops.Count > 0) {
                     //Debug.Log(interactable.gameObject.name + ".LootableCharacter.drops.Count: " + drops.Count);
-                    LootUI.MyInstance.CreatePages(drops);
+                    LootManager.MyInstance.CreatePages(drops);
                     //Debug.Log(gameObject.name + ".LootableCharacter.Interact(): about to open window");
                     PopupWindowManager.MyInstance.lootWindow.OpenWindow();
                     return true;

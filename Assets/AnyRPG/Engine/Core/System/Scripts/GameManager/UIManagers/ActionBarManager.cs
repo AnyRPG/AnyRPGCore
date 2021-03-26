@@ -20,8 +20,8 @@ namespace AnyRPG {
         // the action bar target for range checks
         private Interactable target = null;
 
-        public ActionButton MyFromButton { get => fromButton; set => fromButton = value; }
-        public List<ActionBarController> MyActionBarControllers { get => actionBarControllers; set => actionBarControllers = value; }
+        public ActionButton FromButton { get => fromButton; set => fromButton = value; }
+        public List<ActionBarController> ActionBarControllers { get => actionBarControllers; set => actionBarControllers = value; }
 
         private void Awake() {
             //Debug.Log("ActionBarManager.Awake()");
@@ -175,7 +175,7 @@ namespace AnyRPG {
             List<ActionButton> actionButtons = new List<ActionButton>();
             int count = 0;
             foreach (ActionBarController actionBarController in actionBarControllers) {
-                foreach (ActionButton actionButton in actionBarController.MyActionButtons) {
+                foreach (ActionButton actionButton in actionBarController.ActionButtons) {
                     actionButtons.Add(actionButton);
                     //Debug.Log("ActionBarManager.GetActionButtons() count: " + count + "; actionbutton: " + actionButton.name + actionButton.GetInstanceID());
                     count++;

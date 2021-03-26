@@ -138,23 +138,23 @@ namespace AnyRPG {
 
                 if (Input.GetKey(KeyCode.LeftShift)) {
                     // attempt to pick up - the only valid option when shift is held down
-                    if (Useable != null && UIManager.MyInstance.ActionBarManager.MyFromButton == null && HandScript.MyInstance.MyMoveable == null) {
+                    if (Useable != null && UIManager.MyInstance.ActionBarManager.FromButton == null && HandScript.MyInstance.MyMoveable == null) {
                         // left shift down, pick up a useable
                         //Debug.Log("ActionButton: OnPointerClick(): shift clicked and useable is not null. picking up");
                         HandScript.MyInstance.TakeMoveable(Useable as IMoveable);
-                        UIManager.MyInstance.ActionBarManager.MyFromButton = this;
+                        UIManager.MyInstance.ActionBarManager.FromButton = this;
                     }
                 } else {
                     // attempt to put down
                     if (HandScript.MyInstance.MyMoveable != null && HandScript.MyInstance.MyMoveable is IUseable) {
-                        if (UIManager.MyInstance.ActionBarManager.MyFromButton != null) {
+                        if (UIManager.MyInstance.ActionBarManager.FromButton != null) {
                             //Debug.Log("ActionButton: OnPointerClick(): FROMBUTTON IS NOT NULL, SWAPPING ACTIONBAR ITEMS");
                             // this came from another action button slot.  now decide to swap (if we are not empty), or remove from original (if we are empty)
                             if (Useable != null) {
-                                UIManager.MyInstance.ActionBarManager.MyFromButton.ClearUseable();
-                                UIManager.MyInstance.ActionBarManager.MyFromButton.SetUseable(Useable);
+                                UIManager.MyInstance.ActionBarManager.FromButton.ClearUseable();
+                                UIManager.MyInstance.ActionBarManager.FromButton.SetUseable(Useable);
                             } else {
-                                UIManager.MyInstance.ActionBarManager.MyFromButton.ClearUseable();
+                                UIManager.MyInstance.ActionBarManager.FromButton.ClearUseable();
                             }
                         }
                         // no matter whether we sent our useable over or not, we can now clear our useable and set whatever is in the handscript

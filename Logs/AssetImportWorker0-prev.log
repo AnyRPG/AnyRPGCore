@@ -1,0 +1,209 @@
+Using pre-set license
+Built from '2020.3/release' branch; Version is '2020.3.1f1 (77a89f25062f) revision 7841951'; Using compiler version '192528614'; Build Type 'Release'
+OS: 'Windows 10 Home; OS build 19042.867; Version 2009; 64bit' Language: 'en' Physical Memory: 32710 MB
+BatchMode: 1, IsHumanControllingUs: 0, StartBugReporterOnCrash: 0, Is64bit: 1, IsPro: 0
+
+ COMMAND LINE ARGUMENTS:
+C:\Program Files\Unity\Hub\Editor\2020.3.1f1\Editor\Unity.exe
+-adb2
+-batchMode
+-noUpm
+-name
+AssetImportWorker0
+-projectPath
+F:/unity/projects/AnyRPG Alpha
+-logFile
+Logs/AssetImportWorker0.log
+-srvPort
+49880
+Successfully changed project path to: F:/unity/projects/AnyRPG Alpha
+F:/unity/projects/AnyRPG Alpha
+Using Asset Import Pipeline V2.
+Refreshing native plugins compatible for Editor in 386.31 ms, found 0 plugins.
+Preloading 0 native plugins for Editor in 0.00 ms.
+Initialize engine version: 2020.3.1f1 (77a89f25062f)
+[Subsystems] Discovering subsystems at path C:/Program Files/Unity/Hub/Editor/2020.3.1f1/Editor/Data/Resources/UnitySubsystems
+[Subsystems] Discovering subsystems at path F:/unity/projects/AnyRPG Alpha/Assets
+GfxDevice: creating device client; threaded=0
+Direct3D:
+    Version:  Direct3D 11.0 [level 11.0]
+    Renderer: NVIDIA GeForce GTX 750 Ti (ID=0x1380)
+    Vendor:   
+    VRAM:     2007 MB
+    Driver:   27.21.14.6192
+Shader 'WFX/Transparent Specular': fallback shader 'Particles/Alpha Blended' not found
+Shader 'WFX/Transparent Diffuse': fallback shader 'Particles/Alpha Blended' not found
+Shader 'Custom/AdditiveTintable': fallback shader 'Particles/Additive (Soft)' not found
+Initialize mono
+Mono path[0] = 'C:/Program Files/Unity/Hub/Editor/2020.3.1f1/Editor/Data/Managed'
+Mono path[1] = 'C:/Program Files/Unity/Hub/Editor/2020.3.1f1/Editor/Data/MonoBleedingEdge/lib/mono/unityjit'
+Mono config path = 'C:/Program Files/Unity/Hub/Editor/2020.3.1f1/Editor/Data/MonoBleedingEdge/etc'
+Using monoOptions --debugger-agent=transport=dt_socket,embedding=1,server=y,suspend=n,address=127.0.0.1:56192
+Begin MonoManager ReloadAssembly
+Registering precompiled unity dll's ...
+Register platform support module: C:/Program Files/Unity/Hub/Editor/2020.3.1f1/Editor/Data/PlaybackEngines/WindowsStandaloneSupport/UnityEditor.WindowsStandalone.Extensions.dll
+Registered in 0.003459 seconds.
+Native extension for WindowsStandalone target not found
+Refreshing native plugins compatible for Editor in 386.52 ms, found 0 plugins.
+Preloading 0 native plugins for Editor in 0.00 ms.
+Invoked RoslynAnalysisRunner static constructor.
+RoslynAnalysisRunner will not be running.
+RoslynAnalysisRunner has terminated.
+Mono: successfully reloaded assembly
+- Completed reload, in  3.226 seconds
+Platform modules already initialized, skipping
+Registering precompiled user dll's ...
+Registered in 0.053125 seconds.
+Begin MonoManager ReloadAssembly
+Native extension for WindowsStandalone target not found
+Refreshing native plugins compatible for Editor in 5.23 ms, found 0 plugins.
+Preloading 0 native plugins for Editor in 0.00 ms.
+Invoked RoslynAnalysisRunner static constructor.
+RoslynAnalysisRunner will not be running.
+RoslynAnalysisRunner has terminated.
+Mono: successfully reloaded assembly
+- Completed reload, in  0.982 seconds
+Platform modules already initialized, skipping
+========================================================================
+Worker process is ready to serve import requests
+Shader 'WFX/Transparent Specular': fallback shader 'Particles/Alpha Blended' not found
+Shader 'WFX/Transparent Diffuse': fallback shader 'Particles/Alpha Blended' not found
+Shader 'Custom/AdditiveTintable': fallback shader 'Particles/Additive (Soft)' not found
+Launched and connected shader compiler UnityShaderCompiler.exe after 0.07 seconds
+Refreshing native plugins compatible for Editor in 7.37 ms, found 0 plugins.
+Preloading 0 native plugins for Editor in 0.00 ms.
+Unloading 2779 Unused Serialized files (Serialized files now loaded: 0)
+System memory in use before: 245.5 MB.
+System memory in use after: 245.4 MB.
+
+Unloading 17 unused Assets to reduce memory usage. Loaded Objects now: 3266.
+Total: 4.155100 ms (FindLiveObjects: 0.471700 ms CreateObjectMapping: 0.151000 ms MarkObjects: 2.865000 ms  DeleteObjects: 0.665700 ms)
+
+========================================================================
+Received Import Request.
+  path: Assets/AnyRPG/Engine/Core/System/Prefabs/Interactable/DefaultInteractableBase.prefab
+  artifactKey: Guid(bc2828cd7c94a47468e6e0ca0f70a2c6) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/AnyRPG/Engine/Core/System/Prefabs/Interactable/DefaultInteractableBase.prefab using Guid(bc2828cd7c94a47468e6e0ca0f70a2c6) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '0fd582782820041147bcd5909cf57ed1') in 0.129914 seconds
+  Import took 0.140396 seconds .
+
+========================================================================
+Received Import Request.
+  Time since last request: 35.311157 seconds.
+  path: Assets/AnyRPG/Engine/Core/System/Prefabs/Interactable/DefaultInteractableUnit.prefab
+  artifactKey: Guid(a7ce10ba524f72e43853c1b73975d6d4) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/AnyRPG/Engine/Core/System/Prefabs/Interactable/DefaultInteractableUnit.prefab using Guid(a7ce10ba524f72e43853c1b73975d6d4) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '55519bfb72ff810b9069fc12042bfb15') in 0.013723 seconds
+  Import took 0.021479 seconds .
+
+========================================================================
+Received Import Request.
+  Time since last request: 141.588934 seconds.
+  path: Assets/ALostSoul/Content/ALostSoulExample/Scenes/Game/ALostSoulExampleGame/ALostSoulExampleGame.unity
+  artifactKey: Guid(0a6a387f1a640604ab86081d60dd1ead) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/ALostSoul/Content/ALostSoulExample/Scenes/Game/ALostSoulExampleGame/ALostSoulExampleGame.unity using Guid(0a6a387f1a640604ab86081d60dd1ead) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '5f392fa4311808b5e865cc6df8b5f273') in 0.002810 seconds
+  Import took 0.011113 seconds .
+
+========================================================================
+Received Prepare
+Registering precompiled user dll's ...
+Registered in 0.009140 seconds.
+Begin MonoManager ReloadAssembly
+Native extension for WindowsStandalone target not found
+Refreshing native plugins compatible for Editor in 6.27 ms, found 0 plugins.
+Preloading 0 native plugins for Editor in 0.00 ms.
+Invoked RoslynAnalysisRunner static constructor.
+RoslynAnalysisRunner will not be running.
+RoslynAnalysisRunner has terminated.
+Mono: successfully reloaded assembly
+- Completed reload, in  1.080 seconds
+Platform modules already initialized, skipping
+Shader 'WFX/Transparent Specular': fallback shader 'Particles/Alpha Blended' not found
+Shader 'WFX/Transparent Diffuse': fallback shader 'Particles/Alpha Blended' not found
+Shader 'Custom/AdditiveTintable': fallback shader 'Particles/Additive (Soft)' not found
+Refreshing native plugins compatible for Editor in 5.78 ms, found 0 plugins.
+Preloading 0 native plugins for Editor in 0.00 ms.
+Unloading 2493 Unused Serialized files (Serialized files now loaded: 0)
+System memory in use before: 226.5 MB.
+System memory in use after: 226.4 MB.
+
+Unloading 12 unused Assets to reduce memory usage. Loaded Objects now: 3277.
+Total: 3.454100 ms (FindLiveObjects: 0.457300 ms CreateObjectMapping: 0.280500 ms MarkObjects: 2.286100 ms  DeleteObjects: 0.428700 ms)
+
+========================================================================
+Received Prepare
+Registering precompiled user dll's ...
+Registered in 0.006273 seconds.
+Begin MonoManager ReloadAssembly
+Native extension for WindowsStandalone target not found
+Refreshing native plugins compatible for Editor in 4.69 ms, found 0 plugins.
+Preloading 0 native plugins for Editor in 0.00 ms.
+Invoked RoslynAnalysisRunner static constructor.
+RoslynAnalysisRunner will not be running.
+RoslynAnalysisRunner has terminated.
+Mono: successfully reloaded assembly
+- Completed reload, in  0.828 seconds
+Platform modules already initialized, skipping
+Shader 'WFX/Transparent Specular': fallback shader 'Particles/Alpha Blended' not found
+Shader 'WFX/Transparent Diffuse': fallback shader 'Particles/Alpha Blended' not found
+Shader 'Custom/AdditiveTintable': fallback shader 'Particles/Additive (Soft)' not found
+Refreshing native plugins compatible for Editor in 4.80 ms, found 0 plugins.
+Preloading 0 native plugins for Editor in 0.00 ms.
+Unloading 2493 Unused Serialized files (Serialized files now loaded: 0)
+System memory in use before: 226.9 MB.
+System memory in use after: 226.8 MB.
+
+Unloading 12 unused Assets to reduce memory usage. Loaded Objects now: 3280.
+Total: 2.635400 ms (FindLiveObjects: 0.414700 ms CreateObjectMapping: 0.135500 ms MarkObjects: 1.654100 ms  DeleteObjects: 0.430200 ms)
+
+========================================================================
+Received Prepare
+Registering precompiled user dll's ...
+Registered in 0.008064 seconds.
+Begin MonoManager ReloadAssembly
+Native extension for WindowsStandalone target not found
+Refreshing native plugins compatible for Editor in 4.56 ms, found 0 plugins.
+Preloading 0 native plugins for Editor in 0.00 ms.
+Invoked RoslynAnalysisRunner static constructor.
+RoslynAnalysisRunner will not be running.
+RoslynAnalysisRunner has terminated.
+Mono: successfully reloaded assembly
+- Completed reload, in  0.870 seconds
+Platform modules already initialized, skipping
+Shader 'WFX/Transparent Specular': fallback shader 'Particles/Alpha Blended' not found
+Shader 'WFX/Transparent Diffuse': fallback shader 'Particles/Alpha Blended' not found
+Shader 'Custom/AdditiveTintable': fallback shader 'Particles/Additive (Soft)' not found
+Refreshing native plugins compatible for Editor in 4.68 ms, found 0 plugins.
+Preloading 0 native plugins for Editor in 0.00 ms.
+Unloading 2493 Unused Serialized files (Serialized files now loaded: 0)
+System memory in use before: 227.0 MB.
+System memory in use after: 226.8 MB.
+
+Unloading 12 unused Assets to reduce memory usage. Loaded Objects now: 3283.
+Total: 2.615600 ms (FindLiveObjects: 0.278600 ms CreateObjectMapping: 0.125300 ms MarkObjects: 1.747000 ms  DeleteObjects: 0.463900 ms)
+
+========================================================================
+Received Prepare
+Registering precompiled user dll's ...
+Registered in 0.006274 seconds.
+Begin MonoManager ReloadAssembly
+Native extension for WindowsStandalone target not found
+Refreshing native plugins compatible for Editor in 4.50 ms, found 0 plugins.
+Preloading 0 native plugins for Editor in 0.00 ms.
+Invoked RoslynAnalysisRunner static constructor.
+RoslynAnalysisRunner will not be running.
+RoslynAnalysisRunner has terminated.
+Mono: successfully reloaded assembly
+- Completed reload, in  0.852 seconds
+Platform modules already initialized, skipping
+Shader 'WFX/Transparent Specular': fallback shader 'Particles/Alpha Blended' not found
+Shader 'WFX/Transparent Diffuse': fallback shader 'Particles/Alpha Blended' not found
+Shader 'Custom/AdditiveTintable': fallback shader 'Particles/Additive (Soft)' not found
+Refreshing native plugins compatible for Editor in 4.99 ms, found 0 plugins.
+Preloading 0 native plugins for Editor in 0.00 ms.
+Unloading 2493 Unused Serialized files (Serialized files now loaded: 0)
+System memory in use before: 227.1 MB.
+System memory in use after: 226.9 MB.
+
+Unloading 12 unused Assets to reduce memory usage. Loaded Objects now: 3286.
+Total: 2.874800 ms (FindLiveObjects: 0.324000 ms CreateObjectMapping: 0.226100 ms MarkObjects: 1.832600 ms  DeleteObjects: 0.491100 ms)
+
+AssetImportWorkerClient::OnTransportError - code=2 error=End of file

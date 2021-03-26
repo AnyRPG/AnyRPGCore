@@ -92,7 +92,7 @@ namespace AnyRPG {
             foreach (LootTable lootTable in Props.LootTables) {
                 lootDrops.AddRange(lootTable.GetLoot());
             }
-            LootUI.MyInstance.CreatePages(lootDrops);
+            LootManager.MyInstance.CreatePages(lootDrops);
             lootDropped = true;
         }
 
@@ -103,7 +103,7 @@ namespace AnyRPG {
             //Debug.Log(gameObject.name + ".LootableNode.Pickup()");
             //LootUI.MyInstance.CreatePages(lootTable.GetLoot());
             CreateWindowEventSubscriptions();
-            LootUI.MyInstance.OnCloseWindow += ClearTakeLootHandler;
+            PopupWindowManager.MyInstance.lootWindow.CloseableWindowContents.OnCloseWindow += ClearTakeLootHandler;
             PopupWindowManager.MyInstance.lootWindow.OpenWindow();
         }
 
@@ -122,8 +122,8 @@ namespace AnyRPG {
             if (SystemEventManager.MyInstance != null) {
                 SystemEventManager.MyInstance.OnTakeLoot -= CheckDropListSize;
             }
-            if (LootUI.MyInstance != null) {
-                LootUI.MyInstance.OnCloseWindow -= ClearTakeLootHandler;
+            if (PopupWindowManager.MyInstance.lootWindow?.CloseableWindowContents != null) {
+                PopupWindowManager.MyInstance.lootWindow.CloseableWindowContents.OnCloseWindow -= ClearTakeLootHandler;
             }
         }
 

@@ -13,7 +13,7 @@ namespace AnyRPG {
 
         //private bool initialized = false;
 
-        public List<ActionButton> MyActionButtons { get => actionButtons; set => actionButtons = value; }
+        public List<ActionButton> ActionButtons { get => actionButtons; set => actionButtons = value; }
 
         /*
         private void CommonInitialization() {

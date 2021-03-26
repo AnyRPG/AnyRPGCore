@@ -162,9 +162,11 @@ namespace AnyRPG {
             transform.SetAsLastSibling();
         }
 
-        public void UnHighlight() {
+        public void UnHighlight(bool setAsFirstSibling = true) {
             healthBarOutline.color = Color.black;
-            transform.SetAsFirstSibling();
+            if (setAsFirstSibling) {
+                transform.SetAsFirstSibling();
+            }
         }
 
         private void SetCharacterName() {
@@ -524,12 +526,11 @@ namespace AnyRPG {
             ProcessPointerExit();
             CleanupEventSubscriptions();
 
-            // this could have been disabled while it was still the focus so it needs to be unhighlited just in case
-            UnHighlight();
+            // this could have been disabled while it was still the focus so it needs to be unhighlighted just in case
+            UnHighlight(false);
 
             // reset settings
             unitNamePlateController = null;
-            //healthSliderWidth = 0;
             isPlayerUnitNamePlate = false;
             localComponentsInitialized = false;
             eventSubscriptionsInitialized = false;
