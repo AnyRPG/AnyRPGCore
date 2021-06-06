@@ -469,8 +469,10 @@ namespace AnyRPG {
 
         public void OpenInteractionWindow() {
             //Debug.Log(gameObject.name + ".Interactable.OpenInteractionWindow");
-            if (InteractionPanelUI.MyInstance != null) {
-                InteractionPanelUI.MyInstance.MyInteractable = this;
+            if (InteractionManager.Instance != null) {
+                InteractionManager.Instance.CurrentInteractable = this;
+            } else {
+                Debug.Log("interactionpanelUI had no instance");
             }
             if (PopupWindowManager.MyInstance != null) {
                 PopupWindowManager.MyInstance.interactionWindow.OpenWindow();
@@ -478,7 +480,7 @@ namespace AnyRPG {
         }
 
         public void CloseInteractionWindow() {
-            InteractionPanelUI.MyInstance.MyInteractable = null;
+            InteractionManager.Instance.CurrentInteractable = null;
             PopupWindowManager.MyInstance.interactionWindow.CloseWindow();
         }
 

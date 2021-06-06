@@ -8,21 +8,6 @@ using UnityEngine.UI;
 namespace AnyRPG {
     public class InteractionPanelUI : WindowContentController {
 
-        #region Singleton
-        private static InteractionPanelUI instance;
-
-        public static InteractionPanelUI MyInstance {
-            get {
-                if (instance == null) {
-                    instance = FindObjectOfType<InteractionPanelUI>();
-                }
-
-                return instance;
-            }
-        }
-
-        #endregion
-
         private Interactable interactable = null;
 
         [SerializeField]
@@ -49,17 +34,13 @@ namespace AnyRPG {
 
         protected bool eventSubscriptionsInitialized = false;
 
-        public Interactable MyInteractable {
-            get => interactable;
-            set {
-                //Debug.Log("InteractionPanelUI.MyInteractable.Set(" + (value == null ? "null" : value.MyName ) + ")");
-                if (interactable != null) {
-                    interactable.OnPrerequisiteUpdates -= HandlePrerequisiteUpdates;
-                }
-                interactable = value;
-                if (interactable != null) {
-                    interactable.OnPrerequisiteUpdates += HandlePrerequisiteUpdates;
-                }
+        public void HandleSetInteractable(Interactable _interactable) {
+            if (interactable != null) {
+                interactable.OnPrerequisiteUpdates -= HandlePrerequisiteUpdates;
+            }
+            interactable = _interactable;
+            if (interactable != null) {
+                interactable.OnPrerequisiteUpdates += HandlePrerequisiteUpdates;
             }
         }
 
@@ -78,6 +59,7 @@ namespace AnyRPG {
                 return;
             }
             //SystemEventManager.MyInstance.OnPrerequisiteUpdated += CheckPrerequisites;
+            InteractionManager.Instance.OnSetInteractable += HandleSetInteractable;
             eventSubscriptionsInitialized = true;
         }
 
@@ -86,6 +68,7 @@ namespace AnyRPG {
             if (!eventSubscriptionsInitialized) {
                 return;
             }
+            InteractionManager.Instance.OnSetInteractable -= HandleSetInteractable;
             //SystemEventManager.MyInstance.OnPrerequisiteUpdated -= CheckPrerequisites;
             eventSubscriptionsInitialized = false;
         }
@@ -259,7 +242,7 @@ namespace AnyRPG {
 
         public void ShowInteractables(Interactable interactable) {
             //Debug.Log("InteractionPanelUI.ShowInteractables(" + interactable.name + ")");
-            MyInteractable = interactable;
+            InteractionManager.Instance.CurrentInteractable = interactable;
             ShowInteractablesCommon(this.interactable);
         }
 
@@ -285,7 +268,7 @@ namespace AnyRPG {
             //ClearButtons();
             base.RecieveClosedWindowNotification();
             // clear this so window doesn't pop open again when it's closed
-            MyInteractable = null;
+            InteractionManager.Instance.CurrentInteractable = null;
         }
 
         public override void ReceiveOpenWindowNotification() {
@@ -294,6 +277,15 @@ namespace AnyRPG {
 
             // this has to be done first, because the next line after could close the window and set the interactable to null
             if (PopupWindowManager.MyInstance != null) {
+                if (interactable == null) {
+                    Debug.Log("interactable is null");
+                }
+                if (interactable.DisplayName == null) {
+                    Debug.Log("interactable.displayname is null");
+                }
+                if (PopupWindowManager.MyInstance.interactionWindow == null) {
+                    Debug.Log("interactactionwindow is null");
+                }
                 PopupWindowManager.MyInstance.interactionWindow.SetWindowTitle(interactable.DisplayName);
             }
 
