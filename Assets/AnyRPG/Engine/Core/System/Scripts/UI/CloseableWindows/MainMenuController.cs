@@ -11,8 +11,8 @@ namespace AnyRPG {
         [SerializeField]
         private Button mainMenuButton = null;
 
-        public override void Awake() {
-            base.Awake();
+        public override void Init() {
+            base.Init();
             if (mainMenuButton != null
                 && SystemConfigurationManager.MyInstance.MainMenuSceneNode == null
                 && SystemConfigurationManager.MyInstance.MainMenuScene == string.Empty) {

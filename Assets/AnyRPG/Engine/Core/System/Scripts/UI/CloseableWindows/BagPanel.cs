@@ -29,11 +29,6 @@ namespace AnyRPG {
             }
         }
 
-        public override void Awake() {
-            //Debug.Log(gameObject.name + gameObject.GetInstanceID() + ".BagPanel.Awake()");
-            base.Awake();
-        }
-
         public virtual List<Item> GetItems() {
             //Debug.Log("BagPanel.GetItems() slots count: " + slots.Count);
             List<Item> items = new List<Item>();

@@ -32,8 +32,6 @@ namespace AnyRPG {
 
         private List<GameObject> interactionPanelScripts = new List<GameObject>();
 
-        protected bool eventSubscriptionsInitialized = false;
-
         public void HandleSetInteractable(Interactable _interactable) {
             if (interactable != null) {
                 interactable.OnPrerequisiteUpdates -= HandlePrerequisiteUpdates;
@@ -44,38 +42,24 @@ namespace AnyRPG {
             }
         }
 
-        private void Start() {
-            CreateEventSubscriptions();
-        }
-
-        private void OnEnable() {
-            //Debug.Log("InteractionPanelUI.OnEnable()");
-            CreateEventSubscriptions();
-        }
-
-        private void CreateEventSubscriptions() {
+        protected override void CreateEventSubscriptions() {
             //Debug.Log("PlayerManager.CreateEventSubscriptions()");
             if (eventSubscriptionsInitialized) {
                 return;
             }
+            base.CreateEventSubscriptions();
             //SystemEventManager.MyInstance.OnPrerequisiteUpdated += CheckPrerequisites;
             InteractionManager.Instance.OnSetInteractable += HandleSetInteractable;
-            eventSubscriptionsInitialized = true;
         }
 
-        private void CleanupEventSubscriptions() {
+        protected override void CleanupEventSubscriptions() {
             //Debug.Log("PlayerManager.CleanupEventSubscriptions()");
             if (!eventSubscriptionsInitialized) {
                 return;
             }
+            base.CleanupEventSubscriptions();
             InteractionManager.Instance.OnSetInteractable -= HandleSetInteractable;
             //SystemEventManager.MyInstance.OnPrerequisiteUpdated -= CheckPrerequisites;
-            eventSubscriptionsInitialized = false;
-        }
-
-        public void OnDisable() {
-            //Debug.Log("PlayerManager.OnDisable()");
-            CleanupEventSubscriptions();
         }
 
         public void CheckPrerequisites(Skill skill) {

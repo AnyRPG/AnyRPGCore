@@ -43,8 +43,6 @@ namespace AnyRPG {
         [SerializeField]
         private Color fullSlotColor = new Color32(255, 255, 255, 255);
 
-        protected bool eventSubscriptionsInitialized = false;
-
         public override event Action<ICloseableWindowContents> OnCloseWindow = delegate { };
 
         public CharacterButton MySelectedButton { get; set; }
@@ -67,7 +65,7 @@ namespace AnyRPG {
 
         }
 
-        protected virtual void CreateEventSubscriptions() {
+        protected override void CreateEventSubscriptions() {
             //Debug.Log("CharacterPanel.CreateEventSubscriptions()");
             if (eventSubscriptionsInitialized) {
                 return;
@@ -82,7 +80,7 @@ namespace AnyRPG {
             eventSubscriptionsInitialized = true;
         }
 
-        protected virtual void CleanupEventSubscriptions() {
+        protected override void CleanupEventSubscriptions() {
             //Debug.Log("PlayerCombat.CleanupEventSubscriptions()");
             if (SystemEventManager.MyInstance != null) {
                 SystemEventManager.StopListening("OnPlayerUnitSpawn", HandlePlayerUnitSpawn);
@@ -93,16 +91,6 @@ namespace AnyRPG {
         public void HandlePlayerUnitSpawn(string eventName, EventParamProperties eventParamProperties) {
             //Debug.Log(gameObject.name + ".InanimateUnit.HandlePlayerUnitSpawn()");
             ProcessPlayerUnitSpawn();
-        }
-
-
-        public virtual void OnEnable() {
-            CreateEventSubscriptions();
-        }
-
-        public virtual void OnDestroy() {
-            //Debug.Log("CharacterPanel.OnDestroy()");
-            CleanupEventSubscriptions();
         }
 
         public void ProcessPlayerUnitSpawn() {

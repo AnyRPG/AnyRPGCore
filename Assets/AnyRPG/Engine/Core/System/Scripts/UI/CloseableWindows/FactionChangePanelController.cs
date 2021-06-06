@@ -80,11 +80,6 @@ namespace AnyRPG {
             PopupWindowManager.MyInstance.factionChangeWindow.CloseWindow();
         }
 
-        public override void ReceiveOpenWindowNotification() {
-            //Debug.Log("FactionChangePanelController.OnOpenWindow()");
-            base.ReceiveOpenWindowNotification();
-        }
-
         public override void RecieveClosedWindowNotification() {
             //Debug.Log("FactionChangePanelController.OnCloseWindow()");
             base.RecieveClosedWindowNotification();

@@ -122,7 +122,7 @@ namespace AnyRPG {
             if (SystemEventManager.MyInstance != null) {
                 SystemEventManager.MyInstance.OnTakeLoot -= CheckDropListSize;
             }
-            if (PopupWindowManager.MyInstance.lootWindow?.CloseableWindowContents != null) {
+            if (PopupWindowManager.MyInstance?.lootWindow?.CloseableWindowContents != null) {
                 PopupWindowManager.MyInstance.lootWindow.CloseableWindowContents.OnCloseWindow -= ClearTakeLootHandler;
             }
         }

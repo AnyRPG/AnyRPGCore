@@ -85,9 +85,6 @@ namespace AnyRPG {
         public PetSpawnButton MySelectedPetSpawnButton { get => selectedPetSpawnButton; set => selectedPetSpawnButton = value; }
         //public List<UnitProfile> MyUnitProfileList { get => unitProfileList; set => unitProfileList = value; }
 
-        protected void Start() {
-        }
-
         public void ShowUnit(PetSpawnButton petSpawnButton) {
             //Debug.Log("LoadGamePanel.ShowSavedGame()");
 

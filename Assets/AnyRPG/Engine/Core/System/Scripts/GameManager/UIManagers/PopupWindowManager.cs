@@ -49,6 +49,7 @@ namespace AnyRPG {
 
         // Update is called once per frame
         void Update() {
+            //Debug.Log("PopupWindowManager.Update()");
 
             if (PlayerManager.MyInstance.PlayerUnitSpawned == false) {
                 // if there is no player, these windows shouldn't be open
@@ -92,6 +93,7 @@ namespace AnyRPG {
         }
 
         public void CloseAllWindows() {
+            Debug.Log("PopupWindowManager.CloseAllWindows()");
             abilityBookWindow.CloseWindow();
             skillBookWindow.CloseWindow();
             achievementListWindow.CloseWindow();

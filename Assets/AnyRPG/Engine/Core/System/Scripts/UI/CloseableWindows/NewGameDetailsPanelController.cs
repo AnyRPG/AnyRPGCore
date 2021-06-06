@@ -44,10 +44,6 @@ namespace AnyRPG {
         private bool validSpecializationExists = false;
         */
 
-        public override void Awake() {
-            base.Awake();
-        }
-
         public void ResetInputText(string newText) {
             textInput.text = newText;
         }
@@ -60,6 +56,7 @@ namespace AnyRPG {
 
         public override void ReceiveOpenWindowNotification() {
             //Debug.Log("NewGameCharacterPanelController.ReceiveOpenWindowNotification()");
+            base.ReceiveOpenWindowNotification();
             ClearLabels();
         }
 

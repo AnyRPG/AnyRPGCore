@@ -31,6 +31,10 @@ namespace AnyRPG {
             }
         }
 
+        public void Init() {
+            // nothing for now, here to satisfy interface.  fix me at some point if possible
+        }
+
         public void SetBackGroundColor(Color color) {
             //Debug.Log("AchievementPanelUI.SetBackGroundColor()");
             if (backGroundImage != null) {

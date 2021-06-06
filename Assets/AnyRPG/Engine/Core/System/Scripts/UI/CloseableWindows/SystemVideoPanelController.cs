@@ -27,14 +27,16 @@ namespace AnyRPG {
         public TextOptionHighlightArea textureQualityArea;
         public TextOptionHighlightArea graphicsQualityArea;
 
-        private void Start() {
-            //Debug.Log("SystemVideoPanelController.Start()");
+        public override void Init() {
+            base.Init();
             InitializeSettings();
         }
 
+        /*
         public void OnEnable() {
             InitializeSettings();
         }
+        */
 
         private void InitializeSettings() {
 

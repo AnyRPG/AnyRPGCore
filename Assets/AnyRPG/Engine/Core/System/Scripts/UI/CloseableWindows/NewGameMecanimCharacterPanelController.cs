@@ -44,7 +44,7 @@ namespace AnyRPG {
 
         public override void ReceiveOpenWindowNotification() {
             //Debug.Log("NewGameMecanimCharacterPanelController.ReceiveOpenWindowNotification()");
-
+            base.ReceiveOpenWindowNotification();
             ShowOptionButtonsCommon();
         }
 

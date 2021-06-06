@@ -16,8 +16,8 @@ namespace AnyRPG {
         [SerializeField]
         private Transform creditsContainer = null;
 
-        public void Start() {
-
+        public override void Init() {
+            base.Init();
             PopulateCredits();
         }
 
@@ -48,9 +48,5 @@ namespace AnyRPG {
             SystemWindowManager.MyInstance.creditsWindow.CloseWindow();
         }
 
-        public override void ReceiveOpenWindowNotification() {
-            base.ReceiveOpenWindowNotification();
-            //UserInterfacePanel();
-        }
     }
 }

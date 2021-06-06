@@ -6,6 +6,7 @@ namespace AnyRPG {
     public interface ICloseableWindowContents {
         //event System.Action<ICloseableWindowContents> OnOpenWindow;
         event System.Action<ICloseableWindowContents> OnCloseWindow;
+        void Init();
         void RecieveClosedWindowNotification();
         void ReceiveOpenWindowNotification();
         void SetBackGroundColor(Color color);

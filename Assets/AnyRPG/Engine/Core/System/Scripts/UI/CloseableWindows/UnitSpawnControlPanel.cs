@@ -59,7 +59,6 @@ namespace AnyRPG {
         [SerializeField]
         private TextMeshProUGUI nameText = null;
 
-
         private List<UnitProfile> unitProfileList = new List<UnitProfile>();
 
         private List<UnitSpawnNode> unitSpawnNodeList = new List<UnitSpawnNode>();

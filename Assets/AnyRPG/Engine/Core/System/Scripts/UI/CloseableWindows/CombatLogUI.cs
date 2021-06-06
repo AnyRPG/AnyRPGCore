@@ -92,8 +92,6 @@ namespace AnyRPG {
 
         private List<GameObject> chatMessageList = new List<GameObject>();
 
-        protected bool eventSubscriptionsInitialized = false;
-
         private List<TextLogController> combatLogControllers = new List<TextLogController>();
 
         private List<TextLogController> usedCombatLogControllers = new List<TextLogController>();
@@ -106,20 +104,14 @@ namespace AnyRPG {
 
         private List<TextLogController> usedSystemLogControllers = new List<TextLogController>();
 
-        public override void Awake() {
+        public override void Init() {
             //Debug.Log("CombatLogUI.Awake()");
 
-            base.Awake();
             PopulateObjectPool();
             SetWelcomeString();
             ClearLog();
-        }
 
-        private void Start() {
-            //Debug.Log("QuestTrackerUI.Start()");
-
-            // do this last because it will print the chat messages and we don't want them to just get auto-cleared again
-            CreateEventSubscriptions();
+            base.Init();
         }
 
         public void PopulateObjectPool() {
@@ -253,16 +245,12 @@ namespace AnyRPG {
 
         }
 
-        private void OnEnable() {
-            //Debug.Log("CombatLogUI.OnEnable()");
-            CreateEventSubscriptions();
-        }
-
-        private void CreateEventSubscriptions() {
+        protected override void CreateEventSubscriptions() {
             ////Debug.Log("PlayerManager.CreateEventSubscriptions()");
             if (eventSubscriptionsInitialized) {
                 return;
             }
+            base.CreateEventSubscriptions();
             SystemEventManager.MyInstance.OnTakeDamage += HandleTakeDamage;
             SystemEventManager.MyInstance.OnPlayerConnectionDespawn += ClearLog;
             SystemEventManager.MyInstance.OnPlayerConnectionSpawn += PrintWelcomeMessages;
@@ -272,11 +260,12 @@ namespace AnyRPG {
             eventSubscriptionsInitialized = true;
         }
 
-        private void CleanupEventSubscriptions() {
+        protected override void CleanupEventSubscriptions() {
             ////Debug.Log("PlayerManager.CleanupEventSubscriptions()");
             if (!eventSubscriptionsInitialized) {
                 return;
             }
+            base.CleanupEventSubscriptions();
             if (SystemEventManager.MyInstance != null) {
                 SystemEventManager.MyInstance.OnTakeDamage -= HandleTakeDamage;
                 SystemEventManager.MyInstance.OnPlayerConnectionDespawn -= ClearLog;
@@ -293,11 +282,6 @@ namespace AnyRPG {
             CleanupEventSubscriptions();
         }
         */
-
-        public void OnDestroy() {
-            //Debug.Log("QuestTrackerUI.OnDisable()");
-            CleanupEventSubscriptions();
-        }
 
         public void HandleTakeDamage(IAbilityCaster source, CharacterUnit target, int damage, string abilityName) {
             Color textColor = Color.white;

@@ -30,6 +30,7 @@ namespace AnyRPG {
         public Interactable CurrentInteractable {
             get => currentInteractable;
             set {
+                Debug.Log("CurrentInteractable");
                 currentInteractable = value;
                 OnSetInteractable(currentInteractable);
             }

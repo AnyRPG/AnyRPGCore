@@ -28,15 +28,13 @@ namespace AnyRPG {
 
         private int dropDownIndex = 0;
 
-        protected bool eventSubscriptionsInitialized = false;
-
         VendorCollection buyBackCollection = null;
 
 
         private List<CurrencyAmountController> currencyAmountControllers = new List<CurrencyAmountController>();
 
-        public override void Awake() {
-            base.Awake();
+        public override void Init() {
+            base.Init();
             //vendorUI.CreatePages(items);
             CreateEventSubscriptions();
             //InitializeBuyBackList();
@@ -44,7 +42,7 @@ namespace AnyRPG {
             buyBackCollection = ScriptableObject.CreateInstance(typeof(VendorCollection)) as VendorCollection;
         }
 
-        private void CreateEventSubscriptions() {
+        protected override void CreateEventSubscriptions() {
             //Debug.Log("VendorUI.CreateEventSubscriptions()");
             if (eventSubscriptionsInitialized) {
                 return;
@@ -53,7 +51,7 @@ namespace AnyRPG {
             eventSubscriptionsInitialized = true;
         }
 
-        private void CleanupEventSubscriptions() {
+        protected override void CleanupEventSubscriptions() {
             //Debug.Log("UnitSpawnNode.CleanupEventSubscriptions()");
             if (!eventSubscriptionsInitialized) {
                 return;
@@ -62,11 +60,6 @@ namespace AnyRPG {
                 SystemEventManager.MyInstance.OnCurrencyChange -= UpdateCurrencyAmount;
             }
             eventSubscriptionsInitialized = false;
-        }
-
-        public void OnDestroy() {
-            //Debug.Log("UnitSpawnNode.OnDisable(): stopping any outstanding coroutines");
-            CleanupEventSubscriptions();
         }
 
         public int GetPageCount() {

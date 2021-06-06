@@ -143,7 +143,7 @@ namespace AnyRPG {
 
             // activate in game UI to get default positions
             ActivateInGameUI();
-
+            //return;
             // system menu needs to be activated so that the UI settings check can adjust its opacity
             ActivateSystemMenuUI();
 
@@ -347,7 +347,7 @@ namespace AnyRPG {
         }
 
         public void DeactivateInGameUI() {
-            //Debug.Log("UIManager.DeactivateInGameUI()");
+            Debug.Log("UIManager.DeactivateInGameUI()");
             if (PopupWindowManager.MyInstance != null) {
                 PopupWindowManager.MyInstance.CloseAllWindows();
             }
@@ -363,6 +363,8 @@ namespace AnyRPG {
             //Debug.Log("UIManager.ActivateInGameUI()");
             DeactivateLoadingUI();
             inGameUI.SetActive(true);
+            //Debug.Break();
+            //return;
             if (CameraManager.MyInstance != null) {
                 CameraManager.MyInstance.DisableCutsceneCamera();
             }
@@ -712,6 +714,7 @@ namespace AnyRPG {
 
             // player interaface settings
             ActivatePlayerUI();
+
             CheckQuestTrackerSettings();
             CheckCombatLogSettings();
             UpdateActionBars();

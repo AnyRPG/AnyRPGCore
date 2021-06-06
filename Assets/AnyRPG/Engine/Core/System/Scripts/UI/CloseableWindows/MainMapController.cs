@@ -33,13 +33,13 @@ namespace AnyRPG {
         // the number of pixels per meter of level based on the total map pixels
         private float levelScaleFactor = 1f;
 
-        protected bool eventSubscriptionsInitialized = false;
+        private bool activeEventSubscriptionsInitialized = false;
 
         public GameObject MapGraphic { get => mapGraphic; }
 
-        public override void Awake() {
+        public override void Init() {
             //Debug.Log("MainMapController.Awake()");
-            base.Awake();
+            base.Init();
             //instantiate singleton
             CameraManager.MyInstance.MainMapCamera.enabled = false;
 
@@ -82,30 +82,30 @@ namespace AnyRPG {
 
         private void OnEnable() {
             //Debug.Log("MainMapController.OnEnable()");
-            CreateEventSubscriptions();
+            CreateActiveEventSubscriptions();
         }
 
-        private void CreateEventSubscriptions() {
+        private void CreateActiveEventSubscriptions() {
             //Debug.Log("MainMapController.CreateEventSubscriptions()");
-            if (eventSubscriptionsInitialized) {
+            if (activeEventSubscriptionsInitialized) {
                 return;
             }
             SystemEventManager.StartListening("AfterCameraUpdate", HandleAfterCameraUpdate);
-            eventSubscriptionsInitialized = true;
+            activeEventSubscriptionsInitialized = true;
         }
 
-        private void CleanupEventSubscriptions() {
+        private void CleanupActiveEventSubscriptions() {
             //Debug.Log("PlayerManager.CleanupEventSubscriptions()");
-            if (!eventSubscriptionsInitialized) {
+            if (!activeEventSubscriptionsInitialized) {
                 return;
             }
             SystemEventManager.StopListening("AfterCameraUpdate", HandleAfterCameraUpdate);
-            eventSubscriptionsInitialized = false;
+            activeEventSubscriptionsInitialized = false;
         }
 
         public void OnDisable() {
             //Debug.Log("PlayerManager.OnDisable()");
-            CleanupEventSubscriptions();
+            CleanupActiveEventSubscriptions();
         }
 
         /*

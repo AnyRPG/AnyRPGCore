@@ -30,6 +30,10 @@ namespace AnyRPG {
             }
         }
 
+        public void Init() {
+            // nothing for now, here to satisfy interface.  fix me at some point if possible
+        }
+
         public void SetBackGroundColor(Color color) {
             if (backGroundImage != null) {
                 backGroundImage.color = color;

@@ -31,43 +31,33 @@ namespace AnyRPG {
         [SerializeField]
         private Transform questParent = null;
 
-        private bool referencesInitialized = false;
-
         private List<QuestTrackerQuestScript> questScripts = new List<QuestTrackerQuestScript>();
 
-        private void Start() {
-            //Debug.Log("QuestTrackerUI.Start()");
-            InitializeReferences();
-        }
-
-        private void OnEnable() {
-            //Debug.Log("QuestTrackerUI.OnEnable()");
-            InitializeReferences();
-        }
-
-        public void InitializeReferences() {
+        protected override void CreateEventSubscriptions() {
             //Debug.Log("QuestTrackerUI.InitializeReferences()");
-            if (referencesInitialized == true) {
+            if (eventSubscriptionsInitialized == true) {
                 return;
             }
+            base.CreateEventSubscriptions();
             SystemEventManager.MyInstance.OnQuestObjectiveStatusUpdated += ShowQuests;
             SystemEventManager.MyInstance.OnAfterQuestStatusUpdated += ShowQuests;
             SystemEventManager.StartListening("OnPlayerUnitSpawn", HandlePlayerUnitSpawn);
             if (PlayerManager.MyInstance != null && PlayerManager.MyInstance.PlayerUnitSpawned == true) {
                 ShowQuests();
             }
-
-            referencesInitialized = true;
         }
 
-        public void CleanupEventSubscriptions() {
+        protected override void CleanupEventSubscriptions() {
             //Debug.Log("QuestTrackerUI.CleanupEventSubscriptions()");
+            if (eventSubscriptionsInitialized == false) {
+                return;
+            }
+            base.CleanupEventSubscriptions();
             if (SystemEventManager.MyInstance != null) {
                 SystemEventManager.MyInstance.OnQuestObjectiveStatusUpdated -= ShowQuests;
                 SystemEventManager.MyInstance.OnQuestStatusUpdated -= ShowQuests;
                 SystemEventManager.StopListening("OnPlayerUnitSpawn", HandlePlayerUnitSpawn);
             }
-            referencesInitialized = false;
         }
 
         public void HandlePlayerUnitSpawn(string eventName, EventParamProperties eventParamProperties) {
@@ -149,11 +139,6 @@ namespace AnyRPG {
             ShowQuests();
         }
 
-        // moved below functionality to OnDestroy because these are static objects that exist for the entire game
-        public void OnDestroy() {
-            //Debug.Log("QuestTrackerUI.OnDestroy()");
-            CleanupEventSubscriptions();
-        }
 
     }
 

@@ -19,10 +19,6 @@ namespace AnyRPG {
 
         private int pageIndex = 0;
 
-        private void Start() {
-            //Debug.Log("SkillBookUI.Start()");
-        }
-
         [SerializeField]
         private Image backGroundImage;
 
@@ -32,6 +28,10 @@ namespace AnyRPG {
             if (backGroundImage == null) {
                 backGroundImage = GetComponent<Image>();
             }
+        }
+
+        public void Init() {
+            // nothing for now, here to satisfy interface.  fix me at some point if possible
         }
 
         public void SetBackGroundColor(Color color) {

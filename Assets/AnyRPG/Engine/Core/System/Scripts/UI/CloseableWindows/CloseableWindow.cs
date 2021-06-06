@@ -80,6 +80,7 @@ namespace AnyRPG {
             if (contentGameObject != null) {
                 //Debug.Log(gameObject.name + ".CloseableWindow.InitializeWindow(): Instanted; setting window Contents");
                 windowContents = contentGameObject.GetComponent<ICloseableWindowContents>();
+                windowContents.Init();
             }
         }
 
@@ -148,6 +149,7 @@ namespace AnyRPG {
         }
 
         public void RawCloseWindow() {
+            //Debug.Log(gameObject.name + ".CloseableWindow.RawCloseWindow()");
             /*
             canvasGroup.alpha = 0;
             canvasGroup.interactable = false;

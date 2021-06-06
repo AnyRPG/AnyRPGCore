@@ -61,10 +61,6 @@ namespace AnyRPG {
 
         public MusicPlayerHighlightButton MySelectedMusicPlayerHighlightButton { get => selectedMusicPlayerHighlightButton; set => selectedMusicPlayerHighlightButton = value; }
 
-        private void Start() {
-            //DeactivateButtons();
-        }
-
         public void DeactivateButtons() {
             if (playButton != null) {
                 playButton.interactable = false;

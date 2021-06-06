@@ -17,11 +17,36 @@ namespace AnyRPG {
 
         protected RectTransform rectTransform;
 
-        public virtual void Awake() {
+        protected bool eventSubscriptionsInitialized = false;
+
+        public virtual void Init() {
+            //Debug.Log(gameObject.name + ".WindowContentController.Init()");
             if (backGroundImage == null) {
                 backGroundImage = GetComponent<Image>();
             }
             rectTransform = GetComponent<RectTransform>();
+            CreateEventSubscriptions();
+        }
+
+        protected virtual void CreateEventSubscriptions() {
+            //Debug.Log("PlayerManager.CreateEventSubscriptions()");
+            if (eventSubscriptionsInitialized) {
+                return;
+            }
+            eventSubscriptionsInitialized = true;
+        }
+
+        protected virtual void CleanupEventSubscriptions() {
+            //Debug.Log("PlayerManager.CleanupEventSubscriptions()");
+            if (!eventSubscriptionsInitialized) {
+                return;
+            }
+            eventSubscriptionsInitialized = false;
+        }
+
+        protected virtual void OnDestroy() {
+            //Debug.Log("WindowContentController.OnDestroy()");
+            CleanupEventSubscriptions();
         }
 
         public virtual void OnHoverSound() {
