@@ -31,7 +31,7 @@ namespace AnyRPG {
         public CapabilityConsumerProcessor CapabilityConsumerProcessor { get => capabilityConsumerProcessor; }
 
         public CapabilityConsumerSnapshot(ICapabilityConsumer capabilityConsumer) {
-            capabilityProviders.Add(SystemConfigurationManager.MyInstance);
+            capabilityProviders.Add(SystemConfigurationManager.Instance);
             if (capabilityConsumer.UnitProfile != null) {
                 unitProfile = capabilityConsumer.UnitProfile;
                 capabilityProviders.Add(capabilityConsumer.UnitProfile);

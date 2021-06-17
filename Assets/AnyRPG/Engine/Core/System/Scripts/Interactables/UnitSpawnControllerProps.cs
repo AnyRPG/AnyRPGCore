@@ -23,8 +23,8 @@ namespace AnyRPG {
 
         private List<UnitProfile> unitProfileList = new List<UnitProfile>();
 
-        public override Sprite Icon { get => (SystemConfigurationManager.MyInstance.UnitSpawnControllerInteractionPanelImage != null ? SystemConfigurationManager.MyInstance.UnitSpawnControllerInteractionPanelImage : base.Icon); }
-        public override Sprite NamePlateImage { get => (SystemConfigurationManager.MyInstance.UnitSpawnControllerNamePlateImage != null ? SystemConfigurationManager.MyInstance.UnitSpawnControllerNamePlateImage : base.NamePlateImage); }
+        public override Sprite Icon { get => (SystemConfigurationManager.Instance.UnitSpawnControllerInteractionPanelImage != null ? SystemConfigurationManager.Instance.UnitSpawnControllerInteractionPanelImage : base.Icon); }
+        public override Sprite NamePlateImage { get => (SystemConfigurationManager.Instance.UnitSpawnControllerNamePlateImage != null ? SystemConfigurationManager.Instance.UnitSpawnControllerNamePlateImage : base.NamePlateImage); }
 
         public List<UnitSpawnNode> UnitSpawnNodeList { get => unitSpawnNodeList; set => unitSpawnNodeList = value; }
         public List<UnitProfile> UnitProfileList { get => unitProfileList; set => unitProfileList = value; }

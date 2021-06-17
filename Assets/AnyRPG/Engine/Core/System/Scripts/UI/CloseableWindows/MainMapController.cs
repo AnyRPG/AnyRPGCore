@@ -43,7 +43,7 @@ namespace AnyRPG {
             //instantiate singleton
             CameraManager.MyInstance.MainMapCamera.enabled = false;
 
-            mainmapTextureFolder = mainmapTextureFolderBase + SystemConfigurationManager.MyInstance.GameName.Replace(" ", "") + "/Images/MiniMap/";
+            mainmapTextureFolder = mainmapTextureFolderBase + SystemConfigurationManager.Instance.GameName.Replace(" ", "") + "/Images/MiniMap/";
 
         }
 
@@ -63,7 +63,7 @@ namespace AnyRPG {
             if (PopupWindowManager.MyInstance.mainMapWindow.IsOpen == false) {
                 return;
             }
-            if (SystemConfigurationManager.MyInstance.UseThirdPartyCameraControl == true
+            if (SystemConfigurationManager.Instance.UseThirdPartyCameraControl == true
                 && CameraManager.MyInstance.ThirdPartyCamera.activeInHierarchy == true
                 && PlayerManager.MyInstance.PlayerUnitSpawned == true) {
                 UpdateMainMap();

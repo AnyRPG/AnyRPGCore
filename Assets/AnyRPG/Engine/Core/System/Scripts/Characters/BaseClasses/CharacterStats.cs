@@ -106,7 +106,7 @@ namespace AnyRPG {
             powerResourceList = new List<PowerResource>();
 
             // add from system
-            powerResourceList.AddRange(SystemConfigurationManager.MyInstance.PowerResourceList);
+            powerResourceList.AddRange(SystemConfigurationManager.Instance.PowerResourceList);
 
             if (baseCharacter == null || baseCharacter.StatProviders == null) {
                 return;
@@ -314,7 +314,7 @@ namespace AnyRPG {
         public void SetPrimaryStatModifiers() {
             //Debug.Log(gameObject.name + ".CharacterStats.SetPrimaryStatModifiers()");
             // setup the primary stats dictionary with system defined stats
-            AddPrimaryStatModifiers(SystemConfigurationManager.MyInstance.PrimaryStats, false);
+            AddPrimaryStatModifiers(SystemConfigurationManager.Instance.PrimaryStats, false);
 
             if (baseCharacter != null && baseCharacter.StatProviders != null) {
                 foreach (IStatProvider statProvider in baseCharacter.StatProviders) {

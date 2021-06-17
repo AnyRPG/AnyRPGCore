@@ -357,8 +357,8 @@ namespace AnyRPG {
                 && baseCharacter.UnitProfile.UnitPrefabProps.AnimationProps != null) {
                 return baseCharacter.UnitProfile.UnitPrefabProps.AnimationProps;
             }
-            if (SystemConfigurationManager.MyInstance?.DefaultAnimationProfile != null) {
-                return SystemConfigurationManager.MyInstance.DefaultAnimationProfile.AnimationProps;
+            if (SystemConfigurationManager.Instance?.DefaultAnimationProfile != null) {
+                return SystemConfigurationManager.Instance.DefaultAnimationProfile.AnimationProps;
             }
             return base.GetUnitAnimationProps();
         }
@@ -700,7 +700,7 @@ namespace AnyRPG {
             abilityCoolDownNode.MyAbilityName = baseAbility.DisplayName;
 
             // need to account for auto-attack
-            if (SystemConfigurationManager.MyInstance.AllowAutoAttack == false && (baseAbility is AnimatedAbility) && (baseAbility as AnimatedAbility).IsAutoAttack == true) {
+            if (SystemConfigurationManager.Instance.AllowAutoAttack == false && (baseAbility is AnimatedAbility) && (baseAbility as AnimatedAbility).IsAutoAttack == true) {
                 abilityCoolDownNode.MyRemainingCoolDown = abilityCoolDown;
             } else {
                 abilityCoolDownNode.MyRemainingCoolDown = abilityCoolDown;
@@ -1716,7 +1716,7 @@ namespace AnyRPG {
         public override void ProcessAbilityCoolDowns(AnimatedAbility baseAbility, float animationLength, float abilityCoolDown) {
             base.ProcessAbilityCoolDowns(baseAbility, animationLength, abilityCoolDown);
             if (baseCharacter?.UnitController != null && baseCharacter.UnitController.UnitControllerMode == UnitControllerMode.Player) {
-                if (SystemConfigurationManager.MyInstance.AllowAutoAttack == true && baseAbility.IsAutoAttack) {
+                if (SystemConfigurationManager.Instance.AllowAutoAttack == true && baseAbility.IsAutoAttack) {
                     return;
                 }
             }

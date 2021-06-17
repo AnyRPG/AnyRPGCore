@@ -212,20 +212,20 @@ namespace AnyRPG {
         }
 
         public bool IsMainMenu() {
-            if (activeSceneName == SystemConfigurationManager.MyInstance?.MainMenuSceneNode?.SceneFile) {
+            if (activeSceneName == SystemConfigurationManager.Instance?.MainMenuSceneNode?.SceneFile) {
                 return true;
             }
-            if (activeSceneName == SystemConfigurationManager.MyInstance?.MainMenuScene?.Replace(" ", "")) {
+            if (activeSceneName == SystemConfigurationManager.Instance?.MainMenuScene?.Replace(" ", "")) {
                 return true;
             }
             return false;
         }
 
         public bool IsInitializationScene() {
-            if (activeSceneName == SystemConfigurationManager.MyInstance.InitializationSceneNode?.SceneFile) {
+            if (activeSceneName == SystemConfigurationManager.Instance.InitializationSceneNode?.SceneFile) {
                 return true;
             }
-            if (activeSceneName == SystemConfigurationManager.MyInstance.InitializationScene.Replace(" ", "")) {
+            if (activeSceneName == SystemConfigurationManager.Instance.InitializationScene.Replace(" ", "")) {
                 return true;
             }
             return false;
@@ -410,17 +410,17 @@ namespace AnyRPG {
         }
 
         public void LoadDefaultStartingZone() {
-            if (SystemConfigurationManager.MyInstance.DefaultStartingZone != string.Empty) {
-                LoadLevel(SystemConfigurationManager.MyInstance.DefaultStartingZone);
+            if (SystemConfigurationManager.Instance.DefaultStartingZone != string.Empty) {
+                LoadLevel(SystemConfigurationManager.Instance.DefaultStartingZone);
             }
         }
 
         public void LoadMainMenu() {
             SystemEventManager.MyInstance.NotifyOnExitGame();
-            if (SystemConfigurationManager.MyInstance.MainMenuSceneNode != null) {
-                LoadLevel(SystemConfigurationManager.MyInstance.MainMenuSceneNode.DisplayName);
+            if (SystemConfigurationManager.Instance.MainMenuSceneNode != null) {
+                LoadLevel(SystemConfigurationManager.Instance.MainMenuSceneNode.DisplayName);
             } else {
-                LoadLevel(SystemResourceManager.prepareStringForMatch(SystemConfigurationManager.MyInstance.MainMenuScene));
+                LoadLevel(SystemResourceManager.prepareStringForMatch(SystemConfigurationManager.Instance.MainMenuScene));
             }
         }
 

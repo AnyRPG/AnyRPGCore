@@ -17,8 +17,8 @@ namespace AnyRPG {
 
         private List<Skill> skills = new List<Skill>();
 
-        public override Sprite Icon { get => (SystemConfigurationManager.MyInstance.SkillTrainerInteractionPanelImage != null ? SystemConfigurationManager.MyInstance.SkillTrainerInteractionPanelImage : base.Icon); }
-        public override Sprite NamePlateImage { get => (SystemConfigurationManager.MyInstance.SkillTrainerNamePlateImage != null ? SystemConfigurationManager.MyInstance.SkillTrainerNamePlateImage : base.NamePlateImage); }
+        public override Sprite Icon { get => (SystemConfigurationManager.Instance.SkillTrainerInteractionPanelImage != null ? SystemConfigurationManager.Instance.SkillTrainerInteractionPanelImage : base.Icon); }
+        public override Sprite NamePlateImage { get => (SystemConfigurationManager.Instance.SkillTrainerNamePlateImage != null ? SystemConfigurationManager.Instance.SkillTrainerNamePlateImage : base.NamePlateImage); }
 
         public List<Skill> Skills { get => skills; }
 

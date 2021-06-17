@@ -7,7 +7,7 @@ namespace AnyRPG {
     static class LevelEquations {
 
         public static int GetXPNeededForLevel(int _level) {
-            return _level * SystemConfigurationManager.MyInstance.XpRequiredPerLevel;
+            return _level * SystemConfigurationManager.Instance.XpRequiredPerLevel;
         }
 
         /// <summary>
@@ -53,14 +53,14 @@ namespace AnyRPG {
             float multiplierValue = 1f;
             float toughnessMultiplierValue = 1f;
 
-            if (SystemConfigurationManager.MyInstance.UseKillXPLevelMultiplierDemoninator == true) {
-                multiplierValue = 1f / Mathf.Clamp(sourceLevel, 0, (SystemConfigurationManager.MyInstance.KillXPMultiplierLevelCap > 0 ? SystemConfigurationManager.MyInstance.KillXPMultiplierLevelCap : Mathf.Infinity));
+            if (SystemConfigurationManager.Instance.UseKillXPLevelMultiplierDemoninator == true) {
+                multiplierValue = 1f / Mathf.Clamp(sourceLevel, 0, (SystemConfigurationManager.Instance.KillXPMultiplierLevelCap > 0 ? SystemConfigurationManager.Instance.KillXPMultiplierLevelCap : Mathf.Infinity));
             }
             if (targetCharacter.CharacterStats.Toughness != null) {
                 toughnessMultiplierValue = targetCharacter.CharacterStats.Toughness.ExperienceMultiplier;
             }
 
-            int baseXP = (int)((((sourceLevel * SystemConfigurationManager.MyInstance.KillXPPerLevel) * multiplierValue) + SystemConfigurationManager.MyInstance.BaseKillXP) * toughnessMultiplierValue);
+            int baseXP = (int)((((sourceLevel * SystemConfigurationManager.Instance.KillXPPerLevel) * multiplierValue) + SystemConfigurationManager.Instance.BaseKillXP) * toughnessMultiplierValue);
 
             int totalXP = 0;
             if (sourceLevel < targetCharacter.CharacterStats.Level) {
@@ -78,12 +78,12 @@ namespace AnyRPG {
 
             float multiplierValue = 1f;
 
-            if (SystemConfigurationManager.MyInstance.UseQuestXPLevelMultiplierDemoninator == true) {
-                multiplierValue = 1f / Mathf.Clamp(sourceLevel, 0, (SystemConfigurationManager.MyInstance.QuestXPMultiplierLevelCap > 0 ? SystemConfigurationManager.MyInstance.QuestXPMultiplierLevelCap : Mathf.Infinity));
+            if (SystemConfigurationManager.Instance.UseQuestXPLevelMultiplierDemoninator == true) {
+                multiplierValue = 1f / Mathf.Clamp(sourceLevel, 0, (SystemConfigurationManager.Instance.QuestXPMultiplierLevelCap > 0 ? SystemConfigurationManager.Instance.QuestXPMultiplierLevelCap : Mathf.Infinity));
             }
 
-            int experiencePerLevel = SystemConfigurationManager.MyInstance.QuestXPPerLevel + quest.ExperienceRewardPerLevel;
-            int baseExperience = SystemConfigurationManager.MyInstance.BaseQuestXP + quest.BaseExperienceReward;
+            int experiencePerLevel = SystemConfigurationManager.Instance.QuestXPPerLevel + quest.ExperienceRewardPerLevel;
+            int baseExperience = SystemConfigurationManager.Instance.BaseQuestXP + quest.BaseExperienceReward;
 
             int baseXP = (int)(((quest.MyExperienceLevel * experiencePerLevel) * multiplierValue) + baseExperience);
 
@@ -165,7 +165,7 @@ namespace AnyRPG {
             }
             */
 
-            return SystemConfigurationManager.MyInstance.StatBudgetPerLevel + extraStatPerLevel;
+            return SystemConfigurationManager.Instance.StatBudgetPerLevel + extraStatPerLevel;
         }
 
         public static float GetBaseSecondaryStatForCharacter(SecondaryStatType secondaryStatType, CharacterStats characterStats) {

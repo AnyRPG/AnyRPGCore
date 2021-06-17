@@ -391,7 +391,7 @@ namespace AnyRPG {
         private void SetPreviewMode() {
             //Debug.Log(gameObject.name + ".UnitController.SetPreviewMode()");
             SetUnitControllerMode(UnitControllerMode.Preview);
-            SetDefaultLayer(SystemConfigurationManager.MyInstance.DefaultCharacterUnitLayer);
+            SetDefaultLayer(SystemConfigurationManager.Instance.DefaultCharacterUnitLayer);
             useAgent = false;
             DisableAgent();
 
@@ -430,7 +430,7 @@ namespace AnyRPG {
         public void SetPetMode(BaseCharacter masterBaseCharacter, bool enableMode = false) {
             //Debug.Log(gameObject.name + ".UnitController.SetPetMode(" + (masterBaseCharacter == null ? "null" : masterBaseCharacter.gameObject.name) + ")");
             SetUnitControllerMode(UnitControllerMode.Pet);
-            SetDefaultLayer(SystemConfigurationManager.MyInstance.DefaultCharacterUnitLayer);
+            SetDefaultLayer(SystemConfigurationManager.Instance.DefaultCharacterUnitLayer);
             if (masterBaseCharacter != null) {
                 characterUnit.BaseCharacter.CharacterStats.SetLevel(masterBaseCharacter.CharacterStats.Level);
                 //characterUnit.BaseCharacter.CharacterStats.ApplyControlEffects(masterBaseCharacter);
@@ -467,7 +467,7 @@ namespace AnyRPG {
             namePlateController.SetNamePlatePosition();
 
             SetUnitControllerMode(UnitControllerMode.Mount);
-            SetDefaultLayer(SystemConfigurationManager.MyInstance.DefaultCharacterUnitLayer);
+            SetDefaultLayer(SystemConfigurationManager.Instance.DefaultCharacterUnitLayer);
             if (myCollider != null) {
                 myCollider.isTrigger = false;
             }
@@ -484,7 +484,7 @@ namespace AnyRPG {
             //Debug.Log(gameObject.name + "UnitController.EnablePlayer()");
             InitializeNamePlateController();
 
-            SetDefaultLayer(SystemConfigurationManager.MyInstance.DefaultPlayerUnitLayer);
+            SetDefaultLayer(SystemConfigurationManager.Instance.DefaultPlayerUnitLayer);
             DisableAggro();
 
             rigidBody.useGravity = true;
@@ -508,7 +508,7 @@ namespace AnyRPG {
                 SystemEventManager.TriggerEvent("OnSetSprintSpeed", eventParam);
 
             }
-            if (SystemConfigurationManager.MyInstance.UseThirdPartyMovementControl) {
+            if (SystemConfigurationManager.Instance.UseThirdPartyMovementControl) {
                 KeyBindManager.MyInstance.SendKeyBindEvents();
             }
         }
@@ -530,7 +530,7 @@ namespace AnyRPG {
         }
 
         private void EnableAICommon() {
-            SetDefaultLayer(SystemConfigurationManager.MyInstance.DefaultCharacterUnitLayer);
+            SetDefaultLayer(SystemConfigurationManager.Instance.DefaultCharacterUnitLayer);
 
             // enable agent needs to be done before changing state or idle -> patrol transition will not work because of an inactive navmeshagent
             if (unitProfile != null && unitProfile.IsMobile == true) {
@@ -1767,7 +1767,7 @@ namespace AnyRPG {
                 //miniMapIndicator.transform.forward = new Vector3(0f, transform.forward.x, transform.forward.z);
                 //miniMapIndicator.transform.rotation = Quaternion.Euler(0, transform.eulerAngles.y, 0);
                 //miniMapIndicator.transform.rotation = Quaternion.Euler(0, 0, transform.eulerAngles.y * -1f) * Quaternion.LookRotation(SystemConfigurationManager.MyInstance.PlayerMiniMapIconForward);
-                miniMapIndicator.transform.rotation = Quaternion.Euler(0, 0, (transform.eulerAngles.y - SystemConfigurationManager.MyInstance.PlayerMiniMapIconRotation) * -1f);
+                miniMapIndicator.transform.rotation = Quaternion.Euler(0, 0, (transform.eulerAngles.y - SystemConfigurationManager.Instance.PlayerMiniMapIconRotation) * -1f);
                 if (mainMapIndicator != null) {
                     mainMapIndicator.transform.rotation = miniMapIndicator.transform.rotation;
                 }
@@ -1780,7 +1780,7 @@ namespace AnyRPG {
             }
             base.UpdateMainMapIndicator();
             if (miniMapIndicatorReady == true && mainMapIndicator != null) {
-                mainMapIndicator.transform.rotation = Quaternion.Euler(0, 0, (transform.eulerAngles.y - SystemConfigurationManager.MyInstance.PlayerMiniMapIconRotation) * -1f);
+                mainMapIndicator.transform.rotation = Quaternion.Euler(0, 0, (transform.eulerAngles.y - SystemConfigurationManager.Instance.PlayerMiniMapIconRotation) * -1f);
             }
         }
 

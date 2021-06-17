@@ -135,7 +135,7 @@ namespace AnyRPG {
         }
 
         private void LateUpdate() {
-            if (SystemConfigurationManager.MyInstance.RealTimeUnitFrameCamera) {
+            if (SystemConfigurationManager.Instance.RealTimeUnitFrameCamera) {
                 UpdateCameraPosition();
             }
         }
@@ -240,7 +240,7 @@ namespace AnyRPG {
             } else {
                 //Debug.Log(gameObject.name + ".UnitFrameController.SetTarget(): Unit Frame Not active after activate command.  Likely gameobject under inactive canvas.  Will run TargetInitialization() on enable instead.");
             }
-            if (SystemConfigurationManager.MyInstance.RealTimeUnitFrameCamera == true) {
+            if (SystemConfigurationManager.Instance.RealTimeUnitFrameCamera == true) {
                 previewCamera.enabled = true;
             } else {
                 //previewCamera.Render();

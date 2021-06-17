@@ -97,7 +97,7 @@ namespace AnyRPG {
             SaveManager.MyInstance.ClearSharedData();
             characterPreviewPanel.OnTargetReady -= HandleTargetReady;
             characterPreviewPanel.RecieveClosedWindowNotification();
-            if (SystemConfigurationManager.MyInstance.NewGameUMAAppearance == true) {
+            if (SystemConfigurationManager.Instance.NewGameUMAAppearance == true) {
                 umaCharacterPanel.RecieveClosedWindowNotification();
             } else {
                 characterPanel.RecieveClosedWindowNotification();
@@ -111,13 +111,13 @@ namespace AnyRPG {
 
         public void ClearButtons() {
             // disable character button if option not allowed or no faction exists
-            if (SystemConfigurationManager.MyInstance.NewGameAppearance == true) {
+            if (SystemConfigurationManager.Instance.NewGameAppearance == true) {
                 characterButton.gameObject.SetActive(true);
             } else {
                 characterButton.gameObject.SetActive(false);
             }
 
-            if (SystemConfigurationManager.MyInstance.NewGameUMAAppearance == true) {
+            if (SystemConfigurationManager.Instance.NewGameUMAAppearance == true) {
                 appearanceButton.gameObject.SetActive(true);
             } else {
                 appearanceButton.gameObject.SetActive(false);
@@ -125,7 +125,7 @@ namespace AnyRPG {
 
             // disable faction button if option not allowed or no faction exists
             factionButton.gameObject.SetActive(false);
-            if (SystemConfigurationManager.MyInstance.NewGameFaction == true) {
+            if (SystemConfigurationManager.Instance.NewGameFaction == true) {
                 foreach (Faction faction in SystemFactionManager.MyInstance.GetResourceList()) {
                     if (faction.NewGameOption == true) {
                         factionButton.gameObject.SetActive(true);
@@ -136,7 +136,7 @@ namespace AnyRPG {
 
             // disable class button if option not allowed or no faction exists
             classButton.gameObject.SetActive(false);
-            if (SystemConfigurationManager.MyInstance.NewGameClass == true) {
+            if (SystemConfigurationManager.Instance.NewGameClass == true) {
                 foreach (CharacterClass characterClass in SystemCharacterClassManager.MyInstance.GetResourceList()) {
                     if (characterClass.NewGameOption == true) {
                         classButton.gameObject.SetActive(true);
@@ -146,7 +146,7 @@ namespace AnyRPG {
             }
 
             // disable specialization button if option not allowed or class button disabled (specializations do not have a specific new game option)
-            if (SystemConfigurationManager.MyInstance.NewGameSpecialization == true) {
+            if (SystemConfigurationManager.Instance.NewGameSpecialization == true) {
                 if (classButton.gameObject.activeSelf == true) {
                     specializationButton.gameObject.SetActive(true);
                 } else {
@@ -199,13 +199,13 @@ namespace AnyRPG {
             characterPreviewPanel.ReceiveOpenWindowNotification();
 
             // attempt to open the UMA window first
-            if (SystemConfigurationManager.MyInstance.NewGameUMAAppearance == true) {
+            if (SystemConfigurationManager.Instance.NewGameUMAAppearance == true) {
                 umaCharacterPanel.ReceiveOpenWindowNotification();
             }
 
             // if the UMA window is not in use, or there was no UMA unit available, try the mecanim window
-            if (SystemConfigurationManager.MyInstance.NewGameUMAAppearance == false
-                || (SystemConfigurationManager.MyInstance.NewGameUMAAppearance == true && CharacterCreatorManager.MyInstance.PreviewUnitController == null)) {
+            if (SystemConfigurationManager.Instance.NewGameUMAAppearance == false
+                || (SystemConfigurationManager.Instance.NewGameUMAAppearance == true && CharacterCreatorManager.MyInstance.PreviewUnitController == null)) {
                 characterPanel.ReceiveOpenWindowNotification();
             }
 
@@ -220,9 +220,9 @@ namespace AnyRPG {
 
             // testing appearance last since it relies on at very minimum the unit profile being set
 
-            if (SystemConfigurationManager.MyInstance.NewGameAudioProfile != null) {
+            if (SystemConfigurationManager.Instance.NewGameAudioProfile != null) {
                 AudioManager.MyInstance.StopMusic();
-                AudioManager.MyInstance.PlayMusic(SystemConfigurationManager.MyInstance.NewGameAudioProfile.AudioClip);
+                AudioManager.MyInstance.PlayMusic(SystemConfigurationManager.Instance.NewGameAudioProfile.AudioClip);
             }
         }
          
@@ -233,9 +233,9 @@ namespace AnyRPG {
             saveData = SaveManager.MyInstance.InitializeResourceLists(saveData, false);
             saveData.playerName = playerName;
             saveData.PlayerLevel = 1;
-            saveData.CurrentScene = SystemConfigurationManager.MyInstance.DefaultStartingZone;
-            unitProfile = SystemConfigurationManager.MyInstance.CharacterCreatorUnitProfile;
-            saveData.unitProfileName = SystemConfigurationManager.MyInstance.CharacterCreatorUnitProfileName;
+            saveData.CurrentScene = SystemConfigurationManager.Instance.DefaultStartingZone;
+            unitProfile = SystemConfigurationManager.Instance.CharacterCreatorUnitProfile;
+            saveData.unitProfileName = SystemConfigurationManager.Instance.CharacterCreatorUnitProfileName;
         }
 
         public void SetUnitProfile(NewGameUnitButton newGameUnitButton) {
@@ -360,7 +360,7 @@ namespace AnyRPG {
             if (faction != null && faction.DefaultStartingZone != null && faction.DefaultStartingZone != string.Empty) {
                 saveData.CurrentScene = faction.DefaultStartingZone;
             } else {
-                saveData.CurrentScene = SystemConfigurationManager.MyInstance.DefaultStartingZone;
+                saveData.CurrentScene = SystemConfigurationManager.Instance.DefaultStartingZone;
             }
 
             /*
@@ -396,7 +396,7 @@ namespace AnyRPG {
                 }
             }
 
-            if (SystemConfigurationManager.MyInstance.NewGameClass == true && characterClass != null) {
+            if (SystemConfigurationManager.Instance.NewGameClass == true && characterClass != null) {
                 foreach (Equipment equipment in characterClass.EquipmentList) {
                     if (equipmentList.ContainsKey(equipment.EquipmentSlotType)) {
                         equipmentList[equipment.EquipmentSlotType] = equipment;
@@ -404,7 +404,7 @@ namespace AnyRPG {
                         equipmentList.Add(equipment.EquipmentSlotType, equipment);
                     }
                 }
-                if (SystemConfigurationManager.MyInstance.NewGameSpecialization == true && classSpecialization != null) {
+                if (SystemConfigurationManager.Instance.NewGameSpecialization == true && classSpecialization != null) {
                     foreach (Equipment equipment in classSpecialization.EquipmentList) {
                         if (equipmentList.ContainsKey(equipment.EquipmentSlotType)) {
                             equipmentList[equipment.EquipmentSlotType] = equipment;
@@ -415,7 +415,7 @@ namespace AnyRPG {
                 }
             }
 
-            if (SystemConfigurationManager.MyInstance.NewGameFaction == true && faction != null) {
+            if (SystemConfigurationManager.Instance.NewGameFaction == true && faction != null) {
                 foreach (Equipment equipment in faction.EquipmentList) {
                     if (equipmentList.ContainsKey(equipment.EquipmentSlotType)) {
                         equipmentList[equipment.EquipmentSlotType] = equipment;

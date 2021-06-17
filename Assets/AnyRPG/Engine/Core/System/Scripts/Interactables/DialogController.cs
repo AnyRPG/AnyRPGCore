@@ -78,7 +78,7 @@ namespace AnyRPG {
                         }
                         bool writeMessage = true;
                         if (PlayerManager.MyInstance != null && PlayerManager.MyInstance.ActiveUnitController != null) {
-                            if (Vector3.Distance(interactable.transform.position, PlayerManager.MyInstance.ActiveUnitController.transform.position) > SystemConfigurationManager.MyInstance.MaxChatTextDistance) {
+                            if (Vector3.Distance(interactable.transform.position, PlayerManager.MyInstance.ActiveUnitController.transform.position) > SystemConfigurationManager.Instance.MaxChatTextDistance) {
                                 writeMessage = false;
                             }
                         }

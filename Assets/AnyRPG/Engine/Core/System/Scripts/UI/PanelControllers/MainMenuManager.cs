@@ -32,12 +32,12 @@ namespace AnyRPG {
         }
 
         private void SetupGameLabels() {
-            if (SystemConfigurationManager.MyInstance != null) {
+            if (SystemConfigurationManager.Instance != null) {
                 if (gameNameText != null) {
-                    gameNameText.text = SystemConfigurationManager.MyInstance.GameName;
+                    gameNameText.text = SystemConfigurationManager.Instance.GameName;
                 }
                 if (gameVersionText != null) {
-                    gameVersionText.text = SystemConfigurationManager.MyInstance.GameVersion;
+                    gameVersionText.text = SystemConfigurationManager.Instance.GameVersion;
                 }
             } else {
                 //Debug.Log("SystemConfigurationManager Does Not Exist!");

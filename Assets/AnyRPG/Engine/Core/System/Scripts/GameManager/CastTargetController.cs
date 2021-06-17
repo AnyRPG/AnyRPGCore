@@ -26,7 +26,7 @@ namespace AnyRPG {
 
         public void SetupController() {
             if (meshRenderer != null) {
-                meshRenderer.material = new Material(SystemConfigurationManager.MyInstance.DefaultCastingLightProjector);
+                meshRenderer.material = new Material(SystemConfigurationManager.Instance.DefaultCastingLightProjector);
             }
 
             circleColor = meshRenderer.material.color;

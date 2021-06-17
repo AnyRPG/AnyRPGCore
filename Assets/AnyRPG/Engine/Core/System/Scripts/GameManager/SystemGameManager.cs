@@ -57,7 +57,7 @@ namespace AnyRPG {
             LoadResources();
 
             // next, verify systemconfiguration manager references to resources
-            SystemConfigurationManager.MyInstance.SetupScriptableObjects();
+            SystemConfigurationManager.Instance.SetupScriptableObjects();
 
             PlayerManager.MyInstance.OrchestratorStart();
 

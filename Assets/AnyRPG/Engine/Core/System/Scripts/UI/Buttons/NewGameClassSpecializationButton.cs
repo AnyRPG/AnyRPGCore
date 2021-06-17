@@ -33,7 +33,7 @@ namespace AnyRPG {
                 //description.text = this.faction.GetSummary();
                 description.text = classSpecialization.GetSummary();
             } else {
-                icon.sprite = SystemConfigurationManager.MyInstance.DefaultFactionIcon;
+                icon.sprite = SystemConfigurationManager.Instance.DefaultFactionIcon;
                 icon.color = Color.white;
                 characterClassName.text = "None";
                 //description.text = this.faction.GetSummary();

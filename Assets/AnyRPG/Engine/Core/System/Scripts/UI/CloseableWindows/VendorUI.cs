@@ -195,8 +195,8 @@ namespace AnyRPG {
             //InventoryManager.MyInstance.RemoveItem(item);
             item.MySlot.RemoveItem(item);
 
-            if (SystemConfigurationManager.MyInstance?.VendorAudioProfile?.AudioClip != null) {
-                AudioManager.MyInstance.PlayEffect(SystemConfigurationManager.MyInstance.VendorAudioProfile.AudioClip);
+            if (SystemConfigurationManager.Instance?.VendorAudioProfile?.AudioClip != null) {
+                AudioManager.MyInstance.PlayEffect(SystemConfigurationManager.Instance.VendorAudioProfile.AudioClip);
             }
             string priceString = CurrencyConverter.GetCombinedPriceSring(sellAmount.Key, sellAmount.Value);
             MessageFeedManager.MyInstance.WriteMessage("Sold " + item.DisplayName + " for " + priceString);

@@ -63,7 +63,7 @@ namespace AnyRPG {
         public void ClearLabels() {
             factionLabel.SetActive(false);
             factionButton.gameObject.SetActive(false);
-            if (SystemConfigurationManager.MyInstance.NewGameFaction == true) {
+            if (SystemConfigurationManager.Instance.NewGameFaction == true) {
                 foreach (Faction faction in SystemFactionManager.MyInstance.GetResourceList()) {
                     if (faction.NewGameOption == true) {
                         factionLabel.SetActive(true);
@@ -75,7 +75,7 @@ namespace AnyRPG {
             
             characterClassLabel.SetActive(false);
             characterClassButton.gameObject.SetActive(false);
-            if (SystemConfigurationManager.MyInstance.NewGameClass == true) {
+            if (SystemConfigurationManager.Instance.NewGameClass == true) {
                 foreach (CharacterClass characterClass in SystemCharacterClassManager.MyInstance.GetResourceList()) {
                     if (characterClass.NewGameOption == true) {
                         characterClassLabel.SetActive(true);
@@ -87,7 +87,7 @@ namespace AnyRPG {
 
             classSpecializationLabel.SetActive(false);
             classSpecializationButton.gameObject.SetActive(false);
-            if (SystemConfigurationManager.MyInstance.NewGameSpecialization == true) {
+            if (SystemConfigurationManager.Instance.NewGameSpecialization == true) {
                 foreach (ClassSpecialization classSpecialization in SystemClassSpecializationManager.MyInstance.GetResourceList()) {
                     if (classSpecialization.NewGameOption == true) {
                         classSpecializationLabel.SetActive(true);
@@ -123,7 +123,7 @@ namespace AnyRPG {
 
         public void SetCharacterClass(CharacterClass newCharacterClass) {
             //if (newCharacterClass != null && SystemConfigurationManager.MyInstance.NewGameClass == true) {
-            if (SystemConfigurationManager.MyInstance.NewGameClass == true) {
+            if (SystemConfigurationManager.Instance.NewGameClass == true) {
                 characterClassLabel.SetActive(true);
                 characterClassButton.gameObject.SetActive(true);
                 characterClassButton.AddCharacterClass(newCharacterClass);
@@ -135,7 +135,7 @@ namespace AnyRPG {
 
         public void SetFaction(Faction newfaction) {
             //if (newfaction != null && SystemConfigurationManager.MyInstance.NewGameFaction == true) {
-            if (SystemConfigurationManager.MyInstance.NewGameFaction == true) {
+            if (SystemConfigurationManager.Instance.NewGameFaction == true) {
                 factionLabel.SetActive(true);
                 factionButton.gameObject.SetActive(true);
                 factionButton.AddFaction(newfaction);
@@ -147,7 +147,7 @@ namespace AnyRPG {
 
         public void SetClassSpecialization(ClassSpecialization newClassSpecialization) {
             //if (newClassSpecialization != null && SystemConfigurationManager.MyInstance.NewGameSpecialization == true) {
-            if (SystemConfigurationManager.MyInstance.NewGameSpecialization == true) {
+            if (SystemConfigurationManager.Instance.NewGameSpecialization == true) {
                 classSpecializationLabel.SetActive(true);
                 classSpecializationButton.gameObject.SetActive(true);
                 classSpecializationButton.AddClassSpecialization(newClassSpecialization);

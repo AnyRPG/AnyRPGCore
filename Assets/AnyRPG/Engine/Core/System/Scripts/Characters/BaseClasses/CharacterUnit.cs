@@ -167,7 +167,7 @@ namespace AnyRPG {
                 // add all possible delays together
                 float extraTime = 0f;
                 if (addSystemDefaultTime) {
-                    extraTime = SystemConfigurationManager.MyInstance.DefaultDespawnTimer;
+                    extraTime = SystemConfigurationManager.Instance.DefaultDespawnTimer;
                 }
                 float totalDelay = despawnDelay + this.despawnDelay + extraTime;
                 while (totalDelay > 0f) {
@@ -196,7 +196,7 @@ namespace AnyRPG {
 
         public override Sprite GetMiniMapIcon() {
             if (interactable.CombatOnly) {
-                return SystemConfigurationManager.MyInstance.PlayerMiniMapIcon;
+                return SystemConfigurationManager.Instance.PlayerMiniMapIcon;
             }
 
             return base.GetMiniMapIcon();

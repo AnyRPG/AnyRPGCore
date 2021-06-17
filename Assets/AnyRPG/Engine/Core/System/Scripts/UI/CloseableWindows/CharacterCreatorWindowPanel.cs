@@ -76,8 +76,8 @@ namespace AnyRPG {
             umaCharacterPanel.ShowPanel();
 
             // set unit profile to default
-            if (SystemConfigurationManager.MyInstance.UseFirstCreatorProfile) {
-                unitProfile = SystemConfigurationManager.MyInstance.CharacterCreatorUnitProfile;
+            if (SystemConfigurationManager.Instance.UseFirstCreatorProfile) {
+                unitProfile = SystemConfigurationManager.Instance.CharacterCreatorUnitProfile;
             } else {
                 unitProfile = PlayerManager.MyInstance.ActiveCharacter.UnitProfile;
             }

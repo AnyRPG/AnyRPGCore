@@ -122,7 +122,7 @@ namespace AnyRPG {
             }
             if (anyRPGSaveData.unitProfileName == null) {
                 //Debug.Log("SaveManager.LoadSaveDataFromFile(" + fileName + "): Player Faction is null.  Setting to default");
-                anyRPGSaveData.unitProfileName = SystemConfigurationManager.MyInstance.CharacterCreatorUnitProfileName;
+                anyRPGSaveData.unitProfileName = SystemConfigurationManager.Instance.CharacterCreatorUnitProfileName;
             }
             if (anyRPGSaveData.PlayerUMARecipe == null) {
                 //Debug.Log("SaveManager.LoadSaveDataFromFile(" + fileName + "): Player UMA Recipe is null.  Setting to empty");
@@ -130,7 +130,7 @@ namespace AnyRPG {
             }
             if (anyRPGSaveData.CurrentScene == null) {
                 //Debug.Log("SaveManager.LoadSaveDataFromFile(" + fileName + "): CurrentScene is null.  Setting to default");
-                anyRPGSaveData.CurrentScene = SystemConfigurationManager.MyInstance.DefaultStartingZone;
+                anyRPGSaveData.CurrentScene = SystemConfigurationManager.Instance.DefaultStartingZone;
             }
             if (anyRPGSaveData.DataFileName == null || anyRPGSaveData.DataFileName == string.Empty) {
                 anyRPGSaveData.DataFileName = Path.GetFileName(fileName);
@@ -1486,8 +1486,8 @@ namespace AnyRPG {
 
             string replaceString = string.Empty;
             Regex regex = new Regex("[^a-zA-Z0-9]");
-            if (SystemConfigurationManager.MyInstance != null) {
-                replaceString = regex.Replace(SystemConfigurationManager.MyInstance.GameName, "");
+            if (SystemConfigurationManager.Instance != null) {
+                replaceString = regex.Replace(SystemConfigurationManager.Instance.GameName, "");
             }
 
             if (replaceString != string.Empty) {

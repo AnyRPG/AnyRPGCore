@@ -252,24 +252,24 @@ namespace AnyRPG {
 
         public void PlayLevelUpEffects(int newLevel) {
             //Debug.Log("PlayerManager.PlayLevelUpEffect()");
-            if (PlayerUnitSpawned == false || SystemConfigurationManager.MyInstance?.LevelUpEffect == null) {
+            if (PlayerUnitSpawned == false || SystemConfigurationManager.Instance?.LevelUpEffect == null) {
                 return;
             }
             // 0 to allow playing this effect for different reasons than levelup
             if (newLevel == 0 || newLevel != 1) {
                 AbilityEffectContext abilityEffectContext = new AbilityEffectContext();
 
-                SystemConfigurationManager.MyInstance.LevelUpEffect.Cast(SystemAbilityController.MyInstance, unitController, unitController, abilityEffectContext);
+                SystemConfigurationManager.Instance.LevelUpEffect.Cast(SystemAbilityController.MyInstance, unitController, unitController, abilityEffectContext);
             }
         }
 
         public void PlayDeathEffect() {
             //Debug.Log("PlayerManager.PlayDeathEffect()");
-            if (PlayerUnitSpawned == false || SystemConfigurationManager.MyInstance?.DeathEffect == null) {
+            if (PlayerUnitSpawned == false || SystemConfigurationManager.Instance?.DeathEffect == null) {
                 return;
             }
             AbilityEffectContext abilityEffectContext = new AbilityEffectContext();
-            SystemConfigurationManager.MyInstance.DeathEffect.Cast(SystemAbilityController.MyInstance, unitController, unitController, abilityEffectContext);
+            SystemConfigurationManager.Instance.DeathEffect.Cast(SystemAbilityController.MyInstance, unitController, unitController, abilityEffectContext);
         }
 
         /*
@@ -333,7 +333,7 @@ namespace AnyRPG {
                 SpawnPlayerConnection();
             }
             if (activeCharacter.UnitProfile == null) {
-                activeCharacter.SetUnitProfile(SystemConfigurationManager.MyInstance.DefaultPlayerUnitProfileName, true, -1, false);
+                activeCharacter.SetUnitProfile(SystemConfigurationManager.Instance.DefaultPlayerUnitProfileName, true, -1, false);
             }
 
             // spawn the player unit and set references
@@ -425,7 +425,7 @@ namespace AnyRPG {
 
             playerController.SubscribeToUnitEvents();
 
-            if (SystemConfigurationManager.MyInstance.UseThirdPartyMovementControl == false) {
+            if (SystemConfigurationManager.Instance.UseThirdPartyMovementControl == false) {
                 playerUnitMovementController.Init();
             } else {
                 DisableMovementControllers();
@@ -471,7 +471,7 @@ namespace AnyRPG {
 
             SystemEventManager.MyInstance.NotifyBeforePlayerConnectionSpawn();
             activeCharacter.Init();
-            activeCharacter.Initialize(SystemConfigurationManager.MyInstance.DefaultPlayerName, initialLevel);
+            activeCharacter.Initialize(SystemConfigurationManager.Instance.DefaultPlayerName, initialLevel);
             playerConnectionSpawned = true;
             SystemEventManager.MyInstance.NotifyOnPlayerConnectionSpawn();
 

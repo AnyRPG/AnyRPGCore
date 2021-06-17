@@ -28,20 +28,20 @@ namespace AnyRPG {
 
         private void Start() {
             //Debug.Log("BagBarController.Start()");
-            if (SystemConfigurationManager.MyInstance.SystemBarMainMenu != null) {
-                mainMenuButton.Icon = SystemConfigurationManager.MyInstance.SystemBarMainMenu;
+            if (SystemConfigurationManager.Instance.SystemBarMainMenu != null) {
+                mainMenuButton.Icon = SystemConfigurationManager.Instance.SystemBarMainMenu;
             }
-            if (SystemConfigurationManager.MyInstance.SystemBarAbilityBook != null) {
-                abilityBookButton.Icon = SystemConfigurationManager.MyInstance.SystemBarAbilityBook;
+            if (SystemConfigurationManager.Instance.SystemBarAbilityBook != null) {
+                abilityBookButton.Icon = SystemConfigurationManager.Instance.SystemBarAbilityBook;
             }
-            if (SystemConfigurationManager.MyInstance.SystemBarQuestLog != null) {
-                questLogButton.Icon = SystemConfigurationManager.MyInstance.SystemBarQuestLog;
+            if (SystemConfigurationManager.Instance.SystemBarQuestLog != null) {
+                questLogButton.Icon = SystemConfigurationManager.Instance.SystemBarQuestLog;
             }
-            if (SystemConfigurationManager.MyInstance.SystemBarCharacter != null) {
-                characterButton.Icon = SystemConfigurationManager.MyInstance.SystemBarCharacter;
+            if (SystemConfigurationManager.Instance.SystemBarCharacter != null) {
+                characterButton.Icon = SystemConfigurationManager.Instance.SystemBarCharacter;
             }
-            if (SystemConfigurationManager.MyInstance.SystemBarMap != null) {
-                mapButton.Icon = SystemConfigurationManager.MyInstance.SystemBarMap;
+            if (SystemConfigurationManager.Instance.SystemBarMap != null) {
+                mapButton.Icon = SystemConfigurationManager.Instance.SystemBarMap;
             }
 
         }

@@ -70,7 +70,7 @@ namespace AnyRPG {
 
 
         public void ConfigureDefaultMaterial() {
-            if (SystemConfigurationManager.MyInstance != null) {
+            if (SystemConfigurationManager.Instance != null) {
                 if (castTargetController != null ) {
                     castTargetController.SetupController();
                 }

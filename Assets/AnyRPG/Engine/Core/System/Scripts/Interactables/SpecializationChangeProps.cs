@@ -17,8 +17,8 @@ namespace AnyRPG {
 
         private ClassSpecialization classSpecialization;
 
-        public override Sprite Icon { get => (SystemConfigurationManager.MyInstance.ClassChangeInteractionPanelImage != null ? SystemConfigurationManager.MyInstance.ClassChangeInteractionPanelImage : base.Icon); }
-        public override Sprite NamePlateImage { get => (SystemConfigurationManager.MyInstance.ClassChangeNamePlateImage != null ? SystemConfigurationManager.MyInstance.ClassChangeNamePlateImage : base.NamePlateImage); }
+        public override Sprite Icon { get => (SystemConfigurationManager.Instance.ClassChangeInteractionPanelImage != null ? SystemConfigurationManager.Instance.ClassChangeInteractionPanelImage : base.Icon); }
+        public override Sprite NamePlateImage { get => (SystemConfigurationManager.Instance.ClassChangeNamePlateImage != null ? SystemConfigurationManager.Instance.ClassChangeNamePlateImage : base.NamePlateImage); }
         public ClassSpecialization ClassSpecialization { get => classSpecialization; set => classSpecialization = value; }
 
         public override InteractableOptionComponent GetInteractableOption(Interactable interactable, InteractableOption interactableOption = null) {

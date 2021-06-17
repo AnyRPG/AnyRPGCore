@@ -141,12 +141,12 @@ namespace AnyRPG {
 
         private void SetWelcomeString() {
             completeWelcomeString = welcomeString;
-            if (SystemConfigurationManager.MyInstance != null) {
-                if (SystemConfigurationManager.MyInstance.GameName != null && SystemConfigurationManager.MyInstance.GameName != string.Empty) {
-                    completeWelcomeString += string.Format(" {0}", SystemConfigurationManager.MyInstance.GameName);
+            if (SystemConfigurationManager.Instance != null) {
+                if (SystemConfigurationManager.Instance.GameName != null && SystemConfigurationManager.Instance.GameName != string.Empty) {
+                    completeWelcomeString += string.Format(" {0}", SystemConfigurationManager.Instance.GameName);
                 }
-                if (SystemConfigurationManager.MyInstance.GameVersion != null && SystemConfigurationManager.MyInstance.GameVersion != string.Empty) {
-                    completeWelcomeString += string.Format(" {0}", SystemConfigurationManager.MyInstance.GameVersion);
+                if (SystemConfigurationManager.Instance.GameVersion != null && SystemConfigurationManager.Instance.GameVersion != string.Empty) {
+                    completeWelcomeString += string.Format(" {0}", SystemConfigurationManager.Instance.GameVersion);
                 }
             }
 

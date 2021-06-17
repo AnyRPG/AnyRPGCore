@@ -15,7 +15,7 @@ namespace AnyRPG {
 
         public override void ReceiveOpenWindowNotification() {
             base.ReceiveOpenWindowNotification();
-            if (SystemConfigurationManager.MyInstance.UseNewGameWindow == true) {
+            if (SystemConfigurationManager.Instance.UseNewGameWindow == true) {
                 divider.SetActive(false);
                 confirmGameButton.gameObject.SetActive(true);
                 confirmGameButton.AddSaveData(NewGamePanel.MyInstance.SaveData);
@@ -35,7 +35,7 @@ namespace AnyRPG {
             SystemWindowManager.MyInstance.confirmNewGameMenuWindow.CloseWindow();
             SystemWindowManager.MyInstance.loadGameWindow.CloseWindow();
             SystemWindowManager.MyInstance.newGameWindow.CloseWindow();
-            if (SystemConfigurationManager.MyInstance.UseNewGameWindow == true) {
+            if (SystemConfigurationManager.Instance.UseNewGameWindow == true) {
                 SaveManager.MyInstance.PerformInventorySetup();
                 SaveManager.MyInstance.SaveEquippedBagData(NewGamePanel.MyInstance.SaveData);
                 SaveManager.MyInstance.SaveInventorySlotData(NewGamePanel.MyInstance.SaveData);

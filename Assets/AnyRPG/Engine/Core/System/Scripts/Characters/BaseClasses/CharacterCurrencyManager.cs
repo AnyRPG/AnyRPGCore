@@ -133,7 +133,7 @@ namespace AnyRPG {
 
         public Dictionary<Currency, int> GetRedistributedCurrency() {
             //Debug.Log("PlayerCurrencyManager.GetRedistributedCurrency()");
-            CurrencyGroup currencyGroup = SystemConfigurationManager.MyInstance.DefaultCurrencyGroup;
+            CurrencyGroup currencyGroup = SystemConfigurationManager.Instance.DefaultCurrencyGroup;
             Dictionary<Currency, int> returnDictionary = new Dictionary<Currency, int>();
             if (currencyGroup != null) {
                 //Debug.Log("PlayerCurrencyManager.GetRedistributedCurrency(): default currency group returned: " + currencyGroup.MyName);

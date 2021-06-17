@@ -85,12 +85,8 @@ namespace AnyRPG {
 
         private Quest currentQuest = null;
 
-        public QuestGiverQuestScript MySelectedQuestGiverQuestScript { get => selectedQuestGiverQuestScript; set => selectedQuestGiverQuestScript = value; }
+        public QuestGiverQuestScript SelectedQuestGiverQuestScript { get => selectedQuestGiverQuestScript; set => selectedQuestGiverQuestScript = value; }
         //public Interactable MyInteractable { get => interactable; set => interactable = value; }
-
-        private void Start() {
-            DeactivateButtons();
-        }
 
         public void ToggleShowAllQuests(bool showAllQuests) {
             this.showAllQuests = showAllQuests;
@@ -102,6 +98,7 @@ namespace AnyRPG {
         }
 
         public void DeactivateButtons() {
+            Debug.Log("QuestGiverUI.DeactivateButtons()");
             acceptButton.GetComponent<Button>().enabled = false;
             completeButton.GetComponent<Button>().enabled = false;
         }
@@ -225,7 +222,7 @@ namespace AnyRPG {
         }
 
         private void UpdateButtons(Quest newQuest) {
-            //Debug.Log("QuestGiverUI.UpdateButtons(" + quest.name + "). iscomplete: " + quest.IsComplete + ". HasQuest: " + QuestLog.MyInstance.HasQuest(quest));
+            //Debug.Log("QuestGiverUI.UpdateButtons(" + newQuest.DisplayName + "). iscomplete: " + newQuest.IsComplete + ". HasQuest: " + QuestLog.MyInstance.HasQuest(newQuest.DisplayName));
             if (newQuest.MyAllowRawComplete == true) {
                 acceptButton.gameObject.SetActive(false);
                 completeButton.gameObject.SetActive(true);
@@ -239,6 +236,7 @@ namespace AnyRPG {
                 return;
             }
 
+            Debug.Log("questGiver: " + questGiver.ToString());
             if (newQuest.GetStatus() == "complete" && QuestLog.MyInstance.HasQuest(newQuest.DisplayName) == true && questGiver != null && questGiver.EndsQuest(newQuest.DisplayName)) {
                 completeButton.gameObject.SetActive(true);
                 completeButton.GetComponent<Button>().enabled = true;
@@ -288,7 +286,7 @@ namespace AnyRPG {
                 return;
             }
 
-            if (MySelectedQuestGiverQuestScript == null || MySelectedQuestGiverQuestScript.MyQuest != quest) {
+            if (SelectedQuestGiverQuestScript == null || SelectedQuestGiverQuestScript.MyQuest != quest) {
                 foreach (QuestGiverQuestScript questScript in questScripts) {
                     if (questScript.MyQuest == quest) {
                         questScript.RawSelect();
@@ -330,7 +328,7 @@ namespace AnyRPG {
                 }
             }
             // TRY THIS FOR FIX.  OTHERWISE REFERENCE CAN REMAIN TO DESTROYED QUESTSCRIPT
-            MySelectedQuestGiverQuestScript = null;
+            SelectedQuestGiverQuestScript = null;
             /*
             for (int i = 0; i < quests.Count; i++) {
                 GameObject go = quests[i];
@@ -346,8 +344,7 @@ namespace AnyRPG {
         public override void RecieveClosedWindowNotification() {
             //Debug.Log("QuestGiverUI.OnCloseWindow()");
             base.RecieveClosedWindowNotification();
-            DeactivateButtons();
-            MySelectedQuestGiverQuestScript = null;
+            SelectedQuestGiverQuestScript = null;
         }
 
         public void AcceptQuest() {
@@ -373,8 +370,8 @@ namespace AnyRPG {
                     }
                     */
                 }
-                if (MySelectedQuestGiverQuestScript != null) {
-                    MySelectedQuestGiverQuestScript.DeSelect();
+                if (SelectedQuestGiverQuestScript != null) {
+                    SelectedQuestGiverQuestScript.DeSelect();
                 }
 
                 // disabled this stuff for now since only a single pane is being used
@@ -509,17 +506,22 @@ namespace AnyRPG {
                 Debug.Log("QuestGiverUI.CompleteQuest(): questGiver is null!");
             }
 
-            if (MySelectedQuestGiverQuestScript != null) {
-                MySelectedQuestGiverQuestScript.DeSelect();
+            if (SelectedQuestGiverQuestScript != null) {
+                SelectedQuestGiverQuestScript.DeSelect();
             }
 
         }
 
         public override void ReceiveOpenWindowNotification() {
-            //Debug.Log("QuestGiverUI.OnOpenWindow()");
+            Debug.Log("QuestGiverUI.ReceiveOpenWindowNotification()");
             SetBackGroundColor(new Color32(0, 0, 0, (byte)(int)(PlayerPrefs.GetFloat("PopupWindowOpacity") * 255)));
+
             // clear first because open window handler could show a description
             ClearDescription();
+
+            // reset button state to clear previous state
+            DeactivateButtons();
+
             if (interactable != null) {
                 PopupWindowManager.MyInstance.questGiverWindow.SetWindowTitle(interactable.DisplayName + " (Quests)");
             }

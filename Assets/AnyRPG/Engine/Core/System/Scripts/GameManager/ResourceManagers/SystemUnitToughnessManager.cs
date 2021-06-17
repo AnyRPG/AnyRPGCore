@@ -30,8 +30,8 @@ namespace AnyRPG {
 
         public override void LoadResourceList() {
             masterList.Add(Resources.LoadAll<UnitToughness>(resourceClassName));
-            if (SystemConfigurationManager.MyInstance != null) {
-                foreach (string loadResourcesFolder in SystemConfigurationManager.MyInstance.LoadResourcesFolders) {
+            if (SystemConfigurationManager.Instance != null) {
+                foreach (string loadResourcesFolder in SystemConfigurationManager.Instance.LoadResourcesFolders) {
                     masterList.Add(Resources.LoadAll<UnitToughness>(loadResourcesFolder + "/" + resourceClassName));
                 }
             }

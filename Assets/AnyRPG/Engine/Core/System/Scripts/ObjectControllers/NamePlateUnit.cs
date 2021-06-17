@@ -110,7 +110,7 @@ namespace AnyRPG {
                 } else {
                     // set a generic indicator if there is more than 1 interactable
                     NamePlateController.NamePlate.GenericIndicatorImage.gameObject.SetActive(true);
-                    NamePlateController.NamePlate.GenericIndicatorImage.sprite = SystemConfigurationManager.MyInstance.MultipleInteractionNamePlateImage;
+                    NamePlateController.NamePlate.GenericIndicatorImage.sprite = SystemConfigurationManager.Instance.MultipleInteractionNamePlateImage;
                 }
             }
         }

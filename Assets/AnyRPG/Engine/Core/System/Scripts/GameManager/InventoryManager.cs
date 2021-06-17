@@ -181,13 +181,13 @@ namespace AnyRPG {
 
         public void CreateDefaultBackpack() {
             //Debug.Log("InventoryManager.CreateDefaultBackpack()");
-            if (SystemConfigurationManager.MyInstance?.DefaultBackpackItem != null && SystemConfigurationManager.MyInstance?.DefaultBackpackItem != string.Empty) {
-                Bag bag = SystemItemManager.MyInstance.GetNewResource(SystemConfigurationManager.MyInstance?.DefaultBackpackItem) as Bag;
+            if (SystemConfigurationManager.Instance?.DefaultBackpackItem != null && SystemConfigurationManager.Instance?.DefaultBackpackItem != string.Empty) {
+                Bag bag = SystemItemManager.MyInstance.GetNewResource(SystemConfigurationManager.Instance?.DefaultBackpackItem) as Bag;
                 if (bag == null) {
                     Debug.LogError("InventoryManager.CreateDefaultBankBag(): CHECK INVENTORYMANAGER IN INSPECTOR AND SET DEFAULTBACKPACK TO VALID NAME");
                     return;
                 }
-                if (SystemConfigurationManager.MyInstance.EquipDefaultBackPack) {
+                if (SystemConfigurationManager.Instance.EquipDefaultBackPack) {
                     bag.Use();
                 } else {
                     AddItem(bag, true);
@@ -197,10 +197,10 @@ namespace AnyRPG {
 
         public void CreateDefaultBankBag() {
             //Debug.Log("InventoryManager.CreateDefaultBankBag()");
-            if (SystemConfigurationManager.MyInstance?.DefaultBankBagItem == null || SystemConfigurationManager.MyInstance?.DefaultBankBagItem == string.Empty) {
+            if (SystemConfigurationManager.Instance?.DefaultBankBagItem == null || SystemConfigurationManager.Instance?.DefaultBankBagItem == string.Empty) {
                 return;
             }
-            Bag bag = SystemItemManager.MyInstance.GetNewResource(SystemConfigurationManager.MyInstance?.DefaultBankBagItem) as Bag;
+            Bag bag = SystemItemManager.MyInstance.GetNewResource(SystemConfigurationManager.Instance?.DefaultBankBagItem) as Bag;
             if (bag == null) {
                 Debug.LogError("InventoryManager.CreateDefaultBankBag() Check SystemConfigurationManager in inspector and set defaultbankbag to valid name");
                 return;

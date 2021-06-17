@@ -312,7 +312,7 @@ namespace AnyRPG {
 
         public void ActivateAutoAttack() {
             //Debug.Log(gameObject.name + ".CharacterCombat.ActivateAutoAttack()");
-            if (SystemConfigurationManager.MyInstance.AllowAutoAttack == true) {
+            if (SystemConfigurationManager.Instance.AllowAutoAttack == true) {
                 autoAttackActive = true;
             }
         }

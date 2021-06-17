@@ -57,7 +57,6 @@ namespace AnyRPG {
         private void Start() {
             SystemEventManager.MyInstance.OnQuestStatusUpdated += UpdateQuestCount;
             //QuestLog.MyInstance.OnQuestCompleted += HandleCompleteQuest;
-            DeactivateButtons();
             UpdateQuestCount();
         }
 
@@ -158,7 +157,6 @@ namespace AnyRPG {
             //Debug.Log("QuestLogUI.OnCloseWindow()");
             base.RecieveClosedWindowNotification();
             ClearQuests();
-            DeactivateButtons();
             MySelectedQuestScript = null;
         }
 
@@ -167,6 +165,9 @@ namespace AnyRPG {
 
             base.ReceiveOpenWindowNotification();
             SetBackGroundColor(new Color32(0, 0, 0, (byte)(int)(PlayerPrefs.GetFloat("PopupWindowOpacity") * 255)));
+            
+            //reset button state before showing new quests
+            DeactivateButtons();
 
             ShowQuestsCommon();
         }

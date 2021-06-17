@@ -88,8 +88,8 @@ namespace AnyRPG {
             // attach camera to player
             mainCameraController = mainCameraGameObject.GetComponent<AnyRPGCameraController>();
 
-            if (thirdPartyCameraGameObject == null && SystemConfigurationManager.MyInstance.ThirdPartyCamera != null) {
-                thirdPartyCameraGameObject = Instantiate(SystemConfigurationManager.MyInstance.ThirdPartyCamera, transform);
+            if (thirdPartyCameraGameObject == null && SystemConfigurationManager.Instance.ThirdPartyCamera != null) {
+                thirdPartyCameraGameObject = Instantiate(SystemConfigurationManager.Instance.ThirdPartyCamera, transform);
                 if (thirdPartyCameraGameObject != null) {
                     thirdPartyCamera = thirdPartyCameraGameObject.GetComponentInChildren<Camera>();
                     if (thirdPartyCamera == null) {
@@ -111,24 +111,24 @@ namespace AnyRPG {
         }
 
         private void CheckConfiguration() {
-            if (SystemConfigurationManager.MyInstance.UseThirdPartyCameraControl == true && SystemConfigurationManager.MyInstance.ThirdPartyCamera == null && (thirdPartyCamera == null || thirdPartyCameraGameObject == null)) {
+            if (SystemConfigurationManager.Instance.UseThirdPartyCameraControl == true && SystemConfigurationManager.Instance.ThirdPartyCamera == null && (thirdPartyCamera == null || thirdPartyCameraGameObject == null)) {
                 Debug.LogError("CameraManager.CheckConfiguration(): The system configuration option 'Use Third Party Camera' is true, but no third party camera is configured in the Camera Manager. Check inspector!");
             }
         }
 
         public void ActivateMainCamera(bool prePositionCamera = false) {
             //Debug.Log("CameraManager.ActivateMainCamera()");
-            if (SystemConfigurationManager.MyInstance == null) {
+            if (SystemConfigurationManager.Instance == null) {
                 // can't get camera settings, so just return
                 return;
             }
             if (LevelManager.MyInstance.IsMainMenu()
                 || LevelManager.MyInstance.IsInitializationScene()
-                || SystemConfigurationManager.MyInstance.UseThirdPartyCameraControl == false) {
+                || SystemConfigurationManager.Instance.UseThirdPartyCameraControl == false) {
                 MainCameraGameObject.SetActive(true);
                 return;
             }
-            if (SystemConfigurationManager.MyInstance.UseThirdPartyCameraControl == true) {
+            if (SystemConfigurationManager.Instance.UseThirdPartyCameraControl == true) {
                 EnableThirdPartyCamera(prePositionCamera);
                 return;
             }
@@ -139,7 +139,7 @@ namespace AnyRPG {
 
         public void SwitchToMainCamera() {
             //Debug.Log("CameraManager.SwitchToMainCamera()");
-            if (SystemConfigurationManager.MyInstance.UseThirdPartyCameraControl == true) {
+            if (SystemConfigurationManager.Instance.UseThirdPartyCameraControl == true) {
                 DisableThirdPartyCamera();
             }
             MainCameraGameObject.SetActive(true);
@@ -148,7 +148,7 @@ namespace AnyRPG {
         public void DeactivateMainCamera() {
             //Debug.Log("CameraManager.DeactivateMainCamera()");
             MainCameraGameObject.SetActive(false);
-            if (SystemConfigurationManager.MyInstance.UseThirdPartyCameraControl == true) {
+            if (SystemConfigurationManager.Instance.UseThirdPartyCameraControl == true) {
                 DisableThirdPartyCamera();
             }
         }

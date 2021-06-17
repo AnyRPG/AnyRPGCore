@@ -69,10 +69,6 @@ namespace AnyRPG {
 
         public SkillTrainerSkillScript MySelectedSkillTrainerSkillScript { get => selectedSkillTrainerSkillScript; set => selectedSkillTrainerSkillScript = value; }
 
-        private void Start() {
-            DeactivateButtons();
-        }
-
         public void DeactivateButtons() {
             learnButton.GetComponent<Button>().enabled = false;
             unlearnButton.GetComponent<Button>().enabled = false;
@@ -233,8 +229,12 @@ namespace AnyRPG {
 
         public override void ReceiveOpenWindowNotification() {
             //Debug.Log("SkillTrainerUI.OnOpenWindow()");
-            // clear before open window handler, because it shows quests
             SetBackGroundColor(new Color32(0, 0, 0, (byte)(int)(PlayerPrefs.GetFloat("PopupWindowOpacity") * 255)));
+
+            // reset button state from last window open
+            DeactivateButtons();
+
+            // clear description from last window open
             ClearDescription();
         }
     }

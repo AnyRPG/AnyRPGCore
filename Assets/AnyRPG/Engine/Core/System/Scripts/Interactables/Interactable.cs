@@ -197,11 +197,11 @@ namespace AnyRPG {
             DisableInteraction();
             temporaryMaterials = null;
             if (temporaryMaterial == null) {
-                if (SystemConfigurationManager.MyInstance == null) {
+                if (SystemConfigurationManager.Instance == null) {
                     Debug.LogError(gameObject.name + ": SystemConfigurationManager not found. Is the GameManager in the scene?");
                     return;
                 } else {
-                    temporaryMaterial = SystemConfigurationManager.MyInstance.TemporaryMaterial;
+                    temporaryMaterial = SystemConfigurationManager.Instance.TemporaryMaterial;
                 }
             }
             if (temporaryMaterial == null) {

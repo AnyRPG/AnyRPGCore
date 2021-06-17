@@ -108,8 +108,8 @@ namespace AnyRPG {
         public override void Awake() {
             //Debug.Log(gameObject.name + ": MiniMapController.Awake()");
             base.Awake();
-            if (SystemConfigurationManager.MyInstance.SystemBarMap != null) {
-                mapButtonImage.sprite = SystemConfigurationManager.MyInstance.SystemBarMap;
+            if (SystemConfigurationManager.Instance.SystemBarMap != null) {
+                mapButtonImage.sprite = SystemConfigurationManager.Instance.SystemBarMap;
                 mapButtonImage.color = Color.white;
                 mapButtonText.SetActive(false);
             } else {
@@ -118,7 +118,7 @@ namespace AnyRPG {
                 mapButtonText.SetActive(true);
             }
 
-            minimapTextureFolder = minimapTextureFolderBase + SystemConfigurationManager.MyInstance.GameName.Replace(" ", "") + "/Images/MiniMap/";
+            minimapTextureFolder = minimapTextureFolderBase + SystemConfigurationManager.Instance.GameName.Replace(" ", "") + "/Images/MiniMap/";
             
             //instantiate singleton
             MiniMapController tempcontroller = MyInstance;
@@ -156,7 +156,7 @@ namespace AnyRPG {
         }
 
         public void LateUpdate() {
-            if (SystemConfigurationManager.MyInstance.UseThirdPartyCameraControl == true
+            if (SystemConfigurationManager.Instance.UseThirdPartyCameraControl == true
                 && CameraManager.MyInstance.ThirdPartyCamera.activeInHierarchy == true
                 && PlayerManager.MyInstance.PlayerUnitSpawned == true) {
                 UpdateMiniMap();
@@ -324,7 +324,7 @@ namespace AnyRPG {
                 mapTexture.LoadImage(fileData);
             } else {
                 //Debug.Log("No minimap texture exists at " + textureFilePath + ".  Please run \"Minimap Wizard\" from the Tools menu under AnyRPG.");
-                if (SystemConfigurationManager.MyInstance.MiniMapFallBackMode == MiniMapFallBackMode.None) {
+                if (SystemConfigurationManager.Instance.MiniMapFallBackMode == MiniMapFallBackMode.None) {
                     DisableIndicators();
                     return;
                 }

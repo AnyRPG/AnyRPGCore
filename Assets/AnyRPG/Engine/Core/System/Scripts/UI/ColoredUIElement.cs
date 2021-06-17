@@ -20,8 +20,8 @@ namespace AnyRPG {
         }
 
         public virtual void SetImageColor() {
-            if (SystemConfigurationManager.MyInstance != null && coloredImage != null) {
-                coloredImage.color = SystemConfigurationManager.MyInstance.DefaultUIColor;
+            if (SystemConfigurationManager.Instance != null && coloredImage != null) {
+                coloredImage.color = SystemConfigurationManager.Instance.DefaultUIColor;
             }
         }
 

@@ -9,7 +9,7 @@ namespace AnyRPG {
 
         public void NewGame() {
             //Debug.Log("PlayMenuController.NewGame()");
-            if (SystemConfigurationManager.MyInstance.UseNewGameWindow == true) {
+            if (SystemConfigurationManager.Instance.UseNewGameWindow == true) {
                 SystemWindowManager.MyInstance.newGameWindow.OpenWindow();
                 SystemWindowManager.MyInstance.playMenuWindow.CloseWindow();
             } else {

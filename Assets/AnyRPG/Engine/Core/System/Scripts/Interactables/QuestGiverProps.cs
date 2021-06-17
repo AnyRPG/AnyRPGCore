@@ -25,8 +25,8 @@ namespace AnyRPG {
 
         public List<QuestNode> Quests { get => quests; set => quests = value; }
 
-        public override Sprite Icon { get => (SystemConfigurationManager.MyInstance.QuestGiverInteractionPanelImage != null ? SystemConfigurationManager.MyInstance.QuestGiverInteractionPanelImage : base.Icon); }
-        public override Sprite NamePlateImage { get => (SystemConfigurationManager.MyInstance.QuestGiverNamePlateImage != null ? SystemConfigurationManager.MyInstance.QuestGiverNamePlateImage : base.NamePlateImage); }
+        public override Sprite Icon { get => (SystemConfigurationManager.Instance.QuestGiverInteractionPanelImage != null ? SystemConfigurationManager.Instance.QuestGiverInteractionPanelImage : base.Icon); }
+        public override Sprite NamePlateImage { get => (SystemConfigurationManager.Instance.QuestGiverNamePlateImage != null ? SystemConfigurationManager.Instance.QuestGiverNamePlateImage : base.NamePlateImage); }
 
         public override InteractableOptionComponent GetInteractableOption(Interactable interactable, InteractableOption interactableOption = null) {
             InteractableOptionComponent returnValue = new QuestGiverComponent(interactable, this);

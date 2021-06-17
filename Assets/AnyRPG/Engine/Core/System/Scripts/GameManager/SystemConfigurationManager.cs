@@ -11,7 +11,7 @@ namespace AnyRPG {
         #region Singleton
         private static SystemConfigurationManager instance;
 
-        public static SystemConfigurationManager MyInstance {
+        public static SystemConfigurationManager Instance {
             get {
                 if (instance == null) {
                     instance = FindObjectOfType<SystemConfigurationManager>();
@@ -151,6 +151,10 @@ namespace AnyRPG {
         [Tooltip("This profile should contain references to all the default animations that are on the default animation controller so the system knows which animations to replace when overriding them.")]
         [SerializeField]
         private AnimationProfile systemAnimationProfile;
+
+        [Tooltip("If true, movement animations will be sped up or slowed down to match the actual speed (in m/s) the character is moving at.  This will reduce foot sliding, but may result in more jerky looking movement.")]
+        [SerializeField]
+        private bool syncMovementAnimationSpeed;
 
         [Header("CHARACTER ANIMATION CONFIGURATION")]
 
@@ -613,6 +617,7 @@ namespace AnyRPG {
         public float PlayerMiniMapIconRotation { get => playerMiniMapIconRotation; set => playerMiniMapIconRotation = value; }
         public bool RealTimeUnitFrameCamera { get => realTimeUnitFrameCamera; set => realTimeUnitFrameCamera = value; }
         public List<string> CharacterCreatorProfileNames { get => characterCreatorProfileNames; set => characterCreatorProfileNames = value; }
+        public bool SyncMovementAnimationSpeed { get => syncMovementAnimationSpeed; set => syncMovementAnimationSpeed = value; }
 
         public CapabilityProps GetFilteredCapabilities(ICapabilityConsumer capabilityConsumer, bool returnAll = true) {
             return capabilities;

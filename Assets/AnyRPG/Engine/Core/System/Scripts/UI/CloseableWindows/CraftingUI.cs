@@ -84,9 +84,6 @@ namespace AnyRPG {
 
         private Coroutine waitCoroutine = null;
 
-        private void Start() {
-            DeactivateButtons();
-        }
 
         public void DeactivateButtons() {
             Button craftButtonComponent = craftButton.GetComponent<Button>();
@@ -239,7 +236,6 @@ namespace AnyRPG {
         public override void RecieveClosedWindowNotification() {
             //Debug.Log("craftingUI.OnCloseWindow()");
             base.RecieveClosedWindowNotification();
-            DeactivateButtons();
             //Debug.Log("craftingUI.OnCloseWindow(): nulling recipe script");
             MySelectedRecipeScript = null;
         }
@@ -248,6 +244,8 @@ namespace AnyRPG {
             //Debug.Log("craftingUI.OnOpenWindow()");
             base.ReceiveOpenWindowNotification();
             SetBackGroundColor(new Color32(0, 0, 0, (byte)(int)(PlayerPrefs.GetFloat("PopupWindowOpacity") * 255)));
+
+            DeactivateButtons();
 
             craftingQueue.Clear();
         }

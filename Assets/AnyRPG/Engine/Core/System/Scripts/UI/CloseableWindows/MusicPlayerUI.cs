@@ -190,7 +190,6 @@ namespace AnyRPG {
         public override void RecieveClosedWindowNotification() {
             //Debug.Log("SkillTrainerUI.OnCloseWindow()");
             base.RecieveClosedWindowNotification();
-            //DeactivateButtons();
             MySelectedMusicPlayerHighlightButton = null;
         }
 
@@ -222,6 +221,7 @@ namespace AnyRPG {
             //Debug.Log("SkillTrainerUI.OnOpenWindow()");
             // clear before open window handler, because it shows quests
             SetBackGroundColor(new Color32(0, 0, 0, (byte)(int)(PlayerPrefs.GetFloat("PopupWindowOpacity") * 255)));
+            DeactivateButtons();
             ClearDescription();
         }
     }

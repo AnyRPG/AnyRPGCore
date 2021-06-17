@@ -71,8 +71,8 @@ namespace AnyRPG {
         public override void LoadResourceList() {
             //Debug.Log(this.GetType().Name + ".LoadResourceList()");
             masterList.Add(Resources.LoadAll<Quest>(resourceClassName));
-            if (SystemConfigurationManager.MyInstance != null) {
-                foreach (string loadResourcesFolder in SystemConfigurationManager.MyInstance.LoadResourcesFolders) {
+            if (SystemConfigurationManager.Instance != null) {
+                foreach (string loadResourcesFolder in SystemConfigurationManager.Instance.LoadResourcesFolders) {
                     masterList.Add(Resources.LoadAll<Quest>(loadResourcesFolder + "/" + resourceClassName));
                 }
             }

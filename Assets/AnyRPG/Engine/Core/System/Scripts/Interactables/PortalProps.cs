@@ -17,8 +17,8 @@ namespace AnyRPG {
         [SerializeField]
         protected string locationTag = string.Empty;
 
-        public override Sprite Icon { get => (SystemConfigurationManager.MyInstance.PortalInteractionPanelImage != null ? SystemConfigurationManager.MyInstance.PortalInteractionPanelImage : base.Icon); }
-        public override Sprite NamePlateImage { get => (SystemConfigurationManager.MyInstance.PortalNamePlateImage != null ? SystemConfigurationManager.MyInstance.PortalNamePlateImage : base.NamePlateImage); }
+        public override Sprite Icon { get => (SystemConfigurationManager.Instance.PortalInteractionPanelImage != null ? SystemConfigurationManager.Instance.PortalInteractionPanelImage : base.Icon); }
+        public override Sprite NamePlateImage { get => (SystemConfigurationManager.Instance.PortalNamePlateImage != null ? SystemConfigurationManager.Instance.PortalNamePlateImage : base.NamePlateImage); }
         public string LocationTag { get => locationTag; set => locationTag = value; }
 
         public override InteractableOptionComponent GetInteractableOption(Interactable interactable, InteractableOption interactableOption = null) {

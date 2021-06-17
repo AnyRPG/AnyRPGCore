@@ -30,11 +30,11 @@ public class QuestGiverQuestScript : MonoBehaviour
     }
 
     public void CommonSelect() {
-        if (QuestGiverUI.MyInstance.MySelectedQuestGiverQuestScript != null && QuestGiverUI.MyInstance.MySelectedQuestGiverQuestScript != this) {
+        if (QuestGiverUI.MyInstance.SelectedQuestGiverQuestScript != null && QuestGiverUI.MyInstance.SelectedQuestGiverQuestScript != this) {
             //Debug.Log("QuestGiverQuestScript.Select(): " + MyQuest.MyTitle + ": deselecting old script: " + QuestGiverUI.MyInstance.MySelectedQuestGiverQuestScript.MyQuest.MyTitle);
-            QuestGiverUI.MyInstance.MySelectedQuestGiverQuestScript.DeSelect();
+            QuestGiverUI.MyInstance.SelectedQuestGiverQuestScript.DeSelect();
         }
-        QuestGiverUI.MyInstance.MySelectedQuestGiverQuestScript = this;
+        QuestGiverUI.MyInstance.SelectedQuestGiverQuestScript = this;
 
         //Debug.Log("QuestGiverQuestScript.Select(): " + MyQuest.MyTitle + ": setting color: " + highlightColor);
         GetComponent<Image>().color = highlightColor;
@@ -55,7 +55,7 @@ public class QuestGiverQuestScript : MonoBehaviour
     public void DeSelect() {
         //Debug.Log("QuestGiverQuestScript.DeSelect(): " + MyQuest.MyTitle + ": setting color: " + baseColor);
         GetComponent<Image>().color = baseColor;
-        QuestGiverUI.MyInstance.MySelectedQuestGiverQuestScript = null;
+        QuestGiverUI.MyInstance.SelectedQuestGiverQuestScript = null;
     }
 
     public void IsComplete() {

@@ -34,10 +34,10 @@ namespace AnyRPG {
                 if (playerFaction != null) {
                     icon.sprite = playerFaction.Icon;
                 } else {
-                    icon.sprite = SystemConfigurationManager.MyInstance.DefaultFactionIcon;
+                    icon.sprite = SystemConfigurationManager.Instance.DefaultFactionIcon;
                 }
             } else {
-                icon.sprite = SystemConfigurationManager.MyInstance.DefaultFactionIcon;
+                icon.sprite = SystemConfigurationManager.Instance.DefaultFactionIcon;
             }
             icon.color = Color.white;
             //Debug.Log("LoadGameButton.AddSaveData(): Setting playerName.text: " + mySaveData.playerName);
@@ -46,10 +46,10 @@ namespace AnyRPG {
 
             // format the button text
             string descriptionText = string.Empty;
-            if (SystemConfigurationManager.MyInstance.NewGameFaction == true) {
+            if (SystemConfigurationManager.Instance.NewGameFaction == true) {
                 descriptionText += "Faction: " + (mySaveData.playerFaction == null || mySaveData.playerFaction == string.Empty ? "None" : MySaveData.playerFaction) + "\n";
             }
-            if (SystemConfigurationManager.MyInstance.NewGameClass == true) {
+            if (SystemConfigurationManager.Instance.NewGameClass == true) {
                 descriptionText += "Class: " + (mySaveData.characterClass == null || mySaveData.characterClass == string.Empty ? "None" : mySaveData.characterClass) + "\n";
                 descriptionText += "Specialization: " + (mySaveData.classSpecialization == null || mySaveData.classSpecialization == string.Empty ? "None" : MySaveData.classSpecialization) + "\n";
             }
