@@ -25,10 +25,7 @@ namespace AnyRPG {
             //Debug.Log(gameObject.name + ".RecipeScript.Select(): " + recipe.MyName);
 
             base.Select();
-            CraftingUI.MyInstance.MySelectedRecipeScript = this;
-
-            CraftingUI.MyInstance.ShowDescription(MyRecipe);
-
+            CraftingManager.Instance.SetSelectedRecipe(recipe);
         }
 
         public override void DeSelect() {

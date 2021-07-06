@@ -93,7 +93,7 @@ namespace AnyRPG {
         }
 
         public void CloseAllWindows() {
-            Debug.Log("PopupWindowManager.CloseAllWindows()");
+            //Debug.Log("PopupWindowManager.CloseAllWindows()");
             abilityBookWindow.CloseWindow();
             skillBookWindow.CloseWindow();
             achievementListWindow.CloseWindow();

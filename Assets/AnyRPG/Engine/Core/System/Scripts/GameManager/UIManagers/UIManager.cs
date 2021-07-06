@@ -347,7 +347,7 @@ namespace AnyRPG {
         }
 
         public void DeactivateInGameUI() {
-            Debug.Log("UIManager.DeactivateInGameUI()");
+            //Debug.Log("UIManager.DeactivateInGameUI()");
             if (PopupWindowManager.MyInstance != null) {
                 PopupWindowManager.MyInstance.CloseAllWindows();
             }

@@ -71,7 +71,10 @@ namespace AnyRPG {
         public override bool Interact(CharacterUnit source, int optionIndex = 0) {
             base.Interact(source, optionIndex);
 
-            CraftingUI.MyInstance.ViewRecipes(Props.Ability as CraftAbility);
+            if (Props == null || Props.Ability == null) {
+                Debug.Log("Props is null");
+            }
+            CraftingManager.Instance.SetAbility(Props.Ability as CraftAbility);
             //source.MyCharacter.MyCharacterAbilityManager.BeginAbility(ability);
             return true;
             //return PickUp();

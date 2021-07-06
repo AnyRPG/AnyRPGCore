@@ -9,21 +9,6 @@ using UnityEngine.UI;
 namespace AnyRPG {
     public class CraftingUI : WindowContentController {
 
-        #region Singleton
-        private static CraftingUI instance;
-
-        public static CraftingUI MyInstance {
-            get {
-                if (instance == null) {
-                    instance = FindObjectOfType<CraftingUI>();
-                }
-
-                return instance;
-            }
-        }
-
-        #endregion
-
         // holds all the recipes
         private CraftAbility craftAbility = null;
 
@@ -71,8 +56,6 @@ namespace AnyRPG {
 
         private List<RecipeScript> recipeScripts = new List<RecipeScript>();
 
-        private List<Recipe> craftingQueue = new List<Recipe>();
-
         private RecipeScript selectedRecipeScript;
 
         //private string currentRecipeName = null;
@@ -80,10 +63,28 @@ namespace AnyRPG {
         private Recipe currentRecipe = null;
 
         public RecipeScript MySelectedRecipeScript { get => selectedRecipeScript; set => selectedRecipeScript = value; }
-        public List<Recipe> CraftingQueue { get => craftingQueue; set => craftingQueue = value; }
 
-        private Coroutine waitCoroutine = null;
+        protected override void CreateEventSubscriptions() {
+            //Debug.Log("PlayerManager.CreateEventSubscriptions()");
+            if (eventSubscriptionsInitialized) {
+                return;
+            }
+            base.CreateEventSubscriptions();
+            //SystemEventManager.MyInstance.OnPrerequisiteUpdated += CheckPrerequisites;
+            CraftingManager.Instance.OnSelectRecipe += ShowDescription;
+            CraftingManager.Instance.OnCraftAmountUpdated += UpdateCraftAmountArea;
+        }
 
+        protected override void CleanupEventSubscriptions() {
+            //Debug.Log("PlayerManager.CleanupEventSubscriptions()");
+            if (!eventSubscriptionsInitialized) {
+                return;
+            }
+            base.CleanupEventSubscriptions();
+            CraftingManager.Instance.OnSelectRecipe -= ShowDescription;
+            CraftingManager.Instance.OnCraftAmountUpdated -= UpdateCraftAmountArea;
+            //SystemEventManager.MyInstance.OnPrerequisiteUpdated -= CheckPrerequisites;
+        }
 
         public void DeactivateButtons() {
             Button craftButtonComponent = craftButton.GetComponent<Button>();
@@ -191,17 +192,6 @@ namespace AnyRPG {
 
         }
 
-
-        private bool CanCraft(Recipe recipe) {
-            //Debug.Log("CraftingUI.CanCraft(" + recipe.MyOutput.MyName + ")");
-            for (int i = 0; i < recipe.MyCraftingMaterials.Count; i++) {
-                if (InventoryManager.MyInstance.GetItemCount(recipe.MyCraftingMaterials[i].MyItem.DisplayName) < recipe.MyCraftingMaterials[i].MyCount) {
-                    return false;
-                }
-            }
-            return true;
-        }
-
         public void ClearDescription() {
             //Debug.Log("CraftingUI.ClearDescription()");
             craftAmount = 1;
@@ -247,7 +237,7 @@ namespace AnyRPG {
 
             DeactivateButtons();
 
-            craftingQueue.Clear();
+            CraftingManager.Instance.ClearCraftingQueue();
         }
 
         private void ResetWindow() {
@@ -262,26 +252,10 @@ namespace AnyRPG {
             }
         }
 
-        private int GetMaxCraftAmount(Recipe checkRecipe) {
-            //Debug.Log("CraftingUI.GetMaxCraftAmount()");
-
-            int maxAmount = -1;
-            for (int i = 0; i < checkRecipe.MyCraftingMaterials.Count; i++) {
-                int possibleAmount = InventoryManager.MyInstance.GetItemCount(checkRecipe.MyCraftingMaterials[i].MyItem.DisplayName) / checkRecipe.MyCraftingMaterials[i].MyCount;
-                if (maxAmount == -1) {
-                    maxAmount = possibleAmount;
-                }
-                if (possibleAmount < maxAmount) {
-                    maxAmount = possibleAmount;
-                }
-            }
-            return maxAmount;
-        }
-
         public void CraftAll() {
             //Debug.Log("CraftingUI.CraftAll()");
             if (MySelectedRecipeScript != null) {
-                craftAmount = GetMaxCraftAmount(MySelectedRecipeScript.MyRecipe);
+                craftAmount = CraftingManager.Instance.GetMaxCraftAmount(MySelectedRecipeScript.MyRecipe);
                 UpdateCraftAmountArea();
                 BeginCrafting();
             } else {
@@ -293,7 +267,7 @@ namespace AnyRPG {
             //Debug.Log("CraftingUI.BeginCrafting()");
             if (MySelectedRecipeScript != null) {
                 for (int i = 0; i < craftAmount; i++) {
-                    craftingQueue.Add(MySelectedRecipeScript.MyRecipe);
+                    CraftingManager.Instance.CraftingQueue.Add(MySelectedRecipeScript.MyRecipe);
                 }
                 PlayerManager.MyInstance.MyCharacter.CharacterAbilityManager.BeginAbility(craftAbility);
             } else {
@@ -301,62 +275,12 @@ namespace AnyRPG {
             }
         }
 
-        public void CraftNextItem() {
-            //Debug.Log("CraftingUI.CraftNextItem()");
-            if (craftingQueue.Count == 0) {
-                //Debug.Log("CraftingUI.CraftNextItem(): no more items to craft");
-                return;
-            }
-
-            // PERFORM CHECK FOR MATERIALS IN INVENTORY FIRST IN CASE QUEUE GOT BIGGER THAN MATERIAL AMOUNT BY ACCIDENT / RACE CONDITION, also for bag space
-            if (GetMaxCraftAmount(craftingQueue[0]) > 0) {
-                Item tmpItem = SystemItemManager.MyInstance.GetNewResource(craftingQueue[0].MyOutput.DisplayName);
-                tmpItem.DropLevel = PlayerManager.MyInstance.MyCharacter.CharacterStats.Level;
-                if (InventoryManager.MyInstance.AddItem(tmpItem)) {
-                    //Debug.Log("CraftingUI.CraftNextItem(): got an item successfully");
-                    foreach (CraftingMaterial craftingMaterial in craftingQueue[0].MyCraftingMaterials) {
-                        //Debug.Log("CraftingUI.CraftNextItem(): looping through crafting materials");
-                        for (int i = 0; i < craftingMaterial.MyCount; i++) {
-                            //Debug.Log("CraftingUI.CraftNextItem(): about to remove item from inventory");
-                            InventoryManager.MyInstance.RemoveItem(InventoryManager.MyInstance.GetItems(craftingMaterial.MyItem.DisplayName, 1)[0]);
-                        }
-                    }
-                    craftingQueue.RemoveAt(0);
-                    //UpdateCraftAmountArea();
-                    if (craftingQueue.Count > 0) {
-                        //Debug.Log("CraftingUI.CraftNextItem(): count: " + craftingQueue.Count);
-                        // because this gets called as the last part of the cast, which is still technically in progress, we have to stopcasting first or it will fail to start because the coroutine is not null
-                        //PlayerManager.MyInstance.MyCharacter.MyCharacterAbilityManager.StopCasting();
-
-                        PlayerManager.MyInstance.MyCharacter.CharacterAbilityManager.BeginAbility(craftAbility);
-                    }
-                }
-            } else {
-                // empty the queue to prevent repeated loop trying to craft something you don't have materials for
-                craftingQueue.Clear();
-            }
-        }
-
-        public void CraftNextItemWait() {
-            //Debug.Log("CraftingUI.CraftNextItemWait()");
-            // add delay to avoid issues with cast in progress from current crafting item
-            if (waitCoroutine == null) {
-                waitCoroutine = StartCoroutine(CraftNextItemDelay());
-            }
-        }
-
-        private IEnumerator CraftNextItemDelay() {
-            //Debug.Log("CraftingUI.CraftNextItemDelay()");
-            yield return null;
-            waitCoroutine = null;
-            CraftNextItem();
-        }
 
         public void UpdateCraftAmountArea() {
             //Debug.Log("CraftingUI.UpdateCraftAmountArea()");
             int maxAmount = 0;
             if (MySelectedRecipeScript != null) {
-                maxAmount = GetMaxCraftAmount(MySelectedRecipeScript.MyRecipe);
+                maxAmount = CraftingManager.Instance.GetMaxCraftAmount(MySelectedRecipeScript.MyRecipe);
                 if (craftAmount == 0 && maxAmount > 0) {
                     craftAmount = 1;
                 }
@@ -400,11 +324,6 @@ namespace AnyRPG {
             }
         }
 
-        public void CancelCrafting() {
-            //Debug.Log("CraftingUI.CancelCrafting()");
-            craftingQueue.Clear();
-            PlayerManager.MyInstance.MyCharacter.CharacterAbilityManager.StopCasting();
-        }
 
     }
 

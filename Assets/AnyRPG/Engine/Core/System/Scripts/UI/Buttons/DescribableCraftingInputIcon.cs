@@ -24,10 +24,10 @@ public class DescribableCraftingInputIcon : DescribableIcon
         
         //if (count > 1) {
             stackSize.text = InventoryManager.MyInstance.GetItemCount(Describable.DisplayName) + " / " + count.ToString();
-        //} else {
+            //} else {
             //stackSize.text = "";
-        //}
-        CraftingUI.MyInstance.UpdateCraftAmountArea();
+            //}
+            CraftingManager.Instance.TriggerCraftAmountUpdated();
     }
 
     protected override void SetDescribableCommon(IDescribable describable) {
