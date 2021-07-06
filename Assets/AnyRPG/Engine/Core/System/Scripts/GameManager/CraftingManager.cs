@@ -47,6 +47,7 @@ namespace AnyRPG {
 
         public void SetAbility(CraftAbility craftAbility) {
             this.craftAbility = craftAbility;
+            PopupWindowManager.MyInstance.craftingWindow.OpenWindow();
             OnSetCraftAbility(this.craftAbility);
         }
 

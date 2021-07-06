@@ -33,6 +33,7 @@ namespace AnyRPG {
         private List<GameObject> interactionPanelScripts = new List<GameObject>();
 
         public void HandleSetInteractable(Interactable _interactable) {
+            Debug.Log("InteractionPanelUI.HandleSetInteractable()");
             if (interactable != null) {
                 interactable.OnPrerequisiteUpdates -= HandlePrerequisiteUpdates;
             }
@@ -43,7 +44,7 @@ namespace AnyRPG {
         }
 
         protected override void CreateEventSubscriptions() {
-            //Debug.Log("PlayerManager.CreateEventSubscriptions()");
+            //Debug.Log("InteractionPanelUI.CreateEventSubscriptions()");
             if (eventSubscriptionsInitialized) {
                 return;
             }
@@ -53,7 +54,7 @@ namespace AnyRPG {
         }
 
         protected override void CleanupEventSubscriptions() {
-            //Debug.Log("PlayerManager.CleanupEventSubscriptions()");
+            //Debug.Log("InteractionPanelUI.CleanupEventSubscriptions()");
             if (!eventSubscriptionsInitialized) {
                 return;
             }
@@ -256,7 +257,7 @@ namespace AnyRPG {
         }
 
         public override void ReceiveOpenWindowNotification() {
-            //Debug.Log("InteractionPanelUI.OnOpenWindow()");
+            Debug.Log("InteractionPanelUI.ReceiveOpenWindowNotification()");
             SetBackGroundColor(new Color32(0, 0, 0, (byte)(int)(PlayerPrefs.GetFloat("PopupWindowOpacity") * 255)));
 
             // this has to be done first, because the next line after could close the window and set the interactable to null

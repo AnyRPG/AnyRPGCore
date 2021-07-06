@@ -65,7 +65,7 @@ namespace AnyRPG {
         public RecipeScript MySelectedRecipeScript { get => selectedRecipeScript; set => selectedRecipeScript = value; }
 
         protected override void CreateEventSubscriptions() {
-            //Debug.Log("PlayerManager.CreateEventSubscriptions()");
+            //Debug.Log("CraftingUI.CreateEventSubscriptions()");
             if (eventSubscriptionsInitialized) {
                 return;
             }
@@ -73,16 +73,18 @@ namespace AnyRPG {
             //SystemEventManager.MyInstance.OnPrerequisiteUpdated += CheckPrerequisites;
             CraftingManager.Instance.OnSelectRecipe += ShowDescription;
             CraftingManager.Instance.OnCraftAmountUpdated += UpdateCraftAmountArea;
+            CraftingManager.Instance.OnSetCraftAbility += ViewRecipes;
         }
 
         protected override void CleanupEventSubscriptions() {
-            //Debug.Log("PlayerManager.CleanupEventSubscriptions()");
+            //Debug.Log("CraftingUI.CleanupEventSubscriptions()");
             if (!eventSubscriptionsInitialized) {
                 return;
             }
             base.CleanupEventSubscriptions();
             CraftingManager.Instance.OnSelectRecipe -= ShowDescription;
             CraftingManager.Instance.OnCraftAmountUpdated -= UpdateCraftAmountArea;
+            CraftingManager.Instance.OnSetCraftAbility -= ViewRecipes;
             //SystemEventManager.MyInstance.OnPrerequisiteUpdated -= CheckPrerequisites;
         }
 
@@ -97,10 +99,16 @@ namespace AnyRPG {
             }
         }
 
+        public void CancelCrafting() {
+            //Debug.Log("CraftingUI.CancelCrafting()");
+            CraftingManager.Instance.CancelCrafting();
+        }
+
+
         // meant to be called externally from craftingNode
         public void ViewRecipes(CraftAbility craftAbility) {
             this.craftAbility = craftAbility;
-            PopupWindowManager.MyInstance.craftingWindow.OpenWindow();
+            //PopupWindowManager.MyInstance.craftingWindow.OpenWindow();
             ResetWindow();
             ShowRecipes(craftAbility);
         }
@@ -231,7 +239,7 @@ namespace AnyRPG {
         }
 
         public override void ReceiveOpenWindowNotification() {
-            //Debug.Log("craftingUI.OnOpenWindow()");
+            Debug.Log("CraftingUI.ReceiveOpenWindowNotification()");
             base.ReceiveOpenWindowNotification();
             SetBackGroundColor(new Color32(0, 0, 0, (byte)(int)(PlayerPrefs.GetFloat("PopupWindowOpacity") * 255)));
 

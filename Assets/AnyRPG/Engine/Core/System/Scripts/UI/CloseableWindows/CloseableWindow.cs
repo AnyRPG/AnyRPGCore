@@ -108,7 +108,7 @@ namespace AnyRPG {
         }
 
         public virtual void OpenWindow() {
-            //Debug.Log(gameObject.name + ".CloseableWindow.OpenWindow()");
+            Debug.Log(gameObject.name + ".CloseableWindow.OpenWindow()");
             InitializeWindow();
             if (IsOpen) {
                 return;

@@ -140,7 +140,7 @@ namespace AnyRPG {
         }
 
         public virtual bool Interact(CharacterUnit source, int optionIndex = 0) {
-            //Debug.Log(interactable.gameObject.name + ".InteractableOptionComponent.Interact()");
+            Debug.Log(interactable.gameObject.name + ".InteractableOptionComponent.Interact()");
             //source.CancelMountEffects();
             SystemEventManager.MyInstance.NotifyOnInteractionWithOptionStarted(this);
             return true;

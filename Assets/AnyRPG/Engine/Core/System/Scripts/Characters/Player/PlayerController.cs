@@ -354,6 +354,8 @@ namespace AnyRPG {
         /// if an interactable is set, try to interact with it if it's in range.
         /// </summary>
         private void CheckForInteraction() {
+            Debug.Log(gameObject.name + ".PlayerController.CheckForInteraction()");
+
             if (PlayerManager.MyInstance.UnitController == null) {
                 return;
             }
@@ -368,7 +370,7 @@ namespace AnyRPG {
         }
 
         private bool InteractionSucceeded() {
-            //Debug.Log(gameObject.name + ".PlayerController.InteractionSucceeded()");
+            Debug.Log(gameObject.name + ".PlayerController.InteractionSucceeded()");
 
             if (PlayerManager.MyInstance.UnitController == null) {
                 return false;
@@ -494,7 +496,7 @@ namespace AnyRPG {
         }
 
         public void InterActWithTarget(Interactable interactable) {
-            //Debug.Log(gameObject.name + ".InterActWithTarget(" + interactable.gameObject.name + ")");
+            Debug.Log(gameObject.name + ".InterActWithTarget(" + interactable.gameObject.name + ")");
             if (PlayerManager.MyInstance.UnitController.Target != interactable) {
                 PlayerManager.MyInstance.UnitController.ClearTarget();
                 PlayerManager.MyInstance.UnitController.SetTarget(interactable);

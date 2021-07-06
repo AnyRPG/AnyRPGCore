@@ -15,11 +15,11 @@ F:/unity/projects/AnyRPG Alpha
 -logFile
 Logs/AssetImportWorker0.log
 -srvPort
-58659
+56704
 Successfully changed project path to: F:/unity/projects/AnyRPG Alpha
 F:/unity/projects/AnyRPG Alpha
 Using Asset Import Pipeline V2.
-Refreshing native plugins compatible for Editor in 405.61 ms, found 2 plugins.
+Refreshing native plugins compatible for Editor in 421.82 ms, found 2 plugins.
 Preloading 0 native plugins for Editor in 0.00 ms.
 Initialize engine version: 2020.3.12f1 (b3b2c6512326)
 [Subsystems] Discovering subsystems at path C:/Program Files/Unity/Hub/Editor/2020.3.12f1/Editor/Data/Resources/UnitySubsystems
@@ -38,25 +38,25 @@ Initialize mono
 Mono path[0] = 'C:/Program Files/Unity/Hub/Editor/2020.3.12f1/Editor/Data/Managed'
 Mono path[1] = 'C:/Program Files/Unity/Hub/Editor/2020.3.12f1/Editor/Data/MonoBleedingEdge/lib/mono/unityjit'
 Mono config path = 'C:/Program Files/Unity/Hub/Editor/2020.3.12f1/Editor/Data/MonoBleedingEdge/etc'
-Using monoOptions --debugger-agent=transport=dt_socket,embedding=1,server=y,suspend=n,address=127.0.0.1:56232
+Using monoOptions --debugger-agent=transport=dt_socket,embedding=1,server=y,suspend=n,address=127.0.0.1:56488
 Begin MonoManager ReloadAssembly
 Registering precompiled unity dll's ...
 Register platform support module: C:/Program Files/Unity/Hub/Editor/2020.3.12f1/Editor/Data/PlaybackEngines/WindowsStandaloneSupport/UnityEditor.WindowsStandalone.Extensions.dll
-Registered in 0.001814 seconds.
+Registered in 0.001908 seconds.
 Native extension for WindowsStandalone target not found
-Refreshing native plugins compatible for Editor in 424.72 ms, found 2 plugins.
+Refreshing native plugins compatible for Editor in 431.36 ms, found 2 plugins.
 Preloading 0 native plugins for Editor in 0.00 ms.
 Mono: successfully reloaded assembly
-- Completed reload, in  1.536 seconds
+- Completed reload, in  1.489 seconds
 Platform modules already initialized, skipping
 Registering precompiled user dll's ...
-Registered in 0.006920 seconds.
+Registered in 0.007052 seconds.
 Begin MonoManager ReloadAssembly
 Native extension for WindowsStandalone target not found
-Refreshing native plugins compatible for Editor in 5.28 ms, found 2 plugins.
+Refreshing native plugins compatible for Editor in 4.63 ms, found 2 plugins.
 Preloading 0 native plugins for Editor in 0.00 ms.
 Mono: successfully reloaded assembly
-- Completed reload, in  1.095 seconds
+- Completed reload, in  1.091 seconds
 Platform modules already initialized, skipping
 ========================================================================
 Worker process is ready to serve import requests
@@ -64,14 +64,14 @@ Shader 'WFX/Transparent Diffuse': fallback shader 'Particles/Alpha Blended' not 
 Shader 'WFX/Transparent Specular': fallback shader 'Particles/Alpha Blended' not found
 Shader 'Custom/AdditiveTintable': fallback shader 'Particles/Additive (Soft)' not found
 Launched and connected shader compiler UnityShaderCompiler.exe after 0.04 seconds
-Refreshing native plugins compatible for Editor in 5.47 ms, found 2 plugins.
+Refreshing native plugins compatible for Editor in 5.09 ms, found 2 plugins.
 Preloading 0 native plugins for Editor in 0.00 ms.
-Unloading 3035 Unused Serialized files (Serialized files now loaded: 0)
-System memory in use before: 248.2 MB.
-System memory in use after: 248.1 MB.
+Unloading 3036 Unused Serialized files (Serialized files now loaded: 0)
+System memory in use before: 248.3 MB.
+System memory in use after: 248.2 MB.
 
-Unloading 22 unused Assets to reduce memory usage. Loaded Objects now: 3519.
-Total: 3.653400 ms (FindLiveObjects: 0.405200 ms CreateObjectMapping: 0.348700 ms MarkObjects: 2.565600 ms  DeleteObjects: 0.332900 ms)
+Unloading 22 unused Assets to reduce memory usage. Loaded Objects now: 3520.
+Total: 2.930300 ms (FindLiveObjects: 0.362300 ms CreateObjectMapping: 0.278600 ms MarkObjects: 1.960400 ms  DeleteObjects: 0.328200 ms)
 
 AssetImportParameters requested are different than current active one (requested -> active):
   custom:framework-win-MediaFoundation: 216162199b28c13a410421893ffa2e32 -> 
@@ -85,41 +85,41 @@ AssetImportParameters requested are different than current active one (requested
   custom:audio-encoder-webm-vorbis: bf7c407c2cedff20999df2af8eb42d56 -> 
 ========================================================================
 Received Import Request.
-  path: Assets/AnyRPG/Engine/Core/System/Scripts/UI/CloseableWindows/CraftingUI.cs
-  artifactKey: Guid(3ffd20d78f438204aa491dd712dd2de2) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/AnyRPG/Engine/Core/System/Scripts/UI/CloseableWindows/CraftingUI.cs using Guid(3ffd20d78f438204aa491dd712dd2de2) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: 'a19263eb68cad68a6572e1a9597329e2') in 0.026319 seconds 
-  Import took 0.033759 seconds .
+  path: Assets/AnyRPG/Engine/Core/System/Prefabs/UI/Window/Contents/CraftingPanel.prefab
+  artifactKey: Guid(00b30cef5bfb8754abf7196579b97152) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/AnyRPG/Engine/Core/System/Prefabs/UI/Window/Contents/CraftingPanel.prefab using Guid(00b30cef5bfb8754abf7196579b97152) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '69a7e1aab4999378faa71ae23fe9b0bc') in 0.125395 seconds 
+  Import took 0.133792 seconds .
 
 ========================================================================
 Received Import Request.
-  Time since last request: 0.000237 seconds.
-  path: Assets/AnyRPG/Engine/Core/System/Scripts/UI/CloseableWindows/CreditsController.cs
-  artifactKey: Guid(76a0efabf816bbb49a06bc385e1eeac3) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/AnyRPG/Engine/Core/System/Scripts/UI/CloseableWindows/CreditsController.cs using Guid(76a0efabf816bbb49a06bc385e1eeac3) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: 'f4069b066047483cc785803b8a55dade') in 0.001997 seconds 
-  Import took 0.008130 seconds .
+  Time since last request: 24.232840 seconds.
+  path: Assets/AnyRPG/Engine/Core/System/Prefabs/UI/Window/Frames/CraftingWindow.prefab
+  artifactKey: Guid(ef01914701aa40d4989ddadb690de164) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/AnyRPG/Engine/Core/System/Prefabs/UI/Window/Frames/CraftingWindow.prefab using Guid(ef01914701aa40d4989ddadb690de164) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '14f34c3332d1392837847a688c9d7df5') in 0.047765 seconds 
+  Import took 0.055753 seconds .
 
 ========================================================================
-Received Import Request.
-  Time since last request: 0.000269 seconds.
-  path: Assets/AnyRPG/Engine/Core/System/Scripts/UI/CloseableWindows/CopyGameMenuController.cs
-  artifactKey: Guid(547bfeb4309b164418fd53eb0e5ddd89) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/AnyRPG/Engine/Core/System/Scripts/UI/CloseableWindows/CopyGameMenuController.cs using Guid(547bfeb4309b164418fd53eb0e5ddd89) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '43517e8e902ec9928a42f62fc73e7be7') in 0.002172 seconds 
-  Import took 0.009301 seconds .
+Received Prepare
+Shader 'WFX/Transparent Diffuse': fallback shader 'Particles/Alpha Blended' not found
+Shader 'WFX/Transparent Specular': fallback shader 'Particles/Alpha Blended' not found
+Shader 'Custom/AdditiveTintable': fallback shader 'Particles/Additive (Soft)' not found
+Refreshing native plugins compatible for Editor in 6.43 ms, found 2 plugins.
+Preloading 0 native plugins for Editor in 0.00 ms.
+Unloading 16 Unused Serialized files (Serialized files now loaded: 0)
+System memory in use before: 173.3 MB.
+System memory in use after: 173.2 MB.
 
-========================================================================
-Received Import Request.
-  Time since last request: 1.821953 seconds.
-  path: Assets/AnyRPG/Engine/Core/System/Scripts/UI/CloseableWindows/CraftingUI1.cs
-  artifactKey: Guid(185715239a6d02f43ba6e09ee67f74fe) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/AnyRPG/Engine/Core/System/Scripts/UI/CloseableWindows/CraftingUI1.cs using Guid(185715239a6d02f43ba6e09ee67f74fe) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: 'db7e1a58717da258cb925550fbc9fa03') in 0.001904 seconds 
-  Import took 0.014945 seconds .
+Unloading 17 unused Assets to reduce memory usage. Loaded Objects now: 3520.
+Total: 3.376200 ms (FindLiveObjects: 0.277700 ms CreateObjectMapping: 0.128200 ms MarkObjects: 2.657100 ms  DeleteObjects: 0.312200 ms)
 
-========================================================================
-Received Import Request.
-  Time since last request: 14.449863 seconds.
-  path: Assets/AnyRPG/Engine/Core/System/Scripts/GameManager/CraftingManager.cs
-  artifactKey: Guid(185715239a6d02f43ba6e09ee67f74fe) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/AnyRPG/Engine/Core/System/Scripts/GameManager/CraftingManager.cs using Guid(185715239a6d02f43ba6e09ee67f74fe) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '214b767eea6522c9110153db94395197') in 0.001847 seconds 
-  Import took 0.010778 seconds .
-
+AssetImportParameters requested are different than current active one (requested -> active):
+  custom:framework-win-MediaFoundation: 216162199b28c13a410421893ffa2e32 -> 
+  custom:video-decoder-ogg-theora: a1e56fd34408186e4bbccfd4996cb3dc -> 
+  custom:container-muxer-webm: aa71ff27fc2769a1b78a27578f13a17b -> 
+  custom:container-demuxer-webm: 4f35f7cbe854078d1ac9338744f61a02 -> 
+  custom:container-demuxer-ogg: 62fdf1f143b41e24485cea50d1cbac27 -> 
+  custom:video-encoder-webm-vp8: eb34c28f22e8b96e1ab97ce403110664 -> 
+  custom:video-decoder-webm-vp8: 9c59270c3fd7afecdb556c50c9e8de78 -> 
+  custom:audio-decoder-ogg-vorbis: bf7c407c2cedff20999df2af8eb42d56 -> 
+  custom:audio-encoder-webm-vorbis: bf7c407c2cedff20999df2af8eb42d56 -> 
 AssetImportWorkerClient::OnTransportError - code=2 error=End of file
