@@ -507,7 +507,7 @@ namespace AnyRPG {
         /// </summary>
         /// <returns></returns>
         public virtual bool Interact(CharacterUnit source, bool processRangeCheck = false) {
-            Debug.Log(gameObject.name + ".Interactable.Interact(" + source.DisplayName + ", " + processRangeCheck + ")");
+            //Debug.Log(gameObject.name + ".Interactable.Interact(" + source.DisplayName + ", " + processRangeCheck + ")");
             if (notInteractable == true) {
                 return false;
             }
@@ -552,7 +552,7 @@ namespace AnyRPG {
                 finalInteractables = validInteractables;
             }
             // perform default interaction or open a window if there are multiple valid interactions
-            Debug.Log(gameObject.name + ".Interactable.Interact(): validInteractables.Count: " + validInteractables.Count);
+            //Debug.Log(gameObject.name + ".Interactable.Interact(): validInteractables.Count: " + validInteractables.Count);
             // changed code, window will always be opened, and it will decide if to pop another one or not
             if (finalInteractables.Count > 0) {
                 if (suppressInteractionWindow == true || validInteractables.Count == 1) {
