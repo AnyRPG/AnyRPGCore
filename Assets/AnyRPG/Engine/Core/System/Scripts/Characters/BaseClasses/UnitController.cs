@@ -28,7 +28,8 @@ namespace AnyRPG {
         public event System.Action<PowerResource, int, int> OnResourceAmountChanged = delegate { };
         public event System.Action<StatusEffectNode> OnStatusEffectAdd = delegate { };
         public event System.Action<IAbilityCaster, BaseAbility, float> OnCastTimeChanged = delegate { };
-        public event System.Action<BaseCharacter> OnCastStop = delegate { };
+        public event System.Action<BaseCharacter> OnCastComplete = delegate { };
+        public event System.Action<BaseCharacter> OnCastCancel = delegate { };
         public event System.Action<UnitProfile> OnUnitDestroy = delegate { };
         public event System.Action<UnitController> OnActivateMountedState = delegate { };
         public event System.Action OnDeActivateMountedState = delegate { };
@@ -1872,8 +1873,11 @@ namespace AnyRPG {
         public void NotifyOnCastTimeChanged(IAbilityCaster source, BaseAbility baseAbility, float castPercent) {
             OnCastTimeChanged(source, baseAbility, castPercent);
         }
-        public void NotifyOnCastStop(BaseCharacter baseCharacter) {
-            OnCastStop(baseCharacter);
+        public void NotifyOnCastComplete(BaseCharacter baseCharacter) {
+            OnCastComplete(baseCharacter);
+        }
+        public void NotifyOnCastCancel(BaseCharacter baseCharacter) {
+            OnCastCancel(baseCharacter);
         }
         public void NotifyOnActivateMountedState(UnitController mountUnitController) {
             OnActivateMountedState(mountUnitController);

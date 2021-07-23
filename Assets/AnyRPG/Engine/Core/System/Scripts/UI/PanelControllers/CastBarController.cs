@@ -37,6 +37,7 @@ namespace AnyRPG {
         }
 
         public void DisableCastBar() {
+            //Debug.Log(gameObject.name + ".CastBarController.DisableCastBar()");
             if (uiLocked == false && neverDraggable != true) {
                 //Debug.Log(gameObject.name + ".CastBarController.InitializeController(): ui is unlocked and neverdraggable is not set to true.  returning to avoid deactivating cast bar");
                 return;
@@ -75,7 +76,8 @@ namespace AnyRPG {
             if (unitNamePlateController != null
                 && unitNamePlateController.UnitController != null) {
                 unitNamePlateController.UnitController.OnCastTimeChanged -= OnCastTimeChanged;
-                unitNamePlateController.UnitController.OnCastStop -= OnCastStop;
+                unitNamePlateController.UnitController.OnCastComplete -= OnCastStop;
+                unitNamePlateController.UnitController.OnCastCancel -= OnCastStop;
             }
             unitNamePlateController = null;
             targetInitialized = false;
@@ -88,7 +90,8 @@ namespace AnyRPG {
             if (unitNamePlateController != null
                 && unitNamePlateController.UnitController != null) {
                 unitNamePlateController.UnitController.OnCastTimeChanged += OnCastTimeChanged;
-                unitNamePlateController.UnitController.OnCastStop += OnCastStop;
+                unitNamePlateController.UnitController.OnCastComplete += OnCastStop;
+                unitNamePlateController.UnitController.OnCastCancel += OnCastStop;
             }
 
         }

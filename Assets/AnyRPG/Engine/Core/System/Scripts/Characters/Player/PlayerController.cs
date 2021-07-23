@@ -734,6 +734,7 @@ namespace AnyRPG {
             PlayerManager.MyInstance.ActiveUnitController.OnDeActivateMountedState += HandleDeActivateMountedState;
             PlayerManager.MyInstance.ActiveUnitController.OnMessageFeed += HandleMessageFeed;
             PlayerManager.MyInstance.ActiveUnitController.OnUnitDestroy += HandleUnitDestroy;
+            PlayerManager.MyInstance.ActiveUnitController.OnCastCancel += HandleCastCancel;
 
             // subscribe and call in case the namePlate is already spawned
             PlayerManager.MyInstance.ActiveUnitController.OnInitializeNamePlate += HandleInitializeNamePlate;
@@ -761,7 +762,13 @@ namespace AnyRPG {
             PlayerManager.MyInstance.ActiveUnitController.OnMessageFeed -= HandleMessageFeed;
             PlayerManager.MyInstance.ActiveUnitController.OnInitializeNamePlate -= HandleInitializeNamePlate;
             PlayerManager.MyInstance.ActiveUnitController.OnUnitDestroy -= HandleUnitDestroy;
+            PlayerManager.MyInstance.ActiveUnitController.OnCastCancel -= HandleCastCancel;
 
+        }
+
+        public void HandleCastCancel(BaseCharacter baseCharacter) {
+            Debug.Log("PlayerController.HandleCastCancel()");
+            CraftingManager.Instance.ClearCraftingQueue();
         }
 
         public void HandleInitializeNamePlate() {

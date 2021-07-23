@@ -121,11 +121,12 @@ namespace AnyRPG {
         }
 
         public void CraftNextItem() {
-            //Debug.Log("CraftingUI.CraftNextItem()");
+            Debug.Log("CraftingUI.CraftNextItem()");
             if (craftingQueue.Count == 0) {
-                //Debug.Log("CraftingUI.CraftNextItem(): no more items to craft");
+                Debug.Log("CraftingUI.CraftNextItem(): no more items to craft");
                 return;
             }
+            Debug.Log("CraftingUI.CraftNextItem(): " + CraftingQueue.Count + " items in crafting queue");
 
             // PERFORM CHECK FOR MATERIALS IN INVENTORY FIRST IN CASE QUEUE GOT BIGGER THAN MATERIAL AMOUNT BY ACCIDENT / RACE CONDITION, also for bag space
             if (GetMaxCraftAmount(craftingQueue[0]) > 0) {
@@ -157,7 +158,7 @@ namespace AnyRPG {
         }
 
         public void CraftNextItemWait() {
-            //Debug.Log("CraftingUI.CraftNextItemWait()");
+            Debug.Log("CraftingUI.CraftNextItemWait()");
             // add delay to avoid issues with cast in progress from current crafting item
             if (waitCoroutine == null) {
                 waitCoroutine = StartCoroutine(CraftNextItemDelay());
@@ -165,7 +166,7 @@ namespace AnyRPG {
         }
 
         private IEnumerator CraftNextItemDelay() {
-            //Debug.Log("CraftingUI.CraftNextItemDelay()");
+            Debug.Log("CraftingUI.CraftNextItemDelay()");
             yield return null;
             waitCoroutine = null;
             CraftNextItem();

@@ -9,7 +9,8 @@ namespace AnyRPG {
 
         public event System.Action<BaseCharacter> OnAttack = delegate { };
         public event System.Action<IAbilityCaster, BaseAbility, float> OnCastTimeChanged = delegate { };
-        public event System.Action<BaseCharacter> OnCastStop = delegate { };
+        public event System.Action<BaseCharacter> OnCastComplete = delegate { };
+        public event System.Action<BaseCharacter> OnCastCancel = delegate { };
         public event System.Action<BaseAbility> OnAttemptPerformAbility = delegate { };
         public event System.Action<BaseAbility> OnPerformAbility = delegate { };
         public event System.Action OnUnlearnAbilities = delegate { };
@@ -1129,7 +1130,7 @@ namespace AnyRPG {
             if (canCast) {
                 //Debug.Log(baseCharacter.gameObject.name + ".CharacterAbilitymanager.PerformAbilityCast(): Cast Complete and can cast");
                 if (!ability.CanSimultaneousCast) {
-                    NotifyOnCastStop();
+                    NotifyOnCastComplete();
                     BaseCharacter.UnitController.UnitAnimator.SetCasting(false);
                 }
                 PerformAbility(ability, target, abilityEffectContext);
@@ -1138,10 +1139,17 @@ namespace AnyRPG {
             }
         }
 
-        public void NotifyOnCastStop() {
-            OnCastStop(baseCharacter);
+        public void NotifyOnCastCancel() {
+            OnCastCancel(baseCharacter);
             if (baseCharacter.UnitController != null) {
-                baseCharacter.UnitController.NotifyOnCastStop(baseCharacter);
+                baseCharacter.UnitController.NotifyOnCastCancel(baseCharacter);
+            }
+        }
+
+        public void NotifyOnCastComplete() {
+            OnCastComplete(baseCharacter);
+            if (baseCharacter.UnitController != null) {
+                baseCharacter.UnitController.NotifyOnCastComplete(baseCharacter);
             }
         }
 
@@ -1647,7 +1655,7 @@ namespace AnyRPG {
                 if (BaseCharacter.UnitController != null && BaseCharacter.UnitController.UnitAnimator != null) {
                     BaseCharacter.UnitController.UnitAnimator.ClearAnimationBlockers(true, true, stoppedCast);
                 }
-                NotifyOnCastStop();
+                NotifyOnCastCancel();
             }
 
             /*

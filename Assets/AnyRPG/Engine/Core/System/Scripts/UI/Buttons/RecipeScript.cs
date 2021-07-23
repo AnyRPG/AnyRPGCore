@@ -22,14 +22,14 @@ namespace AnyRPG {
         }
 
         public override void Select() {
-            Debug.Log(gameObject.name + ".RecipeScript.Select(): " + (recipe == null ? "null" : recipe.DisplayName));
+            //Debug.Log(gameObject.name + ".RecipeScript.Select(): " + (recipe == null ? "null" : recipe.DisplayName));
 
             base.Select();
             CraftingManager.Instance.SetSelectedRecipe(recipe);
         }
 
         public override void DeSelect() {
-            Debug.Log(gameObject.name + "RecipeScript.DeSelect()" + (recipe == null ? "null" : recipe.DisplayName));
+            //Debug.Log(gameObject.name + "RecipeScript.DeSelect(): " + (recipe == null ? "null" : recipe.DisplayName));
             base.DeSelect();
         }
 
