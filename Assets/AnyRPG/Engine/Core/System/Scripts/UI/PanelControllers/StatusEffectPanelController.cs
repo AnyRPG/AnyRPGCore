@@ -106,6 +106,9 @@ namespace AnyRPG {
 
         public override void OnDisable() {
             //Debug.Log(gameObject.name + ".StatusEffectPanelController.OnDisable()");
+            if (SystemGameManager.IsShuttingDown) {
+                return;
+            }
             base.OnDisable();
             CleanupEventSubscriptions();
         }

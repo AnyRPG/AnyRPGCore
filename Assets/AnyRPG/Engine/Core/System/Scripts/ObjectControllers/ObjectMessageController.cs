@@ -545,6 +545,9 @@ namespace AnyRPG {
 
         public void OnDisable() {
             //Debug.Log(gameObject.name + "ObjectMessageController.OnDisable()");
+            if (SystemGameManager.IsShuttingDown) {
+                return;
+            }
             CleanupEventResponses();
         }
 

@@ -152,7 +152,7 @@ namespace AnyRPG {
 
         public override bool TakeLoot() {
             base.TakeLoot();
-            return InventoryManager.MyInstance.AddItem(MyItem);
+            return InventoryManager.Instance.AddItem(MyItem);
         }
 
         public override void Remove() {

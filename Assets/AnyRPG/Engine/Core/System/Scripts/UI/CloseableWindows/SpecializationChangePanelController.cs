@@ -41,10 +41,10 @@ namespace AnyRPG {
             //Debug.Log("ClassChangePanelController.Setup(" + newClassName + ")");
             classSpecialization = newClassSpecialization;
             classSpecializationButton.AddClassSpecialization(classSpecialization);
-            PopupWindowManager.MyInstance.specializationChangeWindow.SetWindowTitle(classSpecialization.DisplayName);
+            PopupWindowManager.Instance.specializationChangeWindow.SetWindowTitle(classSpecialization.DisplayName);
             ShowAbilityRewards();
             ShowTraitRewards();
-            PopupWindowManager.MyInstance.specializationChangeWindow.OpenWindow();
+            PopupWindowManager.Instance.specializationChangeWindow.OpenWindow();
         }
 
         public void ShowTraitRewards() {
@@ -117,14 +117,14 @@ namespace AnyRPG {
 
         public void CancelAction() {
             //Debug.Log("ClassChangePanelController.CancelAction()");
-            PopupWindowManager.MyInstance.specializationChangeWindow.CloseWindow();
+            PopupWindowManager.Instance.specializationChangeWindow.CloseWindow();
         }
 
         public void ConfirmAction() {
             //Debug.Log("ClassChangePanelController.ConfirmAction()");
             PlayerManager.MyInstance.SetPlayerCharacterSpecialization(classSpecialization);
             OnConfirmAction();
-            PopupWindowManager.MyInstance.specializationChangeWindow.CloseWindow();
+            PopupWindowManager.Instance.specializationChangeWindow.CloseWindow();
         }
 
         public override void ReceiveOpenWindowNotification() {

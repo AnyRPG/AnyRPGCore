@@ -48,7 +48,7 @@ namespace AnyRPG {
         public MainMapIndicatorController AddIndicator(Interactable interactable) {
             //Debug.Log("MainMapController.AddIndicator(" + interactable.gameObject.name + ")");
             if (mapIndicatorControllers.ContainsKey(interactable) == false) {
-                GameObject mainMapIndicator = ObjectPooler.MyInstance.GetPooledObject(mapIndicatorPrefab, (PopupWindowManager.MyInstance.mainMapWindow.CloseableWindowContents as MainMapController).MapGraphic.transform);
+                GameObject mainMapIndicator = ObjectPooler.MyInstance.GetPooledObject(mapIndicatorPrefab, (PopupWindowManager.Instance.mainMapWindow.CloseableWindowContents as MainMapController).MapGraphic.transform);
                 if (mainMapIndicator != null) {
                     MainMapIndicatorController mapIndicatorController = mainMapIndicator.GetComponent<MainMapIndicatorController>();
                     if (mapIndicatorController != null) {

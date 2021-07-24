@@ -126,7 +126,7 @@ namespace AnyRPG {
         }
 
         public void UpdateCurrencyAmount() {
-            if (PopupWindowManager.MyInstance.vendorWindow.IsOpen == false) {
+            if (PopupWindowManager.Instance.vendorWindow.IsOpen == false) {
                 return;
             }
             Dictionary<Currency, int> playerBaseCurrency = PlayerManager.MyInstance.MyCharacter.CharacterCurrencyManager.GetRedistributedCurrency();

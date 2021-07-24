@@ -269,7 +269,7 @@ namespace AnyRPG {
 
         public override bool Interact(CharacterUnit source, int optionIndex = 0) {
             //Debug.Log(interactable.gameObject.name + ".LootableCharacter.Interact()");
-            PopupWindowManager.MyInstance.interactionWindow.CloseWindow();
+            PopupWindowManager.Instance.interactionWindow.CloseWindow();
             if (!characterUnit.BaseCharacter.CharacterStats.IsAlive) {
                 //Debug.Log(gameObject.name + ".LootableCharacter.Interact(): Character is dead.  Showing Loot Window on interaction");
                 base.Interact(source, optionIndex);
@@ -318,7 +318,7 @@ namespace AnyRPG {
                     //Debug.Log(interactable.gameObject.name + ".LootableCharacter.drops.Count: " + drops.Count);
                     LootManager.MyInstance.CreatePages(drops);
                     //Debug.Log(gameObject.name + ".LootableCharacter.Interact(): about to open window");
-                    PopupWindowManager.MyInstance.lootWindow.OpenWindow();
+                    PopupWindowManager.Instance.lootWindow.OpenWindow();
                     return true;
                 } else {
                     //Debug.Log(gameObject.name + ".LootableCharacter.drops.Count: " + drops.Count);
@@ -345,7 +345,7 @@ namespace AnyRPG {
         public override void StopInteract() {
             //Debug.Log(gameObject.name + ".LootableCharacter.StopInteract()");
             base.StopInteract();
-            PopupWindowManager.MyInstance.lootWindow.CloseWindow();
+            PopupWindowManager.Instance.lootWindow.CloseWindow();
             TryToDespawn();
         }
 

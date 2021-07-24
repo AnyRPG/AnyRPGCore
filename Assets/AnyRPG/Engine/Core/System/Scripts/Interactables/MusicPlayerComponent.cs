@@ -18,10 +18,10 @@ namespace AnyRPG {
         public override bool Interact(CharacterUnit source, int optionIndex = 0) {
             //Debug.Log(gameObject.name + ".SkillTrainer.Interact(" + source + ")");
             base.Interact(source, optionIndex);
-            if (!PopupWindowManager.MyInstance.musicPlayerWindow.IsOpen) {
+            if (!PopupWindowManager.Instance.musicPlayerWindow.IsOpen) {
                 //Debug.Log(source + " interacting with " + gameObject.name);
-                PopupWindowManager.MyInstance.musicPlayerWindow.OpenWindow();
-                (PopupWindowManager.MyInstance.musicPlayerWindow.CloseableWindowContents as MusicPlayerUI).ShowMusicProfiles(this);
+                PopupWindowManager.Instance.musicPlayerWindow.OpenWindow();
+                (PopupWindowManager.Instance.musicPlayerWindow.CloseableWindowContents as MusicPlayerUI).ShowMusicProfiles(this);
                 return true;
             }
             return false;
@@ -31,7 +31,7 @@ namespace AnyRPG {
             //Debug.Log(gameObject.name + ".SkillTrainer.StopInteract()");
             base.StopInteract();
             //vendorUI.ClearPages();
-            PopupWindowManager.MyInstance.musicPlayerWindow.CloseWindow();
+            PopupWindowManager.Instance.musicPlayerWindow.CloseWindow();
         }
 
     }

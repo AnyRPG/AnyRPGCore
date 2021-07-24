@@ -60,7 +60,7 @@ namespace AnyRPG {
             MyQuest = quest;
             MyInteractable = interactable;
             MyDialog = quest.MyOpeningDialog;
-            PopupWindowManager.MyInstance.dialogWindow.OpenWindow();
+            PopupWindowManager.Instance.dialogWindow.OpenWindow();
         }
 
         public void Setup(Dialog dialog, Interactable interactable) {
@@ -68,7 +68,7 @@ namespace AnyRPG {
             ClearSettings();
             MyInteractable = interactable;
             MyDialog = dialog;
-            PopupWindowManager.MyInstance.dialogWindow.OpenWindow();
+            PopupWindowManager.Instance.dialogWindow.OpenWindow();
         }
 
         public void ClearSettings() {
@@ -80,7 +80,7 @@ namespace AnyRPG {
 
         public void CancelAction() {
             //Debug.Log("NewGameMenuController.CancelAction()");
-            PopupWindowManager.MyInstance.dialogWindow.CloseWindow();
+            PopupWindowManager.Instance.dialogWindow.CloseWindow();
         }
 
         public void ConfirmAction() {
@@ -94,7 +94,7 @@ namespace AnyRPG {
                     // no one is currently subscribed so safe to set turnedIn at bottom because nothing here depends on it being set yet
 
                     OnConfirmAction();
-                    PopupWindowManager.MyInstance.dialogWindow.CloseWindow();
+                    PopupWindowManager.Instance.dialogWindow.CloseWindow();
                 } else {
                     if (!quest.TurnedIn) {
                         DisplayQuestText();
@@ -103,7 +103,7 @@ namespace AnyRPG {
                         acceptQuestButton.SetActive(true);
                     } else {
                         //Debug.Log("NewGameMenuController.ConfirmAction(): dialogIndex: " + dialogIndex + "; DialogNode Count: " + MyDialog.MyDialogNodes.Count + "; TRIED TO DISPLAY ALREADY TURNED IN QUEST!");
-                        PopupWindowManager.MyInstance.dialogWindow.CloseWindow();
+                        PopupWindowManager.Instance.dialogWindow.CloseWindow();
                     }
                 }
                 // going to see what got blocked from popping, because this needs to be set true before we call onconfirmaction
@@ -125,15 +125,15 @@ namespace AnyRPG {
         public void ViewQuest() {
             // testing disable this because it was already set by showquests
             //QuestGiverUI.MyInstance.MyInteractable = interactable;
-            PopupWindowManager.MyInstance.questGiverWindow.OpenWindow();
+            PopupWindowManager.Instance.questGiverWindow.OpenWindow();
             QuestGiverUI.MyInstance.ShowDescription(MyQuest);
-            PopupWindowManager.MyInstance.dialogWindow.CloseWindow();
+            PopupWindowManager.Instance.dialogWindow.CloseWindow();
         }
 
         public void AcceptQuest() {
             //Debug.Log("DialogPanelController.AcceptQuest()");
             // CLOSE THIS FIRST SO OTHER WINDOWS AREN'T BLOCKED FROM POPPING
-            PopupWindowManager.MyInstance.dialogWindow.CloseWindow();
+            PopupWindowManager.Instance.dialogWindow.CloseWindow();
 
             QuestLog.MyInstance.AcceptQuest(MyQuest);
             //interactable.CheckForInteractableObjectives(MyQuest.MyName);
@@ -184,7 +184,7 @@ namespace AnyRPG {
             acceptQuestButton.SetActive(false);
             continueButton.SetActive(true);
             dialogIndex = 0;
-            PopupWindowManager.MyInstance.dialogWindow.SetWindowTitle(interactable.DisplayName);
+            PopupWindowManager.Instance.dialogWindow.SetWindowTitle(interactable.DisplayName);
 
             // this one last because it does a layout rebuild
             DisplayNodeText();

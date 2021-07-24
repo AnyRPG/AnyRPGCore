@@ -84,7 +84,7 @@ namespace AnyRPG {
                 //Debug.Log("InteractionPanelUI.CheckPrerequisites(): no interactable. exiting");
                 return;
             }
-            if (isActiveAndEnabled == false || PopupWindowManager.MyInstance.interactionWindow.IsOpen == false) {
+            if (isActiveAndEnabled == false || PopupWindowManager.Instance.interactionWindow.IsOpen == false) {
                 //Debug.Log("InteractionPanelUI.CheckPrerequisites(): window is not active. exiting");
                 return;
             }
@@ -103,7 +103,7 @@ namespace AnyRPG {
             List<InteractableOptionComponent> currentInteractables = interactable.GetCurrentInteractables();
             if (currentInteractables.Count == 0) {
                 // this could have been a refresh from while a quest was open overtop.  close it if there are no valid interactables
-                PopupWindowManager.MyInstance.interactionWindow.CloseWindow();
+                PopupWindowManager.Instance.interactionWindow.CloseWindow();
                 return;
             }
 
@@ -169,7 +169,7 @@ namespace AnyRPG {
 
             }
 
-            if (PopupWindowManager.MyInstance.dialogWindow.IsOpen) {
+            if (PopupWindowManager.Instance.dialogWindow.IsOpen) {
                 //Debug.Log("InteractionPanelUI.ShowInteractablesCommon(" + interactable.name + "): Dialog Window is open, returning to prevent other windows from popping");
                 // if we are mid dialog, we don't want to pop another window yet
                 return;
@@ -261,17 +261,17 @@ namespace AnyRPG {
             SetBackGroundColor(new Color32(0, 0, 0, (byte)(int)(PlayerPrefs.GetFloat("PopupWindowOpacity") * 255)));
 
             // this has to be done first, because the next line after could close the window and set the interactable to null
-            if (PopupWindowManager.MyInstance != null) {
+            if (PopupWindowManager.Instance != null) {
                 if (interactable == null) {
                     Debug.Log("interactable is null");
                 }
                 if (interactable.DisplayName == null) {
                     Debug.Log("interactable.displayname is null");
                 }
-                if (PopupWindowManager.MyInstance.interactionWindow == null) {
+                if (PopupWindowManager.Instance.interactionWindow == null) {
                     Debug.Log("interactactionwindow is null");
                 }
-                PopupWindowManager.MyInstance.interactionWindow.SetWindowTitle(interactable.DisplayName);
+                PopupWindowManager.Instance.interactionWindow.SetWindowTitle(interactable.DisplayName);
             }
 
             ShowInteractables();

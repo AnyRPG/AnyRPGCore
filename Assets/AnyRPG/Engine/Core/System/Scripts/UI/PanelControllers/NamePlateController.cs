@@ -523,6 +523,9 @@ namespace AnyRPG {
 
         public void OnDisable() {
             //Debug.Log(unitNamePlateController.NamePlateUnit.gameObject.name + ".NamePlateController.OnDisable()");
+            if (SystemGameManager.IsShuttingDown) {
+                return;
+            }
             ProcessPointerExit();
             CleanupEventSubscriptions();
 

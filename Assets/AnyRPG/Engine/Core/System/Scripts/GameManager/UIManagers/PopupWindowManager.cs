@@ -9,7 +9,7 @@ namespace AnyRPG {
         #region Singleton
         private static PopupWindowManager instance;
 
-        public static PopupWindowManager MyInstance {
+        public static PopupWindowManager Instance {
             get {
                 if (instance == null) {
                     instance = FindObjectOfType<PopupWindowManager>();
@@ -44,7 +44,7 @@ namespace AnyRPG {
         public CloseableWindow specializationChangeWindow;
 
         void Start() {
-            InventoryManager.MyInstance.Close();
+            InventoryManager.Instance.Close();
         }
 
         // Update is called once per frame
@@ -58,7 +58,7 @@ namespace AnyRPG {
             // don't open windows while binding keys
             if (KeyBindManager.MyInstance.MyBindName == string.Empty) {
                 if (InputManager.MyInstance.KeyBindWasPressed("INVENTORY")) {
-                    InventoryManager.MyInstance.OpenClose();
+                    InventoryManager.Instance.OpenClose();
                 }
                 if (InputManager.MyInstance.KeyBindWasPressed("ABILITYBOOK")) {
                     abilityBookWindow.ToggleOpenClose();
@@ -115,7 +115,7 @@ namespace AnyRPG {
             classChangeWindow.CloseWindow();
             specializationChangeWindow.CloseWindow();
             dialogWindow.CloseWindow();
-            InventoryManager.MyInstance.Close();
+            InventoryManager.Instance.Close();
         }
     }
 

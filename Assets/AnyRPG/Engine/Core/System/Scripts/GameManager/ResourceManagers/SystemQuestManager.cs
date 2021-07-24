@@ -53,6 +53,9 @@ namespace AnyRPG {
 
         public override void OnDisable() {
             //Debug.Log("PlayerManager.OnDisable()");
+            if (SystemGameManager.IsShuttingDown) {
+                return;
+            }
             base.OnDisable();
             CleanupEventSubscriptions();
         }

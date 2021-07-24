@@ -128,8 +128,11 @@ namespace AnyRPG {
         }
 
         public override void OnDisable() {
-            base.OnDisable();
             //Debug.Log(gameObject.name + ".CastBarController.OnDisable()");
+            if (SystemGameManager.IsShuttingDown) {
+                return;
+            }
+            base.OnDisable();
         }
 
     }

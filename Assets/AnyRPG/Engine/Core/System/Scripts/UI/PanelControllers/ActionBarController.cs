@@ -95,6 +95,9 @@ namespace AnyRPG {
 
         public void OnDisable() {
             //Debug.Log("ActionBarController.OnDisable()");
+            if (SystemGameManager.IsShuttingDown) {
+                return;
+            }
             RebuildLayout();
         }
 

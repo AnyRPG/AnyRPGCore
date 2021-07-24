@@ -95,7 +95,7 @@ namespace AnyRPG {
 
             if (firstAvailableMusicProfile == null) {
                 // no available skills anymore, close window
-                PopupWindowManager.MyInstance.musicPlayerWindow.CloseWindow();
+                PopupWindowManager.Instance.musicPlayerWindow.CloseWindow();
             }
 
             if (MySelectedMusicPlayerHighlightButton == null && firstAvailableMusicProfile != null) {

@@ -360,7 +360,7 @@ namespace AnyRPG {
         }
 
         public void OpenMainMap() {
-            PopupWindowManager.MyInstance.mainMapWindow.ToggleOpenClose();
+            PopupWindowManager.Instance.mainMapWindow.ToggleOpenClose();
         }
 
         public void CleanupEventSubscriptions() {

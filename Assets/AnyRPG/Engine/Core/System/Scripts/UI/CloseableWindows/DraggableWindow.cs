@@ -91,6 +91,9 @@ namespace AnyRPG {
 
         public virtual void OnDisable() {
             // overwrite me
+            if (SystemGameManager.IsShuttingDown) {
+                return;
+            }
         }
 
         public void OnEndDrag(PointerEventData eventData) {

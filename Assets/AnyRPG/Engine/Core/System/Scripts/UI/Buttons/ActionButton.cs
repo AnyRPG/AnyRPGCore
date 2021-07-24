@@ -204,13 +204,13 @@ namespace AnyRPG {
 
             if (useable is Item) {
                 //Debug.Log("the useable is an item");
-                if (InventoryManager.MyInstance == null) {
+                if (InventoryManager.Instance == null) {
                     //Debug.Log("ActionButton.SetUseable(): inventorymanager.myinstance = null!!!");
                 }
-                if (InventoryManager.MyInstance.FromSlot != null) {
+                if (InventoryManager.Instance.FromSlot != null) {
                     // white, really?  this doesn't actually happen...
-                    InventoryManager.MyInstance.FromSlot.MyIcon.color = Color.white;
-                    InventoryManager.MyInstance.FromSlot = null;
+                    InventoryManager.Instance.FromSlot.MyIcon.color = Color.white;
+                    InventoryManager.Instance.FromSlot = null;
                 } else {
                     //Debug.Log("ActionButton.SetUseable(): This must have come from another actionbar, not the inventory");
                 }

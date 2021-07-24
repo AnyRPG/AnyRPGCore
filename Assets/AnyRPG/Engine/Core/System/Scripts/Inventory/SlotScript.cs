@@ -112,7 +112,7 @@ namespace AnyRPG {
                 //Debug.Log("slotscript getting ready to remove item: " + item.GetInstanceID().ToString() + "; MyItems count: " + MyItems.Count.ToString());
                 MyItems.Remove(item);
                 UpdateSlot();
-                InventoryManager.MyInstance.OnItemCountChanged(item);
+                InventoryManager.Instance.OnItemCountChanged(item);
             }
         }
 
@@ -130,9 +130,9 @@ namespace AnyRPG {
 
         private void DropItemFromInventorySlot() {
             //Debug.Log("Dropping an item from an inventory slot");
-            if (PutItemBack() || MergeItems(InventoryManager.MyInstance.FromSlot) || SwapItems(InventoryManager.MyInstance.FromSlot) || AddItems(InventoryManager.MyInstance.FromSlot.MyItems)) {
+            if (PutItemBack() || MergeItems(InventoryManager.Instance.FromSlot) || SwapItems(InventoryManager.Instance.FromSlot) || AddItems(InventoryManager.Instance.FromSlot.MyItems)) {
                 HandScript.MyInstance.Drop();
-                InventoryManager.MyInstance.FromSlot = null;
+                InventoryManager.Instance.FromSlot = null;
             }
         }
 
@@ -143,12 +143,12 @@ namespace AnyRPG {
         public void SendItemToHandScript() {
             //Debug.Log("SlotScript.SendItemToHandScript(): setting inventorymanager.myinstance.fromslot to this");
             HandScript.MyInstance.TakeMoveable(MyItem as IMoveable);
-            InventoryManager.MyInstance.FromSlot = this;
+            InventoryManager.Instance.FromSlot = this;
         }
 
         public void HandleLeftClick() {
             // we have something to move and it came from the inventory, therefore we are trying to drop something from this slot or another slot onto this slot
-            if (InventoryManager.MyInstance.FromSlot != null) {
+            if (InventoryManager.Instance.FromSlot != null) {
                 DropItemFromInventorySlot();
                 return;
             }
@@ -166,7 +166,7 @@ namespace AnyRPG {
                     // the handscript has a bag in it
                     if (MyItem is Bag) {
                         // This slot also has a bag in it, so swap the 2 bags
-                        InventoryManager.MyInstance.SwapBags(HandScript.MyInstance.MyMoveable as Bag, MyItem as Bag);
+                        InventoryManager.Instance.SwapBags(HandScript.MyInstance.MyMoveable as Bag, MyItem as Bag);
                     }
                 } else if (HandScript.MyInstance.MyMoveable is Equipment) {
                     // the handscript has equipment in it
@@ -188,10 +188,10 @@ namespace AnyRPG {
                     //Debug.Log("SlotScript.HandleLeftClick(): We are trying to drop a bag into the inventory.");
                     // the handscript had a bag in it, and therefore we are trying to unequip a bag
                     Bag bag = (Bag)HandScript.MyInstance.MyMoveable;
-                    if (bag.MyBagPanel != MyBag && InventoryManager.MyInstance.EmptySlotCount() - bag.MySlots > 0) {
+                    if (bag.MyBagPanel != MyBag && InventoryManager.Instance.EmptySlotCount() - bag.MySlots > 0) {
                         //Debug.Log("SlotScript.HandleLeftClick(): We are trying to drop a bag into the inventory. There is enough empty space.");
                         AddItem(bag);
-                        InventoryManager.MyInstance.RemoveBag(bag);
+                        InventoryManager.Instance.RemoveBag(bag);
                         HandScript.MyInstance.Drop();
                     }
                 } else if (HandScript.MyInstance.MyMoveable is Equipment) {
@@ -209,7 +209,7 @@ namespace AnyRPG {
         }
 
         public int GetCurrentSlotIndex() {
-            List<SlotScript> inventorySlots = InventoryManager.MyInstance.GetSlots();
+            List<SlotScript> inventorySlots = InventoryManager.Instance.GetSlots();
             for (int i = 0; i < inventorySlots.Count; i++) {
                 if (inventorySlots[i] == this) {
                     return i;
@@ -230,7 +230,7 @@ namespace AnyRPG {
             // DO SWAPITEMS CALL HERE - OR NOT BECAUSE THAT REQUIRES GETTING A SLOT FIRST
 
             // send items back and forth between inventory and bank if they are both open
-            if (InventoryManager.MyInstance.BagsClosed() == false && InventoryManager.MyInstance.BankClosed() == false) {
+            if (InventoryManager.Instance.BagsClosed() == false && InventoryManager.Instance.BankClosed() == false) {
                 List<Item> moveList = new List<Item>();
                 if (MyBag is BankPanel) {
                     //Debug.Log("SlotScript.HandleRightClick(): We clicked on something in a bank");
@@ -238,7 +238,7 @@ namespace AnyRPG {
                         moveList.Add(item);
                     }
                     foreach (Item item in moveList) {
-                        if (InventoryManager.MyInstance.AddItem(item)) {
+                        if (InventoryManager.Instance.AddItem(item)) {
                             RemoveItem(item);
                         }
                     }
@@ -252,14 +252,14 @@ namespace AnyRPG {
                         moveList.Add(item);
                     }
                     foreach (Item item in moveList) {
-                        if (InventoryManager.MyInstance.AddItem(item, true)) {
+                        if (InventoryManager.Instance.AddItem(item, true)) {
                             RemoveItem(item);
                         }
                     }
                 } else {
                     //Debug.Log("SlotScript.HandleRightClick(): We clicked on something in a chest or bag");
                 }
-            } else if (InventoryManager.MyInstance.BagsClosed() == false && InventoryManager.MyInstance.BankClosed() == true && PopupWindowManager.MyInstance.vendorWindow.IsOpen) {
+            } else if (InventoryManager.Instance.BagsClosed() == false && InventoryManager.Instance.BankClosed() == true && PopupWindowManager.Instance.vendorWindow.IsOpen) {
                 // SELL THE ITEM
                 if (MyItem != null) {
                     if (MyItem.ItemQuality != null && MyItem.ItemQuality.MyRequireSellConfirmation) {
@@ -267,7 +267,7 @@ namespace AnyRPG {
                         (SystemWindowManager.MyInstance.confirmSellItemMenuWindow.CloseableWindowContents as ConfirmSellItemPanelController).MyItem = MyItem;
                         return;
                     }
-                    if ((PopupWindowManager.MyInstance.vendorWindow.CloseableWindowContents as VendorUI).SellItem(MyItem)) {
+                    if ((PopupWindowManager.Instance.vendorWindow.CloseableWindowContents as VendorUI).SellItem(MyItem)) {
                         return;
                     }
                     
@@ -284,7 +284,7 @@ namespace AnyRPG {
             if (MyItems.Count > 0) {
                 Item tmpItem = MyItems[0];
                 MyItems.Clear();
-                InventoryManager.MyInstance.OnItemCountChanged(tmpItem);
+                InventoryManager.Instance.OnItemCountChanged(tmpItem);
                 UpdateSlot();
             }
         }
@@ -314,7 +314,7 @@ namespace AnyRPG {
 
         public bool PutItemBack() {
             //Debug.Log("attempting to put an item back in a slot");
-            if (InventoryManager.MyInstance.FromSlot == this) {
+            if (InventoryManager.Instance.FromSlot == this) {
                 //Debug.Log("Confirmed that the item came from this slot.  now returning it.");
                 UpdateSlot();
                 return true;

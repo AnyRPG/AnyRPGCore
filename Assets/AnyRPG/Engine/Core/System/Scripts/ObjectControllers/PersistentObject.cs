@@ -33,6 +33,9 @@ namespace AnyRPG {
         }
 
         private void OnDisable() {
+            if (SystemGameManager.IsShuttingDown) {
+                return;
+            }
             persistentObjectComponent.Cleanup();
         }
 

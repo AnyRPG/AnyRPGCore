@@ -145,13 +145,13 @@ namespace AnyRPG {
             SetPreviewTarget();
             UpdateStatsDescription();
             if (PlayerManager.MyInstance.MyCharacter != null) {
-                PopupWindowManager.MyInstance.characterPanelWindow.SetWindowTitle(PlayerManager.MyInstance.MyCharacter.CharacterName);
+                PopupWindowManager.Instance.characterPanelWindow.SetWindowTitle(PlayerManager.MyInstance.MyCharacter.CharacterName);
             }
         }
 
         public void ResetDisplay() {
             //Debug.Log("CharacterPanel.ResetDisplay()");
-            if (PopupWindowManager.MyInstance != null && PopupWindowManager.MyInstance.characterPanelWindow != null && PopupWindowManager.MyInstance.characterPanelWindow.IsOpen) {
+            if (PopupWindowManager.Instance != null && PopupWindowManager.Instance.characterPanelWindow != null && PopupWindowManager.Instance.characterPanelWindow.IsOpen) {
                 // reset display
                 previewCameraController.ClearTarget();
                 CharacterCreatorManager.MyInstance.HandleCloseWindow();
@@ -167,7 +167,7 @@ namespace AnyRPG {
 
         public void HandleEquipmentChanged(Equipment newEquipment, Equipment oldEquipment) {
             //Debug.Log("CharacterPanel.HandleEquipmentChange()");
-            if (PopupWindowManager.MyInstance != null && PopupWindowManager.MyInstance.characterPanelWindow != null && PopupWindowManager.MyInstance.characterPanelWindow.IsOpen) {
+            if (PopupWindowManager.Instance != null && PopupWindowManager.Instance.characterPanelWindow != null && PopupWindowManager.Instance.characterPanelWindow.IsOpen) {
                 ResetDisplay();
                 UpdateStatsDescription();
             }
@@ -176,7 +176,7 @@ namespace AnyRPG {
         public void UpdateStatsDescription() {
             //Debug.Log("CharacterPanel.UpdateStatsDescription");
 
-            if (PopupWindowManager.MyInstance.characterPanelWindow.IsOpen == false) {
+            if (PopupWindowManager.Instance.characterPanelWindow.IsOpen == false) {
                 return;
             }
 
@@ -329,28 +329,28 @@ namespace AnyRPG {
 
         public void OpenReputationWindow() {
             //Debug.Log("CharacterPanel.OpenReputationWindow()");
-            PopupWindowManager.MyInstance.reputationBookWindow.ToggleOpenClose();
+            PopupWindowManager.Instance.reputationBookWindow.ToggleOpenClose();
         }
 
         public void OpenPetWindow() {
             //Debug.Log("CharacterPanel.OpenReputationWindow()");
-            PopupWindowManager.MyInstance.characterPanelWindow.CloseWindow();
+            PopupWindowManager.Instance.characterPanelWindow.CloseWindow();
             SystemWindowManager.MyInstance.petSpawnWindow.ToggleOpenClose();
         }
 
         public void OpenSkillsWindow() {
             //Debug.Log("CharacterPanel.OpenReputationWindow()");
-            PopupWindowManager.MyInstance.skillBookWindow.ToggleOpenClose();
+            PopupWindowManager.Instance.skillBookWindow.ToggleOpenClose();
         }
 
         public void OpenCurrencyWindow() {
             //Debug.Log("CharacterPanel.OpenCurrencyWindow()");
-            PopupWindowManager.MyInstance.currencyListWindow.ToggleOpenClose();
+            PopupWindowManager.Instance.currencyListWindow.ToggleOpenClose();
         }
 
         public void OpenAchievementWindow() {
             //Debug.Log("CharacterPanel.OpenAchievementWindow()");
-            PopupWindowManager.MyInstance.achievementListWindow.ToggleOpenClose();
+            PopupWindowManager.Instance.achievementListWindow.ToggleOpenClose();
         }
 
     }

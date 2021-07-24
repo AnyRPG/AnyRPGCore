@@ -51,7 +51,7 @@ namespace AnyRPG {
 
             DropLoot();
             PickUp();
-            PopupWindowManager.MyInstance.interactionWindow.CloseWindow();
+            PopupWindowManager.Instance.interactionWindow.CloseWindow();
             return true;
         }
 
@@ -103,8 +103,8 @@ namespace AnyRPG {
             //Debug.Log(gameObject.name + ".LootableNode.Pickup()");
             //LootUI.MyInstance.CreatePages(lootTable.GetLoot());
             CreateWindowEventSubscriptions();
-            PopupWindowManager.MyInstance.lootWindow.CloseableWindowContents.OnCloseWindow += ClearTakeLootHandler;
-            PopupWindowManager.MyInstance.lootWindow.OpenWindow();
+            PopupWindowManager.Instance.lootWindow.CloseableWindowContents.OnCloseWindow += ClearTakeLootHandler;
+            PopupWindowManager.Instance.lootWindow.OpenWindow();
         }
 
         public void ClearTakeLootHandler(ICloseableWindowContents windowContents) {
@@ -122,8 +122,8 @@ namespace AnyRPG {
             if (SystemEventManager.MyInstance != null) {
                 SystemEventManager.MyInstance.OnTakeLoot -= CheckDropListSize;
             }
-            if (PopupWindowManager.MyInstance?.lootWindow?.CloseableWindowContents != null) {
-                PopupWindowManager.MyInstance.lootWindow.CloseableWindowContents.OnCloseWindow -= ClearTakeLootHandler;
+            if (PopupWindowManager.Instance?.lootWindow?.CloseableWindowContents != null) {
+                PopupWindowManager.Instance.lootWindow.CloseableWindowContents.OnCloseWindow -= ClearTakeLootHandler;
             }
         }
 
@@ -172,7 +172,7 @@ namespace AnyRPG {
         public override void StopInteract() {
             base.StopInteract();
 
-            PopupWindowManager.MyInstance.lootWindow.CloseWindow();
+            PopupWindowManager.Instance.lootWindow.CloseWindow();
         }
 
         public override bool HasMiniMapText() {

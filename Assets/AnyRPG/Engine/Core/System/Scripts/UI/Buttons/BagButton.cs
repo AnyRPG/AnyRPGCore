@@ -106,16 +106,16 @@ namespace AnyRPG {
             }
             if (eventData.button == PointerEventData.InputButton.Left) {
                 //Debug.Log("BagButton.OnPointerClick() LEFT CLICK DETECTED");
-                if (InventoryManager.MyInstance.FromSlot != null && HandScript.MyInstance.MyMoveable != null && HandScript.MyInstance.MyMoveable is Bag) {
+                if (InventoryManager.Instance.FromSlot != null && HandScript.MyInstance.MyMoveable != null && HandScript.MyInstance.MyMoveable is Bag) {
                     if (MyBagNode.MyBag != null) {
-                        InventoryManager.MyInstance.SwapBags(MyBagNode.MyBag, HandScript.MyInstance.MyMoveable as Bag);
+                        InventoryManager.Instance.SwapBags(MyBagNode.MyBag, HandScript.MyInstance.MyMoveable as Bag);
                     } else {
                         Bag tmp = (Bag)HandScript.MyInstance.MyMoveable;
                         tmp.MyBagNode = bagNode;
                         tmp.Use();
                         MyBagNode.MyBag = tmp;
                         HandScript.MyInstance.Drop();
-                        InventoryManager.MyInstance.FromSlot = null;
+                        InventoryManager.Instance.FromSlot = null;
 
                     }
                 } else if (Input.GetKey(KeyCode.LeftShift)) {

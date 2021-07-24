@@ -43,9 +43,9 @@ namespace AnyRPG {
         }
 
         public void CleanupWindowEventSubscriptions() {
-            if (PopupWindowManager.MyInstance != null && PopupWindowManager.MyInstance.specializationChangeWindow != null && PopupWindowManager.MyInstance.specializationChangeWindow.CloseableWindowContents != null && (PopupWindowManager.MyInstance.specializationChangeWindow.CloseableWindowContents as NameChangePanelController) != null) {
-                (PopupWindowManager.MyInstance.specializationChangeWindow.CloseableWindowContents as SpecializationChangePanelController).OnConfirmAction -= HandleConfirmAction;
-                (PopupWindowManager.MyInstance.specializationChangeWindow.CloseableWindowContents as SpecializationChangePanelController).OnCloseWindow -= CleanupEventSubscriptions;
+            if (PopupWindowManager.Instance != null && PopupWindowManager.Instance.specializationChangeWindow != null && PopupWindowManager.Instance.specializationChangeWindow.CloseableWindowContents != null && (PopupWindowManager.Instance.specializationChangeWindow.CloseableWindowContents as NameChangePanelController) != null) {
+                (PopupWindowManager.Instance.specializationChangeWindow.CloseableWindowContents as SpecializationChangePanelController).OnConfirmAction -= HandleConfirmAction;
+                (PopupWindowManager.Instance.specializationChangeWindow.CloseableWindowContents as SpecializationChangePanelController).OnCloseWindow -= CleanupEventSubscriptions;
             }
             windowEventSubscriptionsInitialized = false;
         }
@@ -75,9 +75,9 @@ namespace AnyRPG {
             }
             base.Interact(source, optionIndex);
 
-            (PopupWindowManager.MyInstance.specializationChangeWindow.CloseableWindowContents as SpecializationChangePanelController).Setup(Props.ClassSpecialization);
-            (PopupWindowManager.MyInstance.specializationChangeWindow.CloseableWindowContents as SpecializationChangePanelController).OnConfirmAction += HandleConfirmAction;
-            (PopupWindowManager.MyInstance.specializationChangeWindow.CloseableWindowContents as SpecializationChangePanelController).OnCloseWindow += CleanupEventSubscriptions;
+            (PopupWindowManager.Instance.specializationChangeWindow.CloseableWindowContents as SpecializationChangePanelController).Setup(Props.ClassSpecialization);
+            (PopupWindowManager.Instance.specializationChangeWindow.CloseableWindowContents as SpecializationChangePanelController).OnConfirmAction += HandleConfirmAction;
+            (PopupWindowManager.Instance.specializationChangeWindow.CloseableWindowContents as SpecializationChangePanelController).OnCloseWindow += CleanupEventSubscriptions;
             windowEventSubscriptionsInitialized = true;
             return true;
         }
@@ -88,7 +88,7 @@ namespace AnyRPG {
 
         public override void StopInteract() {
             base.StopInteract();
-            PopupWindowManager.MyInstance.specializationChangeWindow.CloseWindow();
+            PopupWindowManager.Instance.specializationChangeWindow.CloseWindow();
         }
 
         public override bool HasMiniMapText() {

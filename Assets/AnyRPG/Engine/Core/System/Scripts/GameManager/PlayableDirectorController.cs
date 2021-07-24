@@ -14,17 +14,22 @@ namespace AnyRPG {
             playableDirector = GetComponent<PlayableDirector>();
             if (playableDirector != null) {
                 //Debug.Log("SystemGameManager.Awake(): playableDirector.playableAsset.name: " + playableDirector.playableAsset.name);
-                SystemPlayableDirectorManager.MyInstance.MyPlayableDirectorDictionary[playableDirector.playableAsset.name] = playableDirector;
+                SystemPlayableDirectorManager.Instance.MyPlayableDirectorDictionary[playableDirector.playableAsset.name] = playableDirector;
             }
         }
 
 
         public void OnDisable() {
+            if (SystemGameManager.IsShuttingDown) {
+                return;
+            }
+            /*
             if (SystemPlayableDirectorManager.MyInstance == null || playableDirector == null) {
                 return;
             }
-            if (SystemPlayableDirectorManager.MyInstance.MyPlayableDirectorDictionary.ContainsKey(playableDirector.playableAsset.name)) {
-                SystemPlayableDirectorManager.MyInstance.MyPlayableDirectorDictionary.Remove(playableDirector.playableAsset.name);
+            */
+            if (SystemPlayableDirectorManager.Instance.MyPlayableDirectorDictionary.ContainsKey(playableDirector.playableAsset.name)) {
+                SystemPlayableDirectorManager.Instance.MyPlayableDirectorDictionary.Remove(playableDirector.playableAsset.name);
             }
 
         }

@@ -65,7 +65,7 @@ namespace AnyRPG {
             umaCharacterPanel.RecieveClosedWindowNotification();
             OnCloseWindow(this);
             // close interaction window too for smoother experience
-            PopupWindowManager.MyInstance.interactionWindow.CloseWindow();
+            PopupWindowManager.Instance.interactionWindow.CloseWindow();
         }
 
         public override void ReceiveOpenWindowNotification() {

@@ -38,6 +38,9 @@ namespace AnyRPG {
 
         private void OnDisable() {
             //Debug.Log(gameObject.name + ".AnyRPGCharacterController.OnDisable()");
+            if (SystemGameManager.IsShuttingDown) {
+                return;
+            }
         }
 
         private void OnEnable() {

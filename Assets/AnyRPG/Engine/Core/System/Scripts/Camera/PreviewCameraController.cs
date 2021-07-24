@@ -453,6 +453,9 @@ namespace AnyRPG {
         }
 
         public void OnDisable() {
+            if (SystemGameManager.IsShuttingDown) {
+                return;
+            }
             UnsubscribeFromModelReady();
             StopAllCoroutines();
         }

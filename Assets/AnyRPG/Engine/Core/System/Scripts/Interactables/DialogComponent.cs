@@ -44,9 +44,9 @@ namespace AnyRPG {
         }
 
         public void CleanupConfirm() {
-            if (PopupWindowManager.MyInstance != null && PopupWindowManager.MyInstance.dialogWindow != null && PopupWindowManager.MyInstance.dialogWindow.CloseableWindowContents != null) {
-                (PopupWindowManager.MyInstance.dialogWindow.CloseableWindowContents as DialogPanelController).OnConfirmAction -= HandleConfirmAction;
-                (PopupWindowManager.MyInstance.dialogWindow.CloseableWindowContents as DialogPanelController).OnCloseWindow -= CleanupConfirm;
+            if (PopupWindowManager.Instance != null && PopupWindowManager.Instance.dialogWindow != null && PopupWindowManager.Instance.dialogWindow.CloseableWindowContents != null) {
+                (PopupWindowManager.Instance.dialogWindow.CloseableWindowContents as DialogPanelController).OnConfirmAction -= HandleConfirmAction;
+                (PopupWindowManager.Instance.dialogWindow.CloseableWindowContents as DialogPanelController).OnCloseWindow -= CleanupConfirm;
             }
         }
 
@@ -78,9 +78,9 @@ namespace AnyRPG {
                 if (currentList[optionIndex].Automatic) {
                     interactable.DialogController.BeginDialog(currentList[optionIndex]);
                 } else {
-                    (PopupWindowManager.MyInstance.dialogWindow.CloseableWindowContents as DialogPanelController).Setup(currentList[optionIndex], this.interactable);
-                    (PopupWindowManager.MyInstance.dialogWindow.CloseableWindowContents as DialogPanelController).OnConfirmAction += HandleConfirmAction;
-                    (PopupWindowManager.MyInstance.dialogWindow.CloseableWindowContents as DialogPanelController).OnCloseWindow += CleanupConfirm;
+                    (PopupWindowManager.Instance.dialogWindow.CloseableWindowContents as DialogPanelController).Setup(currentList[optionIndex], this.interactable);
+                    (PopupWindowManager.Instance.dialogWindow.CloseableWindowContents as DialogPanelController).OnConfirmAction += HandleConfirmAction;
+                    (PopupWindowManager.Instance.dialogWindow.CloseableWindowContents as DialogPanelController).OnCloseWindow += CleanupConfirm;
                 }
             }/* else {
                 interactable.OpenInteractionWindow();
@@ -106,7 +106,7 @@ namespace AnyRPG {
 
         public override void StopInteract() {
             base.StopInteract();
-            PopupWindowManager.MyInstance.dialogWindow.CloseWindow();
+            PopupWindowManager.Instance.dialogWindow.CloseWindow();
         }
 
         public override bool HasMiniMapText() {

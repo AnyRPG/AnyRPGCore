@@ -113,7 +113,7 @@ namespace AnyRPG {
                 return true;
             } else if (Quest.GetAvailableQuests(Props.Quests).Count == 1 && Quest.GetCompleteQuests(Props.Quests).Count == 0) {
                 if (Quest.GetAvailableQuests(Props.Quests)[0].MyHasOpeningDialog == true && Quest.GetAvailableQuests(Props.Quests)[0].MyOpeningDialog.TurnedIn == false) {
-                    (PopupWindowManager.MyInstance.dialogWindow.CloseableWindowContents as DialogPanelController).Setup(Quest.GetAvailableQuests(Props.Quests)[0], interactable);
+                    (PopupWindowManager.Instance.dialogWindow.CloseableWindowContents as DialogPanelController).Setup(Quest.GetAvailableQuests(Props.Quests)[0], interactable);
                     return true;
                 } else {
                     // do nothing will skip to below and open questlog to the available quest
@@ -124,9 +124,9 @@ namespace AnyRPG {
                 }
             }
             // we got here: we only have a single complete quest, or a single available quest with the opening dialog competed already
-            if (!PopupWindowManager.MyInstance.questGiverWindow.IsOpen) {
+            if (!PopupWindowManager.Instance.questGiverWindow.IsOpen) {
                 //Debug.Log(source + " interacting with " + gameObject.name);
-                PopupWindowManager.MyInstance.questGiverWindow.OpenWindow();
+                PopupWindowManager.Instance.questGiverWindow.OpenWindow();
                 QuestGiverUI.MyInstance.ShowDescription(Quest.GetAvailableQuests(Props.Quests).Union(Quest.GetCompleteQuests(Props.Quests)).ToList()[0], this);
                 return true;
             }
@@ -137,7 +137,7 @@ namespace AnyRPG {
             //Debug.Log(gameObject.name + ".QuestGiver.StopInteract()");
             base.StopInteract();
             //vendorUI.ClearPages();
-            PopupWindowManager.MyInstance.questGiverWindow.CloseWindow();
+            PopupWindowManager.Instance.questGiverWindow.CloseWindow();
         }
 
         public void UpdateQuestStatus() {

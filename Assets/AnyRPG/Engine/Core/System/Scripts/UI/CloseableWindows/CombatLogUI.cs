@@ -279,6 +279,9 @@ namespace AnyRPG {
         /*
         public void OnDisable() {
             //Debug.Log("QuestTrackerUI.OnDisable()");
+            if (SystemGameManager.IsShuttingDown) {
+                return;
+            }
             CleanupEventSubscriptions();
         }
         */

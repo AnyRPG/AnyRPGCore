@@ -30,7 +30,7 @@ namespace AnyRPG {
         }
 
         public void Initialize(float velocity, IAbilityCaster source, Interactable target, Vector3 positionOffset, AbilityEffectContext abilityEffectContext) {
-            //Debug.Log("ProjectileScript.Initialize(" + velocity + ", " + source.name + ", " + (target == null ? "null" : target.name) + ", " + positionOffset + ")");
+            Debug.Log("ProjectileScript.Initialize(" + velocity + ", " + source.name + ", " + (target == null ? "null" : target.name) + ", " + positionOffset + ")");
             this.source = source;
             this.velocity = velocity;
             this.target = target;
@@ -99,6 +99,9 @@ namespace AnyRPG {
 
         private void OnDisable() {
             //Debug.Log(gameObject.name + " " + gameObject.GetInstanceID() + ".ProjectileScript.OnDisable()");
+            if (SystemGameManager.IsShuttingDown) {
+                return;
+            }
             source = null;
             target = null;
             positionOffset = Vector3.zero;

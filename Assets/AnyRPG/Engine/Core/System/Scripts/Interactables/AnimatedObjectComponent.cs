@@ -43,7 +43,7 @@ namespace AnyRPG {
                 //return false;
             //}
             base.Interact(source, optionIndex);
-            PopupWindowManager.MyInstance.interactionWindow.CloseWindow();
+            PopupWindowManager.Instance.interactionWindow.CloseWindow();
 
             // loop through the animatedobjects prefabobjects
             // check their state (open / closed)

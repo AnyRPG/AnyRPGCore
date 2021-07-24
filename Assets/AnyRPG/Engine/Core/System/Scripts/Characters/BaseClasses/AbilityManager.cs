@@ -272,6 +272,9 @@ namespace AnyRPG {
 
 
         public virtual void OnDisable() {
+            if (SystemGameManager.IsShuttingDown) {
+                return;
+            }
             CleanupEventSubscriptions();
             CleanupCoroutines();
             CleanupAbilityEffectGameObjects();

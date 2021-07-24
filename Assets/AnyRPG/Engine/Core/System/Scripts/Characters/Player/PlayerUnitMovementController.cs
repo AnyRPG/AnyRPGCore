@@ -856,6 +856,9 @@ namespace AnyRPG {
 
         public void OnDisable() {
             //Debug.Log(gameObject.name + ".PlayerUnitMovementController.OnDisable()");
+            if (SystemGameManager.IsShuttingDown) {
+                return;
+            }
             if (movementStateController != null) {
                 movementStateController.enabled = false;
             }

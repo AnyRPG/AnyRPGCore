@@ -51,19 +51,19 @@ namespace AnyRPG {
         }
 
         public void ClickAbilityBook() {
-            PopupWindowManager.MyInstance.abilityBookWindow.ToggleOpenClose();
+            PopupWindowManager.Instance.abilityBookWindow.ToggleOpenClose();
         }
 
         public void ClickCharacter() {
-            PopupWindowManager.MyInstance.characterPanelWindow.ToggleOpenClose();
+            PopupWindowManager.Instance.characterPanelWindow.ToggleOpenClose();
         }
 
         public void ClickQuestLog() {
-            PopupWindowManager.MyInstance.questLogWindow.ToggleOpenClose();
+            PopupWindowManager.Instance.questLogWindow.ToggleOpenClose();
         }
 
         public void ClickMap() {
-            PopupWindowManager.MyInstance.mainMapWindow.ToggleOpenClose();
+            PopupWindowManager.Instance.mainMapWindow.ToggleOpenClose();
         }
 
 

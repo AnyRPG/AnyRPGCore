@@ -52,7 +52,7 @@ namespace AnyRPG {
         }
 
         void UpdateMainMap() {
-            if (PopupWindowManager.MyInstance.mainMapWindow.IsOpen == false) {
+            if (PopupWindowManager.Instance.mainMapWindow.IsOpen == false) {
                 return;
             }
 
@@ -60,7 +60,7 @@ namespace AnyRPG {
         }
 
         public void LateUpdate() {
-            if (PopupWindowManager.MyInstance.mainMapWindow.IsOpen == false) {
+            if (PopupWindowManager.Instance.mainMapWindow.IsOpen == false) {
                 return;
             }
             if (SystemConfigurationManager.Instance.UseThirdPartyCameraControl == true
@@ -105,6 +105,9 @@ namespace AnyRPG {
 
         public void OnDisable() {
             //Debug.Log("PlayerManager.OnDisable()");
+            if (SystemGameManager.IsShuttingDown) {
+                return;
+            }
             CleanupActiveEventSubscriptions();
         }
 

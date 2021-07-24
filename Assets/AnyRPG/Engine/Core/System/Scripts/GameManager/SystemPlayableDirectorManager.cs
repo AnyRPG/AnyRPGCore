@@ -10,7 +10,7 @@ namespace AnyRPG {
         #region Singleton
         private static SystemPlayableDirectorManager instance;
 
-        public static SystemPlayableDirectorManager MyInstance {
+        public static SystemPlayableDirectorManager Instance {
             get {
                 if (instance == null) {
                     instance = FindObjectOfType<SystemPlayableDirectorManager>();

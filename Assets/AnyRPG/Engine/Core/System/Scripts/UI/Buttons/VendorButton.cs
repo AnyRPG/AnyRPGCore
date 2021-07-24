@@ -84,7 +84,7 @@ namespace AnyRPG {
             if (vendorItem.MyItem.BuyPrice == 0 || vendorItem.MyItem.MyCurrency == null || (CurrencyConverter.GetConvertedValue(vendorItem.MyItem.MyCurrency, vendorItem.MyItem.BuyPrice) <= PlayerManager.MyInstance.MyCharacter.CharacterCurrencyManager.GetBaseCurrencyValue(vendorItem.MyItem.MyCurrency))) {
                 Item tmpItem = SystemItemManager.MyInstance.GetNewResource(vendorItem.MyItem.DisplayName);
                 //Debug.Log("Instantiated an item with id: " + tmpItem.GetInstanceID().ToString());
-                if (InventoryManager.MyInstance.AddItem(tmpItem)) {
+                if (InventoryManager.Instance.AddItem(tmpItem)) {
                     tmpItem.DropLevel = PlayerManager.MyInstance.MyCharacter.CharacterStats.Level;
                     SellItem();
                     if (tmpItem is CurrencyItem) {

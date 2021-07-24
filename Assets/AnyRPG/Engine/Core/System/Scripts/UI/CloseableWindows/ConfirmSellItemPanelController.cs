@@ -20,7 +20,7 @@ namespace AnyRPG {
             //Debug.Log("NewGameMenuController.ConfirmAction()");
             //HandScript.MyInstance.DeleteItem();
             if (item != null) {
-                (PopupWindowManager.MyInstance.vendorWindow.CloseableWindowContents as VendorUI).SellItem(MyItem);
+                (PopupWindowManager.Instance.vendorWindow.CloseableWindowContents as VendorUI).SellItem(MyItem);
             }
             SystemWindowManager.MyInstance.confirmSellItemMenuWindow.CloseWindow();
         }

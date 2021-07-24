@@ -140,12 +140,12 @@ namespace AnyRPG {
 
         public virtual void UpdateChargeCount(ActionButton actionButton) {
             //Debug.Log(DisplayName + ".Item.UpdateChargeCount()");
-            int chargeCount = InventoryManager.MyInstance.GetUseableCount(this);
+            int chargeCount = InventoryManager.Instance.GetUseableCount(this);
             UIManager.MyInstance.UpdateStackSize(actionButton, chargeCount, true);
         }
 
         public virtual void UpdateActionButtonVisual(ActionButton actionButton) {
-            int count = InventoryManager.MyInstance.GetUseableCount(this);
+            int count = InventoryManager.Instance.GetUseableCount(this);
             // we have to do this to ensure we have a reference to the top item on the stack, otherwise we will try to use an item that has been used already
             //if ((count == 0 && removeStaleActions) || count > 0) {
             /*
@@ -205,7 +205,7 @@ namespace AnyRPG {
         }
 
         public bool ActionButtonUse() {
-            List<Item> itemList = InventoryManager.MyInstance?.GetItems(DisplayName, 1);
+            List<Item> itemList = InventoryManager.Instance?.GetItems(DisplayName, 1);
             if (itemList == null || itemList.Count == 0) {
                 return false;
             }

@@ -32,7 +32,7 @@ namespace AnyRPG {
                 } else {
                     //Debug.Log(DisplayName + ".QuestStartItem.Use(): showing quests");
                     //Debug.Log("QuestStartItem.Use(): opening questgiver window");
-                    if (PopupWindowManager.MyInstance.questGiverWindow.IsOpen) {
+                    if (PopupWindowManager.Instance.questGiverWindow.IsOpen) {
                         // safety to prevent deletion
                         return false;
                     }
@@ -97,10 +97,10 @@ namespace AnyRPG {
 
         public void OpenQuestGiverWindow() {
             //Debug.Log(DisplayName + ".QuestStartItem.OpenQuestGiverWindow()");
-            if (!PopupWindowManager.MyInstance.questGiverWindow.IsOpen) {
+            if (!PopupWindowManager.Instance.questGiverWindow.IsOpen) {
                 //Debug.Log(source + " interacting with " + gameObject.name);
                 //PopupWindowManager.MyInstance.questGiverWindow.MyCloseableWindowContents.OnOpenWindowHandler += InitWindow;
-                PopupWindowManager.MyInstance.questGiverWindow.OpenWindow();
+                PopupWindowManager.Instance.questGiverWindow.OpenWindow();
             }
         }
 

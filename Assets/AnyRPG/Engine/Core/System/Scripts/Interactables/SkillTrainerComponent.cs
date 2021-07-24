@@ -19,11 +19,11 @@ namespace AnyRPG {
         public override bool Interact(CharacterUnit source, int optionIndex = 0) {
             //Debug.Log(gameObject.name + ".SkillTrainer.Interact(" + source + ")");
             base.Interact(source, optionIndex);
-            if (!PopupWindowManager.MyInstance.skillTrainerWindow.IsOpen) {
+            if (!PopupWindowManager.Instance.skillTrainerWindow.IsOpen) {
                 //Debug.Log(source + " interacting with " + gameObject.name);
                 //vendorWindow.MyVendorUI.CreatePages(items);
-                PopupWindowManager.MyInstance.skillTrainerWindow.OpenWindow();
-                (PopupWindowManager.MyInstance.skillTrainerWindow.CloseableWindowContents as SkillTrainerUI).ShowSkills(this);
+                PopupWindowManager.Instance.skillTrainerWindow.OpenWindow();
+                (PopupWindowManager.Instance.skillTrainerWindow.CloseableWindowContents as SkillTrainerUI).ShowSkills(this);
                 return true;
             }
             return false;
@@ -33,7 +33,7 @@ namespace AnyRPG {
             //Debug.Log(gameObject.name + ".SkillTrainer.StopInteract()");
             base.StopInteract();
             //vendorUI.ClearPages();
-            PopupWindowManager.MyInstance.skillTrainerWindow.CloseWindow();
+            PopupWindowManager.Instance.skillTrainerWindow.CloseWindow();
         }
 
         public override void CleanupEventSubscriptions() {

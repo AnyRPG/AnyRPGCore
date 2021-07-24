@@ -661,6 +661,9 @@ namespace AnyRPG {
         }
 
         private void OnDisable() {
+            if (SystemGameManager.IsShuttingDown) {
+                return;
+            }
             StopAllCoroutines();
             CleanupEventSubscriptions();
             ResetSettings();

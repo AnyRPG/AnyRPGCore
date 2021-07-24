@@ -72,14 +72,14 @@ namespace AnyRPG {
         public void Drop() {
             //Debug.Log("HandScript.Drop()");
             ClearMoveable();
-            InventoryManager.MyInstance.FromSlot = null;
+            InventoryManager.Instance.FromSlot = null;
             UIManager.MyInstance.ActionBarManager.FromButton = null;
         }
 
         private void ClearMoveable() {
             //Debug.Log("HandScript.ClearMoveable()");
-            if (InventoryManager.MyInstance.FromSlot != null) {
-                InventoryManager.MyInstance.FromSlot.PutItemBack();
+            if (InventoryManager.Instance.FromSlot != null) {
+                InventoryManager.Instance.FromSlot.PutItemBack();
             }
             MyMoveable = null;
             icon.sprite = null;

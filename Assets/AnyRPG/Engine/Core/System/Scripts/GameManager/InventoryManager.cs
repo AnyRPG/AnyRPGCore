@@ -11,7 +11,7 @@ namespace AnyRPG {
         #region Singleton
         private static InventoryManager instance;
 
-        public static InventoryManager MyInstance {
+        public static InventoryManager Instance {
             get {
                 if (instance == null) {
                     instance = FindObjectOfType<InventoryManager>();
@@ -131,6 +131,9 @@ namespace AnyRPG {
 
         public void OnDisable() {
             //Debug.Log("PlayerManager.OnDisable()");
+            if (SystemGameManager.IsShuttingDown) {
+                return;
+            }
             CleanupEventSubscriptions();
         }
 
@@ -258,14 +261,14 @@ namespace AnyRPG {
                 } else {
                     if (i == bagCount) {
                         //Debug.Log("InventoryManager.InitializeBagWindows(): create element " + i + " setting bag window to bank window");
-                        bagNode.BagWindow = PopupWindowManager.MyInstance.bankWindow;
+                        bagNode.BagWindow = PopupWindowManager.Instance.bankWindow;
                     } else {
                         //Debug.Log("InventoryManager.InitializeBagWindows(): create element " + i + " creating bag window");
                         bagNode.BagWindow = ObjectPooler.MyInstance.GetPooledObject(windowPrefab, inventoryWindowHolders[i - 1].transform).GetComponent<CloseableWindow>();
                         bagNode.BagWindow.transform.GetComponent<RectTransform>().pivot = new Vector2(1, 1);
                     }
 
-                    bagNode.BagButton = (PopupWindowManager.MyInstance.bankWindow.CloseableWindowContents as BankPanel).MyBagBarController.AddBagButton();
+                    bagNode.BagButton = (PopupWindowManager.Instance.bankWindow.CloseableWindowContents as BankPanel).MyBagBarController.AddBagButton();
 
                     if (bagNode.BagButton != null) {
                         bagNode.BagButton.MyBagNode = bagNode;
@@ -448,7 +451,7 @@ namespace AnyRPG {
                 }
                 AddItem(oldBag);
                 HandScript.MyInstance.Drop();
-                MyInstance.fromSlot = null;
+                Instance.fromSlot = null;
             }
         }
 

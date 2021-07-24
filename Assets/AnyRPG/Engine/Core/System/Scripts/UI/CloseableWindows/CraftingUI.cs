@@ -256,7 +256,7 @@ namespace AnyRPG {
         private void ResetWindow() {
             ClearDescription();
             UpdateCraftAmountArea();
-            PopupWindowManager.MyInstance.craftingWindow.SetWindowTitle(craftAbility.DisplayName);
+            PopupWindowManager.Instance.craftingWindow.SetWindowTitle(craftAbility.DisplayName);
         }
 
         private void ClearInputIcons() {

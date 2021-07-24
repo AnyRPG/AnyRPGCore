@@ -204,6 +204,9 @@ namespace AnyRPG {
 
         public void OnDisable() {
             //Debug.Log("UnitSpawnNode.OnDisable(): stopping any outstanding coroutines");
+            if (SystemGameManager.IsShuttingDown) {
+                return;
+            }
             CleanupEventSubscriptions();
             if (countDownRoutine != null) {
                 StopCoroutine(countDownRoutine);

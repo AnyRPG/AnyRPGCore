@@ -47,7 +47,7 @@ namespace AnyRPG {
 
         public void SetAbility(CraftAbility craftAbility) {
             this.craftAbility = craftAbility;
-            PopupWindowManager.MyInstance.craftingWindow.OpenWindow();
+            PopupWindowManager.Instance.craftingWindow.OpenWindow();
             OnSetCraftAbility(this.craftAbility);
         }
 
@@ -70,7 +70,7 @@ namespace AnyRPG {
         private bool CanCraft(Recipe recipe) {
             //Debug.Log("CraftingUI.CanCraft(" + recipe.MyOutput.MyName + ")");
             for (int i = 0; i < recipe.MyCraftingMaterials.Count; i++) {
-                if (InventoryManager.MyInstance.GetItemCount(recipe.MyCraftingMaterials[i].MyItem.DisplayName) < recipe.MyCraftingMaterials[i].MyCount) {
+                if (InventoryManager.Instance.GetItemCount(recipe.MyCraftingMaterials[i].MyItem.DisplayName) < recipe.MyCraftingMaterials[i].MyCount) {
                     return false;
                 }
             }
@@ -82,7 +82,7 @@ namespace AnyRPG {
 
             int maxAmount = -1;
             for (int i = 0; i < checkRecipe.MyCraftingMaterials.Count; i++) {
-                int possibleAmount = InventoryManager.MyInstance.GetItemCount(checkRecipe.MyCraftingMaterials[i].MyItem.DisplayName) / checkRecipe.MyCraftingMaterials[i].MyCount;
+                int possibleAmount = InventoryManager.Instance.GetItemCount(checkRecipe.MyCraftingMaterials[i].MyItem.DisplayName) / checkRecipe.MyCraftingMaterials[i].MyCount;
                 if (maxAmount == -1) {
                     maxAmount = possibleAmount;
                 }
@@ -132,13 +132,13 @@ namespace AnyRPG {
             if (GetMaxCraftAmount(craftingQueue[0]) > 0) {
                 Item tmpItem = SystemItemManager.MyInstance.GetNewResource(craftingQueue[0].MyOutput.DisplayName);
                 tmpItem.DropLevel = PlayerManager.MyInstance.MyCharacter.CharacterStats.Level;
-                if (InventoryManager.MyInstance.AddItem(tmpItem)) {
+                if (InventoryManager.Instance.AddItem(tmpItem)) {
                     //Debug.Log("CraftingUI.CraftNextItem(): got an item successfully");
                     foreach (CraftingMaterial craftingMaterial in craftingQueue[0].MyCraftingMaterials) {
                         //Debug.Log("CraftingUI.CraftNextItem(): looping through crafting materials");
                         for (int i = 0; i < craftingMaterial.MyCount; i++) {
                             //Debug.Log("CraftingUI.CraftNextItem(): about to remove item from inventory");
-                            InventoryManager.MyInstance.RemoveItem(InventoryManager.MyInstance.GetItems(craftingMaterial.MyItem.DisplayName, 1)[0]);
+                            InventoryManager.Instance.RemoveItem(InventoryManager.Instance.GetItems(craftingMaterial.MyItem.DisplayName, 1)[0]);
                         }
                     }
                     craftingQueue.RemoveAt(0);

@@ -538,6 +538,9 @@ namespace AnyRPG {
 
         public override void OnDisable() {
             //Debug.Log(gameObject.name + ".UnitFrameController.OnDisable()");
+            if (SystemGameManager.IsShuttingDown) {
+                return;
+            }
             base.OnDisable();
             UnsubscribeFromTargetReady();
         }

@@ -78,6 +78,9 @@ namespace AnyRPG {
 
         public void OnDisable() {
             //Debug.Log(gameObject.name + ".MaterialChangeController.OnDisable()");
+            if (SystemGameManager.IsShuttingDown) {
+                return;
+            }
         }
 
         public void RevertMaterialChange() {

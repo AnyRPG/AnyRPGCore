@@ -45,6 +45,9 @@ namespace AnyRPG {
 
         public virtual void OnDisable() {
             //Debug.Log("PlayerManager.OnDisable()");
+            if (SystemGameManager.IsShuttingDown) {
+                return;
+            }
             CleanupEventSubscriptions();
             CleanupScriptableObjects();
         }

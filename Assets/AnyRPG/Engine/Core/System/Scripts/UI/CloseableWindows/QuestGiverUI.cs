@@ -271,17 +271,17 @@ namespace AnyRPG {
             if (quest.MyHasOpeningDialog == true) {
                 if (quest.MyOpeningDialog != null && quest.MyOpeningDialog.TurnedIn == false) {
                     //Debug.Log("QuestGiverUI.ShowDescription(): opening dialog is not complete, showing dialog");
-                    (PopupWindowManager.MyInstance.dialogWindow.CloseableWindowContents as DialogPanelController).Setup(quest, interactable);
+                    (PopupWindowManager.Instance.dialogWindow.CloseableWindowContents as DialogPanelController).Setup(quest, interactable);
                     //Debug.Log("QuestGiverUI.ShowDescription(): about to close window because of dialog");
-                    if (PopupWindowManager.MyInstance.questGiverWindow.IsOpen) {
-                        PopupWindowManager.MyInstance.questGiverWindow.CloseWindow();
+                    if (PopupWindowManager.Instance.questGiverWindow.IsOpen) {
+                        PopupWindowManager.Instance.questGiverWindow.CloseWindow();
                     }
                     return;
                 }
             }
 
-            if (!PopupWindowManager.MyInstance.questGiverWindow.IsOpen) {
-                PopupWindowManager.MyInstance.questGiverWindow.OpenWindow();
+            if (!PopupWindowManager.Instance.questGiverWindow.IsOpen) {
+                PopupWindowManager.Instance.questGiverWindow.OpenWindow();
                 //ShowDescription(quest);
                 return;
             }
@@ -351,7 +351,7 @@ namespace AnyRPG {
             //Debug.Log("QuestGiverUI.AcceptQuest()");
             if (currentQuest != null) {
                 // DO THIS HERE SO IT DOESN'T INSTA-CLOSE ANY AUTO-POPUP BACK TO HERE ON ACCEPT QUEST CAUSING STATUS CHANGE
-                PopupWindowManager.MyInstance.questGiverWindow.CloseWindow();
+                PopupWindowManager.Instance.questGiverWindow.CloseWindow();
 
                 QuestLog.MyInstance.AcceptQuest(currentQuest);
 
@@ -430,7 +430,7 @@ namespace AnyRPG {
             // item rewards first in case not enough space in inventory
             // TO FIX: THIS CODE DOES NOT DEAL WITH PARTIAL STACKS AND WILL REQUEST ONE FULL SLOT FOR EVERY REWARD
             if (questDetailsArea.GetHighlightedItemRewardIcons().Count > 0) {
-                if (InventoryManager.MyInstance.EmptySlotCount() < questDetailsArea.GetHighlightedItemRewardIcons().Count) {
+                if (InventoryManager.Instance.EmptySlotCount() < questDetailsArea.GetHighlightedItemRewardIcons().Count) {
                     MessageFeedManager.MyInstance.WriteMessage("Not enough room in inventory!");
                     return;
                 }
@@ -441,7 +441,7 @@ namespace AnyRPG {
                         if (newItem != null) {
                             //Debug.Log("RewardButton.CompleteQuest(): newItem is not null, adding to inventory");
                             newItem.DropLevel = PlayerManager.MyInstance.MyCharacter.CharacterStats.Level;
-                            InventoryManager.MyInstance.AddItem(newItem);
+                            InventoryManager.Instance.AddItem(newItem);
                         }
                     }
                 }
@@ -490,7 +490,7 @@ namespace AnyRPG {
             UpdateButtons(currentQuest);
 
             // DO THIS HERE OR TURNING THE QUEST RESULTING IN THIS WINDOW RE-OPENING WOULD JUST INSTA-CLOSE IT INSTEAD
-            PopupWindowManager.MyInstance.questGiverWindow.CloseWindow();
+            PopupWindowManager.Instance.questGiverWindow.CloseWindow();
 
             QuestLog.MyInstance.TurnInQuest(currentQuest);
 
@@ -523,15 +523,18 @@ namespace AnyRPG {
             DeactivateButtons();
 
             if (interactable != null) {
-                PopupWindowManager.MyInstance.questGiverWindow.SetWindowTitle(interactable.DisplayName + " (Quests)");
+                PopupWindowManager.Instance.questGiverWindow.SetWindowTitle(interactable.DisplayName + " (Quests)");
             }
         }
 
         public void OnDisable() {
             //Debug.Log("QuestGiverUI.OnDisable()");
             // CLOSE THIS BEFORE LEVEL UNLOADS
-            if (PopupWindowManager.MyInstance != null && PopupWindowManager.MyInstance.questGiverWindow != null) {
-                PopupWindowManager.MyInstance.questGiverWindow.CloseWindow();
+            if (SystemGameManager.IsShuttingDown) {
+                return;
+            }
+            if (PopupWindowManager.Instance != null && PopupWindowManager.Instance.questGiverWindow != null) {
+                PopupWindowManager.Instance.questGiverWindow.CloseWindow();
             }
         }
 

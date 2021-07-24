@@ -39,12 +39,12 @@ namespace AnyRPG {
         }
 
         public void CleanupWindowEventSubscriptions() {
-            if (PopupWindowManager.MyInstance != null
-                && PopupWindowManager.MyInstance.factionChangeWindow != null
-                && PopupWindowManager.MyInstance.factionChangeWindow.CloseableWindowContents != null
-                && (PopupWindowManager.MyInstance.factionChangeWindow.CloseableWindowContents as NameChangePanelController) != null) {
-                (PopupWindowManager.MyInstance.factionChangeWindow.CloseableWindowContents as FactionChangePanelController).OnConfirmAction -= HandleConfirmAction;
-                (PopupWindowManager.MyInstance.factionChangeWindow.CloseableWindowContents as FactionChangePanelController).OnCloseWindow -= CleanupEventSubscriptions;
+            if (PopupWindowManager.Instance != null
+                && PopupWindowManager.Instance.factionChangeWindow != null
+                && PopupWindowManager.Instance.factionChangeWindow.CloseableWindowContents != null
+                && (PopupWindowManager.Instance.factionChangeWindow.CloseableWindowContents as NameChangePanelController) != null) {
+                (PopupWindowManager.Instance.factionChangeWindow.CloseableWindowContents as FactionChangePanelController).OnConfirmAction -= HandleConfirmAction;
+                (PopupWindowManager.Instance.factionChangeWindow.CloseableWindowContents as FactionChangePanelController).OnCloseWindow -= CleanupEventSubscriptions;
             }
         }
 
@@ -73,9 +73,9 @@ namespace AnyRPG {
                 return false;
             }
             base.Interact(source, optionIndex);
-            (PopupWindowManager.MyInstance.factionChangeWindow.CloseableWindowContents as FactionChangePanelController).Setup(Props.Faction);
-            (PopupWindowManager.MyInstance.factionChangeWindow.CloseableWindowContents as FactionChangePanelController).OnConfirmAction += HandleConfirmAction;
-            (PopupWindowManager.MyInstance.factionChangeWindow.CloseableWindowContents as FactionChangePanelController).OnCloseWindow += CleanupEventSubscriptions;
+            (PopupWindowManager.Instance.factionChangeWindow.CloseableWindowContents as FactionChangePanelController).Setup(Props.Faction);
+            (PopupWindowManager.Instance.factionChangeWindow.CloseableWindowContents as FactionChangePanelController).OnConfirmAction += HandleConfirmAction;
+            (PopupWindowManager.Instance.factionChangeWindow.CloseableWindowContents as FactionChangePanelController).OnCloseWindow += CleanupEventSubscriptions;
             windowEventSubscriptionsInitialized = true;
             return true;
         }
@@ -86,7 +86,7 @@ namespace AnyRPG {
 
         public override void StopInteract() {
             base.StopInteract();
-            PopupWindowManager.MyInstance.factionChangeWindow.CloseWindow();
+            PopupWindowManager.Instance.factionChangeWindow.CloseWindow();
         }
 
         public override bool HasMiniMapText() {

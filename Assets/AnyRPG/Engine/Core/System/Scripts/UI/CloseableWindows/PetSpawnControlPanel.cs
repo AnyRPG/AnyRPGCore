@@ -155,7 +155,7 @@ namespace AnyRPG {
         public void ClosePanel() {
             //Debug.Log("CharacterCreatorPanel.ClosePanel()");
             SystemWindowManager.MyInstance.petSpawnWindow.CloseWindow();
-            PopupWindowManager.MyInstance.interactionWindow.CloseWindow();
+            PopupWindowManager.Instance.interactionWindow.CloseWindow();
         }
 
         public void HandleTargetReady() {

@@ -29,7 +29,7 @@ namespace AnyRPG {
             if (completeBefore) {
                 return;
             }
-            CurrentAmount = InventoryManager.MyInstance.GetItemCount(MyType);
+            CurrentAmount = InventoryManager.Instance.GetItemCount(MyType);
             CurrentAmount += PlayerManager.MyInstance.MyCharacter.CharacterEquipmentManager.GetEquipmentCount(MyType);
 
             quest.CheckCompletion(true, printMessages);
@@ -44,7 +44,7 @@ namespace AnyRPG {
         }
 
         public void Complete() {
-            List<Item> items = InventoryManager.MyInstance.GetItems(MyType, MyAmount);
+            List<Item> items = InventoryManager.Instance.GetItems(MyType, MyAmount);
             foreach (Item item in items) {
                 item.Remove();
             }

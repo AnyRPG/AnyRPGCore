@@ -33,8 +33,8 @@ namespace AnyRPG {
                 }
             }
             // CLOSE WINDOWS BEFORE CUTSCENE LOADS TO PREVENT INVALID REFERENCE ON LOAD
-            PopupWindowManager.MyInstance.interactionWindow.CloseWindow();
-            PopupWindowManager.MyInstance.questGiverWindow.CloseWindow();
+            PopupWindowManager.Instance.interactionWindow.CloseWindow();
+            PopupWindowManager.Instance.questGiverWindow.CloseWindow();
             return true;
         }
 

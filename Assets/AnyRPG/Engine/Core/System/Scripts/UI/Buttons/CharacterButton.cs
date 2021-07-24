@@ -157,7 +157,7 @@ namespace AnyRPG {
                 // prevent unnecessary actions when player is not spawned
                 return;
             }
-            if (PopupWindowManager.MyInstance.characterPanelWindow.IsOpen == false) {
+            if (PopupWindowManager.Instance.characterPanelWindow.IsOpen == false) {
                 // prevent unnecessary actions when window is not open
                 return;
             }

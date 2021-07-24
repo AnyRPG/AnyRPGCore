@@ -31,9 +31,9 @@ namespace AnyRPG {
             //Debug.Log("FactionChangePanelController.Setup(" + newFactionName + ")");
             faction = newFaction;
             factionButton.AddFaction(faction);
-            PopupWindowManager.MyInstance.factionChangeWindow.SetWindowTitle(faction.DisplayName);
+            PopupWindowManager.Instance.factionChangeWindow.SetWindowTitle(faction.DisplayName);
             ShowAbilityRewards();
-            PopupWindowManager.MyInstance.factionChangeWindow.OpenWindow();
+            PopupWindowManager.Instance.factionChangeWindow.OpenWindow();
         }
 
         public void ShowAbilityRewards() {
@@ -70,14 +70,14 @@ namespace AnyRPG {
 
         public void CancelAction() {
             //Debug.Log("FactionChangePanelController.CancelAction()");
-            PopupWindowManager.MyInstance.factionChangeWindow.CloseWindow();
+            PopupWindowManager.Instance.factionChangeWindow.CloseWindow();
         }
 
         public void ConfirmAction() {
             //Debug.Log("FactionChangePanelController.ConfirmAction()");
             PlayerManager.MyInstance.SetPlayerFaction(faction);
             OnConfirmAction();
-            PopupWindowManager.MyInstance.factionChangeWindow.CloseWindow();
+            PopupWindowManager.Instance.factionChangeWindow.CloseWindow();
         }
 
         public override void RecieveClosedWindowNotification() {

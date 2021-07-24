@@ -169,6 +169,9 @@ namespace AnyRPG {
 
         public void OnDisable() {
             //Debug.Log("PlayerManager.OnDisable()");
+            if (SystemGameManager.IsShuttingDown) {
+                return;
+            }
             CleanupEventSubscriptions();
         }
         /*
@@ -641,9 +644,9 @@ namespace AnyRPG {
         public void HandleEquipmentChanged(Equipment newItem, Equipment oldItem, int slotIndex) {
             if (PlayerUnitSpawned) {
                 if (slotIndex != -1) {
-                    InventoryManager.MyInstance.AddItem(oldItem, slotIndex);
+                    InventoryManager.Instance.AddItem(oldItem, slotIndex);
                 } else if (oldItem != null) {
-                    InventoryManager.MyInstance.AddItem(oldItem);
+                    InventoryManager.Instance.AddItem(oldItem);
                 }
             }
             SystemEventManager.MyInstance.NotifyOnEquipmentChanged(newItem, oldItem);
