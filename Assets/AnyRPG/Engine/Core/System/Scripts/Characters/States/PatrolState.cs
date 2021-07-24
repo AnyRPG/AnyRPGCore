@@ -52,7 +52,7 @@ namespace AnyRPG {
         }
 
         public void Update() {
-            Debug.Log(baseController.gameObject.name + ": PatrolState.Update() at location: " + baseController.transform.position);
+            //Debug.Log(baseController.gameObject.name + ": PatrolState.Update() at location: " + baseController.transform.position);
 
             // if this was an AI and was captured as a pet, stop any in progress patrol
             if (baseController.UnitControllerMode != UnitControllerMode.AI) {

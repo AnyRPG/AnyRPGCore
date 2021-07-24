@@ -9,7 +9,7 @@ namespace AnyRPG {
         #region Singleton
         private static SystemGameManager instance;
 
-        public static SystemGameManager MyInstance {
+        public static SystemGameManager Instance {
             get {
                 if (instance == null) {
                     instance = FindObjectOfType<SystemGameManager>();
@@ -18,6 +18,7 @@ namespace AnyRPG {
                 return instance;
             }
         }
+
         #endregion
 
         [SerializeField]
@@ -28,6 +29,10 @@ namespace AnyRPG {
         private int spawnCount = 0;
 
         private bool eventSubscriptionsInitialized = false;
+
+        private static bool isShuttingDown = false;
+
+        public static bool IsShuttingDown { get => isShuttingDown; }
 
         private void Awake() {
             //Debug.Log("SystemGameManager.Awake()");
@@ -128,6 +133,11 @@ namespace AnyRPG {
         public int GetSpawnCount() {
             spawnCount++;
             return spawnCount;
+        }
+
+        private void OnApplicationQuit() {
+            Debug.Log("SystemGameManager.OnApplicationQuit()");
+            isShuttingDown = true;
         }
 
     }

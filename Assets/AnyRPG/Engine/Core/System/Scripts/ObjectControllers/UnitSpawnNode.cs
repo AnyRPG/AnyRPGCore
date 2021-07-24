@@ -557,7 +557,7 @@ namespace AnyRPG {
         }
 
         public void SetupScriptableObjects() {
-            if (SystemGameManager.MyInstance == null) {
+            if (SystemGameManager.Instance == null) {
                 Debug.LogError(gameObject.name + ": System Game Manager Not Found In The Scene.");
                 return;
             }

@@ -61,7 +61,7 @@ namespace AnyRPG {
 
         protected virtual void OnEnable() {
             //Debug.Log(gameObject.name + ".Spawnable.OnEnable()");
-            if (SystemGameManager.MyInstance == null) {
+            if (SystemGameManager.Instance == null) {
                 Debug.LogError(gameObject.name + ": SystemGameManager not found. Is the Game Manager in the scene?");
                 return;
             }
@@ -139,6 +139,9 @@ namespace AnyRPG {
 
         public virtual void OnDisable() {
             //Debug.Log(gameObject.name + ".Spawnable.OnDisable()");
+            if (SystemGameManager.IsShuttingDown) {
+                return;
+            }
             ResetSettings();
         }
 
