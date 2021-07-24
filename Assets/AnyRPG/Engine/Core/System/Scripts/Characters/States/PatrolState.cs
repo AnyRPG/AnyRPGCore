@@ -52,7 +52,7 @@ namespace AnyRPG {
         }
 
         public void Update() {
-            //Debug.Log(baseController.gameObject.name + ": PatrolState.Update() at location: " + baseController.transform.position);
+            Debug.Log(baseController.gameObject.name + ": PatrolState.Update() at location: " + baseController.transform.position);
 
             // if this was an AI and was captured as a pet, stop any in progress patrol
             if (baseController.UnitControllerMode != UnitControllerMode.AI) {
@@ -86,6 +86,7 @@ namespace AnyRPG {
                     if (baseController.PatrolController.CurrentPatrol.DespawnOnCompletion) {
                         if (baseController.CharacterUnit != null) {
                             baseController.CharacterUnit.Despawn(0, false, true);
+                            return;
                         }
                     } else {
                         TrySavePersistentData();
