@@ -298,6 +298,7 @@ namespace AnyRPG {
         }
 
         public override void DespawnAbilityObjects() {
+            //Debug.Log(gameObject.name + ".CharacterAbilityManager.DespawnAbilityObjects()");
             base.DespawnAbilityObjects();
 
             if (abilityObjects == null || abilityObjects.Count == 0) {
@@ -317,7 +318,7 @@ namespace AnyRPG {
         }
 
         public override void GeneratePower(BaseAbility ability) {
-            //Debug.Log(gameObject.name + ".GeneratePower(" + ability.MyName + ")");
+            //Debug.Log(gameObject.name + ".CharacterAbilityManager.GeneratePower(" + ability.MyName + ")");
             if (ability.GeneratePowerResource == null) {
                 // nothing to generate
                 return;

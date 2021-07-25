@@ -36,7 +36,7 @@ namespace AnyRPG {
                     if (projectileScript != null) {
                         //Debug.Log(MyName + ".ProjectileEffect.Cast(): found gameobject: " + go.name + " and it has projectile script");
                         abilityEffectContext = ApplyInputMultiplier(abilityEffectContext);
-                        projectileScript.Initialize(projectileSpeed, source, target, new Vector3(0, 1, 0), abilityEffectContext);
+                        projectileScript.Initialize(projectileSpeed, source, target, new Vector3(0, 1, 0), go, abilityEffectContext);
                         if (flightAudioProfiles != null && flightAudioProfiles.Count > 0) {
                             projectileScript.PlayFlightAudio(flightAudioProfiles, randomFlightAudioProfiles);
                         }

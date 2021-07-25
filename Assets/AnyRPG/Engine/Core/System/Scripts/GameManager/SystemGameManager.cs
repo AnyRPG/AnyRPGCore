@@ -136,7 +136,7 @@ namespace AnyRPG {
         }
 
         private void OnApplicationQuit() {
-            Debug.Log("SystemGameManager.OnApplicationQuit()");
+            //Debug.Log("SystemGameManager.OnApplicationQuit()");
             isShuttingDown = true;
         }
 

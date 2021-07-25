@@ -159,6 +159,7 @@ namespace AnyRPG {
         }
 
         public void ReturnObjectToPool(GameObject pooledGameObject) {
+            //Debug.Log("ObjectPooler.ReturnObjectToPool(" + pooledGameObject.name + ")");
             foreach (GameObject gameObjectKey in usedObjects.Keys) {
                 if (usedObjects[gameObjectKey].Contains(pooledGameObject)) {
                     usedObjects[gameObjectKey].Remove(pooledGameObject);

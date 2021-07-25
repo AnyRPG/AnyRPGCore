@@ -767,7 +767,7 @@ namespace AnyRPG {
         }
 
         public void HandleCastCancel(BaseCharacter baseCharacter) {
-            Debug.Log("PlayerController.HandleCastCancel()");
+            //Debug.Log("PlayerController.HandleCastCancel()");
             CraftingManager.Instance.ClearCraftingQueue();
         }
 

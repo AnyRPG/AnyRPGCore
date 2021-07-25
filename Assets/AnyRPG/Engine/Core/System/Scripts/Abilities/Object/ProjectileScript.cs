@@ -11,6 +11,9 @@ namespace AnyRPG {
         [SerializeField]
         private AudioSource audioSource = null;
 
+        // this projectile could be attached to a handle, so it is important to modify the transform of that gameobject and return it to pool
+        private GameObject projectileGameObject = null;
+
         private IAbilityCaster source = null;
 
         private Interactable target = null;
@@ -26,11 +29,13 @@ namespace AnyRPG {
         private AbilityEffectContext abilityEffectContext = null;
 
         private void Update() {
+            //Debug.Log(gameObject.name + ".ProjectileScript.Update()");
             MoveTowardTarget();
         }
 
-        public void Initialize(float velocity, IAbilityCaster source, Interactable target, Vector3 positionOffset, AbilityEffectContext abilityEffectContext) {
-            Debug.Log("ProjectileScript.Initialize(" + velocity + ", " + source.name + ", " + (target == null ? "null" : target.name) + ", " + positionOffset + ")");
+        public void Initialize(float velocity, IAbilityCaster source, Interactable target, Vector3 positionOffset, GameObject go, AbilityEffectContext abilityEffectContext) {
+            //Debug.Log(gameObject.name + ".ProjectileScript.Initialize(" + velocity + ", " + source.AbilityManager.Name + ", " + (target == null ? "null" : target.name) + ", " + positionOffset + ")");
+            projectileGameObject = go;
             this.source = source;
             this.velocity = velocity;
             this.target = target;
@@ -73,13 +78,13 @@ namespace AnyRPG {
             if (initialized) {
                 UpdateTargetPosition();
                 if (target != null) {
-                    transform.forward = (targetPosition - transform.position).normalized;
+                    projectileGameObject.transform.forward = (targetPosition - projectileGameObject.transform.position).normalized;
                 } else {
                     //transform.forward = Vector3.down;
                 }
 
                 //Debug.Log("ProjectileScript.MoveTowardTarget(): transform.forward: " + transform.forward);
-                transform.position += (transform.forward * (Time.deltaTime * velocity));
+                projectileGameObject.transform.position += (projectileGameObject.transform.forward * (Time.deltaTime * velocity));
             }
         }
 
@@ -91,9 +96,9 @@ namespace AnyRPG {
             }
             if ((target != null && other.gameObject == target.InteractableGameObject) || target == null) {
                 if (abilityEffectContext != null && abilityEffectContext.groundTargetLocation != null) {
-                    abilityEffectContext.groundTargetLocation = transform.position;
+                    abilityEffectContext.groundTargetLocation = projectileGameObject.transform.position;
                 }
-                OnCollission(source, target, gameObject, abilityEffectContext, this);
+                OnCollission(source, target, projectileGameObject, abilityEffectContext, this);
             }
         }
 
@@ -102,6 +107,7 @@ namespace AnyRPG {
             if (SystemGameManager.IsShuttingDown) {
                 return;
             }
+            projectileGameObject = null;
             source = null;
             target = null;
             positionOffset = Vector3.zero;
@@ -111,6 +117,7 @@ namespace AnyRPG {
             abilityEffectContext = null;
             OnCollission = delegate { };
         }
+
 
     }
 
