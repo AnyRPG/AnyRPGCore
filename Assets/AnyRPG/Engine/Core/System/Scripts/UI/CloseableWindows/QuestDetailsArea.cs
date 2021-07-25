@@ -267,24 +267,28 @@ namespace AnyRPG {
 
             // items
             foreach (RewardButton rewardIcon in itemRewardIcons) {
+                rewardIcon.Unselect();
                 ObjectPooler.MyInstance.ReturnObjectToPool(rewardIcon.gameObject);
             }
             itemRewardIcons.Clear();
 
             // abilties
             foreach (RewardButton rewardIcon in abilityRewardIcons) {
+                rewardIcon.Unselect();
                 ObjectPooler.MyInstance.ReturnObjectToPool(rewardIcon.gameObject);
             }
             abilityRewardIcons.Clear();
 
             // skills
             foreach (RewardButton rewardIcon in skillRewardIcons) {
+                rewardIcon.Unselect();
                 ObjectPooler.MyInstance.ReturnObjectToPool(rewardIcon.gameObject);
             }
             skillRewardIcons.Clear();
 
             // factions
             foreach (RewardButton rewardIcon in factionRewardIcons) {
+                rewardIcon.Unselect();
                 ObjectPooler.MyInstance.ReturnObjectToPool(rewardIcon.gameObject);
             }
             factionRewardIcons.Clear();

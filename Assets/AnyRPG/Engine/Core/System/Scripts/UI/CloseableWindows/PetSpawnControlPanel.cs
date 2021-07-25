@@ -218,6 +218,7 @@ namespace AnyRPG {
             //Debug.Log("LoadGamePanel.ClearLoadButtons()");
             foreach (PetSpawnButton petSpawnButton in petSpawnButtons) {
                 if (petSpawnButton != null) {
+                    petSpawnButton.DeSelect();
                     ObjectPooler.MyInstance.ReturnObjectToPool(petSpawnButton.gameObject);
                 }
             }

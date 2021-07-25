@@ -175,6 +175,7 @@ namespace AnyRPG {
         public void ClearQuests() {
             //Debug.Log("QuestLogUI.ClearQuests()");
             foreach (QuestScript _questScript in questScripts) {
+                _questScript.DeSelect();
                 ObjectPooler.MyInstance.ReturnObjectToPool(_questScript.gameObject);
             }
             questScripts.Clear();

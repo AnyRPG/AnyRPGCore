@@ -181,6 +181,7 @@ namespace AnyRPG {
             foreach (MusicPlayerHighlightButton musicPlayerHighlightButton in musicPlayerHighlightButtons) {
                 if (musicPlayerHighlightButton != null) {
                     musicPlayerHighlightButton.gameObject.transform.SetParent(null);
+                    musicPlayerHighlightButton.DeSelect();
                     ObjectPooler.MyInstance.ReturnObjectToPool(musicPlayerHighlightButton.gameObject);
                 }
             }

@@ -48,6 +48,7 @@ namespace AnyRPG {
             //Debug.Log("LoadGamePanel.ClearLoadButtons()");
             foreach (NewGameClassSpecializationButton optionButton in optionButtons) {
                 if (optionButton != null) {
+                    optionButton.DeSelect();
                     ObjectPooler.MyInstance.ReturnObjectToPool(optionButton.gameObject);
                 }
             }

@@ -236,6 +236,7 @@ namespace AnyRPG {
             // clear the skill list so any skill left over from a previous time opening the window aren't shown
             foreach (InteractionPanelQuestScript qs in questScripts) {
                 qs.transform.SetParent(null);
+                qs.DeSelect();
                 ObjectPooler.MyInstance.ReturnObjectToPool(qs.gameObject);
             }
             questScripts.Clear();

@@ -231,6 +231,7 @@ namespace AnyRPG {
             foreach (RecipeScript recipeScript in recipeScripts.Values) {
                 //Debug.Log("The recipenode has a gameobject we need to clear");
                 recipeScript.gameObject.transform.SetParent(null);
+                recipeScript.DeSelect();
                 ObjectPooler.MyInstance.ReturnObjectToPool(recipeScript.gameObject);
             }
             recipeScripts.Clear();

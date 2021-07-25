@@ -193,6 +193,7 @@ namespace AnyRPG {
             foreach (SkillTrainerSkillScript skill in skillScripts) {
                 if (skill != null) {
                     skill.gameObject.transform.SetParent(null);
+                    skill.DeSelect();
                     ObjectPooler.MyInstance.ReturnObjectToPool(skill.gameObject);
                 }
             }
