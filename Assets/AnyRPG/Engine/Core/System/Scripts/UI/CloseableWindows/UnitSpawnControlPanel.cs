@@ -227,11 +227,14 @@ namespace AnyRPG {
             //SetPreviewTarget();
         }
 
+        /// <summary>
+        /// clear the unit list so any units left over from a previous time opening the window aren't shown
+        /// </summary>
         public void ClearPreviewButtons() {
-            // clear the quest list so any quests left over from a previous time opening the window aren't shown
-            //Debug.Log("LoadGamePanel.ClearLoadButtons()");
+            ///Debug.Log("UnitSpawnControlPanel.ClearPreviewButtons()");
             foreach (UnitSpawnButton unitSpawnButton in unitSpawnButtons) {
                 if (unitSpawnButton != null) {
+                    unitSpawnButton.DeSelect();
                     ObjectPooler.MyInstance.ReturnObjectToPool(unitSpawnButton.gameObject);
                 }
             }
