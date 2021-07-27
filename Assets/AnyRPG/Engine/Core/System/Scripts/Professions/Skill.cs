@@ -36,7 +36,7 @@ namespace AnyRPG {
             abilityList = new List<BaseAbility>();
             if (abilityNames != null) {
                 foreach (string abilityName in abilityNames) {
-                    BaseAbility baseAbility = SystemAbilityManager.MyInstance.GetResource(abilityName);
+                    BaseAbility baseAbility = SystemAbilityManager.Instance.GetResource(abilityName);
                     if (baseAbility != null) {
                         abilityList.Add(baseAbility);
                     } else {

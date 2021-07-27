@@ -9,7 +9,7 @@ namespace AnyRPG {
         #region Singleton
         private static SystemCutsceneManager instance;
 
-        public static SystemCutsceneManager MyInstance {
+        public static SystemCutsceneManager Instance {
             get {
                 if (instance == null) {
                     instance = FindObjectOfType<SystemCutsceneManager>();

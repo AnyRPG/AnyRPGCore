@@ -20,22 +20,22 @@ namespace AnyRPG {
 
         public void AddLoot() {
             //Debug.Log("LootUI.AddLoot()");
-            if (LootManager.MyInstance.Pages.Count > 0) {
+            if (LootManager.Instance.Pages.Count > 0) {
                 //Debug.Log("LootUI.AddLoot() pages.count: " + pages.Count);
 
-                for (int i = 0; i < LootManager.MyInstance.Pages[pageIndex].Count; i++) {
-                    if (LootManager.MyInstance.Pages[pageIndex][i] != null) {
+                for (int i = 0; i < LootManager.Instance.Pages[pageIndex].Count; i++) {
+                    if (LootManager.Instance.Pages[pageIndex][i] != null) {
                         // set the loot drop
-                        lootButtons[i].LootDrop = LootManager.MyInstance.Pages[pageIndex][i];
+                        lootButtons[i].LootDrop = LootManager.Instance.Pages[pageIndex][i];
 
                         // make sure the loot button is visible
                         lootButtons[i].gameObject.SetActive(true);
 
                         string colorString = "white";
-                        if (LootManager.MyInstance.Pages[pageIndex][i].MyItemQuality != null) {
-                            colorString = "#" + ColorUtility.ToHtmlStringRGB(LootManager.MyInstance.Pages[pageIndex][i].MyItemQuality.MyQualityColor);
+                        if (LootManager.Instance.Pages[pageIndex][i].MyItemQuality != null) {
+                            colorString = "#" + ColorUtility.ToHtmlStringRGB(LootManager.Instance.Pages[pageIndex][i].MyItemQuality.MyQualityColor);
                         }
-                        string title = string.Format("<color={0}>{1}</color>", colorString, LootManager.MyInstance.Pages[pageIndex][i].DisplayName);
+                        string title = string.Format("<color={0}>{1}</color>", colorString, LootManager.Instance.Pages[pageIndex][i].DisplayName);
                         // set the title
                         lootButtons[i].MyTitle.text = title;
                     }
@@ -46,7 +46,7 @@ namespace AnyRPG {
         }
 
         public void TakeAllLoot() {
-            LootManager.MyInstance.TakeAllLoot();
+            LootManager.Instance.TakeAllLoot();
         }
 
         public void BroadcastPageCountUpdate() {
@@ -63,17 +63,17 @@ namespace AnyRPG {
         public void TakeLoot(LootDrop lootDrop) {
             //Debug.Log("LootUI.TakeLoot(" + loot.MyName + ")");
 
-            LootManager.MyInstance.Pages[pageIndex].Remove(lootDrop);
-            LootManager.MyInstance.RemoveFromDroppedItems(lootDrop);
+            LootManager.Instance.Pages[pageIndex].Remove(lootDrop);
+            LootManager.Instance.RemoveFromDroppedItems(lootDrop);
             lootDrop.Remove();
-            SystemEventManager.MyInstance.NotifyOnTakeLoot();
+            SystemEventManager.TriggerEvent("OnTakeLoot", new EventParamProperties());
 
-            if (LootManager.MyInstance.Pages[pageIndex].Count == 0) {
+            if (LootManager.Instance.Pages[pageIndex].Count == 0) {
 
                 // removes the empty page
-                LootManager.MyInstance.Pages.Remove(LootManager.MyInstance.Pages[pageIndex]);
+                LootManager.Instance.Pages.Remove(LootManager.Instance.Pages[pageIndex]);
 
-                if (pageIndex == LootManager.MyInstance.Pages.Count && pageIndex > 0) {
+                if (pageIndex == LootManager.Instance.Pages.Count && pageIndex > 0) {
                     pageIndex--;
                 }
                 AddLoot();
@@ -87,7 +87,7 @@ namespace AnyRPG {
             foreach (LootButton lootButton in lootButtons) {
                 lootButton.CheckMouse();
             }
-            LootManager.MyInstance.ClearPages();
+            LootManager.Instance.ClearPages();
             OnCloseWindow(this);
         }
 
@@ -112,7 +112,7 @@ namespace AnyRPG {
         public int GetPageCount() {
             //Debug.Log("LootUI.GetPageCount()");
 
-            return LootManager.MyInstance.Pages.Count;
+            return LootManager.Instance.Pages.Count;
         }
 
 

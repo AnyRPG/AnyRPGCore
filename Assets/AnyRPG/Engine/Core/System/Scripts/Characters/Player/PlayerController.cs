@@ -83,20 +83,20 @@ namespace AnyRPG {
 
         private void CollectMoveInput() {
             //Debug.Log("PlayerController.CollectMoveInput()");
-            inputJump = InputManager.MyInstance.KeyBindWasPressed("JUMP");
-            inputStrafe = InputManager.MyInstance.KeyBindWasPressedOrHeld("STRAFELEFT") || InputManager.MyInstance.KeyBindWasPressedOrHeld("STRAFERIGHT");
+            inputJump = InputManager.Instance.KeyBindWasPressed("JUMP");
+            inputStrafe = InputManager.Instance.KeyBindWasPressedOrHeld("STRAFELEFT") || InputManager.Instance.KeyBindWasPressedOrHeld("STRAFERIGHT");
             //inputAimVertical = Input.GetAxisRaw("AimVertical");
             //inputAimHorizontal = Input.GetAxisRaw("AimHorizontal");
-            inputHorizontal = (InputManager.MyInstance.KeyBindWasPressedOrHeld("STRAFELEFT") ? -1 : 0) + (InputManager.MyInstance.KeyBindWasPressedOrHeld("STRAFERIGHT") ? 1 : 0);
-            inputTurn = (InputManager.MyInstance.KeyBindWasPressedOrHeld("TURNLEFT") ? -1 : 0) + (InputManager.MyInstance.KeyBindWasPressedOrHeld("TURNRIGHT") ? 1 : 0);
-            inputVertical = (InputManager.MyInstance.KeyBindWasPressedOrHeld("BACK") ? -1 : 0) + (InputManager.MyInstance.KeyBindWasPressedOrHeld("FORWARD") ? 1 : 0);
+            inputHorizontal = (InputManager.Instance.KeyBindWasPressedOrHeld("STRAFELEFT") ? -1 : 0) + (InputManager.Instance.KeyBindWasPressedOrHeld("STRAFERIGHT") ? 1 : 0);
+            inputTurn = (InputManager.Instance.KeyBindWasPressedOrHeld("TURNLEFT") ? -1 : 0) + (InputManager.Instance.KeyBindWasPressedOrHeld("TURNRIGHT") ? 1 : 0);
+            inputVertical = (InputManager.Instance.KeyBindWasPressedOrHeld("BACK") ? -1 : 0) + (InputManager.Instance.KeyBindWasPressedOrHeld("FORWARD") ? 1 : 0);
 
             NormalizedMoveInput = NormalizedVelocity(new Vector3(inputHorizontal, 0, inputVertical));
             TurnInput = new Vector3(inputTurn, 0, 0);
 
             if (HasMoveInput()) {
                 //Debug.Log("PlayerController.CollectMoveInput(): hasMoveInput");
-                PlayerManager.MyInstance.ActiveUnitController.CommonMovementNotifier();
+                PlayerManager.Instance.ActiveUnitController.CommonMovementNotifier();
             }
         }
 
@@ -110,7 +110,7 @@ namespace AnyRPG {
             //Debug.Log("PlayerController.Update()");
             ResetMoveInput();
 
-            if (PlayerManager.MyInstance.ActiveUnitController == null) {
+            if (PlayerManager.Instance.ActiveUnitController == null) {
                 //Debug.Log(gameObject.name + ".PlayerController.Update(): Player Unit is not spawned. Exiting");
                 return;
             }
@@ -126,7 +126,7 @@ namespace AnyRPG {
 
             HandleMouseOver();
 
-            if (PlayerManager.MyInstance?.MyCharacter?.CharacterStats?.IsAlive == false) {
+            if (PlayerManager.Instance?.MyCharacter?.CharacterStats?.IsAlive == false) {
                 // can't interact, perform abilities or handle movement when dead
                 return;
             }
@@ -139,7 +139,7 @@ namespace AnyRPG {
             RegisterTab();
 
             // everything below this point cannot be done while control locked
-            if (PlayerManager.MyInstance?.ActiveUnitController != null && PlayerManager.MyInstance.ActiveUnitController.ControlLocked == true) {
+            if (PlayerManager.Instance?.ActiveUnitController != null && PlayerManager.Instance.ActiveUnitController.ControlLocked == true) {
                 return;
             }
             CollectMoveInput();
@@ -192,18 +192,18 @@ namespace AnyRPG {
         }
 
         private void ToggleRun() {
-            if (InputManager.MyInstance.KeyBindWasPressed("TOGGLERUN")) {
+            if (InputManager.Instance.KeyBindWasPressed("TOGGLERUN")) {
                 EventParamProperties eventParamProperties = new EventParamProperties();
-                if (PlayerManager.MyInstance.ActiveUnitController.Walking == false) {
-                    PlayerManager.MyInstance.ActiveUnitController.Walking = true;
+                if (PlayerManager.Instance.ActiveUnitController.Walking == false) {
+                    PlayerManager.Instance.ActiveUnitController.Walking = true;
                     eventParamProperties.simpleParams.BoolParam = true;
                 } else {
-                    PlayerManager.MyInstance.ActiveUnitController.Walking = false;
+                    PlayerManager.Instance.ActiveUnitController.Walking = false;
                     eventParamProperties.simpleParams.BoolParam = false;
                 }
                 SystemEventManager.TriggerEvent("OnToggleRun", eventParamProperties);
-                MessageFeedManager.MyInstance.WriteMessage("Walk: " + PlayerManager.MyInstance.ActiveUnitController.Walking.ToString());
-                ToggleRunHandler(PlayerManager.MyInstance.ActiveUnitController.Walking);
+                MessageFeedManager.Instance.WriteMessage("Walk: " + PlayerManager.Instance.ActiveUnitController.Walking.ToString());
+                ToggleRunHandler(PlayerManager.Instance.ActiveUnitController.Walking);
             }
         }
 
@@ -220,11 +220,11 @@ namespace AnyRPG {
         /// </summary>
         private void HandleMouseOver() {
             //Debug.Log(gameObject.name + ".PlayerController.HandleMouseOver()");
-            if (CameraManager.MyInstance.MyActiveMainCamera == null) {
+            if (CameraManager.Instance.ActiveMainCamera == null) {
                 // we are in a cutscene and shouldn't be dealing with mouseover
                 return;
             }
-            Ray ray = CameraManager.MyInstance.MyActiveMainCamera.ScreenPointToRay(Input.mousePosition);
+            Ray ray = CameraManager.Instance.ActiveMainCamera.ScreenPointToRay(Input.mousePosition);
             int playerMask = 1 << LayerMask.NameToLayer("Player");
             int ignoreMask = 1 << LayerMask.NameToLayer("Ignore Raycast");
             int spellMask = 1 << LayerMask.NameToLayer("SpellEffects");
@@ -233,14 +233,14 @@ namespace AnyRPG {
 
             bool disableMouseOver = false;
             bool mouseOverNamePlate = false;
-            if (NamePlateManager.MyInstance != null) {
-                mouseOverNamePlate = NamePlateManager.MyInstance.MouseOverNamePlate();
+            if (NamePlateManager.Instance != null) {
+                mouseOverNamePlate = NamePlateManager.Instance.MouseOverNamePlate();
             }
 
             if (!EventSystem.current.IsPointerOverGameObject() && !mouseOverNamePlate) {
                 if (Physics.Raycast(ray, out mouseOverhit, 100, layerMask)) {
                     // prevent clicking on mount
-                    if (mouseOverhit.collider.gameObject != PlayerManager.MyInstance.ActiveUnitController.gameObject) {
+                    if (mouseOverhit.collider.gameObject != PlayerManager.Instance.ActiveUnitController.gameObject) {
                         Interactable newInteractable = mouseOverhit.collider.GetComponent<Interactable>();
                         if (newInteractable == null) {
                             newInteractable = mouseOverhit.collider.GetComponentInParent<Interactable>();
@@ -265,7 +265,7 @@ namespace AnyRPG {
                 }
             } else {
                 disableMouseOver = true;
-                //Debug.Log(gameObject.name + ".PlayerController.HandleMouseOver(): mouseovernameplate: " + NamePlateManager.MyInstance.MouseOverNamePlate() + "; pointerovergameobject: " + EventSystem.current.IsPointerOverGameObject());
+                //Debug.Log(gameObject.name + ".PlayerController.HandleMouseOver(): mouseovernameplate: " + NamePlateManager.Instance.MouseOverNamePlate() + "; pointerovergameobject: " + EventSystem.current.IsPointerOverGameObject());
             }
 
             if (disableMouseOver) {
@@ -282,7 +282,7 @@ namespace AnyRPG {
         /*
         public void HandleMouseOver(Interactable newInteractable) {
             //Debug.Log(gameObject.name + ".PlayerController.HandleMouseOver()");
-            if (CameraManager.MyInstance.MyActiveMainCamera == null) {
+            if (CameraManager.Instance.MyActiveMainCamera == null) {
                 // we are in a cutscene and shouldn't be dealing with mouseover
                 return;
             }
@@ -301,7 +301,7 @@ namespace AnyRPG {
         private void HandleRightMouseClick() {
             //Debug.Log(gameObject.name + ".PlayerController.HandleRightMouseClick()");
             // check if the right mouse button clicked on something and interact with it
-            if (InputManager.MyInstance.rightMouseButtonClicked && !EventSystem.current.IsPointerOverGameObject()) {
+            if (InputManager.Instance.rightMouseButtonClicked && !EventSystem.current.IsPointerOverGameObject()) {
                 //Debug.Log(gameObject.name + ".PlayerController.HandleRightMouseClick(): !EventSystem.current.IsPointerOverGameObject() == true!!!");
 
 
@@ -317,35 +317,35 @@ namespace AnyRPG {
         private void HandleLeftMouseClick() {
             //Debug.Log("PlayerController.HandleLeftMouseClick()");
             // Check if the left mouse button clicked on an interactable and focus it
-            if (!InputManager.MyInstance.leftMouseButtonClicked) {
+            if (!InputManager.Instance.leftMouseButtonClicked) {
                 return;
             }
 
-            if (CameraManager.MyInstance.MyActiveMainCamera == null) {
+            if (CameraManager.Instance.ActiveMainCamera == null) {
                 // probably in a cutscene.  don't respond to clicks on objects if there is no camera following the player
                 return;
             }
 
-            if (EventSystem.current.IsPointerOverGameObject() && !NamePlateManager.MyInstance.MouseOverNamePlate()) {
+            if (EventSystem.current.IsPointerOverGameObject() && !NamePlateManager.Instance.MouseOverNamePlate()) {
                 //Debug.Log("PlayerController.HandleLeftMouseClick(): clicked over UI and not nameplate.  exiting");
                 return;
             }
 
-            //if (InputManager.MyInstance.leftMouseButtonClicked && !EventSystem.current.IsPointerOverGameObject()) {
-            if (mouseOverInteractable == null && !NamePlateManager.MyInstance.MouseOverNamePlate()) {
+            //if (InputManager.Instance.leftMouseButtonClicked && !EventSystem.current.IsPointerOverGameObject()) {
+            if (mouseOverInteractable == null && !NamePlateManager.Instance.MouseOverNamePlate()) {
                 // Stop focusing any object
                 //RemoveFocus();
-                PlayerManager.MyInstance.UnitController.ClearTarget();
+                PlayerManager.Instance.UnitController.ClearTarget();
             } else if (mouseOverInteractable != null) {
-                PlayerManager.MyInstance.UnitController.SetTarget(mouseOverInteractable);
+                PlayerManager.Instance.UnitController.SetTarget(mouseOverInteractable);
             }
             //}
 
-            Ray ray = CameraManager.MyInstance.MyActiveMainCamera.ScreenPointToRay(Input.mousePosition);
+            Ray ray = CameraManager.Instance.ActiveMainCamera.ScreenPointToRay(Input.mousePosition);
             RaycastHit hit;
             if (Physics.Raycast(ray, out hit, 100, movementMask)) {
-                if (PlayerManager.MyInstance.ActiveCharacter.CharacterAbilityManager.WaitingForTarget()) {
-                    PlayerManager.MyInstance.ActiveCharacter.CharacterAbilityManager.SetGroundTarget(hit.point);
+                if (PlayerManager.Instance.ActiveCharacter.CharacterAbilityManager.WaitingForTarget()) {
+                    PlayerManager.Instance.ActiveCharacter.CharacterAbilityManager.SetGroundTarget(hit.point);
                 }
             }
         }
@@ -356,15 +356,15 @@ namespace AnyRPG {
         private void CheckForInteraction() {
             //Debug.Log(gameObject.name + ".PlayerController.CheckForInteraction()");
 
-            if (PlayerManager.MyInstance.UnitController == null) {
+            if (PlayerManager.Instance.UnitController == null) {
                 return;
             }
-            if (PlayerManager.MyInstance.UnitController.Target == null) {
+            if (PlayerManager.Instance.UnitController.Target == null) {
                 return;
             }
             if (InteractionSucceeded()) {
-                if (PlayerManager.MyInstance.ActiveUnitController != null && PlayerManager.MyInstance.ActiveUnitController.UnitMotor != null) {
-                    PlayerManager.MyInstance.ActiveUnitController.UnitMotor.StopFollowingTarget();
+                if (PlayerManager.Instance.ActiveUnitController != null && PlayerManager.Instance.ActiveUnitController.UnitMotor != null) {
+                    PlayerManager.Instance.ActiveUnitController.UnitMotor.StopFollowingTarget();
                 }
             }
         }
@@ -372,19 +372,19 @@ namespace AnyRPG {
         private bool InteractionSucceeded() {
             //Debug.Log(gameObject.name + ".PlayerController.InteractionSucceeded()");
 
-            if (PlayerManager.MyInstance.UnitController == null) {
+            if (PlayerManager.Instance.UnitController == null) {
                 return false;
             }
-            if (PlayerManager.MyInstance.UnitController.Target == null) {
+            if (PlayerManager.Instance.UnitController.Target == null) {
                 //Debug.Log(gameObject.name + ".PlayerController.InteractionSucceeded(): target is null. return false.");
                 return false;
             }
             //if (IsTargetInHitBox(target)) {
             // get reference to name now since interactable could change scene and then target reference is lost
-            string targetDisplayName = PlayerManager.MyInstance.UnitController.Target.DisplayName;
-            if (PlayerManager.MyInstance.UnitController.Target.Interact(PlayerManager.MyInstance.ActiveUnitController.CharacterUnit, true)) {
+            string targetDisplayName = PlayerManager.Instance.UnitController.Target.DisplayName;
+            if (PlayerManager.Instance.UnitController.Target.Interact(PlayerManager.Instance.ActiveUnitController.CharacterUnit, true)) {
                 //Debug.Log(gameObject.name + ".PlayerController.InteractionSucceeded(): Interaction Succeeded.  Setting interactable to null");
-                SystemEventManager.MyInstance.NotifyOnInteractionStarted(targetDisplayName);
+                SystemEventManager.Instance.NotifyOnInteractionStarted(targetDisplayName);
                 return true;
             }
             //Debug.Log(gameObject.name + ".PlayerController.InteractionSucceeded(): returning false");
@@ -395,11 +395,11 @@ namespace AnyRPG {
         }
 
         private void RegisterTab() {
-            if (InputManager.MyInstance.KeyBindWasPressed("NEXTTARGET")) {
+            if (InputManager.Instance.KeyBindWasPressed("NEXTTARGET")) {
                 //Debug.Log("Tab Target Registered");
-                Interactable oldTarget = PlayerManager.MyInstance.UnitController.Target;
+                Interactable oldTarget = PlayerManager.Instance.UnitController.Target;
                 // moving this inside getnexttabtarget
-                //PlayerManager.MyInstance.UnitController.ClearTarget();
+                //PlayerManager.Instance.UnitController.ClearTarget();
                 GetNextTabTarget(oldTarget);
             }
         }
@@ -410,7 +410,7 @@ namespace AnyRPG {
             TimeSpan timeSinceLastTab = currentTime - lastTabTargetTime;
             lastTabTargetTime = DateTime.Now;
             int validMask = 1 << LayerMask.NameToLayer("CharacterUnit");
-            Collider[] hitColliders = Physics.OverlapSphere(PlayerManager.MyInstance.ActiveUnitController.transform.position, tabTargetMaxDistance, validMask);
+            Collider[] hitColliders = Physics.OverlapSphere(PlayerManager.Instance.ActiveUnitController.transform.position, tabTargetMaxDistance, validMask);
             int i = 0;
             //Debug.Log("GetNextTabTarget(): collider length: " + hitColliders.Length + "; index: " + tabTargetIndex);
             int preferredTargetIndex = -1;
@@ -422,11 +422,11 @@ namespace AnyRPG {
                 //Debug.Log("GetNextTabTarget(): collider length: " + hitColliders.Length);
                 GameObject collidedGameObject = hitCollider.gameObject;
                 UnitController targetCharacterUnit = collidedGameObject.GetComponent<UnitController>();
-                if (targetCharacterUnit != null && targetCharacterUnit.CharacterUnit.BaseCharacter.CharacterStats.IsAlive == true && Faction.RelationWith(targetCharacterUnit.CharacterUnit.BaseCharacter, PlayerManager.MyInstance.MyCharacter.Faction) <= -1) {
+                if (targetCharacterUnit != null && targetCharacterUnit.CharacterUnit.BaseCharacter.CharacterStats.IsAlive == true && Faction.RelationWith(targetCharacterUnit.CharacterUnit.BaseCharacter, PlayerManager.Instance.MyCharacter.Faction) <= -1) {
 
                     // check if the unit is actually in front of our character.
                     // not doing any cone or angles for now, anywhere in front will do.  might adjust this a bit later to prevent targetting units nearly adjacent to us and far away
-                    Vector3 transformedPosition = PlayerManager.MyInstance.ActiveUnitController.transform.InverseTransformPoint(collidedGameObject.transform.position);
+                    Vector3 transformedPosition = PlayerManager.Instance.ActiveUnitController.transform.InverseTransformPoint(collidedGameObject.transform.position);
                     if (transformedPosition.z > 0f) {
                         characterUnitList.Add(targetCharacterUnit);
 
@@ -449,7 +449,7 @@ namespace AnyRPG {
                 if (closestTargetIndex == -1) {
                     closestTargetIndex = i;
                 }
-                if (Vector3.Distance(PlayerManager.MyInstance.ActiveUnitController.transform.position, collidedGameObject.transform.position) < Vector3.Distance(PlayerManager.MyInstance.ActiveUnitController.transform.position, characterUnitList[closestTargetIndex].transform.position)) {
+                if (Vector3.Distance(PlayerManager.Instance.ActiveUnitController.transform.position, collidedGameObject.transform.position) < Vector3.Distance(PlayerManager.Instance.ActiveUnitController.transform.position, characterUnitList[closestTargetIndex].transform.position)) {
                     closestTargetIndex = i;
                 }
                 // this next variable shouldn't actually be needed.  i think it was a logic error with not tracking the target index properly
@@ -470,36 +470,36 @@ namespace AnyRPG {
             // otherwise, just keep going through the index
             if (timeSinceLastTab.TotalSeconds > 3f) {
                 //Debug.Log("PlayerController.GetNextTabTarget(): More than 3 seconds since last tab");
-                if (closestTargetIndex != -1 && characterUnitList[closestTargetIndex] != PlayerManager.MyInstance.UnitController.Target) {
+                if (closestTargetIndex != -1 && characterUnitList[closestTargetIndex] != PlayerManager.Instance.UnitController.Target) {
                     // prevent a tab from re-targetting the same unit just because it's closest to us
                     // we only want to clear the target if we are actually setting a new target
-                    PlayerManager.MyInstance.UnitController.ClearTarget();
-                    PlayerManager.MyInstance.UnitController.SetTarget(characterUnitList[closestTargetIndex]);
+                    PlayerManager.Instance.UnitController.ClearTarget();
+                    PlayerManager.Instance.UnitController.SetTarget(characterUnitList[closestTargetIndex]);
                     // we need to manually set this here, otherwise our tab target index won't match our actual target, resulting in the next tab possibly not switching to a new target
                     tabTargetIndex = closestTargetIndex;
                     //} else if (preferredTarget != null) {
                 } else {
-                    if (characterUnitList[tabTargetIndex] != PlayerManager.MyInstance.UnitController.Target) {
+                    if (characterUnitList[tabTargetIndex] != PlayerManager.Instance.UnitController.Target) {
                         // we only want to clear the target if we are actually setting a new target
-                        PlayerManager.MyInstance.UnitController.ClearTarget();
-                        PlayerManager.MyInstance.UnitController.SetTarget(characterUnitList[tabTargetIndex]);
+                        PlayerManager.Instance.UnitController.ClearTarget();
+                        PlayerManager.Instance.UnitController.SetTarget(characterUnitList[tabTargetIndex]);
                     }
                 }
             } else {
                 //Debug.Log("PlayerController.GetNextTabTarget(): Less than 3 seconds since last tab, using index: " + tabTargetIndex);
                 // we only want to clear the target if we are actually setting a new target
-                if (characterUnitList[tabTargetIndex] != PlayerManager.MyInstance.UnitController.Target) {
-                    PlayerManager.MyInstance.UnitController.ClearTarget();
-                    PlayerManager.MyInstance.UnitController.SetTarget(characterUnitList[tabTargetIndex]);
+                if (characterUnitList[tabTargetIndex] != PlayerManager.Instance.UnitController.Target) {
+                    PlayerManager.Instance.UnitController.ClearTarget();
+                    PlayerManager.Instance.UnitController.SetTarget(characterUnitList[tabTargetIndex]);
                 }
             }
         }
 
         public void InterActWithTarget(Interactable interactable) {
             //Debug.Log(gameObject.name + ".InterActWithTarget(" + interactable.gameObject.name + ")");
-            if (PlayerManager.MyInstance.UnitController.Target != interactable) {
-                PlayerManager.MyInstance.UnitController.ClearTarget();
-                PlayerManager.MyInstance.UnitController.SetTarget(interactable);
+            if (PlayerManager.Instance.UnitController.Target != interactable) {
+                PlayerManager.Instance.UnitController.ClearTarget();
+                PlayerManager.Instance.UnitController.SetTarget(interactable);
             }
             if (InteractionSucceeded()) {
                 //Debug.Log("We were able to interact with the target");
@@ -507,9 +507,9 @@ namespace AnyRPG {
                 StopInteract();
             } else {
                 //Debug.Log("we were out of range and must move toward the target to be able to interact with it");
-                if (PlayerManager.MyInstance.PlayerUnitMovementController.useMeshNav) {
+                if (PlayerManager.Instance.PlayerUnitMovementController.useMeshNav) {
                     //Debug.Log("Nav Mesh Agent is enabled. Setting follow target: " + target.name);
-                    PlayerManager.MyInstance.ActiveUnitController.UnitMotor.FollowTarget(PlayerManager.MyInstance.UnitController.Target);
+                    PlayerManager.Instance.ActiveUnitController.UnitMotor.FollowTarget(PlayerManager.Instance.UnitController.Target);
                 } else {
                     //Debug.Log("Nav Mesh Agent is disabled and you are out of range");
                 }
@@ -518,7 +518,7 @@ namespace AnyRPG {
 
         public void InterActWithInteractableOption(Interactable interactable, InteractableOptionComponent interactableOption) {
             //Debug.Log(gameObject.name + ".InterActWithTarget(" + interactable.MyName + ", " + _gameObject.name.ToString() + ")");
-            PlayerManager.MyInstance.UnitController.SetTarget(interactable);
+            PlayerManager.Instance.UnitController.SetTarget(interactable);
             if (interactable == null) {
                 //Debug.Log(gameObject.name + ".PlayerController.InteractWithTarget(): interactable is null!!!");
             }
@@ -528,9 +528,9 @@ namespace AnyRPG {
                 StopInteract();
             } else {
                 //Debug.Log("we were out of range and must move toward the target to be able to interact with it");
-                if (PlayerManager.MyInstance.PlayerUnitMovementController.useMeshNav) {
+                if (PlayerManager.Instance.PlayerUnitMovementController.useMeshNav) {
                     //Debug.Log("Nav Mesh Agent is enabled. Setting follow target: " + target.name);
-                    PlayerManager.MyInstance.ActiveUnitController.UnitMotor.FollowTarget(PlayerManager.MyInstance.UnitController.Target);
+                    PlayerManager.Instance.ActiveUnitController.UnitMotor.FollowTarget(PlayerManager.Instance.UnitController.Target);
                 } else {
                     //Debug.Log("Nav Mesh Agent is disabled and you are out of range");
                 }
@@ -540,12 +540,12 @@ namespace AnyRPG {
         private bool InteractionWithOptionSucceeded(InteractableOptionComponent interactableOption) {
             //Debug.Log(gameObject.name + ".PlayerController.InteractionSucceeded()");
             //if (IsTargetInHitBox(target)) {
-            if (interactableOption.Interact(PlayerManager.MyInstance.ActiveUnitController.CharacterUnit)) {
+            if (interactableOption.Interact(PlayerManager.Instance.ActiveUnitController.CharacterUnit)) {
                 //Debug.Log(gameObject.name + ".PlayerController.InteractionSucceeded(): Interaction Succeeded.  Setting interactable to null");
-                SystemEventManager.MyInstance.NotifyOnInteractionStarted(PlayerManager.MyInstance.UnitController.Target.DisplayName);
-                SystemEventManager.MyInstance.NotifyOnInteractionWithOptionStarted(interactableOption);
+                SystemEventManager.Instance.NotifyOnInteractionStarted(PlayerManager.Instance.UnitController.Target.DisplayName);
+                SystemEventManager.Instance.NotifyOnInteractionWithOptionStarted(interactableOption);
                 // no longer needed since targeting is changed and we don't want to lose target in the middle of attacking
-                //PlayerManager.MyInstance.ActiveUnitController.SetTarget(null);
+                //PlayerManager.Instance.ActiveUnitController.SetTarget(null);
                 return true;
             }
             //Debug.Log(gameObject.name + ".PlayerController.InteractionSucceeded(): returning false");
@@ -568,22 +568,22 @@ namespace AnyRPG {
 
         private void HandleCancelButtonPressed() {
             //Debug.Log("HandleCancelButtonPressed()");
-            if (InputManager.MyInstance.KeyBindWasPressed("CANCEL")) {
-                PlayerManager.MyInstance.UnitController.ClearTarget();
-                if (PlayerManager.MyInstance.ActiveCharacter.CharacterStats.IsAlive != false) {
+            if (InputManager.Instance.KeyBindWasPressed("CANCEL")) {
+                PlayerManager.Instance.UnitController.ClearTarget();
+                if (PlayerManager.Instance.ActiveCharacter.CharacterStats.IsAlive != false) {
                     // prevent character from swapping to third party controller while dead
-                    PlayerManager.MyInstance.ActiveCharacter.CharacterAbilityManager.StopCasting();
+                    PlayerManager.Instance.ActiveCharacter.CharacterAbilityManager.StopCasting();
                 }
-                PlayerManager.MyInstance.ActiveCharacter.CharacterAbilityManager.DeActivateTargettingMode();
+                PlayerManager.Instance.ActiveCharacter.CharacterAbilityManager.DeActivateTargettingMode();
             }
         }
 
         public void RegisterAbilityButtonPresses() {
             //Debug.Log("PlayerController.RegisterAbilityButtonPresses()");
-            foreach (KeyBindNode keyBindNode in KeyBindManager.MyInstance.MyKeyBinds.Values) {
+            foreach (KeyBindNode keyBindNode in KeyBindManager.Instance.MyKeyBinds.Values) {
                 //Debug.Log("PlayerController.RegisterAbilityButtonPresses() keyBindNode.GetKeyDown: " + keyBindNode.GetKeyDown);
                 //Debug.Log("PlayerController.RegisterAbilityButtonPresses() keyBindNode.GetKeyDown: " + keyBindNode.GetKey);
-                if (keyBindNode.MyKeyBindType == KeyBindType.Action && InputManager.MyInstance.KeyBindWasPressed(keyBindNode.MyKeyBindID) == true) {
+                if (keyBindNode.MyKeyBindType == KeyBindType.Action && InputManager.Instance.KeyBindWasPressed(keyBindNode.MyKeyBindID) == true) {
                     //Debug.Log("PlayerController.RegisterAbilityButtonPresses(): key pressed: " + keyBindNode.MyKeyCode.ToString());
                     keyBindNode.MyActionButton.OnClick(true);
                 }
@@ -593,8 +593,8 @@ namespace AnyRPG {
         public void HandleClearTarget(Interactable oldTarget) {
             //Debug.Log("PlayerController.HandleClearTarget()");
 
-            UIManager.MyInstance.FocusUnitFrameController.ClearTarget();
-            NamePlateManager.MyInstance.ClearFocus();
+            UIManager.Instance.FocusUnitFrameController.ClearTarget();
+            NamePlateManager.Instance.ClearFocus();
             oldTarget?.UnitComponentController?.HighlightController?.HandleClearTarget();
         }
 
@@ -606,8 +606,8 @@ namespace AnyRPG {
             NamePlateUnit namePlateUnit = (newTarget as NamePlateUnit);
             if (namePlateUnit?.NamePlateController != null && namePlateUnit.NamePlateController.SuppressNamePlate == false) {
                 //Debug.Log("PlayerController.SetTarget(): InamePlateUnit is not null");
-                UIManager.MyInstance.FocusUnitFrameController.SetTarget(namePlateUnit.NamePlateController);
-                NamePlateManager.MyInstance.SetFocus(namePlateUnit);
+                UIManager.Instance.FocusUnitFrameController.SetTarget(namePlateUnit.NamePlateController);
+                NamePlateManager.Instance.SetFocus(namePlateUnit);
             } else {
                 //Debug.Log("PlayerController.SetTarget(): InamePlateUnit is null ???!?");
             }
@@ -678,14 +678,14 @@ namespace AnyRPG {
         public void LockMovement() {
             //Debug.Log(gameObject.name + ".PlayerController.LockMovement()");
             canMove = false;
-            if (PlayerManager.MyInstance.ActiveUnitController != null) {
-                PlayerManager.MyInstance.ActiveUnitController.UnitAnimator.SetMoving(false);
+            if (PlayerManager.Instance.ActiveUnitController != null) {
+                PlayerManager.Instance.ActiveUnitController.UnitAnimator.SetMoving(false);
 
                 // why do we do this?
                 //baseCharacter.UnitController.MyCharacterAnimator.EnableRootMotion();
 
-                if (PlayerManager.MyInstance.PlayerUnitMovementController != null) {
-                    PlayerManager.MyInstance.PlayerUnitMovementController.currentMoveVelocity = new Vector3(0, 0, 0);
+                if (PlayerManager.Instance.PlayerUnitMovementController != null) {
+                    PlayerManager.Instance.PlayerUnitMovementController.currentMoveVelocity = new Vector3(0, 0, 0);
                 }
             }
         }
@@ -702,8 +702,8 @@ namespace AnyRPG {
         public void StopInteract() {
             // the idea of this code is that it will allow us to keep an NPC focused if we back out of range while its interactable popup closes
             // if we don't have anything focused, then we were interacting with someting environmental and definitely want to clear that because it can lead to a hidden target being set
-            if (UIManager.MyInstance.FocusUnitFrameController.UnitNamePlateController == null && PlayerManager.MyInstance.UnitController != null) {
-                PlayerManager.MyInstance.UnitController.ClearTarget();
+            if (UIManager.Instance.FocusUnitFrameController.UnitNamePlateController == null && PlayerManager.Instance.UnitController != null) {
+                PlayerManager.Instance.UnitController.ClearTarget();
             }
         }
 
@@ -711,58 +711,58 @@ namespace AnyRPG {
             //Debug.Log("PlayerController.SubscribeToUnitEvents()");
             
             // if player was agrod at spawn, they may have a target already since we subscribe on model ready
-            PlayerManager.MyInstance.ActiveUnitController.OnSetTarget += HandleSetTarget;
-            if (PlayerManager.MyInstance.ActiveUnitController.Target != null) {
-                HandleSetTarget(PlayerManager.MyInstance.ActiveUnitController.Target);
+            PlayerManager.Instance.ActiveUnitController.OnSetTarget += HandleSetTarget;
+            if (PlayerManager.Instance.ActiveUnitController.Target != null) {
+                HandleSetTarget(PlayerManager.Instance.ActiveUnitController.Target);
             }
 
-            PlayerManager.MyInstance.ActiveUnitController.OnClearTarget += HandleClearTarget;
-            PlayerManager.MyInstance.ActiveUnitController.UnitAnimator.OnStartCasting += HandleStartCasting;
-            PlayerManager.MyInstance.ActiveUnitController.UnitAnimator.OnEndCasting += HandleEndCasting;
-            PlayerManager.MyInstance.ActiveUnitController.UnitAnimator.OnStartAttacking += HandleStartAttacking;
-            PlayerManager.MyInstance.ActiveUnitController.UnitAnimator.OnEndAttacking += HandleEndAttacking;
-            PlayerManager.MyInstance.ActiveUnitController.UnitAnimator.OnStartLevitated += HandleStartLevitated;
-            PlayerManager.MyInstance.ActiveUnitController.UnitAnimator.OnEndLevitated += HandleEndLevitated;
-            PlayerManager.MyInstance.ActiveUnitController.UnitAnimator.OnStartStunned += HandleStartStunned;
-            PlayerManager.MyInstance.ActiveUnitController.UnitAnimator.OnEndStunned += HandleEndStunned;
-            PlayerManager.MyInstance.ActiveUnitController.UnitAnimator.OnStartRevive += HandleStartRevive;
-            PlayerManager.MyInstance.ActiveUnitController.UnitAnimator.OnDeath += HandleDeath;
-            PlayerManager.MyInstance.ActiveUnitController.OnClassChange += HandleClassChange;
-            PlayerManager.MyInstance.ActiveUnitController.OnFactionChange += HandleFactionChange;
-            PlayerManager.MyInstance.ActiveUnitController.OnSpecializationChange += HandleSpecializationChange;
-            PlayerManager.MyInstance.ActiveUnitController.OnActivateMountedState += HandleActivateMountedState;
-            PlayerManager.MyInstance.ActiveUnitController.OnDeActivateMountedState += HandleDeActivateMountedState;
-            PlayerManager.MyInstance.ActiveUnitController.OnMessageFeed += HandleMessageFeed;
-            PlayerManager.MyInstance.ActiveUnitController.OnUnitDestroy += HandleUnitDestroy;
-            PlayerManager.MyInstance.ActiveUnitController.OnCastCancel += HandleCastCancel;
+            PlayerManager.Instance.ActiveUnitController.OnClearTarget += HandleClearTarget;
+            PlayerManager.Instance.ActiveUnitController.UnitAnimator.OnStartCasting += HandleStartCasting;
+            PlayerManager.Instance.ActiveUnitController.UnitAnimator.OnEndCasting += HandleEndCasting;
+            PlayerManager.Instance.ActiveUnitController.UnitAnimator.OnStartAttacking += HandleStartAttacking;
+            PlayerManager.Instance.ActiveUnitController.UnitAnimator.OnEndAttacking += HandleEndAttacking;
+            PlayerManager.Instance.ActiveUnitController.UnitAnimator.OnStartLevitated += HandleStartLevitated;
+            PlayerManager.Instance.ActiveUnitController.UnitAnimator.OnEndLevitated += HandleEndLevitated;
+            PlayerManager.Instance.ActiveUnitController.UnitAnimator.OnStartStunned += HandleStartStunned;
+            PlayerManager.Instance.ActiveUnitController.UnitAnimator.OnEndStunned += HandleEndStunned;
+            PlayerManager.Instance.ActiveUnitController.UnitAnimator.OnStartRevive += HandleStartRevive;
+            PlayerManager.Instance.ActiveUnitController.UnitAnimator.OnDeath += HandleDeath;
+            PlayerManager.Instance.ActiveUnitController.OnClassChange += HandleClassChange;
+            PlayerManager.Instance.ActiveUnitController.OnFactionChange += HandleFactionChange;
+            PlayerManager.Instance.ActiveUnitController.OnSpecializationChange += HandleSpecializationChange;
+            PlayerManager.Instance.ActiveUnitController.OnActivateMountedState += HandleActivateMountedState;
+            PlayerManager.Instance.ActiveUnitController.OnDeActivateMountedState += HandleDeActivateMountedState;
+            PlayerManager.Instance.ActiveUnitController.OnMessageFeed += HandleMessageFeed;
+            PlayerManager.Instance.ActiveUnitController.OnUnitDestroy += HandleUnitDestroy;
+            PlayerManager.Instance.ActiveUnitController.OnCastCancel += HandleCastCancel;
 
             // subscribe and call in case the namePlate is already spawned
-            PlayerManager.MyInstance.ActiveUnitController.OnInitializeNamePlate += HandleInitializeNamePlate;
+            PlayerManager.Instance.ActiveUnitController.OnInitializeNamePlate += HandleInitializeNamePlate;
             HandleInitializeNamePlate();
         }
 
         public void UnsubscribeFromUnitEvents() {
-            PlayerManager.MyInstance.ActiveUnitController.OnSetTarget -= HandleSetTarget;
-            PlayerManager.MyInstance.ActiveUnitController.OnClearTarget -= HandleClearTarget;
-            PlayerManager.MyInstance.ActiveUnitController.UnitAnimator.OnStartCasting -= HandleStartCasting;
-            PlayerManager.MyInstance.ActiveUnitController.UnitAnimator.OnEndCasting -= HandleEndCasting;
-            PlayerManager.MyInstance.ActiveUnitController.UnitAnimator.OnStartAttacking -= HandleStartAttacking;
-            PlayerManager.MyInstance.ActiveUnitController.UnitAnimator.OnEndAttacking -= HandleEndAttacking;
-            PlayerManager.MyInstance.ActiveUnitController.UnitAnimator.OnStartLevitated -= HandleStartLevitated;
-            PlayerManager.MyInstance.ActiveUnitController.UnitAnimator.OnEndLevitated -= HandleEndLevitated;
-            PlayerManager.MyInstance.ActiveUnitController.UnitAnimator.OnStartStunned -= HandleStartStunned;
-            PlayerManager.MyInstance.ActiveUnitController.UnitAnimator.OnEndStunned -= HandleEndStunned;
-            PlayerManager.MyInstance.ActiveUnitController.UnitAnimator.OnStartRevive -= HandleStartRevive;
-            PlayerManager.MyInstance.ActiveUnitController.UnitAnimator.OnDeath -= HandleDeath;
-            PlayerManager.MyInstance.ActiveUnitController.OnClassChange -= HandleClassChange;
-            PlayerManager.MyInstance.ActiveUnitController.OnFactionChange -= HandleFactionChange;
-            PlayerManager.MyInstance.ActiveUnitController.OnSpecializationChange -= HandleSpecializationChange;
-            PlayerManager.MyInstance.ActiveUnitController.OnActivateMountedState -= HandleActivateMountedState;
-            PlayerManager.MyInstance.ActiveUnitController.OnDeActivateMountedState -= HandleDeActivateMountedState;
-            PlayerManager.MyInstance.ActiveUnitController.OnMessageFeed -= HandleMessageFeed;
-            PlayerManager.MyInstance.ActiveUnitController.OnInitializeNamePlate -= HandleInitializeNamePlate;
-            PlayerManager.MyInstance.ActiveUnitController.OnUnitDestroy -= HandleUnitDestroy;
-            PlayerManager.MyInstance.ActiveUnitController.OnCastCancel -= HandleCastCancel;
+            PlayerManager.Instance.ActiveUnitController.OnSetTarget -= HandleSetTarget;
+            PlayerManager.Instance.ActiveUnitController.OnClearTarget -= HandleClearTarget;
+            PlayerManager.Instance.ActiveUnitController.UnitAnimator.OnStartCasting -= HandleStartCasting;
+            PlayerManager.Instance.ActiveUnitController.UnitAnimator.OnEndCasting -= HandleEndCasting;
+            PlayerManager.Instance.ActiveUnitController.UnitAnimator.OnStartAttacking -= HandleStartAttacking;
+            PlayerManager.Instance.ActiveUnitController.UnitAnimator.OnEndAttacking -= HandleEndAttacking;
+            PlayerManager.Instance.ActiveUnitController.UnitAnimator.OnStartLevitated -= HandleStartLevitated;
+            PlayerManager.Instance.ActiveUnitController.UnitAnimator.OnEndLevitated -= HandleEndLevitated;
+            PlayerManager.Instance.ActiveUnitController.UnitAnimator.OnStartStunned -= HandleStartStunned;
+            PlayerManager.Instance.ActiveUnitController.UnitAnimator.OnEndStunned -= HandleEndStunned;
+            PlayerManager.Instance.ActiveUnitController.UnitAnimator.OnStartRevive -= HandleStartRevive;
+            PlayerManager.Instance.ActiveUnitController.UnitAnimator.OnDeath -= HandleDeath;
+            PlayerManager.Instance.ActiveUnitController.OnClassChange -= HandleClassChange;
+            PlayerManager.Instance.ActiveUnitController.OnFactionChange -= HandleFactionChange;
+            PlayerManager.Instance.ActiveUnitController.OnSpecializationChange -= HandleSpecializationChange;
+            PlayerManager.Instance.ActiveUnitController.OnActivateMountedState -= HandleActivateMountedState;
+            PlayerManager.Instance.ActiveUnitController.OnDeActivateMountedState -= HandleDeActivateMountedState;
+            PlayerManager.Instance.ActiveUnitController.OnMessageFeed -= HandleMessageFeed;
+            PlayerManager.Instance.ActiveUnitController.OnInitializeNamePlate -= HandleInitializeNamePlate;
+            PlayerManager.Instance.ActiveUnitController.OnUnitDestroy -= HandleUnitDestroy;
+            PlayerManager.Instance.ActiveUnitController.OnCastCancel -= HandleCastCancel;
 
         }
 
@@ -773,8 +773,8 @@ namespace AnyRPG {
 
         public void HandleInitializeNamePlate() {
             //Debug.Log("PlayerController.HandleInitializeNamePlate()");
-            if (PlayerManager.MyInstance?.ActiveUnitController?.NamePlateController?.NamePlate != null) {
-                PlayerManager.MyInstance.ActiveUnitController.NamePlateController.NamePlate.SetPlayerOwnerShip();
+            if (PlayerManager.Instance?.ActiveUnitController?.NamePlateController?.NamePlate != null) {
+                PlayerManager.Instance.ActiveUnitController.NamePlateController.NamePlate.SetPlayerOwnerShip();
             }
         }
 
@@ -782,23 +782,23 @@ namespace AnyRPG {
             //Debug.Log("PlayerController.HandleUnitDestroy()");
             SystemEventManager.TriggerEvent("OnPlayerUnitDespawn", new EventParamProperties());
             UnsubscribeFromUnitEvents();
-            PlayerManager.MyInstance.SetUnitController(null);
+            PlayerManager.Instance.SetUnitController(null);
         }
 
         public void HandleMessageFeed(string message) {
-            MessageFeedManager.MyInstance.WriteMessage(message);
+            MessageFeedManager.Instance.WriteMessage(message);
         }
 
         public void HandleActivateMountedState(UnitController mountUnitController) {
 
-            PlayerManager.MyInstance.ActiveUnitController.UnitAnimator.SetDefaultOverrideController();
+            PlayerManager.Instance.ActiveUnitController.UnitAnimator.SetDefaultOverrideController();
 
-            PlayerManager.MyInstance.SetActiveUnitController(mountUnitController);
+            PlayerManager.Instance.SetActiveUnitController(mountUnitController);
 
-            CameraManager.MyInstance.SwitchToMainCamera();
-            CameraManager.MyInstance.MainCameraController.InitializeCamera(PlayerManager.MyInstance.ActiveUnitController.transform);
+            CameraManager.Instance.SwitchToMainCamera();
+            CameraManager.Instance.MainCameraController.InitializeCamera(PlayerManager.Instance.ActiveUnitController.transform);
             if (SystemConfigurationManager.Instance.UseThirdPartyMovementControl == true) {
-                PlayerManager.MyInstance.EnableMovementControllers();
+                PlayerManager.Instance.EnableMovementControllers();
             }
 
             EventParamProperties eventParam = new EventParamProperties();
@@ -808,15 +808,15 @@ namespace AnyRPG {
         public void HandleDeActivateMountedState() {
 
             if (SystemConfigurationManager.Instance.UseThirdPartyMovementControl == true) {
-                PlayerManager.MyInstance.DisableMovementControllers();
+                PlayerManager.Instance.DisableMovementControllers();
             }
-            PlayerManager.MyInstance.SetActiveUnitController(PlayerManager.MyInstance.UnitController);
-            if (PlayerManager.MyInstance.UnitController != null) {
-                PlayerManager.MyInstance.UnitController.UnitAnimator.SetCorrectOverrideController();
+            PlayerManager.Instance.SetActiveUnitController(PlayerManager.Instance.UnitController);
+            if (PlayerManager.Instance.UnitController != null) {
+                PlayerManager.Instance.UnitController.UnitAnimator.SetCorrectOverrideController();
             }
 
-            CameraManager.MyInstance.ActivateMainCamera();
-            CameraManager.MyInstance.MainCameraController.InitializeCamera(PlayerManager.MyInstance.ActiveUnitController.transform);
+            CameraManager.Instance.ActivateMainCamera();
+            CameraManager.Instance.MainCameraController.InitializeCamera(PlayerManager.Instance.ActiveUnitController.transform);
 
             EventParamProperties eventParam = new EventParamProperties();
             SystemEventManager.TriggerEvent("OnEndRiding", eventParam);
@@ -825,55 +825,55 @@ namespace AnyRPG {
 
         public void HandleFactionChange(Faction newFaction, Faction oldFaction) {
             SystemEventManager.TriggerEvent("OnFactionChange", new EventParamProperties());
-            MessageFeedManager.MyInstance.WriteMessage("Changed faction to " + newFaction.DisplayName);
+            MessageFeedManager.Instance.WriteMessage("Changed faction to " + newFaction.DisplayName);
         }
 
         public void HandleClassChange(CharacterClass newCharacterClass, CharacterClass oldCharacterClass) {
-            SystemEventManager.MyInstance.NotifyOnClassChange(newCharacterClass, oldCharacterClass);
-            MessageFeedManager.MyInstance.WriteMessage("Changed class to " + newCharacterClass.DisplayName);
+            SystemEventManager.Instance.NotifyOnClassChange(newCharacterClass, oldCharacterClass);
+            MessageFeedManager.Instance.WriteMessage("Changed class to " + newCharacterClass.DisplayName);
         }
 
         public void HandleSpecializationChange(ClassSpecialization newSpecialization, ClassSpecialization oldSpecialization) {
             SystemEventManager.TriggerEvent("OnSpecializationChange", new EventParamProperties());
             if (newSpecialization != null) {
-                MessageFeedManager.MyInstance.WriteMessage("Changed specialization to " + newSpecialization.DisplayName);
+                MessageFeedManager.Instance.WriteMessage("Changed specialization to " + newSpecialization.DisplayName);
             }
         }
 
 
         public void HandleDeath() {
             //Debug.Log(gameObject.name + ".PlayerController.HandleDeath()");
-            PlayerManager.MyInstance.ActiveUnitController.UnitAnimator.SetDefaultOverrideController();
+            PlayerManager.Instance.ActiveUnitController.UnitAnimator.SetDefaultOverrideController();
             SystemEventManager.TriggerEvent("OnDeath", new EventParamProperties());
         }
 
         public void HandleStartRevive() {
-            PlayerManager.MyInstance.ActiveUnitController.UnitAnimator.SetDefaultOverrideController();
+            PlayerManager.Instance.ActiveUnitController.UnitAnimator.SetDefaultOverrideController();
         }
 
         public void HandleStartLevitated() {
-            PlayerManager.MyInstance.ActiveUnitController.UnitAnimator.SetDefaultOverrideController();
+            PlayerManager.Instance.ActiveUnitController.UnitAnimator.SetDefaultOverrideController();
             EventParamProperties eventParam = new EventParamProperties();
             SystemEventManager.TriggerEvent("OnStartLevitated", eventParam);
         }
 
         public void HandleEndLevitated(bool swapAnimator) {
             if (swapAnimator) {
-                PlayerManager.MyInstance.ActiveUnitController.UnitAnimator.SetCorrectOverrideController();
+                PlayerManager.Instance.ActiveUnitController.UnitAnimator.SetCorrectOverrideController();
                 EventParamProperties eventParam = new EventParamProperties();
                 SystemEventManager.TriggerEvent("OnEndLevitated", eventParam);
             }
         }
 
         public void HandleStartStunned() {
-            PlayerManager.MyInstance.ActiveUnitController.UnitAnimator.SetDefaultOverrideController();
+            PlayerManager.Instance.ActiveUnitController.UnitAnimator.SetDefaultOverrideController();
             EventParamProperties eventParam = new EventParamProperties();
             SystemEventManager.TriggerEvent("OnStartStunned", eventParam);
         }
 
         public void HandleEndStunned(bool swapAnimator) {
             if (swapAnimator) {
-                PlayerManager.MyInstance.ActiveUnitController.UnitAnimator.SetCorrectOverrideController();
+                PlayerManager.Instance.ActiveUnitController.UnitAnimator.SetCorrectOverrideController();
                 EventParamProperties eventParam = new EventParamProperties();
                 SystemEventManager.TriggerEvent("OnEndStunned", eventParam);
             }
@@ -882,7 +882,7 @@ namespace AnyRPG {
         public void HandleStartCasting(bool swapAnimator) {
             EventParamProperties eventParam = new EventParamProperties();
             if (swapAnimator == true) {
-                PlayerManager.MyInstance.ActiveUnitController.UnitAnimator.SetDefaultOverrideController();
+                PlayerManager.Instance.ActiveUnitController.UnitAnimator.SetDefaultOverrideController();
             }
             SystemEventManager.TriggerEvent("OnStartCasting", eventParam);
         }
@@ -890,7 +890,7 @@ namespace AnyRPG {
         public void HandleEndCasting(bool swapAnimator) {
             EventParamProperties eventParam = new EventParamProperties();
             if (swapAnimator) {
-                PlayerManager.MyInstance.ActiveUnitController.UnitAnimator.SetCorrectOverrideController();
+                PlayerManager.Instance.ActiveUnitController.UnitAnimator.SetCorrectOverrideController();
                 SystemEventManager.TriggerEvent("OnEndCasting", eventParam);
             }
         }
@@ -898,7 +898,7 @@ namespace AnyRPG {
         public void HandleStartAttacking(bool swapAnimator) {
             EventParamProperties eventParam = new EventParamProperties();
             if (swapAnimator) {
-                PlayerManager.MyInstance.ActiveUnitController.UnitAnimator.SetDefaultOverrideController();
+                PlayerManager.Instance.ActiveUnitController.UnitAnimator.SetDefaultOverrideController();
             }
             SystemEventManager.TriggerEvent("OnStartAttacking", eventParam);
         }
@@ -906,8 +906,8 @@ namespace AnyRPG {
         public void HandleEndAttacking(bool swapAnimator) {
             EventParamProperties eventParam = new EventParamProperties();
             if (swapAnimator) {
-                if (PlayerManager.MyInstance.ActiveUnitController != null) {
-                    PlayerManager.MyInstance.ActiveUnitController.UnitAnimator.SetCorrectOverrideController();
+                if (PlayerManager.Instance.ActiveUnitController != null) {
+                    PlayerManager.Instance.ActiveUnitController.UnitAnimator.SetCorrectOverrideController();
                 }
                 SystemEventManager.TriggerEvent("OnEndAttacking", eventParam);
             }

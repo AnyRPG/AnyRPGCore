@@ -31,7 +31,7 @@ namespace AnyRPG {
             if (returnObjects != null) {
                 foreach (GameObject go in returnObjects.Values) {
                     //Debug.Log(MyName + ".ProjectileEffect.Cast(): found gameobject: " + go.name);
-                    go.transform.parent = PlayerManager.MyInstance.EffectPrefabParent.transform;
+                    go.transform.parent = PlayerManager.Instance.EffectPrefabParent.transform;
                     ProjectileScript projectileScript = go.GetComponentInChildren<ProjectileScript>();
                     if (projectileScript != null) {
                         //Debug.Log(MyName + ".ProjectileEffect.Cast(): found gameobject: " + go.name + " and it has projectile script");
@@ -51,14 +51,14 @@ namespace AnyRPG {
             //Debug.Log(DisplayName + ".ProjectileEffect.HandleCollission()");
             PerformAbilityHit(source, target, abilityEffectInput);
             projectileScript.OnCollission -= HandleCollission;
-            ObjectPooler.MyInstance.ReturnObjectToPool(_abilityEffectObject);
+            ObjectPooler.Instance.ReturnObjectToPool(_abilityEffectObject);
         }
 
         public override void SetupScriptableObjects() {
             base.SetupScriptableObjects();
             if (flightAudioProfileNames != null) {
                 foreach (string audioProfileName in flightAudioProfileNames) {
-                    AudioProfile audioProfile = SystemAudioProfileManager.MyInstance.GetResource(audioProfileName);
+                    AudioProfile audioProfile = SystemAudioProfileManager.Instance.GetResource(audioProfileName);
                     if (audioProfile != null) {
                         flightAudioProfiles.Add(audioProfile);
                     } else {

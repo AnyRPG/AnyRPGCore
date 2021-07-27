@@ -106,22 +106,22 @@ namespace AnyRPG {
             }
             if (eventData.button == PointerEventData.InputButton.Left) {
                 //Debug.Log("BagButton.OnPointerClick() LEFT CLICK DETECTED");
-                if (InventoryManager.Instance.FromSlot != null && HandScript.MyInstance.MyMoveable != null && HandScript.MyInstance.MyMoveable is Bag) {
+                if (InventoryManager.Instance.FromSlot != null && HandScript.Instance.MyMoveable != null && HandScript.Instance.MyMoveable is Bag) {
                     if (MyBagNode.MyBag != null) {
-                        InventoryManager.Instance.SwapBags(MyBagNode.MyBag, HandScript.MyInstance.MyMoveable as Bag);
+                        InventoryManager.Instance.SwapBags(MyBagNode.MyBag, HandScript.Instance.MyMoveable as Bag);
                     } else {
-                        Bag tmp = (Bag)HandScript.MyInstance.MyMoveable;
+                        Bag tmp = (Bag)HandScript.Instance.MyMoveable;
                         tmp.MyBagNode = bagNode;
                         tmp.Use();
                         MyBagNode.MyBag = tmp;
-                        HandScript.MyInstance.Drop();
+                        HandScript.Instance.Drop();
                         InventoryManager.Instance.FromSlot = null;
 
                     }
                 } else if (Input.GetKey(KeyCode.LeftShift)) {
                     //Debug.Log("BagButton.OnPointerClick() LEFT CLICK DETECTED WITH SHIFT KEY on bagNode.mybag: " + bagNode.MyBag.GetInstanceID());
                     //Debug.Log("InventoryManager.RemoveBag(): Found matching bag in bagNode: " + bagNode.MyBag.GetInstanceID() + "; " + bag.GetInstanceID());
-                    HandScript.MyInstance.TakeMoveable(MyBagNode.MyBag);
+                    HandScript.Instance.TakeMoveable(MyBagNode.MyBag);
                 } else if (bagNode?.MyBag != null) {
                     bagNode.BagWindow.ToggleOpenClose();
                 }
@@ -145,11 +145,11 @@ namespace AnyRPG {
 
         public void OnPointerEnter(PointerEventData eventData) {
 
-            UIManager.MyInstance.ShowToolTip(transform.position, this);
+            UIManager.Instance.ShowToolTip(transform.position, this);
         }
 
         public void OnPointerExit(PointerEventData eventData) {
-            UIManager.MyInstance.HideToolTip();
+            UIManager.Instance.HideToolTip();
         }
 
         public void OnDestroy() {

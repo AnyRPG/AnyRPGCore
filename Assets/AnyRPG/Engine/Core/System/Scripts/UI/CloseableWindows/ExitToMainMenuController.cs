@@ -9,14 +9,14 @@ namespace AnyRPG {
 
         public void CancelExit() {
             //Debug.Log("ExitMenuController.CancelExit()");
-            SystemWindowManager.MyInstance.exitToMainMenuWindow.CloseWindow();
+            SystemWindowManager.Instance.exitToMainMenuWindow.CloseWindow();
         }
 
         public void ConfirmExit() {
             //Debug.Log("ExitMenuController.ConfirmExit()");
-            SystemWindowManager.MyInstance.exitToMainMenuWindow.CloseWindow();
-            SystemWindowManager.MyInstance.playerOptionsMenuWindow.CloseWindow();
-            LevelManager.MyInstance.LoadMainMenu();
+            SystemWindowManager.Instance.exitToMainMenuWindow.CloseWindow();
+            SystemWindowManager.Instance.playerOptionsMenuWindow.CloseWindow();
+            LevelManager.Instance.LoadMainMenu();
         }
 
     }

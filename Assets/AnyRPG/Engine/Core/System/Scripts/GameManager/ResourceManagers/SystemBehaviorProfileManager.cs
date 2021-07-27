@@ -10,7 +10,7 @@ namespace AnyRPG {
         #region Singleton
         private static SystemBehaviorProfileManager instance;
 
-        public static SystemBehaviorProfileManager MyInstance {
+        public static SystemBehaviorProfileManager Instance {
             get {
                 if (instance == null) {
                     instance = FindObjectOfType<SystemBehaviorProfileManager>();

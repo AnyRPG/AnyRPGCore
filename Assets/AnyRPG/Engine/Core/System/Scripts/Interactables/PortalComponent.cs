@@ -21,7 +21,7 @@ namespace AnyRPG {
             PopupWindowManager.Instance.interactionWindow.CloseWindow();
             //Debug.Log(gameObject.name + ".PortalInteractable.Interact(): window should now be closed!!!!!!!!!!!!!!!!!");
             if (Props.LocationTag != null && Props.LocationTag != string.Empty) {
-                LevelManager.MyInstance.OverrideSpawnLocationTag = Props.LocationTag;
+                LevelManager.Instance.OverrideSpawnLocationTag = Props.LocationTag;
             }
             return true;
         }

@@ -9,7 +9,7 @@ namespace AnyRPG {
         #region Singleton
         private static SystemResourceDescriptionManager instance;
 
-        public static SystemResourceDescriptionManager MyInstance {
+        public static SystemResourceDescriptionManager Instance {
             get {
                 if (instance == null) {
                     instance = FindObjectOfType<SystemResourceDescriptionManager>();

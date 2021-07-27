@@ -158,7 +158,7 @@ namespace AnyRPG {
             List<string> abilitiesList = new List<string>();
 
             if (useDamagePerSecond) {
-                abilitiesList.Add(string.Format("Damage Per Second: {0}", GetDamagePerSecond(PlayerManager.MyInstance.MyCharacter.CharacterStats.Level)));
+                abilitiesList.Add(string.Format("Damage Per Second: {0}", GetDamagePerSecond(PlayerManager.Instance.MyCharacter.CharacterStats.Level)));
             }
             if (onHitEffectList != null) {
                 foreach (AbilityEffect abilityEffect in onHitEffectList) {
@@ -172,7 +172,7 @@ namespace AnyRPG {
 
             if (weaponSkill != null) {
                 string colorString = "white";
-                if (!CanEquip(PlayerManager.MyInstance.ActiveCharacter)) {
+                if (!CanEquip(PlayerManager.Instance.ActiveCharacter)) {
                     colorString = "red";
                 }
                 abilitiesString += string.Format("\n<color={0}>Required Skill: {1}</color>", colorString, weaponSkill.DisplayName);
@@ -188,7 +188,7 @@ namespace AnyRPG {
             }
             List<CharacterClass> allowedCharacterClasses = GetAllowedCharacterClasses();
             if (allowedCharacterClasses != null && allowedCharacterClasses.Count > 0 && !allowedCharacterClasses.Contains(baseCharacter.CharacterClass)) {
-                MessageFeedManager.MyInstance.WriteMessage("You do not have the right weapon skill to equip " + DisplayName);
+                MessageFeedManager.Instance.WriteMessage("You do not have the right weapon skill to equip " + DisplayName);
                 return false;
             }
             return true;
@@ -207,7 +207,7 @@ namespace AnyRPG {
             if (onHitEffects != null) {
                 foreach (string onHitEffectName in onHitEffects) {
                     if (onHitEffectName != null && onHitEffectName != string.Empty) {
-                        AbilityEffect abilityEffect = SystemAbilityEffectManager.MyInstance.GetResource(onHitEffectName);
+                        AbilityEffect abilityEffect = SystemAbilityEffectManager.Instance.GetResource(onHitEffectName);
                         if (abilityEffect != null) {
                             onHitEffectList.Add(abilityEffect);
                         } else {
@@ -222,7 +222,7 @@ namespace AnyRPG {
             if (defaultHitEffects != null) {
                 foreach (string defaultHitEffectName in defaultHitEffects) {
                     if (defaultHitEffectName != null && defaultHitEffectName != string.Empty) {
-                        AbilityEffect abilityEffect = SystemAbilityEffectManager.MyInstance.GetResource(defaultHitEffectName);
+                        AbilityEffect abilityEffect = SystemAbilityEffectManager.Instance.GetResource(defaultHitEffectName);
                         if (abilityEffect != null) {
                             defaultHitEffectList.Add(abilityEffect);
                         } else {
@@ -237,7 +237,7 @@ namespace AnyRPG {
 
             animationProfile = null;
             if (animationProfileName != null && animationProfileName != string.Empty) {
-                AnimationProfile tmpAnimationProfile = SystemAnimationProfileManager.MyInstance.GetResource(animationProfileName);
+                AnimationProfile tmpAnimationProfile = SystemAnimationProfileManager.Instance.GetResource(animationProfileName);
                 if (tmpAnimationProfile != null) {
                     animationProfile = tmpAnimationProfile;
                 } else {
@@ -246,7 +246,7 @@ namespace AnyRPG {
             }
 
             if (defaultHitAudioProfile != null && defaultHitAudioProfile != string.Empty) {
-                AudioProfile audioProfile = SystemAudioProfileManager.MyInstance.GetResource(defaultHitAudioProfile);
+                AudioProfile audioProfile = SystemAudioProfileManager.Instance.GetResource(defaultHitAudioProfile);
                 if (audioProfile != null) {
                     defaultHitSoundEffects = audioProfile.AudioClips;
                 } else {
@@ -255,7 +255,7 @@ namespace AnyRPG {
             }
 
             if (weaponType != null && weaponType != string.Empty) {
-                WeaponSkill tmpWeaponSkill = SystemWeaponSkillManager.MyInstance.GetResource(weaponType);
+                WeaponSkill tmpWeaponSkill = SystemWeaponSkillManager.Instance.GetResource(weaponType);
                 if (tmpWeaponSkill != null) {
                     weaponSkill = tmpWeaponSkill;
                 } else {

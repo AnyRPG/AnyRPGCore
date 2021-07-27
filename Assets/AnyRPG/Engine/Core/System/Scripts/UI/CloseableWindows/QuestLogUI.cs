@@ -16,14 +16,14 @@ namespace AnyRPG {
         #region Singleton
         private static QuestLogUI instance;
 
-        public static QuestLogUI MyInstance {
+        public static QuestLogUI Instance {
             get {
-                if (instance == null) {
-                    instance = FindObjectOfType<QuestLogUI>();
-                }
-
                 return instance;
             }
+        }
+
+        private void Awake() {
+            instance = this;
         }
         #endregion
 
@@ -55,13 +55,16 @@ namespace AnyRPG {
         public QuestScript MySelectedQuestScript { get => selectedQuestScript; set => selectedQuestScript = value; }
 
         private void Start() {
-            SystemEventManager.MyInstance.OnQuestStatusUpdated += UpdateQuestCount;
-            //QuestLog.MyInstance.OnQuestCompleted += HandleCompleteQuest;
+            SystemEventManager.StartListening("OnQuestStatusUpdated", HandleQuestStatusUpdated);
+            UpdateQuestCount();
+        }
+
+        public void HandleQuestStatusUpdated(string eventName, EventParamProperties eventParamProperties) {
             UpdateQuestCount();
         }
 
         private void UpdateQuestCount() {
-            questCount.text = QuestLog.MyInstance.MyQuests.Count + " / " + maxCount;
+            questCount.text = QuestLog.Instance.MyQuests.Count + " / " + maxCount;
         }
 
         public void ShowQuestsCommon() {
@@ -72,8 +75,8 @@ namespace AnyRPG {
 
             QuestScript firstAvailableQuest = null;
 
-            foreach (Quest quest in QuestLog.MyInstance.MyQuests.Values) {
-                GameObject go = ObjectPooler.MyInstance.GetPooledObject(questPrefab, questParent);
+            foreach (Quest quest in QuestLog.Instance.MyQuests.Values) {
+                GameObject go = ObjectPooler.Instance.GetPooledObject(questPrefab, questParent);
 
                 QuestScript qs = go.GetComponent<QuestScript>();
                 qs.SetQuest(quest);
@@ -176,14 +179,14 @@ namespace AnyRPG {
             //Debug.Log("QuestLogUI.ClearQuests()");
             foreach (QuestScript _questScript in questScripts) {
                 _questScript.DeSelect();
-                ObjectPooler.MyInstance.ReturnObjectToPool(_questScript.gameObject);
+                ObjectPooler.Instance.ReturnObjectToPool(_questScript.gameObject);
             }
             questScripts.Clear();
             selectedQuestScript = null;
         }
 
         public void AbandonQuest() {
-            QuestLog.MyInstance.AbandonQuest(MySelectedQuestScript.MyQuest);
+            QuestLog.Instance.AbandonQuest(MySelectedQuestScript.MyQuest);
             ShowQuestsCommon();
         }
     }

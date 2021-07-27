@@ -50,7 +50,7 @@ namespace AnyRPG {
         }
 
         public void CommonSelect() {
-            NewGamePanel.MyInstance.ShowClassSpecialization(this);
+            NewGamePanel.Instance.ShowClassSpecialization(this);
         }
 
         public void RawSelect() {

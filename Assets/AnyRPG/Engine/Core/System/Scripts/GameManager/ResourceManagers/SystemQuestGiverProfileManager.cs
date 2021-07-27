@@ -9,7 +9,7 @@ namespace AnyRPG {
         #region Singleton
         private static SystemQuestGiverProfileManager instance;
 
-        public static SystemQuestGiverProfileManager MyInstance {
+        public static SystemQuestGiverProfileManager Instance {
             get {
                 if (instance == null) {
                     instance = FindObjectOfType<SystemQuestGiverProfileManager>();

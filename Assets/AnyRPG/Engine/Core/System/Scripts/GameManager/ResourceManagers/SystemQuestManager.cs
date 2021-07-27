@@ -14,7 +14,7 @@ namespace AnyRPG {
         #region Singleton
         private static SystemQuestManager instance;
 
-        public static SystemQuestManager MyInstance {
+        public static SystemQuestManager Instance {
             get {
                 if (instance == null) {
                     instance = FindObjectOfType<SystemQuestManager>();
@@ -34,8 +34,8 @@ namespace AnyRPG {
                 return;
             }
             base.CreateEventSubscriptions();
-            SystemEventManager.MyInstance.OnPlayerConnectionSpawn += AcceptAchievements;
-            if (PlayerManager.MyInstance.PlayerConnectionSpawned == true) {
+            SystemEventManager.StartListening("OnPlayerConnectionSpawn", HandlePlayerConnectionSpawn);
+            if (PlayerManager.Instance.PlayerConnectionSpawned == true) {
                 AcceptAchievements();
             }
             eventSubscriptionsInitialized = true;
@@ -47,8 +47,12 @@ namespace AnyRPG {
                 return;
             }
             base.CleanupEventSubscriptions();
-            SystemEventManager.MyInstance.OnPlayerConnectionSpawn -= AcceptAchievements;
+            SystemEventManager.StopListening("OnPlayerConnectionSpawn", HandlePlayerConnectionSpawn);
             eventSubscriptionsInitialized = false;
+        }
+
+        public void HandlePlayerConnectionSpawn(string eventName, EventParamProperties eventParamProperties) {
+            AcceptAchievements();
         }
 
         public override void OnDisable() {

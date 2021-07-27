@@ -21,9 +21,9 @@ namespace AnyRPG {
         }
 
         public void CleanupWindowEventSubscriptions() {
-            if (SystemWindowManager.MyInstance != null && SystemWindowManager.MyInstance.nameChangeWindow != null && SystemWindowManager.MyInstance.nameChangeWindow.CloseableWindowContents != null) {
-                (SystemWindowManager.MyInstance.nameChangeWindow.CloseableWindowContents as NameChangePanelController).OnConfirmAction -= HandleConfirmAction;
-                (SystemWindowManager.MyInstance.nameChangeWindow.CloseableWindowContents as NameChangePanelController).OnCloseWindow -= CleanupEventSubscriptions;
+            if (SystemWindowManager.Instance != null && SystemWindowManager.Instance.nameChangeWindow != null && SystemWindowManager.Instance.nameChangeWindow.CloseableWindowContents != null) {
+                (SystemWindowManager.Instance.nameChangeWindow.CloseableWindowContents as NameChangePanelController).OnConfirmAction -= HandleConfirmAction;
+                (SystemWindowManager.Instance.nameChangeWindow.CloseableWindowContents as NameChangePanelController).OnCloseWindow -= CleanupEventSubscriptions;
             }
             windowEventSubscriptionsInitialized = false;
         }
@@ -50,9 +50,9 @@ namespace AnyRPG {
             }
             base.Interact(source, optionIndex);
 
-            SystemWindowManager.MyInstance.nameChangeWindow.OpenWindow();
-            (SystemWindowManager.MyInstance.nameChangeWindow.CloseableWindowContents as NameChangePanelController).OnConfirmAction += HandleConfirmAction;
-            (SystemWindowManager.MyInstance.nameChangeWindow.CloseableWindowContents as NameChangePanelController).OnCloseWindow += CleanupEventSubscriptions;
+            SystemWindowManager.Instance.nameChangeWindow.OpenWindow();
+            (SystemWindowManager.Instance.nameChangeWindow.CloseableWindowContents as NameChangePanelController).OnConfirmAction += HandleConfirmAction;
+            (SystemWindowManager.Instance.nameChangeWindow.CloseableWindowContents as NameChangePanelController).OnCloseWindow += CleanupEventSubscriptions;
             windowEventSubscriptionsInitialized = true;
             return true;
         }
@@ -65,7 +65,7 @@ namespace AnyRPG {
 
         public override void StopInteract() {
             base.StopInteract();
-            SystemWindowManager.MyInstance.nameChangeWindow.CloseWindow();
+            SystemWindowManager.Instance.nameChangeWindow.CloseWindow();
         }
 
         public override bool HasMiniMapText() {

@@ -43,7 +43,7 @@ namespace AnyRPG {
 
 
         private void AddRemoverButton() {
-            GameObject go = ObjectPooler.MyInstance.GetPooledObject(ColorButtonPrefab);
+            GameObject go = ObjectPooler.Instance.GetPooledObject(ColorButtonPrefab);
             ColorHandler ch = go.GetComponent<ColorHandler>();
             ch.SetupRemover(Avatar, ColorName);
             Image i = go.GetComponent<Image>();
@@ -58,7 +58,7 @@ namespace AnyRPG {
         private void AddButton(OverlayColorData ocd) {
             //Debug.Log("AvailableColorsHandler.AddButton(): " + ColorName);
 
-            GameObject go = ObjectPooler.MyInstance.GetPooledObject(ColorButtonPrefab);
+            GameObject go = ObjectPooler.Instance.GetPooledObject(ColorButtonPrefab);
             ColorHandler ch = go.GetComponent<ColorHandler>();
             ch.Setup(Avatar, ColorName, ocd);
             Image i = go.GetComponent<Image>();

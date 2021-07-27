@@ -90,10 +90,10 @@ namespace AnyRPG {
             base.TakeLoot();
             foreach (LootableCharacterComponent lootableCharacter in currencyNodes.Keys) {
                 if (currencyNodes[lootableCharacter].currency != null) {
-                    PlayerManager.MyInstance.MyCharacter.CharacterCurrencyManager.AddCurrency(currencyNodes[lootableCharacter].currency, currencyNodes[lootableCharacter].MyAmount);
+                    PlayerManager.Instance.MyCharacter.CharacterCurrencyManager.AddCurrency(currencyNodes[lootableCharacter].currency, currencyNodes[lootableCharacter].MyAmount);
                     List<CurrencyNode> tmpCurrencyNode = new List<CurrencyNode>();
                     tmpCurrencyNode.Add(currencyNodes[lootableCharacter]);
-                    CombatLogUI.MyInstance.WriteSystemMessage("Gained " + CurrencyConverter.RecalculateValues(tmpCurrencyNode, false).Value.Replace("\n", ", "));
+                    CombatLogUI.Instance.WriteSystemMessage("Gained " + CurrencyConverter.RecalculateValues(tmpCurrencyNode, false).Value.Replace("\n", ", "));
                     lootableCharacter.TakeCurrencyLoot();
                 }
             }
@@ -147,7 +147,7 @@ namespace AnyRPG {
 
         public override void SetBackgroundImage(Image backgroundImage) {
             base.SetBackgroundImage(backgroundImage);
-            UIManager.MyInstance.SetItemBackground(MyItem, backgroundImage, new Color32(0, 0, 0, 255));
+            UIManager.Instance.SetItemBackground(MyItem, backgroundImage, new Color32(0, 0, 0, 255));
         }
 
         public override bool TakeLoot() {

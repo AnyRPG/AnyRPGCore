@@ -49,10 +49,10 @@ namespace AnyRPG {
 
 
         public void CommonSelect() {
-            if (UnitSpawnControlPanel.MyInstance.MySelectedUnitSpawnButton != null && UnitSpawnControlPanel.MyInstance.MySelectedUnitSpawnButton != this) {
-                UnitSpawnControlPanel.MyInstance.MySelectedUnitSpawnButton.DeSelect();
+            if (UnitSpawnControlPanel.Instance.MySelectedUnitSpawnButton != null && UnitSpawnControlPanel.Instance.MySelectedUnitSpawnButton != this) {
+                UnitSpawnControlPanel.Instance.MySelectedUnitSpawnButton.DeSelect();
             }
-            UnitSpawnControlPanel.MyInstance.ShowUnit(this);
+            UnitSpawnControlPanel.Instance.ShowUnit(this);
         }
 
         public void RawSelect() {

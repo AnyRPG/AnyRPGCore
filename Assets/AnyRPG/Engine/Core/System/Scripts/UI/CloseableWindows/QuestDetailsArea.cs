@@ -136,7 +136,7 @@ namespace AnyRPG {
 
             if (GetHighlightedAbilityRewardIcons().Contains(rewardButton)) {
                 //Debug.Log("QuestDetailsArea.HandleAttemptSelect(): it's an ability reward; current count of highlighted icons: " + GetHighlightedAbilityRewardIcons().Count + "; max: " + quest.MyMaxAbilityRewards);
-                if (quest.MyMaxAbilityRewards > 0 && GetHighlightedAbilityRewardIcons().Count > quest.MyMaxAbilityRewards || PlayerManager.MyInstance.MyCharacter.CharacterAbilityManager.HasAbility(rewardButton.Describable as BaseAbility)) {
+                if (quest.MyMaxAbilityRewards > 0 && GetHighlightedAbilityRewardIcons().Count > quest.MyMaxAbilityRewards || PlayerManager.Instance.MyCharacter.CharacterAbilityManager.HasAbility(rewardButton.Describable as BaseAbility)) {
                     rewardButton.Unselect();
                 }
             }
@@ -155,7 +155,7 @@ namespace AnyRPG {
 
             questDescription.text = quest.GetObjectiveDescription();
 
-            experienceReward.text += LevelEquations.GetXPAmountForQuest(PlayerManager.MyInstance.MyCharacter.CharacterStats.Level, quest) + " XP";
+            experienceReward.text += LevelEquations.GetXPAmountForQuest(PlayerManager.Instance.MyCharacter.CharacterStats.Level, quest) + " XP";
 
             // display currency rewards
 
@@ -186,7 +186,7 @@ namespace AnyRPG {
                 }
             }
             for (int i = 0; i < quest.MyItemRewards.Count; i++) {
-                RewardButton rewardIcon = ObjectPooler.MyInstance.GetPooledObject(rewardIconPrefab, itemIconsArea.transform).GetComponent<RewardButton>();
+                RewardButton rewardIcon = ObjectPooler.Instance.GetPooledObject(rewardIconPrefab, itemIconsArea.transform).GetComponent<RewardButton>();
                 rewardIcon.OnAttempSelect += HandleAttemptSelect;
                 //Debug.Log("QuestDetailsArea.ShowDescription(): setting describable (and attemptselect) for: " + quest.MyItemRewards[i]);
                 rewardIcon.SetDescribable(quest.MyItemRewards[i]);
@@ -205,7 +205,7 @@ namespace AnyRPG {
                 abilitiesHeading.GetComponent<TextMeshProUGUI>().text = "";
             }
             for (int i = 0; i < quest.MyAbilityRewards.Count; i++) {
-                RewardButton rewardIcon = ObjectPooler.MyInstance.GetPooledObject(rewardIconPrefab, abilityIconsArea.transform).GetComponent<RewardButton>();
+                RewardButton rewardIcon = ObjectPooler.Instance.GetPooledObject(rewardIconPrefab, abilityIconsArea.transform).GetComponent<RewardButton>();
                 rewardIcon.OnAttempSelect += HandleAttemptSelect;
                 //Debug.Log("QuestDetailsArea.ShowDescription(): setting describable (and attemptselect) for: " + quest.MyAbilityRewards[i]);
                 rewardIcon.SetDescribable(quest.MyAbilityRewards[i]);
@@ -224,7 +224,7 @@ namespace AnyRPG {
                 factionsHeading.GetComponent<TextMeshProUGUI>().text = "";
             }
             for (int i = 0; i < quest.MyFactionRewards.Count; i++) {
-                FactionRewardButton rewardIcon = ObjectPooler.MyInstance.GetPooledObject(factionRewardIconPrefab, factionIconsArea.transform).GetComponent<FactionRewardButton>();
+                FactionRewardButton rewardIcon = ObjectPooler.Instance.GetPooledObject(factionRewardIconPrefab, factionIconsArea.transform).GetComponent<FactionRewardButton>();
                 rewardIcon.OnAttempSelect += HandleAttemptSelect;
                 //Debug.Log("QuestDetailsArea.ShowDescription(): setting describable (and attemptselect) for: " + quest.MyFactionRewards[i]);
                 rewardIcon.SetDescribable(quest.MyFactionRewards[i]);
@@ -243,7 +243,7 @@ namespace AnyRPG {
                 skillHeading.GetComponent<TextMeshProUGUI>().text = "";
             }
             for (int i = 0; i < quest.MySkillRewards.Count; i++) {
-                RewardButton rewardIcon = ObjectPooler.MyInstance.GetPooledObject(rewardIconPrefab, skillIconsArea.transform).GetComponent<RewardButton>();
+                RewardButton rewardIcon = ObjectPooler.Instance.GetPooledObject(rewardIconPrefab, skillIconsArea.transform).GetComponent<RewardButton>();
                 rewardIcon.SetDescribable(quest.MySkillRewards[i]);
                 skillRewardIcons.Add(rewardIcon);
             }
@@ -268,28 +268,28 @@ namespace AnyRPG {
             // items
             foreach (RewardButton rewardIcon in itemRewardIcons) {
                 rewardIcon.Unselect();
-                ObjectPooler.MyInstance.ReturnObjectToPool(rewardIcon.gameObject);
+                ObjectPooler.Instance.ReturnObjectToPool(rewardIcon.gameObject);
             }
             itemRewardIcons.Clear();
 
             // abilties
             foreach (RewardButton rewardIcon in abilityRewardIcons) {
                 rewardIcon.Unselect();
-                ObjectPooler.MyInstance.ReturnObjectToPool(rewardIcon.gameObject);
+                ObjectPooler.Instance.ReturnObjectToPool(rewardIcon.gameObject);
             }
             abilityRewardIcons.Clear();
 
             // skills
             foreach (RewardButton rewardIcon in skillRewardIcons) {
                 rewardIcon.Unselect();
-                ObjectPooler.MyInstance.ReturnObjectToPool(rewardIcon.gameObject);
+                ObjectPooler.Instance.ReturnObjectToPool(rewardIcon.gameObject);
             }
             skillRewardIcons.Clear();
 
             // factions
             foreach (RewardButton rewardIcon in factionRewardIcons) {
                 rewardIcon.Unselect();
-                ObjectPooler.MyInstance.ReturnObjectToPool(rewardIcon.gameObject);
+                ObjectPooler.Instance.ReturnObjectToPool(rewardIcon.gameObject);
             }
             factionRewardIcons.Clear();
         }

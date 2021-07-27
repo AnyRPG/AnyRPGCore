@@ -35,7 +35,7 @@ namespace AnyRPG {
         public override void SetupScriptableObjects() {
             base.SetupScriptableObjects();
             if (cutsceneName != null && cutsceneName != string.Empty) {
-                Cutscene tmpCutscene = SystemCutsceneManager.MyInstance.GetResource(cutsceneName);
+                Cutscene tmpCutscene = SystemCutsceneManager.Instance.GetResource(cutsceneName);
                 if (tmpCutscene != null) {
                     cutscene = tmpCutscene;
                 } else {

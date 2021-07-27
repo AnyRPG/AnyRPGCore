@@ -41,7 +41,7 @@ namespace AnyRPG {
         }
 
         public void CommonSelect() {
-            NewGamePanel.MyInstance.ShowCharacterClass(this);
+            NewGamePanel.Instance.ShowCharacterClass(this);
         }
 
         public void RawSelect() {

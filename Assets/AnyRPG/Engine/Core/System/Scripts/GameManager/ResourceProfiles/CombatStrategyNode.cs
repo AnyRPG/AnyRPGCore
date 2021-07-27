@@ -54,7 +54,7 @@ namespace AnyRPG {
         public void StartPhase() {
             if (phaseMusicProfile != null) {
                 if (phaseMusicProfile.AudioClip != null) {
-                    AudioManager.MyInstance.PlayMusic(phaseMusicProfile.AudioClip);
+                    AudioManager.Instance.PlayMusic(phaseMusicProfile.AudioClip);
                 }
             }
         }
@@ -64,7 +64,7 @@ namespace AnyRPG {
             attackAbilityList = new List<BaseAbility>();
             if (attackAbilityNames != null) {
                 foreach (string baseAbilityName in attackAbilityNames) {
-                    BaseAbility baseAbility = SystemAbilityManager.MyInstance.GetResource(baseAbilityName);
+                    BaseAbility baseAbility = SystemAbilityManager.Instance.GetResource(baseAbilityName);
                     if (baseAbility != null) {
                         attackAbilityList.Add(baseAbility);
                     } else {
@@ -76,7 +76,7 @@ namespace AnyRPG {
             maintainBuffList = new List<BaseAbility>();
             if (maintainBuffNames != null) {
                 foreach (string baseAbilityName in maintainBuffNames) {
-                    BaseAbility baseAbility = SystemAbilityManager.MyInstance.GetResource(baseAbilityName);
+                    BaseAbility baseAbility = SystemAbilityManager.Instance.GetResource(baseAbilityName);
                     if (baseAbility != null) {
                         maintainBuffList.Add(baseAbility);
                     } else {
@@ -87,7 +87,7 @@ namespace AnyRPG {
 
             phaseMusicProfile = null;
             if (phaseMusicProfileName != null && phaseMusicProfileName != string.Empty) {
-                AudioProfile musicProfile = SystemAudioProfileManager.MyInstance.GetResource(phaseMusicProfileName);
+                AudioProfile musicProfile = SystemAudioProfileManager.Instance.GetResource(phaseMusicProfileName);
                 if (musicProfile != null) {
                     phaseMusicProfile = musicProfile;
                 } else {

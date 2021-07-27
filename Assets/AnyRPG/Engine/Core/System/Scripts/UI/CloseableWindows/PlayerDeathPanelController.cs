@@ -10,14 +10,14 @@ namespace AnyRPG {
         //public override event Action<ICloseableWindowContents> OnOpenWindow;
 
         public void RespawnPlayer() {
-            SystemWindowManager.MyInstance.playerOptionsMenuWindow.CloseWindow();
-            PlayerManager.MyInstance.RespawnPlayer();
+            SystemWindowManager.Instance.playerOptionsMenuWindow.CloseWindow();
+            PlayerManager.Instance.RespawnPlayer();
         }
 
         public void RevivePlayer() {
             //Debug.Log("PlayerOptionsController.RevivePlayer()");
-            SystemWindowManager.MyInstance.playerOptionsMenuWindow.CloseWindow();
-            PlayerManager.MyInstance.RevivePlayerUnit();
+            SystemWindowManager.Instance.playerOptionsMenuWindow.CloseWindow();
+            PlayerManager.Instance.RevivePlayerUnit();
         }
 
     }

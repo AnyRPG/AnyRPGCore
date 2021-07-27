@@ -97,7 +97,7 @@ namespace AnyRPG {
         public void SetupScriptableObjects() {
 
             if (attachmentProfileName != null && attachmentProfileName != string.Empty) {
-                AttachmentProfile tmpAttachmentProfile = SystemAttachmentProfileManager.MyInstance.GetResource(attachmentProfileName);
+                AttachmentProfile tmpAttachmentProfile = SystemAttachmentProfileManager.Instance.GetResource(attachmentProfileName);
                 if (tmpAttachmentProfile != null) {
                     attachmentProfile = tmpAttachmentProfile;
                 } else {

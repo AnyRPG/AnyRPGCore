@@ -37,12 +37,12 @@ namespace AnyRPG {
                 if (_interactable.HasMiniMapIcon()) {
                     //else if (_interactable.HasMiniMapIcon()) {
                     // do both now!
-                    GameObject go = ObjectPooler.MyInstance.GetPooledObject(miniMapImageLayerPrefab, contentParent);
+                    GameObject go = ObjectPooler.Instance.GetPooledObject(miniMapImageLayerPrefab, contentParent);
                     Image _image = go.GetComponent<Image>();
                     _interactable.SetMiniMapIcon(_image);
                     miniMapLayers.Add(_interactable, go);
                 } else if (_interactable.HasMiniMapText()) {
-                    GameObject go = ObjectPooler.MyInstance.GetPooledObject(miniMapTextLayerPrefab, contentParent);
+                    GameObject go = ObjectPooler.Instance.GetPooledObject(miniMapTextLayerPrefab, contentParent);
                     TextMeshProUGUI _text = go.GetComponent<TextMeshProUGUI>();
                     _interactable.SetMiniMapText(_text);
                     miniMapLayers.Add(_interactable, go);
@@ -77,7 +77,7 @@ namespace AnyRPG {
 
         public void ResetSettings() {
             foreach (GameObject go in miniMapLayers.Values) {
-                ObjectPooler.MyInstance.ReturnObjectToPool(go);
+                ObjectPooler.Instance.ReturnObjectToPool(go);
             }
             miniMapLayers.Clear();
             interactable = null;

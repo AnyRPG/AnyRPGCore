@@ -29,10 +29,10 @@ namespace AnyRPG {
                 CurrentAmount++;
                 quest.CheckCompletion();
                 if (CurrentAmount <= MyAmount && !quest.MyIsAchievement && CurrentAmount != 0) {
-                    MessageFeedManager.MyInstance.WriteMessage(string.Format("{0}: {1}/{2}", DisplayName, Mathf.Clamp(CurrentAmount, 0, MyAmount), MyAmount));
+                    MessageFeedManager.Instance.WriteMessage(string.Format("{0}: {1}/{2}", DisplayName, Mathf.Clamp(CurrentAmount, 0, MyAmount), MyAmount));
                 }
                 if (completeBefore == false && IsComplete && !quest.MyIsAchievement) {
-                    MessageFeedManager.MyInstance.WriteMessage(string.Format("Learn {0} {1}: Objective Complete", CurrentAmount, DisplayName));
+                    MessageFeedManager.Instance.WriteMessage(string.Format("Learn {0} {1}: Objective Complete", CurrentAmount, DisplayName));
                 }
 
             }
@@ -43,13 +43,13 @@ namespace AnyRPG {
             base.OnAcceptQuest(quest, printMessages);
 
             // don't forget to remove these later
-            PlayerManager.MyInstance.MyCharacter.CharacterCombat.OnKillEvent += UpdateKillCount;
+            PlayerManager.Instance.MyCharacter.CharacterCombat.OnKillEvent += UpdateKillCount;
         }
 
         public override void OnAbandonQuest() {
             base.OnAbandonQuest();
-            if (PlayerManager.MyInstance != null && PlayerManager.MyInstance.MyCharacter != null && PlayerManager.MyInstance.MyCharacter.CharacterCombat != null) {
-                PlayerManager.MyInstance.MyCharacter.CharacterCombat.OnKillEvent -= UpdateKillCount;
+            if (PlayerManager.Instance != null && PlayerManager.Instance.MyCharacter != null && PlayerManager.Instance.MyCharacter.CharacterCombat != null) {
+                PlayerManager.Instance.MyCharacter.CharacterCombat.OnKillEvent -= UpdateKillCount;
             }
         }
 

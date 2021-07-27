@@ -36,7 +36,7 @@ namespace AnyRPG {
 
             if (vendorCollectionNames != null && vendorCollectionNames.Count > 0) {
                 foreach (string vendorCollectionName in vendorCollectionNames) {
-                    VendorCollection tmpVendorCollection = SystemVendorCollectionManager.MyInstance.GetResource(vendorCollectionName);
+                    VendorCollection tmpVendorCollection = SystemVendorCollectionManager.Instance.GetResource(vendorCollectionName);
                     if (tmpVendorCollection != null) {
                         vendorCollections.Add(tmpVendorCollection);
                     } else {

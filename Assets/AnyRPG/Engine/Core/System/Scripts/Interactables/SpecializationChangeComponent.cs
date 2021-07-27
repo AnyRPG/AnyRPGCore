@@ -26,13 +26,13 @@ namespace AnyRPG {
             base.CreateEventSubscriptions();
 
             // because the class is a special type of prerequisite, we need to be notified when it changes
-            if (SystemEventManager.MyInstance == null) {
+            if (SystemEventManager.Instance == null) {
                 Debug.LogError("SystemEventManager Not Found.  Is the GameManager prefab in the scene?");
                 return;
             }
             SystemEventManager.StartListening("OnSpecializationChange", HandleSpecializationChange);
-            if (SystemEventManager.MyInstance != null) {
-                SystemEventManager.MyInstance.OnClassChange += HandleClassChange;
+            if (SystemEventManager.Instance != null) {
+                SystemEventManager.Instance.OnClassChange += HandleClassChange;
             }
 
         }
@@ -55,8 +55,8 @@ namespace AnyRPG {
             base.CleanupEventSubscriptions();
             CleanupWindowEventSubscriptions();
             SystemEventManager.StopListening("OnSpecializationChange", HandleSpecializationChange);
-            if (SystemEventManager.MyInstance != null) {
-                SystemEventManager.MyInstance.OnClassChange -= HandleClassChange;
+            if (SystemEventManager.Instance != null) {
+                SystemEventManager.Instance.OnClassChange -= HandleClassChange;
             }
         }
 
@@ -122,10 +122,10 @@ namespace AnyRPG {
         // specialization is a special type of prerequisite
         public override bool MyPrerequisitesMet {
             get {
-                if (PlayerManager.MyInstance.MyCharacter.ClassSpecialization == Props.ClassSpecialization) {
+                if (PlayerManager.Instance.MyCharacter.ClassSpecialization == Props.ClassSpecialization) {
                     return false;
                 }
-                if (Props.ClassSpecialization.CharacterClasses.Contains(PlayerManager.MyInstance.MyCharacter.CharacterClass) == false) {
+                if (Props.ClassSpecialization.CharacterClasses.Contains(PlayerManager.Instance.MyCharacter.CharacterClass) == false) {
                     return false;
                 }
                 return base.MyPrerequisitesMet;

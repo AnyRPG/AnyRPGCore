@@ -11,14 +11,14 @@ namespace AnyRPG {
         #region Singleton
         private static HandScript instance;
 
-        public static HandScript MyInstance {
+        public static HandScript Instance {
             get {
-                if (instance == null) {
-                    instance = FindObjectOfType<HandScript>();
-                }
-
                 return instance;
             }
+        }
+
+        private void Awake() {
+            instance = this;
         }
         #endregion
 
@@ -38,18 +38,18 @@ namespace AnyRPG {
         // Update is called once per frame
         void Update() {
             icon.transform.position = Input.mousePosition + offset;
-            if (Input.GetMouseButtonDown(0) && !EventSystem.current.IsPointerOverGameObject() && MyInstance.MyMoveable != null) {
-                if (MyInstance.MyMoveable is Item) {
-                    SystemWindowManager.MyInstance.confirmDestroyMenuWindow.OpenWindow();
-                } else if (MyInstance.MyMoveable is BaseAbility) {
+            if (Input.GetMouseButtonDown(0) && !EventSystem.current.IsPointerOverGameObject() && Instance.MyMoveable != null) {
+                if (Instance.MyMoveable is Item) {
+                    SystemWindowManager.Instance.confirmDestroyMenuWindow.OpenWindow();
+                } else if (Instance.MyMoveable is BaseAbility) {
                     // DROP ABILITY SAFELY
-                    if (UIManager.MyInstance.ActionBarManager.FromButton != null) {
-                        UIManager.MyInstance.ActionBarManager.FromButton.ClearUseable();
+                    if (UIManager.Instance.ActionBarManager.FromButton != null) {
+                        UIManager.Instance.ActionBarManager.FromButton.ClearUseable();
                     }
                     Drop();
                 }
             }
-            if (InputManager.MyInstance.KeyBindWasPressed("CANCEL")) {
+            if (InputManager.Instance.KeyBindWasPressed("CANCEL")) {
                 Drop();
             }
         }
@@ -73,7 +73,7 @@ namespace AnyRPG {
             //Debug.Log("HandScript.Drop()");
             ClearMoveable();
             InventoryManager.Instance.FromSlot = null;
-            UIManager.MyInstance.ActionBarManager.FromButton = null;
+            UIManager.Instance.ActionBarManager.FromButton = null;
         }
 
         private void ClearMoveable() {
@@ -97,17 +97,17 @@ namespace AnyRPG {
                     // next we want to query the equipmentmanager on the charcter to see if he has an item in this items slot, and if it is the item we are dropping
                     // if it is, then we will unequip it, and then destroy it
                     if (item is Equipment) {
-                        PlayerManager.MyInstance.MyCharacter.CharacterEquipmentManager.Unequip(item as Equipment);
+                        PlayerManager.Instance.MyCharacter.CharacterEquipmentManager.Unequip(item as Equipment);
                         if (item.MySlot != null) {
                             item.MySlot.Clear();
                         }
                     }
                 }
             }
-            CombatLogUI.MyInstance.WriteSystemMessage("Destroyed " + MyMoveable.DisplayName);
+            CombatLogUI.Instance.WriteSystemMessage("Destroyed " + MyMoveable.DisplayName);
             Drop();
             // done in drop... ?
-            //InventoryManager.MyInstance.FromSlot = null;
+            //InventoryManager.Instance.FromSlot = null;
         }
     }
 

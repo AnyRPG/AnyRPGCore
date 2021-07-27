@@ -75,8 +75,8 @@ namespace AnyRPG {
                 SystemPlayableDirectorManager.Instance.MyPlayableDirectorDictionary[cutscene.TimelineName].Play();
             }
 
-            CameraManager.MyInstance.DeactivateMainCamera();
-            CameraManager.MyInstance.EnableCutsceneCamera();
+            CameraManager.Instance.DeactivateMainCamera();
+            CameraManager.Instance.EnableCutsceneCamera();
 
             currentCutscene = cutscene;
             //currentDialog = cutscene.MyDialog;
@@ -91,12 +91,12 @@ namespace AnyRPG {
             bottomBar.gameObject.SetActive(true);
             captionBar.gameObject.SetActive(true);
 
-            UIManager.MyInstance.ActivatePlayerUI();
-            UIManager.MyInstance.PlayerInterfaceCanvas.SetActive(false);
-            UIManager.MyInstance.PopupWindowContainer.SetActive(false);
-            UIManager.MyInstance.PopupPanelContainer.SetActive(false);
-            UIManager.MyInstance.CombatTextCanvas.SetActive(false);
-            UIManager.MyInstance.CutSceneBarsCanvas.SetActive(true);
+            UIManager.Instance.ActivatePlayerUI();
+            UIManager.Instance.PlayerInterfaceCanvas.SetActive(false);
+            UIManager.Instance.PopupWindowContainer.SetActive(false);
+            UIManager.Instance.PopupPanelContainer.SetActive(false);
+            UIManager.Instance.CombatTextCanvas.SetActive(false);
+            UIManager.Instance.CutSceneBarsCanvas.SetActive(true);
             barsCoroutine = StartCoroutine(LoadCutSceneBars(cutSceneBarHeight));
         }
 
@@ -113,7 +113,7 @@ namespace AnyRPG {
             topBar.gameObject.SetActive(false);
             bottomBar.gameObject.SetActive(false);
             captionBar.gameObject.SetActive(false);
-            UIManager.MyInstance.CutSceneBarsCanvas.SetActive(false);
+            UIManager.Instance.CutSceneBarsCanvas.SetActive(false);
            
             ClearCoRoutine();
             gameObject.SetActive(false);
@@ -121,7 +121,7 @@ namespace AnyRPG {
             if (currentCutscene != null) {
                 currentCutscene.Viewed = true;
             }
-            LevelManager.MyInstance.EndCutscene(currentCutscene);
+            LevelManager.Instance.EndCutscene(currentCutscene);
             currentCutscene = null;
         }
 
@@ -164,8 +164,8 @@ namespace AnyRPG {
             captionText.color = new Color32(255, 255, 255, 0);
             subtitleCoroutine = StartCoroutine(FadeInText());
 
-            if (AudioManager.MyInstance != null && currentCutscene?.SubtitleProperties.AudioProfile != null && currentCutscene.SubtitleProperties.AudioProfile.AudioClips != null && currentCutscene.SubtitleProperties.AudioProfile.AudioClips.Count > subtitleIndex) {
-                AudioManager.MyInstance.PlayVoice(currentCutscene.SubtitleProperties.AudioProfile.AudioClips[subtitleIndex]);
+            if (AudioManager.Instance != null && currentCutscene?.SubtitleProperties.AudioProfile != null && currentCutscene.SubtitleProperties.AudioProfile.AudioClips != null && currentCutscene.SubtitleProperties.AudioProfile.AudioClips.Count > subtitleIndex) {
+                AudioManager.Instance.PlayVoice(currentCutscene.SubtitleProperties.AudioProfile.AudioClips[subtitleIndex]);
             }
 
             currentSubtitleNode.Shown = true;

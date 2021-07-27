@@ -10,16 +10,16 @@ namespace AnyRPG {
         #region Singleton
         private static CameraManager instance;
 
-        public static CameraManager MyInstance {
+        public static CameraManager Instance {
             get {
-                if (instance == null) {
-                    instance = FindObjectOfType<CameraManager>();
-                }
-
                 return instance;
             }
         }
 
+        private void Awake() {
+            instance = this;
+            Init();
+        }
         #endregion
 
         [SerializeField]
@@ -69,7 +69,7 @@ namespace AnyRPG {
         public Camera PetPreviewCamera { get => petPreviewCamera; set => petPreviewCamera = value; }
         public GameObject ThirdPartyCamera { get => thirdPartyCameraGameObject; set => thirdPartyCameraGameObject = value; }
 
-        public Camera MyActiveMainCamera {
+        public Camera ActiveMainCamera {
             get {
                 if (MainCameraGameObject != null && MainCameraGameObject.activeSelf == true && MainCamera != null) {
                     return MainCamera;
@@ -81,7 +81,7 @@ namespace AnyRPG {
             }
         }
 
-        private void Awake() {
+        private void Init() {
             //Debug.Log("CameraManager.Awake()");
             CheckConfiguration();
 
@@ -122,8 +122,8 @@ namespace AnyRPG {
                 // can't get camera settings, so just return
                 return;
             }
-            if (LevelManager.MyInstance.IsMainMenu()
-                || LevelManager.MyInstance.IsInitializationScene()
+            if (LevelManager.Instance.IsMainMenu()
+                || LevelManager.Instance.IsInitializationScene()
                 || SystemConfigurationManager.Instance.UseThirdPartyCameraControl == false) {
                 MainCameraGameObject.SetActive(true);
                 return;
@@ -155,17 +155,17 @@ namespace AnyRPG {
 
         public void EnableCutsceneCamera() {
             //Debug.Log("CameraManager.EnableCutsceneCamera()");
-            if (CutsceneCameraController.MyInstance != null) {
+            if (CutsceneCameraController.Instance != null) {
                 //Debug.Log("CameraManager.EnableCutsceneCamera(): enabling");
-                CutsceneCameraController.MyInstance.gameObject.SetActive(true);
+                CutsceneCameraController.Instance.gameObject.SetActive(true);
             }
         }
 
         public void DisableCutsceneCamera() {
             //Debug.Log("CameraManager.DisableCutsceneCamera()");
-            if (CutsceneCameraController.MyInstance != null) {
+            if (CutsceneCameraController.Instance != null) {
                 //Debug.Log("CameraManager.DisableCutsceneCamera(): disabling");
-                CutsceneCameraController.MyInstance.gameObject.SetActive(false);
+                CutsceneCameraController.Instance.gameObject.SetActive(false);
             }
         }
 
@@ -175,9 +175,9 @@ namespace AnyRPG {
                 if (mainCameraGameObject != null) {
                     MainCameraGameObject.SetActive(false);
                 }
-                if (PlayerManager.MyInstance.ActiveUnitController != null) {
-                    thirdPartyCameraGameObject.transform.position = PlayerManager.MyInstance.ActiveUnitController.transform.TransformPoint(new Vector3(0f, 2.5f, -3f));
-                    thirdPartyCameraGameObject.transform.forward = PlayerManager.MyInstance.ActiveUnitController.transform.forward;
+                if (PlayerManager.Instance.ActiveUnitController != null) {
+                    thirdPartyCameraGameObject.transform.position = PlayerManager.Instance.ActiveUnitController.transform.TransformPoint(new Vector3(0f, 2.5f, -3f));
+                    thirdPartyCameraGameObject.transform.forward = PlayerManager.Instance.ActiveUnitController.transform.forward;
                     //Debug.Log("Setting camera location : " + thirdPartyCameraGameObject.transform.position + "; forward: " + thirdPartyCameraGameObject.transform.forward);
                 }
                 thirdPartyCameraGameObject.SetActive(true);
@@ -243,14 +243,14 @@ namespace AnyRPG {
 
         public void ProcessPlayerUnitSpawn() {
             //Debug.Log("CameraManager.ProcessPlayerUnitSpawn()");
-            if (LevelManager.MyInstance.GetActiveSceneNode() == null) {
+            if (LevelManager.Instance.GetActiveSceneNode() == null) {
                 //Debug.Log("CameraManager.ProcessPlayerUnitSpawn(): ACTIVE SCENE NODE WAS NULL");
                 return;
             }
 
-            if (LevelManager.MyInstance.GetActiveSceneNode().SuppressMainCamera != true) {
+            if (LevelManager.Instance.GetActiveSceneNode().SuppressMainCamera != true) {
                 //Debug.Log("CameraManager.ProcessPlayerUnitSpawn(): suppressed by level = false, spawning camera");
-                mainCamera.GetComponent<AnyRPGCameraController>().InitializeCamera(PlayerManager.MyInstance.ActiveUnitController.transform);
+                mainCamera.GetComponent<AnyRPGCameraController>().InitializeCamera(PlayerManager.Instance.ActiveUnitController.transform);
             }
         }
 

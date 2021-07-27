@@ -39,7 +39,7 @@ namespace AnyRPG {
             if (eventSubscriptionsInitialized) {
                 return;
             }
-            SystemEventManager.MyInstance.OnInventoryTransparencyUpdate += SetBackGroundColor;
+            SystemEventManager.StartListening("OnInventoryTransparencyUpdate", HandleInventoryTransparencyUpdate);
             eventSubscriptionsInitialized = true;
         }
 
@@ -48,10 +48,12 @@ namespace AnyRPG {
             if (!eventSubscriptionsInitialized) {
                 return;
             }
-            if (SystemEventManager.MyInstance != null) {
-                SystemEventManager.MyInstance.OnInventoryTransparencyUpdate -= SetBackGroundColor;
-            }
+            SystemEventManager.StopListening("OnInventoryTransparencyUpdate", HandleInventoryTransparencyUpdate);
             eventSubscriptionsInitialized = false;
+        }
+
+        public void HandleInventoryTransparencyUpdate(string eventName, EventParamProperties eventParamProperties) {
+            SetBackGroundColor();
         }
 
         public void GetComponentReferences() {
@@ -79,7 +81,7 @@ namespace AnyRPG {
 
         public BagButton InstantiateBagButton() {
             //Debug.Log("BagBarController.InstantiateBagButton()");
-            BagButton bagButton = ObjectPooler.MyInstance.GetPooledObject(BagButtonPrefab, this.gameObject.transform).GetComponent<BagButton>();
+            BagButton bagButton = ObjectPooler.Instance.GetPooledObject(BagButtonPrefab, this.gameObject.transform).GetComponent<BagButton>();
             bagButtons.Add(bagButton);
             return bagButton;
         }

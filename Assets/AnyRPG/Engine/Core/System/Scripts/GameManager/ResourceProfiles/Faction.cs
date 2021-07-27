@@ -77,14 +77,14 @@ namespace AnyRPG {
 
         public static Color GetFactionColor(NamePlateUnit namePlateUnit) {
             //Debug.Log("Faction.GetFactionColor(" + namePlateUnit.DisplayName + ")");
-            if (PlayerManager.MyInstance?.UnitController != null && (namePlateUnit as MonoBehaviour).gameObject == PlayerManager.MyInstance?.UnitController?.gameObject) {
+            if (PlayerManager.Instance?.UnitController != null && (namePlateUnit as MonoBehaviour).gameObject == PlayerManager.Instance?.UnitController?.gameObject) {
                 // when retrieving the color that should be displayed on the player character, always green even if it has no faction
                 return Color.green;
             }
             // next check custom gained faction for either character
-            if (namePlateUnit.CharacterUnit != null && PlayerManager.MyInstance?.UnitController != null) {
+            if (namePlateUnit.CharacterUnit != null && PlayerManager.Instance?.UnitController != null) {
                 //Debug.Log("Faction.GetFactionColor(" + namePlateUnit.DisplayName + ") : nameplate unit is a character unit AND PLAYER UNIT IS SPAWNED");
-                return GetFactionColor(PlayerManager.MyInstance?.MyCharacter, namePlateUnit.CharacterUnit.BaseCharacter);
+                return GetFactionColor(PlayerManager.Instance?.MyCharacter, namePlateUnit.CharacterUnit.BaseCharacter);
             } else {
                 //Debug.Log("Faction.GetFactionColor(" + namePlateUnit.DisplayName + ") : nameplate unit is NOT a character unit");
             }
@@ -106,7 +106,7 @@ namespace AnyRPG {
         /// <param name="otherFaction"></param>
         /// <returns></returns>
         public static Color GetFactionColor(Faction sourceFaction) {
-            if (PlayerManager.MyInstance?.MyCharacter == null) {
+            if (PlayerManager.Instance?.MyCharacter == null) {
                 return new Color32(0, 0, 0, 0);
             }
 
@@ -114,7 +114,7 @@ namespace AnyRPG {
                 return Color.yellow;
             }
 
-            float relationValue = Faction.RelationWith(PlayerManager.MyInstance.MyCharacter, sourceFaction);
+            float relationValue = Faction.RelationWith(PlayerManager.Instance.MyCharacter, sourceFaction);
             // override relationValue with default if player is not spawned
             return GetColorFromRelationValue(relationValue);
         }
@@ -125,7 +125,7 @@ namespace AnyRPG {
 
         public static Color GetColorFromRelationValue(float relationValue) {
             //Debug.Log("GetColorFromRelationValue(" + relationValue + ")");
-            if (PlayerManager.MyInstance.MyCharacter == null) {
+            if (PlayerManager.Instance.MyCharacter == null) {
                 return new Color32(0, 0, 0, 0);
             }
 
@@ -150,7 +150,7 @@ namespace AnyRPG {
 
         // return the summary of relationship between the player and the source faction
         public string GetReputationSummary(Faction sourceFaction) {
-            float relationValue = RelationWith(PlayerManager.MyInstance.MyCharacter, sourceFaction);
+            float relationValue = RelationWith(PlayerManager.Instance.MyCharacter, sourceFaction);
             return string.Format("Reputation: {0}", relationValue);
         }
 
@@ -248,7 +248,7 @@ namespace AnyRPG {
             if (equipmentNames != null) {
                 foreach (string equipmentName in equipmentNames) {
                     Equipment tmpEquipment = null;
-                    tmpEquipment = SystemItemManager.MyInstance.GetResource(equipmentName) as Equipment;
+                    tmpEquipment = SystemItemManager.Instance.GetResource(equipmentName) as Equipment;
                     if (tmpEquipment != null) {
                         equipmentList.Add(tmpEquipment);
                     } else {
@@ -271,7 +271,7 @@ namespace AnyRPG {
                     //Debug.Log("Faction.SetupScriptableObjects(): found a string");
                     if (characterCreatorProfileName != null && characterCreatorProfileName != string.Empty) {
                         //Debug.Log("Faction.SetupScriptableObjects(): found a string that is not empty");
-                        UnitProfile tmpUnitProfile = SystemUnitProfileManager.MyInstance.GetResource(characterCreatorProfileName);
+                        UnitProfile tmpUnitProfile = SystemUnitProfileManager.Instance.GetResource(characterCreatorProfileName);
                         if (tmpUnitProfile != null) {
                             //Debug.Log("Faction.SetupScriptableObjects(): found a string that is not empty and added it to the list");
                             characterCreatorProfiles.Add(tmpUnitProfile);
@@ -316,7 +316,7 @@ namespace AnyRPG {
 
             foreach (string characterClassName in characterClasses) {
                 if (characterClassName != null && characterClassName != string.Empty) {
-                    CharacterClass tmpCharacterClass = SystemCharacterClassManager.MyInstance.GetResource(characterClassName);
+                    CharacterClass tmpCharacterClass = SystemCharacterClassManager.Instance.GetResource(characterClassName);
                     if (tmpCharacterClass != null) {
                         characterClassList.Add(tmpCharacterClass);
                     } else {

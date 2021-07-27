@@ -58,7 +58,7 @@ namespace AnyRPG {
                 Transform mountPoint = mountUnitController.transform.FindChildByRecursive(originalPrefabSourceBone);
                 if (mountPoint != null) {
                     unitController.transform.parent = mountPoint;
-                    //PlayerManager.MyInstance.MyPlayerUnitObject.transform.localPosition = Vector3.zero;
+                    //PlayerManager.Instance.MyPlayerUnitObject.transform.localPosition = Vector3.zero;
                     unitController.transform.position = mountPoint.transform.TransformPoint(originalPrefabOffset);
                     unitController.transform.localEulerAngles = mountUnitProfile.UnitPrefabProps.Rotation;
                     ActivateMountedState();
@@ -89,19 +89,19 @@ namespace AnyRPG {
 
         public void ConfigureCharacterMountedPhysics() {
             unitController.RigidBody.WakeUp();
-            //PlayerManager.MyInstance.MyCharacter.MyAnimatedUnit.MyRigidBody.collisionDetectionMode = CollisionDetectionMode.Discrete;
+            //PlayerManager.Instance.MyCharacter.MyAnimatedUnit.MyRigidBody.collisionDetectionMode = CollisionDetectionMode.Discrete;
             // DO NOT EVER USE CONTINUOUS SPECULATIVE.  IT WILL MESS THINGS UP EVEN WHEN YOUR RIGIDBODY IS KINEMATIC
             // UNITY ERROR MESSAGE IS MISLEADING AND WRONG HERE....
-            //PlayerManager.MyInstance.MyCharacter.MyAnimatedUnit.MyRigidBody.collisionDetectionMode = CollisionDetectionMode.ContinuousSpeculative;
+            //PlayerManager.Instance.MyCharacter.MyAnimatedUnit.MyRigidBody.collisionDetectionMode = CollisionDetectionMode.ContinuousSpeculative;
             unitController.RigidBody.interpolation = RigidbodyInterpolation.None;
             unitController.RigidBody.detectCollisions = false;
             unitController.RigidBody.isKinematic = true;
             unitController.RigidBody.useGravity = false;
             unitController.FreezeAll();
-            //PlayerManager.MyInstance.MyCharacter.MyAnimatedUnit.MyRigidBody.constraints = RigidbodyConstraints.None;
+            //PlayerManager.Instance.MyCharacter.MyAnimatedUnit.MyRigidBody.constraints = RigidbodyConstraints.None;
 
             // TODO : should this just set to trigger instead so player go through portals and be attacked on mount?
-            //PlayerManager.MyInstance.ActiveUnitController.Collider.enabled = false;
+            //PlayerManager.Instance.ActiveUnitController.Collider.enabled = false;
             // TESTING IT NOW
             // duplicate collider triggers since mount is redirected - disabling
             //unitController.Collider.isTrigger = true;
@@ -116,9 +116,9 @@ namespace AnyRPG {
             UnsubscribeFromMountModelReady();
             if (mountUnitController != null && unitController != null && unitController.enabled == true) {
 
-                unitController.transform.parent = PlayerManager.MyInstance.PlayerUnitParent.transform;
+                unitController.transform.parent = PlayerManager.Instance.PlayerUnitParent.transform;
 
-                //PlayerManager.MyInstance.MyPlayerUnitObject.transform.localEulerAngles = Vector3.zero;
+                //PlayerManager.Instance.MyPlayerUnitObject.transform.localEulerAngles = Vector3.zero;
                 unitController.transform.localEulerAngles = mountUnitController.transform.localEulerAngles;
 
                 // we could skip this and just let the player fall through gravity
@@ -130,12 +130,12 @@ namespace AnyRPG {
                 unitController.Mounted = false;
                 // testing disabled now since there is only one of those
                 /*
-                if (PlayerManager.MyInstance.PlayerUnitMovementController) {
-                    PlayerManager.MyInstance.PlayerUnitMovementController.enabled = true;
+                if (PlayerManager.Instance.PlayerUnitMovementController) {
+                    PlayerManager.Instance.PlayerUnitMovementController.enabled = true;
                 }
                 */
                 unitController.UnitAnimator.SetRiding(false);
-                //PlayerManager.MyInstance.MyCharacter.MyAnimatedUnit.MyCharacterAnimator.SetBool("Riding", false);
+                //PlayerManager.Instance.MyCharacter.MyAnimatedUnit.MyCharacterAnimator.SetBool("Riding", false);
 
                 unitController.NotifyOnDeActivateMountedState();
             }

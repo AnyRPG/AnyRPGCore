@@ -10,16 +10,16 @@ namespace AnyRPG {
         #region Singleton
         private static KeyBindManager instance;
 
-        public static KeyBindManager MyInstance {
+        public static KeyBindManager Instance {
             get {
-                if (instance == null) {
-                    instance = FindObjectOfType<KeyBindManager>();
-                }
-
                 return instance;
             }
         }
 
+        private void Awake() {
+            instance = this;
+            Init();
+        }
         #endregion
 
         [SerializeField]
@@ -34,7 +34,7 @@ namespace AnyRPG {
         public string MyBindName { get => bindName; set => bindName = value; }
 
         // Start is called before the first frame update
-        void Awake() {
+        void Init() {
             //Debug.Log("KeyBindManager.Awake()");
             InitializeKeys();
         }
@@ -175,9 +175,9 @@ namespace AnyRPG {
 
             //keyBinds[key].MyKeyCode = keyCode;
             keyBinds[key].UpdateKeyCode(inputDeviceType, keyCode, control, shift);
-            //(PopupWindowManager.MyInstance.keyBindMenuWindow.MyCloseableWindowContents as KeyBindMenuController).UpdateKeyText(bindName, keyCode);
+            //(PopupWindowManager.Instance.keyBindMenuWindow.MyCloseableWindowContents as KeyBindMenuController).UpdateKeyText(bindName, keyCode);
             bindName = string.Empty;
-            SystemWindowManager.MyInstance.keyBindConfirmWindow.CloseWindow();
+            SystemWindowManager.Instance.keyBindConfirmWindow.CloseWindow();
         }
 
         private void UnbindKeyCode(Dictionary<string, KeyBindNode> currentDictionary, InputDeviceType inputDeviceType, KeyCode keyCode, bool control, bool shift) {
@@ -228,7 +228,7 @@ namespace AnyRPG {
             //Debug.Log("KeyBindManager.BeginKeyBind(" + key + ", " + inputDeviceType.ToString() + ")");
             this.bindName = key;
             this.inputDeviceType = inputDeviceType;
-            SystemWindowManager.MyInstance.keyBindConfirmWindow.OpenWindow();
+            SystemWindowManager.Instance.keyBindConfirmWindow.OpenWindow();
         }
 
         private void OnGUI() {
@@ -244,7 +244,7 @@ namespace AnyRPG {
         }
 
         public void CancelKeyBind() {
-            SystemWindowManager.MyInstance.keyBindConfirmWindow.CloseWindow();
+            SystemWindowManager.Instance.keyBindConfirmWindow.CloseWindow();
             bindName = string.Empty;
         }
 

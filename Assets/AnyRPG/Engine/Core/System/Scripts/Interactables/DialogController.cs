@@ -44,7 +44,7 @@ namespace AnyRPG {
 
         public void BeginDialog(string dialogName, DialogComponent caller = null) {
             //Debug.Log(interactable.gameObject.name + ".DialogController.BeginDialog(" + dialogName + ")");
-            Dialog tmpDialog = SystemDialogManager.MyInstance.GetResource(dialogName);
+            Dialog tmpDialog = SystemDialogManager.Instance.GetResource(dialogName);
             if (tmpDialog != null) {
                 BeginDialog(tmpDialog, caller);
             }
@@ -77,13 +77,13 @@ namespace AnyRPG {
                             interactable.UnitComponentController.PlayVoice(dialog.AudioProfile.AudioClips[dialogIndex]);
                         }
                         bool writeMessage = true;
-                        if (PlayerManager.MyInstance != null && PlayerManager.MyInstance.ActiveUnitController != null) {
-                            if (Vector3.Distance(interactable.transform.position, PlayerManager.MyInstance.ActiveUnitController.transform.position) > SystemConfigurationManager.Instance.MaxChatTextDistance) {
+                        if (PlayerManager.Instance != null && PlayerManager.Instance.ActiveUnitController != null) {
+                            if (Vector3.Distance(interactable.transform.position, PlayerManager.Instance.ActiveUnitController.transform.position) > SystemConfigurationManager.Instance.MaxChatTextDistance) {
                                 writeMessage = false;
                             }
                         }
-                        if (writeMessage && CombatLogUI.MyInstance != null) {
-                            CombatLogUI.MyInstance.WriteChatMessage(dialogNode.MyDescription);
+                        if (writeMessage && CombatLogUI.Instance != null) {
+                            CombatLogUI.Instance.WriteChatMessage(dialogNode.MyDescription);
                         }
 
                         dialogNode.Shown = true;

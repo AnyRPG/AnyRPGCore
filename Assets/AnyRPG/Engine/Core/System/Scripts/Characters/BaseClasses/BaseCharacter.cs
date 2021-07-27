@@ -163,7 +163,7 @@ namespace AnyRPG {
             if (!eventSubscriptionsInitialized) {
                 return;
             }
-            if (SystemEventManager.MyInstance != null) {
+            if (SystemEventManager.Instance != null) {
                 SystemEventManager.StopListening("OnLevelUnload", HandleLevelUnload);
                 SystemEventManager.StopListening("OnLevelLoad", HandleLevelLoad);
             }

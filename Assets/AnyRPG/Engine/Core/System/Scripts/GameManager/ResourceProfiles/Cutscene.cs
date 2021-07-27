@@ -52,14 +52,14 @@ namespace AnyRPG {
 
         public bool Viewed {
             get {
-                return SaveManager.MyInstance.GetCutsceneSaveData(this).isCutSceneViewed;
+                return SaveManager.Instance.GetCutsceneSaveData(this).isCutSceneViewed;
             }
             set {
                 //Debug.Log(DisplayName + ".Viewed: setting to: " + value);
-                //SaveManager.MyInstance.GetCutsceneSaveData(this).IsCutSceneViewed = value;
-                CutsceneSaveData saveData = SaveManager.MyInstance.GetCutsceneSaveData(this);
+                //SaveManager.Instance.GetCutsceneSaveData(this).IsCutSceneViewed = value;
+                CutsceneSaveData saveData = SaveManager.Instance.GetCutsceneSaveData(this);
                 saveData.isCutSceneViewed = value;
-                SaveManager.MyInstance.CutsceneSaveDataDictionary[saveData.MyName] = saveData;
+                SaveManager.Instance.CutsceneSaveDataDictionary[saveData.MyName] = saveData;
             }
         }
 
@@ -82,7 +82,7 @@ namespace AnyRPG {
             base.SetupScriptableObjects();
 
             if (loadSceneName != null && loadSceneName != string.Empty) {
-                SceneNode tmpSceneNode = SystemSceneNodeManager.MyInstance.GetResource(loadSceneName);
+                SceneNode tmpSceneNode = SystemSceneNodeManager.Instance.GetResource(loadSceneName);
                 if (tmpSceneNode != null) {
                     loadScene = tmpSceneNode;
                 } else {

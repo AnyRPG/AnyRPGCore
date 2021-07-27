@@ -74,7 +74,7 @@ namespace AnyRPG {
         public void InitializeWindowContentsCommon() {
             //Debug.Log(gameObject.name + gameObject.GetInstanceID() + ".CloseableWindow.InitializeWindowContentsCommon()");
             if (contentPrefab != null && windowContents == null && contentGameObject == null) {
-                contentGameObject = ObjectPooler.MyInstance.GetPooledObject(contentPrefab, contentParent.transform);
+                contentGameObject = ObjectPooler.Instance.GetPooledObject(contentPrefab, contentParent.transform);
                 //Debug.Log(gameObject.name + gameObject.GetInstanceID() + ".CloseableWindow.InitializeWindowContentsCommon(): Instantiating window Contents: " + contentPrefab.name + " and got id: " + contentGameObject.GetInstanceID());
             }
             if (contentGameObject != null) {
@@ -100,7 +100,7 @@ namespace AnyRPG {
             //Debug.Log(gameObject.name + ".CloseableWindow.DestroyWindowContents()");
             if (windowContents != null) {
                 //Debug.Log(gameObject.name + gameObject.GetInstanceID() + ".CloseableWindow.DestroyWindowContents(): " + CloseableWindowContents.gameObject.name + CloseableWindowContents.gameObject.GetInstanceID());
-                ObjectPooler.MyInstance.ReturnObjectToPool(CloseableWindowContents.gameObject);
+                ObjectPooler.Instance.ReturnObjectToPool(CloseableWindowContents.gameObject);
                 windowContents = null;
                 contentGameObject = null;
             }

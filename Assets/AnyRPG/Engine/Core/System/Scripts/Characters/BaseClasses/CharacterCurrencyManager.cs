@@ -31,7 +31,7 @@ namespace AnyRPG {
                 newCurrencyNode.MyAmount = currencyAmount + MyCurrencyList[keyName].MyAmount;
                 MyCurrencyList[keyName] = newCurrencyNode;
                 RedistributeCurrency(currency);
-                SystemEventManager.MyInstance.NotifyOnCurrencyChange();
+                SystemEventManager.TriggerEvent("OnCurrencyChange", new EventParamProperties());
                 return;
             }
 
@@ -41,7 +41,7 @@ namespace AnyRPG {
             MyCurrencyList[keyName] = newCurrencyNode;
             //OnCurrencyChange();
             RedistributeCurrency(currency);
-            SystemEventManager.MyInstance.NotifyOnCurrencyChange();
+            SystemEventManager.TriggerEvent("OnCurrencyChange", new EventParamProperties());
         }
 
         public bool SpendCurrency(Currency currency, int currencyAmount) {
@@ -57,7 +57,7 @@ namespace AnyRPG {
                     newCurrencyNode.MyAmount = MyCurrencyList[keyName].MyAmount - currencyAmount;
                     MyCurrencyList[keyName] = newCurrencyNode;
                     RedistributeCurrency(currency);
-                    SystemEventManager.MyInstance.NotifyOnCurrencyChange();
+                    SystemEventManager.TriggerEvent("OnCurrencyChange", new EventParamProperties());
                     return true;
                 } else {
                     return false;
@@ -72,13 +72,13 @@ namespace AnyRPG {
                 // attemp redistribution
                 Currency baseCurrency = currencyGroup.MyBaseCurrency;
                 // convert everything in the group to the base amount
-                int baseCurrencyAmount = PlayerManager.MyInstance.MyCharacter.CharacterCurrencyManager.GetCurrencyAmount(baseCurrency);
+                int baseCurrencyAmount = PlayerManager.Instance.MyCharacter.CharacterCurrencyManager.GetCurrencyAmount(baseCurrency);
                 foreach (CurrencyGroupRate currencyGroupRate in currencyGroup.MyCurrencyGroupRates) {
-                    baseCurrencyAmount += PlayerManager.MyInstance.MyCharacter.CharacterCurrencyManager.GetCurrencyAmount(currencyGroupRate.MyCurrency) * currencyGroupRate.MyBaseMultiple;
+                    baseCurrencyAmount += PlayerManager.Instance.MyCharacter.CharacterCurrencyManager.GetCurrencyAmount(currencyGroupRate.MyCurrency) * currencyGroupRate.MyBaseMultiple;
                 }
                 return baseCurrencyAmount;
             }
-            return PlayerManager.MyInstance.MyCharacter.CharacterCurrencyManager.GetCurrencyAmount(currency);
+            return PlayerManager.Instance.MyCharacter.CharacterCurrencyManager.GetCurrencyAmount(currency);
         }
 
         public void RedistributeCurrency(Currency currency) {
@@ -87,9 +87,9 @@ namespace AnyRPG {
                 // attemp redistribution
                 Currency baseCurrency = currencyGroup.MyBaseCurrency;
                 // convert everything in the group to the base amount
-                int baseCurrencyAmount = PlayerManager.MyInstance.MyCharacter.CharacterCurrencyManager.GetCurrencyAmount(baseCurrency);
+                int baseCurrencyAmount = PlayerManager.Instance.MyCharacter.CharacterCurrencyManager.GetCurrencyAmount(baseCurrency);
                 foreach (CurrencyGroupRate currencyGroupRate in currencyGroup.MyCurrencyGroupRates) {
-                    baseCurrencyAmount += PlayerManager.MyInstance.MyCharacter.CharacterCurrencyManager.GetCurrencyAmount(currencyGroupRate.MyCurrency) * currencyGroupRate.MyBaseMultiple;
+                    baseCurrencyAmount += PlayerManager.Instance.MyCharacter.CharacterCurrencyManager.GetCurrencyAmount(currencyGroupRate.MyCurrency) * currencyGroupRate.MyBaseMultiple;
                 }
                 SortedDictionary<int, Currency> sortList = new SortedDictionary<int, Currency>();
                 foreach (CurrencyGroupRate currencyGroupRate in currencyGroup.MyCurrencyGroupRates) {
@@ -115,7 +115,7 @@ namespace AnyRPG {
                     newSaveData.MyAmount = newCurrencyValue.Value;
                     MyCurrencyList[SystemResourceManager.prepareStringForMatch(newCurrencyValue.Key.DisplayName)] = newSaveData;
                 }
-                SystemEventManager.MyInstance.NotifyOnCurrencyChange();
+                SystemEventManager.TriggerEvent("OnCurrencyChange", new EventParamProperties());
             }
         }
 
@@ -140,9 +140,9 @@ namespace AnyRPG {
                 // attemp redistribution
                 Currency baseCurrency = currencyGroup.MyBaseCurrency;
                 // convert everything in the group to the base amount
-                int baseCurrencyAmount = PlayerManager.MyInstance.MyCharacter.CharacterCurrencyManager.GetCurrencyAmount(baseCurrency);
+                int baseCurrencyAmount = PlayerManager.Instance.MyCharacter.CharacterCurrencyManager.GetCurrencyAmount(baseCurrency);
                 foreach (CurrencyGroupRate currencyGroupRate in currencyGroup.MyCurrencyGroupRates) {
-                    baseCurrencyAmount += PlayerManager.MyInstance.MyCharacter.CharacterCurrencyManager.GetCurrencyAmount(currencyGroupRate.MyCurrency) * currencyGroupRate.MyBaseMultiple;
+                    baseCurrencyAmount += PlayerManager.Instance.MyCharacter.CharacterCurrencyManager.GetCurrencyAmount(currencyGroupRate.MyCurrency) * currencyGroupRate.MyBaseMultiple;
                 }
                 returnDictionary.Add(baseCurrency, baseCurrencyAmount);
                 return returnDictionary;

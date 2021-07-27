@@ -33,7 +33,7 @@ namespace AnyRPG {
             base.SetupScriptableObjects();
 
             if (className != null && className != string.Empty) {
-                CharacterClass tmpCharacterClass = SystemCharacterClassManager.MyInstance.GetResource(className);
+                CharacterClass tmpCharacterClass = SystemCharacterClassManager.Instance.GetResource(className);
                 if (tmpCharacterClass != null) {
                     characterClass = tmpCharacterClass;
                 } else {

@@ -9,7 +9,7 @@ namespace AnyRPG {
         #region Singleton
         private static SystemLootTableManager instance;
 
-        public static SystemLootTableManager MyInstance {
+        public static SystemLootTableManager Instance {
             get {
                 if (instance == null) {
                     instance = FindObjectOfType<SystemLootTableManager>();

@@ -9,7 +9,7 @@ namespace AnyRPG {
         #region Singleton
         private static SystemStatusEffectTypeManager instance;
 
-        public static SystemStatusEffectTypeManager MyInstance {
+        public static SystemStatusEffectTypeManager Instance {
             get {
                 if (instance == null) {
                     instance = FindObjectOfType<SystemStatusEffectTypeManager>();

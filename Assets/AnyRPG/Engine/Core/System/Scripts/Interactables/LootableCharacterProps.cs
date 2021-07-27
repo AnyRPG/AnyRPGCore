@@ -46,7 +46,7 @@ namespace AnyRPG {
             base.SetupScriptableObjects();
 
             foreach (string lootTableName in lootTableNames) {
-                LootTable lootTable = SystemLootTableManager.MyInstance.GetNewResource(lootTableName);
+                LootTable lootTable = SystemLootTableManager.Instance.GetNewResource(lootTableName);
                 if (lootTable != null) {
                     lootTables.Add(lootTable);
                 }

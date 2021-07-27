@@ -40,7 +40,7 @@ namespace AnyRPG {
         public virtual bool IsMet(BaseCharacter baseCharacter) {
             //Debug.Log("DialogPrerequisite.IsMet(): " + prerequisiteName);
             /*
-            Dialog _dialog = SystemDialogManager.MyInstance.GetResource(prerequisiteName);
+            Dialog _dialog = SystemDialogManager.Instance.GetResource(prerequisiteName);
             if (_dialog != null) {
                 if (_dialog.TurnedIn == true) {
                     return true;
@@ -54,7 +54,7 @@ namespace AnyRPG {
         public void SetupScriptableObjects() {
             prerequisiteDialog = null;
             if (prerequisiteName != null && prerequisiteName != string.Empty) {
-                Dialog tmpDialog = SystemDialogManager.MyInstance.GetResource(prerequisiteName);
+                Dialog tmpDialog = SystemDialogManager.Instance.GetResource(prerequisiteName);
                 if (tmpDialog != null) {
                     prerequisiteDialog = tmpDialog;
                     prerequisiteDialog.OnDialogCompleted += HandleDialogCompleted;

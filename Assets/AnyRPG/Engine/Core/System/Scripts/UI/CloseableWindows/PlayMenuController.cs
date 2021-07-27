@@ -10,22 +10,22 @@ namespace AnyRPG {
         public void NewGame() {
             //Debug.Log("PlayMenuController.NewGame()");
             if (SystemConfigurationManager.Instance.UseNewGameWindow == true) {
-                SystemWindowManager.MyInstance.newGameWindow.OpenWindow();
-                SystemWindowManager.MyInstance.playMenuWindow.CloseWindow();
+                SystemWindowManager.Instance.newGameWindow.OpenWindow();
+                SystemWindowManager.Instance.playMenuWindow.CloseWindow();
             } else {
-                SystemWindowManager.MyInstance.confirmNewGameMenuWindow.OpenWindow();
+                SystemWindowManager.Instance.confirmNewGameMenuWindow.OpenWindow();
             }
         }
 
         public void ContinueGame() {
             //Debug.Log("PlayMenuController.ContinueGame()");
-            SaveManager.MyInstance.LoadGame();
+            SaveManager.Instance.LoadGame();
         }
 
         public void LoadGame() {
             //Debug.Log("PlayMenuController.LoadGame()");
-            SystemWindowManager.MyInstance.loadGameWindow.OpenWindow();
-            SystemWindowManager.MyInstance.playMenuWindow.CloseWindow();
+            SystemWindowManager.Instance.loadGameWindow.OpenWindow();
+            SystemWindowManager.Instance.playMenuWindow.CloseWindow();
         }
 
     }

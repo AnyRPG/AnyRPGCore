@@ -9,14 +9,15 @@ namespace AnyRPG {
         #region Singleton
         private static NamePlateManager instance;
 
-        public static NamePlateManager MyInstance {
+        public static NamePlateManager Instance {
             get {
-                if (instance == null) {
-                    instance = FindObjectOfType<NamePlateManager>();
-                }
-
                 return instance;
             }
+        }
+
+        private void Awake() {
+            instance = this;
+            Init();
         }
         #endregion
 
@@ -35,8 +36,8 @@ namespace AnyRPG {
 
         private Dictionary<NamePlateUnit, NamePlateController> namePlates = new Dictionary<NamePlateUnit, NamePlateController>();
 
-        private void Awake() {
-            //Debug.Log("NamePlateManager.Awake(): " + NamePlateManager.MyInstance.gameObject.name);
+        private void Init() {
+            //Debug.Log("NamePlateManager.Awake(): " + NamePlateManager.Instance.gameObject.name);
             SystemEventManager.StartListening("AfterCameraUpdate", HandleAfterCameraUpdate);
             SystemEventManager.StartListening("OnLevelUnload", HandleLevelUnload);
         }
@@ -61,8 +62,8 @@ namespace AnyRPG {
 
         public void LateUpdate() {
             if (SystemConfigurationManager.Instance.UseThirdPartyCameraControl == true
-                && CameraManager.MyInstance.ThirdPartyCamera.activeInHierarchy == true
-                && PlayerManager.MyInstance.PlayerUnitSpawned == true) {
+                && CameraManager.Instance.ThirdPartyCamera.activeInHierarchy == true
+                && PlayerManager.Instance.PlayerUnitSpawned == true) {
                 UpdateNamePlates();
             }
         }
@@ -96,7 +97,7 @@ namespace AnyRPG {
 
         public NamePlateController SpawnNamePlate(NamePlateUnit namePlateUnit, bool usePositionOffset) {
             //Debug.Log("NamePlateManager.SpawnNamePlate(" + namePlateUnit.DisplayName + ")");
-            NamePlateController namePlate = ObjectPooler.MyInstance.GetPooledObject(namePlatePrefab, namePlateContainer).GetComponent<NamePlateController>();
+            NamePlateController namePlate = ObjectPooler.Instance.GetPooledObject(namePlatePrefab, namePlateContainer).GetComponent<NamePlateController>();
             namePlates.Add(namePlateUnit, namePlate);
             namePlate.SetNamePlateUnit(namePlateUnit, usePositionOffset);
 
@@ -118,7 +119,7 @@ namespace AnyRPG {
             //Debug.Log("NamePlatemanager.RemoveNamePlate(" + namePlateUnit.DisplayName + ")");
             if (namePlates.ContainsKey(namePlateUnit)) {
                 if (namePlates[namePlateUnit] != null && namePlates[namePlateUnit].gameObject != null) {
-                    ObjectPooler.MyInstance.ReturnObjectToPool(namePlates[namePlateUnit].gameObject);
+                    ObjectPooler.Instance.ReturnObjectToPool(namePlates[namePlateUnit].gameObject);
                 }
                 namePlates.Remove(namePlateUnit);
             }

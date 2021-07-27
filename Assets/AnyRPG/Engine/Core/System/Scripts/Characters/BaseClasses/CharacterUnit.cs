@@ -91,7 +91,7 @@ namespace AnyRPG {
 
         public override bool Interact(CharacterUnit source, int optionIndex = 0) {
             //Debug.Log(interactable.gameObject.name + ".CharacterUnit.Interact(" + source.DisplayName + ")");
-            float relationValue = interactable.PerformFactionCheck(PlayerManager.MyInstance.MyCharacter);
+            float relationValue = interactable.PerformFactionCheck(PlayerManager.Instance.MyCharacter);
             if (CanInteract(false, false, relationValue)) {
                 base.Interact(source, optionIndex);
 
@@ -146,7 +146,7 @@ namespace AnyRPG {
             }
             text.text = "o";
             if (baseCharacter != null && baseCharacter.Faction != null) {
-                text.color = Faction.GetFactionColor(PlayerManager.MyInstance.MyCharacter, baseCharacter);
+                text.color = Faction.GetFactionColor(PlayerManager.Instance.MyCharacter, baseCharacter);
             }
             return true;
         }

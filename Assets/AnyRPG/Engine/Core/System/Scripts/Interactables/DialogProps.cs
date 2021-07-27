@@ -52,7 +52,7 @@ namespace AnyRPG {
 
             if (dialogNames != null) {
                 foreach (string dialogName in dialogNames) {
-                    Dialog tmpDialog = SystemDialogManager.MyInstance.GetResource(dialogName);
+                    Dialog tmpDialog = SystemDialogManager.Instance.GetResource(dialogName);
                     if (tmpDialog != null) {
                         dialogList.Add(tmpDialog);
                     } else {

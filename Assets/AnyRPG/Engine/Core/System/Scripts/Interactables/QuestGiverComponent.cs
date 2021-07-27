@@ -71,7 +71,7 @@ namespace AnyRPG {
                 } else {
                     //Debug.Log(gameObject.name + ".InitializeQuestGiver(): Adding watches on " + questNode.MyQuestTemplate.MyTitle);
                 }
-                questNode.MyQuest = SystemQuestManager.MyInstance.GetResource(questNode.MyQuest.DisplayName);
+                questNode.MyQuest = SystemQuestManager.Instance.GetResource(questNode.MyQuest.DisplayName);
             }
             questGiverInitialized = true;
         }
@@ -127,7 +127,7 @@ namespace AnyRPG {
             if (!PopupWindowManager.Instance.questGiverWindow.IsOpen) {
                 //Debug.Log(source + " interacting with " + gameObject.name);
                 PopupWindowManager.Instance.questGiverWindow.OpenWindow();
-                QuestGiverUI.MyInstance.ShowDescription(Quest.GetAvailableQuests(Props.Quests).Union(Quest.GetCompleteQuests(Props.Quests)).ToList()[0], this);
+                QuestGiverUI.Instance.ShowDescription(Quest.GetAvailableQuests(Props.Quests).Union(Quest.GetCompleteQuests(Props.Quests)).ToList()[0], this);
                 return true;
             }
             return false;
@@ -142,11 +142,11 @@ namespace AnyRPG {
 
         public void UpdateQuestStatus() {
             //Debug.Log(interactable.gameObject.name + ".QuestGiver.UpdateQuestStatus()");
-            if (PlayerManager.MyInstance == null) {
+            if (PlayerManager.Instance == null) {
                 Debug.LogError("PlayerManager not found.  Is the GameManager in the scene?");
                 return;
             }
-            if (PlayerManager.MyInstance.MyCharacter == null) {
+            if (PlayerManager.Instance.MyCharacter == null) {
                 //Debug.Log(gameObject.name + ".QuestGiver.UpdateQuestStatus(): player has no character");
                 return;
             }
@@ -167,12 +167,12 @@ namespace AnyRPG {
         public string GetIndicatorType() {
             //Debug.Log(gameObject.name + ".QuestGiver.GetIndicatorType()");
 
-            if (PlayerManager.MyInstance.MyCharacter == null) {
-                //Debug.Log(gameObject.name + ".QuestGiver.GetIndicatorType(): PlayerManager.MyInstance.MyCharacter is null. returning empty");
+            if (PlayerManager.Instance.MyCharacter == null) {
+                //Debug.Log(gameObject.name + ".QuestGiver.GetIndicatorType(): PlayerManager.Instance.MyCharacter is null. returning empty");
                 return string.Empty;
             }
 
-            float relationValue = interactable.PerformFactionCheck(PlayerManager.MyInstance.MyCharacter);
+            float relationValue = interactable.PerformFactionCheck(PlayerManager.Instance.MyCharacter);
             if (CanInteract(false, false, relationValue) == false) {
                 //Debug.Log(gameObject.name + ".QuestGiver.GetIndicatorType(): Cannot interact.  Return empty string");
                 return string.Empty;
@@ -185,7 +185,7 @@ namespace AnyRPG {
             //Debug.Log(gameObject.name + "QuestGiver.GetIndicatorType(): quests.length: " + quests.Length);
             foreach (QuestNode questNode in Props.Quests) {
                 if (questNode != null && questNode.MyQuest != null) {
-                    if (QuestLog.MyInstance.HasQuest(questNode.MyQuest.DisplayName)) {
+                    if (QuestLog.Instance.HasQuest(questNode.MyQuest.DisplayName)) {
                         if (questNode.MyQuest.IsComplete && !questNode.MyQuest.TurnedIn && questNode.MyEndQuest) {
                             //Debug.Log(gameObject.name + ": There is a complete quest to turn in.  Incrementing inProgressCount.");
                             completeCount++;

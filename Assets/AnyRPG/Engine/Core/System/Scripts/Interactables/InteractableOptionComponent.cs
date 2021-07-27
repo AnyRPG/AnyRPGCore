@@ -73,12 +73,12 @@ namespace AnyRPG {
                 return;
             }
             //Debug.Log(gameObject.name + ".InteractableOption.CreateEventSubscriptions(): subscribing to player unit spawn");
-            if (SystemEventManager.MyInstance == null) {
+            if (SystemEventManager.Instance == null) {
                 Debug.LogError("SystemEventManager not found in the scene.  Is the GameManager in the scene?");
                 return;
-                //SystemEventManager.MyInstance.OnPlayerUnitSpawn += HandlePlayerUnitSpawn;
+                //SystemEventManager.Instance.OnPlayerUnitSpawn += HandlePlayerUnitSpawn;
             }
-            if (PlayerManager.MyInstance == null) {
+            if (PlayerManager.Instance == null) {
                 Debug.LogError("PlayerManager not found. Is the GameManager in the scene?");
                 return;
             }
@@ -86,14 +86,14 @@ namespace AnyRPG {
         }
 
         public virtual void CleanupEventSubscriptions() {
-            if (SystemEventManager.MyInstance != null) {
-                //SystemEventManager.MyInstance.OnPlayerUnitSpawn -= HandlePlayerUnitSpawn;
+            if (SystemEventManager.Instance != null) {
+                //SystemEventManager.Instance.OnPlayerUnitSpawn -= HandlePlayerUnitSpawn;
             }
             eventSubscriptionsInitialized = false;
         }
 
         public virtual void HandleConfirmAction() {
-            SystemEventManager.MyInstance.NotifyOnInteractionWithOptionCompleted(this);
+            SystemEventManager.Instance.NotifyOnInteractionWithOptionCompleted(this);
         }
 
         public virtual bool ProcessFactionValue(float factionValue) {
@@ -142,13 +142,13 @@ namespace AnyRPG {
         public virtual bool Interact(CharacterUnit source, int optionIndex = 0) {
             //Debug.Log(interactable.gameObject.name + ".InteractableOptionComponent.Interact()");
             //source.CancelMountEffects();
-            SystemEventManager.MyInstance.NotifyOnInteractionWithOptionStarted(this);
+            SystemEventManager.Instance.NotifyOnInteractionWithOptionStarted(this);
             return true;
         }
 
         public virtual void StopInteract() {
             //Debug.Log(gameObject.name + ".InanimateUnit.StopInteract()");
-            PlayerManager.MyInstance.PlayerController.StopInteract();
+            PlayerManager.Instance.PlayerController.StopInteract();
         }
 
         public virtual bool HasMiniMapText() {

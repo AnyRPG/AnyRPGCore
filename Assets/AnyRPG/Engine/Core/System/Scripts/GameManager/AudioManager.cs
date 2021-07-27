@@ -10,15 +10,15 @@ namespace AnyRPG {
         #region Singleton
         private static AudioManager instance;
 
-        public static AudioManager MyInstance {
+        public static AudioManager Instance {
             get {
-                if (instance == null) {
-                    instance = FindObjectOfType<AudioManager>();
-                }
                 return instance;
             }
         }
 
+        private void Awake() {
+            instance = this;
+        }
         #endregion
 
         [SerializeField]
@@ -72,10 +72,6 @@ namespace AnyRPG {
         public AudioSource AmbientAudioSource { get => ambientAudioSource; set => ambientAudioSource = value; }
         public AudioSource UiAudioSource { get => uiAudioSource; set => uiAudioSource = value; }
         public AudioSource VoiceAudioSource { get => voiceAudioSource; set => voiceAudioSource = value; }
-
-        private void Awake() {
-            //Debug.Log("AudioManager.Awake()");
-        }
 
         private void Start() {
             //Debug.Log("AudioManager.Start()");

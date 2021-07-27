@@ -47,7 +47,7 @@ namespace AnyRPG {
         }
 
         public void ClickMainMenu() {
-            SystemWindowManager.MyInstance.inGameMainMenuWindow.ToggleOpenClose();
+            SystemWindowManager.Instance.inGameMainMenuWindow.ToggleOpenClose();
         }
 
         public void ClickAbilityBook() {

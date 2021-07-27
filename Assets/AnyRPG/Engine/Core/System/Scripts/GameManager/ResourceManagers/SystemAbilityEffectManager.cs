@@ -12,7 +12,7 @@ namespace AnyRPG {
         #region Singleton
         private static SystemAbilityEffectManager instance;
 
-        public static SystemAbilityEffectManager MyInstance {
+        public static SystemAbilityEffectManager Instance {
             get {
                 if (instance == null) {
                     instance = FindObjectOfType<SystemAbilityEffectManager>();

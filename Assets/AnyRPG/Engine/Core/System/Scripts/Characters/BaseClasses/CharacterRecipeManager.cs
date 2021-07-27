@@ -27,7 +27,7 @@ namespace AnyRPG {
 
         public virtual void UpdateRecipeList(int newLevel) {
             //Debug.Log("CharacterRecipeManager.UpdateRecipeList(" + newLevel + ")");
-            foreach (Recipe recipe in SystemRecipeManager.MyInstance.GetResourceList()) {
+            foreach (Recipe recipe in SystemRecipeManager.Instance.GetResourceList()) {
                 //Debug.Log("CharacterRecipeManager.UpdateRecipeList(" + newLevel + "): evaluating recipe: " + recipe.MyName);
                 foreach (Skill skill in baseCharacter.CharacterSkillManager.MySkillList.Values) {
                     //Debug.Log("CharacterRecipeManager.UpdateRecipeList(" + newLevel + "): recipe: " + recipe.MyName + "evaluating skill: " + skill.MyName);
@@ -63,7 +63,7 @@ namespace AnyRPG {
             //Debug.Log("CharacterRecipeManager.LoadRecipe(" + recipeName + ")");
             string keyName = SystemResourceManager.prepareStringForMatch(recipeName);
             if (!recipeList.ContainsKey(keyName)) {
-                recipeList[keyName] = SystemRecipeManager.MyInstance.GetResource(recipeName);
+                recipeList[keyName] = SystemRecipeManager.Instance.GetResource(recipeName);
                 if (recipeList[keyName] == null) {
                     // failed to get a valid recipe
                     recipeList.Remove(keyName);

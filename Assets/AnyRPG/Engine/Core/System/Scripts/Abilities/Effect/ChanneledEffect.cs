@@ -34,7 +34,7 @@ namespace AnyRPG {
                     GameObject prefabParent = returnObjects[prefabProfile].transform.parent.gameObject;
                     Vector3 sourcePosition = returnObjects[prefabProfile].transform.localPosition;
 
-                    returnObjects[prefabProfile].transform.parent = PlayerManager.MyInstance.EffectPrefabParent.transform;
+                    returnObjects[prefabProfile].transform.parent = PlayerManager.Instance.EffectPrefabParent.transform;
                     IChanneledObject channeledObjectScript = returnObjects[prefabProfile].GetComponent<IChanneledObject>();
                     if (channeledObjectScript != null) {
                         /*

@@ -9,7 +9,7 @@ namespace AnyRPG {
         #region Singleton
         private static SystemCurrencyGroupManager instance;
 
-        public static SystemCurrencyGroupManager MyInstance {
+        public static SystemCurrencyGroupManager Instance {
             get {
                 if (instance == null) {
                     instance = FindObjectOfType<SystemCurrencyGroupManager>();

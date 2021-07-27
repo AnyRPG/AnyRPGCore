@@ -50,9 +50,9 @@ namespace AnyRPG {
                 foreach (string behaviorName in Props.BehaviorNames) {
                     BehaviorProfile tmpBehaviorProfile = null;
                     if (Props.UseBehaviorCopy == true) {
-                        tmpBehaviorProfile = SystemBehaviorProfileManager.MyInstance.GetNewResource(behaviorName);
+                        tmpBehaviorProfile = SystemBehaviorProfileManager.Instance.GetNewResource(behaviorName);
                     } else {
-                        tmpBehaviorProfile = SystemBehaviorProfileManager.MyInstance.GetResource(behaviorName);
+                        tmpBehaviorProfile = SystemBehaviorProfileManager.Instance.GetResource(behaviorName);
                     }
                     if (tmpBehaviorProfile != null) {
                         unitController.BehaviorController.AddToBehaviorList(tmpBehaviorProfile);

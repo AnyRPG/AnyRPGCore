@@ -116,7 +116,7 @@ namespace AnyRPG {
             get {
                 // disabled next bit because it interferes with spawning in cutscenes
                 /*
-                if (PlayerManager.MyInstance.MyPlayerUnitSpawned == false) {
+                if (PlayerManager.Instance.MyPlayerUnitSpawned == false) {
                     //Debug.Log(gameObject.name + ".MyPrerequisitesMet: returning false because player isn't spawned");
                     return false;
                 }
@@ -152,12 +152,12 @@ namespace AnyRPG {
             if (eventSubscriptionsInitialized) {
                 return;
             }
-            if (SystemEventManager.MyInstance == null) {
+            if (SystemEventManager.Instance == null) {
                 Debug.LogError(gameObject.name + ".UnitSpawnNode.CreateEventSubscriptions(): SystemEventManager not found.  Is the GameManager in the scene?");
                 return;
             }
             SystemEventManager.StartListening("OnPlayerUnitSpawn", HandlePlayerUnitSpawn);
-            if (PlayerManager.MyInstance.PlayerUnitSpawned == true) {
+            if (PlayerManager.Instance.PlayerUnitSpawned == true) {
                 //Debug.Log(gameObject.name + ".UnitSpawnNode.CreateEventSubscriptions(): player unit already spawned.  Handling player unit spawn");
                 ProcessPlayerUnitSpawn();
             }
@@ -170,7 +170,7 @@ namespace AnyRPG {
                 return;
             }
 
-            if (SystemEventManager.MyInstance != null) {
+            if (SystemEventManager.Instance != null) {
                 SystemEventManager.StopListening("OnPlayerUnitSpawn", HandlePlayerUnitSpawn);
             }
 
@@ -279,7 +279,7 @@ namespace AnyRPG {
                 Vector3 tempVector = new Vector3(transform.position.x + xLocation, transform.position.y + (ySize / 2), transform.position.z + zLocation);
                 Vector3 attemptVector = tempVector;
                 RaycastHit hit;
-                if (Physics.Raycast(attemptVector, Vector3.down, out hit, 500f, PlayerManager.MyInstance.PlayerController.movementMask)) {
+                if (Physics.Raycast(attemptVector, Vector3.down, out hit, 500f, PlayerManager.Instance.PlayerController.movementMask)) {
                     gotLocation = true;
                     spawnLocation = hit.point;
                     //Debug.Log("We hit " + hit.collider.name + " " + hit.point);
@@ -316,11 +316,11 @@ namespace AnyRPG {
 
         public void CommonSpawn(int unitLevel, int extraLevels, bool dynamicLevel, UnitProfile unitProfile, UnitToughness toughness = null) {
             //Debug.Log(gameObject.name + ".UnitSpawnNode.CommonSpawn()");
-            if (unitProfile == null || PlayerManager.MyInstance.MyCharacter == null) {
+            if (unitProfile == null || PlayerManager.Instance.MyCharacter == null) {
                 return;
             }
 
-            int _unitLevel = (dynamicLevel ? PlayerManager.MyInstance.MyCharacter.CharacterStats.Level : unitLevel) + extraLevels;
+            int _unitLevel = (dynamicLevel ? PlayerManager.Instance.MyCharacter.CharacterStats.Level : unitLevel) + extraLevels;
             UnitController unitController = unitProfile.SpawnUnitPrefab(null, transform.position, transform.forward, UnitControllerMode.AI, _unitLevel);
 
             if (unitController == null) {
@@ -329,7 +329,7 @@ namespace AnyRPG {
             }
 
             // give this unit a unique name
-            //unitController.gameObject.name = unitController.gameObject.name + SystemGameManager.MyInstance.GetSpawnCount();
+            //unitController.gameObject.name = unitController.gameObject.name + SystemGameManager.Instance.GetSpawnCount();
 
             Vector3 newSpawnLocation = Vector3.zero;
             Vector3 newSpawnForward = Vector3.forward;
@@ -465,7 +465,7 @@ namespace AnyRPG {
             foreach (UnitController unitController in spawnReferences) {
                 //Debug.Log(gameObject.name + ".UnitSpawnNode.DestroySpawn(): Destroying spawn: " + unitController.gameObject.name + "; delay: " + despawnDelay);
                 unitController.Despawn(despawnDelay);
-                //ObjectPooler.MyInstance.ReturnObjectToPool(unitController.gameObject, despawnDelay);
+                //ObjectPooler.Instance.ReturnObjectToPool(unitController.gameObject, despawnDelay);
             }
             spawnReferences.Clear();
         }
@@ -540,7 +540,7 @@ namespace AnyRPG {
             }
 
             // only players can activate trigger based unit spawn nodes.  we don't want npcs wandering around patrolling to activate these
-            if (PlayerManager.MyInstance.PlayerUnitSpawned == false || other.gameObject != PlayerManager.MyInstance.ActiveUnitController.gameObject) {
+            if (PlayerManager.Instance.PlayerUnitSpawned == false || other.gameObject != PlayerManager.Instance.ActiveUnitController.gameObject) {
                 return;
             }
 
@@ -580,7 +580,7 @@ namespace AnyRPG {
             if (unitProfileNames != null) {
                 foreach (string unitProfileName in unitProfileNames) {
                     if (unitProfileName != null && unitProfileName != string.Empty) {
-                        UnitProfile unitProfile = SystemUnitProfileManager.MyInstance.GetResource(unitProfileName);
+                        UnitProfile unitProfile = SystemUnitProfileManager.Instance.GetResource(unitProfileName);
                         if (unitProfile != null) {
                             unitProfiles.Add(unitProfile);
                         } else {
@@ -591,7 +591,7 @@ namespace AnyRPG {
             }
 
             if (unitToughness == null && defaultToughness != null && defaultToughness != string.Empty) {
-                UnitToughness tmpToughness = SystemUnitToughnessManager.MyInstance.GetResource(defaultToughness);
+                UnitToughness tmpToughness = SystemUnitToughnessManager.Instance.GetResource(defaultToughness);
                 if (tmpToughness != null) {
                     unitToughness = tmpToughness;
                 } else {

@@ -14,7 +14,7 @@ namespace AnyRPG {
         #region Singleton
         private static SystemDialogManager instance;
 
-        public static SystemDialogManager MyInstance {
+        public static SystemDialogManager Instance {
             get {
                 if (instance == null) {
                     instance = FindObjectOfType<SystemDialogManager>();

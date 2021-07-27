@@ -45,9 +45,9 @@ namespace AnyRPG {
                 foreach (string behaviorName in behaviorNames) {
                     BehaviorProfile tmpBehaviorProfile = null;
                     if (useBehaviorCopy == true) {
-                        tmpBehaviorProfile = SystemBehaviorProfileManager.MyInstance.GetNewResource(behaviorName);
+                        tmpBehaviorProfile = SystemBehaviorProfileManager.Instance.GetNewResource(behaviorName);
                     } else {
-                        tmpBehaviorProfile = SystemBehaviorProfileManager.MyInstance.GetResource(behaviorName);
+                        tmpBehaviorProfile = SystemBehaviorProfileManager.Instance.GetResource(behaviorName);
                     }
                     if (tmpBehaviorProfile != null) {
                         behaviorList.Add(tmpBehaviorProfile);

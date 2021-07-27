@@ -13,7 +13,7 @@ namespace AnyRPG {
         #region Singleton
         private static MiniMapController instance;
 
-        public static MiniMapController MyInstance {
+        public static MiniMapController Instance {
             get {
                 if (instance == null) {
                     instance = FindObjectOfType<MiniMapController>();
@@ -121,7 +121,7 @@ namespace AnyRPG {
             minimapTextureFolder = minimapTextureFolderBase + SystemConfigurationManager.Instance.GameName.Replace(" ", "") + "/Images/MiniMap/";
             
             //instantiate singleton
-            MiniMapController tempcontroller = MyInstance;
+            MiniMapController tempcontroller = Instance;
 
             rectTransform = gameObject.GetComponent<RectTransform>();
 
@@ -157,8 +157,8 @@ namespace AnyRPG {
 
         public void LateUpdate() {
             if (SystemConfigurationManager.Instance.UseThirdPartyCameraControl == true
-                && CameraManager.MyInstance.ThirdPartyCamera.activeInHierarchy == true
-                && PlayerManager.MyInstance.PlayerUnitSpawned == true) {
+                && CameraManager.Instance.ThirdPartyCamera.activeInHierarchy == true
+                && PlayerManager.Instance.PlayerUnitSpawned == true) {
                 UpdateMiniMap();
             }
         }
@@ -203,7 +203,7 @@ namespace AnyRPG {
         public MiniMapIndicatorController AddIndicator(Interactable interactable) {
             //Debug.Log("MinimapController.AddIndicator(" + interactable.gameObject.name + ")");
             if (miniMapIndicatorControllers.ContainsKey(interactable) == false) {
-                GameObject miniMapIndicator = ObjectPooler.MyInstance.GetPooledObject(miniMapIndicatorPrefab, miniMapGraphic.transform);
+                GameObject miniMapIndicator = ObjectPooler.Instance.GetPooledObject(miniMapIndicatorPrefab, miniMapGraphic.transform);
                 if (miniMapIndicator != null) {
                     MiniMapIndicatorController miniMapIndicatorController = miniMapIndicator.GetComponent<MiniMapIndicatorController>();
                     miniMapIndicatorControllers.Add(interactable, miniMapIndicatorController);
@@ -220,13 +220,13 @@ namespace AnyRPG {
         public void RemoveIndicator(Interactable interactable) {
             if (miniMapIndicatorControllers.ContainsKey(interactable)) {
                 miniMapIndicatorControllers[interactable].ResetSettings();
-                ObjectPooler.MyInstance.ReturnObjectToPool(miniMapIndicatorControllers[interactable].gameObject);
+                ObjectPooler.Instance.ReturnObjectToPool(miniMapIndicatorControllers[interactable].gameObject);
                 miniMapIndicatorControllers.Remove(interactable);
             }
         }
 
         private void HandleCameraZoom(bool force = false) {
-            if (InputManager.MyInstance.mouseScrolled || force) {
+            if (InputManager.Instance.mouseScrolled || force) {
 
                 // determine if mouse is inside this object
                 rectTransform.GetWorldCorners(worldCorners);
@@ -265,13 +265,13 @@ namespace AnyRPG {
             float imageCenterX = -1f * ((playerX - levelOffset.x) * levelScaleFactor) * imageScaleFactor;
             float imageCenterY = -1f * ((playerZ - levelOffset.z) * levelScaleFactor) * imageScaleFactor;
 
-            //Debug.Log("scaleFactor: " + levelScaleFactor + "; player: " + followTransform.position + "; imageScaleFactor: " + imageScaleFactor + "; rawWidth: " + miniMapGraphicRawImage.texture.width + "; cameraSize: " + cameraSize + "; sceneBounds: " + LevelManager.MyInstance.SceneBounds.size);
+            //Debug.Log("scaleFactor: " + levelScaleFactor + "; player: " + followTransform.position + "; imageScaleFactor: " + imageScaleFactor + "; rawWidth: " + miniMapGraphicRawImage.texture.width + "; cameraSize: " + cameraSize + "; sceneBounds: " + LevelManager.Instance.SceneBounds.size);
 
             miniMapGraphicRect.anchoredPosition = new Vector2(imageCenterX, imageCenterY);
         }
 
         private void CommonInitialization() {
-            SceneNode sceneNode = LevelManager.MyInstance.GetActiveSceneNode();
+            SceneNode sceneNode = LevelManager.Instance.GetActiveSceneNode();
             if (sceneNode != null) {
                 zoneNameText.text = sceneNode.DisplayName;
             } else {
@@ -315,7 +315,7 @@ namespace AnyRPG {
             }
 
             // First, try to find the minimap
-            Texture2D mapTexture = new Texture2D((int)LevelManager.MyInstance.SceneBounds.size.x, (int)LevelManager.MyInstance.SceneBounds.size.z);
+            Texture2D mapTexture = new Texture2D((int)LevelManager.Instance.SceneBounds.size.x, (int)LevelManager.Instance.SceneBounds.size.z);
             string textureFilePath = minimapTextureFolder + GetScreenshotFilename();
             if (System.IO.File.Exists(textureFilePath)) {
                 //sceneTextureFound = true;
@@ -343,8 +343,8 @@ namespace AnyRPG {
 
             // scale factor gives the number of pixels per meter for this image
             // it assumes a square image whose factor is based on the largest scene dimension
-            levelScaleFactor = miniMapGraphicRawImage.texture.width / (LevelManager.MyInstance.SceneBounds.size.x > LevelManager.MyInstance.SceneBounds.size.z ? LevelManager.MyInstance.SceneBounds.size.x : LevelManager.MyInstance.SceneBounds.size.z);
-            levelOffset = LevelManager.MyInstance.SceneBounds.center;
+            levelScaleFactor = miniMapGraphicRawImage.texture.width / (LevelManager.Instance.SceneBounds.size.x > LevelManager.Instance.SceneBounds.size.z ? LevelManager.Instance.SceneBounds.size.x : LevelManager.Instance.SceneBounds.size.z);
+            levelOffset = LevelManager.Instance.SceneBounds.center;
 
             EnableIndicators();
 

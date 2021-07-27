@@ -130,8 +130,8 @@ namespace AnyRPG {
         }
 
         public void ResetWindowPositions() {
-            UIManager.MyInstance.LoadDefaultWindowPositions();
-            SaveManager.MyInstance.SaveWindowPositions();
+            UIManager.Instance.LoadDefaultWindowPositions();
+            SaveManager.Instance.SaveWindowPositions();
         }
 
         private void LoadUISettings() {
@@ -345,7 +345,7 @@ namespace AnyRPG {
                 hideFullHealthBarButton.Select();
             }
 
-            UIManager.MyInstance.CheckUISettings(!UIManager.MyInstance.PlayerUI.activeSelf);
+            UIManager.Instance.CheckUISettings(!UIManager.Instance.PlayerUI.activeSelf);
 
         }
 
@@ -377,11 +377,11 @@ namespace AnyRPG {
         public void ToggleinvertMouse() {
             if (PlayerPrefs.GetInt("MouseInvert") == 0) {
                 PlayerPrefs.SetInt("MouseInvert", 1);
-                MessageFeedManager.MyInstance.WriteMessage("Invert Mouse: on");
+                MessageFeedManager.Instance.WriteMessage("Invert Mouse: on");
                 invertMouseButton.Select();
             } else {
                 PlayerPrefs.SetInt("MouseInvert", 0);
-                MessageFeedManager.MyInstance.WriteMessage("Invert Mouse: off");
+                MessageFeedManager.Instance.WriteMessage("Invert Mouse: off");
                 invertMouseButton.DeSelect();
             }
         }
@@ -389,209 +389,209 @@ namespace AnyRPG {
         public void ToggleUseQuestTracker() {
             if (PlayerPrefs.GetInt("UseQuestTracker") == 0) {
                 PlayerPrefs.SetInt("UseQuestTracker", 1);
-                MessageFeedManager.MyInstance.WriteMessage("Quest Tracker: on");
+                MessageFeedManager.Instance.WriteMessage("Quest Tracker: on");
                 useQuestTrackerButton.Select();
             } else {
                 PlayerPrefs.SetInt("UseQuestTracker", 0);
-                MessageFeedManager.MyInstance.WriteMessage("Quest Tracker: off");
+                MessageFeedManager.Instance.WriteMessage("Quest Tracker: off");
                 useQuestTrackerButton.DeSelect();
             }
-            UIManager.MyInstance.CheckQuestTrackerSettings();
+            UIManager.Instance.CheckQuestTrackerSettings();
         }
 
         public void ToggleUseCombatLog() {
             if (PlayerPrefs.GetInt("UseCombatLog") == 0) {
                 PlayerPrefs.SetInt("UseCombatLog", 1);
-                MessageFeedManager.MyInstance.WriteMessage("Combat Log: on");
+                MessageFeedManager.Instance.WriteMessage("Combat Log: on");
                 useCombatLogButton.Select();
             } else {
                 PlayerPrefs.SetInt("UseCombatLog", 0);
-                MessageFeedManager.MyInstance.WriteMessage("Combat Log: off");
+                MessageFeedManager.Instance.WriteMessage("Combat Log: off");
                 useCombatLogButton.DeSelect();
             }
-            UIManager.MyInstance.CheckCombatLogSettings();
+            UIManager.Instance.CheckCombatLogSettings();
         }
 
         public void ToggleUseActionBar2() {
             if (PlayerPrefs.GetInt("UseActionBar2") == 0) {
                 PlayerPrefs.SetInt("UseActionBar2", 1);
-                MessageFeedManager.MyInstance.WriteMessage("Action Bar 2: on");
+                MessageFeedManager.Instance.WriteMessage("Action Bar 2: on");
                 useActionBar2Button.Select();
             } else {
                 PlayerPrefs.SetInt("UseActionBar2", 0);
-                MessageFeedManager.MyInstance.WriteMessage("Action Bar 2: off");
+                MessageFeedManager.Instance.WriteMessage("Action Bar 2: off");
                 useActionBar2Button.DeSelect();
             }
-            UIManager.MyInstance.UpdateActionBars();
+            UIManager.Instance.UpdateActionBars();
         }
 
         public void ToggleUseActionBar3() {
             if (PlayerPrefs.GetInt("UseActionBar3") == 0) {
                 PlayerPrefs.SetInt("UseActionBar3", 1);
-                MessageFeedManager.MyInstance.WriteMessage("Action Bar 3: on");
+                MessageFeedManager.Instance.WriteMessage("Action Bar 3: on");
                 useActionBar3Button.Select();
             } else {
                 PlayerPrefs.SetInt("UseActionBar3", 0);
-                MessageFeedManager.MyInstance.WriteMessage("Action Bar 3: on");
+                MessageFeedManager.Instance.WriteMessage("Action Bar 3: on");
                 useActionBar3Button.DeSelect();
             }
-            UIManager.MyInstance.UpdateActionBars();
+            UIManager.Instance.UpdateActionBars();
         }
 
         public void ToggleUseActionBar4() {
             if (PlayerPrefs.GetInt("UseActionBar4") == 0) {
                 PlayerPrefs.SetInt("UseActionBar4", 1);
-                MessageFeedManager.MyInstance.WriteMessage("Action Bar 4: on");
+                MessageFeedManager.Instance.WriteMessage("Action Bar 4: on");
                 useActionBar4Button.Select();
             } else {
                 PlayerPrefs.SetInt("UseActionBar4", 0);
-                MessageFeedManager.MyInstance.WriteMessage("Action Bar 4: off");
+                MessageFeedManager.Instance.WriteMessage("Action Bar 4: off");
                 useActionBar4Button.DeSelect();
             }
-            UIManager.MyInstance.UpdateActionBars();
+            UIManager.Instance.UpdateActionBars();
         }
 
         public void ToggleUseActionBar5() {
             if (PlayerPrefs.GetInt("UseActionBar5") == 0) {
                 PlayerPrefs.SetInt("UseActionBar5", 1);
-                MessageFeedManager.MyInstance.WriteMessage("Action Bar 5: on");
+                MessageFeedManager.Instance.WriteMessage("Action Bar 5: on");
                 useActionBar5Button.Select();
             } else {
                 PlayerPrefs.SetInt("UseActionBar5", 0);
-                MessageFeedManager.MyInstance.WriteMessage("Action Bar 5: on");
+                MessageFeedManager.Instance.WriteMessage("Action Bar 5: on");
                 useActionBar5Button.DeSelect();
             }
-            UIManager.MyInstance.UpdateActionBars();
+            UIManager.Instance.UpdateActionBars();
         }
 
         public void ToggleUseActionBar6() {
             if (PlayerPrefs.GetInt("UseActionBar6") == 0) {
                 PlayerPrefs.SetInt("UseActionBar6", 1);
-                MessageFeedManager.MyInstance.WriteMessage("Action Bar 6: on");
+                MessageFeedManager.Instance.WriteMessage("Action Bar 6: on");
                 useActionBar6Button.Select();
             } else {
                 PlayerPrefs.SetInt("UseActionBar6", 0);
-                MessageFeedManager.MyInstance.WriteMessage("Action Bar 6: off");
+                MessageFeedManager.Instance.WriteMessage("Action Bar 6: off");
                 useActionBar6Button.DeSelect();
             }
-            UIManager.MyInstance.UpdateActionBars();
+            UIManager.Instance.UpdateActionBars();
         }
 
         public void ToggleUseActionBar7() {
             if (PlayerPrefs.GetInt("UseActionBar7") == 0) {
                 PlayerPrefs.SetInt("UseActionBar7", 1);
-                MessageFeedManager.MyInstance.WriteMessage("Action Bar 7: on");
+                MessageFeedManager.Instance.WriteMessage("Action Bar 7: on");
                 useActionBar7Button.Select();
             } else {
                 PlayerPrefs.SetInt("UseActionBar7", 0);
-                MessageFeedManager.MyInstance.WriteMessage("Action Bar 7: off");
+                MessageFeedManager.Instance.WriteMessage("Action Bar 7: off");
                 useActionBar7Button.DeSelect();
             }
-            UIManager.MyInstance.UpdateActionBars();
+            UIManager.Instance.UpdateActionBars();
         }
 
         public void ToggleUseStatusEffectBar() {
             if (PlayerPrefs.GetInt("UseStatusEffectBar") == 0) {
                 PlayerPrefs.SetInt("UseStatusEffectBar", 1);
-                MessageFeedManager.MyInstance.WriteMessage("Status Effect Bar: on");
+                MessageFeedManager.Instance.WriteMessage("Status Effect Bar: on");
                 useStatusEffectBarButton.Select();
             } else {
                 PlayerPrefs.SetInt("UseStatusEffectBar", 0);
-                MessageFeedManager.MyInstance.WriteMessage("Status Effect Bar: off");
+                MessageFeedManager.Instance.WriteMessage("Status Effect Bar: off");
                 useStatusEffectBarButton.DeSelect();
             }
-            UIManager.MyInstance.UpdateStatusEffectBar();
+            UIManager.Instance.UpdateStatusEffectBar();
         }
 
         public void ToggleUseFocusUnitFrameButton() {
             if (PlayerPrefs.GetInt("UseFocusUnitFrame") == 0) {
                 PlayerPrefs.SetInt("UseFocusUnitFrame", 1);
-                MessageFeedManager.MyInstance.WriteMessage("Focus Unit Frame: on");
+                MessageFeedManager.Instance.WriteMessage("Focus Unit Frame: on");
                 useFocusUnitFrameButton.Select();
             } else {
                 PlayerPrefs.SetInt("UseFocusUnitFrame", 0);
-                MessageFeedManager.MyInstance.WriteMessage("Focus Unit Frame: off");
+                MessageFeedManager.Instance.WriteMessage("Focus Unit Frame: off");
                 useFocusUnitFrameButton.DeSelect();
             }
-            UIManager.MyInstance.UpdateFocusUnitFrame();
+            UIManager.Instance.UpdateFocusUnitFrame();
         }
 
         public void ToggleUsePlayerUnitFrameButton() {
             if (PlayerPrefs.GetInt("UsePlayerUnitFrame") == 0) {
                 PlayerPrefs.SetInt("UsePlayerUnitFrame", 1);
-                MessageFeedManager.MyInstance.WriteMessage("Player Unit Frame: on");
+                MessageFeedManager.Instance.WriteMessage("Player Unit Frame: on");
                 usePlayerUnitFrameButton.Select();
             } else {
                 PlayerPrefs.SetInt("UsePlayerUnitFrame", 0);
-                MessageFeedManager.MyInstance.WriteMessage("Player Unit Frame: off");
+                MessageFeedManager.Instance.WriteMessage("Player Unit Frame: off");
                 usePlayerUnitFrameButton.DeSelect();
             }
-            UIManager.MyInstance.UpdatePlayerUnitFrame();
+            UIManager.Instance.UpdatePlayerUnitFrame();
         }
 
         public void ToggleUseFloatingCastBarButton() {
             if (PlayerPrefs.GetInt("UseFloatingCastBar") == 0) {
                 PlayerPrefs.SetInt("UseFloatingCastBar", 1);
-                MessageFeedManager.MyInstance.WriteMessage("Floating Cast Bar: on");
+                MessageFeedManager.Instance.WriteMessage("Floating Cast Bar: on");
                 useFloatingCastBarButton.Select();
             } else {
                 PlayerPrefs.SetInt("UseFloatingCastBar", 0);
-                MessageFeedManager.MyInstance.WriteMessage("Floating Cast Bar: off");
+                MessageFeedManager.Instance.WriteMessage("Floating Cast Bar: off");
                 useFloatingCastBarButton.DeSelect();
             }
-            UIManager.MyInstance.UpdateFloatingCastBar();
+            UIManager.Instance.UpdateFloatingCastBar();
         }
 
         public void ToggleUseMiniMapButton() {
             if (PlayerPrefs.GetInt("UseMiniMap") == 0) {
                 PlayerPrefs.SetInt("UseMiniMap", 1);
                 useMiniMapButton.Select();
-                MessageFeedManager.MyInstance.WriteMessage("Minimap: on");
+                MessageFeedManager.Instance.WriteMessage("Minimap: on");
             } else {
                 PlayerPrefs.SetInt("UseMiniMap", 0);
                 useMiniMapButton.DeSelect();
-                MessageFeedManager.MyInstance.WriteMessage("Minimap: off");
+                MessageFeedManager.Instance.WriteMessage("Minimap: off");
             }
-            UIManager.MyInstance.UpdateMiniMap();
+            UIManager.Instance.UpdateMiniMap();
         }
 
         public void ToggleUseExperienceBarButton() {
             if (PlayerPrefs.GetInt("UseExperienceBar") == 0) {
                 PlayerPrefs.SetInt("UseExperienceBar", 1);
-                MessageFeedManager.MyInstance.WriteMessage("Experience Bar: on");
+                MessageFeedManager.Instance.WriteMessage("Experience Bar: on");
                 useExperienceBarButton.Select();
             } else {
                 PlayerPrefs.SetInt("UseExperienceBar", 0);
-                MessageFeedManager.MyInstance.WriteMessage("Experience Bar: off");
+                MessageFeedManager.Instance.WriteMessage("Experience Bar: off");
                 useExperienceBarButton.DeSelect();
             }
-            UIManager.MyInstance.UpdateExperienceBar();
+            UIManager.Instance.UpdateExperienceBar();
         }
 
         public void ToggleUseFloatingCombatTextButton() {
             if (PlayerPrefs.GetInt("UseFloatingCombatText") == 0) {
                 PlayerPrefs.SetInt("UseFloatingCombatText", 1);
-                MessageFeedManager.MyInstance.WriteMessage("Floating Combat Text: on");
+                MessageFeedManager.Instance.WriteMessage("Floating Combat Text: on");
                 useFloatingCombatTextButton.Select();
             } else {
                 PlayerPrefs.SetInt("UseFloatingCombatText", 0);
-                MessageFeedManager.MyInstance.WriteMessage("Floating Combat Text: off");
+                MessageFeedManager.Instance.WriteMessage("Floating Combat Text: off");
                 useFloatingCombatTextButton.DeSelect();
             }
-            UIManager.MyInstance.UpdateFloatingCombatText();
+            UIManager.Instance.UpdateFloatingCombatText();
         }
 
         public void ToggleUseMessageFeedButton() {
             if (PlayerPrefs.GetInt("UseMessageFeed") == 0) {
                 PlayerPrefs.SetInt("UseMessageFeed", 1);
-                MessageFeedManager.MyInstance.WriteMessage("Use Message Feed: on");
+                MessageFeedManager.Instance.WriteMessage("Use Message Feed: on");
                 useMessageFeedButton.Select();
             } else {
-                MessageFeedManager.MyInstance.WriteMessage("Use Message Feed: off");
+                MessageFeedManager.Instance.WriteMessage("Use Message Feed: off");
                 PlayerPrefs.SetInt("UseMessageFeed", 0);
                 useMessageFeedButton.DeSelect();
             }
-            UIManager.MyInstance.UpdateMessageFeed();
+            UIManager.Instance.UpdateMessageFeed();
         }
 
         public void ToggleShowPlayerNameButton() {
@@ -599,10 +599,10 @@ namespace AnyRPG {
             if (PlayerPrefs.GetInt("ShowPlayerName") == 0) {
                 PlayerPrefs.SetInt("ShowPlayerName", 1);
                 //Debug.Log("MainSettingsMenuController.ToggleShowPlayerNameButton(): showplayername now set to 1");
-                MessageFeedManager.MyInstance.WriteMessage("Show Player Name: on");
+                MessageFeedManager.Instance.WriteMessage("Show Player Name: on");
                 showPlayerNameButton.Select();
             } else {
-                MessageFeedManager.MyInstance.WriteMessage("Show Player Name: off");
+                MessageFeedManager.Instance.WriteMessage("Show Player Name: off");
                 PlayerPrefs.SetInt("ShowPlayerName", 0);
                 //Debug.Log("MainSettingsMenuController.ToggleShowPlayerNameButton(): showplayername now set to 0");
                 showPlayerNameButton.DeSelect();
@@ -616,10 +616,10 @@ namespace AnyRPG {
             if (PlayerPrefs.GetInt("ShowPlayerFaction") == 0) {
                 PlayerPrefs.SetInt("ShowPlayerFaction", 1);
                 //Debug.Log("MainSettingsMenuController.ToggleShowPlayerNameButton(): showplayername now set to 1");
-                MessageFeedManager.MyInstance.WriteMessage("Show Player Faction: on");
+                MessageFeedManager.Instance.WriteMessage("Show Player Faction: on");
                 showPlayerFactionButton.Select();
             } else {
-                MessageFeedManager.MyInstance.WriteMessage("Show Player Faction: off");
+                MessageFeedManager.Instance.WriteMessage("Show Player Faction: off");
                 PlayerPrefs.SetInt("ShowPlayerFaction", 0);
                 //Debug.Log("MainSettingsMenuController.ToggleShowPlayerNameButton(): showplayername now set to 0");
                 showPlayerFactionButton.DeSelect();
@@ -632,10 +632,10 @@ namespace AnyRPG {
             //Debug.Log("MainSettingsMenuController.ToggleHideFullHealthBarButton()");
             if (PlayerPrefs.GetInt("HideFullHealthBar") == 0) {
                 PlayerPrefs.SetInt("HideFullHealthBar", 1);
-                MessageFeedManager.MyInstance.WriteMessage("Hide Full Healthbar: on");
+                MessageFeedManager.Instance.WriteMessage("Hide Full Healthbar: on");
                 hideFullHealthBarButton.Select();
             } else {
-                MessageFeedManager.MyInstance.WriteMessage("Hide full healthbar: off");
+                MessageFeedManager.Instance.WriteMessage("Hide full healthbar: off");
                 PlayerPrefs.SetInt("HideFullHealthBar", 0);
                 hideFullHealthBarButton.DeSelect();
             }
@@ -646,66 +646,66 @@ namespace AnyRPG {
         public void ToggleLockUIButton() {
             if (PlayerPrefs.GetInt("LockUI") == 0) {
                 PlayerPrefs.SetInt("LockUI", 1);
-                MessageFeedManager.MyInstance.WriteMessage("Lock UI: on");
+                MessageFeedManager.Instance.WriteMessage("Lock UI: on");
                 lockUIButton.Select();
             } else {
-                MessageFeedManager.MyInstance.WriteMessage("Lock UI: off");
+                MessageFeedManager.Instance.WriteMessage("Lock UI: off");
                 PlayerPrefs.SetInt("LockUI", 0);
                 lockUIButton.DeSelect();
             }
-            UIManager.MyInstance.UpdateLockUI();
+            UIManager.Instance.UpdateLockUI();
         }
 
         public void InventoryOpacitySliderUpdate() {
             PlayerPrefs.SetFloat("InventoryOpacity", inventoryOpacitySlider.value);
-            UIManager.MyInstance.UpdateInventoryOpacity();
-            SystemEventManager.MyInstance.NotifyOnInventoryTransparencyUpdate();
+            UIManager.Instance.UpdateInventoryOpacity();
+            SystemEventManager.TriggerEvent("OnInventoryTransparencyUpdate", new EventParamProperties());
         }
 
         public void InventorySlotOpacitySliderUpdate() {
             PlayerPrefs.SetFloat("InventorySlotOpacity", inventorySlotOpacitySlider.value);
-            UIManager.MyInstance.UpdateInventoryOpacity();
-            SystemEventManager.MyInstance.NotifyOnInventoryTransparencyUpdate();
+            UIManager.Instance.UpdateInventoryOpacity();
+            SystemEventManager.TriggerEvent("OnInventoryTransparencyUpdate", new EventParamProperties());
         }
 
         public void ActionBarOpacitySliderUpdate() {
             PlayerPrefs.SetFloat("ActionBarOpacity", actionBarOpacitySlider.value);
-            UIManager.MyInstance.UpdateActionBarOpacity();
+            UIManager.Instance.UpdateActionBarOpacity();
         }
 
         public void QuestTrackerOpacitySliderUpdate() {
             PlayerPrefs.SetFloat("QuestTrackerOpacity", questTrackerOpacitySlider.value);
-            UIManager.MyInstance.UpdateQuestTrackerOpacity();
+            UIManager.Instance.UpdateQuestTrackerOpacity();
         }
 
         public void CombatLogOpacitySliderUpdate() {
             PlayerPrefs.SetFloat("CombatLogOpacity", combatLogOpacitySlider.value);
-            UIManager.MyInstance.UpdateCombatLogOpacity();
+            UIManager.Instance.UpdateCombatLogOpacity();
         }
 
         public void PopupWindowOpacitySliderUpdate() {
             PlayerPrefs.SetFloat("PopupWindowOpacity", popupWindowOpacitySlider.value);
-            UIManager.MyInstance.UpdatePopupWindowOpacity();
+            UIManager.Instance.UpdatePopupWindowOpacity();
         }
 
         public void PagedButtonsOpacitySliderUpdate() {
             //Debug.Log("MainSettingsMenuController.PagedButtonsOpacitySliderUpdate()");
             PlayerPrefs.SetFloat("PagedButtonsOpacity", pagedButtonsOpacitySlider.value);
-            SystemEventManager.MyInstance.NotifyOnPagedButtonsTransparencyUpdate();
+            SystemEventManager.TriggerEvent("OnPagedButtonsTransparencyUpdate", new EventParamProperties());
         }
 
         public void SystemMenuOpacitySliderUpdate() {
             PlayerPrefs.SetFloat("SystemMenuOpacity", systemMenuOpacitySlider.value);
-            UIManager.MyInstance.UpdateSystemMenuOpacity();
+            UIManager.Instance.UpdateSystemMenuOpacity();
         }
 
         private void LoadVolumeSliderValues() {
-            masterSlider.value = PlayerPrefs.GetFloat(AudioManager.MyInstance.MasterVolume);
-            musicSlider.value = PlayerPrefs.GetFloat(AudioManager.MyInstance.MusicVolume);
-            ambientSlider.value = PlayerPrefs.GetFloat(AudioManager.MyInstance.AmbientVolume);
-            effectsSlider.value = PlayerPrefs.GetFloat(AudioManager.MyInstance.EffectsVolume);
-            uiSlider.value = PlayerPrefs.GetFloat(AudioManager.MyInstance.UiVolume);
-            voiceSlider.value = PlayerPrefs.GetFloat(AudioManager.MyInstance.VoiceVolume);
+            masterSlider.value = PlayerPrefs.GetFloat(AudioManager.Instance.MasterVolume);
+            musicSlider.value = PlayerPrefs.GetFloat(AudioManager.Instance.MusicVolume);
+            ambientSlider.value = PlayerPrefs.GetFloat(AudioManager.Instance.AmbientVolume);
+            effectsSlider.value = PlayerPrefs.GetFloat(AudioManager.Instance.EffectsVolume);
+            uiSlider.value = PlayerPrefs.GetFloat(AudioManager.Instance.UiVolume);
+            voiceSlider.value = PlayerPrefs.GetFloat(AudioManager.Instance.VoiceVolume);
         }
 
         private void LoadDifficultySettings() {
@@ -719,27 +719,27 @@ namespace AnyRPG {
         }
 
         public void MasterSlider() {
-            AudioManager.MyInstance.SetMasterVolume(masterSlider.value);
+            AudioManager.Instance.SetMasterVolume(masterSlider.value);
         }
 
         public void MusicSlider() {
-            AudioManager.MyInstance.SetMusicVolume(musicSlider.value);
+            AudioManager.Instance.SetMusicVolume(musicSlider.value);
         }
 
         public void AmbientSlider() {
-            AudioManager.MyInstance.SetAmbientVolume(ambientSlider.value);
+            AudioManager.Instance.SetAmbientVolume(ambientSlider.value);
         }
 
         public void EffectsSlider() {
-            AudioManager.MyInstance.SetEffectsVolume(effectsSlider.value);
+            AudioManager.Instance.SetEffectsVolume(effectsSlider.value);
         }
 
         public void UISlider() {
-            AudioManager.MyInstance.SetUIVolume(uiSlider.value);
+            AudioManager.Instance.SetUIVolume(uiSlider.value);
         }
 
         public void VoiceSlider() {
-            AudioManager.MyInstance.SetVoiceVolume(voiceSlider.value);
+            AudioManager.Instance.SetVoiceVolume(voiceSlider.value);
         }
 
         public void MouseLookSpeedSlider() {
@@ -812,8 +812,8 @@ namespace AnyRPG {
         }
 
         public void CloseMenu() {
-            //SystemWindowManager.MyInstance.mainMenuWindow.OpenWindow();
-            SystemWindowManager.MyInstance.settingsMenuWindow.CloseWindow();
+            //SystemWindowManager.Instance.mainMenuWindow.OpenWindow();
+            SystemWindowManager.Instance.settingsMenuWindow.CloseWindow();
         }
 
         public override void ReceiveOpenWindowNotification() {

@@ -17,16 +17,15 @@ namespace AnyRPG {
         #region Singleton
         private static UMACharacterEditorPanelController instance;
 
-        public static UMACharacterEditorPanelController MyInstance {
+        public static UMACharacterEditorPanelController Instance {
             get {
-                if (instance == null) {
-                    instance = FindObjectOfType<UMACharacterEditorPanelController>();
-                }
-
                 return instance;
             }
         }
 
+        private void Awake() {
+            instance = this;
+        }
         #endregion
 
         public override event Action<ICloseableWindowContents> OnCloseWindow = delegate { };
@@ -67,11 +66,11 @@ namespace AnyRPG {
             mainButtonsArea.SetActive(false);
             mainNoOptionsArea.SetActive(false);
             // there are no options to show if this is not an UMA
-            if (CharacterCreatorManager.MyInstance.PreviewUnitController?.DynamicCharacterAvatar == null) {
+            if (CharacterCreatorManager.Instance.PreviewUnitController?.DynamicCharacterAvatar == null) {
                 mainNoOptionsArea.SetActive(true);
                 return;
             }
-            if (CharacterCreatorManager.MyInstance?.PreviewUnitController?.ModelReady == true) {
+            if (CharacterCreatorManager.Instance?.PreviewUnitController?.ModelReady == true) {
                 mainButtonsArea.SetActive(true);
                 OpenAppearanceOptionsArea();
                 InitializeSexButtons();

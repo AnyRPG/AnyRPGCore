@@ -26,7 +26,7 @@ public class QuestTrackerQuestScript : MonoBehaviour
     public void Select() {
         //Debug.Log("QuestTrackerQuestScript.Select()");
         PopupWindowManager.Instance.questLogWindow.OpenWindow();
-        QuestLogUI.MyInstance.ShowDescription(MyQuest);
+        QuestLogUI.Instance.ShowDescription(MyQuest);
     }
 
     public void DeSelect() {
@@ -44,7 +44,7 @@ public class QuestTrackerQuestScript : MonoBehaviour
             markedComplete = false;
             MyText.text = "[" + MyQuest.MyExperienceLevel + "] " + MyQuest.MyTitle;
         }
-        MyText.color = LevelEquations.GetTargetColor(PlayerManager.MyInstance.MyCharacter.MyCharacterStats.MyLevel, MyQuest.MyExperienceLevel);
+        MyText.color = LevelEquations.GetTargetColor(PlayerManager.Instance.MyCharacter.MyCharacterStats.MyLevel, MyQuest.MyExperienceLevel);
     }
     */
 

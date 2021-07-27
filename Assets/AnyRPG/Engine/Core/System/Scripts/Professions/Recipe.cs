@@ -55,7 +55,7 @@ namespace AnyRPG {
             base.SetupScriptableObjects();
             craftAbility = null;
             if (craftAbilityName != null) {
-                BaseAbility baseAbility = SystemAbilityManager.MyInstance.GetResource(craftAbilityName);
+                BaseAbility baseAbility = SystemAbilityManager.Instance.GetResource(craftAbilityName);
                 if (baseAbility != null) {
                     craftAbility = baseAbility as CraftAbility;
                 } else {
@@ -73,7 +73,7 @@ namespace AnyRPG {
 
             output = null;
             if (itemOutputName != null && itemOutputName != string.Empty) {
-                Item item = SystemItemManager.MyInstance.GetResource(itemOutputName);
+                Item item = SystemItemManager.Instance.GetResource(itemOutputName);
                 if (item != null) {
                     output = item;
                 } else {

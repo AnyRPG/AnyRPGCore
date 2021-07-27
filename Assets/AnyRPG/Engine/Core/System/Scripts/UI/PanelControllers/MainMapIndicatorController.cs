@@ -38,13 +38,13 @@ namespace AnyRPG {
                 // prioritize images - DICTIONARY DOESN'T CURRENTLY SUPPORT BOTH
                 if (_interactable.HasMainMapIcon()) {
                     //Debug.Log((interactable == null ? "null" : interactable.name) + ".MainMapIndicatorController.SetupMainMap(): adding icon : " + _interactable.ToString());
-                    GameObject go = ObjectPooler.MyInstance.GetPooledObject(mainMapImageLayerPrefab, contentParent);
+                    GameObject go = ObjectPooler.Instance.GetPooledObject(mainMapImageLayerPrefab, contentParent);
                     Image _image = go.GetComponent<Image>();
                     _interactable.SetMiniMapIcon(_image);
                     mainMapLayers.Add(_interactable, go);
                 } else if (_interactable.HasMainMapText()) {
                     //Debug.Log((interactable == null ? "null" : interactable.name) + ".MainMapIndicatorController.SetupMainMap(): adding text layer: " + _interactable.ToString());
-                    GameObject go = ObjectPooler.MyInstance.GetPooledObject(mainMapTextLayerPrefab, contentParent);
+                    GameObject go = ObjectPooler.Instance.GetPooledObject(mainMapTextLayerPrefab, contentParent);
                     TextMeshProUGUI _text = go.GetComponent<TextMeshProUGUI>();
                     _interactable.SetMiniMapText(_text);
                     mainMapLayers.Add(_interactable, go);
@@ -79,7 +79,7 @@ namespace AnyRPG {
 
         public void ResetSettings() {
             foreach (GameObject go in mainMapLayers.Values) {
-                ObjectPooler.MyInstance.ReturnObjectToPool(go);
+                ObjectPooler.Instance.ReturnObjectToPool(go);
             }
             mainMapLayers.Clear();
             interactable = null;

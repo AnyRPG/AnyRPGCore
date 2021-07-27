@@ -9,7 +9,7 @@ namespace AnyRPG {
         #region Singleton
         private static SystemAudioProfileManager instance;
 
-        public static SystemAudioProfileManager MyInstance {
+        public static SystemAudioProfileManager Instance {
             get {
                 if (instance == null) {
                     instance = FindObjectOfType<SystemAudioProfileManager>();

@@ -48,10 +48,10 @@ namespace AnyRPG {
 
 
         public void CommonSelect() {
-            if (PetSpawnControlPanel.MyInstance.MySelectedPetSpawnButton != null && PetSpawnControlPanel.MyInstance.MySelectedPetSpawnButton != this) {
-                PetSpawnControlPanel.MyInstance.MySelectedPetSpawnButton.DeSelect();
+            if (PetSpawnControlPanel.Instance.MySelectedPetSpawnButton != null && PetSpawnControlPanel.Instance.MySelectedPetSpawnButton != this) {
+                PetSpawnControlPanel.Instance.MySelectedPetSpawnButton.DeSelect();
             }
-            PetSpawnControlPanel.MyInstance.ShowUnit(this);
+            PetSpawnControlPanel.Instance.ShowUnit(this);
         }
 
         public void RawSelect() {

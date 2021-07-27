@@ -12,16 +12,15 @@ namespace AnyRPG {
         #region Singleton
         private static UnitSpawnControlPanel instance;
 
-        public static UnitSpawnControlPanel MyInstance {
+        public static UnitSpawnControlPanel Instance {
             get {
-                if (instance == null) {
-                    instance = FindObjectOfType<UnitSpawnControlPanel>();
-                }
-
                 return instance;
             }
         }
 
+        private void Awake() {
+            instance = this;
+        }
         #endregion
 
         public event System.Action OnConfirmAction = delegate { };
@@ -99,7 +98,7 @@ namespace AnyRPG {
             options.Clear();
 
             // EXTRA LEVELS
-            for (int i = 0; i < SystemConfigurationManager.Instance.MaxLevel - PlayerManager.MyInstance.MyCharacter.CharacterStats.Level; i++) {
+            for (int i = 0; i < SystemConfigurationManager.Instance.MaxLevel - PlayerManager.Instance.MyCharacter.CharacterStats.Level; i++) {
                 options.Add(i.ToString());
             }
             extraLevelsDropdown.AddOptions(options);
@@ -115,7 +114,7 @@ namespace AnyRPG {
             */
 
             options.Add("Default");
-            foreach (UnitToughness unitToughness in SystemUnitToughnessManager.MyInstance.GetResourceList()) {
+            foreach (UnitToughness unitToughness in SystemUnitToughnessManager.Instance.GetResourceList()) {
                 options.Add(unitToughness.DisplayName);
             }
             toughnessDropdown.AddOptions(options);
@@ -152,24 +151,24 @@ namespace AnyRPG {
         public void ClearPreviewTarget() {
             //Debug.Log("LoadGamePanel.ClearPreviewTarget()");
             // not really close window, but it will despawn the preview unit
-            UnitPreviewManager.MyInstance.HandleCloseWindow();
+            UnitPreviewManager.Instance.HandleCloseWindow();
         }
 
         public void SetPreviewTarget() {
             //Debug.Log("CharacterPanel.SetPreviewTarget()");
             
-            if (UnitPreviewManager.MyInstance.PreviewUnitController != null) {
+            if (UnitPreviewManager.Instance.PreviewUnitController != null) {
                 //Debug.Log("CharacterPanel.SetPreviewTarget() UMA avatar is already spawned!");
                 return;
             }
 
             //spawn correct preview unit
-            UnitPreviewManager.MyInstance.HandleOpenWindow();
+            UnitPreviewManager.Instance.HandleOpenWindow();
 
-            if (CameraManager.MyInstance != null && CameraManager.MyInstance.UnitPreviewCamera != null) {
+            if (CameraManager.Instance != null && CameraManager.Instance.UnitPreviewCamera != null) {
                 //Debug.Log("CharacterPanel.SetPreviewTarget(): preview camera was available, setting target");
                 if (MyPreviewCameraController != null) {
-                    MyPreviewCameraController.InitializeCamera(UnitPreviewManager.MyInstance.PreviewUnitController);
+                    MyPreviewCameraController.InitializeCamera(UnitPreviewManager.Instance.PreviewUnitController);
                     //Debug.Log("CharacterPanel.SetPreviewTarget(): preview camera was available, setting Target Ready Callback");
                     MyPreviewCameraController.OnTargetReady += TargetReadyCallback;
                 } else {
@@ -185,7 +184,7 @@ namespace AnyRPG {
 
         public void ClosePanel() {
             //Debug.Log("CharacterCreatorPanel.ClosePanel()");
-            SystemWindowManager.MyInstance.unitSpawnWindow.CloseWindow();
+            SystemWindowManager.Instance.unitSpawnWindow.CloseWindow();
             PopupWindowManager.Instance.interactionWindow.CloseWindow();
         }
 
@@ -193,8 +192,8 @@ namespace AnyRPG {
             //Debug.Log("LoadGamePanel.OnCloseWindow()");
             base.RecieveClosedWindowNotification();
             previewCameraController.ClearTarget();
-            UnitPreviewManager.MyInstance.HandleCloseWindow();
-            //SaveManager.MyInstance.ClearSharedData();
+            UnitPreviewManager.Instance.HandleCloseWindow();
+            //SaveManager.Instance.ClearSharedData();
             OnCloseWindow(this);
         }
 
@@ -213,7 +212,7 @@ namespace AnyRPG {
 
             foreach (UnitProfile unitProfile in unitProfileList) {
                 //Debug.Log("LoadGamePanel.ShowLoadButtonsCommon(): setting a button with saved game data");
-                GameObject go = ObjectPooler.MyInstance.GetPooledObject(buttonPrefab, buttonArea.transform);
+                GameObject go = ObjectPooler.Instance.GetPooledObject(buttonPrefab, buttonArea.transform);
                 UnitSpawnButton unitSpawnButton = go.GetComponent<UnitSpawnButton>();
                 if (unitSpawnButton != null) {
                     unitSpawnButton.AddUnitProfile(unitProfile);
@@ -235,7 +234,7 @@ namespace AnyRPG {
             foreach (UnitSpawnButton unitSpawnButton in unitSpawnButtons) {
                 if (unitSpawnButton != null) {
                     unitSpawnButton.DeSelect();
-                    ObjectPooler.MyInstance.ReturnObjectToPool(unitSpawnButton.gameObject);
+                    ObjectPooler.Instance.ReturnObjectToPool(unitSpawnButton.gameObject);
                 }
             }
             unitSpawnButtons.Clear();
@@ -285,7 +284,7 @@ namespace AnyRPG {
             if (dropdownIndex == 0) {
                 unitToughness = null;
             } else {
-                UnitToughness tmpToughness = SystemUnitToughnessManager.MyInstance.GetResource(toughnessDropdown.options[toughnessDropdown.value].text);
+                UnitToughness tmpToughness = SystemUnitToughnessManager.Instance.GetResource(toughnessDropdown.options[toughnessDropdown.value].text);
                 if (tmpToughness != null) {
                     unitToughness = tmpToughness;
                 }

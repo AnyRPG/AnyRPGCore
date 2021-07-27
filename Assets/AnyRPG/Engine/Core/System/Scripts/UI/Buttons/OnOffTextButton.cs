@@ -38,11 +38,11 @@ public class OnOffTextButton : MonoBehaviour {
     }
 
     public virtual void OnHoverSound() {
-        AudioManager.MyInstance.PlayUIHoverSound();
+        AudioManager.Instance.PlayUIHoverSound();
     }
 
     public virtual void OnClickSound() {
-        AudioManager.MyInstance.PlayUIClickSound();
+        AudioManager.Instance.PlayUIClickSound();
     }
 
 }

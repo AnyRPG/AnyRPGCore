@@ -10,7 +10,7 @@ namespace AnyRPG {
         #region Singleton
         private static SystemAnimationProfileManager instance;
 
-        public static SystemAnimationProfileManager MyInstance {
+        public static SystemAnimationProfileManager Instance {
             get {
                 if (instance == null) {
                     instance = FindObjectOfType<SystemAnimationProfileManager>();

@@ -25,9 +25,9 @@ namespace AnyRPG {
             //Debug.Log(gameObject.name + ".SkillTrainerSkillScript.Select()");
 
             base.Select();
-            SkillTrainerUI.MyInstance.MySelectedSkillTrainerSkillScript = this;
+            SkillTrainerUI.Instance.MySelectedSkillTrainerSkillScript = this;
 
-            SkillTrainerUI.MyInstance.ShowDescription(skill);
+            SkillTrainerUI.Instance.ShowDescription(skill);
 
         }
 

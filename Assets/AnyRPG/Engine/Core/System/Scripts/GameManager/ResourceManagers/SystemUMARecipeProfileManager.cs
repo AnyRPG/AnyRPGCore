@@ -9,7 +9,7 @@ namespace AnyRPG {
         #region Singleton
         private static SystemUMARecipeProfileManager instance;
 
-        public static SystemUMARecipeProfileManager MyInstance {
+        public static SystemUMARecipeProfileManager Instance {
             get {
                 if (instance == null) {
                     instance = FindObjectOfType<SystemUMARecipeProfileManager>();

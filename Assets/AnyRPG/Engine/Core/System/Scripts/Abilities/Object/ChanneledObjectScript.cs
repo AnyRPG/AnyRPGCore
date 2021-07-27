@@ -107,7 +107,7 @@ namespace AnyRPG {
             MyEndObject = endObject;
             MyEndPosition = endPosition;
 
-            orthographic = (CameraManager.MyInstance.MyActiveMainCamera != null && CameraManager.MyInstance.MyActiveMainCamera.orthographic);
+            orthographic = (CameraManager.Instance.ActiveMainCamera != null && CameraManager.Instance.ActiveMainCamera.orthographic);
             lineRenderer = GetComponent<LineRenderer>();
             lineRenderer.positionCount = 0;
             UpdateFromMaterialChange();
@@ -262,7 +262,7 @@ namespace AnyRPG {
         }
 
         private void Update() {
-            orthographic = (CameraManager.MyInstance.MyActiveMainCamera != null && CameraManager.MyInstance.MyActiveMainCamera.orthographic);
+            orthographic = (CameraManager.Instance.ActiveMainCamera != null && CameraManager.Instance.ActiveMainCamera.orthographic);
             if (timer <= 0.0f) {
                 if (ManualMode) {
                     timer = Duration;

@@ -10,14 +10,14 @@ namespace AnyRPG {
         #region Singleton
         private static SystemEnvironmentManager instance;
 
-        public static SystemEnvironmentManager MyInstance {
+        public static SystemEnvironmentManager Instance {
             get {
-                if (instance == null) {
-                    instance = FindObjectOfType<SystemEnvironmentManager>();
-                }
-
                 return instance;
             }
+        }
+
+        private void Awake() {
+            instance = this;
         }
         #endregion
 

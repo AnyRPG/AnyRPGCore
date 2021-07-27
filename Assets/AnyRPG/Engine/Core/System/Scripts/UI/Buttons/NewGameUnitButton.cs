@@ -48,7 +48,7 @@ namespace AnyRPG {
 
 
         public void CommonSelect() {
-            NewGamePanel.MyInstance.SetUnitProfile(this);
+            NewGamePanel.Instance.SetUnitProfile(this);
         }
 
         public void RawSelect() {

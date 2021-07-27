@@ -27,7 +27,7 @@ namespace AnyRPG {
                 resourceDescriptionProfile = DisplayName;
             }
             if (resourceDescriptionProfile != null && resourceDescriptionProfile != string.Empty) {
-                ResourceDescription tmpResourceDescription = SystemResourceDescriptionManager.MyInstance.GetResource(resourceDescriptionProfile);
+                ResourceDescription tmpResourceDescription = SystemResourceDescriptionManager.Instance.GetResource(resourceDescriptionProfile);
                 if (tmpResourceDescription != null) {
                     if (tmpResourceDescription.RawDisplayName != null && tmpResourceDescription.RawDisplayName != string.Empty) {
                         //Debug.Log("setting resource name to: " + tmpResourceDescription.MyDisplayName);

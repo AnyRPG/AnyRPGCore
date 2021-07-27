@@ -9,7 +9,7 @@ namespace AnyRPG {
         #region Singleton
         private static SystemCombatStrategyManager instance;
 
-        public static SystemCombatStrategyManager MyInstance {
+        public static SystemCombatStrategyManager Instance {
             get {
                 if (instance == null) {
                     instance = FindObjectOfType<SystemCombatStrategyManager>();

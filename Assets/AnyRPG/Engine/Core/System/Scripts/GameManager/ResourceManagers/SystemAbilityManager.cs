@@ -10,7 +10,7 @@ namespace AnyRPG {
         #region Singleton
         private static SystemAbilityManager instance;
 
-        public static SystemAbilityManager MyInstance {
+        public static SystemAbilityManager Instance {
             get {
                 if (instance == null) {
                     instance = FindObjectOfType<SystemAbilityManager>();

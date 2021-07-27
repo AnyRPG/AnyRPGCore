@@ -41,7 +41,7 @@ namespace AnyRPG {
         public void SetupScriptableObjects() {
             holdableObject = null;
             if (holdableObjectName != null && holdableObjectName != string.Empty) {
-                PrefabProfile tmpHoldableObject = SystemPrefabProfileManager.MyInstance.GetResource(holdableObjectName);
+                PrefabProfile tmpHoldableObject = SystemPrefabProfileManager.Instance.GetResource(holdableObjectName);
                 if (tmpHoldableObject != null) {
                     holdableObject = tmpHoldableObject;
                 } else {
@@ -52,7 +52,7 @@ namespace AnyRPG {
             }
             equipmentSlotProfile = null;
             if (equipmentSlotProfileName != null && equipmentSlotProfileName != string.Empty) {
-                EquipmentSlotProfile tmpEquipmentSlotProfile = SystemEquipmentSlotProfileManager.MyInstance.GetResource(equipmentSlotProfileName);
+                EquipmentSlotProfile tmpEquipmentSlotProfile = SystemEquipmentSlotProfileManager.Instance.GetResource(equipmentSlotProfileName);
                 if (tmpEquipmentSlotProfile != null) {
                     equipmentSlotProfile = tmpEquipmentSlotProfile;
                 } else {

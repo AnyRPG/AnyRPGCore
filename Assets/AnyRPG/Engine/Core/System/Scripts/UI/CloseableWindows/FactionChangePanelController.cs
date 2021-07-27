@@ -41,7 +41,7 @@ namespace AnyRPG {
 
             ClearRewardIcons();
             // show ability rewards
-            CapabilityProps capabilityProps = faction.GetFilteredCapabilities(NewGamePanel.MyInstance);
+            CapabilityProps capabilityProps = faction.GetFilteredCapabilities(NewGamePanel.Instance);
             if (capabilityProps.AbilityList.Count > 0) {
                 abilitiesArea.gameObject.SetActive(true);
             } else {
@@ -49,10 +49,10 @@ namespace AnyRPG {
                 return;
             }
             for (int i = 0; i < capabilityProps.AbilityList.Count; i++) {
-                RewardButton rewardIcon = ObjectPooler.MyInstance.GetPooledObject(rewardIconPrefab, abilityIconsArea.transform).GetComponent<RewardButton>();
+                RewardButton rewardIcon = ObjectPooler.Instance.GetPooledObject(rewardIconPrefab, abilityIconsArea.transform).GetComponent<RewardButton>();
                 rewardIcon.SetDescribable(capabilityProps.AbilityList[i]);
                 abilityRewardIcons.Add(rewardIcon);
-                if (capabilityProps.AbilityList[i].RequiredLevel > PlayerManager.MyInstance.MyCharacter.CharacterStats.Level) {
+                if (capabilityProps.AbilityList[i].RequiredLevel > PlayerManager.Instance.MyCharacter.CharacterStats.Level) {
                     rewardIcon.StackSizeText.text = "Level\n" + capabilityProps.AbilityList[i].RequiredLevel;
                     rewardIcon.MyHighlightIcon.color = new Color32(255, 255, 255, 80);
                 }
@@ -63,7 +63,7 @@ namespace AnyRPG {
             //Debug.Log("FactionChangePanelController.ClearRewardIcons()");
 
             foreach (RewardButton rewardIcon in abilityRewardIcons) {
-                ObjectPooler.MyInstance.ReturnObjectToPool(rewardIcon.gameObject);
+                ObjectPooler.Instance.ReturnObjectToPool(rewardIcon.gameObject);
             }
             abilityRewardIcons.Clear();
         }
@@ -75,7 +75,7 @@ namespace AnyRPG {
 
         public void ConfirmAction() {
             //Debug.Log("FactionChangePanelController.ConfirmAction()");
-            PlayerManager.MyInstance.SetPlayerFaction(faction);
+            PlayerManager.Instance.SetPlayerFaction(faction);
             OnConfirmAction();
             PopupWindowManager.Instance.factionChangeWindow.CloseWindow();
         }

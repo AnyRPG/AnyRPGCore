@@ -471,8 +471,8 @@ namespace AnyRPG {
         public void HandleLevelChanged(int _level) {
             CalculateResourceColors();
             unitLevelText.text = _level.ToString();
-            if (PlayerManager.MyInstance != null && PlayerManager.MyInstance.MyCharacter != null && PlayerManager.MyInstance.MyCharacter.CharacterStats != null) {
-                unitLevelText.color = LevelEquations.GetTargetColor(PlayerManager.MyInstance.MyCharacter.CharacterStats.Level, _level);
+            if (PlayerManager.Instance != null && PlayerManager.Instance.MyCharacter != null && PlayerManager.Instance.MyCharacter.CharacterStats != null) {
+                unitLevelText.color = LevelEquations.GetTargetColor(PlayerManager.Instance.MyCharacter.CharacterStats.Level, _level);
             }
         }
 
@@ -516,7 +516,7 @@ namespace AnyRPG {
         }
 
         public void HandleReputationChange() {
-            if (PlayerManager.MyInstance == null || PlayerManager.MyInstance.PlayerUnitSpawned == false) {
+            if (PlayerManager.Instance == null || PlayerManager.Instance.PlayerUnitSpawned == false) {
                 return;
             }
             if (namePlateController == null) {

@@ -9,14 +9,15 @@ namespace AnyRPG {
         #region Singleton
         private static SystemAbilityController instance;
 
-        public static SystemAbilityController MyInstance {
+        public static SystemAbilityController Instance {
             get {
-                if (instance == null) {
-                    instance = FindObjectOfType<SystemAbilityController>();
-                }
-
                 return instance;
             }
+        }
+
+        private void Awake() {
+            instance = this;
+            Init();
         }
         #endregion
 
@@ -24,7 +25,7 @@ namespace AnyRPG {
 
         public IAbilityManager AbilityManager { get => abilityManager; }
 
-        private void Awake() {
+        private void Init() {
             abilityManager = new AbilityManager(this);
             SystemEventManager.StartListening("OnLevelUnload", HandleLevelUnload);
         }
@@ -38,7 +39,7 @@ namespace AnyRPG {
 
             foreach (GameObject go in abilityManager.AbilityEffectGameObjects) {
                 if (go != null) {
-                    ObjectPooler.MyInstance.ReturnObjectToPool(go);
+                    ObjectPooler.Instance.ReturnObjectToPool(go);
                 }
             }
             abilityManager.AbilityEffectGameObjects.Clear();
@@ -111,7 +112,7 @@ namespace AnyRPG {
                     abilityManager.AbilityEffectGameObjects.Remove(go);
                 }
                 if (go != null) {
-                    ObjectPooler.MyInstance.ReturnObjectToPool(go, fixedLengthEffect.PrefabDestroyDelay);
+                    ObjectPooler.Instance.ReturnObjectToPool(go, fixedLengthEffect.PrefabDestroyDelay);
                 }
             }
             abilityEffectObjects.Clear();

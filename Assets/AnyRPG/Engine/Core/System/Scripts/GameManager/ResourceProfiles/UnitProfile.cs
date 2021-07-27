@@ -367,12 +367,12 @@ namespace AnyRPG {
         /// This will retrieve a unit profile from the system unit profile manager
         /// </summary>
         public static UnitProfile GetUnitProfileReference(string unitProfileName) {
-            if (SystemUnitProfileManager.MyInstance == null) {
+            if (SystemUnitProfileManager.Instance == null) {
                 Debug.LogError("UnitProfile.GetUnitProfileReference(): SystemUnitProfileManager not found.  Is the GameManager in the scene?");
                 return null;
             }
             if (unitProfileName != null && unitProfileName != string.Empty) {
-                UnitProfile tmpUnitProfile = SystemUnitProfileManager.MyInstance.GetResource(unitProfileName);
+                UnitProfile tmpUnitProfile = SystemUnitProfileManager.Instance.GetResource(unitProfileName);
                 if (tmpUnitProfile != null) {
                     return tmpUnitProfile;
                 } else {
@@ -420,7 +420,7 @@ namespace AnyRPG {
                 return null;
             }
             
-            GameObject prefabObject = ObjectPooler.MyInstance.GetPooledObject(spawnPrefab, position, (forward == Vector3.zero ? Quaternion.identity : Quaternion.LookRotation(forward)), parentTransform);
+            GameObject prefabObject = ObjectPooler.Instance.GetPooledObject(spawnPrefab, position, (forward == Vector3.zero ? Quaternion.identity : Quaternion.LookRotation(forward)), parentTransform);
 
             return prefabObject;
         }
@@ -430,11 +430,11 @@ namespace AnyRPG {
             /*
             defaultAutoAttackAbility = null;
             if (defaultAutoAttackAbilityName != null && defaultAutoAttackAbilityName != string.Empty) {
-                defaultAutoAttackAbility = SystemAbilityManager.MyInstance.GetResource(defaultAutoAttackAbilityName);
+                defaultAutoAttackAbility = SystemAbilityManager.Instance.GetResource(defaultAutoAttackAbilityName);
             }*/
 
             if (unitToughness == null && defaultToughness != null && defaultToughness != string.Empty) {
-                UnitToughness tmpToughness = SystemUnitToughnessManager.MyInstance.GetResource(defaultToughness);
+                UnitToughness tmpToughness = SystemUnitToughnessManager.Instance.GetResource(defaultToughness);
                 if (tmpToughness != null) {
                     unitToughness = tmpToughness;
                 } else {
@@ -444,7 +444,7 @@ namespace AnyRPG {
 
             if (movementAudioProfileNames != null) {
                 foreach (string movementAudioProfileName in movementAudioProfileNames) {
-                    AudioProfile tmpAudioProfile = SystemAudioProfileManager.MyInstance.GetResource(movementAudioProfileName);
+                    AudioProfile tmpAudioProfile = SystemAudioProfileManager.Instance.GetResource(movementAudioProfileName);
                     if (tmpAudioProfile != null) {
                         movementAudioProfiles.Add(tmpAudioProfile);
                     } else {
@@ -455,7 +455,7 @@ namespace AnyRPG {
 
             if (equipmentNameList != null) {
                 foreach (string equipmentName in equipmentNameList) {
-                    Equipment tmpEquipment = SystemItemManager.MyInstance.GetResource(equipmentName) as Equipment;
+                    Equipment tmpEquipment = SystemItemManager.Instance.GetResource(equipmentName) as Equipment;
                     if (tmpEquipment != null) {
                         equipmentList.Add(tmpEquipment);
                     } else {
@@ -468,7 +468,7 @@ namespace AnyRPG {
             powerResourceList = new List<PowerResource>();
             if (powerResources != null) {
                 foreach (string powerResourcename in powerResources) {
-                    PowerResource tmpPowerResource = SystemPowerResourceManager.MyInstance.GetResource(powerResourcename);
+                    PowerResource tmpPowerResource = SystemPowerResourceManager.Instance.GetResource(powerResourcename);
                     if (tmpPowerResource != null) {
                         powerResourceList.Add(tmpPowerResource);
                     } else {
@@ -485,7 +485,7 @@ namespace AnyRPG {
                 combatStrategyName = ResourceName;
             }
             if (combatStrategyName != null && combatStrategyName != string.Empty) {
-                CombatStrategy tmpCombatStrategy = SystemCombatStrategyManager.MyInstance.GetNewResource(combatStrategyName);
+                CombatStrategy tmpCombatStrategy = SystemCombatStrategyManager.Instance.GetNewResource(combatStrategyName);
                 if (tmpCombatStrategy != null) {
                     combatStrategy = tmpCombatStrategy;
                 } else {
@@ -495,7 +495,7 @@ namespace AnyRPG {
             }
 
             if (faction == null && factionName != null && factionName != string.Empty) {
-                Faction tmpFaction = SystemFactionManager.MyInstance.GetResource(factionName);
+                Faction tmpFaction = SystemFactionManager.Instance.GetResource(factionName);
                 if (tmpFaction != null) {
                     faction = tmpFaction;
                 } else {
@@ -504,7 +504,7 @@ namespace AnyRPG {
             }
 
             if (characterClass == null && characterClassName != null && characterClassName != string.Empty) {
-                CharacterClass tmpCharacterClass = SystemCharacterClassManager.MyInstance.GetResource(characterClassName);
+                CharacterClass tmpCharacterClass = SystemCharacterClassManager.Instance.GetResource(characterClassName);
                 if (tmpCharacterClass != null) {
                     characterClass = tmpCharacterClass;
                 } else {
@@ -513,7 +513,7 @@ namespace AnyRPG {
             }
 
             if (classSpecializationName != null && classSpecializationName != string.Empty) {
-                ClassSpecialization tmpSpecialization = SystemClassSpecializationManager.MyInstance.GetResource(classSpecializationName);
+                ClassSpecialization tmpSpecialization = SystemClassSpecializationManager.Instance.GetResource(classSpecializationName);
                 if (tmpSpecialization != null) {
                     classSpecialization = tmpSpecialization;
                 } else {
@@ -522,7 +522,7 @@ namespace AnyRPG {
             }
 
             if (characterRace == null && characterRaceName != null && characterRaceName != string.Empty) {
-                CharacterRace tmpCharacterRace = SystemCharacterRaceManager.MyInstance.GetResource(characterRaceName);
+                CharacterRace tmpCharacterRace = SystemCharacterRaceManager.Instance.GetResource(characterRaceName);
                 if (tmpCharacterRace != null) {
                     characterRace = tmpCharacterRace;
                 } else {
@@ -531,7 +531,7 @@ namespace AnyRPG {
             }
 
             if (unitType == null && unitTypeName != null && unitTypeName != string.Empty) {
-                UnitType tmpUnitType = SystemUnitTypeManager.MyInstance.GetResource(unitTypeName);
+                UnitType tmpUnitType = SystemUnitTypeManager.Instance.GetResource(unitTypeName);
                 if (tmpUnitType != null) {
                     unitType = tmpUnitType;
                     //Debug.Log(gameObject.name + ".BaseCharacter.SetupScriptableObjects(): successfully set unit type to: " + unitType.MyName);
@@ -544,7 +544,7 @@ namespace AnyRPG {
                 prefabProfileName = ResourceName;
             }
             if (prefabProfileName != null && prefabProfileName != string.Empty) {
-                UnitPrefabProfile tmpPrefabProfile = SystemUnitPrefabProfileManager.MyInstance.GetResource(prefabProfileName);
+                UnitPrefabProfile tmpPrefabProfile = SystemUnitPrefabProfileManager.Instance.GetResource(prefabProfileName);
                 if (tmpPrefabProfile != null) {
                     unitPrefabProfileProps = tmpPrefabProfile.UnitPrefabProps;
                 } else {
@@ -556,7 +556,7 @@ namespace AnyRPG {
             if (interactableOptions != null) {
                 foreach (string interactableOptionName in interactableOptions) {
                     if (interactableOptionName != null && interactableOptionName != string.Empty) {
-                        InteractableOptionConfig interactableOptionConfig = SystemInteractableOptionConfigManager.MyInstance.GetResource(interactableOptionName);
+                        InteractableOptionConfig interactableOptionConfig = SystemInteractableOptionConfigManager.Instance.GetResource(interactableOptionName);
                         if (interactableOptionConfig != null) {
                             interactableOptionConfigs.Add(interactableOptionConfig);
                         } else {

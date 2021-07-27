@@ -12,16 +12,15 @@ namespace AnyRPG {
         #region Singleton
         private static NewGamePanel instance;
 
-        public static NewGamePanel MyInstance {
+        public static NewGamePanel Instance {
             get {
-                if (instance == null) {
-                    instance = FindObjectOfType<NewGamePanel>();
-                }
-
                 return instance;
             }
         }
 
+        private void Awake() {
+            instance = this;
+        }
         #endregion
 
         public override event Action<ICloseableWindowContents> OnCloseWindow = delegate { };
@@ -94,7 +93,7 @@ namespace AnyRPG {
             //Debug.Log("LoadGamePanel.OnCloseWindow()");
             base.RecieveClosedWindowNotification();
 
-            SaveManager.MyInstance.ClearSharedData();
+            SaveManager.Instance.ClearSharedData();
             characterPreviewPanel.OnTargetReady -= HandleTargetReady;
             characterPreviewPanel.RecieveClosedWindowNotification();
             if (SystemConfigurationManager.Instance.NewGameUMAAppearance == true) {
@@ -126,7 +125,7 @@ namespace AnyRPG {
             // disable faction button if option not allowed or no faction exists
             factionButton.gameObject.SetActive(false);
             if (SystemConfigurationManager.Instance.NewGameFaction == true) {
-                foreach (Faction faction in SystemFactionManager.MyInstance.GetResourceList()) {
+                foreach (Faction faction in SystemFactionManager.Instance.GetResourceList()) {
                     if (faction.NewGameOption == true) {
                         factionButton.gameObject.SetActive(true);
                         break;
@@ -137,7 +136,7 @@ namespace AnyRPG {
             // disable class button if option not allowed or no faction exists
             classButton.gameObject.SetActive(false);
             if (SystemConfigurationManager.Instance.NewGameClass == true) {
-                foreach (CharacterClass characterClass in SystemCharacterClassManager.MyInstance.GetResourceList()) {
+                foreach (CharacterClass characterClass in SystemCharacterClassManager.Instance.GetResourceList()) {
                     if (characterClass.NewGameOption == true) {
                         classButton.gameObject.SetActive(true);
                         break;
@@ -176,12 +175,12 @@ namespace AnyRPG {
 
             ClearButtons();
 
-            SaveManager.MyInstance.ClearSharedData();
+            SaveManager.Instance.ClearSharedData();
 
             SetupSaveData();
 
             /*
-            if (SystemConfigurationManager.MyInstance.NewGameUMAAppearance == true) {
+            if (SystemConfigurationManager.Instance.NewGameUMAAppearance == true) {
                 umaCharacterPanel.ReceiveOpenWindowNotification();
                 // first, inform the preview panel so the character can be rendered
             }
@@ -205,7 +204,7 @@ namespace AnyRPG {
 
             // if the UMA window is not in use, or there was no UMA unit available, try the mecanim window
             if (SystemConfigurationManager.Instance.NewGameUMAAppearance == false
-                || (SystemConfigurationManager.Instance.NewGameUMAAppearance == true && CharacterCreatorManager.MyInstance.PreviewUnitController == null)) {
+                || (SystemConfigurationManager.Instance.NewGameUMAAppearance == true && CharacterCreatorManager.Instance.PreviewUnitController == null)) {
                 characterPanel.ReceiveOpenWindowNotification();
             }
 
@@ -221,8 +220,8 @@ namespace AnyRPG {
             // testing appearance last since it relies on at very minimum the unit profile being set
 
             if (SystemConfigurationManager.Instance.NewGameAudioProfile != null) {
-                AudioManager.MyInstance.StopMusic();
-                AudioManager.MyInstance.PlayMusic(SystemConfigurationManager.Instance.NewGameAudioProfile.AudioClip);
+                AudioManager.Instance.StopMusic();
+                AudioManager.Instance.PlayMusic(SystemConfigurationManager.Instance.NewGameAudioProfile.AudioClip);
             }
         }
          
@@ -230,7 +229,7 @@ namespace AnyRPG {
             //Debug.Log("NewGamePanel.SetupSaveData()");
 
             saveData = new AnyRPGSaveData();
-            saveData = SaveManager.MyInstance.InitializeResourceLists(saveData, false);
+            saveData = SaveManager.Instance.InitializeResourceLists(saveData, false);
             saveData.playerName = playerName;
             saveData.PlayerLevel = 1;
             saveData.CurrentScene = SystemConfigurationManager.Instance.DefaultStartingZone;
@@ -364,7 +363,7 @@ namespace AnyRPG {
             }
 
             /*
-            if (SystemConfigurationManager.MyInstance.NewGameUMAAppearance == false) {
+            if (SystemConfigurationManager.Instance.NewGameUMAAppearance == false) {
                 characterPanel.ShowOptionButtonsCommon();
             }
             */
@@ -436,12 +435,12 @@ namespace AnyRPG {
         public void SetCharacterProperties() {
             //Debug.Log("NewGameCharacterPanelController.SetCharacterProperties()");
 
-            CharacterCreatorManager.MyInstance.PreviewUnitController.CharacterUnit.BaseCharacter.SetUnitProfile(UnitProfile, true, -1, false);
-            CharacterCreatorManager.MyInstance.PreviewUnitController.CharacterUnit.BaseCharacter.SetUnitType(UnitType);
-            CharacterCreatorManager.MyInstance.PreviewUnitController.CharacterUnit.BaseCharacter.SetCharacterRace(CharacterRace);
-            CharacterCreatorManager.MyInstance.PreviewUnitController.CharacterUnit.BaseCharacter.SetCharacterClass(CharacterClass);
-            CharacterCreatorManager.MyInstance.PreviewUnitController.CharacterUnit.BaseCharacter.SetClassSpecialization(ClassSpecialization);
-            CharacterCreatorManager.MyInstance.PreviewUnitController.CharacterUnit.BaseCharacter.SetCharacterFaction(Faction);
+            CharacterCreatorManager.Instance.PreviewUnitController.CharacterUnit.BaseCharacter.SetUnitProfile(UnitProfile, true, -1, false);
+            CharacterCreatorManager.Instance.PreviewUnitController.CharacterUnit.BaseCharacter.SetUnitType(UnitType);
+            CharacterCreatorManager.Instance.PreviewUnitController.CharacterUnit.BaseCharacter.SetCharacterRace(CharacterRace);
+            CharacterCreatorManager.Instance.PreviewUnitController.CharacterUnit.BaseCharacter.SetCharacterClass(CharacterClass);
+            CharacterCreatorManager.Instance.PreviewUnitController.CharacterUnit.BaseCharacter.SetClassSpecialization(ClassSpecialization);
+            CharacterCreatorManager.Instance.PreviewUnitController.CharacterUnit.BaseCharacter.SetCharacterFaction(Faction);
         }
 
         public void HandleTargetReady() {
@@ -461,7 +460,7 @@ namespace AnyRPG {
             // set character class etc first so preview works and can equip character
             SetCharacterProperties();
 
-            CharacterEquipmentManager characterEquipmentManager = CharacterCreatorManager.MyInstance.PreviewUnitController.CharacterUnit.BaseCharacter.CharacterEquipmentManager;
+            CharacterEquipmentManager characterEquipmentManager = CharacterCreatorManager.Instance.PreviewUnitController.CharacterUnit.BaseCharacter.CharacterEquipmentManager;
             if (characterEquipmentManager != null) {
                 //Debug.Log("NewGameCharacterPanelController.EquipCharacter(): found equipment manager");
 
@@ -516,8 +515,8 @@ namespace AnyRPG {
 
         public void ClosePanel() {
             //Debug.Log("CharacterCreatorPanel.ClosePanel()");
-            SystemWindowManager.MyInstance.newGameWindow.CloseWindow();
-            LevelManager.MyInstance.PlayLevelSounds();
+            SystemWindowManager.Instance.newGameWindow.CloseWindow();
+            LevelManager.Instance.PlayLevelSounds();
         }
 
         public void NewGame() {
@@ -525,7 +524,7 @@ namespace AnyRPG {
 
             saveData.PlayerUMARecipe = characterPreviewPanel.GetCurrentRecipe();
 
-            SystemWindowManager.MyInstance.confirmNewGameMenuWindow.OpenWindow();
+            SystemWindowManager.Instance.confirmNewGameMenuWindow.OpenWindow();
         }
 
 

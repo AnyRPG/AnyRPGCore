@@ -9,7 +9,7 @@ namespace AnyRPG {
         #region Singleton
         private static SystemRecipeManager instance;
 
-        public static SystemRecipeManager MyInstance {
+        public static SystemRecipeManager Instance {
             get {
                 if (instance == null) {
                     instance = FindObjectOfType<SystemRecipeManager>();

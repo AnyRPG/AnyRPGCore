@@ -19,7 +19,7 @@ namespace AnyRPG {
         public void UpdateStatus(bool notify = true) {
             //Debug.Log("TradeSkillPrerequisite.UpdateStatus(): " + (prerequisiteSkill != null ? prerequisiteSkill.MyName : "null") + "; originalResult: " + prerequisiteMet);
             bool originalResult = prerequisiteMet;
-            bool checkResult = PlayerManager.MyInstance.MyCharacter.CharacterSkillManager.HasSkill(prerequisiteSkill);
+            bool checkResult = PlayerManager.Instance.MyCharacter.CharacterSkillManager.HasSkill(prerequisiteSkill);
             //Debug.Log("TradeSkillPrerequisite.UpdateStatus(): checkResult: " + checkResult);
             if (checkResult != originalResult) {
                 prerequisiteMet = checkResult;
@@ -42,19 +42,19 @@ namespace AnyRPG {
         public void SetupScriptableObjects() {
             prerequisiteSkill = null;
             if (prerequisiteName != null && prerequisiteName != string.Empty) {
-                Skill tmpPrerequisiteSkill = SystemSkillManager.MyInstance.GetResource(prerequisiteName);
+                Skill tmpPrerequisiteSkill = SystemSkillManager.Instance.GetResource(prerequisiteName);
                 if (tmpPrerequisiteSkill != null) {
                     prerequisiteSkill = tmpPrerequisiteSkill;
                 } else {
                     Debug.LogError("SystemAbilityManager.SetupScriptableObjects(): Could not find skill : " + prerequisiteName + " while inititalizing a prerequisite.  CHECK INSPECTOR");
                 }
             }
-            SystemEventManager.MyInstance.OnSkillListChanged += HandleSkillListChanged;
+            SystemEventManager.Instance.OnSkillListChanged += HandleSkillListChanged;
         }
 
         public void CleanupScriptableObjects() {
-            if (SystemEventManager.MyInstance != null) {
-                SystemEventManager.MyInstance.OnSkillListChanged -= HandleSkillListChanged;
+            if (SystemEventManager.Instance != null) {
+                SystemEventManager.Instance.OnSkillListChanged -= HandleSkillListChanged;
             }
         }
     }

@@ -14,7 +14,7 @@ namespace AnyRPG {
         #region Singleton
         private static SystemSceneNodeManager instance;
 
-        public static SystemSceneNodeManager MyInstance {
+        public static SystemSceneNodeManager Instance {
             get {
                 if (instance == null) {
                     instance = FindObjectOfType<SystemSceneNodeManager>();

@@ -9,7 +9,7 @@ namespace AnyRPG {
         #region Singleton
         private static SystemCreditsCategoryManager instance;
 
-        public static SystemCreditsCategoryManager MyInstance {
+        public static SystemCreditsCategoryManager Instance {
             get {
                 if (instance == null) {
                     instance = FindObjectOfType<SystemCreditsCategoryManager>();

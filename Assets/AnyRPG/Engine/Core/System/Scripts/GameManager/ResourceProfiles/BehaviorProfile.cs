@@ -60,12 +60,12 @@ namespace AnyRPG {
         // track whether it is completed to prevent it from repeating if it is automatic
         public bool Completed {
             get {
-                return SaveManager.MyInstance.GetBehaviorSaveData(this).completed;
+                return SaveManager.Instance.GetBehaviorSaveData(this).completed;
             }
             set {
-                BehaviorSaveData saveData = SaveManager.MyInstance.GetBehaviorSaveData(this);
+                BehaviorSaveData saveData = SaveManager.Instance.GetBehaviorSaveData(this);
                 saveData.completed = value;
-                SaveManager.MyInstance.BehaviorSaveDataDictionary[saveData.MyName] = saveData;
+                SaveManager.Instance.BehaviorSaveDataDictionary[saveData.MyName] = saveData;
             }
         }
 

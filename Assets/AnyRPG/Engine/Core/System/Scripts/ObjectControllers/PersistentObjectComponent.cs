@@ -62,8 +62,8 @@ namespace AnyRPG {
         public PersistentState GetPersistentState() {
             //Debug.Log(persistentObjectOwner.gameObject.name + "PersistentObjectComponent.GetPersistentState()");
             if (persistentObjectOwner.UUID != null) {
-                if (LevelManager.MyInstance != null) {
-                    SceneNode activeSceneNode = LevelManager.MyInstance.GetActiveSceneNode();
+                if (LevelManager.Instance != null) {
+                    SceneNode activeSceneNode = LevelManager.Instance.GetActiveSceneNode();
                     if (activeSceneNode != null && activeSceneNode.PersistentObjects != null) {
                         PersistentObjectSaveData persistentObjectSaveData = activeSceneNode.GetPersistentObject(persistentObjectOwner.UUID.ID);
                         if (!persistentObjectSaveData.Equals(default(PersistentObjectSaveData))) {
@@ -95,7 +95,7 @@ namespace AnyRPG {
             if (eventSubscriptionsInitialized) {
                 return;
             }
-            if (SystemEventManager.MyInstance == null) {
+            if (SystemEventManager.Instance == null) {
                 Debug.LogError("PersistentObjectComponent.CreateEventSubscriptions: Could not find SystemEventManager.  Is GameManager in the scene?");
             } else {
                 SystemEventManager.StartListening("OnLevelUnload", HandleLevelUnload);
@@ -108,7 +108,7 @@ namespace AnyRPG {
             if (!eventSubscriptionsInitialized) {
                 return;
             }
-            if (SystemEventManager.MyInstance != null) {
+            if (SystemEventManager.Instance != null) {
                 SystemEventManager.StopListening("OnLevelUnload", HandleLevelUnload);
                 SystemEventManager.StopListening("OnSaveGame", HandleSaveGame);
             }
@@ -149,8 +149,8 @@ namespace AnyRPG {
             }
 
             // save this data to the scene node that is active
-            if (LevelManager.MyInstance != null) {
-                SceneNode currentSceneNode = LevelManager.MyInstance.GetActiveSceneNode();
+            if (LevelManager.Instance != null) {
+                SceneNode currentSceneNode = LevelManager.Instance.GetActiveSceneNode();
                 if (currentSceneNode != null) {
                     //currentSceneNode.PersistentObjects[storedUUID] = MakeSaveData();
                     currentSceneNode.SavePersistentObject(storedUUID, MakeSaveData());

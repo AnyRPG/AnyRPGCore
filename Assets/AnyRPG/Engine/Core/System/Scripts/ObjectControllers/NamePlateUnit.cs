@@ -59,7 +59,7 @@ namespace AnyRPG {
         public override void HandlePrerequisiteUpdates() {
             //Debug.Log(gameObject.name + ".Interactable.HandlePrerequisiteUpdates()");
             base.HandlePrerequisiteUpdates();
-            if (!PlayerManager.MyInstance.PlayerUnitSpawned) {
+            if (!PlayerManager.Instance.PlayerUnitSpawned) {
                 //Debug.Log(gameObject.name + ".Interactable.HandlePrerequisiteUpdates(): player unit not spawned.  returning");
                 return;
             }
@@ -69,7 +69,7 @@ namespace AnyRPG {
         public void UpdateNamePlateImage() {
 
             //Debug.Log(gameObject.name + ".NamePlateUnit.UpdateNamePlateImage()");
-            if (PlayerManager.MyInstance.MyCharacter == null || PlayerManager.MyInstance.UnitController == null) {
+            if (PlayerManager.Instance.MyCharacter == null || PlayerManager.Instance.UnitController == null) {
                 //Debug.Log(gameObject.name + ".Interactable.UpdateNamePlateImage(): player has no character");
                 return;
             }

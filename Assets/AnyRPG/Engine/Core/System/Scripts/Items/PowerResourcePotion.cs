@@ -17,7 +17,7 @@ namespace AnyRPG {
 
         public override bool Use() {
             //Debug.Log(DisplayName + ".PowerResourcePotion.Use()");
-            if (PlayerManager.MyInstance.MyCharacter.CharacterStats.GetPowerResourceAmount(powerResource) < PlayerManager.MyInstance.MyCharacter.CharacterStats.GetPowerResourceMaxAmount(powerResource)) {
+            if (PlayerManager.Instance.MyCharacter.CharacterStats.GetPowerResourceAmount(powerResource) < PlayerManager.Instance.MyCharacter.CharacterStats.GetPowerResourceMaxAmount(powerResource)) {
                 //Debug.Log("The current resource amount was less than the max resource amount and we can use the potion: " + this.GetInstanceID().ToString());
                 bool returnValue = base.Use();
                 if (returnValue == false) {
@@ -25,7 +25,7 @@ namespace AnyRPG {
                 }
                 return returnValue;
             } else {
-                MessageFeedManager.MyInstance.WriteMessage("Your " + powerResource.DisplayName + " is already full!");
+                MessageFeedManager.Instance.WriteMessage("Your " + powerResource.DisplayName + " is already full!");
                 return false;
             }
         }
@@ -42,7 +42,7 @@ namespace AnyRPG {
             base.SetupScriptableObjects();
 
             if (powerResourceName != null && powerResourceName != string.Empty) {
-                PowerResource tmpPowerResource = SystemPowerResourceManager.MyInstance.GetResource(powerResourceName);
+                PowerResource tmpPowerResource = SystemPowerResourceManager.Instance.GetResource(powerResourceName);
                 if (tmpPowerResource != null) {
                     powerResource = tmpPowerResource;
                 } else {

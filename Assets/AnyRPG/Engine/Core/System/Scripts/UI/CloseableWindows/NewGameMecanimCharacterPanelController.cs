@@ -54,7 +54,7 @@ namespace AnyRPG {
             foreach (NewGameUnitButton optionButton in optionButtons) {
                 if (optionButton != null) {
                     optionButton.DeSelect();
-                    ObjectPooler.MyInstance.ReturnObjectToPool(optionButton.gameObject);
+                    ObjectPooler.Instance.ReturnObjectToPool(optionButton.gameObject);
                 }
             }
             optionButtons.Clear();
@@ -64,16 +64,16 @@ namespace AnyRPG {
             //Debug.Log("NewGameMecanimCharacterPanelController.ShowOptionButtonsCommon()");
             ClearOptionButtons();
 
-            if ((NewGamePanel.MyInstance.Faction != null && NewGamePanel.MyInstance.Faction.HideDefaultProfiles == false)
+            if ((NewGamePanel.Instance.Faction != null && NewGamePanel.Instance.Faction.HideDefaultProfiles == false)
                 || SystemConfigurationManager.Instance.AlwaysShowDefaultProfiles == true
-                || NewGamePanel.MyInstance.Faction == null) {
+                || NewGamePanel.Instance.Faction == null) {
                 //Debug.Log("NewGameMecanimCharacterPanelController.ShowOptionButtonsCommon(): showing default profiles");
                 AddDefaultProfiles();
             }
-            if (NewGamePanel.MyInstance.Faction != null) {
-                foreach (UnitProfile unitProfile in NewGamePanel.MyInstance.Faction.CharacterCreatorProfiles) {
+            if (NewGamePanel.Instance.Faction != null) {
+                foreach (UnitProfile unitProfile in NewGamePanel.Instance.Faction.CharacterCreatorProfiles) {
                     //Debug.Log("NewGameMecanimCharacterPanelController.ShowOptionButtonsCommon(): found valid unit profile: " + unitProfile.DisplayName);
-                    GameObject go = ObjectPooler.MyInstance.GetPooledObject(buttonPrefab, buttonArea.transform);
+                    GameObject go = ObjectPooler.Instance.GetPooledObject(buttonPrefab, buttonArea.transform);
                     NewGameUnitButton optionButton = go.GetComponent<NewGameUnitButton>();
                     optionButton.AddUnitProfile(unitProfile);
                     optionButtons.Add(optionButton);
@@ -86,14 +86,14 @@ namespace AnyRPG {
 
         private void AddDefaultProfiles() {
             if (SystemConfigurationManager.Instance.DefaultPlayerUnitProfile != null) {
-                GameObject go = ObjectPooler.MyInstance.GetPooledObject(buttonPrefab, buttonArea.transform);
+                GameObject go = ObjectPooler.Instance.GetPooledObject(buttonPrefab, buttonArea.transform);
                 NewGameUnitButton optionButton = go.GetComponent<NewGameUnitButton>();
                 optionButton.AddUnitProfile(SystemConfigurationManager.Instance.DefaultPlayerUnitProfile);
                 optionButtons.Add(optionButton);
             }
             foreach (UnitProfile unitProfile in SystemConfigurationManager.Instance.CharacterCreatorProfiles) {
                 //Debug.Log("NewGameMecanimCharacterPanelController.ShowOptionButtonsCommon(): found valid unit profile: " + unitProfile.DisplayName);
-                GameObject go = ObjectPooler.MyInstance.GetPooledObject(buttonPrefab, buttonArea.transform);
+                GameObject go = ObjectPooler.Instance.GetPooledObject(buttonPrefab, buttonArea.transform);
                 NewGameUnitButton optionButton = go.GetComponent<NewGameUnitButton>();
                 optionButton.AddUnitProfile(unitProfile);
                 optionButtons.Add(optionButton);

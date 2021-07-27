@@ -76,7 +76,7 @@ namespace AnyRPG {
             if (equipmentNames != null) {
                 foreach (string equipmentName in equipmentNames) {
                     Equipment tmpEquipment = null;
-                    tmpEquipment = SystemItemManager.MyInstance.GetResource(equipmentName) as Equipment;
+                    tmpEquipment = SystemItemManager.Instance.GetResource(equipmentName) as Equipment;
                     if (tmpEquipment != null) {
                         equipmentList.Add(tmpEquipment);
                     } else {
@@ -87,7 +87,7 @@ namespace AnyRPG {
 
             if (classNames != null) {
                 foreach (string className in classNames) {
-                    CharacterClass tmpClass = SystemCharacterClassManager.MyInstance.GetResource(className);
+                    CharacterClass tmpClass = SystemCharacterClassManager.Instance.GetResource(className);
                     if (tmpClass != null) {
                         characterClasses.Add(tmpClass);
                     } else {
@@ -99,7 +99,7 @@ namespace AnyRPG {
             powerResourceList = new List<PowerResource>();
             if (powerResources != null) {
                 foreach (string powerResourcename in powerResources) {
-                    PowerResource tmpPowerResource = SystemPowerResourceManager.MyInstance.GetResource(powerResourcename);
+                    PowerResource tmpPowerResource = SystemPowerResourceManager.Instance.GetResource(powerResourcename);
                     if (tmpPowerResource != null) {
                         powerResourceList.Add(tmpPowerResource);
                     } else {

@@ -30,7 +30,7 @@ namespace AnyRPG {
 
             questTemplate = null;
             if (questName != null && questName != string.Empty) {
-                Quest quest = SystemQuestManager.MyInstance.GetResource(questName);
+                Quest quest = SystemQuestManager.Instance.GetResource(questName);
                 if (quest != null) {
                     questTemplate = quest;
                 } else {

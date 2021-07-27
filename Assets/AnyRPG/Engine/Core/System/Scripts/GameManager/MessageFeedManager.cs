@@ -14,16 +14,15 @@ namespace AnyRPG {
         #region Singleton
         private static MessageFeedManager instance;
 
-        public static MessageFeedManager MyInstance {
+        public static MessageFeedManager Instance {
             get {
-                if (instance == null) {
-                    instance = FindObjectOfType<MessageFeedManager>();
-                }
-
                 return instance;
             }
         }
 
+        private void Awake() {
+            instance = this;
+        }
         #endregion
 
         [SerializeField]
@@ -42,13 +41,13 @@ namespace AnyRPG {
             if (PlayerPrefs.GetInt("UseMessageFeed") == 0) {
                 return;
             }
-            GameObject go = ObjectPooler.MyInstance.GetPooledObject(messagePrefab, messageFeedGameObject.transform);
+            GameObject go = ObjectPooler.Instance.GetPooledObject(messagePrefab, messageFeedGameObject.transform);
             go.GetComponent<TextMeshProUGUI>().text = message;
             //uncomment the next line to make the messages spawn at the top instead of the bottom
             //go.transform.SetAsFirstSibling();
-            ObjectPooler.MyInstance.ReturnObjectToPool(go, 2);
-            if (CombatLogUI.MyInstance != null) {
-                CombatLogUI.MyInstance.WriteSystemMessage(message);
+            ObjectPooler.Instance.ReturnObjectToPool(go, 2);
+            if (CombatLogUI.Instance != null) {
+                CombatLogUI.Instance.WriteSystemMessage(message);
             } else {
                 //Debug.Log("CombatLogUI.Myinstance was null!!");
             }

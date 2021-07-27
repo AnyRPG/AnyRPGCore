@@ -31,9 +31,9 @@ namespace AnyRPG {
 
             RawSelect();
 
-            QuestLogUI.MyInstance.MySelectedQuestScript = this;
+            QuestLogUI.Instance.MySelectedQuestScript = this;
 
-            QuestLogUI.MyInstance.ShowDescription(MyQuest);
+            QuestLogUI.Instance.ShowDescription(MyQuest);
         }
 
         public void RawSelect() {
@@ -52,15 +52,15 @@ namespace AnyRPG {
                 markedComplete = false;
                 MyText.text = "[" + quest.MyExperienceLevel + "] " + quest.DisplayName;
             }
-            MyText.color = LevelEquations.GetTargetColor(PlayerManager.MyInstance.MyCharacter.CharacterStats.Level, quest.MyExperienceLevel);
+            MyText.color = LevelEquations.GetTargetColor(PlayerManager.Instance.MyCharacter.CharacterStats.Level, quest.MyExperienceLevel);
         }
 
         /*
         public void CommonSelect() {
-            if (QuestLogUI.MyInstance.MySelectedQuestScript != null && QuestLogUI.MyInstance.MySelectedQuestScript != this) {
-                QuestLogUI.MyInstance.MySelectedQuestScript.DeSelect();
+            if (QuestLogUI.Instance.MySelectedQuestScript != null && QuestLogUI.Instance.MySelectedQuestScript != this) {
+                QuestLogUI.Instance.MySelectedQuestScript.DeSelect();
             }
-            QuestLogUI.MyInstance.MySelectedQuestScript = this;
+            QuestLogUI.Instance.MySelectedQuestScript = this;
 
         }
         */

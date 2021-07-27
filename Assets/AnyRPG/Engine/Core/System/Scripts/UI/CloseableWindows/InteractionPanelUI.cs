@@ -49,7 +49,7 @@ namespace AnyRPG {
                 return;
             }
             base.CreateEventSubscriptions();
-            //SystemEventManager.MyInstance.OnPrerequisiteUpdated += CheckPrerequisites;
+            //SystemEventManager.Instance.OnPrerequisiteUpdated += CheckPrerequisites;
             InteractionManager.Instance.OnSetInteractable += HandleSetInteractable;
         }
 
@@ -60,7 +60,7 @@ namespace AnyRPG {
             }
             base.CleanupEventSubscriptions();
             InteractionManager.Instance.OnSetInteractable -= HandleSetInteractable;
-            //SystemEventManager.MyInstance.OnPrerequisiteUpdated -= CheckPrerequisites;
+            //SystemEventManager.Instance.OnPrerequisiteUpdated -= CheckPrerequisites;
         }
 
         public void CheckPrerequisites(Skill skill) {
@@ -96,7 +96,7 @@ namespace AnyRPG {
             ClearButtons();
 
             // updated to only use valid interactables
-            if (PlayerManager.MyInstance.PlayerUnitSpawned == false) {
+            if (PlayerManager.Instance.PlayerUnitSpawned == false) {
                 //Debug.Log("InteractionPanelUI.ShowInteractablesCommon(" + interactable.name + ") player unit is null");
                 return;
             }
@@ -127,7 +127,7 @@ namespace AnyRPG {
                             // only display complete and available quests here
 
                             if (displayText != string.Empty) {
-                                GameObject go = ObjectPooler.MyInstance.GetPooledObject(questPrefab, availableQuestArea.transform);
+                                GameObject go = ObjectPooler.Instance.GetPooledObject(questPrefab, availableQuestArea.transform);
                                 InteractionPanelQuestScript qs = go.GetComponent<InteractionPanelQuestScript>();
                                 qs.MyQuest = quest;
                                 qs.MyQuestGiver = (_interactable as QuestGiverComponent);
@@ -137,12 +137,12 @@ namespace AnyRPG {
                                 qs.MyText.text = displayText;
 
                                 //Debug.Log("QuestTrackerUI.ShowQuestsCommon(" + questGiver.name + "): " + questNode.MyQuest.MyTitle);
-                                qs.MyText.color = LevelEquations.GetTargetColor(PlayerManager.MyInstance.MyCharacter.CharacterStats.Level, quest.MyExperienceLevel);
+                                qs.MyText.color = LevelEquations.GetTargetColor(PlayerManager.Instance.MyCharacter.CharacterStats.Level, quest.MyExperienceLevel);
                                 //quests.Add(go);
                                 questScripts.Add(qs);
                                 if (quest.IsComplete && !quest.TurnedIn) {
                                     go.transform.SetParent(completeQuestArea.transform);
-                                } else if (!quest.IsComplete && QuestLog.MyInstance.HasQuest(quest.DisplayName) == false) {
+                                } else if (!quest.IsComplete && QuestLog.Instance.HasQuest(quest.DisplayName) == false) {
                                     go.transform.SetParent(availableQuestArea.transform);
                                 }
 
@@ -156,7 +156,7 @@ namespace AnyRPG {
                     if (_interactable.DisplayName != null && _interactable.DisplayName != string.Empty && _interactable.GetCurrentOptionCount() > 0) {
                         //Debug.Log("InteractionPanelUI.ShowInteractablesCommon(" + interactable.name + "): Instantiating button");
                         for (int i = 0; i < _interactable.GetCurrentOptionCount(); i++) {
-                            GameObject go = ObjectPooler.MyInstance.GetPooledObject(interactableButtonPrefab, interactableButtonParent);
+                            GameObject go = ObjectPooler.Instance.GetPooledObject(interactableButtonPrefab, interactableButtonParent);
                             InteractionPanelScript iPS = go.GetComponent<InteractionPanelScript>();
                             if (iPS != null) {
                                 iPS.Setup(_interactable, i);
@@ -207,7 +207,7 @@ namespace AnyRPG {
                 InteractionPanelScript iPS = interactionPanelScript.GetComponent<InteractionPanelScript>();
                 if (iPS.InteractableOption.CanInteract() && iPS.InteractableOption.GetCurrentOptionCount() == 1) {
                     //Debug.Log("InteractionPanelUI.ShowInteractablesCommon(" + interactable.name + "): Checking interaction Panel Script: canInteract is TRUE!!!");
-                    iPS.InteractableOption.Interact(PlayerManager.MyInstance.UnitController.CharacterUnit);
+                    iPS.InteractableOption.Interact(PlayerManager.Instance.UnitController.CharacterUnit);
                     //optionOpened = true;
                     return;
                 }
@@ -237,14 +237,14 @@ namespace AnyRPG {
             foreach (InteractionPanelQuestScript qs in questScripts) {
                 qs.transform.SetParent(null);
                 qs.DeSelect();
-                ObjectPooler.MyInstance.ReturnObjectToPool(qs.gameObject);
+                ObjectPooler.Instance.ReturnObjectToPool(qs.gameObject);
             }
             questScripts.Clear();
 
             foreach (GameObject go in interactionPanelScripts) {
                 InteractionPanelScript iPS = go.GetComponent<InteractionPanelScript>();
                 go.transform.SetParent(null);
-                ObjectPooler.MyInstance.ReturnObjectToPool(go);
+                ObjectPooler.Instance.ReturnObjectToPool(go);
             }
             interactionPanelScripts.Clear();
         }

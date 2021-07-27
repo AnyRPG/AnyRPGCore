@@ -9,7 +9,7 @@ namespace AnyRPG {
         #region Singleton
         private static SystemUnitTypeManager instance;
 
-        public static SystemUnitTypeManager MyInstance {
+        public static SystemUnitTypeManager Instance {
             get {
                 if (instance == null) {
                     instance = FindObjectOfType<SystemUnitTypeManager>();

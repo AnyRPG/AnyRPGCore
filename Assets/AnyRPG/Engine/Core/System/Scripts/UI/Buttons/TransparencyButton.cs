@@ -24,7 +24,7 @@ namespace AnyRPG {
             if (eventSubscriptionsInitialized) {
                 return;
             }
-            SystemEventManager.MyInstance.OnPagedButtonsTransparencyUpdate += SetBackGroundTransparency;
+            SystemEventManager.StartListening("OnPagedButtonsTransparencyUpdate", HandlePagedButtonsTransparencyUpdate);
             eventSubscriptionsInitialized = true;
         }
 
@@ -33,10 +33,12 @@ namespace AnyRPG {
             if (!eventSubscriptionsInitialized) {
                 return;
             }
-            if (SystemEventManager.MyInstance != null) {
-                SystemEventManager.MyInstance.OnPagedButtonsTransparencyUpdate -= SetBackGroundTransparency;
-            }
+            SystemEventManager.StopListening("OnPagedButtonsTransparencyUpdate", HandlePagedButtonsTransparencyUpdate);
             eventSubscriptionsInitialized = false;
+        }
+
+        public void HandlePagedButtonsTransparencyUpdate(string eventName, EventParamProperties eventParamProperties) {
+            SetBackGroundTransparency();
         }
 
         public void OnDestroy() {
@@ -63,7 +65,7 @@ namespace AnyRPG {
 
         public virtual void CheckMouse() {
             if (UIManager.MouseInRect(transform as RectTransform)) {
-                UIManager.MyInstance.HideToolTip();
+                UIManager.Instance.HideToolTip();
             }
         }
     }

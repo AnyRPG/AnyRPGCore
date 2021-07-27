@@ -12,16 +12,15 @@ namespace AnyRPG {
         #region Singleton
         private static UIManager instance;
 
-        public static UIManager MyInstance {
+        public static UIManager Instance {
             get {
-                if (instance == null) {
-                    instance = FindObjectOfType<UIManager>();
-                }
-
                 return instance;
             }
         }
 
+        private void Awake() {
+            instance = this;
+        }
         #endregion
 
         [SerializeField]
@@ -165,7 +164,7 @@ namespace AnyRPG {
             //Debug.Log("UIManager subscribing to characterspawn");
             CreateEventSubscriptions();
 
-            if (PlayerManager.MyInstance.PlayerUnitSpawned) {
+            if (PlayerManager.Instance.PlayerUnitSpawned) {
                 ProcessPlayerUnitSpawn();
             }
             toolTipText = toolTip.GetComponentInChildren<TextMeshProUGUI>();
@@ -219,8 +218,8 @@ namespace AnyRPG {
             defaultWindowPositions.Add("CombatLogWindowX", CombatLogWindow.transform.position.x);
             defaultWindowPositions.Add("CombatLogWindowY", CombatLogWindow.transform.position.y);
 
-            defaultWindowPositions.Add("MessageFeedManagerX", MessageFeedManager.MyInstance.MessageFeedGameObject.transform.position.x);
-            defaultWindowPositions.Add("MessageFeedManagerY", MessageFeedManager.MyInstance.MessageFeedGameObject.transform.position.y);
+            defaultWindowPositions.Add("MessageFeedManagerX", MessageFeedManager.Instance.MessageFeedGameObject.transform.position.x);
+            defaultWindowPositions.Add("MessageFeedManagerY", MessageFeedManager.Instance.MessageFeedGameObject.transform.position.y);
 
             //Debug.Log("Saving FloatingCastBarController: " + MyFloatingCastBarController.transform.position.x + "; " + MyFloatingCastBarController.transform.position.y);
             defaultWindowPositions.Add("FloatingCastBarControllerX", FloatingCastBarController.transform.position.x);
@@ -272,7 +271,7 @@ namespace AnyRPG {
             PopupWindowManager.Instance.mainMapWindow.transform.position = new Vector3(defaultWindowPositions["MainMapWindowX"], defaultWindowPositions["MainMapWindowY"], 0);
             QuestTrackerWindow.transform.position = new Vector3(defaultWindowPositions["QuestTrackerWindowX"], defaultWindowPositions["QuestTrackerWindowY"], 0);
             CombatLogWindow.transform.position = new Vector3(defaultWindowPositions["CombatLogWindowX"], defaultWindowPositions["CombatLogWindowY"], 0);
-            MessageFeedManager.MyInstance.MessageFeedGameObject.transform.position = new Vector3(defaultWindowPositions["MessageFeedManagerX"], defaultWindowPositions["MessageFeedManagerY"], 0);
+            MessageFeedManager.Instance.MessageFeedGameObject.transform.position = new Vector3(defaultWindowPositions["MessageFeedManagerX"], defaultWindowPositions["MessageFeedManagerY"], 0);
             FloatingCastBarController.transform.position = new Vector3(defaultWindowPositions["FloatingCastBarControllerX"], defaultWindowPositions["FloatingCastBarControllerY"], 0);
             StatusEffectPanelController.transform.position = new Vector3(defaultWindowPositions["StatusEffectPanelControllerX"], defaultWindowPositions["StatusEffectPanelControllerY"], 0);
             PlayerUnitFrameController.transform.position = new Vector3(defaultWindowPositions["PlayerUnitFrameControllerX"], defaultWindowPositions["PlayerUnitFrameControllerY"], 0);
@@ -298,8 +297,8 @@ namespace AnyRPG {
             SystemEventManager.StartListening("OnLevelLoad", HandleLevelLoad);
             SystemEventManager.StartListening("OnPlayerUnitSpawn", HandlePlayerUnitSpawn);
             SystemEventManager.StartListening("OnPlayerUnitDespawn", HandlePlayerUnitDespawn);
-            SystemEventManager.MyInstance.OnBeforePlayerConnectionSpawn += HandleBeforePlayerConnectionSpawn;
-            SystemEventManager.MyInstance.OnPlayerConnectionDespawn += HandlePlayerConnectionDespawn;
+            SystemEventManager.StartListening("OnBeforePlayerConnectionSpawn", HandleBeforePlayerConnectionSpawn);
+            SystemEventManager.StartListening("OnPlayerConnectionDespawn", HandlePlayerConnectionDespawn);
             eventSubscriptionsInitialized = true;
         }
 
@@ -308,13 +307,13 @@ namespace AnyRPG {
             if (!eventSubscriptionsInitialized) {
                 return;
             }
-            if (SystemEventManager.MyInstance != null) {
+            if (SystemEventManager.Instance != null) {
                 SystemEventManager.StopListening("OnLevelLoad", HandleLevelLoad);
                 SystemEventManager.StopListening("OnPlayerUnitSpawn", HandlePlayerUnitSpawn);
                 SystemEventManager.StopListening("OnPlayerUnitDespawn", HandlePlayerUnitDespawn);
                 SystemEventManager.StopListening("OnPlayerUnitSpawn", HandleMainCamera);
-                SystemEventManager.MyInstance.OnBeforePlayerConnectionSpawn -= HandleBeforePlayerConnectionSpawn;
-                SystemEventManager.MyInstance.OnPlayerConnectionDespawn -= HandlePlayerConnectionDespawn;
+                SystemEventManager.StopListening("OnBeforePlayerConnectionSpawn", HandleBeforePlayerConnectionSpawn);
+                SystemEventManager.StopListening("OnPlayerConnectionDespawn", HandlePlayerConnectionDespawn);
             }
             eventSubscriptionsInitialized = false;
         }
@@ -333,13 +332,13 @@ namespace AnyRPG {
 
         void Update() {
 
-            if (PlayerManager.MyInstance.PlayerUnitSpawned == false) {
+            if (PlayerManager.Instance.PlayerUnitSpawned == false) {
                 // if there is no player, these windows shouldn't be open
                 return;
             }
             // don't hide windows while binding keys
-            if (KeyBindManager.MyInstance.MyBindName == string.Empty) {
-                if (InputManager.MyInstance.KeyBindWasPressed("HIDEUI")) {
+            if (KeyBindManager.Instance.MyBindName == string.Empty) {
+                if (InputManager.Instance.KeyBindWasPressed("HIDEUI")) {
                     if (playerUI.gameObject.activeSelf) {
                         playerUI.SetActive(false);
                     } else {
@@ -368,10 +367,10 @@ namespace AnyRPG {
             inGameUI.SetActive(true);
             //Debug.Break();
             //return;
-            if (CameraManager.MyInstance != null) {
-                CameraManager.MyInstance.DisableCutsceneCamera();
+            if (CameraManager.Instance != null) {
+                CameraManager.Instance.DisableCutsceneCamera();
             }
-            if (!PlayerManager.MyInstance.PlayerUnitSpawned) {
+            if (!PlayerManager.Instance.PlayerUnitSpawned) {
                 SystemEventManager.StartListening("OnPlayerUnitSpawn", HandleMainCamera);
             } else {
                 InitializeMainCamera();
@@ -395,7 +394,7 @@ namespace AnyRPG {
         }
 
         public void InitializeMainCamera() {
-            CameraManager.MyInstance.MainCameraController.InitializeCamera(PlayerManager.MyInstance.ActiveUnitController.transform);
+            CameraManager.Instance.MainCameraController.InitializeCamera(PlayerManager.Instance.ActiveUnitController.transform);
         }
 
         public void DeactivatePlayerUI() {
@@ -431,7 +430,7 @@ namespace AnyRPG {
         public void DeactivateSystemMenuUI() {
             //Debug.Log("UIManager.DeactivateSystemMenuUI()");
             systemMenuUI.SetActive(false);
-            SystemWindowManager.MyInstance.CloseAllWindows();
+            SystemWindowManager.Instance.CloseAllWindows();
         }
 
         public void ActivateSystemMenuUI() {
@@ -440,16 +439,16 @@ namespace AnyRPG {
             systemMenuUI.SetActive(true);
         }
 
-        public void HandleBeforePlayerConnectionSpawn() {
+        public void HandleBeforePlayerConnectionSpawn(string eventName, EventParamProperties eventParamProperties) {
             //Debug.Log("UIManager.HandleBeforePlayerConnectionSpawn()");
 
             // allow the player ability manager to send us events so we can redraw the ability list when it changes
-            SystemEventManager.MyInstance.OnAbilityListChanged += HandleAbilityListChanged;
+            SystemEventManager.Instance.OnAbilityListChanged += HandleAbilityListChanged;
         }
 
-        public void HandlePlayerConnectionDespawn() {
+        public void HandlePlayerConnectionDespawn(string eventName, EventParamProperties eventParamProperties) {
             //Debug.Log("UIManager.HandlePlayerConnectionDespawn()");
-            SystemEventManager.MyInstance.OnAbilityListChanged -= HandleAbilityListChanged;
+            SystemEventManager.Instance.OnAbilityListChanged -= HandleAbilityListChanged;
         }
 
         public void ProcessPlayerUnitSpawn() {
@@ -460,21 +459,21 @@ namespace AnyRPG {
             ActionBarManager.UpdateVisuals();
 
             // allow the player ability manager to send us events so we can redraw the ability list when it changes
-            //SystemEventManager.MyInstance.OnAbilityListChanged += HandleAbilityListChanged;
+            //SystemEventManager.Instance.OnAbilityListChanged += HandleAbilityListChanged;
 
             // enable things that track the character
             // initialize unit frame
-            playerUnitFrameController.SetTarget(PlayerManager.MyInstance.ActiveUnitController.NamePlateController);
-            floatingCastBarController.SetTarget(PlayerManager.MyInstance.ActiveUnitController.NamePlateController as UnitNamePlateController);
-            statusEffectPanelController.SetTarget(PlayerManager.MyInstance.ActiveUnitController);
+            playerUnitFrameController.SetTarget(PlayerManager.Instance.ActiveUnitController.NamePlateController);
+            floatingCastBarController.SetTarget(PlayerManager.Instance.ActiveUnitController.NamePlateController as UnitNamePlateController);
+            statusEffectPanelController.SetTarget(PlayerManager.Instance.ActiveUnitController);
 
             // intialize mini map
-            InitializeMiniMapTarget(PlayerManager.MyInstance.ActiveUnitController.gameObject);
+            InitializeMiniMapTarget(PlayerManager.Instance.ActiveUnitController.gameObject);
         }
 
         public void HandlePlayerUnitDespawn(string eventName, EventParamProperties eventParamProperties) {
             //Debug.Log("UIManager.HandleCharacterDespawn()");
-            //SystemEventManager.MyInstance.OnAbilityListChanged -= HandleAbilityListChanged;
+            //SystemEventManager.Instance.OnAbilityListChanged -= HandleAbilityListChanged;
             DeInitializeMiniMapTarget();
             statusEffectPanelController.ClearTarget();
             focusUnitFrameController.ClearTarget();
@@ -874,31 +873,31 @@ namespace AnyRPG {
 
         public void UpdateFloatingCombatText() {
             if (PlayerPrefs.GetInt("UseFloatingCombatText") == 0) {
-                if (CombatTextManager.MyInstance.MyCombatTextCanvas.gameObject.activeSelf) {
-                    CombatTextManager.MyInstance.MyCombatTextCanvas.gameObject.SetActive(false);
+                if (CombatTextManager.Instance.MyCombatTextCanvas.gameObject.activeSelf) {
+                    CombatTextManager.Instance.MyCombatTextCanvas.gameObject.SetActive(false);
                 }
             } else if (PlayerPrefs.GetInt("UseFloatingCastBar") == 1) {
-                if (!CombatTextManager.MyInstance.MyCombatTextCanvas.gameObject.activeSelf) {
-                    CombatTextManager.MyInstance.MyCombatTextCanvas.gameObject.SetActive(true);
+                if (!CombatTextManager.Instance.MyCombatTextCanvas.gameObject.activeSelf) {
+                    CombatTextManager.Instance.MyCombatTextCanvas.gameObject.SetActive(true);
                 }
             }
         }
 
         public void UpdateMessageFeed() {
             if (PlayerPrefs.GetInt("UseMessageFeed") == 0) {
-                if (MessageFeedManager.MyInstance.MessageFeedGameObject.activeSelf) {
-                    MessageFeedManager.MyInstance.MessageFeedGameObject.SetActive(false);
+                if (MessageFeedManager.Instance.MessageFeedGameObject.activeSelf) {
+                    MessageFeedManager.Instance.MessageFeedGameObject.SetActive(false);
                 }
             } else if (PlayerPrefs.GetInt("UseMessageFeed") == 1) {
-                if (!MessageFeedManager.MyInstance.MessageFeedGameObject.activeSelf) {
-                    MessageFeedManager.MyInstance.MessageFeedGameObject.SetActive(true);
+                if (!MessageFeedManager.Instance.MessageFeedGameObject.activeSelf) {
+                    MessageFeedManager.Instance.MessageFeedGameObject.SetActive(true);
                 }
             }
         }
 
         public void UpdateLockUI() {
             //Debug.Log("UIManager.UpdateLockUI()");
-            MessageFeedManager.MyInstance.LockUI();
+            MessageFeedManager.Instance.LockUI();
             floatingCastBarController.LockUI();
             statusEffectPanelController.LockUI();
             playerUnitFrameController.LockUI();
@@ -988,16 +987,16 @@ namespace AnyRPG {
 
         public void UpdateSystemMenuOpacity() {
             int opacityLevel = (int)(PlayerPrefs.GetFloat("SystemMenuOpacity") * 255);
-            SystemWindowManager.MyInstance.mainMenuWindow.CloseableWindowContents.SetBackGroundColor(new Color32(0, 0, 0, (byte)opacityLevel));
-            SystemWindowManager.MyInstance.nameChangeWindow.CloseableWindowContents.SetBackGroundColor(new Color32(0, 0, 0, (byte)opacityLevel));
-            SystemWindowManager.MyInstance.deleteGameMenuWindow.CloseableWindowContents.SetBackGroundColor(new Color32(0, 0, 0, (byte)opacityLevel));
-            SystemWindowManager.MyInstance.characterCreatorWindow.CloseableWindowContents.SetBackGroundColor(new Color32(0, 0, 0, (byte)opacityLevel));
-            SystemWindowManager.MyInstance.exitMenuWindow.CloseableWindowContents.SetBackGroundColor(new Color32(0, 0, 0, (byte)opacityLevel));
-            SystemWindowManager.MyInstance.inGameMainMenuWindow.CloseableWindowContents.SetBackGroundColor(new Color32(0, 0, 0, (byte)opacityLevel));
-            SystemWindowManager.MyInstance.keyBindConfirmWindow.CloseableWindowContents.SetBackGroundColor(new Color32(0, 0, 0, (byte)opacityLevel));
-            SystemWindowManager.MyInstance.playMenuWindow.CloseableWindowContents.SetBackGroundColor(new Color32(0, 0, 0, (byte)opacityLevel));
-            SystemWindowManager.MyInstance.settingsMenuWindow.CloseableWindowContents.SetBackGroundColor(new Color32(0, 0, 0, (byte)opacityLevel));
-            SystemWindowManager.MyInstance.playerOptionsMenuWindow.CloseableWindowContents.SetBackGroundColor(new Color32(0, 0, 0, (byte)opacityLevel));
+            SystemWindowManager.Instance.mainMenuWindow.CloseableWindowContents.SetBackGroundColor(new Color32(0, 0, 0, (byte)opacityLevel));
+            SystemWindowManager.Instance.nameChangeWindow.CloseableWindowContents.SetBackGroundColor(new Color32(0, 0, 0, (byte)opacityLevel));
+            SystemWindowManager.Instance.deleteGameMenuWindow.CloseableWindowContents.SetBackGroundColor(new Color32(0, 0, 0, (byte)opacityLevel));
+            SystemWindowManager.Instance.characterCreatorWindow.CloseableWindowContents.SetBackGroundColor(new Color32(0, 0, 0, (byte)opacityLevel));
+            SystemWindowManager.Instance.exitMenuWindow.CloseableWindowContents.SetBackGroundColor(new Color32(0, 0, 0, (byte)opacityLevel));
+            SystemWindowManager.Instance.inGameMainMenuWindow.CloseableWindowContents.SetBackGroundColor(new Color32(0, 0, 0, (byte)opacityLevel));
+            SystemWindowManager.Instance.keyBindConfirmWindow.CloseableWindowContents.SetBackGroundColor(new Color32(0, 0, 0, (byte)opacityLevel));
+            SystemWindowManager.Instance.playMenuWindow.CloseableWindowContents.SetBackGroundColor(new Color32(0, 0, 0, (byte)opacityLevel));
+            SystemWindowManager.Instance.settingsMenuWindow.CloseableWindowContents.SetBackGroundColor(new Color32(0, 0, 0, (byte)opacityLevel));
+            SystemWindowManager.Instance.playerOptionsMenuWindow.CloseableWindowContents.SetBackGroundColor(new Color32(0, 0, 0, (byte)opacityLevel));
         }
 
         public void SetLayerRecursive(GameObject objectName, int newLayer) {

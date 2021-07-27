@@ -31,10 +31,10 @@ namespace AnyRPG {
             CurrentAmount++;
             quest.CheckCompletion();
             if (CurrentAmount <= MyAmount && !quest.MyIsAchievement && CurrentAmount != 0) {
-                MessageFeedManager.MyInstance.WriteMessage(string.Format("{0}: {1}/{2}", DisplayName, Mathf.Clamp(CurrentAmount, 0, MyAmount), MyAmount));
+                MessageFeedManager.Instance.WriteMessage(string.Format("{0}: {1}/{2}", DisplayName, Mathf.Clamp(CurrentAmount, 0, MyAmount), MyAmount));
             }
             if (completeBefore == false && IsComplete && !quest.MyIsAchievement) {
-                MessageFeedManager.MyInstance.WriteMessage(string.Format("Learn {0} {1}: Objective Complete", CurrentAmount, DisplayName));
+                MessageFeedManager.Instance.WriteMessage(string.Format("Learn {0} {1}: Objective Complete", CurrentAmount, DisplayName));
             }
         }
 
@@ -44,10 +44,10 @@ namespace AnyRPG {
                 CurrentAmount++;
                 quest.CheckCompletion();
                 if (CurrentAmount <= MyAmount && !quest.MyIsAchievement) {
-                    MessageFeedManager.MyInstance.WriteMessage(string.Format("{0}: {1}/{2}", baseAbility.DisplayName, CurrentAmount, MyAmount));
+                    MessageFeedManager.Instance.WriteMessage(string.Format("{0}: {1}/{2}", baseAbility.DisplayName, CurrentAmount, MyAmount));
                 }
                 if (completeBefore == false && IsComplete && !quest.MyIsAchievement) {
-                    MessageFeedManager.MyInstance.WriteMessage(string.Format("Learn {0} {1}: Objective Complete", CurrentAmount, baseAbility.DisplayName));
+                    MessageFeedManager.Instance.WriteMessage(string.Format("Learn {0} {1}: Objective Complete", CurrentAmount, baseAbility.DisplayName));
                 }
         }
 
@@ -58,14 +58,14 @@ namespace AnyRPG {
             if (completeBefore) {
                 return;
             }
-            if (PlayerManager.MyInstance.MyCharacter.CharacterAbilityManager.HasAbility(baseAbility)) {
+            if (PlayerManager.Instance.MyCharacter.CharacterAbilityManager.HasAbility(baseAbility)) {
                 CurrentAmount++;
                 quest.CheckCompletion(true, printMessages);
                 if (CurrentAmount <= MyAmount && !quest.MyIsAchievement && printMessages == true) {
-                    MessageFeedManager.MyInstance.WriteMessage(string.Format("{0}: {1}/{2}", baseAbility.DisplayName, CurrentAmount, MyAmount));
+                    MessageFeedManager.Instance.WriteMessage(string.Format("{0}: {1}/{2}", baseAbility.DisplayName, CurrentAmount, MyAmount));
                 }
                 if (completeBefore == false && IsComplete && !quest.MyIsAchievement && printMessages == true) {
-                    MessageFeedManager.MyInstance.WriteMessage(string.Format("Learn {0} {1}: Objective Complete", CurrentAmount, baseAbility.DisplayName));
+                    MessageFeedManager.Instance.WriteMessage(string.Format("Learn {0} {1}: Objective Complete", CurrentAmount, baseAbility.DisplayName));
                 }
             }
         }
@@ -95,7 +95,7 @@ namespace AnyRPG {
             base.SetupScriptableObjects();
             baseAbility = null;
             if (MyType != null && MyType != string.Empty) {
-                baseAbility = SystemAbilityManager.MyInstance.GetResource(MyType);
+                baseAbility = SystemAbilityManager.Instance.GetResource(MyType);
             } else {
                 Debug.LogError("SystemAbilityManager.SetupScriptableObjects(): Could not find ability : " + MyType + " while inititalizing an ability objective.  CHECK INSPECTOR");
             }

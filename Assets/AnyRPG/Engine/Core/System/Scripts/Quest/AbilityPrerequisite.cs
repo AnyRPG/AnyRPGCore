@@ -28,7 +28,7 @@ namespace AnyRPG {
 
         public void UpdateStatus(bool notify = true) {
             bool originalResult = prerequisiteMet;
-            prerequisiteMet = PlayerManager.MyInstance.MyCharacter.CharacterAbilityManager.HasAbility(prerequisiteAbility);
+            prerequisiteMet = PlayerManager.Instance.MyCharacter.CharacterAbilityManager.HasAbility(prerequisiteAbility);
             if (prerequisiteMet != originalResult) {
                 if (notify == true) {
                     OnStatusUpdated();
@@ -45,7 +45,7 @@ namespace AnyRPG {
         public void SetupScriptableObjects() {
             prerequisiteAbility = null;
             if (prerequisiteName != null && prerequisiteName != string.Empty) {
-                prerequisiteAbility = SystemAbilityManager.MyInstance.GetResource(prerequisiteName);
+                prerequisiteAbility = SystemAbilityManager.Instance.GetResource(prerequisiteName);
                 if (prerequisiteAbility != null) {
                     prerequisiteAbility.OnAbilityLearn += HandleAbilityListChanged;
                 }

@@ -11,16 +11,15 @@ namespace AnyRPG {
         #region Singleton
         private static InputManager instance;
 
-        public static InputManager MyInstance {
+        public static InputManager Instance {
             get {
-                if (instance == null) {
-                    instance = FindObjectOfType<InputManager>();
-                }
-
                 return instance;
             }
         }
 
+        private void Awake() {
+            instance = this;
+        }
         #endregion
 
         public bool rightMouseButtonDown = false;
@@ -77,10 +76,10 @@ namespace AnyRPG {
         }
 
         void Update() {
-            if (KeyBindManager.MyInstance.MyBindName != string.Empty) {
+            if (KeyBindManager.Instance.MyBindName != string.Empty) {
                 // we are binding a key.  discard all input
                 //Debug.Log("Key Binding in progress.  returning.");
-                foreach (KeyBindNode keyBindNode in KeyBindManager.MyInstance.MyKeyBinds.Values) {
+                foreach (KeyBindNode keyBindNode in KeyBindManager.Instance.MyKeyBinds.Values) {
                     keyBindNode.UnRegisterKeyPress();
                     keyBindNode.UnRegisterKeyHeld();
                     keyBindNode.UnRegisterKeyUp();
@@ -100,7 +99,7 @@ namespace AnyRPG {
             }
             lastRegisteredFrame = Time.frameCount;
 
-            if (SystemWindowManager.MyInstance.nameChangeWindow.IsOpen) {
+            if (SystemWindowManager.Instance.nameChangeWindow.IsOpen) {
                 //Debug.Log("Not allowing registration of keystrokes to keybinds during name change");
                 return;
             }
@@ -143,7 +142,7 @@ namespace AnyRPG {
                 shift = true;
             }
 
-            foreach (KeyBindNode keyBindNode in KeyBindManager.MyInstance.MyKeyBinds.Values) {
+            foreach (KeyBindNode keyBindNode in KeyBindManager.Instance.MyKeyBinds.Values) {
                 // normal should eventually changed to movement, but there is only one other key (toggle run) that is normal for now, so normal is ok until more keys are added
                 // register key down
                 if (Input.GetKeyDown(keyBindNode.MyKeyCode) && (keyBindNode.MyKeyBindType == KeyBindType.Normal || ((control == keyBindNode.MyControl) && (shift == keyBindNode.MyShift)))) {
@@ -173,8 +172,8 @@ namespace AnyRPG {
 
         public bool KeyBindWasPressedOrHeld(string keyBindID) {
             RegisterKeyPresses();
-            if (KeyBindManager.MyInstance.MyKeyBinds.ContainsKey(keyBindID) &&
-                (KeyBindManager.MyInstance.MyKeyBinds[keyBindID].KeyPressed == true || KeyBindManager.MyInstance.MyKeyBinds[keyBindID].KeyHeld == true)) {
+            if (KeyBindManager.Instance.MyKeyBinds.ContainsKey(keyBindID) &&
+                (KeyBindManager.Instance.MyKeyBinds[keyBindID].KeyPressed == true || KeyBindManager.Instance.MyKeyBinds[keyBindID].KeyHeld == true)) {
                 return true;
             }
             return false;
@@ -182,7 +181,7 @@ namespace AnyRPG {
 
         public bool KeyBindWasPressed(string keyBindID) {
             RegisterKeyPresses();
-            if (KeyBindManager.MyInstance.MyKeyBinds.ContainsKey(keyBindID) && KeyBindManager.MyInstance.MyKeyBinds[keyBindID].KeyPressed == true) {
+            if (KeyBindManager.Instance.MyKeyBinds.ContainsKey(keyBindID) && KeyBindManager.Instance.MyKeyBinds[keyBindID].KeyPressed == true) {
                 return true;
             }
             return false;
@@ -267,7 +266,7 @@ namespace AnyRPG {
                 rightMouseButtonDown = true;
                 rightMouseButtonDownPosition = Input.mousePosition;
                 // IGNORE NAMEPLATES FOR THE PURPOSE OF CAMERA MOVEMENT
-                if (EventSystem.current.IsPointerOverGameObject() && (NamePlateManager.MyInstance != null ? !NamePlateManager.MyInstance.MouseOverNamePlate() : true)) {
+                if (EventSystem.current.IsPointerOverGameObject() && (NamePlateManager.Instance != null ? !NamePlateManager.Instance.MouseOverNamePlate() : true)) {
                     rightMouseButtonClickedOverUI = true;
                 }
                 if (!rightMouseButtonClickedOverUI) {
@@ -281,7 +280,7 @@ namespace AnyRPG {
             if (Input.GetMouseButtonDown(0)) {
                 leftMouseButtonDown = true;
                 leftMouseButtonDownPosition = Input.mousePosition;
-                if (EventSystem.current.IsPointerOverGameObject() && (NamePlateManager.MyInstance != null ? !NamePlateManager.MyInstance.MouseOverNamePlate() : true)) {
+                if (EventSystem.current.IsPointerOverGameObject() && (NamePlateManager.Instance != null ? !NamePlateManager.Instance.MouseOverNamePlate() : true)) {
                     leftMouseButtonClickedOverUI = true;
                 }
                 if (!leftMouseButtonClickedOverUI) {
@@ -293,7 +292,7 @@ namespace AnyRPG {
             if (Input.GetMouseButtonDown(2)) {
                 middleMouseButtonDown = true;
                 middleMouseButtonDownPosition = Input.mousePosition;
-                if (EventSystem.current.IsPointerOverGameObject() && (NamePlateManager.MyInstance != null ? !NamePlateManager.MyInstance.MouseOverNamePlate() : true)) {
+                if (EventSystem.current.IsPointerOverGameObject() && (NamePlateManager.Instance != null ? !NamePlateManager.Instance.MouseOverNamePlate() : true)) {
                     middleMouseButtonClickedOverUI = true;
                 }
             }

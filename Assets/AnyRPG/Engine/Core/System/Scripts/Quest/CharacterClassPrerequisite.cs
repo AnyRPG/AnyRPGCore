@@ -19,7 +19,7 @@ namespace AnyRPG {
 
         public void UpdateStatus(bool notify = true) {
             bool originalResult = prerequisiteMet;
-            bool checkResult = (PlayerManager.MyInstance.MyCharacter.CharacterClass == prerequisiteCharacterClass);
+            bool checkResult = (PlayerManager.Instance.MyCharacter.CharacterClass == prerequisiteCharacterClass);
             if (checkResult != originalResult) {
                 prerequisiteMet = checkResult;
                 if (notify == true) {
@@ -43,17 +43,17 @@ namespace AnyRPG {
         public void SetupScriptableObjects() {
             prerequisiteCharacterClass = null;
             if (requiredCharacterClass != null && requiredCharacterClass != string.Empty) {
-                prerequisiteCharacterClass = SystemCharacterClassManager.MyInstance.GetResource(requiredCharacterClass);
+                prerequisiteCharacterClass = SystemCharacterClassManager.Instance.GetResource(requiredCharacterClass);
             } else {
                 Debug.LogError("SystemAbilityManager.SetupScriptableObjects(): Could not find character class : " + prerequisiteCharacterClass + " while inititalizing a character class prerequisite.  CHECK INSPECTOR");
             }
 
-            SystemEventManager.MyInstance.OnClassChange += HandleClassChange;
+            SystemEventManager.Instance.OnClassChange += HandleClassChange;
         }
 
         public void CleanupScriptableObjects() {
-            if (SystemEventManager.MyInstance != null) {
-                SystemEventManager.MyInstance.OnClassChange -= HandleClassChange;
+            if (SystemEventManager.Instance != null) {
+                SystemEventManager.Instance.OnClassChange -= HandleClassChange;
             }
         }
     }

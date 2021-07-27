@@ -24,7 +24,7 @@ namespace AnyRPG {
                 return;
             }
             /*
-            if (SystemPlayableDirectorManager.MyInstance == null || playableDirector == null) {
+            if (SystemPlayableDirectorManager.Instance == null || playableDirector == null) {
                 return;
             }
             */
@@ -40,7 +40,7 @@ namespace AnyRPG {
             if (eventSubscriptionsInitialized) {
                 return;
             }
-            SystemEventManager.MyInstance.OnPlayerConnectionDespawn += ReloadResourceLists;
+            SystemEventManager.Instance.OnPlayerConnectionDespawn += ReloadResourceLists;
             eventSubscriptionsInitialized = true;
         }
 
@@ -49,7 +49,7 @@ namespace AnyRPG {
             if (!eventSubscriptionsInitialized) {
                 return;
             }
-            SystemEventManager.MyInstance.OnPlayerConnectionDespawn -= ReloadResourceLists;
+            SystemEventManager.Instance.OnPlayerConnectionDespawn -= ReloadResourceLists;
             eventSubscriptionsInitialized = false;
         }
         */

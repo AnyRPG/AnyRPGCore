@@ -9,21 +9,20 @@ namespace AnyRPG {
         #region Singleton
         private static PetPreviewManager instance;
 
-        public static PetPreviewManager MyInstance {
+        public static PetPreviewManager Instance {
             get {
-                if (instance == null) {
-                    instance = FindObjectOfType<PetPreviewManager>();
-                }
-
                 return instance;
             }
         }
 
+        private void Awake() {
+            instance = this;
+        }
         #endregion
 
 
         public override UnitProfile GetCloneSource() {
-            return PetSpawnControlPanel.MyInstance.MySelectedPetSpawnButton.MyUnitProfile;
+            return PetSpawnControlPanel.Instance.MySelectedPetSpawnButton.MyUnitProfile;
         }
 
         public void HandleOpenWindow() {

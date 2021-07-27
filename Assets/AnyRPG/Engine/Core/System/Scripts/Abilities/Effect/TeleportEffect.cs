@@ -21,9 +21,9 @@ namespace AnyRPG {
             Dictionary<PrefabProfile, GameObject> returnObjects = base.Cast(source, target, originalTarget, abilityEffectInput);
             if (levelName != null) {
                 if (spawnLocation != Vector3.zero) {
-                    LevelManager.MyInstance.LoadLevel(levelName, spawnLocation);
+                    LevelManager.Instance.LoadLevel(levelName, spawnLocation);
                 } else {
-                    LevelManager.MyInstance.LoadLevel(levelName);
+                    LevelManager.Instance.LoadLevel(levelName);
                 }
             }
             return returnObjects;

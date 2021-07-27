@@ -80,8 +80,8 @@ namespace AnyRPG {
 
             if (UIManager.MouseInRect(MyIcon.rectTransform)) {
                 //if (RectTransformUtility.RectangleContainsScreenPoint(MyIcon.rectTransform, Input.mousePosition)) {
-                //UIManager.MyInstance.RefreshTooltip(describable as IDescribable);
-                //UIManager.MyInstance.ShowToolTip(transform.position, describable as IDescribable);
+                //UIManager.Instance.RefreshTooltip(describable as IDescribable);
+                //UIManager.Instance.ShowToolTip(transform.position, describable as IDescribable);
                 ProcessMouseEnter();
             }
 
@@ -101,7 +101,7 @@ namespace AnyRPG {
             //Debug.Log("DescribableIcon.UpdateVisual()");
             /*
             if ((item as IDescribable) == MyDescribable) {
-                count = InventoryManager.MyInstance.GetItemCount(item.MyName);
+                count = InventoryManager.Instance.GetItemCount(item.MyName);
             }
             */
             UpdateVisual();
@@ -132,9 +132,9 @@ namespace AnyRPG {
 
             /*
             if (count > 1) {
-                UIManager.MyInstance.UpdateStackSize(this, count);
+                UIManager.Instance.UpdateStackSize(this, count);
             } else if (MyDescribable is BaseAbility) {
-                UIManager.MyInstance.ClearStackCount(this);
+                UIManager.Instance.ClearStackCount(this);
             }
             */
         }
@@ -150,7 +150,7 @@ namespace AnyRPG {
             if (Describable != null && Describable is IDescribable) {
                 tmp = (IDescribable)Describable;
                 //Debug.Log("DescribableIcon.OnPointerEnter(): describable is not null");
-                //UIManager.MyInstance.ShowToolTip(transform.position);
+                //UIManager.Instance.ShowToolTip(transform.position);
             }
             if (tmp != null) {
                 //Debug.Log("DescribableIcon.OnPointerEnter(): showing tooltip");
@@ -160,16 +160,16 @@ namespace AnyRPG {
         }
 
         public virtual void ShowToolTip(IDescribable describable) {
-            UIManager.MyInstance.ShowToolTip(transform.position, describable);
+            UIManager.Instance.ShowToolTip(transform.position, describable);
         }
 
         public virtual void OnPointerExit(PointerEventData eventData) {
-            UIManager.MyInstance.HideToolTip();
+            UIManager.Instance.HideToolTip();
         }
 
         public virtual void CheckMouse() {
             if (UIManager.MouseInRect(MyIcon.rectTransform)) {
-                UIManager.MyInstance?.HideToolTip();
+                UIManager.Instance?.HideToolTip();
             }
         }
 

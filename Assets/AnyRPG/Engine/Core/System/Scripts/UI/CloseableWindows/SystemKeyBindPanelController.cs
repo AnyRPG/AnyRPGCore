@@ -48,7 +48,7 @@ namespace AnyRPG {
 
         private void InitializeKeys() {
             //Debug.Log("KeyBindMenuController.InitializeKeys()");
-            foreach (KeyBindNode keyBindNode in KeyBindManager.MyInstance.MyKeyBinds.Values) {
+            foreach (KeyBindNode keyBindNode in KeyBindManager.Instance.MyKeyBinds.Values) {
                 Transform nodeParent = null;
                 if (keyBindNode.MyKeyBindType == KeyBindType.Action) {
                     nodeParent = actionBarsKeyParent.transform;
@@ -57,7 +57,7 @@ namespace AnyRPG {
                 } else if (keyBindNode.MyKeyBindType == KeyBindType.Constant || keyBindNode.MyKeyBindType == KeyBindType.System) {
                     nodeParent = systemKeyParent.transform;
                 }
-                KeyBindSlotScript keyBindSlotScript = ObjectPooler.MyInstance.GetPooledObject(keyBindButtonPrefab, nodeParent).GetComponent<KeyBindSlotScript>();
+                KeyBindSlotScript keyBindSlotScript = ObjectPooler.Instance.GetPooledObject(keyBindButtonPrefab, nodeParent).GetComponent<KeyBindSlotScript>();
                 keyBindSlotScript.Initialize(keyBindNode);
                 keyBindNode.SetSlotScript(keyBindSlotScript);
             }

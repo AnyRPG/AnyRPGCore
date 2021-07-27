@@ -9,12 +9,12 @@ namespace AnyRPG {
 
         public void CancelAction() {
             //Debug.Log("NewGameMenuController.CancelAction()");
-            SystemWindowManager.MyInstance.copyGameMenuWindow.CloseWindow();
+            SystemWindowManager.Instance.copyGameMenuWindow.CloseWindow();
         }
 
         public void ConfirmAction() {
             //Debug.Log("NewGameMenuController.ConfirmAction()");
-            LoadGamePanel.MyInstance.CopyGame(true);
+            LoadGamePanel.Instance.CopyGame(true);
         }
 
     }

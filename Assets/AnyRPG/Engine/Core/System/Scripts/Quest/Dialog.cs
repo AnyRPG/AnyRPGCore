@@ -47,17 +47,17 @@ namespace AnyRPG {
         /// </summary>
         public bool TurnedIn {
             get {
-                return SaveManager.MyInstance.GetDialogSaveData(this).turnedIn;
+                return SaveManager.Instance.GetDialogSaveData(this).turnedIn;
                 //return false;
             }
             set {
-                DialogSaveData saveData = SaveManager.MyInstance.GetDialogSaveData(this);
+                DialogSaveData saveData = SaveManager.Instance.GetDialogSaveData(this);
                 saveData.turnedIn = value;
-                SaveManager.MyInstance.DialogSaveDataDictionary[saveData.MyName] = saveData;
+                SaveManager.Instance.DialogSaveDataDictionary[saveData.MyName] = saveData;
                 if (saveData.turnedIn == true) {
                     //Debug.Log(DisplayName + ".Dialog.TurnedIn = true");
                     // these events are for things that need the dialog turned in as a prerequisite
-                    SystemEventManager.MyInstance.NotifyOnDialogCompleted(this);
+                    SystemEventManager.Instance.NotifyOnDialogCompleted(this);
                     OnDialogCompleted();
                 }
 
@@ -127,7 +127,7 @@ namespace AnyRPG {
             }
 
             if (audioProfileName != null && audioProfileName != string.Empty) {
-                AudioProfile tmpAudioProfile = SystemAudioProfileManager.MyInstance.GetResource(audioProfileName);
+                AudioProfile tmpAudioProfile = SystemAudioProfileManager.Instance.GetResource(audioProfileName);
                 if (tmpAudioProfile != null) {
                     audioProfile = tmpAudioProfile;
                 } else {

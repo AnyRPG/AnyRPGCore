@@ -48,7 +48,7 @@ namespace AnyRPG {
             foreach (NewGameCharacterClassButton optionButton in optionButtons) {
                 if (optionButton != null) {
                     optionButton.DeSelect();
-                    ObjectPooler.MyInstance.ReturnObjectToPool(optionButton.gameObject);
+                    ObjectPooler.Instance.ReturnObjectToPool(optionButton.gameObject);
                 }
             }
             optionButtons.Clear();
@@ -58,10 +58,10 @@ namespace AnyRPG {
             //Debug.Log("LoadGamePanel.ShowLoadButtonsCommon()");
             ClearOptionButtons();
 
-            foreach (CharacterClass characterClass in SystemCharacterClassManager.MyInstance.GetResourceList()) {
+            foreach (CharacterClass characterClass in SystemCharacterClassManager.Instance.GetResourceList()) {
                 if (characterClass.NewGameOption == true) {
                     //Debug.Log("LoadGamePanel.ShowLoadButtonsCommon(): setting a button with saved game data");
-                    GameObject go = ObjectPooler.MyInstance.GetPooledObject(buttonPrefab, buttonArea.transform);
+                    GameObject go = ObjectPooler.Instance.GetPooledObject(buttonPrefab, buttonArea.transform);
                     NewGameCharacterClassButton optionButton = go.GetComponent<NewGameCharacterClassButton>();
                     optionButton.AddCharacterClass(characterClass);
                     optionButtons.Add(optionButton);
@@ -103,14 +103,14 @@ namespace AnyRPG {
 
             ClearTraitRewardIcons();
             // show trait rewards
-            if (characterClass != null && characterClass.GetFilteredCapabilities(NewGamePanel.MyInstance).TraitList.Count > 0) {
-                CapabilityProps capabilityProps = characterClass.GetFilteredCapabilities(NewGamePanel.MyInstance);
+            if (characterClass != null && characterClass.GetFilteredCapabilities(NewGamePanel.Instance).TraitList.Count > 0) {
+                CapabilityProps capabilityProps = characterClass.GetFilteredCapabilities(NewGamePanel.Instance);
                 traitLabel.SetActive(true);
                 // move to bottom of list before putting traits below it
                 traitLabel.transform.SetAsLastSibling();
                 for (int i = 0; i < capabilityProps.TraitList.Count; i++) {
                     if (capabilityProps.TraitList[i] != null) {
-                        NewGameAbilityButton rewardIcon = ObjectPooler.MyInstance.GetPooledObject(rewardIconPrefab, abilityButtonArea.transform).GetComponent<NewGameAbilityButton>();
+                        NewGameAbilityButton rewardIcon = ObjectPooler.Instance.GetPooledObject(rewardIconPrefab, abilityButtonArea.transform).GetComponent<NewGameAbilityButton>();
                         rewardIcon.AddAbility(capabilityProps.TraitList[i]);
                         traitRewardIcons.Add(rewardIcon);
                         /*
@@ -131,13 +131,13 @@ namespace AnyRPG {
 
             ClearRewardIcons();
             // show ability rewards
-            if (characterClass != null && characterClass.GetFilteredCapabilities(NewGamePanel.MyInstance).AbilityList.Count > 0) {
-                CapabilityProps capabilityProps = characterClass.GetFilteredCapabilities(NewGamePanel.MyInstance);
+            if (characterClass != null && characterClass.GetFilteredCapabilities(NewGamePanel.Instance).AbilityList.Count > 0) {
+                CapabilityProps capabilityProps = characterClass.GetFilteredCapabilities(NewGamePanel.Instance);
                 abilityLabel.SetActive(true);
                 abilityLabel.transform.SetAsFirstSibling();
                 for (int i = 0; i < capabilityProps.AbilityList.Count; i++) {
                     if (capabilityProps.AbilityList[i] != null) {
-                        NewGameAbilityButton rewardIcon = ObjectPooler.MyInstance.GetPooledObject(rewardIconPrefab, abilityButtonArea.transform).GetComponent<NewGameAbilityButton>();
+                        NewGameAbilityButton rewardIcon = ObjectPooler.Instance.GetPooledObject(rewardIconPrefab, abilityButtonArea.transform).GetComponent<NewGameAbilityButton>();
                         rewardIcon.AddAbility(capabilityProps.AbilityList[i]);
                         abilityRewardIcons.Add(rewardIcon);
                         /*
@@ -157,7 +157,7 @@ namespace AnyRPG {
             //Debug.Log("ClassChangePanelController.ClearRewardIcons()");
 
             foreach (NewGameAbilityButton rewardIcon in traitRewardIcons) {
-                ObjectPooler.MyInstance.ReturnObjectToPool(rewardIcon.gameObject);
+                ObjectPooler.Instance.ReturnObjectToPool(rewardIcon.gameObject);
             }
             traitRewardIcons.Clear();
         }
@@ -166,7 +166,7 @@ namespace AnyRPG {
             //Debug.Log("ClassChangePanelController.ClearRewardIcons()");
 
             foreach (NewGameAbilityButton rewardIcon in abilityRewardIcons) {
-                ObjectPooler.MyInstance.ReturnObjectToPool(rewardIcon.gameObject);
+                ObjectPooler.Instance.ReturnObjectToPool(rewardIcon.gameObject);
             }
             abilityRewardIcons.Clear();
         }

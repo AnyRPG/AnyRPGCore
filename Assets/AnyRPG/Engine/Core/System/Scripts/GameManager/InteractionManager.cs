@@ -22,7 +22,6 @@ namespace AnyRPG {
         private void Awake() {
             instance = this;
         }
-
         #endregion
 
         private Interactable currentInteractable = null;

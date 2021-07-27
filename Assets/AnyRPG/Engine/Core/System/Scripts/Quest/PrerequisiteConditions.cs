@@ -105,7 +105,7 @@ namespace AnyRPG {
                 tempCount = 0;
                 foreach (IPrerequisite prerequisite in prerequisiteList) {
                     prerequisiteCount++;
-                    bool checkResult = prerequisite.IsMet(PlayerManager.MyInstance.MyCharacter);
+                    bool checkResult = prerequisite.IsMet(PlayerManager.Instance.MyCharacter);
                     if (requireAny && checkResult == true) {
                         returnValue = true;
                         break;
@@ -125,7 +125,7 @@ namespace AnyRPG {
             /*
             foreach (LevelPrerequisite levelPrerequisite in levelPrerequisites) {
                 prerequisiteCount++;
-                bool checkResult = levelPrerequisite.IsMet(PlayerManager.MyInstance.MyCharacter);
+                bool checkResult = levelPrerequisite.IsMet(PlayerManager.Instance.MyCharacter);
                 if (requireAny && checkResult == true) {
                     returnValue = true;
                     break;
@@ -144,7 +144,7 @@ namespace AnyRPG {
             foreach (CharacterClassPrerequisite characterClassPrerequisite in characterClassPrerequisites) {
                 //Debug.Log("PrerequisiteConditions.IsMet(): CHECKING CHARACTER CLASS PREREQUISITE");
                 prerequisiteCount++;
-                bool checkResult = characterClassPrerequisite.IsMet(PlayerManager.MyInstance.MyCharacter);
+                bool checkResult = characterClassPrerequisite.IsMet(PlayerManager.Instance.MyCharacter);
                 if (requireAny && checkResult == true) {
                     returnValue = true;
                     break;
@@ -164,7 +164,7 @@ namespace AnyRPG {
             foreach (TradeSkillPrerequisite tradeSkillPrerequisite in tradeSkillPrerequisites) {
                 //Debug.Log("PrerequisiteConditions.IsMet(): checking tradeskill prerequisite");
                 prerequisiteCount++;
-                bool checkResult = tradeSkillPrerequisite.IsMet(PlayerManager.MyInstance.MyCharacter);
+                bool checkResult = tradeSkillPrerequisite.IsMet(PlayerManager.Instance.MyCharacter);
                 if (requireAny && checkResult == true) {
                     returnValue = true;
                     break;
@@ -183,7 +183,7 @@ namespace AnyRPG {
             foreach (AbilityPrerequisite abilityPrerequisite in abilityPrerequisites) {
                 //Debug.Log("PrerequisiteConditions.IsMet(): checking ability prerequisite");
                 prerequisiteCount++;
-                bool checkResult = abilityPrerequisite.IsMet(PlayerManager.MyInstance.MyCharacter);
+                bool checkResult = abilityPrerequisite.IsMet(PlayerManager.Instance.MyCharacter);
                 if (requireAny && checkResult == true) {
                     returnValue = true;
                     break;
@@ -203,7 +203,7 @@ namespace AnyRPG {
             foreach (QuestPrerequisite questPrerequisite in questPrerequisites) {
                 //Debug.Log("PrerequisiteConditions.IsMet(): checking quest prerequisite");
                 prerequisiteCount++;
-                bool checkResult = questPrerequisite.IsMet(PlayerManager.MyInstance.MyCharacter);
+                bool checkResult = questPrerequisite.IsMet(PlayerManager.Instance.MyCharacter);
                 if (requireAny && checkResult == true) {
                     returnValue = true;
                     break;
@@ -223,7 +223,7 @@ namespace AnyRPG {
             foreach (DialogPrerequisite dialogPrerequisite in dialogPrerequisites) {
                 //Debug.Log("PrerequisiteConditions.IsMet(): checking quest prerequisite");
                 prerequisiteCount++;
-                bool checkResult = dialogPrerequisite.IsMet(PlayerManager.MyInstance.MyCharacter);
+                bool checkResult = dialogPrerequisite.IsMet(PlayerManager.Instance.MyCharacter);
                 if (requireAny && checkResult == true) {
                     returnValue = true;
                     break;
@@ -242,7 +242,7 @@ namespace AnyRPG {
             foreach (VisitZonePrerequisite visitZonePrerequisite in visitZonePrerequisites) {
                 //Debug.Log("PrerequisiteConditions.IsMet(): checking quest prerequisite");
                 prerequisiteCount++;
-                bool checkResult = visitZonePrerequisite.IsMet(PlayerManager.MyInstance.MyCharacter);
+                bool checkResult = visitZonePrerequisite.IsMet(PlayerManager.Instance.MyCharacter);
                 if (requireAny && checkResult == true) {
                     returnValue = true;
                     break;
@@ -261,7 +261,7 @@ namespace AnyRPG {
             foreach (FactionPrerequisite factionPrerequisite in factionPrerequisites) {
                 //Debug.Log("PrerequisiteConditions.IsMet(): checking quest prerequisite");
                 prerequisiteCount++;
-                bool checkResult = factionPrerequisite.IsMet(PlayerManager.MyInstance.MyCharacter);
+                bool checkResult = factionPrerequisite.IsMet(PlayerManager.Instance.MyCharacter);
                 if (requireAny && checkResult == true) {
                     returnValue = true;
                     break;

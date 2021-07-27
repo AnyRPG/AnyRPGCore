@@ -41,7 +41,7 @@ namespace AnyRPG {
         }
 
         public void CommonSelect() {
-            NewGamePanel.MyInstance.ShowFaction(this);
+            NewGamePanel.Instance.ShowFaction(this);
         }
 
         public void RawSelect() {

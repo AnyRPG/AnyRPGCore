@@ -91,7 +91,7 @@ namespace AnyRPG {
 
             // if the combat text ui is not active, then we should just immediately disable this
             if (gameObject.activeInHierarchy == false) {
-                CombatTextManager.MyInstance.returnControllerToPool(this);
+                CombatTextManager.Instance.returnControllerToPool(this);
                 return;
             }
 
@@ -99,7 +99,7 @@ namespace AnyRPG {
             randomX = Random.Range(0, randomXLimit);
             randomY = Random.Range(0, randomYLimit);
             //Debug.Log("Combat Text spawning: " + textType + "; randomX: " + randomX + "; randomY: " + randomY);
-            targetPos = CameraManager.MyInstance.MyActiveMainCamera.WorldToScreenPoint(mainTarget.InteractableGameObject.transform.position);
+            targetPos = CameraManager.Instance.ActiveMainCamera.WorldToScreenPoint(mainTarget.InteractableGameObject.transform.position);
             //alpha = text.color.a;
             alpha = 1f;
             fadeOutTimer = fadeTime;
@@ -116,7 +116,7 @@ namespace AnyRPG {
             } else {
                 image.color = Color.white;
             }
-            if (mainTarget.InteractableGameObject == PlayerManager.MyInstance.ActiveUnitController.gameObject) {
+            if (mainTarget.InteractableGameObject == PlayerManager.Instance.ActiveUnitController.gameObject) {
                 directionMultiplier = -1;
                 switch (textType) {
                     case CombatTextType.normal:
@@ -225,7 +225,7 @@ namespace AnyRPG {
             //Debug.Log("CombatTextController.RunCombatTextUpdate() fadeOutTimer: " + fadeOutTimer + " " + tmpProtext.text);
             if (mainTarget != null) {
                 //Debug.Log("CombatTextController.FixedUpdate(): maintarget is not null");
-                targetPos = CameraManager.MyInstance.MyActiveMainCamera.WorldToScreenPoint(mainTarget.InteractableGameObject.transform.position + new Vector3(0, yUnitOffset, 0));
+                targetPos = CameraManager.Instance.ActiveMainCamera.WorldToScreenPoint(mainTarget.InteractableGameObject.transform.position + new Vector3(0, yUnitOffset, 0));
                 //Debug.Log("CombatTextController.FixedUpdate(): targetpos:" + targetPos);
                 transform.position = targetPos + new Vector2((randomX + xUIOffset + (xDirectionMultiplier == 1 ? 0 : textRectTransform.rect.width)) * xDirectionMultiplier, yUIOffset + randomY);
             }
@@ -249,7 +249,7 @@ namespace AnyRPG {
                 //randomY += (movementSpeed * directionMultiplier);
                 yUIOffset = distanceToMove * (((fadeOutTimer - fadeTime) * -1) / fadeTime) * directionMultiplier;
             } else {
-                CombatTextManager.MyInstance.returnControllerToPool(this);
+                CombatTextManager.Instance.returnControllerToPool(this);
             }
 
         }

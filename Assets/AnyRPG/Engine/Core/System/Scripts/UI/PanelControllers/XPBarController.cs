@@ -32,10 +32,10 @@ namespace AnyRPG {
             if (eventSubscriptionsInitialized) {
                 return;
             }
-            SystemEventManager.MyInstance.OnXPGained += UpdateXP;
-            SystemEventManager.MyInstance.OnLevelChanged += UpdateXPBar;
+            SystemEventManager.StartListening("OnXPGained", HandleXPGained);
+            SystemEventManager.Instance.OnLevelChanged += UpdateXPBar;
             SystemEventManager.StartListening("OnPlayerUnitSpawn", HandlePlayerUnitSpawn);
-            if (PlayerManager.MyInstance.PlayerUnitSpawned == true) {
+            if (PlayerManager.Instance.PlayerUnitSpawned == true) {
                 ProcessPlayerUnitSpawn();
             }
             eventSubscriptionsInitialized = true;
@@ -46,12 +46,17 @@ namespace AnyRPG {
             if (!eventSubscriptionsInitialized) {
                 return;
             }
-            if (SystemEventManager.MyInstance != null) {
-                SystemEventManager.MyInstance.OnXPGained -= UpdateXP;
-                SystemEventManager.MyInstance.OnLevelChanged -= UpdateXPBar;
+            if (SystemEventManager.Instance != null) {
+                SystemEventManager.StopListening("OnXPGained", HandleXPGained);
+                SystemEventManager.Instance.OnLevelChanged -= UpdateXPBar;
                 SystemEventManager.StopListening("OnPlayerUnitSpawn", HandlePlayerUnitSpawn);
             }
             eventSubscriptionsInitialized = false;
+        }
+
+        public void HandleXPGained(string eventName, EventParamProperties eventParamProperties) {
+            //Debug.Log(gameObject.name + ".InanimateUnit.HandlePlayerUnitSpawn()");
+            UpdateXP();
         }
 
         public void HandlePlayerUnitSpawn(string eventName, EventParamProperties eventParamProperties) {
@@ -72,20 +77,20 @@ namespace AnyRPG {
                 //originalXPSliderWidth = xpBarBackGround.GetComponent<RectTransform>().rect.width;
                 //Debug.Log("XPBarController.HandlePlayerUnitSpawn(): originalXPSliderWidth was 0, now: " + originalXPSliderWidth);
             }
-            UpdateXPBar(PlayerManager.MyInstance.MyCharacter.CharacterStats.Level);
+            UpdateXPBar(PlayerManager.Instance.MyCharacter.CharacterStats.Level);
         }
 
         public void UpdateXP() {
             //Debug.Log("XPBarController.UpdateXP()");
-            UpdateXPBar(PlayerManager.MyInstance.MyCharacter.CharacterStats.Level);
+            UpdateXPBar(PlayerManager.Instance.MyCharacter.CharacterStats.Level);
         }
 
         public void UpdateXPBar(int _Level) {
-            if (!PlayerManager.MyInstance.PlayerUnitSpawned) {
+            if (!PlayerManager.Instance.PlayerUnitSpawned) {
                 return;
             }
             //Debug.Log("XPBarController.UpdateXPBar(" + _Level + ")");
-            int currentXP = PlayerManager.MyInstance.MyCharacter.CharacterStats.CurrentXP;
+            int currentXP = PlayerManager.Instance.MyCharacter.CharacterStats.CurrentXP;
             int neededXP = LevelEquations.GetXPNeededForLevel(_Level);
             float xpPercent = (float)currentXP / (float)neededXP;
 

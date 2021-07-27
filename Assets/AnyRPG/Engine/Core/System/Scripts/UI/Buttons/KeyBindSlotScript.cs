@@ -40,13 +40,13 @@ namespace AnyRPG {
         /*
         public void SetKeyBind() {
             //Debug.Log("KeyBindSlotScript.SetKeyBind()");
-            KeyBindManager.MyInstance.BeginKeyBind(keyBindID);
+            KeyBindManager.Instance.BeginKeyBind(keyBindID);
         }
         */
 
         public void SetKeyBind(int inputDeviceType) {
             //Debug.Log("KeyBindSlotScript.SetKeyBind(" + inputDeviceType + ")");
-            KeyBindManager.MyInstance.BeginKeyBind(keyBindID, (InputDeviceType)inputDeviceType);
+            KeyBindManager.Instance.BeginKeyBind(keyBindID, (InputDeviceType)inputDeviceType);
         }
 
 

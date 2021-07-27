@@ -70,7 +70,7 @@ namespace AnyRPG {
                 return;
             }
             base.CreateEventSubscriptions();
-            //SystemEventManager.MyInstance.OnPrerequisiteUpdated += CheckPrerequisites;
+            //SystemEventManager.Instance.OnPrerequisiteUpdated += CheckPrerequisites;
             CraftingManager.Instance.OnSelectRecipe += SelectRecipe;
             CraftingManager.Instance.OnCraftAmountUpdated += UpdateCraftAmountArea;
             CraftingManager.Instance.OnSetCraftAbility += ViewRecipes;
@@ -85,7 +85,7 @@ namespace AnyRPG {
             CraftingManager.Instance.OnSelectRecipe -= SelectRecipe;
             CraftingManager.Instance.OnCraftAmountUpdated -= UpdateCraftAmountArea;
             CraftingManager.Instance.OnSetCraftAbility -= ViewRecipes;
-            //SystemEventManager.MyInstance.OnPrerequisiteUpdated -= CheckPrerequisites;
+            //SystemEventManager.Instance.OnPrerequisiteUpdated -= CheckPrerequisites;
         }
 
         public void SelectRecipe(Recipe recipe) {
@@ -113,7 +113,7 @@ namespace AnyRPG {
         // meant to be called externally from craftingNode
         public void ViewRecipes(CraftAbility craftAbility) {
             this.craftAbility = craftAbility;
-            //PopupWindowManager.MyInstance.craftingWindow.OpenWindow();
+            //PopupWindowManager.Instance.craftingWindow.OpenWindow();
             ResetWindow();
             ShowRecipes(craftAbility);
         }
@@ -121,7 +121,7 @@ namespace AnyRPG {
         public List<Recipe> GetRecipes() {
             //Debug.Log("CraftAbility.GetRecipes() this: " + this.name);
             List<Recipe> returnList = new List<Recipe>();
-            foreach (Recipe recipe in PlayerManager.MyInstance.MyCharacter.CharacterRecipeManager.RecipeList.Values) {
+            foreach (Recipe recipe in PlayerManager.Instance.MyCharacter.CharacterRecipeManager.RecipeList.Values) {
                 if (craftAbility == recipe.CraftAbility) {
                     returnList.Add(recipe);
                 }
@@ -136,7 +136,7 @@ namespace AnyRPG {
             foreach (Recipe recipe in GetRecipes()) {
                 //Debug.Log("craftingUI.ShowRecipesCommon(" + craftAbility.name + ") : adding recipe:" + recipe.MyOutput.itemName);
                 if (recipe.MyOutput != null) {
-                    GameObject go = ObjectPooler.MyInstance.GetPooledObject(recipePrefab, recipeParent);
+                    GameObject go = ObjectPooler.Instance.GetPooledObject(recipePrefab, recipeParent);
                     RecipeScript qs = go.GetComponentInChildren<RecipeScript>();
                     if (firstScript == null) {
                         firstScript = qs;
@@ -232,7 +232,7 @@ namespace AnyRPG {
                 //Debug.Log("The recipenode has a gameobject we need to clear");
                 recipeScript.gameObject.transform.SetParent(null);
                 recipeScript.DeSelect();
-                ObjectPooler.MyInstance.ReturnObjectToPool(recipeScript.gameObject);
+                ObjectPooler.Instance.ReturnObjectToPool(recipeScript.gameObject);
             }
             recipeScripts.Clear();
         }
@@ -283,7 +283,7 @@ namespace AnyRPG {
                 for (int i = 0; i < craftAmount; i++) {
                     CraftingManager.Instance.CraftingQueue.Add(SelectedRecipeScript.Recipe);
                 }
-                PlayerManager.MyInstance.MyCharacter.CharacterAbilityManager.BeginAbility(craftAbility);
+                PlayerManager.Instance.MyCharacter.CharacterAbilityManager.BeginAbility(craftAbility);
             } else {
                 //Debug.Log("MySelectedRecipeScript is null!");
             }

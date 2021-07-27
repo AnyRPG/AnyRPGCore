@@ -9,7 +9,7 @@ namespace AnyRPG {
 
         public void CancelExit() {
             //Debug.Log("ExitMenuController.CancelExit()");
-            SystemWindowManager.MyInstance.exitMenuWindow.CloseWindow();
+            SystemWindowManager.Instance.exitMenuWindow.CloseWindow();
         }
 
         public void ConfirmExit() {

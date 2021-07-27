@@ -47,7 +47,7 @@ namespace AnyRPG {
             if (prefabObjects != null) {
                 foreach (GameObject go in prefabObjects.Values) {
                     //Debug.Log(MyName + ".LengthEffect.CancelEffect(" + targetCharacter.MyName + "): Destroy: " + go.name);
-                    ObjectPooler.MyInstance.ReturnObjectToPool(go, StatusEffect.PrefabDestroyDelay);
+                    ObjectPooler.Instance.ReturnObjectToPool(go, StatusEffect.PrefabDestroyDelay);
                 }
             }
         }
@@ -63,7 +63,7 @@ namespace AnyRPG {
         public void ClearNodeScripts() {
             foreach (StatusEffectNodeScript statusEffectNodeScript in statusEffectNodeScripts) {
                 if (statusEffectNodeScript != null) {
-                    ObjectPooler.MyInstance.ReturnObjectToPool(statusEffectNodeScript.gameObject);
+                    ObjectPooler.Instance.ReturnObjectToPool(statusEffectNodeScript.gameObject);
                 }
             }
             statusEffectNodeScripts.Clear();

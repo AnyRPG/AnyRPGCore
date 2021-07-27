@@ -23,7 +23,7 @@ namespace AnyRPG {
             if (returnValue == false) {
                 return false;
             }
-            if (PlayerManager.MyInstance.MyCharacter.CharacterAbilityManager.BeginAbility(ability)) {
+            if (PlayerManager.Instance.MyCharacter.CharacterAbilityManager.BeginAbility(ability)) {
                 Remove();
             }
             return returnValue;
@@ -42,7 +42,7 @@ namespace AnyRPG {
             if (ability == null) {
                 return null;
             }
-            return SystemAbilityManager.MyInstance.StartCoroutine(actionButton.MonitorAbility(ability));
+            return SystemAbilityManager.Instance.StartCoroutine(actionButton.MonitorAbility(ability));
         }
 
         public override string GetSummary() {
@@ -66,7 +66,7 @@ namespace AnyRPG {
             base.SetupScriptableObjects();
             ability = null;
             if (abilityName != null) {
-                BaseAbility baseAbility = SystemAbilityManager.MyInstance.GetResource(abilityName);
+                BaseAbility baseAbility = SystemAbilityManager.Instance.GetResource(abilityName);
                 if (baseAbility != null) {
                     ability = baseAbility;
                 } else {

@@ -41,11 +41,11 @@ namespace AnyRPG {
             //Debug.Log("AbilityButton.OnPointerClick()");
             if (eventData.button == PointerEventData.InputButton.Left) {
                 //Debug.Log("AbilityButton.OnPointerClick(): left click");
-                HandScript.MyInstance.TakeMoveable(ability);
+                HandScript.Instance.TakeMoveable(ability);
             }
             if (eventData.button == PointerEventData.InputButton.Right) {
                 //Debug.Log("AbilityButton.OnPointerClick(): right click");
-                PlayerManager.MyInstance.MyCharacter.CharacterAbilityManager.BeginAbility(ability);
+                PlayerManager.Instance.MyCharacter.CharacterAbilityManager.BeginAbility(ability);
             }
         }
     }

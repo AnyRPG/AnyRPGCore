@@ -9,7 +9,7 @@ namespace AnyRPG {
         #region Singleton
         private static SystemInteractableOptionConfigManager instance;
 
-        public static SystemInteractableOptionConfigManager MyInstance {
+        public static SystemInteractableOptionConfigManager Instance {
             get {
                 if (instance == null) {
                     instance = FindObjectOfType<SystemInteractableOptionConfigManager>();

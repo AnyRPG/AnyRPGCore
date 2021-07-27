@@ -9,7 +9,7 @@ namespace AnyRPG {
         #region Singleton
         private static SystemItemQualityManager instance;
 
-        public static SystemItemQualityManager MyInstance {
+        public static SystemItemQualityManager Instance {
             get {
                 if (instance == null) {
                     instance = FindObjectOfType<SystemItemQualityManager>();

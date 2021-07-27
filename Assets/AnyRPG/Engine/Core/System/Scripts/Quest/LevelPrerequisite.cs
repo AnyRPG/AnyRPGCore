@@ -18,7 +18,7 @@ namespace AnyRPG {
 
         public void UpdateStatus(bool notify = true) {
             bool originalResult = prerequisiteMet;
-            bool checkResult = (PlayerManager.MyInstance.MyCharacter.CharacterStats.Level >= requiredLevel);
+            bool checkResult = (PlayerManager.Instance.MyCharacter.CharacterStats.Level >= requiredLevel);
             if (checkResult != originalResult) {
                 prerequisiteMet = checkResult;
                 if (notify == true) {
@@ -41,12 +41,12 @@ namespace AnyRPG {
 
         public void SetupScriptableObjects() {
             //this.prerequisiteConditions = prerequisiteConditions;
-            SystemEventManager.MyInstance.OnLevelChanged += HandleLevelChanged;
+            SystemEventManager.Instance.OnLevelChanged += HandleLevelChanged;
         }
 
         public void CleanupScriptableObjects() {
-            if (SystemEventManager.MyInstance != null) {
-                SystemEventManager.MyInstance.OnLevelChanged -= HandleLevelChanged;
+            if (SystemEventManager.Instance != null) {
+                SystemEventManager.Instance.OnLevelChanged -= HandleLevelChanged;
             }
         }
 

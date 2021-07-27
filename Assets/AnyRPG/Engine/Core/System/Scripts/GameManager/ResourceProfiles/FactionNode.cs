@@ -29,7 +29,7 @@ namespace AnyRPG {
         public void SetupScriptableObjects() {
             if (factionName != null && factionName != string.Empty) {
                 faction = null;
-                Faction tmpFaction = SystemFactionManager.MyInstance.GetResource(factionName);
+                Faction tmpFaction = SystemFactionManager.Instance.GetResource(factionName);
                 if (tmpFaction != null) {
                     faction = tmpFaction;
                 } else {

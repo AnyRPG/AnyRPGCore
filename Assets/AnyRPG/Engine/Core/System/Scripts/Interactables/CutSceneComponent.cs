@@ -18,16 +18,16 @@ namespace AnyRPG {
             base.Interact(source, optionIndex);
             //Debug.Log(gameObject.name + ".CutSceneInteractable.Interact()");
             // save character position and stuff here
-            //PopupWindowManager.MyInstance.interactionWindow.CloseWindow();
+            //PopupWindowManager.Instance.interactionWindow.CloseWindow();
             if (Props.Cutscene != null
-                && UIManager.MyInstance.CutSceneBarController.CurrentCutscene == null
-                && LevelManager.MyInstance.LoadingLevel == false) {
+                && UIManager.Instance.CutSceneBarController.CurrentCutscene == null
+                && LevelManager.Instance.LoadingLevel == false) {
                 if (Props.Cutscene.Viewed == false || Props.Cutscene.Repeatable == true) {
-                    if (Props.Cutscene.RequirePlayerUnitSpawn == false || (Props.Cutscene.RequirePlayerUnitSpawn == true && PlayerManager.MyInstance.PlayerUnitSpawned == true)) {
+                    if (Props.Cutscene.RequirePlayerUnitSpawn == false || (Props.Cutscene.RequirePlayerUnitSpawn == true && PlayerManager.Instance.PlayerUnitSpawned == true)) {
                         if (Props.Cutscene.MyLoadScene != null) {
-                            LevelManager.MyInstance.LoadCutSceneWithDelay(Props.Cutscene);
+                            LevelManager.Instance.LoadCutSceneWithDelay(Props.Cutscene);
                         } else {
-                            UIManager.MyInstance.CutSceneBarController.StartCutScene(Props.Cutscene);
+                            UIManager.Instance.CutSceneBarController.StartCutScene(Props.Cutscene);
                         }
                     }
                 }
@@ -44,7 +44,7 @@ namespace AnyRPG {
 
         public override void StopInteract() {
             base.StopInteract();
-            //PopupWindowManager.MyInstance.dialogWindow.CloseWindow();
+            //PopupWindowManager.Instance.dialogWindow.CloseWindow();
         }
 
         public override bool HasMiniMapText() {

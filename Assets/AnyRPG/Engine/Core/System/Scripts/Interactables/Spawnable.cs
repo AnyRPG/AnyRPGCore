@@ -68,7 +68,7 @@ namespace AnyRPG {
             GetComponentReferences();
             SetupScriptableObjects();
             CreateEventSubscriptions();
-            if (PlayerManager.MyInstance.PlayerUnitSpawned == false) {
+            if (PlayerManager.Instance.PlayerUnitSpawned == false) {
                 // this allows us to spawn things with no prerequisites that don't need to check against the player
                 PrerequisiteCheck();
             }
@@ -81,7 +81,7 @@ namespace AnyRPG {
             ProcessInit();
 
             // moved here from CreateEventSubscriptions.  Init should have time to occur before processing this
-            if (PlayerManager.MyInstance.PlayerUnitSpawned) {
+            if (PlayerManager.Instance.PlayerUnitSpawned) {
                 //Debug.Log(gameObject.name + ".Spawnable.CreateEventSubscriptions(): Player Unit is spawned.  Handling immediate spawn!");
                 ProcessPlayerUnitSpawn();
             } else {
@@ -107,7 +107,7 @@ namespace AnyRPG {
             }
             SystemEventManager.StartListening("OnLevelUnload", HandleLevelUnload);
             SystemEventManager.StartListening("OnPlayerUnitSpawn", HandlePlayerUnitSpawn);
-            //SystemEventManager.MyInstance.OnPrerequisiteUpdated += HandlePrerequisiteUpdates;
+            //SystemEventManager.Instance.OnPrerequisiteUpdated += HandlePrerequisiteUpdates;
             eventSubscriptionsInitialized = true;
         }
 
@@ -117,8 +117,8 @@ namespace AnyRPG {
                 return;
             }
             SystemEventManager.StopListening("OnLevelUnload", HandleLevelUnload);
-            if (SystemEventManager.MyInstance != null) {
-                //SystemEventManager.MyInstance.OnPrerequisiteUpdated -= HandlePrerequisiteUpdates;
+            if (SystemEventManager.Instance != null) {
+                //SystemEventManager.Instance.OnPrerequisiteUpdated -= HandlePrerequisiteUpdates;
                 SystemEventManager.StopListening("OnPlayerUnitSpawn", HandlePlayerUnitSpawn);
             }
             eventSubscriptionsInitialized = false;
@@ -228,7 +228,7 @@ namespace AnyRPG {
                     usedRotation = prefabProfile.PickupRotation;
                 }
 
-                spawnReference = ObjectPooler.MyInstance.GetPooledObject(prefabProfile.Prefab, transform.TransformPoint(usedPosition), transform.localRotation, transform);
+                spawnReference = ObjectPooler.Instance.GetPooledObject(prefabProfile.Prefab, transform.TransformPoint(usedPosition), transform.localRotation, transform);
 
                 // updated scale from normal to sheathed this allows pickup nodes for things you can't equip to show a different size in hand than on the ground
                 spawnReference.transform.localScale = usedScale;
@@ -254,7 +254,7 @@ namespace AnyRPG {
             //Debug.Log(gameObject.name + ".Spawnable.DestroySpawn()");
             if (spawnReference != null) {
                 //Debug.Log(gameObject.name + ".Spawnable.DestroySpawn(): destroying spawn");
-                ObjectPooler.MyInstance.ReturnObjectToPool(spawnReference);
+                ObjectPooler.Instance.ReturnObjectToPool(spawnReference);
                 spawnReference = null;
             }
         }
@@ -293,7 +293,7 @@ namespace AnyRPG {
         public virtual void SetupScriptableObjects() {
             //Debug.Log(gameObject.name + ".Spawnable.SetupScriptableObjects()");
             if (prefabProfileName != null && prefabProfileName != string.Empty) {
-                PrefabProfile tmpPrefabProfile = SystemPrefabProfileManager.MyInstance.GetResource(prefabProfileName);
+                PrefabProfile tmpPrefabProfile = SystemPrefabProfileManager.Instance.GetResource(prefabProfileName);
                 if (tmpPrefabProfile != null && tmpPrefabProfile.Prefab != null) {
                     prefabProfile = tmpPrefabProfile;
                 } else {

@@ -11,16 +11,15 @@ namespace AnyRPG {
         #region Singleton
         private static QuestTrackerUI instance;
 
-        public static QuestTrackerUI MyInstance {
+        public static QuestTrackerUI Instance {
             get {
-                if (instance == null) {
-                    instance = FindObjectOfType<QuestTrackerUI>();
-                }
-
                 return instance;
             }
         }
 
+        private void Awake() {
+            instance = this;
+        }
         #endregion
 
         [Tooltip("The gameobject to use for each quest item")]
@@ -39,10 +38,10 @@ namespace AnyRPG {
                 return;
             }
             base.CreateEventSubscriptions();
-            SystemEventManager.MyInstance.OnQuestObjectiveStatusUpdated += ShowQuests;
-            SystemEventManager.MyInstance.OnAfterQuestStatusUpdated += ShowQuests;
+            SystemEventManager.StartListening("OnQuestObjectiveStatusUpdated", HandleQuestObjectiveStatusUpdated);
+            SystemEventManager.StartListening("OnAfterQuestStatusUpdated", HandleAfterQuestStatusUpdated);
             SystemEventManager.StartListening("OnPlayerUnitSpawn", HandlePlayerUnitSpawn);
-            if (PlayerManager.MyInstance != null && PlayerManager.MyInstance.PlayerUnitSpawned == true) {
+            if (PlayerManager.Instance != null && PlayerManager.Instance.PlayerUnitSpawned == true) {
                 ShowQuests();
             }
         }
@@ -53,11 +52,19 @@ namespace AnyRPG {
                 return;
             }
             base.CleanupEventSubscriptions();
-            if (SystemEventManager.MyInstance != null) {
-                SystemEventManager.MyInstance.OnQuestObjectiveStatusUpdated -= ShowQuests;
-                SystemEventManager.MyInstance.OnQuestStatusUpdated -= ShowQuests;
+            if (SystemEventManager.Instance != null) {
+                SystemEventManager.StopListening("OnQuestObjectiveStatusUpdated", HandleQuestObjectiveStatusUpdated);
+                SystemEventManager.StopListening("OnAfterQuestStatusUpdated", HandleAfterQuestStatusUpdated);
                 SystemEventManager.StopListening("OnPlayerUnitSpawn", HandlePlayerUnitSpawn);
             }
+        }
+
+        public void HandleQuestObjectiveStatusUpdated(string eventName, EventParamProperties eventParamProperties) {
+            ShowQuests();
+        }
+
+        public void HandleAfterQuestStatusUpdated(string eventName, EventParamProperties eventParamProperties) {
+            ShowQuests();
         }
 
         public void HandlePlayerUnitSpawn(string eventName, EventParamProperties eventParamProperties) {
@@ -73,15 +80,15 @@ namespace AnyRPG {
 
         public void ShowQuestsCommon() {
             //Debug.Log("QuestTrackerUI.ShowQuestsCommon()");
-            if (PlayerManager.MyInstance != null && PlayerManager.MyInstance.PlayerUnitSpawned == false) {
+            if (PlayerManager.Instance != null && PlayerManager.Instance.PlayerUnitSpawned == false) {
                 // shouldn't be doing anything without a player spawned.
                 return;
             }
             ClearQuests();
 
-            foreach (Quest quest in QuestLog.MyInstance.MyQuests.Values) {
+            foreach (Quest quest in QuestLog.Instance.MyQuests.Values) {
                 //Debug.Log("QuestTrackerUI.ShowQuestsCommon(): quest: " + quest);
-                GameObject go = ObjectPooler.MyInstance.GetPooledObject(questPrefab, questParent);
+                GameObject go = ObjectPooler.Instance.GetPooledObject(questPrefab, questParent);
                 QuestTrackerQuestScript qs = go.GetComponent<QuestTrackerQuestScript>();
                 qs.MyQuest = quest;
                 if (qs == null) {
@@ -96,7 +103,7 @@ namespace AnyRPG {
                 qs.MyText.text += "\n<size=12>" + quest.GetUnformattedObjectiveList() + "</size>";
 
                 //Debug.Log("QuestTrackerUI.ShowQuestsCommon(" + questGiver.name + "): " + questNode.MyQuest.MyTitle);
-                qs.MyText.color = LevelEquations.GetTargetColor(PlayerManager.MyInstance.MyCharacter.CharacterStats.Level, quest.MyExperienceLevel);
+                qs.MyText.color = LevelEquations.GetTargetColor(PlayerManager.Instance.MyCharacter.CharacterStats.Level, quest.MyExperienceLevel);
                 //quests.Add(go);
                 questScripts.Add(qs);
 
@@ -121,7 +128,7 @@ namespace AnyRPG {
                 if (qs.gameObject != null) {
                     //Debug.Log("The questnode has a gameobject we need to clear");
                     qs.gameObject.transform.SetParent(null);
-                    ObjectPooler.MyInstance.ReturnObjectToPool(qs.gameObject);
+                    ObjectPooler.Instance.ReturnObjectToPool(qs.gameObject);
                 }
             }
             questScripts.Clear();

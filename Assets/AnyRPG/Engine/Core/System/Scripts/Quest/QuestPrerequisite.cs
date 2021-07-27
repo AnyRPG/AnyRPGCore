@@ -40,9 +40,9 @@ namespace AnyRPG {
             if (requireTurnedIn && prerequisiteQuest.TurnedIn == true) {
                 //Debug.Log("QuestPrerequisite.UpdateStatus(): " + prerequisiteQuest.MyName + ";requireTurnedIn = true and prerequisiteQuest.TurnedIn == true; originalresult: " + originalResult);
                 prerequisiteMet = true;
-            } else if (!requireTurnedIn && requireComplete && prerequisiteQuest.IsComplete && QuestLog.MyInstance.HasQuest(prerequisiteQuest.DisplayName)) {
+            } else if (!requireTurnedIn && requireComplete && prerequisiteQuest.IsComplete && QuestLog.Instance.HasQuest(prerequisiteQuest.DisplayName)) {
                 prerequisiteMet = true;
-            } else if (!requireTurnedIn && !requireComplete && QuestLog.MyInstance.HasQuest(prerequisiteQuest.DisplayName)) {
+            } else if (!requireTurnedIn && !requireComplete && QuestLog.Instance.HasQuest(prerequisiteQuest.DisplayName)) {
                 prerequisiteMet = true;
             } else {
                 prerequisiteMet = false;
@@ -63,7 +63,7 @@ namespace AnyRPG {
         public void SetupScriptableObjects() {
             prerequisiteQuest = null;
             if (prerequisiteName != null && prerequisiteName != string.Empty) {
-                Quest tmpPrerequisiteQuest = SystemQuestManager.MyInstance.GetResource(prerequisiteName);
+                Quest tmpPrerequisiteQuest = SystemQuestManager.Instance.GetResource(prerequisiteName);
                 if (tmpPrerequisiteQuest != null) {
                     //Debug.Log("QuestPrerequisite.SetupScriptableObjects(): setting: " + prerequisiteName + " while inititalizing a quest prerequisite.");
                     prerequisiteQuest = tmpPrerequisiteQuest;

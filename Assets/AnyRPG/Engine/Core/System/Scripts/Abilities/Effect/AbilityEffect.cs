@@ -280,7 +280,7 @@ namespace AnyRPG {
             hitAbilityEffectList = new List<AbilityEffect>();
             if (hitAbilityEffectNames != null) {
                 foreach (string abilityEffectName in hitAbilityEffectNames) {
-                    AbilityEffect abilityEffect = SystemAbilityEffectManager.MyInstance.GetResource(abilityEffectName);
+                    AbilityEffect abilityEffect = SystemAbilityEffectManager.Instance.GetResource(abilityEffectName);
                     if (abilityEffect != null) {
                         hitAbilityEffectList.Add(abilityEffect);
                     } else {
@@ -292,7 +292,7 @@ namespace AnyRPG {
             onHitAudioProfiles = new List<AudioProfile>();
             if (onHitAudioProfileNames != null) {
                 foreach (string audioProfileName in onHitAudioProfileNames) {
-                    AudioProfile audioProfile = SystemAudioProfileManager.MyInstance.GetResource(audioProfileName);
+                    AudioProfile audioProfile = SystemAudioProfileManager.Instance.GetResource(audioProfileName);
                     if (audioProfile != null) {
                         onHitAudioProfiles.Add(audioProfile);
                     } else {
@@ -303,7 +303,7 @@ namespace AnyRPG {
 
             if (effectMaterialName != null && effectMaterialName != string.Empty) {
                 effectMaterial = null;
-                MaterialProfile tmpMaterialProfile = SystemMaterialProfileManager.MyInstance.GetResource(effectMaterialName);
+                MaterialProfile tmpMaterialProfile = SystemMaterialProfileManager.Instance.GetResource(effectMaterialName);
                 if (tmpMaterialProfile != null) {
                     effectMaterial = tmpMaterialProfile.MyEffectMaterial;
                 } else {

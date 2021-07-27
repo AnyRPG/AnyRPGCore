@@ -172,7 +172,7 @@ namespace AnyRPG {
 
         public float GetTotalSlotWeights() {
             float returnValue = 0f;
-            foreach (EquipmentSlotProfile equipmentSlotProfile in SystemEquipmentSlotProfileManager.MyInstance.MyResourceList.Values) {
+            foreach (EquipmentSlotProfile equipmentSlotProfile in SystemEquipmentSlotProfileManager.Instance.MyResourceList.Values) {
                 returnValue += equipmentSlotProfile.MyStatWeight;
             }
             return returnValue;
@@ -191,12 +191,12 @@ namespace AnyRPG {
         }
 
         public override bool Use() {
-            if (PlayerManager.MyInstance != null && PlayerManager.MyInstance.MyCharacter != null && PlayerManager.MyInstance.MyCharacter.CharacterEquipmentManager != null) {
+            if (PlayerManager.Instance != null && PlayerManager.Instance.MyCharacter != null && PlayerManager.Instance.MyCharacter.CharacterEquipmentManager != null) {
                 bool returnValue = base.Use();
                 if (returnValue == false) {
                     return false;
                 }
-                if (PlayerManager.MyInstance.MyCharacter.CharacterEquipmentManager.Equip(this) == true) {
+                if (PlayerManager.Instance.MyCharacter.CharacterEquipmentManager.Equip(this) == true) {
                     Remove();
                     return true;
                 } else {
@@ -240,16 +240,16 @@ namespace AnyRPG {
             if (dynamicLevel == true && freezeDropLevel == false) {
                 itemRange = " (1 - " + (levelCap > 0 ? levelCap : SystemConfigurationManager.Instance.MaxLevel) + ")";
             }
-            abilitiesList.Add(string.Format("Item Level: {0}{1}", GetItemLevel(PlayerManager.MyInstance.MyCharacter.CharacterStats.Level), itemRange));
+            abilitiesList.Add(string.Format("Item Level: {0}{1}", GetItemLevel(PlayerManager.Instance.MyCharacter.CharacterStats.Level), itemRange));
 
             // armor
             if (useArmorModifier) {
-                abilitiesList.Add(string.Format(" +{0} Armor", GetArmorModifier(PlayerManager.MyInstance.MyCharacter.CharacterStats.Level)));
+                abilitiesList.Add(string.Format(" +{0} Armor", GetArmorModifier(PlayerManager.Instance.MyCharacter.CharacterStats.Level)));
             }
 
             // primary stats
             foreach (ItemPrimaryStatNode itemPrimaryStatNode in primaryStats) {
-                float primaryStatModifier = GetPrimaryStatModifier(itemPrimaryStatNode.StatName, PlayerManager.MyInstance.MyCharacter.CharacterStats.Level, PlayerManager.MyInstance.MyCharacter);
+                float primaryStatModifier = GetPrimaryStatModifier(itemPrimaryStatNode.StatName, PlayerManager.Instance.MyCharacter.CharacterStats.Level, PlayerManager.Instance.MyCharacter);
                 if (primaryStatModifier > 0f) {
                     abilitiesList.Add(string.Format(" +{0} {1}",
                         primaryStatModifier,
@@ -260,7 +260,7 @@ namespace AnyRPG {
             // secondary stats
             foreach (ItemSecondaryStatNode itemSecondaryStatNode in SecondaryStats) {
                 abilitiesList.Add(string.Format("<color=green> +{0} {1}</color>",
-                                   GetSecondaryStatAddModifier(itemSecondaryStatNode.SecondaryStat, PlayerManager.MyInstance.MyCharacter.CharacterStats.Level),
+                                   GetSecondaryStatAddModifier(itemSecondaryStatNode.SecondaryStat, PlayerManager.Instance.MyCharacter.CharacterStats.Level),
                                    itemSecondaryStatNode.SecondaryStat.ToString()));
             }
 
@@ -273,11 +273,11 @@ namespace AnyRPG {
             }
 
             if (equipmentSet != null) {
-                int equipmentCount = PlayerManager.MyInstance.MyCharacter.CharacterEquipmentManager.GetEquipmentSetCount(equipmentSet);
+                int equipmentCount = PlayerManager.Instance.MyCharacter.CharacterEquipmentManager.GetEquipmentSetCount(equipmentSet);
                 abilitiesList.Add(string.Format("\n<color=yellow>{0} ({1}/{2})</color>", equipmentSet.DisplayName, equipmentCount, equipmentSet.MyEquipmentList.Count));
                 foreach (Equipment equipment in equipmentSet.MyEquipmentList) {
                     string colorName = "#888888";
-                    if (PlayerManager.MyInstance.MyCharacter.CharacterEquipmentManager.HasEquipment(equipment.DisplayName)) {
+                    if (PlayerManager.Instance.MyCharacter.CharacterEquipmentManager.HasEquipment(equipment.DisplayName)) {
                         colorName = "yellow";
                     }
                     abilitiesList.Add(string.Format("  <color={0}>{1}</color>", colorName, equipment.DisplayName));
@@ -304,7 +304,7 @@ namespace AnyRPG {
             base.SetupScriptableObjects();
             onEquipAbility = null;
             if (onEquipAbilityName != null && onEquipAbilityName != string.Empty) {
-                BaseAbility baseAbility = SystemAbilityManager.MyInstance.GetResource(onEquipAbilityName);
+                BaseAbility baseAbility = SystemAbilityManager.Instance.GetResource(onEquipAbilityName);
                 if (baseAbility != null) {
                     onEquipAbility = baseAbility;
                 } else {
@@ -315,7 +315,7 @@ namespace AnyRPG {
             learnedAbilities = new List<BaseAbility>();
             if (learnedAbilityNames != null) {
                 foreach (string baseAbilityName in learnedAbilityNames) {
-                    BaseAbility baseAbility = SystemAbilityManager.MyInstance.GetResource(baseAbilityName);
+                    BaseAbility baseAbility = SystemAbilityManager.Instance.GetResource(baseAbilityName);
                     if (baseAbility != null) {
                         learnedAbilities.Add(baseAbility);
                     } else {
@@ -327,7 +327,7 @@ namespace AnyRPG {
             
             realEquipmentSlotType = null;
             if (equipmentSlotType != null && equipmentSlotType != string.Empty) {
-                EquipmentSlotType tmpEquipmentSlotType = SystemEquipmentSlotTypeManager.MyInstance.GetResource(equipmentSlotType);
+                EquipmentSlotType tmpEquipmentSlotType = SystemEquipmentSlotTypeManager.Instance.GetResource(equipmentSlotType);
                 if (tmpEquipmentSlotType != null) {
                     realEquipmentSlotType = tmpEquipmentSlotType;
                 } else {
@@ -339,7 +339,7 @@ namespace AnyRPG {
 
             equipmentSet = null;
             if (equipmentSetName != null && equipmentSetName != string.Empty) {
-                EquipmentSet tmpEquipmentSet = SystemEquipmentSetManager.MyInstance.GetResource(equipmentSetName);
+                EquipmentSet tmpEquipmentSet = SystemEquipmentSetManager.Instance.GetResource(equipmentSetName);
                 if (tmpEquipmentSet != null) {
                     equipmentSet = tmpEquipmentSet;
                 } else {
@@ -360,7 +360,7 @@ namespace AnyRPG {
                 umaRecipeProfileName = ResourceName;
             }
             if (umaRecipeProfileName != null && umaRecipeProfileName != string.Empty) {
-                UMARecipeProfile umaRecipeProfile = SystemUMARecipeProfileManager.MyInstance.GetResource(umaRecipeProfileName);
+                UMARecipeProfile umaRecipeProfile = SystemUMARecipeProfileManager.Instance.GetResource(umaRecipeProfileName);
                 if (umaRecipeProfile != null && umaRecipeProfile.MyUMARecipes != null) {
                     UMARecipes = umaRecipeProfile.MyUMARecipes;
                 } else {

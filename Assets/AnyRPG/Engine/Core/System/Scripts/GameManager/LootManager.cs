@@ -11,16 +11,15 @@ namespace AnyRPG {
         #region Singleton
         private static LootManager instance;
 
-        public static LootManager MyInstance {
+        public static LootManager Instance {
             get {
-                if (instance == null) {
-                    instance = FindObjectOfType<LootManager>();
-                }
-
                 return instance;
             }
         }
 
+        private void Awake() {
+            instance = this;
+        }
         #endregion
 
         private List<List<LootDrop>> pages = new List<List<LootDrop>>();
@@ -70,7 +69,7 @@ namespace AnyRPG {
                 if (InventoryManager.Instance.EmptySlotCount() == 0) {
                     //Debug.Log("No space left in inventory");
                 }
-                MessageFeedManager.MyInstance.WriteMessage("Inventory is full!");
+                MessageFeedManager.Instance.WriteMessage("Inventory is full!");
             }
         }
 

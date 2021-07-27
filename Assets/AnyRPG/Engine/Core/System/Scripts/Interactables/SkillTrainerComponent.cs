@@ -13,7 +13,7 @@ namespace AnyRPG {
             if (interactableOptionProps.GetInteractionPanelTitle() == string.Empty) {
                 interactableOptionProps.InteractionPanelTitle = "Train Me";
             }
-            SystemEventManager.MyInstance.OnSkillListChanged += HandleSkillListChanged;
+            SystemEventManager.Instance.OnSkillListChanged += HandleSkillListChanged;
         }
 
         public override bool Interact(CharacterUnit source, int optionIndex = 0) {
@@ -39,8 +39,8 @@ namespace AnyRPG {
         public override void CleanupEventSubscriptions() {
             //Debug.Log(gameObject.name + ".SkillTrainer.CleanupEventSubscriptions()");
             base.CleanupEventSubscriptions();
-            if (SystemEventManager.MyInstance != null) {
-                SystemEventManager.MyInstance.OnSkillListChanged -= HandleSkillListChanged;
+            if (SystemEventManager.Instance != null) {
+                SystemEventManager.Instance.OnSkillListChanged -= HandleSkillListChanged;
             }
         }
 
@@ -65,7 +65,7 @@ namespace AnyRPG {
             }
             int optionCount = 0;
             foreach (Skill skill in Props.Skills) {
-                if (!PlayerManager.MyInstance.MyCharacter.CharacterSkillManager.HasSkill(skill)) {
+                if (!PlayerManager.Instance.MyCharacter.CharacterSkillManager.HasSkill(skill)) {
                     optionCount++;
                 }
             }
@@ -83,7 +83,7 @@ namespace AnyRPG {
         }
 
         public override bool CanShowMiniMapIcon() {
-            float relationValue = interactable.PerformFactionCheck(PlayerManager.MyInstance.MyCharacter);
+            float relationValue = interactable.PerformFactionCheck(PlayerManager.Instance.MyCharacter);
             return CanInteract(false, false, relationValue);
         }
 

@@ -10,7 +10,7 @@ namespace AnyRPG {
         #region Singleton
         private static SystemPatrolProfileManager instance;
 
-        public static SystemPatrolProfileManager MyInstance {
+        public static SystemPatrolProfileManager Instance {
             get {
                 if (instance == null) {
                     instance = FindObjectOfType<SystemPatrolProfileManager>();

@@ -11,16 +11,15 @@ namespace AnyRPG {
         #region Singleton
         private static CombatLogUI instance;
 
-        public static CombatLogUI MyInstance {
+        public static CombatLogUI Instance {
             get {
-                if (instance == null) {
-                    instance = FindObjectOfType<CombatLogUI>();
-                }
-
                 return instance;
             }
         }
 
+        private void Awake() {
+            instance = this;
+        }
         #endregion
 
         //[SerializeField]
@@ -251,10 +250,10 @@ namespace AnyRPG {
                 return;
             }
             base.CreateEventSubscriptions();
-            SystemEventManager.MyInstance.OnTakeDamage += HandleTakeDamage;
-            SystemEventManager.MyInstance.OnPlayerConnectionDespawn += ClearLog;
-            SystemEventManager.MyInstance.OnPlayerConnectionSpawn += PrintWelcomeMessages;
-            if (PlayerManager.MyInstance.PlayerConnectionSpawned == true) {
+            SystemEventManager.Instance.OnTakeDamage += HandleTakeDamage;
+            SystemEventManager.StartListening("OnPlayerConnectionSpawn", handlePlayerConnectionSpawn);
+            SystemEventManager.StartListening("OnPlayerConnectionDespawn", handlePlayerConnectionDespawn);
+            if (PlayerManager.Instance.PlayerConnectionSpawned == true) {
                 PrintWelcomeMessages();
             }
             eventSubscriptionsInitialized = true;
@@ -266,12 +265,20 @@ namespace AnyRPG {
                 return;
             }
             base.CleanupEventSubscriptions();
-            if (SystemEventManager.MyInstance != null) {
-                SystemEventManager.MyInstance.OnTakeDamage -= HandleTakeDamage;
-                SystemEventManager.MyInstance.OnPlayerConnectionDespawn -= ClearLog;
-                SystemEventManager.MyInstance.OnPlayerConnectionSpawn -= PrintWelcomeMessages;
+            if (SystemEventManager.Instance != null) {
+                SystemEventManager.Instance.OnTakeDamage -= HandleTakeDamage;
+                SystemEventManager.StopListening("OnPlayerConnectionSpawn", handlePlayerConnectionSpawn);
+                SystemEventManager.StopListening("OnPlayerConnectionDespawn", handlePlayerConnectionDespawn);
             }
             eventSubscriptionsInitialized = false;
+        }
+
+        public void handlePlayerConnectionSpawn(string eventName, EventParamProperties eventParamProperties) {
+            PrintWelcomeMessages();
+        }
+
+        public void handlePlayerConnectionDespawn(string eventName, EventParamProperties eventParamProperties) {
+            ClearLog();
         }
 
         // although we usually use OnDisable, this is a static UI element, and should really keep it's references for the entire time the game is active
@@ -288,7 +295,7 @@ namespace AnyRPG {
 
         public void HandleTakeDamage(IAbilityCaster source, CharacterUnit target, int damage, string abilityName) {
             Color textColor = Color.white;
-            if (PlayerManager.MyInstance.UnitController != null && target == PlayerManager.MyInstance.UnitController.CharacterUnit) {
+            if (PlayerManager.Instance.UnitController != null && target == PlayerManager.Instance.UnitController.CharacterUnit) {
                 textColor = Color.red;
             }
             string combatMessage = string.Format("<color=#{0}>{1} Takes {2} damage from {3}'s {4}</color>", ColorUtility.ToHtmlStringRGB(textColor), target.DisplayName, damage, source.AbilityManager.Name, abilityName);

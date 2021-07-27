@@ -257,7 +257,7 @@ namespace AnyRPG {
         public float AbilityCoolDown { get => abilityCoolDown; set => abilityCoolDown = value; }
 
         public virtual bool IsUseableStale(ActionButton actionButton) {
-            if (PlayerManager.MyInstance.MyCharacter.CharacterAbilityManager.HasAbility(this)) {
+            if (PlayerManager.Instance.MyCharacter.CharacterAbilityManager.HasAbility(this)) {
                 return false;
             }
             return true;
@@ -268,11 +268,11 @@ namespace AnyRPG {
         }
 
         public IUseable GetFactoryUseable() {
-            return SystemAbilityManager.MyInstance.GetResource(DisplayName);
+            return SystemAbilityManager.Instance.GetResource(DisplayName);
         }
 
         public virtual void UpdateChargeCount(ActionButton actionButton) {
-            UIManager.MyInstance.UpdateStackSize(actionButton, 0, false);
+            UIManager.Instance.UpdateStackSize(actionButton, 0, false);
         }
 
         public virtual bool HadSpecialIcon(ActionButton actionButton) {
@@ -283,7 +283,7 @@ namespace AnyRPG {
             //Debug.Log(DisplayName + ".BaseAbility.UpdateActionButtonVisual()");
             // set cooldown icon on abilities that don't have enough resources to cast
             if (PowerResource != null
-                && (GetResourceCost(PlayerManager.MyInstance.ActiveCharacter) >= PlayerManager.MyInstance.ActiveCharacter.CharacterStats.GetPowerResourceAmount(PowerResource))) {
+                && (GetResourceCost(PlayerManager.Instance.ActiveCharacter) >= PlayerManager.Instance.ActiveCharacter.CharacterStats.GetPowerResourceAmount(PowerResource))) {
                 //Debug.Log(DisplayName + ".BaseAbility.UpdateActionButtonVisual(): not enough resources to cast this ability.  enabling full cooldown");
                 actionButton.EnableFullCoolDownIcon();
                 return;
@@ -294,22 +294,22 @@ namespace AnyRPG {
             }
 
             if (RequireOutOfCombat) {
-                if (PlayerManager.MyInstance.MyCharacter.CharacterCombat.GetInCombat() == true) {
+                if (PlayerManager.Instance.MyCharacter.CharacterCombat.GetInCombat() == true) {
                     //Debug.Log("ActionButton.UpdateVisual(): can't cast due to being in combat");
                     actionButton.EnableFullCoolDownIcon();
                     return;
                 }
             }
 
-            if (!CanCast(PlayerManager.MyInstance.MyCharacter)) {
+            if (!CanCast(PlayerManager.Instance.MyCharacter)) {
                 //Debug.Log(DisplayName + ".BaseAbility.UpdateActionButtonVisual(): can't cast due to spell restrictions");
                 actionButton.EnableFullCoolDownIcon();
                 return;
             }
 
 
-            if (PlayerManager.MyInstance.MyCharacter.CharacterAbilityManager.MyRemainingGlobalCoolDown > 0f
-                || PlayerManager.MyInstance.MyCharacter.CharacterAbilityManager.MyAbilityCoolDownDictionary.ContainsKey(DisplayName)) {
+            if (PlayerManager.Instance.MyCharacter.CharacterAbilityManager.MyRemainingGlobalCoolDown > 0f
+                || PlayerManager.Instance.MyCharacter.CharacterAbilityManager.MyAbilityCoolDownDictionary.ContainsKey(DisplayName)) {
                 //Debug.Log(DisplayName + ".BaseAbility.UpdateActionButtonVisual(): Ability is on cooldown");
                 if (actionButton.CoolDownIcon.isActiveAndEnabled != true) {
                     //Debug.Log("ActionButton.UpdateVisual(): coolDownIcon is not enabled: " + (useable == null ? "null" : useable.DisplayName));
@@ -326,15 +326,15 @@ namespace AnyRPG {
                 //Debug.Log("remainingCooldown: " + this.remainingCooldown + "; totalcooldown: " + (MyUseable as BaseAbility).abilityCoolDown);
                 float remainingAbilityCoolDown = 0f;
                 float initialCoolDown = 0f;
-                if (PlayerManager.MyInstance.MyCharacter.CharacterAbilityManager.MyAbilityCoolDownDictionary.ContainsKey(DisplayName)) {
-                    remainingAbilityCoolDown = PlayerManager.MyInstance.MyCharacter.CharacterAbilityManager.MyAbilityCoolDownDictionary[DisplayName].MyRemainingCoolDown;
-                    initialCoolDown = PlayerManager.MyInstance.MyCharacter.CharacterAbilityManager.MyAbilityCoolDownDictionary[DisplayName].MyInitialCoolDown;
+                if (PlayerManager.Instance.MyCharacter.CharacterAbilityManager.MyAbilityCoolDownDictionary.ContainsKey(DisplayName)) {
+                    remainingAbilityCoolDown = PlayerManager.Instance.MyCharacter.CharacterAbilityManager.MyAbilityCoolDownDictionary[DisplayName].MyRemainingCoolDown;
+                    initialCoolDown = PlayerManager.Instance.MyCharacter.CharacterAbilityManager.MyAbilityCoolDownDictionary[DisplayName].MyInitialCoolDown;
                 } else {
                     initialCoolDown = abilityCoolDown;
                 }
                 //float globalCoolDown
-                float fillAmount = Mathf.Max(remainingAbilityCoolDown, PlayerManager.MyInstance.MyCharacter.CharacterAbilityManager.MyRemainingGlobalCoolDown) /
-                    (remainingAbilityCoolDown > PlayerManager.MyInstance.MyCharacter.CharacterAbilityManager.MyRemainingGlobalCoolDown ? initialCoolDown : PlayerManager.MyInstance.MyCharacter.CharacterAbilityManager.MyInitialGlobalCoolDown);
+                float fillAmount = Mathf.Max(remainingAbilityCoolDown, PlayerManager.Instance.MyCharacter.CharacterAbilityManager.MyRemainingGlobalCoolDown) /
+                    (remainingAbilityCoolDown > PlayerManager.Instance.MyCharacter.CharacterAbilityManager.MyRemainingGlobalCoolDown ? initialCoolDown : PlayerManager.Instance.MyCharacter.CharacterAbilityManager.MyInitialGlobalCoolDown);
                 //Debug.Log("Setting fill amount to: " + fillAmount);
                 if (actionButton.CoolDownIcon.fillAmount != fillAmount) {
                     actionButton.CoolDownIcon.fillAmount = fillAmount;
@@ -349,7 +349,7 @@ namespace AnyRPG {
                 //Debug.Log("ActionButton.OnUseableUse(" + ability.MyName + "): WAS NOT ANIMATED AUTO ATTACK");
                 //if (abilityCoRoutine == null) {
                 //if (monitorCoroutine == null) {
-                    return SystemAbilityManager.MyInstance.StartCoroutine(actionButton.MonitorAbility(this));
+                    return SystemAbilityManager.Instance.StartCoroutine(actionButton.MonitorAbility(this));
                 //}
             //return null;
         }
@@ -409,7 +409,7 @@ namespace AnyRPG {
                 List<string> requireWeaponSkills = new List<string>();
                 foreach (WeaponSkill _weaponAffinity in weaponAffinityList) {
                     requireWeaponSkills.Add(_weaponAffinity.DisplayName);
-                    if (PlayerManager.MyInstance.MyCharacter.CharacterEquipmentManager.HasAffinity(_weaponAffinity)) {
+                    if (PlayerManager.Instance.MyCharacter.CharacterEquipmentManager.HasAffinity(_weaponAffinity)) {
                         affinityMet = true;
                     }
                 }
@@ -421,17 +421,17 @@ namespace AnyRPG {
                 addString = string.Format("\n<color={0}>Requires: {1}</color>", colorString, string.Join(",", requireWeaponSkills));
             }
 
-            string abilityRange = (GetTargetOptions(PlayerManager.MyInstance.MyCharacter).UseMeleeRange == true ? "melee" : GetTargetOptions(PlayerManager.MyInstance.MyCharacter).MaxRange + " meters");
+            string abilityRange = (GetTargetOptions(PlayerManager.Instance.MyCharacter).UseMeleeRange == true ? "melee" : GetTargetOptions(PlayerManager.Instance.MyCharacter).MaxRange + " meters");
 
             string costString = string.Empty;
             if (powerResource != null) {
-                costString = "\nCost: " + GetResourceCost(PlayerManager.MyInstance.MyCharacter) + " " + powerResource.DisplayName;
+                costString = "\nCost: " + GetResourceCost(PlayerManager.Instance.MyCharacter) + " " + powerResource.DisplayName;
             }
 
             string coolDownString = GetCooldownString();
 
             return string.Format("Cast time: {0} second(s)\nCooldown: {1} second(s){2}\nRange: {3}\n<color=#ffff00ff>{4}</color>{5}{6}",
-                GetAbilityCastingTime(PlayerManager.MyInstance.MyCharacter).ToString("F1"),
+                GetAbilityCastingTime(PlayerManager.Instance.MyCharacter).ToString("F1"),
                 abilityCoolDown,
                 costString,
                 abilityRange,
@@ -442,14 +442,14 @@ namespace AnyRPG {
 
         public string GetCooldownString() {
             string coolDownString = string.Empty;
-            if (PlayerManager.MyInstance?.MyCharacter?.CharacterAbilityManager != null
-                && (PlayerManager.MyInstance.MyCharacter.CharacterAbilityManager.MyRemainingGlobalCoolDown > 0f
-                || PlayerManager.MyInstance.MyCharacter.CharacterAbilityManager.MyAbilityCoolDownDictionary.ContainsKey(DisplayName))) {
+            if (PlayerManager.Instance?.MyCharacter?.CharacterAbilityManager != null
+                && (PlayerManager.Instance.MyCharacter.CharacterAbilityManager.MyRemainingGlobalCoolDown > 0f
+                || PlayerManager.Instance.MyCharacter.CharacterAbilityManager.MyAbilityCoolDownDictionary.ContainsKey(DisplayName))) {
                 float dictionaryCooldown = 0f;
-                if (PlayerManager.MyInstance.MyCharacter.CharacterAbilityManager.MyAbilityCoolDownDictionary.ContainsKey(DisplayName)) {
-                    dictionaryCooldown = PlayerManager.MyInstance.MyCharacter.CharacterAbilityManager.MyAbilityCoolDownDictionary[DisplayName].MyRemainingCoolDown;
+                if (PlayerManager.Instance.MyCharacter.CharacterAbilityManager.MyAbilityCoolDownDictionary.ContainsKey(DisplayName)) {
+                    dictionaryCooldown = PlayerManager.Instance.MyCharacter.CharacterAbilityManager.MyAbilityCoolDownDictionary[DisplayName].MyRemainingCoolDown;
                 }
-                coolDownString = "\n\nCooldown Remaining: " + SystemAbilityController.GetTimeText(Mathf.Max(dictionaryCooldown, PlayerManager.MyInstance.MyCharacter.CharacterAbilityManager.MyRemainingGlobalCoolDown)); ;
+                coolDownString = "\n\nCooldown Remaining: " + SystemAbilityController.GetTimeText(Mathf.Max(dictionaryCooldown, PlayerManager.Instance.MyCharacter.CharacterAbilityManager.MyRemainingGlobalCoolDown)); ;
             }
             return coolDownString;
         }
@@ -528,9 +528,9 @@ namespace AnyRPG {
         public bool Use() {
             //Debug.Log(DisplayName + ".BaseAbility.Use()");
             // prevent casting any ability without the proper weapon affinity
-            if (CanCast(PlayerManager.MyInstance.MyCharacter, true)) {
+            if (CanCast(PlayerManager.Instance.MyCharacter, true)) {
                 //Debug.Log(DisplayName + ".BaseAbility.Use(): cancast is true");
-                PlayerManager.MyInstance.MyCharacter.CharacterAbilityManager.BeginAbility(this, true);
+                PlayerManager.Instance.MyCharacter.CharacterAbilityManager.BeginAbility(this, true);
                 return true;
             }
             return false;
@@ -712,7 +712,7 @@ namespace AnyRPG {
         public bool CharacterClassRequirementIsMet() {
             // only used when changing class or for action bars, so hard coding player character is ok for now
             if (CharacterClassRequirementList != null && CharacterClassRequirementList.Count > 0) {
-                if (!CharacterClassRequirementList.Contains(PlayerManager.MyInstance.MyCharacter.CharacterClass)) {
+                if (!CharacterClassRequirementList.Contains(PlayerManager.Instance.MyCharacter.CharacterClass)) {
                     return false;
                 }
             }
@@ -737,7 +737,7 @@ namespace AnyRPG {
 
             if (AbilityEffectNames != null) {
                 foreach (string abilityEffectName in AbilityEffectNames) {
-                    AbilityEffect abilityEffect = SystemAbilityEffectManager.MyInstance.GetResource(abilityEffectName);
+                    AbilityEffect abilityEffect = SystemAbilityEffectManager.Instance.GetResource(abilityEffectName);
                     if (abilityEffect != null) {
                         abilityEffects.Add(abilityEffect);
                     } else {
@@ -755,7 +755,7 @@ namespace AnyRPG {
             weaponAffinityList = new List<WeaponSkill>();
             if (weaponAffinityNames != null) {
                 foreach (string weaponAffinityName in weaponAffinityNames) {
-                    WeaponSkill tmpWeaponSkill = SystemWeaponSkillManager.MyInstance.GetResource(weaponAffinityName);
+                    WeaponSkill tmpWeaponSkill = SystemWeaponSkillManager.Instance.GetResource(weaponAffinityName);
                     if (tmpWeaponSkill != null) {
                         weaponAffinityList.Add(tmpWeaponSkill);
                     } else {
@@ -766,7 +766,7 @@ namespace AnyRPG {
 
             castingAudioProfile = null;
             if (castingAudioProfileName != null && castingAudioProfileName != string.Empty) {
-                AudioProfile audioProfile = SystemAudioProfileManager.MyInstance.GetResource(castingAudioProfileName);
+                AudioProfile audioProfile = SystemAudioProfileManager.Instance.GetResource(castingAudioProfileName);
                 if (audioProfile != null) {
                     castingAudioProfile = audioProfile;
                 } else {
@@ -776,7 +776,7 @@ namespace AnyRPG {
 
             animationHitAudioProfile = null;
             if (animationHitAudioProfileName != null && animationHitAudioProfileName != string.Empty) {
-                AudioProfile audioProfile = SystemAudioProfileManager.MyInstance.GetResource(animationHitAudioProfileName);
+                AudioProfile audioProfile = SystemAudioProfileManager.Instance.GetResource(animationHitAudioProfileName);
                 if (audioProfile != null) {
                     animationHitAudioProfile = audioProfile;
                 } else {
@@ -786,7 +786,7 @@ namespace AnyRPG {
 
             animationProfile = null;
             if (animationProfileName != null && animationProfileName != string.Empty) {
-                AnimationProfile tmpAnimationProfile = SystemAnimationProfileManager.MyInstance.GetResource(animationProfileName);
+                AnimationProfile tmpAnimationProfile = SystemAnimationProfileManager.Instance.GetResource(animationProfileName);
                 if (tmpAnimationProfile != null) {
                     animationProfile = tmpAnimationProfile;
                 } else {
@@ -796,7 +796,7 @@ namespace AnyRPG {
 
             powerResource = null;
             if (powerResourceName != null && powerResourceName != string.Empty) {
-                PowerResource tmpPowerResource = SystemPowerResourceManager.MyInstance.GetResource(powerResourceName);
+                PowerResource tmpPowerResource = SystemPowerResourceManager.Instance.GetResource(powerResourceName);
                 if (tmpPowerResource != null) {
                     powerResource = tmpPowerResource;
                 } else {
@@ -806,7 +806,7 @@ namespace AnyRPG {
 
             generatePowerResource = null;
             if (generatePowerResourceName != null && generatePowerResourceName != string.Empty) {
-                PowerResource tmpPowerResource = SystemPowerResourceManager.MyInstance.GetResource(generatePowerResourceName);
+                PowerResource tmpPowerResource = SystemPowerResourceManager.Instance.GetResource(generatePowerResourceName);
                 if (tmpPowerResource != null) {
                     generatePowerResource = tmpPowerResource;
                 } else {
@@ -818,7 +818,7 @@ namespace AnyRPG {
             channeledAbilityEffects = new List<AbilityEffect>();
             if (channeledAbilityEffectnames != null) {
                 foreach (string abilityEffectName in channeledAbilityEffectnames) {
-                    AbilityEffect abilityEffect = SystemAbilityEffectManager.MyInstance.GetResource(abilityEffectName);
+                    AbilityEffect abilityEffect = SystemAbilityEffectManager.Instance.GetResource(abilityEffectName);
                     if (abilityEffect != null) {
                         channeledAbilityEffects.Add(abilityEffect);
                     } else {
@@ -830,7 +830,7 @@ namespace AnyRPG {
             characterClassRequirementList = new List<CharacterClass>();
             if (characterClassRequirementList != null) {
                 foreach (string characterClassName in characterClassRequirements) {
-                    CharacterClass tmpCharacterClass = SystemCharacterClassManager.MyInstance.GetResource(characterClassName);
+                    CharacterClass tmpCharacterClass = SystemCharacterClassManager.Instance.GetResource(characterClassName);
                     if (tmpCharacterClass != null) {
                         characterClassRequirementList.Add(tmpCharacterClass);
                     } else {

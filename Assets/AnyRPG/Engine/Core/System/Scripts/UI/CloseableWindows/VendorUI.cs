@@ -47,7 +47,7 @@ namespace AnyRPG {
             if (eventSubscriptionsInitialized) {
                 return;
             }
-            SystemEventManager.MyInstance.OnCurrencyChange += UpdateCurrencyAmount;
+            SystemEventManager.StartListening("OnCurrencyChange", HandleCurrencyChange);
             eventSubscriptionsInitialized = true;
         }
 
@@ -56,10 +56,12 @@ namespace AnyRPG {
             if (!eventSubscriptionsInitialized) {
                 return;
             }
-            if (SystemEventManager.MyInstance != null) {
-                SystemEventManager.MyInstance.OnCurrencyChange -= UpdateCurrencyAmount;
-            }
+            SystemEventManager.StopListening("OnCurrencyChange", HandleCurrencyChange);
             eventSubscriptionsInitialized = false;
+        }
+
+        public void HandleCurrencyChange(string eventName, EventParamProperties eventParamProperties) {
+            UpdateCurrencyAmount();
         }
 
         public int GetPageCount() {
@@ -129,7 +131,7 @@ namespace AnyRPG {
             if (PopupWindowManager.Instance.vendorWindow.IsOpen == false) {
                 return;
             }
-            Dictionary<Currency, int> playerBaseCurrency = PlayerManager.MyInstance.MyCharacter.CharacterCurrencyManager.GetRedistributedCurrency();
+            Dictionary<Currency, int> playerBaseCurrency = PlayerManager.Instance.MyCharacter.CharacterCurrencyManager.GetRedistributedCurrency();
             if (playerBaseCurrency != null) {
                 //Debug.Log("VendorUI.UpdateCurrencyAmount(): " + playerBaseCurrency.Count);
                 KeyValuePair<Currency, int> keyValuePair = playerBaseCurrency.First();
@@ -185,21 +187,21 @@ namespace AnyRPG {
 
         public bool SellItem(Item item) {
             if (item.BuyPrice <= 0 || item.MySellPrice.Key == null) {
-                MessageFeedManager.MyInstance.WriteMessage("The vendor does not want to buy the " + item.DisplayName);
+                MessageFeedManager.Instance.WriteMessage("The vendor does not want to buy the " + item.DisplayName);
                 return false;
             }
             KeyValuePair<Currency, int> sellAmount = item.MySellPrice;
 
-            PlayerManager.MyInstance.MyCharacter.CharacterCurrencyManager.AddCurrency(sellAmount.Key, sellAmount.Value);
+            PlayerManager.Instance.MyCharacter.CharacterCurrencyManager.AddCurrency(sellAmount.Key, sellAmount.Value);
             AddToBuyBackCollection(item);
-            //InventoryManager.MyInstance.RemoveItem(item);
+            //InventoryManager.Instance.RemoveItem(item);
             item.MySlot.RemoveItem(item);
 
             if (SystemConfigurationManager.Instance?.VendorAudioProfile?.AudioClip != null) {
-                AudioManager.MyInstance.PlayEffect(SystemConfigurationManager.Instance.VendorAudioProfile.AudioClip);
+                AudioManager.Instance.PlayEffect(SystemConfigurationManager.Instance.VendorAudioProfile.AudioClip);
             }
             string priceString = CurrencyConverter.GetCombinedPriceSring(sellAmount.Key, sellAmount.Value);
-            MessageFeedManager.MyInstance.WriteMessage("Sold " + item.DisplayName + " for " + priceString);
+            MessageFeedManager.Instance.WriteMessage("Sold " + item.DisplayName + " for " + priceString);
 
 
             if (dropDownIndex == 0) {

@@ -8,16 +8,15 @@ namespace AnyRPG {
         #region Singleton
         private static CharacterCreatorManager instance;
 
-        public static CharacterCreatorManager MyInstance {
+        public static CharacterCreatorManager Instance {
             get {
-                if (instance == null) {
-                    instance = FindObjectOfType<CharacterCreatorManager>();
-                }
-
                 return instance;
             }
         }
 
+        private void Awake() {
+            instance = this;
+        }
         #endregion
 
 
@@ -39,11 +38,11 @@ namespace AnyRPG {
         public IEnumerator WaitForCamera() {
             //Debug.Log("CharacterCreatorManager.WaitForCamera();");
 
-            while (CharacterPanel.MyInstance.MyPreviewCameraController == null) {
+            while (CharacterPanel.Instance.MyPreviewCameraController == null) {
                 yield return null;
             }
 
-            CharacterPanel.MyInstance.MyPreviewCameraController.InitializeCamera(unitController);
+            CharacterPanel.Instance.MyPreviewCameraController.InitializeCamera(unitController);
         }
 
 

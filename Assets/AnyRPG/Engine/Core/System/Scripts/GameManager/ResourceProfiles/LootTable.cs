@@ -84,7 +84,7 @@ namespace AnyRPG {
                         if (loot.MyPrerequisitesMet == true &&
                             (loot.MyItem.MyUniqueItem == false ||
                             (InventoryManager.Instance.GetItemCount(loot.MyItem.DisplayName) == 0 &&
-                            PlayerManager.MyInstance.MyCharacter.CharacterEquipmentManager.HasEquipment(loot.MyItem.DisplayName) == false))) {
+                            PlayerManager.Instance.MyCharacter.CharacterEquipmentManager.HasEquipment(loot.MyItem.DisplayName) == false))) {
                             validLoot.Add(loot);
                         }/* else {
                             Debug.Log(MyName + ".LootTable.RollLoot() item: " + loot.MyItem);
@@ -163,8 +163,8 @@ namespace AnyRPG {
             int itemCount = Random.Range(loot.MyMinDrops, loot.MyMaxDrops + 1);
             //Debug.Log("GatherLootTable.RollLoot(): itemCount: " + itemCount);
             for (int i = 0; i < itemCount; i++) {
-                ItemLootDrop droppedItem = new ItemLootDrop(SystemItemManager.MyInstance.GetNewResource(loot.MyItem.DisplayName), this);
-                droppedItem.MyItem.DropLevel = PlayerManager.MyInstance.MyCharacter.CharacterStats.Level;
+                ItemLootDrop droppedItem = new ItemLootDrop(SystemItemManager.Instance.GetNewResource(loot.MyItem.DisplayName), this);
+                droppedItem.MyItem.DropLevel = PlayerManager.Instance.MyCharacter.CharacterStats.Level;
                 droppedItems.Add(droppedItem);
                 if (lootGroupUnlimitedDrops == false && ignoreDropLimit == false) {
                     lootGroupRemainingDrops = lootGroupRemainingDrops - 1;
@@ -179,7 +179,7 @@ namespace AnyRPG {
                     }
                 }
             }
-            //droppedItems.Add(new LootDrop(SystemItemManager.MyInstance.GetNewResource(item.MyItem.MyName), this));
+            //droppedItems.Add(new LootDrop(SystemItemManager.Instance.GetNewResource(item.MyItem.MyName), this));
 
             return returnValue;
         }

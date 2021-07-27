@@ -51,7 +51,7 @@ namespace AnyRPG {
             base.SetupScriptableObjects();
             baseCurrency = null;
             if (baseCurrencyName != null) {
-                Currency tmpCurrency = SystemCurrencyManager.MyInstance.GetResource(baseCurrencyName);
+                Currency tmpCurrency = SystemCurrencyManager.Instance.GetResource(baseCurrencyName);
                 if (tmpCurrency != null) {
                     baseCurrency = tmpCurrency;
                 } else {
@@ -89,7 +89,7 @@ namespace AnyRPG {
         public void SetupScriptableObjects() {
             currency = null;
             if (currencyName != null) {
-                Currency tmpCurrency = SystemCurrencyManager.MyInstance.GetResource(currencyName);
+                Currency tmpCurrency = SystemCurrencyManager.Instance.GetResource(currencyName);
                 if (tmpCurrency != null) {
                     currency = tmpCurrency;
                 } else {

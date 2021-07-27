@@ -38,11 +38,11 @@ namespace AnyRPG {
             if (eventSubscriptionsInitialized) {
                 return;
             }
-            if (SystemEventManager.MyInstance != null) {
+            if (SystemEventManager.Instance != null) {
                 SystemEventManager.StartListening("OnPlayerUnitSpawn", HandlePlayerUnitSpawn);
                 SystemEventManager.StartListening("OnPlayerUnitDespawn", HandlePlayerUnitDespawn);
-                SystemEventManager.MyInstance.OnPlayerConnectionDespawn += HandlePlayerConnectionDespawn;
-                SystemEventManager.MyInstance.OnEquipmentChanged += HandleEquipmentChange;
+                SystemEventManager.StartListening("OnPlayerConnectionDespawn", HandlePlayerConnectionDespawn);
+                SystemEventManager.Instance.OnEquipmentChanged += HandleEquipmentChange;
             }
             eventSubscriptionsInitialized = true;
         }
@@ -52,16 +52,16 @@ namespace AnyRPG {
             if (!eventSubscriptionsInitialized) {
                 return;
             }
-            if (SystemEventManager.MyInstance != null) {
+            if (SystemEventManager.Instance != null) {
                 SystemEventManager.StopListening("OnPlayerUnitSpawn", HandlePlayerUnitSpawn);
                 SystemEventManager.StopListening("OnPlayerUnitDespawn", HandlePlayerUnitDespawn);
-                SystemEventManager.MyInstance.OnPlayerConnectionDespawn -= HandlePlayerConnectionDespawn;
-                SystemEventManager.MyInstance.OnEquipmentChanged -= HandleEquipmentChange;
+                SystemEventManager.StopListening("OnPlayerConnectionDespawn", HandlePlayerConnectionDespawn);
+                SystemEventManager.Instance.OnEquipmentChanged -= HandleEquipmentChange;
             }
             eventSubscriptionsInitialized = false;
         }
 
-        public void HandlePlayerConnectionDespawn() {
+        public void HandlePlayerConnectionDespawn(string eventName, EventParamProperties eventParamProperties) {
             //Debug.Log("ActionBarManager.HandlePlayerConnectionDespawn()");
             ClearActionBars(true);
         }
@@ -82,8 +82,8 @@ namespace AnyRPG {
 
         public void ProcessPlayerUnitSpawn() {
             //Debug.Log("ActionBarmanager.HandlePlayerUnitSpawn()");
-            PlayerManager.MyInstance.UnitController.OnSetTarget += HandleSetTarget;
-            PlayerManager.MyInstance.UnitController.OnClearTarget += HandleClearTarget;
+            PlayerManager.Instance.UnitController.OnSetTarget += HandleSetTarget;
+            PlayerManager.Instance.UnitController.OnClearTarget += HandleClearTarget;
         }
 
         public void HandlePlayerUnitDespawn(string eventName, EventParamProperties eventParamProperties) {
@@ -92,8 +92,8 @@ namespace AnyRPG {
             // this needs to be called manually here because if the character controller processes the player unit despawn after us, we will miss the event
             HandleClearTarget(null);
 
-            PlayerManager.MyInstance.UnitController.OnSetTarget -= HandleSetTarget;
-            PlayerManager.MyInstance.UnitController.OnClearTarget -= HandleClearTarget;
+            PlayerManager.Instance.UnitController.OnSetTarget -= HandleSetTarget;
+            PlayerManager.Instance.UnitController.OnClearTarget -= HandleClearTarget;
         }
 
         public void HandleSetTarget(Interactable target) {
@@ -132,7 +132,7 @@ namespace AnyRPG {
             //float distanceToTarget = 0f;
             bool inRange = false;
             while (HasTarget()) {
-                if (PlayerManager.MyInstance.MyCharacter == null || PlayerManager.MyInstance.ActiveUnitController == null) {
+                if (PlayerManager.Instance.MyCharacter == null || PlayerManager.Instance.ActiveUnitController == null) {
                     break;
                 }
                 //Debug.Log("ActionBarmanager.UpdateTargetRange(): still have target at distance: " + distanceToTarget);
@@ -141,13 +141,13 @@ namespace AnyRPG {
                         BaseAbility baseAbility = actionButton.Useable as BaseAbility;
                         //Debug.Log("ActionBarmanager.UpdateTargetRange(): actionbutton: " + baseAbility.MyName);
 
-                        Interactable finalTarget = baseAbility.ReturnTarget(PlayerManager.MyInstance.MyCharacter, target, false);
-                        //distanceToTarget = Vector3.Distance(PlayerManager.MyInstance.ActiveUnitController.transform.position, target.transform.position);
+                        Interactable finalTarget = baseAbility.ReturnTarget(PlayerManager.Instance.MyCharacter, target, false);
+                        //distanceToTarget = Vector3.Distance(PlayerManager.Instance.ActiveUnitController.transform.position, target.transform.position);
                         //Debug.Log("ActionBarmanager.UpdateTargetRange(): actionbutton: " + baseAbility.DisplayName + "; finalTarget: " + (finalTarget == null ? "null" : finalTarget.gameObject.name));
 
                         inRange = false;
                         if (finalTarget != null) {
-                            inRange = PlayerManager.MyInstance.MyCharacter.CharacterAbilityManager.IsTargetInRange(finalTarget, baseAbility);
+                            inRange = PlayerManager.Instance.MyCharacter.CharacterAbilityManager.IsTargetInRange(finalTarget, baseAbility);
                         }
                         if (inRange) {
                             if (actionButton.KeyBindText.color != Color.white) {
@@ -192,10 +192,10 @@ namespace AnyRPG {
             //Debug.Log("ActionBarManager.AssociateActionBarKeyBinds()");
             int count = 1;
             foreach (ActionButton actionButton in GetActionButtons()) {
-                if (KeyBindManager.MyInstance.MyKeyBinds.Count >= count) {
+                if (KeyBindManager.Instance.MyKeyBinds.Count >= count) {
                     //Debug.Log("ActionBarManager.AssociateActionBarKeyBinds(): associate count: ACT" + count + " with actionButton " + actionButton.name + actionButton.GetInstanceID());
-                    if (KeyBindManager.MyInstance.MyKeyBinds.ContainsKey("ACT" + count.ToString())) {
-                        KeyBindManager.MyInstance.MyKeyBinds["ACT" + count.ToString()].MyActionButton = actionButton;
+                    if (KeyBindManager.Instance.MyKeyBinds.ContainsKey("ACT" + count.ToString())) {
+                        KeyBindManager.Instance.MyKeyBinds["ACT" + count.ToString()].MyActionButton = actionButton;
                         count++;
                     } else {
                         //Debug.Log("ActionBarManager.AssociateActionBarKeyBinds(): ran out of keybinds to associate with available action buttons!");
@@ -248,9 +248,9 @@ namespace AnyRPG {
                 return;
             }
             // TODO: set maximum size of loop to less of abilitylist count or button count
-            int abilityListCount = PlayerManager.MyInstance.MyCharacter.CharacterAbilityManager.AbilityList.Count;
+            int abilityListCount = PlayerManager.Instance.MyCharacter.CharacterAbilityManager.AbilityList.Count;
             //Debug.Log("Updating ability bar with " + abilityListCount.ToString() + " abilities");
-            foreach (BaseAbility newAbility in PlayerManager.MyInstance.MyCharacter.CharacterAbilityManager.AbilityList.Values) {
+            foreach (BaseAbility newAbility in PlayerManager.Instance.MyCharacter.CharacterAbilityManager.AbilityList.Values) {
                 AddNewAbility(newAbility);
             }
             abilityBarsPopulated = true;

@@ -48,8 +48,8 @@ namespace AnyRPG {
             //Debug.Log("ReputationBookUI.CreatePages()");
             ClearPages();
             List<FactionDisposition> page = new List<FactionDisposition>();
-            for (int i = 0; i < PlayerManager.MyInstance.MyCharacter.CharacterFactionManager.DispositionDictionary.Count; i++) {
-                page.Add(PlayerManager.MyInstance.MyCharacter.CharacterFactionManager.DispositionDictionary[i]);
+            for (int i = 0; i < PlayerManager.Instance.MyCharacter.CharacterFactionManager.DispositionDictionary.Count; i++) {
+                page.Add(PlayerManager.Instance.MyCharacter.CharacterFactionManager.DispositionDictionary[i]);
                 if (page.Count == pageSize) {
                     pages.Add(page);
                     page = new List<FactionDisposition>();

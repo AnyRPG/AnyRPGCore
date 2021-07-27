@@ -43,7 +43,7 @@ namespace AnyRPG {
             realEquipmentSlotTypeList = new List<EquipmentSlotType>();
             if (equipmentSlotTypeList != null) {
                 foreach (string equipmentSlotTypeName in equipmentSlotTypeList) {
-                    EquipmentSlotType tmpSlotType = SystemEquipmentSlotTypeManager.MyInstance.GetResource(equipmentSlotTypeName);
+                    EquipmentSlotType tmpSlotType = SystemEquipmentSlotTypeManager.Instance.GetResource(equipmentSlotTypeName);
                     if (tmpSlotType != null) {
                         realEquipmentSlotTypeList.Add(tmpSlotType);
                     } else {

@@ -23,26 +23,26 @@ namespace AnyRPG {
 
         private void Start() {
             //Debug.Log("SoundMenuController.Start()");
-            float rawValue = AudioManager.MyInstance.GetVolume(AudioManager.MyInstance.MasterVolume);
+            float rawValue = AudioManager.Instance.GetVolume(AudioManager.Instance.MasterVolume);
             float adjustedValue = Mathf.Pow(10, (rawValue / 20));
             //Debug.Log("SoundMenuController.Start() adjusted value: " + adjustedValue);
             masterVolumeSlider.value = adjustedValue;
         }
 
         public void SetMasterVolume(float volume) {
-            //AudioManager.MyInstance.SetVolume(AudioManager.MyInstance.MyMasterVolume, volume);
+            //AudioManager.Instance.SetVolume(AudioManager.Instance.MyMasterVolume, volume);
         }
 
         public void SetMusicVolume(float volume) {
-            //AudioManager.MyInstance.SetVolume(AudioManager.MyInstance.MyMusicVolume, volume);
+            //AudioManager.Instance.SetVolume(AudioManager.Instance.MyMusicVolume, volume);
         }
 
         public void SetEffectsVolume(float volume) {
-            //AudioManager.MyInstance.SetVolume(AudioManager.MyInstance.MyEffectsVolume, volume);
+            //AudioManager.Instance.SetVolume(AudioManager.Instance.MyEffectsVolume, volume);
         }
 
         public void SetAmbientVolume(float volume) {
-            //AudioManager.MyInstance.SetVolume(AudioManager.MyInstance.MyAmbientVolume, volume);
+            //AudioManager.Instance.SetVolume(AudioManager.Instance.MyAmbientVolume, volume);
         }
 
     }

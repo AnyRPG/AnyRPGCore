@@ -33,7 +33,7 @@ namespace AnyRPG {
             base.SetupScriptableObjects();
 
             if (classSpecialization == null && specializationName != null && specializationName != string.Empty) {
-                ClassSpecialization tmpClassSpecialization = SystemClassSpecializationManager.MyInstance.GetResource(specializationName);
+                ClassSpecialization tmpClassSpecialization = SystemClassSpecializationManager.Instance.GetResource(specializationName);
                 if (tmpClassSpecialization != null) {
                     classSpecialization = tmpClassSpecialization;
                 } else {

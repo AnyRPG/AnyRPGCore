@@ -11,14 +11,14 @@ namespace AnyRPG {
 
         public static SystemGameManager Instance {
             get {
-                if (instance == null) {
-                    instance = FindObjectOfType<SystemGameManager>();
-                }
-
                 return instance;
             }
         }
 
+        private void Awake() {
+            instance = this;
+            Init();
+        }
         #endregion
 
         [SerializeField]
@@ -34,7 +34,7 @@ namespace AnyRPG {
 
         public static bool IsShuttingDown { get => isShuttingDown; }
 
-        private void Awake() {
+        private void Init() {
             //Debug.Log("SystemGameManager.Awake()");
             SetupPermanentObjects();
         }
@@ -56,7 +56,7 @@ namespace AnyRPG {
             // we are going to handle the initialization of all system managers here so we can control the start order and it isn't random
 
             // first turn off the UI
-            UIManager.MyInstance.PerformSetupActivities();
+            UIManager.Instance.PerformSetupActivities();
 
             // next, load scriptable object resources
             LoadResources();
@@ -64,13 +64,13 @@ namespace AnyRPG {
             // next, verify systemconfiguration manager references to resources
             SystemConfigurationManager.Instance.SetupScriptableObjects();
 
-            PlayerManager.MyInstance.OrchestratorStart();
+            PlayerManager.Instance.OrchestratorStart();
 
             // subscribe to player connection despawn events for reloading resources
             CreateEventSubscriptions();
 
             // then launch level manager to start loading the game
-            LevelManager.MyInstance.PerformSetupActivities();
+            LevelManager.Instance.PerformSetupActivities();
 
         }
 
@@ -79,7 +79,7 @@ namespace AnyRPG {
             if (eventSubscriptionsInitialized) {
                 return;
             }
-            //SystemEventManager.MyInstance.OnPlayerConnectionDespawn += ReloadResourceLists;
+            //SystemEventManager.Instance.OnPlayerConnectionDespawn += ReloadResourceLists;
             eventSubscriptionsInitialized = true;
         }
 
@@ -88,7 +88,7 @@ namespace AnyRPG {
             if (!eventSubscriptionsInitialized) {
                 return;
             }
-            //SystemEventManager.MyInstance.OnPlayerConnectionDespawn -= ReloadResourceLists;
+            //SystemEventManager.Instance.OnPlayerConnectionDespawn -= ReloadResourceLists;
             eventSubscriptionsInitialized = false;
         }
 

@@ -26,10 +26,6 @@ namespace AnyRPG {
         public UnitController PreviewUnitController { get => unitController; set => unitController = value; }
         //public int PreviewLayer { get => previewLayer; set => previewLayer = value; }
 
-        protected void Awake() {
-            //previewLayer = LayerMask.NameToLayer(layerName);
-        }
-
         protected void Start() {
             if (previewSpawnLocation == null) {
                 previewSpawnLocation = Vector3.zero;

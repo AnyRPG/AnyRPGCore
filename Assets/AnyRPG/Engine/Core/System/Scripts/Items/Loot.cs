@@ -64,7 +64,7 @@ namespace AnyRPG {
         public void SetupScriptableObjects() {
             item = null;
             if (itemName != null) {
-                Item tmpItem = SystemItemManager.MyInstance.GetResource(itemName);
+                Item tmpItem = SystemItemManager.Instance.GetResource(itemName);
                 if (tmpItem != null) {
                     item = tmpItem;
                 } else {

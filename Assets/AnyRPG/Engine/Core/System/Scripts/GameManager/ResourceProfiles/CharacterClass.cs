@@ -85,7 +85,7 @@ namespace AnyRPG {
             if (equipmentNames != null) {
                 foreach (string equipmentName in equipmentNames) {
                     Equipment tmpEquipment = null;
-                    tmpEquipment = SystemItemManager.MyInstance.GetResource(equipmentName) as Equipment;
+                    tmpEquipment = SystemItemManager.Instance.GetResource(equipmentName) as Equipment;
                     if (tmpEquipment != null) {
                         equipmentList.Add(tmpEquipment);
                     } else {
@@ -96,7 +96,7 @@ namespace AnyRPG {
 
             if (validPetTypes != null) {
                 foreach (string petType in validPetTypes) {
-                    UnitType tmpUnitType = SystemUnitTypeManager.MyInstance.GetResource(petType);
+                    UnitType tmpUnitType = SystemUnitTypeManager.Instance.GetResource(petType);
                     if (tmpUnitType != null) {
                         validPetTypeList.Add(tmpUnitType);
                     } else {
@@ -109,7 +109,7 @@ namespace AnyRPG {
             powerResourceList = new List<PowerResource>();
             if (powerResources != null) {
                 foreach (string powerResourcename in powerResources) {
-                    PowerResource tmpPowerResource = SystemPowerResourceManager.MyInstance.GetResource(powerResourcename);
+                    PowerResource tmpPowerResource = SystemPowerResourceManager.Instance.GetResource(powerResourcename);
                     if (tmpPowerResource != null) {
                         powerResourceList.Add(tmpPowerResource);
                     } else {
@@ -152,7 +152,7 @@ namespace AnyRPG {
         public void SetupScriptableObjects() {
 
             if (resourceName != null && resourceName != string.Empty) {
-                PowerResource tmpPowerResource = SystemPowerResourceManager.MyInstance.GetResource(resourceName);
+                PowerResource tmpPowerResource = SystemPowerResourceManager.Instance.GetResource(resourceName);
                 if (tmpPowerResource != null) {
                     powerResource = tmpPowerResource;
                 } else {
@@ -183,7 +183,7 @@ namespace AnyRPG {
         public void SetupScriptableObjects() {
 
             if (powerResourceName != null && powerResourceName != string.Empty) {
-                PowerResource tmpPowerResource = SystemPowerResourceManager.MyInstance.GetResource(powerResourceName);
+                PowerResource tmpPowerResource = SystemPowerResourceManager.Instance.GetResource(powerResourceName);
                 if (tmpPowerResource != null) {
                     powerResource = tmpPowerResource;
                 } else {
@@ -214,7 +214,7 @@ namespace AnyRPG {
 
             foreach (string unitTypeName in unitTypes) {
                 if (unitTypeName != null && unitTypeName != string.Empty) {
-                    UnitType tmpUnitType = SystemUnitTypeManager.MyInstance.GetResource(unitTypeName);
+                    UnitType tmpUnitType = SystemUnitTypeManager.Instance.GetResource(unitTypeName);
                     if (tmpUnitType != null) {
                         unitTypeList.Add(tmpUnitType);
                     } else {

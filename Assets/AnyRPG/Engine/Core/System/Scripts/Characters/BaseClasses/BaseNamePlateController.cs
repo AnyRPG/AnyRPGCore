@@ -133,7 +133,7 @@ namespace AnyRPG {
                 return;
             }
             if (CanSpawnNamePlate()) {
-                //NamePlateController _namePlate = NamePlateManager.MyInstance.AddNamePlate(namePlateUnit, (unitController.UnitComponentController.NamePlateTransform == null ? true : false));
+                //NamePlateController _namePlate = NamePlateManager.Instance.AddNamePlate(namePlateUnit, (unitController.UnitComponentController.NamePlateTransform == null ? true : false));
                 SetNamePlatePosition();
                 namePlate = AddNamePlate();
                 SetupNamePlate();
@@ -142,12 +142,12 @@ namespace AnyRPG {
         }
 
         public virtual NamePlateController AddNamePlate() {
-            return NamePlateManager.MyInstance.AddNamePlate(namePlateUnit, false);
+            return NamePlateManager.Instance.AddNamePlate(namePlateUnit, false);
         }
 
         public virtual void RemoveNamePlate() {
-            if (NamePlateManager.MyInstance != null) {
-                NamePlateManager.MyInstance.RemoveNamePlate(namePlateUnit);
+            if (NamePlateManager.Instance != null) {
+                NamePlateManager.Instance.RemoveNamePlate(namePlateUnit);
             }
         }
 

@@ -46,11 +46,11 @@ namespace AnyRPG {
 
         public void OnPointerEnter(PointerEventData eventData) {
 
-            UIManager.MyInstance.ShowToolTip(transform.position, this);
+            UIManager.Instance.ShowToolTip(transform.position, this);
         }
 
         public void OnPointerExit(PointerEventData eventData) {
-            UIManager.MyInstance.HideToolTip();
+            UIManager.Instance.HideToolTip();
         }
 
     }

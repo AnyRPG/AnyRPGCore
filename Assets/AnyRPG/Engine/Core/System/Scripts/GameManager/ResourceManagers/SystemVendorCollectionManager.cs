@@ -9,7 +9,7 @@ namespace AnyRPG {
         #region Singleton
         private static SystemVendorCollectionManager instance;
 
-        public static SystemVendorCollectionManager MyInstance {
+        public static SystemVendorCollectionManager Instance {
             get {
                 if (instance == null) {
                     instance = FindObjectOfType<SystemVendorCollectionManager>();

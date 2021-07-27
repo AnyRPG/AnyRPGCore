@@ -92,7 +92,7 @@ namespace AnyRPG {
             foreach (LootTable lootTable in Props.LootTables) {
                 lootDrops.AddRange(lootTable.GetLoot());
             }
-            LootManager.MyInstance.CreatePages(lootDrops);
+            LootManager.Instance.CreatePages(lootDrops);
             lootDropped = true;
         }
 
@@ -101,7 +101,7 @@ namespace AnyRPG {
         /// </summary>
         public void PickUp() {
             //Debug.Log(gameObject.name + ".LootableNode.Pickup()");
-            //LootUI.MyInstance.CreatePages(lootTable.GetLoot());
+            //LootUI.Instance.CreatePages(lootTable.GetLoot());
             CreateWindowEventSubscriptions();
             PopupWindowManager.Instance.lootWindow.CloseableWindowContents.OnCloseWindow += ClearTakeLootHandler;
             PopupWindowManager.Instance.lootWindow.OpenWindow();
@@ -114,14 +114,12 @@ namespace AnyRPG {
 
         public void CreateWindowEventSubscriptions() {
             //Debug.Log(gameObject.name + ".LootableNode.CreateWindowEventSubscriptions()");
-            SystemEventManager.MyInstance.OnTakeLoot += CheckDropListSize;
+            SystemEventManager.StartListening("OnTakeLoot", HandleTakeLoot);
         }
 
         public void CleanupWindowEventSubscriptions() {
             //Debug.Log(gameObject.name + ".LootableNode.CleanupWindowEventSubscriptions()");
-            if (SystemEventManager.MyInstance != null) {
-                SystemEventManager.MyInstance.OnTakeLoot -= CheckDropListSize;
-            }
+            SystemEventManager.StopListening("OnTakeLoot", HandleTakeLoot);
             if (PopupWindowManager.Instance?.lootWindow?.CloseableWindowContents != null) {
                 PopupWindowManager.Instance.lootWindow.CloseableWindowContents.OnCloseWindow -= ClearTakeLootHandler;
             }
@@ -134,6 +132,10 @@ namespace AnyRPG {
             }
             base.CleanupEventSubscriptions();
             CleanupWindowEventSubscriptions();
+        }
+
+        public void HandleTakeLoot(string eventName, EventParamProperties eventParamProperties) {
+            CheckDropListSize();
         }
 
         public void ClearLootTables() {
@@ -152,7 +154,7 @@ namespace AnyRPG {
 
                 lootDropped = false;
                 //if (lootTable.MyDroppedItems.Count == 0) {
-                PlayerManager.MyInstance.PlayerController.RemoveInteractable(interactable);
+                PlayerManager.Instance.PlayerController.RemoveInteractable(interactable);
                 interactable.DestroySpawn();
                 foreach (LootTable lootTable in Props.LootTables) {
                     lootTable.Reset();
@@ -194,7 +196,7 @@ namespace AnyRPG {
         /*
         public override int GetCurrentOptionCount() {
             //Debug.Log(gameObject.name + ".GatheringNode.GetCurrentOptionCount()");
-            return (PlayerManager.MyInstance.MyCharacter.MyCharacterAbilityManager.HasAbility(MyAbility.MyName) == true && interactable.MySpawnReference != null ? 1 : 0);
+            return (PlayerManager.Instance.MyCharacter.MyCharacterAbilityManager.HasAbility(MyAbility.MyName) == true && interactable.MySpawnReference != null ? 1 : 0);
         }
         */
 

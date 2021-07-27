@@ -8,7 +8,7 @@ namespace AnyRPG {
     public class SystemKeyConfirmPanelController : WindowContentController {
 
         public void CancelBind() {
-            KeyBindManager.MyInstance.CancelKeyBind();
+            KeyBindManager.Instance.CancelKeyBind();
         }
 
     }

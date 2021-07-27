@@ -13,16 +13,16 @@ namespace AnyRPG {
 
         public void CancelAction() {
             //Debug.Log("NewGameMenuController.CancelAction()");
-            SystemWindowManager.MyInstance.confirmSellItemMenuWindow.CloseWindow();
+            SystemWindowManager.Instance.confirmSellItemMenuWindow.CloseWindow();
         }
 
         public void ConfirmAction() {
             //Debug.Log("NewGameMenuController.ConfirmAction()");
-            //HandScript.MyInstance.DeleteItem();
+            //HandScript.Instance.DeleteItem();
             if (item != null) {
                 (PopupWindowManager.Instance.vendorWindow.CloseableWindowContents as VendorUI).SellItem(MyItem);
             }
-            SystemWindowManager.MyInstance.confirmSellItemMenuWindow.CloseWindow();
+            SystemWindowManager.Instance.confirmSellItemMenuWindow.CloseWindow();
         }
 
         public override void ReceiveOpenWindowNotification() {

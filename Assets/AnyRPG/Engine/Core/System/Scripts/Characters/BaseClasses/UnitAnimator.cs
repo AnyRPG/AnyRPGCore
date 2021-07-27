@@ -1152,7 +1152,7 @@ namespace AnyRPG {
                 }
 
                 overrideController[SystemConfigurationManager.Instance.SystemAnimationProfile.AnimationProps.CastClips[0].name] = animationClip;
-                //Debug.Log(gameObject.name + ".CharacterAnimator.HandleCastingAbility() current casting clip: " + overrideController[SystemConfigurationManager.MyInstance.MySystemAnimationProfile.MyCastClips[0].name].name);
+                //Debug.Log(gameObject.name + ".CharacterAnimator.HandleCastingAbility() current casting clip: " + overrideController[SystemConfigurationManager.Instance.MySystemAnimationProfile.MyCastClips[0].name].name);
                 float animationLength = animationClip.length;
                 //Debug.Log(gameObject.name + ".CharacterAnimator.HandleCastingAbility() animationlength: " + animationLength);
 

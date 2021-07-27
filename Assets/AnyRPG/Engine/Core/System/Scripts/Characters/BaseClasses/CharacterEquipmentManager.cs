@@ -205,7 +205,7 @@ namespace AnyRPG {
 
                                     if (targetBone != null) {
                                         //Debug.Log("EquipmentManager.HandleWeaponSlot(): " + newItem.name + " has a physical prefab. targetbone is not null: equipSlot: " + newItem.equipSlot);
-                                        GameObject newEquipmentPrefab = ObjectPooler.MyInstance.GetPooledObject(attachmentNode.HoldableObject.Prefab, targetBone);
+                                        GameObject newEquipmentPrefab = ObjectPooler.Instance.GetPooledObject(attachmentNode.HoldableObject.Prefab, targetBone);
                                         //holdableObjects.Add(attachmentNode.MyHoldableObject, newEquipmentPrefab);
                                         holdableObjects.Add(attachmentNode, newEquipmentPrefab);
                                         //currentEquipmentPhysicalObjects[equipmentSlotProfile] = newEquipmentPrefab;
@@ -401,7 +401,7 @@ namespace AnyRPG {
         public List<EquipmentSlotProfile> GetCompatibleSlotProfiles(EquipmentSlotType equipmentSlotType) {
             List<EquipmentSlotProfile> returnValue = new List<EquipmentSlotProfile>();
             if (equipmentSlotType != null) {
-                foreach (EquipmentSlotProfile equipmentSlotProfile in SystemEquipmentSlotProfileManager.MyInstance.MyResourceList.Values) {
+                foreach (EquipmentSlotProfile equipmentSlotProfile in SystemEquipmentSlotProfileManager.Instance.MyResourceList.Values) {
                     if (equipmentSlotProfile.MyEquipmentSlotTypeList != null && equipmentSlotProfile.MyEquipmentSlotTypeList.Contains(equipmentSlotType)) {
                         returnValue.Add(equipmentSlotProfile);
                     }
@@ -577,7 +577,7 @@ namespace AnyRPG {
             foreach (Dictionary<AttachmentNode, GameObject> holdableObjectReferences in currentEquipmentPhysicalObjects.Values) {
                 //Debug.Log("equipment manager trying to unequip item in slot " + equipmentSlot.ToString() + "; destroying object: " + destroyObject.name);
                 foreach (GameObject holdableObjectReference in holdableObjectReferences.Values) {
-                    ObjectPooler.MyInstance.ReturnObjectToPool(holdableObjectReference);
+                    ObjectPooler.Instance.ReturnObjectToPool(holdableObjectReference);
                 }
             }
             currentEquipmentPhysicalObjects.Clear();
@@ -592,7 +592,7 @@ namespace AnyRPG {
                     foreach (KeyValuePair<AttachmentNode, GameObject> holdableObjectReference in currentEquipmentPhysicalObjects[equipmentSlot]) {
                         GameObject destroyObject = holdableObjectReference.Value;
                         //Debug.Log("equipment manager trying to unequip item in slot " + equipmentSlot.ToString() + "; destroying object: " + destroyObject.name);
-                        ObjectPooler.MyInstance.ReturnObjectToPool(destroyObject);
+                        ObjectPooler.Instance.ReturnObjectToPool(destroyObject);
                     }
                 }
                 Equipment oldItem = currentEquipment[equipmentSlot];

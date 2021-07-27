@@ -11,15 +11,15 @@ namespace AnyRPG {
         #region Singleton
         private static CastTargettingManager instance;
 
-        public static CastTargettingManager MyInstance {
+        public static CastTargettingManager Instance {
             get {
-                if (instance == null) {
-                    instance = FindObjectOfType<CastTargettingManager>();
-                }
                 return instance;
             }
         }
 
+        private void Awake() {
+            instance = this;
+        }
         #endregion
 
         [SerializeField]
@@ -92,8 +92,8 @@ namespace AnyRPG {
         public void EnableProjector(BaseAbility baseAbility) {
             //Debug.Log("CastTargettingmanager.EnableProjector()");
             castTargetController.gameObject.SetActive(true);
-            castTargetController.SetCircleColor((baseAbility.GetTargetOptions(PlayerManager.MyInstance.MyCharacter) as AbilityTargetProps).GroundTargetColor);
-            castTargetController.SetCircleRadius((baseAbility.GetTargetOptions(PlayerManager.MyInstance.MyCharacter) as AbilityTargetProps).GroundTargetRadius);
+            castTargetController.SetCircleColor((baseAbility.GetTargetOptions(PlayerManager.Instance.MyCharacter) as AbilityTargetProps).GroundTargetColor);
+            castTargetController.SetCircleRadius((baseAbility.GetTargetOptions(PlayerManager.Instance.MyCharacter) as AbilityTargetProps).GroundTargetRadius);
         }
 
         public bool ProjectorIsActive() {

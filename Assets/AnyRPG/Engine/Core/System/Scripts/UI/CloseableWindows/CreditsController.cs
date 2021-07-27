@@ -23,17 +23,17 @@ namespace AnyRPG {
 
         public void PopulateCredits() {
             bool firstCategoryPassed = false;
-            foreach (CreditsCategory creditsCategory in SystemCreditsCategoryManager.MyInstance.GetResourceList()) {
+            foreach (CreditsCategory creditsCategory in SystemCreditsCategoryManager.Instance.GetResourceList()) {
                 GameObject go = null;
                 if (firstCategoryPassed) {
-                    go = ObjectPooler.MyInstance.GetPooledObject(creditCategoryTemplate, creditsContainer);
+                    go = ObjectPooler.Instance.GetPooledObject(creditCategoryTemplate, creditsContainer);
                     go.GetComponent<CreditCategoryController>().MyTitleText.text = " ";
                 }
-                go = ObjectPooler.MyInstance.GetPooledObject(creditCategoryTemplate, creditsContainer);
+                go = ObjectPooler.Instance.GetPooledObject(creditCategoryTemplate, creditsContainer);
                 go.GetComponent<CreditCategoryController>().MyTitleText.text = creditsCategory.DisplayName;
                 firstCategoryPassed = true;
                 foreach (CreditsNode creditsNode in creditsCategory.MyCreditsNodes) {
-                    go = ObjectPooler.MyInstance.GetPooledObject(creditTemplate, creditsContainer);
+                    go = ObjectPooler.Instance.GetPooledObject(creditTemplate, creditsContainer);
                     CreditController creditController = go.GetComponent<CreditController>();
                     creditController.CreditNameText.text = creditsNode.CreditName;
                     creditController.AttributionText.text = creditsNode.CreditAttribution;
@@ -44,8 +44,8 @@ namespace AnyRPG {
         }
 
         public void CloseMenu() {
-            //SystemWindowManager.MyInstance.mainMenuWindow.OpenWindow();
-            SystemWindowManager.MyInstance.creditsWindow.CloseWindow();
+            //SystemWindowManager.Instance.mainMenuWindow.OpenWindow();
+            SystemWindowManager.Instance.creditsWindow.CloseWindow();
         }
 
     }

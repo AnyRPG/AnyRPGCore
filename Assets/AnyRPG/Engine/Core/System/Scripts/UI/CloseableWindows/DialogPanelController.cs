@@ -124,9 +124,9 @@ namespace AnyRPG {
 
         public void ViewQuest() {
             // testing disable this because it was already set by showquests
-            //QuestGiverUI.MyInstance.MyInteractable = interactable;
+            //QuestGiverUI.Instance.MyInteractable = interactable;
             PopupWindowManager.Instance.questGiverWindow.OpenWindow();
-            QuestGiverUI.MyInstance.ShowDescription(MyQuest);
+            QuestGiverUI.Instance.ShowDescription(MyQuest);
             PopupWindowManager.Instance.dialogWindow.CloseWindow();
         }
 
@@ -135,7 +135,7 @@ namespace AnyRPG {
             // CLOSE THIS FIRST SO OTHER WINDOWS AREN'T BLOCKED FROM POPPING
             PopupWindowManager.Instance.dialogWindow.CloseWindow();
 
-            QuestLog.MyInstance.AcceptQuest(MyQuest);
+            QuestLog.Instance.AcceptQuest(MyQuest);
             //interactable.CheckForInteractableObjectives(MyQuest.MyName);
         }
 
@@ -152,9 +152,9 @@ namespace AnyRPG {
                 dialogText.text = string.Format("<size={0}>{1}</size>", dialogFontSize, MyDialog.DialogNodes[dialogIndex].MyDescription);
             }
 
-            CombatLogUI.MyInstance.WriteChatMessage(MyDialog.DialogNodes[dialogIndex].MyDescription);
-            if (AudioManager.MyInstance != null && MyDialog.AudioProfile != null && MyDialog.AudioProfile.AudioClips != null && MyDialog.AudioProfile.AudioClips.Count > dialogIndex) {
-                AudioManager.MyInstance.PlayVoice(MyDialog.AudioProfile.AudioClips[dialogIndex]);
+            CombatLogUI.Instance.WriteChatMessage(MyDialog.DialogNodes[dialogIndex].MyDescription);
+            if (AudioManager.Instance != null && MyDialog.AudioProfile != null && MyDialog.AudioProfile.AudioClips != null && MyDialog.AudioProfile.AudioClips.Count > dialogIndex) {
+                AudioManager.Instance.PlayVoice(MyDialog.AudioProfile.AudioClips[dialogIndex]);
             }
 
             if (buttonText != null) {

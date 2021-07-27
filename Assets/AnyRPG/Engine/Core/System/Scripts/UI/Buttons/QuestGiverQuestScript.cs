@@ -30,11 +30,11 @@ public class QuestGiverQuestScript : MonoBehaviour
     }
 
     public void CommonSelect() {
-        if (QuestGiverUI.MyInstance.SelectedQuestGiverQuestScript != null && QuestGiverUI.MyInstance.SelectedQuestGiverQuestScript != this) {
-            //Debug.Log("QuestGiverQuestScript.Select(): " + MyQuest.MyTitle + ": deselecting old script: " + QuestGiverUI.MyInstance.MySelectedQuestGiverQuestScript.MyQuest.MyTitle);
-            QuestGiverUI.MyInstance.SelectedQuestGiverQuestScript.DeSelect();
+        if (QuestGiverUI.Instance.SelectedQuestGiverQuestScript != null && QuestGiverUI.Instance.SelectedQuestGiverQuestScript != this) {
+            //Debug.Log("QuestGiverQuestScript.Select(): " + MyQuest.MyTitle + ": deselecting old script: " + QuestGiverUI.Instance.MySelectedQuestGiverQuestScript.MyQuest.MyTitle);
+            QuestGiverUI.Instance.SelectedQuestGiverQuestScript.DeSelect();
         }
-        QuestGiverUI.MyInstance.SelectedQuestGiverQuestScript = this;
+        QuestGiverUI.Instance.SelectedQuestGiverQuestScript = this;
 
         //Debug.Log("QuestGiverQuestScript.Select(): " + MyQuest.MyTitle + ": setting color: " + highlightColor);
         GetComponent<Image>().color = highlightColor;
@@ -49,13 +49,13 @@ public class QuestGiverQuestScript : MonoBehaviour
         //Debug.Log("QuestGiverQuestScript.Select()");
 
         CommonSelect();
-        QuestGiverUI.MyInstance.ShowDescription(MyQuest);
+        QuestGiverUI.Instance.ShowDescription(MyQuest);
     }
 
     public void DeSelect() {
         //Debug.Log("QuestGiverQuestScript.DeSelect(): " + MyQuest.MyTitle + ": setting color: " + baseColor);
         GetComponent<Image>().color = baseColor;
-        QuestGiverUI.MyInstance.SelectedQuestGiverQuestScript = null;
+        QuestGiverUI.Instance.SelectedQuestGiverQuestScript = null;
     }
 
     public void IsComplete() {
@@ -68,7 +68,7 @@ public class QuestGiverQuestScript : MonoBehaviour
             markedComplete = false;
             MyText.text = "[" + MyQuest.MyExperienceLevel + "] " + MyQuest.DisplayName;
         }
-        MyText.color = LevelEquations.GetTargetColor(PlayerManager.MyInstance.MyCharacter.CharacterStats.Level, MyQuest.MyExperienceLevel);
+        MyText.color = LevelEquations.GetTargetColor(PlayerManager.Instance.MyCharacter.CharacterStats.Level, MyQuest.MyExperienceLevel);
     }
 
 

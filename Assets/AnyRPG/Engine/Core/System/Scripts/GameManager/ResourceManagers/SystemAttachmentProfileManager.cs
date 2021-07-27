@@ -9,7 +9,7 @@ namespace AnyRPG {
         #region Singleton
         private static SystemAttachmentProfileManager instance;
 
-        public static SystemAttachmentProfileManager MyInstance {
+        public static SystemAttachmentProfileManager Instance {
             get {
                 if (instance == null) {
                     instance = FindObjectOfType<SystemAttachmentProfileManager>();

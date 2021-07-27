@@ -42,7 +42,7 @@ namespace AnyRPG {
 
             if (vendorItem.MyQuantity > 0 || vendorItem.Unlimited) {
                 icon.sprite = vendorItem.MyItem.Icon;
-                UIManager.MyInstance.SetItemBackground(vendorItem.MyItem, backGroundImage, new Color32(0, 0, 0, 255));
+                UIManager.Instance.SetItemBackground(vendorItem.MyItem, backGroundImage, new Color32(0, 0, 0, 255));
                 //title.text = string.Format("<color={0}>{1}</color>", QualityColor.MyColors[vendorItem.MyItem.MyQuality], vendorItem.MyItem.MyName);
                 title.text = string.Format("{0}", vendorItem.MyItem.DisplayName);
 
@@ -81,11 +81,11 @@ namespace AnyRPG {
 
 
         public void OnPointerClick(PointerEventData eventData) {
-            if (vendorItem.MyItem.BuyPrice == 0 || vendorItem.MyItem.MyCurrency == null || (CurrencyConverter.GetConvertedValue(vendorItem.MyItem.MyCurrency, vendorItem.MyItem.BuyPrice) <= PlayerManager.MyInstance.MyCharacter.CharacterCurrencyManager.GetBaseCurrencyValue(vendorItem.MyItem.MyCurrency))) {
-                Item tmpItem = SystemItemManager.MyInstance.GetNewResource(vendorItem.MyItem.DisplayName);
+            if (vendorItem.MyItem.BuyPrice == 0 || vendorItem.MyItem.MyCurrency == null || (CurrencyConverter.GetConvertedValue(vendorItem.MyItem.MyCurrency, vendorItem.MyItem.BuyPrice) <= PlayerManager.Instance.MyCharacter.CharacterCurrencyManager.GetBaseCurrencyValue(vendorItem.MyItem.MyCurrency))) {
+                Item tmpItem = SystemItemManager.Instance.GetNewResource(vendorItem.MyItem.DisplayName);
                 //Debug.Log("Instantiated an item with id: " + tmpItem.GetInstanceID().ToString());
                 if (InventoryManager.Instance.AddItem(tmpItem)) {
-                    tmpItem.DropLevel = PlayerManager.MyInstance.MyCharacter.CharacterStats.Level;
+                    tmpItem.DropLevel = PlayerManager.Instance.MyCharacter.CharacterStats.Level;
                     SellItem();
                     if (tmpItem is CurrencyItem) {
                         (tmpItem as CurrencyItem).Use();
@@ -95,11 +95,11 @@ namespace AnyRPG {
         }
 
         public void OnPointerEnter(PointerEventData eventData) {
-            UIManager.MyInstance.ShowToolTip(transform.position, vendorItem.MyItem);
+            UIManager.Instance.ShowToolTip(transform.position, vendorItem.MyItem);
         }
 
         public void OnPointerExit(PointerEventData eventData) {
-            UIManager.MyInstance.HideToolTip();
+            UIManager.Instance.HideToolTip();
         }
 
         private void SellItem() {
@@ -116,12 +116,12 @@ namespace AnyRPG {
                     usedSellPrice = new KeyValuePair<Currency, int>(vendorItem.MyItem.MySellPrice.Key, vendorItem.MyItem.MySellPrice.Value);
                     priceString = CurrencyConverter.GetCombinedPriceSring(vendorItem.MyItem.MySellPrice.Key, vendorItem.MyItem.MySellPrice.Value);
                 }
-                PlayerManager.MyInstance.MyCharacter.CharacterCurrencyManager.SpendCurrency(usedSellPrice.Key, usedSellPrice.Value);
+                PlayerManager.Instance.MyCharacter.CharacterCurrencyManager.SpendCurrency(usedSellPrice.Key, usedSellPrice.Value);
             }
             if (SystemConfigurationManager.Instance?.VendorAudioProfile?.AudioClip != null) {
-                AudioManager.MyInstance.PlayEffect(SystemConfigurationManager.Instance.VendorAudioProfile.AudioClip);
+                AudioManager.Instance.PlayEffect(SystemConfigurationManager.Instance.VendorAudioProfile.AudioClip);
             }
-            MessageFeedManager.MyInstance.WriteMessage("Purchased " + vendorItem.MyItem.DisplayName + " for " + priceString);
+            MessageFeedManager.Instance.WriteMessage("Purchased " + vendorItem.MyItem.DisplayName + " for " + priceString);
 
             if (!vendorItem.Unlimited) {
                 vendorItem.MyQuantity--;

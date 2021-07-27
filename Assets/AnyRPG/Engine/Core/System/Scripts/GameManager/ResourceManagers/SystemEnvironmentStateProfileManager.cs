@@ -9,7 +9,7 @@ namespace AnyRPG {
         #region Singleton
         private static SystemEnvironmentStateProfileManager instance;
 
-        public static SystemEnvironmentStateProfileManager MyInstance {
+        public static SystemEnvironmentStateProfileManager Instance {
             get {
                 if (instance == null) {
                     instance = FindObjectOfType<SystemEnvironmentStateProfileManager>();

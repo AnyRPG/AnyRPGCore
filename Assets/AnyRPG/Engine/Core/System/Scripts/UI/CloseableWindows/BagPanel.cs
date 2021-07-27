@@ -62,7 +62,7 @@ namespace AnyRPG {
             //Debug.Log(gameObject.name + gameObject.GetInstanceID() + ".BagPanel.AddSlots(" + slotCount + ")");
             for (int i = 0; i < slotCount; i++) {
                 //Debug.Log(gameObject.GetInstanceID() + ".BagPanel.AddSlots(" + slotCount + "): Adding slot " + i);
-                SlotScript slot = ObjectPooler.MyInstance.GetPooledObject(slotPrefab, contentArea).GetComponent<SlotScript>();
+                SlotScript slot = ObjectPooler.Instance.GetPooledObject(slotPrefab, contentArea).GetComponent<SlotScript>();
                 slot.MyBag = this;
                 MySlots.Add(slot);
                 slot.SetBackGroundColor();
@@ -99,7 +99,7 @@ namespace AnyRPG {
                 removeList.Add(slot);
             }
             foreach (SlotScript slot in removeList) {
-                ObjectPooler.MyInstance.ReturnObjectToPool(slot.gameObject);
+                ObjectPooler.Instance.ReturnObjectToPool(slot.gameObject);
                 //Debug.Log("BagPanel.Clear(): destroyed slot");
             }
             slots.Clear();

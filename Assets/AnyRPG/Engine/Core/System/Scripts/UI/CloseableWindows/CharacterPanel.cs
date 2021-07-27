@@ -13,16 +13,17 @@ namespace AnyRPG {
         #region Singleton
         private static CharacterPanel instance;
 
-        public static CharacterPanel MyInstance {
+        public static CharacterPanel Instance {
             get {
-                if (instance == null) {
-                    instance = FindObjectOfType<CharacterPanel>();
-                }
-
                 return instance;
             }
         }
+
+        private void Awake() {
+            instance = this;
+        }
         #endregion
+
         /*
         [SerializeField]
         private CharacterButton head, shoulders, chest, hands, legs, feet, mainhand, offhand;
@@ -70,11 +71,11 @@ namespace AnyRPG {
             if (eventSubscriptionsInitialized) {
                 return;
             }
-            if (SystemEventManager.MyInstance != null) {
+            if (SystemEventManager.Instance != null) {
                 SystemEventManager.StartListening("OnPlayerUnitSpawn", HandlePlayerUnitSpawn);
                 SystemEventManager.StartListening("OnPlayerUnitDespawn", HandlePlayerUnitDespawn);
             }
-            if (PlayerManager.MyInstance != null && PlayerManager.MyInstance.PlayerUnitSpawned == true) {
+            if (PlayerManager.Instance != null && PlayerManager.Instance.PlayerUnitSpawned == true) {
                 ProcessPlayerUnitSpawn();
             }
             eventSubscriptionsInitialized = true;
@@ -82,7 +83,7 @@ namespace AnyRPG {
 
         protected override void CleanupEventSubscriptions() {
             //Debug.Log("PlayerCombat.CleanupEventSubscriptions()");
-            if (SystemEventManager.MyInstance != null) {
+            if (SystemEventManager.Instance != null) {
                 SystemEventManager.StopListening("OnPlayerUnitSpawn", HandlePlayerUnitSpawn);
                 SystemEventManager.StopListening("OnPlayerUnitDespawn", HandlePlayerUnitDespawn);
             }
@@ -95,15 +96,15 @@ namespace AnyRPG {
 
         public void ProcessPlayerUnitSpawn() {
             //Debug.Log("CharacterPanel.HandlePlayerUnitSpawn()");
-            if (PlayerManager.MyInstance != null && PlayerManager.MyInstance.MyCharacter != null && PlayerManager.MyInstance.MyCharacter.CharacterStats != null) {
+            if (PlayerManager.Instance != null && PlayerManager.Instance.MyCharacter != null && PlayerManager.Instance.MyCharacter.CharacterStats != null) {
                 //Debug.Log("CharacterPanel.HandlePlayerUnitSpawn(): subscribing to statChanged event");
-                PlayerManager.MyInstance.MyCharacter.CharacterStats.OnStatChanged += UpdateStatsDescription;
+                PlayerManager.Instance.MyCharacter.CharacterStats.OnStatChanged += UpdateStatsDescription;
             } else {
                 //Debug.Log("CharacterPanel.HandlePlayerUnitSpawn(): could not find characterstats");
             }
-            if (SystemEventManager.MyInstance != null) {
+            if (SystemEventManager.Instance != null) {
                 //Debug.Log("CharacterPanel.HandlePlayerUnitSpawn(): subscribing to statChanged event");
-                SystemEventManager.MyInstance.OnEquipmentChanged += HandleEquipmentChanged;
+                SystemEventManager.Instance.OnEquipmentChanged += HandleEquipmentChanged;
             } else {
                 //Debug.Log("CharacterPanel.HandlePlayerUnitSpawn(): could not find characterstats");
             }
@@ -112,11 +113,11 @@ namespace AnyRPG {
 
         public void HandlePlayerUnitDespawn(string eventName, EventParamProperties eventParamProperties) {
             //Debug.Log("CharacterPanel.HandlePlayerUnitDespawn()");
-            if (PlayerManager.MyInstance != null && PlayerManager.MyInstance.MyCharacter != null && PlayerManager.MyInstance.MyCharacter.CharacterStats != null) {
-                PlayerManager.MyInstance.MyCharacter.CharacterStats.OnStatChanged -= UpdateStatsDescription;
+            if (PlayerManager.Instance != null && PlayerManager.Instance.MyCharacter != null && PlayerManager.Instance.MyCharacter.CharacterStats != null) {
+                PlayerManager.Instance.MyCharacter.CharacterStats.OnStatChanged -= UpdateStatsDescription;
             }
-            if (SystemEventManager.MyInstance != null) {
-                SystemEventManager.MyInstance.OnEquipmentChanged -= HandleEquipmentChanged;
+            if (SystemEventManager.Instance != null) {
+                SystemEventManager.Instance.OnEquipmentChanged -= HandleEquipmentChanged;
             } else {
                 //Debug.Log("CharacterPanel.HandlePlayerUnitSpawn(): could not find characterstats");
             }
@@ -134,7 +135,7 @@ namespace AnyRPG {
         public override void RecieveClosedWindowNotification() {
             //Debug.Log("CharacterPanel.RecieveClosedWindowNotification()");
             base.RecieveClosedWindowNotification();
-            CharacterCreatorManager.MyInstance.HandleCloseWindow();
+            CharacterCreatorManager.Instance.HandleCloseWindow();
             previewCameraController.ClearTarget();
         }
 
@@ -144,8 +145,8 @@ namespace AnyRPG {
             SetBackGroundColor(new Color32(0, 0, 0, (byte)(int)(PlayerPrefs.GetFloat("PopupWindowOpacity") * 255)));
             SetPreviewTarget();
             UpdateStatsDescription();
-            if (PlayerManager.MyInstance.MyCharacter != null) {
-                PopupWindowManager.Instance.characterPanelWindow.SetWindowTitle(PlayerManager.MyInstance.MyCharacter.CharacterName);
+            if (PlayerManager.Instance.MyCharacter != null) {
+                PopupWindowManager.Instance.characterPanelWindow.SetWindowTitle(PlayerManager.Instance.MyCharacter.CharacterName);
             }
         }
 
@@ -154,13 +155,13 @@ namespace AnyRPG {
             if (PopupWindowManager.Instance != null && PopupWindowManager.Instance.characterPanelWindow != null && PopupWindowManager.Instance.characterPanelWindow.IsOpen) {
                 // reset display
                 previewCameraController.ClearTarget();
-                CharacterCreatorManager.MyInstance.HandleCloseWindow();
+                CharacterCreatorManager.Instance.HandleCloseWindow();
 
                 // ADD CODE TO LOOP THROUGH BUTTONS AND RE-DISPLAY ANY ITEMS
 
                 // update display
                 SetPreviewTarget();
-                //EquipmentManager.MyInstance.EquipCharacter(CharacterCreatorManager.MyInstance.MyPreviewUnit, false);
+                //EquipmentManager.Instance.EquipCharacter(CharacterCreatorManager.Instance.MyPreviewUnit, false);
                 //UpdateStatsDescription();
             }
         }
@@ -187,21 +188,21 @@ namespace AnyRPG {
                 Debug.LogError("Must set statsdescription text in inspector!");
             }
             string updateString = string.Empty;
-            updateString += "Name: " + PlayerManager.MyInstance.MyCharacter.CharacterName + "\n";
-            updateString += "Class: " + (PlayerManager.MyInstance.MyCharacter.CharacterClass == null ? "None" : PlayerManager.MyInstance.MyCharacter.CharacterClass.DisplayName) + "\n";
-            updateString += "Specialization: " + (PlayerManager.MyInstance.MyCharacter.ClassSpecialization == null ? "None" : PlayerManager.MyInstance.MyCharacter.ClassSpecialization.DisplayName) + "\n";
-            updateString += "Faction: " + (PlayerManager.MyInstance.MyCharacter.Faction == null ? "None" : PlayerManager.MyInstance.MyCharacter.Faction.DisplayName) + "\n";
-            updateString += "Unit Type: " + (PlayerManager.MyInstance.MyCharacter.UnitType == null ? "None" : PlayerManager.MyInstance.MyCharacter.UnitType.DisplayName) + "\n";
-            updateString += "Race: " + (PlayerManager.MyInstance.MyCharacter.CharacterRace == null ? "None" : PlayerManager.MyInstance.MyCharacter.CharacterRace.DisplayName) + "\n";
-            updateString += "Level: " + PlayerManager.MyInstance.MyCharacter.CharacterStats.Level + "\n";
-            updateString += "Experience: " + PlayerManager.MyInstance.MyCharacter.CharacterStats.CurrentXP + " / " + LevelEquations.GetXPNeededForLevel(PlayerManager.MyInstance.MyCharacter.CharacterStats.Level) + "\n\n";
+            updateString += "Name: " + PlayerManager.Instance.MyCharacter.CharacterName + "\n";
+            updateString += "Class: " + (PlayerManager.Instance.MyCharacter.CharacterClass == null ? "None" : PlayerManager.Instance.MyCharacter.CharacterClass.DisplayName) + "\n";
+            updateString += "Specialization: " + (PlayerManager.Instance.MyCharacter.ClassSpecialization == null ? "None" : PlayerManager.Instance.MyCharacter.ClassSpecialization.DisplayName) + "\n";
+            updateString += "Faction: " + (PlayerManager.Instance.MyCharacter.Faction == null ? "None" : PlayerManager.Instance.MyCharacter.Faction.DisplayName) + "\n";
+            updateString += "Unit Type: " + (PlayerManager.Instance.MyCharacter.UnitType == null ? "None" : PlayerManager.Instance.MyCharacter.UnitType.DisplayName) + "\n";
+            updateString += "Race: " + (PlayerManager.Instance.MyCharacter.CharacterRace == null ? "None" : PlayerManager.Instance.MyCharacter.CharacterRace.DisplayName) + "\n";
+            updateString += "Level: " + PlayerManager.Instance.MyCharacter.CharacterStats.Level + "\n";
+            updateString += "Experience: " + PlayerManager.Instance.MyCharacter.CharacterStats.CurrentXP + " / " + LevelEquations.GetXPNeededForLevel(PlayerManager.Instance.MyCharacter.CharacterStats.Level) + "\n\n";
 
-            foreach (string statName in PlayerManager.MyInstance.MyCharacter.CharacterStats.PrimaryStats.Keys) {
-                updateString += statName + ": " + PlayerManager.MyInstance.MyCharacter.CharacterStats.PrimaryStats[statName].CurrentValue;
-                if (PlayerManager.MyInstance.MyCharacter.CharacterStats.PrimaryStats[statName].CurrentValue != PlayerManager.MyInstance.MyCharacter.CharacterStats.PrimaryStats[statName].BaseValue) {
-                    updateString += " ( " + PlayerManager.MyInstance.MyCharacter.CharacterStats.PrimaryStats[statName].BaseValue +
-                        ((PlayerManager.MyInstance.MyCharacter.CharacterStats.PrimaryStats[statName].CurrentValue - PlayerManager.MyInstance.MyCharacter.CharacterStats.PrimaryStats[statName].BaseValue) > 0 ? " <color=green>+" : " <color=red>") +
-                        (PlayerManager.MyInstance.MyCharacter.CharacterStats.PrimaryStats[statName].CurrentValue - PlayerManager.MyInstance.MyCharacter.CharacterStats.PrimaryStats[statName].BaseValue) +
+            foreach (string statName in PlayerManager.Instance.MyCharacter.CharacterStats.PrimaryStats.Keys) {
+                updateString += statName + ": " + PlayerManager.Instance.MyCharacter.CharacterStats.PrimaryStats[statName].CurrentValue;
+                if (PlayerManager.Instance.MyCharacter.CharacterStats.PrimaryStats[statName].CurrentValue != PlayerManager.Instance.MyCharacter.CharacterStats.PrimaryStats[statName].BaseValue) {
+                    updateString += " ( " + PlayerManager.Instance.MyCharacter.CharacterStats.PrimaryStats[statName].BaseValue +
+                        ((PlayerManager.Instance.MyCharacter.CharacterStats.PrimaryStats[statName].CurrentValue - PlayerManager.Instance.MyCharacter.CharacterStats.PrimaryStats[statName].BaseValue) > 0 ? " <color=green>+" : " <color=red>") +
+                        (PlayerManager.Instance.MyCharacter.CharacterStats.PrimaryStats[statName].CurrentValue - PlayerManager.Instance.MyCharacter.CharacterStats.PrimaryStats[statName].BaseValue) +
                         "</color> )";
                 }
                 updateString += "\n";
@@ -209,75 +210,75 @@ namespace AnyRPG {
 
             updateString += "\n";
 
-            if (PlayerManager.MyInstance.MyCharacter.CharacterStats.PrimaryResource != null) {
-                updateString += PlayerManager.MyInstance.MyCharacter.CharacterStats.PrimaryResource.DisplayName + ": " + PlayerManager.MyInstance.MyCharacter.CharacterStats.CurrentPrimaryResource + " / " + PlayerManager.MyInstance.MyCharacter.CharacterStats.MaxPrimaryResource + "\n\n";
+            if (PlayerManager.Instance.MyCharacter.CharacterStats.PrimaryResource != null) {
+                updateString += PlayerManager.Instance.MyCharacter.CharacterStats.PrimaryResource.DisplayName + ": " + PlayerManager.Instance.MyCharacter.CharacterStats.CurrentPrimaryResource + " / " + PlayerManager.Instance.MyCharacter.CharacterStats.MaxPrimaryResource + "\n\n";
             }
 
-            updateString += "Amor: " + PlayerManager.MyInstance.MyCharacter.CharacterStats.SecondaryStats[SecondaryStatType.Armor].CurrentValue + "\n";
+            updateString += "Amor: " + PlayerManager.Instance.MyCharacter.CharacterStats.SecondaryStats[SecondaryStatType.Armor].CurrentValue + "\n";
             /*
-            updateString += "Armor: " + PlayerManager.MyInstance.MyCharacter.CharacterStats.SecondaryStats[SecondaryStatType.Armor].CurrentValue;
-            if (PlayerManager.MyInstance.MyCharacter.CharacterStats.SecondaryStats[SecondaryStatType.Armor].CurrentValue != PlayerManager.MyInstance.MyCharacter.CharacterStats.SecondaryStats[SecondaryStatType.Armor].BaseValue) {
-                updateString += " ( " + PlayerManager.MyInstance.MyCharacter.CharacterStats.SecondaryStats[SecondaryStatType.Armor].BaseValue + " + <color=green>" + PlayerManager.MyInstance.MyCharacter.CharacterStats.SecondaryStats[SecondaryStatType.Armor].GetAddValue() + "</color> )";
+            updateString += "Armor: " + PlayerManager.Instance.MyCharacter.CharacterStats.SecondaryStats[SecondaryStatType.Armor].CurrentValue;
+            if (PlayerManager.Instance.MyCharacter.CharacterStats.SecondaryStats[SecondaryStatType.Armor].CurrentValue != PlayerManager.Instance.MyCharacter.CharacterStats.SecondaryStats[SecondaryStatType.Armor].BaseValue) {
+                updateString += " ( " + PlayerManager.Instance.MyCharacter.CharacterStats.SecondaryStats[SecondaryStatType.Armor].BaseValue + " + <color=green>" + PlayerManager.Instance.MyCharacter.CharacterStats.SecondaryStats[SecondaryStatType.Armor].GetAddValue() + "</color> )";
             }
             */
 
             updateString += "Physical Power: " +
-                (PlayerManager.MyInstance.MyCharacter.CharacterStats.SecondaryStats[SecondaryStatType.PhysicalDamage].CurrentValue +
-                PlayerManager.MyInstance.MyCharacter.CharacterStats.SecondaryStats[SecondaryStatType.Damage].CurrentValue);
-            if (PlayerManager.MyInstance.MyCharacter.CharacterStats.SecondaryStats[SecondaryStatType.PhysicalDamage].CurrentValue != PlayerManager.MyInstance.MyCharacter.CharacterStats.SecondaryStats[SecondaryStatType.PhysicalDamage].BaseValue ||
-                PlayerManager.MyInstance.MyCharacter.CharacterStats.SecondaryStats[SecondaryStatType.Damage].CurrentValue != PlayerManager.MyInstance.MyCharacter.CharacterStats.SecondaryStats[SecondaryStatType.Damage].BaseValue) {
+                (PlayerManager.Instance.MyCharacter.CharacterStats.SecondaryStats[SecondaryStatType.PhysicalDamage].CurrentValue +
+                PlayerManager.Instance.MyCharacter.CharacterStats.SecondaryStats[SecondaryStatType.Damage].CurrentValue);
+            if (PlayerManager.Instance.MyCharacter.CharacterStats.SecondaryStats[SecondaryStatType.PhysicalDamage].CurrentValue != PlayerManager.Instance.MyCharacter.CharacterStats.SecondaryStats[SecondaryStatType.PhysicalDamage].BaseValue ||
+                PlayerManager.Instance.MyCharacter.CharacterStats.SecondaryStats[SecondaryStatType.Damage].CurrentValue != PlayerManager.Instance.MyCharacter.CharacterStats.SecondaryStats[SecondaryStatType.Damage].BaseValue) {
                 updateString += " ( " +
-                    (PlayerManager.MyInstance.MyCharacter.CharacterStats.SecondaryStats[SecondaryStatType.PhysicalDamage].BaseValue + PlayerManager.MyInstance.MyCharacter.CharacterStats.SecondaryStats[SecondaryStatType.Damage].BaseValue) +
-                    (((PlayerManager.MyInstance.MyCharacter.CharacterStats.SecondaryStats[SecondaryStatType.PhysicalDamage].CurrentValue + PlayerManager.MyInstance.MyCharacter.CharacterStats.SecondaryStats[SecondaryStatType.Damage].CurrentValue) - (PlayerManager.MyInstance.MyCharacter.CharacterStats.SecondaryStats[SecondaryStatType.PhysicalDamage].BaseValue + PlayerManager.MyInstance.MyCharacter.CharacterStats.SecondaryStats[SecondaryStatType.Damage].BaseValue)) > 0 ? " <color=green>+" : " <color=red>") +
-                    ((PlayerManager.MyInstance.MyCharacter.CharacterStats.SecondaryStats[SecondaryStatType.PhysicalDamage].CurrentValue + PlayerManager.MyInstance.MyCharacter.CharacterStats.SecondaryStats[SecondaryStatType.Damage].CurrentValue) - (PlayerManager.MyInstance.MyCharacter.CharacterStats.SecondaryStats[SecondaryStatType.PhysicalDamage].BaseValue + PlayerManager.MyInstance.MyCharacter.CharacterStats.SecondaryStats[SecondaryStatType.Damage].BaseValue)) +
+                    (PlayerManager.Instance.MyCharacter.CharacterStats.SecondaryStats[SecondaryStatType.PhysicalDamage].BaseValue + PlayerManager.Instance.MyCharacter.CharacterStats.SecondaryStats[SecondaryStatType.Damage].BaseValue) +
+                    (((PlayerManager.Instance.MyCharacter.CharacterStats.SecondaryStats[SecondaryStatType.PhysicalDamage].CurrentValue + PlayerManager.Instance.MyCharacter.CharacterStats.SecondaryStats[SecondaryStatType.Damage].CurrentValue) - (PlayerManager.Instance.MyCharacter.CharacterStats.SecondaryStats[SecondaryStatType.PhysicalDamage].BaseValue + PlayerManager.Instance.MyCharacter.CharacterStats.SecondaryStats[SecondaryStatType.Damage].BaseValue)) > 0 ? " <color=green>+" : " <color=red>") +
+                    ((PlayerManager.Instance.MyCharacter.CharacterStats.SecondaryStats[SecondaryStatType.PhysicalDamage].CurrentValue + PlayerManager.Instance.MyCharacter.CharacterStats.SecondaryStats[SecondaryStatType.Damage].CurrentValue) - (PlayerManager.Instance.MyCharacter.CharacterStats.SecondaryStats[SecondaryStatType.PhysicalDamage].BaseValue + PlayerManager.Instance.MyCharacter.CharacterStats.SecondaryStats[SecondaryStatType.Damage].BaseValue)) +
                     "</color> )";
             }
             updateString += "\n";
 
             updateString += "SpellPower: " +
-                (PlayerManager.MyInstance.MyCharacter.CharacterStats.SecondaryStats[SecondaryStatType.SpellDamage].CurrentValue +
-                PlayerManager.MyInstance.MyCharacter.CharacterStats.SecondaryStats[SecondaryStatType.Damage].CurrentValue);
-            if (PlayerManager.MyInstance.MyCharacter.CharacterStats.SecondaryStats[SecondaryStatType.SpellDamage].CurrentValue != PlayerManager.MyInstance.MyCharacter.CharacterStats.SecondaryStats[SecondaryStatType.SpellDamage].BaseValue ||
-                PlayerManager.MyInstance.MyCharacter.CharacterStats.SecondaryStats[SecondaryStatType.Damage].CurrentValue != PlayerManager.MyInstance.MyCharacter.CharacterStats.SecondaryStats[SecondaryStatType.Damage].BaseValue) {
+                (PlayerManager.Instance.MyCharacter.CharacterStats.SecondaryStats[SecondaryStatType.SpellDamage].CurrentValue +
+                PlayerManager.Instance.MyCharacter.CharacterStats.SecondaryStats[SecondaryStatType.Damage].CurrentValue);
+            if (PlayerManager.Instance.MyCharacter.CharacterStats.SecondaryStats[SecondaryStatType.SpellDamage].CurrentValue != PlayerManager.Instance.MyCharacter.CharacterStats.SecondaryStats[SecondaryStatType.SpellDamage].BaseValue ||
+                PlayerManager.Instance.MyCharacter.CharacterStats.SecondaryStats[SecondaryStatType.Damage].CurrentValue != PlayerManager.Instance.MyCharacter.CharacterStats.SecondaryStats[SecondaryStatType.Damage].BaseValue) {
                 updateString += " ( " +
-                    (PlayerManager.MyInstance.MyCharacter.CharacterStats.SecondaryStats[SecondaryStatType.SpellDamage].BaseValue + PlayerManager.MyInstance.MyCharacter.CharacterStats.SecondaryStats[SecondaryStatType.Damage].BaseValue) +
-                    (((PlayerManager.MyInstance.MyCharacter.CharacterStats.SecondaryStats[SecondaryStatType.SpellDamage].CurrentValue + PlayerManager.MyInstance.MyCharacter.CharacterStats.SecondaryStats[SecondaryStatType.Damage].CurrentValue) - (PlayerManager.MyInstance.MyCharacter.CharacterStats.SecondaryStats[SecondaryStatType.SpellDamage].BaseValue + PlayerManager.MyInstance.MyCharacter.CharacterStats.SecondaryStats[SecondaryStatType.Damage].BaseValue)) > 0 ? " <color=green>+" : " <color=red>") +
-                    ((PlayerManager.MyInstance.MyCharacter.CharacterStats.SecondaryStats[SecondaryStatType.SpellDamage].CurrentValue + PlayerManager.MyInstance.MyCharacter.CharacterStats.SecondaryStats[SecondaryStatType.Damage].CurrentValue) - (PlayerManager.MyInstance.MyCharacter.CharacterStats.SecondaryStats[SecondaryStatType.SpellDamage].BaseValue + PlayerManager.MyInstance.MyCharacter.CharacterStats.SecondaryStats[SecondaryStatType.Damage].BaseValue)) +
+                    (PlayerManager.Instance.MyCharacter.CharacterStats.SecondaryStats[SecondaryStatType.SpellDamage].BaseValue + PlayerManager.Instance.MyCharacter.CharacterStats.SecondaryStats[SecondaryStatType.Damage].BaseValue) +
+                    (((PlayerManager.Instance.MyCharacter.CharacterStats.SecondaryStats[SecondaryStatType.SpellDamage].CurrentValue + PlayerManager.Instance.MyCharacter.CharacterStats.SecondaryStats[SecondaryStatType.Damage].CurrentValue) - (PlayerManager.Instance.MyCharacter.CharacterStats.SecondaryStats[SecondaryStatType.SpellDamage].BaseValue + PlayerManager.Instance.MyCharacter.CharacterStats.SecondaryStats[SecondaryStatType.Damage].BaseValue)) > 0 ? " <color=green>+" : " <color=red>") +
+                    ((PlayerManager.Instance.MyCharacter.CharacterStats.SecondaryStats[SecondaryStatType.SpellDamage].CurrentValue + PlayerManager.Instance.MyCharacter.CharacterStats.SecondaryStats[SecondaryStatType.Damage].CurrentValue) - (PlayerManager.Instance.MyCharacter.CharacterStats.SecondaryStats[SecondaryStatType.SpellDamage].BaseValue + PlayerManager.Instance.MyCharacter.CharacterStats.SecondaryStats[SecondaryStatType.Damage].BaseValue)) +
                     "</color> )";
             }
             updateString += "\n";
 
             updateString += "Critical Hit Chance: " +
-                PlayerManager.MyInstance.MyCharacter.CharacterStats.SecondaryStats[SecondaryStatType.CriticalStrike].CurrentValue + "%";
-            if (PlayerManager.MyInstance.MyCharacter.CharacterStats.SecondaryStats[SecondaryStatType.CriticalStrike].CurrentValue != PlayerManager.MyInstance.MyCharacter.CharacterStats.SecondaryStats[SecondaryStatType.CriticalStrike].BaseValue) {
+                PlayerManager.Instance.MyCharacter.CharacterStats.SecondaryStats[SecondaryStatType.CriticalStrike].CurrentValue + "%";
+            if (PlayerManager.Instance.MyCharacter.CharacterStats.SecondaryStats[SecondaryStatType.CriticalStrike].CurrentValue != PlayerManager.Instance.MyCharacter.CharacterStats.SecondaryStats[SecondaryStatType.CriticalStrike].BaseValue) {
                 updateString += " ( " +
-                    PlayerManager.MyInstance.MyCharacter.CharacterStats.SecondaryStats[SecondaryStatType.CriticalStrike].BaseValue +
-                    ((PlayerManager.MyInstance.MyCharacter.CharacterStats.SecondaryStats[SecondaryStatType.CriticalStrike].CurrentValue - PlayerManager.MyInstance.MyCharacter.CharacterStats.SecondaryStats[SecondaryStatType.CriticalStrike].BaseValue) > 0 ? " <color=green>+" : " <color=red>")
-                    + (PlayerManager.MyInstance.MyCharacter.CharacterStats.SecondaryStats[SecondaryStatType.CriticalStrike].CurrentValue - PlayerManager.MyInstance.MyCharacter.CharacterStats.SecondaryStats[SecondaryStatType.CriticalStrike].BaseValue) + "</color> )";
+                    PlayerManager.Instance.MyCharacter.CharacterStats.SecondaryStats[SecondaryStatType.CriticalStrike].BaseValue +
+                    ((PlayerManager.Instance.MyCharacter.CharacterStats.SecondaryStats[SecondaryStatType.CriticalStrike].CurrentValue - PlayerManager.Instance.MyCharacter.CharacterStats.SecondaryStats[SecondaryStatType.CriticalStrike].BaseValue) > 0 ? " <color=green>+" : " <color=red>")
+                    + (PlayerManager.Instance.MyCharacter.CharacterStats.SecondaryStats[SecondaryStatType.CriticalStrike].CurrentValue - PlayerManager.Instance.MyCharacter.CharacterStats.SecondaryStats[SecondaryStatType.CriticalStrike].BaseValue) + "</color> )";
             }
             updateString += "\n";
 
             updateString += "Accuracy: " +
-                LevelEquations.GetSecondaryStatForCharacter(SecondaryStatType.Accuracy, PlayerManager.MyInstance.MyCharacter.CharacterStats) +"%";
-            if (PlayerManager.MyInstance.MyCharacter.CharacterStats.SecondaryStats[SecondaryStatType.Accuracy].CurrentValue != PlayerManager.MyInstance.MyCharacter.CharacterStats.SecondaryStats[SecondaryStatType.Accuracy].BaseValue) {
+                LevelEquations.GetSecondaryStatForCharacter(SecondaryStatType.Accuracy, PlayerManager.Instance.MyCharacter.CharacterStats) +"%";
+            if (PlayerManager.Instance.MyCharacter.CharacterStats.SecondaryStats[SecondaryStatType.Accuracy].CurrentValue != PlayerManager.Instance.MyCharacter.CharacterStats.SecondaryStats[SecondaryStatType.Accuracy].BaseValue) {
                 updateString += " ( " +
-                    PlayerManager.MyInstance.MyCharacter.CharacterStats.SecondaryStats[SecondaryStatType.Accuracy].BaseValue +
-                    ((PlayerManager.MyInstance.MyCharacter.CharacterStats.SecondaryStats[SecondaryStatType.Accuracy].CurrentValue - PlayerManager.MyInstance.MyCharacter.CharacterStats.SecondaryStats[SecondaryStatType.Accuracy].BaseValue) > 0 ? " <color=green>+" : " <color=red>")
-                    + (PlayerManager.MyInstance.MyCharacter.CharacterStats.SecondaryStats[SecondaryStatType.Accuracy].CurrentValue - PlayerManager.MyInstance.MyCharacter.CharacterStats.SecondaryStats[SecondaryStatType.Accuracy].BaseValue) + "</color> )";
+                    PlayerManager.Instance.MyCharacter.CharacterStats.SecondaryStats[SecondaryStatType.Accuracy].BaseValue +
+                    ((PlayerManager.Instance.MyCharacter.CharacterStats.SecondaryStats[SecondaryStatType.Accuracy].CurrentValue - PlayerManager.Instance.MyCharacter.CharacterStats.SecondaryStats[SecondaryStatType.Accuracy].BaseValue) > 0 ? " <color=green>+" : " <color=red>")
+                    + (PlayerManager.Instance.MyCharacter.CharacterStats.SecondaryStats[SecondaryStatType.Accuracy].CurrentValue - PlayerManager.Instance.MyCharacter.CharacterStats.SecondaryStats[SecondaryStatType.Accuracy].BaseValue) + "</color> )";
             }
             updateString += "\n";
 
             updateString += "Attack/Casting Speed: " +
-                LevelEquations.GetSecondaryStatForCharacter(SecondaryStatType.Speed, PlayerManager.MyInstance.MyCharacter.CharacterStats) + "%";
-            if (PlayerManager.MyInstance.MyCharacter.CharacterStats.SecondaryStats[SecondaryStatType.Speed].CurrentValue != PlayerManager.MyInstance.MyCharacter.CharacterStats.SecondaryStats[SecondaryStatType.Speed].BaseValue) {
+                LevelEquations.GetSecondaryStatForCharacter(SecondaryStatType.Speed, PlayerManager.Instance.MyCharacter.CharacterStats) + "%";
+            if (PlayerManager.Instance.MyCharacter.CharacterStats.SecondaryStats[SecondaryStatType.Speed].CurrentValue != PlayerManager.Instance.MyCharacter.CharacterStats.SecondaryStats[SecondaryStatType.Speed].BaseValue) {
                 updateString += " ( "
-                    //PlayerManager.MyInstance.MyCharacter.CharacterStats.SecondaryStats[SecondaryStatType.Speed].BaseValue +
-                    + ((PlayerManager.MyInstance.MyCharacter.CharacterStats.SecondaryStats[SecondaryStatType.Speed].CurrentValue - PlayerManager.MyInstance.MyCharacter.CharacterStats.SecondaryStats[SecondaryStatType.Speed].BaseValue) > 0 ? "<color=green>+" : " + <color=red>")
-                    + (PlayerManager.MyInstance.MyCharacter.CharacterStats.SecondaryStats[SecondaryStatType.Speed].CurrentValue - PlayerManager.MyInstance.MyCharacter.CharacterStats.SecondaryStats[SecondaryStatType.Speed].BaseValue) + "%</color> )";
+                    //PlayerManager.Instance.MyCharacter.CharacterStats.SecondaryStats[SecondaryStatType.Speed].BaseValue +
+                    + ((PlayerManager.Instance.MyCharacter.CharacterStats.SecondaryStats[SecondaryStatType.Speed].CurrentValue - PlayerManager.Instance.MyCharacter.CharacterStats.SecondaryStats[SecondaryStatType.Speed].BaseValue) > 0 ? "<color=green>+" : " + <color=red>")
+                    + (PlayerManager.Instance.MyCharacter.CharacterStats.SecondaryStats[SecondaryStatType.Speed].CurrentValue - PlayerManager.Instance.MyCharacter.CharacterStats.SecondaryStats[SecondaryStatType.Speed].BaseValue) + "%</color> )";
             }
             updateString += "\n";
 
-            updateString += "Movement Speed: " + Mathf.Clamp(PlayerManager.MyInstance.MyCharacter.CharacterStats.RunSpeed, 0, PlayerManager.MyInstance.MaxMovementSpeed).ToString("F2") + " (m/s)\n\n";
+            updateString += "Movement Speed: " + Mathf.Clamp(PlayerManager.Instance.MyCharacter.CharacterStats.RunSpeed, 0, PlayerManager.Instance.MaxMovementSpeed).ToString("F2") + " (m/s)\n\n";
 
             statsDescription.text = updateString;
         }
@@ -287,15 +288,15 @@ namespace AnyRPG {
 
 
             //spawn correct preview unit
-            CharacterCreatorManager.MyInstance.HandleOpenWindow(PlayerManager.MyInstance.MyCharacter.UnitProfile);
+            CharacterCreatorManager.Instance.HandleOpenWindow(PlayerManager.Instance.MyCharacter.UnitProfile);
 
             // testing do this earlier
             LoadUMARecipe();
 
-            if (CameraManager.MyInstance != null && CameraManager.MyInstance.CharacterPreviewCamera != null) {
+            if (CameraManager.Instance != null && CameraManager.Instance.CharacterPreviewCamera != null) {
                 //Debug.Log("CharacterPanel.SetPreviewTarget(): preview camera was available, setting target");
                 if (MyPreviewCameraController != null) {
-                    MyPreviewCameraController.InitializeCamera(CharacterCreatorManager.MyInstance.PreviewUnitController);
+                    MyPreviewCameraController.InitializeCamera(CharacterCreatorManager.Instance.PreviewUnitController);
                     MyPreviewCameraController.OnTargetReady += TargetReadyCallback;
                 } else {
                     Debug.LogError("CharacterPanel.SetPreviewTarget(): Character Preview Camera Controller is null. Please set it in the inspector");
@@ -310,17 +311,17 @@ namespace AnyRPG {
         }
 
         public void LoadUMARecipe() {
-            SaveManager.MyInstance.LoadUMASettings(CharacterCreatorManager.MyInstance.PreviewUnitController.DynamicCharacterAvatar, false);
+            SaveManager.Instance.LoadUMASettings(CharacterCreatorManager.Instance.PreviewUnitController.DynamicCharacterAvatar, false);
 
         }
 
         public void TargetReadyCallbackCommon() {
             //Debug.Log("CharacterCreatorPanel.TargetReadyCallbackCommon(" + updateCharacterButton + ")");
 
-            CharacterEquipmentManager characterEquipmentManager = CharacterCreatorManager.MyInstance.PreviewUnitController.CharacterUnit.BaseCharacter.CharacterEquipmentManager;
+            CharacterEquipmentManager characterEquipmentManager = CharacterCreatorManager.Instance.PreviewUnitController.CharacterUnit.BaseCharacter.CharacterEquipmentManager;
             if (characterEquipmentManager != null) {
-                if (PlayerManager.MyInstance != null && PlayerManager.MyInstance.MyCharacter != null && PlayerManager.MyInstance.MyCharacter.CharacterEquipmentManager != null) {
-                    characterEquipmentManager.CurrentEquipment = PlayerManager.MyInstance.MyCharacter.CharacterEquipmentManager.CurrentEquipment;
+                if (PlayerManager.Instance != null && PlayerManager.Instance.MyCharacter != null && PlayerManager.Instance.MyCharacter.CharacterEquipmentManager != null) {
+                    characterEquipmentManager.CurrentEquipment = PlayerManager.Instance.MyCharacter.CharacterEquipmentManager.CurrentEquipment;
                     characterEquipmentManager.EquipEquipmentModels();
                 }
             }
@@ -335,7 +336,7 @@ namespace AnyRPG {
         public void OpenPetWindow() {
             //Debug.Log("CharacterPanel.OpenReputationWindow()");
             PopupWindowManager.Instance.characterPanelWindow.CloseWindow();
-            SystemWindowManager.MyInstance.petSpawnWindow.ToggleOpenClose();
+            SystemWindowManager.Instance.petSpawnWindow.ToggleOpenClose();
         }
 
         public void OpenSkillsWindow() {

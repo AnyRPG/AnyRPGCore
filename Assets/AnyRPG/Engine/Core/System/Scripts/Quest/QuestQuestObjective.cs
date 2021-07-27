@@ -24,7 +24,7 @@ namespace AnyRPG {
                 //Debug.Log("QuestQuestObjective.UpdateCompletionCount() : COMPLETEBEFORE = TRUE");
                 return;
             }
-            if (SystemQuestManager.MyInstance != null) {
+            if (SystemQuestManager.Instance != null) {
                 if (questObjective == null) {
                     //Debug.Log("QuestQuestObjective.UpdateCompletionCount(): questObjective is null");
                     return;
@@ -35,10 +35,10 @@ namespace AnyRPG {
                     quest.CheckCompletion(true, printMessages);
                     //questObjective.CheckCompletion(true, printMessages);
                     if (CurrentAmount <= MyAmount && !questObjective.MyIsAchievement && printMessages == true && CurrentAmount != 0) {
-                        MessageFeedManager.MyInstance.WriteMessage(string.Format("{0}: {1}/{2}", questObjective.DisplayName, Mathf.Clamp(CurrentAmount, 0, MyAmount), MyAmount));
+                        MessageFeedManager.Instance.WriteMessage(string.Format("{0}: {1}/{2}", questObjective.DisplayName, Mathf.Clamp(CurrentAmount, 0, MyAmount), MyAmount));
                     }
                     if (completeBefore == false && IsComplete && !questObjective.MyIsAchievement && printMessages == true) {
-                        MessageFeedManager.MyInstance.WriteMessage(string.Format("Complete {1}: Objective Complete", CurrentAmount, questObjective.DisplayName));
+                        MessageFeedManager.Instance.WriteMessage(string.Format("Complete {1}: Objective Complete", CurrentAmount, questObjective.DisplayName));
                     }
                 }
             }
@@ -49,7 +49,7 @@ namespace AnyRPG {
             //Debug.Log("QuestQuestObjective.OnAcceptQuest(" + quest.MyName + ")");
             base.OnAcceptQuest(quest, printMessages);
             // not needed anymore ?
-            //SystemEventManager.MyInstance.OnQuestStatusUpdated += HandleQuestStatusUpdated;
+            //SystemEventManager.Instance.OnQuestStatusUpdated += HandleQuestStatusUpdated;
             questObjective.OnQuestStatusUpdated += HandleQuestStatusUpdated;
             UpdateCompletionCount(printMessages);
         }
@@ -57,7 +57,7 @@ namespace AnyRPG {
         public override void OnAbandonQuest() {
             base.OnAbandonQuest();
             // not needed anymore ?
-            //SystemEventManager.MyInstance.OnQuestStatusUpdated -= HandleQuestStatusUpdated;
+            //SystemEventManager.Instance.OnQuestStatusUpdated -= HandleQuestStatusUpdated;
             questObjective.OnQuestStatusUpdated -= HandleQuestStatusUpdated;
         }
 
@@ -67,7 +67,7 @@ namespace AnyRPG {
             base.SetupScriptableObjects();
             questObjective = null;
             if (MyType != null && MyType != string.Empty) {
-                Quest tmpQuestObjective = SystemQuestManager.MyInstance.GetResource(MyType);
+                Quest tmpQuestObjective = SystemQuestManager.Instance.GetResource(MyType);
                 if (tmpQuestObjective != null) {
                     questObjective = tmpQuestObjective;
                 } else {

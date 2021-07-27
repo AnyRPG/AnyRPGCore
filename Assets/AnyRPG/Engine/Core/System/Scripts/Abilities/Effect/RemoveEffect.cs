@@ -49,7 +49,7 @@ namespace AnyRPG {
 
             if (effectTypeNames != null) {
                 foreach (string statusEffectType in effectTypeNames) {
-                    StatusEffectType tmpStatusEffectType = SystemStatusEffectTypeManager.MyInstance.GetResource(statusEffectType);
+                    StatusEffectType tmpStatusEffectType = SystemStatusEffectTypeManager.Instance.GetResource(statusEffectType);
                     if (tmpStatusEffectType != null) {
                         effectTypes.Add(tmpStatusEffectType);
                     } else {

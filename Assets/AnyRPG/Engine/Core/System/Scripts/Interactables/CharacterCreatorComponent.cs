@@ -18,9 +18,9 @@ namespace AnyRPG {
         }
 
         public void CleanupWindowEventSubscriptions() {
-            if (SystemWindowManager.MyInstance != null && SystemWindowManager.MyInstance.characterCreatorWindow != null && SystemWindowManager.MyInstance.characterCreatorWindow.CloseableWindowContents != null) {
-                (SystemWindowManager.MyInstance.characterCreatorWindow.CloseableWindowContents as CharacterCreatorWindowPanel).OnConfirmAction -= HandleConfirmAction;
-                (SystemWindowManager.MyInstance.characterCreatorWindow.CloseableWindowContents as CharacterCreatorWindowPanel).OnCloseWindow -= CleanupEventSubscriptions;
+            if (SystemWindowManager.Instance != null && SystemWindowManager.Instance.characterCreatorWindow != null && SystemWindowManager.Instance.characterCreatorWindow.CloseableWindowContents != null) {
+                (SystemWindowManager.Instance.characterCreatorWindow.CloseableWindowContents as CharacterCreatorWindowPanel).OnConfirmAction -= HandleConfirmAction;
+                (SystemWindowManager.Instance.characterCreatorWindow.CloseableWindowContents as CharacterCreatorWindowPanel).OnCloseWindow -= CleanupEventSubscriptions;
             }
         }
 
@@ -32,9 +32,9 @@ namespace AnyRPG {
         public override bool Interact(CharacterUnit source, int optionIndex = 0) {
             // was there a reason why we didn't have base.Interact here before or just an oversight?
             base.Interact(source, optionIndex);
-            SystemWindowManager.MyInstance.characterCreatorWindow.OpenWindow();
-            (SystemWindowManager.MyInstance.characterCreatorWindow.CloseableWindowContents as CharacterCreatorWindowPanel).OnConfirmAction += HandleConfirmAction;
-            (SystemWindowManager.MyInstance.characterCreatorWindow.CloseableWindowContents as CharacterCreatorWindowPanel).OnCloseWindow += CleanupEventSubscriptions;
+            SystemWindowManager.Instance.characterCreatorWindow.OpenWindow();
+            (SystemWindowManager.Instance.characterCreatorWindow.CloseableWindowContents as CharacterCreatorWindowPanel).OnConfirmAction += HandleConfirmAction;
+            (SystemWindowManager.Instance.characterCreatorWindow.CloseableWindowContents as CharacterCreatorWindowPanel).OnCloseWindow += CleanupEventSubscriptions;
             return true;
         }
 
@@ -44,7 +44,7 @@ namespace AnyRPG {
 
         public override void StopInteract() {
             base.StopInteract();
-            SystemWindowManager.MyInstance.characterCreatorWindow.CloseWindow();
+            SystemWindowManager.Instance.characterCreatorWindow.CloseWindow();
         }
 
         public override bool HasMiniMapText() {

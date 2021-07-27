@@ -199,8 +199,8 @@ namespace AnyRPG {
                 if (movementSoundArea != null && movementSoundArea.MovementLoopProfile != null) {
                     return movementSoundArea.MovementLoopProfile;
                 }
-                if (LevelManager.MyInstance.GetActiveSceneNode()?.MovementLoopProfile != null) {
-                    return LevelManager.MyInstance.GetActiveSceneNode().MovementLoopProfile;
+                if (LevelManager.Instance.GetActiveSceneNode()?.MovementLoopProfile != null) {
+                    return LevelManager.Instance.GetActiveSceneNode().MovementLoopProfile;
                 }
                 if (characterUnit?.BaseCharacter != null && unitProfile?.MovementAudioProfiles != null && unitProfile.MovementAudioProfiles.Count > 0) {
                     return unitProfile.MovementAudioProfiles[0];
@@ -215,8 +215,8 @@ namespace AnyRPG {
                     //Debug.Log(gameObject.name + ".CharacterUnit.GetMovementHitProfile: return movementSoundArea.MovementHitProfile");
                     return movementSoundArea.MovementHitProfile;
                 }
-                if (LevelManager.MyInstance.GetActiveSceneNode()?.MovementHitProfile != null) {
-                    return LevelManager.MyInstance.GetActiveSceneNode().MovementHitProfile;
+                if (LevelManager.Instance.GetActiveSceneNode()?.MovementHitProfile != null) {
+                    return LevelManager.Instance.GetActiveSceneNode().MovementHitProfile;
                 }
                 if (characterUnit.BaseCharacter != null && unitProfile != null && unitProfile.MovementAudioProfiles != null && unitProfile.MovementAudioProfiles.Count > 0) {
                     return unitProfile.MovementAudioProfiles[0];
@@ -379,7 +379,7 @@ namespace AnyRPG {
                 }
                 //Debug.Log(gameObject.name + ".UnitController.SetDefaultLayer(): unitModel: " + (unitModel == null ? "null" : unitModel.name));
                 if (unitModel != null && !IsInLayerMask(unitModel.layer, finalmask)) {
-                    UIManager.MyInstance.SetLayerRecursive(unitModel, defaultLayer);
+                    UIManager.Instance.SetLayerRecursive(unitModel, defaultLayer);
                     //Debug.Log(gameObject.name + ".UnitController.SetDefaultLayer(): model was not set to correct layer: " + layerName + ". Setting automatically");
                 }
             }
@@ -510,7 +510,7 @@ namespace AnyRPG {
 
             }
             if (SystemConfigurationManager.Instance.UseThirdPartyMovementControl) {
-                KeyBindManager.MyInstance.SendKeyBindEvents();
+                KeyBindManager.Instance.SendKeyBindEvents();
             }
         }
 
@@ -552,7 +552,7 @@ namespace AnyRPG {
 
         public void ConfigurePlayer() {
             //Debug.Log(gameObject.name + ".UnitController.ConfigurePlayer()");
-            PlayerManager.MyInstance.SetUnitController(this);
+            PlayerManager.Instance.SetUnitController(this);
         }
 
         public void SetUnitControllerMode(UnitControllerMode unitControllerMode) {
@@ -657,7 +657,7 @@ namespace AnyRPG {
 
             // now that the model is unequipped, return the model to the pool
             if (unitProfile?.UnitPrefabProps?.ModelPrefab != null) {
-                ObjectPooler.MyInstance.ReturnObjectToPool(unitModel);
+                ObjectPooler.Instance.ReturnObjectToPool(unitModel);
             }
 
             persistentObjectComponent.Cleanup();
@@ -666,7 +666,7 @@ namespace AnyRPG {
             }
             OnUnitDestroy(unitProfile);
             ResetSettings();
-            ObjectPooler.MyInstance.ReturnObjectToPool(gameObject);
+            ObjectPooler.Instance.ReturnObjectToPool(gameObject);
         }
 
         /// <summary>
@@ -1371,16 +1371,16 @@ namespace AnyRPG {
             if (MyCombatStrategy != null) {
                 if (MyCombatStrategy.HasMusic() == true) {
                     //Debug.Log(gameObject.name + ".AIController.ResetCombat(): attempting to turn off fight music");
-                    AudioProfile musicProfile = LevelManager.MyInstance.GetActiveSceneNode().BackgroundMusicProfile;
+                    AudioProfile musicProfile = LevelManager.Instance.GetActiveSceneNode().BackgroundMusicProfile;
                     if (musicProfile != null) {
                         //Debug.Log(aiController.gameObject.name + "ReturnState.Enter(): music profile was set");
-                        if (musicProfile.AudioClip != null && AudioManager.MyInstance.MusicAudioSource.clip != musicProfile.AudioClip) {
+                        if (musicProfile.AudioClip != null && AudioManager.Instance.MusicAudioSource.clip != musicProfile.AudioClip) {
                             //Debug.Log(aiController.gameObject.name + "ReturnState.Enter(): playing default music");
-                            AudioManager.MyInstance.PlayMusic(musicProfile.AudioClip);
+                            AudioManager.Instance.PlayMusic(musicProfile.AudioClip);
                         }
                     } else {
                         // There was no music, turn it off instead
-                        AudioManager.MyInstance.StopMusic();
+                        AudioManager.Instance.StopMusic();
                     }
                 }
                 ResetCombatStrategy();
@@ -1767,7 +1767,7 @@ namespace AnyRPG {
             if (miniMapIndicatorReady == true && miniMapIndicator != null) {
                 //miniMapIndicator.transform.forward = new Vector3(0f, transform.forward.x, transform.forward.z);
                 //miniMapIndicator.transform.rotation = Quaternion.Euler(0, transform.eulerAngles.y, 0);
-                //miniMapIndicator.transform.rotation = Quaternion.Euler(0, 0, transform.eulerAngles.y * -1f) * Quaternion.LookRotation(SystemConfigurationManager.MyInstance.PlayerMiniMapIconForward);
+                //miniMapIndicator.transform.rotation = Quaternion.Euler(0, 0, transform.eulerAngles.y * -1f) * Quaternion.LookRotation(SystemConfigurationManager.Instance.PlayerMiniMapIconForward);
                 miniMapIndicator.transform.rotation = Quaternion.Euler(0, 0, (transform.eulerAngles.y - SystemConfigurationManager.Instance.PlayerMiniMapIconRotation) * -1f);
                 if (mainMapIndicator != null) {
                     mainMapIndicator.transform.rotation = miniMapIndicator.transform.rotation;

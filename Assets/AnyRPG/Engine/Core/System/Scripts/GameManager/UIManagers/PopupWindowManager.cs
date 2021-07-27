@@ -11,12 +11,12 @@ namespace AnyRPG {
 
         public static PopupWindowManager Instance {
             get {
-                if (instance == null) {
-                    instance = FindObjectOfType<PopupWindowManager>();
-                }
-
                 return instance;
             }
+        }
+
+        private void Awake() {
+            instance = this;
         }
         #endregion
 
@@ -51,43 +51,43 @@ namespace AnyRPG {
         void Update() {
             //Debug.Log("PopupWindowManager.Update()");
 
-            if (PlayerManager.MyInstance.PlayerUnitSpawned == false) {
+            if (PlayerManager.Instance.PlayerUnitSpawned == false) {
                 // if there is no player, these windows shouldn't be open
                 return;
             }
             // don't open windows while binding keys
-            if (KeyBindManager.MyInstance.MyBindName == string.Empty) {
-                if (InputManager.MyInstance.KeyBindWasPressed("INVENTORY")) {
+            if (KeyBindManager.Instance.MyBindName == string.Empty) {
+                if (InputManager.Instance.KeyBindWasPressed("INVENTORY")) {
                     InventoryManager.Instance.OpenClose();
                 }
-                if (InputManager.MyInstance.KeyBindWasPressed("ABILITYBOOK")) {
+                if (InputManager.Instance.KeyBindWasPressed("ABILITYBOOK")) {
                     abilityBookWindow.ToggleOpenClose();
                 }
-                if (InputManager.MyInstance.KeyBindWasPressed("SKILLBOOK")) {
+                if (InputManager.Instance.KeyBindWasPressed("SKILLBOOK")) {
                     skillBookWindow.ToggleOpenClose();
                 }
-                if (InputManager.MyInstance.KeyBindWasPressed("ACHIEVEMENTBOOK")) {
+                if (InputManager.Instance.KeyBindWasPressed("ACHIEVEMENTBOOK")) {
                     achievementListWindow.ToggleOpenClose();
                 }
-                if (InputManager.MyInstance.KeyBindWasPressed("REPUTATIONBOOK")) {
+                if (InputManager.Instance.KeyBindWasPressed("REPUTATIONBOOK")) {
                     reputationBookWindow.ToggleOpenClose();
                 }
-                if (InputManager.MyInstance.KeyBindWasPressed("CURRENCYPANEL")) {
+                if (InputManager.Instance.KeyBindWasPressed("CURRENCYPANEL")) {
                     currencyListWindow.ToggleOpenClose();
                 }
-                if (InputManager.MyInstance.KeyBindWasPressed("CHARACTERPANEL")) {
+                if (InputManager.Instance.KeyBindWasPressed("CHARACTERPANEL")) {
                     characterPanelWindow.ToggleOpenClose();
                 }
-                if (InputManager.MyInstance.KeyBindWasPressed("QUESTLOG")) {
+                if (InputManager.Instance.KeyBindWasPressed("QUESTLOG")) {
                     questLogWindow.ToggleOpenClose();
                 }
-                if (InputManager.MyInstance.KeyBindWasPressed("MAINMAP")) {
+                if (InputManager.Instance.KeyBindWasPressed("MAINMAP")) {
                     //Debug.Log("mainmap was pressed");
                     mainMapWindow.ToggleOpenClose();
                 }
             }
 
-            if (InputManager.MyInstance.KeyBindWasPressed("CANCEL")) {
+            if (InputManager.Instance.KeyBindWasPressed("CANCEL")) {
                 CloseAllWindows();
             }
         }

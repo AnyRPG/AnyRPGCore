@@ -18,7 +18,7 @@ namespace AnyRPG {
             if (SystemConfigurationManager.Instance.UseNewGameWindow == true) {
                 divider.SetActive(false);
                 confirmGameButton.gameObject.SetActive(true);
-                confirmGameButton.AddSaveData(NewGamePanel.MyInstance.SaveData);
+                confirmGameButton.AddSaveData(NewGamePanel.Instance.SaveData);
             } else {
                 divider.SetActive(true);
                 confirmGameButton.gameObject.SetActive(false);
@@ -27,21 +27,21 @@ namespace AnyRPG {
 
         public void CancelAction() {
             //Debug.Log("NewGameMenuController.CancelAction()");
-            SystemWindowManager.MyInstance.confirmNewGameMenuWindow.CloseWindow();
+            SystemWindowManager.Instance.confirmNewGameMenuWindow.CloseWindow();
         }
 
         public void ConfirmAction() {
             //Debug.Log("NewGameMenuController.ConfirmAction()");
-            SystemWindowManager.MyInstance.confirmNewGameMenuWindow.CloseWindow();
-            SystemWindowManager.MyInstance.loadGameWindow.CloseWindow();
-            SystemWindowManager.MyInstance.newGameWindow.CloseWindow();
+            SystemWindowManager.Instance.confirmNewGameMenuWindow.CloseWindow();
+            SystemWindowManager.Instance.loadGameWindow.CloseWindow();
+            SystemWindowManager.Instance.newGameWindow.CloseWindow();
             if (SystemConfigurationManager.Instance.UseNewGameWindow == true) {
-                SaveManager.MyInstance.PerformInventorySetup();
-                SaveManager.MyInstance.SaveEquippedBagData(NewGamePanel.MyInstance.SaveData);
-                SaveManager.MyInstance.SaveInventorySlotData(NewGamePanel.MyInstance.SaveData);
-                SaveManager.MyInstance.LoadGame(NewGamePanel.MyInstance.SaveData);
+                SaveManager.Instance.PerformInventorySetup();
+                SaveManager.Instance.SaveEquippedBagData(NewGamePanel.Instance.SaveData);
+                SaveManager.Instance.SaveInventorySlotData(NewGamePanel.Instance.SaveData);
+                SaveManager.Instance.LoadGame(NewGamePanel.Instance.SaveData);
             } else {
-                SaveManager.MyInstance.TryNewGame();
+                SaveManager.Instance.TryNewGame();
             }
         }
 

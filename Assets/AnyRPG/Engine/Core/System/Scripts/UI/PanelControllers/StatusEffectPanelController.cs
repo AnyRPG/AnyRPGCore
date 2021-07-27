@@ -39,7 +39,7 @@ namespace AnyRPG {
             targetUnitController = null;
             foreach (StatusEffectNodeScript _statusEffectNodeScript in statusEffectNodeScripts) {
                 if (_statusEffectNodeScript != null) {
-                    ObjectPooler.MyInstance.ReturnObjectToPool(_statusEffectNodeScript.gameObject);
+                    ObjectPooler.Instance.ReturnObjectToPool(_statusEffectNodeScript.gameObject);
                 }
             }
             statusEffectNodeScripts.Clear();
@@ -92,7 +92,7 @@ namespace AnyRPG {
             }
 
             // determine if a node with that status effect already exists
-            GameObject statusNode = ObjectPooler.MyInstance.GetPooledObject(statusNodePrefab, transform);
+            GameObject statusNode = ObjectPooler.Instance.GetPooledObject(statusNodePrefab, transform);
             StatusEffectNodeScript statusEffectNodeScript = statusNode.GetComponent<StatusEffectNodeScript>();
             if (statusEffectNodeScript != null) {
                 statusEffectNodeScript.Initialize(statusEffectNode, target);

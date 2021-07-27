@@ -14,16 +14,15 @@ namespace AnyRPG {
         #region Singleton
         private static QuestLog instance;
 
-        public static QuestLog MyInstance {
+        public static QuestLog Instance {
             get {
-                if (instance == null) {
-                    instance = FindObjectOfType<QuestLog>();
-                }
-
                 return instance;
             }
         }
 
+        private void Awake() {
+            instance = this;
+        }
         #endregion
 
         [SerializeField]
@@ -40,7 +39,7 @@ namespace AnyRPG {
         public void LoadQuest(QuestSaveData questSaveData) {
             //Debug.Log("QuestLog.LoadQuest(" + questSaveData.MyName + ")");
 
-            Quest quest = SystemQuestManager.MyInstance.GetResource(questSaveData.MyName);
+            Quest quest = SystemQuestManager.Instance.GetResource(questSaveData.MyName);
             if (quest == null) {
                 //Debug.Log("QuestLog.LoadQuest(" + questSaveData.MyName + "): COULD NOT FIND QUEST!!!");
                 return;
@@ -106,7 +105,7 @@ namespace AnyRPG {
         public void AcceptQuest(QuestSaveData questSaveData) {
             //Debug.Log("QuestLog.LoadQuest(" + questSaveData.MyName + ")");
 
-            Quest quest = SystemQuestManager.MyInstance.GetResource(questSaveData.MyName);
+            Quest quest = SystemQuestManager.Instance.GetResource(questSaveData.MyName);
             if (quest == null) {
                 //Debug.Log("QuestLog.LoadQuest(" + questSaveData.MyName + "): COULD NOT FIND QUEST!!!");
                 return;

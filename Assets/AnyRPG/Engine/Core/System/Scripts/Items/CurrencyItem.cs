@@ -25,7 +25,7 @@ namespace AnyRPG {
                 return false;
             }
             if (currencyNode.currency != null) {
-                PlayerManager.MyInstance.MyCharacter.CharacterCurrencyManager.AddCurrency(currencyNode.currency, currencyNode.MyAmount);
+                PlayerManager.Instance.MyCharacter.CharacterCurrencyManager.AddCurrency(currencyNode.currency, currencyNode.MyAmount);
             }
             Remove();
             return true;
@@ -43,7 +43,7 @@ namespace AnyRPG {
         public override void SetupScriptableObjects() {
             base.SetupScriptableObjects();
             if (gainCurrencyName != null && gainCurrencyName != string.Empty) {
-                Currency tmpCurrency = SystemCurrencyManager.MyInstance.GetResource(gainCurrencyName);
+                Currency tmpCurrency = SystemCurrencyManager.Instance.GetResource(gainCurrencyName);
                 if (tmpCurrency != null) {
                     currencyNode.currency = tmpCurrency;
                     currencyNode.MyAmount = gainCurrencyAmount;

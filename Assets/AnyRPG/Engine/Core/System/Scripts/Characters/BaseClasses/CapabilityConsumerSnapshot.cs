@@ -59,7 +59,7 @@ namespace AnyRPG {
         }
 
         public CapabilityConsumerSnapshot() {
-            //capabilityProviders.Add(SystemConfigurationManager.MyInstance);
+            //capabilityProviders.Add(SystemConfigurationManager.Instance);
         }
 
         public List<StatusEffect> GetTraitList() {

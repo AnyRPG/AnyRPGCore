@@ -9,7 +9,7 @@ namespace AnyRPG {
         #region Singleton
         private static SystemPowerResourceManager instance;
 
-        public static SystemPowerResourceManager MyInstance {
+        public static SystemPowerResourceManager Instance {
             get {
                 if (instance == null) {
                     instance = FindObjectOfType<SystemPowerResourceManager>();

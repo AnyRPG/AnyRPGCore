@@ -51,7 +51,7 @@ namespace AnyRPG {
             //Debug.Log("AbilityBookUI.CreatePages()");
             ClearPages();
             List<BaseAbility> page = new List<BaseAbility>();
-            foreach (BaseAbility newAbility in PlayerManager.MyInstance.MyCharacter.CharacterAbilityManager.AbilityList.Values) {
+            foreach (BaseAbility newAbility in PlayerManager.Instance.MyCharacter.CharacterAbilityManager.AbilityList.Values) {
                 if (newAbility.RequirementsAreMet()) {
                     page.Add(newAbility);
                     if (page.Count == pageSize) {

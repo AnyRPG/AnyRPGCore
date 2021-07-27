@@ -14,14 +14,14 @@ namespace AnyRPG {
         #region Singleton
         private static SaveManager instance;
 
-        public static SaveManager MyInstance {
+        public static SaveManager Instance {
             get {
-                if (instance == null) {
-                    instance = FindObjectOfType<SaveManager>();
-                }
-
                 return instance;
             }
+        }
+
+        private void Awake() {
+            instance = this;
         }
         #endregion
 
@@ -68,7 +68,7 @@ namespace AnyRPG {
             if (eventSubscriptionsInitialized) {
                 return;
             }
-            SystemEventManager.MyInstance.OnEquipmentChanged += SaveUMASettings;
+            SystemEventManager.Instance.OnEquipmentChanged += SaveUMASettings;
             eventSubscriptionsInitialized = true;
         }
 
@@ -77,7 +77,7 @@ namespace AnyRPG {
             if (!eventSubscriptionsInitialized) {
                 return;
             }
-            SystemEventManager.MyInstance.OnEquipmentChanged -= SaveUMASettings;
+            SystemEventManager.Instance.OnEquipmentChanged -= SaveUMASettings;
             eventSubscriptionsInitialized = false;
         }
 
@@ -236,20 +236,20 @@ namespace AnyRPG {
 
         public void SaveUMASettings() {
             //Debug.Log("SaveManager.SaveUMASettings()");
-            if (PlayerManager.MyInstance == null) {
+            if (PlayerManager.Instance == null) {
                 return;
             }
-            if (PlayerManager.MyInstance.UnitController == null) {
+            if (PlayerManager.Instance.UnitController == null) {
                 return;
             }
-            if (PlayerManager.MyInstance.UnitController.DynamicCharacterAvatar != null) {
+            if (PlayerManager.Instance.UnitController.DynamicCharacterAvatar != null) {
                 //Debug.Log("SaveManager.SaveUMASettings(): avatar exists");
                 if (recipeString == string.Empty) {
                     //Debug.Log("SaveManager.SaveUMASettings(): recipestring is empty");
-                    recipeString = PlayerManager.MyInstance.UnitController.DynamicCharacterAvatar.GetCurrentRecipe();
+                    recipeString = PlayerManager.Instance.UnitController.DynamicCharacterAvatar.GetCurrentRecipe();
                 } else {
                     //Debug.Log("SaveManager.SaveUMASettings(): recipestring is not empty");
-                    recipeString = PlayerManager.MyInstance.UnitController.DynamicCharacterAvatar.GetCurrentRecipe();
+                    recipeString = PlayerManager.Instance.UnitController.DynamicCharacterAvatar.GetCurrentRecipe();
                 }
             }
         }
@@ -270,7 +270,7 @@ namespace AnyRPG {
                 //Debug.Log("Savemanager.LoadUMASettings(): recipe string is empty. exiting!");
                 return;
             }
-            LoadUMASettings(recipeString, PlayerManager.MyInstance.UnitController.DynamicCharacterAvatar, rebuild);
+            LoadUMASettings(recipeString, PlayerManager.Instance.UnitController.DynamicCharacterAvatar, rebuild);
         }
 
         public void LoadUMASettings(DynamicCharacterAvatar _dynamicCharacterAvatar, bool rebuild = true) {
@@ -359,13 +359,13 @@ namespace AnyRPG {
             // check if the player is inside a trigger
             // disallow saving if they are because we don't want to trigger boss spawns
             // or cutscenes when the player loads back in the game
-            if (PlayerManager.MyInstance.ActiveUnitController != null) {
+            if (PlayerManager.Instance.ActiveUnitController != null) {
                 bool canSave = true;
-                Collider playerCollider = PlayerManager.MyInstance.ActiveUnitController.Collider;
+                Collider playerCollider = PlayerManager.Instance.ActiveUnitController.Collider;
                 int validMask = (1 << LayerMask.NameToLayer("Triggers") | 1 << LayerMask.NameToLayer("Interactable") | 1 << LayerMask.NameToLayer("Ignore Raycast"));
                 Collider[] hitColliders = Physics.OverlapCapsule(playerCollider.bounds.center + new Vector3(0, playerCollider.bounds.extents.y, 0),
                     playerCollider.bounds.center - new Vector3(0, playerCollider.bounds.extents.y, 0),
-                    PlayerManager.MyInstance.ActiveUnitController.Collider.bounds.extents.x, validMask);
+                    PlayerManager.Instance.ActiveUnitController.Collider.bounds.extents.x, validMask);
                 foreach (Collider hitCollider in hitColliders) {
                     if (hitCollider.isTrigger == true) {
                         Interactable interactable = hitCollider.gameObject.GetComponent<Interactable>();
@@ -376,7 +376,7 @@ namespace AnyRPG {
                     }
                 }
                 if (canSave == false) {
-                    MessageFeedManager.MyInstance.WriteMessage("You cannot save here");
+                    MessageFeedManager.Instance.WriteMessage("You cannot save here");
                     return false;
                 }
             }
@@ -384,35 +384,35 @@ namespace AnyRPG {
             // do this first because persistent objects need to add their locations to the scene node before we write it to disk
             SystemEventManager.TriggerEvent("OnSaveGame", new EventParamProperties());
 
-            anyRPGSaveData.PlayerLevel = PlayerManager.MyInstance.MyCharacter.CharacterStats.Level;
-            anyRPGSaveData.currentExperience = PlayerManager.MyInstance.MyCharacter.CharacterStats.CurrentXP;
-            anyRPGSaveData.playerName = PlayerManager.MyInstance.MyCharacter.CharacterName;
-            if (PlayerManager.MyInstance.MyCharacter.Faction != null) {
-                anyRPGSaveData.playerFaction = PlayerManager.MyInstance.MyCharacter.Faction.DisplayName;
+            anyRPGSaveData.PlayerLevel = PlayerManager.Instance.MyCharacter.CharacterStats.Level;
+            anyRPGSaveData.currentExperience = PlayerManager.Instance.MyCharacter.CharacterStats.CurrentXP;
+            anyRPGSaveData.playerName = PlayerManager.Instance.MyCharacter.CharacterName;
+            if (PlayerManager.Instance.MyCharacter.Faction != null) {
+                anyRPGSaveData.playerFaction = PlayerManager.Instance.MyCharacter.Faction.DisplayName;
             }
-            if (PlayerManager.MyInstance.MyCharacter.CharacterRace != null) {
-                anyRPGSaveData.characterRace = PlayerManager.MyInstance.MyCharacter.CharacterRace.DisplayName;
+            if (PlayerManager.Instance.MyCharacter.CharacterRace != null) {
+                anyRPGSaveData.characterRace = PlayerManager.Instance.MyCharacter.CharacterRace.DisplayName;
             }
-            if (PlayerManager.MyInstance.MyCharacter.CharacterClass != null) {
-                anyRPGSaveData.characterClass = PlayerManager.MyInstance.MyCharacter.CharacterClass.DisplayName;
+            if (PlayerManager.Instance.MyCharacter.CharacterClass != null) {
+                anyRPGSaveData.characterClass = PlayerManager.Instance.MyCharacter.CharacterClass.DisplayName;
             }
-            if (PlayerManager.MyInstance.MyCharacter.ClassSpecialization != null) {
-                anyRPGSaveData.classSpecialization = PlayerManager.MyInstance.MyCharacter.ClassSpecialization.DisplayName;
+            if (PlayerManager.Instance.MyCharacter.ClassSpecialization != null) {
+                anyRPGSaveData.classSpecialization = PlayerManager.Instance.MyCharacter.ClassSpecialization.DisplayName;
             }
-            anyRPGSaveData.unitProfileName = PlayerManager.MyInstance.MyCharacter.UnitProfile.DisplayName;
+            anyRPGSaveData.unitProfileName = PlayerManager.Instance.MyCharacter.UnitProfile.DisplayName;
 
             // moved to resource power data
-            //anyRPGSaveData.currentHealth = PlayerManager.MyInstance.MyCharacter.CharacterStats.currentHealth;
+            //anyRPGSaveData.currentHealth = PlayerManager.Instance.MyCharacter.CharacterStats.currentHealth;
 
-            anyRPGSaveData.PlayerLocationX = PlayerManager.MyInstance.ActiveUnitController.transform.position.x;
-            anyRPGSaveData.PlayerLocationY = PlayerManager.MyInstance.ActiveUnitController.transform.position.y;
-            anyRPGSaveData.PlayerLocationZ = PlayerManager.MyInstance.ActiveUnitController.transform.position.z;
-            anyRPGSaveData.PlayerRotationX = PlayerManager.MyInstance.ActiveUnitController.transform.forward.x;
-            anyRPGSaveData.PlayerRotationY = PlayerManager.MyInstance.ActiveUnitController.transform.forward.y;
-            anyRPGSaveData.PlayerRotationZ = PlayerManager.MyInstance.ActiveUnitController.transform.forward.z;
+            anyRPGSaveData.PlayerLocationX = PlayerManager.Instance.ActiveUnitController.transform.position.x;
+            anyRPGSaveData.PlayerLocationY = PlayerManager.Instance.ActiveUnitController.transform.position.y;
+            anyRPGSaveData.PlayerLocationZ = PlayerManager.Instance.ActiveUnitController.transform.position.z;
+            anyRPGSaveData.PlayerRotationX = PlayerManager.Instance.ActiveUnitController.transform.forward.x;
+            anyRPGSaveData.PlayerRotationY = PlayerManager.Instance.ActiveUnitController.transform.forward.y;
+            anyRPGSaveData.PlayerRotationZ = PlayerManager.Instance.ActiveUnitController.transform.forward.z;
             //Debug.Log("Savemanager.SaveGame() rotation: " + anyRPGSaveData.PlayerRotationX + ", " + anyRPGSaveData.PlayerRotationY + ", " + anyRPGSaveData.PlayerRotationZ);
             anyRPGSaveData.PlayerUMARecipe = recipeString;
-            anyRPGSaveData.CurrentScene = LevelManager.MyInstance.ActiveSceneName;
+            anyRPGSaveData.CurrentScene = LevelManager.Instance.ActiveSceneName;
 
             // shared code to setup resource lists on load of old version file or save of new one
             anyRPGSaveData = InitializeResourceLists(anyRPGSaveData, true);
@@ -464,11 +464,11 @@ namespace AnyRPG {
 
         public void SaveResourcePowerData(AnyRPGSaveData anyRPGSaveData) {
             //Debug.Log("Savemanager.SaveResourcePowerData()");
-            foreach (PowerResource powerResource in PlayerManager.MyInstance.MyCharacter.CharacterStats.PowerResourceDictionary.Keys) {
+            foreach (PowerResource powerResource in PlayerManager.Instance.MyCharacter.CharacterStats.PowerResourceDictionary.Keys) {
                 //Debug.Log("Savemanager.SaveQuestData(): Getting quest data from SystemQuestManager: " + quest.MyName);
                 ResourcePowerSaveData resourcePowerData = new ResourcePowerSaveData();
                 resourcePowerData.MyName = powerResource.DisplayName;
-                resourcePowerData.amount = PlayerManager.MyInstance.MyCharacter.CharacterStats.PowerResourceDictionary[powerResource].currentValue;
+                resourcePowerData.amount = PlayerManager.Instance.MyCharacter.CharacterStats.PowerResourceDictionary[powerResource].currentValue;
                 anyRPGSaveData.resourcePowerSaveData.Add(resourcePowerData);
                 //Debug.Log("Savemanager.SaveQuestData(): " + questSaveData.MyName + ", turnedIn: " + questSaveData.turnedIn + ", inLog: " + questSaveData.inLog);
             }
@@ -627,7 +627,7 @@ namespace AnyRPG {
                     finalSaveData.tradeSkillObjectives = tradeSkillObjectiveSaveDataList;
                     finalSaveData.abilityObjectives = abilityObjectiveSaveDataList;
                 }
-                finalSaveData.inLog = QuestLog.MyInstance.HasQuest(questSaveData.MyName);
+                finalSaveData.inLog = QuestLog.Instance.HasQuest(questSaveData.MyName);
                 anyRPGSaveData.questSaveData.Add(finalSaveData);
             }
 
@@ -657,7 +657,7 @@ namespace AnyRPG {
                 anyRPGSaveData.sceneNodeSaveData.Add(sceneNodeSaveData);
             }
             /*
-            foreach (SceneNode sceneNode in SystemSceneNodeManager.MyInstance.GetResourceList()) {
+            foreach (SceneNode sceneNode in SystemSceneNodeManager.Instance.GetResourceList()) {
 
                 sceneNodeSaveData.persistentObjects = new List<PersistentObjectSaveData>();
                 foreach (PersistentObjectSaveData persistentObjectSaveData in sceneNode.PersistentObjects.Values) {
@@ -681,9 +681,9 @@ namespace AnyRPG {
         public void SaveStatusEffectData(AnyRPGSaveData anyRPGSaveData) {
             //Debug.Log("Savemanager.SaveSceneNodeData()");
 
-            foreach (StatusEffectNode statusEffectNode in PlayerManager.MyInstance.MyCharacter.CharacterStats.StatusEffects.Values) {
+            foreach (StatusEffectNode statusEffectNode in PlayerManager.Instance.MyCharacter.CharacterStats.StatusEffects.Values) {
                 if (statusEffectNode.StatusEffect.ClassTrait == false
-                    && statusEffectNode.AbilityEffectContext.AbilityCaster == (PlayerManager.MyInstance.MyCharacter as IAbilityCaster)) {
+                    && statusEffectNode.AbilityEffectContext.AbilityCaster == (PlayerManager.Instance.MyCharacter as IAbilityCaster)) {
                     StatusEffectSaveData statusEffectSaveData = new StatusEffectSaveData();
                     statusEffectSaveData.MyName = statusEffectNode.StatusEffect.DisplayName;
                     statusEffectSaveData.remainingSeconds = (int)statusEffectNode.GetRemainingDuration();
@@ -694,7 +694,7 @@ namespace AnyRPG {
 
         public void SaveActionBarData(AnyRPGSaveData anyRPGSaveData) {
             //Debug.Log("Savemanager.SaveActionBarData()");
-            foreach (ActionButton actionButton in UIManager.MyInstance.ActionBarManager.GetActionButtons()) {
+            foreach (ActionButton actionButton in UIManager.Instance.ActionBarManager.GetActionButtons()) {
                 ActionBarSaveData saveData = new ActionBarSaveData();
                 saveData.MyName = (actionButton.Useable == null ? string.Empty : (actionButton.Useable as IDescribable).DisplayName);
                 saveData.savedName = (actionButton.SavedUseable == null ? string.Empty : (actionButton.SavedUseable as IDescribable).DisplayName);
@@ -727,7 +727,7 @@ namespace AnyRPG {
 
         public void SaveReputationData(AnyRPGSaveData anyRPGSaveData) {
             //Debug.Log("Savemanager.SaveReputationData()");
-            foreach (FactionDisposition factionDisposition in PlayerManager.MyInstance.MyCharacter.CharacterFactionManager.DispositionDictionary) {
+            foreach (FactionDisposition factionDisposition in PlayerManager.Instance.MyCharacter.CharacterFactionManager.DispositionDictionary) {
                 if (factionDisposition == null) {
                     Debug.Log("Savemanager.SaveReputationData(): no disposition");
                     continue;
@@ -745,7 +745,7 @@ namespace AnyRPG {
 
         public void SaveCurrencyData(AnyRPGSaveData anyRPGSaveData) {
             //Debug.Log("Savemanager.SaveCurrencyData()");
-            foreach (CurrencyNode currencyNode in PlayerManager.MyInstance.MyCharacter.CharacterCurrencyManager.MyCurrencyList.Values) {
+            foreach (CurrencyNode currencyNode in PlayerManager.Instance.MyCharacter.CharacterCurrencyManager.MyCurrencyList.Values) {
                 CurrencySaveData currencySaveData = new CurrencySaveData();
                 currencySaveData.MyAmount = currencyNode.MyAmount;
                 currencySaveData.MyName = currencyNode.currency.DisplayName;
@@ -767,7 +767,7 @@ namespace AnyRPG {
 
         public void SaveAbilityData(AnyRPGSaveData anyRPGSaveData) {
             //Debug.Log("Savemanager.SaveAbilityData()");
-            foreach (BaseAbility baseAbility in PlayerManager.MyInstance.MyCharacter.CharacterAbilityManager.RawAbilityList.Values) {
+            foreach (BaseAbility baseAbility in PlayerManager.Instance.MyCharacter.CharacterAbilityManager.RawAbilityList.Values) {
                 AbilitySaveData saveData = new AbilitySaveData();
                 saveData.MyName = baseAbility.DisplayName;
                 anyRPGSaveData.abilitySaveData.Add(saveData);
@@ -776,7 +776,7 @@ namespace AnyRPG {
 
         public void SavePetData(AnyRPGSaveData anyRPGSaveData) {
             //Debug.Log("Savemanager.SaveAbilityData()");
-            foreach (UnitProfile unitProfile in PlayerManager.MyInstance.MyCharacter.CharacterPetManager.UnitProfiles) {
+            foreach (UnitProfile unitProfile in PlayerManager.Instance.MyCharacter.CharacterPetManager.UnitProfiles) {
                 PetSaveData saveData = new PetSaveData();
                 saveData.MyName = unitProfile.DisplayName;
                 anyRPGSaveData.petSaveData.Add(saveData);
@@ -785,8 +785,8 @@ namespace AnyRPG {
 
         public void SaveEquipmentData(AnyRPGSaveData anyRPGSaveData) {
             //Debug.Log("Savemanager.SaveEquipmentData()");
-            if (PlayerManager.MyInstance != null && PlayerManager.MyInstance.MyCharacter != null && PlayerManager.MyInstance.MyCharacter.CharacterEquipmentManager != null) {
-                foreach (Equipment equipment in PlayerManager.MyInstance.MyCharacter.CharacterEquipmentManager.CurrentEquipment.Values) {
+            if (PlayerManager.Instance != null && PlayerManager.Instance.MyCharacter != null && PlayerManager.Instance.MyCharacter.CharacterEquipmentManager != null) {
+                foreach (Equipment equipment in PlayerManager.Instance.MyCharacter.CharacterEquipmentManager.CurrentEquipment.Values) {
                     EquipmentSaveData saveData = new EquipmentSaveData();
                     saveData.MyName = (equipment == null ? string.Empty : equipment.ResourceName);
                     saveData.DisplayName = (equipment == null ? string.Empty : equipment.DisplayName);
@@ -804,7 +804,7 @@ namespace AnyRPG {
 
         public void SaveSkillData(AnyRPGSaveData anyRPGSaveData) {
             //Debug.Log("Savemanager.SaveSkillData()");
-            foreach (string skillName in PlayerManager.MyInstance.MyCharacter.CharacterSkillManager.MySkillList.Keys) {
+            foreach (string skillName in PlayerManager.Instance.MyCharacter.CharacterSkillManager.MySkillList.Keys) {
                 SkillSaveData saveData = new SkillSaveData();
                 saveData.MyName = skillName;
                 anyRPGSaveData.skillSaveData.Add(saveData);
@@ -813,7 +813,7 @@ namespace AnyRPG {
 
         public void SaveRecipeData(AnyRPGSaveData anyRPGSaveData) {
             //Debug.Log("Savemanager.SaveRecipeData()");
-            foreach (string recipeName in PlayerManager.MyInstance.MyCharacter.CharacterRecipeManager.RecipeList.Keys) {
+            foreach (string recipeName in PlayerManager.Instance.MyCharacter.CharacterRecipeManager.RecipeList.Keys) {
                 RecipeSaveData saveData = new RecipeSaveData();
                 saveData.MyName = recipeName;
                 anyRPGSaveData.recipeSaveData.Add(saveData);
@@ -825,7 +825,7 @@ namespace AnyRPG {
 
             foreach (ResourcePowerSaveData resourcePowerSaveData in anyRPGSaveData.resourcePowerSaveData) {
                 //Debug.Log("Savemanager.LoadQuestData(): loading questsavedata");
-                PlayerManager.MyInstance.MyCharacter.CharacterStats.SetResourceAmount(resourcePowerSaveData.MyName, resourcePowerSaveData.amount);
+                PlayerManager.Instance.MyCharacter.CharacterStats.SetResourceAmount(resourcePowerSaveData.MyName, resourcePowerSaveData.amount);
             }
 
         }
@@ -877,7 +877,7 @@ namespace AnyRPG {
 
             foreach (QuestSaveData questSaveData in anyRPGSaveData.questSaveData) {
                 //Debug.Log("Savemanager.LoadQuestData(): loading questsavedata");
-                QuestLog.MyInstance.AcceptQuest(questSaveData);
+                QuestLog.Instance.AcceptQuest(questSaveData);
             }
         }
 
@@ -915,7 +915,7 @@ namespace AnyRPG {
             //Debug.Log("Savemanager.LoadStatusEffectData()");
             foreach (StatusEffectSaveData statusEffectSaveData in anyRPGSaveData.statusEffectSaveData) {
                 //Debug.Log("Savemanager.LoadStatusEffectData(): applying " + statusEffectSaveData.MyName);
-                PlayerManager.MyInstance.MyCharacter.CharacterAbilityManager.ApplySavedStatusEffects(statusEffectSaveData);
+                PlayerManager.Instance.MyCharacter.CharacterAbilityManager.ApplySavedStatusEffects(statusEffectSaveData);
             }
         }
 
@@ -932,16 +932,16 @@ namespace AnyRPG {
             int counter = 0;
             foreach (InventorySlotSaveData inventorySlotSaveData in anyRPGSaveData.inventorySlotSaveData) {
                 if (inventorySlotSaveData.MyName != string.Empty && inventorySlotSaveData.MyName != null) {
-                    if (SystemItemManager.MyInstance != null) {
+                    if (SystemItemManager.Instance != null) {
                         for (int i = 0; i < inventorySlotSaveData.stackCount; i++) {
-                            Item newItem = SystemItemManager.MyInstance.GetNewResource(inventorySlotSaveData.MyName);
+                            Item newItem = SystemItemManager.Instance.GetNewResource(inventorySlotSaveData.MyName);
                             if (newItem == null) {
                                 Debug.Log("Savemanager.LoadInventorySlotData(): COULD NOT LOAD ITEM FROM ITEM MANAGER: " + inventorySlotSaveData.MyName);
                             } else {
                                 newItem.DisplayName = inventorySlotSaveData.DisplayName;
                                 newItem.DropLevel = inventorySlotSaveData.dropLevel;
                                 if (newItem.RandomItemQuality == true) {
-                                    newItem.ItemQuality = SystemItemQualityManager.MyInstance.GetResource(inventorySlotSaveData.itemQuality);
+                                    newItem.ItemQuality = SystemItemQualityManager.Instance.GetResource(inventorySlotSaveData.itemQuality);
                                 }
                                 if ((newItem as Equipment) is Equipment) {
                                     if (inventorySlotSaveData.randomSecondaryStatIndexes != null) {
@@ -969,12 +969,12 @@ namespace AnyRPG {
                 //Debug.Log("Savemanager.LoadEquipmentData(): checking equipment");
                 if (equipmentSaveData.MyName != string.Empty) {
                     //Debug.Log("Savemanager.LoadEquipmentData(): checking equipment: using item: " + equipmentSaveData.MyName);
-                    Equipment newItem = (SystemItemManager.MyInstance.GetNewResource(equipmentSaveData.MyName) as Equipment);
+                    Equipment newItem = (SystemItemManager.Instance.GetNewResource(equipmentSaveData.MyName) as Equipment);
                     if (newItem != null) {
                         newItem.DisplayName = equipmentSaveData.DisplayName;
                         newItem.DropLevel = equipmentSaveData.dropLevel;
                         if (newItem.RandomItemQuality == true) {
-                            newItem.ItemQuality = SystemItemQualityManager.MyInstance.GetResource(equipmentSaveData.itemQuality);
+                            newItem.ItemQuality = SystemItemQualityManager.Instance.GetResource(equipmentSaveData.itemQuality);
                         }
                         if (equipmentSaveData.randomSecondaryStatIndexes != null) {
                             newItem.RandomStatIndexes = equipmentSaveData.randomSecondaryStatIndexes;
@@ -995,9 +995,9 @@ namespace AnyRPG {
             //int counter = 0;
             foreach (ReputationSaveData reputationSaveData in anyRPGSaveData.reputationSaveData) {
                 FactionDisposition factionDisposition = new FactionDisposition();
-                factionDisposition.Faction = SystemFactionManager.MyInstance.GetResource(reputationSaveData.MyName);
+                factionDisposition.Faction = SystemFactionManager.Instance.GetResource(reputationSaveData.MyName);
                 factionDisposition.disposition = reputationSaveData.MyAmount;
-                PlayerManager.MyInstance.MyCharacter.CharacterFactionManager.AddReputation(factionDisposition.Faction, (int)factionDisposition.disposition, false);
+                PlayerManager.Instance.MyCharacter.CharacterFactionManager.AddReputation(factionDisposition.Faction, (int)factionDisposition.disposition, false);
                 //counter++;
             }
         }
@@ -1005,7 +1005,7 @@ namespace AnyRPG {
         public void LoadCurrencyData(AnyRPGSaveData anyRPGSaveData) {
             //Debug.Log("Savemanager.LoadCurrencyData()");
             foreach (CurrencySaveData currencySaveData in anyRPGSaveData.currencySaveData) {
-                PlayerManager.MyInstance.MyCharacter.CharacterCurrencyManager.AddCurrency(SystemCurrencyManager.MyInstance.GetResource(currencySaveData.MyName), currencySaveData.MyAmount);
+                PlayerManager.Instance.MyCharacter.CharacterCurrencyManager.AddCurrency(SystemCurrencyManager.Instance.GetResource(currencySaveData.MyName), currencySaveData.MyAmount);
             }
         }
 
@@ -1014,7 +1014,7 @@ namespace AnyRPG {
 
             foreach (AbilitySaveData abilitySaveData in anyRPGSaveData.abilitySaveData) {
                 if (abilitySaveData.MyName != string.Empty) {
-                    PlayerManager.MyInstance.MyCharacter.CharacterAbilityManager.LoadAbility(abilitySaveData.MyName);
+                    PlayerManager.Instance.MyCharacter.CharacterAbilityManager.LoadAbility(abilitySaveData.MyName);
                 }
             }
         }
@@ -1024,7 +1024,7 @@ namespace AnyRPG {
 
             foreach (PetSaveData petSaveData in anyRPGSaveData.petSaveData) {
                 if (petSaveData.MyName != string.Empty) {
-                    PlayerManager.MyInstance.MyCharacter.CharacterPetManager.AddPet(petSaveData.MyName);
+                    PlayerManager.Instance.MyCharacter.CharacterPetManager.AddPet(petSaveData.MyName);
                 }
             }
 
@@ -1033,14 +1033,14 @@ namespace AnyRPG {
         public void LoadSkillData(AnyRPGSaveData anyRPGSaveData) {
             //Debug.Log("Savemanager.LoadSkillData()");
             foreach (SkillSaveData skillSaveData in anyRPGSaveData.skillSaveData) {
-                PlayerManager.MyInstance.MyCharacter.CharacterSkillManager.LoadSkill(skillSaveData.MyName);
+                PlayerManager.Instance.MyCharacter.CharacterSkillManager.LoadSkill(skillSaveData.MyName);
             }
         }
 
         public void LoadRecipeData(AnyRPGSaveData anyRPGSaveData) {
             //Debug.Log("Savemanager.LoadRecipeData()");
             foreach (RecipeSaveData recipeSaveData in anyRPGSaveData.recipeSaveData) {
-                PlayerManager.MyInstance.MyCharacter.CharacterRecipeManager.LoadRecipe(recipeSaveData.MyName);
+                PlayerManager.Instance.MyCharacter.CharacterRecipeManager.LoadRecipe(recipeSaveData.MyName);
             }
         }
 
@@ -1055,7 +1055,7 @@ namespace AnyRPG {
                     // find item in bag
                     //Debug.Log("Savemanager.LoadActionBarData(): searching for usable(" + actionBarSaveData.MyName + ") in inventory");
                     /*
-                    List<Item> itemList = InventoryManager.MyInstance.GetItems(actionBarSaveData.MyName, 1);
+                    List<Item> itemList = InventoryManager.Instance.GetItems(actionBarSaveData.MyName, 1);
                     if (itemList.Count > 0) {
                         //Debug.Log("Savemanager.LoadActionBarData(): searching for usable(" + actionBarSaveData.MyName + ") in inventory and itemlist.count was: " + itemList.Count);
                         useable = itemList[0] as IUseable;
@@ -1063,34 +1063,34 @@ namespace AnyRPG {
                         //Debug.Log("Savemanager.LoadActionBarData(): searching for usable(" + actionBarSaveData.MyName + ") in inventory and itemlist.count was: " + itemList.Count);
                     }
                     */
-                    useable = SystemItemManager.MyInstance.GetResource(actionBarSaveData.MyName);
+                    useable = SystemItemManager.Instance.GetResource(actionBarSaveData.MyName);
                 } else {
                     // find ability from system ability manager
                     //Debug.Log("Savemanager.LoadActionBarData(): searching for usable in ability manager");
                     if (actionBarSaveData.MyName != null && actionBarSaveData.MyName != string.Empty) {
-                        useable = SystemAbilityManager.MyInstance.GetResource(actionBarSaveData.MyName);
+                        useable = SystemAbilityManager.Instance.GetResource(actionBarSaveData.MyName);
                     } else {
                         //Debug.Log("Savemanager.LoadActionBarData(): saved action bar had no name");
                     }
                     if (actionBarSaveData.savedName != null && actionBarSaveData.savedName != string.Empty) {
-                        IUseable savedUseable = SystemAbilityManager.MyInstance.GetResource(actionBarSaveData.savedName);
+                        IUseable savedUseable = SystemAbilityManager.Instance.GetResource(actionBarSaveData.savedName);
                         if (savedUseable != null) {
-                            UIManager.MyInstance.ActionBarManager.GetActionButtons()[counter].SavedUseable = savedUseable;
+                            UIManager.Instance.ActionBarManager.GetActionButtons()[counter].SavedUseable = savedUseable;
                         }
                     }
                 }
                 if (useable != null) {
-                    //Debug.Log("Savemanager.LoadActionBarData(): setting useable on button: " + counter + "; actionbutton: " + UIManager.MyInstance.MyActionBarManager.GetActionButtons()[counter].name + UIManager.MyInstance.MyActionBarManager.GetActionButtons()[counter].GetInstanceID());
-                    UIManager.MyInstance.ActionBarManager.GetActionButtons()[counter].SetUseable(useable, false);
+                    //Debug.Log("Savemanager.LoadActionBarData(): setting useable on button: " + counter + "; actionbutton: " + UIManager.Instance.MyActionBarManager.GetActionButtons()[counter].name + UIManager.Instance.MyActionBarManager.GetActionButtons()[counter].GetInstanceID());
+                    UIManager.Instance.ActionBarManager.GetActionButtons()[counter].SetUseable(useable, false);
                 } else {
                     //Debug.Log("Savemanager.LoadActionBarData(): no usable set on this actionbutton");
                     // testing remove things that weren't saved, it will prevent duplicate abilities if they are moved
                     // this means if new abilities are added to a class/etc between play sessions they won't be on the bars
-                    UIManager.MyInstance.ActionBarManager.GetActionButtons()[counter].ClearUseable();
+                    UIManager.Instance.ActionBarManager.GetActionButtons()[counter].ClearUseable();
                 }
                 counter++;
             }
-            UIManager.MyInstance.ActionBarManager.UpdateVisuals();
+            UIManager.Instance.ActionBarManager.UpdateVisuals();
         }
 
         public void TryNewGame() {
@@ -1108,11 +1108,11 @@ namespace AnyRPG {
 
             PerformInventorySetup();
 
-            SystemWindowManager.MyInstance.loadGameWindow.CloseWindow();
-            SystemWindowManager.MyInstance.newGameWindow.CloseWindow();
+            SystemWindowManager.Instance.loadGameWindow.CloseWindow();
+            SystemWindowManager.Instance.newGameWindow.CloseWindow();
 
             // load default scene
-            LevelManager.MyInstance.LoadFirstScene();
+            LevelManager.Instance.LoadFirstScene();
         }
 
         public void PerformInventorySetup() {
@@ -1149,11 +1149,11 @@ namespace AnyRPG {
                 //Debug.Log("Savemanager.LoadSharedData(): recipe string in save data was not empty or null, loading UMA settings");
                 SaveUMASettings(loadedRecipeString);
                 // we have UMA data so should load the UMA unit instead of the default
-                //PlayerManager.MyInstance.SetUMAPrefab();
+                //PlayerManager.Instance.SetUMAPrefab();
             } else {
                 //Debug.Log("Savemanager.LoadSharedData(): recipe string in save data was empty or null, setting player prefab to default");
                 ClearUMASettings();
-                //PlayerManager.MyInstance.SetDefaultPrefab();
+                //PlayerManager.Instance.SetDefaultPrefab();
             }
 
         }
@@ -1161,10 +1161,10 @@ namespace AnyRPG {
         public CapabilityConsumerSnapshot GetCapabilityConsumerSnapshot(AnyRPGSaveData saveData) {
             CapabilityConsumerSnapshot returnValue = new CapabilityConsumerSnapshot();
             returnValue.UnitProfile = UnitProfile.GetUnitProfileReference(saveData.unitProfileName);
-            returnValue.CharacterRace = SystemCharacterRaceManager.MyInstance.GetResource(saveData.characterRace);
-            returnValue.CharacterClass = SystemCharacterClassManager.MyInstance.GetResource(saveData.characterClass);
-            returnValue.ClassSpecialization = SystemClassSpecializationManager.MyInstance.GetResource(saveData.classSpecialization);
-            returnValue.Faction = SystemFactionManager.MyInstance.GetResource(saveData.playerFaction);
+            returnValue.CharacterRace = SystemCharacterRaceManager.Instance.GetResource(saveData.characterRace);
+            returnValue.CharacterClass = SystemCharacterClassManager.Instance.GetResource(saveData.characterClass);
+            returnValue.ClassSpecialization = SystemClassSpecializationManager.Instance.GetResource(saveData.classSpecialization);
+            returnValue.Faction = SystemFactionManager.Instance.GetResource(saveData.playerFaction);
             return returnValue;
         }
 
@@ -1190,7 +1190,7 @@ namespace AnyRPG {
             InventoryManager.Instance.PerformSetupActivities();
 
             // player level
-            PlayerManager.MyInstance.InitialLevel = anyRPGSaveData.PlayerLevel;
+            PlayerManager.Instance.InitialLevel = anyRPGSaveData.PlayerLevel;
 
             // scene and location
             Vector3 playerLocation = new Vector3(anyRPGSaveData.PlayerLocationX, anyRPGSaveData.PlayerLocationY, anyRPGSaveData.PlayerLocationZ);
@@ -1198,21 +1198,21 @@ namespace AnyRPG {
             //Debug.Log("Savemanager.LoadGame() rotation: " + anyRPGSaveData.PlayerRotationX + ", " + anyRPGSaveData.PlayerRotationY + ", " + anyRPGSaveData.PlayerRotationZ);
 
             // disable auto-accept achievements since we haven't loaded the data that tells us if they are complete yet
-            SystemQuestManager.MyInstance.CleanupEventSubscriptions();
+            SystemQuestManager.Instance.CleanupEventSubscriptions();
 
             // spawn player connection so all the data can be loaded
-            PlayerManager.MyInstance.SpawnPlayerConnection();
-            PlayerManager.MyInstance.MyCharacter.CharacterStats.CurrentXP = anyRPGSaveData.currentExperience;
+            PlayerManager.Instance.SpawnPlayerConnection();
+            PlayerManager.Instance.MyCharacter.CharacterStats.CurrentXP = anyRPGSaveData.currentExperience;
 
             // testing: load this before setting providers so no duplicates on bars
             //LoadActionBarData(anyRPGSaveData);
 
             CapabilityConsumerSnapshot capabilityConsumerSnapshot = GetCapabilityConsumerSnapshot(anyRPGSaveData);
 
-            PlayerManager.MyInstance.MyCharacter.ApplyCapabilityConsumerSnapshot(capabilityConsumerSnapshot);
+            PlayerManager.Instance.MyCharacter.ApplyCapabilityConsumerSnapshot(capabilityConsumerSnapshot);
 
             // this must be called after the snapshot is applied, because the unit profile could contain a default name
-            PlayerManager.MyInstance.SetPlayerName(anyRPGSaveData.playerName);
+            PlayerManager.Instance.SetPlayerName(anyRPGSaveData.playerName);
 
 
             // THIS NEEDS TO BE DOWN HERE SO THE PLAYERSTATS EXISTS TO SUBSCRIBE TO THE EQUIP EVENTS AND INCREASE STATS
@@ -1225,7 +1225,7 @@ namespace AnyRPG {
 
 
             // testing - move here to prevent learning auto-attack ability twice
-            LoadEquipmentData(anyRPGSaveData, PlayerManager.MyInstance.MyCharacter.CharacterEquipmentManager);
+            LoadEquipmentData(anyRPGSaveData, PlayerManager.Instance.MyCharacter.CharacterEquipmentManager);
 
             LoadSkillData(anyRPGSaveData);
             LoadRecipeData(anyRPGSaveData);
@@ -1247,23 +1247,23 @@ namespace AnyRPG {
             LoadPetData(anyRPGSaveData);
 
             // now that we have loaded the quest data, we can re-enable references
-            SystemQuestManager.MyInstance.CreateEventSubscriptions();
+            SystemQuestManager.Instance.CreateEventSubscriptions();
 
             // set resources last after equipment loaded for modifiers
             LoadResourcePowerData(anyRPGSaveData);
 
             LoadWindowPositions();
 
-            SystemWindowManager.MyInstance.loadGameWindow.CloseWindow();
+            SystemWindowManager.Instance.loadGameWindow.CloseWindow();
             // load the proper level now that everything should be setup
-            LevelManager.MyInstance.LoadLevel(anyRPGSaveData.CurrentScene, playerLocation, playerRotation);
+            LevelManager.Instance.LoadLevel(anyRPGSaveData.CurrentScene, playerLocation, playerRotation);
         }
 
         public void ClearSystemManagedCharacterData() {
             //Debug.Log("Savemanager.ClearSystemmanagedCharacterData()");
 
             // not needed anymore because no singleton?
-            //CharacterEquipmentManager.MyInstance.ClearEquipment();
+            //CharacterEquipmentManager.Instance.ClearEquipment();
 
             InventoryManager.Instance.ClearData();
             if (PopupWindowManager.Instance != null) {
@@ -1281,11 +1281,11 @@ namespace AnyRPG {
                 //Debug.Log("popupwindowmanager was was null");
             }
 
-            //SystemGameManager.MyInstance.ReloadResourceLists();
+            //SystemGameManager.Instance.ReloadResourceLists();
 
-            UIManager.MyInstance.ActionBarManager.ClearActionBars(true);
-            QuestLog.MyInstance.ClearLog();
-            PlayerManager.MyInstance.ResetInitialLevel();
+            UIManager.Instance.ActionBarManager.ClearActionBars(true);
+            QuestLog.Instance.ClearLog();
+            PlayerManager.Instance.ResetInitialLevel();
 
             // clear describable resource mutable data dictionaries
             questSaveDataDictionary.Clear();
@@ -1335,42 +1335,42 @@ namespace AnyRPG {
             if (PlayerPrefs.HasKey("MainMapWindowX") && PlayerPrefs.HasKey("MainMapWindowY"))
                 PopupWindowManager.Instance.mainMapWindow.transform.position = new Vector3(PlayerPrefs.GetFloat("MainMapWindowX"), PlayerPrefs.GetFloat("MainMapWindowY"), 0);
             if (PlayerPrefs.HasKey("QuestTrackerWindowX") && PlayerPrefs.HasKey("QuestTrackerWindowY"))
-                UIManager.MyInstance.QuestTrackerWindow.transform.position = new Vector3(PlayerPrefs.GetFloat("QuestTrackerWindowX"), PlayerPrefs.GetFloat("QuestTrackerWindowY"), 0);
+                UIManager.Instance.QuestTrackerWindow.transform.position = new Vector3(PlayerPrefs.GetFloat("QuestTrackerWindowX"), PlayerPrefs.GetFloat("QuestTrackerWindowY"), 0);
             if (PlayerPrefs.HasKey("CombatLogWindowX") && PlayerPrefs.HasKey("CombatLogWindowY"))
-                UIManager.MyInstance.CombatLogWindow.transform.position = new Vector3(PlayerPrefs.GetFloat("CombatLogWindowX"), PlayerPrefs.GetFloat("CombatLogWindowY"), 0);
+                UIManager.Instance.CombatLogWindow.transform.position = new Vector3(PlayerPrefs.GetFloat("CombatLogWindowX"), PlayerPrefs.GetFloat("CombatLogWindowY"), 0);
 
             if (PlayerPrefs.HasKey("MessageFeedManagerX") && PlayerPrefs.HasKey("MessageFeedManagerY"))
-                MessageFeedManager.MyInstance.MessageFeedGameObject.transform.position = new Vector3(PlayerPrefs.GetFloat("MessageFeedManagerX"), PlayerPrefs.GetFloat("MessageFeedManagerY"), 0);
+                MessageFeedManager.Instance.MessageFeedGameObject.transform.position = new Vector3(PlayerPrefs.GetFloat("MessageFeedManagerX"), PlayerPrefs.GetFloat("MessageFeedManagerY"), 0);
 
             if (PlayerPrefs.HasKey("FloatingCastBarControllerX") && PlayerPrefs.HasKey("FloatingCastBarControllerY")) {
-                //Debug.Log("UIManager.MyInstance.MyFloatingCastBarController.transform.position: " + UIManager.MyInstance.MyFloatingCastBarController.transform.position);
-                UIManager.MyInstance.FloatingCastBarController.transform.position = new Vector3(PlayerPrefs.GetFloat("FloatingCastBarControllerX"), PlayerPrefs.GetFloat("FloatingCastBarControllerY"), 0);
-                //Debug.Log("UIManager.MyInstance.MyFloatingCastBarController.transform.position after set: " + UIManager.MyInstance.MyFloatingCastBarController.transform.position);
+                //Debug.Log("UIManager.Instance.MyFloatingCastBarController.transform.position: " + UIManager.Instance.MyFloatingCastBarController.transform.position);
+                UIManager.Instance.FloatingCastBarController.transform.position = new Vector3(PlayerPrefs.GetFloat("FloatingCastBarControllerX"), PlayerPrefs.GetFloat("FloatingCastBarControllerY"), 0);
+                //Debug.Log("UIManager.Instance.MyFloatingCastBarController.transform.position after set: " + UIManager.Instance.MyFloatingCastBarController.transform.position);
             }
 
             if (PlayerPrefs.HasKey("StatusEffectPanelControllerX") && PlayerPrefs.HasKey("StatusEffectPanelControllerY"))
-                UIManager.MyInstance.StatusEffectPanelController.transform.position = new Vector3(PlayerPrefs.GetFloat("StatusEffectPanelControllerX"), PlayerPrefs.GetFloat("StatusEffectPanelControllerY"), 0);
+                UIManager.Instance.StatusEffectPanelController.transform.position = new Vector3(PlayerPrefs.GetFloat("StatusEffectPanelControllerX"), PlayerPrefs.GetFloat("StatusEffectPanelControllerY"), 0);
 
             if (PlayerPrefs.HasKey("PlayerUnitFrameControllerX") && PlayerPrefs.HasKey("PlayerUnitFrameControllerY"))
-                UIManager.MyInstance.PlayerUnitFrameController.transform.position = new Vector3(PlayerPrefs.GetFloat("PlayerUnitFrameControllerX"), PlayerPrefs.GetFloat("PlayerUnitFrameControllerY"), 0);
+                UIManager.Instance.PlayerUnitFrameController.transform.position = new Vector3(PlayerPrefs.GetFloat("PlayerUnitFrameControllerX"), PlayerPrefs.GetFloat("PlayerUnitFrameControllerY"), 0);
 
             if (PlayerPrefs.HasKey("FocusUnitFrameControllerX") && PlayerPrefs.HasKey("FocusUnitFrameControllerY"))
-                UIManager.MyInstance.FocusUnitFrameController.transform.position = new Vector3(PlayerPrefs.GetFloat("FocusUnitFrameControllerX"), PlayerPrefs.GetFloat("FocusUnitFrameControllerY"), 0);
+                UIManager.Instance.FocusUnitFrameController.transform.position = new Vector3(PlayerPrefs.GetFloat("FocusUnitFrameControllerX"), PlayerPrefs.GetFloat("FocusUnitFrameControllerY"), 0);
 
             if (PlayerPrefs.HasKey("MiniMapControllerX") && PlayerPrefs.HasKey("MiniMapControllerY"))
-                UIManager.MyInstance.MiniMapController.transform.position = new Vector3(PlayerPrefs.GetFloat("MiniMapControllerX"), PlayerPrefs.GetFloat("MiniMapControllerY"), 0);
+                UIManager.Instance.MiniMapController.transform.position = new Vector3(PlayerPrefs.GetFloat("MiniMapControllerX"), PlayerPrefs.GetFloat("MiniMapControllerY"), 0);
 
             if (PlayerPrefs.HasKey("XPBarControllerX") && PlayerPrefs.HasKey("XPBarControllerY"))
-                UIManager.MyInstance.XPBarController.transform.position = new Vector3(PlayerPrefs.GetFloat("XPBarControllerX"), PlayerPrefs.GetFloat("XPBarControllerY"), 0);
+                UIManager.Instance.XPBarController.transform.position = new Vector3(PlayerPrefs.GetFloat("XPBarControllerX"), PlayerPrefs.GetFloat("XPBarControllerY"), 0);
 
             if (PlayerPrefs.HasKey("BottomPanelX") && PlayerPrefs.HasKey("BottomPanelY"))
-                UIManager.MyInstance.BottomPanel.transform.position = new Vector3(PlayerPrefs.GetFloat("BottomPanelX"), PlayerPrefs.GetFloat("BottomPanelY"), 0);
+                UIManager.Instance.BottomPanel.transform.position = new Vector3(PlayerPrefs.GetFloat("BottomPanelX"), PlayerPrefs.GetFloat("BottomPanelY"), 0);
 
             if (PlayerPrefs.HasKey("SidePanelX") && PlayerPrefs.HasKey("SidePanelY"))
-                UIManager.MyInstance.SidePanel.transform.position = new Vector3(PlayerPrefs.GetFloat("SidePanelX"), PlayerPrefs.GetFloat("SidePanelY"), 0);
+                UIManager.Instance.SidePanel.transform.position = new Vector3(PlayerPrefs.GetFloat("SidePanelX"), PlayerPrefs.GetFloat("SidePanelY"), 0);
 
             if (PlayerPrefs.HasKey("MouseOverWindowX") && PlayerPrefs.HasKey("MouseOverWindowY"))
-                UIManager.MyInstance.MouseOverWindow.transform.position = new Vector3(PlayerPrefs.GetFloat("MouseOverWindowX"), PlayerPrefs.GetFloat("MouseOverWindowY"), 0);
+                UIManager.Instance.MouseOverWindow.transform.position = new Vector3(PlayerPrefs.GetFloat("MouseOverWindowX"), PlayerPrefs.GetFloat("MouseOverWindowY"), 0);
 
         }
 
@@ -1415,41 +1415,41 @@ namespace AnyRPG {
             PlayerPrefs.SetFloat("CraftingWindowY", PopupWindowManager.Instance.craftingWindow.transform.position.y);
             PlayerPrefs.SetFloat("MainMapWindowX", PopupWindowManager.Instance.mainMapWindow.transform.position.x);
             PlayerPrefs.SetFloat("MainMapWindowY", PopupWindowManager.Instance.mainMapWindow.transform.position.y);
-            PlayerPrefs.SetFloat("QuestTrackerWindowX", UIManager.MyInstance.QuestTrackerWindow.transform.position.x);
-            PlayerPrefs.SetFloat("QuestTrackerWindowY", UIManager.MyInstance.QuestTrackerWindow.transform.position.y);
-            PlayerPrefs.SetFloat("CombatLogWindowX", UIManager.MyInstance.CombatLogWindow.transform.position.x);
-            PlayerPrefs.SetFloat("CombatLogWindowY", UIManager.MyInstance.CombatLogWindow.transform.position.y);
+            PlayerPrefs.SetFloat("QuestTrackerWindowX", UIManager.Instance.QuestTrackerWindow.transform.position.x);
+            PlayerPrefs.SetFloat("QuestTrackerWindowY", UIManager.Instance.QuestTrackerWindow.transform.position.y);
+            PlayerPrefs.SetFloat("CombatLogWindowX", UIManager.Instance.CombatLogWindow.transform.position.x);
+            PlayerPrefs.SetFloat("CombatLogWindowY", UIManager.Instance.CombatLogWindow.transform.position.y);
 
-            PlayerPrefs.SetFloat("MessageFeedManagerX", MessageFeedManager.MyInstance.MessageFeedGameObject.transform.position.x);
-            PlayerPrefs.SetFloat("MessageFeedManagerY", MessageFeedManager.MyInstance.MessageFeedGameObject.transform.position.y);
+            PlayerPrefs.SetFloat("MessageFeedManagerX", MessageFeedManager.Instance.MessageFeedGameObject.transform.position.x);
+            PlayerPrefs.SetFloat("MessageFeedManagerY", MessageFeedManager.Instance.MessageFeedGameObject.transform.position.y);
 
-            //Debug.Log("Saving FloatingCastBarController: " + UIManager.MyInstance.MyFloatingCastBarController.transform.position.x + "; " + UIManager.MyInstance.MyFloatingCastBarController.transform.position.y);
-            PlayerPrefs.SetFloat("FloatingCastBarControllerX", UIManager.MyInstance.FloatingCastBarController.transform.position.x);
-            PlayerPrefs.SetFloat("FloatingCastBarControllerY", UIManager.MyInstance.FloatingCastBarController.transform.position.y);
+            //Debug.Log("Saving FloatingCastBarController: " + UIManager.Instance.MyFloatingCastBarController.transform.position.x + "; " + UIManager.Instance.MyFloatingCastBarController.transform.position.y);
+            PlayerPrefs.SetFloat("FloatingCastBarControllerX", UIManager.Instance.FloatingCastBarController.transform.position.x);
+            PlayerPrefs.SetFloat("FloatingCastBarControllerY", UIManager.Instance.FloatingCastBarController.transform.position.y);
 
-            PlayerPrefs.SetFloat("StatusEffectPanelControllerX", UIManager.MyInstance.StatusEffectPanelController.transform.position.x);
-            PlayerPrefs.SetFloat("StatusEffectPanelControllerY", UIManager.MyInstance.StatusEffectPanelController.transform.position.y);
+            PlayerPrefs.SetFloat("StatusEffectPanelControllerX", UIManager.Instance.StatusEffectPanelController.transform.position.x);
+            PlayerPrefs.SetFloat("StatusEffectPanelControllerY", UIManager.Instance.StatusEffectPanelController.transform.position.y);
 
-            PlayerPrefs.SetFloat("PlayerUnitFrameControllerX", UIManager.MyInstance.PlayerUnitFrameController.transform.position.x);
-            PlayerPrefs.SetFloat("PlayerUnitFrameControllerY", UIManager.MyInstance.PlayerUnitFrameController.transform.position.y);
+            PlayerPrefs.SetFloat("PlayerUnitFrameControllerX", UIManager.Instance.PlayerUnitFrameController.transform.position.x);
+            PlayerPrefs.SetFloat("PlayerUnitFrameControllerY", UIManager.Instance.PlayerUnitFrameController.transform.position.y);
 
-            PlayerPrefs.SetFloat("FocusUnitFrameControllerX", UIManager.MyInstance.FocusUnitFrameController.transform.position.x);
-            PlayerPrefs.SetFloat("FocusUnitFrameControllerY", UIManager.MyInstance.FocusUnitFrameController.transform.position.y);
+            PlayerPrefs.SetFloat("FocusUnitFrameControllerX", UIManager.Instance.FocusUnitFrameController.transform.position.x);
+            PlayerPrefs.SetFloat("FocusUnitFrameControllerY", UIManager.Instance.FocusUnitFrameController.transform.position.y);
 
-            PlayerPrefs.SetFloat("MiniMapControllerX", UIManager.MyInstance.MiniMapController.transform.position.x);
-            PlayerPrefs.SetFloat("MiniMapControllerY", UIManager.MyInstance.MiniMapController.transform.position.y);
+            PlayerPrefs.SetFloat("MiniMapControllerX", UIManager.Instance.MiniMapController.transform.position.x);
+            PlayerPrefs.SetFloat("MiniMapControllerY", UIManager.Instance.MiniMapController.transform.position.y);
 
-            PlayerPrefs.SetFloat("XPBarControllerX", UIManager.MyInstance.XPBarController.transform.position.x);
-            PlayerPrefs.SetFloat("XPBarControllerY", UIManager.MyInstance.XPBarController.transform.position.y);
+            PlayerPrefs.SetFloat("XPBarControllerX", UIManager.Instance.XPBarController.transform.position.x);
+            PlayerPrefs.SetFloat("XPBarControllerY", UIManager.Instance.XPBarController.transform.position.y);
 
-            PlayerPrefs.SetFloat("BottomPanelX", UIManager.MyInstance.BottomPanel.transform.position.x);
-            PlayerPrefs.SetFloat("BottomPanelY", UIManager.MyInstance.BottomPanel.transform.position.y);
+            PlayerPrefs.SetFloat("BottomPanelX", UIManager.Instance.BottomPanel.transform.position.x);
+            PlayerPrefs.SetFloat("BottomPanelY", UIManager.Instance.BottomPanel.transform.position.y);
 
-            PlayerPrefs.SetFloat("SidePanelX", UIManager.MyInstance.SidePanel.transform.position.x);
-            PlayerPrefs.SetFloat("SidePanelY", UIManager.MyInstance.SidePanel.transform.position.y);
+            PlayerPrefs.SetFloat("SidePanelX", UIManager.Instance.SidePanel.transform.position.x);
+            PlayerPrefs.SetFloat("SidePanelY", UIManager.Instance.SidePanel.transform.position.y);
 
-            PlayerPrefs.SetFloat("MouseOverWindowX", UIManager.MyInstance.MouseOverWindow.transform.position.x);
-            PlayerPrefs.SetFloat("MouseOverWindowY", UIManager.MyInstance.MouseOverWindow.transform.position.y);
+            PlayerPrefs.SetFloat("MouseOverWindowX", UIManager.Instance.MouseOverWindow.transform.position.x);
+            PlayerPrefs.SetFloat("MouseOverWindowY", UIManager.Instance.MouseOverWindow.transform.position.y);
 
             if (InventoryManager.Instance.BagNodes != null && InventoryManager.Instance.BagNodes.Count > 0) {
                 for (int i = 0; i < 13; i++) {
@@ -1458,7 +1458,7 @@ namespace AnyRPG {
                         PlayerPrefs.SetFloat("InventoryWindowX" + i, InventoryManager.Instance.BagNodes[i].BagWindow.transform.position.x);
                         PlayerPrefs.SetFloat("InventoryWindowY" + i, InventoryManager.Instance.BagNodes[i].BagWindow.transform.position.y);
                     } else {
-                        //Debug.Log("SaveManager.SaveWindowPositions(): " + i + "X: " + InventoryManager.MyInstance.MyBagNodes[i].MyBagWindow.transform.position.x + "; y: " + InventoryManager.MyInstance.MyBagNodes[i].MyBagWindow.transform.position.y + " WINDOW CLOSED@!!!!, NOT SAVING");
+                        //Debug.Log("SaveManager.SaveWindowPositions(): " + i + "X: " + InventoryManager.Instance.MyBagNodes[i].MyBagWindow.transform.position.x + "; y: " + InventoryManager.Instance.MyBagNodes[i].MyBagWindow.transform.position.y + " WINDOW CLOSED@!!!!, NOT SAVING");
                     }
                 }
             }
@@ -1467,7 +1467,7 @@ namespace AnyRPG {
 
         public void DeleteGame(AnyRPGSaveData anyRPGSaveData) {
             File.Delete(Application.persistentDataPath + "/" + makeSaveDirectoryName() + "/" + anyRPGSaveData.DataFileName);
-            SystemEventManager.MyInstance.NotifyOnDeleteSaveData();
+            SystemEventManager.TriggerEvent("OnDeleteSaveData", new EventParamProperties());
         }
 
         public void CopyGame(AnyRPGSaveData anyRPGSaveData) {

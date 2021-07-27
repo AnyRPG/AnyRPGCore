@@ -12,16 +12,16 @@ namespace AnyRPG {
         #region Singleton
         private static MainMapManager instance;
 
-        public static MainMapManager MyInstance {
+        public static MainMapManager Instance {
             get {
-                if (instance == null) {
-                    instance = FindObjectOfType<MainMapManager>();
-                }
-
                 return instance;
             }
         }
 
+        private void Awake() {
+            instance = this;
+            Init();
+        }
         #endregion
 
         [SerializeField]
@@ -33,7 +33,7 @@ namespace AnyRPG {
 
         public Dictionary<Interactable, MainMapIndicatorController> MapIndicatorControllers { get => mapIndicatorControllers; }
 
-        public void Awake() {
+        public void Init() {
             CreateEventSubscriptions();
         }
 
@@ -48,7 +48,7 @@ namespace AnyRPG {
         public MainMapIndicatorController AddIndicator(Interactable interactable) {
             //Debug.Log("MainMapController.AddIndicator(" + interactable.gameObject.name + ")");
             if (mapIndicatorControllers.ContainsKey(interactable) == false) {
-                GameObject mainMapIndicator = ObjectPooler.MyInstance.GetPooledObject(mapIndicatorPrefab, (PopupWindowManager.Instance.mainMapWindow.CloseableWindowContents as MainMapController).MapGraphic.transform);
+                GameObject mainMapIndicator = ObjectPooler.Instance.GetPooledObject(mapIndicatorPrefab, (PopupWindowManager.Instance.mainMapWindow.CloseableWindowContents as MainMapController).MapGraphic.transform);
                 if (mainMapIndicator != null) {
                     MainMapIndicatorController mapIndicatorController = mainMapIndicator.GetComponent<MainMapIndicatorController>();
                     if (mapIndicatorController != null) {
@@ -64,7 +64,7 @@ namespace AnyRPG {
         public void RemoveIndicator(Interactable interactable) {
             if (mapIndicatorControllers.ContainsKey(interactable)) {
                 mapIndicatorControllers[interactable].ResetSettings();
-                ObjectPooler.MyInstance.ReturnObjectToPool(mapIndicatorControllers[interactable].gameObject);
+                ObjectPooler.Instance.ReturnObjectToPool(mapIndicatorControllers[interactable].gameObject);
                 mapIndicatorControllers.Remove(interactable);
             }
         }

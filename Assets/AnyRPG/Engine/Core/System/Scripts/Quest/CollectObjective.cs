@@ -30,14 +30,14 @@ namespace AnyRPG {
                 return;
             }
             CurrentAmount = InventoryManager.Instance.GetItemCount(MyType);
-            CurrentAmount += PlayerManager.MyInstance.MyCharacter.CharacterEquipmentManager.GetEquipmentCount(MyType);
+            CurrentAmount += PlayerManager.Instance.MyCharacter.CharacterEquipmentManager.GetEquipmentCount(MyType);
 
             quest.CheckCompletion(true, printMessages);
             if (CurrentAmount <= MyAmount && !quest.MyIsAchievement && printMessages == true && CurrentAmount != 0) {
-                MessageFeedManager.MyInstance.WriteMessage(string.Format("{0}: {1}/{2}", DisplayName, Mathf.Clamp(CurrentAmount, 0, MyAmount), MyAmount));
+                MessageFeedManager.Instance.WriteMessage(string.Format("{0}: {1}/{2}", DisplayName, Mathf.Clamp(CurrentAmount, 0, MyAmount), MyAmount));
             }
             if (completeBefore == false && IsComplete && !quest.MyIsAchievement && printMessages == true) {
-                MessageFeedManager.MyInstance.WriteMessage(string.Format("Collect {0} {1}: Objective Complete", CurrentAmount, DisplayName));
+                MessageFeedManager.Instance.WriteMessage(string.Format("Collect {0} {1}: Objective Complete", CurrentAmount, DisplayName));
             }
             //Debug.Log("CollectObjective Updating item count to " + MyCurrentAmount.ToString() + " for type " + MyType);
             base.UpdateCompletionCount(printMessages);
@@ -52,13 +52,13 @@ namespace AnyRPG {
 
         public override void OnAcceptQuest(Quest quest, bool printMessages = true) {
             base.OnAcceptQuest(quest, printMessages);
-            SystemEventManager.MyInstance.OnItemCountChanged += UpdateItemCount;
+            SystemEventManager.Instance.OnItemCountChanged += UpdateItemCount;
             UpdateCompletionCount(printMessages);
         }
 
         public override void OnAbandonQuest() {
             base.OnAbandonQuest();
-            SystemEventManager.MyInstance.OnItemCountChanged -= UpdateItemCount;
+            SystemEventManager.Instance.OnItemCountChanged -= UpdateItemCount;
         }
 
     }

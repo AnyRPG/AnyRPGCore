@@ -31,7 +31,7 @@ namespace AnyRPG {
         public override void SetupScriptableObjects() {
             base.SetupScriptableObjects();
             if (factionName != null && factionName != string.Empty) {
-                Faction tmpFaction = SystemFactionManager.MyInstance.GetResource(factionName);
+                Faction tmpFaction = SystemFactionManager.Instance.GetResource(factionName);
                 if (tmpFaction != null) {
                     faction = tmpFaction;
                 } else {

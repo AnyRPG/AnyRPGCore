@@ -29,7 +29,7 @@ namespace AnyRPG {
 
         public void UpdateStatus(bool notify = true) {
             bool originalResult = prerequisiteMet;
-            bool checkResult = (Faction.RelationWith(PlayerManager.MyInstance.MyCharacter, prerequisiteFaction) >= prerequisiteDisposition);
+            bool checkResult = (Faction.RelationWith(PlayerManager.Instance.MyCharacter, prerequisiteFaction) >= prerequisiteDisposition);
             if (checkResult != originalResult) {
                 prerequisiteMet = checkResult;
                 if (notify == true) {
@@ -41,7 +41,7 @@ namespace AnyRPG {
         public virtual bool IsMet(BaseCharacter baseCharacter) {
             //Debug.Log("DialogPrerequisite.IsMet(): " + prerequisiteName);
             /*
-            Dialog _dialog = SystemDialogManager.MyInstance.GetResource(prerequisiteName);
+            Dialog _dialog = SystemDialogManager.Instance.GetResource(prerequisiteName);
             if (_dialog != null) {
                 if (_dialog.TurnedIn == true) {
                     return true;
@@ -54,7 +54,7 @@ namespace AnyRPG {
 
         public void SetupScriptableObjects() {
             if (prerequisiteName != null && prerequisiteName != string.Empty) {
-                prerequisiteFaction = SystemFactionManager.MyInstance.GetResource(prerequisiteName);
+                prerequisiteFaction = SystemFactionManager.Instance.GetResource(prerequisiteName);
             } else {
                 Debug.LogError("SystemAbilityManager.SetupScriptableObjects(): Could not find dialog : " + prerequisiteName + " while inititalizing a dialog prerequisite.  CHECK INSPECTOR");
             }
@@ -62,7 +62,7 @@ namespace AnyRPG {
         }
 
         public void CleanupScriptableObjects() {
-            if (SystemEventManager.MyInstance != null) {
+            if (SystemEventManager.Instance != null) {
                 SystemEventManager.StopListening("OnReputationChange", HandleReputationChange);
             }
         }

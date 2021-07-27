@@ -23,7 +23,7 @@ namespace AnyRPG {
 
         /*
         public void AddCurrency(string currency) {
-            Currency addCurrency = SystemCurrencyManager.MyInstance.GetResource(currency);
+            Currency addCurrency = SystemCurrencyManager.Instance.GetResource(currency);
             AddCurrency(addCurrency);
         }
         */

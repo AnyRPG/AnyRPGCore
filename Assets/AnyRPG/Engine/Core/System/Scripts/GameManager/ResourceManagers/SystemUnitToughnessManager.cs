@@ -10,7 +10,7 @@ namespace AnyRPG {
         #region Singleton
         private static SystemUnitToughnessManager instance;
 
-        public static SystemUnitToughnessManager MyInstance {
+        public static SystemUnitToughnessManager Instance {
             get {
                 if (instance == null) {
                     instance = FindObjectOfType<SystemUnitToughnessManager>();

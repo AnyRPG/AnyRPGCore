@@ -9,14 +9,14 @@ namespace AnyRPG {
         #region Singleton
         private static SystemWindowManager instance;
 
-        public static SystemWindowManager MyInstance {
+        public static SystemWindowManager Instance {
             get {
-                if (instance == null) {
-                    instance = FindObjectOfType<SystemWindowManager>();
-                }
-
                 return instance;
             }
+        }
+
+        private void Awake() {
+            instance = this;
         }
         #endregion
 
@@ -59,8 +59,8 @@ namespace AnyRPG {
             if (eventSubscriptionsInitialized) {
                 return;
             }
-            SystemEventManager.MyInstance.OnPlayerConnectionSpawn += SetupDeathPopup;
-            SystemEventManager.MyInstance.OnPlayerConnectionDespawn += RemoveDeathPopup;
+            SystemEventManager.StartListening("OnPlayerConnectionSpawn", handlePlayerConnectionSpawn);
+            SystemEventManager.StartListening("OnPlayerConnectionDespawn", handlePlayerConnectionDespawn);
             eventSubscriptionsInitialized = true;
         }
 
@@ -69,9 +69,17 @@ namespace AnyRPG {
             if (!eventSubscriptionsInitialized) {
                 return;
             }
-            SystemEventManager.MyInstance.OnPlayerConnectionSpawn += SetupDeathPopup;
-            SystemEventManager.MyInstance.OnPlayerConnectionDespawn += RemoveDeathPopup;
+            SystemEventManager.StopListening("OnPlayerConnectionSpawn", handlePlayerConnectionSpawn);
+            SystemEventManager.StopListening("OnPlayerConnectionDespawn", handlePlayerConnectionDespawn);
             eventSubscriptionsInitialized = false;
+        }
+
+        public void handlePlayerConnectionSpawn(string eventName, EventParamProperties eventParamProperties) {
+            SetupDeathPopup();
+        }
+
+        public void handlePlayerConnectionDespawn(string eventName, EventParamProperties eventParamProperties) {
+            RemoveDeathPopup();
         }
 
         public void OnDisable() {
@@ -89,7 +97,7 @@ namespace AnyRPG {
                 return;
             }
 
-            if (InputManager.MyInstance.KeyBindWasPressed("CANCEL")) {
+            if (InputManager.Instance.KeyBindWasPressed("CANCEL")) {
                 settingsMenuWindow.CloseWindow();
                 creditsWindow.CloseWindow();
                 exitMenuWindow.CloseWindow();
@@ -102,12 +110,12 @@ namespace AnyRPG {
                 petSpawnWindow.CloseWindow();
 
                 // do not allow accidentally closing this while dead
-                if (PlayerManager.MyInstance.PlayerUnitSpawned == true && PlayerManager.MyInstance.MyCharacter.CharacterStats.IsAlive != false) {
+                if (PlayerManager.Instance.PlayerUnitSpawned == true && PlayerManager.Instance.MyCharacter.CharacterStats.IsAlive != false) {
                     playerOptionsMenuWindow.CloseWindow();
                 }
             }
 
-            if (InputManager.MyInstance.KeyBindWasPressed("MAINMENU")) {
+            if (InputManager.Instance.KeyBindWasPressed("MAINMENU")) {
                 inGameMainMenuWindow.ToggleOpenClose();
             }
 
@@ -143,12 +151,12 @@ namespace AnyRPG {
 
         public void SetupDeathPopup() {
             //Debug.Log("PopupWindowmanager.SetupDeathPopup()");
-            PlayerManager.MyInstance.MyCharacter.CharacterStats.OnDie += PlayerDeathHandler;
+            PlayerManager.Instance.MyCharacter.CharacterStats.OnDie += PlayerDeathHandler;
         }
 
         public void RemoveDeathPopup() {
             //Debug.Log("PopupWindowmanager.RemoveDeathPopup()");
-            PlayerManager.MyInstance.MyCharacter.CharacterStats.OnDie -= PlayerDeathHandler;
+            PlayerManager.Instance.MyCharacter.CharacterStats.OnDie -= PlayerDeathHandler;
         }
 
         public void OpenInGameMainMenu() {

@@ -44,11 +44,11 @@ namespace AnyRPG {
 
             if (MyQuest.MyHasOpeningDialog == true && MyQuest.MyOpeningDialog != null && MyQuest.MyOpeningDialog.TurnedIn == false) {
                 //Debug.Log("InteractionPanelQuestScript.Select(): dialog is not completed, popping dialog with questGiver: " + (questGiver == null ? "null" : questGiver.Interactable.DisplayName));
-                QuestGiverUI.MyInstance.ShowDescription(MyQuest, questGiver);
+                QuestGiverUI.Instance.ShowDescription(MyQuest, questGiver);
             } else {
                 //Debug.Log("InteractionPanelQuestScript.Select(): has no dialog, or dialog is completed, opening questgiver window");
                 PopupWindowManager.Instance.questGiverWindow.OpenWindow();
-                QuestGiverUI.MyInstance.ShowDescription(MyQuest, questGiver);
+                QuestGiverUI.Instance.ShowDescription(MyQuest, questGiver);
             }
 
         }
@@ -67,7 +67,7 @@ namespace AnyRPG {
                 markedComplete = false;
                 MyText.text = "[" + MyQuest.MyExperienceLevel + "] " + MyQuest.DisplayName;
             }
-            MyText.color = LevelEquations.GetTargetColor(PlayerManager.MyInstance.MyCharacter.CharacterStats.Level, MyQuest.MyExperienceLevel);
+            MyText.color = LevelEquations.GetTargetColor(PlayerManager.Instance.MyCharacter.CharacterStats.Level, MyQuest.MyExperienceLevel);
         }
 
 

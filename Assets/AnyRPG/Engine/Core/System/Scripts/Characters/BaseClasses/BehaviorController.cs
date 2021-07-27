@@ -222,9 +222,9 @@ namespace AnyRPG {
                 foreach (string behaviorName in unitController.BehaviorNames) {
                     BehaviorProfile tmpBehaviorProfile = null;
                     if (unitController.UseBehaviorCopy == true) {
-                        tmpBehaviorProfile = SystemBehaviorProfileManager.MyInstance.GetNewResource(behaviorName);
+                        tmpBehaviorProfile = SystemBehaviorProfileManager.Instance.GetNewResource(behaviorName);
                     } else {
-                        tmpBehaviorProfile = SystemBehaviorProfileManager.MyInstance.GetResource(behaviorName);
+                        tmpBehaviorProfile = SystemBehaviorProfileManager.Instance.GetResource(behaviorName);
                     }
                     if (tmpBehaviorProfile != null) {
                         AddToBehaviorList(tmpBehaviorProfile);
@@ -240,9 +240,9 @@ namespace AnyRPG {
                     foreach (string behaviorProfileName in unitController.UnitProfile.BehaviorProps.BehaviorNames) {
                         BehaviorProfile tmpBehaviorProfile = null;
                         if (unitController.UnitProfile.BehaviorProps.UseBehaviorCopy == true) {
-                            tmpBehaviorProfile = SystemBehaviorProfileManager.MyInstance.GetNewResource(behaviorProfileName);
+                            tmpBehaviorProfile = SystemBehaviorProfileManager.Instance.GetNewResource(behaviorProfileName);
                         } else {
-                            tmpBehaviorProfile = SystemBehaviorProfileManager.MyInstance.GetResource(behaviorProfileName);
+                            tmpBehaviorProfile = SystemBehaviorProfileManager.Instance.GetResource(behaviorProfileName);
                         }
                         if (tmpBehaviorProfile != null) {
                             tmpBehaviorProfile.OnPrerequisiteUpdates += HandlePrerequisiteUpdates;
@@ -262,11 +262,11 @@ namespace AnyRPG {
         }
 
         public void StopBackgroundMusic() {
-            AudioManager.MyInstance.StopMusic();
+            AudioManager.Instance.StopMusic();
         }
 
         public void StartBackgroundMusic() {
-            LevelManager.MyInstance.PlayLevelSounds();
+            LevelManager.Instance.PlayLevelSounds();
         }
 
 

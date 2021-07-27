@@ -9,7 +9,7 @@ namespace AnyRPG {
         #region Singleton
         private static SystemMaterialProfileManager instance;
 
-        public static SystemMaterialProfileManager MyInstance {
+        public static SystemMaterialProfileManager Instance {
             get {
                 if (instance == null) {
                     instance = FindObjectOfType<SystemMaterialProfileManager>();

@@ -10,17 +10,15 @@ namespace AnyRPG {
         #region Singleton
         private static SystemEventManager instance;
 
-        public static SystemEventManager MyInstance {
+        public static SystemEventManager Instance {
             get {
-                if (instance == null) {
-                    instance = FindObjectOfType<SystemEventManager>();
-                    if (instance != null) {
-                        instance.Init();
-                    }
-                }
-
                 return instance;
             }
+        }
+
+        private void Awake() {
+            instance = this;
+            Init();
         }
 
         void Init() {
@@ -33,11 +31,6 @@ namespace AnyRPG {
         private Dictionary<string, Action<string, EventParamProperties>> singleEventDictionary;
 
 
-        //public event System.Action OnPrerequisiteUpdated = delegate { };
-        public event System.Action OnQuestStatusUpdated = delegate { };
-        public event System.Action OnAfterQuestStatusUpdated = delegate { };
-        public event System.Action OnQuestObjectiveStatusUpdated = delegate { };
-        //public event System.Action<IAbility> OnAbilityCast = delegate { };
         public event System.Action<BaseAbility> OnAbilityUsed = delegate { };
         public event System.Action<BaseAbility> OnAbilityListChanged = delegate { };
         public event System.Action<Skill> OnSkillListChanged = delegate { };
@@ -49,102 +42,51 @@ namespace AnyRPG {
         public event System.Action<Interactable> OnInteractionCompleted = delegate { };
         public event System.Action<InteractableOptionComponent> OnInteractionWithOptionCompleted = delegate { };
         public event System.Action<Item> OnItemCountChanged = delegate { };
-        public event System.Action OnBeginKeybind = delegate { };
-        public event System.Action OnEndKeybind = delegate { };
         public event System.Action<Dialog> OnDialogCompleted = delegate { };
-        public event System.Action OnDeleteSaveData = delegate { };
         public event System.Action<IAbilityCaster, CharacterUnit, int, string> OnTakeDamage = delegate { };
-        public event System.Action OnXPGained = delegate { };
-
-        // Player Manager
-        public event System.Action OnPlayerConnectionSpawn = delegate { };
-        public event System.Action OnBeforePlayerConnectionSpawn = delegate { };
-        public event System.Action OnPlayerConnectionDespawn = delegate { };
-        public event System.Action OnPlayerUMACreated = delegate { };
-        public event System.Action OnPlayerNameChanged = delegate { };
-
-        // Level manager
-        public event System.Action OnExitGame = delegate { };
-
-        // loot UI
-        public event System.Action OnTakeLoot = delegate { };
 
         // equipment manager
         public System.Action<Equipment, Equipment> OnEquipmentChanged = delegate { };
-        //public System.Action<Equipment> OnEquipmentRefresh = delegate { };
-
-        // UI
-        public System.Action OnPagedButtonsTransparencyUpdate = delegate { };
-        public System.Action OnInventoryTransparencyUpdate = delegate { };
-
-        // currency manager
-        public System.Action OnCurrencyChange = delegate { };
-
-        private void Awake() {
-            //Debug.Log("SystemGameManager.Awake()");
-        }
-
-        private void Start() {
-            //Debug.Log("SystemGameManager.Start()");
-        }
 
         public static void StartListening(string eventName, Action<string, EventParamProperties> listener) {
             Action<string, EventParamProperties> thisEvent;
-            if (MyInstance.singleEventDictionary.TryGetValue(eventName, out thisEvent)) {
+            if (Instance.singleEventDictionary.TryGetValue(eventName, out thisEvent)) {
 
                 //Add more event to the existing one
                 thisEvent += listener;
 
                 //Update the Dictionary
-                MyInstance.singleEventDictionary[eventName] = thisEvent;
+                Instance.singleEventDictionary[eventName] = thisEvent;
             } else {
                 //Add event to the Dictionary for the first time
                 thisEvent += listener;
 
-                MyInstance.singleEventDictionary.Add(eventName, thisEvent);
+                Instance.singleEventDictionary.Add(eventName, thisEvent);
             }
         }
 
         public static void StopListening(string eventName, Action<string, EventParamProperties> listener) {
-            if (MyInstance == null) return;
+            if (Instance == null) return;
 
             Action<string, EventParamProperties> thisEvent;
-            if (MyInstance.singleEventDictionary.TryGetValue(eventName, out thisEvent)) {
+            if (Instance.singleEventDictionary.TryGetValue(eventName, out thisEvent)) {
 
                 //Remove event from the existing one
                 thisEvent -= listener;
 
                 //Update the Dictionary
-                MyInstance.singleEventDictionary[eventName] = thisEvent;
+                Instance.singleEventDictionary[eventName] = thisEvent;
             }
         }
 
         public static void TriggerEvent(string eventName, EventParamProperties eventParam) {
             Action<string, EventParamProperties> thisEvent = null;
-            if (MyInstance.singleEventDictionary.TryGetValue(eventName, out thisEvent)) {
+            if (Instance.singleEventDictionary.TryGetValue(eventName, out thisEvent)) {
                 if (thisEvent != null) {
                     thisEvent.Invoke(eventName, eventParam);
                 }
                 // OR USE  instance.eventDictionary[eventName](eventParam);
             }
-        }
-
-        public void NotifyOnCurrencyChange() {
-            OnCurrencyChange();
-        }
-
-        public void NotifyOnInventoryTransparencyUpdate() {
-            //Debug.Log("SystemEventManager.OnInventoryTransparencyUpdate()");
-            OnInventoryTransparencyUpdate();
-        }
-
-        public void NotifyOnPagedButtonsTransparencyUpdate() {
-            //Debug.Log("SystemEventManager.NotifyOnPagedButtonsTransparencyUpdate()");
-            OnPagedButtonsTransparencyUpdate();
-        }
-
-        public void NotifyOnQuestObjectiveStatusUpdated() {
-            OnQuestObjectiveStatusUpdated();
         }
 
         public void NotifyOnEquipmentChanged(Equipment newEquipment, Equipment oldEquipment) {
@@ -155,58 +97,8 @@ namespace AnyRPG {
             OnClassChange(newCharacterClass, oldCharacterClass);
         }
 
-        /*
-        public void NotifyOnEquipmentRefresh(Equipment newEquipment) {
-            OnEquipmentRefresh(newEquipment);
-        }
-        */
-
-        public void NotifyOnTakeLoot() {
-            OnTakeLoot();
-        }
-
-        public void NotifyOnExitGame() {
-            OnExitGame();
-        }
-
-        public void NotifyOnPlayerConnectionSpawn() {
-            OnPlayerConnectionSpawn();
-        }
-
-        public void NotifyBeforePlayerConnectionSpawn() {
-            OnBeforePlayerConnectionSpawn();
-        }
-
-        public void NotifyOnPlayerConnectionDespawn() {
-            OnPlayerConnectionDespawn();
-        }
-
-        public void NotifyOnPlayerUMACreated() {
-            OnPlayerUMACreated();
-        }
-
-        public void NotifyOnPlayerNameChanged() {
-            OnPlayerNameChanged();
-        }
-
-        public void NotifyOnXPGained() {
-            OnXPGained();
-        }
-
         public void NotifyOnTakeDamage(IAbilityCaster source, CharacterUnit target, int damage, string abilityName) {
             OnTakeDamage(source, target, damage, abilityName);
-        }
-
-        public void NotifyOnDeleteSaveData() {
-            OnDeleteSaveData();
-        }
-
-        public void NotifyOnOnBeginKeybind() {
-            OnBeginKeybind();
-        }
-
-        public void NotifyOnEndKeybind() {
-            OnEndKeybind();
         }
 
         public void NotifyOnDialogCompleted(Dialog dialog) {
@@ -238,19 +130,6 @@ namespace AnyRPG {
             //OnPrerequisiteUpdated();
         }
 
-        public void NotifyOnQuestStatusUpdated() {
-            //Debug.Log("SystemEventManager.NotifyOnQuestStatusUpdated");
-            if (PlayerManager.MyInstance != null && PlayerManager.MyInstance.PlayerUnitSpawned == false) {
-                // STOP STUFF FROM REACTING WHEN PLAYER ISN'T SPAWNED
-                return;
-            }
-            OnQuestStatusUpdated();
-            OnAfterQuestStatusUpdated();
-            // having these two separate seems to be ok for now.  the items that react to the first event do not react to the second, nor do they send prerequisiteupdates so no double calls should happen
-            //OnPrerequisiteUpdated();
-        }
-
-        
         public void NotifyOnAbilityListChanged(BaseAbility newAbility) {
             //Debug.Log("SystemEventManager.NotifyOnAbilityListChanged(" + abilityName + ")");
             OnAbilityListChanged(newAbility);
@@ -271,11 +150,6 @@ namespace AnyRPG {
         public void NotifyOnItemCountChanged(Item item) {
             OnItemCountChanged(item);
         }
-        /*
-        public void NotifyAbilityCast(IAbility ability) {
-            OnAbilityCast(ability);
-        }
-        */
 
     }
 

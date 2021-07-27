@@ -7,21 +7,20 @@ namespace AnyRPG {
         #region Singleton
         private static UnitPreviewManager instance;
 
-        public static UnitPreviewManager MyInstance {
+        public static UnitPreviewManager Instance {
             get {
-                if (instance == null) {
-                    instance = FindObjectOfType<UnitPreviewManager>();
-                }
-
                 return instance;
             }
         }
 
+        private void Awake() {
+            instance = this;
+        }
         #endregion
 
 
         public override UnitProfile GetCloneSource() {
-            return UnitSpawnControlPanel.MyInstance.MySelectedUnitSpawnButton.MyUnitProfile;
+            return UnitSpawnControlPanel.Instance.MySelectedUnitSpawnButton.MyUnitProfile;
         }
 
         public void HandleOpenWindow() {

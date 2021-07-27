@@ -9,7 +9,7 @@ namespace AnyRPG {
         #region Singleton
         private static SystemArmorClassManager instance;
 
-        public static SystemArmorClassManager MyInstance {
+        public static SystemArmorClassManager Instance {
             get {
                 if (instance == null) {
                     instance = FindObjectOfType<SystemArmorClassManager>();

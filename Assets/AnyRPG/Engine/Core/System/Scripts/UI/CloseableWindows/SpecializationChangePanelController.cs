@@ -52,7 +52,7 @@ namespace AnyRPG {
 
             ClearTraitRewardIcons();
             // show trait rewards
-            CapabilityProps capabilityProps = classSpecialization.GetFilteredCapabilities(PlayerManager.MyInstance.ActiveCharacter);
+            CapabilityProps capabilityProps = classSpecialization.GetFilteredCapabilities(PlayerManager.Instance.ActiveCharacter);
             if (capabilityProps.TraitList.Count > 0) {
                 traitsArea.gameObject.SetActive(true);
             } else {
@@ -61,10 +61,10 @@ namespace AnyRPG {
             }
             for (int i = 0; i < capabilityProps.TraitList.Count; i++) {
                 if (capabilityProps.TraitList[i] != null) {
-                    RewardButton rewardIcon = ObjectPooler.MyInstance.GetPooledObject(rewardIconPrefab, traitIconsArea.transform).GetComponent<RewardButton>();
+                    RewardButton rewardIcon = ObjectPooler.Instance.GetPooledObject(rewardIconPrefab, traitIconsArea.transform).GetComponent<RewardButton>();
                     rewardIcon.SetDescribable(capabilityProps.TraitList[i]);
                     traitRewardIcons.Add(rewardIcon);
-                    if ((capabilityProps.TraitList[i] as StatusEffect).RequiredLevel > PlayerManager.MyInstance.MyCharacter.CharacterStats.Level) {
+                    if ((capabilityProps.TraitList[i] as StatusEffect).RequiredLevel > PlayerManager.Instance.MyCharacter.CharacterStats.Level) {
                         rewardIcon.StackSizeText.text = "Level\n" + (capabilityProps.TraitList[i] as StatusEffect).RequiredLevel;
                         rewardIcon.MyHighlightIcon.color = new Color32(255, 255, 255, 80);
                     }
@@ -77,7 +77,7 @@ namespace AnyRPG {
 
             ClearRewardIcons();
             // show ability rewards
-            CapabilityProps capabilityProps = classSpecialization.GetFilteredCapabilities(PlayerManager.MyInstance.ActiveCharacter);
+            CapabilityProps capabilityProps = classSpecialization.GetFilteredCapabilities(PlayerManager.Instance.ActiveCharacter);
             if (capabilityProps.AbilityList.Count > 0) {
                 abilitiesArea.gameObject.SetActive(true);
             } else {
@@ -86,10 +86,10 @@ namespace AnyRPG {
             }
             for (int i = 0; i < capabilityProps.AbilityList.Count; i++) {
                 if (capabilityProps.AbilityList[i] != null) {
-                    RewardButton rewardIcon = ObjectPooler.MyInstance.GetPooledObject(rewardIconPrefab, abilityIconsArea.transform).GetComponent<RewardButton>();
+                    RewardButton rewardIcon = ObjectPooler.Instance.GetPooledObject(rewardIconPrefab, abilityIconsArea.transform).GetComponent<RewardButton>();
                     rewardIcon.SetDescribable(capabilityProps.AbilityList[i]);
                     abilityRewardIcons.Add(rewardIcon);
-                    if (capabilityProps.AbilityList[i].RequiredLevel > PlayerManager.MyInstance.MyCharacter.CharacterStats.Level) {
+                    if (capabilityProps.AbilityList[i].RequiredLevel > PlayerManager.Instance.MyCharacter.CharacterStats.Level) {
                         rewardIcon.StackSizeText.text = "Level\n" + capabilityProps.AbilityList[i].RequiredLevel;
                         rewardIcon.MyHighlightIcon.color = new Color32(255, 255, 255, 80);
                     }
@@ -101,7 +101,7 @@ namespace AnyRPG {
             //Debug.Log("ClassChangePanelController.ClearRewardIcons()");
 
             foreach (RewardButton rewardIcon in traitRewardIcons) {
-                ObjectPooler.MyInstance.ReturnObjectToPool(rewardIcon.gameObject);
+                ObjectPooler.Instance.ReturnObjectToPool(rewardIcon.gameObject);
             }
             traitRewardIcons.Clear();
         }
@@ -110,7 +110,7 @@ namespace AnyRPG {
             //Debug.Log("ClassChangePanelController.ClearRewardIcons()");
 
             foreach (RewardButton rewardIcon in abilityRewardIcons) {
-                ObjectPooler.MyInstance.ReturnObjectToPool(rewardIcon.gameObject);
+                ObjectPooler.Instance.ReturnObjectToPool(rewardIcon.gameObject);
             }
             abilityRewardIcons.Clear();
         }
@@ -122,7 +122,7 @@ namespace AnyRPG {
 
         public void ConfirmAction() {
             //Debug.Log("ClassChangePanelController.ConfirmAction()");
-            PlayerManager.MyInstance.SetPlayerCharacterSpecialization(classSpecialization);
+            PlayerManager.Instance.SetPlayerCharacterSpecialization(classSpecialization);
             OnConfirmAction();
             PopupWindowManager.Instance.specializationChangeWindow.CloseWindow();
         }

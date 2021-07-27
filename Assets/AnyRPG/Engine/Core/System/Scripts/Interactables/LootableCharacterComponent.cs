@@ -86,15 +86,17 @@ namespace AnyRPG {
                 (characterUnit.Interactable as UnitController).OnBeforeDie -= HandleDeath;
                 (characterUnit.Interactable as UnitController).OnReviveComplete -= HandleRevive;
             }
-            if (SystemEventManager.MyInstance != null) {
-                SystemEventManager.MyInstance.OnTakeLoot -= TryToDespawn;
-            }
+            SystemEventManager.StopListening("OnTakeLoot", HandleTakeLoot);
+        }
+
+        public void HandleTakeLoot(string eventName, EventParamProperties eventParamProperties) {
+            TryToDespawn();
         }
 
         public void CreateLootTables() {
             //Debug.Log(gameObject.name + ".LootableCharacter.CreateLootTables()");
             foreach (string lootTableName in Props.LootTableNames) {
-                LootTable lootTable = SystemLootTableManager.MyInstance.GetNewResource(lootTableName);
+                LootTable lootTable = SystemLootTableManager.Instance.GetNewResource(lootTableName);
                 if (lootTable != null) {
                     lootTables.Add(lootTable);
                 }
@@ -107,23 +109,23 @@ namespace AnyRPG {
 
         public void HandleDeath(CharacterStats characterStats) {
             //Debug.Log(gameObject.name + "LootableCharacter.HandleDeath()");
-            if (PlayerManager.MyInstance == null) {
+            if (PlayerManager.Instance == null) {
                 // game is exiting
                 return;
             }
             int lootCount = 0;
             //Debug.Log(gameObject.name + "LootableCharacter.HandleDeath(): MyLootTable != null.  Getting loot");
-            //Debug.Log(gameObject.name + "LootableCharacter.HandleDeath(): characterinAgrotable: " + characterUnit.BaseCharacter.CharacterCombat.MyAggroTable.AggroTableContains(PlayerManager.MyInstance.MyCharacter.CharacterUnit));
-            if (lootTables != null && characterUnit.BaseCharacter.CharacterCombat.AggroTable.AggroTableContains(PlayerManager.MyInstance.UnitController.CharacterUnit)) {
-                //Debug.Log(gameObject.name + "LootableCharacter.HandleDeath(): characterinAgrotable: " + characterUnit.BaseCharacter.CharacterCombat.MyAggroTable.AggroTableContains(PlayerManager.MyInstance.MyCharacter.CharacterUnit));
+            //Debug.Log(gameObject.name + "LootableCharacter.HandleDeath(): characterinAgrotable: " + characterUnit.BaseCharacter.CharacterCombat.MyAggroTable.AggroTableContains(PlayerManager.Instance.MyCharacter.CharacterUnit));
+            if (lootTables != null && characterUnit.BaseCharacter.CharacterCombat.AggroTable.AggroTableContains(PlayerManager.Instance.UnitController.CharacterUnit)) {
+                //Debug.Log(gameObject.name + "LootableCharacter.HandleDeath(): characterinAgrotable: " + characterUnit.BaseCharacter.CharacterCombat.MyAggroTable.AggroTableContains(PlayerManager.Instance.MyCharacter.CharacterUnit));
                 lootCount = GetLootCount();
             }
             lootCalculated = true;
             if (lootCount > 0 && SystemConfigurationManager.Instance?.LootSparkleEffect != null) {
                 //Debug.Log(gameObject.name + "LootableCharacter.HandleDeath(): Loot count: " + MyLootTable.MyDroppedItems.Count + "; performing loot sparkle");
 
-                //SystemAbilityController.MyInstance.BeginAbility(SystemConfigurationManager.MyInstance.MyLootSparkleAbility as IAbility, gameObject);
-                SystemConfigurationManager.Instance.LootSparkleEffect.Cast(SystemAbilityController.MyInstance, interactable, interactable, new AbilityEffectContext());
+                //SystemAbilityController.Instance.BeginAbility(SystemConfigurationManager.Instance.MyLootSparkleAbility as IAbility, gameObject);
+                SystemConfigurationManager.Instance.LootSparkleEffect.Cast(SystemAbilityController.Instance, interactable, interactable, new AbilityEffectContext());
             }
             TryToDespawn();
         }
@@ -146,7 +148,7 @@ namespace AnyRPG {
             int lootCount = GetLootCount();
             if (lootCount == 0) {
                 //Debug.Log(gameObject.name + ".LootableCharacter.TryToDespawn(): loot table had no dropped items, despawning");
-                SystemEventManager.MyInstance.OnTakeLoot -= TryToDespawn;
+                SystemEventManager.StopListening("OnTakeLoot", HandleTakeLoot);
 
                 // cancel loot sparkle here because despawn takes a while
                 if (characterUnit.BaseCharacter.CharacterStats.StatusEffects.ContainsKey(SystemResourceManager.prepareStringForMatch(SystemConfigurationManager.Instance.LootSparkleEffect.DisplayName))) {
@@ -297,8 +299,13 @@ namespace AnyRPG {
                             // get item loot
                             foreach (LootTable lootTable in lootableCharacter.LootTables) {
                                 itemDrops.AddRange(lootTable.GetLoot());
+                                // testing - move this outside of loop because otherwise we can subscribe multiple times to loot events, and they will never be cleared
+                                //lootableCharacter.MonitorLootTable();
+                            }
+                            if (lootableCharacter.LootTables.Count > 0 || Props.AutomaticCurrency == true) {
                                 lootableCharacter.MonitorLootTable();
                             }
+
                         }
                     }
                 }
@@ -316,7 +323,7 @@ namespace AnyRPG {
 
                 if (drops.Count > 0) {
                     //Debug.Log(interactable.gameObject.name + ".LootableCharacter.drops.Count: " + drops.Count);
-                    LootManager.MyInstance.CreatePages(drops);
+                    LootManager.Instance.CreatePages(drops);
                     //Debug.Log(gameObject.name + ".LootableCharacter.Interact(): about to open window");
                     PopupWindowManager.Instance.lootWindow.OpenWindow();
                     return true;
@@ -329,7 +336,8 @@ namespace AnyRPG {
         }
 
         public void MonitorLootTable() {
-            SystemEventManager.MyInstance.OnTakeLoot += TryToDespawn;
+            Debug.Log(interactable.gameObject.name + ".LootableCharacterComponent.MonitorLootTable()");
+            SystemEventManager.StartListening("OnTakeLoot", HandleTakeLoot);
         }
 
         public void ClearTakeLootHandler(ICloseableWindowContents windowContents) {

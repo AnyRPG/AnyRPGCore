@@ -130,7 +130,7 @@ namespace AnyRPG {
         /*
         public override void StopInteract() {
             base.StopInteract();
-            PopupWindowManager.MyInstance.AnimatedObjectWindow.CloseWindow();
+            PopupWindowManager.Instance.AnimatedObjectWindow.CloseWindow();
         }
         */
 

@@ -9,7 +9,7 @@ namespace AnyRPG {
         #region Singleton
         private static SystemClassSpecializationManager instance;
 
-        public static SystemClassSpecializationManager MyInstance {
+        public static SystemClassSpecializationManager Instance {
             get {
                 if (instance == null) {
                     instance = FindObjectOfType<SystemClassSpecializationManager>();

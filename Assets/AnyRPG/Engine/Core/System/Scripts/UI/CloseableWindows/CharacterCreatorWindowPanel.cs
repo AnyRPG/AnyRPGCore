@@ -12,16 +12,15 @@ namespace AnyRPG {
         #region Singleton
         private static CharacterCreatorWindowPanel instance;
 
-        public static CharacterCreatorWindowPanel MyInstance {
+        public static CharacterCreatorWindowPanel Instance {
             get {
-                if (instance == null) {
-                    instance = FindObjectOfType<CharacterCreatorWindowPanel>();
-                }
-
                 return instance;
             }
         }
 
+        private void Awake() {
+            instance = this;
+        }
         #endregion
 
         public event System.Action OnConfirmAction = delegate { };
@@ -79,7 +78,7 @@ namespace AnyRPG {
             if (SystemConfigurationManager.Instance.UseFirstCreatorProfile) {
                 unitProfile = SystemConfigurationManager.Instance.CharacterCreatorUnitProfile;
             } else {
-                unitProfile = PlayerManager.MyInstance.ActiveCharacter.UnitProfile;
+                unitProfile = PlayerManager.Instance.ActiveCharacter.UnitProfile;
             }
 
             // inform the preview panel so the character can be rendered
@@ -91,38 +90,38 @@ namespace AnyRPG {
 
         public void LoadUMARecipe() {
             //Debug.Log("CharacterCreatorWindowPanel.LoadUMARecipe()");
-            //SaveManager.MyInstance.SaveUMASettings();
-            SaveManager.MyInstance.LoadUMASettings(CharacterCreatorManager.MyInstance.PreviewUnitController.DynamicCharacterAvatar, false);
+            //SaveManager.Instance.SaveUMASettings();
+            SaveManager.Instance.LoadUMASettings(CharacterCreatorManager.Instance.PreviewUnitController.DynamicCharacterAvatar, false);
         }
 
         public void ClosePanel() {
             //Debug.Log("CharacterCreatorPanel.ClosePanel()");
-            SystemWindowManager.MyInstance.characterCreatorWindow.CloseWindow();
+            SystemWindowManager.Instance.characterCreatorWindow.CloseWindow();
         }
 
         public void SaveCharacter() {
             //Debug.Log("CharacterCreatorPanel.SaveCharacter()");
 
-            if (CharacterCreatorManager.MyInstance.PreviewUnitController.DynamicCharacterAvatar != null) {
-                SaveManager.MyInstance.SaveUMASettings(CharacterCreatorManager.MyInstance.PreviewUnitController.DynamicCharacterAvatar.GetCurrentRecipe());
+            if (CharacterCreatorManager.Instance.PreviewUnitController.DynamicCharacterAvatar != null) {
+                SaveManager.Instance.SaveUMASettings(CharacterCreatorManager.Instance.PreviewUnitController.DynamicCharacterAvatar.GetCurrentRecipe());
             }
 
             // replace a default player unit with an UMA player unit when a save occurs
             // testing : old if statement would cause a character that switched between 2 UMA profiles to not get unit profile properties set
             // from the second profile.  Just go ahead and always despawn units if their appearance changes.
-            //if (PlayerManager.MyInstance.UnitController.DynamicCharacterAvatar == null) {
-            Vector3 currentPlayerLocation = PlayerManager.MyInstance.ActiveUnitController.transform.position;
-            LevelManager.MyInstance.SpawnRotationOverride = PlayerManager.MyInstance.ActiveUnitController.transform.forward;
-            PlayerManager.MyInstance.DespawnPlayerUnit();
-            PlayerManager.MyInstance.MyCharacter.SetUnitProfile(unitProfile.DisplayName, true, -1, false);
-            PlayerManager.MyInstance.SpawnPlayerUnit(currentPlayerLocation);
-            if (PlayerManager.MyInstance.MyCharacter.CharacterAbilityManager != null) {
-                PlayerManager.MyInstance.MyCharacter.CharacterAbilityManager.LearnDefaultAutoAttackAbility();
+            //if (PlayerManager.Instance.UnitController.DynamicCharacterAvatar == null) {
+            Vector3 currentPlayerLocation = PlayerManager.Instance.ActiveUnitController.transform.position;
+            LevelManager.Instance.SpawnRotationOverride = PlayerManager.Instance.ActiveUnitController.transform.forward;
+            PlayerManager.Instance.DespawnPlayerUnit();
+            PlayerManager.Instance.MyCharacter.SetUnitProfile(unitProfile.DisplayName, true, -1, false);
+            PlayerManager.Instance.SpawnPlayerUnit(currentPlayerLocation);
+            if (PlayerManager.Instance.MyCharacter.CharacterAbilityManager != null) {
+                PlayerManager.Instance.MyCharacter.CharacterAbilityManager.LearnDefaultAutoAttackAbility();
             }
 
             //}
             // testing this is not needed because subscribing to the player unit spawn already handles this through the playermanager
-            //SaveManager.MyInstance.LoadUMASettings();
+            //SaveManager.Instance.LoadUMASettings();
             //ClosePanel();
 
             OnConfirmAction();

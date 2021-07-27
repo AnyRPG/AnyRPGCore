@@ -194,13 +194,13 @@ namespace AnyRPG {
             }
             rectTransform.GetWorldCorners(worldCorners);
             Vector3 mousePosition = Input.mousePosition;
-            if (InputManager.MyInstance.rightMouseButtonUp) {
+            if (InputManager.Instance.rightMouseButtonUp) {
                 rightMouseClickedOverThisWindow = false;
             }
-            if (InputManager.MyInstance.leftMouseButtonUp) {
+            if (InputManager.Instance.leftMouseButtonUp) {
                 leftMouseClickedOverThisWindow = false;
             }
-            if (InputManager.MyInstance.middleMouseButtonUp) {
+            if (InputManager.Instance.middleMouseButtonUp) {
                 middleMouseClickedOverThisWindow = false;
             }
             /*
@@ -219,13 +219,13 @@ namespace AnyRPG {
             } else {
                 mouseOutsideWindow = false;
                 /*
-                if (InputManager.MyInstance.rightMouseButtonDown) {
+                if (InputManager.Instance.rightMouseButtonDown) {
                     rightMouseClickedOverThisWindow = true;
                 }
-                if (InputManager.MyInstance.leftMouseButtonDown) {
+                if (InputManager.Instance.leftMouseButtonDown) {
                     leftMouseClickedOverThisWindow = true;
                 }
-                if (InputManager.MyInstance.middleMouseButtonDown) {
+                if (InputManager.Instance.middleMouseButtonDown) {
                     middleMouseClickedOverThisWindow = true;
                 }
                 */
@@ -235,7 +235,7 @@ namespace AnyRPG {
             cameraZoom = false;
 
             // handleZoom
-            if (!mouseOutsideWindow && InputManager.MyInstance.mouseScrolled) {
+            if (!mouseOutsideWindow && InputManager.Instance.mouseScrolled) {
                 //Debug.Log("Mouse Scrollwheel: " + Input.GetAxis("Mouse ScrollWheel"));
                 currentZoomDistance += (Input.GetAxis("Mouse ScrollWheel") * cameraSpeed * -1);
                 currentZoomDistance = Mathf.Clamp(currentZoomDistance, minZoom, currentMaxZoom);
@@ -245,7 +245,7 @@ namespace AnyRPG {
             // pan with the left or turn with the right mouse button
             if (!mouseOutsideWindow
                 && (rightMouseClickedOverThisWindow || leftMouseClickedOverThisWindow)
-                && (InputManager.MyInstance.rightMouseButtonDown || InputManager.MyInstance.leftMouseButtonDown)) {
+                && (InputManager.Instance.rightMouseButtonDown || InputManager.Instance.leftMouseButtonDown)) {
                 float xInput = Input.GetAxis("Mouse X") * yawSpeed;
                 currentXDegrees += xInput;
                 Quaternion xQuaternion = Quaternion.AngleAxis(currentXDegrees, Vector3.up);
@@ -269,7 +269,7 @@ namespace AnyRPG {
             // move the rotation point away from the center of the target using middle mouse button
             if (!mouseOutsideWindow
                 && middleMouseClickedOverThisWindow
-                && InputManager.MyInstance.middleMouseButtonDown) {
+                && InputManager.Instance.middleMouseButtonDown) {
                 //float xInput = Input.GetAxis("Mouse X") * yawSpeed;
                 float xInput = Input.GetAxis("Mouse X");
                 float yInput = Input.GetAxis("Mouse Y");
@@ -283,7 +283,7 @@ namespace AnyRPG {
             //SetTargetPosition();
 
             // follow the player
-            //if (hasMoved || cameraZoom || (cameraPan && !InputManager.MyInstance.rightMouseButtonClickedOverUI && !InputManager.MyInstance.leftMouseButtonClickedOverUI) ) {
+            //if (hasMoved || cameraZoom || (cameraPan && !InputManager.Instance.rightMouseButtonClickedOverUI && !InputManager.Instance.leftMouseButtonClickedOverUI) ) {
             SetWantedPosition();
             //}
 

@@ -211,7 +211,7 @@ namespace AnyRPG {
             if (SceneNames.Count > 0) {
                 bool sceneFound = false;
                 foreach (string sceneName in SceneNames) {
-                    if (SystemResourceManager.prepareStringForMatch(sceneName) == SystemResourceManager.prepareStringForMatch(LevelManager.MyInstance.GetActiveSceneNode().SceneName)) {
+                    if (SystemResourceManager.prepareStringForMatch(sceneName) == SystemResourceManager.prepareStringForMatch(LevelManager.Instance.GetActiveSceneNode().SceneName)) {
                         sceneFound = true;
                     }
                 }
@@ -354,8 +354,8 @@ namespace AnyRPG {
 
             if (limitedDuration == true && classTrait == false) {
                 float remainingDuration = 0f;
-                if (PlayerManager.MyInstance?.MyCharacter?.CharacterStats?.HasStatusEffect(this) == true) {
-                    remainingDuration = PlayerManager.MyInstance.MyCharacter.CharacterStats.GetStatusEffectNode(this).RemainingDuration;
+                if (PlayerManager.Instance?.MyCharacter?.CharacterStats?.HasStatusEffect(this) == true) {
+                    remainingDuration = PlayerManager.Instance.MyCharacter.CharacterStats.GetStatusEffectNode(this).RemainingDuration;
                 }
                 if (remainingDuration != 0f) {
                     durationLabel = "Remaining Duration: ";
@@ -413,7 +413,7 @@ namespace AnyRPG {
             reflectAbilityEffectList = new List<AbilityEffect>();
             if (reflectAbilityEffectNames != null) {
                 foreach (string abilityEffectName in reflectAbilityEffectNames) {
-                    AbilityEffect abilityEffect = SystemAbilityEffectManager.MyInstance.GetResource(abilityEffectName);
+                    AbilityEffect abilityEffect = SystemAbilityEffectManager.Instance.GetResource(abilityEffectName);
                     if (abilityEffect != null) {
                         reflectAbilityEffectList.Add(abilityEffect);
                     } else {
@@ -425,7 +425,7 @@ namespace AnyRPG {
             weaponHitAbilityEffectList = new List<AbilityEffect>();
             if (weaponHitAbilityEffectNames != null) {
                 foreach (string abilityEffectName in weaponHitAbilityEffectNames) {
-                    AbilityEffect abilityEffect = SystemAbilityEffectManager.MyInstance.GetResource(abilityEffectName);
+                    AbilityEffect abilityEffect = SystemAbilityEffectManager.Instance.GetResource(abilityEffectName);
                     if (abilityEffect != null) {
                         weaponHitAbilityEffectList.Add(abilityEffect);
                     } else {
@@ -435,7 +435,7 @@ namespace AnyRPG {
             }
 
             if (statusEffectTypeName != null && statusEffectTypeName != string.Empty) {
-                StatusEffectType tmpStatusEffectType = SystemStatusEffectTypeManager.MyInstance.GetResource(statusEffectTypeName);
+                StatusEffectType tmpStatusEffectType = SystemStatusEffectTypeManager.Instance.GetResource(statusEffectTypeName);
                 if (tmpStatusEffectType != null) {
                     statusEffectType = tmpStatusEffectType;
                 } else {

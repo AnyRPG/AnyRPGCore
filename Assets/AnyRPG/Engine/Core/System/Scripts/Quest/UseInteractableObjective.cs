@@ -57,10 +57,10 @@ namespace AnyRPG {
                     quest.CheckCompletion();
                 }
                 if (CurrentAmount <= MyAmount && !quest.MyIsAchievement && CurrentAmount != 0) {
-                    MessageFeedManager.MyInstance.WriteMessage(string.Format("{0}: {1}/{2}", DisplayName, Mathf.Clamp(CurrentAmount, 0, MyAmount), MyAmount));
+                    MessageFeedManager.Instance.WriteMessage(string.Format("{0}: {1}/{2}", DisplayName, Mathf.Clamp(CurrentAmount, 0, MyAmount), MyAmount));
                 }
                 if (completeBefore == false && IsComplete && !quest.MyIsAchievement) {
-                    MessageFeedManager.MyInstance.WriteMessage(string.Format("{0}: Objective Complete", DisplayName));
+                    MessageFeedManager.Instance.WriteMessage(string.Format("{0}: Objective Complete", DisplayName));
                 }
             }
         }
@@ -71,19 +71,19 @@ namespace AnyRPG {
             base.OnAcceptQuest(quest, printMessages);
 
             // don't forget to remove these later
-            SystemEventManager.MyInstance.OnInteractionStarted += CheckInteractionStart;
-            SystemEventManager.MyInstance.OnInteractionWithOptionStarted += CheckInteractionStart;
-            SystemEventManager.MyInstance.OnInteractionCompleted += CheckInteractionComplete;
-            SystemEventManager.MyInstance.OnInteractionWithOptionCompleted += CheckInteractionComplete;
+            SystemEventManager.Instance.OnInteractionStarted += CheckInteractionStart;
+            SystemEventManager.Instance.OnInteractionWithOptionStarted += CheckInteractionStart;
+            SystemEventManager.Instance.OnInteractionCompleted += CheckInteractionComplete;
+            SystemEventManager.Instance.OnInteractionWithOptionCompleted += CheckInteractionComplete;
         }
 
         public override void OnAbandonQuest() {
             //Debug.Log("UseInteractableObjective.OnAbandonQuest()");
             base.OnAbandonQuest();
-            SystemEventManager.MyInstance.OnInteractionStarted -= CheckInteractionStart;
-            SystemEventManager.MyInstance.OnInteractionWithOptionStarted -= CheckInteractionStart;
-            SystemEventManager.MyInstance.OnInteractionCompleted -= CheckInteractionComplete;
-            SystemEventManager.MyInstance.OnInteractionWithOptionCompleted -= CheckInteractionComplete;
+            SystemEventManager.Instance.OnInteractionStarted -= CheckInteractionStart;
+            SystemEventManager.Instance.OnInteractionWithOptionStarted -= CheckInteractionStart;
+            SystemEventManager.Instance.OnInteractionCompleted -= CheckInteractionComplete;
+            SystemEventManager.Instance.OnInteractionWithOptionCompleted -= CheckInteractionComplete;
         }
 
     }

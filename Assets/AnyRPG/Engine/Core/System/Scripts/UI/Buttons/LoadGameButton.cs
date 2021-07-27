@@ -40,7 +40,7 @@ namespace AnyRPG {
 
             icon.sprite = null;
             if (mySaveData.playerFaction != null && SaveData.playerFaction != string.Empty) {
-                Faction playerFaction = SystemFactionManager.MyInstance.GetResource(mySaveData.playerFaction);
+                Faction playerFaction = SystemFactionManager.Instance.GetResource(mySaveData.playerFaction);
                 // needs to be checked anyway.  could have invalid faction in save data
                 if (playerFaction != null) {
                     icon.sprite = playerFaction.Icon;
@@ -70,7 +70,7 @@ namespace AnyRPG {
             // set the text on the button
             description.text = descriptionText;
 
-            unitProfile = SystemUnitProfileManager.MyInstance.GetResource(mySaveData.unitProfileName);
+            unitProfile = SystemUnitProfileManager.Instance.GetResource(mySaveData.unitProfileName);
         }
 
         /*
@@ -83,10 +83,10 @@ namespace AnyRPG {
         */
 
         public void CommonSelect() {
-            if (LoadGamePanel.MyInstance.SelectedLoadGameButton != null && LoadGamePanel.MyInstance.SelectedLoadGameButton != this) {
-                LoadGamePanel.MyInstance.SelectedLoadGameButton.DeSelect();
+            if (LoadGamePanel.Instance.SelectedLoadGameButton != null && LoadGamePanel.Instance.SelectedLoadGameButton != this) {
+                LoadGamePanel.Instance.SelectedLoadGameButton.DeSelect();
             }
-            LoadGamePanel.MyInstance.ShowSavedGame(this);
+            LoadGamePanel.Instance.ShowSavedGame(this);
         }
 
         public void RawSelect() {

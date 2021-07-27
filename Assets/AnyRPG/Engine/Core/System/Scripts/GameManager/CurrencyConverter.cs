@@ -85,7 +85,7 @@ namespace AnyRPG {
         public static CurrencyGroup FindCurrencyGroup(Currency currency) {
             //Debug.Log("CurrencyConverter.FindCurrencyGroup(" + (currency == null ? "null" : currency.MyName) + ")");
             if (currency != null) {
-                foreach (CurrencyGroup currencyGroup in SystemCurrencyGroupManager.MyInstance.MyResourceList.Values) {
+                foreach (CurrencyGroup currencyGroup in SystemCurrencyGroupManager.Instance.MyResourceList.Values) {
                     if (currencyGroup.HasCurrency(currency)) {
                         return currencyGroup;
                     }

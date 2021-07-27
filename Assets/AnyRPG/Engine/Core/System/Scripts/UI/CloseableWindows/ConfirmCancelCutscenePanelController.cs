@@ -9,15 +9,15 @@ namespace AnyRPG {
 
         public void CancelAction() {
             //Debug.Log("ConfirmCancelCutScenePanelController.CancelAction()");
-            SystemWindowManager.MyInstance.confirmCancelCutsceneMenuWindow.CloseWindow();
+            SystemWindowManager.Instance.confirmCancelCutsceneMenuWindow.CloseWindow();
         }
 
         public void ConfirmAction() {
             //Debug.Log("ConfirmCancelCutScenePanelController.ConfirmAction()");
             // might be something better to deactivate cutscene camera
-            UIManager.MyInstance.CutSceneBarController.EndCutScene();
-            //UIManager.MyInstance.ActivateInGameUI();
-            SystemWindowManager.MyInstance.confirmCancelCutsceneMenuWindow.CloseWindow();
+            UIManager.Instance.CutSceneBarController.EndCutScene();
+            //UIManager.Instance.ActivateInGameUI();
+            SystemWindowManager.Instance.confirmCancelCutsceneMenuWindow.CloseWindow();
         }
 
     }

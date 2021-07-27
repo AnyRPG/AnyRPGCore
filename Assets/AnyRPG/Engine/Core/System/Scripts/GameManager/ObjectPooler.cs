@@ -10,15 +10,16 @@ namespace AnyRPG {
         #region Singleton
         private static ObjectPooler instance;
 
-        public static ObjectPooler MyInstance {
+        public static ObjectPooler Instance {
             get {
-                if (instance == null) {
-                    instance = FindObjectOfType<ObjectPooler>();
-                }
                 return instance;
             }
         }
 
+        private void Awake() {
+            instance = this;
+            Init();
+        }
         #endregion
 
         [Tooltip("If all types of objects should persist through scene changes, set this to true")]
@@ -35,7 +36,7 @@ namespace AnyRPG {
         private Dictionary<GameObject, List<GameObject>> freeObjects = new Dictionary<GameObject, List<GameObject>>();
         private Dictionary<GameObject, List<GameObject>> usedObjects = new Dictionary<GameObject, List<GameObject>>();
 
-        private void Awake() {
+        private void Init() {
             SystemEventManager.StartListening("OnLevelUnload", HandleLevelUnload);
         }
 

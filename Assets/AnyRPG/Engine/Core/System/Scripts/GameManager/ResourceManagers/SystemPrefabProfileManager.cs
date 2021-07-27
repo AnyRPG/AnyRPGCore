@@ -9,7 +9,7 @@ namespace AnyRPG {
         #region Singleton
         private static SystemPrefabProfileManager instance;
 
-        public static SystemPrefabProfileManager MyInstance {
+        public static SystemPrefabProfileManager Instance {
             get {
                 if (instance == null) {
                     instance = FindObjectOfType<SystemPrefabProfileManager>();

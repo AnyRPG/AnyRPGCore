@@ -9,7 +9,7 @@ namespace AnyRPG {
         #region Singleton
         private static SystemCharacterClassManager instance;
 
-        public static SystemCharacterClassManager MyInstance {
+        public static SystemCharacterClassManager Instance {
             get {
                 if (instance == null) {
                     instance = FindObjectOfType<SystemCharacterClassManager>();
