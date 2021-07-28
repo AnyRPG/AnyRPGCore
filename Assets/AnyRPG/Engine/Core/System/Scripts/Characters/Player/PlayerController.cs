@@ -384,7 +384,7 @@ namespace AnyRPG {
             string targetDisplayName = PlayerManager.Instance.UnitController.Target.DisplayName;
             if (PlayerManager.Instance.UnitController.Target.Interact(PlayerManager.Instance.ActiveUnitController.CharacterUnit, true)) {
                 //Debug.Log(gameObject.name + ".PlayerController.InteractionSucceeded(): Interaction Succeeded.  Setting interactable to null");
-                SystemEventManager.Instance.NotifyOnInteractionStarted(targetDisplayName);
+                SystemGameManager.Instance.EventManager.NotifyOnInteractionStarted(targetDisplayName);
                 return true;
             }
             //Debug.Log(gameObject.name + ".PlayerController.InteractionSucceeded(): returning false");
@@ -542,8 +542,8 @@ namespace AnyRPG {
             //if (IsTargetInHitBox(target)) {
             if (interactableOption.Interact(PlayerManager.Instance.ActiveUnitController.CharacterUnit)) {
                 //Debug.Log(gameObject.name + ".PlayerController.InteractionSucceeded(): Interaction Succeeded.  Setting interactable to null");
-                SystemEventManager.Instance.NotifyOnInteractionStarted(PlayerManager.Instance.UnitController.Target.DisplayName);
-                SystemEventManager.Instance.NotifyOnInteractionWithOptionStarted(interactableOption);
+                SystemGameManager.Instance.EventManager.NotifyOnInteractionStarted(PlayerManager.Instance.UnitController.Target.DisplayName);
+                SystemGameManager.Instance.EventManager.NotifyOnInteractionWithOptionStarted(interactableOption);
                 // no longer needed since targeting is changed and we don't want to lose target in the middle of attacking
                 //PlayerManager.Instance.ActiveUnitController.SetTarget(null);
                 return true;
@@ -580,7 +580,7 @@ namespace AnyRPG {
 
         public void RegisterAbilityButtonPresses() {
             //Debug.Log("PlayerController.RegisterAbilityButtonPresses()");
-            foreach (KeyBindNode keyBindNode in KeyBindManager.Instance.MyKeyBinds.Values) {
+            foreach (KeyBindNode keyBindNode in SystemGameManager.Instance.KeyBindManager.MyKeyBinds.Values) {
                 //Debug.Log("PlayerController.RegisterAbilityButtonPresses() keyBindNode.GetKeyDown: " + keyBindNode.GetKeyDown);
                 //Debug.Log("PlayerController.RegisterAbilityButtonPresses() keyBindNode.GetKeyDown: " + keyBindNode.GetKey);
                 if (keyBindNode.MyKeyBindType == KeyBindType.Action && InputManager.Instance.KeyBindWasPressed(keyBindNode.MyKeyBindID) == true) {
@@ -768,7 +768,7 @@ namespace AnyRPG {
 
         public void HandleCastCancel(BaseCharacter baseCharacter) {
             //Debug.Log("PlayerController.HandleCastCancel()");
-            CraftingManager.Instance.ClearCraftingQueue();
+            SystemGameManager.Instance.CraftingManager.ClearCraftingQueue();
         }
 
         public void HandleInitializeNamePlate() {
@@ -829,7 +829,7 @@ namespace AnyRPG {
         }
 
         public void HandleClassChange(CharacterClass newCharacterClass, CharacterClass oldCharacterClass) {
-            SystemEventManager.Instance.NotifyOnClassChange(newCharacterClass, oldCharacterClass);
+            SystemGameManager.Instance.EventManager.NotifyOnClassChange(newCharacterClass, oldCharacterClass);
             MessageFeedManager.Instance.WriteMessage("Changed class to " + newCharacterClass.DisplayName);
         }
 

@@ -71,7 +71,7 @@ namespace AnyRPG {
             if (eventSubscriptionsInitialized) {
                 return;
             }
-            if (SystemEventManager.Instance != null) {
+            if (SystemGameManager.Instance.EventManager != null) {
                 SystemEventManager.StartListening("OnPlayerUnitSpawn", HandlePlayerUnitSpawn);
                 SystemEventManager.StartListening("OnPlayerUnitDespawn", HandlePlayerUnitDespawn);
             }
@@ -83,7 +83,7 @@ namespace AnyRPG {
 
         protected override void CleanupEventSubscriptions() {
             //Debug.Log("PlayerCombat.CleanupEventSubscriptions()");
-            if (SystemEventManager.Instance != null) {
+            if (SystemGameManager.Instance.EventManager != null) {
                 SystemEventManager.StopListening("OnPlayerUnitSpawn", HandlePlayerUnitSpawn);
                 SystemEventManager.StopListening("OnPlayerUnitDespawn", HandlePlayerUnitDespawn);
             }
@@ -102,9 +102,9 @@ namespace AnyRPG {
             } else {
                 //Debug.Log("CharacterPanel.HandlePlayerUnitSpawn(): could not find characterstats");
             }
-            if (SystemEventManager.Instance != null) {
+            if (SystemGameManager.Instance.EventManager != null) {
                 //Debug.Log("CharacterPanel.HandlePlayerUnitSpawn(): subscribing to statChanged event");
-                SystemEventManager.Instance.OnEquipmentChanged += HandleEquipmentChanged;
+                SystemGameManager.Instance.EventManager.OnEquipmentChanged += HandleEquipmentChanged;
             } else {
                 //Debug.Log("CharacterPanel.HandlePlayerUnitSpawn(): could not find characterstats");
             }
@@ -116,8 +116,8 @@ namespace AnyRPG {
             if (PlayerManager.Instance != null && PlayerManager.Instance.MyCharacter != null && PlayerManager.Instance.MyCharacter.CharacterStats != null) {
                 PlayerManager.Instance.MyCharacter.CharacterStats.OnStatChanged -= UpdateStatsDescription;
             }
-            if (SystemEventManager.Instance != null) {
-                SystemEventManager.Instance.OnEquipmentChanged -= HandleEquipmentChanged;
+            if (SystemGameManager.Instance.EventManager != null) {
+                SystemGameManager.Instance.EventManager.OnEquipmentChanged -= HandleEquipmentChanged;
             } else {
                 //Debug.Log("CharacterPanel.HandlePlayerUnitSpawn(): could not find characterstats");
             }
@@ -311,7 +311,7 @@ namespace AnyRPG {
         }
 
         public void LoadUMARecipe() {
-            SaveManager.Instance.LoadUMASettings(CharacterCreatorManager.Instance.PreviewUnitController.DynamicCharacterAvatar, false);
+            SystemGameManager.Instance.SaveManager.LoadUMASettings(CharacterCreatorManager.Instance.PreviewUnitController.DynamicCharacterAvatar, false);
 
         }
 

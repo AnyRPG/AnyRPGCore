@@ -9,21 +9,11 @@ using UMA.CharacterSystem;
 using System.Text.RegularExpressions;
 
 namespace AnyRPG {
-    public class SaveManager : MonoBehaviour {
+    public class SaveManager {
 
-        #region Singleton
-        private static SaveManager instance;
-
-        public static SaveManager Instance {
-            get {
-                return instance;
-            }
+        public SaveManager() {
+            Init();
         }
-
-        private void Awake() {
-            instance = this;
-        }
-        #endregion
 
         //private UMAData umaSaveData = null;
         private string recipeString = string.Empty;
@@ -57,7 +47,7 @@ namespace AnyRPG {
 
         protected bool eventSubscriptionsInitialized = false;
 
-        void Start() {
+        void Init() {
             //Debug.Log("Savemanager.Start()");
             CreateEventSubscriptions();
             GetSaveDataList();
@@ -68,25 +58,18 @@ namespace AnyRPG {
             if (eventSubscriptionsInitialized) {
                 return;
             }
-            SystemEventManager.Instance.OnEquipmentChanged += SaveUMASettings;
+            SystemGameManager.Instance.EventManager.OnEquipmentChanged += SaveUMASettings;
             eventSubscriptionsInitialized = true;
         }
 
+        // not currently called because this script is active the entire time the application is active
         private void CleanupEventSubscriptions() {
             //Debug.Log("PlayerManager.CleanupEventSubscriptions()");
             if (!eventSubscriptionsInitialized) {
                 return;
             }
-            SystemEventManager.Instance.OnEquipmentChanged -= SaveUMASettings;
+            SystemGameManager.Instance.EventManager.OnEquipmentChanged -= SaveUMASettings;
             eventSubscriptionsInitialized = false;
-        }
-
-        public void OnDisable() {
-            //Debug.Log("PlayerManager.OnDisable()");
-            if (SystemGameManager.IsShuttingDown) {
-                return;
-            }
-            CleanupEventSubscriptions();
         }
 
         public List<AnyRPGSaveData> GetSaveDataList() {

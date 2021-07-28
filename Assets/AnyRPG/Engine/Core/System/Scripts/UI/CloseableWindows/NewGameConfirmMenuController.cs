@@ -36,12 +36,12 @@ namespace AnyRPG {
             SystemWindowManager.Instance.loadGameWindow.CloseWindow();
             SystemWindowManager.Instance.newGameWindow.CloseWindow();
             if (SystemConfigurationManager.Instance.UseNewGameWindow == true) {
-                SaveManager.Instance.PerformInventorySetup();
-                SaveManager.Instance.SaveEquippedBagData(NewGamePanel.Instance.SaveData);
-                SaveManager.Instance.SaveInventorySlotData(NewGamePanel.Instance.SaveData);
-                SaveManager.Instance.LoadGame(NewGamePanel.Instance.SaveData);
+                SystemGameManager.Instance.SaveManager.PerformInventorySetup();
+                SystemGameManager.Instance.SaveManager.SaveEquippedBagData(NewGamePanel.Instance.SaveData);
+                SystemGameManager.Instance.SaveManager.SaveInventorySlotData(NewGamePanel.Instance.SaveData);
+                SystemGameManager.Instance.SaveManager.LoadGame(NewGamePanel.Instance.SaveData);
             } else {
-                SaveManager.Instance.TryNewGame();
+                SystemGameManager.Instance.SaveManager.TryNewGame();
             }
         }
 

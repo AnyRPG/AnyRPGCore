@@ -70,10 +70,10 @@ namespace AnyRPG {
                 return;
             }
             base.CreateEventSubscriptions();
-            //SystemEventManager.Instance.OnPrerequisiteUpdated += CheckPrerequisites;
-            CraftingManager.Instance.OnSelectRecipe += SelectRecipe;
-            CraftingManager.Instance.OnCraftAmountUpdated += UpdateCraftAmountArea;
-            CraftingManager.Instance.OnSetCraftAbility += ViewRecipes;
+            //SystemGameManager.Instance.EventManager.OnPrerequisiteUpdated += CheckPrerequisites;
+            SystemGameManager.Instance.CraftingManager.OnSelectRecipe += SelectRecipe;
+            SystemGameManager.Instance.CraftingManager.OnCraftAmountUpdated += UpdateCraftAmountArea;
+            SystemGameManager.Instance.CraftingManager.OnSetCraftAbility += ViewRecipes;
         }
 
         protected override void CleanupEventSubscriptions() {
@@ -82,10 +82,10 @@ namespace AnyRPG {
                 return;
             }
             base.CleanupEventSubscriptions();
-            CraftingManager.Instance.OnSelectRecipe -= SelectRecipe;
-            CraftingManager.Instance.OnCraftAmountUpdated -= UpdateCraftAmountArea;
-            CraftingManager.Instance.OnSetCraftAbility -= ViewRecipes;
-            //SystemEventManager.Instance.OnPrerequisiteUpdated -= CheckPrerequisites;
+            SystemGameManager.Instance.CraftingManager.OnSelectRecipe -= SelectRecipe;
+            SystemGameManager.Instance.CraftingManager.OnCraftAmountUpdated -= UpdateCraftAmountArea;
+            SystemGameManager.Instance.CraftingManager.OnSetCraftAbility -= ViewRecipes;
+            //SystemGameManager.Instance.EventManager.OnPrerequisiteUpdated -= CheckPrerequisites;
         }
 
         public void SelectRecipe(Recipe recipe) {
@@ -106,7 +106,7 @@ namespace AnyRPG {
 
         public void CancelCrafting() {
             //Debug.Log("CraftingUI.CancelCrafting()");
-            CraftingManager.Instance.CancelCrafting();
+            SystemGameManager.Instance.CraftingManager.CancelCrafting();
         }
 
 
@@ -251,7 +251,7 @@ namespace AnyRPG {
 
             DeactivateButtons();
 
-            CraftingManager.Instance.ClearCraftingQueue();
+            SystemGameManager.Instance.CraftingManager.ClearCraftingQueue();
         }
 
         private void ResetWindow() {
@@ -269,7 +269,7 @@ namespace AnyRPG {
         public void CraftAll() {
             //Debug.Log("CraftingUI.CraftAll()");
             if (SelectedRecipeScript != null) {
-                craftAmount = CraftingManager.Instance.GetMaxCraftAmount(SelectedRecipeScript.Recipe);
+                craftAmount = SystemGameManager.Instance.CraftingManager.GetMaxCraftAmount(SelectedRecipeScript.Recipe);
                 UpdateCraftAmountArea();
                 BeginCrafting();
             } else {
@@ -281,7 +281,7 @@ namespace AnyRPG {
             //Debug.Log("CraftingUI.BeginCrafting()");
             if (SelectedRecipeScript != null) {
                 for (int i = 0; i < craftAmount; i++) {
-                    CraftingManager.Instance.CraftingQueue.Add(SelectedRecipeScript.Recipe);
+                    SystemGameManager.Instance.CraftingManager.CraftingQueue.Add(SelectedRecipeScript.Recipe);
                 }
                 PlayerManager.Instance.MyCharacter.CharacterAbilityManager.BeginAbility(craftAbility);
             } else {
@@ -294,7 +294,7 @@ namespace AnyRPG {
             //Debug.Log("CraftingUI.UpdateCraftAmountArea()");
             int maxAmount = 0;
             if (SelectedRecipeScript != null) {
-                maxAmount = CraftingManager.Instance.GetMaxCraftAmount(SelectedRecipeScript.Recipe);
+                maxAmount = SystemGameManager.Instance.CraftingManager.GetMaxCraftAmount(SelectedRecipeScript.Recipe);
                 if (craftAmount == 0 && maxAmount > 0) {
                     craftAmount = 1;
                 }

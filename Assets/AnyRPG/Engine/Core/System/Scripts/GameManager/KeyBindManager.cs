@@ -5,22 +5,11 @@ using System.Linq;
 using UnityEngine;
 
 namespace AnyRPG {
-    public class KeyBindManager : MonoBehaviour {
+    public class KeyBindManager {
 
-        #region Singleton
-        private static KeyBindManager instance;
-
-        public static KeyBindManager Instance {
-            get {
-                return instance;
-            }
+        public KeyBindManager() {
+            InitializeKeys();
         }
-
-        private void Awake() {
-            instance = this;
-            Init();
-        }
-        #endregion
 
         [SerializeField]
         private Dictionary<string, KeyBindNode> keyBinds = new Dictionary<string, KeyBindNode>();
@@ -32,12 +21,6 @@ namespace AnyRPG {
         public Dictionary<string, KeyBindNode> MyKeyBinds { get => keyBinds; set => keyBinds = value; }
 
         public string MyBindName { get => bindName; set => bindName = value; }
-
-        // Start is called before the first frame update
-        void Init() {
-            //Debug.Log("KeyBindManager.Awake()");
-            InitializeKeys();
-        }
 
         private void InitializeKeys() {
             //Debug.Log("KeyBindManager.InitializeKeys()");

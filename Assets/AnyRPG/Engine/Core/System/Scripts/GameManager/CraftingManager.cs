@@ -7,26 +7,11 @@ using UnityEngine;
 using UnityEngine.UI;
 
 namespace AnyRPG {
-    public class CraftingManager : MonoBehaviour {
+    public class CraftingManager  {
 
         public event System.Action OnCraftAmountUpdated = delegate { };
         public event System.Action<CraftAbility> OnSetCraftAbility = delegate { };
         public event System.Action<Recipe> OnSelectRecipe = delegate { };
-
-        #region Singleton
-        private static CraftingManager instance;
-
-        public static CraftingManager Instance {
-            get {
-                return instance;
-            }
-        }
-
-        private void Awake() {
-            instance = this;
-        }
-
-        #endregion
 
         private CraftAbility craftAbility = null;
 
@@ -161,7 +146,7 @@ namespace AnyRPG {
             Debug.Log("CraftingUI.CraftNextItemWait()");
             // add delay to avoid issues with cast in progress from current crafting item
             if (waitCoroutine == null) {
-                waitCoroutine = StartCoroutine(CraftNextItemDelay());
+                waitCoroutine = SystemGameManager.Instance.StartCoroutine(CraftNextItemDelay());
             }
         }
 

@@ -26,17 +26,44 @@ namespace AnyRPG {
 
         private List<SystemResourceManager> systemResourceManagers = new List<SystemResourceManager>();
 
+        // event manager first because everything else will use it for subscriptions
+        private SystemEventManager systemEventManager = new SystemEventManager();
+
+        // system scripts
+        private SystemEnvironmentManager systemEnvironmentManager = new SystemEnvironmentManager();
+        private CraftingManager craftingManager = new CraftingManager();
+        private InteractionManager interactionManager = new InteractionManager();
+        private LootManager lootManager = new LootManager();
+        private SystemPlayableDirectorManager systemPlayableDirectorManager = new SystemPlayableDirectorManager();
+        private SaveManager saveManager = null;
+        private KeyBindManager keyBindManager = new KeyBindManager();
+
+        // application state
         private int spawnCount = 0;
-
-        private bool eventSubscriptionsInitialized = false;
-
         private static bool isShuttingDown = false;
 
         public static bool IsShuttingDown { get => isShuttingDown; }
 
+        public SystemEventManager EventManager { get => systemEventManager; set => systemEventManager = value; }
+        public SystemEnvironmentManager SystemEnvironmentManager { get => systemEnvironmentManager; set => systemEnvironmentManager = value; }
+        public CraftingManager CraftingManager { get => craftingManager; set => craftingManager = value; }
+        public InteractionManager InteractionManager { get => interactionManager; set => interactionManager = value; }
+        public LootManager LootManager { get => lootManager; set => lootManager = value; }
+        public SystemPlayableDirectorManager SystemPlayableDirectorManager { get => systemPlayableDirectorManager; set => systemPlayableDirectorManager = value; }
+        public SaveManager SaveManager { get => saveManager; set => saveManager = value; }
+        public KeyBindManager KeyBindManager { get => keyBindManager; set => keyBindManager = value; }
+
         private void Init() {
             //Debug.Log("SystemGameManager.Awake()");
             SetupPermanentObjects();
+
+            // initialize event manager first because everything else uses it
+            //systemEventManager = new SystemEventManager();
+
+            //systemEnvironmentManager = new SystemEnvironmentManager();
+            //craftingManager = new CraftingManager();
+            //interactionManager = new InteractionManager();
+            saveManager = new SaveManager();
         }
 
         private void SetupPermanentObjects() {
@@ -66,30 +93,9 @@ namespace AnyRPG {
 
             PlayerManager.Instance.OrchestratorStart();
 
-            // subscribe to player connection despawn events for reloading resources
-            CreateEventSubscriptions();
-
             // then launch level manager to start loading the game
             LevelManager.Instance.PerformSetupActivities();
 
-        }
-
-        public virtual void CreateEventSubscriptions() {
-            //Debug.Log("PlayerManager.CreateEventSubscriptions()");
-            if (eventSubscriptionsInitialized) {
-                return;
-            }
-            //SystemEventManager.Instance.OnPlayerConnectionDespawn += ReloadResourceLists;
-            eventSubscriptionsInitialized = true;
-        }
-
-        public virtual void CleanupEventSubscriptions() {
-            //Debug.Log("PlayerManager.CleanupEventSubscriptions()");
-            if (!eventSubscriptionsInitialized) {
-                return;
-            }
-            //SystemEventManager.Instance.OnPlayerConnectionDespawn -= ReloadResourceLists;
-            eventSubscriptionsInitialized = false;
         }
 
         /// <summary>

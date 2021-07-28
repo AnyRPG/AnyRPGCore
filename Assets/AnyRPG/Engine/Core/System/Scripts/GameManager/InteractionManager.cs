@@ -6,23 +6,9 @@ using UnityEngine;
 using UnityEngine.UI;
 
 namespace AnyRPG {
-    public class InteractionManager : MonoBehaviour {
+    public class InteractionManager {
 
         public event System.Action<Interactable> OnSetInteractable = delegate { };
-
-        #region Singleton
-        private static InteractionManager instance;
-
-        public static InteractionManager Instance {
-            get {
-                return instance;
-            }
-        }
-
-        private void Awake() {
-            instance = this;
-        }
-        #endregion
 
         private Interactable currentInteractable = null;
 

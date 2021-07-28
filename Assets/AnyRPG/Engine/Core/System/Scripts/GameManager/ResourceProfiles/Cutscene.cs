@@ -52,14 +52,14 @@ namespace AnyRPG {
 
         public bool Viewed {
             get {
-                return SaveManager.Instance.GetCutsceneSaveData(this).isCutSceneViewed;
+                return SystemGameManager.Instance.SaveManager.GetCutsceneSaveData(this).isCutSceneViewed;
             }
             set {
                 //Debug.Log(DisplayName + ".Viewed: setting to: " + value);
-                //SaveManager.Instance.GetCutsceneSaveData(this).IsCutSceneViewed = value;
-                CutsceneSaveData saveData = SaveManager.Instance.GetCutsceneSaveData(this);
+                //SystemGameManager.Instance.SaveManager.GetCutsceneSaveData(this).IsCutSceneViewed = value;
+                CutsceneSaveData saveData = SystemGameManager.Instance.SaveManager.GetCutsceneSaveData(this);
                 saveData.isCutSceneViewed = value;
-                SaveManager.Instance.CutsceneSaveDataDictionary[saveData.MyName] = saveData;
+                SystemGameManager.Instance.SaveManager.CutsceneSaveDataDictionary[saveData.MyName] = saveData;
             }
         }
 

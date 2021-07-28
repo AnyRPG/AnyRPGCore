@@ -59,7 +59,7 @@ namespace AnyRPG {
 
         public void SaveGame() {
             //Debug.Log("MainMenuController.SaveGame()");
-            if (SaveManager.Instance.SaveGame()) {
+            if (SystemGameManager.Instance.SaveManager.SaveGame()) {
                 SystemWindowManager.Instance.CloseAllWindows();
                 MessageFeedManager.Instance.WriteMessage("Game Saved");
             }

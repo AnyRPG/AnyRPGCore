@@ -53,13 +53,13 @@ namespace AnyRPG {
 
         public override void OnAcceptQuest(Quest quest, bool printMessages = true) {
             base.OnAcceptQuest(quest, printMessages);
-            SystemEventManager.Instance.OnSkillListChanged += UpdateCompletionCount;
+            SystemGameManager.Instance.EventManager.OnSkillListChanged += UpdateCompletionCount;
             UpdateCompletionCount(printMessages);
         }
 
         public override void OnAbandonQuest() {
             base.OnAbandonQuest();
-            SystemEventManager.Instance.OnSkillListChanged -= UpdateCompletionCount;
+            SystemGameManager.Instance.EventManager.OnSkillListChanged -= UpdateCompletionCount;
         }
 
         public override void SetupScriptableObjects() {

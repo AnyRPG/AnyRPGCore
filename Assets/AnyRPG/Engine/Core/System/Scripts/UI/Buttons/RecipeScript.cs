@@ -25,7 +25,7 @@ namespace AnyRPG {
             //Debug.Log(gameObject.name + ".RecipeScript.Select(): " + (recipe == null ? "null" : recipe.DisplayName));
 
             base.Select();
-            CraftingManager.Instance.SetSelectedRecipe(recipe);
+            SystemGameManager.Instance.CraftingManager.SetSelectedRecipe(recipe);
         }
 
         public override void DeSelect() {

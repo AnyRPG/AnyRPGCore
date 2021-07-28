@@ -93,7 +93,7 @@ namespace AnyRPG {
             //Debug.Log("LoadGamePanel.OnCloseWindow()");
             base.RecieveClosedWindowNotification();
 
-            SaveManager.Instance.ClearSharedData();
+            SystemGameManager.Instance.SaveManager.ClearSharedData();
             characterPreviewPanel.OnTargetReady -= HandleTargetReady;
             characterPreviewPanel.RecieveClosedWindowNotification();
             if (SystemConfigurationManager.Instance.NewGameUMAAppearance == true) {
@@ -175,7 +175,7 @@ namespace AnyRPG {
 
             ClearButtons();
 
-            SaveManager.Instance.ClearSharedData();
+            SystemGameManager.Instance.SaveManager.ClearSharedData();
 
             SetupSaveData();
 
@@ -229,7 +229,7 @@ namespace AnyRPG {
             //Debug.Log("NewGamePanel.SetupSaveData()");
 
             saveData = new AnyRPGSaveData();
-            saveData = SaveManager.Instance.InitializeResourceLists(saveData, false);
+            saveData = SystemGameManager.Instance.SaveManager.InitializeResourceLists(saveData, false);
             saveData.playerName = playerName;
             saveData.PlayerLevel = 1;
             saveData.CurrentScene = SystemConfigurationManager.Instance.DefaultStartingZone;

@@ -62,7 +62,7 @@ namespace AnyRPG {
         }
 
         public void CleanupScriptableObjects() {
-            if (SystemEventManager.Instance != null) {
+            if (SystemGameManager.Instance.EventManager != null) {
                 SystemEventManager.StopListening("OnReputationChange", HandleReputationChange);
             }
         }

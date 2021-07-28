@@ -95,7 +95,7 @@ namespace AnyRPG {
             if (eventSubscriptionsInitialized) {
                 return;
             }
-            if (SystemEventManager.Instance == null) {
+            if (SystemGameManager.Instance.EventManager == null) {
                 Debug.LogError("PersistentObjectComponent.CreateEventSubscriptions: Could not find SystemEventManager.  Is GameManager in the scene?");
             } else {
                 SystemEventManager.StartListening("OnLevelUnload", HandleLevelUnload);
@@ -108,7 +108,7 @@ namespace AnyRPG {
             if (!eventSubscriptionsInitialized) {
                 return;
             }
-            if (SystemEventManager.Instance != null) {
+            if (SystemGameManager.Instance.EventManager != null) {
                 SystemEventManager.StopListening("OnLevelUnload", HandleLevelUnload);
                 SystemEventManager.StopListening("OnSaveGame", HandleSaveGame);
             }

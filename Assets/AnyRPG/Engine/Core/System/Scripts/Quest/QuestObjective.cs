@@ -37,13 +37,13 @@ namespace AnyRPG {
 
         public int CurrentAmount {
             get {
-                return SaveManager.Instance.GetQuestObjectiveSaveData(quest.DisplayName, ObjectiveType, MyType).MyAmount;
+                return SystemGameManager.Instance.SaveManager.GetQuestObjectiveSaveData(quest.DisplayName, ObjectiveType, MyType).MyAmount;
                 //return false;
             }
             set {
-                QuestObjectiveSaveData saveData = SaveManager.Instance.GetQuestObjectiveSaveData(quest.DisplayName, ObjectiveType, MyType);
+                QuestObjectiveSaveData saveData = SystemGameManager.Instance.SaveManager.GetQuestObjectiveSaveData(quest.DisplayName, ObjectiveType, MyType);
                 saveData.MyAmount = value;
-                SaveManager.Instance.QuestObjectiveSaveDataDictionary[quest.DisplayName][ObjectiveType][MyType] = saveData;
+                SystemGameManager.Instance.SaveManager.QuestObjectiveSaveDataDictionary[quest.DisplayName][ObjectiveType][MyType] = saveData;
             }
         }
 

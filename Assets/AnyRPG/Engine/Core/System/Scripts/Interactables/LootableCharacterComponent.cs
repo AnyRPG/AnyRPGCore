@@ -323,7 +323,7 @@ namespace AnyRPG {
 
                 if (drops.Count > 0) {
                     //Debug.Log(interactable.gameObject.name + ".LootableCharacter.drops.Count: " + drops.Count);
-                    LootManager.Instance.CreatePages(drops);
+                    SystemGameManager.Instance.LootManager.CreatePages(drops);
                     //Debug.Log(gameObject.name + ".LootableCharacter.Interact(): about to open window");
                     PopupWindowManager.Instance.lootWindow.OpenWindow();
                     return true;

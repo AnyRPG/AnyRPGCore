@@ -58,7 +58,7 @@ namespace AnyRPG {
             objectiveSceneNode.OnVisitZone += CheckCompletionCount;
 
             // don't forget to remove these later
-            //SystemEventManager.Instance.OnDialogCompleted += CheckCompletionCount;
+            //SystemGameManager.Instance.EventManager.OnDialogCompleted += CheckCompletionCount;
 
         }
 
@@ -66,7 +66,7 @@ namespace AnyRPG {
             //Debug.Log("UseInteractableObjective.OnAbandonQuest()");
             base.OnAbandonQuest();
             objectiveSceneNode.OnVisitZone -= CheckCompletionCount;
-            //SystemEventManager.Instance.OnDialogCompleted -= CheckCompletionCount;
+            //SystemGameManager.Instance.EventManager.OnDialogCompleted -= CheckCompletionCount;
         }
 
     }

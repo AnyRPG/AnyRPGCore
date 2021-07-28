@@ -71,19 +71,19 @@ namespace AnyRPG {
             base.OnAcceptQuest(quest, printMessages);
 
             // don't forget to remove these later
-            SystemEventManager.Instance.OnInteractionStarted += CheckInteractionStart;
-            SystemEventManager.Instance.OnInteractionWithOptionStarted += CheckInteractionStart;
-            SystemEventManager.Instance.OnInteractionCompleted += CheckInteractionComplete;
-            SystemEventManager.Instance.OnInteractionWithOptionCompleted += CheckInteractionComplete;
+            SystemGameManager.Instance.EventManager.OnInteractionStarted += CheckInteractionStart;
+            SystemGameManager.Instance.EventManager.OnInteractionWithOptionStarted += CheckInteractionStart;
+            SystemGameManager.Instance.EventManager.OnInteractionCompleted += CheckInteractionComplete;
+            SystemGameManager.Instance.EventManager.OnInteractionWithOptionCompleted += CheckInteractionComplete;
         }
 
         public override void OnAbandonQuest() {
             //Debug.Log("UseInteractableObjective.OnAbandonQuest()");
             base.OnAbandonQuest();
-            SystemEventManager.Instance.OnInteractionStarted -= CheckInteractionStart;
-            SystemEventManager.Instance.OnInteractionWithOptionStarted -= CheckInteractionStart;
-            SystemEventManager.Instance.OnInteractionCompleted -= CheckInteractionComplete;
-            SystemEventManager.Instance.OnInteractionWithOptionCompleted -= CheckInteractionComplete;
+            SystemGameManager.Instance.EventManager.OnInteractionStarted -= CheckInteractionStart;
+            SystemGameManager.Instance.EventManager.OnInteractionWithOptionStarted -= CheckInteractionStart;
+            SystemGameManager.Instance.EventManager.OnInteractionCompleted -= CheckInteractionComplete;
+            SystemGameManager.Instance.EventManager.OnInteractionWithOptionCompleted -= CheckInteractionComplete;
         }
 
     }

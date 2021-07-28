@@ -49,8 +49,8 @@ namespace AnyRPG {
                 return;
             }
             base.CreateEventSubscriptions();
-            //SystemEventManager.Instance.OnPrerequisiteUpdated += CheckPrerequisites;
-            InteractionManager.Instance.OnSetInteractable += HandleSetInteractable;
+            //SystemGameManager.Instance.EventManager.OnPrerequisiteUpdated += CheckPrerequisites;
+            SystemGameManager.Instance.InteractionManager.OnSetInteractable += HandleSetInteractable;
         }
 
         protected override void CleanupEventSubscriptions() {
@@ -59,8 +59,8 @@ namespace AnyRPG {
                 return;
             }
             base.CleanupEventSubscriptions();
-            InteractionManager.Instance.OnSetInteractable -= HandleSetInteractable;
-            //SystemEventManager.Instance.OnPrerequisiteUpdated -= CheckPrerequisites;
+            SystemGameManager.Instance.InteractionManager.OnSetInteractable -= HandleSetInteractable;
+            //SystemGameManager.Instance.EventManager.OnPrerequisiteUpdated -= CheckPrerequisites;
         }
 
         public void CheckPrerequisites(Skill skill) {
@@ -227,7 +227,7 @@ namespace AnyRPG {
 
         public void ShowInteractables(Interactable interactable) {
             //Debug.Log("InteractionPanelUI.ShowInteractables(" + interactable.name + ")");
-            InteractionManager.Instance.CurrentInteractable = interactable;
+            SystemGameManager.Instance.InteractionManager.CurrentInteractable = interactable;
             ShowInteractablesCommon(this.interactable);
         }
 
@@ -254,7 +254,7 @@ namespace AnyRPG {
             //ClearButtons();
             base.RecieveClosedWindowNotification();
             // clear this so window doesn't pop open again when it's closed
-            InteractionManager.Instance.CurrentInteractable = null;
+            SystemGameManager.Instance.InteractionManager.CurrentInteractable = null;
         }
 
         public override void ReceiveOpenWindowNotification() {

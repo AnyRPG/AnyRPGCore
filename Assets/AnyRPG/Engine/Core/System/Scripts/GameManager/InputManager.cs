@@ -76,10 +76,10 @@ namespace AnyRPG {
         }
 
         void Update() {
-            if (KeyBindManager.Instance.MyBindName != string.Empty) {
+            if (SystemGameManager.Instance.KeyBindManager.MyBindName != string.Empty) {
                 // we are binding a key.  discard all input
                 //Debug.Log("Key Binding in progress.  returning.");
-                foreach (KeyBindNode keyBindNode in KeyBindManager.Instance.MyKeyBinds.Values) {
+                foreach (KeyBindNode keyBindNode in SystemGameManager.Instance.KeyBindManager.MyKeyBinds.Values) {
                     keyBindNode.UnRegisterKeyPress();
                     keyBindNode.UnRegisterKeyHeld();
                     keyBindNode.UnRegisterKeyUp();
@@ -142,7 +142,7 @@ namespace AnyRPG {
                 shift = true;
             }
 
-            foreach (KeyBindNode keyBindNode in KeyBindManager.Instance.MyKeyBinds.Values) {
+            foreach (KeyBindNode keyBindNode in SystemGameManager.Instance.KeyBindManager.MyKeyBinds.Values) {
                 // normal should eventually changed to movement, but there is only one other key (toggle run) that is normal for now, so normal is ok until more keys are added
                 // register key down
                 if (Input.GetKeyDown(keyBindNode.MyKeyCode) && (keyBindNode.MyKeyBindType == KeyBindType.Normal || ((control == keyBindNode.MyControl) && (shift == keyBindNode.MyShift)))) {
@@ -172,8 +172,8 @@ namespace AnyRPG {
 
         public bool KeyBindWasPressedOrHeld(string keyBindID) {
             RegisterKeyPresses();
-            if (KeyBindManager.Instance.MyKeyBinds.ContainsKey(keyBindID) &&
-                (KeyBindManager.Instance.MyKeyBinds[keyBindID].KeyPressed == true || KeyBindManager.Instance.MyKeyBinds[keyBindID].KeyHeld == true)) {
+            if (SystemGameManager.Instance.KeyBindManager.MyKeyBinds.ContainsKey(keyBindID) &&
+                (SystemGameManager.Instance.KeyBindManager.MyKeyBinds[keyBindID].KeyPressed == true || SystemGameManager.Instance.KeyBindManager.MyKeyBinds[keyBindID].KeyHeld == true)) {
                 return true;
             }
             return false;
@@ -181,7 +181,7 @@ namespace AnyRPG {
 
         public bool KeyBindWasPressed(string keyBindID) {
             RegisterKeyPresses();
-            if (KeyBindManager.Instance.MyKeyBinds.ContainsKey(keyBindID) && KeyBindManager.Instance.MyKeyBinds[keyBindID].KeyPressed == true) {
+            if (SystemGameManager.Instance.KeyBindManager.MyKeyBinds.ContainsKey(keyBindID) && SystemGameManager.Instance.KeyBindManager.MyKeyBinds[keyBindID].KeyPressed == true) {
                 return true;
             }
             return false;

@@ -402,7 +402,7 @@ namespace AnyRPG {
             if (maleRecipe != string.Empty) {
                 //Debug.Log("CharacterCreatorPanel.SetFemale(): maleRecipe != string.Empty");
                 CharacterCreatorManager.Instance.PreviewUnitController.DynamicCharacterAvatar.ChangeRace("HumanMaleDCS");
-                SaveManager.Instance.LoadUMASettings(maleRecipe, CharacterCreatorManager.Instance.PreviewUnitController.DynamicCharacterAvatar);
+                SystemGameManager.Instance.SaveManager.LoadUMASettings(maleRecipe, CharacterCreatorManager.Instance.PreviewUnitController.DynamicCharacterAvatar);
             } else {
                 //Debug.Log("CharacterCreatorPanel.SetFemale(): maleRecipe == string.Empty");
                 CharacterCreatorManager.Instance.PreviewUnitController.DynamicCharacterAvatar.ChangeRace("HumanMaleDCS");
@@ -422,7 +422,7 @@ namespace AnyRPG {
             if (femaleRecipe != string.Empty) {
                 //Debug.Log("CharacterCreatorPanel.SetFemale(): femaleRecipe != string.Empty");
                 CharacterCreatorManager.Instance.PreviewUnitController.DynamicCharacterAvatar.ChangeRace("HumanFemaleDCS");
-                SaveManager.Instance.LoadUMASettings(femaleRecipe, CharacterCreatorManager.Instance.PreviewUnitController.DynamicCharacterAvatar);
+                SystemGameManager.Instance.SaveManager.LoadUMASettings(femaleRecipe, CharacterCreatorManager.Instance.PreviewUnitController.DynamicCharacterAvatar);
             } else {
                 //Debug.Log("CharacterCreatorPanel.SetFemale(): femaleRecipe == string.Empty");
                 CharacterCreatorManager.Instance.PreviewUnitController.DynamicCharacterAvatar.ChangeRace("HumanFemaleDCS");

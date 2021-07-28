@@ -47,17 +47,17 @@ namespace AnyRPG {
         /// </summary>
         public bool TurnedIn {
             get {
-                return SaveManager.Instance.GetDialogSaveData(this).turnedIn;
+                return SystemGameManager.Instance.SaveManager.GetDialogSaveData(this).turnedIn;
                 //return false;
             }
             set {
-                DialogSaveData saveData = SaveManager.Instance.GetDialogSaveData(this);
+                DialogSaveData saveData = SystemGameManager.Instance.SaveManager.GetDialogSaveData(this);
                 saveData.turnedIn = value;
-                SaveManager.Instance.DialogSaveDataDictionary[saveData.MyName] = saveData;
+                SystemGameManager.Instance.SaveManager.DialogSaveDataDictionary[saveData.MyName] = saveData;
                 if (saveData.turnedIn == true) {
                     //Debug.Log(DisplayName + ".Dialog.TurnedIn = true");
                     // these events are for things that need the dialog turned in as a prerequisite
-                    SystemEventManager.Instance.NotifyOnDialogCompleted(this);
+                    SystemGameManager.Instance.EventManager.NotifyOnDialogCompleted(this);
                     OnDialogCompleted();
                 }
 

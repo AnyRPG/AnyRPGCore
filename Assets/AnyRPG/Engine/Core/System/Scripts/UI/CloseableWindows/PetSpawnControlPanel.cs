@@ -167,7 +167,7 @@ namespace AnyRPG {
             base.RecieveClosedWindowNotification();
             characterPreviewPanel.OnTargetReady -= HandleTargetReady;
             characterPreviewPanel.RecieveClosedWindowNotification();
-            //SaveManager.Instance.ClearSharedData();
+            //SystemGameManager.Instance.SaveManager.ClearSharedData();
             OnCloseWindow(this);
         }
 

@@ -28,7 +28,7 @@ namespace AnyRPG {
 
         private void InitializeKeys() {
             //Debug.Log("KeyBindMenuController.InitializeKeys()");
-            foreach (KeyBindNode keyBindNode in KeyBindManager.Instance.MyKeyBinds.Values) {
+            foreach (KeyBindNode keyBindNode in SystemGameManager.Instance.KeyBindManager.MyKeyBinds.Values) {
                 Transform nodeParent = null;
                 if (keyBindNode.MyKeyBindType == KeyBindType.Action) {
                     nodeParent = actionKeyParent.transform;

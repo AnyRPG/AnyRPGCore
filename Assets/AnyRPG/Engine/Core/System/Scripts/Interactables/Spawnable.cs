@@ -107,7 +107,7 @@ namespace AnyRPG {
             }
             SystemEventManager.StartListening("OnLevelUnload", HandleLevelUnload);
             SystemEventManager.StartListening("OnPlayerUnitSpawn", HandlePlayerUnitSpawn);
-            //SystemEventManager.Instance.OnPrerequisiteUpdated += HandlePrerequisiteUpdates;
+            //SystemGameManager.Instance.EventManager.OnPrerequisiteUpdated += HandlePrerequisiteUpdates;
             eventSubscriptionsInitialized = true;
         }
 
@@ -117,8 +117,8 @@ namespace AnyRPG {
                 return;
             }
             SystemEventManager.StopListening("OnLevelUnload", HandleLevelUnload);
-            if (SystemEventManager.Instance != null) {
-                //SystemEventManager.Instance.OnPrerequisiteUpdated -= HandlePrerequisiteUpdates;
+            if (SystemGameManager.Instance.EventManager != null) {
+                //SystemGameManager.Instance.EventManager.OnPrerequisiteUpdated -= HandlePrerequisiteUpdates;
                 SystemEventManager.StopListening("OnPlayerUnitSpawn", HandlePlayerUnitSpawn);
             }
             eventSubscriptionsInitialized = false;

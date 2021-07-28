@@ -26,12 +26,12 @@ namespace AnyRPG {
             //} else {
             //stackSize.text = "";
             //}
-            CraftingManager.Instance.TriggerCraftAmountUpdated();
+            SystemGameManager.Instance.CraftingManager.TriggerCraftAmountUpdated();
         }
 
         protected override void SetDescribableCommon(IDescribable describable) {
             base.SetDescribableCommon(describable);
-            SystemEventManager.Instance.OnItemCountChanged += UpdateVisual;
+            SystemGameManager.Instance.EventManager.OnItemCountChanged += UpdateVisual;
         }
 
 
@@ -41,7 +41,7 @@ namespace AnyRPG {
             }
             base.OnDisable();
             if (InventoryManager.Instance != null) {
-                SystemEventManager.Instance.OnItemCountChanged -= UpdateVisual;
+                SystemGameManager.Instance.EventManager.OnItemCountChanged -= UpdateVisual;
             }
 
         }

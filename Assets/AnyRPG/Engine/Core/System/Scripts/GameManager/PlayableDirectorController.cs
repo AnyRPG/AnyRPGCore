@@ -14,7 +14,7 @@ namespace AnyRPG {
             playableDirector = GetComponent<PlayableDirector>();
             if (playableDirector != null) {
                 //Debug.Log("SystemGameManager.Awake(): playableDirector.playableAsset.name: " + playableDirector.playableAsset.name);
-                SystemPlayableDirectorManager.Instance.MyPlayableDirectorDictionary[playableDirector.playableAsset.name] = playableDirector;
+                SystemGameManager.Instance.SystemPlayableDirectorManager.PlayableDirectorDictionary[playableDirector.playableAsset.name] = playableDirector;
             }
         }
 
@@ -24,12 +24,12 @@ namespace AnyRPG {
                 return;
             }
             /*
-            if (SystemPlayableDirectorManager.Instance == null || playableDirector == null) {
+            if (SystemGameManager.Instance.SystemPlayableDirectorManager == null || playableDirector == null) {
                 return;
             }
             */
-            if (SystemPlayableDirectorManager.Instance.MyPlayableDirectorDictionary.ContainsKey(playableDirector.playableAsset.name)) {
-                SystemPlayableDirectorManager.Instance.MyPlayableDirectorDictionary.Remove(playableDirector.playableAsset.name);
+            if (SystemGameManager.Instance.SystemPlayableDirectorManager.PlayableDirectorDictionary.ContainsKey(playableDirector.playableAsset.name)) {
+                SystemGameManager.Instance.SystemPlayableDirectorManager.PlayableDirectorDictionary.Remove(playableDirector.playableAsset.name);
             }
 
         }
@@ -40,7 +40,7 @@ namespace AnyRPG {
             if (eventSubscriptionsInitialized) {
                 return;
             }
-            SystemEventManager.Instance.OnPlayerConnectionDespawn += ReloadResourceLists;
+            SystemGameManager.Instance.EventManager.OnPlayerConnectionDespawn += ReloadResourceLists;
             eventSubscriptionsInitialized = true;
         }
 
@@ -49,7 +49,7 @@ namespace AnyRPG {
             if (!eventSubscriptionsInitialized) {
                 return;
             }
-            SystemEventManager.Instance.OnPlayerConnectionDespawn -= ReloadResourceLists;
+            SystemGameManager.Instance.EventManager.OnPlayerConnectionDespawn -= ReloadResourceLists;
             eventSubscriptionsInitialized = false;
         }
         */

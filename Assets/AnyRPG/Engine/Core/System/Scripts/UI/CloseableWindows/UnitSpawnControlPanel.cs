@@ -193,7 +193,7 @@ namespace AnyRPG {
             base.RecieveClosedWindowNotification();
             previewCameraController.ClearTarget();
             UnitPreviewManager.Instance.HandleCloseWindow();
-            //SaveManager.Instance.ClearSharedData();
+            //SystemGameManager.Instance.SaveManager.ClearSharedData();
             OnCloseWindow(this);
         }
 

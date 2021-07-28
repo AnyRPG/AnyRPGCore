@@ -307,7 +307,7 @@ namespace AnyRPG {
             if (!eventSubscriptionsInitialized) {
                 return;
             }
-            if (SystemEventManager.Instance != null) {
+            if (SystemGameManager.Instance.EventManager != null) {
                 SystemEventManager.StopListening("OnLevelLoad", HandleLevelLoad);
                 SystemEventManager.StopListening("OnPlayerUnitSpawn", HandlePlayerUnitSpawn);
                 SystemEventManager.StopListening("OnPlayerUnitDespawn", HandlePlayerUnitDespawn);
@@ -337,7 +337,7 @@ namespace AnyRPG {
                 return;
             }
             // don't hide windows while binding keys
-            if (KeyBindManager.Instance.MyBindName == string.Empty) {
+            if (SystemGameManager.Instance.KeyBindManager.MyBindName == string.Empty) {
                 if (InputManager.Instance.KeyBindWasPressed("HIDEUI")) {
                     if (playerUI.gameObject.activeSelf) {
                         playerUI.SetActive(false);
@@ -443,12 +443,12 @@ namespace AnyRPG {
             //Debug.Log("UIManager.HandleBeforePlayerConnectionSpawn()");
 
             // allow the player ability manager to send us events so we can redraw the ability list when it changes
-            SystemEventManager.Instance.OnAbilityListChanged += HandleAbilityListChanged;
+            SystemGameManager.Instance.EventManager.OnAbilityListChanged += HandleAbilityListChanged;
         }
 
         public void HandlePlayerConnectionDespawn(string eventName, EventParamProperties eventParamProperties) {
             //Debug.Log("UIManager.HandlePlayerConnectionDespawn()");
-            SystemEventManager.Instance.OnAbilityListChanged -= HandleAbilityListChanged;
+            SystemGameManager.Instance.EventManager.OnAbilityListChanged -= HandleAbilityListChanged;
         }
 
         public void ProcessPlayerUnitSpawn() {
@@ -459,7 +459,7 @@ namespace AnyRPG {
             ActionBarManager.UpdateVisuals();
 
             // allow the player ability manager to send us events so we can redraw the ability list when it changes
-            //SystemEventManager.Instance.OnAbilityListChanged += HandleAbilityListChanged;
+            //SystemGameManager.Instance.EventManager.OnAbilityListChanged += HandleAbilityListChanged;
 
             // enable things that track the character
             // initialize unit frame
@@ -473,7 +473,7 @@ namespace AnyRPG {
 
         public void HandlePlayerUnitDespawn(string eventName, EventParamProperties eventParamProperties) {
             //Debug.Log("UIManager.HandleCharacterDespawn()");
-            //SystemEventManager.Instance.OnAbilityListChanged -= HandleAbilityListChanged;
+            //SystemGameManager.Instance.EventManager.OnAbilityListChanged -= HandleAbilityListChanged;
             DeInitializeMiniMapTarget();
             statusEffectPanelController.ClearTarget();
             focusUnitFrameController.ClearTarget();

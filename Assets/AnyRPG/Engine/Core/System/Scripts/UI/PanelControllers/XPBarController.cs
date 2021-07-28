@@ -33,7 +33,7 @@ namespace AnyRPG {
                 return;
             }
             SystemEventManager.StartListening("OnXPGained", HandleXPGained);
-            SystemEventManager.Instance.OnLevelChanged += UpdateXPBar;
+            SystemGameManager.Instance.EventManager.OnLevelChanged += UpdateXPBar;
             SystemEventManager.StartListening("OnPlayerUnitSpawn", HandlePlayerUnitSpawn);
             if (PlayerManager.Instance.PlayerUnitSpawned == true) {
                 ProcessPlayerUnitSpawn();
@@ -46,9 +46,9 @@ namespace AnyRPG {
             if (!eventSubscriptionsInitialized) {
                 return;
             }
-            if (SystemEventManager.Instance != null) {
+            if (SystemGameManager.Instance.EventManager != null) {
                 SystemEventManager.StopListening("OnXPGained", HandleXPGained);
-                SystemEventManager.Instance.OnLevelChanged -= UpdateXPBar;
+                SystemGameManager.Instance.EventManager.OnLevelChanged -= UpdateXPBar;
                 SystemEventManager.StopListening("OnPlayerUnitSpawn", HandlePlayerUnitSpawn);
             }
             eventSubscriptionsInitialized = false;

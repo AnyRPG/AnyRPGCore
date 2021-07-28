@@ -79,7 +79,7 @@ namespace AnyRPG {
             base.RecieveClosedWindowNotification();
             characterPreviewPanel.OnTargetReady -= HandleTargetReady;
             characterPreviewPanel.RecieveClosedWindowNotification();
-            //SaveManager.Instance.ClearSharedData();
+            //SystemGameManager.Instance.SaveManager.ClearSharedData();
             OnCloseWindow(this);
         }
 
@@ -104,7 +104,7 @@ namespace AnyRPG {
             selectedLoadGameButton = loadButton;
             anyRPGSaveData = loadButton.SaveData;
 
-            capabilityConsumerSnapshot = SaveManager.Instance.GetCapabilityConsumerSnapshot(selectedLoadGameButton.SaveData);
+            capabilityConsumerSnapshot = SystemGameManager.Instance.SaveManager.GetCapabilityConsumerSnapshot(selectedLoadGameButton.SaveData);
 
             unitProfile = capabilityConsumerSnapshot.UnitProfile;
             UnitType = capabilityConsumerSnapshot.UnitProfile.UnitType;
@@ -113,8 +113,8 @@ namespace AnyRPG {
             classSpecialization = capabilityConsumerSnapshot.ClassSpecialization;
             faction = capabilityConsumerSnapshot.Faction;
 
-            SaveManager.Instance.ClearSharedData();
-            SaveManager.Instance.LoadUMARecipe(loadButton.SaveData);
+            SystemGameManager.Instance.SaveManager.ClearSharedData();
+            SystemGameManager.Instance.SaveManager.LoadUMARecipe(loadButton.SaveData);
 
             // testing avoid naked spawn
             // seems to make no difference to have this disabled here
@@ -169,7 +169,7 @@ namespace AnyRPG {
             characterPreviewPanel.ClearPreviewTarget();
             int selectedButton = 0;
             int count = 0;
-            foreach (AnyRPGSaveData anyRPGSaveData in SaveManager.Instance.GetSaveDataList()) {
+            foreach (AnyRPGSaveData anyRPGSaveData in SystemGameManager.Instance.SaveManager.GetSaveDataList()) {
                 //Debug.Log("LoadGamePanel.ShowLoadButtonsCommon(): setting a button with saved game data");
                 GameObject go = ObjectPooler.Instance.GetPooledObject(buttonPrefab, buttonArea.transform);
                 LoadGameButton loadGameButton = go.GetComponent<LoadGameButton>();
@@ -189,7 +189,7 @@ namespace AnyRPG {
 
         public void LoadUMARecipe() {
             if (CharacterCreatorManager.Instance?.PreviewUnitController?.DynamicCharacterAvatar != null) {
-                SaveManager.Instance.LoadUMASettings(CharacterCreatorManager.Instance.PreviewUnitController.DynamicCharacterAvatar, false);
+                SystemGameManager.Instance.SaveManager.LoadUMASettings(CharacterCreatorManager.Instance.PreviewUnitController.DynamicCharacterAvatar, false);
             }
         }
 
@@ -205,9 +205,9 @@ namespace AnyRPG {
 
                 BaseCharacter baseCharacter = CharacterCreatorManager.Instance.PreviewUnitController.CharacterUnit.BaseCharacter;
                 if (baseCharacter != null) {
-                    //SaveManager.Instance.LoadEquipmentData(loadGameButton.MySaveData, characterEquipmentManager);
+                    //SystemGameManager.Instance.SaveManager.LoadEquipmentData(loadGameButton.MySaveData, characterEquipmentManager);
                     // results in equipment being sheathed
-                    SaveManager.Instance.LoadEquipmentData(anyRPGSaveData, baseCharacter.CharacterEquipmentManager);
+                    SystemGameManager.Instance.SaveManager.LoadEquipmentData(anyRPGSaveData, baseCharacter.CharacterEquipmentManager);
                 }
             }
         }
@@ -234,7 +234,7 @@ namespace AnyRPG {
 
         public void LoadGame() {
             if (SelectedLoadGameButton != null) {
-                SaveManager.Instance.LoadGame(SelectedLoadGameButton.SaveData);
+                SystemGameManager.Instance.SaveManager.LoadGame(SelectedLoadGameButton.SaveData);
             }
         }
 
@@ -257,7 +257,7 @@ namespace AnyRPG {
         public void DeleteGame(bool confirmDelete = false) {
             if (SelectedLoadGameButton != null) {
                 if (confirmDelete) {
-                    SaveManager.Instance.DeleteGame(SelectedLoadGameButton.SaveData);
+                    SystemGameManager.Instance.SaveManager.DeleteGame(SelectedLoadGameButton.SaveData);
                     SystemWindowManager.Instance.deleteGameMenuWindow.CloseWindow();
                     ShowLoadButtonsCommon();
                 } else {
@@ -275,7 +275,7 @@ namespace AnyRPG {
         public void CopyGame(bool confirmCopy = false) {
             if (SelectedLoadGameButton != null) {
                 if (confirmCopy) {
-                    SaveManager.Instance.CopyGame(SelectedLoadGameButton.SaveData);
+                    SystemGameManager.Instance.SaveManager.CopyGame(SelectedLoadGameButton.SaveData);
                     SystemWindowManager.Instance.copyGameMenuWindow.CloseWindow();
                     ShowLoadButtonsCommon(SelectedLoadGameButton.SaveData.DataFileName);
                 } else {

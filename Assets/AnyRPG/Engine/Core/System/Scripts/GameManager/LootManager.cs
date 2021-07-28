@@ -6,21 +6,7 @@ using UnityEngine;
 using UnityEngine.UI;
 
 namespace AnyRPG {
-    public class LootManager : MonoBehaviour {
-
-        #region Singleton
-        private static LootManager instance;
-
-        public static LootManager Instance {
-            get {
-                return instance;
-            }
-        }
-
-        private void Awake() {
-            instance = this;
-        }
-        #endregion
+    public class LootManager {
 
         private List<List<LootDrop>> pages = new List<List<LootDrop>>();
 

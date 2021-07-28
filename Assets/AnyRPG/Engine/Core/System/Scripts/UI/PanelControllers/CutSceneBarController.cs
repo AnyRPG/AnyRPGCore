@@ -71,8 +71,8 @@ namespace AnyRPG {
 
             if (cutscene.TimelineName != null
                 && cutscene.TimelineName != string.Empty
-                && SystemPlayableDirectorManager.Instance.MyPlayableDirectorDictionary.ContainsKey(cutscene.TimelineName)) {
-                SystemPlayableDirectorManager.Instance.MyPlayableDirectorDictionary[cutscene.TimelineName].Play();
+                && SystemGameManager.Instance.SystemPlayableDirectorManager.PlayableDirectorDictionary.ContainsKey(cutscene.TimelineName)) {
+                SystemGameManager.Instance.SystemPlayableDirectorManager.PlayableDirectorDictionary[cutscene.TimelineName].Play();
             }
 
             CameraManager.Instance.DeactivateMainCamera();
@@ -106,8 +106,8 @@ namespace AnyRPG {
             if (currentCutscene != null
                 && currentCutscene.TimelineName != null
                 && currentCutscene.TimelineName != string.Empty
-                && SystemPlayableDirectorManager.Instance.MyPlayableDirectorDictionary.ContainsKey(currentCutscene.TimelineName)) {
-                SystemPlayableDirectorManager.Instance.MyPlayableDirectorDictionary[currentCutscene.TimelineName].Stop();
+                && SystemGameManager.Instance.SystemPlayableDirectorManager.PlayableDirectorDictionary.ContainsKey(currentCutscene.TimelineName)) {
+                SystemGameManager.Instance.SystemPlayableDirectorManager.PlayableDirectorDictionary[currentCutscene.TimelineName].Stop();
             }
 
             topBar.gameObject.SetActive(false);

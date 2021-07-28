@@ -131,7 +131,7 @@ namespace AnyRPG {
 
         public void ResetWindowPositions() {
             UIManager.Instance.LoadDefaultWindowPositions();
-            SaveManager.Instance.SaveWindowPositions();
+            SystemGameManager.Instance.SaveManager.SaveWindowPositions();
         }
 
         private void LoadUISettings() {

@@ -56,7 +56,7 @@ namespace AnyRPG {
                 return;
             }
             // don't open windows while binding keys
-            if (KeyBindManager.Instance.MyBindName == string.Empty) {
+            if (SystemGameManager.Instance.KeyBindManager.MyBindName == string.Empty) {
                 if (InputManager.Instance.KeyBindWasPressed("INVENTORY")) {
                     InventoryManager.Instance.OpenClose();
                 }

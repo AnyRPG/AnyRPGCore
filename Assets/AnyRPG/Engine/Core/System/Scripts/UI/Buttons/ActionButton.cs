@@ -91,7 +91,7 @@ namespace AnyRPG {
 
         void Start() {
             //Debug.Log("ActionButton.Start()");
-            SystemEventManager.Instance.OnItemCountChanged += UpdateItemCount;
+            SystemGameManager.Instance.EventManager.OnItemCountChanged += UpdateItemCount;
         }
 
         public void OnClickFromButton() {

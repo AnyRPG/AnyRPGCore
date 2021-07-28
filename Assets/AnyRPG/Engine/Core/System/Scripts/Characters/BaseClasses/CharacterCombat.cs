@@ -239,7 +239,7 @@ namespace AnyRPG {
                         combatTextType = CombatTextType.ability;
                     }
                     CombatTextManager.Instance.SpawnCombatText(baseCharacter.UnitController, damage, combatTextType, combatMagnitude, abilityEffectContext);
-                    SystemEventManager.Instance.NotifyOnTakeDamage(target, BaseCharacter.UnitController.CharacterUnit, damage, abilityEffect.DisplayName);
+                    SystemGameManager.Instance.EventManager.NotifyOnTakeDamage(target, BaseCharacter.UnitController.CharacterUnit, damage, abilityEffect.DisplayName);
                 }
                 lastCombatEvent = Time.time;
                 float totalThreat = damage;

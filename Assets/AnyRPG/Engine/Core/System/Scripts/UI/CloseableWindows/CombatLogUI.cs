@@ -250,7 +250,7 @@ namespace AnyRPG {
                 return;
             }
             base.CreateEventSubscriptions();
-            SystemEventManager.Instance.OnTakeDamage += HandleTakeDamage;
+            SystemGameManager.Instance.EventManager.OnTakeDamage += HandleTakeDamage;
             SystemEventManager.StartListening("OnPlayerConnectionSpawn", handlePlayerConnectionSpawn);
             SystemEventManager.StartListening("OnPlayerConnectionDespawn", handlePlayerConnectionDespawn);
             if (PlayerManager.Instance.PlayerConnectionSpawned == true) {
@@ -265,8 +265,8 @@ namespace AnyRPG {
                 return;
             }
             base.CleanupEventSubscriptions();
-            if (SystemEventManager.Instance != null) {
-                SystemEventManager.Instance.OnTakeDamage -= HandleTakeDamage;
+            if (SystemGameManager.Instance.EventManager != null) {
+                SystemGameManager.Instance.EventManager.OnTakeDamage -= HandleTakeDamage;
                 SystemEventManager.StopListening("OnPlayerConnectionSpawn", handlePlayerConnectionSpawn);
                 SystemEventManager.StopListening("OnPlayerConnectionDespawn", handlePlayerConnectionDespawn);
             }

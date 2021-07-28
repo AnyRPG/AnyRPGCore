@@ -38,11 +38,11 @@ namespace AnyRPG {
             if (eventSubscriptionsInitialized) {
                 return;
             }
-            if (SystemEventManager.Instance != null) {
+            if (SystemGameManager.Instance.EventManager != null) {
                 SystemEventManager.StartListening("OnPlayerUnitSpawn", HandlePlayerUnitSpawn);
                 SystemEventManager.StartListening("OnPlayerUnitDespawn", HandlePlayerUnitDespawn);
                 SystemEventManager.StartListening("OnPlayerConnectionDespawn", HandlePlayerConnectionDespawn);
-                SystemEventManager.Instance.OnEquipmentChanged += HandleEquipmentChange;
+                SystemGameManager.Instance.EventManager.OnEquipmentChanged += HandleEquipmentChange;
             }
             eventSubscriptionsInitialized = true;
         }
@@ -52,11 +52,11 @@ namespace AnyRPG {
             if (!eventSubscriptionsInitialized) {
                 return;
             }
-            if (SystemEventManager.Instance != null) {
+            if (SystemGameManager.Instance.EventManager != null) {
                 SystemEventManager.StopListening("OnPlayerUnitSpawn", HandlePlayerUnitSpawn);
                 SystemEventManager.StopListening("OnPlayerUnitDespawn", HandlePlayerUnitDespawn);
                 SystemEventManager.StopListening("OnPlayerConnectionDespawn", HandlePlayerConnectionDespawn);
-                SystemEventManager.Instance.OnEquipmentChanged -= HandleEquipmentChange;
+                SystemGameManager.Instance.EventManager.OnEquipmentChanged -= HandleEquipmentChange;
             }
             eventSubscriptionsInitialized = false;
         }
@@ -192,10 +192,10 @@ namespace AnyRPG {
             //Debug.Log("ActionBarManager.AssociateActionBarKeyBinds()");
             int count = 1;
             foreach (ActionButton actionButton in GetActionButtons()) {
-                if (KeyBindManager.Instance.MyKeyBinds.Count >= count) {
+                if (SystemGameManager.Instance.KeyBindManager.MyKeyBinds.Count >= count) {
                     //Debug.Log("ActionBarManager.AssociateActionBarKeyBinds(): associate count: ACT" + count + " with actionButton " + actionButton.name + actionButton.GetInstanceID());
-                    if (KeyBindManager.Instance.MyKeyBinds.ContainsKey("ACT" + count.ToString())) {
-                        KeyBindManager.Instance.MyKeyBinds["ACT" + count.ToString()].MyActionButton = actionButton;
+                    if (SystemGameManager.Instance.KeyBindManager.MyKeyBinds.ContainsKey("ACT" + count.ToString())) {
+                        SystemGameManager.Instance.KeyBindManager.MyKeyBinds["ACT" + count.ToString()].MyActionButton = actionButton;
                         count++;
                     } else {
                         //Debug.Log("ActionBarManager.AssociateActionBarKeyBinds(): ran out of keybinds to associate with available action buttons!");

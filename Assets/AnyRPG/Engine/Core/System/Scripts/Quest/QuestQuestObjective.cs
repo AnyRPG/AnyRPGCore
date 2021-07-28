@@ -49,7 +49,7 @@ namespace AnyRPG {
             //Debug.Log("QuestQuestObjective.OnAcceptQuest(" + quest.MyName + ")");
             base.OnAcceptQuest(quest, printMessages);
             // not needed anymore ?
-            //SystemEventManager.Instance.OnQuestStatusUpdated += HandleQuestStatusUpdated;
+            //SystemGameManager.Instance.EventManager.OnQuestStatusUpdated += HandleQuestStatusUpdated;
             questObjective.OnQuestStatusUpdated += HandleQuestStatusUpdated;
             UpdateCompletionCount(printMessages);
         }
@@ -57,7 +57,7 @@ namespace AnyRPG {
         public override void OnAbandonQuest() {
             base.OnAbandonQuest();
             // not needed anymore ?
-            //SystemEventManager.Instance.OnQuestStatusUpdated -= HandleQuestStatusUpdated;
+            //SystemGameManager.Instance.EventManager.OnQuestStatusUpdated -= HandleQuestStatusUpdated;
             questObjective.OnQuestStatusUpdated -= HandleQuestStatusUpdated;
         }
 

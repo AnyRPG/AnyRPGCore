@@ -19,7 +19,7 @@ namespace AnyRPG {
 
         public void ContinueGame() {
             //Debug.Log("PlayMenuController.ContinueGame()");
-            SaveManager.Instance.LoadGame();
+            SystemGameManager.Instance.SaveManager.LoadGame();
         }
 
         public void LoadGame() {

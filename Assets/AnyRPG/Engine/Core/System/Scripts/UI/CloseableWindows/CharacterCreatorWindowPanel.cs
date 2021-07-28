@@ -90,8 +90,8 @@ namespace AnyRPG {
 
         public void LoadUMARecipe() {
             //Debug.Log("CharacterCreatorWindowPanel.LoadUMARecipe()");
-            //SaveManager.Instance.SaveUMASettings();
-            SaveManager.Instance.LoadUMASettings(CharacterCreatorManager.Instance.PreviewUnitController.DynamicCharacterAvatar, false);
+            //SystemGameManager.Instance.SaveManager.SaveUMASettings();
+            SystemGameManager.Instance.SaveManager.LoadUMASettings(CharacterCreatorManager.Instance.PreviewUnitController.DynamicCharacterAvatar, false);
         }
 
         public void ClosePanel() {
@@ -103,7 +103,7 @@ namespace AnyRPG {
             //Debug.Log("CharacterCreatorPanel.SaveCharacter()");
 
             if (CharacterCreatorManager.Instance.PreviewUnitController.DynamicCharacterAvatar != null) {
-                SaveManager.Instance.SaveUMASettings(CharacterCreatorManager.Instance.PreviewUnitController.DynamicCharacterAvatar.GetCurrentRecipe());
+                SystemGameManager.Instance.SaveManager.SaveUMASettings(CharacterCreatorManager.Instance.PreviewUnitController.DynamicCharacterAvatar.GetCurrentRecipe());
             }
 
             // replace a default player unit with an UMA player unit when a save occurs
@@ -121,7 +121,7 @@ namespace AnyRPG {
 
             //}
             // testing this is not needed because subscribing to the player unit spawn already handles this through the playermanager
-            //SaveManager.Instance.LoadUMASettings();
+            //SystemGameManager.Instance.SaveManager.LoadUMASettings();
             //ClosePanel();
 
             OnConfirmAction();

@@ -49,12 +49,12 @@ namespace AnyRPG {
                     Debug.LogError("SystemAbilityManager.SetupScriptableObjects(): Could not find skill : " + prerequisiteName + " while inititalizing a prerequisite.  CHECK INSPECTOR");
                 }
             }
-            SystemEventManager.Instance.OnSkillListChanged += HandleSkillListChanged;
+            SystemGameManager.Instance.EventManager.OnSkillListChanged += HandleSkillListChanged;
         }
 
         public void CleanupScriptableObjects() {
-            if (SystemEventManager.Instance != null) {
-                SystemEventManager.Instance.OnSkillListChanged -= HandleSkillListChanged;
+            if (SystemGameManager.Instance.EventManager != null) {
+                SystemGameManager.Instance.EventManager.OnSkillListChanged -= HandleSkillListChanged;
             }
         }
     }

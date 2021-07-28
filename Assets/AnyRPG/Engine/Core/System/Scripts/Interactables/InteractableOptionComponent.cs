@@ -73,10 +73,10 @@ namespace AnyRPG {
                 return;
             }
             //Debug.Log(gameObject.name + ".InteractableOption.CreateEventSubscriptions(): subscribing to player unit spawn");
-            if (SystemEventManager.Instance == null) {
+            if (SystemGameManager.Instance.EventManager == null) {
                 Debug.LogError("SystemEventManager not found in the scene.  Is the GameManager in the scene?");
                 return;
-                //SystemEventManager.Instance.OnPlayerUnitSpawn += HandlePlayerUnitSpawn;
+                //SystemGameManager.Instance.EventManager.OnPlayerUnitSpawn += HandlePlayerUnitSpawn;
             }
             if (PlayerManager.Instance == null) {
                 Debug.LogError("PlayerManager not found. Is the GameManager in the scene?");
@@ -86,14 +86,14 @@ namespace AnyRPG {
         }
 
         public virtual void CleanupEventSubscriptions() {
-            if (SystemEventManager.Instance != null) {
-                //SystemEventManager.Instance.OnPlayerUnitSpawn -= HandlePlayerUnitSpawn;
+            if (SystemGameManager.Instance.EventManager != null) {
+                //SystemGameManager.Instance.EventManager.OnPlayerUnitSpawn -= HandlePlayerUnitSpawn;
             }
             eventSubscriptionsInitialized = false;
         }
 
         public virtual void HandleConfirmAction() {
-            SystemEventManager.Instance.NotifyOnInteractionWithOptionCompleted(this);
+            SystemGameManager.Instance.EventManager.NotifyOnInteractionWithOptionCompleted(this);
         }
 
         public virtual bool ProcessFactionValue(float factionValue) {
@@ -142,7 +142,7 @@ namespace AnyRPG {
         public virtual bool Interact(CharacterUnit source, int optionIndex = 0) {
             //Debug.Log(interactable.gameObject.name + ".InteractableOptionComponent.Interact()");
             //source.CancelMountEffects();
-            SystemEventManager.Instance.NotifyOnInteractionWithOptionStarted(this);
+            SystemGameManager.Instance.EventManager.NotifyOnInteractionWithOptionStarted(this);
             return true;
         }
 

@@ -231,13 +231,13 @@ namespace AnyRPG {
 
         public bool TurnedIn {
             get {
-                return SaveManager.Instance.GetQuestSaveData(this).turnedIn;
+                return SystemGameManager.Instance.SaveManager.GetQuestSaveData(this).turnedIn;
                 //return false;
             }
             set {
-                QuestSaveData saveData = SaveManager.Instance.GetQuestSaveData(this);
+                QuestSaveData saveData = SystemGameManager.Instance.SaveManager.GetQuestSaveData(this);
                 saveData.turnedIn = value;
-                SaveManager.Instance.QuestSaveDataDictionary[saveData.MyName] = saveData;
+                SystemGameManager.Instance.SaveManager.QuestSaveDataDictionary[saveData.MyName] = saveData;
             }
         }
 
@@ -297,13 +297,13 @@ namespace AnyRPG {
         public int CurrencyRewardPerLevel { get => currencyRewardPerLevel; set => currencyRewardPerLevel = value; }
         public bool MarkedComplete {
             get {
-                return SaveManager.Instance.GetQuestSaveData(this).markedComplete;
+                return SystemGameManager.Instance.SaveManager.GetQuestSaveData(this).markedComplete;
                 //return false;
             }
             set {
-                QuestSaveData saveData = SaveManager.Instance.GetQuestSaveData(this);
+                QuestSaveData saveData = SystemGameManager.Instance.SaveManager.GetQuestSaveData(this);
                 saveData.markedComplete = value;
-                SaveManager.Instance.QuestSaveDataDictionary[saveData.MyName] = saveData;
+                SystemGameManager.Instance.SaveManager.QuestSaveDataDictionary[saveData.MyName] = saveData;
             }
         }
 

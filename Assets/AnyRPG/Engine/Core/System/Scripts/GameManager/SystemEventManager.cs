@@ -5,30 +5,9 @@ using System.Collections.Generic;
 using UnityEngine;
 
 namespace AnyRPG {
-    public class SystemEventManager : MonoBehaviour {
+    public class SystemEventManager {
 
-        #region Singleton
-        private static SystemEventManager instance;
-
-        public static SystemEventManager Instance {
-            get {
-                return instance;
-            }
-        }
-
-        private void Awake() {
-            instance = this;
-            Init();
-        }
-
-        void Init() {
-            if (singleEventDictionary == null) {
-                singleEventDictionary = new Dictionary<string, Action<string, EventParamProperties>>();
-            }
-        }
-        #endregion
-
-        private Dictionary<string, Action<string, EventParamProperties>> singleEventDictionary;
+        private static Dictionary<string, Action<string, EventParamProperties>> singleEventDictionary = new Dictionary<string, Action<string, EventParamProperties>>();
 
 
         public event System.Action<BaseAbility> OnAbilityUsed = delegate { };
@@ -50,38 +29,37 @@ namespace AnyRPG {
 
         public static void StartListening(string eventName, Action<string, EventParamProperties> listener) {
             Action<string, EventParamProperties> thisEvent;
-            if (Instance.singleEventDictionary.TryGetValue(eventName, out thisEvent)) {
+            if (singleEventDictionary.TryGetValue(eventName, out thisEvent)) {
 
                 //Add more event to the existing one
                 thisEvent += listener;
 
                 //Update the Dictionary
-                Instance.singleEventDictionary[eventName] = thisEvent;
+                singleEventDictionary[eventName] = thisEvent;
             } else {
                 //Add event to the Dictionary for the first time
                 thisEvent += listener;
 
-                Instance.singleEventDictionary.Add(eventName, thisEvent);
+                singleEventDictionary.Add(eventName, thisEvent);
             }
         }
 
         public static void StopListening(string eventName, Action<string, EventParamProperties> listener) {
-            if (Instance == null) return;
 
             Action<string, EventParamProperties> thisEvent;
-            if (Instance.singleEventDictionary.TryGetValue(eventName, out thisEvent)) {
+            if (singleEventDictionary.TryGetValue(eventName, out thisEvent)) {
 
                 //Remove event from the existing one
                 thisEvent -= listener;
 
                 //Update the Dictionary
-                Instance.singleEventDictionary[eventName] = thisEvent;
+                singleEventDictionary[eventName] = thisEvent;
             }
         }
 
         public static void TriggerEvent(string eventName, EventParamProperties eventParam) {
             Action<string, EventParamProperties> thisEvent = null;
-            if (Instance.singleEventDictionary.TryGetValue(eventName, out thisEvent)) {
+            if (singleEventDictionary.TryGetValue(eventName, out thisEvent)) {
                 if (thisEvent != null) {
                     thisEvent.Invoke(eventName, eventParam);
                 }

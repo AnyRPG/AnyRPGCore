@@ -136,7 +136,7 @@ namespace AnyRPG {
             //SystemEventManager.StartListening("OnLevelUnload", HandleLevelUnload);
             SystemEventManager.StartListening("OnLevelLoad", HandleLevelLoad);
             SystemEventManager.StartListening("OnExitGame",  HandleExitGame);
-            SystemEventManager.Instance.OnLevelChanged += PlayLevelUpEffects;
+            SystemGameManager.Instance.EventManager.OnLevelChanged += PlayLevelUpEffects;
             SystemEventManager.StartListening("OnPlayerDeath", HandlePlayerDeath);
             eventSubscriptionsInitialized = true;
         }
@@ -146,11 +146,11 @@ namespace AnyRPG {
             if (!eventSubscriptionsInitialized) {
                 return;
             }
-            if (SystemEventManager.Instance != null) {
+            if (SystemGameManager.Instance.EventManager != null) {
                 //SystemEventManager.StopListening("OnLevelUnload", HandleLevelUnload);
                 SystemEventManager.StopListening("OnLevelLoad", HandleLevelLoad);
                 SystemEventManager.StopListening("OnExitGame", HandleExitGame);
-                SystemEventManager.Instance.OnLevelChanged -= PlayLevelUpEffects;
+                SystemGameManager.Instance.EventManager.OnLevelChanged -= PlayLevelUpEffects;
                 SystemEventManager.StopListening("OnPlayerDeath", HandlePlayerDeath);
             }
             eventSubscriptionsInitialized = false;
@@ -178,7 +178,7 @@ namespace AnyRPG {
             //Debug.Log("PlayerManager.ExitGameHandler()");
             //DespawnPlayerUnit();
             DespawnPlayerConnection();
-            SaveManager.Instance.ClearSystemManagedCharacterData();
+            SystemGameManager.Instance.SaveManager.ClearSystemManagedCharacterData();
         }
 
         public void SetPlayerName(string newName) {
@@ -338,9 +338,9 @@ namespace AnyRPG {
 
             if (activeUnitController.DynamicCharacterAvatar != null) {
                 if (activeUnitController.ModelReady == false) {
-                    SaveManager.Instance.LoadUMASettings(false);
+                    SystemGameManager.Instance.SaveManager.LoadUMASettings(false);
                 } else {
-                    SaveManager.Instance.LoadUMASettings(false);
+                    SystemGameManager.Instance.SaveManager.LoadUMASettings(false);
                 }
             }
 
@@ -440,7 +440,7 @@ namespace AnyRPG {
             //Debug.Log("PlayerManager.SubscribeToModelReady()");
 
             // try this earlier
-            //SaveManager.Instance.LoadUMASettings(false);
+            //SystemGameManager.Instance.SaveManager.LoadUMASettings(false);
 
             activeUnitController.OnModelReady += HandleModelReady;
         }
@@ -571,7 +571,7 @@ namespace AnyRPG {
         }
 
         public void HandleLearnAbility(BaseAbility baseAbility) {
-            SystemEventManager.Instance.NotifyOnAbilityListChanged(baseAbility);
+            SystemGameManager.Instance.EventManager.NotifyOnAbilityListChanged(baseAbility);
             baseAbility.NotifyOnLearn();
         }
 
@@ -608,7 +608,7 @@ namespace AnyRPG {
         }
 
         public void HandlePerformAbility(BaseAbility ability) {
-            SystemEventManager.Instance.NotifyOnAbilityUsed(ability);
+            SystemGameManager.Instance.EventManager.NotifyOnAbilityUsed(ability);
             ability.NotifyOnAbilityUsed();
 
         }
@@ -638,7 +638,7 @@ namespace AnyRPG {
                     InventoryManager.Instance.AddItem(oldItem);
                 }
             }
-            SystemEventManager.Instance.NotifyOnEquipmentChanged(newItem, oldItem);
+            SystemGameManager.Instance.EventManager.NotifyOnEquipmentChanged(newItem, oldItem);
         }
 
         /// <summary>
@@ -705,7 +705,7 @@ namespace AnyRPG {
         }
 
         public void HandleLevelChanged(int newLevel) {
-            SystemEventManager.Instance.NotifyOnLevelChanged(newLevel);
+            SystemGameManager.Instance.EventManager.NotifyOnLevelChanged(newLevel);
             MessageFeedManager.Instance.WriteMessage(string.Format("YOU HAVE REACHED LEVEL {0}!", newLevel.ToString()));
         }
 

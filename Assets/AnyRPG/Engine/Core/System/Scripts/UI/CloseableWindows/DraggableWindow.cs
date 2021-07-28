@@ -101,7 +101,7 @@ namespace AnyRPG {
                 return;
             }
             UIManager.Instance.DragInProgress = false;
-            SaveManager.Instance.SaveWindowPositions();
+            SystemGameManager.Instance.SaveManager.SaveWindowPositions();
         }
 
         public void OnPointerDown(PointerEventData eventData) {

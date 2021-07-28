@@ -32,11 +32,11 @@ namespace AnyRPG {
             base.CreateEventSubscriptions();
 
             // because the skill is a special type of prerequisite, we need to be notified when it changes
-            if (SystemEventManager.Instance == null) {
+            if (SystemGameManager.Instance.EventManager == null) {
                 Debug.LogError("SystemEventManager Not Found.  Is the GameManager prefab in the scene?");
                 return;
             }
-            SystemEventManager.Instance.OnAbilityListChanged += HandleAbilityListChange;
+            SystemGameManager.Instance.EventManager.OnAbilityListChanged += HandleAbilityListChange;
         }
 
         public override void CleanupEventSubscriptions() {
@@ -46,8 +46,8 @@ namespace AnyRPG {
             }
             base.CleanupEventSubscriptions();
 
-            if (SystemEventManager.Instance != null) {
-                SystemEventManager.Instance.OnAbilityListChanged -= HandleAbilityListChange;
+            if (SystemGameManager.Instance.EventManager != null) {
+                SystemGameManager.Instance.EventManager.OnAbilityListChanged -= HandleAbilityListChange;
             }
         }
 
@@ -74,7 +74,7 @@ namespace AnyRPG {
             if (Props == null || Props.Ability == null) {
                 Debug.Log("Props is null");
             }
-            CraftingManager.Instance.SetAbility(Props.Ability as CraftAbility);
+            SystemGameManager.Instance.CraftingManager.SetAbility(Props.Ability as CraftAbility);
             //source.MyCharacter.MyCharacterAbilityManager.BeginAbility(ability);
             return true;
             //return PickUp();

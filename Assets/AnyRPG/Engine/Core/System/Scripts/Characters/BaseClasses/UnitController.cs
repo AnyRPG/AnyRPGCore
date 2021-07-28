@@ -510,7 +510,7 @@ namespace AnyRPG {
 
             }
             if (SystemConfigurationManager.Instance.UseThirdPartyMovementControl) {
-                KeyBindManager.Instance.SendKeyBindEvents();
+                SystemGameManager.Instance.KeyBindManager.SendKeyBindEvents();
             }
         }
 

@@ -56,7 +56,7 @@ namespace AnyRPG {
 
             SceneNode currentNode = LevelManager.Instance.GetActiveSceneNode();
             if (currentNode != null && currentNode.EnvironmentStates != null && currentNode.EnvironmentStates.Count > index && currentNode.EnvironmentStates[index].MySkyBoxMaterial != null) {
-                SystemEnvironmentManager.Instance.SetSkyBox(currentNode.EnvironmentStates[index].MySkyBoxMaterial);
+                SystemEnvironmentManager.SetSkyBox(currentNode.EnvironmentStates[index].MySkyBoxMaterial);
             }
         }
 
