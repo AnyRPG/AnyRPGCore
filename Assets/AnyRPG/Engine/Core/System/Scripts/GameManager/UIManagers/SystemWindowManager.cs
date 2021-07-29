@@ -6,20 +6,6 @@ using UnityEngine;
 namespace AnyRPG {
     public class SystemWindowManager : MonoBehaviour {
 
-        #region Singleton
-        private static SystemWindowManager instance;
-
-        public static SystemWindowManager Instance {
-            get {
-                return instance;
-            }
-        }
-
-        private void Awake() {
-            instance = this;
-        }
-        #endregion
-
         protected bool eventSubscriptionsInitialized = false;
 
         public CloseableWindow mainMenuWindow;

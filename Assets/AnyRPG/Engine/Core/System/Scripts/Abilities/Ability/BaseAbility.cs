@@ -272,7 +272,7 @@ namespace AnyRPG {
         }
 
         public virtual void UpdateChargeCount(ActionButton actionButton) {
-            UIManager.Instance.UpdateStackSize(actionButton, 0, false);
+            SystemGameManager.Instance.UIManager.UpdateStackSize(actionButton, 0, false);
         }
 
         public virtual bool HadSpecialIcon(ActionButton actionButton) {

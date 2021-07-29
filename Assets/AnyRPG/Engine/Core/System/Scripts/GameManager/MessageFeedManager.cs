@@ -11,20 +11,6 @@ namespace AnyRPG {
     /// </summary>
     public class MessageFeedManager : MonoBehaviour {
 
-        #region Singleton
-        private static MessageFeedManager instance;
-
-        public static MessageFeedManager Instance {
-            get {
-                return instance;
-            }
-        }
-
-        private void Awake() {
-            instance = this;
-        }
-        #endregion
-
         [SerializeField]
         private GameObject messagePrefab = null;
 

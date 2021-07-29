@@ -5,21 +5,6 @@ using UnityEngine;
 namespace AnyRPG {
     public class CharacterCreatorManager : PreviewManager {
 
-        #region Singleton
-        private static CharacterCreatorManager instance;
-
-        public static CharacterCreatorManager Instance {
-            get {
-                return instance;
-            }
-        }
-
-        private void Awake() {
-            instance = this;
-        }
-        #endregion
-
-
         public void HandleOpenWindow(UnitProfile unitProfile) {
             //Debug.Log("CharacterCreatorManager.HandleOpenWindow()");
 

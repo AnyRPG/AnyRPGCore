@@ -44,8 +44,8 @@ namespace AnyRPG {
         }
 
         public void CloseMenu() {
-            //SystemWindowManager.Instance.mainMenuWindow.OpenWindow();
-            SystemWindowManager.Instance.creditsWindow.CloseWindow();
+            //SystemGameManager.Instance.UIManager.SystemWindowManager.mainMenuWindow.OpenWindow();
+            SystemGameManager.Instance.UIManager.SystemWindowManager.creditsWindow.CloseWindow();
         }
 
     }

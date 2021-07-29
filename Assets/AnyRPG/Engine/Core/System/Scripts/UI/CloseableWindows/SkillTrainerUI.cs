@@ -97,7 +97,7 @@ namespace AnyRPG {
 
             if (firstAvailableSkill == null) {
                 // no available skills anymore, close window
-                PopupWindowManager.Instance.skillTrainerWindow.CloseWindow();
+                SystemGameManager.Instance.UIManager.PopupWindowManager.skillTrainerWindow.CloseWindow();
             }
 
             if (MySelectedSkillTrainerSkillScript == null && firstAvailableSkill != null) {

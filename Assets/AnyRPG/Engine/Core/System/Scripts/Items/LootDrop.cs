@@ -147,7 +147,7 @@ namespace AnyRPG {
 
         public override void SetBackgroundImage(Image backgroundImage) {
             base.SetBackgroundImage(backgroundImage);
-            UIManager.Instance.SetItemBackground(MyItem, backgroundImage, new Color32(0, 0, 0, 255));
+            SystemGameManager.Instance.UIManager.SetItemBackground(MyItem, backgroundImage, new Color32(0, 0, 0, 255));
         }
 
         public override bool TakeLoot() {

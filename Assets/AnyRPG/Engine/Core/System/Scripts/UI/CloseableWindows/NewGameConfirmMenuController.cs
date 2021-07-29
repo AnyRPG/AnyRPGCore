@@ -27,14 +27,14 @@ namespace AnyRPG {
 
         public void CancelAction() {
             //Debug.Log("NewGameMenuController.CancelAction()");
-            SystemWindowManager.Instance.confirmNewGameMenuWindow.CloseWindow();
+            SystemGameManager.Instance.UIManager.SystemWindowManager.confirmNewGameMenuWindow.CloseWindow();
         }
 
         public void ConfirmAction() {
             //Debug.Log("NewGameMenuController.ConfirmAction()");
-            SystemWindowManager.Instance.confirmNewGameMenuWindow.CloseWindow();
-            SystemWindowManager.Instance.loadGameWindow.CloseWindow();
-            SystemWindowManager.Instance.newGameWindow.CloseWindow();
+            SystemGameManager.Instance.UIManager.SystemWindowManager.confirmNewGameMenuWindow.CloseWindow();
+            SystemGameManager.Instance.UIManager.SystemWindowManager.loadGameWindow.CloseWindow();
+            SystemGameManager.Instance.UIManager.SystemWindowManager.newGameWindow.CloseWindow();
             if (SystemConfigurationManager.Instance.UseNewGameWindow == true) {
                 SystemGameManager.Instance.SaveManager.PerformInventorySetup();
                 SystemGameManager.Instance.SaveManager.SaveEquippedBagData(NewGamePanel.Instance.SaveData);

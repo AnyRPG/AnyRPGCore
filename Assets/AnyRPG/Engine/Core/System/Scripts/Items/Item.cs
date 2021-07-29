@@ -141,7 +141,7 @@ namespace AnyRPG {
         public virtual void UpdateChargeCount(ActionButton actionButton) {
             //Debug.Log(DisplayName + ".Item.UpdateChargeCount()");
             int chargeCount = InventoryManager.Instance.GetUseableCount(this);
-            UIManager.Instance.UpdateStackSize(actionButton, chargeCount, true);
+            SystemGameManager.Instance.UIManager.UpdateStackSize(actionButton, chargeCount, true);
         }
 
         public virtual void UpdateActionButtonVisual(ActionButton actionButton) {
@@ -153,7 +153,7 @@ namespace AnyRPG {
                 Useable = InventoryManager.Instance.GetUseable(Useable as IUseable);
             }
             */
-            UIManager.Instance.UpdateStackSize(actionButton, count, true);
+            SystemGameManager.Instance.UIManager.UpdateStackSize(actionButton, count, true);
 
             
             if (count == 0) {
@@ -229,7 +229,7 @@ namespace AnyRPG {
         public virtual bool Use() {
             //Debug.Log("Base item class: using " + itemName);
             if (!CharacterClassRequirementIsMet(PlayerManager.Instance.MyCharacter)) {
-                MessageFeedManager.Instance.WriteMessage("You are not the right character class to use " + DisplayName);
+                SystemGameManager.Instance.UIManager.MessageFeedManager.WriteMessage("You are not the right character class to use " + DisplayName);
                 return false;
             }
 

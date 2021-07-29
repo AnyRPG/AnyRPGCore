@@ -379,7 +379,7 @@ namespace AnyRPG {
                 }
                 //Debug.Log(gameObject.name + ".UnitController.SetDefaultLayer(): unitModel: " + (unitModel == null ? "null" : unitModel.name));
                 if (unitModel != null && !IsInLayerMask(unitModel.layer, finalmask)) {
-                    UIManager.Instance.SetLayerRecursive(unitModel, defaultLayer);
+                    SystemGameManager.Instance.UIManager.SetLayerRecursive(unitModel, defaultLayer);
                     //Debug.Log(gameObject.name + ".UnitController.SetDefaultLayer(): model was not set to correct layer: " + layerName + ". Setting automatically");
                 }
             }
@@ -1374,13 +1374,13 @@ namespace AnyRPG {
                     AudioProfile musicProfile = LevelManager.Instance.GetActiveSceneNode().BackgroundMusicProfile;
                     if (musicProfile != null) {
                         //Debug.Log(aiController.gameObject.name + "ReturnState.Enter(): music profile was set");
-                        if (musicProfile.AudioClip != null && AudioManager.Instance.MusicAudioSource.clip != musicProfile.AudioClip) {
+                        if (musicProfile.AudioClip != null && SystemGameManager.Instance.AudioManager.MusicAudioSource.clip != musicProfile.AudioClip) {
                             //Debug.Log(aiController.gameObject.name + "ReturnState.Enter(): playing default music");
-                            AudioManager.Instance.PlayMusic(musicProfile.AudioClip);
+                            SystemGameManager.Instance.AudioManager.PlayMusic(musicProfile.AudioClip);
                         }
                     } else {
                         // There was no music, turn it off instead
-                        AudioManager.Instance.StopMusic();
+                        SystemGameManager.Instance.AudioManager.StopMusic();
                     }
                 }
                 ResetCombatStrategy();

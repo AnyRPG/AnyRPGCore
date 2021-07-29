@@ -7,20 +7,6 @@ using UnityEngine.Audio;
 namespace AnyRPG {
     public class AudioManager : MonoBehaviour {
 
-        #region Singleton
-        private static AudioManager instance;
-
-        public static AudioManager Instance {
-            get {
-                return instance;
-            }
-        }
-
-        private void Awake() {
-            instance = this;
-        }
-        #endregion
-
         [SerializeField]
         private AudioMixer audioMixer = null;
 
@@ -73,7 +59,7 @@ namespace AnyRPG {
         public AudioSource UiAudioSource { get => uiAudioSource; set => uiAudioSource = value; }
         public AudioSource VoiceAudioSource { get => voiceAudioSource; set => voiceAudioSource = value; }
 
-        private void Start() {
+        public void Init() {
             //Debug.Log("AudioManager.Start()");
             InitializeVolume();
         }

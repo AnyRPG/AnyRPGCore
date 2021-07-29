@@ -80,8 +80,8 @@ namespace AnyRPG {
 
             if (UIManager.MouseInRect(MyIcon.rectTransform)) {
                 //if (RectTransformUtility.RectangleContainsScreenPoint(MyIcon.rectTransform, Input.mousePosition)) {
-                //UIManager.Instance.RefreshTooltip(describable as IDescribable);
-                //UIManager.Instance.ShowToolTip(transform.position, describable as IDescribable);
+                //SystemGameManager.Instance.UIManager.RefreshTooltip(describable as IDescribable);
+                //SystemGameManager.Instance.UIManager.ShowToolTip(transform.position, describable as IDescribable);
                 ProcessMouseEnter();
             }
 
@@ -132,9 +132,9 @@ namespace AnyRPG {
 
             /*
             if (count > 1) {
-                UIManager.Instance.UpdateStackSize(this, count);
+                SystemGameManager.Instance.UIManager.UpdateStackSize(this, count);
             } else if (MyDescribable is BaseAbility) {
-                UIManager.Instance.ClearStackCount(this);
+                SystemGameManager.Instance.UIManager.ClearStackCount(this);
             }
             */
         }
@@ -150,7 +150,7 @@ namespace AnyRPG {
             if (Describable != null && Describable is IDescribable) {
                 tmp = (IDescribable)Describable;
                 //Debug.Log("DescribableIcon.OnPointerEnter(): describable is not null");
-                //UIManager.Instance.ShowToolTip(transform.position);
+                //SystemGameManager.Instance.UIManager.ShowToolTip(transform.position);
             }
             if (tmp != null) {
                 //Debug.Log("DescribableIcon.OnPointerEnter(): showing tooltip");
@@ -160,16 +160,16 @@ namespace AnyRPG {
         }
 
         public virtual void ShowToolTip(IDescribable describable) {
-            UIManager.Instance.ShowToolTip(transform.position, describable);
+            SystemGameManager.Instance.UIManager.ShowToolTip(transform.position, describable);
         }
 
         public virtual void OnPointerExit(PointerEventData eventData) {
-            UIManager.Instance.HideToolTip();
+            SystemGameManager.Instance.UIManager.HideToolTip();
         }
 
         public virtual void CheckMouse() {
             if (UIManager.MouseInRect(MyIcon.rectTransform)) {
-                UIManager.Instance?.HideToolTip();
+                SystemGameManager.Instance.UIManager?.HideToolTip();
             }
         }
 

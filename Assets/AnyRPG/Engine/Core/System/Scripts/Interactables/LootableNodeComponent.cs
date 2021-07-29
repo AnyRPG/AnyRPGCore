@@ -51,7 +51,7 @@ namespace AnyRPG {
 
             DropLoot();
             PickUp();
-            PopupWindowManager.Instance.interactionWindow.CloseWindow();
+            SystemGameManager.Instance.UIManager.PopupWindowManager.interactionWindow.CloseWindow();
             return true;
         }
 
@@ -103,8 +103,8 @@ namespace AnyRPG {
             //Debug.Log(gameObject.name + ".LootableNode.Pickup()");
             //LootUI.Instance.CreatePages(lootTable.GetLoot());
             CreateWindowEventSubscriptions();
-            PopupWindowManager.Instance.lootWindow.CloseableWindowContents.OnCloseWindow += ClearTakeLootHandler;
-            PopupWindowManager.Instance.lootWindow.OpenWindow();
+            SystemGameManager.Instance.UIManager.PopupWindowManager.lootWindow.CloseableWindowContents.OnCloseWindow += ClearTakeLootHandler;
+            SystemGameManager.Instance.UIManager.PopupWindowManager.lootWindow.OpenWindow();
         }
 
         public void ClearTakeLootHandler(ICloseableWindowContents windowContents) {
@@ -120,8 +120,8 @@ namespace AnyRPG {
         public void CleanupWindowEventSubscriptions() {
             //Debug.Log(gameObject.name + ".LootableNode.CleanupWindowEventSubscriptions()");
             SystemEventManager.StopListening("OnTakeLoot", HandleTakeLoot);
-            if (PopupWindowManager.Instance?.lootWindow?.CloseableWindowContents != null) {
-                PopupWindowManager.Instance.lootWindow.CloseableWindowContents.OnCloseWindow -= ClearTakeLootHandler;
+            if (SystemGameManager.Instance.UIManager.PopupWindowManager?.lootWindow?.CloseableWindowContents != null) {
+                SystemGameManager.Instance.UIManager.PopupWindowManager.lootWindow.CloseableWindowContents.OnCloseWindow -= ClearTakeLootHandler;
             }
         }
 
@@ -174,7 +174,7 @@ namespace AnyRPG {
         public override void StopInteract() {
             base.StopInteract();
 
-            PopupWindowManager.Instance.lootWindow.CloseWindow();
+            SystemGameManager.Instance.UIManager.PopupWindowManager.lootWindow.CloseWindow();
         }
 
         public override bool HasMiniMapText() {

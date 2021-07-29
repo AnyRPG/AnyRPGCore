@@ -128,7 +128,7 @@ namespace AnyRPG {
         }
 
         public void UpdateCurrencyAmount() {
-            if (PopupWindowManager.Instance.vendorWindow.IsOpen == false) {
+            if (SystemGameManager.Instance.UIManager.PopupWindowManager.vendorWindow.IsOpen == false) {
                 return;
             }
             Dictionary<Currency, int> playerBaseCurrency = PlayerManager.Instance.MyCharacter.CharacterCurrencyManager.GetRedistributedCurrency();
@@ -187,7 +187,7 @@ namespace AnyRPG {
 
         public bool SellItem(Item item) {
             if (item.BuyPrice <= 0 || item.MySellPrice.Key == null) {
-                MessageFeedManager.Instance.WriteMessage("The vendor does not want to buy the " + item.DisplayName);
+                SystemGameManager.Instance.UIManager.MessageFeedManager.WriteMessage("The vendor does not want to buy the " + item.DisplayName);
                 return false;
             }
             KeyValuePair<Currency, int> sellAmount = item.MySellPrice;
@@ -198,10 +198,10 @@ namespace AnyRPG {
             item.MySlot.RemoveItem(item);
 
             if (SystemConfigurationManager.Instance?.VendorAudioProfile?.AudioClip != null) {
-                AudioManager.Instance.PlayEffect(SystemConfigurationManager.Instance.VendorAudioProfile.AudioClip);
+                SystemGameManager.Instance.AudioManager.PlayEffect(SystemConfigurationManager.Instance.VendorAudioProfile.AudioClip);
             }
             string priceString = CurrencyConverter.GetCombinedPriceSring(sellAmount.Key, sellAmount.Value);
-            MessageFeedManager.Instance.WriteMessage("Sold " + item.DisplayName + " for " + priceString);
+            SystemGameManager.Instance.UIManager.MessageFeedManager.WriteMessage("Sold " + item.DisplayName + " for " + priceString);
 
 
             if (dropDownIndex == 0) {

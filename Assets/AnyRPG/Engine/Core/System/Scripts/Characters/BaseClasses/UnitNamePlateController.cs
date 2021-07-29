@@ -96,7 +96,7 @@ namespace AnyRPG {
         */
 
         public override NamePlateController AddNamePlate() {
-            return NamePlateManager.Instance.AddNamePlate(unitController, (unitController.UnitComponentController.NamePlateTransform == null ? true : false));
+            return SystemGameManager.Instance.UIManager.NamePlateManager.AddNamePlate(unitController, (unitController.UnitComponentController.NamePlateTransform == null ? true : false));
         }
 
         public override void RemoveNamePlate() {

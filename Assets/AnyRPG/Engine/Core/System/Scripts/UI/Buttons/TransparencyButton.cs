@@ -65,7 +65,7 @@ namespace AnyRPG {
 
         public virtual void CheckMouse() {
             if (UIManager.MouseInRect(transform as RectTransform)) {
-                UIManager.Instance.HideToolTip();
+                SystemGameManager.Instance.UIManager.HideToolTip();
             }
         }
     }

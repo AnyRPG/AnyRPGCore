@@ -135,7 +135,7 @@ namespace AnyRPG {
         public override void RecieveClosedWindowNotification() {
             //Debug.Log("CharacterPanel.RecieveClosedWindowNotification()");
             base.RecieveClosedWindowNotification();
-            CharacterCreatorManager.Instance.HandleCloseWindow();
+            SystemGameManager.Instance.CharacterCreatorManager.HandleCloseWindow();
             previewCameraController.ClearTarget();
         }
 
@@ -146,29 +146,29 @@ namespace AnyRPG {
             SetPreviewTarget();
             UpdateStatsDescription();
             if (PlayerManager.Instance.MyCharacter != null) {
-                PopupWindowManager.Instance.characterPanelWindow.SetWindowTitle(PlayerManager.Instance.MyCharacter.CharacterName);
+                SystemGameManager.Instance.UIManager.PopupWindowManager.characterPanelWindow.SetWindowTitle(PlayerManager.Instance.MyCharacter.CharacterName);
             }
         }
 
         public void ResetDisplay() {
             //Debug.Log("CharacterPanel.ResetDisplay()");
-            if (PopupWindowManager.Instance != null && PopupWindowManager.Instance.characterPanelWindow != null && PopupWindowManager.Instance.characterPanelWindow.IsOpen) {
+            if (SystemGameManager.Instance.UIManager.PopupWindowManager != null && SystemGameManager.Instance.UIManager.PopupWindowManager.characterPanelWindow != null && SystemGameManager.Instance.UIManager.PopupWindowManager.characterPanelWindow.IsOpen) {
                 // reset display
                 previewCameraController.ClearTarget();
-                CharacterCreatorManager.Instance.HandleCloseWindow();
+                SystemGameManager.Instance.CharacterCreatorManager.HandleCloseWindow();
 
                 // ADD CODE TO LOOP THROUGH BUTTONS AND RE-DISPLAY ANY ITEMS
 
                 // update display
                 SetPreviewTarget();
-                //EquipmentManager.Instance.EquipCharacter(CharacterCreatorManager.Instance.MyPreviewUnit, false);
+                //EquipmentManager.Instance.EquipCharacter(SystemGameManager.Instance.CharacterCreatorManager.MyPreviewUnit, false);
                 //UpdateStatsDescription();
             }
         }
 
         public void HandleEquipmentChanged(Equipment newEquipment, Equipment oldEquipment) {
             //Debug.Log("CharacterPanel.HandleEquipmentChange()");
-            if (PopupWindowManager.Instance != null && PopupWindowManager.Instance.characterPanelWindow != null && PopupWindowManager.Instance.characterPanelWindow.IsOpen) {
+            if (SystemGameManager.Instance.UIManager.PopupWindowManager != null && SystemGameManager.Instance.UIManager.PopupWindowManager.characterPanelWindow != null && SystemGameManager.Instance.UIManager.PopupWindowManager.characterPanelWindow.IsOpen) {
                 ResetDisplay();
                 UpdateStatsDescription();
             }
@@ -177,7 +177,7 @@ namespace AnyRPG {
         public void UpdateStatsDescription() {
             //Debug.Log("CharacterPanel.UpdateStatsDescription");
 
-            if (PopupWindowManager.Instance.characterPanelWindow.IsOpen == false) {
+            if (SystemGameManager.Instance.UIManager.PopupWindowManager.characterPanelWindow.IsOpen == false) {
                 return;
             }
 
@@ -288,15 +288,15 @@ namespace AnyRPG {
 
 
             //spawn correct preview unit
-            CharacterCreatorManager.Instance.HandleOpenWindow(PlayerManager.Instance.MyCharacter.UnitProfile);
+            SystemGameManager.Instance.CharacterCreatorManager.HandleOpenWindow(PlayerManager.Instance.MyCharacter.UnitProfile);
 
             // testing do this earlier
             LoadUMARecipe();
 
-            if (CameraManager.Instance != null && CameraManager.Instance.CharacterPreviewCamera != null) {
+            if (SystemGameManager.Instance.CameraManager != null && SystemGameManager.Instance.CameraManager.CharacterPreviewCamera != null) {
                 //Debug.Log("CharacterPanel.SetPreviewTarget(): preview camera was available, setting target");
                 if (MyPreviewCameraController != null) {
-                    MyPreviewCameraController.InitializeCamera(CharacterCreatorManager.Instance.PreviewUnitController);
+                    MyPreviewCameraController.InitializeCamera(SystemGameManager.Instance.CharacterCreatorManager.PreviewUnitController);
                     MyPreviewCameraController.OnTargetReady += TargetReadyCallback;
                 } else {
                     Debug.LogError("CharacterPanel.SetPreviewTarget(): Character Preview Camera Controller is null. Please set it in the inspector");
@@ -311,14 +311,14 @@ namespace AnyRPG {
         }
 
         public void LoadUMARecipe() {
-            SystemGameManager.Instance.SaveManager.LoadUMASettings(CharacterCreatorManager.Instance.PreviewUnitController.DynamicCharacterAvatar, false);
+            SystemGameManager.Instance.SaveManager.LoadUMASettings(SystemGameManager.Instance.CharacterCreatorManager.PreviewUnitController.DynamicCharacterAvatar, false);
 
         }
 
         public void TargetReadyCallbackCommon() {
             //Debug.Log("CharacterCreatorPanel.TargetReadyCallbackCommon(" + updateCharacterButton + ")");
 
-            CharacterEquipmentManager characterEquipmentManager = CharacterCreatorManager.Instance.PreviewUnitController.CharacterUnit.BaseCharacter.CharacterEquipmentManager;
+            CharacterEquipmentManager characterEquipmentManager = SystemGameManager.Instance.CharacterCreatorManager.PreviewUnitController.CharacterUnit.BaseCharacter.CharacterEquipmentManager;
             if (characterEquipmentManager != null) {
                 if (PlayerManager.Instance != null && PlayerManager.Instance.MyCharacter != null && PlayerManager.Instance.MyCharacter.CharacterEquipmentManager != null) {
                     characterEquipmentManager.CurrentEquipment = PlayerManager.Instance.MyCharacter.CharacterEquipmentManager.CurrentEquipment;
@@ -330,28 +330,28 @@ namespace AnyRPG {
 
         public void OpenReputationWindow() {
             //Debug.Log("CharacterPanel.OpenReputationWindow()");
-            PopupWindowManager.Instance.reputationBookWindow.ToggleOpenClose();
+            SystemGameManager.Instance.UIManager.PopupWindowManager.reputationBookWindow.ToggleOpenClose();
         }
 
         public void OpenPetWindow() {
             //Debug.Log("CharacterPanel.OpenReputationWindow()");
-            PopupWindowManager.Instance.characterPanelWindow.CloseWindow();
-            SystemWindowManager.Instance.petSpawnWindow.ToggleOpenClose();
+            SystemGameManager.Instance.UIManager.PopupWindowManager.characterPanelWindow.CloseWindow();
+            SystemGameManager.Instance.UIManager.SystemWindowManager.petSpawnWindow.ToggleOpenClose();
         }
 
         public void OpenSkillsWindow() {
             //Debug.Log("CharacterPanel.OpenReputationWindow()");
-            PopupWindowManager.Instance.skillBookWindow.ToggleOpenClose();
+            SystemGameManager.Instance.UIManager.PopupWindowManager.skillBookWindow.ToggleOpenClose();
         }
 
         public void OpenCurrencyWindow() {
             //Debug.Log("CharacterPanel.OpenCurrencyWindow()");
-            PopupWindowManager.Instance.currencyListWindow.ToggleOpenClose();
+            SystemGameManager.Instance.UIManager.PopupWindowManager.currencyListWindow.ToggleOpenClose();
         }
 
         public void OpenAchievementWindow() {
             //Debug.Log("CharacterPanel.OpenAchievementWindow()");
-            PopupWindowManager.Instance.achievementListWindow.ToggleOpenClose();
+            SystemGameManager.Instance.UIManager.PopupWindowManager.achievementListWindow.ToggleOpenClose();
         }
 
     }

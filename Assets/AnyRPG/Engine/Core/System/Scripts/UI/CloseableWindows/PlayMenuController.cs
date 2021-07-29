@@ -10,10 +10,10 @@ namespace AnyRPG {
         public void NewGame() {
             //Debug.Log("PlayMenuController.NewGame()");
             if (SystemConfigurationManager.Instance.UseNewGameWindow == true) {
-                SystemWindowManager.Instance.newGameWindow.OpenWindow();
-                SystemWindowManager.Instance.playMenuWindow.CloseWindow();
+                SystemGameManager.Instance.UIManager.SystemWindowManager.newGameWindow.OpenWindow();
+                SystemGameManager.Instance.UIManager.SystemWindowManager.playMenuWindow.CloseWindow();
             } else {
-                SystemWindowManager.Instance.confirmNewGameMenuWindow.OpenWindow();
+                SystemGameManager.Instance.UIManager.SystemWindowManager.confirmNewGameMenuWindow.OpenWindow();
             }
         }
 
@@ -24,8 +24,8 @@ namespace AnyRPG {
 
         public void LoadGame() {
             //Debug.Log("PlayMenuController.LoadGame()");
-            SystemWindowManager.Instance.loadGameWindow.OpenWindow();
-            SystemWindowManager.Instance.playMenuWindow.CloseWindow();
+            SystemGameManager.Instance.UIManager.SystemWindowManager.loadGameWindow.OpenWindow();
+            SystemGameManager.Instance.UIManager.SystemWindowManager.playMenuWindow.CloseWindow();
         }
 
     }

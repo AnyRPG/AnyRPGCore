@@ -191,11 +191,11 @@ namespace AnyRPG {
 
             if (PlayerManager.Instance?.MyCharacter?.CharacterStats?.IsAlive == true && PlayerManager.Instance?.PlayerController?.canMove == true) {
                 // code to prevent turning when clicking on UI elements
-                if (InputManager.Instance.rightMouseButtonDown && PlayerManager.Instance.PlayerController.HasMoveInput() && (!InputManager.Instance.rightMouseButtonClickedOverUI || (NamePlateManager.Instance != null ? NamePlateManager.Instance.MouseOverNamePlate() : false))) {
+                if (InputManager.Instance.rightMouseButtonDown && PlayerManager.Instance.PlayerController.HasMoveInput() && (!InputManager.Instance.rightMouseButtonClickedOverUI || (SystemGameManager.Instance.UIManager.NamePlateManager != null ? SystemGameManager.Instance.UIManager.NamePlateManager.MouseOverNamePlate() : false))) {
                     //Debug.Log(gameObject.name + ".PlayerUnitMovementController.LateGlobalSuperUpdate(): resetting PlayerManager.Instance.ActiveUnitController.transform.forward");
 
-                    PlayerManager.Instance.ActiveUnitController.transform.forward = new Vector3(CameraManager.Instance.MainCameraController.MyWantedDirection.x, 0, CameraManager.Instance.MainCameraController.MyWantedDirection.z);
-                    CameraManager.Instance.MainCamera.GetComponent<AnyRPGCameraController>().ResetWantedPosition();
+                    PlayerManager.Instance.ActiveUnitController.transform.forward = new Vector3(SystemGameManager.Instance.CameraManager.MainCameraController.MyWantedDirection.x, 0, SystemGameManager.Instance.CameraManager.MainCameraController.MyWantedDirection.z);
+                    SystemGameManager.Instance.CameraManager.MainCamera.GetComponent<AnyRPGCameraController>().ResetWantedPosition();
                 }
 
                 if (PlayerManager.Instance.PlayerController.inputTurn != 0) {
@@ -475,7 +475,7 @@ namespace AnyRPG {
         /// </summary>
         Vector3 CameraRelativeInput(float inputX, float inputZ) {
             //Forward vector relative to the camera along the x-z plane   
-            Vector3 forward = CameraManager.Instance.ActiveMainCamera.transform.TransformDirection(Vector3.forward);
+            Vector3 forward = SystemGameManager.Instance.CameraManager.ActiveMainCamera.transform.TransformDirection(Vector3.forward);
             forward.y = 0;
             forward = forward.normalized;
             //Right vector relative to the camera always orthogonal to the forward vector.

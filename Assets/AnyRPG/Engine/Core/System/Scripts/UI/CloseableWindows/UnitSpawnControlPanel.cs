@@ -151,24 +151,24 @@ namespace AnyRPG {
         public void ClearPreviewTarget() {
             //Debug.Log("LoadGamePanel.ClearPreviewTarget()");
             // not really close window, but it will despawn the preview unit
-            UnitPreviewManager.Instance.HandleCloseWindow();
+            SystemGameManager.Instance.UnitPreviewManager.HandleCloseWindow();
         }
 
         public void SetPreviewTarget() {
             //Debug.Log("CharacterPanel.SetPreviewTarget()");
             
-            if (UnitPreviewManager.Instance.PreviewUnitController != null) {
+            if (SystemGameManager.Instance.UnitPreviewManager.PreviewUnitController != null) {
                 //Debug.Log("CharacterPanel.SetPreviewTarget() UMA avatar is already spawned!");
                 return;
             }
 
             //spawn correct preview unit
-            UnitPreviewManager.Instance.HandleOpenWindow();
+            SystemGameManager.Instance.UnitPreviewManager.HandleOpenWindow();
 
-            if (CameraManager.Instance != null && CameraManager.Instance.UnitPreviewCamera != null) {
+            if (SystemGameManager.Instance.CameraManager != null && SystemGameManager.Instance.CameraManager.UnitPreviewCamera != null) {
                 //Debug.Log("CharacterPanel.SetPreviewTarget(): preview camera was available, setting target");
                 if (MyPreviewCameraController != null) {
-                    MyPreviewCameraController.InitializeCamera(UnitPreviewManager.Instance.PreviewUnitController);
+                    MyPreviewCameraController.InitializeCamera(SystemGameManager.Instance.UnitPreviewManager.PreviewUnitController);
                     //Debug.Log("CharacterPanel.SetPreviewTarget(): preview camera was available, setting Target Ready Callback");
                     MyPreviewCameraController.OnTargetReady += TargetReadyCallback;
                 } else {
@@ -184,15 +184,15 @@ namespace AnyRPG {
 
         public void ClosePanel() {
             //Debug.Log("CharacterCreatorPanel.ClosePanel()");
-            SystemWindowManager.Instance.unitSpawnWindow.CloseWindow();
-            PopupWindowManager.Instance.interactionWindow.CloseWindow();
+            SystemGameManager.Instance.UIManager.SystemWindowManager.unitSpawnWindow.CloseWindow();
+            SystemGameManager.Instance.UIManager.PopupWindowManager.interactionWindow.CloseWindow();
         }
 
         public override void RecieveClosedWindowNotification() {
             //Debug.Log("LoadGamePanel.OnCloseWindow()");
             base.RecieveClosedWindowNotification();
             previewCameraController.ClearTarget();
-            UnitPreviewManager.Instance.HandleCloseWindow();
+            SystemGameManager.Instance.UnitPreviewManager.HandleCloseWindow();
             //SystemGameManager.Instance.SaveManager.ClearSharedData();
             OnCloseWindow(this);
         }

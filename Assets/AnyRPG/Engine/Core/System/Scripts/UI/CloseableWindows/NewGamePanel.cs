@@ -204,7 +204,7 @@ namespace AnyRPG {
 
             // if the UMA window is not in use, or there was no UMA unit available, try the mecanim window
             if (SystemConfigurationManager.Instance.NewGameUMAAppearance == false
-                || (SystemConfigurationManager.Instance.NewGameUMAAppearance == true && CharacterCreatorManager.Instance.PreviewUnitController == null)) {
+                || (SystemConfigurationManager.Instance.NewGameUMAAppearance == true && SystemGameManager.Instance.CharacterCreatorManager.PreviewUnitController == null)) {
                 characterPanel.ReceiveOpenWindowNotification();
             }
 
@@ -220,8 +220,8 @@ namespace AnyRPG {
             // testing appearance last since it relies on at very minimum the unit profile being set
 
             if (SystemConfigurationManager.Instance.NewGameAudioProfile != null) {
-                AudioManager.Instance.StopMusic();
-                AudioManager.Instance.PlayMusic(SystemConfigurationManager.Instance.NewGameAudioProfile.AudioClip);
+                SystemGameManager.Instance.AudioManager.StopMusic();
+                SystemGameManager.Instance.AudioManager.PlayMusic(SystemConfigurationManager.Instance.NewGameAudioProfile.AudioClip);
             }
         }
          
@@ -435,12 +435,12 @@ namespace AnyRPG {
         public void SetCharacterProperties() {
             //Debug.Log("NewGameCharacterPanelController.SetCharacterProperties()");
 
-            CharacterCreatorManager.Instance.PreviewUnitController.CharacterUnit.BaseCharacter.SetUnitProfile(UnitProfile, true, -1, false);
-            CharacterCreatorManager.Instance.PreviewUnitController.CharacterUnit.BaseCharacter.SetUnitType(UnitType);
-            CharacterCreatorManager.Instance.PreviewUnitController.CharacterUnit.BaseCharacter.SetCharacterRace(CharacterRace);
-            CharacterCreatorManager.Instance.PreviewUnitController.CharacterUnit.BaseCharacter.SetCharacterClass(CharacterClass);
-            CharacterCreatorManager.Instance.PreviewUnitController.CharacterUnit.BaseCharacter.SetClassSpecialization(ClassSpecialization);
-            CharacterCreatorManager.Instance.PreviewUnitController.CharacterUnit.BaseCharacter.SetCharacterFaction(Faction);
+            SystemGameManager.Instance.CharacterCreatorManager.PreviewUnitController.CharacterUnit.BaseCharacter.SetUnitProfile(UnitProfile, true, -1, false);
+            SystemGameManager.Instance.CharacterCreatorManager.PreviewUnitController.CharacterUnit.BaseCharacter.SetUnitType(UnitType);
+            SystemGameManager.Instance.CharacterCreatorManager.PreviewUnitController.CharacterUnit.BaseCharacter.SetCharacterRace(CharacterRace);
+            SystemGameManager.Instance.CharacterCreatorManager.PreviewUnitController.CharacterUnit.BaseCharacter.SetCharacterClass(CharacterClass);
+            SystemGameManager.Instance.CharacterCreatorManager.PreviewUnitController.CharacterUnit.BaseCharacter.SetClassSpecialization(ClassSpecialization);
+            SystemGameManager.Instance.CharacterCreatorManager.PreviewUnitController.CharacterUnit.BaseCharacter.SetCharacterFaction(Faction);
         }
 
         public void HandleTargetReady() {
@@ -460,7 +460,7 @@ namespace AnyRPG {
             // set character class etc first so preview works and can equip character
             SetCharacterProperties();
 
-            CharacterEquipmentManager characterEquipmentManager = CharacterCreatorManager.Instance.PreviewUnitController.CharacterUnit.BaseCharacter.CharacterEquipmentManager;
+            CharacterEquipmentManager characterEquipmentManager = SystemGameManager.Instance.CharacterCreatorManager.PreviewUnitController.CharacterUnit.BaseCharacter.CharacterEquipmentManager;
             if (characterEquipmentManager != null) {
                 //Debug.Log("NewGameCharacterPanelController.EquipCharacter(): found equipment manager");
 
@@ -515,7 +515,7 @@ namespace AnyRPG {
 
         public void ClosePanel() {
             //Debug.Log("CharacterCreatorPanel.ClosePanel()");
-            SystemWindowManager.Instance.newGameWindow.CloseWindow();
+            SystemGameManager.Instance.UIManager.SystemWindowManager.newGameWindow.CloseWindow();
             LevelManager.Instance.PlayLevelSounds();
         }
 
@@ -524,7 +524,7 @@ namespace AnyRPG {
 
             saveData.PlayerUMARecipe = characterPreviewPanel.GetCurrentRecipe();
 
-            SystemWindowManager.Instance.confirmNewGameMenuWindow.OpenWindow();
+            SystemGameManager.Instance.UIManager.SystemWindowManager.confirmNewGameMenuWindow.OpenWindow();
         }
 
 

@@ -13,7 +13,7 @@ namespace AnyRPG {
 
         protected override void Awake() {
             base.Awake();
-            currentCamera = CameraManager.Instance.PetPreviewCamera;
+            currentCamera = SystemGameManager.Instance.CameraManager.PetPreviewCamera;
         }
 
     }

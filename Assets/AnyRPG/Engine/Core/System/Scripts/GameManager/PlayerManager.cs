@@ -189,7 +189,7 @@ namespace AnyRPG {
 
             SystemEventManager.TriggerEvent("OnPlayerNameChanged", new EventParamProperties());
             if (playerUnitSpawned) {
-                UIManager.Instance.PlayerUnitFrameController.SetTarget(UnitController.NamePlateController);
+                SystemGameManager.Instance.UIManager.PlayerUnitFrameController.SetTarget(UnitController.NamePlateController);
             }
         }
 
@@ -226,8 +226,8 @@ namespace AnyRPG {
                     || activeSceneNode.SuppressCharacterSpawn) {
                     //Debug.Log("PlayerManager.OnLevelLoad(): character spawn is suppressed");
                     loadCharacter = false;
-                    CameraManager.Instance.DeactivateMainCamera();
-                    //CameraManager.Instance.MyCharacterCreatorCamera.gameObject.SetActive(true);
+                    SystemGameManager.Instance.CameraManager.DeactivateMainCamera();
+                    //SystemGameManager.Instance.CameraManager.MyCharacterCreatorCamera.gameObject.SetActive(true);
                 }
             } else {
                 if (LevelManager.Instance.IsMainMenu()) {
@@ -235,10 +235,10 @@ namespace AnyRPG {
                 }
             }
             if (autoSpawnPlayerOnLevelLoad == true && loadCharacter) {
-                //CameraManager.Instance.MyCharacterCreatorCamera.gameObject.SetActive(false);
+                //SystemGameManager.Instance.CameraManager.MyCharacterCreatorCamera.gameObject.SetActive(false);
                 Vector3 spawnLocation = SpawnPlayerUnit();
-                CameraManager.Instance.ActivateMainCamera(true);
-                CameraManager.Instance.MainCameraController.SetTargetPositionRaw(spawnLocation, activeUnitController.transform.forward);
+                SystemGameManager.Instance.CameraManager.ActivateMainCamera(true);
+                SystemGameManager.Instance.CameraManager.MainCameraController.SetTargetPositionRaw(spawnLocation, activeUnitController.transform.forward);
             }
         }
 
@@ -557,7 +557,7 @@ namespace AnyRPG {
         }
 
         public void HandleCombatMiss(Interactable targetObject, AbilityEffectContext abilityEffectContext) {
-            CombatTextManager.Instance.SpawnCombatText(targetObject, 0, CombatTextType.miss, CombatMagnitude.normal, abilityEffectContext);
+            SystemGameManager.Instance.UIManager.CombatTextManager.SpawnCombatText(targetObject, 0, CombatTextType.miss, CombatMagnitude.normal, abilityEffectContext);
         }
 
         public void HandleActivateTargetingMode(BaseAbility baseAbility) {
@@ -577,7 +577,7 @@ namespace AnyRPG {
 
         public void HandleUnlearnAbility(bool updateActionBars) {
             if (updateActionBars) {
-                UIManager.Instance.ActionBarManager.UpdateVisuals(true);
+                SystemGameManager.Instance.UIManager.ActionBarManager.UpdateVisuals(true);
             }
         }
 
@@ -627,7 +627,7 @@ namespace AnyRPG {
 
         public void HandleUnlearnClassAbilities() {
             // now perform a single action bar update
-            UIManager.Instance.ActionBarManager.UpdateVisuals(true);
+            SystemGameManager.Instance.UIManager.ActionBarManager.UpdateVisuals(true);
         }
 
         public void HandleEquipmentChanged(Equipment newItem, Equipment oldItem, int slotIndex) {
@@ -679,14 +679,14 @@ namespace AnyRPG {
         }
 
         public void HandleResourceAmountChanged(PowerResource powerResource, int amount, int amount2) {
-            UIManager.Instance.ActionBarManager.UpdateVisuals();
+            SystemGameManager.Instance.UIManager.ActionBarManager.UpdateVisuals();
         }
 
         public void HandleStatusEffectAdd(StatusEffectNode statusEffectNode) {
             if (statusEffectNode != null && statusEffectNode.StatusEffect.ClassTrait == false && activeUnitController != null) {
                 if (statusEffectNode.AbilityEffectContext.savedEffect == false) {
                     if (activeUnitController.CharacterUnit != null) {
-                        CombatTextManager.Instance.SpawnCombatText(activeUnitController, statusEffectNode.StatusEffect, true);
+                        SystemGameManager.Instance.UIManager.CombatTextManager.SpawnCombatText(activeUnitController, statusEffectNode.StatusEffect, true);
                     }
                 }
             }
@@ -697,8 +697,8 @@ namespace AnyRPG {
                 CombatLogUI.Instance.WriteSystemMessage("You gain " + xp + " experience");
             }
             if (activeUnitController != null) {
-                if (CombatTextManager.Instance != null) {
-                    CombatTextManager.Instance.SpawnCombatText(activeUnitController, xp, CombatTextType.gainXP, CombatMagnitude.normal, null);
+                if (SystemGameManager.Instance.UIManager.CombatTextManager != null) {
+                    SystemGameManager.Instance.UIManager.CombatTextManager.SpawnCombatText(activeUnitController, xp, CombatTextType.gainXP, CombatMagnitude.normal, null);
                 }
             }
             SystemEventManager.TriggerEvent("OnXPGained", new EventParamProperties());
@@ -706,7 +706,7 @@ namespace AnyRPG {
 
         public void HandleLevelChanged(int newLevel) {
             SystemGameManager.Instance.EventManager.NotifyOnLevelChanged(newLevel);
-            MessageFeedManager.Instance.WriteMessage(string.Format("YOU HAVE REACHED LEVEL {0}!", newLevel.ToString()));
+            SystemGameManager.Instance.UIManager.MessageFeedManager.WriteMessage(string.Format("YOU HAVE REACHED LEVEL {0}!", newLevel.ToString()));
         }
 
         public void HandleReviveComplete() {
@@ -726,7 +726,7 @@ namespace AnyRPG {
         }
 
         public void HandleImmuneToEffect(AbilityEffectContext abilityEffectContext) {
-            CombatTextManager.Instance.SpawnCombatText(activeUnitController, 0, CombatTextType.immune, CombatMagnitude.normal, abilityEffectContext);
+            SystemGameManager.Instance.UIManager.CombatTextManager.SpawnCombatText(activeUnitController, 0, CombatTextType.immune, CombatMagnitude.normal, abilityEffectContext);
         }
 
     }

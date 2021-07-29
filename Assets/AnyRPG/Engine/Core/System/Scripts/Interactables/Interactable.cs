@@ -428,7 +428,7 @@ namespace AnyRPG {
                 if (interactables.Count > 0) {
                     //Debug.Log(gameObject.name + ".Interactable.InstantiateMiniMapIndicator(): interactables.length > 0");
                     miniMapIndicator = MiniMapController.Instance.AddIndicator(this);
-                    mainMapIndicator = MainMapManager.Instance.AddIndicator(this);
+                    mainMapIndicator = SystemGameManager.Instance.UIManager.MainMapManager.AddIndicator(this);
                     miniMapIndicatorReady = true;
                     return true;
                 }
@@ -456,7 +456,7 @@ namespace AnyRPG {
             }
             if (mainMapIndicator != null) {
                 //Debug.Log(gameObject.name + ".Interactable.CleanupMiniMapIndicator(): " + miniMapIndicator.name);
-                MainMapManager.Instance.RemoveIndicator(this);
+                SystemGameManager.Instance.UIManager.MainMapManager.RemoveIndicator(this);
             }
 
         }
@@ -474,14 +474,14 @@ namespace AnyRPG {
             } else {
                 Debug.Log("interactionpanelUI had no instance");
             }
-            if (PopupWindowManager.Instance != null) {
-                PopupWindowManager.Instance.interactionWindow.OpenWindow();
+            if (SystemGameManager.Instance.UIManager.PopupWindowManager != null) {
+                SystemGameManager.Instance.UIManager.PopupWindowManager.interactionWindow.OpenWindow();
             }
         }
 
         public void CloseInteractionWindow() {
             SystemGameManager.Instance.InteractionManager.CurrentInteractable = null;
-            PopupWindowManager.Instance.interactionWindow.CloseWindow();
+            SystemGameManager.Instance.UIManager.PopupWindowManager.interactionWindow.CloseWindow();
         }
 
         public bool CanInteract() {
@@ -711,7 +711,7 @@ namespace AnyRPG {
                 return;
             }
 
-            if (EventSystem.current.IsPointerOverGameObject() && !NamePlateManager.Instance.MouseOverNamePlate()) {
+            if (EventSystem.current.IsPointerOverGameObject() && !SystemGameManager.Instance.UIManager.NamePlateManager.MouseOverNamePlate()) {
                 // THIS CODE WILL STILL CAUSE THE GUY TO GLOW IF YOU MOUSE OVER HIS NAMEPLATE WHILE A WINDOW IS UP.  NOT A BIG DEAL FOR NOW
                 // IT HAS TO BE THIS WAY BECAUSE THE MOUSEOVER WINDOW IS A GAMEOBJECT AND WE NEED TO BE ABLE TO GLOW WHEN A WINDOW IS NOT UP AND WE ARE OVER IT
                 // THIS COULD BE POTENTIALLY FIXED BY BLOCKING MOUSEOVER THE SAME WAY WE BLOCK DRAG IN THE UIMANAGER BY RESTRICTING ON MOUSEENTER ON ANY CLOSEABLEWINDOW IF IT'S TOO DISTRACTING
@@ -734,7 +734,7 @@ namespace AnyRPG {
 
             // moved to before the return statement.  This is because we still want a tooltip even if there are no current interactions to perform
             // added pivot so the tooltip doesn't bounce around
-            UIManager.Instance.ShowToolTip(new Vector2(0, 1), UIManager.Instance.MouseOverWindow.transform.position, this);
+            SystemGameManager.Instance.UIManager.ShowToolTip(new Vector2(0, 1), SystemGameManager.Instance.UIManager.MouseOverWindow.transform.position, this);
 
             if (GetCurrentInteractables().Count == 0) {
                 //if (GetValidInteractables(PlayerManager.Instance.MyCharacter.MyCharacterUnit).Count == 0) {
@@ -798,7 +798,7 @@ namespace AnyRPG {
             }
 
             // new mouseover code
-            UIManager.Instance.HideToolTip();
+            SystemGameManager.Instance.UIManager.HideToolTip();
 
             if (!isFlashing) {
                 // there was nothing to interact with on mouseover so just exit instead of trying to reset materials

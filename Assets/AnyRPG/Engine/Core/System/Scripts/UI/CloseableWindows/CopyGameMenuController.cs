@@ -9,7 +9,7 @@ namespace AnyRPG {
 
         public void CancelAction() {
             //Debug.Log("NewGameMenuController.CancelAction()");
-            SystemWindowManager.Instance.copyGameMenuWindow.CloseWindow();
+            SystemGameManager.Instance.UIManager.SystemWindowManager.copyGameMenuWindow.CloseWindow();
         }
 
         public void ConfirmAction() {

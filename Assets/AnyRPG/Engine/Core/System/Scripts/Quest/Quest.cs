@@ -346,7 +346,7 @@ namespace AnyRPG {
             }
             if (isAchievement) {
                 if (printMessages == true) {
-                    MessageFeedManager.Instance.WriteMessage(string.Format("Achievement: {0} Complete!", DisplayName));
+                    SystemGameManager.Instance.UIManager.MessageFeedManager.WriteMessage(string.Format("Achievement: {0} Complete!", DisplayName));
                 }
                 PlayerManager.Instance.PlayLevelUpEffects(0);
 
@@ -354,7 +354,7 @@ namespace AnyRPG {
                 TurnedIn = true;
             } else {
                 if (printMessages == true) {
-                    MessageFeedManager.Instance.WriteMessage(string.Format("{0} Complete!", DisplayName));
+                    SystemGameManager.Instance.UIManager.MessageFeedManager.WriteMessage(string.Format("{0} Complete!", DisplayName));
                 }
             }
             MarkedComplete = true;
@@ -507,7 +507,7 @@ namespace AnyRPG {
                 o.OnAcceptQuest(this, printMessages);
             }
             if (isAchievement == false && printMessages == true) {
-                MessageFeedManager.Instance.WriteMessage("Quest Accepted: " + DisplayName);
+                SystemGameManager.Instance.UIManager.MessageFeedManager.WriteMessage("Quest Accepted: " + DisplayName);
             }
             if (!MarkedComplete) {
                 // needs to be done here if quest wasn't auto-completed in checkcompletion

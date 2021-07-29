@@ -59,21 +59,21 @@ namespace AnyRPG {
                 //Debug.Log("StatusEffectNodeScript.HandleRightClick(): statusEffect is not null, destroying");
                 statusEffectNode.CancelStatusEffect();
             }
-            UIManager.Instance.HideToolTip();
+            SystemGameManager.Instance.UIManager.HideToolTip();
         }
 
         public void OnPointerEnter(PointerEventData eventData) {
             //Debug.Log("StatusEffectNodeScript.OnPointerEnter()");
 
             // show tooltip
-            UIManager.Instance.ShowToolTip(transform.position, statusEffectNode.StatusEffect);
+            SystemGameManager.Instance.UIManager.ShowToolTip(transform.position, statusEffectNode.StatusEffect);
         }
 
         public void OnPointerExit(PointerEventData eventData) {
             //Debug.Log("StatusEffectNodeScript.OnPointerExit()");
 
             // hide tooltip
-            UIManager.Instance.HideToolTip();
+            SystemGameManager.Instance.UIManager.HideToolTip();
         }
 
         public void UpdateFillIcon(float fillAmount) {

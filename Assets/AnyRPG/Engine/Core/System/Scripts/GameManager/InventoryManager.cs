@@ -266,14 +266,14 @@ namespace AnyRPG {
                 } else {
                     if (i == bagCount) {
                         //Debug.Log("InventoryManager.InitializeBagWindows(): create element " + i + " setting bag window to bank window");
-                        bagNode.BagWindow = PopupWindowManager.Instance.bankWindow;
+                        bagNode.BagWindow = SystemGameManager.Instance.UIManager.PopupWindowManager.bankWindow;
                     } else {
                         //Debug.Log("InventoryManager.InitializeBagWindows(): create element " + i + " creating bag window");
                         bagNode.BagWindow = ObjectPooler.Instance.GetPooledObject(windowPrefab, inventoryWindowHolders[i - 1].transform).GetComponent<CloseableWindow>();
                         bagNode.BagWindow.transform.GetComponent<RectTransform>().pivot = new Vector2(1, 1);
                     }
 
-                    bagNode.BagButton = (PopupWindowManager.Instance.bankWindow.CloseableWindowContents as BankPanel).MyBagBarController.AddBagButton();
+                    bagNode.BagButton = (SystemGameManager.Instance.UIManager.PopupWindowManager.bankWindow.CloseableWindowContents as BankPanel).MyBagBarController.AddBagButton();
 
                     if (bagNode.BagButton != null) {
                         bagNode.BagButton.MyBagNode = bagNode;
@@ -354,7 +354,7 @@ namespace AnyRPG {
 
             //Debug.Log("InventoryManager.PopulateBagNode(): bagNode.MyBag: " + bagNode.MyBag.GetInstanceID() + "; bagNode.MyBag.MyBagPanel: " + bagNode.MyBag.MyBagPanel.GetInstanceID() + "; bag" + bag.GetInstanceID() + "; bag.MyBagPanel: " + bag.MyBagPanel.GetInstanceID());
 
-            UIManager.Instance.UpdateInventoryOpacity();
+            SystemGameManager.Instance.UIManager.UpdateInventoryOpacity();
 
         }
 
@@ -469,7 +469,7 @@ namespace AnyRPG {
                 return false;
             }
             if (item.MyUniqueItem == true && GetItemCount(item.DisplayName) > 0) {
-                MessageFeedManager.Instance.WriteMessage(item.DisplayName + " is unique.  You can only carry one at a time.");
+                SystemGameManager.Instance.UIManager.MessageFeedManager.WriteMessage(item.DisplayName + " is unique.  You can only carry one at a time.");
                 return false;
             }
             if (item.MyMaximumStackSize > 0) {
@@ -518,7 +518,7 @@ namespace AnyRPG {
             }
             if (EmptySlotCount(addToBank) == 0) {
                 //Debug.Log("No empty slots");
-                MessageFeedManager.Instance.WriteMessage((addToBank == false ? "Inventory" : "Bank") + " is full!");
+                SystemGameManager.Instance.UIManager.MessageFeedManager.WriteMessage((addToBank == false ? "Inventory" : "Bank") + " is full!");
             }
             return false;
         }
@@ -537,7 +537,7 @@ namespace AnyRPG {
             // commented below because it may result in 2 full messages being displayed if the last item in the bag is a full stack of the same item type
             /*
             if (MyEmptySlotCount(addToBank) == 0) {
-                MessageFeedManager.Instance.WriteMessage((addToBank == false ? "Inventory" : "Bank") + " is full!");
+                SystemGameManager.Instance.UIManager.MessageFeedManager.WriteMessage((addToBank == false ? "Inventory" : "Bank") + " is full!");
             }
             */
             return false;
@@ -581,7 +581,7 @@ namespace AnyRPG {
             // if closed bag is false, then close all open bags
             bool inventoryClosed = InventoryClosed();
             if (CurrentBagCount == 0) {
-                MessageFeedManager.Instance.WriteMessage("You do not have any bags equipped");
+                SystemGameManager.Instance.UIManager.MessageFeedManager.WriteMessage("You do not have any bags equipped");
                 return;
             }
             //Debug.Log("Inventory is closed: " + inventoryClosed);
@@ -591,7 +591,7 @@ namespace AnyRPG {
                     bagNode.BagWindow.ToggleOpenClose();
                 }
             }
-            UIManager.Instance.UpdateInventoryOpacity();
+            SystemGameManager.Instance.UIManager.UpdateInventoryOpacity();
             // that may look wrong, but it will still read as closed, because we opened it after taking that reading
             //if (inventoryClosed) {
             SetWindowPositions();

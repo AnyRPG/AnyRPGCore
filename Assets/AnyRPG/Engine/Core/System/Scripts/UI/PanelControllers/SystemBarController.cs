@@ -47,23 +47,23 @@ namespace AnyRPG {
         }
 
         public void ClickMainMenu() {
-            SystemWindowManager.Instance.inGameMainMenuWindow.ToggleOpenClose();
+            SystemGameManager.Instance.UIManager.SystemWindowManager.inGameMainMenuWindow.ToggleOpenClose();
         }
 
         public void ClickAbilityBook() {
-            PopupWindowManager.Instance.abilityBookWindow.ToggleOpenClose();
+            SystemGameManager.Instance.UIManager.PopupWindowManager.abilityBookWindow.ToggleOpenClose();
         }
 
         public void ClickCharacter() {
-            PopupWindowManager.Instance.characterPanelWindow.ToggleOpenClose();
+            SystemGameManager.Instance.UIManager.PopupWindowManager.characterPanelWindow.ToggleOpenClose();
         }
 
         public void ClickQuestLog() {
-            PopupWindowManager.Instance.questLogWindow.ToggleOpenClose();
+            SystemGameManager.Instance.UIManager.PopupWindowManager.questLogWindow.ToggleOpenClose();
         }
 
         public void ClickMap() {
-            PopupWindowManager.Instance.mainMapWindow.ToggleOpenClose();
+            SystemGameManager.Instance.UIManager.PopupWindowManager.mainMapWindow.ToggleOpenClose();
         }
 
 

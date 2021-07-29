@@ -177,7 +177,7 @@ namespace AnyRPG {
                         PlayerManager.Instance.MyCharacter.CharacterEquipmentManager.Equip(MyItem as Equipment, equipmentSlotProfile);
                         MyItem.Remove();
                        //UseItem();
-                        //UIManager.Instance.RefreshTooltip();
+                        //SystemGameManager.Instance.UIManager.RefreshTooltip();
                         HandScript.Instance.Drop();
                     }
                 }
@@ -259,15 +259,15 @@ namespace AnyRPG {
                 } else {
                     //Debug.Log("SlotScript.HandleRightClick(): We clicked on something in a chest or bag");
                 }
-            } else if (InventoryManager.Instance.BagsClosed() == false && InventoryManager.Instance.BankClosed() == true && PopupWindowManager.Instance.vendorWindow.IsOpen) {
+            } else if (InventoryManager.Instance.BagsClosed() == false && InventoryManager.Instance.BankClosed() == true && SystemGameManager.Instance.UIManager.PopupWindowManager.vendorWindow.IsOpen) {
                 // SELL THE ITEM
                 if (MyItem != null) {
                     if (MyItem.ItemQuality != null && MyItem.ItemQuality.MyRequireSellConfirmation) {
-                        SystemWindowManager.Instance.confirmSellItemMenuWindow.OpenWindow();
-                        (SystemWindowManager.Instance.confirmSellItemMenuWindow.CloseableWindowContents as ConfirmSellItemPanelController).MyItem = MyItem;
+                        SystemGameManager.Instance.UIManager.SystemWindowManager.confirmSellItemMenuWindow.OpenWindow();
+                        (SystemGameManager.Instance.UIManager.SystemWindowManager.confirmSellItemMenuWindow.CloseableWindowContents as ConfirmSellItemPanelController).MyItem = MyItem;
                         return;
                     }
-                    if ((PopupWindowManager.Instance.vendorWindow.CloseableWindowContents as VendorUI).SellItem(MyItem)) {
+                    if ((SystemGameManager.Instance.UIManager.PopupWindowManager.vendorWindow.CloseableWindowContents as VendorUI).SellItem(MyItem)) {
                         return;
                     }
                     
@@ -366,7 +366,7 @@ namespace AnyRPG {
                 SetSlotOnItems();
             }
             SetDescribable(MyItem);
-            UIManager.Instance.UpdateStackSize(this, MyCount);
+            SystemGameManager.Instance.UIManager.UpdateStackSize(this, MyCount);
             SetBackGroundColor();
         }
 
@@ -385,14 +385,14 @@ namespace AnyRPG {
                 }
             } else {
                 // check if the item has a quality.  if not, just do the default color
-                UIManager.Instance.SetItemBackground(MyItem, backGroundImage, new Color32(0, 0, 0, 255));
+                SystemGameManager.Instance.UIManager.SetItemBackground(MyItem, backGroundImage, new Color32(0, 0, 0, 255));
 
             }
             //Debug.Log(gameObject.name + ".WindowContentController.SetBackGroundColor()");
         }
 
         public override void ShowToolTip(IDescribable describable) {
-            UIManager.Instance.ShowToolTip(transform.position, describable, "Sell Price: ");
+            SystemGameManager.Instance.UIManager.ShowToolTip(transform.position, describable, "Sell Price: ");
         }
 
 

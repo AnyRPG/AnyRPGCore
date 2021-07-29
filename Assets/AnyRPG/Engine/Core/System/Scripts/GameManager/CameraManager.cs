@@ -7,21 +7,6 @@ using UnityEngine.SceneManagement;
 namespace AnyRPG {
     public class CameraManager : MonoBehaviour {
 
-        #region Singleton
-        private static CameraManager instance;
-
-        public static CameraManager Instance {
-            get {
-                return instance;
-            }
-        }
-
-        private void Awake() {
-            instance = this;
-            Init();
-        }
-        #endregion
-
         [SerializeField]
         private Camera mainCamera = null;
 
@@ -81,7 +66,7 @@ namespace AnyRPG {
             }
         }
 
-        private void Init() {
+        public void Init() {
             //Debug.Log("CameraManager.Awake()");
             CheckConfiguration();
 
@@ -103,10 +88,7 @@ namespace AnyRPG {
             DisablePreviewCameras();
             DisableThirdPartyCamera();
             DisableFocusCamera();
-        }
 
-        private void Start() {
-            //Debug.Log("CameraManager.Start()");
             CreateEventSubscriptions();
         }
 

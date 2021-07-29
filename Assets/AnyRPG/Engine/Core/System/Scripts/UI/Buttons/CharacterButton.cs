@@ -90,7 +90,7 @@ namespace AnyRPG {
                         //EquipEquipment(tmp);
                         HandScript.Instance.Drop();
 
-                        UIManager.Instance.RefreshTooltip(tmp);
+                        SystemGameManager.Instance.UIManager.RefreshTooltip(tmp);
                     }
                 } else if (HandScript.Instance.MyMoveable == null && equippedEquipment != null) {
                     HandScript.Instance.TakeMoveable(equippedEquipment);
@@ -150,14 +150,14 @@ namespace AnyRPG {
                 icon.color = Color.white;
                 icon.sprite = equippedEquipment.Icon;
 
-                UIManager.Instance.SetItemBackground(equippedEquipment, emptySlotImage, fullBackGroundColor);
+                SystemGameManager.Instance.UIManager.SetItemBackground(equippedEquipment, emptySlotImage, fullBackGroundColor);
             }
 
             if (PlayerManager.Instance.PlayerUnitSpawned == false) {
                 // prevent unnecessary actions when player is not spawned
                 return;
             }
-            if (PopupWindowManager.Instance.characterPanelWindow.IsOpen == false) {
+            if (SystemGameManager.Instance.UIManager.PopupWindowManager.characterPanelWindow.IsOpen == false) {
                 // prevent unnecessary actions when window is not open
                 return;
             }
@@ -195,11 +195,11 @@ namespace AnyRPG {
 
 
         public void OnPointerEnter(PointerEventData eventData) {
-            UIManager.Instance.ShowToolTip(transform.position, this);
+            SystemGameManager.Instance.UIManager.ShowToolTip(transform.position, this);
         }
 
         public void OnPointerExit(PointerEventData eventData) {
-            UIManager.Instance.HideToolTip();
+            SystemGameManager.Instance.UIManager.HideToolTip();
         }
 
         public string GetDescription() {

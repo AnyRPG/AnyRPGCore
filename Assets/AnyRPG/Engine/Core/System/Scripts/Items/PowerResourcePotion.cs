@@ -25,7 +25,7 @@ namespace AnyRPG {
                 }
                 return returnValue;
             } else {
-                MessageFeedManager.Instance.WriteMessage("Your " + powerResource.DisplayName + " is already full!");
+                SystemGameManager.Instance.UIManager.MessageFeedManager.WriteMessage("Your " + powerResource.DisplayName + " is already full!");
                 return false;
             }
         }

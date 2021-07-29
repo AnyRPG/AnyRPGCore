@@ -127,7 +127,7 @@ namespace AnyRPG {
 
             // handleZoom
             // added code at end to check if over nameplate and allow scrolling
-            if (InputManager.Instance.mouseScrolled && (!EventSystem.current.IsPointerOverGameObject() || (NamePlateManager.Instance != null ? NamePlateManager.Instance.MouseOverNamePlate() : false))) {
+            if (InputManager.Instance.mouseScrolled && (!EventSystem.current.IsPointerOverGameObject() || (SystemGameManager.Instance.UIManager.NamePlateManager != null ? SystemGameManager.Instance.UIManager.NamePlateManager.MouseOverNamePlate() : false))) {
                 //Debug.Log("Mouse Scrollwheel: " + Input.GetAxis("Mouse ScrollWheel"));
                 currentZoomDistance += (Input.GetAxis("Mouse ScrollWheel") * zoomSpeed * -1);
                 currentZoomDistance = Mathf.Clamp(currentZoomDistance, minZoom, maxZoom);
@@ -136,8 +136,8 @@ namespace AnyRPG {
 
             // pan with the left or turn with the right mouse button
             // IF START HAVING MORE ISSUES WITH PAN AND TURN IN FUTURE, JUST COMMENT BELOW LINE AND RE-ENABLE COMMENTED LINE BELOW IT SINCE QUATERNIONS ARE NOW ALWAYS CALCULATED IN SETWANTEDPOSITION
-            if (!UIManager.Instance.DragInProgress && ((InputManager.Instance.rightMouseButtonDown && !InputManager.Instance.rightMouseButtonClickedOverUI) || (InputManager.Instance.leftMouseButtonDown && !InputManager.Instance.leftMouseButtonClickedOverUI))) {
-                //if (!UIManager.Instance.MyDragInProgress && ((InputManager.Instance.rightMouseButtonDown && !InputManager.Instance.rightMouseButtonClickedOverUI && InputManager.Instance.rightMouseButtonDownPosition != Input.mousePosition) || (InputManager.Instance.leftMouseButtonDown && !InputManager.Instance.leftMouseButtonClickedOverUI && InputManager.Instance.leftMouseButtonDownPosition != Input.mousePosition))) {
+            if (!SystemGameManager.Instance.UIManager.DragInProgress && ((InputManager.Instance.rightMouseButtonDown && !InputManager.Instance.rightMouseButtonClickedOverUI) || (InputManager.Instance.leftMouseButtonDown && !InputManager.Instance.leftMouseButtonClickedOverUI))) {
+                //if (!SystemGameManager.Instance.UIManager.MyDragInProgress && ((InputManager.Instance.rightMouseButtonDown && !InputManager.Instance.rightMouseButtonClickedOverUI && InputManager.Instance.rightMouseButtonDownPosition != Input.mousePosition) || (InputManager.Instance.leftMouseButtonDown && !InputManager.Instance.leftMouseButtonClickedOverUI && InputManager.Instance.leftMouseButtonDownPosition != Input.mousePosition))) {
                 //float xInput = Input.GetAxis("Mouse X") * yawSpeed;
                 float usedTurnSpeed = 0f;
                 if (InputManager.Instance.rightMouseButtonDown) {

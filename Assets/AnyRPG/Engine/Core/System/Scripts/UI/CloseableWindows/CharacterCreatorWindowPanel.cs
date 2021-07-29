@@ -64,7 +64,7 @@ namespace AnyRPG {
             umaCharacterPanel.RecieveClosedWindowNotification();
             OnCloseWindow(this);
             // close interaction window too for smoother experience
-            PopupWindowManager.Instance.interactionWindow.CloseWindow();
+            SystemGameManager.Instance.UIManager.PopupWindowManager.interactionWindow.CloseWindow();
         }
 
         public override void ReceiveOpenWindowNotification() {
@@ -91,19 +91,19 @@ namespace AnyRPG {
         public void LoadUMARecipe() {
             //Debug.Log("CharacterCreatorWindowPanel.LoadUMARecipe()");
             //SystemGameManager.Instance.SaveManager.SaveUMASettings();
-            SystemGameManager.Instance.SaveManager.LoadUMASettings(CharacterCreatorManager.Instance.PreviewUnitController.DynamicCharacterAvatar, false);
+            SystemGameManager.Instance.SaveManager.LoadUMASettings(SystemGameManager.Instance.CharacterCreatorManager.PreviewUnitController.DynamicCharacterAvatar, false);
         }
 
         public void ClosePanel() {
             //Debug.Log("CharacterCreatorPanel.ClosePanel()");
-            SystemWindowManager.Instance.characterCreatorWindow.CloseWindow();
+            SystemGameManager.Instance.UIManager.SystemWindowManager.characterCreatorWindow.CloseWindow();
         }
 
         public void SaveCharacter() {
             //Debug.Log("CharacterCreatorPanel.SaveCharacter()");
 
-            if (CharacterCreatorManager.Instance.PreviewUnitController.DynamicCharacterAvatar != null) {
-                SystemGameManager.Instance.SaveManager.SaveUMASettings(CharacterCreatorManager.Instance.PreviewUnitController.DynamicCharacterAvatar.GetCurrentRecipe());
+            if (SystemGameManager.Instance.CharacterCreatorManager.PreviewUnitController.DynamicCharacterAvatar != null) {
+                SystemGameManager.Instance.SaveManager.SaveUMASettings(SystemGameManager.Instance.CharacterCreatorManager.PreviewUnitController.DynamicCharacterAvatar.GetCurrentRecipe());
             }
 
             // replace a default player unit with an UMA player unit when a save occurs

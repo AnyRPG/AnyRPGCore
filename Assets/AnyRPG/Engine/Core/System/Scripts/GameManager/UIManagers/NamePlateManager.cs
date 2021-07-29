@@ -6,21 +6,6 @@ using UnityEngine;
 namespace AnyRPG {
     public class NamePlateManager : MonoBehaviour {
 
-        #region Singleton
-        private static NamePlateManager instance;
-
-        public static NamePlateManager Instance {
-            get {
-                return instance;
-            }
-        }
-
-        private void Awake() {
-            instance = this;
-            Init();
-        }
-        #endregion
-
         [SerializeField]
         private GameObject namePlatePrefab = null;
 
@@ -36,8 +21,8 @@ namespace AnyRPG {
 
         private Dictionary<NamePlateUnit, NamePlateController> namePlates = new Dictionary<NamePlateUnit, NamePlateController>();
 
-        private void Init() {
-            //Debug.Log("NamePlateManager.Awake(): " + NamePlateManager.Instance.gameObject.name);
+        public void Init() {
+            //Debug.Log("NamePlateManager.Awake(): " + SystemGameManager.Instance.UIManager.NamePlateManager.gameObject.name);
             SystemEventManager.StartListening("AfterCameraUpdate", HandleAfterCameraUpdate);
             SystemEventManager.StartListening("OnLevelUnload", HandleLevelUnload);
         }
@@ -62,7 +47,7 @@ namespace AnyRPG {
 
         public void LateUpdate() {
             if (SystemConfigurationManager.Instance.UseThirdPartyCameraControl == true
-                && CameraManager.Instance.ThirdPartyCamera.activeInHierarchy == true
+                && SystemGameManager.Instance.CameraManager.ThirdPartyCamera.activeInHierarchy == true
                 && PlayerManager.Instance.PlayerUnitSpawned == true) {
                 UpdateNamePlates();
             }

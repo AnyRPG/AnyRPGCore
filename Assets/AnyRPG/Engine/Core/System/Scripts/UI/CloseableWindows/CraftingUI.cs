@@ -113,7 +113,7 @@ namespace AnyRPG {
         // meant to be called externally from craftingNode
         public void ViewRecipes(CraftAbility craftAbility) {
             this.craftAbility = craftAbility;
-            //PopupWindowManager.Instance.craftingWindow.OpenWindow();
+            //SystemGameManager.Instance.UIManager.PopupWindowManager.craftingWindow.OpenWindow();
             ResetWindow();
             ShowRecipes(craftAbility);
         }
@@ -257,7 +257,7 @@ namespace AnyRPG {
         private void ResetWindow() {
             ClearDescription();
             UpdateCraftAmountArea();
-            PopupWindowManager.Instance.craftingWindow.SetWindowTitle(craftAbility.DisplayName);
+            SystemGameManager.Instance.UIManager.PopupWindowManager.craftingWindow.SetWindowTitle(craftAbility.DisplayName);
         }
 
         private void ClearInputIcons() {

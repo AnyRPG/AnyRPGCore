@@ -9,13 +9,13 @@ namespace AnyRPG {
 
         public void CancelAction() {
             //Debug.Log("NewGameMenuController.CancelAction()");
-            SystemWindowManager.Instance.confirmDestroyMenuWindow.CloseWindow();
+            SystemGameManager.Instance.UIManager.SystemWindowManager.confirmDestroyMenuWindow.CloseWindow();
         }
 
         public void ConfirmAction() {
             //Debug.Log("NewGameMenuController.ConfirmAction()");
             HandScript.Instance.DeleteItem(); ;
-            SystemWindowManager.Instance.confirmDestroyMenuWindow.CloseWindow();
+            SystemGameManager.Instance.UIManager.SystemWindowManager.confirmDestroyMenuWindow.CloseWindow();
         }
 
     }

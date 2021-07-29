@@ -262,7 +262,7 @@ namespace AnyRPG {
         }
 
         public void StopBackgroundMusic() {
-            AudioManager.Instance.StopMusic();
+            SystemGameManager.Instance.AudioManager.StopMusic();
         }
 
         public void StartBackgroundMusic() {

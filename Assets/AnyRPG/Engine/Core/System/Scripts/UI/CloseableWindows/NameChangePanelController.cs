@@ -19,7 +19,7 @@ namespace AnyRPG {
 
         public void CancelAction() {
             //Debug.Log("NameChangePanelController.CancelAction()");
-            SystemWindowManager.Instance.nameChangeWindow.CloseWindow();
+            SystemGameManager.Instance.UIManager.SystemWindowManager.nameChangeWindow.CloseWindow();
         }
 
         public void ConfirmAction() {
@@ -27,7 +27,7 @@ namespace AnyRPG {
             if (textInput.text != null && textInput.text != string.Empty) {
                 PlayerManager.Instance.SetPlayerName(textInput.text);
                 OnConfirmAction();
-                SystemWindowManager.Instance.nameChangeWindow.CloseWindow();
+                SystemGameManager.Instance.UIManager.SystemWindowManager.nameChangeWindow.CloseWindow();
             }
         }
 

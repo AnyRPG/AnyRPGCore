@@ -56,7 +56,7 @@ namespace AnyRPG {
                 return;
             }
             if (!EventSystem.current.IsPointerOverGameObject()) {
-                Ray ray = CameraManager.Instance.ActiveMainCamera.ScreenPointToRay(Input.mousePosition);
+                Ray ray = SystemGameManager.Instance.CameraManager.ActiveMainCamera.ScreenPointToRay(Input.mousePosition);
                 RaycastHit hit;
                 //if (Physics.Raycast(ray, out hit, 100)) {
                 if (Physics.Raycast(ray, out hit, 100, PlayerManager.Instance.PlayerController.movementMask.value)) {

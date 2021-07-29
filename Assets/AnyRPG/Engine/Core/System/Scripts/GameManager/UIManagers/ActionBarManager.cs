@@ -23,10 +23,6 @@ namespace AnyRPG {
         public ActionButton FromButton { get => fromButton; set => fromButton = value; }
         public List<ActionBarController> ActionBarControllers { get => actionBarControllers; set => actionBarControllers = value; }
 
-        private void Awake() {
-            //Debug.Log("ActionBarManager.Awake()");
-        }
-
         private void Start() {
             //Debug.Log("ActionBarManager.Start()");
             AssociateActionBarKeyBinds();

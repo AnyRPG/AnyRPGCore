@@ -359,7 +359,7 @@ namespace AnyRPG {
                     }
                 }
                 if (canSave == false) {
-                    MessageFeedManager.Instance.WriteMessage("You cannot save here");
+                    SystemGameManager.Instance.UIManager.MessageFeedManager.WriteMessage("You cannot save here");
                     return false;
                 }
             }
@@ -677,7 +677,7 @@ namespace AnyRPG {
 
         public void SaveActionBarData(AnyRPGSaveData anyRPGSaveData) {
             //Debug.Log("Savemanager.SaveActionBarData()");
-            foreach (ActionButton actionButton in UIManager.Instance.ActionBarManager.GetActionButtons()) {
+            foreach (ActionButton actionButton in SystemGameManager.Instance.UIManager.ActionBarManager.GetActionButtons()) {
                 ActionBarSaveData saveData = new ActionBarSaveData();
                 saveData.MyName = (actionButton.Useable == null ? string.Empty : (actionButton.Useable as IDescribable).DisplayName);
                 saveData.savedName = (actionButton.SavedUseable == null ? string.Empty : (actionButton.SavedUseable as IDescribable).DisplayName);
@@ -1058,22 +1058,22 @@ namespace AnyRPG {
                     if (actionBarSaveData.savedName != null && actionBarSaveData.savedName != string.Empty) {
                         IUseable savedUseable = SystemAbilityManager.Instance.GetResource(actionBarSaveData.savedName);
                         if (savedUseable != null) {
-                            UIManager.Instance.ActionBarManager.GetActionButtons()[counter].SavedUseable = savedUseable;
+                            SystemGameManager.Instance.UIManager.ActionBarManager.GetActionButtons()[counter].SavedUseable = savedUseable;
                         }
                     }
                 }
                 if (useable != null) {
-                    //Debug.Log("Savemanager.LoadActionBarData(): setting useable on button: " + counter + "; actionbutton: " + UIManager.Instance.MyActionBarManager.GetActionButtons()[counter].name + UIManager.Instance.MyActionBarManager.GetActionButtons()[counter].GetInstanceID());
-                    UIManager.Instance.ActionBarManager.GetActionButtons()[counter].SetUseable(useable, false);
+                    //Debug.Log("Savemanager.LoadActionBarData(): setting useable on button: " + counter + "; actionbutton: " + SystemGameManager.Instance.UIManager.MyActionBarManager.GetActionButtons()[counter].name + SystemGameManager.Instance.UIManager.MyActionBarManager.GetActionButtons()[counter].GetInstanceID());
+                    SystemGameManager.Instance.UIManager.ActionBarManager.GetActionButtons()[counter].SetUseable(useable, false);
                 } else {
                     //Debug.Log("Savemanager.LoadActionBarData(): no usable set on this actionbutton");
                     // testing remove things that weren't saved, it will prevent duplicate abilities if they are moved
                     // this means if new abilities are added to a class/etc between play sessions they won't be on the bars
-                    UIManager.Instance.ActionBarManager.GetActionButtons()[counter].ClearUseable();
+                    SystemGameManager.Instance.UIManager.ActionBarManager.GetActionButtons()[counter].ClearUseable();
                 }
                 counter++;
             }
-            UIManager.Instance.ActionBarManager.UpdateVisuals();
+            SystemGameManager.Instance.UIManager.ActionBarManager.UpdateVisuals();
         }
 
         public void TryNewGame() {
@@ -1091,8 +1091,8 @@ namespace AnyRPG {
 
             PerformInventorySetup();
 
-            SystemWindowManager.Instance.loadGameWindow.CloseWindow();
-            SystemWindowManager.Instance.newGameWindow.CloseWindow();
+            SystemGameManager.Instance.UIManager.SystemWindowManager.loadGameWindow.CloseWindow();
+            SystemGameManager.Instance.UIManager.SystemWindowManager.newGameWindow.CloseWindow();
 
             // load default scene
             LevelManager.Instance.LoadFirstScene();
@@ -1237,7 +1237,7 @@ namespace AnyRPG {
 
             LoadWindowPositions();
 
-            SystemWindowManager.Instance.loadGameWindow.CloseWindow();
+            SystemGameManager.Instance.UIManager.SystemWindowManager.loadGameWindow.CloseWindow();
             // load the proper level now that everything should be setup
             LevelManager.Instance.LoadLevel(anyRPGSaveData.CurrentScene, playerLocation, playerRotation);
         }
@@ -1249,11 +1249,11 @@ namespace AnyRPG {
             //CharacterEquipmentManager.Instance.ClearEquipment();
 
             InventoryManager.Instance.ClearData();
-            if (PopupWindowManager.Instance != null) {
-                if (PopupWindowManager.Instance.bankWindow != null) {
-                    if (PopupWindowManager.Instance.bankWindow.CloseableWindowContents != null) {
-                        (PopupWindowManager.Instance.bankWindow.CloseableWindowContents as BankPanel).ClearSlots();
-                        (PopupWindowManager.Instance.bankWindow.CloseableWindowContents as BankPanel).MyBagBarController.ClearBagButtons();
+            if (SystemGameManager.Instance.UIManager.PopupWindowManager != null) {
+                if (SystemGameManager.Instance.UIManager.PopupWindowManager.bankWindow != null) {
+                    if (SystemGameManager.Instance.UIManager.PopupWindowManager.bankWindow.CloseableWindowContents != null) {
+                        (SystemGameManager.Instance.UIManager.PopupWindowManager.bankWindow.CloseableWindowContents as BankPanel).ClearSlots();
+                        (SystemGameManager.Instance.UIManager.PopupWindowManager.bankWindow.CloseableWindowContents as BankPanel).MyBagBarController.ClearBagButtons();
                     } else {
                         //Debug.Log("windowcontents was null");
                     }
@@ -1266,7 +1266,7 @@ namespace AnyRPG {
 
             //SystemGameManager.Instance.ReloadResourceLists();
 
-            UIManager.Instance.ActionBarManager.ClearActionBars(true);
+            SystemGameManager.Instance.UIManager.ActionBarManager.ClearActionBars(true);
             QuestLog.Instance.ClearLog();
             PlayerManager.Instance.ResetInitialLevel();
 
@@ -1286,74 +1286,74 @@ namespace AnyRPG {
             // set to playerprefs values
 
             if (PlayerPrefs.HasKey("AbilityBookWindowX") && PlayerPrefs.HasKey("AbilityBookWindowY"))
-                PopupWindowManager.Instance.abilityBookWindow.transform.position = new Vector3(PlayerPrefs.GetFloat("AbilityBookWindowX"), PlayerPrefs.GetFloat("AbilityBookWindowY"), 0);
+                SystemGameManager.Instance.UIManager.PopupWindowManager.abilityBookWindow.transform.position = new Vector3(PlayerPrefs.GetFloat("AbilityBookWindowX"), PlayerPrefs.GetFloat("AbilityBookWindowY"), 0);
             if (PlayerPrefs.HasKey("SkillBookWindowX") && PlayerPrefs.HasKey("SkillBookWindowY"))
-                PopupWindowManager.Instance.skillBookWindow.transform.position = new Vector3(PlayerPrefs.GetFloat("SkillBookWindowX"), PlayerPrefs.GetFloat("SkillBookWindowY"), 0);
+                SystemGameManager.Instance.UIManager.PopupWindowManager.skillBookWindow.transform.position = new Vector3(PlayerPrefs.GetFloat("SkillBookWindowX"), PlayerPrefs.GetFloat("SkillBookWindowY"), 0);
             if (PlayerPrefs.HasKey("ReputationBookWindowX") && PlayerPrefs.HasKey("ReputationBookWindowY"))
-                PopupWindowManager.Instance.reputationBookWindow.transform.position = new Vector3(PlayerPrefs.GetFloat("ReputationBookWindowX"), PlayerPrefs.GetFloat("ReputationBookWindowY"), 0);
+                SystemGameManager.Instance.UIManager.PopupWindowManager.reputationBookWindow.transform.position = new Vector3(PlayerPrefs.GetFloat("ReputationBookWindowX"), PlayerPrefs.GetFloat("ReputationBookWindowY"), 0);
             if (PlayerPrefs.HasKey("CurrencyListWindowX") && PlayerPrefs.HasKey("CurrencyListWindowY"))
-                PopupWindowManager.Instance.currencyListWindow.transform.position = new Vector3(PlayerPrefs.GetFloat("CurrencyListWindowX"), PlayerPrefs.GetFloat("CurrencyListWindowY"), 0);
+                SystemGameManager.Instance.UIManager.PopupWindowManager.currencyListWindow.transform.position = new Vector3(PlayerPrefs.GetFloat("CurrencyListWindowX"), PlayerPrefs.GetFloat("CurrencyListWindowY"), 0);
             if (PlayerPrefs.HasKey("CharacterPanelWindowX") && PlayerPrefs.HasKey("CharacterPanelWindowY"))
-                PopupWindowManager.Instance.characterPanelWindow.transform.position = new Vector3(PlayerPrefs.GetFloat("CharacterPanelWindowX"), PlayerPrefs.GetFloat("CharacterPanelWindowY"), 0);
+                SystemGameManager.Instance.UIManager.PopupWindowManager.characterPanelWindow.transform.position = new Vector3(PlayerPrefs.GetFloat("CharacterPanelWindowX"), PlayerPrefs.GetFloat("CharacterPanelWindowY"), 0);
             if (PlayerPrefs.HasKey("LootWindowX") && PlayerPrefs.HasKey("LootWindowY"))
-                PopupWindowManager.Instance.lootWindow.transform.position = new Vector3(PlayerPrefs.GetFloat("LootWindowX"), PlayerPrefs.GetFloat("LootWindowY"), 0);
+                SystemGameManager.Instance.UIManager.PopupWindowManager.lootWindow.transform.position = new Vector3(PlayerPrefs.GetFloat("LootWindowX"), PlayerPrefs.GetFloat("LootWindowY"), 0);
             if (PlayerPrefs.HasKey("VendorWindowX") && PlayerPrefs.HasKey("VendorWindowY"))
-                PopupWindowManager.Instance.vendorWindow.transform.position = new Vector3(PlayerPrefs.GetFloat("VendorWindowX"), PlayerPrefs.GetFloat("VendorWindowY"), 0);
+                SystemGameManager.Instance.UIManager.PopupWindowManager.vendorWindow.transform.position = new Vector3(PlayerPrefs.GetFloat("VendorWindowX"), PlayerPrefs.GetFloat("VendorWindowY"), 0);
             if (PlayerPrefs.HasKey("ChestWindowX") && PlayerPrefs.HasKey("ChestWindowY"))
-                PopupWindowManager.Instance.chestWindow.transform.position = new Vector3(PlayerPrefs.GetFloat("ChestWindowX"), PlayerPrefs.GetFloat("ChestWindowY"), 0);
+                SystemGameManager.Instance.UIManager.PopupWindowManager.chestWindow.transform.position = new Vector3(PlayerPrefs.GetFloat("ChestWindowX"), PlayerPrefs.GetFloat("ChestWindowY"), 0);
             if (PlayerPrefs.HasKey("BankWindowX") && PlayerPrefs.HasKey("BankWindowY"))
-                PopupWindowManager.Instance.bankWindow.transform.position = new Vector3(PlayerPrefs.GetFloat("BankWindowX"), PlayerPrefs.GetFloat("BankWindowY"), 0);
+                SystemGameManager.Instance.UIManager.PopupWindowManager.bankWindow.transform.position = new Vector3(PlayerPrefs.GetFloat("BankWindowX"), PlayerPrefs.GetFloat("BankWindowY"), 0);
             if (PlayerPrefs.HasKey("QuestLogWindowX") && PlayerPrefs.HasKey("QuestLogWindowY"))
-                PopupWindowManager.Instance.questLogWindow.transform.position = new Vector3(PlayerPrefs.GetFloat("QuestLogWindowX"), PlayerPrefs.GetFloat("QuestLogWindowY"), 0);
+                SystemGameManager.Instance.UIManager.PopupWindowManager.questLogWindow.transform.position = new Vector3(PlayerPrefs.GetFloat("QuestLogWindowX"), PlayerPrefs.GetFloat("QuestLogWindowY"), 0);
             if (PlayerPrefs.HasKey("AchievementListWindowX") && PlayerPrefs.HasKey("AchievementListWindowY"))
-                PopupWindowManager.Instance.achievementListWindow.transform.position = new Vector3(PlayerPrefs.GetFloat("AchievementListWindowX"), PlayerPrefs.GetFloat("AchievementListWindowY"), 0);
+                SystemGameManager.Instance.UIManager.PopupWindowManager.achievementListWindow.transform.position = new Vector3(PlayerPrefs.GetFloat("AchievementListWindowX"), PlayerPrefs.GetFloat("AchievementListWindowY"), 0);
             if (PlayerPrefs.HasKey("QuestGiverWindowX") && PlayerPrefs.HasKey("QuestGiverWindowY"))
-                PopupWindowManager.Instance.questGiverWindow.transform.position = new Vector3(PlayerPrefs.GetFloat("QuestGiverWindowX"), PlayerPrefs.GetFloat("QuestGiverWindowY"), 0);
+                SystemGameManager.Instance.UIManager.PopupWindowManager.questGiverWindow.transform.position = new Vector3(PlayerPrefs.GetFloat("QuestGiverWindowX"), PlayerPrefs.GetFloat("QuestGiverWindowY"), 0);
             if (PlayerPrefs.HasKey("SkillTrainerWindowX") && PlayerPrefs.HasKey("SkillTrainerWindowY"))
-                PopupWindowManager.Instance.skillTrainerWindow.transform.position = new Vector3(PlayerPrefs.GetFloat("SkillTrainerWindowX"), PlayerPrefs.GetFloat("SkillTrainerWindowY"), 0);
+                SystemGameManager.Instance.UIManager.PopupWindowManager.skillTrainerWindow.transform.position = new Vector3(PlayerPrefs.GetFloat("SkillTrainerWindowX"), PlayerPrefs.GetFloat("SkillTrainerWindowY"), 0);
             if (PlayerPrefs.HasKey("InteractionWindowX") && PlayerPrefs.HasKey("InteractionWindowY"))
-                PopupWindowManager.Instance.interactionWindow.transform.position = new Vector3(PlayerPrefs.GetFloat("InteractionWindowX"), PlayerPrefs.GetFloat("InteractionWindowY"), 0);
+                SystemGameManager.Instance.UIManager.PopupWindowManager.interactionWindow.transform.position = new Vector3(PlayerPrefs.GetFloat("InteractionWindowX"), PlayerPrefs.GetFloat("InteractionWindowY"), 0);
             if (PlayerPrefs.HasKey("CraftingWindowX") && PlayerPrefs.HasKey("CraftingWindowY"))
-                PopupWindowManager.Instance.craftingWindow.transform.position = new Vector3(PlayerPrefs.GetFloat("CraftingWindowX"), PlayerPrefs.GetFloat("CraftingWindowY"), 0);
+                SystemGameManager.Instance.UIManager.PopupWindowManager.craftingWindow.transform.position = new Vector3(PlayerPrefs.GetFloat("CraftingWindowX"), PlayerPrefs.GetFloat("CraftingWindowY"), 0);
             if (PlayerPrefs.HasKey("MainMapWindowX") && PlayerPrefs.HasKey("MainMapWindowY"))
-                PopupWindowManager.Instance.mainMapWindow.transform.position = new Vector3(PlayerPrefs.GetFloat("MainMapWindowX"), PlayerPrefs.GetFloat("MainMapWindowY"), 0);
+                SystemGameManager.Instance.UIManager.PopupWindowManager.mainMapWindow.transform.position = new Vector3(PlayerPrefs.GetFloat("MainMapWindowX"), PlayerPrefs.GetFloat("MainMapWindowY"), 0);
             if (PlayerPrefs.HasKey("QuestTrackerWindowX") && PlayerPrefs.HasKey("QuestTrackerWindowY"))
-                UIManager.Instance.QuestTrackerWindow.transform.position = new Vector3(PlayerPrefs.GetFloat("QuestTrackerWindowX"), PlayerPrefs.GetFloat("QuestTrackerWindowY"), 0);
+                SystemGameManager.Instance.UIManager.QuestTrackerWindow.transform.position = new Vector3(PlayerPrefs.GetFloat("QuestTrackerWindowX"), PlayerPrefs.GetFloat("QuestTrackerWindowY"), 0);
             if (PlayerPrefs.HasKey("CombatLogWindowX") && PlayerPrefs.HasKey("CombatLogWindowY"))
-                UIManager.Instance.CombatLogWindow.transform.position = new Vector3(PlayerPrefs.GetFloat("CombatLogWindowX"), PlayerPrefs.GetFloat("CombatLogWindowY"), 0);
+                SystemGameManager.Instance.UIManager.CombatLogWindow.transform.position = new Vector3(PlayerPrefs.GetFloat("CombatLogWindowX"), PlayerPrefs.GetFloat("CombatLogWindowY"), 0);
 
             if (PlayerPrefs.HasKey("MessageFeedManagerX") && PlayerPrefs.HasKey("MessageFeedManagerY"))
-                MessageFeedManager.Instance.MessageFeedGameObject.transform.position = new Vector3(PlayerPrefs.GetFloat("MessageFeedManagerX"), PlayerPrefs.GetFloat("MessageFeedManagerY"), 0);
+                SystemGameManager.Instance.UIManager.MessageFeedManager.MessageFeedGameObject.transform.position = new Vector3(PlayerPrefs.GetFloat("MessageFeedManagerX"), PlayerPrefs.GetFloat("MessageFeedManagerY"), 0);
 
             if (PlayerPrefs.HasKey("FloatingCastBarControllerX") && PlayerPrefs.HasKey("FloatingCastBarControllerY")) {
-                //Debug.Log("UIManager.Instance.MyFloatingCastBarController.transform.position: " + UIManager.Instance.MyFloatingCastBarController.transform.position);
-                UIManager.Instance.FloatingCastBarController.transform.position = new Vector3(PlayerPrefs.GetFloat("FloatingCastBarControllerX"), PlayerPrefs.GetFloat("FloatingCastBarControllerY"), 0);
-                //Debug.Log("UIManager.Instance.MyFloatingCastBarController.transform.position after set: " + UIManager.Instance.MyFloatingCastBarController.transform.position);
+                //Debug.Log("SystemGameManager.Instance.UIManager.MyFloatingCastBarController.transform.position: " + SystemGameManager.Instance.UIManager.MyFloatingCastBarController.transform.position);
+                SystemGameManager.Instance.UIManager.FloatingCastBarController.transform.position = new Vector3(PlayerPrefs.GetFloat("FloatingCastBarControllerX"), PlayerPrefs.GetFloat("FloatingCastBarControllerY"), 0);
+                //Debug.Log("SystemGameManager.Instance.UIManager.MyFloatingCastBarController.transform.position after set: " + SystemGameManager.Instance.UIManager.MyFloatingCastBarController.transform.position);
             }
 
             if (PlayerPrefs.HasKey("StatusEffectPanelControllerX") && PlayerPrefs.HasKey("StatusEffectPanelControllerY"))
-                UIManager.Instance.StatusEffectPanelController.transform.position = new Vector3(PlayerPrefs.GetFloat("StatusEffectPanelControllerX"), PlayerPrefs.GetFloat("StatusEffectPanelControllerY"), 0);
+                SystemGameManager.Instance.UIManager.StatusEffectPanelController.transform.position = new Vector3(PlayerPrefs.GetFloat("StatusEffectPanelControllerX"), PlayerPrefs.GetFloat("StatusEffectPanelControllerY"), 0);
 
             if (PlayerPrefs.HasKey("PlayerUnitFrameControllerX") && PlayerPrefs.HasKey("PlayerUnitFrameControllerY"))
-                UIManager.Instance.PlayerUnitFrameController.transform.position = new Vector3(PlayerPrefs.GetFloat("PlayerUnitFrameControllerX"), PlayerPrefs.GetFloat("PlayerUnitFrameControllerY"), 0);
+                SystemGameManager.Instance.UIManager.PlayerUnitFrameController.transform.position = new Vector3(PlayerPrefs.GetFloat("PlayerUnitFrameControllerX"), PlayerPrefs.GetFloat("PlayerUnitFrameControllerY"), 0);
 
             if (PlayerPrefs.HasKey("FocusUnitFrameControllerX") && PlayerPrefs.HasKey("FocusUnitFrameControllerY"))
-                UIManager.Instance.FocusUnitFrameController.transform.position = new Vector3(PlayerPrefs.GetFloat("FocusUnitFrameControllerX"), PlayerPrefs.GetFloat("FocusUnitFrameControllerY"), 0);
+                SystemGameManager.Instance.UIManager.FocusUnitFrameController.transform.position = new Vector3(PlayerPrefs.GetFloat("FocusUnitFrameControllerX"), PlayerPrefs.GetFloat("FocusUnitFrameControllerY"), 0);
 
             if (PlayerPrefs.HasKey("MiniMapControllerX") && PlayerPrefs.HasKey("MiniMapControllerY"))
-                UIManager.Instance.MiniMapController.transform.position = new Vector3(PlayerPrefs.GetFloat("MiniMapControllerX"), PlayerPrefs.GetFloat("MiniMapControllerY"), 0);
+                SystemGameManager.Instance.UIManager.MiniMapController.transform.position = new Vector3(PlayerPrefs.GetFloat("MiniMapControllerX"), PlayerPrefs.GetFloat("MiniMapControllerY"), 0);
 
             if (PlayerPrefs.HasKey("XPBarControllerX") && PlayerPrefs.HasKey("XPBarControllerY"))
-                UIManager.Instance.XPBarController.transform.position = new Vector3(PlayerPrefs.GetFloat("XPBarControllerX"), PlayerPrefs.GetFloat("XPBarControllerY"), 0);
+                SystemGameManager.Instance.UIManager.XPBarController.transform.position = new Vector3(PlayerPrefs.GetFloat("XPBarControllerX"), PlayerPrefs.GetFloat("XPBarControllerY"), 0);
 
             if (PlayerPrefs.HasKey("BottomPanelX") && PlayerPrefs.HasKey("BottomPanelY"))
-                UIManager.Instance.BottomPanel.transform.position = new Vector3(PlayerPrefs.GetFloat("BottomPanelX"), PlayerPrefs.GetFloat("BottomPanelY"), 0);
+                SystemGameManager.Instance.UIManager.BottomPanel.transform.position = new Vector3(PlayerPrefs.GetFloat("BottomPanelX"), PlayerPrefs.GetFloat("BottomPanelY"), 0);
 
             if (PlayerPrefs.HasKey("SidePanelX") && PlayerPrefs.HasKey("SidePanelY"))
-                UIManager.Instance.SidePanel.transform.position = new Vector3(PlayerPrefs.GetFloat("SidePanelX"), PlayerPrefs.GetFloat("SidePanelY"), 0);
+                SystemGameManager.Instance.UIManager.SidePanel.transform.position = new Vector3(PlayerPrefs.GetFloat("SidePanelX"), PlayerPrefs.GetFloat("SidePanelY"), 0);
 
             if (PlayerPrefs.HasKey("MouseOverWindowX") && PlayerPrefs.HasKey("MouseOverWindowY"))
-                UIManager.Instance.MouseOverWindow.transform.position = new Vector3(PlayerPrefs.GetFloat("MouseOverWindowX"), PlayerPrefs.GetFloat("MouseOverWindowY"), 0);
+                SystemGameManager.Instance.UIManager.MouseOverWindow.transform.position = new Vector3(PlayerPrefs.GetFloat("MouseOverWindowX"), PlayerPrefs.GetFloat("MouseOverWindowY"), 0);
 
         }
 
@@ -1362,77 +1362,77 @@ namespace AnyRPG {
         public void SaveWindowPositions() {
             //Debug.Log("Savemanager.SaveWindowPositions()");
 
-            PlayerPrefs.SetFloat("AbilityBookWindowX", PopupWindowManager.Instance.abilityBookWindow.transform.position.x);
-            PlayerPrefs.SetFloat("AbilityBookWindowY", PopupWindowManager.Instance.abilityBookWindow.transform.position.y);
+            PlayerPrefs.SetFloat("AbilityBookWindowX", SystemGameManager.Instance.UIManager.PopupWindowManager.abilityBookWindow.transform.position.x);
+            PlayerPrefs.SetFloat("AbilityBookWindowY", SystemGameManager.Instance.UIManager.PopupWindowManager.abilityBookWindow.transform.position.y);
 
-            PlayerPrefs.SetFloat("SkillBookWindowX", PopupWindowManager.Instance.skillBookWindow.transform.position.x);
-            PlayerPrefs.SetFloat("SkillBookWindowY", PopupWindowManager.Instance.skillBookWindow.transform.position.y);
+            PlayerPrefs.SetFloat("SkillBookWindowX", SystemGameManager.Instance.UIManager.PopupWindowManager.skillBookWindow.transform.position.x);
+            PlayerPrefs.SetFloat("SkillBookWindowY", SystemGameManager.Instance.UIManager.PopupWindowManager.skillBookWindow.transform.position.y);
 
             //Debug.Log("abilityBookWindowX: " + abilityBookWindowX + "; abilityBookWindowY: " + abilityBookWindowY);
-            PlayerPrefs.SetFloat("ReputationBookWindowX", PopupWindowManager.Instance.reputationBookWindow.transform.position.x);
-            PlayerPrefs.SetFloat("ReputationBookWindowY", PopupWindowManager.Instance.reputationBookWindow.transform.position.y);
-            PlayerPrefs.SetFloat("CurrencyListWindowX", PopupWindowManager.Instance.currencyListWindow.transform.position.x);
-            PlayerPrefs.SetFloat("CurrencyListWindowY", PopupWindowManager.Instance.currencyListWindow.transform.position.y);
+            PlayerPrefs.SetFloat("ReputationBookWindowX", SystemGameManager.Instance.UIManager.PopupWindowManager.reputationBookWindow.transform.position.x);
+            PlayerPrefs.SetFloat("ReputationBookWindowY", SystemGameManager.Instance.UIManager.PopupWindowManager.reputationBookWindow.transform.position.y);
+            PlayerPrefs.SetFloat("CurrencyListWindowX", SystemGameManager.Instance.UIManager.PopupWindowManager.currencyListWindow.transform.position.x);
+            PlayerPrefs.SetFloat("CurrencyListWindowY", SystemGameManager.Instance.UIManager.PopupWindowManager.currencyListWindow.transform.position.y);
 
-            PlayerPrefs.SetFloat("CharacterPanelWindowX", PopupWindowManager.Instance.characterPanelWindow.transform.position.x);
-            PlayerPrefs.SetFloat("CharacterPanelWindowY", PopupWindowManager.Instance.characterPanelWindow.transform.position.y);
-            PlayerPrefs.SetFloat("LootWindowX", PopupWindowManager.Instance.lootWindow.transform.position.x);
-            PlayerPrefs.SetFloat("LootWindowY", PopupWindowManager.Instance.lootWindow.transform.position.y);
-            PlayerPrefs.SetFloat("VendorWindowX", PopupWindowManager.Instance.vendorWindow.transform.position.x);
-            PlayerPrefs.SetFloat("VendorWindowY", PopupWindowManager.Instance.vendorWindow.transform.position.y);
-            PlayerPrefs.SetFloat("ChestWindowX", PopupWindowManager.Instance.chestWindow.transform.position.x);
-            PlayerPrefs.SetFloat("ChestWindowY", PopupWindowManager.Instance.chestWindow.transform.position.y);
-            PlayerPrefs.SetFloat("BankWindowX", PopupWindowManager.Instance.bankWindow.transform.position.x);
-            PlayerPrefs.SetFloat("BankWindowY", PopupWindowManager.Instance.bankWindow.transform.position.y);
-            PlayerPrefs.SetFloat("QuestLogWindowX", PopupWindowManager.Instance.questLogWindow.transform.position.x);
-            PlayerPrefs.SetFloat("QuestLogWindowY", PopupWindowManager.Instance.questLogWindow.transform.position.y);
-            PlayerPrefs.SetFloat("AchievementListWindowX", PopupWindowManager.Instance.achievementListWindow.transform.position.x);
-            PlayerPrefs.SetFloat("AchievementListWindowY", PopupWindowManager.Instance.achievementListWindow.transform.position.y);
-            PlayerPrefs.SetFloat("QuestGiverWindowX", PopupWindowManager.Instance.questGiverWindow.transform.position.x);
-            PlayerPrefs.SetFloat("QuestGiverWindowY", PopupWindowManager.Instance.questGiverWindow.transform.position.y);
-            PlayerPrefs.SetFloat("SkillTrainerWindowX", PopupWindowManager.Instance.skillTrainerWindow.transform.position.x);
-            PlayerPrefs.SetFloat("SkillTrainerWindowY", PopupWindowManager.Instance.skillTrainerWindow.transform.position.y);
-            PlayerPrefs.SetFloat("InteractionWindowX", PopupWindowManager.Instance.interactionWindow.transform.position.x);
-            PlayerPrefs.SetFloat("InteractionWindowY", PopupWindowManager.Instance.interactionWindow.transform.position.y);
-            PlayerPrefs.SetFloat("CraftingWindowX", PopupWindowManager.Instance.craftingWindow.transform.position.x);
-            PlayerPrefs.SetFloat("CraftingWindowY", PopupWindowManager.Instance.craftingWindow.transform.position.y);
-            PlayerPrefs.SetFloat("MainMapWindowX", PopupWindowManager.Instance.mainMapWindow.transform.position.x);
-            PlayerPrefs.SetFloat("MainMapWindowY", PopupWindowManager.Instance.mainMapWindow.transform.position.y);
-            PlayerPrefs.SetFloat("QuestTrackerWindowX", UIManager.Instance.QuestTrackerWindow.transform.position.x);
-            PlayerPrefs.SetFloat("QuestTrackerWindowY", UIManager.Instance.QuestTrackerWindow.transform.position.y);
-            PlayerPrefs.SetFloat("CombatLogWindowX", UIManager.Instance.CombatLogWindow.transform.position.x);
-            PlayerPrefs.SetFloat("CombatLogWindowY", UIManager.Instance.CombatLogWindow.transform.position.y);
+            PlayerPrefs.SetFloat("CharacterPanelWindowX", SystemGameManager.Instance.UIManager.PopupWindowManager.characterPanelWindow.transform.position.x);
+            PlayerPrefs.SetFloat("CharacterPanelWindowY", SystemGameManager.Instance.UIManager.PopupWindowManager.characterPanelWindow.transform.position.y);
+            PlayerPrefs.SetFloat("LootWindowX", SystemGameManager.Instance.UIManager.PopupWindowManager.lootWindow.transform.position.x);
+            PlayerPrefs.SetFloat("LootWindowY", SystemGameManager.Instance.UIManager.PopupWindowManager.lootWindow.transform.position.y);
+            PlayerPrefs.SetFloat("VendorWindowX", SystemGameManager.Instance.UIManager.PopupWindowManager.vendorWindow.transform.position.x);
+            PlayerPrefs.SetFloat("VendorWindowY", SystemGameManager.Instance.UIManager.PopupWindowManager.vendorWindow.transform.position.y);
+            PlayerPrefs.SetFloat("ChestWindowX", SystemGameManager.Instance.UIManager.PopupWindowManager.chestWindow.transform.position.x);
+            PlayerPrefs.SetFloat("ChestWindowY", SystemGameManager.Instance.UIManager.PopupWindowManager.chestWindow.transform.position.y);
+            PlayerPrefs.SetFloat("BankWindowX", SystemGameManager.Instance.UIManager.PopupWindowManager.bankWindow.transform.position.x);
+            PlayerPrefs.SetFloat("BankWindowY", SystemGameManager.Instance.UIManager.PopupWindowManager.bankWindow.transform.position.y);
+            PlayerPrefs.SetFloat("QuestLogWindowX", SystemGameManager.Instance.UIManager.PopupWindowManager.questLogWindow.transform.position.x);
+            PlayerPrefs.SetFloat("QuestLogWindowY", SystemGameManager.Instance.UIManager.PopupWindowManager.questLogWindow.transform.position.y);
+            PlayerPrefs.SetFloat("AchievementListWindowX", SystemGameManager.Instance.UIManager.PopupWindowManager.achievementListWindow.transform.position.x);
+            PlayerPrefs.SetFloat("AchievementListWindowY", SystemGameManager.Instance.UIManager.PopupWindowManager.achievementListWindow.transform.position.y);
+            PlayerPrefs.SetFloat("QuestGiverWindowX", SystemGameManager.Instance.UIManager.PopupWindowManager.questGiverWindow.transform.position.x);
+            PlayerPrefs.SetFloat("QuestGiverWindowY", SystemGameManager.Instance.UIManager.PopupWindowManager.questGiverWindow.transform.position.y);
+            PlayerPrefs.SetFloat("SkillTrainerWindowX", SystemGameManager.Instance.UIManager.PopupWindowManager.skillTrainerWindow.transform.position.x);
+            PlayerPrefs.SetFloat("SkillTrainerWindowY", SystemGameManager.Instance.UIManager.PopupWindowManager.skillTrainerWindow.transform.position.y);
+            PlayerPrefs.SetFloat("InteractionWindowX", SystemGameManager.Instance.UIManager.PopupWindowManager.interactionWindow.transform.position.x);
+            PlayerPrefs.SetFloat("InteractionWindowY", SystemGameManager.Instance.UIManager.PopupWindowManager.interactionWindow.transform.position.y);
+            PlayerPrefs.SetFloat("CraftingWindowX", SystemGameManager.Instance.UIManager.PopupWindowManager.craftingWindow.transform.position.x);
+            PlayerPrefs.SetFloat("CraftingWindowY", SystemGameManager.Instance.UIManager.PopupWindowManager.craftingWindow.transform.position.y);
+            PlayerPrefs.SetFloat("MainMapWindowX", SystemGameManager.Instance.UIManager.PopupWindowManager.mainMapWindow.transform.position.x);
+            PlayerPrefs.SetFloat("MainMapWindowY", SystemGameManager.Instance.UIManager.PopupWindowManager.mainMapWindow.transform.position.y);
+            PlayerPrefs.SetFloat("QuestTrackerWindowX", SystemGameManager.Instance.UIManager.QuestTrackerWindow.transform.position.x);
+            PlayerPrefs.SetFloat("QuestTrackerWindowY", SystemGameManager.Instance.UIManager.QuestTrackerWindow.transform.position.y);
+            PlayerPrefs.SetFloat("CombatLogWindowX", SystemGameManager.Instance.UIManager.CombatLogWindow.transform.position.x);
+            PlayerPrefs.SetFloat("CombatLogWindowY", SystemGameManager.Instance.UIManager.CombatLogWindow.transform.position.y);
 
-            PlayerPrefs.SetFloat("MessageFeedManagerX", MessageFeedManager.Instance.MessageFeedGameObject.transform.position.x);
-            PlayerPrefs.SetFloat("MessageFeedManagerY", MessageFeedManager.Instance.MessageFeedGameObject.transform.position.y);
+            PlayerPrefs.SetFloat("MessageFeedManagerX", SystemGameManager.Instance.UIManager.MessageFeedManager.MessageFeedGameObject.transform.position.x);
+            PlayerPrefs.SetFloat("MessageFeedManagerY", SystemGameManager.Instance.UIManager.MessageFeedManager.MessageFeedGameObject.transform.position.y);
 
-            //Debug.Log("Saving FloatingCastBarController: " + UIManager.Instance.MyFloatingCastBarController.transform.position.x + "; " + UIManager.Instance.MyFloatingCastBarController.transform.position.y);
-            PlayerPrefs.SetFloat("FloatingCastBarControllerX", UIManager.Instance.FloatingCastBarController.transform.position.x);
-            PlayerPrefs.SetFloat("FloatingCastBarControllerY", UIManager.Instance.FloatingCastBarController.transform.position.y);
+            //Debug.Log("Saving FloatingCastBarController: " + SystemGameManager.Instance.UIManager.MyFloatingCastBarController.transform.position.x + "; " + SystemGameManager.Instance.UIManager.MyFloatingCastBarController.transform.position.y);
+            PlayerPrefs.SetFloat("FloatingCastBarControllerX", SystemGameManager.Instance.UIManager.FloatingCastBarController.transform.position.x);
+            PlayerPrefs.SetFloat("FloatingCastBarControllerY", SystemGameManager.Instance.UIManager.FloatingCastBarController.transform.position.y);
 
-            PlayerPrefs.SetFloat("StatusEffectPanelControllerX", UIManager.Instance.StatusEffectPanelController.transform.position.x);
-            PlayerPrefs.SetFloat("StatusEffectPanelControllerY", UIManager.Instance.StatusEffectPanelController.transform.position.y);
+            PlayerPrefs.SetFloat("StatusEffectPanelControllerX", SystemGameManager.Instance.UIManager.StatusEffectPanelController.transform.position.x);
+            PlayerPrefs.SetFloat("StatusEffectPanelControllerY", SystemGameManager.Instance.UIManager.StatusEffectPanelController.transform.position.y);
 
-            PlayerPrefs.SetFloat("PlayerUnitFrameControllerX", UIManager.Instance.PlayerUnitFrameController.transform.position.x);
-            PlayerPrefs.SetFloat("PlayerUnitFrameControllerY", UIManager.Instance.PlayerUnitFrameController.transform.position.y);
+            PlayerPrefs.SetFloat("PlayerUnitFrameControllerX", SystemGameManager.Instance.UIManager.PlayerUnitFrameController.transform.position.x);
+            PlayerPrefs.SetFloat("PlayerUnitFrameControllerY", SystemGameManager.Instance.UIManager.PlayerUnitFrameController.transform.position.y);
 
-            PlayerPrefs.SetFloat("FocusUnitFrameControllerX", UIManager.Instance.FocusUnitFrameController.transform.position.x);
-            PlayerPrefs.SetFloat("FocusUnitFrameControllerY", UIManager.Instance.FocusUnitFrameController.transform.position.y);
+            PlayerPrefs.SetFloat("FocusUnitFrameControllerX", SystemGameManager.Instance.UIManager.FocusUnitFrameController.transform.position.x);
+            PlayerPrefs.SetFloat("FocusUnitFrameControllerY", SystemGameManager.Instance.UIManager.FocusUnitFrameController.transform.position.y);
 
-            PlayerPrefs.SetFloat("MiniMapControllerX", UIManager.Instance.MiniMapController.transform.position.x);
-            PlayerPrefs.SetFloat("MiniMapControllerY", UIManager.Instance.MiniMapController.transform.position.y);
+            PlayerPrefs.SetFloat("MiniMapControllerX", SystemGameManager.Instance.UIManager.MiniMapController.transform.position.x);
+            PlayerPrefs.SetFloat("MiniMapControllerY", SystemGameManager.Instance.UIManager.MiniMapController.transform.position.y);
 
-            PlayerPrefs.SetFloat("XPBarControllerX", UIManager.Instance.XPBarController.transform.position.x);
-            PlayerPrefs.SetFloat("XPBarControllerY", UIManager.Instance.XPBarController.transform.position.y);
+            PlayerPrefs.SetFloat("XPBarControllerX", SystemGameManager.Instance.UIManager.XPBarController.transform.position.x);
+            PlayerPrefs.SetFloat("XPBarControllerY", SystemGameManager.Instance.UIManager.XPBarController.transform.position.y);
 
-            PlayerPrefs.SetFloat("BottomPanelX", UIManager.Instance.BottomPanel.transform.position.x);
-            PlayerPrefs.SetFloat("BottomPanelY", UIManager.Instance.BottomPanel.transform.position.y);
+            PlayerPrefs.SetFloat("BottomPanelX", SystemGameManager.Instance.UIManager.BottomPanel.transform.position.x);
+            PlayerPrefs.SetFloat("BottomPanelY", SystemGameManager.Instance.UIManager.BottomPanel.transform.position.y);
 
-            PlayerPrefs.SetFloat("SidePanelX", UIManager.Instance.SidePanel.transform.position.x);
-            PlayerPrefs.SetFloat("SidePanelY", UIManager.Instance.SidePanel.transform.position.y);
+            PlayerPrefs.SetFloat("SidePanelX", SystemGameManager.Instance.UIManager.SidePanel.transform.position.x);
+            PlayerPrefs.SetFloat("SidePanelY", SystemGameManager.Instance.UIManager.SidePanel.transform.position.y);
 
-            PlayerPrefs.SetFloat("MouseOverWindowX", UIManager.Instance.MouseOverWindow.transform.position.x);
-            PlayerPrefs.SetFloat("MouseOverWindowY", UIManager.Instance.MouseOverWindow.transform.position.y);
+            PlayerPrefs.SetFloat("MouseOverWindowX", SystemGameManager.Instance.UIManager.MouseOverWindow.transform.position.x);
+            PlayerPrefs.SetFloat("MouseOverWindowY", SystemGameManager.Instance.UIManager.MouseOverWindow.transform.position.y);
 
             if (InventoryManager.Instance.BagNodes != null && InventoryManager.Instance.BagNodes.Count > 0) {
                 for (int i = 0; i < 13; i++) {

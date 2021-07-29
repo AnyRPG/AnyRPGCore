@@ -7525,6 +7525,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   resourceManagerParent: {fileID: 2832900707419775535}
+  cameraManager: {fileID: 102332519143383914}
+  audioManager: {fileID: 4400642470888454862}
+  petPreviewManager: {fileID: 83571310276192926}
+  unitPreviewManager: {fileID: 7558795976200462903}
+  characterCreatorManager: {fileID: 6165180946975163457}
+  uIManager: {fileID: 6765758701573424388}
 --- !u!114 &5149191970440176744
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -8178,6 +8184,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0acb16fae3d74ac4488158a50982cda3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  actionBarManager: {fileID: 3372542372360536245}
+  combatTextManager: {fileID: 4987049062904966066}
+  messageFeedManager: {fileID: 8935282192918879629}
+  popupWindowManager: {fileID: 3804359995419664291}
+  systemWindowManager: {fileID: 1675583982063803336}
+  namePlateManager: {fileID: 6986250774741738154}
+  mainMapManager: {fileID: 3310018683127147123}
   inGameUI: {fileID: 6164211477587951780}
   playerUI: {fileID: 8069897384845375058}
   systemMenuUI: {fileID: 3065418867268533194}
@@ -8199,7 +8212,6 @@ MonoBehaviour:
   floatingCastBarController: {fileID: 8608743223772975726}
   questTrackerWindow: {fileID: 1097710789678392224}
   combatLogWindow: {fileID: 2659441062192479473}
-  actionBarManager: {fileID: 3372542372360536245}
   toolTip: {fileID: 6019731847281957159}
   toolTipCurrencyBarController: {fileID: 3345773525986488833}
   tooltipRect: {fileID: 4018933294738765809}

@@ -79,7 +79,6 @@ namespace AnyRPG {
                 }
             }
 
-            SetupScriptableObjects();
         }
 
         public static Bounds GetSceneBounds() {
@@ -245,15 +244,15 @@ namespace AnyRPG {
             }
 
             // determine if this is the main menu
-            UIManager.Instance.ActivateInGameUI();
-            UIManager.Instance.DeactivatePlayerUI();
-            UIManager.Instance.ActivateSystemMenuUI();
+            SystemGameManager.Instance.UIManager.ActivateInGameUI();
+            SystemGameManager.Instance.UIManager.DeactivatePlayerUI();
+            SystemGameManager.Instance.UIManager.ActivateSystemMenuUI();
             if (IsMainMenu()) {
                 //Debug.Log("Levelmanager.OnLoadLevel(): This is the main menu scene.  Activating Main Menu");
-                SystemWindowManager.Instance.OpenMainMenu();
+                SystemGameManager.Instance.UIManager.SystemWindowManager.OpenMainMenu();
             } else {
                 // just in case
-                SystemWindowManager.Instance.CloseMainMenu();
+                SystemGameManager.Instance.UIManager.SystemWindowManager.CloseMainMenu();
             }
 
             // get level boundaries
@@ -278,16 +277,16 @@ namespace AnyRPG {
             //Debug.Log("Levelmanager.PlayLevelSounds()");
             if (activeSceneNode != null) {
                 if (activeSceneNode.AmbientMusicProfile != null && activeSceneNode.AmbientMusicProfile.AudioClip != null) {
-                    AudioManager.Instance.PlayAmbientSound(activeSceneNode.AmbientMusicProfile.AudioClip);
+                    SystemGameManager.Instance.AudioManager.PlayAmbientSound(activeSceneNode.AmbientMusicProfile.AudioClip);
                 } else {
-                    AudioManager.Instance.StopAmbientSound();
+                    SystemGameManager.Instance.AudioManager.StopAmbientSound();
                 }
                 if (activeSceneNode.BackgroundMusicProfile != null && activeSceneNode.BackgroundMusicProfile.AudioClip != null) {
                     //Debug.Log("Levelmanager.PlayLevelSounds(): PLAYING MUSIC");
-                    AudioManager.Instance.PlayMusic(activeSceneNode.BackgroundMusicProfile.AudioClip);
+                    SystemGameManager.Instance.AudioManager.PlayMusic(activeSceneNode.BackgroundMusicProfile.AudioClip);
                 } else {
                     //Debug.Log("Levelmanager.PlayLevelSounds(): STOPPING MUSIC");
-                    AudioManager.Instance.StopMusic();
+                    SystemGameManager.Instance.AudioManager.StopMusic();
                 }
             }
         }
@@ -300,16 +299,16 @@ namespace AnyRPG {
                 if (activeSceneNode.AutoPlayCutscene != null) {
                     if (activeSceneNode.AutoPlayCutscene.Viewed == true && activeSceneNode.AutoPlayCutscene.Repeatable == false) {
                         // this is just an intro scene, not a full cutscene, and we have already viewed it, just go straight to main camera
-                        CameraManager.Instance.ActivateMainCamera();
+                        SystemGameManager.Instance.CameraManager.ActivateMainCamera();
                         return;
                     }
                     //Debug.Log("Levelmanager.ActivateSceneCamera(): activating cutscene camera");
                     //if (GetActiveSceneNode().MyIsCutScene == true || GetActiveSceneNode().MySuppressMainCamera == true) {
                     //Debug.Log("Levelmanager.ActivateSceneCamera(): activating cutscene bars");
-                    UIManager.Instance.CutSceneBarController.StartCutScene(activeSceneNode.AutoPlayCutscene);
+                    SystemGameManager.Instance.UIManager.CutSceneBarController.StartCutScene(activeSceneNode.AutoPlayCutscene);
                     //}
                 } else {
-                    CameraManager.Instance.ActivateMainCamera();
+                    SystemGameManager.Instance.CameraManager.ActivateMainCamera();
                 }
             }
         }
@@ -338,7 +337,7 @@ namespace AnyRPG {
                 spawnLocationOverride = PlayerManager.Instance.ActiveUnitController.transform.position;
             }
             returnSceneName = activeSceneNode.ResourceName;
-            UIManager.Instance.CutSceneBarController.AssignCutScene(cutscene);
+            SystemGameManager.Instance.UIManager.CutSceneBarController.AssignCutScene(cutscene);
             LoadLevel(cutscene.MyLoadScene.ResourceName);
         }
 
@@ -349,19 +348,19 @@ namespace AnyRPG {
                 LoadLevel(returnSceneName);
             } else {
 
-                //CameraManager.Instance.ActivateMainCamera();
-                UIManager.Instance.PlayerInterfaceCanvas.SetActive(true);
-                UIManager.Instance.PopupWindowContainer.SetActive(true);
-                UIManager.Instance.PopupPanelContainer.SetActive(true);
-                UIManager.Instance.CombatTextCanvas.SetActive(true);
+                //SystemGameManager.Instance.CameraManager.ActivateMainCamera();
+                SystemGameManager.Instance.UIManager.PlayerInterfaceCanvas.SetActive(true);
+                SystemGameManager.Instance.UIManager.PopupWindowContainer.SetActive(true);
+                SystemGameManager.Instance.UIManager.PopupPanelContainer.SetActive(true);
+                SystemGameManager.Instance.UIManager.CombatTextCanvas.SetActive(true);
 
                 if (PlayerManager.Instance.PlayerUnitSpawned == false) {
                     PlayerManager.Instance.SpawnPlayerUnit();
                 }
 
                 // test moving down here
-                CameraManager.Instance.DisableCutsceneCamera();
-                CameraManager.Instance.ActivateMainCamera();
+                SystemGameManager.Instance.CameraManager.DisableCutsceneCamera();
+                SystemGameManager.Instance.CameraManager.ActivateMainCamera();
             }
         }
 
@@ -394,9 +393,9 @@ namespace AnyRPG {
             // testing - let playerController handle passing on player despawn event
             //PlayerManager.Instance.ProcessLevelUnload();
 
-            UIManager.Instance.DeactivatePlayerUI();
-            UIManager.Instance.DeactivateInGameUI();
-            UIManager.Instance.DeactivateSystemMenuUI();
+            SystemGameManager.Instance.UIManager.DeactivatePlayerUI();
+            SystemGameManager.Instance.UIManager.DeactivateInGameUI();
+            SystemGameManager.Instance.UIManager.DeactivateSystemMenuUI();
 
             //SceneManager.LoadScene(levelName);
             //StartCoroutine(LoadAsynchronously(levelName.Replace(" ", string.Empty)));
@@ -436,7 +435,7 @@ namespace AnyRPG {
 
 
         IEnumerator LoadAsynchronously(string sceneName) { // scene name is just the name of the current scene being loaded
-            UIManager.Instance.ActivateLoadingUI();
+            SystemGameManager.Instance.UIManager.ActivateLoadingUI();
             // try initial value
             loadBar.value = 0.1f;
             AsyncOperation operation = SceneManager.LoadSceneAsync(sceneName);
@@ -464,13 +463,8 @@ namespace AnyRPG {
                     yield return null;
                 }
                 // deactivate loading menu
-                //UIManager.Instance.DeactivateLoadingUI();
+                //SystemGameManager.Instance.UIManager.DeactivateLoadingUI();
             }
-        }
-
-        private void SetupScriptableObjects() {
-
-
         }
 
 

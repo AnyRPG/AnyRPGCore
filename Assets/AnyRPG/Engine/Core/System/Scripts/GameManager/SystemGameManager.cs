@@ -26,17 +26,34 @@ namespace AnyRPG {
 
         private List<SystemResourceManager> systemResourceManagers = new List<SystemResourceManager>();
 
-        // event manager first because everything else will use it for subscriptions
-        private SystemEventManager systemEventManager = new SystemEventManager();
-
         // system scripts
-        private SystemEnvironmentManager systemEnvironmentManager = new SystemEnvironmentManager();
-        private CraftingManager craftingManager = new CraftingManager();
-        private InteractionManager interactionManager = new InteractionManager();
-        private LootManager lootManager = new LootManager();
-        private SystemPlayableDirectorManager systemPlayableDirectorManager = new SystemPlayableDirectorManager();
+        private SystemEventManager systemEventManager = null;
+        private SystemEnvironmentManager systemEnvironmentManager = null;
+        private CraftingManager craftingManager = null;
+        private InteractionManager interactionManager = null;
+        private LootManager lootManager = null;
+        private SystemPlayableDirectorManager systemPlayableDirectorManager = null;
         private SaveManager saveManager = null;
-        private KeyBindManager keyBindManager = new KeyBindManager();
+        private KeyBindManager keyBindManager = null;
+
+        // sub manager monobehaviors
+        [SerializeField]
+        private CameraManager cameraManager = null;
+
+        [SerializeField]
+        private AudioManager audioManager = null;
+
+        [SerializeField]
+        private PetPreviewManager petPreviewManager = null;
+
+        [SerializeField]
+        private UnitPreviewManager unitPreviewManager = null;
+
+        [SerializeField]
+        private CharacterCreatorManager characterCreatorManager = null;
+
+        [SerializeField]
+        private UIManager uIManager = null;
 
         // application state
         private int spawnCount = 0;
@@ -52,18 +69,37 @@ namespace AnyRPG {
         public SystemPlayableDirectorManager SystemPlayableDirectorManager { get => systemPlayableDirectorManager; set => systemPlayableDirectorManager = value; }
         public SaveManager SaveManager { get => saveManager; set => saveManager = value; }
         public KeyBindManager KeyBindManager { get => keyBindManager; set => keyBindManager = value; }
+        public CameraManager CameraManager { get => cameraManager; set => cameraManager = value; }
+        public AudioManager AudioManager { get => audioManager; set => audioManager = value; }
+        public PetPreviewManager PetPreviewManager { get => petPreviewManager; set => petPreviewManager = value; }
+        public UnitPreviewManager UnitPreviewManager { get => unitPreviewManager; set => unitPreviewManager = value; }
+        public CharacterCreatorManager CharacterCreatorManager { get => characterCreatorManager; set => characterCreatorManager = value; }
+        public UIManager UIManager { get => uIManager; set => uIManager = value; }
 
         private void Init() {
-            //Debug.Log("SystemGameManager.Awake()");
+            //Debug.Log("SystemGameManager.Init()");
             SetupPermanentObjects();
 
+            // things are initialized here instead of in their declarations to prevent them from being initialized in the Unity Editor and restrict to play mode
             // initialize event manager first because everything else uses it
-            //systemEventManager = new SystemEventManager();
+            systemEventManager = new SystemEventManager();
 
-            //systemEnvironmentManager = new SystemEnvironmentManager();
-            //craftingManager = new CraftingManager();
-            //interactionManager = new InteractionManager();
+            systemEnvironmentManager = new SystemEnvironmentManager();
+            craftingManager = new CraftingManager();
+            interactionManager = new InteractionManager();
+            lootManager = new LootManager();
+            systemPlayableDirectorManager = new SystemPlayableDirectorManager();
             saveManager = new SaveManager();
+            keyBindManager = new KeyBindManager();
+
+            // sub manager monobehaviors
+            cameraManager.Init();
+            audioManager.Init();
+            petPreviewManager.Init();
+            unitPreviewManager.Init();
+            characterCreatorManager.Init();
+
+            uIManager.Init();
         }
 
         private void SetupPermanentObjects() {
@@ -83,7 +119,7 @@ namespace AnyRPG {
             // we are going to handle the initialization of all system managers here so we can control the start order and it isn't random
 
             // first turn off the UI
-            UIManager.Instance.PerformSetupActivities();
+            SystemGameManager.Instance.UIManager.PerformSetupActivities();
 
             // next, load scriptable object resources
             LoadResources();

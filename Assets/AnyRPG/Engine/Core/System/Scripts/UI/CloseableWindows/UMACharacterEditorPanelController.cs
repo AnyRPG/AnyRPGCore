@@ -66,11 +66,11 @@ namespace AnyRPG {
             mainButtonsArea.SetActive(false);
             mainNoOptionsArea.SetActive(false);
             // there are no options to show if this is not an UMA
-            if (CharacterCreatorManager.Instance.PreviewUnitController?.DynamicCharacterAvatar == null) {
+            if (SystemGameManager.Instance.CharacterCreatorManager.PreviewUnitController?.DynamicCharacterAvatar == null) {
                 mainNoOptionsArea.SetActive(true);
                 return;
             }
-            if (CharacterCreatorManager.Instance?.PreviewUnitController?.ModelReady == true) {
+            if (SystemGameManager.Instance.CharacterCreatorManager?.PreviewUnitController?.ModelReady == true) {
                 mainButtonsArea.SetActive(true);
                 OpenAppearanceOptionsArea();
                 InitializeSexButtons();

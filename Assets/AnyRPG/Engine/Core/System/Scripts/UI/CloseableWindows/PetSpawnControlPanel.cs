@@ -111,7 +111,7 @@ namespace AnyRPG {
         }
    
         public void UpdateUnitInformation() {
-            //BaseCharacter baseCharacter = CharacterCreatorManager.Instance.PreviewUnitController.CharacterUnit.BaseCharacter;
+            //BaseCharacter baseCharacter = SystemGameManager.Instance.CharacterCreatorManager.PreviewUnitController.CharacterUnit.BaseCharacter;
             //BaseCharacter baseCharacter = PetPreviewManager.Instance.PreviewUnitController.GetComponent<BaseCharacter>();
             //if (baseCharacter != null && baseCharacter.CharacterClass != null) {
             classLabel.SetActive(true);
@@ -153,8 +153,8 @@ namespace AnyRPG {
 
         public void ClosePanel() {
             //Debug.Log("CharacterCreatorPanel.ClosePanel()");
-            SystemWindowManager.Instance.petSpawnWindow.CloseWindow();
-            PopupWindowManager.Instance.interactionWindow.CloseWindow();
+            SystemGameManager.Instance.UIManager.SystemWindowManager.petSpawnWindow.CloseWindow();
+            SystemGameManager.Instance.UIManager.PopupWindowManager.interactionWindow.CloseWindow();
         }
 
         public void HandleTargetReady() {

@@ -7,21 +7,6 @@ using UnityEngine;
 namespace AnyRPG {
     public class CombatTextManager : MonoBehaviour {
 
-        #region Singleton
-        private static CombatTextManager instance;
-
-        public static CombatTextManager Instance {
-            get {
-                return instance;
-            }
-        }
-
-        private void Awake() {
-            instance = this;
-            Init();
-        }
-        #endregion
-
         [SerializeField]
         private GameObject combatTextPrefab;
 
@@ -34,8 +19,8 @@ namespace AnyRPG {
 
         public Canvas MyCombatTextCanvas { get => combatTextCanvas; set => combatTextCanvas = value; }
 
-        private void Init() {
-            //Debug.Log("NamePlateManager.Awake(): " + NamePlateManager.Instance.gameObject.name);
+        public void Init() {
+            //Debug.Log("NamePlateManager.Awake(): " + SystemGameManager.Instance.UIManager.NamePlateManager.gameObject.name);
             SystemEventManager.StartListening("AfterCameraUpdate", HandleAfterCameraUpdate);
             SystemEventManager.StartListening("OnLevelUnload", HandleLevelUnload);
         }
@@ -46,7 +31,7 @@ namespace AnyRPG {
 
         public void LateUpdate() {
             if (SystemConfigurationManager.Instance.UseThirdPartyCameraControl == true
-                && CameraManager.Instance.ThirdPartyCamera.activeInHierarchy == true
+                && SystemGameManager.Instance.CameraManager.ThirdPartyCamera.activeInHierarchy == true
                 && PlayerManager.Instance.PlayerUnitSpawned == true) {
                 UpdateCombatText();
             }
@@ -61,10 +46,10 @@ namespace AnyRPG {
         }
 
         private void UpdateCombatText() {
-            if (CameraManager.Instance?.ActiveMainCamera == null) {
+            if (SystemGameManager.Instance.CameraManager?.ActiveMainCamera == null) {
                 return;
             }
-            if (UIManager.Instance.CutSceneBarController.CurrentCutscene != null) {
+            if (SystemGameManager.Instance.UIManager.CutSceneBarController.CurrentCutscene != null) {
                 return;
             }
             foreach (CombatTextController combatTextController in inUseCombatTextControllers) {

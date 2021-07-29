@@ -145,11 +145,11 @@ namespace AnyRPG {
 
         public void OnPointerEnter(PointerEventData eventData) {
 
-            UIManager.Instance.ShowToolTip(transform.position, this);
+            SystemGameManager.Instance.UIManager.ShowToolTip(transform.position, this);
         }
 
         public void OnPointerExit(PointerEventData eventData) {
-            UIManager.Instance.HideToolTip();
+            SystemGameManager.Instance.UIManager.HideToolTip();
         }
 
         public void OnDestroy() {

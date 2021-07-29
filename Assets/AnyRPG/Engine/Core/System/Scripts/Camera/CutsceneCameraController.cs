@@ -28,7 +28,7 @@ namespace AnyRPG {
             }
             if (InputManager.Instance.KeyBindWasPressed("CANCEL")) {
                 //Debug.Log("AnyRPGCutsceneCameraController.LateUpdate(): open cancel cutscene window");
-                SystemWindowManager.Instance.confirmCancelCutsceneMenuWindow.OpenWindow();
+                SystemGameManager.Instance.UIManager.SystemWindowManager.confirmCancelCutsceneMenuWindow.OpenWindow();
             }
 
             SystemEventManager.TriggerEvent("AfterCameraUpdate", new EventParamProperties());
@@ -36,20 +36,20 @@ namespace AnyRPG {
 
         public void EndCutScene() {
             //Debug.Log("CutsceneCameraController.EndCutScene()");
-            if (UIManager.Instance != null && UIManager.Instance.CutSceneBarController != null) {
-                UIManager.Instance.CutSceneBarController.EndCutScene();
+            if (SystemGameManager.Instance.UIManager != null && SystemGameManager.Instance.UIManager.CutSceneBarController != null) {
+                SystemGameManager.Instance.UIManager.CutSceneBarController.EndCutScene();
             }
         }
 
         public void AnimationFinished() {
             //Debug.Log("AnyRPGCutsceneCameraController.AnimationFinished(): re-activating in game UI");
-            //UIManager.Instance.ActivateInGameUI();
+            //SystemGameManager.Instance.UIManager.ActivateInGameUI();
             EndCutScene();
         }
 
         public void AdvanceDialog() {
             //Debug.Log("AnyRPGCutsceneCameraController.AdvanceDialog()");
-            UIManager.Instance.CutSceneBarController.AdvanceDialog();
+            SystemGameManager.Instance.UIManager.CutSceneBarController.AdvanceDialog();
         }
 
         public void ActivateEnvironmentStateByIndex(int index) {

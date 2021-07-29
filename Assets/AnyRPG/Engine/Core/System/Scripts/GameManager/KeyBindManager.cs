@@ -158,9 +158,9 @@ namespace AnyRPG {
 
             //keyBinds[key].MyKeyCode = keyCode;
             keyBinds[key].UpdateKeyCode(inputDeviceType, keyCode, control, shift);
-            //(PopupWindowManager.Instance.keyBindMenuWindow.MyCloseableWindowContents as KeyBindMenuController).UpdateKeyText(bindName, keyCode);
+            //(SystemGameManager.Instance.UIManager.PopupWindowManager.keyBindMenuWindow.MyCloseableWindowContents as KeyBindMenuController).UpdateKeyText(bindName, keyCode);
             bindName = string.Empty;
-            SystemWindowManager.Instance.keyBindConfirmWindow.CloseWindow();
+            SystemGameManager.Instance.UIManager.SystemWindowManager.keyBindConfirmWindow.CloseWindow();
         }
 
         private void UnbindKeyCode(Dictionary<string, KeyBindNode> currentDictionary, InputDeviceType inputDeviceType, KeyCode keyCode, bool control, bool shift) {
@@ -211,7 +211,7 @@ namespace AnyRPG {
             //Debug.Log("KeyBindManager.BeginKeyBind(" + key + ", " + inputDeviceType.ToString() + ")");
             this.bindName = key;
             this.inputDeviceType = inputDeviceType;
-            SystemWindowManager.Instance.keyBindConfirmWindow.OpenWindow();
+            SystemGameManager.Instance.UIManager.SystemWindowManager.keyBindConfirmWindow.OpenWindow();
         }
 
         private void OnGUI() {
@@ -227,7 +227,7 @@ namespace AnyRPG {
         }
 
         public void CancelKeyBind() {
-            SystemWindowManager.Instance.keyBindConfirmWindow.CloseWindow();
+            SystemGameManager.Instance.UIManager.SystemWindowManager.keyBindConfirmWindow.CloseWindow();
             bindName = string.Empty;
         }
 

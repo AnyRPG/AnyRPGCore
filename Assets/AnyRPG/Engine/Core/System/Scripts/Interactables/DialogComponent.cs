@@ -44,9 +44,9 @@ namespace AnyRPG {
         }
 
         public void CleanupConfirm() {
-            if (PopupWindowManager.Instance != null && PopupWindowManager.Instance.dialogWindow != null && PopupWindowManager.Instance.dialogWindow.CloseableWindowContents != null) {
-                (PopupWindowManager.Instance.dialogWindow.CloseableWindowContents as DialogPanelController).OnConfirmAction -= HandleConfirmAction;
-                (PopupWindowManager.Instance.dialogWindow.CloseableWindowContents as DialogPanelController).OnCloseWindow -= CleanupConfirm;
+            if (SystemGameManager.Instance.UIManager.PopupWindowManager != null && SystemGameManager.Instance.UIManager.PopupWindowManager.dialogWindow != null && SystemGameManager.Instance.UIManager.PopupWindowManager.dialogWindow.CloseableWindowContents != null) {
+                (SystemGameManager.Instance.UIManager.PopupWindowManager.dialogWindow.CloseableWindowContents as DialogPanelController).OnConfirmAction -= HandleConfirmAction;
+                (SystemGameManager.Instance.UIManager.PopupWindowManager.dialogWindow.CloseableWindowContents as DialogPanelController).OnCloseWindow -= CleanupConfirm;
             }
         }
 
@@ -78,9 +78,9 @@ namespace AnyRPG {
                 if (currentList[optionIndex].Automatic) {
                     interactable.DialogController.BeginDialog(currentList[optionIndex]);
                 } else {
-                    (PopupWindowManager.Instance.dialogWindow.CloseableWindowContents as DialogPanelController).Setup(currentList[optionIndex], this.interactable);
-                    (PopupWindowManager.Instance.dialogWindow.CloseableWindowContents as DialogPanelController).OnConfirmAction += HandleConfirmAction;
-                    (PopupWindowManager.Instance.dialogWindow.CloseableWindowContents as DialogPanelController).OnCloseWindow += CleanupConfirm;
+                    (SystemGameManager.Instance.UIManager.PopupWindowManager.dialogWindow.CloseableWindowContents as DialogPanelController).Setup(currentList[optionIndex], this.interactable);
+                    (SystemGameManager.Instance.UIManager.PopupWindowManager.dialogWindow.CloseableWindowContents as DialogPanelController).OnConfirmAction += HandleConfirmAction;
+                    (SystemGameManager.Instance.UIManager.PopupWindowManager.dialogWindow.CloseableWindowContents as DialogPanelController).OnCloseWindow += CleanupConfirm;
                 }
             }/* else {
                 interactable.OpenInteractionWindow();
@@ -106,7 +106,7 @@ namespace AnyRPG {
 
         public override void StopInteract() {
             base.StopInteract();
-            PopupWindowManager.Instance.dialogWindow.CloseWindow();
+            SystemGameManager.Instance.UIManager.PopupWindowManager.dialogWindow.CloseWindow();
         }
 
         public override bool HasMiniMapText() {

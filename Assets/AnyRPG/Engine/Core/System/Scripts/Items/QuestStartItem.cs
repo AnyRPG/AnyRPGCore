@@ -26,13 +26,13 @@ namespace AnyRPG {
             }
             if (questGiverProps.Quests != null) {
                 if (QuestLog.Instance.HasQuest(questGiverProps.Quests[0].MyQuest.DisplayName)) {
-                    MessageFeedManager.Instance.WriteMessage("You are already on that quest");
+                    SystemGameManager.Instance.UIManager.MessageFeedManager.WriteMessage("You are already on that quest");
                 } else if (questGiverProps.Quests[0].MyQuest.TurnedIn == true) {
-                    MessageFeedManager.Instance.WriteMessage("You have already completed that quest");
+                    SystemGameManager.Instance.UIManager.MessageFeedManager.WriteMessage("You have already completed that quest");
                 } else {
                     //Debug.Log(DisplayName + ".QuestStartItem.Use(): showing quests");
                     //Debug.Log("QuestStartItem.Use(): opening questgiver window");
-                    if (PopupWindowManager.Instance.questGiverWindow.IsOpen) {
+                    if (SystemGameManager.Instance.UIManager.PopupWindowManager.questGiverWindow.IsOpen) {
                         // safety to prevent deletion
                         return false;
                     }
@@ -97,10 +97,10 @@ namespace AnyRPG {
 
         public void OpenQuestGiverWindow() {
             //Debug.Log(DisplayName + ".QuestStartItem.OpenQuestGiverWindow()");
-            if (!PopupWindowManager.Instance.questGiverWindow.IsOpen) {
+            if (!SystemGameManager.Instance.UIManager.PopupWindowManager.questGiverWindow.IsOpen) {
                 //Debug.Log(source + " interacting with " + gameObject.name);
-                //PopupWindowManager.Instance.questGiverWindow.MyCloseableWindowContents.OnOpenWindowHandler += InitWindow;
-                PopupWindowManager.Instance.questGiverWindow.OpenWindow();
+                //SystemGameManager.Instance.UIManager.PopupWindowManager.questGiverWindow.MyCloseableWindowContents.OnOpenWindowHandler += InitWindow;
+                SystemGameManager.Instance.UIManager.PopupWindowManager.questGiverWindow.OpenWindow();
             }
         }
 

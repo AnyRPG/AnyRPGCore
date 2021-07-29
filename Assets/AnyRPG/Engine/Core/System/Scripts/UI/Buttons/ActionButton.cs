@@ -138,23 +138,23 @@ namespace AnyRPG {
 
                 if (Input.GetKey(KeyCode.LeftShift)) {
                     // attempt to pick up - the only valid option when shift is held down
-                    if (Useable != null && UIManager.Instance.ActionBarManager.FromButton == null && HandScript.Instance.MyMoveable == null) {
+                    if (Useable != null && SystemGameManager.Instance.UIManager.ActionBarManager.FromButton == null && HandScript.Instance.MyMoveable == null) {
                         // left shift down, pick up a useable
                         //Debug.Log("ActionButton: OnPointerClick(): shift clicked and useable is not null. picking up");
                         HandScript.Instance.TakeMoveable(Useable as IMoveable);
-                        UIManager.Instance.ActionBarManager.FromButton = this;
+                        SystemGameManager.Instance.UIManager.ActionBarManager.FromButton = this;
                     }
                 } else {
                     // attempt to put down
                     if (HandScript.Instance.MyMoveable != null && HandScript.Instance.MyMoveable is IUseable) {
-                        if (UIManager.Instance.ActionBarManager.FromButton != null) {
+                        if (SystemGameManager.Instance.UIManager.ActionBarManager.FromButton != null) {
                             //Debug.Log("ActionButton: OnPointerClick(): FROMBUTTON IS NOT NULL, SWAPPING ACTIONBAR ITEMS");
                             // this came from another action button slot.  now decide to swap (if we are not empty), or remove from original (if we are empty)
                             if (Useable != null) {
-                                UIManager.Instance.ActionBarManager.FromButton.ClearUseable();
-                                UIManager.Instance.ActionBarManager.FromButton.SetUseable(Useable);
+                                SystemGameManager.Instance.UIManager.ActionBarManager.FromButton.ClearUseable();
+                                SystemGameManager.Instance.UIManager.ActionBarManager.FromButton.SetUseable(Useable);
                             } else {
-                                UIManager.Instance.ActionBarManager.FromButton.ClearUseable();
+                                SystemGameManager.Instance.UIManager.ActionBarManager.FromButton.ClearUseable();
                             }
                         }
                         // no matter whether we sent our useable over or not, we can now clear our useable and set whatever is in the handscript
@@ -244,11 +244,11 @@ namespace AnyRPG {
             // there was the assumption that these were only being called when a player clicked to add an ability
             if (UIManager.MouseInRect(MyIcon.rectTransform)) {
                 //if (RectTransformUtility.RectangleContainsScreenPoint(MyIcon.rectTransform, Input.mousePosition)) {
-                //UIManager.Instance.RefreshTooltip(describable as IDescribable);
-                UIManager.Instance.ShowToolTip(transform.position, useable as IDescribable);
+                //SystemGameManager.Instance.UIManager.RefreshTooltip(describable as IDescribable);
+                SystemGameManager.Instance.UIManager.ShowToolTip(transform.position, useable as IDescribable);
             }
 
-            //UIManager.Instance.RefreshTooltip(useable as IDescribable);
+            //SystemGameManager.Instance.UIManager.RefreshTooltip(useable as IDescribable);
 
             initialized = true;
         }
@@ -367,7 +367,7 @@ namespace AnyRPG {
 
             if (Useable == null) {
                 //Debug.Log("ActionButton.UpdateVisual(): useable is null. clearing stack count and setting icon to empty");
-                UIManager.Instance.ClearStackCount(this);
+                SystemGameManager.Instance.UIManager.ClearStackCount(this);
                 MyIcon.sprite = null;
                 MyIcon.color = icon.color = new Color32(0, 0, 0, 0);
                 DisableCoolDownIcon();
@@ -387,8 +387,8 @@ namespace AnyRPG {
 
             if (UIManager.MouseInRect(MyIcon.rectTransform)) {
                 //if (RectTransformUtility.RectangleContainsScreenPoint(MyIcon.rectTransform, Input.mousePosition)) {
-                //UIManager.Instance.RefreshTooltip(describable as IDescribable);
-                //UIManager.Instance.ShowToolTip(transform.position, describable as IDescribable);
+                //SystemGameManager.Instance.UIManager.RefreshTooltip(describable as IDescribable);
+                //SystemGameManager.Instance.UIManager.ShowToolTip(transform.position, describable as IDescribable);
                 ProcessOnPointerEnter();
             }
         }
@@ -431,17 +431,17 @@ namespace AnyRPG {
 
             if (Useable != null && Useable is IDescribable) {
                 tmp = (IDescribable)Useable;
-                //UIManager.Instance.ShowToolTip(transform.position);
+                //SystemGameManager.Instance.UIManager.ShowToolTip(transform.position);
             }// else if (MyUseables.Count > 0) {
-             //UIManager.Instance.ShowToolTip(transform.position);
+             //SystemGameManager.Instance.UIManager.ShowToolTip(transform.position);
              //}
             if (tmp != null) {
-                UIManager.Instance.ShowToolTip(transform.position, tmp);
+                SystemGameManager.Instance.UIManager.ShowToolTip(transform.position, tmp);
             }
         }
 
         public void OnPointerExit(PointerEventData eventData) {
-            UIManager.Instance.HideToolTip();
+            SystemGameManager.Instance.UIManager.HideToolTip();
         }
 
         public void UnsubscribeFromCombatEvents() {

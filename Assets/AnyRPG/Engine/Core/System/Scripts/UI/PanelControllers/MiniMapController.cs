@@ -157,7 +157,7 @@ namespace AnyRPG {
 
         public void LateUpdate() {
             if (SystemConfigurationManager.Instance.UseThirdPartyCameraControl == true
-                && CameraManager.Instance.ThirdPartyCamera.activeInHierarchy == true
+                && SystemGameManager.Instance.CameraManager.ThirdPartyCamera.activeInHierarchy == true
                 && PlayerManager.Instance.PlayerUnitSpawned == true) {
                 UpdateMiniMap();
             }
@@ -360,7 +360,7 @@ namespace AnyRPG {
         }
 
         public void OpenMainMap() {
-            PopupWindowManager.Instance.mainMapWindow.ToggleOpenClose();
+            SystemGameManager.Instance.UIManager.PopupWindowManager.mainMapWindow.ToggleOpenClose();
         }
 
         public void CleanupEventSubscriptions() {

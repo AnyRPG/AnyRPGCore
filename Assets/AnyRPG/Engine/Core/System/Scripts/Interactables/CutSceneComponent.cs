@@ -18,23 +18,23 @@ namespace AnyRPG {
             base.Interact(source, optionIndex);
             //Debug.Log(gameObject.name + ".CutSceneInteractable.Interact()");
             // save character position and stuff here
-            //PopupWindowManager.Instance.interactionWindow.CloseWindow();
+            //SystemGameManager.Instance.UIManager.PopupWindowManager.interactionWindow.CloseWindow();
             if (Props.Cutscene != null
-                && UIManager.Instance.CutSceneBarController.CurrentCutscene == null
+                && SystemGameManager.Instance.UIManager.CutSceneBarController.CurrentCutscene == null
                 && LevelManager.Instance.LoadingLevel == false) {
                 if (Props.Cutscene.Viewed == false || Props.Cutscene.Repeatable == true) {
                     if (Props.Cutscene.RequirePlayerUnitSpawn == false || (Props.Cutscene.RequirePlayerUnitSpawn == true && PlayerManager.Instance.PlayerUnitSpawned == true)) {
                         if (Props.Cutscene.MyLoadScene != null) {
                             LevelManager.Instance.LoadCutSceneWithDelay(Props.Cutscene);
                         } else {
-                            UIManager.Instance.CutSceneBarController.StartCutScene(Props.Cutscene);
+                            SystemGameManager.Instance.UIManager.CutSceneBarController.StartCutScene(Props.Cutscene);
                         }
                     }
                 }
             }
             // CLOSE WINDOWS BEFORE CUTSCENE LOADS TO PREVENT INVALID REFERENCE ON LOAD
-            PopupWindowManager.Instance.interactionWindow.CloseWindow();
-            PopupWindowManager.Instance.questGiverWindow.CloseWindow();
+            SystemGameManager.Instance.UIManager.PopupWindowManager.interactionWindow.CloseWindow();
+            SystemGameManager.Instance.UIManager.PopupWindowManager.questGiverWindow.CloseWindow();
             return true;
         }
 
@@ -44,7 +44,7 @@ namespace AnyRPG {
 
         public override void StopInteract() {
             base.StopInteract();
-            //PopupWindowManager.Instance.dialogWindow.CloseWindow();
+            //SystemGameManager.Instance.UIManager.PopupWindowManager.dialogWindow.CloseWindow();
         }
 
         public override bool HasMiniMapText() {

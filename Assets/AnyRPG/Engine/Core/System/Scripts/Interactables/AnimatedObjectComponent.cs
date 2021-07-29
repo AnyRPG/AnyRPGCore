@@ -43,7 +43,7 @@ namespace AnyRPG {
                 //return false;
             //}
             base.Interact(source, optionIndex);
-            PopupWindowManager.Instance.interactionWindow.CloseWindow();
+            SystemGameManager.Instance.UIManager.PopupWindowManager.interactionWindow.CloseWindow();
 
             // loop through the animatedobjects prefabobjects
             // check their state (open / closed)
@@ -130,7 +130,7 @@ namespace AnyRPG {
         /*
         public override void StopInteract() {
             base.StopInteract();
-            PopupWindowManager.Instance.AnimatedObjectWindow.CloseWindow();
+            SystemGameManager.Instance.UIManager.PopupWindowManager.AnimatedObjectWindow.CloseWindow();
         }
         */
 

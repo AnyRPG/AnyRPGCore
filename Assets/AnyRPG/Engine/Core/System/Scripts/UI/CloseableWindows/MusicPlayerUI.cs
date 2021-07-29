@@ -94,7 +94,7 @@ namespace AnyRPG {
 
             if (firstAvailableMusicProfile == null) {
                 // no available skills anymore, close window
-                PopupWindowManager.Instance.musicPlayerWindow.CloseWindow();
+                SystemGameManager.Instance.UIManager.PopupWindowManager.musicPlayerWindow.CloseWindow();
             }
 
             if (MySelectedMusicPlayerHighlightButton == null && firstAvailableMusicProfile != null) {
@@ -196,7 +196,7 @@ namespace AnyRPG {
         public void PlayMusic() {
             //Debug.Log("SkillTrainerUI.LearnSkill()");
             if (currentMusicProfile != null && currentMusicProfile.AudioClip != null) {
-                AudioManager.Instance.PlayMusic(currentMusicProfile.AudioClip);
+                SystemGameManager.Instance.AudioManager.PlayMusic(currentMusicProfile.AudioClip);
             }
         }
 
@@ -205,16 +205,16 @@ namespace AnyRPG {
             if (currentMusicProfileName != null && currentMusicProfileName != string.Empty) {
                 MusicProfile musicProfile = SystemMusicProfileManager.Instance.GetResource(currentMusicProfileName);
                 if (musicProfile != null && musicProfile.MyAudioClip != null) {
-                    AudioManager.Instance.PauseMusic();
+                    SystemGameManager.Instance.AudioManager.PauseMusic();
                 }
             }
             */
-            AudioManager.Instance.PauseMusic();
+            SystemGameManager.Instance.AudioManager.PauseMusic();
         }
 
         public void StopMusic() {
             //Debug.Log("SkillTrainerUI.UnlearnSkill()");
-            AudioManager.Instance.StopMusic();
+            SystemGameManager.Instance.AudioManager.StopMusic();
         }
 
         public override void ReceiveOpenWindowNotification() {

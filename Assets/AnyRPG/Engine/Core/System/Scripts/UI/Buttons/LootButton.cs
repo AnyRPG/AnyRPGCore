@@ -64,7 +64,7 @@ namespace AnyRPG {
 
                 gameObject.SetActive(false);
                 lootWindow.TakeLoot(LootDrop);
-                UIManager.Instance.HideToolTip();
+                SystemGameManager.Instance.UIManager.HideToolTip();
                 return true;
             }
             return false;
@@ -76,11 +76,11 @@ namespace AnyRPG {
                 return;
             }
 
-            UIManager.Instance.ShowToolTip(transform.position, LootDrop);
+            SystemGameManager.Instance.UIManager.ShowToolTip(transform.position, LootDrop);
         }
 
         public void OnPointerExit(PointerEventData eventData) {
-            UIManager.Instance.HideToolTip();
+            SystemGameManager.Instance.UIManager.HideToolTip();
         }
     }
 

@@ -270,17 +270,17 @@ namespace AnyRPG {
             if (quest.MyHasOpeningDialog == true) {
                 if (quest.MyOpeningDialog != null && quest.MyOpeningDialog.TurnedIn == false) {
                     //Debug.Log("QuestGiverUI.ShowDescription(): opening dialog is not complete, showing dialog");
-                    (PopupWindowManager.Instance.dialogWindow.CloseableWindowContents as DialogPanelController).Setup(quest, interactable);
+                    (SystemGameManager.Instance.UIManager.PopupWindowManager.dialogWindow.CloseableWindowContents as DialogPanelController).Setup(quest, interactable);
                     //Debug.Log("QuestGiverUI.ShowDescription(): about to close window because of dialog");
-                    if (PopupWindowManager.Instance.questGiverWindow.IsOpen) {
-                        PopupWindowManager.Instance.questGiverWindow.CloseWindow();
+                    if (SystemGameManager.Instance.UIManager.PopupWindowManager.questGiverWindow.IsOpen) {
+                        SystemGameManager.Instance.UIManager.PopupWindowManager.questGiverWindow.CloseWindow();
                     }
                     return;
                 }
             }
 
-            if (!PopupWindowManager.Instance.questGiverWindow.IsOpen) {
-                PopupWindowManager.Instance.questGiverWindow.OpenWindow();
+            if (!SystemGameManager.Instance.UIManager.PopupWindowManager.questGiverWindow.IsOpen) {
+                SystemGameManager.Instance.UIManager.PopupWindowManager.questGiverWindow.OpenWindow();
                 //ShowDescription(quest);
                 return;
             }
@@ -350,7 +350,7 @@ namespace AnyRPG {
             //Debug.Log("QuestGiverUI.AcceptQuest()");
             if (currentQuest != null) {
                 // DO THIS HERE SO IT DOESN'T INSTA-CLOSE ANY AUTO-POPUP BACK TO HERE ON ACCEPT QUEST CAUSING STATUS CHANGE
-                PopupWindowManager.Instance.questGiverWindow.CloseWindow();
+                SystemGameManager.Instance.UIManager.PopupWindowManager.questGiverWindow.CloseWindow();
 
                 QuestLog.Instance.AcceptQuest(currentQuest);
 
@@ -365,7 +365,7 @@ namespace AnyRPG {
                 if (interactable != null) {
                     /*
                     if (interactable.CheckForInteractableObjectives(currentQuestName)) {
-                        PopupWindowManager.Instance.questGiverWindow.CloseWindow();
+                        SystemGameManager.Instance.UIManager.PopupWindowManager.questGiverWindow.CloseWindow();
                     }
                     */
                 }
@@ -377,7 +377,7 @@ namespace AnyRPG {
                 //RefreshQuestDisplay();
                 //if (availableArea.transform.childCount == 0 && inProgressArea.transform.childCount == 0) {
                 //Debug.Log("Nothing to show, closing window for smoother UI experience");
-                //PopupWindowManager.Instance.questGiverWindow.CloseWindow();
+                //SystemGameManager.Instance.UIManager.PopupWindowManager.questGiverWindow.CloseWindow();
                 //}
                 // do it anyway for now since 
 
@@ -413,7 +413,7 @@ namespace AnyRPG {
             }
 
             if (!itemCountMatches || !abilityCountMatches || !factionCountMatches) {
-                MessageFeedManager.Instance.WriteMessage("You must choose rewards before turning in this quest");
+                SystemGameManager.Instance.UIManager.MessageFeedManager.WriteMessage("You must choose rewards before turning in this quest");
                 return;
             }
 
@@ -430,7 +430,7 @@ namespace AnyRPG {
             // TO FIX: THIS CODE DOES NOT DEAL WITH PARTIAL STACKS AND WILL REQUEST ONE FULL SLOT FOR EVERY REWARD
             if (questDetailsArea.GetHighlightedItemRewardIcons().Count > 0) {
                 if (InventoryManager.Instance.EmptySlotCount() < questDetailsArea.GetHighlightedItemRewardIcons().Count) {
-                    MessageFeedManager.Instance.WriteMessage("Not enough room in inventory!");
+                    SystemGameManager.Instance.UIManager.MessageFeedManager.WriteMessage("Not enough room in inventory!");
                     return;
                 }
                 foreach (RewardButton rewardButton in questDetailsArea.GetHighlightedItemRewardIcons()) {
@@ -489,7 +489,7 @@ namespace AnyRPG {
             UpdateButtons(currentQuest);
 
             // DO THIS HERE OR TURNING THE QUEST RESULTING IN THIS WINDOW RE-OPENING WOULD JUST INSTA-CLOSE IT INSTEAD
-            PopupWindowManager.Instance.questGiverWindow.CloseWindow();
+            SystemGameManager.Instance.UIManager.PopupWindowManager.questGiverWindow.CloseWindow();
 
             QuestLog.Instance.TurnInQuest(currentQuest);
 
@@ -522,7 +522,7 @@ namespace AnyRPG {
             DeactivateButtons();
 
             if (interactable != null) {
-                PopupWindowManager.Instance.questGiverWindow.SetWindowTitle(interactable.DisplayName + " (Quests)");
+                SystemGameManager.Instance.UIManager.PopupWindowManager.questGiverWindow.SetWindowTitle(interactable.DisplayName + " (Quests)");
             }
         }
 
@@ -532,8 +532,8 @@ namespace AnyRPG {
             if (SystemGameManager.IsShuttingDown) {
                 return;
             }
-            if (PopupWindowManager.Instance != null && PopupWindowManager.Instance.questGiverWindow != null) {
-                PopupWindowManager.Instance.questGiverWindow.CloseWindow();
+            if (SystemGameManager.Instance.UIManager.PopupWindowManager != null && SystemGameManager.Instance.UIManager.PopupWindowManager.questGiverWindow != null) {
+                SystemGameManager.Instance.UIManager.PopupWindowManager.questGiverWindow.CloseWindow();
             }
         }
 

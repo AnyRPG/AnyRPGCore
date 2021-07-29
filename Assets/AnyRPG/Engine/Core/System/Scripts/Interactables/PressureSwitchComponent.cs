@@ -39,7 +39,7 @@ namespace AnyRPG {
                 //Debug.Log(gameObject.name + "Weight: " + totalWeight);
                 base.Interact(source, optionIndex);
             } else {
-                PopupWindowManager.Instance.interactionWindow.CloseWindow();
+                SystemGameManager.Instance.UIManager.PopupWindowManager.interactionWindow.CloseWindow();
             }
 
             return false;

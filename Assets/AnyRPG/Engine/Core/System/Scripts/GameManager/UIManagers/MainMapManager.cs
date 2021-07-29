@@ -9,21 +9,6 @@ using UnityEngine.SceneManagement;
 namespace AnyRPG {
     public class MainMapManager : MonoBehaviour {
 
-        #region Singleton
-        private static MainMapManager instance;
-
-        public static MainMapManager Instance {
-            get {
-                return instance;
-            }
-        }
-
-        private void Awake() {
-            instance = this;
-            Init();
-        }
-        #endregion
-
         [SerializeField]
         private GameObject mapIndicatorPrefab = null;
 
@@ -48,7 +33,7 @@ namespace AnyRPG {
         public MainMapIndicatorController AddIndicator(Interactable interactable) {
             //Debug.Log("MainMapController.AddIndicator(" + interactable.gameObject.name + ")");
             if (mapIndicatorControllers.ContainsKey(interactable) == false) {
-                GameObject mainMapIndicator = ObjectPooler.Instance.GetPooledObject(mapIndicatorPrefab, (PopupWindowManager.Instance.mainMapWindow.CloseableWindowContents as MainMapController).MapGraphic.transform);
+                GameObject mainMapIndicator = ObjectPooler.Instance.GetPooledObject(mapIndicatorPrefab, (SystemGameManager.Instance.UIManager.PopupWindowManager.mainMapWindow.CloseableWindowContents as MainMapController).MapGraphic.transform);
                 if (mainMapIndicator != null) {
                     MainMapIndicatorController mapIndicatorController = mainMapIndicator.GetComponent<MainMapIndicatorController>();
                     if (mapIndicatorController != null) {

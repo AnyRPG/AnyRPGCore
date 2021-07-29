@@ -41,7 +41,7 @@ namespace AnyRPG {
             //Debug.Log("MainMapController.Awake()");
             base.Init();
             //instantiate singleton
-            CameraManager.Instance.MainMapCamera.enabled = false;
+            SystemGameManager.Instance.CameraManager.MainMapCamera.enabled = false;
 
             mainmapTextureFolder = mainmapTextureFolderBase + SystemConfigurationManager.Instance.GameName.Replace(" ", "") + "/Images/MiniMap/";
 
@@ -52,7 +52,7 @@ namespace AnyRPG {
         }
 
         void UpdateMainMap() {
-            if (PopupWindowManager.Instance.mainMapWindow.IsOpen == false) {
+            if (SystemGameManager.Instance.UIManager.PopupWindowManager.mainMapWindow.IsOpen == false) {
                 return;
             }
 
@@ -60,21 +60,21 @@ namespace AnyRPG {
         }
 
         public void LateUpdate() {
-            if (PopupWindowManager.Instance.mainMapWindow.IsOpen == false) {
+            if (SystemGameManager.Instance.UIManager.PopupWindowManager.mainMapWindow.IsOpen == false) {
                 return;
             }
             if (SystemConfigurationManager.Instance.UseThirdPartyCameraControl == true
-                && CameraManager.Instance.ThirdPartyCamera.activeInHierarchy == true
+                && SystemGameManager.Instance.CameraManager.ThirdPartyCamera.activeInHierarchy == true
                 && PlayerManager.Instance.PlayerUnitSpawned == true) {
                 UpdateMainMap();
             }
         }
 
         private void UpdateIndicatorPositions() {
-            foreach (Interactable interactable in MainMapManager.Instance.MapIndicatorControllers.Keys) {
-                if (MainMapManager.Instance.MapIndicatorControllers[interactable].gameObject.activeSelf == true) {
-                    MainMapManager.Instance.MapIndicatorControllers[interactable].transform.localPosition = new Vector3((interactable.transform.position.x - LevelManager.Instance.SceneBounds.center.x) * levelScaleFactor, (interactable.transform.position.z - LevelManager.Instance.SceneBounds.center.z) * levelScaleFactor, 0);
-                    MainMapManager.Instance.MapIndicatorControllers[interactable].transform.localScale = new Vector3(1f / mapGraphic.transform.localScale.x, 1f / mapGraphic.transform.localScale.y, 1f / mapGraphic.transform.localScale.z);
+            foreach (Interactable interactable in SystemGameManager.Instance.UIManager.MainMapManager.MapIndicatorControllers.Keys) {
+                if (SystemGameManager.Instance.UIManager.MainMapManager.MapIndicatorControllers[interactable].gameObject.activeSelf == true) {
+                    SystemGameManager.Instance.UIManager.MainMapManager.MapIndicatorControllers[interactable].transform.localPosition = new Vector3((interactable.transform.position.x - LevelManager.Instance.SceneBounds.center.x) * levelScaleFactor, (interactable.transform.position.z - LevelManager.Instance.SceneBounds.center.z) * levelScaleFactor, 0);
+                    SystemGameManager.Instance.UIManager.MainMapManager.MapIndicatorControllers[interactable].transform.localScale = new Vector3(1f / mapGraphic.transform.localScale.x, 1f / mapGraphic.transform.localScale.y, 1f / mapGraphic.transform.localScale.z);
                     interactable.UpdateMainMapIndicator();
                 }
             }
@@ -137,7 +137,7 @@ namespace AnyRPG {
                 // if a map image could not be found, take a picture
                 UpdateCameraSize();
                 UpdateCameraPosition();
-                CameraManager.Instance.MainMapCamera.Render();
+                SystemGameManager.Instance.CameraManager.MainMapCamera.Render();
             }
             loadedMapName = SceneManager.GetActiveScene().name;
 
@@ -163,7 +163,7 @@ namespace AnyRPG {
             //Debug.Log("MainMapController.UpdateCameraSize()");
             //float newCameraSize = cameraSizeDefault;
             cameraSize = Mathf.Max(LevelManager.Instance.SceneBounds.extents.x, LevelManager.Instance.SceneBounds.extents.z);
-            CameraManager.Instance.MainMapCamera.orthographicSize = cameraSize;
+            SystemGameManager.Instance.CameraManager.MainMapCamera.orthographicSize = cameraSize;
         }
 
         private void UpdateCameraPosition() {
@@ -172,8 +172,8 @@ namespace AnyRPG {
             //Debug.Log("MainMapController.UpdateCameraPosition() wantedposition: " + wantedPosition);
             Vector3 wantedLookPosition = new Vector3(LevelManager.Instance.SceneBounds.center.x, LevelManager.Instance.SceneBounds.center.y, LevelManager.Instance.SceneBounds.center.z);
             //Debug.Log("MainMapController.UpdateCameraPosition() wantedLookPosition: " + wantedLookPosition);
-            CameraManager.Instance.MainMapCamera.transform.position = wantedPosition;
-            CameraManager.Instance.MainMapCamera.transform.LookAt(wantedLookPosition);
+            SystemGameManager.Instance.CameraManager.MainMapCamera.transform.position = wantedPosition;
+            SystemGameManager.Instance.CameraManager.MainMapCamera.transform.LookAt(wantedLookPosition);
         }
 
         public override void ReceiveOpenWindowNotification() {

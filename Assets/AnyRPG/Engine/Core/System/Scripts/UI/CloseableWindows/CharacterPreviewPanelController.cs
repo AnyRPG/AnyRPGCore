@@ -32,7 +32,7 @@ namespace AnyRPG {
             //Debug.Log("CharacterPreviewPanelController.RecieveClosedWindowNotification()");
             base.RecieveClosedWindowNotification();
             characterReady = false;
-            CharacterCreatorManager.Instance.HandleCloseWindow();
+            SystemGameManager.Instance.CharacterCreatorManager.HandleCloseWindow();
             previewCameraController.ClearTarget();
             OnCloseWindow(this);
         }
@@ -57,12 +57,12 @@ namespace AnyRPG {
         public void ClearPreviewTarget() {
             //Debug.Log("CharacterPreviewPanelController.ClearPreviewTarget()");
             // not really close window, but it will despawn the preview unit
-            CharacterCreatorManager.Instance.HandleCloseWindow();
+            SystemGameManager.Instance.CharacterCreatorManager.HandleCloseWindow();
         }
 
         private void SetPreviewTarget() {
             //Debug.Log("CharacterPreviewPanelController.SetPreviewTarget()");
-            if (CharacterCreatorManager.Instance.PreviewUnitController != null
+            if (SystemGameManager.Instance.CharacterCreatorManager.PreviewUnitController != null
                 || capabilityConsumer == null
                 || capabilityConsumer.UnitProfile == null) {
                 //Debug.Log("CharacterPreviewPanelController.SetPreviewTarget() UMA avatar is already spawned!");
@@ -70,13 +70,13 @@ namespace AnyRPG {
             }
 
             //spawn correct preview unit
-            CharacterCreatorManager.Instance.HandleOpenWindow(capabilityConsumer.UnitProfile);
+            SystemGameManager.Instance.CharacterCreatorManager.HandleOpenWindow(capabilityConsumer.UnitProfile);
 
-            if (CameraManager.Instance != null && CameraManager.Instance.CharacterPreviewCamera != null) {
+            if (SystemGameManager.Instance.CameraManager != null && SystemGameManager.Instance.CameraManager.CharacterPreviewCamera != null) {
                 //Debug.Log("CharacterPanel.SetPreviewTarget(): preview camera was available, setting target");
                 if (MyPreviewCameraController != null) {
                     MyPreviewCameraController.OnTargetReady += TargetReadyCallback;
-                    MyPreviewCameraController.InitializeCamera(CharacterCreatorManager.Instance.PreviewUnitController);
+                    MyPreviewCameraController.InitializeCamera(SystemGameManager.Instance.CharacterCreatorManager.PreviewUnitController);
                     //Debug.Log("CharacterPanel.SetPreviewTarget(): preview camera was available, setting Target Ready Callback");
                 } else {
                     Debug.LogError("CharacterPanel.SetPreviewTarget(): Character Preview Camera Controller is null. Please set it in the inspector");
@@ -104,16 +104,16 @@ namespace AnyRPG {
         public void RebuildUMA() {
             //Debug.Log("CharacterCreatorPanel.RebuildUMA()");
             //Debug.Log("CharacterPreviewPanelController.RebuildUMA(): BuildCharacter(): buildenabled: " + umaAvatar.BuildCharacterEnabled + "; frame: " + Time.frameCount);
-            if (CharacterCreatorManager.Instance.PreviewUnitController?.DynamicCharacterAvatar != null) {
-                CharacterCreatorManager.Instance.PreviewUnitController.DynamicCharacterAvatar.BuildCharacter();
+            if (SystemGameManager.Instance.CharacterCreatorManager.PreviewUnitController?.DynamicCharacterAvatar != null) {
+                SystemGameManager.Instance.CharacterCreatorManager.PreviewUnitController.DynamicCharacterAvatar.BuildCharacter();
             }
         }
 
         public string GetCurrentRecipe() {
-            if (CharacterCreatorManager.Instance.PreviewUnitController?.DynamicCharacterAvatar == null) {
+            if (SystemGameManager.Instance.CharacterCreatorManager.PreviewUnitController?.DynamicCharacterAvatar == null) {
                 return string.Empty;
             }
-            return CharacterCreatorManager.Instance.PreviewUnitController.DynamicCharacterAvatar.GetCurrentRecipe();
+            return SystemGameManager.Instance.CharacterCreatorManager.PreviewUnitController.DynamicCharacterAvatar.GetCurrentRecipe();
         }
 
     }

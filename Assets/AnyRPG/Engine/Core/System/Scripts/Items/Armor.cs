@@ -74,7 +74,7 @@ namespace AnyRPG {
             }
             List<CharacterClass> allowedCharacterClasses = GetAllowedCharacterClasses();
             if (allowedCharacterClasses != null && allowedCharacterClasses.Count > 0 && !allowedCharacterClasses.Contains(baseCharacter.CharacterClass)) {
-                MessageFeedManager.Instance.WriteMessage("You do not have the right armor proficiency to equip " + DisplayName);
+                SystemGameManager.Instance.UIManager.MessageFeedManager.WriteMessage("You do not have the right armor proficiency to equip " + DisplayName);
                 return false;
             }
             return true;

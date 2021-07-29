@@ -1690,7 +1690,7 @@ namespace AnyRPG {
             if (currentCastAbility != null) {
                 AudioClip audioClip = currentCastAbility.GetAnimationHitSound();
                 if (audioClip != null) {
-                    //AudioManager.Instance.PlayEffect(ability.MyCastingAudioClip);
+                    //SystemGameManager.Instance.AudioManager.PlayEffect(ability.MyCastingAudioClip);
                     baseCharacter.UnitController.UnitComponentController.PlayEffect(audioClip);
                 }
             }

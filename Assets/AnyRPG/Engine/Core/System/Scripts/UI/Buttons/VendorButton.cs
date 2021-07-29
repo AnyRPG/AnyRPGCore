@@ -42,7 +42,7 @@ namespace AnyRPG {
 
             if (vendorItem.MyQuantity > 0 || vendorItem.Unlimited) {
                 icon.sprite = vendorItem.MyItem.Icon;
-                UIManager.Instance.SetItemBackground(vendorItem.MyItem, backGroundImage, new Color32(0, 0, 0, 255));
+                SystemGameManager.Instance.UIManager.SetItemBackground(vendorItem.MyItem, backGroundImage, new Color32(0, 0, 0, 255));
                 //title.text = string.Format("<color={0}>{1}</color>", QualityColor.MyColors[vendorItem.MyItem.MyQuality], vendorItem.MyItem.MyName);
                 title.text = string.Format("{0}", vendorItem.MyItem.DisplayName);
 
@@ -95,11 +95,11 @@ namespace AnyRPG {
         }
 
         public void OnPointerEnter(PointerEventData eventData) {
-            UIManager.Instance.ShowToolTip(transform.position, vendorItem.MyItem);
+            SystemGameManager.Instance.UIManager.ShowToolTip(transform.position, vendorItem.MyItem);
         }
 
         public void OnPointerExit(PointerEventData eventData) {
-            UIManager.Instance.HideToolTip();
+            SystemGameManager.Instance.UIManager.HideToolTip();
         }
 
         private void SellItem() {
@@ -119,9 +119,9 @@ namespace AnyRPG {
                 PlayerManager.Instance.MyCharacter.CharacterCurrencyManager.SpendCurrency(usedSellPrice.Key, usedSellPrice.Value);
             }
             if (SystemConfigurationManager.Instance?.VendorAudioProfile?.AudioClip != null) {
-                AudioManager.Instance.PlayEffect(SystemConfigurationManager.Instance.VendorAudioProfile.AudioClip);
+                SystemGameManager.Instance.AudioManager.PlayEffect(SystemConfigurationManager.Instance.VendorAudioProfile.AudioClip);
             }
-            MessageFeedManager.Instance.WriteMessage("Purchased " + vendorItem.MyItem.DisplayName + " for " + priceString);
+            SystemGameManager.Instance.UIManager.MessageFeedManager.WriteMessage("Purchased " + vendorItem.MyItem.DisplayName + " for " + priceString);
 
             if (!vendorItem.Unlimited) {
                 vendorItem.MyQuantity--;

@@ -40,11 +40,11 @@ namespace AnyRPG {
             icon.transform.position = Input.mousePosition + offset;
             if (Input.GetMouseButtonDown(0) && !EventSystem.current.IsPointerOverGameObject() && Instance.MyMoveable != null) {
                 if (Instance.MyMoveable is Item) {
-                    SystemWindowManager.Instance.confirmDestroyMenuWindow.OpenWindow();
+                    SystemGameManager.Instance.UIManager.SystemWindowManager.confirmDestroyMenuWindow.OpenWindow();
                 } else if (Instance.MyMoveable is BaseAbility) {
                     // DROP ABILITY SAFELY
-                    if (UIManager.Instance.ActionBarManager.FromButton != null) {
-                        UIManager.Instance.ActionBarManager.FromButton.ClearUseable();
+                    if (SystemGameManager.Instance.UIManager.ActionBarManager.FromButton != null) {
+                        SystemGameManager.Instance.UIManager.ActionBarManager.FromButton.ClearUseable();
                     }
                     Drop();
                 }
@@ -73,7 +73,7 @@ namespace AnyRPG {
             //Debug.Log("HandScript.Drop()");
             ClearMoveable();
             InventoryManager.Instance.FromSlot = null;
-            UIManager.Instance.ActionBarManager.FromButton = null;
+            SystemGameManager.Instance.UIManager.ActionBarManager.FromButton = null;
         }
 
         private void ClearMoveable() {

@@ -26,7 +26,7 @@ namespace AnyRPG {
         public UnitController PreviewUnitController { get => unitController; set => unitController = value; }
         //public int PreviewLayer { get => previewLayer; set => previewLayer = value; }
 
-        protected void Start() {
+        public void Init() {
             if (previewSpawnLocation == null) {
                 previewSpawnLocation = Vector3.zero;
             }

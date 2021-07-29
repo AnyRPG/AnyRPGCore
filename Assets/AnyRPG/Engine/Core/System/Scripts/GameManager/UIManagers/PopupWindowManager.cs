@@ -6,20 +6,6 @@ using UnityEngine;
 namespace AnyRPG {
     public class PopupWindowManager : MonoBehaviour {
 
-        #region Singleton
-        private static PopupWindowManager instance;
-
-        public static PopupWindowManager Instance {
-            get {
-                return instance;
-            }
-        }
-
-        private void Awake() {
-            instance = this;
-        }
-        #endregion
-
         //public GameObject inventoryUI;
         public PagedWindow abilityBookWindow;
         public PagedWindow skillBookWindow;

@@ -25,7 +25,7 @@ public class QuestTrackerQuestScript : MonoBehaviour
 
     public void Select() {
         //Debug.Log("QuestTrackerQuestScript.Select()");
-        PopupWindowManager.Instance.questLogWindow.OpenWindow();
+        SystemGameManager.Instance.UIManager.PopupWindowManager.questLogWindow.OpenWindow();
         QuestLogUI.Instance.ShowDescription(MyQuest);
     }
 

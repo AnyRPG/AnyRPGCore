@@ -54,7 +54,7 @@ namespace AnyRPG {
         public void StartPhase() {
             if (phaseMusicProfile != null) {
                 if (phaseMusicProfile.AudioClip != null) {
-                    AudioManager.Instance.PlayMusic(phaseMusicProfile.AudioClip);
+                    SystemGameManager.Instance.AudioManager.PlayMusic(phaseMusicProfile.AudioClip);
                 }
             }
         }

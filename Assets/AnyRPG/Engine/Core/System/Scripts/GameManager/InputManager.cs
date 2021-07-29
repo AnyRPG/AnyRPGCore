@@ -99,7 +99,7 @@ namespace AnyRPG {
             }
             lastRegisteredFrame = Time.frameCount;
 
-            if (SystemWindowManager.Instance.nameChangeWindow.IsOpen) {
+            if (SystemGameManager.Instance.UIManager.SystemWindowManager.nameChangeWindow.IsOpen) {
                 //Debug.Log("Not allowing registration of keystrokes to keybinds during name change");
                 return;
             }
@@ -266,7 +266,7 @@ namespace AnyRPG {
                 rightMouseButtonDown = true;
                 rightMouseButtonDownPosition = Input.mousePosition;
                 // IGNORE NAMEPLATES FOR THE PURPOSE OF CAMERA MOVEMENT
-                if (EventSystem.current.IsPointerOverGameObject() && (NamePlateManager.Instance != null ? !NamePlateManager.Instance.MouseOverNamePlate() : true)) {
+                if (EventSystem.current.IsPointerOverGameObject() && (SystemGameManager.Instance.UIManager.NamePlateManager != null ? !SystemGameManager.Instance.UIManager.NamePlateManager.MouseOverNamePlate() : true)) {
                     rightMouseButtonClickedOverUI = true;
                 }
                 if (!rightMouseButtonClickedOverUI) {
@@ -280,7 +280,7 @@ namespace AnyRPG {
             if (Input.GetMouseButtonDown(0)) {
                 leftMouseButtonDown = true;
                 leftMouseButtonDownPosition = Input.mousePosition;
-                if (EventSystem.current.IsPointerOverGameObject() && (NamePlateManager.Instance != null ? !NamePlateManager.Instance.MouseOverNamePlate() : true)) {
+                if (EventSystem.current.IsPointerOverGameObject() && (SystemGameManager.Instance.UIManager.NamePlateManager != null ? !SystemGameManager.Instance.UIManager.NamePlateManager.MouseOverNamePlate() : true)) {
                     leftMouseButtonClickedOverUI = true;
                 }
                 if (!leftMouseButtonClickedOverUI) {
@@ -292,7 +292,7 @@ namespace AnyRPG {
             if (Input.GetMouseButtonDown(2)) {
                 middleMouseButtonDown = true;
                 middleMouseButtonDownPosition = Input.mousePosition;
-                if (EventSystem.current.IsPointerOverGameObject() && (NamePlateManager.Instance != null ? !NamePlateManager.Instance.MouseOverNamePlate() : true)) {
+                if (EventSystem.current.IsPointerOverGameObject() && (SystemGameManager.Instance.UIManager.NamePlateManager != null ? !SystemGameManager.Instance.UIManager.NamePlateManager.MouseOverNamePlate() : true)) {
                     middleMouseButtonClickedOverUI = true;
                 }
             }

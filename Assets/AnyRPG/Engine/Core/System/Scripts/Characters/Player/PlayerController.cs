@@ -202,7 +202,7 @@ namespace AnyRPG {
                     eventParamProperties.simpleParams.BoolParam = false;
                 }
                 SystemEventManager.TriggerEvent("OnToggleRun", eventParamProperties);
-                MessageFeedManager.Instance.WriteMessage("Walk: " + PlayerManager.Instance.ActiveUnitController.Walking.ToString());
+                SystemGameManager.Instance.UIManager.MessageFeedManager.WriteMessage("Walk: " + PlayerManager.Instance.ActiveUnitController.Walking.ToString());
                 ToggleRunHandler(PlayerManager.Instance.ActiveUnitController.Walking);
             }
         }
@@ -220,11 +220,11 @@ namespace AnyRPG {
         /// </summary>
         private void HandleMouseOver() {
             //Debug.Log(gameObject.name + ".PlayerController.HandleMouseOver()");
-            if (CameraManager.Instance.ActiveMainCamera == null) {
+            if (SystemGameManager.Instance.CameraManager.ActiveMainCamera == null) {
                 // we are in a cutscene and shouldn't be dealing with mouseover
                 return;
             }
-            Ray ray = CameraManager.Instance.ActiveMainCamera.ScreenPointToRay(Input.mousePosition);
+            Ray ray = SystemGameManager.Instance.CameraManager.ActiveMainCamera.ScreenPointToRay(Input.mousePosition);
             int playerMask = 1 << LayerMask.NameToLayer("Player");
             int ignoreMask = 1 << LayerMask.NameToLayer("Ignore Raycast");
             int spellMask = 1 << LayerMask.NameToLayer("SpellEffects");
@@ -233,8 +233,8 @@ namespace AnyRPG {
 
             bool disableMouseOver = false;
             bool mouseOverNamePlate = false;
-            if (NamePlateManager.Instance != null) {
-                mouseOverNamePlate = NamePlateManager.Instance.MouseOverNamePlate();
+            if (SystemGameManager.Instance.UIManager.NamePlateManager != null) {
+                mouseOverNamePlate = SystemGameManager.Instance.UIManager.NamePlateManager.MouseOverNamePlate();
             }
 
             if (!EventSystem.current.IsPointerOverGameObject() && !mouseOverNamePlate) {
@@ -265,7 +265,7 @@ namespace AnyRPG {
                 }
             } else {
                 disableMouseOver = true;
-                //Debug.Log(gameObject.name + ".PlayerController.HandleMouseOver(): mouseovernameplate: " + NamePlateManager.Instance.MouseOverNamePlate() + "; pointerovergameobject: " + EventSystem.current.IsPointerOverGameObject());
+                //Debug.Log(gameObject.name + ".PlayerController.HandleMouseOver(): mouseovernameplate: " + SystemGameManager.Instance.UIManager.NamePlateManager.MouseOverNamePlate() + "; pointerovergameobject: " + EventSystem.current.IsPointerOverGameObject());
             }
 
             if (disableMouseOver) {
@@ -282,7 +282,7 @@ namespace AnyRPG {
         /*
         public void HandleMouseOver(Interactable newInteractable) {
             //Debug.Log(gameObject.name + ".PlayerController.HandleMouseOver()");
-            if (CameraManager.Instance.MyActiveMainCamera == null) {
+            if (SystemGameManager.Instance.CameraManager.MyActiveMainCamera == null) {
                 // we are in a cutscene and shouldn't be dealing with mouseover
                 return;
             }
@@ -321,18 +321,18 @@ namespace AnyRPG {
                 return;
             }
 
-            if (CameraManager.Instance.ActiveMainCamera == null) {
+            if (SystemGameManager.Instance.CameraManager.ActiveMainCamera == null) {
                 // probably in a cutscene.  don't respond to clicks on objects if there is no camera following the player
                 return;
             }
 
-            if (EventSystem.current.IsPointerOverGameObject() && !NamePlateManager.Instance.MouseOverNamePlate()) {
+            if (EventSystem.current.IsPointerOverGameObject() && !SystemGameManager.Instance.UIManager.NamePlateManager.MouseOverNamePlate()) {
                 //Debug.Log("PlayerController.HandleLeftMouseClick(): clicked over UI and not nameplate.  exiting");
                 return;
             }
 
             //if (InputManager.Instance.leftMouseButtonClicked && !EventSystem.current.IsPointerOverGameObject()) {
-            if (mouseOverInteractable == null && !NamePlateManager.Instance.MouseOverNamePlate()) {
+            if (mouseOverInteractable == null && !SystemGameManager.Instance.UIManager.NamePlateManager.MouseOverNamePlate()) {
                 // Stop focusing any object
                 //RemoveFocus();
                 PlayerManager.Instance.UnitController.ClearTarget();
@@ -341,7 +341,7 @@ namespace AnyRPG {
             }
             //}
 
-            Ray ray = CameraManager.Instance.ActiveMainCamera.ScreenPointToRay(Input.mousePosition);
+            Ray ray = SystemGameManager.Instance.CameraManager.ActiveMainCamera.ScreenPointToRay(Input.mousePosition);
             RaycastHit hit;
             if (Physics.Raycast(ray, out hit, 100, movementMask)) {
                 if (PlayerManager.Instance.ActiveCharacter.CharacterAbilityManager.WaitingForTarget()) {
@@ -593,8 +593,8 @@ namespace AnyRPG {
         public void HandleClearTarget(Interactable oldTarget) {
             //Debug.Log("PlayerController.HandleClearTarget()");
 
-            UIManager.Instance.FocusUnitFrameController.ClearTarget();
-            NamePlateManager.Instance.ClearFocus();
+            SystemGameManager.Instance.UIManager.FocusUnitFrameController.ClearTarget();
+            SystemGameManager.Instance.UIManager.NamePlateManager.ClearFocus();
             oldTarget?.UnitComponentController?.HighlightController?.HandleClearTarget();
         }
 
@@ -606,8 +606,8 @@ namespace AnyRPG {
             NamePlateUnit namePlateUnit = (newTarget as NamePlateUnit);
             if (namePlateUnit?.NamePlateController != null && namePlateUnit.NamePlateController.SuppressNamePlate == false) {
                 //Debug.Log("PlayerController.SetTarget(): InamePlateUnit is not null");
-                UIManager.Instance.FocusUnitFrameController.SetTarget(namePlateUnit.NamePlateController);
-                NamePlateManager.Instance.SetFocus(namePlateUnit);
+                SystemGameManager.Instance.UIManager.FocusUnitFrameController.SetTarget(namePlateUnit.NamePlateController);
+                SystemGameManager.Instance.UIManager.NamePlateManager.SetFocus(namePlateUnit);
             } else {
                 //Debug.Log("PlayerController.SetTarget(): InamePlateUnit is null ???!?");
             }
@@ -702,7 +702,7 @@ namespace AnyRPG {
         public void StopInteract() {
             // the idea of this code is that it will allow us to keep an NPC focused if we back out of range while its interactable popup closes
             // if we don't have anything focused, then we were interacting with someting environmental and definitely want to clear that because it can lead to a hidden target being set
-            if (UIManager.Instance.FocusUnitFrameController.UnitNamePlateController == null && PlayerManager.Instance.UnitController != null) {
+            if (SystemGameManager.Instance.UIManager.FocusUnitFrameController.UnitNamePlateController == null && PlayerManager.Instance.UnitController != null) {
                 PlayerManager.Instance.UnitController.ClearTarget();
             }
         }
@@ -786,7 +786,7 @@ namespace AnyRPG {
         }
 
         public void HandleMessageFeed(string message) {
-            MessageFeedManager.Instance.WriteMessage(message);
+            SystemGameManager.Instance.UIManager.MessageFeedManager.WriteMessage(message);
         }
 
         public void HandleActivateMountedState(UnitController mountUnitController) {
@@ -795,8 +795,8 @@ namespace AnyRPG {
 
             PlayerManager.Instance.SetActiveUnitController(mountUnitController);
 
-            CameraManager.Instance.SwitchToMainCamera();
-            CameraManager.Instance.MainCameraController.InitializeCamera(PlayerManager.Instance.ActiveUnitController.transform);
+            SystemGameManager.Instance.CameraManager.SwitchToMainCamera();
+            SystemGameManager.Instance.CameraManager.MainCameraController.InitializeCamera(PlayerManager.Instance.ActiveUnitController.transform);
             if (SystemConfigurationManager.Instance.UseThirdPartyMovementControl == true) {
                 PlayerManager.Instance.EnableMovementControllers();
             }
@@ -815,8 +815,8 @@ namespace AnyRPG {
                 PlayerManager.Instance.UnitController.UnitAnimator.SetCorrectOverrideController();
             }
 
-            CameraManager.Instance.ActivateMainCamera();
-            CameraManager.Instance.MainCameraController.InitializeCamera(PlayerManager.Instance.ActiveUnitController.transform);
+            SystemGameManager.Instance.CameraManager.ActivateMainCamera();
+            SystemGameManager.Instance.CameraManager.MainCameraController.InitializeCamera(PlayerManager.Instance.ActiveUnitController.transform);
 
             EventParamProperties eventParam = new EventParamProperties();
             SystemEventManager.TriggerEvent("OnEndRiding", eventParam);
@@ -825,18 +825,18 @@ namespace AnyRPG {
 
         public void HandleFactionChange(Faction newFaction, Faction oldFaction) {
             SystemEventManager.TriggerEvent("OnFactionChange", new EventParamProperties());
-            MessageFeedManager.Instance.WriteMessage("Changed faction to " + newFaction.DisplayName);
+            SystemGameManager.Instance.UIManager.MessageFeedManager.WriteMessage("Changed faction to " + newFaction.DisplayName);
         }
 
         public void HandleClassChange(CharacterClass newCharacterClass, CharacterClass oldCharacterClass) {
             SystemGameManager.Instance.EventManager.NotifyOnClassChange(newCharacterClass, oldCharacterClass);
-            MessageFeedManager.Instance.WriteMessage("Changed class to " + newCharacterClass.DisplayName);
+            SystemGameManager.Instance.UIManager.MessageFeedManager.WriteMessage("Changed class to " + newCharacterClass.DisplayName);
         }
 
         public void HandleSpecializationChange(ClassSpecialization newSpecialization, ClassSpecialization oldSpecialization) {
             SystemEventManager.TriggerEvent("OnSpecializationChange", new EventParamProperties());
             if (newSpecialization != null) {
-                MessageFeedManager.Instance.WriteMessage("Changed specialization to " + newSpecialization.DisplayName);
+                SystemGameManager.Instance.UIManager.MessageFeedManager.WriteMessage("Changed specialization to " + newSpecialization.DisplayName);
             }
         }
 

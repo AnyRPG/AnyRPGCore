@@ -22,9 +22,9 @@ namespace AnyRPG {
         }
 
         public void CleanupWindowEventSubscriptions() {
-            if (SystemWindowManager.Instance != null && SystemWindowManager.Instance.unitSpawnWindow != null && SystemWindowManager.Instance.unitSpawnWindow.CloseableWindowContents != null) {
-                (SystemWindowManager.Instance.unitSpawnWindow.CloseableWindowContents as UnitSpawnControlPanel).OnConfirmAction -= HandleConfirmAction;
-                (SystemWindowManager.Instance.unitSpawnWindow.CloseableWindowContents as UnitSpawnControlPanel).OnCloseWindow -= CleanupEventSubscriptions;
+            if (SystemGameManager.Instance.UIManager.SystemWindowManager != null && SystemGameManager.Instance.UIManager.SystemWindowManager.unitSpawnWindow != null && SystemGameManager.Instance.UIManager.SystemWindowManager.unitSpawnWindow.CloseableWindowContents != null) {
+                (SystemGameManager.Instance.UIManager.SystemWindowManager.unitSpawnWindow.CloseableWindowContents as UnitSpawnControlPanel).OnConfirmAction -= HandleConfirmAction;
+                (SystemGameManager.Instance.UIManager.SystemWindowManager.unitSpawnWindow.CloseableWindowContents as UnitSpawnControlPanel).OnCloseWindow -= CleanupEventSubscriptions;
             }
         }
 
@@ -35,11 +35,11 @@ namespace AnyRPG {
 
         public override bool Interact(CharacterUnit source, int optionIndex = 0) {
             base.Interact(source, optionIndex);
-            (SystemWindowManager.Instance.unitSpawnWindow.CloseableWindowContents as UnitSpawnControlPanel).MyUnitProfileList = Props.UnitProfileList;
-            (SystemWindowManager.Instance.unitSpawnWindow.CloseableWindowContents as UnitSpawnControlPanel).MyUnitSpawnNodeList = Props.UnitSpawnNodeList;
-            SystemWindowManager.Instance.unitSpawnWindow.OpenWindow();
-            (SystemWindowManager.Instance.unitSpawnWindow.CloseableWindowContents as UnitSpawnControlPanel).OnConfirmAction += HandleConfirmAction;
-            (SystemWindowManager.Instance.unitSpawnWindow.CloseableWindowContents as UnitSpawnControlPanel).OnCloseWindow += CleanupEventSubscriptions;
+            (SystemGameManager.Instance.UIManager.SystemWindowManager.unitSpawnWindow.CloseableWindowContents as UnitSpawnControlPanel).MyUnitProfileList = Props.UnitProfileList;
+            (SystemGameManager.Instance.UIManager.SystemWindowManager.unitSpawnWindow.CloseableWindowContents as UnitSpawnControlPanel).MyUnitSpawnNodeList = Props.UnitSpawnNodeList;
+            SystemGameManager.Instance.UIManager.SystemWindowManager.unitSpawnWindow.OpenWindow();
+            (SystemGameManager.Instance.UIManager.SystemWindowManager.unitSpawnWindow.CloseableWindowContents as UnitSpawnControlPanel).OnConfirmAction += HandleConfirmAction;
+            (SystemGameManager.Instance.UIManager.SystemWindowManager.unitSpawnWindow.CloseableWindowContents as UnitSpawnControlPanel).OnCloseWindow += CleanupEventSubscriptions;
             return true;
         }
 
@@ -49,7 +49,7 @@ namespace AnyRPG {
 
         public override void StopInteract() {
             base.StopInteract();
-            SystemWindowManager.Instance.unitSpawnWindow.CloseWindow();
+            SystemGameManager.Instance.UIManager.SystemWindowManager.unitSpawnWindow.CloseWindow();
         }
 
         public override bool HasMiniMapText() {

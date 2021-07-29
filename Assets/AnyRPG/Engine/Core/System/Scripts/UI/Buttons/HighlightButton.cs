@@ -103,11 +103,11 @@ namespace AnyRPG {
         }
 
         public virtual void OnHoverSound() {
-            AudioManager.Instance.PlayUIHoverSound();
+            SystemGameManager.Instance.AudioManager.PlayUIHoverSound();
         }
 
         public virtual void OnClickSound() {
-            AudioManager.Instance.PlayUIClickSound();
+            SystemGameManager.Instance.AudioManager.PlayUIClickSound();
         }
 
         public void OnPointerEnter(PointerEventData eventData) {

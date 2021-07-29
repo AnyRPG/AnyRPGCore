@@ -238,7 +238,7 @@ namespace AnyRPG {
                     } else {
                         combatTextType = CombatTextType.ability;
                     }
-                    CombatTextManager.Instance.SpawnCombatText(baseCharacter.UnitController, damage, combatTextType, combatMagnitude, abilityEffectContext);
+                    SystemGameManager.Instance.UIManager.CombatTextManager.SpawnCombatText(baseCharacter.UnitController, damage, combatTextType, combatMagnitude, abilityEffectContext);
                     SystemGameManager.Instance.EventManager.NotifyOnTakeDamage(target, BaseCharacter.UnitController.CharacterUnit, damage, abilityEffect.DisplayName);
                 }
                 lastCombatEvent = Time.time;
@@ -508,7 +508,7 @@ namespace AnyRPG {
                     if (audioClip != null) {
                         baseCharacter.UnitController.UnitComponentController.PlayEffect(audioClip);
                     }
-                    //AudioManager.Instance.PlayEffect(overrideHitSoundEffect);
+                    //SystemGameManager.Instance.AudioManager.PlayEffect(overrideHitSoundEffect);
                 }
                 */
 
