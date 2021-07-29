@@ -116,7 +116,7 @@ namespace AnyRPG {
             get {
                 // disabled next bit because it interferes with spawning in cutscenes
                 /*
-                if (PlayerManager.Instance.MyPlayerUnitSpawned == false) {
+                if (SystemGameManager.Instance.PlayerManager.MyPlayerUnitSpawned == false) {
                     //Debug.Log(gameObject.name + ".MyPrerequisitesMet: returning false because player isn't spawned");
                     return false;
                 }
@@ -157,7 +157,7 @@ namespace AnyRPG {
                 return;
             }
             SystemEventManager.StartListening("OnPlayerUnitSpawn", HandlePlayerUnitSpawn);
-            if (PlayerManager.Instance.PlayerUnitSpawned == true) {
+            if (SystemGameManager.Instance.PlayerManager.PlayerUnitSpawned == true) {
                 //Debug.Log(gameObject.name + ".UnitSpawnNode.CreateEventSubscriptions(): player unit already spawned.  Handling player unit spawn");
                 ProcessPlayerUnitSpawn();
             }
@@ -279,7 +279,7 @@ namespace AnyRPG {
                 Vector3 tempVector = new Vector3(transform.position.x + xLocation, transform.position.y + (ySize / 2), transform.position.z + zLocation);
                 Vector3 attemptVector = tempVector;
                 RaycastHit hit;
-                if (Physics.Raycast(attemptVector, Vector3.down, out hit, 500f, PlayerManager.Instance.PlayerController.movementMask)) {
+                if (Physics.Raycast(attemptVector, Vector3.down, out hit, 500f, SystemGameManager.Instance.PlayerManager.PlayerController.movementMask)) {
                     gotLocation = true;
                     spawnLocation = hit.point;
                     //Debug.Log("We hit " + hit.collider.name + " " + hit.point);
@@ -316,11 +316,11 @@ namespace AnyRPG {
 
         public void CommonSpawn(int unitLevel, int extraLevels, bool dynamicLevel, UnitProfile unitProfile, UnitToughness toughness = null) {
             //Debug.Log(gameObject.name + ".UnitSpawnNode.CommonSpawn()");
-            if (unitProfile == null || PlayerManager.Instance.MyCharacter == null) {
+            if (unitProfile == null || SystemGameManager.Instance.PlayerManager.MyCharacter == null) {
                 return;
             }
 
-            int _unitLevel = (dynamicLevel ? PlayerManager.Instance.MyCharacter.CharacterStats.Level : unitLevel) + extraLevels;
+            int _unitLevel = (dynamicLevel ? SystemGameManager.Instance.PlayerManager.MyCharacter.CharacterStats.Level : unitLevel) + extraLevels;
             UnitController unitController = unitProfile.SpawnUnitPrefab(null, transform.position, transform.forward, UnitControllerMode.AI, _unitLevel);
 
             if (unitController == null) {
@@ -540,7 +540,7 @@ namespace AnyRPG {
             }
 
             // only players can activate trigger based unit spawn nodes.  we don't want npcs wandering around patrolling to activate these
-            if (PlayerManager.Instance.PlayerUnitSpawned == false || other.gameObject != PlayerManager.Instance.ActiveUnitController.gameObject) {
+            if (SystemGameManager.Instance.PlayerManager.PlayerUnitSpawned == false || other.gameObject != SystemGameManager.Instance.PlayerManager.ActiveUnitController.gameObject) {
                 return;
             }
 

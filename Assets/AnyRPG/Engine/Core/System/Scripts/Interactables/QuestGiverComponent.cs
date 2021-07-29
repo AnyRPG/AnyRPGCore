@@ -142,11 +142,11 @@ namespace AnyRPG {
 
         public void UpdateQuestStatus() {
             //Debug.Log(interactable.gameObject.name + ".QuestGiver.UpdateQuestStatus()");
-            if (PlayerManager.Instance == null) {
+            if (SystemGameManager.Instance.PlayerManager == null) {
                 Debug.LogError("PlayerManager not found.  Is the GameManager in the scene?");
                 return;
             }
-            if (PlayerManager.Instance.MyCharacter == null) {
+            if (SystemGameManager.Instance.PlayerManager.MyCharacter == null) {
                 //Debug.Log(gameObject.name + ".QuestGiver.UpdateQuestStatus(): player has no character");
                 return;
             }
@@ -167,12 +167,12 @@ namespace AnyRPG {
         public string GetIndicatorType() {
             //Debug.Log(gameObject.name + ".QuestGiver.GetIndicatorType()");
 
-            if (PlayerManager.Instance.MyCharacter == null) {
-                //Debug.Log(gameObject.name + ".QuestGiver.GetIndicatorType(): PlayerManager.Instance.MyCharacter is null. returning empty");
+            if (SystemGameManager.Instance.PlayerManager.MyCharacter == null) {
+                //Debug.Log(gameObject.name + ".QuestGiver.GetIndicatorType(): SystemGameManager.Instance.PlayerManager.MyCharacter is null. returning empty");
                 return string.Empty;
             }
 
-            float relationValue = interactable.PerformFactionCheck(PlayerManager.Instance.MyCharacter);
+            float relationValue = interactable.PerformFactionCheck(SystemGameManager.Instance.PlayerManager.MyCharacter);
             if (CanInteract(false, false, relationValue) == false) {
                 //Debug.Log(gameObject.name + ".QuestGiver.GetIndicatorType(): Cannot interact.  Return empty string");
                 return string.Empty;
@@ -185,7 +185,7 @@ namespace AnyRPG {
             //Debug.Log(gameObject.name + "QuestGiver.GetIndicatorType(): quests.length: " + quests.Length);
             foreach (QuestNode questNode in Props.Quests) {
                 if (questNode != null && questNode.MyQuest != null) {
-                    if (QuestLog.Instance.HasQuest(questNode.MyQuest.DisplayName)) {
+                    if (SystemGameManager.Instance.QuestLog.HasQuest(questNode.MyQuest.DisplayName)) {
                         if (questNode.MyQuest.IsComplete && !questNode.MyQuest.TurnedIn && questNode.MyEndQuest) {
                             //Debug.Log(gameObject.name + ": There is a complete quest to turn in.  Incrementing inProgressCount.");
                             completeCount++;

@@ -47,7 +47,7 @@ namespace AnyRPG {
                 }
                 foreach (Recipe recipe in SystemRecipeManager.Instance.GetResourceList()) {
                     if (baseCharacter.CharacterStats.Level >= recipe.RequiredLevel && recipe.AutoLearn == true && newSkill.MyAbilityList.Contains(recipe.CraftAbility)) {
-                        PlayerManager.Instance.MyCharacter.CharacterRecipeManager.LearnRecipe(recipe);
+                        SystemGameManager.Instance.PlayerManager.MyCharacter.CharacterRecipeManager.LearnRecipe(recipe);
                     }
                 }
 

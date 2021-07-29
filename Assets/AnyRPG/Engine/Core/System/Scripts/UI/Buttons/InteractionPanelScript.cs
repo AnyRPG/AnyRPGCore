@@ -45,8 +45,8 @@ namespace AnyRPG {
         }
 
         public void Interact() {
-            if (PlayerManager.Instance.UnitController != null) {
-                InteractableOption.Interact(PlayerManager.Instance.UnitController.CharacterUnit, optionIndex);
+            if (SystemGameManager.Instance.PlayerManager.UnitController != null) {
+                InteractableOption.Interact(SystemGameManager.Instance.PlayerManager.UnitController.CharacterUnit, optionIndex);
             }
             InteractableOption.Interactable.CloseInteractionWindow();
         }

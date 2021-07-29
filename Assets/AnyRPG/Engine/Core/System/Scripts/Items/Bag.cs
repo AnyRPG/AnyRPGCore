@@ -55,14 +55,14 @@ namespace AnyRPG {
             if (MyBagNode != null) {
                 addToBank = MyBagNode.IsBankNode;
             }
-            if (InventoryManager.Instance.CanAddBag(addToBank)) {
+            if (SystemGameManager.Instance.InventoryManager.CanAddBag(addToBank)) {
                 //Debug.Log("Bag.Use(): we can add the bag");
 
                 if (MyBagNode == null) {
-                    InventoryManager.Instance.AddBag(this);
+                    SystemGameManager.Instance.InventoryManager.AddBag(this);
                 } else {
                     //Debug.Log("Bag.Use(): i have a bagnode");
-                    InventoryManager.Instance.AddBag(this, MyBagNode);
+                    SystemGameManager.Instance.InventoryManager.AddBag(this, MyBagNode);
                 }
                 Remove();
             } else {

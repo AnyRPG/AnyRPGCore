@@ -64,7 +64,7 @@ namespace AnyRPG {
         }
 
         private void UpdateQuestCount() {
-            questCount.text = QuestLog.Instance.MyQuests.Count + " / " + maxCount;
+            questCount.text = SystemGameManager.Instance.QuestLog.MyQuests.Count + " / " + maxCount;
         }
 
         public void ShowQuestsCommon() {
@@ -75,7 +75,7 @@ namespace AnyRPG {
 
             QuestScript firstAvailableQuest = null;
 
-            foreach (Quest quest in QuestLog.Instance.MyQuests.Values) {
+            foreach (Quest quest in SystemGameManager.Instance.QuestLog.MyQuests.Values) {
                 GameObject go = ObjectPooler.Instance.GetPooledObject(questPrefab, questParent);
 
                 QuestScript qs = go.GetComponent<QuestScript>();
@@ -186,7 +186,7 @@ namespace AnyRPG {
         }
 
         public void AbandonQuest() {
-            QuestLog.Instance.AbandonQuest(MySelectedQuestScript.MyQuest);
+            SystemGameManager.Instance.QuestLog.AbandonQuest(MySelectedQuestScript.MyQuest);
             ShowQuestsCommon();
         }
     }

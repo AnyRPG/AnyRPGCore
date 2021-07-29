@@ -20,8 +20,8 @@ namespace AnyRPG {
         private Cutscene cutscene = null;
 
 
-        public override Sprite Icon { get => (SystemConfigurationManager.Instance.CutSceneInteractionPanelImage != null ? SystemConfigurationManager.Instance.CutSceneInteractionPanelImage : base.Icon); }
-        public override Sprite NamePlateImage { get => (SystemConfigurationManager.Instance.CutSceneNamePlateImage != null ? SystemConfigurationManager.Instance.CutSceneNamePlateImage : base.NamePlateImage); }
+        public override Sprite Icon { get => (SystemGameManager.Instance.SystemConfigurationManager.CutSceneInteractionPanelImage != null ? SystemGameManager.Instance.SystemConfigurationManager.CutSceneInteractionPanelImage : base.Icon); }
+        public override Sprite NamePlateImage { get => (SystemGameManager.Instance.SystemConfigurationManager.CutSceneNamePlateImage != null ? SystemGameManager.Instance.SystemConfigurationManager.CutSceneNamePlateImage : base.NamePlateImage); }
         public Cutscene Cutscene { get => cutscene; set => cutscene = value; }
 
         public override InteractableOptionComponent GetInteractableOption(Interactable interactable, InteractableOption interactableOption = null) {

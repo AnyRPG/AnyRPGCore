@@ -11,13 +11,13 @@ namespace AnyRPG {
 
         public void RespawnPlayer() {
             SystemGameManager.Instance.UIManager.SystemWindowManager.playerOptionsMenuWindow.CloseWindow();
-            PlayerManager.Instance.RespawnPlayer();
+            SystemGameManager.Instance.PlayerManager.RespawnPlayer();
         }
 
         public void RevivePlayer() {
             //Debug.Log("PlayerOptionsController.RevivePlayer()");
             SystemGameManager.Instance.UIManager.SystemWindowManager.playerOptionsMenuWindow.CloseWindow();
-            PlayerManager.Instance.RevivePlayerUnit();
+            SystemGameManager.Instance.PlayerManager.RevivePlayerUnit();
         }
 
     }

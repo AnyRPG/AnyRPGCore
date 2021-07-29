@@ -77,13 +77,13 @@ namespace AnyRPG {
                 if (HandScript.Instance.MyMoveable is Equipment) {
                     Equipment tmp = (Equipment)HandScript.Instance.MyMoveable;
                     if (equipmentSlotProfile.MyEquipmentSlotTypeList.Contains(tmp.EquipmentSlotType)) {
-                        PlayerManager.Instance.MyCharacter.CharacterEquipmentManager.Unequip(equipmentSlotProfile);
+                        SystemGameManager.Instance.PlayerManager.MyCharacter.CharacterEquipmentManager.Unequip(equipmentSlotProfile);
                         //if (tmp.equipSlot == equipmentSlot) {
 
                         //tmp.Use();
 
                         // equip to this slot
-                        PlayerManager.Instance.MyCharacter.CharacterEquipmentManager.Equip(tmp, equipmentSlotProfile);
+                        SystemGameManager.Instance.PlayerManager.MyCharacter.CharacterEquipmentManager.Equip(tmp, equipmentSlotProfile);
                         // call remove
                         tmp.Remove();
 
@@ -116,16 +116,16 @@ namespace AnyRPG {
             GetLocalComponents();
             GetSystemResourceReferences();
             Equipment tmpEquipment = equippedEquipment;
-            if (equipmentSlotProfile != null && PlayerManager.Instance.MyCharacter.CharacterEquipmentManager.CurrentEquipment.ContainsKey(equipmentSlotProfile)) {
+            if (equipmentSlotProfile != null && SystemGameManager.Instance.PlayerManager.MyCharacter.CharacterEquipmentManager.CurrentEquipment.ContainsKey(equipmentSlotProfile)) {
                 //Debug.Log(gameObject.name + "CharacterButton.UpdateVisual(): equipmentslotprofile was not null and player has quipment in this slot");
-                equippedEquipment = PlayerManager.Instance.MyCharacter.CharacterEquipmentManager.CurrentEquipment[equipmentSlotProfile];
+                equippedEquipment = SystemGameManager.Instance.PlayerManager.MyCharacter.CharacterEquipmentManager.CurrentEquipment[equipmentSlotProfile];
             } else {
                 /*
                 if (equipmentSlotProfile == null) {
                     //Debug.Log(gameObject.name + "CharacterButton.UpdateVisual(): equipmentslotprofile was null");
                 }
-                if (!PlayerManager.Instance.MyCharacter.MyCharacterEquipmentManager.MyCurrentEquipment.ContainsKey(equipmentSlotProfile)) {
-                    //Debug.Log(gameObject.name + "CharacterButton.UpdateVisual(): player had no equipment in this slot: " + equipmentSlotProfile + "; " + equipmentSlotProfile.GetInstanceID() + "; equipmentCount: " + PlayerManager.Instance.MyCharacter.MyCharacterEquipmentManager.MyCurrentEquipment.Count);
+                if (!SystemGameManager.Instance.PlayerManager.MyCharacter.MyCharacterEquipmentManager.MyCurrentEquipment.ContainsKey(equipmentSlotProfile)) {
+                    //Debug.Log(gameObject.name + "CharacterButton.UpdateVisual(): player had no equipment in this slot: " + equipmentSlotProfile + "; " + equipmentSlotProfile.GetInstanceID() + "; equipmentCount: " + SystemGameManager.Instance.PlayerManager.MyCharacter.MyCharacterEquipmentManager.MyCurrentEquipment.Count);
                 }*/
                 equippedEquipment = null;
             }
@@ -153,7 +153,7 @@ namespace AnyRPG {
                 SystemGameManager.Instance.UIManager.SetItemBackground(equippedEquipment, emptySlotImage, fullBackGroundColor);
             }
 
-            if (PlayerManager.Instance.PlayerUnitSpawned == false) {
+            if (SystemGameManager.Instance.PlayerManager.PlayerUnitSpawned == false) {
                 // prevent unnecessary actions when player is not spawned
                 return;
             }
@@ -180,8 +180,8 @@ namespace AnyRPG {
         public void DequipEquipment(int slotIndex = -1) {
             //Debug.Log("attempting to unequip the item in slot " + equipmentSlot.ToString());
             equippedEquipment.MyCharacterButton = null;
-            if (PlayerManager.Instance != null && PlayerManager.Instance.MyCharacter != null && PlayerManager.Instance.MyCharacter.MyCharacterEquipmentManager != null) {
-                PlayerManager.Instance.MyCharacter.MyCharacterEquipmentManager.Unequip(equipmentSlot, slotIndex);
+            if (SystemGameManager.Instance.PlayerManager != null && SystemGameManager.Instance.PlayerManager.MyCharacter != null && SystemGameManager.Instance.PlayerManager.MyCharacter.MyCharacterEquipmentManager != null) {
+                SystemGameManager.Instance.PlayerManager.MyCharacter.MyCharacterEquipmentManager.Unequip(equipmentSlot, slotIndex);
             }
             ClearButton();
         }

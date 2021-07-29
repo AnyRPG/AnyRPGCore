@@ -59,7 +59,7 @@ namespace AnyRPG {
         public override void HandlePrerequisiteUpdates() {
             //Debug.Log(gameObject.name + ".Interactable.HandlePrerequisiteUpdates()");
             base.HandlePrerequisiteUpdates();
-            if (!PlayerManager.Instance.PlayerUnitSpawned) {
+            if (!SystemGameManager.Instance.PlayerManager.PlayerUnitSpawned) {
                 //Debug.Log(gameObject.name + ".Interactable.HandlePrerequisiteUpdates(): player unit not spawned.  returning");
                 return;
             }
@@ -69,7 +69,7 @@ namespace AnyRPG {
         public void UpdateNamePlateImage() {
 
             //Debug.Log(gameObject.name + ".NamePlateUnit.UpdateNamePlateImage()");
-            if (PlayerManager.Instance.MyCharacter == null || PlayerManager.Instance.UnitController == null) {
+            if (SystemGameManager.Instance.PlayerManager.MyCharacter == null || SystemGameManager.Instance.PlayerManager.UnitController == null) {
                 //Debug.Log(gameObject.name + ".Interactable.UpdateNamePlateImage(): player has no character");
                 return;
             }
@@ -110,7 +110,7 @@ namespace AnyRPG {
                 } else {
                     // set a generic indicator if there is more than 1 interactable
                     NamePlateController.NamePlate.GenericIndicatorImage.gameObject.SetActive(true);
-                    NamePlateController.NamePlate.GenericIndicatorImage.sprite = SystemConfigurationManager.Instance.MultipleInteractionNamePlateImage;
+                    NamePlateController.NamePlate.GenericIndicatorImage.sprite = SystemGameManager.Instance.SystemConfigurationManager.MultipleInteractionNamePlateImage;
                 }
             }
         }

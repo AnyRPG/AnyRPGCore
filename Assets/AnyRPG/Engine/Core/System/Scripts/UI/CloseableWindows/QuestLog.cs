@@ -9,31 +9,11 @@ namespace AnyRPG {
     /// <summary>
     /// Maintains a list of all quests
     /// </summary>
-    public class QuestLog : MonoBehaviour {
-
-        #region Singleton
-        private static QuestLog instance;
-
-        public static QuestLog Instance {
-            get {
-                return instance;
-            }
-        }
-
-        private void Awake() {
-            instance = this;
-        }
-        #endregion
-
-        [SerializeField]
-        private int maxCount = 0;
+    public class QuestLog {
 
         private Dictionary<string, Quest> quests = new Dictionary<string, Quest>();
 
         public Dictionary<string, Quest> MyQuests { get => quests; }
-
-        private void Start() {
-        }
 
         /*
         public void LoadQuest(QuestSaveData questSaveData) {
@@ -128,7 +108,7 @@ namespace AnyRPG {
 
         public void AcceptQuest(Quest newQuest) {
             //Debug.Log("QuestLog.AcceptQuest(" + quest.name + ")");
-            if (quests.Count >= maxCount) {
+            if (quests.Count >= SystemGameManager.Instance.SystemConfigurationManager.QuestLogSize) {
                 // quest log is full. we can't accept the quest
                 return;
             }

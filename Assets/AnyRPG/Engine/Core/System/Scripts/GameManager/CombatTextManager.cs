@@ -30,9 +30,9 @@ namespace AnyRPG {
         }
 
         public void LateUpdate() {
-            if (SystemConfigurationManager.Instance.UseThirdPartyCameraControl == true
+            if (SystemGameManager.Instance.SystemConfigurationManager.UseThirdPartyCameraControl == true
                 && SystemGameManager.Instance.CameraManager.ThirdPartyCamera.activeInHierarchy == true
-                && PlayerManager.Instance.PlayerUnitSpawned == true) {
+                && SystemGameManager.Instance.PlayerManager.PlayerUnitSpawned == true) {
                 UpdateCombatText();
             }
         }

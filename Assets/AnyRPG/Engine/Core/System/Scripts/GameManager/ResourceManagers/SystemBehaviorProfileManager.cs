@@ -30,8 +30,8 @@ namespace AnyRPG {
 
         public override void LoadResourceList() {
             masterList.Add(Resources.LoadAll<BehaviorProfile>(resourceClassName));
-            if (SystemConfigurationManager.Instance != null) {
-                foreach (string loadResourcesFolder in SystemConfigurationManager.Instance.LoadResourcesFolders) {
+            if (SystemGameManager.Instance.SystemConfigurationManager != null) {
+                foreach (string loadResourcesFolder in SystemGameManager.Instance.SystemConfigurationManager.LoadResourcesFolders) {
                     masterList.Add(Resources.LoadAll<BehaviorProfile>(loadResourcesFolder + "/" + resourceClassName));
                 }
             }

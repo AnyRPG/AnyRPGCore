@@ -125,7 +125,7 @@ namespace AnyRPG {
         private void UpdateButtons(AudioProfile musicProfile) {
             //Debug.Log("SkillTrainerUI.UpdateButtons(" + skillName + ")");
             /*
-            if (PlayerManager.Instance.MyCharacter.MyCharacterSkillManager.HasSkill(musicProfileName)) {
+            if (SystemGameManager.Instance.PlayerManager.MyCharacter.MyCharacterSkillManager.HasSkill(musicProfileName)) {
                 playButton.gameObject.SetActive(false);
                 playButton.GetComponent<Button>().enabled = false;
                 stopButton.gameObject.SetActive(true);

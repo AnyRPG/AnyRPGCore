@@ -62,8 +62,8 @@ namespace AnyRPG {
         public PersistentState GetPersistentState() {
             //Debug.Log(persistentObjectOwner.gameObject.name + "PersistentObjectComponent.GetPersistentState()");
             if (persistentObjectOwner.UUID != null) {
-                if (LevelManager.Instance != null) {
-                    SceneNode activeSceneNode = LevelManager.Instance.GetActiveSceneNode();
+                if (SystemGameManager.Instance.LevelManager != null) {
+                    SceneNode activeSceneNode = SystemGameManager.Instance.LevelManager.GetActiveSceneNode();
                     if (activeSceneNode != null && activeSceneNode.PersistentObjects != null) {
                         PersistentObjectSaveData persistentObjectSaveData = activeSceneNode.GetPersistentObject(persistentObjectOwner.UUID.ID);
                         if (!persistentObjectSaveData.Equals(default(PersistentObjectSaveData))) {
@@ -149,8 +149,8 @@ namespace AnyRPG {
             }
 
             // save this data to the scene node that is active
-            if (LevelManager.Instance != null) {
-                SceneNode currentSceneNode = LevelManager.Instance.GetActiveSceneNode();
+            if (SystemGameManager.Instance.LevelManager != null) {
+                SceneNode currentSceneNode = SystemGameManager.Instance.LevelManager.GetActiveSceneNode();
                 if (currentSceneNode != null) {
                     //currentSceneNode.PersistentObjects[storedUUID] = MakeSaveData();
                     currentSceneNode.SavePersistentObject(storedUUID, MakeSaveData());

@@ -22,8 +22,8 @@ namespace AnyRPG {
         // need to track this for access to some of its functions
         private DialogComponent dialogComponent = null;
 
-        public override Sprite Icon { get => (SystemConfigurationManager.Instance.DialogInteractionPanelImage != null ? SystemConfigurationManager.Instance.DialogInteractionPanelImage : base.Icon); }
-        public override Sprite NamePlateImage { get => (SystemConfigurationManager.Instance.DialogNamePlateImage != null ? SystemConfigurationManager.Instance.DialogNamePlateImage : base.NamePlateImage); }
+        public override Sprite Icon { get => (SystemGameManager.Instance.SystemConfigurationManager.DialogInteractionPanelImage != null ? SystemGameManager.Instance.SystemConfigurationManager.DialogInteractionPanelImage : base.Icon); }
+        public override Sprite NamePlateImage { get => (SystemGameManager.Instance.SystemConfigurationManager.DialogNamePlateImage != null ? SystemGameManager.Instance.SystemConfigurationManager.DialogNamePlateImage : base.NamePlateImage); }
 
         public override string GetInteractionPanelTitle(int optionIndex = 0) {
                 List<Dialog> currentList = dialogComponent.GetCurrentOptionList();

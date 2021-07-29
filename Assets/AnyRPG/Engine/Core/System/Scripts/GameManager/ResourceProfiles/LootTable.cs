@@ -83,8 +83,8 @@ namespace AnyRPG {
                     foreach (Loot loot in lootGroup.Loot) {
                         if (loot.MyPrerequisitesMet == true &&
                             (loot.MyItem.MyUniqueItem == false ||
-                            (InventoryManager.Instance.GetItemCount(loot.MyItem.DisplayName) == 0 &&
-                            PlayerManager.Instance.MyCharacter.CharacterEquipmentManager.HasEquipment(loot.MyItem.DisplayName) == false))) {
+                            (SystemGameManager.Instance.InventoryManager.GetItemCount(loot.MyItem.DisplayName) == 0 &&
+                            SystemGameManager.Instance.PlayerManager.MyCharacter.CharacterEquipmentManager.HasEquipment(loot.MyItem.DisplayName) == false))) {
                             validLoot.Add(loot);
                         }/* else {
                             Debug.Log(MyName + ".LootTable.RollLoot() item: " + loot.MyItem);
@@ -164,7 +164,7 @@ namespace AnyRPG {
             //Debug.Log("GatherLootTable.RollLoot(): itemCount: " + itemCount);
             for (int i = 0; i < itemCount; i++) {
                 ItemLootDrop droppedItem = new ItemLootDrop(SystemItemManager.Instance.GetNewResource(loot.MyItem.DisplayName), this);
-                droppedItem.MyItem.DropLevel = PlayerManager.Instance.MyCharacter.CharacterStats.Level;
+                droppedItem.MyItem.DropLevel = SystemGameManager.Instance.PlayerManager.MyCharacter.CharacterStats.Level;
                 droppedItems.Add(droppedItem);
                 if (lootGroupUnlimitedDrops == false && ignoreDropLimit == false) {
                     lootGroupRemainingDrops = lootGroupRemainingDrops - 1;

@@ -43,13 +43,13 @@ namespace AnyRPG {
             base.OnAcceptQuest(quest, printMessages);
 
             // don't forget to remove these later
-            PlayerManager.Instance.MyCharacter.CharacterCombat.OnKillEvent += UpdateKillCount;
+            SystemGameManager.Instance.PlayerManager.MyCharacter.CharacterCombat.OnKillEvent += UpdateKillCount;
         }
 
         public override void OnAbandonQuest() {
             base.OnAbandonQuest();
-            if (PlayerManager.Instance != null && PlayerManager.Instance.MyCharacter != null && PlayerManager.Instance.MyCharacter.CharacterCombat != null) {
-                PlayerManager.Instance.MyCharacter.CharacterCombat.OnKillEvent -= UpdateKillCount;
+            if (SystemGameManager.Instance.PlayerManager != null && SystemGameManager.Instance.PlayerManager.MyCharacter != null && SystemGameManager.Instance.PlayerManager.MyCharacter.CharacterCombat != null) {
+                SystemGameManager.Instance.PlayerManager.MyCharacter.CharacterCombat.OnKillEvent -= UpdateKillCount;
             }
         }
 

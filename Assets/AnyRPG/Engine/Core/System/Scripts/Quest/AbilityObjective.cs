@@ -58,7 +58,7 @@ namespace AnyRPG {
             if (completeBefore) {
                 return;
             }
-            if (PlayerManager.Instance.MyCharacter.CharacterAbilityManager.HasAbility(baseAbility)) {
+            if (SystemGameManager.Instance.PlayerManager.MyCharacter.CharacterAbilityManager.HasAbility(baseAbility)) {
                 CurrentAmount++;
                 quest.CheckCompletion(true, printMessages);
                 if (CurrentAmount <= MyAmount && !quest.MyIsAchievement && printMessages == true) {

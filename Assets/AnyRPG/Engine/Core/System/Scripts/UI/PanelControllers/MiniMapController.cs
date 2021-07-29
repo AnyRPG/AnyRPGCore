@@ -108,8 +108,8 @@ namespace AnyRPG {
         public override void Awake() {
             //Debug.Log(gameObject.name + ": MiniMapController.Awake()");
             base.Awake();
-            if (SystemConfigurationManager.Instance.SystemBarMap != null) {
-                mapButtonImage.sprite = SystemConfigurationManager.Instance.SystemBarMap;
+            if (SystemGameManager.Instance.SystemConfigurationManager.SystemBarMap != null) {
+                mapButtonImage.sprite = SystemGameManager.Instance.SystemConfigurationManager.SystemBarMap;
                 mapButtonImage.color = Color.white;
                 mapButtonText.SetActive(false);
             } else {
@@ -118,7 +118,7 @@ namespace AnyRPG {
                 mapButtonText.SetActive(true);
             }
 
-            minimapTextureFolder = minimapTextureFolderBase + SystemConfigurationManager.Instance.GameName.Replace(" ", "") + "/Images/MiniMap/";
+            minimapTextureFolder = minimapTextureFolderBase + SystemGameManager.Instance.SystemConfigurationManager.GameName.Replace(" ", "") + "/Images/MiniMap/";
             
             //instantiate singleton
             MiniMapController tempcontroller = Instance;
@@ -156,9 +156,9 @@ namespace AnyRPG {
         }
 
         public void LateUpdate() {
-            if (SystemConfigurationManager.Instance.UseThirdPartyCameraControl == true
+            if (SystemGameManager.Instance.SystemConfigurationManager.UseThirdPartyCameraControl == true
                 && SystemGameManager.Instance.CameraManager.ThirdPartyCamera.activeInHierarchy == true
-                && PlayerManager.Instance.PlayerUnitSpawned == true) {
+                && SystemGameManager.Instance.PlayerManager.PlayerUnitSpawned == true) {
                 UpdateMiniMap();
             }
         }
@@ -226,7 +226,7 @@ namespace AnyRPG {
         }
 
         private void HandleCameraZoom(bool force = false) {
-            if (InputManager.Instance.mouseScrolled || force) {
+            if (SystemGameManager.Instance.InputManager.mouseScrolled || force) {
 
                 // determine if mouse is inside this object
                 rectTransform.GetWorldCorners(worldCorners);
@@ -265,13 +265,13 @@ namespace AnyRPG {
             float imageCenterX = -1f * ((playerX - levelOffset.x) * levelScaleFactor) * imageScaleFactor;
             float imageCenterY = -1f * ((playerZ - levelOffset.z) * levelScaleFactor) * imageScaleFactor;
 
-            //Debug.Log("scaleFactor: " + levelScaleFactor + "; player: " + followTransform.position + "; imageScaleFactor: " + imageScaleFactor + "; rawWidth: " + miniMapGraphicRawImage.texture.width + "; cameraSize: " + cameraSize + "; sceneBounds: " + LevelManager.Instance.SceneBounds.size);
+            //Debug.Log("scaleFactor: " + levelScaleFactor + "; player: " + followTransform.position + "; imageScaleFactor: " + imageScaleFactor + "; rawWidth: " + miniMapGraphicRawImage.texture.width + "; cameraSize: " + cameraSize + "; sceneBounds: " + SystemGameManager.Instance.LevelManager.SceneBounds.size);
 
             miniMapGraphicRect.anchoredPosition = new Vector2(imageCenterX, imageCenterY);
         }
 
         private void CommonInitialization() {
-            SceneNode sceneNode = LevelManager.Instance.GetActiveSceneNode();
+            SceneNode sceneNode = SystemGameManager.Instance.LevelManager.GetActiveSceneNode();
             if (sceneNode != null) {
                 zoneNameText.text = sceneNode.DisplayName;
             } else {
@@ -315,7 +315,7 @@ namespace AnyRPG {
             }
 
             // First, try to find the minimap
-            Texture2D mapTexture = new Texture2D((int)LevelManager.Instance.SceneBounds.size.x, (int)LevelManager.Instance.SceneBounds.size.z);
+            Texture2D mapTexture = new Texture2D((int)SystemGameManager.Instance.LevelManager.SceneBounds.size.x, (int)SystemGameManager.Instance.LevelManager.SceneBounds.size.z);
             string textureFilePath = minimapTextureFolder + GetScreenshotFilename();
             if (System.IO.File.Exists(textureFilePath)) {
                 //sceneTextureFound = true;
@@ -324,7 +324,7 @@ namespace AnyRPG {
                 mapTexture.LoadImage(fileData);
             } else {
                 //Debug.Log("No minimap texture exists at " + textureFilePath + ".  Please run \"Minimap Wizard\" from the Tools menu under AnyRPG.");
-                if (SystemConfigurationManager.Instance.MiniMapFallBackMode == MiniMapFallBackMode.None) {
+                if (SystemGameManager.Instance.SystemConfigurationManager.MiniMapFallBackMode == MiniMapFallBackMode.None) {
                     DisableIndicators();
                     return;
                 }
@@ -343,8 +343,8 @@ namespace AnyRPG {
 
             // scale factor gives the number of pixels per meter for this image
             // it assumes a square image whose factor is based on the largest scene dimension
-            levelScaleFactor = miniMapGraphicRawImage.texture.width / (LevelManager.Instance.SceneBounds.size.x > LevelManager.Instance.SceneBounds.size.z ? LevelManager.Instance.SceneBounds.size.x : LevelManager.Instance.SceneBounds.size.z);
-            levelOffset = LevelManager.Instance.SceneBounds.center;
+            levelScaleFactor = miniMapGraphicRawImage.texture.width / (SystemGameManager.Instance.LevelManager.SceneBounds.size.x > SystemGameManager.Instance.LevelManager.SceneBounds.size.z ? SystemGameManager.Instance.LevelManager.SceneBounds.size.x : SystemGameManager.Instance.LevelManager.SceneBounds.size.z);
+            levelOffset = SystemGameManager.Instance.LevelManager.SceneBounds.center;
 
             EnableIndicators();
 

@@ -89,8 +89,8 @@ namespace AnyRPG {
         private float collisionMinimumHeight = 0.05f;
 
         private void OnEnable() {
-            if (PlayerManager.Instance != null) {
-                groundMask = PlayerManager.Instance.DefaultGroundMask;
+            if (SystemGameManager.Instance.PlayerManager != null) {
+                groundMask = SystemGameManager.Instance.PlayerManager.DefaultGroundMask;
             }
             GetComponentReferences();
             if (movementStateController != null) {
@@ -100,7 +100,7 @@ namespace AnyRPG {
 
         public void Init() {
             //Debug.Log(gameObject.name + ".PlayerUnitMovementController.OrchestrateStartup()");
-            //airForwardDirection = PlayerManager.Instance.ActiveUnitController.transform.forward;
+            //airForwardDirection = SystemGameManager.Instance.PlayerManager.ActiveUnitController.transform.forward;
             ConfigureStateMachine();
             SwitchCollisionOn();
         }
@@ -134,7 +134,7 @@ namespace AnyRPG {
 
         //Put any code in here you want to run AFTER the state's update function.  This is run regardless of what state you're in.
         protected override void LateGlobalStateUpdate() {
-            if (PlayerManager.Instance.ActiveUnitController == null) {
+            if (SystemGameManager.Instance.PlayerManager.ActiveUnitController == null) {
                 return;
             }
 
@@ -150,57 +150,57 @@ namespace AnyRPG {
             //Move the player by our velocity every frame.
             // transform the velocity from local space to world space so we move the character forward on his z axis, not the global world z axis
             Vector3 relativeMovement = CharacterRelativeInput(currentMoveVelocity);
-            if (relativeMovement.magnitude > 0.1 || PlayerManager.Instance.PlayerController.inputJump) {
-                PlayerManager.Instance.ActiveUnitController.UnitMotor.Move(relativeMovement);
+            if (relativeMovement.magnitude > 0.1 || SystemGameManager.Instance.PlayerManager.PlayerController.inputJump) {
+                SystemGameManager.Instance.PlayerManager.ActiveUnitController.UnitMotor.Move(relativeMovement);
             } else {
 
                 Vector3 localVelocity = Vector3.zero;
-                if (PlayerManager.Instance.ActiveUnitController != null && PlayerManager.Instance.ActiveUnitController.RigidBody != null) {
-                    localVelocity = PlayerManager.Instance.ActiveUnitController.transform.InverseTransformDirection(PlayerManager.Instance.ActiveUnitController.RigidBody.velocity);
+                if (SystemGameManager.Instance.PlayerManager.ActiveUnitController != null && SystemGameManager.Instance.PlayerManager.ActiveUnitController.RigidBody != null) {
+                    localVelocity = SystemGameManager.Instance.PlayerManager.ActiveUnitController.transform.InverseTransformDirection(SystemGameManager.Instance.PlayerManager.ActiveUnitController.RigidBody.velocity);
                 }
                 if (localVelocity.x != 0f || localVelocity.z != 0f || localVelocity.y != 0f) {
-                    //Debug.Log("Character is moving at velocity: " + PlayerManager.Instance.ActiveUnitController.MyRigidBody.velocity + "; local: " + localVelocity + ", but no input was given.  Stopping Character!");
-                    PlayerManager.Instance.ActiveUnitController.UnitMotor?.Move(new Vector3(0, Mathf.Clamp(localVelocity.y, -53, 0), 0));
+                    //Debug.Log("Character is moving at velocity: " + SystemGameManager.Instance.PlayerManager.ActiveUnitController.MyRigidBody.velocity + "; local: " + localVelocity + ", but no input was given.  Stopping Character!");
+                    SystemGameManager.Instance.PlayerManager.ActiveUnitController.UnitMotor?.Move(new Vector3(0, Mathf.Clamp(localVelocity.y, -53, 0), 0));
                 }
             }
 
             //If alive and is moving, set animator.
-            if (useMeshNav == false && PlayerManager.Instance?.MyCharacter?.CharacterStats?.IsAlive == true && PlayerManager.Instance?.PlayerController?.canMove == true) {
+            if (useMeshNav == false && SystemGameManager.Instance.PlayerManager?.MyCharacter?.CharacterStats?.IsAlive == true && SystemGameManager.Instance.PlayerManager?.PlayerController?.canMove == true) {
 
                 // handle movement
-                if (currentMoveVelocity.magnitude > 0 && PlayerManager.Instance.PlayerController.HasMoveInput()) {
-                    //Debug.Log(gameObject.name + ".PlayerUnitMovementController.LateGlobalSuperUpdate(): animator velocity: " + PlayerManager.Instance.ActiveUnitController.MyCharacterAnimator.MyAnimator.velocity + "; angular: " + PlayerManager.Instance.ActiveUnitController.MyCharacterAnimator.MyAnimator.angularVelocity);
-                    if (PlayerManager.Instance.PlayerController.inputStrafe == true) {
-                        PlayerManager.Instance.ActiveUnitController.UnitAnimator.SetStrafing(true);
+                if (currentMoveVelocity.magnitude > 0 && SystemGameManager.Instance.PlayerManager.PlayerController.HasMoveInput()) {
+                    //Debug.Log(gameObject.name + ".PlayerUnitMovementController.LateGlobalSuperUpdate(): animator velocity: " + SystemGameManager.Instance.PlayerManager.ActiveUnitController.MyCharacterAnimator.MyAnimator.velocity + "; angular: " + SystemGameManager.Instance.PlayerManager.ActiveUnitController.MyCharacterAnimator.MyAnimator.angularVelocity);
+                    if (SystemGameManager.Instance.PlayerManager.PlayerController.inputStrafe == true) {
+                        SystemGameManager.Instance.PlayerManager.ActiveUnitController.UnitAnimator.SetStrafing(true);
                     } else {
-                        PlayerManager.Instance.ActiveUnitController.UnitAnimator.SetStrafing(false);
+                        SystemGameManager.Instance.PlayerManager.ActiveUnitController.UnitAnimator.SetStrafing(false);
                     }
-                    PlayerManager.Instance.ActiveUnitController.UnitAnimator.SetMoving(true);
-                    PlayerManager.Instance.ActiveUnitController.UnitAnimator.SetVelocity(currentMoveVelocity);
+                    SystemGameManager.Instance.PlayerManager.ActiveUnitController.UnitAnimator.SetMoving(true);
+                    SystemGameManager.Instance.PlayerManager.ActiveUnitController.UnitAnimator.SetVelocity(currentMoveVelocity);
                 }/* else {
-                    PlayerManager.Instance.ActiveUnitController.MyCharacterAnimator.SetMoving(false);
-                    PlayerManager.Instance.ActiveUnitController.MyCharacterAnimator.SetStrafing(false);
-                    PlayerManager.Instance.ActiveUnitController.MyCharacterAnimator.SetVelocity(currentMoveVelocity, rotateModel);
+                    SystemGameManager.Instance.PlayerManager.ActiveUnitController.MyCharacterAnimator.SetMoving(false);
+                    SystemGameManager.Instance.PlayerManager.ActiveUnitController.MyCharacterAnimator.SetStrafing(false);
+                    SystemGameManager.Instance.PlayerManager.ActiveUnitController.MyCharacterAnimator.SetVelocity(currentMoveVelocity, rotateModel);
                 }*/
-                if (PlayerManager.Instance.ActiveUnitController != null && PlayerManager.Instance.ActiveUnitController.UnitAnimator != null) {
-                    PlayerManager.Instance.ActiveUnitController.UnitAnimator.SetTurnVelocity(currentTurnVelocity.x);
+                if (SystemGameManager.Instance.PlayerManager.ActiveUnitController != null && SystemGameManager.Instance.PlayerManager.ActiveUnitController.UnitAnimator != null) {
+                    SystemGameManager.Instance.PlayerManager.ActiveUnitController.UnitAnimator.SetTurnVelocity(currentTurnVelocity.x);
                 } else {
 
                 }
             }
 
-            if (PlayerManager.Instance?.MyCharacter?.CharacterStats?.IsAlive == true && PlayerManager.Instance?.PlayerController?.canMove == true) {
+            if (SystemGameManager.Instance.PlayerManager?.MyCharacter?.CharacterStats?.IsAlive == true && SystemGameManager.Instance.PlayerManager?.PlayerController?.canMove == true) {
                 // code to prevent turning when clicking on UI elements
-                if (InputManager.Instance.rightMouseButtonDown && PlayerManager.Instance.PlayerController.HasMoveInput() && (!InputManager.Instance.rightMouseButtonClickedOverUI || (SystemGameManager.Instance.UIManager.NamePlateManager != null ? SystemGameManager.Instance.UIManager.NamePlateManager.MouseOverNamePlate() : false))) {
-                    //Debug.Log(gameObject.name + ".PlayerUnitMovementController.LateGlobalSuperUpdate(): resetting PlayerManager.Instance.ActiveUnitController.transform.forward");
+                if (SystemGameManager.Instance.InputManager.rightMouseButtonDown && SystemGameManager.Instance.PlayerManager.PlayerController.HasMoveInput() && (!SystemGameManager.Instance.InputManager.rightMouseButtonClickedOverUI || (SystemGameManager.Instance.UIManager.NamePlateManager != null ? SystemGameManager.Instance.UIManager.NamePlateManager.MouseOverNamePlate() : false))) {
+                    //Debug.Log(gameObject.name + ".PlayerUnitMovementController.LateGlobalSuperUpdate(): resetting SystemGameManager.Instance.PlayerManager.ActiveUnitController.transform.forward");
 
-                    PlayerManager.Instance.ActiveUnitController.transform.forward = new Vector3(SystemGameManager.Instance.CameraManager.MainCameraController.MyWantedDirection.x, 0, SystemGameManager.Instance.CameraManager.MainCameraController.MyWantedDirection.z);
+                    SystemGameManager.Instance.PlayerManager.ActiveUnitController.transform.forward = new Vector3(SystemGameManager.Instance.CameraManager.MainCameraController.MyWantedDirection.x, 0, SystemGameManager.Instance.CameraManager.MainCameraController.MyWantedDirection.z);
                     SystemGameManager.Instance.CameraManager.MainCamera.GetComponent<AnyRPGCameraController>().ResetWantedPosition();
                 }
 
-                if (PlayerManager.Instance.PlayerController.inputTurn != 0) {
+                if (SystemGameManager.Instance.PlayerManager.PlayerController.inputTurn != 0) {
                     //Debug.Log(gameObject.name + ".PlayerUnitMovementController.LateGlobalSuperUpdate(): rotating " + currentTurnVelocity.x);
-                    PlayerManager.Instance.ActiveUnitController.UnitMotor.Rotate(new Vector3(0, currentTurnVelocity.x, 0));
+                    SystemGameManager.Instance.PlayerManager.ActiveUnitController.UnitMotor.Rotate(new Vector3(0, currentTurnVelocity.x, 0));
                 }
             }
 
@@ -208,28 +208,28 @@ namespace AnyRPG {
 
         void EnterGroundStateCommon() {
             canJump = true;
-            PlayerManager.Instance.ActiveUnitController.UnitAnimator.SetJumping(0);
-            airForwardDirection = PlayerManager.Instance.ActiveUnitController.transform.forward;
+            SystemGameManager.Instance.PlayerManager.ActiveUnitController.UnitAnimator.SetJumping(0);
+            airForwardDirection = SystemGameManager.Instance.PlayerManager.ActiveUnitController.transform.forward;
         }
 
         //Below are the state functions. Each one is called based on the name of the state, so when currentState = Idle, we call Idle_EnterState. If currentState = Jump, we call Jump_StateUpdate()
         void Idle_EnterState() {
             //Debug.Log(gameObject.name + ".PlayerUnitMovementController.Idle_EnterState() Freezing all constraints");
-            if (PlayerManager.Instance.ActiveUnitController != null && PlayerManager.Instance.ActiveUnitController.RigidBody != null) {
-                PlayerManager.Instance.ActiveUnitController.FreezePositionXZ();
+            if (SystemGameManager.Instance.PlayerManager.ActiveUnitController != null && SystemGameManager.Instance.PlayerManager.ActiveUnitController.RigidBody != null) {
+                SystemGameManager.Instance.PlayerManager.ActiveUnitController.FreezePositionXZ();
             }
 
             // reset velocity from any falling movement that was happening
             currentMoveVelocity = Vector3.zero;
             EnterGroundStateCommon();
 
-            PlayerManager.Instance.ActiveUnitController.UnitAnimator.SetMoving(false);
-            PlayerManager.Instance.ActiveUnitController.UnitAnimator.SetStrafing(false);
+            SystemGameManager.Instance.PlayerManager.ActiveUnitController.UnitAnimator.SetMoving(false);
+            SystemGameManager.Instance.PlayerManager.ActiveUnitController.UnitAnimator.SetStrafing(false);
 
             // testing stop turning animation from playing
-            PlayerManager.Instance.ActiveUnitController.UnitAnimator.SetTurnVelocity(0f);
+            SystemGameManager.Instance.PlayerManager.ActiveUnitController.UnitAnimator.SetTurnVelocity(0f);
 
-            PlayerManager.Instance.ActiveUnitController.UnitAnimator.SetVelocity(currentMoveVelocity);
+            SystemGameManager.Instance.PlayerManager.ActiveUnitController.UnitAnimator.SetVelocity(currentMoveVelocity);
 
         }
 
@@ -237,13 +237,13 @@ namespace AnyRPG {
         void Idle_StateUpdate() {
             //Debug.Log(gameObject.name + ".PlayerUnitMovementController.Idle_StateUpdate()");
 
-            if (PlayerManager.Instance.ActiveUnitController == null) {
+            if (SystemGameManager.Instance.PlayerManager.ActiveUnitController == null) {
                 // still waiting for character to spawn
                 //Debug.Log(gameObject.name + ".PlayerUnitMovementController.Idle_StateUpdate(): not spawned yet");
                 return;
             }
 
-            if (PlayerManager.Instance.PlayerController.allowedInput && PlayerManager.Instance.PlayerController.inputJump) {
+            if (SystemGameManager.Instance.PlayerManager.PlayerController.allowedInput && SystemGameManager.Instance.PlayerManager.PlayerController.inputJump) {
                 //Debug.Log(gameObject.name + ".PlayerUnitMovementController.Idle_StateUpdate(): entering jump state");
                 currentState = AnyRPGCharacterState.Jump;
                 rpgCharacterState = AnyRPGCharacterState.Jump;
@@ -253,10 +253,10 @@ namespace AnyRPG {
                 //Debug.Log(gameObject.name + ".PlayerUnitMovementController.Idle_StateUpdate(): entering fall state");
                 currentState = AnyRPGCharacterState.Fall;
                 rpgCharacterState = AnyRPGCharacterState.Fall;
-                PlayerManager.Instance.ActiveUnitController.UnitAnimator.SetTrigger("FallTrigger");
+                SystemGameManager.Instance.PlayerManager.ActiveUnitController.UnitAnimator.SetTrigger("FallTrigger");
                 return;
             }
-            if ((PlayerManager.Instance.PlayerController.HasMoveInput() || PlayerManager.Instance.PlayerController.HasTurnInput()) && PlayerManager.Instance.PlayerController.canMove) {
+            if ((SystemGameManager.Instance.PlayerManager.PlayerController.HasMoveInput() || SystemGameManager.Instance.PlayerManager.PlayerController.HasTurnInput()) && SystemGameManager.Instance.PlayerManager.PlayerController.canMove) {
                 //Debug.Log(gameObject.name + ".PlayerUnitMovementController.Idle_StateUpdate(): entering move state");
                 currentState = AnyRPGCharacterState.Move;
                 rpgCharacterState = AnyRPGCharacterState.Move;
@@ -264,7 +264,7 @@ namespace AnyRPG {
             }
             // factor in slightly uneven ground which gravity will cause the unit to slide on even when standing still with position and rotation locked
             // DETECT SUPER LOW RIGIDBODY VELOCITY AND FREEZE CHARACTER
-            if (Mathf.Abs(PlayerManager.Instance.ActiveUnitController.RigidBody.velocity.y) < 0.01 && MaintainingGround() == true) {
+            if (Mathf.Abs(SystemGameManager.Instance.PlayerManager.ActiveUnitController.RigidBody.velocity.y) < 0.01 && MaintainingGround() == true) {
 
                 // note: disabled this to test if it was causing issues with moving platforms
                 // note : re-enabled to see if it was not preventing launching up hills
@@ -272,22 +272,22 @@ namespace AnyRPG {
 
                 // disable gravity while this close to the ground so we don't slide down slight inclines
                 // freezing y position was causing character to not get lifted by bridges
-                PlayerManager.Instance.ActiveUnitController.FreezePositionXZ();
-                //PlayerManager.Instance.ActiveUnitController.MyRigidBody.constraints = RigidbodyConstraints.FreezeAll;
+                SystemGameManager.Instance.PlayerManager.ActiveUnitController.FreezePositionXZ();
+                //SystemGameManager.Instance.PlayerManager.ActiveUnitController.MyRigidBody.constraints = RigidbodyConstraints.FreezeAll;
             } else {
 
                 // allow the character to fall until they reach the ground
-                PlayerManager.Instance.ActiveUnitController.FreezePositionXZ();
+                SystemGameManager.Instance.PlayerManager.ActiveUnitController.FreezePositionXZ();
 
                 // note: disabled this to test if it was causing issues with moving platforms
                 // note : re-enabled to see if it was not preventing launching up hills
-                currentMoveVelocity = new Vector3(0, Mathf.Clamp(PlayerManager.Instance.ActiveUnitController.RigidBody.velocity.y, -53, 0), 0);
+                currentMoveVelocity = new Vector3(0, Mathf.Clamp(SystemGameManager.Instance.PlayerManager.ActiveUnitController.RigidBody.velocity.y, -53, 0), 0);
             }
         }
 
         void Idle_ExitState() {
             //Debug.Log(gameObject.name + ".PlayerUnitMovementController.Idle_ExitState(). Freezing Rotation only");
-            PlayerManager.Instance.ActiveUnitController.RigidBody.constraints = RigidbodyConstraints.FreezeRotation;
+            SystemGameManager.Instance.PlayerManager.ActiveUnitController.RigidBody.constraints = RigidbodyConstraints.FreezeRotation;
             //Run once when exit the idle state.
         }
 
@@ -298,9 +298,9 @@ namespace AnyRPG {
 
         void Move_StateUpdate() {
 
-            airForwardDirection = PlayerManager.Instance.ActiveUnitController.transform.forward;
-            airRotation = PlayerManager.Instance.ActiveUnitController.transform.rotation;
-            if (PlayerManager.Instance.PlayerController.allowedInput && PlayerManager.Instance.PlayerController.inputJump) {
+            airForwardDirection = SystemGameManager.Instance.PlayerManager.ActiveUnitController.transform.forward;
+            airRotation = SystemGameManager.Instance.PlayerManager.ActiveUnitController.transform.rotation;
+            if (SystemGameManager.Instance.PlayerManager.PlayerController.allowedInput && SystemGameManager.Instance.PlayerManager.PlayerController.inputJump) {
                 currentState = AnyRPGCharacterState.Jump;
                 rpgCharacterState = AnyRPGCharacterState.Jump;
                 return;
@@ -308,7 +308,7 @@ namespace AnyRPG {
             if (!MaintainingGround()) {
                 currentState = AnyRPGCharacterState.Fall;
                 rpgCharacterState = AnyRPGCharacterState.Fall;
-                PlayerManager.Instance.ActiveUnitController.UnitAnimator.SetTrigger("FallTrigger");
+                SystemGameManager.Instance.PlayerManager.ActiveUnitController.UnitAnimator.SetTrigger("FallTrigger");
                 return;
             }
 
@@ -316,12 +316,12 @@ namespace AnyRPG {
 
             // since we are in the move state, reset velocity to zero so we can pick up the new values
             // allow falling while moving by clamping existing y velocity
-            currentMoveVelocity = new Vector3(0, Mathf.Clamp(PlayerManager.Instance.ActiveUnitController.RigidBody.velocity.y, -53, 0), 0);
+            currentMoveVelocity = new Vector3(0, Mathf.Clamp(SystemGameManager.Instance.PlayerManager.ActiveUnitController.RigidBody.velocity.y, -53, 0), 0);
 
-            if ((PlayerManager.Instance.PlayerController.HasMoveInput() || PlayerManager.Instance.PlayerController.HasTurnInput()) && PlayerManager.Instance.PlayerController.canMove) {
+            if ((SystemGameManager.Instance.PlayerManager.PlayerController.HasMoveInput() || SystemGameManager.Instance.PlayerManager.PlayerController.HasTurnInput()) && SystemGameManager.Instance.PlayerManager.PlayerController.canMove) {
 
                 // set clampValue to default of max movement speed
-                float clampValue = PlayerManager.Instance.MaxMovementSpeed;
+                float clampValue = SystemGameManager.Instance.PlayerManager.MaxMovementSpeed;
 
                 // set a clamp value to limit movement speed to walking if going backward
                 /*
@@ -331,15 +331,15 @@ namespace AnyRPG {
                 */
 
                 // get current movement speed and clamp it to current clamp value
-                float calculatedSpeed = PlayerManager.Instance.ActiveUnitController.MovementSpeed;
+                float calculatedSpeed = SystemGameManager.Instance.PlayerManager.ActiveUnitController.MovementSpeed;
                 calculatedSpeed = Mathf.Clamp(calculatedSpeed, 0, clampValue);
 
-                if (PlayerManager.Instance.PlayerController.HasMoveInput()) {
+                if (SystemGameManager.Instance.PlayerManager.PlayerController.HasMoveInput()) {
                     // multiply normalized movement by calculated speed to get actual movement
                     currentMoveVelocity = LocalMovement() * calculatedSpeed;
                 }
-                if (PlayerManager.Instance.PlayerController.HasTurnInput()) {
-                    currentTurnVelocity = PlayerManager.Instance.PlayerController.TurnInput * ((PlayerPrefs.GetFloat("KeyboardTurnSpeed") * 5) + 6.0f);
+                if (SystemGameManager.Instance.PlayerManager.PlayerController.HasTurnInput()) {
+                    currentTurnVelocity = SystemGameManager.Instance.PlayerManager.PlayerController.TurnInput * ((PlayerPrefs.GetFloat("KeyboardTurnSpeed") * 5) + 6.0f);
                 }
             } else {
                 currentTurnVelocity = Vector3.zero;
@@ -353,20 +353,20 @@ namespace AnyRPG {
             //Debug.Log("Knockback_EnterState()");
             //currentMoveVelocity.y = (Vector3.up * jumpAcceleration).y;
             canJump = false;
-            PlayerManager.Instance.ActiveUnitController.UnitAnimator.SetJumping(1);
-            PlayerManager.Instance.ActiveUnitController.UnitAnimator.SetTrigger("JumpTrigger");
+            SystemGameManager.Instance.PlayerManager.ActiveUnitController.UnitAnimator.SetJumping(1);
+            SystemGameManager.Instance.PlayerManager.ActiveUnitController.UnitAnimator.SetTrigger("JumpTrigger");
         }
 
         void Knockback_StateUpdate() {
             //Debug.Log("Knockback_StateUpdate()");
             // new code to allow bouncing off walls instead of getting stuck flying into them
-            //currentMoveVelocity = CharacterRelativeInput(PlayerManager.Instance.ActiveUnitController.transform.InverseTransformDirection(PlayerManager.Instance.ActiveUnitController.MyRigidBody.velocity));
-            Vector3 airForwardVelocity = Quaternion.LookRotation(airForwardDirection, Vector3.up) * PlayerManager.Instance.ActiveUnitController.RigidBody.velocity;
-            currentMoveVelocity = PlayerManager.Instance.ActiveUnitController.transform.InverseTransformDirection(PlayerManager.Instance.ActiveUnitController.RigidBody.velocity);
-            Vector3 fromtoMoveVelocity = Quaternion.FromToRotation(airForwardDirection, PlayerManager.Instance.ActiveUnitController.transform.forward) * PlayerManager.Instance.ActiveUnitController.transform.InverseTransformDirection(PlayerManager.Instance.ActiveUnitController.RigidBody.velocity);
+            //currentMoveVelocity = CharacterRelativeInput(SystemGameManager.Instance.PlayerManager.ActiveUnitController.transform.InverseTransformDirection(SystemGameManager.Instance.PlayerManager.ActiveUnitController.MyRigidBody.velocity));
+            Vector3 airForwardVelocity = Quaternion.LookRotation(airForwardDirection, Vector3.up) * SystemGameManager.Instance.PlayerManager.ActiveUnitController.RigidBody.velocity;
+            currentMoveVelocity = SystemGameManager.Instance.PlayerManager.ActiveUnitController.transform.InverseTransformDirection(SystemGameManager.Instance.PlayerManager.ActiveUnitController.RigidBody.velocity);
+            Vector3 fromtoMoveVelocity = Quaternion.FromToRotation(airForwardDirection, SystemGameManager.Instance.PlayerManager.ActiveUnitController.transform.forward) * SystemGameManager.Instance.PlayerManager.ActiveUnitController.transform.InverseTransformDirection(SystemGameManager.Instance.PlayerManager.ActiveUnitController.RigidBody.velocity);
             currentMoveVelocity = fromtoMoveVelocity;
-            if (AcquiringGround() && PlayerManager.Instance.ActiveUnitController.RigidBody.velocity.y < 0.1) {
-                if ((PlayerManager.Instance.PlayerController.HasMoveInput() || PlayerManager.Instance.PlayerController.HasTurnInput()) && PlayerManager.Instance.PlayerController.canMove) {
+            if (AcquiringGround() && SystemGameManager.Instance.PlayerManager.ActiveUnitController.RigidBody.velocity.y < 0.1) {
+                if ((SystemGameManager.Instance.PlayerManager.PlayerController.HasMoveInput() || SystemGameManager.Instance.PlayerManager.PlayerController.HasTurnInput()) && SystemGameManager.Instance.PlayerManager.PlayerController.canMove) {
                     // new code to allow not freezing up when landing - fix, should be fall or somehow prevent from getting into move during takeoff
                     currentState = AnyRPGCharacterState.Move;
                     rpgCharacterState = AnyRPGCharacterState.Move;
@@ -388,19 +388,19 @@ namespace AnyRPG {
         void Jump_EnterState() {
             currentMoveVelocity.y = (Vector3.up * jumpAcceleration).y;
             canJump = false;
-            PlayerManager.Instance.ActiveUnitController.UnitAnimator.SetJumping(1);
-            PlayerManager.Instance.ActiveUnitController.UnitAnimator.SetTrigger("JumpTrigger");
+            SystemGameManager.Instance.PlayerManager.ActiveUnitController.UnitAnimator.SetJumping(1);
+            SystemGameManager.Instance.PlayerManager.ActiveUnitController.UnitAnimator.SetTrigger("JumpTrigger");
             lastJumpFrame = Time.frameCount;
         }
 
         void Jump_StateUpdate() {
             // new code to allow bouncing off walls instead of getting stuck flying into them
-            //currentMoveVelocity = CharacterRelativeInput(PlayerManager.Instance.ActiveUnitController.transform.InverseTransformDirection(PlayerManager.Instance.ActiveUnitController.MyRigidBody.velocity));
-            Vector3 airForwardVelocity = Quaternion.LookRotation(airForwardDirection, Vector3.up) * PlayerManager.Instance.ActiveUnitController.RigidBody.velocity;
-            currentMoveVelocity = PlayerManager.Instance.ActiveUnitController.transform.InverseTransformDirection(PlayerManager.Instance.ActiveUnitController.RigidBody.velocity);
-            Vector3 fromtoMoveVelocity = Quaternion.FromToRotation(airForwardDirection, PlayerManager.Instance.ActiveUnitController.transform.forward) * PlayerManager.Instance.ActiveUnitController.transform.InverseTransformDirection(PlayerManager.Instance.ActiveUnitController.RigidBody.velocity);
+            //currentMoveVelocity = CharacterRelativeInput(SystemGameManager.Instance.PlayerManager.ActiveUnitController.transform.InverseTransformDirection(SystemGameManager.Instance.PlayerManager.ActiveUnitController.MyRigidBody.velocity));
+            Vector3 airForwardVelocity = Quaternion.LookRotation(airForwardDirection, Vector3.up) * SystemGameManager.Instance.PlayerManager.ActiveUnitController.RigidBody.velocity;
+            currentMoveVelocity = SystemGameManager.Instance.PlayerManager.ActiveUnitController.transform.InverseTransformDirection(SystemGameManager.Instance.PlayerManager.ActiveUnitController.RigidBody.velocity);
+            Vector3 fromtoMoveVelocity = Quaternion.FromToRotation(airForwardDirection, SystemGameManager.Instance.PlayerManager.ActiveUnitController.transform.forward) * SystemGameManager.Instance.PlayerManager.ActiveUnitController.transform.InverseTransformDirection(SystemGameManager.Instance.PlayerManager.ActiveUnitController.RigidBody.velocity);
             currentMoveVelocity = fromtoMoveVelocity;
-            if (PlayerManager.Instance.ActiveUnitController.RigidBody.velocity.y <= 0f && Time.frameCount > (lastJumpFrame + 2)) {
+            if (SystemGameManager.Instance.PlayerManager.ActiveUnitController.RigidBody.velocity.y <= 0f && Time.frameCount > (lastJumpFrame + 2)) {
                 currentState = AnyRPGCharacterState.Fall;
                 rpgCharacterState = AnyRPGCharacterState.Fall;
                 return;
@@ -410,17 +410,17 @@ namespace AnyRPG {
         void Fall_EnterState() {
             //Debug.Log("Fall_EnterState()");
             canJump = false;
-            PlayerManager.Instance.ActiveUnitController.UnitAnimator.SetJumping(2);
+            SystemGameManager.Instance.PlayerManager.ActiveUnitController.UnitAnimator.SetJumping(2);
         }
 
         void Fall_StateUpdate() {
             // new code to allow bouncing off walls instead of getting stuck flying into them
-            Vector3 fromtoMoveVelocity = Quaternion.FromToRotation(airForwardDirection, PlayerManager.Instance.ActiveUnitController.transform.forward) * PlayerManager.Instance.ActiveUnitController.transform.InverseTransformDirection(PlayerManager.Instance.ActiveUnitController.RigidBody.velocity);
-            //currentMoveVelocity = PlayerManager.Instance.ActiveUnitController.transform.InverseTransformDirection(CharacterRelativeInput(PlayerManager.Instance.ActiveUnitController.MyRigidBody.velocity));
+            Vector3 fromtoMoveVelocity = Quaternion.FromToRotation(airForwardDirection, SystemGameManager.Instance.PlayerManager.ActiveUnitController.transform.forward) * SystemGameManager.Instance.PlayerManager.ActiveUnitController.transform.InverseTransformDirection(SystemGameManager.Instance.PlayerManager.ActiveUnitController.RigidBody.velocity);
+            //currentMoveVelocity = SystemGameManager.Instance.PlayerManager.ActiveUnitController.transform.InverseTransformDirection(CharacterRelativeInput(SystemGameManager.Instance.PlayerManager.ActiveUnitController.MyRigidBody.velocity));
             currentMoveVelocity = new Vector3(fromtoMoveVelocity.x, Mathf.Clamp(fromtoMoveVelocity.y, -53, 0), fromtoMoveVelocity.z);
             //currentMoveVelocity = new Vector3(currentMoveVelocity.x, 0, currentMoveVelocity.z);
             if (AcquiringGround()) {
-                if ((PlayerManager.Instance.PlayerController.HasMoveInput() || PlayerManager.Instance.PlayerController.HasTurnInput()) && PlayerManager.Instance.PlayerController.canMove) {
+                if ((SystemGameManager.Instance.PlayerManager.PlayerController.HasMoveInput() || SystemGameManager.Instance.PlayerManager.PlayerController.HasTurnInput()) && SystemGameManager.Instance.PlayerManager.PlayerController.canMove) {
                     // new code to allow not freezing up when landing
                     currentState = AnyRPGCharacterState.Move;
                     rpgCharacterState = AnyRPGCharacterState.Move;
@@ -434,14 +434,14 @@ namespace AnyRPG {
 
         public void SwitchCollisionOn() {
             //Debug.Log(gameObject.name + ".PlayerUnitMovementController.SwitchCollisionOn()");
-            if (PlayerManager.Instance.ActiveUnitController != null) {
-                PlayerManager.Instance.PlayerController.canMove = true;
+            if (SystemGameManager.Instance.PlayerManager.ActiveUnitController != null) {
+                SystemGameManager.Instance.PlayerManager.PlayerController.canMove = true;
                 if (movementStateController != null) {
                     movementStateController.enabled = true;
                 }
             }
-            if (PlayerManager.Instance?.ActiveUnitController?.UnitAnimator != null) {
-                PlayerManager.Instance.ActiveUnitController.UnitAnimator.DisableRootMotion();
+            if (SystemGameManager.Instance.PlayerManager?.ActiveUnitController?.UnitAnimator != null) {
+                SystemGameManager.Instance.PlayerManager.ActiveUnitController.UnitAnimator.DisableRootMotion();
             }
         }
 
@@ -457,11 +457,11 @@ namespace AnyRPG {
             if (inputVector != Vector3.zero) {
                 qRelativeVelocity = Quaternion.LookRotation(airForwardDirection, Vector3.up) * inputVector;
             }
-            Vector3 tRelativeVelocity = PlayerManager.Instance.ActiveUnitController.transform.TransformDirection(inputVector);
+            Vector3 tRelativeVelocity = SystemGameManager.Instance.PlayerManager.ActiveUnitController.transform.TransformDirection(inputVector);
             if (qRelativeVelocity != Vector3.zero && tRelativeVelocity != Vector3.zero) {
                 //Debug.Log("CharacterRelativeInput(" + inputVector + "): qRelativeVelocity: " + qRelativeVelocity + "; tRelativeVelocity: " + tRelativeVelocity);
             }
-            //Debug.Log("PlayerUnitMovementController.CharacterRelativeInput(" + inputVector + "): return " + qRelativeVelocity + "; transformF: " + PlayerManager.Instance.ActiveUnitController.transform.forward + "; airForwardDirection: " + airForwardDirection);
+            //Debug.Log("PlayerUnitMovementController.CharacterRelativeInput(" + inputVector + "): return " + qRelativeVelocity + "; transformF: " + SystemGameManager.Instance.PlayerManager.ActiveUnitController.transform.forward + "; airForwardDirection: " + airForwardDirection);
             return qRelativeVelocity;
         }
 
@@ -487,7 +487,7 @@ namespace AnyRPG {
 
         private bool AcquiringGround() {
             //Debug.Log("PlayerUnitMovementController.AcquiringGround()");
-            Collider[] hitColliders = Physics.OverlapBox(PlayerManager.Instance.ActiveUnitController.transform.position, acquiringGroundExtents, Quaternion.identity, groundMask);
+            Collider[] hitColliders = Physics.OverlapBox(SystemGameManager.Instance.PlayerManager.ActiveUnitController.transform.position, acquiringGroundExtents, Quaternion.identity, groundMask);
             /*
             foreach (Collider hitCollider in hitColliders) {
                 //Debug.Log("Overlap Box Hit : " + hitColliders[i].name + i);
@@ -510,7 +510,7 @@ namespace AnyRPG {
 
         private Vector3 LocalMovement() {
             //Debug.Log("PlayerUnitMovementController.LocalMovement(): groundAngle: " + groundAngle + "; backwardGroundAngle: " + backwardGroundAngle);
-            Vector3 normalizedInput = PlayerManager.Instance.PlayerController.NormalizedMoveInput;
+            Vector3 normalizedInput = SystemGameManager.Instance.PlayerManager.PlayerController.NormalizedMoveInput;
 
             // testing applying downforce on ground that is sloped downward - can't do it because that will later be rotated which could result in the "down" force moving backward at angles beyond 45degrees
             if (groundAngle == 0 && backwardGroundAngle == 0 && nearFrontObstacle == false) {
@@ -518,8 +518,8 @@ namespace AnyRPG {
                 // this should make the character stick to the ground better when actively moving while grounded
                 // ONLY APPLY Y DOWNFORCE ON FLAT GROUND, this will apply a y downforce multiplied by speed, not the existing y downforce from physics (gravity)
                 float yValue = 0f;
-                if (PlayerManager.Instance.ActiveUnitController.transform.InverseTransformPoint(groundHitInfo.point) != Vector3.zero) {
-                    yValue = Mathf.Clamp(PlayerManager.Instance.ActiveUnitController.RigidBody.velocity.normalized.y, -1, 0);
+                if (SystemGameManager.Instance.PlayerManager.ActiveUnitController.transform.InverseTransformPoint(groundHitInfo.point) != Vector3.zero) {
+                    yValue = Mathf.Clamp(SystemGameManager.Instance.PlayerManager.ActiveUnitController.RigidBody.velocity.normalized.y, -1, 0);
                     //Debug.Log("LocalMovement(): We are above the (flat) ground and there are no near collisions.  Applying extra ground force: " + yValue);
                 }
                 normalizedInput = new Vector3(normalizedInput.x, yValue, normalizedInput.z);
@@ -563,7 +563,7 @@ namespace AnyRPG {
         private void CalculateForward() {
             if (!MaintainingGround()) {
                 forwardDirection = airForwardDirection;
-                //forwardDirection = PlayerManager.Instance.ActiveUnitController.transform.forward;
+                //forwardDirection = SystemGameManager.Instance.PlayerManager.ActiveUnitController.transform.forward;
                 return;
             }
 
@@ -576,10 +576,10 @@ namespace AnyRPG {
 
                 // find highest contact point
                 foreach (ContactPoint contactPoint in forwardContactPoints) {
-                    Vector3 localContactPoint = PlayerManager.Instance.ActiveUnitController.transform.InverseTransformPoint(contactPoint.point);
+                    Vector3 localContactPoint = SystemGameManager.Instance.PlayerManager.ActiveUnitController.transform.InverseTransformPoint(contactPoint.point);
                     // ensure forward contact point is above a certain height and actually in front of the character
                     if (localContactPoint.y > collisionMinimumHeight && localContactPoint != Vector3.zero) {
-                        if (smallestIndex == -1 || localContactPoint.y > PlayerManager.Instance.ActiveUnitController.transform.InverseTransformPoint(forwardContactPoints[smallestIndex].point).y) {
+                        if (smallestIndex == -1 || localContactPoint.y > SystemGameManager.Instance.PlayerManager.ActiveUnitController.transform.InverseTransformPoint(forwardContactPoints[smallestIndex].point).y) {
                             //Debug.Log(gameObject.name + ".PlayerUnitMovementController.CalculateForward(): found highest contact point at: " + contactPoint.point + "; local: " + localContactPoint);
                             smallestIndex = counter;
                         }
@@ -589,7 +589,7 @@ namespace AnyRPG {
 
                 if (smallestIndex != -1) {
                     // get vector between contact point and base of player
-                    Vector3 directionToContact = (forwardContactPoints[smallestIndex].point - PlayerManager.Instance.ActiveUnitController.transform.position).normalized;
+                    Vector3 directionToContact = (forwardContactPoints[smallestIndex].point - SystemGameManager.Instance.PlayerManager.ActiveUnitController.transform.position).normalized;
                     forwardDirection = directionToContact;
                     //Debug.Log(gameObject.name + ".PlayerUnitMovementController.CalculateForward(): Vector3.Cross(downHitInfo.normal(" + downHitInfo.normal + "), -transform.right(" + -transform.right + ")): " + forwardDirection);
                     //Debug.Log(gameObject.name + ".PlayerUnitMovementController.CalculateForward(): directionToContact: " + directionToContact + "; forwardDirection: " + forwardDirection);
@@ -599,11 +599,11 @@ namespace AnyRPG {
 
             if (nearFrontObstacle && groundHitInfo.normal == Vector3.up) {
                 //Debug.Log(gameObject.name + ".PlayerUnitMovementController.CalculateForward(): near front obstacle is true and we didn't get any useful information from the ground normal, trying obstacle normal");
-                forwardDirection = Vector3.Cross(forwardHitInfo.normal, -PlayerManager.Instance.ActiveUnitController.transform.right);
+                forwardDirection = Vector3.Cross(forwardHitInfo.normal, -SystemGameManager.Instance.PlayerManager.ActiveUnitController.transform.right);
                 return;
             }
 
-            forwardDirection = Vector3.Cross(groundHitInfo.normal, -PlayerManager.Instance.ActiveUnitController.transform.right);
+            forwardDirection = Vector3.Cross(groundHitInfo.normal, -SystemGameManager.Instance.PlayerManager.ActiveUnitController.transform.right);
             //Debug.Log(gameObject.name + ".PlayerUnitMovementController.CalculateForward(): no forward collisions. forwardDirection = Vector3.Cross(downHitInfo.normal(" + downHitInfo.normal + "), -transform.right(" + -transform.right + ")): " + forwardDirection);
             return;
 
@@ -622,9 +622,9 @@ namespace AnyRPG {
 
                 // find highest contact point
                 foreach (ContactPoint contactPoint in backwardContactPoints) {
-                    Vector3 localContactPoint = PlayerManager.Instance.ActiveUnitController.transform.InverseTransformPoint(contactPoint.point);
+                    Vector3 localContactPoint = SystemGameManager.Instance.PlayerManager.ActiveUnitController.transform.InverseTransformPoint(contactPoint.point);
                     if (localContactPoint.y > collisionMinimumHeight && localContactPoint != Vector3.zero) {
-                        if (smallestIndex == -1 || localContactPoint.y > PlayerManager.Instance.ActiveUnitController.transform.InverseTransformPoint(backwardContactPoints[smallestIndex].point).y) {
+                        if (smallestIndex == -1 || localContactPoint.y > SystemGameManager.Instance.PlayerManager.ActiveUnitController.transform.InverseTransformPoint(backwardContactPoints[smallestIndex].point).y) {
                             //Debug.Log(gameObject.name + ".PlayerUnitMovementController.CalculateBackward(): found highest contact point");
                             smallestIndex = counter;
                         }
@@ -633,7 +633,7 @@ namespace AnyRPG {
                 }
                 if (smallestIndex != -1) {
                     // get angle between contact point and base of player
-                    Vector3 directionToContact = (backwardContactPoints[smallestIndex].point - PlayerManager.Instance.ActiveUnitController.transform.position).normalized;
+                    Vector3 directionToContact = (backwardContactPoints[smallestIndex].point - SystemGameManager.Instance.PlayerManager.ActiveUnitController.transform.position).normalized;
                     backwardDirection = directionToContact;
                     //forwardDirection = Vector3.Cross(directionToContact, -transform.right);
                     //Debug.Log(gameObject.name + ".PlayerUnitMovementController.CalculateBackward(): directionToContact: " + directionToContact + "; rearDirection: " + backwardDirection);
@@ -643,12 +643,12 @@ namespace AnyRPG {
 
             if (nearFrontObstacle && groundHitInfo.normal == Vector3.up) {
                 //Debug.Log(gameObject.name + ".PlayerUnitMovementController.CalculateForward(): near front obstacle is true and we didn't get any useful information from the ground normal, trying obstacle normal");
-                backwardDirection = Vector3.Cross(forwardHitInfo.normal, PlayerManager.Instance.ActiveUnitController.transform.right);
+                backwardDirection = Vector3.Cross(forwardHitInfo.normal, SystemGameManager.Instance.PlayerManager.ActiveUnitController.transform.right);
                 return;
             }
 
-            backwardDirection = Vector3.Cross(groundHitInfo.normal, PlayerManager.Instance.ActiveUnitController.transform.right);
-            //Debug.Log(gameObject.name + ".PlayerUnitMovementController.CalculateForward(): no backward collisions. backwardDirection = Vector3.Cross(downHitInfo.normal(" + downHitInfo.normal + "), PlayerManager.Instance.ActiveUnitController.transform.right(" + PlayerManager.Instance.ActiveUnitController.transform.right + ")): " + backwardDirection);
+            backwardDirection = Vector3.Cross(groundHitInfo.normal, SystemGameManager.Instance.PlayerManager.ActiveUnitController.transform.right);
+            //Debug.Log(gameObject.name + ".PlayerUnitMovementController.CalculateForward(): no backward collisions. backwardDirection = Vector3.Cross(downHitInfo.normal(" + downHitInfo.normal + "), SystemGameManager.Instance.PlayerManager.ActiveUnitController.transform.right(" + SystemGameManager.Instance.PlayerManager.ActiveUnitController.transform.right + ")): " + backwardDirection);
             return;
         }
 
@@ -664,13 +664,13 @@ namespace AnyRPG {
                 Debug.Log("hitInfo: " + hitInfo.collider.gameObject.name + "; normal: " + hitInfo.normal);
             }
             */
-            float downHitAngle = Vector3.Angle(groundHitInfo.normal, PlayerManager.Instance.ActiveUnitController.transform.forward) - 90f;
+            float downHitAngle = Vector3.Angle(groundHitInfo.normal, SystemGameManager.Instance.PlayerManager.ActiveUnitController.transform.forward) - 90f;
             //Debug.Log(gameObject.name + ".PlayerUnitMovementController.CalculateGroundAngle() from downHitInfo.normal(" + downHitInfo.normal + "): " + downHitAngle);
-            float forwardHitAngle = Vector3.Angle(forwardHitInfo.normal, PlayerManager.Instance.ActiveUnitController.transform.forward) - 90f;
+            float forwardHitAngle = Vector3.Angle(forwardHitInfo.normal, SystemGameManager.Instance.PlayerManager.ActiveUnitController.transform.forward) - 90f;
             //Debug.Log(gameObject.name + ".PlayerUnitMovementController.CalculateGroundAngle() from forwardHitInfo.normal(" + forwardHitInfo.normal + "): " + forwardHitAngle);
 
-            //groundAngle = Vector3.Angle(forwardDirection, PlayerManager.Instance.ActiveUnitController.transform.forward) + 90;
-            float forwardcollisionAngle = Vector3.Angle(forwardDirection, PlayerManager.Instance.ActiveUnitController.transform.forward) * (forwardDirection.y < 0 ? -1 : 1);
+            //groundAngle = Vector3.Angle(forwardDirection, SystemGameManager.Instance.PlayerManager.ActiveUnitController.transform.forward) + 90;
+            float forwardcollisionAngle = Vector3.Angle(forwardDirection, SystemGameManager.Instance.PlayerManager.ActiveUnitController.transform.forward) * (forwardDirection.y < 0 ? -1 : 1);
 
             // get ground angle from downhit
             // because downhit angle is based on fowardcollissionAngle it can return 90 even on flat ground. this is ok because we will use one of the collission points that is lower than step height
@@ -695,7 +695,7 @@ namespace AnyRPG {
                 //Debug.Log(gameObject.name + ".PlayerUnitMovementController.CalculateGroundAngle() from forwardDirection(" + forwardDirection + "): " + forwardcollisionAngle + "; from downhitInfo: " + downHitAngle);
             }
 
-            backwardGroundAngle = Vector3.Angle(backwardDirection, -PlayerManager.Instance.ActiveUnitController.transform.forward) * (backwardDirection.y < 0 ? -1 : 1);
+            backwardGroundAngle = Vector3.Angle(backwardDirection, -SystemGameManager.Instance.PlayerManager.ActiveUnitController.transform.forward) * (backwardDirection.y < 0 ? -1 : 1);
             if (backwardGroundAngle != 0) {
                 //Debug.Log(gameObject.name + ".PlayerUnitMovementController.CalculateGroundAngle() from backwardDirection(" + backwardDirection + "): " + backwardGroundAngle);
             }
@@ -704,7 +704,7 @@ namespace AnyRPG {
         private void CheckGround() {
             //Debug.Log(gameObject.name + ".PlayerUnitMovementController.CheckGround()");
             // downward cast for grounding
-            if (Physics.Raycast(PlayerManager.Instance.ActiveUnitController.transform.position + (Vector3.up * 0.25f), -Vector3.up, out downHitInfo, rayCastHeight, groundMask)) {
+            if (Physics.Raycast(SystemGameManager.Instance.PlayerManager.ActiveUnitController.transform.position + (Vector3.up * 0.25f), -Vector3.up, out downHitInfo, rayCastHeight, groundMask)) {
                 //Debug.Log(gameObject.name + ".PlayerUnitMovementController.CheckGround(): grounded is true");
                 tempGrounded = true;
             } else {
@@ -713,7 +713,7 @@ namespace AnyRPG {
             }
 
             // downward cast for normals
-            Physics.Raycast(PlayerManager.Instance.ActiveUnitController.transform.position + (Vector3.up * 0.25f), -Vector3.up, out groundHitInfo, Mathf.Infinity, groundMask);
+            Physics.Raycast(SystemGameManager.Instance.PlayerManager.ActiveUnitController.transform.position + (Vector3.up * 0.25f), -Vector3.up, out groundHitInfo, Mathf.Infinity, groundMask);
 
             if (bottomContactPoints.Count > 0 || forwardContactPoints.Count > 0 || backwardContactPoints.Count > 0) {
                 // extra check to catch contact points below maximum step height in case the character is halfway off a slope
@@ -721,7 +721,7 @@ namespace AnyRPG {
                 tempGrounded = true;
             }
 
-            Collider[] hitColliders = Physics.OverlapBox(PlayerManager.Instance.ActiveUnitController.transform.position, maintainingGroundExtents, Quaternion.identity, groundMask);
+            Collider[] hitColliders = Physics.OverlapBox(SystemGameManager.Instance.PlayerManager.ActiveUnitController.transform.position, maintainingGroundExtents, Quaternion.identity, groundMask);
             if (hitColliders.Length > 0) {
                 //foreach (Collider collider in hitColliders) {
                 //Debug.Log(gameObject.name + ".PlayerUnitMovementController.CheckGround(): grounded is true from overlapbox (" + maintainingGroundExtents + "): " + collider.gameObject.name);
@@ -738,12 +738,12 @@ namespace AnyRPG {
             */
 
             // forward cast
-            Vector3 directionOfTravel = PlayerManager.Instance.ActiveUnitController.transform.forward;
+            Vector3 directionOfTravel = SystemGameManager.Instance.PlayerManager.ActiveUnitController.transform.forward;
             if (currentMoveVelocity.x != 0 || currentMoveVelocity.z != 0) {
-                directionOfTravel = PlayerManager.Instance.ActiveUnitController.transform.TransformDirection(new Vector3(currentMoveVelocity.x, 0, currentMoveVelocity.z)).normalized;
+                directionOfTravel = SystemGameManager.Instance.PlayerManager.ActiveUnitController.transform.TransformDirection(new Vector3(currentMoveVelocity.x, 0, currentMoveVelocity.z)).normalized;
             }
-            Debug.DrawLine(PlayerManager.Instance.ActiveUnitController.transform.position + (Vector3.up * 0.05f), PlayerManager.Instance.ActiveUnitController.transform.position + (Vector3.up * 0.05f) + (directionOfTravel * rayCastLength), Color.black);
-            if (Physics.Raycast(PlayerManager.Instance.ActiveUnitController.transform.position + (Vector3.up * 0.05f), directionOfTravel, out forwardHitInfo, rayCastLength, groundMask)) {
+            Debug.DrawLine(SystemGameManager.Instance.PlayerManager.ActiveUnitController.transform.position + (Vector3.up * 0.05f), SystemGameManager.Instance.PlayerManager.ActiveUnitController.transform.position + (Vector3.up * 0.05f) + (directionOfTravel * rayCastLength), Color.black);
+            if (Physics.Raycast(SystemGameManager.Instance.PlayerManager.ActiveUnitController.transform.position + (Vector3.up * 0.05f), directionOfTravel, out forwardHitInfo, rayCastLength, groundMask)) {
                 //Debug.Log(gameObject.name + ".PlayerUnitMovementController.CheckGround(): There is an obstacle in front of the player: " + forwardHitInfo.collider.gameObject.name + "; normal: " + forwardHitInfo.normal);
                 nearFrontObstacle = true;
             } else {
@@ -763,9 +763,9 @@ namespace AnyRPG {
                 return;
             }
 
-            Debug.DrawLine(PlayerManager.Instance.ActiveUnitController.transform.position, PlayerManager.Instance.ActiveUnitController.transform.position + forwardDirection * rayCastHeight * 2, Color.blue);
-            Debug.DrawLine(PlayerManager.Instance.ActiveUnitController.transform.position, PlayerManager.Instance.ActiveUnitController.transform.position + backwardDirection * rayCastHeight * 2, Color.magenta);
-            Debug.DrawLine(PlayerManager.Instance.ActiveUnitController.transform.position + (Vector3.up * 0.25f), (PlayerManager.Instance.ActiveUnitController.transform.position + (Vector3.up * 0.25f)) - (Vector3.up * rayCastHeight), Color.green);
+            Debug.DrawLine(SystemGameManager.Instance.PlayerManager.ActiveUnitController.transform.position, SystemGameManager.Instance.PlayerManager.ActiveUnitController.transform.position + forwardDirection * rayCastHeight * 2, Color.blue);
+            Debug.DrawLine(SystemGameManager.Instance.PlayerManager.ActiveUnitController.transform.position, SystemGameManager.Instance.PlayerManager.ActiveUnitController.transform.position + backwardDirection * rayCastHeight * 2, Color.magenta);
+            Debug.DrawLine(SystemGameManager.Instance.PlayerManager.ActiveUnitController.transform.position + (Vector3.up * 0.25f), (SystemGameManager.Instance.PlayerManager.ActiveUnitController.transform.position + (Vector3.up * 0.25f)) - (Vector3.up * rayCastHeight), Color.green);
 
         }
 
@@ -784,21 +784,21 @@ namespace AnyRPG {
             collision.GetContacts(contactPoints);
             foreach (ContactPoint contactPoint in contactPoints) {
                 if (((1 << collision.gameObject.layer) & groundMask) != 0) {
-                    //Debug.Log(gameObject.name + ".CharacterUnit.OnCollisionStay(): " + collision.collider.gameObject.name + " matched the ground Layer mask at : " + contactPoint.point + "; player: " + PlayerManager.Instance.ActiveUnitController.transform.position);
-                    //float hitAngle = Vector3.Angle(contactPoint.normal, PlayerManager.Instance.ActiveUnitController.transform.forward);
+                    //Debug.Log(gameObject.name + ".CharacterUnit.OnCollisionStay(): " + collision.collider.gameObject.name + " matched the ground Layer mask at : " + contactPoint.point + "; player: " + SystemGameManager.Instance.PlayerManager.ActiveUnitController.transform.position);
+                    //float hitAngle = Vector3.Angle(contactPoint.normal, SystemGameManager.Instance.PlayerManager.ActiveUnitController.transform.forward);
                     //Debug.Log(gameObject.name + ".CharacterUnit.OnCollisionStay(): " + collision.collider.gameObject.name + "; normal: " + contactPoint.normal + "; angle: " + hitAngle);
-                    Vector3 relativePoint = PlayerManager.Instance.ActiveUnitController.transform.InverseTransformPoint(contactPoint.point);
+                    Vector3 relativePoint = SystemGameManager.Instance.PlayerManager.ActiveUnitController.transform.InverseTransformPoint(contactPoint.point);
                     //Debug.Log(gameObject.name + ".CharacterUnit.OnCollisionStay(): " + collision.collider.gameObject.name + "; relativePoint: " + relativePoint);
                     if (relativePoint.z > 0 && relativePoint.y < stepHeight) {
                         //Debug.Log(gameObject.name + ".CharacterUnit.DebugCollision(): " + collision.collider.gameObject.name + "; relativePoint: " + relativePoint + " is in front of the player at world point: " + contactPoint.point);
                         // get direction to contact point
-                        Vector3 direction = contactPoint.point - PlayerManager.Instance.ActiveUnitController.transform.position;
+                        Vector3 direction = contactPoint.point - SystemGameManager.Instance.PlayerManager.ActiveUnitController.transform.position;
                         // extend contact point
                         direction *= 1.1f;
                         // shoot raycast downward from new point to detect stairs
 
-                        Vector3 raycastPoint = PlayerManager.Instance.ActiveUnitController.transform.position + direction;
-                        raycastPoint = new Vector3(raycastPoint.x, PlayerManager.Instance.ActiveUnitController.transform.position.y + stepHeight + 1f, raycastPoint.z);
+                        Vector3 raycastPoint = SystemGameManager.Instance.PlayerManager.ActiveUnitController.transform.position + direction;
+                        raycastPoint = new Vector3(raycastPoint.x, SystemGameManager.Instance.PlayerManager.ActiveUnitController.transform.position.y + stepHeight + 1f, raycastPoint.z);
                         //Debug.Log(gameObject.name + ".CharacterUnit.DebugCollision(): " + collision.collider.gameObject.name + "; direction is: " + direction + "; raycastpoint: " + raycastPoint);
                         Debug.DrawLine(raycastPoint, new Vector3(raycastPoint.x, raycastPoint.y - stepHeight - 1f, raycastPoint.z), Color.green);
                         RaycastHit stairHitInfo;
@@ -832,7 +832,7 @@ namespace AnyRPG {
                         //Debug.Log(gameObject.name + ".CharacterUnit.OnCollisionStay(): " + collision.collider.gameObject.name + "; relativePoint: " + relativePoint + " is NOT in front of or behind the player or is higher than the stepheight!");
                     }
                 }
-                Debug.DrawLine(PlayerManager.Instance.ActiveUnitController.transform.position, contactPoint.point, Color.yellow);
+                Debug.DrawLine(SystemGameManager.Instance.PlayerManager.ActiveUnitController.transform.position, contactPoint.point, Color.yellow);
             }
         }
 
@@ -844,14 +844,14 @@ namespace AnyRPG {
         }
 
         private void OnDrawGizmos() {
-            if (PlayerManager.Instance == null || PlayerManager.Instance.ActiveUnitController == null) {
+            if (SystemGameManager.Instance.PlayerManager == null || SystemGameManager.Instance.PlayerManager.ActiveUnitController == null) {
                 return;
             }
             Gizmos.color = Color.white;
-            Gizmos.DrawWireCube(PlayerManager.Instance.ActiveUnitController.transform.position, acquiringGroundExtents * 2);
+            Gizmos.DrawWireCube(SystemGameManager.Instance.PlayerManager.ActiveUnitController.transform.position, acquiringGroundExtents * 2);
 
             Gizmos.color = Color.yellow;
-            Gizmos.DrawWireCube(PlayerManager.Instance.ActiveUnitController.transform.position, maintainingGroundExtents * 2);
+            Gizmos.DrawWireCube(SystemGameManager.Instance.PlayerManager.ActiveUnitController.transform.position, maintainingGroundExtents * 2);
         }
 
         public void OnDisable() {

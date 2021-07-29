@@ -72,13 +72,13 @@ namespace AnyRPG {
                 // attemp redistribution
                 Currency baseCurrency = currencyGroup.MyBaseCurrency;
                 // convert everything in the group to the base amount
-                int baseCurrencyAmount = PlayerManager.Instance.MyCharacter.CharacterCurrencyManager.GetCurrencyAmount(baseCurrency);
+                int baseCurrencyAmount = SystemGameManager.Instance.PlayerManager.MyCharacter.CharacterCurrencyManager.GetCurrencyAmount(baseCurrency);
                 foreach (CurrencyGroupRate currencyGroupRate in currencyGroup.MyCurrencyGroupRates) {
-                    baseCurrencyAmount += PlayerManager.Instance.MyCharacter.CharacterCurrencyManager.GetCurrencyAmount(currencyGroupRate.MyCurrency) * currencyGroupRate.MyBaseMultiple;
+                    baseCurrencyAmount += SystemGameManager.Instance.PlayerManager.MyCharacter.CharacterCurrencyManager.GetCurrencyAmount(currencyGroupRate.MyCurrency) * currencyGroupRate.MyBaseMultiple;
                 }
                 return baseCurrencyAmount;
             }
-            return PlayerManager.Instance.MyCharacter.CharacterCurrencyManager.GetCurrencyAmount(currency);
+            return SystemGameManager.Instance.PlayerManager.MyCharacter.CharacterCurrencyManager.GetCurrencyAmount(currency);
         }
 
         public void RedistributeCurrency(Currency currency) {
@@ -87,9 +87,9 @@ namespace AnyRPG {
                 // attemp redistribution
                 Currency baseCurrency = currencyGroup.MyBaseCurrency;
                 // convert everything in the group to the base amount
-                int baseCurrencyAmount = PlayerManager.Instance.MyCharacter.CharacterCurrencyManager.GetCurrencyAmount(baseCurrency);
+                int baseCurrencyAmount = SystemGameManager.Instance.PlayerManager.MyCharacter.CharacterCurrencyManager.GetCurrencyAmount(baseCurrency);
                 foreach (CurrencyGroupRate currencyGroupRate in currencyGroup.MyCurrencyGroupRates) {
-                    baseCurrencyAmount += PlayerManager.Instance.MyCharacter.CharacterCurrencyManager.GetCurrencyAmount(currencyGroupRate.MyCurrency) * currencyGroupRate.MyBaseMultiple;
+                    baseCurrencyAmount += SystemGameManager.Instance.PlayerManager.MyCharacter.CharacterCurrencyManager.GetCurrencyAmount(currencyGroupRate.MyCurrency) * currencyGroupRate.MyBaseMultiple;
                 }
                 SortedDictionary<int, Currency> sortList = new SortedDictionary<int, Currency>();
                 foreach (CurrencyGroupRate currencyGroupRate in currencyGroup.MyCurrencyGroupRates) {
@@ -133,16 +133,16 @@ namespace AnyRPG {
 
         public Dictionary<Currency, int> GetRedistributedCurrency() {
             //Debug.Log("PlayerCurrencyManager.GetRedistributedCurrency()");
-            CurrencyGroup currencyGroup = SystemConfigurationManager.Instance.DefaultCurrencyGroup;
+            CurrencyGroup currencyGroup = SystemGameManager.Instance.SystemConfigurationManager.DefaultCurrencyGroup;
             Dictionary<Currency, int> returnDictionary = new Dictionary<Currency, int>();
             if (currencyGroup != null) {
                 //Debug.Log("PlayerCurrencyManager.GetRedistributedCurrency(): default currency group returned: " + currencyGroup.MyName);
                 // attemp redistribution
                 Currency baseCurrency = currencyGroup.MyBaseCurrency;
                 // convert everything in the group to the base amount
-                int baseCurrencyAmount = PlayerManager.Instance.MyCharacter.CharacterCurrencyManager.GetCurrencyAmount(baseCurrency);
+                int baseCurrencyAmount = SystemGameManager.Instance.PlayerManager.MyCharacter.CharacterCurrencyManager.GetCurrencyAmount(baseCurrency);
                 foreach (CurrencyGroupRate currencyGroupRate in currencyGroup.MyCurrencyGroupRates) {
-                    baseCurrencyAmount += PlayerManager.Instance.MyCharacter.CharacterCurrencyManager.GetCurrencyAmount(currencyGroupRate.MyCurrency) * currencyGroupRate.MyBaseMultiple;
+                    baseCurrencyAmount += SystemGameManager.Instance.PlayerManager.MyCharacter.CharacterCurrencyManager.GetCurrencyAmount(currencyGroupRate.MyCurrency) * currencyGroupRate.MyBaseMultiple;
                 }
                 returnDictionary.Add(baseCurrency, baseCurrencyAmount);
                 return returnDictionary;

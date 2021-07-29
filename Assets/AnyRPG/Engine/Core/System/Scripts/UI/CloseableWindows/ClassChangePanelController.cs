@@ -53,11 +53,11 @@ namespace AnyRPG {
 
             ClearTraitRewardIcons();
             // show trait rewards
-            CapabilityProps capabilityProps = characterClass.GetFilteredCapabilities(PlayerManager.Instance.ActiveCharacter);
-            if (PlayerManager.Instance.MyCharacter.Faction != null) {
-                CapabilityConsumerSnapshot capabilityConsumerSnapshot = new CapabilityConsumerSnapshot(PlayerManager.Instance.ActiveCharacter);
+            CapabilityProps capabilityProps = characterClass.GetFilteredCapabilities(SystemGameManager.Instance.PlayerManager.ActiveCharacter);
+            if (SystemGameManager.Instance.PlayerManager.MyCharacter.Faction != null) {
+                CapabilityConsumerSnapshot capabilityConsumerSnapshot = new CapabilityConsumerSnapshot(SystemGameManager.Instance.PlayerManager.ActiveCharacter);
                 capabilityConsumerSnapshot.CharacterClass = characterClass;
-                CapabilityProps capabilityPropsFaction = PlayerManager.Instance.MyCharacter.Faction.GetFilteredCapabilities(capabilityConsumerSnapshot, false);
+                CapabilityProps capabilityPropsFaction = SystemGameManager.Instance.PlayerManager.MyCharacter.Faction.GetFilteredCapabilities(capabilityConsumerSnapshot, false);
                 capabilityProps = capabilityPropsFaction.Join(capabilityProps);
             }
 
@@ -74,7 +74,7 @@ namespace AnyRPG {
                     RewardButton rewardIcon = ObjectPooler.Instance.GetPooledObject(rewardIconPrefab, traitIconsArea.transform).GetComponent<RewardButton>();
                     rewardIcon.SetDescribable(traitList[i]);
                     traitRewardIcons.Add(rewardIcon);
-                    if (traitList[i].RequiredLevel > PlayerManager.Instance.MyCharacter.CharacterStats.Level) {
+                    if (traitList[i].RequiredLevel > SystemGameManager.Instance.PlayerManager.MyCharacter.CharacterStats.Level) {
                         rewardIcon.StackSizeText.text = "Level\n" + traitList[i].RequiredLevel;
                         rewardIcon.MyHighlightIcon.color = new Color32(255, 255, 255, 80);
                     }
@@ -87,11 +87,11 @@ namespace AnyRPG {
 
             ClearRewardIcons();
             // show ability rewards
-            CapabilityProps capabilityProps = characterClass.GetFilteredCapabilities(PlayerManager.Instance.ActiveCharacter);
-            if (PlayerManager.Instance.MyCharacter.Faction != null) {
-                CapabilityConsumerSnapshot capabilityConsumerSnapshot = new CapabilityConsumerSnapshot(PlayerManager.Instance.ActiveCharacter);
+            CapabilityProps capabilityProps = characterClass.GetFilteredCapabilities(SystemGameManager.Instance.PlayerManager.ActiveCharacter);
+            if (SystemGameManager.Instance.PlayerManager.MyCharacter.Faction != null) {
+                CapabilityConsumerSnapshot capabilityConsumerSnapshot = new CapabilityConsumerSnapshot(SystemGameManager.Instance.PlayerManager.ActiveCharacter);
                 capabilityConsumerSnapshot.CharacterClass = characterClass;
-                CapabilityProps capabilityPropsFaction = PlayerManager.Instance.MyCharacter.Faction.GetFilteredCapabilities(capabilityConsumerSnapshot, false);
+                CapabilityProps capabilityPropsFaction = SystemGameManager.Instance.PlayerManager.MyCharacter.Faction.GetFilteredCapabilities(capabilityConsumerSnapshot, false);
                 capabilityProps = capabilityPropsFaction.Join(capabilityProps);
             }
             List<BaseAbility> abilityList = capabilityProps.AbilityList.Distinct().ToList();
@@ -106,7 +106,7 @@ namespace AnyRPG {
                     RewardButton rewardIcon = ObjectPooler.Instance.GetPooledObject(rewardIconPrefab, abilityIconsArea.transform).GetComponent<RewardButton>();
                     rewardIcon.SetDescribable(abilityList[i]);
                     abilityRewardIcons.Add(rewardIcon);
-                    if (abilityList[i].RequiredLevel > PlayerManager.Instance.MyCharacter.CharacterStats.Level) {
+                    if (abilityList[i].RequiredLevel > SystemGameManager.Instance.PlayerManager.MyCharacter.CharacterStats.Level) {
                         rewardIcon.StackSizeText.text = "Level\n" + abilityList[i].RequiredLevel;
                         rewardIcon.MyHighlightIcon.color = new Color32(255, 255, 255, 80);
                     }
@@ -139,7 +139,7 @@ namespace AnyRPG {
 
         public void ConfirmAction() {
             //Debug.Log("ClassChangePanelController.ConfirmAction()");
-            PlayerManager.Instance.SetPlayerCharacterClass(characterClass);
+            SystemGameManager.Instance.PlayerManager.SetPlayerCharacterClass(characterClass);
             OnConfirmAction();
             SystemGameManager.Instance.UIManager.PopupWindowManager.classChangeWindow.CloseWindow();
         }

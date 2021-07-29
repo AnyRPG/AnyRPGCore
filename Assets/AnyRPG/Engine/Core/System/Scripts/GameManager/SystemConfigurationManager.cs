@@ -8,20 +8,6 @@ using UnityEngine.Serialization;
 namespace AnyRPG {
     public class SystemConfigurationManager : MonoBehaviour, IStatProvider, ICapabilityProvider {
 
-        #region Singleton
-        private static SystemConfigurationManager instance;
-
-        public static SystemConfigurationManager Instance {
-            get {
-                return instance;
-            }
-        }
-
-        private void Awake() {
-            instance = this;
-        }
-        #endregion
-
         [Header("GAME CONFIGURATION")]
 
         [SerializeField]
@@ -488,6 +474,12 @@ namespace AnyRPG {
         [SerializeField]
         private float defaultDespawnTimer = 0f;
 
+        [Header("Quest Configuration")]
+
+        [SerializeField]
+        [Tooltip("The maximum number of quests in the quest log")]
+        private int questLogSize = 25;
+
         protected bool eventSubscriptionsInitialized = false;
 
         public AbilityEffect LootSparkleEffect { get => lootSparkleEffect; set => lootSparkleEffect = value; }
@@ -618,31 +610,10 @@ namespace AnyRPG {
         public bool RealTimeUnitFrameCamera { get => realTimeUnitFrameCamera; set => realTimeUnitFrameCamera = value; }
         public List<string> CharacterCreatorProfileNames { get => characterCreatorProfileNames; set => characterCreatorProfileNames = value; }
         public bool SyncMovementAnimationSpeed { get => syncMovementAnimationSpeed; set => syncMovementAnimationSpeed = value; }
+        public int QuestLogSize { get => questLogSize; set => questLogSize = value; }
 
         public CapabilityProps GetFilteredCapabilities(ICapabilityConsumer capabilityConsumer, bool returnAll = true) {
             return capabilities;
-        }
-
-        private void Start() {
-            //Debug.Log("PlayerManager.Start()");
-            CreateEventSubscriptions();
-            //VerifySystemAbilities();
-        }
-
-        private void CreateEventSubscriptions() {
-            //Debug.Log("PlayerManager.CreateEventSubscriptions()");
-            if (eventSubscriptionsInitialized) {
-                return;
-            }
-            eventSubscriptionsInitialized = true;
-        }
-
-        private void CleanupEventSubscriptions() {
-            //Debug.Log("PlayerManager.CleanupEventSubscriptions()");
-            if (!eventSubscriptionsInitialized) {
-                return;
-            }
-            eventSubscriptionsInitialized = false;
         }
 
         public void PerformRequiredPropertyChecks() {
@@ -651,14 +622,6 @@ namespace AnyRPG {
             }
         }
 
-
-        public void OnDisable() {
-            //Debug.Log("PlayerManager.OnDisable()");
-            if (SystemGameManager.IsShuttingDown) {
-                return;
-            }
-            CleanupEventSubscriptions();
-        }
 
         // verify that system abilities are available through the factory
         public void SetupScriptableObjects() {

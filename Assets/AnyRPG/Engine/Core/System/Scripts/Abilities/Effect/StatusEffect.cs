@@ -211,7 +211,7 @@ namespace AnyRPG {
             if (SceneNames.Count > 0) {
                 bool sceneFound = false;
                 foreach (string sceneName in SceneNames) {
-                    if (SystemResourceManager.prepareStringForMatch(sceneName) == SystemResourceManager.prepareStringForMatch(LevelManager.Instance.GetActiveSceneNode().SceneName)) {
+                    if (SystemResourceManager.prepareStringForMatch(sceneName) == SystemResourceManager.prepareStringForMatch(SystemGameManager.Instance.LevelManager.GetActiveSceneNode().SceneName)) {
                         sceneFound = true;
                     }
                 }
@@ -354,8 +354,8 @@ namespace AnyRPG {
 
             if (limitedDuration == true && classTrait == false) {
                 float remainingDuration = 0f;
-                if (PlayerManager.Instance?.MyCharacter?.CharacterStats?.HasStatusEffect(this) == true) {
-                    remainingDuration = PlayerManager.Instance.MyCharacter.CharacterStats.GetStatusEffectNode(this).RemainingDuration;
+                if (SystemGameManager.Instance.PlayerManager?.MyCharacter?.CharacterStats?.HasStatusEffect(this) == true) {
+                    remainingDuration = SystemGameManager.Instance.PlayerManager.MyCharacter.CharacterStats.GetStatusEffectNode(this).RemainingDuration;
                 }
                 if (remainingDuration != 0f) {
                     durationLabel = "Remaining Duration: ";

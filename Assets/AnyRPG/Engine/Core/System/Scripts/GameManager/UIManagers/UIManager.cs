@@ -184,7 +184,7 @@ namespace AnyRPG {
             //Debug.Log("UIManager subscribing to characterspawn");
             CreateEventSubscriptions();
 
-            if (PlayerManager.Instance.PlayerUnitSpawned) {
+            if (SystemGameManager.Instance.PlayerManager.PlayerUnitSpawned) {
                 ProcessPlayerUnitSpawn();
             }
             toolTipText = toolTip.GetComponentInChildren<TextMeshProUGUI>();
@@ -352,13 +352,13 @@ namespace AnyRPG {
 
         void Update() {
 
-            if (PlayerManager.Instance.PlayerUnitSpawned == false) {
+            if (SystemGameManager.Instance.PlayerManager.PlayerUnitSpawned == false) {
                 // if there is no player, these windows shouldn't be open
                 return;
             }
             // don't hide windows while binding keys
             if (SystemGameManager.Instance.KeyBindManager.MyBindName == string.Empty) {
-                if (InputManager.Instance.KeyBindWasPressed("HIDEUI")) {
+                if (SystemGameManager.Instance.InputManager.KeyBindWasPressed("HIDEUI")) {
                     if (playerUI.gameObject.activeSelf) {
                         playerUI.SetActive(false);
                     } else {
@@ -390,7 +390,7 @@ namespace AnyRPG {
             if (SystemGameManager.Instance.CameraManager != null) {
                 SystemGameManager.Instance.CameraManager.DisableCutsceneCamera();
             }
-            if (!PlayerManager.Instance.PlayerUnitSpawned) {
+            if (!SystemGameManager.Instance.PlayerManager.PlayerUnitSpawned) {
                 SystemEventManager.StartListening("OnPlayerUnitSpawn", HandleMainCamera);
             } else {
                 InitializeMainCamera();
@@ -414,7 +414,7 @@ namespace AnyRPG {
         }
 
         public void InitializeMainCamera() {
-            SystemGameManager.Instance.CameraManager.MainCameraController.InitializeCamera(PlayerManager.Instance.ActiveUnitController.transform);
+            SystemGameManager.Instance.CameraManager.MainCameraController.InitializeCamera(SystemGameManager.Instance.PlayerManager.ActiveUnitController.transform);
         }
 
         public void DeactivatePlayerUI() {
@@ -483,12 +483,12 @@ namespace AnyRPG {
 
             // enable things that track the character
             // initialize unit frame
-            playerUnitFrameController.SetTarget(PlayerManager.Instance.ActiveUnitController.NamePlateController);
-            floatingCastBarController.SetTarget(PlayerManager.Instance.ActiveUnitController.NamePlateController as UnitNamePlateController);
-            statusEffectPanelController.SetTarget(PlayerManager.Instance.ActiveUnitController);
+            playerUnitFrameController.SetTarget(SystemGameManager.Instance.PlayerManager.ActiveUnitController.NamePlateController);
+            floatingCastBarController.SetTarget(SystemGameManager.Instance.PlayerManager.ActiveUnitController.NamePlateController as UnitNamePlateController);
+            statusEffectPanelController.SetTarget(SystemGameManager.Instance.PlayerManager.ActiveUnitController);
 
             // intialize mini map
-            InitializeMiniMapTarget(PlayerManager.Instance.ActiveUnitController.gameObject);
+            InitializeMiniMapTarget(SystemGameManager.Instance.PlayerManager.ActiveUnitController.gameObject);
         }
 
         public void HandlePlayerUnitDespawn(string eventName, EventParamProperties eventParamProperties) {
@@ -967,7 +967,7 @@ namespace AnyRPG {
 
             int opacityLevel = (int)(PlayerPrefs.GetFloat("InventoryOpacity") * 255);
             int slotOpacityLevel = (int)(PlayerPrefs.GetFloat("InventorySlotOpacity") * 255);
-            foreach (BagNode bagNode in InventoryManager.Instance.BagNodes) {
+            foreach (BagNode bagNode in SystemGameManager.Instance.InventoryManager.BagNodes) {
                 //Debug.Log("UIManager.UpdateInventoryOpacity(): found bagNode");
                 if (bagNode.BagPanel != null) {
                     //Debug.Log("UIManager.UpdateInventoryOpacity(): found bagNode and bagpanel is not null!");

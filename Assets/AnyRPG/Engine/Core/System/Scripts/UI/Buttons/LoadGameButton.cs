@@ -45,10 +45,10 @@ namespace AnyRPG {
                 if (playerFaction != null) {
                     icon.sprite = playerFaction.Icon;
                 } else {
-                    icon.sprite = SystemConfigurationManager.Instance.DefaultFactionIcon;
+                    icon.sprite = SystemGameManager.Instance.SystemConfigurationManager.DefaultFactionIcon;
                 }
             } else {
-                icon.sprite = SystemConfigurationManager.Instance.DefaultFactionIcon;
+                icon.sprite = SystemGameManager.Instance.SystemConfigurationManager.DefaultFactionIcon;
             }
             icon.color = Color.white;
             //Debug.Log("LoadGameButton.AddSaveData(): Setting playerName.text: " + mySaveData.playerName);

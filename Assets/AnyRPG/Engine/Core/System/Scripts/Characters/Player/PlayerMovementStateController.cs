@@ -20,7 +20,7 @@ namespace AnyRPG {
         }
 
         void Update() {
-            if (PlayerManager.Instance.ActiveUnitController == null) {
+            if (SystemGameManager.Instance.PlayerManager.ActiveUnitController == null) {
                 return;
             }
             SingleUpdate();

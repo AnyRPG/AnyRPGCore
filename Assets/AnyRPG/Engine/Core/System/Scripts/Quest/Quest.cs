@@ -245,7 +245,7 @@ namespace AnyRPG {
             this.TurnedIn = turnedIn;
             //Debug.Log(MyName + ".Quest.TurnedIn = " + value);
             if (notify) {
-                if (PlayerManager.Instance != null && PlayerManager.Instance.PlayerUnitSpawned == false) {
+                if (SystemGameManager.Instance.PlayerManager != null && SystemGameManager.Instance.PlayerManager.PlayerUnitSpawned == false) {
                     // STOP STUFF FROM REACTING WHEN PLAYER ISN'T SPAWNED
                     return;
                 }
@@ -269,7 +269,7 @@ namespace AnyRPG {
         }
 
         public Quest MyQuestTemplate { get => questTemplate; set => questTemplate = value; }
-        public int MyExperienceLevel { get => ((dynamicLevel == true ? PlayerManager.Instance.MyCharacter.CharacterStats.Level : experienceLevel) + extraLevels); }
+        public int MyExperienceLevel { get => ((dynamicLevel == true ? SystemGameManager.Instance.PlayerManager.MyCharacter.CharacterStats.Level : experienceLevel) + extraLevels); }
 
         public List<Item> MyItemRewards { get => itemRewardList; }
         public List<FactionNode> MyFactionRewards { get => factionRewards; }
@@ -310,7 +310,7 @@ namespace AnyRPG {
         public void RemoveQuest() {
             //Debug.Log("Quest.RemoveQuest(): " + DisplayName + " calling OnQuestStatusUpdated()");
             OnAbandonQuest();
-            if (PlayerManager.Instance != null && PlayerManager.Instance.PlayerUnitSpawned == false) {
+            if (SystemGameManager.Instance.PlayerManager != null && SystemGameManager.Instance.PlayerManager.PlayerUnitSpawned == false) {
                 // STOP STUFF FROM REACTING WHEN PLAYER ISN'T SPAWNED
                 return;
             }
@@ -323,10 +323,10 @@ namespace AnyRPG {
             List<CurrencyNode> currencyNodes = new List<CurrencyNode>();
 
             if (AutomaticCurrencyReward == true) {
-                if (SystemConfigurationManager.Instance.QuestCurrency != null) {
+                if (SystemGameManager.Instance.SystemConfigurationManager.QuestCurrency != null) {
                     CurrencyNode currencyNode = new CurrencyNode();
-                    currencyNode.currency = SystemConfigurationManager.Instance.QuestCurrency;
-                    currencyNode.MyAmount = SystemConfigurationManager.Instance.QuestCurrencyAmountPerLevel * MyExperienceLevel;
+                    currencyNode.currency = SystemGameManager.Instance.SystemConfigurationManager.QuestCurrency;
+                    currencyNode.MyAmount = SystemGameManager.Instance.SystemConfigurationManager.QuestCurrencyAmountPerLevel * MyExperienceLevel;
                     currencyNodes.Add(currencyNode);
                 }
             }
@@ -348,7 +348,7 @@ namespace AnyRPG {
                 if (printMessages == true) {
                     SystemGameManager.Instance.UIManager.MessageFeedManager.WriteMessage(string.Format("Achievement: {0} Complete!", DisplayName));
                 }
-                PlayerManager.Instance.PlayLevelUpEffects(0);
+                SystemGameManager.Instance.PlayerManager.PlayLevelUpEffects(0);
 
                 MarkedComplete = true;
                 TurnedIn = true;
@@ -359,7 +359,7 @@ namespace AnyRPG {
             }
             MarkedComplete = true;
             if (notifyOnUpdate == true) {
-                if (PlayerManager.Instance != null && PlayerManager.Instance.PlayerUnitSpawned == false) {
+                if (SystemGameManager.Instance.PlayerManager != null && SystemGameManager.Instance.PlayerManager.PlayerUnitSpawned == false) {
                     // STOP STUFF FROM REACTING WHEN PLAYER ISN'T SPAWNED
                     return;
                 }
@@ -406,17 +406,17 @@ namespace AnyRPG {
                 return "completed";
             }
 
-            if (QuestLog.Instance.HasQuest(DisplayName) && IsComplete) {
+            if (SystemGameManager.Instance.QuestLog.HasQuest(DisplayName) && IsComplete) {
                 //Debug.Log(MyName + ".Quest.GetStatus(): returning complete");
                 return "complete";
             }
 
-            if (QuestLog.Instance.HasQuest(DisplayName)) {
+            if (SystemGameManager.Instance.QuestLog.HasQuest(DisplayName)) {
                 //Debug.Log(MyName + ".Quest.GetStatus(): returning inprogress");
                 return "inprogress";
             }
 
-            if (!QuestLog.Instance.HasQuest(DisplayName) && (TurnedIn == false || MyRepeatableQuest == true) && MyPrerequisitesMet == true) {
+            if (!SystemGameManager.Instance.QuestLog.HasQuest(DisplayName) && (TurnedIn == false || MyRepeatableQuest == true) && MyPrerequisitesMet == true) {
                 //Debug.Log(MyName + ".Quest.GetStatus(): returning available");
                 return "available";
             }
@@ -433,7 +433,7 @@ namespace AnyRPG {
 
         public string GetObjectiveDescription() {
 
-            Color titleColor = LevelEquations.GetTargetColor(PlayerManager.Instance.MyCharacter.CharacterStats.Level, MyExperienceLevel);
+            Color titleColor = LevelEquations.GetTargetColor(SystemGameManager.Instance.PlayerManager.MyCharacter.CharacterStats.Level, MyExperienceLevel);
             return string.Format("<size=30><b><color=#{0}>{1}</color></b></size>\n\n<size=18>{2}</size>\n\n<b><size=24>Objectives:</size></b>\n\n<size=18>{3}</size>", ColorUtility.ToHtmlStringRGB(titleColor), DisplayName, MyDescription, GetUnformattedObjectiveList());
 
         }
@@ -511,7 +511,7 @@ namespace AnyRPG {
             }
             if (!MarkedComplete) {
                 // needs to be done here if quest wasn't auto-completed in checkcompletion
-                if (PlayerManager.Instance != null && PlayerManager.Instance.PlayerUnitSpawned == false) {
+                if (SystemGameManager.Instance.PlayerManager != null && SystemGameManager.Instance.PlayerManager.PlayerUnitSpawned == false) {
                     // STOP STUFF FROM REACTING WHEN PLAYER ISN'T SPAWNED
                     return;
                 }
@@ -595,7 +595,7 @@ namespace AnyRPG {
             List<Quest> returnList = new List<Quest>();
             foreach (QuestNode questNode in questNodeArray) {
                 if (questNode.MyQuest != null) {
-                    if (questNode.MyQuest.GetStatus() == questStatusType && (requireInQuestLog == true ? QuestLog.Instance.HasQuest(questNode.MyQuest.DisplayName) : true) && (requireStartQuest == true ? questNode.MyStartQuest : true) && (requireEndQuest == true ? questNode.MyEndQuest : true)) {
+                    if (questNode.MyQuest.GetStatus() == questStatusType && (requireInQuestLog == true ? SystemGameManager.Instance.QuestLog.HasQuest(questNode.MyQuest.DisplayName) : true) && (requireStartQuest == true ? questNode.MyStartQuest : true) && (requireEndQuest == true ? questNode.MyEndQuest : true)) {
                         //Debug.Log("Quest.GetQuestListByType(" + questStatusType + "): adding quest: " + questNode.MyQuest.MyName);
                         returnList.Add(questNode.MyQuest);
                     }

@@ -9,20 +9,6 @@ using UnityEngine.UI;
 namespace AnyRPG {
     public class LevelManager : MonoBehaviour {
 
-        #region Singleton
-        private static LevelManager instance;
-
-        public static LevelManager Instance {
-            get {
-                return instance;
-            }
-        }
-
-        private void Awake() {
-            instance = this;
-        }
-        #endregion
-
         [Header("Loading Screen")]
         public Slider loadBar;
         public TextMeshProUGUI finishedLoadingText;
@@ -211,20 +197,20 @@ namespace AnyRPG {
         }
 
         public bool IsMainMenu() {
-            if (activeSceneName == SystemConfigurationManager.Instance?.MainMenuSceneNode?.SceneFile) {
+            if (activeSceneName == SystemGameManager.Instance.SystemConfigurationManager?.MainMenuSceneNode?.SceneFile) {
                 return true;
             }
-            if (activeSceneName == SystemConfigurationManager.Instance?.MainMenuScene?.Replace(" ", "")) {
+            if (activeSceneName == SystemGameManager.Instance.SystemConfigurationManager?.MainMenuScene?.Replace(" ", "")) {
                 return true;
             }
             return false;
         }
 
         public bool IsInitializationScene() {
-            if (activeSceneName == SystemConfigurationManager.Instance.InitializationSceneNode?.SceneFile) {
+            if (activeSceneName == SystemGameManager.Instance.SystemConfigurationManager.InitializationSceneNode?.SceneFile) {
                 return true;
             }
-            if (activeSceneName == SystemConfigurationManager.Instance.InitializationScene.Replace(" ", "")) {
+            if (activeSceneName == SystemGameManager.Instance.SystemConfigurationManager.InitializationScene.Replace(" ", "")) {
                 return true;
             }
             return false;
@@ -332,9 +318,9 @@ namespace AnyRPG {
 
         public void LoadCutScene(Cutscene cutscene) {
             //Debug.Log("LevelManager.LoadCutScene(" + sceneName + ")");
-            if (PlayerManager.Instance.ActiveUnitController != null) {
-                spawnRotationOverride = PlayerManager.Instance.ActiveUnitController.transform.forward;
-                spawnLocationOverride = PlayerManager.Instance.ActiveUnitController.transform.position;
+            if (SystemGameManager.Instance.PlayerManager.ActiveUnitController != null) {
+                spawnRotationOverride = SystemGameManager.Instance.PlayerManager.ActiveUnitController.transform.forward;
+                spawnLocationOverride = SystemGameManager.Instance.PlayerManager.ActiveUnitController.transform.position;
             }
             returnSceneName = activeSceneNode.ResourceName;
             SystemGameManager.Instance.UIManager.CutSceneBarController.AssignCutScene(cutscene);
@@ -354,8 +340,8 @@ namespace AnyRPG {
                 SystemGameManager.Instance.UIManager.PopupPanelContainer.SetActive(true);
                 SystemGameManager.Instance.UIManager.CombatTextCanvas.SetActive(true);
 
-                if (PlayerManager.Instance.PlayerUnitSpawned == false) {
-                    PlayerManager.Instance.SpawnPlayerUnit();
+                if (SystemGameManager.Instance.PlayerManager.PlayerUnitSpawned == false) {
+                    SystemGameManager.Instance.PlayerManager.SpawnPlayerUnit();
                 }
 
                 // test moving down here
@@ -391,7 +377,7 @@ namespace AnyRPG {
 
             // playerManager needs to do this last so other objects can respond before we despawn the character
             // testing - let playerController handle passing on player despawn event
-            //PlayerManager.Instance.ProcessLevelUnload();
+            //SystemGameManager.Instance.PlayerManager.ProcessLevelUnload();
 
             SystemGameManager.Instance.UIManager.DeactivatePlayerUI();
             SystemGameManager.Instance.UIManager.DeactivateInGameUI();
@@ -409,17 +395,17 @@ namespace AnyRPG {
         }
 
         public void LoadDefaultStartingZone() {
-            if (SystemConfigurationManager.Instance.DefaultStartingZone != string.Empty) {
-                LoadLevel(SystemConfigurationManager.Instance.DefaultStartingZone);
+            if (SystemGameManager.Instance.SystemConfigurationManager.DefaultStartingZone != string.Empty) {
+                LoadLevel(SystemGameManager.Instance.SystemConfigurationManager.DefaultStartingZone);
             }
         }
 
         public void LoadMainMenu() {
             SystemEventManager.TriggerEvent("OnExitGame", new EventParamProperties());
-            if (SystemConfigurationManager.Instance.MainMenuSceneNode != null) {
-                LoadLevel(SystemConfigurationManager.Instance.MainMenuSceneNode.DisplayName);
+            if (SystemGameManager.Instance.SystemConfigurationManager.MainMenuSceneNode != null) {
+                LoadLevel(SystemGameManager.Instance.SystemConfigurationManager.MainMenuSceneNode.DisplayName);
             } else {
-                LoadLevel(SystemResourceManager.prepareStringForMatch(SystemConfigurationManager.Instance.MainMenuScene));
+                LoadLevel(SystemResourceManager.prepareStringForMatch(SystemGameManager.Instance.SystemConfigurationManager.MainMenuScene));
             }
         }
 

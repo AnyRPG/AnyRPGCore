@@ -21,20 +21,13 @@ namespace AnyRPG {
         }
         #endregion
 
+        [Header("Configuration")]
+
+        // configuration monobehavior
         [SerializeField]
-        private GameObject resourceManagerParent = null;
+        private SystemConfigurationManager systemConfigurationManager = null;
 
-        private List<SystemResourceManager> systemResourceManagers = new List<SystemResourceManager>();
-
-        // system scripts
-        private SystemEventManager systemEventManager = null;
-        private SystemEnvironmentManager systemEnvironmentManager = null;
-        private CraftingManager craftingManager = null;
-        private InteractionManager interactionManager = null;
-        private LootManager lootManager = null;
-        private SystemPlayableDirectorManager systemPlayableDirectorManager = null;
-        private SaveManager saveManager = null;
-        private KeyBindManager keyBindManager = null;
+        [Header("Monobehavior Managers")]
 
         // sub manager monobehaviors
         [SerializeField]
@@ -54,6 +47,42 @@ namespace AnyRPG {
 
         [SerializeField]
         private UIManager uIManager = null;
+
+        [SerializeField]
+        private SystemAbilityController systemAbilityController = null;
+
+        [SerializeField]
+        private CastTargettingManager castTargettingManager = null;
+
+        [SerializeField]
+        private InputManager inputManager = null;
+
+        [SerializeField]
+        private LevelManager levelManager = null;
+
+        [SerializeField]
+        private InventoryManager inventoryManager = null;
+
+        [SerializeField]
+        private PlayerManager playerManager = null;
+
+        [Header("Resource Managers")]
+
+        [SerializeField]
+        private GameObject resourceManagerParent = null;
+
+        private List<SystemResourceManager> systemResourceManagers = new List<SystemResourceManager>();
+
+        // system scripts
+        private SystemEventManager systemEventManager = null;
+        private SystemEnvironmentManager systemEnvironmentManager = null;
+        private CraftingManager craftingManager = null;
+        private InteractionManager interactionManager = null;
+        private LootManager lootManager = null;
+        private SystemPlayableDirectorManager systemPlayableDirectorManager = null;
+        private SaveManager saveManager = null;
+        private KeyBindManager keyBindManager = null;
+        private QuestLog questLog = null;
 
         // application state
         private int spawnCount = 0;
@@ -75,6 +104,14 @@ namespace AnyRPG {
         public UnitPreviewManager UnitPreviewManager { get => unitPreviewManager; set => unitPreviewManager = value; }
         public CharacterCreatorManager CharacterCreatorManager { get => characterCreatorManager; set => characterCreatorManager = value; }
         public UIManager UIManager { get => uIManager; set => uIManager = value; }
+        public SystemConfigurationManager SystemConfigurationManager { get => systemConfigurationManager; set => systemConfigurationManager = value; }
+        public SystemAbilityController SystemAbilityController { get => systemAbilityController; set => systemAbilityController = value; }
+        public CastTargettingManager CastTargettingManager { get => castTargettingManager; set => castTargettingManager = value; }
+        public QuestLog QuestLog { get => questLog; set => questLog = value; }
+        public InputManager InputManager { get => inputManager; set => inputManager = value; }
+        public LevelManager LevelManager { get => levelManager; set => levelManager = value; }
+        public InventoryManager InventoryManager { get => inventoryManager; set => inventoryManager = value; }
+        public PlayerManager PlayerManager { get => playerManager; set => playerManager = value; }
 
         private void Init() {
             //Debug.Log("SystemGameManager.Init()");
@@ -91,6 +128,7 @@ namespace AnyRPG {
             systemPlayableDirectorManager = new SystemPlayableDirectorManager();
             saveManager = new SaveManager();
             keyBindManager = new KeyBindManager();
+            questLog = new QuestLog();
 
             // sub manager monobehaviors
             cameraManager.Init();
@@ -100,6 +138,10 @@ namespace AnyRPG {
             characterCreatorManager.Init();
 
             uIManager.Init();
+            systemAbilityController.Init();
+            castTargettingManager.Init();
+            inputManager.Init();
+            inventoryManager.Init();
         }
 
         private void SetupPermanentObjects() {
@@ -125,12 +167,12 @@ namespace AnyRPG {
             LoadResources();
 
             // next, verify systemconfiguration manager references to resources
-            SystemConfigurationManager.Instance.SetupScriptableObjects();
+            SystemGameManager.Instance.SystemConfigurationManager.SetupScriptableObjects();
 
-            PlayerManager.Instance.OrchestratorStart();
+            SystemGameManager.Instance.PlayerManager.OrchestratorStart();
 
             // then launch level manager to start loading the game
-            LevelManager.Instance.PerformSetupActivities();
+            SystemGameManager.Instance.LevelManager.PerformSetupActivities();
 
         }
 

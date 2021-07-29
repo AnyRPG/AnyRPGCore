@@ -120,7 +120,7 @@ namespace AnyRPG {
                 QuestGiverQuestScript qs = go.GetComponent<QuestGiverQuestScript>();
                 qs.MyText.text = "[" + questNode.MyQuest.MyExperienceLevel + "] " + questNode.MyQuest.MyName;
                 //Debug.Log("QuestGiverUI.ShowQuestsCommon(" + questGiver.name + "): " + questNode.MyQuest.MyTitle);
-                qs.MyText.color = LevelEquations.GetTargetColor(PlayerManager.Instance.MyCharacter.MyCharacterStats.MyLevel, questNode.MyQuest.MyExperienceLevel);
+                qs.MyText.color = LevelEquations.GetTargetColor(SystemGameManager.Instance.PlayerManager.MyCharacter.MyCharacterStats.MyLevel, questNode.MyQuest.MyExperienceLevel);
                 qs.MyQuest = questNode.MyQuest;
                 questNode.MyGameObject = go;
                 //quests.Add(go);
@@ -146,7 +146,7 @@ namespace AnyRPG {
             foreach (QuestNode questNode in questGiver.MyQuests) {
                 QuestGiverQuestScript qs = questNode.MyGameObject.GetComponent<QuestGiverQuestScript>();
                 qs.MyText.text = "[" + questNode.MyQuest.MyExperienceLevel + "] " + questNode.MyQuest.MyName;
-                qs.MyText.color = LevelEquations.GetTargetColor(PlayerManager.Instance.MyCharacter.MyCharacterStats.MyLevel, questNode.MyQuest.MyExperienceLevel);
+                qs.MyText.color = LevelEquations.GetTargetColor(SystemGameManager.Instance.PlayerManager.MyCharacter.MyCharacterStats.MyLevel, questNode.MyQuest.MyExperienceLevel);
                 //Debug.Log("Evaluating quest: " + qs.MyQuest.MyTitle + "; turnedin: " + qs.MyQuest.TurnedIn.ToString());
                 string questStatus = qs.MyQuest.GetStatus();
                 if (questStatus == "completed" && questNode.MyEndQuest == true) {
@@ -221,14 +221,14 @@ namespace AnyRPG {
         }
 
         private void UpdateButtons(Quest newQuest) {
-            //Debug.Log("QuestGiverUI.UpdateButtons(" + newQuest.DisplayName + "). iscomplete: " + newQuest.IsComplete + ". HasQuest: " + QuestLog.Instance.HasQuest(newQuest.DisplayName));
+            //Debug.Log("QuestGiverUI.UpdateButtons(" + newQuest.DisplayName + "). iscomplete: " + newQuest.IsComplete + ". HasQuest: " + SystemGameManager.Instance.QuestLog.HasQuest(newQuest.DisplayName));
             if (newQuest.MyAllowRawComplete == true) {
                 acceptButton.gameObject.SetActive(false);
                 completeButton.gameObject.SetActive(true);
                 completeButton.GetComponent<Button>().enabled = true;
                 return;
             }
-            if (newQuest.GetStatus() == "available" && QuestLog.Instance.HasQuest(newQuest.DisplayName) == false) {
+            if (newQuest.GetStatus() == "available" && SystemGameManager.Instance.QuestLog.HasQuest(newQuest.DisplayName) == false) {
                 acceptButton.gameObject.SetActive(true);
                 acceptButton.GetComponent<Button>().enabled = true;
                 completeButton.gameObject.SetActive(false);
@@ -236,7 +236,7 @@ namespace AnyRPG {
             }
 
             Debug.Log("questGiver: " + questGiver.ToString());
-            if (newQuest.GetStatus() == "complete" && QuestLog.Instance.HasQuest(newQuest.DisplayName) == true && questGiver != null && questGiver.EndsQuest(newQuest.DisplayName)) {
+            if (newQuest.GetStatus() == "complete" && SystemGameManager.Instance.QuestLog.HasQuest(newQuest.DisplayName) == true && questGiver != null && questGiver.EndsQuest(newQuest.DisplayName)) {
                 completeButton.gameObject.SetActive(true);
                 completeButton.GetComponent<Button>().enabled = true;
                 acceptButton.gameObject.SetActive(false);
@@ -352,7 +352,7 @@ namespace AnyRPG {
                 // DO THIS HERE SO IT DOESN'T INSTA-CLOSE ANY AUTO-POPUP BACK TO HERE ON ACCEPT QUEST CAUSING STATUS CHANGE
                 SystemGameManager.Instance.UIManager.PopupWindowManager.questGiverWindow.CloseWindow();
 
-                QuestLog.Instance.AcceptQuest(currentQuest);
+                SystemGameManager.Instance.QuestLog.AcceptQuest(currentQuest);
 
                 if (questGiver != null) {
                     // notify a bag item so it can remove itself
@@ -420,7 +420,7 @@ namespace AnyRPG {
             // currency rewards
             List<CurrencyNode> currencyNodes = currentQuest.GetCurrencyReward();
             foreach (CurrencyNode currencyNode in currencyNodes) {
-                PlayerManager.Instance.MyCharacter.CharacterCurrencyManager.AddCurrency(currencyNode.currency, currencyNode.MyAmount);
+                SystemGameManager.Instance.PlayerManager.MyCharacter.CharacterCurrencyManager.AddCurrency(currencyNode.currency, currencyNode.MyAmount);
                 List<CurrencyNode> tmpCurrencyNode = new List<CurrencyNode>();
                 tmpCurrencyNode.Add(currencyNode);
                 CombatLogUI.Instance.WriteSystemMessage("Gained " + CurrencyConverter.RecalculateValues(tmpCurrencyNode, false).Value.Replace("\n", ", "));
@@ -429,7 +429,7 @@ namespace AnyRPG {
             // item rewards first in case not enough space in inventory
             // TO FIX: THIS CODE DOES NOT DEAL WITH PARTIAL STACKS AND WILL REQUEST ONE FULL SLOT FOR EVERY REWARD
             if (questDetailsArea.GetHighlightedItemRewardIcons().Count > 0) {
-                if (InventoryManager.Instance.EmptySlotCount() < questDetailsArea.GetHighlightedItemRewardIcons().Count) {
+                if (SystemGameManager.Instance.InventoryManager.EmptySlotCount() < questDetailsArea.GetHighlightedItemRewardIcons().Count) {
                     SystemGameManager.Instance.UIManager.MessageFeedManager.WriteMessage("Not enough room in inventory!");
                     return;
                 }
@@ -439,8 +439,8 @@ namespace AnyRPG {
                         Item newItem = SystemItemManager.Instance.GetNewResource(rewardButton.Describable.DisplayName);
                         if (newItem != null) {
                             //Debug.Log("RewardButton.CompleteQuest(): newItem is not null, adding to inventory");
-                            newItem.DropLevel = PlayerManager.Instance.MyCharacter.CharacterStats.Level;
-                            InventoryManager.Instance.AddItem(newItem);
+                            newItem.DropLevel = SystemGameManager.Instance.PlayerManager.MyCharacter.CharacterStats.Level;
+                            SystemGameManager.Instance.InventoryManager.AddItem(newItem);
                         }
                     }
                 }
@@ -458,7 +458,7 @@ namespace AnyRPG {
                 foreach (RewardButton rewardButton in questDetailsArea.GetHighlightedFactionRewardIcons()) {
                     //Debug.Log("QuestGiverUI.CompleteQuest(): Giving Faction Rewards: got a reward button!");
                     if (rewardButton.Describable != null && rewardButton.Describable.DisplayName != null && rewardButton.Describable.DisplayName != string.Empty) {
-                        PlayerManager.Instance.MyCharacter.CharacterFactionManager.AddReputation((rewardButton.Describable as FactionNode).faction, (rewardButton.Describable as FactionNode).reputationAmount);
+                        SystemGameManager.Instance.PlayerManager.MyCharacter.CharacterFactionManager.AddReputation((rewardButton.Describable as FactionNode).faction, (rewardButton.Describable as FactionNode).reputationAmount);
                     }
                 }
             }
@@ -468,7 +468,7 @@ namespace AnyRPG {
                 //Debug.Log("QuestGiverUI.CompleteQuest(): Giving Ability Rewards");
                 foreach (RewardButton rewardButton in questDetailsArea.GetHighlightedAbilityRewardIcons()) {
                     if (rewardButton.Describable != null && rewardButton.Describable.DisplayName != null && rewardButton.Describable.DisplayName != string.Empty) {
-                        PlayerManager.Instance.MyCharacter.CharacterAbilityManager.LearnAbility(rewardButton.Describable as BaseAbility);
+                        SystemGameManager.Instance.PlayerManager.MyCharacter.CharacterAbilityManager.LearnAbility(rewardButton.Describable as BaseAbility);
                     }
                 }
             }
@@ -478,20 +478,20 @@ namespace AnyRPG {
                 //Debug.Log("QuestGiverUI.CompleteQuest(): Giving Skill Rewards");
                 foreach (RewardButton rewardButton in questDetailsArea.GetHighlightedSkillRewardIcons()) {
                     if (rewardButton.Describable != null && rewardButton.Describable.DisplayName != null && rewardButton.Describable.DisplayName != string.Empty) {
-                        PlayerManager.Instance.MyCharacter.CharacterSkillManager.LearnSkill(rewardButton.Describable as Skill);
+                        SystemGameManager.Instance.PlayerManager.MyCharacter.CharacterSkillManager.LearnSkill(rewardButton.Describable as Skill);
                     }
                 }
             }
 
             // xp reward
-            PlayerManager.Instance.MyCharacter.CharacterStats.GainXP(LevelEquations.GetXPAmountForQuest(PlayerManager.Instance.MyCharacter.CharacterStats.Level, currentQuest));
+            SystemGameManager.Instance.PlayerManager.MyCharacter.CharacterStats.GainXP(LevelEquations.GetXPAmountForQuest(SystemGameManager.Instance.PlayerManager.MyCharacter.CharacterStats.Level, currentQuest));
 
             UpdateButtons(currentQuest);
 
             // DO THIS HERE OR TURNING THE QUEST RESULTING IN THIS WINDOW RE-OPENING WOULD JUST INSTA-CLOSE IT INSTEAD
             SystemGameManager.Instance.UIManager.PopupWindowManager.questGiverWindow.CloseWindow();
 
-            QuestLog.Instance.TurnInQuest(currentQuest);
+            SystemGameManager.Instance.QuestLog.TurnInQuest(currentQuest);
 
             // do this last
             // DO THIS AT THE END OR THERE WILL BE NO SELECTED QUESTGIVERQUESTSCRIPT

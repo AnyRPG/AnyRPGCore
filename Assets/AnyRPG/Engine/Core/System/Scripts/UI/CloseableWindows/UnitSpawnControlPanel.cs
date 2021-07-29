@@ -89,7 +89,7 @@ namespace AnyRPG {
             List<string> options = new List<string>();
 
             // LEVELS
-            for (int i = 1; i < SystemConfigurationManager.Instance.MaxLevel; i++) {
+            for (int i = 1; i < SystemGameManager.Instance.SystemConfigurationManager.MaxLevel; i++) {
                 options.Add(i.ToString());
             }
             levelDropdown.AddOptions(options);
@@ -98,7 +98,7 @@ namespace AnyRPG {
             options.Clear();
 
             // EXTRA LEVELS
-            for (int i = 0; i < SystemConfigurationManager.Instance.MaxLevel - PlayerManager.Instance.MyCharacter.CharacterStats.Level; i++) {
+            for (int i = 0; i < SystemGameManager.Instance.SystemConfigurationManager.MaxLevel - SystemGameManager.Instance.PlayerManager.MyCharacter.CharacterStats.Level; i++) {
                 options.Add(i.ToString());
             }
             extraLevelsDropdown.AddOptions(options);

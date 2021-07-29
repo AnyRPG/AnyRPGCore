@@ -199,8 +199,8 @@ namespace AnyRPG {
                 if (movementSoundArea != null && movementSoundArea.MovementLoopProfile != null) {
                     return movementSoundArea.MovementLoopProfile;
                 }
-                if (LevelManager.Instance.GetActiveSceneNode()?.MovementLoopProfile != null) {
-                    return LevelManager.Instance.GetActiveSceneNode().MovementLoopProfile;
+                if (SystemGameManager.Instance.LevelManager.GetActiveSceneNode()?.MovementLoopProfile != null) {
+                    return SystemGameManager.Instance.LevelManager.GetActiveSceneNode().MovementLoopProfile;
                 }
                 if (characterUnit?.BaseCharacter != null && unitProfile?.MovementAudioProfiles != null && unitProfile.MovementAudioProfiles.Count > 0) {
                     return unitProfile.MovementAudioProfiles[0];
@@ -215,8 +215,8 @@ namespace AnyRPG {
                     //Debug.Log(gameObject.name + ".CharacterUnit.GetMovementHitProfile: return movementSoundArea.MovementHitProfile");
                     return movementSoundArea.MovementHitProfile;
                 }
-                if (LevelManager.Instance.GetActiveSceneNode()?.MovementHitProfile != null) {
-                    return LevelManager.Instance.GetActiveSceneNode().MovementHitProfile;
+                if (SystemGameManager.Instance.LevelManager.GetActiveSceneNode()?.MovementHitProfile != null) {
+                    return SystemGameManager.Instance.LevelManager.GetActiveSceneNode().MovementHitProfile;
                 }
                 if (characterUnit.BaseCharacter != null && unitProfile != null && unitProfile.MovementAudioProfiles != null && unitProfile.MovementAudioProfiles.Count > 0) {
                     return unitProfile.MovementAudioProfiles[0];
@@ -392,7 +392,7 @@ namespace AnyRPG {
         private void SetPreviewMode() {
             //Debug.Log(gameObject.name + ".UnitController.SetPreviewMode()");
             SetUnitControllerMode(UnitControllerMode.Preview);
-            SetDefaultLayer(SystemConfigurationManager.Instance.DefaultCharacterUnitLayer);
+            SetDefaultLayer(SystemGameManager.Instance.SystemConfigurationManager.DefaultCharacterUnitLayer);
             useAgent = false;
             DisableAgent();
 
@@ -431,7 +431,7 @@ namespace AnyRPG {
         public void SetPetMode(BaseCharacter masterBaseCharacter, bool enableMode = false) {
             //Debug.Log(gameObject.name + ".UnitController.SetPetMode(" + (masterBaseCharacter == null ? "null" : masterBaseCharacter.gameObject.name) + ")");
             SetUnitControllerMode(UnitControllerMode.Pet);
-            SetDefaultLayer(SystemConfigurationManager.Instance.DefaultCharacterUnitLayer);
+            SetDefaultLayer(SystemGameManager.Instance.SystemConfigurationManager.DefaultCharacterUnitLayer);
             if (masterBaseCharacter != null) {
                 characterUnit.BaseCharacter.CharacterStats.SetLevel(masterBaseCharacter.CharacterStats.Level);
                 //characterUnit.BaseCharacter.CharacterStats.ApplyControlEffects(masterBaseCharacter);
@@ -468,7 +468,7 @@ namespace AnyRPG {
             namePlateController.SetNamePlatePosition();
 
             SetUnitControllerMode(UnitControllerMode.Mount);
-            SetDefaultLayer(SystemConfigurationManager.Instance.DefaultCharacterUnitLayer);
+            SetDefaultLayer(SystemGameManager.Instance.SystemConfigurationManager.DefaultCharacterUnitLayer);
             if (myCollider != null) {
                 myCollider.isTrigger = false;
             }
@@ -485,7 +485,7 @@ namespace AnyRPG {
             //Debug.Log(gameObject.name + "UnitController.EnablePlayer()");
             InitializeNamePlateController();
 
-            SetDefaultLayer(SystemConfigurationManager.Instance.DefaultPlayerUnitLayer);
+            SetDefaultLayer(SystemGameManager.Instance.SystemConfigurationManager.DefaultPlayerUnitLayer);
             DisableAggro();
 
             rigidBody.useGravity = true;
@@ -509,7 +509,7 @@ namespace AnyRPG {
                 SystemEventManager.TriggerEvent("OnSetSprintSpeed", eventParam);
 
             }
-            if (SystemConfigurationManager.Instance.UseThirdPartyMovementControl) {
+            if (SystemGameManager.Instance.SystemConfigurationManager.UseThirdPartyMovementControl) {
                 SystemGameManager.Instance.KeyBindManager.SendKeyBindEvents();
             }
         }
@@ -531,7 +531,7 @@ namespace AnyRPG {
         }
 
         private void EnableAICommon() {
-            SetDefaultLayer(SystemConfigurationManager.Instance.DefaultCharacterUnitLayer);
+            SetDefaultLayer(SystemGameManager.Instance.SystemConfigurationManager.DefaultCharacterUnitLayer);
 
             // enable agent needs to be done before changing state or idle -> patrol transition will not work because of an inactive navmeshagent
             if (unitProfile != null && unitProfile.IsMobile == true) {
@@ -552,7 +552,7 @@ namespace AnyRPG {
 
         public void ConfigurePlayer() {
             //Debug.Log(gameObject.name + ".UnitController.ConfigurePlayer()");
-            PlayerManager.Instance.SetUnitController(this);
+            SystemGameManager.Instance.PlayerManager.SetUnitController(this);
         }
 
         public void SetUnitControllerMode(UnitControllerMode unitControllerMode) {
@@ -1371,7 +1371,7 @@ namespace AnyRPG {
             if (MyCombatStrategy != null) {
                 if (MyCombatStrategy.HasMusic() == true) {
                     //Debug.Log(gameObject.name + ".AIController.ResetCombat(): attempting to turn off fight music");
-                    AudioProfile musicProfile = LevelManager.Instance.GetActiveSceneNode().BackgroundMusicProfile;
+                    AudioProfile musicProfile = SystemGameManager.Instance.LevelManager.GetActiveSceneNode().BackgroundMusicProfile;
                     if (musicProfile != null) {
                         //Debug.Log(aiController.gameObject.name + "ReturnState.Enter(): music profile was set");
                         if (musicProfile.AudioClip != null && SystemGameManager.Instance.AudioManager.MusicAudioSource.clip != musicProfile.AudioClip) {
@@ -1767,8 +1767,8 @@ namespace AnyRPG {
             if (miniMapIndicatorReady == true && miniMapIndicator != null) {
                 //miniMapIndicator.transform.forward = new Vector3(0f, transform.forward.x, transform.forward.z);
                 //miniMapIndicator.transform.rotation = Quaternion.Euler(0, transform.eulerAngles.y, 0);
-                //miniMapIndicator.transform.rotation = Quaternion.Euler(0, 0, transform.eulerAngles.y * -1f) * Quaternion.LookRotation(SystemConfigurationManager.Instance.PlayerMiniMapIconForward);
-                miniMapIndicator.transform.rotation = Quaternion.Euler(0, 0, (transform.eulerAngles.y - SystemConfigurationManager.Instance.PlayerMiniMapIconRotation) * -1f);
+                //miniMapIndicator.transform.rotation = Quaternion.Euler(0, 0, transform.eulerAngles.y * -1f) * Quaternion.LookRotation(SystemGameManager.Instance.SystemConfigurationManager.PlayerMiniMapIconForward);
+                miniMapIndicator.transform.rotation = Quaternion.Euler(0, 0, (transform.eulerAngles.y - SystemGameManager.Instance.SystemConfigurationManager.PlayerMiniMapIconRotation) * -1f);
                 if (mainMapIndicator != null) {
                     mainMapIndicator.transform.rotation = miniMapIndicator.transform.rotation;
                 }
@@ -1781,7 +1781,7 @@ namespace AnyRPG {
             }
             base.UpdateMainMapIndicator();
             if (miniMapIndicatorReady == true && mainMapIndicator != null) {
-                mainMapIndicator.transform.rotation = Quaternion.Euler(0, 0, (transform.eulerAngles.y - SystemConfigurationManager.Instance.PlayerMiniMapIconRotation) * -1f);
+                mainMapIndicator.transform.rotation = Quaternion.Euler(0, 0, (transform.eulerAngles.y - SystemGameManager.Instance.SystemConfigurationManager.PlayerMiniMapIconRotation) * -1f);
             }
         }
 

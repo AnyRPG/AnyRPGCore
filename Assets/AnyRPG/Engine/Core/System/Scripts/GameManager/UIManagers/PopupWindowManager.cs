@@ -30,50 +30,50 @@ namespace AnyRPG {
         public CloseableWindow specializationChangeWindow;
 
         void Start() {
-            InventoryManager.Instance.Close();
+            SystemGameManager.Instance.InventoryManager.Close();
         }
 
         // Update is called once per frame
         void Update() {
             //Debug.Log("PopupWindowManager.Update()");
 
-            if (PlayerManager.Instance.PlayerUnitSpawned == false) {
+            if (SystemGameManager.Instance.PlayerManager.PlayerUnitSpawned == false) {
                 // if there is no player, these windows shouldn't be open
                 return;
             }
             // don't open windows while binding keys
             if (SystemGameManager.Instance.KeyBindManager.MyBindName == string.Empty) {
-                if (InputManager.Instance.KeyBindWasPressed("INVENTORY")) {
-                    InventoryManager.Instance.OpenClose();
+                if (SystemGameManager.Instance.InputManager.KeyBindWasPressed("INVENTORY")) {
+                    SystemGameManager.Instance.InventoryManager.OpenClose();
                 }
-                if (InputManager.Instance.KeyBindWasPressed("ABILITYBOOK")) {
+                if (SystemGameManager.Instance.InputManager.KeyBindWasPressed("ABILITYBOOK")) {
                     abilityBookWindow.ToggleOpenClose();
                 }
-                if (InputManager.Instance.KeyBindWasPressed("SKILLBOOK")) {
+                if (SystemGameManager.Instance.InputManager.KeyBindWasPressed("SKILLBOOK")) {
                     skillBookWindow.ToggleOpenClose();
                 }
-                if (InputManager.Instance.KeyBindWasPressed("ACHIEVEMENTBOOK")) {
+                if (SystemGameManager.Instance.InputManager.KeyBindWasPressed("ACHIEVEMENTBOOK")) {
                     achievementListWindow.ToggleOpenClose();
                 }
-                if (InputManager.Instance.KeyBindWasPressed("REPUTATIONBOOK")) {
+                if (SystemGameManager.Instance.InputManager.KeyBindWasPressed("REPUTATIONBOOK")) {
                     reputationBookWindow.ToggleOpenClose();
                 }
-                if (InputManager.Instance.KeyBindWasPressed("CURRENCYPANEL")) {
+                if (SystemGameManager.Instance.InputManager.KeyBindWasPressed("CURRENCYPANEL")) {
                     currencyListWindow.ToggleOpenClose();
                 }
-                if (InputManager.Instance.KeyBindWasPressed("CHARACTERPANEL")) {
+                if (SystemGameManager.Instance.InputManager.KeyBindWasPressed("CHARACTERPANEL")) {
                     characterPanelWindow.ToggleOpenClose();
                 }
-                if (InputManager.Instance.KeyBindWasPressed("QUESTLOG")) {
+                if (SystemGameManager.Instance.InputManager.KeyBindWasPressed("QUESTLOG")) {
                     questLogWindow.ToggleOpenClose();
                 }
-                if (InputManager.Instance.KeyBindWasPressed("MAINMAP")) {
+                if (SystemGameManager.Instance.InputManager.KeyBindWasPressed("MAINMAP")) {
                     //Debug.Log("mainmap was pressed");
                     mainMapWindow.ToggleOpenClose();
                 }
             }
 
-            if (InputManager.Instance.KeyBindWasPressed("CANCEL")) {
+            if (SystemGameManager.Instance.InputManager.KeyBindWasPressed("CANCEL")) {
                 CloseAllWindows();
             }
         }
@@ -101,7 +101,7 @@ namespace AnyRPG {
             classChangeWindow.CloseWindow();
             specializationChangeWindow.CloseWindow();
             dialogWindow.CloseWindow();
-            InventoryManager.Instance.Close();
+            SystemGameManager.Instance.InventoryManager.Close();
         }
     }
 

@@ -22,11 +22,11 @@ namespace AnyRPG {
         // public variables
 
         private void LateUpdate() {
-            if (InputManager.Instance == null) {
+            if (SystemGameManager.Instance.InputManager == null) {
                 Debug.LogError("InputManager not found in scene.  Is the GameManager in the scene?");
                 return;
             }
-            if (InputManager.Instance.KeyBindWasPressed("CANCEL")) {
+            if (SystemGameManager.Instance.InputManager.KeyBindWasPressed("CANCEL")) {
                 //Debug.Log("AnyRPGCutsceneCameraController.LateUpdate(): open cancel cutscene window");
                 SystemGameManager.Instance.UIManager.SystemWindowManager.confirmCancelCutsceneMenuWindow.OpenWindow();
             }
@@ -54,7 +54,7 @@ namespace AnyRPG {
 
         public void ActivateEnvironmentStateByIndex(int index) {
 
-            SceneNode currentNode = LevelManager.Instance.GetActiveSceneNode();
+            SceneNode currentNode = SystemGameManager.Instance.LevelManager.GetActiveSceneNode();
             if (currentNode != null && currentNode.EnvironmentStates != null && currentNode.EnvironmentStates.Count > index && currentNode.EnvironmentStates[index].MySkyBoxMaterial != null) {
                 SystemEnvironmentManager.SetSkyBox(currentNode.EnvironmentStates[index].MySkyBoxMaterial);
             }

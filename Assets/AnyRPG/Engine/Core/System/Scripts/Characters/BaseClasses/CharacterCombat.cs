@@ -210,13 +210,13 @@ namespace AnyRPG {
             }
 
             if (target != null
-                && PlayerManager.Instance != null
-                && PlayerManager.Instance.ActiveUnitController != null
+                && SystemGameManager.Instance.PlayerManager != null
+                && SystemGameManager.Instance.PlayerManager.ActiveUnitController != null
                 && baseCharacter != null
                 && baseCharacter.UnitController != null
                 && baseCharacter.UnitController.CharacterUnit != null) {
-                if (target == (PlayerManager.Instance.MyCharacter as IAbilityCaster) ||
-                    (PlayerManager.Instance.MyCharacter as BaseCharacter) == (baseCharacter as BaseCharacter) ||
+                if (target == (SystemGameManager.Instance.PlayerManager.MyCharacter as IAbilityCaster) ||
+                    (SystemGameManager.Instance.PlayerManager.MyCharacter as BaseCharacter) == (baseCharacter as BaseCharacter) ||
                     target.AbilityManager.IsPlayerControlled()) {
                     // spawn text over enemies damaged by the player and over the player itself
                     CombatTextType combatTextType = CombatTextType.normal;
@@ -312,7 +312,7 @@ namespace AnyRPG {
 
         public void ActivateAutoAttack() {
             //Debug.Log(gameObject.name + ".CharacterCombat.ActivateAutoAttack()");
-            if (SystemConfigurationManager.Instance.AllowAutoAttack == true) {
+            if (SystemGameManager.Instance.SystemConfigurationManager.AllowAutoAttack == true) {
                 autoAttackActive = true;
             }
         }

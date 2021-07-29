@@ -8,20 +8,6 @@ namespace AnyRPG {
 
     public class InputManager : MonoBehaviour {
 
-        #region Singleton
-        private static InputManager instance;
-
-        public static InputManager Instance {
-            get {
-                return instance;
-            }
-        }
-
-        private void Awake() {
-            instance = this;
-        }
-        #endregion
-
         public bool rightMouseButtonDown = false;
         public bool middleMouseButtonDown = false;
         public bool rightMouseButtonUp = false;
@@ -46,7 +32,7 @@ namespace AnyRPG {
         
         private int lastRegisteredFrame = 0;
 
-        public void Start() {
+        public void Init() {
             SystemEventManager.StartListening("OnLevelLoad", HandleLevelLoad);
         }
 

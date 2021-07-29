@@ -23,8 +23,8 @@ namespace AnyRPG {
 
         //private List<LootTable> lootTables = new List<LootTable>();
 
-        public override Sprite Icon { get => (SystemConfigurationManager.Instance.LootableCharacterInteractionPanelImage != null ? SystemConfigurationManager.Instance.LootableCharacterInteractionPanelImage : base.Icon); }
-        public override Sprite NamePlateImage { get => (SystemConfigurationManager.Instance.LootableCharacterNamePlateImage != null ? SystemConfigurationManager.Instance.LootableCharacterNamePlateImage : base.NamePlateImage); }
+        public override Sprite Icon { get => (SystemGameManager.Instance.SystemConfigurationManager.LootableCharacterInteractionPanelImage != null ? SystemGameManager.Instance.SystemConfigurationManager.LootableCharacterInteractionPanelImage : base.Icon); }
+        public override Sprite NamePlateImage { get => (SystemGameManager.Instance.SystemConfigurationManager.LootableCharacterNamePlateImage != null ? SystemGameManager.Instance.SystemConfigurationManager.LootableCharacterNamePlateImage : base.NamePlateImage); }
         public bool AutomaticCurrency { get => automaticCurrency; set => automaticCurrency = value; }
         public List<string> LootTableNames { get => lootTableNames; set => lootTableNames = value; }
 

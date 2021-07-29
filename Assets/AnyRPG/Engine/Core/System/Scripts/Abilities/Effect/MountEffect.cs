@@ -23,7 +23,7 @@ namespace AnyRPG {
 
         public override void CancelEffect(BaseCharacter targetCharacter) {
             //Debug.Log("MountEffect.CancelEffect(" + (targetCharacter != null ? targetCharacter.name : "null") + ")");
-            if (PlayerManager.Instance == null) {
+            if (SystemGameManager.Instance.PlayerManager == null) {
                 // game is in the middle of exiting
                 return;
             }
@@ -36,7 +36,7 @@ namespace AnyRPG {
         }
 
         public override bool CanCast() {
-            if (LevelManager.Instance.GetActiveSceneNode()?.AllowMount == false) {
+            if (SystemGameManager.Instance.LevelManager.GetActiveSceneNode()?.AllowMount == false) {
                 //Debug.Log(DisplayName + ".MountEffect.CanCast(): scene does not allow mount");
                 return false;
             }

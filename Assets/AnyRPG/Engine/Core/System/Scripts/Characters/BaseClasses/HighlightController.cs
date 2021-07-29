@@ -31,7 +31,7 @@ namespace AnyRPG {
             meshRenderer.material = materialCopy;
             */
 
-            foreach (ProjectorColorMapNode colorMapNode in SystemConfigurationManager.Instance.FocusProjectorColorMap) {
+            foreach (ProjectorColorMapNode colorMapNode in SystemGameManager.Instance.SystemConfigurationManager.FocusProjectorColorMap) {
                 colorDictionary[ColorUtility.ToHtmlStringRGBA(colorMapNode.SourceColor)] = colorMapNode;
                 //Debug.Log("FocusTargettingController.SetupController(): added " + ColorUtility.ToHtmlStringRGBA(colorMapNode.MySourceColor));
             }
@@ -72,7 +72,7 @@ namespace AnyRPG {
 
         public void SetMaterial(Color materialColor) {
             //Debug.Log("FocusTargettingController.SetMaterial(" + (materialColor == null ? "null" : materialColor.ToString()) + ")");
-            if (SystemConfigurationManager.Instance == null) {
+            if (SystemGameManager.Instance.SystemConfigurationManager == null) {
                 return;
             }
 
@@ -91,7 +91,7 @@ namespace AnyRPG {
                     ProcessTint(colorDictionary[ColorUtility.ToHtmlStringRGBA(materialColor)]);
                     //Debug.Log("FocusTargettingController.SetMaterial(): dictionary contained color  " + ColorUtility.ToHtmlStringRGBA(materialColor));
                 } else {
-                    meshRenderer.material = new Material(SystemConfigurationManager.Instance.DefaultCastingLightProjector);
+                    meshRenderer.material = new Material(SystemGameManager.Instance.SystemConfigurationManager.DefaultCastingLightProjector);
                     //Debug.Log("FocusTargettingController.SetMaterial(): dictionary did not contain color " + ColorUtility.ToHtmlStringRGBA(materialColor) + ", setting to default highlight");
                 }
             }

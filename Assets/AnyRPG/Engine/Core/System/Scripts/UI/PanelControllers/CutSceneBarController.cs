@@ -121,7 +121,7 @@ namespace AnyRPG {
             if (currentCutscene != null) {
                 currentCutscene.Viewed = true;
             }
-            LevelManager.Instance.EndCutscene(currentCutscene);
+            SystemGameManager.Instance.LevelManager.EndCutscene(currentCutscene);
             currentCutscene = null;
         }
 

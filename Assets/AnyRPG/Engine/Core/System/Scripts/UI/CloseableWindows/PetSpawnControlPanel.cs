@@ -127,7 +127,7 @@ namespace AnyRPG {
                 //despawnButton.enabled = true;
                 spawnButton.gameObject.SetActive(true);
                 despawnButton.gameObject.SetActive(true);
-                if (PlayerManager.Instance.MyCharacter.CharacterPetManager.ActiveUnitProfiles.ContainsKey(petSpawnButton.MyUnitProfile)) {
+                if (SystemGameManager.Instance.PlayerManager.MyCharacter.CharacterPetManager.ActiveUnitProfiles.ContainsKey(petSpawnButton.MyUnitProfile)) {
                     spawnButton.interactable = false;
                     despawnButton.interactable = true;
                 } else {
@@ -176,8 +176,8 @@ namespace AnyRPG {
 
             ClearPanel();
 
-            if (PlayerManager.Instance.MyCharacter.CharacterPetManager != null) {
-                unitProfileList = PlayerManager.Instance.MyCharacter.CharacterPetManager.UnitProfiles;
+            if (SystemGameManager.Instance.PlayerManager.MyCharacter.CharacterPetManager != null) {
+                unitProfileList = SystemGameManager.Instance.PlayerManager.MyCharacter.CharacterPetManager.UnitProfiles;
             }
             ShowPreviewButtonsCommon();
 
@@ -197,7 +197,7 @@ namespace AnyRPG {
 
             foreach (UnitProfile unitProfile in unitProfileList) {
                 //Debug.Log("PetSpawnControlPanel.ShowLoadButtonsCommon() unitprofile: " + unitProfile.DisplayName);
-                if (PlayerManager.Instance.MyCharacter.CharacterClass.ValidPetTypeList.Contains(unitProfile.UnitType)) {
+                if (SystemGameManager.Instance.PlayerManager.MyCharacter.CharacterClass.ValidPetTypeList.Contains(unitProfile.UnitType)) {
                     GameObject go = ObjectPooler.Instance.GetPooledObject(buttonPrefab, buttonArea.transform);
                     PetSpawnButton petSpawnButton = go.GetComponent<PetSpawnButton>();
                     if (petSpawnButton != null) {
@@ -227,12 +227,12 @@ namespace AnyRPG {
         }
 
         public void SpawnUnit() {
-            PlayerManager.Instance.MyCharacter.CharacterPetManager.SpawnPet(MySelectedPetSpawnButton.MyUnitProfile);
+            SystemGameManager.Instance.PlayerManager.MyCharacter.CharacterPetManager.SpawnPet(MySelectedPetSpawnButton.MyUnitProfile);
             ClosePanel();
         }
 
         public void DespawnUnit() {
-            PlayerManager.Instance.MyCharacter.CharacterPetManager.DespawnPet(MySelectedPetSpawnButton.MyUnitProfile);
+            SystemGameManager.Instance.PlayerManager.MyCharacter.CharacterPetManager.DespawnPet(MySelectedPetSpawnButton.MyUnitProfile);
             UpdateButtons(selectedPetSpawnButton);
             //ClosePanel();
         }

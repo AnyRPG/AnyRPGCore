@@ -140,12 +140,12 @@ namespace AnyRPG {
 
         private void SetWelcomeString() {
             completeWelcomeString = welcomeString;
-            if (SystemConfigurationManager.Instance != null) {
-                if (SystemConfigurationManager.Instance.GameName != null && SystemConfigurationManager.Instance.GameName != string.Empty) {
-                    completeWelcomeString += string.Format(" {0}", SystemConfigurationManager.Instance.GameName);
+            if (SystemGameManager.Instance.SystemConfigurationManager != null) {
+                if (SystemGameManager.Instance.SystemConfigurationManager.GameName != null && SystemGameManager.Instance.SystemConfigurationManager.GameName != string.Empty) {
+                    completeWelcomeString += string.Format(" {0}", SystemGameManager.Instance.SystemConfigurationManager.GameName);
                 }
-                if (SystemConfigurationManager.Instance.GameVersion != null && SystemConfigurationManager.Instance.GameVersion != string.Empty) {
-                    completeWelcomeString += string.Format(" {0}", SystemConfigurationManager.Instance.GameVersion);
+                if (SystemGameManager.Instance.SystemConfigurationManager.GameVersion != null && SystemGameManager.Instance.SystemConfigurationManager.GameVersion != string.Empty) {
+                    completeWelcomeString += string.Format(" {0}", SystemGameManager.Instance.SystemConfigurationManager.GameVersion);
                 }
             }
 
@@ -253,7 +253,7 @@ namespace AnyRPG {
             SystemGameManager.Instance.EventManager.OnTakeDamage += HandleTakeDamage;
             SystemEventManager.StartListening("OnPlayerConnectionSpawn", handlePlayerConnectionSpawn);
             SystemEventManager.StartListening("OnPlayerConnectionDespawn", handlePlayerConnectionDespawn);
-            if (PlayerManager.Instance.PlayerConnectionSpawned == true) {
+            if (SystemGameManager.Instance.PlayerManager.PlayerConnectionSpawned == true) {
                 PrintWelcomeMessages();
             }
             eventSubscriptionsInitialized = true;
@@ -295,7 +295,7 @@ namespace AnyRPG {
 
         public void HandleTakeDamage(IAbilityCaster source, CharacterUnit target, int damage, string abilityName) {
             Color textColor = Color.white;
-            if (PlayerManager.Instance.UnitController != null && target == PlayerManager.Instance.UnitController.CharacterUnit) {
+            if (SystemGameManager.Instance.PlayerManager.UnitController != null && target == SystemGameManager.Instance.PlayerManager.UnitController.CharacterUnit) {
                 textColor = Color.red;
             }
             string combatMessage = string.Format("<color=#{0}>{1} Takes {2} damage from {3}'s {4}</color>", ColorUtility.ToHtmlStringRGB(textColor), target.DisplayName, damage, source.AbilityManager.Name, abilityName);

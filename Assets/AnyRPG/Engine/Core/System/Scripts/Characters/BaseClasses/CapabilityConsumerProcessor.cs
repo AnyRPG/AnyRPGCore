@@ -17,7 +17,7 @@ namespace AnyRPG {
 
         public void UpdateCapabilityProviderList() {
             capabilityProviders = new List<ICapabilityProvider>();
-            capabilityProviders.Add(SystemConfigurationManager.Instance);
+            capabilityProviders.Add(SystemGameManager.Instance.SystemConfigurationManager);
             if (capabilityConsumer.UnitProfile != null) {
                 capabilityProviders.Add(capabilityConsumer.UnitProfile);
             }

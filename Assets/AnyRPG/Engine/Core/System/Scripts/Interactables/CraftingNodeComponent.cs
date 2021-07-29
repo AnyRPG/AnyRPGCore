@@ -17,7 +17,7 @@ namespace AnyRPG {
 
         public override bool MyPrerequisitesMet {
             get {
-                if (PlayerManager.Instance.MyCharacter.CharacterAbilityManager.HasAbility(Props.Ability) == false) {
+                if (SystemGameManager.Instance.PlayerManager.MyCharacter.CharacterAbilityManager.HasAbility(Props.Ability) == false) {
                     return false;
                 }
                 return base.MyPrerequisitesMet;
@@ -65,7 +65,7 @@ namespace AnyRPG {
 
         public override int GetCurrentOptionCount() {
             //Debug.Log(gameObject.name + ".GatheringNode.GetCurrentOptionCount()");
-            return ((PlayerManager.Instance.MyCharacter.CharacterAbilityManager.HasAbility(Props.Ability) == true) ? 1 : 0);
+            return ((SystemGameManager.Instance.PlayerManager.MyCharacter.CharacterAbilityManager.HasAbility(Props.Ability) == true) ? 1 : 0);
         }
 
         public override bool Interact(CharacterUnit source, int optionIndex = 0) {

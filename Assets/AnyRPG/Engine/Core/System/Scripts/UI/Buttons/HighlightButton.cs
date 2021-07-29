@@ -43,14 +43,14 @@ namespace AnyRPG {
         public void Awake() {
             //Debug.Log(gameObject.name + ".HightlightButton.Awake()");
 
-            if (SystemConfigurationManager.Instance != null) {
+            if (SystemGameManager.Instance.SystemConfigurationManager != null) {
                 if (highlightImage != null) {
-                    highlightColor = SystemConfigurationManager.Instance.DefaultUIColor;
+                    highlightColor = SystemGameManager.Instance.SystemConfigurationManager.DefaultUIColor;
                 }
                 if (highlightButton != null) {
                     Image highlightButtonImage = highlightButton.GetComponent<Image>();
                     if (highlightButtonImage != null) {
-                        highlightButtonImage.color = SystemConfigurationManager.Instance.DefaultUISolidColor;
+                        highlightButtonImage.color = SystemGameManager.Instance.SystemConfigurationManager.DefaultUISolidColor;
                     }
                 }
             }

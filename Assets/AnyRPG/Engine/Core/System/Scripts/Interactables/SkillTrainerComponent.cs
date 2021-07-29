@@ -65,7 +65,7 @@ namespace AnyRPG {
             }
             int optionCount = 0;
             foreach (Skill skill in Props.Skills) {
-                if (!PlayerManager.Instance.MyCharacter.CharacterSkillManager.HasSkill(skill)) {
+                if (!SystemGameManager.Instance.PlayerManager.MyCharacter.CharacterSkillManager.HasSkill(skill)) {
                     optionCount++;
                 }
             }
@@ -83,7 +83,7 @@ namespace AnyRPG {
         }
 
         public override bool CanShowMiniMapIcon() {
-            float relationValue = interactable.PerformFactionCheck(PlayerManager.Instance.MyCharacter);
+            float relationValue = interactable.PerformFactionCheck(SystemGameManager.Instance.PlayerManager.MyCharacter);
             return CanInteract(false, false, relationValue);
         }
 

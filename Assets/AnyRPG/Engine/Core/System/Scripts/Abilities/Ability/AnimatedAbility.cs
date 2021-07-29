@@ -46,17 +46,17 @@ namespace AnyRPG {
         }
 
         public override bool HadSpecialIcon(ActionButton actionButton) {
-            if (SystemConfigurationManager.Instance.AllowAutoAttack == true && IsAutoAttack == true) {
+            if (SystemGameManager.Instance.SystemConfigurationManager.AllowAutoAttack == true && IsAutoAttack == true) {
 
                 /*
-                if (PlayerManager.Instance.MyCharacter.MyCharacterEquipmentManager.MyCurrentEquipment.ContainsKey(EquipmentSlot.MainHand) && PlayerManager.Instance.MyCharacter.MyCharacterEquipmentManager.MyCurrentEquipment[EquipmentSlot.MainHand] != null) {
-                    if (PlayerManager.Instance.MyCharacter.MyCharacterEquipmentManager.MyCurrentEquipment[EquipmentSlot.MainHand].MyIcon != null) {
-                        MyIcon.sprite = PlayerManager.Instance.MyCharacter.MyCharacterEquipmentManager.MyCurrentEquipment[EquipmentSlot.MainHand].MyIcon;
+                if (SystemGameManager.Instance.PlayerManager.MyCharacter.MyCharacterEquipmentManager.MyCurrentEquipment.ContainsKey(EquipmentSlot.MainHand) && SystemGameManager.Instance.PlayerManager.MyCharacter.MyCharacterEquipmentManager.MyCurrentEquipment[EquipmentSlot.MainHand] != null) {
+                    if (SystemGameManager.Instance.PlayerManager.MyCharacter.MyCharacterEquipmentManager.MyCurrentEquipment[EquipmentSlot.MainHand].MyIcon != null) {
+                        MyIcon.sprite = SystemGameManager.Instance.PlayerManager.MyCharacter.MyCharacterEquipmentManager.MyCurrentEquipment[EquipmentSlot.MainHand].MyIcon;
                         //Debug.Log("ActionButton.UpdateVisual(): setting icon");
                     }
                 }
                 */
-                if (PlayerManager.Instance.MyCharacter.CharacterCombat.GetInCombat() == true && PlayerManager.Instance.MyCharacter.CharacterCombat.AutoAttackActive == true) {
+                if (SystemGameManager.Instance.PlayerManager.MyCharacter.CharacterCombat.GetInCombat() == true && SystemGameManager.Instance.PlayerManager.MyCharacter.CharacterCombat.AutoAttackActive == true) {
                     if (actionButton.CoolDownIcon.isActiveAndEnabled == false) {
                         actionButton.CoolDownIcon.enabled = true;
                     }
@@ -93,7 +93,7 @@ namespace AnyRPG {
             // auto-attack buttons are special and display the current weapon of the character
             if (IsAutoAttack == true) {
                 //Debug.Log("ActionButton.UpdateVisual(): updating auto-attack ability");
-                foreach (Equipment equipment in PlayerManager.Instance.MyCharacter.CharacterEquipmentManager.CurrentEquipment.Values) {
+                foreach (Equipment equipment in SystemGameManager.Instance.PlayerManager.MyCharacter.CharacterEquipmentManager.CurrentEquipment.Values) {
                     if (equipment != null && equipment is Weapon && (equipment as Weapon).UseDamagePerSecond == true) {
                         if (actionButton.MyIcon.sprite != equipment.Icon) {
                             actionButton.MyIcon.sprite = equipment.Icon;
@@ -106,7 +106,7 @@ namespace AnyRPG {
         }
 
         public override Coroutine ChooseMonitorCoroutine(ActionButton actionButton) {
-            if (SystemConfigurationManager.Instance.AllowAutoAttack == true && IsAutoAttack == true) {
+            if (SystemGameManager.Instance.SystemConfigurationManager.AllowAutoAttack == true && IsAutoAttack == true) {
                 //Debug.Log("ActionButton.OnUseableUse(" + ability.MyName + "): WAS ANIMATED AUTO ATTACK");
                 //if (autoAttackCoRoutine == null) {
                 //if (monitorCoroutine == null) {

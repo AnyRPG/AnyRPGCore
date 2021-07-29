@@ -240,7 +240,7 @@ namespace AnyRPG {
 
         public void NewGame() {
             //Debug.Log("LoadGamePanel.NewGame()");
-            if (SystemConfigurationManager.Instance.UseNewGameWindow == true) {
+            if (SystemGameManager.Instance.SystemConfigurationManager.UseNewGameWindow == true) {
                 ClosePanel();
                 SystemGameManager.Instance.UIManager.SystemWindowManager.newGameWindow.OpenWindow();
             } else {

@@ -93,8 +93,8 @@ namespace AnyRPG {
                         //rigidbody.AddForce(GetKnockBackVelocity(targetPosition, collider.gameObject.transform.position), ForceMode.VelocityChange);
 
                         // we have to handle player knockback specially, as they need to be in knockback state or the idle update will freeze them in place
-                        if (collider.gameObject == PlayerManager.Instance.ActiveUnitController.gameObject) {
-                            PlayerManager.Instance.PlayerUnitMovementController.KnockBack();
+                        if (collider.gameObject == SystemGameManager.Instance.PlayerManager.ActiveUnitController.gameObject) {
+                            SystemGameManager.Instance.PlayerManager.PlayerUnitMovementController.KnockBack();
                         }
 
                         // if this is a character, we want to freeze their rotation.  for inanimate objects, we want rotation

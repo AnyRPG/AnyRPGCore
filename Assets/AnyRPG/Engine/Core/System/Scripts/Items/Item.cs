@@ -91,7 +91,7 @@ namespace AnyRPG {
             get {
 
                 if (dynamicCurrencyAmount) {
-                    return (int)(((pricePerLevel * GetItemLevel(PlayerManager.Instance.MyCharacter.CharacterStats.Level)) + basePrice) * (realItemQuality == null ? 1 : realItemQuality.BuyPriceMultiplier));
+                    return (int)(((pricePerLevel * GetItemLevel(SystemGameManager.Instance.PlayerManager.MyCharacter.CharacterStats.Level)) + basePrice) * (realItemQuality == null ? 1 : realItemQuality.BuyPriceMultiplier));
                 }
                 return (int)(basePrice * (realItemQuality == null ? 1 : realItemQuality.BuyPriceMultiplier));
             }
@@ -105,7 +105,7 @@ namespace AnyRPG {
                     if (realItemQuality == null) {
                         //Debug.Log("realItemQuality was null");
                     }
-                    return (int)(((pricePerLevel * GetItemLevel(PlayerManager.Instance.MyCharacter.CharacterStats.Level)) + basePrice) * (realItemQuality == null ? 1 : realItemQuality.SellPriceMultiplier));
+                    return (int)(((pricePerLevel * GetItemLevel(SystemGameManager.Instance.PlayerManager.MyCharacter.CharacterStats.Level)) + basePrice) * (realItemQuality == null ? 1 : realItemQuality.SellPriceMultiplier));
                 }
                 return (int)(basePrice * (realItemQuality == null ? 1 : realItemQuality.SellPriceMultiplier));
             }
@@ -140,17 +140,17 @@ namespace AnyRPG {
 
         public virtual void UpdateChargeCount(ActionButton actionButton) {
             //Debug.Log(DisplayName + ".Item.UpdateChargeCount()");
-            int chargeCount = InventoryManager.Instance.GetUseableCount(this);
+            int chargeCount = SystemGameManager.Instance.InventoryManager.GetUseableCount(this);
             SystemGameManager.Instance.UIManager.UpdateStackSize(actionButton, chargeCount, true);
         }
 
         public virtual void UpdateActionButtonVisual(ActionButton actionButton) {
-            int count = InventoryManager.Instance.GetUseableCount(this);
+            int count = SystemGameManager.Instance.InventoryManager.GetUseableCount(this);
             // we have to do this to ensure we have a reference to the top item on the stack, otherwise we will try to use an item that has been used already
             //if ((count == 0 && removeStaleActions) || count > 0) {
             /*
             if (count > 0) {
-                Useable = InventoryManager.Instance.GetUseable(Useable as IUseable);
+                Useable = SystemGameManager.Instance.InventoryManager.GetUseable(Useable as IUseable);
             }
             */
             SystemGameManager.Instance.UIManager.UpdateStackSize(actionButton, count, true);
@@ -181,9 +181,9 @@ namespace AnyRPG {
                     if (currencyGroup != null) {
                         int convertedSellAmount = CurrencyConverter.GetConvertedValue(currency, sellAmount);
                         currency = currencyGroup.MyBaseCurrency;
-                        sellAmount = (int)Mathf.Ceil((float)convertedSellAmount * SystemConfigurationManager.Instance.VendorPriceMultiplier);
+                        sellAmount = (int)Mathf.Ceil((float)convertedSellAmount * SystemGameManager.Instance.SystemConfigurationManager.VendorPriceMultiplier);
                     } else {
-                        sellAmount = (int)Mathf.Ceil((float)sellAmount * SystemConfigurationManager.Instance.VendorPriceMultiplier);
+                        sellAmount = (int)Mathf.Ceil((float)sellAmount * SystemGameManager.Instance.SystemConfigurationManager.VendorPriceMultiplier);
                     }
                 }
                 return new KeyValuePair<Currency, int>(currency, sellAmount);
@@ -205,7 +205,7 @@ namespace AnyRPG {
         }
 
         public bool ActionButtonUse() {
-            List<Item> itemList = InventoryManager.Instance?.GetItems(DisplayName, 1);
+            List<Item> itemList = SystemGameManager.Instance.InventoryManager?.GetItems(DisplayName, 1);
             if (itemList == null || itemList.Count == 0) {
                 return false;
             }
@@ -228,7 +228,7 @@ namespace AnyRPG {
 
         public virtual bool Use() {
             //Debug.Log("Base item class: using " + itemName);
-            if (!CharacterClassRequirementIsMet(PlayerManager.Instance.MyCharacter)) {
+            if (!CharacterClassRequirementIsMet(SystemGameManager.Instance.PlayerManager.MyCharacter)) {
                 SystemGameManager.Instance.UIManager.MessageFeedManager.WriteMessage("You are not the right character class to use " + DisplayName);
                 return false;
             }
@@ -258,7 +258,7 @@ namespace AnyRPG {
             // NOTE : currently this is only called from places that apply to characters (quest and loot)
             // if in the future this function is called from somewhere an npc or preview character is used, it would be better to accept the
             // character as a parameter, rather than hard coding to the player
-            if (!CharacterClassRequirementIsMet(PlayerManager.Instance.MyCharacter)) {
+            if (!CharacterClassRequirementIsMet(SystemGameManager.Instance.PlayerManager.MyCharacter)) {
                 //Debug.Log(DisplayName + ".Item.RequirementsAreMet(): return false");
                 return false;
             }
@@ -294,7 +294,7 @@ namespace AnyRPG {
             string summaryString = string.Empty;
             if (characterClassRequirementList.Count > 0) {
                 string colorString = "red";
-                if (realCharacterClassRequirementList.Contains(PlayerManager.Instance.MyCharacter.CharacterClass)) {
+                if (realCharacterClassRequirementList.Contains(SystemGameManager.Instance.PlayerManager.MyCharacter.CharacterClass)) {
                     colorString = "white";
                 }
                 summaryString += string.Format("\n<color={0}>Required Classes: {1}</color>", colorString, string.Join(",", characterClassRequirementList));

@@ -78,7 +78,7 @@ namespace AnyRPG {
                 return;
                 //SystemGameManager.Instance.EventManager.OnPlayerUnitSpawn += HandlePlayerUnitSpawn;
             }
-            if (PlayerManager.Instance == null) {
+            if (SystemGameManager.Instance.PlayerManager == null) {
                 Debug.LogError("PlayerManager not found. Is the GameManager in the scene?");
                 return;
             }
@@ -148,7 +148,7 @@ namespace AnyRPG {
 
         public virtual void StopInteract() {
             //Debug.Log(gameObject.name + ".InanimateUnit.StopInteract()");
-            PlayerManager.Instance.PlayerController.StopInteract();
+            SystemGameManager.Instance.PlayerManager.PlayerController.StopInteract();
         }
 
         public virtual bool HasMiniMapText() {

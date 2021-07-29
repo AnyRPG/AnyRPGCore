@@ -35,7 +35,7 @@ namespace AnyRPG {
             }
             base.CreateEventSubscriptions();
             SystemEventManager.StartListening("OnPlayerConnectionSpawn", HandlePlayerConnectionSpawn);
-            if (PlayerManager.Instance.PlayerConnectionSpawned == true) {
+            if (SystemGameManager.Instance.PlayerManager.PlayerConnectionSpawned == true) {
                 AcceptAchievements();
             }
             eventSubscriptionsInitialized = true;
@@ -78,8 +78,8 @@ namespace AnyRPG {
         public override void LoadResourceList() {
             //Debug.Log(this.GetType().Name + ".LoadResourceList()");
             masterList.Add(Resources.LoadAll<Quest>(resourceClassName));
-            if (SystemConfigurationManager.Instance != null) {
-                foreach (string loadResourcesFolder in SystemConfigurationManager.Instance.LoadResourcesFolders) {
+            if (SystemGameManager.Instance.SystemConfigurationManager != null) {
+                foreach (string loadResourcesFolder in SystemGameManager.Instance.SystemConfigurationManager.LoadResourcesFolders) {
                     masterList.Add(Resources.LoadAll<Quest>(loadResourcesFolder + "/" + resourceClassName));
                 }
             }

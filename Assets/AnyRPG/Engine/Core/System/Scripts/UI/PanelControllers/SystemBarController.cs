@@ -28,20 +28,20 @@ namespace AnyRPG {
 
         private void Start() {
             //Debug.Log("BagBarController.Start()");
-            if (SystemConfigurationManager.Instance.SystemBarMainMenu != null) {
-                mainMenuButton.Icon = SystemConfigurationManager.Instance.SystemBarMainMenu;
+            if (SystemGameManager.Instance.SystemConfigurationManager.SystemBarMainMenu != null) {
+                mainMenuButton.Icon = SystemGameManager.Instance.SystemConfigurationManager.SystemBarMainMenu;
             }
-            if (SystemConfigurationManager.Instance.SystemBarAbilityBook != null) {
-                abilityBookButton.Icon = SystemConfigurationManager.Instance.SystemBarAbilityBook;
+            if (SystemGameManager.Instance.SystemConfigurationManager.SystemBarAbilityBook != null) {
+                abilityBookButton.Icon = SystemGameManager.Instance.SystemConfigurationManager.SystemBarAbilityBook;
             }
-            if (SystemConfigurationManager.Instance.SystemBarQuestLog != null) {
-                questLogButton.Icon = SystemConfigurationManager.Instance.SystemBarQuestLog;
+            if (SystemGameManager.Instance.SystemConfigurationManager.SystemBarQuestLog != null) {
+                questLogButton.Icon = SystemGameManager.Instance.SystemConfigurationManager.SystemBarQuestLog;
             }
-            if (SystemConfigurationManager.Instance.SystemBarCharacter != null) {
-                characterButton.Icon = SystemConfigurationManager.Instance.SystemBarCharacter;
+            if (SystemGameManager.Instance.SystemConfigurationManager.SystemBarCharacter != null) {
+                characterButton.Icon = SystemGameManager.Instance.SystemConfigurationManager.SystemBarCharacter;
             }
-            if (SystemConfigurationManager.Instance.SystemBarMap != null) {
-                mapButton.Icon = SystemConfigurationManager.Instance.SystemBarMap;
+            if (SystemGameManager.Instance.SystemConfigurationManager.SystemBarMap != null) {
+                mapButton.Icon = SystemGameManager.Instance.SystemConfigurationManager.SystemBarMap;
             }
 
         }

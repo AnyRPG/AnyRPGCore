@@ -16,8 +16,8 @@ namespace AnyRPG {
 
         private CharacterClass characterClass;
 
-        public override Sprite Icon { get => (SystemConfigurationManager.Instance.ClassChangeInteractionPanelImage != null ? SystemConfigurationManager.Instance.ClassChangeInteractionPanelImage : base.Icon); }
-        public override Sprite NamePlateImage { get => (SystemConfigurationManager.Instance.ClassChangeNamePlateImage != null ? SystemConfigurationManager.Instance.ClassChangeNamePlateImage : base.NamePlateImage); }
+        public override Sprite Icon { get => (SystemGameManager.Instance.SystemConfigurationManager.ClassChangeInteractionPanelImage != null ? SystemGameManager.Instance.SystemConfigurationManager.ClassChangeInteractionPanelImage : base.Icon); }
+        public override Sprite NamePlateImage { get => (SystemGameManager.Instance.SystemConfigurationManager.ClassChangeNamePlateImage != null ? SystemGameManager.Instance.SystemConfigurationManager.ClassChangeNamePlateImage : base.NamePlateImage); }
 
         public CharacterClass CharacterClass { get => characterClass; set => characterClass = value; }
 

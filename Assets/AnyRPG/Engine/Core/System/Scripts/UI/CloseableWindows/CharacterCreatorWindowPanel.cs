@@ -75,10 +75,10 @@ namespace AnyRPG {
             umaCharacterPanel.ShowPanel();
 
             // set unit profile to default
-            if (SystemConfigurationManager.Instance.UseFirstCreatorProfile) {
-                unitProfile = SystemConfigurationManager.Instance.CharacterCreatorUnitProfile;
+            if (SystemGameManager.Instance.SystemConfigurationManager.UseFirstCreatorProfile) {
+                unitProfile = SystemGameManager.Instance.SystemConfigurationManager.CharacterCreatorUnitProfile;
             } else {
-                unitProfile = PlayerManager.Instance.ActiveCharacter.UnitProfile;
+                unitProfile = SystemGameManager.Instance.PlayerManager.ActiveCharacter.UnitProfile;
             }
 
             // inform the preview panel so the character can be rendered
@@ -109,14 +109,14 @@ namespace AnyRPG {
             // replace a default player unit with an UMA player unit when a save occurs
             // testing : old if statement would cause a character that switched between 2 UMA profiles to not get unit profile properties set
             // from the second profile.  Just go ahead and always despawn units if their appearance changes.
-            //if (PlayerManager.Instance.UnitController.DynamicCharacterAvatar == null) {
-            Vector3 currentPlayerLocation = PlayerManager.Instance.ActiveUnitController.transform.position;
-            LevelManager.Instance.SpawnRotationOverride = PlayerManager.Instance.ActiveUnitController.transform.forward;
-            PlayerManager.Instance.DespawnPlayerUnit();
-            PlayerManager.Instance.MyCharacter.SetUnitProfile(unitProfile.DisplayName, true, -1, false);
-            PlayerManager.Instance.SpawnPlayerUnit(currentPlayerLocation);
-            if (PlayerManager.Instance.MyCharacter.CharacterAbilityManager != null) {
-                PlayerManager.Instance.MyCharacter.CharacterAbilityManager.LearnDefaultAutoAttackAbility();
+            //if (SystemGameManager.Instance.PlayerManager.UnitController.DynamicCharacterAvatar == null) {
+            Vector3 currentPlayerLocation = SystemGameManager.Instance.PlayerManager.ActiveUnitController.transform.position;
+            SystemGameManager.Instance.LevelManager.SpawnRotationOverride = SystemGameManager.Instance.PlayerManager.ActiveUnitController.transform.forward;
+            SystemGameManager.Instance.PlayerManager.DespawnPlayerUnit();
+            SystemGameManager.Instance.PlayerManager.MyCharacter.SetUnitProfile(unitProfile.DisplayName, true, -1, false);
+            SystemGameManager.Instance.PlayerManager.SpawnPlayerUnit(currentPlayerLocation);
+            if (SystemGameManager.Instance.PlayerManager.MyCharacter.CharacterAbilityManager != null) {
+                SystemGameManager.Instance.PlayerManager.MyCharacter.CharacterAbilityManager.LearnDefaultAutoAttackAbility();
             }
 
             //}

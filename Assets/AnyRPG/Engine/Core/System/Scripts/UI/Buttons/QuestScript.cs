@@ -52,7 +52,7 @@ namespace AnyRPG {
                 markedComplete = false;
                 MyText.text = "[" + quest.MyExperienceLevel + "] " + quest.DisplayName;
             }
-            MyText.color = LevelEquations.GetTargetColor(PlayerManager.Instance.MyCharacter.CharacterStats.Level, quest.MyExperienceLevel);
+            MyText.color = LevelEquations.GetTargetColor(SystemGameManager.Instance.PlayerManager.MyCharacter.CharacterStats.Level, quest.MyExperienceLevel);
         }
 
         /*

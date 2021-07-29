@@ -41,7 +41,7 @@ namespace AnyRPG {
             SystemEventManager.StartListening("OnQuestObjectiveStatusUpdated", HandleQuestObjectiveStatusUpdated);
             SystemEventManager.StartListening("OnAfterQuestStatusUpdated", HandleAfterQuestStatusUpdated);
             SystemEventManager.StartListening("OnPlayerUnitSpawn", HandlePlayerUnitSpawn);
-            if (PlayerManager.Instance != null && PlayerManager.Instance.PlayerUnitSpawned == true) {
+            if (SystemGameManager.Instance.PlayerManager != null && SystemGameManager.Instance.PlayerManager.PlayerUnitSpawned == true) {
                 ShowQuests();
             }
         }
@@ -80,13 +80,13 @@ namespace AnyRPG {
 
         public void ShowQuestsCommon() {
             //Debug.Log("QuestTrackerUI.ShowQuestsCommon()");
-            if (PlayerManager.Instance != null && PlayerManager.Instance.PlayerUnitSpawned == false) {
+            if (SystemGameManager.Instance.PlayerManager != null && SystemGameManager.Instance.PlayerManager.PlayerUnitSpawned == false) {
                 // shouldn't be doing anything without a player spawned.
                 return;
             }
             ClearQuests();
 
-            foreach (Quest quest in QuestLog.Instance.MyQuests.Values) {
+            foreach (Quest quest in SystemGameManager.Instance.QuestLog.MyQuests.Values) {
                 //Debug.Log("QuestTrackerUI.ShowQuestsCommon(): quest: " + quest);
                 GameObject go = ObjectPooler.Instance.GetPooledObject(questPrefab, questParent);
                 QuestTrackerQuestScript qs = go.GetComponent<QuestTrackerQuestScript>();
@@ -103,7 +103,7 @@ namespace AnyRPG {
                 qs.MyText.text += "\n<size=12>" + quest.GetUnformattedObjectiveList() + "</size>";
 
                 //Debug.Log("QuestTrackerUI.ShowQuestsCommon(" + questGiver.name + "): " + questNode.MyQuest.MyTitle);
-                qs.MyText.color = LevelEquations.GetTargetColor(PlayerManager.Instance.MyCharacter.CharacterStats.Level, quest.MyExperienceLevel);
+                qs.MyText.color = LevelEquations.GetTargetColor(SystemGameManager.Instance.PlayerManager.MyCharacter.CharacterStats.Level, quest.MyExperienceLevel);
                 //quests.Add(go);
                 questScripts.Add(qs);
 

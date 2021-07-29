@@ -369,7 +369,7 @@ namespace AnyRPG {
 
         public void UpdateStatProviderList() {
             statProviders = new List<IStatProvider>();
-            statProviders.Add(SystemConfigurationManager.Instance);
+            statProviders.Add(SystemGameManager.Instance.SystemConfigurationManager);
             if (unitProfile != null) {
                 statProviders.Add(unitProfile);
             }

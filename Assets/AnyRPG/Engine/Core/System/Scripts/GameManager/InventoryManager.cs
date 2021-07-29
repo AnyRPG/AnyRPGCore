@@ -8,21 +8,6 @@ using UnityEngine.UI;
 namespace AnyRPG {
     public class InventoryManager : MonoBehaviour {
 
-        #region Singleton
-        private static InventoryManager instance;
-
-        public static InventoryManager Instance {
-            get {
-                return instance;
-            }
-        }
-
-        private void Awake() {
-            instance = this;
-            Init();
-        }
-        #endregion
-
         private SlotScript fromSlot;
 
         // BagNodes contain a bag and some metadata about the bag
@@ -102,7 +87,7 @@ namespace AnyRPG {
         public List<BagNode> BagNodes { get => bagNodes; set => bagNodes = value; }
         public List<BagNode> BankNodes { get => bagNodes; set => bagNodes = value; }
 
-        private void Init() {
+        public void Init() {
             //Debug.Log("InventoryManager.Awake()");
             canvasGroup = inventoryContainer.GetComponent<CanvasGroup>();
         }
@@ -189,13 +174,13 @@ namespace AnyRPG {
 
         public void CreateDefaultBackpack() {
             //Debug.Log("InventoryManager.CreateDefaultBackpack()");
-            if (SystemConfigurationManager.Instance?.DefaultBackpackItem != null && SystemConfigurationManager.Instance?.DefaultBackpackItem != string.Empty) {
-                Bag bag = SystemItemManager.Instance.GetNewResource(SystemConfigurationManager.Instance?.DefaultBackpackItem) as Bag;
+            if (SystemGameManager.Instance.SystemConfigurationManager?.DefaultBackpackItem != null && SystemGameManager.Instance.SystemConfigurationManager?.DefaultBackpackItem != string.Empty) {
+                Bag bag = SystemItemManager.Instance.GetNewResource(SystemGameManager.Instance.SystemConfigurationManager?.DefaultBackpackItem) as Bag;
                 if (bag == null) {
                     Debug.LogError("InventoryManager.CreateDefaultBankBag(): CHECK INVENTORYMANAGER IN INSPECTOR AND SET DEFAULTBACKPACK TO VALID NAME");
                     return;
                 }
-                if (SystemConfigurationManager.Instance.EquipDefaultBackPack) {
+                if (SystemGameManager.Instance.SystemConfigurationManager.EquipDefaultBackPack) {
                     bag.Use();
                 } else {
                     AddItem(bag, true);
@@ -205,10 +190,10 @@ namespace AnyRPG {
 
         public void CreateDefaultBankBag() {
             //Debug.Log("InventoryManager.CreateDefaultBankBag()");
-            if (SystemConfigurationManager.Instance?.DefaultBankBagItem == null || SystemConfigurationManager.Instance?.DefaultBankBagItem == string.Empty) {
+            if (SystemGameManager.Instance.SystemConfigurationManager?.DefaultBankBagItem == null || SystemGameManager.Instance.SystemConfigurationManager?.DefaultBankBagItem == string.Empty) {
                 return;
             }
-            Bag bag = SystemItemManager.Instance.GetNewResource(SystemConfigurationManager.Instance?.DefaultBankBagItem) as Bag;
+            Bag bag = SystemItemManager.Instance.GetNewResource(SystemGameManager.Instance.SystemConfigurationManager?.DefaultBankBagItem) as Bag;
             if (bag == null) {
                 Debug.LogError("InventoryManager.CreateDefaultBankBag() Check SystemConfigurationManager in inspector and set defaultbankbag to valid name");
                 return;
@@ -292,7 +277,7 @@ namespace AnyRPG {
             for (int i = 0; i < 13; i++) {
                 //Debug.Log("Bag Nodes initialized. Checking node: " + i);
                 if (PlayerPrefs.HasKey("InventoryWindowX" + i) && PlayerPrefs.HasKey("InventoryWindowY" + i)) {
-                    //InventoryManager.Instance.MyBagNodes[i].MyBagWindow.transform.position = new Vector3(PlayerPrefs.GetFloat("InventoryWindowX" + i), PlayerPrefs.GetFloat("InventoryWindowY" + i), 0);
+                    //SystemGameManager.Instance.InventoryManager.MyBagNodes[i].MyBagWindow.transform.position = new Vector3(PlayerPrefs.GetFloat("InventoryWindowX" + i), PlayerPrefs.GetFloat("InventoryWindowY" + i), 0);
                     BagNodes[i].BagWindow.transform.position = new Vector3(PlayerPrefs.GetFloat("InventoryWindowX" + i), PlayerPrefs.GetFloat("InventoryWindowY" + i), 0);
                     //Debug.Log("setting node:" + i + "; to: " + new Vector3(PlayerPrefs.GetFloat("InventoryWindowX" + i), PlayerPrefs.GetFloat("InventoryWindowY" + i), 0));
                 } else {
@@ -456,7 +441,7 @@ namespace AnyRPG {
                 }
                 AddItem(oldBag);
                 HandScript.Instance.Drop();
-                Instance.fromSlot = null;
+                fromSlot = null;
             }
         }
 
@@ -605,7 +590,7 @@ namespace AnyRPG {
             for (int i = 0; i < 13; i++) {
                 //Debug.Log("Checking window " + i + " on openclose");
                 if (PlayerPrefs.HasKey("InventoryWindowX" + i) && PlayerPrefs.HasKey("InventoryWindowY" + i)) {
-                    //InventoryManager.Instance.MyBagNodes[i].MyBagWindow.transform.position = new Vector3(PlayerPrefs.GetFloat("InventoryWindowX" + i), PlayerPrefs.GetFloat("InventoryWindowY" + i), 0);
+                    //SystemGameManager.Instance.InventoryManager.MyBagNodes[i].MyBagWindow.transform.position = new Vector3(PlayerPrefs.GetFloat("InventoryWindowX" + i), PlayerPrefs.GetFloat("InventoryWindowY" + i), 0);
                     //Debug.Log("setting node:" + i + "; to: " + new Vector3(PlayerPrefs.GetFloat("InventoryWindowX" + i), PlayerPrefs.GetFloat("InventoryWindowY" + i), 0));
                     if (BagNodes[i].BagWindow.IsOpen) {
                         //Debug.Log("Window was open, moving it");

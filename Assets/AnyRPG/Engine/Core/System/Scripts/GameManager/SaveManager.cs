@@ -108,7 +108,7 @@ namespace AnyRPG {
             }
             if (anyRPGSaveData.unitProfileName == null) {
                 //Debug.Log("SaveManager.LoadSaveDataFromFile(" + fileName + "): Player Faction is null.  Setting to default");
-                anyRPGSaveData.unitProfileName = SystemConfigurationManager.Instance.CharacterCreatorUnitProfileName;
+                anyRPGSaveData.unitProfileName = SystemGameManager.Instance.SystemConfigurationManager.CharacterCreatorUnitProfileName;
             }
             if (anyRPGSaveData.PlayerUMARecipe == null) {
                 //Debug.Log("SaveManager.LoadSaveDataFromFile(" + fileName + "): Player UMA Recipe is null.  Setting to empty");
@@ -116,7 +116,7 @@ namespace AnyRPG {
             }
             if (anyRPGSaveData.CurrentScene == null) {
                 //Debug.Log("SaveManager.LoadSaveDataFromFile(" + fileName + "): CurrentScene is null.  Setting to default");
-                anyRPGSaveData.CurrentScene = SystemConfigurationManager.Instance.DefaultStartingZone;
+                anyRPGSaveData.CurrentScene = SystemGameManager.Instance.SystemConfigurationManager.DefaultStartingZone;
             }
             if (anyRPGSaveData.DataFileName == null || anyRPGSaveData.DataFileName == string.Empty) {
                 anyRPGSaveData.DataFileName = Path.GetFileName(fileName);
@@ -219,20 +219,20 @@ namespace AnyRPG {
 
         public void SaveUMASettings() {
             //Debug.Log("SaveManager.SaveUMASettings()");
-            if (PlayerManager.Instance == null) {
+            if (SystemGameManager.Instance.PlayerManager == null) {
                 return;
             }
-            if (PlayerManager.Instance.UnitController == null) {
+            if (SystemGameManager.Instance.PlayerManager.UnitController == null) {
                 return;
             }
-            if (PlayerManager.Instance.UnitController.DynamicCharacterAvatar != null) {
+            if (SystemGameManager.Instance.PlayerManager.UnitController.DynamicCharacterAvatar != null) {
                 //Debug.Log("SaveManager.SaveUMASettings(): avatar exists");
                 if (recipeString == string.Empty) {
                     //Debug.Log("SaveManager.SaveUMASettings(): recipestring is empty");
-                    recipeString = PlayerManager.Instance.UnitController.DynamicCharacterAvatar.GetCurrentRecipe();
+                    recipeString = SystemGameManager.Instance.PlayerManager.UnitController.DynamicCharacterAvatar.GetCurrentRecipe();
                 } else {
                     //Debug.Log("SaveManager.SaveUMASettings(): recipestring is not empty");
-                    recipeString = PlayerManager.Instance.UnitController.DynamicCharacterAvatar.GetCurrentRecipe();
+                    recipeString = SystemGameManager.Instance.PlayerManager.UnitController.DynamicCharacterAvatar.GetCurrentRecipe();
                 }
             }
         }
@@ -253,7 +253,7 @@ namespace AnyRPG {
                 //Debug.Log("Savemanager.LoadUMASettings(): recipe string is empty. exiting!");
                 return;
             }
-            LoadUMASettings(recipeString, PlayerManager.Instance.UnitController.DynamicCharacterAvatar, rebuild);
+            LoadUMASettings(recipeString, SystemGameManager.Instance.PlayerManager.UnitController.DynamicCharacterAvatar, rebuild);
         }
 
         public void LoadUMASettings(DynamicCharacterAvatar _dynamicCharacterAvatar, bool rebuild = true) {
@@ -342,13 +342,13 @@ namespace AnyRPG {
             // check if the player is inside a trigger
             // disallow saving if they are because we don't want to trigger boss spawns
             // or cutscenes when the player loads back in the game
-            if (PlayerManager.Instance.ActiveUnitController != null) {
+            if (SystemGameManager.Instance.PlayerManager.ActiveUnitController != null) {
                 bool canSave = true;
-                Collider playerCollider = PlayerManager.Instance.ActiveUnitController.Collider;
+                Collider playerCollider = SystemGameManager.Instance.PlayerManager.ActiveUnitController.Collider;
                 int validMask = (1 << LayerMask.NameToLayer("Triggers") | 1 << LayerMask.NameToLayer("Interactable") | 1 << LayerMask.NameToLayer("Ignore Raycast"));
                 Collider[] hitColliders = Physics.OverlapCapsule(playerCollider.bounds.center + new Vector3(0, playerCollider.bounds.extents.y, 0),
                     playerCollider.bounds.center - new Vector3(0, playerCollider.bounds.extents.y, 0),
-                    PlayerManager.Instance.ActiveUnitController.Collider.bounds.extents.x, validMask);
+                    SystemGameManager.Instance.PlayerManager.ActiveUnitController.Collider.bounds.extents.x, validMask);
                 foreach (Collider hitCollider in hitColliders) {
                     if (hitCollider.isTrigger == true) {
                         Interactable interactable = hitCollider.gameObject.GetComponent<Interactable>();
@@ -367,35 +367,35 @@ namespace AnyRPG {
             // do this first because persistent objects need to add their locations to the scene node before we write it to disk
             SystemEventManager.TriggerEvent("OnSaveGame", new EventParamProperties());
 
-            anyRPGSaveData.PlayerLevel = PlayerManager.Instance.MyCharacter.CharacterStats.Level;
-            anyRPGSaveData.currentExperience = PlayerManager.Instance.MyCharacter.CharacterStats.CurrentXP;
-            anyRPGSaveData.playerName = PlayerManager.Instance.MyCharacter.CharacterName;
-            if (PlayerManager.Instance.MyCharacter.Faction != null) {
-                anyRPGSaveData.playerFaction = PlayerManager.Instance.MyCharacter.Faction.DisplayName;
+            anyRPGSaveData.PlayerLevel = SystemGameManager.Instance.PlayerManager.MyCharacter.CharacterStats.Level;
+            anyRPGSaveData.currentExperience = SystemGameManager.Instance.PlayerManager.MyCharacter.CharacterStats.CurrentXP;
+            anyRPGSaveData.playerName = SystemGameManager.Instance.PlayerManager.MyCharacter.CharacterName;
+            if (SystemGameManager.Instance.PlayerManager.MyCharacter.Faction != null) {
+                anyRPGSaveData.playerFaction = SystemGameManager.Instance.PlayerManager.MyCharacter.Faction.DisplayName;
             }
-            if (PlayerManager.Instance.MyCharacter.CharacterRace != null) {
-                anyRPGSaveData.characterRace = PlayerManager.Instance.MyCharacter.CharacterRace.DisplayName;
+            if (SystemGameManager.Instance.PlayerManager.MyCharacter.CharacterRace != null) {
+                anyRPGSaveData.characterRace = SystemGameManager.Instance.PlayerManager.MyCharacter.CharacterRace.DisplayName;
             }
-            if (PlayerManager.Instance.MyCharacter.CharacterClass != null) {
-                anyRPGSaveData.characterClass = PlayerManager.Instance.MyCharacter.CharacterClass.DisplayName;
+            if (SystemGameManager.Instance.PlayerManager.MyCharacter.CharacterClass != null) {
+                anyRPGSaveData.characterClass = SystemGameManager.Instance.PlayerManager.MyCharacter.CharacterClass.DisplayName;
             }
-            if (PlayerManager.Instance.MyCharacter.ClassSpecialization != null) {
-                anyRPGSaveData.classSpecialization = PlayerManager.Instance.MyCharacter.ClassSpecialization.DisplayName;
+            if (SystemGameManager.Instance.PlayerManager.MyCharacter.ClassSpecialization != null) {
+                anyRPGSaveData.classSpecialization = SystemGameManager.Instance.PlayerManager.MyCharacter.ClassSpecialization.DisplayName;
             }
-            anyRPGSaveData.unitProfileName = PlayerManager.Instance.MyCharacter.UnitProfile.DisplayName;
+            anyRPGSaveData.unitProfileName = SystemGameManager.Instance.PlayerManager.MyCharacter.UnitProfile.DisplayName;
 
             // moved to resource power data
-            //anyRPGSaveData.currentHealth = PlayerManager.Instance.MyCharacter.CharacterStats.currentHealth;
+            //anyRPGSaveData.currentHealth = SystemGameManager.Instance.PlayerManager.MyCharacter.CharacterStats.currentHealth;
 
-            anyRPGSaveData.PlayerLocationX = PlayerManager.Instance.ActiveUnitController.transform.position.x;
-            anyRPGSaveData.PlayerLocationY = PlayerManager.Instance.ActiveUnitController.transform.position.y;
-            anyRPGSaveData.PlayerLocationZ = PlayerManager.Instance.ActiveUnitController.transform.position.z;
-            anyRPGSaveData.PlayerRotationX = PlayerManager.Instance.ActiveUnitController.transform.forward.x;
-            anyRPGSaveData.PlayerRotationY = PlayerManager.Instance.ActiveUnitController.transform.forward.y;
-            anyRPGSaveData.PlayerRotationZ = PlayerManager.Instance.ActiveUnitController.transform.forward.z;
+            anyRPGSaveData.PlayerLocationX = SystemGameManager.Instance.PlayerManager.ActiveUnitController.transform.position.x;
+            anyRPGSaveData.PlayerLocationY = SystemGameManager.Instance.PlayerManager.ActiveUnitController.transform.position.y;
+            anyRPGSaveData.PlayerLocationZ = SystemGameManager.Instance.PlayerManager.ActiveUnitController.transform.position.z;
+            anyRPGSaveData.PlayerRotationX = SystemGameManager.Instance.PlayerManager.ActiveUnitController.transform.forward.x;
+            anyRPGSaveData.PlayerRotationY = SystemGameManager.Instance.PlayerManager.ActiveUnitController.transform.forward.y;
+            anyRPGSaveData.PlayerRotationZ = SystemGameManager.Instance.PlayerManager.ActiveUnitController.transform.forward.z;
             //Debug.Log("Savemanager.SaveGame() rotation: " + anyRPGSaveData.PlayerRotationX + ", " + anyRPGSaveData.PlayerRotationY + ", " + anyRPGSaveData.PlayerRotationZ);
             anyRPGSaveData.PlayerUMARecipe = recipeString;
-            anyRPGSaveData.CurrentScene = LevelManager.Instance.ActiveSceneName;
+            anyRPGSaveData.CurrentScene = SystemGameManager.Instance.LevelManager.ActiveSceneName;
 
             // shared code to setup resource lists on load of old version file or save of new one
             anyRPGSaveData = InitializeResourceLists(anyRPGSaveData, true);
@@ -447,11 +447,11 @@ namespace AnyRPG {
 
         public void SaveResourcePowerData(AnyRPGSaveData anyRPGSaveData) {
             //Debug.Log("Savemanager.SaveResourcePowerData()");
-            foreach (PowerResource powerResource in PlayerManager.Instance.MyCharacter.CharacterStats.PowerResourceDictionary.Keys) {
+            foreach (PowerResource powerResource in SystemGameManager.Instance.PlayerManager.MyCharacter.CharacterStats.PowerResourceDictionary.Keys) {
                 //Debug.Log("Savemanager.SaveQuestData(): Getting quest data from SystemQuestManager: " + quest.MyName);
                 ResourcePowerSaveData resourcePowerData = new ResourcePowerSaveData();
                 resourcePowerData.MyName = powerResource.DisplayName;
-                resourcePowerData.amount = PlayerManager.Instance.MyCharacter.CharacterStats.PowerResourceDictionary[powerResource].currentValue;
+                resourcePowerData.amount = SystemGameManager.Instance.PlayerManager.MyCharacter.CharacterStats.PowerResourceDictionary[powerResource].currentValue;
                 anyRPGSaveData.resourcePowerSaveData.Add(resourcePowerData);
                 //Debug.Log("Savemanager.SaveQuestData(): " + questSaveData.MyName + ", turnedIn: " + questSaveData.turnedIn + ", inLog: " + questSaveData.inLog);
             }
@@ -610,7 +610,7 @@ namespace AnyRPG {
                     finalSaveData.tradeSkillObjectives = tradeSkillObjectiveSaveDataList;
                     finalSaveData.abilityObjectives = abilityObjectiveSaveDataList;
                 }
-                finalSaveData.inLog = QuestLog.Instance.HasQuest(questSaveData.MyName);
+                finalSaveData.inLog = SystemGameManager.Instance.QuestLog.HasQuest(questSaveData.MyName);
                 anyRPGSaveData.questSaveData.Add(finalSaveData);
             }
 
@@ -664,9 +664,9 @@ namespace AnyRPG {
         public void SaveStatusEffectData(AnyRPGSaveData anyRPGSaveData) {
             //Debug.Log("Savemanager.SaveSceneNodeData()");
 
-            foreach (StatusEffectNode statusEffectNode in PlayerManager.Instance.MyCharacter.CharacterStats.StatusEffects.Values) {
+            foreach (StatusEffectNode statusEffectNode in SystemGameManager.Instance.PlayerManager.MyCharacter.CharacterStats.StatusEffects.Values) {
                 if (statusEffectNode.StatusEffect.ClassTrait == false
-                    && statusEffectNode.AbilityEffectContext.AbilityCaster == (PlayerManager.Instance.MyCharacter as IAbilityCaster)) {
+                    && statusEffectNode.AbilityEffectContext.AbilityCaster == (SystemGameManager.Instance.PlayerManager.MyCharacter as IAbilityCaster)) {
                     StatusEffectSaveData statusEffectSaveData = new StatusEffectSaveData();
                     statusEffectSaveData.MyName = statusEffectNode.StatusEffect.DisplayName;
                     statusEffectSaveData.remainingSeconds = (int)statusEffectNode.GetRemainingDuration();
@@ -689,7 +689,7 @@ namespace AnyRPG {
 
         public void SaveInventorySlotData(AnyRPGSaveData anyRPGSaveData) {
             //Debug.Log("Savemanager.SaveInventorySlotData()");
-            foreach (SlotScript slotScript in InventoryManager.Instance.GetSlots()) {
+            foreach (SlotScript slotScript in SystemGameManager.Instance.InventoryManager.GetSlots()) {
                 InventorySlotSaveData saveData = new InventorySlotSaveData();
                 saveData.MyName = (slotScript.MyItem == null ? string.Empty : slotScript.MyItem.ResourceName);
                 saveData.stackCount = (slotScript.MyItem == null ? 0 : slotScript.MyCount);
@@ -710,7 +710,7 @@ namespace AnyRPG {
 
         public void SaveReputationData(AnyRPGSaveData anyRPGSaveData) {
             //Debug.Log("Savemanager.SaveReputationData()");
-            foreach (FactionDisposition factionDisposition in PlayerManager.Instance.MyCharacter.CharacterFactionManager.DispositionDictionary) {
+            foreach (FactionDisposition factionDisposition in SystemGameManager.Instance.PlayerManager.MyCharacter.CharacterFactionManager.DispositionDictionary) {
                 if (factionDisposition == null) {
                     Debug.Log("Savemanager.SaveReputationData(): no disposition");
                     continue;
@@ -728,7 +728,7 @@ namespace AnyRPG {
 
         public void SaveCurrencyData(AnyRPGSaveData anyRPGSaveData) {
             //Debug.Log("Savemanager.SaveCurrencyData()");
-            foreach (CurrencyNode currencyNode in PlayerManager.Instance.MyCharacter.CharacterCurrencyManager.MyCurrencyList.Values) {
+            foreach (CurrencyNode currencyNode in SystemGameManager.Instance.PlayerManager.MyCharacter.CharacterCurrencyManager.MyCurrencyList.Values) {
                 CurrencySaveData currencySaveData = new CurrencySaveData();
                 currencySaveData.MyAmount = currencyNode.MyAmount;
                 currencySaveData.MyName = currencyNode.currency.DisplayName;
@@ -738,7 +738,7 @@ namespace AnyRPG {
 
         public void SaveEquippedBagData(AnyRPGSaveData anyRPGSaveData) {
             //Debug.Log("Savemanager.SaveEquippedBagData()");
-            foreach (BagNode bagNode in InventoryManager.Instance.BagNodes) {
+            foreach (BagNode bagNode in SystemGameManager.Instance.InventoryManager.BagNodes) {
                 //Debug.Log("Savemanager.SaveEquippedBagData(): got bagNode");
                 EquippedBagSaveData saveData = new EquippedBagSaveData();
                 saveData.MyName = (bagNode.MyBag != null ? bagNode.MyBag.DisplayName : string.Empty);
@@ -750,7 +750,7 @@ namespace AnyRPG {
 
         public void SaveAbilityData(AnyRPGSaveData anyRPGSaveData) {
             //Debug.Log("Savemanager.SaveAbilityData()");
-            foreach (BaseAbility baseAbility in PlayerManager.Instance.MyCharacter.CharacterAbilityManager.RawAbilityList.Values) {
+            foreach (BaseAbility baseAbility in SystemGameManager.Instance.PlayerManager.MyCharacter.CharacterAbilityManager.RawAbilityList.Values) {
                 AbilitySaveData saveData = new AbilitySaveData();
                 saveData.MyName = baseAbility.DisplayName;
                 anyRPGSaveData.abilitySaveData.Add(saveData);
@@ -759,7 +759,7 @@ namespace AnyRPG {
 
         public void SavePetData(AnyRPGSaveData anyRPGSaveData) {
             //Debug.Log("Savemanager.SaveAbilityData()");
-            foreach (UnitProfile unitProfile in PlayerManager.Instance.MyCharacter.CharacterPetManager.UnitProfiles) {
+            foreach (UnitProfile unitProfile in SystemGameManager.Instance.PlayerManager.MyCharacter.CharacterPetManager.UnitProfiles) {
                 PetSaveData saveData = new PetSaveData();
                 saveData.MyName = unitProfile.DisplayName;
                 anyRPGSaveData.petSaveData.Add(saveData);
@@ -768,8 +768,8 @@ namespace AnyRPG {
 
         public void SaveEquipmentData(AnyRPGSaveData anyRPGSaveData) {
             //Debug.Log("Savemanager.SaveEquipmentData()");
-            if (PlayerManager.Instance != null && PlayerManager.Instance.MyCharacter != null && PlayerManager.Instance.MyCharacter.CharacterEquipmentManager != null) {
-                foreach (Equipment equipment in PlayerManager.Instance.MyCharacter.CharacterEquipmentManager.CurrentEquipment.Values) {
+            if (SystemGameManager.Instance.PlayerManager != null && SystemGameManager.Instance.PlayerManager.MyCharacter != null && SystemGameManager.Instance.PlayerManager.MyCharacter.CharacterEquipmentManager != null) {
+                foreach (Equipment equipment in SystemGameManager.Instance.PlayerManager.MyCharacter.CharacterEquipmentManager.CurrentEquipment.Values) {
                     EquipmentSaveData saveData = new EquipmentSaveData();
                     saveData.MyName = (equipment == null ? string.Empty : equipment.ResourceName);
                     saveData.DisplayName = (equipment == null ? string.Empty : equipment.DisplayName);
@@ -787,7 +787,7 @@ namespace AnyRPG {
 
         public void SaveSkillData(AnyRPGSaveData anyRPGSaveData) {
             //Debug.Log("Savemanager.SaveSkillData()");
-            foreach (string skillName in PlayerManager.Instance.MyCharacter.CharacterSkillManager.MySkillList.Keys) {
+            foreach (string skillName in SystemGameManager.Instance.PlayerManager.MyCharacter.CharacterSkillManager.MySkillList.Keys) {
                 SkillSaveData saveData = new SkillSaveData();
                 saveData.MyName = skillName;
                 anyRPGSaveData.skillSaveData.Add(saveData);
@@ -796,7 +796,7 @@ namespace AnyRPG {
 
         public void SaveRecipeData(AnyRPGSaveData anyRPGSaveData) {
             //Debug.Log("Savemanager.SaveRecipeData()");
-            foreach (string recipeName in PlayerManager.Instance.MyCharacter.CharacterRecipeManager.RecipeList.Keys) {
+            foreach (string recipeName in SystemGameManager.Instance.PlayerManager.MyCharacter.CharacterRecipeManager.RecipeList.Keys) {
                 RecipeSaveData saveData = new RecipeSaveData();
                 saveData.MyName = recipeName;
                 anyRPGSaveData.recipeSaveData.Add(saveData);
@@ -808,7 +808,7 @@ namespace AnyRPG {
 
             foreach (ResourcePowerSaveData resourcePowerSaveData in anyRPGSaveData.resourcePowerSaveData) {
                 //Debug.Log("Savemanager.LoadQuestData(): loading questsavedata");
-                PlayerManager.Instance.MyCharacter.CharacterStats.SetResourceAmount(resourcePowerSaveData.MyName, resourcePowerSaveData.amount);
+                SystemGameManager.Instance.PlayerManager.MyCharacter.CharacterStats.SetResourceAmount(resourcePowerSaveData.MyName, resourcePowerSaveData.amount);
             }
 
         }
@@ -860,7 +860,7 @@ namespace AnyRPG {
 
             foreach (QuestSaveData questSaveData in anyRPGSaveData.questSaveData) {
                 //Debug.Log("Savemanager.LoadQuestData(): loading questsavedata");
-                QuestLog.Instance.AcceptQuest(questSaveData);
+                SystemGameManager.Instance.QuestLog.AcceptQuest(questSaveData);
             }
         }
 
@@ -898,14 +898,14 @@ namespace AnyRPG {
             //Debug.Log("Savemanager.LoadStatusEffectData()");
             foreach (StatusEffectSaveData statusEffectSaveData in anyRPGSaveData.statusEffectSaveData) {
                 //Debug.Log("Savemanager.LoadStatusEffectData(): applying " + statusEffectSaveData.MyName);
-                PlayerManager.Instance.MyCharacter.CharacterAbilityManager.ApplySavedStatusEffects(statusEffectSaveData);
+                SystemGameManager.Instance.PlayerManager.MyCharacter.CharacterAbilityManager.ApplySavedStatusEffects(statusEffectSaveData);
             }
         }
 
         public void LoadEquippedBagData(AnyRPGSaveData anyRPGSaveData) {
             //Debug.Log("Savemanager.LoadEquippedBagData()");
             //foreach (EquippedBagSaveData saveData in anyRPGSaveData.equippedBagSaveData) {
-            InventoryManager.Instance.LoadEquippedBagData(anyRPGSaveData.equippedBagSaveData);
+            SystemGameManager.Instance.InventoryManager.LoadEquippedBagData(anyRPGSaveData.equippedBagSaveData);
             //}
 
         }
@@ -933,7 +933,7 @@ namespace AnyRPG {
                                     }
                                 }
 
-                                InventoryManager.Instance.AddItem(newItem, counter);
+                                SystemGameManager.Instance.InventoryManager.AddItem(newItem, counter);
                             }
                         }
                     } else {
@@ -980,7 +980,7 @@ namespace AnyRPG {
                 FactionDisposition factionDisposition = new FactionDisposition();
                 factionDisposition.Faction = SystemFactionManager.Instance.GetResource(reputationSaveData.MyName);
                 factionDisposition.disposition = reputationSaveData.MyAmount;
-                PlayerManager.Instance.MyCharacter.CharacterFactionManager.AddReputation(factionDisposition.Faction, (int)factionDisposition.disposition, false);
+                SystemGameManager.Instance.PlayerManager.MyCharacter.CharacterFactionManager.AddReputation(factionDisposition.Faction, (int)factionDisposition.disposition, false);
                 //counter++;
             }
         }
@@ -988,7 +988,7 @@ namespace AnyRPG {
         public void LoadCurrencyData(AnyRPGSaveData anyRPGSaveData) {
             //Debug.Log("Savemanager.LoadCurrencyData()");
             foreach (CurrencySaveData currencySaveData in anyRPGSaveData.currencySaveData) {
-                PlayerManager.Instance.MyCharacter.CharacterCurrencyManager.AddCurrency(SystemCurrencyManager.Instance.GetResource(currencySaveData.MyName), currencySaveData.MyAmount);
+                SystemGameManager.Instance.PlayerManager.MyCharacter.CharacterCurrencyManager.AddCurrency(SystemCurrencyManager.Instance.GetResource(currencySaveData.MyName), currencySaveData.MyAmount);
             }
         }
 
@@ -997,7 +997,7 @@ namespace AnyRPG {
 
             foreach (AbilitySaveData abilitySaveData in anyRPGSaveData.abilitySaveData) {
                 if (abilitySaveData.MyName != string.Empty) {
-                    PlayerManager.Instance.MyCharacter.CharacterAbilityManager.LoadAbility(abilitySaveData.MyName);
+                    SystemGameManager.Instance.PlayerManager.MyCharacter.CharacterAbilityManager.LoadAbility(abilitySaveData.MyName);
                 }
             }
         }
@@ -1007,7 +1007,7 @@ namespace AnyRPG {
 
             foreach (PetSaveData petSaveData in anyRPGSaveData.petSaveData) {
                 if (petSaveData.MyName != string.Empty) {
-                    PlayerManager.Instance.MyCharacter.CharacterPetManager.AddPet(petSaveData.MyName);
+                    SystemGameManager.Instance.PlayerManager.MyCharacter.CharacterPetManager.AddPet(petSaveData.MyName);
                 }
             }
 
@@ -1016,14 +1016,14 @@ namespace AnyRPG {
         public void LoadSkillData(AnyRPGSaveData anyRPGSaveData) {
             //Debug.Log("Savemanager.LoadSkillData()");
             foreach (SkillSaveData skillSaveData in anyRPGSaveData.skillSaveData) {
-                PlayerManager.Instance.MyCharacter.CharacterSkillManager.LoadSkill(skillSaveData.MyName);
+                SystemGameManager.Instance.PlayerManager.MyCharacter.CharacterSkillManager.LoadSkill(skillSaveData.MyName);
             }
         }
 
         public void LoadRecipeData(AnyRPGSaveData anyRPGSaveData) {
             //Debug.Log("Savemanager.LoadRecipeData()");
             foreach (RecipeSaveData recipeSaveData in anyRPGSaveData.recipeSaveData) {
-                PlayerManager.Instance.MyCharacter.CharacterRecipeManager.LoadRecipe(recipeSaveData.MyName);
+                SystemGameManager.Instance.PlayerManager.MyCharacter.CharacterRecipeManager.LoadRecipe(recipeSaveData.MyName);
             }
         }
 
@@ -1038,7 +1038,7 @@ namespace AnyRPG {
                     // find item in bag
                     //Debug.Log("Savemanager.LoadActionBarData(): searching for usable(" + actionBarSaveData.MyName + ") in inventory");
                     /*
-                    List<Item> itemList = InventoryManager.Instance.GetItems(actionBarSaveData.MyName, 1);
+                    List<Item> itemList = SystemGameManager.Instance.InventoryManager.GetItems(actionBarSaveData.MyName, 1);
                     if (itemList.Count > 0) {
                         //Debug.Log("Savemanager.LoadActionBarData(): searching for usable(" + actionBarSaveData.MyName + ") in inventory and itemlist.count was: " + itemList.Count);
                         useable = itemList[0] as IUseable;
@@ -1095,15 +1095,15 @@ namespace AnyRPG {
             SystemGameManager.Instance.UIManager.SystemWindowManager.newGameWindow.CloseWindow();
 
             // load default scene
-            LevelManager.Instance.LoadFirstScene();
+            SystemGameManager.Instance.LevelManager.LoadFirstScene();
         }
 
         public void PerformInventorySetup() {
             // initialize inventory so there is a place to put the inventory
-            InventoryManager.Instance.PerformSetupActivities();
+            SystemGameManager.Instance.InventoryManager.PerformSetupActivities();
 
-            InventoryManager.Instance.CreateDefaultBankBag();
-            InventoryManager.Instance.CreateDefaultBackpack();
+            SystemGameManager.Instance.InventoryManager.CreateDefaultBankBag();
+            SystemGameManager.Instance.InventoryManager.CreateDefaultBackpack();
         }
 
         public void LoadGame() {
@@ -1132,11 +1132,11 @@ namespace AnyRPG {
                 //Debug.Log("Savemanager.LoadSharedData(): recipe string in save data was not empty or null, loading UMA settings");
                 SaveUMASettings(loadedRecipeString);
                 // we have UMA data so should load the UMA unit instead of the default
-                //PlayerManager.Instance.SetUMAPrefab();
+                //SystemGameManager.Instance.PlayerManager.SetUMAPrefab();
             } else {
                 //Debug.Log("Savemanager.LoadSharedData(): recipe string in save data was empty or null, setting player prefab to default");
                 ClearUMASettings();
-                //PlayerManager.Instance.SetDefaultPrefab();
+                //SystemGameManager.Instance.PlayerManager.SetDefaultPrefab();
             }
 
         }
@@ -1170,10 +1170,10 @@ namespace AnyRPG {
             currentSaveData = anyRPGSaveData;
 
             // initialize inventory so there is a place to put the inventory
-            InventoryManager.Instance.PerformSetupActivities();
+            SystemGameManager.Instance.InventoryManager.PerformSetupActivities();
 
             // player level
-            PlayerManager.Instance.InitialLevel = anyRPGSaveData.PlayerLevel;
+            SystemGameManager.Instance.PlayerManager.InitialLevel = anyRPGSaveData.PlayerLevel;
 
             // scene and location
             Vector3 playerLocation = new Vector3(anyRPGSaveData.PlayerLocationX, anyRPGSaveData.PlayerLocationY, anyRPGSaveData.PlayerLocationZ);
@@ -1184,18 +1184,18 @@ namespace AnyRPG {
             SystemQuestManager.Instance.CleanupEventSubscriptions();
 
             // spawn player connection so all the data can be loaded
-            PlayerManager.Instance.SpawnPlayerConnection();
-            PlayerManager.Instance.MyCharacter.CharacterStats.CurrentXP = anyRPGSaveData.currentExperience;
+            SystemGameManager.Instance.PlayerManager.SpawnPlayerConnection();
+            SystemGameManager.Instance.PlayerManager.MyCharacter.CharacterStats.CurrentXP = anyRPGSaveData.currentExperience;
 
             // testing: load this before setting providers so no duplicates on bars
             //LoadActionBarData(anyRPGSaveData);
 
             CapabilityConsumerSnapshot capabilityConsumerSnapshot = GetCapabilityConsumerSnapshot(anyRPGSaveData);
 
-            PlayerManager.Instance.MyCharacter.ApplyCapabilityConsumerSnapshot(capabilityConsumerSnapshot);
+            SystemGameManager.Instance.PlayerManager.MyCharacter.ApplyCapabilityConsumerSnapshot(capabilityConsumerSnapshot);
 
             // this must be called after the snapshot is applied, because the unit profile could contain a default name
-            PlayerManager.Instance.SetPlayerName(anyRPGSaveData.playerName);
+            SystemGameManager.Instance.PlayerManager.SetPlayerName(anyRPGSaveData.playerName);
 
 
             // THIS NEEDS TO BE DOWN HERE SO THE PLAYERSTATS EXISTS TO SUBSCRIBE TO THE EQUIP EVENTS AND INCREASE STATS
@@ -1208,7 +1208,7 @@ namespace AnyRPG {
 
 
             // testing - move here to prevent learning auto-attack ability twice
-            LoadEquipmentData(anyRPGSaveData, PlayerManager.Instance.MyCharacter.CharacterEquipmentManager);
+            LoadEquipmentData(anyRPGSaveData, SystemGameManager.Instance.PlayerManager.MyCharacter.CharacterEquipmentManager);
 
             LoadSkillData(anyRPGSaveData);
             LoadRecipeData(anyRPGSaveData);
@@ -1239,7 +1239,7 @@ namespace AnyRPG {
 
             SystemGameManager.Instance.UIManager.SystemWindowManager.loadGameWindow.CloseWindow();
             // load the proper level now that everything should be setup
-            LevelManager.Instance.LoadLevel(anyRPGSaveData.CurrentScene, playerLocation, playerRotation);
+            SystemGameManager.Instance.LevelManager.LoadLevel(anyRPGSaveData.CurrentScene, playerLocation, playerRotation);
         }
 
         public void ClearSystemManagedCharacterData() {
@@ -1248,7 +1248,7 @@ namespace AnyRPG {
             // not needed anymore because no singleton?
             //CharacterEquipmentManager.Instance.ClearEquipment();
 
-            InventoryManager.Instance.ClearData();
+            SystemGameManager.Instance.InventoryManager.ClearData();
             if (SystemGameManager.Instance.UIManager.PopupWindowManager != null) {
                 if (SystemGameManager.Instance.UIManager.PopupWindowManager.bankWindow != null) {
                     if (SystemGameManager.Instance.UIManager.PopupWindowManager.bankWindow.CloseableWindowContents != null) {
@@ -1267,8 +1267,8 @@ namespace AnyRPG {
             //SystemGameManager.Instance.ReloadResourceLists();
 
             SystemGameManager.Instance.UIManager.ActionBarManager.ClearActionBars(true);
-            QuestLog.Instance.ClearLog();
-            PlayerManager.Instance.ResetInitialLevel();
+            SystemGameManager.Instance.QuestLog.ClearLog();
+            SystemGameManager.Instance.PlayerManager.ResetInitialLevel();
 
             // clear describable resource mutable data dictionaries
             questSaveDataDictionary.Clear();
@@ -1434,14 +1434,14 @@ namespace AnyRPG {
             PlayerPrefs.SetFloat("MouseOverWindowX", SystemGameManager.Instance.UIManager.MouseOverWindow.transform.position.x);
             PlayerPrefs.SetFloat("MouseOverWindowY", SystemGameManager.Instance.UIManager.MouseOverWindow.transform.position.y);
 
-            if (InventoryManager.Instance.BagNodes != null && InventoryManager.Instance.BagNodes.Count > 0) {
+            if (SystemGameManager.Instance.InventoryManager.BagNodes != null && SystemGameManager.Instance.InventoryManager.BagNodes.Count > 0) {
                 for (int i = 0; i < 13; i++) {
                     //Debug.Log("SaveManager.SaveWindowPositions(): " + i);
-                    if (InventoryManager.Instance.BagNodes[i].BagWindow.IsOpen) {
-                        PlayerPrefs.SetFloat("InventoryWindowX" + i, InventoryManager.Instance.BagNodes[i].BagWindow.transform.position.x);
-                        PlayerPrefs.SetFloat("InventoryWindowY" + i, InventoryManager.Instance.BagNodes[i].BagWindow.transform.position.y);
+                    if (SystemGameManager.Instance.InventoryManager.BagNodes[i].BagWindow.IsOpen) {
+                        PlayerPrefs.SetFloat("InventoryWindowX" + i, SystemGameManager.Instance.InventoryManager.BagNodes[i].BagWindow.transform.position.x);
+                        PlayerPrefs.SetFloat("InventoryWindowY" + i, SystemGameManager.Instance.InventoryManager.BagNodes[i].BagWindow.transform.position.y);
                     } else {
-                        //Debug.Log("SaveManager.SaveWindowPositions(): " + i + "X: " + InventoryManager.Instance.MyBagNodes[i].MyBagWindow.transform.position.x + "; y: " + InventoryManager.Instance.MyBagNodes[i].MyBagWindow.transform.position.y + " WINDOW CLOSED@!!!!, NOT SAVING");
+                        //Debug.Log("SaveManager.SaveWindowPositions(): " + i + "X: " + SystemGameManager.Instance.InventoryManager.MyBagNodes[i].MyBagWindow.transform.position.x + "; y: " + SystemGameManager.Instance.InventoryManager.MyBagNodes[i].MyBagWindow.transform.position.y + " WINDOW CLOSED@!!!!, NOT SAVING");
                     }
                 }
             }
@@ -1472,8 +1472,8 @@ namespace AnyRPG {
 
             string replaceString = string.Empty;
             Regex regex = new Regex("[^a-zA-Z0-9]");
-            if (SystemConfigurationManager.Instance != null) {
-                replaceString = regex.Replace(SystemConfigurationManager.Instance.GameName, "");
+            if (SystemGameManager.Instance.SystemConfigurationManager != null) {
+                replaceString = regex.Replace(SystemGameManager.Instance.SystemConfigurationManager.GameName, "");
             }
 
             if (replaceString != string.Empty) {

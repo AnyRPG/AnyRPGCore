@@ -136,7 +136,7 @@ namespace AnyRPG {
 
             if (GetHighlightedAbilityRewardIcons().Contains(rewardButton)) {
                 //Debug.Log("QuestDetailsArea.HandleAttemptSelect(): it's an ability reward; current count of highlighted icons: " + GetHighlightedAbilityRewardIcons().Count + "; max: " + quest.MyMaxAbilityRewards);
-                if (quest.MyMaxAbilityRewards > 0 && GetHighlightedAbilityRewardIcons().Count > quest.MyMaxAbilityRewards || PlayerManager.Instance.MyCharacter.CharacterAbilityManager.HasAbility(rewardButton.Describable as BaseAbility)) {
+                if (quest.MyMaxAbilityRewards > 0 && GetHighlightedAbilityRewardIcons().Count > quest.MyMaxAbilityRewards || SystemGameManager.Instance.PlayerManager.MyCharacter.CharacterAbilityManager.HasAbility(rewardButton.Describable as BaseAbility)) {
                     rewardButton.Unselect();
                 }
             }
@@ -155,7 +155,7 @@ namespace AnyRPG {
 
             questDescription.text = quest.GetObjectiveDescription();
 
-            experienceReward.text += LevelEquations.GetXPAmountForQuest(PlayerManager.Instance.MyCharacter.CharacterStats.Level, quest) + " XP";
+            experienceReward.text += LevelEquations.GetXPAmountForQuest(SystemGameManager.Instance.PlayerManager.MyCharacter.CharacterStats.Level, quest) + " XP";
 
             // display currency rewards
 

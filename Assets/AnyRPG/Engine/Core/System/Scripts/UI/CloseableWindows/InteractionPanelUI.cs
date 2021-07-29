@@ -96,7 +96,7 @@ namespace AnyRPG {
             ClearButtons();
 
             // updated to only use valid interactables
-            if (PlayerManager.Instance.PlayerUnitSpawned == false) {
+            if (SystemGameManager.Instance.PlayerManager.PlayerUnitSpawned == false) {
                 //Debug.Log("InteractionPanelUI.ShowInteractablesCommon(" + interactable.name + ") player unit is null");
                 return;
             }
@@ -137,12 +137,12 @@ namespace AnyRPG {
                                 qs.MyText.text = displayText;
 
                                 //Debug.Log("QuestTrackerUI.ShowQuestsCommon(" + questGiver.name + "): " + questNode.MyQuest.MyTitle);
-                                qs.MyText.color = LevelEquations.GetTargetColor(PlayerManager.Instance.MyCharacter.CharacterStats.Level, quest.MyExperienceLevel);
+                                qs.MyText.color = LevelEquations.GetTargetColor(SystemGameManager.Instance.PlayerManager.MyCharacter.CharacterStats.Level, quest.MyExperienceLevel);
                                 //quests.Add(go);
                                 questScripts.Add(qs);
                                 if (quest.IsComplete && !quest.TurnedIn) {
                                     go.transform.SetParent(completeQuestArea.transform);
-                                } else if (!quest.IsComplete && QuestLog.Instance.HasQuest(quest.DisplayName) == false) {
+                                } else if (!quest.IsComplete && SystemGameManager.Instance.QuestLog.HasQuest(quest.DisplayName) == false) {
                                     go.transform.SetParent(availableQuestArea.transform);
                                 }
 
@@ -207,7 +207,7 @@ namespace AnyRPG {
                 InteractionPanelScript iPS = interactionPanelScript.GetComponent<InteractionPanelScript>();
                 if (iPS.InteractableOption.CanInteract() && iPS.InteractableOption.GetCurrentOptionCount() == 1) {
                     //Debug.Log("InteractionPanelUI.ShowInteractablesCommon(" + interactable.name + "): Checking interaction Panel Script: canInteract is TRUE!!!");
-                    iPS.InteractableOption.Interact(PlayerManager.Instance.UnitController.CharacterUnit);
+                    iPS.InteractableOption.Interact(SystemGameManager.Instance.PlayerManager.UnitController.CharacterUnit);
                     //optionOpened = true;
                     return;
                 }

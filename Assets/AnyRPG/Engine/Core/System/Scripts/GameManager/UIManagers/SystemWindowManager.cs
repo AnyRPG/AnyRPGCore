@@ -83,7 +83,7 @@ namespace AnyRPG {
                 return;
             }
 
-            if (InputManager.Instance.KeyBindWasPressed("CANCEL")) {
+            if (SystemGameManager.Instance.InputManager.KeyBindWasPressed("CANCEL")) {
                 settingsMenuWindow.CloseWindow();
                 creditsWindow.CloseWindow();
                 exitMenuWindow.CloseWindow();
@@ -96,12 +96,12 @@ namespace AnyRPG {
                 petSpawnWindow.CloseWindow();
 
                 // do not allow accidentally closing this while dead
-                if (PlayerManager.Instance.PlayerUnitSpawned == true && PlayerManager.Instance.MyCharacter.CharacterStats.IsAlive != false) {
+                if (SystemGameManager.Instance.PlayerManager.PlayerUnitSpawned == true && SystemGameManager.Instance.PlayerManager.MyCharacter.CharacterStats.IsAlive != false) {
                     playerOptionsMenuWindow.CloseWindow();
                 }
             }
 
-            if (InputManager.Instance.KeyBindWasPressed("MAINMENU")) {
+            if (SystemGameManager.Instance.InputManager.KeyBindWasPressed("MAINMENU")) {
                 inGameMainMenuWindow.ToggleOpenClose();
             }
 
@@ -137,12 +137,12 @@ namespace AnyRPG {
 
         public void SetupDeathPopup() {
             //Debug.Log("PopupWindowmanager.SetupDeathPopup()");
-            PlayerManager.Instance.MyCharacter.CharacterStats.OnDie += PlayerDeathHandler;
+            SystemGameManager.Instance.PlayerManager.MyCharacter.CharacterStats.OnDie += PlayerDeathHandler;
         }
 
         public void RemoveDeathPopup() {
             //Debug.Log("PopupWindowmanager.RemoveDeathPopup()");
-            PlayerManager.Instance.MyCharacter.CharacterStats.OnDie -= PlayerDeathHandler;
+            SystemGameManager.Instance.PlayerManager.MyCharacter.CharacterStats.OnDie -= PlayerDeathHandler;
         }
 
         public void OpenInGameMainMenu() {

@@ -131,7 +131,7 @@ namespace AnyRPG {
             if (SystemGameManager.Instance.UIManager.PopupWindowManager.vendorWindow.IsOpen == false) {
                 return;
             }
-            Dictionary<Currency, int> playerBaseCurrency = PlayerManager.Instance.MyCharacter.CharacterCurrencyManager.GetRedistributedCurrency();
+            Dictionary<Currency, int> playerBaseCurrency = SystemGameManager.Instance.PlayerManager.MyCharacter.CharacterCurrencyManager.GetRedistributedCurrency();
             if (playerBaseCurrency != null) {
                 //Debug.Log("VendorUI.UpdateCurrencyAmount(): " + playerBaseCurrency.Count);
                 KeyValuePair<Currency, int> keyValuePair = playerBaseCurrency.First();
@@ -192,13 +192,13 @@ namespace AnyRPG {
             }
             KeyValuePair<Currency, int> sellAmount = item.MySellPrice;
 
-            PlayerManager.Instance.MyCharacter.CharacterCurrencyManager.AddCurrency(sellAmount.Key, sellAmount.Value);
+            SystemGameManager.Instance.PlayerManager.MyCharacter.CharacterCurrencyManager.AddCurrency(sellAmount.Key, sellAmount.Value);
             AddToBuyBackCollection(item);
-            //InventoryManager.Instance.RemoveItem(item);
+            //SystemGameManager.Instance.InventoryManager.RemoveItem(item);
             item.MySlot.RemoveItem(item);
 
-            if (SystemConfigurationManager.Instance?.VendorAudioProfile?.AudioClip != null) {
-                SystemGameManager.Instance.AudioManager.PlayEffect(SystemConfigurationManager.Instance.VendorAudioProfile.AudioClip);
+            if (SystemGameManager.Instance.SystemConfigurationManager?.VendorAudioProfile?.AudioClip != null) {
+                SystemGameManager.Instance.AudioManager.PlayEffect(SystemGameManager.Instance.SystemConfigurationManager.VendorAudioProfile.AudioClip);
             }
             string priceString = CurrencyConverter.GetCombinedPriceSring(sellAmount.Key, sellAmount.Value);
             SystemGameManager.Instance.UIManager.MessageFeedManager.WriteMessage("Sold " + item.DisplayName + " for " + priceString);

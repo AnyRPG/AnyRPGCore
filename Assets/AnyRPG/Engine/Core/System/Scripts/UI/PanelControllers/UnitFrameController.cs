@@ -135,7 +135,7 @@ namespace AnyRPG {
         }
 
         private void LateUpdate() {
-            if (SystemConfigurationManager.Instance.RealTimeUnitFrameCamera) {
+            if (SystemGameManager.Instance.SystemConfigurationManager.RealTimeUnitFrameCamera) {
                 UpdateCameraPosition();
             }
         }
@@ -240,7 +240,7 @@ namespace AnyRPG {
             } else {
                 //Debug.Log(gameObject.name + ".UnitFrameController.SetTarget(): Unit Frame Not active after activate command.  Likely gameobject under inactive canvas.  Will run TargetInitialization() on enable instead.");
             }
-            if (SystemConfigurationManager.Instance.RealTimeUnitFrameCamera == true) {
+            if (SystemGameManager.Instance.SystemConfigurationManager.RealTimeUnitFrameCamera == true) {
                 previewCamera.enabled = true;
             } else {
                 //previewCamera.Render();
@@ -471,8 +471,8 @@ namespace AnyRPG {
         public void HandleLevelChanged(int _level) {
             CalculateResourceColors();
             unitLevelText.text = _level.ToString();
-            if (PlayerManager.Instance != null && PlayerManager.Instance.MyCharacter != null && PlayerManager.Instance.MyCharacter.CharacterStats != null) {
-                unitLevelText.color = LevelEquations.GetTargetColor(PlayerManager.Instance.MyCharacter.CharacterStats.Level, _level);
+            if (SystemGameManager.Instance.PlayerManager != null && SystemGameManager.Instance.PlayerManager.MyCharacter != null && SystemGameManager.Instance.PlayerManager.MyCharacter.CharacterStats != null) {
+                unitLevelText.color = LevelEquations.GetTargetColor(SystemGameManager.Instance.PlayerManager.MyCharacter.CharacterStats.Level, _level);
             }
         }
 
@@ -516,7 +516,7 @@ namespace AnyRPG {
         }
 
         public void HandleReputationChange() {
-            if (PlayerManager.Instance == null || PlayerManager.Instance.PlayerUnitSpawned == false) {
+            if (SystemGameManager.Instance.PlayerManager == null || SystemGameManager.Instance.PlayerManager.PlayerUnitSpawned == false) {
                 return;
             }
             if (namePlateController == null) {

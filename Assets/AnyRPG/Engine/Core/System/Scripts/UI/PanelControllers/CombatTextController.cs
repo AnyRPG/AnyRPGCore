@@ -116,7 +116,7 @@ namespace AnyRPG {
             } else {
                 image.color = Color.white;
             }
-            if (mainTarget.InteractableGameObject == PlayerManager.Instance.ActiveUnitController.gameObject) {
+            if (mainTarget.InteractableGameObject == SystemGameManager.Instance.PlayerManager.ActiveUnitController.gameObject) {
                 directionMultiplier = -1;
                 switch (textType) {
                     case CombatTextType.normal:

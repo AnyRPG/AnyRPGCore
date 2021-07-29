@@ -18,7 +18,7 @@ namespace AnyRPG {
 
         public virtual bool IsMet() {
             //Debug.Log("TradeSkillObjective.IsMet()");
-            if (PlayerManager.Instance.MyCharacter.CharacterSkillManager.HasSkill(skill)) {
+            if (SystemGameManager.Instance.PlayerManager.MyCharacter.CharacterSkillManager.HasSkill(skill)) {
                 return true;
             }
             return false;
@@ -38,7 +38,7 @@ namespace AnyRPG {
             if (completeBefore) {
                 return;
             }
-            if (PlayerManager.Instance.MyCharacter.CharacterSkillManager.HasSkill(skill)) {
+            if (SystemGameManager.Instance.PlayerManager.MyCharacter.CharacterSkillManager.HasSkill(skill)) {
                 CurrentAmount++;
                 quest.CheckCompletion(true, printMessages);
             }

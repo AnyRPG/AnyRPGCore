@@ -266,7 +266,7 @@ namespace AnyRPG {
         }
 
         public void StartBackgroundMusic() {
-            LevelManager.Instance.PlayLevelSounds();
+            SystemGameManager.Instance.LevelManager.PlayLevelSounds();
         }
 
 

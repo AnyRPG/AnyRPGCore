@@ -16,7 +16,7 @@ namespace AnyRPG {
             //Debug.Log("ExitMenuController.ConfirmExit()");
             SystemGameManager.Instance.UIManager.SystemWindowManager.exitToMainMenuWindow.CloseWindow();
             SystemGameManager.Instance.UIManager.SystemWindowManager.playerOptionsMenuWindow.CloseWindow();
-            LevelManager.Instance.LoadMainMenu();
+            SystemGameManager.Instance.LevelManager.LoadMainMenu();
         }
 
     }

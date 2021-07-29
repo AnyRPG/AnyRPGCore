@@ -44,7 +44,7 @@ public class QuestTrackerQuestScript : MonoBehaviour
             markedComplete = false;
             MyText.text = "[" + MyQuest.MyExperienceLevel + "] " + MyQuest.MyTitle;
         }
-        MyText.color = LevelEquations.GetTargetColor(PlayerManager.Instance.MyCharacter.MyCharacterStats.MyLevel, MyQuest.MyExperienceLevel);
+        MyText.color = LevelEquations.GetTargetColor(SystemGameManager.Instance.PlayerManager.MyCharacter.MyCharacterStats.MyLevel, MyQuest.MyExperienceLevel);
     }
     */
 

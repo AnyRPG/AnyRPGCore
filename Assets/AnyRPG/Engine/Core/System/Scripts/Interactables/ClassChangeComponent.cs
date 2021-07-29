@@ -113,7 +113,7 @@ namespace AnyRPG {
         // character class is a special type of prerequisite
         public override bool MyPrerequisitesMet {
             get {
-                if (PlayerManager.Instance.MyCharacter.CharacterClass == Props.CharacterClass) {
+                if (SystemGameManager.Instance.PlayerManager.MyCharacter.CharacterClass == Props.CharacterClass) {
                     return false;
                 }
                 return base.MyPrerequisitesMet;

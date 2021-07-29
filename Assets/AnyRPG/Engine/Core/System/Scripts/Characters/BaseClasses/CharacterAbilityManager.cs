@@ -359,8 +359,8 @@ namespace AnyRPG {
                 && baseCharacter.UnitProfile.UnitPrefabProps.AnimationProps != null) {
                 return baseCharacter.UnitProfile.UnitPrefabProps.AnimationProps;
             }
-            if (SystemConfigurationManager.Instance?.DefaultAnimationProfile != null) {
-                return SystemConfigurationManager.Instance.DefaultAnimationProfile.AnimationProps;
+            if (SystemGameManager.Instance.SystemConfigurationManager?.DefaultAnimationProfile != null) {
+                return SystemGameManager.Instance.SystemConfigurationManager.DefaultAnimationProfile.AnimationProps;
             }
             return base.GetUnitAnimationProps();
         }
@@ -702,7 +702,7 @@ namespace AnyRPG {
             abilityCoolDownNode.MyAbilityName = baseAbility.DisplayName;
 
             // need to account for auto-attack
-            if (SystemConfigurationManager.Instance.AllowAutoAttack == false && (baseAbility is AnimatedAbility) && (baseAbility as AnimatedAbility).IsAutoAttack == true) {
+            if (SystemGameManager.Instance.SystemConfigurationManager.AllowAutoAttack == false && (baseAbility is AnimatedAbility) && (baseAbility as AnimatedAbility).IsAutoAttack == true) {
                 abilityCoolDownNode.MyRemainingCoolDown = abilityCoolDown;
             } else {
                 abilityCoolDownNode.MyRemainingCoolDown = abilityCoolDown;
@@ -843,7 +843,7 @@ namespace AnyRPG {
             if (baseCharacter != null &&
                 baseCharacter.UnitController != null &&
                 baseCharacter.UnitController.MasterUnit != null &&
-                baseCharacter.UnitController.MasterUnit == (PlayerManager.Instance.MyCharacter as BaseCharacter)) {
+                baseCharacter.UnitController.MasterUnit == (SystemGameManager.Instance.PlayerManager.MyCharacter as BaseCharacter)) {
 
                 return true;
             }
@@ -986,7 +986,7 @@ namespace AnyRPG {
         public void DeActivateTargettingMode() {
             //Debug.Log("CharacterAbilityManager.DeActivateTargettingMode()");
             targettingModeActive = false;
-            CastTargettingManager.Instance.DisableProjector();
+            SystemGameManager.Instance.CastTargettingManager.DisableProjector();
         }
 
         public void UpdateAbilityList(int newLevel) {
@@ -1619,7 +1619,7 @@ namespace AnyRPG {
             // adding new code to require some movement distance to prevent gravity while standing still from triggering this
             if (BaseCharacter.UnitController.ApparentVelocity > 0.1f) {
                 //Debug.Log("CharacterAbilityManager.HandleManualMovement(): stop casting");
-                if (currentCastAbility != null && currentCastAbility.GetTargetOptions(baseCharacter).RequiresGroundTarget == true && CastTargettingManager.Instance.ProjectorIsActive() == true) {
+                if (currentCastAbility != null && currentCastAbility.GetTargetOptions(baseCharacter).RequiresGroundTarget == true && SystemGameManager.Instance.CastTargettingManager.ProjectorIsActive() == true) {
                     // do nothing
                     //Debug.Log("CharacterAbilityManager.HandleManualMovement(): not cancelling casting because we have a ground target active");
                 } else {
@@ -1725,7 +1725,7 @@ namespace AnyRPG {
         public override void ProcessAbilityCoolDowns(AnimatedAbility baseAbility, float animationLength, float abilityCoolDown) {
             base.ProcessAbilityCoolDowns(baseAbility, animationLength, abilityCoolDown);
             if (baseCharacter?.UnitController != null && baseCharacter.UnitController.UnitControllerMode == UnitControllerMode.Player) {
-                if (SystemConfigurationManager.Instance.AllowAutoAttack == true && baseAbility.IsAutoAttack) {
+                if (SystemGameManager.Instance.SystemConfigurationManager.AllowAutoAttack == true && baseAbility.IsAutoAttack) {
                     return;
                 }
             }

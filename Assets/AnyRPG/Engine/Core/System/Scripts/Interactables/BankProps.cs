@@ -14,8 +14,8 @@ namespace AnyRPG {
 
         public override Sprite Icon {
             get {
-                if (SystemConfigurationManager.Instance.BankInteractionPanelImage != null) {
-                    return SystemConfigurationManager.Instance.BankInteractionPanelImage;
+                if (SystemGameManager.Instance.SystemConfigurationManager.BankInteractionPanelImage != null) {
+                    return SystemGameManager.Instance.SystemConfigurationManager.BankInteractionPanelImage;
                 }
                 return base.Icon;
             }
@@ -23,8 +23,8 @@ namespace AnyRPG {
 
         public override Sprite NamePlateImage {
             get {
-                if (SystemConfigurationManager.Instance.BankNamePlateImage != null) {
-                    return SystemConfigurationManager.Instance.BankNamePlateImage;
+                if (SystemGameManager.Instance.SystemConfigurationManager.BankNamePlateImage != null) {
+                    return SystemGameManager.Instance.SystemConfigurationManager.BankNamePlateImage;
                 }
                 return base.NamePlateImage;
             }

@@ -81,11 +81,11 @@ namespace AnyRPG {
 
 
         public void OnPointerClick(PointerEventData eventData) {
-            if (vendorItem.MyItem.BuyPrice == 0 || vendorItem.MyItem.MyCurrency == null || (CurrencyConverter.GetConvertedValue(vendorItem.MyItem.MyCurrency, vendorItem.MyItem.BuyPrice) <= PlayerManager.Instance.MyCharacter.CharacterCurrencyManager.GetBaseCurrencyValue(vendorItem.MyItem.MyCurrency))) {
+            if (vendorItem.MyItem.BuyPrice == 0 || vendorItem.MyItem.MyCurrency == null || (CurrencyConverter.GetConvertedValue(vendorItem.MyItem.MyCurrency, vendorItem.MyItem.BuyPrice) <= SystemGameManager.Instance.PlayerManager.MyCharacter.CharacterCurrencyManager.GetBaseCurrencyValue(vendorItem.MyItem.MyCurrency))) {
                 Item tmpItem = SystemItemManager.Instance.GetNewResource(vendorItem.MyItem.DisplayName);
                 //Debug.Log("Instantiated an item with id: " + tmpItem.GetInstanceID().ToString());
-                if (InventoryManager.Instance.AddItem(tmpItem)) {
-                    tmpItem.DropLevel = PlayerManager.Instance.MyCharacter.CharacterStats.Level;
+                if (SystemGameManager.Instance.InventoryManager.AddItem(tmpItem)) {
+                    tmpItem.DropLevel = SystemGameManager.Instance.PlayerManager.MyCharacter.CharacterStats.Level;
                     SellItem();
                     if (tmpItem is CurrencyItem) {
                         (tmpItem as CurrencyItem).Use();
@@ -116,10 +116,10 @@ namespace AnyRPG {
                     usedSellPrice = new KeyValuePair<Currency, int>(vendorItem.MyItem.MySellPrice.Key, vendorItem.MyItem.MySellPrice.Value);
                     priceString = CurrencyConverter.GetCombinedPriceSring(vendorItem.MyItem.MySellPrice.Key, vendorItem.MyItem.MySellPrice.Value);
                 }
-                PlayerManager.Instance.MyCharacter.CharacterCurrencyManager.SpendCurrency(usedSellPrice.Key, usedSellPrice.Value);
+                SystemGameManager.Instance.PlayerManager.MyCharacter.CharacterCurrencyManager.SpendCurrency(usedSellPrice.Key, usedSellPrice.Value);
             }
-            if (SystemConfigurationManager.Instance?.VendorAudioProfile?.AudioClip != null) {
-                SystemGameManager.Instance.AudioManager.PlayEffect(SystemConfigurationManager.Instance.VendorAudioProfile.AudioClip);
+            if (SystemGameManager.Instance.SystemConfigurationManager?.VendorAudioProfile?.AudioClip != null) {
+                SystemGameManager.Instance.AudioManager.PlayEffect(SystemGameManager.Instance.SystemConfigurationManager.VendorAudioProfile.AudioClip);
             }
             SystemGameManager.Instance.UIManager.MessageFeedManager.WriteMessage("Purchased " + vendorItem.MyItem.DisplayName + " for " + priceString);
 

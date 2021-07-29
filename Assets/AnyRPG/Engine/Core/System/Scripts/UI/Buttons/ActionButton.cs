@@ -115,7 +115,7 @@ namespace AnyRPG {
             }
 
             if (Useable != null) {
-                //if (Useable != null && (!(Useable is Item) || InventoryManager.Instance.GetUseableCount(Useable) > 0)) {
+                //if (Useable != null && (!(Useable is Item) || SystemGameManager.Instance.InventoryManager.GetUseableCount(Useable) > 0)) {
                 //Debug.Log("ActionButton.OnClick(): Using MyUseable");
                 //InventoryScript.Instance.GetUseable(MyUseable).Use();
                 //Useable.Use();
@@ -127,8 +127,8 @@ namespace AnyRPG {
 
         public void OnPointerClick(PointerEventData eventData) {
             //Debug.Log(gameObject.name + GetInstanceID() + ".ActionButton.OnPointerClick(): useable: " + (Useable != null ? Useable.MyName : "null"));
-            if (PlayerManager.Instance?.ActiveUnitController != null) {
-                if (PlayerManager.Instance.ActiveUnitController.ControlLocked == true) {
+            if (SystemGameManager.Instance.PlayerManager?.ActiveUnitController != null) {
+                if (SystemGameManager.Instance.PlayerManager.ActiveUnitController.ControlLocked == true) {
                     return;
                 }
             }
@@ -186,16 +186,16 @@ namespace AnyRPG {
             //if (Useable != null && Useable is BaseAbility) {
             //Debug.Log("ActionButton.SetUsable(" + (useable == null ? "null" : useable.ToString()) + "): there was already something on this button");
             /*
-            if (SystemConfigurationManager.Instance.MyAllowAutoAttack == true && Useable is AnimatedAbility && (Useable as AnimatedAbility).IsAutoAttack == true) {
+            if (SystemGameManager.Instance.SystemConfigurationManager.MyAllowAutoAttack == true && Useable is AnimatedAbility && (Useable as AnimatedAbility).IsAutoAttack == true) {
                 // this statement exists to trigger flashing icon, but before the ability executes, and therefore the gcd is null
-                PlayerManager.Instance.MyCharacter.CharacterAbilityManager.OnAttemptPerformAbility -= OnAttemptUseableUse;
+                SystemGameManager.Instance.PlayerManager.MyCharacter.CharacterAbilityManager.OnAttemptPerformAbility -= OnAttemptUseableUse;
             } else {
-                PlayerManager.Instance.MyCharacter.CharacterAbilityManager.OnPerformAbility -= OnUseableUse;
+                SystemGameManager.Instance.PlayerManager.MyCharacter.CharacterAbilityManager.OnPerformAbility -= OnUseableUse;
             }
             */
-            PlayerManager.Instance.MyCharacter.CharacterAbilityManager.OnAttemptPerformAbility -= OnAttemptUseableUse;
-            PlayerManager.Instance.MyCharacter.CharacterAbilityManager.OnPerformAbility -= OnUseableUse;
-            PlayerManager.Instance.MyCharacter.CharacterAbilityManager.OnBeginAbilityCoolDown -= HandleBeginAbilityCooldown;
+            SystemGameManager.Instance.PlayerManager.MyCharacter.CharacterAbilityManager.OnAttemptPerformAbility -= OnAttemptUseableUse;
+            SystemGameManager.Instance.PlayerManager.MyCharacter.CharacterAbilityManager.OnPerformAbility -= OnUseableUse;
+            SystemGameManager.Instance.PlayerManager.MyCharacter.CharacterAbilityManager.OnBeginAbilityCoolDown -= HandleBeginAbilityCooldown;
 
             UnsubscribeFromCombatEvents();
             //}
@@ -204,13 +204,13 @@ namespace AnyRPG {
 
             if (useable is Item) {
                 //Debug.Log("the useable is an item");
-                if (InventoryManager.Instance == null) {
+                if (SystemGameManager.Instance.InventoryManager == null) {
                     //Debug.Log("ActionButton.SetUseable(): inventorymanager.myinstance = null!!!");
                 }
-                if (InventoryManager.Instance.FromSlot != null) {
+                if (SystemGameManager.Instance.InventoryManager.FromSlot != null) {
                     // white, really?  this doesn't actually happen...
-                    InventoryManager.Instance.FromSlot.MyIcon.color = Color.white;
-                    InventoryManager.Instance.FromSlot = null;
+                    SystemGameManager.Instance.InventoryManager.FromSlot.MyIcon.color = Color.white;
+                    SystemGameManager.Instance.InventoryManager.FromSlot = null;
                 } else {
                     //Debug.Log("ActionButton.SetUseable(): This must have come from another actionbar, not the inventory");
                 }
@@ -222,16 +222,16 @@ namespace AnyRPG {
             //Debug.Log("id: " + SystemAbilityManager.Instance.GetResourceList().Find(x => x == (BaseAbility)useable).GetInstanceID());
             //Debug.Log("SystemAbilityManager: " + SystemAbilityManager.Instance.GetResource((BaseAbility)useable));
             /*
-            if (SystemConfigurationManager.Instance.MyAllowAutoAttack == true && Useable is AnimatedAbility && (Useable as AnimatedAbility).IsAutoAttack == true) {
+            if (SystemGameManager.Instance.SystemConfigurationManager.MyAllowAutoAttack == true && Useable is AnimatedAbility && (Useable as AnimatedAbility).IsAutoAttack == true) {
                 // this statement exists to trigger flashing icon, but before the ability executes, and therefore the gcd is null
-                PlayerManager.Instance.MyCharacter.CharacterAbilityManager.OnAttemptPerformAbility += OnAttemptUseableUse;
+                SystemGameManager.Instance.PlayerManager.MyCharacter.CharacterAbilityManager.OnAttemptPerformAbility += OnAttemptUseableUse;
             } else {
-                PlayerManager.Instance.MyCharacter.CharacterAbilityManager.OnPerformAbility += OnUseableUse;
+                SystemGameManager.Instance.PlayerManager.MyCharacter.CharacterAbilityManager.OnPerformAbility += OnUseableUse;
             }
             */
-            PlayerManager.Instance.MyCharacter.CharacterAbilityManager.OnAttemptPerformAbility += OnAttemptUseableUse;
-            PlayerManager.Instance.MyCharacter.CharacterAbilityManager.OnPerformAbility += OnUseableUse;
-            PlayerManager.Instance.MyCharacter.CharacterAbilityManager.OnBeginAbilityCoolDown += HandleBeginAbilityCooldown;
+            SystemGameManager.Instance.PlayerManager.MyCharacter.CharacterAbilityManager.OnAttemptPerformAbility += OnAttemptUseableUse;
+            SystemGameManager.Instance.PlayerManager.MyCharacter.CharacterAbilityManager.OnPerformAbility += OnUseableUse;
+            SystemGameManager.Instance.PlayerManager.MyCharacter.CharacterAbilityManager.OnBeginAbilityCoolDown += HandleBeginAbilityCooldown;
 
             SubscribeToCombatEvents();
             //}
@@ -255,8 +255,8 @@ namespace AnyRPG {
 
         public void SubscribeToCombatEvents() {
             if (Useable != null && Useable is BaseAbility && (Useable as BaseAbility).RequireOutOfCombat == true) {
-                PlayerManager.Instance.MyCharacter.CharacterCombat.OnEnterCombat += HandleEnterCombat;
-                PlayerManager.Instance.MyCharacter.CharacterCombat.OnDropCombat += HandleDropCombat;
+                SystemGameManager.Instance.PlayerManager.MyCharacter.CharacterCombat.OnEnterCombat += HandleEnterCombat;
+                SystemGameManager.Instance.PlayerManager.MyCharacter.CharacterCombat.OnDropCombat += HandleDropCombat;
             }
         }
 
@@ -294,8 +294,8 @@ namespace AnyRPG {
             yield return null;
 
             while (Useable != null
-                && PlayerManager.Instance.MyCharacter.CharacterCombat.GetInCombat() == true
-                && PlayerManager.Instance.MyCharacter.CharacterCombat.AutoAttackActive == true) {
+                && SystemGameManager.Instance.PlayerManager.MyCharacter.CharacterCombat.GetInCombat() == true
+                && SystemGameManager.Instance.PlayerManager.MyCharacter.CharacterCombat.AutoAttackActive == true) {
                 //Debug.Log("ActionButton.MonitorAbility(): cooldown : " + remainingCooldown + "useable cooldown: " + (MyUseable as IAbility).MyRemainingCoolDown);
                 UpdateVisual();
                 yield return new WaitForSeconds(0.5f);
@@ -313,16 +313,16 @@ namespace AnyRPG {
             //Debug.Log("ActionButton.MonitorAbility(" + ability.DisplayName + ")");
             //Debug.Log("Monitoring cooldown of AbilityInstanceID: " + SystemAbilityManager.Instance.GetResource((BaseAbility)ability).GetInstanceID());
             while (Useable != null
-                && (PlayerManager.Instance.MyCharacter.CharacterAbilityManager.MyRemainingGlobalCoolDown > 0f
-                || PlayerManager.Instance.MyCharacter.CharacterAbilityManager.MyAbilityCoolDownDictionary.ContainsKey(ability.DisplayName))) {
+                && (SystemGameManager.Instance.PlayerManager.MyCharacter.CharacterAbilityManager.MyRemainingGlobalCoolDown > 0f
+                || SystemGameManager.Instance.PlayerManager.MyCharacter.CharacterAbilityManager.MyAbilityCoolDownDictionary.ContainsKey(ability.DisplayName))) {
                 /*
-                if (PlayerManager.Instance.MyCharacter.MyCharacterAbilityManager.MyAbilityCoolDownDictionary.ContainsKey(ability.MyName)) {
-                    remainingCooldown = PlayerManager.Instance.MyCharacter.MyCharacterAbilityManager.MyAbilityCoolDownDictionary[ability.MyName].MyRemainingCoolDown;
+                if (SystemGameManager.Instance.PlayerManager.MyCharacter.MyCharacterAbilityManager.MyAbilityCoolDownDictionary.ContainsKey(ability.MyName)) {
+                    remainingCooldown = SystemGameManager.Instance.PlayerManager.MyCharacter.MyCharacterAbilityManager.MyAbilityCoolDownDictionary[ability.MyName].MyRemainingCoolDown;
                 } else {
-                    remainingCooldown = PlayerManager.Instance.MyCharacter.MyCharacterAbilityManager.MyRemainingGlobalCoolDown;
+                    remainingCooldown = SystemGameManager.Instance.PlayerManager.MyCharacter.MyCharacterAbilityManager.MyRemainingGlobalCoolDown;
                 }
                 */
-                //Debug.Log("ActionButton.MonitorAbility(" + ability.DisplayName + "): global cooldown : " + PlayerManager.Instance.MyCharacter.CharacterAbilityManager.MyRemainingGlobalCoolDown + "dictionary cooldown: " + PlayerManager.Instance.MyCharacter.CharacterAbilityManager.MyAbilityCoolDownDictionary[ability.DisplayName].MyRemainingCoolDown);
+                //Debug.Log("ActionButton.MonitorAbility(" + ability.DisplayName + "): global cooldown : " + SystemGameManager.Instance.PlayerManager.MyCharacter.CharacterAbilityManager.MyRemainingGlobalCoolDown + "dictionary cooldown: " + SystemGameManager.Instance.PlayerManager.MyCharacter.CharacterAbilityManager.MyAbilityCoolDownDictionary[ability.DisplayName].MyRemainingCoolDown);
                 UpdateVisual();
                 yield return null;
             }
@@ -351,14 +351,14 @@ namespace AnyRPG {
         /// </summary>
         public void UpdateVisual(bool removeStaleActions = false) {
             //Debug.Log(gameObject.name + GetInstanceID() + ".ActionButton.UpdateVisual() useable: " + (useable == null ? "null" : useable.DisplayName));
-            if (PlayerManager.Instance == null || PlayerManager.Instance.MyCharacter == null) {
+            if (SystemGameManager.Instance.PlayerManager == null || SystemGameManager.Instance.PlayerManager.MyCharacter == null) {
                 return;
             }
             // attempt to remove unlearned spells from the bars
             if (removeStaleActions) {
                 //Debug.Log("ActionButton.UpdateVisual(): removeStaleActions = true");
                 if (Useable != null && Useable.IsUseableStale(this)) {
-                    if (!PlayerManager.Instance.MyCharacter.CharacterAbilityManager.HasAbility(Useable as BaseAbility)) {
+                    if (!SystemGameManager.Instance.PlayerManager.MyCharacter.CharacterAbilityManager.HasAbility(Useable as BaseAbility)) {
                         savedUseable = Useable;
                         Useable = null;
                     }
@@ -446,8 +446,8 @@ namespace AnyRPG {
 
         public void UnsubscribeFromCombatEvents() {
             if (Useable != null && Useable is BaseAbility && (Useable as BaseAbility).RequireOutOfCombat == true) {
-                PlayerManager.Instance.MyCharacter.CharacterCombat.OnEnterCombat -= HandleEnterCombat;
-                PlayerManager.Instance.MyCharacter.CharacterCombat.OnDropCombat -= HandleDropCombat;
+                SystemGameManager.Instance.PlayerManager.MyCharacter.CharacterCombat.OnEnterCombat -= HandleEnterCombat;
+                SystemGameManager.Instance.PlayerManager.MyCharacter.CharacterCombat.OnDropCombat -= HandleDropCombat;
             }
         }
 

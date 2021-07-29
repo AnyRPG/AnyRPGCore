@@ -77,14 +77,14 @@ namespace AnyRPG {
 
         public static Color GetFactionColor(NamePlateUnit namePlateUnit) {
             //Debug.Log("Faction.GetFactionColor(" + namePlateUnit.DisplayName + ")");
-            if (PlayerManager.Instance?.UnitController != null && (namePlateUnit as MonoBehaviour).gameObject == PlayerManager.Instance?.UnitController?.gameObject) {
+            if (SystemGameManager.Instance.PlayerManager?.UnitController != null && (namePlateUnit as MonoBehaviour).gameObject == SystemGameManager.Instance.PlayerManager?.UnitController?.gameObject) {
                 // when retrieving the color that should be displayed on the player character, always green even if it has no faction
                 return Color.green;
             }
             // next check custom gained faction for either character
-            if (namePlateUnit.CharacterUnit != null && PlayerManager.Instance?.UnitController != null) {
+            if (namePlateUnit.CharacterUnit != null && SystemGameManager.Instance.PlayerManager?.UnitController != null) {
                 //Debug.Log("Faction.GetFactionColor(" + namePlateUnit.DisplayName + ") : nameplate unit is a character unit AND PLAYER UNIT IS SPAWNED");
-                return GetFactionColor(PlayerManager.Instance?.MyCharacter, namePlateUnit.CharacterUnit.BaseCharacter);
+                return GetFactionColor(SystemGameManager.Instance.PlayerManager?.MyCharacter, namePlateUnit.CharacterUnit.BaseCharacter);
             } else {
                 //Debug.Log("Faction.GetFactionColor(" + namePlateUnit.DisplayName + ") : nameplate unit is NOT a character unit");
             }
@@ -106,7 +106,7 @@ namespace AnyRPG {
         /// <param name="otherFaction"></param>
         /// <returns></returns>
         public static Color GetFactionColor(Faction sourceFaction) {
-            if (PlayerManager.Instance?.MyCharacter == null) {
+            if (SystemGameManager.Instance.PlayerManager?.MyCharacter == null) {
                 return new Color32(0, 0, 0, 0);
             }
 
@@ -114,7 +114,7 @@ namespace AnyRPG {
                 return Color.yellow;
             }
 
-            float relationValue = Faction.RelationWith(PlayerManager.Instance.MyCharacter, sourceFaction);
+            float relationValue = Faction.RelationWith(SystemGameManager.Instance.PlayerManager.MyCharacter, sourceFaction);
             // override relationValue with default if player is not spawned
             return GetColorFromRelationValue(relationValue);
         }
@@ -125,7 +125,7 @@ namespace AnyRPG {
 
         public static Color GetColorFromRelationValue(float relationValue) {
             //Debug.Log("GetColorFromRelationValue(" + relationValue + ")");
-            if (PlayerManager.Instance.MyCharacter == null) {
+            if (SystemGameManager.Instance.PlayerManager.MyCharacter == null) {
                 return new Color32(0, 0, 0, 0);
             }
 
@@ -150,7 +150,7 @@ namespace AnyRPG {
 
         // return the summary of relationship between the player and the source faction
         public string GetReputationSummary(Faction sourceFaction) {
-            float relationValue = RelationWith(PlayerManager.Instance.MyCharacter, sourceFaction);
+            float relationValue = RelationWith(SystemGameManager.Instance.PlayerManager.MyCharacter, sourceFaction);
             return string.Format("Reputation: {0}", relationValue);
         }
 

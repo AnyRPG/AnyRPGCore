@@ -101,7 +101,7 @@ namespace AnyRPG {
             //Debug.Log("DescribableIcon.UpdateVisual()");
             /*
             if ((item as IDescribable) == MyDescribable) {
-                count = InventoryManager.Instance.GetItemCount(item.MyName);
+                count = SystemGameManager.Instance.InventoryManager.GetItemCount(item.MyName);
             }
             */
             UpdateVisual();

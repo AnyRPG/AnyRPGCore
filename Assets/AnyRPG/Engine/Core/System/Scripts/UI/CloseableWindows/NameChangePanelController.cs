@@ -25,7 +25,7 @@ namespace AnyRPG {
         public void ConfirmAction() {
             //Debug.Log("NameChangePanelController.ConfirmAction()");
             if (textInput.text != null && textInput.text != string.Empty) {
-                PlayerManager.Instance.SetPlayerName(textInput.text);
+                SystemGameManager.Instance.PlayerManager.SetPlayerName(textInput.text);
                 OnConfirmAction();
                 SystemGameManager.Instance.UIManager.SystemWindowManager.nameChangeWindow.CloseWindow();
             }
@@ -34,7 +34,7 @@ namespace AnyRPG {
         public override void ReceiveOpenWindowNotification() {
             //Debug.Log("NameChangePanelController.OnOpenWindow()");
             base.ReceiveOpenWindowNotification();
-            textInput.text = PlayerManager.Instance.MyCharacter.CharacterName;
+            textInput.text = SystemGameManager.Instance.PlayerManager.MyCharacter.CharacterName;
         }
 
         public override void RecieveClosedWindowNotification() {

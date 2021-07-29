@@ -91,7 +91,7 @@ namespace AnyRPG {
 
         public override bool Interact(CharacterUnit source, int optionIndex = 0) {
             //Debug.Log(interactable.gameObject.name + ".CharacterUnit.Interact(" + source.DisplayName + ")");
-            float relationValue = interactable.PerformFactionCheck(PlayerManager.Instance.MyCharacter);
+            float relationValue = interactable.PerformFactionCheck(SystemGameManager.Instance.PlayerManager.MyCharacter);
             if (CanInteract(false, false, relationValue)) {
                 base.Interact(source, optionIndex);
 
@@ -146,7 +146,7 @@ namespace AnyRPG {
             }
             text.text = "o";
             if (baseCharacter != null && baseCharacter.Faction != null) {
-                text.color = Faction.GetFactionColor(PlayerManager.Instance.MyCharacter, baseCharacter);
+                text.color = Faction.GetFactionColor(SystemGameManager.Instance.PlayerManager.MyCharacter, baseCharacter);
             }
             return true;
         }
@@ -167,7 +167,7 @@ namespace AnyRPG {
                 // add all possible delays together
                 float extraTime = 0f;
                 if (addSystemDefaultTime) {
-                    extraTime = SystemConfigurationManager.Instance.DefaultDespawnTimer;
+                    extraTime = SystemGameManager.Instance.SystemConfigurationManager.DefaultDespawnTimer;
                 }
                 float totalDelay = despawnDelay + this.despawnDelay + extraTime;
                 while (totalDelay > 0f) {
@@ -196,7 +196,7 @@ namespace AnyRPG {
 
         public override Sprite GetMiniMapIcon() {
             if (interactable.CombatOnly) {
-                return SystemConfigurationManager.Instance.PlayerMiniMapIcon;
+                return SystemGameManager.Instance.SystemConfigurationManager.PlayerMiniMapIcon;
             }
 
             return base.GetMiniMapIcon();

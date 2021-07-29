@@ -45,7 +45,7 @@ namespace AnyRPG {
             }
             if (eventData.button == PointerEventData.InputButton.Right) {
                 //Debug.Log("AbilityButton.OnPointerClick(): right click");
-                PlayerManager.Instance.MyCharacter.CharacterAbilityManager.BeginAbility(ability);
+                SystemGameManager.Instance.PlayerManager.MyCharacter.CharacterAbilityManager.BeginAbility(ability);
             }
         }
     }

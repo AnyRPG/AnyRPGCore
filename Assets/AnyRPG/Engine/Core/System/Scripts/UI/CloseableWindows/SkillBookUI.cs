@@ -48,7 +48,7 @@ namespace AnyRPG {
             //Debug.Log("SkillBookUI.CreatePages()");
             ClearPages();
             List<Skill> page = new List<Skill>();
-            foreach (Skill playerSkill in PlayerManager.Instance.MyCharacter.CharacterSkillManager.MySkillList.Values) {
+            foreach (Skill playerSkill in SystemGameManager.Instance.PlayerManager.MyCharacter.CharacterSkillManager.MySkillList.Values) {
                 page.Add(playerSkill);
                 if (page.Count == pageSize) {
                     pages.Add(page);

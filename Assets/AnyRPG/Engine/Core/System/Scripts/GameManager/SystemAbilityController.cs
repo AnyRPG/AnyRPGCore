@@ -6,26 +6,11 @@ using UnityEngine;
 namespace AnyRPG {
     public class SystemAbilityController : MonoBehaviour, IAbilityCaster {
 
-        #region Singleton
-        private static SystemAbilityController instance;
-
-        public static SystemAbilityController Instance {
-            get {
-                return instance;
-            }
-        }
-
-        private void Awake() {
-            instance = this;
-            Init();
-        }
-        #endregion
-
         private AbilityManager abilityManager = null;
 
         public IAbilityManager AbilityManager { get => abilityManager; }
 
-        private void Init() {
+        public void Init() {
             abilityManager = new AbilityManager(this);
             SystemEventManager.StartListening("OnLevelUnload", HandleLevelUnload);
         }

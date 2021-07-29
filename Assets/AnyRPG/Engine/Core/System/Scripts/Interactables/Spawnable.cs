@@ -68,7 +68,7 @@ namespace AnyRPG {
             GetComponentReferences();
             SetupScriptableObjects();
             CreateEventSubscriptions();
-            if (PlayerManager.Instance.PlayerUnitSpawned == false) {
+            if (SystemGameManager.Instance.PlayerManager.PlayerUnitSpawned == false) {
                 // this allows us to spawn things with no prerequisites that don't need to check against the player
                 PrerequisiteCheck();
             }
@@ -81,7 +81,7 @@ namespace AnyRPG {
             ProcessInit();
 
             // moved here from CreateEventSubscriptions.  Init should have time to occur before processing this
-            if (PlayerManager.Instance.PlayerUnitSpawned) {
+            if (SystemGameManager.Instance.PlayerManager.PlayerUnitSpawned) {
                 //Debug.Log(gameObject.name + ".Spawnable.CreateEventSubscriptions(): Player Unit is spawned.  Handling immediate spawn!");
                 ProcessPlayerUnitSpawn();
             } else {

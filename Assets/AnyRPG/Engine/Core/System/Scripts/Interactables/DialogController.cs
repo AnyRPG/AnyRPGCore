@@ -77,8 +77,8 @@ namespace AnyRPG {
                             interactable.UnitComponentController.PlayVoice(dialog.AudioProfile.AudioClips[dialogIndex]);
                         }
                         bool writeMessage = true;
-                        if (PlayerManager.Instance != null && PlayerManager.Instance.ActiveUnitController != null) {
-                            if (Vector3.Distance(interactable.transform.position, PlayerManager.Instance.ActiveUnitController.transform.position) > SystemConfigurationManager.Instance.MaxChatTextDistance) {
+                        if (SystemGameManager.Instance.PlayerManager != null && SystemGameManager.Instance.PlayerManager.ActiveUnitController != null) {
+                            if (Vector3.Distance(interactable.transform.position, SystemGameManager.Instance.PlayerManager.ActiveUnitController.transform.position) > SystemGameManager.Instance.SystemConfigurationManager.MaxChatTextDistance) {
                                 writeMessage = false;
                             }
                         }

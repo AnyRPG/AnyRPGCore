@@ -7,20 +7,6 @@ using UnityEngine.AI;
 namespace AnyRPG {
     public class PlayerManager : MonoBehaviour {
 
-        #region Singleton
-        private static PlayerManager instance;
-
-        public static PlayerManager Instance {
-            get {
-                return instance;
-            }
-        }
-
-        private void Awake() {
-            instance = this;
-        }
-        #endregion
-
         [SerializeField]
         private int initialLevel = 1;
 
@@ -113,19 +99,7 @@ namespace AnyRPG {
 
         public void OrchestratorStart() {
             PerformRequiredPropertyChecks();
-            SetupScriptableObjects();
             CreateEventSubscriptions();
-        }
-
-        public void SetupScriptableObjects() {
-
-
-            //defaultCharacterCreatorUnitProfile = SystemUnitProfileManager.Instance.GetResource(defaultCharacterCreatorUnitProfileName);
-        }
-
-        private void Start() {
-            //Debug.Log("PlayerManager.Start()");
-            //CreateEventSubscriptions();
         }
 
         private void CreateEventSubscriptions() {
@@ -218,7 +192,7 @@ namespace AnyRPG {
         public void HandleLevelLoad(string eventName, EventParamProperties eventParamProperties) {
             //Debug.Log("PlayerManager.OnLevelLoad()");
             bool loadCharacter = true;
-            SceneNode activeSceneNode = LevelManager.Instance.GetActiveSceneNode();
+            SceneNode activeSceneNode = SystemGameManager.Instance.LevelManager.GetActiveSceneNode();
             if (activeSceneNode != null) {
                 //Debug.Log("PlayerManager.OnLevelLoad(): we have a scene node");
                 // fix to allow character to spawn after cutscene is viewed on next level load - and another fix to prevent character from spawning on a pure cutscene
@@ -230,7 +204,7 @@ namespace AnyRPG {
                     //SystemGameManager.Instance.CameraManager.MyCharacterCreatorCamera.gameObject.SetActive(true);
                 }
             } else {
-                if (LevelManager.Instance.IsMainMenu()) {
+                if (SystemGameManager.Instance.LevelManager.IsMainMenu()) {
                     loadCharacter = false;
                 }
             }
@@ -244,24 +218,24 @@ namespace AnyRPG {
 
         public void PlayLevelUpEffects(int newLevel) {
             //Debug.Log("PlayerManager.PlayLevelUpEffect()");
-            if (PlayerUnitSpawned == false || SystemConfigurationManager.Instance?.LevelUpEffect == null) {
+            if (PlayerUnitSpawned == false || SystemGameManager.Instance.SystemConfigurationManager?.LevelUpEffect == null) {
                 return;
             }
             // 0 to allow playing this effect for different reasons than levelup
             if (newLevel == 0 || newLevel != 1) {
                 AbilityEffectContext abilityEffectContext = new AbilityEffectContext();
 
-                SystemConfigurationManager.Instance.LevelUpEffect.Cast(SystemAbilityController.Instance, unitController, unitController, abilityEffectContext);
+                SystemGameManager.Instance.SystemConfigurationManager.LevelUpEffect.Cast(SystemGameManager.Instance.SystemAbilityController, unitController, unitController, abilityEffectContext);
             }
         }
 
         public void PlayDeathEffect() {
             //Debug.Log("PlayerManager.PlayDeathEffect()");
-            if (PlayerUnitSpawned == false || SystemConfigurationManager.Instance?.DeathEffect == null) {
+            if (PlayerUnitSpawned == false || SystemGameManager.Instance.SystemConfigurationManager?.DeathEffect == null) {
                 return;
             }
             AbilityEffectContext abilityEffectContext = new AbilityEffectContext();
-            SystemConfigurationManager.Instance.DeathEffect.Cast(SystemAbilityController.Instance, unitController, unitController, abilityEffectContext);
+            SystemGameManager.Instance.SystemConfigurationManager.DeathEffect.Cast(SystemGameManager.Instance.SystemAbilityController, unitController, unitController, abilityEffectContext);
         }
 
         /*
@@ -307,7 +281,7 @@ namespace AnyRPG {
 
         public Vector3 SpawnPlayerUnit() {
             //Debug.Log("PlayerManager.SpawnPlayerUnit()");
-            Vector3 spawnLocation = LevelManager.Instance.GetSpawnLocation();
+            Vector3 spawnLocation = SystemGameManager.Instance.LevelManager.GetSpawnLocation();
             SpawnPlayerUnit(spawnLocation);
             return spawnLocation;
         }
@@ -325,11 +299,11 @@ namespace AnyRPG {
                 SpawnPlayerConnection();
             }
             if (activeCharacter.UnitProfile == null) {
-                activeCharacter.SetUnitProfile(SystemConfigurationManager.Instance.DefaultPlayerUnitProfileName, true, -1, false);
+                activeCharacter.SetUnitProfile(SystemGameManager.Instance.SystemConfigurationManager.DefaultPlayerUnitProfileName, true, -1, false);
             }
 
             // spawn the player unit and set references
-            Vector3 spawnRotation = LevelManager.Instance.GetSpawnRotation();
+            Vector3 spawnRotation = SystemGameManager.Instance.LevelManager.GetSpawnRotation();
             activeCharacter.UnitProfile.SpawnUnitPrefab(playerUnitParent.transform, spawnLocation, spawnRotation, UnitControllerMode.Player);
             if (activeUnitController == null) {
                 Debug.LogError("PlayerManager.SpawnPlayerUnit(): No UnitController could be found, or player unit was not spawned properly");
@@ -344,7 +318,7 @@ namespace AnyRPG {
                 }
             }
 
-            if (LevelManager.Instance.NavMeshAvailable == true && autoDetectNavMeshes) {
+            if (SystemGameManager.Instance.LevelManager.NavMeshAvailable == true && autoDetectNavMeshes) {
                 //Debug.Log("PlayerManager.SpawnPlayerUnit(): Enabling NavMeshAgent()");
                 activeUnitController.EnableAgent();
                 if (playerUnitMovementController != null) {
@@ -417,7 +391,7 @@ namespace AnyRPG {
 
             playerController.SubscribeToUnitEvents();
 
-            if (SystemConfigurationManager.Instance.UseThirdPartyMovementControl == false) {
+            if (SystemGameManager.Instance.SystemConfigurationManager.UseThirdPartyMovementControl == false) {
                 playerUnitMovementController.Init();
             } else {
                 DisableMovementControllers();
@@ -463,7 +437,7 @@ namespace AnyRPG {
 
             SystemEventManager.TriggerEvent("NotifyBeforePlayerConnectionSpawn", new EventParamProperties());
             activeCharacter.Init();
-            activeCharacter.Initialize(SystemConfigurationManager.Instance.DefaultPlayerName, initialLevel);
+            activeCharacter.Initialize(SystemGameManager.Instance.SystemConfigurationManager.DefaultPlayerName, initialLevel);
             playerConnectionSpawned = true;
             SystemEventManager.TriggerEvent("OnPlayerConnectionSpawn", new EventParamProperties());
 
@@ -561,7 +535,7 @@ namespace AnyRPG {
         }
 
         public void HandleActivateTargetingMode(BaseAbility baseAbility) {
-            CastTargettingManager.Instance.EnableProjector(baseAbility);
+            SystemGameManager.Instance.CastTargettingManager.EnableProjector(baseAbility);
         }
 
         public void HandleAnimatedAbilityCheckFail(AnimatedAbility animatedAbility) {
@@ -633,9 +607,9 @@ namespace AnyRPG {
         public void HandleEquipmentChanged(Equipment newItem, Equipment oldItem, int slotIndex) {
             if (PlayerUnitSpawned) {
                 if (slotIndex != -1) {
-                    InventoryManager.Instance.AddItem(oldItem, slotIndex);
+                    SystemGameManager.Instance.InventoryManager.AddItem(oldItem, slotIndex);
                 } else if (oldItem != null) {
-                    InventoryManager.Instance.AddItem(oldItem);
+                    SystemGameManager.Instance.InventoryManager.AddItem(oldItem);
                 }
             }
             SystemGameManager.Instance.EventManager.NotifyOnEquipmentChanged(newItem, oldItem);

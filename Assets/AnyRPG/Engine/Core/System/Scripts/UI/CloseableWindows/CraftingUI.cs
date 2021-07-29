@@ -121,7 +121,7 @@ namespace AnyRPG {
         public List<Recipe> GetRecipes() {
             //Debug.Log("CraftAbility.GetRecipes() this: " + this.name);
             List<Recipe> returnList = new List<Recipe>();
-            foreach (Recipe recipe in PlayerManager.Instance.MyCharacter.CharacterRecipeManager.RecipeList.Values) {
+            foreach (Recipe recipe in SystemGameManager.Instance.PlayerManager.MyCharacter.CharacterRecipeManager.RecipeList.Values) {
                 if (craftAbility == recipe.CraftAbility) {
                     returnList.Add(recipe);
                 }
@@ -283,7 +283,7 @@ namespace AnyRPG {
                 for (int i = 0; i < craftAmount; i++) {
                     SystemGameManager.Instance.CraftingManager.CraftingQueue.Add(SelectedRecipeScript.Recipe);
                 }
-                PlayerManager.Instance.MyCharacter.CharacterAbilityManager.BeginAbility(craftAbility);
+                SystemGameManager.Instance.PlayerManager.MyCharacter.CharacterAbilityManager.BeginAbility(craftAbility);
             } else {
                 //Debug.Log("MySelectedRecipeScript is null!");
             }

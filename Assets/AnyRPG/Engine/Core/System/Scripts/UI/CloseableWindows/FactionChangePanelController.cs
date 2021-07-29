@@ -52,7 +52,7 @@ namespace AnyRPG {
                 RewardButton rewardIcon = ObjectPooler.Instance.GetPooledObject(rewardIconPrefab, abilityIconsArea.transform).GetComponent<RewardButton>();
                 rewardIcon.SetDescribable(capabilityProps.AbilityList[i]);
                 abilityRewardIcons.Add(rewardIcon);
-                if (capabilityProps.AbilityList[i].RequiredLevel > PlayerManager.Instance.MyCharacter.CharacterStats.Level) {
+                if (capabilityProps.AbilityList[i].RequiredLevel > SystemGameManager.Instance.PlayerManager.MyCharacter.CharacterStats.Level) {
                     rewardIcon.StackSizeText.text = "Level\n" + capabilityProps.AbilityList[i].RequiredLevel;
                     rewardIcon.MyHighlightIcon.color = new Color32(255, 255, 255, 80);
                 }
@@ -75,7 +75,7 @@ namespace AnyRPG {
 
         public void ConfirmAction() {
             //Debug.Log("FactionChangePanelController.ConfirmAction()");
-            PlayerManager.Instance.SetPlayerFaction(faction);
+            SystemGameManager.Instance.PlayerManager.SetPlayerFaction(faction);
             OnConfirmAction();
             SystemGameManager.Instance.UIManager.PopupWindowManager.factionChangeWindow.CloseWindow();
         }

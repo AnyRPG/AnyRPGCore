@@ -21,11 +21,11 @@ namespace AnyRPG {
             //SystemGameManager.Instance.UIManager.PopupWindowManager.interactionWindow.CloseWindow();
             if (Props.Cutscene != null
                 && SystemGameManager.Instance.UIManager.CutSceneBarController.CurrentCutscene == null
-                && LevelManager.Instance.LoadingLevel == false) {
+                && SystemGameManager.Instance.LevelManager.LoadingLevel == false) {
                 if (Props.Cutscene.Viewed == false || Props.Cutscene.Repeatable == true) {
-                    if (Props.Cutscene.RequirePlayerUnitSpawn == false || (Props.Cutscene.RequirePlayerUnitSpawn == true && PlayerManager.Instance.PlayerUnitSpawned == true)) {
+                    if (Props.Cutscene.RequirePlayerUnitSpawn == false || (Props.Cutscene.RequirePlayerUnitSpawn == true && SystemGameManager.Instance.PlayerManager.PlayerUnitSpawned == true)) {
                         if (Props.Cutscene.MyLoadScene != null) {
-                            LevelManager.Instance.LoadCutSceneWithDelay(Props.Cutscene);
+                            SystemGameManager.Instance.LevelManager.LoadCutSceneWithDelay(Props.Cutscene);
                         } else {
                             SystemGameManager.Instance.UIManager.CutSceneBarController.StartCutScene(Props.Cutscene);
                         }

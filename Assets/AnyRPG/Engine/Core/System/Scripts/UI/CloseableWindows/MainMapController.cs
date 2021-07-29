@@ -43,7 +43,7 @@ namespace AnyRPG {
             //instantiate singleton
             SystemGameManager.Instance.CameraManager.MainMapCamera.enabled = false;
 
-            mainmapTextureFolder = mainmapTextureFolderBase + SystemConfigurationManager.Instance.GameName.Replace(" ", "") + "/Images/MiniMap/";
+            mainmapTextureFolder = mainmapTextureFolderBase + SystemGameManager.Instance.SystemConfigurationManager.GameName.Replace(" ", "") + "/Images/MiniMap/";
 
         }
 
@@ -63,9 +63,9 @@ namespace AnyRPG {
             if (SystemGameManager.Instance.UIManager.PopupWindowManager.mainMapWindow.IsOpen == false) {
                 return;
             }
-            if (SystemConfigurationManager.Instance.UseThirdPartyCameraControl == true
+            if (SystemGameManager.Instance.SystemConfigurationManager.UseThirdPartyCameraControl == true
                 && SystemGameManager.Instance.CameraManager.ThirdPartyCamera.activeInHierarchy == true
-                && PlayerManager.Instance.PlayerUnitSpawned == true) {
+                && SystemGameManager.Instance.PlayerManager.PlayerUnitSpawned == true) {
                 UpdateMainMap();
             }
         }
@@ -73,7 +73,7 @@ namespace AnyRPG {
         private void UpdateIndicatorPositions() {
             foreach (Interactable interactable in SystemGameManager.Instance.UIManager.MainMapManager.MapIndicatorControllers.Keys) {
                 if (SystemGameManager.Instance.UIManager.MainMapManager.MapIndicatorControllers[interactable].gameObject.activeSelf == true) {
-                    SystemGameManager.Instance.UIManager.MainMapManager.MapIndicatorControllers[interactable].transform.localPosition = new Vector3((interactable.transform.position.x - LevelManager.Instance.SceneBounds.center.x) * levelScaleFactor, (interactable.transform.position.z - LevelManager.Instance.SceneBounds.center.z) * levelScaleFactor, 0);
+                    SystemGameManager.Instance.UIManager.MainMapManager.MapIndicatorControllers[interactable].transform.localPosition = new Vector3((interactable.transform.position.x - SystemGameManager.Instance.LevelManager.SceneBounds.center.x) * levelScaleFactor, (interactable.transform.position.z - SystemGameManager.Instance.LevelManager.SceneBounds.center.z) * levelScaleFactor, 0);
                     SystemGameManager.Instance.UIManager.MainMapManager.MapIndicatorControllers[interactable].transform.localScale = new Vector3(1f / mapGraphic.transform.localScale.x, 1f / mapGraphic.transform.localScale.y, 1f / mapGraphic.transform.localScale.z);
                     interactable.UpdateMainMapIndicator();
                 }
@@ -126,7 +126,7 @@ namespace AnyRPG {
             }
 
             // First, try to find the the map image
-            Texture2D mapTexture = new Texture2D((int)LevelManager.Instance.SceneBounds.size.x, (int)LevelManager.Instance.SceneBounds.size.z);
+            Texture2D mapTexture = new Texture2D((int)SystemGameManager.Instance.LevelManager.SceneBounds.size.x, (int)SystemGameManager.Instance.LevelManager.SceneBounds.size.z);
             string textureFilePath = mainmapTextureFolder + GetScreenshotFilename();
             if (System.IO.File.Exists(textureFilePath)) {
                 //sceneTextureFound = true;
@@ -148,7 +148,7 @@ namespace AnyRPG {
             graphicLayoutElement.preferredHeight = graphicLayoutElement.preferredWidth;
 
             // the image will be scaled to the largest dimension
-            levelScaleFactor = graphicLayoutElement.preferredWidth / (LevelManager.Instance.SceneBounds.size.x > LevelManager.Instance.SceneBounds.size.z ? LevelManager.Instance.SceneBounds.size.x : LevelManager.Instance.SceneBounds.size.z);
+            levelScaleFactor = graphicLayoutElement.preferredWidth / (SystemGameManager.Instance.LevelManager.SceneBounds.size.x > SystemGameManager.Instance.LevelManager.SceneBounds.size.z ? SystemGameManager.Instance.LevelManager.SceneBounds.size.x : SystemGameManager.Instance.LevelManager.SceneBounds.size.z);
         }
 
         /// <summary>
@@ -162,15 +162,15 @@ namespace AnyRPG {
         private void UpdateCameraSize() {
             //Debug.Log("MainMapController.UpdateCameraSize()");
             //float newCameraSize = cameraSizeDefault;
-            cameraSize = Mathf.Max(LevelManager.Instance.SceneBounds.extents.x, LevelManager.Instance.SceneBounds.extents.z);
+            cameraSize = Mathf.Max(SystemGameManager.Instance.LevelManager.SceneBounds.extents.x, SystemGameManager.Instance.LevelManager.SceneBounds.extents.z);
             SystemGameManager.Instance.CameraManager.MainMapCamera.orthographicSize = cameraSize;
         }
 
         private void UpdateCameraPosition() {
             //Debug.Log("MainMapController.UpdateCameraPosition()");
-            Vector3 wantedPosition = new Vector3(LevelManager.Instance.SceneBounds.center.x, LevelManager.Instance.SceneBounds.center.y + LevelManager.Instance.SceneBounds.extents.y + 1f, LevelManager.Instance.SceneBounds.center.z);
+            Vector3 wantedPosition = new Vector3(SystemGameManager.Instance.LevelManager.SceneBounds.center.x, SystemGameManager.Instance.LevelManager.SceneBounds.center.y + SystemGameManager.Instance.LevelManager.SceneBounds.extents.y + 1f, SystemGameManager.Instance.LevelManager.SceneBounds.center.z);
             //Debug.Log("MainMapController.UpdateCameraPosition() wantedposition: " + wantedPosition);
-            Vector3 wantedLookPosition = new Vector3(LevelManager.Instance.SceneBounds.center.x, LevelManager.Instance.SceneBounds.center.y, LevelManager.Instance.SceneBounds.center.z);
+            Vector3 wantedLookPosition = new Vector3(SystemGameManager.Instance.LevelManager.SceneBounds.center.x, SystemGameManager.Instance.LevelManager.SceneBounds.center.y, SystemGameManager.Instance.LevelManager.SceneBounds.center.z);
             //Debug.Log("MainMapController.UpdateCameraPosition() wantedLookPosition: " + wantedLookPosition);
             SystemGameManager.Instance.CameraManager.MainMapCamera.transform.position = wantedPosition;
             SystemGameManager.Instance.CameraManager.MainMapCamera.transform.LookAt(wantedLookPosition);

@@ -154,7 +154,7 @@ namespace AnyRPG {
 
                 lootDropped = false;
                 //if (lootTable.MyDroppedItems.Count == 0) {
-                PlayerManager.Instance.PlayerController.RemoveInteractable(interactable);
+                SystemGameManager.Instance.PlayerManager.PlayerController.RemoveInteractable(interactable);
                 interactable.DestroySpawn();
                 foreach (LootTable lootTable in Props.LootTables) {
                     lootTable.Reset();
@@ -196,7 +196,7 @@ namespace AnyRPG {
         /*
         public override int GetCurrentOptionCount() {
             //Debug.Log(gameObject.name + ".GatheringNode.GetCurrentOptionCount()");
-            return (PlayerManager.Instance.MyCharacter.MyCharacterAbilityManager.HasAbility(MyAbility.MyName) == true && interactable.MySpawnReference != null ? 1 : 0);
+            return (SystemGameManager.Instance.PlayerManager.MyCharacter.MyCharacterAbilityManager.HasAbility(MyAbility.MyName) == true && interactable.MySpawnReference != null ? 1 : 0);
         }
         */
 

@@ -22,7 +22,7 @@ namespace AnyRPG {
             description.text = Describable.DisplayName;
 
             //if (count > 1) {
-            stackSize.text = InventoryManager.Instance.GetItemCount(Describable.DisplayName) + " / " + count.ToString();
+            stackSize.text = SystemGameManager.Instance.InventoryManager.GetItemCount(Describable.DisplayName) + " / " + count.ToString();
             //} else {
             //stackSize.text = "";
             //}
@@ -40,7 +40,7 @@ namespace AnyRPG {
                 return;
             }
             base.OnDisable();
-            if (InventoryManager.Instance != null) {
+            if (SystemGameManager.Instance.InventoryManager != null) {
                 SystemGameManager.Instance.EventManager.OnItemCountChanged -= UpdateVisual;
             }
 

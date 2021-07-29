@@ -49,7 +49,7 @@ namespace AnyRPG {
                     Drop();
                 }
             }
-            if (InputManager.Instance.KeyBindWasPressed("CANCEL")) {
+            if (SystemGameManager.Instance.InputManager.KeyBindWasPressed("CANCEL")) {
                 Drop();
             }
         }
@@ -72,14 +72,14 @@ namespace AnyRPG {
         public void Drop() {
             //Debug.Log("HandScript.Drop()");
             ClearMoveable();
-            InventoryManager.Instance.FromSlot = null;
+            SystemGameManager.Instance.InventoryManager.FromSlot = null;
             SystemGameManager.Instance.UIManager.ActionBarManager.FromButton = null;
         }
 
         private void ClearMoveable() {
             //Debug.Log("HandScript.ClearMoveable()");
-            if (InventoryManager.Instance.FromSlot != null) {
-                InventoryManager.Instance.FromSlot.PutItemBack();
+            if (SystemGameManager.Instance.InventoryManager.FromSlot != null) {
+                SystemGameManager.Instance.InventoryManager.FromSlot.PutItemBack();
             }
             MyMoveable = null;
             icon.sprite = null;
@@ -97,7 +97,7 @@ namespace AnyRPG {
                     // next we want to query the equipmentmanager on the charcter to see if he has an item in this items slot, and if it is the item we are dropping
                     // if it is, then we will unequip it, and then destroy it
                     if (item is Equipment) {
-                        PlayerManager.Instance.MyCharacter.CharacterEquipmentManager.Unequip(item as Equipment);
+                        SystemGameManager.Instance.PlayerManager.MyCharacter.CharacterEquipmentManager.Unequip(item as Equipment);
                         if (item.MySlot != null) {
                             item.MySlot.Clear();
                         }
@@ -107,7 +107,7 @@ namespace AnyRPG {
             CombatLogUI.Instance.WriteSystemMessage("Destroyed " + MyMoveable.DisplayName);
             Drop();
             // done in drop... ?
-            //InventoryManager.Instance.FromSlot = null;
+            //SystemGameManager.Instance.InventoryManager.FromSlot = null;
         }
     }
 

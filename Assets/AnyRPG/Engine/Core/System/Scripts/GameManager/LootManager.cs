@@ -41,7 +41,7 @@ namespace AnyRPG {
             // added emptyslotcount to prevent game from freezup when no bag space left and takeall button pressed
             int maximumLoopCount = droppedLoot.Count;
             int currentLoopCount = 0;
-            while (pages.Count > 0 && InventoryManager.Instance.EmptySlotCount() > 0 && currentLoopCount < maximumLoopCount && (SystemGameManager.Instance.UIManager.PopupWindowManager.lootWindow.CloseableWindowContents as LootUI).LootButtons.Count > 0) {
+            while (pages.Count > 0 && SystemGameManager.Instance.InventoryManager.EmptySlotCount() > 0 && currentLoopCount < maximumLoopCount && (SystemGameManager.Instance.UIManager.PopupWindowManager.lootWindow.CloseableWindowContents as LootUI).LootButtons.Count > 0) {
                 foreach (LootButton lootButton in (SystemGameManager.Instance.UIManager.PopupWindowManager.lootWindow.CloseableWindowContents as LootUI).LootButtons) {
                     //Debug.Log("LootUI.TakeAllLoot(): droppedItems.Count: " + droppedLoot.Count);
                     if (lootButton.gameObject.activeSelf == true) {
@@ -51,8 +51,8 @@ namespace AnyRPG {
                 }
             }
 
-            if (pages.Count > 0 && InventoryManager.Instance.EmptySlotCount() == 0) {
-                if (InventoryManager.Instance.EmptySlotCount() == 0) {
+            if (pages.Count > 0 && SystemGameManager.Instance.InventoryManager.EmptySlotCount() == 0) {
+                if (SystemGameManager.Instance.InventoryManager.EmptySlotCount() == 0) {
                     //Debug.Log("No space left in inventory");
                 }
                 SystemGameManager.Instance.UIManager.MessageFeedManager.WriteMessage("Inventory is full!");

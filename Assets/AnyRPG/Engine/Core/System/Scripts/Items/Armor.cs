@@ -44,7 +44,7 @@ namespace AnyRPG {
             List<CharacterClass> allowedCharacterClasses = GetAllowedCharacterClasses();
             if (allowedCharacterClasses.Count > 0) {
                 string colorString = "red";
-                if (allowedCharacterClasses.Contains(PlayerManager.Instance.MyCharacter.CharacterClass)) {
+                if (allowedCharacterClasses.Contains(SystemGameManager.Instance.PlayerManager.MyCharacter.CharacterClass)) {
                     colorString = "white";
                 }
                 abilitiesString += string.Format("\n<color={0}>{1}</color>", colorString, armorClassName);
@@ -53,7 +53,7 @@ namespace AnyRPG {
             // testing replacement for above code
             if (armorClassName != null && armorClassName != string.Empty) {
                 string colorString = "white";
-                if (!CanEquip(PlayerManager.Instance.ActiveCharacter)) {
+                if (!CanEquip(SystemGameManager.Instance.PlayerManager.ActiveCharacter)) {
                     colorString = "red";
                 }
                 abilitiesString += string.Format("\n<color={0}>{1}</color>", colorString, armorClassName);

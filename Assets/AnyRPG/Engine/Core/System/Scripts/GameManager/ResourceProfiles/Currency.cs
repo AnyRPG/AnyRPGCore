@@ -9,8 +9,8 @@ namespace AnyRPG {
     public class Currency : DescribableResource {
 
         public override string GetSummary() {
-            return string.Format("Current Amount: {0}", PlayerManager.Instance.MyCharacter.CharacterCurrencyManager.GetCurrencyAmount(this));
-            //return string.Format("{0}\nCurrent Amount: {1}", description, PlayerManager.Instance.MyCharacter.CharacterCurrencyManager.GetCurrencyAmount(this));
+            return string.Format("Current Amount: {0}", SystemGameManager.Instance.PlayerManager.MyCharacter.CharacterCurrencyManager.GetCurrencyAmount(this));
+            //return string.Format("{0}\nCurrent Amount: {1}", description, SystemGameManager.Instance.PlayerManager.MyCharacter.CharacterCurrencyManager.GetCurrencyAmount(this));
             //return string.Format("{0}", description);
         }
 

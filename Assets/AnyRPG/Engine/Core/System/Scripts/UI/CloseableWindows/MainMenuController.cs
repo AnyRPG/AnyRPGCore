@@ -14,8 +14,8 @@ namespace AnyRPG {
         public override void Init() {
             base.Init();
             if (mainMenuButton != null
-                && SystemConfigurationManager.Instance.MainMenuSceneNode == null
-                && SystemConfigurationManager.Instance.MainMenuScene == string.Empty) {
+                && SystemGameManager.Instance.SystemConfigurationManager.MainMenuSceneNode == null
+                && SystemGameManager.Instance.SystemConfigurationManager.MainMenuScene == string.Empty) {
                 mainMenuButton.interactable = false;
             }
         }

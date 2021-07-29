@@ -135,7 +135,7 @@ namespace AnyRPG {
             // CLOSE THIS FIRST SO OTHER WINDOWS AREN'T BLOCKED FROM POPPING
             SystemGameManager.Instance.UIManager.PopupWindowManager.dialogWindow.CloseWindow();
 
-            QuestLog.Instance.AcceptQuest(MyQuest);
+            SystemGameManager.Instance.QuestLog.AcceptQuest(MyQuest);
             //interactable.CheckForInteractableObjectives(MyQuest.MyName);
         }
 

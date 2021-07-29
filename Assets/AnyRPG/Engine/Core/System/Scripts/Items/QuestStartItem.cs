@@ -25,7 +25,7 @@ namespace AnyRPG {
                 return false;
             }
             if (questGiverProps.Quests != null) {
-                if (QuestLog.Instance.HasQuest(questGiverProps.Quests[0].MyQuest.DisplayName)) {
+                if (SystemGameManager.Instance.QuestLog.HasQuest(questGiverProps.Quests[0].MyQuest.DisplayName)) {
                     SystemGameManager.Instance.UIManager.MessageFeedManager.WriteMessage("You are already on that quest");
                 } else if (questGiverProps.Quests[0].MyQuest.TurnedIn == true) {
                     SystemGameManager.Instance.UIManager.MessageFeedManager.WriteMessage("You have already completed that quest");
@@ -51,12 +51,12 @@ namespace AnyRPG {
                         // the next condition is failing on raw complete quest start items because they are always considered complete
                         //&& questNode.MyQuest.IsComplete == false
                         && questNode.MyQuest.TurnedIn == false
-                        && !QuestLog.Instance.HasQuest(questNode.MyQuest.DisplayName)
+                        && !SystemGameManager.Instance.QuestLog.HasQuest(questNode.MyQuest.DisplayName)
                         && (questNode.MyQuest.MyRepeatableQuest == true || questNode.MyQuest.TurnedIn == false)) {
                         //Debug.Log(DisplayName + ".QuestStartItem.QuestRequirementsAreMet(): return true");
                         return true;
                     } else {
-                        //Debug.Log(DisplayName + ".QuestStartItem.QuestRequirementsAreMet(): prereqs: " + questNode.MyQuest.MyPrerequisitesMet + "; complete: " + questNode.MyQuest.IsComplete + "; " + questNode.MyQuest.TurnedIn + "; has: " + QuestLog.Instance.HasQuest(questNode.MyQuest.DisplayName));
+                        //Debug.Log(DisplayName + ".QuestStartItem.QuestRequirementsAreMet(): prereqs: " + questNode.MyQuest.MyPrerequisitesMet + "; complete: " + questNode.MyQuest.IsComplete + "; " + questNode.MyQuest.TurnedIn + "; has: " + SystemGameManager.Instance.QuestLog.HasQuest(questNode.MyQuest.DisplayName));
                     }
                 }
             } else {

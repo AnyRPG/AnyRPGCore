@@ -90,7 +90,7 @@ namespace AnyRPG {
             base.TakeLoot();
             foreach (LootableCharacterComponent lootableCharacter in currencyNodes.Keys) {
                 if (currencyNodes[lootableCharacter].currency != null) {
-                    PlayerManager.Instance.MyCharacter.CharacterCurrencyManager.AddCurrency(currencyNodes[lootableCharacter].currency, currencyNodes[lootableCharacter].MyAmount);
+                    SystemGameManager.Instance.PlayerManager.MyCharacter.CharacterCurrencyManager.AddCurrency(currencyNodes[lootableCharacter].currency, currencyNodes[lootableCharacter].MyAmount);
                     List<CurrencyNode> tmpCurrencyNode = new List<CurrencyNode>();
                     tmpCurrencyNode.Add(currencyNodes[lootableCharacter]);
                     CombatLogUI.Instance.WriteSystemMessage("Gained " + CurrencyConverter.RecalculateValues(tmpCurrencyNode, false).Value.Replace("\n", ", "));
@@ -152,7 +152,7 @@ namespace AnyRPG {
 
         public override bool TakeLoot() {
             base.TakeLoot();
-            return InventoryManager.Instance.AddItem(MyItem);
+            return SystemGameManager.Instance.InventoryManager.AddItem(MyItem);
         }
 
         public override void Remove() {

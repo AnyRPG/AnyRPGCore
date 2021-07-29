@@ -16,12 +16,12 @@ namespace AnyRPG {
 
         public override void ReceiveOpenWindowNotification() {
             base.ReceiveOpenWindowNotification();
-            InventoryManager.Instance.OpenBank();
+            SystemGameManager.Instance.InventoryManager.OpenBank();
         }
 
         public override void RecieveClosedWindowNotification() {
             base.RecieveClosedWindowNotification();
-            InventoryManager.Instance.CloseBank();
+            SystemGameManager.Instance.InventoryManager.CloseBank();
         }
 
     }

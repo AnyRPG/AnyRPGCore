@@ -26,7 +26,7 @@ namespace AnyRPG {
 
         public void SetupController() {
             if (meshRenderer != null) {
-                meshRenderer.material = new Material(SystemConfigurationManager.Instance.DefaultCastingLightProjector);
+                meshRenderer.material = new Material(SystemGameManager.Instance.SystemConfigurationManager.DefaultCastingLightProjector);
             }
 
             circleColor = meshRenderer.material.color;
@@ -52,17 +52,17 @@ namespace AnyRPG {
 
         private void FollowMouse() {
             //Debug.Log("CastTargettingController.FollowMouse()");
-            if (PlayerManager.Instance == null || PlayerManager.Instance.ActiveUnitController == null) {
+            if (SystemGameManager.Instance.PlayerManager == null || SystemGameManager.Instance.PlayerManager.ActiveUnitController == null) {
                 return;
             }
             if (!EventSystem.current.IsPointerOverGameObject()) {
                 Ray ray = SystemGameManager.Instance.CameraManager.ActiveMainCamera.ScreenPointToRay(Input.mousePosition);
                 RaycastHit hit;
                 //if (Physics.Raycast(ray, out hit, 100)) {
-                if (Physics.Raycast(ray, out hit, 100, PlayerManager.Instance.PlayerController.movementMask.value)) {
+                if (Physics.Raycast(ray, out hit, 100, SystemGameManager.Instance.PlayerManager.PlayerController.movementMask.value)) {
                     //Debug.Log("CastTargettingController.FollowMouse() hit movement mask at hit.point: " + hit.point + "; gameObject: " + hit.transform.gameObject.name + hit.transform.gameObject.layer);
                     Vector3 cameraPoint = new Vector3(hit.point.x, hit.point.y + 0.1f, hit.point.z);
-                    if (Vector3.Distance(hit.point, PlayerManager.Instance.ActiveUnitController.transform.position) < 40f) {
+                    if (Vector3.Distance(hit.point, SystemGameManager.Instance.PlayerManager.ActiveUnitController.transform.position) < 40f) {
                         //Debug.Log("CastTargettingController.FollowMouse() hit movement mask and was within 40 meters from player");
                         this.transform.position = cameraPoint;
                     }

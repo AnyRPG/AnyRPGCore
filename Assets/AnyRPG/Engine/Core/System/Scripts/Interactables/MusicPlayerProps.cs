@@ -19,8 +19,8 @@ namespace AnyRPG {
 
         private List<AudioProfile> musicProfileList = new List<AudioProfile>();
 
-        public override Sprite Icon { get => (SystemConfigurationManager.Instance.MusicPlayerInteractionPanelImage != null ? SystemConfigurationManager.Instance.MusicPlayerInteractionPanelImage : base.Icon); }
-        public override Sprite NamePlateImage { get => (SystemConfigurationManager.Instance.MusicPlayerNamePlateImage != null ? SystemConfigurationManager.Instance.MusicPlayerNamePlateImage : base.NamePlateImage); }
+        public override Sprite Icon { get => (SystemGameManager.Instance.SystemConfigurationManager.MusicPlayerInteractionPanelImage != null ? SystemGameManager.Instance.SystemConfigurationManager.MusicPlayerInteractionPanelImage : base.Icon); }
+        public override Sprite NamePlateImage { get => (SystemGameManager.Instance.SystemConfigurationManager.MusicPlayerNamePlateImage != null ? SystemGameManager.Instance.SystemConfigurationManager.MusicPlayerNamePlateImage : base.NamePlateImage); }
         public List<AudioProfile> MusicProfileList { get => musicProfileList; set => musicProfileList = value; }
 
         public override InteractableOptionComponent GetInteractableOption(Interactable interactable, InteractableOption interactableOption = null) {
