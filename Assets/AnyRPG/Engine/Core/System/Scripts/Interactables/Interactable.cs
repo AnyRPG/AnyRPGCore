@@ -119,16 +119,21 @@ namespace AnyRPG {
 
         // attached components
         protected Collider myCollider;
-        protected MiniMapIndicatorController miniMapIndicator = null;
-        protected MainMapIndicatorController mainMapIndicator = null;
+        //protected MiniMapIndicatorController miniMapIndicator = null;
+        //protected MainMapIndicatorController mainMapIndicator = null;
 
         // created components
         protected CharacterUnit characterUnit = null;
         protected DialogController dialogController = null;
 
+        // references
+        protected MiniMapManager miniMapManager = null;
+        protected MainMapManager mainMapManager = null;
+
         // properties
         public bool IsInteracting { get => isInteracting; }
         public List<InteractableOptionComponent> Interactables { get => interactables; set => interactables = value; }
+
 
         public Sprite Icon { get => interactableIcon; }
 
@@ -190,6 +195,11 @@ namespace AnyRPG {
 
         public bool IsMouseOverUnit { get => isMouseOverUnit; set => isMouseOverUnit = value; }
         public bool IsMouseOverNameplate { get => isMouseOverNameplate; set => isMouseOverNameplate = value; }
+
+        protected void Awake() {
+            miniMapManager = SystemGameManager.Instance.UIManager.MiniMapManager;
+            mainMapManager = SystemGameManager.Instance.UIManager.MainMapManager;
+        }
 
         protected override void OnEnable() {
             base.OnEnable();
@@ -421,14 +431,18 @@ namespace AnyRPG {
             }
 
             if (!miniMapIndicatorReady) {
+                /*
                 if (MiniMapController.Instance == null) {
                     //Debug.Log(gameObject.name + ".Interactable.InstantiateMiniMapIndicator(): MiniMapController.Instance is null");
                     return false;
                 }
+                */
                 if (interactables.Count > 0) {
                     //Debug.Log(gameObject.name + ".Interactable.InstantiateMiniMapIndicator(): interactables.length > 0");
-                    miniMapIndicator = MiniMapController.Instance.AddIndicator(this);
-                    mainMapIndicator = SystemGameManager.Instance.UIManager.MainMapManager.AddIndicator(this);
+                    //miniMapIndicator = miniMapManager.AddIndicator(this);
+                    //mainMapIndicator = SystemGameManager.Instance.UIManager.MainMapManager.AddIndicator(this);
+                    miniMapManager.AddIndicator(this);
+                    SystemGameManager.Instance.UIManager.MainMapManager.AddIndicator(this);
                     miniMapIndicatorReady = true;
                     return true;
                 }
@@ -446,18 +460,20 @@ namespace AnyRPG {
 
         public void CleanupMiniMapIndicator() {
             //Debug.Log(gameObject.name + ".Interactable.CleanupMiniMapIndicator()");
-            if (miniMapIndicator != null) {
+            //if (miniMapIndicator != null) {
                 //Debug.Log(gameObject.name + ".Interactable.CleanupMiniMapIndicator(): " + miniMapIndicator.name);
-                MiniMapController.Instance.RemoveIndicator(this);
+                //MiniMapController.Instance.RemoveIndicator(this);
+            miniMapManager.RemoveIndicator(this);
 
-                // keeping this set to true so any other update can't respawn it
-                // if there is a situation where we re-enable interactables, then we should set it to false in OnEnable instead
-                // miniMapIndicatorReady = false;
-            }
-            if (mainMapIndicator != null) {
+            // keeping this set to true so any other update can't respawn it
+            // if there is a situation where we re-enable interactables, then we should set it to false in OnEnable instead
+            // miniMapIndicatorReady = false;
+            //}
+            //if (mainMapIndicator != null) {
                 //Debug.Log(gameObject.name + ".Interactable.CleanupMiniMapIndicator(): " + miniMapIndicator.name);
-                SystemGameManager.Instance.UIManager.MainMapManager.RemoveIndicator(this);
-            }
+                //SystemGameManager.Instance.UIManager.MainMapManager.RemoveIndicator(this);
+            mainMapManager.RemoveIndicator(this);
+            //}
 
         }
 
@@ -1048,8 +1064,8 @@ namespace AnyRPG {
         #endregion
 
         public void HandleMiniMapStatusUpdate(InteractableOptionComponent interactableOptionComponent) {
-            miniMapIndicator?.HandleMiniMapStatusUpdate(interactableOptionComponent);
-            mainMapIndicator?.HandleMainMapStatusUpdate(interactableOptionComponent);
+            miniMapManager.InteractableStatusUpdate(this, interactableOptionComponent);
+            mainMapManager.InteractableStatusUpdate(this, interactableOptionComponent);
         }
 
         public override void ResetSettings() {
@@ -1082,8 +1098,8 @@ namespace AnyRPG {
             isMouseOverUnit = false;
             isMouseOverNameplate = false;
 
-            miniMapIndicator = null;
-            mainMapIndicator = null;
+            //miniMapIndicator = null;
+            //mainMapIndicator = null;
 
             characterUnit = null;
 

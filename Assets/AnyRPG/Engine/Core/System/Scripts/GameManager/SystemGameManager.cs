@@ -137,11 +137,12 @@ namespace AnyRPG {
             unitPreviewManager.Init();
             characterCreatorManager.Init();
 
-            uIManager.Init();
             systemAbilityController.Init();
             castTargettingManager.Init();
             inputManager.Init();
             inventoryManager.Init();
+            uIManager.Init(this);
+
         }
 
         private void SetupPermanentObjects() {

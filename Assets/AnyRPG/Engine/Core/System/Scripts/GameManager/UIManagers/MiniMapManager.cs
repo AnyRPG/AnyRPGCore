@@ -7,16 +7,13 @@ using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 
 namespace AnyRPG {
-    public class MainMapManager : MonoBehaviour {
+    public class MiniMapManager : MonoBehaviour {
 
         // events
         public event System.Action<Interactable> OnAddIndicator = delegate { };
         public event System.Action<Interactable> OnRemoveIndicator = delegate { };
         public event System.Action<Interactable> OnUpdateIndicatorRotation = delegate { };
         public event System.Action<Interactable, InteractableOptionComponent> OnInteractableStatusUpdate = delegate { };
-
-        [SerializeField]
-        private GameObject mapIndicatorPrefab = null;
 
         // state
         protected bool eventSubscriptionsInitialized = false;
@@ -25,7 +22,6 @@ namespace AnyRPG {
         private List<Interactable> mapIndicatorControllers = new List<Interactable>();
 
         public List<Interactable> MapIndicatorControllers { get => mapIndicatorControllers; set => mapIndicatorControllers = value; }
-        public GameObject MapIndicatorPrefab { get => mapIndicatorPrefab; set => mapIndicatorPrefab = value; }
 
         public void Init() {
             CreateEventSubscriptions();
@@ -46,6 +42,8 @@ namespace AnyRPG {
                 mapIndicatorControllers.Add(interactable);
                 OnAddIndicator(interactable);
             }
+
+            //return mapIndicatorControllers[interactable];
         }
 
         public void RemoveIndicator(Interactable interactable) {
@@ -62,7 +60,6 @@ namespace AnyRPG {
         public void UpdateIndicatorRotation(Interactable interactable) {
             OnUpdateIndicatorRotation(interactable);
         }
-
 
         private void CreateEventSubscriptions() {
             //Debug.Log("MainMapController.CreateEventSubscriptions()");

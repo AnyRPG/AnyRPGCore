@@ -1764,14 +1764,13 @@ namespace AnyRPG {
                 return;
             }
             base.UpdateMiniMapIndicator();
-            if (miniMapIndicatorReady == true && miniMapIndicator != null) {
-                //miniMapIndicator.transform.forward = new Vector3(0f, transform.forward.x, transform.forward.z);
-                //miniMapIndicator.transform.rotation = Quaternion.Euler(0, transform.eulerAngles.y, 0);
-                //miniMapIndicator.transform.rotation = Quaternion.Euler(0, 0, transform.eulerAngles.y * -1f) * Quaternion.LookRotation(SystemGameManager.Instance.SystemConfigurationManager.PlayerMiniMapIconForward);
-                miniMapIndicator.transform.rotation = Quaternion.Euler(0, 0, (transform.eulerAngles.y - SystemGameManager.Instance.SystemConfigurationManager.PlayerMiniMapIconRotation) * -1f);
+            if (miniMapIndicatorReady == true) {
+                miniMapManager.UpdateIndicatorRotation(this);
+                /*
                 if (mainMapIndicator != null) {
                     mainMapIndicator.transform.rotation = miniMapIndicator.transform.rotation;
                 }
+                */
             }
         }
 
@@ -1780,8 +1779,8 @@ namespace AnyRPG {
                 return;
             }
             base.UpdateMainMapIndicator();
-            if (miniMapIndicatorReady == true && mainMapIndicator != null) {
-                mainMapIndicator.transform.rotation = Quaternion.Euler(0, 0, (transform.eulerAngles.y - SystemGameManager.Instance.SystemConfigurationManager.PlayerMiniMapIconRotation) * -1f);
+            if (miniMapIndicatorReady == true) {
+                mainMapManager.UpdateIndicatorRotation(this);
             }
         }
 

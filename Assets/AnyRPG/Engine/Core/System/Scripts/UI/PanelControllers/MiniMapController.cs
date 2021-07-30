@@ -10,21 +10,6 @@ using UnityEngine.SceneManagement;
 namespace AnyRPG {
     public class MiniMapController : DraggableWindow {
 
-        #region Singleton
-        private static MiniMapController instance;
-
-        public static MiniMapController Instance {
-            get {
-                if (instance == null) {
-                    instance = FindObjectOfType<MiniMapController>();
-                }
-
-                return instance;
-            }
-        }
-
-        #endregion
-
         [Header("MiniMap")]
 
         [SerializeField]
@@ -37,7 +22,7 @@ namespace AnyRPG {
         private Image mapButtonImage = null;
 
         [SerializeField]
-        private GameObject miniMapGraphic = null;
+        private GameObject mapGraphic = null;
 
         [SerializeField]
         private RawImage miniMapGraphicRawImage = null;
@@ -93,9 +78,6 @@ namespace AnyRPG {
         // keep track if mouse is in window bounds
         private Vector3[] worldCorners = new Vector3[4];
 
-        // track all active indicators
-        private Dictionary<Interactable, MiniMapIndicatorController> miniMapIndicatorControllers = new Dictionary<Interactable, MiniMapIndicatorController>();
-
         // track current minimap status and state
         private bool miniMapEnabled = false;
 
@@ -104,12 +86,37 @@ namespace AnyRPG {
 
         private string loadedMapName = string.Empty;
 
+        protected bool eventSubscriptionsInitialized = false;
 
-        public override void Awake() {
-            //Debug.Log(gameObject.name + ": MiniMapController.Awake()");
-            base.Awake();
-            if (SystemGameManager.Instance.SystemConfigurationManager.SystemBarMap != null) {
-                mapButtonImage.sprite = SystemGameManager.Instance.SystemConfigurationManager.SystemBarMap;
+        // system component references
+        private SystemConfigurationManager systemConfigurationManager = null;
+        private CameraManager cameraManager = null;
+        private PlayerManager playerManager = null;
+        private InputManager inputManager = null;
+        private LevelManager levelManager = null;
+        private PopupWindowManager popupWindowManager = null;
+        private MiniMapManager miniMapManager = null;
+
+        // map indicators
+        private Dictionary<Interactable, MiniMapIndicatorController> mapIndicatorControllers = new Dictionary<Interactable, MiniMapIndicatorController>();
+
+        public GameObject MapGraphic { get => mapGraphic; set => mapGraphic = value; }
+
+        public void Init(SystemGameManager systemGameManager) {
+            Debug.Log("MiniMapController.Init()");
+
+            systemConfigurationManager = systemGameManager.SystemConfigurationManager;
+            cameraManager = systemGameManager.CameraManager;
+            playerManager = systemGameManager.PlayerManager;
+            inputManager = systemGameManager.InputManager;
+            levelManager = systemGameManager.LevelManager;
+            popupWindowManager = systemGameManager.UIManager.PopupWindowManager;
+            miniMapManager = systemGameManager.UIManager.MiniMapManager;
+
+            CreateEventSubscriptions();
+
+            if (systemConfigurationManager.SystemBarMap != null) {
+                mapButtonImage.sprite = systemConfigurationManager.SystemBarMap;
                 mapButtonImage.color = Color.white;
                 mapButtonText.SetActive(false);
             } else {
@@ -118,10 +125,7 @@ namespace AnyRPG {
                 mapButtonText.SetActive(true);
             }
 
-            minimapTextureFolder = minimapTextureFolderBase + SystemGameManager.Instance.SystemConfigurationManager.GameName.Replace(" ", "") + "/Images/MiniMap/";
-            
-            //instantiate singleton
-            MiniMapController tempcontroller = Instance;
+            minimapTextureFolder = minimapTextureFolderBase + systemConfigurationManager.GameName.Replace(" ", "") + "/Images/MiniMap/";
 
             rectTransform = gameObject.GetComponent<RectTransform>();
 
@@ -131,20 +135,60 @@ namespace AnyRPG {
             } else {
                 cameraSize = cameraSizeDefault;
             }
+        }
 
+        private void CreateEventSubscriptions() {
+            //Debug.Log("MainMapController.CreateEventSubscriptions()");
+            if (eventSubscriptionsInitialized) {
+                return;
+            }
+            miniMapManager.OnAddIndicator += HandleAddIndicator;
+            miniMapManager.OnRemoveIndicator += HandleRemoveIndicator;
+            miniMapManager.OnUpdateIndicatorRotation += HandleIndicatorRotation;
+            miniMapManager.OnInteractableStatusUpdate += HandleInteractableStatusUpdate;
             SystemEventManager.StartListening("AfterCameraUpdate", HandleAfterCameraUpdate);
-            SystemEventManager.StartListening("OnLevelUnload", HandleLevelUnload);
+
+            eventSubscriptionsInitialized = true;
         }
 
         public void HandleAfterCameraUpdate(string eventName, EventParamProperties eventParamProperties) {
             UpdateMiniMap();
         }
 
-        public void HandleLevelUnload(string eventName, EventParamProperties eventParamProperties) {
-            List<Interactable> removeList = new List<Interactable>();
-            removeList.AddRange(miniMapIndicatorControllers.Keys);
-            foreach (Interactable interactable in removeList) {
-                RemoveIndicator(interactable);
+        public void HandleIndicatorRotation(Interactable interactable) {
+            mapIndicatorControllers[interactable].transform.rotation = Quaternion.Euler(0, 0, (interactable.transform.eulerAngles.y - systemConfigurationManager.PlayerMiniMapIconRotation) * -1f);
+        }
+
+        public void HandleInteractableStatusUpdate(Interactable interactable, InteractableOptionComponent interactableOptionComponent) {
+            if (mapIndicatorControllers.ContainsKey(interactable)) {
+                mapIndicatorControllers[interactable].HandleMiniMapStatusUpdate(interactableOptionComponent);
+            }
+        }
+
+        public void HandleAddIndicator(Interactable interactable) {
+            //Debug.Log("MainMapController.AddIndicator(" + interactable.gameObject.name + ")");
+            if (mapIndicatorControllers.ContainsKey(interactable) == false) {
+                GameObject mapIndicator = ObjectPooler.Instance.GetPooledObject(miniMapIndicatorPrefab, (mapGraphic.transform));
+                if (mapIndicator != null) {
+                    MiniMapIndicatorController mapIndicatorController = mapIndicator.GetComponent<MiniMapIndicatorController>();
+                    if (mapIndicatorController != null) {
+                        mapIndicatorControllers.Add(interactable, mapIndicatorController);
+                        mapIndicatorController.SetInteractable(interactable);
+                        if (miniMapEnabled == false) {
+                            mapIndicatorController.gameObject.SetActive(false);
+                        }
+                    }
+                }
+            }
+
+            //return mapIndicatorControllers[interactable];
+        }
+
+        public void HandleRemoveIndicator(Interactable interactable) {
+            if (mapIndicatorControllers.ContainsKey(interactable)) {
+                mapIndicatorControllers[interactable].ResetSettings();
+                ObjectPooler.Instance.ReturnObjectToPool(mapIndicatorControllers[interactable].gameObject);
+                mapIndicatorControllers.Remove(interactable);
             }
         }
 
@@ -156,9 +200,9 @@ namespace AnyRPG {
         }
 
         public void LateUpdate() {
-            if (SystemGameManager.Instance.SystemConfigurationManager.UseThirdPartyCameraControl == true
-                && SystemGameManager.Instance.CameraManager.ThirdPartyCamera.activeInHierarchy == true
-                && SystemGameManager.Instance.PlayerManager.PlayerUnitSpawned == true) {
+            if (systemConfigurationManager.UseThirdPartyCameraControl == true
+                && cameraManager.ThirdPartyCamera.activeInHierarchy == true
+                && playerManager.PlayerUnitSpawned == true) {
                 UpdateMiniMap();
             }
         }
@@ -179,54 +223,29 @@ namespace AnyRPG {
         }
 
         private void EnableIndicators() {
-            foreach (MiniMapIndicatorController miniMapIndicatorController in miniMapIndicatorControllers.Values) {
+            foreach (MiniMapIndicatorController miniMapIndicatorController in mapIndicatorControllers.Values) {
                 miniMapIndicatorController.gameObject.SetActive(true);
             }
         }
 
         private void DisableIndicators() {
-            foreach (MiniMapIndicatorController miniMapIndicatorController in miniMapIndicatorControllers.Values) {
+            foreach (MiniMapIndicatorController miniMapIndicatorController in mapIndicatorControllers.Values) {
                 miniMapIndicatorController.gameObject.SetActive(false);
             }
         }
 
         private void UpdateIndicatorPositions() {
-            foreach (Interactable interactable in miniMapIndicatorControllers.Keys) {
-                if (miniMapIndicatorControllers[interactable].gameObject.activeSelf == true) {
-                    miniMapIndicatorControllers[interactable].transform.localPosition = new Vector3((interactable.transform.position.x - levelOffset.x) * levelScaleFactor, (interactable.transform.position.z - levelOffset.z) * levelScaleFactor, 0);
-                    miniMapIndicatorControllers[interactable].transform.localScale = new Vector3(1f / miniMapGraphic.transform.localScale.x, 1f / miniMapGraphic.transform.localScale.y, 1f / miniMapGraphic.transform.localScale.z);
+            foreach (Interactable interactable in mapIndicatorControllers.Keys) {
+                if (mapIndicatorControllers[interactable].gameObject.activeSelf == true) {
+                    mapIndicatorControllers[interactable].transform.localPosition = new Vector3((interactable.transform.position.x - levelOffset.x) * levelScaleFactor, (interactable.transform.position.z - levelOffset.z) * levelScaleFactor, 0);
+                    mapIndicatorControllers[interactable].transform.localScale = new Vector3(1f / mapGraphic.transform.localScale.x, 1f / mapGraphic.transform.localScale.y, 1f / mapGraphic.transform.localScale.z);
                     interactable.UpdateMiniMapIndicator();
                 }
             }
         }
 
-        public MiniMapIndicatorController AddIndicator(Interactable interactable) {
-            //Debug.Log("MinimapController.AddIndicator(" + interactable.gameObject.name + ")");
-            if (miniMapIndicatorControllers.ContainsKey(interactable) == false) {
-                GameObject miniMapIndicator = ObjectPooler.Instance.GetPooledObject(miniMapIndicatorPrefab, miniMapGraphic.transform);
-                if (miniMapIndicator != null) {
-                    MiniMapIndicatorController miniMapIndicatorController = miniMapIndicator.GetComponent<MiniMapIndicatorController>();
-                    miniMapIndicatorControllers.Add(interactable, miniMapIndicatorController);
-                    miniMapIndicatorController.SetInteractable(interactable);
-                    if (miniMapEnabled == false) {
-                        miniMapIndicatorController.gameObject.SetActive(false);
-                    }
-                }
-            }
-
-            return miniMapIndicatorControllers[interactable];
-        }
-
-        public void RemoveIndicator(Interactable interactable) {
-            if (miniMapIndicatorControllers.ContainsKey(interactable)) {
-                miniMapIndicatorControllers[interactable].ResetSettings();
-                ObjectPooler.Instance.ReturnObjectToPool(miniMapIndicatorControllers[interactable].gameObject);
-                miniMapIndicatorControllers.Remove(interactable);
-            }
-        }
-
         private void HandleCameraZoom(bool force = false) {
-            if (SystemGameManager.Instance.InputManager.mouseScrolled || force) {
+            if (inputManager.mouseScrolled || force) {
 
                 // determine if mouse is inside this object
                 rectTransform.GetWorldCorners(worldCorners);
@@ -246,7 +265,7 @@ namespace AnyRPG {
                 // a multiplier to determine what the image scale will need to be to fit the requested 'real pixels' into the space available in the minimap window
                 imageScaleFactor = windowSize / requiredPixels;
 
-                miniMapGraphic.transform.localScale = new Vector3(imageScaleFactor, imageScaleFactor, 1);
+                mapGraphic.transform.localScale = new Vector3(imageScaleFactor, imageScaleFactor, 1);
 
                 PlayerPrefs.SetFloat("MiniMapZoomLevel", cameraSize);
             }
@@ -271,7 +290,7 @@ namespace AnyRPG {
         }
 
         private void CommonInitialization() {
-            SceneNode sceneNode = SystemGameManager.Instance.LevelManager.GetActiveSceneNode();
+            SceneNode sceneNode = levelManager.GetActiveSceneNode();
             if (sceneNode != null) {
                 zoneNameText.text = sceneNode.DisplayName;
             } else {
@@ -315,7 +334,7 @@ namespace AnyRPG {
             }
 
             // First, try to find the minimap
-            Texture2D mapTexture = new Texture2D((int)SystemGameManager.Instance.LevelManager.SceneBounds.size.x, (int)SystemGameManager.Instance.LevelManager.SceneBounds.size.z);
+            Texture2D mapTexture = new Texture2D((int)levelManager.SceneBounds.size.x, (int)levelManager.SceneBounds.size.z);
             string textureFilePath = minimapTextureFolder + GetScreenshotFilename();
             if (System.IO.File.Exists(textureFilePath)) {
                 //sceneTextureFound = true;
@@ -324,7 +343,7 @@ namespace AnyRPG {
                 mapTexture.LoadImage(fileData);
             } else {
                 //Debug.Log("No minimap texture exists at " + textureFilePath + ".  Please run \"Minimap Wizard\" from the Tools menu under AnyRPG.");
-                if (SystemGameManager.Instance.SystemConfigurationManager.MiniMapFallBackMode == MiniMapFallBackMode.None) {
+                if (systemConfigurationManager.MiniMapFallBackMode == MiniMapFallBackMode.None) {
                     DisableIndicators();
                     return;
                 }
@@ -335,7 +354,7 @@ namespace AnyRPG {
             miniMapGraphicRawImage.texture = mapTexture;
             miniMapGraphicRect.sizeDelta = new Vector2(mapTexture.width, mapTexture.height);
 
-            GameObject parentObject = miniMapGraphic.transform.parent.gameObject;
+            GameObject parentObject = mapGraphic.transform.parent.gameObject;
             if (parentObject == null) {
                 Debug.LogError("Could not find parent object of minimap raw image.  Unable to set rectangle mask on pre-rendered minimap image.");
             }
@@ -343,8 +362,8 @@ namespace AnyRPG {
 
             // scale factor gives the number of pixels per meter for this image
             // it assumes a square image whose factor is based on the largest scene dimension
-            levelScaleFactor = miniMapGraphicRawImage.texture.width / (SystemGameManager.Instance.LevelManager.SceneBounds.size.x > SystemGameManager.Instance.LevelManager.SceneBounds.size.z ? SystemGameManager.Instance.LevelManager.SceneBounds.size.x : SystemGameManager.Instance.LevelManager.SceneBounds.size.z);
-            levelOffset = SystemGameManager.Instance.LevelManager.SceneBounds.center;
+            levelScaleFactor = miniMapGraphicRawImage.texture.width / (levelManager.SceneBounds.size.x > levelManager.SceneBounds.size.z ? levelManager.SceneBounds.size.x : levelManager.SceneBounds.size.z);
+            levelOffset = levelManager.SceneBounds.center;
 
             EnableIndicators();
 
@@ -360,12 +379,20 @@ namespace AnyRPG {
         }
 
         public void OpenMainMap() {
-            SystemGameManager.Instance.UIManager.PopupWindowManager.mainMapWindow.ToggleOpenClose();
+            popupWindowManager.mainMapWindow.ToggleOpenClose();
         }
 
-        public void CleanupEventSubscriptions() {
+        private void CleanupEventSubscriptions() {
+            //Debug.Log("PlayerManager.CleanupEventSubscriptions()");
+            if (!eventSubscriptionsInitialized) {
+                return;
+            }
+            miniMapManager.OnAddIndicator -= HandleAddIndicator;
+            miniMapManager.OnRemoveIndicator -= HandleRemoveIndicator;
+            miniMapManager.OnUpdateIndicatorRotation -= HandleIndicatorRotation;
+            miniMapManager.OnInteractableStatusUpdate -= HandleInteractableStatusUpdate;
             SystemEventManager.StopListening("AfterCameraUpdate", HandleAfterCameraUpdate);
-            SystemEventManager.StopListening("OnLevelUnload", HandleLevelUnload);
+            eventSubscriptionsInitialized = false;
         }
 
         public void OnDestroy() {
