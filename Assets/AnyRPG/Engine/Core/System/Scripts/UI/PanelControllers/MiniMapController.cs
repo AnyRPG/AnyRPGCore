@@ -103,7 +103,7 @@ namespace AnyRPG {
         public GameObject MapGraphic { get => mapGraphic; set => mapGraphic = value; }
 
         public void Init(SystemGameManager systemGameManager) {
-            Debug.Log("MiniMapController.Init()");
+            //Debug.Log("MiniMapController.Init()");
 
             systemConfigurationManager = systemGameManager.SystemConfigurationManager;
             cameraManager = systemGameManager.CameraManager;

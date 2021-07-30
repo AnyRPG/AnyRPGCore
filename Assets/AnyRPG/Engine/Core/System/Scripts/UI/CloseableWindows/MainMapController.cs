@@ -33,7 +33,7 @@ namespace AnyRPG {
         // the number of pixels per meter of level based on the total map pixels
         private float levelScaleFactor = 1f;
 
-        private bool activeEventSubscriptionsInitialized = false;
+        //private bool activeEventSubscriptionsInitialized = false;
 
         // system component references
         private SystemConfigurationManager systemConfigurationManager = null;
@@ -50,8 +50,7 @@ namespace AnyRPG {
         public GameObject MapGraphic { get => mapGraphic; }
 
         public override void Init() {
-            Debug.Log("MainMapController.Init()");
-            base.Init();
+            //Debug.Log("MainMapController.Init()");
             systemConfigurationManager = SystemGameManager.Instance.SystemConfigurationManager;
             cameraManager = SystemGameManager.Instance.CameraManager;
             playerManager = SystemGameManager.Instance.PlayerManager;
@@ -62,6 +61,9 @@ namespace AnyRPG {
             cameraManager.MainMapCamera.enabled = false;
 
             mainmapTextureFolder = mainmapTextureFolderBase + systemConfigurationManager.GameName.Replace(" ", "") + "/Images/MiniMap/";
+
+            // calling base.Init() last because it will trigger event subscriptions, which need the above references initialized
+            base.Init();
         }
 
         public void HandleInteractableStatusUpdate(Interactable interactable, InteractableOptionComponent interactableOptionComponent) {
@@ -128,54 +130,56 @@ namespace AnyRPG {
 
         private void UpdateIndicatorPositions() {
             foreach (Interactable interactable in mapIndicatorControllers.Keys) {
-                if (interactable.gameObject.activeSelf == true) {
-                    interactable.transform.localPosition = new Vector3((interactable.transform.position.x - levelManager.SceneBounds.center.x) * levelScaleFactor, (interactable.transform.position.z - levelManager.SceneBounds.center.z) * levelScaleFactor, 0);
-                    interactable.transform.localScale = new Vector3(1f / mapGraphic.transform.localScale.x, 1f / mapGraphic.transform.localScale.y, 1f / mapGraphic.transform.localScale.z);
+                if (mapIndicatorControllers[interactable].gameObject.activeSelf == true) {
+                    mapIndicatorControllers[interactable].transform.localPosition = new Vector3((interactable.transform.position.x - levelManager.SceneBounds.center.x) * levelScaleFactor, (interactable.transform.position.z - levelManager.SceneBounds.center.z) * levelScaleFactor, 0);
+                    mapIndicatorControllers[interactable].transform.localScale = new Vector3(1f / mapGraphic.transform.localScale.x, 1f / mapGraphic.transform.localScale.y, 1f / mapGraphic.transform.localScale.z);
                     interactable.UpdateMainMapIndicator();
                 }
             }
         }
 
+        /*
         private void OnEnable() {
-            //Debug.Log("MainMapController.OnEnable()");
-            CreateActiveEventSubscriptions();
+            Debug.Log("MainMapController.OnEnable()");
+            //CreateActiveEventSubscriptions();
         }
+        */
 
-        private void CreateActiveEventSubscriptions() {
+        protected override void CreateEventSubscriptions() {
             //Debug.Log("MainMapController.CreateEventSubscriptions()");
-            if (activeEventSubscriptionsInitialized) {
+            if (eventSubscriptionsInitialized) {
                 return;
             }
+            base.CreateEventSubscriptions();
             mainMapManager.OnAddIndicator += HandleAddIndicator;
             mainMapManager.OnRemoveIndicator += HandleRemoveIndicator;
             mainMapManager.OnUpdateIndicatorRotation += HandleIndicatorRotation;
             mainMapManager.OnInteractableStatusUpdate += HandleInteractableStatusUpdate;
             SystemEventManager.StartListening("AfterCameraUpdate", HandleAfterCameraUpdate);
-
-            activeEventSubscriptionsInitialized = true;
         }
 
-        private void CleanupActiveEventSubscriptions() {
-            //Debug.Log("PlayerManager.CleanupEventSubscriptions()");
-            if (!activeEventSubscriptionsInitialized) {
+        protected override void CleanupEventSubscriptions() {
+            //Debug.Log("MainMapController.CleanupEventSubscriptions()");
+            if (!eventSubscriptionsInitialized) {
                 return;
             }
+            base.CleanupEventSubscriptions();
             mainMapManager.OnAddIndicator += HandleAddIndicator;
             mainMapManager.OnRemoveIndicator += HandleRemoveIndicator;
             mainMapManager.OnUpdateIndicatorRotation += HandleIndicatorRotation;
             mainMapManager.OnInteractableStatusUpdate += HandleInteractableStatusUpdate;
             SystemEventManager.StopListening("AfterCameraUpdate", HandleAfterCameraUpdate);
-
-            activeEventSubscriptionsInitialized = false;
         }
 
+        /*
         public void OnDisable() {
-            //Debug.Log("PlayerManager.OnDisable()");
+            //Debug.Log("MainMapController.OnDisable()");
             if (SystemGameManager.IsShuttingDown) {
                 return;
             }
-            CleanupActiveEventSubscriptions();
+            //CleanupActiveEventSubscriptions();
         }
+        */
 
         /*
         public void HandleLevelLoad(string eventName, EventParamProperties eventParamProperties) {
