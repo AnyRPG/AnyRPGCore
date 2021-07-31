@@ -11,6 +11,7 @@ namespace AnyRPG {
 
 
         [SerializeField]
+        [ResourceSelector(resourceType = typeof(Quest))]
         private string prerequisiteName = string.Empty;
 
         private bool prerequisiteMet = false;

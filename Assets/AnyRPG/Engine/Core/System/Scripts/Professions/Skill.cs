@@ -19,6 +19,7 @@ namespace AnyRPG {
 
         [Tooltip("List of abilities that are learned when this skill is learned")]
         [SerializeField]
+        [ResourceSelector(resourceType = typeof(BaseAbility))]
         private List<string> abilityNames = new List<string>();
 
         private List<BaseAbility> abilityList = new List<BaseAbility>();

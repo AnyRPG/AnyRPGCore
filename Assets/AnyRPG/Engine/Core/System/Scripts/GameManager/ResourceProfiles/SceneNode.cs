@@ -27,12 +27,14 @@ namespace AnyRPG {
 
         [Tooltip("Ambient sounds to play in the background while this scene is active")]
         [SerializeField]
+        [ResourceSelector(resourceType = typeof(AudioProfile))]
         private string ambientMusicProfile = string.Empty;
 
         private AudioProfile realAmbientMusicProfile;
 
         [Tooltip("Music to play in the background while this scene is active")]
         [SerializeField]
+        [ResourceSelector(resourceType = typeof(AudioProfile))]
         private string backgroundMusicProfile = string.Empty;
 
         private AudioProfile realBackgroundMusicProfile;
@@ -41,12 +43,14 @@ namespace AnyRPG {
 
         [Tooltip("This audio will override the movement sound loop for a character in this zone")]
         [SerializeField]
+        [ResourceSelector(resourceType = typeof(AudioProfile))]
         private string movementLoopProfileName = string.Empty;
 
         private AudioProfile movementLoopProfile;
 
         [Tooltip("This audio will override the movement hit (footstep) sound for a character in this zone")]
         [SerializeField]
+        [ResourceSelector(resourceType = typeof(AudioProfile))]
         private string movementHitProfileName = string.Empty;
 
         private AudioProfile movementHitProfile;
@@ -67,6 +71,7 @@ namespace AnyRPG {
 
         [Tooltip("A Cutscene to play automatically when this level is loaded.")]
         [SerializeField]
+        [ResourceSelector(resourceType = typeof(Cutscene))]
         private string autoPlayCutsceneName = string.Empty;
 
         private Cutscene autoPlayCutscene = null;
@@ -75,6 +80,7 @@ namespace AnyRPG {
 
         [Tooltip("A list of environment state names available to this scene.  Used for swapping environment states with unity timeline.")]
         [SerializeField]
+        [ResourceSelector(resourceType = typeof(EnvironmentStateProfile))]
         private List<string> environmentStateNames = new List<string>();
 
         private List<EnvironmentStateProfile> environmentStates = new List<EnvironmentStateProfile>();

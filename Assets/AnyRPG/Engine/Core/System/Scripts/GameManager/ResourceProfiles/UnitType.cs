@@ -27,6 +27,7 @@ namespace AnyRPG {
 
         [Tooltip("Power Resources used by this unit.  The first resource is considered primary and will show on the unit frame.")]
         [SerializeField]
+        [ResourceSelector(resourceType = typeof(PowerResource))]
         private List<string> powerResources = new List<string>();
 
         // reference to the actual power resources

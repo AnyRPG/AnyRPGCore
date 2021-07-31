@@ -11,6 +11,7 @@ namespace AnyRPG {
 
         [Tooltip("The power resource to refill when this potion is used")]
         [SerializeField]
+        [ResourceSelector(resourceType = typeof(Recipe))]
         private string recipeName = string.Empty;
 
         private Recipe recipe = null;

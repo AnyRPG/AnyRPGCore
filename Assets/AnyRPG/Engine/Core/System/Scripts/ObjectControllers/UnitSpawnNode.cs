@@ -13,6 +13,7 @@ namespace AnyRPG {
         [Header("Spawn GameObject")]
 
         [SerializeField]
+        [ResourceSelector(resourceType = typeof(UnitProfile))]
         private List<string> unitProfileNames = new List<string>();
 
         private List<UnitProfile> unitProfiles = new List<UnitProfile>();
@@ -31,6 +32,7 @@ namespace AnyRPG {
 
         [Tooltip("If a unit has no toughness set, this toughness will be used.")]
         [SerializeField]
+        [ResourceSelector(resourceType = typeof(UnitToughness))]
         private string defaultToughness = string.Empty;
 
         [Header("Timers")]

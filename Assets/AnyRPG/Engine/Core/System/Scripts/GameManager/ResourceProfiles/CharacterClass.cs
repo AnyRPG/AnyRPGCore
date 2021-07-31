@@ -20,6 +20,7 @@ namespace AnyRPG {
 
         [Tooltip("The names of the equipment that will be worn by this class when a new game is started")]
         [SerializeField]
+        [ResourceSelector(resourceType = typeof(Equipment))]
         private List<string> equipmentNames = new List<string>();
 
         private List<Equipment> equipmentList = new List<Equipment>();
@@ -45,12 +46,14 @@ namespace AnyRPG {
 
         [Tooltip("Power Resources used by this class.  The first resource is considered primary and will show on the unit frame.")]
         [SerializeField]
+        [ResourceSelector(resourceType = typeof(PowerResource))]
         private List<string> powerResources = new List<string>();
 
         [Header("Pet Management")]
 
         [Tooltip("The names of the equipment that will be worn by this class when a new game is started")]
         [SerializeField]
+        [ResourceSelector(resourceType = typeof(UnitType))]
         private List<string> validPetTypes = new List<string>();
 
         private List<UnitType> validPetTypeList = new List<UnitType>();

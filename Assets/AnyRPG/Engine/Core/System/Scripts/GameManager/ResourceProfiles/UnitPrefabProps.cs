@@ -65,6 +65,7 @@ namespace AnyRPG {
 
         [Tooltip("The name of the attachment profile to use for attaching other prefabs to this prefab")]
         [SerializeField]
+        [ResourceSelector(resourceType = typeof(AttachmentProfile))]
         private string attachmentProfileName = string.Empty;
 
         // reference to the actual attachment profile

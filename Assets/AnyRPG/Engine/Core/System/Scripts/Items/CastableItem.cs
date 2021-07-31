@@ -8,6 +8,7 @@ namespace AnyRPG {
     public abstract class CastableItem : Item, IUseable {
 
         [SerializeField]
+        [ResourceSelector(resourceType = typeof(BaseAbility))]
         protected string abilityName = string.Empty;
 
         //[SerializeField]

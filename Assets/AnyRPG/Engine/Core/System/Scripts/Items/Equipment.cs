@@ -19,6 +19,7 @@ namespace AnyRPG {
 
         [Tooltip("The name of the equipment set this item belongs to, if any")]
         [SerializeField]
+        [ResourceSelector(resourceType = typeof(EquipmentSet))]
         private string equipmentSetName = string.Empty;
 
         // keep a reference to the actual equipment set
@@ -32,6 +33,7 @@ namespace AnyRPG {
 
         [Tooltip("The name of an UMA recipe to manually search for")]
         [SerializeField]
+        [ResourceSelector(resourceType = typeof(UMARecipeProfile))]
         private string umaRecipeProfileName = string.Empty;
 
         // hold references to the uma recipes found in the uma recipe profile
@@ -88,6 +90,7 @@ namespace AnyRPG {
 
         [Tooltip("These abilities will be learned when the item is equipped")]
         [SerializeField]
+        [ResourceSelector(resourceType = typeof(BaseAbility))]
         private List<string> learnedAbilityNames = new List<string>();
 
         private List<int> randomStatIndexes = new List<int>();

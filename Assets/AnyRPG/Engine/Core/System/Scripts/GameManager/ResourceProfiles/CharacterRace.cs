@@ -14,6 +14,7 @@ namespace AnyRPG {
 
         [Tooltip("The names of the equipment that will be worn by this race when a new game is started")]
         [SerializeField]
+        [ResourceSelector(resourceType = typeof(Equipment))]
         private List<string> equipmentNames = new List<string>();
 
         private List<Equipment> equipmentList = new List<Equipment>();
@@ -22,12 +23,14 @@ namespace AnyRPG {
 
         [Tooltip("Ability effects to cast on the target when the character does not have a weapon equipped and does damage from a standard (auto) attack")]
         [SerializeField]
+        [ResourceSelector(resourceType = typeof(AbilityEffect))]
         private List<string> defaultHitEffects = new List<string>();
 
         private List<AbilityEffect> defaultHitEffectList = new List<AbilityEffect>();
 
         [Tooltip("Ability effects to cast on the target when the weapon does damage from any attack, including standard (auto) attacks")]
         [SerializeField]
+        [ResourceSelector(resourceType = typeof(AbilityEffect))]
         private List<string> onHitEffects = new List<string>();
 
         private List<AbilityEffect> onHitEffectList = new List<AbilityEffect>();

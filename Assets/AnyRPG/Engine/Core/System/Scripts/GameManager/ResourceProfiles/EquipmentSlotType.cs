@@ -21,6 +21,7 @@ namespace AnyRPG {
 
         [Tooltip("If this slot type takes up more than one physical slots, the slots listed below will be unequipped to make room for the item in this slot")]
         [SerializeField]
+        [ResourceSelector(resourceType = typeof(EquipmentSlotProfile))]
         private List<string> exclusiveSlotProfileList = new List<string>();
 
         private List<EquipmentSlotProfile> realExclusiveSlotProfileList = new List<EquipmentSlotProfile>();

@@ -52,6 +52,7 @@ namespace AnyRPG {
         private string targetBone = string.Empty;
 
         [SerializeField]
+        [ResourceSelector(resourceType = typeof(AudioProfile))]
         private string unsheathAudioProfileName = string.Empty;
         private AudioProfile unsheathAudioProfile = null;
 
@@ -76,6 +77,7 @@ namespace AnyRPG {
         private string sheathedTargetBone = string.Empty;
 
         [SerializeField]
+        [ResourceSelector(resourceType = typeof(AudioProfile))]
         private string sheathAudioProfileName = string.Empty;
         private AudioProfile sheathAudioProfile = null;
 

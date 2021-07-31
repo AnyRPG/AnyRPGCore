@@ -10,6 +10,7 @@ namespace AnyRPG {
         public event System.Action OnStatusUpdated = delegate { };
 
         [SerializeField]
+        [ResourceSelector(resourceType = typeof(CharacterClass))]
         private string requiredCharacterClass = string.Empty;
 
 

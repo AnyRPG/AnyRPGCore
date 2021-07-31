@@ -12,6 +12,7 @@ namespace AnyRPG {
 
         [Tooltip("The name of the ability effect to cast on valid targets every tick")]
         [SerializeField]
+        [ResourceSelector(resourceType = typeof(AbilityEffect))]
         private List<string> abilityEffectNames = new List<string>();
 
         // a reference to the ability effect to apply to targets on tick

@@ -19,6 +19,7 @@ namespace AnyRPG {
 
         [Tooltip("Names of equipment slot types that can be equippped in this slot")]
         [SerializeField]
+        [ResourceSelector(resourceType = typeof(EquipmentSlotType))]
         private List<string> equipmentSlotTypeList = new List<string>();
 
         [Header("Audio")]

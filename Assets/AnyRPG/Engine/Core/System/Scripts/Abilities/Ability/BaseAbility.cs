@@ -21,6 +21,7 @@ namespace AnyRPG {
 
         [Tooltip("If this list is not empty, this ability will require the character to have the following weapons equipped to use it.")]
         [SerializeField]
+        [ResourceSelector(resourceType = typeof(WeaponSkill))]
         private List<string> weaponAffinityNames = new List<string>();
 
         private List<WeaponSkill> weaponAffinityList = new List<WeaponSkill>();
@@ -49,6 +50,7 @@ namespace AnyRPG {
 
         [Tooltip("The name of an animation profile to get animations for the character to perform while casting this ability")]
         [SerializeField]
+        [ResourceSelector(resourceType = typeof(AnimationProfile))]
         protected string animationProfileName = string.Empty;
 
         protected AnimationProfile animationProfile;
@@ -61,12 +63,14 @@ namespace AnyRPG {
 
         [Tooltip("If the animation has hit events while it is playing (such as when a hammer strike occurs), this audio profile will be played in response to those events.")]
         [SerializeField]
+        [ResourceSelector(resourceType = typeof(AudioProfile))]
         protected string animationHitAudioProfileName;
 
         protected AudioProfile animationHitAudioProfile;
 
         [Tooltip("An audio profile to play while the ability is casting")]
         [SerializeField]
+        [ResourceSelector(resourceType = typeof(AudioProfile))]
         protected string castingAudioProfileName;
 
         protected AudioProfile castingAudioProfile;
@@ -79,6 +83,7 @@ namespace AnyRPG {
 
         [Tooltip("If not empty, the character must be one of these classes to use this item.")]
         [SerializeField]
+        [ResourceSelector(resourceType = typeof(CharacterClass))]
         private List<string> characterClassRequirements = new List<string>();
 
         private List<CharacterClass> characterClassRequirementList = new List<CharacterClass>();
@@ -109,6 +114,7 @@ namespace AnyRPG {
 
         [Tooltip("The resource to use when casting this ability")]
         [SerializeField]
+        [ResourceSelector(resourceType = typeof(PowerResource))]
         protected string powerResourceName = string.Empty;
 
         /// <summary>
@@ -132,6 +138,7 @@ namespace AnyRPG {
 
         [Tooltip("The resource to refill when this ability hits the target")]
         [SerializeField]
+        [ResourceSelector(resourceType = typeof(PowerResource))]
         protected string generatePowerResourceName = string.Empty;
 
         protected PowerResource generatePowerResource = null;
@@ -180,6 +187,7 @@ namespace AnyRPG {
 
         [Tooltip("When casting is complete, these ability effects will be triggered.")]
         [SerializeField]
+        [ResourceSelector(resourceType = typeof(AbilityEffect))]
         protected List<string> abilityEffectNames = new List<string>();
 
         [Header("Channeling")]
@@ -192,6 +200,7 @@ namespace AnyRPG {
 
         [Tooltip("During casting, these ability effects will be triggered on every tick.")]
         [SerializeField]
+        [ResourceSelector(resourceType = typeof(AbilityEffect))]
         protected List<string> channeledAbilityEffectnames = new List<string>();
 
         protected List<AbilityEffect> channeledAbilityEffects = new List<AbilityEffect>();

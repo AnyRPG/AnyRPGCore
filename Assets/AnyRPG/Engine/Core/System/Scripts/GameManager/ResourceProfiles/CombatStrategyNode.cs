@@ -17,11 +17,13 @@ namespace AnyRPG {
         private int minHealthPercent = 0;
 
         [SerializeField]
+        [ResourceSelector(resourceType = typeof(AudioProfile))]
         private string phaseMusicProfileName;
 
         private AudioProfile phaseMusicProfile;
 
         [SerializeField]
+        [ResourceSelector(resourceType = typeof(BaseAbility))]
         private List<string> maintainBuffNames = new List<string>();
 
         /*
@@ -32,6 +34,7 @@ namespace AnyRPG {
         private List<BaseAbility> maintainBuffList = new List<BaseAbility>();
 
         [SerializeField]
+        [ResourceSelector(resourceType = typeof(BaseAbility))]
         private List<string> attackAbilityNames = new List<string>();
 
         /*

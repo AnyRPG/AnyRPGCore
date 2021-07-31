@@ -18,6 +18,7 @@ namespace AnyRPG {
         [Header("Material Changes")]
 
         [SerializeField]
+        [ResourceSelector(resourceType = typeof(MaterialProfile))]
         private string effectMaterialName = string.Empty;
 
         // a material to temporarily assign to the target we hit
@@ -31,6 +32,7 @@ namespace AnyRPG {
         [Header("Audio")]
 
         [SerializeField]
+        [ResourceSelector(resourceType = typeof(AudioProfile))]
         protected List<string> onHitAudioProfileNames = new List<string>();
 
         [Tooltip("whether to play all audio profiles or just one random one")]
@@ -43,6 +45,7 @@ namespace AnyRPG {
         [Header("Hit")]
         [Tooltip("any abilities to cast immediately on hit")]
         [SerializeField]
+        [ResourceSelector(resourceType = typeof(AbilityEffect))]
         protected List<string> hitAbilityEffectNames = new List<string>();
 
         //[SerializeField]

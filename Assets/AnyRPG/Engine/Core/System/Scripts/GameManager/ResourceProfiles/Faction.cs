@@ -23,6 +23,7 @@ namespace AnyRPG {
 
         [Tooltip("The options available when the character creator is used")]
         [SerializeField]
+        [ResourceSelector(resourceType = typeof(UnitProfile))]
         private List<string> characterCreatorProfileNames = new List<string>();
 
         // reference to the default profile
@@ -32,6 +33,7 @@ namespace AnyRPG {
 
         [Tooltip("The names of the equipment that will be worn by this class when a new game is started")]
         [SerializeField]
+        [ResourceSelector(resourceType = typeof(Equipment))]
         private List<string> equipmentNames = new List<string>();
 
         private List<Equipment> equipmentList = new List<Equipment>();

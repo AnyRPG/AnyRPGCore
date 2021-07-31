@@ -13,6 +13,7 @@ namespace AnyRPG {
         [Tooltip("Weapon Type controls defaults for the weapon, and also the skill required to use this weapon")]
         [FormerlySerializedAs("weaponSkill")]
         [SerializeField]
+        [ResourceSelector(resourceType = typeof(WeaponSkill))]
         private string weaponType = string.Empty;
 
         private WeaponSkill weaponSkill;
@@ -21,12 +22,14 @@ namespace AnyRPG {
 
         [Tooltip("Ability effects to cast on the target when the weapon does damage from a standard (auto) attack")]
         [SerializeField]
+        [ResourceSelector(resourceType = typeof(AbilityEffect))]
         private List<string> defaultHitEffects = new List<string>();
 
         private List<AbilityEffect> defaultHitEffectList = new List<AbilityEffect>();
 
         [Tooltip("Ability effects to cast on the target when the weapon does damage from any attack, including standard (auto) attacks")]
         [SerializeField]
+        [ResourceSelector(resourceType = typeof(AbilityEffect))]
         private List<string> onHitEffects = new List<string>();
 
         private List<AbilityEffect> onHitEffectList = new List<AbilityEffect>();
@@ -36,12 +39,14 @@ namespace AnyRPG {
         [Tooltip("An animation profile that can overwrite default animations to match the weapon")]
         [FormerlySerializedAs("defaultAttackAnimationProfileName")]
         [SerializeField]
+        [ResourceSelector(resourceType = typeof(AnimationProfile))]
         protected string animationProfileName = string.Empty;
 
         protected AnimationProfile animationProfile = null;
 
         [Tooltip("An audio effect that can be used by any physical ability cast while this weapon is equippped")]
         [SerializeField]
+        [ResourceSelector(resourceType = typeof(AudioProfile))]
         private string defaultHitAudioProfile = string.Empty;
 
         private List<AudioClip> defaultHitSoundEffects = new List<AudioClip>();

@@ -10,12 +10,14 @@ namespace AnyRPG {
 
         [Tooltip("This audio will override the movement sound loop for a character in this zone")]
         [SerializeField]
+        [ResourceSelector(resourceType = typeof(AudioProfile))]
         private string movementLoopProfileName = string.Empty;
 
         private AudioProfile movementLoopProfile;
 
         [Tooltip("This audio will override the movement hit (footstep) sound for a character in this zone")]
         [SerializeField]
+        [ResourceSelector(resourceType = typeof(AudioProfile))]
         private string movementHitProfileName = string.Empty;
 
         private AudioProfile movementHitProfile;

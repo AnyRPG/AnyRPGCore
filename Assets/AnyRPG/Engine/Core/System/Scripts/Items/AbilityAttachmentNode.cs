@@ -9,6 +9,7 @@ namespace AnyRPG {
 
         [Tooltip("The name of the holdable object profile that refers to the physical prefab")]
         [SerializeField]
+        [ResourceSelector(resourceType = typeof(PrefabProfile))]
         private string holdableObjectName = string.Empty;
 
         private PrefabProfile holdableObject = null;

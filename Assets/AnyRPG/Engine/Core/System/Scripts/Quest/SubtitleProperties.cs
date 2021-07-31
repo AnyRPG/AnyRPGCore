@@ -12,6 +12,7 @@ namespace AnyRPG {
 
         [Tooltip("The name of an audio profile to play when this dialog is started.")]
         [SerializeField]
+        [ResourceSelector(resourceType = typeof(AudioProfile))]
         private string audioProfileName = string.Empty;
 
         private AudioProfile audioProfile;

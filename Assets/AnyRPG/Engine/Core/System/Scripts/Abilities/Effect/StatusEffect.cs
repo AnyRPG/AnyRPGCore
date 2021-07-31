@@ -15,6 +15,7 @@ namespace AnyRPG {
         private StatusEffectAlignment statusEffectAlignment = StatusEffectAlignment.None;
 
         [SerializeField]
+        [ResourceSelector(resourceType = typeof(StatusEffectType))]
         private string statusEffectTypeName = string.Empty;
 
         private StatusEffectType statusEffectType = null;
@@ -135,6 +136,7 @@ namespace AnyRPG {
 
         [Tooltip("Ability Effects to cast when the character is hit with an attack")]
         [SerializeField]
+        [ResourceSelector(resourceType = typeof(AbilityEffect))]
         protected List<string> reflectAbilityEffectNames = new List<string>();
 
         protected List<AbilityEffect> reflectAbilityEffectList = new List<AbilityEffect>();
@@ -143,6 +145,7 @@ namespace AnyRPG {
 
         [Tooltip("Ability Effects to cast when a weapon hit is scored on an enemy")]
         [SerializeField]
+        [ResourceSelector(resourceType = typeof(AbilityEffect))]
         protected List<string> weaponHitAbilityEffectNames = new List<string>();
 
         protected List<AbilityEffect> weaponHitAbilityEffectList = new List<AbilityEffect>();
