@@ -29,6 +29,7 @@ namespace AnyRPG {
 
         [Tooltip("Armor classes that can be equipped by this class")]
         [SerializeField]
+        [ResourceSelector(resourceType = typeof(ArmorClass))]
         private List<string> armorClassList = new List<string>();
 
         [Tooltip("Weapon skills known by this class")]
