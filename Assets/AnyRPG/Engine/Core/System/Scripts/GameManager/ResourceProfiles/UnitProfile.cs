@@ -195,6 +195,7 @@ namespace AnyRPG {
 
         [Tooltip("Lookup and use these named patrols that can be shared among units")]
         [SerializeField]
+        [ResourceSelector(resourceType = typeof(PatrolProfile))]
         private List<string> patrolNames = new List<string>();
 
         [Header("Behavior")]
