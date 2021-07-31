@@ -23,12 +23,14 @@ namespace AnyRPG {
 
         [Tooltip("The name of the scene that loads the game manager into memory, and then proceeds to the main menu")]
         [SerializeField]
+        [ResourceSelector(resourceType = typeof(SceneNode))]
         private string initializationScene = "Core Game";
 
         private SceneNode initializationSceneNode = null;
 
         [Tooltip("The name of the main menu scene")]
         [SerializeField]
+        [ResourceSelector(resourceType = typeof(SceneNode))]
         private string mainMenuScene = "Main Menu";
 
         // reference to the main menu scene node
@@ -36,6 +38,7 @@ namespace AnyRPG {
 
         [Tooltip("When a new game is started, the character will initially spawn in this scene if no scene is provided by their faction")]
         [SerializeField]
+        [ResourceSelector(resourceType = typeof(SceneNode))]
         private string defaultStartingZone = string.Empty;
 
         [Header("NEW GAME OPTIONS")]
@@ -70,12 +73,14 @@ namespace AnyRPG {
 
         [Tooltip("The name of the audio profile to play when the new game window is active")]
         [SerializeField]
+        [ResourceSelector(resourceType = typeof(AudioProfile))]
         private string newGameAudio = string.Empty;
 
         private AudioProfile newGameAudioProfile = null;
 
         [Tooltip("If the character creator is not used, this unit will be the default player unit. Usually a non UMA mecanim Unit or pre-configured UMA unit.")]
         [SerializeField]
+        [ResourceSelector(resourceType = typeof(UnitProfile))]
         private string defaultPlayerUnitProfileName = string.Empty;
 
         [Tooltip("If true, the default profiles will always be shown, in addition to any allowed by faction (if used)")]
@@ -84,6 +89,7 @@ namespace AnyRPG {
 
         [Tooltip("The options available when the character creator is used")]
         [SerializeField]
+        [ResourceSelector(resourceType = typeof(UnitProfile))]
         private List<string> characterCreatorProfileNames = new List<string>();
 
         // reference to the default profile
@@ -105,9 +111,11 @@ namespace AnyRPG {
         private bool equipDefaultBackPack = true;
 
         [SerializeField]
+        [ResourceSelector(resourceType = typeof(Bag))]
         private string defaultBackpackItem = "Backpack";
 
         [SerializeField]
+        [ResourceSelector(resourceType = typeof(Bag))]
         private string defaultBankBagItem = "Bank";
 
         [Header("CONTROLLER")]
@@ -165,6 +173,7 @@ namespace AnyRPG {
 
         [Tooltip("When showing the total currency the player has in the vendor window, this currency will be used")]
         [SerializeField]
+        [ResourceSelector(resourceType = typeof(CurrencyGroup))]
         private string currencyGroupName = string.Empty;
 
         private CurrencyGroup defaultCurrencyGroup;
@@ -178,6 +187,7 @@ namespace AnyRPG {
 
         [Tooltip("If automatic currency is enabled for a lootable character, this currency will be dropped")]
         [SerializeField]
+        [ResourceSelector(resourceType = typeof(Currency))]
         private string killCurrencyName = string.Empty;
 
         private Currency killCurrency = null;
@@ -188,6 +198,7 @@ namespace AnyRPG {
 
         [Tooltip("If automatic currency is enabled for a quest, this currency will be rewarded")]
         [SerializeField]
+        [ResourceSelector(resourceType = typeof(Currency))]
         private string questCurrencyName = string.Empty;
 
         private Currency questCurrency;
@@ -253,6 +264,7 @@ namespace AnyRPG {
 
         [Tooltip("Power Resources used by all characters.  The first resource is considered primary and will show on the unit frame.")]
         [SerializeField]
+        [ResourceSelector(resourceType = typeof(PowerResource))]
         private List<string> powerResources = new List<string>();
 
         // reference to the actual power resources
@@ -279,6 +291,7 @@ namespace AnyRPG {
         [Tooltip("The ability effect to cast on a player when they level up")]
         [FormerlySerializedAs("levelUpAbilityName")]
         [SerializeField]
+        [ResourceSelector(resourceType = typeof(AbilityEffect))]
         private string levelUpEffectName = string.Empty;
 
         private AbilityEffect levelUpEffect = null;
@@ -286,6 +299,7 @@ namespace AnyRPG {
         [Tooltip("The ability effect to cast on a player when they die")]
         [FormerlySerializedAs("deathAbilityName")]
         [SerializeField]
+        [ResourceSelector(resourceType = typeof(AbilityEffect))]
         private string deathEffectName = string.Empty;
 
         private AbilityEffect deathEffect = null;
@@ -293,6 +307,7 @@ namespace AnyRPG {
         [Tooltip("The ability effect to cast on any character when it has loot that can be collected")]
         [FormerlySerializedAs("lootSparkleAbilityName")]
         [SerializeField]
+        [ResourceSelector(resourceType = typeof(AbilityEffect))]
         private string lootSparkleEffectName = string.Empty;
 
         private AbilityEffect lootSparkleEffect = null;
@@ -301,6 +316,7 @@ namespace AnyRPG {
 
         [Tooltip("This audio will play whenever buying from or selling to a vendor")]
         [SerializeField]
+        [ResourceSelector(resourceType = typeof(AudioProfile))]
         private string vendorAudioProfileName = string.Empty;
 
         [Tooltip("The maximum distance at which chat in dialogs above characters will also appear in the player chat log.  Prevents distant conversations from spamming logs.")]
