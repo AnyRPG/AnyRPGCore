@@ -13,6 +13,7 @@ namespace AnyRPG {
 
         [Tooltip("The equipment slot this item can be equippped in")]
         [SerializeField]
+        [ResourceSelector(resourceType = typeof(EquipmentSlotType))]
         protected string equipmentSlotType;
 
         private EquipmentSlotType realEquipmentSlotType;
