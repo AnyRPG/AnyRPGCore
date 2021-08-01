@@ -42,7 +42,7 @@ namespace AnyRPG {
             if (ability == null) {
                 return null;
             }
-            return SystemAbilityManager.Instance.StartCoroutine(actionButton.MonitorAbility(ability));
+            return SystemGameManager.Instance.SystemAbilityController.StartCoroutine(actionButton.MonitorAbility(ability));
         }
 
         public override string GetSummary() {
@@ -66,7 +66,7 @@ namespace AnyRPG {
             base.SetupScriptableObjects();
             ability = null;
             if (abilityName != null) {
-                BaseAbility baseAbility = SystemAbilityManager.Instance.GetResource(abilityName);
+                BaseAbility baseAbility = SystemDataFactory.Instance.GetResource<BaseAbility>(abilityName);
                 if (baseAbility != null) {
                     ability = baseAbility;
                 } else {

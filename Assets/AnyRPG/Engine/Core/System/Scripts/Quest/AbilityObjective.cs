@@ -95,7 +95,7 @@ namespace AnyRPG {
             base.SetupScriptableObjects();
             baseAbility = null;
             if (MyType != null && MyType != string.Empty) {
-                baseAbility = SystemAbilityManager.Instance.GetResource(MyType);
+                baseAbility = SystemDataFactory.Instance.GetResource<BaseAbility>(MyType);
             } else {
                 Debug.LogError("SystemAbilityManager.SetupScriptableObjects(): Could not find ability : " + MyType + " while inititalizing an ability objective.  CHECK INSPECTOR");
             }

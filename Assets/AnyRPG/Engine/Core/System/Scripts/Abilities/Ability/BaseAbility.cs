@@ -268,7 +268,7 @@ namespace AnyRPG {
         }
 
         public IUseable GetFactoryUseable() {
-            return SystemAbilityManager.Instance.GetResource(DisplayName);
+            return SystemDataFactory.Instance.GetResource<BaseAbility>(DisplayName);
         }
 
         public virtual void UpdateChargeCount(ActionButton actionButton) {
@@ -349,7 +349,7 @@ namespace AnyRPG {
                 //Debug.Log("ActionButton.OnUseableUse(" + ability.MyName + "): WAS NOT ANIMATED AUTO ATTACK");
                 //if (abilityCoRoutine == null) {
                 //if (monitorCoroutine == null) {
-                    return SystemAbilityManager.Instance.StartCoroutine(actionButton.MonitorAbility(this));
+                    return SystemGameManager.Instance.SystemAbilityController.StartCoroutine(actionButton.MonitorAbility(this));
                 //}
             //return null;
         }

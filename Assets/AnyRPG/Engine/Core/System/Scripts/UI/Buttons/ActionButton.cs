@@ -220,7 +220,7 @@ namespace AnyRPG {
             //Debug.Log("ActionButton.SetUsable(" + (useable == null ? "null" : useable.ToString()) + "): setting ability");
             //(MyUseable as BaseAbility).OnAbilityCast += OnUseableUse;
             //Debug.Log("id: " + SystemAbilityManager.Instance.GetResourceList().Find(x => x == (BaseAbility)useable).GetInstanceID());
-            //Debug.Log("SystemAbilityManager: " + SystemAbilityManager.Instance.GetResource((BaseAbility)useable));
+            //Debug.Log("SystemAbilityManager: " + SystemDataFactory.Instance.GetResource<BaseAbility>((BaseAbility)useable));
             /*
             if (SystemGameManager.Instance.SystemConfigurationManager.MyAllowAutoAttack == true && Useable is AnimatedAbility && (Useable as AnimatedAbility).IsAutoAttack == true) {
                 // this statement exists to trigger flashing icon, but before the ability executes, and therefore the gcd is null
@@ -290,7 +290,7 @@ namespace AnyRPG {
 
         public IEnumerator MonitorAutoAttack(BaseAbility ability) {
             //Debug.Log("ActionButton.MonitorautoAttack(" + ability.MyName + ")");
-            //Debug.Log("Monitoring cooldown of AbilityInstanceID: " + SystemAbilityManager.Instance.GetResource((BaseAbility)ability).GetInstanceID());
+            //Debug.Log("Monitoring cooldown of AbilityInstanceID: " + SystemDataFactory.Instance.GetResource<BaseAbility>((BaseAbility)ability).GetInstanceID());
             yield return null;
 
             while (Useable != null
@@ -311,7 +311,7 @@ namespace AnyRPG {
 
         public IEnumerator MonitorAbility(BaseAbility ability) {
             //Debug.Log("ActionButton.MonitorAbility(" + ability.DisplayName + ")");
-            //Debug.Log("Monitoring cooldown of AbilityInstanceID: " + SystemAbilityManager.Instance.GetResource((BaseAbility)ability).GetInstanceID());
+            //Debug.Log("Monitoring cooldown of AbilityInstanceID: " + SystemDataFactory.Instance.GetResource<BaseAbility>((BaseAbility)ability).GetInstanceID());
             while (Useable != null
                 && (SystemGameManager.Instance.PlayerManager.MyCharacter.CharacterAbilityManager.MyRemainingGlobalCoolDown > 0f
                 || SystemGameManager.Instance.PlayerManager.MyCharacter.CharacterAbilityManager.MyAbilityCoolDownDictionary.ContainsKey(ability.DisplayName))) {

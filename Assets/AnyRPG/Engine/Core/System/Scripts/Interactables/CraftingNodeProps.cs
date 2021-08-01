@@ -44,7 +44,7 @@ namespace AnyRPG {
         public override void SetupScriptableObjects() {
             base.SetupScriptableObjects();
             if (abilityName != null && abilityName != string.Empty) {
-                BaseAbility baseAbility = SystemAbilityManager.Instance.GetResource(abilityName);
+                BaseAbility baseAbility = SystemDataFactory.Instance.GetResource<BaseAbility>(abilityName);
                 if (baseAbility != null) {
                     ability = baseAbility;
                 } else {

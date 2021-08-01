@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 namespace AnyRPG {
-    public class FactoryData<TDataType> : SystemResourceManager where TDataType : UnityEngine.Object {
+    public class FactoryData<TDataType> : FactoryResource where TDataType : UnityEngine.Object {
 
         //public TDataType dataType { get; set; }
         private string resourceClassName = string.Empty;

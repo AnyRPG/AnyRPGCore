@@ -55,7 +55,7 @@ namespace AnyRPG {
             base.SetupScriptableObjects();
             craftAbility = null;
             if (craftAbilityName != null) {
-                BaseAbility baseAbility = SystemAbilityManager.Instance.GetResource(craftAbilityName);
+                BaseAbility baseAbility = SystemDataFactory.Instance.GetResource<BaseAbility>(craftAbilityName);
                 if (baseAbility != null) {
                     craftAbility = baseAbility as CraftAbility;
                 } else {

@@ -64,7 +64,7 @@ namespace AnyRPG {
             attackAbilityList = new List<BaseAbility>();
             if (attackAbilityNames != null) {
                 foreach (string baseAbilityName in attackAbilityNames) {
-                    BaseAbility baseAbility = SystemAbilityManager.Instance.GetResource(baseAbilityName);
+                    BaseAbility baseAbility = SystemDataFactory.Instance.GetResource<BaseAbility>(baseAbilityName);
                     if (baseAbility != null) {
                         attackAbilityList.Add(baseAbility);
                     } else {
@@ -76,7 +76,7 @@ namespace AnyRPG {
             maintainBuffList = new List<BaseAbility>();
             if (maintainBuffNames != null) {
                 foreach (string baseAbilityName in maintainBuffNames) {
-                    BaseAbility baseAbility = SystemAbilityManager.Instance.GetResource(baseAbilityName);
+                    BaseAbility baseAbility = SystemDataFactory.Instance.GetResource<BaseAbility>(baseAbilityName);
                     if (baseAbility != null) {
                         maintainBuffList.Add(baseAbility);
                     } else {

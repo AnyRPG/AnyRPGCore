@@ -304,7 +304,7 @@ namespace AnyRPG {
             base.SetupScriptableObjects();
             onEquipAbility = null;
             if (onEquipAbilityName != null && onEquipAbilityName != string.Empty) {
-                BaseAbility baseAbility = SystemAbilityManager.Instance.GetResource(onEquipAbilityName);
+                BaseAbility baseAbility = SystemDataFactory.Instance.GetResource<BaseAbility>(onEquipAbilityName);
                 if (baseAbility != null) {
                     onEquipAbility = baseAbility;
                 } else {
@@ -315,7 +315,7 @@ namespace AnyRPG {
             learnedAbilities = new List<BaseAbility>();
             if (learnedAbilityNames != null) {
                 foreach (string baseAbilityName in learnedAbilityNames) {
-                    BaseAbility baseAbility = SystemAbilityManager.Instance.GetResource(baseAbilityName);
+                    BaseAbility baseAbility = SystemDataFactory.Instance.GetResource<BaseAbility>(baseAbilityName);
                     if (baseAbility != null) {
                         learnedAbilities.Add(baseAbility);
                     } else {

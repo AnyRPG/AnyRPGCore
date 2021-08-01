@@ -110,10 +110,10 @@ namespace AnyRPG {
                 //Debug.Log("ActionButton.OnUseableUse(" + ability.MyName + "): WAS ANIMATED AUTO ATTACK");
                 //if (autoAttackCoRoutine == null) {
                 //if (monitorCoroutine == null) {
-                    return SystemAbilityManager.Instance.StartCoroutine(actionButton.MonitorAutoAttack(this));
+                    return SystemGameManager.Instance.SystemAbilityController.StartCoroutine(actionButton.MonitorAutoAttack(this));
                 //}
             }
-            return SystemAbilityManager.Instance.StartCoroutine(actionButton.MonitorAbility(this));
+            return SystemGameManager.Instance.SystemAbilityController.StartCoroutine(actionButton.MonitorAbility(this));
         }
 
         public override List<AbilityAttachmentNode> GetHoldableObjectList(IAbilityCaster abilityCaster) {

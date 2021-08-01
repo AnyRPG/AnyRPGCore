@@ -430,7 +430,7 @@ namespace AnyRPG {
             /*
             defaultAutoAttackAbility = null;
             if (defaultAutoAttackAbilityName != null && defaultAutoAttackAbilityName != string.Empty) {
-                defaultAutoAttackAbility = SystemAbilityManager.Instance.GetResource(defaultAutoAttackAbilityName);
+                defaultAutoAttackAbility = SystemDataFactory.Instance.GetResource<BaseAbility>(defaultAutoAttackAbilityName);
             }*/
 
             if (unitToughness == null && defaultToughness != null && defaultToughness != string.Empty) {

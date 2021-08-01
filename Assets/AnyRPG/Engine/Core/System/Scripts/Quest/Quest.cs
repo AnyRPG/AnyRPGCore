@@ -629,7 +629,7 @@ namespace AnyRPG {
             abilityRewardList = new List<BaseAbility>();
             if (abilityRewardNames != null) {
                 foreach (string baseAbilityName in abilityRewardNames) {
-                    BaseAbility baseAbility = SystemAbilityManager.Instance.GetResource(baseAbilityName);
+                    BaseAbility baseAbility = SystemDataFactory.Instance.GetResource<BaseAbility>(baseAbilityName);
                     if (baseAbility != null) {
                         abilityRewardList.Add(baseAbility);
                     } else {

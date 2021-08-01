@@ -60,7 +60,7 @@ namespace AnyRPG {
             if (abilityNames != null) {
                 foreach (string baseAbilityName in abilityNames) {
                     if (baseAbilityName != null && baseAbilityName != string.Empty) {
-                        BaseAbility baseAbility = SystemAbilityManager.Instance.GetResource(baseAbilityName);
+                        BaseAbility baseAbility = SystemDataFactory.Instance.GetResource<BaseAbility>(baseAbilityName);
                         if (baseAbility != null) {
                             abilityList.Add(baseAbility);
                         } else {

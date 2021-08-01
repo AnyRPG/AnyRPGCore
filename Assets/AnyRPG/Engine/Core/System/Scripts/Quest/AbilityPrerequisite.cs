@@ -45,7 +45,7 @@ namespace AnyRPG {
         public void SetupScriptableObjects() {
             prerequisiteAbility = null;
             if (prerequisiteName != null && prerequisiteName != string.Empty) {
-                prerequisiteAbility = SystemAbilityManager.Instance.GetResource(prerequisiteName);
+                prerequisiteAbility = SystemDataFactory.Instance.GetResource<BaseAbility>(prerequisiteName);
                 if (prerequisiteAbility != null) {
                     prerequisiteAbility.OnAbilityLearn += HandleAbilityListChanged;
                 }

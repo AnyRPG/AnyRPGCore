@@ -171,7 +171,8 @@ namespace AnyRPG {
 
         public void LoadAbility(string abilityName) {
             //Debug.Log(gameObject.name + ".PlayerAbilityManager.LoadAbility(" + abilityName + ")");
-            BaseAbility ability = SystemAbilityManager.Instance.GetResource(abilityName);
+            //BaseAbility ability = SystemDataFactory.Instance.GetResource<BaseAbility>(abilityName);
+            BaseAbility ability = SystemDataFactory.Instance.GetResource<BaseAbility>(abilityName);
             if (ability != null) {
                 // if we renamed an ability, old save data could load a null.  prevent invalid abilities from loading.
                 bool isAutoAttack = false;
@@ -1213,7 +1214,7 @@ namespace AnyRPG {
         /// <param name="abilityName"></param>
         public override bool BeginAbility(string abilityName) {
             //Debug.Log(baseCharacter.gameObject.name + "CharacterAbilitymanager.BeginAbility(" + (abilityName == null ? "null" : abilityName) + ")");
-            BaseAbility baseAbility = SystemAbilityManager.Instance.GetResource(abilityName);
+            BaseAbility baseAbility = SystemDataFactory.Instance.GetResource<BaseAbility>(abilityName);
             if (baseAbility != null) {
                 return BeginAbility(baseAbility);
             }
@@ -1339,7 +1340,7 @@ namespace AnyRPG {
 
         protected bool BeginAbilityCommon(BaseAbility ability, Interactable target, bool playerInitiated = false) {
             //Debug.Log(baseCharacter.gameObject.name + ".CharacterAbilityManager.BeginAbilityCommon(" + (ability == null ? "null" : ability.DisplayName) + ", " + (target == null ? "null" : target.gameObject.name) + ")");
-            BaseAbility usedAbility = SystemAbilityManager.Instance.GetResource(ability.DisplayName);
+            BaseAbility usedAbility = SystemDataFactory.Instance.GetResource<BaseAbility>(ability.DisplayName);
             if (usedAbility == null) {
                 Debug.LogError("CharacterAbilityManager.BeginAbilityCommon(" + (ability == null ? "null" : ability.DisplayName) + ", " + (target == null ? "null" : target.name) + ") NO ABILITY FOUND");
                 return false;
@@ -1596,7 +1597,7 @@ namespace AnyRPG {
             }
 
             // cast the system manager version so we can track globally the spell cooldown
-            SystemAbilityManager.Instance.GetResource(ability.DisplayName).Cast(baseCharacter, finalTarget, abilityEffectContext);
+            SystemDataFactory.Instance.GetResource<BaseAbility>(ability.DisplayName).Cast(baseCharacter, finalTarget, abilityEffectContext);
             //ability.Cast(MyBaseCharacter.MyCharacterUnit.gameObject, finalTarget);
             OnPerformAbility(ability);
         }

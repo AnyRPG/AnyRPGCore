@@ -1051,12 +1051,12 @@ namespace AnyRPG {
                     // find ability from system ability manager
                     //Debug.Log("Savemanager.LoadActionBarData(): searching for usable in ability manager");
                     if (actionBarSaveData.MyName != null && actionBarSaveData.MyName != string.Empty) {
-                        useable = SystemAbilityManager.Instance.GetResource(actionBarSaveData.MyName);
+                        useable = SystemDataFactory.Instance.GetResource<BaseAbility>(actionBarSaveData.MyName);
                     } else {
                         //Debug.Log("Savemanager.LoadActionBarData(): saved action bar had no name");
                     }
                     if (actionBarSaveData.savedName != null && actionBarSaveData.savedName != string.Empty) {
-                        IUseable savedUseable = SystemAbilityManager.Instance.GetResource(actionBarSaveData.savedName);
+                        IUseable savedUseable = SystemDataFactory.Instance.GetResource<BaseAbility>(actionBarSaveData.savedName);
                         if (savedUseable != null) {
                             SystemGameManager.Instance.UIManager.ActionBarManager.GetActionButtons()[counter].SavedUseable = savedUseable;
                         }
