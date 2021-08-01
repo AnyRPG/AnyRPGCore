@@ -71,6 +71,9 @@ namespace AnyRPG {
         [SerializeField]
         private GameObject resourceManagerParent = null;
 
+        [SerializeField]
+        private SystemDataFactory systemDataFactory = null;
+
         private List<SystemResourceManager> systemResourceManagers = new List<SystemResourceManager>();
 
         // system scripts
@@ -207,6 +210,8 @@ namespace AnyRPG {
                     systemResourceManager.LoadResourceList();
                 }
             }
+
+            systemDataFactory.SetupFactory();
 
             // give each resource manager a chance to loop through their scriptableOjects and create references to other scriptableOjects to avoid costly
             // and repetitive runtime lookups

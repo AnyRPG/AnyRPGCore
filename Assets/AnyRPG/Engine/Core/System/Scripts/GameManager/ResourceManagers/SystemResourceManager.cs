@@ -9,14 +9,14 @@ namespace AnyRPG {
 
     public class SystemResourceManager : MonoBehaviour {
 
-        protected UnityEngine.Object[] rawResourceList;
+        protected ResourceProfile[] rawResourceList;
         protected List<UnityEngine.Object[]> masterList = new List<UnityEngine.Object[]>();
 
-        protected Dictionary<string, UnityEngine.Object> resourceList = new Dictionary<string, UnityEngine.Object>();
+        protected Dictionary<string, ResourceProfile> resourceList = new Dictionary<string, ResourceProfile>();
 
         protected bool eventSubscriptionsInitialized = false;
 
-        public Dictionary<string, UnityEngine.Object> MyResourceList { get => resourceList; set => resourceList = value; }
+        public Dictionary<string, ResourceProfile> ResourceList { get => resourceList; set => resourceList = value; }
 
         protected virtual void Awake() {
             //LoadResourceList();
@@ -61,28 +61,28 @@ namespace AnyRPG {
         public virtual void LoadResourceList() {
             //Debug.Log(gameObject.name + ".SystemResourceManager.LoadResourceList()");
             int tmpLength = 0;
-            foreach (UnityEngine.Object[] subList in masterList) {
+            foreach (ResourceProfile[] subList in masterList) {
                 tmpLength += subList.Length;
             }
-            rawResourceList = new UnityEngine.Object[tmpLength];
+            rawResourceList = new ResourceProfile[tmpLength];
             int indexPosition = 0;
-            foreach (UnityEngine.Object[] subList in masterList) {
+            foreach (ResourceProfile[] subList in masterList) {
                 Array.Copy(subList, 0, rawResourceList, indexPosition, subList.Length);
                 indexPosition += subList.Length;
             }
             masterList.Clear();
 
             // do this after the parent function so it's properly set
-            foreach (UnityEngine.Object resource in rawResourceList) {
-                if ((resource as ResourceProfile).ResourceName == null) {
+            foreach (ResourceProfile resource in rawResourceList) {
+                if (resource.ResourceName == null) {
                     Debug.Log(resource.name + " had empty MyName value");
                     (resource as ResourceProfile).ResourceName = resource.name;
                 }
-                if ((resource as ResourceProfile).MyDescription == null) {
+                if (resource.MyDescription == null) {
                     //Debug.Log(resource.name + " had empty description value");
-                    (resource as ResourceProfile).MyDescription = string.Empty;
+                    resource.MyDescription = string.Empty;
                 }
-                string keyName = prepareStringForMatch((resource as ResourceProfile).ResourceName);
+                string keyName = prepareStringForMatch(resource.ResourceName);
                 if (!resourceList.ContainsKey(keyName)) {
                     resourceList[keyName] = ScriptableObject.Instantiate(resource);
                 } else {
@@ -115,14 +115,14 @@ namespace AnyRPG {
         }
 
         public virtual void SetupScriptableObjects() {
-            foreach (UnityEngine.Object listItem in resourceList.Values) {
-                (listItem as ResourceProfile).SetupScriptableObjects();
+            foreach (ResourceProfile listItem in resourceList.Values) {
+                listItem.SetupScriptableObjects();
             }
         }
 
         public virtual void CleanupScriptableObjects() {
-            foreach (UnityEngine.Object listItem in resourceList.Values) {
-                (listItem as ResourceProfile).CleanupScriptableObjects();
+            foreach (ResourceProfile listItem in resourceList.Values) {
+                listItem.CleanupScriptableObjects();
             }
         }
 

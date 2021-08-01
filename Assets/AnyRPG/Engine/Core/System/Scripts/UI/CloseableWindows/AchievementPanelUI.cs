@@ -52,7 +52,7 @@ namespace AnyRPG {
             ClearPages();
             List<Quest> page = new List<Quest>();
             int i = 0;
-            foreach (Quest quest in SystemQuestManager.Instance.MyResourceList.Values) {
+            foreach (Quest quest in SystemQuestManager.Instance.ResourceList.Values) {
                 //Debug.Log("AchievementPanelUI.CreatePages(): questName: " + quest.MyName + "; complete: " + quest.IsComplete + "; turnedin: " + quest.TurnedIn + "; achievement: " + quest.MyIsAchievement);
                 if (quest.MyIsAchievement && quest.TurnedIn) {
                     //Debug.Log("AchievementPanelUI.CreatePages(): questName: " + quest.MyName + "; complete: " + quest.IsComplete + "; turnedin: " + quest.TurnedIn + "; achievement: " + quest.MyIsAchievement);

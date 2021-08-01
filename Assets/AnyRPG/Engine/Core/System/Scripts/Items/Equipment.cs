@@ -172,7 +172,7 @@ namespace AnyRPG {
 
         public float GetTotalSlotWeights() {
             float returnValue = 0f;
-            foreach (EquipmentSlotProfile equipmentSlotProfile in SystemEquipmentSlotProfileManager.Instance.MyResourceList.Values) {
+            foreach (EquipmentSlotProfile equipmentSlotProfile in SystemEquipmentSlotProfileManager.Instance.ResourceList.Values) {
                 returnValue += equipmentSlotProfile.MyStatWeight;
             }
             return returnValue;
