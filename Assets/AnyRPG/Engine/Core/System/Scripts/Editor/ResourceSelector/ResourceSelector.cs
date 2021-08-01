@@ -12,6 +12,7 @@ public class ResourceSelector : EditorWindow
     SerializedProperty editedProperty;
     Label header;
     Label fileTypeLabel;
+    Toggle includeCoreContent;
     ListView listView;
     List<String> listElements;
     bool listInitialized = false;
@@ -46,7 +47,8 @@ public class ResourceSelector : EditorWindow
 
     // fill listElements with all resources for the type in fileType
     void InitializeList() {
-        DummyResourceManager manager = new DummyResourceManager(resourceType);
+        Debug.Log("Initialize list");
+        DummyResourceManager manager = new DummyResourceManager(resourceType, includeCoreContent.value);
         if (manager.GetResourceList().Count == 0) {
             manager.LoadResourceList();
         }
@@ -56,6 +58,12 @@ public class ResourceSelector : EditorWindow
         }
         namesList.Sort();
         listElements.AddRange(namesList);
+    }
+
+    void ReloadList() {
+        listElements.Clear();
+        InitializeList();
+        listView.Refresh();
     }
 
     public void OnGUI() {
@@ -86,6 +94,11 @@ public class ResourceSelector : EditorWindow
         fileTypeLabel = new Label("any");
         fileTypeLabel.style.unityFontStyleAndWeight = FontStyle.Bold;
         root.Add(fileTypeLabel);
+
+        includeCoreContent = new Toggle("include core content");
+        includeCoreContent.value = true;
+        includeCoreContent.RegisterValueChangedCallback<bool>( x => ReloadList());
+        root.Add(includeCoreContent);
 
         listElements = new List<string>();
 

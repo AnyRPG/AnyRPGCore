@@ -6,15 +6,21 @@ namespace AnyRPG {
     public class DummyResourceManager : SystemResourceManager
     {
         public string resourceClassName;
+        bool includeCoreContent;
+
         System.Type type;
 
-        public DummyResourceManager(System.Type resourceType) {
+        public DummyResourceManager(System.Type resourceType, bool includeCoreContent) {
             this.type = resourceType;
+            this.includeCoreContent = includeCoreContent;
             resourceClassName = resourceType.Name;
         }
 
         public override void LoadResourceList() {
             masterList.Add(Resources.LoadAll(resourceClassName, type));
+            if (includeCoreContent) {
+                masterList.Add(Resources.LoadAll("CoreContent/"+resourceClassName, type));
+            }
             base.LoadResourceList();
         }
 
