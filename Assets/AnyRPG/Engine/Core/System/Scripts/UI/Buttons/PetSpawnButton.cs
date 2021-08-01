@@ -17,10 +17,18 @@ namespace AnyRPG {
         [SerializeField]
         private TextMeshProUGUI description = null;
 
+        private PetSpawnControlPanel petSpawnControlPanel = null;
+        private SystemConfigurationManager systemConfigurationManager = null;
+
         //[SerializeField]
         private UnitProfile unitProfile;
 
         public UnitProfile MyUnitProfile { get => unitProfile; set => unitProfile = value; }
+
+        public void Init(PetSpawnControlPanel petSpawnControlPanel) {
+            this.petSpawnControlPanel = petSpawnControlPanel;
+            systemConfigurationManager = SystemGameManager.Instance.SystemConfigurationManager;
+        }
 
         public void AddUnitProfile(UnitProfile unitProfile) {
             //Debug.Log("UnitSpawnButton.AddUnitProfile()");
@@ -30,7 +38,7 @@ namespace AnyRPG {
             if (unitProfile.Icon != null) {
                 icon.sprite = unitProfile.Icon;
             } else {
-                icon.sprite = SystemGameManager.Instance.SystemConfigurationManager.DefaultFactionIcon;
+                icon.sprite = systemConfigurationManager.DefaultFactionIcon;
             }
             icon.color = Color.white;
             //Debug.Log("LoadGameButton.AddSaveData(): Setting playerName.text: " + mySaveData.playerName);
@@ -48,10 +56,10 @@ namespace AnyRPG {
 
 
         public void CommonSelect() {
-            if (PetSpawnControlPanel.Instance.MySelectedPetSpawnButton != null && PetSpawnControlPanel.Instance.MySelectedPetSpawnButton != this) {
-                PetSpawnControlPanel.Instance.MySelectedPetSpawnButton.DeSelect();
+            if (petSpawnControlPanel.MySelectedPetSpawnButton != null && petSpawnControlPanel.MySelectedPetSpawnButton != this) {
+                petSpawnControlPanel.MySelectedPetSpawnButton.DeSelect();
             }
-            PetSpawnControlPanel.Instance.ShowUnit(this);
+            petSpawnControlPanel.ShowUnit(this);
         }
 
         public void RawSelect() {

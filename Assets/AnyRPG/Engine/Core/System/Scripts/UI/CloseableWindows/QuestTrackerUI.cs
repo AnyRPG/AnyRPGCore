@@ -8,20 +8,6 @@ using UnityEngine.UI;
 namespace AnyRPG {
     public class QuestTrackerUI : WindowContentController {
 
-        #region Singleton
-        private static QuestTrackerUI instance;
-
-        public static QuestTrackerUI Instance {
-            get {
-                return instance;
-            }
-        }
-
-        private void Awake() {
-            instance = this;
-        }
-        #endregion
-
         [Tooltip("The gameobject to use for each quest item")]
         [SerializeField]
         private GameObject questPrefab = null;

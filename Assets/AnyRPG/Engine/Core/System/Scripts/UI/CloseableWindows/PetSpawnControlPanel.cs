@@ -9,20 +9,6 @@ namespace AnyRPG {
 
     public class PetSpawnControlPanel : WindowContentController, ICapabilityConsumer {
 
-        #region Singleton
-        private static PetSpawnControlPanel instance;
-
-        public static PetSpawnControlPanel Instance {
-            get {
-                return instance;
-            }
-        }
-
-        private void Awake() {
-            instance = this;
-        }
-        #endregion
-
         public event System.Action OnConfirmAction = delegate { };
         public override event Action<ICloseableWindowContents> OnCloseWindow = delegate { };
 

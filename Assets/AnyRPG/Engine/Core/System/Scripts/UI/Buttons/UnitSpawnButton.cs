@@ -17,10 +17,18 @@ namespace AnyRPG {
         [SerializeField]
         private TextMeshProUGUI description = null;
 
+        private UnitSpawnControlPanel unitSpawnControlPanel = null;
+        private SystemConfigurationManager systemConfigurationManager = null;
+
         //[SerializeField]
         private UnitProfile unitProfile = null;
 
         public UnitProfile MyUnitProfile { get => unitProfile; set => unitProfile = value; }
+
+        public void Init(UnitSpawnControlPanel unitSpawnControlPanel) {
+            this.unitSpawnControlPanel = unitSpawnControlPanel;
+            systemConfigurationManager = SystemGameManager.Instance.SystemConfigurationManager;
+        }
 
         public void AddUnitProfile(UnitProfile unitProfile) {
             //Debug.Log("UnitSpawnButton.AddUnitProfile()");
@@ -30,7 +38,7 @@ namespace AnyRPG {
             if (unitProfile.Icon != null) {
                 icon.sprite = unitProfile.Icon;
             } else {
-                icon.sprite = SystemGameManager.Instance.SystemConfigurationManager.DefaultFactionIcon;
+                icon.sprite = systemConfigurationManager.DefaultFactionIcon;
             }
             icon.color = Color.white;
             //Debug.Log("LoadGameButton.AddSaveData(): Setting playerName.text: " + mySaveData.playerName);
@@ -49,10 +57,10 @@ namespace AnyRPG {
 
 
         public void CommonSelect() {
-            if (UnitSpawnControlPanel.Instance.MySelectedUnitSpawnButton != null && UnitSpawnControlPanel.Instance.MySelectedUnitSpawnButton != this) {
-                UnitSpawnControlPanel.Instance.MySelectedUnitSpawnButton.DeSelect();
+            if (unitSpawnControlPanel.SelectedUnitSpawnButton != null && unitSpawnControlPanel.SelectedUnitSpawnButton != this) {
+                unitSpawnControlPanel.SelectedUnitSpawnButton.DeSelect();
             }
-            UnitSpawnControlPanel.Instance.ShowUnit(this);
+            unitSpawnControlPanel.ShowUnit(this);
         }
 
         public void RawSelect() {

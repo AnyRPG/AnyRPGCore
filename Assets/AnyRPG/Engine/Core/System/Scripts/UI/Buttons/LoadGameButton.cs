@@ -11,6 +11,8 @@ namespace AnyRPG {
         //[SerializeField]
         //private Faction faction = null;
 
+        LoadGamePanel loadGamePanel = null;
+
         [SerializeField]
         private Image icon = null;
 
@@ -34,8 +36,9 @@ namespace AnyRPG {
         public AnyRPGSaveData SaveData { get => mySaveData; set => mySaveData = value; }
         public UnitProfile UnitProfile { get => unitProfile; set => unitProfile = value; }
 
-        public void AddSaveData(AnyRPGSaveData mySaveData) {
+        public void AddSaveData(LoadGamePanel loadGamePanel, AnyRPGSaveData mySaveData) {
             //Debug.Log("LoadGameButton.AddSaveData()");
+            this.loadGamePanel = loadGamePanel;
             this.mySaveData = mySaveData;
 
             icon.sprite = null;
@@ -83,10 +86,10 @@ namespace AnyRPG {
         */
 
         public void CommonSelect() {
-            if (LoadGamePanel.Instance.SelectedLoadGameButton != null && LoadGamePanel.Instance.SelectedLoadGameButton != this) {
-                LoadGamePanel.Instance.SelectedLoadGameButton.DeSelect();
+            if (loadGamePanel.SelectedLoadGameButton != null && loadGamePanel.SelectedLoadGameButton != this) {
+                loadGamePanel.SelectedLoadGameButton.DeSelect();
             }
-            LoadGamePanel.Instance.ShowSavedGame(this);
+            loadGamePanel.ShowSavedGame(this);
         }
 
         public void RawSelect() {

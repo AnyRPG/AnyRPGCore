@@ -14,20 +14,6 @@ namespace AnyRPG {
 
     public class UMACharacterEditorPanelController : CharacterAppearancePanel {
 
-        #region Singleton
-        private static UMACharacterEditorPanelController instance;
-
-        public static UMACharacterEditorPanelController Instance {
-            get {
-                return instance;
-            }
-        }
-
-        private void Awake() {
-            instance = this;
-        }
-        #endregion
-
         public override event Action<ICloseableWindowContents> OnCloseWindow = delegate { };
 
         [SerializeField]

@@ -9,11 +9,14 @@ namespace AnyRPG {
 
     public class MusicPlayerHighlightButton : HighlightButton {
 
+        private MusicPlayerUI musicPlayerUI = null;
+
         private AudioProfile musicProfile;
 
         public AudioProfile MyMusicProfile { get => musicProfile; }
 
-        public void SetMusicProfile(AudioProfile newMusicProfile) {
+        public void SetMusicProfile(MusicPlayerUI musicPlayerUI, AudioProfile newMusicProfile) {
+            this.musicPlayerUI = musicPlayerUI;
             if (newMusicProfile != null) {
                 musicProfile = newMusicProfile;
             }
@@ -23,9 +26,9 @@ namespace AnyRPG {
             //Debug.Log(gameObject.name + ".MusicPlayerHighlightButton.Select()");
 
             base.Select();
-            MusicPlayerUI.Instance.MySelectedMusicPlayerHighlightButton = this;
+            musicPlayerUI.MySelectedMusicPlayerHighlightButton = this;
 
-            MusicPlayerUI.Instance.ShowDescription(musicProfile);
+            musicPlayerUI.ShowDescription(musicProfile);
 
         }
 

@@ -79,7 +79,7 @@ namespace AnyRPG {
                 GameObject go = ObjectPooler.Instance.GetPooledObject(questPrefab, questParent);
 
                 QuestScript qs = go.GetComponent<QuestScript>();
-                qs.SetQuest(quest);
+                qs.SetQuest(this, quest);
                 questScripts.Add(qs);
                 if (firstAvailableQuest == null) {
                     firstAvailableQuest = qs;

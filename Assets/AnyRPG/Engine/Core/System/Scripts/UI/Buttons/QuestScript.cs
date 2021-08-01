@@ -16,9 +16,12 @@ namespace AnyRPG {
 
         private bool markedComplete = false;
 
+        private QuestLogUI questLogUI = null;
+
         public Quest MyQuest { get => quest; }
 
-        public void SetQuest(Quest newQuest) {
+        public void SetQuest(QuestLogUI questLogUI, Quest newQuest) {
+            this.questLogUI = questLogUI;
             if (newQuest != null) {
                 quest = newQuest;
                 MyText.text = quest.DisplayName;
@@ -31,9 +34,9 @@ namespace AnyRPG {
 
             RawSelect();
 
-            QuestLogUI.Instance.MySelectedQuestScript = this;
+            questLogUI.MySelectedQuestScript = this;
 
-            QuestLogUI.Instance.ShowDescription(MyQuest);
+            questLogUI.ShowDescription(MyQuest);
         }
 
         public void RawSelect() {

@@ -35,8 +35,8 @@ namespace AnyRPG {
 
         public override bool Interact(CharacterUnit source, int optionIndex = 0) {
             base.Interact(source, optionIndex);
-            (SystemGameManager.Instance.UIManager.SystemWindowManager.unitSpawnWindow.CloseableWindowContents as UnitSpawnControlPanel).MyUnitProfileList = Props.UnitProfileList;
-            (SystemGameManager.Instance.UIManager.SystemWindowManager.unitSpawnWindow.CloseableWindowContents as UnitSpawnControlPanel).MyUnitSpawnNodeList = Props.UnitSpawnNodeList;
+            (SystemGameManager.Instance.UIManager.SystemWindowManager.unitSpawnWindow.CloseableWindowContents as UnitSpawnControlPanel).UnitProfileList = Props.UnitProfileList;
+            (SystemGameManager.Instance.UIManager.SystemWindowManager.unitSpawnWindow.CloseableWindowContents as UnitSpawnControlPanel).UnitSpawnNodeList = Props.UnitSpawnNodeList;
             SystemGameManager.Instance.UIManager.SystemWindowManager.unitSpawnWindow.OpenWindow();
             (SystemGameManager.Instance.UIManager.SystemWindowManager.unitSpawnWindow.CloseableWindowContents as UnitSpawnControlPanel).OnConfirmAction += HandleConfirmAction;
             (SystemGameManager.Instance.UIManager.SystemWindowManager.unitSpawnWindow.CloseableWindowContents as UnitSpawnControlPanel).OnCloseWindow += CleanupEventSubscriptions;

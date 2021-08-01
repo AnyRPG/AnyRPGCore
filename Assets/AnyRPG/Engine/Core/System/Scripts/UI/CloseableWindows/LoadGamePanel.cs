@@ -173,7 +173,7 @@ namespace AnyRPG {
                 //Debug.Log("LoadGamePanel.ShowLoadButtonsCommon(): setting a button with saved game data");
                 GameObject go = ObjectPooler.Instance.GetPooledObject(buttonPrefab, buttonArea.transform);
                 LoadGameButton loadGameButton = go.GetComponent<LoadGameButton>();
-                loadGameButton.AddSaveData(anyRPGSaveData);
+                loadGameButton.AddSaveData(this, anyRPGSaveData);
                 loadGameButtons.Add(loadGameButton);
                 if (anyRPGSaveData.DataFileName == fileName) {
                     selectedButton = count;

@@ -9,20 +9,6 @@ using UnityEngine.UI;
 namespace AnyRPG {
     public class SkillTrainerUI : WindowContentController {
 
-        #region Singleton
-        private static SkillTrainerUI instance;
-
-        public static SkillTrainerUI Instance {
-            get {
-                return instance;
-            }
-        }
-
-        private void Awake() {
-            instance = this;
-        }
-        #endregion
-
         private SkillTrainerComponent skillTrainer = null;
 
         [SerializeField]
@@ -86,7 +72,7 @@ namespace AnyRPG {
                     SkillTrainerSkillScript qs = go.GetComponent<SkillTrainerSkillScript>();
                     qs.MyText.text = skill.DisplayName;
                     qs.MyText.color = Color.white;
-                    qs.SetSkill(skill);
+                    qs.SetSkill(this, skill);
                     skillScripts.Add(qs);
                     skills.Add(skill);
                     if (firstAvailableSkill == null) {

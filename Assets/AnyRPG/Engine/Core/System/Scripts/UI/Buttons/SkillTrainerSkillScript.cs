@@ -13,9 +13,12 @@ namespace AnyRPG {
 
         private string skillName;
 
+        private SkillTrainerUI skillTrainerUI = null;
+
         public Skill MySkill { get => skill; }
 
-        public void SetSkill(Skill newSkill) {
+        public void SetSkill(SkillTrainerUI skillTrainerUI, Skill newSkill) {
+            this.skillTrainerUI = skillTrainerUI;
             if (newSkill != null) {
                 this.skill = newSkill;
             }
@@ -25,9 +28,9 @@ namespace AnyRPG {
             //Debug.Log(gameObject.name + ".SkillTrainerSkillScript.Select()");
 
             base.Select();
-            SkillTrainerUI.Instance.MySelectedSkillTrainerSkillScript = this;
+            skillTrainerUI.MySelectedSkillTrainerSkillScript = this;
 
-            SkillTrainerUI.Instance.ShowDescription(skill);
+            skillTrainerUI.ShowDescription(skill);
 
         }
 

@@ -9,20 +9,6 @@ using UnityEngine.UI;
 namespace AnyRPG {
     public class MusicPlayerUI : WindowContentController {
 
-        #region Singleton
-        private static MusicPlayerUI instance;
-
-        public static MusicPlayerUI Instance {
-            get {
-                return instance;
-            }
-        }
-
-        private void Awake() {
-            instance = this;
-        }
-        #endregion
-
         private MusicPlayerComponent musicPlayer = null;
 
         [SerializeField]
@@ -84,7 +70,7 @@ namespace AnyRPG {
                 MusicPlayerHighlightButton qs = go.GetComponent<MusicPlayerHighlightButton>();
                 qs.MyText.text = musicProfile.DisplayName;
                 qs.MyText.color = Color.white;
-                qs.SetMusicProfile(musicProfile);
+                qs.SetMusicProfile(this, musicProfile);
                 musicPlayerHighlightButtons.Add(qs);
                 musicProfileList.Add(musicProfile);
                 if (firstAvailableMusicProfile == null) {

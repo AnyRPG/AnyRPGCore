@@ -9,20 +9,6 @@ namespace AnyRPG {
 
     public class UnitSpawnControlPanel : WindowContentController {
 
-        #region Singleton
-        private static UnitSpawnControlPanel instance;
-
-        public static UnitSpawnControlPanel Instance {
-            get {
-                return instance;
-            }
-        }
-
-        private void Awake() {
-            instance = this;
-        }
-        #endregion
-
         public event System.Action OnConfirmAction = delegate { };
         public override event Action<ICloseableWindowContents> OnCloseWindow = delegate { };
 
@@ -71,9 +57,9 @@ namespace AnyRPG {
         private UnitToughness unitToughness;
 
         public UnitPreviewCameraController MyPreviewCameraController { get => previewCameraController; set => previewCameraController = value; }
-        public UnitSpawnButton MySelectedUnitSpawnButton { get => selectedUnitSpawnButton; set => selectedUnitSpawnButton = value; }
-        public List<UnitProfile> MyUnitProfileList { get => unitProfileList; set => unitProfileList = value; }
-        public List<UnitSpawnNode> MyUnitSpawnNodeList { get => unitSpawnNodeList; set => unitSpawnNodeList = value; }
+        public UnitSpawnButton SelectedUnitSpawnButton { get => selectedUnitSpawnButton; set => selectedUnitSpawnButton = value; }
+        public List<UnitProfile> UnitProfileList { get => unitProfileList; set => unitProfileList = value; }
+        public List<UnitSpawnNode> UnitSpawnNodeList { get => unitSpawnNodeList; set => unitSpawnNodeList = value; }
 
         protected void Start() {
             CloseExtraLevelsOptionsArea();
@@ -163,7 +149,7 @@ namespace AnyRPG {
             }
 
             //spawn correct preview unit
-            SystemGameManager.Instance.UnitPreviewManager.HandleOpenWindow();
+            SystemGameManager.Instance.UnitPreviewManager.HandleOpenWindow(this);
 
             if (SystemGameManager.Instance.CameraManager != null && SystemGameManager.Instance.CameraManager.UnitPreviewCamera != null) {
                 //Debug.Log("CharacterPanel.SetPreviewTarget(): preview camera was available, setting target");
@@ -215,6 +201,7 @@ namespace AnyRPG {
                 GameObject go = ObjectPooler.Instance.GetPooledObject(buttonPrefab, buttonArea.transform);
                 UnitSpawnButton unitSpawnButton = go.GetComponent<UnitSpawnButton>();
                 if (unitSpawnButton != null) {
+                    unitSpawnButton.Init(this);
                     unitSpawnButton.AddUnitProfile(unitProfile);
                     unitSpawnButtons.Add(unitSpawnButton);
                 }
@@ -238,7 +225,7 @@ namespace AnyRPG {
                 }
             }
             unitSpawnButtons.Clear();
-            MySelectedUnitSpawnButton = null;
+            SelectedUnitSpawnButton = null;
             nameText.text = "";
         }
 
@@ -300,7 +287,7 @@ namespace AnyRPG {
             foreach (UnitSpawnNode unitSpawnNode in unitSpawnNodeList) {
                 bool useDynamicLevel = (levelTypeDropdown.options[levelTypeDropdown.value].text == "Fixed" ? false : true);
                 if (unitSpawnNode != null) {
-                    unitSpawnNode.ManualSpawn(unitLevel, extraLevels, useDynamicLevel, MySelectedUnitSpawnButton.MyUnitProfile, unitToughness);
+                    unitSpawnNode.ManualSpawn(unitLevel, extraLevels, useDynamicLevel, SelectedUnitSpawnButton.MyUnitProfile, unitToughness);
                 }
             }
             ClosePanel();
