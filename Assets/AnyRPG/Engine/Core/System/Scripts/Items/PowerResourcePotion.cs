@@ -42,7 +42,7 @@ namespace AnyRPG {
             base.SetupScriptableObjects();
 
             if (powerResourceName != null && powerResourceName != string.Empty) {
-                PowerResource tmpPowerResource = SystemPowerResourceManager.Instance.GetResource(powerResourceName);
+                PowerResource tmpPowerResource = SystemDataFactory.Instance.GetResource<PowerResource>(powerResourceName);
                 if (tmpPowerResource != null) {
                     powerResource = tmpPowerResource;
                 } else {

@@ -25,7 +25,7 @@ namespace AnyRPG {
         public void SetupScriptableObjects() {
 
             if (audioProfileName != null && audioProfileName != string.Empty) {
-                AudioProfile tmpAudioProfile = SystemAudioProfileManager.Instance.GetResource(audioProfileName);
+                AudioProfile tmpAudioProfile = SystemDataFactory.Instance.GetResource<AudioProfile>(audioProfileName);
                 if (tmpAudioProfile != null) {
                     audioProfile = tmpAudioProfile;
                 } else {

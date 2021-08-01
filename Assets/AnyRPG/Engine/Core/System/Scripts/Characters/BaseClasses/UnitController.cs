@@ -181,7 +181,7 @@ namespace AnyRPG {
 
             }
         }
-        public CombatStrategy MyCombatStrategy {
+        public CombatStrategy CombatStrategy {
             get {
                 if (characterUnit.BaseCharacter != null && unitProfile != null) {
                     return unitProfile.CombatStrategy;
@@ -1333,9 +1333,9 @@ namespace AnyRPG {
 
         public float GetMinAttackRange() {
 
-            if (MyCombatStrategy != null) {
+            if (CombatStrategy != null) {
                 // attempt to get a valid ability from combat strategy before defaulting to random attacks
-                return characterUnit.BaseCharacter.CharacterCombat.GetMinAttackRange(MyCombatStrategy.GetAttackRangeAbilityList(characterUnit.BaseCharacter));
+                return characterUnit.BaseCharacter.CharacterCombat.GetMinAttackRange(CombatStrategy.GetAttackRangeAbilityList(characterUnit.BaseCharacter));
             } else {
                 // get random attack if no strategy exists
                 return characterUnit.BaseCharacter.CharacterCombat.GetMinAttackRange(characterUnit.BaseCharacter.CharacterCombat.GetAttackRangeAbilityList());
@@ -1345,9 +1345,9 @@ namespace AnyRPG {
 
         public bool HasMeleeAttack() {
 
-            if (MyCombatStrategy != null) {
+            if (CombatStrategy != null) {
                 // attempt to get a valid ability from combat strategy before defaulting to random attacks
-                BaseAbility meleeAbility = MyCombatStrategy.GetMeleeAbility(characterUnit.BaseCharacter);
+                BaseAbility meleeAbility = CombatStrategy.GetMeleeAbility(characterUnit.BaseCharacter);
                 if (meleeAbility != null) {
                     return true;
                 }
@@ -1368,8 +1368,8 @@ namespace AnyRPG {
 
             // PUT CODE HERE TO CHECK IF THIS ACTUALLY HAS MUSIC PROFILE, OTHERWISE MOBS WITH A STRATEGY BUT NO PROFILE THAT DIE MID BOSS FIGHT CAN RESET MUSIC
 
-            if (MyCombatStrategy != null) {
-                if (MyCombatStrategy.HasMusic() == true) {
+            if (CombatStrategy != null) {
+                if (CombatStrategy.HasMusic() == true) {
                     //Debug.Log(gameObject.name + ".AIController.ResetCombat(): attempting to turn off fight music");
                     AudioProfile musicProfile = SystemGameManager.Instance.LevelManager.GetActiveSceneNode().BackgroundMusicProfile;
                     if (musicProfile != null) {
@@ -1704,9 +1704,9 @@ namespace AnyRPG {
 
         public bool CanGetValidAttack(bool beginAttack = false) {
 
-            if (MyCombatStrategy != null) {
+            if (CombatStrategy != null) {
                 // attempt to get a valid ability from combat strategy before defaulting to random attacks
-                BaseAbility validCombatStrategyAbility = MyCombatStrategy.GetValidAbility(CharacterUnit.BaseCharacter);
+                BaseAbility validCombatStrategyAbility = CombatStrategy.GetValidAbility(CharacterUnit.BaseCharacter);
                 if (validCombatStrategyAbility != null) {
                     characterUnit.BaseCharacter.CharacterAbilityManager.BeginAbility(validCombatStrategyAbility);
                     return true;

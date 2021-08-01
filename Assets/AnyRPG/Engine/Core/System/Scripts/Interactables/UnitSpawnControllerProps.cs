@@ -41,7 +41,7 @@ namespace AnyRPG {
             base.SetupScriptableObjects();
             if (unitProfileNames != null) {
                 foreach (string unitProfileName in unitProfileNames) {
-                    UnitProfile tmpUnitProfile = SystemUnitProfileManager.Instance.GetResource(unitProfileName);
+                    UnitProfile tmpUnitProfile = SystemDataFactory.Instance.GetResource<UnitProfile>(unitProfileName);
                     if (tmpUnitProfile != null) {
                         unitProfileList.Add(tmpUnitProfile);
                     } else {

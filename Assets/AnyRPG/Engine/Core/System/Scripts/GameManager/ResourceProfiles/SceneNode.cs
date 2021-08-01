@@ -145,7 +145,7 @@ namespace AnyRPG {
             base.SetupScriptableObjects();
 
             if (movementLoopProfileName != null && movementLoopProfileName != string.Empty) {
-                AudioProfile tmpMovementLoop = SystemAudioProfileManager.Instance.GetResource(movementLoopProfileName);
+                AudioProfile tmpMovementLoop = SystemDataFactory.Instance.GetResource<AudioProfile>(movementLoopProfileName);
                 if (tmpMovementLoop != null) {
                     movementLoopProfile = tmpMovementLoop;
                 } else {
@@ -154,7 +154,7 @@ namespace AnyRPG {
             }
 
             if (movementHitProfileName != null && movementHitProfileName != string.Empty) {
-                AudioProfile tmpMovementHit = SystemAudioProfileManager.Instance.GetResource(movementHitProfileName);
+                AudioProfile tmpMovementHit = SystemDataFactory.Instance.GetResource<AudioProfile>(movementHitProfileName);
                 if (tmpMovementHit != null) {
                     movementHitProfile = tmpMovementHit;
                 } else {
@@ -164,7 +164,7 @@ namespace AnyRPG {
 
             realAmbientMusicProfile = null;
             if (ambientMusicProfile != null && ambientMusicProfile != string.Empty) {
-                AudioProfile tmpAmbientMusicProfile = SystemAudioProfileManager.Instance.GetResource(ambientMusicProfile);
+                AudioProfile tmpAmbientMusicProfile = SystemDataFactory.Instance.GetResource<AudioProfile>(ambientMusicProfile);
                 if (tmpAmbientMusicProfile != null) {
                     realAmbientMusicProfile = tmpAmbientMusicProfile;
                 } else {
@@ -175,7 +175,7 @@ namespace AnyRPG {
 
             realBackgroundMusicProfile = null;
             if (backgroundMusicProfile != null && backgroundMusicProfile != string.Empty) {
-                AudioProfile tmpBackgroundMusicProfile = SystemAudioProfileManager.Instance.GetResource(backgroundMusicProfile);
+                AudioProfile tmpBackgroundMusicProfile = SystemDataFactory.Instance.GetResource<AudioProfile>(backgroundMusicProfile);
                 if (tmpBackgroundMusicProfile != null) {
                     realBackgroundMusicProfile = tmpBackgroundMusicProfile;
                 } else {
@@ -184,7 +184,7 @@ namespace AnyRPG {
             }
 
             if (autoPlayCutsceneName != null && autoPlayCutsceneName != string.Empty) {
-                Cutscene tmpCutscene = SystemCutsceneManager.Instance.GetResource(autoPlayCutsceneName);
+                Cutscene tmpCutscene = SystemDataFactory.Instance.GetResource<Cutscene>(autoPlayCutsceneName);
                 if (tmpCutscene != null) {
                     autoPlayCutscene = tmpCutscene;
                 } else {
@@ -194,7 +194,7 @@ namespace AnyRPG {
 
             if (environmentStateNames != null) {
                 foreach (string environmentStateName in environmentStateNames) {
-                    EnvironmentStateProfile tmpProfile = SystemEnvironmentStateProfileManager.Instance.GetResource(environmentStateName);
+                    EnvironmentStateProfile tmpProfile = SystemDataFactory.Instance.GetResource<EnvironmentStateProfile>(environmentStateName);
                     if (tmpProfile != null) {
                         environmentStates.Add(tmpProfile);
                     } else {
@@ -204,7 +204,7 @@ namespace AnyRPG {
             }
 
             if (useRegionalFile == true) {
-                ResourceDescription tmpResourceDescription = SystemResourceDescriptionManager.Instance.GetResource(resourceName + "Scene");
+                ResourceDescription tmpResourceDescription = SystemDataFactory.Instance.GetResource<ResourceDescription>(resourceName + "Scene");
                 if (tmpResourceDescription != null) {
                     sceneFile = tmpResourceDescription.DisplayName;
                 } else {

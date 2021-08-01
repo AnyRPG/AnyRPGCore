@@ -37,7 +37,7 @@ namespace AnyRPG {
             if (equipmentNames != null) {
                 foreach (string equipmentName in equipmentNames) {
                     Equipment tmpEquipment = null;
-                    tmpEquipment = SystemItemManager.Instance.GetResource(equipmentName) as Equipment;
+                    tmpEquipment = SystemDataFactory.Instance.GetResource<Item>(equipmentName) as Equipment;
                     if (tmpEquipment != null) {
                         equipmentList.Add(tmpEquipment);
                     } else {
@@ -53,7 +53,7 @@ namespace AnyRPG {
                     if (traitName == string.Empty) {
                         traitList.Add(null);
                     } else {
-                        tmpStatusEffect = SystemAbilityEffectManager.Instance.GetResource(traitName) as StatusEffect;
+                        tmpStatusEffect = SystemDataFactory.Instance.GetResource<AbilityEffect>(traitName) as StatusEffect;
                         if (tmpStatusEffect != null) {
                             traitList.Add(tmpStatusEffect);
                         } else {

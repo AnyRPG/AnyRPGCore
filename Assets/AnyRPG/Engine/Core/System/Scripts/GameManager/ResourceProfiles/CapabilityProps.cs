@@ -75,7 +75,7 @@ namespace AnyRPG {
             if (traitNames != null) {
                 foreach (string traitName in traitNames) {
                     if (traitName != null && traitName != string.Empty) {
-                        StatusEffect statusEffect = SystemAbilityEffectManager.Instance.GetResource(traitName) as StatusEffect;
+                        StatusEffect statusEffect = SystemDataFactory.Instance.GetResource<AbilityEffect>(traitName) as StatusEffect;
                         if (statusEffect != null) {
                             traitList.Add(statusEffect);
                         } else {
@@ -90,7 +90,7 @@ namespace AnyRPG {
             if (weaponSkills != null) {
                 foreach (string weaponSkillName in weaponSkills) {
                     if (weaponSkillName != null && weaponSkillName != string.Empty) {
-                        WeaponSkill weaponSkill = SystemWeaponSkillManager.Instance.GetResource(weaponSkillName);
+                        WeaponSkill weaponSkill = SystemDataFactory.Instance.GetResource<WeaponSkill>(weaponSkillName);
                         if (weaponSkill != null) {
                             weaponSkillList.Add(weaponSkill);
                         } else {

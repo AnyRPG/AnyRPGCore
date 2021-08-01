@@ -16,7 +16,7 @@ namespace AnyRPG {
         [SerializeField]
         private List<CombatStrategyNode> phaseNodes = new List<CombatStrategyNode>();
 
-        public List<CombatStrategyNode> MyPhaseNodes { get => phaseNodes; set => phaseNodes = value; }
+        public List<CombatStrategyNode> PhaseNodes { get => phaseNodes; set => phaseNodes = value; }
 
         public BaseAbility GetValidAbility(BaseCharacter sourceCharacter) {
             List<BaseAbility> returnList = new List<BaseAbility>();

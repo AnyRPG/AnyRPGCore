@@ -293,7 +293,7 @@ namespace AnyRPG {
         public virtual void SetupScriptableObjects() {
             //Debug.Log(gameObject.name + ".Spawnable.SetupScriptableObjects()");
             if (prefabProfileName != null && prefabProfileName != string.Empty) {
-                PrefabProfile tmpPrefabProfile = SystemPrefabProfileManager.Instance.GetResource(prefabProfileName);
+                PrefabProfile tmpPrefabProfile = SystemDataFactory.Instance.GetResource<PrefabProfile>(prefabProfileName);
                 if (tmpPrefabProfile != null && tmpPrefabProfile.Prefab != null) {
                     prefabProfile = tmpPrefabProfile;
                 } else {

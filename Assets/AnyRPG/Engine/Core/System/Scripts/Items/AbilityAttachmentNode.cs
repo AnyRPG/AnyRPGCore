@@ -28,7 +28,7 @@ namespace AnyRPG {
         public void SetupScriptableObjects() {
             holdableObject = null;
             if (holdableObjectName != null && holdableObjectName != string.Empty) {
-                PrefabProfile tmpHoldableObject = SystemPrefabProfileManager.Instance.GetResource(holdableObjectName);
+                PrefabProfile tmpHoldableObject = SystemDataFactory.Instance.GetResource<PrefabProfile>(holdableObjectName);
                 if (tmpHoldableObject != null) {
                     holdableObject = tmpHoldableObject;
                 } else {

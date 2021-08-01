@@ -64,7 +64,7 @@ namespace AnyRPG {
             factionLabel.SetActive(false);
             factionButton.gameObject.SetActive(false);
             if (SystemGameManager.Instance.SystemConfigurationManager.NewGameFaction == true) {
-                foreach (Faction faction in SystemFactionManager.Instance.GetResourceList()) {
+                foreach (Faction faction in SystemDataFactory.Instance.GetResourceList<Faction>()) {
                     if (faction.NewGameOption == true) {
                         factionLabel.SetActive(true);
                         factionButton.gameObject.SetActive(true);
@@ -76,7 +76,7 @@ namespace AnyRPG {
             characterClassLabel.SetActive(false);
             characterClassButton.gameObject.SetActive(false);
             if (SystemGameManager.Instance.SystemConfigurationManager.NewGameClass == true) {
-                foreach (CharacterClass characterClass in SystemCharacterClassManager.Instance.GetResourceList()) {
+                foreach (CharacterClass characterClass in SystemDataFactory.Instance.GetResourceList<CharacterClass>()) {
                     if (characterClass.NewGameOption == true) {
                         characterClassLabel.SetActive(true);
                         characterClassButton.gameObject.SetActive(true);
@@ -88,7 +88,7 @@ namespace AnyRPG {
             classSpecializationLabel.SetActive(false);
             classSpecializationButton.gameObject.SetActive(false);
             if (SystemGameManager.Instance.SystemConfigurationManager.NewGameSpecialization == true) {
-                foreach (ClassSpecialization classSpecialization in SystemClassSpecializationManager.Instance.GetResourceList()) {
+                foreach (ClassSpecialization classSpecialization in SystemDataFactory.Instance.GetResourceList<ClassSpecialization>()) {
                     if (classSpecialization.NewGameOption == true) {
                         classSpecializationLabel.SetActive(true);
                         classSpecializationButton.gameObject.SetActive(true);

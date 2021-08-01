@@ -71,7 +71,7 @@ namespace AnyRPG {
 
             if (petEffectNames != null) {
                 foreach (string petEffectName in petEffectNames) {
-                    AbilityEffect abilityEffect = SystemAbilityEffectManager.Instance.GetResource(petEffectName);
+                    AbilityEffect abilityEffect = SystemDataFactory.Instance.GetResource<AbilityEffect>(petEffectName);
                     if (abilityEffect != null && ((abilityEffect as SummonEffect) is SummonEffect)) {
                         petEffectList.Add(abilityEffect as SummonEffect);
                     } else {

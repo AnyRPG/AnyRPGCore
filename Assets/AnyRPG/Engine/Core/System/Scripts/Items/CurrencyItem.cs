@@ -43,7 +43,7 @@ namespace AnyRPG {
         public override void SetupScriptableObjects() {
             base.SetupScriptableObjects();
             if (gainCurrencyName != null && gainCurrencyName != string.Empty) {
-                Currency tmpCurrency = SystemCurrencyManager.Instance.GetResource(gainCurrencyName);
+                Currency tmpCurrency = SystemDataFactory.Instance.GetResource<Currency>(gainCurrencyName);
                 if (tmpCurrency != null) {
                     currencyNode.currency = tmpCurrency;
                     currencyNode.MyAmount = gainCurrencyAmount;

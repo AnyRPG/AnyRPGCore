@@ -26,7 +26,7 @@ namespace AnyRPG {
             base.SetupScriptableObjects();
 
             if (skyBoxMaterialProfileName != null && skyBoxMaterialProfileName != string.Empty) {
-                MaterialProfile tmpMaterialProfile = SystemMaterialProfileManager.Instance.GetResource(skyBoxMaterialProfileName);
+                MaterialProfile tmpMaterialProfile = SystemDataFactory.Instance.GetResource<MaterialProfile>(skyBoxMaterialProfileName);
                 if (tmpMaterialProfile != null && tmpMaterialProfile.MyEffectMaterial != null) {
                     skyBoxMaterial = tmpMaterialProfile.MyEffectMaterial;
                 } else {

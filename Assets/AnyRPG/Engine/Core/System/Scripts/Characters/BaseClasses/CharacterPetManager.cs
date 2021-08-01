@@ -69,7 +69,7 @@ namespace AnyRPG {
 
         public virtual void AddPet(string unitProfileName) {
             //Debug.Log(baseCharacter.gameObject.name + ".CharacterPetManager.AddPet(" + unitProfileName + ")");
-            UnitProfile unitProfile = SystemUnitProfileManager.Instance.GetResource(unitProfileName);
+            UnitProfile unitProfile = SystemDataFactory.Instance.GetResource<UnitProfile>(unitProfileName);
             if (unitProfile != null) {
                 AddPet(unitProfile);
             } else {

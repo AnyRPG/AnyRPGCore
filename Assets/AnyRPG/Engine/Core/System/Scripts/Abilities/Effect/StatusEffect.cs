@@ -413,7 +413,7 @@ namespace AnyRPG {
             reflectAbilityEffectList = new List<AbilityEffect>();
             if (reflectAbilityEffectNames != null) {
                 foreach (string abilityEffectName in reflectAbilityEffectNames) {
-                    AbilityEffect abilityEffect = SystemAbilityEffectManager.Instance.GetResource(abilityEffectName);
+                    AbilityEffect abilityEffect = SystemDataFactory.Instance.GetResource<AbilityEffect>(abilityEffectName);
                     if (abilityEffect != null) {
                         reflectAbilityEffectList.Add(abilityEffect);
                     } else {
@@ -425,7 +425,7 @@ namespace AnyRPG {
             weaponHitAbilityEffectList = new List<AbilityEffect>();
             if (weaponHitAbilityEffectNames != null) {
                 foreach (string abilityEffectName in weaponHitAbilityEffectNames) {
-                    AbilityEffect abilityEffect = SystemAbilityEffectManager.Instance.GetResource(abilityEffectName);
+                    AbilityEffect abilityEffect = SystemDataFactory.Instance.GetResource<AbilityEffect>(abilityEffectName);
                     if (abilityEffect != null) {
                         weaponHitAbilityEffectList.Add(abilityEffect);
                     } else {
@@ -435,7 +435,7 @@ namespace AnyRPG {
             }
 
             if (statusEffectTypeName != null && statusEffectTypeName != string.Empty) {
-                StatusEffectType tmpStatusEffectType = SystemStatusEffectTypeManager.Instance.GetResource(statusEffectTypeName);
+                StatusEffectType tmpStatusEffectType = SystemDataFactory.Instance.GetResource<StatusEffectType>(statusEffectTypeName);
                 if (tmpStatusEffectType != null) {
                     statusEffectType = tmpStatusEffectType;
                 } else {

@@ -172,7 +172,7 @@ namespace AnyRPG {
 
         public float GetTotalSlotWeights() {
             float returnValue = 0f;
-            foreach (EquipmentSlotProfile equipmentSlotProfile in SystemEquipmentSlotProfileManager.Instance.ResourceList.Values) {
+            foreach (EquipmentSlotProfile equipmentSlotProfile in SystemDataFactory.Instance.GetResourceList<EquipmentSlotProfile>()) {
                 returnValue += equipmentSlotProfile.MyStatWeight;
             }
             return returnValue;
@@ -327,7 +327,7 @@ namespace AnyRPG {
             
             realEquipmentSlotType = null;
             if (equipmentSlotType != null && equipmentSlotType != string.Empty) {
-                EquipmentSlotType tmpEquipmentSlotType = SystemEquipmentSlotTypeManager.Instance.GetResource(equipmentSlotType);
+                EquipmentSlotType tmpEquipmentSlotType = SystemDataFactory.Instance.GetResource<EquipmentSlotType>(equipmentSlotType);
                 if (tmpEquipmentSlotType != null) {
                     realEquipmentSlotType = tmpEquipmentSlotType;
                 } else {
@@ -339,7 +339,7 @@ namespace AnyRPG {
 
             equipmentSet = null;
             if (equipmentSetName != null && equipmentSetName != string.Empty) {
-                EquipmentSet tmpEquipmentSet = SystemEquipmentSetManager.Instance.GetResource(equipmentSetName);
+                EquipmentSet tmpEquipmentSet = SystemDataFactory.Instance.GetResource<EquipmentSet>(equipmentSetName);
                 if (tmpEquipmentSet != null) {
                     equipmentSet = tmpEquipmentSet;
                 } else {
@@ -360,7 +360,7 @@ namespace AnyRPG {
                 umaRecipeProfileName = ResourceName;
             }
             if (umaRecipeProfileName != null && umaRecipeProfileName != string.Empty) {
-                UMARecipeProfile umaRecipeProfile = SystemUMARecipeProfileManager.Instance.GetResource(umaRecipeProfileName);
+                UMARecipeProfile umaRecipeProfile = SystemDataFactory.Instance.GetResource<UMARecipeProfile>(umaRecipeProfileName);
                 if (umaRecipeProfile != null && umaRecipeProfile.MyUMARecipes != null) {
                     UMARecipes = umaRecipeProfile.MyUMARecipes;
                 } else {

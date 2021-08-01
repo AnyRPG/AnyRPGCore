@@ -35,7 +35,7 @@ namespace AnyRPG {
             base.SetupScriptableObjects();
             if (musicProfileNames != null) {
                 foreach (string musicProfileName in musicProfileNames) {
-                    AudioProfile tmpMusicProfile = SystemAudioProfileManager.Instance.GetResource(musicProfileName);
+                    AudioProfile tmpMusicProfile = SystemDataFactory.Instance.GetResource<AudioProfile>(musicProfileName);
                     if (tmpMusicProfile != null) {
                         musicProfileList.Add(tmpMusicProfile);
                     } else {

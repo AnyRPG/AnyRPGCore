@@ -23,7 +23,7 @@ namespace AnyRPG {
 
         public void PopulateCredits() {
             bool firstCategoryPassed = false;
-            foreach (CreditsCategory creditsCategory in SystemCreditsCategoryManager.Instance.GetResourceList()) {
+            foreach (CreditsCategory creditsCategory in SystemDataFactory.Instance.GetResourceList<CreditsCategory>()) {
                 GameObject go = null;
                 if (firstCategoryPassed) {
                     go = ObjectPooler.Instance.GetPooledObject(creditCategoryTemplate, creditsContainer);

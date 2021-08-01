@@ -100,7 +100,7 @@ namespace AnyRPG {
             */
 
             options.Add("Default");
-            foreach (UnitToughness unitToughness in SystemUnitToughnessManager.Instance.GetResourceList()) {
+            foreach (UnitToughness unitToughness in SystemDataFactory.Instance.GetResourceList<UnitToughness>()) {
                 options.Add(unitToughness.DisplayName);
             }
             toughnessDropdown.AddOptions(options);
@@ -271,7 +271,7 @@ namespace AnyRPG {
             if (dropdownIndex == 0) {
                 unitToughness = null;
             } else {
-                UnitToughness tmpToughness = SystemUnitToughnessManager.Instance.GetResource(toughnessDropdown.options[toughnessDropdown.value].text);
+                UnitToughness tmpToughness = SystemDataFactory.Instance.GetResource<UnitToughness>(toughnessDropdown.options[toughnessDropdown.value].text);
                 if (tmpToughness != null) {
                     unitToughness = tmpToughness;
                 }

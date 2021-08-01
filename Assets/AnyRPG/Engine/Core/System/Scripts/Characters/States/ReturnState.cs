@@ -17,7 +17,7 @@ namespace AnyRPG {
             }
             this.baseController.SetDestination(baseController.LeashPosition);
             this.baseController.UnitMotor.MovementSpeed = this.baseController.MovementSpeed;
-            if (this.baseController.MyCombatStrategy != null) {
+            if (this.baseController.CombatStrategy != null) {
                 this.baseController.ResetCombat();
             }
 

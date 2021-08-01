@@ -18,7 +18,7 @@ namespace AnyRPG {
             this.baseController.DisableAggro();
             this.baseController.ClearTarget();
 
-            if (this.baseController.MyCombatStrategy != null) {
+            if (this.baseController.CombatStrategy != null) {
                 this.baseController.ResetCombat();
             }
 

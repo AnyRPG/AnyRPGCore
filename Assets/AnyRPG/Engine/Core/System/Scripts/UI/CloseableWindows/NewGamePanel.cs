@@ -125,7 +125,7 @@ namespace AnyRPG {
             // disable faction button if option not allowed or no faction exists
             factionButton.gameObject.SetActive(false);
             if (SystemGameManager.Instance.SystemConfigurationManager.NewGameFaction == true) {
-                foreach (Faction faction in SystemFactionManager.Instance.GetResourceList()) {
+                foreach (Faction faction in SystemDataFactory.Instance.GetResourceList<Faction>()) {
                     if (faction.NewGameOption == true) {
                         factionButton.gameObject.SetActive(true);
                         break;
@@ -136,7 +136,7 @@ namespace AnyRPG {
             // disable class button if option not allowed or no faction exists
             classButton.gameObject.SetActive(false);
             if (SystemGameManager.Instance.SystemConfigurationManager.NewGameClass == true) {
-                foreach (CharacterClass characterClass in SystemCharacterClassManager.Instance.GetResourceList()) {
+                foreach (CharacterClass characterClass in SystemDataFactory.Instance.GetResourceList<CharacterClass>()) {
                     if (characterClass.NewGameOption == true) {
                         classButton.gameObject.SetActive(true);
                         break;

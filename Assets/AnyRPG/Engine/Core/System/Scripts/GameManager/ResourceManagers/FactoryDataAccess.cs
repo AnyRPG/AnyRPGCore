@@ -13,17 +13,21 @@ namespace AnyRPG {
 
         public Dictionary<string, ResourceProfile> factoryData = new Dictionary<string, ResourceProfile>();
 
-        public void Setup<TDataType>(string dataName) where TDataType : UnityEngine.Object{
+        public void Setup<TDataType>(string dataName) where TDataType : ResourceProfile {
             FactoryData<TDataType> abilityFactory = new FactoryData<TDataType>("BaseAbility");
             abilityFactory.LoadResourceList();
             factoryData = abilityFactory.ResourceList;
             //return abilityFactory.GetResourceDict();
         }
 
-        public List<TDataType> GetResourceList<TDataType>(string dataType) where TDataType : UnityEngine.Object {
+        public int GetResourceCount() {
+
+            return factoryData.Count;
+        }
+
+        public List<TDataType> GetResourceList<TDataType>() where TDataType : ResourceProfile {
             List<TDataType> returnList = new List<TDataType>();
 
-            
             foreach (UnityEngine.Object listItem in factoryData.Values) {
                 returnList.Add(listItem as TDataType);
             }
@@ -31,7 +35,7 @@ namespace AnyRPG {
             return returnList;
         }
 
-        public TDataType GetResource<TDataType>(string resourceName) where TDataType : UnityEngine.Object {
+        public TDataType GetResource<TDataType>(string resourceName) where TDataType : ResourceProfile {
             //Debug.Log(this.GetType().Name + ".GetResource(" + resourceName + ")");
             if (!SystemResourceManager.RequestIsEmpty(resourceName)) {
                 string keyName = SystemResourceManager.prepareStringForMatch(resourceName);

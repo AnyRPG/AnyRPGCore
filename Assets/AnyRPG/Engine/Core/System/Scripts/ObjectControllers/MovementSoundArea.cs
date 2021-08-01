@@ -53,13 +53,13 @@ namespace AnyRPG {
 
         private void SetupScriptableObjects() {
             //Debug.Log(gameObject.name + ".EnvironmentalEffectArea.SetupScriptableObjects()");
-            if (SystemAbilityEffectManager.Instance == null) {
+            if (SystemGameManager.Instance == null) {
                 Debug.LogError(gameObject.name + ": SystemAbilityEffectManager not found.  Is the GameManager in the scene?");
                 return;
             }
 
             if (movementLoopProfileName != null && movementLoopProfileName != string.Empty) {
-                AudioProfile tmpMovementLoop = SystemAudioProfileManager.Instance.GetResource(movementLoopProfileName);
+                AudioProfile tmpMovementLoop = SystemDataFactory.Instance.GetResource<AudioProfile>(movementLoopProfileName);
                 if (tmpMovementLoop != null) {
                     movementLoopProfile = tmpMovementLoop;
                 } else {
@@ -68,7 +68,7 @@ namespace AnyRPG {
             }
 
             if (movementHitProfileName != null && movementHitProfileName != string.Empty) {
-                AudioProfile tmpMovementHit = SystemAudioProfileManager.Instance.GetResource(movementHitProfileName);
+                AudioProfile tmpMovementHit = SystemDataFactory.Instance.GetResource<AudioProfile>(movementHitProfileName);
                 if (tmpMovementHit != null) {
                     movementHitProfile = tmpMovementHit;
                 } else {

@@ -580,7 +580,7 @@ namespace AnyRPG {
             if (unitProfileNames != null) {
                 foreach (string unitProfileName in unitProfileNames) {
                     if (unitProfileName != null && unitProfileName != string.Empty) {
-                        UnitProfile unitProfile = SystemUnitProfileManager.Instance.GetResource(unitProfileName);
+                        UnitProfile unitProfile = SystemDataFactory.Instance.GetResource<UnitProfile>(unitProfileName);
                         if (unitProfile != null) {
                             unitProfiles.Add(unitProfile);
                         } else {
@@ -591,7 +591,7 @@ namespace AnyRPG {
             }
 
             if (unitToughness == null && defaultToughness != null && defaultToughness != string.Empty) {
-                UnitToughness tmpToughness = SystemUnitToughnessManager.Instance.GetResource(defaultToughness);
+                UnitToughness tmpToughness = SystemDataFactory.Instance.GetResource<UnitToughness>(defaultToughness);
                 if (tmpToughness != null) {
                     unitToughness = tmpToughness;
                 } else {

@@ -59,7 +59,7 @@ namespace AnyRPG {
             levelManagerInitialized = true;
 
             // initialize the scene dictionary
-            foreach (SceneNode sceneNode in SystemSceneNodeManager.Instance.GetResourceList()) {
+            foreach (SceneNode sceneNode in SystemDataFactory.Instance.GetResourceList<SceneNode>()) {
                 if (sceneNode.SceneFile != null && sceneNode.SceneFile != string.Empty) {
                     sceneDictionary.Add(sceneNode.SceneFile.ToLower(), sceneNode);
                 }
@@ -99,7 +99,7 @@ namespace AnyRPG {
 
         public SceneNode GetActiveSceneNode() {
             //Debug.Log("LevelManager.GetActiveSceneNode(): return " + SceneManager.GetActiveScene().name);
-            //return SystemSceneNodeManager.Instance.GetResource(SceneManager.GetActiveScene().name);
+            //return SystemDataFactory.Instance.GetResource<SceneNode>(SceneManager.GetActiveScene().name);
             return activeSceneNode;
         }
 
@@ -385,7 +385,7 @@ namespace AnyRPG {
 
             //SceneManager.LoadScene(levelName);
             //StartCoroutine(LoadAsynchronously(levelName.Replace(" ", string.Empty)));
-            SceneNode sceneNode = SystemSceneNodeManager.Instance.GetResource(levelName);
+            SceneNode sceneNode = SystemDataFactory.Instance.GetResource<SceneNode>(levelName);
             if (sceneNode != null) {
                 StartCoroutine(LoadAsynchronously(sceneNode.SceneFile));
             } else {

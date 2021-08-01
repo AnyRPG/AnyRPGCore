@@ -58,7 +58,7 @@ namespace AnyRPG {
             //Debug.Log("NewGameFactionPanelController.ShowOptionButtonsCommon()");
             ClearOptionButtons();
 
-            foreach (Faction faction in SystemFactionManager.Instance.GetResourceList()) {
+            foreach (Faction faction in SystemDataFactory.Instance.GetResourceList<Faction>()) {
                 if (faction.NewGameOption == true) {
                     //Debug.Log("LoadGamePanel.ShowLoadButtonsCommon(): setting a button with saved game data");
                     GameObject go = ObjectPooler.Instance.GetPooledObject(buttonPrefab, buttonArea.transform);

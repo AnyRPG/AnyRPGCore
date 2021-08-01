@@ -37,7 +37,7 @@ namespace AnyRPG {
 
         public override void UpdateCompletionCount(bool printMessages = true) {
             base.UpdateCompletionCount(printMessages);
-            Dialog dialog = SystemDialogManager.Instance.GetResource(MyType);
+            Dialog dialog = SystemDataFactory.Instance.GetResource<Dialog>(MyType);
             if (dialog != null && dialog.TurnedIn == true) {
                 CurrentAmount++;
             }

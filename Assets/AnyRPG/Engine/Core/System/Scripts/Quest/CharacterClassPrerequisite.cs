@@ -43,7 +43,7 @@ namespace AnyRPG {
         public void SetupScriptableObjects() {
             prerequisiteCharacterClass = null;
             if (requiredCharacterClass != null && requiredCharacterClass != string.Empty) {
-                prerequisiteCharacterClass = SystemCharacterClassManager.Instance.GetResource(requiredCharacterClass);
+                prerequisiteCharacterClass = SystemDataFactory.Instance.GetResource<CharacterClass>(requiredCharacterClass);
             } else {
                 Debug.LogError("SystemAbilityManager.SetupScriptableObjects(): Could not find character class : " + prerequisiteCharacterClass + " while inititalizing a character class prerequisite.  CHECK INSPECTOR");
             }

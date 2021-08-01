@@ -61,7 +61,7 @@ namespace AnyRPG {
             base.SetupScriptableObjects();
 
             if (recipeName != null && recipeName != string.Empty) {
-                Recipe tmpRecipe = SystemRecipeManager.Instance.GetResource(recipeName);
+                Recipe tmpRecipe = SystemDataFactory.Instance.GetResource<Recipe>(recipeName);
                 if (tmpRecipe != null) {
                     recipe = tmpRecipe;
                 } else {

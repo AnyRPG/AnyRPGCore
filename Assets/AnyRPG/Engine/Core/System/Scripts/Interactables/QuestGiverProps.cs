@@ -46,7 +46,7 @@ namespace AnyRPG {
 
             if (questGiverProfileNames != null) {
                 foreach (string questGiverProfileName in questGiverProfileNames) {
-                    QuestGiverProfile tmpQuestGiverProfile = SystemQuestGiverProfileManager.Instance.GetResource(questGiverProfileName);
+                    QuestGiverProfile tmpQuestGiverProfile = SystemDataFactory.Instance.GetResource<QuestGiverProfile>(questGiverProfileName);
                     if (tmpQuestGiverProfile != null) {
                         questGiverProfiles.Add(tmpQuestGiverProfile);
                     } else {

@@ -25,16 +25,9 @@ namespace AnyRPG {
         }
         #endregion
 
-        //private Dictionary<string, FactoryDataAccess> dataDictionary = new Dictionary<string, FactoryDataAccess>();
         private Dictionary<Type, FactoryDataAccess> dataDictionary = new Dictionary<Type, FactoryDataAccess>();
 
-        //public Dictionary<string, FactoryDataAccess> DataDictionary { get => dataDictionary; set => dataDictionary = value; }
-
         public void SetupFactory() {
-            /*
-            FactoryData<BaseAbility> abilityFactory = new FactoryData<BaseAbility>("BaseAbility");
-            abilityFactory.LoadResourceList();
-            */
             FactoryDataAccess factoryDataAccess = new FactoryDataAccess();
             factoryDataAccess.Setup<BaseAbility>("BaseAbility");
             dataDictionary.Add(typeof(BaseAbility), factoryDataAccess);
@@ -78,10 +71,6 @@ namespace AnyRPG {
             factoryDataAccess = new FactoryDataAccess();
             factoryDataAccess.Setup<PrefabProfile>("PrefabProfile");
             dataDictionary.Add(typeof(PrefabProfile), factoryDataAccess);
-
-            factoryDataAccess = new FactoryDataAccess();
-            factoryDataAccess.Setup<EquipmentProfile>("EquipmentProfile");
-            dataDictionary.Add(typeof(EquipmentProfile), factoryDataAccess);
 
             factoryDataAccess = new FactoryDataAccess();
             factoryDataAccess.Setup<UnitProfile>("UnitProfile");
@@ -213,14 +202,12 @@ namespace AnyRPG {
 
             factoryDataAccess = new FactoryDataAccess();
             factoryDataAccess.Setup<CharacterRace>("CharacterRace");
-            //dataDictionary.Add("CharacterRace", factoryDataAccess);
             dataDictionary.Add(typeof(CharacterRace), factoryDataAccess);
 
             //setup scriptable objects
             foreach (FactoryDataAccess dataAccess in dataDictionary.Values) {
                 dataAccess.SetupScriptableObjects();
             }
-
         }
 
         public TDataType GetResource<TDataType>(string resourceName) where TDataType : ResourceProfile {
@@ -232,6 +219,20 @@ namespace AnyRPG {
                 }
             }
             return default(TDataType);
+        }
+
+        public List<TDataType> GetResourceList<TDataType>() where TDataType : ResourceProfile {
+            if (dataDictionary.ContainsKey(typeof(TDataType))) {
+                return dataDictionary[typeof(TDataType)].GetResourceList<TDataType>();
+            }
+            return new List<TDataType>();
+        }
+
+        public int GetResourceCount<TDataType>() where TDataType : ResourceProfile {
+            if (dataDictionary.ContainsKey(typeof(TDataType))) {
+                return dataDictionary[typeof(TDataType)].GetResourceCount();
+            }
+            return 0;
         }
 
 

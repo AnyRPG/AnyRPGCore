@@ -121,7 +121,7 @@ namespace AnyRPG {
             base.SetupScriptableObjects();
 
             if (sheathAudioProfileName != null && sheathAudioProfileName != string.Empty) {
-                AudioProfile tmpAudioProfile = SystemAudioProfileManager.Instance.GetResource(sheathAudioProfileName);
+                AudioProfile tmpAudioProfile = SystemDataFactory.Instance.GetResource<AudioProfile>(sheathAudioProfileName);
                 if (tmpAudioProfile != null) {
                     sheathAudioProfile = tmpAudioProfile;
                 } else {
@@ -130,7 +130,7 @@ namespace AnyRPG {
             }
 
             if (unsheathAudioProfileName != null && unsheathAudioProfileName != string.Empty) {
-                AudioProfile tmpAudioProfile = SystemAudioProfileManager.Instance.GetResource(unsheathAudioProfileName);
+                AudioProfile tmpAudioProfile = SystemDataFactory.Instance.GetResource<AudioProfile>(unsheathAudioProfileName);
                 if (tmpAudioProfile != null) {
                     unsheathAudioProfile = tmpAudioProfile;
                 } else {

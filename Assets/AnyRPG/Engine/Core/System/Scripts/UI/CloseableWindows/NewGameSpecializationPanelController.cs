@@ -68,7 +68,7 @@ namespace AnyRPG {
             HideInfoArea();
             classSpecialization = null;
 
-            foreach (ClassSpecialization classSpecialization in SystemClassSpecializationManager.Instance.GetResourceList()) {
+            foreach (ClassSpecialization classSpecialization in SystemDataFactory.Instance.GetResourceList<ClassSpecialization>()) {
                 //Debug.Log("LoadGamePanel.ShowLoadButtonsCommon(): setting a button with saved game data");
                 if (NewGamePanel.Instance.CharacterClass != null
                     && classSpecialization.CharacterClasses != null

@@ -43,7 +43,7 @@ namespace AnyRPG {
 
             icon.sprite = null;
             if (mySaveData.playerFaction != null && SaveData.playerFaction != string.Empty) {
-                Faction playerFaction = SystemFactionManager.Instance.GetResource(mySaveData.playerFaction);
+                Faction playerFaction = SystemDataFactory.Instance.GetResource<Faction>(mySaveData.playerFaction);
                 // needs to be checked anyway.  could have invalid faction in save data
                 if (playerFaction != null) {
                     icon.sprite = playerFaction.Icon;
@@ -73,7 +73,7 @@ namespace AnyRPG {
             // set the text on the button
             description.text = descriptionText;
 
-            unitProfile = SystemUnitProfileManager.Instance.GetResource(mySaveData.unitProfileName);
+            unitProfile = SystemDataFactory.Instance.GetResource<UnitProfile>(mySaveData.unitProfileName);
         }
 
         /*

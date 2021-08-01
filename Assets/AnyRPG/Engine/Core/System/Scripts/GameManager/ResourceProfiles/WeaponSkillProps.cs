@@ -66,7 +66,7 @@ namespace AnyRPG {
             if (onHitEffects != null) {
                 foreach (string onHitEffectName in onHitEffects) {
                     if (onHitEffectName != null && onHitEffectName != string.Empty) {
-                        AbilityEffect abilityEffect = SystemAbilityEffectManager.Instance.GetResource(onHitEffectName);
+                        AbilityEffect abilityEffect = SystemDataFactory.Instance.GetResource<AbilityEffect>(onHitEffectName);
                         if (abilityEffect != null) {
                             onHitEffectList.Add(abilityEffect);
                         } else {
@@ -81,7 +81,7 @@ namespace AnyRPG {
             if (defaultHitEffects != null) {
                 foreach (string defaultHitEffectName in defaultHitEffects) {
                     if (defaultHitEffectName != null && defaultHitEffectName != string.Empty) {
-                        AbilityEffect abilityEffect = SystemAbilityEffectManager.Instance.GetResource(defaultHitEffectName);
+                        AbilityEffect abilityEffect = SystemDataFactory.Instance.GetResource<AbilityEffect>(defaultHitEffectName);
                         if (abilityEffect != null) {
                             defaultHitEffectList.Add(abilityEffect);
                         } else {
@@ -94,7 +94,7 @@ namespace AnyRPG {
             }
 
             if (animationProfileName != null && animationProfileName != string.Empty) {
-                AnimationProfile tmpAnimationProfile = SystemAnimationProfileManager.Instance.GetResource(animationProfileName);
+                AnimationProfile tmpAnimationProfile = SystemDataFactory.Instance.GetResource<AnimationProfile>(animationProfileName);
                 if (tmpAnimationProfile != null) {
                     animationProfile = tmpAnimationProfile;
                 } else {
@@ -105,7 +105,7 @@ namespace AnyRPG {
             if (onHitAudioProfiles != null) {
                 foreach (string defaultHitAudioProfile in onHitAudioProfiles) {
                     if (defaultHitAudioProfile != null && defaultHitAudioProfile != string.Empty) {
-                        AudioProfile audioProfile = SystemAudioProfileManager.Instance.GetResource(defaultHitAudioProfile);
+                        AudioProfile audioProfile = SystemDataFactory.Instance.GetResource<AudioProfile>(defaultHitAudioProfile);
                         if (audioProfile != null) {
                             onHitSoundEffects.Add(audioProfile.AudioClip);
                         } else {

@@ -201,7 +201,7 @@ namespace AnyRPG {
         }
 
         public IUseable GetFactoryUseable() {
-            return SystemItemManager.Instance.GetResource(DisplayName);
+            return SystemDataFactory.Instance.GetResource<Item>(DisplayName);
         }
 
         public bool ActionButtonUse() {
@@ -314,7 +314,7 @@ namespace AnyRPG {
             if (randomItemQuality == true) {
                 // get number of item qualities that are valid for random item quality creation
                 List<ItemQuality> validItemQualities = new List<ItemQuality>();
-                foreach (ItemQuality itemQuality in SystemItemQualityManager.Instance.GetResourceList()) {
+                foreach (ItemQuality itemQuality in SystemDataFactory.Instance.GetResourceList<ItemQuality>()) {
                     if (itemQuality.AllowRandomItems) {
                         validItemQualities.Add(itemQuality);
                     }
@@ -360,7 +360,7 @@ namespace AnyRPG {
             base.SetupScriptableObjects();
             currency = null;
             if (currencyName != null && currencyName != string.Empty) {
-                Currency tmpCurrency = SystemCurrencyManager.Instance.GetResource(currencyName);
+                Currency tmpCurrency = SystemDataFactory.Instance.GetResource<Currency>(currencyName);
                 if (tmpCurrency != null) {
                     currency = tmpCurrency;
                 } else {
@@ -370,7 +370,7 @@ namespace AnyRPG {
 
             realItemQuality = null;
             if (itemQuality != null && itemQuality != string.Empty) {
-                ItemQuality tmpItemQuality = SystemItemQualityManager.Instance.GetResource(itemQuality);
+                ItemQuality tmpItemQuality = SystemDataFactory.Instance.GetResource<ItemQuality>(itemQuality);
                 if (tmpItemQuality != null) {
                     realItemQuality = tmpItemQuality;
                 } else {
@@ -381,7 +381,7 @@ namespace AnyRPG {
             realCharacterClassRequirementList = new List<CharacterClass>();
             if (characterClassRequirementList != null) {
                 foreach (string characterClassName in characterClassRequirementList) {
-                    CharacterClass tmpCharacterClass = SystemCharacterClassManager.Instance.GetResource(characterClassName);
+                    CharacterClass tmpCharacterClass = SystemDataFactory.Instance.GetResource<CharacterClass>(characterClassName);
                     if (tmpCharacterClass != null) {
                         realCharacterClassRequirementList.Add(tmpCharacterClass);
                     } else {

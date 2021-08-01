@@ -229,7 +229,7 @@ namespace AnyRPG {
         public void SetupScriptableObjects() {
 
             if (resourceName != null && resourceName != string.Empty) {
-                PowerResource tmpPowerResource = SystemPowerResourceManager.Instance.GetResource(resourceName);
+                PowerResource tmpPowerResource = SystemDataFactory.Instance.GetResource<PowerResource>(resourceName);
                 if (tmpPowerResource != null) {
                     powerResource = tmpPowerResource;
                 } else {

@@ -44,7 +44,7 @@ namespace AnyRPG {
 
         public void BeginDialog(string dialogName, DialogComponent caller = null) {
             //Debug.Log(interactable.gameObject.name + ".DialogController.BeginDialog(" + dialogName + ")");
-            Dialog tmpDialog = SystemDialogManager.Instance.GetResource(dialogName);
+            Dialog tmpDialog = SystemDataFactory.Instance.GetResource<Dialog>(dialogName);
             if (tmpDialog != null) {
                 BeginDialog(tmpDialog, caller);
             }

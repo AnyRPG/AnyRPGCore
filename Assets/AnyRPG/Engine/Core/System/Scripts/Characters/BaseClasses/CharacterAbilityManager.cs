@@ -861,7 +861,7 @@ namespace AnyRPG {
         }
 
         public void ApplySavedStatusEffects(StatusEffectSaveData statusEffectSaveData) {
-            ApplyStatusEffect(SystemAbilityEffectManager.Instance.GetResource(statusEffectSaveData.MyName), statusEffectSaveData.remainingSeconds);
+            ApplyStatusEffect(SystemDataFactory.Instance.GetResource<AbilityEffect>(statusEffectSaveData.MyName), statusEffectSaveData.remainingSeconds);
         }
 
         public void RemoveCapabilityProviderTraits(List<StatusEffect> statusEffects) {

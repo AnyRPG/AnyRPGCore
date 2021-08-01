@@ -41,7 +41,7 @@ namespace AnyRPG {
         public virtual bool IsMet(BaseCharacter baseCharacter) {
             //Debug.Log("DialogPrerequisite.IsMet(): " + prerequisiteName);
             /*
-            Dialog _dialog = SystemDialogManager.Instance.GetResource(prerequisiteName);
+            Dialog _dialog = SystemDataFactory.Instance.GetResource<Dialog>(prerequisiteName);
             if (_dialog != null) {
                 if (_dialog.TurnedIn == true) {
                     return true;
@@ -54,7 +54,7 @@ namespace AnyRPG {
 
         public void SetupScriptableObjects() {
             if (prerequisiteName != null && prerequisiteName != string.Empty) {
-                prerequisiteFaction = SystemFactionManager.Instance.GetResource(prerequisiteName);
+                prerequisiteFaction = SystemDataFactory.Instance.GetResource<Faction>(prerequisiteName);
             } else {
                 Debug.LogError("SystemAbilityManager.SetupScriptableObjects(): Could not find dialog : " + prerequisiteName + " while inititalizing a dialog prerequisite.  CHECK INSPECTOR");
             }

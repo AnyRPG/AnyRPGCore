@@ -99,7 +99,7 @@ namespace AnyRPG {
 
         private void SetupScriptableObjects() {
             //Debug.Log(gameObject.name + ".EnvironmentalEffectArea.SetupScriptableObjects()");
-            if (SystemAbilityEffectManager.Instance == null) {
+            if (SystemGameManager.Instance == null) {
                 Debug.LogError(gameObject.name + ": SystemAbilityEffectManager not found.  Is the GameManager in the scene?");
                 return;
             }
@@ -107,7 +107,7 @@ namespace AnyRPG {
             if (abilityEffectNames != null) {
                 foreach (string abilityEffectName in abilityEffectNames) {
                     if (abilityEffectName != string.Empty) {
-                        AbilityEffect tmpAbilityEffect = SystemAbilityEffectManager.Instance.GetResource(abilityEffectName);
+                        AbilityEffect tmpAbilityEffect = SystemDataFactory.Instance.GetResource<AbilityEffect>(abilityEffectName);
                         if (tmpAbilityEffect != null) {
                             abilityEffects.Add(tmpAbilityEffect);
                         } else {

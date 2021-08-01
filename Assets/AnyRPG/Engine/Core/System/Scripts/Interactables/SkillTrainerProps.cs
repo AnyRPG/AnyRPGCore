@@ -34,7 +34,7 @@ namespace AnyRPG {
             base.SetupScriptableObjects();
             if (skillNames != null) {
                 foreach (string skillName in skillNames) {
-                    Skill tmpSkill = SystemSkillManager.Instance.GetResource(skillName);
+                    Skill tmpSkill = SystemDataFactory.Instance.GetResource<Skill>(skillName);
                     if (tmpSkill != null) {
                         skills.Add(tmpSkill);
                     } else {

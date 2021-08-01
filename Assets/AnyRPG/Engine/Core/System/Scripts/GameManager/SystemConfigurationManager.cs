@@ -627,7 +627,7 @@ namespace AnyRPG {
         public void SetupScriptableObjects() {
 
             if (levelUpEffectName != null && levelUpEffectName != string.Empty) {
-                AbilityEffect testAbility = SystemAbilityEffectManager.Instance.GetResource(levelUpEffectName);
+                AbilityEffect testAbility = SystemDataFactory.Instance.GetResource<AbilityEffect>(levelUpEffectName);
                 if (testAbility == null) {
                     Debug.LogError("SystemConfigurationManager.SetupScriptableObjects(): " + levelUpEffectName + " could not be found in factory.  CHECK INSPECTOR");
                     return;
@@ -637,7 +637,7 @@ namespace AnyRPG {
             }
 
             if (deathEffectName != null && deathEffectName != string.Empty) {
-                AbilityEffect testAbility = SystemAbilityEffectManager.Instance.GetResource(deathEffectName);
+                AbilityEffect testAbility = SystemDataFactory.Instance.GetResource<AbilityEffect>(deathEffectName);
                 if (testAbility == null) {
                     Debug.LogError("SystemConfigurationManager.SetupScriptableObjects(): " + deathEffectName + " could not be found in factory.  CHECK INSPECTOR");
                     return;
@@ -646,7 +646,7 @@ namespace AnyRPG {
                 }
             }
             if (lootSparkleEffectName != null && lootSparkleEffectName != string.Empty) {
-                AbilityEffect testAbility = SystemAbilityEffectManager.Instance.GetResource(lootSparkleEffectName);
+                AbilityEffect testAbility = SystemDataFactory.Instance.GetResource<AbilityEffect>(lootSparkleEffectName);
                 if (testAbility == null) {
                     Debug.LogError("SystemConfigurationManager.SetupScriptableObjects(): " + lootSparkleEffectName + " could not be found in factory.  CHECK INSPECTOR");
                     return;
@@ -655,7 +655,7 @@ namespace AnyRPG {
                 }
             }
             if (currencyGroupName != null && currencyGroupName != string.Empty) {
-                CurrencyGroup tmpCurrencyGroup = SystemCurrencyGroupManager.Instance.GetResource(currencyGroupName);
+                CurrencyGroup tmpCurrencyGroup = SystemDataFactory.Instance.GetResource<CurrencyGroup>(currencyGroupName);
                 if (tmpCurrencyGroup == null) {
                     Debug.LogError("SystemConfigurationManager.SetupScriptableObjects(): " + currencyGroupName + " could not be found in factory.  CHECK INSPECTOR");
                     return;
@@ -672,7 +672,7 @@ namespace AnyRPG {
             powerResourceList = new List<PowerResource>();
             if (powerResources != null) {
                 foreach (string powerResourcename in powerResources) {
-                    PowerResource tmpPowerResource = SystemPowerResourceManager.Instance.GetResource(powerResourcename);
+                    PowerResource tmpPowerResource = SystemDataFactory.Instance.GetResource<PowerResource>(powerResourcename);
                     if (tmpPowerResource != null) {
                         powerResourceList.Add(tmpPowerResource);
                     } else {
@@ -682,7 +682,7 @@ namespace AnyRPG {
             }
 
             if (KillCurrencyName != null && KillCurrencyName != string.Empty) {
-                Currency tmpCurrency = SystemCurrencyManager.Instance.GetResource(KillCurrencyName);
+                Currency tmpCurrency = SystemDataFactory.Instance.GetResource<Currency>(KillCurrencyName);
                 if (tmpCurrency != null) {
                     killCurrency = tmpCurrency;
                     //currencyNode.MyAmount = gainCurrencyAmount;
@@ -692,7 +692,7 @@ namespace AnyRPG {
             }
 
             if (questCurrencyName != null && questCurrencyName != string.Empty) {
-                Currency tmpCurrency = SystemCurrencyManager.Instance.GetResource(questCurrencyName);
+                Currency tmpCurrency = SystemDataFactory.Instance.GetResource<Currency>(questCurrencyName);
                 if (tmpCurrency != null) {
                     questCurrency = tmpCurrency;
                     //currencyNode.MyAmount = gainCurrencyAmount;
@@ -708,7 +708,7 @@ namespace AnyRPG {
             capabilities.SetupScriptableObjects();
 
             if (vendorAudioProfileName != null && vendorAudioProfileName != string.Empty) {
-                AudioProfile tmpAudioProfile = SystemAudioProfileManager.Instance.GetResource(vendorAudioProfileName);
+                AudioProfile tmpAudioProfile = SystemDataFactory.Instance.GetResource<AudioProfile>(vendorAudioProfileName);
                 if (tmpAudioProfile != null) {
                     vendorAudioProfile = tmpAudioProfile;
                 } else {
@@ -717,7 +717,7 @@ namespace AnyRPG {
             }
 
             if (newGameAudio != null && newGameAudio != string.Empty) {
-                AudioProfile tmpAudioProfile = SystemAudioProfileManager.Instance.GetResource(newGameAudio);
+                AudioProfile tmpAudioProfile = SystemDataFactory.Instance.GetResource<AudioProfile>(newGameAudio);
                 if (tmpAudioProfile != null) {
                     newGameAudioProfile = tmpAudioProfile;
                 } else {
@@ -727,7 +727,7 @@ namespace AnyRPG {
 
             // get default player unit profile
             if (defaultPlayerUnitProfileName != null && defaultPlayerUnitProfileName != string.Empty) {
-                UnitProfile tmpUnitProfile = SystemUnitProfileManager.Instance.GetResource(defaultPlayerUnitProfileName);
+                UnitProfile tmpUnitProfile = SystemDataFactory.Instance.GetResource<UnitProfile>(defaultPlayerUnitProfileName);
                 if (tmpUnitProfile != null) {
                     defaultPlayerUnitProfile = tmpUnitProfile;
                 } else {
@@ -741,7 +741,7 @@ namespace AnyRPG {
             if (characterCreatorProfileNames != null) {
                 foreach (string characterCreatorProfileName in characterCreatorProfileNames) {
                     if (characterCreatorProfileName != null && characterCreatorProfileName != string.Empty) {
-                        UnitProfile tmpUnitProfile = SystemUnitProfileManager.Instance.GetResource(characterCreatorProfileName);
+                        UnitProfile tmpUnitProfile = SystemDataFactory.Instance.GetResource<UnitProfile>(characterCreatorProfileName);
                         if (tmpUnitProfile != null) {
                             characterCreatorProfiles.Add(tmpUnitProfile);
                         } else {
@@ -756,7 +756,7 @@ namespace AnyRPG {
 
 
             if (initializationScene != null && initializationScene != string.Empty) {
-                SceneNode tmpSceneNode = SystemSceneNodeManager.Instance.GetResource(initializationScene);
+                SceneNode tmpSceneNode = SystemDataFactory.Instance.GetResource<SceneNode>(initializationScene);
                 if (tmpSceneNode != null) {
                     initializationSceneNode = tmpSceneNode;
                 }
@@ -767,7 +767,7 @@ namespace AnyRPG {
             }
 
             if (mainMenuScene != null && mainMenuScene != string.Empty) {
-                SceneNode tmpSceneNode = SystemSceneNodeManager.Instance.GetResource(mainMenuScene);
+                SceneNode tmpSceneNode = SystemDataFactory.Instance.GetResource<SceneNode>(mainMenuScene);
                 if (tmpSceneNode != null) {
                     mainMenuSceneNode = tmpSceneNode;
                 }/* else {

@@ -250,7 +250,7 @@ namespace AnyRPG {
             tickAbilityEffectList = new List<AbilityEffect>();
             if (tickAbilityEffectNames != null) {
                 foreach (string abilityEffectName in tickAbilityEffectNames) {
-                    AbilityEffect abilityEffect = SystemAbilityEffectManager.Instance.GetResource(abilityEffectName);
+                    AbilityEffect abilityEffect = SystemDataFactory.Instance.GetResource<AbilityEffect>(abilityEffectName);
                     if (abilityEffect != null) {
                         tickAbilityEffectList.Add(abilityEffect);
                     } else {
@@ -262,7 +262,7 @@ namespace AnyRPG {
             completeAbilityEffectList = new List<AbilityEffect>();
             if (completeAbilityEffectNames != null) {
                 foreach (string abilityEffectName in completeAbilityEffectNames) {
-                    AbilityEffect abilityEffect = SystemAbilityEffectManager.Instance.GetResource(abilityEffectName);
+                    AbilityEffect abilityEffect = SystemDataFactory.Instance.GetResource<AbilityEffect>(abilityEffectName);
                     if (abilityEffect != null) {
                         completeAbilityEffectList.Add(abilityEffect);
                     } else {
@@ -277,7 +277,7 @@ namespace AnyRPG {
                     Debug.LogError("LengthEffect.SetupScriptableObjects(): prefabnames is not null but PrefabSpawnLocation is none while inititalizing " + DisplayName + ".  CHECK INSPECTOR BECAUSE OBJECTS WILL NEVER SPAWN");
                 }
                 foreach (string prefabName in prefabNames) {
-                    PrefabProfile prefabProfile = SystemPrefabProfileManager.Instance.GetResource(prefabName);
+                    PrefabProfile prefabProfile = SystemDataFactory.Instance.GetResource<PrefabProfile>(prefabName);
                     if (prefabProfile != null) {
                         prefabProfileList.Add(prefabProfile);
                     } else {
@@ -290,7 +290,7 @@ namespace AnyRPG {
             onTickAudioProfiles = new List<AudioProfile>();
             if (onTickAudioProfileNames != null) {
                 foreach (string audioProfileName in onTickAudioProfileNames) {
-                    AudioProfile audioProfile = SystemAudioProfileManager.Instance.GetResource(audioProfileName);
+                    AudioProfile audioProfile = SystemDataFactory.Instance.GetResource<AudioProfile>(audioProfileName);
                     if (audioProfile != null) {
                         onTickAudioProfiles.Add(audioProfile);
                     } else {

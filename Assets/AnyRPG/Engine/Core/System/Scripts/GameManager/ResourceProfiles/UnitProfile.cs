@@ -367,12 +367,12 @@ namespace AnyRPG {
         /// This will retrieve a unit profile from the system unit profile manager
         /// </summary>
         public static UnitProfile GetUnitProfileReference(string unitProfileName) {
-            if (SystemUnitProfileManager.Instance == null) {
+            if (SystemGameManager.Instance == null) {
                 Debug.LogError("UnitProfile.GetUnitProfileReference(): SystemUnitProfileManager not found.  Is the GameManager in the scene?");
                 return null;
             }
             if (unitProfileName != null && unitProfileName != string.Empty) {
-                UnitProfile tmpUnitProfile = SystemUnitProfileManager.Instance.GetResource(unitProfileName);
+                UnitProfile tmpUnitProfile = SystemDataFactory.Instance.GetResource<UnitProfile>(unitProfileName);
                 if (tmpUnitProfile != null) {
                     return tmpUnitProfile;
                 } else {
@@ -434,7 +434,7 @@ namespace AnyRPG {
             }*/
 
             if (unitToughness == null && defaultToughness != null && defaultToughness != string.Empty) {
-                UnitToughness tmpToughness = SystemUnitToughnessManager.Instance.GetResource(defaultToughness);
+                UnitToughness tmpToughness = SystemDataFactory.Instance.GetResource<UnitToughness>(defaultToughness);
                 if (tmpToughness != null) {
                     unitToughness = tmpToughness;
                 } else {
@@ -444,7 +444,7 @@ namespace AnyRPG {
 
             if (movementAudioProfileNames != null) {
                 foreach (string movementAudioProfileName in movementAudioProfileNames) {
-                    AudioProfile tmpAudioProfile = SystemAudioProfileManager.Instance.GetResource(movementAudioProfileName);
+                    AudioProfile tmpAudioProfile = SystemDataFactory.Instance.GetResource<AudioProfile>(movementAudioProfileName);
                     if (tmpAudioProfile != null) {
                         movementAudioProfiles.Add(tmpAudioProfile);
                     } else {
@@ -455,7 +455,7 @@ namespace AnyRPG {
 
             if (equipmentNameList != null) {
                 foreach (string equipmentName in equipmentNameList) {
-                    Equipment tmpEquipment = SystemItemManager.Instance.GetResource(equipmentName) as Equipment;
+                    Equipment tmpEquipment = SystemDataFactory.Instance.GetResource<Item>(equipmentName) as Equipment;
                     if (tmpEquipment != null) {
                         equipmentList.Add(tmpEquipment);
                     } else {
@@ -468,7 +468,7 @@ namespace AnyRPG {
             powerResourceList = new List<PowerResource>();
             if (powerResources != null) {
                 foreach (string powerResourcename in powerResources) {
-                    PowerResource tmpPowerResource = SystemPowerResourceManager.Instance.GetResource(powerResourcename);
+                    PowerResource tmpPowerResource = SystemDataFactory.Instance.GetResource<PowerResource>(powerResourcename);
                     if (tmpPowerResource != null) {
                         powerResourceList.Add(tmpPowerResource);
                     } else {
@@ -495,7 +495,7 @@ namespace AnyRPG {
             }
 
             if (faction == null && factionName != null && factionName != string.Empty) {
-                Faction tmpFaction = SystemFactionManager.Instance.GetResource(factionName);
+                Faction tmpFaction = SystemDataFactory.Instance.GetResource<Faction>(factionName);
                 if (tmpFaction != null) {
                     faction = tmpFaction;
                 } else {
@@ -504,7 +504,7 @@ namespace AnyRPG {
             }
 
             if (characterClass == null && characterClassName != null && characterClassName != string.Empty) {
-                CharacterClass tmpCharacterClass = SystemCharacterClassManager.Instance.GetResource(characterClassName);
+                CharacterClass tmpCharacterClass = SystemDataFactory.Instance.GetResource<CharacterClass>(characterClassName);
                 if (tmpCharacterClass != null) {
                     characterClass = tmpCharacterClass;
                 } else {
@@ -513,7 +513,7 @@ namespace AnyRPG {
             }
 
             if (classSpecializationName != null && classSpecializationName != string.Empty) {
-                ClassSpecialization tmpSpecialization = SystemClassSpecializationManager.Instance.GetResource(classSpecializationName);
+                ClassSpecialization tmpSpecialization = SystemDataFactory.Instance.GetResource<ClassSpecialization>(classSpecializationName);
                 if (tmpSpecialization != null) {
                     classSpecialization = tmpSpecialization;
                 } else {
@@ -522,7 +522,7 @@ namespace AnyRPG {
             }
 
             if (characterRace == null && characterRaceName != null && characterRaceName != string.Empty) {
-                CharacterRace tmpCharacterRace = SystemCharacterRaceManager.Instance.GetResource(characterRaceName);
+                CharacterRace tmpCharacterRace = SystemDataFactory.Instance.GetResource<CharacterRace>(characterRaceName);
                 if (tmpCharacterRace != null) {
                     characterRace = tmpCharacterRace;
                 } else {
@@ -531,7 +531,7 @@ namespace AnyRPG {
             }
 
             if (unitType == null && unitTypeName != null && unitTypeName != string.Empty) {
-                UnitType tmpUnitType = SystemUnitTypeManager.Instance.GetResource(unitTypeName);
+                UnitType tmpUnitType = SystemDataFactory.Instance.GetResource<UnitType>(unitTypeName);
                 if (tmpUnitType != null) {
                     unitType = tmpUnitType;
                     //Debug.Log(gameObject.name + ".BaseCharacter.SetupScriptableObjects(): successfully set unit type to: " + unitType.MyName);
@@ -544,7 +544,7 @@ namespace AnyRPG {
                 prefabProfileName = ResourceName;
             }
             if (prefabProfileName != null && prefabProfileName != string.Empty) {
-                UnitPrefabProfile tmpPrefabProfile = SystemUnitPrefabProfileManager.Instance.GetResource(prefabProfileName);
+                UnitPrefabProfile tmpPrefabProfile = SystemDataFactory.Instance.GetResource<UnitPrefabProfile>(prefabProfileName);
                 if (tmpPrefabProfile != null) {
                     unitPrefabProfileProps = tmpPrefabProfile.UnitPrefabProps;
                 } else {
@@ -556,7 +556,7 @@ namespace AnyRPG {
             if (interactableOptions != null) {
                 foreach (string interactableOptionName in interactableOptions) {
                     if (interactableOptionName != null && interactableOptionName != string.Empty) {
-                        InteractableOptionConfig interactableOptionConfig = SystemInteractableOptionConfigManager.Instance.GetResource(interactableOptionName);
+                        InteractableOptionConfig interactableOptionConfig = SystemDataFactory.Instance.GetResource<InteractableOptionConfig>(interactableOptionName);
                         if (interactableOptionConfig != null) {
                             interactableOptionConfigs.Add(interactableOptionConfig);
                         } else {

@@ -33,7 +33,6 @@ namespace AnyRPG {
             UpdateStatus();
         }
 
-
         public virtual bool IsMet(BaseCharacter baseCharacter) {
             //Debug.Log("TradeSkillPrerequisite.IsMet()");
             return prerequisiteMet;
@@ -42,7 +41,7 @@ namespace AnyRPG {
         public void SetupScriptableObjects() {
             prerequisiteSkill = null;
             if (prerequisiteName != null && prerequisiteName != string.Empty) {
-                Skill tmpPrerequisiteSkill = SystemSkillManager.Instance.GetResource(prerequisiteName);
+                Skill tmpPrerequisiteSkill = SystemDataFactory.Instance.GetResource<Skill>(prerequisiteName);
                 if (tmpPrerequisiteSkill != null) {
                     prerequisiteSkill = tmpPrerequisiteSkill;
                 } else {

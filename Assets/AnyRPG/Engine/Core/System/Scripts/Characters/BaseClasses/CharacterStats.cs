@@ -978,7 +978,7 @@ namespace AnyRPG {
         public void SetResourceAmount(string resourceName, float newAmount) {
             //Debug.Log(baseCharacter.gameObject.name + ".CharacterStats.SetResourceAmount(" + resourceName + ", " + newAmount + "): current " + CurrentPrimaryResource);
             newAmount = Mathf.Clamp(newAmount, 0, int.MaxValue);
-            PowerResource tmpPowerResource = SystemPowerResourceManager.Instance.GetResource(resourceName);
+            PowerResource tmpPowerResource = SystemDataFactory.Instance.GetResource<PowerResource>(resourceName);
 
             if (tmpPowerResource != null && powerResourceDictionary.ContainsKey(tmpPowerResource)) {
                 powerResourceDictionary[tmpPowerResource].currentValue = newAmount;
@@ -1000,7 +1000,7 @@ namespace AnyRPG {
         public bool AddResourceAmount(string resourceName, float newAmount) {
             //Debug.Log(baseCharacter.gameObject.name + ".CharacterStats.AddResourceAmount(" + resourceName + ", " + newAmount + ")");
             newAmount = Mathf.Clamp(newAmount, 0, int.MaxValue);
-            PowerResource tmpPowerResource = SystemPowerResourceManager.Instance.GetResource(resourceName);
+            PowerResource tmpPowerResource = SystemDataFactory.Instance.GetResource<PowerResource>(resourceName);
 
             bool returnValue = false;
             if (tmpPowerResource != null && powerResourceDictionary.ContainsKey(tmpPowerResource)) {

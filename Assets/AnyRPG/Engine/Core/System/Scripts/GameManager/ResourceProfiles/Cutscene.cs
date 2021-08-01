@@ -82,7 +82,7 @@ namespace AnyRPG {
             base.SetupScriptableObjects();
 
             if (loadSceneName != null && loadSceneName != string.Empty) {
-                SceneNode tmpSceneNode = SystemSceneNodeManager.Instance.GetResource(loadSceneName);
+                SceneNode tmpSceneNode = SystemDataFactory.Instance.GetResource<SceneNode>(loadSceneName);
                 if (tmpSceneNode != null) {
                     loadScene = tmpSceneNode;
                 } else {

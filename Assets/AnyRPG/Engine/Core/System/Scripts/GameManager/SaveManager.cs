@@ -640,7 +640,7 @@ namespace AnyRPG {
                 anyRPGSaveData.sceneNodeSaveData.Add(sceneNodeSaveData);
             }
             /*
-            foreach (SceneNode sceneNode in SystemSceneNodeManager.Instance.GetResourceList()) {
+            foreach (SceneNode sceneNode in SystemDataFactory.Instance.GetResourceList<SceneNode>()) {
 
                 sceneNodeSaveData.persistentObjects = new List<PersistentObjectSaveData>();
                 foreach (PersistentObjectSaveData persistentObjectSaveData in sceneNode.PersistentObjects.Values) {
@@ -924,7 +924,7 @@ namespace AnyRPG {
                                 newItem.DisplayName = inventorySlotSaveData.DisplayName;
                                 newItem.DropLevel = inventorySlotSaveData.dropLevel;
                                 if (newItem.RandomItemQuality == true) {
-                                    newItem.ItemQuality = SystemItemQualityManager.Instance.GetResource(inventorySlotSaveData.itemQuality);
+                                    newItem.ItemQuality = SystemDataFactory.Instance.GetResource<ItemQuality>(inventorySlotSaveData.itemQuality);
                                 }
                                 if ((newItem as Equipment) is Equipment) {
                                     if (inventorySlotSaveData.randomSecondaryStatIndexes != null) {
@@ -957,7 +957,7 @@ namespace AnyRPG {
                         newItem.DisplayName = equipmentSaveData.DisplayName;
                         newItem.DropLevel = equipmentSaveData.dropLevel;
                         if (newItem.RandomItemQuality == true) {
-                            newItem.ItemQuality = SystemItemQualityManager.Instance.GetResource(equipmentSaveData.itemQuality);
+                            newItem.ItemQuality = SystemDataFactory.Instance.GetResource<ItemQuality>(equipmentSaveData.itemQuality);
                         }
                         if (equipmentSaveData.randomSecondaryStatIndexes != null) {
                             newItem.RandomStatIndexes = equipmentSaveData.randomSecondaryStatIndexes;
@@ -978,7 +978,7 @@ namespace AnyRPG {
             //int counter = 0;
             foreach (ReputationSaveData reputationSaveData in anyRPGSaveData.reputationSaveData) {
                 FactionDisposition factionDisposition = new FactionDisposition();
-                factionDisposition.Faction = SystemFactionManager.Instance.GetResource(reputationSaveData.MyName);
+                factionDisposition.Faction = SystemDataFactory.Instance.GetResource<Faction>(reputationSaveData.MyName);
                 factionDisposition.disposition = reputationSaveData.MyAmount;
                 SystemGameManager.Instance.PlayerManager.MyCharacter.CharacterFactionManager.AddReputation(factionDisposition.Faction, (int)factionDisposition.disposition, false);
                 //counter++;
@@ -988,7 +988,7 @@ namespace AnyRPG {
         public void LoadCurrencyData(AnyRPGSaveData anyRPGSaveData) {
             //Debug.Log("Savemanager.LoadCurrencyData()");
             foreach (CurrencySaveData currencySaveData in anyRPGSaveData.currencySaveData) {
-                SystemGameManager.Instance.PlayerManager.MyCharacter.CharacterCurrencyManager.AddCurrency(SystemCurrencyManager.Instance.GetResource(currencySaveData.MyName), currencySaveData.MyAmount);
+                SystemGameManager.Instance.PlayerManager.MyCharacter.CharacterCurrencyManager.AddCurrency(SystemDataFactory.Instance.GetResource<Currency>(currencySaveData.MyName), currencySaveData.MyAmount);
             }
         }
 
@@ -1046,7 +1046,7 @@ namespace AnyRPG {
                         //Debug.Log("Savemanager.LoadActionBarData(): searching for usable(" + actionBarSaveData.MyName + ") in inventory and itemlist.count was: " + itemList.Count);
                     }
                     */
-                    useable = SystemItemManager.Instance.GetResource(actionBarSaveData.MyName);
+                    useable = SystemDataFactory.Instance.GetResource<Item>(actionBarSaveData.MyName);
                 } else {
                     // find ability from system ability manager
                     //Debug.Log("Savemanager.LoadActionBarData(): searching for usable in ability manager");
@@ -1144,10 +1144,10 @@ namespace AnyRPG {
         public CapabilityConsumerSnapshot GetCapabilityConsumerSnapshot(AnyRPGSaveData saveData) {
             CapabilityConsumerSnapshot returnValue = new CapabilityConsumerSnapshot();
             returnValue.UnitProfile = UnitProfile.GetUnitProfileReference(saveData.unitProfileName);
-            returnValue.CharacterRace = SystemCharacterRaceManager.Instance.GetResource(saveData.characterRace);
-            returnValue.CharacterClass = SystemCharacterClassManager.Instance.GetResource(saveData.characterClass);
-            returnValue.ClassSpecialization = SystemClassSpecializationManager.Instance.GetResource(saveData.classSpecialization);
-            returnValue.Faction = SystemFactionManager.Instance.GetResource(saveData.playerFaction);
+            returnValue.CharacterRace = SystemDataFactory.Instance.GetResource<CharacterRace>(saveData.characterRace);
+            returnValue.CharacterClass = SystemDataFactory.Instance.GetResource<CharacterClass>(saveData.characterClass);
+            returnValue.ClassSpecialization = SystemDataFactory.Instance.GetResource<ClassSpecialization>(saveData.classSpecialization);
+            returnValue.Faction = SystemDataFactory.Instance.GetResource<Faction>(saveData.playerFaction);
             return returnValue;
         }
 

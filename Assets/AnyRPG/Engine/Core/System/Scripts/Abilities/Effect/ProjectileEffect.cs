@@ -58,7 +58,7 @@ namespace AnyRPG {
             base.SetupScriptableObjects();
             if (flightAudioProfileNames != null) {
                 foreach (string audioProfileName in flightAudioProfileNames) {
-                    AudioProfile audioProfile = SystemAudioProfileManager.Instance.GetResource(audioProfileName);
+                    AudioProfile audioProfile = SystemDataFactory.Instance.GetResource<AudioProfile>(audioProfileName);
                     if (audioProfile != null) {
                         flightAudioProfiles.Add(audioProfile);
                     } else {

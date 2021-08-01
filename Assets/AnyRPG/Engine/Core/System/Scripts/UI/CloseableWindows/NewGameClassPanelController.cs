@@ -58,7 +58,7 @@ namespace AnyRPG {
             //Debug.Log("LoadGamePanel.ShowLoadButtonsCommon()");
             ClearOptionButtons();
 
-            foreach (CharacterClass characterClass in SystemCharacterClassManager.Instance.GetResourceList()) {
+            foreach (CharacterClass characterClass in SystemDataFactory.Instance.GetResourceList<CharacterClass>()) {
                 if (characterClass.NewGameOption == true) {
                     //Debug.Log("LoadGamePanel.ShowLoadButtonsCommon(): setting a button with saved game data");
                     GameObject go = ObjectPooler.Instance.GetPooledObject(buttonPrefab, buttonArea.transform);

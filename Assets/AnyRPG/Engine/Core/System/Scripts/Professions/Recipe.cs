@@ -73,7 +73,7 @@ namespace AnyRPG {
 
             output = null;
             if (itemOutputName != null && itemOutputName != string.Empty) {
-                Item item = SystemItemManager.Instance.GetResource(itemOutputName);
+                Item item = SystemDataFactory.Instance.GetResource<Item>(itemOutputName);
                 if (item != null) {
                     output = item;
                 } else {

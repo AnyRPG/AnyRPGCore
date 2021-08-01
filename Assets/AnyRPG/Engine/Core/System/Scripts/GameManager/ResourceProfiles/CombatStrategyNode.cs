@@ -87,7 +87,7 @@ namespace AnyRPG {
 
             phaseMusicProfile = null;
             if (phaseMusicProfileName != null && phaseMusicProfileName != string.Empty) {
-                AudioProfile musicProfile = SystemAudioProfileManager.Instance.GetResource(phaseMusicProfileName);
+                AudioProfile musicProfile = SystemDataFactory.Instance.GetResource<AudioProfile>(phaseMusicProfileName);
                 if (musicProfile != null) {
                     phaseMusicProfile = musicProfile;
                 } else {

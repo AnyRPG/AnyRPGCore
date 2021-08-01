@@ -9,7 +9,6 @@ namespace AnyRPG {
 
         public event System.Action OnStatusUpdated = delegate { };
 
-
         [SerializeField]
         private string prerequisiteName = string.Empty;
 
@@ -38,7 +37,7 @@ namespace AnyRPG {
         public virtual bool IsMet(BaseCharacter baseCharacter) {
             //Debug.Log("DialogPrerequisite.IsMet(): " + prerequisiteName);
             /*
-            Dialog _dialog = SystemDialogManager.Instance.GetResource(prerequisiteName);
+            Dialog _dialog = SystemDataFactory.Instance.GetResource<Dialog>(prerequisiteName);
             if (_dialog != null) {
                 if (_dialog.TurnedIn == true) {
                     return true;
@@ -52,7 +51,7 @@ namespace AnyRPG {
         public void SetupScriptableObjects() {
             prerequisiteSceneNode = null;
             if (prerequisiteName != null && prerequisiteName != string.Empty) {
-                SceneNode tmpPrerequisiteSceneNode = SystemSceneNodeManager.Instance.GetResource(prerequisiteName);
+                SceneNode tmpPrerequisiteSceneNode = SystemDataFactory.Instance.GetResource<SceneNode>(prerequisiteName);
                 if (tmpPrerequisiteSceneNode != null) {
                     prerequisiteSceneNode = tmpPrerequisiteSceneNode;
                 } else {

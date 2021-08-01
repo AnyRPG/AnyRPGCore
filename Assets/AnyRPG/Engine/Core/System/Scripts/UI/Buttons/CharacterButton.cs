@@ -103,7 +103,7 @@ namespace AnyRPG {
         public void GetSystemResourceReferences() {
             if (equipmentSlotProfileName != null && equipmentSlotProfileName != string.Empty) {
                 //Debug.Log("CharacterButton.GetLocalComponents(): equipmentslotprofileName is not empty");
-                equipmentSlotProfile = SystemEquipmentSlotProfileManager.Instance.GetResource(equipmentSlotProfileName);
+                equipmentSlotProfile = SystemDataFactory.Instance.GetResource<EquipmentSlotProfile>(equipmentSlotProfileName);
                 if (equipmentSlotProfile == null) {
                     //Debug.Log("CharacterButton.GetLocalComponents(): equipmentslotprofile is NULL!!!");
                 }

@@ -617,7 +617,7 @@ namespace AnyRPG {
             base.SetupScriptableObjects();
 
             if (rewardCurrencyName != null && rewardCurrencyName != string.Empty) {
-                Currency tmpCurrency = SystemCurrencyManager.Instance.GetResource(rewardCurrencyName);
+                Currency tmpCurrency = SystemDataFactory.Instance.GetResource<Currency>(rewardCurrencyName);
                 if (tmpCurrency != null) {
                     rewardCurrency = tmpCurrency;
                     //currencyNode.MyAmount = gainCurrencyAmount;
@@ -641,7 +641,7 @@ namespace AnyRPG {
             skillRewardList = new List<Skill>();
             if (skillRewardNames != null) {
                 foreach (string skillName in skillRewardNames) {
-                    Skill skill = SystemSkillManager.Instance.GetResource(skillName);
+                    Skill skill = SystemDataFactory.Instance.GetResource<Skill>(skillName);
                     if (skill != null) {
                         skillRewardList.Add(skill);
                     } else {
@@ -653,7 +653,7 @@ namespace AnyRPG {
             itemRewardList = new List<Item>();
             if (itemRewardNames != null) {
                 foreach (string itemName in itemRewardNames) {
-                    Item item = SystemItemManager.Instance.GetResource(itemName);
+                    Item item = SystemDataFactory.Instance.GetResource<Item>(itemName);
                     if (item != null) {
                         itemRewardList.Add(item);
                     } else {
@@ -670,7 +670,7 @@ namespace AnyRPG {
 
             openingDialog = null;
             if (hasOpeningDialog) {
-                Dialog dialog = SystemDialogManager.Instance.GetResource(DisplayName);
+                Dialog dialog = SystemDataFactory.Instance.GetResource<Dialog>(DisplayName);
                 if (dialog != null) {
                     openingDialog = dialog;
                 } else {

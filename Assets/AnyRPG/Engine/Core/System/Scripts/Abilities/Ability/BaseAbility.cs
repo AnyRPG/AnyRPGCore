@@ -737,7 +737,7 @@ namespace AnyRPG {
 
             if (AbilityEffectNames != null) {
                 foreach (string abilityEffectName in AbilityEffectNames) {
-                    AbilityEffect abilityEffect = SystemAbilityEffectManager.Instance.GetResource(abilityEffectName);
+                    AbilityEffect abilityEffect = SystemDataFactory.Instance.GetResource<AbilityEffect>(abilityEffectName);
                     if (abilityEffect != null) {
                         abilityEffects.Add(abilityEffect);
                     } else {
@@ -755,7 +755,7 @@ namespace AnyRPG {
             weaponAffinityList = new List<WeaponSkill>();
             if (weaponAffinityNames != null) {
                 foreach (string weaponAffinityName in weaponAffinityNames) {
-                    WeaponSkill tmpWeaponSkill = SystemWeaponSkillManager.Instance.GetResource(weaponAffinityName);
+                    WeaponSkill tmpWeaponSkill = SystemDataFactory.Instance.GetResource<WeaponSkill>(weaponAffinityName);
                     if (tmpWeaponSkill != null) {
                         weaponAffinityList.Add(tmpWeaponSkill);
                     } else {
@@ -766,7 +766,7 @@ namespace AnyRPG {
 
             castingAudioProfile = null;
             if (castingAudioProfileName != null && castingAudioProfileName != string.Empty) {
-                AudioProfile audioProfile = SystemAudioProfileManager.Instance.GetResource(castingAudioProfileName);
+                AudioProfile audioProfile = SystemDataFactory.Instance.GetResource<AudioProfile>(castingAudioProfileName);
                 if (audioProfile != null) {
                     castingAudioProfile = audioProfile;
                 } else {
@@ -776,7 +776,7 @@ namespace AnyRPG {
 
             animationHitAudioProfile = null;
             if (animationHitAudioProfileName != null && animationHitAudioProfileName != string.Empty) {
-                AudioProfile audioProfile = SystemAudioProfileManager.Instance.GetResource(animationHitAudioProfileName);
+                AudioProfile audioProfile = SystemDataFactory.Instance.GetResource<AudioProfile>(animationHitAudioProfileName);
                 if (audioProfile != null) {
                     animationHitAudioProfile = audioProfile;
                 } else {
@@ -786,7 +786,7 @@ namespace AnyRPG {
 
             animationProfile = null;
             if (animationProfileName != null && animationProfileName != string.Empty) {
-                AnimationProfile tmpAnimationProfile = SystemAnimationProfileManager.Instance.GetResource(animationProfileName);
+                AnimationProfile tmpAnimationProfile = SystemDataFactory.Instance.GetResource<AnimationProfile>(animationProfileName);
                 if (tmpAnimationProfile != null) {
                     animationProfile = tmpAnimationProfile;
                 } else {
@@ -796,7 +796,7 @@ namespace AnyRPG {
 
             powerResource = null;
             if (powerResourceName != null && powerResourceName != string.Empty) {
-                PowerResource tmpPowerResource = SystemPowerResourceManager.Instance.GetResource(powerResourceName);
+                PowerResource tmpPowerResource = SystemDataFactory.Instance.GetResource<PowerResource>(powerResourceName);
                 if (tmpPowerResource != null) {
                     powerResource = tmpPowerResource;
                 } else {
@@ -806,7 +806,7 @@ namespace AnyRPG {
 
             generatePowerResource = null;
             if (generatePowerResourceName != null && generatePowerResourceName != string.Empty) {
-                PowerResource tmpPowerResource = SystemPowerResourceManager.Instance.GetResource(generatePowerResourceName);
+                PowerResource tmpPowerResource = SystemDataFactory.Instance.GetResource<PowerResource>(generatePowerResourceName);
                 if (tmpPowerResource != null) {
                     generatePowerResource = tmpPowerResource;
                 } else {
@@ -818,7 +818,7 @@ namespace AnyRPG {
             channeledAbilityEffects = new List<AbilityEffect>();
             if (channeledAbilityEffectnames != null) {
                 foreach (string abilityEffectName in channeledAbilityEffectnames) {
-                    AbilityEffect abilityEffect = SystemAbilityEffectManager.Instance.GetResource(abilityEffectName);
+                    AbilityEffect abilityEffect = SystemDataFactory.Instance.GetResource<AbilityEffect>(abilityEffectName);
                     if (abilityEffect != null) {
                         channeledAbilityEffects.Add(abilityEffect);
                     } else {
@@ -830,7 +830,7 @@ namespace AnyRPG {
             characterClassRequirementList = new List<CharacterClass>();
             if (characterClassRequirementList != null) {
                 foreach (string characterClassName in characterClassRequirements) {
-                    CharacterClass tmpCharacterClass = SystemCharacterClassManager.Instance.GetResource(characterClassName);
+                    CharacterClass tmpCharacterClass = SystemDataFactory.Instance.GetResource<CharacterClass>(characterClassName);
                     if (tmpCharacterClass != null) {
                         characterClassRequirementList.Add(tmpCharacterClass);
                     } else {

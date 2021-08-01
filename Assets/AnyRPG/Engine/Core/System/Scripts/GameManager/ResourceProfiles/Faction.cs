@@ -248,7 +248,7 @@ namespace AnyRPG {
             if (equipmentNames != null) {
                 foreach (string equipmentName in equipmentNames) {
                     Equipment tmpEquipment = null;
-                    tmpEquipment = SystemItemManager.Instance.GetResource(equipmentName) as Equipment;
+                    tmpEquipment = SystemDataFactory.Instance.GetResource<Item>(equipmentName) as Equipment;
                     if (tmpEquipment != null) {
                         equipmentList.Add(tmpEquipment);
                     } else {
@@ -271,7 +271,7 @@ namespace AnyRPG {
                     //Debug.Log("Faction.SetupScriptableObjects(): found a string");
                     if (characterCreatorProfileName != null && characterCreatorProfileName != string.Empty) {
                         //Debug.Log("Faction.SetupScriptableObjects(): found a string that is not empty");
-                        UnitProfile tmpUnitProfile = SystemUnitProfileManager.Instance.GetResource(characterCreatorProfileName);
+                        UnitProfile tmpUnitProfile = SystemDataFactory.Instance.GetResource<UnitProfile>(characterCreatorProfileName);
                         if (tmpUnitProfile != null) {
                             //Debug.Log("Faction.SetupScriptableObjects(): found a string that is not empty and added it to the list");
                             characterCreatorProfiles.Add(tmpUnitProfile);
@@ -316,7 +316,7 @@ namespace AnyRPG {
 
             foreach (string characterClassName in characterClasses) {
                 if (characterClassName != null && characterClassName != string.Empty) {
-                    CharacterClass tmpCharacterClass = SystemCharacterClassManager.Instance.GetResource(characterClassName);
+                    CharacterClass tmpCharacterClass = SystemDataFactory.Instance.GetResource<CharacterClass>(characterClassName);
                     if (tmpCharacterClass != null) {
                         characterClassList.Add(tmpCharacterClass);
                     } else {
