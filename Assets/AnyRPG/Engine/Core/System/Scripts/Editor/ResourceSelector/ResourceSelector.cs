@@ -47,7 +47,6 @@ public class ResourceSelector : EditorWindow
 
     // fill listElements with all resources for the type in fileType
     void InitializeList() {
-        Debug.Log("Initialize list");
         DummyResourceManager manager = new DummyResourceManager(resourceType, includeCoreContent.value);
         if (manager.GetResourceList().Count == 0) {
             manager.LoadResourceList();
