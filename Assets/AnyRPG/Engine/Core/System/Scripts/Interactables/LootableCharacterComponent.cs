@@ -336,7 +336,7 @@ namespace AnyRPG {
         }
 
         public void MonitorLootTable() {
-            Debug.Log(interactable.gameObject.name + ".LootableCharacterComponent.MonitorLootTable()");
+            //Debug.Log(interactable.gameObject.name + ".LootableCharacterComponent.MonitorLootTable()");
             SystemEventManager.StartListening("OnTakeLoot", HandleTakeLoot);
         }
 

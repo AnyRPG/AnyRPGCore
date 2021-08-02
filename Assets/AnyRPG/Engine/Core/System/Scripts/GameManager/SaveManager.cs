@@ -915,9 +915,9 @@ namespace AnyRPG {
             int counter = 0;
             foreach (InventorySlotSaveData inventorySlotSaveData in anyRPGSaveData.inventorySlotSaveData) {
                 if (inventorySlotSaveData.MyName != string.Empty && inventorySlotSaveData.MyName != null) {
-                    if (SystemItemManager.Instance != null) {
+                    if (SystemGameManager.Instance != null) {
                         for (int i = 0; i < inventorySlotSaveData.stackCount; i++) {
-                            Item newItem = SystemItemManager.Instance.GetNewResource(inventorySlotSaveData.MyName);
+                            Item newItem = SystemGameManager.Instance.SystemItemManager.GetNewResource(inventorySlotSaveData.MyName);
                             if (newItem == null) {
                                 Debug.Log("Savemanager.LoadInventorySlotData(): COULD NOT LOAD ITEM FROM ITEM MANAGER: " + inventorySlotSaveData.MyName);
                             } else {
@@ -952,7 +952,7 @@ namespace AnyRPG {
                 //Debug.Log("Savemanager.LoadEquipmentData(): checking equipment");
                 if (equipmentSaveData.MyName != string.Empty) {
                     //Debug.Log("Savemanager.LoadEquipmentData(): checking equipment: using item: " + equipmentSaveData.MyName);
-                    Equipment newItem = (SystemItemManager.Instance.GetNewResource(equipmentSaveData.MyName) as Equipment);
+                    Equipment newItem = (SystemGameManager.Instance.SystemItemManager.GetNewResource(equipmentSaveData.MyName) as Equipment);
                     if (newItem != null) {
                         newItem.DisplayName = equipmentSaveData.DisplayName;
                         newItem.DropLevel = equipmentSaveData.dropLevel;
@@ -1181,7 +1181,7 @@ namespace AnyRPG {
             //Debug.Log("Savemanager.LoadGame() rotation: " + anyRPGSaveData.PlayerRotationX + ", " + anyRPGSaveData.PlayerRotationY + ", " + anyRPGSaveData.PlayerRotationZ);
 
             // disable auto-accept achievements since we haven't loaded the data that tells us if they are complete yet
-            SystemQuestManager.Instance.CleanupEventSubscriptions();
+            SystemGameManager.Instance.SystemAchievementManager.CleanupEventSubscriptions();
 
             // spawn player connection so all the data can be loaded
             SystemGameManager.Instance.PlayerManager.SpawnPlayerConnection();
@@ -1230,7 +1230,7 @@ namespace AnyRPG {
             LoadPetData(anyRPGSaveData);
 
             // now that we have loaded the quest data, we can re-enable references
-            SystemQuestManager.Instance.CreateEventSubscriptions();
+            SystemGameManager.Instance.SystemAchievementManager.CreateEventSubscriptions();
 
             // set resources last after equipment loaded for modifiers
             LoadResourcePowerData(anyRPGSaveData);

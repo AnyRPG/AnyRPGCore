@@ -66,6 +66,12 @@ namespace AnyRPG {
         [SerializeField]
         private PlayerManager playerManager = null;
 
+        [SerializeField]
+        private SystemItemManager systemItemManager = null;
+
+        [SerializeField]
+        private SystemAchievementManager systemAchievementManager = null;
+
         [Header("Resource Managers")]
 
         [SerializeField]
@@ -115,6 +121,8 @@ namespace AnyRPG {
         public LevelManager LevelManager { get => levelManager; set => levelManager = value; }
         public InventoryManager InventoryManager { get => inventoryManager; set => inventoryManager = value; }
         public PlayerManager PlayerManager { get => playerManager; set => playerManager = value; }
+        public SystemItemManager SystemItemManager { get => systemItemManager; set => systemItemManager = value; }
+        public SystemAchievementManager SystemAchievementManager { get => systemAchievementManager; set => systemAchievementManager = value; }
 
         private void Init() {
             //Debug.Log("SystemGameManager.Init()");
@@ -139,6 +147,7 @@ namespace AnyRPG {
             petPreviewManager.Init();
             unitPreviewManager.Init();
             characterCreatorManager.Init();
+            systemAchievementManager.Init();
 
             systemAbilityController.Init();
             castTargettingManager.Init();

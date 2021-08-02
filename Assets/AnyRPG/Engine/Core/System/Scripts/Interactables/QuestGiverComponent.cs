@@ -71,7 +71,7 @@ namespace AnyRPG {
                 } else {
                     //Debug.Log(gameObject.name + ".InitializeQuestGiver(): Adding watches on " + questNode.MyQuestTemplate.MyTitle);
                 }
-                questNode.MyQuest = SystemQuestManager.Instance.GetResource(questNode.MyQuest.DisplayName);
+                questNode.MyQuest = SystemDataFactory.Instance.GetResource<Quest>(questNode.MyQuest.DisplayName);
             }
             questGiverInitialized = true;
         }

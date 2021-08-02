@@ -60,7 +60,7 @@ namespace AnyRPG {
                     //Debug.Log(resource.name + " had empty description value");
                     resource.MyDescription = string.Empty;
                 }
-                string keyName = prepareStringForMatch(resource.ResourceName);
+                string keyName = PrepareStringForMatch(resource.ResourceName);
                 if (!resourceList.ContainsKey(keyName)) {
                     resourceList[keyName] = ScriptableObject.Instantiate(resource);
                 } else {
@@ -69,13 +69,13 @@ namespace AnyRPG {
             }
         }
 
-        public static string prepareStringForMatch(string oldString) {
+        public static string PrepareStringForMatch(string oldString) {
             return oldString.ToLower().Replace(" ", string.Empty).Replace("'", string.Empty);
         }
 
         public static bool MatchResource(string resourceName, string resourceMatchName) {
             if (resourceName != null && resourceMatchName != null) {
-                if (prepareStringForMatch(resourceName) == prepareStringForMatch(resourceMatchName)) {
+                if (PrepareStringForMatch(resourceName) == PrepareStringForMatch(resourceMatchName)) {
                     return true;
                 }
             } else {

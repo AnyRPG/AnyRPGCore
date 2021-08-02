@@ -592,7 +592,7 @@ namespace AnyRPG {
 
         /*
         public bool CheckForInteractableObjectives(string questName) {
-            Quest quest = SystemQuestManager.Instance.GetResource(questName);
+            Quest quest = SystemDataFactory.Instance.GetResource<Quest>(questName);
             foreach (QuestObjective questObjective in quest.MyUseInteractableObjectives) {
                 foreach (InteractableOption interactableOption in MyInteractables) {
                     if (SystemResourceManager.MatchResource(questObjective.MyType, interactableOption.MyName)) {

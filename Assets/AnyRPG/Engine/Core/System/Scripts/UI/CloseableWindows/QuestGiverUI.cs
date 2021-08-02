@@ -97,7 +97,7 @@ namespace AnyRPG {
         }
 
         public void DeactivateButtons() {
-            Debug.Log("QuestGiverUI.DeactivateButtons()");
+            //Debug.Log("QuestGiverUI.DeactivateButtons()");
             acceptButton.GetComponent<Button>().enabled = false;
             completeButton.GetComponent<Button>().enabled = false;
         }
@@ -235,7 +235,7 @@ namespace AnyRPG {
                 return;
             }
 
-            Debug.Log("questGiver: " + questGiver.ToString());
+            //Debug.Log("questGiver: " + questGiver.ToString());
             if (newQuest.GetStatus() == "complete" && SystemGameManager.Instance.QuestLog.HasQuest(newQuest.DisplayName) == true && questGiver != null && questGiver.EndsQuest(newQuest.DisplayName)) {
                 completeButton.gameObject.SetActive(true);
                 completeButton.GetComponent<Button>().enabled = true;
@@ -394,7 +394,7 @@ namespace AnyRPG {
             }
 
             // DO THIS NOW SO NO NULL REFERENCES WHEN IT GETS DESELECTED DURING THIS PROCESS
-            //Quest questToComplete = SystemQuestManager.Instance.GetResource(currentQuestName);
+            //Quest questToComplete = SystemDataFactory.Instance.GetResource<Quest>(currentQuestName);
 
             //questDetailsArea.myreward
 
@@ -436,7 +436,7 @@ namespace AnyRPG {
                 foreach (RewardButton rewardButton in questDetailsArea.GetHighlightedItemRewardIcons()) {
                     //Debug.Log("rewardButton.MyDescribable: " + rewardButton.MyDescribable.MyName);
                     if (rewardButton.Describable != null && rewardButton.Describable.DisplayName != null && rewardButton.Describable.DisplayName != string.Empty) {
-                        Item newItem = SystemItemManager.Instance.GetNewResource(rewardButton.Describable.DisplayName);
+                        Item newItem = SystemGameManager.Instance.SystemItemManager.GetNewResource(rewardButton.Describable.DisplayName);
                         if (newItem != null) {
                             //Debug.Log("RewardButton.CompleteQuest(): newItem is not null, adding to inventory");
                             newItem.DropLevel = SystemGameManager.Instance.PlayerManager.MyCharacter.CharacterStats.Level;
@@ -512,7 +512,7 @@ namespace AnyRPG {
         }
 
         public override void ReceiveOpenWindowNotification() {
-            Debug.Log("QuestGiverUI.ReceiveOpenWindowNotification()");
+            //Debug.Log("QuestGiverUI.ReceiveOpenWindowNotification()");
             SetBackGroundColor(new Color32(0, 0, 0, (byte)(int)(PlayerPrefs.GetFloat("PopupWindowOpacity") * 255)));
 
             // clear first because open window handler could show a description

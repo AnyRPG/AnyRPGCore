@@ -19,7 +19,7 @@ namespace AnyRPG {
         public void LoadQuest(QuestSaveData questSaveData) {
             //Debug.Log("QuestLog.LoadQuest(" + questSaveData.MyName + ")");
 
-            Quest quest = SystemQuestManager.Instance.GetResource(questSaveData.MyName);
+            Quest quest = SystemDataFactory.Instance.GetResource<Quest>(questSaveData.MyName);
             if (quest == null) {
                 //Debug.Log("QuestLog.LoadQuest(" + questSaveData.MyName + "): COULD NOT FIND QUEST!!!");
                 return;
@@ -85,7 +85,7 @@ namespace AnyRPG {
         public void AcceptQuest(QuestSaveData questSaveData) {
             //Debug.Log("QuestLog.LoadQuest(" + questSaveData.MyName + ")");
 
-            Quest quest = SystemQuestManager.Instance.GetResource(questSaveData.MyName);
+            Quest quest = SystemDataFactory.Instance.GetResource<Quest>(questSaveData.MyName);
             if (quest == null) {
                 //Debug.Log("QuestLog.LoadQuest(" + questSaveData.MyName + "): COULD NOT FIND QUEST!!!");
                 return;

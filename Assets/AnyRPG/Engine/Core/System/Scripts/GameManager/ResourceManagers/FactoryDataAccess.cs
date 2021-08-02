@@ -14,7 +14,7 @@ namespace AnyRPG {
         public Dictionary<string, ResourceProfile> factoryData = new Dictionary<string, ResourceProfile>();
 
         public void Setup<TDataType>(string dataName) where TDataType : ResourceProfile {
-            FactoryData<TDataType> abilityFactory = new FactoryData<TDataType>("BaseAbility");
+            FactoryData<TDataType> abilityFactory = new FactoryData<TDataType>(dataName);
             abilityFactory.LoadResourceList();
             factoryData = abilityFactory.ResourceList;
             //return abilityFactory.GetResourceDict();
@@ -39,6 +39,11 @@ namespace AnyRPG {
             //Debug.Log(this.GetType().Name + ".GetResource(" + resourceName + ")");
             if (!SystemResourceManager.RequestIsEmpty(resourceName)) {
                 string keyName = SystemResourceManager.prepareStringForMatch(resourceName);
+                /*
+                foreach (string dictKeyName in factoryData.Keys) {
+                    Debug.Log("count: " + factoryData.Count + "; " + dictKeyName);
+                }
+                */
                 if (factoryData.ContainsKey(keyName)) {
                     return (factoryData[keyName] as TDataType);
                 }

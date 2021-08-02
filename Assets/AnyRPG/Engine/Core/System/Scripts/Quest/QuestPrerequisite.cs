@@ -63,7 +63,7 @@ namespace AnyRPG {
         public void SetupScriptableObjects() {
             prerequisiteQuest = null;
             if (prerequisiteName != null && prerequisiteName != string.Empty) {
-                Quest tmpPrerequisiteQuest = SystemQuestManager.Instance.GetResource(prerequisiteName);
+                Quest tmpPrerequisiteQuest = SystemDataFactory.Instance.GetResource<Quest>(prerequisiteName);
                 if (tmpPrerequisiteQuest != null) {
                     //Debug.Log("QuestPrerequisite.SetupScriptableObjects(): setting: " + prerequisiteName + " while inititalizing a quest prerequisite.");
                     prerequisiteQuest = tmpPrerequisiteQuest;

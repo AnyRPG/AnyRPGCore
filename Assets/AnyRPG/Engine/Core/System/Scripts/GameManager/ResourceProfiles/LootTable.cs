@@ -163,7 +163,7 @@ namespace AnyRPG {
             int itemCount = Random.Range(loot.MyMinDrops, loot.MyMaxDrops + 1);
             //Debug.Log("GatherLootTable.RollLoot(): itemCount: " + itemCount);
             for (int i = 0; i < itemCount; i++) {
-                ItemLootDrop droppedItem = new ItemLootDrop(SystemItemManager.Instance.GetNewResource(loot.MyItem.DisplayName), this);
+                ItemLootDrop droppedItem = new ItemLootDrop(SystemGameManager.Instance.SystemItemManager.GetNewResource(loot.MyItem.DisplayName), this);
                 droppedItem.MyItem.DropLevel = SystemGameManager.Instance.PlayerManager.MyCharacter.CharacterStats.Level;
                 droppedItems.Add(droppedItem);
                 if (lootGroupUnlimitedDrops == false && ignoreDropLimit == false) {
@@ -179,7 +179,7 @@ namespace AnyRPG {
                     }
                 }
             }
-            //droppedItems.Add(new LootDrop(SystemItemManager.Instance.GetNewResource(item.MyItem.MyName), this));
+            //droppedItems.Add(new LootDrop(SystemGameManager.Instance.SystemItemManager.GetNewResource(item.MyItem.MyName), this));
 
             return returnValue;
         }

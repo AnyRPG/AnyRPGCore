@@ -24,7 +24,7 @@ namespace AnyRPG {
                 //Debug.Log("QuestQuestObjective.UpdateCompletionCount() : COMPLETEBEFORE = TRUE");
                 return;
             }
-            if (SystemQuestManager.Instance != null) {
+            if (SystemGameManager.Instance != null) {
                 if (questObjective == null) {
                     //Debug.Log("QuestQuestObjective.UpdateCompletionCount(): questObjective is null");
                     return;
@@ -67,7 +67,7 @@ namespace AnyRPG {
             base.SetupScriptableObjects();
             questObjective = null;
             if (MyType != null && MyType != string.Empty) {
-                Quest tmpQuestObjective = SystemQuestManager.Instance.GetResource(MyType);
+                Quest tmpQuestObjective = SystemDataFactory.Instance.GetResource<Quest>(MyType);
                 if (tmpQuestObjective != null) {
                     questObjective = tmpQuestObjective;
                 } else {

@@ -4,58 +4,20 @@ using System.Collections.Generic;
 using UnityEngine;
 
 namespace AnyRPG {
-    public class SystemItemManager : SystemResourceManager {
+    public class SystemItemManager : MonoBehaviour {
 
-        #region Singleton
-        private static SystemItemManager instance;
-
-        public static SystemItemManager Instance {
-            get {
-                if (instance == null) {
-                    instance = FindObjectOfType<SystemItemManager>();
-                }
-
-                return instance;
-            }
-        }
-        #endregion
-
-        const string resourceClassName = "Item";
-
-        protected override void Awake() {
-            //Debug.Log(this.GetType().Name + ".Awake()");
-            base.Awake();
-        }
-
-        public override void LoadResourceList() {
-            //Debug.Log(this.GetType().Name + ".LoadResourceList()");
-            masterList.Add(Resources.LoadAll<Item>(resourceClassName));
-            if (SystemGameManager.Instance.SystemConfigurationManager != null) {
-                foreach (string loadResourcesFolder in SystemGameManager.Instance.SystemConfigurationManager.LoadResourcesFolders) {
-                    masterList.Add(Resources.LoadAll<Item>(loadResourcesFolder + "/" + resourceClassName));
-                }
-            }
-            base.LoadResourceList();
-        }
-
-        public Item GetResource(string resourceName) {
-            //Debug.Log(this.GetType().Name + ".GetResource(" + resourceName + ")");
-            if (!RequestIsEmpty(resourceName)) {
-                string keyName = prepareStringForMatch(resourceName);
-                if (resourceList.ContainsKey(keyName)) {
-                    return (resourceList[keyName] as Item);
-                }
-            }
-            return null;
-        }
-
-
+        /// <summary>
+        /// Get a new copy of an item based on the factory template.  This is necessary so items can be deleted without deleting the entire item from the database
+        /// </summary>
+        /// <param name="resourceName"></param>
+        /// <returns></returns>
         public Item GetNewResource(string resourceName) {
             //Debug.Log(this.GetType().Name + ".GetNewResource(" + resourceName + ")");
-            if (!RequestIsEmpty(resourceName)) {
-                string keyName = prepareStringForMatch(resourceName);
-                if (resourceList.ContainsKey(keyName)) {
-                    Item returnValue = ScriptableObject.Instantiate(resourceList[keyName]) as Item;
+            if (!FactoryResource.RequestIsEmpty(resourceName)) {
+                string keyName = FactoryResource.PrepareStringForMatch(resourceName);
+                Item itemTemplate = SystemDataFactory.Instance.GetResource<Item>("keyName");
+                if (itemTemplate != null) {
+                    Item returnValue = ScriptableObject.Instantiate(itemTemplate) as Item;
                     returnValue.SetupScriptableObjects();
                     returnValue.InitializeNewItem();
                     return returnValue;
@@ -65,14 +27,6 @@ namespace AnyRPG {
         }
 
 
-        public List<Item> GetResourceList() {
-            List<Item> returnList = new List<Item>();
-
-            foreach (UnityEngine.Object listItem in resourceList.Values) {
-                returnList.Add(listItem as Item);
-            }
-            return returnList;
-        }
     }
 
 }

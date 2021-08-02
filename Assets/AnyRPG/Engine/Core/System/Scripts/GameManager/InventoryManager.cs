@@ -175,7 +175,7 @@ namespace AnyRPG {
         public void CreateDefaultBackpack() {
             //Debug.Log("InventoryManager.CreateDefaultBackpack()");
             if (SystemGameManager.Instance.SystemConfigurationManager?.DefaultBackpackItem != null && SystemGameManager.Instance.SystemConfigurationManager?.DefaultBackpackItem != string.Empty) {
-                Bag bag = SystemItemManager.Instance.GetNewResource(SystemGameManager.Instance.SystemConfigurationManager?.DefaultBackpackItem) as Bag;
+                Bag bag = SystemGameManager.Instance.SystemItemManager.GetNewResource(SystemGameManager.Instance.SystemConfigurationManager?.DefaultBackpackItem) as Bag;
                 if (bag == null) {
                     Debug.LogError("InventoryManager.CreateDefaultBankBag(): CHECK INVENTORYMANAGER IN INSPECTOR AND SET DEFAULTBACKPACK TO VALID NAME");
                     return;
@@ -193,7 +193,7 @@ namespace AnyRPG {
             if (SystemGameManager.Instance.SystemConfigurationManager?.DefaultBankBagItem == null || SystemGameManager.Instance.SystemConfigurationManager?.DefaultBankBagItem == string.Empty) {
                 return;
             }
-            Bag bag = SystemItemManager.Instance.GetNewResource(SystemGameManager.Instance.SystemConfigurationManager?.DefaultBankBagItem) as Bag;
+            Bag bag = SystemGameManager.Instance.SystemItemManager.GetNewResource(SystemGameManager.Instance.SystemConfigurationManager?.DefaultBankBagItem) as Bag;
             if (bag == null) {
                 Debug.LogError("InventoryManager.CreateDefaultBankBag() Check SystemConfigurationManager in inspector and set defaultbankbag to valid name");
                 return;
@@ -206,7 +206,7 @@ namespace AnyRPG {
             int counter = 0;
             foreach (EquippedBagSaveData saveData in equippedBagSaveData) {
                 if (saveData.slotCount > 0) {
-                    Bag newBag = SystemItemManager.Instance.GetNewResource(saveData.MyName) as Bag;
+                    Bag newBag = SystemGameManager.Instance.SystemItemManager.GetNewResource(saveData.MyName) as Bag;
                     if (newBag != null) {
                         AddBag(newBag, BagNodes[counter]);
                     } else {
