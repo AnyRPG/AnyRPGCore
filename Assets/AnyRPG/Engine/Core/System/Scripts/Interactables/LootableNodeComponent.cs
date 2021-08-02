@@ -7,7 +7,7 @@ using UnityEngine;
 using UnityEngine.UI;
 
 namespace AnyRPG {
-    public abstract class LootableNodeComponent : InteractableOptionComponent {
+    public abstract class LootableNodeComponent : InteractableOptionComponent, ILootHolder {
 
         public LootableNodeProps Props { get => interactableOptionProps as LootableNodeProps; }
 
@@ -17,6 +17,8 @@ namespace AnyRPG {
 
         // track the number of times this item has been picked up
         protected int pickupCount = 0;
+
+        protected LootHolder lootHolder = new LootHolder();
 
         protected Coroutine spawnCoroutine = null;
 
@@ -33,7 +35,13 @@ namespace AnyRPG {
             }
         }
 
+        public LootHolder LootHolder { get => lootHolder; set => lootHolder = value; }
+
         public LootableNodeComponent(Interactable interactable, LootableNodeProps interactableOptionProps) : base(interactable, interactableOptionProps) {
+            // initialize loot tables and states
+            foreach (LootTable lootTable in Props.LootTables) {
+                lootHolder.LootTableStates.Add(lootTable, new LootTableState());
+            }
         }
 
         public override void Cleanup() {
@@ -90,7 +98,7 @@ namespace AnyRPG {
 
             List<LootDrop> lootDrops = new List<LootDrop>();
             foreach (LootTable lootTable in Props.LootTables) {
-                lootDrops.AddRange(lootTable.GetLoot());
+                lootDrops.AddRange(lootTable.GetLoot(lootHolder.LootTableStates[lootTable]));
             }
             SystemGameManager.Instance.LootManager.CreatePages(lootDrops);
             lootDropped = true;
@@ -146,7 +154,7 @@ namespace AnyRPG {
             //Debug.Log(gameObject.name + ".LootableNode.CheckDropListSize()");
             int lootCount = 0;
             foreach (LootTable lootTable in Props.LootTables) {
-                lootCount += lootTable.MyDroppedItems.Count;
+                lootCount += lootHolder.LootTableStates[lootTable].DroppedItems.Count;
             }
             if (lootCount == 0) {
                 // since this method is only called on take loot, we can consider everything picked up if there is no loot left
@@ -157,7 +165,7 @@ namespace AnyRPG {
                 SystemGameManager.Instance.PlayerManager.PlayerController.RemoveInteractable(interactable);
                 interactable.DestroySpawn();
                 foreach (LootTable lootTable in Props.LootTables) {
-                    lootTable.Reset();
+                    lootTable.Reset(lootHolder.LootTableStates[lootTable]);
                 }
 
                 // spawn timer of -1 means don't spawn again

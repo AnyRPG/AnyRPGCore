@@ -1,10 +1,10 @@
 using AnyRPG;
-﻿using UnityEngine;
+using UnityEngine;
 
 namespace AnyRPG {
-public interface IMoveable{
+    public interface IMoveable {
 
-    Sprite Icon { get; }
-    string DisplayName { get; }
-}
+        Sprite Icon { get; }
+        string DisplayName { get; }
+    }
 }

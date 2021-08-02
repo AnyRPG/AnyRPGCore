@@ -32,8 +32,8 @@ namespace AnyRPG {
                         lootButtons[i].gameObject.SetActive(true);
 
                         string colorString = "white";
-                        if (SystemGameManager.Instance.LootManager.Pages[pageIndex][i].MyItemQuality != null) {
-                            colorString = "#" + ColorUtility.ToHtmlStringRGB(SystemGameManager.Instance.LootManager.Pages[pageIndex][i].MyItemQuality.MyQualityColor);
+                        if (SystemGameManager.Instance.LootManager.Pages[pageIndex][i].ItemQuality != null) {
+                            colorString = "#" + ColorUtility.ToHtmlStringRGB(SystemGameManager.Instance.LootManager.Pages[pageIndex][i].ItemQuality.MyQualityColor);
                         }
                         string title = string.Format("<color={0}>{1}</color>", colorString, SystemGameManager.Instance.LootManager.Pages[pageIndex][i].DisplayName);
                         // set the title

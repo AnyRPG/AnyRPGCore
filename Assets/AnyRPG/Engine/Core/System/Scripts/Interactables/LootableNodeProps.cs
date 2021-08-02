@@ -33,7 +33,7 @@ namespace AnyRPG {
         public override void SetupScriptableObjects() {
             base.SetupScriptableObjects();
             foreach (string lootTableName in lootTableNames) {
-                LootTable lootTable = SystemLootTableManager.Instance.GetNewResource(lootTableName);
+                LootTable lootTable = SystemDataFactory.Instance.GetResource<LootTable>(lootTableName);
                 if (lootTable != null) {
                     lootTables.Add(lootTable);
                 } else {

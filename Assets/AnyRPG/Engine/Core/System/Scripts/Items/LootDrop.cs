@@ -12,7 +12,7 @@ namespace AnyRPG {
 
         public virtual string DisplayName => string.Empty;
 
-        public virtual ItemQuality MyItemQuality {
+        public virtual ItemQuality ItemQuality {
             get {
                 return null;
             }
@@ -109,19 +109,19 @@ namespace AnyRPG {
 
     public class ItemLootDrop : LootDrop {
 
-        public override ItemQuality MyItemQuality {
+        public override ItemQuality ItemQuality {
             get {
-                if (MyItem != null) {
-                    return MyItem.ItemQuality;
+                if (Item != null) {
+                    return Item.ItemQuality;
                 }
-                return base.MyItemQuality;
+                return base.ItemQuality;
             }
         }
 
         public override Sprite Icon {
             get {
-                if (MyItem != null) {
-                    return MyItem.Icon;
+                if (Item != null) {
+                    return Item.Icon;
                 }
                 return base.Icon;
             }
@@ -129,60 +129,60 @@ namespace AnyRPG {
 
         public override string DisplayName {
             get {
-                if (MyItem != null) {
-                    return MyItem.DisplayName;
+                if (Item != null) {
+                    return Item.DisplayName;
                 }
                 return base.DisplayName;
             }
         }
 
-        public Item MyItem { get; set; }
+        public Item Item { get; set; }
 
-        public LootTable MyLootTable { get; set; }
+        public LootTableState LootTableState { get; set; }
 
-        public ItemLootDrop(Item item, LootTable lootTable) {
-            MyLootTable = lootTable;
-            MyItem = item;
+        public ItemLootDrop(Item item, LootTableState lootTableState) {
+            LootTableState = lootTableState;
+            Item = item;
         }
 
         public override void SetBackgroundImage(Image backgroundImage) {
             base.SetBackgroundImage(backgroundImage);
-            SystemGameManager.Instance.UIManager.SetItemBackground(MyItem, backgroundImage, new Color32(0, 0, 0, 255));
+            SystemGameManager.Instance.UIManager.SetItemBackground(Item, backgroundImage, new Color32(0, 0, 0, 255));
         }
 
         public override bool TakeLoot() {
             base.TakeLoot();
-            return SystemGameManager.Instance.InventoryManager.AddItem(MyItem);
+            return SystemGameManager.Instance.InventoryManager.AddItem(Item);
         }
 
         public override void Remove() {
             base.Remove();
-            MyLootTable.MyDroppedItems.Remove(this);
+            LootTableState.DroppedItems.Remove(this);
         }
 
         public override void AfterLoot() {
             base.AfterLoot();
-            if ((MyItem as CurrencyItem) is CurrencyItem) {
+            if ((Item as CurrencyItem) is CurrencyItem) {
                 //Debug.Log("LootUI.TakeAllLoot(): item is currency: " + MyLoot.MyName);
-                (MyItem as CurrencyItem).Use();
-            } else if ((MyItem as QuestStartItem) is QuestStartItem) {
+                (Item as CurrencyItem).Use();
+            } else if ((Item as QuestStartItem) is QuestStartItem) {
                 //Debug.Log("LootUI.TakeAllLoot(): item is questStartItem: " + MyLoot.MyName);
-                (MyItem as QuestStartItem).Use();
+                (Item as QuestStartItem).Use();
             } else {
                 //Debug.Log("LootUI.TakeAllLoot(): item is normal item");
             }
         }
 
         public override string GetDescription() {
-            if (MyItem != null) {
-                return MyItem.GetDescription();
+            if (Item != null) {
+                return Item.GetDescription();
             }
             return base.GetDescription();
         }
 
         public override string GetSummary() {
-            if (MyItem != null) {
-                return MyItem.GetSummary();
+            if (Item != null) {
+                return Item.GetSummary();
             }
             return base.GetSummary();
         }

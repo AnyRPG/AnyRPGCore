@@ -19,26 +19,18 @@ namespace AnyRPG {
         [SerializeField]
         protected int dropLimit = 0;
 
-        // keep track of remaining drops if there is a drop limit
-        protected int lootTableRemainingDrops = 0;
-
         [SerializeField]
         protected List<LootGroup> lootGroups = new List<LootGroup>();
 
-        private List<LootDrop> droppedItems = new List<LootDrop>();
 
-        protected bool rolled = false;
-
-        public List<LootDrop> MyDroppedItems { get => droppedItems; set => droppedItems = value; }
-
-        public List<LootDrop> GetLoot(bool rollLoot = true) {
+        public List<LootDrop> GetLoot(LootTableState lootTableState, bool rollLoot = true) {
             //Debug.Log("LootTable.GetLoot().");
-            if (!rolled && rollLoot == true) {
+            if (!lootTableState.Rolled && rollLoot == true) {
                 //Debug.Log("LootTable.GetLoot() !rolled. rolling...");
-                RollLoot();
+                RollLoot(lootTableState);
             }
             //Debug.Log("LootTable.GetLoot(). MyDroppedItems.Length: " + MyDroppedItems.Count);
-            return MyDroppedItems;
+            return lootTableState.DroppedItems;
         }
 
         /// <summary>
@@ -46,19 +38,19 @@ namespace AnyRPG {
         /// </summary>
         /// <param name="itemName"></param>
         /// <returns></returns>
-        public bool droppedItemsContains(string itemName) {
-            foreach (LootDrop lootDrop in droppedItems) {
+        public bool droppedItemsContains(LootTableState lootTableState, string itemName) {
+            foreach (LootDrop lootDrop in lootTableState.DroppedItems) {
                 if ((lootDrop as ItemLootDrop) is ItemLootDrop) {
 
                 }
-                if (SystemResourceManager.MatchResource((lootDrop as ItemLootDrop).MyItem.DisplayName, itemName)) {
+                if (SystemResourceManager.MatchResource((lootDrop as ItemLootDrop).Item.DisplayName, itemName)) {
                     return true;
                 }
             }
             return false;
         }
 
-        protected virtual void RollLoot() {
+        protected virtual void RollLoot(LootTableState lootTableState) {
             //Debug.Log(gameObject.name + ".LootTable.RollLoot()");
             int lootTableRemainingDrops = dropLimit;
             bool lootTableUnlimitedDrops = (dropLimit == 0);
@@ -133,14 +125,14 @@ namespace AnyRPG {
                             }
                         }
                         foreach (int randomItemIndex in randomItemIndexes) {
-                            droppedItems.AddRange(GetLootDrop(validLoot[randomItemIndex], lootGroupUnlimitedDrops, ignoreDropLimit, lootTableUnlimitedDrops, ref lootGroupRemainingDrops));
+                            lootTableState.DroppedItems.AddRange(GetLootDrop(lootTableState, validLoot[randomItemIndex], lootGroupUnlimitedDrops, ignoreDropLimit, lootTableUnlimitedDrops, ref lootGroupRemainingDrops));
                         }
                     } else {
                         foreach (Loot item in validLoot) {
                             //Debug.Log("LootTable.RollLoot(): " + item.MyItem.MyName + " rolling");
                             int roll = Random.Range(0, 100);
                             if (roll <= item.MyDropChance) {
-                                droppedItems.AddRange(GetLootDrop(item, lootGroupUnlimitedDrops, ignoreDropLimit, lootTableUnlimitedDrops, ref lootGroupRemainingDrops));
+                                lootTableState.DroppedItems.AddRange(GetLootDrop(lootTableState, item, lootGroupUnlimitedDrops, ignoreDropLimit, lootTableUnlimitedDrops, ref lootGroupRemainingDrops));
                             }
                             if ((lootGroupUnlimitedDrops == false && lootGroupRemainingDrops <= 0) || (lootTableUnlimitedDrops == false && lootTableRemainingDrops <= 0)) {
                                 break;
@@ -154,18 +146,18 @@ namespace AnyRPG {
                 }
             }
 
-            rolled = true;
+            lootTableState.Rolled = true;
         }
 
 
-        public List<ItemLootDrop> GetLootDrop(Loot loot, bool lootGroupUnlimitedDrops, bool ignoreDropLimit, bool lootTableUnlimitedDrops, ref int lootGroupRemainingDrops) {
+        public List<ItemLootDrop> GetLootDrop(LootTableState lootTableState, Loot loot, bool lootGroupUnlimitedDrops, bool ignoreDropLimit, bool lootTableUnlimitedDrops, ref int lootGroupRemainingDrops) {
             List<ItemLootDrop> returnValue = new List<ItemLootDrop>();
             int itemCount = Random.Range(loot.MyMinDrops, loot.MyMaxDrops + 1);
             //Debug.Log("GatherLootTable.RollLoot(): itemCount: " + itemCount);
             for (int i = 0; i < itemCount; i++) {
-                ItemLootDrop droppedItem = new ItemLootDrop(SystemGameManager.Instance.SystemItemManager.GetNewResource(loot.MyItem.DisplayName), this);
-                droppedItem.MyItem.DropLevel = SystemGameManager.Instance.PlayerManager.MyCharacter.CharacterStats.Level;
-                droppedItems.Add(droppedItem);
+                ItemLootDrop droppedItem = new ItemLootDrop(SystemGameManager.Instance.SystemItemManager.GetNewResource(loot.MyItem.DisplayName), lootTableState);
+                droppedItem.Item.DropLevel = SystemGameManager.Instance.PlayerManager.MyCharacter.CharacterStats.Level;
+                lootTableState.DroppedItems.Add(droppedItem);
                 if (lootGroupUnlimitedDrops == false && ignoreDropLimit == false) {
                     lootGroupRemainingDrops = lootGroupRemainingDrops - 1;
                     if (lootGroupRemainingDrops <= 0) {
@@ -173,8 +165,8 @@ namespace AnyRPG {
                     }
                 }
                 if (lootTableUnlimitedDrops == false && ignoreDropLimit == false) {
-                    lootTableRemainingDrops -= 1;
-                    if (lootTableRemainingDrops <= 0) {
+                    lootTableState.LootTableRemainingDrops -= 1;
+                    if (lootTableState.LootTableRemainingDrops <= 0) {
                         break;
                     }
                 }
@@ -184,13 +176,13 @@ namespace AnyRPG {
             return returnValue;
         }
 
-        public void HandleRevive() {
-            MyDroppedItems.Clear();
-            Reset();
+        public void HandleRevive(LootTableState lootTableState) {
+            lootTableState.DroppedItems.Clear();
+            Reset(lootTableState);
         }
 
-        public void Reset() {
-            rolled = false;
+        public void Reset(LootTableState lootTableState) {
+            lootTableState.Rolled = false;
         }
 
         public override void SetupScriptableObjects() {
