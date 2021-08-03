@@ -6,11 +6,11 @@ namespace AnyRPG {
     public interface ICloseableWindowContents {
         //event System.Action<ICloseableWindowContents> OnOpenWindow;
         event System.Action<ICloseableWindowContents> OnCloseWindow;
-        void Init();
+        void Init(SystemGameManager systemGameManager);
         void RecieveClosedWindowNotification();
         void ReceiveOpenWindowNotification();
         void SetBackGroundColor(Color color);
         GameObject gameObject { get; }
-        Image MyBackGroundImage { get; }
+        Image BackGroundImage { get; }
     }
 }

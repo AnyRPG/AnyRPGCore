@@ -16,8 +16,13 @@ namespace AnyRPG {
         [SerializeField]
         private Transform creditsContainer = null;
 
-        public override void Init() {
-            base.Init();
+        private SystemWindowManager systemWindowManager = null;
+        private ObjectPooler objectPooler = null;
+
+        public override void Init(SystemGameManager systemGameManager) {
+            base.Init(systemGameManager);
+            systemWindowManager = systemGameManager.UIManager.SystemWindowManager;
+            objectPooler = systemGameManager.ObjectPooler;
             PopulateCredits();
         }
 
@@ -26,14 +31,14 @@ namespace AnyRPG {
             foreach (CreditsCategory creditsCategory in SystemDataFactory.Instance.GetResourceList<CreditsCategory>()) {
                 GameObject go = null;
                 if (firstCategoryPassed) {
-                    go = ObjectPooler.Instance.GetPooledObject(creditCategoryTemplate, creditsContainer);
+                    go = objectPooler.GetPooledObject(creditCategoryTemplate, creditsContainer);
                     go.GetComponent<CreditCategoryController>().MyTitleText.text = " ";
                 }
-                go = ObjectPooler.Instance.GetPooledObject(creditCategoryTemplate, creditsContainer);
+                go = objectPooler.GetPooledObject(creditCategoryTemplate, creditsContainer);
                 go.GetComponent<CreditCategoryController>().MyTitleText.text = creditsCategory.DisplayName;
                 firstCategoryPassed = true;
                 foreach (CreditsNode creditsNode in creditsCategory.MyCreditsNodes) {
-                    go = ObjectPooler.Instance.GetPooledObject(creditTemplate, creditsContainer);
+                    go = objectPooler.GetPooledObject(creditTemplate, creditsContainer);
                     CreditController creditController = go.GetComponent<CreditController>();
                     creditController.CreditNameText.text = creditsNode.CreditName;
                     creditController.AttributionText.text = creditsNode.CreditAttribution;
@@ -45,7 +50,7 @@ namespace AnyRPG {
 
         public void CloseMenu() {
             //SystemGameManager.Instance.UIManager.SystemWindowManager.mainMenuWindow.OpenWindow();
-            SystemGameManager.Instance.UIManager.SystemWindowManager.creditsWindow.CloseWindow();
+            systemWindowManager.creditsWindow.CloseWindow();
         }
 
     }

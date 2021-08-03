@@ -13,14 +13,17 @@ namespace AnyRPG {
         [SerializeField]
         private Image backGroundImage;
 
-        public Image MyBackGroundImage { get => backGroundImage; set => backGroundImage = value; }
+        public Image BackGroundImage { get => backGroundImage; set => backGroundImage = value; }
 
         protected RectTransform rectTransform;
 
+        protected SystemGameManager systemGameManager = null;
+
         protected bool eventSubscriptionsInitialized = false;
 
-        public virtual void Init() {
+        public virtual void Init(SystemGameManager systemGameManager) {
             //Debug.Log(gameObject.name + ".WindowContentController.Init()");
+            this.systemGameManager = systemGameManager;
             if (backGroundImage == null) {
                 backGroundImage = GetComponent<Image>();
             }

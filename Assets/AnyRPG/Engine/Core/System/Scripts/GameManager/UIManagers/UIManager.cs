@@ -111,6 +111,9 @@ namespace AnyRPG {
         [SerializeField]
         private RectTransform tooltipRect = null;
 
+        [SerializeField]
+        private HandScript handScript = null;
+
         // objects in the mouseover window
         private TextMeshProUGUI mouseOverText;
         private GameObject mouseOverTarget;
@@ -161,6 +164,7 @@ namespace AnyRPG {
         public NamePlateManager NamePlateManager { get => namePlateManager; set => namePlateManager = value; }
         public MainMapManager MainMapManager { get => mainMapManager; set => mainMapManager = value; }
         public MiniMapManager MiniMapManager { get => miniMapManager; set => miniMapManager = value; }
+        public HandScript HandScript { get => handScript; set => handScript = value; }
 
         public void Init(SystemGameManager systemGameManager) {
 
@@ -170,7 +174,9 @@ namespace AnyRPG {
             cameraManager = systemGameManager.CameraManager;
             inventoryManager = systemGameManager.InventoryManager;
 
-            combatTextManager.Init();
+            actionBarManager.Init(systemGameManager);
+            combatTextManager.Init(systemGameManager);
+            messageFeedManager.Init(systemGameManager);
             namePlateManager.Init();
             mainMapManager.Init();
             miniMapManager.Init();
@@ -908,12 +914,12 @@ namespace AnyRPG {
 
         public void UpdateFloatingCombatText() {
             if (PlayerPrefs.GetInt("UseFloatingCombatText") == 0) {
-                if (CombatTextManager.MyCombatTextCanvas.gameObject.activeSelf) {
-                    CombatTextManager.MyCombatTextCanvas.gameObject.SetActive(false);
+                if (CombatTextManager.CombatTextCanvas.gameObject.activeSelf) {
+                    CombatTextManager.CombatTextCanvas.gameObject.SetActive(false);
                 }
             } else if (PlayerPrefs.GetInt("UseFloatingCastBar") == 1) {
-                if (!CombatTextManager.MyCombatTextCanvas.gameObject.activeSelf) {
-                    CombatTextManager.MyCombatTextCanvas.gameObject.SetActive(true);
+                if (!CombatTextManager.CombatTextCanvas.gameObject.activeSelf) {
+                    CombatTextManager.CombatTextCanvas.gameObject.SetActive(true);
                 }
             }
         }

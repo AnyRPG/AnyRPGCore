@@ -170,7 +170,7 @@ namespace AnyRPG {
             //Debug.Log(baseCharacter.gameObject.name + ".CharacterCombat.Attack(" + characterTarget.name + ")");
             if (characterTarget == null) {
                 //Debug.Log("You must have a target to attack");
-                //CombatLogUI.Instance.WriteCombatMessage("You must have a target to attack");
+                //SystemGameManager.Instance.LogManager.WriteCombatMessage("You must have a target to attack");
             } else {
                 // add this here to prevent characters from not being able to attack
                 swingTarget = characterTarget;

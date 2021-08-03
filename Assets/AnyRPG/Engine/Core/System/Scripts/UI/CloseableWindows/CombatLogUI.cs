@@ -8,20 +8,6 @@ using UnityEngine.UI;
 namespace AnyRPG {
     public class CombatLogUI : WindowContentController {
 
-        #region Singleton
-        private static CombatLogUI instance;
-
-        public static CombatLogUI Instance {
-            get {
-                return instance;
-            }
-        }
-
-        private void Awake() {
-            instance = this;
-        }
-        #endregion
-
         //[SerializeField]
         //private GameObject textPrefab = null;
 
@@ -73,9 +59,6 @@ namespace AnyRPG {
         [SerializeField]
         private HighlightButton systemHighlightButton = null;
 
-        private string welcomeString = "Welcome to";
-        private string completeWelcomeString = string.Empty;
-
         // a list to hold the messages
         //private List<string> combatMessageList = new List<string>();
 
@@ -103,14 +86,19 @@ namespace AnyRPG {
 
         private List<TextLogController> usedSystemLogControllers = new List<TextLogController>();
 
-        public override void Init() {
+        public override void Init(SystemGameManager systemGameManager) {
             //Debug.Log("CombatLogUI.Awake()");
 
             PopulateObjectPool();
-            SetWelcomeString();
             ClearLog();
 
-            base.Init();
+            base.Init(systemGameManager);
+        }
+
+        private void ClearLog() {
+            HandleClearChatMessages();
+            HandleClearCombatMessages();
+            HandleClearSystemMessages();
         }
 
         public void PopulateObjectPool() {
@@ -137,19 +125,6 @@ namespace AnyRPG {
             }
         }
 
-
-        private void SetWelcomeString() {
-            completeWelcomeString = welcomeString;
-            if (SystemGameManager.Instance.SystemConfigurationManager != null) {
-                if (SystemGameManager.Instance.SystemConfigurationManager.GameName != null && SystemGameManager.Instance.SystemConfigurationManager.GameName != string.Empty) {
-                    completeWelcomeString += string.Format(" {0}", SystemGameManager.Instance.SystemConfigurationManager.GameName);
-                }
-                if (SystemGameManager.Instance.SystemConfigurationManager.GameVersion != null && SystemGameManager.Instance.SystemConfigurationManager.GameVersion != string.Empty) {
-                    completeWelcomeString += string.Format(" {0}", SystemGameManager.Instance.SystemConfigurationManager.GameVersion);
-                }
-            }
-
-        }
 
         public void ShowChatLog() {
             chatHighlightButton.Select();
@@ -218,14 +193,14 @@ namespace AnyRPG {
         }
         
 
-        public void WriteChatMessage(string newMessage) {
+        public void HandleWriteChatMessage(string newMessage) {
             TextLogController textLogController = GetTextLogController(ref chatLogControllers, ref usedChatLogControllers);
             textLogController.InitializeTextLogController(newMessage);
             LayoutRebuilder.ForceRebuildLayoutImmediate(chatRectTranform);
 
         }
 
-        public void WriteCombatMessage(string newMessage) {
+        public void HandleWriteCombatMessage(string newMessage) {
             //Debug.Log("CombatLogUI.WriteCombatMessage(" + newMessage + ")");
 
             TextLogController textLogController = GetTextLogController(ref combatLogControllers, ref usedCombatLogControllers);
@@ -235,7 +210,7 @@ namespace AnyRPG {
 
         }
 
-        public void WriteSystemMessage(string newMessage) {
+        public void HandleWriteSystemMessage(string newMessage) {
             TextLogController textLogController = GetTextLogController(ref systemLogControllers, ref usedSystemLogControllers);
 
             textLogController.InitializeTextLogController(newMessage);
@@ -250,12 +225,12 @@ namespace AnyRPG {
                 return;
             }
             base.CreateEventSubscriptions();
-            SystemGameManager.Instance.EventManager.OnTakeDamage += HandleTakeDamage;
-            SystemEventManager.StartListening("OnPlayerConnectionSpawn", handlePlayerConnectionSpawn);
-            SystemEventManager.StartListening("OnPlayerConnectionDespawn", handlePlayerConnectionDespawn);
-            if (SystemGameManager.Instance.PlayerManager.PlayerConnectionSpawned == true) {
-                PrintWelcomeMessages();
-            }
+            SystemGameManager.Instance.LogManager.OnWriteChatMessage += HandleWriteChatMessage;
+            SystemGameManager.Instance.LogManager.OnWriteSystemMessage += HandleWriteChatMessage;
+            SystemGameManager.Instance.LogManager.OnWriteCombatMessage += HandleWriteChatMessage;
+            SystemGameManager.Instance.LogManager.OnClearChatMessages += HandleClearChatMessages;
+            SystemGameManager.Instance.LogManager.OnClearSystemMessages += HandleClearChatMessages;
+            SystemGameManager.Instance.LogManager.OnClearCombatMessages += HandleClearChatMessages;
             eventSubscriptionsInitialized = true;
         }
 
@@ -265,79 +240,36 @@ namespace AnyRPG {
                 return;
             }
             base.CleanupEventSubscriptions();
-            if (SystemGameManager.Instance.EventManager != null) {
-                SystemGameManager.Instance.EventManager.OnTakeDamage -= HandleTakeDamage;
-                SystemEventManager.StopListening("OnPlayerConnectionSpawn", handlePlayerConnectionSpawn);
-                SystemEventManager.StopListening("OnPlayerConnectionDespawn", handlePlayerConnectionDespawn);
+            if (SystemGameManager.Instance?.LogManager != null) {
+                SystemGameManager.Instance.LogManager.OnWriteChatMessage += HandleWriteChatMessage;
+                SystemGameManager.Instance.LogManager.OnWriteSystemMessage += HandleWriteChatMessage;
+                SystemGameManager.Instance.LogManager.OnWriteCombatMessage += HandleWriteChatMessage;
+                SystemGameManager.Instance.LogManager.OnClearChatMessages += HandleClearChatMessages;
+                SystemGameManager.Instance.LogManager.OnClearSystemMessages += HandleClearChatMessages;
+                SystemGameManager.Instance.LogManager.OnClearCombatMessages += HandleClearChatMessages;
             }
             eventSubscriptionsInitialized = false;
         }
 
-        public void handlePlayerConnectionSpawn(string eventName, EventParamProperties eventParamProperties) {
-            PrintWelcomeMessages();
-        }
-
-        public void handlePlayerConnectionDespawn(string eventName, EventParamProperties eventParamProperties) {
-            ClearLog();
-        }
-
-        // although we usually use OnDisable, this is a static UI element, and should really keep it's references for the entire time the game is active
-        // moved to OnDestroy() instead because it was already disabled before the player connection despawned.
-        /*
-        public void OnDisable() {
-            //Debug.Log("QuestTrackerUI.OnDisable()");
-            if (SystemGameManager.IsShuttingDown) {
-                return;
-            }
-            CleanupEventSubscriptions();
-        }
-        */
-
-        public void HandleTakeDamage(IAbilityCaster source, CharacterUnit target, int damage, string abilityName) {
-            Color textColor = Color.white;
-            if (SystemGameManager.Instance.PlayerManager.UnitController != null && target == SystemGameManager.Instance.PlayerManager.UnitController.CharacterUnit) {
-                textColor = Color.red;
-            }
-            string combatMessage = string.Format("<color=#{0}>{1} Takes {2} damage from {3}'s {4}</color>", ColorUtility.ToHtmlStringRGB(textColor), target.DisplayName, damage, source.AbilityManager.Name, abilityName);
-
-            WriteCombatMessage(combatMessage);
-        }
-
-        public void ClearLog() {
-            //Debug.Log("CombatLogUI.ClearLog()");
-            ClearCombatMessages();
-            ClearChatMessages();
-            ClearSystemMessages();
-        }
-
-        private void ClearCombatMessages() {
+        public void HandleClearCombatMessages() {
             //Debug.Log("CombatLogUI.ClearCombatMessages()");
             foreach (TextLogController textLogController in combatLogControllers) {
                 returnControllerToPool(textLogController, ref combatLogControllers, ref usedCombatLogControllers);
             }
         }
 
-        private void ClearChatMessages() {
+        public void HandleClearChatMessages() {
             //Debug.Log("CombatLogUI.ClearChatMessages()");
             foreach (TextLogController textLogController in chatLogControllers) {
                 returnControllerToPool(textLogController, ref chatLogControllers, ref usedChatLogControllers);
             }
         }
 
-        private void ClearSystemMessages() {
+        public void HandleClearSystemMessages() {
             //Debug.Log("CombatLogUI.ClearSystemMessages()");
             foreach (TextLogController textLogController in systemLogControllers) {
                 returnControllerToPool(textLogController, ref systemLogControllers, ref usedSystemLogControllers);
             }
-        }
-
-        public void PrintWelcomeMessages() {
-            //Debug.Log("CombatLogUI.PrintWelcomeMessages()");
-
-            WriteChatMessage(completeWelcomeString);
-            WriteCombatMessage(completeWelcomeString);
-            WriteSystemMessage(completeWelcomeString);
-
         }
 
         public override void RecieveClosedWindowNotification() {

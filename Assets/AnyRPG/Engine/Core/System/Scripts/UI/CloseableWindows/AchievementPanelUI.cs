@@ -5,71 +5,27 @@ using UnityEngine;
 using UnityEngine.UI;
 
 namespace AnyRPG {
-    public class AchievementPanelUI : MonoBehaviour, IPagedWindowContents {
-
-        public event System.Action<bool> OnPageCountUpdate = delegate { };
-        public event System.Action<ICloseableWindowContents> OnCloseWindow = delegate { };
+    public class AchievementPanelUI : PagedWindowContents {
 
         [SerializeField]
         private List<AchievementButton> resourceButtons = new List<AchievementButton>();
 
-        private List<List<Quest>> pages = new List<List<Quest>>();
-
-        private int pageSize = 10;
-
-        private int pageIndex;
-
-        [SerializeField]
-        private Image backGroundImage;
-
-        public Image MyBackGroundImage { get => backGroundImage; set => backGroundImage = value; }
-
-        public virtual void Awake() {
-            //Debug.Log("AchievementPanelUI.Awake()");
-            if (backGroundImage == null) {
-                backGroundImage = GetComponent<Image>();
-            }
-        }
-
-        public void Init() {
-            // nothing for now, here to satisfy interface.  fix me at some point if possible
-        }
-
-        public void SetBackGroundColor(Color color) {
-            //Debug.Log("AchievementPanelUI.SetBackGroundColor()");
-            if (backGroundImage != null) {
-                backGroundImage.color = color;
-            }
-        }
-
-        public int GetPageCount() {
-            //Debug.Log("AchievementPanelUI.GetPageCount()");
-            return pages.Count;
-        }
-
-        public void CreatePages() {
+        protected override void PopulatePages() {
             //Debug.Log("AchievementPanelUI.CreatePages()");
-            ClearPages();
-            List<Quest> page = new List<Quest>();
-            int i = 0;
+            QuestContentList page = new QuestContentList();
             foreach (Quest quest in SystemDataFactory.Instance.GetResourceList<Quest>()) {
-                //Debug.Log("AchievementPanelUI.CreatePages(): questName: " + quest.MyName + "; complete: " + quest.IsComplete + "; turnedin: " + quest.TurnedIn + "; achievement: " + quest.MyIsAchievement);
                 if (quest.MyIsAchievement && quest.TurnedIn) {
-                    //Debug.Log("AchievementPanelUI.CreatePages(): questName: " + quest.MyName + "; complete: " + quest.IsComplete + "; turnedin: " + quest.TurnedIn + "; achievement: " + quest.MyIsAchievement);
-                    page.Add(quest);
+                    page.quests.Add(quest);
                 }
-                if (page.Count == pageSize) {
+                if (page.quests.Count == pageSize) {
                     pages.Add(page);
-                    page = new List<Quest>();
+                    page = new QuestContentList();
                 }
-                i++;
             }
-            if (page.Count > 0) {
+            if (page.quests.Count > 0) {
                 pages.Add(page);
             }
             AddResources();
-            OnPageCountUpdate(false);
-
         }
 
         public void AddResources() {
@@ -78,10 +34,10 @@ namespace AnyRPG {
                 for (int i = 0; i < pageSize; i++) {
                     //for (int i = 0; i < pages[pageIndex].Count - 1; i++) {
                     //Debug.Log("AchievementPanelUI.AddResources(): i: " + i);
-                    if (i < pages[pageIndex].Count) {
+                    if (i < (pages[pageIndex] as QuestContentList).quests.Count) {
                         //Debug.Log("adding ability");
                         resourceButtons[i].gameObject.SetActive(true);
-                        resourceButtons[i].AddResource(pages[pageIndex][i]);
+                        resourceButtons[i].AddResource((pages[pageIndex] as QuestContentList).quests[i]);
                     } else {
                         //Debug.Log("clearing ability");
                         resourceButtons[i].ClearResource();
@@ -91,35 +47,21 @@ namespace AnyRPG {
             }
         }
 
-        public void ClearButtons() {
-            //Debug.Log("AchievementPanelUI.ClearButtons()");
+        public override void LoadPage(int pageIndex) {
+            base.LoadPage(pageIndex);
+            AddResources();
+        }
+
+        public override void ClearButtons() {
+            base.ClearButtons();
             foreach (AchievementButton btn in resourceButtons) {
                 btn.gameObject.SetActive(false);
             }
         }
 
-        public void LoadPage(int pageIndex) {
-            //Debug.Log("AchievementPanelUI.LoadPage(" + pageIndex + ")");
-            ClearButtons();
-            this.pageIndex = pageIndex;
-            AddResources();
-        }
+    }
 
-        public void RecieveClosedWindowNotification() {
-            //Debug.Log("AchievementPanelUI.OnCloseWindow()");
-        }
-
-        public void ReceiveOpenWindowNotification() {
-            //Debug.Log("AchievementPanelUI.OnOpenWindow()");
-            SetBackGroundColor(new Color32(0, 0, 0, (byte)(int)(PlayerPrefs.GetFloat("PopupWindowOpacity") * 255)));
-            CreatePages();
-        }
-
-        private void ClearPages() {
-            ClearButtons();
-            pages.Clear();
-            pageIndex = 0;
-        }
-
+    public class QuestContentList : PagedContentList {
+        public List<Quest> quests = new List<Quest>();
     }
 }

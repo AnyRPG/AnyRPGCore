@@ -106,22 +106,22 @@ namespace AnyRPG {
             }
             if (eventData.button == PointerEventData.InputButton.Left) {
                 //Debug.Log("BagButton.OnPointerClick() LEFT CLICK DETECTED");
-                if (SystemGameManager.Instance.InventoryManager.FromSlot != null && HandScript.Instance.MyMoveable != null && HandScript.Instance.MyMoveable is Bag) {
+                if (SystemGameManager.Instance.InventoryManager.FromSlot != null && SystemGameManager.Instance.UIManager.HandScript.Moveable != null && SystemGameManager.Instance.UIManager.HandScript.Moveable is Bag) {
                     if (MyBagNode.MyBag != null) {
-                        SystemGameManager.Instance.InventoryManager.SwapBags(MyBagNode.MyBag, HandScript.Instance.MyMoveable as Bag);
+                        SystemGameManager.Instance.InventoryManager.SwapBags(MyBagNode.MyBag, SystemGameManager.Instance.UIManager.HandScript.Moveable as Bag);
                     } else {
-                        Bag tmp = (Bag)HandScript.Instance.MyMoveable;
+                        Bag tmp = (Bag)SystemGameManager.Instance.UIManager.HandScript.Moveable;
                         tmp.MyBagNode = bagNode;
                         tmp.Use();
                         MyBagNode.MyBag = tmp;
-                        HandScript.Instance.Drop();
+                        SystemGameManager.Instance.UIManager.HandScript.Drop();
                         SystemGameManager.Instance.InventoryManager.FromSlot = null;
 
                     }
                 } else if (Input.GetKey(KeyCode.LeftShift)) {
                     //Debug.Log("BagButton.OnPointerClick() LEFT CLICK DETECTED WITH SHIFT KEY on bagNode.mybag: " + bagNode.MyBag.GetInstanceID());
                     //Debug.Log("InventoryManager.RemoveBag(): Found matching bag in bagNode: " + bagNode.MyBag.GetInstanceID() + "; " + bag.GetInstanceID());
-                    HandScript.Instance.TakeMoveable(MyBagNode.MyBag);
+                    SystemGameManager.Instance.UIManager.HandScript.TakeMoveable(MyBagNode.MyBag);
                 } else if (bagNode?.MyBag != null) {
                     bagNode.BagWindow.ToggleOpenClose();
                 }

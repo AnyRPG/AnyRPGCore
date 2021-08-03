@@ -33,8 +33,8 @@ namespace AnyRPG {
 
         private List<CurrencyAmountController> currencyAmountControllers = new List<CurrencyAmountController>();
 
-        public override void Init() {
-            base.Init();
+        public override void Init(SystemGameManager systemGameManager) {
+            base.Init(systemGameManager);
             //vendorUI.CreatePages(items);
             CreateEventSubscriptions();
             //InitializeBuyBackList();

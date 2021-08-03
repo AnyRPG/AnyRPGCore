@@ -17,9 +17,23 @@ namespace AnyRPG {
 
         private List<CombatTextController> inUseCombatTextControllers = new List<CombatTextController>();
 
-        public Canvas MyCombatTextCanvas { get => combatTextCanvas; set => combatTextCanvas = value; }
+        private SystemGameManager systemGameManager = null;
+        private SystemConfigurationManager systemConfigurationManager = null;
+        private CameraManager cameraManager = null;
+        private PlayerManager playerManager = null;
+        private ObjectPooler objectPooler = null;
+        private CutSceneBarController cutSceneBarController = null;
 
-        public void Init() {
+        public Canvas CombatTextCanvas { get => combatTextCanvas; set => combatTextCanvas = value; }
+
+        public void Init(SystemGameManager systemGameManager) {
+            this.systemGameManager = systemGameManager;
+            systemConfigurationManager = systemGameManager.SystemConfigurationManager;
+            cameraManager = systemGameManager.CameraManager;
+            playerManager = systemGameManager.PlayerManager;
+            objectPooler = systemGameManager.ObjectPooler;
+            cutSceneBarController = systemGameManager.UIManager.CutSceneBarController;
+
             //Debug.Log("NamePlateManager.Awake(): " + SystemGameManager.Instance.UIManager.NamePlateManager.gameObject.name);
             SystemEventManager.StartListening("AfterCameraUpdate", HandleAfterCameraUpdate);
             SystemEventManager.StartListening("OnLevelUnload", HandleLevelUnload);
@@ -30,9 +44,9 @@ namespace AnyRPG {
         }
 
         public void LateUpdate() {
-            if (SystemGameManager.Instance.SystemConfigurationManager.UseThirdPartyCameraControl == true
-                && SystemGameManager.Instance.CameraManager.ThirdPartyCamera.activeInHierarchy == true
-                && SystemGameManager.Instance.PlayerManager.PlayerUnitSpawned == true) {
+            if (systemConfigurationManager.UseThirdPartyCameraControl == true
+                && cameraManager.ThirdPartyCamera.activeInHierarchy == true
+                && playerManager.PlayerUnitSpawned == true) {
                 UpdateCombatText();
             }
         }
@@ -46,10 +60,10 @@ namespace AnyRPG {
         }
 
         private void UpdateCombatText() {
-            if (SystemGameManager.Instance.CameraManager?.ActiveMainCamera == null) {
+            if (cameraManager.ActiveMainCamera == null) {
                 return;
             }
-            if (SystemGameManager.Instance.UIManager.CutSceneBarController.CurrentCutscene != null) {
+            if (cutSceneBarController.CurrentCutscene != null) {
                 return;
             }
             foreach (CombatTextController combatTextController in inUseCombatTextControllers) {
@@ -58,7 +72,7 @@ namespace AnyRPG {
         }
 
         public CombatTextController GetCombatTextController() {
-            GameObject pooledObject = ObjectPooler.Instance.GetPooledObject(combatTextPrefab, combatTextCanvas.transform);
+            GameObject pooledObject = objectPooler.GetPooledObject(combatTextPrefab, combatTextCanvas.transform);
             if (pooledObject != null) {
                 return pooledObject.GetComponent<CombatTextController>();
             }
@@ -77,7 +91,7 @@ namespace AnyRPG {
         public IEnumerator ReturnAtEndOfFrame(CombatTextController combatTextController) {
             yield return new WaitForEndOfFrame();
             inUseCombatTextControllers.Remove(combatTextController);
-            ObjectPooler.Instance.ReturnObjectToPool(combatTextController.gameObject);
+            objectPooler.ReturnObjectToPool(combatTextController.gameObject);
 
         }
 

@@ -8,21 +8,7 @@ using UnityEngine.UI;
 namespace AnyRPG {
     public class HandScript : MonoBehaviour {
 
-        #region Singleton
-        private static HandScript instance;
-
-        public static HandScript Instance {
-            get {
-                return instance;
-            }
-        }
-
-        private void Awake() {
-            instance = this;
-        }
-        #endregion
-
-        public IMoveable MyMoveable { get; set; }
+        public IMoveable Moveable { get; set; }
 
         private Image icon;
 
@@ -38,10 +24,10 @@ namespace AnyRPG {
         // Update is called once per frame
         void Update() {
             icon.transform.position = Input.mousePosition + offset;
-            if (Input.GetMouseButtonDown(0) && !EventSystem.current.IsPointerOverGameObject() && Instance.MyMoveable != null) {
-                if (Instance.MyMoveable is Item) {
+            if (Input.GetMouseButtonDown(0) && !EventSystem.current.IsPointerOverGameObject() && Moveable != null) {
+                if (Moveable is Item) {
                     SystemGameManager.Instance.UIManager.SystemWindowManager.confirmDestroyMenuWindow.OpenWindow();
-                } else if (Instance.MyMoveable is BaseAbility) {
+                } else if (Moveable is BaseAbility) {
                     // DROP ABILITY SAFELY
                     if (SystemGameManager.Instance.UIManager.ActionBarManager.FromButton != null) {
                         SystemGameManager.Instance.UIManager.ActionBarManager.FromButton.ClearUseable();
@@ -56,14 +42,14 @@ namespace AnyRPG {
 
         public void TakeMoveable(IMoveable moveable) {
             //Debug.Log("HandScript.TakeMoveable(" + moveable.ToString() + ")");
-            this.MyMoveable = moveable;
+            this.Moveable = moveable;
             icon.sprite = moveable.Icon;
             icon.color = Color.white;
         }
 
         public IMoveable Put() {
             //Debug.Log("HandScript.Put().  Putting " + MyMoveable.ToString());
-            IMoveable tmp = MyMoveable;
+            IMoveable tmp = Moveable;
             ClearMoveable();
 
             return tmp;
@@ -81,15 +67,15 @@ namespace AnyRPG {
             if (SystemGameManager.Instance.InventoryManager.FromSlot != null) {
                 SystemGameManager.Instance.InventoryManager.FromSlot.PutItemBack();
             }
-            MyMoveable = null;
+            Moveable = null;
             icon.sprite = null;
             icon.color = new Color(0, 0, 0, 0);
         }
 
         public void DeleteItem() {
             //Debug.Log("HandScript.DeleteItem()");
-            if (MyMoveable is Item) {
-                Item item = (Item)MyMoveable;
+            if (Moveable is Item) {
+                Item item = (Item)Moveable;
                 if (item.MySlot != null) {
                     item.MySlot.Clear();
                 } else {
@@ -104,7 +90,7 @@ namespace AnyRPG {
                     }
                 }
             }
-            CombatLogUI.Instance.WriteSystemMessage("Destroyed " + MyMoveable.DisplayName);
+            SystemGameManager.Instance.LogManager.WriteSystemMessage("Destroyed " + Moveable.DisplayName);
             Drop();
             // done in drop... ?
             //SystemGameManager.Instance.InventoryManager.FromSlot = null;

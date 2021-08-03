@@ -5,62 +5,32 @@ using UnityEngine;
 using UnityEngine.UI;
 
 namespace AnyRPG {
-    public class CurrencyPanelUI : MonoBehaviour, IPagedWindowContents {
-
-        public event System.Action<bool> OnPageCountUpdate = delegate { };
-        public event System.Action<ICloseableWindowContents> OnCloseWindow = delegate { };
+    public class CurrencyPanelUI : PagedWindowContents {
 
         [SerializeField]
         private List<CurrencyButton> currencyButtons = new List<CurrencyButton>();
 
-        private List<List<CurrencyNode>> pages = new List<List<CurrencyNode>>();
+        private PlayerManager playerManager = null;
 
-        private int pageSize = 10;
-
-        private int pageIndex = 0;
-
-        [SerializeField]
-        private Image backGroundImage = null;
-
-        public Image MyBackGroundImage { get => backGroundImage; set => backGroundImage = value; }
-
-        public virtual void Awake() {
-            if (backGroundImage == null) {
-                backGroundImage = GetComponent<Image>();
-            }
+        public override void Init(SystemGameManager systemGameManager) {
+            base.Init(systemGameManager);
+            playerManager = systemGameManager.PlayerManager;
         }
 
-        public void Init() {
-            // nothing for now, here to satisfy interface.  fix me at some point if possible
-        }
-
-        public void SetBackGroundColor(Color color) {
-            if (backGroundImage != null) {
-                backGroundImage.color = color;
-            }
-        }
-
-        public int GetPageCount() {
-            return pages.Count;
-        }
-
-        public void CreatePages() {
+        protected override void PopulatePages() {
             //Debug.Log("ReputationBookUI.CreatePages()");
-            ClearPages();
-            List<CurrencyNode> page = new List<CurrencyNode>();
-            foreach (CurrencyNode currencySaveData in SystemGameManager.Instance.PlayerManager.MyCharacter.CharacterCurrencyManager.MyCurrencyList.Values) {
-                page.Add(currencySaveData);
-                if (page.Count == pageSize) {
+            CurrencyNodeContentList page = new CurrencyNodeContentList();
+            foreach (CurrencyNode currencySaveData in playerManager.MyCharacter.CharacterCurrencyManager.MyCurrencyList.Values) {
+                page.currencyNodes.Add(currencySaveData);
+                if (page.currencyNodes.Count == pageSize) {
                     pages.Add(page);
-                    page = new List<CurrencyNode>();
+                    page = new CurrencyNodeContentList();
                 }
             }
-            if (page.Count > 0) {
+            if (page.currencyNodes.Count > 0) {
                 pages.Add(page);
             }
             AddCurrencies();
-            OnPageCountUpdate(false);
-
         }
 
         public void AddCurrencies() {
@@ -69,10 +39,10 @@ namespace AnyRPG {
                 for (int i = 0; i < pageSize; i++) {
                     //for (int i = 0; i < pages[pageIndex].Count - 1; i++) {
                     //Debug.Log("ReputationBookUI.AddAbilities(): i: " + i);
-                    if (i < pages[pageIndex].Count) {
+                    if (i < (pages[pageIndex] as CurrencyNodeContentList).currencyNodes.Count) {
                         //Debug.Log("adding ability");
                         currencyButtons[i].gameObject.SetActive(true);
-                        currencyButtons[i].AddCurrency(pages[pageIndex][i].currency);
+                        currencyButtons[i].AddCurrency((pages[pageIndex] as CurrencyNodeContentList).currencyNodes[i].currency);
                     } else {
                         //Debug.Log("clearing ability");
                         currencyButtons[i].ClearCurrency();
@@ -82,31 +52,21 @@ namespace AnyRPG {
             }
         }
 
-        public void ClearButtons() {
+        public override void LoadPage(int pageIndex) {
+            base.LoadPage(pageIndex);
+            AddCurrencies();
+        }
+
+        public override void ClearButtons() {
+            base.ClearButtons();
             foreach (CurrencyButton btn in currencyButtons) {
                 btn.gameObject.SetActive(false);
             }
         }
 
-        public void LoadPage(int pageIndex) {
-            ClearButtons();
-            this.pageIndex = pageIndex;
-            AddCurrencies();
-        }
+    }
 
-        public void RecieveClosedWindowNotification() {
-        }
-
-        public void ReceiveOpenWindowNotification() {
-            SetBackGroundColor(new Color32(0, 0, 0, (byte)(int)(PlayerPrefs.GetFloat("PopupWindowOpacity") * 255)));
-            CreatePages();
-        }
-
-        private void ClearPages() {
-            ClearButtons();
-            pages.Clear();
-            pageIndex = 0;
-        }
-
+    public class CurrencyNodeContentList : PagedContentList {
+        public List<CurrencyNode> currencyNodes = new List<CurrencyNode>();
     }
 }

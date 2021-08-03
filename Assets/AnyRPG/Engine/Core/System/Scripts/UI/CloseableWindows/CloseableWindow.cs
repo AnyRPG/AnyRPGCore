@@ -35,12 +35,12 @@ namespace AnyRPG {
         [SerializeField]
         protected Image backGroundImage;
 
+        private SystemGameManager systemGameManager = null;
+
         /*
         [SerializeField]
         protected CanvasGroup canvasGroup;
         */
-
-        protected bool windowInitialized = false;
 
         public ICloseableWindowContents CloseableWindowContents { get => windowContents; set => windowContents = value; }
 
@@ -51,24 +51,19 @@ namespace AnyRPG {
             }
         }
 
-        protected virtual void Awake() {
+        protected virtual void Init(SystemGameManager systemGameManager) {
             //Debug.Log(gameObject.name + ".CloseableWindow.Awake()");
-            if (!windowInitialized) {
-                InitializeWindow();
-                RawCloseWindow();
-            }
+            this.systemGameManager = systemGameManager;
+            InitializeWindow();
+            RawCloseWindow();
         }
 
         protected virtual void InitializeWindow() {
             //Debug.Log(gameObject.name + ".CloseableWindow.InitializeWindow()");
-            if (windowInitialized) {
-                return;
-            }
             if (windowText != null) {
                 windowText.text = windowTitle;
             }
             InitializeWindowContentsCommon();
-            windowInitialized = true;
         }
 
         public void InitializeWindowContentsCommon() {
@@ -80,7 +75,7 @@ namespace AnyRPG {
             if (contentGameObject != null) {
                 //Debug.Log(gameObject.name + ".CloseableWindow.InitializeWindow(): Instanted; setting window Contents");
                 windowContents = contentGameObject.GetComponent<ICloseableWindowContents>();
-                windowContents.Init();
+                windowContents.Init(systemGameManager);
             }
         }
 

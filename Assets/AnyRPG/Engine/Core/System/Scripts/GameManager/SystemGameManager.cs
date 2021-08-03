@@ -72,6 +72,12 @@ namespace AnyRPG {
         [SerializeField]
         private SystemAchievementManager systemAchievementManager = null;
 
+        [SerializeField]
+        private LogManager logManager = null;
+
+        [SerializeField]
+        private ObjectPooler objectPooler = null;
+
         [Header("Data Resource Factory")]
 
         [SerializeField]
@@ -118,6 +124,8 @@ namespace AnyRPG {
         public PlayerManager PlayerManager { get => playerManager; set => playerManager = value; }
         public SystemItemManager SystemItemManager { get => systemItemManager; set => systemItemManager = value; }
         public SystemAchievementManager SystemAchievementManager { get => systemAchievementManager; set => systemAchievementManager = value; }
+        public LogManager LogManager { get => logManager; set => logManager = value; }
+        public ObjectPooler ObjectPooler { get => objectPooler; set => objectPooler = value; }
 
         private void Init() {
             //Debug.Log("SystemGameManager.Init()");
@@ -147,7 +155,7 @@ namespace AnyRPG {
             systemAbilityController.Init();
             castTargettingManager.Init();
             inputManager.Init();
-            inventoryManager.Init();
+            inventoryManager.Init(this);
             uIManager.Init(this);
 
         }

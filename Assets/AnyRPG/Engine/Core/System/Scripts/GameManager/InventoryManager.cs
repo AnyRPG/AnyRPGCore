@@ -34,6 +34,16 @@ namespace AnyRPG {
 
         protected CanvasGroup canvasGroup = null;
 
+        // game manager references
+        private HandScript handScript = null;
+        private MessageFeedManager messageFeedManager = null;
+        private SystemConfigurationManager systemConfigurationManager = null;
+        private SystemItemManager systemItemManager = null;
+        private UIManager uIManager = null;
+        private PopupWindowManager popupWindowManager = null;
+        private ObjectPooler objectPooler = null;
+        private SystemEventManager systemEventManager = null;
+
         //private bool debugMode = false;
 
         // whether bag positions have been loaded
@@ -87,9 +97,17 @@ namespace AnyRPG {
         public List<BagNode> BagNodes { get => bagNodes; set => bagNodes = value; }
         public List<BagNode> BankNodes { get => bagNodes; set => bagNodes = value; }
 
-        public void Init() {
+        public void Init(SystemGameManager systemGameManager) {
             //Debug.Log("InventoryManager.Awake()");
             canvasGroup = inventoryContainer.GetComponent<CanvasGroup>();
+            uIManager = systemGameManager.UIManager;
+            handScript = uIManager.HandScript;
+            messageFeedManager = uIManager.MessageFeedManager;
+            popupWindowManager = uIManager.PopupWindowManager;
+            systemConfigurationManager = systemGameManager.SystemConfigurationManager;
+            systemItemManager = systemGameManager.SystemItemManager;
+            objectPooler = systemGameManager.ObjectPooler;
+            systemEventManager = systemGameManager.EventManager;
         }
 
         private void Start() {
@@ -174,13 +192,13 @@ namespace AnyRPG {
 
         public void CreateDefaultBackpack() {
             //Debug.Log("InventoryManager.CreateDefaultBackpack()");
-            if (SystemGameManager.Instance.SystemConfigurationManager?.DefaultBackpackItem != null && SystemGameManager.Instance.SystemConfigurationManager?.DefaultBackpackItem != string.Empty) {
-                Bag bag = SystemGameManager.Instance.SystemItemManager.GetNewResource(SystemGameManager.Instance.SystemConfigurationManager?.DefaultBackpackItem) as Bag;
+            if (systemConfigurationManager.DefaultBackpackItem != null && systemConfigurationManager.DefaultBackpackItem != string.Empty) {
+                Bag bag = systemItemManager.GetNewResource(systemConfigurationManager.DefaultBackpackItem) as Bag;
                 if (bag == null) {
                     Debug.LogError("InventoryManager.CreateDefaultBankBag(): CHECK INVENTORYMANAGER IN INSPECTOR AND SET DEFAULTBACKPACK TO VALID NAME");
                     return;
                 }
-                if (SystemGameManager.Instance.SystemConfigurationManager.EquipDefaultBackPack) {
+                if (systemConfigurationManager.EquipDefaultBackPack) {
                     bag.Use();
                 } else {
                     AddItem(bag, true);
@@ -190,10 +208,10 @@ namespace AnyRPG {
 
         public void CreateDefaultBankBag() {
             //Debug.Log("InventoryManager.CreateDefaultBankBag()");
-            if (SystemGameManager.Instance.SystemConfigurationManager?.DefaultBankBagItem == null || SystemGameManager.Instance.SystemConfigurationManager?.DefaultBankBagItem == string.Empty) {
+            if (systemConfigurationManager.DefaultBankBagItem == null || systemConfigurationManager.DefaultBankBagItem == string.Empty) {
                 return;
             }
-            Bag bag = SystemGameManager.Instance.SystemItemManager.GetNewResource(SystemGameManager.Instance.SystemConfigurationManager?.DefaultBankBagItem) as Bag;
+            Bag bag = systemItemManager.GetNewResource(systemConfigurationManager.DefaultBankBagItem) as Bag;
             if (bag == null) {
                 Debug.LogError("InventoryManager.CreateDefaultBankBag() Check SystemConfigurationManager in inspector and set defaultbankbag to valid name");
                 return;
@@ -206,7 +224,7 @@ namespace AnyRPG {
             int counter = 0;
             foreach (EquippedBagSaveData saveData in equippedBagSaveData) {
                 if (saveData.slotCount > 0) {
-                    Bag newBag = SystemGameManager.Instance.SystemItemManager.GetNewResource(saveData.MyName) as Bag;
+                    Bag newBag = systemItemManager.GetNewResource(saveData.MyName) as Bag;
                     if (newBag != null) {
                         AddBag(newBag, BagNodes[counter]);
                     } else {
@@ -236,7 +254,7 @@ namespace AnyRPG {
 
                 if (i < bagCount) {
                     // create a new BagWindow to show the contents of this bag Nodes' bag
-                    bagNode.BagWindow = ObjectPooler.Instance.GetPooledObject(windowPrefab, inventoryWindowHolders[i].transform).GetComponent<CloseableWindow>();
+                    bagNode.BagWindow = objectPooler.GetPooledObject(windowPrefab, inventoryWindowHolders[i].transform).GetComponent<CloseableWindow>();
                     bagNode.BagWindow.transform.GetComponent<RectTransform>().pivot = new Vector2(1, 1);
                     // create a bagbutton to access this bag node
 
@@ -251,14 +269,14 @@ namespace AnyRPG {
                 } else {
                     if (i == bagCount) {
                         //Debug.Log("InventoryManager.InitializeBagWindows(): create element " + i + " setting bag window to bank window");
-                        bagNode.BagWindow = SystemGameManager.Instance.UIManager.PopupWindowManager.bankWindow;
+                        bagNode.BagWindow = popupWindowManager.bankWindow;
                     } else {
                         //Debug.Log("InventoryManager.InitializeBagWindows(): create element " + i + " creating bag window");
-                        bagNode.BagWindow = ObjectPooler.Instance.GetPooledObject(windowPrefab, inventoryWindowHolders[i - 1].transform).GetComponent<CloseableWindow>();
+                        bagNode.BagWindow = objectPooler.GetPooledObject(windowPrefab, inventoryWindowHolders[i - 1].transform).GetComponent<CloseableWindow>();
                         bagNode.BagWindow.transform.GetComponent<RectTransform>().pivot = new Vector2(1, 1);
                     }
 
-                    bagNode.BagButton = (SystemGameManager.Instance.UIManager.PopupWindowManager.bankWindow.CloseableWindowContents as BankPanel).MyBagBarController.AddBagButton();
+                    bagNode.BagButton = (popupWindowManager.bankWindow.CloseableWindowContents as BankPanel).MyBagBarController.AddBagButton();
 
                     if (bagNode.BagButton != null) {
                         bagNode.BagButton.MyBagNode = bagNode;
@@ -277,7 +295,6 @@ namespace AnyRPG {
             for (int i = 0; i < 13; i++) {
                 //Debug.Log("Bag Nodes initialized. Checking node: " + i);
                 if (PlayerPrefs.HasKey("InventoryWindowX" + i) && PlayerPrefs.HasKey("InventoryWindowY" + i)) {
-                    //SystemGameManager.Instance.InventoryManager.MyBagNodes[i].MyBagWindow.transform.position = new Vector3(PlayerPrefs.GetFloat("InventoryWindowX" + i), PlayerPrefs.GetFloat("InventoryWindowY" + i), 0);
                     BagNodes[i].BagWindow.transform.position = new Vector3(PlayerPrefs.GetFloat("InventoryWindowX" + i), PlayerPrefs.GetFloat("InventoryWindowY" + i), 0);
                     //Debug.Log("setting node:" + i + "; to: " + new Vector3(PlayerPrefs.GetFloat("InventoryWindowX" + i), PlayerPrefs.GetFloat("InventoryWindowY" + i), 0));
                 } else {
@@ -339,7 +356,7 @@ namespace AnyRPG {
 
             //Debug.Log("InventoryManager.PopulateBagNode(): bagNode.MyBag: " + bagNode.MyBag.GetInstanceID() + "; bagNode.MyBag.MyBagPanel: " + bagNode.MyBag.MyBagPanel.GetInstanceID() + "; bag" + bag.GetInstanceID() + "; bag.MyBagPanel: " + bag.MyBagPanel.GetInstanceID());
 
-            SystemGameManager.Instance.UIManager.UpdateInventoryOpacity();
+            uIManager.UpdateInventoryOpacity();
 
         }
 
@@ -440,7 +457,7 @@ namespace AnyRPG {
                     }
                 }
                 AddItem(oldBag);
-                HandScript.Instance.Drop();
+                handScript.Drop();
                 fromSlot = null;
             }
         }
@@ -454,7 +471,7 @@ namespace AnyRPG {
                 return false;
             }
             if (item.MyUniqueItem == true && GetItemCount(item.DisplayName) > 0) {
-                SystemGameManager.Instance.UIManager.MessageFeedManager.WriteMessage(item.DisplayName + " is unique.  You can only carry one at a time.");
+                messageFeedManager.WriteMessage(item.DisplayName + " is unique.  You can only carry one at a time.");
                 return false;
             }
             if (item.MyMaximumStackSize > 0) {
@@ -503,7 +520,7 @@ namespace AnyRPG {
             }
             if (EmptySlotCount(addToBank) == 0) {
                 //Debug.Log("No empty slots");
-                SystemGameManager.Instance.UIManager.MessageFeedManager.WriteMessage((addToBank == false ? "Inventory" : "Bank") + " is full!");
+                messageFeedManager.WriteMessage((addToBank == false ? "Inventory" : "Bank") + " is full!");
             }
             return false;
         }
@@ -519,12 +536,6 @@ namespace AnyRPG {
                     }
                 }
             }
-            // commented below because it may result in 2 full messages being displayed if the last item in the bag is a full stack of the same item type
-            /*
-            if (MyEmptySlotCount(addToBank) == 0) {
-                SystemGameManager.Instance.UIManager.MessageFeedManager.WriteMessage((addToBank == false ? "Inventory" : "Bank") + " is full!");
-            }
-            */
             return false;
         }
 
@@ -566,7 +577,7 @@ namespace AnyRPG {
             // if closed bag is false, then close all open bags
             bool inventoryClosed = InventoryClosed();
             if (CurrentBagCount == 0) {
-                SystemGameManager.Instance.UIManager.MessageFeedManager.WriteMessage("You do not have any bags equipped");
+                messageFeedManager.WriteMessage("You do not have any bags equipped");
                 return;
             }
             //Debug.Log("Inventory is closed: " + inventoryClosed);
@@ -576,7 +587,7 @@ namespace AnyRPG {
                     bagNode.BagWindow.ToggleOpenClose();
                 }
             }
-            SystemGameManager.Instance.UIManager.UpdateInventoryOpacity();
+            uIManager.UpdateInventoryOpacity();
             // that may look wrong, but it will still read as closed, because we opened it after taking that reading
             //if (inventoryClosed) {
             SetWindowPositions();
@@ -590,7 +601,6 @@ namespace AnyRPG {
             for (int i = 0; i < 13; i++) {
                 //Debug.Log("Checking window " + i + " on openclose");
                 if (PlayerPrefs.HasKey("InventoryWindowX" + i) && PlayerPrefs.HasKey("InventoryWindowY" + i)) {
-                    //SystemGameManager.Instance.InventoryManager.MyBagNodes[i].MyBagWindow.transform.position = new Vector3(PlayerPrefs.GetFloat("InventoryWindowX" + i), PlayerPrefs.GetFloat("InventoryWindowY" + i), 0);
                     //Debug.Log("setting node:" + i + "; to: " + new Vector3(PlayerPrefs.GetFloat("InventoryWindowX" + i), PlayerPrefs.GetFloat("InventoryWindowY" + i), 0));
                     if (BagNodes[i].BagWindow.IsOpen) {
                         //Debug.Log("Window was open, moving it");
@@ -633,7 +643,7 @@ namespace AnyRPG {
         }
 
         public void OnItemCountChanged(Item item) {
-            SystemGameManager.Instance.EventManager.NotifyOnItemCountChanged(item);
+            systemEventManager.NotifyOnItemCountChanged(item);
         }
 
         public int GetItemCount(string type) {

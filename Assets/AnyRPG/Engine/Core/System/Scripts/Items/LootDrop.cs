@@ -93,7 +93,7 @@ namespace AnyRPG {
                     SystemGameManager.Instance.PlayerManager.MyCharacter.CharacterCurrencyManager.AddCurrency(currencyNodes[lootableCharacter].currency, currencyNodes[lootableCharacter].MyAmount);
                     List<CurrencyNode> tmpCurrencyNode = new List<CurrencyNode>();
                     tmpCurrencyNode.Add(currencyNodes[lootableCharacter]);
-                    CombatLogUI.Instance.WriteSystemMessage("Gained " + CurrencyConverter.RecalculateValues(tmpCurrencyNode, false).Value.Replace("\n", ", "));
+                    SystemGameManager.Instance.LogManager.WriteSystemMessage("Gained " + CurrencyConverter.RecalculateValues(tmpCurrencyNode, false).Value.Replace("\n", ", "));
                     lootableCharacter.TakeCurrencyLoot();
                 }
             }

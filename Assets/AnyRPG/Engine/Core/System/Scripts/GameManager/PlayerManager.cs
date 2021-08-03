@@ -527,7 +527,7 @@ namespace AnyRPG {
         }
 
         public void HandleCombatMessage(string messageText) {
-            CombatLogUI.Instance.WriteCombatMessage(messageText);
+            SystemGameManager.Instance.LogManager.WriteCombatMessage(messageText);
         }
 
         public void HandleCombatMiss(Interactable targetObject, AbilityEffectContext abilityEffectContext) {
@@ -539,8 +539,8 @@ namespace AnyRPG {
         }
 
         public void HandleAnimatedAbilityCheckFail(AnimatedAbility animatedAbility) {
-            if (PlayerUnitSpawned == true && CombatLogUI.Instance != null) {
-                CombatLogUI.Instance.WriteCombatMessage("Cannot use " + (animatedAbility.DisplayName == null ? "null" : animatedAbility.DisplayName) + ". Waiting for another ability to finish.");
+            if (PlayerUnitSpawned == true && SystemGameManager.Instance.LogManager != null) {
+                SystemGameManager.Instance.LogManager.WriteCombatMessage("Cannot use " + (animatedAbility.DisplayName == null ? "null" : animatedAbility.DisplayName) + ". Waiting for another ability to finish.");
             }
         }
 
@@ -560,14 +560,14 @@ namespace AnyRPG {
         }
 
         public void HandleDropCombat() {
-            if (CombatLogUI.Instance != null) {
-                CombatLogUI.Instance.WriteCombatMessage("Left combat");
+            if (SystemGameManager.Instance.LogManager != null) {
+                SystemGameManager.Instance.LogManager.WriteCombatMessage("Left combat");
             }
         }
 
         public void HandleEnterCombat(Interactable interactable) {
-            if (CombatLogUI.Instance != null) {
-                CombatLogUI.Instance.WriteCombatMessage("Entered combat with " + interactable.DisplayName);
+            if (SystemGameManager.Instance.LogManager != null) {
+                SystemGameManager.Instance.LogManager.WriteCombatMessage("Entered combat with " + interactable.DisplayName);
             }
         }
 
@@ -576,8 +576,8 @@ namespace AnyRPG {
         }
 
         public void HandleTargetInAbilityRangeFail(BaseAbility baseAbility, Interactable target) {
-            if (baseAbility != null && CombatLogUI.Instance != null) {
-                CombatLogUI.Instance.WriteCombatMessage(target.name + " is out of range of " + (baseAbility.DisplayName == null ? "null" : baseAbility.DisplayName));
+            if (baseAbility != null && SystemGameManager.Instance.LogManager != null) {
+                SystemGameManager.Instance.LogManager.WriteCombatMessage(target.name + " is out of range of " + (baseAbility.DisplayName == null ? "null" : baseAbility.DisplayName));
             }
         }
 
@@ -588,15 +588,15 @@ namespace AnyRPG {
         }
 
         public void HandleCombatCheckFail(BaseAbility ability) {
-            CombatLogUI.Instance.WriteCombatMessage("The ability " + ability.DisplayName + " can only be cast while out of combat");
+            SystemGameManager.Instance.LogManager.WriteCombatMessage("The ability " + ability.DisplayName + " can only be cast while out of combat");
         }
 
         public void HandlePowerResourceCheckFail(BaseAbility ability, IAbilityCaster abilityCaster) {
-            CombatLogUI.Instance.WriteCombatMessage("Not enough " + ability.PowerResource.DisplayName + " to perform " + ability.DisplayName + " at a cost of " + ability.GetResourceCost(abilityCaster));
+            SystemGameManager.Instance.LogManager.WriteCombatMessage("Not enough " + ability.PowerResource.DisplayName + " to perform " + ability.DisplayName + " at a cost of " + ability.GetResourceCost(abilityCaster));
         }
 
         public void HandleLearnedCheckFail(BaseAbility ability) {
-            CombatLogUI.Instance.WriteCombatMessage("You have not learned the ability " + ability.DisplayName + " yet");
+            SystemGameManager.Instance.LogManager.WriteCombatMessage("You have not learned the ability " + ability.DisplayName + " yet");
         }
 
         public void HandleUnlearnClassAbilities() {
@@ -647,8 +647,8 @@ namespace AnyRPG {
 
 
         public void HandleRecoverResource(PowerResource powerResource, int amount) {
-            if (CombatLogUI.Instance != null) {
-                CombatLogUI.Instance.WriteSystemMessage("You gain " + amount + " " + powerResource.DisplayName);
+            if (SystemGameManager.Instance.LogManager != null) {
+                SystemGameManager.Instance.LogManager.WriteSystemMessage("You gain " + amount + " " + powerResource.DisplayName);
             }
         }
 
@@ -667,8 +667,8 @@ namespace AnyRPG {
         }
 
         public void HandleGainXP(int xp) {
-            if (CombatLogUI.Instance != null) {
-                CombatLogUI.Instance.WriteSystemMessage("You gain " + xp + " experience");
+            if (SystemGameManager.Instance.LogManager != null) {
+                SystemGameManager.Instance.LogManager.WriteSystemMessage("You gain " + xp + " experience");
             }
             if (activeUnitController != null) {
                 if (SystemGameManager.Instance.UIManager.CombatTextManager != null) {

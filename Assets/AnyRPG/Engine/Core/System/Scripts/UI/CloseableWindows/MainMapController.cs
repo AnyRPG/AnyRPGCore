@@ -49,21 +49,21 @@ namespace AnyRPG {
 
         public GameObject MapGraphic { get => mapGraphic; }
 
-        public override void Init() {
+        public override void Init(SystemGameManager systemGameManager) {
             //Debug.Log("MainMapController.Init()");
-            systemConfigurationManager = SystemGameManager.Instance.SystemConfigurationManager;
-            cameraManager = SystemGameManager.Instance.CameraManager;
-            playerManager = SystemGameManager.Instance.PlayerManager;
-            mainMapManager = SystemGameManager.Instance.UIManager.MainMapManager;
-            levelManager = SystemGameManager.Instance.LevelManager;
-            popupWindowManager = SystemGameManager.Instance.UIManager.PopupWindowManager;
+            systemConfigurationManager = systemGameManager.SystemConfigurationManager;
+            cameraManager = systemGameManager.CameraManager;
+            playerManager = systemGameManager.PlayerManager;
+            mainMapManager = systemGameManager.UIManager.MainMapManager;
+            levelManager = systemGameManager.LevelManager;
+            popupWindowManager = systemGameManager.UIManager.PopupWindowManager;
 
             cameraManager.MainMapCamera.enabled = false;
 
             mainmapTextureFolder = mainmapTextureFolderBase + systemConfigurationManager.GameName.Replace(" ", "") + "/Images/MiniMap/";
 
             // calling base.Init() last because it will trigger event subscriptions, which need the above references initialized
-            base.Init();
+            base.Init(systemGameManager);
         }
 
         public void HandleInteractableStatusUpdate(Interactable interactable, InteractableOptionComponent interactableOptionComponent) {

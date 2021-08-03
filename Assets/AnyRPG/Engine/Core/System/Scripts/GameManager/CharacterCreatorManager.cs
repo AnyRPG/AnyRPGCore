@@ -20,16 +20,5 @@ namespace AnyRPG {
             OpenWindowCommon();
         }
 
-        public IEnumerator WaitForCamera() {
-            //Debug.Log("CharacterCreatorManager.WaitForCamera();");
-
-            while (CharacterPanel.Instance.MyPreviewCameraController == null) {
-                yield return null;
-            }
-
-            CharacterPanel.Instance.MyPreviewCameraController.InitializeCamera(unitController);
-        }
-
-
     }
 }

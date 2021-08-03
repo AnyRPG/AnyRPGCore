@@ -5,62 +5,32 @@ using UnityEngine;
 using UnityEngine.UI;
 
 namespace AnyRPG {
-    public class ReputationBookUI : MonoBehaviour, IPagedWindowContents {
-
-        public event System.Action<bool> OnPageCountUpdate = delegate { };
-        public event System.Action<ICloseableWindowContents> OnCloseWindow = delegate { };
+    public class ReputationBookUI : PagedWindowContents {
 
         [SerializeField]
         private List<FactionButton> factionButtons = new List<FactionButton>();
 
-        private List<List<FactionDisposition>> pages = new List<List<FactionDisposition>>();
+        private PlayerManager playerManager = null;
 
-        private int pageSize = 10;
-
-        private int pageIndex = 0;
-
-        [SerializeField]
-        private Image backGroundImage = null;
-
-        public Image MyBackGroundImage { get => backGroundImage; set => backGroundImage = value; }
-
-        public virtual void Awake() {
-            if (backGroundImage == null) {
-                backGroundImage = GetComponent<Image>();
-            }
+        public override void Init(SystemGameManager systemGameManager) {
+            base.Init(systemGameManager);
+            playerManager = systemGameManager.PlayerManager;
         }
 
-        public void Init() {
-            // nothing for now, here to satisfy interface.  fix me at some point if possible
-        }
-
-        public void SetBackGroundColor(Color color) {
-            if (backGroundImage != null) {
-                backGroundImage.color = color;
-            }
-        }
-
-        public int GetPageCount() {
-            return pages.Count;
-        }
-
-        public void CreatePages() {
+        protected override void PopulatePages() {
             //Debug.Log("ReputationBookUI.CreatePages()");
-            ClearPages();
-            List<FactionDisposition> page = new List<FactionDisposition>();
-            for (int i = 0; i < SystemGameManager.Instance.PlayerManager.MyCharacter.CharacterFactionManager.DispositionDictionary.Count; i++) {
-                page.Add(SystemGameManager.Instance.PlayerManager.MyCharacter.CharacterFactionManager.DispositionDictionary[i]);
-                if (page.Count == pageSize) {
+            FactionDispositionContentList page = new FactionDispositionContentList();
+            for (int i = 0; i < playerManager.MyCharacter.CharacterFactionManager.DispositionDictionary.Count; i++) {
+                page.factionDispositions.Add(playerManager.MyCharacter.CharacterFactionManager.DispositionDictionary[i]);
+                if (page.factionDispositions.Count == pageSize) {
                     pages.Add(page);
-                    page = new List<FactionDisposition>();
+                    page = new FactionDispositionContentList();
                 }
             }
-            if (page.Count > 0) {
+            if (page.factionDispositions.Count > 0) {
                 pages.Add(page);
             }
             AddReputations();
-            OnPageCountUpdate(false);
-
         }
 
         public void AddReputations() {
@@ -69,10 +39,10 @@ namespace AnyRPG {
                 for (int i = 0; i < pageSize; i++) {
                     //for (int i = 0; i < pages[pageIndex].Count - 1; i++) {
                     //Debug.Log("ReputationBookUI.AddAbilities(): i: " + i);
-                    if (i < pages[pageIndex].Count) {
+                    if (i < (pages[pageIndex] as FactionDispositionContentList).factionDispositions.Count) {
                         //Debug.Log("adding ability");
                         factionButtons[i].gameObject.SetActive(true);
-                        factionButtons[i].AddFaction(pages[pageIndex][i].Faction);
+                        factionButtons[i].AddFaction((pages[pageIndex] as FactionDispositionContentList).factionDispositions[i].Faction);
                     } else {
                         //Debug.Log("clearing ability");
                         factionButtons[i].ClearFaction();
@@ -82,31 +52,22 @@ namespace AnyRPG {
             }
         }
 
-        public void ClearButtons() {
+        public override void LoadPage(int pageIndex) {
+            base.LoadPage(pageIndex);
+            AddReputations();
+        }
+
+        public override void ClearButtons() {
+            base.ClearButtons();
             foreach (FactionButton btn in factionButtons) {
                 btn.gameObject.SetActive(false);
             }
         }
 
-        public void LoadPage(int pageIndex) {
-            ClearButtons();
-            this.pageIndex = pageIndex;
-            AddReputations();
-        }
-
-        public void RecieveClosedWindowNotification() {
-        }
-
-        public void ReceiveOpenWindowNotification() {
-            SetBackGroundColor(new Color32(0, 0, 0, (byte)(int)(PlayerPrefs.GetFloat("PopupWindowOpacity") * 255)));
-            CreatePages();
-        }
-
-        private void ClearPages() {
-            ClearButtons();
-            pages.Clear();
-            pageIndex = 0;
-        }
-
     }
+
+    public class FactionDispositionContentList : PagedContentList {
+        public List<FactionDisposition> factionDispositions = new List<FactionDisposition>();
+    }
+
 }

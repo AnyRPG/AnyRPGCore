@@ -6564,6 +6564,7 @@ GameObject:
   - component: {fileID: 3463012749454617670}
   - component: {fileID: 7942343010086851192}
   - component: {fileID: 427652063533075600}
+  - component: {fileID: 5686319901837456897}
   m_Layer: 0
   m_Name: GameManager
   m_TagString: Untagged
@@ -6796,7 +6797,8 @@ MonoBehaviour:
   playerManager: {fileID: 5684895214070870786}
   systemItemManager: {fileID: 3463012749454617670}
   systemAchievementManager: {fileID: 7942343010086851192}
-  resourceManagerParent: {fileID: 0}
+  logManager: {fileID: 5686319901837456897}
+  objectPooler: {fileID: 5121156030533897523}
   systemDataFactory: {fileID: 427652063533075600}
 --- !u!114 &5684895214070870786
 MonoBehaviour:
@@ -6973,6 +6975,18 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 301f5d04b262c1e4bba69d0f7e054201, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &5686319901837456897
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5684895214070870814}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4a2a93a8e1f18674ca492856a49404e4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1 &5742173228335772782
@@ -7637,6 +7651,7 @@ MonoBehaviour:
   toolTip: {fileID: 6019731847281957159}
   toolTipCurrencyBarController: {fileID: 3345773525986488833}
   tooltipRect: {fileID: 4018933294738765809}
+  handScript: {fileID: 5051387862584425130}
 --- !u!114 &3372542372360536245
 MonoBehaviour:
   m_ObjectHideFlags: 0

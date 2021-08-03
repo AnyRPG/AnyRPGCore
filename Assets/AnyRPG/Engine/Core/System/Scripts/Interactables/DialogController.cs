@@ -82,8 +82,8 @@ namespace AnyRPG {
                                 writeMessage = false;
                             }
                         }
-                        if (writeMessage && CombatLogUI.Instance != null) {
-                            CombatLogUI.Instance.WriteChatMessage(dialogNode.MyDescription);
+                        if (writeMessage && SystemGameManager.Instance.LogManager != null) {
+                            SystemGameManager.Instance.LogManager.WriteChatMessage(dialogNode.MyDescription);
                         }
 
                         dialogNode.Shown = true;

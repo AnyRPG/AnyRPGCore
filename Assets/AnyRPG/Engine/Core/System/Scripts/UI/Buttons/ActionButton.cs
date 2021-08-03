@@ -108,7 +108,7 @@ namespace AnyRPG {
                 if (Input.GetKey(KeyCode.LeftShift)) {
                     return;
                 }
-                if (HandScript.Instance.MyMoveable != null) {
+                if (SystemGameManager.Instance.UIManager.HandScript.Moveable != null) {
                     // if we have something in the handscript we are trying to drop an item, not use one
                     return;
                 }
@@ -138,15 +138,15 @@ namespace AnyRPG {
 
                 if (Input.GetKey(KeyCode.LeftShift)) {
                     // attempt to pick up - the only valid option when shift is held down
-                    if (Useable != null && SystemGameManager.Instance.UIManager.ActionBarManager.FromButton == null && HandScript.Instance.MyMoveable == null) {
+                    if (Useable != null && SystemGameManager.Instance.UIManager.ActionBarManager.FromButton == null && SystemGameManager.Instance.UIManager.HandScript.Moveable == null) {
                         // left shift down, pick up a useable
                         //Debug.Log("ActionButton: OnPointerClick(): shift clicked and useable is not null. picking up");
-                        HandScript.Instance.TakeMoveable(Useable as IMoveable);
+                        SystemGameManager.Instance.UIManager.HandScript.TakeMoveable(Useable as IMoveable);
                         SystemGameManager.Instance.UIManager.ActionBarManager.FromButton = this;
                     }
                 } else {
                     // attempt to put down
-                    if (HandScript.Instance.MyMoveable != null && HandScript.Instance.MyMoveable is IUseable) {
+                    if (SystemGameManager.Instance.UIManager.HandScript.Moveable != null && SystemGameManager.Instance.UIManager.HandScript.Moveable is IUseable) {
                         if (SystemGameManager.Instance.UIManager.ActionBarManager.FromButton != null) {
                             //Debug.Log("ActionButton: OnPointerClick(): FROMBUTTON IS NOT NULL, SWAPPING ACTIONBAR ITEMS");
                             // this came from another action button slot.  now decide to swap (if we are not empty), or remove from original (if we are empty)
@@ -159,9 +159,9 @@ namespace AnyRPG {
                         }
                         // no matter whether we sent our useable over or not, we can now clear our useable and set whatever is in the handscript
                         ClearUseable();
-                        SetUseable(HandScript.Instance.MyMoveable as IUseable);
+                        SetUseable(SystemGameManager.Instance.UIManager.HandScript.Moveable as IUseable);
 
-                        HandScript.Instance.Drop();
+                        SystemGameManager.Instance.UIManager.HandScript.Drop();
                     }
                 }
             }

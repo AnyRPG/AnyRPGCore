@@ -11,64 +11,75 @@ namespace AnyRPG {
         [SerializeField]
         private Button mainMenuButton = null;
 
-        public override void Init() {
-            base.Init();
+        private SystemConfigurationManager systemConfigurationManager = null;
+        private SystemWindowManager systemWindowManager = null;
+        private SaveManager saveManager = null;
+        private MessageFeedManager messageFeedManager = null;
+
+        public override void Init(SystemGameManager systemGameManager) {
+            base.Init(systemGameManager);
+
+            systemConfigurationManager = systemGameManager.SystemConfigurationManager;
+            systemWindowManager = systemGameManager.UIManager.SystemWindowManager;
+            saveManager = systemGameManager.SaveManager;
+            messageFeedManager = systemGameManager.UIManager.MessageFeedManager;
+
             if (mainMenuButton != null
-                && SystemGameManager.Instance.SystemConfigurationManager.MainMenuSceneNode == null
-                && SystemGameManager.Instance.SystemConfigurationManager.MainMenuScene == string.Empty) {
+                && systemConfigurationManager.MainMenuSceneNode == null
+                && systemConfigurationManager.MainMenuScene == string.Empty) {
                 mainMenuButton.interactable = false;
             }
         }
 
         public void PlayMenu() {
             //Debug.Log("MainMenuController.PlayMenu()");
-            SystemGameManager.Instance.UIManager.SystemWindowManager.exitMenuWindow.CloseWindow();
-            SystemGameManager.Instance.UIManager.SystemWindowManager.deleteGameMenuWindow.CloseWindow();
-            SystemGameManager.Instance.UIManager.SystemWindowManager.settingsMenuWindow.CloseWindow();
-            SystemGameManager.Instance.UIManager.SystemWindowManager.playMenuWindow.OpenWindow();
+            systemWindowManager.exitMenuWindow.CloseWindow();
+            systemWindowManager.deleteGameMenuWindow.CloseWindow();
+            systemWindowManager.settingsMenuWindow.CloseWindow();
+            systemWindowManager.playMenuWindow.OpenWindow();
         }
 
         public void ExitMenu() {
             //Debug.Log("MainMenuController.ExitMenu()");
-            SystemGameManager.Instance.UIManager.SystemWindowManager.playMenuWindow.CloseWindow();
-            SystemGameManager.Instance.UIManager.SystemWindowManager.deleteGameMenuWindow.CloseWindow();
-            SystemGameManager.Instance.UIManager.SystemWindowManager.exitMenuWindow.OpenWindow();
+            systemWindowManager.playMenuWindow.CloseWindow();
+            systemWindowManager.deleteGameMenuWindow.CloseWindow();
+            systemWindowManager.exitMenuWindow.OpenWindow();
         }
 
         public void MainMenu() {
             //Debug.Log("MainMenuController.MainMenu()");
-            SystemGameManager.Instance.UIManager.SystemWindowManager.exitToMainMenuWindow.OpenWindow();
+            systemWindowManager.exitToMainMenuWindow.OpenWindow();
         }
 
         public void SettingsMenu() {
             //Debug.Log("MainMenuController.SettingsMenu()");
-            SystemGameManager.Instance.UIManager.SystemWindowManager.playMenuWindow.CloseWindow();
-            SystemGameManager.Instance.UIManager.SystemWindowManager.deleteGameMenuWindow.CloseWindow();
-            //SystemGameManager.Instance.UIManager.SystemWindowManager.mainMenuWindow.CloseWindow();
-            SystemGameManager.Instance.UIManager.SystemWindowManager.settingsMenuWindow.OpenWindow();
+            systemWindowManager.playMenuWindow.CloseWindow();
+            systemWindowManager.deleteGameMenuWindow.CloseWindow();
+            //systemWindowManager.mainMenuWindow.CloseWindow();
+            systemWindowManager.settingsMenuWindow.OpenWindow();
         }
 
         public void CreditsMenu() {
             //Debug.Log("MainMenuController.SettingsMenu()");
-            SystemGameManager.Instance.UIManager.SystemWindowManager.playMenuWindow.CloseWindow();
-            SystemGameManager.Instance.UIManager.SystemWindowManager.deleteGameMenuWindow.CloseWindow();
-            //SystemGameManager.Instance.UIManager.SystemWindowManager.mainMenuWindow.CloseWindow();
-            SystemGameManager.Instance.UIManager.SystemWindowManager.settingsMenuWindow.CloseWindow();
-            SystemGameManager.Instance.UIManager.SystemWindowManager.creditsWindow.OpenWindow();
+            systemWindowManager.playMenuWindow.CloseWindow();
+            systemWindowManager.deleteGameMenuWindow.CloseWindow();
+            //systemWindowManager.mainMenuWindow.CloseWindow();
+            systemWindowManager.settingsMenuWindow.CloseWindow();
+            systemWindowManager.creditsWindow.OpenWindow();
         }
 
         public void SaveGame() {
             //Debug.Log("MainMenuController.SaveGame()");
-            if (SystemGameManager.Instance.SaveManager.SaveGame()) {
-                SystemGameManager.Instance.UIManager.SystemWindowManager.CloseAllWindows();
-                SystemGameManager.Instance.UIManager.MessageFeedManager.WriteMessage("Game Saved");
+            if (saveManager.SaveGame()) {
+                systemWindowManager.CloseAllWindows();
+                messageFeedManager.WriteMessage("Game Saved");
             }
 
         }
 
         public void ContinueGame() {
             //Debug.Log("MainMenuController.ContinueGame()");
-            SystemGameManager.Instance.UIManager.SystemWindowManager.CloseAllWindows();
+            systemWindowManager.CloseAllWindows();
         }
 
     }

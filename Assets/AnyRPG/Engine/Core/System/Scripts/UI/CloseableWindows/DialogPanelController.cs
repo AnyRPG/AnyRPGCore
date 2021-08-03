@@ -152,7 +152,7 @@ namespace AnyRPG {
                 dialogText.text = string.Format("<size={0}>{1}</size>", dialogFontSize, MyDialog.DialogNodes[dialogIndex].MyDescription);
             }
 
-            CombatLogUI.Instance.WriteChatMessage(MyDialog.DialogNodes[dialogIndex].MyDescription);
+            SystemGameManager.Instance.LogManager.WriteChatMessage(MyDialog.DialogNodes[dialogIndex].MyDescription);
             if (SystemGameManager.Instance.AudioManager != null && MyDialog.AudioProfile != null && MyDialog.AudioProfile.AudioClips != null && MyDialog.AudioProfile.AudioClips.Count > dialogIndex) {
                 SystemGameManager.Instance.AudioManager.PlayVoice(MyDialog.AudioProfile.AudioClips[dialogIndex]);
             }

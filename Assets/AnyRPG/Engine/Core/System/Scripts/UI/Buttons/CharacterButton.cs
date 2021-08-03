@@ -33,6 +33,8 @@ namespace AnyRPG {
 
         private Color fullBackGroundColor;
 
+        private CharacterPanel characterPanel = null;
+
         private bool LocalComponentsGotten = false;
 
         public Color MyEmptyBackGroundColor { get => emptyBackGroundColor; set => emptyBackGroundColor = value; }
@@ -52,6 +54,7 @@ namespace AnyRPG {
 
         public string MyEquipmentSlotProfileName { get => equipmentSlotProfileName; set => equipmentSlotProfileName = value; }
         public EquipmentSlotProfile MyEquipmentSlotProfile { get => equipmentSlotProfile; }
+        public CharacterPanel CharacterPanel { get => characterPanel; set => characterPanel = value; }
 
         private void Awake() {
             GetLocalComponents();
@@ -74,8 +77,8 @@ namespace AnyRPG {
 
         public void OnPointerClick(PointerEventData eventData) {
             if (eventData.button == PointerEventData.InputButton.Left) {
-                if (HandScript.Instance.MyMoveable is Equipment) {
-                    Equipment tmp = (Equipment)HandScript.Instance.MyMoveable;
+                if (SystemGameManager.Instance.UIManager.HandScript.Moveable is Equipment) {
+                    Equipment tmp = (Equipment)SystemGameManager.Instance.UIManager.HandScript.Moveable;
                     if (equipmentSlotProfile.MyEquipmentSlotTypeList.Contains(tmp.EquipmentSlotType)) {
                         SystemGameManager.Instance.PlayerManager.MyCharacter.CharacterEquipmentManager.Unequip(equipmentSlotProfile);
                         //if (tmp.equipSlot == equipmentSlot) {
@@ -88,13 +91,13 @@ namespace AnyRPG {
                         tmp.Remove();
 
                         //EquipEquipment(tmp);
-                        HandScript.Instance.Drop();
+                        SystemGameManager.Instance.UIManager.HandScript.Drop();
 
                         SystemGameManager.Instance.UIManager.RefreshTooltip(tmp);
                     }
-                } else if (HandScript.Instance.MyMoveable == null && equippedEquipment != null) {
-                    HandScript.Instance.TakeMoveable(equippedEquipment);
-                    CharacterPanel.Instance.MySelectedButton = this;
+                } else if (SystemGameManager.Instance.UIManager.HandScript.Moveable == null && equippedEquipment != null) {
+                    SystemGameManager.Instance.UIManager.HandScript.TakeMoveable(equippedEquipment);
+                    characterPanel.SelectedButton = this;
                     icon.color = Color.gray;
                 }
             }

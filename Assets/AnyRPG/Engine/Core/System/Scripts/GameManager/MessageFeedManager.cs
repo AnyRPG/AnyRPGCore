@@ -20,20 +20,30 @@ namespace AnyRPG {
         [SerializeField]
         private GraphicRaycaster raycaster = null;
 
+        private SystemGameManager systemGameManager = null;
+        private ObjectPooler objectPooler = null;
+        private LogManager logManager = null;
+
         public GameObject MessageFeedGameObject { get => messageFeedGameObject; set => messageFeedGameObject = value; }
+
+        public void Init(SystemGameManager systemGameManager) {
+            this.systemGameManager = systemGameManager;
+            objectPooler = systemGameManager.ObjectPooler;
+            logManager = systemGameManager.LogManager;
+        }
 
         public void WriteMessage(string message) {
             //Debug.Log("MessageFeedManager.WriteMessage(" + message + ")");
             if (PlayerPrefs.GetInt("UseMessageFeed") == 0) {
                 return;
             }
-            GameObject go = ObjectPooler.Instance.GetPooledObject(messagePrefab, messageFeedGameObject.transform);
+            GameObject go = objectPooler.GetPooledObject(messagePrefab, messageFeedGameObject.transform);
             go.GetComponent<TextMeshProUGUI>().text = message;
             //uncomment the next line to make the messages spawn at the top instead of the bottom
             //go.transform.SetAsFirstSibling();
-            ObjectPooler.Instance.ReturnObjectToPool(go, 2);
-            if (CombatLogUI.Instance != null) {
-                CombatLogUI.Instance.WriteSystemMessage(message);
+            objectPooler.ReturnObjectToPool(go, 2);
+            if (logManager != null) {
+                logManager.WriteSystemMessage(message);
             } else {
                 //Debug.Log("CombatLogUI.Myinstance was null!!");
             }

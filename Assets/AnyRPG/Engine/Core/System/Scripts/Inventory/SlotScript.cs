@@ -131,7 +131,7 @@ namespace AnyRPG {
         private void DropItemFromInventorySlot() {
             //Debug.Log("Dropping an item from an inventory slot");
             if (PutItemBack() || MergeItems(SystemGameManager.Instance.InventoryManager.FromSlot) || SwapItems(SystemGameManager.Instance.InventoryManager.FromSlot) || AddItems(SystemGameManager.Instance.InventoryManager.FromSlot.MyItems)) {
-                HandScript.Instance.Drop();
+                SystemGameManager.Instance.UIManager.HandScript.Drop();
                 SystemGameManager.Instance.InventoryManager.FromSlot = null;
             }
         }
@@ -142,7 +142,7 @@ namespace AnyRPG {
 
         public void SendItemToHandScript() {
             //Debug.Log("SlotScript.SendItemToHandScript(): setting inventorymanager.myinstance.fromslot to this");
-            HandScript.Instance.TakeMoveable(MyItem as IMoveable);
+            SystemGameManager.Instance.UIManager.HandScript.TakeMoveable(MyItem as IMoveable);
             SystemGameManager.Instance.InventoryManager.FromSlot = this;
         }
 
@@ -156,54 +156,54 @@ namespace AnyRPG {
 
             if (!IsEmpty) {
                 // This slot has something in it, and the hand script is empty, so we are trying to pick it up
-                if (HandScript.Instance.MyMoveable == null) {
+                if (SystemGameManager.Instance.UIManager.HandScript.Moveable == null) {
                     SendItemToHandScript();
                     return;
                 }
 
                 // the slot has something in it, and the handscript is not empty, so we are trying to swap with something
-                if (HandScript.Instance.MyMoveable is Bag) {
+                if (SystemGameManager.Instance.UIManager.HandScript.Moveable is Bag) {
                     // the handscript has a bag in it
                     if (MyItem is Bag) {
                         // This slot also has a bag in it, so swap the 2 bags
-                        SystemGameManager.Instance.InventoryManager.SwapBags(HandScript.Instance.MyMoveable as Bag, MyItem as Bag);
+                        SystemGameManager.Instance.InventoryManager.SwapBags(SystemGameManager.Instance.UIManager.HandScript.Moveable as Bag, MyItem as Bag);
                     }
-                } else if (HandScript.Instance.MyMoveable is Equipment) {
+                } else if (SystemGameManager.Instance.UIManager.HandScript.Moveable is Equipment) {
                     // the handscript has equipment in it
-                    if (MyItem is Equipment && (MyItem as Equipment).EquipmentSlotType == (HandScript.Instance.MyMoveable as Equipment).EquipmentSlotType) {
+                    if (MyItem is Equipment && (MyItem as Equipment).EquipmentSlotType == (SystemGameManager.Instance.UIManager.HandScript.Moveable as Equipment).EquipmentSlotType) {
                         // this slot has equipment in it, and the equipment matches the slot of the item in the handscript.  swap them
-                        EquipmentSlotProfile equipmentSlotProfile = SystemGameManager.Instance.PlayerManager.MyCharacter.CharacterEquipmentManager.FindEquipmentSlotForEquipment(HandScript.Instance.MyMoveable as Equipment);
+                        EquipmentSlotProfile equipmentSlotProfile = SystemGameManager.Instance.PlayerManager.MyCharacter.CharacterEquipmentManager.FindEquipmentSlotForEquipment(SystemGameManager.Instance.UIManager.HandScript.Moveable as Equipment);
                         SystemGameManager.Instance.PlayerManager.MyCharacter.CharacterEquipmentManager.Unequip(equipmentSlotProfile);
                         SystemGameManager.Instance.PlayerManager.MyCharacter.CharacterEquipmentManager.Equip(MyItem as Equipment, equipmentSlotProfile);
                         MyItem.Remove();
                        //UseItem();
                         //SystemGameManager.Instance.UIManager.RefreshTooltip();
-                        HandScript.Instance.Drop();
+                        SystemGameManager.Instance.UIManager.HandScript.Drop();
                     }
                 }
 
             } else {
                 // This slot has nothing in it, and we are not trying to transfer anything to it from another slot in the bag
-                if (HandScript.Instance.MyMoveable is Bag) {
+                if (SystemGameManager.Instance.UIManager.HandScript.Moveable is Bag) {
                     //Debug.Log("SlotScript.HandleLeftClick(): We are trying to drop a bag into the inventory.");
                     // the handscript had a bag in it, and therefore we are trying to unequip a bag
-                    Bag bag = (Bag)HandScript.Instance.MyMoveable;
+                    Bag bag = (Bag)SystemGameManager.Instance.UIManager.HandScript.Moveable;
                     if (bag.MyBagPanel != MyBag && SystemGameManager.Instance.InventoryManager.EmptySlotCount() - bag.MySlots > 0) {
                         //Debug.Log("SlotScript.HandleLeftClick(): We are trying to drop a bag into the inventory. There is enough empty space.");
                         AddItem(bag);
                         SystemGameManager.Instance.InventoryManager.RemoveBag(bag);
-                        HandScript.Instance.Drop();
+                        SystemGameManager.Instance.UIManager.HandScript.Drop();
                     }
-                } else if (HandScript.Instance.MyMoveable is Equipment) {
+                } else if (SystemGameManager.Instance.UIManager.HandScript.Moveable is Equipment) {
                     // the handscript had equipment in it, and therefore we are trying to unequip some equipment
-                    Equipment equipment = (Equipment)HandScript.Instance.MyMoveable;
+                    Equipment equipment = (Equipment)SystemGameManager.Instance.UIManager.HandScript.Moveable;
                     // probably don't need to do this, since dequip should drop the equipment in the bag anyway
                     //AddItem(equipment);
 
                     //CharacterPanel.Instance.MySelectedButton.DequipEquipment(GetCurrentSlotIndex());
-                    EquipmentSlotProfile equipmentSlotProfile = SystemGameManager.Instance.PlayerManager.MyCharacter.CharacterEquipmentManager.FindEquipmentSlotForEquipment(HandScript.Instance.MyMoveable as Equipment);
+                    EquipmentSlotProfile equipmentSlotProfile = SystemGameManager.Instance.PlayerManager.MyCharacter.CharacterEquipmentManager.FindEquipmentSlotForEquipment(SystemGameManager.Instance.UIManager.HandScript.Moveable as Equipment);
                     SystemGameManager.Instance.PlayerManager.MyCharacter.CharacterEquipmentManager.Unequip(equipmentSlotProfile, GetCurrentSlotIndex());
-                    HandScript.Instance.Drop();
+                    SystemGameManager.Instance.UIManager.HandScript.Drop();
                 }
             }
         }
@@ -223,7 +223,7 @@ namespace AnyRPG {
         public void HandleRightClick() {
             //Debug.Log("SlotScript.HandleRightClick()");
             // ignore right clicks when something is in the handscript
-            if (HandScript.Instance.MyMoveable != null) {
+            if (SystemGameManager.Instance.UIManager.HandScript.Moveable != null) {
                 return;
             }
 

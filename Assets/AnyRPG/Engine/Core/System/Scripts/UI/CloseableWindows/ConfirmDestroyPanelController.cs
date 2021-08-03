@@ -14,7 +14,7 @@ namespace AnyRPG {
 
         public void ConfirmAction() {
             //Debug.Log("NewGameMenuController.ConfirmAction()");
-            HandScript.Instance.DeleteItem(); ;
+            SystemGameManager.Instance.UIManager.HandScript.DeleteItem(); ;
             SystemGameManager.Instance.UIManager.SystemWindowManager.confirmDestroyMenuWindow.CloseWindow();
         }
 

@@ -18,7 +18,7 @@ namespace AnyRPG {
 
         public void ConfirmAction() {
             //Debug.Log("NewGameMenuController.ConfirmAction()");
-            //HandScript.Instance.DeleteItem();
+            //SystemGameManager.Instance.UIManager.HandScript.DeleteItem();
             if (item != null) {
                 (SystemGameManager.Instance.UIManager.PopupWindowManager.vendorWindow.CloseableWindowContents as VendorUI).SellItem(MyItem);
             }

@@ -41,7 +41,7 @@ namespace AnyRPG {
             //Debug.Log("AbilityButton.OnPointerClick()");
             if (eventData.button == PointerEventData.InputButton.Left) {
                 //Debug.Log("AbilityButton.OnPointerClick(): left click");
-                HandScript.Instance.TakeMoveable(ability);
+                SystemGameManager.Instance.UIManager.HandScript.TakeMoveable(ability);
             }
             if (eventData.button == PointerEventData.InputButton.Right) {
                 //Debug.Log("AbilityButton.OnPointerClick(): right click");

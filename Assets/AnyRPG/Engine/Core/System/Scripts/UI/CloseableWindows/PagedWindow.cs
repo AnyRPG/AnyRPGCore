@@ -22,8 +22,8 @@ namespace AnyRPG {
 
         private int pageIndex = 0;
 
-        protected override void Awake() {
-            base.Awake();
+        protected override void Init(SystemGameManager systemGameManager) {
+            base.Init(systemGameManager);
             if (windowContents != null) {
                 (windowContents as IPagedWindowContents).OnPageCountUpdate += UpdateNavigationArea;
             } else {

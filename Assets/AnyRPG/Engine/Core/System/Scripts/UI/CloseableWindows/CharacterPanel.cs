@@ -10,25 +10,6 @@ namespace AnyRPG {
 
     public class CharacterPanel : WindowContentController {
 
-        #region Singleton
-        private static CharacterPanel instance;
-
-        public static CharacterPanel Instance {
-            get {
-                return instance;
-            }
-        }
-
-        private void Awake() {
-            instance = this;
-        }
-        #endregion
-
-        /*
-        [SerializeField]
-        private CharacterButton head, shoulders, chest, hands, legs, feet, mainhand, offhand;
-        */
-
         [SerializeField]
         private List<CharacterButton> characterButtons = new List<CharacterButton>();
 
@@ -46,8 +27,8 @@ namespace AnyRPG {
 
         public override event Action<ICloseableWindowContents> OnCloseWindow = delegate { };
 
-        public CharacterButton MySelectedButton { get; set; }
-        public CharacterPreviewCameraController MyPreviewCameraController { get => previewCameraController; set => previewCameraController = value; }
+        public CharacterButton SelectedButton { get; set; }
+        public CharacterPreviewCameraController PreviewCameraController { get => previewCameraController; set => previewCameraController = value; }
 
         private void Start() {
             //Debug.Log("CharacterPanel.Start()");
@@ -56,6 +37,7 @@ namespace AnyRPG {
             foreach (CharacterButton characterButton in characterButtons) {
                 characterButton.MyEmptyBackGroundColor = emptySlotColor;
                 characterButton.MyFullBackGroundColor = fullSlotColor;
+                characterButton.CharacterPanel = this;
                 //Debug.Log("CharacterPanel.Start(): checking icon");
                 if (characterButton.MyEquipmentSlotProfile != null && characterButton.MyEquipmentSlotProfile.Icon != null) {
                     //Debug.Log("CharacterPanel.Start(): equipment slot profile is not null, setting icon");
@@ -295,9 +277,9 @@ namespace AnyRPG {
 
             if (SystemGameManager.Instance.CameraManager != null && SystemGameManager.Instance.CameraManager.CharacterPreviewCamera != null) {
                 //Debug.Log("CharacterPanel.SetPreviewTarget(): preview camera was available, setting target");
-                if (MyPreviewCameraController != null) {
-                    MyPreviewCameraController.InitializeCamera(SystemGameManager.Instance.CharacterCreatorManager.PreviewUnitController);
-                    MyPreviewCameraController.OnTargetReady += TargetReadyCallback;
+                if (PreviewCameraController != null) {
+                    PreviewCameraController.InitializeCamera(SystemGameManager.Instance.CharacterCreatorManager.PreviewUnitController);
+                    PreviewCameraController.OnTargetReady += TargetReadyCallback;
                 } else {
                     Debug.LogError("CharacterPanel.SetPreviewTarget(): Character Preview Camera Controller is null. Please set it in the inspector");
                 }
@@ -306,7 +288,7 @@ namespace AnyRPG {
 
         public void TargetReadyCallback() {
             //Debug.Log("CharacterCreatorPanel.TargetReadyCallback()");
-            MyPreviewCameraController.OnTargetReady -= TargetReadyCallback;
+            PreviewCameraController.OnTargetReady -= TargetReadyCallback;
             TargetReadyCallbackCommon();
         }
 
