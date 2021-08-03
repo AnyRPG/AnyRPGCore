@@ -9,6 +9,7 @@ namespace AnyRPG {
 
         [Tooltip("The name of the prefab profile to use.  The object referenced in the prefab profile will be spawned.")]
         [SerializeField]
+        [ResourceSelector(resourceType = typeof(PrefabProfile))]
         protected string prefabProfileName = string.Empty;
 
         protected PrefabProfile prefabProfile;
