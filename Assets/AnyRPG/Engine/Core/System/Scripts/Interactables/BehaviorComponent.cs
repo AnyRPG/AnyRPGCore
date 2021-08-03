@@ -49,11 +49,12 @@ namespace AnyRPG {
             if (Props.BehaviorNames != null) {
                 foreach (string behaviorName in Props.BehaviorNames) {
                     BehaviorProfile tmpBehaviorProfile = null;
-                    if (Props.UseBehaviorCopy == true) {
-                        tmpBehaviorProfile = SystemBehaviorProfileManager.Instance.GetNewResource(behaviorName);
-                    } else {
-                        tmpBehaviorProfile = SystemBehaviorProfileManager.Instance.GetResource(behaviorName);
-                    }
+                    // monitor for breakage - behavior copies are theoretically no longer necessary because behavior players now track state individually
+                    //if (Props.UseBehaviorCopy == true) {
+                        //tmpBehaviorProfile = SystemBehaviorProfileManager.Instance.GetNewResource(behaviorName);
+                    //} else {
+                        tmpBehaviorProfile = SystemDataFactory.Instance.GetResource<BehaviorProfile>(behaviorName);
+                    //}
                     if (tmpBehaviorProfile != null) {
                         unitController.BehaviorController.AddToBehaviorList(tmpBehaviorProfile);
                     }
@@ -66,7 +67,7 @@ namespace AnyRPG {
             //Debug.Log(unitController.gameObject.name +  ".BehaviorComponent.GetCurrentOptionList()");
             List<BehaviorProfile> currentList = new List<BehaviorProfile>();
             if (interactable.CombatOnly == false) {
-                foreach (BehaviorProfile behaviorProfile in unitController.BehaviorController.BehaviorList) {
+                foreach (BehaviorProfile behaviorProfile in unitController.BehaviorController.BehaviorList.Keys) {
                     //Debug.Log(unitController.gameObject.name + ".BehaviorComponent.GetCurrentOptionList() processing behavior: " + behaviorProfile.DisplayName);
                     if (behaviorProfile.MyPrerequisitesMet == true
                         && (behaviorProfile.Completed == false || behaviorProfile.Repeatable == true)

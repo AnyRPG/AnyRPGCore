@@ -37,8 +37,8 @@ namespace AnyRPG {
 
         public TDataType GetResource<TDataType>(string resourceName) where TDataType : ResourceProfile {
             //Debug.Log(this.GetType().Name + ".GetResource(" + resourceName + ")");
-            if (!SystemResourceManager.RequestIsEmpty(resourceName)) {
-                string keyName = SystemResourceManager.prepareStringForMatch(resourceName);
+            if (!SystemDataFactory.RequestIsEmpty(resourceName)) {
+                string keyName = SystemDataFactory.PrepareStringForMatch(resourceName);
                 /*
                 foreach (string dictKeyName in factoryData.Keys) {
                     Debug.Log("count: " + factoryData.Count + "; " + dictKeyName);

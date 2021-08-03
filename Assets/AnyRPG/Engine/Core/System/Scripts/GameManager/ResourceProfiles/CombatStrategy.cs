@@ -34,7 +34,7 @@ namespace AnyRPG {
                         if (sourceCharacter.AbilityManager.HasAbility(baseAbility)) {
                             //Debug.Log(MyName + ".AICombat.GetValidAttackAbility(): Checking ability: " + baseAbility.MyName);
                             //if (baseAbility.maxRange == 0 || Vector3.Distance(aiController.MyBaseCharacter.MyCharacterUnit.transform.position, aiController.MyTarget.transform.position) < baseAbility.maxRange) {
-                            if (!sourceCharacter.CharacterStats.StatusEffects.ContainsKey(SystemResourceManager.prepareStringForMatch(baseAbility.GetAbilityEffects(sourceCharacter)[0].DisplayName))
+                            if (!sourceCharacter.CharacterStats.StatusEffects.ContainsKey(SystemDataFactory.PrepareStringForMatch(baseAbility.GetAbilityEffects(sourceCharacter)[0].DisplayName))
                                 && sourceCharacter.AbilityManager.CanCastAbility(baseAbility)
                                 && baseAbility.CanUseOn(sourceCharacter.UnitController, sourceCharacter)) {
                                 //Debug.Log(MyName + ".AICombat.GetValidAbility(): ADDING A BUFF ABILITY TO LIST");
@@ -140,7 +140,8 @@ namespace AnyRPG {
             List<CombatStrategyNode> returnList = new List<CombatStrategyNode>();
             foreach (CombatStrategyNode phaseNode in phaseNodes) {
                 if (sourceCharacter != null && sourceCharacter.CharacterStats != null) {
-                    if (Mathf.Ceil((sourceCharacter.CharacterStats.CurrentPrimaryResource / (float)sourceCharacter.CharacterStats.MaxPrimaryResource) * 100f) <= phaseNode.MyMaxHealthPercent && Mathf.Floor((sourceCharacter.CharacterStats.CurrentPrimaryResource / (float)sourceCharacter.CharacterStats.MaxPrimaryResource) * 100f) >= phaseNode.MyMinHealthPercent) {
+                    if (Mathf.Ceil((sourceCharacter.CharacterStats.CurrentPrimaryResource / (float)sourceCharacter.CharacterStats.MaxPrimaryResource) * 100f) <= phaseNode.MyMaxHealthPercent
+                        && Mathf.Floor((sourceCharacter.CharacterStats.CurrentPrimaryResource / (float)sourceCharacter.CharacterStats.MaxPrimaryResource) * 100f) >= phaseNode.MyMinHealthPercent) {
                         //Debug.Log(sourceCharacter.AbilityManager.MyName + ".GetValidPhaseNodes: currentHealth: " + sourceCharacter.AbilityManager.MyCharacterStats.currentHealth + "; MaxHealth: " + sourceCharacter.AbilityManager.MyCharacterStats.MyMaxHealth);
                         returnList.Add(phaseNode);
                     }

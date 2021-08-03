@@ -54,7 +54,7 @@ namespace AnyRPG {
             }
         }
 
-        public List<BehaviorNode> MyBehaviorNodes { get => behaviorNodes; set => behaviorNodes = value; }
+        public List<BehaviorNode> BehaviorNodes { get => behaviorNodes; set => behaviorNodes = value; }
         public bool MyAutomatic { get => automatic; set => automatic = value; }
 
         // track whether it is completed to prevent it from repeating if it is automatic
@@ -113,11 +113,11 @@ namespace AnyRPG {
         /// <summary>
         /// Reset the completion status of this profile and all its nodes
         /// </summary>
-        public void ResetStatus() {
+        public void ResetStatus(BehaviorProfileState behaviorProfileState) {
             if (repeatable == true) {
                 Completed = false;
                 foreach (BehaviorNode behaviorNode in behaviorNodes) {
-                    behaviorNode.ResetStatus();
+                    behaviorNode.ResetStatus(behaviorProfileState.BehaviorNodeStates[behaviorNode]);
                 }
             }
         }

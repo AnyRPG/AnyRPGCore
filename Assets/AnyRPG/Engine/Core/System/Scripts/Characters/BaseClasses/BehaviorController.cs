@@ -21,14 +21,14 @@ namespace AnyRPG {
 
         private bool suppressNameplateImage = false;
 
-        private List<BehaviorProfile> behaviorList = new List<BehaviorProfile>();
+        private Dictionary<BehaviorProfile, BehaviorProfileState> behaviorList = new Dictionary<BehaviorProfile, BehaviorProfileState>();
 
         private BehaviorComponent behaviorComponent = null;
 
         public int MyBehaviorIndex { get => behaviorIndex; }
-        public List<BehaviorProfile> BehaviorList { get => behaviorList; set => behaviorList = value; }
         public bool BehaviorPlaying { get => behaviorPlaying; set => behaviorPlaying = value; }
         public bool SuppressNameplateImage { get => suppressNameplateImage; }
+        public Dictionary<BehaviorProfile, BehaviorProfileState> BehaviorList { get => behaviorList; set => behaviorList = value; }
 
         public BehaviorController(UnitController unitController) {
             //Debug.Log(unitController.gameObject.name + "BehaviorController.Constructor()");
@@ -89,16 +89,16 @@ namespace AnyRPG {
             BehaviorNode currentbehaviorNode = null;
             suppressNameplateImage = true;
 
-            behaviorProfile.ResetStatus();
+            behaviorProfile.ResetStatus(behaviorList[behaviorProfile]);
 
             // give the interactable a chance to update the nameplate image and minimap indicator since we want the option to interact to be gone while the behavior is playing
             if (caller != null) {
                 caller.ProcessBehaviorBeginEnd();
             }
             //ProcessBehaviorBeginEnd();
-            while (behaviorIndex < behaviorProfile.MyBehaviorNodes.Count) {
-                foreach (BehaviorNode behaviorNode in behaviorProfile.MyBehaviorNodes) {
-                    if (behaviorNode.MyStartTime <= elapsedTime && behaviorNode.MyCompleted == false) {
+            while (behaviorIndex < behaviorProfile.BehaviorNodes.Count) {
+                foreach (BehaviorNode behaviorNode in behaviorProfile.BehaviorNodes) {
+                    if (behaviorNode.MyStartTime <= elapsedTime && behaviorList[behaviorProfile].BehaviorNodeStates[behaviorNode].Completed == false) {
                         currentbehaviorNode = behaviorNode;
 
                         if (currentbehaviorNode.MyBehaviorActionNodes != null) {
@@ -114,7 +114,7 @@ namespace AnyRPG {
                             }
                         }
 
-                        behaviorNode.MyCompleted = true;
+                        behaviorList[behaviorProfile].BehaviorNodeStates[behaviorNode].Completed = true;
                         behaviorIndex++;
                     }
                 }
@@ -170,7 +170,7 @@ namespace AnyRPG {
             }
 
             // since player unit spawn doesn't trigger prerequisite update on individual behaviors, a manual check is needed
-            foreach (BehaviorProfile behaviorProfile in behaviorList) {
+            foreach (BehaviorProfile behaviorProfile in behaviorList.Keys) {
                 behaviorProfile.UpdatePrerequisites(false);
             }
             PlayAutomaticBehaviors();
@@ -198,7 +198,7 @@ namespace AnyRPG {
         public List<BehaviorProfile> GetCurrentOptionList() {
             //Debug.Log(unitController.gameObject.name + ".BehaviorController.GetCurrentOptionList()");
             List<BehaviorProfile> currentList = new List<BehaviorProfile>();
-            foreach (BehaviorProfile behaviorProfile in behaviorList) {
+            foreach (BehaviorProfile behaviorProfile in behaviorList.Keys) {
                 if (behaviorProfile.MyPrerequisitesMet == true
                     && (behaviorProfile.Completed == false || behaviorProfile.Repeatable == true)) {
                     //Debug.Log("BehaviorInteractable.GetCurrentOptionList() adding behaviorProfile " + behaviorProfile.DisplayName + "; id: " + behaviorProfile.GetInstanceID());
@@ -210,7 +210,7 @@ namespace AnyRPG {
         }
 
         public void AddToBehaviorList(BehaviorProfile behaviorProfile) {
-            behaviorList.Add(behaviorProfile);
+            behaviorList.Add(behaviorProfile, new BehaviorProfileState(behaviorProfile));
             behaviorProfile.OnPrerequisiteUpdates += HandlePrerequisiteUpdates;
         }
 
@@ -221,11 +221,12 @@ namespace AnyRPG {
             if (unitController.BehaviorNames != null) {
                 foreach (string behaviorName in unitController.BehaviorNames) {
                     BehaviorProfile tmpBehaviorProfile = null;
-                    if (unitController.UseBehaviorCopy == true) {
-                        tmpBehaviorProfile = SystemBehaviorProfileManager.Instance.GetNewResource(behaviorName);
-                    } else {
-                        tmpBehaviorProfile = SystemBehaviorProfileManager.Instance.GetResource(behaviorName);
-                    }
+                    // monitor for breakage - behavior copies are theoretically no longer necessary because behavior players now track state individually
+                    //if (unitController.UseBehaviorCopy == true) {
+                        //tmpBehaviorProfile = SystemBehaviorProfileManager.Instance.GetNewResource(behaviorName);
+                    //} else {
+                        tmpBehaviorProfile = SystemDataFactory.Instance.GetResource<BehaviorProfile>(behaviorName);
+                    //}
                     if (tmpBehaviorProfile != null) {
                         AddToBehaviorList(tmpBehaviorProfile);
                     }
@@ -256,7 +257,7 @@ namespace AnyRPG {
         }
 
         public void CleanupScriptableObjects() {
-            foreach (BehaviorProfile behaviorProfile in behaviorList) {
+            foreach (BehaviorProfile behaviorProfile in behaviorList.Keys) {
                 behaviorProfile.OnPrerequisiteUpdates -= HandlePrerequisiteUpdates;
             }
         }

@@ -86,7 +86,7 @@ namespace AnyRPG {
                 if (statusEffectNode.StatusEffect.SceneNames.Count > 0) {
                     bool sceneFound = false;
                     foreach (string sceneName in statusEffectNode.StatusEffect.SceneNames) {
-                        if (SystemResourceManager.prepareStringForMatch(sceneName) == SystemResourceManager.prepareStringForMatch(SystemGameManager.Instance.LevelManager.GetActiveSceneNode().DisplayName)) {
+                        if (SystemDataFactory.PrepareStringForMatch(sceneName) == SystemDataFactory.PrepareStringForMatch(SystemGameManager.Instance.LevelManager.GetActiveSceneNode().DisplayName)) {
                             sceneFound = true;
                         }
                     }
@@ -732,7 +732,7 @@ namespace AnyRPG {
             //Debug.Log("statuseffects count: " + statusEffects.Count);
 
             StatusEffect comparedStatusEffect = null;
-            string peparedString = SystemResourceManager.prepareStringForMatch(statusEffect.DisplayName);
+            string peparedString = SystemDataFactory.PrepareStringForMatch(statusEffect.DisplayName);
             if (statusEffects.ContainsKey(peparedString)) {
                 comparedStatusEffect = statusEffects[peparedString].StatusEffect;
             }
@@ -754,7 +754,7 @@ namespace AnyRPG {
                     return null;
                 }
                 StatusEffectNode newStatusEffectNode = new StatusEffectNode();
-                statusEffects.Add(SystemResourceManager.prepareStringForMatch(statusEffect.DisplayName), newStatusEffectNode);
+                statusEffects.Add(SystemDataFactory.PrepareStringForMatch(statusEffect.DisplayName), newStatusEffectNode);
 
                 // set base ability to null so that all damage taken by a status effect tick is considered ability damage for combat text purposes
                 abilityEffectContext.baseAbility = null;
@@ -783,15 +783,15 @@ namespace AnyRPG {
         }
 
         public bool HasStatusEffect(StatusEffect statusEffect) {
-            if (statusEffects.ContainsKey(SystemResourceManager.prepareStringForMatch(statusEffect.DisplayName))) {
+            if (statusEffects.ContainsKey(SystemDataFactory.PrepareStringForMatch(statusEffect.DisplayName))) {
                 return true;
             }
             return false;
         }
 
         public StatusEffectNode GetStatusEffectNode(StatusEffect statusEffect) {
-            if (statusEffects.ContainsKey(SystemResourceManager.prepareStringForMatch(statusEffect.DisplayName))) {
-                return StatusEffects[SystemResourceManager.prepareStringForMatch(statusEffect.DisplayName)];
+            if (statusEffects.ContainsKey(SystemDataFactory.PrepareStringForMatch(statusEffect.DisplayName))) {
+                return StatusEffects[SystemDataFactory.PrepareStringForMatch(statusEffect.DisplayName)];
             }
             return null;
         }
@@ -835,7 +835,7 @@ namespace AnyRPG {
 
         public void HandleStatusEffectRemoval(StatusEffect statusEffect) {
             //Debug.Log("CharacterStats.HandleStatusEffectRemoval(" + statusEffect.name + ")");
-            string preparedString = SystemResourceManager.prepareStringForMatch(statusEffect.DisplayName);
+            string preparedString = SystemDataFactory.PrepareStringForMatch(statusEffect.DisplayName);
             if (statusEffects.ContainsKey(preparedString)) {
                 if (statusEffects[preparedString].MyMonitorCoroutine != null) {
                     baseCharacter.StopCoroutine(statusEffects[preparedString].MyMonitorCoroutine);
@@ -1176,7 +1176,7 @@ namespace AnyRPG {
             }
             foreach (StatusEffectNode statusEffectNode in statusEffectNodes) {
                 statusEffectNode.CancelStatusEffect();
-                statusEffects.Remove(SystemResourceManager.prepareStringForMatch(statusEffectNode.StatusEffect.DisplayName));
+                statusEffects.Remove(SystemDataFactory.PrepareStringForMatch(statusEffectNode.StatusEffect.DisplayName));
             }
             //statusEffects.Clear();
         }
@@ -1246,9 +1246,9 @@ namespace AnyRPG {
                 }
             }
 
-            if (statusEffects.ContainsKey(SystemResourceManager.prepareStringForMatch(statusEffect.DisplayName))) {
+            if (statusEffects.ContainsKey(SystemDataFactory.PrepareStringForMatch(statusEffect.DisplayName))) {
                 //Debug.Log(gameObject.name + ".CharacterStats.Tick(): statusEffect: " + statusEffect.MyName + "; cancelling ");
-                statusEffects[SystemResourceManager.prepareStringForMatch(statusEffect.DisplayName)].CancelStatusEffect();
+                statusEffects[SystemDataFactory.PrepareStringForMatch(statusEffect.DisplayName)].CancelStatusEffect();
             }
         }
 

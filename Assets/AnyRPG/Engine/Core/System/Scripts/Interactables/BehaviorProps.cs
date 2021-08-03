@@ -16,14 +16,16 @@ namespace AnyRPG {
         [SerializeField]
         private List<string> behaviorNames = new List<string>();
 
+        /*
         [Tooltip("instantiate a new behavior profile or not when loading behavior profiles")]
         [SerializeField]
         private bool useBehaviorCopy = false;
+        */
 
         public override Sprite Icon { get => (SystemGameManager.Instance.SystemConfigurationManager.DialogInteractionPanelImage != null ? SystemGameManager.Instance.SystemConfigurationManager.DialogInteractionPanelImage : base.Icon); }
         public override Sprite NamePlateImage { get => (SystemGameManager.Instance.SystemConfigurationManager.DialogNamePlateImage != null ? SystemGameManager.Instance.SystemConfigurationManager.DialogNamePlateImage : base.NamePlateImage); }
 
-        public bool UseBehaviorCopy { get => useBehaviorCopy; }
+        //public bool UseBehaviorCopy { get => useBehaviorCopy; }
         public List<string> BehaviorNames { get => behaviorNames; }
 
         public override string GetInteractionPanelTitle(int optionIndex = 0) {

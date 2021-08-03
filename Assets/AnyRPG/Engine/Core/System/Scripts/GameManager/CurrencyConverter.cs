@@ -15,12 +15,12 @@ namespace AnyRPG {
                 // attemp redistribution
                 Currency baseCurrency = currencyGroup.MyBaseCurrency;
                 // convert everything in the group to the base amount
-                if (SystemResourceManager.MatchResource(currency.DisplayName, currencyGroup.MyBaseCurrency.DisplayName)) {
+                if (SystemDataFactory.MatchResource(currency.DisplayName, currencyGroup.MyBaseCurrency.DisplayName)) {
                     return currencyAmount;
                 }
                 // the currency needs conversion
                 foreach (CurrencyGroupRate currencyGroupRate in currencyGroup.MyCurrencyGroupRates) {
-                    if (SystemResourceManager.MatchResource(currencyGroupRate.MyCurrency.DisplayName, currency.DisplayName)) {
+                    if (SystemDataFactory.MatchResource(currencyGroupRate.MyCurrency.DisplayName, currency.DisplayName)) {
                         return currencyGroupRate.MyBaseMultiple * currencyAmount;
                     }
                 }
@@ -98,7 +98,7 @@ namespace AnyRPG {
         public int GetCurrencyAmountFromList(Currency currency, List<KeyValuePair<Currency, int>>) {
             //Debug.Log(gameObject.name + ".PlayerCurrencyManager.GetCurrency(" + currency.MyName + ")");
             //bool foundReputation = false;
-            string keyName = SystemResourceManager.prepareStringForMatch(currency.MyName);
+            string keyName = SystemDataFactory.PrepareStringForMatch(currency.MyName);
             if (MyCurrencyList.ContainsKey(keyName)) {
                 return MyCurrencyList[keyName].MyAmount;
             }

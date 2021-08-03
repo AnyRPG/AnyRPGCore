@@ -212,8 +212,8 @@ namespace AnyRPG {
 
         public TDataType GetResource<TDataType>(string resourceName) where TDataType : ResourceProfile {
             //Debug.Log(this.GetType().Name + ".GetResource(" + resourceName + ")");
-            if (!SystemResourceManager.RequestIsEmpty(resourceName)) {
-                //string keyName = SystemResourceManager.prepareStringForMatch(resourceName);
+            if (!RequestIsEmpty(resourceName)) {
+                //string keyName = SystemDataFactory.PrepareStringForMatch(resourceName);
                 if (dataDictionary.ContainsKey(typeof(TDataType))) {
                     return dataDictionary[typeof(TDataType)].GetResource<TDataType>(resourceName);
                 }
@@ -233,6 +233,29 @@ namespace AnyRPG {
                 return dataDictionary[typeof(TDataType)].GetResourceCount();
             }
             return 0;
+        }
+
+        public static string PrepareStringForMatch(string oldString) {
+            return oldString.ToLower().Replace(" ", string.Empty).Replace("'", string.Empty);
+        }
+
+        public static bool MatchResource(string resourceName, string resourceMatchName) {
+            if (resourceName != null && resourceMatchName != null) {
+                if (PrepareStringForMatch(resourceName) == PrepareStringForMatch(resourceMatchName)) {
+                    return true;
+                }
+            } else {
+                //Debug.Log("SystemGameManager.MatchResource(" + (resourceName == null ? "null" : resourceName) + ", " + (resourceMatchName == null ? "null" : resourceMatchName) + ")");
+            }
+            return false;
+        }
+
+        public static bool RequestIsEmpty(string resourceName) {
+            if (resourceName == null || resourceName == string.Empty) {
+                //Debug.Log("SystemDataFactory.RequestIsEmpty(" + resourceName + "): EMPTY RESOURCE REQUESTED.  FIX THIS! DO NOT COMMENT THIS LINE");
+                return true;
+            }
+            return false;
         }
 
 

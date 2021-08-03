@@ -151,9 +151,9 @@ namespace AnyRPG {
                 SystemEventManager.StopListening("OnTakeLoot", HandleTakeLoot);
 
                 // cancel loot sparkle here because despawn takes a while
-                if (characterUnit.BaseCharacter.CharacterStats.StatusEffects.ContainsKey(SystemResourceManager.prepareStringForMatch(SystemGameManager.Instance.SystemConfigurationManager.LootSparkleEffect.DisplayName))) {
-                    //Debug.Log(gameObject.name + ".LootableCharacter.TryToDespawn(): found a sparkle effect: " + SystemResourceManager.prepareStringForMatch(abilityEffect.MyName) + " and now cancelling it");
-                    characterUnit.BaseCharacter.CharacterStats.StatusEffects[SystemResourceManager.prepareStringForMatch(SystemGameManager.Instance.SystemConfigurationManager.LootSparkleEffect.DisplayName)].CancelStatusEffect();
+                if (characterUnit.BaseCharacter.CharacterStats.StatusEffects.ContainsKey(SystemDataFactory.PrepareStringForMatch(SystemGameManager.Instance.SystemConfigurationManager.LootSparkleEffect.DisplayName))) {
+                    //Debug.Log(gameObject.name + ".LootableCharacter.TryToDespawn(): found a sparkle effect: " + SystemDataFactory.PrepareStringForMatch(abilityEffect.MyName) + " and now cancelling it");
+                    characterUnit.BaseCharacter.CharacterStats.StatusEffects[SystemDataFactory.PrepareStringForMatch(SystemGameManager.Instance.SystemConfigurationManager.LootSparkleEffect.DisplayName)].CancelStatusEffect();
                 }
                 AdvertiseLootComplete();
                 Despawn();

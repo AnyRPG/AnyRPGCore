@@ -72,15 +72,10 @@ namespace AnyRPG {
         [SerializeField]
         private SystemAchievementManager systemAchievementManager = null;
 
-        [Header("Resource Managers")]
-
-        [SerializeField]
-        private GameObject resourceManagerParent = null;
+        [Header("Data Resource Factory")]
 
         [SerializeField]
         private SystemDataFactory systemDataFactory = null;
-
-        private List<SystemResourceManager> systemResourceManagers = new List<SystemResourceManager>();
 
         // system scripts
         private SystemEventManager systemEventManager = null;
@@ -174,59 +169,19 @@ namespace AnyRPG {
             // we are going to handle the initialization of all system managers here so we can control the start order and it isn't random
 
             // first turn off the UI
-            SystemGameManager.Instance.UIManager.PerformSetupActivities();
+            UIManager.PerformSetupActivities();
 
             // next, load scriptable object resources
-            LoadResources();
-
-            // next, verify systemconfiguration manager references to resources
-            SystemGameManager.Instance.SystemConfigurationManager.SetupScriptableObjects();
-
-            SystemGameManager.Instance.PlayerManager.OrchestratorStart();
-
-            // then launch level manager to start loading the game
-            SystemGameManager.Instance.LevelManager.PerformSetupActivities();
-
-        }
-
-        /// <summary>
-        /// this function is not currently in use because objects subscribe to events on these so clearing them breaks the event subscriptions
-        /// also, there should no longer be mutable properties on these so there should be no need to reload them
-        /// </summary>
-        public void ReloadResourceLists() {
-            //Debug.Log("SystemGameManager.ReloadResourceLists()");
-
-            // this has to be done in two loops to avoid invalidating scriptableobject references as we clear the lists to reload them
-            foreach (SystemResourceManager systemResourceManager in systemResourceManagers) {
-                systemResourceManager.ReloadResourceList();
-            }
-            foreach (SystemResourceManager systemResourceManager in systemResourceManagers) {
-                systemResourceManager.SetupScriptableObjects();
-            }
-
-        }
-
-        public void LoadResources() {
-            //Debug.Log("SystemGameManager.LoadResources()");
-
-            // load all resource managers into a list and get them to load their scriptableobjects from disk
-            SystemResourceManager[] systemResourceManagerArray = resourceManagerParent.GetComponents<SystemResourceManager>();
-            foreach (SystemResourceManager systemResourceManager in systemResourceManagerArray) {
-                //Debug.Log("SystemGameManager.LoadResources(): found a child: " + child.name);
-                //SystemResourceManager systemResourceManager = child.GetComponent<SystemResourceManager>();
-                if (systemResourceManager != null) {
-                    systemResourceManagers.Add(systemResourceManager);
-                    systemResourceManager.LoadResourceList();
-                }
-            }
-
             systemDataFactory.SetupFactory();
 
-            // give each resource manager a chance to loop through their scriptableOjects and create references to other scriptableOjects to avoid costly
-            // and repetitive runtime lookups
-            foreach (SystemResourceManager systemResourceManager in systemResourceManagers) {
-                systemResourceManager.SetupScriptableObjects();
-            }
+            // next, verify systemconfiguration manager references to resources
+            SystemConfigurationManager.SetupScriptableObjects();
+
+            PlayerManager.OrchestratorStart();
+
+            // then launch level manager to start loading the game
+            LevelManager.PerformSetupActivities();
+
         }
 
         public int GetSpawnCount() {

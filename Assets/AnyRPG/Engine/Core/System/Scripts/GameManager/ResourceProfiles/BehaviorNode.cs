@@ -15,18 +15,14 @@ namespace AnyRPG {
         [SerializeField]
         private List<BehaviorActionNode> behaviorActionNodes = new List<BehaviorActionNode>();
 
-        private bool completed = false;
-
-
         public float MyStartTime { get => startTime; set => startTime = value; }
         public List<BehaviorActionNode> MyBehaviorActionNodes { get => behaviorActionNodes; set => behaviorActionNodes = value; }
-        public bool MyCompleted { get => completed; set => completed = value; }
 
         /// <summary>
         /// Reset the completion status
         /// </summary>
-        public void ResetStatus() {
-            completed = false;
+        public void ResetStatus(BehaviorNodeState behaviorNodeState) {
+            behaviorNodeState.Completed = false;
         }
     }
 

@@ -45,7 +45,7 @@ namespace AnyRPG {
             if (completeBefore) {
                 return;
             }
-            if (SystemResourceManager.MatchResource(interactableName, MyType)) {
+            if (SystemDataFactory.MatchResource(interactableName, MyType)) {
                 if (!interactionComplete && requireCompletion == true) {
                     return;
                 }

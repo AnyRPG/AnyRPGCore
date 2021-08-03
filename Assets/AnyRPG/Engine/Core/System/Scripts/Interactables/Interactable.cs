@@ -595,7 +595,7 @@ namespace AnyRPG {
             Quest quest = SystemDataFactory.Instance.GetResource<Quest>(questName);
             foreach (QuestObjective questObjective in quest.MyUseInteractableObjectives) {
                 foreach (InteractableOption interactableOption in MyInteractables) {
-                    if (SystemResourceManager.MatchResource(questObjective.MyType, interactableOption.MyName)) {
+                    if (SystemDataFactory.MatchResource(questObjective.MyType, interactableOption.MyName)) {
                         //Debug.Log("auto open interactable on questgiver to complete interactable objective");
                         if (SystemGameManager.Instance.PlayerManager != null && SystemGameManager.Instance.PlayerManager.MyCharacter != null && SystemGameManager.Instance.PlayerManager.MyCharacter.MyCharacterController != null) {
                             Interactable _interactable = this;

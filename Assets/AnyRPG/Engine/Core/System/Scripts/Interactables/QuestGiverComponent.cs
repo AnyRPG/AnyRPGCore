@@ -285,7 +285,7 @@ namespace AnyRPG {
 
         public bool EndsQuest(string questName) {
             foreach (QuestNode questNode in Props.Quests) {
-                if (SystemResourceManager.MatchResource(questNode.MyQuest.DisplayName, questName)) {
+                if (SystemDataFactory.MatchResource(questNode.MyQuest.DisplayName, questName)) {
                     if (questNode.MyEndQuest == true) {
                         return true;
                     } else {

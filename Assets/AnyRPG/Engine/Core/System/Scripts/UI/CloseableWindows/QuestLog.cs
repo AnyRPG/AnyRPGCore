@@ -35,7 +35,7 @@ namespace AnyRPG {
                 //Debug.Log("QuestLog.LoadQuest(" + questSaveData.MyName + "): loading kill objectives");
                 foreach (QuestObjective existingQuestObjective in quest.MyKillObjectives) {
                     //Debug.Log("QuestLog.LoadQuest(" + questSaveData.MyName + "): loading kill objective: " + existingQuestObjective.MyType);
-                    if (SystemResourceManager.MatchResource(existingQuestObjective.MyType, objectiveSaveData.MyName)) {
+                    if (SystemDataFactory.MatchResource(existingQuestObjective.MyType, objectiveSaveData.MyName)) {
                         //Debug.Log("QuestLog.LoadQuest(" + questSaveData.MyName + "): loading kill objective: " + existingQuestObjective.MyType + " matches!!! myamount: " + objectiveSaveData.MyAmount);
                         existingQuestObjective.CurrentAmount = objectiveSaveData.MyAmount;
                     }
@@ -44,7 +44,7 @@ namespace AnyRPG {
             List<CollectObjective> collectObjectiveSaveDataList = new List<CollectObjective>();
             foreach (QuestObjectiveSaveData objectiveSaveData in questSaveData.collectObjectives) {
                 foreach (QuestObjective existingQuestObjective in quest.MyCollectObjectives) {
-                    if (SystemResourceManager.MatchResource(existingQuestObjective.MyType, objectiveSaveData.MyName)) {
+                    if (SystemDataFactory.MatchResource(existingQuestObjective.MyType, objectiveSaveData.MyName)) {
                         existingQuestObjective.CurrentAmount = objectiveSaveData.MyAmount;
                     }
                 }
@@ -53,7 +53,7 @@ namespace AnyRPG {
             foreach (QuestObjectiveSaveData objectiveSaveData in questSaveData.tradeSkillObjectives) {
                 //Debug.Log("QuestLog.LoadQuest(" + questSaveData.MyName + "): loading tradeskill objective");
                 foreach (QuestObjective existingQuestObjective in quest.MyTradeSkillObjectives) {
-                    if (SystemResourceManager.MatchResource(existingQuestObjective.MyType, objectiveSaveData.MyName)) {
+                    if (SystemDataFactory.MatchResource(existingQuestObjective.MyType, objectiveSaveData.MyName)) {
                         existingQuestObjective.CurrentAmount = objectiveSaveData.MyAmount;
                     }
                 }
@@ -61,7 +61,7 @@ namespace AnyRPG {
             List<UseInteractableObjective> useInteractableObjectiveSaveDataList = new List<UseInteractableObjective>();
             foreach (QuestObjectiveSaveData objectiveSaveData in questSaveData.useInteractableObjectives) {
                 foreach (QuestObjective existingQuestObjective in quest.MyUseInteractableObjectives) {
-                    if (SystemResourceManager.MatchResource(existingQuestObjective.MyType, objectiveSaveData.MyName)) {
+                    if (SystemDataFactory.MatchResource(existingQuestObjective.MyType, objectiveSaveData.MyName)) {
                         existingQuestObjective.CurrentAmount = objectiveSaveData.MyAmount;
                     }
                 }
@@ -70,7 +70,7 @@ namespace AnyRPG {
             List<AbilityObjective> abilityObjectiveSaveDataList = new List<AbilityObjective>();
             foreach (QuestObjectiveSaveData objectiveSaveData in questSaveData.abilityObjectives) {
                 foreach (QuestObjective existingQuestObjective in quest.MyAbilityObjectives) {
-                    if (SystemResourceManager.MatchResource(existingQuestObjective.MyType, objectiveSaveData.MyName)) {
+                    if (SystemDataFactory.MatchResource(existingQuestObjective.MyType, objectiveSaveData.MyName)) {
                         //Debug.Log("QuestLog.LoadQuest(" + questSaveData.MyName + "): loading ability objective: " + existingQuestObjective.MyType + " matches!!! myamount: " + objectiveSaveData.MyAmount);
                         existingQuestObjective.CurrentAmount = objectiveSaveData.MyAmount;
                     }
@@ -99,7 +99,7 @@ namespace AnyRPG {
             quest.AcceptQuest(false);
             // gotta check here because kills and ability use are not automatically checked on accept because under normal circumstances those amounts must start at 0
             quest.CheckCompletion(true, false);
-            string keyName = SystemResourceManager.prepareStringForMatch(quest.DisplayName);
+            string keyName = SystemDataFactory.PrepareStringForMatch(quest.DisplayName);
             quests[keyName] = quest;
 
             // just in case one quest was complete but not turned in
@@ -115,7 +115,7 @@ namespace AnyRPG {
             // AVOID ACCIDENTALLY ACCEPTING TURNED IN QUESTS THAT ARE NOT REPEATABLE
             if (newQuest != null && (newQuest.TurnedIn == false || newQuest.MyRepeatableQuest == true)) {
                 // add first, then use acceptquest because it needs to be in the log for the accepquest completion check to pass
-                string keyName = SystemResourceManager.prepareStringForMatch(newQuest.DisplayName);
+                string keyName = SystemDataFactory.PrepareStringForMatch(newQuest.DisplayName);
                 quests[keyName] = newQuest;
                 newQuest.AcceptQuest();
                 //CheckCompletion();
@@ -124,7 +124,7 @@ namespace AnyRPG {
 
         public bool HasQuest(string questName) {
             //Debug.Log("QuestLog.HasQuest(" + questName + ")");
-            string keyName = SystemResourceManager.prepareStringForMatch(questName);
+            string keyName = SystemDataFactory.PrepareStringForMatch(questName);
             if (quests.ContainsKey(keyName)) {
                 return true;
             }
@@ -151,7 +151,7 @@ namespace AnyRPG {
 
         public void RemoveQuest(Quest oldQuest) {
             //Debug.Log("QuestLog.RemoveQuest()");
-            string keyName = SystemResourceManager.prepareStringForMatch(oldQuest.DisplayName);
+            string keyName = SystemDataFactory.PrepareStringForMatch(oldQuest.DisplayName);
             if (quests.ContainsKey(keyName)) {
                 quests.Remove(keyName);
             }

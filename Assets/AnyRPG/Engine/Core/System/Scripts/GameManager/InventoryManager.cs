@@ -482,7 +482,7 @@ namespace AnyRPG {
                     //Debug.Log("InventoryManager.RemoveItem(" + item.itemName + "): checking bagNode and bag is not null");
                     foreach (SlotScript slot in bagNode.BagPanel.MySlots) {
                         //Debug.Log("InventoryManager.RemoveItem(" + item.itemName + "): checking bagNode and bag is not null and checking slotscript");
-                        if (!slot.IsEmpty && SystemResourceManager.MatchResource(slot.MyItem.DisplayName, item.DisplayName)) {
+                        if (!slot.IsEmpty && SystemDataFactory.MatchResource(slot.MyItem.DisplayName, item.DisplayName)) {
                             //Debug.Log("InventoryManager.RemoveItem(" + item.itemName + "): about to remove item from slot");
                             slot.RemoveItem(item);
                             return;
@@ -608,7 +608,7 @@ namespace AnyRPG {
             foreach (BagNode bagNode in bagNodes) {
                 if (bagNode.MyBag != null) {
                     foreach (SlotScript slot in bagNode.BagPanel.MySlots) {
-                        if (!slot.IsEmpty && SystemResourceManager.MatchResource(slot.MyItem.DisplayName, useable.DisplayName)) {
+                        if (!slot.IsEmpty && SystemDataFactory.MatchResource(slot.MyItem.DisplayName, useable.DisplayName)) {
                             return (slot.MyItem as IUseable);
                         }
                     }
@@ -623,7 +623,7 @@ namespace AnyRPG {
             foreach (BagNode bagNode in bagNodes) {
                 if (bagNode.MyBag != null) {
                     foreach (SlotScript slot in bagNode.BagPanel.MySlots) {
-                        if (!slot.IsEmpty && SystemResourceManager.MatchResource(slot.MyItem.DisplayName, useable.DisplayName)) {
+                        if (!slot.IsEmpty && SystemDataFactory.MatchResource(slot.MyItem.DisplayName, useable.DisplayName)) {
                             count += slot.MyCount;
                         }
                     }
@@ -643,7 +643,7 @@ namespace AnyRPG {
             foreach (BagNode bagNode in bagNodes) {
                 if (bagNode.MyBag != null) {
                     foreach (SlotScript slot in bagNode.BagPanel.MySlots) {
-                        if (!slot.IsEmpty && SystemResourceManager.MatchResource(slot.MyItem.DisplayName, type)) {
+                        if (!slot.IsEmpty && SystemDataFactory.MatchResource(slot.MyItem.DisplayName, type)) {
                             itemCount += slot.MyCount;
                         }
                     }
@@ -662,7 +662,7 @@ namespace AnyRPG {
                     //Debug.Log("InventoryManager.GetItems() got bagnode and it has a bag");
                     foreach (SlotScript slot in bagNode.BagPanel.MySlots) {
                         //Debug.Log("InventoryManager.GetItems() got bagnode and it has a bag and we are looking in a slotscript");
-                        if (!slot.IsEmpty && SystemResourceManager.MatchResource(slot.MyItem.DisplayName, itemType)) {
+                        if (!slot.IsEmpty && SystemDataFactory.MatchResource(slot.MyItem.DisplayName, itemType)) {
                             //Debug.Log("InventoryManager.GetItems() got bagnode and it has a bag and we are looking in a slotscript and the slot is not empty and it matches");
                             foreach (Item item in slot.MyItems) {
                                 //Debug.Log("InventoryManager.GetItems() got bagnode and it has a bag and we are looking in a slotscript and the slot is not empty and it matches and we are ading and item");

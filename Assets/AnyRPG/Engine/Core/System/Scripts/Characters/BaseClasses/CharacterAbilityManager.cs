@@ -184,7 +184,7 @@ namespace AnyRPG {
                     return;
                 }
 
-                string keyName = SystemResourceManager.prepareStringForMatch(abilityName);
+                string keyName = SystemDataFactory.PrepareStringForMatch(abilityName);
                 if (!abilityList.ContainsKey(keyName)) {
                     //Debug.Log("PlayerAbilityManager.LoadAbility(" + abilityName + "): found it!");
                     if (ability is AnimatedAbility && (ability as AnimatedAbility).IsAutoAttack == true) {
@@ -768,13 +768,13 @@ namespace AnyRPG {
                 if (statusEffect != null) {
                     if (equipmentCount > i) {
                         // we are allowed to have this buff
-                        if (!baseCharacter.CharacterStats.StatusEffects.ContainsKey(SystemResourceManager.prepareStringForMatch(statusEffect.DisplayName))) {
+                        if (!baseCharacter.CharacterStats.StatusEffects.ContainsKey(SystemDataFactory.PrepareStringForMatch(statusEffect.DisplayName))) {
                             ApplyStatusEffect(statusEffect);
                         }
                     } else {
                         // we are not allowed to have this buff
-                        if (baseCharacter.CharacterStats.StatusEffects.ContainsKey(SystemResourceManager.prepareStringForMatch(statusEffect.DisplayName))) {
-                            baseCharacter.CharacterStats.StatusEffects[SystemResourceManager.prepareStringForMatch(statusEffect.DisplayName)].CancelStatusEffect();
+                        if (baseCharacter.CharacterStats.StatusEffects.ContainsKey(SystemDataFactory.PrepareStringForMatch(statusEffect.DisplayName))) {
+                            baseCharacter.CharacterStats.StatusEffects[SystemDataFactory.PrepareStringForMatch(statusEffect.DisplayName)].CancelStatusEffect();
                         }
                     }
                 }
@@ -869,8 +869,8 @@ namespace AnyRPG {
                 return;
             }
             foreach (StatusEffect statusEffect in statusEffects) {
-                if (baseCharacter.CharacterStats != null && baseCharacter.CharacterStats.StatusEffects.ContainsKey(SystemResourceManager.prepareStringForMatch(statusEffect.DisplayName))) {
-                    baseCharacter.CharacterStats.StatusEffects[SystemResourceManager.prepareStringForMatch(statusEffect.DisplayName)].CancelStatusEffect();
+                if (baseCharacter.CharacterStats != null && baseCharacter.CharacterStats.StatusEffects.ContainsKey(SystemDataFactory.PrepareStringForMatch(statusEffect.DisplayName))) {
+                    baseCharacter.CharacterStats.StatusEffects[SystemDataFactory.PrepareStringForMatch(statusEffect.DisplayName)].CancelStatusEffect();
                 }
             }
         }
@@ -947,9 +947,9 @@ namespace AnyRPG {
 
         public override bool HasAbility(BaseAbility baseAbility) {
             //Debug.Log(gameObject.name + ".CharacterAbilitymanager.HasAbility(" + abilityName + ")");
-            //string keyName = SystemResourceManager.prepareStringForMatch(baseAbility);
+            //string keyName = SystemDataFactory.PrepareStringForMatch(baseAbility);
             //Debug.Log(gameObject.name + ".CharacterAbilitymanager.HasAbility(" + abilityName + "): keyname: " + keyName);
-            if (AbilityList.ContainsKey(SystemResourceManager.prepareStringForMatch(baseAbility.DisplayName))) {
+            if (AbilityList.ContainsKey(SystemDataFactory.PrepareStringForMatch(baseAbility.DisplayName))) {
                 //Debug.Log(gameObject.name + ".CharacterAbilitymanager.HasAbility( " + abilityName + "): keyname: " + keyName + " TRUE!");
                 return true;
             }
@@ -1014,7 +1014,7 @@ namespace AnyRPG {
                 return false;
             }
             if (!HasAbility(newAbility) && newAbility.RequiredLevel <= BaseCharacter.CharacterStats.Level) {
-                abilityList[SystemResourceManager.prepareStringForMatch(newAbility.DisplayName)] = newAbility;
+                abilityList[SystemDataFactory.PrepareStringForMatch(newAbility.DisplayName)] = newAbility;
                 if (isAutoAttack) {
                     //Debug.Log(gameObject.name + ".CharacterAbilityManager.LearnAbility(" + (newAbility == null ? "null" : newAbility.MyName) + "): setting auto-attack ability");
                     autoAttackAbility = newAbility;
@@ -1033,7 +1033,7 @@ namespace AnyRPG {
         }
 
         public void UnlearnAbility(BaseAbility oldAbility, bool updateActionBars = true) {
-            string keyName = SystemResourceManager.prepareStringForMatch(oldAbility.DisplayName);
+            string keyName = SystemDataFactory.PrepareStringForMatch(oldAbility.DisplayName);
             if (abilityList.ContainsKey(keyName)) {
                 bool isAutoAttack = false;
                 if (oldAbility is AnimatedAbility && (oldAbility as AnimatedAbility).IsAutoAttack) {
@@ -1531,7 +1531,7 @@ namespace AnyRPG {
 
         public bool PerformLearnedCheck(BaseAbility ability) {
 
-            string keyName = SystemResourceManager.prepareStringForMatch(ability.DisplayName);
+            string keyName = SystemDataFactory.PrepareStringForMatch(ability.DisplayName);
 
             if (!ability.UseableWithoutLearning && !AbilityList.ContainsKey(keyName)) {
                 OnLearnedCheckFail(ability);

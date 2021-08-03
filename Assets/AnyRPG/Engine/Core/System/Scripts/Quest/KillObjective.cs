@@ -25,7 +25,7 @@ namespace AnyRPG {
             }
 
             // INVESTIGATE IF STRING MATCH CAN BE REPLACED WITH TYPE.GETTYPE DIRECT MATCH
-            if (character.GetType() == Type.GetType(MyType) || SystemResourceManager.MatchResource(character.CharacterName, MyType) || SystemResourceManager.MatchResource(character.Faction.DisplayName, MyType)) {
+            if (character.GetType() == Type.GetType(MyType) || SystemDataFactory.MatchResource(character.CharacterName, MyType) || SystemDataFactory.MatchResource(character.Faction.DisplayName, MyType)) {
                 CurrentAmount++;
                 quest.CheckCompletion();
                 if (CurrentAmount <= MyAmount && !quest.MyIsAchievement && CurrentAmount != 0) {

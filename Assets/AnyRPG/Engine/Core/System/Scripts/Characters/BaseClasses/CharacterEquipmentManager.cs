@@ -668,7 +668,7 @@ namespace AnyRPG {
         public bool HasEquipment(string equipmentName) {
             foreach (Equipment equipment in currentEquipment.Values) {
                 if (equipment != null) {
-                    if (SystemResourceManager.MatchResource(equipment.DisplayName, equipmentName)) {
+                    if (SystemDataFactory.MatchResource(equipment.DisplayName, equipmentName)) {
                         return true;
                     }
                 }
@@ -680,7 +680,7 @@ namespace AnyRPG {
             int returnValue = 0;
             foreach (Equipment equipment in currentEquipment.Values) {
                 if (equipment != null) {
-                    if (SystemResourceManager.MatchResource(equipment.DisplayName, equipmentName)) {
+                    if (SystemDataFactory.MatchResource(equipment.DisplayName, equipmentName)) {
                         returnValue++;
                     }
                 }

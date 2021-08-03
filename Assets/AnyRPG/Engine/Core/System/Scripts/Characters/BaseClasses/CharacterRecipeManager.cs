@@ -52,7 +52,7 @@ namespace AnyRPG {
                 return;
             }
             if (!recipeList.ContainsValue(newRecipe)) {
-                recipeList[SystemResourceManager.prepareStringForMatch(newRecipe.DisplayName)] = newRecipe;
+                recipeList[SystemDataFactory.PrepareStringForMatch(newRecipe.DisplayName)] = newRecipe;
                 EventParamProperties eventParamProperties = new EventParamProperties();
                 eventParamProperties.simpleParams.StringParam = newRecipe.DisplayName;
                 SystemEventManager.TriggerEvent("OnRecipeListChanged", eventParamProperties);
@@ -61,7 +61,7 @@ namespace AnyRPG {
 
         public void LoadRecipe(string recipeName) {
             //Debug.Log("CharacterRecipeManager.LoadRecipe(" + recipeName + ")");
-            string keyName = SystemResourceManager.prepareStringForMatch(recipeName);
+            string keyName = SystemDataFactory.PrepareStringForMatch(recipeName);
             if (!recipeList.ContainsKey(keyName)) {
                 recipeList[keyName] = SystemDataFactory.Instance.GetResource<Recipe>(recipeName);
                 if (recipeList[keyName] == null) {
@@ -74,7 +74,7 @@ namespace AnyRPG {
 
         public void UnlearnRecipe(Recipe oldRecipe) {
             if (recipeList.ContainsValue(oldRecipe)) {
-                recipeList.Remove(SystemResourceManager.prepareStringForMatch(oldRecipe.DisplayName));
+                recipeList.Remove(SystemDataFactory.PrepareStringForMatch(oldRecipe.DisplayName));
             }
         }
 

@@ -485,7 +485,7 @@ namespace AnyRPG {
                 combatStrategyName = ResourceName;
             }
             if (combatStrategyName != null && combatStrategyName != string.Empty) {
-                CombatStrategy tmpCombatStrategy = SystemCombatStrategyManager.Instance.GetNewResource(combatStrategyName);
+                CombatStrategy tmpCombatStrategy = SystemDataFactory.Instance.GetResource<CombatStrategy>(combatStrategyName);
                 if (tmpCombatStrategy != null) {
                     combatStrategy = tmpCombatStrategy;
                 } else {
