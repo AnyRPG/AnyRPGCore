@@ -15,6 +15,7 @@ namespace AnyRPG {
 
         [Tooltip("The name of the cutscene to play")]
         [SerializeField]
+        [ResourceSelector(resourceType = typeof(Cutscene))]
         private string cutsceneName = string.Empty;
 
         private Cutscene cutscene = null;

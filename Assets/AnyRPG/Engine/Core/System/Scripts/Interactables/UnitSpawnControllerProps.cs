@@ -15,6 +15,7 @@ namespace AnyRPG {
 
         [Tooltip("The names of the unit profiles that will be available to spawn with this controller")]
         [SerializeField]
+        [ResourceSelector(resourceType = typeof(UnitProfile))]
         private List<string> unitProfileNames = new List<string>();
 
         [Tooltip("List of Unit Spawn Nodes to control")]

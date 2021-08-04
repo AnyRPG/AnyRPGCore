@@ -15,6 +15,7 @@ namespace AnyRPG {
 
         [Tooltip("When interacted with, the player will cast this ability. Only applies if Portal Type is Ability.")]
         [SerializeField]
+        [ResourceSelector(resourceType = typeof(BaseAbility))]
         private string abilityName = string.Empty;
 
         private BaseAbility ability = null;

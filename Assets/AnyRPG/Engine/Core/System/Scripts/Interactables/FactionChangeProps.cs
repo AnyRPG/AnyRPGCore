@@ -12,6 +12,7 @@ namespace AnyRPG {
 
         [Tooltip("the faction that this interactable option offers")]
         [SerializeField]
+        [ResourceSelector(resourceType = typeof(Faction))]
         private string factionName = string.Empty;
 
         private Faction faction;

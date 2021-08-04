@@ -15,6 +15,7 @@ namespace AnyRPG {
 
         [Tooltip("The names of the dialogs available to this interactable")]
         [SerializeField]
+        [ResourceSelector(resourceType = typeof(Dialog))]
         private List<string> dialogNames = new List<string>();
 
         private List<Dialog> dialogList = new List<Dialog>();

@@ -15,6 +15,7 @@ namespace AnyRPG {
 
         [Tooltip("The names of the audio profiles available on this music player")]
         [SerializeField]
+        [ResourceSelector(resourceType = typeof(AudioProfile))]
         private List<string> musicProfileNames = new List<string>();
 
         private List<AudioProfile> musicProfileList = new List<AudioProfile>();
