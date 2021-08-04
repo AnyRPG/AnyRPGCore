@@ -8,13 +8,13 @@ using AnyRPG;
 public class ResourceSelector : EditorWindow
 {
     System.Type resourceType;
-    string selectedItem = "";
+    string selectedItemName = "";
     SerializedProperty editedProperty;
     Label header;
     Label fileTypeLabel;
     Toggle includeCoreContent;
     ListView listView;
-    List<String> listElements;
+    List<ResourceProfile> listElements;
     bool listInitialized = false;
 
 //    [MenuItem("Tools/AnyRPG/ResourceSelector")]
@@ -28,7 +28,7 @@ public class ResourceSelector : EditorWindow
         ResourceSelector window = GetWindow<ResourceSelector>();
         window.titleContent = new GUIContent("ResourceSelector");
         window.resourceType = resourceType;
-        window.selectedItem = property.stringValue;
+        window.selectedItemName = property.stringValue;
         window.editedProperty = property;
         window.Show();
     }
@@ -37,7 +37,7 @@ public class ResourceSelector : EditorWindow
         foreach (System.Object obj in selected) {
             //Debug.Log("set selected: " + obj);
             if (obj != null) {
-                editedProperty.stringValue = obj as string;
+                editedProperty.stringValue = (obj as ResourceProfile).ResourceName;
             } else {
                 editedProperty.stringValue = "";
             }
@@ -51,11 +51,11 @@ public class ResourceSelector : EditorWindow
         if (manager.GetResourceList().Count == 0) {
             manager.LoadResourceList();
         }
-        List<string> namesList = new List<string>();
+        List<ResourceProfile> namesList = new List<ResourceProfile>();
         foreach (ResourceProfile item in manager.GetResourceList()) {
-            namesList.Add(item.ResourceName);
+            namesList.Add(item);
         }
-        namesList.Sort();
+        namesList.Sort((a,b) => a.ResourceName.CompareTo(b.ResourceName));
         listElements.AddRange(namesList);
     }
 
@@ -73,7 +73,13 @@ public class ResourceSelector : EditorWindow
                 InitializeList();
                 listView.Refresh();
                 listInitialized = true;
-                int idx = listElements.IndexOf(selectedItem);
+                int idx = -1;
+                for (int i = 0; i < listElements.Count; i++) {
+                    if (listElements[i].ResourceName == selectedItemName) {
+                        idx = i;
+                        break;
+                    }
+                }
                 if (idx >= 0) {
                     listView.selectedIndex = idx;
                 }
@@ -99,7 +105,7 @@ public class ResourceSelector : EditorWindow
         includeCoreContent.RegisterValueChangedCallback<bool>( x => ReloadList());
         root.Add(includeCoreContent);
 
-        listElements = new List<string>();
+        listElements = new List<ResourceProfile>();
 
         // The "makeItem" function is called when the
         // ListView needs more items to render.
@@ -109,7 +115,13 @@ public class ResourceSelector : EditorWindow
         // recycles elements created by the "makeItem" function,
         // and invoke the "bindItem" callback to associate
         // the element with the matching data item (specified as an index in the list).
-        Action<VisualElement, int> bindItem = (e, i) => (e as Label).text = listElements[i];
+        //Action<VisualElement, int> bindItem = (e, i) => (e as Label).text = listElements[i];
+        Action<VisualElement, int> bindItem = (e, i) => {
+            Label l = e as Label;
+            l.text = listElements[i].ResourceName;
+            // I would love to put the path in a tooltip but there is currently no way to get it from Resources
+            //l.tooltip = "Path: " + AssetDatabase.GetAssetPath(listElements[i]);
+        };
 
         // Provide the list view with an explict height for every row
         // so it can calculate how many items to actually display
