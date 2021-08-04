@@ -86,9 +86,11 @@ namespace AnyRPG {
 
         private List<TextLogController> usedSystemLogControllers = new List<TextLogController>();
 
+        private LogManager logManager = null;
+
         public override void Init(SystemGameManager systemGameManager) {
             //Debug.Log("CombatLogUI.Awake()");
-
+            logManager = systemGameManager.LogManager;
             PopulateObjectPool();
             ClearLog();
 
@@ -225,12 +227,12 @@ namespace AnyRPG {
                 return;
             }
             base.CreateEventSubscriptions();
-            SystemGameManager.Instance.LogManager.OnWriteChatMessage += HandleWriteChatMessage;
-            SystemGameManager.Instance.LogManager.OnWriteSystemMessage += HandleWriteChatMessage;
-            SystemGameManager.Instance.LogManager.OnWriteCombatMessage += HandleWriteChatMessage;
-            SystemGameManager.Instance.LogManager.OnClearChatMessages += HandleClearChatMessages;
-            SystemGameManager.Instance.LogManager.OnClearSystemMessages += HandleClearChatMessages;
-            SystemGameManager.Instance.LogManager.OnClearCombatMessages += HandleClearChatMessages;
+            logManager.OnWriteChatMessage += HandleWriteChatMessage;
+            logManager.OnWriteSystemMessage += HandleWriteChatMessage;
+            logManager.OnWriteCombatMessage += HandleWriteChatMessage;
+            logManager.OnClearChatMessages += HandleClearChatMessages;
+            logManager.OnClearSystemMessages += HandleClearChatMessages;
+            logManager.OnClearCombatMessages += HandleClearChatMessages;
             eventSubscriptionsInitialized = true;
         }
 
@@ -240,14 +242,12 @@ namespace AnyRPG {
                 return;
             }
             base.CleanupEventSubscriptions();
-            if (SystemGameManager.Instance?.LogManager != null) {
-                SystemGameManager.Instance.LogManager.OnWriteChatMessage += HandleWriteChatMessage;
-                SystemGameManager.Instance.LogManager.OnWriteSystemMessage += HandleWriteChatMessage;
-                SystemGameManager.Instance.LogManager.OnWriteCombatMessage += HandleWriteChatMessage;
-                SystemGameManager.Instance.LogManager.OnClearChatMessages += HandleClearChatMessages;
-                SystemGameManager.Instance.LogManager.OnClearSystemMessages += HandleClearChatMessages;
-                SystemGameManager.Instance.LogManager.OnClearCombatMessages += HandleClearChatMessages;
-            }
+            logManager.OnWriteChatMessage += HandleWriteChatMessage;
+            logManager.OnWriteSystemMessage += HandleWriteChatMessage;
+            logManager.OnWriteCombatMessage += HandleWriteChatMessage;
+            logManager.OnClearChatMessages += HandleClearChatMessages;
+            logManager.OnClearSystemMessages += HandleClearChatMessages;
+            logManager.OnClearCombatMessages += HandleClearChatMessages;
             eventSubscriptionsInitialized = false;
         }
 

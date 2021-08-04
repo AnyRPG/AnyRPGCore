@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 namespace AnyRPG {
-    public class NamePlateManager : MonoBehaviour {
+    public class NamePlateManager : ConfiguredMonoBehaviour {
 
         [SerializeField]
         private GameObject namePlatePrefab = null;
@@ -21,8 +21,19 @@ namespace AnyRPG {
 
         private Dictionary<NamePlateUnit, NamePlateController> namePlates = new Dictionary<NamePlateUnit, NamePlateController>();
 
-        public void Init() {
-            //Debug.Log("NamePlateManager.Awake(): " + SystemGameManager.Instance.UIManager.NamePlateManager.gameObject.name);
+        // game manager references
+        private SystemConfigurationManager systemConfigurationManager = null;
+        private CameraManager cameraManager = null;
+        private PlayerManager playerManager = null;
+        private ObjectPooler objectPooler = null;
+
+        public override void Init(SystemGameManager systemGameManager) {
+            base.Init(systemGameManager);
+            systemConfigurationManager = systemGameManager.SystemConfigurationManager;
+            cameraManager = systemGameManager.CameraManager;
+            playerManager = systemGameManager.PlayerManager;
+            objectPooler = systemGameManager.ObjectPooler;
+
             SystemEventManager.StartListening("AfterCameraUpdate", HandleAfterCameraUpdate);
             SystemEventManager.StartListening("OnLevelUnload", HandleLevelUnload);
         }
@@ -46,9 +57,9 @@ namespace AnyRPG {
         }
 
         public void LateUpdate() {
-            if (SystemGameManager.Instance.SystemConfigurationManager.UseThirdPartyCameraControl == true
-                && SystemGameManager.Instance.CameraManager.ThirdPartyCamera.activeInHierarchy == true
-                && SystemGameManager.Instance.PlayerManager.PlayerUnitSpawned == true) {
+            if (systemConfigurationManager.UseThirdPartyCameraControl == true
+                && cameraManager.ThirdPartyCamera.activeInHierarchy == true
+                && playerManager.PlayerUnitSpawned == true) {
                 UpdateNamePlates();
             }
         }
@@ -82,7 +93,7 @@ namespace AnyRPG {
 
         public NamePlateController SpawnNamePlate(NamePlateUnit namePlateUnit, bool usePositionOffset) {
             //Debug.Log("NamePlateManager.SpawnNamePlate(" + namePlateUnit.DisplayName + ")");
-            NamePlateController namePlate = ObjectPooler.Instance.GetPooledObject(namePlatePrefab, namePlateContainer).GetComponent<NamePlateController>();
+            NamePlateController namePlate = objectPooler.GetPooledObject(namePlatePrefab, namePlateContainer).GetComponent<NamePlateController>();
             namePlates.Add(namePlateUnit, namePlate);
             namePlate.SetNamePlateUnit(namePlateUnit, usePositionOffset);
 
@@ -104,7 +115,7 @@ namespace AnyRPG {
             //Debug.Log("NamePlatemanager.RemoveNamePlate(" + namePlateUnit.DisplayName + ")");
             if (namePlates.ContainsKey(namePlateUnit)) {
                 if (namePlates[namePlateUnit] != null && namePlates[namePlateUnit].gameObject != null) {
-                    ObjectPooler.Instance.ReturnObjectToPool(namePlates[namePlateUnit].gameObject);
+                    objectPooler.ReturnObjectToPool(namePlates[namePlateUnit].gameObject);
                 }
                 namePlates.Remove(namePlateUnit);
             }

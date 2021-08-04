@@ -6,7 +6,7 @@ using UnityEngine.EventSystems;
 
 namespace AnyRPG {
 
-    public class InputManager : MonoBehaviour {
+    public class InputManager : ConfiguredMonoBehaviour {
 
         public bool rightMouseButtonDown = false;
         public bool middleMouseButtonDown = false;
@@ -32,7 +32,17 @@ namespace AnyRPG {
         
         private int lastRegisteredFrame = 0;
 
-        public void Init() {
+        // game manager references
+        private KeyBindManager keyBindManager = null;
+        private SystemWindowManager systemWindowManager = null;
+        private NamePlateManager namePlateManager = null;
+
+        public override void Init(SystemGameManager systemGameManager) {
+            base.Init(systemGameManager);
+            keyBindManager = systemGameManager.KeyBindManager;
+            systemWindowManager = systemGameManager.UIManager.SystemWindowManager;
+            namePlateManager = systemGameManager.UIManager.NamePlateManager;
+
             SystemEventManager.StartListening("OnLevelLoad", HandleLevelLoad);
         }
 
@@ -62,10 +72,10 @@ namespace AnyRPG {
         }
 
         void Update() {
-            if (SystemGameManager.Instance.KeyBindManager.MyBindName != string.Empty) {
+            if (keyBindManager.MyBindName != string.Empty) {
                 // we are binding a key.  discard all input
                 //Debug.Log("Key Binding in progress.  returning.");
-                foreach (KeyBindNode keyBindNode in SystemGameManager.Instance.KeyBindManager.MyKeyBinds.Values) {
+                foreach (KeyBindNode keyBindNode in keyBindManager.MyKeyBinds.Values) {
                     keyBindNode.UnRegisterKeyPress();
                     keyBindNode.UnRegisterKeyHeld();
                     keyBindNode.UnRegisterKeyUp();
@@ -85,7 +95,7 @@ namespace AnyRPG {
             }
             lastRegisteredFrame = Time.frameCount;
 
-            if (SystemGameManager.Instance.UIManager.SystemWindowManager.nameChangeWindow.IsOpen) {
+            if (systemWindowManager.nameChangeWindow.IsOpen) {
                 //Debug.Log("Not allowing registration of keystrokes to keybinds during name change");
                 return;
             }
@@ -128,7 +138,7 @@ namespace AnyRPG {
                 shift = true;
             }
 
-            foreach (KeyBindNode keyBindNode in SystemGameManager.Instance.KeyBindManager.MyKeyBinds.Values) {
+            foreach (KeyBindNode keyBindNode in keyBindManager.MyKeyBinds.Values) {
                 // normal should eventually changed to movement, but there is only one other key (toggle run) that is normal for now, so normal is ok until more keys are added
                 // register key down
                 if (Input.GetKeyDown(keyBindNode.MyKeyCode) && (keyBindNode.MyKeyBindType == KeyBindType.Normal || ((control == keyBindNode.MyControl) && (shift == keyBindNode.MyShift)))) {
@@ -158,8 +168,8 @@ namespace AnyRPG {
 
         public bool KeyBindWasPressedOrHeld(string keyBindID) {
             RegisterKeyPresses();
-            if (SystemGameManager.Instance.KeyBindManager.MyKeyBinds.ContainsKey(keyBindID) &&
-                (SystemGameManager.Instance.KeyBindManager.MyKeyBinds[keyBindID].KeyPressed == true || SystemGameManager.Instance.KeyBindManager.MyKeyBinds[keyBindID].KeyHeld == true)) {
+            if (keyBindManager.MyKeyBinds.ContainsKey(keyBindID) &&
+                (keyBindManager.MyKeyBinds[keyBindID].KeyPressed == true || keyBindManager.MyKeyBinds[keyBindID].KeyHeld == true)) {
                 return true;
             }
             return false;
@@ -167,7 +177,7 @@ namespace AnyRPG {
 
         public bool KeyBindWasPressed(string keyBindID) {
             RegisterKeyPresses();
-            if (SystemGameManager.Instance.KeyBindManager.MyKeyBinds.ContainsKey(keyBindID) && SystemGameManager.Instance.KeyBindManager.MyKeyBinds[keyBindID].KeyPressed == true) {
+            if (keyBindManager.MyKeyBinds.ContainsKey(keyBindID) && keyBindManager.MyKeyBinds[keyBindID].KeyPressed == true) {
                 return true;
             }
             return false;
@@ -252,7 +262,7 @@ namespace AnyRPG {
                 rightMouseButtonDown = true;
                 rightMouseButtonDownPosition = Input.mousePosition;
                 // IGNORE NAMEPLATES FOR THE PURPOSE OF CAMERA MOVEMENT
-                if (EventSystem.current.IsPointerOverGameObject() && (SystemGameManager.Instance.UIManager.NamePlateManager != null ? !SystemGameManager.Instance.UIManager.NamePlateManager.MouseOverNamePlate() : true)) {
+                if (EventSystem.current.IsPointerOverGameObject() && (namePlateManager != null ? !namePlateManager.MouseOverNamePlate() : true)) {
                     rightMouseButtonClickedOverUI = true;
                 }
                 if (!rightMouseButtonClickedOverUI) {
@@ -266,7 +276,7 @@ namespace AnyRPG {
             if (Input.GetMouseButtonDown(0)) {
                 leftMouseButtonDown = true;
                 leftMouseButtonDownPosition = Input.mousePosition;
-                if (EventSystem.current.IsPointerOverGameObject() && (SystemGameManager.Instance.UIManager.NamePlateManager != null ? !SystemGameManager.Instance.UIManager.NamePlateManager.MouseOverNamePlate() : true)) {
+                if (EventSystem.current.IsPointerOverGameObject() && (namePlateManager != null ? !namePlateManager.MouseOverNamePlate() : true)) {
                     leftMouseButtonClickedOverUI = true;
                 }
                 if (!leftMouseButtonClickedOverUI) {
@@ -278,7 +288,7 @@ namespace AnyRPG {
             if (Input.GetMouseButtonDown(2)) {
                 middleMouseButtonDown = true;
                 middleMouseButtonDownPosition = Input.mousePosition;
-                if (EventSystem.current.IsPointerOverGameObject() && (SystemGameManager.Instance.UIManager.NamePlateManager != null ? !SystemGameManager.Instance.UIManager.NamePlateManager.MouseOverNamePlate() : true)) {
+                if (EventSystem.current.IsPointerOverGameObject() && (namePlateManager != null ? !namePlateManager.MouseOverNamePlate() : true)) {
                     middleMouseButtonClickedOverUI = true;
                 }
             }

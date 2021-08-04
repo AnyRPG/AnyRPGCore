@@ -5,7 +5,7 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 
 namespace AnyRPG {
-    public class CameraManager : MonoBehaviour {
+    public class CameraManager : ConfiguredMonoBehaviour {
 
         [SerializeField]
         private Camera mainCamera = null;
@@ -42,6 +42,11 @@ namespace AnyRPG {
 
         protected bool eventSubscriptionsInitialized = false;
 
+        // game manager references
+        SystemConfigurationManager systemConfigurationManager = null;
+        LevelManager levelManager = null;
+        PlayerManager playerManager = null;
+
         public Camera MainCamera { get => mainCamera; set => mainCamera = value; }
         public GameObject MainCameraGameObject { get => mainCameraGameObject; }
         public Camera MainMapCamera { get => mainMapCamera; set => mainMapCamera = value; }
@@ -66,15 +71,20 @@ namespace AnyRPG {
             }
         }
 
-        public void Init() {
+        public override void Init(SystemGameManager systemGameManager) {
             //Debug.Log("CameraManager.Awake()");
+            base.Init(systemGameManager);
+            systemConfigurationManager = systemGameManager.SystemConfigurationManager;
+            levelManager = systemGameManager.LevelManager;
+            playerManager = systemGameManager.PlayerManager;
+
             CheckConfiguration();
 
             // attach camera to player
             mainCameraController = mainCameraGameObject.GetComponent<AnyRPGCameraController>();
 
-            if (thirdPartyCameraGameObject == null && SystemGameManager.Instance.SystemConfigurationManager.ThirdPartyCamera != null) {
-                thirdPartyCameraGameObject = Instantiate(SystemGameManager.Instance.SystemConfigurationManager.ThirdPartyCamera, transform);
+            if (thirdPartyCameraGameObject == null && systemConfigurationManager.ThirdPartyCamera != null) {
+                thirdPartyCameraGameObject = Instantiate(systemConfigurationManager.ThirdPartyCamera, transform);
                 if (thirdPartyCameraGameObject != null) {
                     thirdPartyCamera = thirdPartyCameraGameObject.GetComponentInChildren<Camera>();
                     if (thirdPartyCamera == null) {
@@ -93,24 +103,24 @@ namespace AnyRPG {
         }
 
         private void CheckConfiguration() {
-            if (SystemGameManager.Instance.SystemConfigurationManager.UseThirdPartyCameraControl == true && SystemGameManager.Instance.SystemConfigurationManager.ThirdPartyCamera == null && (thirdPartyCamera == null || thirdPartyCameraGameObject == null)) {
+            if (systemConfigurationManager.UseThirdPartyCameraControl == true && systemConfigurationManager.ThirdPartyCamera == null && (thirdPartyCamera == null || thirdPartyCameraGameObject == null)) {
                 Debug.LogError("CameraManager.CheckConfiguration(): The system configuration option 'Use Third Party Camera' is true, but no third party camera is configured in the Camera Manager. Check inspector!");
             }
         }
 
         public void ActivateMainCamera(bool prePositionCamera = false) {
             //Debug.Log("CameraManager.ActivateMainCamera()");
-            if (SystemGameManager.Instance.SystemConfigurationManager == null) {
+            if (systemConfigurationManager == null) {
                 // can't get camera settings, so just return
                 return;
             }
-            if (SystemGameManager.Instance.LevelManager.IsMainMenu()
-                || SystemGameManager.Instance.LevelManager.IsInitializationScene()
-                || SystemGameManager.Instance.SystemConfigurationManager.UseThirdPartyCameraControl == false) {
+            if (levelManager.IsMainMenu()
+                || levelManager.IsInitializationScene()
+                || systemConfigurationManager.UseThirdPartyCameraControl == false) {
                 MainCameraGameObject.SetActive(true);
                 return;
             }
-            if (SystemGameManager.Instance.SystemConfigurationManager.UseThirdPartyCameraControl == true) {
+            if (systemConfigurationManager.UseThirdPartyCameraControl == true) {
                 EnableThirdPartyCamera(prePositionCamera);
                 return;
             }
@@ -121,7 +131,7 @@ namespace AnyRPG {
 
         public void SwitchToMainCamera() {
             //Debug.Log("CameraManager.SwitchToMainCamera()");
-            if (SystemGameManager.Instance.SystemConfigurationManager.UseThirdPartyCameraControl == true) {
+            if (systemConfigurationManager.UseThirdPartyCameraControl == true) {
                 DisableThirdPartyCamera();
             }
             MainCameraGameObject.SetActive(true);
@@ -130,7 +140,7 @@ namespace AnyRPG {
         public void DeactivateMainCamera() {
             //Debug.Log("CameraManager.DeactivateMainCamera()");
             MainCameraGameObject.SetActive(false);
-            if (SystemGameManager.Instance.SystemConfigurationManager.UseThirdPartyCameraControl == true) {
+            if (systemConfigurationManager.UseThirdPartyCameraControl == true) {
                 DisableThirdPartyCamera();
             }
         }
@@ -157,9 +167,9 @@ namespace AnyRPG {
                 if (mainCameraGameObject != null) {
                     MainCameraGameObject.SetActive(false);
                 }
-                if (SystemGameManager.Instance.PlayerManager.ActiveUnitController != null) {
-                    thirdPartyCameraGameObject.transform.position = SystemGameManager.Instance.PlayerManager.ActiveUnitController.transform.TransformPoint(new Vector3(0f, 2.5f, -3f));
-                    thirdPartyCameraGameObject.transform.forward = SystemGameManager.Instance.PlayerManager.ActiveUnitController.transform.forward;
+                if (playerManager.ActiveUnitController != null) {
+                    thirdPartyCameraGameObject.transform.position = playerManager.ActiveUnitController.transform.TransformPoint(new Vector3(0f, 2.5f, -3f));
+                    thirdPartyCameraGameObject.transform.forward = playerManager.ActiveUnitController.transform.forward;
                     //Debug.Log("Setting camera location : " + thirdPartyCameraGameObject.transform.position + "; forward: " + thirdPartyCameraGameObject.transform.forward);
                 }
                 thirdPartyCameraGameObject.SetActive(true);
@@ -225,14 +235,14 @@ namespace AnyRPG {
 
         public void ProcessPlayerUnitSpawn() {
             //Debug.Log("CameraManager.ProcessPlayerUnitSpawn()");
-            if (SystemGameManager.Instance.LevelManager.GetActiveSceneNode() == null) {
+            if (levelManager.GetActiveSceneNode() == null) {
                 //Debug.Log("CameraManager.ProcessPlayerUnitSpawn(): ACTIVE SCENE NODE WAS NULL");
                 return;
             }
 
-            if (SystemGameManager.Instance.LevelManager.GetActiveSceneNode().SuppressMainCamera != true) {
+            if (levelManager.GetActiveSceneNode().SuppressMainCamera != true) {
                 //Debug.Log("CameraManager.ProcessPlayerUnitSpawn(): suppressed by level = false, spawning camera");
-                mainCamera.GetComponent<AnyRPGCameraController>().InitializeCamera(SystemGameManager.Instance.PlayerManager.ActiveUnitController.transform);
+                mainCamera.GetComponent<AnyRPGCameraController>().InitializeCamera(playerManager.ActiveUnitController.transform);
             }
         }
 

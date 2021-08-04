@@ -6,7 +6,7 @@ using UnityEngine;
 using UnityEngine.UI;
 
 namespace AnyRPG {
-    public class WindowContentController : MonoBehaviour, ICloseableWindowContents {
+    public class WindowContentController : ConfiguredMonoBehaviour, ICloseableWindowContents {
 
         public virtual event Action<ICloseableWindowContents> OnCloseWindow = delegate { };
 
@@ -17,13 +17,14 @@ namespace AnyRPG {
 
         protected RectTransform rectTransform;
 
-        protected SystemGameManager systemGameManager = null;
-
         protected bool eventSubscriptionsInitialized = false;
 
-        public virtual void Init(SystemGameManager systemGameManager) {
+        protected AudioManager audioManager = null;
+
+        public override void Init(SystemGameManager systemGameManager) {
             //Debug.Log(gameObject.name + ".WindowContentController.Init()");
-            this.systemGameManager = systemGameManager;
+            base.Init(systemGameManager);
+            audioManager = systemGameManager.AudioManager;
             if (backGroundImage == null) {
                 backGroundImage = GetComponent<Image>();
             }
@@ -53,11 +54,11 @@ namespace AnyRPG {
         }
 
         public virtual void OnHoverSound() {
-            SystemGameManager.Instance.AudioManager.PlayUIHoverSound();
+            audioManager.PlayUIHoverSound();
         }
 
         public virtual void OnClickSound() {
-            SystemGameManager.Instance.AudioManager.PlayUIClickSound();
+            audioManager.PlayUIClickSound();
         }
 
         public virtual void RecieveClosedWindowNotification() {

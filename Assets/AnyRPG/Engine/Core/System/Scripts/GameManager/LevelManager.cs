@@ -7,7 +7,7 @@ using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 namespace AnyRPG {
-    public class LevelManager : MonoBehaviour {
+    public class LevelManager : ConfiguredMonoBehaviour {
 
         [Header("Loading Screen")]
         public Slider loadBar;
@@ -34,6 +34,15 @@ namespace AnyRPG {
         // dictionary of scene file names to scene nodes for quick lookup at runtime
         private Dictionary<string, SceneNode> sceneDictionary = new Dictionary<string, SceneNode>();
 
+        // game manager references
+        SystemDataFactory systemDataFactory = null;
+        SystemConfigurationManager systemConfigurationManager = null;
+        UIManager uIManager = null;
+        SystemWindowManager systemWindowManager = null;
+        AudioManager audioManager = null;
+        CameraManager cameraManager = null;
+        PlayerManager playerManager = null;
+
         public bool NavMeshAvailable { get => navMeshAvailable; set => navMeshAvailable = value; }
         public Vector3 SpawnRotationOverride { get => spawnRotationOverride; set => spawnRotationOverride = value; }
         public Vector3 SpawnLocationOverride { get => spawnLocationOverride; set => spawnLocationOverride = value; }
@@ -42,6 +51,18 @@ namespace AnyRPG {
         public bool LoadingLevel { get => loadingLevel; set => loadingLevel = value; }
         public string ActiveSceneName { get => activeSceneName; set => activeSceneName = value; }
         public Bounds SceneBounds { get => sceneBounds; }
+
+        public override void Init(SystemGameManager systemGameManager) {
+            base.Init(systemGameManager);
+
+            systemDataFactory = systemGameManager.SystemDataFactory;
+            systemConfigurationManager = systemGameManager.SystemConfigurationManager;
+            uIManager = systemGameManager.UIManager;
+            systemWindowManager = uIManager.SystemWindowManager;
+            audioManager = systemGameManager.AudioManager;
+            cameraManager = systemGameManager.CameraManager;
+            playerManager = systemGameManager.PlayerManager;
+        }
 
         public void PerformSetupActivities() {
             InitializeLevelManager();
@@ -59,7 +80,7 @@ namespace AnyRPG {
             levelManagerInitialized = true;
 
             // initialize the scene dictionary
-            foreach (SceneNode sceneNode in SystemDataFactory.Instance.GetResourceList<SceneNode>()) {
+            foreach (SceneNode sceneNode in systemDataFactory.GetResourceList<SceneNode>()) {
                 if (sceneNode.SceneFile != null && sceneNode.SceneFile != string.Empty) {
                     sceneDictionary.Add(sceneNode.SceneFile.ToLower(), sceneNode);
                 }
@@ -99,7 +120,6 @@ namespace AnyRPG {
 
         public SceneNode GetActiveSceneNode() {
             //Debug.Log("LevelManager.GetActiveSceneNode(): return " + SceneManager.GetActiveScene().name);
-            //return SystemDataFactory.Instance.GetResource<SceneNode>(SceneManager.GetActiveScene().name);
             return activeSceneNode;
         }
 
@@ -197,20 +217,20 @@ namespace AnyRPG {
         }
 
         public bool IsMainMenu() {
-            if (activeSceneName == SystemGameManager.Instance.SystemConfigurationManager?.MainMenuSceneNode?.SceneFile) {
+            if (activeSceneName == systemConfigurationManager.MainMenuSceneNode?.SceneFile) {
                 return true;
             }
-            if (activeSceneName == SystemGameManager.Instance.SystemConfigurationManager?.MainMenuScene?.Replace(" ", "")) {
+            if (activeSceneName == systemConfigurationManager.MainMenuScene?.Replace(" ", "")) {
                 return true;
             }
             return false;
         }
 
         public bool IsInitializationScene() {
-            if (activeSceneName == SystemGameManager.Instance.SystemConfigurationManager.InitializationSceneNode?.SceneFile) {
+            if (activeSceneName == systemConfigurationManager.InitializationSceneNode?.SceneFile) {
                 return true;
             }
-            if (activeSceneName == SystemGameManager.Instance.SystemConfigurationManager.InitializationScene.Replace(" ", "")) {
+            if (activeSceneName == systemConfigurationManager.InitializationScene.Replace(" ", "")) {
                 return true;
             }
             return false;
@@ -230,15 +250,15 @@ namespace AnyRPG {
             }
 
             // determine if this is the main menu
-            SystemGameManager.Instance.UIManager.ActivateInGameUI();
-            SystemGameManager.Instance.UIManager.DeactivatePlayerUI();
-            SystemGameManager.Instance.UIManager.ActivateSystemMenuUI();
+            uIManager.ActivateInGameUI();
+            uIManager.DeactivatePlayerUI();
+            uIManager.ActivateSystemMenuUI();
             if (IsMainMenu()) {
                 //Debug.Log("Levelmanager.OnLoadLevel(): This is the main menu scene.  Activating Main Menu");
-                SystemGameManager.Instance.UIManager.SystemWindowManager.OpenMainMenu();
+                systemWindowManager.OpenMainMenu();
             } else {
                 // just in case
-                SystemGameManager.Instance.UIManager.SystemWindowManager.CloseMainMenu();
+                systemWindowManager.CloseMainMenu();
             }
 
             // get level boundaries
@@ -263,16 +283,16 @@ namespace AnyRPG {
             //Debug.Log("Levelmanager.PlayLevelSounds()");
             if (activeSceneNode != null) {
                 if (activeSceneNode.AmbientMusicProfile != null && activeSceneNode.AmbientMusicProfile.AudioClip != null) {
-                    SystemGameManager.Instance.AudioManager.PlayAmbientSound(activeSceneNode.AmbientMusicProfile.AudioClip);
+                    audioManager.PlayAmbientSound(activeSceneNode.AmbientMusicProfile.AudioClip);
                 } else {
-                    SystemGameManager.Instance.AudioManager.StopAmbientSound();
+                    audioManager.StopAmbientSound();
                 }
                 if (activeSceneNode.BackgroundMusicProfile != null && activeSceneNode.BackgroundMusicProfile.AudioClip != null) {
                     //Debug.Log("Levelmanager.PlayLevelSounds(): PLAYING MUSIC");
-                    SystemGameManager.Instance.AudioManager.PlayMusic(activeSceneNode.BackgroundMusicProfile.AudioClip);
+                    audioManager.PlayMusic(activeSceneNode.BackgroundMusicProfile.AudioClip);
                 } else {
                     //Debug.Log("Levelmanager.PlayLevelSounds(): STOPPING MUSIC");
-                    SystemGameManager.Instance.AudioManager.StopMusic();
+                    audioManager.StopMusic();
                 }
             }
         }
@@ -285,16 +305,16 @@ namespace AnyRPG {
                 if (activeSceneNode.AutoPlayCutscene != null) {
                     if (activeSceneNode.AutoPlayCutscene.Viewed == true && activeSceneNode.AutoPlayCutscene.Repeatable == false) {
                         // this is just an intro scene, not a full cutscene, and we have already viewed it, just go straight to main camera
-                        SystemGameManager.Instance.CameraManager.ActivateMainCamera();
+                        cameraManager.ActivateMainCamera();
                         return;
                     }
                     //Debug.Log("Levelmanager.ActivateSceneCamera(): activating cutscene camera");
                     //if (GetActiveSceneNode().MyIsCutScene == true || GetActiveSceneNode().MySuppressMainCamera == true) {
                     //Debug.Log("Levelmanager.ActivateSceneCamera(): activating cutscene bars");
-                    SystemGameManager.Instance.UIManager.CutSceneBarController.StartCutScene(activeSceneNode.AutoPlayCutscene);
+                    uIManager.CutSceneBarController.StartCutScene(activeSceneNode.AutoPlayCutscene);
                     //}
                 } else {
-                    SystemGameManager.Instance.CameraManager.ActivateMainCamera();
+                    cameraManager.ActivateMainCamera();
                 }
             }
         }
@@ -318,12 +338,12 @@ namespace AnyRPG {
 
         public void LoadCutScene(Cutscene cutscene) {
             //Debug.Log("LevelManager.LoadCutScene(" + sceneName + ")");
-            if (SystemGameManager.Instance.PlayerManager.ActiveUnitController != null) {
-                spawnRotationOverride = SystemGameManager.Instance.PlayerManager.ActiveUnitController.transform.forward;
-                spawnLocationOverride = SystemGameManager.Instance.PlayerManager.ActiveUnitController.transform.position;
+            if (playerManager.ActiveUnitController != null) {
+                spawnRotationOverride = playerManager.ActiveUnitController.transform.forward;
+                spawnLocationOverride = playerManager.ActiveUnitController.transform.position;
             }
             returnSceneName = activeSceneNode.ResourceName;
-            SystemGameManager.Instance.UIManager.CutSceneBarController.AssignCutScene(cutscene);
+            uIManager.CutSceneBarController.AssignCutScene(cutscene);
             LoadLevel(cutscene.MyLoadScene.ResourceName);
         }
 
@@ -334,19 +354,19 @@ namespace AnyRPG {
                 LoadLevel(returnSceneName);
             } else {
 
-                //SystemGameManager.Instance.CameraManager.ActivateMainCamera();
-                SystemGameManager.Instance.UIManager.PlayerInterfaceCanvas.SetActive(true);
-                SystemGameManager.Instance.UIManager.PopupWindowContainer.SetActive(true);
-                SystemGameManager.Instance.UIManager.PopupPanelContainer.SetActive(true);
-                SystemGameManager.Instance.UIManager.CombatTextCanvas.SetActive(true);
+                //cameraManager.ActivateMainCamera();
+                uIManager.PlayerInterfaceCanvas.SetActive(true);
+                uIManager.PopupWindowContainer.SetActive(true);
+                uIManager.PopupPanelContainer.SetActive(true);
+                uIManager.CombatTextCanvas.SetActive(true);
 
-                if (SystemGameManager.Instance.PlayerManager.PlayerUnitSpawned == false) {
-                    SystemGameManager.Instance.PlayerManager.SpawnPlayerUnit();
+                if (playerManager.PlayerUnitSpawned == false) {
+                    playerManager.SpawnPlayerUnit();
                 }
 
                 // test moving down here
-                SystemGameManager.Instance.CameraManager.DisableCutsceneCamera();
-                SystemGameManager.Instance.CameraManager.ActivateMainCamera();
+                cameraManager.DisableCutsceneCamera();
+                cameraManager.ActivateMainCamera();
             }
         }
 
@@ -377,15 +397,15 @@ namespace AnyRPG {
 
             // playerManager needs to do this last so other objects can respond before we despawn the character
             // testing - let playerController handle passing on player despawn event
-            //SystemGameManager.Instance.PlayerManager.ProcessLevelUnload();
+            //playerManager.ProcessLevelUnload();
 
-            SystemGameManager.Instance.UIManager.DeactivatePlayerUI();
-            SystemGameManager.Instance.UIManager.DeactivateInGameUI();
-            SystemGameManager.Instance.UIManager.DeactivateSystemMenuUI();
+            uIManager.DeactivatePlayerUI();
+            uIManager.DeactivateInGameUI();
+            uIManager.DeactivateSystemMenuUI();
 
             //SceneManager.LoadScene(levelName);
             //StartCoroutine(LoadAsynchronously(levelName.Replace(" ", string.Empty)));
-            SceneNode sceneNode = SystemDataFactory.Instance.GetResource<SceneNode>(levelName);
+            SceneNode sceneNode = systemDataFactory.GetResource<SceneNode>(levelName);
             if (sceneNode != null) {
                 StartCoroutine(LoadAsynchronously(sceneNode.SceneFile));
             } else {
@@ -395,17 +415,17 @@ namespace AnyRPG {
         }
 
         public void LoadDefaultStartingZone() {
-            if (SystemGameManager.Instance.SystemConfigurationManager.DefaultStartingZone != string.Empty) {
-                LoadLevel(SystemGameManager.Instance.SystemConfigurationManager.DefaultStartingZone);
+            if (systemConfigurationManager.DefaultStartingZone != string.Empty) {
+                LoadLevel(systemConfigurationManager.DefaultStartingZone);
             }
         }
 
         public void LoadMainMenu() {
             SystemEventManager.TriggerEvent("OnExitGame", new EventParamProperties());
-            if (SystemGameManager.Instance.SystemConfigurationManager.MainMenuSceneNode != null) {
-                LoadLevel(SystemGameManager.Instance.SystemConfigurationManager.MainMenuSceneNode.DisplayName);
+            if (systemConfigurationManager.MainMenuSceneNode != null) {
+                LoadLevel(systemConfigurationManager.MainMenuSceneNode.DisplayName);
             } else {
-                LoadLevel(SystemDataFactory.PrepareStringForMatch(SystemGameManager.Instance.SystemConfigurationManager.MainMenuScene));
+                LoadLevel(SystemDataFactory.PrepareStringForMatch(systemConfigurationManager.MainMenuScene));
             }
         }
 
@@ -421,7 +441,7 @@ namespace AnyRPG {
 
 
         IEnumerator LoadAsynchronously(string sceneName) { // scene name is just the name of the current scene being loaded
-            SystemGameManager.Instance.UIManager.ActivateLoadingUI();
+            uIManager.ActivateLoadingUI();
             // try initial value
             loadBar.value = 0.1f;
             AsyncOperation operation = SceneManager.LoadSceneAsync(sceneName);
@@ -449,7 +469,7 @@ namespace AnyRPG {
                     yield return null;
                 }
                 // deactivate loading menu
-                //SystemGameManager.Instance.UIManager.DeactivateLoadingUI();
+                //uIManager.DeactivateLoadingUI();
             }
         }
 

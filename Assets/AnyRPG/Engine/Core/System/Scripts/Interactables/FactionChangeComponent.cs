@@ -26,7 +26,7 @@ namespace AnyRPG {
             base.CreateEventSubscriptions();
 
             // because the class is a special type of prerequisite, we need to be notified when it changes
-            if (SystemGameManager.Instance.EventManager == null) {
+            if (SystemGameManager.Instance.SystemEventManager == null) {
                 Debug.LogError("SystemEventManager Not Found.  Is the GameManager prefab in the scene?");
                 return;
             }

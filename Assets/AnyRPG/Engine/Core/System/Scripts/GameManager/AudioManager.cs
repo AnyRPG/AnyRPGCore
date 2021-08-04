@@ -5,7 +5,7 @@ using UnityEngine;
 using UnityEngine.Audio;
 
 namespace AnyRPG {
-    public class AudioManager : MonoBehaviour {
+    public class AudioManager : ConfiguredMonoBehaviour {
 
         [SerializeField]
         private AudioMixer audioMixer = null;
@@ -59,8 +59,10 @@ namespace AnyRPG {
         public AudioSource UiAudioSource { get => uiAudioSource; set => uiAudioSource = value; }
         public AudioSource VoiceAudioSource { get => voiceAudioSource; set => voiceAudioSource = value; }
 
-        public void Init() {
+        public override void Init(SystemGameManager systemGameManager) {
             //Debug.Log("AudioManager.Start()");
+            base.Init(systemGameManager);
+
             InitializeVolume();
         }
 

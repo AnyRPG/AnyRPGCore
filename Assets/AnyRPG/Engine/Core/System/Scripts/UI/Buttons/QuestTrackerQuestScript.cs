@@ -1,53 +1,52 @@
 using AnyRPG;
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
 namespace AnyRPG {
-// this is almost identical to questscript
+    // this is almost identical to questscript
 
-public class QuestTrackerQuestScript : MonoBehaviour
-{
-    public Quest MyQuest { get; set; }
+    public class QuestTrackerQuestScript : MonoBehaviour {
+        public Quest MyQuest { get; set; }
 
-    [SerializeField]
-    private TextMeshProUGUI text = null;
+        [SerializeField]
+        private TextMeshProUGUI text = null;
 
-    //private bool markedComplete = false;
+        //private bool markedComplete = false;
 
-    public TextMeshProUGUI MyText {
-        get {
-            return text;
+        public TextMeshProUGUI MyText {
+            get {
+                return text;
+            }
         }
-    }
 
-    public void Select() {
-        //Debug.Log("QuestTrackerQuestScript.Select()");
-        SystemGameManager.Instance.UIManager.PopupWindowManager.questLogWindow.OpenWindow();
-        QuestLogUI.Instance.ShowDescription(MyQuest);
-    }
-
-    public void DeSelect() {
-        //Debug.Log("QuestTrackerQuestScript.DeSelect()");
-    }
-
-    /*
-    public void IsComplete() {
-        //Debug.Log("QuestTrackerQuestScript.IsComplete(): Checking questscript iscomplete on myquest: " + MyQuest.MyTitle);
-        if (MyQuest.IsComplete && !markedComplete) {
-            markedComplete = true;
-            //Debug.Log("the quest is complete");
-            MyText.text = "[" + MyQuest.MyExperienceLevel + "] " + MyQuest.MyTitle + " (Complete)";
-        } else if (!MyQuest.IsComplete) {
-            markedComplete = false;
-            MyText.text = "[" + MyQuest.MyExperienceLevel + "] " + MyQuest.MyTitle;
+        public void Select() {
+            //Debug.Log("QuestTrackerQuestScript.Select()");
+            SystemGameManager.Instance.UIManager.PopupWindowManager.questLogWindow.OpenWindow();
+            QuestLogUI.Instance.ShowDescription(MyQuest);
         }
-        MyText.color = LevelEquations.GetTargetColor(SystemGameManager.Instance.PlayerManager.MyCharacter.MyCharacterStats.MyLevel, MyQuest.MyExperienceLevel);
-    }
-    */
 
-}
+        public void DeSelect() {
+            //Debug.Log("QuestTrackerQuestScript.DeSelect()");
+        }
+
+        /*
+        public void IsComplete() {
+            //Debug.Log("QuestTrackerQuestScript.IsComplete(): Checking questscript iscomplete on myquest: " + MyQuest.MyTitle);
+            if (MyQuest.IsComplete && !markedComplete) {
+                markedComplete = true;
+                //Debug.Log("the quest is complete");
+                MyText.text = "[" + MyQuest.MyExperienceLevel + "] " + MyQuest.MyTitle + " (Complete)";
+            } else if (!MyQuest.IsComplete) {
+                markedComplete = false;
+                MyText.text = "[" + MyQuest.MyExperienceLevel + "] " + MyQuest.MyTitle;
+            }
+            MyText.color = LevelEquations.GetTargetColor(SystemGameManager.Instance.PlayerManager.MyCharacter.MyCharacterStats.MyLevel, MyQuest.MyExperienceLevel);
+        }
+        */
+
+    }
 
 }

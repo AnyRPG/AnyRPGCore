@@ -117,7 +117,7 @@ namespace AnyRPG {
                 return;
             }
             SystemEventManager.StopListening("OnLevelUnload", HandleLevelUnload);
-            if (SystemGameManager.Instance.EventManager != null) {
+            if (SystemGameManager.Instance.SystemEventManager != null) {
                 //SystemGameManager.Instance.EventManager.OnPrerequisiteUpdated -= HandlePrerequisiteUpdates;
                 SystemEventManager.StopListening("OnPlayerUnitSpawn", HandlePlayerUnitSpawn);
             }

@@ -6,7 +6,7 @@ using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 namespace AnyRPG {
-    public class CastTargettingManager : MonoBehaviour {
+    public class CastTargettingManager : ConfiguredMonoBehaviour {
 
         [SerializeField]
         private CastTargetController castTargetController = null;
@@ -18,10 +18,17 @@ namespace AnyRPG {
 
         protected bool eventSubscriptionsInitialized = false;
 
+        // game manager references
+        private PlayerManager playerManager = null;
+
         public Color MyCircleColor { get => circleColor; set => circleColor = value; }
 
-        public void Init() {
+        public override void Init(SystemGameManager systemGameManager) {
             //Debug.Log("CastTargettingmanager.Start()");
+            base.Init(systemGameManager);
+
+            playerManager = systemGameManager.PlayerManager;
+
             ConfigureDefaultMaterial();
             DisableProjector();
             CreateEventSubscriptions();
@@ -59,10 +66,8 @@ namespace AnyRPG {
 
 
         public void ConfigureDefaultMaterial() {
-            if (SystemGameManager.Instance.SystemConfigurationManager != null) {
-                if (castTargetController != null ) {
-                    castTargetController.SetupController();
-                }
+            if (castTargetController != null) {
+                castTargetController.SetupController();
             }
         }
 
@@ -78,8 +83,8 @@ namespace AnyRPG {
         public void EnableProjector(BaseAbility baseAbility) {
             //Debug.Log("CastTargettingmanager.EnableProjector()");
             castTargetController.gameObject.SetActive(true);
-            castTargetController.SetCircleColor((baseAbility.GetTargetOptions(SystemGameManager.Instance.PlayerManager.MyCharacter) as AbilityTargetProps).GroundTargetColor);
-            castTargetController.SetCircleRadius((baseAbility.GetTargetOptions(SystemGameManager.Instance.PlayerManager.MyCharacter) as AbilityTargetProps).GroundTargetRadius);
+            castTargetController.SetCircleColor((baseAbility.GetTargetOptions(playerManager.MyCharacter) as AbilityTargetProps).GroundTargetColor);
+            castTargetController.SetCircleRadius((baseAbility.GetTargetOptions(playerManager.MyCharacter) as AbilityTargetProps).GroundTargetRadius);
         }
 
         public bool ProjectorIsActive() {

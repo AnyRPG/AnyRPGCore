@@ -18,17 +18,19 @@ namespace AnyRPG {
 
         private SystemWindowManager systemWindowManager = null;
         private ObjectPooler objectPooler = null;
+        private SystemDataFactory systemDataFactory = null;
 
         public override void Init(SystemGameManager systemGameManager) {
             base.Init(systemGameManager);
             systemWindowManager = systemGameManager.UIManager.SystemWindowManager;
             objectPooler = systemGameManager.ObjectPooler;
+            systemDataFactory = systemGameManager.SystemDataFactory;
             PopulateCredits();
         }
 
         public void PopulateCredits() {
             bool firstCategoryPassed = false;
-            foreach (CreditsCategory creditsCategory in SystemDataFactory.Instance.GetResourceList<CreditsCategory>()) {
+            foreach (CreditsCategory creditsCategory in systemDataFactory.GetResourceList<CreditsCategory>()) {
                 GameObject go = null;
                 if (firstCategoryPassed) {
                     go = objectPooler.GetPooledObject(creditCategoryTemplate, creditsContainer);
@@ -49,7 +51,6 @@ namespace AnyRPG {
         }
 
         public void CloseMenu() {
-            //SystemGameManager.Instance.UIManager.SystemWindowManager.mainMenuWindow.OpenWindow();
             systemWindowManager.creditsWindow.CloseWindow();
         }
 

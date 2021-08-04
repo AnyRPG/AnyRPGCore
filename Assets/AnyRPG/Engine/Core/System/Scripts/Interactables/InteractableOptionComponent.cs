@@ -73,7 +73,7 @@ namespace AnyRPG {
                 return;
             }
             //Debug.Log(gameObject.name + ".InteractableOption.CreateEventSubscriptions(): subscribing to player unit spawn");
-            if (SystemGameManager.Instance.EventManager == null) {
+            if (SystemGameManager.Instance.SystemEventManager == null) {
                 Debug.LogError("SystemEventManager not found in the scene.  Is the GameManager in the scene?");
                 return;
                 //SystemGameManager.Instance.EventManager.OnPlayerUnitSpawn += HandlePlayerUnitSpawn;
@@ -86,14 +86,14 @@ namespace AnyRPG {
         }
 
         public virtual void CleanupEventSubscriptions() {
-            if (SystemGameManager.Instance.EventManager != null) {
+            if (SystemGameManager.Instance.SystemEventManager != null) {
                 //SystemGameManager.Instance.EventManager.OnPlayerUnitSpawn -= HandlePlayerUnitSpawn;
             }
             eventSubscriptionsInitialized = false;
         }
 
         public virtual void HandleConfirmAction() {
-            SystemGameManager.Instance.EventManager.NotifyOnInteractionWithOptionCompleted(this);
+            SystemGameManager.Instance.SystemEventManager.NotifyOnInteractionWithOptionCompleted(this);
         }
 
         public virtual bool ProcessFactionValue(float factionValue) {
@@ -142,7 +142,7 @@ namespace AnyRPG {
         public virtual bool Interact(CharacterUnit source, int optionIndex = 0) {
             //Debug.Log(interactable.gameObject.name + ".InteractableOptionComponent.Interact()");
             //source.CancelMountEffects();
-            SystemGameManager.Instance.EventManager.NotifyOnInteractionWithOptionStarted(this);
+            SystemGameManager.Instance.SystemEventManager.NotifyOnInteractionWithOptionStarted(this);
             return true;
         }
 

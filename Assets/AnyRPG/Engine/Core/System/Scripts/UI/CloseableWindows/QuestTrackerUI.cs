@@ -38,7 +38,7 @@ namespace AnyRPG {
                 return;
             }
             base.CleanupEventSubscriptions();
-            if (SystemGameManager.Instance.EventManager != null) {
+            if (SystemGameManager.Instance.SystemEventManager != null) {
                 SystemEventManager.StopListening("OnQuestObjectiveStatusUpdated", HandleQuestObjectiveStatusUpdated);
                 SystemEventManager.StopListening("OnAfterQuestStatusUpdated", HandleAfterQuestStatusUpdated);
                 SystemEventManager.StopListening("OnPlayerUnitSpawn", HandlePlayerUnitSpawn);
@@ -72,7 +72,7 @@ namespace AnyRPG {
             }
             ClearQuests();
 
-            foreach (Quest quest in SystemGameManager.Instance.QuestLog.MyQuests.Values) {
+            foreach (Quest quest in SystemGameManager.Instance.QuestLog.Quests.Values) {
                 //Debug.Log("QuestTrackerUI.ShowQuestsCommon(): quest: " + quest);
                 GameObject go = ObjectPooler.Instance.GetPooledObject(questPrefab, questParent);
                 QuestTrackerQuestScript qs = go.GetComponent<QuestTrackerQuestScript>();

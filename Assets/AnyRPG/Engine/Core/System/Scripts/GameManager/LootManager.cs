@@ -12,8 +12,21 @@ namespace AnyRPG {
 
         private List<LootDrop> droppedLoot = new List<LootDrop>();
 
+        // game manager references
+        SystemGameManager systemGameManager = null;
+        PopupWindowManager popupWindowManager = null;
+        InventoryManager inventoryManager = null;
+        MessageFeedManager messageFeedManager = null;
+
         public List<List<LootDrop>> Pages { get => pages; set => pages = value; }
         public List<LootDrop> DroppedLoot { get => droppedLoot; set => droppedLoot = value; }
+
+        public LootManager(SystemGameManager systemGameManager) {
+            this.systemGameManager = systemGameManager;
+            popupWindowManager = systemGameManager.UIManager.PopupWindowManager;
+            inventoryManager = systemGameManager.InventoryManager;
+            messageFeedManager = systemGameManager.UIManager.MessageFeedManager;
+        }
 
         public void CreatePages(List<LootDrop> items) {
             //Debug.Log("LootUI.CreatePages()");
@@ -30,9 +43,9 @@ namespace AnyRPG {
             }
             //Debug.Log("LootUI.CreatePages(): pages.count: " + pages.Count);
 
-            (SystemGameManager.Instance.UIManager.PopupWindowManager.lootWindow.CloseableWindowContents as LootUI).AddLoot();
+            (popupWindowManager.lootWindow.CloseableWindowContents as LootUI).AddLoot();
 
-            (SystemGameManager.Instance.UIManager.PopupWindowManager.lootWindow.CloseableWindowContents as LootUI).BroadcastPageCountUpdate();
+            (popupWindowManager.lootWindow.CloseableWindowContents as LootUI).BroadcastPageCountUpdate();
         }
 
         public void TakeAllLoot() {
@@ -41,8 +54,8 @@ namespace AnyRPG {
             // added emptyslotcount to prevent game from freezup when no bag space left and takeall button pressed
             int maximumLoopCount = droppedLoot.Count;
             int currentLoopCount = 0;
-            while (pages.Count > 0 && SystemGameManager.Instance.InventoryManager.EmptySlotCount() > 0 && currentLoopCount < maximumLoopCount && (SystemGameManager.Instance.UIManager.PopupWindowManager.lootWindow.CloseableWindowContents as LootUI).LootButtons.Count > 0) {
-                foreach (LootButton lootButton in (SystemGameManager.Instance.UIManager.PopupWindowManager.lootWindow.CloseableWindowContents as LootUI).LootButtons) {
+            while (pages.Count > 0 && inventoryManager.EmptySlotCount() > 0 && currentLoopCount < maximumLoopCount && (popupWindowManager.lootWindow.CloseableWindowContents as LootUI).LootButtons.Count > 0) {
+                foreach (LootButton lootButton in (popupWindowManager.lootWindow.CloseableWindowContents as LootUI).LootButtons) {
                     //Debug.Log("LootUI.TakeAllLoot(): droppedItems.Count: " + droppedLoot.Count);
                     if (lootButton.gameObject.activeSelf == true) {
                         lootButton.TakeLoot();
@@ -51,11 +64,11 @@ namespace AnyRPG {
                 }
             }
 
-            if (pages.Count > 0 && SystemGameManager.Instance.InventoryManager.EmptySlotCount() == 0) {
-                if (SystemGameManager.Instance.InventoryManager.EmptySlotCount() == 0) {
+            if (pages.Count > 0 && inventoryManager.EmptySlotCount() == 0) {
+                if (inventoryManager.EmptySlotCount() == 0) {
                     //Debug.Log("No space left in inventory");
                 }
-                SystemGameManager.Instance.UIManager.MessageFeedManager.WriteMessage("Inventory is full!");
+                messageFeedManager.WriteMessage("Inventory is full!");
             }
         }
 
@@ -69,13 +82,13 @@ namespace AnyRPG {
         public void TakeLoot(LootDrop lootDrop) {
             //Debug.Log("LootUI.TakeLoot(" + loot.MyName + ")");
 
-            (SystemGameManager.Instance.UIManager.PopupWindowManager.lootWindow.CloseableWindowContents as LootUI).TakeLoot(lootDrop);
+            (popupWindowManager.lootWindow.CloseableWindowContents as LootUI).TakeLoot(lootDrop);
         }
 
 
         public void ClearPages() {
             pages.Clear();
-            (SystemGameManager.Instance.UIManager.PopupWindowManager.lootWindow.CloseableWindowContents as LootUI).ClearPages();
+            (popupWindowManager.lootWindow.CloseableWindowContents as LootUI).ClearPages();
         }
 
     }

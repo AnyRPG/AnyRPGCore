@@ -152,7 +152,7 @@ namespace AnyRPG {
             if (eventSubscriptionsInitialized) {
                 return;
             }
-            if (SystemGameManager.Instance.EventManager == null) {
+            if (SystemGameManager.Instance.SystemEventManager == null) {
                 Debug.LogError(gameObject.name + ".UnitSpawnNode.CreateEventSubscriptions(): SystemEventManager not found.  Is the GameManager in the scene?");
                 return;
             }
@@ -170,7 +170,7 @@ namespace AnyRPG {
                 return;
             }
 
-            if (SystemGameManager.Instance.EventManager != null) {
+            if (SystemGameManager.Instance.SystemEventManager != null) {
                 SystemEventManager.StopListening("OnPlayerUnitSpawn", HandlePlayerUnitSpawn);
             }
 

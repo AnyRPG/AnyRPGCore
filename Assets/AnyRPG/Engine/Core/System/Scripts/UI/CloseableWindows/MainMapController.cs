@@ -42,6 +42,7 @@ namespace AnyRPG {
         private MainMapManager mainMapManager = null;
         private LevelManager levelManager = null;
         private PopupWindowManager popupWindowManager = null;
+        private ObjectPooler objectPooler = null;
 
         private Dictionary<Interactable, MainMapIndicatorController> mapIndicatorControllers = new Dictionary<Interactable, MainMapIndicatorController>();
 
@@ -57,6 +58,7 @@ namespace AnyRPG {
             mainMapManager = systemGameManager.UIManager.MainMapManager;
             levelManager = systemGameManager.LevelManager;
             popupWindowManager = systemGameManager.UIManager.PopupWindowManager;
+            objectPooler = systemGameManager.ObjectPooler;
 
             cameraManager.MainMapCamera.enabled = false;
 
@@ -75,7 +77,7 @@ namespace AnyRPG {
         public void HandleAddIndicator(Interactable interactable) {
             //Debug.Log("MainMapController.AddIndicator(" + interactable.gameObject.name + ")");
             if (mapIndicatorControllers.ContainsKey(interactable) == false) {
-                GameObject mainMapIndicator = ObjectPooler.Instance.GetPooledObject(mainMapManager.MapIndicatorPrefab, (mapGraphic.transform));
+                GameObject mainMapIndicator = objectPooler.GetPooledObject(mainMapManager.MapIndicatorPrefab, (mapGraphic.transform));
                 if (mainMapIndicator != null) {
                     MainMapIndicatorController mapIndicatorController = mainMapIndicator.GetComponent<MainMapIndicatorController>();
                     if (mapIndicatorController != null) {
@@ -96,7 +98,7 @@ namespace AnyRPG {
         public void HandleRemoveIndicator(Interactable interactable) {
             if (mapIndicatorControllers.ContainsKey(interactable)) {
                 mapIndicatorControllers[interactable].ResetSettings();
-                ObjectPooler.Instance.ReturnObjectToPool(mapIndicatorControllers[interactable].gameObject);
+                objectPooler.ReturnObjectToPool(mapIndicatorControllers[interactable].gameObject);
                 mapIndicatorControllers.Remove(interactable);
             }
         }

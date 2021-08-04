@@ -30,11 +30,11 @@ namespace AnyRPG {
             base.CreateEventSubscriptions();
 
             // because the skill is a special type of prerequisite, we need to be notified when it changes
-            if (SystemGameManager.Instance.EventManager == null) {
+            if (SystemGameManager.Instance.SystemEventManager == null) {
                 Debug.LogError("SystemEventManager Not Found.  Is the GameManager prefab in the scene?");
                 return;
             }
-            SystemGameManager.Instance.EventManager.OnAbilityListChanged += HandleAbilityListChange;
+            SystemGameManager.Instance.SystemEventManager.OnAbilityListChanged += HandleAbilityListChange;
         }
 
         public override void CleanupEventSubscriptions() {
@@ -44,8 +44,8 @@ namespace AnyRPG {
             }
             base.CleanupEventSubscriptions();
 
-            if (SystemGameManager.Instance.EventManager != null) {
-                SystemGameManager.Instance.EventManager.OnAbilityListChanged -= HandleAbilityListChange;
+            if (SystemGameManager.Instance.SystemEventManager != null) {
+                SystemGameManager.Instance.SystemEventManager.OnAbilityListChanged -= HandleAbilityListChange;
             }
         }
 

@@ -4,9 +4,8 @@ using System.Collections.Generic;
 using UnityEngine;
 
 namespace AnyRPG {
-    public class PopupWindowManager : MonoBehaviour {
+    public class PopupWindowManager : ConfiguredMonoBehaviour {
 
-        //public GameObject inventoryUI;
         public PagedWindow abilityBookWindow;
         public PagedWindow skillBookWindow;
         public PagedWindow reputationBookWindow;
@@ -29,51 +28,90 @@ namespace AnyRPG {
         public CloseableWindow classChangeWindow;
         public CloseableWindow specializationChangeWindow;
 
+        // game manager references
+        PlayerManager playerManager = null;
+        InventoryManager inventoryManager = null;
+        KeyBindManager keyBindManager = null;
+        InputManager inputManager = null;
+
+        public override void Init(SystemGameManager systemGameManager) {
+            base.Init(systemGameManager);
+            
+            // set references
+            playerManager = systemGameManager.PlayerManager;
+            inventoryManager = systemGameManager.InventoryManager;
+            keyBindManager = systemGameManager.KeyBindManager;
+            inputManager = systemGameManager.InputManager;
+
+            // initialize windows
+            abilityBookWindow.Init(systemGameManager);
+            skillBookWindow.Init(systemGameManager);
+            reputationBookWindow.Init(systemGameManager);
+            currencyListWindow.Init(systemGameManager);
+            achievementListWindow.Init(systemGameManager);
+            characterPanelWindow.Init(systemGameManager);
+            lootWindow.Init(systemGameManager);
+            vendorWindow.Init(systemGameManager);
+            chestWindow.Init(systemGameManager);
+            bankWindow.Init(systemGameManager);
+            questLogWindow.Init(systemGameManager);
+            questGiverWindow.Init(systemGameManager);
+            skillTrainerWindow.Init(systemGameManager);
+            musicPlayerWindow.Init(systemGameManager);
+            interactionWindow.Init(systemGameManager);
+            craftingWindow.Init(systemGameManager);
+            mainMapWindow.Init(systemGameManager);
+            dialogWindow.Init(systemGameManager);
+            factionChangeWindow.Init(systemGameManager);
+            classChangeWindow.Init(systemGameManager);
+            specializationChangeWindow.Init(systemGameManager);
+        }
+
         void Start() {
-            SystemGameManager.Instance.InventoryManager.Close();
+            inventoryManager.Close();
         }
 
         // Update is called once per frame
         void Update() {
             //Debug.Log("PopupWindowManager.Update()");
 
-            if (SystemGameManager.Instance.PlayerManager.PlayerUnitSpawned == false) {
+            if (playerManager.PlayerUnitSpawned == false) {
                 // if there is no player, these windows shouldn't be open
                 return;
             }
             // don't open windows while binding keys
-            if (SystemGameManager.Instance.KeyBindManager.MyBindName == string.Empty) {
-                if (SystemGameManager.Instance.InputManager.KeyBindWasPressed("INVENTORY")) {
-                    SystemGameManager.Instance.InventoryManager.OpenClose();
+            if (keyBindManager.MyBindName == string.Empty) {
+                if (inputManager.KeyBindWasPressed("INVENTORY")) {
+                    inventoryManager.OpenClose();
                 }
-                if (SystemGameManager.Instance.InputManager.KeyBindWasPressed("ABILITYBOOK")) {
+                if (inputManager.KeyBindWasPressed("ABILITYBOOK")) {
                     abilityBookWindow.ToggleOpenClose();
                 }
-                if (SystemGameManager.Instance.InputManager.KeyBindWasPressed("SKILLBOOK")) {
+                if (inputManager.KeyBindWasPressed("SKILLBOOK")) {
                     skillBookWindow.ToggleOpenClose();
                 }
-                if (SystemGameManager.Instance.InputManager.KeyBindWasPressed("ACHIEVEMENTBOOK")) {
+                if (inputManager.KeyBindWasPressed("ACHIEVEMENTBOOK")) {
                     achievementListWindow.ToggleOpenClose();
                 }
-                if (SystemGameManager.Instance.InputManager.KeyBindWasPressed("REPUTATIONBOOK")) {
+                if (inputManager.KeyBindWasPressed("REPUTATIONBOOK")) {
                     reputationBookWindow.ToggleOpenClose();
                 }
-                if (SystemGameManager.Instance.InputManager.KeyBindWasPressed("CURRENCYPANEL")) {
+                if (inputManager.KeyBindWasPressed("CURRENCYPANEL")) {
                     currencyListWindow.ToggleOpenClose();
                 }
-                if (SystemGameManager.Instance.InputManager.KeyBindWasPressed("CHARACTERPANEL")) {
+                if (inputManager.KeyBindWasPressed("CHARACTERPANEL")) {
                     characterPanelWindow.ToggleOpenClose();
                 }
-                if (SystemGameManager.Instance.InputManager.KeyBindWasPressed("QUESTLOG")) {
+                if (inputManager.KeyBindWasPressed("QUESTLOG")) {
                     questLogWindow.ToggleOpenClose();
                 }
-                if (SystemGameManager.Instance.InputManager.KeyBindWasPressed("MAINMAP")) {
+                if (inputManager.KeyBindWasPressed("MAINMAP")) {
                     //Debug.Log("mainmap was pressed");
                     mainMapWindow.ToggleOpenClose();
                 }
             }
 
-            if (SystemGameManager.Instance.InputManager.KeyBindWasPressed("CANCEL")) {
+            if (inputManager.KeyBindWasPressed("CANCEL")) {
                 CloseAllWindows();
             }
         }
@@ -101,7 +139,7 @@ namespace AnyRPG {
             classChangeWindow.CloseWindow();
             specializationChangeWindow.CloseWindow();
             dialogWindow.CloseWindow();
-            SystemGameManager.Instance.InventoryManager.Close();
+            inventoryManager.Close();
         }
     }
 

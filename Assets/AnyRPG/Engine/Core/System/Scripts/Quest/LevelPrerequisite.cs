@@ -41,12 +41,12 @@ namespace AnyRPG {
 
         public void SetupScriptableObjects() {
             //this.prerequisiteConditions = prerequisiteConditions;
-            SystemGameManager.Instance.EventManager.OnLevelChanged += HandleLevelChanged;
+            SystemGameManager.Instance.SystemEventManager.OnLevelChanged += HandleLevelChanged;
         }
 
         public void CleanupScriptableObjects() {
-            if (SystemGameManager.Instance.EventManager != null) {
-                SystemGameManager.Instance.EventManager.OnLevelChanged -= HandleLevelChanged;
+            if (SystemGameManager.Instance.SystemEventManager != null) {
+                SystemGameManager.Instance.SystemEventManager.OnLevelChanged -= HandleLevelChanged;
             }
         }
 

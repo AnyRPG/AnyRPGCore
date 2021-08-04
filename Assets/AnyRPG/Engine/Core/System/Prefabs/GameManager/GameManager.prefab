@@ -7578,11 +7578,11 @@ GameObject:
   m_Component:
   - component: {fileID: 5439600274220847951}
   - component: {fileID: 6765758701573424388}
+  - component: {fileID: 3804359995419664291}
+  - component: {fileID: 1675583982063803336}
   - component: {fileID: 3372542372360536245}
   - component: {fileID: 4987049062904966066}
   - component: {fileID: 8935282192918879629}
-  - component: {fileID: 3804359995419664291}
-  - component: {fileID: 1675583982063803336}
   - component: {fileID: 6986250774741738154}
   - component: {fileID: 3310018683127147123}
   - component: {fileID: 3478581543287038846}
@@ -7652,57 +7652,6 @@ MonoBehaviour:
   toolTipCurrencyBarController: {fileID: 3345773525986488833}
   tooltipRect: {fileID: 4018933294738765809}
   handScript: {fileID: 5051387862584425130}
---- !u!114 &3372542372360536245
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6302109279012613667}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: eb1f54387063eee4cb63f4cc48dbc734, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  actionBarControllers:
-  - {fileID: 4696354487689760592}
-  - {fileID: 225453579805313919}
-  - {fileID: 3086395245417246872}
-  - {fileID: 4953010344039765630}
-  - {fileID: 5105931677440166923}
-  - {fileID: 7349223603277445016}
-  - {fileID: 3047813663566665295}
---- !u!114 &4987049062904966066
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6302109279012613667}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 465c53ad3f6ae7a459aed57f141ec017, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  combatTextPrefab: {fileID: 7971569521143729688, guid: 8a0248647540af547a17b8631d08504d,
-    type: 3}
-  combatTextCanvas: {fileID: 8217712525196222468}
---- !u!114 &8935282192918879629
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6302109279012613667}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ffccc1f096dcd0645bc5bac5f47c40eb, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  messagePrefab: {fileID: 2850499971153302814, guid: c6720ce141d7ba847ae8bef24e0917a4,
-    type: 3}
-  messageFeedGameObject: {fileID: 8709305566673212249}
-  raycaster: {fileID: 6188708101218135243}
 --- !u!114 &3804359995419664291
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -7769,6 +7718,57 @@ MonoBehaviour:
   nameChangeWindow: {fileID: 5478705335037542811}
   exitToMainMenuWindow: {fileID: 558234417497627591}
   confirmNewGameMenuWindow: {fileID: 2929541506135432935}
+--- !u!114 &3372542372360536245
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6302109279012613667}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: eb1f54387063eee4cb63f4cc48dbc734, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  actionBarControllers:
+  - {fileID: 4696354487689760592}
+  - {fileID: 225453579805313919}
+  - {fileID: 3086395245417246872}
+  - {fileID: 4953010344039765630}
+  - {fileID: 5105931677440166923}
+  - {fileID: 7349223603277445016}
+  - {fileID: 3047813663566665295}
+--- !u!114 &4987049062904966066
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6302109279012613667}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 465c53ad3f6ae7a459aed57f141ec017, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  combatTextPrefab: {fileID: 7971569521143729688, guid: 8a0248647540af547a17b8631d08504d,
+    type: 3}
+  combatTextCanvas: {fileID: 8217712525196222468}
+--- !u!114 &8935282192918879629
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6302109279012613667}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ffccc1f096dcd0645bc5bac5f47c40eb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  messagePrefab: {fileID: 2850499971153302814, guid: c6720ce141d7ba847ae8bef24e0917a4,
+    type: 3}
+  messageFeedGameObject: {fileID: 8709305566673212249}
+  raycaster: {fileID: 6188708101218135243}
 --- !u!114 &6986250774741738154
 MonoBehaviour:
   m_ObjectHideFlags: 0

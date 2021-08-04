@@ -64,7 +64,7 @@ namespace AnyRPG {
         }
 
         private void UpdateQuestCount() {
-            questCount.text = SystemGameManager.Instance.QuestLog.MyQuests.Count + " / " + maxCount;
+            questCount.text = SystemGameManager.Instance.QuestLog.Quests.Count + " / " + maxCount;
         }
 
         public void ShowQuestsCommon() {
@@ -75,7 +75,7 @@ namespace AnyRPG {
 
             QuestScript firstAvailableQuest = null;
 
-            foreach (Quest quest in SystemGameManager.Instance.QuestLog.MyQuests.Values) {
+            foreach (Quest quest in SystemGameManager.Instance.QuestLog.Quests.Values) {
                 GameObject go = ObjectPooler.Instance.GetPooledObject(questPrefab, questParent);
 
                 QuestScript qs = go.GetComponent<QuestScript>();

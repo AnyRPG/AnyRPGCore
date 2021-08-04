@@ -4,16 +4,14 @@ using System.Collections.Generic;
 using UnityEngine;
 
 namespace AnyRPG {
-    public class SystemWindowManager : MonoBehaviour {
+    public class SystemWindowManager : ConfiguredMonoBehaviour {
 
         protected bool eventSubscriptionsInitialized = false;
 
+        // windows
         public CloseableWindow mainMenuWindow;
         public CloseableWindow inGameMainMenuWindow;
-        //public CloseableWindow keyBindMenuWindow;
         public CloseableWindow keyBindConfirmWindow;
-        //public CloseableWindow soundMenuWindow;
-        //public CloseableWindow graphicsMenuWindow;
         public CloseableWindow playerOptionsMenuWindow;
         public CloseableWindow characterCreatorWindow;
         public CloseableWindow unitSpawnWindow;
@@ -31,13 +29,41 @@ namespace AnyRPG {
         public CloseableWindow confirmSellItemMenuWindow;
         public CloseableWindow nameChangeWindow;
         public CloseableWindow exitToMainMenuWindow;
-
         public CloseableWindow confirmNewGameMenuWindow;
 
+        // game manager references
+        InputManager inputManager = null;
+        PlayerManager playerManager = null;
 
-        private void Start() {
-            //Debug.Log("PlayerManager.Start()");
+        public override void Init(SystemGameManager systemGameManager) {
+            base.Init(systemGameManager);
+
+            inputManager = systemGameManager.InputManager;
+            playerManager = systemGameManager.PlayerManager;
+
             CreateEventSubscriptions();
+
+            mainMenuWindow.Init(systemGameManager);
+            inGameMainMenuWindow.Init(systemGameManager);
+            keyBindConfirmWindow.Init(systemGameManager);
+            playerOptionsMenuWindow.Init(systemGameManager);
+            characterCreatorWindow.Init(systemGameManager);
+            unitSpawnWindow.Init(systemGameManager);
+            petSpawnWindow.Init(systemGameManager);
+            playMenuWindow.Init(systemGameManager);
+            settingsMenuWindow.Init(systemGameManager);
+            creditsWindow.Init(systemGameManager);
+            exitMenuWindow.Init(systemGameManager);
+            deleteGameMenuWindow.Init(systemGameManager);
+            copyGameMenuWindow.Init(systemGameManager);
+            loadGameWindow.Init(systemGameManager);
+            newGameWindow.Init(systemGameManager);
+            confirmDestroyMenuWindow.Init(systemGameManager);
+            confirmCancelCutsceneMenuWindow.Init(systemGameManager);
+            confirmSellItemMenuWindow.Init(systemGameManager);
+            nameChangeWindow.Init(systemGameManager);
+            exitToMainMenuWindow.Init(systemGameManager);
+            confirmNewGameMenuWindow.Init(systemGameManager);
         }
 
         private void CreateEventSubscriptions() {
@@ -83,7 +109,7 @@ namespace AnyRPG {
                 return;
             }
 
-            if (SystemGameManager.Instance.InputManager.KeyBindWasPressed("CANCEL")) {
+            if (inputManager.KeyBindWasPressed("CANCEL")) {
                 settingsMenuWindow.CloseWindow();
                 creditsWindow.CloseWindow();
                 exitMenuWindow.CloseWindow();
@@ -96,12 +122,12 @@ namespace AnyRPG {
                 petSpawnWindow.CloseWindow();
 
                 // do not allow accidentally closing this while dead
-                if (SystemGameManager.Instance.PlayerManager.PlayerUnitSpawned == true && SystemGameManager.Instance.PlayerManager.MyCharacter.CharacterStats.IsAlive != false) {
+                if (playerManager.PlayerUnitSpawned == true && playerManager.MyCharacter.CharacterStats.IsAlive != false) {
                     playerOptionsMenuWindow.CloseWindow();
                 }
             }
 
-            if (SystemGameManager.Instance.InputManager.KeyBindWasPressed("MAINMENU")) {
+            if (inputManager.KeyBindWasPressed("MAINMENU")) {
                 inGameMainMenuWindow.ToggleOpenClose();
             }
 
@@ -137,12 +163,12 @@ namespace AnyRPG {
 
         public void SetupDeathPopup() {
             //Debug.Log("PopupWindowmanager.SetupDeathPopup()");
-            SystemGameManager.Instance.PlayerManager.MyCharacter.CharacterStats.OnDie += PlayerDeathHandler;
+            playerManager.MyCharacter.CharacterStats.OnDie += PlayerDeathHandler;
         }
 
         public void RemoveDeathPopup() {
             //Debug.Log("PopupWindowmanager.RemoveDeathPopup()");
-            SystemGameManager.Instance.PlayerManager.MyCharacter.CharacterStats.OnDie -= PlayerDeathHandler;
+            playerManager.MyCharacter.CharacterStats.OnDie -= PlayerDeathHandler;
         }
 
         public void OpenInGameMainMenu() {

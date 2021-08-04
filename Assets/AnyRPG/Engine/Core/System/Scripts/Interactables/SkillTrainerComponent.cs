@@ -13,7 +13,7 @@ namespace AnyRPG {
             if (interactableOptionProps.GetInteractionPanelTitle() == string.Empty) {
                 interactableOptionProps.InteractionPanelTitle = "Train Me";
             }
-            SystemGameManager.Instance.EventManager.OnSkillListChanged += HandleSkillListChanged;
+            SystemGameManager.Instance.SystemEventManager.OnSkillListChanged += HandleSkillListChanged;
         }
 
         public override bool Interact(CharacterUnit source, int optionIndex = 0) {
@@ -39,8 +39,8 @@ namespace AnyRPG {
         public override void CleanupEventSubscriptions() {
             //Debug.Log(gameObject.name + ".SkillTrainer.CleanupEventSubscriptions()");
             base.CleanupEventSubscriptions();
-            if (SystemGameManager.Instance.EventManager != null) {
-                SystemGameManager.Instance.EventManager.OnSkillListChanged -= HandleSkillListChanged;
+            if (SystemGameManager.Instance.SystemEventManager != null) {
+                SystemGameManager.Instance.SystemEventManager.OnSkillListChanged -= HandleSkillListChanged;
             }
         }
 

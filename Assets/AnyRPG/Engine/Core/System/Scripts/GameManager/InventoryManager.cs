@@ -6,7 +6,7 @@ using UnityEngine;
 using UnityEngine.UI;
 
 namespace AnyRPG {
-    public class InventoryManager : MonoBehaviour {
+    public class InventoryManager : ConfiguredMonoBehaviour {
 
         private SlotScript fromSlot;
 
@@ -35,9 +35,9 @@ namespace AnyRPG {
         protected CanvasGroup canvasGroup = null;
 
         // game manager references
+        private SystemConfigurationManager systemConfigurationManager = null;
         private HandScript handScript = null;
         private MessageFeedManager messageFeedManager = null;
-        private SystemConfigurationManager systemConfigurationManager = null;
         private SystemItemManager systemItemManager = null;
         private UIManager uIManager = null;
         private PopupWindowManager popupWindowManager = null;
@@ -97,8 +97,9 @@ namespace AnyRPG {
         public List<BagNode> BagNodes { get => bagNodes; set => bagNodes = value; }
         public List<BagNode> BankNodes { get => bagNodes; set => bagNodes = value; }
 
-        public void Init(SystemGameManager systemGameManager) {
+        public override void Init(SystemGameManager systemGameManager) {
             //Debug.Log("InventoryManager.Awake()");
+            base.Init(systemGameManager);
             canvasGroup = inventoryContainer.GetComponent<CanvasGroup>();
             uIManager = systemGameManager.UIManager;
             handScript = uIManager.HandScript;
@@ -107,7 +108,7 @@ namespace AnyRPG {
             systemConfigurationManager = systemGameManager.SystemConfigurationManager;
             systemItemManager = systemGameManager.SystemItemManager;
             objectPooler = systemGameManager.ObjectPooler;
-            systemEventManager = systemGameManager.EventManager;
+            systemEventManager = systemGameManager.SystemEventManager;
         }
 
         private void Start() {

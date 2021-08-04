@@ -6,7 +6,7 @@ using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 namespace AnyRPG {
-    public class HandScript : MonoBehaviour {
+    public class HandScript : ConfiguredMonoBehaviour {
 
         public IMoveable Moveable { get; set; }
 
@@ -15,9 +15,23 @@ namespace AnyRPG {
         [SerializeField]
         private Vector3 offset = Vector3.zero;
 
-        // Start is called before the first frame update
-        void Start() {
-            //Debug.Log("HandScript.Start()");
+        // game manager references
+        SystemWindowManager systemWindowManager = null;
+        ActionBarManager actionBarManager = null;
+        InputManager inputManager = null;
+        InventoryManager inventoryManager = null;
+        PlayerManager playerManager = null;
+        LogManager logManager = null;
+
+        public override void Init(SystemGameManager systemGameManager) {
+            base.Init(systemGameManager);
+            systemWindowManager = systemGameManager.UIManager.SystemWindowManager;
+            actionBarManager = systemGameManager.UIManager.ActionBarManager;
+            inputManager = systemGameManager.InputManager;
+            inventoryManager = systemGameManager.InventoryManager;
+            playerManager = systemGameManager.PlayerManager;
+            logManager = systemGameManager.LogManager;
+
             icon = GetComponent<Image>();
         }
 
@@ -26,16 +40,16 @@ namespace AnyRPG {
             icon.transform.position = Input.mousePosition + offset;
             if (Input.GetMouseButtonDown(0) && !EventSystem.current.IsPointerOverGameObject() && Moveable != null) {
                 if (Moveable is Item) {
-                    SystemGameManager.Instance.UIManager.SystemWindowManager.confirmDestroyMenuWindow.OpenWindow();
+                    systemWindowManager.confirmDestroyMenuWindow.OpenWindow();
                 } else if (Moveable is BaseAbility) {
                     // DROP ABILITY SAFELY
-                    if (SystemGameManager.Instance.UIManager.ActionBarManager.FromButton != null) {
-                        SystemGameManager.Instance.UIManager.ActionBarManager.FromButton.ClearUseable();
+                    if (actionBarManager.FromButton != null) {
+                        actionBarManager.FromButton.ClearUseable();
                     }
                     Drop();
                 }
             }
-            if (SystemGameManager.Instance.InputManager.KeyBindWasPressed("CANCEL")) {
+            if (inputManager.KeyBindWasPressed("CANCEL")) {
                 Drop();
             }
         }
@@ -58,14 +72,14 @@ namespace AnyRPG {
         public void Drop() {
             //Debug.Log("HandScript.Drop()");
             ClearMoveable();
-            SystemGameManager.Instance.InventoryManager.FromSlot = null;
-            SystemGameManager.Instance.UIManager.ActionBarManager.FromButton = null;
+            inventoryManager.FromSlot = null;
+            actionBarManager.FromButton = null;
         }
 
         private void ClearMoveable() {
             //Debug.Log("HandScript.ClearMoveable()");
-            if (SystemGameManager.Instance.InventoryManager.FromSlot != null) {
-                SystemGameManager.Instance.InventoryManager.FromSlot.PutItemBack();
+            if (inventoryManager.FromSlot != null) {
+                inventoryManager.FromSlot.PutItemBack();
             }
             Moveable = null;
             icon.sprite = null;
@@ -83,17 +97,15 @@ namespace AnyRPG {
                     // next we want to query the equipmentmanager on the charcter to see if he has an item in this items slot, and if it is the item we are dropping
                     // if it is, then we will unequip it, and then destroy it
                     if (item is Equipment) {
-                        SystemGameManager.Instance.PlayerManager.MyCharacter.CharacterEquipmentManager.Unequip(item as Equipment);
+                        playerManager.MyCharacter.CharacterEquipmentManager.Unequip(item as Equipment);
                         if (item.MySlot != null) {
                             item.MySlot.Clear();
                         }
                     }
                 }
             }
-            SystemGameManager.Instance.LogManager.WriteSystemMessage("Destroyed " + Moveable.DisplayName);
+            logManager.WriteSystemMessage("Destroyed " + Moveable.DisplayName);
             Drop();
-            // done in drop... ?
-            //SystemGameManager.Instance.InventoryManager.FromSlot = null;
         }
     }
 

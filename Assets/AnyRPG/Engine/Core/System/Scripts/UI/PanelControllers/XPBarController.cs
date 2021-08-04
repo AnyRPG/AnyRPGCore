@@ -22,8 +22,15 @@ namespace AnyRPG {
 
         protected bool eventSubscriptionsInitialized = false;
 
-        private void Start() {
-            //Debug.Log("XPBarController.Start()");
+        // game manager references
+        SystemEventManager systemEventManager = null;
+        PlayerManager playerManager = null;
+
+        public override void Init(SystemGameManager systemGameManager) {
+            base.Init(systemGameManager);
+            systemEventManager = systemGameManager.SystemEventManager;
+            playerManager = systemGameManager.PlayerManager;
+
             CreateEventSubscriptions();
         }
 
@@ -33,9 +40,9 @@ namespace AnyRPG {
                 return;
             }
             SystemEventManager.StartListening("OnXPGained", HandleXPGained);
-            SystemGameManager.Instance.EventManager.OnLevelChanged += UpdateXPBar;
+            systemEventManager.OnLevelChanged += UpdateXPBar;
             SystemEventManager.StartListening("OnPlayerUnitSpawn", HandlePlayerUnitSpawn);
-            if (SystemGameManager.Instance.PlayerManager.PlayerUnitSpawned == true) {
+            if (playerManager.PlayerUnitSpawned == true) {
                 ProcessPlayerUnitSpawn();
             }
             eventSubscriptionsInitialized = true;
@@ -46,11 +53,9 @@ namespace AnyRPG {
             if (!eventSubscriptionsInitialized) {
                 return;
             }
-            if (SystemGameManager.Instance.EventManager != null) {
-                SystemEventManager.StopListening("OnXPGained", HandleXPGained);
-                SystemGameManager.Instance.EventManager.OnLevelChanged -= UpdateXPBar;
-                SystemEventManager.StopListening("OnPlayerUnitSpawn", HandlePlayerUnitSpawn);
-            }
+            SystemEventManager.StopListening("OnXPGained", HandleXPGained);
+            systemEventManager.OnLevelChanged -= UpdateXPBar;
+            SystemEventManager.StopListening("OnPlayerUnitSpawn", HandlePlayerUnitSpawn);
             eventSubscriptionsInitialized = false;
         }
 
@@ -77,20 +82,20 @@ namespace AnyRPG {
                 //originalXPSliderWidth = xpBarBackGround.GetComponent<RectTransform>().rect.width;
                 //Debug.Log("XPBarController.HandlePlayerUnitSpawn(): originalXPSliderWidth was 0, now: " + originalXPSliderWidth);
             }
-            UpdateXPBar(SystemGameManager.Instance.PlayerManager.MyCharacter.CharacterStats.Level);
+            UpdateXPBar(playerManager.MyCharacter.CharacterStats.Level);
         }
 
         public void UpdateXP() {
             //Debug.Log("XPBarController.UpdateXP()");
-            UpdateXPBar(SystemGameManager.Instance.PlayerManager.MyCharacter.CharacterStats.Level);
+            UpdateXPBar(playerManager.MyCharacter.CharacterStats.Level);
         }
 
         public void UpdateXPBar(int _Level) {
-            if (!SystemGameManager.Instance.PlayerManager.PlayerUnitSpawned) {
+            if (!playerManager.PlayerUnitSpawned) {
                 return;
             }
             //Debug.Log("XPBarController.UpdateXPBar(" + _Level + ")");
-            int currentXP = SystemGameManager.Instance.PlayerManager.MyCharacter.CharacterStats.CurrentXP;
+            int currentXP = playerManager.MyCharacter.CharacterStats.CurrentXP;
             int neededXP = LevelEquations.GetXPNeededForLevel(_Level);
             float xpPercent = (float)currentXP / (float)neededXP;
 

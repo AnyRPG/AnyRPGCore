@@ -5,7 +5,7 @@ using UnityEngine;
 using UnityEngine.UI;
 
 namespace AnyRPG {
-    public class PagedWindowContents : MonoBehaviour, IPagedWindowContents {
+    public class PagedWindowContents : ConfiguredMonoBehaviour, IPagedWindowContents {
 
         public event System.Action<bool> OnPageCountUpdate = delegate { };
         public event System.Action<ICloseableWindowContents> OnCloseWindow = delegate { };
@@ -16,15 +16,13 @@ namespace AnyRPG {
 
         protected int pageIndex = 0;
 
-        protected SystemGameManager systemGameManager = null;
-
         [SerializeField]
         protected Image backGroundImage;
 
         public Image BackGroundImage { get => backGroundImage; set => backGroundImage = value; }
 
-        public virtual void Init(SystemGameManager systemGameManager) {
-            this.systemGameManager = systemGameManager;
+        public override void Init(SystemGameManager systemGameManager) {
+            base.Init(systemGameManager);
             if (backGroundImage == null) {
                 backGroundImage = GetComponent<Image>();
             }

@@ -6,7 +6,7 @@ using UnityEngine;
 using UnityEngine.UI;
 
 namespace AnyRPG {
-    public class LogManager : MonoBehaviour {
+    public class LogManager : ConfiguredMonoBehaviour {
 
         public event System.Action<string> OnWriteChatMessage = delegate { };
         public event System.Action<string> OnWriteSystemMessage = delegate { };
@@ -36,8 +36,17 @@ namespace AnyRPG {
 
         private bool eventSubscriptionsInitialized = false;
 
-        public void Init() {
+        // game manager references
+        SystemConfigurationManager systemConfigurationManager = null;
+        SystemEventManager systemEventManager = null;
+        PlayerManager playerManager = null;
+
+        public override void Init(SystemGameManager systemGameManager) {
             //Debug.Log("CombatLogUI.Awake()");
+
+            systemConfigurationManager = systemGameManager.SystemConfigurationManager;
+            systemEventManager = systemGameManager.SystemEventManager;
+            playerManager = systemGameManager.PlayerManager;
 
             SetWelcomeString();
             ClearLog();
@@ -45,12 +54,12 @@ namespace AnyRPG {
 
         private void SetWelcomeString() {
             completeWelcomeString = welcomeString;
-            if (SystemGameManager.Instance.SystemConfigurationManager != null) {
-                if (SystemGameManager.Instance.SystemConfigurationManager.GameName != null && SystemGameManager.Instance.SystemConfigurationManager.GameName != string.Empty) {
-                    completeWelcomeString += string.Format(" {0}", SystemGameManager.Instance.SystemConfigurationManager.GameName);
+            if (systemConfigurationManager != null) {
+                if (systemConfigurationManager.GameName != null && systemConfigurationManager.GameName != string.Empty) {
+                    completeWelcomeString += string.Format(" {0}", systemConfigurationManager.GameName);
                 }
-                if (SystemGameManager.Instance.SystemConfigurationManager.GameVersion != null && SystemGameManager.Instance.SystemConfigurationManager.GameVersion != string.Empty) {
-                    completeWelcomeString += string.Format(" {0}", SystemGameManager.Instance.SystemConfigurationManager.GameVersion);
+                if (systemConfigurationManager.GameVersion != null && systemConfigurationManager.GameVersion != string.Empty) {
+                    completeWelcomeString += string.Format(" {0}", systemConfigurationManager.GameVersion);
                 }
             }
 
@@ -75,7 +84,7 @@ namespace AnyRPG {
             if (eventSubscriptionsInitialized) {
                 return;
             }
-            SystemGameManager.Instance.EventManager.OnTakeDamage += HandleTakeDamage;
+            systemEventManager.OnTakeDamage += HandleTakeDamage;
             SystemEventManager.StartListening("OnPlayerConnectionSpawn", handlePlayerConnectionSpawn);
             SystemEventManager.StartListening("OnPlayerConnectionDespawn", handlePlayerConnectionDespawn);
             eventSubscriptionsInitialized = true;
@@ -86,8 +95,8 @@ namespace AnyRPG {
             if (!eventSubscriptionsInitialized) {
                 return;
             }
-            if (SystemGameManager.Instance?.EventManager != null) {
-                SystemGameManager.Instance.EventManager.OnTakeDamage -= HandleTakeDamage;
+            if (systemEventManager != null) {
+                systemEventManager.OnTakeDamage -= HandleTakeDamage;
                 SystemEventManager.StopListening("OnPlayerConnectionSpawn", handlePlayerConnectionSpawn);
                 SystemEventManager.StopListening("OnPlayerConnectionDespawn", handlePlayerConnectionDespawn);
             }
@@ -104,7 +113,7 @@ namespace AnyRPG {
 
         public void HandleTakeDamage(IAbilityCaster source, CharacterUnit target, int damage, string abilityName) {
             Color textColor = Color.white;
-            if (SystemGameManager.Instance.PlayerManager.UnitController != null && target == SystemGameManager.Instance.PlayerManager.UnitController.CharacterUnit) {
+            if (playerManager.UnitController != null && target == playerManager.UnitController.CharacterUnit) {
                 textColor = Color.red;
             }
             string combatMessage = string.Format("<color=#{0}>{1} Takes {2} damage from {3}'s {4}</color>", ColorUtility.ToHtmlStringRGB(textColor), target.DisplayName, damage, source.AbilityManager.Name, abilityName);

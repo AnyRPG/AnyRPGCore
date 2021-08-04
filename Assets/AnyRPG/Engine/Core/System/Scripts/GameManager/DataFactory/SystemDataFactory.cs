@@ -9,7 +9,7 @@ namespace AnyRPG {
     /// <summary>
     /// allow us to query scriptable objects for equivalence by storing a template ID on all instantiated objects
     /// </summary>
-    public class SystemDataFactory : MonoBehaviour {
+    public class SystemDataFactory : ConfiguredMonoBehaviour {
 
         #region Singleton
         private static SystemDataFactory instance;
@@ -26,6 +26,12 @@ namespace AnyRPG {
         #endregion
 
         private Dictionary<Type, FactoryDataAccess> dataDictionary = new Dictionary<Type, FactoryDataAccess>();
+
+        public override void Init(SystemGameManager systemGameManager) {
+            base.Init(systemGameManager);
+
+            SetupFactory();
+        }
 
         public void SetupFactory() {
             FactoryDataAccess factoryDataAccess = new FactoryDataAccess();

@@ -71,19 +71,19 @@ namespace AnyRPG {
             base.OnAcceptQuest(quest, printMessages);
 
             // don't forget to remove these later
-            SystemGameManager.Instance.EventManager.OnInteractionStarted += CheckInteractionStart;
-            SystemGameManager.Instance.EventManager.OnInteractionWithOptionStarted += CheckInteractionStart;
-            SystemGameManager.Instance.EventManager.OnInteractionCompleted += CheckInteractionComplete;
-            SystemGameManager.Instance.EventManager.OnInteractionWithOptionCompleted += CheckInteractionComplete;
+            SystemGameManager.Instance.SystemEventManager.OnInteractionStarted += CheckInteractionStart;
+            SystemGameManager.Instance.SystemEventManager.OnInteractionWithOptionStarted += CheckInteractionStart;
+            SystemGameManager.Instance.SystemEventManager.OnInteractionCompleted += CheckInteractionComplete;
+            SystemGameManager.Instance.SystemEventManager.OnInteractionWithOptionCompleted += CheckInteractionComplete;
         }
 
         public override void OnAbandonQuest() {
             //Debug.Log("UseInteractableObjective.OnAbandonQuest()");
             base.OnAbandonQuest();
-            SystemGameManager.Instance.EventManager.OnInteractionStarted -= CheckInteractionStart;
-            SystemGameManager.Instance.EventManager.OnInteractionWithOptionStarted -= CheckInteractionStart;
-            SystemGameManager.Instance.EventManager.OnInteractionCompleted -= CheckInteractionComplete;
-            SystemGameManager.Instance.EventManager.OnInteractionWithOptionCompleted -= CheckInteractionComplete;
+            SystemGameManager.Instance.SystemEventManager.OnInteractionStarted -= CheckInteractionStart;
+            SystemGameManager.Instance.SystemEventManager.OnInteractionWithOptionStarted -= CheckInteractionStart;
+            SystemGameManager.Instance.SystemEventManager.OnInteractionCompleted -= CheckInteractionComplete;
+            SystemGameManager.Instance.SystemEventManager.OnInteractionWithOptionCompleted -= CheckInteractionComplete;
         }
 
     }

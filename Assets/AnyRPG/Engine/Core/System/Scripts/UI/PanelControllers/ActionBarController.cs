@@ -6,7 +6,7 @@ using UnityEngine;
 using UnityEngine.UI;
 
 namespace AnyRPG {
-    public class ActionBarController : MonoBehaviour {
+    public class ActionBarController : ConfiguredMonoBehaviour {
 
         [SerializeField]
         private List<ActionButton> actionButtons = new List<ActionButton>();
@@ -24,21 +24,22 @@ namespace AnyRPG {
         [SerializeField]
         protected Image backGroundImage;
 
-        public virtual void Awake() {
+        public override void Init(SystemGameManager systemGameManager) {
+            base.Init(systemGameManager);
+
             if (backGroundImage == null) {
                 backGroundImage = GetComponent<Image>();
             }
+
+            InitializeActionButtons(systemGameManager);
         }
 
-        /*
-        public void SetTarget(GameObject target) {
-            CommonInitialization();
+        public void InitializeActionButtons(SystemGameManager systemGameManager) {
+            for (int i = 0; i < actionButtons.Count; i++) {
+                actionButtons[i].Init(systemGameManager);
+            }
         }
 
-        public void ClearTarget() {
-            this.gameObject.SetActive(false);
-        }
-        */
 
         public void ClearActionBar(bool clearSavedUseables = false) {
             //Debug.Log(gameObject.name + ".ActionBarController.ClearActionBar()");

@@ -29,7 +29,9 @@ namespace AnyRPG {
         private bool controllerInitialized = false;
         private bool targetInitialized = false;
 
-        void Start() {
+        public override void Init(SystemGameManager systemGameManager) {
+            base.Init(systemGameManager);
+
             InitializeController();
             if (!targetInitialized) {
                 DisableCastBar();

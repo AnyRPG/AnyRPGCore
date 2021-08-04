@@ -57,7 +57,7 @@ namespace AnyRPG {
                 if (saveData.turnedIn == true) {
                     //Debug.Log(DisplayName + ".Dialog.TurnedIn = true");
                     // these events are for things that need the dialog turned in as a prerequisite
-                    SystemGameManager.Instance.EventManager.NotifyOnDialogCompleted(this);
+                    SystemGameManager.Instance.SystemEventManager.NotifyOnDialogCompleted(this);
                     OnDialogCompleted();
                 }
 

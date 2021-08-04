@@ -100,7 +100,7 @@ namespace AnyRPG {
 
         public static bool IsShuttingDown { get => isShuttingDown; }
 
-        public SystemEventManager EventManager { get => systemEventManager; set => systemEventManager = value; }
+        public SystemEventManager SystemEventManager { get => systemEventManager; set => systemEventManager = value; }
         public SystemEnvironmentManager SystemEnvironmentManager { get => systemEnvironmentManager; set => systemEnvironmentManager = value; }
         public CraftingManager CraftingManager { get => craftingManager; set => craftingManager = value; }
         public InteractionManager InteractionManager { get => interactionManager; set => interactionManager = value; }
@@ -108,54 +108,70 @@ namespace AnyRPG {
         public SystemPlayableDirectorManager SystemPlayableDirectorManager { get => systemPlayableDirectorManager; set => systemPlayableDirectorManager = value; }
         public SaveManager SaveManager { get => saveManager; set => saveManager = value; }
         public KeyBindManager KeyBindManager { get => keyBindManager; set => keyBindManager = value; }
+        public QuestLog QuestLog { get => questLog; set => questLog = value; }
+
+        public SystemConfigurationManager SystemConfigurationManager { get => systemConfigurationManager; set => systemConfigurationManager = value; }
         public CameraManager CameraManager { get => cameraManager; set => cameraManager = value; }
         public AudioManager AudioManager { get => audioManager; set => audioManager = value; }
         public PetPreviewManager PetPreviewManager { get => petPreviewManager; set => petPreviewManager = value; }
         public UnitPreviewManager UnitPreviewManager { get => unitPreviewManager; set => unitPreviewManager = value; }
         public CharacterCreatorManager CharacterCreatorManager { get => characterCreatorManager; set => characterCreatorManager = value; }
+        public SystemAchievementManager SystemAchievementManager { get => systemAchievementManager; set => systemAchievementManager = value; }
         public UIManager UIManager { get => uIManager; set => uIManager = value; }
-        public SystemConfigurationManager SystemConfigurationManager { get => systemConfigurationManager; set => systemConfigurationManager = value; }
         public SystemAbilityController SystemAbilityController { get => systemAbilityController; set => systemAbilityController = value; }
         public CastTargettingManager CastTargettingManager { get => castTargettingManager; set => castTargettingManager = value; }
-        public QuestLog QuestLog { get => questLog; set => questLog = value; }
         public InputManager InputManager { get => inputManager; set => inputManager = value; }
         public LevelManager LevelManager { get => levelManager; set => levelManager = value; }
         public InventoryManager InventoryManager { get => inventoryManager; set => inventoryManager = value; }
         public PlayerManager PlayerManager { get => playerManager; set => playerManager = value; }
         public SystemItemManager SystemItemManager { get => systemItemManager; set => systemItemManager = value; }
-        public SystemAchievementManager SystemAchievementManager { get => systemAchievementManager; set => systemAchievementManager = value; }
         public LogManager LogManager { get => logManager; set => logManager = value; }
         public ObjectPooler ObjectPooler { get => objectPooler; set => objectPooler = value; }
+        public SystemDataFactory SystemDataFactory { get => systemDataFactory; set => systemDataFactory = value; }
 
         private void Init() {
             //Debug.Log("SystemGameManager.Init()");
             SetupPermanentObjects();
 
+            // we are going to handle the initialization of all system managers here so we can control the start order and it isn't random
             // things are initialized here instead of in their declarations to prevent them from being initialized in the Unity Editor and restrict to play mode
             // initialize event manager first because everything else uses it
             systemEventManager = new SystemEventManager();
 
+            // system data factory next for access to data resources
+            SystemDataFactory.Init(this);
+
+            // configuration manager next because it will need access to resources from the factory
+            systemConfigurationManager.Init(this);
+
+            // then everything else that relies on system configuration and data resources
+            // starting with the non monobehavior managers
             systemEnvironmentManager = new SystemEnvironmentManager();
-            craftingManager = new CraftingManager();
+            craftingManager = new CraftingManager(this);
             interactionManager = new InteractionManager();
-            lootManager = new LootManager();
+            lootManager = new LootManager(this);
             systemPlayableDirectorManager = new SystemPlayableDirectorManager();
-            saveManager = new SaveManager();
-            keyBindManager = new KeyBindManager();
-            questLog = new QuestLog();
+            saveManager = new SaveManager(this);
+            keyBindManager = new KeyBindManager(this);
+            questLog = new QuestLog(this);
 
-            // sub manager monobehaviors
-            cameraManager.Init();
-            audioManager.Init();
-            petPreviewManager.Init();
-            unitPreviewManager.Init();
-            characterCreatorManager.Init();
-            systemAchievementManager.Init();
+            // and finally monobehavior managers
+            cameraManager.Init(this);
+            audioManager.Init(this);
+            petPreviewManager.Init(this);
+            unitPreviewManager.Init(this);
+            characterCreatorManager.Init(this);
+            systemAchievementManager.Init(this);
 
-            systemAbilityController.Init();
-            castTargettingManager.Init();
-            inputManager.Init();
+            systemAbilityController.Init(this);
+            castTargettingManager.Init(this);
+            inputManager.Init(this);
+            levelManager.Init(this);
             inventoryManager.Init(this);
+            playerManager.Init(this);
+            systemItemManager.Init(this);
+            logManager.Init(this);
+            ObjectPooler.Init(this);
             uIManager.Init(this);
 
         }
@@ -174,18 +190,8 @@ namespace AnyRPG {
         private void Start() {
             //Debug.Log("SystemGameManager.Start()");
 
-            // we are going to handle the initialization of all system managers here so we can control the start order and it isn't random
-
             // first turn off the UI
             UIManager.PerformSetupActivities();
-
-            // next, load scriptable object resources
-            systemDataFactory.SetupFactory();
-
-            // next, verify systemconfiguration manager references to resources
-            SystemConfigurationManager.SetupScriptableObjects();
-
-            PlayerManager.OrchestratorStart();
 
             // then launch level manager to start loading the game
             LevelManager.PerformSetupActivities();

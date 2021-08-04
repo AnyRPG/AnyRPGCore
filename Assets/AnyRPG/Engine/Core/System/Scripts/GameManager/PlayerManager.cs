@@ -5,7 +5,7 @@ using UnityEngine;
 using UnityEngine.AI;
 
 namespace AnyRPG {
-    public class PlayerManager : MonoBehaviour {
+    public class PlayerManager : ConfiguredMonoBehaviour {
 
         [SerializeField]
         private int initialLevel = 1;
@@ -70,6 +70,21 @@ namespace AnyRPG {
 
         protected bool eventSubscriptionsInitialized = false;
 
+        // game manager references
+        SaveManager saveManager = null;
+        SystemEventManager systemEventManager = null;
+        UIManager uIManager = null;
+        LevelManager levelManager = null;
+        CameraManager cameraManager = null;
+        SystemConfigurationManager systemConfigurationManager = null;
+        SystemAbilityController systemAbilityController = null;
+        LogManager logManager = null;
+        CastTargettingManager castTargettingManager = null;
+        CombatTextManager combatTextManager = null;
+        InventoryManager inventoryManager = null;
+        ActionBarManager actionBarManager = null;
+        MessageFeedManager messageFeedManager = null;
+
         public BaseCharacter MyCharacter { get => character; set => character = value; }
 
         public GameObject PlayerConnectionObject { get => playerConnectionObject; set => playerConnectionObject = value; }
@@ -88,6 +103,26 @@ namespace AnyRPG {
         public UnitController ActiveUnitController { get => activeUnitController; }
         public PlayerController PlayerController { get => playerController; set => playerController = value; }
 
+        public override void Init(SystemGameManager systemGameManager) {
+            base.Init(systemGameManager);
+            saveManager = systemGameManager.SaveManager;
+            systemEventManager = systemGameManager.SystemEventManager;
+            uIManager = systemGameManager.UIManager;
+            combatTextManager = uIManager.CombatTextManager;
+            actionBarManager = uIManager.ActionBarManager;
+            messageFeedManager = uIManager.MessageFeedManager;
+            levelManager = systemGameManager.LevelManager;
+            cameraManager = systemGameManager.CameraManager;
+            systemConfigurationManager = systemGameManager.SystemConfigurationManager;
+            systemAbilityController = systemGameManager.SystemAbilityController;
+            logManager = systemGameManager.LogManager;
+            castTargettingManager = systemGameManager.CastTargettingManager;
+            inventoryManager = systemGameManager.InventoryManager;
+
+            PerformRequiredPropertyChecks();
+            CreateEventSubscriptions();
+        }
+
         public void PerformRequiredPropertyChecks() {
             if (aiUnitParent == null) {
                 Debug.LogError("PlayerManager.Awake(): the ai unit parent is null.  Please set it in the inspector");
@@ -95,11 +130,6 @@ namespace AnyRPG {
             if (effectPrefabParent == null) {
                 Debug.LogError("PlayerManager.Awake(): the effect prefab parent is null.  Please set it in the inspector");
             }
-        }
-
-        public void OrchestratorStart() {
-            PerformRequiredPropertyChecks();
-            CreateEventSubscriptions();
         }
 
         private void CreateEventSubscriptions() {
@@ -110,7 +140,7 @@ namespace AnyRPG {
             //SystemEventManager.StartListening("OnLevelUnload", HandleLevelUnload);
             SystemEventManager.StartListening("OnLevelLoad", HandleLevelLoad);
             SystemEventManager.StartListening("OnExitGame",  HandleExitGame);
-            SystemGameManager.Instance.EventManager.OnLevelChanged += PlayLevelUpEffects;
+            systemEventManager.OnLevelChanged += PlayLevelUpEffects;
             SystemEventManager.StartListening("OnPlayerDeath", HandlePlayerDeath);
             eventSubscriptionsInitialized = true;
         }
@@ -120,13 +150,11 @@ namespace AnyRPG {
             if (!eventSubscriptionsInitialized) {
                 return;
             }
-            if (SystemGameManager.Instance.EventManager != null) {
-                //SystemEventManager.StopListening("OnLevelUnload", HandleLevelUnload);
-                SystemEventManager.StopListening("OnLevelLoad", HandleLevelLoad);
-                SystemEventManager.StopListening("OnExitGame", HandleExitGame);
-                SystemGameManager.Instance.EventManager.OnLevelChanged -= PlayLevelUpEffects;
-                SystemEventManager.StopListening("OnPlayerDeath", HandlePlayerDeath);
-            }
+            //SystemEventManager.StopListening("OnLevelUnload", HandleLevelUnload);
+            SystemEventManager.StopListening("OnLevelLoad", HandleLevelLoad);
+            SystemEventManager.StopListening("OnExitGame", HandleExitGame);
+            systemEventManager.OnLevelChanged -= PlayLevelUpEffects;
+            SystemEventManager.StopListening("OnPlayerDeath", HandlePlayerDeath);
             eventSubscriptionsInitialized = false;
         }
 
@@ -152,7 +180,7 @@ namespace AnyRPG {
             //Debug.Log("PlayerManager.ExitGameHandler()");
             //DespawnPlayerUnit();
             DespawnPlayerConnection();
-            SystemGameManager.Instance.SaveManager.ClearSystemManagedCharacterData();
+            saveManager.ClearSystemManagedCharacterData();
         }
 
         public void SetPlayerName(string newName) {
@@ -163,7 +191,7 @@ namespace AnyRPG {
 
             SystemEventManager.TriggerEvent("OnPlayerNameChanged", new EventParamProperties());
             if (playerUnitSpawned) {
-                SystemGameManager.Instance.UIManager.PlayerUnitFrameController.SetTarget(UnitController.NamePlateController);
+                uIManager.PlayerUnitFrameController.SetTarget(UnitController.NamePlateController);
             }
         }
 
@@ -192,7 +220,7 @@ namespace AnyRPG {
         public void HandleLevelLoad(string eventName, EventParamProperties eventParamProperties) {
             //Debug.Log("PlayerManager.OnLevelLoad()");
             bool loadCharacter = true;
-            SceneNode activeSceneNode = SystemGameManager.Instance.LevelManager.GetActiveSceneNode();
+            SceneNode activeSceneNode = levelManager.GetActiveSceneNode();
             if (activeSceneNode != null) {
                 //Debug.Log("PlayerManager.OnLevelLoad(): we have a scene node");
                 // fix to allow character to spawn after cutscene is viewed on next level load - and another fix to prevent character from spawning on a pure cutscene
@@ -200,42 +228,42 @@ namespace AnyRPG {
                     || activeSceneNode.SuppressCharacterSpawn) {
                     //Debug.Log("PlayerManager.OnLevelLoad(): character spawn is suppressed");
                     loadCharacter = false;
-                    SystemGameManager.Instance.CameraManager.DeactivateMainCamera();
-                    //SystemGameManager.Instance.CameraManager.MyCharacterCreatorCamera.gameObject.SetActive(true);
+                    cameraManager.DeactivateMainCamera();
+                    //cameraManager.MyCharacterCreatorCamera.gameObject.SetActive(true);
                 }
             } else {
-                if (SystemGameManager.Instance.LevelManager.IsMainMenu()) {
+                if (levelManager.IsMainMenu()) {
                     loadCharacter = false;
                 }
             }
             if (autoSpawnPlayerOnLevelLoad == true && loadCharacter) {
-                //SystemGameManager.Instance.CameraManager.MyCharacterCreatorCamera.gameObject.SetActive(false);
+                //cameraManager.MyCharacterCreatorCamera.gameObject.SetActive(false);
                 Vector3 spawnLocation = SpawnPlayerUnit();
-                SystemGameManager.Instance.CameraManager.ActivateMainCamera(true);
-                SystemGameManager.Instance.CameraManager.MainCameraController.SetTargetPositionRaw(spawnLocation, activeUnitController.transform.forward);
+                cameraManager.ActivateMainCamera(true);
+                cameraManager.MainCameraController.SetTargetPositionRaw(spawnLocation, activeUnitController.transform.forward);
             }
         }
 
         public void PlayLevelUpEffects(int newLevel) {
             //Debug.Log("PlayerManager.PlayLevelUpEffect()");
-            if (PlayerUnitSpawned == false || SystemGameManager.Instance.SystemConfigurationManager?.LevelUpEffect == null) {
+            if (PlayerUnitSpawned == false || systemConfigurationManager.LevelUpEffect == null) {
                 return;
             }
             // 0 to allow playing this effect for different reasons than levelup
             if (newLevel == 0 || newLevel != 1) {
                 AbilityEffectContext abilityEffectContext = new AbilityEffectContext();
 
-                SystemGameManager.Instance.SystemConfigurationManager.LevelUpEffect.Cast(SystemGameManager.Instance.SystemAbilityController, unitController, unitController, abilityEffectContext);
+                systemConfigurationManager.LevelUpEffect.Cast(systemAbilityController, unitController, unitController, abilityEffectContext);
             }
         }
 
         public void PlayDeathEffect() {
             //Debug.Log("PlayerManager.PlayDeathEffect()");
-            if (PlayerUnitSpawned == false || SystemGameManager.Instance.SystemConfigurationManager?.DeathEffect == null) {
+            if (PlayerUnitSpawned == false || systemConfigurationManager.DeathEffect == null) {
                 return;
             }
             AbilityEffectContext abilityEffectContext = new AbilityEffectContext();
-            SystemGameManager.Instance.SystemConfigurationManager.DeathEffect.Cast(SystemGameManager.Instance.SystemAbilityController, unitController, unitController, abilityEffectContext);
+            systemConfigurationManager.DeathEffect.Cast(systemAbilityController, unitController, unitController, abilityEffectContext);
         }
 
         /*
@@ -281,7 +309,7 @@ namespace AnyRPG {
 
         public Vector3 SpawnPlayerUnit() {
             //Debug.Log("PlayerManager.SpawnPlayerUnit()");
-            Vector3 spawnLocation = SystemGameManager.Instance.LevelManager.GetSpawnLocation();
+            Vector3 spawnLocation = levelManager.GetSpawnLocation();
             SpawnPlayerUnit(spawnLocation);
             return spawnLocation;
         }
@@ -299,11 +327,11 @@ namespace AnyRPG {
                 SpawnPlayerConnection();
             }
             if (activeCharacter.UnitProfile == null) {
-                activeCharacter.SetUnitProfile(SystemGameManager.Instance.SystemConfigurationManager.DefaultPlayerUnitProfileName, true, -1, false);
+                activeCharacter.SetUnitProfile(systemConfigurationManager.DefaultPlayerUnitProfileName, true, -1, false);
             }
 
             // spawn the player unit and set references
-            Vector3 spawnRotation = SystemGameManager.Instance.LevelManager.GetSpawnRotation();
+            Vector3 spawnRotation = levelManager.GetSpawnRotation();
             activeCharacter.UnitProfile.SpawnUnitPrefab(playerUnitParent.transform, spawnLocation, spawnRotation, UnitControllerMode.Player);
             if (activeUnitController == null) {
                 Debug.LogError("PlayerManager.SpawnPlayerUnit(): No UnitController could be found, or player unit was not spawned properly");
@@ -312,13 +340,13 @@ namespace AnyRPG {
 
             if (activeUnitController.DynamicCharacterAvatar != null) {
                 if (activeUnitController.ModelReady == false) {
-                    SystemGameManager.Instance.SaveManager.LoadUMASettings(false);
+                    saveManager.LoadUMASettings(false);
                 } else {
-                    SystemGameManager.Instance.SaveManager.LoadUMASettings(false);
+                    saveManager.LoadUMASettings(false);
                 }
             }
 
-            if (SystemGameManager.Instance.LevelManager.NavMeshAvailable == true && autoDetectNavMeshes) {
+            if (levelManager.NavMeshAvailable == true && autoDetectNavMeshes) {
                 //Debug.Log("PlayerManager.SpawnPlayerUnit(): Enabling NavMeshAgent()");
                 activeUnitController.EnableAgent();
                 if (playerUnitMovementController != null) {
@@ -391,7 +419,7 @@ namespace AnyRPG {
 
             playerController.SubscribeToUnitEvents();
 
-            if (SystemGameManager.Instance.SystemConfigurationManager.UseThirdPartyMovementControl == false) {
+            if (systemConfigurationManager.UseThirdPartyMovementControl == false) {
                 playerUnitMovementController.Init();
             } else {
                 DisableMovementControllers();
@@ -414,7 +442,7 @@ namespace AnyRPG {
             //Debug.Log("PlayerManager.SubscribeToModelReady()");
 
             // try this earlier
-            //SystemGameManager.Instance.SaveManager.LoadUMASettings(false);
+            //saveManager.LoadUMASettings(false);
 
             activeUnitController.OnModelReady += HandleModelReady;
         }
@@ -437,7 +465,7 @@ namespace AnyRPG {
 
             SystemEventManager.TriggerEvent("NotifyBeforePlayerConnectionSpawn", new EventParamProperties());
             activeCharacter.Init();
-            activeCharacter.Initialize(SystemGameManager.Instance.SystemConfigurationManager.DefaultPlayerName, initialLevel);
+            activeCharacter.Initialize(systemConfigurationManager.DefaultPlayerName, initialLevel);
             playerConnectionSpawned = true;
             SystemEventManager.TriggerEvent("OnPlayerConnectionSpawn", new EventParamProperties());
 
@@ -527,31 +555,31 @@ namespace AnyRPG {
         }
 
         public void HandleCombatMessage(string messageText) {
-            SystemGameManager.Instance.LogManager.WriteCombatMessage(messageText);
+            logManager.WriteCombatMessage(messageText);
         }
 
         public void HandleCombatMiss(Interactable targetObject, AbilityEffectContext abilityEffectContext) {
-            SystemGameManager.Instance.UIManager.CombatTextManager.SpawnCombatText(targetObject, 0, CombatTextType.miss, CombatMagnitude.normal, abilityEffectContext);
+            combatTextManager.SpawnCombatText(targetObject, 0, CombatTextType.miss, CombatMagnitude.normal, abilityEffectContext);
         }
 
         public void HandleActivateTargetingMode(BaseAbility baseAbility) {
-            SystemGameManager.Instance.CastTargettingManager.EnableProjector(baseAbility);
+            castTargettingManager.EnableProjector(baseAbility);
         }
 
         public void HandleAnimatedAbilityCheckFail(AnimatedAbility animatedAbility) {
-            if (PlayerUnitSpawned == true && SystemGameManager.Instance.LogManager != null) {
-                SystemGameManager.Instance.LogManager.WriteCombatMessage("Cannot use " + (animatedAbility.DisplayName == null ? "null" : animatedAbility.DisplayName) + ". Waiting for another ability to finish.");
+            if (PlayerUnitSpawned == true && logManager != null) {
+                logManager.WriteCombatMessage("Cannot use " + (animatedAbility.DisplayName == null ? "null" : animatedAbility.DisplayName) + ". Waiting for another ability to finish.");
             }
         }
 
         public void HandleLearnAbility(BaseAbility baseAbility) {
-            SystemGameManager.Instance.EventManager.NotifyOnAbilityListChanged(baseAbility);
+            systemEventManager.NotifyOnAbilityListChanged(baseAbility);
             baseAbility.NotifyOnLearn();
         }
 
         public void HandleUnlearnAbility(bool updateActionBars) {
             if (updateActionBars) {
-                SystemGameManager.Instance.UIManager.ActionBarManager.UpdateVisuals(true);
+                actionBarManager.UpdateVisuals(true);
             }
         }
 
@@ -560,14 +588,14 @@ namespace AnyRPG {
         }
 
         public void HandleDropCombat() {
-            if (SystemGameManager.Instance.LogManager != null) {
-                SystemGameManager.Instance.LogManager.WriteCombatMessage("Left combat");
+            if (logManager != null) {
+                logManager.WriteCombatMessage("Left combat");
             }
         }
 
         public void HandleEnterCombat(Interactable interactable) {
-            if (SystemGameManager.Instance.LogManager != null) {
-                SystemGameManager.Instance.LogManager.WriteCombatMessage("Entered combat with " + interactable.DisplayName);
+            if (logManager != null) {
+                logManager.WriteCombatMessage("Entered combat with " + interactable.DisplayName);
             }
         }
 
@@ -576,43 +604,43 @@ namespace AnyRPG {
         }
 
         public void HandleTargetInAbilityRangeFail(BaseAbility baseAbility, Interactable target) {
-            if (baseAbility != null && SystemGameManager.Instance.LogManager != null) {
-                SystemGameManager.Instance.LogManager.WriteCombatMessage(target.name + " is out of range of " + (baseAbility.DisplayName == null ? "null" : baseAbility.DisplayName));
+            if (baseAbility != null && logManager != null) {
+                logManager.WriteCombatMessage(target.name + " is out of range of " + (baseAbility.DisplayName == null ? "null" : baseAbility.DisplayName));
             }
         }
 
         public void HandlePerformAbility(BaseAbility ability) {
-            SystemGameManager.Instance.EventManager.NotifyOnAbilityUsed(ability);
+            systemEventManager.NotifyOnAbilityUsed(ability);
             ability.NotifyOnAbilityUsed();
 
         }
 
         public void HandleCombatCheckFail(BaseAbility ability) {
-            SystemGameManager.Instance.LogManager.WriteCombatMessage("The ability " + ability.DisplayName + " can only be cast while out of combat");
+            logManager.WriteCombatMessage("The ability " + ability.DisplayName + " can only be cast while out of combat");
         }
 
         public void HandlePowerResourceCheckFail(BaseAbility ability, IAbilityCaster abilityCaster) {
-            SystemGameManager.Instance.LogManager.WriteCombatMessage("Not enough " + ability.PowerResource.DisplayName + " to perform " + ability.DisplayName + " at a cost of " + ability.GetResourceCost(abilityCaster));
+            logManager.WriteCombatMessage("Not enough " + ability.PowerResource.DisplayName + " to perform " + ability.DisplayName + " at a cost of " + ability.GetResourceCost(abilityCaster));
         }
 
         public void HandleLearnedCheckFail(BaseAbility ability) {
-            SystemGameManager.Instance.LogManager.WriteCombatMessage("You have not learned the ability " + ability.DisplayName + " yet");
+            logManager.WriteCombatMessage("You have not learned the ability " + ability.DisplayName + " yet");
         }
 
         public void HandleUnlearnClassAbilities() {
             // now perform a single action bar update
-            SystemGameManager.Instance.UIManager.ActionBarManager.UpdateVisuals(true);
+            actionBarManager.UpdateVisuals(true);
         }
 
         public void HandleEquipmentChanged(Equipment newItem, Equipment oldItem, int slotIndex) {
             if (PlayerUnitSpawned) {
                 if (slotIndex != -1) {
-                    SystemGameManager.Instance.InventoryManager.AddItem(oldItem, slotIndex);
+                    inventoryManager.AddItem(oldItem, slotIndex);
                 } else if (oldItem != null) {
-                    SystemGameManager.Instance.InventoryManager.AddItem(oldItem);
+                    inventoryManager.AddItem(oldItem);
                 }
             }
-            SystemGameManager.Instance.EventManager.NotifyOnEquipmentChanged(newItem, oldItem);
+            systemEventManager.NotifyOnEquipmentChanged(newItem, oldItem);
         }
 
         /// <summary>
@@ -647,40 +675,40 @@ namespace AnyRPG {
 
 
         public void HandleRecoverResource(PowerResource powerResource, int amount) {
-            if (SystemGameManager.Instance.LogManager != null) {
-                SystemGameManager.Instance.LogManager.WriteSystemMessage("You gain " + amount + " " + powerResource.DisplayName);
+            if (logManager != null) {
+                logManager.WriteSystemMessage("You gain " + amount + " " + powerResource.DisplayName);
             }
         }
 
         public void HandleResourceAmountChanged(PowerResource powerResource, int amount, int amount2) {
-            SystemGameManager.Instance.UIManager.ActionBarManager.UpdateVisuals();
+            actionBarManager.UpdateVisuals();
         }
 
         public void HandleStatusEffectAdd(StatusEffectNode statusEffectNode) {
             if (statusEffectNode != null && statusEffectNode.StatusEffect.ClassTrait == false && activeUnitController != null) {
                 if (statusEffectNode.AbilityEffectContext.savedEffect == false) {
                     if (activeUnitController.CharacterUnit != null) {
-                        SystemGameManager.Instance.UIManager.CombatTextManager.SpawnCombatText(activeUnitController, statusEffectNode.StatusEffect, true);
+                        combatTextManager.SpawnCombatText(activeUnitController, statusEffectNode.StatusEffect, true);
                     }
                 }
             }
         }
 
         public void HandleGainXP(int xp) {
-            if (SystemGameManager.Instance.LogManager != null) {
-                SystemGameManager.Instance.LogManager.WriteSystemMessage("You gain " + xp + " experience");
+            if (logManager != null) {
+                logManager.WriteSystemMessage("You gain " + xp + " experience");
             }
             if (activeUnitController != null) {
-                if (SystemGameManager.Instance.UIManager.CombatTextManager != null) {
-                    SystemGameManager.Instance.UIManager.CombatTextManager.SpawnCombatText(activeUnitController, xp, CombatTextType.gainXP, CombatMagnitude.normal, null);
+                if (combatTextManager != null) {
+                    combatTextManager.SpawnCombatText(activeUnitController, xp, CombatTextType.gainXP, CombatMagnitude.normal, null);
                 }
             }
             SystemEventManager.TriggerEvent("OnXPGained", new EventParamProperties());
         }
 
         public void HandleLevelChanged(int newLevel) {
-            SystemGameManager.Instance.EventManager.NotifyOnLevelChanged(newLevel);
-            SystemGameManager.Instance.UIManager.MessageFeedManager.WriteMessage(string.Format("YOU HAVE REACHED LEVEL {0}!", newLevel.ToString()));
+            systemEventManager.NotifyOnLevelChanged(newLevel);
+            messageFeedManager.WriteMessage(string.Format("YOU HAVE REACHED LEVEL {0}!", newLevel.ToString()));
         }
 
         public void HandleReviveComplete() {
@@ -700,7 +728,7 @@ namespace AnyRPG {
         }
 
         public void HandleImmuneToEffect(AbilityEffectContext abilityEffectContext) {
-            SystemGameManager.Instance.UIManager.CombatTextManager.SpawnCombatText(activeUnitController, 0, CombatTextType.immune, CombatMagnitude.normal, abilityEffectContext);
+            combatTextManager.SpawnCombatText(activeUnitController, 0, CombatTextType.immune, CombatMagnitude.normal, abilityEffectContext);
         }
 
     }

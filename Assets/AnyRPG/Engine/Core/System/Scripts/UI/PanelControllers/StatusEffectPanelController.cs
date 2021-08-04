@@ -18,6 +18,15 @@ namespace AnyRPG {
 
         public int MyEffectLimit { get => effectLimit; set => effectLimit = value; }
 
+        // game manager references
+        ObjectPooler objectPooler = null;
+
+        public override void Init(SystemGameManager systemGameManager) {
+            base.Init(systemGameManager);
+
+            objectPooler = systemGameManager.ObjectPooler;
+        }
+
         public void SetTarget(UnitController unitController) {
             //Debug.Log(gameObject.name + "StatusEffectPanelController.SetTarget(" + unitController.DisplayName + ")");
             this.targetUnitController = unitController;
@@ -39,7 +48,7 @@ namespace AnyRPG {
             targetUnitController = null;
             foreach (StatusEffectNodeScript _statusEffectNodeScript in statusEffectNodeScripts) {
                 if (_statusEffectNodeScript != null) {
-                    ObjectPooler.Instance.ReturnObjectToPool(_statusEffectNodeScript.gameObject);
+                    objectPooler.ReturnObjectToPool(_statusEffectNodeScript.gameObject);
                 }
             }
             statusEffectNodeScripts.Clear();
@@ -92,7 +101,7 @@ namespace AnyRPG {
             }
 
             // determine if a node with that status effect already exists
-            GameObject statusNode = ObjectPooler.Instance.GetPooledObject(statusNodePrefab, transform);
+            GameObject statusNode = objectPooler.GetPooledObject(statusNodePrefab, transform);
             StatusEffectNodeScript statusEffectNodeScript = statusNode.GetComponent<StatusEffectNodeScript>();
             if (statusEffectNodeScript != null) {
                 statusEffectNodeScript.Initialize(statusEffectNode, target);

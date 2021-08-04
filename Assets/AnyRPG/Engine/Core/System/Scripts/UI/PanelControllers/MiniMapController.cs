@@ -96,22 +96,25 @@ namespace AnyRPG {
         private LevelManager levelManager = null;
         private PopupWindowManager popupWindowManager = null;
         private MiniMapManager miniMapManager = null;
+        private ObjectPooler objectPooler = null;
 
         // map indicators
         private Dictionary<Interactable, MiniMapIndicatorController> mapIndicatorControllers = new Dictionary<Interactable, MiniMapIndicatorController>();
 
         public GameObject MapGraphic { get => mapGraphic; set => mapGraphic = value; }
 
-        public void Init(SystemGameManager systemGameManager) {
+        public override void Init(SystemGameManager systemGameManager) {
             //Debug.Log("MiniMapController.Init()");
+            base.Init(systemGameManager);
 
             systemConfigurationManager = systemGameManager.SystemConfigurationManager;
             cameraManager = systemGameManager.CameraManager;
             playerManager = systemGameManager.PlayerManager;
             inputManager = systemGameManager.InputManager;
             levelManager = systemGameManager.LevelManager;
-            popupWindowManager = systemGameManager.UIManager.PopupWindowManager;
-            miniMapManager = systemGameManager.UIManager.MiniMapManager;
+            popupWindowManager = uIManager.PopupWindowManager;
+            miniMapManager = uIManager.MiniMapManager;
+            objectPooler = systemGameManager.ObjectPooler;
 
             CreateEventSubscriptions();
 
@@ -168,7 +171,7 @@ namespace AnyRPG {
         public void HandleAddIndicator(Interactable interactable) {
             //Debug.Log("MainMapController.AddIndicator(" + interactable.gameObject.name + ")");
             if (mapIndicatorControllers.ContainsKey(interactable) == false) {
-                GameObject mapIndicator = ObjectPooler.Instance.GetPooledObject(miniMapIndicatorPrefab, (mapGraphic.transform));
+                GameObject mapIndicator = objectPooler.GetPooledObject(miniMapIndicatorPrefab, (mapGraphic.transform));
                 if (mapIndicator != null) {
                     MiniMapIndicatorController mapIndicatorController = mapIndicator.GetComponent<MiniMapIndicatorController>();
                     if (mapIndicatorController != null) {
@@ -187,7 +190,7 @@ namespace AnyRPG {
         public void HandleRemoveIndicator(Interactable interactable) {
             if (mapIndicatorControllers.ContainsKey(interactable)) {
                 mapIndicatorControllers[interactable].ResetSettings();
-                ObjectPooler.Instance.ReturnObjectToPool(mapIndicatorControllers[interactable].gameObject);
+                objectPooler.ReturnObjectToPool(mapIndicatorControllers[interactable].gameObject);
                 mapIndicatorControllers.Remove(interactable);
             }
         }
@@ -283,8 +286,6 @@ namespace AnyRPG {
             // and made negative to account for the fact that we are moving the image center
             float imageCenterX = -1f * ((playerX - levelOffset.x) * levelScaleFactor) * imageScaleFactor;
             float imageCenterY = -1f * ((playerZ - levelOffset.z) * levelScaleFactor) * imageScaleFactor;
-
-            //Debug.Log("scaleFactor: " + levelScaleFactor + "; player: " + followTransform.position + "; imageScaleFactor: " + imageScaleFactor + "; rawWidth: " + miniMapGraphicRawImage.texture.width + "; cameraSize: " + cameraSize + "; sceneBounds: " + SystemGameManager.Instance.LevelManager.SceneBounds.size);
 
             miniMapGraphicRect.anchoredPosition = new Vector2(imageCenterX, imageCenterY);
         }

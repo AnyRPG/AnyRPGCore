@@ -13,7 +13,18 @@ namespace AnyRPG {
 
         private Dictionary<string, Quest> quests = new Dictionary<string, Quest>();
 
-        public Dictionary<string, Quest> MyQuests { get => quests; }
+        // game manager references
+        SystemGameManager systemGameManager = null;
+        SystemDataFactory systemDataFactory = null;
+        SystemConfigurationManager systemConfigurationManager = null;
+
+        public Dictionary<string, Quest> Quests { get => quests; }
+
+        public QuestLog(SystemGameManager systemGameManager) {
+            this.systemGameManager = systemGameManager;
+            systemConfigurationManager = systemGameManager.SystemConfigurationManager;
+            systemDataFactory = systemGameManager.SystemDataFactory;
+        }
 
         /*
         public void LoadQuest(QuestSaveData questSaveData) {
@@ -85,7 +96,7 @@ namespace AnyRPG {
         public void AcceptQuest(QuestSaveData questSaveData) {
             //Debug.Log("QuestLog.LoadQuest(" + questSaveData.MyName + ")");
 
-            Quest quest = SystemDataFactory.Instance.GetResource<Quest>(questSaveData.MyName);
+            Quest quest = systemDataFactory.GetResource<Quest>(questSaveData.MyName);
             if (quest == null) {
                 //Debug.Log("QuestLog.LoadQuest(" + questSaveData.MyName + "): COULD NOT FIND QUEST!!!");
                 return;
@@ -108,7 +119,7 @@ namespace AnyRPG {
 
         public void AcceptQuest(Quest newQuest) {
             //Debug.Log("QuestLog.AcceptQuest(" + quest.name + ")");
-            if (quests.Count >= SystemGameManager.Instance.SystemConfigurationManager.QuestLogSize) {
+            if (quests.Count >= systemConfigurationManager.QuestLogSize) {
                 // quest log is full. we can't accept the quest
                 return;
             }
@@ -159,13 +170,13 @@ namespace AnyRPG {
 
         public void ClearLog() {
             List<Quest> removeList = new List<Quest>();
-            foreach (Quest quest in MyQuests.Values) {
+            foreach (Quest quest in Quests.Values) {
                 removeList.Add(quest);
             }
             foreach (Quest oldQuest in removeList) {
                 AbandonQuest(oldQuest);
             }
-            MyQuests.Clear();
+            Quests.Clear();
         }
     }
 

@@ -4,13 +4,20 @@ using System.Collections.Generic;
 using UnityEngine;
 
 namespace AnyRPG {
-    public class SystemAbilityController : MonoBehaviour, IAbilityCaster {
+    public class SystemAbilityController : ConfiguredMonoBehaviour, IAbilityCaster {
 
         private AbilityManager abilityManager = null;
 
+        // game manager references
+        ObjectPooler objectPooler = null;
+
         public IAbilityManager AbilityManager { get => abilityManager; }
 
-        public void Init() {
+        public override  void Init(SystemGameManager systemGame) {
+            base.Init(systemGameManager);
+
+            objectPooler = systemGameManager.ObjectPooler;
+
             abilityManager = new AbilityManager(this);
             SystemEventManager.StartListening("OnLevelUnload", HandleLevelUnload);
         }
@@ -24,11 +31,10 @@ namespace AnyRPG {
 
             foreach (GameObject go in abilityManager.AbilityEffectGameObjects) {
                 if (go != null) {
-                    ObjectPooler.Instance.ReturnObjectToPool(go);
+                    objectPooler.ReturnObjectToPool(go);
                 }
             }
             abilityManager.AbilityEffectGameObjects.Clear();
-
         }
 
         public void BeginDestroyAbilityEffectObject(Dictionary<PrefabProfile, GameObject> abilityEffectObjects, IAbilityCaster source, Interactable target, float timer, AbilityEffectContext abilityEffectInput, FixedLengthEffect fixedLengthEffect) {
@@ -97,7 +103,7 @@ namespace AnyRPG {
                     abilityManager.AbilityEffectGameObjects.Remove(go);
                 }
                 if (go != null) {
-                    ObjectPooler.Instance.ReturnObjectToPool(go, fixedLengthEffect.PrefabDestroyDelay);
+                    objectPooler.ReturnObjectToPool(go, fixedLengthEffect.PrefabDestroyDelay);
                 }
             }
             abilityEffectObjects.Clear();

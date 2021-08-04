@@ -9,7 +9,7 @@ namespace AnyRPG {
     /// <summary>
     /// Manages the messages displayed on the screen for quest status updates
     /// </summary>
-    public class MessageFeedManager : MonoBehaviour {
+    public class MessageFeedManager : ConfiguredMonoBehaviour {
 
         [SerializeField]
         private GameObject messagePrefab = null;
@@ -20,14 +20,14 @@ namespace AnyRPG {
         [SerializeField]
         private GraphicRaycaster raycaster = null;
 
-        private SystemGameManager systemGameManager = null;
+        // GameManager references
         private ObjectPooler objectPooler = null;
         private LogManager logManager = null;
 
         public GameObject MessageFeedGameObject { get => messageFeedGameObject; set => messageFeedGameObject = value; }
 
-        public void Init(SystemGameManager systemGameManager) {
-            this.systemGameManager = systemGameManager;
+        public override void Init(SystemGameManager systemGameManager) {
+            base.Init(systemGameManager);
             objectPooler = systemGameManager.ObjectPooler;
             logManager = systemGameManager.LogManager;
         }

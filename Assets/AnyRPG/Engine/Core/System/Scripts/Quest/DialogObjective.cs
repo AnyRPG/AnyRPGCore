@@ -50,13 +50,13 @@ namespace AnyRPG {
             UpdateCompletionCount(printMessages);
 
             // don't forget to remove these later
-            SystemGameManager.Instance.EventManager.OnDialogCompleted += CheckCompletionCount;
+            SystemGameManager.Instance.SystemEventManager.OnDialogCompleted += CheckCompletionCount;
         }
 
         public override void OnAbandonQuest() {
             //Debug.Log("UseInteractableObjective.OnAbandonQuest()");
             base.OnAbandonQuest();
-            SystemGameManager.Instance.EventManager.OnDialogCompleted -= CheckCompletionCount;
+            SystemGameManager.Instance.SystemEventManager.OnDialogCompleted -= CheckCompletionCount;
         }
 
     }

@@ -48,12 +48,12 @@ namespace AnyRPG {
                 Debug.LogError("SystemAbilityManager.SetupScriptableObjects(): Could not find character class : " + prerequisiteCharacterClass + " while inititalizing a character class prerequisite.  CHECK INSPECTOR");
             }
 
-            SystemGameManager.Instance.EventManager.OnClassChange += HandleClassChange;
+            SystemGameManager.Instance.SystemEventManager.OnClassChange += HandleClassChange;
         }
 
         public void CleanupScriptableObjects() {
-            if (SystemGameManager.Instance.EventManager != null) {
-                SystemGameManager.Instance.EventManager.OnClassChange -= HandleClassChange;
+            if (SystemGameManager.Instance.SystemEventManager != null) {
+                SystemGameManager.Instance.SystemEventManager.OnClassChange -= HandleClassChange;
             }
         }
     }

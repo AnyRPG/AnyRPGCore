@@ -384,7 +384,7 @@ namespace AnyRPG {
             string targetDisplayName = SystemGameManager.Instance.PlayerManager.UnitController.Target.DisplayName;
             if (SystemGameManager.Instance.PlayerManager.UnitController.Target.Interact(SystemGameManager.Instance.PlayerManager.ActiveUnitController.CharacterUnit, true)) {
                 //Debug.Log(gameObject.name + ".PlayerController.InteractionSucceeded(): Interaction Succeeded.  Setting interactable to null");
-                SystemGameManager.Instance.EventManager.NotifyOnInteractionStarted(targetDisplayName);
+                SystemGameManager.Instance.SystemEventManager.NotifyOnInteractionStarted(targetDisplayName);
                 return true;
             }
             //Debug.Log(gameObject.name + ".PlayerController.InteractionSucceeded(): returning false");
@@ -542,8 +542,8 @@ namespace AnyRPG {
             //if (IsTargetInHitBox(target)) {
             if (interactableOption.Interact(SystemGameManager.Instance.PlayerManager.ActiveUnitController.CharacterUnit)) {
                 //Debug.Log(gameObject.name + ".PlayerController.InteractionSucceeded(): Interaction Succeeded.  Setting interactable to null");
-                SystemGameManager.Instance.EventManager.NotifyOnInteractionStarted(SystemGameManager.Instance.PlayerManager.UnitController.Target.DisplayName);
-                SystemGameManager.Instance.EventManager.NotifyOnInteractionWithOptionStarted(interactableOption);
+                SystemGameManager.Instance.SystemEventManager.NotifyOnInteractionStarted(SystemGameManager.Instance.PlayerManager.UnitController.Target.DisplayName);
+                SystemGameManager.Instance.SystemEventManager.NotifyOnInteractionWithOptionStarted(interactableOption);
                 // no longer needed since targeting is changed and we don't want to lose target in the middle of attacking
                 //SystemGameManager.Instance.PlayerManager.ActiveUnitController.SetTarget(null);
                 return true;
@@ -829,7 +829,7 @@ namespace AnyRPG {
         }
 
         public void HandleClassChange(CharacterClass newCharacterClass, CharacterClass oldCharacterClass) {
-            SystemGameManager.Instance.EventManager.NotifyOnClassChange(newCharacterClass, oldCharacterClass);
+            SystemGameManager.Instance.SystemEventManager.NotifyOnClassChange(newCharacterClass, oldCharacterClass);
             SystemGameManager.Instance.UIManager.MessageFeedManager.WriteMessage("Changed class to " + newCharacterClass.DisplayName);
         }
 

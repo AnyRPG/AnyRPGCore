@@ -5,7 +5,7 @@ using UnityEngine;
 
 
 namespace AnyRPG {
-    public class ObjectPooler : MonoBehaviour {
+    public class ObjectPooler : ConfiguredMonoBehaviour {
 
         #region Singleton
         private static ObjectPooler instance;
@@ -18,7 +18,6 @@ namespace AnyRPG {
 
         private void Awake() {
             instance = this;
-            Init();
         }
         #endregion
 
@@ -36,7 +35,9 @@ namespace AnyRPG {
         private Dictionary<GameObject, List<GameObject>> freeObjects = new Dictionary<GameObject, List<GameObject>>();
         private Dictionary<GameObject, List<GameObject>> usedObjects = new Dictionary<GameObject, List<GameObject>>();
 
-        private void Init() {
+        public override void Init(SystemGameManager systemGameManager) {
+            base.Init(systemGameManager);
+
             SystemEventManager.StartListening("OnLevelUnload", HandleLevelUnload);
         }
 

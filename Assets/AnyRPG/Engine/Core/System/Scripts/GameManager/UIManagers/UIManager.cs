@@ -7,7 +7,7 @@ using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 
 namespace AnyRPG {
-    public class UIManager : MonoBehaviour {
+    public class UIManager : ConfiguredMonoBehaviour {
 
         [Header("UI Managers")]
 
@@ -127,11 +127,12 @@ namespace AnyRPG {
         protected bool eventSubscriptionsInitialized = false;
 
         // manager references
-        PlayerManager playerManager = null;
-        KeyBindManager keyBindManager = null;
-        InputManager inputManager = null;
-        CameraManager cameraManager = null;
-        InventoryManager inventoryManager = null;
+        private PlayerManager playerManager = null;
+        private KeyBindManager keyBindManager = null;
+        private InputManager inputManager = null;
+        private CameraManager cameraManager = null;
+        private InventoryManager inventoryManager = null;
+        private SystemEventManager systemEventManager = null;
 
         public StatusEffectPanelController StatusEffectPanelController { get => statusEffectPanelController; }
         public UnitFrameController FocusUnitFrameController { get => focusUnitFrameController; }
@@ -166,22 +167,37 @@ namespace AnyRPG {
         public MiniMapManager MiniMapManager { get => miniMapManager; set => miniMapManager = value; }
         public HandScript HandScript { get => handScript; set => handScript = value; }
 
-        public void Init(SystemGameManager systemGameManager) {
-
+        public override void Init(SystemGameManager systemGameManager) {
+            base.Init(systemGameManager);
             playerManager = systemGameManager.PlayerManager;
             keyBindManager = systemGameManager.KeyBindManager;
             inputManager = systemGameManager.InputManager;
             cameraManager = systemGameManager.CameraManager;
             inventoryManager = systemGameManager.InventoryManager;
+            systemEventManager = systemGameManager.SystemEventManager;
 
+            // initialize ui managers
             actionBarManager.Init(systemGameManager);
             combatTextManager.Init(systemGameManager);
             messageFeedManager.Init(systemGameManager);
-            namePlateManager.Init();
-            mainMapManager.Init();
-            miniMapManager.Init();
+            popupWindowManager.Init(systemGameManager);
+            systemWindowManager.Init(systemGameManager);
+            namePlateManager.Init(systemGameManager);
+            mainMapManager.Init(systemGameManager);
+            miniMapManager.Init(systemGameManager);
 
+            // initialize ui elements
+            playerUnitFrameController.Init(systemGameManager);
+            focusUnitFrameController.Init(systemGameManager);
             miniMapController.Init(systemGameManager);
+            cutSceneBarController.Init(systemGameManager);
+            xpBarController.Init(systemGameManager);
+            statusEffectPanelController.Init(systemGameManager);
+            floatingCastBarController.Init(systemGameManager);
+            questTrackerWindow.Init(systemGameManager);
+            combatLogWindow.Init(systemGameManager);
+            toolTipCurrencyBarController.Init(systemGameManager);
+            handScript.Init(systemGameManager);
         }
 
         public void PerformSetupActivities() {
@@ -488,12 +504,12 @@ namespace AnyRPG {
             //Debug.Log("UIManager.HandleBeforePlayerConnectionSpawn()");
 
             // allow the player ability manager to send us events so we can redraw the ability list when it changes
-            SystemGameManager.Instance.EventManager.OnAbilityListChanged += HandleAbilityListChanged;
+            systemEventManager.OnAbilityListChanged += HandleAbilityListChanged;
         }
 
         public void HandlePlayerConnectionDespawn(string eventName, EventParamProperties eventParamProperties) {
             //Debug.Log("UIManager.HandlePlayerConnectionDespawn()");
-            SystemGameManager.Instance.EventManager.OnAbilityListChanged -= HandleAbilityListChanged;
+            systemEventManager.OnAbilityListChanged -= HandleAbilityListChanged;
         }
 
         public void ProcessPlayerUnitSpawn() {

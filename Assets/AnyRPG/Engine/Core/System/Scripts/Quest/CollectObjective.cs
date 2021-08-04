@@ -52,13 +52,13 @@ namespace AnyRPG {
 
         public override void OnAcceptQuest(Quest quest, bool printMessages = true) {
             base.OnAcceptQuest(quest, printMessages);
-            SystemGameManager.Instance.EventManager.OnItemCountChanged += UpdateItemCount;
+            SystemGameManager.Instance.SystemEventManager.OnItemCountChanged += UpdateItemCount;
             UpdateCompletionCount(printMessages);
         }
 
         public override void OnAbandonQuest() {
             base.OnAbandonQuest();
-            SystemGameManager.Instance.EventManager.OnItemCountChanged -= UpdateItemCount;
+            SystemGameManager.Instance.SystemEventManager.OnItemCountChanged -= UpdateItemCount;
         }
 
     }

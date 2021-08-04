@@ -30,11 +30,21 @@ namespace AnyRPG {
 
         VendorCollection buyBackCollection = null;
 
+        // game manager references
+        PlayerManager playerManager = null;
+        PopupWindowManager popupWindowManager = null;
+        MessageFeedManager messageFeedManager = null;
+        SystemConfigurationManager systemConfigurationManager = null;
 
         private List<CurrencyAmountController> currencyAmountControllers = new List<CurrencyAmountController>();
 
         public override void Init(SystemGameManager systemGameManager) {
             base.Init(systemGameManager);
+            playerManager = systemGameManager.PlayerManager;
+            popupWindowManager = systemGameManager.UIManager.PopupWindowManager;
+            systemConfigurationManager = systemGameManager.SystemConfigurationManager;
+            messageFeedManager = systemGameManager.UIManager.MessageFeedManager;
+
             //vendorUI.CreatePages(items);
             CreateEventSubscriptions();
             //InitializeBuyBackList();
@@ -128,10 +138,10 @@ namespace AnyRPG {
         }
 
         public void UpdateCurrencyAmount() {
-            if (SystemGameManager.Instance.UIManager.PopupWindowManager.vendorWindow.IsOpen == false) {
+            if (popupWindowManager.vendorWindow.IsOpen == false) {
                 return;
             }
-            Dictionary<Currency, int> playerBaseCurrency = SystemGameManager.Instance.PlayerManager.MyCharacter.CharacterCurrencyManager.GetRedistributedCurrency();
+            Dictionary<Currency, int> playerBaseCurrency = playerManager.MyCharacter.CharacterCurrencyManager.GetRedistributedCurrency();
             if (playerBaseCurrency != null) {
                 //Debug.Log("VendorUI.UpdateCurrencyAmount(): " + playerBaseCurrency.Count);
                 KeyValuePair<Currency, int> keyValuePair = playerBaseCurrency.First();
@@ -187,21 +197,20 @@ namespace AnyRPG {
 
         public bool SellItem(Item item) {
             if (item.BuyPrice <= 0 || item.MySellPrice.Key == null) {
-                SystemGameManager.Instance.UIManager.MessageFeedManager.WriteMessage("The vendor does not want to buy the " + item.DisplayName);
+                messageFeedManager.WriteMessage("The vendor does not want to buy the " + item.DisplayName);
                 return false;
             }
             KeyValuePair<Currency, int> sellAmount = item.MySellPrice;
 
-            SystemGameManager.Instance.PlayerManager.MyCharacter.CharacterCurrencyManager.AddCurrency(sellAmount.Key, sellAmount.Value);
+            playerManager.MyCharacter.CharacterCurrencyManager.AddCurrency(sellAmount.Key, sellAmount.Value);
             AddToBuyBackCollection(item);
-            //SystemGameManager.Instance.InventoryManager.RemoveItem(item);
             item.MySlot.RemoveItem(item);
 
-            if (SystemGameManager.Instance.SystemConfigurationManager?.VendorAudioProfile?.AudioClip != null) {
-                SystemGameManager.Instance.AudioManager.PlayEffect(SystemGameManager.Instance.SystemConfigurationManager.VendorAudioProfile.AudioClip);
+            if (systemConfigurationManager.VendorAudioProfile?.AudioClip != null) {
+                audioManager.PlayEffect(systemConfigurationManager.VendorAudioProfile.AudioClip);
             }
             string priceString = CurrencyConverter.GetCombinedPriceSring(sellAmount.Key, sellAmount.Value);
-            SystemGameManager.Instance.UIManager.MessageFeedManager.WriteMessage("Sold " + item.DisplayName + " for " + priceString);
+            messageFeedManager.WriteMessage("Sold " + item.DisplayName + " for " + priceString);
 
 
             if (dropDownIndex == 0) {

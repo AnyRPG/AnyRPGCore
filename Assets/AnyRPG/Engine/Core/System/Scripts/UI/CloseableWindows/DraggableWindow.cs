@@ -7,7 +7,7 @@ using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 namespace AnyRPG {
-    public class DraggableWindow : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler, IPointerDownHandler, IPointerUpHandler {
+    public class DraggableWindow : ConfiguredMonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler, IPointerDownHandler, IPointerUpHandler {
 
         [Header("Draggable Window")]
 
@@ -30,6 +30,16 @@ namespace AnyRPG {
 
         protected bool uiLocked = true;
 
+        // game manager references
+        protected UIManager uIManager = null;
+        protected SaveManager saveManager = null;
+
+        public override void Init(SystemGameManager systemGameManager) {
+            base.Init(systemGameManager);
+            uIManager = systemGameManager.UIManager;
+            saveManager = systemGameManager.SaveManager;
+        }
+
         public virtual void Awake() {
             // lazy instantiation
             if (moveableTransform == null) {
@@ -45,7 +55,7 @@ namespace AnyRPG {
             }
             startMousePosition = eventData.position;
             startWindowPosition = moveableTransform.position;
-            SystemGameManager.Instance.UIManager.DragInProgress = true;
+            uIManager.DragInProgress = true;
         }
 
         public void OnDrag(PointerEventData eventData) {
@@ -100,22 +110,22 @@ namespace AnyRPG {
             if (neverDraggable) {
                 return;
             }
-            SystemGameManager.Instance.UIManager.DragInProgress = false;
-            SystemGameManager.Instance.SaveManager.SaveWindowPositions();
+            uIManager.DragInProgress = false;
+            saveManager.SaveWindowPositions();
         }
 
         public void OnPointerDown(PointerEventData eventData) {
             if (neverDraggable) {
                 return;
             }
-            SystemGameManager.Instance.UIManager.DragInProgress = true;
+            uIManager.DragInProgress = true;
         }
 
         public void OnPointerUp(PointerEventData eventData) {
             if (neverDraggable) {
                 return;
             }
-            SystemGameManager.Instance.UIManager.DragInProgress = false;
+            uIManager.DragInProgress = false;
         }
     }
 

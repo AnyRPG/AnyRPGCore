@@ -9,11 +9,19 @@ namespace AnyRPG {
     /// <summary>
     /// allow us to query scriptable objects for equivalence by storing a template ID on all instantiated objects
     /// </summary>
-    public class SystemAchievementManager : MonoBehaviour {
+    public class SystemAchievementManager : ConfiguredMonoBehaviour {
 
         private bool eventSubscriptionsInitialized = false;
 
-        public void Init() {
+        // game manager references
+        PlayerManager playerManager = null;
+        SystemDataFactory systemDataFactory = null;
+
+        public override void Init(SystemGameManager systemGameManager) {
+            base.Init(systemGameManager);
+            playerManager = systemGameManager.PlayerManager;
+            systemDataFactory = systemGameManager.SystemDataFactory;
+
             CreateEventSubscriptions();
         }
 
@@ -23,7 +31,7 @@ namespace AnyRPG {
                 return;
             }
             SystemEventManager.StartListening("OnPlayerConnectionSpawn", HandlePlayerConnectionSpawn);
-            if (SystemGameManager.Instance.PlayerManager.PlayerConnectionSpawned == true) {
+            if (playerManager.PlayerConnectionSpawned == true) {
                 AcceptAchievements();
             }
             eventSubscriptionsInitialized = true;
@@ -52,7 +60,7 @@ namespace AnyRPG {
 
         public void AcceptAchievements() {
             //Debug.Log("SystemQuestManager.AcceptAchievements()");
-            foreach (Quest resource in SystemDataFactory.Instance.GetResourceList<Quest>()) {
+            foreach (Quest resource in systemDataFactory.GetResourceList<Quest>()) {
                 //Debug.Log("SystemQuestManager.AcceptAchievements(): quest: " + resource.MyName + "; isAchievement: " + resource.MyIsAchievement);
                 if (resource.MyIsAchievement == true && resource.TurnedIn == false && resource.IsComplete == false) {
                     //Debug.Log("SystemQuestManager.AcceptAchievements(): quest: " + resource.MyName + "; isAchievement: " + resource.MyIsAchievement + " TRUE!!!");

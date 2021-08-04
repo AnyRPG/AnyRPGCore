@@ -5,7 +5,7 @@ using TMPro;
 using UnityEngine;
 
 namespace AnyRPG {
-    public class CombatTextManager : MonoBehaviour {
+    public class CombatTextManager : ConfiguredMonoBehaviour {
 
         [SerializeField]
         private GameObject combatTextPrefab;
@@ -17,7 +17,6 @@ namespace AnyRPG {
 
         private List<CombatTextController> inUseCombatTextControllers = new List<CombatTextController>();
 
-        private SystemGameManager systemGameManager = null;
         private SystemConfigurationManager systemConfigurationManager = null;
         private CameraManager cameraManager = null;
         private PlayerManager playerManager = null;
@@ -26,8 +25,8 @@ namespace AnyRPG {
 
         public Canvas CombatTextCanvas { get => combatTextCanvas; set => combatTextCanvas = value; }
 
-        public void Init(SystemGameManager systemGameManager) {
-            this.systemGameManager = systemGameManager;
+        public override void Init(SystemGameManager systemGameManager) {
+            base.Init(systemGameManager);
             systemConfigurationManager = systemGameManager.SystemConfigurationManager;
             cameraManager = systemGameManager.CameraManager;
             playerManager = systemGameManager.PlayerManager;

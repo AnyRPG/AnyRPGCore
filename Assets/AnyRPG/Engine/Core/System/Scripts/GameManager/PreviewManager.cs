@@ -5,7 +5,7 @@ using UnityEngine.AI;
 
 
 namespace AnyRPG {
-    public abstract class PreviewManager : MonoBehaviour {
+    public abstract class PreviewManager : ConfiguredMonoBehaviour {
 
         protected UnitController unitController;
 
@@ -26,7 +26,9 @@ namespace AnyRPG {
         public UnitController PreviewUnitController { get => unitController; set => unitController = value; }
         //public int PreviewLayer { get => previewLayer; set => previewLayer = value; }
 
-        public void Init() {
+        public override void Init(SystemGameManager systemGameManager) {
+            base.Init(systemGameManager);
+
             if (previewSpawnLocation == null) {
                 previewSpawnLocation = Vector3.zero;
             }

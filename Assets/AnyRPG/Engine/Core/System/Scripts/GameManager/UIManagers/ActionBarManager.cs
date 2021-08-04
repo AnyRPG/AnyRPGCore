@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 namespace AnyRPG {
-    public class ActionBarManager : MonoBehaviour {
+    public class ActionBarManager : ConfiguredMonoBehaviour {
 
         [SerializeField]
         private List<ActionBarController> actionBarControllers = new List<ActionBarController>();
@@ -20,7 +20,6 @@ namespace AnyRPG {
         // the action bar target for range checks
         private Interactable target = null;
 
-        private SystemGameManager systemGameManager = null;
         private PlayerManager playerManager = null;
         private KeyBindManager keyBindManager = null;
         private SystemEventManager systemEventManager = null;
@@ -28,15 +27,14 @@ namespace AnyRPG {
         public ActionButton FromButton { get => fromButton; set => fromButton = value; }
         public List<ActionBarController> ActionBarControllers { get => actionBarControllers; set => actionBarControllers = value; }
 
-        public void Init(SystemGameManager systemGameManager) {
-            this.systemGameManager = systemGameManager;
+        public override void Init(SystemGameManager systemGameManager) {
+            base.Init(systemGameManager);
             playerManager = systemGameManager.PlayerManager;
             keyBindManager = systemGameManager.KeyBindManager;
-            systemEventManager = systemGameManager.EventManager;
-        }
+            systemEventManager = systemGameManager.SystemEventManager;
 
-        private void Start() {
-            //Debug.Log("ActionBarManager.Start()");
+            InitializeActionbars();
+
             AssociateActionBarKeyBinds();
             CreateEventSubscriptions();
         }
@@ -63,6 +61,12 @@ namespace AnyRPG {
             SystemEventManager.StopListening("OnPlayerConnectionDespawn", HandlePlayerConnectionDespawn);
             systemEventManager.OnEquipmentChanged -= HandleEquipmentChange;
             eventSubscriptionsInitialized = false;
+        }
+
+        public void InitializeActionbars() {
+            foreach (ActionBarController actionBarController in actionBarControllers) {
+                actionBarController.Init(systemGameManager);
+            }
         }
 
         public void HandlePlayerConnectionDespawn(string eventName, EventParamProperties eventParamProperties) {

@@ -7,7 +7,7 @@ using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 
 namespace AnyRPG {
-    public class MainMapManager : MonoBehaviour {
+    public class MainMapManager : ConfiguredMonoBehaviour {
 
         // events
         public event System.Action<Interactable> OnAddIndicator = delegate { };
@@ -27,7 +27,8 @@ namespace AnyRPG {
         public List<Interactable> MapIndicatorControllers { get => mapIndicatorControllers; set => mapIndicatorControllers = value; }
         public GameObject MapIndicatorPrefab { get => mapIndicatorPrefab; set => mapIndicatorPrefab = value; }
 
-        public void Init() {
+        public override void Init(SystemGameManager systemGameManager) {
+            base.Init(systemGameManager);
             CreateEventSubscriptions();
         }
 

@@ -6,7 +6,7 @@ using UnityEngine;
 using UnityEngine.UI;
 
 namespace AnyRPG {
-    public class CloseableWindow : MonoBehaviour {
+    public class CloseableWindow : ConfiguredMonoBehaviour {
 
         public event System.Action OnOpenWindowCallback = delegate { };
         public event System.Action OnCloseWindowCallback = delegate { };
@@ -35,12 +35,7 @@ namespace AnyRPG {
         [SerializeField]
         protected Image backGroundImage;
 
-        private SystemGameManager systemGameManager = null;
-
-        /*
-        [SerializeField]
-        protected CanvasGroup canvasGroup;
-        */
+        protected ObjectPooler objectPooler = null;
 
         public ICloseableWindowContents CloseableWindowContents { get => windowContents; set => windowContents = value; }
 
@@ -51,9 +46,10 @@ namespace AnyRPG {
             }
         }
 
-        protected virtual void Init(SystemGameManager systemGameManager) {
+        public override void Init(SystemGameManager systemGameManager) {
             //Debug.Log(gameObject.name + ".CloseableWindow.Awake()");
-            this.systemGameManager = systemGameManager;
+            base.Init(systemGameManager);
+            objectPooler = systemGameManager.ObjectPooler;
             InitializeWindow();
             RawCloseWindow();
         }
@@ -69,7 +65,7 @@ namespace AnyRPG {
         public void InitializeWindowContentsCommon() {
             //Debug.Log(gameObject.name + gameObject.GetInstanceID() + ".CloseableWindow.InitializeWindowContentsCommon()");
             if (contentPrefab != null && windowContents == null && contentGameObject == null) {
-                contentGameObject = ObjectPooler.Instance.GetPooledObject(contentPrefab, contentParent.transform);
+                contentGameObject = objectPooler.GetPooledObject(contentPrefab, contentParent.transform);
                 //Debug.Log(gameObject.name + gameObject.GetInstanceID() + ".CloseableWindow.InitializeWindowContentsCommon(): Instantiating window Contents: " + contentPrefab.name + " and got id: " + contentGameObject.GetInstanceID());
             }
             if (contentGameObject != null) {
@@ -95,7 +91,7 @@ namespace AnyRPG {
             //Debug.Log(gameObject.name + ".CloseableWindow.DestroyWindowContents()");
             if (windowContents != null) {
                 //Debug.Log(gameObject.name + gameObject.GetInstanceID() + ".CloseableWindow.DestroyWindowContents(): " + CloseableWindowContents.gameObject.name + CloseableWindowContents.gameObject.GetInstanceID());
-                ObjectPooler.Instance.ReturnObjectToPool(CloseableWindowContents.gameObject);
+                objectPooler.ReturnObjectToPool(CloseableWindowContents.gameObject);
                 windowContents = null;
                 contentGameObject = null;
             }

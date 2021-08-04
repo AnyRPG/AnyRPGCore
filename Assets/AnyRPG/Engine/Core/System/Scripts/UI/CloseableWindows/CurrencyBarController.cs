@@ -6,7 +6,7 @@ using UnityEngine;
 using UnityEngine.UI;
 
 namespace AnyRPG {
-    public class CurrencyBarController : MonoBehaviour {
+    public class CurrencyBarController : ConfiguredMonoBehaviour {
 
         //[SerializeField]
         //private GameObject currencyAmountPrefab = null;
@@ -21,6 +21,10 @@ namespace AnyRPG {
 
         [SerializeField]
         protected List<CurrencyAmountController> currencyAmountControllers = new List<CurrencyAmountController>();
+
+        public override void Init(SystemGameManager systemGameManager) {
+            base.Init(systemGameManager);
+        }
 
         public void ClearCurrencyAmounts() {
             foreach (CurrencyAmountController currencyAmountController in currencyAmountControllers) {

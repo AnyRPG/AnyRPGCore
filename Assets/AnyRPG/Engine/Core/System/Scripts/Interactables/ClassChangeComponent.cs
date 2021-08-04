@@ -35,8 +35,8 @@ namespace AnyRPG {
             //Debug.Log(gameObject.name + ".ClassChangeInteractable.CleanupEventSubscriptions()");
             base.CleanupEventSubscriptions();
             CleanupWindowEventSubscriptions();
-            if (SystemGameManager.Instance.EventManager != null) {
-                SystemGameManager.Instance.EventManager.OnClassChange -= HandleClassChange;
+            if (SystemGameManager.Instance.SystemEventManager != null) {
+                SystemGameManager.Instance.SystemEventManager.OnClassChange -= HandleClassChange;
             }
         }
 
@@ -48,11 +48,11 @@ namespace AnyRPG {
             base.CreateEventSubscriptions();
 
             // because the class is a special type of prerequisite, we need to be notified when it changes
-            if (SystemGameManager.Instance.EventManager == null) {
+            if (SystemGameManager.Instance.SystemEventManager == null) {
                 Debug.LogError("SystemEventManager Not Found.  Is the GameManager prefab in the scene?");
                 return;
             }
-            SystemGameManager.Instance.EventManager.OnClassChange += HandleClassChange;
+            SystemGameManager.Instance.SystemEventManager.OnClassChange += HandleClassChange;
         }
 
         public void HandleClassChange(CharacterClass oldCharacterClass, CharacterClass newCharacterClass) {

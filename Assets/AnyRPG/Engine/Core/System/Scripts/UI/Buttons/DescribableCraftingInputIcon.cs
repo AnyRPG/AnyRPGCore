@@ -31,7 +31,7 @@ namespace AnyRPG {
 
         protected override void SetDescribableCommon(IDescribable describable) {
             base.SetDescribableCommon(describable);
-            SystemGameManager.Instance.EventManager.OnItemCountChanged += UpdateVisual;
+            SystemGameManager.Instance.SystemEventManager.OnItemCountChanged += UpdateVisual;
         }
 
 
@@ -41,7 +41,7 @@ namespace AnyRPG {
             }
             base.OnDisable();
             if (SystemGameManager.Instance.InventoryManager != null) {
-                SystemGameManager.Instance.EventManager.OnItemCountChanged -= UpdateVisual;
+                SystemGameManager.Instance.SystemEventManager.OnItemCountChanged -= UpdateVisual;
             }
 
         }
