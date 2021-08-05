@@ -9,23 +9,28 @@ namespace AnyRPG {
 
     public class RecipeScript : HighlightButton {
 
-        //private string recipeName;
-
         private Recipe recipe;
+
+        // game manager references
+        private CraftingManager craftingManager = null;
 
         public Recipe Recipe { get => recipe; set => recipe = value; }
 
+        public override void Init(SystemGameManager systemGameManager) {
+            base.Init(systemGameManager);
+
+            craftingManager = systemGameManager.CraftingManager;
+        }
+
         public void SetRecipe(Recipe newRecipe) {
-            //if (recipeName != null && recipeName != string.Empty) {
-                recipe = newRecipe;
-            //}
+            recipe = newRecipe;
         }
 
         public override void Select() {
             //Debug.Log(gameObject.name + ".RecipeScript.Select(): " + (recipe == null ? "null" : recipe.DisplayName));
 
             base.Select();
-            SystemGameManager.Instance.CraftingManager.SetSelectedRecipe(recipe);
+            craftingManager.SetSelectedRecipe(recipe);
         }
 
         public override void DeSelect() {

@@ -86,7 +86,7 @@ namespace AnyRPG {
             } else {
                 source.BaseCharacter.CharacterAbilityManager.BeginAbility(GatheringNodeProps.BaseAbility, interactable);
             }
-            SystemGameManager.Instance.UIManager.PopupWindowManager.interactionWindow.CloseWindow();
+            SystemGameManager.Instance.UIManager.interactionWindow.CloseWindow();
             return true;
             //return PickUp();
         }

@@ -62,7 +62,7 @@ namespace AnyRPG {
             //Debug.Log("SystemQuestManager.AcceptAchievements()");
             foreach (Quest resource in systemDataFactory.GetResourceList<Quest>()) {
                 //Debug.Log("SystemQuestManager.AcceptAchievements(): quest: " + resource.MyName + "; isAchievement: " + resource.MyIsAchievement);
-                if (resource.MyIsAchievement == true && resource.TurnedIn == false && resource.IsComplete == false) {
+                if (resource.IsAchievement == true && resource.TurnedIn == false && resource.IsComplete == false) {
                     //Debug.Log("SystemQuestManager.AcceptAchievements(): quest: " + resource.MyName + "; isAchievement: " + resource.MyIsAchievement + " TRUE!!!");
                     resource.AcceptQuest();
                 }

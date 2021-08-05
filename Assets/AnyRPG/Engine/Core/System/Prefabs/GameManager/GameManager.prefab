@@ -7578,7 +7578,6 @@ GameObject:
   m_Component:
   - component: {fileID: 5439600274220847951}
   - component: {fileID: 6765758701573424388}
-  - component: {fileID: 3804359995419664291}
   - component: {fileID: 1675583982063803336}
   - component: {fileID: 3372542372360536245}
   - component: {fileID: 4987049062904966066}
@@ -7622,7 +7621,7 @@ MonoBehaviour:
   actionBarManager: {fileID: 3372542372360536245}
   combatTextManager: {fileID: 4987049062904966066}
   messageFeedManager: {fileID: 8935282192918879629}
-  popupWindowManager: {fileID: 3804359995419664291}
+  popupWindowManager: {fileID: 0}
   systemWindowManager: {fileID: 1675583982063803336}
   namePlateManager: {fileID: 6986250774741738154}
   mainMapManager: {fileID: 3310018683127147123}
@@ -7652,18 +7651,6 @@ MonoBehaviour:
   toolTipCurrencyBarController: {fileID: 3345773525986488833}
   tooltipRect: {fileID: 4018933294738765809}
   handScript: {fileID: 5051387862584425130}
---- !u!114 &3804359995419664291
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6302109279012613667}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9da99bf5a93bf6c4e835b6eb53fa81f2, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
   abilityBookWindow: {fileID: 8000422823133042115}
   skillBookWindow: {fileID: 8848319999832251205}
   reputationBookWindow: {fileID: 1659501517297166410}

@@ -18,7 +18,7 @@ namespace AnyRPG {
             base.Interact(source, optionIndex);
             //Debug.Log(gameObject.name + ".CutSceneInteractable.Interact()");
             // save character position and stuff here
-            //SystemGameManager.Instance.UIManager.PopupWindowManager.interactionWindow.CloseWindow();
+            //SystemGameManager.Instance.UIManager.interactionWindow.CloseWindow();
             if (Props.Cutscene != null
                 && SystemGameManager.Instance.UIManager.CutSceneBarController.CurrentCutscene == null
                 && SystemGameManager.Instance.LevelManager.LoadingLevel == false) {
@@ -33,8 +33,8 @@ namespace AnyRPG {
                 }
             }
             // CLOSE WINDOWS BEFORE CUTSCENE LOADS TO PREVENT INVALID REFERENCE ON LOAD
-            SystemGameManager.Instance.UIManager.PopupWindowManager.interactionWindow.CloseWindow();
-            SystemGameManager.Instance.UIManager.PopupWindowManager.questGiverWindow.CloseWindow();
+            SystemGameManager.Instance.UIManager.interactionWindow.CloseWindow();
+            SystemGameManager.Instance.UIManager.questGiverWindow.CloseWindow();
             return true;
         }
 
@@ -44,7 +44,7 @@ namespace AnyRPG {
 
         public override void StopInteract() {
             base.StopInteract();
-            //SystemGameManager.Instance.UIManager.PopupWindowManager.dialogWindow.CloseWindow();
+            //SystemGameManager.Instance.UIManager.dialogWindow.CloseWindow();
         }
 
         public override bool HasMiniMapText() {

@@ -5,7 +5,7 @@ using UnityEngine;
 using UnityEngine.UI;
 
 namespace AnyRPG {
-    public class BagBarController : MonoBehaviour {
+    public class BagBarController : ConfiguredMonoBehaviour {
 
         [SerializeField]
         private GameObject BagButtonPrefab = null;
@@ -20,19 +20,22 @@ namespace AnyRPG {
 
         protected bool eventSubscriptionsInitialized = false;
 
+        // game manager references
+        private ObjectPooler objectPooler = null;
+
 
         public List<BagButton> MyBagButtons { get => bagButtons; set => bagButtons = value; }
 
-        private void Awake() {
-            //Debug.Log("BagBarController.Awake()");
-            GetComponentReferences();
-        }
+        public override void Init(SystemGameManager systemGameManager) {
+            base.Init(systemGameManager);
 
-        private void Start() {
-            //Debug.Log("BagBarController.Start()");
+            objectPooler = systemGameManager.ObjectPooler;
+
+            GetComponentReferences();
             SetBackGroundColor();
             CreateEventSubscriptions();
         }
+
 
         private void CreateEventSubscriptions() {
             //Debug.Log("BagBarController.CreateEventSubscriptions()");
@@ -81,7 +84,8 @@ namespace AnyRPG {
 
         public BagButton InstantiateBagButton() {
             //Debug.Log("BagBarController.InstantiateBagButton()");
-            BagButton bagButton = ObjectPooler.Instance.GetPooledObject(BagButtonPrefab, this.gameObject.transform).GetComponent<BagButton>();
+            BagButton bagButton = objectPooler.GetPooledObject(BagButtonPrefab, this.gameObject.transform).GetComponent<BagButton>();
+            bagButton.Init(systemGameManager);
             bagButtons.Add(bagButton);
             return bagButton;
         }

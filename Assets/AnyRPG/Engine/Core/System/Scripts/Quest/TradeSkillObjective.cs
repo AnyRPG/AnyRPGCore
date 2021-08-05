@@ -42,10 +42,10 @@ namespace AnyRPG {
                 CurrentAmount++;
                 quest.CheckCompletion(true, printMessages);
             }
-            if (CurrentAmount <= MyAmount && !quest.MyIsAchievement && printMessages == true && CurrentAmount != 0) {
+            if (CurrentAmount <= MyAmount && !quest.IsAchievement && printMessages == true && CurrentAmount != 0) {
                 SystemGameManager.Instance.UIManager.MessageFeedManager.WriteMessage(string.Format("{0}: {1}/{2}", skill.DisplayName, Mathf.Clamp(CurrentAmount, 0, MyAmount), MyAmount));
             }
-            if (completeBefore == false && IsComplete && !quest.MyIsAchievement && printMessages == true) {
+            if (completeBefore == false && IsComplete && !quest.IsAchievement && printMessages == true) {
                 SystemGameManager.Instance.UIManager.MessageFeedManager.WriteMessage(string.Format("Learn {0} {1}: Objective Complete", CurrentAmount, skill.DisplayName));
             }
             base.UpdateCompletionCount(printMessages);

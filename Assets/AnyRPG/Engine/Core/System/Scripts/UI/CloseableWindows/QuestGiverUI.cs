@@ -84,8 +84,33 @@ namespace AnyRPG {
 
         private Quest currentQuest = null;
 
+        // game manager references
+        private QuestLog questLog = null;
+        private UIManager uIManager = null;
+        private ObjectPooler objectPooler = null;
+        private MessageFeedManager messageFeedManager = null;
+        private PlayerManager playerManager = null;
+        private LogManager logManager = null;
+        private InventoryManager inventoryManager = null;
+        private SystemItemManager systemItemManager = null;
+
         public QuestGiverQuestScript SelectedQuestGiverQuestScript { get => selectedQuestGiverQuestScript; set => selectedQuestGiverQuestScript = value; }
         //public Interactable MyInteractable { get => interactable; set => interactable = value; }
+
+        public override void Init(SystemGameManager systemGameManager) {
+            base.Init(systemGameManager);
+
+            questLog = systemGameManager.QuestLog;
+            uIManager = systemGameManager.UIManager;
+            objectPooler = systemGameManager.ObjectPooler;
+            messageFeedManager = uIManager.MessageFeedManager;
+            playerManager = systemGameManager.PlayerManager;
+            logManager = systemGameManager.LogManager;
+            inventoryManager = systemGameManager.InventoryManager;
+            systemItemManager = systemGameManager.SystemItemManager;
+
+            questDetailsArea.Init(systemGameManager);
+        }
 
         public void ToggleShowAllQuests(bool showAllQuests) {
             this.showAllQuests = showAllQuests;
@@ -120,7 +145,7 @@ namespace AnyRPG {
                 QuestGiverQuestScript qs = go.GetComponent<QuestGiverQuestScript>();
                 qs.MyText.text = "[" + questNode.MyQuest.MyExperienceLevel + "] " + questNode.MyQuest.MyName;
                 //Debug.Log("QuestGiverUI.ShowQuestsCommon(" + questGiver.name + "): " + questNode.MyQuest.MyTitle);
-                qs.MyText.color = LevelEquations.GetTargetColor(SystemGameManager.Instance.PlayerManager.MyCharacter.MyCharacterStats.MyLevel, questNode.MyQuest.MyExperienceLevel);
+                qs.MyText.color = LevelEquations.GetTargetColor(playerManager.MyCharacter.MyCharacterStats.MyLevel, questNode.MyQuest.MyExperienceLevel);
                 qs.MyQuest = questNode.MyQuest;
                 questNode.MyGameObject = go;
                 //quests.Add(go);
@@ -146,7 +171,7 @@ namespace AnyRPG {
             foreach (QuestNode questNode in questGiver.MyQuests) {
                 QuestGiverQuestScript qs = questNode.MyGameObject.GetComponent<QuestGiverQuestScript>();
                 qs.MyText.text = "[" + questNode.MyQuest.MyExperienceLevel + "] " + questNode.MyQuest.MyName;
-                qs.MyText.color = LevelEquations.GetTargetColor(SystemGameManager.Instance.PlayerManager.MyCharacter.MyCharacterStats.MyLevel, questNode.MyQuest.MyExperienceLevel);
+                qs.MyText.color = LevelEquations.GetTargetColor(playerManager.MyCharacter.MyCharacterStats.MyLevel, questNode.MyQuest.MyExperienceLevel);
                 //Debug.Log("Evaluating quest: " + qs.MyQuest.MyTitle + "; turnedin: " + qs.MyQuest.TurnedIn.ToString());
                 string questStatus = qs.MyQuest.GetStatus();
                 if (questStatus == "completed" && questNode.MyEndQuest == true) {
@@ -221,14 +246,14 @@ namespace AnyRPG {
         }
 
         private void UpdateButtons(Quest newQuest) {
-            //Debug.Log("QuestGiverUI.UpdateButtons(" + newQuest.DisplayName + "). iscomplete: " + newQuest.IsComplete + ". HasQuest: " + SystemGameManager.Instance.QuestLog.HasQuest(newQuest.DisplayName));
-            if (newQuest.MyAllowRawComplete == true) {
+            //Debug.Log("QuestGiverUI.UpdateButtons(" + newQuest.DisplayName + "). iscomplete: " + newQuest.IsComplete + ". HasQuest: " + questLog.HasQuest(newQuest.DisplayName));
+            if (newQuest.AllowRawComplete == true) {
                 acceptButton.gameObject.SetActive(false);
                 completeButton.gameObject.SetActive(true);
                 completeButton.GetComponent<Button>().enabled = true;
                 return;
             }
-            if (newQuest.GetStatus() == "available" && SystemGameManager.Instance.QuestLog.HasQuest(newQuest.DisplayName) == false) {
+            if (newQuest.GetStatus() == "available" && questLog.HasQuest(newQuest.DisplayName) == false) {
                 acceptButton.gameObject.SetActive(true);
                 acceptButton.GetComponent<Button>().enabled = true;
                 completeButton.gameObject.SetActive(false);
@@ -236,7 +261,7 @@ namespace AnyRPG {
             }
 
             //Debug.Log("questGiver: " + questGiver.ToString());
-            if (newQuest.GetStatus() == "complete" && SystemGameManager.Instance.QuestLog.HasQuest(newQuest.DisplayName) == true && questGiver != null && questGiver.EndsQuest(newQuest.DisplayName)) {
+            if (newQuest.GetStatus() == "complete" && questLog.HasQuest(newQuest.DisplayName) == true && questGiver != null && questGiver.EndsQuest(newQuest.DisplayName)) {
                 completeButton.gameObject.SetActive(true);
                 completeButton.GetComponent<Button>().enabled = true;
                 acceptButton.gameObject.SetActive(false);
@@ -267,20 +292,20 @@ namespace AnyRPG {
             //currentQuestName = quest.MyName;
             currentQuest = quest;
 
-            if (quest.MyHasOpeningDialog == true) {
-                if (quest.MyOpeningDialog != null && quest.MyOpeningDialog.TurnedIn == false) {
+            if (quest.HasOpeningDialog == true) {
+                if (quest.OpeningDialog != null && quest.OpeningDialog.TurnedIn == false) {
                     //Debug.Log("QuestGiverUI.ShowDescription(): opening dialog is not complete, showing dialog");
-                    (SystemGameManager.Instance.UIManager.PopupWindowManager.dialogWindow.CloseableWindowContents as DialogPanelController).Setup(quest, interactable);
+                    (uIManager.dialogWindow.CloseableWindowContents as DialogPanelController).Setup(quest, interactable);
                     //Debug.Log("QuestGiverUI.ShowDescription(): about to close window because of dialog");
-                    if (SystemGameManager.Instance.UIManager.PopupWindowManager.questGiverWindow.IsOpen) {
-                        SystemGameManager.Instance.UIManager.PopupWindowManager.questGiverWindow.CloseWindow();
+                    if (uIManager.questGiverWindow.IsOpen) {
+                        uIManager.questGiverWindow.CloseWindow();
                     }
                     return;
                 }
             }
 
-            if (!SystemGameManager.Instance.UIManager.PopupWindowManager.questGiverWindow.IsOpen) {
-                SystemGameManager.Instance.UIManager.PopupWindowManager.questGiverWindow.OpenWindow();
+            if (!uIManager.questGiverWindow.IsOpen) {
+                uIManager.questGiverWindow.OpenWindow();
                 //ShowDescription(quest);
                 return;
             }
@@ -322,7 +347,7 @@ namespace AnyRPG {
                 if (questNode.MyGameObject != null) {
                     //Debug.Log("The questnode has a gameobject we need to clear");
                     questNode.MyGameObject.transform.SetParent(null);
-                    ObjectPooler.Instance.ReturnObjectToPool(questNode.MyGameObject);
+                    objectPooler.ReturnObjectToPool(questNode.MyGameObject);
                     questNode.MyGameObject = null;
                 }
             }
@@ -350,9 +375,9 @@ namespace AnyRPG {
             //Debug.Log("QuestGiverUI.AcceptQuest()");
             if (currentQuest != null) {
                 // DO THIS HERE SO IT DOESN'T INSTA-CLOSE ANY AUTO-POPUP BACK TO HERE ON ACCEPT QUEST CAUSING STATUS CHANGE
-                SystemGameManager.Instance.UIManager.PopupWindowManager.questGiverWindow.CloseWindow();
+                uIManager.questGiverWindow.CloseWindow();
 
-                SystemGameManager.Instance.QuestLog.AcceptQuest(currentQuest);
+                questLog.AcceptQuest(currentQuest);
 
                 if (questGiver != null) {
                     // notify a bag item so it can remove itself
@@ -365,7 +390,7 @@ namespace AnyRPG {
                 if (interactable != null) {
                     /*
                     if (interactable.CheckForInteractableObjectives(currentQuestName)) {
-                        SystemGameManager.Instance.UIManager.PopupWindowManager.questGiverWindow.CloseWindow();
+                        uIManager.questGiverWindow.CloseWindow();
                     }
                     */
                 }
@@ -377,7 +402,7 @@ namespace AnyRPG {
                 //RefreshQuestDisplay();
                 //if (availableArea.transform.childCount == 0 && inProgressArea.transform.childCount == 0) {
                 //Debug.Log("Nothing to show, closing window for smoother UI experience");
-                //SystemGameManager.Instance.UIManager.PopupWindowManager.questGiverWindow.CloseWindow();
+                //uIManager.questGiverWindow.CloseWindow();
                 //}
                 // do it anyway for now since 
 
@@ -401,97 +426,97 @@ namespace AnyRPG {
             bool itemCountMatches = false;
             bool abilityCountMatches = false;
             bool factionCountMatches = false;
-            if (currentQuest.MyItemRewards.Count == 0 || currentQuest.MyMaxItemRewards == 0 || currentQuest.MyMaxItemRewards == questDetailsArea.GetHighlightedItemRewardIcons().Count) {
+            if (currentQuest.ItemRewards.Count == 0 || currentQuest.MaxItemRewards == 0 || currentQuest.MaxItemRewards == questDetailsArea.GetHighlightedItemRewardIcons().Count) {
                 itemCountMatches = true;
             }
-            if (currentQuest.MyFactionRewards.Count == 0 || currentQuest.MyMaxFactionRewards == 0 || currentQuest.MyMaxFactionRewards == questDetailsArea.GetHighlightedFactionRewardIcons().Count) {
+            if (currentQuest.FactionRewards.Count == 0 || currentQuest.MaxFactionRewards == 0 || currentQuest.MaxFactionRewards == questDetailsArea.GetHighlightedFactionRewardIcons().Count) {
                 factionCountMatches = true;
             }
 
-            if (currentQuest.MyAbilityRewards.Count == 0 || currentQuest.MyMaxAbilityRewards == 0 || currentQuest.MyMaxAbilityRewards == questDetailsArea.GetHighlightedAbilityRewardIcons().Count) {
+            if (currentQuest.AbilityRewards.Count == 0 || currentQuest.MaxAbilityRewards == 0 || currentQuest.MaxAbilityRewards == questDetailsArea.GetHighlightedAbilityRewardIcons().Count) {
                 abilityCountMatches = true;
             }
 
             if (!itemCountMatches || !abilityCountMatches || !factionCountMatches) {
-                SystemGameManager.Instance.UIManager.MessageFeedManager.WriteMessage("You must choose rewards before turning in this quest");
+                messageFeedManager.WriteMessage("You must choose rewards before turning in this quest");
                 return;
             }
 
             // currency rewards
             List<CurrencyNode> currencyNodes = currentQuest.GetCurrencyReward();
             foreach (CurrencyNode currencyNode in currencyNodes) {
-                SystemGameManager.Instance.PlayerManager.MyCharacter.CharacterCurrencyManager.AddCurrency(currencyNode.currency, currencyNode.MyAmount);
+                playerManager.MyCharacter.CharacterCurrencyManager.AddCurrency(currencyNode.currency, currencyNode.MyAmount);
                 List<CurrencyNode> tmpCurrencyNode = new List<CurrencyNode>();
                 tmpCurrencyNode.Add(currencyNode);
-                SystemGameManager.Instance.LogManager.WriteSystemMessage("Gained " + CurrencyConverter.RecalculateValues(tmpCurrencyNode, false).Value.Replace("\n", ", "));
+                logManager.WriteSystemMessage("Gained " + CurrencyConverter.RecalculateValues(tmpCurrencyNode, false).Value.Replace("\n", ", "));
             }
 
             // item rewards first in case not enough space in inventory
             // TO FIX: THIS CODE DOES NOT DEAL WITH PARTIAL STACKS AND WILL REQUEST ONE FULL SLOT FOR EVERY REWARD
             if (questDetailsArea.GetHighlightedItemRewardIcons().Count > 0) {
-                if (SystemGameManager.Instance.InventoryManager.EmptySlotCount() < questDetailsArea.GetHighlightedItemRewardIcons().Count) {
-                    SystemGameManager.Instance.UIManager.MessageFeedManager.WriteMessage("Not enough room in inventory!");
+                if (inventoryManager.EmptySlotCount() < questDetailsArea.GetHighlightedItemRewardIcons().Count) {
+                    messageFeedManager.WriteMessage("Not enough room in inventory!");
                     return;
                 }
                 foreach (RewardButton rewardButton in questDetailsArea.GetHighlightedItemRewardIcons()) {
                     //Debug.Log("rewardButton.MyDescribable: " + rewardButton.MyDescribable.MyName);
                     if (rewardButton.Describable != null && rewardButton.Describable.DisplayName != null && rewardButton.Describable.DisplayName != string.Empty) {
-                        Item newItem = SystemGameManager.Instance.SystemItemManager.GetNewResource(rewardButton.Describable.DisplayName);
+                        Item newItem = systemItemManager.GetNewResource(rewardButton.Describable.DisplayName);
                         if (newItem != null) {
                             //Debug.Log("RewardButton.CompleteQuest(): newItem is not null, adding to inventory");
-                            newItem.DropLevel = SystemGameManager.Instance.PlayerManager.MyCharacter.CharacterStats.Level;
-                            SystemGameManager.Instance.InventoryManager.AddItem(newItem);
+                            newItem.DropLevel = playerManager.MyCharacter.CharacterStats.Level;
+                            inventoryManager.AddItem(newItem);
                         }
                     }
                 }
             }
 
             foreach (CollectObjective o in currentQuest.MyCollectObjectives) {
-                if (currentQuest.MyTurnInItems == true) {
+                if (currentQuest.TurnInItems == true) {
                     o.Complete();
                 }
             }
 
             // faction rewards
-            if (currentQuest.MyFactionRewards.Count > 0) {
+            if (currentQuest.FactionRewards.Count > 0) {
                 //Debug.Log("QuestGiverUI.CompleteQuest(): Giving Faction Rewards");
                 foreach (RewardButton rewardButton in questDetailsArea.GetHighlightedFactionRewardIcons()) {
                     //Debug.Log("QuestGiverUI.CompleteQuest(): Giving Faction Rewards: got a reward button!");
                     if (rewardButton.Describable != null && rewardButton.Describable.DisplayName != null && rewardButton.Describable.DisplayName != string.Empty) {
-                        SystemGameManager.Instance.PlayerManager.MyCharacter.CharacterFactionManager.AddReputation((rewardButton.Describable as FactionNode).faction, (rewardButton.Describable as FactionNode).reputationAmount);
+                        playerManager.MyCharacter.CharacterFactionManager.AddReputation((rewardButton.Describable as FactionNode).faction, (rewardButton.Describable as FactionNode).reputationAmount);
                     }
                 }
             }
 
             // ability rewards
-            if (currentQuest.MyAbilityRewards.Count > 0) {
+            if (currentQuest.AbilityRewards.Count > 0) {
                 //Debug.Log("QuestGiverUI.CompleteQuest(): Giving Ability Rewards");
                 foreach (RewardButton rewardButton in questDetailsArea.GetHighlightedAbilityRewardIcons()) {
                     if (rewardButton.Describable != null && rewardButton.Describable.DisplayName != null && rewardButton.Describable.DisplayName != string.Empty) {
-                        SystemGameManager.Instance.PlayerManager.MyCharacter.CharacterAbilityManager.LearnAbility(rewardButton.Describable as BaseAbility);
+                        playerManager.MyCharacter.CharacterAbilityManager.LearnAbility(rewardButton.Describable as BaseAbility);
                     }
                 }
             }
 
             // skill rewards
-            if (currentQuest.MySkillRewards.Count > 0) {
+            if (currentQuest.SkillRewards.Count > 0) {
                 //Debug.Log("QuestGiverUI.CompleteQuest(): Giving Skill Rewards");
                 foreach (RewardButton rewardButton in questDetailsArea.GetHighlightedSkillRewardIcons()) {
                     if (rewardButton.Describable != null && rewardButton.Describable.DisplayName != null && rewardButton.Describable.DisplayName != string.Empty) {
-                        SystemGameManager.Instance.PlayerManager.MyCharacter.CharacterSkillManager.LearnSkill(rewardButton.Describable as Skill);
+                        playerManager.MyCharacter.CharacterSkillManager.LearnSkill(rewardButton.Describable as Skill);
                     }
                 }
             }
 
             // xp reward
-            SystemGameManager.Instance.PlayerManager.MyCharacter.CharacterStats.GainXP(LevelEquations.GetXPAmountForQuest(SystemGameManager.Instance.PlayerManager.MyCharacter.CharacterStats.Level, currentQuest));
+            playerManager.MyCharacter.CharacterStats.GainXP(LevelEquations.GetXPAmountForQuest(playerManager.MyCharacter.CharacterStats.Level, currentQuest));
 
             UpdateButtons(currentQuest);
 
             // DO THIS HERE OR TURNING THE QUEST RESULTING IN THIS WINDOW RE-OPENING WOULD JUST INSTA-CLOSE IT INSTEAD
-            SystemGameManager.Instance.UIManager.PopupWindowManager.questGiverWindow.CloseWindow();
+            uIManager.questGiverWindow.CloseWindow();
 
-            SystemGameManager.Instance.QuestLog.TurnInQuest(currentQuest);
+            questLog.TurnInQuest(currentQuest);
 
             // do this last
             // DO THIS AT THE END OR THERE WILL BE NO SELECTED QUESTGIVERQUESTSCRIPT
@@ -522,7 +547,7 @@ namespace AnyRPG {
             DeactivateButtons();
 
             if (interactable != null) {
-                SystemGameManager.Instance.UIManager.PopupWindowManager.questGiverWindow.SetWindowTitle(interactable.DisplayName + " (Quests)");
+                uIManager.questGiverWindow.SetWindowTitle(interactable.DisplayName + " (Quests)");
             }
         }
 
@@ -532,8 +557,8 @@ namespace AnyRPG {
             if (SystemGameManager.IsShuttingDown) {
                 return;
             }
-            if (SystemGameManager.Instance.UIManager.PopupWindowManager != null && SystemGameManager.Instance.UIManager.PopupWindowManager.questGiverWindow != null) {
-                SystemGameManager.Instance.UIManager.PopupWindowManager.questGiverWindow.CloseWindow();
+            if (uIManager != null && uIManager.questGiverWindow != null) {
+                uIManager.questGiverWindow.CloseWindow();
             }
         }
 

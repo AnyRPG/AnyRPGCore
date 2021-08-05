@@ -8,49 +8,46 @@ using UnityEngine.UI;
 namespace AnyRPG {
     // this is almost identical to questscript
 
-    public class InteractionPanelQuestScript : MonoBehaviour {
-
-        private Quest quest = null;
-
-        public Quest MyQuest {
-            get => quest;
-            set {
-                quest = value;
-                //Debug.Log("Just set quest to: " + quest);
-            }
-
-        }
-
-        private QuestGiverComponent questGiver;
+    public class InteractionPanelQuestScript : ConfiguredMonoBehaviour {
 
         [SerializeField]
         private TextMeshProUGUI text = null;
 
+        private Quest quest = null;
+
+        private QuestGiverComponent questGiver;
+
         private bool markedComplete = false;
 
-        public TextMeshProUGUI MyText {
-            get {
-                return text;
-            }
-        }
+        // game manager references
+        private UIManager uIManager = null;
+        private PlayerManager playerManager = null;
 
-        public QuestGiverComponent MyQuestGiver { get => questGiver; set => questGiver = value; }
+        public TextMeshProUGUI Text { get => text; }
+        public Quest Quest { get => quest; set => quest = value; }
+        public QuestGiverComponent QuestGiver { get => questGiver; set => questGiver = value; }
+
+        public override void Init(SystemGameManager systemGameManager) {
+            base.Init(systemGameManager);
+
+            uIManager = systemGameManager.UIManager;
+            playerManager = systemGameManager.PlayerManager;
+        }
 
         public void Select() {
             //Debug.Log((MyQuest == null ? "null" : MyQuest.DisplayName) + ".InteractionPanelQuestScript.Select()");
-            if (MyQuest == null) {
+            if (quest == null) {
                 return;
             }
 
-            if (MyQuest.MyHasOpeningDialog == true && MyQuest.MyOpeningDialog != null && MyQuest.MyOpeningDialog.TurnedIn == false) {
+            if (quest.HasOpeningDialog == true && quest.OpeningDialog != null && quest.OpeningDialog.TurnedIn == false) {
                 //Debug.Log("InteractionPanelQuestScript.Select(): dialog is not completed, popping dialog with questGiver: " + (questGiver == null ? "null" : questGiver.Interactable.DisplayName));
-                QuestGiverUI.Instance.ShowDescription(MyQuest, questGiver);
+                QuestGiverUI.Instance.ShowDescription(quest, questGiver);
             } else {
                 //Debug.Log("InteractionPanelQuestScript.Select(): has no dialog, or dialog is completed, opening questgiver window");
-                SystemGameManager.Instance.UIManager.PopupWindowManager.questGiverWindow.OpenWindow();
-                QuestGiverUI.Instance.ShowDescription(MyQuest, questGiver);
+                uIManager.questGiverWindow.OpenWindow();
+                QuestGiverUI.Instance.ShowDescription(quest, questGiver);
             }
-
         }
 
         public void DeSelect() {
@@ -59,15 +56,15 @@ namespace AnyRPG {
 
         public void IsComplete() {
             //Debug.Log("QuestTrackerQuestScript.IsComplete(): Checking questscript iscomplete on myquest: " + MyQuest.MyTitle);
-            if (MyQuest.IsComplete && !markedComplete) {
+            if (quest.IsComplete && !markedComplete) {
                 markedComplete = true;
                 //Debug.Log("the quest is complete");
-                MyText.text = "[" + MyQuest.MyExperienceLevel + "] " + MyQuest.DisplayName + " (Complete)";
-            } else if (!MyQuest.IsComplete) {
+                Text.text = "[" + quest.ExperienceLevel + "] " + quest.DisplayName + " (Complete)";
+            } else if (!quest.IsComplete) {
                 markedComplete = false;
-                MyText.text = "[" + MyQuest.MyExperienceLevel + "] " + MyQuest.DisplayName;
+                Text.text = "[" + quest.ExperienceLevel + "] " + quest.DisplayName;
             }
-            MyText.color = LevelEquations.GetTargetColor(SystemGameManager.Instance.PlayerManager.MyCharacter.CharacterStats.Level, MyQuest.MyExperienceLevel);
+            Text.color = LevelEquations.GetTargetColor(playerManager.MyCharacter.CharacterStats.Level, quest.ExperienceLevel);
         }
 
 

@@ -44,7 +44,18 @@ namespace AnyRPG {
 
         private AudioProfile currentMusicProfile = null;
 
+        // game manager references
+        private ObjectPooler objectPooler = null;
+        private UIManager uIManager = null;
+
         public MusicPlayerHighlightButton MySelectedMusicPlayerHighlightButton { get => selectedMusicPlayerHighlightButton; set => selectedMusicPlayerHighlightButton = value; }
+
+        public override void Init(SystemGameManager systemGameManager) {
+            base.Init(systemGameManager);
+
+            objectPooler = systemGameManager.ObjectPooler;
+            uIManager = systemGameManager.UIManager;
+        }
 
         public void DeactivateButtons() {
             if (playButton != null) {
@@ -66,10 +77,11 @@ namespace AnyRPG {
             MusicPlayerHighlightButton firstAvailableMusicProfile = null;
 
             foreach (AudioProfile musicProfile in musicPlayer.Props.MusicProfileList) {
-                GameObject go = ObjectPooler.Instance.GetPooledObject(highlightButtonPrefab, availableArea.transform);
+                GameObject go = objectPooler.GetPooledObject(highlightButtonPrefab, availableArea.transform);
                 MusicPlayerHighlightButton qs = go.GetComponent<MusicPlayerHighlightButton>();
-                qs.MyText.text = musicProfile.DisplayName;
-                qs.MyText.color = Color.white;
+                qs.Init(systemGameManager);
+                qs.Text.text = musicProfile.DisplayName;
+                qs.Text.color = Color.white;
                 qs.SetMusicProfile(this, musicProfile);
                 musicPlayerHighlightButtons.Add(qs);
                 musicProfileList.Add(musicProfile);
@@ -80,7 +92,7 @@ namespace AnyRPG {
 
             if (firstAvailableMusicProfile == null) {
                 // no available skills anymore, close window
-                SystemGameManager.Instance.UIManager.PopupWindowManager.musicPlayerWindow.CloseWindow();
+                uIManager.musicPlayerWindow.CloseWindow();
             }
 
             if (MySelectedMusicPlayerHighlightButton == null && firstAvailableMusicProfile != null) {
@@ -107,24 +119,6 @@ namespace AnyRPG {
             }
         }
 
-        // Enable or disable learn and unlearn buttons based on what is selected
-        private void UpdateButtons(AudioProfile musicProfile) {
-            //Debug.Log("SkillTrainerUI.UpdateButtons(" + skillName + ")");
-            /*
-            if (SystemGameManager.Instance.PlayerManager.MyCharacter.MyCharacterSkillManager.HasSkill(musicProfileName)) {
-                playButton.gameObject.SetActive(false);
-                playButton.GetComponent<Button>().enabled = false;
-                stopButton.gameObject.SetActive(true);
-                stopButton.GetComponent<Button>().enabled = true;
-            } else {
-                playButton.gameObject.SetActive(true);
-                playButton.GetComponent<Button>().enabled = true;
-                stopButton.GetComponent<Button>().enabled = false;
-                stopButton.gameObject.SetActive(false);
-            }
-            */
-        }
-
         public void ShowDescription(AudioProfile musicProfile) {
             //Debug.Log("SkillTrainerUI.ShowDescription(" + skillName + ")");
             ClearDescription();
@@ -133,8 +127,6 @@ namespace AnyRPG {
                 return;
             }
             currentMusicProfile = musicProfile;
-
-            UpdateButtons(musicProfile);
 
             musicDescription.text = string.Format("<size=30><b><color=yellow>{0}</color></b></size>\n\n<size=18>{1}</size>", musicProfile.DisplayName, musicProfile.MyDescription);
             if (musicProfile.ArtistName != null && musicProfile.ArtistName != string.Empty) {
@@ -167,7 +159,7 @@ namespace AnyRPG {
                 if (musicPlayerHighlightButton != null) {
                     musicPlayerHighlightButton.gameObject.transform.SetParent(null);
                     musicPlayerHighlightButton.DeSelect();
-                    ObjectPooler.Instance.ReturnObjectToPool(musicPlayerHighlightButton.gameObject);
+                    objectPooler.ReturnObjectToPool(musicPlayerHighlightButton.gameObject);
                 }
             }
             musicPlayerHighlightButtons.Clear();
@@ -182,25 +174,17 @@ namespace AnyRPG {
         public void PlayMusic() {
             //Debug.Log("SkillTrainerUI.LearnSkill()");
             if (currentMusicProfile != null && currentMusicProfile.AudioClip != null) {
-                SystemGameManager.Instance.AudioManager.PlayMusic(currentMusicProfile.AudioClip);
+                audioManager.PlayMusic(currentMusicProfile.AudioClip);
             }
         }
 
         public void PauseMusic() {
-            /*
-            if (currentMusicProfileName != null && currentMusicProfileName != string.Empty) {
-                MusicProfile musicProfile = SystemMusicProfileManager.Instance.GetResource(currentMusicProfileName);
-                if (musicProfile != null && musicProfile.MyAudioClip != null) {
-                    SystemGameManager.Instance.AudioManager.PauseMusic();
-                }
-            }
-            */
-            SystemGameManager.Instance.AudioManager.PauseMusic();
+            audioManager.PauseMusic();
         }
 
         public void StopMusic() {
             //Debug.Log("SkillTrainerUI.UnlearnSkill()");
-            SystemGameManager.Instance.AudioManager.StopMusic();
+            audioManager.StopMusic();
         }
 
         public override void ReceiveOpenWindowNotification() {

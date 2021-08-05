@@ -21,9 +21,6 @@ namespace AnyRPG {
         private MessageFeedManager messageFeedManager = null;
 
         [SerializeField]
-        private PopupWindowManager popupWindowManager = null;
-
-        [SerializeField]
         private SystemWindowManager systemWindowManager = null;
 
         [SerializeField]
@@ -114,6 +111,30 @@ namespace AnyRPG {
         [SerializeField]
         private HandScript handScript = null;
 
+        [Header("Popup Windows")]
+
+        public PagedWindow abilityBookWindow;
+        public PagedWindow skillBookWindow;
+        public PagedWindow reputationBookWindow;
+        public PagedWindow currencyListWindow;
+        public PagedWindow achievementListWindow;
+        public CloseableWindow characterPanelWindow;
+        public PagedWindow lootWindow;
+        public PagedWindow vendorWindow;
+        public CloseableWindow chestWindow;
+        public CloseableWindow bankWindow;
+        public CloseableWindow questLogWindow;
+        public CloseableWindow questGiverWindow;
+        public CloseableWindow skillTrainerWindow;
+        public CloseableWindow musicPlayerWindow;
+        public CloseableWindow interactionWindow;
+        public CloseableWindow craftingWindow;
+        public CloseableWindow mainMapWindow;
+        public CloseableWindow dialogWindow;
+        public CloseableWindow factionChangeWindow;
+        public CloseableWindow classChangeWindow;
+        public CloseableWindow specializationChangeWindow;
+
         // objects in the mouseover window
         private TextMeshProUGUI mouseOverText;
         private GameObject mouseOverTarget;
@@ -160,7 +181,6 @@ namespace AnyRPG {
         public Dictionary<string, float> DefaultWindowPositions { get => defaultWindowPositions; }
         public CombatTextManager CombatTextManager { get => combatTextManager; set => combatTextManager = value; }
         public MessageFeedManager MessageFeedManager { get => messageFeedManager; set => messageFeedManager = value; }
-        public PopupWindowManager PopupWindowManager { get => popupWindowManager; set => popupWindowManager = value; }
         public SystemWindowManager SystemWindowManager { get => systemWindowManager; set => systemWindowManager = value; }
         public NamePlateManager NamePlateManager { get => namePlateManager; set => namePlateManager = value; }
         public MainMapManager MainMapManager { get => mainMapManager; set => mainMapManager = value; }
@@ -169,6 +189,8 @@ namespace AnyRPG {
 
         public override void Init(SystemGameManager systemGameManager) {
             base.Init(systemGameManager);
+
+            // set references
             playerManager = systemGameManager.PlayerManager;
             keyBindManager = systemGameManager.KeyBindManager;
             inputManager = systemGameManager.InputManager;
@@ -180,7 +202,6 @@ namespace AnyRPG {
             actionBarManager.Init(systemGameManager);
             combatTextManager.Init(systemGameManager);
             messageFeedManager.Init(systemGameManager);
-            popupWindowManager.Init(systemGameManager);
             systemWindowManager.Init(systemGameManager);
             namePlateManager.Init(systemGameManager);
             mainMapManager.Init(systemGameManager);
@@ -198,6 +219,29 @@ namespace AnyRPG {
             combatLogWindow.Init(systemGameManager);
             toolTipCurrencyBarController.Init(systemGameManager);
             handScript.Init(systemGameManager);
+
+            // initialize popup windows
+            abilityBookWindow.Init(systemGameManager);
+            skillBookWindow.Init(systemGameManager);
+            reputationBookWindow.Init(systemGameManager);
+            currencyListWindow.Init(systemGameManager);
+            achievementListWindow.Init(systemGameManager);
+            characterPanelWindow.Init(systemGameManager);
+            lootWindow.Init(systemGameManager);
+            vendorWindow.Init(systemGameManager);
+            chestWindow.Init(systemGameManager);
+            bankWindow.Init(systemGameManager);
+            questLogWindow.Init(systemGameManager);
+            questGiverWindow.Init(systemGameManager);
+            skillTrainerWindow.Init(systemGameManager);
+            musicPlayerWindow.Init(systemGameManager);
+            interactionWindow.Init(systemGameManager);
+            craftingWindow.Init(systemGameManager);
+            mainMapWindow.Init(systemGameManager);
+            dialogWindow.Init(systemGameManager);
+            factionChangeWindow.Init(systemGameManager);
+            classChangeWindow.Init(systemGameManager);
+            specializationChangeWindow.Init(systemGameManager);
         }
 
         public void PerformSetupActivities() {
@@ -236,46 +280,54 @@ namespace AnyRPG {
             mouseOverText = mouseOverWindow.transform.GetComponentInChildren<TextMeshProUGUI>();
 
             DeActivateMouseOverWindow();
+
+            inventoryManager.Close();
         }
+
+        /*
+        void Start() {
+            inventoryManager.Close();
+        }
+        */
 
         private void GetDefaultWindowPositions() {
             //Debug.Log("Savemanager.GetDefaultWindowPositions()");
-            defaultWindowPositions.Add("AbilityBookWindowX", PopupWindowManager.abilityBookWindow.transform.position.x);
-            defaultWindowPositions.Add("AbilityBookWindowY", PopupWindowManager.abilityBookWindow.transform.position.y);
+            defaultWindowPositions.Add("AbilityBookWindowX", abilityBookWindow.transform.position.x);
+            defaultWindowPositions.Add("AbilityBookWindowY", abilityBookWindow.transform.position.y);
 
-            defaultWindowPositions.Add("SkillBookWindowX", PopupWindowManager.skillBookWindow.transform.position.x);
-            defaultWindowPositions.Add("SkillBookWindowY", PopupWindowManager.skillBookWindow.transform.position.y);
+            defaultWindowPositions.Add("SkillBookWindowX", skillBookWindow.transform.position.x);
+            defaultWindowPositions.Add("SkillBookWindowY", skillBookWindow.transform.position.y);
 
             //Debug.Log("abilityBookWindowX: " + abilityBookWindowX + "; abilityBookWindowY: " + abilityBookWindowY);
-            defaultWindowPositions.Add("ReputationBookWindowX", PopupWindowManager.reputationBookWindow.transform.position.x);
-            defaultWindowPositions.Add("ReputationBookWindowY", PopupWindowManager.reputationBookWindow.transform.position.y);
-            defaultWindowPositions.Add("CurrencyListWindowX", PopupWindowManager.currencyListWindow.transform.position.x);
-            defaultWindowPositions.Add("CurrencyListWindowY", PopupWindowManager.currencyListWindow.transform.position.y);
+            defaultWindowPositions.Add("ReputationBookWindowX", reputationBookWindow.transform.position.x);
+            defaultWindowPositions.Add("ReputationBookWindowY", reputationBookWindow.transform.position.y);
+            defaultWindowPositions.Add("CurrencyListWindowX", currencyListWindow.transform.position.x);
+            defaultWindowPositions.Add("CurrencyListWindowY", currencyListWindow.transform.position.y);
 
-            defaultWindowPositions.Add("CharacterPanelWindowX", PopupWindowManager.characterPanelWindow.transform.position.x);
-            defaultWindowPositions.Add("CharacterPanelWindowY", PopupWindowManager.characterPanelWindow.transform.position.y);
-            defaultWindowPositions.Add("LootWindowX", PopupWindowManager.lootWindow.transform.position.x);
-            defaultWindowPositions.Add("LootWindowY", PopupWindowManager.lootWindow.transform.position.y);
-            defaultWindowPositions.Add("VendorWindowX", PopupWindowManager.vendorWindow.transform.position.x);
-            defaultWindowPositions.Add("VendorWindowY", PopupWindowManager.vendorWindow.transform.position.y);
-            defaultWindowPositions.Add("ChestWindowX", PopupWindowManager.chestWindow.transform.position.x);
-            defaultWindowPositions.Add("ChestWindowY", PopupWindowManager.chestWindow.transform.position.y);
-            defaultWindowPositions.Add("BankWindowX", PopupWindowManager.bankWindow.transform.position.x);
-            defaultWindowPositions.Add("BankWindowY", PopupWindowManager.bankWindow.transform.position.y);
-            defaultWindowPositions.Add("QuestLogWindowX", PopupWindowManager.questLogWindow.transform.position.x);
-            defaultWindowPositions.Add("QuestLogWindowY", PopupWindowManager.questLogWindow.transform.position.y);
-            defaultWindowPositions.Add("AchievementListWindowX", PopupWindowManager.achievementListWindow.transform.position.x);
-            defaultWindowPositions.Add("AchievementListWindowY", PopupWindowManager.achievementListWindow.transform.position.y);
-            defaultWindowPositions.Add("QuestGiverWindowX", PopupWindowManager.questGiverWindow.transform.position.x);
-            defaultWindowPositions.Add("QuestGiverWindowY", PopupWindowManager.questGiverWindow.transform.position.y);
-            defaultWindowPositions.Add("SkillTrainerWindowX", PopupWindowManager.skillTrainerWindow.transform.position.x);
-            defaultWindowPositions.Add("SkillTrainerWindowY", PopupWindowManager.skillTrainerWindow.transform.position.y);
-            defaultWindowPositions.Add("InteractionWindowX", PopupWindowManager.interactionWindow.transform.position.x);
-            defaultWindowPositions.Add("InteractionWindowY", PopupWindowManager.interactionWindow.transform.position.y);
-            defaultWindowPositions.Add("CraftingWindowX", PopupWindowManager.craftingWindow.transform.position.x);
-            defaultWindowPositions.Add("CraftingWindowY", PopupWindowManager.craftingWindow.transform.position.y);
-            defaultWindowPositions.Add("MainMapWindowX", PopupWindowManager.mainMapWindow.transform.position.x);
-            defaultWindowPositions.Add("MainMapWindowY", PopupWindowManager.mainMapWindow.transform.position.y);
+            defaultWindowPositions.Add("CharacterPanelWindowX", characterPanelWindow.transform.position.x);
+            defaultWindowPositions.Add("CharacterPanelWindowY", characterPanelWindow.transform.position.y);
+            defaultWindowPositions.Add("LootWindowX", lootWindow.transform.position.x);
+            defaultWindowPositions.Add("LootWindowY", lootWindow.transform.position.y);
+            defaultWindowPositions.Add("VendorWindowX", vendorWindow.transform.position.x);
+            defaultWindowPositions.Add("VendorWindowY", vendorWindow.transform.position.y);
+            defaultWindowPositions.Add("ChestWindowX", chestWindow.transform.position.x);
+            defaultWindowPositions.Add("ChestWindowY", chestWindow.transform.position.y);
+            defaultWindowPositions.Add("BankWindowX", bankWindow.transform.position.x);
+            defaultWindowPositions.Add("BankWindowY", bankWindow.transform.position.y);
+            defaultWindowPositions.Add("QuestLogWindowX", questLogWindow.transform.position.x);
+            defaultWindowPositions.Add("QuestLogWindowY", questLogWindow.transform.position.y);
+            defaultWindowPositions.Add("AchievementListWindowX", achievementListWindow.transform.position.x);
+            defaultWindowPositions.Add("AchievementListWindowY", achievementListWindow.transform.position.y);
+            defaultWindowPositions.Add("QuestGiverWindowX", questGiverWindow.transform.position.x);
+            defaultWindowPositions.Add("QuestGiverWindowY", questGiverWindow.transform.position.y);
+            defaultWindowPositions.Add("SkillTrainerWindowX", skillTrainerWindow.transform.position.x);
+            defaultWindowPositions.Add("SkillTrainerWindowY", skillTrainerWindow.transform.position.y);
+            defaultWindowPositions.Add("InteractionWindowX", interactionWindow.transform.position.x);
+            defaultWindowPositions.Add("InteractionWindowY", interactionWindow.transform.position.y);
+            defaultWindowPositions.Add("CraftingWindowX", craftingWindow.transform.position.x);
+            defaultWindowPositions.Add("CraftingWindowY", craftingWindow.transform.position.y);
+            defaultWindowPositions.Add("MainMapWindowX", mainMapWindow.transform.position.x);
+            defaultWindowPositions.Add("MainMapWindowY", mainMapWindow.transform.position.y);
             defaultWindowPositions.Add("QuestTrackerWindowX", QuestTrackerWindow.transform.position.x);
             defaultWindowPositions.Add("QuestTrackerWindowY", QuestTrackerWindow.transform.position.y);
             defaultWindowPositions.Add("CombatLogWindowX", CombatLogWindow.transform.position.x);
@@ -316,22 +368,25 @@ namespace AnyRPG {
         public void LoadDefaultWindowPositions() {
             //Debug.Log("UIManager.LoadDefaultWindowPositions()");
 
-            PopupWindowManager.abilityBookWindow.transform.position = new Vector3(defaultWindowPositions["AbilityBookWindowX"], defaultWindowPositions["AbilityBookWindowY"], 0);
-            PopupWindowManager.skillBookWindow.transform.position = new Vector3(defaultWindowPositions["SkillBookWindowX"], defaultWindowPositions["SkillBookWindowY"], 0);
-            PopupWindowManager.reputationBookWindow.transform.position = new Vector3(defaultWindowPositions["ReputationBookWindowX"], defaultWindowPositions["ReputationBookWindowY"], 0);
-            PopupWindowManager.currencyListWindow.transform.position = new Vector3(defaultWindowPositions["CurrencyListWindowX"], defaultWindowPositions["CurrencyListWindowY"], 0);
-            PopupWindowManager.characterPanelWindow.transform.position = new Vector3(defaultWindowPositions["CharacterPanelWindowX"], defaultWindowPositions["CharacterPanelWindowY"], 0);
-            PopupWindowManager.lootWindow.transform.position = new Vector3(defaultWindowPositions["LootWindowX"], defaultWindowPositions["LootWindowY"], 0);
-            PopupWindowManager.vendorWindow.transform.position = new Vector3(defaultWindowPositions["VendorWindowX"], defaultWindowPositions["VendorWindowY"], 0);
-            PopupWindowManager.chestWindow.transform.position = new Vector3(defaultWindowPositions["ChestWindowX"], defaultWindowPositions["ChestWindowY"], 0);
-            PopupWindowManager.bankWindow.transform.position = new Vector3(defaultWindowPositions["BankWindowX"], defaultWindowPositions["BankWindowY"], 0);
-            PopupWindowManager.questLogWindow.transform.position = new Vector3(defaultWindowPositions["QuestLogWindowX"], defaultWindowPositions["QuestLogWindowY"], 0);
-            PopupWindowManager.achievementListWindow.transform.position = new Vector3(defaultWindowPositions["AchievementListWindowX"], defaultWindowPositions["AchievementListWindowY"], 0);
-            PopupWindowManager.questGiverWindow.transform.position = new Vector3(defaultWindowPositions["QuestGiverWindowX"], defaultWindowPositions["QuestGiverWindowY"], 0);
-            PopupWindowManager.skillTrainerWindow.transform.position = new Vector3(defaultWindowPositions["SkillTrainerWindowX"], defaultWindowPositions["SkillTrainerWindowY"], 0);
-            PopupWindowManager.interactionWindow.transform.position = new Vector3(defaultWindowPositions["InteractionWindowX"], defaultWindowPositions["InteractionWindowY"], 0);
-            PopupWindowManager.craftingWindow.transform.position = new Vector3(defaultWindowPositions["CraftingWindowX"], defaultWindowPositions["CraftingWindowY"], 0);
-            PopupWindowManager.mainMapWindow.transform.position = new Vector3(defaultWindowPositions["MainMapWindowX"], defaultWindowPositions["MainMapWindowY"], 0);
+            // popup windowws
+            abilityBookWindow.transform.position = new Vector3(defaultWindowPositions["AbilityBookWindowX"], defaultWindowPositions["AbilityBookWindowY"], 0);
+            skillBookWindow.transform.position = new Vector3(defaultWindowPositions["SkillBookWindowX"], defaultWindowPositions["SkillBookWindowY"], 0);
+            reputationBookWindow.transform.position = new Vector3(defaultWindowPositions["ReputationBookWindowX"], defaultWindowPositions["ReputationBookWindowY"], 0);
+            currencyListWindow.transform.position = new Vector3(defaultWindowPositions["CurrencyListWindowX"], defaultWindowPositions["CurrencyListWindowY"], 0);
+            characterPanelWindow.transform.position = new Vector3(defaultWindowPositions["CharacterPanelWindowX"], defaultWindowPositions["CharacterPanelWindowY"], 0);
+            lootWindow.transform.position = new Vector3(defaultWindowPositions["LootWindowX"], defaultWindowPositions["LootWindowY"], 0);
+            vendorWindow.transform.position = new Vector3(defaultWindowPositions["VendorWindowX"], defaultWindowPositions["VendorWindowY"], 0);
+            chestWindow.transform.position = new Vector3(defaultWindowPositions["ChestWindowX"], defaultWindowPositions["ChestWindowY"], 0);
+            bankWindow.transform.position = new Vector3(defaultWindowPositions["BankWindowX"], defaultWindowPositions["BankWindowY"], 0);
+            questLogWindow.transform.position = new Vector3(defaultWindowPositions["QuestLogWindowX"], defaultWindowPositions["QuestLogWindowY"], 0);
+            achievementListWindow.transform.position = new Vector3(defaultWindowPositions["AchievementListWindowX"], defaultWindowPositions["AchievementListWindowY"], 0);
+            questGiverWindow.transform.position = new Vector3(defaultWindowPositions["QuestGiverWindowX"], defaultWindowPositions["QuestGiverWindowY"], 0);
+            skillTrainerWindow.transform.position = new Vector3(defaultWindowPositions["SkillTrainerWindowX"], defaultWindowPositions["SkillTrainerWindowY"], 0);
+            interactionWindow.transform.position = new Vector3(defaultWindowPositions["InteractionWindowX"], defaultWindowPositions["InteractionWindowY"], 0);
+            craftingWindow.transform.position = new Vector3(defaultWindowPositions["CraftingWindowX"], defaultWindowPositions["CraftingWindowY"], 0);
+            mainMapWindow.transform.position = new Vector3(defaultWindowPositions["MainMapWindowX"], defaultWindowPositions["MainMapWindowY"], 0);
+
+            // ui elements
             QuestTrackerWindow.transform.position = new Vector3(defaultWindowPositions["QuestTrackerWindowX"], defaultWindowPositions["QuestTrackerWindowY"], 0);
             CombatLogWindow.transform.position = new Vector3(defaultWindowPositions["CombatLogWindowX"], defaultWindowPositions["CombatLogWindowY"], 0);
             MessageFeedManager.MessageFeedGameObject.transform.position = new Vector3(defaultWindowPositions["MessageFeedManagerX"], defaultWindowPositions["MessageFeedManagerY"], 0);
@@ -399,6 +454,8 @@ namespace AnyRPG {
             }
             // don't hide windows while binding keys
             if (keyBindManager.MyBindName == string.Empty) {
+
+                // ui element keys pressed
                 if (inputManager.KeyBindWasPressed("HIDEUI")) {
                     if (playerUI.gameObject.activeSelf) {
                         playerUI.SetActive(false);
@@ -406,14 +463,73 @@ namespace AnyRPG {
                         playerUI.SetActive(true);
                     }
                 }
+
+                // popup window keys pressed
+                if (inputManager.KeyBindWasPressed("INVENTORY")) {
+                    inventoryManager.OpenClose();
+                }
+                if (inputManager.KeyBindWasPressed("ABILITYBOOK")) {
+                    abilityBookWindow.ToggleOpenClose();
+                }
+                if (inputManager.KeyBindWasPressed("SKILLBOOK")) {
+                    skillBookWindow.ToggleOpenClose();
+                }
+                if (inputManager.KeyBindWasPressed("ACHIEVEMENTBOOK")) {
+                    achievementListWindow.ToggleOpenClose();
+                }
+                if (inputManager.KeyBindWasPressed("REPUTATIONBOOK")) {
+                    reputationBookWindow.ToggleOpenClose();
+                }
+                if (inputManager.KeyBindWasPressed("CURRENCYPANEL")) {
+                    currencyListWindow.ToggleOpenClose();
+                }
+                if (inputManager.KeyBindWasPressed("CHARACTERPANEL")) {
+                    characterPanelWindow.ToggleOpenClose();
+                }
+                if (inputManager.KeyBindWasPressed("QUESTLOG")) {
+                    questLogWindow.ToggleOpenClose();
+                }
+                if (inputManager.KeyBindWasPressed("MAINMAP")) {
+                    //Debug.Log("mainmap was pressed");
+                    mainMapWindow.ToggleOpenClose();
+                }
             }
+
+            if (inputManager.KeyBindWasPressed("CANCEL")) {
+                CloseAllPopupWindows();
+            }
+
+        }
+
+        public void CloseAllPopupWindows() {
+            //Debug.Log("CloseAllWindows()");
+            abilityBookWindow.CloseWindow();
+            skillBookWindow.CloseWindow();
+            achievementListWindow.CloseWindow();
+            reputationBookWindow.CloseWindow();
+            currencyListWindow.CloseWindow();
+            characterPanelWindow.CloseWindow();
+            lootWindow.CloseWindow();
+            vendorWindow.CloseWindow();
+            chestWindow.CloseWindow();
+            bankWindow.CloseWindow();
+            questLogWindow.CloseWindow();
+            questGiverWindow.CloseWindow();
+            skillTrainerWindow.CloseWindow();
+            musicPlayerWindow.CloseWindow();
+            interactionWindow.CloseWindow();
+            craftingWindow.CloseWindow();
+            mainMapWindow.CloseWindow();
+            factionChangeWindow.CloseWindow();
+            classChangeWindow.CloseWindow();
+            specializationChangeWindow.CloseWindow();
+            dialogWindow.CloseWindow();
+            inventoryManager.Close();
         }
 
         public void DeactivateInGameUI() {
             //Debug.Log("UIManager.DeactivateInGameUI()");
-            if (PopupWindowManager != null) {
-                PopupWindowManager.CloseAllWindows();
-            }
+            CloseAllPopupWindows();
 
             if (inGameUI.activeSelf == true) {
                 inGameUI.SetActive(false);
@@ -1015,8 +1131,8 @@ namespace AnyRPG {
                     bagNode.BagButton.SetBackGroundColor();
                 }
             }
-            if (PopupWindowManager.bankWindow.CloseableWindowContents != null) {
-                PopupWindowManager.bankWindow.CloseableWindowContents.SetBackGroundColor(new Color32(0, 0, 0, (byte)opacityLevel));
+            if (bankWindow.CloseableWindowContents != null) {
+                bankWindow.CloseableWindowContents.SetBackGroundColor(new Color32(0, 0, 0, (byte)opacityLevel));
             }
 
         }
@@ -1024,22 +1140,22 @@ namespace AnyRPG {
         public void UpdatePopupWindowOpacity() {
             //Debug.Log("UIManager.UpdatePopupWindowOpacity()");
             int opacityLevel = (int)(PlayerPrefs.GetFloat("PopupWindowOpacity") * 255);
-            PopupWindowManager.abilityBookWindow.CloseableWindowContents.SetBackGroundColor(new Color32(0, 0, 0, (byte)opacityLevel));
-            PopupWindowManager.achievementListWindow.CloseableWindowContents.SetBackGroundColor(new Color32(0, 0, 0, (byte)opacityLevel));
-            PopupWindowManager.reputationBookWindow.CloseableWindowContents.SetBackGroundColor(new Color32(0, 0, 0, (byte)opacityLevel));
-            PopupWindowManager.skillBookWindow.CloseableWindowContents.SetBackGroundColor(new Color32(0, 0, 0, (byte)opacityLevel));
-            PopupWindowManager.skillTrainerWindow.CloseableWindowContents.SetBackGroundColor(new Color32(0, 0, 0, (byte)opacityLevel));
-            PopupWindowManager.musicPlayerWindow.CloseableWindowContents.SetBackGroundColor(new Color32(0, 0, 0, (byte)opacityLevel));
-            PopupWindowManager.characterPanelWindow.CloseableWindowContents.SetBackGroundColor(new Color32(0, 0, 0, (byte)opacityLevel));
-            PopupWindowManager.craftingWindow.CloseableWindowContents.SetBackGroundColor(new Color32(0, 0, 0, (byte)opacityLevel));
-            PopupWindowManager.currencyListWindow.CloseableWindowContents.SetBackGroundColor(new Color32(0, 0, 0, (byte)opacityLevel));
-            PopupWindowManager.interactionWindow.CloseableWindowContents.SetBackGroundColor(new Color32(0, 0, 0, (byte)opacityLevel));
-            PopupWindowManager.lootWindow.CloseableWindowContents.SetBackGroundColor(new Color32(0, 0, 0, (byte)opacityLevel));
-            PopupWindowManager.mainMapWindow.CloseableWindowContents.SetBackGroundColor(new Color32(0, 0, 0, (byte)opacityLevel));
-            PopupWindowManager.questGiverWindow.CloseableWindowContents.SetBackGroundColor(new Color32(0, 0, 0, (byte)opacityLevel));
-            PopupWindowManager.questLogWindow.CloseableWindowContents.SetBackGroundColor(new Color32(0, 0, 0, (byte)opacityLevel));
-            PopupWindowManager.vendorWindow.CloseableWindowContents.SetBackGroundColor(new Color32(0, 0, 0, (byte)opacityLevel));
-            PopupWindowManager.dialogWindow.CloseableWindowContents.SetBackGroundColor(new Color32(0, 0, 0, (byte)opacityLevel));
+            abilityBookWindow.CloseableWindowContents.SetBackGroundColor(new Color32(0, 0, 0, (byte)opacityLevel));
+            achievementListWindow.CloseableWindowContents.SetBackGroundColor(new Color32(0, 0, 0, (byte)opacityLevel));
+            reputationBookWindow.CloseableWindowContents.SetBackGroundColor(new Color32(0, 0, 0, (byte)opacityLevel));
+            skillBookWindow.CloseableWindowContents.SetBackGroundColor(new Color32(0, 0, 0, (byte)opacityLevel));
+            skillTrainerWindow.CloseableWindowContents.SetBackGroundColor(new Color32(0, 0, 0, (byte)opacityLevel));
+            musicPlayerWindow.CloseableWindowContents.SetBackGroundColor(new Color32(0, 0, 0, (byte)opacityLevel));
+            characterPanelWindow.CloseableWindowContents.SetBackGroundColor(new Color32(0, 0, 0, (byte)opacityLevel));
+            craftingWindow.CloseableWindowContents.SetBackGroundColor(new Color32(0, 0, 0, (byte)opacityLevel));
+            currencyListWindow.CloseableWindowContents.SetBackGroundColor(new Color32(0, 0, 0, (byte)opacityLevel));
+            interactionWindow.CloseableWindowContents.SetBackGroundColor(new Color32(0, 0, 0, (byte)opacityLevel));
+            lootWindow.CloseableWindowContents.SetBackGroundColor(new Color32(0, 0, 0, (byte)opacityLevel));
+            mainMapWindow.CloseableWindowContents.SetBackGroundColor(new Color32(0, 0, 0, (byte)opacityLevel));
+            questGiverWindow.CloseableWindowContents.SetBackGroundColor(new Color32(0, 0, 0, (byte)opacityLevel));
+            questLogWindow.CloseableWindowContents.SetBackGroundColor(new Color32(0, 0, 0, (byte)opacityLevel));
+            vendorWindow.CloseableWindowContents.SetBackGroundColor(new Color32(0, 0, 0, (byte)opacityLevel));
+            dialogWindow.CloseableWindowContents.SetBackGroundColor(new Color32(0, 0, 0, (byte)opacityLevel));
         }
 
         public void UpdateSystemMenuOpacity() {

@@ -32,7 +32,7 @@ namespace AnyRPG {
                 } else {
                     //Debug.Log(DisplayName + ".QuestStartItem.Use(): showing quests");
                     //Debug.Log("QuestStartItem.Use(): opening questgiver window");
-                    if (SystemGameManager.Instance.UIManager.PopupWindowManager.questGiverWindow.IsOpen) {
+                    if (SystemGameManager.Instance.UIManager.questGiverWindow.IsOpen) {
                         // safety to prevent deletion
                         return false;
                     }
@@ -52,7 +52,7 @@ namespace AnyRPG {
                         //&& questNode.MyQuest.IsComplete == false
                         && questNode.MyQuest.TurnedIn == false
                         && !SystemGameManager.Instance.QuestLog.HasQuest(questNode.MyQuest.DisplayName)
-                        && (questNode.MyQuest.MyRepeatableQuest == true || questNode.MyQuest.TurnedIn == false)) {
+                        && (questNode.MyQuest.RepeatableQuest == true || questNode.MyQuest.TurnedIn == false)) {
                         //Debug.Log(DisplayName + ".QuestStartItem.QuestRequirementsAreMet(): return true");
                         return true;
                     } else {
@@ -97,10 +97,10 @@ namespace AnyRPG {
 
         public void OpenQuestGiverWindow() {
             //Debug.Log(DisplayName + ".QuestStartItem.OpenQuestGiverWindow()");
-            if (!SystemGameManager.Instance.UIManager.PopupWindowManager.questGiverWindow.IsOpen) {
+            if (!SystemGameManager.Instance.UIManager.questGiverWindow.IsOpen) {
                 //Debug.Log(source + " interacting with " + gameObject.name);
-                //SystemGameManager.Instance.UIManager.PopupWindowManager.questGiverWindow.MyCloseableWindowContents.OnOpenWindowHandler += InitWindow;
-                SystemGameManager.Instance.UIManager.PopupWindowManager.questGiverWindow.OpenWindow();
+                //SystemGameManager.Instance.UIManager.questGiverWindow.MyCloseableWindowContents.OnOpenWindowHandler += InitWindow;
+                SystemGameManager.Instance.UIManager.questGiverWindow.OpenWindow();
             }
         }
 

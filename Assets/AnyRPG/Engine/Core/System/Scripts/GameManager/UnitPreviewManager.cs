@@ -14,7 +14,7 @@ namespace AnyRPG {
             //Debug.Log("CharacterCreatorManager.HandleOpenWindow()");
 
             //cloneSource = GetCloneSource();
-            cloneSource = unitSpawnControlPanel.SelectedUnitSpawnButton.MyUnitProfile;
+            cloneSource = unitSpawnControlPanel.SelectedUnitSpawnButton.UnitProfile;
             if (cloneSource == null) {
                 return;
             }

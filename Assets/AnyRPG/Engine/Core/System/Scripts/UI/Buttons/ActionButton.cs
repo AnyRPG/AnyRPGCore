@@ -48,7 +48,7 @@ namespace AnyRPG {
         public Button MyButton { get; private set; }
 
         public Image MyIcon { get => icon; set => icon = value; }
-        public int MyCount { get => count; }
+        public int Count { get => count; }
         public TextMeshProUGUI StackSizeText { get => stackSizeText; }
         public TextMeshProUGUI KeyBindText { get => keyBindText; }
         public IUseable SavedUseable { get => savedUseable; set => savedUseable = value; }

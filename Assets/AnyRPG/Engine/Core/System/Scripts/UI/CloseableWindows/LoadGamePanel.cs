@@ -64,6 +64,13 @@ namespace AnyRPG {
 
         private CapabilityConsumerSnapshot capabilityConsumerSnapshot = null;
 
+        // game manager references
+        private SaveManager saveManager = null;
+        private ObjectPooler objectPooler = null;
+        private CharacterCreatorManager characterCreatorManager = null;
+        private SystemConfigurationManager systemConfigurationManager = null;
+        private UIManager uIManager = null;
+
         public UnitProfile UnitProfile { get => unitProfile; set => unitProfile = value; }
         public UnitType UnitType { get => unitType; set => unitType = value; }
         public CharacterRace CharacterRace { get => characterRace; set => characterRace = value; }
@@ -74,12 +81,24 @@ namespace AnyRPG {
 
         public LoadGameButton SelectedLoadGameButton { get => selectedLoadGameButton; set => selectedLoadGameButton = value; }
 
+        public override void Init(SystemGameManager systemGameManager) {
+            base.Init(systemGameManager);
+
+            saveManager = systemGameManager.SaveManager;
+            objectPooler = systemGameManager.ObjectPooler;
+            characterCreatorManager = systemGameManager.CharacterCreatorManager;
+            systemConfigurationManager = systemGameManager.SystemConfigurationManager;
+            uIManager = systemGameManager.UIManager;
+
+            characterPreviewPanel.Init(systemGameManager);
+        }
+
         public override void RecieveClosedWindowNotification() {
             //Debug.Log("LoadGamePanel.RecieveClosedWindowNotification()");
             base.RecieveClosedWindowNotification();
             characterPreviewPanel.OnTargetReady -= HandleTargetReady;
             characterPreviewPanel.RecieveClosedWindowNotification();
-            //SystemGameManager.Instance.SaveManager.ClearSharedData();
+            //saveManager.ClearSharedData();
             OnCloseWindow(this);
         }
 
@@ -104,7 +123,7 @@ namespace AnyRPG {
             selectedLoadGameButton = loadButton;
             anyRPGSaveData = loadButton.SaveData;
 
-            capabilityConsumerSnapshot = SystemGameManager.Instance.SaveManager.GetCapabilityConsumerSnapshot(selectedLoadGameButton.SaveData);
+            capabilityConsumerSnapshot = saveManager.GetCapabilityConsumerSnapshot(selectedLoadGameButton.SaveData);
 
             unitProfile = capabilityConsumerSnapshot.UnitProfile;
             UnitType = capabilityConsumerSnapshot.UnitProfile.UnitType;
@@ -113,8 +132,8 @@ namespace AnyRPG {
             classSpecialization = capabilityConsumerSnapshot.ClassSpecialization;
             faction = capabilityConsumerSnapshot.Faction;
 
-            SystemGameManager.Instance.SaveManager.ClearSharedData();
-            SystemGameManager.Instance.SaveManager.LoadUMARecipe(loadButton.SaveData);
+            saveManager.ClearSharedData();
+            saveManager.LoadUMARecipe(loadButton.SaveData);
 
             // testing avoid naked spawn
             // seems to make no difference to have this disabled here
@@ -127,7 +146,7 @@ namespace AnyRPG {
             LoadUMARecipe();
 
             // apply capabilities to it so equipment can work
-            //SystemGameManager.Instance.CharacterCreatorManager.PreviewUnitController.CharacterUnit.BaseCharacter.ApplyCapabilityConsumerSnapshot(capabilityConsumerSnapshot);
+            //characterCreatorManager.PreviewUnitController.CharacterUnit.BaseCharacter.ApplyCapabilityConsumerSnapshot(capabilityConsumerSnapshot);
 
             loadGameButton.interactable = true;
             copyGameButton.interactable = true;
@@ -143,7 +162,7 @@ namespace AnyRPG {
             foreach (LoadGameButton loadGameButton in loadGameButtons) {
                 if (loadGameButton != null) {
                     loadGameButton.DeSelect();
-                    ObjectPooler.Instance.ReturnObjectToPool(loadGameButton.gameObject);
+                    objectPooler.ReturnObjectToPool(loadGameButton.gameObject);
                 }
             }
             loadGameButtons.Clear();
@@ -169,10 +188,11 @@ namespace AnyRPG {
             characterPreviewPanel.ClearPreviewTarget();
             int selectedButton = 0;
             int count = 0;
-            foreach (AnyRPGSaveData anyRPGSaveData in SystemGameManager.Instance.SaveManager.GetSaveDataList()) {
+            foreach (AnyRPGSaveData anyRPGSaveData in saveManager.GetSaveDataList()) {
                 //Debug.Log("LoadGamePanel.ShowLoadButtonsCommon(): setting a button with saved game data");
-                GameObject go = ObjectPooler.Instance.GetPooledObject(buttonPrefab, buttonArea.transform);
+                GameObject go = objectPooler.GetPooledObject(buttonPrefab, buttonArea.transform);
                 LoadGameButton loadGameButton = go.GetComponent<LoadGameButton>();
+                loadGameButton.Init(systemGameManager);
                 loadGameButton.AddSaveData(this, anyRPGSaveData);
                 loadGameButtons.Add(loadGameButton);
                 if (anyRPGSaveData.DataFileName == fileName) {
@@ -188,26 +208,26 @@ namespace AnyRPG {
 
 
         public void LoadUMARecipe() {
-            if (SystemGameManager.Instance.CharacterCreatorManager?.PreviewUnitController?.DynamicCharacterAvatar != null) {
-                SystemGameManager.Instance.SaveManager.LoadUMASettings(SystemGameManager.Instance.CharacterCreatorManager.PreviewUnitController.DynamicCharacterAvatar, false);
+            if (characterCreatorManager.PreviewUnitController?.DynamicCharacterAvatar != null) {
+                saveManager.LoadUMASettings(characterCreatorManager.PreviewUnitController.DynamicCharacterAvatar, false);
             }
         }
 
         public void HandleTargetReady() {
             //LoadUMARecipe();
 
-            if (SystemGameManager.Instance.CharacterCreatorManager.PreviewUnitController != null) {
+            if (characterCreatorManager.PreviewUnitController != null) {
 
                 //LoadUMARecipe();
 
                 // apply capabilities to it so equipment can work
-                SystemGameManager.Instance.CharacterCreatorManager.PreviewUnitController.CharacterUnit.BaseCharacter.ApplyCapabilityConsumerSnapshot(capabilityConsumerSnapshot);
+                characterCreatorManager.PreviewUnitController.CharacterUnit.BaseCharacter.ApplyCapabilityConsumerSnapshot(capabilityConsumerSnapshot);
 
-                BaseCharacter baseCharacter = SystemGameManager.Instance.CharacterCreatorManager.PreviewUnitController.CharacterUnit.BaseCharacter;
+                BaseCharacter baseCharacter = characterCreatorManager.PreviewUnitController.CharacterUnit.BaseCharacter;
                 if (baseCharacter != null) {
-                    //SystemGameManager.Instance.SaveManager.LoadEquipmentData(loadGameButton.MySaveData, characterEquipmentManager);
+                    //saveManager.LoadEquipmentData(loadGameButton.MySaveData, characterEquipmentManager);
                     // results in equipment being sheathed
-                    SystemGameManager.Instance.SaveManager.LoadEquipmentData(anyRPGSaveData, baseCharacter.CharacterEquipmentManager);
+                    saveManager.LoadEquipmentData(anyRPGSaveData, baseCharacter.CharacterEquipmentManager);
                 }
             }
         }
@@ -219,7 +239,7 @@ namespace AnyRPG {
 
         public void ClosePanel() {
             //Debug.Log("LoadGamePanel.ClosePanel()");
-            SystemGameManager.Instance.UIManager.SystemWindowManager.loadGameWindow.CloseWindow();
+            uIManager.SystemWindowManager.loadGameWindow.CloseWindow();
         }
 
         /*
@@ -234,52 +254,52 @@ namespace AnyRPG {
 
         public void LoadGame() {
             if (SelectedLoadGameButton != null) {
-                SystemGameManager.Instance.SaveManager.LoadGame(SelectedLoadGameButton.SaveData);
+                saveManager.LoadGame(SelectedLoadGameButton.SaveData);
             }
         }
 
         public void NewGame() {
             //Debug.Log("LoadGamePanel.NewGame()");
-            if (SystemGameManager.Instance.SystemConfigurationManager.UseNewGameWindow == true) {
+            if (systemConfigurationManager.UseNewGameWindow == true) {
                 ClosePanel();
-                SystemGameManager.Instance.UIManager.SystemWindowManager.newGameWindow.OpenWindow();
+                uIManager.SystemWindowManager.newGameWindow.OpenWindow();
             } else {
-                SystemGameManager.Instance.UIManager.SystemWindowManager.confirmNewGameMenuWindow.OpenWindow();
+                uIManager.SystemWindowManager.confirmNewGameMenuWindow.OpenWindow();
             }
         }
 
         public void DeleteGame() {
             if (SelectedLoadGameButton != null) {
-                SystemGameManager.Instance.UIManager.SystemWindowManager.deleteGameMenuWindow.OpenWindow();
+                uIManager.SystemWindowManager.deleteGameMenuWindow.OpenWindow();
             }
         }
 
         public void DeleteGame(bool confirmDelete = false) {
             if (SelectedLoadGameButton != null) {
                 if (confirmDelete) {
-                    SystemGameManager.Instance.SaveManager.DeleteGame(SelectedLoadGameButton.SaveData);
-                    SystemGameManager.Instance.UIManager.SystemWindowManager.deleteGameMenuWindow.CloseWindow();
+                    saveManager.DeleteGame(SelectedLoadGameButton.SaveData);
+                    uIManager.SystemWindowManager.deleteGameMenuWindow.CloseWindow();
                     ShowLoadButtonsCommon();
                 } else {
-                    SystemGameManager.Instance.UIManager.SystemWindowManager.deleteGameMenuWindow.OpenWindow();
+                    uIManager.SystemWindowManager.deleteGameMenuWindow.OpenWindow();
                 }
             }
         }
 
         public void CopyGame() {
             if (SelectedLoadGameButton != null) {
-                SystemGameManager.Instance.UIManager.SystemWindowManager.copyGameMenuWindow.OpenWindow();
+                uIManager.SystemWindowManager.copyGameMenuWindow.OpenWindow();
             }
         }
 
         public void CopyGame(bool confirmCopy = false) {
             if (SelectedLoadGameButton != null) {
                 if (confirmCopy) {
-                    SystemGameManager.Instance.SaveManager.CopyGame(SelectedLoadGameButton.SaveData);
-                    SystemGameManager.Instance.UIManager.SystemWindowManager.copyGameMenuWindow.CloseWindow();
+                    saveManager.CopyGame(SelectedLoadGameButton.SaveData);
+                    uIManager.SystemWindowManager.copyGameMenuWindow.CloseWindow();
                     ShowLoadButtonsCommon(SelectedLoadGameButton.SaveData.DataFileName);
                 } else {
-                    SystemGameManager.Instance.UIManager.SystemWindowManager.copyGameMenuWindow.OpenWindow();
+                    uIManager.SystemWindowManager.copyGameMenuWindow.OpenWindow();
                 }
             }
         }

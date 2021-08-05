@@ -28,10 +28,10 @@ namespace AnyRPG {
             if (character.GetType() == Type.GetType(MyType) || SystemDataFactory.MatchResource(character.CharacterName, MyType) || SystemDataFactory.MatchResource(character.Faction.DisplayName, MyType)) {
                 CurrentAmount++;
                 quest.CheckCompletion();
-                if (CurrentAmount <= MyAmount && !quest.MyIsAchievement && CurrentAmount != 0) {
+                if (CurrentAmount <= MyAmount && !quest.IsAchievement && CurrentAmount != 0) {
                     SystemGameManager.Instance.UIManager.MessageFeedManager.WriteMessage(string.Format("{0}: {1}/{2}", DisplayName, Mathf.Clamp(CurrentAmount, 0, MyAmount), MyAmount));
                 }
-                if (completeBefore == false && IsComplete && !quest.MyIsAchievement) {
+                if (completeBefore == false && IsComplete && !quest.IsAchievement) {
                     SystemGameManager.Instance.UIManager.MessageFeedManager.WriteMessage(string.Format("Learn {0} {1}: Objective Complete", CurrentAmount, DisplayName));
                 }
 

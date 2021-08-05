@@ -24,15 +24,26 @@ namespace AnyRPG {
         // need a reference to the capabilityConsumer calling window to get Unit Profile
         private ICapabilityConsumer capabilityConsumer = null;
 
+        // game manager references
+        private CharacterCreatorManager characterCreatorManager = null;
+        private CameraManager cameraManager = null;
+
         public CharacterPreviewCameraController MyPreviewCameraController { get => previewCameraController; set => previewCameraController = value; }
         public bool CharacterReady { get => characterReady; }
         public ICapabilityConsumer CapabilityConsumer { get => capabilityConsumer; set => capabilityConsumer = value; }
+
+        public override void Init(SystemGameManager systemGameManager) {
+            base.Init(systemGameManager);
+
+            characterCreatorManager = systemGameManager.CharacterCreatorManager;
+            cameraManager = systemGameManager.CameraManager;
+        }
 
         public override void RecieveClosedWindowNotification() {
             //Debug.Log("CharacterPreviewPanelController.RecieveClosedWindowNotification()");
             base.RecieveClosedWindowNotification();
             characterReady = false;
-            SystemGameManager.Instance.CharacterCreatorManager.HandleCloseWindow();
+            characterCreatorManager.HandleCloseWindow();
             previewCameraController.ClearTarget();
             OnCloseWindow(this);
         }
@@ -57,12 +68,12 @@ namespace AnyRPG {
         public void ClearPreviewTarget() {
             //Debug.Log("CharacterPreviewPanelController.ClearPreviewTarget()");
             // not really close window, but it will despawn the preview unit
-            SystemGameManager.Instance.CharacterCreatorManager.HandleCloseWindow();
+            characterCreatorManager.HandleCloseWindow();
         }
 
         private void SetPreviewTarget() {
             //Debug.Log("CharacterPreviewPanelController.SetPreviewTarget()");
-            if (SystemGameManager.Instance.CharacterCreatorManager.PreviewUnitController != null
+            if (characterCreatorManager.PreviewUnitController != null
                 || capabilityConsumer == null
                 || capabilityConsumer.UnitProfile == null) {
                 //Debug.Log("CharacterPreviewPanelController.SetPreviewTarget() UMA avatar is already spawned!");
@@ -70,13 +81,13 @@ namespace AnyRPG {
             }
 
             //spawn correct preview unit
-            SystemGameManager.Instance.CharacterCreatorManager.HandleOpenWindow(capabilityConsumer.UnitProfile);
+            characterCreatorManager.HandleOpenWindow(capabilityConsumer.UnitProfile);
 
-            if (SystemGameManager.Instance.CameraManager != null && SystemGameManager.Instance.CameraManager.CharacterPreviewCamera != null) {
+            if (cameraManager.CharacterPreviewCamera != null) {
                 //Debug.Log("CharacterPanel.SetPreviewTarget(): preview camera was available, setting target");
                 if (MyPreviewCameraController != null) {
                     MyPreviewCameraController.OnTargetReady += TargetReadyCallback;
-                    MyPreviewCameraController.InitializeCamera(SystemGameManager.Instance.CharacterCreatorManager.PreviewUnitController);
+                    MyPreviewCameraController.InitializeCamera(characterCreatorManager.PreviewUnitController);
                     //Debug.Log("CharacterPanel.SetPreviewTarget(): preview camera was available, setting Target Ready Callback");
                 } else {
                     Debug.LogError("CharacterPanel.SetPreviewTarget(): Character Preview Camera Controller is null. Please set it in the inspector");
@@ -104,16 +115,16 @@ namespace AnyRPG {
         public void RebuildUMA() {
             //Debug.Log("CharacterCreatorPanel.RebuildUMA()");
             //Debug.Log("CharacterPreviewPanelController.RebuildUMA(): BuildCharacter(): buildenabled: " + umaAvatar.BuildCharacterEnabled + "; frame: " + Time.frameCount);
-            if (SystemGameManager.Instance.CharacterCreatorManager.PreviewUnitController?.DynamicCharacterAvatar != null) {
-                SystemGameManager.Instance.CharacterCreatorManager.PreviewUnitController.DynamicCharacterAvatar.BuildCharacter();
+            if (characterCreatorManager.PreviewUnitController?.DynamicCharacterAvatar != null) {
+                characterCreatorManager.PreviewUnitController.DynamicCharacterAvatar.BuildCharacter();
             }
         }
 
         public string GetCurrentRecipe() {
-            if (SystemGameManager.Instance.CharacterCreatorManager.PreviewUnitController?.DynamicCharacterAvatar == null) {
+            if (characterCreatorManager.PreviewUnitController?.DynamicCharacterAvatar == null) {
                 return string.Empty;
             }
-            return SystemGameManager.Instance.CharacterCreatorManager.PreviewUnitController.DynamicCharacterAvatar.GetCurrentRecipe();
+            return characterCreatorManager.PreviewUnitController.DynamicCharacterAvatar.GetCurrentRecipe();
         }
 
     }

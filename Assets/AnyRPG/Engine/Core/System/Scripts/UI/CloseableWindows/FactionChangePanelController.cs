@@ -27,13 +27,28 @@ namespace AnyRPG {
 
         private Faction faction = null;
 
+        // game manager references
+        private UIManager uIManager = null;
+        private PlayerManager playerManager = null;
+        private ObjectPooler objectPooler = null;
+
+        public override void Init(SystemGameManager systemGameManager) {
+            base.Init(systemGameManager);
+
+            uIManager = systemGameManager.UIManager;
+            playerManager = systemGameManager.PlayerManager;
+            objectPooler = systemGameManager.ObjectPooler;
+
+            factionButton.Init(systemGameManager);
+        }
+
         public void Setup(Faction newFaction) {
             //Debug.Log("FactionChangePanelController.Setup(" + newFactionName + ")");
             faction = newFaction;
             factionButton.AddFaction(faction);
-            SystemGameManager.Instance.UIManager.PopupWindowManager.factionChangeWindow.SetWindowTitle(faction.DisplayName);
+            uIManager.factionChangeWindow.SetWindowTitle(faction.DisplayName);
             ShowAbilityRewards();
-            SystemGameManager.Instance.UIManager.PopupWindowManager.factionChangeWindow.OpenWindow();
+            uIManager.factionChangeWindow.OpenWindow();
         }
 
         public void ShowAbilityRewards() {
@@ -49,10 +64,11 @@ namespace AnyRPG {
                 return;
             }
             for (int i = 0; i < capabilityProps.AbilityList.Count; i++) {
-                RewardButton rewardIcon = ObjectPooler.Instance.GetPooledObject(rewardIconPrefab, abilityIconsArea.transform).GetComponent<RewardButton>();
+                RewardButton rewardIcon = objectPooler.GetPooledObject(rewardIconPrefab, abilityIconsArea.transform).GetComponent<RewardButton>();
+                rewardIcon.Init(systemGameManager);
                 rewardIcon.SetDescribable(capabilityProps.AbilityList[i]);
                 abilityRewardIcons.Add(rewardIcon);
-                if (capabilityProps.AbilityList[i].RequiredLevel > SystemGameManager.Instance.PlayerManager.MyCharacter.CharacterStats.Level) {
+                if (capabilityProps.AbilityList[i].RequiredLevel > playerManager.MyCharacter.CharacterStats.Level) {
                     rewardIcon.StackSizeText.text = "Level\n" + capabilityProps.AbilityList[i].RequiredLevel;
                     rewardIcon.MyHighlightIcon.color = new Color32(255, 255, 255, 80);
                 }
@@ -63,21 +79,21 @@ namespace AnyRPG {
             //Debug.Log("FactionChangePanelController.ClearRewardIcons()");
 
             foreach (RewardButton rewardIcon in abilityRewardIcons) {
-                ObjectPooler.Instance.ReturnObjectToPool(rewardIcon.gameObject);
+                objectPooler.ReturnObjectToPool(rewardIcon.gameObject);
             }
             abilityRewardIcons.Clear();
         }
 
         public void CancelAction() {
             //Debug.Log("FactionChangePanelController.CancelAction()");
-            SystemGameManager.Instance.UIManager.PopupWindowManager.factionChangeWindow.CloseWindow();
+            uIManager.factionChangeWindow.CloseWindow();
         }
 
         public void ConfirmAction() {
             //Debug.Log("FactionChangePanelController.ConfirmAction()");
-            SystemGameManager.Instance.PlayerManager.SetPlayerFaction(faction);
+            playerManager.SetPlayerFaction(faction);
             OnConfirmAction();
-            SystemGameManager.Instance.UIManager.PopupWindowManager.factionChangeWindow.CloseWindow();
+            uIManager.factionChangeWindow.CloseWindow();
         }
 
         public override void RecieveClosedWindowNotification() {

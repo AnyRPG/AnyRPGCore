@@ -12,7 +12,7 @@ public interface IClickable {
         set;
     }
 
-    int MyCount {
+    int Count {
         get;
     }
 

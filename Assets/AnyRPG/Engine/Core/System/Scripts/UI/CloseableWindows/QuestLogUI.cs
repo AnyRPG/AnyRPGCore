@@ -52,11 +52,22 @@ namespace AnyRPG {
 
         private QuestScript selectedQuestScript = null;
 
+        // game manager references
+        private QuestLog questLog = null;
+        private ObjectPooler objectPooler = null;
+
         public QuestScript MySelectedQuestScript { get => selectedQuestScript; set => selectedQuestScript = value; }
 
-        private void Start() {
+        public override void Init(SystemGameManager systemGameManager) {
+            base.Init(systemGameManager);
+
+            questLog = systemGameManager.QuestLog;
+            objectPooler = systemGameManager.ObjectPooler;
+
             SystemEventManager.StartListening("OnQuestStatusUpdated", HandleQuestStatusUpdated);
             UpdateQuestCount();
+
+            questDetailsArea.Init(systemGameManager);
         }
 
         public void HandleQuestStatusUpdated(string eventName, EventParamProperties eventParamProperties) {
@@ -64,7 +75,7 @@ namespace AnyRPG {
         }
 
         private void UpdateQuestCount() {
-            questCount.text = SystemGameManager.Instance.QuestLog.Quests.Count + " / " + maxCount;
+            questCount.text = questLog.Quests.Count + " / " + maxCount;
         }
 
         public void ShowQuestsCommon() {
@@ -75,10 +86,11 @@ namespace AnyRPG {
 
             QuestScript firstAvailableQuest = null;
 
-            foreach (Quest quest in SystemGameManager.Instance.QuestLog.Quests.Values) {
-                GameObject go = ObjectPooler.Instance.GetPooledObject(questPrefab, questParent);
+            foreach (Quest quest in questLog.Quests.Values) {
+                GameObject go = objectPooler.GetPooledObject(questPrefab, questParent);
 
                 QuestScript qs = go.GetComponent<QuestScript>();
+                qs.Init(systemGameManager);
                 qs.SetQuest(this, quest);
                 questScripts.Add(qs);
                 if (firstAvailableQuest == null) {
@@ -124,14 +136,14 @@ namespace AnyRPG {
             foreach (QuestScript questScript in questScripts) {
                 if (MySelectedQuestScript == null) {
                     // we came from questtracker UI
-                    if (SystemDataFactory.MatchResource(newQuest.DisplayName, questScript.MyQuest.DisplayName)) {
+                    if (SystemDataFactory.MatchResource(newQuest.DisplayName, questScript.Quest.DisplayName)) {
                         questScript.RawSelect();
                         MySelectedQuestScript = questScript;
                     } else {
                         questScript.DeSelect();
                     }
                 } else {
-                    if (SystemDataFactory.MatchResource(newQuest.DisplayName, questScript.MyQuest.DisplayName)) {
+                    if (SystemDataFactory.MatchResource(newQuest.DisplayName, questScript.Quest.DisplayName)) {
                         questScript.RawSelect();
                         MySelectedQuestScript = questScript;
                     } else {
@@ -179,14 +191,14 @@ namespace AnyRPG {
             //Debug.Log("QuestLogUI.ClearQuests()");
             foreach (QuestScript _questScript in questScripts) {
                 _questScript.DeSelect();
-                ObjectPooler.Instance.ReturnObjectToPool(_questScript.gameObject);
+                objectPooler.ReturnObjectToPool(_questScript.gameObject);
             }
             questScripts.Clear();
             selectedQuestScript = null;
         }
 
         public void AbandonQuest() {
-            SystemGameManager.Instance.QuestLog.AbandonQuest(MySelectedQuestScript.MyQuest);
+            questLog.AbandonQuest(MySelectedQuestScript.Quest);
             ShowQuestsCommon();
         }
     }

@@ -10,11 +10,23 @@ namespace AnyRPG {
         [SerializeField]
         private List<AchievementButton> resourceButtons = new List<AchievementButton>();
 
+        // game manager references
+        private SystemDataFactory systemDataFactory = null;
+
+        public override void Init(SystemGameManager systemGameManager) {
+            base.Init(systemGameManager);
+
+            systemDataFactory = systemGameManager.SystemDataFactory;
+            foreach (AchievementButton achievementButton in resourceButtons) {
+                achievementButton.Init(systemGameManager);
+            }
+        }
+
         protected override void PopulatePages() {
             //Debug.Log("AchievementPanelUI.CreatePages()");
             QuestContentList page = new QuestContentList();
-            foreach (Quest quest in SystemDataFactory.Instance.GetResourceList<Quest>()) {
-                if (quest.MyIsAchievement && quest.TurnedIn) {
+            foreach (Quest quest in systemDataFactory.GetResourceList<Quest>()) {
+                if (quest.IsAchievement && quest.TurnedIn) {
                     page.quests.Add(quest);
                 }
                 if (page.quests.Count == pageSize) {

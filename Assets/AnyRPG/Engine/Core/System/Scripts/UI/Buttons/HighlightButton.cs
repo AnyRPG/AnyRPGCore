@@ -9,7 +9,7 @@ using UnityEngine.UI;
 namespace AnyRPG {
     // this is almost identical to questscript
 
-    public class HighlightButton : MonoBehaviour, IPointerEnterHandler, IPointerClickHandler, IPointerDownHandler, IPointerUpHandler {
+    public class HighlightButton : ConfiguredMonoBehaviour, IPointerEnterHandler, IPointerClickHandler, IPointerDownHandler, IPointerUpHandler {
 
         [SerializeField]
         protected TextMeshProUGUI text;
@@ -38,26 +38,28 @@ namespace AnyRPG {
         [SerializeField]
         protected bool CapitalizeText = false;
 
-        public TextMeshProUGUI MyText { get => text; }
+        // game manager references
+        protected SystemConfigurationManager systemConfigurationManager = null;
+        protected AudioManager audioManager = null;
 
-        public void Awake() {
-            //Debug.Log(gameObject.name + ".HightlightButton.Awake()");
+        public TextMeshProUGUI Text { get => text; }
 
-            if (SystemGameManager.Instance.SystemConfigurationManager != null) {
-                if (highlightImage != null) {
-                    highlightColor = SystemGameManager.Instance.SystemConfigurationManager.DefaultUIColor;
-                }
-                if (highlightButton != null) {
-                    Image highlightButtonImage = highlightButton.GetComponent<Image>();
-                    if (highlightButtonImage != null) {
-                        highlightButtonImage.color = SystemGameManager.Instance.SystemConfigurationManager.DefaultUISolidColor;
-                    }
+        public override void Init(SystemGameManager systemGameManager) {
+            base.Init(systemGameManager);
+
+            systemConfigurationManager = systemGameManager.SystemConfigurationManager;
+            audioManager = systemGameManager.AudioManager;
+
+            if (highlightImage != null) {
+                highlightColor = systemConfigurationManager.DefaultUIColor;
+            }
+            if (highlightButton != null) {
+                Image highlightButtonImage = highlightButton.GetComponent<Image>();
+                if (highlightButtonImage != null) {
+                    highlightButtonImage.color = systemConfigurationManager.DefaultUISolidColor;
                 }
             }
             DeSelect();
-        }
-
-        public void Start() {
         }
 
         public virtual void Select() {
@@ -103,11 +105,11 @@ namespace AnyRPG {
         }
 
         public virtual void OnHoverSound() {
-            SystemGameManager.Instance.AudioManager.PlayUIHoverSound();
+            audioManager.PlayUIHoverSound();
         }
 
         public virtual void OnClickSound() {
-            SystemGameManager.Instance.AudioManager.PlayUIClickSound();
+            audioManager.PlayUIClickSound();
         }
 
         public void OnPointerEnter(PointerEventData eventData) {

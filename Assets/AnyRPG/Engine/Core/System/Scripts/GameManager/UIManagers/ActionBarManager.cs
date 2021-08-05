@@ -7,6 +7,9 @@ namespace AnyRPG {
     public class ActionBarManager : ConfiguredMonoBehaviour {
 
         [SerializeField]
+        private SystemBarController systemBarController = null;
+
+        [SerializeField]
         private List<ActionBarController> actionBarControllers = new List<ActionBarController>();
 
         private bool abilityBarsPopulated = false;
@@ -33,6 +36,7 @@ namespace AnyRPG {
             keyBindManager = systemGameManager.KeyBindManager;
             systemEventManager = systemGameManager.SystemEventManager;
 
+            systemBarController.Init(systemGameManager);
             InitializeActionbars();
 
             AssociateActionBarKeyBinds();

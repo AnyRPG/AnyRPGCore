@@ -124,7 +124,7 @@ namespace AnyRPG {
                 return;
             }
             // AVOID ACCIDENTALLY ACCEPTING TURNED IN QUESTS THAT ARE NOT REPEATABLE
-            if (newQuest != null && (newQuest.TurnedIn == false || newQuest.MyRepeatableQuest == true)) {
+            if (newQuest != null && (newQuest.TurnedIn == false || newQuest.RepeatableQuest == true)) {
                 // add first, then use acceptquest because it needs to be in the log for the accepquest completion check to pass
                 string keyName = SystemDataFactory.PrepareStringForMatch(newQuest.DisplayName);
                 quests[keyName] = newQuest;

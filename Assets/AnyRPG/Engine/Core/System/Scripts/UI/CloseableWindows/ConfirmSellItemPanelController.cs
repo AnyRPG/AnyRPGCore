@@ -9,20 +9,28 @@ namespace AnyRPG {
 
         private Item item = null;
 
+        // game manager references
+        private UIManager uIManager = null;
+
         public Item MyItem { get => item; set => item = value; }
+
+        public override void Init(SystemGameManager systemGameManager) {
+            base.Init(systemGameManager);
+            uIManager = systemGameManager.UIManager;
+        }
 
         public void CancelAction() {
             //Debug.Log("NewGameMenuController.CancelAction()");
-            SystemGameManager.Instance.UIManager.SystemWindowManager.confirmSellItemMenuWindow.CloseWindow();
+            uIManager.SystemWindowManager.confirmSellItemMenuWindow.CloseWindow();
         }
 
         public void ConfirmAction() {
             //Debug.Log("NewGameMenuController.ConfirmAction()");
             //SystemGameManager.Instance.UIManager.HandScript.DeleteItem();
             if (item != null) {
-                (SystemGameManager.Instance.UIManager.PopupWindowManager.vendorWindow.CloseableWindowContents as VendorUI).SellItem(MyItem);
+                (uIManager.vendorWindow.CloseableWindowContents as VendorUI).SellItem(MyItem);
             }
-            SystemGameManager.Instance.UIManager.SystemWindowManager.confirmSellItemMenuWindow.CloseWindow();
+            uIManager.SystemWindowManager.confirmSellItemMenuWindow.CloseWindow();
         }
 
         public override void ReceiveOpenWindowNotification() {

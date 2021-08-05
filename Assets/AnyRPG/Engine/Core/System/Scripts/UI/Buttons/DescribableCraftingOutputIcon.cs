@@ -7,6 +7,8 @@ using UnityEngine.UI;
 
 namespace AnyRPG {
     public class DescribableCraftingOutputIcon : DescribableIcon {
+
+
         public override void UpdateVisual() {
             //Debug.Log("DescribableCraftingOutputIcon.UpdateVisual()");
             base.UpdateVisual();

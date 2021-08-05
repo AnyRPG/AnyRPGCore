@@ -32,7 +32,7 @@ namespace AnyRPG {
 
         // game manager references
         PlayerManager playerManager = null;
-        PopupWindowManager popupWindowManager = null;
+        UIManager uIManager = null;
         MessageFeedManager messageFeedManager = null;
         SystemConfigurationManager systemConfigurationManager = null;
 
@@ -41,7 +41,7 @@ namespace AnyRPG {
         public override void Init(SystemGameManager systemGameManager) {
             base.Init(systemGameManager);
             playerManager = systemGameManager.PlayerManager;
-            popupWindowManager = systemGameManager.UIManager.PopupWindowManager;
+            uIManager = systemGameManager.UIManager;
             systemConfigurationManager = systemGameManager.SystemConfigurationManager;
             messageFeedManager = systemGameManager.UIManager.MessageFeedManager;
 
@@ -50,6 +50,15 @@ namespace AnyRPG {
             //InitializeBuyBackList();
             //buyBackCollection = new VendorCollection();
             buyBackCollection = ScriptableObject.CreateInstance(typeof(VendorCollection)) as VendorCollection;
+
+            currencyBarController.Init(systemGameManager);
+            foreach (VendorButton vendorButton in vendorButtons) {
+                vendorButton.Init(systemGameManager);
+            }
+
+            foreach (CurrencyAmountController currencyAmountController in currencyAmountControllers) {
+                currencyAmountController.Init(systemGameManager);
+            }
         }
 
         protected override void CreateEventSubscriptions() {
@@ -138,7 +147,7 @@ namespace AnyRPG {
         }
 
         public void UpdateCurrencyAmount() {
-            if (popupWindowManager.vendorWindow.IsOpen == false) {
+            if (uIManager.vendorWindow.IsOpen == false) {
                 return;
             }
             Dictionary<Currency, int> playerBaseCurrency = playerManager.MyCharacter.CharacterCurrencyManager.GetRedistributedCurrency();

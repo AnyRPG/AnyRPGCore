@@ -40,7 +40,6 @@ namespace AnyRPG {
         private MessageFeedManager messageFeedManager = null;
         private SystemItemManager systemItemManager = null;
         private UIManager uIManager = null;
-        private PopupWindowManager popupWindowManager = null;
         private ObjectPooler objectPooler = null;
         private SystemEventManager systemEventManager = null;
 
@@ -104,11 +103,12 @@ namespace AnyRPG {
             uIManager = systemGameManager.UIManager;
             handScript = uIManager.HandScript;
             messageFeedManager = uIManager.MessageFeedManager;
-            popupWindowManager = uIManager.PopupWindowManager;
             systemConfigurationManager = systemGameManager.SystemConfigurationManager;
             systemItemManager = systemGameManager.SystemItemManager;
             objectPooler = systemGameManager.ObjectPooler;
             systemEventManager = systemGameManager.SystemEventManager;
+
+            bagBarController.Init(systemGameManager);
         }
 
         private void Start() {
@@ -256,6 +256,7 @@ namespace AnyRPG {
                 if (i < bagCount) {
                     // create a new BagWindow to show the contents of this bag Nodes' bag
                     bagNode.BagWindow = objectPooler.GetPooledObject(windowPrefab, inventoryWindowHolders[i].transform).GetComponent<CloseableWindow>();
+                    bagNode.BagWindow.Init(systemGameManager);
                     bagNode.BagWindow.transform.GetComponent<RectTransform>().pivot = new Vector2(1, 1);
                     // create a bagbutton to access this bag node
 
@@ -270,14 +271,14 @@ namespace AnyRPG {
                 } else {
                     if (i == bagCount) {
                         //Debug.Log("InventoryManager.InitializeBagWindows(): create element " + i + " setting bag window to bank window");
-                        bagNode.BagWindow = popupWindowManager.bankWindow;
+                        bagNode.BagWindow = uIManager.bankWindow;
                     } else {
                         //Debug.Log("InventoryManager.InitializeBagWindows(): create element " + i + " creating bag window");
                         bagNode.BagWindow = objectPooler.GetPooledObject(windowPrefab, inventoryWindowHolders[i - 1].transform).GetComponent<CloseableWindow>();
                         bagNode.BagWindow.transform.GetComponent<RectTransform>().pivot = new Vector2(1, 1);
                     }
 
-                    bagNode.BagButton = (popupWindowManager.bankWindow.CloseableWindowContents as BankPanel).MyBagBarController.AddBagButton();
+                    bagNode.BagButton = (uIManager.bankWindow.CloseableWindowContents as BankPanel).MyBagBarController.AddBagButton();
 
                     if (bagNode.BagButton != null) {
                         bagNode.BagButton.MyBagNode = bagNode;
@@ -635,7 +636,7 @@ namespace AnyRPG {
                 if (bagNode.MyBag != null) {
                     foreach (SlotScript slot in bagNode.BagPanel.MySlots) {
                         if (!slot.IsEmpty && SystemDataFactory.MatchResource(slot.MyItem.DisplayName, useable.DisplayName)) {
-                            count += slot.MyCount;
+                            count += slot.Count;
                         }
                     }
                 }
@@ -655,7 +656,7 @@ namespace AnyRPG {
                 if (bagNode.MyBag != null) {
                     foreach (SlotScript slot in bagNode.BagPanel.MySlots) {
                         if (!slot.IsEmpty && SystemDataFactory.MatchResource(slot.MyItem.DisplayName, type)) {
-                            itemCount += slot.MyCount;
+                            itemCount += slot.Count;
                         }
                     }
                 }

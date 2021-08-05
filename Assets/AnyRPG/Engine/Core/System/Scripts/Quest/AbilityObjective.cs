@@ -30,10 +30,10 @@ namespace AnyRPG {
             }
             CurrentAmount++;
             quest.CheckCompletion();
-            if (CurrentAmount <= MyAmount && !quest.MyIsAchievement && CurrentAmount != 0) {
+            if (CurrentAmount <= MyAmount && !quest.IsAchievement && CurrentAmount != 0) {
                 SystemGameManager.Instance.UIManager.MessageFeedManager.WriteMessage(string.Format("{0}: {1}/{2}", DisplayName, Mathf.Clamp(CurrentAmount, 0, MyAmount), MyAmount));
             }
-            if (completeBefore == false && IsComplete && !quest.MyIsAchievement) {
+            if (completeBefore == false && IsComplete && !quest.IsAchievement) {
                 SystemGameManager.Instance.UIManager.MessageFeedManager.WriteMessage(string.Format("Learn {0} {1}: Objective Complete", CurrentAmount, DisplayName));
             }
         }
@@ -43,10 +43,10 @@ namespace AnyRPG {
             bool completeBefore = IsComplete;
                 CurrentAmount++;
                 quest.CheckCompletion();
-                if (CurrentAmount <= MyAmount && !quest.MyIsAchievement) {
+                if (CurrentAmount <= MyAmount && !quest.IsAchievement) {
                     SystemGameManager.Instance.UIManager.MessageFeedManager.WriteMessage(string.Format("{0}: {1}/{2}", baseAbility.DisplayName, CurrentAmount, MyAmount));
                 }
-                if (completeBefore == false && IsComplete && !quest.MyIsAchievement) {
+                if (completeBefore == false && IsComplete && !quest.IsAchievement) {
                     SystemGameManager.Instance.UIManager.MessageFeedManager.WriteMessage(string.Format("Learn {0} {1}: Objective Complete", CurrentAmount, baseAbility.DisplayName));
                 }
         }
@@ -61,10 +61,10 @@ namespace AnyRPG {
             if (SystemGameManager.Instance.PlayerManager.MyCharacter.CharacterAbilityManager.HasAbility(baseAbility)) {
                 CurrentAmount++;
                 quest.CheckCompletion(true, printMessages);
-                if (CurrentAmount <= MyAmount && !quest.MyIsAchievement && printMessages == true) {
+                if (CurrentAmount <= MyAmount && !quest.IsAchievement && printMessages == true) {
                     SystemGameManager.Instance.UIManager.MessageFeedManager.WriteMessage(string.Format("{0}: {1}/{2}", baseAbility.DisplayName, CurrentAmount, MyAmount));
                 }
-                if (completeBefore == false && IsComplete && !quest.MyIsAchievement && printMessages == true) {
+                if (completeBefore == false && IsComplete && !quest.IsAchievement && printMessages == true) {
                     SystemGameManager.Instance.UIManager.MessageFeedManager.WriteMessage(string.Format("Learn {0} {1}: Objective Complete", CurrentAmount, baseAbility.DisplayName));
                 }
             }

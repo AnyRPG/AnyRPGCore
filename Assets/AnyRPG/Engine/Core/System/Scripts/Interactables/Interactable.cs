@@ -490,14 +490,14 @@ namespace AnyRPG {
             } else {
                 Debug.Log("interactionpanelUI had no instance");
             }
-            if (SystemGameManager.Instance.UIManager.PopupWindowManager != null) {
-                SystemGameManager.Instance.UIManager.PopupWindowManager.interactionWindow.OpenWindow();
+            if (SystemGameManager.Instance.UIManager != null) {
+                SystemGameManager.Instance.UIManager.interactionWindow.OpenWindow();
             }
         }
 
         public void CloseInteractionWindow() {
             SystemGameManager.Instance.InteractionManager.CurrentInteractable = null;
-            SystemGameManager.Instance.UIManager.PopupWindowManager.interactionWindow.CloseWindow();
+            SystemGameManager.Instance.UIManager.interactionWindow.CloseWindow();
         }
 
         public bool CanInteract() {

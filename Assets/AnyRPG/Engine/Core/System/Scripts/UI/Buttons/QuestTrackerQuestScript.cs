@@ -8,7 +8,7 @@ using UnityEngine.UI;
 namespace AnyRPG {
     // this is almost identical to questscript
 
-    public class QuestTrackerQuestScript : MonoBehaviour {
+    public class QuestTrackerQuestScript : ConfiguredMonoBehaviour {
         public Quest MyQuest { get; set; }
 
         [SerializeField]
@@ -16,15 +16,24 @@ namespace AnyRPG {
 
         //private bool markedComplete = false;
 
+        // game manager references
+        private UIManager uIManager = null;
+
         public TextMeshProUGUI MyText {
             get {
                 return text;
             }
         }
 
+        public override void Init(SystemGameManager systemGameManager) {
+            base.Init(systemGameManager);
+
+            uIManager = systemGameManager.UIManager;
+        }
+
         public void Select() {
             //Debug.Log("QuestTrackerQuestScript.Select()");
-            SystemGameManager.Instance.UIManager.PopupWindowManager.questLogWindow.OpenWindow();
+            uIManager.questLogWindow.OpenWindow();
             QuestLogUI.Instance.ShowDescription(MyQuest);
         }
 

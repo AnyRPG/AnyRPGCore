@@ -6,7 +6,7 @@ using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 namespace AnyRPG {
-    public class BagButton : MonoBehaviour, IPointerClickHandler, IDescribable, IPointerEnterHandler, IPointerExitHandler, IPointerDownHandler, IPointerUpHandler {
+    public class BagButton : ConfiguredMonoBehaviour, IPointerClickHandler, IDescribable, IPointerEnterHandler, IPointerExitHandler, IPointerDownHandler, IPointerUpHandler {
 
         private BagNode bagNode = null;
 
@@ -21,10 +21,10 @@ namespace AnyRPG {
 
         private bool localComponentsGotten = false;
 
-        /*
-        [SerializeField]
-        private int bagIndex;
-        */
+        // game manager references
+        private InventoryManager inventoryManager = null;
+        private HandScript handScript = null;
+        private UIManager uIManager = null;
 
         public BagNode MyBagNode {
             get {
@@ -49,6 +49,17 @@ namespace AnyRPG {
 
         public Sprite Icon { get => (MyBagNode.MyBag != null ? MyBagNode.MyBag.Icon : null); }
         public string DisplayName { get => (MyBagNode.MyBag != null ? MyBagNode.MyBag.DisplayName : null); }
+
+        public override void Init(SystemGameManager systemGameManager) {
+            base.Init(systemGameManager);
+
+            inventoryManager = systemGameManager.InventoryManager;
+            uIManager = systemGameManager.UIManager;
+            handScript = uIManager.HandScript;
+
+            GetLocalComponents();
+            SetBackGroundColor();
+        }
 
         public void OnAddBag(Bag bag) {
             //Debug.Log("BagButton.OnAddBag: setting icon: " + bag.MyIcon.name);
@@ -76,14 +87,6 @@ namespace AnyRPG {
         }
         */
 
-        private void Awake() {
-            GetLocalComponents();
-        }
-
-        private void Start() {
-            SetBackGroundColor();
-        }
-
         public void GetLocalComponents() {
             if (localComponentsGotten == true) {
                 return;
@@ -106,22 +109,22 @@ namespace AnyRPG {
             }
             if (eventData.button == PointerEventData.InputButton.Left) {
                 //Debug.Log("BagButton.OnPointerClick() LEFT CLICK DETECTED");
-                if (SystemGameManager.Instance.InventoryManager.FromSlot != null && SystemGameManager.Instance.UIManager.HandScript.Moveable != null && SystemGameManager.Instance.UIManager.HandScript.Moveable is Bag) {
+                if (inventoryManager.FromSlot != null && handScript.Moveable != null && handScript.Moveable is Bag) {
                     if (MyBagNode.MyBag != null) {
-                        SystemGameManager.Instance.InventoryManager.SwapBags(MyBagNode.MyBag, SystemGameManager.Instance.UIManager.HandScript.Moveable as Bag);
+                        inventoryManager.SwapBags(MyBagNode.MyBag, handScript.Moveable as Bag);
                     } else {
-                        Bag tmp = (Bag)SystemGameManager.Instance.UIManager.HandScript.Moveable;
+                        Bag tmp = (Bag)handScript.Moveable;
                         tmp.MyBagNode = bagNode;
                         tmp.Use();
                         MyBagNode.MyBag = tmp;
-                        SystemGameManager.Instance.UIManager.HandScript.Drop();
-                        SystemGameManager.Instance.InventoryManager.FromSlot = null;
+                        handScript.Drop();
+                        inventoryManager.FromSlot = null;
 
                     }
                 } else if (Input.GetKey(KeyCode.LeftShift)) {
                     //Debug.Log("BagButton.OnPointerClick() LEFT CLICK DETECTED WITH SHIFT KEY on bagNode.mybag: " + bagNode.MyBag.GetInstanceID());
                     //Debug.Log("InventoryManager.RemoveBag(): Found matching bag in bagNode: " + bagNode.MyBag.GetInstanceID() + "; " + bag.GetInstanceID());
-                    SystemGameManager.Instance.UIManager.HandScript.TakeMoveable(MyBagNode.MyBag);
+                    handScript.TakeMoveable(MyBagNode.MyBag);
                 } else if (bagNode?.MyBag != null) {
                     bagNode.BagWindow.ToggleOpenClose();
                 }
@@ -145,11 +148,11 @@ namespace AnyRPG {
 
         public void OnPointerEnter(PointerEventData eventData) {
 
-            SystemGameManager.Instance.UIManager.ShowToolTip(transform.position, this);
+            uIManager.ShowToolTip(transform.position, this);
         }
 
         public void OnPointerExit(PointerEventData eventData) {
-            SystemGameManager.Instance.UIManager.HideToolTip();
+            uIManager.HideToolTip();
         }
 
         public void OnDestroy() {

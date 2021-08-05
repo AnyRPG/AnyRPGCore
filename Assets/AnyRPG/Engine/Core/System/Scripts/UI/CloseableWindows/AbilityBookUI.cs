@@ -18,6 +18,10 @@ namespace AnyRPG {
         public override void Init(SystemGameManager systemGameManager) {
             base.Init(systemGameManager);
             playerManager = systemGameManager.PlayerManager;
+
+            foreach (AbilityButton abilityButton in abilityButtons) {
+                abilityButton.Init(systemGameManager);
+            }
         }
 
         protected override void PopulatePages() {

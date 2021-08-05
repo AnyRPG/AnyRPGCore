@@ -21,6 +21,15 @@ namespace AnyRPG {
         [SerializeField]
         private TextMeshProUGUI description = null;
 
+        // game manager references
+        PlayerManager playerManager = null;
+
+        public override void Init(SystemGameManager systemGameManager) {
+            base.Init(systemGameManager);
+
+            playerManager = systemGameManager.PlayerManager;
+        }
+
         public void AddAbility(BaseAbility ability) {
             this.ability = ability;
             icon.sprite = this.ability.Icon;
@@ -41,11 +50,11 @@ namespace AnyRPG {
             //Debug.Log("AbilityButton.OnPointerClick()");
             if (eventData.button == PointerEventData.InputButton.Left) {
                 //Debug.Log("AbilityButton.OnPointerClick(): left click");
-                SystemGameManager.Instance.UIManager.HandScript.TakeMoveable(ability);
+                uIManager.HandScript.TakeMoveable(ability);
             }
             if (eventData.button == PointerEventData.InputButton.Right) {
                 //Debug.Log("AbilityButton.OnPointerClick(): right click");
-                SystemGameManager.Instance.PlayerManager.MyCharacter.CharacterAbilityManager.BeginAbility(ability);
+                playerManager.MyCharacter.CharacterAbilityManager.BeginAbility(ability);
             }
         }
     }

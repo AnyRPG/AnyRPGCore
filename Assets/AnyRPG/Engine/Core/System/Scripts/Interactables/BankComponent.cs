@@ -15,9 +15,9 @@ namespace AnyRPG {
         public override bool Interact(CharacterUnit source, int optionIndex = 0) {
             //Debug.Log(gameObject.name + ".Bank.Interact(" + (source == null ? "null" : source.name) +")");
             base.Interact(source, optionIndex);
-            SystemGameManager.Instance.UIManager.PopupWindowManager.interactionWindow.CloseWindow();
-            if (!SystemGameManager.Instance.UIManager.PopupWindowManager.bankWindow.IsOpen) {
-                SystemGameManager.Instance.UIManager.PopupWindowManager.bankWindow.OpenWindow();
+            SystemGameManager.Instance.UIManager.interactionWindow.CloseWindow();
+            if (!SystemGameManager.Instance.UIManager.bankWindow.IsOpen) {
+                SystemGameManager.Instance.UIManager.bankWindow.OpenWindow();
                 return true;
             }
             return false;
@@ -25,7 +25,7 @@ namespace AnyRPG {
 
         public override void StopInteract() {
             base.StopInteract();
-            SystemGameManager.Instance.UIManager.PopupWindowManager.bankWindow.CloseWindow();
+            SystemGameManager.Instance.UIManager.bankWindow.CloseWindow();
         }
 
     }

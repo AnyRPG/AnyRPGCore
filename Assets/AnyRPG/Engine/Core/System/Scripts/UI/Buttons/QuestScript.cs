@@ -18,13 +18,22 @@ namespace AnyRPG {
 
         private QuestLogUI questLogUI = null;
 
-        public Quest MyQuest { get => quest; }
+        // game manager references
+        private PlayerManager playerManager = null;
+
+        public Quest Quest { get => quest; }
+
+        public override void Init(SystemGameManager systemGameManager) {
+            base.Init(systemGameManager);
+
+            playerManager = systemGameManager.PlayerManager;
+        }
 
         public void SetQuest(QuestLogUI questLogUI, Quest newQuest) {
             this.questLogUI = questLogUI;
             if (newQuest != null) {
                 quest = newQuest;
-                MyText.text = quest.DisplayName;
+                Text.text = quest.DisplayName;
                 IsComplete();
             }
         }
@@ -36,7 +45,7 @@ namespace AnyRPG {
 
             questLogUI.MySelectedQuestScript = this;
 
-            questLogUI.ShowDescription(MyQuest);
+            questLogUI.ShowDescription(Quest);
         }
 
         public void RawSelect() {
@@ -50,12 +59,12 @@ namespace AnyRPG {
             if (quest.IsComplete && !markedComplete) {
                 markedComplete = true;
                 //Debug.Log("the quest is complete");
-                MyText.text = "[" + quest.MyExperienceLevel + "] " + quest.DisplayName + " (Complete)";
+                Text.text = "[" + quest.ExperienceLevel + "] " + quest.DisplayName + " (Complete)";
             } else if (!quest.IsComplete) {
                 markedComplete = false;
-                MyText.text = "[" + quest.MyExperienceLevel + "] " + quest.DisplayName;
+                Text.text = "[" + quest.ExperienceLevel + "] " + quest.DisplayName;
             }
-            MyText.color = LevelEquations.GetTargetColor(SystemGameManager.Instance.PlayerManager.MyCharacter.CharacterStats.Level, quest.MyExperienceLevel);
+            Text.color = LevelEquations.GetTargetColor(playerManager.MyCharacter.CharacterStats.Level, quest.ExperienceLevel);
         }
 
         /*

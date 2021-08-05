@@ -56,10 +56,31 @@ namespace AnyRPG {
 
         private UnitToughness unitToughness;
 
+        // game manager references
+        private SystemConfigurationManager systemConfigurationManager = null;
+        private PlayerManager playerManager = null;
+        private SystemDataFactory systemDataFactory = null;
+        private UnitPreviewManager unitPreviewManager = null;
+        private CameraManager cameraManager = null;
+        private UIManager uIManager = null;
+        private ObjectPooler objectPooler = null;
+
         public UnitPreviewCameraController MyPreviewCameraController { get => previewCameraController; set => previewCameraController = value; }
         public UnitSpawnButton SelectedUnitSpawnButton { get => selectedUnitSpawnButton; set => selectedUnitSpawnButton = value; }
         public List<UnitProfile> UnitProfileList { get => unitProfileList; set => unitProfileList = value; }
         public List<UnitSpawnNode> UnitSpawnNodeList { get => unitSpawnNodeList; set => unitSpawnNodeList = value; }
+
+        public override void Init(SystemGameManager systemGameManager) {
+            base.Init(systemGameManager);
+
+            systemConfigurationManager = systemGameManager.SystemConfigurationManager;
+            playerManager = systemGameManager.PlayerManager;
+            systemDataFactory = systemGameManager.SystemDataFactory;
+            unitPreviewManager = systemGameManager.UnitPreviewManager;
+            cameraManager = systemGameManager.CameraManager;
+            uIManager = systemGameManager.UIManager;
+            objectPooler = systemGameManager.ObjectPooler;
+        }
 
         protected void Start() {
             CloseExtraLevelsOptionsArea();
@@ -75,7 +96,7 @@ namespace AnyRPG {
             List<string> options = new List<string>();
 
             // LEVELS
-            for (int i = 1; i < SystemGameManager.Instance.SystemConfigurationManager.MaxLevel; i++) {
+            for (int i = 1; i < systemConfigurationManager.MaxLevel; i++) {
                 options.Add(i.ToString());
             }
             levelDropdown.AddOptions(options);
@@ -84,7 +105,7 @@ namespace AnyRPG {
             options.Clear();
 
             // EXTRA LEVELS
-            for (int i = 0; i < SystemGameManager.Instance.SystemConfigurationManager.MaxLevel - SystemGameManager.Instance.PlayerManager.MyCharacter.CharacterStats.Level; i++) {
+            for (int i = 0; i < systemConfigurationManager.MaxLevel - playerManager.MyCharacter.CharacterStats.Level; i++) {
                 options.Add(i.ToString());
             }
             extraLevelsDropdown.AddOptions(options);
@@ -100,7 +121,7 @@ namespace AnyRPG {
             */
 
             options.Add("Default");
-            foreach (UnitToughness unitToughness in SystemDataFactory.Instance.GetResourceList<UnitToughness>()) {
+            foreach (UnitToughness unitToughness in systemDataFactory.GetResourceList<UnitToughness>()) {
                 options.Add(unitToughness.DisplayName);
             }
             toughnessDropdown.AddOptions(options);
@@ -117,11 +138,11 @@ namespace AnyRPG {
 
             ClearPreviewTarget();
             SetPreviewTarget();
-            if (unitSpawnButton.MyUnitProfile.DefaultToughness != null) {
+            if (unitSpawnButton.UnitProfile.DefaultToughness != null) {
                 //toughnessDropdown.value = unitSpawnButton.MyUnitProfile.MyDefaultToughness - 1;
                 int counter = 0;
                 foreach (TMP_Dropdown.OptionData data in toughnessDropdown.options) {
-                    if (data.text == unitSpawnButton.MyUnitProfile.DefaultToughness.DisplayName) {
+                    if (data.text == unitSpawnButton.UnitProfile.DefaultToughness.DisplayName) {
                         toughnessDropdown.value = counter;
                         break;
                     }
@@ -131,30 +152,30 @@ namespace AnyRPG {
                 toughnessDropdown.value = 0;
             }
 
-            nameText.text = unitSpawnButton.MyUnitProfile.CharacterName;
+            nameText.text = unitSpawnButton.UnitProfile.CharacterName;
         }
 
         public void ClearPreviewTarget() {
             //Debug.Log("LoadGamePanel.ClearPreviewTarget()");
             // not really close window, but it will despawn the preview unit
-            SystemGameManager.Instance.UnitPreviewManager.HandleCloseWindow();
+            unitPreviewManager.HandleCloseWindow();
         }
 
         public void SetPreviewTarget() {
             //Debug.Log("CharacterPanel.SetPreviewTarget()");
             
-            if (SystemGameManager.Instance.UnitPreviewManager.PreviewUnitController != null) {
+            if (unitPreviewManager.PreviewUnitController != null) {
                 //Debug.Log("CharacterPanel.SetPreviewTarget() UMA avatar is already spawned!");
                 return;
             }
 
             //spawn correct preview unit
-            SystemGameManager.Instance.UnitPreviewManager.HandleOpenWindow(this);
+            unitPreviewManager.HandleOpenWindow(this);
 
-            if (SystemGameManager.Instance.CameraManager != null && SystemGameManager.Instance.CameraManager.UnitPreviewCamera != null) {
+            if (cameraManager.UnitPreviewCamera != null) {
                 //Debug.Log("CharacterPanel.SetPreviewTarget(): preview camera was available, setting target");
                 if (MyPreviewCameraController != null) {
-                    MyPreviewCameraController.InitializeCamera(SystemGameManager.Instance.UnitPreviewManager.PreviewUnitController);
+                    MyPreviewCameraController.InitializeCamera(unitPreviewManager.PreviewUnitController);
                     //Debug.Log("CharacterPanel.SetPreviewTarget(): preview camera was available, setting Target Ready Callback");
                     MyPreviewCameraController.OnTargetReady += TargetReadyCallback;
                 } else {
@@ -170,16 +191,15 @@ namespace AnyRPG {
 
         public void ClosePanel() {
             //Debug.Log("CharacterCreatorPanel.ClosePanel()");
-            SystemGameManager.Instance.UIManager.SystemWindowManager.unitSpawnWindow.CloseWindow();
-            SystemGameManager.Instance.UIManager.PopupWindowManager.interactionWindow.CloseWindow();
+            uIManager.SystemWindowManager.unitSpawnWindow.CloseWindow();
+            uIManager.interactionWindow.CloseWindow();
         }
 
         public override void RecieveClosedWindowNotification() {
             //Debug.Log("LoadGamePanel.OnCloseWindow()");
             base.RecieveClosedWindowNotification();
             previewCameraController.ClearTarget();
-            SystemGameManager.Instance.UnitPreviewManager.HandleCloseWindow();
-            //SystemGameManager.Instance.SaveManager.ClearSharedData();
+            unitPreviewManager.HandleCloseWindow();
             OnCloseWindow(this);
         }
 
@@ -198,10 +218,11 @@ namespace AnyRPG {
 
             foreach (UnitProfile unitProfile in unitProfileList) {
                 //Debug.Log("LoadGamePanel.ShowLoadButtonsCommon(): setting a button with saved game data");
-                GameObject go = ObjectPooler.Instance.GetPooledObject(buttonPrefab, buttonArea.transform);
+                GameObject go = objectPooler.GetPooledObject(buttonPrefab, buttonArea.transform);
                 UnitSpawnButton unitSpawnButton = go.GetComponent<UnitSpawnButton>();
                 if (unitSpawnButton != null) {
-                    unitSpawnButton.Init(this);
+                    unitSpawnButton.Init(systemGameManager);
+                    unitSpawnButton.UnitSpawnControlPanel = this;
                     unitSpawnButton.AddUnitProfile(unitProfile);
                     unitSpawnButtons.Add(unitSpawnButton);
                 }
@@ -221,7 +242,7 @@ namespace AnyRPG {
             foreach (UnitSpawnButton unitSpawnButton in unitSpawnButtons) {
                 if (unitSpawnButton != null) {
                     unitSpawnButton.DeSelect();
-                    ObjectPooler.Instance.ReturnObjectToPool(unitSpawnButton.gameObject);
+                    objectPooler.ReturnObjectToPool(unitSpawnButton.gameObject);
                 }
             }
             unitSpawnButtons.Clear();
@@ -271,7 +292,7 @@ namespace AnyRPG {
             if (dropdownIndex == 0) {
                 unitToughness = null;
             } else {
-                UnitToughness tmpToughness = SystemDataFactory.Instance.GetResource<UnitToughness>(toughnessDropdown.options[toughnessDropdown.value].text);
+                UnitToughness tmpToughness = systemDataFactory.GetResource<UnitToughness>(toughnessDropdown.options[toughnessDropdown.value].text);
                 if (tmpToughness != null) {
                     unitToughness = tmpToughness;
                 }
@@ -287,7 +308,7 @@ namespace AnyRPG {
             foreach (UnitSpawnNode unitSpawnNode in unitSpawnNodeList) {
                 bool useDynamicLevel = (levelTypeDropdown.options[levelTypeDropdown.value].text == "Fixed" ? false : true);
                 if (unitSpawnNode != null) {
-                    unitSpawnNode.ManualSpawn(unitLevel, extraLevels, useDynamicLevel, SelectedUnitSpawnButton.MyUnitProfile, unitToughness);
+                    unitSpawnNode.ManualSpawn(unitLevel, extraLevels, useDynamicLevel, SelectedUnitSpawnButton.UnitProfile, unitToughness);
                 }
             }
             ClosePanel();

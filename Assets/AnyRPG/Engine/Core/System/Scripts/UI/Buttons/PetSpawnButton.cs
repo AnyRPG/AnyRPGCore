@@ -18,17 +18,12 @@ namespace AnyRPG {
         private TextMeshProUGUI description = null;
 
         private PetSpawnControlPanel petSpawnControlPanel = null;
-        private SystemConfigurationManager systemConfigurationManager = null;
 
         //[SerializeField]
         private UnitProfile unitProfile;
 
         public UnitProfile MyUnitProfile { get => unitProfile; set => unitProfile = value; }
-
-        public void Init(PetSpawnControlPanel petSpawnControlPanel) {
-            this.petSpawnControlPanel = petSpawnControlPanel;
-            systemConfigurationManager = SystemGameManager.Instance.SystemConfigurationManager;
-        }
+        public PetSpawnControlPanel PetSpawnControlPanel { get => petSpawnControlPanel; set => petSpawnControlPanel = value; }
 
         public void AddUnitProfile(UnitProfile unitProfile) {
             //Debug.Log("UnitSpawnButton.AddUnitProfile()");
@@ -56,8 +51,8 @@ namespace AnyRPG {
 
 
         public void CommonSelect() {
-            if (petSpawnControlPanel.MySelectedPetSpawnButton != null && petSpawnControlPanel.MySelectedPetSpawnButton != this) {
-                petSpawnControlPanel.MySelectedPetSpawnButton.DeSelect();
+            if (petSpawnControlPanel.SelectedPetSpawnButton != null && petSpawnControlPanel.SelectedPetSpawnButton != this) {
+                petSpawnControlPanel.SelectedPetSpawnButton.DeSelect();
             }
             petSpawnControlPanel.ShowUnit(this);
         }

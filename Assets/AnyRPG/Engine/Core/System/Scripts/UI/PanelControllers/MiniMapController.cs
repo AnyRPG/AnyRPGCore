@@ -94,7 +94,6 @@ namespace AnyRPG {
         private PlayerManager playerManager = null;
         private InputManager inputManager = null;
         private LevelManager levelManager = null;
-        private PopupWindowManager popupWindowManager = null;
         private MiniMapManager miniMapManager = null;
         private ObjectPooler objectPooler = null;
 
@@ -112,7 +111,6 @@ namespace AnyRPG {
             playerManager = systemGameManager.PlayerManager;
             inputManager = systemGameManager.InputManager;
             levelManager = systemGameManager.LevelManager;
-            popupWindowManager = uIManager.PopupWindowManager;
             miniMapManager = uIManager.MiniMapManager;
             objectPooler = systemGameManager.ObjectPooler;
 
@@ -380,7 +378,7 @@ namespace AnyRPG {
         }
 
         public void OpenMainMap() {
-            popupWindowManager.mainMapWindow.ToggleOpenClose();
+            uIManager.mainMapWindow.ToggleOpenClose();
         }
 
         private void CleanupEventSubscriptions() {

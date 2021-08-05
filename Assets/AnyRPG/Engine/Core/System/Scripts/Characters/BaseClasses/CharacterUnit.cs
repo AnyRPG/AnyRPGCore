@@ -102,7 +102,7 @@ namespace AnyRPG {
                 //source.baseCharacter.CharacterCombat.EnterCombat(baseCharacter.UnitController);
 
                 source.BaseCharacter.CharacterCombat.Attack(baseCharacter, true);
-                SystemGameManager.Instance.UIManager.PopupWindowManager.interactionWindow.CloseWindow();
+                SystemGameManager.Instance.UIManager.interactionWindow.CloseWindow();
                 return true;
             }
             //return true;

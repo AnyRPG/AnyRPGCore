@@ -6,7 +6,7 @@ using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 namespace AnyRPG {
-    public class CharacterButton : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler, IPointerExitHandler, IDescribable {
+    public class CharacterButton : ConfiguredMonoBehaviour, IPointerClickHandler, IPointerEnterHandler, IPointerExitHandler, IDescribable {
 
         /// <summary>
         /// The equipment slot associated with this button.  Only items that match this slot can be equiped here.
@@ -35,7 +35,11 @@ namespace AnyRPG {
 
         private CharacterPanel characterPanel = null;
 
-        private bool LocalComponentsGotten = false;
+        // game manager references
+        private PlayerManager playerManager = null;
+        private UIManager uIManager = null;
+        private HandScript handScript = null;
+        private SystemDataFactory systemDataFactory = null;
 
         public Color MyEmptyBackGroundColor { get => emptyBackGroundColor; set => emptyBackGroundColor = value; }
         public Color MyFullBackGroundColor { get => fullBackGroundColor; set => fullBackGroundColor = value; }
@@ -56,47 +60,47 @@ namespace AnyRPG {
         public EquipmentSlotProfile MyEquipmentSlotProfile { get => equipmentSlotProfile; }
         public CharacterPanel CharacterPanel { get => characterPanel; set => characterPanel = value; }
 
-        private void Awake() {
+        public override void Init(SystemGameManager systemGameManager) {
+            base.Init(systemGameManager);
+
+            playerManager = systemGameManager.PlayerManager;
+            uIManager = systemGameManager.UIManager;
+            handScript = uIManager.HandScript;
+            systemDataFactory = systemGameManager.SystemDataFactory;
+
             GetLocalComponents();
             GetSystemResourceReferences();
-        }
 
-        private void Start() {
-            GetLocalComponents();
         }
 
         private void GetLocalComponents() {
-            if (LocalComponentsGotten == true) {
-                return;
-            }
             if (emptySlotImage == null) {
                 emptySlotImage = GetComponent<Image>();
             }
-            LocalComponentsGotten = true;
         }
 
         public void OnPointerClick(PointerEventData eventData) {
             if (eventData.button == PointerEventData.InputButton.Left) {
-                if (SystemGameManager.Instance.UIManager.HandScript.Moveable is Equipment) {
-                    Equipment tmp = (Equipment)SystemGameManager.Instance.UIManager.HandScript.Moveable;
+                if (handScript.Moveable is Equipment) {
+                    Equipment tmp = (Equipment)handScript.Moveable;
                     if (equipmentSlotProfile.MyEquipmentSlotTypeList.Contains(tmp.EquipmentSlotType)) {
-                        SystemGameManager.Instance.PlayerManager.MyCharacter.CharacterEquipmentManager.Unequip(equipmentSlotProfile);
+                        playerManager.MyCharacter.CharacterEquipmentManager.Unequip(equipmentSlotProfile);
                         //if (tmp.equipSlot == equipmentSlot) {
 
                         //tmp.Use();
 
                         // equip to this slot
-                        SystemGameManager.Instance.PlayerManager.MyCharacter.CharacterEquipmentManager.Equip(tmp, equipmentSlotProfile);
+                        playerManager.MyCharacter.CharacterEquipmentManager.Equip(tmp, equipmentSlotProfile);
                         // call remove
                         tmp.Remove();
 
                         //EquipEquipment(tmp);
-                        SystemGameManager.Instance.UIManager.HandScript.Drop();
+                        handScript.Drop();
 
-                        SystemGameManager.Instance.UIManager.RefreshTooltip(tmp);
+                        uIManager.RefreshTooltip(tmp);
                     }
-                } else if (SystemGameManager.Instance.UIManager.HandScript.Moveable == null && equippedEquipment != null) {
-                    SystemGameManager.Instance.UIManager.HandScript.TakeMoveable(equippedEquipment);
+                } else if (handScript.Moveable == null && equippedEquipment != null) {
+                    handScript.TakeMoveable(equippedEquipment);
                     characterPanel.SelectedButton = this;
                     icon.color = Color.gray;
                 }
@@ -106,7 +110,7 @@ namespace AnyRPG {
         public void GetSystemResourceReferences() {
             if (equipmentSlotProfileName != null && equipmentSlotProfileName != string.Empty) {
                 //Debug.Log("CharacterButton.GetLocalComponents(): equipmentslotprofileName is not empty");
-                equipmentSlotProfile = SystemDataFactory.Instance.GetResource<EquipmentSlotProfile>(equipmentSlotProfileName);
+                equipmentSlotProfile = systemDataFactory.GetResource<EquipmentSlotProfile>(equipmentSlotProfileName);
                 if (equipmentSlotProfile == null) {
                     //Debug.Log("CharacterButton.GetLocalComponents(): equipmentslotprofile is NULL!!!");
                 }
@@ -119,16 +123,16 @@ namespace AnyRPG {
             GetLocalComponents();
             GetSystemResourceReferences();
             Equipment tmpEquipment = equippedEquipment;
-            if (equipmentSlotProfile != null && SystemGameManager.Instance.PlayerManager.MyCharacter.CharacterEquipmentManager.CurrentEquipment.ContainsKey(equipmentSlotProfile)) {
+            if (equipmentSlotProfile != null && playerManager.MyCharacter.CharacterEquipmentManager.CurrentEquipment.ContainsKey(equipmentSlotProfile)) {
                 //Debug.Log(gameObject.name + "CharacterButton.UpdateVisual(): equipmentslotprofile was not null and player has quipment in this slot");
-                equippedEquipment = SystemGameManager.Instance.PlayerManager.MyCharacter.CharacterEquipmentManager.CurrentEquipment[equipmentSlotProfile];
+                equippedEquipment = playerManager.MyCharacter.CharacterEquipmentManager.CurrentEquipment[equipmentSlotProfile];
             } else {
                 /*
                 if (equipmentSlotProfile == null) {
                     //Debug.Log(gameObject.name + "CharacterButton.UpdateVisual(): equipmentslotprofile was null");
                 }
-                if (!SystemGameManager.Instance.PlayerManager.MyCharacter.MyCharacterEquipmentManager.MyCurrentEquipment.ContainsKey(equipmentSlotProfile)) {
-                    //Debug.Log(gameObject.name + "CharacterButton.UpdateVisual(): player had no equipment in this slot: " + equipmentSlotProfile + "; " + equipmentSlotProfile.GetInstanceID() + "; equipmentCount: " + SystemGameManager.Instance.PlayerManager.MyCharacter.MyCharacterEquipmentManager.MyCurrentEquipment.Count);
+                if (!playerManager.MyCharacter.MyCharacterEquipmentManager.MyCurrentEquipment.ContainsKey(equipmentSlotProfile)) {
+                    //Debug.Log(gameObject.name + "CharacterButton.UpdateVisual(): player had no equipment in this slot: " + equipmentSlotProfile + "; " + equipmentSlotProfile.GetInstanceID() + "; equipmentCount: " + playerManager.MyCharacter.MyCharacterEquipmentManager.MyCurrentEquipment.Count);
                 }*/
                 equippedEquipment = null;
             }
@@ -153,22 +157,17 @@ namespace AnyRPG {
                 icon.color = Color.white;
                 icon.sprite = equippedEquipment.Icon;
 
-                SystemGameManager.Instance.UIManager.SetItemBackground(equippedEquipment, emptySlotImage, fullBackGroundColor);
+                uIManager.SetItemBackground(equippedEquipment, emptySlotImage, fullBackGroundColor);
             }
 
-            if (SystemGameManager.Instance.PlayerManager.PlayerUnitSpawned == false) {
+            if (playerManager.PlayerUnitSpawned == false) {
                 // prevent unnecessary actions when player is not spawned
                 return;
             }
-            if (SystemGameManager.Instance.UIManager.PopupWindowManager.characterPanelWindow.IsOpen == false) {
+            if (uIManager.characterPanelWindow.IsOpen == false) {
                 // prevent unnecessary actions when window is not open
                 return;
             }
-            /*
-            if (resetDisplay) {
-                CharacterPanel.Instance.ResetDisplay();
-            }
-            */
         }
 
         /*
@@ -183,8 +182,8 @@ namespace AnyRPG {
         public void DequipEquipment(int slotIndex = -1) {
             //Debug.Log("attempting to unequip the item in slot " + equipmentSlot.ToString());
             equippedEquipment.MyCharacterButton = null;
-            if (SystemGameManager.Instance.PlayerManager != null && SystemGameManager.Instance.PlayerManager.MyCharacter != null && SystemGameManager.Instance.PlayerManager.MyCharacter.MyCharacterEquipmentManager != null) {
-                SystemGameManager.Instance.PlayerManager.MyCharacter.MyCharacterEquipmentManager.Unequip(equipmentSlot, slotIndex);
+            if (playerManager != null && playerManager.MyCharacter != null && playerManager.MyCharacter.MyCharacterEquipmentManager != null) {
+                playerManager.MyCharacter.MyCharacterEquipmentManager.Unequip(equipmentSlot, slotIndex);
             }
             ClearButton();
         }
@@ -198,11 +197,11 @@ namespace AnyRPG {
 
 
         public void OnPointerEnter(PointerEventData eventData) {
-            SystemGameManager.Instance.UIManager.ShowToolTip(transform.position, this);
+            uIManager.ShowToolTip(transform.position, this);
         }
 
         public void OnPointerExit(PointerEventData eventData) {
-            SystemGameManager.Instance.UIManager.HideToolTip();
+            uIManager.HideToolTip();
         }
 
         public string GetDescription() {

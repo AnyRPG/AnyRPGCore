@@ -24,6 +24,10 @@ namespace AnyRPG {
 
         public override void Init(SystemGameManager systemGameManager) {
             base.Init(systemGameManager);
+
+            foreach (CurrencyAmountController currencyAmountController in currencyAmountControllers) {
+                currencyAmountController.Init(systemGameManager);
+            }
         }
 
         public void ClearCurrencyAmounts() {
@@ -59,11 +63,11 @@ namespace AnyRPG {
                 if (currencyAmountControllers.Count > counter) {
                     CurrencyAmountController currencyAmountController = currencyAmountControllers[counter];
                     currencyAmountController.gameObject.SetActive(true);
-                    if (currencyAmountController.MyCurrencyIcon != null) {
-                        currencyAmountController.MyCurrencyIcon.SetDescribable(currencyPair.Key);
+                    if (currencyAmountController.CurrencyIcon != null) {
+                        currencyAmountController.CurrencyIcon.SetDescribable(currencyPair.Key);
                     }
-                    if (currencyAmountController.MyAmountText != null) {
-                        currencyAmountController.MyAmountText.text = currencyPair.Value.ToString();
+                    if (currencyAmountController.AmountText != null) {
+                        currencyAmountController.AmountText.text = currencyPair.Value.ToString();
                     }
                 }
                 counter += 1;

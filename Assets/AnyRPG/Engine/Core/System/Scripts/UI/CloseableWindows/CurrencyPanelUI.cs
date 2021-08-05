@@ -15,6 +15,10 @@ namespace AnyRPG {
         public override void Init(SystemGameManager systemGameManager) {
             base.Init(systemGameManager);
             playerManager = systemGameManager.PlayerManager;
+
+            foreach (CurrencyButton currencyButton in currencyButtons) {
+                currencyButton.Init(systemGameManager);
+            }
         }
 
         protected override void PopulatePages() {

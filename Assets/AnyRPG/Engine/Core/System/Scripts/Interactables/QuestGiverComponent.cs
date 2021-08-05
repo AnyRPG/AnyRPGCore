@@ -112,8 +112,8 @@ namespace AnyRPG {
                 interactable.OpenInteractionWindow();
                 return true;
             } else if (Quest.GetAvailableQuests(Props.Quests).Count == 1 && Quest.GetCompleteQuests(Props.Quests).Count == 0) {
-                if (Quest.GetAvailableQuests(Props.Quests)[0].MyHasOpeningDialog == true && Quest.GetAvailableQuests(Props.Quests)[0].MyOpeningDialog.TurnedIn == false) {
-                    (SystemGameManager.Instance.UIManager.PopupWindowManager.dialogWindow.CloseableWindowContents as DialogPanelController).Setup(Quest.GetAvailableQuests(Props.Quests)[0], interactable);
+                if (Quest.GetAvailableQuests(Props.Quests)[0].HasOpeningDialog == true && Quest.GetAvailableQuests(Props.Quests)[0].OpeningDialog.TurnedIn == false) {
+                    (SystemGameManager.Instance.UIManager.dialogWindow.CloseableWindowContents as DialogPanelController).Setup(Quest.GetAvailableQuests(Props.Quests)[0], interactable);
                     return true;
                 } else {
                     // do nothing will skip to below and open questlog to the available quest
@@ -124,9 +124,9 @@ namespace AnyRPG {
                 }
             }
             // we got here: we only have a single complete quest, or a single available quest with the opening dialog competed already
-            if (!SystemGameManager.Instance.UIManager.PopupWindowManager.questGiverWindow.IsOpen) {
+            if (!SystemGameManager.Instance.UIManager.questGiverWindow.IsOpen) {
                 //Debug.Log(source + " interacting with " + gameObject.name);
-                SystemGameManager.Instance.UIManager.PopupWindowManager.questGiverWindow.OpenWindow();
+                SystemGameManager.Instance.UIManager.questGiverWindow.OpenWindow();
                 QuestGiverUI.Instance.ShowDescription(Quest.GetAvailableQuests(Props.Quests).Union(Quest.GetCompleteQuests(Props.Quests)).ToList()[0], this);
                 return true;
             }
@@ -137,7 +137,7 @@ namespace AnyRPG {
             //Debug.Log(gameObject.name + ".QuestGiver.StopInteract()");
             base.StopInteract();
             //vendorUI.ClearPages();
-            SystemGameManager.Instance.UIManager.PopupWindowManager.questGiverWindow.CloseWindow();
+            SystemGameManager.Instance.UIManager.questGiverWindow.CloseWindow();
         }
 
         public void UpdateQuestStatus() {

@@ -5,7 +5,7 @@ using UnityEngine;
 using UnityEngine.UI;
 
 namespace AnyRPG {
-    public class SystemBarController : MonoBehaviour {
+    public class SystemBarController : ConfiguredMonoBehaviour {
 
         [SerializeField]
         private SystemPanelButton mainMenuButton = null;
@@ -22,48 +22,51 @@ namespace AnyRPG {
         [SerializeField]
         private SystemPanelButton mapButton = null;
 
-        private void Awake() {
-            //Debug.Log("BagBarController.Awake()");
+        // game manager references
+        SystemConfigurationManager systemConfigurationManager = null;
+        UIManager uIManager = null;
+
+        public override void Init(SystemGameManager systemGameManager) {
+            base.Init(systemGameManager);
+            systemConfigurationManager = systemGameManager.SystemConfigurationManager;
+            uIManager = systemGameManager.UIManager;
+
+            if (systemConfigurationManager.SystemBarMainMenu != null) {
+                mainMenuButton.Icon = systemConfigurationManager.SystemBarMainMenu;
+            }
+            if (systemConfigurationManager.SystemBarAbilityBook != null) {
+                abilityBookButton.Icon = systemConfigurationManager.SystemBarAbilityBook;
+            }
+            if (systemConfigurationManager.SystemBarQuestLog != null) {
+                questLogButton.Icon = systemConfigurationManager.SystemBarQuestLog;
+            }
+            if (systemConfigurationManager.SystemBarCharacter != null) {
+                characterButton.Icon = systemConfigurationManager.SystemBarCharacter;
+            }
+            if (systemConfigurationManager.SystemBarMap != null) {
+                mapButton.Icon = systemConfigurationManager.SystemBarMap;
+            }
         }
 
-        private void Start() {
-            //Debug.Log("BagBarController.Start()");
-            if (SystemGameManager.Instance.SystemConfigurationManager.SystemBarMainMenu != null) {
-                mainMenuButton.Icon = SystemGameManager.Instance.SystemConfigurationManager.SystemBarMainMenu;
-            }
-            if (SystemGameManager.Instance.SystemConfigurationManager.SystemBarAbilityBook != null) {
-                abilityBookButton.Icon = SystemGameManager.Instance.SystemConfigurationManager.SystemBarAbilityBook;
-            }
-            if (SystemGameManager.Instance.SystemConfigurationManager.SystemBarQuestLog != null) {
-                questLogButton.Icon = SystemGameManager.Instance.SystemConfigurationManager.SystemBarQuestLog;
-            }
-            if (SystemGameManager.Instance.SystemConfigurationManager.SystemBarCharacter != null) {
-                characterButton.Icon = SystemGameManager.Instance.SystemConfigurationManager.SystemBarCharacter;
-            }
-            if (SystemGameManager.Instance.SystemConfigurationManager.SystemBarMap != null) {
-                mapButton.Icon = SystemGameManager.Instance.SystemConfigurationManager.SystemBarMap;
-            }
-
-        }
 
         public void ClickMainMenu() {
-            SystemGameManager.Instance.UIManager.SystemWindowManager.inGameMainMenuWindow.ToggleOpenClose();
+            uIManager.SystemWindowManager.inGameMainMenuWindow.ToggleOpenClose();
         }
 
         public void ClickAbilityBook() {
-            SystemGameManager.Instance.UIManager.PopupWindowManager.abilityBookWindow.ToggleOpenClose();
+            uIManager.abilityBookWindow.ToggleOpenClose();
         }
 
         public void ClickCharacter() {
-            SystemGameManager.Instance.UIManager.PopupWindowManager.characterPanelWindow.ToggleOpenClose();
+            uIManager.characterPanelWindow.ToggleOpenClose();
         }
 
         public void ClickQuestLog() {
-            SystemGameManager.Instance.UIManager.PopupWindowManager.questLogWindow.ToggleOpenClose();
+            uIManager.questLogWindow.ToggleOpenClose();
         }
 
         public void ClickMap() {
-            SystemGameManager.Instance.UIManager.PopupWindowManager.mainMapWindow.ToggleOpenClose();
+            uIManager.mainMapWindow.ToggleOpenClose();
         }
 
 

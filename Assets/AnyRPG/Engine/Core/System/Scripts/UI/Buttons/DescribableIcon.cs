@@ -7,51 +7,31 @@ using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 namespace AnyRPG {
-    public class DescribableIcon : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler {
+    public class DescribableIcon : ConfiguredMonoBehaviour, IPointerEnterHandler, IPointerExitHandler {
 
         protected IDescribable describable = null;
 
         [SerializeField]
         protected TextMeshProUGUI stackSize;
 
-        protected int count;
-
-        public Image MyIcon {
-            get {
-                return icon;
-            }
-
-            set {
-                icon = value;
-            }
-        }
-
-        public virtual int MyCount {
-            get {
-                return count;
-            }
-        }
-
-        public TextMeshProUGUI StackSizeText {
-            get {
-                return stackSize;
-            }
-        }
-
-        public IDescribable Describable { get => describable; set => describable = value; }
-
         [SerializeField]
         protected Image icon;
 
-        protected virtual void Awake() {
-            //Debug.Log("ActionButton.Awake()");
-            //MyDescribable = null;
-        }
+        protected int count;
 
-        protected virtual void Start() {
-            //Debug.Log("ActionButton.Start()");
-        }
+        // game manager references
+        private UIManager uIManager = null;
 
+        public Image MyIcon { get => icon; set => icon = value; }
+        public TextMeshProUGUI StackSizeText { get => stackSize; }
+        public IDescribable Describable { get => describable; set => describable = value; }
+        public virtual int Count { get => count; }
+
+        public override void Init(SystemGameManager systemGameManager) {
+            base.Init(systemGameManager);
+
+            uIManager = systemGameManager.UIManager;
+        }
 
         /// <summary>
         /// Sets the describable on the describablebutton
@@ -80,14 +60,12 @@ namespace AnyRPG {
 
             if (UIManager.MouseInRect(MyIcon.rectTransform)) {
                 //if (RectTransformUtility.RectangleContainsScreenPoint(MyIcon.rectTransform, Input.mousePosition)) {
-                //SystemGameManager.Instance.UIManager.RefreshTooltip(describable as IDescribable);
-                //SystemGameManager.Instance.UIManager.ShowToolTip(transform.position, describable as IDescribable);
+                //uIManager.RefreshTooltip(describable as IDescribable);
+                //uIManager.ShowToolTip(transform.position, describable as IDescribable);
                 ProcessMouseEnter();
             }
 
         }
-
-
 
         public static Rect RectTransformToScreenSpace(RectTransform transform) {
             Vector2 size = Vector2.Scale(transform.rect.size, transform.lossyScale);
@@ -132,9 +110,9 @@ namespace AnyRPG {
 
             /*
             if (count > 1) {
-                SystemGameManager.Instance.UIManager.UpdateStackSize(this, count);
+                uIManager.UpdateStackSize(this, count);
             } else if (MyDescribable is BaseAbility) {
-                SystemGameManager.Instance.UIManager.ClearStackCount(this);
+                uIManager.ClearStackCount(this);
             }
             */
         }
@@ -150,7 +128,7 @@ namespace AnyRPG {
             if (Describable != null && Describable is IDescribable) {
                 tmp = (IDescribable)Describable;
                 //Debug.Log("DescribableIcon.OnPointerEnter(): describable is not null");
-                //SystemGameManager.Instance.UIManager.ShowToolTip(transform.position);
+                //uIManager.ShowToolTip(transform.position);
             }
             if (tmp != null) {
                 //Debug.Log("DescribableIcon.OnPointerEnter(): showing tooltip");
@@ -160,16 +138,16 @@ namespace AnyRPG {
         }
 
         public virtual void ShowToolTip(IDescribable describable) {
-            SystemGameManager.Instance.UIManager.ShowToolTip(transform.position, describable);
+            uIManager.ShowToolTip(transform.position, describable);
         }
 
         public virtual void OnPointerExit(PointerEventData eventData) {
-            SystemGameManager.Instance.UIManager.HideToolTip();
+            uIManager.HideToolTip();
         }
 
         public virtual void CheckMouse() {
             if (UIManager.MouseInRect(MyIcon.rectTransform)) {
-                SystemGameManager.Instance.UIManager?.HideToolTip();
+                uIManager.HideToolTip();
             }
         }
 
@@ -180,11 +158,6 @@ namespace AnyRPG {
             CheckMouse();
         }
 
-        /*
-        public virtual void OnDestroy() {
-            //Debug.Log("DescribableIcon.OnDestroy()");
-        }
-        */
     }
 
 }

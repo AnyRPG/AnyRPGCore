@@ -6,14 +6,21 @@ using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 namespace AnyRPG {
-    public class TransparencyButton : MonoBehaviour {
+    public class TransparencyButton : ConfiguredMonoBehaviour {
 
         [SerializeField]
         protected Image backGroundImage;
 
         protected bool eventSubscriptionsInitialized = false;
 
-        protected virtual void Awake() {
+        // game manager references
+        protected UIManager uIManager = null;
+
+        public override void Init(SystemGameManager systemGameManager) {
+            base.Init(systemGameManager);
+
+            uIManager = systemGameManager.UIManager;
+
             GetComponentReferences();
             SetBackGroundTransparency();
             CreateEventSubscriptions();
@@ -65,7 +72,7 @@ namespace AnyRPG {
 
         public virtual void CheckMouse() {
             if (UIManager.MouseInRect(transform as RectTransform)) {
-                SystemGameManager.Instance.UIManager.HideToolTip();
+                uIManager.HideToolTip();
             }
         }
     }

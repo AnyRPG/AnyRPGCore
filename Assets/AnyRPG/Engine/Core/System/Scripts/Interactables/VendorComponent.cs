@@ -25,10 +25,10 @@ namespace AnyRPG {
         public override bool Interact(CharacterUnit source, int optionIndex = 0) {
             base.Interact(source, optionIndex);
             //Debug.Log(source + " attempting to interact with " + gameObject.name);
-            if (!SystemGameManager.Instance.UIManager.PopupWindowManager.vendorWindow.IsOpen) {
+            if (!SystemGameManager.Instance.UIManager.vendorWindow.IsOpen) {
                 //Debug.Log(source + " interacting with " + gameObject.name);
-                SystemGameManager.Instance.UIManager.PopupWindowManager.vendorWindow.OpenWindow();
-                (SystemGameManager.Instance.UIManager.PopupWindowManager.vendorWindow.CloseableWindowContents as VendorUI).PopulateDropDownList(Props.VendorCollections);
+                SystemGameManager.Instance.UIManager.vendorWindow.OpenWindow();
+                (SystemGameManager.Instance.UIManager.vendorWindow.CloseableWindowContents as VendorUI).PopulateDropDownList(Props.VendorCollections);
                 return true;
             }
             return false;
@@ -36,7 +36,7 @@ namespace AnyRPG {
 
         public override void StopInteract() {
             base.StopInteract();
-            SystemGameManager.Instance.UIManager.PopupWindowManager.vendorWindow.CloseWindow();
+            SystemGameManager.Instance.UIManager.vendorWindow.CloseWindow();
         }
 
     }

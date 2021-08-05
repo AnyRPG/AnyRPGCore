@@ -26,7 +26,7 @@ namespace AnyRPG {
 
         // game manager references
         private SystemGameManager systemGameManager = null;
-        private PopupWindowManager popupWindowManager = null;
+        private UIManager uIManager = null;
         private PlayerManager playerManager = null;
         private InventoryManager inventoryManager = null;
         private SystemItemManager systemItemManager = null;
@@ -35,7 +35,7 @@ namespace AnyRPG {
 
         public CraftingManager(SystemGameManager systemGameManager) {
             this.systemGameManager = systemGameManager;
-            popupWindowManager = systemGameManager.UIManager.PopupWindowManager;
+            uIManager = systemGameManager.UIManager;
             playerManager = systemGameManager.PlayerManager;
             inventoryManager = systemGameManager.InventoryManager;
             systemItemManager = systemGameManager.SystemItemManager;
@@ -47,7 +47,7 @@ namespace AnyRPG {
 
         public void SetAbility(CraftAbility craftAbility) {
             this.craftAbility = craftAbility;
-            popupWindowManager.craftingWindow.OpenWindow();
+            uIManager.craftingWindow.OpenWindow();
             OnSetCraftAbility(this.craftAbility);
         }
 

@@ -14,7 +14,20 @@ namespace AnyRPG {
         [SerializeField]
         private GameObject materialSlot = null;
 
+        // game manager references
+        private InventoryManager inventoryManager = null;
+        private CraftingManager craftingManager = null;
+        private SystemEventManager systemEventManager = null;
+
         public GameObject MyMaterialSlot { get => materialSlot; }
+
+        public override void Init(SystemGameManager systemGameManager) {
+            base.Init(systemGameManager);
+
+            inventoryManager = systemGameManager.InventoryManager;
+            craftingManager = systemGameManager.CraftingManager;
+            systemEventManager = systemGameManager.SystemEventManager;
+        }
 
         public override void UpdateVisual() {
             //Debug.Log("DescribableCraftingInputIcon.UpdateVisual()");
@@ -22,16 +35,16 @@ namespace AnyRPG {
             description.text = Describable.DisplayName;
 
             //if (count > 1) {
-            stackSize.text = SystemGameManager.Instance.InventoryManager.GetItemCount(Describable.DisplayName) + " / " + count.ToString();
+            stackSize.text = inventoryManager.GetItemCount(Describable.DisplayName) + " / " + count.ToString();
             //} else {
             //stackSize.text = "";
             //}
-            SystemGameManager.Instance.CraftingManager.TriggerCraftAmountUpdated();
+            craftingManager.TriggerCraftAmountUpdated();
         }
 
         protected override void SetDescribableCommon(IDescribable describable) {
             base.SetDescribableCommon(describable);
-            SystemGameManager.Instance.SystemEventManager.OnItemCountChanged += UpdateVisual;
+            systemEventManager.OnItemCountChanged += UpdateVisual;
         }
 
 
@@ -40,8 +53,8 @@ namespace AnyRPG {
                 return;
             }
             base.OnDisable();
-            if (SystemGameManager.Instance.InventoryManager != null) {
-                SystemGameManager.Instance.SystemEventManager.OnItemCountChanged -= UpdateVisual;
+            if (inventoryManager != null) {
+                systemEventManager.OnItemCountChanged -= UpdateVisual;
             }
 
         }

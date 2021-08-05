@@ -268,25 +268,24 @@ namespace AnyRPG {
             }
         }
 
-        public Quest MyQuestTemplate { get => questTemplate; set => questTemplate = value; }
-        public int MyExperienceLevel { get => ((dynamicLevel == true ? SystemGameManager.Instance.PlayerManager.MyCharacter.CharacterStats.Level : experienceLevel) + extraLevels); }
+        public Quest QuestTemplate { get => questTemplate; set => questTemplate = value; }
+        public int ExperienceLevel { get => ((dynamicLevel == true ? SystemGameManager.Instance.PlayerManager.MyCharacter.CharacterStats.Level : experienceLevel) + extraLevels); }
 
-        public List<Item> MyItemRewards { get => itemRewardList; }
-        public List<FactionNode> MyFactionRewards { get => factionRewards; }
-        public List<BaseAbility> MyAbilityRewards { get => abilityRewardList; }
-        public List<Skill> MySkillRewards { get => skillRewardList; }
+        public List<Item> ItemRewards { get => itemRewardList; }
+        public List<FactionNode> FactionRewards { get => factionRewards; }
+        public List<BaseAbility> AbilityRewards { get => abilityRewardList; }
+        public List<Skill> SkillRewards { get => skillRewardList; }
 
-        public bool MyTurnInItems { get => turnInItems; set => turnInItems = value; }
-        public bool MyAllowRawComplete { get => allowRawComplete; set => allowRawComplete = value; }
-        public int MyMaxAbilityRewards { get => maxAbilityRewards; set => maxAbilityRewards = value; }
-        public int MyMaxSkillRewards { get => maxSkillRewards; set => maxSkillRewards = value; }
-        public int MyMaxItemRewards { get => maxItemRewards; set => maxItemRewards = value; }
-        public int MyMaxFactionRewards { get => maxFactionRewards; set => maxFactionRewards = value; }
-        public bool MyRepeatableQuest { get => repeatableQuest; set => repeatableQuest = value; }
-        public bool MyIsAchievement { get => isAchievement; set => isAchievement = value; }
-        //public Dialog MyOpeningDialog { get => openingDialog; set => openingDialog = value; }
-        public bool MyHasOpeningDialog { get => hasOpeningDialog; set => hasOpeningDialog = value; }
-        public Dialog MyOpeningDialog { get => openingDialog; set => openingDialog = value; }
+        public bool TurnInItems { get => turnInItems; set => turnInItems = value; }
+        public bool AllowRawComplete { get => allowRawComplete; set => allowRawComplete = value; }
+        public int MaxAbilityRewards { get => maxAbilityRewards; set => maxAbilityRewards = value; }
+        public int MaxSkillRewards { get => maxSkillRewards; set => maxSkillRewards = value; }
+        public int MaxItemRewards { get => maxItemRewards; set => maxItemRewards = value; }
+        public int MaxFactionRewards { get => maxFactionRewards; set => maxFactionRewards = value; }
+        public bool RepeatableQuest { get => repeatableQuest; set => repeatableQuest = value; }
+        public bool IsAchievement { get => isAchievement; set => isAchievement = value; }
+        public bool HasOpeningDialog { get => hasOpeningDialog; set => hasOpeningDialog = value; }
+        public Dialog OpeningDialog { get => openingDialog; set => openingDialog = value; }
         public VisitZoneObjective[] VisitZoneObjectives { get => visitZoneObjectives; set => visitZoneObjectives = value; }
         public int ExperienceRewardPerLevel { get => experienceRewardPerLevel; set => experienceRewardPerLevel = value; }
         public int BaseExperienceReward { get => baseExperienceReward; set => baseExperienceReward = value; }
@@ -326,13 +325,13 @@ namespace AnyRPG {
                 if (SystemGameManager.Instance.SystemConfigurationManager.QuestCurrency != null) {
                     CurrencyNode currencyNode = new CurrencyNode();
                     currencyNode.currency = SystemGameManager.Instance.SystemConfigurationManager.QuestCurrency;
-                    currencyNode.MyAmount = SystemGameManager.Instance.SystemConfigurationManager.QuestCurrencyAmountPerLevel * MyExperienceLevel;
+                    currencyNode.MyAmount = SystemGameManager.Instance.SystemConfigurationManager.QuestCurrencyAmountPerLevel * ExperienceLevel;
                     currencyNodes.Add(currencyNode);
                 }
             }
             if (RewardCurrency != null) {
                 CurrencyNode currencyNode = new CurrencyNode();
-                currencyNode.MyAmount = BaseCurrencyReward + (CurrencyRewardPerLevel * MyExperienceLevel);
+                currencyNode.MyAmount = BaseCurrencyReward + (CurrencyRewardPerLevel * ExperienceLevel);
                 currencyNode.currency = RewardCurrency;
                 currencyNodes.Add(currencyNode);
             }
@@ -416,7 +415,7 @@ namespace AnyRPG {
                 return "inprogress";
             }
 
-            if (!SystemGameManager.Instance.QuestLog.HasQuest(DisplayName) && (TurnedIn == false || MyRepeatableQuest == true) && MyPrerequisitesMet == true) {
+            if (!SystemGameManager.Instance.QuestLog.HasQuest(DisplayName) && (TurnedIn == false || RepeatableQuest == true) && MyPrerequisitesMet == true) {
                 //Debug.Log(MyName + ".Quest.GetStatus(): returning available");
                 return "available";
             }
@@ -433,7 +432,7 @@ namespace AnyRPG {
 
         public string GetObjectiveDescription() {
 
-            Color titleColor = LevelEquations.GetTargetColor(SystemGameManager.Instance.PlayerManager.MyCharacter.CharacterStats.Level, MyExperienceLevel);
+            Color titleColor = LevelEquations.GetTargetColor(SystemGameManager.Instance.PlayerManager.MyCharacter.CharacterStats.Level, ExperienceLevel);
             return string.Format("<size=30><b><color=#{0}>{1}</color></b></size>\n\n<size=18>{2}</size>\n\n<b><size=24>Objectives:</size></b>\n\n<size=18>{3}</size>", ColorUtility.ToHtmlStringRGB(titleColor), DisplayName, MyDescription, GetUnformattedObjectiveList());
 
         }

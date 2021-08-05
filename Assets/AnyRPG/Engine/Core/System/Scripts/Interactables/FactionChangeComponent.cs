@@ -39,12 +39,12 @@ namespace AnyRPG {
         }
 
         public void CleanupWindowEventSubscriptions() {
-            if (SystemGameManager.Instance.UIManager.PopupWindowManager != null
-                && SystemGameManager.Instance.UIManager.PopupWindowManager.factionChangeWindow != null
-                && SystemGameManager.Instance.UIManager.PopupWindowManager.factionChangeWindow.CloseableWindowContents != null
-                && (SystemGameManager.Instance.UIManager.PopupWindowManager.factionChangeWindow.CloseableWindowContents as NameChangePanelController) != null) {
-                (SystemGameManager.Instance.UIManager.PopupWindowManager.factionChangeWindow.CloseableWindowContents as FactionChangePanelController).OnConfirmAction -= HandleConfirmAction;
-                (SystemGameManager.Instance.UIManager.PopupWindowManager.factionChangeWindow.CloseableWindowContents as FactionChangePanelController).OnCloseWindow -= CleanupEventSubscriptions;
+            if (SystemGameManager.Instance.UIManager != null
+                && SystemGameManager.Instance.UIManager.factionChangeWindow != null
+                && SystemGameManager.Instance.UIManager.factionChangeWindow.CloseableWindowContents != null
+                && (SystemGameManager.Instance.UIManager.factionChangeWindow.CloseableWindowContents as NameChangePanelController) != null) {
+                (SystemGameManager.Instance.UIManager.factionChangeWindow.CloseableWindowContents as FactionChangePanelController).OnConfirmAction -= HandleConfirmAction;
+                (SystemGameManager.Instance.UIManager.factionChangeWindow.CloseableWindowContents as FactionChangePanelController).OnCloseWindow -= CleanupEventSubscriptions;
             }
         }
 
@@ -73,9 +73,9 @@ namespace AnyRPG {
                 return false;
             }
             base.Interact(source, optionIndex);
-            (SystemGameManager.Instance.UIManager.PopupWindowManager.factionChangeWindow.CloseableWindowContents as FactionChangePanelController).Setup(Props.Faction);
-            (SystemGameManager.Instance.UIManager.PopupWindowManager.factionChangeWindow.CloseableWindowContents as FactionChangePanelController).OnConfirmAction += HandleConfirmAction;
-            (SystemGameManager.Instance.UIManager.PopupWindowManager.factionChangeWindow.CloseableWindowContents as FactionChangePanelController).OnCloseWindow += CleanupEventSubscriptions;
+            (SystemGameManager.Instance.UIManager.factionChangeWindow.CloseableWindowContents as FactionChangePanelController).Setup(Props.Faction);
+            (SystemGameManager.Instance.UIManager.factionChangeWindow.CloseableWindowContents as FactionChangePanelController).OnConfirmAction += HandleConfirmAction;
+            (SystemGameManager.Instance.UIManager.factionChangeWindow.CloseableWindowContents as FactionChangePanelController).OnCloseWindow += CleanupEventSubscriptions;
             windowEventSubscriptionsInitialized = true;
             return true;
         }
@@ -86,7 +86,7 @@ namespace AnyRPG {
 
         public override void StopInteract() {
             base.StopInteract();
-            SystemGameManager.Instance.UIManager.PopupWindowManager.factionChangeWindow.CloseWindow();
+            SystemGameManager.Instance.UIManager.factionChangeWindow.CloseWindow();
         }
 
         public override bool HasMiniMapText() {

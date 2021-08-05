@@ -52,7 +52,24 @@ namespace AnyRPG {
 
         private Skill currentSkill = null;
 
+        // game manager references
+        private ObjectPooler objectPooler = null;
+        private PlayerManager playerManager = null;
+        private UIManager uIManager = null;
+
         public SkillTrainerSkillScript MySelectedSkillTrainerSkillScript { get => selectedSkillTrainerSkillScript; set => selectedSkillTrainerSkillScript = value; }
+
+        public override void Init(SystemGameManager systemGameManager) {
+            base.Init(systemGameManager);
+
+            objectPooler = systemGameManager.ObjectPooler;
+            playerManager = systemGameManager.PlayerManager;
+            uIManager = systemGameManager.UIManager;
+
+            foreach (DescribableIcon describableIcon in rewardButtons) {
+                describableIcon.Init(systemGameManager);
+            }
+        }
 
         public void DeactivateButtons() {
             learnButton.GetComponent<Button>().enabled = false;
@@ -67,11 +84,12 @@ namespace AnyRPG {
             SkillTrainerSkillScript firstAvailableSkill = null;
 
             foreach (Skill skill in skillTrainer.Props.Skills) {
-                if (!SystemGameManager.Instance.PlayerManager.MyCharacter.CharacterSkillManager.HasSkill(skill)) {
-                    GameObject go = ObjectPooler.Instance.GetPooledObject(skillPrefab, availableArea.transform);
+                if (!playerManager.MyCharacter.CharacterSkillManager.HasSkill(skill)) {
+                    GameObject go = objectPooler.GetPooledObject(skillPrefab, availableArea.transform);
                     SkillTrainerSkillScript qs = go.GetComponent<SkillTrainerSkillScript>();
-                    qs.MyText.text = skill.DisplayName;
-                    qs.MyText.color = Color.white;
+                    qs.Init(systemGameManager);
+                    qs.Text.text = skill.DisplayName;
+                    qs.Text.color = Color.white;
                     qs.SetSkill(this, skill);
                     skillScripts.Add(qs);
                     skills.Add(skill);
@@ -83,7 +101,7 @@ namespace AnyRPG {
 
             if (firstAvailableSkill == null) {
                 // no available skills anymore, close window
-                SystemGameManager.Instance.UIManager.PopupWindowManager.skillTrainerWindow.CloseWindow();
+                uIManager.skillTrainerWindow.CloseWindow();
             }
 
             if (MySelectedSkillTrainerSkillScript == null && firstAvailableSkill != null) {
@@ -113,7 +131,7 @@ namespace AnyRPG {
         // Enable or disable learn and unlearn buttons based on what is selected
         private void UpdateButtons(Skill newSkill) {
             //Debug.Log("SkillTrainerUI.UpdateButtons(" + skillName + ")");
-            if (SystemGameManager.Instance.PlayerManager.MyCharacter.CharacterSkillManager.HasSkill(newSkill)) {
+            if (playerManager.MyCharacter.CharacterSkillManager.HasSkill(newSkill)) {
                 learnButton.gameObject.SetActive(false);
                 learnButton.GetComponent<Button>().enabled = false;
                 unlearnButton.gameObject.SetActive(true);
@@ -179,7 +197,7 @@ namespace AnyRPG {
                 if (skill != null) {
                     skill.gameObject.transform.SetParent(null);
                     skill.DeSelect();
-                    ObjectPooler.Instance.ReturnObjectToPool(skill.gameObject);
+                    objectPooler.ReturnObjectToPool(skill.gameObject);
                 }
             }
             skillScripts.Clear();
@@ -196,7 +214,7 @@ namespace AnyRPG {
             //Debug.Log("SkillTrainerUI.LearnSkill()");
             if (currentSkill != null) {
                 //if (MySelectedSkillTrainerSkillScript != null && MySelectedSkillTrainerSkillScript.MySkillName != null) {
-                SystemGameManager.Instance.PlayerManager.MyCharacter.CharacterSkillManager.LearnSkill(MySelectedSkillTrainerSkillScript.MySkill);
+                playerManager.MyCharacter.CharacterSkillManager.LearnSkill(MySelectedSkillTrainerSkillScript.MySkill);
                 //UpdateButtons(MySelectedSkillTrainerSkillScript.MySkillName);
                 MySelectedSkillTrainerSkillScript = null;
                 ClearDescription();
@@ -207,7 +225,7 @@ namespace AnyRPG {
         public void UnlearnSkill() {
             //Debug.Log("SkillTrainerUI.UnlearnSkill()");
             if (MySelectedSkillTrainerSkillScript != null && MySelectedSkillTrainerSkillScript.MySkill != null) {
-                SystemGameManager.Instance.PlayerManager.MyCharacter.CharacterSkillManager.UnlearnSkill(MySelectedSkillTrainerSkillScript.MySkill);
+                playerManager.MyCharacter.CharacterSkillManager.UnlearnSkill(MySelectedSkillTrainerSkillScript.MySkill);
                 UpdateButtons(MySelectedSkillTrainerSkillScript.MySkill);
                 ShowSkills();
             }

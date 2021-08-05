@@ -17,18 +17,14 @@ namespace AnyRPG {
         [SerializeField]
         private TextMeshProUGUI description = null;
 
-        private UnitSpawnControlPanel unitSpawnControlPanel = null;
-        private SystemConfigurationManager systemConfigurationManager = null;
-
         //[SerializeField]
         private UnitProfile unitProfile = null;
 
-        public UnitProfile MyUnitProfile { get => unitProfile; set => unitProfile = value; }
+        private UnitSpawnControlPanel unitSpawnControlPanel = null;
 
-        public void Init(UnitSpawnControlPanel unitSpawnControlPanel) {
-            this.unitSpawnControlPanel = unitSpawnControlPanel;
-            systemConfigurationManager = SystemGameManager.Instance.SystemConfigurationManager;
-        }
+        public UnitProfile UnitProfile { get => unitProfile; set => unitProfile = value; }
+        public UnitSpawnControlPanel UnitSpawnControlPanel { get => unitSpawnControlPanel; set => unitSpawnControlPanel = value; }
+
 
         public void AddUnitProfile(UnitProfile unitProfile) {
             //Debug.Log("UnitSpawnButton.AddUnitProfile()");

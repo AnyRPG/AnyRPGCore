@@ -16,7 +16,7 @@ namespace AnyRPG {
             //Debug.Log("CharacterCreatorManager.HandleOpenWindow()");
 
             //cloneSource = GetCloneSource();
-            cloneSource = petSpawnControlPanel.MySelectedPetSpawnButton.MyUnitProfile;
+            cloneSource = petSpawnControlPanel.SelectedPetSpawnButton.MyUnitProfile;
             if (cloneSource == null) {
                 return;
             }

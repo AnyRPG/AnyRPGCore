@@ -41,7 +41,7 @@ namespace AnyRPG {
         private PlayerManager playerManager = null;
         private MainMapManager mainMapManager = null;
         private LevelManager levelManager = null;
-        private PopupWindowManager popupWindowManager = null;
+        private UIManager uIManager = null;
         private ObjectPooler objectPooler = null;
 
         private Dictionary<Interactable, MainMapIndicatorController> mapIndicatorControllers = new Dictionary<Interactable, MainMapIndicatorController>();
@@ -57,7 +57,7 @@ namespace AnyRPG {
             playerManager = systemGameManager.PlayerManager;
             mainMapManager = systemGameManager.UIManager.MainMapManager;
             levelManager = systemGameManager.LevelManager;
-            popupWindowManager = systemGameManager.UIManager.PopupWindowManager;
+            uIManager = systemGameManager.UIManager;
             objectPooler = systemGameManager.ObjectPooler;
 
             cameraManager.MainMapCamera.enabled = false;
@@ -112,7 +112,7 @@ namespace AnyRPG {
         }
 
         void UpdateMainMap() {
-            if (popupWindowManager.mainMapWindow.IsOpen == false) {
+            if (uIManager.mainMapWindow.IsOpen == false) {
                 return;
             }
 
@@ -120,7 +120,7 @@ namespace AnyRPG {
         }
 
         public void LateUpdate() {
-            if (popupWindowManager.mainMapWindow.IsOpen == false) {
+            if (uIManager.mainMapWindow.IsOpen == false) {
                 return;
             }
             if (systemConfigurationManager.UseThirdPartyCameraControl == true

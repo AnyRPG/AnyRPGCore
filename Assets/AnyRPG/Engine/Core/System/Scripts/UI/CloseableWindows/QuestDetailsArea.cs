@@ -7,7 +7,7 @@ using UnityEngine;
 using UnityEngine.UI;
 
 namespace AnyRPG {
-    public class QuestDetailsArea : MonoBehaviour {
+    public class QuestDetailsArea : ConfiguredMonoBehaviour {
 
         [SerializeField]
         private TextMeshProUGUI questDescription = null;
@@ -61,16 +61,26 @@ namespace AnyRPG {
         private List<RewardButton> skillRewardIcons = new List<RewardButton>();
         private List<FactionRewardButton> factionRewardIcons = new List<FactionRewardButton>();
 
+        // game manager references
+        private ObjectPooler objectPooler = null;
+        private PlayerManager playerManager = null;
 
-        private void Start() {
+        public override void Init(SystemGameManager systemGameManager) {
+            base.Init(systemGameManager);
+
+            objectPooler = systemGameManager.ObjectPooler;
+            playerManager = systemGameManager.PlayerManager;
+
+            currencyLootButton.Init(systemGameManager);
         }
+
 
         public List<RewardButton> GetHighlightedItemRewardIcons() {
             //Debug.Log("QuestDetailsArea.GetHighlightedItemRewardIcons()");
             List<RewardButton> returnList = new List<RewardButton>();
             foreach (RewardButton rewardButton in itemRewardIcons) {
                 //Debug.Log("QuestDetailsArea.GetHighlightedItemRewardIcons(): passing over rewardbutton");
-                if (rewardButton.isActiveAndEnabled == true && (rewardButton.MySelected == true || quest.MyMaxItemRewards == 0)) {
+                if (rewardButton.isActiveAndEnabled == true && (rewardButton.MySelected == true || quest.MaxItemRewards == 0)) {
                     //Debug.Log("QuestDetailsArea.GetHighlightedItemRewardIcons(): adding button to the list");
                     returnList.Add(rewardButton);
                 }
@@ -83,7 +93,7 @@ namespace AnyRPG {
             List<RewardButton> returnList = new List<RewardButton>();
             foreach (RewardButton rewardButton in abilityRewardIcons) {
                 //Debug.Log("QuestDetailsArea.GetHighlightedAbilityRewardIcons(): passing over rewardbutton");
-                if (rewardButton.isActiveAndEnabled == true && (rewardButton.MySelected == true || quest.MyMaxAbilityRewards == 0)) {
+                if (rewardButton.isActiveAndEnabled == true && (rewardButton.MySelected == true || quest.MaxAbilityRewards == 0)) {
                     //Debug.Log("QuestDetailsArea.GetHighlightedAbilityRewardIcons(): adding button to the list");
                     returnList.Add(rewardButton);
                 }
@@ -97,7 +107,7 @@ namespace AnyRPG {
             List<RewardButton> returnList = new List<RewardButton>();
             foreach (RewardButton rewardButton in skillRewardIcons) {
                 //Debug.Log("QuestDetailsArea.GetHighlightedSkillRewardIcons(): passing over rewardbutton");
-                if (rewardButton.isActiveAndEnabled == true && (rewardButton.MySelected == true || quest.MyMaxSkillRewards == 0)) {
+                if (rewardButton.isActiveAndEnabled == true && (rewardButton.MySelected == true || quest.MaxSkillRewards == 0)) {
                     //Debug.Log("QuestDetailsArea.GetHighlightedSkillRewardIcons(): adding button to the list");
                     returnList.Add(rewardButton);
                 }
@@ -111,7 +121,7 @@ namespace AnyRPG {
             List<RewardButton> returnList = new List<RewardButton>();
             foreach (RewardButton rewardButton in factionRewardIcons) {
                 //Debug.Log("QuestDetailsArea.GetHighlightedFactionRewardIcons(): passing over rewardbutton");
-                if (rewardButton.isActiveAndEnabled == true && (rewardButton.MySelected == true || quest.MyMaxFactionRewards == 0)) {
+                if (rewardButton.isActiveAndEnabled == true && (rewardButton.MySelected == true || quest.MaxFactionRewards == 0)) {
                     //Debug.Log("QuestDetailsArea.GetHighlightedFactionRewardIcons(): adding button to the list");
                     returnList.Add(rewardButton);
                 }
@@ -123,20 +133,20 @@ namespace AnyRPG {
             //Debug.Log("QuestDetailsArea.HandleAttemptSelect()");
             if (GetHighlightedItemRewardIcons().Contains(rewardButton)) {
                 //Debug.Log("QuestDetailsArea.HandleAttemptSelect(): it's an item reward; current count of highlighted icons: " + GetHighlightedItemRewardIcons().Count + "; max: " + quest.MyMaxItemRewards);
-                if (quest.MyMaxItemRewards > 0 && GetHighlightedItemRewardIcons().Count > quest.MyMaxItemRewards) {
+                if (quest.MaxItemRewards > 0 && GetHighlightedItemRewardIcons().Count > quest.MaxItemRewards) {
                     rewardButton.Unselect();
                 }
             }
             if (GetHighlightedFactionRewardIcons().Contains(rewardButton)) {
                 //Debug.Log("QuestDetailsArea.HandleAttemptSelect(): it's an faction reward; current count of highlighted icons: " + GetHighlightedFactionRewardIcons().Count + "; max: " + quest.MyMaxFactionRewards);
-                if (quest.MyMaxFactionRewards > 0 && GetHighlightedFactionRewardIcons().Count > quest.MyMaxFactionRewards) {
+                if (quest.MaxFactionRewards > 0 && GetHighlightedFactionRewardIcons().Count > quest.MaxFactionRewards) {
                     rewardButton.Unselect();
                 }
             }
 
             if (GetHighlightedAbilityRewardIcons().Contains(rewardButton)) {
                 //Debug.Log("QuestDetailsArea.HandleAttemptSelect(): it's an ability reward; current count of highlighted icons: " + GetHighlightedAbilityRewardIcons().Count + "; max: " + quest.MyMaxAbilityRewards);
-                if (quest.MyMaxAbilityRewards > 0 && GetHighlightedAbilityRewardIcons().Count > quest.MyMaxAbilityRewards || SystemGameManager.Instance.PlayerManager.MyCharacter.CharacterAbilityManager.HasAbility(rewardButton.Describable as BaseAbility)) {
+                if (quest.MaxAbilityRewards > 0 && GetHighlightedAbilityRewardIcons().Count > quest.MaxAbilityRewards || playerManager.MyCharacter.CharacterAbilityManager.HasAbility(rewardButton.Describable as BaseAbility)) {
                     rewardButton.Unselect();
                 }
             }
@@ -155,7 +165,7 @@ namespace AnyRPG {
 
             questDescription.text = quest.GetObjectiveDescription();
 
-            experienceReward.text += LevelEquations.GetXPAmountForQuest(SystemGameManager.Instance.PlayerManager.MyCharacter.CharacterStats.Level, quest) + " XP";
+            experienceReward.text += LevelEquations.GetXPAmountForQuest(playerManager.MyCharacter.CharacterStats.Level, quest) + " XP";
 
             // display currency rewards
 
@@ -177,74 +187,78 @@ namespace AnyRPG {
 
 
             // show item rewards
-            if (quest.MyItemRewards.Count > 0) {
+            if (quest.ItemRewards.Count > 0) {
                 itemsHeading.gameObject.SetActive(true);
-                if (quest.MyMaxItemRewards > 0) {
-                    itemsHeading.GetComponent<TextMeshProUGUI>().text = "Choose " + quest.MyMaxItemRewards + " Item Rewards:";
+                if (quest.MaxItemRewards > 0) {
+                    itemsHeading.GetComponent<TextMeshProUGUI>().text = "Choose " + quest.MaxItemRewards + " Item Rewards:";
                 } else {
                     itemsHeading.GetComponent<TextMeshProUGUI>().text = "Item Rewards:";
                 }
             }
-            for (int i = 0; i < quest.MyItemRewards.Count; i++) {
-                RewardButton rewardIcon = ObjectPooler.Instance.GetPooledObject(rewardIconPrefab, itemIconsArea.transform).GetComponent<RewardButton>();
+            for (int i = 0; i < quest.ItemRewards.Count; i++) {
+                RewardButton rewardIcon = objectPooler.GetPooledObject(rewardIconPrefab, itemIconsArea.transform).GetComponent<RewardButton>();
+                rewardIcon.Init(systemGameManager);
                 rewardIcon.OnAttempSelect += HandleAttemptSelect;
                 //Debug.Log("QuestDetailsArea.ShowDescription(): setting describable (and attemptselect) for: " + quest.MyItemRewards[i]);
-                rewardIcon.SetDescribable(quest.MyItemRewards[i]);
+                rewardIcon.SetDescribable(quest.ItemRewards[i]);
                 itemRewardIcons.Add(rewardIcon);
             }
 
             // show ability rewards
-            if (quest.MyAbilityRewards.Count > 0) {
+            if (quest.AbilityRewards.Count > 0) {
                 abilitiesHeading.gameObject.SetActive(true);
-                if (quest.MyMaxAbilityRewards > 0) {
-                    abilitiesHeading.GetComponent<TextMeshProUGUI>().text = "Choose " + quest.MyMaxAbilityRewards + " Ability Rewards:";
+                if (quest.MaxAbilityRewards > 0) {
+                    abilitiesHeading.GetComponent<TextMeshProUGUI>().text = "Choose " + quest.MaxAbilityRewards + " Ability Rewards:";
                 } else {
                     abilitiesHeading.GetComponent<TextMeshProUGUI>().text = "Ability Rewards:";
                 }
             } else {
                 abilitiesHeading.GetComponent<TextMeshProUGUI>().text = "";
             }
-            for (int i = 0; i < quest.MyAbilityRewards.Count; i++) {
-                RewardButton rewardIcon = ObjectPooler.Instance.GetPooledObject(rewardIconPrefab, abilityIconsArea.transform).GetComponent<RewardButton>();
+            for (int i = 0; i < quest.AbilityRewards.Count; i++) {
+                RewardButton rewardIcon = objectPooler.GetPooledObject(rewardIconPrefab, abilityIconsArea.transform).GetComponent<RewardButton>();
+                rewardIcon.Init(systemGameManager);
                 rewardIcon.OnAttempSelect += HandleAttemptSelect;
                 //Debug.Log("QuestDetailsArea.ShowDescription(): setting describable (and attemptselect) for: " + quest.MyAbilityRewards[i]);
-                rewardIcon.SetDescribable(quest.MyAbilityRewards[i]);
+                rewardIcon.SetDescribable(quest.AbilityRewards[i]);
                 abilityRewardIcons.Add(rewardIcon);
             }
 
             // show faction rewards
-            if (quest.MyFactionRewards.Count > 0) {
+            if (quest.FactionRewards.Count > 0) {
                 factionsHeading.gameObject.SetActive(true);
-                if (quest.MyMaxFactionRewards > 0) {
-                    factionsHeading.GetComponent<TextMeshProUGUI>().text = "Choose " + quest.MyMaxFactionRewards + " Reputation Rewards:";
+                if (quest.MaxFactionRewards > 0) {
+                    factionsHeading.GetComponent<TextMeshProUGUI>().text = "Choose " + quest.MaxFactionRewards + " Reputation Rewards:";
                 } else {
                     factionsHeading.GetComponent<TextMeshProUGUI>().text = "Reputation Rewards:";
                 }
             } else {
                 factionsHeading.GetComponent<TextMeshProUGUI>().text = "";
             }
-            for (int i = 0; i < quest.MyFactionRewards.Count; i++) {
-                FactionRewardButton rewardIcon = ObjectPooler.Instance.GetPooledObject(factionRewardIconPrefab, factionIconsArea.transform).GetComponent<FactionRewardButton>();
+            for (int i = 0; i < quest.FactionRewards.Count; i++) {
+                FactionRewardButton rewardIcon = objectPooler.GetPooledObject(factionRewardIconPrefab, factionIconsArea.transform).GetComponent<FactionRewardButton>();
+                rewardIcon.Init(systemGameManager);
                 rewardIcon.OnAttempSelect += HandleAttemptSelect;
                 //Debug.Log("QuestDetailsArea.ShowDescription(): setting describable (and attemptselect) for: " + quest.MyFactionRewards[i]);
-                rewardIcon.SetDescribable(quest.MyFactionRewards[i]);
+                rewardIcon.SetDescribable(quest.FactionRewards[i]);
                 factionRewardIcons.Add(rewardIcon);
             }
 
             // show Skill rewards
-            if (quest.MySkillRewards.Count > 0) {
+            if (quest.SkillRewards.Count > 0) {
                 skillHeading.gameObject.SetActive(true);
-                if (quest.MyMaxSkillRewards > 0) {
-                    skillHeading.GetComponent<TextMeshProUGUI>().text = "Choose " + quest.MyMaxSkillRewards + " Skill Rewards:";
+                if (quest.MaxSkillRewards > 0) {
+                    skillHeading.GetComponent<TextMeshProUGUI>().text = "Choose " + quest.MaxSkillRewards + " Skill Rewards:";
                 } else {
                     skillHeading.GetComponent<TextMeshProUGUI>().text = "Skill Rewards:";
                 }
             } else {
                 skillHeading.GetComponent<TextMeshProUGUI>().text = "";
             }
-            for (int i = 0; i < quest.MySkillRewards.Count; i++) {
-                RewardButton rewardIcon = ObjectPooler.Instance.GetPooledObject(rewardIconPrefab, skillIconsArea.transform).GetComponent<RewardButton>();
-                rewardIcon.SetDescribable(quest.MySkillRewards[i]);
+            for (int i = 0; i < quest.SkillRewards.Count; i++) {
+                RewardButton rewardIcon = objectPooler.GetPooledObject(rewardIconPrefab, skillIconsArea.transform).GetComponent<RewardButton>();
+                rewardIcon.Init(systemGameManager);
+                rewardIcon.SetDescribable(quest.SkillRewards[i]);
                 skillRewardIcons.Add(rewardIcon);
             }
 
@@ -268,28 +282,28 @@ namespace AnyRPG {
             // items
             foreach (RewardButton rewardIcon in itemRewardIcons) {
                 rewardIcon.Unselect();
-                ObjectPooler.Instance.ReturnObjectToPool(rewardIcon.gameObject);
+                objectPooler.ReturnObjectToPool(rewardIcon.gameObject);
             }
             itemRewardIcons.Clear();
 
             // abilties
             foreach (RewardButton rewardIcon in abilityRewardIcons) {
                 rewardIcon.Unselect();
-                ObjectPooler.Instance.ReturnObjectToPool(rewardIcon.gameObject);
+                objectPooler.ReturnObjectToPool(rewardIcon.gameObject);
             }
             abilityRewardIcons.Clear();
 
             // skills
             foreach (RewardButton rewardIcon in skillRewardIcons) {
                 rewardIcon.Unselect();
-                ObjectPooler.Instance.ReturnObjectToPool(rewardIcon.gameObject);
+                objectPooler.ReturnObjectToPool(rewardIcon.gameObject);
             }
             skillRewardIcons.Clear();
 
             // factions
             foreach (RewardButton rewardIcon in factionRewardIcons) {
                 rewardIcon.Unselect();
-                ObjectPooler.Instance.ReturnObjectToPool(rewardIcon.gameObject);
+                objectPooler.ReturnObjectToPool(rewardIcon.gameObject);
             }
             factionRewardIcons.Clear();
         }

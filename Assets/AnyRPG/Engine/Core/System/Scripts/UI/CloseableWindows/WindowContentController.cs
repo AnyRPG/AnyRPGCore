@@ -19,6 +19,7 @@ namespace AnyRPG {
 
         protected bool eventSubscriptionsInitialized = false;
 
+        // game manager references
         protected AudioManager audioManager = null;
 
         public override void Init(SystemGameManager systemGameManager) {

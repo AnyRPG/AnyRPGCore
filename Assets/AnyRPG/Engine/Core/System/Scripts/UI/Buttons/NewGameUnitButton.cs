@@ -30,7 +30,7 @@ namespace AnyRPG {
             if (unitProfile.Icon != null) {
                 icon.sprite = unitProfile.Icon;
             } else {
-                icon.sprite = SystemGameManager.Instance.SystemConfigurationManager.DefaultFactionIcon;
+                icon.sprite = systemConfigurationManager.DefaultFactionIcon;
             }
             icon.color = Color.white;
             //Debug.Log("LoadGameButton.AddSaveData(): Setting playerName.text: " + mySaveData.playerName);

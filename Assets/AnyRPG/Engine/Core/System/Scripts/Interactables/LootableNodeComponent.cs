@@ -59,7 +59,7 @@ namespace AnyRPG {
 
             DropLoot();
             PickUp();
-            SystemGameManager.Instance.UIManager.PopupWindowManager.interactionWindow.CloseWindow();
+            SystemGameManager.Instance.UIManager.interactionWindow.CloseWindow();
             return true;
         }
 
@@ -111,8 +111,8 @@ namespace AnyRPG {
             //Debug.Log(gameObject.name + ".LootableNode.Pickup()");
             //LootUI.Instance.CreatePages(lootTable.GetLoot());
             CreateWindowEventSubscriptions();
-            SystemGameManager.Instance.UIManager.PopupWindowManager.lootWindow.CloseableWindowContents.OnCloseWindow += ClearTakeLootHandler;
-            SystemGameManager.Instance.UIManager.PopupWindowManager.lootWindow.OpenWindow();
+            SystemGameManager.Instance.UIManager.lootWindow.CloseableWindowContents.OnCloseWindow += ClearTakeLootHandler;
+            SystemGameManager.Instance.UIManager.lootWindow.OpenWindow();
         }
 
         public void ClearTakeLootHandler(ICloseableWindowContents windowContents) {
@@ -128,8 +128,8 @@ namespace AnyRPG {
         public void CleanupWindowEventSubscriptions() {
             //Debug.Log(gameObject.name + ".LootableNode.CleanupWindowEventSubscriptions()");
             SystemEventManager.StopListening("OnTakeLoot", HandleTakeLoot);
-            if (SystemGameManager.Instance.UIManager.PopupWindowManager?.lootWindow?.CloseableWindowContents != null) {
-                SystemGameManager.Instance.UIManager.PopupWindowManager.lootWindow.CloseableWindowContents.OnCloseWindow -= ClearTakeLootHandler;
+            if (SystemGameManager.Instance.UIManager?.lootWindow?.CloseableWindowContents != null) {
+                SystemGameManager.Instance.UIManager.lootWindow.CloseableWindowContents.OnCloseWindow -= ClearTakeLootHandler;
             }
         }
 
@@ -182,7 +182,7 @@ namespace AnyRPG {
         public override void StopInteract() {
             base.StopInteract();
 
-            SystemGameManager.Instance.UIManager.PopupWindowManager.lootWindow.CloseWindow();
+            SystemGameManager.Instance.UIManager.lootWindow.CloseWindow();
         }
 
         public override bool HasMiniMapText() {

@@ -15,6 +15,9 @@ namespace AnyRPG {
 
         protected List<SlotScript> slots = new List<SlotScript>();
 
+        // game manager references
+        private ObjectPooler objectPooler = null;
+
         public List<SlotScript> MySlots { get => slots; }
 
         public virtual int MyEmptySlotCount {
@@ -27,6 +30,12 @@ namespace AnyRPG {
                 }
                 return count;
             }
+        }
+
+        public override void Init(SystemGameManager systemGameManager) {
+            base.Init(systemGameManager);
+
+            objectPooler = systemGameManager.ObjectPooler;
         }
 
         public virtual List<Item> GetItems() {
@@ -62,7 +71,8 @@ namespace AnyRPG {
             //Debug.Log(gameObject.name + gameObject.GetInstanceID() + ".BagPanel.AddSlots(" + slotCount + ")");
             for (int i = 0; i < slotCount; i++) {
                 //Debug.Log(gameObject.GetInstanceID() + ".BagPanel.AddSlots(" + slotCount + "): Adding slot " + i);
-                SlotScript slot = ObjectPooler.Instance.GetPooledObject(slotPrefab, contentArea).GetComponent<SlotScript>();
+                SlotScript slot = objectPooler.GetPooledObject(slotPrefab, contentArea).GetComponent<SlotScript>();
+                slot.Init(systemGameManager);
                 slot.MyBag = this;
                 MySlots.Add(slot);
                 slot.SetBackGroundColor();
@@ -99,7 +109,7 @@ namespace AnyRPG {
                 removeList.Add(slot);
             }
             foreach (SlotScript slot in removeList) {
-                ObjectPooler.Instance.ReturnObjectToPool(slot.gameObject);
+                objectPooler.ReturnObjectToPool(slot.gameObject);
                 //Debug.Log("BagPanel.Clear(): destroyed slot");
             }
             slots.Clear();

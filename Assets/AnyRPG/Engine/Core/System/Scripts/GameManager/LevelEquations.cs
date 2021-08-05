@@ -85,24 +85,24 @@ namespace AnyRPG {
             int experiencePerLevel = SystemGameManager.Instance.SystemConfigurationManager.QuestXPPerLevel + quest.ExperienceRewardPerLevel;
             int baseExperience = SystemGameManager.Instance.SystemConfigurationManager.BaseQuestXP + quest.BaseExperienceReward;
 
-            int baseXP = (int)(((quest.MyExperienceLevel * experiencePerLevel) * multiplierValue) + baseExperience);
+            int baseXP = (int)(((quest.ExperienceLevel * experiencePerLevel) * multiplierValue) + baseExperience);
 
-            if (sourceLevel <= quest.MyExperienceLevel + 5) {
+            if (sourceLevel <= quest.ExperienceLevel + 5) {
                 return baseXP;
             }
-            if (sourceLevel == quest.MyExperienceLevel + 6) {
+            if (sourceLevel == quest.ExperienceLevel + 6) {
                 return (int)(baseXP * 0.8);
             }
-            if (sourceLevel == quest.MyExperienceLevel + 7) {
+            if (sourceLevel == quest.ExperienceLevel + 7) {
                 return (int)(baseXP * 0.6);
             }
-            if (sourceLevel == quest.MyExperienceLevel + 8) {
+            if (sourceLevel == quest.ExperienceLevel + 8) {
                 return (int)(baseXP * 0.4);
             }
-            if (sourceLevel == quest.MyExperienceLevel + 9) {
+            if (sourceLevel == quest.ExperienceLevel + 9) {
                 return (int)(baseXP * 0.2);
             }
-            if (sourceLevel == quest.MyExperienceLevel + 10) {
+            if (sourceLevel == quest.ExperienceLevel + 10) {
                 return (int)(baseXP * 0.1);
             }
             return 0;

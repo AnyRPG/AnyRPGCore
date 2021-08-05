@@ -36,8 +36,8 @@ namespace AnyRPG {
             }
         }
 
-        protected override void Awake() {
-            base.Awake();
+        public override void Init(SystemGameManager systemGameManager) {
+            base.Init(systemGameManager);
             lootWindow = GetComponentInParent<LootUI>();
         }
 
@@ -64,7 +64,7 @@ namespace AnyRPG {
 
                 gameObject.SetActive(false);
                 lootWindow.TakeLoot(LootDrop);
-                SystemGameManager.Instance.UIManager.HideToolTip();
+                uIManager.HideToolTip();
                 return true;
             }
             return false;
@@ -76,11 +76,11 @@ namespace AnyRPG {
                 return;
             }
 
-            SystemGameManager.Instance.UIManager.ShowToolTip(transform.position, LootDrop);
+            uIManager.ShowToolTip(transform.position, LootDrop);
         }
 
         public void OnPointerExit(PointerEventData eventData) {
-            SystemGameManager.Instance.UIManager.HideToolTip();
+            uIManager.HideToolTip();
         }
     }
 

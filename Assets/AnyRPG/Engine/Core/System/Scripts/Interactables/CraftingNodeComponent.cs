@@ -83,7 +83,7 @@ namespace AnyRPG {
         public override void StopInteract() {
             base.StopInteract();
 
-            SystemGameManager.Instance.UIManager.PopupWindowManager.craftingWindow.CloseWindow();
+            SystemGameManager.Instance.UIManager.craftingWindow.CloseWindow();
         }
 
         public override bool HasMiniMapText() {

@@ -33,8 +33,17 @@ namespace AnyRPG {
 
         private UnitProfile unitProfile;
 
+        // game manager references
+        private SystemDataFactory systemDataFactory = null;
+
         public AnyRPGSaveData SaveData { get => mySaveData; set => mySaveData = value; }
         public UnitProfile UnitProfile { get => unitProfile; set => unitProfile = value; }
+
+        public override void Init(SystemGameManager systemGameManager) {
+            base.Init(systemGameManager);
+
+            systemDataFactory = systemGameManager.SystemDataFactory;
+        }
 
         public void AddSaveData(LoadGamePanel loadGamePanel, AnyRPGSaveData mySaveData) {
             //Debug.Log("LoadGameButton.AddSaveData()");
@@ -43,15 +52,15 @@ namespace AnyRPG {
 
             icon.sprite = null;
             if (mySaveData.playerFaction != null && SaveData.playerFaction != string.Empty) {
-                Faction playerFaction = SystemDataFactory.Instance.GetResource<Faction>(mySaveData.playerFaction);
+                Faction playerFaction = systemDataFactory.GetResource<Faction>(mySaveData.playerFaction);
                 // needs to be checked anyway.  could have invalid faction in save data
                 if (playerFaction != null) {
                     icon.sprite = playerFaction.Icon;
                 } else {
-                    icon.sprite = SystemGameManager.Instance.SystemConfigurationManager.DefaultFactionIcon;
+                    icon.sprite = systemConfigurationManager.DefaultFactionIcon;
                 }
             } else {
-                icon.sprite = SystemGameManager.Instance.SystemConfigurationManager.DefaultFactionIcon;
+                icon.sprite = systemConfigurationManager.DefaultFactionIcon;
             }
             icon.color = Color.white;
             //Debug.Log("LoadGameButton.AddSaveData(): Setting playerName.text: " + mySaveData.playerName);
@@ -73,7 +82,7 @@ namespace AnyRPG {
             // set the text on the button
             description.text = descriptionText;
 
-            unitProfile = SystemDataFactory.Instance.GetResource<UnitProfile>(mySaveData.unitProfileName);
+            unitProfile = systemDataFactory.GetResource<UnitProfile>(mySaveData.unitProfileName);
         }
 
         /*
