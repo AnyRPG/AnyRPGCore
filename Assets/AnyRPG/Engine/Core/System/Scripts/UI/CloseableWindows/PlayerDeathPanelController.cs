@@ -9,15 +9,26 @@ namespace AnyRPG {
 
         //public override event Action<ICloseableWindowContents> OnOpenWindow;
 
+        // game manager references
+        private UIManager uIManager = null;
+        private PlayerManager playerManager = null;
+
+        public override void Init(SystemGameManager systemGameManager) {
+            base.Init(systemGameManager);
+
+            uIManager = systemGameManager.UIManager;
+            playerManager = systemGameManager.PlayerManager;
+        }
+
         public void RespawnPlayer() {
-            SystemGameManager.Instance.UIManager.SystemWindowManager.playerOptionsMenuWindow.CloseWindow();
-            SystemGameManager.Instance.PlayerManager.RespawnPlayer();
+            uIManager.playerOptionsMenuWindow.CloseWindow();
+            playerManager.RespawnPlayer();
         }
 
         public void RevivePlayer() {
             //Debug.Log("PlayerOptionsController.RevivePlayer()");
-            SystemGameManager.Instance.UIManager.SystemWindowManager.playerOptionsMenuWindow.CloseWindow();
-            SystemGameManager.Instance.PlayerManager.RevivePlayerUnit();
+            uIManager.playerOptionsMenuWindow.CloseWindow();
+            playerManager.RevivePlayerUnit();
         }
 
     }

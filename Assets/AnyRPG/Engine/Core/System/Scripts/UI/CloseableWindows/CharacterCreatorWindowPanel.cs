@@ -101,7 +101,7 @@ namespace AnyRPG {
 
         public void ClosePanel() {
             //Debug.Log("CharacterCreatorPanel.ClosePanel()");
-            SystemGameManager.Instance.UIManager.SystemWindowManager.characterCreatorWindow.CloseWindow();
+            uIManager.characterCreatorWindow.CloseWindow();
         }
 
         public void SaveCharacter() {

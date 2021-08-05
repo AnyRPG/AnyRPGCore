@@ -21,9 +21,9 @@ namespace AnyRPG {
         }
 
         public void CleanupWindowEventSubscriptions() {
-            if (SystemGameManager.Instance.UIManager.SystemWindowManager != null && SystemGameManager.Instance.UIManager.SystemWindowManager.nameChangeWindow != null && SystemGameManager.Instance.UIManager.SystemWindowManager.nameChangeWindow.CloseableWindowContents != null) {
-                (SystemGameManager.Instance.UIManager.SystemWindowManager.nameChangeWindow.CloseableWindowContents as NameChangePanelController).OnConfirmAction -= HandleConfirmAction;
-                (SystemGameManager.Instance.UIManager.SystemWindowManager.nameChangeWindow.CloseableWindowContents as NameChangePanelController).OnCloseWindow -= CleanupEventSubscriptions;
+            if (SystemGameManager.Instance.UIManager != null && SystemGameManager.Instance.UIManager.nameChangeWindow != null && SystemGameManager.Instance.UIManager.nameChangeWindow.CloseableWindowContents != null) {
+                (SystemGameManager.Instance.UIManager.nameChangeWindow.CloseableWindowContents as NameChangePanelController).OnConfirmAction -= HandleConfirmAction;
+                (SystemGameManager.Instance.UIManager.nameChangeWindow.CloseableWindowContents as NameChangePanelController).OnCloseWindow -= CleanupEventSubscriptions;
             }
             windowEventSubscriptionsInitialized = false;
         }
@@ -50,9 +50,9 @@ namespace AnyRPG {
             }
             base.Interact(source, optionIndex);
 
-            SystemGameManager.Instance.UIManager.SystemWindowManager.nameChangeWindow.OpenWindow();
-            (SystemGameManager.Instance.UIManager.SystemWindowManager.nameChangeWindow.CloseableWindowContents as NameChangePanelController).OnConfirmAction += HandleConfirmAction;
-            (SystemGameManager.Instance.UIManager.SystemWindowManager.nameChangeWindow.CloseableWindowContents as NameChangePanelController).OnCloseWindow += CleanupEventSubscriptions;
+            SystemGameManager.Instance.UIManager.nameChangeWindow.OpenWindow();
+            (SystemGameManager.Instance.UIManager.nameChangeWindow.CloseableWindowContents as NameChangePanelController).OnConfirmAction += HandleConfirmAction;
+            (SystemGameManager.Instance.UIManager.nameChangeWindow.CloseableWindowContents as NameChangePanelController).OnCloseWindow += CleanupEventSubscriptions;
             windowEventSubscriptionsInitialized = true;
             return true;
         }
@@ -65,7 +65,7 @@ namespace AnyRPG {
 
         public override void StopInteract() {
             base.StopInteract();
-            SystemGameManager.Instance.UIManager.SystemWindowManager.nameChangeWindow.CloseWindow();
+            SystemGameManager.Instance.UIManager.nameChangeWindow.CloseWindow();
         }
 
         public override bool HasMiniMapText() {

@@ -38,7 +38,6 @@ namespace AnyRPG {
         SystemDataFactory systemDataFactory = null;
         SystemConfigurationManager systemConfigurationManager = null;
         UIManager uIManager = null;
-        SystemWindowManager systemWindowManager = null;
         AudioManager audioManager = null;
         CameraManager cameraManager = null;
         PlayerManager playerManager = null;
@@ -58,7 +57,6 @@ namespace AnyRPG {
             systemDataFactory = systemGameManager.SystemDataFactory;
             systemConfigurationManager = systemGameManager.SystemConfigurationManager;
             uIManager = systemGameManager.UIManager;
-            systemWindowManager = uIManager.SystemWindowManager;
             audioManager = systemGameManager.AudioManager;
             cameraManager = systemGameManager.CameraManager;
             playerManager = systemGameManager.PlayerManager;
@@ -255,10 +253,10 @@ namespace AnyRPG {
             uIManager.ActivateSystemMenuUI();
             if (IsMainMenu()) {
                 //Debug.Log("Levelmanager.OnLoadLevel(): This is the main menu scene.  Activating Main Menu");
-                systemWindowManager.OpenMainMenu();
+                uIManager.mainMenuWindow.OpenWindow();
             } else {
                 // just in case
-                systemWindowManager.CloseMainMenu();
+                uIManager.mainMenuWindow.CloseWindow();
             }
 
             // get level boundaries

@@ -16,7 +16,7 @@ namespace AnyRPG {
         private Vector3 offset = Vector3.zero;
 
         // game manager references
-        SystemWindowManager systemWindowManager = null;
+        UIManager uIManager = null;
         ActionBarManager actionBarManager = null;
         InputManager inputManager = null;
         InventoryManager inventoryManager = null;
@@ -25,8 +25,8 @@ namespace AnyRPG {
 
         public override void Init(SystemGameManager systemGameManager) {
             base.Init(systemGameManager);
-            systemWindowManager = systemGameManager.UIManager.SystemWindowManager;
-            actionBarManager = systemGameManager.UIManager.ActionBarManager;
+            uIManager = systemGameManager.UIManager;
+            actionBarManager = uIManager.ActionBarManager;
             inputManager = systemGameManager.InputManager;
             inventoryManager = systemGameManager.InventoryManager;
             playerManager = systemGameManager.PlayerManager;
@@ -40,7 +40,7 @@ namespace AnyRPG {
             icon.transform.position = Input.mousePosition + offset;
             if (Input.GetMouseButtonDown(0) && !EventSystem.current.IsPointerOverGameObject() && Moveable != null) {
                 if (Moveable is Item) {
-                    systemWindowManager.confirmDestroyMenuWindow.OpenWindow();
+                    uIManager.confirmDestroyMenuWindow.OpenWindow();
                 } else if (Moveable is BaseAbility) {
                     // DROP ABILITY SAFELY
                     if (actionBarManager.FromButton != null) {

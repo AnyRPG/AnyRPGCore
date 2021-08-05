@@ -21,7 +21,7 @@ namespace AnyRPG {
 
         public void CancelAction() {
             //Debug.Log("NewGameMenuController.CancelAction()");
-            uIManager.SystemWindowManager.confirmSellItemMenuWindow.CloseWindow();
+            uIManager.confirmSellItemMenuWindow.CloseWindow();
         }
 
         public void ConfirmAction() {
@@ -30,7 +30,7 @@ namespace AnyRPG {
             if (item != null) {
                 (uIManager.vendorWindow.CloseableWindowContents as VendorUI).SellItem(MyItem);
             }
-            uIManager.SystemWindowManager.confirmSellItemMenuWindow.CloseWindow();
+            uIManager.confirmSellItemMenuWindow.CloseWindow();
         }
 
         public override void ReceiveOpenWindowNotification() {

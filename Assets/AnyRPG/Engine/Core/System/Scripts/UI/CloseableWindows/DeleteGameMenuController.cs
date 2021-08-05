@@ -7,9 +7,18 @@ using UnityEngine;
 namespace AnyRPG {
     public class DeleteGameMenuController : WindowContentController {
 
+        // game manager references
+        private UIManager uIManager = null;
+
+        public override void Init(SystemGameManager systemGameManager) {
+            base.Init(systemGameManager);
+
+            uIManager = systemGameManager.UIManager;
+        }
+
         public void CancelAction() {
             //Debug.Log("NewGameMenuController.CancelAction()");
-            SystemGameManager.Instance.UIManager.SystemWindowManager.deleteGameMenuWindow.CloseWindow();
+            uIManager.deleteGameMenuWindow.CloseWindow();
         }
 
         public void ConfirmAction() {

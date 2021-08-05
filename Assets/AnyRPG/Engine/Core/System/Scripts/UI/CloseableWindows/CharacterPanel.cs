@@ -325,7 +325,7 @@ namespace AnyRPG {
         public void OpenPetWindow() {
             //Debug.Log("CharacterPanel.OpenReputationWindow()");
             uIManager.characterPanelWindow.CloseWindow();
-            uIManager.SystemWindowManager.petSpawnWindow.ToggleOpenClose();
+            uIManager.petSpawnWindow.ToggleOpenClose();
         }
 
         public void OpenSkillsWindow() {

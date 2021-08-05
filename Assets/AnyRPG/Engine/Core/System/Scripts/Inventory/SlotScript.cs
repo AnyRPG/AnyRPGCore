@@ -271,8 +271,8 @@ namespace AnyRPG {
                 // SELL THE ITEM
                 if (MyItem != null) {
                     if (MyItem.ItemQuality != null && MyItem.ItemQuality.MyRequireSellConfirmation) {
-                        uIManager.SystemWindowManager.confirmSellItemMenuWindow.OpenWindow();
-                        (uIManager.SystemWindowManager.confirmSellItemMenuWindow.CloseableWindowContents as ConfirmSellItemPanelController).MyItem = MyItem;
+                        uIManager.confirmSellItemMenuWindow.OpenWindow();
+                        (uIManager.confirmSellItemMenuWindow.CloseableWindowContents as ConfirmSellItemPanelController).MyItem = MyItem;
                         return;
                     }
                     if ((uIManager.vendorWindow.CloseableWindowContents as VendorUI).SellItem(MyItem)) {

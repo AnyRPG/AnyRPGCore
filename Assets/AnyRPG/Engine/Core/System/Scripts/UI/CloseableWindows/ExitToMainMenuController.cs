@@ -7,16 +7,27 @@ using UnityEngine;
 namespace AnyRPG {
     public class ExitToMainMenuController : WindowContentController {
 
+        // game manager references
+        private UIManager uIManager = null;
+        private LevelManager levelManager = null;
+
+        public override void Init(SystemGameManager systemGameManager) {
+            base.Init(systemGameManager);
+
+            uIManager = systemGameManager.UIManager;
+            levelManager = systemGameManager.LevelManager;
+        }
+
         public void CancelExit() {
             //Debug.Log("ExitMenuController.CancelExit()");
-            SystemGameManager.Instance.UIManager.SystemWindowManager.exitToMainMenuWindow.CloseWindow();
+            uIManager.exitToMainMenuWindow.CloseWindow();
         }
 
         public void ConfirmExit() {
             //Debug.Log("ExitMenuController.ConfirmExit()");
-            SystemGameManager.Instance.UIManager.SystemWindowManager.exitToMainMenuWindow.CloseWindow();
-            SystemGameManager.Instance.UIManager.SystemWindowManager.playerOptionsMenuWindow.CloseWindow();
-            SystemGameManager.Instance.LevelManager.LoadMainMenu();
+            uIManager.exitToMainMenuWindow.CloseWindow();
+            uIManager.playerOptionsMenuWindow.CloseWindow();
+            levelManager.LoadMainMenu();
         }
 
     }

@@ -120,6 +120,17 @@ namespace AnyRPG {
         [Tooltip("The UI Panel that holds the USER INTERFACE window tab")]
         public GameObject PanelUserInterface;
 
+        // game manager references
+        private UIManager uIManager = null;
+        private SaveManager saveManager = null;
+
+        public override void Init(SystemGameManager systemGameManager) {
+            base.Init(systemGameManager);
+
+            uIManager = systemGameManager.UIManager;
+            saveManager = systemGameManager.SaveManager;
+        }
+
         public void Start() {
 
             //LoadDifficultySettings();
@@ -130,8 +141,8 @@ namespace AnyRPG {
         }
 
         public void ResetWindowPositions() {
-            SystemGameManager.Instance.UIManager.LoadDefaultWindowPositions();
-            SystemGameManager.Instance.SaveManager.SaveWindowPositions();
+            uIManager.LoadDefaultWindowPositions();
+            saveManager.SaveWindowPositions();
         }
 
         private void LoadUISettings() {
@@ -345,7 +356,7 @@ namespace AnyRPG {
                 hideFullHealthBarButton.Select();
             }
 
-            SystemGameManager.Instance.UIManager.CheckUISettings(!SystemGameManager.Instance.UIManager.PlayerUI.activeSelf);
+            uIManager.CheckUISettings(!uIManager.PlayerUI.activeSelf);
 
         }
 
@@ -377,11 +388,11 @@ namespace AnyRPG {
         public void ToggleinvertMouse() {
             if (PlayerPrefs.GetInt("MouseInvert") == 0) {
                 PlayerPrefs.SetInt("MouseInvert", 1);
-                SystemGameManager.Instance.UIManager.MessageFeedManager.WriteMessage("Invert Mouse: on");
+                uIManager.MessageFeedManager.WriteMessage("Invert Mouse: on");
                 invertMouseButton.Select();
             } else {
                 PlayerPrefs.SetInt("MouseInvert", 0);
-                SystemGameManager.Instance.UIManager.MessageFeedManager.WriteMessage("Invert Mouse: off");
+                uIManager.MessageFeedManager.WriteMessage("Invert Mouse: off");
                 invertMouseButton.DeSelect();
             }
         }
@@ -389,209 +400,209 @@ namespace AnyRPG {
         public void ToggleUseQuestTracker() {
             if (PlayerPrefs.GetInt("UseQuestTracker") == 0) {
                 PlayerPrefs.SetInt("UseQuestTracker", 1);
-                SystemGameManager.Instance.UIManager.MessageFeedManager.WriteMessage("Quest Tracker: on");
+                uIManager.MessageFeedManager.WriteMessage("Quest Tracker: on");
                 useQuestTrackerButton.Select();
             } else {
                 PlayerPrefs.SetInt("UseQuestTracker", 0);
-                SystemGameManager.Instance.UIManager.MessageFeedManager.WriteMessage("Quest Tracker: off");
+                uIManager.MessageFeedManager.WriteMessage("Quest Tracker: off");
                 useQuestTrackerButton.DeSelect();
             }
-            SystemGameManager.Instance.UIManager.CheckQuestTrackerSettings();
+            uIManager.CheckQuestTrackerSettings();
         }
 
         public void ToggleUseCombatLog() {
             if (PlayerPrefs.GetInt("UseCombatLog") == 0) {
                 PlayerPrefs.SetInt("UseCombatLog", 1);
-                SystemGameManager.Instance.UIManager.MessageFeedManager.WriteMessage("Combat Log: on");
+                uIManager.MessageFeedManager.WriteMessage("Combat Log: on");
                 useCombatLogButton.Select();
             } else {
                 PlayerPrefs.SetInt("UseCombatLog", 0);
-                SystemGameManager.Instance.UIManager.MessageFeedManager.WriteMessage("Combat Log: off");
+                uIManager.MessageFeedManager.WriteMessage("Combat Log: off");
                 useCombatLogButton.DeSelect();
             }
-            SystemGameManager.Instance.UIManager.CheckCombatLogSettings();
+            uIManager.CheckCombatLogSettings();
         }
 
         public void ToggleUseActionBar2() {
             if (PlayerPrefs.GetInt("UseActionBar2") == 0) {
                 PlayerPrefs.SetInt("UseActionBar2", 1);
-                SystemGameManager.Instance.UIManager.MessageFeedManager.WriteMessage("Action Bar 2: on");
+                uIManager.MessageFeedManager.WriteMessage("Action Bar 2: on");
                 useActionBar2Button.Select();
             } else {
                 PlayerPrefs.SetInt("UseActionBar2", 0);
-                SystemGameManager.Instance.UIManager.MessageFeedManager.WriteMessage("Action Bar 2: off");
+                uIManager.MessageFeedManager.WriteMessage("Action Bar 2: off");
                 useActionBar2Button.DeSelect();
             }
-            SystemGameManager.Instance.UIManager.UpdateActionBars();
+            uIManager.UpdateActionBars();
         }
 
         public void ToggleUseActionBar3() {
             if (PlayerPrefs.GetInt("UseActionBar3") == 0) {
                 PlayerPrefs.SetInt("UseActionBar3", 1);
-                SystemGameManager.Instance.UIManager.MessageFeedManager.WriteMessage("Action Bar 3: on");
+                uIManager.MessageFeedManager.WriteMessage("Action Bar 3: on");
                 useActionBar3Button.Select();
             } else {
                 PlayerPrefs.SetInt("UseActionBar3", 0);
-                SystemGameManager.Instance.UIManager.MessageFeedManager.WriteMessage("Action Bar 3: on");
+                uIManager.MessageFeedManager.WriteMessage("Action Bar 3: on");
                 useActionBar3Button.DeSelect();
             }
-            SystemGameManager.Instance.UIManager.UpdateActionBars();
+            uIManager.UpdateActionBars();
         }
 
         public void ToggleUseActionBar4() {
             if (PlayerPrefs.GetInt("UseActionBar4") == 0) {
                 PlayerPrefs.SetInt("UseActionBar4", 1);
-                SystemGameManager.Instance.UIManager.MessageFeedManager.WriteMessage("Action Bar 4: on");
+                uIManager.MessageFeedManager.WriteMessage("Action Bar 4: on");
                 useActionBar4Button.Select();
             } else {
                 PlayerPrefs.SetInt("UseActionBar4", 0);
-                SystemGameManager.Instance.UIManager.MessageFeedManager.WriteMessage("Action Bar 4: off");
+                uIManager.MessageFeedManager.WriteMessage("Action Bar 4: off");
                 useActionBar4Button.DeSelect();
             }
-            SystemGameManager.Instance.UIManager.UpdateActionBars();
+            uIManager.UpdateActionBars();
         }
 
         public void ToggleUseActionBar5() {
             if (PlayerPrefs.GetInt("UseActionBar5") == 0) {
                 PlayerPrefs.SetInt("UseActionBar5", 1);
-                SystemGameManager.Instance.UIManager.MessageFeedManager.WriteMessage("Action Bar 5: on");
+                uIManager.MessageFeedManager.WriteMessage("Action Bar 5: on");
                 useActionBar5Button.Select();
             } else {
                 PlayerPrefs.SetInt("UseActionBar5", 0);
-                SystemGameManager.Instance.UIManager.MessageFeedManager.WriteMessage("Action Bar 5: on");
+                uIManager.MessageFeedManager.WriteMessage("Action Bar 5: on");
                 useActionBar5Button.DeSelect();
             }
-            SystemGameManager.Instance.UIManager.UpdateActionBars();
+            uIManager.UpdateActionBars();
         }
 
         public void ToggleUseActionBar6() {
             if (PlayerPrefs.GetInt("UseActionBar6") == 0) {
                 PlayerPrefs.SetInt("UseActionBar6", 1);
-                SystemGameManager.Instance.UIManager.MessageFeedManager.WriteMessage("Action Bar 6: on");
+                uIManager.MessageFeedManager.WriteMessage("Action Bar 6: on");
                 useActionBar6Button.Select();
             } else {
                 PlayerPrefs.SetInt("UseActionBar6", 0);
-                SystemGameManager.Instance.UIManager.MessageFeedManager.WriteMessage("Action Bar 6: off");
+                uIManager.MessageFeedManager.WriteMessage("Action Bar 6: off");
                 useActionBar6Button.DeSelect();
             }
-            SystemGameManager.Instance.UIManager.UpdateActionBars();
+            uIManager.UpdateActionBars();
         }
 
         public void ToggleUseActionBar7() {
             if (PlayerPrefs.GetInt("UseActionBar7") == 0) {
                 PlayerPrefs.SetInt("UseActionBar7", 1);
-                SystemGameManager.Instance.UIManager.MessageFeedManager.WriteMessage("Action Bar 7: on");
+                uIManager.MessageFeedManager.WriteMessage("Action Bar 7: on");
                 useActionBar7Button.Select();
             } else {
                 PlayerPrefs.SetInt("UseActionBar7", 0);
-                SystemGameManager.Instance.UIManager.MessageFeedManager.WriteMessage("Action Bar 7: off");
+                uIManager.MessageFeedManager.WriteMessage("Action Bar 7: off");
                 useActionBar7Button.DeSelect();
             }
-            SystemGameManager.Instance.UIManager.UpdateActionBars();
+            uIManager.UpdateActionBars();
         }
 
         public void ToggleUseStatusEffectBar() {
             if (PlayerPrefs.GetInt("UseStatusEffectBar") == 0) {
                 PlayerPrefs.SetInt("UseStatusEffectBar", 1);
-                SystemGameManager.Instance.UIManager.MessageFeedManager.WriteMessage("Status Effect Bar: on");
+                uIManager.MessageFeedManager.WriteMessage("Status Effect Bar: on");
                 useStatusEffectBarButton.Select();
             } else {
                 PlayerPrefs.SetInt("UseStatusEffectBar", 0);
-                SystemGameManager.Instance.UIManager.MessageFeedManager.WriteMessage("Status Effect Bar: off");
+                uIManager.MessageFeedManager.WriteMessage("Status Effect Bar: off");
                 useStatusEffectBarButton.DeSelect();
             }
-            SystemGameManager.Instance.UIManager.UpdateStatusEffectBar();
+            uIManager.UpdateStatusEffectBar();
         }
 
         public void ToggleUseFocusUnitFrameButton() {
             if (PlayerPrefs.GetInt("UseFocusUnitFrame") == 0) {
                 PlayerPrefs.SetInt("UseFocusUnitFrame", 1);
-                SystemGameManager.Instance.UIManager.MessageFeedManager.WriteMessage("Focus Unit Frame: on");
+                uIManager.MessageFeedManager.WriteMessage("Focus Unit Frame: on");
                 useFocusUnitFrameButton.Select();
             } else {
                 PlayerPrefs.SetInt("UseFocusUnitFrame", 0);
-                SystemGameManager.Instance.UIManager.MessageFeedManager.WriteMessage("Focus Unit Frame: off");
+                uIManager.MessageFeedManager.WriteMessage("Focus Unit Frame: off");
                 useFocusUnitFrameButton.DeSelect();
             }
-            SystemGameManager.Instance.UIManager.UpdateFocusUnitFrame();
+            uIManager.UpdateFocusUnitFrame();
         }
 
         public void ToggleUsePlayerUnitFrameButton() {
             if (PlayerPrefs.GetInt("UsePlayerUnitFrame") == 0) {
                 PlayerPrefs.SetInt("UsePlayerUnitFrame", 1);
-                SystemGameManager.Instance.UIManager.MessageFeedManager.WriteMessage("Player Unit Frame: on");
+                uIManager.MessageFeedManager.WriteMessage("Player Unit Frame: on");
                 usePlayerUnitFrameButton.Select();
             } else {
                 PlayerPrefs.SetInt("UsePlayerUnitFrame", 0);
-                SystemGameManager.Instance.UIManager.MessageFeedManager.WriteMessage("Player Unit Frame: off");
+                uIManager.MessageFeedManager.WriteMessage("Player Unit Frame: off");
                 usePlayerUnitFrameButton.DeSelect();
             }
-            SystemGameManager.Instance.UIManager.UpdatePlayerUnitFrame();
+            uIManager.UpdatePlayerUnitFrame();
         }
 
         public void ToggleUseFloatingCastBarButton() {
             if (PlayerPrefs.GetInt("UseFloatingCastBar") == 0) {
                 PlayerPrefs.SetInt("UseFloatingCastBar", 1);
-                SystemGameManager.Instance.UIManager.MessageFeedManager.WriteMessage("Floating Cast Bar: on");
+                uIManager.MessageFeedManager.WriteMessage("Floating Cast Bar: on");
                 useFloatingCastBarButton.Select();
             } else {
                 PlayerPrefs.SetInt("UseFloatingCastBar", 0);
-                SystemGameManager.Instance.UIManager.MessageFeedManager.WriteMessage("Floating Cast Bar: off");
+                uIManager.MessageFeedManager.WriteMessage("Floating Cast Bar: off");
                 useFloatingCastBarButton.DeSelect();
             }
-            SystemGameManager.Instance.UIManager.UpdateFloatingCastBar();
+            uIManager.UpdateFloatingCastBar();
         }
 
         public void ToggleUseMiniMapButton() {
             if (PlayerPrefs.GetInt("UseMiniMap") == 0) {
                 PlayerPrefs.SetInt("UseMiniMap", 1);
                 useMiniMapButton.Select();
-                SystemGameManager.Instance.UIManager.MessageFeedManager.WriteMessage("Minimap: on");
+                uIManager.MessageFeedManager.WriteMessage("Minimap: on");
             } else {
                 PlayerPrefs.SetInt("UseMiniMap", 0);
                 useMiniMapButton.DeSelect();
-                SystemGameManager.Instance.UIManager.MessageFeedManager.WriteMessage("Minimap: off");
+                uIManager.MessageFeedManager.WriteMessage("Minimap: off");
             }
-            SystemGameManager.Instance.UIManager.UpdateMiniMap();
+            uIManager.UpdateMiniMap();
         }
 
         public void ToggleUseExperienceBarButton() {
             if (PlayerPrefs.GetInt("UseExperienceBar") == 0) {
                 PlayerPrefs.SetInt("UseExperienceBar", 1);
-                SystemGameManager.Instance.UIManager.MessageFeedManager.WriteMessage("Experience Bar: on");
+                uIManager.MessageFeedManager.WriteMessage("Experience Bar: on");
                 useExperienceBarButton.Select();
             } else {
                 PlayerPrefs.SetInt("UseExperienceBar", 0);
-                SystemGameManager.Instance.UIManager.MessageFeedManager.WriteMessage("Experience Bar: off");
+                uIManager.MessageFeedManager.WriteMessage("Experience Bar: off");
                 useExperienceBarButton.DeSelect();
             }
-            SystemGameManager.Instance.UIManager.UpdateExperienceBar();
+            uIManager.UpdateExperienceBar();
         }
 
         public void ToggleUseFloatingCombatTextButton() {
             if (PlayerPrefs.GetInt("UseFloatingCombatText") == 0) {
                 PlayerPrefs.SetInt("UseFloatingCombatText", 1);
-                SystemGameManager.Instance.UIManager.MessageFeedManager.WriteMessage("Floating Combat Text: on");
+                uIManager.MessageFeedManager.WriteMessage("Floating Combat Text: on");
                 useFloatingCombatTextButton.Select();
             } else {
                 PlayerPrefs.SetInt("UseFloatingCombatText", 0);
-                SystemGameManager.Instance.UIManager.MessageFeedManager.WriteMessage("Floating Combat Text: off");
+                uIManager.MessageFeedManager.WriteMessage("Floating Combat Text: off");
                 useFloatingCombatTextButton.DeSelect();
             }
-            SystemGameManager.Instance.UIManager.UpdateFloatingCombatText();
+            uIManager.UpdateFloatingCombatText();
         }
 
         public void ToggleUseMessageFeedButton() {
             if (PlayerPrefs.GetInt("UseMessageFeed") == 0) {
                 PlayerPrefs.SetInt("UseMessageFeed", 1);
-                SystemGameManager.Instance.UIManager.MessageFeedManager.WriteMessage("Use Message Feed: on");
+                uIManager.MessageFeedManager.WriteMessage("Use Message Feed: on");
                 useMessageFeedButton.Select();
             } else {
-                SystemGameManager.Instance.UIManager.MessageFeedManager.WriteMessage("Use Message Feed: off");
+                uIManager.MessageFeedManager.WriteMessage("Use Message Feed: off");
                 PlayerPrefs.SetInt("UseMessageFeed", 0);
                 useMessageFeedButton.DeSelect();
             }
-            SystemGameManager.Instance.UIManager.UpdateMessageFeed();
+            uIManager.UpdateMessageFeed();
         }
 
         public void ToggleShowPlayerNameButton() {
@@ -599,10 +610,10 @@ namespace AnyRPG {
             if (PlayerPrefs.GetInt("ShowPlayerName") == 0) {
                 PlayerPrefs.SetInt("ShowPlayerName", 1);
                 //Debug.Log("MainSettingsMenuController.ToggleShowPlayerNameButton(): showplayername now set to 1");
-                SystemGameManager.Instance.UIManager.MessageFeedManager.WriteMessage("Show Player Name: on");
+                uIManager.MessageFeedManager.WriteMessage("Show Player Name: on");
                 showPlayerNameButton.Select();
             } else {
-                SystemGameManager.Instance.UIManager.MessageFeedManager.WriteMessage("Show Player Name: off");
+                uIManager.MessageFeedManager.WriteMessage("Show Player Name: off");
                 PlayerPrefs.SetInt("ShowPlayerName", 0);
                 //Debug.Log("MainSettingsMenuController.ToggleShowPlayerNameButton(): showplayername now set to 0");
                 showPlayerNameButton.DeSelect();
@@ -616,10 +627,10 @@ namespace AnyRPG {
             if (PlayerPrefs.GetInt("ShowPlayerFaction") == 0) {
                 PlayerPrefs.SetInt("ShowPlayerFaction", 1);
                 //Debug.Log("MainSettingsMenuController.ToggleShowPlayerNameButton(): showplayername now set to 1");
-                SystemGameManager.Instance.UIManager.MessageFeedManager.WriteMessage("Show Player Faction: on");
+                uIManager.MessageFeedManager.WriteMessage("Show Player Faction: on");
                 showPlayerFactionButton.Select();
             } else {
-                SystemGameManager.Instance.UIManager.MessageFeedManager.WriteMessage("Show Player Faction: off");
+                uIManager.MessageFeedManager.WriteMessage("Show Player Faction: off");
                 PlayerPrefs.SetInt("ShowPlayerFaction", 0);
                 //Debug.Log("MainSettingsMenuController.ToggleShowPlayerNameButton(): showplayername now set to 0");
                 showPlayerFactionButton.DeSelect();
@@ -632,10 +643,10 @@ namespace AnyRPG {
             //Debug.Log("MainSettingsMenuController.ToggleHideFullHealthBarButton()");
             if (PlayerPrefs.GetInt("HideFullHealthBar") == 0) {
                 PlayerPrefs.SetInt("HideFullHealthBar", 1);
-                SystemGameManager.Instance.UIManager.MessageFeedManager.WriteMessage("Hide Full Healthbar: on");
+                uIManager.MessageFeedManager.WriteMessage("Hide Full Healthbar: on");
                 hideFullHealthBarButton.Select();
             } else {
-                SystemGameManager.Instance.UIManager.MessageFeedManager.WriteMessage("Hide full healthbar: off");
+                uIManager.MessageFeedManager.WriteMessage("Hide full healthbar: off");
                 PlayerPrefs.SetInt("HideFullHealthBar", 0);
                 hideFullHealthBarButton.DeSelect();
             }
@@ -646,46 +657,46 @@ namespace AnyRPG {
         public void ToggleLockUIButton() {
             if (PlayerPrefs.GetInt("LockUI") == 0) {
                 PlayerPrefs.SetInt("LockUI", 1);
-                SystemGameManager.Instance.UIManager.MessageFeedManager.WriteMessage("Lock UI: on");
+                uIManager.MessageFeedManager.WriteMessage("Lock UI: on");
                 lockUIButton.Select();
             } else {
-                SystemGameManager.Instance.UIManager.MessageFeedManager.WriteMessage("Lock UI: off");
+                uIManager.MessageFeedManager.WriteMessage("Lock UI: off");
                 PlayerPrefs.SetInt("LockUI", 0);
                 lockUIButton.DeSelect();
             }
-            SystemGameManager.Instance.UIManager.UpdateLockUI();
+            uIManager.UpdateLockUI();
         }
 
         public void InventoryOpacitySliderUpdate() {
             PlayerPrefs.SetFloat("InventoryOpacity", inventoryOpacitySlider.value);
-            SystemGameManager.Instance.UIManager.UpdateInventoryOpacity();
+            uIManager.UpdateInventoryOpacity();
             SystemEventManager.TriggerEvent("OnInventoryTransparencyUpdate", new EventParamProperties());
         }
 
         public void InventorySlotOpacitySliderUpdate() {
             PlayerPrefs.SetFloat("InventorySlotOpacity", inventorySlotOpacitySlider.value);
-            SystemGameManager.Instance.UIManager.UpdateInventoryOpacity();
+            uIManager.UpdateInventoryOpacity();
             SystemEventManager.TriggerEvent("OnInventoryTransparencyUpdate", new EventParamProperties());
         }
 
         public void ActionBarOpacitySliderUpdate() {
             PlayerPrefs.SetFloat("ActionBarOpacity", actionBarOpacitySlider.value);
-            SystemGameManager.Instance.UIManager.UpdateActionBarOpacity();
+            uIManager.UpdateActionBarOpacity();
         }
 
         public void QuestTrackerOpacitySliderUpdate() {
             PlayerPrefs.SetFloat("QuestTrackerOpacity", questTrackerOpacitySlider.value);
-            SystemGameManager.Instance.UIManager.UpdateQuestTrackerOpacity();
+            uIManager.UpdateQuestTrackerOpacity();
         }
 
         public void CombatLogOpacitySliderUpdate() {
             PlayerPrefs.SetFloat("CombatLogOpacity", combatLogOpacitySlider.value);
-            SystemGameManager.Instance.UIManager.UpdateCombatLogOpacity();
+            uIManager.UpdateCombatLogOpacity();
         }
 
         public void PopupWindowOpacitySliderUpdate() {
             PlayerPrefs.SetFloat("PopupWindowOpacity", popupWindowOpacitySlider.value);
-            SystemGameManager.Instance.UIManager.UpdatePopupWindowOpacity();
+            uIManager.UpdatePopupWindowOpacity();
         }
 
         public void PagedButtonsOpacitySliderUpdate() {
@@ -696,16 +707,16 @@ namespace AnyRPG {
 
         public void SystemMenuOpacitySliderUpdate() {
             PlayerPrefs.SetFloat("SystemMenuOpacity", systemMenuOpacitySlider.value);
-            SystemGameManager.Instance.UIManager.UpdateSystemMenuOpacity();
+            uIManager.UpdateSystemMenuOpacity();
         }
 
         private void LoadVolumeSliderValues() {
-            masterSlider.value = PlayerPrefs.GetFloat(SystemGameManager.Instance.AudioManager.MasterVolume);
-            musicSlider.value = PlayerPrefs.GetFloat(SystemGameManager.Instance.AudioManager.MusicVolume);
-            ambientSlider.value = PlayerPrefs.GetFloat(SystemGameManager.Instance.AudioManager.AmbientVolume);
-            effectsSlider.value = PlayerPrefs.GetFloat(SystemGameManager.Instance.AudioManager.EffectsVolume);
-            uiSlider.value = PlayerPrefs.GetFloat(SystemGameManager.Instance.AudioManager.UiVolume);
-            voiceSlider.value = PlayerPrefs.GetFloat(SystemGameManager.Instance.AudioManager.VoiceVolume);
+            masterSlider.value = PlayerPrefs.GetFloat(audioManager.MasterVolume);
+            musicSlider.value = PlayerPrefs.GetFloat(audioManager.MusicVolume);
+            ambientSlider.value = PlayerPrefs.GetFloat(audioManager.AmbientVolume);
+            effectsSlider.value = PlayerPrefs.GetFloat(audioManager.EffectsVolume);
+            uiSlider.value = PlayerPrefs.GetFloat(audioManager.UiVolume);
+            voiceSlider.value = PlayerPrefs.GetFloat(audioManager.VoiceVolume);
         }
 
         private void LoadDifficultySettings() {
@@ -719,27 +730,27 @@ namespace AnyRPG {
         }
 
         public void MasterSlider() {
-            SystemGameManager.Instance.AudioManager.SetMasterVolume(masterSlider.value);
+            audioManager.SetMasterVolume(masterSlider.value);
         }
 
         public void MusicSlider() {
-            SystemGameManager.Instance.AudioManager.SetMusicVolume(musicSlider.value);
+            audioManager.SetMusicVolume(musicSlider.value);
         }
 
         public void AmbientSlider() {
-            SystemGameManager.Instance.AudioManager.SetAmbientVolume(ambientSlider.value);
+            audioManager.SetAmbientVolume(ambientSlider.value);
         }
 
         public void EffectsSlider() {
-            SystemGameManager.Instance.AudioManager.SetEffectsVolume(effectsSlider.value);
+            audioManager.SetEffectsVolume(effectsSlider.value);
         }
 
         public void UISlider() {
-            SystemGameManager.Instance.AudioManager.SetUIVolume(uiSlider.value);
+            audioManager.SetUIVolume(uiSlider.value);
         }
 
         public void VoiceSlider() {
-            SystemGameManager.Instance.AudioManager.SetVoiceVolume(voiceSlider.value);
+            audioManager.SetVoiceVolume(voiceSlider.value);
         }
 
         public void MouseLookSpeedSlider() {
@@ -812,8 +823,8 @@ namespace AnyRPG {
         }
 
         public void CloseMenu() {
-            //SystemGameManager.Instance.UIManager.SystemWindowManager.mainMenuWindow.OpenWindow();
-            SystemGameManager.Instance.UIManager.SystemWindowManager.settingsMenuWindow.CloseWindow();
+            //uIManager.SystemWindowManager.mainMenuWindow.OpenWindow();
+            uIManager.settingsMenuWindow.CloseWindow();
         }
 
         public override void ReceiveOpenWindowNotification() {

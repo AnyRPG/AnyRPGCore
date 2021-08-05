@@ -1,5 +1,6 @@
 using AnyRPG;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
@@ -19,9 +20,6 @@ namespace AnyRPG {
 
         [SerializeField]
         private MessageFeedManager messageFeedManager = null;
-
-        [SerializeField]
-        private SystemWindowManager systemWindowManager = null;
 
         [SerializeField]
         private NamePlateManager namePlateManager = null;
@@ -135,6 +133,30 @@ namespace AnyRPG {
         public CloseableWindow classChangeWindow;
         public CloseableWindow specializationChangeWindow;
 
+        [Header("System Windows")]
+
+        public CloseableWindow mainMenuWindow;
+        public CloseableWindow inGameMainMenuWindow;
+        public CloseableWindow keyBindConfirmWindow;
+        public CloseableWindow playerOptionsMenuWindow;
+        public CloseableWindow characterCreatorWindow;
+        public CloseableWindow unitSpawnWindow;
+        public CloseableWindow petSpawnWindow;
+        public CloseableWindow playMenuWindow;
+        public CloseableWindow settingsMenuWindow;
+        public CloseableWindow creditsWindow;
+        public CloseableWindow exitMenuWindow;
+        public CloseableWindow deleteGameMenuWindow;
+        public CloseableWindow copyGameMenuWindow;
+        public CloseableWindow loadGameWindow;
+        public CloseableWindow newGameWindow;
+        public CloseableWindow confirmDestroyMenuWindow;
+        public CloseableWindow confirmCancelCutsceneMenuWindow;
+        public CloseableWindow confirmSellItemMenuWindow;
+        public CloseableWindow nameChangeWindow;
+        public CloseableWindow exitToMainMenuWindow;
+        public CloseableWindow confirmNewGameMenuWindow;
+
         // objects in the mouseover window
         private TextMeshProUGUI mouseOverText;
         private GameObject mouseOverTarget;
@@ -181,7 +203,6 @@ namespace AnyRPG {
         public Dictionary<string, float> DefaultWindowPositions { get => defaultWindowPositions; }
         public CombatTextManager CombatTextManager { get => combatTextManager; set => combatTextManager = value; }
         public MessageFeedManager MessageFeedManager { get => messageFeedManager; set => messageFeedManager = value; }
-        public SystemWindowManager SystemWindowManager { get => systemWindowManager; set => systemWindowManager = value; }
         public NamePlateManager NamePlateManager { get => namePlateManager; set => namePlateManager = value; }
         public MainMapManager MainMapManager { get => mainMapManager; set => mainMapManager = value; }
         public MiniMapManager MiniMapManager { get => miniMapManager; set => miniMapManager = value; }
@@ -202,7 +223,6 @@ namespace AnyRPG {
             actionBarManager.Init(systemGameManager);
             combatTextManager.Init(systemGameManager);
             messageFeedManager.Init(systemGameManager);
-            systemWindowManager.Init(systemGameManager);
             namePlateManager.Init(systemGameManager);
             mainMapManager.Init(systemGameManager);
             miniMapManager.Init(systemGameManager);
@@ -242,6 +262,31 @@ namespace AnyRPG {
             factionChangeWindow.Init(systemGameManager);
             classChangeWindow.Init(systemGameManager);
             specializationChangeWindow.Init(systemGameManager);
+
+            // initialize system windows
+            mainMenuWindow.Init(systemGameManager);
+            inGameMainMenuWindow.Init(systemGameManager);
+            keyBindConfirmWindow.Init(systemGameManager);
+            playerOptionsMenuWindow.Init(systemGameManager);
+            characterCreatorWindow.Init(systemGameManager);
+            unitSpawnWindow.Init(systemGameManager);
+            petSpawnWindow.Init(systemGameManager);
+            playMenuWindow.Init(systemGameManager);
+            settingsMenuWindow.Init(systemGameManager);
+            creditsWindow.Init(systemGameManager);
+            exitMenuWindow.Init(systemGameManager);
+            deleteGameMenuWindow.Init(systemGameManager);
+            copyGameMenuWindow.Init(systemGameManager);
+            loadGameWindow.Init(systemGameManager);
+            newGameWindow.Init(systemGameManager);
+            confirmDestroyMenuWindow.Init(systemGameManager);
+            confirmCancelCutsceneMenuWindow.Init(systemGameManager);
+            confirmSellItemMenuWindow.Init(systemGameManager);
+            nameChangeWindow.Init(systemGameManager);
+            exitToMainMenuWindow.Init(systemGameManager);
+            confirmNewGameMenuWindow.Init(systemGameManager);
+
+            CreateEventSubscriptions();
         }
 
         public void PerformSetupActivities() {
@@ -268,8 +313,6 @@ namespace AnyRPG {
             playerUnitFrameController.ClearTarget();
             focusUnitFrameController.ClearTarget();
             miniMapController.ClearTarget();
-            //Debug.Log("UIManager subscribing to characterspawn");
-            CreateEventSubscriptions();
 
             if (playerManager.PlayerUnitSpawned) {
                 ProcessPlayerUnitSpawn();
@@ -416,6 +459,7 @@ namespace AnyRPG {
             SystemEventManager.StartListening("OnPlayerUnitSpawn", HandlePlayerUnitSpawn);
             SystemEventManager.StartListening("OnPlayerUnitDespawn", HandlePlayerUnitDespawn);
             SystemEventManager.StartListening("OnBeforePlayerConnectionSpawn", HandleBeforePlayerConnectionSpawn);
+            SystemEventManager.StartListening("OnPlayerConnectionSpawn", HandlePlayerConnectionSpawn);
             SystemEventManager.StartListening("OnPlayerConnectionDespawn", HandlePlayerConnectionDespawn);
             eventSubscriptionsInitialized = true;
         }
@@ -430,6 +474,7 @@ namespace AnyRPG {
             SystemEventManager.StopListening("OnPlayerUnitDespawn", HandlePlayerUnitDespawn);
             SystemEventManager.StopListening("OnPlayerUnitSpawn", HandleMainCamera);
             SystemEventManager.StopListening("OnBeforePlayerConnectionSpawn", HandleBeforePlayerConnectionSpawn);
+            SystemEventManager.StopListening("OnPlayerConnectionSpawn", HandlePlayerConnectionSpawn);
             SystemEventManager.StopListening("OnPlayerConnectionDespawn", HandlePlayerConnectionDespawn);
             eventSubscriptionsInitialized = false;
         }
@@ -448,10 +493,14 @@ namespace AnyRPG {
 
         void Update() {
 
+            /*
+             * commented out for now because the UIManager now handles system windows also
             if (playerManager.PlayerUnitSpawned == false) {
                 // if there is no player, these windows shouldn't be open
                 return;
             }
+            */
+
             // don't hide windows while binding keys
             if (keyBindManager.MyBindName == string.Empty) {
 
@@ -499,6 +548,34 @@ namespace AnyRPG {
                 CloseAllPopupWindows();
             }
 
+            // old system window manager code below : monitor for breakage
+
+            if (mainMenuWindow.enabled == false && settingsMenuWindow.enabled == false) {
+                return;
+            }
+
+            if (inputManager.KeyBindWasPressed("CANCEL")) {
+                settingsMenuWindow.CloseWindow();
+                creditsWindow.CloseWindow();
+                exitMenuWindow.CloseWindow();
+                playMenuWindow.CloseWindow();
+                deleteGameMenuWindow.CloseWindow();
+                copyGameMenuWindow.CloseWindow();
+                confirmDestroyMenuWindow.CloseWindow();
+                confirmSellItemMenuWindow.CloseWindow();
+                inGameMainMenuWindow.CloseWindow();
+                petSpawnWindow.CloseWindow();
+
+                // do not allow accidentally closing this while dead
+                if (playerManager.PlayerUnitSpawned == true && playerManager.MyCharacter.CharacterStats.IsAlive != false) {
+                    playerOptionsMenuWindow.CloseWindow();
+                }
+            }
+
+            if (inputManager.KeyBindWasPressed("MAINMENU")) {
+                inGameMainMenuWindow.ToggleOpenClose();
+            }
+
         }
 
         public void CloseAllPopupWindows() {
@@ -525,6 +602,20 @@ namespace AnyRPG {
             specializationChangeWindow.CloseWindow();
             dialogWindow.CloseWindow();
             inventoryManager.Close();
+        }
+
+        public void CloseAllSystemWindows() {
+            //Debug.Log("SystemWindowManager.CloseAllWindows()");
+            mainMenuWindow.CloseWindow();
+            inGameMainMenuWindow.CloseWindow();
+            settingsMenuWindow.CloseWindow();
+            creditsWindow.CloseWindow();
+            exitMenuWindow.CloseWindow();
+            playMenuWindow.CloseWindow();
+            deleteGameMenuWindow.CloseWindow();
+            copyGameMenuWindow.CloseWindow();
+            confirmDestroyMenuWindow.CloseWindow();
+            confirmSellItemMenuWindow.CloseWindow();
         }
 
         public void DeactivateInGameUI() {
@@ -607,7 +698,7 @@ namespace AnyRPG {
         public void DeactivateSystemMenuUI() {
             //Debug.Log("UIManager.DeactivateSystemMenuUI()");
             systemMenuUI.SetActive(false);
-            SystemWindowManager.CloseAllWindows();
+            CloseAllSystemWindows();
         }
 
         public void ActivateSystemMenuUI() {
@@ -623,9 +714,39 @@ namespace AnyRPG {
             systemEventManager.OnAbilityListChanged += HandleAbilityListChanged;
         }
 
+        public void HandlePlayerConnectionSpawn(string eventName, EventParamProperties eventParamProperties) {
+            SetupDeathPopup();
+        }
+
         public void HandlePlayerConnectionDespawn(string eventName, EventParamProperties eventParamProperties) {
             //Debug.Log("UIManager.HandlePlayerConnectionDespawn()");
+            RemoveDeathPopup();
+
             systemEventManager.OnAbilityListChanged -= HandleAbilityListChanged;
+        }
+
+        public void PlayerDeathHandler(CharacterStats characterStats) {
+            //Debug.Log("PopupWindowManager.PlayerDeathHandler()");
+            StartCoroutine(PerformDeathWindowDelay());
+        }
+
+        public IEnumerator PerformDeathWindowDelay() {
+            float timeCount = 0f;
+            while (timeCount < 2f) {
+                yield return null;
+                timeCount += Time.deltaTime;
+            }
+            playerOptionsMenuWindow.OpenWindow();
+        }
+
+        public void SetupDeathPopup() {
+            //Debug.Log("PopupWindowmanager.SetupDeathPopup()");
+            playerManager.MyCharacter.CharacterStats.OnDie += PlayerDeathHandler;
+        }
+
+        public void RemoveDeathPopup() {
+            //Debug.Log("PopupWindowmanager.RemoveDeathPopup()");
+            playerManager.MyCharacter.CharacterStats.OnDie -= PlayerDeathHandler;
         }
 
         public void ProcessPlayerUnitSpawn() {
@@ -1160,16 +1281,16 @@ namespace AnyRPG {
 
         public void UpdateSystemMenuOpacity() {
             int opacityLevel = (int)(PlayerPrefs.GetFloat("SystemMenuOpacity") * 255);
-            SystemWindowManager.mainMenuWindow.CloseableWindowContents.SetBackGroundColor(new Color32(0, 0, 0, (byte)opacityLevel));
-            SystemWindowManager.nameChangeWindow.CloseableWindowContents.SetBackGroundColor(new Color32(0, 0, 0, (byte)opacityLevel));
-            SystemWindowManager.deleteGameMenuWindow.CloseableWindowContents.SetBackGroundColor(new Color32(0, 0, 0, (byte)opacityLevel));
-            SystemWindowManager.characterCreatorWindow.CloseableWindowContents.SetBackGroundColor(new Color32(0, 0, 0, (byte)opacityLevel));
-            SystemWindowManager.exitMenuWindow.CloseableWindowContents.SetBackGroundColor(new Color32(0, 0, 0, (byte)opacityLevel));
-            SystemWindowManager.inGameMainMenuWindow.CloseableWindowContents.SetBackGroundColor(new Color32(0, 0, 0, (byte)opacityLevel));
-            SystemWindowManager.keyBindConfirmWindow.CloseableWindowContents.SetBackGroundColor(new Color32(0, 0, 0, (byte)opacityLevel));
-            SystemWindowManager.playMenuWindow.CloseableWindowContents.SetBackGroundColor(new Color32(0, 0, 0, (byte)opacityLevel));
-            SystemWindowManager.settingsMenuWindow.CloseableWindowContents.SetBackGroundColor(new Color32(0, 0, 0, (byte)opacityLevel));
-            SystemWindowManager.playerOptionsMenuWindow.CloseableWindowContents.SetBackGroundColor(new Color32(0, 0, 0, (byte)opacityLevel));
+            mainMenuWindow.CloseableWindowContents.SetBackGroundColor(new Color32(0, 0, 0, (byte)opacityLevel));
+            nameChangeWindow.CloseableWindowContents.SetBackGroundColor(new Color32(0, 0, 0, (byte)opacityLevel));
+            deleteGameMenuWindow.CloseableWindowContents.SetBackGroundColor(new Color32(0, 0, 0, (byte)opacityLevel));
+            characterCreatorWindow.CloseableWindowContents.SetBackGroundColor(new Color32(0, 0, 0, (byte)opacityLevel));
+            exitMenuWindow.CloseableWindowContents.SetBackGroundColor(new Color32(0, 0, 0, (byte)opacityLevel));
+            inGameMainMenuWindow.CloseableWindowContents.SetBackGroundColor(new Color32(0, 0, 0, (byte)opacityLevel));
+            keyBindConfirmWindow.CloseableWindowContents.SetBackGroundColor(new Color32(0, 0, 0, (byte)opacityLevel));
+            playMenuWindow.CloseableWindowContents.SetBackGroundColor(new Color32(0, 0, 0, (byte)opacityLevel));
+            settingsMenuWindow.CloseableWindowContents.SetBackGroundColor(new Color32(0, 0, 0, (byte)opacityLevel));
+            playerOptionsMenuWindow.CloseableWindowContents.SetBackGroundColor(new Color32(0, 0, 0, (byte)opacityLevel));
         }
 
         public void SetLayerRecursive(GameObject objectName, int newLayer) {

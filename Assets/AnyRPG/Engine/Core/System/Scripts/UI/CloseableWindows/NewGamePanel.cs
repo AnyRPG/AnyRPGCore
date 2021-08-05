@@ -542,7 +542,7 @@ namespace AnyRPG {
 
         public void ClosePanel() {
             //Debug.Log("CharacterCreatorPanel.ClosePanel()");
-            uIManager.SystemWindowManager.newGameWindow.CloseWindow();
+            uIManager.newGameWindow.CloseWindow();
             levelManager.PlayLevelSounds();
         }
 
@@ -551,7 +551,7 @@ namespace AnyRPG {
 
             saveData.PlayerUMARecipe = characterPreviewPanel.GetCurrentRecipe();
 
-            uIManager.SystemWindowManager.confirmNewGameMenuWindow.OpenWindow();
+            uIManager.confirmNewGameMenuWindow.OpenWindow();
         }
 
 

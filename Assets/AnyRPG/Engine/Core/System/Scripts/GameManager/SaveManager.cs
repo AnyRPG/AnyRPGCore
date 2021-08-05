@@ -24,7 +24,6 @@ namespace AnyRPG {
         private SystemItemManager systemItemManager = null;
         private SystemDataFactory systemDataFactory = null;
         private UIManager uIManager = null;
-        private SystemWindowManager systemWindowManager = null;
         private SystemAchievementManager systemAchievementManager = null;
 
         public SaveManager(SystemGameManager systemGameManager) {
@@ -41,7 +40,6 @@ namespace AnyRPG {
             uIManager = systemGameManager.UIManager;
             messageFeedManager = uIManager.MessageFeedManager;
             actionBarManager = uIManager.ActionBarManager;
-            systemWindowManager = uIManager.SystemWindowManager;
 
             Init();
         }
@@ -1092,8 +1090,8 @@ namespace AnyRPG {
 
             PerformInventorySetup();
 
-            systemWindowManager.loadGameWindow.CloseWindow();
-            systemWindowManager.newGameWindow.CloseWindow();
+            uIManager.loadGameWindow.CloseWindow();
+            uIManager.newGameWindow.CloseWindow();
 
             // load default scene
             levelManager.LoadFirstScene();
@@ -1238,7 +1236,7 @@ namespace AnyRPG {
 
             LoadWindowPositions();
 
-            systemWindowManager.loadGameWindow.CloseWindow();
+            uIManager.loadGameWindow.CloseWindow();
             // load the proper level now that everything should be setup
             levelManager.LoadLevel(anyRPGSaveData.CurrentScene, playerLocation, playerRotation);
         }

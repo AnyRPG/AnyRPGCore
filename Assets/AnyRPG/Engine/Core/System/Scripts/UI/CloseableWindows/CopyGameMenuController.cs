@@ -7,9 +7,18 @@ using UnityEngine;
 namespace AnyRPG {
     public class CopyGameMenuController : WindowContentController {
 
+        // game manager references
+        private UIManager uIManager = null;
+
+        public override void Init(SystemGameManager systemGameManager) {
+            base.Init(systemGameManager);
+
+            uIManager = systemGameManager.UIManager;
+        }
+
         public void CancelAction() {
             //Debug.Log("NewGameMenuController.CancelAction()");
-            SystemGameManager.Instance.UIManager.SystemWindowManager.copyGameMenuWindow.CloseWindow();
+            uIManager.copyGameMenuWindow.CloseWindow();
         }
 
         public void ConfirmAction() {

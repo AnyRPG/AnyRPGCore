@@ -13,9 +13,22 @@ namespace AnyRPG {
         [SerializeField]
         private ConfirmGameButton confirmGameButton = null;
 
+        // game manager references
+        private UIManager uIManager = null;
+        private SystemConfigurationManager systemConfigurationManager = null;
+        private SaveManager saveManager = null;
+
+        public override void Init(SystemGameManager systemGameManager) {
+            base.Init(systemGameManager);
+
+            uIManager = systemGameManager.UIManager;
+            systemConfigurationManager = systemGameManager.SystemConfigurationManager;
+            saveManager = systemGameManager.SaveManager;
+        }
+
         public override void ReceiveOpenWindowNotification() {
             base.ReceiveOpenWindowNotification();
-            if (SystemGameManager.Instance.SystemConfigurationManager.UseNewGameWindow == true) {
+            if (systemConfigurationManager.UseNewGameWindow == true) {
                 divider.SetActive(false);
                 confirmGameButton.gameObject.SetActive(true);
                 confirmGameButton.AddSaveData(NewGamePanel.Instance.SaveData);
@@ -27,21 +40,21 @@ namespace AnyRPG {
 
         public void CancelAction() {
             //Debug.Log("NewGameMenuController.CancelAction()");
-            SystemGameManager.Instance.UIManager.SystemWindowManager.confirmNewGameMenuWindow.CloseWindow();
+            uIManager.confirmNewGameMenuWindow.CloseWindow();
         }
 
         public void ConfirmAction() {
             //Debug.Log("NewGameMenuController.ConfirmAction()");
-            SystemGameManager.Instance.UIManager.SystemWindowManager.confirmNewGameMenuWindow.CloseWindow();
-            SystemGameManager.Instance.UIManager.SystemWindowManager.loadGameWindow.CloseWindow();
-            SystemGameManager.Instance.UIManager.SystemWindowManager.newGameWindow.CloseWindow();
-            if (SystemGameManager.Instance.SystemConfigurationManager.UseNewGameWindow == true) {
-                SystemGameManager.Instance.SaveManager.PerformInventorySetup();
-                SystemGameManager.Instance.SaveManager.SaveEquippedBagData(NewGamePanel.Instance.SaveData);
-                SystemGameManager.Instance.SaveManager.SaveInventorySlotData(NewGamePanel.Instance.SaveData);
-                SystemGameManager.Instance.SaveManager.LoadGame(NewGamePanel.Instance.SaveData);
+            uIManager.confirmNewGameMenuWindow.CloseWindow();
+            uIManager.loadGameWindow.CloseWindow();
+            uIManager.newGameWindow.CloseWindow();
+            if (systemConfigurationManager.UseNewGameWindow == true) {
+                saveManager.PerformInventorySetup();
+                saveManager.SaveEquippedBagData(NewGamePanel.Instance.SaveData);
+                saveManager.SaveInventorySlotData(NewGamePanel.Instance.SaveData);
+                saveManager.LoadGame(NewGamePanel.Instance.SaveData);
             } else {
-                SystemGameManager.Instance.SaveManager.TryNewGame();
+                saveManager.TryNewGame();
             }
         }
 

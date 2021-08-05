@@ -10,31 +10,42 @@ using UnityEngine.UI;
 namespace AnyRPG {
     public class NameChangePanelController : WindowContentController {
 
+        public event System.Action OnConfirmAction = delegate { };
+        public override event Action<ICloseableWindowContents> OnCloseWindow = delegate { };
+
         [SerializeField]
         private TMP_InputField textInput;
 
-        public event System.Action OnConfirmAction = delegate { };
-        public override event Action<ICloseableWindowContents> OnCloseWindow = delegate { };
+        // game manager references
+        private UIManager uIManager = null;
+        private PlayerManager playerManager = null;
+
+        public override void Init(SystemGameManager systemGameManager) {
+            base.Init(systemGameManager);
+
+            uIManager = systemGameManager.UIManager;
+            playerManager = systemGameManager.PlayerManager;
+        }
 
 
         public void CancelAction() {
             //Debug.Log("NameChangePanelController.CancelAction()");
-            SystemGameManager.Instance.UIManager.SystemWindowManager.nameChangeWindow.CloseWindow();
+            uIManager.nameChangeWindow.CloseWindow();
         }
 
         public void ConfirmAction() {
             //Debug.Log("NameChangePanelController.ConfirmAction()");
             if (textInput.text != null && textInput.text != string.Empty) {
-                SystemGameManager.Instance.PlayerManager.SetPlayerName(textInput.text);
+                playerManager.SetPlayerName(textInput.text);
                 OnConfirmAction();
-                SystemGameManager.Instance.UIManager.SystemWindowManager.nameChangeWindow.CloseWindow();
+                uIManager.nameChangeWindow.CloseWindow();
             }
         }
 
         public override void ReceiveOpenWindowNotification() {
             //Debug.Log("NameChangePanelController.OnOpenWindow()");
             base.ReceiveOpenWindowNotification();
-            textInput.text = SystemGameManager.Instance.PlayerManager.MyCharacter.CharacterName;
+            textInput.text = playerManager.MyCharacter.CharacterName;
         }
 
         public override void RecieveClosedWindowNotification() {

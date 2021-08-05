@@ -239,7 +239,7 @@ namespace AnyRPG {
 
         public void ClosePanel() {
             //Debug.Log("LoadGamePanel.ClosePanel()");
-            uIManager.SystemWindowManager.loadGameWindow.CloseWindow();
+            uIManager.loadGameWindow.CloseWindow();
         }
 
         /*
@@ -262,15 +262,15 @@ namespace AnyRPG {
             //Debug.Log("LoadGamePanel.NewGame()");
             if (systemConfigurationManager.UseNewGameWindow == true) {
                 ClosePanel();
-                uIManager.SystemWindowManager.newGameWindow.OpenWindow();
+                uIManager.newGameWindow.OpenWindow();
             } else {
-                uIManager.SystemWindowManager.confirmNewGameMenuWindow.OpenWindow();
+                uIManager.confirmNewGameMenuWindow.OpenWindow();
             }
         }
 
         public void DeleteGame() {
             if (SelectedLoadGameButton != null) {
-                uIManager.SystemWindowManager.deleteGameMenuWindow.OpenWindow();
+                uIManager.deleteGameMenuWindow.OpenWindow();
             }
         }
 
@@ -278,17 +278,17 @@ namespace AnyRPG {
             if (SelectedLoadGameButton != null) {
                 if (confirmDelete) {
                     saveManager.DeleteGame(SelectedLoadGameButton.SaveData);
-                    uIManager.SystemWindowManager.deleteGameMenuWindow.CloseWindow();
+                    uIManager.deleteGameMenuWindow.CloseWindow();
                     ShowLoadButtonsCommon();
                 } else {
-                    uIManager.SystemWindowManager.deleteGameMenuWindow.OpenWindow();
+                    uIManager.deleteGameMenuWindow.OpenWindow();
                 }
             }
         }
 
         public void CopyGame() {
             if (SelectedLoadGameButton != null) {
-                uIManager.SystemWindowManager.copyGameMenuWindow.OpenWindow();
+                uIManager.copyGameMenuWindow.OpenWindow();
             }
         }
 
@@ -296,10 +296,10 @@ namespace AnyRPG {
             if (SelectedLoadGameButton != null) {
                 if (confirmCopy) {
                     saveManager.CopyGame(SelectedLoadGameButton.SaveData);
-                    uIManager.SystemWindowManager.copyGameMenuWindow.CloseWindow();
+                    uIManager.copyGameMenuWindow.CloseWindow();
                     ShowLoadButtonsCommon(SelectedLoadGameButton.SaveData.DataFileName);
                 } else {
-                    uIManager.SystemWindowManager.copyGameMenuWindow.OpenWindow();
+                    uIManager.copyGameMenuWindow.OpenWindow();
                 }
             }
         }

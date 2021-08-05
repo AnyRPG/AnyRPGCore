@@ -7,15 +7,26 @@ using UnityEngine;
 namespace AnyRPG {
     public class ConfirmDestroyPanelController : WindowContentController {
 
+        // game manager references
+        private UIManager uIManager = null;
+        private HandScript handScript = null;
+
+        public override void Init(SystemGameManager systemGameManager) {
+            base.Init(systemGameManager);
+
+            uIManager = systemGameManager.UIManager;
+            handScript = uIManager.HandScript;
+        }
+
         public void CancelAction() {
             //Debug.Log("NewGameMenuController.CancelAction()");
-            SystemGameManager.Instance.UIManager.SystemWindowManager.confirmDestroyMenuWindow.CloseWindow();
+            uIManager.confirmDestroyMenuWindow.CloseWindow();
         }
 
         public void ConfirmAction() {
             //Debug.Log("NewGameMenuController.ConfirmAction()");
-            SystemGameManager.Instance.UIManager.HandScript.DeleteItem(); ;
-            SystemGameManager.Instance.UIManager.SystemWindowManager.confirmDestroyMenuWindow.CloseWindow();
+            handScript.DeleteItem(); ;
+            uIManager.confirmDestroyMenuWindow.CloseWindow();
         }
 
     }

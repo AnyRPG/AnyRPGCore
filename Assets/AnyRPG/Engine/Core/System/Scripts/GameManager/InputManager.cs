@@ -34,14 +34,14 @@ namespace AnyRPG {
 
         // game manager references
         private KeyBindManager keyBindManager = null;
-        private SystemWindowManager systemWindowManager = null;
+        private UIManager uIManager = null;
         private NamePlateManager namePlateManager = null;
 
         public override void Init(SystemGameManager systemGameManager) {
             base.Init(systemGameManager);
             keyBindManager = systemGameManager.KeyBindManager;
-            systemWindowManager = systemGameManager.UIManager.SystemWindowManager;
-            namePlateManager = systemGameManager.UIManager.NamePlateManager;
+            uIManager = systemGameManager.UIManager;
+            namePlateManager = uIManager.NamePlateManager;
 
             SystemEventManager.StartListening("OnLevelLoad", HandleLevelLoad);
         }
@@ -95,7 +95,7 @@ namespace AnyRPG {
             }
             lastRegisteredFrame = Time.frameCount;
 
-            if (systemWindowManager.nameChangeWindow.IsOpen) {
+            if (uIManager.nameChangeWindow.IsOpen) {
                 //Debug.Log("Not allowing registration of keystrokes to keybinds during name change");
                 return;
             }

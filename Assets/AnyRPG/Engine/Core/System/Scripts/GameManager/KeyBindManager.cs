@@ -20,7 +20,7 @@ namespace AnyRPG {
 
         // game manager references
         SystemGameManager systemGameManager = null;
-        SystemWindowManager systemWindowManager = null;
+        UIManager uIManager = null;
 
         public Dictionary<string, KeyBindNode> MyKeyBinds { get => keyBinds; set => keyBinds = value; }
 
@@ -28,7 +28,7 @@ namespace AnyRPG {
 
         public KeyBindManager(SystemGameManager systemGameManager) {
             this.systemGameManager = systemGameManager;
-            systemWindowManager = systemGameManager.UIManager.SystemWindowManager;
+            uIManager = systemGameManager.UIManager;
         }
 
         private void InitializeKeys() {
@@ -168,7 +168,7 @@ namespace AnyRPG {
             //keyBinds[key].MyKeyCode = keyCode;
             keyBinds[key].UpdateKeyCode(inputDeviceType, keyCode, control, shift);
             bindName = string.Empty;
-            systemWindowManager.keyBindConfirmWindow.CloseWindow();
+            uIManager.keyBindConfirmWindow.CloseWindow();
         }
 
         private void UnbindKeyCode(Dictionary<string, KeyBindNode> currentDictionary, InputDeviceType inputDeviceType, KeyCode keyCode, bool control, bool shift) {
@@ -219,7 +219,7 @@ namespace AnyRPG {
             //Debug.Log("KeyBindManager.BeginKeyBind(" + key + ", " + inputDeviceType.ToString() + ")");
             this.bindName = key;
             this.inputDeviceType = inputDeviceType;
-            systemWindowManager.keyBindConfirmWindow.OpenWindow();
+            uIManager.keyBindConfirmWindow.OpenWindow();
         }
 
         private void OnGUI() {
@@ -235,7 +235,7 @@ namespace AnyRPG {
         }
 
         public void CancelKeyBind() {
-            systemWindowManager.keyBindConfirmWindow.CloseWindow();
+            uIManager.keyBindConfirmWindow.CloseWindow();
             bindName = string.Empty;
         }
 

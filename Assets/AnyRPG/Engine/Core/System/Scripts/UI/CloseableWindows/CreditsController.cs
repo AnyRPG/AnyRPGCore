@@ -16,13 +16,13 @@ namespace AnyRPG {
         [SerializeField]
         private Transform creditsContainer = null;
 
-        private SystemWindowManager systemWindowManager = null;
+        private UIManager uIManager = null;
         private ObjectPooler objectPooler = null;
         private SystemDataFactory systemDataFactory = null;
 
         public override void Init(SystemGameManager systemGameManager) {
             base.Init(systemGameManager);
-            systemWindowManager = systemGameManager.UIManager.SystemWindowManager;
+            uIManager = systemGameManager.UIManager;
             objectPooler = systemGameManager.ObjectPooler;
             systemDataFactory = systemGameManager.SystemDataFactory;
             PopulateCredits();
@@ -51,7 +51,7 @@ namespace AnyRPG {
         }
 
         public void CloseMenu() {
-            systemWindowManager.creditsWindow.CloseWindow();
+            uIManager.creditsWindow.CloseWindow();
         }
 
     }

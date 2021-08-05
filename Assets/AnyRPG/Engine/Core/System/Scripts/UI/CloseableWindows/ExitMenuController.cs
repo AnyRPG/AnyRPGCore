@@ -7,9 +7,18 @@ using UnityEngine;
 namespace AnyRPG {
     public class ExitMenuController : WindowContentController {
 
+        // game manager references
+        private UIManager uIManager = null;
+
+        public override void Init(SystemGameManager systemGameManager) {
+            base.Init(systemGameManager);
+
+            uIManager = systemGameManager.UIManager;
+        }
+
         public void CancelExit() {
             //Debug.Log("ExitMenuController.CancelExit()");
-            SystemGameManager.Instance.UIManager.SystemWindowManager.exitMenuWindow.CloseWindow();
+            uIManager.exitMenuWindow.CloseWindow();
         }
 
         public void ConfirmExit() {

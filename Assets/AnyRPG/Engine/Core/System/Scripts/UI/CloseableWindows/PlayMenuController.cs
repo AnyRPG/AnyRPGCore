@@ -7,25 +7,38 @@ using UnityEngine;
 namespace AnyRPG {
     public class PlayMenuController : WindowContentController {
 
+        // game manager references
+        private UIManager uIManager = null;
+        private SystemConfigurationManager systemConfigurationManager = null;
+        private SaveManager saveManager = null;
+
+        public override void Init(SystemGameManager systemGameManager) {
+            base.Init(systemGameManager);
+
+            uIManager = systemGameManager.UIManager;
+            systemConfigurationManager = systemGameManager.SystemConfigurationManager;
+            saveManager = systemGameManager.SaveManager;
+        }
+
         public void NewGame() {
             //Debug.Log("PlayMenuController.NewGame()");
-            if (SystemGameManager.Instance.SystemConfigurationManager.UseNewGameWindow == true) {
-                SystemGameManager.Instance.UIManager.SystemWindowManager.newGameWindow.OpenWindow();
-                SystemGameManager.Instance.UIManager.SystemWindowManager.playMenuWindow.CloseWindow();
+            if (systemConfigurationManager.UseNewGameWindow == true) {
+                uIManager.newGameWindow.OpenWindow();
+                uIManager.playMenuWindow.CloseWindow();
             } else {
-                SystemGameManager.Instance.UIManager.SystemWindowManager.confirmNewGameMenuWindow.OpenWindow();
+                uIManager.confirmNewGameMenuWindow.OpenWindow();
             }
         }
 
         public void ContinueGame() {
             //Debug.Log("PlayMenuController.ContinueGame()");
-            SystemGameManager.Instance.SaveManager.LoadGame();
+            saveManager.LoadGame();
         }
 
         public void LoadGame() {
             //Debug.Log("PlayMenuController.LoadGame()");
-            SystemGameManager.Instance.UIManager.SystemWindowManager.loadGameWindow.OpenWindow();
-            SystemGameManager.Instance.UIManager.SystemWindowManager.playMenuWindow.CloseWindow();
+            uIManager.loadGameWindow.OpenWindow();
+            uIManager.playMenuWindow.CloseWindow();
         }
 
     }

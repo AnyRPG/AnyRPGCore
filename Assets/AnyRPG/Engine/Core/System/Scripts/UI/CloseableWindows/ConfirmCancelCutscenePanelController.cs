@@ -7,17 +7,29 @@ using UnityEngine;
 namespace AnyRPG {
     public class ConfirmCancelCutscenePanelController : WindowContentController {
 
+
+        // game manager references
+        private UIManager uIManager = null;
+        private CutSceneBarController cutSceneBarController = null;
+
+        public override void Init(SystemGameManager systemGameManager) {
+            base.Init(systemGameManager);
+
+            uIManager = systemGameManager.UIManager;
+            cutSceneBarController = uIManager.CutSceneBarController;
+        }
+
         public void CancelAction() {
             //Debug.Log("ConfirmCancelCutScenePanelController.CancelAction()");
-            SystemGameManager.Instance.UIManager.SystemWindowManager.confirmCancelCutsceneMenuWindow.CloseWindow();
+            uIManager.confirmCancelCutsceneMenuWindow.CloseWindow();
         }
 
         public void ConfirmAction() {
             //Debug.Log("ConfirmCancelCutScenePanelController.ConfirmAction()");
             // might be something better to deactivate cutscene camera
-            SystemGameManager.Instance.UIManager.CutSceneBarController.EndCutScene();
+            cutSceneBarController.EndCutScene();
             //SystemGameManager.Instance.UIManager.ActivateInGameUI();
-            SystemGameManager.Instance.UIManager.SystemWindowManager.confirmCancelCutsceneMenuWindow.CloseWindow();
+            uIManager.confirmCancelCutsceneMenuWindow.CloseWindow();
         }
 
     }
