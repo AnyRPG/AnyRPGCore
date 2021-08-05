@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 namespace AnyRPG {
-    public class DummyResourceManager : SystemResourceManager
+    public class DummyResourceManager : FactoryResource
     {
         public string resourceClassName;
         bool includeCoreContent;
