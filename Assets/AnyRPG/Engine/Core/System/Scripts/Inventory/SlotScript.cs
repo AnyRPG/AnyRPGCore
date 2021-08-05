@@ -21,7 +21,6 @@ namespace AnyRPG {
         private InventoryManager inventoryManager = null;
         private HandScript handScript = null;
         private PlayerManager playerManager = null;
-        private UIManager uIManager = null;
 
         /// <summary>
         /// A referecne to the bag that this slot belongs to
@@ -69,7 +68,6 @@ namespace AnyRPG {
             inventoryManager = systemGameManager.InventoryManager;
             handScript = systemGameManager.UIManager.HandScript;
             playerManager = systemGameManager.PlayerManager;
-            uIManager = systemGameManager.UIManager;
 
             GetLocalComponents();
         }

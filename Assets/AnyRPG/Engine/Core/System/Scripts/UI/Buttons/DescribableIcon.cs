@@ -20,7 +20,7 @@ namespace AnyRPG {
         protected int count;
 
         // game manager references
-        private UIManager uIManager = null;
+        protected UIManager uIManager = null;
 
         public Image MyIcon { get => icon; set => icon = value; }
         public TextMeshProUGUI StackSizeText { get => stackSize; }
