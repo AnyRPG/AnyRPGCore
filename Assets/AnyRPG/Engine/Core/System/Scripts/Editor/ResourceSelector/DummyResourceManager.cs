@@ -17,9 +17,9 @@ namespace AnyRPG {
         }
 
         public override void LoadResourceList() {
-            masterList.Add(Resources.LoadAll(resourceClassName, type));
+            masterList.Add(Resources.LoadAll<ResourceProfile>(resourceClassName));
             if (includeCoreContent) {
-                masterList.Add(Resources.LoadAll("CoreContent/"+resourceClassName, type));
+                masterList.Add(Resources.LoadAll<ResourceProfile>("CoreContent/"+resourceClassName));
             }
             base.LoadResourceList();
         }
