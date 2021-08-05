@@ -1,3 +1,4 @@
+using AnyRPG;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -6,21 +7,30 @@ namespace AnyRPG {
     public class DummyResourceManager : FactoryResource
     {
         public string resourceClassName;
-        bool includeCoreContent;
+        //bool includeCoreContent;
 
         System.Type type;
 
-        public DummyResourceManager(System.Type resourceType, bool includeCoreContent) {
+        public DummyResourceManager(System.Type resourceType) {
+        //public DummyResourceManager(System.Type resourceType, bool includeCoreContent) {
             this.type = resourceType;
-            this.includeCoreContent = includeCoreContent;
+            //this.includeCoreContent = includeCoreContent;
             resourceClassName = resourceType.Name;
         }
 
         public override void LoadResourceList() {
             masterList.Add(Resources.LoadAll<ResourceProfile>(resourceClassName));
+            SystemConfigurationManager systemConfigurationManager = GameObject.FindObjectOfType<SystemConfigurationManager>();
+            if (systemConfigurationManager != null) {
+                foreach (string resourceFolderName in systemConfigurationManager.LoadResourcesFolders) {
+                    masterList.Add(Resources.LoadAll<ResourceProfile>(resourceFolderName + "/" + resourceClassName));
+                }
+            }
+            /*
             if (includeCoreContent) {
                 masterList.Add(Resources.LoadAll<ResourceProfile>("CoreContent/"+resourceClassName));
             }
+            */
             base.LoadResourceList();
         }
 

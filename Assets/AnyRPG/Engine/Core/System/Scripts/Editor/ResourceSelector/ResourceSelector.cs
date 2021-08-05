@@ -12,7 +12,7 @@ public class ResourceSelector : EditorWindow
     SerializedProperty editedProperty;
     Label header;
     Label fileTypeLabel;
-    Toggle includeCoreContent;
+    //Toggle includeCoreContent;
     ListView listView;
     List<ResourceProfile> listElements;
     bool listInitialized = false;
@@ -47,7 +47,8 @@ public class ResourceSelector : EditorWindow
 
     // fill listElements with all resources for the type in fileType
     void InitializeList() {
-        DummyResourceManager manager = new DummyResourceManager(resourceType, includeCoreContent.value);
+        //DummyResourceManager manager = new DummyResourceManager(resourceType, includeCoreContent.value);
+        DummyResourceManager manager = new DummyResourceManager(resourceType);
         if (manager.GetResourceList().Count == 0) {
             manager.LoadResourceList();
         }
@@ -67,7 +68,13 @@ public class ResourceSelector : EditorWindow
 
     public void OnGUI() {
         if (editedProperty != null) {
-            header.text = editedProperty.propertyPath + " in " + editedProperty.serializedObject.targetObject;
+            try {
+                header.text = editedProperty.propertyPath + " in " + editedProperty.serializedObject.targetObject;
+            } catch (NullReferenceException) {
+                // that means the serialized object has been disposed and gone out of scope while the editor window is still open
+                // let's just close it and act as nothing happened
+                Close();
+            }
             fileTypeLabel.text = "Resource name: " + resourceType.Name;
             if (!listInitialized) {
                 InitializeList();
@@ -100,10 +107,12 @@ public class ResourceSelector : EditorWindow
         fileTypeLabel.style.unityFontStyleAndWeight = FontStyle.Bold;
         root.Add(fileTypeLabel);
 
+        /*
         includeCoreContent = new Toggle("include core content");
         includeCoreContent.value = true;
         includeCoreContent.RegisterValueChangedCallback<bool>( x => ReloadList());
         root.Add(includeCoreContent);
+        */
 
         listElements = new List<ResourceProfile>();
 
