@@ -16,6 +16,7 @@ namespace AnyRPG {
 
         [Tooltip("Unit Prefab Profile to use for the mount object")]
         [SerializeField]
+        [ResourceSelector(resourceType = typeof(UnitProfile))]
         private string unitProfileName = string.Empty;
 
         // reference to actual unitProfile

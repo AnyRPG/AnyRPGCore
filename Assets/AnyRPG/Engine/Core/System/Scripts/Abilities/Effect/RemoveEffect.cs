@@ -16,6 +16,7 @@ namespace AnyRPG {
 
         // effect types that this ability can clear
         [SerializeField]
+        [ResourceSelector(resourceType = typeof(StatusEffectType))]
         private List<string> effectTypeNames = new List<string>();
 
         private List<StatusEffectType> effectTypes = new List<StatusEffectType>();

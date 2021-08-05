@@ -8,6 +8,7 @@ namespace AnyRPG {
     public class VendorItem {
 
         [SerializeField]
+        [ResourceSelector(resourceType = typeof(Item))]
         private string itemName = string.Empty;
 
         //[SerializeField]

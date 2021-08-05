@@ -14,6 +14,7 @@ namespace AnyRPG {
 
         [Tooltip("Manually set a resource description to be used.")]
         [SerializeField]
+        [ResourceSelector(resourceType = typeof(ResourceDescription))]
         protected string resourceDescriptionProfile;
 
         protected ResourceDescription resourceDescription = null;

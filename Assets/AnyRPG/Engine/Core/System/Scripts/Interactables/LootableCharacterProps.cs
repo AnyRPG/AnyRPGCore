@@ -19,6 +19,7 @@ namespace AnyRPG {
 
         [Tooltip("Lookup and use these named loot tables that can be shared among units")]
         [SerializeField]
+        [ResourceSelector(resourceType = typeof(LootTable))]
         private List<string> lootTableNames = new List<string>();
 
         //private List<LootTable> lootTables = new List<LootTable>();

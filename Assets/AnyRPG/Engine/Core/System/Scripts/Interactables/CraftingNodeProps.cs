@@ -13,6 +13,7 @@ namespace AnyRPG {
 
         [Tooltip("The ability to cast in order to craft with this node")]
         [SerializeField]
+        [ResourceSelector(resourceType = typeof(BaseAbility))]
         private string abilityName = string.Empty;
 
         private BaseAbility ability;

@@ -12,6 +12,7 @@ namespace AnyRPG {
 
         [Tooltip("the armor class required to wear this item")]
         [SerializeField]
+        [ResourceSelector(resourceType = typeof(ArmorClass))]
         private string armorClassName = string.Empty;
 
         private ArmorClass armorClass = null;

@@ -15,6 +15,7 @@ namespace AnyRPG {
 
         [Tooltip("The names of the equipment that belong to this set")]
         [SerializeField]
+        [ResourceSelector(resourceType = typeof(Equipment))]
         private List<string> equipmentNames = new List<string>();
 
         private List<Equipment> equipmentList = new List<Equipment>();
@@ -23,6 +24,7 @@ namespace AnyRPG {
 
         [Tooltip("the name of the trait should be associated with the list spot that matches the number of gear pieces required")]
         [SerializeField]
+        [ResourceSelector(resourceType = typeof(StatusEffect))]
         private List<string> traitNames = new List<string>();
 
         private List<StatusEffect> traitList = new List<StatusEffect>();

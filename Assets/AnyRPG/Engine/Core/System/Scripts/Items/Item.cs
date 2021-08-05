@@ -20,6 +20,7 @@ namespace AnyRPG {
 
         [Tooltip("The name of the item quality to use")]
         [SerializeField]
+        [ResourceSelector(resourceType = typeof(ItemQuality))]
         protected string itemQuality = string.Empty;
 
         [Tooltip("If true, a random item quality will be selected")]
@@ -50,6 +51,7 @@ namespace AnyRPG {
 
         [Tooltip("The currency used when buying or selling this item")]
         [SerializeField]
+        [ResourceSelector(resourceType = typeof(Currency))]
         private string currencyName = string.Empty;
 
         [Tooltip("If true, the purchase and sale price will scale with level")]
@@ -72,6 +74,7 @@ namespace AnyRPG {
 
         [Tooltip("If not empty, the character must be one of these classes to use this item.")]
         [SerializeField]
+        [ResourceSelector(resourceType = typeof(CharacterClass))]
         private List<string> characterClassRequirementList = new List<string>();
 
         private List<CharacterClass> realCharacterClassRequirementList = new List<CharacterClass>();

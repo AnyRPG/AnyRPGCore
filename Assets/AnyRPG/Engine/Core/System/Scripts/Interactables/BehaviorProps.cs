@@ -14,6 +14,7 @@ namespace AnyRPG {
         [Header("Behavior")]
 
         [SerializeField]
+        [ResourceSelector(resourceType = typeof(Behaviour))]
         private List<string> behaviorNames = new List<string>();
 
         /*

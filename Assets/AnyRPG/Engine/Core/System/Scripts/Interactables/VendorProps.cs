@@ -14,6 +14,7 @@ namespace AnyRPG {
         [Header("Vendor")]
 
         [SerializeField]
+        [ResourceSelector(resourceType = typeof(VendorCollection))]
         private List<string> vendorCollectionNames = new List<string>();
 
         private List<VendorCollection> vendorCollections = new List<VendorCollection>();

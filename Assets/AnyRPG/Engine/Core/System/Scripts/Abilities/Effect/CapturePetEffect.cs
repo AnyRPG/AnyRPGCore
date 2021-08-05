@@ -9,6 +9,7 @@ namespace AnyRPG {
     public class CapturePetEffect : InstantEffect {
 
         [SerializeField]
+        [ResourceSelector(resourceType = typeof(UnitType))]
         protected List<string> unitTypeRestrictions = new List<string>();
 
         protected List<UnitType> unitTypeRestrictionList = new List<UnitType>();

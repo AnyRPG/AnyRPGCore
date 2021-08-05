@@ -14,6 +14,7 @@ namespace AnyRPG {
         [Header("Lootable Node")]
 
         [SerializeField]
+        [ResourceSelector(resourceType = typeof(LootTable))]
         protected List<string> lootTableNames = new List<string>();
 
         protected List<LootTable> lootTables = new List<LootTable>();

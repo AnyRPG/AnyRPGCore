@@ -12,6 +12,7 @@ namespace AnyRPG {
 
 
         [SerializeField]
+        [ResourceSelector(resourceType = typeof(Faction))]
         private string prerequisiteName = string.Empty;
 
         [SerializeField]

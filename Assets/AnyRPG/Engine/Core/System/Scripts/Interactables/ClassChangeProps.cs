@@ -12,6 +12,7 @@ namespace AnyRPG {
 
         [Tooltip("the class that this interactable option offers")]
         [SerializeField]
+        [ResourceSelector(resourceType = typeof(CharacterClass))]
         private string className = string.Empty;
 
         private CharacterClass characterClass;

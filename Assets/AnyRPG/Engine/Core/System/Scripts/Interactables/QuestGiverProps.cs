@@ -19,6 +19,7 @@ namespace AnyRPG {
 
         [Tooltip("Enter the names of shared quest giver profiles")]
         [SerializeField]
+        [ResourceSelector(resourceType = typeof(QuestGiverProfile))]
         private List<string> questGiverProfileNames = new List<string>();
 
         private List<QuestGiverProfile> questGiverProfiles = new List<QuestGiverProfile>();

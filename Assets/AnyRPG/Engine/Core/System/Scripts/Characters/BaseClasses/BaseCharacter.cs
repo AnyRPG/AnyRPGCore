@@ -16,6 +16,7 @@ namespace AnyRPG {
 
         [Tooltip("The name of the unit profile used to configure this character")]
         [SerializeField]
+        [ResourceSelector(resourceType = typeof(UnitProfile))]
         private string unitProfileName;
 
         // properties that come from the unit profile

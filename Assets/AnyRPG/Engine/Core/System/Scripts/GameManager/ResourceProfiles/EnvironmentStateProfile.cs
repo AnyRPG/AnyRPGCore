@@ -15,6 +15,7 @@ namespace AnyRPG {
         
         [Tooltip("The name of the material profile that contains the skybox that should be used when this environment state is active")]
         [SerializeField]
+        [ResourceSelector(resourceType = typeof(MaterialProfile))]
         private string skyBoxMaterialProfileName = string.Empty;
 
         // reference to the actual material

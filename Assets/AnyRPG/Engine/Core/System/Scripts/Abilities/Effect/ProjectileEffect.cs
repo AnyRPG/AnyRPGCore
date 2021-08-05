@@ -16,6 +16,7 @@ namespace AnyRPG {
         [Header("Flight Audio")]
 
         [SerializeField]
+        [ResourceSelector(resourceType = typeof(AudioProfile))]
         protected List<string> flightAudioProfileNames = new List<string>();
 
         [Tooltip("whether to play all audio profiles or just one random one")]

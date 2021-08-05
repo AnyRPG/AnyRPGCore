@@ -15,6 +15,7 @@ namespace AnyRPG {
 
         [Tooltip("The ability to cast in order to gather from this node")]
         [SerializeField]
+        [ResourceSelector(resourceType = typeof(GatherAbility))]
         private string abilityName = string.Empty;
 
         private GatherAbility baseAbility = null;

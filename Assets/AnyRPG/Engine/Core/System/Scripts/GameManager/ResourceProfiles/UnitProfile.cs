@@ -14,6 +14,7 @@ namespace AnyRPG {
 
         [Tooltip("The name of the prefab profile that contains the gameObject that represents the unit.  Only used if Automatic Prefab Profile, and use Inline props are not checked.")]
         [SerializeField]
+        [ResourceSelector(resourceType = typeof(UnitPrefabProfile))]
         private string prefabProfileName = string.Empty;
 
         [Tooltip("If true, the unit prefab is loaded from the inline prefab settings below, instead of the shared prefab profile above.")]
@@ -48,30 +49,35 @@ namespace AnyRPG {
 
         [Tooltip("The name of the faction this character belongs to")]
         [SerializeField]
+        [ResourceSelector(resourceType = typeof(Faction))]
         protected string factionName;
 
         protected Faction faction;
 
         [Tooltip("The name of the unit type")]
         [SerializeField]
+        [ResourceSelector(resourceType = typeof(UnitType))]
         protected string unitTypeName;
 
         protected UnitType unitType;
 
         [Tooltip("The race of the unit type")]
         [SerializeField]
+        [ResourceSelector(resourceType = typeof(CharacterRace))]
         protected string characterRaceName;
 
         protected CharacterRace characterRace;
 
         [Tooltip("The name of the character class")]
         [SerializeField]
+        [ResourceSelector(resourceType = typeof(CharacterClass))]
         protected string characterClassName;
 
         protected CharacterClass characterClass;
 
         [Tooltip("The name of the class specialization")]
         [SerializeField]
+        [ResourceSelector(resourceType = typeof(ClassSpecialization))]
         protected string classSpecializationName;
 
         protected ClassSpecialization classSpecialization;
@@ -86,6 +92,7 @@ namespace AnyRPG {
 
         [Tooltip("If this is set, when the unit spawns, it will use this toughness")]
         [SerializeField]
+        [ResourceSelector(resourceType = typeof(UnitToughness))]
         private string defaultToughness = string.Empty;
 
         protected UnitToughness unitToughness = null;
@@ -123,6 +130,7 @@ namespace AnyRPG {
 
         [Tooltip("The strategy that will be used when this unit is in combat")]
         [SerializeField]
+        [ResourceSelector(resourceType = typeof(CombatStrategy))]
         private string combatStrategyName = string.Empty;
 
         // reference to the actual combat strategy
@@ -139,6 +147,7 @@ namespace AnyRPG {
 
         [Tooltip("Power Resources used by this unit.  The first resource is considered primary and will show on the unit frame.")]
         [SerializeField]
+        [ResourceSelector(resourceType = typeof(PowerResource))]
         private List<string> powerResources = new List<string>();
 
         // reference to the actual power resources
@@ -152,6 +161,7 @@ namespace AnyRPG {
 
         [Tooltip("This equipment will be equipped by default on this unit")]
         [SerializeField]
+        [ResourceSelector(resourceType = typeof(Equipment))]
         private List<string> equipmentNameList = new List<string>();
 
         private List<Equipment> equipmentList = new List<Equipment>();
@@ -168,6 +178,7 @@ namespace AnyRPG {
 
         [Tooltip("These profiles will be played when the unit is in motion.  If footsteps are used, the next sound on the list will be played on every footstep.")]
         [SerializeField]
+        [ResourceSelector(resourceType = typeof(AudioProfile))]
         private List<string> movementAudioProfileNames = new List<string>();
 
         private List<AudioProfile> movementAudioProfiles = new List<AudioProfile>();
@@ -184,6 +195,7 @@ namespace AnyRPG {
 
         [Tooltip("Lookup and use these named patrols that can be shared among units")]
         [SerializeField]
+        [ResourceSelector(resourceType = typeof(PatrolProfile))]
         private List<string> patrolNames = new List<string>();
 
         [Header("Behavior")]
@@ -244,6 +256,7 @@ namespace AnyRPG {
 
         [Tooltip("The names of the interactable options available on this character")]
         [SerializeField]
+        [ResourceSelector(resourceType = typeof(InteractableOptionConfig))]
         private List<string> interactableOptions = new List<string>();
 
         private List<InteractableOptionConfig> interactableOptionConfigs = new List<InteractableOptionConfig>();

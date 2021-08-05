@@ -33,6 +33,7 @@ namespace AnyRPG {
 
         [Tooltip("If this cutscene plays in a separate scene, this should be set to the scene name.")]
         [SerializeField]
+        [ResourceSelector(resourceType = typeof(SceneNode))]
         private string loadSceneName = string.Empty;
 
         private SceneNode loadScene = null;

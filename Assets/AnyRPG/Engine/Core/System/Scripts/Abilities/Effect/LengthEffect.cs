@@ -52,12 +52,14 @@ namespace AnyRPG {
 
         [Tooltip("any abilities to cast every tick")]
         [SerializeField]
+        [ResourceSelector(resourceType = typeof(AbilityEffect))]
         protected List<string> tickAbilityEffectNames = new List<string>();
 
         //[SerializeField]
         protected List<AbilityEffect> tickAbilityEffectList = new List<AbilityEffect>();
 
         [SerializeField]
+        [ResourceSelector(resourceType = typeof(AudioProfile))]
         protected List<string> onTickAudioProfileNames = new List<string>();
 
         [Tooltip("whether to play all audio profiles or just one random one")]
@@ -71,6 +73,7 @@ namespace AnyRPG {
 
         [Tooltip("any abilities to cast when the effect completes")]
         [SerializeField]
+        [ResourceSelector(resourceType = typeof(AbilityEffect))]
         protected List<string> completeAbilityEffectNames = new List<string>();
 
         //[SerializeField]

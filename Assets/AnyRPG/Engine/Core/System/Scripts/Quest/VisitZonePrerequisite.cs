@@ -10,6 +10,7 @@ namespace AnyRPG {
         public event System.Action OnStatusUpdated = delegate { };
 
         [SerializeField]
+        [ResourceSelector(resourceType = typeof(SceneNode))]
         private string prerequisiteName = string.Empty;
 
         private bool prerequisiteMet = false;

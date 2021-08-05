@@ -8,6 +8,7 @@ namespace AnyRPG {
     public class CurrencyItem : Item, IUseable {
 
         [SerializeField]
+        [ResourceSelector(resourceType = typeof(Currency))]
         private string gainCurrencyName = string.Empty;
 
         [SerializeField]

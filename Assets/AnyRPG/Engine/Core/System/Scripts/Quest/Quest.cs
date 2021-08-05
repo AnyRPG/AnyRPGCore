@@ -67,6 +67,7 @@ namespace AnyRPG {
 
         [Tooltip("If automatic currency is enabled for a quest, this currency will be rewarded")]
         [SerializeField]
+        [ResourceSelector(resourceType = typeof(Currency))]
         private string rewardCurrencyName = string.Empty;
 
         private Currency rewardCurrency;
@@ -86,6 +87,7 @@ namespace AnyRPG {
         private int maxItemRewards = 0;
 
         [SerializeField]
+        [ResourceSelector(resourceType = typeof(Item))]
         private List<string> itemRewardNames = new List<string>();
 
         private List<Item> itemRewardList = new List<Item>();
@@ -104,6 +106,7 @@ namespace AnyRPG {
         private int maxAbilityRewards = 0;
 
         [SerializeField]
+        [ResourceSelector(resourceType = typeof(BaseAbility))]
         private List<string> abilityRewardNames = new List<string>();
 
         private List<BaseAbility> abilityRewardList = new List<BaseAbility>();
@@ -114,6 +117,7 @@ namespace AnyRPG {
         private int maxSkillRewards = 0;
 
         [SerializeField]
+        [ResourceSelector(resourceType = typeof(Skill))]
         private List<string> skillRewardNames = new List<string>();
 
         private List<Skill> skillRewardList = new List<Skill>();

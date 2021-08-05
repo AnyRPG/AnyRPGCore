@@ -13,12 +13,14 @@ namespace AnyRPG {
         [Tooltip("Abilities learned")]
         [FormerlySerializedAs("learnedAbilityNames")]
         [SerializeField]
+        [ResourceSelector(resourceType = typeof(BaseAbility))]
         protected List<string> abilityNames = new List<string>();
 
         protected List<BaseAbility> abilityList = new List<BaseAbility>();
 
         [Tooltip("Traits are status effects which are automatically active at all times if the level requirement is met.")]
         [SerializeField]
+        [ResourceSelector(resourceType = typeof(StatusEffect))]
         protected List<string> traitNames = new List<string>();
 
         protected List<StatusEffect> traitList = new List<StatusEffect>();
@@ -27,11 +29,13 @@ namespace AnyRPG {
 
         [Tooltip("Armor classes that can be equipped by this class")]
         [SerializeField]
+        [ResourceSelector(resourceType = typeof(ArmorClass))]
         private List<string> armorClassList = new List<string>();
 
         [Tooltip("Weapon skills known by this class")]
         [FormerlySerializedAs("weaponSkillList")]
         [SerializeField]
+        [ResourceSelector(resourceType = typeof(WeaponSkill))]
         private List<string> weaponSkills = new List<string>();
 
         // reference to the actual weapon skills

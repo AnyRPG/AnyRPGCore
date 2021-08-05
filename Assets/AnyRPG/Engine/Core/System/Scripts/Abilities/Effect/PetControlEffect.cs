@@ -11,6 +11,7 @@ namespace AnyRPG {
     public class PetControlEffect : StatusEffect {
 
         [SerializeField]
+        [ResourceSelector(resourceType = typeof(SummonEffect))]
         private List<string> petEffectNames = new List<string>();
 
         private List<SummonEffect> petEffectList = new List<SummonEffect>();

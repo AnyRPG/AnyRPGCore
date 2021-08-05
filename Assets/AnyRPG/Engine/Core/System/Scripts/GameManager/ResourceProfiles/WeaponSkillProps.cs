@@ -21,12 +21,14 @@ namespace AnyRPG {
 
         [Tooltip("Ability effects to cast on the target when the weapon does damage from a standard (auto) attack")]
         [SerializeField]
+        [ResourceSelector(resourceType = typeof(AbilityEffect))]
         private List<string> defaultHitEffects = new List<string>();
 
         private List<AbilityEffect> defaultHitEffectList = new List<AbilityEffect>();
 
         [Tooltip("Ability effects to cast on the target when the weapon does damage from any attack, including standard (auto) attacks")]
         [SerializeField]
+        [ResourceSelector(resourceType = typeof(AbilityEffect))]
         private List<string> onHitEffects = new List<string>();
 
         private List<AbilityEffect> onHitEffectList = new List<AbilityEffect>();
@@ -35,12 +37,14 @@ namespace AnyRPG {
 
         [Tooltip("An animation profile that can overwrite default animations to match the weapon")]
         [SerializeField]
+        [ResourceSelector(resourceType = typeof(AnimationProfile))]
         protected string animationProfileName = string.Empty;
 
         private AnimationProfile animationProfile = null;
 
         [Tooltip("Audio effects that can be used by any physical ability cast while this weapon is equippped")]
         [SerializeField]
+        [ResourceSelector(resourceType = typeof(AudioProfile))]
         private List<string> onHitAudioProfiles = new List<string>();
 
         private List<AudioClip> onHitSoundEffects = new List<AudioClip>();

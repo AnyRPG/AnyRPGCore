@@ -32,6 +32,7 @@ namespace AnyRPG {
         private int outputCount = 0;
 
         [SerializeField]
+        [ResourceSelector(resourceType = typeof(BaseAbility))]
         private string craftAbilityName = string.Empty;
 
         [Header("Prefabs")]

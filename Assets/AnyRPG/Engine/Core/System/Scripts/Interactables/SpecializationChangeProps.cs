@@ -13,6 +13,7 @@ namespace AnyRPG {
 
         [Tooltip("the class Specialization that this interactable option offers")]
         [SerializeField]
+        [ResourceSelector(resourceType = typeof(ClassSpecialization))]
         private string specializationName = string.Empty;
 
         private ClassSpecialization classSpecialization;
