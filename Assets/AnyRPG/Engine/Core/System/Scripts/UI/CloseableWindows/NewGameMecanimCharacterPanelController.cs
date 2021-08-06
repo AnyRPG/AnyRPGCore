@@ -38,12 +38,14 @@ namespace AnyRPG {
         // game manager references
         private ObjectPooler objectPooler = null;
         private SystemConfigurationManager systemConfigurationManager = null;
+        private NewGameManager newGameManager = null;
 
         public override void Init(SystemGameManager systemGameManager) {
             base.Init(systemGameManager);
 
             objectPooler = systemGameManager.ObjectPooler;
             systemConfigurationManager = systemGameManager.SystemConfigurationManager;
+            newGameManager = systemGameManager.NewGameManager;
         }
 
         public override void RecieveClosedWindowNotification() {
@@ -74,14 +76,14 @@ namespace AnyRPG {
             //Debug.Log("NewGameMecanimCharacterPanelController.ShowOptionButtonsCommon()");
             ClearOptionButtons();
 
-            if ((NewGamePanel.Instance.Faction != null && NewGamePanel.Instance.Faction.HideDefaultProfiles == false)
+            if ((newGameManager.Faction != null && newGameManager.Faction.HideDefaultProfiles == false)
                 || systemConfigurationManager.AlwaysShowDefaultProfiles == true
-                || NewGamePanel.Instance.Faction == null) {
+                || newGameManager.Faction == null) {
                 //Debug.Log("NewGameMecanimCharacterPanelController.ShowOptionButtonsCommon(): showing default profiles");
                 AddDefaultProfiles();
             }
-            if (NewGamePanel.Instance.Faction != null) {
-                foreach (UnitProfile unitProfile in NewGamePanel.Instance.Faction.CharacterCreatorProfiles) {
+            if (newGameManager.Faction != null) {
+                foreach (UnitProfile unitProfile in newGameManager.Faction.CharacterCreatorProfiles) {
                     //Debug.Log("NewGameMecanimCharacterPanelController.ShowOptionButtonsCommon(): found valid unit profile: " + unitProfile.DisplayName);
                     GameObject go = objectPooler.GetPooledObject(buttonPrefab, buttonArea.transform);
                     NewGameUnitButton optionButton = go.GetComponent<NewGameUnitButton>();

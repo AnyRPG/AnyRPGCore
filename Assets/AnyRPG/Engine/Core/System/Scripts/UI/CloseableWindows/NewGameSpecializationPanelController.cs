@@ -46,12 +46,14 @@ namespace AnyRPG {
         // game manager references
         private ObjectPooler objectPooler = null;
         private SystemDataFactory systemDataFactory = null;
+        private NewGameManager newGameManager = null;
 
         public override void Init(SystemGameManager systemGameManager) {
             base.Init(systemGameManager);
 
             objectPooler = systemGameManager.ObjectPooler;
             systemDataFactory = systemGameManager.SystemDataFactory;
+            newGameManager = systemGameManager.NewGameManager;
         }
 
         public void ClearOptionButtons() {
@@ -81,9 +83,9 @@ namespace AnyRPG {
 
             foreach (ClassSpecialization classSpecialization in systemDataFactory.GetResourceList<ClassSpecialization>()) {
                 //Debug.Log("LoadGamePanel.ShowLoadButtonsCommon(): setting a button with saved game data");
-                if (NewGamePanel.Instance.CharacterClass != null
+                if (newGameManager.CharacterClass != null
                     && classSpecialization.CharacterClasses != null
-                    && classSpecialization.CharacterClasses.Contains(NewGamePanel.Instance.CharacterClass)
+                    && classSpecialization.CharacterClasses.Contains(newGameManager.CharacterClass)
                     && classSpecialization.NewGameOption == true) {
                     GameObject go = objectPooler.GetPooledObject(buttonPrefab, buttonArea.transform);
                     NewGameClassSpecializationButton optionButton = go.GetComponent<NewGameClassSpecializationButton>();
@@ -98,7 +100,7 @@ namespace AnyRPG {
             // that should not be needed
             /*
             else {
-                NewGamePanel.Instance.ShowClassSpecialization(null);
+                newGameManager.ShowClassSpecialization(null);
             }
             */
         }
@@ -138,8 +140,8 @@ namespace AnyRPG {
 
             ClearTraitRewardIcons();
             // show trait rewards
-            if (classSpecialization != null && classSpecialization.GetFilteredCapabilities(NewGamePanel.Instance).TraitList.Count > 0) {
-                CapabilityProps capabilityProps = classSpecialization.GetFilteredCapabilities(NewGamePanel.Instance);
+            if (classSpecialization != null && classSpecialization.GetFilteredCapabilities(newGameManager).TraitList.Count > 0) {
+                CapabilityProps capabilityProps = classSpecialization.GetFilteredCapabilities(newGameManager);
                 traitLabel.SetActive(true);
                 // move to bottom of list before putting traits below it
                 traitLabel.transform.SetAsLastSibling();
@@ -167,8 +169,8 @@ namespace AnyRPG {
 
             ClearAbilityRewardIcons();
             // show ability rewards
-            if (classSpecialization != null && classSpecialization.GetFilteredCapabilities(NewGamePanel.Instance).AbilityList.Count > 0) {
-                CapabilityProps capabilityProps = classSpecialization.GetFilteredCapabilities(NewGamePanel.Instance);
+            if (classSpecialization != null && classSpecialization.GetFilteredCapabilities(newGameManager).AbilityList.Count > 0) {
+                CapabilityProps capabilityProps = classSpecialization.GetFilteredCapabilities(newGameManager);
                 abilityLabel.SetActive(true);
                 abilityLabel.transform.SetAsFirstSibling();
                 for (int i = 0; i < capabilityProps.AbilityList.Count; i++) {

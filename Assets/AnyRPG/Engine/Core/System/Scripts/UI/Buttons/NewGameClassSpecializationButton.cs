@@ -21,7 +21,16 @@ namespace AnyRPG {
         [SerializeField]
         private TextMeshProUGUI description = null;
 
+        // game manager references
+        private NewGameManager newGameManager = null;
+
         public ClassSpecialization ClassSpecialization { get => classSpecialization; set => classSpecialization = value; }
+
+        public override void Init(SystemGameManager systemGameManager) {
+            base.Init(systemGameManager);
+
+            newGameManager = systemGameManager.NewGameManager;
+        }
 
         public void AddClassSpecialization(ClassSpecialization newClassSpecialization) {
             //Debug.Log("NewGameClassSpecializationbutton.AddClassSpecialization(" + (newClassSpecialization == null ? "null" : newClassSpecialization.DisplayName) + ")");
@@ -50,7 +59,7 @@ namespace AnyRPG {
         }
 
         public void CommonSelect() {
-            NewGamePanel.Instance.ShowClassSpecialization(this);
+            newGameManager.ShowClassSpecialization(this);
         }
 
         public void RawSelect() {

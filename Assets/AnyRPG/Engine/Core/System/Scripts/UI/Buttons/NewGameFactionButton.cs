@@ -21,7 +21,16 @@ namespace AnyRPG {
         [SerializeField]
         private TextMeshProUGUI description = null;
 
+        // game manager references
+        private NewGameManager newGameManager = null;
+
         public Faction Faction { get => faction; set => faction = value; }
+
+        public override void Init(SystemGameManager systemGameManager) {
+            base.Init(systemGameManager);
+
+            newGameManager = systemGameManager.NewGameManager;
+        }
 
         public void AddFaction(Faction newFaction) {
             faction = newFaction;
@@ -41,7 +50,7 @@ namespace AnyRPG {
         }
 
         public void CommonSelect() {
-            NewGamePanel.Instance.ShowFaction(this);
+            newGameManager.ShowFaction(this);
         }
 
         public void RawSelect() {

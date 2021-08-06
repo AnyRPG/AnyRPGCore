@@ -31,6 +31,7 @@ namespace AnyRPG {
         private UIManager uIManager = null;
         private PlayerManager playerManager = null;
         private ObjectPooler objectPooler = null;
+        private NewGameManager newGameManager = null;
 
         public override void Init(SystemGameManager systemGameManager) {
             base.Init(systemGameManager);
@@ -38,6 +39,7 @@ namespace AnyRPG {
             uIManager = systemGameManager.UIManager;
             playerManager = systemGameManager.PlayerManager;
             objectPooler = systemGameManager.ObjectPooler;
+            newGameManager = systemGameManager.NewGameManager;
 
             factionButton.Init(systemGameManager);
         }
@@ -56,7 +58,8 @@ namespace AnyRPG {
 
             ClearRewardIcons();
             // show ability rewards
-            CapabilityProps capabilityProps = faction.GetFilteredCapabilities(NewGamePanel.Instance);
+            // new game manager ? isn't this only in-game ?
+            CapabilityProps capabilityProps = faction.GetFilteredCapabilities(newGameManager);
             if (capabilityProps.AbilityList.Count > 0) {
                 abilitiesArea.gameObject.SetActive(true);
             } else {

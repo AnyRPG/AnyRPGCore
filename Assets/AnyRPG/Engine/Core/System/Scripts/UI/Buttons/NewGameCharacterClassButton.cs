@@ -21,7 +21,16 @@ namespace AnyRPG {
         [SerializeField]
         private TextMeshProUGUI description = null;
 
+        // game manager references
+        private NewGameManager newGameManager = null;
+
         public CharacterClass CharacterClass { get => characterClass; set => characterClass = value; }
+
+        public override void Init(SystemGameManager systemGameManager) {
+            base.Init(systemGameManager);
+
+            newGameManager = systemGameManager.NewGameManager;
+        }
 
         public void AddCharacterClass(CharacterClass newCharacterClass) {
             characterClass = newCharacterClass;
@@ -41,7 +50,7 @@ namespace AnyRPG {
         }
 
         public void CommonSelect() {
-            NewGamePanel.Instance.ShowCharacterClass(this);
+            newGameManager.ShowCharacterClass(this);
         }
 
         public void RawSelect() {

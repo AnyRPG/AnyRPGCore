@@ -42,6 +42,7 @@ namespace AnyRPG {
         private SystemConfigurationManager systemConfigurationManager = null;
         private SystemDataFactory systemDataFactory = null;
         private UIManager uIManager = null;
+        private NewGameManager newGameManager = null;
 
         public override void Init(SystemGameManager systemGameManager) {
             base.Init(systemGameManager);
@@ -49,6 +50,7 @@ namespace AnyRPG {
             systemConfigurationManager = systemGameManager.SystemConfigurationManager;
             systemDataFactory = systemGameManager.SystemDataFactory;
             uIManager = systemGameManager.UIManager;
+            newGameManager = systemGameManager.NewGameManager;
 
             characterClassButton.Init(systemGameManager);
             classSpecializationButton.Init(systemGameManager);
@@ -111,7 +113,7 @@ namespace AnyRPG {
         }
 
         public void SetPlayerName(string newPlayerName) {
-            NewGamePanel.Instance.SetPlayerName(newPlayerName);
+            newGameManager.SetPlayerName(newPlayerName);
         }
 
         public void HidePanel() {

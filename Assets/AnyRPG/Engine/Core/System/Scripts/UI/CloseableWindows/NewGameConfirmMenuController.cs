@@ -17,6 +17,7 @@ namespace AnyRPG {
         private UIManager uIManager = null;
         private SystemConfigurationManager systemConfigurationManager = null;
         private SaveManager saveManager = null;
+        private NewGameManager newGameManager = null;
 
         public override void Init(SystemGameManager systemGameManager) {
             base.Init(systemGameManager);
@@ -24,6 +25,7 @@ namespace AnyRPG {
             uIManager = systemGameManager.UIManager;
             systemConfigurationManager = systemGameManager.SystemConfigurationManager;
             saveManager = systemGameManager.SaveManager;
+            newGameManager = systemGameManager.NewGameManager;
         }
 
         public override void ReceiveOpenWindowNotification() {
@@ -31,7 +33,7 @@ namespace AnyRPG {
             if (systemConfigurationManager.UseNewGameWindow == true) {
                 divider.SetActive(false);
                 confirmGameButton.gameObject.SetActive(true);
-                confirmGameButton.AddSaveData(NewGamePanel.Instance.SaveData);
+                confirmGameButton.AddSaveData(newGameManager.SaveData);
             } else {
                 divider.SetActive(true);
                 confirmGameButton.gameObject.SetActive(false);
@@ -50,9 +52,9 @@ namespace AnyRPG {
             uIManager.newGameWindow.CloseWindow();
             if (systemConfigurationManager.UseNewGameWindow == true) {
                 saveManager.PerformInventorySetup();
-                saveManager.SaveEquippedBagData(NewGamePanel.Instance.SaveData);
-                saveManager.SaveInventorySlotData(NewGamePanel.Instance.SaveData);
-                saveManager.LoadGame(NewGamePanel.Instance.SaveData);
+                saveManager.SaveEquippedBagData(newGameManager.SaveData);
+                saveManager.SaveInventorySlotData(newGameManager.SaveData);
+                saveManager.LoadGame(newGameManager.SaveData);
             } else {
                 saveManager.TryNewGame();
             }

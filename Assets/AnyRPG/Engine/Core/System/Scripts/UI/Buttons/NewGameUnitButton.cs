@@ -20,7 +20,16 @@ namespace AnyRPG {
         //[SerializeField]
         private UnitProfile unitProfile = null;
 
+        // game manager references
+        private NewGameManager newGameManager = null;
+
         public UnitProfile UnitProfile { get => unitProfile; set => unitProfile = value; }
+
+        public override void Init(SystemGameManager systemGameManager) {
+            base.Init(systemGameManager);
+
+            newGameManager = systemGameManager.NewGameManager;
+        }
 
         public void AddUnitProfile(UnitProfile unitProfile) {
             //Debug.Log("UnitSpawnButton.AddUnitProfile()");
@@ -48,7 +57,7 @@ namespace AnyRPG {
 
 
         public void CommonSelect() {
-            NewGamePanel.Instance.SetUnitProfile(this);
+            newGameManager.SetUnitProfile(this);
         }
 
         public void RawSelect() {

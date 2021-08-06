@@ -78,6 +78,9 @@ namespace AnyRPG {
         [SerializeField]
         private ObjectPooler objectPooler = null;
 
+        [SerializeField]
+        private NewGameManager newGameManager = null;
+
         [Header("Data Resource Factory")]
 
         [SerializeField]
@@ -128,6 +131,7 @@ namespace AnyRPG {
         public LogManager LogManager { get => logManager; set => logManager = value; }
         public ObjectPooler ObjectPooler { get => objectPooler; set => objectPooler = value; }
         public SystemDataFactory SystemDataFactory { get => systemDataFactory; set => systemDataFactory = value; }
+        public NewGameManager NewGameManager { get => newGameManager; set => newGameManager = value; }
 
         private void Init() {
             //Debug.Log("SystemGameManager.Init()");

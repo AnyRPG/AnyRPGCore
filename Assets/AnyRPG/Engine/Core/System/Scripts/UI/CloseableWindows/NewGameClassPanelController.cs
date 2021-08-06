@@ -44,12 +44,14 @@ namespace AnyRPG {
         // game manager references
         private ObjectPooler objectPooler = null;
         private SystemDataFactory systemDataFactory = null;
+        private NewGameManager newGameManager = null;
 
         public override void Init(SystemGameManager systemGameManager) {
             base.Init(systemGameManager);
 
             objectPooler = systemGameManager.ObjectPooler;
             systemDataFactory = systemGameManager.SystemDataFactory;
+            newGameManager = systemGameManager.NewGameManager;
         }
 
         public void ClearOptionButtons() {
@@ -114,8 +116,8 @@ namespace AnyRPG {
 
             ClearTraitRewardIcons();
             // show trait rewards
-            if (characterClass != null && characterClass.GetFilteredCapabilities(NewGamePanel.Instance).TraitList.Count > 0) {
-                CapabilityProps capabilityProps = characterClass.GetFilteredCapabilities(NewGamePanel.Instance);
+            if (characterClass != null && characterClass.GetFilteredCapabilities(newGameManager).TraitList.Count > 0) {
+                CapabilityProps capabilityProps = characterClass.GetFilteredCapabilities(newGameManager);
                 traitLabel.SetActive(true);
                 // move to bottom of list before putting traits below it
                 traitLabel.transform.SetAsLastSibling();
@@ -143,8 +145,8 @@ namespace AnyRPG {
 
             ClearRewardIcons();
             // show ability rewards
-            if (characterClass != null && characterClass.GetFilteredCapabilities(NewGamePanel.Instance).AbilityList.Count > 0) {
-                CapabilityProps capabilityProps = characterClass.GetFilteredCapabilities(NewGamePanel.Instance);
+            if (characterClass != null && characterClass.GetFilteredCapabilities(newGameManager).AbilityList.Count > 0) {
+                CapabilityProps capabilityProps = characterClass.GetFilteredCapabilities(newGameManager);
                 abilityLabel.SetActive(true);
                 abilityLabel.transform.SetAsFirstSibling();
                 for (int i = 0; i < capabilityProps.AbilityList.Count; i++) {
