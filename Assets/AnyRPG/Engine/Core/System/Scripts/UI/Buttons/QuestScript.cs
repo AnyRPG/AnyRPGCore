@@ -23,8 +23,8 @@ namespace AnyRPG {
 
         public Quest Quest { get => quest; }
 
-        public override void Init(SystemGameManager systemGameManager) {
-            base.Init(systemGameManager);
+        public override void Configure(SystemGameManager systemGameManager) {
+            base.Configure(systemGameManager);
 
             playerManager = systemGameManager.PlayerManager;
         }

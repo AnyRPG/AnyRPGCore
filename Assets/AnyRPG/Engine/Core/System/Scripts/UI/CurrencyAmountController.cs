@@ -16,10 +16,10 @@ namespace AnyRPG {
         public DescribableIcon CurrencyIcon { get => currencyIcon; set => currencyIcon = value; }
         public TextMeshProUGUI AmountText { get => amountText; set => amountText = value; }
 
-        public override void Init(SystemGameManager systemGameManager) {
-            base.Init(systemGameManager);
+        public override void Configure(SystemGameManager systemGameManager) {
+            base.Configure(systemGameManager);
 
-            currencyIcon.Init(systemGameManager);
+            currencyIcon.Configure(systemGameManager);
         }
     }
 

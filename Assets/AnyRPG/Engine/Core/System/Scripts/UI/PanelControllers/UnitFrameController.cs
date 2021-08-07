@@ -103,9 +103,9 @@ namespace AnyRPG {
 
         //public GameObject FollowGameObject { get => followGameObject; set => followGameObject = value; }
 
-        public override void Init(SystemGameManager systemGameManager) {
+        public override void Configure(SystemGameManager systemGameManager) {
             //Debug.Log(gameObject.name + ": UnitFrameController.Awake()");
-            base.Init(systemGameManager);
+            base.Configure(systemGameManager);
 
             InitializeController();
             previewCamera.enabled = false;

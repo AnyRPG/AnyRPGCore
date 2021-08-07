@@ -33,15 +33,15 @@ namespace AnyRPG {
         private ObjectPooler objectPooler = null;
         private NewGameManager newGameManager = null;
 
-        public override void Init(SystemGameManager systemGameManager) {
-            base.Init(systemGameManager);
+        public override void Configure(SystemGameManager systemGameManager) {
+            base.Configure(systemGameManager);
 
             uIManager = systemGameManager.UIManager;
             playerManager = systemGameManager.PlayerManager;
             objectPooler = systemGameManager.ObjectPooler;
             newGameManager = systemGameManager.NewGameManager;
 
-            factionButton.Init(systemGameManager);
+            factionButton.Configure(systemGameManager);
         }
 
         public void Setup(Faction newFaction) {
@@ -68,7 +68,7 @@ namespace AnyRPG {
             }
             for (int i = 0; i < capabilityProps.AbilityList.Count; i++) {
                 RewardButton rewardIcon = objectPooler.GetPooledObject(rewardIconPrefab, abilityIconsArea.transform).GetComponent<RewardButton>();
-                rewardIcon.Init(systemGameManager);
+                rewardIcon.Configure(systemGameManager);
                 rewardIcon.SetDescribable(capabilityProps.AbilityList[i]);
                 abilityRewardIcons.Add(rewardIcon);
                 if (capabilityProps.AbilityList[i].RequiredLevel > playerManager.MyCharacter.CharacterStats.Level) {

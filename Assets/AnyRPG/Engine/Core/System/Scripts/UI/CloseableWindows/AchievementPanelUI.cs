@@ -13,12 +13,12 @@ namespace AnyRPG {
         // game manager references
         private SystemDataFactory systemDataFactory = null;
 
-        public override void Init(SystemGameManager systemGameManager) {
-            base.Init(systemGameManager);
+        public override void Configure(SystemGameManager systemGameManager) {
+            base.Configure(systemGameManager);
 
             systemDataFactory = systemGameManager.SystemDataFactory;
             foreach (AchievementButton achievementButton in resourceButtons) {
-                achievementButton.Init(systemGameManager);
+                achievementButton.Configure(systemGameManager);
             }
         }
 

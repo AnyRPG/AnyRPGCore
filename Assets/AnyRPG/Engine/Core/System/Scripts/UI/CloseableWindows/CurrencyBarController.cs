@@ -22,11 +22,11 @@ namespace AnyRPG {
         [SerializeField]
         protected List<CurrencyAmountController> currencyAmountControllers = new List<CurrencyAmountController>();
 
-        public override void Init(SystemGameManager systemGameManager) {
-            base.Init(systemGameManager);
+        public override void Configure(SystemGameManager systemGameManager) {
+            base.Configure(systemGameManager);
 
             foreach (CurrencyAmountController currencyAmountController in currencyAmountControllers) {
-                currencyAmountController.Init(systemGameManager);
+                currencyAmountController.Configure(systemGameManager);
             }
         }
 

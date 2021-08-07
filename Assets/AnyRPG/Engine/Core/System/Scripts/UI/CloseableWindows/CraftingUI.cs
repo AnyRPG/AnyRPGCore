@@ -70,18 +70,22 @@ namespace AnyRPG {
 
         public RecipeScript SelectedRecipeScript { get => selectedRecipeScript; set => selectedRecipeScript = value; }
 
-        public override void Init(SystemGameManager systemGameManager) {
-            base.Init(systemGameManager);
+        public override void Configure(SystemGameManager systemGameManager) {
+            base.Configure(systemGameManager);
 
+
+            foreach (DescribableCraftingInputIcon inputIcon in inputIcons) {
+                inputIcon.Configure(systemGameManager);
+            }
+            outputIcon.Configure(systemGameManager);
+        }
+
+        public override void SetGameManagerReferences() {
+            base.SetGameManagerReferences();
             craftingManager = systemGameManager.CraftingManager;
             playerManager = systemGameManager.PlayerManager;
             objectPooler = systemGameManager.ObjectPooler;
             uIManager = systemGameManager.UIManager;
-
-            foreach (DescribableCraftingInputIcon inputIcon in inputIcons) {
-                inputIcon.Init(systemGameManager);
-            }
-            outputIcon.Init(systemGameManager);
         }
 
         protected override void CreateEventSubscriptions() {
@@ -154,7 +158,7 @@ namespace AnyRPG {
                 if (recipe.MyOutput != null) {
                     GameObject go = objectPooler.GetPooledObject(recipePrefab, recipeParent);
                     RecipeScript qs = go.GetComponentInChildren<RecipeScript>();
-                    qs.Init(systemGameManager);
+                    qs.Configure(systemGameManager);
                     if (firstScript == null) {
                         firstScript = qs;
                     }

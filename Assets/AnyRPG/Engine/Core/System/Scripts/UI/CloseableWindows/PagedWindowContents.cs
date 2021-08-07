@@ -21,8 +21,8 @@ namespace AnyRPG {
 
         public Image BackGroundImage { get => backGroundImage; set => backGroundImage = value; }
 
-        public override void Init(SystemGameManager systemGameManager) {
-            base.Init(systemGameManager);
+        public override void Configure(SystemGameManager systemGameManager) {
+            base.Configure(systemGameManager);
             if (backGroundImage == null) {
                 backGroundImage = GetComponent<Image>();
             }

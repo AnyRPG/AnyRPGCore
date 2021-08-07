@@ -7,7 +7,7 @@ using UnityEngine.UI;
 using UnityEngine.EventSystems;
 
 namespace AnyRPG {
-    public class MainMapIndicatorController : MonoBehaviour {
+    public class MainMapIndicatorController : ConfiguredMonoBehaviour {
 
         [SerializeField]
         private GameObject mainMapTextLayerPrefab = null;
@@ -24,6 +24,16 @@ namespace AnyRPG {
 
         private bool setupComplete = false;
 
+        // game manager references
+
+        private ObjectPooler objectPooler = null;
+
+        public override void Configure(SystemGameManager systemGameManager) {
+            base.Configure(systemGameManager);
+
+            objectPooler = systemGameManager.ObjectPooler;
+        }
+
         public void SetupMainMap() {
             //Debug.Log((interactable == null ? "null" : interactable.name) + ".MainMapIndicatorController.SetupMainMap()");
             if (setupComplete == true) {
@@ -38,13 +48,13 @@ namespace AnyRPG {
                 // prioritize images - DICTIONARY DOESN'T CURRENTLY SUPPORT BOTH
                 if (_interactable.HasMainMapIcon()) {
                     //Debug.Log((interactable == null ? "null" : interactable.name) + ".MainMapIndicatorController.SetupMainMap(): adding icon : " + _interactable.ToString());
-                    GameObject go = ObjectPooler.Instance.GetPooledObject(mainMapImageLayerPrefab, contentParent);
+                    GameObject go = objectPooler.GetPooledObject(mainMapImageLayerPrefab, contentParent);
                     Image _image = go.GetComponent<Image>();
                     _interactable.SetMiniMapIcon(_image);
                     mainMapLayers.Add(_interactable, go);
                 } else if (_interactable.HasMainMapText()) {
                     //Debug.Log((interactable == null ? "null" : interactable.name) + ".MainMapIndicatorController.SetupMainMap(): adding text layer: " + _interactable.ToString());
-                    GameObject go = ObjectPooler.Instance.GetPooledObject(mainMapTextLayerPrefab, contentParent);
+                    GameObject go = objectPooler.GetPooledObject(mainMapTextLayerPrefab, contentParent);
                     TextMeshProUGUI _text = go.GetComponent<TextMeshProUGUI>();
                     _interactable.SetMiniMapText(_text);
                     mainMapLayers.Add(_interactable, go);
@@ -79,7 +89,7 @@ namespace AnyRPG {
 
         public void ResetSettings() {
             foreach (GameObject go in mainMapLayers.Values) {
-                ObjectPooler.Instance.ReturnObjectToPool(go);
+                objectPooler.ReturnObjectToPool(go);
             }
             mainMapLayers.Clear();
             interactable = null;

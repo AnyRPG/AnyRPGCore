@@ -102,9 +102,9 @@ namespace AnyRPG {
 
         public GameObject MapGraphic { get => mapGraphic; set => mapGraphic = value; }
 
-        public override void Init(SystemGameManager systemGameManager) {
+        public override void Configure(SystemGameManager systemGameManager) {
             //Debug.Log("MiniMapController.Init()");
-            base.Init(systemGameManager);
+            base.Configure(systemGameManager);
 
             systemConfigurationManager = systemGameManager.SystemConfigurationManager;
             cameraManager = systemGameManager.CameraManager;

@@ -21,8 +21,8 @@ namespace AnyRPG {
 
         public GameObject MyMaterialSlot { get => materialSlot; }
 
-        public override void Init(SystemGameManager systemGameManager) {
-            base.Init(systemGameManager);
+        public override void Configure(SystemGameManager systemGameManager) {
+            base.Configure(systemGameManager);
 
             inventoryManager = systemGameManager.InventoryManager;
             craftingManager = systemGameManager.CraftingManager;

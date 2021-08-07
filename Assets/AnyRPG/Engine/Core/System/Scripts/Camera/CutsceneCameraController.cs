@@ -3,32 +3,35 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 
 namespace AnyRPG {
-    public class CutsceneCameraController : MonoBehaviour {
+    public class CutsceneCameraController : AutoConfiguredMonoBehaviour {
 
-        #region Singleton
-        private static CutsceneCameraController instance;
+        private Camera thisCamera = null;
 
-        public static CutsceneCameraController Instance {
-            get {
-                if (instance == null) {
-                    instance = FindObjectOfType<CutsceneCameraController>();
-                }
+        public Camera Camera { get => thisCamera; set => thisCamera = value; }
 
-                return instance;
-            }
+        // game manager references
+        private InputManager inputManager = null;
+        private UIManager uIManager = null;
+        private LevelManager levelManager = null;
+
+        public override void Configure(SystemGameManager systemGameManager) {
+            base.Configure(systemGameManager);
+
+            inputManager = systemGameManager.InputManager;
+            uIManager = systemGameManager.UIManager;
+            levelManager = systemGameManager.LevelManager;
+
+            thisCamera = GetComponent<Camera>();
         }
-        #endregion
-
-        // public variables
 
         private void LateUpdate() {
-            if (SystemGameManager.Instance.InputManager == null) {
+            if (SystemGameManager.Instance == null) {
                 Debug.LogError("InputManager not found in scene.  Is the GameManager in the scene?");
                 return;
             }
-            if (SystemGameManager.Instance.InputManager.KeyBindWasPressed("CANCEL")) {
+            if (inputManager.KeyBindWasPressed("CANCEL")) {
                 //Debug.Log("AnyRPGCutsceneCameraController.LateUpdate(): open cancel cutscene window");
-                SystemGameManager.Instance.UIManager.confirmCancelCutsceneMenuWindow.OpenWindow();
+                uIManager.confirmCancelCutsceneMenuWindow.OpenWindow();
             }
 
             SystemEventManager.TriggerEvent("AfterCameraUpdate", new EventParamProperties());
@@ -36,8 +39,8 @@ namespace AnyRPG {
 
         public void EndCutScene() {
             //Debug.Log("CutsceneCameraController.EndCutScene()");
-            if (SystemGameManager.Instance.UIManager != null && SystemGameManager.Instance.UIManager.CutSceneBarController != null) {
-                SystemGameManager.Instance.UIManager.CutSceneBarController.EndCutScene();
+            if (uIManager != null && uIManager.CutSceneBarController != null) {
+                uIManager.CutSceneBarController.EndCutScene();
             }
         }
 
@@ -49,12 +52,12 @@ namespace AnyRPG {
 
         public void AdvanceDialog() {
             //Debug.Log("AnyRPGCutsceneCameraController.AdvanceDialog()");
-            SystemGameManager.Instance.UIManager.CutSceneBarController.AdvanceDialog();
+            uIManager.CutSceneBarController.AdvanceDialog();
         }
 
         public void ActivateEnvironmentStateByIndex(int index) {
 
-            SceneNode currentNode = SystemGameManager.Instance.LevelManager.GetActiveSceneNode();
+            SceneNode currentNode = levelManager.GetActiveSceneNode();
             if (currentNode != null && currentNode.EnvironmentStates != null && currentNode.EnvironmentStates.Count > index && currentNode.EnvironmentStates[index].MySkyBoxMaterial != null) {
                 SystemEnvironmentManager.SetSkyBox(currentNode.EnvironmentStates[index].MySkyBoxMaterial);
             }

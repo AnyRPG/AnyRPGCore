@@ -9,11 +9,13 @@ namespace AnyRPG {
 
         // game manager references
         private UIManager uIManager = null;
+        private LoadGameManager loadGameManager = null;
 
-        public override void Init(SystemGameManager systemGameManager) {
-            base.Init(systemGameManager);
+        public override void Configure(SystemGameManager systemGameManager) {
+            base.Configure(systemGameManager);
 
             uIManager = systemGameManager.UIManager;
+            loadGameManager = systemGameManager.LoadGameManager;
         }
 
         public void CancelAction() {
@@ -23,7 +25,7 @@ namespace AnyRPG {
 
         public void ConfirmAction() {
             //Debug.Log("NewGameMenuController.ConfirmAction()");
-            LoadGamePanel.Instance.DeleteGame(true);
+            loadGameManager.DeleteGame();
         }
 
     }

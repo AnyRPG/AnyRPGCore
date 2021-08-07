@@ -11,6 +11,9 @@ namespace AnyRPG {
     /// </summary>
     public class QuestLog {
 
+        public event System.Action<Quest> OnShowQuestLogDescription = delegate { };
+        public event System.Action<Quest, IQuestGiver> OnShowQuestGiverDescription = delegate { };
+
         private Dictionary<string, Quest> quests = new Dictionary<string, Quest>();
 
         // game manager references
@@ -177,6 +180,14 @@ namespace AnyRPG {
                 AbandonQuest(oldQuest);
             }
             Quests.Clear();
+        }
+
+        public void ShowQuestLogDescription(Quest quest) {
+            OnShowQuestLogDescription(quest);
+        }
+
+        public void ShowQuestGiverDescription(Quest quest, IQuestGiver questGiver) {
+            OnShowQuestGiverDescription(quest, questGiver);
         }
     }
 

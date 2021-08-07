@@ -7,23 +7,8 @@ using UnityEngine.UI;
 
 namespace AnyRPG {
 
-    public class LoadGamePanel : WindowContentController, ICapabilityConsumer {
+    public class LoadGamePanel : WindowContentController {
 
-        #region Singleton
-        private static LoadGamePanel instance;
-
-        public static LoadGamePanel Instance {
-            get {
-                return instance;
-            }
-        }
-
-        private void Awake() {
-            instance = this;
-        }
-        #endregion
-
-        public event System.Action OnConfirmAction = delegate { };
         public override event Action<ICloseableWindowContents> OnCloseWindow = delegate { };
 
         [SerializeField]
@@ -49,20 +34,7 @@ namespace AnyRPG {
 
         private List<LoadGameButton> loadGameButtons = new List<LoadGameButton>();
 
-        private UnitProfile unitProfile = null;
-        private UnitType unitType = null;
-        private CharacterRace characterRace = null;
-        private CharacterClass characterClass = null;
-        private ClassSpecialization classSpecialization = null;
-        private Faction faction = null;
-
-        private CapabilityConsumerProcessor capabilityConsumerProcessor = null;
-
-        private AnyRPGSaveData anyRPGSaveData;
-
         private LoadGameButton selectedLoadGameButton = null;
-
-        private CapabilityConsumerSnapshot capabilityConsumerSnapshot = null;
 
         // game manager references
         private SaveManager saveManager = null;
@@ -70,27 +42,24 @@ namespace AnyRPG {
         private CharacterCreatorManager characterCreatorManager = null;
         private SystemConfigurationManager systemConfigurationManager = null;
         private UIManager uIManager = null;
-
-        public UnitProfile UnitProfile { get => unitProfile; set => unitProfile = value; }
-        public UnitType UnitType { get => unitType; set => unitType = value; }
-        public CharacterRace CharacterRace { get => characterRace; set => characterRace = value; }
-        public CharacterClass CharacterClass { get => characterClass; set => characterClass = value; }
-        public ClassSpecialization ClassSpecialization { get => classSpecialization; set => classSpecialization = value; }
-        public Faction Faction { get => faction; set => faction = value; }
-        public CapabilityConsumerProcessor CapabilityConsumerProcessor { get => capabilityConsumerProcessor; }
+        private LoadGameManager loadGameManager = null;
 
         public LoadGameButton SelectedLoadGameButton { get => selectedLoadGameButton; set => selectedLoadGameButton = value; }
 
-        public override void Init(SystemGameManager systemGameManager) {
-            base.Init(systemGameManager);
+        public override void Configure(SystemGameManager systemGameManager) {
+            base.Configure(systemGameManager);
 
             saveManager = systemGameManager.SaveManager;
             objectPooler = systemGameManager.ObjectPooler;
             characterCreatorManager = systemGameManager.CharacterCreatorManager;
             systemConfigurationManager = systemGameManager.SystemConfigurationManager;
             uIManager = systemGameManager.UIManager;
+            loadGameManager = systemGameManager.LoadGameManager;
 
-            characterPreviewPanel.Init(systemGameManager);
+            loadGameManager.OnDeleteGame += HandleDeleteGame;
+            loadGameManager.OnCopyGame += HandleCopyGame;
+
+            characterPreviewPanel.Configure(systemGameManager);
         }
 
         public override void RecieveClosedWindowNotification() {
@@ -110,7 +79,7 @@ namespace AnyRPG {
 
             // inform the preview panel so the character can be rendered
             characterPreviewPanel.OnTargetReady += HandleTargetReady;
-            characterPreviewPanel.CapabilityConsumer = this;
+            characterPreviewPanel.CapabilityConsumer = loadGameManager;
             characterPreviewPanel.ReceiveOpenWindowNotification();
 
             // this needs to be run here because the initial run in ShowLoadButtonsCommon will have done nothing because the preview panel wasn't open yet
@@ -121,19 +90,8 @@ namespace AnyRPG {
             //Debug.Log("LoadGamePanel.ShowSavedGame()");
 
             selectedLoadGameButton = loadButton;
-            anyRPGSaveData = loadButton.SaveData;
 
-            capabilityConsumerSnapshot = saveManager.GetCapabilityConsumerSnapshot(selectedLoadGameButton.SaveData);
-
-            unitProfile = capabilityConsumerSnapshot.UnitProfile;
-            UnitType = capabilityConsumerSnapshot.UnitProfile.UnitType;
-            characterRace = capabilityConsumerSnapshot.CharacterRace;
-            characterClass = capabilityConsumerSnapshot.CharacterClass;
-            classSpecialization = capabilityConsumerSnapshot.ClassSpecialization;
-            faction = capabilityConsumerSnapshot.Faction;
-
-            saveManager.ClearSharedData();
-            saveManager.LoadUMARecipe(loadButton.SaveData);
+            loadGameManager.SetSavedGame(loadButton.SaveData);
 
             // testing avoid naked spawn
             // seems to make no difference to have this disabled here
@@ -152,7 +110,7 @@ namespace AnyRPG {
             copyGameButton.interactable = true;
             deleteGameButton.interactable = true;
 
-            nameText.text = anyRPGSaveData.playerName;
+            nameText.text = loadGameManager.AnyRPGSaveData.playerName;
         }
 
 
@@ -171,14 +129,7 @@ namespace AnyRPG {
             copyGameButton.interactable = false;
             deleteGameButton.interactable = false;
             nameText.text = "";
-            unitProfile = null;
-            unitType = null;
-            characterRace = null;
-            characterClass = null;
-            classSpecialization = null;
-            faction = null;
-            anyRPGSaveData = new AnyRPGSaveData();
-            capabilityConsumerSnapshot = null;
+            loadGameManager.ResetData();
         }
 
 
@@ -192,7 +143,7 @@ namespace AnyRPG {
                 //Debug.Log("LoadGamePanel.ShowLoadButtonsCommon(): setting a button with saved game data");
                 GameObject go = objectPooler.GetPooledObject(buttonPrefab, buttonArea.transform);
                 LoadGameButton loadGameButton = go.GetComponent<LoadGameButton>();
-                loadGameButton.Init(systemGameManager);
+                loadGameButton.Configure(systemGameManager);
                 loadGameButton.AddSaveData(this, anyRPGSaveData);
                 loadGameButtons.Add(loadGameButton);
                 if (anyRPGSaveData.DataFileName == fileName) {
@@ -221,13 +172,13 @@ namespace AnyRPG {
                 //LoadUMARecipe();
 
                 // apply capabilities to it so equipment can work
-                characterCreatorManager.PreviewUnitController.CharacterUnit.BaseCharacter.ApplyCapabilityConsumerSnapshot(capabilityConsumerSnapshot);
+                characterCreatorManager.PreviewUnitController.CharacterUnit.BaseCharacter.ApplyCapabilityConsumerSnapshot(loadGameManager.CapabilityConsumerSnapshot);
 
                 BaseCharacter baseCharacter = characterCreatorManager.PreviewUnitController.CharacterUnit.BaseCharacter;
                 if (baseCharacter != null) {
                     //saveManager.LoadEquipmentData(loadGameButton.MySaveData, characterEquipmentManager);
                     // results in equipment being sheathed
-                    saveManager.LoadEquipmentData(anyRPGSaveData, baseCharacter.CharacterEquipmentManager);
+                    saveManager.LoadEquipmentData(loadGameManager.AnyRPGSaveData, baseCharacter.CharacterEquipmentManager);
                 }
             }
         }
@@ -254,7 +205,7 @@ namespace AnyRPG {
 
         public void LoadGame() {
             if (SelectedLoadGameButton != null) {
-                saveManager.LoadGame(SelectedLoadGameButton.SaveData);
+                loadGameManager.LoadGame(SelectedLoadGameButton.SaveData);
             }
         }
 
@@ -274,16 +225,9 @@ namespace AnyRPG {
             }
         }
 
-        public void DeleteGame(bool confirmDelete = false) {
-            if (SelectedLoadGameButton != null) {
-                if (confirmDelete) {
-                    saveManager.DeleteGame(SelectedLoadGameButton.SaveData);
-                    uIManager.deleteGameMenuWindow.CloseWindow();
-                    ShowLoadButtonsCommon();
-                } else {
-                    uIManager.deleteGameMenuWindow.OpenWindow();
-                }
-            }
+        public void HandleDeleteGame() {
+            uIManager.deleteGameMenuWindow.CloseWindow();
+            ShowLoadButtonsCommon();
         }
 
         public void CopyGame() {
@@ -292,16 +236,9 @@ namespace AnyRPG {
             }
         }
 
-        public void CopyGame(bool confirmCopy = false) {
-            if (SelectedLoadGameButton != null) {
-                if (confirmCopy) {
-                    saveManager.CopyGame(SelectedLoadGameButton.SaveData);
-                    uIManager.copyGameMenuWindow.CloseWindow();
-                    ShowLoadButtonsCommon(SelectedLoadGameButton.SaveData.DataFileName);
-                } else {
-                    uIManager.copyGameMenuWindow.OpenWindow();
-                }
-            }
+        public void HandleCopyGame() {
+            uIManager.copyGameMenuWindow.CloseWindow();
+            ShowLoadButtonsCommon(SelectedLoadGameButton.SaveData.DataFileName);
         }
 
     }

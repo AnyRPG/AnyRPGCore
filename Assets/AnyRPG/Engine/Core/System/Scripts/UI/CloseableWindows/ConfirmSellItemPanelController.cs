@@ -14,8 +14,8 @@ namespace AnyRPG {
 
         public Item MyItem { get => item; set => item = value; }
 
-        public override void Init(SystemGameManager systemGameManager) {
-            base.Init(systemGameManager);
+        public override void Configure(SystemGameManager systemGameManager) {
+            base.Configure(systemGameManager);
             uIManager = systemGameManager.UIManager;
         }
 

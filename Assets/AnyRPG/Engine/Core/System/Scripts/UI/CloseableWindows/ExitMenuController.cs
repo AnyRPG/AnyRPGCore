@@ -10,8 +10,8 @@ namespace AnyRPG {
         // game manager references
         private UIManager uIManager = null;
 
-        public override void Init(SystemGameManager systemGameManager) {
-            base.Init(systemGameManager);
+        public override void Configure(SystemGameManager systemGameManager) {
+            base.Configure(systemGameManager);
 
             uIManager = systemGameManager.UIManager;
         }

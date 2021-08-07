@@ -55,8 +55,8 @@ namespace AnyRPG {
 
         public Cutscene CurrentCutscene { get => currentCutscene; set => currentCutscene = value; }
 
-        public override void Init(SystemGameManager systemGameManager) {
-            base.Init(systemGameManager);
+        public override void Configure(SystemGameManager systemGameManager) {
+            base.Configure(systemGameManager);
             systemPlayableDirectorManager = systemGameManager.SystemPlayableDirectorManager;
             cameraManager = systemGameManager.CameraManager;
             uIManager = systemGameManager.UIManager;

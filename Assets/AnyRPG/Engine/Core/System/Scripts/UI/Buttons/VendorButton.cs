@@ -44,8 +44,8 @@ namespace AnyRPG {
 
         public bool MyBuyBackButton { get => buyBackButton; set => buyBackButton = value; }
 
-        public override void Init(SystemGameManager systemGameManager) {
-            base.Init(systemGameManager);
+        public override void Configure(SystemGameManager systemGameManager) {
+            base.Configure(systemGameManager);
 
             systemItemManager = systemGameManager.SystemItemManager;
             playerManager = systemGameManager.PlayerManager;
@@ -54,7 +54,7 @@ namespace AnyRPG {
             audioManager = systemGameManager.AudioManager;
             messageFeedManager = systemGameManager.UIManager.MessageFeedManager;
 
-            currencyBarController.Init(systemGameManager);
+            currencyBarController.Configure(systemGameManager);
         }
 
         public void AddItem(VendorItem vendorItem, bool buyBackButton = false) {

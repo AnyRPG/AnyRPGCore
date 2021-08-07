@@ -32,8 +32,8 @@ namespace AnyRPG {
         public bool CharacterReady { get => characterReady; }
         public ICapabilityConsumer CapabilityConsumer { get => capabilityConsumer; set => capabilityConsumer = value; }
 
-        public override void Init(SystemGameManager systemGameManager) {
-            base.Init(systemGameManager);
+        public override void Configure(SystemGameManager systemGameManager) {
+            base.Configure(systemGameManager);
 
             characterCreatorManager = systemGameManager.CharacterCreatorManager;
             cameraManager = systemGameManager.CameraManager;

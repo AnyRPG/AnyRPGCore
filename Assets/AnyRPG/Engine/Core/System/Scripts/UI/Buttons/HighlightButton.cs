@@ -43,9 +43,10 @@ namespace AnyRPG {
         protected AudioManager audioManager = null;
 
         public TextMeshProUGUI Text { get => text; }
+        public Button Button { get => highlightButton; set => highlightButton = value; }
 
-        public override void Init(SystemGameManager systemGameManager) {
-            base.Init(systemGameManager);
+        public override void Configure(SystemGameManager systemGameManager) {
+            base.Configure(systemGameManager);
 
             systemConfigurationManager = systemGameManager.SystemConfigurationManager;
             audioManager = systemGameManager.AudioManager;

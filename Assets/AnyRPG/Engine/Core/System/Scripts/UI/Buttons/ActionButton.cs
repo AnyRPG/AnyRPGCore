@@ -69,8 +69,8 @@ namespace AnyRPG {
         public Image CoolDownIcon { get => coolDownIcon; set => coolDownIcon = value; }
         public Coroutine MonitorCoroutine { get => monitorCoroutine; set => monitorCoroutine = value; }
 
-        public override void Init(SystemGameManager systemGameManager) {
-            base.Init(systemGameManager);
+        public override void Configure(SystemGameManager systemGameManager) {
+            base.Configure(systemGameManager);
 
             uIManager = systemGameManager.UIManager;
             systemEventManager = systemGameManager.SystemEventManager;

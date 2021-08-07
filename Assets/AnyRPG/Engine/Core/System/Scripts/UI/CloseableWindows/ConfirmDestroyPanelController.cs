@@ -11,8 +11,8 @@ namespace AnyRPG {
         private UIManager uIManager = null;
         private HandScript handScript = null;
 
-        public override void Init(SystemGameManager systemGameManager) {
-            base.Init(systemGameManager);
+        public override void Configure(SystemGameManager systemGameManager) {
+            base.Configure(systemGameManager);
 
             uIManager = systemGameManager.UIManager;
             handScript = uIManager.HandScript;

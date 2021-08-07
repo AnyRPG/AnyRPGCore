@@ -13,12 +13,12 @@ namespace AnyRPG {
 
         private PlayerManager playerManager = null;
 
-        public override void Init(SystemGameManager systemGameManager) {
-            base.Init(systemGameManager);
+        public override void Configure(SystemGameManager systemGameManager) {
+            base.Configure(systemGameManager);
             playerManager = systemGameManager.PlayerManager;
 
             foreach (SkillButton skillButton in skillButtons) {
-                skillButton.Init(systemGameManager);
+                skillButton.Configure(systemGameManager);
             }
         }
 

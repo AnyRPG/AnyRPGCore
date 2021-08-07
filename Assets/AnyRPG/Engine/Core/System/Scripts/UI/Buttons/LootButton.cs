@@ -36,8 +36,8 @@ namespace AnyRPG {
             }
         }
 
-        public override void Init(SystemGameManager systemGameManager) {
-            base.Init(systemGameManager);
+        public override void Configure(SystemGameManager systemGameManager) {
+            base.Configure(systemGameManager);
             lootWindow = GetComponentInParent<LootUI>();
         }
 

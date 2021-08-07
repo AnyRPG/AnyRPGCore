@@ -6,8 +6,13 @@ namespace AnyRPG {
 
         protected SystemGameManager systemGameManager = null;
 
-        public virtual void Init(SystemGameManager systemGameManager) {
+        public virtual void Configure(SystemGameManager systemGameManager) {
             this.systemGameManager = systemGameManager;
+            SetGameManagerReferences();
+        }
+
+        public virtual void SetGameManagerReferences() {
+            // meant to be overwritten
         }
 
     }

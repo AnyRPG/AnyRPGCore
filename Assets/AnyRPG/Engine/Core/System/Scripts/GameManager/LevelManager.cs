@@ -51,8 +51,8 @@ namespace AnyRPG {
         public string ActiveSceneName { get => activeSceneName; set => activeSceneName = value; }
         public Bounds SceneBounds { get => sceneBounds; }
 
-        public override void Init(SystemGameManager systemGameManager) {
-            base.Init(systemGameManager);
+        public override void Configure(SystemGameManager systemGameManager) {
+            base.Configure(systemGameManager);
 
             systemDataFactory = systemGameManager.SystemDataFactory;
             systemConfigurationManager = systemGameManager.SystemConfigurationManager;
@@ -242,6 +242,8 @@ namespace AnyRPG {
             if (activeSceneNode != null) {
                 activeSceneNode.Visit();
             }
+            systemGameManager.AutoConfigureMonoBehaviours();
+            cameraManager.CheckForCutsceneCamera();
             if (IsInitializationScene()) {
                 LoadMainMenu();
                 return;

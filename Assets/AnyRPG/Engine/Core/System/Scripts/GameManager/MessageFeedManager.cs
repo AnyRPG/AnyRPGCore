@@ -26,8 +26,8 @@ namespace AnyRPG {
 
         public GameObject MessageFeedGameObject { get => messageFeedGameObject; set => messageFeedGameObject = value; }
 
-        public override void Init(SystemGameManager systemGameManager) {
-            base.Init(systemGameManager);
+        public override void Configure(SystemGameManager systemGameManager) {
+            base.Configure(systemGameManager);
             objectPooler = systemGameManager.ObjectPooler;
             logManager = systemGameManager.LogManager;
         }

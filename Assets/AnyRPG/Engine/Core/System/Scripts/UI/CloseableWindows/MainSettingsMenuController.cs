@@ -7,12 +7,13 @@ using TMPro;
 namespace AnyRPG {
     public class MainSettingsMenuController : WindowContentController {
 
-        // toggle buttons
+        [Header("MAIN BUTTONS")]
         public HighlightButton soundButton;
         public HighlightButton controlsButton;
         public HighlightButton videoButton;
         public HighlightButton keyBindingsButton;
         public HighlightButton userInterfaceButton;
+        public HighlightButton returnButton;
 
         [Header("GAME SETTINGS")]
         public GameObject showhudtext;
@@ -37,6 +38,7 @@ namespace AnyRPG {
         public OnOffTextButton invertMouseButton;
 
         [Header("UI SETTINGS")]
+        public HighlightButton resetWindowPositionsButton;
         public OnOffTextButton useQuestTrackerButton;
         public OnOffTextButton useActionBar2Button;
         public OnOffTextButton useActionBar3Button;
@@ -53,6 +55,10 @@ namespace AnyRPG {
         public OnOffTextButton useMessageFeedButton;
         public OnOffTextButton useStatusEffectBarButton;
         public OnOffTextButton useCombatLogButton;
+
+        [Header("Video SETTINGS")]
+        public OnOffTextButton fullScreenButton;
+        public OnOffTextButton vSyncButton;
 
         [Header("Player Interface SETTINGS")]
         public OnOffTextButton showPlayerNameButton;
@@ -124,8 +130,50 @@ namespace AnyRPG {
         private UIManager uIManager = null;
         private SaveManager saveManager = null;
 
-        public override void Init(SystemGameManager systemGameManager) {
-            base.Init(systemGameManager);
+        public override void Configure(SystemGameManager systemGameManager) {
+            base.Configure(systemGameManager);
+
+            // main buttons
+            soundButton.Configure(systemGameManager);
+            controlsButton.Configure(systemGameManager);
+            videoButton.Configure(systemGameManager);
+            keyBindingsButton.Configure(systemGameManager);
+            userInterfaceButton.Configure(systemGameManager);
+            returnButton.Configure(systemGameManager);
+
+            // ui buttons
+            resetWindowPositionsButton.Configure(systemGameManager);
+            invertMouseButton.Configure(systemGameManager);
+            useQuestTrackerButton.Configure(systemGameManager);
+            useActionBar2Button.Configure(systemGameManager);
+            useActionBar3Button.Configure(systemGameManager);
+            useActionBar4Button.Configure(systemGameManager);
+            useActionBar5Button.Configure(systemGameManager);
+            useActionBar6Button.Configure(systemGameManager);
+            useActionBar7Button.Configure(systemGameManager);
+            useFocusUnitFrameButton.Configure(systemGameManager);
+            usePlayerUnitFrameButton.Configure(systemGameManager);
+            useFloatingCastBarButton.Configure(systemGameManager);
+            useMiniMapButton.Configure(systemGameManager);
+            useExperienceBarButton.Configure(systemGameManager);
+            useFloatingCombatTextButton.Configure(systemGameManager);
+            useMessageFeedButton.Configure(systemGameManager);
+            useStatusEffectBarButton.Configure(systemGameManager);
+            useCombatLogButton.Configure(systemGameManager);
+
+            // video buttons
+            fullScreenButton.Configure(systemGameManager);
+            vSyncButton.Configure(systemGameManager);
+
+            // player interface buttons
+            showPlayerNameButton.Configure(systemGameManager);
+            showPlayerFactionButton.Configure(systemGameManager);
+            hideFullHealthBarButton.Configure(systemGameManager);
+            lockUIButton.Configure(systemGameManager);
+        }
+
+        public override void SetGameManagerReferences() {
+            base.SetGameManagerReferences();
 
             uIManager = systemGameManager.UIManager;
             saveManager = systemGameManager.SaveManager;

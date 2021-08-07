@@ -13,8 +13,8 @@ namespace AnyRPG {
         private UIManager uIManager = null;
         private PlayerManager playerManager = null;
 
-        public override void Init(SystemGameManager systemGameManager) {
-            base.Init(systemGameManager);
+        public override void Configure(SystemGameManager systemGameManager) {
+            base.Configure(systemGameManager);
 
             uIManager = systemGameManager.UIManager;
             playerManager = systemGameManager.PlayerManager;

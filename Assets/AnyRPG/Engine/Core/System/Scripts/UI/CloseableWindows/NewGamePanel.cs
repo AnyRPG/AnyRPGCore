@@ -87,8 +87,8 @@ namespace AnyRPG {
         public CapabilityConsumerProcessor CapabilityConsumerProcessor { get => capabilityConsumerProcessor; }
         */
 
-        public override void Init(SystemGameManager systemGameManager) {
-            base.Init(systemGameManager);
+        public override void Configure(SystemGameManager systemGameManager) {
+            base.Configure(systemGameManager);
 
             saveManager = systemGameManager.SaveManager;
             systemConfigurationManager = systemGameManager.SystemConfigurationManager;
@@ -98,13 +98,13 @@ namespace AnyRPG {
             levelManager = systemGameManager.LevelManager;
             newGameManager = systemGameManager.NewGameManager;
 
-            characterPreviewPanel.Init(systemGameManager);
-            detailsPanel.Init(systemGameManager);
-            characterPanel.Init(systemGameManager);
-            umaCharacterPanel.Init(systemGameManager);
-            classPanel.Init(systemGameManager);
-            factionPanel.Init(systemGameManager);
-            specializationPanel.Init(systemGameManager);
+            characterPreviewPanel.Configure(systemGameManager);
+            detailsPanel.Configure(systemGameManager);
+            characterPanel.Configure(systemGameManager);
+            umaCharacterPanel.Configure(systemGameManager);
+            classPanel.Configure(systemGameManager);
+            factionPanel.Configure(systemGameManager);
+            specializationPanel.Configure(systemGameManager);
         }
 
         public override void RecieveClosedWindowNotification() {

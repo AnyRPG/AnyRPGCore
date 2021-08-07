@@ -26,8 +26,8 @@ namespace AnyRPG {
 
         public CharacterClass CharacterClass { get => characterClass; set => characterClass = value; }
 
-        public override void Init(SystemGameManager systemGameManager) {
-            base.Init(systemGameManager);
+        public override void Configure(SystemGameManager systemGameManager) {
+            base.Configure(systemGameManager);
 
             newGameManager = systemGameManager.NewGameManager;
         }

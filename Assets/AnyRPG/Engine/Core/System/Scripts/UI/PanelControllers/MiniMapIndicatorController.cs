@@ -7,7 +7,7 @@ using UnityEngine.UI;
 using UnityEngine.EventSystems;
 
 namespace AnyRPG {
-    public class MiniMapIndicatorController : MonoBehaviour {
+    public class MiniMapIndicatorController : ConfiguredMonoBehaviour {
 
         [SerializeField]
         private GameObject miniMapTextLayerPrefab = null;
@@ -24,6 +24,16 @@ namespace AnyRPG {
 
         private bool setupComplete = false;
 
+        // game manager references
+
+        private ObjectPooler objectPooler = null;
+
+        public override void Configure(SystemGameManager systemGameManager) {
+            base.Configure(systemGameManager);
+
+            objectPooler = systemGameManager.ObjectPooler;
+        }
+
         public void SetupMiniMap() {
             //Debug.Log(transform.parent.gameObject.name + ".MiniMapIndicatorController.SetupMiniMap(): interactable: " + (interactable == null ? "null" : interactable.name));
             if (setupComplete == true) {
@@ -37,12 +47,12 @@ namespace AnyRPG {
                 if (_interactable.HasMiniMapIcon()) {
                     //else if (_interactable.HasMiniMapIcon()) {
                     // do both now!
-                    GameObject go = ObjectPooler.Instance.GetPooledObject(miniMapImageLayerPrefab, contentParent);
+                    GameObject go = objectPooler.GetPooledObject(miniMapImageLayerPrefab, contentParent);
                     Image _image = go.GetComponent<Image>();
                     _interactable.SetMiniMapIcon(_image);
                     miniMapLayers.Add(_interactable, go);
                 } else if (_interactable.HasMiniMapText()) {
-                    GameObject go = ObjectPooler.Instance.GetPooledObject(miniMapTextLayerPrefab, contentParent);
+                    GameObject go = objectPooler.GetPooledObject(miniMapTextLayerPrefab, contentParent);
                     TextMeshProUGUI _text = go.GetComponent<TextMeshProUGUI>();
                     _interactable.SetMiniMapText(_text);
                     miniMapLayers.Add(_interactable, go);
@@ -77,7 +87,7 @@ namespace AnyRPG {
 
         public void ResetSettings() {
             foreach (GameObject go in miniMapLayers.Values) {
-                ObjectPooler.Instance.ReturnObjectToPool(go);
+                objectPooler.ReturnObjectToPool(go);
             }
             miniMapLayers.Clear();
             interactable = null;

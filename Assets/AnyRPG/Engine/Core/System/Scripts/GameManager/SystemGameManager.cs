@@ -81,6 +81,9 @@ namespace AnyRPG {
         [SerializeField]
         private NewGameManager newGameManager = null;
 
+        [SerializeField]
+        private LoadGameManager loadGameManager = null;
+
         [Header("Data Resource Factory")]
 
         [SerializeField]
@@ -132,6 +135,7 @@ namespace AnyRPG {
         public ObjectPooler ObjectPooler { get => objectPooler; set => objectPooler = value; }
         public SystemDataFactory SystemDataFactory { get => systemDataFactory; set => systemDataFactory = value; }
         public NewGameManager NewGameManager { get => newGameManager; set => newGameManager = value; }
+        public LoadGameManager LoadGameManager { get => loadGameManager; set => loadGameManager = value; }
 
         private void Init() {
             //Debug.Log("SystemGameManager.Init()");
@@ -143,10 +147,10 @@ namespace AnyRPG {
             systemEventManager = new SystemEventManager();
 
             // system data factory next for access to data resources
-            SystemDataFactory.Init(this);
+            SystemDataFactory.Configure(this);
 
             // configuration manager next because it will need access to resources from the factory
-            systemConfigurationManager.Init(this);
+            systemConfigurationManager.Configure(this);
 
             // then everything else that relies on system configuration and data resources
             // starting with the non monobehavior managers
@@ -155,28 +159,30 @@ namespace AnyRPG {
             interactionManager = new InteractionManager();
             lootManager = new LootManager(this);
             systemPlayableDirectorManager = new SystemPlayableDirectorManager();
-            saveManager = new SaveManager(this);
             keyBindManager = new KeyBindManager(this);
             questLog = new QuestLog(this);
 
-            // and finally monobehavior managers
-            cameraManager.Init(this);
-            audioManager.Init(this);
-            petPreviewManager.Init(this);
-            unitPreviewManager.Init(this);
-            characterCreatorManager.Init(this);
-            systemAchievementManager.Init(this);
+            // saveManager should be the last non monobehavior because it refers to other non monobehaviors
+            saveManager = new SaveManager(this);
 
-            systemAbilityController.Init(this);
-            castTargettingManager.Init(this);
-            inputManager.Init(this);
-            levelManager.Init(this);
-            inventoryManager.Init(this);
-            playerManager.Init(this);
-            systemItemManager.Init(this);
-            logManager.Init(this);
-            ObjectPooler.Init(this);
-            uIManager.Init(this);
+            // and finally monobehavior managers
+            cameraManager.Configure(this);
+            audioManager.Configure(this);
+            petPreviewManager.Configure(this);
+            unitPreviewManager.Configure(this);
+            characterCreatorManager.Configure(this);
+            systemAchievementManager.Configure(this);
+
+            systemAbilityController.Configure(this);
+            castTargettingManager.Configure(this);
+            inputManager.Configure(this);
+            levelManager.Configure(this);
+            inventoryManager.Configure(this);
+            playerManager.Configure(this);
+            systemItemManager.Configure(this);
+            logManager.Configure(this);
+            ObjectPooler.Configure(this);
+            uIManager.Configure(this);
 
         }
 
@@ -210,6 +216,15 @@ namespace AnyRPG {
         private void OnApplicationQuit() {
             //Debug.Log("SystemGameManager.OnApplicationQuit()");
             isShuttingDown = true;
+        }
+
+        /// <summary>
+        /// configure all classes of type AutoConfiguredMonoBehavior in the scene
+        /// </summary>
+        public void AutoConfigureMonoBehaviours() {
+            foreach (AutoConfiguredMonoBehaviour autoConfiguredMonoBehaviour in GameObject.FindObjectsOfType<AutoConfiguredMonoBehaviour>()) {
+                autoConfiguredMonoBehaviour.Configure(this);
+            }
         }
 
     }

@@ -13,20 +13,6 @@ namespace AnyRPG {
     /// </summary>
     public class QuestLogUI : WindowContentController {
 
-        #region Singleton
-        private static QuestLogUI instance;
-
-        public static QuestLogUI Instance {
-            get {
-                return instance;
-            }
-        }
-
-        private void Awake() {
-            instance = this;
-        }
-        #endregion
-
         [SerializeField]
         private GameObject abandonButton = null;
 
@@ -58,16 +44,17 @@ namespace AnyRPG {
 
         public QuestScript MySelectedQuestScript { get => selectedQuestScript; set => selectedQuestScript = value; }
 
-        public override void Init(SystemGameManager systemGameManager) {
-            base.Init(systemGameManager);
+        public override void Configure(SystemGameManager systemGameManager) {
+            base.Configure(systemGameManager);
 
             questLog = systemGameManager.QuestLog;
             objectPooler = systemGameManager.ObjectPooler;
 
+            questLog.OnShowQuestLogDescription += HandleShowQuestDescription;
             SystemEventManager.StartListening("OnQuestStatusUpdated", HandleQuestStatusUpdated);
             UpdateQuestCount();
 
-            questDetailsArea.Init(systemGameManager);
+            questDetailsArea.Configure(systemGameManager);
         }
 
         public void HandleQuestStatusUpdated(string eventName, EventParamProperties eventParamProperties) {
@@ -90,7 +77,7 @@ namespace AnyRPG {
                 GameObject go = objectPooler.GetPooledObject(questPrefab, questParent);
 
                 QuestScript qs = go.GetComponent<QuestScript>();
-                qs.Init(systemGameManager);
+                qs.Configure(systemGameManager);
                 qs.SetQuest(this, quest);
                 questScripts.Add(qs);
                 if (firstAvailableQuest == null) {
@@ -105,6 +92,10 @@ namespace AnyRPG {
             }
 
             UpdateQuestCount();
+        }
+
+        public void HandleShowQuestDescription(Quest quest) {
+            ShowDescription(quest);
         }
 
         public void ShowDescription(Quest newQuest) {

@@ -43,14 +43,14 @@ namespace AnyRPG {
         private PlayerManager playerManager = null;
         private ObjectPooler objectPooler = null;
 
-        public override void Init(SystemGameManager systemGameManager) {
-            base.Init(systemGameManager);
+        public override void Configure(SystemGameManager systemGameManager) {
+            base.Configure(systemGameManager);
 
             uIManager = systemGameManager.UIManager;
             playerManager = systemGameManager.PlayerManager;
             objectPooler = systemGameManager.ObjectPooler;
 
-            characterClassButton.Init(systemGameManager);
+            characterClassButton.Configure(systemGameManager);
         }
 
         public void Setup(CharacterClass newCharacterClass) {
@@ -87,7 +87,7 @@ namespace AnyRPG {
             for (int i = 0; i < traitList.Count; i++) {
                 if (traitList[i] != null) {
                     RewardButton rewardIcon = objectPooler.GetPooledObject(rewardIconPrefab, traitIconsArea.transform).GetComponent<RewardButton>();
-                    rewardIcon.Init(systemGameManager);
+                    rewardIcon.Configure(systemGameManager);
                     rewardIcon.SetDescribable(traitList[i]);
                     traitRewardIcons.Add(rewardIcon);
                     if (traitList[i].RequiredLevel > playerManager.MyCharacter.CharacterStats.Level) {
@@ -120,7 +120,7 @@ namespace AnyRPG {
             for (int i = 0; i < abilityList.Count; i++) {
                 if (abilityList[i] != null) {
                     RewardButton rewardIcon = objectPooler.GetPooledObject(rewardIconPrefab, abilityIconsArea.transform).GetComponent<RewardButton>();
-                    rewardIcon.Init(systemGameManager);
+                    rewardIcon.Configure(systemGameManager);
                     rewardIcon.SetDescribable(abilityList[i]);
                     abilityRewardIcons.Add(rewardIcon);
                     if (abilityList[i].RequiredLevel > playerManager.MyCharacter.CharacterStats.Level) {

@@ -46,8 +46,8 @@ namespace AnyRPG {
         private SystemDataFactory systemDataFactory = null;
         private NewGameManager newGameManager = null;
 
-        public override void Init(SystemGameManager systemGameManager) {
-            base.Init(systemGameManager);
+        public override void Configure(SystemGameManager systemGameManager) {
+            base.Configure(systemGameManager);
 
             objectPooler = systemGameManager.ObjectPooler;
             systemDataFactory = systemGameManager.SystemDataFactory;
@@ -75,7 +75,7 @@ namespace AnyRPG {
                     //Debug.Log("LoadGamePanel.ShowLoadButtonsCommon(): setting a button with saved game data");
                     GameObject go = objectPooler.GetPooledObject(buttonPrefab, buttonArea.transform);
                     NewGameCharacterClassButton optionButton = go.GetComponent<NewGameCharacterClassButton>();
-                    optionButton.Init(systemGameManager);
+                    optionButton.Configure(systemGameManager);
                     optionButton.AddCharacterClass(characterClass);
                     optionButtons.Add(optionButton);
                 }
@@ -124,7 +124,7 @@ namespace AnyRPG {
                 for (int i = 0; i < capabilityProps.TraitList.Count; i++) {
                     if (capabilityProps.TraitList[i] != null) {
                         NewGameAbilityButton rewardIcon = objectPooler.GetPooledObject(rewardIconPrefab, abilityButtonArea.transform).GetComponent<NewGameAbilityButton>();
-                        rewardIcon.Init(systemGameManager);
+                        rewardIcon.Configure(systemGameManager);
                         rewardIcon.AddAbility(capabilityProps.TraitList[i]);
                         traitRewardIcons.Add(rewardIcon);
                         /*
@@ -152,7 +152,7 @@ namespace AnyRPG {
                 for (int i = 0; i < capabilityProps.AbilityList.Count; i++) {
                     if (capabilityProps.AbilityList[i] != null) {
                         NewGameAbilityButton rewardIcon = objectPooler.GetPooledObject(rewardIconPrefab, abilityButtonArea.transform).GetComponent<NewGameAbilityButton>();
-                        rewardIcon.Init(systemGameManager);
+                        rewardIcon.Configure(systemGameManager);
                         rewardIcon.AddAbility(capabilityProps.AbilityList[i]);
                         abilityRewardIcons.Add(rewardIcon);
                         /*

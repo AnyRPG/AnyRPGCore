@@ -41,7 +41,7 @@ namespace AnyRPG {
         SystemEventManager systemEventManager = null;
         PlayerManager playerManager = null;
 
-        public override void Init(SystemGameManager systemGameManager) {
+        public override void Configure(SystemGameManager systemGameManager) {
             //Debug.Log("CombatLogUI.Awake()");
 
             systemConfigurationManager = systemGameManager.SystemConfigurationManager;

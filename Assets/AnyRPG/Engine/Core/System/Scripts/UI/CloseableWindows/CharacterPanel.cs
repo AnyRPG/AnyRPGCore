@@ -38,20 +38,11 @@ namespace AnyRPG {
         public CharacterButton SelectedButton { get; set; }
         public CharacterPreviewCameraController PreviewCameraController { get => previewCameraController; set => previewCameraController = value; }
 
-        public override void Init(SystemGameManager systemGameManager) {
-            base.Init(systemGameManager);
-
-            playerManager = systemGameManager.PlayerManager;
-            systemEventManager = systemGameManager.SystemEventManager;
-            uIManager = systemGameManager.UIManager;
-            characterCreatorManager = systemGameManager.CharacterCreatorManager;
-            cameraManager = systemGameManager.CameraManager;
-            saveManager = systemGameManager.SaveManager;
-
-            CreateEventSubscriptions();
+        public override void Configure(SystemGameManager systemGameManager) {
+            base.Configure(systemGameManager);
 
             foreach (CharacterButton characterButton in characterButtons) {
-                characterButton.Init(systemGameManager);
+                characterButton.Configure(systemGameManager);
                 characterButton.MyEmptyBackGroundColor = emptySlotColor;
                 characterButton.MyFullBackGroundColor = fullSlotColor;
                 characterButton.CharacterPanel = this;
@@ -62,6 +53,17 @@ namespace AnyRPG {
                 }
                 characterButton.UpdateVisual();
             }
+        }
+
+        public override void SetGameManagerReferences() {
+            base.SetGameManagerReferences();
+
+            playerManager = systemGameManager.PlayerManager;
+            systemEventManager = systemGameManager.SystemEventManager;
+            uIManager = systemGameManager.UIManager;
+            characterCreatorManager = systemGameManager.CharacterCreatorManager;
+            cameraManager = systemGameManager.CameraManager;
+            saveManager = systemGameManager.SaveManager;
         }
 
         /*

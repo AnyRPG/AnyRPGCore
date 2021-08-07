@@ -208,8 +208,8 @@ namespace AnyRPG {
         public MiniMapManager MiniMapManager { get => miniMapManager; set => miniMapManager = value; }
         public HandScript HandScript { get => handScript; set => handScript = value; }
 
-        public override void Init(SystemGameManager systemGameManager) {
-            base.Init(systemGameManager);
+        public override void Configure(SystemGameManager systemGameManager) {
+            base.Configure(systemGameManager);
 
             // set references
             playerManager = systemGameManager.PlayerManager;
@@ -220,71 +220,71 @@ namespace AnyRPG {
             systemEventManager = systemGameManager.SystemEventManager;
 
             // initialize ui managers
-            actionBarManager.Init(systemGameManager);
-            combatTextManager.Init(systemGameManager);
-            messageFeedManager.Init(systemGameManager);
-            namePlateManager.Init(systemGameManager);
-            mainMapManager.Init(systemGameManager);
-            miniMapManager.Init(systemGameManager);
+            actionBarManager.Configure(systemGameManager);
+            combatTextManager.Configure(systemGameManager);
+            messageFeedManager.Configure(systemGameManager);
+            namePlateManager.Configure(systemGameManager);
+            mainMapManager.Configure(systemGameManager);
+            miniMapManager.Configure(systemGameManager);
 
             // initialize ui elements
-            playerUnitFrameController.Init(systemGameManager);
-            focusUnitFrameController.Init(systemGameManager);
-            miniMapController.Init(systemGameManager);
-            cutSceneBarController.Init(systemGameManager);
-            xpBarController.Init(systemGameManager);
-            statusEffectPanelController.Init(systemGameManager);
-            floatingCastBarController.Init(systemGameManager);
-            questTrackerWindow.Init(systemGameManager);
-            combatLogWindow.Init(systemGameManager);
-            toolTipCurrencyBarController.Init(systemGameManager);
-            handScript.Init(systemGameManager);
+            playerUnitFrameController.Configure(systemGameManager);
+            focusUnitFrameController.Configure(systemGameManager);
+            miniMapController.Configure(systemGameManager);
+            cutSceneBarController.Configure(systemGameManager);
+            xpBarController.Configure(systemGameManager);
+            statusEffectPanelController.Configure(systemGameManager);
+            floatingCastBarController.Configure(systemGameManager);
+            questTrackerWindow.Configure(systemGameManager);
+            combatLogWindow.Configure(systemGameManager);
+            toolTipCurrencyBarController.Configure(systemGameManager);
+            handScript.Configure(systemGameManager);
 
             // initialize popup windows
-            abilityBookWindow.Init(systemGameManager);
-            skillBookWindow.Init(systemGameManager);
-            reputationBookWindow.Init(systemGameManager);
-            currencyListWindow.Init(systemGameManager);
-            achievementListWindow.Init(systemGameManager);
-            characterPanelWindow.Init(systemGameManager);
-            lootWindow.Init(systemGameManager);
-            vendorWindow.Init(systemGameManager);
-            chestWindow.Init(systemGameManager);
-            bankWindow.Init(systemGameManager);
-            questLogWindow.Init(systemGameManager);
-            questGiverWindow.Init(systemGameManager);
-            skillTrainerWindow.Init(systemGameManager);
-            musicPlayerWindow.Init(systemGameManager);
-            interactionWindow.Init(systemGameManager);
-            craftingWindow.Init(systemGameManager);
-            mainMapWindow.Init(systemGameManager);
-            dialogWindow.Init(systemGameManager);
-            factionChangeWindow.Init(systemGameManager);
-            classChangeWindow.Init(systemGameManager);
-            specializationChangeWindow.Init(systemGameManager);
+            abilityBookWindow.Configure(systemGameManager);
+            skillBookWindow.Configure(systemGameManager);
+            reputationBookWindow.Configure(systemGameManager);
+            currencyListWindow.Configure(systemGameManager);
+            achievementListWindow.Configure(systemGameManager);
+            characterPanelWindow.Configure(systemGameManager);
+            lootWindow.Configure(systemGameManager);
+            vendorWindow.Configure(systemGameManager);
+            chestWindow.Configure(systemGameManager);
+            bankWindow.Configure(systemGameManager);
+            questLogWindow.Configure(systemGameManager);
+            questGiverWindow.Configure(systemGameManager);
+            skillTrainerWindow.Configure(systemGameManager);
+            musicPlayerWindow.Configure(systemGameManager);
+            interactionWindow.Configure(systemGameManager);
+            craftingWindow.Configure(systemGameManager);
+            mainMapWindow.Configure(systemGameManager);
+            dialogWindow.Configure(systemGameManager);
+            factionChangeWindow.Configure(systemGameManager);
+            classChangeWindow.Configure(systemGameManager);
+            specializationChangeWindow.Configure(systemGameManager);
 
             // initialize system windows
-            mainMenuWindow.Init(systemGameManager);
-            inGameMainMenuWindow.Init(systemGameManager);
-            keyBindConfirmWindow.Init(systemGameManager);
-            playerOptionsMenuWindow.Init(systemGameManager);
-            characterCreatorWindow.Init(systemGameManager);
-            unitSpawnWindow.Init(systemGameManager);
-            petSpawnWindow.Init(systemGameManager);
-            playMenuWindow.Init(systemGameManager);
-            settingsMenuWindow.Init(systemGameManager);
-            creditsWindow.Init(systemGameManager);
-            exitMenuWindow.Init(systemGameManager);
-            deleteGameMenuWindow.Init(systemGameManager);
-            copyGameMenuWindow.Init(systemGameManager);
-            loadGameWindow.Init(systemGameManager);
-            newGameWindow.Init(systemGameManager);
-            confirmDestroyMenuWindow.Init(systemGameManager);
-            confirmCancelCutsceneMenuWindow.Init(systemGameManager);
-            confirmSellItemMenuWindow.Init(systemGameManager);
-            nameChangeWindow.Init(systemGameManager);
-            exitToMainMenuWindow.Init(systemGameManager);
-            confirmNewGameMenuWindow.Init(systemGameManager);
+            mainMenuWindow.Configure(systemGameManager);
+            inGameMainMenuWindow.Configure(systemGameManager);
+            keyBindConfirmWindow.Configure(systemGameManager);
+            playerOptionsMenuWindow.Configure(systemGameManager);
+            characterCreatorWindow.Configure(systemGameManager);
+            unitSpawnWindow.Configure(systemGameManager);
+            petSpawnWindow.Configure(systemGameManager);
+            playMenuWindow.Configure(systemGameManager);
+            settingsMenuWindow.Configure(systemGameManager);
+            creditsWindow.Configure(systemGameManager);
+            exitMenuWindow.Configure(systemGameManager);
+            deleteGameMenuWindow.Configure(systemGameManager);
+            copyGameMenuWindow.Configure(systemGameManager);
+            loadGameWindow.Configure(systemGameManager);
+            newGameWindow.Configure(systemGameManager);
+            confirmDestroyMenuWindow.Configure(systemGameManager);
+            confirmCancelCutsceneMenuWindow.Configure(systemGameManager);
+            confirmSellItemMenuWindow.Configure(systemGameManager);
+            nameChangeWindow.Configure(systemGameManager);
+            exitToMainMenuWindow.Configure(systemGameManager);
+            confirmNewGameMenuWindow.Configure(systemGameManager);
 
             CreateEventSubscriptions();
         }

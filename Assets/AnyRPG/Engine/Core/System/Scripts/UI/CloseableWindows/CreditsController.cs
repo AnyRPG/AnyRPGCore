@@ -16,17 +16,26 @@ namespace AnyRPG {
         [SerializeField]
         private Transform creditsContainer = null;
 
+        [SerializeField]
+        private HighlightButton returnButton = null;
+
         private UIManager uIManager = null;
         private ObjectPooler objectPooler = null;
         private SystemDataFactory systemDataFactory = null;
 
-        public override void Init(SystemGameManager systemGameManager) {
-            base.Init(systemGameManager);
+        public override void Configure(SystemGameManager systemGameManager) {
+            base.Configure(systemGameManager);
+            PopulateCredits();
+            returnButton.Configure(systemGameManager);
+        }
+
+        public override void SetGameManagerReferences() {
+            base.SetGameManagerReferences();
             uIManager = systemGameManager.UIManager;
             objectPooler = systemGameManager.ObjectPooler;
             systemDataFactory = systemGameManager.SystemDataFactory;
-            PopulateCredits();
         }
+
 
         public void PopulateCredits() {
             bool firstCategoryPassed = false;

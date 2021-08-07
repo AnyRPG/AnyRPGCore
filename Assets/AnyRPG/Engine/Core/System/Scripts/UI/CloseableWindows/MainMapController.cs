@@ -50,7 +50,7 @@ namespace AnyRPG {
 
         public GameObject MapGraphic { get => mapGraphic; }
 
-        public override void Init(SystemGameManager systemGameManager) {
+        public override void Configure(SystemGameManager systemGameManager) {
             //Debug.Log("MainMapController.Init()");
             systemConfigurationManager = systemGameManager.SystemConfigurationManager;
             cameraManager = systemGameManager.CameraManager;
@@ -65,7 +65,7 @@ namespace AnyRPG {
             mainmapTextureFolder = mainmapTextureFolderBase + systemConfigurationManager.GameName.Replace(" ", "") + "/Images/MiniMap/";
 
             // calling base.Init() last because it will trigger event subscriptions, which need the above references initialized
-            base.Init(systemGameManager);
+            base.Configure(systemGameManager);
         }
 
         public void HandleInteractableStatusUpdate(Interactable interactable, InteractableOptionComponent interactableOptionComponent) {
@@ -82,6 +82,7 @@ namespace AnyRPG {
                     MainMapIndicatorController mapIndicatorController = mainMapIndicator.GetComponent<MainMapIndicatorController>();
                     if (mapIndicatorController != null) {
                         mapIndicatorControllers.Add(interactable, mapIndicatorController);
+                        mapIndicatorController.Configure(systemGameManager);
                         mapIndicatorController.SetInteractable(interactable);
                         /*
                         if (miniMapEnabled == false) {

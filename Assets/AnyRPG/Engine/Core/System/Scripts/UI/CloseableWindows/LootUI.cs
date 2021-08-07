@@ -21,13 +21,13 @@ namespace AnyRPG {
 
         public List<LootButton> LootButtons { get => lootButtons; set => lootButtons = value; }
 
-        public override void Init(SystemGameManager systemGameManager) {
-            base.Init(systemGameManager);
+        public override void Configure(SystemGameManager systemGameManager) {
+            base.Configure(systemGameManager);
 
             lootManager = systemGameManager.LootManager;
 
             foreach (LootButton lootButton in lootButtons) {
-                lootButton.Init(systemGameManager);
+                lootButton.Configure(systemGameManager);
             }
         }
 

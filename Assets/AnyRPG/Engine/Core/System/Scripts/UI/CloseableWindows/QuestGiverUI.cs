@@ -97,8 +97,8 @@ namespace AnyRPG {
         public QuestGiverQuestScript SelectedQuestGiverQuestScript { get => selectedQuestGiverQuestScript; set => selectedQuestGiverQuestScript = value; }
         //public Interactable MyInteractable { get => interactable; set => interactable = value; }
 
-        public override void Init(SystemGameManager systemGameManager) {
-            base.Init(systemGameManager);
+        public override void Configure(SystemGameManager systemGameManager) {
+            base.Configure(systemGameManager);
 
             questLog = systemGameManager.QuestLog;
             uIManager = systemGameManager.UIManager;
@@ -109,7 +109,9 @@ namespace AnyRPG {
             inventoryManager = systemGameManager.InventoryManager;
             systemItemManager = systemGameManager.SystemItemManager;
 
-            questDetailsArea.Init(systemGameManager);
+            questDetailsArea.Configure(systemGameManager);
+
+            questLog.OnShowQuestGiverDescription += HandleShowQuestGiverDescription;
         }
 
         public void ToggleShowAllQuests(bool showAllQuests) {
@@ -281,6 +283,10 @@ namespace AnyRPG {
             }
         }
 
+        public void HandleShowQuestGiverDescription(Quest quest, IQuestGiver questGiver) {
+            ShowDescription(quest, questGiver);
+        }
+
         public void ShowDescription(Quest quest, IQuestGiver questGiver = null) {
             //Debug.Log("QuestGiverUI.ShowDescription(" + quest.DisplayName + ", " + (questGiver == null ? "null" : questGiver.ToString()) + ")");
 
@@ -309,7 +315,7 @@ namespace AnyRPG {
                 //ShowDescription(quest);
                 return;
             }
-
+            /*
             if (SelectedQuestGiverQuestScript == null || SelectedQuestGiverQuestScript.MyQuest != quest) {
                 foreach (QuestGiverQuestScript questScript in questScripts) {
                     if (questScript.MyQuest == quest) {
@@ -317,6 +323,7 @@ namespace AnyRPG {
                     }
                 }
             }
+            */
 
             ClearDescription();
 
@@ -335,9 +342,11 @@ namespace AnyRPG {
 
         public void CheckCompletion() {
             //Debug.Log("quest log checking completion");
+            /*
             foreach (QuestGiverQuestScript qs in questScripts) {
                 qs.IsComplete();
             }
+            */
         }
 
         public void ClearQuests() {
@@ -394,9 +403,11 @@ namespace AnyRPG {
                     }
                     */
                 }
+                /*
                 if (SelectedQuestGiverQuestScript != null) {
                     SelectedQuestGiverQuestScript.DeSelect();
                 }
+                */
 
                 // disabled this stuff for now since only a single pane is being used
                 //RefreshQuestDisplay();
@@ -530,9 +541,11 @@ namespace AnyRPG {
                 Debug.Log("QuestGiverUI.CompleteQuest(): questGiver is null!");
             }
 
+            /*
             if (SelectedQuestGiverQuestScript != null) {
                 SelectedQuestGiverQuestScript.DeSelect();
             }
+            */
 
         }
 

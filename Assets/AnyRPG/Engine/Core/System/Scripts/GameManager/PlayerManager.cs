@@ -84,6 +84,7 @@ namespace AnyRPG {
         InventoryManager inventoryManager = null;
         ActionBarManager actionBarManager = null;
         MessageFeedManager messageFeedManager = null;
+        ObjectPooler objectPooler = null;
 
         public BaseCharacter MyCharacter { get => character; set => character = value; }
 
@@ -103,8 +104,8 @@ namespace AnyRPG {
         public UnitController ActiveUnitController { get => activeUnitController; }
         public PlayerController PlayerController { get => playerController; set => playerController = value; }
 
-        public override void Init(SystemGameManager systemGameManager) {
-            base.Init(systemGameManager);
+        public override void Configure(SystemGameManager systemGameManager) {
+            base.Configure(systemGameManager);
             saveManager = systemGameManager.SaveManager;
             systemEventManager = systemGameManager.SystemEventManager;
             uIManager = systemGameManager.UIManager;
@@ -118,6 +119,7 @@ namespace AnyRPG {
             logManager = systemGameManager.LogManager;
             castTargettingManager = systemGameManager.CastTargettingManager;
             inventoryManager = systemGameManager.InventoryManager;
+            objectPooler = systemGameManager.ObjectPooler;
 
             PerformRequiredPropertyChecks();
             CreateEventSubscriptions();
@@ -457,7 +459,7 @@ namespace AnyRPG {
                 //Debug.Log("PlayerManager.SpawnPlayerConnection(): The Player Connection is not null.  exiting.");
                 return;
             }
-            playerConnectionObject = ObjectPooler.Instance.GetPooledObject(playerConnectionPrefab, playerConnectionParent.transform);
+            playerConnectionObject = objectPooler.GetPooledObject(playerConnectionPrefab, playerConnectionParent.transform);
             character = playerConnectionObject.GetComponent<BaseCharacter>();
             activeCharacter = character;
             playerController = playerConnectionObject.GetComponent<PlayerController>();
@@ -479,7 +481,7 @@ namespace AnyRPG {
             }
             UnsubscribeFromPlayerEvents();
             SystemEventManager.TriggerEvent("OnPlayerConnectionDespawn", new EventParamProperties());
-            ObjectPooler.Instance.ReturnObjectToPool(playerConnectionObject);
+            objectPooler.ReturnObjectToPool(playerConnectionObject);
             character = null;
             activeCharacter = null;
             playerUnitMovementController = null;

@@ -108,8 +108,8 @@ namespace AnyRPG {
 
         public GameObject MainNoOptionsArea { get => mainNoOptionsArea; }
 
-        public override void Init(SystemGameManager systemGameManager) {
-            base.Init(systemGameManager);
+        public override void Configure(SystemGameManager systemGameManager) {
+            base.Configure(systemGameManager);
 
             characterCreatorManager = systemGameManager.CharacterCreatorManager;
             uIManager = systemGameManager.UIManager;
@@ -324,6 +324,7 @@ namespace AnyRPG {
         public void InitializeSkinColors() {
             //Debug.Log("CharacterCreatorPanel.InitializeSkinColors()");
             ColorSelectionController colorSelectionController = skinColorsOptionsArea.GetComponent<ColorSelectionController>();
+            colorSelectionController.Configure(systemGameManager);
             colorSelectionController.Setup(characterCreatorManager.PreviewUnitController.DynamicCharacterAvatar, "Skin", skinColorsOptionsArea, SkinColor);
             /*
                     foreach (UMA.OverlayColorData overlayColorData in umaAvatar.CurrentSharedColors) {
@@ -340,12 +341,14 @@ namespace AnyRPG {
         public void InitializeHairColors() {
             //Debug.Log("CharacterCreatorPanel.InitializeHairColors()");
             ColorSelectionController colorSelectionController = hairColorsOptionsArea.GetComponent<ColorSelectionController>();
+            colorSelectionController.Configure(systemGameManager);
             colorSelectionController.Setup(characterCreatorManager.PreviewUnitController.DynamicCharacterAvatar, "Hair", hairColorsOptionsArea, HairColor);
         }
 
         public void InitializeEyesColors() {
             //Debug.Log("CharacterCreatorPanel.InitializeEyesColors()");
             ColorSelectionController colorSelectionController = eyesColorsOptionsArea.GetComponent<ColorSelectionController>();
+            colorSelectionController.Configure(systemGameManager);
             colorSelectionController.Setup(characterCreatorManager.PreviewUnitController.DynamicCharacterAvatar, "Eyes", eyesColorsOptionsArea, EyesColor);
         }
 

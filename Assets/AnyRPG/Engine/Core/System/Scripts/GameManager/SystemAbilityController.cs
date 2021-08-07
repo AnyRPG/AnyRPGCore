@@ -13,8 +13,8 @@ namespace AnyRPG {
 
         public IAbilityManager AbilityManager { get => abilityManager; }
 
-        public override  void Init(SystemGameManager systemGame) {
-            base.Init(systemGameManager);
+        public override  void Configure(SystemGameManager systemGameManager) {
+            base.Configure(systemGameManager);
 
             objectPooler = systemGameManager.ObjectPooler;
 

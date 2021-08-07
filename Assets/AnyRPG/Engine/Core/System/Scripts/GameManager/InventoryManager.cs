@@ -96,9 +96,9 @@ namespace AnyRPG {
         public List<BagNode> BagNodes { get => bagNodes; set => bagNodes = value; }
         public List<BagNode> BankNodes { get => bagNodes; set => bagNodes = value; }
 
-        public override void Init(SystemGameManager systemGameManager) {
+        public override void Configure(SystemGameManager systemGameManager) {
             //Debug.Log("InventoryManager.Awake()");
-            base.Init(systemGameManager);
+            base.Configure(systemGameManager);
             canvasGroup = inventoryContainer.GetComponent<CanvasGroup>();
             uIManager = systemGameManager.UIManager;
             handScript = uIManager.HandScript;
@@ -108,7 +108,7 @@ namespace AnyRPG {
             objectPooler = systemGameManager.ObjectPooler;
             systemEventManager = systemGameManager.SystemEventManager;
 
-            bagBarController.Init(systemGameManager);
+            bagBarController.Configure(systemGameManager);
         }
 
         private void Start() {
@@ -256,7 +256,7 @@ namespace AnyRPG {
                 if (i < bagCount) {
                     // create a new BagWindow to show the contents of this bag Nodes' bag
                     bagNode.BagWindow = objectPooler.GetPooledObject(windowPrefab, inventoryWindowHolders[i].transform).GetComponent<CloseableWindow>();
-                    bagNode.BagWindow.Init(systemGameManager);
+                    bagNode.BagWindow.Configure(systemGameManager);
                     bagNode.BagWindow.transform.GetComponent<RectTransform>().pivot = new Vector2(1, 1);
                     // create a bagbutton to access this bag node
 

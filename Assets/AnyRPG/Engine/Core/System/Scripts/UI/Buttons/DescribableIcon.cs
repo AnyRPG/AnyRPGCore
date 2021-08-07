@@ -27,8 +27,8 @@ namespace AnyRPG {
         public IDescribable Describable { get => describable; set => describable = value; }
         public virtual int Count { get => count; }
 
-        public override void Init(SystemGameManager systemGameManager) {
-            base.Init(systemGameManager);
+        public override void Configure(SystemGameManager systemGameManager) {
+            base.Configure(systemGameManager);
 
             uIManager = systemGameManager.UIManager;
         }

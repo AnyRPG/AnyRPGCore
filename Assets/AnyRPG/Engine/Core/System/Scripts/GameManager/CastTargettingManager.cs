@@ -23,9 +23,9 @@ namespace AnyRPG {
 
         public Color MyCircleColor { get => circleColor; set => circleColor = value; }
 
-        public override void Init(SystemGameManager systemGameManager) {
+        public override void Configure(SystemGameManager systemGameManager) {
             //Debug.Log("CastTargettingmanager.Start()");
-            base.Init(systemGameManager);
+            base.Configure(systemGameManager);
 
             playerManager = systemGameManager.PlayerManager;
 

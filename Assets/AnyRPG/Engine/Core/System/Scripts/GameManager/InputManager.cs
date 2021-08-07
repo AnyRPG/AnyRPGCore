@@ -37,8 +37,8 @@ namespace AnyRPG {
         private UIManager uIManager = null;
         private NamePlateManager namePlateManager = null;
 
-        public override void Init(SystemGameManager systemGameManager) {
-            base.Init(systemGameManager);
+        public override void Configure(SystemGameManager systemGameManager) {
+            base.Configure(systemGameManager);
             keyBindManager = systemGameManager.KeyBindManager;
             uIManager = systemGameManager.UIManager;
             namePlateManager = uIManager.NamePlateManager;

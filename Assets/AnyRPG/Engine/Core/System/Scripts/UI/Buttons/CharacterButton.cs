@@ -60,8 +60,8 @@ namespace AnyRPG {
         public EquipmentSlotProfile MyEquipmentSlotProfile { get => equipmentSlotProfile; }
         public CharacterPanel CharacterPanel { get => characterPanel; set => characterPanel = value; }
 
-        public override void Init(SystemGameManager systemGameManager) {
-            base.Init(systemGameManager);
+        public override void Configure(SystemGameManager systemGameManager) {
+            base.Configure(systemGameManager);
 
             playerManager = systemGameManager.PlayerManager;
             uIManager = systemGameManager.UIManager;
@@ -120,10 +120,8 @@ namespace AnyRPG {
         public void UpdateVisual(bool resetDisplay = true) {
             //Debug.Log(gameObject.name + "CharacterButton.UpdateVisual()");
 
-            GetLocalComponents();
-            GetSystemResourceReferences();
             Equipment tmpEquipment = equippedEquipment;
-            if (equipmentSlotProfile != null && playerManager.MyCharacter.CharacterEquipmentManager.CurrentEquipment.ContainsKey(equipmentSlotProfile)) {
+            if (equipmentSlotProfile != null && playerManager.MyCharacter != null && playerManager.MyCharacter.CharacterEquipmentManager.CurrentEquipment.ContainsKey(equipmentSlotProfile)) {
                 //Debug.Log(gameObject.name + "CharacterButton.UpdateVisual(): equipmentslotprofile was not null and player has quipment in this slot");
                 equippedEquipment = playerManager.MyCharacter.CharacterEquipmentManager.CurrentEquipment[equipmentSlotProfile];
             } else {

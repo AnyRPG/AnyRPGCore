@@ -27,8 +27,8 @@ namespace AnyRPG {
         public TextOptionHighlightArea textureQualityArea;
         public TextOptionHighlightArea graphicsQualityArea;
 
-        public override void Init(SystemGameManager systemGameManager) {
-            base.Init(systemGameManager);
+        public override void Configure(SystemGameManager systemGameManager) {
+            base.Configure(systemGameManager);
             InitializeSettings();
         }
 

@@ -26,8 +26,8 @@ namespace AnyRPG {
 
         public Faction Faction { get => faction; set => faction = value; }
 
-        public override void Init(SystemGameManager systemGameManager) {
-            base.Init(systemGameManager);
+        public override void Configure(SystemGameManager systemGameManager) {
+            base.Configure(systemGameManager);
 
             newGameManager = systemGameManager.NewGameManager;
         }

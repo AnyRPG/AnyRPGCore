@@ -50,8 +50,8 @@ namespace AnyRPG {
 
         public MusicPlayerHighlightButton MySelectedMusicPlayerHighlightButton { get => selectedMusicPlayerHighlightButton; set => selectedMusicPlayerHighlightButton = value; }
 
-        public override void Init(SystemGameManager systemGameManager) {
-            base.Init(systemGameManager);
+        public override void Configure(SystemGameManager systemGameManager) {
+            base.Configure(systemGameManager);
 
             objectPooler = systemGameManager.ObjectPooler;
             uIManager = systemGameManager.UIManager;
@@ -79,7 +79,7 @@ namespace AnyRPG {
             foreach (AudioProfile musicProfile in musicPlayer.Props.MusicProfileList) {
                 GameObject go = objectPooler.GetPooledObject(highlightButtonPrefab, availableArea.transform);
                 MusicPlayerHighlightButton qs = go.GetComponent<MusicPlayerHighlightButton>();
-                qs.Init(systemGameManager);
+                qs.Configure(systemGameManager);
                 qs.Text.text = musicProfile.DisplayName;
                 qs.Text.color = Color.white;
                 qs.SetMusicProfile(this, musicProfile);

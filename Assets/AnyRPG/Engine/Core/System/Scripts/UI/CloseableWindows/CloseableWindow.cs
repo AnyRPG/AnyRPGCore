@@ -46,12 +46,16 @@ namespace AnyRPG {
             }
         }
 
-        public override void Init(SystemGameManager systemGameManager) {
+        public override void Configure(SystemGameManager systemGameManager) {
             //Debug.Log(gameObject.name + ".CloseableWindow.Awake()");
-            base.Init(systemGameManager);
-            objectPooler = systemGameManager.ObjectPooler;
+            base.Configure(systemGameManager);
             InitializeWindow();
             RawCloseWindow();
+        }
+
+        public override void SetGameManagerReferences() {
+            base.SetGameManagerReferences();
+            objectPooler = systemGameManager.ObjectPooler;
         }
 
         protected virtual void InitializeWindow() {
@@ -71,7 +75,7 @@ namespace AnyRPG {
             if (contentGameObject != null) {
                 //Debug.Log(gameObject.name + ".CloseableWindow.InitializeWindow(): Instanted; setting window Contents");
                 windowContents = contentGameObject.GetComponent<ICloseableWindowContents>();
-                windowContents.Init(systemGameManager);
+                windowContents.Configure(systemGameManager);
             }
         }
 

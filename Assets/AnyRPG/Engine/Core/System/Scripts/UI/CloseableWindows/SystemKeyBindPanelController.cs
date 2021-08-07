@@ -36,11 +36,19 @@ namespace AnyRPG {
         public HighlightButton actionBarsButton = null;
         public HighlightButton systemButton = null;
 
+        // game manager references
+        KeyBindManager keyBindManager = null;
+        ObjectPooler objectPooler = null;
 
-        private void Start() {
-            //Debug.Log("KeyBindMenuController.Start()");
+        public override void Configure(SystemGameManager systemGameManager) {
+            base.Configure(systemGameManager);
+
+            keyBindManager = systemGameManager.KeyBindManager;
+            objectPooler = systemGameManager.ObjectPooler;
+
             InitializeKeys();
         }
+
 
         public void OnEnable() {
             ToggleMovementPanel();
@@ -48,7 +56,7 @@ namespace AnyRPG {
 
         private void InitializeKeys() {
             //Debug.Log("KeyBindMenuController.InitializeKeys()");
-            foreach (KeyBindNode keyBindNode in SystemGameManager.Instance.KeyBindManager.MyKeyBinds.Values) {
+            foreach (KeyBindNode keyBindNode in keyBindManager.MyKeyBinds.Values) {
                 Transform nodeParent = null;
                 if (keyBindNode.MyKeyBindType == KeyBindType.Action) {
                     nodeParent = actionBarsKeyParent.transform;
@@ -57,7 +65,8 @@ namespace AnyRPG {
                 } else if (keyBindNode.MyKeyBindType == KeyBindType.Constant || keyBindNode.MyKeyBindType == KeyBindType.System) {
                     nodeParent = systemKeyParent.transform;
                 }
-                KeyBindSlotScript keyBindSlotScript = ObjectPooler.Instance.GetPooledObject(keyBindButtonPrefab, nodeParent).GetComponent<KeyBindSlotScript>();
+                KeyBindSlotScript keyBindSlotScript = objectPooler.GetPooledObject(keyBindButtonPrefab, nodeParent).GetComponent<KeyBindSlotScript>();
+                keyBindSlotScript.Configure(systemGameManager);
                 keyBindSlotScript.Initialize(keyBindNode);
                 keyBindNode.SetSlotScript(keyBindSlotScript);
             }

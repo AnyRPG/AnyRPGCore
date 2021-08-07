@@ -32,8 +32,8 @@ namespace AnyRPG {
             }
         }
 
-        public override void Init(SystemGameManager systemGameManager) {
-            base.Init(systemGameManager);
+        public override void Configure(SystemGameManager systemGameManager) {
+            base.Configure(systemGameManager);
 
             objectPooler = systemGameManager.ObjectPooler;
         }
@@ -72,7 +72,7 @@ namespace AnyRPG {
             for (int i = 0; i < slotCount; i++) {
                 //Debug.Log(gameObject.GetInstanceID() + ".BagPanel.AddSlots(" + slotCount + "): Adding slot " + i);
                 SlotScript slot = objectPooler.GetPooledObject(slotPrefab, contentArea).GetComponent<SlotScript>();
-                slot.Init(systemGameManager);
+                slot.Configure(systemGameManager);
                 slot.MyBag = this;
                 MySlots.Add(slot);
                 slot.SetBackGroundColor();

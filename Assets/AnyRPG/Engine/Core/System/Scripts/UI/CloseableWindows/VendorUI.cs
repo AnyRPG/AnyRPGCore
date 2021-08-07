@@ -38,8 +38,8 @@ namespace AnyRPG {
 
         private List<CurrencyAmountController> currencyAmountControllers = new List<CurrencyAmountController>();
 
-        public override void Init(SystemGameManager systemGameManager) {
-            base.Init(systemGameManager);
+        public override void Configure(SystemGameManager systemGameManager) {
+            base.Configure(systemGameManager);
             playerManager = systemGameManager.PlayerManager;
             uIManager = systemGameManager.UIManager;
             systemConfigurationManager = systemGameManager.SystemConfigurationManager;
@@ -51,13 +51,13 @@ namespace AnyRPG {
             //buyBackCollection = new VendorCollection();
             buyBackCollection = ScriptableObject.CreateInstance(typeof(VendorCollection)) as VendorCollection;
 
-            currencyBarController.Init(systemGameManager);
+            currencyBarController.Configure(systemGameManager);
             foreach (VendorButton vendorButton in vendorButtons) {
-                vendorButton.Init(systemGameManager);
+                vendorButton.Configure(systemGameManager);
             }
 
             foreach (CurrencyAmountController currencyAmountController in currencyAmountControllers) {
-                currencyAmountController.Init(systemGameManager);
+                currencyAmountController.Configure(systemGameManager);
             }
         }
 

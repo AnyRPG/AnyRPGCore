@@ -42,14 +42,14 @@ namespace AnyRPG {
         private PlayerManager playerManager = null;
         private ObjectPooler objectPooler = null;
 
-        public override void Init(SystemGameManager systemGameManager) {
-            base.Init(systemGameManager);
+        public override void Configure(SystemGameManager systemGameManager) {
+            base.Configure(systemGameManager);
 
             uIManager = systemGameManager.UIManager;
             playerManager = systemGameManager.PlayerManager;
             objectPooler = systemGameManager.ObjectPooler;
 
-            classSpecializationButton.Init(systemGameManager);
+            classSpecializationButton.Configure(systemGameManager);
         }
 
         public void Setup(ClassSpecialization newClassSpecialization) {
@@ -77,7 +77,7 @@ namespace AnyRPG {
             for (int i = 0; i < capabilityProps.TraitList.Count; i++) {
                 if (capabilityProps.TraitList[i] != null) {
                     RewardButton rewardIcon = objectPooler.GetPooledObject(rewardIconPrefab, traitIconsArea.transform).GetComponent<RewardButton>();
-                    rewardIcon.Init(systemGameManager);
+                    rewardIcon.Configure(systemGameManager);
                     rewardIcon.SetDescribable(capabilityProps.TraitList[i]);
                     traitRewardIcons.Add(rewardIcon);
                     if ((capabilityProps.TraitList[i] as StatusEffect).RequiredLevel > playerManager.MyCharacter.CharacterStats.Level) {
@@ -103,7 +103,7 @@ namespace AnyRPG {
             for (int i = 0; i < capabilityProps.AbilityList.Count; i++) {
                 if (capabilityProps.AbilityList[i] != null) {
                     RewardButton rewardIcon = objectPooler.GetPooledObject(rewardIconPrefab, abilityIconsArea.transform).GetComponent<RewardButton>();
-                    rewardIcon.Init(systemGameManager);
+                    rewardIcon.Configure(systemGameManager);
                     rewardIcon.SetDescribable(capabilityProps.AbilityList[i]);
                     abilityRewardIcons.Add(rewardIcon);
                     if (capabilityProps.AbilityList[i].RequiredLevel > playerManager.MyCharacter.CharacterStats.Level) {

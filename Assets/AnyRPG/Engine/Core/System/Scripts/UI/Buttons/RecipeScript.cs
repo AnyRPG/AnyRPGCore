@@ -16,8 +16,8 @@ namespace AnyRPG {
 
         public Recipe Recipe { get => recipe; set => recipe = value; }
 
-        public override void Init(SystemGameManager systemGameManager) {
-            base.Init(systemGameManager);
+        public override void Configure(SystemGameManager systemGameManager) {
+            base.Configure(systemGameManager);
 
             craftingManager = systemGameManager.CraftingManager;
         }

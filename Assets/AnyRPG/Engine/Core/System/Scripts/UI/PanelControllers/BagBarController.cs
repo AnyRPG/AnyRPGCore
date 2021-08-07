@@ -26,8 +26,8 @@ namespace AnyRPG {
 
         public List<BagButton> MyBagButtons { get => bagButtons; set => bagButtons = value; }
 
-        public override void Init(SystemGameManager systemGameManager) {
-            base.Init(systemGameManager);
+        public override void Configure(SystemGameManager systemGameManager) {
+            base.Configure(systemGameManager);
 
             objectPooler = systemGameManager.ObjectPooler;
 
@@ -85,7 +85,7 @@ namespace AnyRPG {
         public BagButton InstantiateBagButton() {
             //Debug.Log("BagBarController.InstantiateBagButton()");
             BagButton bagButton = objectPooler.GetPooledObject(BagButtonPrefab, this.gameObject.transform).GetComponent<BagButton>();
-            bagButton.Init(systemGameManager);
+            bagButton.Configure(systemGameManager);
             bagButtons.Add(bagButton);
             return bagButton;
         }

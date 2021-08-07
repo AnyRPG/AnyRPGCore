@@ -21,8 +21,8 @@ namespace AnyRPG {
         // game manager references
         ObjectPooler objectPooler = null;
 
-        public override void Init(SystemGameManager systemGameManager) {
-            base.Init(systemGameManager);
+        public override void Configure(SystemGameManager systemGameManager) {
+            base.Configure(systemGameManager);
 
             objectPooler = systemGameManager.ObjectPooler;
         }

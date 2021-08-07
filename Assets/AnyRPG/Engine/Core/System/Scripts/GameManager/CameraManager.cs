@@ -40,6 +40,8 @@ namespace AnyRPG {
 
         private AnyRPGCameraController mainCameraController;
 
+        private CutsceneCameraController currentCutsceneCameraController = null;
+
         protected bool eventSubscriptionsInitialized = false;
 
         // game manager references
@@ -71,9 +73,11 @@ namespace AnyRPG {
             }
         }
 
-        public override void Init(SystemGameManager systemGameManager) {
+        public CutsceneCameraController CurrentCutsceneCameraController { get => currentCutsceneCameraController; set => currentCutsceneCameraController = value; }
+
+        public override void Configure(SystemGameManager systemGameManager) {
             //Debug.Log("CameraManager.Awake()");
-            base.Init(systemGameManager);
+            base.Configure(systemGameManager);
             systemConfigurationManager = systemGameManager.SystemConfigurationManager;
             levelManager = systemGameManager.LevelManager;
             playerManager = systemGameManager.PlayerManager;
@@ -100,6 +104,11 @@ namespace AnyRPG {
             DisableFocusCamera();
 
             CreateEventSubscriptions();
+        }
+
+        public void CheckForCutsceneCamera() {
+            //currentCutsceneCameraController = null;
+            currentCutsceneCameraController = FindObjectOfType<CutsceneCameraController>();
         }
 
         private void CheckConfiguration() {
@@ -147,17 +156,17 @@ namespace AnyRPG {
 
         public void EnableCutsceneCamera() {
             //Debug.Log("CameraManager.EnableCutsceneCamera()");
-            if (CutsceneCameraController.Instance != null) {
+            if (currentCutsceneCameraController != null) {
                 //Debug.Log("CameraManager.EnableCutsceneCamera(): enabling");
-                CutsceneCameraController.Instance.gameObject.SetActive(true);
+                currentCutsceneCameraController.gameObject.SetActive(true);
             }
         }
 
         public void DisableCutsceneCamera() {
             //Debug.Log("CameraManager.DisableCutsceneCamera()");
-            if (CutsceneCameraController.Instance != null) {
+            if (currentCutsceneCameraController != null) {
                 //Debug.Log("CameraManager.DisableCutsceneCamera(): disabling");
-                CutsceneCameraController.Instance.gameObject.SetActive(false);
+                currentCutsceneCameraController.gameObject.SetActive(false);
             }
         }
 

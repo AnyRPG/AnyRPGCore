@@ -6,7 +6,7 @@ using UnityEngine;
 using UnityEngine.UI;
 
 namespace AnyRPG {
-    public class MainMenuManager : MonoBehaviour {
+    public class MainMenuManager : AutoConfiguredMonoBehaviour {
 
         [SerializeField]
         private TextMeshProUGUI gameNameText = null;
@@ -14,12 +14,20 @@ namespace AnyRPG {
         [SerializeField]
         private TextMeshProUGUI gameVersionText = null;
 
-        private void Awake() {
+        // game manager references
+
+        private SystemConfigurationManager systemConfigurationManager = null;
+
+        public override void Configure(SystemGameManager systemGameManager) {
+            base.Configure(systemGameManager);
+
             CheckMissingInspectorValues();
+            SetupGameLabels();
         }
 
-        private void Start() {
-            SetupGameLabels();
+        public override void SetGameManagerReferences() {
+            base.SetGameManagerReferences();
+            systemConfigurationManager = systemGameManager.SystemConfigurationManager;
         }
 
         private void CheckMissingInspectorValues() {
@@ -34,10 +42,10 @@ namespace AnyRPG {
         private void SetupGameLabels() {
             if (SystemGameManager.Instance.SystemConfigurationManager != null) {
                 if (gameNameText != null) {
-                    gameNameText.text = SystemGameManager.Instance.SystemConfigurationManager.GameName;
+                    gameNameText.text = systemConfigurationManager.GameName;
                 }
                 if (gameVersionText != null) {
-                    gameVersionText.text = SystemGameManager.Instance.SystemConfigurationManager.GameVersion;
+                    gameVersionText.text = systemConfigurationManager.GameVersion;
                 }
             } else {
                 //Debug.Log("SystemConfigurationManager Does Not Exist!");

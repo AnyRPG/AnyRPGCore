@@ -6,7 +6,7 @@ using UnityEngine;
 using UnityEngine.UI;
 
 namespace AnyRPG {
-    public class KeyBindSlotScript : MonoBehaviour {
+    public class KeyBindSlotScript : ConfiguredMonoBehaviour {
 
         // a unique string that represents the dictionary key for this keybind throughout the game
         [SerializeField]
@@ -25,6 +25,15 @@ namespace AnyRPG {
         private TextMeshProUGUI mobileButtonLabel = null;
 
         private KeyBindNode keyBindNode = null;
+
+        // game manager references
+        KeyBindManager keyBindManager = null;
+
+        public override void Configure(SystemGameManager systemGameManager) {
+            base.Configure(systemGameManager);
+
+            keyBindManager = systemGameManager.KeyBindManager;
+        }
 
         public void Initialize(KeyBindNode keyBindNode) {
             //Debug.Log("KeyBindSlotScript.Initialize()");
@@ -46,7 +55,7 @@ namespace AnyRPG {
 
         public void SetKeyBind(int inputDeviceType) {
             //Debug.Log("KeyBindSlotScript.SetKeyBind(" + inputDeviceType + ")");
-            SystemGameManager.Instance.KeyBindManager.BeginKeyBind(keyBindID, (InputDeviceType)inputDeviceType);
+            keyBindManager.BeginKeyBind(keyBindID, (InputDeviceType)inputDeviceType);
         }
 
 

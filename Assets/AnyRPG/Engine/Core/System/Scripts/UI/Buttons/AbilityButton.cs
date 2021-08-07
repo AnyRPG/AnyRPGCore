@@ -24,8 +24,8 @@ namespace AnyRPG {
         // game manager references
         PlayerManager playerManager = null;
 
-        public override void Init(SystemGameManager systemGameManager) {
-            base.Init(systemGameManager);
+        public override void Configure(SystemGameManager systemGameManager) {
+            base.Configure(systemGameManager);
 
             playerManager = systemGameManager.PlayerManager;
         }

@@ -26,8 +26,8 @@ namespace AnyRPG {
         public UnitController PreviewUnitController { get => unitController; set => unitController = value; }
         //public int PreviewLayer { get => previewLayer; set => previewLayer = value; }
 
-        public override void Init(SystemGameManager systemGameManager) {
-            base.Init(systemGameManager);
+        public override void Configure(SystemGameManager systemGameManager) {
+            base.Configure(systemGameManager);
 
             if (previewSpawnLocation == null) {
                 previewSpawnLocation = Vector3.zero;

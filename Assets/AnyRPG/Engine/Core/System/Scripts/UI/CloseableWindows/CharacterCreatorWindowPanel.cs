@@ -50,8 +50,8 @@ namespace AnyRPG {
         public AnyRPGSaveData SaveData { get => saveData; set => saveData = value; }
         public CapabilityConsumerProcessor CapabilityConsumerProcessor { get => capabilityConsumerProcessor; }
 
-        public override void Init(SystemGameManager systemGameManager) {
-            base.Init(systemGameManager);
+        public override void Configure(SystemGameManager systemGameManager) {
+            base.Configure(systemGameManager);
 
             uIManager = systemGameManager.UIManager;
             systemConfigurationManager = systemGameManager.SystemConfigurationManager;

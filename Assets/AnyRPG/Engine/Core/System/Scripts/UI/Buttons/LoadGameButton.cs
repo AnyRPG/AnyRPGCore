@@ -39,8 +39,8 @@ namespace AnyRPG {
         public AnyRPGSaveData SaveData { get => mySaveData; set => mySaveData = value; }
         public UnitProfile UnitProfile { get => unitProfile; set => unitProfile = value; }
 
-        public override void Init(SystemGameManager systemGameManager) {
-            base.Init(systemGameManager);
+        public override void Configure(SystemGameManager systemGameManager) {
+            base.Configure(systemGameManager);
 
             systemDataFactory = systemGameManager.SystemDataFactory;
         }

@@ -30,13 +30,13 @@ namespace AnyRPG {
         public ActionButton FromButton { get => fromButton; set => fromButton = value; }
         public List<ActionBarController> ActionBarControllers { get => actionBarControllers; set => actionBarControllers = value; }
 
-        public override void Init(SystemGameManager systemGameManager) {
-            base.Init(systemGameManager);
+        public override void Configure(SystemGameManager systemGameManager) {
+            base.Configure(systemGameManager);
             playerManager = systemGameManager.PlayerManager;
             keyBindManager = systemGameManager.KeyBindManager;
             systemEventManager = systemGameManager.SystemEventManager;
 
-            systemBarController.Init(systemGameManager);
+            systemBarController.Configure(systemGameManager);
             InitializeActionbars();
 
             AssociateActionBarKeyBinds();
@@ -69,7 +69,7 @@ namespace AnyRPG {
 
         public void InitializeActionbars() {
             foreach (ActionBarController actionBarController in actionBarControllers) {
-                actionBarController.Init(systemGameManager);
+                actionBarController.Configure(systemGameManager);
             }
         }
 

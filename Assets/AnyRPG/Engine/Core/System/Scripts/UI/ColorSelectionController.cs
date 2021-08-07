@@ -8,7 +8,7 @@ using UMA.CharacterSystem.Examples;
 using UnityEngine.UI;
 
 namespace AnyRPG {
-    public class ColorSelectionController : MonoBehaviour {
+    public class ColorSelectionController : ConfiguredMonoBehaviour {
         public DynamicCharacterAvatar Avatar;
 
         // List<OverlayColorData> Colors = new List<OverlayColorData>();
@@ -17,6 +17,16 @@ namespace AnyRPG {
         public GameObject ColorButtonPrefab;
         public string ColorName;
         public GameObject LabelPrefab;
+
+        // game manager references
+
+        private ObjectPooler objectPooler = null;
+
+        public override void Configure(SystemGameManager systemGameManager) {
+            base.Configure(systemGameManager);
+
+            objectPooler = systemGameManager.ObjectPooler;
+        }
 
         public void Setup(DynamicCharacterAvatar avatar, string colorName, GameObject colorPanel, SharedColorTable colorTable) {
             //Debug.Log("AvailableColorsHandler.Setup(): colorPanel.name: " + colorPanel.name);
@@ -43,7 +53,7 @@ namespace AnyRPG {
 
 
         private void AddRemoverButton() {
-            GameObject go = ObjectPooler.Instance.GetPooledObject(ColorButtonPrefab);
+            GameObject go = objectPooler.GetPooledObject(ColorButtonPrefab);
             ColorHandler ch = go.GetComponent<ColorHandler>();
             ch.SetupRemover(Avatar, ColorName);
             Image i = go.GetComponent<Image>();
@@ -58,7 +68,7 @@ namespace AnyRPG {
         private void AddButton(OverlayColorData ocd) {
             //Debug.Log("AvailableColorsHandler.AddButton(): " + ColorName);
 
-            GameObject go = ObjectPooler.Instance.GetPooledObject(ColorButtonPrefab);
+            GameObject go = objectPooler.GetPooledObject(ColorButtonPrefab);
             ColorHandler ch = go.GetComponent<ColorHandler>();
             ch.Setup(Avatar, ColorName, ocd);
             Image i = go.GetComponent<Image>();

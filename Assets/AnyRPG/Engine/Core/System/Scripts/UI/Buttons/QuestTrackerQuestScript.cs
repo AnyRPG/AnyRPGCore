@@ -18,6 +18,7 @@ namespace AnyRPG {
 
         // game manager references
         private UIManager uIManager = null;
+        private QuestLog questLog = null;
 
         public TextMeshProUGUI MyText {
             get {
@@ -25,16 +26,17 @@ namespace AnyRPG {
             }
         }
 
-        public override void Init(SystemGameManager systemGameManager) {
-            base.Init(systemGameManager);
+        public override void Configure(SystemGameManager systemGameManager) {
+            base.Configure(systemGameManager);
 
             uIManager = systemGameManager.UIManager;
+            questLog = systemGameManager.QuestLog;
         }
 
         public void Select() {
             //Debug.Log("QuestTrackerQuestScript.Select()");
             uIManager.questLogWindow.OpenWindow();
-            QuestLogUI.Instance.ShowDescription(MyQuest);
+            questLog.ShowQuestLogDescription(MyQuest);
         }
 
         public void DeSelect() {

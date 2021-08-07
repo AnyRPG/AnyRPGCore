@@ -23,8 +23,14 @@ namespace AnyRPG {
         private QuestLog questLog = null;
         private ObjectPooler objectPooler = null;
 
-        public override void Init(SystemGameManager systemGameManager) {
-            base.Init(systemGameManager);
+        /*
+        public override void Configure(SystemGameManager systemGameManager) {
+            base.Configure(systemGameManager);
+        }
+        */
+
+        public override void SetGameManagerReferences() {
+            base.SetGameManagerReferences();
 
             playerManager = systemGameManager.PlayerManager;
             questLog = systemGameManager.QuestLog;

@@ -40,8 +40,8 @@ namespace AnyRPG {
         private SystemConfigurationManager systemConfigurationManager = null;
         private NewGameManager newGameManager = null;
 
-        public override void Init(SystemGameManager systemGameManager) {
-            base.Init(systemGameManager);
+        public override void Configure(SystemGameManager systemGameManager) {
+            base.Configure(systemGameManager);
 
             objectPooler = systemGameManager.ObjectPooler;
             systemConfigurationManager = systemGameManager.SystemConfigurationManager;
@@ -87,7 +87,7 @@ namespace AnyRPG {
                     //Debug.Log("NewGameMecanimCharacterPanelController.ShowOptionButtonsCommon(): found valid unit profile: " + unitProfile.DisplayName);
                     GameObject go = objectPooler.GetPooledObject(buttonPrefab, buttonArea.transform);
                     NewGameUnitButton optionButton = go.GetComponent<NewGameUnitButton>();
-                    optionButton.Init(systemGameManager);
+                    optionButton.Configure(systemGameManager);
                     optionButton.AddUnitProfile(unitProfile);
                     optionButtons.Add(optionButton);
                 }
@@ -101,7 +101,7 @@ namespace AnyRPG {
             if (systemConfigurationManager.DefaultPlayerUnitProfile != null) {
                 GameObject go = objectPooler.GetPooledObject(buttonPrefab, buttonArea.transform);
                 NewGameUnitButton optionButton = go.GetComponent<NewGameUnitButton>();
-                optionButton.Init(systemGameManager);
+                optionButton.Configure(systemGameManager);
                 optionButton.AddUnitProfile(systemConfigurationManager.DefaultPlayerUnitProfile);
                 optionButtons.Add(optionButton);
             }
@@ -109,7 +109,7 @@ namespace AnyRPG {
                 //Debug.Log("NewGameMecanimCharacterPanelController.ShowOptionButtonsCommon(): found valid unit profile: " + unitProfile.DisplayName);
                 GameObject go = objectPooler.GetPooledObject(buttonPrefab, buttonArea.transform);
                 NewGameUnitButton optionButton = go.GetComponent<NewGameUnitButton>();
-                optionButton.Init(systemGameManager);
+                optionButton.Configure(systemGameManager);
                 optionButton.AddUnitProfile(unitProfile);
                 optionButtons.Add(optionButton);
             }

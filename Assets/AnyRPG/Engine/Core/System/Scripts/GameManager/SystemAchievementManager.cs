@@ -17,8 +17,8 @@ namespace AnyRPG {
         PlayerManager playerManager = null;
         SystemDataFactory systemDataFactory = null;
 
-        public override void Init(SystemGameManager systemGameManager) {
-            base.Init(systemGameManager);
+        public override void Configure(SystemGameManager systemGameManager) {
+            base.Configure(systemGameManager);
             playerManager = systemGameManager.PlayerManager;
             systemDataFactory = systemGameManager.SystemDataFactory;
 

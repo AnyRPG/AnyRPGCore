@@ -70,8 +70,8 @@ namespace AnyRPG {
         public List<UnitProfile> UnitProfileList { get => unitProfileList; set => unitProfileList = value; }
         public List<UnitSpawnNode> UnitSpawnNodeList { get => unitSpawnNodeList; set => unitSpawnNodeList = value; }
 
-        public override void Init(SystemGameManager systemGameManager) {
-            base.Init(systemGameManager);
+        public override void Configure(SystemGameManager systemGameManager) {
+            base.Configure(systemGameManager);
 
             systemConfigurationManager = systemGameManager.SystemConfigurationManager;
             playerManager = systemGameManager.PlayerManager;
@@ -221,7 +221,7 @@ namespace AnyRPG {
                 GameObject go = objectPooler.GetPooledObject(buttonPrefab, buttonArea.transform);
                 UnitSpawnButton unitSpawnButton = go.GetComponent<UnitSpawnButton>();
                 if (unitSpawnButton != null) {
-                    unitSpawnButton.Init(systemGameManager);
+                    unitSpawnButton.Configure(systemGameManager);
                     unitSpawnButton.UnitSpawnControlPanel = this;
                     unitSpawnButton.AddUnitProfile(unitProfile);
                     unitSpawnButtons.Add(unitSpawnButton);

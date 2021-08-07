@@ -27,8 +27,8 @@ namespace AnyRPG {
         public List<Interactable> MapIndicatorControllers { get => mapIndicatorControllers; set => mapIndicatorControllers = value; }
         public GameObject MapIndicatorPrefab { get => mapIndicatorPrefab; set => mapIndicatorPrefab = value; }
 
-        public override void Init(SystemGameManager systemGameManager) {
-            base.Init(systemGameManager);
+        public override void Configure(SystemGameManager systemGameManager) {
+            base.Configure(systemGameManager);
             CreateEventSubscriptions();
         }
 

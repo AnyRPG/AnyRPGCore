@@ -29,8 +29,8 @@ namespace AnyRPG {
         private bool controllerInitialized = false;
         private bool targetInitialized = false;
 
-        public override void Init(SystemGameManager systemGameManager) {
-            base.Init(systemGameManager);
+        public override void Configure(SystemGameManager systemGameManager) {
+            base.Configure(systemGameManager);
 
             InitializeController();
             if (!targetInitialized) {

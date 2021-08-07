@@ -22,15 +22,19 @@ namespace AnyRPG {
         // game manager references
         protected AudioManager audioManager = null;
 
-        public override void Init(SystemGameManager systemGameManager) {
+        public override void Configure(SystemGameManager systemGameManager) {
             //Debug.Log(gameObject.name + ".WindowContentController.Init()");
-            base.Init(systemGameManager);
-            audioManager = systemGameManager.AudioManager;
+            base.Configure(systemGameManager);
             if (backGroundImage == null) {
                 backGroundImage = GetComponent<Image>();
             }
             rectTransform = GetComponent<RectTransform>();
             CreateEventSubscriptions();
+        }
+
+        public override void SetGameManagerReferences() {
+            base.SetGameManagerReferences();
+            audioManager = systemGameManager.AudioManager;
         }
 
         protected virtual void CreateEventSubscriptions() {

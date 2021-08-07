@@ -26,8 +26,8 @@ namespace AnyRPG {
         SystemEventManager systemEventManager = null;
         PlayerManager playerManager = null;
 
-        public override void Init(SystemGameManager systemGameManager) {
-            base.Init(systemGameManager);
+        public override void Configure(SystemGameManager systemGameManager) {
+            base.Configure(systemGameManager);
             systemEventManager = systemGameManager.SystemEventManager;
             playerManager = systemGameManager.PlayerManager;
 

@@ -74,8 +74,8 @@ namespace AnyRPG {
 
         public PetSpawnButton SelectedPetSpawnButton { get => selectedPetSpawnButton; set => selectedPetSpawnButton = value; }
 
-        public override void Init(SystemGameManager systemGameManager) {
-            base.Init(systemGameManager);
+        public override void Configure(SystemGameManager systemGameManager) {
+            base.Configure(systemGameManager);
 
             playerManager = systemGameManager.PlayerManager;
             uIManager = systemGameManager.UIManager;
@@ -183,7 +183,7 @@ namespace AnyRPG {
                     GameObject go = objectPooler.GetPooledObject(buttonPrefab, buttonArea.transform);
                     PetSpawnButton petSpawnButton = go.GetComponent<PetSpawnButton>();
                     if (petSpawnButton != null) {
-                        petSpawnButton.Init(systemGameManager);
+                        petSpawnButton.Configure(systemGameManager);
                         petSpawnButton.PetSpawnControlPanel = this;
                         petSpawnButton.AddUnitProfile(unitProfile);
                         petSpawnButtons.Add(petSpawnButton);

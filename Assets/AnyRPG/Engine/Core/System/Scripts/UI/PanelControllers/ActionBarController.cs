@@ -24,8 +24,8 @@ namespace AnyRPG {
         [SerializeField]
         protected Image backGroundImage;
 
-        public override void Init(SystemGameManager systemGameManager) {
-            base.Init(systemGameManager);
+        public override void Configure(SystemGameManager systemGameManager) {
+            base.Configure(systemGameManager);
 
             if (backGroundImage == null) {
                 backGroundImage = GetComponent<Image>();
@@ -36,7 +36,7 @@ namespace AnyRPG {
 
         public void InitializeActionButtons(SystemGameManager systemGameManager) {
             for (int i = 0; i < actionButtons.Count; i++) {
-                actionButtons[i].Init(systemGameManager);
+                actionButtons[i].Configure(systemGameManager);
             }
         }
 

@@ -88,13 +88,13 @@ namespace AnyRPG {
 
         private LogManager logManager = null;
 
-        public override void Init(SystemGameManager systemGameManager) {
+        public override void Configure(SystemGameManager systemGameManager) {
             //Debug.Log("CombatLogUI.Awake()");
             logManager = systemGameManager.LogManager;
             PopulateObjectPool();
             ClearLog();
 
-            base.Init(systemGameManager);
+            base.Configure(systemGameManager);
         }
 
         private void ClearLog() {

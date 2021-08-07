@@ -44,17 +44,17 @@ namespace AnyRPG {
         private UIManager uIManager = null;
         private NewGameManager newGameManager = null;
 
-        public override void Init(SystemGameManager systemGameManager) {
-            base.Init(systemGameManager);
+        public override void Configure(SystemGameManager systemGameManager) {
+            base.Configure(systemGameManager);
 
             systemConfigurationManager = systemGameManager.SystemConfigurationManager;
             systemDataFactory = systemGameManager.SystemDataFactory;
             uIManager = systemGameManager.UIManager;
             newGameManager = systemGameManager.NewGameManager;
 
-            characterClassButton.Init(systemGameManager);
-            classSpecializationButton.Init(systemGameManager);
-            factionButton.Init(systemGameManager);
+            characterClassButton.Configure(systemGameManager);
+            classSpecializationButton.Configure(systemGameManager);
+            factionButton.Configure(systemGameManager);
         }
 
         public void ResetInputText(string newText) {

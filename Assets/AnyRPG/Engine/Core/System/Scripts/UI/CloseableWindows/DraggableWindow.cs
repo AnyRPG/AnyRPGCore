@@ -34,8 +34,8 @@ namespace AnyRPG {
         protected UIManager uIManager = null;
         protected SaveManager saveManager = null;
 
-        public override void Init(SystemGameManager systemGameManager) {
-            base.Init(systemGameManager);
+        public override void Configure(SystemGameManager systemGameManager) {
+            base.Configure(systemGameManager);
             uIManager = systemGameManager.UIManager;
             saveManager = systemGameManager.SaveManager;
         }

@@ -59,8 +59,8 @@ namespace AnyRPG {
         private QuestLog questLog = null;
         private LogManager logManager = null;
 
-        public override void Init(SystemGameManager systemGameManager) {
-            base.Init(systemGameManager);
+        public override void Configure(SystemGameManager systemGameManager) {
+            base.Configure(systemGameManager);
 
             uIManager = systemGameManager.UIManager;
             questLog = systemGameManager.QuestLog;

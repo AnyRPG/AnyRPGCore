@@ -59,15 +59,15 @@ namespace AnyRPG {
 
         public SkillTrainerSkillScript MySelectedSkillTrainerSkillScript { get => selectedSkillTrainerSkillScript; set => selectedSkillTrainerSkillScript = value; }
 
-        public override void Init(SystemGameManager systemGameManager) {
-            base.Init(systemGameManager);
+        public override void Configure(SystemGameManager systemGameManager) {
+            base.Configure(systemGameManager);
 
             objectPooler = systemGameManager.ObjectPooler;
             playerManager = systemGameManager.PlayerManager;
             uIManager = systemGameManager.UIManager;
 
             foreach (DescribableIcon describableIcon in rewardButtons) {
-                describableIcon.Init(systemGameManager);
+                describableIcon.Configure(systemGameManager);
             }
         }
 
@@ -87,7 +87,7 @@ namespace AnyRPG {
                 if (!playerManager.MyCharacter.CharacterSkillManager.HasSkill(skill)) {
                     GameObject go = objectPooler.GetPooledObject(skillPrefab, availableArea.transform);
                     SkillTrainerSkillScript qs = go.GetComponent<SkillTrainerSkillScript>();
-                    qs.Init(systemGameManager);
+                    qs.Configure(systemGameManager);
                     qs.Text.text = skill.DisplayName;
                     qs.Text.color = Color.white;
                     qs.SetSkill(this, skill);

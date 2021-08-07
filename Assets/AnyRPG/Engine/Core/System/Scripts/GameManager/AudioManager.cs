@@ -59,9 +59,9 @@ namespace AnyRPG {
         public AudioSource UiAudioSource { get => uiAudioSource; set => uiAudioSource = value; }
         public AudioSource VoiceAudioSource { get => voiceAudioSource; set => voiceAudioSource = value; }
 
-        public override void Init(SystemGameManager systemGameManager) {
+        public override void Configure(SystemGameManager systemGameManager) {
             //Debug.Log("AudioManager.Start()");
-            base.Init(systemGameManager);
+            base.Configure(systemGameManager);
 
             InitializeVolume();
         }

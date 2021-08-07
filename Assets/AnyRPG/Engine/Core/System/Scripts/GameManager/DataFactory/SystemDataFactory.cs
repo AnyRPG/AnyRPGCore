@@ -27,8 +27,8 @@ namespace AnyRPG {
 
         private Dictionary<Type, FactoryDataAccess> dataDictionary = new Dictionary<Type, FactoryDataAccess>();
 
-        public override void Init(SystemGameManager systemGameManager) {
-            base.Init(systemGameManager);
+        public override void Configure(SystemGameManager systemGameManager) {
+            base.Configure(systemGameManager);
 
             SetupFactory();
         }
