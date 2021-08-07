@@ -5,11 +5,7 @@ using System.Linq;
 using UnityEngine;
 
 namespace AnyRPG {
-    public class KeyBindManager {
-
-        public KeyBindManager() {
-            InitializeKeys();
-        }
+    public class KeyBindManager : ConfiguredMonoBehaviour {
 
         [SerializeField]
         private Dictionary<string, KeyBindNode> keyBinds = new Dictionary<string, KeyBindNode>();
@@ -19,15 +15,19 @@ namespace AnyRPG {
         private InputDeviceType inputDeviceType;
 
         // game manager references
-        SystemGameManager systemGameManager = null;
         UIManager uIManager = null;
 
-        public Dictionary<string, KeyBindNode> MyKeyBinds { get => keyBinds; set => keyBinds = value; }
+        public Dictionary<string, KeyBindNode> KeyBinds { get => keyBinds; set => keyBinds = value; }
 
         public string MyBindName { get => bindName; set => bindName = value; }
 
-        public KeyBindManager(SystemGameManager systemGameManager) {
-            this.systemGameManager = systemGameManager;
+        public override void Configure(SystemGameManager systemGameManager) {
+            base.Configure(systemGameManager);
+            InitializeKeys();
+        }
+
+        public override void SetGameManagerReferences() {
+            base.SetGameManagerReferences();
             uIManager = systemGameManager.UIManager;
         }
 
@@ -160,7 +160,7 @@ namespace AnyRPG {
         }
 
         public void BindKey(string key, InputDeviceType inputDeviceType, KeyCode keyCode, bool control, bool shift) {
-            //Debug.Log("KeyBindManager.BindKey(" + key + ", " + keyCode.ToString() + ")");
+            Debug.Log("KeyBindManager.BindKey(" + key + ", " + keyCode.ToString() + ")");
 
             // since the key cannot control 2 actions, if it already exists, unbind it from that action
             UnbindKeyCode(keyBinds, inputDeviceType, keyCode, control, shift);
@@ -216,7 +216,7 @@ namespace AnyRPG {
         */
 
         public void BeginKeyBind(string key, InputDeviceType inputDeviceType) {
-            //Debug.Log("KeyBindManager.BeginKeyBind(" + key + ", " + inputDeviceType.ToString() + ")");
+            Debug.Log("KeyBindManager.BeginKeyBind(" + key + ", " + inputDeviceType.ToString() + ")");
             this.bindName = key;
             this.inputDeviceType = inputDeviceType;
             uIManager.keyBindConfirmWindow.OpenWindow();
@@ -235,6 +235,7 @@ namespace AnyRPG {
         }
 
         public void CancelKeyBind() {
+            Debug.Log("KeyBindManager.CancelKeyBind()");
             uIManager.keyBindConfirmWindow.CloseWindow();
             bindName = string.Empty;
         }

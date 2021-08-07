@@ -12,8 +12,24 @@ namespace AnyRPG {
 
         public override event Action<ICloseableWindowContents> OnCloseWindow = delegate { };
 
+        // buttons
         [SerializeField]
         private List<CharacterButton> characterButtons = new List<CharacterButton>();
+
+        [SerializeField]
+        private HighlightButton reputationButton = null;
+
+        [SerializeField]
+        private HighlightButton achievementsButton = null;
+
+        [SerializeField]
+        private HighlightButton skillsButton = null;
+
+        [SerializeField]
+        private HighlightButton currencyButton = null;
+
+        [SerializeField]
+        private HighlightButton petButton = null;
 
         [SerializeField]
         private TextMeshProUGUI statsDescription = null;
@@ -53,6 +69,12 @@ namespace AnyRPG {
                 }
                 characterButton.UpdateVisual();
             }
+
+            reputationButton.Configure(systemGameManager);
+            achievementsButton.Configure(systemGameManager);
+            skillsButton.Configure(systemGameManager);
+            currencyButton.Configure(systemGameManager);
+            petButton.Configure(systemGameManager);
         }
 
         public override void SetGameManagerReferences() {

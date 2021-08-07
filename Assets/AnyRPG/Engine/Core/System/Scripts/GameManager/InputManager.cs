@@ -75,7 +75,7 @@ namespace AnyRPG {
             if (keyBindManager.MyBindName != string.Empty) {
                 // we are binding a key.  discard all input
                 //Debug.Log("Key Binding in progress.  returning.");
-                foreach (KeyBindNode keyBindNode in keyBindManager.MyKeyBinds.Values) {
+                foreach (KeyBindNode keyBindNode in keyBindManager.KeyBinds.Values) {
                     keyBindNode.UnRegisterKeyPress();
                     keyBindNode.UnRegisterKeyHeld();
                     keyBindNode.UnRegisterKeyUp();
@@ -138,7 +138,7 @@ namespace AnyRPG {
                 shift = true;
             }
 
-            foreach (KeyBindNode keyBindNode in keyBindManager.MyKeyBinds.Values) {
+            foreach (KeyBindNode keyBindNode in keyBindManager.KeyBinds.Values) {
                 // normal should eventually changed to movement, but there is only one other key (toggle run) that is normal for now, so normal is ok until more keys are added
                 // register key down
                 if (Input.GetKeyDown(keyBindNode.MyKeyCode) && (keyBindNode.MyKeyBindType == KeyBindType.Normal || ((control == keyBindNode.MyControl) && (shift == keyBindNode.MyShift)))) {
@@ -168,8 +168,8 @@ namespace AnyRPG {
 
         public bool KeyBindWasPressedOrHeld(string keyBindID) {
             RegisterKeyPresses();
-            if (keyBindManager.MyKeyBinds.ContainsKey(keyBindID) &&
-                (keyBindManager.MyKeyBinds[keyBindID].KeyPressed == true || keyBindManager.MyKeyBinds[keyBindID].KeyHeld == true)) {
+            if (keyBindManager.KeyBinds.ContainsKey(keyBindID) &&
+                (keyBindManager.KeyBinds[keyBindID].KeyPressed == true || keyBindManager.KeyBinds[keyBindID].KeyHeld == true)) {
                 return true;
             }
             return false;
@@ -177,7 +177,7 @@ namespace AnyRPG {
 
         public bool KeyBindWasPressed(string keyBindID) {
             RegisterKeyPresses();
-            if (keyBindManager.MyKeyBinds.ContainsKey(keyBindID) && keyBindManager.MyKeyBinds[keyBindID].KeyPressed == true) {
+            if (keyBindManager.KeyBinds.ContainsKey(keyBindID) && keyBindManager.KeyBinds[keyBindID].KeyPressed == true) {
                 return true;
             }
             return false;

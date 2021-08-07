@@ -6,14 +6,13 @@ using UnityEngine;
 using UnityEngine.UI;
 
 namespace AnyRPG {
-    public class LootManager {
+    public class LootManager : ConfiguredMonoBehaviour {
 
         private List<List<LootDrop>> pages = new List<List<LootDrop>>();
 
         private List<LootDrop> droppedLoot = new List<LootDrop>();
 
         // game manager references
-        SystemGameManager systemGameManager = null;
         UIManager uIManager = null;
         InventoryManager inventoryManager = null;
         MessageFeedManager messageFeedManager = null;
@@ -21,8 +20,8 @@ namespace AnyRPG {
         public List<List<LootDrop>> Pages { get => pages; set => pages = value; }
         public List<LootDrop> DroppedLoot { get => droppedLoot; set => droppedLoot = value; }
 
-        public LootManager(SystemGameManager systemGameManager) {
-            this.systemGameManager = systemGameManager;
+        public override void SetGameManagerReferences() {
+            base.SetGameManagerReferences();
             uIManager = systemGameManager.UIManager;
             inventoryManager = systemGameManager.InventoryManager;
             messageFeedManager = systemGameManager.UIManager.MessageFeedManager;

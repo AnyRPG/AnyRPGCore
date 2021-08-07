@@ -9,10 +9,9 @@ using UMA.CharacterSystem;
 using System.Text.RegularExpressions;
 
 namespace AnyRPG {
-    public class SaveManager {
+    public class SaveManager : ConfiguredMonoBehaviour {
 
         // game manager references
-        private SystemGameManager systemGameManager = null;
         private SystemEventManager systemEventManager = null;
         private SystemConfigurationManager systemConfigurationManager = null;
         private PlayerManager playerManager = null;
@@ -26,8 +25,13 @@ namespace AnyRPG {
         private UIManager uIManager = null;
         private SystemAchievementManager systemAchievementManager = null;
 
-        public SaveManager(SystemGameManager systemGameManager) {
-            this.systemGameManager = systemGameManager;
+        public override void Configure(SystemGameManager systemGameManager) {
+            base.Configure(systemGameManager);
+            Init();
+        }
+
+        public override void SetGameManagerReferences() {
+            base.SetGameManagerReferences();
             systemEventManager = systemGameManager.SystemEventManager;
             systemConfigurationManager = systemGameManager.SystemConfigurationManager;
             playerManager = systemGameManager.PlayerManager;
@@ -40,8 +44,6 @@ namespace AnyRPG {
             uIManager = systemGameManager.UIManager;
             messageFeedManager = uIManager.MessageFeedManager;
             actionBarManager = uIManager.ActionBarManager;
-
-            Init();
         }
 
         //private UMAData umaSaveData = null;

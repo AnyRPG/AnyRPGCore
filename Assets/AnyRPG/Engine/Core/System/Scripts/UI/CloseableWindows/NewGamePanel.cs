@@ -35,20 +35,31 @@ namespace AnyRPG {
         [SerializeField]
         private NewGameSpecializationPanelController specializationPanel = null;
 
-        [SerializeField]
-        private Button characterButton = null;
+        [Header("Button Buttons")]
 
         [SerializeField]
-        private Button appearanceButton = null;
+        private HighlightButton returnButton = null;
 
         [SerializeField]
-        private Button factionButton = null;
+        private HighlightButton detailsButton = null;
 
         [SerializeField]
-        private Button classButton = null;
+        private HighlightButton characterButton = null;
 
         [SerializeField]
-        private Button specializationButton = null;
+        private HighlightButton appearanceButton = null;
+
+        [SerializeField]
+        private HighlightButton factionButton = null;
+
+        [SerializeField]
+        private HighlightButton classButton = null;
+
+        [SerializeField]
+        private HighlightButton specializationButton = null;
+
+        [SerializeField]
+        private HighlightButton startButton = null;
 
         /*
         private string playerName = "Player Name";
@@ -90,14 +101,16 @@ namespace AnyRPG {
         public override void Configure(SystemGameManager systemGameManager) {
             base.Configure(systemGameManager);
 
-            saveManager = systemGameManager.SaveManager;
-            systemConfigurationManager = systemGameManager.SystemConfigurationManager;
-            systemDataFactory = systemGameManager.SystemDataFactory;
-            characterCreatorManager = systemGameManager.CharacterCreatorManager;
-            uIManager = systemGameManager.UIManager;
-            levelManager = systemGameManager.LevelManager;
-            newGameManager = systemGameManager.NewGameManager;
+            returnButton.Configure(systemGameManager);
+            detailsButton.Configure(systemGameManager);
+            characterButton.Configure(systemGameManager);
+            appearanceButton.Configure(systemGameManager);
+            factionButton.Configure(systemGameManager);
+            classButton.Configure(systemGameManager);
+            specializationButton.Configure(systemGameManager);
+            startButton.Configure(systemGameManager);
 
+            startButton = null;
             characterPreviewPanel.Configure(systemGameManager);
             detailsPanel.Configure(systemGameManager);
             characterPanel.Configure(systemGameManager);
@@ -105,6 +118,17 @@ namespace AnyRPG {
             classPanel.Configure(systemGameManager);
             factionPanel.Configure(systemGameManager);
             specializationPanel.Configure(systemGameManager);
+        }
+
+        public override void SetGameManagerReferences() {
+            base.SetGameManagerReferences();
+            saveManager = systemGameManager.SaveManager;
+            systemConfigurationManager = systemGameManager.SystemConfigurationManager;
+            systemDataFactory = systemGameManager.SystemDataFactory;
+            characterCreatorManager = systemGameManager.CharacterCreatorManager;
+            uIManager = systemGameManager.UIManager;
+            levelManager = systemGameManager.LevelManager;
+            newGameManager = systemGameManager.NewGameManager;
         }
 
         public override void RecieveClosedWindowNotification() {
@@ -317,9 +341,9 @@ namespace AnyRPG {
             detailsPanel.SetClassSpecialization(newGameManager.ClassSpecialization);
 
             if (newGameManager.ClassSpecialization != null) {
-                specializationButton.interactable = true;
+                specializationButton.Button.interactable = true;
             } else {
-                specializationButton.interactable = false;
+                specializationButton.Button.interactable = false;
             }
         }
 

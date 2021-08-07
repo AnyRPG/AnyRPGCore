@@ -18,8 +18,37 @@ namespace AnyRPG {
         [SerializeField]
         private UMACharacterEditorPanelController umaCharacterPanel = null;
 
+        // appearance buttons
         [SerializeField]
-        private Button saveButton = null;
+        private HighlightButton faceButton = null;
+
+        [SerializeField]
+        private HighlightButton colorsButton = null;
+
+        [SerializeField]
+        private HighlightButton sexButton = null;
+
+        [SerializeField]
+        private HighlightButton maleButton = null;
+
+        [SerializeField]
+        private HighlightButton femaleButton = null;
+
+        [SerializeField]
+        private HighlightButton hairButton = null;
+
+        [SerializeField]
+        private HighlightButton skinButton = null;
+
+        [SerializeField]
+        private HighlightButton eyesButton = null;
+
+        // bottom row
+        [SerializeField]
+        private HighlightButton closeButton = null;
+
+        [SerializeField]
+        private HighlightButton saveButton = null;
 
         //private string playerName = "Player Name";
         private UnitProfile unitProfile = null;
@@ -52,7 +81,20 @@ namespace AnyRPG {
 
         public override void Configure(SystemGameManager systemGameManager) {
             base.Configure(systemGameManager);
+            faceButton.Configure(systemGameManager);
+            colorsButton.Configure(systemGameManager);
+            sexButton.Configure(systemGameManager);
+            maleButton.Configure(systemGameManager);
+            femaleButton.Configure(systemGameManager);
+            hairButton.Configure(systemGameManager);
+            skinButton.Configure(systemGameManager);
+            eyesButton.Configure(systemGameManager);
+            closeButton.Configure(systemGameManager);
+            saveButton.Configure(systemGameManager);
+        }
 
+        public override void SetGameManagerReferences() {
+            base.SetGameManagerReferences();
             uIManager = systemGameManager.UIManager;
             systemConfigurationManager = systemGameManager.SystemConfigurationManager;
             playerManager = systemGameManager.PlayerManager;
@@ -75,7 +117,7 @@ namespace AnyRPG {
         public override void ReceiveOpenWindowNotification() {
             //Debug.Log("LoadGamePanel.OnOpenWindow()");
             base.ReceiveOpenWindowNotification();
-            saveButton.interactable = false;
+            saveButton.Button.interactable = false;
             umaCharacterPanel.ReceiveOpenWindowNotification();
             umaCharacterPanel.ShowPanel();
 
@@ -137,7 +179,7 @@ namespace AnyRPG {
             LoadUMARecipe();
             umaCharacterPanel.HandleTargetReady();
             if (umaCharacterPanel.MainNoOptionsArea.activeSelf == false) {
-                saveButton.interactable = true;
+                saveButton.Button.interactable = true;
             }
         }
 

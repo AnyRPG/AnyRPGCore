@@ -580,7 +580,7 @@ namespace AnyRPG {
 
         public void RegisterAbilityButtonPresses() {
             //Debug.Log("PlayerController.RegisterAbilityButtonPresses()");
-            foreach (KeyBindNode keyBindNode in SystemGameManager.Instance.KeyBindManager.MyKeyBinds.Values) {
+            foreach (KeyBindNode keyBindNode in SystemGameManager.Instance.KeyBindManager.KeyBinds.Values) {
                 //Debug.Log("PlayerController.RegisterAbilityButtonPresses() keyBindNode.GetKeyDown: " + keyBindNode.GetKeyDown);
                 //Debug.Log("PlayerController.RegisterAbilityButtonPresses() keyBindNode.GetKeyDown: " + keyBindNode.GetKey);
                 if (keyBindNode.MyKeyBindType == KeyBindType.Action && SystemGameManager.Instance.InputManager.KeyBindWasPressed(keyBindNode.MyKeyBindID) == true) {

@@ -19,10 +19,19 @@ namespace AnyRPG {
         private TextMeshProUGUI keyboardButtonLabel = null;
 
         [SerializeField]
+        private HighlightButton keyboardAssignButton = null;
+
+        [SerializeField]
         private TextMeshProUGUI joystickButtonLabel = null;
 
         [SerializeField]
+        private HighlightButton joystickAssignButton = null;
+
+        [SerializeField]
         private TextMeshProUGUI mobileButtonLabel = null;
+
+        [SerializeField]
+        private HighlightButton mobileAssignButton = null;
 
         private KeyBindNode keyBindNode = null;
 
@@ -31,7 +40,13 @@ namespace AnyRPG {
 
         public override void Configure(SystemGameManager systemGameManager) {
             base.Configure(systemGameManager);
+            keyboardAssignButton.Configure(systemGameManager);
+            joystickAssignButton.Configure(systemGameManager);
+            mobileAssignButton.Configure(systemGameManager);
+        }
 
+        public override void SetGameManagerReferences() {
+            base.SetGameManagerReferences();
             keyBindManager = systemGameManager.KeyBindManager;
         }
 

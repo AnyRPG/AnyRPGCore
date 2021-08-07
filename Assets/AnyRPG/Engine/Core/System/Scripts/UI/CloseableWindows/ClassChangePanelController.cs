@@ -30,6 +30,9 @@ namespace AnyRPG {
         [SerializeField]
         private GameObject traitIconsArea = null;
 
+        [SerializeField]
+        private HighlightButton confirmButton = null;
+
         private List<RewardButton> abilityRewardIcons = new List<RewardButton>();
 
         private List<RewardButton> traitRewardIcons = new List<RewardButton>();
@@ -46,11 +49,15 @@ namespace AnyRPG {
         public override void Configure(SystemGameManager systemGameManager) {
             base.Configure(systemGameManager);
 
+            characterClassButton.Configure(systemGameManager);
+            confirmButton.Configure(systemGameManager);
+        }
+
+        public override void SetGameManagerReferences() {
+            base.SetGameManagerReferences();
             uIManager = systemGameManager.UIManager;
             playerManager = systemGameManager.PlayerManager;
             objectPooler = systemGameManager.ObjectPooler;
-
-            characterClassButton.Configure(systemGameManager);
         }
 
         public void Setup(CharacterClass newCharacterClass) {

@@ -14,7 +14,13 @@ namespace AnyRPG {
         public override event Action<ICloseableWindowContents> OnCloseWindow = delegate { };
 
         [SerializeField]
-        private TMP_InputField textInput;
+        private TMP_InputField textInput = null;
+
+        [SerializeField]
+        private HighlightButton confirmButton = null;
+
+        [SerializeField]
+        private HighlightButton cancelButton = null;
 
         // game manager references
         private UIManager uIManager = null;
@@ -22,7 +28,12 @@ namespace AnyRPG {
 
         public override void Configure(SystemGameManager systemGameManager) {
             base.Configure(systemGameManager);
+            confirmButton.Configure(systemGameManager);
+            cancelButton.Configure(systemGameManager);
+        }
 
+        public override void SetGameManagerReferences() {
+            base.SetGameManagerReferences();
             uIManager = systemGameManager.UIManager;
             playerManager = systemGameManager.PlayerManager;
         }

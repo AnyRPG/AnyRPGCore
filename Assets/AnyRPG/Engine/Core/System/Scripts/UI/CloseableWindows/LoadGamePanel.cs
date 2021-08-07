@@ -21,13 +21,19 @@ namespace AnyRPG {
         private GameObject buttonArea = null;
 
         [SerializeField]
-        private Button loadGameButton = null;
+        private HighlightButton returnButton = null;
 
         [SerializeField]
-        private Button deleteGameButton = null;
+        private HighlightButton loadGameButton = null;
 
         [SerializeField]
-        private Button copyGameButton = null;
+        private HighlightButton newGameButton = null;
+
+        [SerializeField]
+        private HighlightButton deleteGameButton = null;
+
+        [SerializeField]
+        private HighlightButton copyGameButton = null;
 
         [SerializeField]
         private TextMeshProUGUI nameText = null;
@@ -49,17 +55,25 @@ namespace AnyRPG {
         public override void Configure(SystemGameManager systemGameManager) {
             base.Configure(systemGameManager);
 
+            loadGameManager.OnDeleteGame += HandleDeleteGame;
+            loadGameManager.OnCopyGame += HandleCopyGame;
+
+            returnButton.Configure(systemGameManager);
+            loadGameButton.Configure(systemGameManager);
+            newGameButton.Configure(systemGameManager);
+            deleteGameButton.Configure(systemGameManager);
+            copyGameButton.Configure(systemGameManager);
+            characterPreviewPanel.Configure(systemGameManager);
+        }
+
+        public override void SetGameManagerReferences() {
+            base.SetGameManagerReferences();
             saveManager = systemGameManager.SaveManager;
             objectPooler = systemGameManager.ObjectPooler;
             characterCreatorManager = systemGameManager.CharacterCreatorManager;
             systemConfigurationManager = systemGameManager.SystemConfigurationManager;
             uIManager = systemGameManager.UIManager;
             loadGameManager = systemGameManager.LoadGameManager;
-
-            loadGameManager.OnDeleteGame += HandleDeleteGame;
-            loadGameManager.OnCopyGame += HandleCopyGame;
-
-            characterPreviewPanel.Configure(systemGameManager);
         }
 
         public override void RecieveClosedWindowNotification() {
@@ -106,9 +120,9 @@ namespace AnyRPG {
             // apply capabilities to it so equipment can work
             //characterCreatorManager.PreviewUnitController.CharacterUnit.BaseCharacter.ApplyCapabilityConsumerSnapshot(capabilityConsumerSnapshot);
 
-            loadGameButton.interactable = true;
-            copyGameButton.interactable = true;
-            deleteGameButton.interactable = true;
+            loadGameButton.Button.interactable = true;
+            copyGameButton.Button.interactable = true;
+            deleteGameButton.Button.interactable = true;
 
             nameText.text = loadGameManager.AnyRPGSaveData.playerName;
         }
@@ -125,9 +139,9 @@ namespace AnyRPG {
             }
             loadGameButtons.Clear();
             selectedLoadGameButton = null;
-            loadGameButton.interactable = false;
-            copyGameButton.interactable = false;
-            deleteGameButton.interactable = false;
+            loadGameButton.Button.interactable = false;
+            copyGameButton.Button.interactable = false;
+            deleteGameButton.Button.interactable = false;
             nameText.text = "";
             loadGameManager.ResetData();
         }

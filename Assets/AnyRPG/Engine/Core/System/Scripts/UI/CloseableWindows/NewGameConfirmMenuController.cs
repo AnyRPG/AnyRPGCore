@@ -13,6 +13,12 @@ namespace AnyRPG {
         [SerializeField]
         private ConfirmGameButton confirmGameButton = null;
 
+        [SerializeField]
+        private HighlightButton confirmButton = null;
+
+        [SerializeField]
+        private HighlightButton cancelButton = null;
+
         // game manager references
         private UIManager uIManager = null;
         private SystemConfigurationManager systemConfigurationManager = null;
@@ -21,7 +27,12 @@ namespace AnyRPG {
 
         public override void Configure(SystemGameManager systemGameManager) {
             base.Configure(systemGameManager);
+            cancelButton.Configure(systemGameManager);
+            confirmButton.Configure(systemGameManager);
+        }
 
+        public override void SetGameManagerReferences() {
+            base.SetGameManagerReferences();
             uIManager = systemGameManager.UIManager;
             systemConfigurationManager = systemGameManager.SystemConfigurationManager;
             saveManager = systemGameManager.SaveManager;

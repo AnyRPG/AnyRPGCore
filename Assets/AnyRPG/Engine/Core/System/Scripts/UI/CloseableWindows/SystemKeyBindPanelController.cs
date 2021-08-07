@@ -43,10 +43,17 @@ namespace AnyRPG {
         public override void Configure(SystemGameManager systemGameManager) {
             base.Configure(systemGameManager);
 
-            keyBindManager = systemGameManager.KeyBindManager;
-            objectPooler = systemGameManager.ObjectPooler;
+            movementButton.Configure(systemGameManager);
+            actionBarsButton.Configure(systemGameManager);
+            systemButton.Configure(systemGameManager);
 
             InitializeKeys();
+        }
+
+        public override void SetGameManagerReferences() {
+            base.SetGameManagerReferences();
+            keyBindManager = systemGameManager.KeyBindManager;
+            objectPooler = systemGameManager.ObjectPooler;
         }
 
 
@@ -56,7 +63,7 @@ namespace AnyRPG {
 
         private void InitializeKeys() {
             //Debug.Log("KeyBindMenuController.InitializeKeys()");
-            foreach (KeyBindNode keyBindNode in keyBindManager.MyKeyBinds.Values) {
+            foreach (KeyBindNode keyBindNode in keyBindManager.KeyBinds.Values) {
                 Transform nodeParent = null;
                 if (keyBindNode.MyKeyBindType == KeyBindType.Action) {
                     nodeParent = actionBarsKeyParent.transform;

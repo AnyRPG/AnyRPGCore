@@ -7,6 +7,11 @@ using UnityEngine;
 namespace AnyRPG {
     public class ConfirmCancelCutscenePanelController : WindowContentController {
 
+        [SerializeField]
+        private HighlightButton noButton = null;
+
+        [SerializeField]
+        private HighlightButton yesButton = null;
 
         // game manager references
         private UIManager uIManager = null;
@@ -14,7 +19,12 @@ namespace AnyRPG {
 
         public override void Configure(SystemGameManager systemGameManager) {
             base.Configure(systemGameManager);
+            noButton.Configure(systemGameManager);
+            yesButton.Configure(systemGameManager);
+        }
 
+        public override void SetGameManagerReferences() {
+            base.SetGameManagerReferences();
             uIManager = systemGameManager.UIManager;
             cutSceneBarController = uIManager.CutSceneBarController;
         }

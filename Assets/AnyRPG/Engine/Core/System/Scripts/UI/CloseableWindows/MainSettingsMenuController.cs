@@ -56,10 +56,6 @@ namespace AnyRPG {
         public OnOffTextButton useStatusEffectBarButton;
         public OnOffTextButton useCombatLogButton;
 
-        [Header("Video SETTINGS")]
-        public OnOffTextButton fullScreenButton;
-        public OnOffTextButton vSyncButton;
-
         [Header("Player Interface SETTINGS")]
         public OnOffTextButton showPlayerNameButton;
         public OnOffTextButton showPlayerFactionButton;
@@ -120,9 +116,9 @@ namespace AnyRPG {
         [Tooltip("The UI Panel that holds the CONTROLS window tab")]
         public GameObject PanelControls;
         [Tooltip("The UI Panel that holds the VIDEO window tab")]
-        public GameObject PanelVideo;
+        public SystemVideoPanelController PanelVideo;
         [Tooltip("The UI Panel that holds the KEY BINDINGS window tab")]
-        public GameObject PanelKeyBindings;
+        public SystemKeyBindPanelController PanelKeyBindings;
         [Tooltip("The UI Panel that holds the USER INTERFACE window tab")]
         public GameObject PanelUserInterface;
 
@@ -161,15 +157,16 @@ namespace AnyRPG {
             useStatusEffectBarButton.Configure(systemGameManager);
             useCombatLogButton.Configure(systemGameManager);
 
-            // video buttons
-            fullScreenButton.Configure(systemGameManager);
-            vSyncButton.Configure(systemGameManager);
-
             // player interface buttons
             showPlayerNameButton.Configure(systemGameManager);
             showPlayerFactionButton.Configure(systemGameManager);
             hideFullHealthBarButton.Configure(systemGameManager);
             lockUIButton.Configure(systemGameManager);
+
+            // panels
+            PanelVideo.Configure(systemGameManager);
+            PanelKeyBindings.Configure(systemGameManager);
+
         }
 
         public override void SetGameManagerReferences() {

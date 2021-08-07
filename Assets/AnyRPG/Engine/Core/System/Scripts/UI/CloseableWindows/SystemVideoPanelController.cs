@@ -29,6 +29,13 @@ namespace AnyRPG {
 
         public override void Configure(SystemGameManager systemGameManager) {
             base.Configure(systemGameManager);
+
+            fullScreenButton.Configure(systemGameManager);
+            vSyncButton.Configure(systemGameManager);
+            shadowQualityArea.Configure(systemGameManager);
+            textureQualityArea.Configure(systemGameManager);
+            graphicsQualityArea.Configure(systemGameManager);
+
             InitializeSettings();
         }
 

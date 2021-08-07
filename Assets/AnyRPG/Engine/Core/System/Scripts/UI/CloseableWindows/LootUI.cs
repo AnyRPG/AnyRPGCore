@@ -14,6 +14,9 @@ namespace AnyRPG {
         [SerializeField]
         private List<LootButton> lootButtons = new List<LootButton>();
 
+        [SerializeField]
+        private HighlightButton takeAllButton = null;
+
         private int pageIndex = 0;
 
         // game manager references
@@ -24,11 +27,15 @@ namespace AnyRPG {
         public override void Configure(SystemGameManager systemGameManager) {
             base.Configure(systemGameManager);
 
-            lootManager = systemGameManager.LootManager;
-
             foreach (LootButton lootButton in lootButtons) {
                 lootButton.Configure(systemGameManager);
             }
+            takeAllButton.Configure(systemGameManager);
+        }
+
+        public override void SetGameManagerReferences() {
+            base.SetGameManagerReferences();
+            lootManager = systemGameManager.LootManager;
         }
 
         public void AddLoot() {

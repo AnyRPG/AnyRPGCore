@@ -44,6 +44,12 @@ namespace AnyRPG {
         [SerializeField]
         private TextMeshProUGUI nameText = null;
 
+        [SerializeField]
+        private HighlightButton returnButton = null;
+
+        [SerializeField]
+        private HighlightButton spawnButton = null;
+
         private List<UnitProfile> unitProfileList = new List<UnitProfile>();
 
         private List<UnitSpawnNode> unitSpawnNodeList = new List<UnitSpawnNode>();
@@ -73,6 +79,12 @@ namespace AnyRPG {
         public override void Configure(SystemGameManager systemGameManager) {
             base.Configure(systemGameManager);
 
+            returnButton.Configure(systemGameManager);
+            spawnButton.Configure(systemGameManager);
+        }
+
+        public override void SetGameManagerReferences() {
+            base.SetGameManagerReferences();
             systemConfigurationManager = systemGameManager.SystemConfigurationManager;
             playerManager = systemGameManager.PlayerManager;
             systemDataFactory = systemGameManager.SystemDataFactory;

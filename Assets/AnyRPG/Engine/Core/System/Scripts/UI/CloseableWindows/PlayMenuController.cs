@@ -7,6 +7,15 @@ using UnityEngine;
 namespace AnyRPG {
     public class PlayMenuController : WindowContentController {
 
+        [SerializeField]
+        private HighlightButton continueButton = null;
+
+        [SerializeField]
+        private HighlightButton newGameButton = null;
+
+        [SerializeField]
+        private HighlightButton loadGameButton = null;
+
         // game manager references
         private UIManager uIManager = null;
         private SystemConfigurationManager systemConfigurationManager = null;
@@ -14,7 +23,13 @@ namespace AnyRPG {
 
         public override void Configure(SystemGameManager systemGameManager) {
             base.Configure(systemGameManager);
+            continueButton.Configure(systemGameManager);
+            newGameButton.Configure(systemGameManager);
+            loadGameButton.Configure(systemGameManager);
+        }
 
+        public override void SetGameManagerReferences() {
+            base.SetGameManagerReferences();
             uIManager = systemGameManager.UIManager;
             systemConfigurationManager = systemGameManager.SystemConfigurationManager;
             saveManager = systemGameManager.SaveManager;

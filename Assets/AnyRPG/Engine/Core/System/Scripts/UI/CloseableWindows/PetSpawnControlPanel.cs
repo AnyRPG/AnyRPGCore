@@ -24,12 +24,6 @@ namespace AnyRPG {
         private CharacterPreviewPanelController characterPreviewPanel = null;
 
         [SerializeField]
-        private Button spawnButton = null;
-
-        [SerializeField]
-        private Button despawnButton = null;
-
-        [SerializeField]
         private TextMeshProUGUI nameText = null;
 
         [SerializeField]
@@ -37,6 +31,16 @@ namespace AnyRPG {
 
         [SerializeField]
         private TextMeshProUGUI classText = null;
+
+        [SerializeField]
+        private HighlightButton returnButton = null;
+
+        [SerializeField]
+        private HighlightButton spawnButton = null;
+
+        [SerializeField]
+        private HighlightButton despawnButton = null;
+
 
         private List<UnitProfile> unitProfileList = new List<UnitProfile>();
 
@@ -76,7 +80,13 @@ namespace AnyRPG {
 
         public override void Configure(SystemGameManager systemGameManager) {
             base.Configure(systemGameManager);
+            returnButton.Configure(systemGameManager);
+            spawnButton.Configure(systemGameManager);
+            despawnButton.Configure(systemGameManager);
+        }
 
+        public override void SetGameManagerReferences() {
+            base.SetGameManagerReferences();
             playerManager = systemGameManager.PlayerManager;
             uIManager = systemGameManager.UIManager;
             objectPooler = systemGameManager.ObjectPooler;
@@ -111,11 +121,11 @@ namespace AnyRPG {
                 spawnButton.gameObject.SetActive(true);
                 despawnButton.gameObject.SetActive(true);
                 if (playerManager.MyCharacter.CharacterPetManager.ActiveUnitProfiles.ContainsKey(petSpawnButton.MyUnitProfile)) {
-                    spawnButton.interactable = false;
-                    despawnButton.interactable = true;
+                    spawnButton.Button.interactable = false;
+                    despawnButton.Button.interactable = true;
                 } else {
-                    spawnButton.interactable = true;
-                    despawnButton.interactable = false;
+                    spawnButton.Button.interactable = true;
+                    despawnButton.Button.interactable = false;
                 }
             }
         }

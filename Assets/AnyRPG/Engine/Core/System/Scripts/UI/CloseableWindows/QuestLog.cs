@@ -9,7 +9,7 @@ namespace AnyRPG {
     /// <summary>
     /// Maintains a list of all quests
     /// </summary>
-    public class QuestLog {
+    public class QuestLog : ConfiguredMonoBehaviour {
 
         public event System.Action<Quest> OnShowQuestLogDescription = delegate { };
         public event System.Action<Quest, IQuestGiver> OnShowQuestGiverDescription = delegate { };
@@ -17,14 +17,13 @@ namespace AnyRPG {
         private Dictionary<string, Quest> quests = new Dictionary<string, Quest>();
 
         // game manager references
-        SystemGameManager systemGameManager = null;
         SystemDataFactory systemDataFactory = null;
         SystemConfigurationManager systemConfigurationManager = null;
 
         public Dictionary<string, Quest> Quests { get => quests; }
 
-        public QuestLog(SystemGameManager systemGameManager) {
-            this.systemGameManager = systemGameManager;
+        public override void SetGameManagerReferences() {
+            base.SetGameManagerReferences();
             systemConfigurationManager = systemGameManager.SystemConfigurationManager;
             systemDataFactory = systemGameManager.SystemDataFactory;
         }

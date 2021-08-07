@@ -18,6 +18,9 @@ namespace AnyRPG {
         private FactionButton factionButton = null;
 
         [SerializeField]
+        private HighlightButton confirmButton = null;
+
+        [SerializeField]
         private GameObject abilitiesArea = null;
 
         [SerializeField]
@@ -36,12 +39,16 @@ namespace AnyRPG {
         public override void Configure(SystemGameManager systemGameManager) {
             base.Configure(systemGameManager);
 
+            factionButton.Configure(systemGameManager);
+            confirmButton.Configure(systemGameManager);
+        }
+
+        public override void SetGameManagerReferences() {
+            base.SetGameManagerReferences();
             uIManager = systemGameManager.UIManager;
             playerManager = systemGameManager.PlayerManager;
             objectPooler = systemGameManager.ObjectPooler;
             newGameManager = systemGameManager.NewGameManager;
-
-            factionButton.Configure(systemGameManager);
         }
 
         public void Setup(Faction newFaction) {

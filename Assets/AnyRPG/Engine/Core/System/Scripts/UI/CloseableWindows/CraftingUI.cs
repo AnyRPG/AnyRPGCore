@@ -13,10 +13,13 @@ namespace AnyRPG {
         private CraftAbility craftAbility = null;
 
         [SerializeField]
-        private GameObject craftButton = null;
+        private HighlightButton craftButton = null;
 
         [SerializeField]
-        private GameObject craftAllButton = null;
+        private HighlightButton craftAllButton = null;
+
+        [SerializeField]
+        private HighlightButton cancelButton = null;
 
         [SerializeField]
         private GameObject lessButton = null;
@@ -72,7 +75,9 @@ namespace AnyRPG {
 
         public override void Configure(SystemGameManager systemGameManager) {
             base.Configure(systemGameManager);
-
+            craftButton.Configure(systemGameManager);
+            craftAllButton.Configure(systemGameManager);
+            cancelButton.Configure(systemGameManager);
 
             foreach (DescribableCraftingInputIcon inputIcon in inputIcons) {
                 inputIcon.Configure(systemGameManager);
@@ -116,14 +121,8 @@ namespace AnyRPG {
         }
 
         public void DeactivateButtons() {
-            Button craftButtonComponent = craftButton.GetComponent<Button>();
-            if (craftButtonComponent != null) {
-                craftButton.GetComponent<Button>().interactable = false;
-            }
-            Button craftAllButtonComponent = craftButton.GetComponent<Button>();
-            if (craftAllButtonComponent != null) {
-                craftAllButton.GetComponent<Button>().interactable = false;
-            }
+            craftButton.Button.interactable = false;
+            craftAllButton.Button.interactable = false;
         }
 
         public void CancelCrafting() {

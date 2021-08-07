@@ -31,13 +31,13 @@ namespace AnyRPG {
         private TextMeshProUGUI buttonText = null;
 
         [SerializeField]
-        private GameObject viewQuestButton = null;
+        private HighlightButton viewQuestButton = null;
 
         [SerializeField]
-        private GameObject acceptQuestButton = null;
+        private HighlightButton acceptQuestButton = null;
 
         [SerializeField]
-        private GameObject continueButton = null;
+        private HighlightButton continueButton = null;
 
         [SerializeField]
         int dialogFontSize = 30;
@@ -61,7 +61,13 @@ namespace AnyRPG {
 
         public override void Configure(SystemGameManager systemGameManager) {
             base.Configure(systemGameManager);
+            continueButton.Configure(systemGameManager);
+            viewQuestButton.Configure(systemGameManager);
+            acceptQuestButton.Configure(systemGameManager);
+        }
 
+        public override void SetGameManagerReferences() {
+            base.SetGameManagerReferences();
             uIManager = systemGameManager.UIManager;
             questLog = systemGameManager.QuestLog;
             logManager = systemGameManager.LogManager;
@@ -111,9 +117,9 @@ namespace AnyRPG {
                 } else {
                     if (!quest.TurnedIn) {
                         DisplayQuestText();
-                        continueButton.SetActive(false);
-                        viewQuestButton.SetActive(true);
-                        acceptQuestButton.SetActive(true);
+                        continueButton.gameObject.SetActive(false);
+                        viewQuestButton.gameObject.SetActive(true);
+                        acceptQuestButton.gameObject.SetActive(true);
                     } else {
                         //Debug.Log("NewGameMenuController.ConfirmAction(): dialogIndex: " + dialogIndex + "; DialogNode Count: " + MyDialog.MyDialogNodes.Count + "; TRIED TO DISPLAY ALREADY TURNED IN QUEST!");
                         uIManager.dialogWindow.CloseWindow();
@@ -193,9 +199,9 @@ namespace AnyRPG {
             SetBackGroundColor(new Color32(0, 0, 0, (byte)(int)(PlayerPrefs.GetFloat("PopupWindowOpacity") * 255)));
 
             // these go first or they will squish the text of the continue button out of place
-            viewQuestButton.SetActive(false);
-            acceptQuestButton.SetActive(false);
-            continueButton.SetActive(true);
+            viewQuestButton.gameObject.SetActive(false);
+            acceptQuestButton.gameObject.SetActive(false);
+            continueButton.gameObject.SetActive(true);
             dialogIndex = 0;
             uIManager.dialogWindow.SetWindowTitle(interactable.DisplayName);
 
@@ -207,9 +213,9 @@ namespace AnyRPG {
             base.RecieveClosedWindowNotification();
             OnCloseWindow(this);
 
-            viewQuestButton.SetActive(false);
-            acceptQuestButton.SetActive(false);
-            continueButton.SetActive(false);
+            viewQuestButton.gameObject.SetActive(false);
+            acceptQuestButton.gameObject.SetActive(false);
+            continueButton.gameObject.SetActive(false);
         }
 
 

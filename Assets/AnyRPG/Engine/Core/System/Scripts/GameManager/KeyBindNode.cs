@@ -54,9 +54,10 @@ namespace AnyRPG {
         public KeyCode MyKeyCode {
             get => keyCode;
             set {
-                //Debug.Log("KeyBindNode.SetMyKeyCode");
+                Debug.Log("KeyBindNode.SetMyKeyCode");
                 keyCode = value;
                 if (MyActionButton != null) {
+                    Debug.Log("KeyBindNode.SetMyKeyCode : actionbutton is not null");
                     MyActionButton.KeyBindText.text = FormatActionButtonLabel();
                 }
                 if (MyKeyBindSlotScript != null) {
@@ -102,7 +103,7 @@ namespace AnyRPG {
         public ActionButton MyActionButton {
             get => actionButton;
             set {
-                //Debug.Log("KeyBindNode.SetMyActionButton: " + (value == null ? "null" : value.GetInstanceID().ToString()) + "keybindID: " + keyBindID);
+                Debug.Log("KeyBindNode.SetMyActionButton: " + (value == null ? "null" : value.GetInstanceID().ToString()) + "keybindID: " + keyBindID);
                 actionButton = value;
                 actionButton.KeyBindText.text = FormatActionButtonLabel();
             }
@@ -117,6 +118,7 @@ namespace AnyRPG {
         public bool KeyUp { get => keyUp; }
 
         private string FormatActionButtonLabel() {
+            Debug.Log("KeyBindNode.FormatActionButtonLabel() : " + MyKeyCode.ToString());
             if (MyKeyCode.ToString() == "None") {
                 return string.Empty;
             }
@@ -135,7 +137,7 @@ namespace AnyRPG {
         }
 
         public void UpdateKeyCode(InputDeviceType inputDeviceType, KeyCode keyCode, bool control, bool shift) {
-            //Debug.Log("KeyBindNode.UpdateKeyCode(" + inputDeviceType + ", " + keyCode + ", " + control + ", " + shift + ")");
+            Debug.Log("KeyBindNode.UpdateKeyCode(" + inputDeviceType + ", " + keyCode + ", " + control + ", " + shift + ")");
             if (inputDeviceType == InputDeviceType.Keyboard) {
                 this.MyKeyCode = keyCode;
                 this.control = control;

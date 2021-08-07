@@ -18,6 +18,9 @@ namespace AnyRPG {
         private ClassSpecializationButton classSpecializationButton = null;
 
         [SerializeField]
+        private HighlightButton confirmButton = null;
+
+        [SerializeField]
         private GameObject abilitiesArea = null;
 
         [SerializeField]
@@ -45,11 +48,15 @@ namespace AnyRPG {
         public override void Configure(SystemGameManager systemGameManager) {
             base.Configure(systemGameManager);
 
+            confirmButton.Configure(systemGameManager);
+            classSpecializationButton.Configure(systemGameManager);
+        }
+
+        public override void SetGameManagerReferences() {
+            base.SetGameManagerReferences();
             uIManager = systemGameManager.UIManager;
             playerManager = systemGameManager.PlayerManager;
             objectPooler = systemGameManager.ObjectPooler;
-
-            classSpecializationButton.Configure(systemGameManager);
         }
 
         public void Setup(ClassSpecialization newClassSpecialization) {

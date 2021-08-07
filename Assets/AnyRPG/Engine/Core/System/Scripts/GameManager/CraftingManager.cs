@@ -7,7 +7,7 @@ using UnityEngine;
 using UnityEngine.UI;
 
 namespace AnyRPG {
-    public class CraftingManager  {
+    public class CraftingManager : ConfiguredMonoBehaviour {
 
         public event System.Action OnCraftAmountUpdated = delegate { };
         public event System.Action<CraftAbility> OnSetCraftAbility = delegate { };
@@ -25,7 +25,6 @@ namespace AnyRPG {
         private Coroutine waitCoroutine = null;
 
         // game manager references
-        private SystemGameManager systemGameManager = null;
         private UIManager uIManager = null;
         private PlayerManager playerManager = null;
         private InventoryManager inventoryManager = null;
@@ -33,8 +32,8 @@ namespace AnyRPG {
 
         public List<Recipe> CraftingQueue { get => craftingQueue; set => craftingQueue = value; }
 
-        public CraftingManager(SystemGameManager systemGameManager) {
-            this.systemGameManager = systemGameManager;
+        public override void SetGameManagerReferences() {
+            base.SetGameManagerReferences();
             uIManager = systemGameManager.UIManager;
             playerManager = systemGameManager.PlayerManager;
             inventoryManager = systemGameManager.InventoryManager;

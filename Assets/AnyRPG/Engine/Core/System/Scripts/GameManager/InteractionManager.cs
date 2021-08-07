@@ -6,7 +6,7 @@ using UnityEngine;
 using UnityEngine.UI;
 
 namespace AnyRPG {
-    public class InteractionManager {
+    public class InteractionManager : ConfiguredMonoBehaviour {
 
         public event System.Action<Interactable> OnSetInteractable = delegate { };
 

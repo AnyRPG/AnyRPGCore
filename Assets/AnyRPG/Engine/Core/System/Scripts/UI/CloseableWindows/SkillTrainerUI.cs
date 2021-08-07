@@ -12,10 +12,10 @@ namespace AnyRPG {
         private SkillTrainerComponent skillTrainer = null;
 
         [SerializeField]
-        private GameObject learnButton = null;
+        private HighlightButton learnButton = null;
 
         [SerializeField]
-        private GameObject unlearnButton = null;
+        private HighlightButton unlearnButton = null;
 
         [SerializeField]
         private GameObject skillPrefab = null;
@@ -62,18 +62,24 @@ namespace AnyRPG {
         public override void Configure(SystemGameManager systemGameManager) {
             base.Configure(systemGameManager);
 
-            objectPooler = systemGameManager.ObjectPooler;
-            playerManager = systemGameManager.PlayerManager;
-            uIManager = systemGameManager.UIManager;
+            learnButton.Configure(systemGameManager);
+            unlearnButton.Configure(systemGameManager);
 
             foreach (DescribableIcon describableIcon in rewardButtons) {
                 describableIcon.Configure(systemGameManager);
             }
         }
 
+        public override void SetGameManagerReferences() {
+            base.SetGameManagerReferences();
+            objectPooler = systemGameManager.ObjectPooler;
+            playerManager = systemGameManager.PlayerManager;
+            uIManager = systemGameManager.UIManager;
+        }
+
         public void DeactivateButtons() {
-            learnButton.GetComponent<Button>().enabled = false;
-            unlearnButton.GetComponent<Button>().enabled = false;
+            learnButton.Button.enabled = false;
+            unlearnButton.Button.enabled = false;
         }
 
         public void ShowSkillsCommon(SkillTrainerComponent skillTrainer) {
@@ -133,13 +139,13 @@ namespace AnyRPG {
             //Debug.Log("SkillTrainerUI.UpdateButtons(" + skillName + ")");
             if (playerManager.MyCharacter.CharacterSkillManager.HasSkill(newSkill)) {
                 learnButton.gameObject.SetActive(false);
-                learnButton.GetComponent<Button>().enabled = false;
+                learnButton.Button.enabled = false;
                 unlearnButton.gameObject.SetActive(true);
-                unlearnButton.GetComponent<Button>().enabled = true;
+                unlearnButton.Button.enabled = true;
             } else {
                 learnButton.gameObject.SetActive(true);
-                learnButton.GetComponent<Button>().enabled = true;
-                unlearnButton.GetComponent<Button>().enabled = false;
+                learnButton.Button.enabled = true;
+                unlearnButton.Button.enabled = false;
                 unlearnButton.gameObject.SetActive(false);
             }
         }

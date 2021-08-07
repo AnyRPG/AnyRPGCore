@@ -12,13 +12,13 @@ namespace AnyRPG {
         private MusicPlayerComponent musicPlayer = null;
 
         [SerializeField]
-        private Button playButton = null;
+        private HighlightButton playButton = null;
 
         [SerializeField]
-        private Button pauseButton = null;
+        private HighlightButton pauseButton = null;
 
         [SerializeField]
-        private Button stopButton = null;
+        private HighlightButton stopButton = null;
 
         [SerializeField]
         private GameObject highlightButtonPrefab = null;
@@ -52,20 +52,26 @@ namespace AnyRPG {
 
         public override void Configure(SystemGameManager systemGameManager) {
             base.Configure(systemGameManager);
+            playButton.Configure(systemGameManager);
+            pauseButton.Configure(systemGameManager);
+            stopButton.Configure(systemGameManager);
+        }
 
+        public override void SetGameManagerReferences() {
+            base.SetGameManagerReferences();
             objectPooler = systemGameManager.ObjectPooler;
             uIManager = systemGameManager.UIManager;
         }
 
         public void DeactivateButtons() {
             if (playButton != null) {
-                playButton.interactable = false;
+                playButton.Button.interactable = false;
             }
             if (pauseButton != null) {
-                pauseButton.interactable = false;
+                pauseButton.Button.interactable = false;
             }
             if (stopButton != null) {
-                stopButton.interactable = false;
+                stopButton.Button.interactable = false;
             }
         }
 

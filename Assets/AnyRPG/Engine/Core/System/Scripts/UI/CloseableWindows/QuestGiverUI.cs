@@ -26,10 +26,10 @@ namespace AnyRPG {
         private IQuestGiver questGiver;
 
         [SerializeField]
-        private GameObject acceptButton = null;
+        private HighlightButton acceptButton = null;
 
         [SerializeField]
-        private GameObject completeButton = null;
+        private HighlightButton completeButton = null;
 
         [SerializeField]
         private GameObject leftPane = null;
@@ -100,6 +100,16 @@ namespace AnyRPG {
         public override void Configure(SystemGameManager systemGameManager) {
             base.Configure(systemGameManager);
 
+            acceptButton.Configure(systemGameManager);
+            completeButton.Configure(systemGameManager);
+
+            questDetailsArea.Configure(systemGameManager);
+
+            questLog.OnShowQuestGiverDescription += HandleShowQuestGiverDescription;
+        }
+
+        public override void SetGameManagerReferences() {
+            base.SetGameManagerReferences();
             questLog = systemGameManager.QuestLog;
             uIManager = systemGameManager.UIManager;
             objectPooler = systemGameManager.ObjectPooler;
@@ -108,10 +118,6 @@ namespace AnyRPG {
             logManager = systemGameManager.LogManager;
             inventoryManager = systemGameManager.InventoryManager;
             systemItemManager = systemGameManager.SystemItemManager;
-
-            questDetailsArea.Configure(systemGameManager);
-
-            questLog.OnShowQuestGiverDescription += HandleShowQuestGiverDescription;
         }
 
         public void ToggleShowAllQuests(bool showAllQuests) {
@@ -125,8 +131,8 @@ namespace AnyRPG {
 
         public void DeactivateButtons() {
             //Debug.Log("QuestGiverUI.DeactivateButtons()");
-            acceptButton.GetComponent<Button>().enabled = false;
-            completeButton.GetComponent<Button>().enabled = false;
+            acceptButton.Button.enabled = false;
+            completeButton.Button.enabled = false;
         }
 
         public void ShowQuestsCommon(IQuestGiver questGiver) {
@@ -252,12 +258,12 @@ namespace AnyRPG {
             if (newQuest.AllowRawComplete == true) {
                 acceptButton.gameObject.SetActive(false);
                 completeButton.gameObject.SetActive(true);
-                completeButton.GetComponent<Button>().enabled = true;
+                completeButton.Button.enabled = true;
                 return;
             }
             if (newQuest.GetStatus() == "available" && questLog.HasQuest(newQuest.DisplayName) == false) {
                 acceptButton.gameObject.SetActive(true);
-                acceptButton.GetComponent<Button>().enabled = true;
+                acceptButton.Button.enabled = true;
                 completeButton.gameObject.SetActive(false);
                 return;
             }
@@ -265,7 +271,7 @@ namespace AnyRPG {
             //Debug.Log("questGiver: " + questGiver.ToString());
             if (newQuest.GetStatus() == "complete" && questLog.HasQuest(newQuest.DisplayName) == true && questGiver != null && questGiver.EndsQuest(newQuest.DisplayName)) {
                 completeButton.gameObject.SetActive(true);
-                completeButton.GetComponent<Button>().enabled = true;
+                completeButton.Button.enabled = true;
                 acceptButton.gameObject.SetActive(false);
                 return;
             }

@@ -14,7 +14,7 @@ namespace AnyRPG {
     public class QuestLogUI : WindowContentController {
 
         [SerializeField]
-        private GameObject abandonButton = null;
+        private HighlightButton abandonButton = null;
 
         //[SerializeField]
         //private GameObject trackButton = null;
@@ -47,14 +47,19 @@ namespace AnyRPG {
         public override void Configure(SystemGameManager systemGameManager) {
             base.Configure(systemGameManager);
 
-            questLog = systemGameManager.QuestLog;
-            objectPooler = systemGameManager.ObjectPooler;
+            abandonButton.Configure(systemGameManager);
 
             questLog.OnShowQuestLogDescription += HandleShowQuestDescription;
             SystemEventManager.StartListening("OnQuestStatusUpdated", HandleQuestStatusUpdated);
             UpdateQuestCount();
 
             questDetailsArea.Configure(systemGameManager);
+        }
+
+        public override void SetGameManagerReferences() {
+            base.SetGameManagerReferences();
+            questLog = systemGameManager.QuestLog;
+            objectPooler = systemGameManager.ObjectPooler;
         }
 
         public void HandleQuestStatusUpdated(string eventName, EventParamProperties eventParamProperties) {
@@ -147,14 +152,14 @@ namespace AnyRPG {
         }
 
         private void UpdateButtons(Quest quest) {
-            abandonButton.SetActive(true);
+            abandonButton.gameObject.SetActive(true);
             //abandonButton.GetComponent<Button>().enabled = true;
             //trackButton.GetComponent<Button>().enabled = true;
         }
 
         public void DeactivateButtons() {
 
-            abandonButton.SetActive(false);
+            abandonButton.gameObject.SetActive(false);
             //abandonButton.GetComponent<Button>().enabled = false;
             //trackButton.GetComponent<Button>().enabled = false;
         }
