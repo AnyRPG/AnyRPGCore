@@ -583,9 +583,9 @@ namespace AnyRPG {
             foreach (KeyBindNode keyBindNode in SystemGameManager.Instance.KeyBindManager.KeyBinds.Values) {
                 //Debug.Log("PlayerController.RegisterAbilityButtonPresses() keyBindNode.GetKeyDown: " + keyBindNode.GetKeyDown);
                 //Debug.Log("PlayerController.RegisterAbilityButtonPresses() keyBindNode.GetKeyDown: " + keyBindNode.GetKey);
-                if (keyBindNode.MyKeyBindType == KeyBindType.Action && SystemGameManager.Instance.InputManager.KeyBindWasPressed(keyBindNode.MyKeyBindID) == true) {
+                if (keyBindNode.KeyBindType == KeyBindType.Action && SystemGameManager.Instance.InputManager.KeyBindWasPressed(keyBindNode.MyKeyBindID) == true) {
                     //Debug.Log("PlayerController.RegisterAbilityButtonPresses(): key pressed: " + keyBindNode.MyKeyCode.ToString());
-                    keyBindNode.MyActionButton.OnClick(true);
+                    keyBindNode.ActionButton.OnClick(true);
                 }
             }
         }

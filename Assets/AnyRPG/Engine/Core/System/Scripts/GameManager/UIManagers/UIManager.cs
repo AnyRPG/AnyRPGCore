@@ -211,14 +211,6 @@ namespace AnyRPG {
         public override void Configure(SystemGameManager systemGameManager) {
             base.Configure(systemGameManager);
 
-            // set references
-            playerManager = systemGameManager.PlayerManager;
-            keyBindManager = systemGameManager.KeyBindManager;
-            inputManager = systemGameManager.InputManager;
-            cameraManager = systemGameManager.CameraManager;
-            inventoryManager = systemGameManager.InventoryManager;
-            systemEventManager = systemGameManager.SystemEventManager;
-
             // initialize ui managers
             actionBarManager.Configure(systemGameManager);
             combatTextManager.Configure(systemGameManager);
@@ -287,6 +279,17 @@ namespace AnyRPG {
             confirmNewGameMenuWindow.Configure(systemGameManager);
 
             CreateEventSubscriptions();
+        }
+
+        public override void SetGameManagerReferences() {
+            base.SetGameManagerReferences();
+
+            playerManager = systemGameManager.PlayerManager;
+            keyBindManager = systemGameManager.KeyBindManager;
+            inputManager = systemGameManager.InputManager;
+            cameraManager = systemGameManager.CameraManager;
+            inventoryManager = systemGameManager.InventoryManager;
+            systemEventManager = systemGameManager.SystemEventManager;
         }
 
         public void PerformSetupActivities() {

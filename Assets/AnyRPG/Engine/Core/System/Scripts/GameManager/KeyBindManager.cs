@@ -175,21 +175,21 @@ namespace AnyRPG {
             //Debug.Log("KeyBindManager.UnbindKeyCode()");
             foreach (KeyBindNode keyBindNode in currentDictionary.Values) {
                 if (inputDeviceType == InputDeviceType.Keyboard) {
-                    if (keyBindNode.MyKeyCode == keyCode && keyBindNode.MyShift == shift && keyBindNode.MyControl == control) {
-                        keyBindNode.MyKeyCode = KeyCode.None;
-                        keyBindNode.MyShift = false;
-                        keyBindNode.MyControl = false;
+                    if (keyBindNode.KeyboardKeyCode == keyCode && keyBindNode.Shift == shift && keyBindNode.Control == control) {
+                        keyBindNode.KeyboardKeyCode = KeyCode.None;
+                        keyBindNode.Shift = false;
+                        keyBindNode.Control = false;
                         return;
                     }
                 } else if(inputDeviceType == InputDeviceType.Joystick) {
-                    if (keyBindNode.MyJoystickKeyCode == keyCode) {
-                        keyBindNode.MyJoystickKeyCode = KeyCode.None;
+                    if (keyBindNode.JoystickKeyCode == keyCode) {
+                        keyBindNode.JoystickKeyCode = KeyCode.None;
                         return;
                     }
 
                 } else if (inputDeviceType == InputDeviceType.Mobile) {
-                    if (keyBindNode.MyMobileKeyCode == keyCode) {
-                        keyBindNode.MyMobileKeyCode = KeyCode.None;
+                    if (keyBindNode.MobileKeyCode == keyCode) {
+                        keyBindNode.MobileKeyCode = KeyCode.None;
                         return;
                     }
 

@@ -54,9 +54,6 @@ namespace AnyRPG {
         private CharacterCreatorManager characterCreatorManager = null;
 
         [SerializeField]
-        private UIManager uIManager = null;
-
-        [SerializeField]
         private SystemAbilityController systemAbilityController = null;
 
         [SerializeField]
@@ -112,6 +109,9 @@ namespace AnyRPG {
 
         [SerializeField]
         private SystemPlayableDirectorManager systemPlayableDirectorManager = null;
+
+        [SerializeField]
+        private UIManager uIManager = null;
 
         // system scripts
         private SystemEventManager systemEventManager = null;
@@ -169,20 +169,13 @@ namespace AnyRPG {
             systemConfigurationManager.Configure(this);
 
             // then everything else that relies on system configuration and data resources
-            systemEnvironmentManager.Configure(this);
-            craftingManager.Configure(this);
-            interactionManager.Configure(this);
-            lootManager.Configure(this);
-            systemPlayableDirectorManager.Configure(this);
-            questLog.Configure(this);
-            KeyBindManager.Configure(this);
-            saveManager.Configure(this);
+            objectPooler.Configure(this);
+
             cameraManager.Configure(this);
             audioManager.Configure(this);
             petPreviewManager.Configure(this);
             unitPreviewManager.Configure(this);
             characterCreatorManager.Configure(this);
-            systemAchievementManager.Configure(this);
             systemAbilityController.Configure(this);
             castTargettingManager.Configure(this);
             inputManager.Configure(this);
@@ -190,8 +183,18 @@ namespace AnyRPG {
             inventoryManager.Configure(this);
             playerManager.Configure(this);
             systemItemManager.Configure(this);
+            systemAchievementManager.Configure(this);
             logManager.Configure(this);
-            ObjectPooler.Configure(this);
+            newGameManager.Configure(this);
+            loadGameManager.Configure(this);
+            saveManager.Configure(this);
+            KeyBindManager.Configure(this);
+            questLog.Configure(this);
+            systemEnvironmentManager.Configure(this);
+            craftingManager.Configure(this);
+            interactionManager.Configure(this);
+            lootManager.Configure(this);
+            systemPlayableDirectorManager.Configure(this);
             uIManager.Configure(this);
 
         }

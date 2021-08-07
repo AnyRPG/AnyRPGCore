@@ -207,7 +207,7 @@ namespace AnyRPG {
                 if (keyBindManager.KeyBinds.Count >= count) {
                     //Debug.Log("ActionBarManager.AssociateActionBarKeyBinds(): associate count: ACT" + count + " with actionButton " + actionButton.name + actionButton.GetInstanceID());
                     if (keyBindManager.KeyBinds.ContainsKey("ACT" + count.ToString())) {
-                        keyBindManager.KeyBinds["ACT" + count.ToString()].MyActionButton = actionButton;
+                        keyBindManager.KeyBinds["ACT" + count.ToString()].ActionButton = actionButton;
                         count++;
                     } else {
                         //Debug.Log("ActionBarManager.AssociateActionBarKeyBinds(): ran out of keybinds to associate with available action buttons!");

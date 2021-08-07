@@ -86,7 +86,7 @@ namespace AnyRPG {
             this.windowTitle = title;
             this.windowText.text = this.windowTitle;
 
-            InitializeWindow();
+            //InitializeWindow();
 
             InitializeWindowContentsCommon();
         }
@@ -104,7 +104,7 @@ namespace AnyRPG {
 
         public virtual void OpenWindow() {
             //Debug.Log(gameObject.name + ".CloseableWindow.OpenWindow()");
-            InitializeWindow();
+            //InitializeWindow();
             if (IsOpen) {
                 return;
             }
@@ -127,7 +127,7 @@ namespace AnyRPG {
 
         public virtual void CloseWindow() {
             //Debug.Log(gameObject.name + ".CloseableWindow.CloseWindow()");
-            InitializeWindow();
+            //InitializeWindow();
             if (IsOpen == false) {
                 RawCloseWindow();
                 return;

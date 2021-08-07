@@ -50,6 +50,11 @@ namespace AnyRPG {
         public override void Configure(SystemGameManager systemGameManager) {
             base.Configure(systemGameManager);
 
+        }
+
+        public override void SetGameManagerReferences() {
+            //Debug.Log("LoadGameManager.SetGameManagerReferences()");
+            base.SetGameManagerReferences();
             saveManager = systemGameManager.SaveManager;
             objectPooler = systemGameManager.ObjectPooler;
             characterCreatorManager = systemGameManager.CharacterCreatorManager;
@@ -59,10 +64,9 @@ namespace AnyRPG {
 
 
         public void SetSavedGame(AnyRPGSaveData saveData) {
-            //Debug.Log("LoadGamePanel.ShowSavedGame()");
+            //Debug.Log("LoadGameManager.SetSavedGame()");
 
             anyRPGSaveData = saveData;
-
             capabilityConsumerSnapshot = saveManager.GetCapabilityConsumerSnapshot(anyRPGSaveData);
 
             unitProfile = capabilityConsumerSnapshot.UnitProfile;

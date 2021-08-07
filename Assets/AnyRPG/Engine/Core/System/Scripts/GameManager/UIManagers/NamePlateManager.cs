@@ -94,6 +94,7 @@ namespace AnyRPG {
         public NamePlateController SpawnNamePlate(NamePlateUnit namePlateUnit, bool usePositionOffset) {
             //Debug.Log("NamePlateManager.SpawnNamePlate(" + namePlateUnit.DisplayName + ")");
             NamePlateController namePlate = objectPooler.GetPooledObject(namePlatePrefab, namePlateContainer).GetComponent<NamePlateController>();
+            namePlate.Configure(systemGameManager);
             namePlates.Add(namePlateUnit, namePlate);
             namePlate.SetNamePlateUnit(namePlateUnit, usePositionOffset);
 

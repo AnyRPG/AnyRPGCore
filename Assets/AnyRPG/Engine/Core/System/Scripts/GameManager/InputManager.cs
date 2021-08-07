@@ -141,14 +141,14 @@ namespace AnyRPG {
             foreach (KeyBindNode keyBindNode in keyBindManager.KeyBinds.Values) {
                 // normal should eventually changed to movement, but there is only one other key (toggle run) that is normal for now, so normal is ok until more keys are added
                 // register key down
-                if (Input.GetKeyDown(keyBindNode.MyKeyCode) && (keyBindNode.MyKeyBindType == KeyBindType.Normal || ((control == keyBindNode.MyControl) && (shift == keyBindNode.MyShift)))) {
+                if (Input.GetKeyDown(keyBindNode.KeyboardKeyCode) && (keyBindNode.KeyBindType == KeyBindType.Normal || ((control == keyBindNode.Control) && (shift == keyBindNode.Shift)))) {
                     //Debug.Log(keyBindNode.MyKeyCode + " pressed true!");
                     keyBindNode.RegisterKeyPress();
                 } else {
                     keyBindNode.UnRegisterKeyPress();
                 }
 
-                if (Input.GetKey(keyBindNode.MyKeyCode) && (keyBindNode.MyKeyBindType == KeyBindType.Normal || (control == keyBindNode.MyControl) && (shift == keyBindNode.MyShift))) {
+                if (Input.GetKey(keyBindNode.KeyboardKeyCode) && (keyBindNode.KeyBindType == KeyBindType.Normal || (control == keyBindNode.Control) && (shift == keyBindNode.Shift))) {
                     //Debug.Log(keyBindNode.MyKeyCode + " held true!");
                     keyBindNode.RegisterKeyHeld();
                 } else {
@@ -156,7 +156,7 @@ namespace AnyRPG {
                 }
 
                 // register key up
-                if (Input.GetKeyUp(keyBindNode.MyKeyCode)) {
+                if (Input.GetKeyUp(keyBindNode.KeyboardKeyCode)) {
                     //Debug.Log(keyBindNode.MyKeyCode + " pressed true!");
                     keyBindNode.RegisterKeyUp();
                 } else {

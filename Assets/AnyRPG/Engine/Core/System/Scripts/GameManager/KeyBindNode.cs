@@ -14,9 +14,9 @@ namespace AnyRPG {
         private KeyCode joystickKeyCode;
         private KeyCode mobileKeyCode;
 
-        private bool control = false;
+        private bool controlModifier = false;
 
-        private bool shift = false;
+        private bool shiftModifier = false;
 
         private KeyBindType keyBindType;
 
@@ -37,36 +37,36 @@ namespace AnyRPG {
         // prevent multiple triggers
         private bool keyLocked = false;
 
-        public KeyBindNode(string keyBindID, KeyCode keyCode, KeyCode joystickKeyCode, KeyCode mobileKeyCode, string label, KeyBindType keyBindType, bool control = false, bool shift = false) {
+        public KeyBindNode(string keyBindID, KeyCode keyboardKeyCode, KeyCode joystickKeyCode, KeyCode mobileKeyCode, string label, KeyBindType keyBindType, bool control = false, bool shift = false) {
             //Debug.Log("KeyBindNode(" + keyBindID + ")");
             this.keyBindID = keyBindID;
             this.label = label;
             this.keyBindType = keyBindType;
-            this.control = control;
-            this.shift = shift;
+            this.controlModifier = control;
+            this.shiftModifier = shift;
             this.joystickKeyCode = joystickKeyCode;
             this.mobileKeyCode = mobileKeyCode;
-            this.MyKeyCode = keyCode;
+            this.KeyboardKeyCode = keyboardKeyCode;
         }
 
         public string MyKeyBindID { get => keyBindID; set => keyBindID = value; }
 
-        public KeyCode MyKeyCode {
+        public KeyCode KeyboardKeyCode {
             get => keyCode;
             set {
-                Debug.Log("KeyBindNode.SetMyKeyCode");
+                //Debug.Log("KeyBindNode.SetKeyboardKeyCode: " + value);
                 keyCode = value;
-                if (MyActionButton != null) {
-                    Debug.Log("KeyBindNode.SetMyKeyCode : actionbutton is not null");
-                    MyActionButton.KeyBindText.text = FormatActionButtonLabel();
+                if (ActionButton != null) {
+                    Debug.Log("KeyBindNode.SetKeyboardKeyCode : actionbutton is not null");
+                    ActionButton.KeyBindText.text = FormatActionButtonLabel();
                 }
-                if (MyKeyBindSlotScript != null) {
-                    MyKeyBindSlotScript.Initialize(this);
+                if (KeyBindSlotScript != null) {
+                    KeyBindSlotScript.Initialize(this);
                 }
             }
         }
 
-        public KeyCode MyJoystickKeyCode {
+        public KeyCode JoystickKeyCode {
             get => joystickKeyCode;
             set {
                 //Debug.Log("KeyBindNode.SetMyKeyCode");
@@ -76,13 +76,13 @@ namespace AnyRPG {
                     MyActionButton.MyKeyBindText.text = FormatActionButtonLabel();
                 }
                 */
-                if (MyKeyBindSlotScript != null) {
-                    MyKeyBindSlotScript.Initialize(this);
+                if (KeyBindSlotScript != null) {
+                    KeyBindSlotScript.Initialize(this);
                 }
             }
         }
 
-        public KeyCode MyMobileKeyCode {
+        public KeyCode MobileKeyCode {
             get => mobileKeyCode;
             set {
                 //Debug.Log("KeyBindNode.SetMyKeyCode");
@@ -92,37 +92,37 @@ namespace AnyRPG {
                     MyActionButton.MyKeyBindText.text = FormatActionButtonLabel();
                 }
                 */
-                if (MyKeyBindSlotScript != null) {
-                    MyKeyBindSlotScript.Initialize(this);
+                if (KeyBindSlotScript != null) {
+                    KeyBindSlotScript.Initialize(this);
                 }
             }
         }
 
         public string MyLabel { get => label; set => label = value; }
 
-        public ActionButton MyActionButton {
+        public ActionButton ActionButton {
             get => actionButton;
             set {
-                Debug.Log("KeyBindNode.SetMyActionButton: " + (value == null ? "null" : value.GetInstanceID().ToString()) + "keybindID: " + keyBindID);
+                //Debug.Log("KeyBindNode.SetActionButton: " + (value == null ? "null" : value.GetInstanceID().ToString()) + "keybindID: " + keyBindID);
                 actionButton = value;
                 actionButton.KeyBindText.text = FormatActionButtonLabel();
             }
         }
 
-        public KeyBindSlotScript MyKeyBindSlotScript { get => keyBindSlotScript; set => keyBindSlotScript = value; }
-        public KeyBindType MyKeyBindType { get => keyBindType; set => keyBindType = value; }
-        public bool MyControl { get => control; set => control = value; }
-        public bool MyShift { get => shift; set => shift = value; }
+        public KeyBindSlotScript KeyBindSlotScript { get => keyBindSlotScript; set => keyBindSlotScript = value; }
+        public KeyBindType KeyBindType { get => keyBindType; set => keyBindType = value; }
+        public bool Control { get => controlModifier; set => controlModifier = value; }
+        public bool Shift { get => shiftModifier; set => shiftModifier = value; }
         public bool KeyPressed { get => keyPressed; }
         public bool KeyHeld { get => keyHeld; }
         public bool KeyUp { get => keyUp; }
 
         private string FormatActionButtonLabel() {
-            Debug.Log("KeyBindNode.FormatActionButtonLabel() : " + MyKeyCode.ToString());
-            if (MyKeyCode.ToString() == "None") {
+            //Debug.Log("KeyBindNode.FormatActionButtonLabel() : " + KeyboardKeyCode.ToString());
+            if (KeyboardKeyCode.ToString() == "None") {
                 return string.Empty;
             }
-            return (control ? "c" : "") + (shift ? "s" : "") + ReplaceSpecialCharacters(MyKeyCode.ToString());
+            return (controlModifier ? "c" : "") + (shiftModifier ? "s" : "") + ReplaceSpecialCharacters(KeyboardKeyCode.ToString());
             //return keyBindID;
         }
 
@@ -139,13 +139,13 @@ namespace AnyRPG {
         public void UpdateKeyCode(InputDeviceType inputDeviceType, KeyCode keyCode, bool control, bool shift) {
             Debug.Log("KeyBindNode.UpdateKeyCode(" + inputDeviceType + ", " + keyCode + ", " + control + ", " + shift + ")");
             if (inputDeviceType == InputDeviceType.Keyboard) {
-                this.MyKeyCode = keyCode;
-                this.control = control;
-                this.shift = shift;
+                this.KeyboardKeyCode = keyCode;
+                this.controlModifier = control;
+                this.shiftModifier = shift;
             } else if (inputDeviceType == InputDeviceType.Joystick) {
-                this.MyJoystickKeyCode = keyCode;
+                this.JoystickKeyCode = keyCode;
             } else if (inputDeviceType == InputDeviceType.Mobile) {
-                this.MyMobileKeyCode = keyCode;
+                this.MobileKeyCode = keyCode;
             }
             SendKeyBindEvent();
         }

@@ -191,7 +191,7 @@ namespace AnyRPG {
         }
 
         private void LoadUISettings() {
-            Debug.Log("MainSettingsMenuController.LoadUISettings()");
+            //Debug.Log("MainSettingsMenuController.LoadUISettings()");
             if (!PlayerPrefs.HasKey("InventoryOpacity")) {
                 PlayerPrefs.SetFloat("InventoryOpacity", defaultInventoryOpacity);
             }
