@@ -91,6 +91,9 @@ namespace AnyRPG {
             eyesButton.Configure(systemGameManager);
             closeButton.Configure(systemGameManager);
             saveButton.Configure(systemGameManager);
+
+            characterPreviewPanel.Configure(systemGameManager);
+            umaCharacterPanel.Configure(systemGameManager);
         }
 
         public override void SetGameManagerReferences() {

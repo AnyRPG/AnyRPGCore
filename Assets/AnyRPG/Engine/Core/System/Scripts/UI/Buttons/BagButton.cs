@@ -53,12 +53,15 @@ namespace AnyRPG {
         public override void Configure(SystemGameManager systemGameManager) {
             base.Configure(systemGameManager);
 
+            GetLocalComponents();
+            SetBackGroundColor();
+        }
+
+        public override void SetGameManagerReferences() {
+            base.SetGameManagerReferences();
             inventoryManager = systemGameManager.InventoryManager;
             uIManager = systemGameManager.UIManager;
             handScript = uIManager.HandScript;
-
-            GetLocalComponents();
-            SetBackGroundColor();
         }
 
         public void OnAddBag(Bag bag) {

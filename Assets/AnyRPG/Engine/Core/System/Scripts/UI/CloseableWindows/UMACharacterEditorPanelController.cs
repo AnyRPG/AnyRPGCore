@@ -52,6 +52,9 @@ namespace AnyRPG {
             mainButtonsArea.SetActive(false);
             mainNoOptionsArea.SetActive(false);
             // there are no options to show if this is not an UMA
+            if (characterCreatorManager == null) {
+                Debug.Log("UMACharacterEditorPanelController.SetupOptions() : characterCreatorManager is null");
+            }
             if (characterCreatorManager.PreviewUnitController?.DynamicCharacterAvatar == null) {
                 mainNoOptionsArea.SetActive(true);
                 return;

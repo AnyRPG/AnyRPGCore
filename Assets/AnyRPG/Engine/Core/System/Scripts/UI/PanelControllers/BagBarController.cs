@@ -29,11 +29,19 @@ namespace AnyRPG {
         public override void Configure(SystemGameManager systemGameManager) {
             base.Configure(systemGameManager);
 
-            objectPooler = systemGameManager.ObjectPooler;
-
             GetComponentReferences();
             SetBackGroundColor();
             CreateEventSubscriptions();
+
+            foreach (BagButton bagButton in bagButtons) {
+                bagButton.Configure(systemGameManager);
+            }
+        }
+
+        public override void SetGameManagerReferences() {
+            base.SetGameManagerReferences();
+
+            objectPooler = systemGameManager.ObjectPooler;
         }
 
 

@@ -111,6 +111,12 @@ namespace AnyRPG {
         public override void Configure(SystemGameManager systemGameManager) {
             base.Configure(systemGameManager);
 
+        }
+
+        public override void SetGameManagerReferences() {
+            //Debug.Log("CharacterAppearancePanel.SetGameManagerReferences()");
+            base.SetGameManagerReferences();
+
             characterCreatorManager = systemGameManager.CharacterCreatorManager;
             uIManager = systemGameManager.UIManager;
             objectPooler = systemGameManager.ObjectPooler;
