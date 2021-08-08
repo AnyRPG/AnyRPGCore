@@ -91,8 +91,10 @@ namespace AnyRPG {
 
         private void OnEnable() {
             //Debug.Log("NamePlateController.OnEnable()");
+            /*
             CreateEventSubscriptions();
             HideSpeechBubble();
+            */
         }
 
         private void CreateEventSubscriptions() {
@@ -264,6 +266,9 @@ namespace AnyRPG {
         public void SetNamePlateUnit(NamePlateUnit namePlateUnit, bool usePositionOffset) {
             //Debug.Log("NamePlateController.SetNamePlateUnit(" + namePlateUnit.DisplayName + ") setting namePlateUnit on nameplate in instanceid" + GetInstanceID().ToString());
             // moved code here from awake since a nameplate always has to be initialized so this method will always be called before anything else
+            CreateEventSubscriptions();
+            HideSpeechBubble();
+
             unitNamePlateController = namePlateUnit.NamePlateController;
             if (usePositionOffset == false) {
                 positionOffset = 0f;

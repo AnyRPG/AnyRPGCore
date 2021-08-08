@@ -67,7 +67,7 @@ namespace AnyRPG {
         }
 
         public override void SetGameManagerReferences() {
-            Debug.Log("LoadGamePanel.SetGameManagerReferences()");
+            //Debug.Log("LoadGamePanel.SetGameManagerReferences()");
             base.SetGameManagerReferences();
             saveManager = systemGameManager.SaveManager;
             objectPooler = systemGameManager.ObjectPooler;

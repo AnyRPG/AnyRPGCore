@@ -108,6 +108,7 @@ namespace AnyRPG {
             base.Configure(systemGameManager);
 
             InitializeController();
+            statusEffectPanelController.Configure(systemGameManager);
             previewCamera.enabled = false;
         }
 

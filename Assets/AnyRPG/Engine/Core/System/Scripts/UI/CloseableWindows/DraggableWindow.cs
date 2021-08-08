@@ -36,16 +36,16 @@ namespace AnyRPG {
 
         public override void Configure(SystemGameManager systemGameManager) {
             base.Configure(systemGameManager);
-            uIManager = systemGameManager.UIManager;
-            saveManager = systemGameManager.SaveManager;
-        }
-
-        public virtual void Awake() {
-            // lazy instantiation
             if (moveableTransform == null) {
                 //Debug.Log(gameObject.name + "DraggableWindow.Awake(): moveableTransform was null, setting to self");
                 moveableTransform = transform;
             }
+        }
+
+        public override void SetGameManagerReferences() {
+            base.SetGameManagerReferences();
+            uIManager = systemGameManager.UIManager;
+            saveManager = systemGameManager.SaveManager;
         }
 
         public void OnBeginDrag(PointerEventData eventData) {

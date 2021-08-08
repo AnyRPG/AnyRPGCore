@@ -8,7 +8,7 @@ using UnityEngine.UI;
 namespace AnyRPG {
     // this is almost identical to questscript
 
-    public class InteractionPanelScript : MonoBehaviour {
+    public class InteractionPanelScript : ConfiguredMonoBehaviour {
 
 
         [SerializeField]
@@ -20,6 +20,9 @@ namespace AnyRPG {
         private InteractableOptionComponent interactableOption = null;
 
         private int optionIndex = 0;
+
+        // game manager references
+        PlayerManager playerManager = null;
 
         public Image MyIcon { get => icon; set => icon = value; }
         public InteractableOptionComponent InteractableOption {
@@ -36,6 +39,12 @@ namespace AnyRPG {
             }
         }
 
+        public override void SetGameManagerReferences() {
+            base.SetGameManagerReferences();
+
+            playerManager = systemGameManager.PlayerManager;
+        }
+
         public void Setup(InteractableOptionComponent interactableOptionComponent, int optionIndex) {
 
             InteractableOption = interactableOptionComponent;
@@ -46,7 +55,7 @@ namespace AnyRPG {
 
         public void Interact() {
             if (SystemGameManager.Instance.PlayerManager.UnitController != null) {
-                InteractableOption.Interact(SystemGameManager.Instance.PlayerManager.UnitController.CharacterUnit, optionIndex);
+                InteractableOption.Interact(playerManager.UnitController.CharacterUnit, optionIndex);
             }
             InteractableOption.Interactable.CloseInteractionWindow();
         }

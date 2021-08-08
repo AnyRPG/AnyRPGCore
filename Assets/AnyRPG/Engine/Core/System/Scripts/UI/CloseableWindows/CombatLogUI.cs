@@ -11,6 +11,19 @@ namespace AnyRPG {
         //[SerializeField]
         //private GameObject textPrefab = null;
 
+        [Header("Buttons")]
+
+        [SerializeField]
+        private HighlightButton chatHighlightButton = null;
+
+        [SerializeField]
+        private HighlightButton combatHighlightButton = null;
+
+        [SerializeField]
+        private HighlightButton systemHighlightButton = null;
+
+        [Header("Areas")]
+
         [SerializeField]
         private GameObject chatArea = null;
 
@@ -23,8 +36,6 @@ namespace AnyRPG {
         //[SerializeField]
         //private Scrollbar chatScrollBar = null;
 
-        [SerializeField]
-        private HighlightButton chatHighlightButton = null;
 
         [SerializeField]
         private GameObject combatArea = null;
@@ -38,8 +49,6 @@ namespace AnyRPG {
         //[SerializeField]
         //private Scrollbar combatScrollBar = null;
 
-        [SerializeField]
-        private HighlightButton combatHighlightButton = null;
 
         [SerializeField]
         private GameObject systemArea = null;
@@ -56,8 +65,6 @@ namespace AnyRPG {
         //[SerializeField]
         //private Button systemButton = null;
 
-        [SerializeField]
-        private HighlightButton systemHighlightButton = null;
 
         // a list to hold the messages
         //private List<string> combatMessageList = new List<string>();
@@ -90,11 +97,19 @@ namespace AnyRPG {
 
         public override void Configure(SystemGameManager systemGameManager) {
             //Debug.Log("CombatLogUI.Awake()");
-            logManager = systemGameManager.LogManager;
+            base.Configure(systemGameManager);
+
+            chatHighlightButton.Configure(systemGameManager);
+            combatHighlightButton.Configure(systemGameManager);
+            systemHighlightButton.Configure(systemGameManager);
+
             PopulateObjectPool();
             ClearLog();
+        }
 
-            base.Configure(systemGameManager);
+        public override void SetGameManagerReferences() {
+            base.SetGameManagerReferences();
+            logManager = systemGameManager.LogManager;
         }
 
         private void ClearLog() {

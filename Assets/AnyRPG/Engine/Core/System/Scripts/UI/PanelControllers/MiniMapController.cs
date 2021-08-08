@@ -106,14 +106,6 @@ namespace AnyRPG {
             //Debug.Log("MiniMapController.Init()");
             base.Configure(systemGameManager);
 
-            systemConfigurationManager = systemGameManager.SystemConfigurationManager;
-            cameraManager = systemGameManager.CameraManager;
-            playerManager = systemGameManager.PlayerManager;
-            inputManager = systemGameManager.InputManager;
-            levelManager = systemGameManager.LevelManager;
-            miniMapManager = uIManager.MiniMapManager;
-            objectPooler = systemGameManager.ObjectPooler;
-
             CreateEventSubscriptions();
 
             if (systemConfigurationManager.SystemBarMap != null) {
@@ -136,6 +128,19 @@ namespace AnyRPG {
             } else {
                 cameraSize = cameraSizeDefault;
             }
+        }
+
+        public override void SetGameManagerReferences() {
+            base.SetGameManagerReferences();
+
+            systemConfigurationManager = systemGameManager.SystemConfigurationManager;
+            cameraManager = systemGameManager.CameraManager;
+            playerManager = systemGameManager.PlayerManager;
+            inputManager = systemGameManager.InputManager;
+            levelManager = systemGameManager.LevelManager;
+            miniMapManager = uIManager.MiniMapManager;
+            objectPooler = systemGameManager.ObjectPooler;
+
         }
 
         private void CreateEventSubscriptions() {
@@ -173,6 +178,7 @@ namespace AnyRPG {
                 if (mapIndicator != null) {
                     MiniMapIndicatorController mapIndicatorController = mapIndicator.GetComponent<MiniMapIndicatorController>();
                     if (mapIndicatorController != null) {
+                        mapIndicatorController.Configure(systemGameManager);
                         mapIndicatorControllers.Add(interactable, mapIndicatorController);
                         mapIndicatorController.SetInteractable(interactable);
                         if (miniMapEnabled == false) {

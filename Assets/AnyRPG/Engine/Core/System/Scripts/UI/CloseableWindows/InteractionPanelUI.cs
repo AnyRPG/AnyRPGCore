@@ -148,6 +148,7 @@ namespace AnyRPG {
                             if (displayText != string.Empty) {
                                 GameObject go = objectPooler.GetPooledObject(questPrefab, availableQuestArea.transform);
                                 InteractionPanelQuestScript qs = go.GetComponent<InteractionPanelQuestScript>();
+                                qs.Configure(systemGameManager);
                                 qs.Quest = quest;
                                 qs.QuestGiver = (_interactable as QuestGiverComponent);
 
@@ -178,6 +179,7 @@ namespace AnyRPG {
                             GameObject go = objectPooler.GetPooledObject(interactableButtonPrefab, interactableButtonParent);
                             InteractionPanelScript iPS = go.GetComponent<InteractionPanelScript>();
                             if (iPS != null) {
+                                iPS.Configure(systemGameManager);
                                 iPS.Setup(_interactable, i);
                                 interactionPanelScripts.Add(go);
                             }

@@ -31,6 +31,11 @@ namespace AnyRPG {
         public override void Configure(SystemGameManager systemGameManager) {
             base.Configure(systemGameManager);
 
+        }
+
+        public override void SetGameManagerReferences() {
+            base.SetGameManagerReferences();
+
             uIManager = systemGameManager.UIManager;
             playerManager = systemGameManager.PlayerManager;
             questLog = systemGameManager.QuestLog;
