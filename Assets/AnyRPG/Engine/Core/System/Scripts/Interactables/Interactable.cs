@@ -484,7 +484,7 @@ namespace AnyRPG {
         */
 
         public void OpenInteractionWindow() {
-            Debug.Log(gameObject.name + ".Interactable.OpenInteractionWindow");
+            //Debug.Log(gameObject.name + ".Interactable.OpenInteractionWindow");
             if (SystemGameManager.Instance.InteractionManager != null) {
                 SystemGameManager.Instance.InteractionManager.CurrentInteractable = this;
             } else {

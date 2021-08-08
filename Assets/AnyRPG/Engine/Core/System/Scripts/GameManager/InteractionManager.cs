@@ -15,7 +15,7 @@ namespace AnyRPG {
         public Interactable CurrentInteractable {
             get => currentInteractable;
             set {
-                Debug.Log("CurrentInteractable");
+                //Debug.Log("CurrentInteractable");
                 currentInteractable = value;
                 OnSetInteractable(currentInteractable);
             }

@@ -51,8 +51,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   contentParent: {fileID: 4336510194897801960}
   contentPrefab: {fileID: 0}
-  contentGameObject: {fileID: 2382909202382707832, guid: aa7b18c612a6c6c4a80aff39e080092d,
-    type: 3}
+  contentGameObject: {fileID: 7699551534467896023}
   windowTitle: 
   windowText: {fileID: 0}
   backGroundImage: {fileID: 0}
@@ -196,6 +195,12 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: aa7b18c612a6c6c4a80aff39e080092d, type: 3}
+--- !u!1 &7699551534467896023 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 2382909202382707832, guid: aa7b18c612a6c6c4a80aff39e080092d,
+    type: 3}
+  m_PrefabInstance: {fileID: 5461606414004915887}
+  m_PrefabAsset: {fileID: 0}
 --- !u!224 &7699551534467896010 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 2382909202382707813, guid: aa7b18c612a6c6c4a80aff39e080092d,

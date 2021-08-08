@@ -329,10 +329,10 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   m_text: 'This is some really long quest text.  You should be able to read it and
-    there should be space for at least on paragraph.
+    there should be space for at least one paragraph.
 
 
-    Also a return pace and
+    Also a return space and
     some final stuff before you click the button and go to the next screen
 
     and

@@ -141,7 +141,6 @@ namespace AnyRPG {
             }
             //SystemEventManager.StartListening("OnLevelUnload", HandleLevelUnload);
             SystemEventManager.StartListening("OnLevelLoad", HandleLevelLoad);
-            SystemEventManager.StartListening("OnExitGame",  HandleExitGame);
             systemEventManager.OnLevelChanged += PlayLevelUpEffects;
             SystemEventManager.StartListening("OnPlayerDeath", HandlePlayerDeath);
             eventSubscriptionsInitialized = true;
@@ -154,7 +153,6 @@ namespace AnyRPG {
             }
             //SystemEventManager.StopListening("OnLevelUnload", HandleLevelUnload);
             SystemEventManager.StopListening("OnLevelLoad", HandleLevelLoad);
-            SystemEventManager.StopListening("OnExitGame", HandleExitGame);
             systemEventManager.OnLevelChanged -= PlayLevelUpEffects;
             SystemEventManager.StopListening("OnPlayerDeath", HandlePlayerDeath);
             eventSubscriptionsInitialized = false;
@@ -167,20 +165,14 @@ namespace AnyRPG {
             }
             CleanupEventSubscriptions();
         }
-        /*
-        public void HandleLevelUnload(string eventName, EventParamProperties eventParamProperties) {
-            Debug.Log("PlayerManager.HandleLevelUnload()");
-            ProcessLevelUnload();
-        }
-        */
 
         public void ResetInitialLevel() {
             initialLevel = 1;
         }
 
-        public void HandleExitGame(string eventName, EventParamProperties eventParamProperties) {
+        public void ProcessExitToMainMenu() {
             //Debug.Log("PlayerManager.ExitGameHandler()");
-            //DespawnPlayerUnit();
+            DespawnPlayerUnit();
             DespawnPlayerConnection();
             saveManager.ClearSystemManagedCharacterData();
         }
@@ -465,7 +457,7 @@ namespace AnyRPG {
             playerController = playerConnectionObject.GetComponent<PlayerController>();
             playerUnitMovementController = playerConnectionObject.GetComponent<PlayerUnitMovementController>();
 
-            SystemEventManager.TriggerEvent("NotifyBeforePlayerConnectionSpawn", new EventParamProperties());
+            SystemEventManager.TriggerEvent("OnBeforePlayerConnectionSpawn", new EventParamProperties());
             activeCharacter.Init();
             activeCharacter.Initialize(systemConfigurationManager.DefaultPlayerName, initialLevel);
             playerConnectionSpawned = true;
@@ -482,6 +474,7 @@ namespace AnyRPG {
             UnsubscribeFromPlayerEvents();
             SystemEventManager.TriggerEvent("OnPlayerConnectionDespawn", new EventParamProperties());
             objectPooler.ReturnObjectToPool(playerConnectionObject);
+            playerConnectionObject = null;
             character = null;
             activeCharacter = null;
             playerUnitMovementController = null;

@@ -54,7 +54,7 @@ namespace AnyRPG {
         }
 
         public void HandleSetInteractable(Interactable _interactable) {
-            Debug.Log("InteractionPanelUI.HandleSetInteractable()");
+            //Debug.Log("InteractionPanelUI.HandleSetInteractable()");
             if (interactable != null) {
                 interactable.OnPrerequisiteUpdates -= HandlePrerequisiteUpdates;
             }
@@ -279,7 +279,7 @@ namespace AnyRPG {
         }
 
         public override void ReceiveOpenWindowNotification() {
-            Debug.Log("InteractionPanelUI.ReceiveOpenWindowNotification()");
+            //Debug.Log("InteractionPanelUI.ReceiveOpenWindowNotification()");
             SetBackGroundColor(new Color32(0, 0, 0, (byte)(int)(PlayerPrefs.GetFloat("PopupWindowOpacity") * 255)));
 
             // this has to be done first, because the next line after could close the window and set the interactable to null

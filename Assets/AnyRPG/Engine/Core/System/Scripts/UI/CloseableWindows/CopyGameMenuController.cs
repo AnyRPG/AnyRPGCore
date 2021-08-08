@@ -18,7 +18,9 @@ namespace AnyRPG {
         private LoadGameManager loadGameManager = null;
 
         public override void Configure(SystemGameManager systemGameManager) {
+            //Debug.Log("CopyGameMenuController.Configure()");
             base.Configure(systemGameManager);
+
             noButton.Configure(systemGameManager);
             yesButton.Configure(systemGameManager);
 
@@ -31,12 +33,12 @@ namespace AnyRPG {
         }
 
         public void CancelAction() {
-            //Debug.Log("NewGameMenuController.CancelAction()");
+            //Debug.Log("CopyGameMenuController.CancelAction()");
             uIManager.copyGameMenuWindow.CloseWindow();
         }
 
         public void ConfirmAction() {
-            //Debug.Log("NewGameMenuController.ConfirmAction()");
+            //Debug.Log("CopyGameMenuController.ConfirmAction()");
             loadGameManager.CopyGame();
         }
 

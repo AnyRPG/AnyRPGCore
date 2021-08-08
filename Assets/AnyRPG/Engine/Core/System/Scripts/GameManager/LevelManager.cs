@@ -422,6 +422,7 @@ namespace AnyRPG {
 
         public void LoadMainMenu() {
             SystemEventManager.TriggerEvent("OnExitGame", new EventParamProperties());
+            playerManager.ProcessExitToMainMenu();
             if (systemConfigurationManager.MainMenuSceneNode != null) {
                 LoadLevel(systemConfigurationManager.MainMenuSceneNode.DisplayName);
             } else {

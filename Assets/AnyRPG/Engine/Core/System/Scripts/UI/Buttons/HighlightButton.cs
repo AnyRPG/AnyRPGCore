@@ -7,7 +7,6 @@ using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 namespace AnyRPG {
-    // this is almost identical to questscript
 
     public class HighlightButton : ConfiguredMonoBehaviour, IPointerEnterHandler, IPointerClickHandler, IPointerDownHandler, IPointerUpHandler {
 
@@ -48,9 +47,6 @@ namespace AnyRPG {
         public override void Configure(SystemGameManager systemGameManager) {
             base.Configure(systemGameManager);
 
-            systemConfigurationManager = systemGameManager.SystemConfigurationManager;
-            audioManager = systemGameManager.AudioManager;
-
             if (highlightImage != null) {
                 highlightColor = systemConfigurationManager.DefaultUIColor;
             }
@@ -61,6 +57,14 @@ namespace AnyRPG {
                 }
             }
             DeSelect();
+        }
+
+        public override void SetGameManagerReferences() {
+            //Debug.Log(gameObject.name + ".HighlightButton.SetGameManagerReferences(): " + GetInstanceID());
+            base.SetGameManagerReferences();
+
+            systemConfigurationManager = systemGameManager.SystemConfigurationManager;
+            audioManager = systemGameManager.AudioManager;
         }
 
         public virtual void Select() {
@@ -106,6 +110,9 @@ namespace AnyRPG {
         }
 
         public virtual void OnHoverSound() {
+            if (audioManager == null) {
+                Debug.Log(gameObject.name + ".HighlightButton.OnHoverSound() : audioManager is null!: " + GetInstanceID());
+            }
             audioManager.PlayUIHoverSound();
         }
 

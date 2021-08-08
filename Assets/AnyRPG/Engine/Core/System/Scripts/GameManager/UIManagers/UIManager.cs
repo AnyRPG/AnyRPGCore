@@ -454,7 +454,7 @@ namespace AnyRPG {
         }
 
         private void CreateEventSubscriptions() {
-            //Debug.Log("PlayerManager.CreateEventSubscriptions()");
+            //Debug.Log("UIManager.CreateEventSubscriptions()");
             if (eventSubscriptionsInitialized) {
                 return;
             }
@@ -468,7 +468,7 @@ namespace AnyRPG {
         }
 
         private void CleanupEventSubscriptions() {
-            //Debug.Log("PlayerManager.CleanupEventSubscriptions()");
+            Debug.Log("UIManager.CleanupEventSubscriptions()");
             if (!eventSubscriptionsInitialized) {
                 return;
             }
@@ -788,7 +788,7 @@ namespace AnyRPG {
         }
 
         public void HandleAbilityListChanged(BaseAbility newAbility) {
-            //Debug.Log("UIManager.HandleAbilityListChanged(" + (newAbility == null ? "null" : newAbility.MyName) + ")");
+            //Debug.Log("UIManager.HandleAbilityListChanged(" + (newAbility == null ? "null" : newAbility.DisplayName) + ")");
             // loop through ability bars and try to add ability
             if (actionBarManager != null) {
                 if (newAbility.AutoAddToBars == true) {
