@@ -5273,8 +5273,8 @@ MonoBehaviour:
   craftButton: {fileID: 8334333993718393383}
   craftAllButton: {fileID: 2237936046598130667}
   cancelButton: {fileID: 8972549338421416663}
-  lessButton: {fileID: 1057324698371571244}
-  moreButton: {fileID: 2162864186772804298}
+  lessButton: {fileID: 722961944292511783}
+  moreButton: {fileID: 514581711893651790}
   craftAmountText: {fileID: 6267273976593262115}
   recipePrefab: {fileID: 5181954922283900111, guid: 8b2533b026bcdd34e84ed6acbda66655,
     type: 3}

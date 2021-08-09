@@ -22,10 +22,10 @@ namespace AnyRPG {
         private HighlightButton cancelButton = null;
 
         [SerializeField]
-        private GameObject lessButton = null;
+        private Button lessButton = null;
 
         [SerializeField]
-        private GameObject moreButton = null;
+        private Button moreButton = null;
 
         //[SerializeField]
         //private GameObject cancelButton = null;
@@ -326,22 +326,22 @@ namespace AnyRPG {
             }
 
             if (craftAmount == 0) {
-                craftButton.GetComponent<Button>().interactable = false;
-                craftAllButton.GetComponent<Button>().interactable = false;
-                lessButton.GetComponent<Button>().interactable = false;
-                moreButton.GetComponent<Button>().interactable = false;
+                craftButton.Button.interactable = false;
+                craftAllButton.Button.interactable = false;
+                lessButton.interactable = false;
+                moreButton.interactable = false;
                 if (maxAmount > 0) {
-                    moreButton.GetComponent<Button>().interactable = true;
+                    moreButton.interactable = true;
                 }
             } else {
-                lessButton.GetComponent<Button>().interactable = true;
+                lessButton.interactable = true;
                 if (maxAmount > craftAmount) {
-                    moreButton.GetComponent<Button>().interactable = true;
+                    moreButton.interactable = true;
                 } else {
-                    moreButton.GetComponent<Button>().interactable = false;
+                    moreButton.interactable = false;
                 }
-                craftButton.GetComponent<Button>().interactable = true;
-                craftAllButton.GetComponent<Button>().interactable = true;
+                craftButton.Button.interactable = true;
+                craftAllButton.Button.interactable = true;
             }
             craftAmountText.text = craftAmount.ToString();
         }
