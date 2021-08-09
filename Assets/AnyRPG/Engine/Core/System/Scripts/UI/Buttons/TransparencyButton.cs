@@ -19,11 +19,14 @@ namespace AnyRPG {
         public override void Configure(SystemGameManager systemGameManager) {
             base.Configure(systemGameManager);
 
-            uIManager = systemGameManager.UIManager;
-
             GetComponentReferences();
             SetBackGroundTransparency();
             CreateEventSubscriptions();
+        }
+
+        public override void SetGameManagerReferences() {
+            base.SetGameManagerReferences();
+            uIManager = systemGameManager.UIManager;
         }
 
         private void CreateEventSubscriptions() {

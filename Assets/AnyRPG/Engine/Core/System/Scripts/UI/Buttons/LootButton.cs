@@ -37,9 +37,12 @@ namespace AnyRPG {
         }
 
         public override void Configure(SystemGameManager systemGameManager) {
-            //Debug.Log("LootButton.Configure()");
+            //Debug.Log(gameObject.name + ".LootButton.Configure(): " + GetInstanceID());
             base.Configure(systemGameManager);
-            lootWindow = GetComponentInParent<LootUI>();
+        }
+
+        public void SetLootUI(LootUI lootUI) {
+            lootWindow = lootUI;
         }
 
         public void OnPointerClick(PointerEventData eventData) {
@@ -72,7 +75,7 @@ namespace AnyRPG {
         }
 
         public void OnPointerEnter(PointerEventData eventData) {
-            //Debug.Log("LootButton.OnPointerEnter()");
+            //Debug.Log("LootButton.OnPointerEnter(): " + GetInstanceID());
             if (LootDrop == null) {
                 return;
             }

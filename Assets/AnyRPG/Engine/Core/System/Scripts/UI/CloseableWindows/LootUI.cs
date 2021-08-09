@@ -29,6 +29,7 @@ namespace AnyRPG {
 
             foreach (LootButton lootButton in lootButtons) {
                 lootButton.Configure(systemGameManager);
+                lootButton.SetLootUI(this);
             }
             takeAllButton.Configure(systemGameManager);
         }
