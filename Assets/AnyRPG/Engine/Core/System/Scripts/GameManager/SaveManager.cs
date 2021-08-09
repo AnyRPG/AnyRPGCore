@@ -1313,7 +1313,7 @@ namespace AnyRPG {
                 uIManager.CombatLogWindow.transform.position = new Vector3(PlayerPrefs.GetFloat("CombatLogWindowX"), PlayerPrefs.GetFloat("CombatLogWindowY"), 0);
 
             if (PlayerPrefs.HasKey("MessageFeedManagerX") && PlayerPrefs.HasKey("MessageFeedManagerY"))
-                messageFeedManager.MessageFeedGameObject.transform.position = new Vector3(PlayerPrefs.GetFloat("MessageFeedManagerX"), PlayerPrefs.GetFloat("MessageFeedManagerY"), 0);
+                messageFeedManager.MessageFeedWindow.transform.position = new Vector3(PlayerPrefs.GetFloat("MessageFeedManagerX"), PlayerPrefs.GetFloat("MessageFeedManagerY"), 0);
 
             if (PlayerPrefs.HasKey("FloatingCastBarControllerX") && PlayerPrefs.HasKey("FloatingCastBarControllerY")) {
                 uIManager.FloatingCastBarController.transform.position = new Vector3(PlayerPrefs.GetFloat("FloatingCastBarControllerX"), PlayerPrefs.GetFloat("FloatingCastBarControllerY"), 0);
@@ -1391,8 +1391,8 @@ namespace AnyRPG {
             PlayerPrefs.SetFloat("CombatLogWindowX", uIManager.CombatLogWindow.transform.position.x);
             PlayerPrefs.SetFloat("CombatLogWindowY", uIManager.CombatLogWindow.transform.position.y);
 
-            PlayerPrefs.SetFloat("MessageFeedManagerX", messageFeedManager.MessageFeedGameObject.transform.position.x);
-            PlayerPrefs.SetFloat("MessageFeedManagerY", messageFeedManager.MessageFeedGameObject.transform.position.y);
+            PlayerPrefs.SetFloat("MessageFeedManagerX", messageFeedManager.MessageFeedWindow.transform.position.x);
+            PlayerPrefs.SetFloat("MessageFeedManagerY", messageFeedManager.MessageFeedWindow.transform.position.y);
 
             //Debug.Log("Saving FloatingCastBarController: " + uIManager.MyFloatingCastBarController.transform.position.x + "; " + uIManager.MyFloatingCastBarController.transform.position.y);
             PlayerPrefs.SetFloat("FloatingCastBarControllerX", uIManager.FloatingCastBarController.transform.position.x);

@@ -15,7 +15,7 @@ namespace AnyRPG {
         private GameObject messagePrefab = null;
 
         [SerializeField]
-        private GameObject messageFeedGameObject = null;
+        private DraggableWindow messageFeedWindow = null;
 
         [SerializeField]
         private GraphicRaycaster raycaster = null;
@@ -24,10 +24,15 @@ namespace AnyRPG {
         private ObjectPooler objectPooler = null;
         private LogManager logManager = null;
 
-        public GameObject MessageFeedGameObject { get => messageFeedGameObject; set => messageFeedGameObject = value; }
+        public DraggableWindow MessageFeedWindow { get => messageFeedWindow; set => messageFeedWindow = value; }
 
         public override void Configure(SystemGameManager systemGameManager) {
             base.Configure(systemGameManager);
+            messageFeedWindow.Configure(systemGameManager);
+        }
+
+        public override void SetGameManagerReferences() {
+            base.SetGameManagerReferences();
             objectPooler = systemGameManager.ObjectPooler;
             logManager = systemGameManager.LogManager;
         }
@@ -37,7 +42,7 @@ namespace AnyRPG {
             if (PlayerPrefs.GetInt("UseMessageFeed") == 0) {
                 return;
             }
-            GameObject go = objectPooler.GetPooledObject(messagePrefab, messageFeedGameObject.transform);
+            GameObject go = objectPooler.GetPooledObject(messagePrefab, messageFeedWindow.transform);
             go.GetComponent<TextMeshProUGUI>().text = message;
             //uncomment the next line to make the messages spawn at the top instead of the bottom
             //go.transform.SetAsFirstSibling();
@@ -57,7 +62,7 @@ namespace AnyRPG {
                     raycaster.enabled = false;
                 }
             }
-            MessageFeedGameObject.GetComponent<DraggableWindow>().LockUI();
+            MessageFeedWindow.LockUI();
         }
     }
 

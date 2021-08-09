@@ -117,6 +117,7 @@ namespace AnyRPG {
 
         public void SelectRecipe(Recipe recipe) {
             selectedRecipeScript = recipeScripts[recipe];
+            DeselectOtherRecipes();
             ShowDescription(recipe);
         }
 
@@ -199,7 +200,7 @@ namespace AnyRPG {
         }
 
         public void ShowDescription(Recipe newRecipe) {
-            Debug.Log("CraftingUI.ShowDescription(" + newRecipe.DisplayName + ")");
+            //Debug.Log("CraftingUI.ShowDescription(" + newRecipe.DisplayName + ")");
             ClearDescription();
 
             if (newRecipe == null) {
@@ -232,10 +233,10 @@ namespace AnyRPG {
             recipeDescription.text = string.Empty;
             //materialsHeading.gameObject.SetActive(false);
             ClearInputIcons();
-            DeselectRecipes();
+            //DeselectRecipes();
         }
 
-        public void DeselectRecipes() {
+        public void DeselectOtherRecipes() {
             //Debug.Log("CraftingUI.DeselectRecipes()");
             foreach (Recipe recipe in recipeScripts.Keys) {
                 if (recipe != SelectedRecipeScript.Recipe) {

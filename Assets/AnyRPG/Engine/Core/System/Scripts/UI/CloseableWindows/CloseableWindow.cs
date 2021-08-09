@@ -16,6 +16,9 @@ namespace AnyRPG {
         [Header("Closeable Window")]
 
         [SerializeField]
+        protected DraggableWindow dragHandle;
+
+        [SerializeField]
         protected GameObject contentParent;
 
         [SerializeField]
@@ -49,6 +52,9 @@ namespace AnyRPG {
         public override void Configure(SystemGameManager systemGameManager) {
             //Debug.Log(gameObject.name + ".CloseableWindow.Awake()");
             base.Configure(systemGameManager);
+            if (dragHandle != null) {
+                dragHandle.Configure(systemGameManager);
+            }
             InitializeWindow();
             RawCloseWindow();
         }

@@ -48,13 +48,13 @@ namespace AnyRPG {
         private GameObject cutSceneBarsCanvas = null;
 
         [SerializeField]
-        private GameObject bottomPanel = null;
+        private DraggableWindow bottomPanel = null;
 
         [SerializeField]
-        private GameObject sidePanel = null;
+        private DraggableWindow sidePanel = null;
 
         [SerializeField]
-        private GameObject mouseOverWindow = null;
+        private DraggableWindow mouseOverWindow = null;
 
         [SerializeField]
         private GameObject playerInterface = null;
@@ -186,10 +186,10 @@ namespace AnyRPG {
         public CastBarController FloatingCastBarController { get => floatingCastBarController; set => floatingCastBarController = value; }
         public MiniMapController MiniMapController { get => miniMapController; set => miniMapController = value; }
         public XPBarController XPBarController { get => xpBarController; set => xpBarController = value; }
-        public GameObject BottomPanel { get => bottomPanel; set => bottomPanel = value; }
-        public GameObject SidePanel { get => sidePanel; set => sidePanel = value; }
+        public DraggableWindow BottomPanel { get => bottomPanel; set => bottomPanel = value; }
+        public DraggableWindow SidePanel { get => sidePanel; set => sidePanel = value; }
         public GameObject MouseOverTarget { get => mouseOverTarget; set => mouseOverTarget = value; }
-        public GameObject MouseOverWindow { get => mouseOverWindow; set => mouseOverWindow = value; }
+        public DraggableWindow MouseOverWindow { get => mouseOverWindow; set => mouseOverWindow = value; }
         public GameObject ToolTip { get => toolTip; set => toolTip = value; }
         public CutSceneBarController CutSceneBarController { get => cutSceneBarController; set => cutSceneBarController = value; }
         public GameObject PlayerInterfaceCanvas { get => playerInterface; set => playerInterface = value; }
@@ -225,6 +225,9 @@ namespace AnyRPG {
             miniMapController.Configure(systemGameManager);
             cutSceneBarController.Configure(systemGameManager);
             xpBarController.Configure(systemGameManager);
+            bottomPanel.Configure(systemGameManager);
+            sidePanel.Configure(systemGameManager);
+            mouseOverWindow.Configure(systemGameManager);
             statusEffectPanelController.Configure(systemGameManager);
             floatingCastBarController.Configure(systemGameManager);
             questTrackerWindow.Configure(systemGameManager);
@@ -379,8 +382,8 @@ namespace AnyRPG {
             defaultWindowPositions.Add("CombatLogWindowX", CombatLogWindow.transform.position.x);
             defaultWindowPositions.Add("CombatLogWindowY", CombatLogWindow.transform.position.y);
 
-            defaultWindowPositions.Add("MessageFeedManagerX", MessageFeedManager.MessageFeedGameObject.transform.position.x);
-            defaultWindowPositions.Add("MessageFeedManagerY", MessageFeedManager.MessageFeedGameObject.transform.position.y);
+            defaultWindowPositions.Add("MessageFeedManagerX", MessageFeedManager.MessageFeedWindow.transform.position.x);
+            defaultWindowPositions.Add("MessageFeedManagerY", MessageFeedManager.MessageFeedWindow.transform.position.y);
 
             //Debug.Log("Saving FloatingCastBarController: " + MyFloatingCastBarController.transform.position.x + "; " + MyFloatingCastBarController.transform.position.y);
             defaultWindowPositions.Add("FloatingCastBarControllerX", FloatingCastBarController.transform.position.x);
@@ -435,7 +438,7 @@ namespace AnyRPG {
             // ui elements
             QuestTrackerWindow.transform.position = new Vector3(defaultWindowPositions["QuestTrackerWindowX"], defaultWindowPositions["QuestTrackerWindowY"], 0);
             CombatLogWindow.transform.position = new Vector3(defaultWindowPositions["CombatLogWindowX"], defaultWindowPositions["CombatLogWindowY"], 0);
-            MessageFeedManager.MessageFeedGameObject.transform.position = new Vector3(defaultWindowPositions["MessageFeedManagerX"], defaultWindowPositions["MessageFeedManagerY"], 0);
+            MessageFeedManager.MessageFeedWindow.transform.position = new Vector3(defaultWindowPositions["MessageFeedManagerX"], defaultWindowPositions["MessageFeedManagerY"], 0);
             FloatingCastBarController.transform.position = new Vector3(defaultWindowPositions["FloatingCastBarControllerX"], defaultWindowPositions["FloatingCastBarControllerY"], 0);
             StatusEffectPanelController.transform.position = new Vector3(defaultWindowPositions["StatusEffectPanelControllerX"], defaultWindowPositions["StatusEffectPanelControllerY"], 0);
             PlayerUnitFrameController.transform.position = new Vector3(defaultWindowPositions["PlayerUnitFrameControllerX"], defaultWindowPositions["PlayerUnitFrameControllerY"], 0);
@@ -805,12 +808,12 @@ namespace AnyRPG {
 
         public void ActivateMouseOverWindow(GameObject newFocus) {
             mouseOverTarget = newFocus;
-            mouseOverWindow.SetActive(true);
+            mouseOverWindow.gameObject.SetActive(true);
             mouseOverText.text = newFocus.transform.name;
         }
 
         public void DeActivateMouseOverWindow() {
-            mouseOverWindow.SetActive(false);
+            mouseOverWindow.gameObject.SetActive(false);
         }
 
         public void UpdateStackSize(IClickable clickable, int count, bool alwaysDisplayCount = false) {
@@ -1182,12 +1185,12 @@ namespace AnyRPG {
 
         public void UpdateMessageFeed() {
             if (PlayerPrefs.GetInt("UseMessageFeed") == 0) {
-                if (MessageFeedManager.MessageFeedGameObject.activeSelf) {
-                    MessageFeedManager.MessageFeedGameObject.SetActive(false);
+                if (MessageFeedManager.MessageFeedWindow.gameObject.activeSelf) {
+                    MessageFeedManager.MessageFeedWindow.gameObject.SetActive(false);
                 }
             } else if (PlayerPrefs.GetInt("UseMessageFeed") == 1) {
-                if (!MessageFeedManager.MessageFeedGameObject.activeSelf) {
-                    MessageFeedManager.MessageFeedGameObject.SetActive(true);
+                if (!MessageFeedManager.MessageFeedWindow.gameObject.activeSelf) {
+                    MessageFeedManager.MessageFeedWindow.gameObject.SetActive(true);
                 }
             }
         }
@@ -1201,9 +1204,9 @@ namespace AnyRPG {
             focusUnitFrameController.LockUI();
             miniMapController.LockUI();
             xpBarController.LockUI();
-            bottomPanel.GetComponent<DraggableWindow>().LockUI();
-            sidePanel.GetComponent<DraggableWindow>().LockUI();
-            mouseOverWindow.GetComponent<DraggableWindow>().LockUI();
+            bottomPanel.LockUI();
+            sidePanel.LockUI();
+            mouseOverWindow.LockUI();
             if (PlayerPrefs.HasKey("LockUI")) {
                 //Debug.Log("UIManager.UpdateLockUI(): playerprefs has key LockUI");
                 if (PlayerPrefs.GetInt("LockUI") == 0) {

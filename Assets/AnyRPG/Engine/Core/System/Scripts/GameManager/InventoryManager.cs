@@ -275,6 +275,7 @@ namespace AnyRPG {
                     } else {
                         //Debug.Log("InventoryManager.InitializeBagWindows(): create element " + i + " creating bag window");
                         bagNode.BagWindow = objectPooler.GetPooledObject(windowPrefab, inventoryWindowHolders[i - 1].transform).GetComponent<CloseableWindow>();
+                        bagNode.BagWindow.Configure(systemGameManager);
                         bagNode.BagWindow.transform.GetComponent<RectTransform>().pivot = new Vector2(1, 1);
                     }
 

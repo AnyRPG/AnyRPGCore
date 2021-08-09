@@ -6800,7 +6800,6 @@ MonoBehaviour:
   petPreviewManager: {fileID: 83571310276192926}
   unitPreviewManager: {fileID: 7558795976200462903}
   characterCreatorManager: {fileID: 6165180946975163457}
-  uIManager: {fileID: 6765758701573424388}
   systemAbilityController: {fileID: 5149191970440176744}
   castTargettingManager: {fileID: 5332626292093196242}
   inputManager: {fileID: 5291358111946708745}
@@ -6820,6 +6819,7 @@ MonoBehaviour:
   interactionManager: {fileID: 4883567332619093550}
   lootManager: {fileID: 9028134952021446586}
   systemPlayableDirectorManager: {fileID: 3709637699949944930}
+  uIManager: {fileID: 6765758701573424388}
 --- !u!114 &5684895214070870786
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -7768,9 +7768,9 @@ MonoBehaviour:
   systemMenuUI: {fileID: 3065418867268533194}
   loadingCanvas: {fileID: 1141706936954150413}
   cutSceneBarsCanvas: {fileID: 8209992901321195926}
-  bottomPanel: {fileID: 5009796491016420086}
-  sidePanel: {fileID: 8612473055735106861}
-  mouseOverWindow: {fileID: 4173710368151852342}
+  bottomPanel: {fileID: 3206702345944180348}
+  sidePanel: {fileID: 7838105387938431480}
+  mouseOverWindow: {fileID: 5431823223006668216}
   playerInterface: {fileID: 1614463292035453266}
   popupWindowContainer: {fileID: 8634985469134840507}
   popupPanelContainer: {fileID: 2271809898802598315}
@@ -7880,7 +7880,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   messagePrefab: {fileID: 2850499971153302814, guid: c6720ce141d7ba847ae8bef24e0917a4,
     type: 3}
-  messageFeedGameObject: {fileID: 8709305566673212249}
+  messageFeedWindow: {fileID: 3156450276081319822}
   raycaster: {fileID: 6188708101218135243}
 --- !u!114 &6986250774741738154
 MonoBehaviour:
