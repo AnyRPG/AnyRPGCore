@@ -33,6 +33,8 @@ namespace AnyRPG {
 
         private UnitProfile unitProfile;
 
+        private string currentScene = string.Empty;
+
         // game manager references
         private SystemDataFactory systemDataFactory = null;
 
@@ -68,19 +70,32 @@ namespace AnyRPG {
             playerName.text = mySaveData.playerName;
 
             // format the button text
-            string descriptionText = string.Empty;
-            descriptionText += "Zone: " + mySaveData.CurrentScene + "\n";
-            descriptionText += "Race: " + (mySaveData.characterRace == null || mySaveData.characterRace == string.Empty ? "None" : mySaveData.characterRace) + "\n";
-            descriptionText += "Class: " + (mySaveData.characterClass == null || mySaveData.characterClass == string.Empty ? "None" : mySaveData.characterClass) + "\n";
-            descriptionText += "Level: " + mySaveData.PlayerLevel + "\n";
-            descriptionText += "Experience: " + mySaveData.currentExperience + "\n";
-            descriptionText += "Faction: " + (mySaveData.playerFaction == string.Empty ? "None" : SaveData.playerFaction) + "\n";
-            descriptionText += "Created: " + mySaveData.DataCreatedOn + "\n";
-            descriptionText += "Saved: " + mySaveData.DataSavedOn + "\n";
-            descriptionText += "FileName: " + mySaveData.DataFileName + "\n";
+            description.text = string.Empty;
+            currentScene = string.Empty;
+            // todo : fix; save scene DisplayName to file and load scene from resource description to avoid this loop
+            foreach (SceneNode sceneNode in systemDataFactory.GetResourceList<SceneNode>()) {
+                if (sceneNode.SceneFile == mySaveData.CurrentScene) {
+                    currentScene = sceneNode.DisplayName;
+                    break;
+                }
+            }
+            if (currentScene == null || currentScene == string.Empty) {
+                currentScene = mySaveData.CurrentScene;
+            }
+            description.text += "Zone: " + currentScene + "\n";
+            description.text += "Race: " + (mySaveData.characterRace == null || mySaveData.characterRace == string.Empty ? "None" : mySaveData.characterRace) + "\n";
+            description.text += "Class: " + (mySaveData.characterClass == null || mySaveData.characterClass == string.Empty ? "None" : mySaveData.characterClass) + "\n";
+            description.text += "Level: " + mySaveData.PlayerLevel + "\n";
+            description.text += "Experience: " + mySaveData.currentExperience + "\n";
+            description.text += "Faction: " + (mySaveData.playerFaction == string.Empty ? "None" : SaveData.playerFaction) + "\n";
+            description.text += "Created: " + mySaveData.DataCreatedOn + "\n";
+            description.text += "Saved: " + mySaveData.DataSavedOn + "\n";
+            description.text += "FileName: " + mySaveData.DataFileName + "\n";
 
             // set the text on the button
+            /*
             description.text = descriptionText;
+            */
 
             unitProfile = systemDataFactory.GetResource<UnitProfile>(mySaveData.unitProfileName);
         }
