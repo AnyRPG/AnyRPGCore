@@ -702,6 +702,7 @@ namespace AnyRPG {
             unitModel = null;
             modelReady = false;
             dynamicCharacterAvatar = null;
+            currentState = null;
             target = null;
             distanceToTarget = 0f;
             lastTargetPosition = Vector3.zero;

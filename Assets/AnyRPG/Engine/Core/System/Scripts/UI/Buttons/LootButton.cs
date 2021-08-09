@@ -37,7 +37,7 @@ namespace AnyRPG {
         }
 
         public override void Configure(SystemGameManager systemGameManager) {
-            Debug.Log("LootButton.Configure()");
+            //Debug.Log("LootButton.Configure()");
             base.Configure(systemGameManager);
             lootWindow = GetComponentInParent<LootUI>();
         }

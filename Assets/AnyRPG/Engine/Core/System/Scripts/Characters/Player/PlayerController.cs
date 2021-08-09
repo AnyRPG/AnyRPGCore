@@ -708,7 +708,7 @@ namespace AnyRPG {
         }
 
         public void SubscribeToUnitEvents() {
-            //Debug.Log("PlayerController.SubscribeToUnitEvents()");
+            //Debug.Log(gameObject.name + ".PlayerController.SubscribeToUnitEvents()");
             
             // if player was agrod at spawn, they may have a target already since we subscribe on model ready
             SystemGameManager.Instance.PlayerManager.ActiveUnitController.OnSetTarget += HandleSetTarget;
@@ -742,6 +742,7 @@ namespace AnyRPG {
         }
 
         public void UnsubscribeFromUnitEvents() {
+            //Debug.Log(gameObject.name + ".PlayerController.UnsubscribeFromUnitEvents()");
             SystemGameManager.Instance.PlayerManager.ActiveUnitController.OnSetTarget -= HandleSetTarget;
             SystemGameManager.Instance.PlayerManager.ActiveUnitController.OnClearTarget -= HandleClearTarget;
             SystemGameManager.Instance.PlayerManager.ActiveUnitController.UnitAnimator.OnStartCasting -= HandleStartCasting;
@@ -779,7 +780,7 @@ namespace AnyRPG {
         }
 
         public void HandleUnitDestroy(UnitProfile unitProfile) {
-            //Debug.Log("PlayerController.HandleUnitDestroy()");
+            //Debug.Log(gameObject.name + ".PlayerController.HandleUnitDestroy()");
             SystemEventManager.TriggerEvent("OnPlayerUnitDespawn", new EventParamProperties());
             UnsubscribeFromUnitEvents();
             SystemGameManager.Instance.PlayerManager.SetUnitController(null);

@@ -14,6 +14,11 @@ namespace AnyRPG {
 
         public BagBarController MyBagBarController { get => bagBarController; set => bagBarController = value; }
 
+        public override void Configure(SystemGameManager systemGameManager) {
+            base.Configure(systemGameManager);
+            bagBarController.Configure(systemGameManager);
+        }
+
         public override void ReceiveOpenWindowNotification() {
             base.ReceiveOpenWindowNotification();
             SystemGameManager.Instance.InventoryManager.OpenBank();

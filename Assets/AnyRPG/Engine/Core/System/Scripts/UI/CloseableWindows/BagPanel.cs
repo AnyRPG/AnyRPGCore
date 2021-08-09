@@ -35,6 +35,11 @@ namespace AnyRPG {
         public override void Configure(SystemGameManager systemGameManager) {
             base.Configure(systemGameManager);
 
+        }
+
+        public override void SetGameManagerReferences() {
+            base.SetGameManagerReferences();
+
             objectPooler = systemGameManager.ObjectPooler;
         }
 

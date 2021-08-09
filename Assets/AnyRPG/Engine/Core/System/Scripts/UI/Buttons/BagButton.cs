@@ -66,15 +66,23 @@ namespace AnyRPG {
 
         public void OnAddBag(Bag bag) {
             //Debug.Log("BagButton.OnAddBag: setting icon: " + bag.MyIcon.name);
+            /*
             icon.GetComponent<Image>().sprite = bag.Icon;
             icon.GetComponent<Image>().color = Color.white;
+            */
+            icon.sprite = bag.Icon;
+            icon.color = Color.white;
             SetBackGroundColor();
         }
 
         public void OnRemoveBag() {
             //Debug.Log("BagButton.OnRemoveBag(): setting icon to null");
+            /*
             icon.GetComponent<Image>().sprite = null;
             icon.GetComponent<Image>().color = new Color32(0, 0, 0, 0);
+            */
+            icon.sprite = null;
+            icon.color = new Color32(0, 0, 0, 0);
             SetBackGroundColor();
         }
 
