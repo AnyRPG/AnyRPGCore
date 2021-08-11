@@ -97,7 +97,9 @@ namespace AnyRPG {
         private bool controllerInitialized = false;
         private bool targetInitialized = false;
 
-        Color reputationColor;
+        private Color reputationColor;
+
+        private Coroutine waitForCameraCoroutine = null;
 
         public BaseNamePlateController UnitNamePlateController { get => namePlateController; set => namePlateController = value; }
 
@@ -110,11 +112,6 @@ namespace AnyRPG {
             InitializeController();
             statusEffectPanelController.Configure(systemGameManager);
             previewCamera.enabled = false;
-        }
-
-        protected void Start() {
-            //Debug.Log(gameObject.name + ".UnitFrameController.Start()");
-            //InitializeController();
             if (!targetInitialized) {
                 this.gameObject.SetActive(false);
             }
@@ -196,10 +193,14 @@ namespace AnyRPG {
         }
 
         public void HandleTargetReady() {
+            Debug.Log(gameObject.name + ".UnitFrameController.HandleTargetReady()");
+
             //UnsubscribeFromTargetReady();
             GetFollowTarget();
             UpdateCameraPosition();
-            StartCoroutine(WaitForCamera());
+            if (waitForCameraCoroutine == null) {
+                waitForCameraCoroutine = StartCoroutine(WaitForCamera());
+            }
         }
 
         public void InitializePosition() {
@@ -246,7 +247,9 @@ namespace AnyRPG {
                 previewCamera.enabled = true;
             } else {
                 //previewCamera.Render();
-                StartCoroutine(WaitForCamera());
+                if (waitForCameraCoroutine == null) {
+                    waitForCameraCoroutine = StartCoroutine(WaitForCamera());
+                }
             }
         }
 
@@ -277,13 +280,18 @@ namespace AnyRPG {
         }
 
         private IEnumerator WaitForCamera() {
+            Debug.Log(gameObject.name + ".UnitFrameController.WaitForCamera()");
             //yield return new WaitForEndOfFrame();
             yield return null;
             previewCamera.Render();
+            waitForCameraCoroutine = null;
         }
 
         public void ClearTarget(bool closeWindowOnClear = true) {
-            //Debug.Log(gameObject.name + ".UnitFrameController.ClearTarget(" + closeWindowOnClear + ")");
+            Debug.Log(gameObject.name + ".UnitFrameController.ClearTarget(" + closeWindowOnClear + ")");
+            if (waitForCameraCoroutine != null) {
+                StopCoroutine(waitForCameraCoroutine);
+            }
             UnsubscribeFromTargetReady();
 
             if (namePlateController != null && namePlateController.Interactable.CharacterUnit != null) {

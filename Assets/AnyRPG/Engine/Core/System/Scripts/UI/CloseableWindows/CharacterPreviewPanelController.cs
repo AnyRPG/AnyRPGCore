@@ -108,23 +108,23 @@ namespace AnyRPG {
         public IEnumerator PointlessDelay() {
             //Debug.Log("CharacterPreviewPanelController.EquipCharacter(): found equipment manager");
             yield return null;
-            RebuildUMA();
+            BuildModelAppearance();
         }
 
 
-        public void RebuildUMA() {
+        public void BuildModelAppearance() {
             //Debug.Log("CharacterCreatorPanel.RebuildUMA()");
             //Debug.Log("CharacterPreviewPanelController.RebuildUMA(): BuildCharacter(): buildenabled: " + umaAvatar.BuildCharacterEnabled + "; frame: " + Time.frameCount);
-            if (characterCreatorManager.PreviewUnitController?.DynamicCharacterAvatar != null) {
-                characterCreatorManager.PreviewUnitController.DynamicCharacterAvatar.BuildCharacter();
+            if (characterCreatorManager.PreviewUnitController?.UnitModelController != null) {
+                characterCreatorManager.PreviewUnitController.UnitModelController.BuildModelAppearance();
             }
         }
 
         public string GetCurrentRecipe() {
-            if (characterCreatorManager.PreviewUnitController?.DynamicCharacterAvatar == null) {
-                return string.Empty;
+            if (characterCreatorManager.PreviewUnitController?.UnitModelController != null) {
+                return characterCreatorManager.PreviewUnitController.UnitModelController.GetAppearanceSettings();
             }
-            return characterCreatorManager.PreviewUnitController.DynamicCharacterAvatar.GetCurrentRecipe();
+            return string.Empty;
         }
 
     }

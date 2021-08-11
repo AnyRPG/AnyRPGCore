@@ -305,7 +305,7 @@ namespace AnyRPG {
 
                 DeActivateAutoAttack();
                 //Debug.Log(gameObject.name + ".CharacterCombat.DropCombat(): dropped combat.");
-                baseCharacter.CharacterEquipmentManager.SheathWeapons();
+                baseCharacter.UnitController?.UnitModelController?.SheathWeapons();
                 OnDropCombat();
             }
         }
@@ -366,7 +366,7 @@ namespace AnyRPG {
             if (!aggroTable.AggroTableContains(CharacterUnit.GetCharacterUnit(target))) {
                 OnEnterCombat(target);
             }
-            baseCharacter.CharacterEquipmentManager.HoldWeapons();
+            baseCharacter?.UnitController?.UnitModelController?.HoldWeapons();
             return aggroTable.AddToAggroTable(CharacterUnit.GetCharacterUnit(target), 0);
         }
 

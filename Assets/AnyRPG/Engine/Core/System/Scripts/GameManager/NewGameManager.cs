@@ -256,7 +256,7 @@ namespace AnyRPG {
         }
 
         public void SetPlayerUMARecipe(string newRecipe) {
-            //Debug.Log("LoadGamePanel.NewGame()");
+            Debug.Log("NewGameManager.SetPlayerUMARecipe()");
 
             saveData.PlayerUMARecipe = newRecipe;
         }

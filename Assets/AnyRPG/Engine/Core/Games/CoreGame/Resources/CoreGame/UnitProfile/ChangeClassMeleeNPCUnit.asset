@@ -130,11 +130,11 @@ MonoBehaviour:
   isUMAUnit: 0
   isPet: 0
   characterName: Change Class Melee
-  factionName: 
   title: 
-  characterClassName: Melee
+  factionName: 
   unitTypeName: 
   characterRaceName: 
+  characterClassName: Melee
   classSpecializationName: 
   spawnDead: 0
   preventAutoDespawn: 0
@@ -150,6 +150,7 @@ MonoBehaviour:
   combatStrategyName: 
   primaryStats: []
   powerResources: []
+  useProviderEquipment: 0
   equipmentNameList: []
   isMobile: 1
   playOnFootstep: 0
@@ -176,7 +177,6 @@ MonoBehaviour:
     namePlateImage: {fileID: 0}
     prerequisiteConditions: []
     behaviorNames: []
-    useBehaviorCopy: 0
   interactionMaxRange: 3
   lootableCharacter:
     interactionPanelTitle: 
@@ -196,6 +196,7 @@ MonoBehaviour:
     interactionPanelImage: {fileID: 0}
     namePlateImage: {fileID: 0}
     prerequisiteConditions: []
+    quests: []
     questGiverProfileNames: []
   vendorConfig:
     interactionPanelTitle: 
@@ -205,5 +206,8 @@ MonoBehaviour:
     vendorCollectionNames: []
   interactableOptions:
   - Change Class Melee
+  persistObjectPosition: 0
+  saveOnLevelUnload: 0
+  saveOnGameSave: 0
   overwriteUnitUUID: 0
   m_UUID: 3882085c-bfee-4155-a7b8-90f7410db528

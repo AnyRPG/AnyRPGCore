@@ -80,7 +80,8 @@ namespace AnyRPG {
         public override void RecieveClosedWindowNotification() {
             //Debug.Log("LoadGamePanel.RecieveClosedWindowNotification()");
             base.RecieveClosedWindowNotification();
-            characterPreviewPanel.OnTargetReady -= HandleTargetReady;
+            // testing - character will load its own equipment when it spawns
+            //characterPreviewPanel.OnTargetReady -= HandleTargetReady;
             characterPreviewPanel.RecieveClosedWindowNotification();
             //saveManager.ClearSharedData();
             OnCloseWindow(this);
@@ -93,12 +94,13 @@ namespace AnyRPG {
             ShowLoadButtonsCommon();
 
             // inform the preview panel so the character can be rendered
-            characterPreviewPanel.OnTargetReady += HandleTargetReady;
+            // testing - character will load its own equipment when it spawns
+            //characterPreviewPanel.OnTargetReady += HandleTargetReady;
             characterPreviewPanel.CapabilityConsumer = loadGameManager;
             characterPreviewPanel.ReceiveOpenWindowNotification();
 
             // this needs to be run here because the initial run in ShowLoadButtonsCommon will have done nothing because the preview panel wasn't open yet
-            LoadUMARecipe();
+            LoadSavedAppearanceSettings();
         }
 
         public void ShowSavedGame(LoadGameButton loadButton) {
@@ -116,7 +118,7 @@ namespace AnyRPG {
             characterPreviewPanel.ReloadUnit();
 
             // testing get proper appearance
-            LoadUMARecipe();
+            LoadSavedAppearanceSettings();
 
             // apply capabilities to it so equipment can work
             //characterCreatorManager.PreviewUnitController.CharacterUnit.BaseCharacter.ApplyCapabilityConsumerSnapshot(capabilityConsumerSnapshot);
@@ -172,11 +174,14 @@ namespace AnyRPG {
             //SetPreviewTarget();
         }
 
-
-        public void LoadUMARecipe() {
-            if (characterCreatorManager.PreviewUnitController?.DynamicCharacterAvatar != null) {
-                saveManager.LoadUMASettings(characterCreatorManager.PreviewUnitController.DynamicCharacterAvatar, false);
+        public void LoadSavedAppearanceSettings() {
+            if (characterCreatorManager.PreviewUnitController?.UnitModelController  != null) {
+                characterCreatorManager.PreviewUnitController?.UnitModelController.LoadSavedAppearanceSettings();
             }
+
+            // testing - try this here to allow the unit to equip itself naturally when it finishes spawning
+            HandleTargetReady();
+
         }
 
         public void HandleTargetReady() {
@@ -194,6 +199,7 @@ namespace AnyRPG {
                     //saveManager.LoadEquipmentData(loadGameButton.MySaveData, characterEquipmentManager);
                     // results in equipment being sheathed
                     saveManager.LoadEquipmentData(loadGameManager.AnyRPGSaveData, baseCharacter.CharacterEquipmentManager);
+                    //characterCreatorManager.PreviewUnitController.UnitModelController.EquipEquipmentModels(baseCharacter.CharacterEquipmentManager);
                 }
             }
         }

@@ -25,27 +25,6 @@ namespace AnyRPG {
         private UIManager uIManager = null;
         private SystemAchievementManager systemAchievementManager = null;
 
-        public override void Configure(SystemGameManager systemGameManager) {
-            base.Configure(systemGameManager);
-            Init();
-        }
-
-        public override void SetGameManagerReferences() {
-            base.SetGameManagerReferences();
-            systemEventManager = systemGameManager.SystemEventManager;
-            systemConfigurationManager = systemGameManager.SystemConfigurationManager;
-            playerManager = systemGameManager.PlayerManager;
-            levelManager = systemGameManager.LevelManager;
-            questLog = systemGameManager.QuestLog;
-            inventoryManager = systemGameManager.InventoryManager;
-            systemItemManager = systemGameManager.SystemItemManager;
-            systemDataFactory = systemGameManager.SystemDataFactory;
-            systemAchievementManager = systemGameManager.SystemAchievementManager;
-            uIManager = systemGameManager.UIManager;
-            messageFeedManager = uIManager.MessageFeedManager;
-            actionBarManager = uIManager.ActionBarManager;
-        }
-
         //private UMAData umaSaveData = null;
         private string recipeString = string.Empty;
         private string jsonSavePath = string.Empty;
@@ -78,10 +57,27 @@ namespace AnyRPG {
 
         protected bool eventSubscriptionsInitialized = false;
 
-        void Init() {
-            //Debug.Log("Savemanager.Start()");
+        public override void Configure(SystemGameManager systemGameManager) {
+            base.Configure(systemGameManager);
+
             CreateEventSubscriptions();
             GetSaveDataList();
+        }
+
+        public override void SetGameManagerReferences() {
+            base.SetGameManagerReferences();
+            systemEventManager = systemGameManager.SystemEventManager;
+            systemConfigurationManager = systemGameManager.SystemConfigurationManager;
+            playerManager = systemGameManager.PlayerManager;
+            levelManager = systemGameManager.LevelManager;
+            questLog = systemGameManager.QuestLog;
+            inventoryManager = systemGameManager.InventoryManager;
+            systemItemManager = systemGameManager.SystemItemManager;
+            systemDataFactory = systemGameManager.SystemDataFactory;
+            systemAchievementManager = systemGameManager.SystemAchievementManager;
+            uIManager = systemGameManager.UIManager;
+            messageFeedManager = uIManager.MessageFeedManager;
+            actionBarManager = uIManager.ActionBarManager;
         }
 
         private void CreateEventSubscriptions() {
@@ -243,29 +239,23 @@ namespace AnyRPG {
         public void SaveUMASettings(Equipment oldItem, Equipment newItem) {
             //Debug.Log("SaveManager.SaveUMASettings(Equipment, Equipement)");
             if ((oldItem != null && oldItem.MyUMARecipes.Count > 0) || (newItem != null && newItem.MyUMARecipes.Count > 0)) {
-                SaveUMASettings();
+                SaveAppearanceSettings();
             }
         }
 
 
-        public void SaveUMASettings() {
+        public void SaveAppearanceSettings() {
             //Debug.Log("SaveManager.SaveUMASettings()");
-            if (playerManager.UnitController == null) {
-                return;
-            }
-            if (playerManager.UnitController.DynamicCharacterAvatar != null) {
+            if (playerManager.UnitController?.UnitModelController != null) {
                 //Debug.Log("SaveManager.SaveUMASettings(): avatar exists");
                 if (recipeString == string.Empty) {
                     //Debug.Log("SaveManager.SaveUMASettings(): recipestring is empty");
-                    recipeString = playerManager.UnitController.DynamicCharacterAvatar.GetCurrentRecipe();
-                } else {
-                    //Debug.Log("SaveManager.SaveUMASettings(): recipestring is not empty");
-                    recipeString = playerManager.UnitController.DynamicCharacterAvatar.GetCurrentRecipe();
+                    playerManager.UnitController.UnitModelController.SaveAppearanceSettings();
                 }
             }
         }
 
-        public void SaveUMASettings(string newRecipe) {
+        public void SaveRecipeString(string newRecipe) {
             //Debug.Log("SaveManager.SaveUMASettings(string)");
             recipeString = newRecipe;
         }
@@ -273,15 +263,6 @@ namespace AnyRPG {
         public void ClearUMASettings() {
             //Debug.Log("SaveManager.ClearUMASettings()");
             recipeString = string.Empty;
-        }
-
-        public void LoadUMASettings(bool rebuild = true) {
-            //Debug.Log("Savemanager.LoadUMASettings(" + rebuild + ")");
-            if (recipeString == string.Empty) {
-                //Debug.Log("Savemanager.LoadUMASettings(): recipe string is empty. exiting!");
-                return;
-            }
-            LoadUMASettings(recipeString, playerManager.UnitController.DynamicCharacterAvatar, rebuild);
         }
 
         public void LoadUMASettings(DynamicCharacterAvatar _dynamicCharacterAvatar, bool rebuild = true) {
@@ -975,7 +956,7 @@ namespace AnyRPG {
                             newItem.InitializeRandomStatsFromIndex();
                         }
                         if (characterEquipmentManager != null) {
-                            characterEquipmentManager.Equip(newItem);
+                            characterEquipmentManager.Equip(newItem, null, true, false);
                         } else {
                             //Debug.Log("Issue with equipment manager on player");
                         }
@@ -1124,14 +1105,14 @@ namespace AnyRPG {
         }
 
         // data needed by both the load window and in game play
-        public void LoadUMARecipe(AnyRPGSaveData anyRPGSaveData) {
-            //Debug.Log("Savemanager.LoadSharedData()");
+        public void LoadRecipeString(AnyRPGSaveData anyRPGSaveData) {
+            //Debug.Log("Savemanager.LoadUMARecipe()");
 
             // appearance
             string loadedRecipeString = anyRPGSaveData.PlayerUMARecipe;
             if (loadedRecipeString != null && loadedRecipeString != string.Empty) {
                 //Debug.Log("Savemanager.LoadSharedData(): recipe string in save data was not empty or null, loading UMA settings");
-                SaveUMASettings(loadedRecipeString);
+                SaveRecipeString(loadedRecipeString);
                 // we have UMA data so should load the UMA unit instead of the default
                 //playerManager.SetUMAPrefab();
             } else {
@@ -1200,7 +1181,7 @@ namespace AnyRPG {
 
 
             // THIS NEEDS TO BE DOWN HERE SO THE PLAYERSTATS EXISTS TO SUBSCRIBE TO THE EQUIP EVENTS AND INCREASE STATS
-            LoadUMARecipe(anyRPGSaveData);
+            LoadRecipeString(anyRPGSaveData);
 
             // complex data
             LoadEquippedBagData(anyRPGSaveData);

@@ -138,6 +138,7 @@ namespace AnyRPG {
             ProcessPlayerUnitSpawn();
         }
 
+        /*
         public virtual void OnDisable() {
             //Debug.Log(gameObject.name + ".Spawnable.OnDisable()");
             if (SystemGameManager.IsShuttingDown) {
@@ -145,8 +146,19 @@ namespace AnyRPG {
             }
             ResetSettings();
         }
+        */
+
+        public virtual void OnDestroy() {
+            //Debug.Log(gameObject.name + ".Spawnable.OnDisable()");
+            if (SystemGameManager.IsShuttingDown) {
+                return;
+            }
+            CleanupEventSubscriptions();
+            CleanupEverything();
+        }
 
         public virtual void ResetSettings() {
+            Debug.Log(gameObject.name + ".Spawnable.ResetSettings()");
             CleanupEventSubscriptions();
             CleanupEverything();
 
@@ -160,6 +172,8 @@ namespace AnyRPG {
             //Debug.Log(gameObject.name + ".Spawnable.CleanupEverything()");
             // moved to OnDestroy so disabled object can still respond to levelUnload
             // which disabled objects?  had to move back to ondisable for object pooling
+            // testing - moved back to OnDestroy because spawnables should never be pooled because they are static items in the level unless they are
+            // Units in which case they call their own cleanup before despawning themselves
             //CleanupEventSubscriptions();
             CleanupScriptableObjects();
         }

@@ -2,8 +2,6 @@ using AnyRPG;
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using UMA;
-using UMA.CharacterSystem;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -13,7 +11,6 @@ namespace AnyRPG {
         public event System.Action<Interactable> OnSetTarget = delegate { };
         public event System.Action<Interactable> OnClearTarget = delegate { };
         public event System.Action OnManualMovement = delegate { };
-        public event System.Action OnModelReady = delegate { };
         public event System.Action OnReputationChange = delegate { };
         public event System.Action OnReviveComplete = delegate { };
         public event System.Action<CharacterStats> OnBeforeDie = delegate { };
@@ -72,13 +69,9 @@ namespace AnyRPG {
         private LootableCharacter lootableCharacter = null;
         private PatrolController patrolController = null;
         private BehaviorController behaviorController = null;
+        private UnitModelController unitModelController = null;
         private UnitMountManager unitMountManager = null;
         private UUID uuid = null;
-
-        // track model
-        private GameObject unitModel = null;
-        private bool modelReady = false;
-        private DynamicCharacterAvatar dynamicCharacterAvatar = null;
 
         // control logic
         private IState currentState;
@@ -238,9 +231,7 @@ namespace AnyRPG {
             }
         }
         public PersistentObjectComponent PersistentObjectComponent { get => persistentObjectComponent; set => persistentObjectComponent = value; }
-        public DynamicCharacterAvatar DynamicCharacterAvatar { get => dynamicCharacterAvatar; set => dynamicCharacterAvatar = value; }
         public UnitProfile UnitProfile { get => unitProfile; }
-        public bool ModelReady { get => modelReady; set => modelReady = value; }
         public override NamePlateProps NamePlateProps {
             get {
                 if (unitProfile?.UnitPrefabProps != null) {
@@ -298,7 +289,7 @@ namespace AnyRPG {
 
         public override bool CameraTargetReady {
             get {
-                return modelReady;
+                return unitModelController.ModelReady;
             }
         }
 
@@ -323,6 +314,7 @@ namespace AnyRPG {
 
         public bool UseAgent { get => useAgent; }
         public MovementSoundArea MovementSoundArea { get => movementSoundArea; set => movementSoundArea = value; }
+        public UnitModelController UnitModelController { get => unitModelController; }
 
         public override void CreateEventSubscriptions() {
             if (eventSubscriptionsInitialized == true) {
@@ -365,34 +357,13 @@ namespace AnyRPG {
             //base.DisableInteraction();
         }
 
-        public static bool IsInLayerMask(int layer, LayerMask layermask) {
-            return layermask == (layermask | (1 << layer));
-        }
-
-        protected virtual void SetDefaultLayer(string layerName) {
-            if (layerName != null && layerName != string.Empty) {
-                int defaultLayer = LayerMask.NameToLayer(layerName);
-                int finalmask = (1 << defaultLayer);
-                if (!IsInLayerMask(gameObject.layer, finalmask)) {
-                    gameObject.layer = defaultLayer;
-                    //Debug.Log(gameObject.name + ".UnitController.SetDefaultLayer(): object was not set to correct layer: " + layerName + ". Setting automatically");
-                }
-                //Debug.Log(gameObject.name + ".UnitController.SetDefaultLayer(): unitModel: " + (unitModel == null ? "null" : unitModel.name));
-                if (unitModel != null && !IsInLayerMask(unitModel.layer, finalmask)) {
-                    SystemGameManager.Instance.UIManager.SetLayerRecursive(unitModel, defaultLayer);
-                    //Debug.Log(gameObject.name + ".UnitController.SetDefaultLayer(): model was not set to correct layer: " + layerName + ". Setting automatically");
-                }
-            }
-        }
-
-
         /// <summary>
         /// set this unit to be a stationary preview
         /// </summary>
         private void SetPreviewMode() {
             //Debug.Log(gameObject.name + ".UnitController.SetPreviewMode()");
             SetUnitControllerMode(UnitControllerMode.Preview);
-            SetDefaultLayer(SystemGameManager.Instance.SystemConfigurationManager.DefaultCharacterUnitLayer);
+            unitModelController.SetDefaultLayer(SystemGameManager.Instance.SystemConfigurationManager.DefaultCharacterUnitLayer);
             useAgent = false;
             DisableAgent();
 
@@ -415,7 +386,7 @@ namespace AnyRPG {
                 if ((monoBehaviour as UnitController) is UnitController) {
                     safe = true;
                 }
-                if ((monoBehaviour as DynamicCharacterAvatar) is DynamicCharacterAvatar) {
+                if (unitModelController.KeepMonoBehaviorEnabled(monoBehaviour)) {
                     safe = true;
                 }
                 if (!safe) {
@@ -431,7 +402,7 @@ namespace AnyRPG {
         public void SetPetMode(BaseCharacter masterBaseCharacter, bool enableMode = false) {
             //Debug.Log(gameObject.name + ".UnitController.SetPetMode(" + (masterBaseCharacter == null ? "null" : masterBaseCharacter.gameObject.name) + ")");
             SetUnitControllerMode(UnitControllerMode.Pet);
-            SetDefaultLayer(SystemGameManager.Instance.SystemConfigurationManager.DefaultCharacterUnitLayer);
+            unitModelController.SetDefaultLayer(SystemGameManager.Instance.SystemConfigurationManager.DefaultCharacterUnitLayer);
             if (masterBaseCharacter != null) {
                 characterUnit.BaseCharacter.CharacterStats.SetLevel(masterBaseCharacter.CharacterStats.Level);
                 //characterUnit.BaseCharacter.CharacterStats.ApplyControlEffects(masterBaseCharacter);
@@ -468,7 +439,7 @@ namespace AnyRPG {
             namePlateController.SetNamePlatePosition();
 
             SetUnitControllerMode(UnitControllerMode.Mount);
-            SetDefaultLayer(SystemGameManager.Instance.SystemConfigurationManager.DefaultCharacterUnitLayer);
+            unitModelController.SetDefaultLayer(SystemGameManager.Instance.SystemConfigurationManager.DefaultCharacterUnitLayer);
             if (myCollider != null) {
                 myCollider.isTrigger = false;
             }
@@ -485,7 +456,7 @@ namespace AnyRPG {
             //Debug.Log(gameObject.name + "UnitController.EnablePlayer()");
             InitializeNamePlateController();
 
-            SetDefaultLayer(SystemGameManager.Instance.SystemConfigurationManager.DefaultPlayerUnitLayer);
+            unitModelController.SetDefaultLayer(SystemGameManager.Instance.SystemConfigurationManager.DefaultPlayerUnitLayer);
             DisableAggro();
 
             rigidBody.useGravity = true;
@@ -531,7 +502,7 @@ namespace AnyRPG {
         }
 
         private void EnableAICommon() {
-            SetDefaultLayer(SystemGameManager.Instance.SystemConfigurationManager.DefaultCharacterUnitLayer);
+            unitModelController.SetDefaultLayer(SystemGameManager.Instance.SystemConfigurationManager.DefaultCharacterUnitLayer);
 
             // enable agent needs to be done before changing state or idle -> patrol transition will not work because of an inactive navmeshagent
             if (unitProfile != null && unitProfile.IsMobile == true) {
@@ -588,6 +559,7 @@ namespace AnyRPG {
             unitAnimator = new UnitAnimator(this);
             patrolController = new PatrolController(this);
             behaviorController = new BehaviorController(this);
+            unitModelController = new UnitModelController(this);
             unitMountManager = new UnitMountManager(this);
             persistentObjectComponent.Setup(this);
 
@@ -601,14 +573,9 @@ namespace AnyRPG {
                 && characterUnit.BaseCharacter.UnitProfileName != null
                 && characterUnit.BaseCharacter.UnitProfileName != string.Empty) {
                 SetUnitProfile(UnitProfile.GetUnitProfileReference(characterUnit.BaseCharacter.UnitProfileName), UnitControllerMode.AI);
-                // setUnitProfile will have spawned a model if it contained one.  If it did not,
-                // look for an animator.  If one is found, the model is already attached to this unit.
             }
 
-            // no model was spawned.  try to find an animator or UMA on this unit
-            if (unitModel == null) {
-                ConfigureAnimator();
-            }
+            ConfigureAnimator();
 
             base.ProcessInit();
 
@@ -650,15 +617,12 @@ namespace AnyRPG {
             StopAllCoroutines();
             RemoveControlEffects();
             ProcessPointerExit();
-            UnsubscribeFromUMACreate();
 
             // give the equipment manager a chance to remove the equipment models
             characterUnit?.BaseCharacter?.HandleCharacterUnitDespawn();
 
             // now that the model is unequipped, return the model to the pool
-            if (unitProfile?.UnitPrefabProps?.ModelPrefab != null) {
-                ObjectPooler.Instance.ReturnObjectToPool(unitModel);
-            }
+            unitModelController.DespawnModel();
 
             persistentObjectComponent.Cleanup();
             if (behaviorController != null) {
@@ -673,18 +637,13 @@ namespace AnyRPG {
         /// reset all variables to default values for object pooling
         /// </summary>
         public override void ResetSettings() {
-            //Debug.Log(gameObject.name + ".UnitController.ResetSettings()");
+            Debug.Log(gameObject.name + ".UnitController.ResetSettings()");
             
             // agents should be disabled so when pool and re-activated they don't throw errors if they are a preview unit
             DisableAgent();
 
-            if (dynamicCharacterAvatar != null) {
-                dynamicCharacterAvatar.ClearSlots();
-                dynamicCharacterAvatar.RestoreCachedBodyColors();
-                dynamicCharacterAvatar.LoadDefaultWardrobe();
-                // doing the rebuild on despawn so there isn't a frame with this appearance until a rebuild happens when re-using the avatar
-                dynamicCharacterAvatar.BuildCharacter();
-            }
+            // cleanup unit model type specific settings
+            unitModelController.ResetSettings();
 
             unitProfile = null;
 
@@ -696,12 +655,10 @@ namespace AnyRPG {
             lootableCharacter = null;
             patrolController = null;
             behaviorController = null;
+            unitModelController = null;
             unitMountManager = null;
             uuid = null;
 
-            unitModel = null;
-            modelReady = false;
-            dynamicCharacterAvatar = null;
             currentState = null;
             target = null;
             distanceToTarget = 0f;
@@ -772,12 +729,6 @@ namespace AnyRPG {
             lootableCharacter = GetComponent<LootableCharacter>();
             agent = GetComponent<NavMeshAgent>();
             rigidBody = GetComponent<Rigidbody>();
-
-            // do an early check for this just in case this is a third party controller unit with the avatar already on the unit, instead of on a second model
-            if (dynamicCharacterAvatar == null) {
-                dynamicCharacterAvatar = GetComponentInChildren<DynamicCharacterAvatar>();
-            }
-
         }
 
         /// <summary>
@@ -813,7 +764,7 @@ namespace AnyRPG {
             // testing - not necessary here since it was actually not doing anything and code is now in Init that used to be in Start which requires the model spawned
             //Init();
 
-            SpawnUnitModel();
+            unitModelController.SpawnUnitModel();
 
             SetUnitProfileInteractables();
         }
@@ -892,130 +843,28 @@ namespace AnyRPG {
 
         }
 
-        public void SpawnUnitModel() {
-            //Debug.Log(gameObject.name + ".UnitController.SpawnUnitModel()");
-            if (unitProfile?.UnitPrefabProps?.ModelPrefab != null) {
-                unitModel = unitProfile.SpawnModelPrefab(transform, transform.position, transform.forward);
-                ConfigureAnimator(unitModel);
-            }
-        }
-
-        public void ConfigureAnimator(GameObject newUnitModel = null) {
+        public void ConfigureAnimator() {
             //Debug.Log(gameObject.name + ".UnitController.ConfigureAnimator(" + (newUnitModel == null ? "null" : newUnitModel.name) + ")");
-
-            if (newUnitModel != null) {
-                unitModel = newUnitModel;
-            }
 
             // most (but not all) units have animators
             // find an animator if one exists and initialize it
             Animator animator = GetComponentInChildren<Animator>();
-            
-            // this may have been called from a unit which already had a model attached
-            // if so, the model is the animator gameobject, since no model will have been passed to this call
-            if (animator != null && unitModel == null) {
-                unitModel = animator.gameObject;
-            }
 
+            // if the unit was not spawned, the unit model will be the animator
             // references to the dynamicCharacterAvatar must exist before the unit animator is initialized
             // they are needed for the animator to properly set the override controller on the avatar
-            if (unitModel != null && dynamicCharacterAvatar == null) {
-                dynamicCharacterAvatar = unitModel.GetComponent<DynamicCharacterAvatar>();
-            }
-            if (dynamicCharacterAvatar == null) {
-                dynamicCharacterAvatar = GetComponentInChildren<DynamicCharacterAvatar>();
-            }
+            unitModelController.FindUnitModel(animator);
 
             if (animator != null) {
                 unitAnimator.Init(animator);
             }
 
-            ConfigureUnitModel();
-        }
-
-        public void ConfigureUnitModel() {
-            //Debug.Log(gameObject.name + "UnitController.ConfigureUnitModel()");
-
-            /*
-            if (unitModel != null && dynamicCharacterAvatar == null) {
-                dynamicCharacterAvatar = unitModel.GetComponent<DynamicCharacterAvatar>();
-            }
-            if (dynamicCharacterAvatar == null) {
-                dynamicCharacterAvatar = GetComponentInChildren<DynamicCharacterAvatar>();
-            }
-            */
-            if (unitModel != null || dynamicCharacterAvatar != null) {
-                if (dynamicCharacterAvatar != null) {
-
-                    // testing - pooled UMA units will already be initialized
-                    // so they should be considered ready if they have umaData
-                    if (dynamicCharacterAvatar.umaData == null) {
-                        //Debug.Log(gameObject.name + "UnitController.ConfigureUnitModel(): dynamicCharacterAvatar.Initialize()");
-                        dynamicCharacterAvatar.Initialize();
-                    } else {
-                        //Debug.Log(gameObject.name + "UnitController.ConfigureUnitModel(): dynamicCharacterAvatar has been re-used and is already initialized");
-                        SetModelReady();
-                    }
-
-                    SubscribeToUMACreate();
-                } else {
-                    // this is not an UMA model, therefore it is ready and its bone structure is already created
-                    SetModelReady();
-                }
-            }
+            unitModelController.ConfigureUnitModel();
         }
 
         public void SetModelReady() {
             //Debug.Log(gameObject.name + ".UnitController.SetModelReady()");
-            if (modelReady == false) {
-                characterUnit.BaseCharacter.HandleCharacterUnitSpawn();
-            }
-            modelReady = true;
-            OnModelReady();
             OnCameraTargetReady();
-        }
-
-        public void UnsubscribeFromUMACreate() {
-            if (dynamicCharacterAvatar?.umaData != null) {
-                dynamicCharacterAvatar.umaData.OnCharacterCreated -= HandleCharacterCreated;
-                dynamicCharacterAvatar.umaData.OnCharacterUpdated -= HandleCharacterUpdated;
-            }
-        }
-
-        public void SubscribeToUMACreate() {
-
-            dynamicCharacterAvatar.umaData.OnCharacterCreated += HandleCharacterCreated;
-            /*
-            umaData.OnCharacterBeforeDnaUpdated += HandleCharacterBeforeDnaUpdated;
-            umaData.OnCharacterBeforeUpdated += HandleCharacterBeforeUpdated;
-            umaData.OnCharacterDnaUpdated += HandleCharacterDnaUpdated;
-            umaData.OnCharacterDestroyed += HandleCharacterDestroyed;
-            */
-            dynamicCharacterAvatar.umaData.OnCharacterUpdated += HandleCharacterUpdated;
-        }
-
-        public void HandleCharacterCreated(UMAData umaData) {
-            //Debug.Log("PreviewCameraController.HandleCharacterCreated(): " + umaData);
-            //UnsubscribeFromUMACreate();
-            SetModelReady();
-        }
-
-        public void HandleCharacterBeforeDnaUpdated(UMAData umaData) {
-            //Debug.Log("PreviewCameraController.BeforeDnaUpdated(): " + umaData);
-        }
-        public void HandleCharacterBeforeUpdated(UMAData umaData) {
-            //Debug.Log("PreviewCameraController.OnCharacterBeforeUpdated(): " + umaData);
-        }
-        public void HandleCharacterDnaUpdated(UMAData umaData) {
-            //Debug.Log("PreviewCameraController.OnCharacterDnaUpdated(): " + umaData);
-        }
-        public void HandleCharacterDestroyed(UMAData umaData) {
-            //Debug.Log("PreviewCameraController.OnCharacterDestroyed(): " + umaData);
-        }
-        public void HandleCharacterUpdated(UMAData umaData) {
-            //Debug.Log("PreviewCameraController.HandleCharacterUpdated(): " + umaData + "; frame: " + Time.frameCount);
-            //HandleCharacterCreated(umaData);
-            SetModelReady();
         }
 
         public void SetMovementSoundArea(MovementSoundArea movementSoundArea) {

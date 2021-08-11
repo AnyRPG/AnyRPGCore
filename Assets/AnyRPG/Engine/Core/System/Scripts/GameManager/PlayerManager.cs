@@ -332,12 +332,8 @@ namespace AnyRPG {
                 return;
             }
 
-            if (activeUnitController.DynamicCharacterAvatar != null) {
-                if (activeUnitController.ModelReady == false) {
-                    saveManager.LoadUMASettings(false);
-                } else {
-                    saveManager.LoadUMASettings(false);
-                }
+            if (activeUnitController.UnitModelController != null) {
+                activeUnitController.UnitModelController.LoadSavedAppearanceSettings();
             }
 
             if (levelManager.NavMeshAvailable == true && autoDetectNavMeshes) {
@@ -357,7 +353,7 @@ namespace AnyRPG {
             // testing - move this to before the below calls so its initialized if a model is already ready
             activeUnitController.Init();
 
-            if (activeUnitController.ModelReady == false) {
+            if (activeUnitController?.UnitModelController?.ModelReady == false) {
                 // do UMA spawn stuff to wait for UMA to spawn
                 SubscribeToModelReady();
             } else {
@@ -438,11 +434,11 @@ namespace AnyRPG {
             // try this earlier
             //saveManager.LoadUMASettings(false);
 
-            activeUnitController.OnModelReady += HandleModelReady;
+            activeUnitController.UnitModelController.OnModelReady += HandleModelReady;
         }
 
         public void UnsubscribeFromModelReady() {
-            activeUnitController.OnModelReady -= HandleModelReady;
+            activeUnitController.UnitModelController.OnModelReady -= HandleModelReady;
         }
 
         public void SpawnPlayerConnection() {

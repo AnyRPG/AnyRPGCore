@@ -14,12 +14,12 @@ namespace AnyRPG {
 
         public static QuestGiverUI Instance {
             get {
+                if (instance == null) {
+                    instance = FindObjectOfType<QuestGiverUI>();
+                }
+
                 return instance;
             }
-        }
-
-        private void Awake() {
-            instance = this;
         }
         #endregion
 

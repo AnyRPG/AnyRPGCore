@@ -233,12 +233,9 @@ namespace AnyRPG {
                 }
 
                 // set animator on UMA if one exists
-                if (unitController.DynamicCharacterAvatar != null) {
+                if (unitController.UnitModelController != null) {
                     //Debug.Log(unitController.gameObject.name + ".UnitAnimator.SetOverrideController(" + animatorOverrideController.name + ") setting override controller on UMA");
-                    unitController.DynamicCharacterAvatar.raceAnimationControllers.defaultAnimationController = animatorOverrideController;
-                    unitController.DynamicCharacterAvatar.animationController = animatorOverrideController;
-                } else {
-                    //Debug.Log(unitController.gameObject.name + ".UnitAnimator.SetOverrideController(" + animatorOverrideController.name + ") could not find an UMA");
+                    unitController.UnitModelController.SetAnimatorOverrideController(animatorOverrideController);
                 }
                 //animator.updateMode = AnimatorUpdateMode.
                 if (runUpdate) {

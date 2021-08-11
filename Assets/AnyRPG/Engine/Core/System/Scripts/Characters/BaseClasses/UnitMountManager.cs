@@ -22,7 +22,7 @@ namespace AnyRPG {
             this.mountUnitController = mountUnitController;
             this.mountUnitProfile = mountUnitProfile;
             mountUnitController.SetRider(unitController);
-            if (mountUnitController != null && mountUnitController.ModelReady == false) {
+            if (mountUnitController?.UnitModelController != null && mountUnitController.UnitModelController.ModelReady == false) {
                 SubscribeToMountModelReady();
             } else {
                 HandleMountUnitSpawn();
@@ -30,8 +30,8 @@ namespace AnyRPG {
         }
 
         public void SubscribeToMountModelReady() {
-            if (mountUnitController != null) {
-                mountUnitController.OnModelReady += HandleMountModelReady;
+            if (mountUnitController?.UnitModelController != null) {
+                mountUnitController.UnitModelController.OnModelReady += HandleMountModelReady;
             }
         }
 
@@ -42,8 +42,8 @@ namespace AnyRPG {
         }
 
         public void UnsubscribeFromMountModelReady() {
-            if (mountUnitController != null) {
-                mountUnitController.OnModelReady -= HandleMountModelReady;
+            if (mountUnitController?.UnitModelController != null) {
+                mountUnitController.UnitModelController.OnModelReady -= HandleMountModelReady;
             }
         }
 
@@ -68,7 +68,7 @@ namespace AnyRPG {
 
         public void ActivateMountedState() {
 
-            unitController?.CharacterUnit?.BaseCharacter?.CharacterEquipmentManager?.SheathWeapons();
+            unitController?.UnitModelController?.SheathWeapons();
 
             unitController.FreezeAll();
 
@@ -146,7 +146,7 @@ namespace AnyRPG {
                 mountUnitProfile = null;
             }
             if (unitController?.CharacterUnit?.BaseCharacter?.CharacterCombat?.GetInCombat() == true) {
-                unitController?.CharacterUnit?.BaseCharacter?.CharacterEquipmentManager.HoldWeapons();
+                unitController?.UnitModelController?.HoldWeapons();
             }
         }
 

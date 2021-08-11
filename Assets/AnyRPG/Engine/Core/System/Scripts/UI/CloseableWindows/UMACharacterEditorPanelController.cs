@@ -5,10 +5,7 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
-using UMA;
-using UMA.Examples;
 using UMA.CharacterSystem;
-using UMA.CharacterSystem.Examples;
 
 namespace AnyRPG {
 
@@ -18,6 +15,8 @@ namespace AnyRPG {
 
         [SerializeField]
         protected CanvasGroup canvasGroup = null;
+
+        private DynamicCharacterAvatar dynamicCharacterAvatar = null;
 
         public override void RecieveClosedWindowNotification() {
             //Debug.Log("CharacterCreatorPanel.OnCloseWindow()");
@@ -55,11 +54,11 @@ namespace AnyRPG {
             if (characterCreatorManager == null) {
                 Debug.Log("UMACharacterEditorPanelController.SetupOptions() : characterCreatorManager is null");
             }
-            if (characterCreatorManager.PreviewUnitController?.DynamicCharacterAvatar == null) {
+            if (dynamicCharacterAvatar == null) {
                 mainNoOptionsArea.SetActive(true);
                 return;
             }
-            if (characterCreatorManager.PreviewUnitController?.ModelReady == true) {
+            if (characterCreatorManager.PreviewUnitController?.UnitModelController?.ModelReady == true) {
                 mainButtonsArea.SetActive(true);
                 OpenAppearanceOptionsArea();
                 InitializeSexButtons();
@@ -68,6 +67,7 @@ namespace AnyRPG {
 
         public void HandleTargetReady() {
             //Debug.Log("UMACharacterEditorPanelController.HandleTargetReady()");
+            dynamicCharacterAvatar = characterCreatorManager.PreviewUnitController.UnitModelController.UMAModelController.DynamicCharacterAvatar;
             SetupOptions();
         }
 

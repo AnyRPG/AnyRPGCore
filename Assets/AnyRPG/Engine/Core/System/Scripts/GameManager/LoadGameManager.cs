@@ -77,7 +77,7 @@ namespace AnyRPG {
             faction = capabilityConsumerSnapshot.Faction;
 
             saveManager.ClearSharedData();
-            saveManager.LoadUMARecipe(anyRPGSaveData);
+            saveManager.LoadRecipeString(anyRPGSaveData);
 
             //OnSetSavedGame(loadButton);
            

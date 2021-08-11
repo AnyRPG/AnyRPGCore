@@ -304,7 +304,7 @@ namespace AnyRPG {
             characterCreatorManager.HandleOpenWindow(playerManager.MyCharacter.UnitProfile);
 
             // testing do this earlier
-            LoadUMARecipe();
+            LoadSavedAppearanceSettings();
 
             if (cameraManager != null && cameraManager.CharacterPreviewCamera != null) {
                 //Debug.Log("CharacterPanel.SetPreviewTarget(): preview camera was available, setting target");
@@ -323,9 +323,8 @@ namespace AnyRPG {
             TargetReadyCallbackCommon();
         }
 
-        public void LoadUMARecipe() {
-            saveManager.LoadUMASettings(characterCreatorManager.PreviewUnitController.DynamicCharacterAvatar, false);
-
+        public void LoadSavedAppearanceSettings() {
+            characterCreatorManager.PreviewUnitController?.UnitModelController.LoadSavedAppearanceSettings();
         }
 
         public void TargetReadyCallbackCommon() {
@@ -335,7 +334,7 @@ namespace AnyRPG {
             if (characterEquipmentManager != null) {
                 if (playerManager != null && playerManager.MyCharacter != null && playerManager.MyCharacter.CharacterEquipmentManager != null) {
                     characterEquipmentManager.CurrentEquipment = playerManager.MyCharacter.CharacterEquipmentManager.CurrentEquipment;
-                    characterEquipmentManager.EquipEquipmentModels();
+                    characterCreatorManager.PreviewUnitController.UnitModelController.EquipEquipmentModels(characterEquipmentManager);
                 }
             }
         }

@@ -138,10 +138,9 @@ namespace AnyRPG {
 
         }
 
-        public void LoadUMARecipe() {
+        public void LoadSavedAppearanceSettings() {
             //Debug.Log("CharacterCreatorWindowPanel.LoadUMARecipe()");
-            //saveManager.SaveUMASettings();
-            saveManager.LoadUMASettings(characterCreatorManager.PreviewUnitController.DynamicCharacterAvatar, false);
+            characterCreatorManager.PreviewUnitController.UnitModelController.LoadSavedAppearanceSettings();
         }
 
         public void ClosePanel() {
@@ -152,8 +151,8 @@ namespace AnyRPG {
         public void SaveCharacter() {
             //Debug.Log("CharacterCreatorPanel.SaveCharacter()");
 
-            if (characterCreatorManager.PreviewUnitController.DynamicCharacterAvatar != null) {
-                saveManager.SaveUMASettings(characterCreatorManager.PreviewUnitController.DynamicCharacterAvatar.GetCurrentRecipe());
+            if (characterCreatorManager.PreviewUnitController.UnitModelController != null) {
+                characterCreatorManager.PreviewUnitController.UnitModelController.SaveAppearanceSettings();
             }
 
             // replace a default player unit with an UMA player unit when a save occurs
@@ -179,7 +178,7 @@ namespace AnyRPG {
 
         public void HandleTargetReady() {
             //Debug.Log("CharacterCreatorWindowPanel.HandleTargetReady()");
-            LoadUMARecipe();
+            LoadSavedAppearanceSettings();
             umaCharacterPanel.HandleTargetReady();
             if (umaCharacterPanel.MainNoOptionsArea.activeSelf == false) {
                 saveButton.Button.interactable = true;

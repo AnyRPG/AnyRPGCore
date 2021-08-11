@@ -625,13 +625,15 @@ namespace AnyRPG {
 
         public void HandleCharacterUnitSpawn() {
             //Debug.Log(gameObject.name + ".BaseCharacter.HandleCharacterUnitSpawn()");
-            characterEquipmentManager.HandleCharacterUnitSpawn();
+            // no longer necessary - moved to UnitModel -> UnitModelController
+            //characterEquipmentManager.HandleCharacterUnitSpawn();
             characterStats.HandleCharacterUnitSpawn();
         }
 
         public void HandleCharacterUnitDespawn() {
             //Debug.Log(gameObject.name + ".BaseCharacter.HandleCharacterUnitSpawn()");
-            characterEquipmentManager.HandleCharacterUnitDespawn();
+            // no longer necessary - moved to UnitModel -> UnitModelController
+            //characterEquipmentManager.HandleCharacterUnitDespawn();
             characterStats.HandleCharacterUnitDespawn();
         }
 

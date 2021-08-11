@@ -12,12 +12,12 @@ namespace AnyRPG {
 
         public static ObjectPooler Instance {
             get {
+                if (instance == null) {
+                    instance = FindObjectOfType<ObjectPooler>();
+                }
+
                 return instance;
             }
-        }
-
-        private void Awake() {
-            instance = this;
         }
         #endregion
 
@@ -46,7 +46,7 @@ namespace AnyRPG {
         }
 
         public void HandleLevelUnload(string eventName, EventParamProperties eventParamProperties) {
-
+            //Debug.Log("ObjectPooler.HandleLevelUnload()");
             // if object should persist through scene changes globally, do nothing
             if (persistSceneChange == true) {
                 return;
@@ -83,6 +83,7 @@ namespace AnyRPG {
         }
 
         public void PopulateObjectPool() {
+            //Debug.Log("ObjectPooler.PopulateObjectPool()");
             foreach (PooledObjectConfig pooledObjectConfig in pooledObjectConfigs) {
                 if (pooledObjectConfig.PreloadPool == true) {
                     AddKeyIfNeeded(pooledObjectConfig.PooledObject);
@@ -111,6 +112,7 @@ namespace AnyRPG {
 
 
         public GameObject GetPooledObject(GameObject pooledGameObject, Vector3 spawnLocation, Quaternion spawnRotation, Transform parentTransform, bool worldPositionStays = false) {
+            //Debug.Log("ObjectPooler.GetPooledObject(" + pooledGameObject.name + ")");
             GameObject returnValue = null;
             AddKeyIfNeeded(pooledGameObject);
 
@@ -136,9 +138,10 @@ namespace AnyRPG {
         }
 
         private int GetMaximumObjectCount(GameObject pooledGameObject) {
+            //Debug.Log("ObjectPooler.GetMaximumObjectCount()");
             int returnValue = 0;
             foreach (PooledObjectConfig pooledObjectConfig in pooledObjectConfigs) {
-                if (pooledObjectConfig.PooledObject = pooledGameObject) {
+                if (pooledObjectConfig.PooledObject == pooledGameObject) {
                     returnValue = pooledObjectConfig.MaxObjects;
                     break;
                 }
