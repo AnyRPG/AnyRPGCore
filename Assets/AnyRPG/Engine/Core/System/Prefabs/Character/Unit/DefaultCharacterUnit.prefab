@@ -170,7 +170,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 49ff920aaeff32c47b919cdd7f10e67d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_UUID: 044fb914-dda1-45e9-9b8c-94ba147e1fec
+  m_UUID: 8cd7d827-c70b-4990-97b3-ce286e1ec9ad
   forceUpdateUUID: 0
 --- !u!1001 &8260972880229052764
 PrefabInstance:
