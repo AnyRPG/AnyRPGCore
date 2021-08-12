@@ -67,6 +67,7 @@ namespace AnyRPG {
         }
 
         public void ActivateMountedState() {
+            //Debug.Log(unitController.gameObject.name + ".UnitMountManager.ActivateMountedState()");
 
             unitController?.UnitModelController?.SheathWeapons();
 

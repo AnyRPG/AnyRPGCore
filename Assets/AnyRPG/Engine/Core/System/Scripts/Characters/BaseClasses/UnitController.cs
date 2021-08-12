@@ -893,7 +893,7 @@ namespace AnyRPG {
             //Debug.Log(gameObject.name + ".UnitController.CancelMountEffects()");
 
             if (mounted == true) {
-                //Debug.Log(gameObject.name + ".CharacterAbilityManager.PerformAbilityCast(): canCast and character is mounted");
+                //Debug.Log(gameObject.name + ".UnitController.CancelMountEffects(): unit is mounted");
 
                 foreach (StatusEffectNode statusEffectNode in characterUnit.BaseCharacter.CharacterStats.StatusEffects.Values) {
                     //Debug.Log(gameObject.name + ".CharacterAbilityManager.PerformAbilityCast(): looping through status effects");
@@ -1304,11 +1304,22 @@ namespace AnyRPG {
 
         public override void ProcessLevelUnload() {
             //Debug.Log(gameObject.name + ".UnitController.ProcessLevelUnload()");
+            if (gameObject.activeSelf == false) {
+                // this could be a mount unit that was already despawned via the player CancelMountEffects() calls
+                return;
+            }
+
             base.ProcessLevelUnload();
             ClearTarget();
             CancelMountEffects();
+            // this was subject to event ordering and the baseCharacter could catch the event and despawn the unit
+            // before the unit could cancel the mounted state - re-enabling
             // moved to baseCharacter
             //Despawn();
+
+            // this could be a mount which has no base character - check for nulls
+            characterUnit?.BaseCharacter?.ProcessLevelUnload();
+            Despawn();
         }
 
         public void Agro(CharacterUnit agroTarget) {

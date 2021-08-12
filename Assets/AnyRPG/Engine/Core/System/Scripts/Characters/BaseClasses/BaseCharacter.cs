@@ -206,6 +206,11 @@ namespace AnyRPG {
         public void HandleLevelUnload(string eventName, EventParamProperties eventParamProperties) {
             //Debug.Log(gameObject.name + ".BaseCharacter.HandleLevelUnload(): instanceID: " + gameObject.GetInstanceID());
 
+            // testing - do nothing here and let the unit call this so that ordering is correct
+            //ProcessLevelUnload()
+        }
+
+        public void ProcessLevelUnload() {
             // There are multiple situations where a baseCharacter could receive this event after they already despawned.
             // This is because the event that is invoked will not update its list until the loop is complete.
             // Things like pets being despawned or player units being despawned as part of the level unload
@@ -218,7 +223,7 @@ namespace AnyRPG {
             characterAbilityManager.ProcessLevelUnload();
             characterCombat.ProcessLevelUnload();
             characterPetManager.ProcessLevelUnload();
-            unitController?.Despawn();
+            //unitController?.Despawn();
         }
 
         public void HandleLevelLoad(string eventName, EventParamProperties eventParamProperties) {
