@@ -55,8 +55,8 @@ namespace AnyRPG {
             umaModelController.BuildModelAppearance();
         }
 
-        public void LoadSavedAppearanceSettings() {
-            umaModelController.LoadSavedAppearanceSettings();
+        public void LoadSavedAppearanceSettings(string recipeString = null, bool rebuildAppearance = false) {
+            umaModelController.LoadSavedAppearanceSettings(recipeString, rebuildAppearance);
         }
 
         public void SaveAppearanceSettings() {
@@ -76,9 +76,10 @@ namespace AnyRPG {
 
         // This method does not actually equip the character, just apply models from already equipped equipment
         public void EquipEquipmentModels(CharacterEquipmentManager characterEquipmentManager) {
-            //Debug.Log(gameObject.name + ".CharacterEquipmentManager.EquipCharacter()");
-            if (characterEquipmentManager.CurrentEquipment == null) {
+            //Debug.Log(unitController.gameObject.name + ".UnitModelController.EquipEquipmentModels()");
+            if (characterEquipmentManager.CurrentEquipment == null || characterEquipmentManager.CurrentEquipment.Count == 0) {
                 //Debug.Log(gameObject.name + ".CharacterEquipmentManager.EquipCharacter(): currentEquipment == null!");
+                // no point building model appearance if there was nothing equipped
                 return;
             }
             foreach (EquipmentSlotProfile equipmentSlotProfile in characterEquipmentManager.CurrentEquipment.Keys) {
@@ -87,11 +88,12 @@ namespace AnyRPG {
                     EquipItemModels(characterEquipmentManager, equipmentSlotProfile, characterEquipmentManager.CurrentEquipment[equipmentSlotProfile], false);
                 }
             }
+            
             umaModelController.BuildModelAppearance();
         }
 
         public void EquipItemModels(CharacterEquipmentManager characterEquipmentManager, EquipmentSlotProfile equipmentSlotProfile, Equipment equipment, bool rebuildAppearance) {
-            Debug.Log(unitController.gameObject.name + ".UnitModelController.EquipItemModels(" + equipment.DisplayName + ", " + rebuildAppearance + ")");
+            //Debug.Log(unitController.gameObject.name + ".UnitModelController.EquipItemModels(" + equipment.DisplayName + ", " + rebuildAppearance + ")");
             if (characterEquipmentManager.CurrentEquipment == null) {
                 Debug.LogError("CharacterEquipmentManager.HandleWeaponSlot(" + equipmentSlotProfile.DisplayName + "): currentEquipment is null!");
                 return;
@@ -142,7 +144,7 @@ namespace AnyRPG {
         }
 
         public void DespawnModel() {
-            Debug.Log(unitController.gameObject.name + "UnitModelController.DespawnModel()");
+            //Debug.Log(unitController.gameObject.name + "UnitModelController.DespawnModel()");
             mecanimModelController.DespawnModel();
             umaModelController.DespawnModel();
             if (unitController.UnitProfile?.UnitPrefabProps?.ModelPrefab != null) {
@@ -179,7 +181,7 @@ namespace AnyRPG {
         }
 
         public void SetModelReady() {
-            //Debug.Log(gameObject.name + ".UnitController.SetModelReady()");
+            //Debug.Log(unitController.gameObject.name + ".UnitController.SetModelReady()");
             if (modelReady == false) {
                 unitController.CharacterUnit.BaseCharacter.HandleCharacterUnitSpawn();
                 EquipEquipmentModels(unitController.CharacterUnit.BaseCharacter.CharacterEquipmentManager);

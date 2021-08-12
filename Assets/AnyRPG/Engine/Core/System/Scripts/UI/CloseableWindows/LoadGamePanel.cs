@@ -180,14 +180,15 @@ namespace AnyRPG {
             }
 
             // testing - try this here to allow the unit to equip itself naturally when it finishes spawning
-            HandleTargetReady();
+            LoadEquipmentData();
 
         }
 
-        public void HandleTargetReady() {
-            //LoadUMARecipe();
+        public void LoadEquipmentData() {
+            //Debug.Log("LoadGamePanel.LoadEquipmentData()");
 
             if (characterCreatorManager.PreviewUnitController != null) {
+                //Debug.Log("LoadGamePanel.LoadEquipmentData(): preview controller found");
 
                 //LoadUMARecipe();
 
@@ -199,7 +200,12 @@ namespace AnyRPG {
                     //saveManager.LoadEquipmentData(loadGameButton.MySaveData, characterEquipmentManager);
                     // results in equipment being sheathed
                     saveManager.LoadEquipmentData(loadGameManager.AnyRPGSaveData, baseCharacter.CharacterEquipmentManager);
-                    //characterCreatorManager.PreviewUnitController.UnitModelController.EquipEquipmentModels(baseCharacter.CharacterEquipmentManager);
+                    
+                    if (characterCreatorManager.PreviewUnitController.UnitModelController.ModelReady == true) {
+                        // any mecanim, and re-used UMAs will already be initialized, so the equipment models can be loaded right away
+                        characterCreatorManager.PreviewUnitController.UnitModelController.EquipEquipmentModels(baseCharacter.CharacterEquipmentManager);
+                    }
+                    
                 }
             }
         }

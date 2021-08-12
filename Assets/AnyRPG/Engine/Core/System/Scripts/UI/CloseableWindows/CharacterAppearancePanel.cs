@@ -110,6 +110,14 @@ namespace AnyRPG {
         public override void Configure(SystemGameManager systemGameManager) {
             base.Configure(systemGameManager);
 
+            appearanceButton.Configure(systemGameManager);
+            colorsButton.Configure(systemGameManager);
+            hairColorsButton.Configure(systemGameManager);
+            skinColorsButton.Configure(systemGameManager);
+            eyesColorsButton.Configure(systemGameManager);
+            sexButton.Configure(systemGameManager);
+            maleButton.Configure(systemGameManager);
+            femaleButton.Configure(systemGameManager);
         }
 
         public override void SetGameManagerReferences() {
@@ -426,7 +434,7 @@ namespace AnyRPG {
             if (maleRecipe != string.Empty) {
                 //Debug.Log("CharacterCreatorPanel.SetFemale(): maleRecipe != string.Empty");
                 characterCreatorManager.PreviewUnitController.UnitModelController.UMAModelController.DynamicCharacterAvatar.ChangeRace("HumanMaleDCS");
-               saveManager.LoadUMASettings(maleRecipe, characterCreatorManager.PreviewUnitController.UnitModelController.UMAModelController.DynamicCharacterAvatar);
+               characterCreatorManager.PreviewUnitController.UnitModelController.LoadSavedAppearanceSettings(maleRecipe, true);
             } else {
                 //Debug.Log("CharacterCreatorPanel.SetFemale(): maleRecipe == string.Empty");
                 characterCreatorManager.PreviewUnitController.UnitModelController.UMAModelController.DynamicCharacterAvatar.ChangeRace("HumanMaleDCS");
@@ -446,7 +454,7 @@ namespace AnyRPG {
             if (femaleRecipe != string.Empty) {
                 //Debug.Log("CharacterCreatorPanel.SetFemale(): femaleRecipe != string.Empty");
                 characterCreatorManager.PreviewUnitController.UnitModelController.UMAModelController.DynamicCharacterAvatar.ChangeRace("HumanFemaleDCS");
-               saveManager.LoadUMASettings(femaleRecipe, characterCreatorManager.PreviewUnitController.UnitModelController.UMAModelController.DynamicCharacterAvatar);
+               characterCreatorManager.PreviewUnitController.UnitModelController.LoadSavedAppearanceSettings(femaleRecipe, true);
             } else {
                 //Debug.Log("CharacterCreatorPanel.SetFemale(): femaleRecipe == string.Empty");
                 characterCreatorManager.PreviewUnitController.UnitModelController.UMAModelController.DynamicCharacterAvatar.ChangeRace("HumanFemaleDCS");
@@ -599,7 +607,7 @@ namespace AnyRPG {
             //Debug.Log("CharacterCreatorPanel.RebuildUMA()");
             //Debug.Log("NewGameCharacterPanelController.RebuildUMA(): BuildCharacter(): buildenabled: " + umaAvatar.BuildCharacterEnabled + "; frame: " + Time.frameCount);
 
-            characterCreatorManager.PreviewUnitController.UnitModelController.UMAModelController.DynamicCharacterAvatar.BuildCharacter();
+            characterCreatorManager.PreviewUnitController.UnitModelController.UMAModelController.BuildModelAppearance();
         }
 
 

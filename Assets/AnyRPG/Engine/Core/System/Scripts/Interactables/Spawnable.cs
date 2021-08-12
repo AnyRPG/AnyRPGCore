@@ -158,7 +158,7 @@ namespace AnyRPG {
         }
 
         public virtual void ResetSettings() {
-            Debug.Log(gameObject.name + ".Spawnable.ResetSettings()");
+            //Debug.Log(gameObject.name + ".Spawnable.ResetSettings()");
             CleanupEventSubscriptions();
             CleanupEverything();
 

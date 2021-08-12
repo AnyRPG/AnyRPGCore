@@ -4,8 +4,6 @@ using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
-using UMA;
-using UMA.CharacterSystem;
 using System.Text.RegularExpressions;
 
 namespace AnyRPG {
@@ -54,6 +52,7 @@ namespace AnyRPG {
         public Dictionary<string, SceneNodeSaveData> SceneNodeSaveDataDictionary { get => sceneNodeSaveDataDictionary; set => sceneNodeSaveDataDictionary = value; }
         public Dictionary<string, CutsceneSaveData> CutsceneSaveDataDictionary { get => cutsceneSaveDataDictionary; set => cutsceneSaveDataDictionary = value; }
         public Dictionary<string, Dictionary<Type, Dictionary<string, QuestObjectiveSaveData>>> QuestObjectiveSaveDataDictionary { get => questObjectiveSaveDataDictionary; set => questObjectiveSaveDataDictionary = value; }
+        public string RecipeString { get => recipeString; }
 
         protected bool eventSubscriptionsInitialized = false;
 
@@ -265,6 +264,7 @@ namespace AnyRPG {
             recipeString = string.Empty;
         }
 
+        /*
         public void LoadUMASettings(DynamicCharacterAvatar _dynamicCharacterAvatar, bool rebuild = true) {
             //Debug.Log("Savemanager.LoadUMASettings(" + _dynamicCharacterAvatar.gameObject.name + ", " + rebuild + ")");
             if (recipeString == string.Empty) {
@@ -288,8 +288,10 @@ namespace AnyRPG {
                 //Debug.Log("Savemanager.LoadUMASettings(string, " + _dynamicCharacterAvatar.gameObject.name + ", " + rebuild + "): dynamicCharacterAvatar.BuildCharacter()");
                 _dynamicCharacterAvatar.BuildCharacter();
             }
-            
         }
+
+        */
+
 
         /*
         public void SaveUMASettings(UMAData umaData) {

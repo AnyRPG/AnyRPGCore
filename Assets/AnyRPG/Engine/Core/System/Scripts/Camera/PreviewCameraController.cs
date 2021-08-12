@@ -176,7 +176,7 @@ namespace AnyRPG {
 
 
         public void InitializeCamera(UnitController unitController) {
-            //Debug.Log("AnyRPGCameraController.InitializeCamera(" + (unitController == null ? "null" : unitController.gameObject.name) + ")");
+            //Debug.Log("PreviewCameraController.InitializeCamera(" + (unitController == null ? "null" : unitController.gameObject.name) + ")");
             SetTarget(unitController);
             //JumpToFollowSpot();
         }

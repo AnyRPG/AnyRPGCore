@@ -37,7 +37,7 @@ namespace AnyRPG {
         }
 
         public void ShowPanel() {
-            //Debug.Log("UMACharacterEditorPanelController.ShowPanel()");
+            Debug.Log("UMACharacterEditorPanelController.ShowPanel()");
             canvasGroup.alpha = 1;
             canvasGroup.blocksRaycasts = true;
             canvasGroup.interactable = true;
@@ -46,7 +46,7 @@ namespace AnyRPG {
         }
 
         public void SetupOptions() {
-            //Debug.Log("UMACharacterEditorPanelController.SetupOptions()");
+            Debug.Log("UMACharacterEditorPanelController.SetupOptions()");
             CloseOptionsAreas();
             mainButtonsArea.SetActive(false);
             mainNoOptionsArea.SetActive(false);
@@ -54,7 +54,7 @@ namespace AnyRPG {
             if (characterCreatorManager == null) {
                 Debug.Log("UMACharacterEditorPanelController.SetupOptions() : characterCreatorManager is null");
             }
-            if (dynamicCharacterAvatar == null) {
+            if (characterCreatorManager.PreviewUnitController?.UnitModelController?.UMAModelController?.DynamicCharacterAvatar == null) {
                 mainNoOptionsArea.SetActive(true);
                 return;
             }

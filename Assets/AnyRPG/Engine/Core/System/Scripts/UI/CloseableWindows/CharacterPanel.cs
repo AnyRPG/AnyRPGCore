@@ -155,7 +155,7 @@ namespace AnyRPG {
         }
 
         public override void ReceiveOpenWindowNotification() {
-            //Debug.Log("CharacterPanel.OnOpenWindow()");
+            Debug.Log("CharacterPanel.ReceiveOpenWindowNotification()");
             base.ReceiveOpenWindowNotification();
             SetBackGroundColor(new Color32(0, 0, 0, (byte)(int)(PlayerPrefs.GetFloat("PopupWindowOpacity") * 255)));
             SetPreviewTarget();
@@ -297,7 +297,7 @@ namespace AnyRPG {
         }
 
         private void SetPreviewTarget() {
-            //Debug.Log("CharacterPanel.SetPreviewTarget()");
+            Debug.Log("CharacterPanel.SetPreviewTarget()");
 
 
             //spawn correct preview unit
@@ -309,8 +309,9 @@ namespace AnyRPG {
             if (cameraManager != null && cameraManager.CharacterPreviewCamera != null) {
                 //Debug.Log("CharacterPanel.SetPreviewTarget(): preview camera was available, setting target");
                 if (PreviewCameraController != null) {
-                    PreviewCameraController.InitializeCamera(characterCreatorManager.PreviewUnitController);
+                    Debug.Log("CharacterPanel.SetPreviewTarget(): subscribing to OnTargetReady()");
                     PreviewCameraController.OnTargetReady += TargetReadyCallback;
+                    PreviewCameraController.InitializeCamera(characterCreatorManager.PreviewUnitController);
                 } else {
                     Debug.LogError("CharacterPanel.SetPreviewTarget(): Character Preview Camera Controller is null. Please set it in the inspector");
                 }
@@ -318,7 +319,7 @@ namespace AnyRPG {
         }
 
         public void TargetReadyCallback() {
-            //Debug.Log("CharacterCreatorPanel.TargetReadyCallback()");
+            Debug.Log("CharacterPanel.TargetReadyCallback()");
             PreviewCameraController.OnTargetReady -= TargetReadyCallback;
             TargetReadyCallbackCommon();
         }
@@ -328,7 +329,7 @@ namespace AnyRPG {
         }
 
         public void TargetReadyCallbackCommon() {
-            //Debug.Log("CharacterCreatorPanel.TargetReadyCallbackCommon(" + updateCharacterButton + ")");
+            Debug.Log("CharacterPanel.TargetReadyCallbackCommon()");
 
             CharacterEquipmentManager characterEquipmentManager = characterCreatorManager.PreviewUnitController.CharacterUnit.BaseCharacter.CharacterEquipmentManager;
             if (characterEquipmentManager != null) {
@@ -336,6 +337,8 @@ namespace AnyRPG {
                     characterEquipmentManager.CurrentEquipment = playerManager.MyCharacter.CharacterEquipmentManager.CurrentEquipment;
                     characterCreatorManager.PreviewUnitController.UnitModelController.EquipEquipmentModels(characterEquipmentManager);
                 }
+            } else {
+                Debug.Log("CharacterPanel.TargetReadyCallbackCommon(): could not find a characterEquipmentManager");
             }
         }
 

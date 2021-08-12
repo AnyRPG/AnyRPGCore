@@ -101,6 +101,9 @@ namespace AnyRPG {
 
         private Coroutine waitForCameraCoroutine = null;
 
+        // track the camera wait start frame to ensure the current camera wait routine is still valid
+        private int lastWaitFrame = 0;
+
         public BaseNamePlateController UnitNamePlateController { get => namePlateController; set => namePlateController = value; }
 
         //public GameObject FollowGameObject { get => followGameObject; set => followGameObject = value; }
@@ -193,14 +196,15 @@ namespace AnyRPG {
         }
 
         public void HandleTargetReady() {
-            Debug.Log(gameObject.name + ".UnitFrameController.HandleTargetReady()");
+            //Debug.Log(gameObject.name + ".UnitFrameController.HandleTargetReady()");
 
             //UnsubscribeFromTargetReady();
             GetFollowTarget();
             UpdateCameraPosition();
-            if (waitForCameraCoroutine == null) {
-                waitForCameraCoroutine = StartCoroutine(WaitForCamera());
-            }
+            lastWaitFrame++;
+            //if (waitForCameraCoroutine == null) {
+                waitForCameraCoroutine = StartCoroutine(WaitForCamera(lastWaitFrame));
+            //}
         }
 
         public void InitializePosition() {
@@ -245,12 +249,14 @@ namespace AnyRPG {
             }
             if (SystemGameManager.Instance.SystemConfigurationManager.RealTimeUnitFrameCamera == true) {
                 previewCamera.enabled = true;
-            } else {
+            }/* else {
+            // this code disabled because it is handled by TargetInitialization(), which results in an extra render request here
                 //previewCamera.Render();
-                if (waitForCameraCoroutine == null) {
-                    waitForCameraCoroutine = StartCoroutine(WaitForCamera());
-                }
-            }
+                lastWaitFrame++;
+                //if (waitForCameraCoroutine == null) {
+                    waitForCameraCoroutine = StartCoroutine(WaitForCamera(lastWaitFrame));
+                //}
+            }*/
         }
 
         public void CalculateResourceColors() {
@@ -279,16 +285,21 @@ namespace AnyRPG {
 
         }
 
-        private IEnumerator WaitForCamera() {
-            Debug.Log(gameObject.name + ".UnitFrameController.WaitForCamera()");
+        private IEnumerator WaitForCamera(int frameNumber) {
+            //Debug.Log(gameObject.name + ".UnitFrameController.WaitForCamera(): frame: " + frameNumber);
             //yield return new WaitForEndOfFrame();
             yield return null;
-            previewCamera.Render();
-            waitForCameraCoroutine = null;
+            //Debug.Log(gameObject.name + ".UnitFrameController.WaitForCamera(): about to render. initial frame: " + frameNumber + "; current frame: " + lastWaitFrame);
+            if (lastWaitFrame != frameNumber) {
+                //Debug.Log(gameObject.name + ".UnitFrameController.WaitForCamera(): a new wait was started. initial frame: " + frameNumber +  "; current wait: " + lastWaitFrame);
+            } else {
+                previewCamera.Render();
+                waitForCameraCoroutine = null;
+            }
         }
 
         public void ClearTarget(bool closeWindowOnClear = true) {
-            Debug.Log(gameObject.name + ".UnitFrameController.ClearTarget(" + closeWindowOnClear + ")");
+            //Debug.Log(gameObject.name + ".UnitFrameController.ClearTarget(" + closeWindowOnClear + ")");
             if (waitForCameraCoroutine != null) {
                 StopCoroutine(waitForCameraCoroutine);
             }

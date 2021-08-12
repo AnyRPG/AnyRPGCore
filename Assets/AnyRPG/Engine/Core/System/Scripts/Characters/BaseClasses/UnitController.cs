@@ -637,7 +637,7 @@ namespace AnyRPG {
         /// reset all variables to default values for object pooling
         /// </summary>
         public override void ResetSettings() {
-            Debug.Log(gameObject.name + ".UnitController.ResetSettings()");
+            //Debug.Log(gameObject.name + ".UnitController.ResetSettings()");
             
             // agents should be disabled so when pool and re-activated they don't throw errors if they are a preview unit
             DisableAgent();

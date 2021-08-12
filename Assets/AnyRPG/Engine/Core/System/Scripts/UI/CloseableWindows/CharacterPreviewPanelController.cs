@@ -101,7 +101,8 @@ namespace AnyRPG {
             characterReady = true;
 
             OnTargetReady();
-            StartCoroutine(PointlessDelay());
+            // testing - character will now build their own appearance
+            //StartCoroutine(PointlessDelay());
         }
 
 

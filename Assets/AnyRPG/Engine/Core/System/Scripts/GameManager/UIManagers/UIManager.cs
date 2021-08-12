@@ -161,6 +161,8 @@ namespace AnyRPG {
         private TextMeshProUGUI mouseOverText;
         private GameObject mouseOverTarget;
 
+        private int ignoreChangeLayer = 0;
+
         // keep track of window positions at startup in case of need to reset
         private Dictionary<string, float> defaultWindowPositions = new Dictionary<string, float>();
 
@@ -282,6 +284,8 @@ namespace AnyRPG {
             confirmNewGameMenuWindow.Configure(systemGameManager);
 
             CreateEventSubscriptions();
+
+            ignoreChangeLayer = LayerMask.NameToLayer("Equipment");
         }
 
         public override void SetGameManagerReferences() {
@@ -501,6 +505,7 @@ namespace AnyRPG {
 
             /*
              * commented out for now because the UIManager now handles system windows also
+             * added condition below to prevent typeing a new character name from triggering a popup window
             if (playerManager.PlayerUnitSpawned == false) {
                 // if there is no player, these windows shouldn't be open
                 return;
@@ -508,7 +513,7 @@ namespace AnyRPG {
             */
 
             // don't hide windows while binding keys
-            if (keyBindManager.MyBindName == string.Empty) {
+            if (keyBindManager.MyBindName == string.Empty && playerManager.PlayerUnitSpawned != false) {
 
                 // ui element keys pressed
                 if (inputManager.KeyBindWasPressed("HIDEUI")) {
@@ -1303,7 +1308,9 @@ namespace AnyRPG {
             // set the preview unit layer to the PlayerPreview layer so the preview camera can see it and all other cameras will ignore it
             objectName.layer = newLayer;
             foreach (Transform childTransform in objectName.gameObject.GetComponentsInChildren<Transform>(true)) {
-                childTransform.gameObject.layer = newLayer;
+                if (childTransform.gameObject.layer != ignoreChangeLayer) {
+                    childTransform.gameObject.layer = newLayer;
+                }
             }
 
         }

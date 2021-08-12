@@ -230,9 +230,9 @@ namespace AnyRPG {
 
         public void RemoveEquipmentObjects() {
             foreach (Dictionary<AttachmentNode, GameObject> holdableObjectReferences in currentEquipmentPhysicalObjects.Values) {
-                Debug.Log("MecanimModelController.RemoveEquipmentObjects(): destroying objects ");
+                //Debug.Log("MecanimModelController.RemoveEquipmentObjects(): destroying objects ");
                 foreach (GameObject holdableObjectReference in holdableObjectReferences.Values) {
-                    Debug.Log("MecanimModelController.RemoveEquipmentObjects(): destroying object: " + holdableObjectReference.name);
+                    //Debug.Log("MecanimModelController.RemoveEquipmentObjects(): destroying object: " + holdableObjectReference.name);
                     ObjectPooler.Instance.ReturnObjectToPool(holdableObjectReference);
                 }
             }
@@ -251,7 +251,7 @@ namespace AnyRPG {
         }
 
         public void DespawnModel() {
-            Debug.Log(unitController.gameObject.name + ".MecanimModelController.DespawnModel()");
+            //Debug.Log(unitController.gameObject.name + ".MecanimModelController.DespawnModel()");
             RemoveEquipmentObjects();
         }
 

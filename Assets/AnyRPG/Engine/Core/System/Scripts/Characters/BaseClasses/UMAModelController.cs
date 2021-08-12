@@ -44,6 +44,7 @@ namespace AnyRPG {
         }
 
         public void SubscribeToUMACreate() {
+            //Debug.Log(unitController.gameObject.name + ".UMAModelController.SubscribeToUMACreate()");
 
             dynamicCharacterAvatar.umaData.OnCharacterCreated += HandleCharacterCreated;
             /*
@@ -56,6 +57,7 @@ namespace AnyRPG {
         }
 
         public void UnsubscribeFromUMACreate() {
+            //Debug.Log(unitController.gameObject.name + ".UMAModelController.UnsubscribeFromUMACreate()");
             if (dynamicCharacterAvatar?.umaData != null) {
                 dynamicCharacterAvatar.umaData.OnCharacterCreated -= HandleCharacterCreated;
                 dynamicCharacterAvatar.umaData.OnCharacterUpdated -= HandleCharacterUpdated;
@@ -63,7 +65,7 @@ namespace AnyRPG {
         }
 
         public void HandleCharacterCreated(UMAData umaData) {
-            //Debug.Log("PreviewCameraController.HandleCharacterCreated(): " + umaData);
+            //Debug.Log(unitController.gameObject.name + ".UMAModelController.HandleCharacterCreated()");
             //UnsubscribeFromUMACreate();
             unitModelController.SetModelReady();
         }
@@ -81,7 +83,8 @@ namespace AnyRPG {
             //Debug.Log("PreviewCameraController.OnCharacterDestroyed(): " + umaData);
         }
         public void HandleCharacterUpdated(UMAData umaData) {
-            //Debug.Log("PreviewCameraController.HandleCharacterUpdated(): " + umaData + "; frame: " + Time.frameCount);
+            //Debug.Log(unitController.gameObject.name + ".UMAModelController.HandleCharacterUpdated()");
+            //Debug.Log("UMAModelController.HandleCharacterUpdated(): " + umaData + "; frame: " + Time.frameCount);
             //HandleCharacterCreated(umaData);
             unitModelController.SetModelReady();
         }
@@ -142,9 +145,20 @@ namespace AnyRPG {
             return string.Empty;
         }
 
-        public void LoadSavedAppearanceSettings() {
+        public void LoadSavedAppearanceSettings(string recipeString = null, bool rebuildAppearance = false) {
+            //Debug.Log(unitController.gameObject.name + ".UMAModelController.LoadSavedAppearanceSettings()");
             if (dynamicCharacterAvatar != null) {
-                SystemGameManager.Instance.SaveManager.LoadUMASettings(dynamicCharacterAvatar, false);
+                if (recipeString != null && recipeString != string.Empty) {
+                    dynamicCharacterAvatar.SetLoadString(recipeString);
+                } else if (recipeString == null
+                    && SystemGameManager.Instance.SaveManager.RecipeString != null
+                    && SystemGameManager.Instance.SaveManager.RecipeString != string.Empty) {
+                    dynamicCharacterAvatar.SetLoadString(SystemGameManager.Instance.SaveManager.RecipeString);
+                }
+                if (rebuildAppearance == true) {
+                    // by default an UMA will build appearance unless the option is disabled, so this call is redundant unless the UMA is configured to not build
+                    BuildModelAppearance();
+                }
             }
         }
 
@@ -155,7 +169,7 @@ namespace AnyRPG {
         }
 
         public void BuildModelAppearance() {
-            Debug.Log(unitController.gameObject.name + ".UMAModelController.BuildModelAppearance()");
+            //Debug.Log(unitController.gameObject.name + ".UMAModelController.BuildModelAppearance()");
             if (dynamicCharacterAvatar != null) {
                 dynamicCharacterAvatar.BuildCharacter();
             }
@@ -169,7 +183,8 @@ namespace AnyRPG {
                 dynamicCharacterAvatar.RestoreCachedBodyColors();
                 dynamicCharacterAvatar.LoadDefaultWardrobe();
                 // doing the rebuild on despawn so there isn't a frame with this appearance until a rebuild happens when re-using the avatar
-                dynamicCharacterAvatar.BuildCharacter();
+                // testing - see if we don't get extra handleCharacterUpdated after respawn
+                BuildModelAppearance();
             }
 
         }

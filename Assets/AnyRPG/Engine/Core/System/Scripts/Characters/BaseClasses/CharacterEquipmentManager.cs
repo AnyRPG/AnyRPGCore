@@ -57,7 +57,7 @@ namespace AnyRPG {
         /// meant to be called by SetUnitProfile since it relies on that for the equipment list
         /// </summary>
         public void LoadDefaultEquipment(bool loadProviderEquipment) {
-            //Debug.Log(gameObject.name + ".CharacterEquipmentManager.LoadDefaultEquipment()");
+            //Debug.Log(baseCharacter.gameObject.name + ".CharacterEquipmentManager.LoadDefaultEquipment()");
 
             if (baseCharacter?.UnitProfile?.EquipmentList == null) {
                 return;
