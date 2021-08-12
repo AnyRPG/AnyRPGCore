@@ -35,6 +35,7 @@ namespace AnyRPG {
         }
 
         public void FindUnitModel(GameObject unitModel) {
+            //Debug.Log(unitController.gameObject.name + ".UMAModelController.FindUnitModel(" + (unitModel == null ? "null" : unitModel.name) + ")");
             if (unitModel != null && dynamicCharacterAvatar == null) {
                 dynamicCharacterAvatar = unitModel.GetComponent<DynamicCharacterAvatar>();
             }
@@ -96,6 +97,7 @@ namespace AnyRPG {
 
 
         public void UnequipItemModels(Equipment equipment, bool rebuildAppearance) {
+            //Debug.Log(unitController.gameObject.name + ".UMAModelController.UnequipItemModels(" + equipment.DisplayName + ", " + rebuildAppearance + ")");
             if (equipment.MyUMARecipes != null && equipment.MyUMARecipes.Count > 0 && dynamicCharacterAvatar != null) {
                 // Clear the item from the UMA slot on the UMA character
                 //Debug.Log("Clearing UMA slot " + oldItem.UMARecipe.wardrobeSlot);
@@ -149,20 +151,24 @@ namespace AnyRPG {
             //Debug.Log(unitController.gameObject.name + ".UMAModelController.LoadSavedAppearanceSettings()");
             if (dynamicCharacterAvatar != null) {
                 if (recipeString != null && recipeString != string.Empty) {
+                    //Debug.Log(unitController.gameObject.name + ".UMAModelController.LoadSavedAppearanceSettings() : loading string from parameters : " + recipeString);
                     dynamicCharacterAvatar.SetLoadString(recipeString);
                 } else if (recipeString == null
                     && SystemGameManager.Instance.SaveManager.RecipeString != null
                     && SystemGameManager.Instance.SaveManager.RecipeString != string.Empty) {
+                    //Debug.Log(unitController.gameObject.name + ".UMAModelController.LoadSavedAppearanceSettings() : loading string from SaveManager : " + SystemGameManager.Instance.SaveManager.RecipeString);
                     dynamicCharacterAvatar.SetLoadString(SystemGameManager.Instance.SaveManager.RecipeString);
                 }
-                if (rebuildAppearance == true) {
+                if (rebuildAppearance == true && dynamicCharacterAvatar.BuildCharacterEnabled == false) {
                     // by default an UMA will build appearance unless the option is disabled, so this call is redundant unless the UMA is configured to not build
+                    //Debug.Log(unitController.gameObject.name + ".UMAModelController.LoadSavedAppearanceSettings() : building model appearance");
                     BuildModelAppearance();
                 }
             }
         }
 
         public void SaveAppearanceSettings() {
+            //Debug.Log(unitController.gameObject.name + ".UMAModelController.SaveAppearanceSettings()");
             if (dynamicCharacterAvatar != null) {
                 SystemGameManager.Instance.SaveManager.SaveRecipeString(dynamicCharacterAvatar.GetCurrentRecipe());
             }

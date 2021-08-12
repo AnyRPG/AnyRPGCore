@@ -255,7 +255,7 @@ namespace AnyRPG {
         }
 
         public void SaveRecipeString(string newRecipe) {
-            //Debug.Log("SaveManager.SaveUMASettings(string)");
+            //Debug.Log("SaveManager.SaveRecipeString(): " + newRecipe);
             recipeString = newRecipe;
         }
 

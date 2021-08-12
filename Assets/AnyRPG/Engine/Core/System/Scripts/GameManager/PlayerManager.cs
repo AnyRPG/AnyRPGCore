@@ -332,10 +332,6 @@ namespace AnyRPG {
                 return;
             }
 
-            if (activeUnitController.UnitModelController != null) {
-                activeUnitController.UnitModelController.LoadSavedAppearanceSettings();
-            }
-
             if (levelManager.NavMeshAvailable == true && autoDetectNavMeshes) {
                 //Debug.Log("PlayerManager.SpawnPlayerUnit(): Enabling NavMeshAgent()");
                 activeUnitController.EnableAgent();
@@ -352,6 +348,11 @@ namespace AnyRPG {
 
             // testing - move this to before the below calls so its initialized if a model is already ready
             activeUnitController.Init();
+
+            // saved appearance settings should only be run after the above Init() call or there is no reference to the avatar to load the settings onto
+            if (activeUnitController.UnitModelController != null) {
+                activeUnitController.UnitModelController.LoadSavedAppearanceSettings();
+            }
 
             if (activeUnitController?.UnitModelController?.ModelReady == false) {
                 // do UMA spawn stuff to wait for UMA to spawn

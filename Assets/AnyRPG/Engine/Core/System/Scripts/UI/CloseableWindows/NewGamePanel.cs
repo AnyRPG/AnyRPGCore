@@ -399,7 +399,7 @@ namespace AnyRPG {
         }
 
         public void EquipCharacter() {
-            Debug.Log("NewGamePanel.EquipCharacter()");
+            //Debug.Log("NewGamePanel.EquipCharacter()");
 
             if (characterPreviewPanel.CharacterReady == false) {
                 // attempting this before the character is spawned will make it go invisible (UMA bug)

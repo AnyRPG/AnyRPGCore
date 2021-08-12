@@ -139,7 +139,7 @@ namespace AnyRPG {
         }
 
         public void LoadSavedAppearanceSettings() {
-            //Debug.Log("CharacterCreatorWindowPanel.LoadUMARecipe()");
+            //Debug.Log("CharacterCreatorWindowPanel.LoadSavedAppearanceSettings()");
             characterCreatorManager.PreviewUnitController.UnitModelController.LoadSavedAppearanceSettings();
         }
 
