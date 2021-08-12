@@ -121,9 +121,16 @@ namespace AnyRPG {
         }
 
         public void SetNamePlatePosition() {
+            //Debug.Log(namePlateUnit.gameObject.name + "BaseNamePlateController.SetnamePlatePosition()");
+            if (namePlateUnit.UnitComponentController.GotInitialNamePlatePosition == false) {
+                namePlateUnit.UnitComponentController.InitialNamePlatePosition = namePlateUnit.UnitComponentController.NamePlateTransform.localPosition;
+                namePlateUnit.UnitComponentController.GotInitialNamePlatePosition = true;
+            }
             if (OverrideNamePlatePosition) {
                 //_namePlate.transform.localPosition = NamePlatePosition;
                 namePlateUnit.UnitComponentController.NamePlateTransform.localPosition = NamePlatePosition;
+            } else {
+                namePlateUnit.UnitComponentController.NamePlateTransform.localPosition = namePlateUnit.UnitComponentController.InitialNamePlatePosition;
             }
         }
 

@@ -155,7 +155,7 @@ namespace AnyRPG {
         }
 
         public override void ReceiveOpenWindowNotification() {
-            Debug.Log("CharacterPanel.ReceiveOpenWindowNotification()");
+            //Debug.Log("CharacterPanel.ReceiveOpenWindowNotification()");
             base.ReceiveOpenWindowNotification();
             SetBackGroundColor(new Color32(0, 0, 0, (byte)(int)(PlayerPrefs.GetFloat("PopupWindowOpacity") * 255)));
             SetPreviewTarget();
@@ -297,7 +297,7 @@ namespace AnyRPG {
         }
 
         private void SetPreviewTarget() {
-            Debug.Log("CharacterPanel.SetPreviewTarget()");
+            //Debug.Log("CharacterPanel.SetPreviewTarget()");
 
 
             //spawn correct preview unit
@@ -309,7 +309,7 @@ namespace AnyRPG {
             if (cameraManager != null && cameraManager.CharacterPreviewCamera != null) {
                 //Debug.Log("CharacterPanel.SetPreviewTarget(): preview camera was available, setting target");
                 if (PreviewCameraController != null) {
-                    Debug.Log("CharacterPanel.SetPreviewTarget(): subscribing to OnTargetReady()");
+                    //Debug.Log("CharacterPanel.SetPreviewTarget(): subscribing to OnTargetReady()");
                     PreviewCameraController.OnTargetReady += TargetReadyCallback;
                     PreviewCameraController.InitializeCamera(characterCreatorManager.PreviewUnitController);
                 } else {
@@ -319,7 +319,7 @@ namespace AnyRPG {
         }
 
         public void TargetReadyCallback() {
-            Debug.Log("CharacterPanel.TargetReadyCallback()");
+            //Debug.Log("CharacterPanel.TargetReadyCallback()");
             PreviewCameraController.OnTargetReady -= TargetReadyCallback;
             TargetReadyCallbackCommon();
         }
@@ -329,7 +329,7 @@ namespace AnyRPG {
         }
 
         public void TargetReadyCallbackCommon() {
-            Debug.Log("CharacterPanel.TargetReadyCallbackCommon()");
+            //Debug.Log("CharacterPanel.TargetReadyCallbackCommon()");
 
             CharacterEquipmentManager characterEquipmentManager = characterCreatorManager.PreviewUnitController.CharacterUnit.BaseCharacter.CharacterEquipmentManager;
             if (characterEquipmentManager != null) {

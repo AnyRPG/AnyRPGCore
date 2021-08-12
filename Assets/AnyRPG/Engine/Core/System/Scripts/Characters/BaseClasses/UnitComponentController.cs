@@ -25,14 +25,20 @@ namespace AnyRPG {
         [SerializeField]
         private HighlightController highlightController = null;
 
+        private Vector3 initialNamePlatePosition = Vector3.zero;
+        private bool gotInitialNamePlatePosition = false;
+
         public Transform NamePlateTransform { get => namePlateTransform; set => namePlateTransform = value; }
         public AggroRange AggroRangeController { get => aggroRangeController; set => aggroRangeController = value; }
         public InteractableRange InteractableRange { get => interactableRange; set => interactableRange = value; }
         public HighlightController HighlightController { get => highlightController; set => highlightController = value; }
+        public Vector3 InitialNamePlatePosition { get => initialNamePlatePosition; set => initialNamePlatePosition = value; }
+        public bool GotInitialNamePlatePosition { get => gotInitialNamePlatePosition; set => gotInitialNamePlatePosition = value; }
 
         //public UnitAudioEmitter UnitAudioEmitter { get => unitAudioEmitter; set => unitAudioEmitter = value; }
 
         private void OnEnable() {
+            //Debug.Log("UnitComponentController.OnEnable()");
             if (unitAudioEmitter == null) {
                 unitAudioEmitter = GetComponentInChildren<UnitAudioEmitter>();
                 Debug.Log(gameObject.name + "UnitAudioController.OnEnable(): UnitAudioEmitter was not set.  Searching children.");
