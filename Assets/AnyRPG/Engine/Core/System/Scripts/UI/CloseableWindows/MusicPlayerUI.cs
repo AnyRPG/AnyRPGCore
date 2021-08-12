@@ -125,6 +125,18 @@ namespace AnyRPG {
             }
         }
 
+        private void UpdateButtons(AudioProfile musicProfile) {
+            //Debug.Log("MusicPlayerUI.UpdateButtons(" + musicProfile + ")");
+            playButton.Button.interactable = true;
+            if (audioManager.MusicAudioSource.isPlaying == true) {
+                stopButton.Button.interactable = true;
+                pauseButton.Button.interactable = true;
+            } else {
+                stopButton.Button.interactable = false;
+                pauseButton.Button.interactable = false;
+            }
+        }
+
         public void ShowDescription(AudioProfile musicProfile) {
             //Debug.Log("SkillTrainerUI.ShowDescription(" + skillName + ")");
             ClearDescription();
@@ -134,11 +146,12 @@ namespace AnyRPG {
             }
             currentMusicProfile = musicProfile;
 
+            UpdateButtons(musicProfile);
+
             musicDescription.text = string.Format("<size=30><b><color=yellow>{0}</color></b></size>\n\n<size=18>{1}</size>", musicProfile.DisplayName, musicProfile.MyDescription);
             if (musicProfile.ArtistName != null && musicProfile.ArtistName != string.Empty) {
                 musicDescription.text += string.Format("\n\n<size=20><b>Author:</b></size> {0}\n\n", musicProfile.ArtistName);
             }
-
         }
 
         public void ClearDescription() {
@@ -181,16 +194,26 @@ namespace AnyRPG {
             //Debug.Log("SkillTrainerUI.LearnSkill()");
             if (currentMusicProfile != null && currentMusicProfile.AudioClip != null) {
                 audioManager.PlayMusic(currentMusicProfile.AudioClip);
+                playButton.Button.interactable = false;
+                stopButton.Button.interactable = true;
+                pauseButton.Button.interactable = true;
+
             }
         }
 
         public void PauseMusic() {
             audioManager.PauseMusic();
+            playButton.Button.interactable = true;
+            stopButton.Button.interactable = true;
+            pauseButton.Button.interactable = false;
         }
 
         public void StopMusic() {
             //Debug.Log("SkillTrainerUI.UnlearnSkill()");
             audioManager.StopMusic();
+            playButton.Button.interactable = true;
+            stopButton.Button.interactable = false;
+            pauseButton.Button.interactable = false;
         }
 
         public override void ReceiveOpenWindowNotification() {

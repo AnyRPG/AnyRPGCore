@@ -110,8 +110,14 @@ namespace AnyRPG {
         }
 
         public virtual void OnHoverSound() {
+            /*
             if (audioManager == null) {
                 Debug.Log(gameObject.name + ".HighlightButton.OnHoverSound() : audioManager is null!: " + GetInstanceID());
+            }
+            */
+            if (highlightButton != null && highlightButton.interactable == false) {
+                // don't do hover sound for buttons we can't click
+                return;
             }
             audioManager.PlayUIHoverSound();
         }

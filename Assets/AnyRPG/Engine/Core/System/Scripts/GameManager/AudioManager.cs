@@ -185,6 +185,7 @@ namespace AnyRPG {
                 UnPauseMusic();
                 return;
             }
+            musicPaused = false;
             musicAudioSource.clip = audioClip;
             musicAudioSource.loop = true;
             musicAudioSource.Play();
