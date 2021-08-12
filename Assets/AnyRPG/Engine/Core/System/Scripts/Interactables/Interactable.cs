@@ -1027,7 +1027,7 @@ namespace AnyRPG {
                     //enable emission and set the emission texture to none in case this item already had some type of glow mask or effect
                     //Debug.Log("Interactable.Update(): flashingmaterial: " + temporaryMaterial.name + "; emission enabled? " + temporaryMaterial.IsKeywordEnabled("_EMISSION"));
                     if (lightEmission) {
-                        Debug.Log(gameObject.name + ".Interactable.PerformMaterialChange(): enabling emission");
+                        //Debug.Log(gameObject.name + ".Interactable.PerformMaterialChange(): enabling emission");
                         temporaryMaterials[i].EnableKeyword("_EMISSION");
                         temporaryMaterials[i].SetTexture("_EmissionMap", null);
                     }

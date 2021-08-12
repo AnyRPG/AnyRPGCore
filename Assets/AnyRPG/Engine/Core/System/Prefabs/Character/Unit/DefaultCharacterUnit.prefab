@@ -170,7 +170,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 49ff920aaeff32c47b919cdd7f10e67d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_UUID: eb7c9e62-ee16-4b19-b5f9-9d908afbf53f
+  m_UUID: 044fb914-dda1-45e9-9b8c-94ba147e1fec
   forceUpdateUUID: 0
 --- !u!1001 &8260972880229052764
 PrefabInstance:
@@ -188,7 +188,7 @@ PrefabInstance:
         type: 3}
       propertyPath: aggroCollider
       value: 
-      objectReference: {fileID: 5931774440979719565}
+      objectReference: {fileID: 0}
     - target: {fileID: 8465681069618093373, guid: ffef65e2e170bd54a9b915f85d943c90,
         type: 3}
       propertyPath: m_RootOrder
@@ -229,9 +229,3 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ff66cd4c225276a429c7ebf4774567da, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!135 &5931774440979719565 stripped
-SphereCollider:
-  m_CorrespondingSourceObject: {fileID: 2374868691136697553, guid: ffef65e2e170bd54a9b915f85d943c90,
-    type: 3}
-  m_PrefabInstance: {fileID: 8260972880229052764}
-  m_PrefabAsset: {fileID: 0}

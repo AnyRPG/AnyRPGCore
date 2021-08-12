@@ -232,7 +232,7 @@ namespace AnyRPG {
                 SpawnWithDelay();
             }
             if (forceDespawnUnits && !MyPrerequisitesMet) {
-                DestroySpawns();
+                StartCoroutine(DestroySpawnsAtEndOfFrame());
             }
         }
 
@@ -460,6 +460,15 @@ namespace AnyRPG {
             // clearing the coroutine so the next round can start
             delayRoutine = null;
             Spawn();
+        }
+
+        /// <summary>
+        /// wait for the end of the frame to destroy spawns to avoid null references in the middle of a chain of prerequisite checks
+        /// </summary>
+        /// <returns></returns>
+        private IEnumerator DestroySpawnsAtEndOfFrame() {
+            yield return new WaitForEndOfFrame();
+            DestroySpawns();
         }
 
         private void DestroySpawns() {
