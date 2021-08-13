@@ -7,26 +7,47 @@ using UMA.CharacterSystem;
 namespace AnyRPG {
     public class UMAModelController {
 
+
         // reference to unit
         private UnitController unitController = null;
         private DynamicCharacterAvatar dynamicCharacterAvatar = null;
         private UnitModelController unitModelController = null;
 
         public DynamicCharacterAvatar DynamicCharacterAvatar { get => dynamicCharacterAvatar; }
+        private string initialAppearance = null;
 
         public UMAModelController(UnitController unitController, UnitModelController unitModelController) {
             this.unitController = unitController;
             this.unitModelController = unitModelController;
         }
 
+        public void SetInitialAppearance(string appearance) {
+            initialAppearance = appearance;
+        }
+
+        public void SetInitialSavedAppearance() {
+            //Debug.Log(unitController.gameObject.name + ".UMAModelController.SetInitialSavedAppearance()");
+            if (SystemGameManager.Instance.SaveManager.RecipeString != null
+                && SystemGameManager.Instance.SaveManager.RecipeString != string.Empty) {
+                initialAppearance = SystemGameManager.Instance.SaveManager.RecipeString;
+            }
+        }
+
         public void InitializeModel() {
+            //Debug.Log(unitController.gameObject.name + ".UMAModelController.InitializeModel()");
             // testing - pooled UMA units will already be initialized
             // so they should be considered ready if they have umaData
             if (dynamicCharacterAvatar.umaData == null) {
                 //Debug.Log(gameObject.name + "UnitController.ConfigureUnitModel(): dynamicCharacterAvatar.Initialize()");
                 dynamicCharacterAvatar.Initialize();
+                if (initialAppearance != null && initialAppearance != string.Empty) {
+                    LoadSavedAppearanceSettings(initialAppearance);
+                }
             } else {
                 //Debug.Log(gameObject.name + "UnitController.ConfigureUnitModel(): dynamicCharacterAvatar has been re-used and is already initialized");
+                if (initialAppearance != null && initialAppearance != string.Empty) {
+                    LoadSavedAppearanceSettings(initialAppearance);
+                }
                 unitModelController.SetModelReady();
             }
 
@@ -177,6 +198,7 @@ namespace AnyRPG {
         public void BuildModelAppearance() {
             //Debug.Log(unitController.gameObject.name + ".UMAModelController.BuildModelAppearance()");
             if (dynamicCharacterAvatar != null) {
+                //Debug.Log(unitController.gameObject.name + ".UMAModelController.BuildModelAppearance() : " + dynamicCharacterAvatar.GetCurrentRecipe());
                 dynamicCharacterAvatar.BuildCharacter();
             }
 

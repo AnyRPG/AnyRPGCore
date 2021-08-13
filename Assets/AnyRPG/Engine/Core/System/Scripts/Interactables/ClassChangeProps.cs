@@ -38,7 +38,7 @@ namespace AnyRPG {
                 if (tmpCharacterClass != null) {
                     characterClass = tmpCharacterClass;
                 } else {
-                    Debug.LogError("ClassChangeComponent.SetupScriptableObjects(): Could not find faction : " + className + " while inititalizing.  CHECK INSPECTOR");
+                    Debug.LogError("ClassChangeComponent.SetupScriptableObjects(): Could not find character class : " + className + " while inititalizing.  CHECK INSPECTOR");
                 }
 
             }

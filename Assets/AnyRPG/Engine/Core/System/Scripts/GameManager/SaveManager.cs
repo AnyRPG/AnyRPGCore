@@ -244,13 +244,13 @@ namespace AnyRPG {
 
 
         public void SaveAppearanceSettings() {
-            //Debug.Log("SaveManager.SaveUMASettings()");
+            //Debug.Log("SaveManager.SaveAppearanceSettings()");
             if (playerManager.UnitController?.UnitModelController != null) {
                 //Debug.Log("SaveManager.SaveUMASettings(): avatar exists");
-                if (recipeString == string.Empty) {
+                //if (recipeString == string.Empty) {
                     //Debug.Log("SaveManager.SaveUMASettings(): recipestring is empty");
                     playerManager.UnitController.UnitModelController.SaveAppearanceSettings();
-                }
+                //}
             }
         }
 
@@ -405,6 +405,7 @@ namespace AnyRPG {
             anyRPGSaveData.PlayerRotationY = playerManager.ActiveUnitController.transform.forward.y;
             anyRPGSaveData.PlayerRotationZ = playerManager.ActiveUnitController.transform.forward.z;
             //Debug.Log("Savemanager.SaveGame() rotation: " + anyRPGSaveData.PlayerRotationX + ", " + anyRPGSaveData.PlayerRotationY + ", " + anyRPGSaveData.PlayerRotationZ);
+            SaveAppearanceSettings();
             anyRPGSaveData.PlayerUMARecipe = recipeString;
             anyRPGSaveData.CurrentScene = levelManager.ActiveSceneName;
 

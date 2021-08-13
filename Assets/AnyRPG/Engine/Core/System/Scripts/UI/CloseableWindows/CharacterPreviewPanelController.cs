@@ -114,7 +114,7 @@ namespace AnyRPG {
 
 
         public void BuildModelAppearance() {
-            //Debug.Log("CharacterCreatorPanel.RebuildUMA()");
+            Debug.Log("CharacterCreatorPanel.BuildModelAppearance()");
             //Debug.Log("CharacterPreviewPanelController.RebuildUMA(): BuildCharacter(): buildenabled: " + umaAvatar.BuildCharacterEnabled + "; frame: " + Time.frameCount);
             if (characterCreatorManager.PreviewUnitController?.UnitModelController != null) {
                 characterCreatorManager.PreviewUnitController.UnitModelController.BuildModelAppearance();

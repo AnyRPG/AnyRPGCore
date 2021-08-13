@@ -121,8 +121,16 @@ namespace AnyRPG {
             umaModelController.UnequipItemModels(equipment, rebuildAppearance);
         }
 
+        public void SetInitialAppearance(string appearance) {
+            umaModelController.SetInitialAppearance(appearance);
+        }
+
+        public void SetInitialSavedAppearance() {
+            umaModelController.SetInitialSavedAppearance();
+        }
+
         public void ConfigureUnitModel() {
-            //Debug.Log(gameObject.name + "UnitController.ConfigureUnitModel()");
+            //Debug.Log(unitController.gameObject.name + "UnitModelController.ConfigureUnitModel()");
 
             if (unitModel != null || umaModelController.DynamicCharacterAvatar != null) {
                 if (umaModelController.DynamicCharacterAvatar != null) {
@@ -181,7 +189,7 @@ namespace AnyRPG {
         }
 
         public void SetModelReady() {
-            //Debug.Log(unitController.gameObject.name + ".UnitController.SetModelReady()");
+            //Debug.Log(unitController.gameObject.name + ".UnitModelController.SetModelReady()");
             if (modelReady == false) {
                 unitController.CharacterUnit.BaseCharacter.HandleCharacterUnitSpawn();
                 EquipEquipmentModels(unitController.CharacterUnit.BaseCharacter.CharacterEquipmentManager);
