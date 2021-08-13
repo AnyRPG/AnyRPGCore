@@ -104,11 +104,11 @@ namespace AnyRPG {
         }
 
         public NamePlateController AddNamePlate(NamePlateUnit interactable, bool usePositionOffset) {
-            //Debug.Log("NamePlateManager.AddNamePlate(" + interactable.DisplayName + ")");
+            //Debug.Log("NamePlateManager.AddNamePlate(" + interactable.gameObject.name + ")");
             if (namePlates.ContainsKey(interactable) == false) {
                 return SpawnNamePlate(interactable, usePositionOffset);
             }
-            //Debug.Log("NamePlateManager.AddNamePlate(" + namePlateUnit.DisplayName + "): key already existed.  returning null!!!");
+            //Debug.Log("NamePlateManager.AddNamePlate(" + interactable.gameObject.name + "): key already existed.  returning null!!!");
             return null;
         }
 

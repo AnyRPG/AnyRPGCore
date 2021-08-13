@@ -66,6 +66,11 @@ namespace AnyRPG {
                 Debug.LogError(gameObject.name + ": SystemGameManager not found. Is the Game Manager in the scene?");
                 return;
             }
+            if (initialized == true) {
+                // this unit may have been disabled by a timeline controller.  If so, none of this is necessary
+                return;
+            }
+
             GetComponentReferences();
             SetupScriptableObjects();
             CreateEventSubscriptions();

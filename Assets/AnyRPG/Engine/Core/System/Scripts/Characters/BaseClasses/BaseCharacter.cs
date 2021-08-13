@@ -668,7 +668,8 @@ namespace AnyRPG {
             Despawn();
         }
 
-        private void OnDisable() {
+        private void OnSendObjectToPool() {
+            //Debug.Log(gameObject.name + ".BaseCharacter.OnSendObjectToPool()");
             if (SystemGameManager.IsShuttingDown) {
                 return;
             }

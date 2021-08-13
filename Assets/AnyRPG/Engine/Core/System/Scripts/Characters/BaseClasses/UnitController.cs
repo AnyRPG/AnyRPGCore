@@ -551,6 +551,11 @@ namespace AnyRPG {
 
         protected override void OnEnable() {
             //Debug.Log(gameObject.name + ".UnitController.OnEnable()");
+            if (initialized == true) {
+                // this unit may have been disabled by a timeline controller.  If so, none of this is necessary
+                return;
+            }
+
             base.OnEnable();
 
             // create components here instead?  which ones rely on other things like unit profile being set before start?
@@ -618,7 +623,7 @@ namespace AnyRPG {
             RemoveControlEffects();
             ProcessPointerExit();
 
-            // give the equipment manager a chance to remove the equipment models
+            // give the status effects a chance to clear visual effect prefabs
             characterUnit?.BaseCharacter?.HandleCharacterUnitDespawn();
 
             // now that the model is unequipped, return the model to the pool

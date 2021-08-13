@@ -174,6 +174,8 @@ namespace AnyRPG {
                 }
             }
 
+            pooledGameObject.SendMessage("OnSendObjectToPool", SendMessageOptions.DontRequireReceiver);
+
             // move pooled object to pool transform
             // that would be great if this could be done by setting active false first,
             // but Unity gives an error message that you can't set parent while deactivating

@@ -52,6 +52,10 @@ namespace AnyRPG {
         /// directly initialize a nameplate
         /// </summary>
         protected void InitializeNamePlate() {
+            // account for characters that spawn dead 
+            if (namePlateReady == true) {
+                return;
+            }
             NamePlateController.InitializeNamePlate();
             OnInitializeNamePlate();
         }
@@ -187,6 +191,10 @@ namespace AnyRPG {
 
         protected override void OnEnable() {
             // characters can get disabled by cutscenes, so need to initialize nameplate on re-enable
+            if (initialized == true) {
+                // this unit may have been disabled by a timeline controller.  If so, none of this is necessary
+                return;
+            }
             base.OnEnable();
             namePlateController = new BaseNamePlateController(this);
             if (startHasRun && namePlateController != null) {

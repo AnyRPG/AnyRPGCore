@@ -202,6 +202,10 @@ namespace AnyRPG {
         }
 
         protected override void OnEnable() {
+            if (initialized == true) {
+                // this unit may have been disabled by a timeline controller.  If so, none of this is necessary
+                return;
+            }
             base.OnEnable();
             dialogController = new DialogController(this);
             DisableInteraction();
