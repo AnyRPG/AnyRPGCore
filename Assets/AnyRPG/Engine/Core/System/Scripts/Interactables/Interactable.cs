@@ -110,6 +110,7 @@ namespace AnyRPG {
         protected List<bool> emissionEnabledList = new List<bool>();
 
         // state
+        protected bool suppressGlow = false;
         protected bool glowQueued = false;
         protected bool isInteracting = false;
         protected bool isFlashing = false;
@@ -730,7 +731,7 @@ namespace AnyRPG {
         /// called manually after mouse enters nameplate or interactable
         /// </summary>
         public void OnMouseIn() {
-            //Debug.Log(gameObject.name + ".Interactable.OnMouseHover()");
+            Debug.Log(gameObject.name + ".Interactable.OnMouseIn()");
             if (!isActiveAndEnabled) {
                 // this interactable is inactive, there is no reason to do anything
                 return;
@@ -816,9 +817,9 @@ namespace AnyRPG {
         }
         */
 
+        // renamed from OnMouseOver to OnMouseOut to stop automatic events from being received
         public void OnMouseOut() {
-            // renamed from OnMouseOver to OnMouseOut to stop automatic events from being received
-            //Debug.Log(gameObject.name + ".Interactable.OnMouseOut()");
+            Debug.Log(gameObject.name + ".Interactable.OnMouseOut()");
 
             if (SystemGameManager.Instance.PlayerManager == null) {
                 return;
@@ -1005,6 +1006,24 @@ namespace AnyRPG {
 
         #region MaterialChange
 
+        public virtual void RequestSnapshot() {
+            Debug.Log(gameObject.name + ".Interactable.RequestSnapshot()");
+            suppressGlow = true;
+            if (isFlashing) {
+                RevertMaterialChange();
+                // results in glowing even when mouse is no longer over as result of dialog panel opening
+                //glowQueued = true;
+            }
+        }
+
+        public virtual void ClearSnapshotRequest() {
+            Debug.Log(gameObject.name + ".Interactable.ClearSnapshotRequest()");
+            suppressGlow = false;
+            if (isMouseOverUnit == true) {
+                OnMouseIn();
+            }
+        }
+
         public virtual Color GetGlowColor() {
             return Color.yellow;
         }
@@ -1130,6 +1149,8 @@ namespace AnyRPG {
             emissionTextureList = new List<Texture>();
             emissionEnabledList = new List<bool>();
 
+            suppressGlow = false;
+            glowQueued = false;
             isInteracting = false;
             isFlashing = false;
             hasMeshRenderer = false;

@@ -28,7 +28,7 @@ namespace AnyRPG {
         public bool IsBuilding() {
             //Debug.Log(unitController.gameObject.name + ".UMAModelController.IsBuilding()");
             if (dynamicCharacterAvatar?.umaData == null) {
-                Debug.Log(unitController.gameObject.name + ".UMAModelController.IsBuilding() : no dynamicCharacterAvatar was found");
+                //Debug.Log(unitController.gameObject.name + ".UMAModelController.IsBuilding() : no dynamicCharacterAvatar was found");
                 return false;
             }
             /*
