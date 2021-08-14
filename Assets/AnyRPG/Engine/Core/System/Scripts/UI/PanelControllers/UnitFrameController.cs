@@ -101,6 +101,10 @@ namespace AnyRPG {
 
         private Coroutine waitForCameraCoroutine = null;
 
+        // avoid GC by using global variables for these
+        private Vector3 wantedPosition = Vector3.zero;
+        private Vector3 wantedLookPosition = Vector3.zero;
+
         // track the camera wait start frame to ensure the current camera wait routine is still valid
         //private int lastWaitFrame = 0;
 
@@ -156,8 +160,11 @@ namespace AnyRPG {
             if (cameraTransform != null) {
                 //Vector3 wantedPosition = followTransform.TransformPoint(0, offsetY, offsetZ);
                 //Vector3 wantedLookPosition = followTransform.TransformPoint(0, offsetY, 0);
-                Vector3 wantedPosition = followTransform.TransformPoint(cameraPositionOffset);
-                Vector3 wantedLookPosition = followTransform.TransformPoint(cameraLookOffset);
+
+                //Vector3 wantedPosition = followTransform.TransformPoint(cameraPositionOffset);
+                wantedPosition = UnitNamePlateController.NamePlateUnit.transform.TransformPoint(UnitNamePlateController.NamePlateUnit.transform.InverseTransformPoint(followTransform.position) + cameraPositionOffset);
+                //Vector3 wantedLookPosition = followTransform.TransformPoint(cameraLookOffset);
+                wantedLookPosition = UnitNamePlateController.NamePlateUnit.transform.TransformPoint(UnitNamePlateController.NamePlateUnit.transform.InverseTransformPoint(followTransform.position) + cameraLookOffset);
                 cameraTransform.position = wantedPosition;
                 cameraTransform.LookAt(wantedLookPosition);
 

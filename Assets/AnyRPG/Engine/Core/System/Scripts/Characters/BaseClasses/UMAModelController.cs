@@ -232,7 +232,7 @@ namespace AnyRPG {
             if (dynamicCharacterAvatar != null) {
 
                 dynamicCharacterAvatar.ClearSlots();
-                dynamicCharacterAvatar.RestoreCachedBodyColors();
+                dynamicCharacterAvatar.RestoreCachedBodyColors(false, true);
                 dynamicCharacterAvatar.LoadDefaultWardrobe();
                 // doing the rebuild on despawn so there isn't a frame with this appearance until a rebuild happens when re-using the avatar
                 // testing - see if we don't get extra handleCharacterUpdated after respawn
