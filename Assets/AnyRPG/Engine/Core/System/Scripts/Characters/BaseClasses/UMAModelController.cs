@@ -3,6 +3,7 @@ using UnityEngine;
 using UnityEngine.AI;
 using UMA;
 using UMA.CharacterSystem;
+using UMA.PoseTools;
 
 namespace AnyRPG {
     public class UMAModelController {
@@ -11,6 +12,7 @@ namespace AnyRPG {
         // reference to unit
         private UnitController unitController = null;
         private DynamicCharacterAvatar dynamicCharacterAvatar = null;
+        private UMAExpressionPlayer expressionPlayer = null;
         private UnitModelController unitModelController = null;
 
         public DynamicCharacterAvatar DynamicCharacterAvatar { get => dynamicCharacterAvatar; }
@@ -71,7 +73,6 @@ namespace AnyRPG {
             }
 
             SubscribeToUMACreate();
-
         }
 
         public void FindUnitModel(GameObject unitModel) {
@@ -225,11 +226,18 @@ namespace AnyRPG {
                 buildInProgress = true;
                 dynamicCharacterAvatar.BuildCharacter();
             }
-
         }
 
         public void ResetSettings() {
             if (dynamicCharacterAvatar != null) {
+
+                // attempt clear expression player
+                expressionPlayer = dynamicCharacterAvatar.gameObject.GetComponent<UMAExpressionPlayer>();
+                if (expressionPlayer != null) {
+                    //expressionPlayer.enabled = false;
+                    GameObject.Destroy(expressionPlayer);
+                }
+                //dynamicCharacterAvatar.umaAdditionalRecipes = new UMARecipeBase[0];
 
                 dynamicCharacterAvatar.ClearSlots();
                 dynamicCharacterAvatar.RestoreCachedBodyColors(false, true);

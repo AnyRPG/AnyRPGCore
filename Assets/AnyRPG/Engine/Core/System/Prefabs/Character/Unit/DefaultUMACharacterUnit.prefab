@@ -135,9 +135,11 @@ MonoBehaviour:
   interactOnExit: 0
   isTrigger: 0
   suppressInteractionWindow: 0
+  interactionMaxRange: 2
   checkOptionsToSpawn: 0
   spawnRequiresValidOption: 0
   despawnRequiresNoValidOption: 0
+  unitComponentController: {fileID: 0}
 --- !u!114 &1751672641666550326
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -150,17 +152,42 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 894bc4eeef577cf43a021ba43cfdd2d5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  namePlateController:
+  prefabProfileName: 
+  spawnDelay: 0
+  spawnReference: {fileID: 0}
+  despawnObject: 0
+  prerequisiteConditions: []
+  showTooltip: 1
+  interactableName: 
+  glowOnMouseOver: 1
+  lightEmission: 0
+  glowFlashSpeed: 1.5
+  glowMinIntensity: 4.5
+  glowMaxIntensity: 6
+  glowColor: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
+  temporaryMaterial: {fileID: 0}
+  notInteractable: 0
+  interactWithAny: 0
+  interactOnExit: 0
+  isTrigger: 0
+  suppressInteractionWindow: 0
+  interactionMaxRange: 2
+  checkOptionsToSpawn: 0
+  spawnRequiresValidOption: 0
+  despawnRequiresNoValidOption: 0
+  unitComponentController: {fileID: 8257430763179704801}
+  namePlateProps:
     displayName: 
     suppressNamePlate: 0
     suppressFaction: 1
+    overrideNameplatePosition: 0
+    namePlatePosition: {x: 0, y: 0, z: 0}
     unitFrameTarget: 
     unitFrameCameraLookOffset: {x: 0, y: 0, z: 0}
-    unitFrameCameraPositionOffset: {x: 0, y: 0, z: 0}
+    unitFrameCameraPositionOffset: {x: 0, y: 1, z: 1}
     unitPreviewTarget: 
     unitPreviewCameraLookOffset: {x: 0, y: 1, z: 0}
-    unitPreviewCameraPositionOffset: {x: 0, y: 1, z: 1}
-  unitComponentController: {fileID: 8257430763179704801}
+    unitPreviewCameraPositionOffset: {x: 0, y: 1, z: 2.5}
   unitControllerMode: 2
   patrolNames: []
   behaviorNames: []
@@ -216,6 +243,12 @@ MonoBehaviour:
   RecipeUpdated:
     m_PersistentCalls:
       m_Calls: []
+  WardrobeAdded:
+    m_PersistentCalls:
+      m_Calls: []
+  WardrobeRemoved:
+    m_PersistentCalls:
+      m_Calls: []
   hide: 0
   loadBlendShapes: 0
   keepAvatar: 0
@@ -224,6 +257,7 @@ MonoBehaviour:
   defaultChangeRaceOptions: 8
   cacheCurrentState: 1
   rebuildSkeleton: 0
+  alwaysRebuildSkeleton: 0
   preloadWardrobeRecipes:
     loadDefaultRecipes: 1
     recipes:
@@ -255,6 +289,10 @@ MonoBehaviour:
       - {r: 0, g: 0, b: 0, a: 0}
       - {r: 0, g: 0, b: 0, a: 0}
       - {r: 0, g: 0, b: 0, a: 0}
+      PropertyBlock:
+        alwaysUpdate: 0
+        serializedProperties: []
+      foldout: 0
       _name: 
       _color: {r: 1, g: 1, b: 1, a: 1}
       _metallicGloss: {r: 0, g: 0, b: 0, a: 0}
@@ -269,6 +307,10 @@ MonoBehaviour:
       - {r: 0, g: 0, b: 0, a: 0}
       - {r: 0, g: 0, b: 0, a: 0}
       - {r: 0, g: 0, b: 0, a: 0}
+      PropertyBlock:
+        alwaysUpdate: 0
+        serializedProperties: []
+      foldout: 0
       _name: 
       _color: {r: 1, g: 1, b: 1, a: 1}
       _metallicGloss: {r: 0, g: 0, b: 0, a: 0}
@@ -283,6 +325,10 @@ MonoBehaviour:
       - {r: 0, g: 0, b: 0, a: 0}
       - {r: 0, g: 0, b: 0, a: 0}
       - {r: 0, g: 0, b: 0, a: 0}
+      PropertyBlock:
+        alwaysUpdate: 0
+        serializedProperties: []
+      foldout: 0
       _name: 
       _color: {r: 1, g: 1, b: 1, a: 1}
       _metallicGloss: {r: 0, g: 0, b: 0, a: 0}
@@ -295,6 +341,7 @@ MonoBehaviour:
   loadFilename: 
   loadString: 
   loadFileOnStart: 0
+  ForceSlotMaterials: 0
   AtlasResolutionScale: 1
   defaultLoadOptions: 31
   savePathType: 0
@@ -304,6 +351,7 @@ MonoBehaviour:
   ensureSharedColors: 0
   defaultSaveOptions: 15
   BoundsOffset: {x: 0, y: 0, z: 0}
+  editorTimeGeneration: 1
   showPlaceholder: 1
   previewModel: 0
   customModel: {fileID: 0}
@@ -322,7 +370,7 @@ Animator:
   m_Avatar: {fileID: 0}
   m_Controller: {fileID: 0}
   m_CullingMode: 0
-  m_UpdateMode: 1
+  m_UpdateMode: 0
   m_ApplyRootMotion: 0
   m_LinearVelocityBlending: 0
   m_WarningMessage: 
