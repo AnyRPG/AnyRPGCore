@@ -14,11 +14,30 @@ namespace AnyRPG {
         private UnitModelController unitModelController = null;
 
         public DynamicCharacterAvatar DynamicCharacterAvatar { get => dynamicCharacterAvatar; }
+
+        // track settings that should be applied on initialization
         private string initialAppearance = null;
+
+        private bool buildInProgress = false;
 
         public UMAModelController(UnitController unitController, UnitModelController unitModelController) {
             this.unitController = unitController;
             this.unitModelController = unitModelController;
+        }
+
+        public bool IsBuilding() {
+            //Debug.Log(unitController.gameObject.name + ".UMAModelController.IsBuilding()");
+            if (dynamicCharacterAvatar?.umaData == null) {
+                Debug.Log(unitController.gameObject.name + ".UMAModelController.IsBuilding() : no dynamicCharacterAvatar was found");
+                return false;
+            }
+            /*
+            Debug.Log(unitController.gameObject.name + ".UMAModelController.IsBuilding() : uma dirty status: " + dynamicCharacterAvatar.umaData.dirty);
+            Debug.Log(unitController.gameObject.name + ".UMAModelController.IsBuilding() : update pending status : " + dynamicCharacterAvatar.UpdatePending());
+            Debug.Log(unitController.gameObject.name + ".UMAModelController.IsBuilding() : build in progress status: " + buildInProgress);
+            */
+            //return dynamicCharacterAvatar.umaData.dirty || dynamicCharacterAvatar.UpdatePending() || buildInProgress;
+            return dynamicCharacterAvatar.umaData.dirty || dynamicCharacterAvatar.UpdatePending() || buildInProgress;
         }
 
         public void SetInitialAppearance(string appearance) {
@@ -68,7 +87,7 @@ namespace AnyRPG {
         public void SubscribeToUMACreate() {
             //Debug.Log(unitController.gameObject.name + ".UMAModelController.SubscribeToUMACreate()");
 
-            dynamicCharacterAvatar.umaData.OnCharacterCreated += HandleCharacterCreated;
+            //dynamicCharacterAvatar.umaData.OnCharacterCreated += HandleCharacterCreated;
             /*
             umaData.OnCharacterBeforeDnaUpdated += HandleCharacterBeforeDnaUpdated;
             umaData.OnCharacterBeforeUpdated += HandleCharacterBeforeUpdated;
@@ -81,7 +100,7 @@ namespace AnyRPG {
         public void UnsubscribeFromUMACreate() {
             //Debug.Log(unitController.gameObject.name + ".UMAModelController.UnsubscribeFromUMACreate()");
             if (dynamicCharacterAvatar?.umaData != null) {
-                dynamicCharacterAvatar.umaData.OnCharacterCreated -= HandleCharacterCreated;
+                //dynamicCharacterAvatar.umaData.OnCharacterCreated -= HandleCharacterCreated;
                 dynamicCharacterAvatar.umaData.OnCharacterUpdated -= HandleCharacterUpdated;
             }
         }
@@ -89,6 +108,7 @@ namespace AnyRPG {
         public void HandleCharacterCreated(UMAData umaData) {
             //Debug.Log(unitController.gameObject.name + ".UMAModelController.HandleCharacterCreated()");
             //UnsubscribeFromUMACreate();
+            buildInProgress = false;
             unitModelController.SetModelReady();
         }
 
@@ -108,6 +128,7 @@ namespace AnyRPG {
             //Debug.Log(unitController.gameObject.name + ".UMAModelController.HandleCharacterUpdated()");
             //Debug.Log("UMAModelController.HandleCharacterUpdated(): " + umaData + "; frame: " + Time.frameCount);
             //HandleCharacterCreated(umaData);
+            buildInProgress = false;
             unitModelController.SetModelReady();
         }
 
@@ -173,11 +194,13 @@ namespace AnyRPG {
             if (dynamicCharacterAvatar != null) {
                 if (recipeString != null && recipeString != string.Empty) {
                     //Debug.Log(unitController.gameObject.name + ".UMAModelController.LoadSavedAppearanceSettings() : loading string from parameters : " + recipeString);
+                    buildInProgress = true;
                     dynamicCharacterAvatar.SetLoadString(recipeString);
                 } else if (recipeString == null
                     && SystemGameManager.Instance.SaveManager.RecipeString != null
                     && SystemGameManager.Instance.SaveManager.RecipeString != string.Empty) {
                     //Debug.Log(unitController.gameObject.name + ".UMAModelController.LoadSavedAppearanceSettings() : loading string from SaveManager : " + SystemGameManager.Instance.SaveManager.RecipeString);
+                    buildInProgress = true;
                     dynamicCharacterAvatar.SetLoadString(SystemGameManager.Instance.SaveManager.RecipeString);
                 }
                 if (rebuildAppearance == true && dynamicCharacterAvatar.BuildCharacterEnabled == false) {
@@ -199,6 +222,7 @@ namespace AnyRPG {
             //Debug.Log(unitController.gameObject.name + ".UMAModelController.BuildModelAppearance()");
             if (dynamicCharacterAvatar != null) {
                 //Debug.Log(unitController.gameObject.name + ".UMAModelController.BuildModelAppearance() : " + dynamicCharacterAvatar.GetCurrentRecipe());
+                buildInProgress = true;
                 dynamicCharacterAvatar.BuildCharacter();
             }
 

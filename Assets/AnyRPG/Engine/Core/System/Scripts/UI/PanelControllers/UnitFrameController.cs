@@ -102,7 +102,7 @@ namespace AnyRPG {
         private Coroutine waitForCameraCoroutine = null;
 
         // track the camera wait start frame to ensure the current camera wait routine is still valid
-        private int lastWaitFrame = 0;
+        //private int lastWaitFrame = 0;
 
         public BaseNamePlateController UnitNamePlateController { get => namePlateController; set => namePlateController = value; }
 
@@ -201,10 +201,12 @@ namespace AnyRPG {
             //UnsubscribeFromTargetReady();
             GetFollowTarget();
             UpdateCameraPosition();
-            lastWaitFrame++;
+            //lastWaitFrame++;
+            //Debug.Log(gameObject.name + ".UnitFrameController.HandleTargetReady() " + namePlateController.Interactable.GetInstanceID() + "; frame : " + lastWaitFrame);
             //if (waitForCameraCoroutine == null) {
-                waitForCameraCoroutine = StartCoroutine(WaitForCamera(lastWaitFrame));
+            //waitForCameraCoroutine = StartCoroutine(WaitForCamera(lastWaitFrame));
             //}
+            waitForCameraCoroutine = StartCoroutine(WaitForCamera());
         }
 
         public void InitializePosition() {
@@ -285,12 +287,14 @@ namespace AnyRPG {
 
         }
 
-        private IEnumerator WaitForCamera(int frameNumber) {
-            //Debug.Log(gameObject.name + ".UnitFrameController.WaitForCamera(): frame: " + frameNumber);
+        private IEnumerator WaitForCamera() {
+            //private IEnumerator WaitForCamera(int frameNumber) {
+            //Debug.Log(gameObject.name + ".UnitFrameController.WaitForCamera(): " + namePlateController.Interactable.GetInstanceID() + "; frame: " + frameNumber);
             //yield return new WaitForEndOfFrame();
             yield return null;
-            //Debug.Log(gameObject.name + ".UnitFrameController.WaitForCamera(): about to render. initial frame: " + frameNumber + "; current frame: " + lastWaitFrame);
-            if (lastWaitFrame != frameNumber) {
+            //Debug.Log(gameObject.name + ".UnitFrameController.WaitForCamera(): about to render " + namePlateController.Interactable.GetInstanceID() + "; initial frame: " + frameNumber + "; current frame: " + lastWaitFrame);
+            //if (lastWaitFrame != frameNumber) {
+            if (namePlateController?.Interactable?.IsBuilding() == true) {
                 //Debug.Log(gameObject.name + ".UnitFrameController.WaitForCamera(): a new wait was started. initial frame: " + frameNumber +  "; current wait: " + lastWaitFrame);
             } else {
                 previewCamera.Render();

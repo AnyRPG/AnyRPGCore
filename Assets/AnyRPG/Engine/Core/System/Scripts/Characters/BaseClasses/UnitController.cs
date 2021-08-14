@@ -289,7 +289,7 @@ namespace AnyRPG {
 
         public override bool CameraTargetReady {
             get {
-                return unitModelController.ModelReady;
+                return unitModelController.ModelReady && unitModelController.isBuilding() == false;
             }
         }
 
@@ -1668,6 +1668,10 @@ namespace AnyRPG {
             if (UnitMotor != null) {
                 UnitMotor.MovementSpeed = MovementSpeed;
             }
+        }
+
+        public override bool IsBuilding() {
+            return unitModelController.isBuilding();
         }
 
         #region EventNotifications

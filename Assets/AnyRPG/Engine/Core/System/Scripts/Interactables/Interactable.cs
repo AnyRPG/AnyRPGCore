@@ -110,6 +110,7 @@ namespace AnyRPG {
         protected List<bool> emissionEnabledList = new List<bool>();
 
         // state
+        protected bool glowQueued = false;
         protected bool isInteracting = false;
         protected bool isFlashing = false;
         protected bool hasMeshRenderer = false;
@@ -294,9 +295,30 @@ namespace AnyRPG {
             interactables.Add(interactableOption);
         }
 
+        public IEnumerator GlowNextFrame() {
+            yield return null;
+            if (glowQueued) {
+                if (!IsBuilding()) {
+                    ActivateGlow();
+                }
+            }
+        }
+
         protected virtual void Update() {
             // if the item is highlighted, we will continue a pulsing glow
             //return;
+            
+            if (glowQueued) {
+                if (!IsBuilding()) {
+                    //ActivateGlow();
+                    StartCoroutine(GlowNextFrame());
+                    return;
+                } else {
+                    return;
+                }
+            }
+            
+
             if (isFlashing) {
                 //Debug.Log("Interactable.Update(): isflashing == true");
                 float emission = glowMinIntensity + Mathf.PingPong(Time.time * glowFlashSpeed, glowMaxIntensity - glowMinIntensity);
@@ -700,6 +722,10 @@ namespace AnyRPG {
         }
         */
 
+        public virtual bool IsBuilding() {
+            return false;
+        }
+
         /// <summary>
         /// called manually after mouse enters nameplate or interactable
         /// </summary>
@@ -761,15 +787,22 @@ namespace AnyRPG {
                 //Debug.Log(gameObject.name + ".Interactable.OnMouseEnter(): No current Interactables.  Not glowing.");
                 return;
             }
-
             if (glowOnMouseOver) {
-                //Debug.Log(gameObject.name + ".Interactable.OnMouseEnter(): hasMeshRenderer && glowOnMouseOver == true");
-                if (isFlashing == false) {
-                    isFlashing = true;
-                    InitializeMaterialsNew();
+                if (!IsBuilding()) {
+                    ActivateGlow();
+                } else {
+                    glowQueued = true;
                 }
             }
+        }
 
+        protected virtual void ActivateGlow() {
+            //Debug.Log(gameObject.name + ".Interactable.OnMouseEnter(): hasMeshRenderer && glowOnMouseOver == true");
+            if (isFlashing == false) {
+                isFlashing = true;
+                InitializeMaterialsNew();
+            }
+            glowQueued = false;
         }
 
         /*
@@ -826,6 +859,8 @@ namespace AnyRPG {
             }
             RevertMaterialChange();
             // return emission enabled, emission color, and emission texture to their previous values
+
+            glowQueued = false;
         }
 
         protected void OnMouseDown() {

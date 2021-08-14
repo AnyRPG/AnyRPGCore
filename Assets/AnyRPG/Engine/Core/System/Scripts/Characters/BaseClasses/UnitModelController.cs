@@ -29,6 +29,10 @@ namespace AnyRPG {
             mecanimModelController = new MecanimModelController(unitController);
         }
 
+        public bool isBuilding() {
+            return umaModelController.IsBuilding();
+        }
+
         public void ResetSettings() {
             umaModelController.ResetSettings();
         }
