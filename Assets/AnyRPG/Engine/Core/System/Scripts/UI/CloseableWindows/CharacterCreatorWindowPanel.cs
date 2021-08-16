@@ -109,6 +109,7 @@ namespace AnyRPG {
         public override void RecieveClosedWindowNotification() {
             //Debug.Log("CharacterCreatorPanel.OnCloseWindow()");
             base.RecieveClosedWindowNotification();
+            characterPreviewPanel.OnTargetCreated -= HandleTargetCreated;
             characterPreviewPanel.OnTargetReady -= HandleTargetReady;
             characterPreviewPanel.RecieveClosedWindowNotification();
             umaCharacterPanel.RecieveClosedWindowNotification();
@@ -132,15 +133,11 @@ namespace AnyRPG {
             }
 
             // inform the preview panel so the character can be rendered
+            characterPreviewPanel.OnTargetCreated += HandleTargetCreated;
             characterPreviewPanel.OnTargetReady += HandleTargetReady;
             characterPreviewPanel.CapabilityConsumer = this;
             characterPreviewPanel.ReceiveOpenWindowNotification();
 
-        }
-
-        public void LoadSavedAppearanceSettings() {
-            //Debug.Log("CharacterCreatorWindowPanel.LoadSavedAppearanceSettings()");
-            characterCreatorManager.PreviewUnitController.UnitModelController.LoadSavedAppearanceSettings();
         }
 
         public void ClosePanel() {
@@ -176,14 +173,26 @@ namespace AnyRPG {
             OnConfirmAction();
         }
 
+        public void HandleTargetCreated() {
+            Debug.Log("CharacterCreatorWindowPanel.HandleTargetCreated()");
+            characterCreatorManager.PreviewUnitController.UnitModelController.SetInitialSavedAppearance();
+        }
+
         public void HandleTargetReady() {
             //Debug.Log("CharacterCreatorWindowPanel.HandleTargetReady()");
-            LoadSavedAppearanceSettings();
+            //LoadSavedAppearanceSettings();
             umaCharacterPanel.HandleTargetReady();
             if (umaCharacterPanel.MainNoOptionsArea.activeSelf == false) {
                 saveButton.Button.interactable = true;
             }
         }
+
+        /*
+        public void LoadSavedAppearanceSettings() {
+            Debug.Log("CharacterCreatorWindowPanel.LoadSavedAppearanceSettings()");
+            characterCreatorManager.PreviewUnitController.UnitModelController.LoadSavedAppearanceSettings();
+        }
+        */
 
     }
 

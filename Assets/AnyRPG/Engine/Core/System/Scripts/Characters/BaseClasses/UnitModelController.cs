@@ -59,9 +59,11 @@ namespace AnyRPG {
             umaModelController.BuildModelAppearance();
         }
 
+        /*
         public void LoadSavedAppearanceSettings(string recipeString = null, bool rebuildAppearance = false) {
             umaModelController.LoadSavedAppearanceSettings(recipeString, rebuildAppearance);
         }
+        */
 
         public void SaveAppearanceSettings() {
             umaModelController.SaveAppearanceSettings();
@@ -93,7 +95,7 @@ namespace AnyRPG {
                 }
             }
             
-            umaModelController.BuildModelAppearance();
+            //umaModelController.BuildModelAppearance();
         }
 
         public void EquipItemModels(CharacterEquipmentManager characterEquipmentManager, EquipmentSlotProfile equipmentSlotProfile, Equipment equipment, bool rebuildAppearance) {
@@ -114,7 +116,7 @@ namespace AnyRPG {
             }
 
             // both of these not needed if character unit not yet spawned?
-            umaModelController.EquipItemModels(characterEquipmentManager, equipment, rebuildAppearance);
+            //umaModelController.EquipItemModels(characterEquipmentManager, equipment, rebuildAppearance);
 
             // testing new code to prevent UKMA characters from trying to find bones before they are created.
             mecanimModelController.EquipItemModels(characterEquipmentManager, equipmentSlotProfile, equipment);
@@ -125,9 +127,11 @@ namespace AnyRPG {
             umaModelController.UnequipItemModels(equipment, rebuildAppearance);
         }
 
+        /*
         public void SetInitialAppearance(string appearance) {
             umaModelController.SetInitialAppearance(appearance);
         }
+        */
 
         public void SetInitialSavedAppearance() {
             umaModelController.SetInitialSavedAppearance();

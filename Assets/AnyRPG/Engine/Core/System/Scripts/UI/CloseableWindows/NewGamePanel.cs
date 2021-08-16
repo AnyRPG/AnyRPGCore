@@ -144,6 +144,7 @@ namespace AnyRPG {
             newGameManager.OnShowFaction -= HandleShowFaction;
 
             saveManager.ClearSharedData();
+            characterPreviewPanel.OnTargetCreated -= HandleTargetCreated;
             characterPreviewPanel.OnTargetReady -= HandleTargetReady;
             characterPreviewPanel.RecieveClosedWindowNotification();
             if (systemConfigurationManager.NewGameUMAAppearance == true) {
@@ -191,6 +192,7 @@ namespace AnyRPG {
             // now that faction is set, and character panel is opened (which caused the first available unit to be selected), it's time to render the unit
             // inform the preview panel so the character can be rendered
             characterPreviewPanel.OnTargetReady += HandleTargetReady;
+            characterPreviewPanel.OnTargetCreated += HandleTargetCreated;
             characterPreviewPanel.CapabilityConsumer = newGameManager;
             characterPreviewPanel.ReceiveOpenWindowNotification();
 
@@ -392,6 +394,12 @@ namespace AnyRPG {
             characterCreatorManager.PreviewUnitController.CharacterUnit.BaseCharacter.SetClassSpecialization(newGameManager.ClassSpecialization);
             characterCreatorManager.PreviewUnitController.CharacterUnit.BaseCharacter.SetCharacterFaction(newGameManager.Faction);
         }
+
+        public void HandleTargetCreated() {
+            // just a reminder
+            //EquipCharacter();
+        }
+
 
         public void HandleTargetReady() {
             //Debug.Log("NewGameCharacterPanelController.HandleTargetReady()");

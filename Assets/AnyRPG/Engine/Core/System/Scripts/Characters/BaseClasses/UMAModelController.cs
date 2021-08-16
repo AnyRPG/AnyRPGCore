@@ -1,4 +1,6 @@
 using AnyRPG;
+using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 using UMA;
@@ -14,6 +16,7 @@ namespace AnyRPG {
         private DynamicCharacterAvatar dynamicCharacterAvatar = null;
         private UMAExpressionPlayer expressionPlayer = null;
         private UnitModelController unitModelController = null;
+        private AvatarDefinition avatarDefinition = default(AvatarDefinition);
 
         public DynamicCharacterAvatar DynamicCharacterAvatar { get => dynamicCharacterAvatar; }
 
@@ -42,8 +45,17 @@ namespace AnyRPG {
             return dynamicCharacterAvatar.umaData.dirty || dynamicCharacterAvatar.UpdatePending() || buildInProgress;
         }
 
+        /*
         public void SetInitialAppearance(string appearance) {
             initialAppearance = appearance;
+        }
+        */
+
+        public void SetAppearance(string appearance) {
+            initialAppearance = appearance;
+            avatarDefinition = AvatarDefinition.FromCompressedString(initialAppearance, '|');
+            dynamicCharacterAvatar.LoadAvatarDefinition(avatarDefinition);
+            BuildModelAppearance();
         }
 
         public void SetInitialSavedAppearance() {
@@ -55,25 +67,132 @@ namespace AnyRPG {
         }
 
         public void InitializeModel() {
-            //Debug.Log(unitController.gameObject.name + ".UMAModelController.InitializeModel()");
+            Debug.Log(unitController.gameObject.name + ".UMAModelController.InitializeModel()");
             // testing - pooled UMA units will already be initialized
             // so they should be considered ready if they have umaData
+            int preloadedModels = 0;
+            /*
+            if (initialAppearance != null && initialAppearance != string.Empty) {
+                avatarDefinition = AvatarDefinition.FromCompressedString(initialAppearance, '|');
+            } else {
+                avatarDefinition = dynamicCharacterAvatar.GetAvatarDefinition(true);
+            }
+            if (unitController.CharacterUnit?.BaseCharacter?.CharacterEquipmentManager != null) {
+                preloadedModels = PreloadEquipmentModels(unitController.CharacterUnit.BaseCharacter.CharacterEquipmentManager);
+            }
+            if ((initialAppearance != null && initialAppearance != string.Empty) || preloadedModels > 0) {
+                // only needed if the UMA had some custom appearance or extra equipment loaded onto it
+                dynamicCharacterAvatar.LoadAvatarDefinition(avatarDefinition);
+            }
+            */
+
+            if (initialAppearance != null && initialAppearance != string.Empty) {
+                avatarDefinition = AvatarDefinition.FromCompressedString(initialAppearance, '|');
+            } else {
+                //avatarDefinition = dynamicCharacterAvatar.GetAvatarDefinition(true);
+                avatarDefinition = GetAvatarDefinition(dynamicCharacterAvatar);
+            }
+            if (unitController.CharacterUnit?.BaseCharacter?.CharacterEquipmentManager != null) {
+                preloadedModels = PreloadEquipmentModels(unitController.CharacterUnit.BaseCharacter.CharacterEquipmentManager);
+            }
+            if ((initialAppearance != null && initialAppearance != string.Empty) || preloadedModels > 0) {
+                // only needed if the UMA had some custom appearance or extra equipment loaded onto it
+                dynamicCharacterAvatar.LoadAvatarDefinition(avatarDefinition);
+            }
+            //bool wasInitialized = false;
             if (dynamicCharacterAvatar.umaData == null) {
                 //Debug.Log(gameObject.name + "UnitController.ConfigureUnitModel(): dynamicCharacterAvatar.Initialize()");
                 dynamicCharacterAvatar.Initialize();
-                if (initialAppearance != null && initialAppearance != string.Empty) {
-                    LoadSavedAppearanceSettings(initialAppearance);
-                }
+                //if (initialAppearance != null && initialAppearance != string.Empty) {
+                //LoadSavedAppearanceSettings(initialAppearance);
+                //}
+                buildInProgress = true;
+            //}
             } else {
+            //if (!wasInitialized) {
+
                 //Debug.Log(gameObject.name + "UnitController.ConfigureUnitModel(): dynamicCharacterAvatar has been re-used and is already initialized");
-                if (initialAppearance != null && initialAppearance != string.Empty) {
-                    LoadSavedAppearanceSettings(initialAppearance);
+                //if (initialAppearance != null && initialAppearance != string.Empty) {
+                //LoadSavedAppearanceSettings(initialAppearance);
+                //}
+                //unitModelController.SetModelReady();
+
+                if ((initialAppearance == null || initialAppearance == string.Empty) && preloadedModels == 0) {
+                    unitModelController.SetModelReady();
+                } else {
+                    BuildModelAppearance();
                 }
-                unitModelController.SetModelReady();
             }
 
             SubscribeToUMACreate();
         }
+
+        private AvatarDefinition GetAvatarDefinition(DynamicCharacterAvatar dynamicCharacterAvatar) {
+            AvatarDefinition adf = new AvatarDefinition();
+            // race
+            adf.RaceName = dynamicCharacterAvatar.activeRace.name;
+
+            // wardrobe
+            List<string> WardrobeRecipes = new List<string>();
+            foreach (DynamicCharacterAvatar.WardrobeRecipeListItem item in dynamicCharacterAvatar.preloadWardrobeRecipes.recipes) {
+                WardrobeRecipes.Add(item._recipeName);
+            }
+            adf.Wardrobe = WardrobeRecipes.ToArray();
+
+            // dna
+            List<DnaDef> dnaDefs = new List<DnaDef>();
+            foreach (DnaValue dnaValue in dynamicCharacterAvatar.predefinedDNA.PreloadValues) {
+                DnaDef def = new DnaDef(dnaValue.Name, dnaValue.Value);
+                dnaDefs.Add(def);
+            }
+            adf.Dna = dnaDefs.ToArray();
+
+            // colors
+            List<SharedColorDef> Colors = new List<SharedColorDef>();
+            foreach (DynamicCharacterAvatar.ColorValue colorValueList in dynamicCharacterAvatar.characterColors.Colors) {
+                SharedColorDef scd = new SharedColorDef(colorValueList.name, colorValueList.channelCount);
+                List<ColorDef> colorchannels = new List<ColorDef>();
+
+                for (int i = 0; i < colorValueList.channelCount; i++) {
+                    if (colorValueList.isDefault(i)) continue;
+                    Color Mask = colorValueList.channelMask[i];
+                    Color Additive = colorValueList.channelAdditiveMask[i];
+                    colorchannels.Add(new ColorDef(i, ColorDef.ToUInt(Mask), ColorDef.ToUInt(Additive)));
+                }
+                if (colorchannels.Count > 0) {
+                    scd.SetChannels(colorchannels.ToArray());
+                    Colors.Add(scd);
+                }
+            }
+            adf.Colors = Colors.ToArray();
+
+            return adf;
+        }
+
+        /*
+        public void LoadSavedAppearanceSettings(string recipeString = null, bool rebuildAppearance = false) {
+            Debug.Log(unitController.gameObject.name + ".UMAModelController.LoadSavedAppearanceSettings()");
+            if (dynamicCharacterAvatar != null) {
+                if (recipeString != null && recipeString != string.Empty) {
+                    //Debug.Log(unitController.gameObject.name + ".UMAModelController.LoadSavedAppearanceSettings() : loading string from parameters : " + recipeString);
+                    buildInProgress = true;
+                    //dynamicCharacterAvatar.SetLoadString(recipeString);
+
+                } else if (recipeString == null
+                    && SystemGameManager.Instance.SaveManager.RecipeString != null
+                    && SystemGameManager.Instance.SaveManager.RecipeString != string.Empty) {
+                    //Debug.Log(unitController.gameObject.name + ".UMAModelController.LoadSavedAppearanceSettings() : loading string from SaveManager : " + SystemGameManager.Instance.SaveManager.RecipeString);
+                    buildInProgress = true;
+                    dynamicCharacterAvatar.SetLoadString(SystemGameManager.Instance.SaveManager.RecipeString);
+                }
+                if (rebuildAppearance == true && dynamicCharacterAvatar.BuildCharacterEnabled == false) {
+                    // by default an UMA will build appearance unless the option is disabled, so this call is redundant unless the UMA is configured to not build
+                    //Debug.Log(unitController.gameObject.name + ".UMAModelController.LoadSavedAppearanceSettings() : building model appearance");
+                    BuildModelAppearance();
+                }
+            }
+        }
+        */
 
         public void FindUnitModel(GameObject unitModel) {
             //Debug.Log(unitController.gameObject.name + ".UMAModelController.FindUnitModel(" + (unitModel == null ? "null" : unitModel.name) + ")");
@@ -126,7 +245,7 @@ namespace AnyRPG {
             //Debug.Log("PreviewCameraController.OnCharacterDestroyed(): " + umaData);
         }
         public void HandleCharacterUpdated(UMAData umaData) {
-            //Debug.Log(unitController.gameObject.name + ".UMAModelController.HandleCharacterUpdated()");
+            Debug.Log(unitController.gameObject.name + ".UMAModelController.HandleCharacterUpdated()");
             //Debug.Log("UMAModelController.HandleCharacterUpdated(): " + umaData + "; frame: " + Time.frameCount);
             //HandleCharacterCreated(umaData);
             buildInProgress = false;
@@ -136,6 +255,18 @@ namespace AnyRPG {
         public void DespawnModel() {
             UnsubscribeFromUMACreate();
 
+        }
+
+        private int PreloadEquipmentModels(CharacterEquipmentManager characterEquipmentManager) {
+            Debug.Log(unitController.gameObject.name + ".UMAModelController.PreloadEquipmentModels()");
+            int returnValue = 0;
+            foreach (EquipmentSlotProfile equipmentSlotProfile in characterEquipmentManager.CurrentEquipment.Keys) {
+                if (characterEquipmentManager.CurrentEquipment[equipmentSlotProfile] != null) {
+                    // armor and weapon models handling
+                    returnValue += PreloadItemModels(characterEquipmentManager, characterEquipmentManager.CurrentEquipment[equipmentSlotProfile]);
+                }
+            }
+            return returnValue;
         }
 
 
@@ -154,6 +285,38 @@ namespace AnyRPG {
                     BuildModelAppearance();
                 }
             }
+        }
+
+        public int PreloadItemModels(CharacterEquipmentManager characterEquipmentManager, Equipment equipment) {
+            Debug.Log(unitController.gameObject.name + ".UMAModelController.PreloadItemModels()");
+            int returnValue = 0;
+            if (equipment.MyUMARecipes != null
+            && equipment.MyUMARecipes.Count > 0
+            && dynamicCharacterAvatar != null) {
+                //Debug.Log("EquipmentManager.HandleItemUMARecipe(): " + newItem.DisplayName);
+                // Put the item in the UMA slot on the UMA character
+                //Debug.Log("Putting " + newItem.UMARecipe.name + " in slot " + newItem.UMARecipe.wardrobeSlot);
+                List<string> newWardrobe = new List<string>(avatarDefinition.Wardrobe);
+                foreach (UMATextRecipe uMARecipe in equipment.MyUMARecipes) {
+                    if (uMARecipe != null && uMARecipe.compatibleRaces.Contains(dynamicCharacterAvatar.activeRace.name)) {
+                        //Debug.Log("EquipmentManager.HandleItemUMARecipe(): SetSlot: " + uMARecipe.wardrobeSlot + ", " + uMARecipe.name);
+                        //dynamicCharacterAvatar.SetSlot(uMARecipe.wardrobeSlot, uMARecipe.name);
+                        if (newWardrobe.Contains(uMARecipe.name) == false) {
+                            newWardrobe.Add(uMARecipe.name);
+                            returnValue++;
+                        }
+                    }
+                }
+                if (returnValue != 0) {
+                    avatarDefinition.Wardrobe = newWardrobe.ToArray();
+                }
+                /*
+                if (rebuildAppearance) {
+                    BuildModelAppearance();
+                }
+                */
+            }
+            return returnValue;
         }
 
         public void EquipItemModels(CharacterEquipmentManager characterEquipmentManager, Equipment equipment, bool rebuildAppearance = true) {
@@ -190,37 +353,23 @@ namespace AnyRPG {
             return string.Empty;
         }
 
-        public void LoadSavedAppearanceSettings(string recipeString = null, bool rebuildAppearance = false) {
-            //Debug.Log(unitController.gameObject.name + ".UMAModelController.LoadSavedAppearanceSettings()");
-            if (dynamicCharacterAvatar != null) {
-                if (recipeString != null && recipeString != string.Empty) {
-                    //Debug.Log(unitController.gameObject.name + ".UMAModelController.LoadSavedAppearanceSettings() : loading string from parameters : " + recipeString);
-                    buildInProgress = true;
-                    dynamicCharacterAvatar.SetLoadString(recipeString);
-                } else if (recipeString == null
-                    && SystemGameManager.Instance.SaveManager.RecipeString != null
-                    && SystemGameManager.Instance.SaveManager.RecipeString != string.Empty) {
-                    //Debug.Log(unitController.gameObject.name + ".UMAModelController.LoadSavedAppearanceSettings() : loading string from SaveManager : " + SystemGameManager.Instance.SaveManager.RecipeString);
-                    buildInProgress = true;
-                    dynamicCharacterAvatar.SetLoadString(SystemGameManager.Instance.SaveManager.RecipeString);
-                }
-                if (rebuildAppearance == true && dynamicCharacterAvatar.BuildCharacterEnabled == false) {
-                    // by default an UMA will build appearance unless the option is disabled, so this call is redundant unless the UMA is configured to not build
-                    //Debug.Log(unitController.gameObject.name + ".UMAModelController.LoadSavedAppearanceSettings() : building model appearance");
-                    BuildModelAppearance();
-                }
-            }
-        }
-
         public void SaveAppearanceSettings() {
             //Debug.Log(unitController.gameObject.name + ".UMAModelController.SaveAppearanceSettings()");
             if (dynamicCharacterAvatar != null) {
-                SystemGameManager.Instance.SaveManager.SaveRecipeString(dynamicCharacterAvatar.GetCurrentRecipe());
+                //SystemGameManager.Instance.SaveManager.SaveRecipeString(dynamicCharacterAvatar.GetCurrentRecipe());
+                SystemGameManager.Instance.SaveManager.SaveRecipeString(GetAppearanceString());
             }
         }
 
+        public string GetAppearanceString() {
+            if (dynamicCharacterAvatar != null) {
+                return dynamicCharacterAvatar.GetAvatarDefinition(true).ToCompressedString("|");
+            }
+            return string.Empty;
+        }
+
         public void BuildModelAppearance() {
-            //Debug.Log(unitController.gameObject.name + ".UMAModelController.BuildModelAppearance()");
+            Debug.Log(unitController.gameObject.name + ".UMAModelController.BuildModelAppearance()");
             if (dynamicCharacterAvatar != null) {
                 //Debug.Log(unitController.gameObject.name + ".UMAModelController.BuildModelAppearance() : " + dynamicCharacterAvatar.GetCurrentRecipe());
                 buildInProgress = true;

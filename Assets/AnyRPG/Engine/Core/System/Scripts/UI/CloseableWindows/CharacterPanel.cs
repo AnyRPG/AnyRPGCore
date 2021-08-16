@@ -35,7 +35,7 @@ namespace AnyRPG {
         private TextMeshProUGUI statsDescription = null;
 
         [SerializeField]
-        private CharacterPreviewCameraController previewCameraController;
+        private CharacterPreviewPanelController characterPreviewPanel;
 
         [SerializeField]
         private Color emptySlotColor = new Color32(0, 0, 0, 0);
@@ -52,7 +52,6 @@ namespace AnyRPG {
         private SaveManager saveManager = null;
 
         public CharacterButton SelectedButton { get; set; }
-        public CharacterPreviewCameraController PreviewCameraController { get => previewCameraController; set => previewCameraController = value; }
 
         public override void Configure(SystemGameManager systemGameManager) {
             base.Configure(systemGameManager);
@@ -70,6 +69,7 @@ namespace AnyRPG {
                 characterButton.UpdateVisual();
             }
 
+            characterPreviewPanel.Configure(systemGameManager);
             reputationButton.Configure(systemGameManager);
             achievementsButton.Configure(systemGameManager);
             skillsButton.Configure(systemGameManager);
@@ -151,7 +151,9 @@ namespace AnyRPG {
             //Debug.Log("CharacterPanel.RecieveClosedWindowNotification()");
             base.RecieveClosedWindowNotification();
             characterCreatorManager.HandleCloseWindow();
-            previewCameraController.ClearTarget();
+            characterPreviewPanel.OnTargetCreated -= HandleTargetCreated;
+            //characterPreviewPanel.OnTargetReady -= HandleTargetReady;
+            characterPreviewPanel.RecieveClosedWindowNotification();
         }
 
         public override void ReceiveOpenWindowNotification() {
@@ -163,13 +165,17 @@ namespace AnyRPG {
             if (playerManager.MyCharacter != null) {
                 uIManager.characterPanelWindow.SetWindowTitle(playerManager.MyCharacter.CharacterName);
             }
+            characterPreviewPanel.OnTargetCreated += HandleTargetCreated;
+            characterPreviewPanel.CapabilityConsumer = playerManager.MyCharacter;
+            characterPreviewPanel.ReceiveOpenWindowNotification();
+
         }
 
         public void ResetDisplay() {
             //Debug.Log("CharacterPanel.ResetDisplay()");
             if (uIManager != null && uIManager.characterPanelWindow != null && uIManager.characterPanelWindow.IsOpen) {
                 // reset display
-                previewCameraController.ClearTarget();
+                //characterPreviewPanel.ClearTarget();
                 characterCreatorManager.HandleCloseWindow();
 
                 // TODO : ADD CODE TO LOOP THROUGH BUTTONS AND RE-DISPLAY ANY ITEMS
@@ -304,8 +310,9 @@ namespace AnyRPG {
             characterCreatorManager.HandleOpenWindow(playerManager.MyCharacter.UnitProfile);
 
             // testing do this earlier
-            LoadSavedAppearanceSettings();
+            //LoadSavedAppearanceSettings();
 
+            /*
             if (cameraManager != null && cameraManager.CharacterPreviewCamera != null) {
                 //Debug.Log("CharacterPanel.SetPreviewTarget(): preview camera was available, setting target");
                 if (PreviewCameraController != null) {
@@ -316,18 +323,35 @@ namespace AnyRPG {
                     Debug.LogError("CharacterPanel.SetPreviewTarget(): Character Preview Camera Controller is null. Please set it in the inspector");
                 }
             }
+            */
         }
 
+        /*
         public void TargetReadyCallback() {
             //Debug.Log("CharacterPanel.TargetReadyCallback()");
             PreviewCameraController.OnTargetReady -= TargetReadyCallback;
             TargetReadyCallbackCommon();
         }
 
+
         public void LoadSavedAppearanceSettings() {
             characterCreatorManager.PreviewUnitController?.UnitModelController.LoadSavedAppearanceSettings();
         }
+        */
 
+        public void HandleTargetCreated() {
+            characterCreatorManager.PreviewUnitController?.UnitModelController.SetInitialSavedAppearance();
+            CharacterEquipmentManager characterEquipmentManager = characterCreatorManager.PreviewUnitController.CharacterUnit.BaseCharacter.CharacterEquipmentManager;
+            if (characterEquipmentManager != null) {
+                if (playerManager != null && playerManager.MyCharacter != null && playerManager.MyCharacter.CharacterEquipmentManager != null) {
+                    characterEquipmentManager.CurrentEquipment = playerManager.MyCharacter.CharacterEquipmentManager.CurrentEquipment;
+                }
+            } else {
+                Debug.Log("CharacterPanel.HandleTargetCreated(): could not find a characterEquipmentManager");
+            }
+        }
+
+        /*
         public void TargetReadyCallbackCommon() {
             //Debug.Log("CharacterPanel.TargetReadyCallbackCommon()");
 
@@ -341,6 +365,7 @@ namespace AnyRPG {
                 Debug.Log("CharacterPanel.TargetReadyCallbackCommon(): could not find a characterEquipmentManager");
             }
         }
+        */
 
 
         public void OpenReputationWindow() {

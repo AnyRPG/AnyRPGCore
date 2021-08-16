@@ -182,6 +182,7 @@ namespace AnyRPG {
             }
 
             //spawn correct preview unit
+            //unitPreviewManager.OnTargetCreated += HandleTargetCreated;
             unitPreviewManager.HandleOpenWindow(this);
 
             if (cameraManager.UnitPreviewCamera != null) {

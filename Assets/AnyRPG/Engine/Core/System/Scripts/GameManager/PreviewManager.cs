@@ -7,6 +7,8 @@ using UnityEngine.AI;
 namespace AnyRPG {
     public abstract class PreviewManager : ConfiguredMonoBehaviour {
 
+        public event System.Action OnTargetCreated = delegate { };
+
         protected UnitController unitController;
 
         [SerializeField]
@@ -48,13 +50,14 @@ namespace AnyRPG {
         }
 
         public void OpenWindowCommon() {
-            //Debug.Log("PreviewManager.OpenWindowCommon()");
+            Debug.Log("PreviewManager.OpenWindowCommon()");
 
             unitController = cloneSource.SpawnUnitPrefab(transform, transform.position, transform.forward, UnitControllerMode.Preview);
             if (unitController != null) {
                 if (unitController.UnitModelController != null) {
                     unitController.UnitModelController.SetAttachmentProfile(cloneSource.UnitPrefabProps.AttachmentProfile);
                 }
+                OnTargetCreated();
                 unitController.Init();
             }
         }

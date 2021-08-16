@@ -11,6 +11,7 @@ namespace AnyRPG {
 
 
         public event Action OnTargetReady = delegate { };
+        public event Action OnTargetCreated = delegate { };
         public override event Action<ICloseableWindowContents> OnCloseWindow = delegate { };
 
         [SerializeField]
@@ -43,15 +44,17 @@ namespace AnyRPG {
             //Debug.Log("CharacterPreviewPanelController.RecieveClosedWindowNotification()");
             base.RecieveClosedWindowNotification();
             characterReady = false;
+            characterCreatorManager.OnTargetCreated -= HandleTargetCreated;
             characterCreatorManager.HandleCloseWindow();
             previewCameraController.ClearTarget();
             OnCloseWindow(this);
         }
 
         public override void ReceiveOpenWindowNotification() {
-            //Debug.Log("CharacterPreviewPanelController.ReceiveOpenWindowNotification()");
+            Debug.Log("CharacterPreviewPanelController.ReceiveOpenWindowNotification()");
             windowOpened = true;
             characterReady = false;
+            characterCreatorManager.OnTargetCreated += HandleTargetCreated;
             SetPreviewTarget();
         }
 
@@ -72,7 +75,7 @@ namespace AnyRPG {
         }
 
         private void SetPreviewTarget() {
-            //Debug.Log("CharacterPreviewPanelController.SetPreviewTarget()");
+            Debug.Log("CharacterPreviewPanelController.SetPreviewTarget()");
             if (characterCreatorManager.PreviewUnitController != null
                 || capabilityConsumer == null
                 || capabilityConsumer.UnitProfile == null) {
@@ -86,7 +89,7 @@ namespace AnyRPG {
             if (cameraManager.CharacterPreviewCamera != null) {
                 //Debug.Log("CharacterPanel.SetPreviewTarget(): preview camera was available, setting target");
                 if (MyPreviewCameraController != null) {
-                    MyPreviewCameraController.OnTargetReady += TargetReadyCallback;
+                    MyPreviewCameraController.OnTargetReady += HandleTargetReady;
                     MyPreviewCameraController.InitializeCamera(characterCreatorManager.PreviewUnitController);
                     //Debug.Log("CharacterPanel.SetPreviewTarget(): preview camera was available, setting Target Ready Callback");
                 } else {
@@ -95,9 +98,14 @@ namespace AnyRPG {
             }
         }
 
-        public void TargetReadyCallback() {
+        public void HandleTargetCreated() {
+            Debug.Log("CharacterPreviewPanelController.HandleTargetCreated()");
+            OnTargetCreated();
+        }
+
+        public void HandleTargetReady() {
             //Debug.Log("CharacterPreviewPanelController.TargetReadyCallback()");
-            MyPreviewCameraController.OnTargetReady -= TargetReadyCallback;
+            MyPreviewCameraController.OnTargetReady -= HandleTargetReady;
             characterReady = true;
 
             OnTargetReady();
@@ -105,12 +113,13 @@ namespace AnyRPG {
             //StartCoroutine(PointlessDelay());
         }
 
-
+        /*
         public IEnumerator PointlessDelay() {
             //Debug.Log("CharacterPreviewPanelController.EquipCharacter(): found equipment manager");
             yield return null;
             BuildModelAppearance();
         }
+        */
 
 
         public void BuildModelAppearance() {

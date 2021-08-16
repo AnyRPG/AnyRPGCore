@@ -424,17 +424,19 @@ namespace AnyRPG {
         public void SetMale() {
             //Debug.Log("CharacterCreatorPanel.SetMale()");
 
-            if (characterCreatorManager.PreviewUnitController.UnitModelController.UMAModelController.DynamicCharacterAvatar.activeRace.name == "HumanMaleDCS" || characterCreatorManager.PreviewUnitController.UnitModelController.UMAModelController.DynamicCharacterAvatar.activeRace.name == "HumanMale") {
+            if (characterCreatorManager.PreviewUnitController.UnitModelController.UMAModelController.DynamicCharacterAvatar.activeRace.name == "HumanMaleDCS"
+                || characterCreatorManager.PreviewUnitController.UnitModelController.UMAModelController.DynamicCharacterAvatar.activeRace.name == "HumanMale") {
                 //Debug.Log("CharacterCreatorPanel.SetMale(): already male. returning");
                 return;
             }
-            femaleRecipe = characterCreatorManager.PreviewUnitController.UnitModelController.UMAModelController.DynamicCharacterAvatar.GetCurrentRecipe();
+            femaleRecipe = characterCreatorManager.PreviewUnitController.UnitModelController.UMAModelController.GetAppearanceString();
             femaleButton.DeSelect();
             maleButton.Select();
             if (maleRecipe != string.Empty) {
                 //Debug.Log("CharacterCreatorPanel.SetFemale(): maleRecipe != string.Empty");
                 characterCreatorManager.PreviewUnitController.UnitModelController.UMAModelController.DynamicCharacterAvatar.ChangeRace("HumanMaleDCS");
-               characterCreatorManager.PreviewUnitController.UnitModelController.LoadSavedAppearanceSettings(maleRecipe, true);
+                //characterCreatorManager.PreviewUnitController.UnitModelController.LoadSavedAppearanceSettings(maleRecipe, true);
+                characterCreatorManager.PreviewUnitController.UnitModelController.UMAModelController.SetAppearance(maleRecipe);
             } else {
                 //Debug.Log("CharacterCreatorPanel.SetFemale(): maleRecipe == string.Empty");
                 characterCreatorManager.PreviewUnitController.UnitModelController.UMAModelController.DynamicCharacterAvatar.ChangeRace("HumanMaleDCS");
@@ -444,17 +446,20 @@ namespace AnyRPG {
         public void SetFemale() {
             //Debug.Log("CharacterCreatorPanel.SetFemale()");
 
-            if (characterCreatorManager.PreviewUnitController.UnitModelController.UMAModelController.DynamicCharacterAvatar.activeRace.name == "HumanFemaleDCS" || characterCreatorManager.PreviewUnitController.UnitModelController.UMAModelController.DynamicCharacterAvatar.activeRace.name == "HumanFemale") {
+            if (characterCreatorManager.PreviewUnitController.UnitModelController.UMAModelController.DynamicCharacterAvatar.activeRace.name == "HumanFemaleDCS"
+                || characterCreatorManager.PreviewUnitController.UnitModelController.UMAModelController.DynamicCharacterAvatar.activeRace.name == "HumanFemale") {
                 //Debug.Log("CharacterCreatorPanel.SetFemale(): already female. returning");
                 return;
             }
-            maleRecipe = characterCreatorManager.PreviewUnitController.UnitModelController.UMAModelController.DynamicCharacterAvatar.GetCurrentRecipe();
+            //maleRecipe = characterCreatorManager.PreviewUnitController.UnitModelController.UMAModelController.DynamicCharacterAvatar.GetCurrentRecipe();
+            maleRecipe = characterCreatorManager.PreviewUnitController.UnitModelController.UMAModelController.GetAppearanceString();
             maleButton.DeSelect();
             femaleButton.Select();
             if (femaleRecipe != string.Empty) {
                 //Debug.Log("CharacterCreatorPanel.SetFemale(): femaleRecipe != string.Empty");
                 characterCreatorManager.PreviewUnitController.UnitModelController.UMAModelController.DynamicCharacterAvatar.ChangeRace("HumanFemaleDCS");
-               characterCreatorManager.PreviewUnitController.UnitModelController.LoadSavedAppearanceSettings(femaleRecipe, true);
+                //characterCreatorManager.PreviewUnitController.UnitModelController.LoadSavedAppearanceSettings(femaleRecipe, true);
+                characterCreatorManager.PreviewUnitController.UnitModelController.UMAModelController.SetAppearance(femaleRecipe);
             } else {
                 //Debug.Log("CharacterCreatorPanel.SetFemale(): femaleRecipe == string.Empty");
                 characterCreatorManager.PreviewUnitController.UnitModelController.UMAModelController.DynamicCharacterAvatar.ChangeRace("HumanFemaleDCS");

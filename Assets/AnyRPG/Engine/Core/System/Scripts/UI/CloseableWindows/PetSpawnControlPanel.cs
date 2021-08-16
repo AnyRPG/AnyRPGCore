@@ -150,15 +150,17 @@ namespace AnyRPG {
             uIManager.interactionWindow.CloseWindow();
         }
 
+        /*
         public void HandleTargetReady() {
             //LoadUMARecipe();
             // not doing anything for now since pets don't have equipment yet
         }
+        */
 
         public override void RecieveClosedWindowNotification() {
             //Debug.Log("LoadGamePanel.OnCloseWindow()");
             base.RecieveClosedWindowNotification();
-            characterPreviewPanel.OnTargetReady -= HandleTargetReady;
+            //characterPreviewPanel.OnTargetReady -= HandleTargetReady;
             characterPreviewPanel.RecieveClosedWindowNotification();
             OnCloseWindow(this);
         }
@@ -174,7 +176,7 @@ namespace AnyRPG {
             ShowPreviewButtonsCommon();
 
             // inform the preview panel so the character can be rendered
-            characterPreviewPanel.OnTargetReady += HandleTargetReady;
+            //characterPreviewPanel.OnTargetReady += HandleTargetReady;
             characterPreviewPanel.CapabilityConsumer = this;
             characterPreviewPanel.ReceiveOpenWindowNotification();
 
