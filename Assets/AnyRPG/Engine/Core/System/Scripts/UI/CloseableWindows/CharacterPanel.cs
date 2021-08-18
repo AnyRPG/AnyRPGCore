@@ -160,7 +160,7 @@ namespace AnyRPG {
             //Debug.Log("CharacterPanel.ReceiveOpenWindowNotification()");
             base.ReceiveOpenWindowNotification();
             SetBackGroundColor(new Color32(0, 0, 0, (byte)(int)(PlayerPrefs.GetFloat("PopupWindowOpacity") * 255)));
-            SetPreviewTarget();
+            //SetPreviewTarget();
             UpdateStatsDescription();
             if (playerManager.MyCharacter != null) {
                 uIManager.characterPanelWindow.SetWindowTitle(playerManager.MyCharacter.CharacterName);
@@ -171,6 +171,7 @@ namespace AnyRPG {
 
         }
 
+        /*
         public void ResetDisplay() {
             //Debug.Log("CharacterPanel.ResetDisplay()");
             if (uIManager != null && uIManager.characterPanelWindow != null && uIManager.characterPanelWindow.IsOpen) {
@@ -184,11 +185,20 @@ namespace AnyRPG {
                 SetPreviewTarget();
             }
         }
+        */
 
         public void HandleEquipmentChanged(Equipment newEquipment, Equipment oldEquipment) {
-            //Debug.Log("CharacterPanel.HandleEquipmentChange()");
+            Debug.Log("CharacterPanel.HandleEquipmentChanged(" + (newEquipment == null ? "null" : newEquipment.DisplayName) + ", " + (oldEquipment == null ? "null" : oldEquipment.DisplayName) + ")");
             if (uIManager != null && uIManager.characterPanelWindow != null && uIManager.characterPanelWindow.IsOpen) {
-                ResetDisplay();
+                //ResetDisplay();
+                //characterPreviewPanel.ReloadUnit();
+                if (oldEquipment != null) {
+                    characterCreatorManager.PreviewUnitController.CharacterUnit.BaseCharacter.CharacterEquipmentManager.Unequip(oldEquipment, true, true, false);
+                }
+                if (newEquipment != null) {
+                    characterCreatorManager.PreviewUnitController.CharacterUnit.BaseCharacter.CharacterEquipmentManager.Equip(newEquipment, null, true, true, false);
+                }
+                characterCreatorManager.PreviewUnitController.UnitModelController.BuildModelAppearance();
                 UpdateStatsDescription();
             }
         }
@@ -302,13 +312,14 @@ namespace AnyRPG {
             statsDescription.text = updateString;
         }
 
+        /*
         private void SetPreviewTarget() {
             Debug.Log("CharacterPanel.SetPreviewTarget()");
 
 
             //spawn correct preview unit
             characterCreatorManager.HandleOpenWindow(playerManager.MyCharacter.UnitProfile);
-
+            */
             // testing do this earlier
             //LoadSavedAppearanceSettings();
 
@@ -324,7 +335,9 @@ namespace AnyRPG {
                 }
             }
             */
+            /*
         }
+        */
 
         /*
         public void TargetReadyCallback() {
@@ -340,7 +353,7 @@ namespace AnyRPG {
         */
 
         public void HandleTargetCreated() {
-            Debug.Log("CharacterPanel.HandleTargetCreated()");
+            //Debug.Log("CharacterPanel.HandleTargetCreated()");
             characterCreatorManager.PreviewUnitController?.UnitModelController.SetInitialSavedAppearance();
             CharacterEquipmentManager characterEquipmentManager = characterCreatorManager.PreviewUnitController.CharacterUnit.BaseCharacter.CharacterEquipmentManager;
             if (characterEquipmentManager != null) {

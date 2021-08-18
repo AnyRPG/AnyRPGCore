@@ -518,6 +518,7 @@ namespace AnyRPG {
                 Debug.Log("interactionpanelUI had no instance");
             }
             if (SystemGameManager.Instance.UIManager != null) {
+                SystemGameManager.Instance.UIManager.craftingWindow.CloseWindow();
                 SystemGameManager.Instance.UIManager.interactionWindow.OpenWindow();
             }
         }
