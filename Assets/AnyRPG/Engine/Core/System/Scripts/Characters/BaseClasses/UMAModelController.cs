@@ -16,7 +16,7 @@ namespace AnyRPG {
         private DynamicCharacterAvatar dynamicCharacterAvatar = null;
         private UMAExpressionPlayer expressionPlayer = null;
         private UnitModelController unitModelController = null;
-        private AvatarDefinition avatarDefinition = default(AvatarDefinition);
+        private AvatarDefinition avatarDefinition =  new AvatarDefinition();
 
         public DynamicCharacterAvatar DynamicCharacterAvatar { get => dynamicCharacterAvatar; }
 
@@ -26,8 +26,15 @@ namespace AnyRPG {
         private bool buildInProgress = false;
 
         public UMAModelController(UnitController unitController, UnitModelController unitModelController) {
+            //Debug.Log(unitController.gameObject.name + ".UMAModelController()");
             this.unitController = unitController;
             this.unitModelController = unitModelController;
+
+            // avatarDefintion is a struct so needs to have its properties set to something other than null
+            avatarDefinition.RaceName = string.Empty;
+            avatarDefinition.Wardrobe = new string[0];
+            avatarDefinition.Dna = new DnaDef[0];
+            avatarDefinition.Colors = new SharedColorDef[0];
         }
 
         public bool IsBuilding() {
@@ -52,6 +59,7 @@ namespace AnyRPG {
         */
 
         public void SetAppearance(string appearance) {
+            //Debug.Log(unitController.gameObject.name + ".UMAModelController.SetAppearance()");
             initialAppearance = appearance;
             avatarDefinition = AvatarDefinition.FromCompressedString(initialAppearance, '|');
             dynamicCharacterAvatar.LoadAvatarDefinition(avatarDefinition);
@@ -67,7 +75,7 @@ namespace AnyRPG {
         }
 
         public void InitializeModel() {
-            Debug.Log(unitController.gameObject.name + ".UMAModelController.InitializeModel()");
+            //Debug.Log(unitController.gameObject.name + ".UMAModelController.InitializeModel()");
             // testing - pooled UMA units will already be initialized
             // so they should be considered ready if they have umaData
             int preloadedModels = 0;
@@ -128,16 +136,18 @@ namespace AnyRPG {
         }
 
         private AvatarDefinition GetAvatarDefinition(DynamicCharacterAvatar dynamicCharacterAvatar) {
+            //Debug.Log(unitController.gameObject.name + ".UMAModelController.GetAvatarDefinition()");
+
             AvatarDefinition adf = new AvatarDefinition();
             // race
             adf.RaceName = dynamicCharacterAvatar.activeRace.name;
 
             // wardrobe
-            List<string> WardrobeRecipes = new List<string>();
+            List<string> wardrobeRecipes = new List<string>();
             foreach (DynamicCharacterAvatar.WardrobeRecipeListItem item in dynamicCharacterAvatar.preloadWardrobeRecipes.recipes) {
-                WardrobeRecipes.Add(item._recipeName);
+                wardrobeRecipes.Add(item._recipeName);
             }
-            adf.Wardrobe = WardrobeRecipes.ToArray();
+            adf.Wardrobe = wardrobeRecipes.ToArray();
 
             // dna
             List<DnaDef> dnaDefs = new List<DnaDef>();
@@ -245,7 +255,7 @@ namespace AnyRPG {
             //Debug.Log("PreviewCameraController.OnCharacterDestroyed(): " + umaData);
         }
         public void HandleCharacterUpdated(UMAData umaData) {
-            Debug.Log(unitController.gameObject.name + ".UMAModelController.HandleCharacterUpdated()");
+            //Debug.Log(unitController.gameObject.name + ".UMAModelController.HandleCharacterUpdated()");
             //Debug.Log("UMAModelController.HandleCharacterUpdated(): " + umaData + "; frame: " + Time.frameCount);
             //HandleCharacterCreated(umaData);
             buildInProgress = false;
@@ -258,7 +268,7 @@ namespace AnyRPG {
         }
 
         private int PreloadEquipmentModels(CharacterEquipmentManager characterEquipmentManager) {
-            Debug.Log(unitController.gameObject.name + ".UMAModelController.PreloadEquipmentModels()");
+            //Debug.Log(unitController.gameObject.name + ".UMAModelController.PreloadEquipmentModels()");
             int returnValue = 0;
             foreach (EquipmentSlotProfile equipmentSlotProfile in characterEquipmentManager.CurrentEquipment.Keys) {
                 if (characterEquipmentManager.CurrentEquipment[equipmentSlotProfile] != null) {
@@ -288,7 +298,7 @@ namespace AnyRPG {
         }
 
         public int PreloadItemModels(CharacterEquipmentManager characterEquipmentManager, Equipment equipment) {
-            Debug.Log(unitController.gameObject.name + ".UMAModelController.PreloadItemModels()");
+            //Debug.Log(unitController.gameObject.name + ".UMAModelController.PreloadItemModels(" + equipment.DisplayName + ")");
             int returnValue = 0;
             if (equipment.MyUMARecipes != null
             && equipment.MyUMARecipes.Count > 0
@@ -310,16 +320,12 @@ namespace AnyRPG {
                 if (returnValue != 0) {
                     avatarDefinition.Wardrobe = newWardrobe.ToArray();
                 }
-                /*
-                if (rebuildAppearance) {
-                    BuildModelAppearance();
-                }
-                */
             }
             return returnValue;
         }
 
         public void EquipItemModels(CharacterEquipmentManager characterEquipmentManager, Equipment equipment, bool rebuildAppearance = true) {
+            //Debug.Log(unitController.gameObject.name + ".UMAModelController.EquipItemModels(" + equipment.DisplayName + ", " + rebuildAppearance + ")");
 
             if (equipment.MyUMARecipes != null
             && equipment.MyUMARecipes.Count > 0
@@ -346,12 +352,14 @@ namespace AnyRPG {
             }
         }
 
+        /*
         public string GetAppearanceSettings() {
             if (dynamicCharacterAvatar != null) {
                 return dynamicCharacterAvatar.GetCurrentRecipe();
             }
             return string.Empty;
         }
+        */
 
         public void SaveAppearanceSettings() {
             //Debug.Log(unitController.gameObject.name + ".UMAModelController.SaveAppearanceSettings()");
@@ -368,8 +376,22 @@ namespace AnyRPG {
             return string.Empty;
         }
 
+        public void RebuildModelAppearance() {
+            if (dynamicCharacterAvatar != null) {
+                //dynamicCharacterAvatar.ClearSlots();
+            }
+
+            foreach (Equipment equipment in unitController.CharacterUnit.BaseCharacter.CharacterEquipmentManager.CurrentEquipment.Values) {
+                //Debug.Log("NewGameCharacterPanelController.EquipCharacter(): ask to equip: " + equipment.DisplayName);
+                if (equipment != null) {
+                    EquipItemModels(unitController.CharacterUnit.BaseCharacter.CharacterEquipmentManager, equipment, false);
+                }
+            }
+            BuildModelAppearance();
+        }
+
         public void BuildModelAppearance() {
-            Debug.Log(unitController.gameObject.name + ".UMAModelController.BuildModelAppearance()");
+            //Debug.Log(unitController.gameObject.name + ".UMAModelController.BuildModelAppearance()");
             if (dynamicCharacterAvatar != null) {
                 //Debug.Log(unitController.gameObject.name + ".UMAModelController.BuildModelAppearance() : " + dynamicCharacterAvatar.GetCurrentRecipe());
                 buildInProgress = true;

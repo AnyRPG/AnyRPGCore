@@ -277,7 +277,7 @@ namespace AnyRPG {
             SetUnitProfile(UnitProfile.GetUnitProfileReference(unitProfileName), notify, unitLevel, loadProviderEquipment);
         }
 
-        public void SetUnitProfile (UnitProfile unitProfile, bool notify = true, int unitLevel = -1, bool loadProviderEquipment = true) {
+        public void SetUnitProfile (UnitProfile unitProfile, bool notify = true, int unitLevel = -1, bool loadProviderEquipment = true, bool processEquipmentRestrictions = true) {
             //Debug.Log(gameObject.name + ".BaseCharacter.SetUnitProfile(" + (unitProfile == null ? "null" : unitProfile.DisplayName) + ", " + notify + ", " + unitLevel + ")");
 
             // get a snapshot of the current state
@@ -290,7 +290,7 @@ namespace AnyRPG {
             CapabilityConsumerSnapshot newSnapshot = new CapabilityConsumerSnapshot(this);
 
             if (notify) {
-                ProcessCapabilityConsumerChange(oldSnapshot, newSnapshot);
+                ProcessCapabilityConsumerChange(oldSnapshot, newSnapshot, processEquipmentRestrictions);
             }
 
             SetUnitProfileProperties(notify, unitLevel, loadProviderEquipment);
@@ -433,7 +433,7 @@ namespace AnyRPG {
             }
         }
 
-        public void SetCharacterFaction(Faction newFaction, bool notify = true, bool resetStats = true) {
+        public void SetCharacterFaction(Faction newFaction, bool notify = true, bool resetStats = true, bool processEquipmentRestrictions = true) {
             //Debug.Log(gameObject.name + ".BaseCharacter.SetCharacterFaction(" + newFaction + ")");
 
             CapabilityConsumerSnapshot oldSnapshot = null;
@@ -455,7 +455,7 @@ namespace AnyRPG {
                     UpdateStatProviderList();
 
                     // update capabilities based on the difference between old and new snapshots
-                    ProcessCapabilityConsumerChange(oldSnapshot, newSnapshot);
+                    ProcessCapabilityConsumerChange(oldSnapshot, newSnapshot, processEquipmentRestrictions);
 
                     if (unitController != null) {
                         unitController.NotifyOnFactionChange(newFaction, oldFaction);
@@ -470,7 +470,7 @@ namespace AnyRPG {
             }
         }
 
-        public void SetClassSpecialization(ClassSpecialization newClassSpecialization, bool notify = true, bool resetStats = true) {
+        public void SetClassSpecialization(ClassSpecialization newClassSpecialization, bool notify = true, bool resetStats = true, bool processEquipmentRestrictions = true) {
             //Debug.Log(gameObject.name + ".BaseCharacter.SetCharacterFaction(" + newCharacterClassName + ")");
 
             CapabilityConsumerSnapshot oldSnapshot = null;
@@ -493,7 +493,7 @@ namespace AnyRPG {
                     UpdateStatProviderList();
 
                     // update capabilities based on the difference between old and new snapshots
-                    ProcessCapabilityConsumerChange(oldSnapshot, newSnapshot);
+                    ProcessCapabilityConsumerChange(oldSnapshot, newSnapshot, processEquipmentRestrictions);
 
                     if (unitController != null) {
                         unitController.NotifyOnSpecializationChange(newClassSpecialization, oldClassSpecialization);
@@ -507,7 +507,7 @@ namespace AnyRPG {
             //}
         }
 
-        public void SetCharacterClass(CharacterClass newCharacterClass, bool notify = true, bool resetStats = true) {
+        public void SetCharacterClass(CharacterClass newCharacterClass, bool notify = true, bool resetStats = true, bool processEquipmentRestrictions = true) {
             //Debug.Log(gameObject.name + ".BaseCharacter.SetCharacterClass(" + (newCharacterClass != null ? newCharacterClass.MyName : "null") + ", " + notify + ")");
 
             CapabilityConsumerSnapshot oldSnapshot = null;
@@ -528,7 +528,7 @@ namespace AnyRPG {
                     UpdateStatProviderList();
 
                     // update capabilities based on the difference between old and new snapshots
-                    ProcessCapabilityConsumerChange(oldSnapshot, newSnapshot);
+                    ProcessCapabilityConsumerChange(oldSnapshot, newSnapshot, processEquipmentRestrictions);
 
                     if (unitController != null) {
                         unitController.NotifyOnClassChange(newCharacterClass, oldCharacterClass);
@@ -542,7 +542,7 @@ namespace AnyRPG {
             }
         }
 
-        public void SetCharacterRace(CharacterRace newCharacterRace, bool notify = true, bool resetStats = true) {
+        public void SetCharacterRace(CharacterRace newCharacterRace, bool notify = true, bool resetStats = true, bool processEquipmentRestrictions = true) {
             //Debug.Log(gameObject.name + ".BaseCharacter.SetCharacterClass(" + (newCharacterClass != null ? newCharacterClass.MyName : "null") + ", " + notify + ")");
 
             CapabilityConsumerSnapshot oldSnapshot = null;
@@ -572,7 +572,7 @@ namespace AnyRPG {
                     //OnRaceChange(newCharacterRace, oldCharacterRace);
 
                     // update capabilities based on the difference between old and new snapshots
-                    ProcessCapabilityConsumerChange(oldSnapshot, newSnapshot);
+                    ProcessCapabilityConsumerChange(oldSnapshot, newSnapshot, processEquipmentRestrictions);
 
                     if (unitController != null) {
                         unitController.NotifyOnRaceChange(newCharacterRace, oldCharacterRace);
@@ -586,7 +586,7 @@ namespace AnyRPG {
             }
         }
 
-        public void SetUnitType(UnitType newUnitType, bool notify = true, bool resetStats = true) {
+        public void SetUnitType(UnitType newUnitType, bool notify = true, bool resetStats = true, bool processEquipmentRestrictions = true) {
             //Debug.Log(gameObject.name + ".BaseCharacter.SetUnitType(" + (newUnitType != null ? newUnitType.DisplayName : "null") + ", " + notify + ")");
 
             CapabilityConsumerSnapshot oldSnapshot = null;
@@ -608,7 +608,7 @@ namespace AnyRPG {
                     UpdateStatProviderList();
 
                     // update capabilities based on the difference between old and new snapshots
-                    ProcessCapabilityConsumerChange(oldSnapshot, newSnapshot);
+                    ProcessCapabilityConsumerChange(oldSnapshot, newSnapshot, processEquipmentRestrictions);
 
                     if (unitController != null) {
                         unitController.NotifyOnUnitTypeChange(newUnitType, oldUnitType);
@@ -622,9 +622,11 @@ namespace AnyRPG {
             }
         }
 
-        public void ProcessCapabilityConsumerChange(CapabilityConsumerSnapshot oldSnapshot, CapabilityConsumerSnapshot newSnapshot) {
+        public void ProcessCapabilityConsumerChange(CapabilityConsumerSnapshot oldSnapshot, CapabilityConsumerSnapshot newSnapshot, bool processEquipmentRestrictions = true) {
             //Debug.Log(gameObject.name + ".BaseCharacter.ProcessCapabilityConsumerChange()");
-            characterEquipmentManager.HandleCapabilityConsumerChange();
+            if (processEquipmentRestrictions == true) {
+                characterEquipmentManager.HandleCapabilityConsumerChange();
+            }
             characterAbilityManager.HandleCapabilityProviderChange(oldSnapshot, newSnapshot);
         }
 

@@ -66,7 +66,7 @@ namespace AnyRPG {
             // load the unit profile equipment
             foreach (Equipment equipment in baseCharacter.UnitProfile.EquipmentList) {
                 if (equipment != null) {
-                    Equip(equipment, null, true);
+                    Equip(equipment, null, false, false, false);
                 }
             }
 
@@ -76,24 +76,24 @@ namespace AnyRPG {
 
             if (baseCharacter.CharacterRace != null) {
                 foreach (Equipment equipment in baseCharacter.CharacterRace.EquipmentList) {
-                    Equip(equipment, null, true);
+                    Equip(equipment, null, false, false, false);
                 }
             }
 
             if (baseCharacter.CharacterClass != null) {
                 foreach (Equipment equipment in baseCharacter.CharacterClass.EquipmentList) {
-                    Equip(equipment, null, true);
+                    Equip(equipment, null, false, false, false);
                 }
                 if (baseCharacter.ClassSpecialization != null) {
                     foreach (Equipment equipment in baseCharacter.ClassSpecialization.EquipmentList) {
-                        Equip(equipment, null, true);
+                        Equip(equipment, null, false, false, false);
                     }
                 }
             }
 
             if (baseCharacter.Faction != null) {
                 foreach (Equipment equipment in baseCharacter.Faction.EquipmentList) {
-                    Equip(equipment, null, true);
+                    Equip(equipment, null, false, false, false);
                 }
             }
 
@@ -146,7 +146,7 @@ namespace AnyRPG {
             return null;
         }
 
-        public bool Equip(Equipment newItem, EquipmentSlotProfile equipmentSlotProfile = null, bool skipModels = false, bool rebuildAppearance = true) {
+        public bool Equip(Equipment newItem, EquipmentSlotProfile equipmentSlotProfile = null, bool equipModels = true, bool setAppearance = true, bool rebuildAppearance = true) {
             //Debug.Log(baseCharacter.gameObject.name + ".CharacterEquipmentManager.Equip(" + (newItem != null ? newItem.DisplayName : "null") + ", " + (equipmentSlotProfile == null ? "null" : equipmentSlotProfile.DisplayName) + ")");
             //Debug.Break();
             if (newItem == null) {
@@ -191,11 +191,7 @@ namespace AnyRPG {
             //Debug.Log(gameObject.name + ".CharacterEquipmentManager.Equip(): equippping " + newItem.MyName + " in slot: " + emptySlotProfile + "; " + emptySlotProfile.GetInstanceID());
             currentEquipment[emptySlotProfile] = newItem;
 
-            if (skipModels == false) {
-                if (baseCharacter?.UnitController?.UnitModelController != null) {
-                    baseCharacter?.UnitController?.UnitModelController.EquipItemModels(this, emptySlotProfile, newItem, rebuildAppearance);
-                }
-            }
+            baseCharacter?.UnitController?.UnitModelController.EquipItemModels(this, emptySlotProfile, newItem, equipModels, setAppearance, rebuildAppearance);
            
             // DO THIS LAST OR YOU WILL SAVE THE UMA DATA BEFORE ANYTHING IS EQUIPPED!
             // updated oldItem to null here because this call is already done in Unequip.
@@ -269,10 +265,11 @@ namespace AnyRPG {
             return null;
         }
 
-        public Equipment Unequip(Equipment equipment, bool rebuildUMA = true) {
+        public Equipment Unequip(Equipment equipment, bool unequipModels = true, bool unequipAppearance = true, bool rebuildAppearance = true) {
+            //Debug.Log(baseCharacter.gameObject.name + ".CharacterEquipmentManager.Unequip(" + (equipment == null ? "null" : equipment.DisplayName) + ", " + unequipModels + ", " + unequipAppearance + ", " + rebuildAppearance + ")");
             foreach (EquipmentSlotProfile equipmentSlotProfile in currentEquipment.Keys) {
-                if (currentEquipment[equipmentSlotProfile] == equipment) {
-                    return Unequip(equipmentSlotProfile, -1, rebuildUMA);
+                if (currentEquipment[equipmentSlotProfile] != null && currentEquipment[equipmentSlotProfile] == equipment) {
+                    return Unequip(equipmentSlotProfile, -1, unequipModels, unequipAppearance, rebuildAppearance);
                 }
             }
             return null;
@@ -291,12 +288,12 @@ namespace AnyRPG {
 
        
 
-        public Equipment Unequip(EquipmentSlotProfile equipmentSlot, int slotIndex = -1, bool rebuildAppearance = true) {
-            //Debug.Log(gameObject.name + ".CharacterEquipmentManager.Unequip(" + equipmentSlot.ToString() + ", " + slotIndex + ")");
+        public Equipment Unequip(EquipmentSlotProfile equipmentSlot, int slotIndex = -1, bool unequipModels = true, bool unequipAppearance = true, bool rebuildAppearance = true) {
+            //Debug.Log(baseCharacter.gameObject.name + ".CharacterEquipmentManager.Unequip(" + equipmentSlot.ToString() + ", " + slotIndex + ", " + unequipModels + ", " + unequipAppearance + ", " + rebuildAppearance + ")");
             if (currentEquipment.ContainsKey(equipmentSlot) && currentEquipment[equipmentSlot] != null) {
                 //Debug.Log("equipment manager trying to unequip item in slot " + equipmentSlot.ToString() + "; currentEquipment has this slot key");
 
-                baseCharacter?.UnitController?.UnitModelController?.UnequipItemModels(equipmentSlot, currentEquipment[equipmentSlot], rebuildAppearance);
+                baseCharacter?.UnitController?.UnitModelController?.UnequipItemModels(equipmentSlot, currentEquipment[equipmentSlot], unequipModels, unequipAppearance, rebuildAppearance);
                 
                 Equipment oldItem = currentEquipment[equipmentSlot];
 
@@ -316,7 +313,7 @@ namespace AnyRPG {
             }
 
             foreach (EquipmentSlotProfile equipmentSlotProfile in tmpList) {
-                Unequip(equipmentSlotProfile, -1, rebuildUMA);
+                Unequip(equipmentSlotProfile, -1, true, true, rebuildUMA);
             }
 
             /*

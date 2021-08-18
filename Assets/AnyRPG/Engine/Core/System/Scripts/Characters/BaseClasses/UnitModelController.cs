@@ -45,6 +45,7 @@ namespace AnyRPG {
         }
 
         public void FindUnitModel(Animator  animator) {
+            //Debug.Log(unitController.gameObject.name + ".UnitController.FindUnitModel()");
             // this may have been called from a unit which already had a model attached
             // if so, the model is the animator gameobject, since no model will have been passed to this call
             if (animator != null && unitModel == null) {
@@ -59,6 +60,12 @@ namespace AnyRPG {
             umaModelController.BuildModelAppearance();
         }
 
+        public void RebuildModelAppearance() {
+            // not yet implemented
+            mecanimModelController.RebuildModelAppearance();
+            umaModelController.RebuildModelAppearance();
+        }
+
         /*
         public void LoadSavedAppearanceSettings(string recipeString = null, bool rebuildAppearance = false) {
             umaModelController.LoadSavedAppearanceSettings(recipeString, rebuildAppearance);
@@ -71,7 +78,7 @@ namespace AnyRPG {
 
         public string GetAppearanceSettings() {
             if (umaModelController.DynamicCharacterAvatar != null) {
-                return umaModelController.GetAppearanceSettings();
+                return umaModelController.GetAppearanceString();
             }
             return string.Empty;
         }
@@ -84,28 +91,28 @@ namespace AnyRPG {
         public void EquipEquipmentModels(CharacterEquipmentManager characterEquipmentManager) {
             //Debug.Log(unitController.gameObject.name + ".UnitModelController.EquipEquipmentModels()");
             if (characterEquipmentManager.CurrentEquipment == null || characterEquipmentManager.CurrentEquipment.Count == 0) {
-                //Debug.Log(gameObject.name + ".CharacterEquipmentManager.EquipCharacter(): currentEquipment == null!");
+                //Debug.Log(unitController.gameObject.name + ".UnitModelController.EquipCharacter(): currentEquipment == null!");
                 // no point building model appearance if there was nothing equipped
                 return;
             }
             foreach (EquipmentSlotProfile equipmentSlotProfile in characterEquipmentManager.CurrentEquipment.Keys) {
                 if (characterEquipmentManager.CurrentEquipment[equipmentSlotProfile] != null) {
                     // armor and weapon models handling
-                    EquipItemModels(characterEquipmentManager, equipmentSlotProfile, characterEquipmentManager.CurrentEquipment[equipmentSlotProfile], false);
+                    EquipItemModels(characterEquipmentManager, equipmentSlotProfile, characterEquipmentManager.CurrentEquipment[equipmentSlotProfile], true, false, false);
                 }
             }
             
             //umaModelController.BuildModelAppearance();
         }
 
-        public void EquipItemModels(CharacterEquipmentManager characterEquipmentManager, EquipmentSlotProfile equipmentSlotProfile, Equipment equipment, bool rebuildAppearance) {
+        public void EquipItemModels(CharacterEquipmentManager characterEquipmentManager, EquipmentSlotProfile equipmentSlotProfile, Equipment equipment, bool equipModels, bool setAppearance, bool rebuildAppearance) {
             //Debug.Log(unitController.gameObject.name + ".UnitModelController.EquipItemModels(" + equipment.DisplayName + ", " + rebuildAppearance + ")");
             if (characterEquipmentManager.CurrentEquipment == null) {
-                Debug.LogError("CharacterEquipmentManager.HandleWeaponSlot(" + equipmentSlotProfile.DisplayName + "): currentEquipment is null!");
+                Debug.LogError("UnitModelController.EquipItemModels(" + equipmentSlotProfile.DisplayName + "): currentEquipment is null!");
                 return;
             }
             if (!characterEquipmentManager.CurrentEquipment.ContainsKey(equipmentSlotProfile)) {
-                Debug.LogError("CharacterEquipmentManager.HandleWeaponSlot(" + equipmentSlotProfile.DisplayName + "): currentEquipment does not have key");
+                Debug.LogError("UnitModelController.EquipItemModels(" + equipmentSlotProfile.DisplayName + "): currentEquipment does not have key");
                 return;
             }
             //Equipment equipment = characterEquipmentManager.CurrentEquipment[equipmentSlotProfile];
@@ -115,16 +122,31 @@ namespace AnyRPG {
                 return;
             }
 
-            // both of these not needed if character unit not yet spawned?
-            //umaModelController.EquipItemModels(characterEquipmentManager, equipment, rebuildAppearance);
+            if (setAppearance == true) {
+                // both of these not needed if character unit not yet spawned?
+                // re-enabled for newGamePanel
+                // removed because this is only supposed to equip weapons and other physical prefabs
+                // having it here resulted in a second application of the uma gear
+                // this code now inside if condition should be safe
+                umaModelController.EquipItemModels(characterEquipmentManager, equipment, rebuildAppearance);
+            }
 
-            // testing new code to prevent UKMA characters from trying to find bones before they are created.
-            mecanimModelController.EquipItemModels(characterEquipmentManager, equipmentSlotProfile, equipment);
+            if (equipModels == true) {
+                // testing new code to prevent UKMA characters from trying to find bones before they are created.
+                mecanimModelController.EquipItemModels(characterEquipmentManager, equipmentSlotProfile, equipment);
+            }
         }
 
-        public void UnequipItemModels(EquipmentSlotProfile equipmentSlot, Equipment equipment, bool rebuildAppearance = true) {
-            mecanimModelController.UnequipItemModels(equipmentSlot);
-            umaModelController.UnequipItemModels(equipment, rebuildAppearance);
+        public void UnequipItemModels(EquipmentSlotProfile equipmentSlot, Equipment equipment, bool unequipModels = true, bool unequipAppearance = true, bool rebuildAppearance = true) {
+            //Debug.Log(unitController.gameObject.name + ".UnitModelController.UnequipItemModels(" + equipment.DisplayName + ", " + unequipModels + ", " + unequipAppearance + ", " + rebuildAppearance + ")");
+
+            if (unequipModels == true) {
+                mecanimModelController.UnequipItemModels(equipmentSlot);
+            }
+
+            if (unequipAppearance == true) {
+                umaModelController.UnequipItemModels(equipment, rebuildAppearance);
+            }
         }
 
         /*

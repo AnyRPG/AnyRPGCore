@@ -51,7 +51,7 @@ namespace AnyRPG {
         }
 
         public override void ReceiveOpenWindowNotification() {
-            Debug.Log("CharacterPreviewPanelController.ReceiveOpenWindowNotification()");
+            //Debug.Log("CharacterPreviewPanelController.ReceiveOpenWindowNotification()");
             windowOpened = true;
             characterReady = false;
             characterCreatorManager.OnTargetCreated += HandleTargetCreated;
@@ -65,6 +65,7 @@ namespace AnyRPG {
                 return;
             }
             ClearPreviewTarget();
+            characterReady = false;
             SetPreviewTarget();
         }
 
@@ -75,7 +76,7 @@ namespace AnyRPG {
         }
 
         private void SetPreviewTarget() {
-            Debug.Log("CharacterPreviewPanelController.SetPreviewTarget()");
+            //Debug.Log("CharacterPreviewPanelController.SetPreviewTarget()");
             if (characterCreatorManager.PreviewUnitController != null
                 || capabilityConsumer == null
                 || capabilityConsumer.UnitProfile == null) {
@@ -99,7 +100,7 @@ namespace AnyRPG {
         }
 
         public void HandleTargetCreated() {
-            Debug.Log("CharacterPreviewPanelController.HandleTargetCreated()");
+            //Debug.Log("CharacterPreviewPanelController.HandleTargetCreated()");
             OnTargetCreated();
         }
 

@@ -255,7 +255,7 @@ namespace AnyRPG {
         }
 
         public void SaveRecipeString(string newRecipe) {
-            Debug.Log("SaveManager.SaveRecipeString(): " + newRecipe);
+            //Debug.Log("SaveManager.SaveRecipeString(): " + newRecipe);
             recipeString = newRecipe;
         }
 
@@ -959,7 +959,7 @@ namespace AnyRPG {
                             newItem.InitializeRandomStatsFromIndex();
                         }
                         if (characterEquipmentManager != null) {
-                            characterEquipmentManager.Equip(newItem, null, true, false);
+                            characterEquipmentManager.Equip(newItem, null, false, false, false);
                         } else {
                             //Debug.Log("Issue with equipment manager on player");
                         }

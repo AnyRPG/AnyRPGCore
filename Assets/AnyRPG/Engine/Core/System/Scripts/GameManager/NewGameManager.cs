@@ -124,12 +124,29 @@ namespace AnyRPG {
 
         public void ShowClassSpecialization(NewGameClassSpecializationButton newGameClassSpecializationButton) {
 
-            if (newGameClassSpecializationButton == null) {
+            if (classSpecialization !=  newGameClassSpecializationButton.ClassSpecialization) {
+                classSpecialization = newGameClassSpecializationButton.ClassSpecialization;
+
+                UpdateEquipmentList();
+
+                // must call this after setting specialization so its available to the UI
+                OnShowClassSpecialization(newGameClassSpecializationButton);
+
+                if (classSpecialization != null) {
+                    saveData.classSpecialization = classSpecialization.DisplayName;
+                } else {
+                    saveData.classSpecialization = string.Empty;
+                }
+            }
+            /*
+             * if (newGameClassSpecializationButton == null) {
                 classSpecialization = null;
             } else {
                 classSpecialization = newGameClassSpecializationButton.ClassSpecialization;
             }
+            */
 
+            /*
             UpdateEquipmentList();
 
             // must call this after setting specialization so its available to the UI
@@ -140,12 +157,12 @@ namespace AnyRPG {
             } else {
                 saveData.classSpecialization = string.Empty;
             }
+            */
 
         }
 
         public void ShowFaction(NewGameFactionButton newGameFactionButton) {
-            //Debug.Log("NewGamePanel.ShowFaction()");
-
+            //Debug.Log("NewGameManager.ShowFaction()");
 
             faction = newGameFactionButton.Faction;
 
@@ -162,7 +179,7 @@ namespace AnyRPG {
         }
 
         public void UpdateEquipmentList() {
-            //Debug.Log("NameGamePanel.UpdateEquipmentList()");
+            //Debug.Log("NameGameManager.UpdateEquipmentList()");
 
             equipmentList.Clear();
 

@@ -177,7 +177,7 @@ namespace AnyRPG {
         }
 
         public void HandleTargetCreated() {
-            Debug.Log("LoadGamePanel.HandleTargetCreated()");
+            //Debug.Log("LoadGamePanel.HandleTargetCreated()");
 
             if (characterCreatorManager.PreviewUnitController?.UnitModelController != null) {
                 characterCreatorManager.PreviewUnitController?.UnitModelController.SetInitialSavedAppearance();

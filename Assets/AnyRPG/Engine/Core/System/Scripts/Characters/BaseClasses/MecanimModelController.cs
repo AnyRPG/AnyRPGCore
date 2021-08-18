@@ -24,17 +24,18 @@ namespace AnyRPG {
         }
 
         public void EquipItemModels(CharacterEquipmentManager characterEquipmentManager, EquipmentSlotProfile equipmentSlotProfile, Equipment equipment) {
-                
-                SpawnEquipmentObjects(equipmentSlotProfile, equipment);
+            //Debug.Log(unitController.gameObject.name + ".MecanimModelController.EquipItemModels()");
+
+            SpawnEquipmentObjects(equipmentSlotProfile, equipment);
                 if (unitController?.UnitAnimator != null) {
                     unitController.UnitAnimator.HandleEquipmentChanged(equipment, null);
                 }
         }
 
         public void SpawnEquipmentObjects(EquipmentSlotProfile equipmentSlotProfile, Equipment newEquipment) {
-            //Debug.Log("CharacterEquipmentManager.SpawnEquipmentObjects()");
-            if (newEquipment == null || newEquipment.HoldableObjectList == null || equipmentSlotProfile == null) {
-                Debug.Log("CharacterEquipmentManager.SpawnEquipmentObjects() : FAILED TO SPAWN OBJECTS");
+            //Debug.Log(unitController.gameObject.name + ".MecanimModelController.SpawnEquipmentObjects()");
+            if (newEquipment == null || newEquipment.HoldableObjectList == null || newEquipment.HoldableObjectList.Count == 0|| equipmentSlotProfile == null) {
+                //Debug.Log("CharacterEquipmentManager.SpawnEquipmentObjects() : FAILED TO SPAWN OBJECTS");
                 return;
             }
             //Dictionary<PrefabProfile, GameObject> holdableObjects = new Dictionary<PrefabProfile, GameObject>();
@@ -53,7 +54,7 @@ namespace AnyRPG {
                                     Transform targetBone = unitController.gameObject.transform.FindChildByRecursive(attachmentPointNode.TargetBone);
 
                                     if (targetBone != null) {
-                                        //Debug.Log("EquipmentManager.HandleWeaponSlot(): " + newItem.name + " has a physical prefab. targetbone is not null: equipSlot: " + newItem.equipSlot);
+                                        //Debug.Log(unitController.gameObject.name + ".MecanimModelController.SpawnEquipmentObjects(): " + newEquipment.name + " has a physical prefab. targetbone is not null: equipSlot: " + newEquipment.EquipmentSlotType.DisplayName);
                                         GameObject newEquipmentPrefab = ObjectPooler.Instance.GetPooledObject(attachmentNode.HoldableObject.Prefab, targetBone);
                                         //holdableObjects.Add(attachmentNode.MyHoldableObject, newEquipmentPrefab);
                                         holdableObjects.Add(attachmentNode, newEquipmentPrefab);
@@ -202,7 +203,7 @@ namespace AnyRPG {
         }
 
         public void HoldWeapons() {
-            //Debug.Log(baseCharacter.gameObject.name + ".CharacterEquipmentManager.HoldWeapons()");
+            //Debug.Log(baseCharacter.gameObject.name + ".MecanimModelController.HoldWeapons()");
 
             // when mounted, weapons should stay sheathed
             if (unitController?.Mounted == true) {
@@ -228,6 +229,16 @@ namespace AnyRPG {
             }
         }
 
+        public void RebuildModelAppearance() {
+            //Debug.Log(unitController.gameObject.name + ".MecanimModelController.RebuildModelAppearance()");
+            //RemoveEquipmentObjects();
+
+            foreach (EquipmentSlotProfile equipmentSlotProfile in unitController.CharacterUnit.BaseCharacter.CharacterEquipmentManager.CurrentEquipment.Keys) {
+                //Debug.Log("NewGameCharacterPanelController.EquipCharacter(): ask to equip: " + equipment.DisplayName);
+                SpawnEquipmentObjects(equipmentSlotProfile, unitController.CharacterUnit.BaseCharacter.CharacterEquipmentManager.CurrentEquipment[equipmentSlotProfile]);
+            }
+        }
+
         public void RemoveEquipmentObjects() {
             foreach (Dictionary<AttachmentNode, GameObject> holdableObjectReferences in currentEquipmentPhysicalObjects.Values) {
                 //Debug.Log("MecanimModelController.RemoveEquipmentObjects(): destroying objects ");
@@ -244,7 +255,7 @@ namespace AnyRPG {
                 // LOOP THOUGH THEM INSTEAD
                 foreach (KeyValuePair<AttachmentNode, GameObject> holdableObjectReference in currentEquipmentPhysicalObjects[equipmentSlot]) {
                     //GameObject destroyObject = holdableObjectReference.Value;
-                    //Debug.Log("equipment manager trying to unequip item in slot " + equipmentSlot.ToString() + "; destroying object: " + destroyObject.name);
+                    //Debug.Log("equipment manager trying to unequip item in slot " + equipmentSlot.ToString() + "; destroying object: " + holdableObjectReference.Value.name);
                     ObjectPooler.Instance.ReturnObjectToPool(holdableObjectReference.Value);
                 }
             }

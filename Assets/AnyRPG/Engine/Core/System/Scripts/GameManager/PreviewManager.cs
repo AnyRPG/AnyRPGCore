@@ -50,7 +50,7 @@ namespace AnyRPG {
         }
 
         public void OpenWindowCommon() {
-            Debug.Log("PreviewManager.OpenWindowCommon()");
+            //Debug.Log("PreviewManager.OpenWindowCommon()");
 
             unitController = cloneSource.SpawnUnitPrefab(transform, transform.position, transform.forward, UnitControllerMode.Preview);
             if (unitController != null) {
