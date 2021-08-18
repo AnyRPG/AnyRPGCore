@@ -411,6 +411,7 @@ namespace AnyRPG {
             //Debug.Log("NewGameCharacterPanelController.SetCharacterProperties()");
 
             characterCreatorManager.PreviewUnitController.CharacterUnit.BaseCharacter.SetUnitProfile(newGameManager.UnitProfile, true, -1, false, false);
+            //characterCreatorManager.PreviewUnitController.CharacterUnit.BaseCharacter.SetUnitProfile(newGameManager.UnitProfile, true, -1, false, false);
             characterCreatorManager.PreviewUnitController.CharacterUnit.BaseCharacter.SetUnitType(newGameManager.UnitType, true, true, false);
             characterCreatorManager.PreviewUnitController.CharacterUnit.BaseCharacter.SetCharacterRace(newGameManager.CharacterRace, true, true, false);
             characterCreatorManager.PreviewUnitController.CharacterUnit.BaseCharacter.SetCharacterClass(newGameManager.CharacterClass, true, true, false);
@@ -459,6 +460,7 @@ namespace AnyRPG {
                 //characterEquipmentManager.UnequipAll(false);
                 List<Equipment> removeList = new List<Equipment>();
                 foreach (Equipment equipment in characterEquipmentManager.CurrentEquipment.Values) {
+                    //Debug.Log("NewGamePanel.EquipCharacter(): checking for removal : " + (equipment == null ? "null" : equipment.DisplayName));
                     if (equipment != null && !newGameManager.EquipmentList.ContainsValue(equipment)) {
                         removeList.Add(equipment);
                     }

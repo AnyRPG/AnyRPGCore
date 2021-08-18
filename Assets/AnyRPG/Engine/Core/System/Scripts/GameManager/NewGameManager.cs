@@ -183,6 +183,9 @@ namespace AnyRPG {
 
             equipmentList.Clear();
 
+            // testing - the new game manager should ignore special UnitProfile equipment that is only meant for NPCs
+            // commented out the following code : 
+            /*
             if (unitProfile != null) {
                 foreach (Equipment equipment in unitProfile.EquipmentList) {
                     if (equipmentList.ContainsKey(equipment.EquipmentSlotType)) {
@@ -192,6 +195,7 @@ namespace AnyRPG {
                     }
                 }
             }
+            */
 
             if (characterRace != null) {
                 foreach (Equipment equipment in characterRace.EquipmentList) {

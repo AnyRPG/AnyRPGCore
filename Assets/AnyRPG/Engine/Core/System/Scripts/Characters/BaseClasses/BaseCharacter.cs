@@ -278,7 +278,7 @@ namespace AnyRPG {
         }
 
         public void SetUnitProfile (UnitProfile unitProfile, bool notify = true, int unitLevel = -1, bool loadProviderEquipment = true, bool processEquipmentRestrictions = true) {
-            //Debug.Log(gameObject.name + ".BaseCharacter.SetUnitProfile(" + (unitProfile == null ? "null" : unitProfile.DisplayName) + ", " + notify + ", " + unitLevel + ")");
+            //Debug.Log(gameObject.name + ".BaseCharacter.SetUnitProfile(" + (unitProfile == null ? "null" : unitProfile.DisplayName) + ", " + notify + ", " + unitLevel + ", " + loadProviderEquipment + ", " + processEquipmentRestrictions + ")");
 
             // get a snapshot of the current state
             CapabilityConsumerSnapshot oldSnapshot = new CapabilityConsumerSnapshot(this);
@@ -293,7 +293,7 @@ namespace AnyRPG {
                 ProcessCapabilityConsumerChange(oldSnapshot, newSnapshot, processEquipmentRestrictions);
             }
 
-            SetUnitProfileProperties(notify, unitLevel, loadProviderEquipment);
+            SetUnitProfileProperties(notify, unitLevel, loadProviderEquipment, processEquipmentRestrictions);
 
             // Trying to spawn dead relies on reading properties set in the previous method
             characterStats.TrySpawnDead();
@@ -302,8 +302,8 @@ namespace AnyRPG {
         /// <summary>
         /// This will retrieve a unit profile from the system unit profile manager
         /// </summary>
-        private void SetUnitProfileProperties(bool notify = true, int unitLevel = -1, bool loadProviderEquipment = true) {
-            //Debug.Log(gameObject.name + ".BaseCharacter.SetUnitProfileProperties()");
+        private void SetUnitProfileProperties(bool notify = true, int unitLevel = -1, bool loadProviderEquipment = true, bool processEquipmentRestrictions = true) {
+            //Debug.Log(gameObject.name + ".BaseCharacter.SetUnitProfileProperties(" + notify + ", " + unitLevel + ", " + loadProviderEquipment + ")");
 
             if (unitProfile != null) {
                 if (unitProfile.CharacterName != null && unitProfile.CharacterName != string.Empty) {
@@ -313,19 +313,19 @@ namespace AnyRPG {
                     SetCharacterTitle(unitProfile.Title, notify);
                 }
                 if (unitProfile.UnitType != null) {
-                    SetUnitType(unitProfile.UnitType, notify, false);
+                    SetUnitType(unitProfile.UnitType, notify, false, processEquipmentRestrictions);
                 }
                 if (unitProfile.CharacterRace != null) {
-                    SetCharacterRace(unitProfile.CharacterRace, notify, false);
+                    SetCharacterRace(unitProfile.CharacterRace, notify, false, processEquipmentRestrictions);
                 }
                 if (unitProfile.CharacterClass != null) {
-                    SetCharacterClass(unitProfile.CharacterClass, notify, false);
+                    SetCharacterClass(unitProfile.CharacterClass, notify, false, processEquipmentRestrictions);
                 }
                 if (unitProfile.ClassSpecialization != null) {
-                    SetClassSpecialization(unitProfile.ClassSpecialization, notify, false);
+                    SetClassSpecialization(unitProfile.ClassSpecialization, notify, false, processEquipmentRestrictions);
                 }
                 if (unitProfile.Faction != null) {
-                    SetCharacterFaction(unitProfile.Faction, notify, false);
+                    SetCharacterFaction(unitProfile.Faction, notify, false, processEquipmentRestrictions);
                 }
                 if (unitProfile.DefaultToughness != null) {
                     SetUnitToughness(unitProfile.DefaultToughness);
@@ -508,7 +508,7 @@ namespace AnyRPG {
         }
 
         public void SetCharacterClass(CharacterClass newCharacterClass, bool notify = true, bool resetStats = true, bool processEquipmentRestrictions = true) {
-            //Debug.Log(gameObject.name + ".BaseCharacter.SetCharacterClass(" + (newCharacterClass != null ? newCharacterClass.MyName : "null") + ", " + notify + ")");
+            //Debug.Log(gameObject.name + ".BaseCharacter.SetCharacterClass(" + (newCharacterClass != null ? newCharacterClass.DisplayName : "null") + ", " + notify + ", " + resetStats + ", " + processEquipmentRestrictions + ")");
 
             CapabilityConsumerSnapshot oldSnapshot = null;
 

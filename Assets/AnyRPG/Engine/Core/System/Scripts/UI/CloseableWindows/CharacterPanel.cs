@@ -303,7 +303,7 @@ namespace AnyRPG {
         }
 
         private void SetPreviewTarget() {
-            //Debug.Log("CharacterPanel.SetPreviewTarget()");
+            Debug.Log("CharacterPanel.SetPreviewTarget()");
 
 
             //spawn correct preview unit
@@ -340,6 +340,7 @@ namespace AnyRPG {
         */
 
         public void HandleTargetCreated() {
+            Debug.Log("CharacterPanel.HandleTargetCreated()");
             characterCreatorManager.PreviewUnitController?.UnitModelController.SetInitialSavedAppearance();
             CharacterEquipmentManager characterEquipmentManager = characterCreatorManager.PreviewUnitController.CharacterUnit.BaseCharacter.CharacterEquipmentManager;
             if (characterEquipmentManager != null) {
