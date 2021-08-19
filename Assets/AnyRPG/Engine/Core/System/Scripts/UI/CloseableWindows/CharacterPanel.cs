@@ -188,7 +188,7 @@ namespace AnyRPG {
         */
 
         public void HandleEquipmentChanged(Equipment newEquipment, Equipment oldEquipment) {
-            Debug.Log("CharacterPanel.HandleEquipmentChanged(" + (newEquipment == null ? "null" : newEquipment.DisplayName) + ", " + (oldEquipment == null ? "null" : oldEquipment.DisplayName) + ")");
+            //Debug.Log("CharacterPanel.HandleEquipmentChanged(" + (newEquipment == null ? "null" : newEquipment.DisplayName) + ", " + (oldEquipment == null ? "null" : oldEquipment.DisplayName) + ")");
             if (uIManager != null && uIManager.characterPanelWindow != null && uIManager.characterPanelWindow.IsOpen) {
                 //ResetDisplay();
                 //characterPreviewPanel.ReloadUnit();
@@ -356,9 +356,23 @@ namespace AnyRPG {
             //Debug.Log("CharacterPanel.HandleTargetCreated()");
             characterCreatorManager.PreviewUnitController?.UnitModelController.SetInitialSavedAppearance();
             CharacterEquipmentManager characterEquipmentManager = characterCreatorManager.PreviewUnitController.CharacterUnit.BaseCharacter.CharacterEquipmentManager;
+
+            // providers need to be set or equipment won't be able to be equipped
+            characterCreatorManager.PreviewUnitController.CharacterUnit.BaseCharacter.SetUnitType(playerManager.MyCharacter.UnitType, true, false, false);
+            characterCreatorManager.PreviewUnitController.CharacterUnit.BaseCharacter.SetCharacterRace(playerManager.MyCharacter.CharacterRace, true, false, false);
+            characterCreatorManager.PreviewUnitController.CharacterUnit.BaseCharacter.SetCharacterFaction(playerManager.MyCharacter.Faction, true, false, false);
+            characterCreatorManager.PreviewUnitController.CharacterUnit.BaseCharacter.SetCharacterClass(playerManager.MyCharacter.CharacterClass, true, false, false);
+            characterCreatorManager.PreviewUnitController.CharacterUnit.BaseCharacter.SetClassSpecialization(playerManager.MyCharacter.ClassSpecialization, true, false, false);
+
             if (characterEquipmentManager != null) {
                 if (playerManager != null && playerManager.MyCharacter != null && playerManager.MyCharacter.CharacterEquipmentManager != null) {
-                    characterEquipmentManager.CurrentEquipment = playerManager.MyCharacter.CharacterEquipmentManager.CurrentEquipment;
+                    
+                    //characterEquipmentManager.CurrentEquipment = playerManager.MyCharacter.CharacterEquipmentManager.CurrentEquipment;
+                    // testing new code to avoid just making a pointer to the player gear, which results in equip/unequip not working properly
+                    characterEquipmentManager.CurrentEquipment.Clear();
+                    foreach (EquipmentSlotProfile equipmentSlotProfile in playerManager.MyCharacter.CharacterEquipmentManager.CurrentEquipment.Keys) {
+                        characterEquipmentManager.CurrentEquipment.Add(equipmentSlotProfile, playerManager.MyCharacter.CharacterEquipmentManager.CurrentEquipment[equipmentSlotProfile]);
+                    }
                 }
             } else {
                 Debug.Log("CharacterPanel.HandleTargetCreated(): could not find a characterEquipmentManager");
