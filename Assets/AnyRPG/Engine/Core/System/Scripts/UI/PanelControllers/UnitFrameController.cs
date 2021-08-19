@@ -123,7 +123,7 @@ namespace AnyRPG {
                 this.gameObject.SetActive(false);
             }
             if (statusEffectPanelController != null) {
-                statusEffectPanelController.MyEffectLimit = 7;
+                statusEffectPanelController.EffectLimit = 7;
             }
         }
 

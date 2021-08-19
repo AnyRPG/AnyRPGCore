@@ -101,27 +101,27 @@ namespace AnyRPG {
                     }
 
                     // set updated values
-                    if (statusEffectNodeScript.MyUseTimerText == true && statusText != string.Empty) {
-                        if (statusEffectNodeScript.MyTimer != null) {
-                            if (statusEffectNodeScript.MyTimer.isActiveAndEnabled == false) {
-                                statusEffectNodeScript.MyTimer.gameObject.SetActive(true);
+                    if (statusEffectNodeScript.UseTimerText == true && statusText != string.Empty) {
+                        if (statusEffectNodeScript.Timer != null) {
+                            if (statusEffectNodeScript.Timer.isActiveAndEnabled == false) {
+                                statusEffectNodeScript.Timer.gameObject.SetActive(true);
                             }
-                            statusEffectNodeScript.MyTimer.text = statusText;
+                            statusEffectNodeScript.Timer.text = statusText;
                         }
                     } else {
-                        if (statusEffectNodeScript.MyTimer != null) {
-                            statusEffectNodeScript.MyTimer.gameObject.SetActive(false);
+                        if (statusEffectNodeScript.Timer != null) {
+                            statusEffectNodeScript.Timer.gameObject.SetActive(false);
                         }
                     }
-                    if (statusEffectNodeScript.MyUseStackText == true) {
-                        if (statusEffectNodeScript.MyStackCount.isActiveAndEnabled == false) {
-                            statusEffectNodeScript.MyStackCount.gameObject.SetActive(true);
+                    if (statusEffectNodeScript.UseStackText == true) {
+                        if (statusEffectNodeScript.StackCount.isActiveAndEnabled == false) {
+                            statusEffectNodeScript.StackCount.gameObject.SetActive(true);
                         }
-                        statusEffectNodeScript.MyStackCount.gameObject.SetActive(true);
-                        statusEffectNodeScript.MyStackCount.text = stackText;
+                        statusEffectNodeScript.StackCount.gameObject.SetActive(true);
+                        statusEffectNodeScript.StackCount.text = stackText;
                     } else {
-                        if (statusEffectNodeScript.MyStackCount != null) {
-                            statusEffectNodeScript.MyStackCount.gameObject.SetActive(false);
+                        if (statusEffectNodeScript.StackCount != null) {
+                            statusEffectNodeScript.StackCount.gameObject.SetActive(false);
                         }
                     }
                     if (statusEffect.Duration == 0f) {

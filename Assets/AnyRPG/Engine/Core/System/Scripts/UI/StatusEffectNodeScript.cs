@@ -27,19 +27,20 @@ namespace AnyRPG {
         [SerializeField]
         private TextMeshProUGUI stackCount = null;
 
+        private StatusEffectPanelController statusEffectPanelController = null;
         private StatusEffectNode statusEffectNode = null;
-
         private CharacterUnit target = null;
 
-        public TextMeshProUGUI MyTimer { get => timer; }
-        public TextMeshProUGUI MyStackCount { get => stackCount; set => stackCount = value; }
-        public Image MyIcon { get => icon; set => icon = value; }
-        public bool MyUseTimerText { get => useTimerText; set => useTimerText = value; }
-        public bool MyUseStackText { get => useStackText; set => useStackText = value; }
+        public TextMeshProUGUI Timer { get => timer; }
+        public TextMeshProUGUI StackCount { get => stackCount; set => stackCount = value; }
+        public Image Icon { get => icon; set => icon = value; }
+        public bool UseTimerText { get => useTimerText; set => useTimerText = value; }
+        public bool UseStackText { get => useStackText; set => useStackText = value; }
 
-        public void Initialize(StatusEffectNode statusEffectNode, CharacterUnit target) {
+        public void Initialize(StatusEffectPanelController statusEffectPanelController, StatusEffectNode statusEffectNode, CharacterUnit target) {
             //Debug.Log("StatusEffectNodeScript.Initialize()");
             icon.sprite = statusEffectNode.StatusEffect.Icon;
+            this.statusEffectPanelController = statusEffectPanelController;
             this.statusEffectNode = statusEffectNode;
             this.target = target;
             statusEffectNode.SetStatusNode(this);
@@ -90,9 +91,9 @@ namespace AnyRPG {
             if (coolDownIcon.isActiveAndEnabled == false) {
                 coolDownIcon.enabled = true;
             }
-            if (coolDownIcon.sprite != MyIcon.sprite) {
+            if (coolDownIcon.sprite != Icon.sprite) {
                 //Debug.Log("Setting coolDownIcon to match MyIcon");
-                coolDownIcon.sprite = MyIcon.sprite;
+                coolDownIcon.sprite = Icon.sprite;
                 coolDownIcon.color = new Color32(0, 0, 0, 150);
                 coolDownIcon.fillMethod = Image.FillMethod.Radial360;
                 //coolDownIcon.fillOrigin = Image.Origin360.Top;
@@ -107,6 +108,14 @@ namespace AnyRPG {
         }
 
         public void OnPointerUp(PointerEventData eventData) {
+        }
+
+        public void OnSendObjectToPool() {
+            //Debug.Log("StatusEffectNodeScript.OnSendObjectToPool()");
+            statusEffectPanelController.ClearStatusEffectNodeScript(this);
+            statusEffectPanelController = null;
+            statusEffectNode = null;
+            target = null;
         }
 
 
