@@ -22,7 +22,7 @@ namespace AnyRPG {
         private float remainingDuration = 0f;
 
         // list of status effect nodes to send updates to so multiple effects panels and bars can access this
-        private List<StatusEffectNodeScript> statusEffectNodeScripts = new List<StatusEffectNodeScript>();
+        private Dictionary<StatusEffectPanelController, StatusEffectNodeScript> statusTrackers = new Dictionary<StatusEffectPanelController, StatusEffectNodeScript>();
 
         // keep track of any spell effect prefabs associated with this status effect.
         private Dictionary<PrefabProfile, GameObject> prefabObjects = new Dictionary<PrefabProfile, GameObject>();
@@ -61,23 +61,32 @@ namespace AnyRPG {
         }
 
         public void ClearNodeScripts() {
-            foreach (StatusEffectNodeScript statusEffectNodeScript in statusEffectNodeScripts) {
-                if (statusEffectNodeScript != null) {
-                    ObjectPooler.Instance.ReturnObjectToPool(statusEffectNodeScript.gameObject);
-                }
+            foreach (StatusEffectPanelController statusEffectPanelController in statusTrackers.Keys) {
+                statusEffectPanelController.ClearStatusEffectNode(this);
             }
-            statusEffectNodeScripts.Clear();
+            statusTrackers.Clear();
         }
 
-        public void SetStatusNode(StatusEffectNodeScript statusEffectNodeScript) {
+        public void AddStatusTracker(StatusEffectPanelController statusEffectPanelController, StatusEffectNodeScript statusEffectNodeScript) {
             //Debug.Log("StatusEffect.SetStatusNode()");
-            statusEffectNodeScripts.Add(statusEffectNodeScript);
+            if (statusTrackers.ContainsKey(statusEffectPanelController)) {
+                statusTrackers[statusEffectPanelController] = statusEffectNodeScript;
+            } else {
+                statusTrackers.Add(statusEffectPanelController, statusEffectNodeScript);
+            }
             UpdateStatusNode();
         }
 
+        public void RemoveStatusTracker(StatusEffectPanelController statusEffectPanelController) {
+            //Debug.Log("StatusEffect.SetStatusNode()");
+            statusTrackers.Remove(statusEffectPanelController);
+            UpdateStatusNode();
+        }
+
+
         public void UpdateStatusNode() {
             //Debug.Log(GetInstanceID() + ".StatusEffect.UpdateStatusNode(): COUNT statusEffectNodeScript: " + statusEffectNodeScripts.Count);
-            foreach (StatusEffectNodeScript statusEffectNodeScript in statusEffectNodeScripts) {
+            foreach (StatusEffectNodeScript statusEffectNodeScript in statusTrackers.Values) {
                 //Debug.Log("StatusEffect.UpdateStatusNode(): got statuseffectnodescript");
                 if (statusEffectNodeScript != null) {
                     string statusText = string.Empty;

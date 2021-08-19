@@ -14,7 +14,7 @@ namespace AnyRPG {
 
         private UnitController targetUnitController = null;
 
-        private List<StatusEffectNodeScript> statusEffectNodeScripts = new List<StatusEffectNodeScript>();
+        private Dictionary<StatusEffectNode, StatusEffectNodeScript> statusEffectNodes = new Dictionary<StatusEffectNode, StatusEffectNodeScript>();
 
         public int EffectLimit { get => effectLimit; set => effectLimit = value; }
 
@@ -33,7 +33,7 @@ namespace AnyRPG {
             if (targetUnitController.CharacterUnit.BaseCharacter != null && targetUnitController.CharacterUnit.BaseCharacter.CharacterStats != null) {
                 //Debug.Log("StatusEffectPanelController.SetTarget(" + characterUnit.MyDisplayName + "): checking status effects");
                 foreach (StatusEffectNode statusEffectNode in targetUnitController.CharacterUnit.BaseCharacter.CharacterStats.StatusEffects.Values) {
-                    SpawnStatusNode(statusEffectNode, targetUnitController.CharacterUnit);
+                    AddStatusNode(statusEffectNode);
                 }
                 CreateEventSubscriptions();
             }
@@ -46,19 +46,21 @@ namespace AnyRPG {
             CleanupEventSubscriptions();
 
             targetUnitController = null;
-            List<StatusEffectNodeScript> removeList = new List<StatusEffectNodeScript>();
-            removeList.AddRange(statusEffectNodeScripts);
-            foreach (StatusEffectNodeScript _statusEffectNodeScript in removeList) {
-                if (_statusEffectNodeScript != null) {
-                    objectPooler.ReturnObjectToPool(_statusEffectNodeScript.gameObject);
+            List<StatusEffectNode> removeList = new List<StatusEffectNode>();
+            removeList.AddRange(statusEffectNodes.Keys);
+            foreach (StatusEffectNode statusEffectNode in removeList) {
+                if (statusEffectNodes[statusEffectNode] != null) {
+                    statusEffectNode.RemoveStatusTracker(this);
+                    objectPooler.ReturnObjectToPool(statusEffectNodes[statusEffectNode].gameObject);
                 }
             }
-            statusEffectNodeScripts.Clear();
+            statusEffectNodes.Clear();
         }
 
         public void HandleStatusEffectAdd(StatusEffectNode statusEffectNode) {
             //Debug.Log(gameObject.name + ".StatusEffectPanelController.HandleStatusEffectAdd(): character: " + (targetUnitController == null ? "null" : targetUnitController.DisplayName));
-            SpawnStatusNode(statusEffectNode, targetUnitController.CharacterUnit);
+            
+            AddStatusNode(statusEffectNode);
         }
 
         public void CreateEventSubscriptions() {
@@ -76,16 +78,37 @@ namespace AnyRPG {
             }
         }
 
-        public void ClearStatusEffectNodeScript(StatusEffectNodeScript statusEffectNodeScript) {
-            //Debug.Log(gameObject.name + ".StatusEffectPanelController.ClearStatusEffectNodeScript()");
-            if (statusEffectNodeScripts.Contains(statusEffectNodeScript)) {
-                statusEffectNodeScripts.Remove(statusEffectNodeScript);
+        public void ClearStatusEffectNode(StatusEffectNode statusEffectNode) {
+            //Debug.Log(gameObject.name + ".StatusEffectPanelController.ClearStatusEffectNode()");
+            if (statusEffectNodes.ContainsKey(statusEffectNode)) {
+                if (statusEffectNodes[statusEffectNode] != null) {
+                    ObjectPooler.Instance.ReturnObjectToPool(statusEffectNodes[statusEffectNode].gameObject);
+                }
+                statusEffectNodes.Remove(statusEffectNode);
+                if (effectLimit > 0 && GetStatusEffectNodeScriptCount() < effectLimit) {
+                    //Debug.Log("StatusEffectPanelController.SpawnStatusNode() Too many nodes(" + statusEffectNodeScripts.Count + "), can't spawn");
+                    foreach (StatusEffectNode _statusEffectNode in statusEffectNodes.Keys) {
+                        if (statusEffectNodes[_statusEffectNode] == null) {
+                            SpawnStatusNode(_statusEffectNode);
+                            break;
+                        }
+                    }
+                }
             } else {
                 Debug.Log(gameObject.name + ".StatusEffectPanelController.ClearStatusEffectNodeScript() received a clear request from a node script that was not in the list.  How did this happne?");
             }
         }
 
-        public StatusEffectNodeScript SpawnStatusNode(StatusEffectNode statusEffectNode, CharacterUnit target) {
+        public void AddStatusNode(StatusEffectNode statusEffectNode) {
+            // add node to ensure it's tracked, even if script can't be created due to size limit
+            if (statusEffectNode.StatusEffect.ClassTrait == true) {
+                return;
+            }
+            statusEffectNodes.Add(statusEffectNode, null);
+            SpawnStatusNode(statusEffectNode);
+        }
+
+        public StatusEffectNodeScript SpawnStatusNode(StatusEffectNode statusEffectNode) {
             //Debug.Log(gameObject.name + ".StatusEffectPanelController.SpawnStatusNode()");
 
             // do not spawn visible icons for traits
@@ -94,8 +117,10 @@ namespace AnyRPG {
             }
 
             // clear invalid entries before trying to check for total entries
+            // this should not be necessary because nodes are pooled and properly remove themselves now
+            /*
             List<StatusEffectNodeScript> removeList = new List<StatusEffectNodeScript>();
-            foreach (StatusEffectNodeScript _statusEffectNodeScript in statusEffectNodeScripts) {
+            foreach (StatusEffectNodeScript _statusEffectNodeScript in statusEffectNodes) {
                 if (_statusEffectNodeScript == null) {
                     removeList.Add(_statusEffectNodeScript);
                     Debug.Log("StatusEffectPanelController.SpawnStatusNode() a status effect node script was null.  This should not happen because scripts should clear themselves on disable");
@@ -105,13 +130,15 @@ namespace AnyRPG {
                 }
             }
             foreach (StatusEffectNodeScript _statusEffectNodeScript in removeList) {
-                statusEffectNodeScripts.Remove(_statusEffectNodeScript);
+                statusEffectNodes.Remove(_statusEffectNodeScript);
             }
-
+            */
 
             // prevent status effect bars on unit frames from printing too many effects
-            if (effectLimit > 0 && statusEffectNodeScripts.Count >= effectLimit) {
-                //Debug.Log("StatusEffectPanelController.SpawnStatusNode() Too many nodes(" + statusEffectNodeScripts.Count + "), can't spawn");
+            
+            if (effectLimit > 0 && GetStatusEffectNodeScriptCount() >= effectLimit) {
+                //Debug.Log(gameObject.name + ".StatusEffectPanelController.SpawnStatusNode() Too many nodes(" + statusEffectNodes.Count + "), can't spawn");
+                statusEffectNode.AddStatusTracker(this, null);
                 return null;
             }
 
@@ -119,13 +146,25 @@ namespace AnyRPG {
             GameObject statusNode = objectPooler.GetPooledObject(statusNodePrefab, transform);
             StatusEffectNodeScript statusEffectNodeScript = statusNode.GetComponent<StatusEffectNodeScript>();
             if (statusEffectNodeScript != null) {
-                statusEffectNodeScript.Initialize(this, statusEffectNode, target);
+                statusEffectNodes[statusEffectNode] = statusEffectNodeScript;
+                statusEffectNodeScript.Initialize(statusEffectNode, targetUnitController.CharacterUnit);
+                statusEffectNode.AddStatusTracker(this, statusEffectNodeScript);
             } else {
                 //Debug.Log("StatusEffectPanelController.SpawnStatusNode(): statusEffectNodeScript is null!");
             }
-            statusEffectNodeScripts.Add(statusEffectNodeScript);
 
             return statusEffectNodeScript;
+        }
+
+
+        public int GetStatusEffectNodeScriptCount() {
+            int statusEffectNodeScriptCount = 0;
+            foreach (StatusEffectNodeScript _statusEffectNodeScript in statusEffectNodes.Values) {
+                if (_statusEffectNodeScript != null) {
+                    statusEffectNodeScriptCount++;
+                }
+            }
+            return statusEffectNodeScriptCount;
         }
 
         public override void OnDisable() {

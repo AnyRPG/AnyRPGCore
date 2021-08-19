@@ -27,7 +27,6 @@ namespace AnyRPG {
         [SerializeField]
         private TextMeshProUGUI stackCount = null;
 
-        private StatusEffectPanelController statusEffectPanelController = null;
         private StatusEffectNode statusEffectNode = null;
         private CharacterUnit target = null;
 
@@ -37,13 +36,11 @@ namespace AnyRPG {
         public bool UseTimerText { get => useTimerText; set => useTimerText = value; }
         public bool UseStackText { get => useStackText; set => useStackText = value; }
 
-        public void Initialize(StatusEffectPanelController statusEffectPanelController, StatusEffectNode statusEffectNode, CharacterUnit target) {
+        public void Initialize(StatusEffectNode statusEffectNode, CharacterUnit target) {
             //Debug.Log("StatusEffectNodeScript.Initialize()");
             icon.sprite = statusEffectNode.StatusEffect.Icon;
-            this.statusEffectPanelController = statusEffectPanelController;
             this.statusEffectNode = statusEffectNode;
             this.target = target;
-            statusEffectNode.SetStatusNode(this);
         }
 
         public void OnPointerClick(PointerEventData eventData) {
@@ -112,8 +109,6 @@ namespace AnyRPG {
 
         public void OnSendObjectToPool() {
             //Debug.Log("StatusEffectNodeScript.OnSendObjectToPool()");
-            statusEffectPanelController.ClearStatusEffectNodeScript(this);
-            statusEffectPanelController = null;
             statusEffectNode = null;
             target = null;
         }
