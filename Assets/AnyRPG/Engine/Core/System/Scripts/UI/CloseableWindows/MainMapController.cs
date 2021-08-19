@@ -200,7 +200,6 @@ namespace AnyRPG {
 
             // First, try to find the the map image
             if (mapManager.SceneTextureFound == true) {
-                //sceneTextureFound = true;
                 mapRawImage.texture = mapManager.MapTexture;
             } else {
                 // if a map image could not be found, take a picture

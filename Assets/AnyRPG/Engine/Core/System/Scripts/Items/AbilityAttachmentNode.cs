@@ -26,14 +26,14 @@ namespace AnyRPG {
         public bool UseUniversalAttachment { get => useUniversalAttachment; set => useUniversalAttachment = value; }
         public string AttachmentName { get => attachmentName; set => attachmentName = value; }
 
-        public void SetupScriptableObjects() {
+        public void SetupScriptableObjects(string ownerName) {
             holdableObject = null;
             if (holdableObjectName != null && holdableObjectName != string.Empty) {
                 PrefabProfile tmpHoldableObject = SystemDataFactory.Instance.GetResource<PrefabProfile>(holdableObjectName);
                 if (tmpHoldableObject != null) {
                     holdableObject = tmpHoldableObject;
                 } else {
-                    Debug.LogError("SystemAbilityManager.SetupScriptableObjects(): Could not find holdable object : " + holdableObjectName + " while inititalizing an attachment node.  CHECK INSPECTOR");
+                    Debug.LogError("SystemAbilityManager.SetupScriptableObjects(): Could not find holdable object : " + holdableObjectName + " while inititalizing an attachment node for " + ownerName + ".  CHECK INSPECTOR");
                 }
             } else {
                 Debug.LogError("SystemAbilityManager.SetupScriptableObjects(): holdable object name blank while inititalizing an attachment node.  CHECK INSPECTOR");

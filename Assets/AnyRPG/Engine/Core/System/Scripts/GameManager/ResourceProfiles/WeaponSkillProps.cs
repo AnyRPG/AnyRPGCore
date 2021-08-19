@@ -65,7 +65,7 @@ namespace AnyRPG {
         public List<AbilityAttachmentNode> AbilityObjectList { get => abilityObjectList; set => abilityObjectList = value; }
 
         // methods
-        public void SetupScriptableObjects() {
+        public void SetupScriptableObjects(string ownerName) {
 
             if (onHitEffects != null) {
                 foreach (string onHitEffectName in onHitEffects) {
@@ -123,7 +123,8 @@ namespace AnyRPG {
             if (abilityObjectList != null) {
                 foreach (AbilityAttachmentNode abilityAttachmentNode in abilityObjectList) {
                     if (abilityAttachmentNode != null) {
-                        abilityAttachmentNode.SetupScriptableObjects();
+
+                        abilityAttachmentNode.SetupScriptableObjects(ownerName);
                     }
                 }
             }

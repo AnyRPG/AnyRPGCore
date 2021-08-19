@@ -17,7 +17,7 @@ namespace AnyRPG {
 
         public override void SetupScriptableObjects() {
             base.SetupScriptableObjects();
-            weaponSkillProps.SetupScriptableObjects();
+            weaponSkillProps.SetupScriptableObjects(DisplayName);
         }
     }
 

@@ -757,7 +757,7 @@ namespace AnyRPG {
             if (holdableObjectList != null) {
                 foreach (AbilityAttachmentNode holdableObjectAttachment in holdableObjectList) {
                     if (holdableObjectAttachment != null) {
-                        holdableObjectAttachment.SetupScriptableObjects();
+                        holdableObjectAttachment.SetupScriptableObjects(DisplayName);
                     }
                 }
             }

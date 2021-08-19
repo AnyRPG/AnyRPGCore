@@ -305,7 +305,7 @@ namespace AnyRPG {
             if (abilityObjectList != null) {
                 foreach (AbilityAttachmentNode abilityAttachmentNode in abilityObjectList) {
                     if (abilityAttachmentNode != null) {
-                        abilityAttachmentNode.SetupScriptableObjects();
+                        abilityAttachmentNode.SetupScriptableObjects(DisplayName);
                     }
                 }
             }
