@@ -47,6 +47,12 @@ namespace AnyRPG {
             return dialogComponent;
         }
 
+        public void CleanupPrerequisiteOwner(DialogComponent dialogComponent) {
+            foreach (Dialog dialog in dialogList) {
+                dialog.UnregisterPrerequisiteOwner(dialogComponent);
+            }
+        }
+
         public override void SetupScriptableObjects() {
             //Debug.Log("DialogProps.SetupScriptableObjects()");
             base.SetupScriptableObjects();

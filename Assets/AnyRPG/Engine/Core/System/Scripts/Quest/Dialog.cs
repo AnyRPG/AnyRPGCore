@@ -41,7 +41,7 @@ namespace AnyRPG {
         [SerializeField]
         private List<PrerequisiteConditions> prerequisiteConditions = new List<PrerequisiteConditions>();
 
-        private IPrerequisiteOwner prerequisiteOwner = null;
+        private List<IPrerequisiteOwner> prerequisiteOwners = new List<IPrerequisiteOwner>();
 
         /// <summary>
         /// Track whether this dialog has been turned in
@@ -67,8 +67,18 @@ namespace AnyRPG {
 
         public void RegisterPrerequisiteOwner(IPrerequisiteOwner prerequisiteOwner) {
             //Debug.Log(DisplayName + ".Dialog.RegisterPrerequisiteOwner()");
-            this.prerequisiteOwner = prerequisiteOwner;
+            if (prerequisiteOwners.Contains(prerequisiteOwner) == false) {
+                prerequisiteOwners.Add(prerequisiteOwner);
+            }
         }
+
+        public void UnregisterPrerequisiteOwner(IPrerequisiteOwner prerequisiteOwner) {
+            //Debug.Log(DisplayName + ".Dialog.RegisterPrerequisiteOwner()");
+            if (prerequisiteOwners.Contains(prerequisiteOwner) == true) {
+                prerequisiteOwners.Remove(prerequisiteOwner);
+            }
+        }
+
 
         public virtual void UpdatePrerequisites(bool notify = true) {
             //Debug.Log(gameObject.name + ".Dialog.UpdatePrerequisites()");
@@ -150,12 +160,12 @@ namespace AnyRPG {
 
         public void HandlePrerequisiteUpdates() {
             //Debug.Log(DisplayName + ".Dialog.HandlePrerequisiteUpdates()");
-            if (prerequisiteOwner != null) {
+            if (prerequisiteOwners != null) {
                 // this event is for the interactable that will display this dialog and needs to know when it becomes available
                 //Debug.Log(DisplayName + ".Dialog.HandlePrerequisiteUpdates()");
-                prerequisiteOwner.HandlePrerequisiteUpdates();
-            } else {
-
+                foreach (IPrerequisiteOwner prerequisiteOwner in prerequisiteOwners) {
+                    prerequisiteOwner.HandlePrerequisiteUpdates();
+                }
             }
         }
     }

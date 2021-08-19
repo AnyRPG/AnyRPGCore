@@ -46,7 +46,9 @@ namespace AnyRPG {
             CleanupEventSubscriptions();
 
             targetUnitController = null;
-            foreach (StatusEffectNodeScript _statusEffectNodeScript in statusEffectNodeScripts) {
+            List<StatusEffectNodeScript> removeList = new List<StatusEffectNodeScript>();
+            removeList.AddRange(statusEffectNodeScripts);
+            foreach (StatusEffectNodeScript _statusEffectNodeScript in removeList) {
                 if (_statusEffectNodeScript != null) {
                     objectPooler.ReturnObjectToPool(_statusEffectNodeScript.gameObject);
                 }

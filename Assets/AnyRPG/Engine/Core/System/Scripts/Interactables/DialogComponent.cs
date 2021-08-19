@@ -31,6 +31,11 @@ namespace AnyRPG {
         public override void Cleanup() {
             base.Cleanup();
             CleanupConfirm();
+            CleanupPrerequisiteOwner();
+        }
+
+        public void CleanupPrerequisiteOwner() {
+            Props.CleanupPrerequisiteOwner(this);
         }
 
         public override void HandleConfirmAction() {
