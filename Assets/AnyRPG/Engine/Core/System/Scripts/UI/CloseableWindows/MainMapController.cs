@@ -23,9 +23,6 @@ namespace AnyRPG {
         [SerializeField]
         private GameObject mapGraphic = null;
 
-        private const string mainmapTextureFolderBase = "Assets/Games/";
-        private string mainmapTextureFolder = string.Empty;
-
         private string loadedMapName = string.Empty;
 
         private float cameraSize = 0f;
@@ -39,6 +36,7 @@ namespace AnyRPG {
         private SystemConfigurationManager systemConfigurationManager = null;
         private CameraManager cameraManager = null;
         private PlayerManager playerManager = null;
+        private MapManager mapManager = null;
         private MainMapManager mainMapManager = null;
         private LevelManager levelManager = null;
         private UIManager uIManager = null;
@@ -52,20 +50,21 @@ namespace AnyRPG {
 
         public override void Configure(SystemGameManager systemGameManager) {
             //Debug.Log("MainMapController.Init()");
+            base.Configure(systemGameManager);
+
+            //cameraManager.MainMapCamera.enabled = false;
+        }
+
+        public override void SetGameManagerReferences() {
+            base.SetGameManagerReferences();
             systemConfigurationManager = systemGameManager.SystemConfigurationManager;
             cameraManager = systemGameManager.CameraManager;
             playerManager = systemGameManager.PlayerManager;
-            mainMapManager = systemGameManager.UIManager.MainMapManager;
-            levelManager = systemGameManager.LevelManager;
             uIManager = systemGameManager.UIManager;
+            mapManager = uIManager.MapManager;
+            mainMapManager = uIManager.MainMapManager;
+            levelManager = systemGameManager.LevelManager;
             objectPooler = systemGameManager.ObjectPooler;
-
-            cameraManager.MainMapCamera.enabled = false;
-
-            mainmapTextureFolder = mainmapTextureFolderBase + systemConfigurationManager.GameName.Replace(" ", "") + "/Images/MiniMap/";
-
-            // calling base.Init() last because it will trigger event subscriptions, which need the above references initialized
-            base.Configure(systemGameManager);
         }
 
         public void HandleInteractableStatusUpdate(Interactable interactable, InteractableOptionComponent interactableOptionComponent) {
@@ -193,19 +192,16 @@ namespace AnyRPG {
         public void InitializeMap() {
             //Debug.Log(gameObject.name + ": MainMapController.InitializeMap()");
 
+            
             if (loadedMapName == SceneManager.GetActiveScene().name) {
                 // current map is already loaded or rendered
                 return;
             }
 
             // First, try to find the the map image
-            Texture2D mapTexture = new Texture2D((int)levelManager.SceneBounds.size.x, (int)levelManager.SceneBounds.size.z);
-            string textureFilePath = mainmapTextureFolder + GetScreenshotFilename();
-            if (System.IO.File.Exists(textureFilePath)) {
+            if (mapManager.SceneTextureFound == true) {
                 //sceneTextureFound = true;
-                byte[] fileData = System.IO.File.ReadAllBytes(textureFilePath);
-                mapTexture.LoadImage(fileData);
-                mapRawImage.texture = mapTexture;
+                mapRawImage.texture = mapManager.MapTexture;
             } else {
                 // if a map image could not be found, take a picture
                 UpdateCameraSize();
@@ -222,14 +218,6 @@ namespace AnyRPG {
 
             // the image will be scaled to the largest dimension
             levelScaleFactor = graphicLayoutElement.preferredWidth / (levelManager.SceneBounds.size.x > levelManager.SceneBounds.size.z ? levelManager.SceneBounds.size.x : levelManager.SceneBounds.size.z);
-        }
-
-        /// <summary>
-        /// Return the standardized name of the map image file
-        /// </summary>
-        /// <returns></returns>
-        public string GetScreenshotFilename() {
-            return SceneManager.GetActiveScene().name + ".png";
         }
 
         private void UpdateCameraSize() {

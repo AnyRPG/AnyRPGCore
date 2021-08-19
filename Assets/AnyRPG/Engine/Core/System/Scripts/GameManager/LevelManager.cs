@@ -35,12 +35,13 @@ namespace AnyRPG {
         private Dictionary<string, SceneNode> sceneDictionary = new Dictionary<string, SceneNode>();
 
         // game manager references
-        SystemDataFactory systemDataFactory = null;
-        SystemConfigurationManager systemConfigurationManager = null;
-        UIManager uIManager = null;
-        AudioManager audioManager = null;
-        CameraManager cameraManager = null;
-        PlayerManager playerManager = null;
+        private SystemDataFactory systemDataFactory = null;
+        private SystemConfigurationManager systemConfigurationManager = null;
+        private UIManager uIManager = null;
+        private AudioManager audioManager = null;
+        private CameraManager cameraManager = null;
+        private PlayerManager playerManager = null;
+        private MapManager mapManager = null;
 
         public bool NavMeshAvailable { get => navMeshAvailable; set => navMeshAvailable = value; }
         public Vector3 SpawnRotationOverride { get => spawnRotationOverride; set => spawnRotationOverride = value; }
@@ -54,9 +55,14 @@ namespace AnyRPG {
         public override void Configure(SystemGameManager systemGameManager) {
             base.Configure(systemGameManager);
 
+        }
+
+        public override void SetGameManagerReferences() {
+            base.SetGameManagerReferences();
             systemDataFactory = systemGameManager.SystemDataFactory;
             systemConfigurationManager = systemGameManager.SystemConfigurationManager;
             uIManager = systemGameManager.UIManager;
+            mapManager = uIManager.MapManager;
             audioManager = systemGameManager.AudioManager;
             cameraManager = systemGameManager.CameraManager;
             playerManager = systemGameManager.PlayerManager;
@@ -259,10 +265,13 @@ namespace AnyRPG {
             } else {
                 // just in case
                 uIManager.mainMenuWindow.CloseWindow();
+                sceneBounds = GetSceneBounds();
+                mapManager.ProcessLevelLoad();
             }
 
             // get level boundaries
-            sceneBounds = GetSceneBounds();
+            // testing - move this to not main menu or initialization scene
+            //sceneBounds = GetSceneBounds();
 
             // determine if a navmesh is available
             DetectNavMesh();
@@ -393,6 +402,7 @@ namespace AnyRPG {
                 return;
             }
 
+            mapManager.ProcessLevelUnload();
             SystemEventManager.TriggerEvent("OnLevelUnload", new EventParamProperties());
 
             // playerManager needs to do this last so other objects can respond before we despawn the character

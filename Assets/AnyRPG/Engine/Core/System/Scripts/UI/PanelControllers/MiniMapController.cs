@@ -81,9 +81,6 @@ namespace AnyRPG {
         // track current minimap status and state
         private bool miniMapEnabled = false;
 
-        private const string minimapTextureFolderBase = "Assets/Games/";
-        private string minimapTextureFolder = string.Empty;
-
         private string loadedMapName = string.Empty;
 
         protected bool eventSubscriptionsInitialized = false;
@@ -96,6 +93,7 @@ namespace AnyRPG {
         private LevelManager levelManager = null;
         private MiniMapManager miniMapManager = null;
         private ObjectPooler objectPooler = null;
+        private MapManager mapManager = null;
 
         // map indicators
         private Dictionary<Interactable, MiniMapIndicatorController> mapIndicatorControllers = new Dictionary<Interactable, MiniMapIndicatorController>();
@@ -118,8 +116,6 @@ namespace AnyRPG {
                 mapButtonText.SetActive(true);
             }
 
-            minimapTextureFolder = minimapTextureFolderBase + systemConfigurationManager.GameName.Replace(" ", "") + "/Images/MiniMap/";
-
             rectTransform = gameObject.GetComponent<RectTransform>();
 
             // set initial camera size
@@ -140,7 +136,7 @@ namespace AnyRPG {
             levelManager = systemGameManager.LevelManager;
             miniMapManager = uIManager.MiniMapManager;
             objectPooler = systemGameManager.ObjectPooler;
-
+            mapManager = systemGameManager.UIManager.MapManager;
         }
 
         private void CreateEventSubscriptions() {
@@ -339,13 +335,8 @@ namespace AnyRPG {
             }
 
             // First, try to find the minimap
-            Texture2D mapTexture = new Texture2D((int)levelManager.SceneBounds.size.x, (int)levelManager.SceneBounds.size.z);
-            string textureFilePath = minimapTextureFolder + GetScreenshotFilename();
-            if (System.IO.File.Exists(textureFilePath)) {
-                //sceneTextureFound = true;
+            if (mapManager.SceneTextureFound == true) {
                 miniMapEnabled = true;
-                byte[] fileData = System.IO.File.ReadAllBytes(textureFilePath);
-                mapTexture.LoadImage(fileData);
             } else {
                 //Debug.Log("No minimap texture exists at " + textureFilePath + ".  Please run \"Minimap Wizard\" from the Tools menu under AnyRPG.");
                 if (systemConfigurationManager.MiniMapFallBackMode == MiniMapFallBackMode.None) {
@@ -356,8 +347,8 @@ namespace AnyRPG {
                 //miniMapGraphicRect.sizeDelta = new Vector2(mapTexture.width, mapTexture.height);
                 //return;
             }
-            miniMapGraphicRawImage.texture = mapTexture;
-            miniMapGraphicRect.sizeDelta = new Vector2(mapTexture.width, mapTexture.height);
+            miniMapGraphicRawImage.texture = mapManager.MapTexture;
+            miniMapGraphicRect.sizeDelta = new Vector2(mapManager.MapTexture.width, mapManager.MapTexture.height);
 
             GameObject parentObject = mapGraphic.transform.parent.gameObject;
             if (parentObject == null) {
@@ -373,14 +364,6 @@ namespace AnyRPG {
             EnableIndicators();
 
             loadedMapName = SceneManager.GetActiveScene().name;
-        }
-
-        /// <summary>
-        /// Return the standardized name of the minimap image file
-        /// </summary>
-        /// <returns></returns>
-        public string GetScreenshotFilename() {
-            return SceneManager.GetActiveScene().name + ".png";
         }
 
         public void OpenMainMap() {

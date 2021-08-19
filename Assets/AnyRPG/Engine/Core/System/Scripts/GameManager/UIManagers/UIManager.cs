@@ -25,6 +25,9 @@ namespace AnyRPG {
         private NamePlateManager namePlateManager = null;
 
         [SerializeField]
+        private MapManager mapManager = null;
+
+        [SerializeField]
         private MainMapManager mainMapManager = null;
 
         [SerializeField]
@@ -209,6 +212,7 @@ namespace AnyRPG {
         public MainMapManager MainMapManager { get => mainMapManager; set => mainMapManager = value; }
         public MiniMapManager MiniMapManager { get => miniMapManager; set => miniMapManager = value; }
         public HandScript HandScript { get => handScript; set => handScript = value; }
+        public MapManager MapManager { get => mapManager; set => mapManager = value; }
 
         public override void Configure(SystemGameManager systemGameManager) {
             base.Configure(systemGameManager);
@@ -218,6 +222,7 @@ namespace AnyRPG {
             combatTextManager.Configure(systemGameManager);
             messageFeedManager.Configure(systemGameManager);
             namePlateManager.Configure(systemGameManager);
+            mapManager.Configure(systemGameManager);
             mainMapManager.Configure(systemGameManager);
             miniMapManager.Configure(systemGameManager);
 
