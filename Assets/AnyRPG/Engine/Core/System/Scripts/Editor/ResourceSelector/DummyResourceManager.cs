@@ -19,11 +19,20 @@ namespace AnyRPG {
         }
 
         public override void LoadResourceList() {
-            masterList.Add(Resources.LoadAll<ResourceProfile>(resourceClassName));
-            SystemConfigurationManager systemConfigurationManager = GameObject.FindObjectOfType<SystemConfigurationManager>();
-            if (systemConfigurationManager != null) {
-                foreach (string resourceFolderName in systemConfigurationManager.LoadResourcesFolders) {
-                    masterList.Add(Resources.LoadAll<ResourceProfile>(resourceFolderName + "/" + resourceClassName));
+            List<string> mappedClassNames = new List<string>();
+            if (resourceClassName == "Equipment") {
+                mappedClassNames.Add("Item/Armor");
+                mappedClassNames.Add("Item/Weapon");
+            } else {
+                mappedClassNames.Add(resourceClassName);
+            }
+            foreach (string className in mappedClassNames) {
+                masterList.Add(Resources.LoadAll<ResourceProfile>(className));
+                SystemConfigurationManager systemConfigurationManager = GameObject.FindObjectOfType<SystemConfigurationManager>();
+                if (systemConfigurationManager != null) {
+                    foreach (string resourceFolderName in systemConfigurationManager.LoadResourcesFolders) {
+                        masterList.Add(Resources.LoadAll<ResourceProfile>(resourceFolderName + "/" + className));
+                    }
                 }
             }
             /*

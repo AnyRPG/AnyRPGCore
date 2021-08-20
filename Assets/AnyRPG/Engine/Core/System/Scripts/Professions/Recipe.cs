@@ -23,6 +23,7 @@ namespace AnyRPG {
         private List<CraftingMaterial> craftingMaterials = new List<CraftingMaterial>();
 
         [SerializeField]
+        [ResourceSelector(resourceType = typeof(Item))]
         private string itemOutputName = string.Empty;
 
         //[SerializeField]
