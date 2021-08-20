@@ -63,8 +63,6 @@ MonoBehaviour:
   mapRawImage: {fileID: 5062099781006031626}
   mainMapBackground: {fileID: 2399952160041757219}
   mapGraphic: {fileID: 2780258617087811045}
-  mapIndicatorPrefab: {fileID: 7971569521143729688, guid: cfae1ef5d76306c46b7481b9dc273b3a,
-    type: 3}
 --- !u!1 &2780258617087811045
 GameObject:
   m_ObjectHideFlags: 0
@@ -127,11 +125,12 @@ MonoBehaviour:
   m_Material: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
+  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Texture: {fileID: 8400000, guid: e9595bac5d0eda44299da3396c216a13, type: 2}
+  m_Texture: {fileID: 0}
   m_UVRect:
     serializedVersion: 2
     x: 0
@@ -234,6 +233,7 @@ MonoBehaviour:
   m_Material: {fileID: 0}
   m_Color: {r: 0, g: 0, b: 0, a: 1}
   m_RaycastTarget: 1
+  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
@@ -323,6 +323,7 @@ MonoBehaviour:
   m_Material: {fileID: 0}
   m_Color: {r: 0, g: 0, b: 0, a: 1}
   m_RaycastTarget: 1
+  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:

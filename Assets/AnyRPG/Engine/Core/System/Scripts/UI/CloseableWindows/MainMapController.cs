@@ -25,8 +25,6 @@ namespace AnyRPG {
 
         private string loadedMapName = string.Empty;
 
-        private float cameraSize = 0f;
-
         // the number of pixels per meter of level based on the total map pixels
         private float levelScaleFactor = 1f;
 
@@ -203,9 +201,7 @@ namespace AnyRPG {
                 mapRawImage.texture = mapManager.MapTexture;
             } else {
                 // if a map image could not be found, take a picture
-                UpdateCameraSize();
-                UpdateCameraPosition();
-                cameraManager.MainMapCamera.Render();
+                
             }
             loadedMapName = SceneManager.GetActiveScene().name;
 
@@ -218,23 +214,7 @@ namespace AnyRPG {
             // the image will be scaled to the largest dimension
             levelScaleFactor = graphicLayoutElement.preferredWidth / (levelManager.SceneBounds.size.x > levelManager.SceneBounds.size.z ? levelManager.SceneBounds.size.x : levelManager.SceneBounds.size.z);
         }
-
-        private void UpdateCameraSize() {
-            //Debug.Log("MainMapController.UpdateCameraSize()");
-            //float newCameraSize = cameraSizeDefault;
-            cameraSize = Mathf.Max(levelManager.SceneBounds.extents.x, levelManager.SceneBounds.extents.z);
-            cameraManager.MainMapCamera.orthographicSize = cameraSize;
-        }
-
-        private void UpdateCameraPosition() {
-            //Debug.Log("MainMapController.UpdateCameraPosition()");
-            Vector3 wantedPosition = new Vector3(levelManager.SceneBounds.center.x, levelManager.SceneBounds.center.y + levelManager.SceneBounds.extents.y + 1f, levelManager.SceneBounds.center.z);
-            //Debug.Log("MainMapController.UpdateCameraPosition() wantedposition: " + wantedPosition);
-            Vector3 wantedLookPosition = new Vector3(levelManager.SceneBounds.center.x, levelManager.SceneBounds.center.y, levelManager.SceneBounds.center.z);
-            //Debug.Log("MainMapController.UpdateCameraPosition() wantedLookPosition: " + wantedLookPosition);
-            cameraManager.MainMapCamera.transform.position = wantedPosition;
-            cameraManager.MainMapCamera.transform.LookAt(wantedLookPosition);
-        }
+       
 
         public override void ReceiveOpenWindowNotification() {
             //Debug.Log("MainMapController.OnOpenWindow()");
