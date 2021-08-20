@@ -157,7 +157,7 @@ namespace AnyRPG {
             // from the second profile.  Just go ahead and always despawn units if their appearance changes.
             //if (playerManager.UnitController.DynamicCharacterAvatar == null) {
             Vector3 currentPlayerLocation = playerManager.ActiveUnitController.transform.position;
-            levelManager.SpawnRotationOverride = playerManager.ActiveUnitController.transform.forward;
+            levelManager.SetSpawnRotationOverride(playerManager.ActiveUnitController.transform.forward);
             playerManager.DespawnPlayerUnit();
             playerManager.MyCharacter.SetUnitProfile(unitProfile.DisplayName, true, -1, false);
             playerManager.SpawnPlayerUnit(currentPlayerLocation);
