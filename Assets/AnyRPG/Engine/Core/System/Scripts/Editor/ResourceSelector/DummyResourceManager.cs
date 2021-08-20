@@ -21,6 +21,7 @@ namespace AnyRPG {
         public override void LoadResourceList() {
             List<string> mappedClassNames = new List<string>();
             if (resourceClassName == "Equipment") {
+                mappedClassNames.Add("Item/Accessory");
                 mappedClassNames.Add("Item/Armor");
                 mappedClassNames.Add("Item/Weapon");
             } else {
