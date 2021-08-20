@@ -93,6 +93,7 @@ namespace AnyRPG {
                 //Debug.Log("QuestTrackerUI.ShowQuestsCommon(): quest: " + quest);
                 GameObject go = objectPooler.GetPooledObject(questPrefab, questParent);
                 QuestTrackerQuestScript qs = go.GetComponent<QuestTrackerQuestScript>();
+                qs.Configure(systemGameManager);
                 qs.MyQuest = quest;
                 if (qs == null) {
                     //Debug.Log("QuestTrackerUI.ShowQuestsCommon(): QuestGiverQuestScript is null");
