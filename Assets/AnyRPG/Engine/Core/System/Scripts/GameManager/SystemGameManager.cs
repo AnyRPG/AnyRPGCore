@@ -201,10 +201,16 @@ namespace AnyRPG {
 
         private void SetupPermanentObjects() {
             DontDestroyOnLoad(this.gameObject);
-            GameObject umaDCS = GameObject.Find("UMA_DCS");
+            GameObject umaDCS = GameObject.Find("UMA_GLIB");
+            if (umaDCS == null) {
+                umaDCS = GameObject.Find("UMA_DCS");
+                if (umaDCS != null) {
+                    Debug.Log("SystemGameManager.SetupPermanentObjects(): UMA_DCS is deprecated.  Please replace the UMA_DCS prefab with the UMA_GLIB prefab");
+                }
+            }
             if (umaDCS == null) {
                 //Debug.LogError("SystemGameManager.SetupPermanentObjects(): AnyRPG requires uma.  Ensure that the UMA_DCS prefab is in your loading scene.");
-                Debug.Log("SystemGameManager.SetupPermanentObjects(): UMA_DCS prefab not found in scene. UMA will be unavailable");
+                Debug.Log("SystemGameManager.SetupPermanentObjects(): Neither UMA_GLIB nor UMA_DCS prefab could be found in the scene. UMA will be unavailable");
             } else {
                 DontDestroyOnLoad(umaDCS);
             }
