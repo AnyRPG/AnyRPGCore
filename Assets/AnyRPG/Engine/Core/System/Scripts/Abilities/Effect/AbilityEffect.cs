@@ -88,10 +88,12 @@ namespace AnyRPG {
 
         public virtual Interactable ReturnTarget(IAbilityCaster sourceCharacter, Interactable target, AbilityEffectContext abilityEffectContext = null) {
             if (sourceCharacter?.AbilityManager?.UnitGameObject == null) {
-                Debug.Log(DisplayName + ".AbilityEffect.ReturnTarget(): source is null! This should never happen!!!!!");
+                /*
+                /Debug.Log(DisplayName + ".AbilityEffect.ReturnTarget(): source is null! This should never happen!!!!! (unless the thing that put the dot on you despawns)");
                 if (sourceCharacter == null) {
                     Debug.Log(DisplayName + ".AbilityEffect.ReturnTarget(): source abilitymanager is null! This should never happen!!!!! " + sourceCharacter.AbilityManager.Name);
                 }
+                */
                 return null;
             }
 
