@@ -62,8 +62,26 @@ namespace AnyRPG {
             //Debug.Log(unitController.gameObject.name + ".UMAModelController.SetAppearance()");
             initialAppearance = appearance;
             avatarDefinition = AvatarDefinition.FromCompressedString(initialAppearance, '|');
+            CheckAvatarDefinition();
             dynamicCharacterAvatar.LoadAvatarDefinition(avatarDefinition);
             BuildModelAppearance();
+        }
+
+        private void CheckAvatarDefinition() {
+            /*if (avatarDefinition.Wardrobe == null
+                || avatarDefinition.RaceName == null
+                || avatarDefinition.Dna == null
+                || avatarDefinition.Colors == null) {*/
+            if (avatarDefinition.RaceName == null) {
+                Debug.LogWarning("AvatarDefinition could not be loaded.  The save file may be in an older format.  You will need to reset the character appearance (using the CharacterCreator) and save the game again to update it.");
+                avatarDefinition = new AvatarDefinition();
+
+                // avatarDefintion is a struct so needs to have its properties set to something other than null
+                avatarDefinition.RaceName = "HumanMaleDCS";
+                avatarDefinition.Wardrobe = new string[0];
+                avatarDefinition.Dna = new DnaDef[0];
+                avatarDefinition.Colors = new SharedColorDef[0];
+            }
         }
 
         public void SetInitialSavedAppearance() {
@@ -96,6 +114,7 @@ namespace AnyRPG {
 
             if (initialAppearance != null && initialAppearance != string.Empty) {
                 avatarDefinition = AvatarDefinition.FromCompressedString(initialAppearance, '|');
+                CheckAvatarDefinition();
             } else {
                 //avatarDefinition = dynamicCharacterAvatar.GetAvatarDefinition(true);
                 avatarDefinition = GetAvatarDefinition(dynamicCharacterAvatar);
