@@ -23,6 +23,9 @@ MonoBehaviour:
   - itemName: Necklace
     quantity: 0
     unlimited: 1
+  - itemName: Level 5 Necklace
+    quantity: 0
+    unlimited: 1
   - itemName: Cape
     quantity: 0
     unlimited: 1

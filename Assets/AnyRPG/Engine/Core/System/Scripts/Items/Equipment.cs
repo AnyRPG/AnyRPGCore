@@ -195,7 +195,7 @@ namespace AnyRPG {
         }
 
         public override bool Use() {
-            if (SystemGameManager.Instance.PlayerManager != null && SystemGameManager.Instance.PlayerManager.MyCharacter != null && SystemGameManager.Instance.PlayerManager.MyCharacter.CharacterEquipmentManager != null) {
+            if (SystemGameManager.Instance.PlayerManager?.MyCharacter?.CharacterEquipmentManager != null) {
                 bool returnValue = base.Use();
                 if (returnValue == false) {
                     return false;
@@ -220,6 +220,9 @@ namespace AnyRPG {
                 //Debug.Log(DisplayName + "CapabilityConsumer unsupported");
                 return false;
             }
+            if (GetItemLevel(baseCharacter.CharacterStats.Level) > baseCharacter.CharacterStats.Level) {
+                return false;
+            }
             return true;
         }
 
@@ -240,11 +243,17 @@ namespace AnyRPG {
             List<string> abilitiesList = new List<string>();
 
             string itemRange = "";
+            string colorstring = string.Empty;
             //Debug.Log(MyName + ": levelcap: " + levelCap + "; dynamicLevel: " + dynamicLevel);
             if (dynamicLevel == true && freezeDropLevel == false) {
                 itemRange = " (1 - " + (levelCap > 0 ? levelCap : SystemGameManager.Instance.SystemConfigurationManager.MaxLevel) + ")";
             }
-            abilitiesList.Add(string.Format("Item Level: {0}{1}", GetItemLevel(SystemGameManager.Instance.PlayerManager.MyCharacter.CharacterStats.Level), itemRange));
+            if (GetItemLevel(SystemGameManager.Instance.PlayerManager.MyCharacter.CharacterStats.Level) > SystemGameManager.Instance.PlayerManager.MyCharacter.CharacterStats.Level) {
+                colorstring = "red";
+            } else {
+                colorstring = "white";
+            }
+            abilitiesList.Add(string.Format("<color={0}>Item Level: {1}{2}</color>", colorstring, GetItemLevel(SystemGameManager.Instance.PlayerManager.MyCharacter.CharacterStats.Level), itemRange));
 
             // armor
             if (useArmorModifier) {

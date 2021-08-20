@@ -235,6 +235,10 @@ namespace AnyRPG {
                 SystemGameManager.Instance.UIManager.MessageFeedManager.WriteMessage("You are not the right character class to use " + DisplayName);
                 return false;
             }
+            if (GetItemLevel(SystemGameManager.Instance.PlayerManager.MyCharacter.CharacterStats.Level) > SystemGameManager.Instance.PlayerManager.MyCharacter.CharacterStats.Level) {
+                SystemGameManager.Instance.UIManager.MessageFeedManager.WriteMessage("You are too low level use " + DisplayName);
+                return false;
+            }
 
             return true;
         }

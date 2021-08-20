@@ -128,7 +128,7 @@ namespace AnyRPG {
         }
 
         public void InitializeController() {
-            //Debug.Log(gameObject.name + ".UnitFrameController.InitializeController()");
+            Debug.Log(gameObject.name + ".UnitFrameController.InitializeController()");
             if (controllerInitialized) {
                 return;
             }
@@ -173,6 +173,7 @@ namespace AnyRPG {
         }
 
         private void TargetInitialization() {
+            Debug.Log(gameObject.name + ".UnitFrameController.TargetInitialization()");
             if (namePlateController == null) {
                 return;
             }
@@ -232,7 +233,7 @@ namespace AnyRPG {
         }
 
         public void SetTarget(BaseNamePlateController namePlateController) {
-            //Debug.Log(gameObject.name + ".UnitFrameController.SetTarget(" + namePlateController.Interactable.name + ")");
+            Debug.Log(gameObject.name + ".UnitFrameController.SetTarget(" + namePlateController.Interactable.name + ")");
 
             // prevent old target from still sending us updates while we are focused on a new target
             ClearTarget(false);
@@ -312,7 +313,7 @@ namespace AnyRPG {
         }
 
         public void ClearTarget(bool closeWindowOnClear = true) {
-            //Debug.Log(gameObject.name + ".UnitFrameController.ClearTarget(" + closeWindowOnClear + ")");
+            Debug.Log(gameObject.name + ".UnitFrameController.ClearTarget(" + closeWindowOnClear + ")");
             if (waitForCameraCoroutine != null) {
                 StopCoroutine(waitForCameraCoroutine);
             }
@@ -344,7 +345,7 @@ namespace AnyRPG {
         }
 
         private void InitializeStats() {
-            //Debug.Log(gameObject.name + ".UnitFrameController.InitializeStats()");
+            Debug.Log(gameObject.name + ".UnitFrameController.InitializeStats()");
 
             HandleReputationChange();
             //Debug.Log("Charcter name is " + baseCharacter.MyCharacterName);
