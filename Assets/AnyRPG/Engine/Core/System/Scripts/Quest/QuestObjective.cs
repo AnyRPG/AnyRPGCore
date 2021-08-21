@@ -7,7 +7,7 @@ using UnityEngine;
 
 namespace AnyRPG {
     [System.Serializable]
-    public abstract class QuestObjective {
+    public class QuestObjective {
         [SerializeField]
         private int amount;
 

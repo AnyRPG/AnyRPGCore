@@ -124,6 +124,10 @@ namespace AnyRPG {
 
         [Header("Objectives")]
 
+        [SerializeReference]
+        [SerializeReferenceButton]
+        private List<QuestObjective> baseObjectives = new List<QuestObjective>();
+
         [SerializeField]
         private CollectObjective[] collectObjectives;
 

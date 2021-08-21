@@ -9,6 +9,7 @@ namespace AnyRPG {
     [System.Serializable]
     public class CollectObjective : QuestObjective {
 
+        public string collectItemName;
         public override Type ObjectiveType {
             get {
                 return typeof(CollectObjective);
