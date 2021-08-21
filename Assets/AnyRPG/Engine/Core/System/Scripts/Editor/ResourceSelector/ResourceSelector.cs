@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
 using UnityEngine.UIElements;
+using UnityEditor.UIElements;
 using AnyRPG;
 
 public class ResourceSelector : EditorWindow
@@ -12,10 +13,14 @@ public class ResourceSelector : EditorWindow
     SerializedProperty editedProperty;
     Label header;
     Label fileTypeLabel;
-    //Toggle includeCoreContent;
+    TextField nameFilter;
+    PopupField<string> typeFilter;
     ListView listView;
     List<ResourceProfile> listElements;
+    List<string> classNames = new List<string>();
     bool listInitialized = false;
+    string namePattern;
+    string classPattern;
 
 //    [MenuItem("Tools/AnyRPG/ResourceSelector")]
 
@@ -35,7 +40,6 @@ public class ResourceSelector : EditorWindow
 
     void SetSelected(IEnumerable<System.Object> selected) {
         foreach (System.Object obj in selected) {
-            //Debug.Log("set selected: " + obj);
             if (obj != null) {
                 editedProperty.stringValue = (obj as ResourceProfile).ResourceName;
             } else {
@@ -47,21 +51,44 @@ public class ResourceSelector : EditorWindow
 
     // fill listElements with all resources for the type in fileType
     void InitializeList() {
-        //DummyResourceManager manager = new DummyResourceManager(resourceType, includeCoreContent.value);
+        listElements.Clear();
         DummyResourceManager manager = new DummyResourceManager(resourceType);
         if (manager.GetResourceList().Count == 0) {
             manager.LoadResourceList();
         }
         List<ResourceProfile> namesList = new List<ResourceProfile>();
         foreach (ResourceProfile item in manager.GetResourceList()) {
-            namesList.Add(item);
+
+            if (MatchesFilter(item)) {
+                namesList.Add(item);
+            }
         }
         namesList.Sort((a,b) => a.ResourceName.CompareTo(b.ResourceName));
         listElements.AddRange(namesList);
+        
+    }
+
+    bool MatchesFilter(ResourceProfile item) {
+        if (namePattern == null || namePattern == "") {
+            return true;
+        }
+        return item.ResourceName.ToLower().Contains(namePattern.ToLower());
     }
 
     void ReloadList() {
         listElements.Clear();
+        InitializeList();
+        listView.Refresh();
+    }
+
+    void ApplyFilter(string namePattern) {
+        this.namePattern = namePattern;
+        InitializeList();
+        listView.Refresh();
+    }
+
+    void ApplyClassFilter(string classPattern) {
+        this.classPattern = classPattern;
         InitializeList();
         listView.Refresh();
     }
@@ -73,10 +100,12 @@ public class ResourceSelector : EditorWindow
             } catch (NullReferenceException) {
                 // that means the serialized object has been disposed and gone out of scope while the editor window is still open
                 // let's just close it and act as nothing happened
+                Debug.Log("edited property is gone.");
                 Close();
             }
             fileTypeLabel.text = "Resource name: " + resourceType.Name;
             if (!listInitialized) {
+                classNames.Add("classOne");
                 InitializeList();
                 listView.Refresh();
                 listInitialized = true;
@@ -99,6 +128,7 @@ public class ResourceSelector : EditorWindow
     public void CreateGUI() {
         VisualElement root = rootVisualElement;
 
+        classNames.Add("");
         header = new Label("");
         header.style.unityFontStyleAndWeight = FontStyle.Bold;
         root.Add(header);
@@ -108,11 +138,15 @@ public class ResourceSelector : EditorWindow
         root.Add(fileTypeLabel);
 
         /*
-        includeCoreContent = new Toggle("include core content");
-        includeCoreContent.value = true;
-        includeCoreContent.RegisterValueChangedCallback<bool>( x => ReloadList());
-        root.Add(includeCoreContent);
+        // unfortunately this breaks the Unity Editor. the window won't open and you have to reset your layouts
+        typeFilter = new UnityEditor.UIElements.PopupField<string>("Filter by type", classNames, "");
+        typeFilter.RegisterValueChangedCallback<string>( x => ApplyClassFilter(x.newValue));
+        root.Add(typeFilter);
         */
+
+        nameFilter = new TextField("Filter by name");
+        nameFilter.RegisterValueChangedCallback<string>( x => ApplyFilter(x.newValue));
+        root.Add(nameFilter);
 
         listElements = new List<ResourceProfile>();
 
