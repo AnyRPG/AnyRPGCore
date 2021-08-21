@@ -29,11 +29,17 @@ namespace AnyRPG {
         }
 
         public static string GetQualityColorString(Item item) {
-            if (item.ItemQuality != null) {
-                return "#" + ColorUtility.ToHtmlStringRGB(item.ItemQuality.MyQualityColor);
+            return GetQualityColorString(item.ItemQuality);
+        }
+
+        public static string GetQualityColorString(ItemQuality itemQuality) {
+            if (itemQuality != null) {
+                return "#" + ColorUtility.ToHtmlStringRGB(itemQuality.MyQualityColor);
             }
             return "#" + ColorUtility.ToHtmlStringRGB(Color.white);
         }
+
+
     }
 
 }

@@ -198,14 +198,14 @@ namespace AnyRPG {
         
         public void AddToBuyBackCollection(Item newItem) {
             VendorItem newVendorItem = new VendorItem();
-            newVendorItem.MyQuantity = 1;
-            newVendorItem.MyItem = newItem;
+            newVendorItem.Quantity = 1;
+            newVendorItem.Item = newItem;
             buyBackCollection.MyVendorItems.Add(newVendorItem);
         }
         
 
         public bool SellItem(Item item) {
-            if (item.BuyPrice <= 0 || item.MySellPrice.Key == null) {
+            if (item.BuyPrice() <= 0 || item.MySellPrice.Key == null) {
                 messageFeedManager.WriteMessage("The vendor does not want to buy the " + item.DisplayName);
                 return false;
             }

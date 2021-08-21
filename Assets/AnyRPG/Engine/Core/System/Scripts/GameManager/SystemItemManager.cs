@@ -20,7 +20,7 @@ namespace AnyRPG {
         /// </summary>
         /// <param name="resourceName"></param>
         /// <returns></returns>
-        public Item GetNewResource(string resourceName) {
+        public Item GetNewResource(string resourceName, ItemQuality usedItemQuality = null) {
             //Debug.Log(this.GetType().Name + ".GetNewResource(" + resourceName + ")");
             if (!SystemDataFactory.RequestIsEmpty(resourceName)) {
                 string keyName = SystemDataFactory.PrepareStringForMatch(resourceName);
@@ -28,7 +28,7 @@ namespace AnyRPG {
                 if (itemTemplate != null) {
                     Item returnValue = ScriptableObject.Instantiate(itemTemplate) as Item;
                     returnValue.SetupScriptableObjects();
-                    returnValue.InitializeNewItem();
+                    returnValue.InitializeNewItem(usedItemQuality);
                     return returnValue;
                 }
             }

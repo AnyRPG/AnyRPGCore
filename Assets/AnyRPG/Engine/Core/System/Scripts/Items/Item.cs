@@ -90,15 +90,16 @@ namespace AnyRPG {
 
         public int MyMaximumStackSize { get => stackSize; set => stackSize = value; }
         public SlotScript MySlot { get => slot; set => slot = value; }
-        public int BuyPrice {
-            get {
+        
+        public int BuyPrice() {
+            return BuyPrice(realItemQuality);
+        }
 
-                if (dynamicCurrencyAmount) {
-                    return (int)(((pricePerLevel * GetItemLevel(SystemGameManager.Instance.PlayerManager.MyCharacter.CharacterStats.Level)) + basePrice) * (realItemQuality == null ? 1 : realItemQuality.BuyPriceMultiplier));
-                }
-                return (int)(basePrice * (realItemQuality == null ? 1 : realItemQuality.BuyPriceMultiplier));
+        public int BuyPrice(ItemQuality usedItemQuality) {
+            if (dynamicCurrencyAmount) {
+                return (int)(((pricePerLevel * GetItemLevel(SystemGameManager.Instance.PlayerManager.MyCharacter.CharacterStats.Level)) + basePrice) * (usedItemQuality == null ? 1 : usedItemQuality.BuyPriceMultiplier));
             }
-            set => basePrice = value;
+            return (int)(basePrice * (usedItemQuality == null ? 1 : usedItemQuality.BuyPriceMultiplier));
         }
 
         public int SellPrice {
@@ -288,15 +289,18 @@ namespace AnyRPG {
             }
         }
 
-        public override string GetDescription() {
-            //Debug.Log(MyName + ".Item.GetDescription()");
-            return string.Format("<color={0}>{1}</color>\n{2}", QualityColor.GetQualityColorString(this), DisplayName, GetSummary());
+        public virtual string GetDescription(ItemQuality usedItemQuality) {
+
+            return string.Format("<color={0}>{1}</color>\n{2}", QualityColor.GetQualityColorString(usedItemQuality), DisplayName, GetSummary(usedItemQuality));
             //return string.Format("<color=yellow>{0}</color>\n{1}", MyName, GetSummary());
         }
 
-        
-        public override string GetSummary() {
-            //Debug.Log(MyDisplayName + ".Item.GetSummary()");
+        public override string GetDescription() {
+            //Debug.Log(MyName + ".Item.GetDescription()");
+            return GetDescription(realItemQuality);
+        }
+
+        public virtual string GetSummary(ItemQuality usedItemQuality) {
             //Debug.Log("Quality is " + quality.ToString() + QualityColor.MyColors.ToString());
             string summaryString = string.Empty;
             if (characterClassRequirementList.Count > 0) {
@@ -314,8 +318,20 @@ namespace AnyRPG {
             return string.Format("{0}", summaryString);
         }
 
-        public virtual void InitializeNewItem() {
+        public override string GetSummary() {
+            //Debug.Log(MyDisplayName + ".Item.GetSummary()");
+            return GetSummary(realItemQuality);
+        }
+
+        public virtual void InitializeNewItem(ItemQuality usedItemQuality = null) {
             //Debug.Log(MyDisplayName + ".Item.InitializeNewItem()");
+
+            // for now items that have item quality set by non random means (vendor overrides) will not change their display name
+            if (usedItemQuality != null) {
+                realItemQuality = usedItemQuality;
+                displayName = DisplayName;
+                return;
+            }
 
             // choose the random item quality
             if (randomItemQuality == true) {

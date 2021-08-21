@@ -923,9 +923,12 @@ namespace AnyRPG {
                         } else {
                             newItem.DisplayName = inventorySlotSaveData.DisplayName;
                             newItem.DropLevel = inventorySlotSaveData.dropLevel;
-                            if (newItem.RandomItemQuality == true) {
+                            // disabled the if condition since all items can now have item quality overrides from vendor
+                            //if (newItem.RandomItemQuality == true) {
+                            if (inventorySlotSaveData.itemQuality != null && inventorySlotSaveData.itemQuality != string.Empty) {
                                 newItem.ItemQuality = systemDataFactory.GetResource<ItemQuality>(inventorySlotSaveData.itemQuality);
                             }
+                            //}
                             if ((newItem as Equipment) is Equipment) {
                                 if (inventorySlotSaveData.randomSecondaryStatIndexes != null) {
                                     (newItem as Equipment).RandomStatIndexes = inventorySlotSaveData.randomSecondaryStatIndexes;
@@ -951,9 +954,12 @@ namespace AnyRPG {
                     if (newItem != null) {
                         newItem.DisplayName = equipmentSaveData.DisplayName;
                         newItem.DropLevel = equipmentSaveData.dropLevel;
-                        if (newItem.RandomItemQuality == true) {
+                        //if (newItem.RandomItemQuality == true) {
+                        if (equipmentSaveData.itemQuality != null && equipmentSaveData.itemQuality != string.Empty) {
                             newItem.ItemQuality = systemDataFactory.GetResource<ItemQuality>(equipmentSaveData.itemQuality);
                         }
+                        //newItem.ItemQuality = systemDataFactory.GetResource<ItemQuality>(equipmentSaveData.itemQuality);
+                        //}
                         if (equipmentSaveData.randomSecondaryStatIndexes != null) {
                             newItem.RandomStatIndexes = equipmentSaveData.randomSecondaryStatIndexes;
                             newItem.InitializeRandomStatsFromIndex();

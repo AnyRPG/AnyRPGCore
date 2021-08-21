@@ -857,16 +857,27 @@ namespace AnyRPG {
         /// <param name="defaultColor"></param>
         public void SetItemBackground(Item item, Image backgroundImage, Color defaultColor) {
             //Debug.Log("UIManager.SetItemBackground(" + item.DisplayName + ")");
+            SetItemBackground(item, backgroundImage, defaultColor, item.ItemQuality);
+        }
+
+        /// <summary>
+        /// set the background image for an item based on the item quality settings
+        /// </summary>
+        /// <param name="item"></param>
+        /// <param name="backgroundImage"></param>
+        /// <param name="defaultColor"></param>
+        public void SetItemBackground(Item item, Image backgroundImage, Color defaultColor, ItemQuality itemQuality) {
+            //Debug.Log("UIManager.SetItemBackground(" + item.DisplayName + ")");
             Color finalColor;
-            if (item.ItemQuality != null) {
-                if (item.ItemQuality.IconBackgroundImage != null) {
+            if (itemQuality != null) {
+                if (itemQuality.IconBackgroundImage != null) {
                     if (item.IconBackgroundImage != null) {
                         backgroundImage.sprite = item.IconBackgroundImage;
                     } else {
-                        backgroundImage.sprite = item.ItemQuality.IconBackgroundImage;
+                        backgroundImage.sprite = itemQuality.IconBackgroundImage;
                     }
-                    if (item.ItemQuality.TintBackgroundImage == true) {
-                        finalColor = item.ItemQuality.MyQualityColor;
+                    if (itemQuality.TintBackgroundImage == true) {
+                        finalColor = itemQuality.MyQualityColor;
                     } else {
                         finalColor = Color.white;
                     }

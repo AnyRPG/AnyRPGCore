@@ -145,6 +145,10 @@ namespace AnyRPG {
         }
 
         public float GetDamagePerSecond(int characterLevel) {
+            return GetDamagePerSecond(characterLevel, realItemQuality);
+        }
+
+        public float GetDamagePerSecond(int characterLevel, ItemQuality usedItemQuality) {
             if (!UseDamagePerSecond) {
                 return 0f;
             }
@@ -152,18 +156,18 @@ namespace AnyRPG {
                 return damagePerSecond;
             }
             return Mathf.Ceil(Mathf.Clamp(
-                (float)GetItemLevel(characterLevel) * (SystemGameManager.Instance.SystemConfigurationManager.WeaponDPSBudgetPerLevel * GetItemQualityNumber() * EquipmentSlotType.MyStatWeight),
+                (float)GetItemLevel(characterLevel) * (SystemGameManager.Instance.SystemConfigurationManager.WeaponDPSBudgetPerLevel * GetItemQualityNumber(usedItemQuality) * EquipmentSlotType.MyStatWeight),
                 0f,
                 Mathf.Infinity
                 ));
         }
 
-        public override string GetSummary() {
+        public override string GetSummary(ItemQuality usedItemQuality) {
 
             List<string> abilitiesList = new List<string>();
 
             if (useDamagePerSecond) {
-                abilitiesList.Add(string.Format("Damage Per Second: {0}", GetDamagePerSecond(SystemGameManager.Instance.PlayerManager.MyCharacter.CharacterStats.Level)));
+                abilitiesList.Add(string.Format("Damage Per Second: {0}", GetDamagePerSecond(SystemGameManager.Instance.PlayerManager.MyCharacter.CharacterStats.Level, usedItemQuality)));
             }
             if (onHitEffectList != null) {
                 foreach (AbilityEffect abilityEffect in onHitEffectList) {
@@ -182,7 +186,7 @@ namespace AnyRPG {
                 }
                 abilitiesString += string.Format("\n<color={0}>Required Skill: {1}</color>", colorString, weaponSkill.DisplayName);
             }
-            return base.GetSummary() + abilitiesString;
+            return base.GetSummary(usedItemQuality) + abilitiesString;
         }
 
         /*

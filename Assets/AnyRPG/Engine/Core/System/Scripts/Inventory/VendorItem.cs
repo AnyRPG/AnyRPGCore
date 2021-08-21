@@ -5,14 +5,14 @@ using UnityEngine;
 
 namespace AnyRPG {
     [System.Serializable]
-    public class VendorItem {
+    public class VendorItem : IDescribable {
 
         [SerializeField]
         [ResourceSelector(resourceType = typeof(Item))]
         private string itemName = string.Empty;
 
         //[SerializeField]
-        private Item item;
+        private Item item = null;
 
         [SerializeField]
         private int quantity = 1;
@@ -20,7 +20,14 @@ namespace AnyRPG {
         [SerializeField]
         private bool unlimited = false;
 
-        public Item MyItem {
+        [Tooltip("The name of the item quality to use.  Leave blank to use the items default item quality")]
+        [SerializeField]
+        [ResourceSelector(resourceType = typeof(ItemQuality))]
+        private string itemQualityName = string.Empty;
+
+        private ItemQuality itemQuality = null;
+
+        public Item Item {
             get {
                 return item;
             }
@@ -29,7 +36,7 @@ namespace AnyRPG {
             }
         }
 
-        public int MyQuantity {
+        public int Quantity {
             get {
                 return quantity;
             }
@@ -45,6 +52,24 @@ namespace AnyRPG {
             }
         }
 
+        Sprite IDescribable.Icon => item.Icon;
+
+        string IDescribable.DisplayName => item.DisplayName;
+
+        public ItemQuality GetItemQuality() {
+            if (itemQuality != null) {
+                return itemQuality;
+            }
+            return item.ItemQuality;
+        }
+
+        public int BuyPrice() {
+            if (itemQuality != null) {
+                return item.BuyPrice(itemQuality);
+            }
+            return item.BuyPrice();
+        }
+
         public void SetupScriptableObjects() {
 
             item = null;
@@ -56,8 +81,25 @@ namespace AnyRPG {
                     Debug.LogError("SystemSkillManager.SetupScriptableObjects(): Could not find item : " + itemName + " while inititalizing a vendor item.  CHECK INSPECTOR");
                 }
             }
+
+            itemQuality = null;
+            if (itemQualityName != null && itemQualityName != string.Empty) {
+                ItemQuality tmpItemQuality = SystemDataFactory.Instance.GetResource<ItemQuality>(itemQualityName);
+                if (tmpItemQuality != null) {
+                    itemQuality = tmpItemQuality;
+                } else {
+                    Debug.LogError("SystemSkillManager.SetupScriptableObjects(): Could not find item : " + itemName + " while inititalizing a vendor item.  CHECK INSPECTOR");
+                }
+            }
         }
 
+        string IDescribable.GetDescription() {
+            return item.GetDescription(itemQuality);
+        }
+
+        string IDescribable.GetSummary() {
+            return item.GetSummary(itemQuality);
+        }
     }
 
 }

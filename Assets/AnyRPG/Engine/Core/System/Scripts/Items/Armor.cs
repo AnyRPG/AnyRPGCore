@@ -19,11 +19,11 @@ namespace AnyRPG {
 
         public ArmorClass ArmorClass { get => armorClass; set => armorClass = value; }
 
-        public override float GetArmorModifier(int characterLevel) {
-            float returnValue = base.GetArmorModifier(characterLevel);
+        public override float GetArmorModifier(int characterLevel, ItemQuality usedItemQuality) {
+            float returnValue = base.GetArmorModifier(characterLevel, usedItemQuality);
             if (useArmorModifier && !useManualArmor) {
                 return (int)Mathf.Ceil(Mathf.Clamp(
-                    (float)GetItemLevel(characterLevel) * (LevelEquations.GetArmorForClass(ArmorClass) * GetItemQualityNumber()) * (1f / ((float)(SystemDataFactory.Instance.GetResourceCount<EquipmentSlotProfile>() - 2))),
+                    (float)GetItemLevel(characterLevel) * (LevelEquations.GetArmorForClass(ArmorClass) * GetItemQualityNumber(usedItemQuality)) * (1f / ((float)(SystemDataFactory.Instance.GetResourceCount<EquipmentSlotProfile>() - 2))),
                     0f,
                     Mathf.Infinity
                     ));
@@ -31,7 +31,7 @@ namespace AnyRPG {
             return returnValue;
         }
 
-        public override string GetSummary() {
+        public override string GetSummary(ItemQuality usedItemQuality) {
             //Debug.Log(MyName + ".Armor.GetSummary()");
 
             List<string> abilitiesList = new List<string>();
@@ -60,7 +60,7 @@ namespace AnyRPG {
                 abilitiesString += string.Format("\n<color={0}>{1}</color>", colorString, armorClassName);
             }
 
-            return base.GetSummary() + abilitiesString;
+            return base.GetSummary(usedItemQuality) + abilitiesString;
         }
 
         public override bool CapabilityConsumerSupported(ICapabilityConsumer capabilityConsumer) {

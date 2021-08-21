@@ -101,14 +101,18 @@ namespace AnyRPG {
         //[SerializeField]
         private List<BaseAbility> learnedAbilities = new List<BaseAbility>();
 
-        public virtual float GetArmorModifier(int characterLevel) {
+        public float GetArmorModifier(int characterLevel) {
+            return GetArmorModifier(characterLevel, realItemQuality);
+        }
+
+        public virtual float GetArmorModifier(int characterLevel, ItemQuality usedItemQuality) {
             if (!useArmorModifier) {
                 return 0f;
             }
             if (useManualArmor) {
                 if (manualValueIsScale) {
                     return (int)Mathf.Ceil(Mathf.Clamp(
-                        (float)GetItemLevel(characterLevel) * (armorModifier * GetItemQualityNumber()),
+                        (float)GetItemLevel(characterLevel) * (armorModifier * GetItemQualityNumber(usedItemQuality)),
                         0f,
                         Mathf.Infinity
                         ));
@@ -119,14 +123,18 @@ namespace AnyRPG {
             return 0f;
         }
 
-        public virtual float GetPrimaryStatModifier(string statName, int currentLevel, BaseCharacter baseCharacter) {
+        public float GetPrimaryStatModifier(string statName, int currentLevel, BaseCharacter baseCharacter) {
+            return GetPrimaryStatModifier(statName, currentLevel, baseCharacter, realItemQuality);
+        }
+
+        public virtual float GetPrimaryStatModifier(string statName, int currentLevel, BaseCharacter baseCharacter, ItemQuality usedItemQuality) {
             foreach (ItemPrimaryStatNode itemPrimaryStatNode in primaryStats) {
                 if (statName == itemPrimaryStatNode.StatName) {
                     if (itemPrimaryStatNode.UseManualValue) {
                         return itemPrimaryStatNode.ManualModifierValue;
                     }
                     return (int)Mathf.Ceil(Mathf.Clamp(
-                        (float)GetItemLevel(currentLevel) * (LevelEquations.GetPrimaryStatForLevel(statName, currentLevel, baseCharacter) * (GetItemQualityNumber() - 1f)) * ((EquipmentSlotType.MyStatWeight * EquipmentSlotType.GetCompatibleSlotProfiles()[0].MyStatWeight) / GetTotalSlotWeights()),
+                        (float)GetItemLevel(currentLevel) * (LevelEquations.GetPrimaryStatForLevel(statName, currentLevel, baseCharacter) * (GetItemQualityNumber(usedItemQuality) - 1f)) * ((EquipmentSlotType.MyStatWeight * EquipmentSlotType.GetCompatibleSlotProfiles()[0].MyStatWeight) / GetTotalSlotWeights()),
                         0f,
                         Mathf.Infinity
                         ));
@@ -186,10 +194,10 @@ namespace AnyRPG {
         /// return a multiplier value that is based on the item quality
         /// </summary>
         /// <returns></returns>
-        public float GetItemQualityNumber() {
+        public float GetItemQualityNumber(ItemQuality usedItemQuality) {
             float returnValue = 1;
-            if (ItemQuality != null) {
-                returnValue = ItemQuality.MyStatMultiplier;
+            if (usedItemQuality != null) {
+                returnValue = usedItemQuality.MyStatMultiplier;
             }
             return returnValue;
         }
@@ -237,10 +245,10 @@ namespace AnyRPG {
             return true;
         }
 
-        public override string GetSummary() {
+        public override string GetSummary(ItemQuality usedItemQuality) {
             //Debug.Log(MyName + ".Equipment.GetSummary()");
             //string stats = string.Empty;
-            List<string> abilitiesList = new List<string>();
+            List<string> summaryLines = new List<string>();
 
             string itemRange = "";
             string colorstring = string.Empty;
@@ -253,18 +261,18 @@ namespace AnyRPG {
             } else {
                 colorstring = "white";
             }
-            abilitiesList.Add(string.Format("<color={0}>Item Level: {1}{2}</color>", colorstring, GetItemLevel(SystemGameManager.Instance.PlayerManager.MyCharacter.CharacterStats.Level), itemRange));
+            summaryLines.Add(string.Format("<color={0}>Item Level: {1}{2}</color>", colorstring, GetItemLevel(SystemGameManager.Instance.PlayerManager.MyCharacter.CharacterStats.Level), itemRange));
 
             // armor
             if (useArmorModifier) {
-                abilitiesList.Add(string.Format(" +{0} Armor", GetArmorModifier(SystemGameManager.Instance.PlayerManager.MyCharacter.CharacterStats.Level)));
+                summaryLines.Add(string.Format(" +{0} Armor", GetArmorModifier(SystemGameManager.Instance.PlayerManager.MyCharacter.CharacterStats.Level, usedItemQuality)));
             }
 
             // primary stats
             foreach (ItemPrimaryStatNode itemPrimaryStatNode in primaryStats) {
-                float primaryStatModifier = GetPrimaryStatModifier(itemPrimaryStatNode.StatName, SystemGameManager.Instance.PlayerManager.MyCharacter.CharacterStats.Level, SystemGameManager.Instance.PlayerManager.MyCharacter);
+                float primaryStatModifier = GetPrimaryStatModifier(itemPrimaryStatNode.StatName, SystemGameManager.Instance.PlayerManager.MyCharacter.CharacterStats.Level, SystemGameManager.Instance.PlayerManager.MyCharacter, usedItemQuality);
                 if (primaryStatModifier > 0f) {
-                    abilitiesList.Add(string.Format(" +{0} {1}",
+                    summaryLines.Add(string.Format(" +{0} {1}",
                         primaryStatModifier,
                         itemPrimaryStatNode.StatName));
                 }
@@ -272,45 +280,45 @@ namespace AnyRPG {
 
             // secondary stats
             foreach (ItemSecondaryStatNode itemSecondaryStatNode in SecondaryStats) {
-                abilitiesList.Add(string.Format("<color=green> +{0} {1}</color>",
+                summaryLines.Add(string.Format("<color=green> +{0} {1}</color>",
                                    GetSecondaryStatAddModifier(itemSecondaryStatNode.SecondaryStat, SystemGameManager.Instance.PlayerManager.MyCharacter.CharacterStats.Level),
                                    itemSecondaryStatNode.SecondaryStat.ToString()));
             }
 
             // abilities
             if (onEquipAbility != null) {
-                abilitiesList.Add(string.Format("<color=green>Cast On Equip: {0}</color>", onEquipAbility.DisplayName));
+                summaryLines.Add(string.Format("<color=green>Cast On Equip: {0}</color>", onEquipAbility.DisplayName));
             }
             foreach (BaseAbility learnedAbility in LearnedAbilities) {
-                abilitiesList.Add(string.Format("<color=green>Learn On Equip: {0}</color>", learnedAbility.DisplayName));
+                summaryLines.Add(string.Format("<color=green>Learn On Equip: {0}</color>", learnedAbility.DisplayName));
             }
 
             if (equipmentSet != null) {
                 int equipmentCount = SystemGameManager.Instance.PlayerManager.MyCharacter.CharacterEquipmentManager.GetEquipmentSetCount(equipmentSet);
-                abilitiesList.Add(string.Format("\n<color=yellow>{0} ({1}/{2})</color>", equipmentSet.DisplayName, equipmentCount, equipmentSet.MyEquipmentList.Count));
+                summaryLines.Add(string.Format("\n<color=yellow>{0} ({1}/{2})</color>", equipmentSet.DisplayName, equipmentCount, equipmentSet.MyEquipmentList.Count));
                 foreach (Equipment equipment in equipmentSet.MyEquipmentList) {
                     string colorName = "#888888";
                     if (SystemGameManager.Instance.PlayerManager.MyCharacter.CharacterEquipmentManager.HasEquipment(equipment.DisplayName)) {
                         colorName = "yellow";
                     }
-                    abilitiesList.Add(string.Format("  <color={0}>{1}</color>", colorName, equipment.DisplayName));
+                    summaryLines.Add(string.Format("  <color={0}>{1}</color>", colorName, equipment.DisplayName));
                 }
-                abilitiesList.Add(string.Format(""));
+                summaryLines.Add(string.Format(""));
                 for (int i = 0; i < equipmentSet.MyTraitList.Count; i++) {
                     if (equipmentSet.MyTraitList[i] != null) {
                         string colorName = "#888888";
                         if (equipmentCount > i) {
                             colorName = "green";
                         }
-                        abilitiesList.Add(string.Format("<color={0}>({1}) {2}</color>", colorName, i+1, equipmentSet.MyTraitList[i].GetSummary()));
+                        summaryLines.Add(string.Format("<color={0}>({1}) {2}</color>", colorName, i+1, equipmentSet.MyTraitList[i].GetSummary()));
                     }
                 }
                 if (equipmentSet.MyTraitList.Count > 0) {
-                    abilitiesList.Add(string.Format(""));
+                    summaryLines.Add(string.Format(""));
                 }
             }
 
-            return base.GetSummary() + "\n" + string.Join("\n", abilitiesList);
+            return base.GetSummary(usedItemQuality) + "\n" + string.Join("\n", summaryLines);
         }
 
         public override void SetupScriptableObjects() {
@@ -384,8 +392,8 @@ namespace AnyRPG {
 
         }
 
-        public override void InitializeNewItem() {
-            base.InitializeNewItem();
+        public override void InitializeNewItem(ItemQuality itemQuality = null) {
+            base.InitializeNewItem(itemQuality);
 
             if (randomSecondaryStats == false) {
                 return;
