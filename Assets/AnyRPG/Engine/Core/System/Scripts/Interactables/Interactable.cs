@@ -151,6 +151,9 @@ namespace AnyRPG {
                 }
                 return gameObject.name;
             }
+            set {
+                interactableName = value;
+            }
         }
         public bool NotInteractable { get => notInteractable; set => notInteractable = value; }
         public Collider Collider { get => myCollider; }
