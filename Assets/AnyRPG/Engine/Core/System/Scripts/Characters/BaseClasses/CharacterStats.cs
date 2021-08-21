@@ -1142,7 +1142,7 @@ namespace AnyRPG {
         }
 
         public void ReviveRaw() {
-            //Debug.Log(BaseCharacter.CharacterName + ".CharacterStats.ReviveRaw()");
+            //Debug.Log(BaseCharacter.gameObject.name + ".CharacterStats.ReviveRaw()");
             isReviving = false;
             baseCharacter.UnitController.CharacterUnit.DisableCollider();
             baseCharacter.UnitController.CharacterUnit.EnableCollider();

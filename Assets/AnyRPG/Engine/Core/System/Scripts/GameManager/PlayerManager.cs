@@ -292,8 +292,11 @@ namespace AnyRPG {
         public void RespawnPlayer() {
             //Debug.Log("PlayerManager.RespawnPlayer()");
             DespawnPlayerUnit();
-            activeCharacter.CharacterStats.ReviveRaw();
             SpawnPlayerUnit();
+
+            if (activeCharacter.CharacterStats.IsAlive == false) {
+                activeCharacter.CharacterStats.ReviveRaw();
+            }
         }
 
         public void RevivePlayerUnit() {
