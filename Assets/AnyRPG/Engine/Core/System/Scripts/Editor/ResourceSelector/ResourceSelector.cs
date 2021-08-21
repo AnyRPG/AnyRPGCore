@@ -14,13 +14,13 @@ public class ResourceSelector : EditorWindow
     Label header;
     Label fileTypeLabel;
     TextField nameFilter;
-    PopupField<string> typeFilter;
+    PopupField<Type> typeFilter;
     ListView listView;
     List<ResourceProfile> listElements;
-    List<string> classNames = new List<string>();
+    List<Type> classNames = new List<Type>();
     bool listInitialized = false;
     string namePattern;
-    string classPattern;
+    Type classPattern;
 
 //    [MenuItem("Tools/AnyRPG/ResourceSelector")]
 
@@ -57,8 +57,12 @@ public class ResourceSelector : EditorWindow
             manager.LoadResourceList();
         }
         List<ResourceProfile> namesList = new List<ResourceProfile>();
+        classNames.Clear();
+        classNames.Add(typeof(ResourceProfile));
         foreach (ResourceProfile item in manager.GetResourceList()) {
-
+            if (!classNames.Contains(item.GetType())) {
+                classNames.Add(item.GetType());
+            }
             if (MatchesFilter(item)) {
                 namesList.Add(item);
             }
@@ -69,10 +73,14 @@ public class ResourceSelector : EditorWindow
     }
 
     bool MatchesFilter(ResourceProfile item) {
-        if (namePattern == null || namePattern == "") {
-            return true;
+        bool exclude = false;
+        if (namePattern != null && namePattern != "") {
+            exclude = !item.ResourceName.ToLower().Contains(namePattern.ToLower());
         }
-        return item.ResourceName.ToLower().Contains(namePattern.ToLower());
+        if (!exclude && classPattern != null) {
+            exclude = !classPattern.IsAssignableFrom(item.GetType());
+        }
+        return !exclude;
     }
 
     void ReloadList() {
@@ -87,7 +95,7 @@ public class ResourceSelector : EditorWindow
         listView.Refresh();
     }
 
-    void ApplyClassFilter(string classPattern) {
+    void ApplyClassFilter(Type classPattern) {
         this.classPattern = classPattern;
         InitializeList();
         listView.Refresh();
@@ -105,7 +113,6 @@ public class ResourceSelector : EditorWindow
             }
             fileTypeLabel.text = "Resource name: " + resourceType.Name;
             if (!listInitialized) {
-                classNames.Add("classOne");
                 InitializeList();
                 listView.Refresh();
                 listInitialized = true;
@@ -126,9 +133,10 @@ public class ResourceSelector : EditorWindow
     // this function is heavily influenced by the API docs example at
     // https://docs.unity3d.com/Packages/com.unity.ui@1.0/api/UnityEngine.UIElements.ListView.html
     public void CreateGUI() {
+        classNames.Add(typeof(ResourceProfile));
+
         VisualElement root = rootVisualElement;
 
-        classNames.Add("");
         header = new Label("");
         header.style.unityFontStyleAndWeight = FontStyle.Bold;
         root.Add(header);
@@ -137,16 +145,16 @@ public class ResourceSelector : EditorWindow
         fileTypeLabel.style.unityFontStyleAndWeight = FontStyle.Bold;
         root.Add(fileTypeLabel);
 
-        /*
-        // unfortunately this breaks the Unity Editor. the window won't open and you have to reset your layouts
-        typeFilter = new UnityEditor.UIElements.PopupField<string>("Filter by type", classNames, "");
-        typeFilter.RegisterValueChangedCallback<string>( x => ApplyClassFilter(x.newValue));
-        root.Add(typeFilter);
-        */
+        VisualElement filtersElement = new VisualElement() { style = { flexDirection = FlexDirection.Row }};
+        root.Add(filtersElement);
 
-        nameFilter = new TextField("Filter by name");
+        typeFilter = new UnityEditor.UIElements.PopupField<Type>(classNames, 0) { style = { flexGrow = 0.4f } };
+        typeFilter.RegisterCallback<ChangeEvent<Type>>( x => ApplyClassFilter(x.newValue));
+        filtersElement.Add(typeFilter);
+
+        nameFilter = new TextField() { style = { flexGrow = 1 }};
         nameFilter.RegisterValueChangedCallback<string>( x => ApplyFilter(x.newValue));
-        root.Add(nameFilter);
+        filtersElement.Add(nameFilter);
 
         listElements = new List<ResourceProfile>();
 
