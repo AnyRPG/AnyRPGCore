@@ -13,6 +13,7 @@ public class ResourceSelector : EditorWindow
     SerializedProperty editedProperty;
     Label header;
     Label fileTypeLabel;
+    Label busyLabel;
     TextField nameFilter;
     PopupField<Type> typeFilter;
     ListView listView;
@@ -22,11 +23,12 @@ public class ResourceSelector : EditorWindow
     string namePattern;
     Type classPattern;
 
-//    [MenuItem("Tools/AnyRPG/ResourceSelector")]
-
+    [MenuItem("Tools/AnyRPG/Browse Resources")]
     public static void ShowResources() {
         ResourceSelector wnd = GetWindow<ResourceSelector>();
         wnd.titleContent = new GUIContent("ResourceSelector");
+        wnd.resourceType = typeof(ResourceProfile);
+        wnd.Show();
     }
 
     public static void DisplaySelectionDialog(System.Type resourceType, SerializedProperty property) {
@@ -39,26 +41,33 @@ public class ResourceSelector : EditorWindow
     }
 
     void SetSelected(IEnumerable<System.Object> selected) {
-        foreach (System.Object obj in selected) {
-            if (obj != null) {
-                editedProperty.stringValue = (obj as ResourceProfile).ResourceName;
-            } else {
-                editedProperty.stringValue = "";
+        if (editedProperty != null) {
+            foreach (System.Object obj in selected) {
+                if (obj != null) {
+                    editedProperty.stringValue = (obj as ResourceProfile).ResourceName;
+                } else {
+                    editedProperty.stringValue = "";
+                }
+                editedProperty.serializedObject.ApplyModifiedProperties();
             }
-            editedProperty.serializedObject.ApplyModifiedProperties();
         }
     }
 
     // fill listElements with all resources for the type in fileType
     void InitializeList() {
         listElements.Clear();
+        bool classFilterNeedsReset = false;
         DummyResourceManager manager = new DummyResourceManager(resourceType);
         if (manager.GetResourceList().Count == 0) {
             manager.LoadResourceList();
         }
         List<ResourceProfile> namesList = new List<ResourceProfile>();
         classNames.Clear();
-        classNames.Add(typeof(ResourceProfile));
+        if (editedProperty == null) {
+            classNames.Add(typeof(ResourceProfile));
+        } else if (typeFilter.value == typeof(ResourceProfile)) {
+            classFilterNeedsReset = true;
+        }
         foreach (ResourceProfile item in manager.GetResourceList()) {
             if (!classNames.Contains(item.GetType())) {
                 classNames.Add(item.GetType());
@@ -69,7 +78,9 @@ public class ResourceSelector : EditorWindow
         }
         namesList.Sort((a,b) => a.ResourceName.CompareTo(b.ResourceName));
         listElements.AddRange(namesList);
-        
+        if (classFilterNeedsReset && classNames.Contains(resourceType)) {
+            typeFilter.SetValueWithoutNotify(resourceType);
+        }
     }
 
     bool MatchesFilter(ResourceProfile item) {
@@ -112,22 +123,27 @@ public class ResourceSelector : EditorWindow
                 Close();
             }
             fileTypeLabel.text = "Resource name: " + resourceType.Name;
-            if (!listInitialized) {
-                InitializeList();
-                listView.Refresh();
-                listInitialized = true;
-                int idx = -1;
-                for (int i = 0; i < listElements.Count; i++) {
-                    if (listElements[i].ResourceName == selectedItemName) {
-                        idx = i;
-                        break;
-                    }
-                }
-                if (idx >= 0) {
-                    listView.selectedIndex = idx;
+        }
+        if (!listInitialized  && resourceType != null) {
+            InitializeList();
+            listView.Refresh();
+            listInitialized = true;
+            ClearBusyLabel();
+            int idx = -1;
+            for (int i = 0; i < listElements.Count; i++) {
+                if (listElements[i].ResourceName == selectedItemName) {
+                    idx = i;
+                    break;
                 }
             }
+            if (idx >= 0) {
+                listView.selectedIndex = idx;
+            }
         }
+    }
+
+    void ClearBusyLabel() {
+        busyLabel.text = "";
     }
 
     // this function is heavily influenced by the API docs example at
@@ -156,8 +172,13 @@ public class ResourceSelector : EditorWindow
         nameFilter.RegisterValueChangedCallback<string>( x => ApplyFilter(x.newValue));
         filtersElement.Add(nameFilter);
 
-        listElements = new List<ResourceProfile>();
+        busyLabel = new Label("Loading... Please wait.");
+        busyLabel.style.unityFontStyleAndWeight = FontStyle.BoldAndItalic;
+        busyLabel.style.color = Color.red;
+        root.Add(busyLabel);
 
+        listElements = new List<ResourceProfile>();
+        
         // The "makeItem" function is called when the
         // ListView needs more items to render.
         Func<VisualElement> makeItem = () => new Label();
