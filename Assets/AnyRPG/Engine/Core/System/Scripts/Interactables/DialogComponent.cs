@@ -9,18 +9,10 @@ using UnityEngine.UI;
 namespace AnyRPG {
     public class DialogComponent : InteractableOptionComponent {
 
-        // game manager references
-        private UIManager uIManager = null;
-
         public DialogProps Props { get => interactableOptionProps as DialogProps; }
 
         public DialogComponent(Interactable interactable, DialogProps interactableOptionProps, SystemGameManager systemGameManager) : base(interactable, interactableOptionProps, systemGameManager) {
             //AddUnitProfileSettings();
-        }
-
-        public override void SetGameManagerReferences() {
-            base.SetGameManagerReferences();
-            uIManager = systemGameManager.UIManager;
         }
 
         /*

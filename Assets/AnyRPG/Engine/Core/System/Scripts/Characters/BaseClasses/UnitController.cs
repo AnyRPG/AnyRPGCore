@@ -572,14 +572,14 @@ namespace AnyRPG {
             base.OnEnable();
 
             // create components here instead?  which ones rely on other things like unit profile being set before start?
-            namePlateController = new UnitNamePlateController(this);
-            unitMotor = new UnitMotor(this);
-            unitAnimator = new UnitAnimator(this);
+            namePlateController = new UnitNamePlateController(this, systemGameManager);
+            unitMotor = new UnitMotor(this, systemGameManager);
+            unitAnimator = new UnitAnimator(this, systemGameManager);
             patrolController = new PatrolController(this, systemGameManager);
             behaviorController = new BehaviorController(this, systemGameManager);
             unitModelController = new UnitModelController(this, systemGameManager);
-            unitMountManager = new UnitMountManager(this);
-            persistentObjectComponent.Setup(this);
+            unitMountManager = new UnitMountManager(this, systemGameManager);
+            persistentObjectComponent.Setup(this, systemGameManager);
 
             // allow the base character to initialize.
             characterUnit.BaseCharacter.Init();

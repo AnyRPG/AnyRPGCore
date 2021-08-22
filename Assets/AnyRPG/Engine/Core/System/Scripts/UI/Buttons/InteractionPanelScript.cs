@@ -22,7 +22,7 @@ namespace AnyRPG {
         private int optionIndex = 0;
 
         // game manager references
-        PlayerManager playerManager = null;
+        protected PlayerManager playerManager = null;
 
         public Image MyIcon { get => icon; set => icon = value; }
         public InteractableOptionComponent InteractableOption {
@@ -54,7 +54,7 @@ namespace AnyRPG {
         }
 
         public void Interact() {
-            if (SystemGameManager.Instance.PlayerManager.UnitController != null) {
+            if (playerManager.UnitController != null) {
                 InteractableOption.Interact(playerManager.UnitController.CharacterUnit, optionIndex);
             }
             InteractableOption.Interactable.CloseInteractionWindow();

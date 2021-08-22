@@ -18,23 +18,23 @@ namespace AnyRPG {
 
         public override bool Use() {
             //Debug.Log(MyDisplayName + ".RecipeItem.Use()");
-            if (!SystemGameManager.Instance.PlayerManager.MyCharacter.CharacterRecipeManager.RecipeList.ContainsValue(recipe)) {
+            if (!playerManager.MyCharacter.CharacterRecipeManager.RecipeList.ContainsValue(recipe)) {
                 //Debug.Log(MyDisplayName + ".RecipeItem.Use(): Player does not have the recipe: " + recipe.MyDisplayName);
                 bool returnValue = base.Use();
                 if (returnValue == false) {
                     return false;
                 }
                 // learn recipe if the character has the right skill
-                if (SystemGameManager.Instance.PlayerManager.MyCharacter.CharacterAbilityManager.AbilityList.ContainsValue(recipe.CraftAbility)) {
-                    SystemGameManager.Instance.PlayerManager.MyCharacter.CharacterRecipeManager.LearnRecipe(recipe);
-                    SystemGameManager.Instance.UIManager.MessageFeedManager.WriteMessage("You learned the recipe " + recipe.DisplayName);
+                if (playerManager.MyCharacter.CharacterAbilityManager.AbilityList.ContainsValue(recipe.CraftAbility)) {
+                    playerManager.MyCharacter.CharacterRecipeManager.LearnRecipe(recipe);
+                    messageFeedManager.WriteMessage("You learned the recipe " + recipe.DisplayName);
                     Remove();
                 } else {
-                    SystemGameManager.Instance.UIManager.MessageFeedManager.WriteMessage("To learn this recipe, you must know " + recipe.CraftAbility + "!");
+                    messageFeedManager.WriteMessage("To learn this recipe, you must know " + recipe.CraftAbility + "!");
                 }
                 return returnValue;
             } else {
-                SystemGameManager.Instance.UIManager.MessageFeedManager.WriteMessage("You already know this recipe!");
+                messageFeedManager.WriteMessage("You already know this recipe!");
                 return false;
             }
         }
@@ -43,11 +43,11 @@ namespace AnyRPG {
             string returnString = base.GetSummary();
             if (recipe != null) {
                 string alreadyKnownString = string.Empty;
-                if (SystemGameManager.Instance.PlayerManager.MyCharacter.CharacterRecipeManager.RecipeList.ContainsValue(recipe)) {
+                if (playerManager.MyCharacter.CharacterRecipeManager.RecipeList.ContainsValue(recipe)) {
                     alreadyKnownString = "<color=red>already known</color>\n";
                 }
                 string abilityKnownString = string.Empty;
-                if (SystemGameManager.Instance.PlayerManager.MyCharacter.CharacterAbilityManager.AbilityList.ContainsValue(recipe.CraftAbility)) {
+                if (playerManager.MyCharacter.CharacterAbilityManager.AbilityList.ContainsValue(recipe.CraftAbility)) {
                     abilityKnownString = "<color=white>Requires: " + recipe.CraftAbility.DisplayName  + "</color>\n";
                 } else {
                     abilityKnownString = "<color=red>Requires: " + recipe.CraftAbility.DisplayName + "</color>\n";

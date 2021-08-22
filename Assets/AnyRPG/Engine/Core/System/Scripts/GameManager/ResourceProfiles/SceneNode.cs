@@ -85,6 +85,9 @@ namespace AnyRPG {
 
         private List<EnvironmentStateProfile> environmentStates = new List<EnvironmentStateProfile>();
 
+        // game manager referenes
+        private SaveManager saveManager = null;
+
         private Dictionary<string, PersistentObjectSaveData> persistentObjects = new Dictionary<string, PersistentObjectSaveData>();
 
         public string SceneName { get => resourceName; set => resourceName = value; }
@@ -94,7 +97,7 @@ namespace AnyRPG {
         public AudioProfile BackgroundMusicProfile { get => realBackgroundMusicProfile; set => realBackgroundMusicProfile = value; }
         public List<PersistentObjectSaveData> PersistentObjects {
             get {
-                return SystemGameManager.Instance.SaveManager.GetSceneNodeSaveData(this).persistentObjects;
+                return saveManager.GetSceneNodeSaveData(this).persistentObjects;
             }
         }
         public List<EnvironmentStateProfile> EnvironmentStates { get => environmentStates; set => environmentStates = value; }
@@ -106,33 +109,38 @@ namespace AnyRPG {
 
         public bool Visited {
             get {
-                return SystemGameManager.Instance.SaveManager.GetSceneNodeSaveData(this).visited;
+                return saveManager.GetSceneNodeSaveData(this).visited;
             }
             set {
-                SceneNodeSaveData saveData = SystemGameManager.Instance.SaveManager.GetSceneNodeSaveData(this);
+                SceneNodeSaveData saveData = saveManager.GetSceneNodeSaveData(this);
                 saveData.visited = value;
-                SystemGameManager.Instance.SaveManager.SceneNodeSaveDataDictionary[saveData.MyName] = saveData;
+                saveManager.SceneNodeSaveDataDictionary[saveData.MyName] = saveData;
             }
         }
 
         public bool AllowMount { get => allowMount; set => allowMount = value; }
 
+        public override void SetGameManagerReferences() {
+            base.SetGameManagerReferences();
+            saveManager = systemGameManager.SaveManager;
+        }
+
         public void SavePersistentObject(string UUID, PersistentObjectSaveData persistentObjectSaveData) {
             //Debug.Log(DisplayName + ".SceneNode.SavePersistentObject(" + UUID + ")");
-            SceneNodeSaveData saveData = SystemGameManager.Instance.SaveManager.GetSceneNodeSaveData(this);
+            SceneNodeSaveData saveData = saveManager.GetSceneNodeSaveData(this);
             foreach (PersistentObjectSaveData _persistentObjectSaveData in saveData.persistentObjects) {
                 if (_persistentObjectSaveData.UUID == UUID) {
                     saveData.persistentObjects.Remove(_persistentObjectSaveData);
-                    SystemGameManager.Instance.SaveManager.SceneNodeSaveDataDictionary[saveData.MyName] = saveData;
+                    saveManager.SceneNodeSaveDataDictionary[saveData.MyName] = saveData;
                     break;
                 }
             }
             saveData.persistentObjects.Add(persistentObjectSaveData);
-            SystemGameManager.Instance.SaveManager.SceneNodeSaveDataDictionary[saveData.MyName] = saveData;
+            saveManager.SceneNodeSaveDataDictionary[saveData.MyName] = saveData;
         }
 
         public PersistentObjectSaveData GetPersistentObject(string UUID) {
-            foreach (PersistentObjectSaveData _persistentObjectSaveData in SystemGameManager.Instance.SaveManager.GetSceneNodeSaveData(this).persistentObjects) {
+            foreach (PersistentObjectSaveData _persistentObjectSaveData in saveManager.GetSceneNodeSaveData(this).persistentObjects) {
                 if (_persistentObjectSaveData.UUID == UUID) {
                     return _persistentObjectSaveData;
                 }

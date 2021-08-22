@@ -65,7 +65,7 @@ namespace AnyRPG {
 
         public UnitController UnitController { get => unitController; set => unitController = value; }
 
-        public UnitNamePlateController(NamePlateUnit namePlateUnit) : base(namePlateUnit) {
+        public UnitNamePlateController(NamePlateUnit namePlateUnit, SystemGameManager systemGameManager) : base(namePlateUnit, systemGameManager) {
             if ((namePlateUnit as UnitController) is UnitController) {
                 unitController = (namePlateUnit as UnitController);
             }
@@ -96,7 +96,7 @@ namespace AnyRPG {
         */
 
         public override NamePlateController AddNamePlate() {
-            return SystemGameManager.Instance.UIManager.NamePlateManager.AddNamePlate(unitController, (unitController.UnitComponentController.NamePlateTransform == null ? true : false));
+            return namePlateManager.AddNamePlate(unitController, (unitController.UnitComponentController.NamePlateTransform == null ? true : false));
         }
 
         public override void RemoveNamePlate() {

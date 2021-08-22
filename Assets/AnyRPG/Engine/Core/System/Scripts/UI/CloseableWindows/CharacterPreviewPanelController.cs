@@ -35,7 +35,11 @@ namespace AnyRPG {
 
         public override void Configure(SystemGameManager systemGameManager) {
             base.Configure(systemGameManager);
+            previewCameraController.Configure(systemGameManager);
+        }
 
+        public override void SetGameManagerReferences() {
+            base.SetGameManagerReferences();
             characterCreatorManager = systemGameManager.CharacterCreatorManager;
             cameraManager = systemGameManager.CameraManager;
         }

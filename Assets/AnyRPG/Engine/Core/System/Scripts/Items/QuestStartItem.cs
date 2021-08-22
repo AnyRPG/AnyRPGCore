@@ -16,8 +16,6 @@ namespace AnyRPG {
 
         // game manager references
         protected QuestLog questLog = null;
-        protected MessageFeedManager messageFeedManager = null;
-        protected UIManager uIManager = null;
 
         public Interactable Interactable { get => null; }
         public QuestGiverProps Props { get => questGiverProps; set => questGiverProps = value; }
@@ -25,8 +23,6 @@ namespace AnyRPG {
         public override void SetGameManagerReferences() {
             base.SetGameManagerReferences();
             questLog = systemGameManager.QuestLog;
-            uIManager = systemGameManager.UIManager;
-            messageFeedManager = uIManager.MessageFeedManager;
         }
 
         public override bool Use() {

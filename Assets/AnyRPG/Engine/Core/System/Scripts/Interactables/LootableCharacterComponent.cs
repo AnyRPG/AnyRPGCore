@@ -31,9 +31,7 @@ namespace AnyRPG {
 
         // game manager references
         private SystemDataFactory systemDataFactory = null;
-        private SystemConfigurationManager systemConfigurationManager = null;
         private SystemAbilityController systemAbilityController = null;
-        private UIManager uIManager = null;
         private LootManager lootManager = null;
 
         public CharacterUnit MyCharacterUnit { get => characterUnit; set => characterUnit = value; }
@@ -52,9 +50,7 @@ namespace AnyRPG {
         public override void SetGameManagerReferences() {
             base.SetGameManagerReferences();
             systemDataFactory = systemGameManager.SystemDataFactory;
-            systemConfigurationManager = systemGameManager.SystemConfigurationManager;
             systemAbilityController = systemGameManager.SystemAbilityController;
-            uIManager = systemGameManager.UIManager;
             lootManager = systemGameManager.LootManager;
         }
 

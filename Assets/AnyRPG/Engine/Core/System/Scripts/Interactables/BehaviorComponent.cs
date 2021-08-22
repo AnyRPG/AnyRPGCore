@@ -17,7 +17,6 @@ namespace AnyRPG {
 
         // game manager references
         private SystemDataFactory systemDataFactory = null;
-        private UIManager uIManager = null;
 
         public BehaviorComponent(Interactable interactable, BehaviorProps interactableOptionProps, SystemGameManager systemGameManager) : base(interactable, interactableOptionProps, systemGameManager) {
             if ((interactable as UnitController) is UnitController) {
@@ -29,7 +28,6 @@ namespace AnyRPG {
         public override void SetGameManagerReferences() {
             base.SetGameManagerReferences();
             systemDataFactory = systemGameManager.SystemDataFactory;
-            uIManager = systemGameManager.UIManager;
         }
 
         public static BehaviorComponent GetBehaviorComponent(Interactable searchInteractable) {

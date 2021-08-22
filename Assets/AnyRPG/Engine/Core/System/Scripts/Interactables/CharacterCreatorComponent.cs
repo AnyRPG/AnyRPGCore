@@ -8,17 +8,9 @@ using UnityEngine.UI;
 namespace AnyRPG {
     public class CharacterCreatorComponent : InteractableOptionComponent {
 
-        // game manager references
-        private UIManager uIManager = null;
-
         public CharacterCreatorProps Props { get => interactableOptionProps as CharacterCreatorProps; }
 
         public CharacterCreatorComponent(Interactable interactable, CharacterCreatorProps interactableOptionProps, SystemGameManager systemGameManager) : base(interactable, interactableOptionProps, systemGameManager) {
-        }
-
-        public override void SetGameManagerReferences() {
-            base.SetGameManagerReferences();
-            uIManager = systemGameManager.UIManager;
         }
 
         public void CleanupEventSubscriptions(ICloseableWindowContents windowContents) {

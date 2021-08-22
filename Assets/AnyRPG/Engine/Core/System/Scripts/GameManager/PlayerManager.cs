@@ -76,7 +76,6 @@ namespace AnyRPG {
         UIManager uIManager = null;
         LevelManager levelManager = null;
         CameraManager cameraManager = null;
-        SystemConfigurationManager systemConfigurationManager = null;
         SystemAbilityController systemAbilityController = null;
         LogManager logManager = null;
         CastTargettingManager castTargettingManager = null;
@@ -114,7 +113,6 @@ namespace AnyRPG {
             messageFeedManager = uIManager.MessageFeedManager;
             levelManager = systemGameManager.LevelManager;
             cameraManager = systemGameManager.CameraManager;
-            systemConfigurationManager = systemGameManager.SystemConfigurationManager;
             systemAbilityController = systemGameManager.SystemAbilityController;
             logManager = systemGameManager.LogManager;
             castTargettingManager = systemGameManager.CastTargettingManager;
@@ -458,7 +456,9 @@ namespace AnyRPG {
             character = playerConnectionObject.GetComponent<BaseCharacter>();
             activeCharacter = character;
             playerController = playerConnectionObject.GetComponent<PlayerController>();
+            playerController.Configure(systemGameManager);
             playerUnitMovementController = playerConnectionObject.GetComponent<PlayerUnitMovementController>();
+            playerUnitMovementController.Configure(systemGameManager);
 
             SystemEventManager.TriggerEvent("OnBeforePlayerConnectionSpawn", new EventParamProperties());
             activeCharacter.Init();

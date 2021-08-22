@@ -15,7 +15,7 @@ namespace AnyRPG {
 
         public override bool MyPrerequisitesMet {
             get {
-                if (SystemGameManager.Instance.PlayerManager.MyCharacter.CharacterAbilityManager.HasAbility(GatheringNodeProps.BaseAbility) == false) {
+                if (playerManager.MyCharacter.CharacterAbilityManager.HasAbility(GatheringNodeProps.BaseAbility) == false) {
                     return false;
                 }
                 return base.MyPrerequisitesMet;
@@ -29,7 +29,7 @@ namespace AnyRPG {
             }
             base.CreateEventSubscriptions();
 
-            SystemGameManager.Instance.SystemEventManager.OnAbilityListChanged += HandleAbilityListChange;
+            systemEventManager.OnAbilityListChanged += HandleAbilityListChange;
         }
 
         public override void CleanupEventSubscriptions() {
@@ -39,8 +39,8 @@ namespace AnyRPG {
             }
             base.CleanupEventSubscriptions();
 
-            if (SystemGameManager.Instance.SystemEventManager != null) {
-                SystemGameManager.Instance.SystemEventManager.OnAbilityListChanged -= HandleAbilityListChange;
+            if (systemEventManager != null) {
+                systemEventManager.OnAbilityListChanged -= HandleAbilityListChange;
             }
         }
 
@@ -81,22 +81,22 @@ namespace AnyRPG {
             } else {
                 source.BaseCharacter.CharacterAbilityManager.BeginAbility(GatheringNodeProps.BaseAbility, interactable);
             }
-            SystemGameManager.Instance.UIManager.interactionWindow.CloseWindow();
+            uIManager.interactionWindow.CloseWindow();
             return true;
             //return PickUp();
         }
 
         public void Gather(int optionIndex = 0) {
             //Debug.Log(gameObject.name + ".GatheringNode.DropLoot()");
-            if (SystemGameManager.Instance.PlayerManager.ActiveUnitController != null) {
-                base.Interact(SystemGameManager.Instance.PlayerManager.ActiveUnitController.CharacterUnit, optionIndex);
+            if (playerManager.ActiveUnitController != null) {
+                base.Interact(playerManager.ActiveUnitController.CharacterUnit, optionIndex);
             }
         }
 
         /*
         public override void DropLoot() {
             Debug.Log(gameObject.name + ".GatheringNode.DropLoot()");
-            base.Interact(SystemGameManager.Instance.PlayerManager.MyCharacter.CharacterUnit);
+            base.Interact(playerManager.MyCharacter.CharacterUnit);
             //base.DropLoot();
             //PickUp();
         }
@@ -104,7 +104,7 @@ namespace AnyRPG {
 
         public override int GetCurrentOptionCount() {
             //Debug.Log(gameObject.name + ".GatheringNode.GetCurrentOptionCount()");
-            return ((SystemGameManager.Instance.PlayerManager.MyCharacter.CharacterAbilityManager.HasAbility(GatheringNodeProps.BaseAbility) == true
+            return ((playerManager.MyCharacter.CharacterAbilityManager.HasAbility(GatheringNodeProps.BaseAbility) == true
                 && interactable.MySpawnReference != null
                 && currentTimer <= 0f) ? 1 : 0);
         }

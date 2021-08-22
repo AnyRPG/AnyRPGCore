@@ -8,7 +8,7 @@ using UnityEngine.Serialization;
 
 namespace AnyRPG {
 
-    public class BaseNamePlateController {
+    public class BaseNamePlateController : ConfiguredClass {
 
         public virtual event System.Action OnInitializeNamePlate = delegate { };
         public virtual event Action OnNameChange = delegate { };
@@ -16,6 +16,9 @@ namespace AnyRPG {
         protected NamePlateController namePlate;
 
         protected NamePlateUnit namePlateUnit;
+
+        // game manager references
+        protected NamePlateManager namePlateManager = null;
 
         public virtual NamePlateController NamePlate { get => namePlate; }
 
@@ -116,8 +119,14 @@ namespace AnyRPG {
 
         public NamePlateUnit NamePlateUnit { get => namePlateUnit; set => namePlateUnit = value; }
 
-        public BaseNamePlateController(NamePlateUnit namePlateUnit) {
+        public BaseNamePlateController(NamePlateUnit namePlateUnit, SystemGameManager systemGameManager) {
             this.namePlateUnit = namePlateUnit;
+            Configure(systemGameManager);
+        }
+
+        public override void SetGameManagerReferences() {
+            base.SetGameManagerReferences();
+            namePlateManager = systemGameManager.UIManager.NamePlateManager;
         }
 
         public void SetNamePlatePosition() {
@@ -141,7 +150,6 @@ namespace AnyRPG {
                 return;
             }
             if (CanSpawnNamePlate()) {
-                //NamePlateController _namePlate = SystemGameManager.Instance.UIManager.NamePlateManager.AddNamePlate(namePlateUnit, (unitController.UnitComponentController.NamePlateTransform == null ? true : false));
                 SetNamePlatePosition();
                 namePlate = AddNamePlate();
                 SetupNamePlate();
@@ -151,13 +159,11 @@ namespace AnyRPG {
 
         public virtual NamePlateController AddNamePlate() {
             //Debug.Log(namePlateUnit.gameObject.name + ".BasenamePlateController.AddNamePlate()");
-            return SystemGameManager.Instance.UIManager.NamePlateManager.AddNamePlate(namePlateUnit, false);
+            return namePlateManager.AddNamePlate(namePlateUnit, false);
         }
 
         public virtual void RemoveNamePlate() {
-            if (SystemGameManager.Instance.UIManager.NamePlateManager != null) {
-                SystemGameManager.Instance.UIManager.NamePlateManager.RemoveNamePlate(namePlateUnit);
-            }
+            namePlateManager.RemoveNamePlate(namePlateUnit);
         }
 
         public virtual bool CanSpawnNamePlate() {

@@ -16,7 +16,15 @@ namespace AnyRPG {
         /// </summary>
         public float defaultPrefabLifetime = 10f;
 
+        // game manager references
+        protected SystemAbilityController systemAbilityController = null;
+
         public float MyAbilityEffectObjectLifetime { get => defaultPrefabLifetime; set => defaultPrefabLifetime = value; }
+
+        public override void SetGameManagerReferences() {
+            base.SetGameManagerReferences();
+            systemAbilityController = systemGameManager.SystemAbilityController;
+        }
 
         protected override void BeginMonitoring(Dictionary<PrefabProfile, GameObject> abilityEffectObjects, IAbilityCaster source, Interactable target, AbilityEffectContext abilityEffectInput) {
             //Debug.Log(DisplayName + ".FixedLengthEffect.BeginMonitoring(" + (abilityEffectObjects == null ? "null" : abilityEffectObjects.Count.ToString()) + ", " + (target == null ? "null" : target.name) + ")");
@@ -29,7 +37,7 @@ namespace AnyRPG {
         protected virtual void CheckDestroyObjects(Dictionary<PrefabProfile, GameObject> abilityEffectObjects, IAbilityCaster source, Interactable target, AbilityEffectContext abilityEffectInput) {
             //Debug.Log(DisplayName + ".FixedLengthEffect.CheckDestroyObjects(" + (abilityEffectObjects == null ? "null" : abilityEffectObjects.Count.ToString()) + ", " + (source == null ? "null" : source.AbilityManager.Name) + ", " + (target == null ? "null" : target.name) + ")");
             if (source != null) {
-                SystemGameManager.Instance.SystemAbilityController.BeginDestroyAbilityEffectObject(abilityEffectObjects, source, target, defaultPrefabLifetime, abilityEffectInput, this);
+                systemAbilityController.BeginDestroyAbilityEffectObject(abilityEffectObjects, source, target, defaultPrefabLifetime, abilityEffectInput, this);
             }
         }
 

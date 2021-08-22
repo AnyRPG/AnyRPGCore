@@ -35,7 +35,6 @@ namespace AnyRPG {
         protected CanvasGroup canvasGroup = null;
 
         // game manager references
-        private SystemConfigurationManager systemConfigurationManager = null;
         private HandScript handScript = null;
         private MessageFeedManager messageFeedManager = null;
         private SystemItemManager systemItemManager = null;
@@ -100,15 +99,18 @@ namespace AnyRPG {
             //Debug.Log("InventoryManager.Awake()");
             base.Configure(systemGameManager);
             canvasGroup = inventoryContainer.GetComponent<CanvasGroup>();
+
+            bagBarController.Configure(systemGameManager);
+        }
+
+        public override void SetGameManagerReferences() {
+            base.SetGameManagerReferences();
             uIManager = systemGameManager.UIManager;
             handScript = uIManager.HandScript;
             messageFeedManager = uIManager.MessageFeedManager;
-            systemConfigurationManager = systemGameManager.SystemConfigurationManager;
             systemItemManager = systemGameManager.SystemItemManager;
             objectPooler = systemGameManager.ObjectPooler;
             systemEventManager = systemGameManager.SystemEventManager;
-
-            bagBarController.Configure(systemGameManager);
         }
 
         private void Start() {

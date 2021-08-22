@@ -11,7 +11,6 @@ namespace AnyRPG {
 
         // game manager references
         private LevelManager levelManager = null;
-        private UIManager uIManager = null;
         private CutSceneBarController cutSceneBarController = null;
 
         public CutsceneProps Props { get => interactableOptionProps as CutsceneProps; }
@@ -22,7 +21,6 @@ namespace AnyRPG {
         public override void SetGameManagerReferences() {
             base.SetGameManagerReferences();
             levelManager = systemGameManager.LevelManager;
-            uIManager = systemGameManager.UIManager;
             cutSceneBarController = uIManager.CutSceneBarController;
         }
 

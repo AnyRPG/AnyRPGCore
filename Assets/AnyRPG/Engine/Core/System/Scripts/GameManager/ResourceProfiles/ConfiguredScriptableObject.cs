@@ -5,6 +5,7 @@ namespace AnyRPG {
     public abstract class ConfiguredScriptableObject : ScriptableObject {
 
         protected SystemGameManager systemGameManager = null;
+        protected SystemConfigurationManager systemConfigurationManager = null;
 
         public virtual void Configure(SystemGameManager systemGameManager) {
             this.systemGameManager = systemGameManager;
@@ -12,7 +13,7 @@ namespace AnyRPG {
         }
 
         public virtual void SetGameManagerReferences() {
-            // meant to be overwritten
+            systemConfigurationManager = systemGameManager.SystemConfigurationManager;
         }
 
     }

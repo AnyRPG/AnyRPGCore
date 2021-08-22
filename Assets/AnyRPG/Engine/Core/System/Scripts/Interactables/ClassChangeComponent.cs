@@ -8,9 +8,6 @@ using UnityEngine.UI;
 namespace AnyRPG {
     public class ClassChangeComponent : InteractableOptionComponent {
 
-        // game manager references
-        private UIManager uIManager = null;
-
         public ClassChangeProps Props { get => interactableOptionProps as ClassChangeProps; }
 
         private bool windowEventSubscriptionsInitialized = false;
@@ -19,11 +16,6 @@ namespace AnyRPG {
             if (interactableOptionProps.GetInteractionPanelTitle() == string.Empty) {
                 interactableOptionProps.InteractionPanelTitle = Props.CharacterClass.DisplayName + " Class";
             }
-        }
-
-        public override void SetGameManagerReferences() {
-            base.SetGameManagerReferences();
-            uIManager = systemGameManager.UIManager;
         }
 
         public void CleanupEventSubscriptions(ICloseableWindowContents windowContents) {

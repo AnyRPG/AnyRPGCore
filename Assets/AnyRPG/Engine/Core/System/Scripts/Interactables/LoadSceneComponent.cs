@@ -17,7 +17,7 @@ namespace AnyRPG {
             //Debug.Log(interactable.gameObject.name + ".LoadSceneComponent.Interact()");
             base.Interact(source, optionIndex);
 
-            SystemGameManager.Instance.LevelManager.LoadLevel(LoadSceneProps.SceneName);
+            levelManager.LoadLevel(LoadSceneProps.SceneName);
             return true;
         }
 

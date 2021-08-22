@@ -32,7 +32,6 @@ namespace AnyRPG {
         private SaveManager saveManager = null;
         private ObjectPooler objectPooler = null;
         private CharacterCreatorManager characterCreatorManager = null;
-        private SystemConfigurationManager systemConfigurationManager = null;
         private UIManager uIManager = null;
 
         public UnitProfile UnitProfile { get => unitProfile; set => unitProfile = value; }
@@ -58,7 +57,6 @@ namespace AnyRPG {
             saveManager = systemGameManager.SaveManager;
             objectPooler = systemGameManager.ObjectPooler;
             characterCreatorManager = systemGameManager.CharacterCreatorManager;
-            systemConfigurationManager = systemGameManager.SystemConfigurationManager;
             uIManager = systemGameManager.UIManager;
         }
 

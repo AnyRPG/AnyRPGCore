@@ -22,7 +22,6 @@ namespace AnyRPG {
         private SystemDataFactory systemDataFactory = null;
         private PlayerManager playerManager = null;
         private LogManager logManager = null;
-        private SystemConfigurationManager systemConfigurationManager = null;
 
         public int DialogIndex { get => dialogIndex; }
 
@@ -36,7 +35,6 @@ namespace AnyRPG {
             systemDataFactory = systemGameManager.SystemDataFactory;
             playerManager = systemGameManager.PlayerManager;
             logManager = systemGameManager.LogManager;
-            systemConfigurationManager = systemGameManager.SystemConfigurationManager;
         }
 
         public void Cleanup() {

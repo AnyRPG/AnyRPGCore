@@ -14,20 +14,11 @@ namespace AnyRPG {
         [SerializeField]
         private TextMeshProUGUI gameVersionText = null;
 
-        // game manager references
-
-        private SystemConfigurationManager systemConfigurationManager = null;
-
         public override void Configure(SystemGameManager systemGameManager) {
             base.Configure(systemGameManager);
 
             CheckMissingInspectorValues();
             SetupGameLabels();
-        }
-
-        public override void SetGameManagerReferences() {
-            base.SetGameManagerReferences();
-            systemConfigurationManager = systemGameManager.SystemConfigurationManager;
         }
 
         private void CheckMissingInspectorValues() {
@@ -40,7 +31,7 @@ namespace AnyRPG {
         }
 
         private void SetupGameLabels() {
-            if (SystemGameManager.Instance.SystemConfigurationManager != null) {
+            if (systemConfigurationManager != null) {
                 if (gameNameText != null) {
                     gameNameText.text = systemConfigurationManager.GameName;
                 }

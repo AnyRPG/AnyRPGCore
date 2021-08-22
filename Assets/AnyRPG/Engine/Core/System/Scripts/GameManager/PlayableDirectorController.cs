@@ -5,16 +5,24 @@ using UnityEngine;
 using UnityEngine.Playables;
 
 namespace AnyRPG {
-    public class PlayableDirectorController : MonoBehaviour {
+    public class PlayableDirectorController : AutoConfiguredMonoBehaviour {
 
         PlayableDirector playableDirector = null;
+
+        // game manager references
+        private SystemPlayableDirectorManager systemPlayableDirectorManager = null;
+
+        public override void SetGameManagerReferences() {
+            base.SetGameManagerReferences();
+            systemPlayableDirectorManager = systemGameManager.SystemPlayableDirectorManager;
+        }
 
         private void Awake() {
             //Debug.Log("SystemGameManager.Awake()");
             playableDirector = GetComponent<PlayableDirector>();
             if (playableDirector != null) {
                 //Debug.Log("SystemGameManager.Awake(): playableDirector.playableAsset.name: " + playableDirector.playableAsset.name);
-                SystemGameManager.Instance.SystemPlayableDirectorManager.PlayableDirectorDictionary[playableDirector.playableAsset.name] = playableDirector;
+                systemPlayableDirectorManager.PlayableDirectorDictionary[playableDirector.playableAsset.name] = playableDirector;
             }
         }
 
@@ -24,12 +32,12 @@ namespace AnyRPG {
                 return;
             }
             /*
-            if (SystemGameManager.Instance.SystemPlayableDirectorManager == null || playableDirector == null) {
+            if (systemPlayableDirectorManager == null || playableDirector == null) {
                 return;
             }
             */
-            if (SystemGameManager.Instance.SystemPlayableDirectorManager.PlayableDirectorDictionary.ContainsKey(playableDirector.playableAsset.name)) {
-                SystemGameManager.Instance.SystemPlayableDirectorManager.PlayableDirectorDictionary.Remove(playableDirector.playableAsset.name);
+            if (systemPlayableDirectorManager.PlayableDirectorDictionary.ContainsKey(playableDirector.playableAsset.name)) {
+                systemPlayableDirectorManager.PlayableDirectorDictionary.Remove(playableDirector.playableAsset.name);
             }
 
         }

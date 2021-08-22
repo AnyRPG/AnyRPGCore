@@ -14,7 +14,6 @@ namespace AnyRPG {
 
         // game manager references
         private SystemDataFactory systemDataFactory = null;
-        private UIManager uIManager = null;
         private QuestLog questLog = null;
 
         public QuestGiverProps Props { get => interactableOptionProps as QuestGiverProps; }
@@ -32,7 +31,6 @@ namespace AnyRPG {
         public override void SetGameManagerReferences() {
             base.SetGameManagerReferences();
             systemDataFactory = systemGameManager.SystemDataFactory;
-            uIManager = systemGameManager.UIManager;
             questLog = systemGameManager.QuestLog;
         }
 
@@ -57,7 +55,7 @@ namespace AnyRPG {
 
         public override bool CanInteract(bool processRangeCheck = false, bool passedRangeCheck = false, float factionValue = 0f, bool processNonCombatCheck = true) {
             //Debug.Log(gameObject.name + ".QuestGiver.CanInteract()");
-            if (Quest.GetCompleteQuests(Props.Quests).Count + Quest.GetAvailableQuests(Props.Quests).Count == 0) {
+            if (questLog.GetCompleteQuests(Props.Quests).Count + questLog.GetAvailableQuests(Props.Quests).Count == 0) {
                 return false;
             }
             return base.CanInteract(processRangeCheck, passedRangeCheck, factionValue, processNonCombatCheck);
@@ -120,12 +118,12 @@ namespace AnyRPG {
         public override bool Interact(CharacterUnit source, int optionIndex = 0) {
             //Debug.Log(interactable.gameObject.name + ".QuestGiver.Interact()");
             base.Interact(source, optionIndex);
-            if (Quest.GetCompleteQuests(Props.Quests, true).Count + Quest.GetAvailableQuests(Props.Quests).Count > 1) {
+            if (questLog.GetCompleteQuests(Props.Quests, true).Count + questLog.GetAvailableQuests(Props.Quests).Count > 1) {
                 interactable.OpenInteractionWindow();
                 return true;
-            } else if (Quest.GetAvailableQuests(Props.Quests).Count == 1 && Quest.GetCompleteQuests(Props.Quests).Count == 0) {
-                if (Quest.GetAvailableQuests(Props.Quests)[0].HasOpeningDialog == true && Quest.GetAvailableQuests(Props.Quests)[0].OpeningDialog.TurnedIn == false) {
-                    (uIManager.dialogWindow.CloseableWindowContents as DialogPanelController).Setup(Quest.GetAvailableQuests(Props.Quests)[0], interactable);
+            } else if (questLog.GetAvailableQuests(Props.Quests).Count == 1 && questLog.GetCompleteQuests(Props.Quests).Count == 0) {
+                if (questLog.GetAvailableQuests(Props.Quests)[0].HasOpeningDialog == true && questLog.GetAvailableQuests(Props.Quests)[0].OpeningDialog.TurnedIn == false) {
+                    (uIManager.dialogWindow.CloseableWindowContents as DialogPanelController).Setup(questLog.GetAvailableQuests(Props.Quests)[0], interactable);
                     return true;
                 } else {
                     // do nothing will skip to below and open questlog to the available quest
@@ -139,7 +137,7 @@ namespace AnyRPG {
             if (!uIManager.questGiverWindow.IsOpen) {
                 //Debug.Log(source + " interacting with " + gameObject.name);
                 uIManager.questGiverWindow.OpenWindow();
-                questLog.ShowQuestGiverDescription(Quest.GetAvailableQuests(Props.Quests).Union(Quest.GetCompleteQuests(Props.Quests)).ToList()[0], this);
+                questLog.ShowQuestGiverDescription(questLog.GetAvailableQuests(Props.Quests).Union(questLog.GetCompleteQuests(Props.Quests)).ToList()[0], this);
                 return true;
             }
             return false;
@@ -272,7 +270,7 @@ namespace AnyRPG {
             if (interactable.CombatOnly) {
                 return 0;
             }
-            return Quest.GetCompleteQuests(Props.Quests).Count + Quest.GetAvailableQuests(Props.Quests).Count;
+            return questLog.GetCompleteQuests(Props.Quests).Count + questLog.GetAvailableQuests(Props.Quests).Count;
         }
 
         public void HandleAcceptQuest() {

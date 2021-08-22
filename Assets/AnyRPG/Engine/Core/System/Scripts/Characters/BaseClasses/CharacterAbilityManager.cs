@@ -56,7 +56,6 @@ namespace AnyRPG {
 
         // game manager references
         private SystemDataFactory systemDataFactory = null;
-        private SystemConfigurationManager systemConfigurationManager = null;
         private PlayerManager playerManager = null;
         private CastTargettingManager castTargettingManager = null;
 
@@ -150,7 +149,6 @@ namespace AnyRPG {
         public override void SetGameManagerReferences() {
             base.SetGameManagerReferences();
             systemDataFactory = systemGameManager.SystemDataFactory;
-            systemConfigurationManager = systemGameManager.SystemConfigurationManager;
             playerManager = systemGameManager.PlayerManager;
             castTargettingManager = systemGameManager.CastTargettingManager;
         }

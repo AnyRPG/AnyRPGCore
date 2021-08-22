@@ -3,7 +3,7 @@ using UnityEngine;
 using UnityEngine.AI;
 
 namespace AnyRPG {
-    public class UnitMotor {
+    public class UnitMotor : ConfiguredClass {
 
         public event System.Action OnMovement = delegate { };
 
@@ -43,6 +43,9 @@ namespace AnyRPG {
 
         private bool useRootMotion = false;
 
+        // game manager references
+        private PlayerManager playerManager = null;
+
         // properties
         public float MovementSpeed { get => movementSpeed; set => movementSpeed = value; }
         public Interactable Target { get => target; }
@@ -50,8 +53,14 @@ namespace AnyRPG {
         public float NavMeshDistancePadding { get => navMeshDistancePadding; }
         public bool UseRootMotion { get => useRootMotion; set => useRootMotion = value; }
 
-        public UnitMotor(UnitController unitController) {
+        public UnitMotor(UnitController unitController, SystemGameManager systemGameManager) {
             this.unitController = unitController;
+            Configure(systemGameManager);
+        }
+
+        public override void SetGameManagerReferences() {
+            base.SetGameManagerReferences();
+            playerManager = systemGameManager.PlayerManager;
         }
 
         protected void SetMovementSpeed() {
@@ -230,7 +239,7 @@ namespace AnyRPG {
             RaycastHit raycastHit;
             Vector3 firstTestPosition = unitController.transform.position;
             bool foundMatch = false;
-            if (Physics.Raycast(testPosition + new Vector3(0f, 10f, 0f), Vector3.down, out raycastHit, 10f, SystemGameManager.Instance.PlayerManager.DefaultGroundMask)) {
+            if (Physics.Raycast(testPosition + new Vector3(0f, 10f, 0f), Vector3.down, out raycastHit, 10f, playerManager.DefaultGroundMask)) {
                 firstTestPosition = raycastHit.point;
                 foundMatch = true;
                 //Debug.Log(unitController.gameObject.name + ".UnitMotor.CorrectedNavmeshPosition(): testPosition " + testPosition + " got hit above on walkable ground: " + firstTestPosition + "; collider: " + raycastHit.collider.name);
@@ -256,7 +265,7 @@ namespace AnyRPG {
             // now try raycast downward in case we are at the top of a hill
             firstTestPosition = unitController.transform.position;
             foundMatch = false;
-            if (Physics.Raycast(testPosition, Vector3.down, out raycastHit, 10f, SystemGameManager.Instance.PlayerManager.DefaultGroundMask)) {
+            if (Physics.Raycast(testPosition, Vector3.down, out raycastHit, 10f, playerManager.DefaultGroundMask)) {
                 firstTestPosition = raycastHit.point;
                 foundMatch = true;
                 //Debug.Log(gameObject.name + ".UnitMotor.CorrectedNavmeshPosition(): testPosition " + testPosition + " got hit below on walkable ground: " + firstTestPosition + ")");
@@ -362,8 +371,8 @@ namespace AnyRPG {
             if (isKnockBack
                 && unitController != null
                 && unitController.UnitControllerMode == UnitControllerMode.Player) {
-                if (SystemGameManager.Instance.PlayerManager.PlayerUnitMovementController != null) {
-                    SystemGameManager.Instance.PlayerManager.PlayerUnitMovementController.KnockBack();
+                if (playerManager.PlayerUnitMovementController != null) {
+                    playerManager.PlayerUnitMovementController.KnockBack();
                 }
             }
             if (frozen) {

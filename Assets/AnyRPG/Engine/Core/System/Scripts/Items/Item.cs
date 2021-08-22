@@ -89,12 +89,11 @@ namespace AnyRPG {
         private SlotScript slot = null;
 
         // game manager references
-        private CurrencyConverter currencyConverter = null;
-        private InventoryManager inventoryManager = null;
-        private MessageFeedManager messageFeedManager = null;
-        private UIManager uIManager = null;
-        private SystemConfigurationManager systemConfigurationManager = null;
-        private PlayerManager playerManager = null;
+        protected CurrencyConverter currencyConverter = null;
+        protected InventoryManager inventoryManager = null;
+        protected MessageFeedManager messageFeedManager = null;
+        protected UIManager uIManager = null;
+        protected PlayerManager playerManager = null;
 
         public int MyMaximumStackSize { get => stackSize; set => stackSize = value; }
         public SlotScript MySlot { get => slot; set => slot = value; }
@@ -156,7 +155,6 @@ namespace AnyRPG {
             currencyConverter = systemGameManager.CurrencyConverter;
             uIManager = systemGameManager.UIManager;
             messageFeedManager = uIManager.MessageFeedManager;
-            systemConfigurationManager = systemGameManager.SystemConfigurationManager;
             playerManager = systemGameManager.PlayerManager;
         }
 

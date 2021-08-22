@@ -30,7 +30,7 @@ namespace AnyRPG {
             this.unitController = unitController;
             Configure(systemGameManager);
 
-            umaModelController = new UMAModelController(unitController, this);
+            umaModelController = new UMAModelController(unitController, this, systemGameManager);
             mecanimModelController = new MecanimModelController(unitController, systemGameManager);
         }
 

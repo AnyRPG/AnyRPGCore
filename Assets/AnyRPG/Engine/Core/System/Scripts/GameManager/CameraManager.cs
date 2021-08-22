@@ -45,7 +45,6 @@ namespace AnyRPG {
         protected bool eventSubscriptionsInitialized = false;
 
         // game manager references
-        SystemConfigurationManager systemConfigurationManager = null;
         LevelManager levelManager = null;
         PlayerManager playerManager = null;
 
@@ -78,7 +77,6 @@ namespace AnyRPG {
         public override void Configure(SystemGameManager systemGameManager) {
             //Debug.Log("CameraManager.Awake()");
             base.Configure(systemGameManager);
-            systemConfigurationManager = systemGameManager.SystemConfigurationManager;
             levelManager = systemGameManager.LevelManager;
             playerManager = systemGameManager.PlayerManager;
 

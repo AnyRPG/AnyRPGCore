@@ -86,7 +86,6 @@ namespace AnyRPG {
         protected bool eventSubscriptionsInitialized = false;
 
         // system component references
-        private SystemConfigurationManager systemConfigurationManager = null;
         private CameraManager cameraManager = null;
         private PlayerManager playerManager = null;
         private InputManager inputManager = null;
@@ -129,7 +128,6 @@ namespace AnyRPG {
         public override void SetGameManagerReferences() {
             base.SetGameManagerReferences();
 
-            systemConfigurationManager = systemGameManager.SystemConfigurationManager;
             cameraManager = systemGameManager.CameraManager;
             playerManager = systemGameManager.PlayerManager;
             inputManager = systemGameManager.InputManager;

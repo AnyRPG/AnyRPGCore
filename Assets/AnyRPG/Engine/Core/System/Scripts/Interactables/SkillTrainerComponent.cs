@@ -13,17 +13,17 @@ namespace AnyRPG {
             if (interactableOptionProps.GetInteractionPanelTitle() == string.Empty) {
                 interactableOptionProps.InteractionPanelTitle = "Train Me";
             }
-            SystemGameManager.Instance.SystemEventManager.OnSkillListChanged += HandleSkillListChanged;
+            systemEventManager.OnSkillListChanged += HandleSkillListChanged;
         }
 
         public override bool Interact(CharacterUnit source, int optionIndex = 0) {
             //Debug.Log(gameObject.name + ".SkillTrainer.Interact(" + source + ")");
             base.Interact(source, optionIndex);
-            if (!SystemGameManager.Instance.UIManager.skillTrainerWindow.IsOpen) {
+            if (!uIManager.skillTrainerWindow.IsOpen) {
                 //Debug.Log(source + " interacting with " + gameObject.name);
                 //vendorWindow.MyVendorUI.CreatePages(items);
-                SystemGameManager.Instance.UIManager.skillTrainerWindow.OpenWindow();
-                (SystemGameManager.Instance.UIManager.skillTrainerWindow.CloseableWindowContents as SkillTrainerUI).ShowSkills(this);
+                uIManager.skillTrainerWindow.OpenWindow();
+                (uIManager.skillTrainerWindow.CloseableWindowContents as SkillTrainerUI).ShowSkills(this);
                 return true;
             }
             return false;
@@ -33,14 +33,14 @@ namespace AnyRPG {
             //Debug.Log(gameObject.name + ".SkillTrainer.StopInteract()");
             base.StopInteract();
             //vendorUI.ClearPages();
-            SystemGameManager.Instance.UIManager.skillTrainerWindow.CloseWindow();
+            uIManager.skillTrainerWindow.CloseWindow();
         }
 
         public override void CleanupEventSubscriptions() {
             //Debug.Log(gameObject.name + ".SkillTrainer.CleanupEventSubscriptions()");
             base.CleanupEventSubscriptions();
-            if (SystemGameManager.Instance.SystemEventManager != null) {
-                SystemGameManager.Instance.SystemEventManager.OnSkillListChanged -= HandleSkillListChanged;
+            if (systemEventManager != null) {
+                systemEventManager.OnSkillListChanged -= HandleSkillListChanged;
             }
         }
 
@@ -65,7 +65,7 @@ namespace AnyRPG {
             }
             int optionCount = 0;
             foreach (Skill skill in Props.Skills) {
-                if (!SystemGameManager.Instance.PlayerManager.MyCharacter.CharacterSkillManager.HasSkill(skill)) {
+                if (!playerManager.MyCharacter.CharacterSkillManager.HasSkill(skill)) {
                     optionCount++;
                 }
             }
@@ -83,7 +83,7 @@ namespace AnyRPG {
         }
 
         public override bool CanShowMiniMapIcon() {
-            float relationValue = interactable.PerformFactionCheck(SystemGameManager.Instance.PlayerManager.MyCharacter);
+            float relationValue = interactable.PerformFactionCheck(playerManager.MyCharacter);
             return CanInteract(false, false, relationValue);
         }
 

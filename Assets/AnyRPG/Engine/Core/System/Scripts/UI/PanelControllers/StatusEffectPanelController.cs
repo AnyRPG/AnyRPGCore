@@ -150,7 +150,7 @@ namespace AnyRPG {
             StatusEffectNodeScript statusEffectNodeScript = statusNode.GetComponent<StatusEffectNodeScript>();
             if (statusEffectNodeScript != null) {
                 statusEffectNodes[statusEffectNode] = statusEffectNodeScript;
-                statusEffectNodeScript.Initialize(statusEffectNode, targetUnitController.CharacterUnit);
+                statusEffectNodeScript.Initialize(statusEffectNode, targetUnitController.CharacterUnit, systemGameManager);
                 statusEffectNode.AddStatusTracker(this, statusEffectNodeScript);
             } else {
                 //Debug.Log("StatusEffectPanelController.SpawnStatusNode(): statusEffectNodeScript is null!");

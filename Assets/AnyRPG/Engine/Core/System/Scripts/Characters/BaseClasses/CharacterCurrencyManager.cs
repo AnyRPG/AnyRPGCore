@@ -14,7 +14,6 @@ namespace AnyRPG {
         // game manager references
         private CurrencyConverter currencyConverter = null;
         private PlayerManager playerManager = null;
-        private SystemConfigurationManager systemConfigurationManager = null;
 
         public Dictionary<string, CurrencyNode> MyCurrencyList { get => currencyList; }
 
@@ -27,7 +26,6 @@ namespace AnyRPG {
             base.SetGameManagerReferences();
             currencyConverter = systemGameManager.CurrencyConverter;
             playerManager = systemGameManager.PlayerManager;
-            systemConfigurationManager = systemGameManager.SystemConfigurationManager;
         }
 
         public void AddCurrency(Currency currency, int currencyAmount) {

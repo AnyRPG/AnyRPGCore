@@ -11,7 +11,6 @@ namespace AnyRPG {
 
         // game manager references
         private SystemEventManager systemEventManager = null;
-        private SystemConfigurationManager systemConfigurationManager = null;
         private PlayerManager playerManager = null;
         private MessageFeedManager messageFeedManager = null;
         private LevelManager levelManager = null;
@@ -66,7 +65,6 @@ namespace AnyRPG {
         public override void SetGameManagerReferences() {
             base.SetGameManagerReferences();
             systemEventManager = systemGameManager.SystemEventManager;
-            systemConfigurationManager = systemGameManager.SystemConfigurationManager;
             playerManager = systemGameManager.PlayerManager;
             levelManager = systemGameManager.LevelManager;
             questLog = systemGameManager.QuestLog;

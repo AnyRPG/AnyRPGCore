@@ -23,13 +23,16 @@ namespace AnyRPG {
         private SystemPanelButton mapButton = null;
 
         // game manager references
-        SystemConfigurationManager systemConfigurationManager = null;
         UIManager uIManager = null;
 
         public override void Configure(SystemGameManager systemGameManager) {
             base.Configure(systemGameManager);
-            systemConfigurationManager = systemGameManager.SystemConfigurationManager;
-            uIManager = systemGameManager.UIManager;
+
+            mainMenuButton.Configure(systemGameManager);
+            abilityBookButton.Configure(systemGameManager);
+            questLogButton.Configure(systemGameManager);
+            characterButton.Configure(systemGameManager);
+            mapButton.Configure(systemGameManager);
 
             if (systemConfigurationManager.SystemBarMainMenu != null) {
                 mainMenuButton.Icon = systemConfigurationManager.SystemBarMainMenu;
@@ -46,6 +49,11 @@ namespace AnyRPG {
             if (systemConfigurationManager.SystemBarMap != null) {
                 mapButton.Icon = systemConfigurationManager.SystemBarMap;
             }
+        }
+
+        public override void SetGameManagerReferences() {
+            base.SetGameManagerReferences();
+            uIManager = systemGameManager.UIManager;
         }
 
 

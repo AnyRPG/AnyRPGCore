@@ -11,9 +11,9 @@ namespace AnyRPG {
 
         //public event System.Action OnTargetReady = delegate { };
 
-        protected override void Awake() {
-            base.Awake();
-            currentCamera = SystemGameManager.Instance.CameraManager.UnitPreviewCamera;
+        public override void Configure(SystemGameManager systemGameManager) {
+            base.Configure(systemGameManager);
+            currentCamera = cameraManager.UnitPreviewCamera;
         }
 
     }

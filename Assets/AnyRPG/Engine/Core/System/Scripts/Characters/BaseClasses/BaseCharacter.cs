@@ -58,7 +58,6 @@ namespace AnyRPG {
 
         // game manager references
         private SystemDataFactory systemDataFactory = null;
-        private SystemConfigurationManager systemConfigurationManager = null;
 
         public CharacterStats CharacterStats { get => characterStats; }
         public CharacterCombat CharacterCombat { get => characterCombat; }
@@ -101,7 +100,6 @@ namespace AnyRPG {
             base.SetGameManagerReferences();
 
             systemDataFactory = systemGameManager.SystemDataFactory;
-            systemConfigurationManager = systemGameManager.SystemConfigurationManager;
         }
 
         // baseCharacter does not initialize itself.  It is initialized by the PlayerManager (player case), or the UnitController (AI case)

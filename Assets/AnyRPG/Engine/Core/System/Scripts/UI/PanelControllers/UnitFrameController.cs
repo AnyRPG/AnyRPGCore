@@ -108,6 +108,9 @@ namespace AnyRPG {
         // track the camera wait start frame to ensure the current camera wait routine is still valid
         //private int lastWaitFrame = 0;
 
+        // game manager references
+        private PlayerManager playerManager = null;
+
         public BaseNamePlateController UnitNamePlateController { get => namePlateController; set => namePlateController = value; }
 
         //public GameObject FollowGameObject { get => followGameObject; set => followGameObject = value; }
@@ -127,6 +130,11 @@ namespace AnyRPG {
             }
         }
 
+        public override void SetGameManagerReferences() {
+            base.SetGameManagerReferences();
+            playerManager = systemGameManager.PlayerManager;
+        }
+
         public void InitializeController() {
             Debug.Log(gameObject.name + ".UnitFrameController.InitializeController()");
             if (controllerInitialized) {
@@ -141,7 +149,7 @@ namespace AnyRPG {
         }
 
         private void LateUpdate() {
-            if (SystemGameManager.Instance.SystemConfigurationManager.RealTimeUnitFrameCamera) {
+            if (systemConfigurationManager.RealTimeUnitFrameCamera) {
                 UpdateCameraPosition();
             }
         }
@@ -258,7 +266,7 @@ namespace AnyRPG {
             } else {
                 //Debug.Log(gameObject.name + ".UnitFrameController.SetTarget(): Unit Frame Not active after activate command.  Likely gameobject under inactive canvas.  Will run TargetInitialization() on enable instead.");
             }
-            if (SystemGameManager.Instance.SystemConfigurationManager.RealTimeUnitFrameCamera == true) {
+            if (systemConfigurationManager.RealTimeUnitFrameCamera == true) {
                 previewCamera.enabled = true;
             }/* else {
             // this code disabled because it is handled by TargetInitialization(), which results in an extra render request here
@@ -506,8 +514,8 @@ namespace AnyRPG {
         public void HandleLevelChanged(int _level) {
             CalculateResourceColors();
             unitLevelText.text = _level.ToString();
-            if (SystemGameManager.Instance.PlayerManager != null && SystemGameManager.Instance.PlayerManager.MyCharacter != null && SystemGameManager.Instance.PlayerManager.MyCharacter.CharacterStats != null) {
-                unitLevelText.color = LevelEquations.GetTargetColor(SystemGameManager.Instance.PlayerManager.MyCharacter.CharacterStats.Level, _level);
+            if (playerManager.MyCharacter?.CharacterStats != null) {
+                unitLevelText.color = LevelEquations.GetTargetColor(playerManager.MyCharacter.CharacterStats.Level, _level);
             }
         }
 
@@ -551,13 +559,13 @@ namespace AnyRPG {
         }
 
         public void HandleReputationChange() {
-            if (SystemGameManager.Instance.PlayerManager == null || SystemGameManager.Instance.PlayerManager.PlayerUnitSpawned == false) {
+            if (playerManager == null || playerManager.PlayerUnitSpawned == false) {
                 return;
             }
             if (namePlateController == null) {
                 return;
             }
-            reputationColor = Faction.GetFactionColor(namePlateController.NamePlateUnit);
+            reputationColor = Faction.GetFactionColor(playerManager, namePlateController.NamePlateUnit);
             //Color tmp = Faction.GetFactionColor(baseCharacter.MyFaction);
             reputationColor.a = 0.5f;
             unitNameBackground.color = reputationColor;

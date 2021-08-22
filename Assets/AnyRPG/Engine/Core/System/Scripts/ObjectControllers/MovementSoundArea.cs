@@ -62,8 +62,8 @@ namespace AnyRPG {
 
         private void SetupScriptableObjects() {
             //Debug.Log(gameObject.name + ".EnvironmentalEffectArea.SetupScriptableObjects()");
-            if (SystemGameManager.Instance == null) {
-                Debug.LogError(gameObject.name + ": SystemAbilityEffectManager not found.  Is the GameManager in the scene?");
+            if (systemGameManager == null) {
+                Debug.LogError(gameObject.name + ": SystemGameManager not found.  Is the GameManager in the scene?");
                 return;
             }
 

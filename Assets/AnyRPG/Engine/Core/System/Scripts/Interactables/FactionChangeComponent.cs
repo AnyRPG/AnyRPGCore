@@ -8,9 +8,6 @@ using UnityEngine.UI;
 namespace AnyRPG {
     public class FactionChangeComponent : InteractableOptionComponent {
 
-        // game manager references
-        private UIManager uIManager = null;
-
         public FactionChangeProps Props { get => interactableOptionProps as FactionChangeProps; }
 
         private bool windowEventSubscriptionsInitialized = false;
@@ -19,11 +16,6 @@ namespace AnyRPG {
             if (interactableOptionProps.GetInteractionPanelTitle() == string.Empty) {
                 interactableOptionProps.InteractionPanelTitle = Props.Faction.DisplayName + " Faction";
             }
-        }
-
-        public override void SetGameManagerReferences() {
-            base.SetGameManagerReferences();
-            uIManager = systemGameManager.UIManager;
         }
 
         public override void CreateEventSubscriptions() {

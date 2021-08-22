@@ -203,12 +203,12 @@ namespace AnyRPG {
         }
 
         public override bool Use() {
-            if (SystemGameManager.Instance.PlayerManager?.MyCharacter?.CharacterEquipmentManager != null) {
+            if (playerManager.MyCharacter?.CharacterEquipmentManager != null) {
                 bool returnValue = base.Use();
                 if (returnValue == false) {
                     return false;
                 }
-                if (SystemGameManager.Instance.PlayerManager.MyCharacter.CharacterEquipmentManager.Equip(this) == true) {
+                if (playerManager.MyCharacter.CharacterEquipmentManager.Equip(this) == true) {
                     Remove();
                     return true;
                 } else {
@@ -254,23 +254,23 @@ namespace AnyRPG {
             string colorstring = string.Empty;
             //Debug.Log(MyName + ": levelcap: " + levelCap + "; dynamicLevel: " + dynamicLevel);
             if (dynamicLevel == true && freezeDropLevel == false) {
-                itemRange = " (1 - " + (levelCap > 0 ? levelCap : SystemGameManager.Instance.SystemConfigurationManager.MaxLevel) + ")";
+                itemRange = " (1 - " + (levelCap > 0 ? levelCap : systemConfigurationManager.MaxLevel) + ")";
             }
-            if (GetItemLevel(SystemGameManager.Instance.PlayerManager.MyCharacter.CharacterStats.Level) > SystemGameManager.Instance.PlayerManager.MyCharacter.CharacterStats.Level) {
+            if (GetItemLevel(playerManager.MyCharacter.CharacterStats.Level) > playerManager.MyCharacter.CharacterStats.Level) {
                 colorstring = "red";
             } else {
                 colorstring = "white";
             }
-            summaryLines.Add(string.Format("<color={0}>Item Level: {1}{2}</color>", colorstring, GetItemLevel(SystemGameManager.Instance.PlayerManager.MyCharacter.CharacterStats.Level), itemRange));
+            summaryLines.Add(string.Format("<color={0}>Item Level: {1}{2}</color>", colorstring, GetItemLevel(playerManager.MyCharacter.CharacterStats.Level), itemRange));
 
             // armor
             if (useArmorModifier) {
-                summaryLines.Add(string.Format(" +{0} Armor", GetArmorModifier(SystemGameManager.Instance.PlayerManager.MyCharacter.CharacterStats.Level, usedItemQuality)));
+                summaryLines.Add(string.Format(" +{0} Armor", GetArmorModifier(playerManager.MyCharacter.CharacterStats.Level, usedItemQuality)));
             }
 
             // primary stats
             foreach (ItemPrimaryStatNode itemPrimaryStatNode in primaryStats) {
-                float primaryStatModifier = GetPrimaryStatModifier(itemPrimaryStatNode.StatName, SystemGameManager.Instance.PlayerManager.MyCharacter.CharacterStats.Level, SystemGameManager.Instance.PlayerManager.MyCharacter, usedItemQuality);
+                float primaryStatModifier = GetPrimaryStatModifier(itemPrimaryStatNode.StatName, playerManager.MyCharacter.CharacterStats.Level, playerManager.MyCharacter, usedItemQuality);
                 if (primaryStatModifier > 0f) {
                     summaryLines.Add(string.Format(" +{0} {1}",
                         primaryStatModifier,
@@ -281,7 +281,7 @@ namespace AnyRPG {
             // secondary stats
             foreach (ItemSecondaryStatNode itemSecondaryStatNode in SecondaryStats) {
                 summaryLines.Add(string.Format("<color=green> +{0} {1}</color>",
-                                   GetSecondaryStatAddModifier(itemSecondaryStatNode.SecondaryStat, SystemGameManager.Instance.PlayerManager.MyCharacter.CharacterStats.Level),
+                                   GetSecondaryStatAddModifier(itemSecondaryStatNode.SecondaryStat, playerManager.MyCharacter.CharacterStats.Level),
                                    itemSecondaryStatNode.SecondaryStat.ToString()));
             }
 
@@ -294,11 +294,11 @@ namespace AnyRPG {
             }
 
             if (equipmentSet != null) {
-                int equipmentCount = SystemGameManager.Instance.PlayerManager.MyCharacter.CharacterEquipmentManager.GetEquipmentSetCount(equipmentSet);
+                int equipmentCount = playerManager.MyCharacter.CharacterEquipmentManager.GetEquipmentSetCount(equipmentSet);
                 summaryLines.Add(string.Format("\n<color=yellow>{0} ({1}/{2})</color>", equipmentSet.DisplayName, equipmentCount, equipmentSet.MyEquipmentList.Count));
                 foreach (Equipment equipment in equipmentSet.MyEquipmentList) {
                     string colorName = "#888888";
-                    if (SystemGameManager.Instance.PlayerManager.MyCharacter.CharacterEquipmentManager.HasEquipment(equipment.DisplayName)) {
+                    if (playerManager.MyCharacter.CharacterEquipmentManager.HasEquipment(equipment.DisplayName)) {
                         colorName = "yellow";
                     }
                     summaryLines.Add(string.Format("  <color={0}>{1}</color>", colorName, equipment.DisplayName));

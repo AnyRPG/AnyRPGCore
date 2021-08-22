@@ -33,7 +33,6 @@ namespace AnyRPG {
 
         // game manager references
         protected SystemDataFactory systemDataFactory = null;
-        protected SystemConfigurationManager systemConfigurationManager = null;
 
         public virtual string InteractionPanelTitle { set => interactionPanelTitle = value; }
         public virtual Sprite Icon { get => interactionPanelImage; }
@@ -53,7 +52,6 @@ namespace AnyRPG {
         public override void SetGameManagerReferences() {
             base.SetGameManagerReferences();
             systemDataFactory = systemGameManager.SystemDataFactory;
-            systemConfigurationManager = systemGameManager.SystemConfigurationManager;
         }
 
         public virtual void SetupScriptableObjects(SystemGameManager systemGameManager) {

@@ -11,7 +11,6 @@ namespace AnyRPG {
     public class CraftingNodeComponent : InteractableOptionComponent {
 
         // game manager references
-        private UIManager uIManager = null;
         private CraftingManager craftingManager = null;
 
         public CraftingNodeProps Props { get => interactableOptionProps as CraftingNodeProps; }
@@ -21,7 +20,6 @@ namespace AnyRPG {
 
         public override void SetGameManagerReferences() {
             base.SetGameManagerReferences();
-            uIManager = systemGameManager.UIManager;
             craftingManager = systemGameManager.CraftingManager;
         }
 

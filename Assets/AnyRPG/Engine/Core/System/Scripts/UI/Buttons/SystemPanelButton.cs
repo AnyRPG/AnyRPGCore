@@ -6,7 +6,7 @@ using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 namespace AnyRPG {
-    public class SystemPanelButton : MonoBehaviour, IDescribable, IPointerEnterHandler, IPointerExitHandler {
+    public class SystemPanelButton : ConfiguredMonoBehaviour, IDescribable, IPointerEnterHandler, IPointerExitHandler {
 
         [SerializeField]
         private Sprite icon = null;
@@ -20,6 +20,9 @@ namespace AnyRPG {
         [SerializeField]
         private Image menuImage = null;
 
+        // game manager references
+        private UIManager uIManager = null;
+
         public Sprite Icon {
             get => icon;
             set {
@@ -32,7 +35,9 @@ namespace AnyRPG {
 
         public string DisplayName { get => optionName; }
 
-        private void Awake() {
+        public override void SetGameManagerReferences() {
+            base.SetGameManagerReferences();
+            uIManager = systemGameManager.UIManager;
         }
 
         public string GetDescription() {
@@ -45,12 +50,11 @@ namespace AnyRPG {
         }
 
         public void OnPointerEnter(PointerEventData eventData) {
-
-            SystemGameManager.Instance.UIManager.ShowToolTip(transform.position, this);
+            uIManager.ShowToolTip(transform.position, this);
         }
 
         public void OnPointerExit(PointerEventData eventData) {
-            SystemGameManager.Instance.UIManager.HideToolTip();
+            uIManager.HideToolTip();
         }
 
     }

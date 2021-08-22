@@ -22,14 +22,12 @@ namespace AnyRPG {
         private AnyRPGSaveData mySaveData;
 
         // game manager references
-        private SystemConfigurationManager systemConfigurationManager = null;
         private SystemDataFactory systemDataFactory = null;
 
         public AnyRPGSaveData MySaveData { get => mySaveData; set => mySaveData = value; }
 
         public override void SetGameManagerReferences() {
             base.SetGameManagerReferences();
-            systemConfigurationManager = systemGameManager.SystemConfigurationManager;
             systemDataFactory = systemGameManager.SystemDataFactory;
         }
 

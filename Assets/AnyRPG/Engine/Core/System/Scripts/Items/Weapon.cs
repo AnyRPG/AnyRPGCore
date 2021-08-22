@@ -156,7 +156,7 @@ namespace AnyRPG {
                 return damagePerSecond;
             }
             return Mathf.Ceil(Mathf.Clamp(
-                (float)GetItemLevel(characterLevel) * (SystemGameManager.Instance.SystemConfigurationManager.WeaponDPSBudgetPerLevel * GetItemQualityNumber(usedItemQuality) * EquipmentSlotType.MyStatWeight),
+                (float)GetItemLevel(characterLevel) * (systemConfigurationManager.WeaponDPSBudgetPerLevel * GetItemQualityNumber(usedItemQuality) * EquipmentSlotType.MyStatWeight),
                 0f,
                 Mathf.Infinity
                 ));
@@ -167,7 +167,7 @@ namespace AnyRPG {
             List<string> abilitiesList = new List<string>();
 
             if (useDamagePerSecond) {
-                abilitiesList.Add(string.Format("Damage Per Second: {0}", GetDamagePerSecond(SystemGameManager.Instance.PlayerManager.MyCharacter.CharacterStats.Level, usedItemQuality)));
+                abilitiesList.Add(string.Format("Damage Per Second: {0}", GetDamagePerSecond(playerManager.MyCharacter.CharacterStats.Level, usedItemQuality)));
             }
             if (onHitEffectList != null) {
                 foreach (AbilityEffect abilityEffect in onHitEffectList) {
@@ -181,7 +181,7 @@ namespace AnyRPG {
 
             if (weaponSkill != null) {
                 string colorString = "white";
-                if (!CanEquip(SystemGameManager.Instance.PlayerManager.ActiveCharacter)) {
+                if (!CanEquip(playerManager.ActiveCharacter)) {
                     colorString = "red";
                 }
                 abilitiesString += string.Format("\n<color={0}>Required Skill: {1}</color>", colorString, weaponSkill.DisplayName);

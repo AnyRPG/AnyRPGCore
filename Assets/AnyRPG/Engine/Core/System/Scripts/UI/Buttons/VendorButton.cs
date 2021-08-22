@@ -38,7 +38,6 @@ namespace AnyRPG {
         private SystemItemManager systemItemManager = null;
         private PlayerManager playerManager = null;
         private InventoryManager inventoryManager = null;
-        private SystemConfigurationManager systemConfigurationManager = null;
         private AudioManager audioManager = null;
         private MessageFeedManager messageFeedManager = null;
         private CurrencyConverter currencyConverter = null;
@@ -48,6 +47,11 @@ namespace AnyRPG {
         public override void Configure(SystemGameManager systemGameManager) {
             base.Configure(systemGameManager);
 
+            currencyBarController.Configure(systemGameManager);
+        }
+
+        public override void SetGameManagerReferences() {
+            base.SetGameManagerReferences();
             systemItemManager = systemGameManager.SystemItemManager;
             playerManager = systemGameManager.PlayerManager;
             inventoryManager = systemGameManager.InventoryManager;
@@ -55,8 +59,6 @@ namespace AnyRPG {
             audioManager = systemGameManager.AudioManager;
             messageFeedManager = systemGameManager.UIManager.MessageFeedManager;
             currencyConverter = systemGameManager.CurrencyConverter;
-
-            currencyBarController.Configure(systemGameManager);
         }
 
         public void AddItem(VendorItem vendorItem, bool buyBackButton = false) {

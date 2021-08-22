@@ -133,7 +133,6 @@ namespace AnyRPG {
         protected NamePlateManager namePlateManager = null;
         protected MiniMapManager miniMapManager = null;
         protected MainMapManager mainMapManager = null;
-        protected SystemConfigurationManager systemConfigurationManager = null;
         protected InteractionManager interactionManager = null;
 
         // properties
@@ -205,6 +204,11 @@ namespace AnyRPG {
         public bool IsMouseOverUnit { get => isMouseOverUnit; set => isMouseOverUnit = value; }
         public bool IsMouseOverNameplate { get => isMouseOverNameplate; set => isMouseOverNameplate = value; }
 
+        public override void Configure(SystemGameManager systemGameManager) {
+            base.Configure(systemGameManager);
+            unitComponentController.Configure(systemGameManager);
+        }
+
         public override void SetGameManagerReferences() {
             base.SetGameManagerReferences();
 
@@ -212,7 +216,6 @@ namespace AnyRPG {
             namePlateManager = uIManager.NamePlateManager;
             miniMapManager = uIManager.MiniMapManager;
             mainMapManager = uIManager.MainMapManager;
-            systemConfigurationManager = systemGameManager.SystemConfigurationManager;
             interactionManager = systemGameManager.InteractionManager;
         }
 

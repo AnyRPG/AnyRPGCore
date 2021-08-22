@@ -64,7 +64,6 @@ namespace AnyRPG {
 
         // game manager references
         private UIManager uIManager = null;
-        private SystemConfigurationManager systemConfigurationManager = null;
         private PlayerManager playerManager = null;
         private CharacterCreatorManager characterCreatorManager = null;
         private SaveManager saveManager = null;
@@ -99,7 +98,6 @@ namespace AnyRPG {
         public override void SetGameManagerReferences() {
             base.SetGameManagerReferences();
             uIManager = systemGameManager.UIManager;
-            systemConfigurationManager = systemGameManager.SystemConfigurationManager;
             playerManager = systemGameManager.PlayerManager;
             characterCreatorManager = systemGameManager.CharacterCreatorManager;
             saveManager = systemGameManager.SaveManager;

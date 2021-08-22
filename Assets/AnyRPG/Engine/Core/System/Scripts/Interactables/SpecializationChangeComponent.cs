@@ -26,14 +26,8 @@ namespace AnyRPG {
             base.CreateEventSubscriptions();
 
             // because the class is a special type of prerequisite, we need to be notified when it changes
-            if (SystemGameManager.Instance.SystemEventManager == null) {
-                Debug.LogError("SystemEventManager Not Found.  Is the GameManager prefab in the scene?");
-                return;
-            }
             SystemEventManager.StartListening("OnSpecializationChange", HandleSpecializationChange);
-            if (SystemGameManager.Instance.SystemEventManager != null) {
-                SystemGameManager.Instance.SystemEventManager.OnClassChange += HandleClassChange;
-            }
+            systemEventManager.OnClassChange += HandleClassChange;
 
         }
 
@@ -43,9 +37,10 @@ namespace AnyRPG {
         }
 
         public void CleanupWindowEventSubscriptions() {
-            if (SystemGameManager.Instance.UIManager != null && SystemGameManager.Instance.UIManager.specializationChangeWindow != null && SystemGameManager.Instance.UIManager.specializationChangeWindow.CloseableWindowContents != null && (SystemGameManager.Instance.UIManager.specializationChangeWindow.CloseableWindowContents as NameChangePanelController) != null) {
-                (SystemGameManager.Instance.UIManager.specializationChangeWindow.CloseableWindowContents as SpecializationChangePanelController).OnConfirmAction -= HandleConfirmAction;
-                (SystemGameManager.Instance.UIManager.specializationChangeWindow.CloseableWindowContents as SpecializationChangePanelController).OnCloseWindow -= CleanupEventSubscriptions;
+            if (uIManager.specializationChangeWindow.CloseableWindowContents != null
+                && (uIManager.specializationChangeWindow.CloseableWindowContents as NameChangePanelController) != null) {
+                (uIManager.specializationChangeWindow.CloseableWindowContents as SpecializationChangePanelController).OnConfirmAction -= HandleConfirmAction;
+                (uIManager.specializationChangeWindow.CloseableWindowContents as SpecializationChangePanelController).OnCloseWindow -= CleanupEventSubscriptions;
             }
             windowEventSubscriptionsInitialized = false;
         }
@@ -55,8 +50,8 @@ namespace AnyRPG {
             base.CleanupEventSubscriptions();
             CleanupWindowEventSubscriptions();
             SystemEventManager.StopListening("OnSpecializationChange", HandleSpecializationChange);
-            if (SystemGameManager.Instance.SystemEventManager != null) {
-                SystemGameManager.Instance.SystemEventManager.OnClassChange -= HandleClassChange;
+            if (systemEventManager != null) {
+                systemEventManager.OnClassChange -= HandleClassChange;
             }
         }
 
@@ -75,9 +70,9 @@ namespace AnyRPG {
             }
             base.Interact(source, optionIndex);
 
-            (SystemGameManager.Instance.UIManager.specializationChangeWindow.CloseableWindowContents as SpecializationChangePanelController).Setup(Props.ClassSpecialization);
-            (SystemGameManager.Instance.UIManager.specializationChangeWindow.CloseableWindowContents as SpecializationChangePanelController).OnConfirmAction += HandleConfirmAction;
-            (SystemGameManager.Instance.UIManager.specializationChangeWindow.CloseableWindowContents as SpecializationChangePanelController).OnCloseWindow += CleanupEventSubscriptions;
+            (uIManager.specializationChangeWindow.CloseableWindowContents as SpecializationChangePanelController).Setup(Props.ClassSpecialization);
+            (uIManager.specializationChangeWindow.CloseableWindowContents as SpecializationChangePanelController).OnConfirmAction += HandleConfirmAction;
+            (uIManager.specializationChangeWindow.CloseableWindowContents as SpecializationChangePanelController).OnCloseWindow += CleanupEventSubscriptions;
             windowEventSubscriptionsInitialized = true;
             return true;
         }
@@ -88,7 +83,7 @@ namespace AnyRPG {
 
         public override void StopInteract() {
             base.StopInteract();
-            SystemGameManager.Instance.UIManager.specializationChangeWindow.CloseWindow();
+            uIManager.specializationChangeWindow.CloseWindow();
         }
 
         public override bool HasMiniMapText() {
@@ -122,10 +117,10 @@ namespace AnyRPG {
         // specialization is a special type of prerequisite
         public override bool MyPrerequisitesMet {
             get {
-                if (SystemGameManager.Instance.PlayerManager.MyCharacter.ClassSpecialization == Props.ClassSpecialization) {
+                if (playerManager.MyCharacter.ClassSpecialization == Props.ClassSpecialization) {
                     return false;
                 }
-                if (Props.ClassSpecialization.CharacterClasses.Contains(SystemGameManager.Instance.PlayerManager.MyCharacter.CharacterClass) == false) {
+                if (Props.ClassSpecialization.CharacterClasses.Contains(playerManager.MyCharacter.CharacterClass) == false) {
                     return false;
                 }
                 return base.MyPrerequisitesMet;

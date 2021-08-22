@@ -34,7 +34,6 @@ namespace AnyRPG {
         PlayerManager playerManager = null;
         UIManager uIManager = null;
         MessageFeedManager messageFeedManager = null;
-        SystemConfigurationManager systemConfigurationManager = null;
         private CurrencyConverter currencyConverter = null;
 
         private List<CurrencyAmountController> currencyAmountControllers = new List<CurrencyAmountController>();
@@ -44,7 +43,6 @@ namespace AnyRPG {
             playerManager = systemGameManager.PlayerManager;
             uIManager = systemGameManager.UIManager;
             messageFeedManager = uIManager.MessageFeedManager;
-            systemConfigurationManager = systemGameManager.SystemConfigurationManager;
             currencyConverter = systemGameManager.CurrencyConverter;
 
             //vendorUI.CreatePages(items);

@@ -6,7 +6,7 @@ using System.Collections.Generic;
 
 namespace AnyRPG {
 
-    public class AnyRPGStateMachine : MonoBehaviour {
+    public class AnyRPGStateMachine : ConfiguredMonoBehaviour {
 
         protected float timeEnteredState;
 

@@ -159,12 +159,12 @@ namespace AnyRPG {
         }
 
         public override Color GetGlowColor() {
-            return Faction.GetFactionColor(this);
+            return Faction.GetFactionColor(playerManager, this);
         }
 
         public override Color GetDescriptionColor() {
             if (NamePlateController != null && NamePlateController.Faction != null) {
-                return Faction.GetFactionColor(this);
+                return Faction.GetFactionColor(playerManager, this);
             }
             return base.GetDescriptionColor();
         }
@@ -196,7 +196,7 @@ namespace AnyRPG {
                 return;
             }
             base.OnEnable();
-            namePlateController = new BaseNamePlateController(this);
+            namePlateController = new BaseNamePlateController(this, systemGameManager);
             if (startHasRun && namePlateController != null) {
                 namePlateController.InitializeNamePlate();
             }
