@@ -79,6 +79,9 @@ namespace AnyRPG {
         //[SerializeField]
         protected List<AbilityEffect> completeAbilityEffectList = new List<AbilityEffect>();
 
+        // game manager references
+        protected ObjectPooler objectPooler = null;
+
         public List<AbilityEffect> MyTickAbilityEffectList { get => tickAbilityEffectList; set => tickAbilityEffectList = value; }
         public List<AbilityEffect> MyCompleteAbilityEffectList { get => completeAbilityEffectList; set => completeAbilityEffectList = value; }
         public float TickRate { get => tickRate; set => tickRate = value; }
@@ -86,6 +89,11 @@ namespace AnyRPG {
         public PrefabSpawnLocation PrefabSpawnLocation { get => prefabSpawnLocation; set => prefabSpawnLocation = value; }
         //public GameObject MyAbilityEffectPrefab { get => abilityEffectPrefab; set => abilityEffectPrefab = value; }
         public bool CastZeroTick { get => castZeroTick; set => castZeroTick = value; }
+
+        public override void SetGameManagerReferences() {
+            base.SetGameManagerReferences();
+            objectPooler = systemGameManager.ObjectPooler;
+        }
 
         public List<AbilityAttachmentNode> GetPrefabProfileList(IAbilityCaster abilityCaster) {
             if (abilityPrefabSource == AbilityPrefabSource.Both) {
@@ -189,7 +197,7 @@ namespace AnyRPG {
                             if (prefabParent != null) {
                                 usedForwardDirection = prefabParent.transform.forward;
                             }
-                            GameObject prefabObject = ObjectPooler.Instance.GetPooledObject(abilityAttachmentNode.HoldableObject.Prefab,
+                            GameObject prefabObject = objectPooler.GetPooledObject(abilityAttachmentNode.HoldableObject.Prefab,
                                 finalSpawnLocation,
                                 Quaternion.LookRotation(usedForwardDirection) * Quaternion.Euler(nodeRotation),
                                 prefabParent);

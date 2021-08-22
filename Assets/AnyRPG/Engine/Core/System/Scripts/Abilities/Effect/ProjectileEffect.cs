@@ -52,7 +52,7 @@ namespace AnyRPG {
             //Debug.Log(DisplayName + ".ProjectileEffect.HandleCollission()");
             PerformAbilityHit(source, target, abilityEffectInput);
             projectileScript.OnCollission -= HandleCollission;
-            ObjectPooler.Instance.ReturnObjectToPool(_abilityEffectObject);
+            objectPooler.ReturnObjectToPool(_abilityEffectObject);
         }
 
         public override void SetupScriptableObjects(SystemGameManager systemGameManager) {

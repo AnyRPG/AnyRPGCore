@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace AnyRPG {
 
-    public class ChanneledCylinderScript : MonoBehaviour, IChanneledObject {
+    public class ChanneledCylinderScript : ConfiguredMonoBehaviour, IChanneledObject {
 
         private float xRadius = 0.1f;
         private float zRadius = 0.1f;
@@ -34,6 +34,9 @@ namespace AnyRPG {
         //private Vector3 lastStartPosition = Vector3.zero;
         //private Vector3 lastEndPosition = Vector3.zero;
 
+        // game manager references
+        private ObjectPooler objectPooler = null;
+
         public GameObject MyStartObject { get => startObject;
             set {
                 startObject = value;
@@ -49,8 +52,9 @@ namespace AnyRPG {
         }
         public Vector3 MyEndPosition { get => endPosition; set => endPosition = value; }
 
-        public void Setup(GameObject startObject, Vector3 startPosition, GameObject endObject, Vector3 endPosition) {
+        public void Setup(GameObject startObject, Vector3 startPosition, GameObject endObject, Vector3 endPosition, SystemGameManager systemGameManager) {
             //Debug.Log(gameObject.name + ".ChanneledCylinderScript.Setup(" + (startObject == null ? "null" : startObject.name) + ", " + startPosition + ", " + (endObject == null ? "null" : endObject.name) + ", " + endPosition + ")");
+            Configure(systemGameManager);
             MyStartObject = startObject;
             MyStartPosition = startPosition;
             MyEndObject = endObject;
@@ -61,11 +65,16 @@ namespace AnyRPG {
             UpdateTransform();
         }
 
+        public override void SetGameManagerReferences() {
+            base.SetGameManagerReferences();
+            objectPooler = systemGameManager.ObjectPooler;
+        }
+
         private void Update() {
 
             if (MyStartObject == null || (nullEndObject == false && (endObject == null || endObject.activeInHierarchy == false))) {
                 // need to be able to shoot at ground, but should still exit if we had an actual original target
-                ObjectPooler.Instance.ReturnObjectToPool(gameObject);
+                objectPooler.ReturnObjectToPool(gameObject);
                 return;
             }
             UpdateTransform();
@@ -81,7 +90,7 @@ namespace AnyRPG {
         private void UpdateTransform() {
             if (MyStartObject == null || (nullEndObject == false && (endObject == null || endObject.activeInHierarchy == false))) {
                 // need to be able to shoot at ground, but should still exit if we had an actual original target
-                ObjectPooler.Instance.ReturnObjectToPool(gameObject);
+                objectPooler.ReturnObjectToPool(gameObject);
                 return;
             }
             Vector3 absoluteStartPosition = MyStartObject.transform.TransformPoint(MyStartPosition);

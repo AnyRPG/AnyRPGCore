@@ -295,6 +295,10 @@ namespace AnyRPG {
 
         private string m_IDBackup = null;
 
+        // game manager references
+
+        private ObjectPooler objectPooler = null;
+
         public string ID { get => m_UUID; set => m_UUID = value; }
         public string IDBackup { get => m_IDBackup; set => m_IDBackup = value; }
 
@@ -368,6 +372,11 @@ namespace AnyRPG {
         public bool SaveOnLevelUnload { get => saveOnLevelUnload; set => saveOnLevelUnload = value; }
         public bool SaveOnGameSave { get => saveOnGameSave; set => saveOnGameSave = value; }
 
+        public override void SetGameManagerReferences() {
+            base.SetGameManagerReferences();
+            objectPooler = systemGameManager.ObjectPooler;
+        }
+
         // disabled because it was too high maintenance
         /*
         public bool UseLootableCharacter { get => useLootableCharacter; set => useLootableCharacter = value; }
@@ -376,26 +385,22 @@ namespace AnyRPG {
         public bool UseVendor { get => useVendor; set => useVendor = value; }
         */
 
-            /*
-        /// <summary>
-        /// This will retrieve a unit profile from the system unit profile manager
-        /// </summary>
-        public static UnitProfile GetUnitProfileReference(string unitProfileName) {
-            if (SystemGameManager.Instance == null) {
-                Debug.LogError("UnitProfile.GetUnitProfileReference(): SystemUnitProfileManager not found.  Is the GameManager in the scene?");
-                return null;
+        /*
+    /// <summary>
+    /// This will retrieve a unit profile from the system unit profile manager
+    /// </summary>
+    public static UnitProfile GetUnitProfileReference(string unitProfileName) {
+        if (unitProfileName != null && unitProfileName != string.Empty) {
+            UnitProfile tmpUnitProfile = systemDataFactory.GetResource<UnitProfile>(unitProfileName);
+            if (tmpUnitProfile != null) {
+                return tmpUnitProfile;
+            } else {
+                Debug.LogError("GetUnitProfileReference(): Unit Profile " + unitProfileName + " could not be found.");
             }
-            if (unitProfileName != null && unitProfileName != string.Empty) {
-                UnitProfile tmpUnitProfile = systemDataFactory.GetResource<UnitProfile>(unitProfileName);
-                if (tmpUnitProfile != null) {
-                    return tmpUnitProfile;
-                } else {
-                    Debug.LogError("GetUnitProfileReference(): Unit Profile " + unitProfileName + " could not be found.");
-                }
-            }
-            return null;
         }
-        */
+        return null;
+    }
+    */
 
         /// <summary>
         /// spawn unit with parent. rotation and position from settings
@@ -411,7 +416,7 @@ namespace AnyRPG {
                 if (unitController != null) {
                     
                     // give this unit a unique name
-                    unitController.gameObject.name = DisplayName.Replace(" ", "") + SystemGameManager.Instance.GetSpawnCount();
+                    unitController.gameObject.name = DisplayName.Replace(" ", "") + systemGameManager.GetSpawnCount();
                     // test - set unitprofile first so we don't overwrite players baseCharacter settings
                     unitController.SetUnitProfile(this, unitControllerMode, unitLevel);
                 }
@@ -435,7 +440,7 @@ namespace AnyRPG {
                 return null;
             }
             
-            GameObject prefabObject = ObjectPooler.Instance.GetPooledObject(spawnPrefab, position, (forward == Vector3.zero ? Quaternion.identity : Quaternion.LookRotation(forward)), parentTransform);
+            GameObject prefabObject = objectPooler.GetPooledObject(spawnPrefab, position, (forward == Vector3.zero ? Quaternion.identity : Quaternion.LookRotation(forward)), parentTransform);
 
             return prefabObject;
         }

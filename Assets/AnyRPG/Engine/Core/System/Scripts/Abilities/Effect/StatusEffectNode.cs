@@ -6,7 +6,7 @@ using UnityEngine;
 using UnityEngine.UI;
 
 namespace AnyRPG {
-    public class StatusEffectNode {
+    public class StatusEffectNode : ConfiguredClass {
 
         private StatusEffect statusEffect = null;
 
@@ -27,12 +27,24 @@ namespace AnyRPG {
         // keep track of any spell effect prefabs associated with this status effect.
         private Dictionary<PrefabProfile, GameObject> prefabObjects = new Dictionary<PrefabProfile, GameObject>();
 
+        // game manager references
+        private ObjectPooler objectPooler = null;
+
         public StatusEffect StatusEffect { get => statusEffect; set => statusEffect = value; }
         public Coroutine MyMonitorCoroutine { get => monitorCoroutine; set => monitorCoroutine = value; }
         public AbilityEffectContext AbilityEffectContext { get => abilityEffectContext; set => abilityEffectContext = value; }
         public Dictionary<PrefabProfile, GameObject> PrefabObjects { get => prefabObjects; set => prefabObjects = value; }
         public int CurrentStacks { get => currentStacks; set => currentStacks = value; }
         public float RemainingDuration { get => remainingDuration; set => remainingDuration = value; }
+
+        public StatusEffectNode(SystemGameManager systemGameManager) {
+            Configure(systemGameManager);
+        }
+
+        public override void SetGameManagerReferences() {
+            base.SetGameManagerReferences();
+            objectPooler = systemGameManager.ObjectPooler;
+        }
 
         //public void Setup(CharacterStats characterStats, StatusEffect _statusEffect, Coroutine newCoroutine) {
         public void Setup(CharacterStats characterStats, StatusEffect statusEffect, AbilityEffectContext abilityEffectContext) {
@@ -47,7 +59,7 @@ namespace AnyRPG {
             if (prefabObjects != null) {
                 foreach (GameObject go in prefabObjects.Values) {
                     //Debug.Log(MyName + ".LengthEffect.CancelEffect(" + targetCharacter.MyName + "): Destroy: " + go.name);
-                    ObjectPooler.Instance.ReturnObjectToPool(go, StatusEffect.PrefabDestroyDelay);
+                    objectPooler.ReturnObjectToPool(go, StatusEffect.PrefabDestroyDelay);
                 }
             }
         }

@@ -577,7 +577,7 @@ namespace AnyRPG {
             unitAnimator = new UnitAnimator(this);
             patrolController = new PatrolController(this, systemGameManager);
             behaviorController = new BehaviorController(this, systemGameManager);
-            unitModelController = new UnitModelController(this);
+            unitModelController = new UnitModelController(this, systemGameManager);
             unitMountManager = new UnitMountManager(this);
             persistentObjectComponent.Setup(this);
 
@@ -648,7 +648,7 @@ namespace AnyRPG {
             }
             OnUnitDestroy(unitProfile);
             ResetSettings();
-            ObjectPooler.Instance.ReturnObjectToPool(gameObject);
+            objectPooler.ReturnObjectToPool(gameObject);
         }
 
         /// <summary>

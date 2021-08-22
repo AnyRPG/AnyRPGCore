@@ -7,20 +7,6 @@ using UnityEngine;
 namespace AnyRPG {
     public class ObjectPooler : ConfiguredMonoBehaviour {
 
-        #region Singleton
-        private static ObjectPooler instance;
-
-        public static ObjectPooler Instance {
-            get {
-                if (instance == null) {
-                    instance = FindObjectOfType<ObjectPooler>();
-                }
-
-                return instance;
-            }
-        }
-        #endregion
-
         [Tooltip("If all types of objects should persist through scene changes, set this to true")]
         [SerializeField]
         private bool persistSceneChange = false;

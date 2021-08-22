@@ -5,7 +5,7 @@ using UnityEngine;
 using UnityEngine.AI;
 
 namespace AnyRPG {
-    public class MecanimModelController {
+    public class MecanimModelController : ConfiguredClass {
         
         // reference to unit
         private UnitController unitController = null;
@@ -13,10 +13,19 @@ namespace AnyRPG {
         // need a local reference to this for preview characters which don't have a way to reference back to the base character to find this
         protected AttachmentProfile attachmentProfile;
 
+        // game manager references
+        private ObjectPooler objectPooler = null;
+
         private Dictionary<EquipmentSlotProfile, Dictionary<AttachmentNode, GameObject>> currentEquipmentPhysicalObjects = new Dictionary<EquipmentSlotProfile, Dictionary<AttachmentNode, GameObject>>();
 
-        public MecanimModelController(UnitController unitController) {
+        public MecanimModelController(UnitController unitController, SystemGameManager systemGameManager) {
             this.unitController = unitController;
+            Configure(systemGameManager);
+        }
+
+        public override void SetGameManagerReferences() {
+            base.SetGameManagerReferences();
+            objectPooler = systemGameManager.ObjectPooler;
         }
 
         public void SetAttachmentProfile(AttachmentProfile attachmentProfile) {
@@ -55,7 +64,7 @@ namespace AnyRPG {
 
                                     if (targetBone != null) {
                                         //Debug.Log(unitController.gameObject.name + ".MecanimModelController.SpawnEquipmentObjects(): " + newEquipment.name + " has a physical prefab. targetbone is not null: equipSlot: " + newEquipment.EquipmentSlotType.DisplayName);
-                                        GameObject newEquipmentPrefab = ObjectPooler.Instance.GetPooledObject(attachmentNode.HoldableObject.Prefab, targetBone);
+                                        GameObject newEquipmentPrefab = objectPooler.GetPooledObject(attachmentNode.HoldableObject.Prefab, targetBone);
                                         //holdableObjects.Add(attachmentNode.MyHoldableObject, newEquipmentPrefab);
                                         holdableObjects.Add(attachmentNode, newEquipmentPrefab);
                                         //currentEquipmentPhysicalObjects[equipmentSlotProfile] = newEquipmentPrefab;
@@ -244,7 +253,7 @@ namespace AnyRPG {
                 //Debug.Log("MecanimModelController.RemoveEquipmentObjects(): destroying objects ");
                 foreach (GameObject holdableObjectReference in holdableObjectReferences.Values) {
                     //Debug.Log("MecanimModelController.RemoveEquipmentObjects(): destroying object: " + holdableObjectReference.name);
-                    ObjectPooler.Instance.ReturnObjectToPool(holdableObjectReference);
+                    objectPooler.ReturnObjectToPool(holdableObjectReference);
                 }
             }
             currentEquipmentPhysicalObjects.Clear();
@@ -256,7 +265,7 @@ namespace AnyRPG {
                 foreach (KeyValuePair<AttachmentNode, GameObject> holdableObjectReference in currentEquipmentPhysicalObjects[equipmentSlot]) {
                     //GameObject destroyObject = holdableObjectReference.Value;
                     //Debug.Log("equipment manager trying to unequip item in slot " + equipmentSlot.ToString() + "; destroying object: " + holdableObjectReference.Value.name);
-                    ObjectPooler.Instance.ReturnObjectToPool(holdableObjectReference.Value);
+                    objectPooler.ReturnObjectToPool(holdableObjectReference.Value);
                 }
             }
         }

@@ -23,7 +23,10 @@ namespace AnyRPG {
 
         public override void Configure(SystemGameManager systemGameManager) {
             base.Configure(systemGameManager);
+        }
 
+        public override void SetGameManagerReferences() {
+            base.SetGameManagerReferences();
             objectPooler = systemGameManager.ObjectPooler;
         }
 
@@ -82,7 +85,7 @@ namespace AnyRPG {
             //Debug.Log(gameObject.name + ".StatusEffectPanelController.ClearStatusEffectNode()");
             if (statusEffectNodes.ContainsKey(statusEffectNode)) {
                 if (statusEffectNodes[statusEffectNode] != null) {
-                    ObjectPooler.Instance.ReturnObjectToPool(statusEffectNodes[statusEffectNode].gameObject);
+                    objectPooler.ReturnObjectToPool(statusEffectNodes[statusEffectNode].gameObject);
                 }
                 statusEffectNodes.Remove(statusEffectNode);
                 if (effectLimit > 0 && GetStatusEffectNodeScriptCount() < effectLimit) {
