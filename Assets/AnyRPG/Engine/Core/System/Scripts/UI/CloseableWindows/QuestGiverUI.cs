@@ -9,20 +9,6 @@ using UnityEngine.UI;
 namespace AnyRPG {
     public class QuestGiverUI : WindowContentController {
 
-        #region Singleton
-        private static QuestGiverUI instance;
-
-        public static QuestGiverUI Instance {
-            get {
-                if (instance == null) {
-                    instance = FindObjectOfType<QuestGiverUI>();
-                }
-
-                return instance;
-            }
-        }
-        #endregion
-
         private IQuestGiver questGiver;
 
         [SerializeField]
