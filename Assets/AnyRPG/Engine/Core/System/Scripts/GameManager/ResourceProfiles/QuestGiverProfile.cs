@@ -26,7 +26,7 @@ namespace AnyRPG {
             if (quests != null) {
                 foreach (QuestNode questNode in quests) {
                     if (questNode != null) {
-                        questNode.SetupScriptableObjects();
+                        questNode.SetupScriptableObjects(systemGameManager);
                     }
                 }
             }

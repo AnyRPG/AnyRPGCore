@@ -91,7 +91,7 @@ namespace AnyRPG {
                 }
             }
 
-            subtitleProperties.SetupScriptableObjects();
+            subtitleProperties.SetupScriptableObjects(systemGameManager);
 
         }
     }

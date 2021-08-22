@@ -41,6 +41,7 @@ namespace AnyRPG {
         private SystemConfigurationManager systemConfigurationManager = null;
         private AudioManager audioManager = null;
         private MessageFeedManager messageFeedManager = null;
+        private CurrencyConverter currencyConverter = null;
 
         public bool MyBuyBackButton { get => buyBackButton; set => buyBackButton = value; }
 
@@ -53,6 +54,7 @@ namespace AnyRPG {
             systemConfigurationManager = systemGameManager.SystemConfigurationManager;
             audioManager = systemGameManager.AudioManager;
             messageFeedManager = systemGameManager.UIManager.MessageFeedManager;
+            currencyConverter = systemGameManager.CurrencyConverter;
 
             currencyBarController.Configure(systemGameManager);
         }
@@ -107,7 +109,7 @@ namespace AnyRPG {
         public void OnPointerClick(PointerEventData eventData) {
             if (vendorItem.BuyPrice() == 0
                 || vendorItem.Item.MyCurrency == null
-                || (CurrencyConverter.GetConvertedValue(vendorItem.Item.MyCurrency, vendorItem.BuyPrice()) <= playerManager.MyCharacter.CharacterCurrencyManager.GetBaseCurrencyValue(vendorItem.Item.MyCurrency))) {
+                || (currencyConverter.GetConvertedValue(vendorItem.Item.MyCurrency, vendorItem.BuyPrice()) <= playerManager.MyCharacter.CharacterCurrencyManager.GetBaseCurrencyValue(vendorItem.Item.MyCurrency))) {
                 Item tmpItem = systemItemManager.GetNewResource(vendorItem.Item.DisplayName, vendorItem.GetItemQuality());
                 /*
                 if (vendorItem.GetItemQuality() != null) {
@@ -145,7 +147,7 @@ namespace AnyRPG {
                     priceString = vendorItem.BuyPrice() + " " + vendorItem.Item.MyCurrency.DisplayName;
                 } else {
                     usedSellPrice = new KeyValuePair<Currency, int>(vendorItem.Item.MySellPrice.Key, vendorItem.Item.MySellPrice.Value);
-                    priceString = CurrencyConverter.GetCombinedPriceSring(vendorItem.Item.MySellPrice.Key, vendorItem.Item.MySellPrice.Value);
+                    priceString = currencyConverter.GetCombinedPriceSring(vendorItem.Item.MySellPrice.Key, vendorItem.Item.MySellPrice.Value);
                 }
                 playerManager.MyCharacter.CharacterCurrencyManager.SpendCurrency(usedSellPrice.Key, usedSellPrice.Value);
             }

@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace AnyRPG {
     [System.Serializable]
-    public class TradeSkillPrerequisite : IPrerequisite {
+    public class TradeSkillPrerequisite : ConfiguredClass, IPrerequisite {
 
         public event System.Action OnStatusUpdated = delegate { };
 
@@ -16,10 +16,15 @@ namespace AnyRPG {
 
         private Skill prerequisiteSkill = null;
 
+        // game manager references
+        private SystemDataFactory systemDataFactory = null;
+        private PlayerManager playerManager = null;
+        private SystemEventManager systemEventManager = null;
+
         public void UpdateStatus(bool notify = true) {
             //Debug.Log("TradeSkillPrerequisite.UpdateStatus(): " + (prerequisiteSkill != null ? prerequisiteSkill.MyName : "null") + "; originalResult: " + prerequisiteMet);
             bool originalResult = prerequisiteMet;
-            bool checkResult = SystemGameManager.Instance.PlayerManager.MyCharacter.CharacterSkillManager.HasSkill(prerequisiteSkill);
+            bool checkResult = playerManager.MyCharacter.CharacterSkillManager.HasSkill(prerequisiteSkill);
             //Debug.Log("TradeSkillPrerequisite.UpdateStatus(): checkResult: " + checkResult);
             if (checkResult != originalResult) {
                 prerequisiteMet = checkResult;
@@ -38,23 +43,29 @@ namespace AnyRPG {
             return prerequisiteMet;
         }
 
-        public void SetupScriptableObjects() {
+        public override void SetGameManagerReferences() {
+            base.SetGameManagerReferences();
+            systemDataFactory = systemGameManager.SystemDataFactory;
+            playerManager = systemGameManager.PlayerManager;
+            systemEventManager = systemGameManager.SystemEventManager;
+        }
+
+        public void SetupScriptableObjects(SystemGameManager systemGameManager) {
+            Configure(systemGameManager);
             prerequisiteSkill = null;
             if (prerequisiteName != null && prerequisiteName != string.Empty) {
-                Skill tmpPrerequisiteSkill = SystemDataFactory.Instance.GetResource<Skill>(prerequisiteName);
+                Skill tmpPrerequisiteSkill = systemDataFactory.GetResource<Skill>(prerequisiteName);
                 if (tmpPrerequisiteSkill != null) {
                     prerequisiteSkill = tmpPrerequisiteSkill;
                 } else {
                     Debug.LogError("SystemAbilityManager.SetupScriptableObjects(): Could not find skill : " + prerequisiteName + " while inititalizing a prerequisite.  CHECK INSPECTOR");
                 }
             }
-            SystemGameManager.Instance.SystemEventManager.OnSkillListChanged += HandleSkillListChanged;
+            systemEventManager.OnSkillListChanged += HandleSkillListChanged;
         }
 
         public void CleanupScriptableObjects() {
-            if (SystemGameManager.Instance.SystemEventManager != null) {
-                SystemGameManager.Instance.SystemEventManager.OnSkillListChanged -= HandleSkillListChanged;
-            }
+            systemEventManager.OnSkillListChanged -= HandleSkillListChanged;
         }
     }
 

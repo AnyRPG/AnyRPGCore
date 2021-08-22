@@ -261,7 +261,7 @@ namespace AnyRPG {
             if (interactableOptionProps.PrerequisiteConditions != null) {
                 foreach (PrerequisiteConditions tmpPrerequisiteConditions in interactableOptionProps.PrerequisiteConditions) {
                     if (tmpPrerequisiteConditions != null) {
-                        tmpPrerequisiteConditions.SetupScriptableObjects(this);
+                        tmpPrerequisiteConditions.SetupScriptableObjects(systemGameManager, this);
                     }
                 }
             }

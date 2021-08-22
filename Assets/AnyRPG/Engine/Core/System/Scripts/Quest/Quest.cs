@@ -682,40 +682,40 @@ namespace AnyRPG {
             }
 
             foreach (QuestObjective objective in collectObjectives) {
-                objective.SetupScriptableObjects();
+                objective.SetupScriptableObjects(systemGameManager);
                 objective.SetQuest(this);
             }
             foreach (QuestObjective objective in killObjectives) {
-                objective.SetupScriptableObjects();
+                objective.SetupScriptableObjects(systemGameManager);
                 objective.SetQuest(this);
             }
             foreach (QuestObjective objective in tradeSkillObjectives) {
-                objective.SetupScriptableObjects();
+                objective.SetupScriptableObjects(systemGameManager);
                 objective.SetQuest(this);
             }
             foreach (QuestObjective objective in abilityObjectives) {
-                objective.SetupScriptableObjects();
+                objective.SetupScriptableObjects(systemGameManager);
                 objective.SetQuest(this);
             }
             foreach (QuestObjective objective in useInteractableObjectives) {
-                objective.SetupScriptableObjects();
+                objective.SetupScriptableObjects(systemGameManager);
                 objective.SetQuest(this);
             }
             foreach (QuestObjective objective in questQuestObjectives) {
-                objective.SetupScriptableObjects();
+                objective.SetupScriptableObjects(systemGameManager);
                 objective.SetQuest(this);
             }
             foreach (QuestObjective objective in dialogObjectives) {
-                objective.SetupScriptableObjects();
+                objective.SetupScriptableObjects(systemGameManager);
                 objective.SetQuest(this);
             }
             foreach (QuestObjective objective in visitZoneObjectives) {
-                objective.SetupScriptableObjects();
+                objective.SetupScriptableObjects(systemGameManager);
                 objective.SetQuest(this);
             }
             //Debug.Log("Quest.SetupScriptableObjects(): " + MyName + " about to initialize prerequisiteConditions");
             foreach (PrerequisiteConditions conditions in prerequisiteConditions) {
-                conditions.SetupScriptableObjects(this);
+                conditions.SetupScriptableObjects(systemGameManager, this);
             }
 
         }

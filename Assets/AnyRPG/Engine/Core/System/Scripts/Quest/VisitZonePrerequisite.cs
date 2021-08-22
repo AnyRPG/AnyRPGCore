@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace AnyRPG {
     [System.Serializable]
-    public class VisitZonePrerequisite : IPrerequisite {
+    public class VisitZonePrerequisite : ConfiguredClass, IPrerequisite {
 
         public event System.Action OnStatusUpdated = delegate { };
 
@@ -17,6 +17,9 @@ namespace AnyRPG {
 
 
         private SceneNode prerequisiteSceneNode = null;
+
+        // game manager references
+        private SystemDataFactory systemDataFactory = null;
 
         public void UpdateStatus(bool notify = true) {
             bool originalResult = prerequisiteMet;
@@ -36,23 +39,19 @@ namespace AnyRPG {
         }
 
         public virtual bool IsMet(BaseCharacter baseCharacter) {
-            //Debug.Log("DialogPrerequisite.IsMet(): " + prerequisiteName);
-            /*
-            Dialog _dialog = SystemDataFactory.Instance.GetResource<Dialog>(prerequisiteName);
-            if (_dialog != null) {
-                if (_dialog.TurnedIn == true) {
-                    return true;
-                }
-            }
-            return false;
-            */
             return prerequisiteMet;
         }
 
-        public void SetupScriptableObjects() {
+        public override void SetGameManagerReferences() {
+            base.SetGameManagerReferences();
+            systemDataFactory = systemGameManager.SystemDataFactory;
+        }
+
+        public void SetupScriptableObjects(SystemGameManager systemGameManager) {
+            Configure(systemGameManager);
             prerequisiteSceneNode = null;
             if (prerequisiteName != null && prerequisiteName != string.Empty) {
-                SceneNode tmpPrerequisiteSceneNode = SystemDataFactory.Instance.GetResource<SceneNode>(prerequisiteName);
+                SceneNode tmpPrerequisiteSceneNode = systemDataFactory.GetResource<SceneNode>(prerequisiteName);
                 if (tmpPrerequisiteSceneNode != null) {
                     prerequisiteSceneNode = tmpPrerequisiteSceneNode;
                 } else {

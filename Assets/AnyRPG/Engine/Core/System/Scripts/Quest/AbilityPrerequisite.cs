@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace AnyRPG {
     [System.Serializable]
-    public class AbilityPrerequisite : IPrerequisite {
+    public class AbilityPrerequisite : ConfiguredClass, IPrerequisite {
 
         public event System.Action OnStatusUpdated = delegate { };
 
@@ -15,8 +15,11 @@ namespace AnyRPG {
 
         private bool prerequisiteMet = false;
 
-
         private BaseAbility prerequisiteAbility = null;
+
+        // game manager references
+        private PlayerManager playerManager = null;
+        private SystemDataFactory systemDataFactory = null;
 
         public void HandleAbilityListChanged() {
             //Debug.Log("AbilityPrerequisite.HandleAbilityListChanged()");
@@ -29,7 +32,7 @@ namespace AnyRPG {
 
         public void UpdateStatus(bool notify = true) {
             bool originalResult = prerequisiteMet;
-            prerequisiteMet = SystemGameManager.Instance.PlayerManager.MyCharacter.CharacterAbilityManager.HasAbility(prerequisiteAbility);
+            prerequisiteMet = playerManager.MyCharacter.CharacterAbilityManager.HasAbility(prerequisiteAbility);
             if (prerequisiteMet != originalResult) {
                 if (notify == true) {
                     OnStatusUpdated();
@@ -37,16 +40,22 @@ namespace AnyRPG {
             }
         }
 
-
         public virtual bool IsMet(BaseCharacter baseCharacter) {
             //Debug.Log("AbilityPrerequisite.IsMet()");
             return prerequisiteMet;
         }
 
-        public void SetupScriptableObjects() {
+        public override void SetGameManagerReferences() {
+            base.SetGameManagerReferences();
+            systemDataFactory = systemGameManager.SystemDataFactory;
+            playerManager = systemGameManager.PlayerManager;
+        }
+
+        public void SetupScriptableObjects(SystemGameManager systemGameManager) {
+            Configure(systemGameManager);
             prerequisiteAbility = null;
             if (prerequisiteName != null && prerequisiteName != string.Empty) {
-                prerequisiteAbility = SystemDataFactory.Instance.GetResource<BaseAbility>(prerequisiteName);
+                prerequisiteAbility = systemDataFactory.GetResource<BaseAbility>(prerequisiteName);
                 if (prerequisiteAbility != null) {
                     prerequisiteAbility.OnAbilityLearn += HandleAbilityListChanged;
                 }

@@ -11,20 +11,6 @@ namespace AnyRPG {
     /// </summary>
     public class SystemDataFactory : ConfiguredMonoBehaviour {
 
-        #region Singleton
-        private static SystemDataFactory instance;
-
-        public static SystemDataFactory Instance {
-            get {
-                if (instance == null) {
-                    instance = FindObjectOfType<SystemDataFactory>();
-                }
-
-                return instance;
-            }
-        }
-        #endregion
-
         private Dictionary<Type, FactoryDataAccess> dataDictionary = new Dictionary<Type, FactoryDataAccess>();
 
         public override void Configure(SystemGameManager systemGameManager) {

@@ -18,7 +18,7 @@ namespace AnyRPG {
 
         public virtual bool IsMet() {
             //Debug.Log("TradeSkillObjective.IsMet()");
-            if (SystemGameManager.Instance.PlayerManager.MyCharacter.CharacterSkillManager.HasSkill(skill)) {
+            if (playerManager.MyCharacter.CharacterSkillManager.HasSkill(skill)) {
                 return true;
             }
             return false;
@@ -38,35 +38,35 @@ namespace AnyRPG {
             if (completeBefore) {
                 return;
             }
-            if (SystemGameManager.Instance.PlayerManager.MyCharacter.CharacterSkillManager.HasSkill(skill)) {
+            if (playerManager.MyCharacter.CharacterSkillManager.HasSkill(skill)) {
                 CurrentAmount++;
                 quest.CheckCompletion(true, printMessages);
             }
             if (CurrentAmount <= MyAmount && !quest.IsAchievement && printMessages == true && CurrentAmount != 0) {
-                SystemGameManager.Instance.UIManager.MessageFeedManager.WriteMessage(string.Format("{0}: {1}/{2}", skill.DisplayName, Mathf.Clamp(CurrentAmount, 0, MyAmount), MyAmount));
+                messageFeedManager.WriteMessage(string.Format("{0}: {1}/{2}", skill.DisplayName, Mathf.Clamp(CurrentAmount, 0, MyAmount), MyAmount));
             }
             if (completeBefore == false && IsComplete && !quest.IsAchievement && printMessages == true) {
-                SystemGameManager.Instance.UIManager.MessageFeedManager.WriteMessage(string.Format("Learn {0} {1}: Objective Complete", CurrentAmount, skill.DisplayName));
+                messageFeedManager.WriteMessage(string.Format("Learn {0} {1}: Objective Complete", CurrentAmount, skill.DisplayName));
             }
             base.UpdateCompletionCount(printMessages);
         }
 
         public override void OnAcceptQuest(Quest quest, bool printMessages = true) {
             base.OnAcceptQuest(quest, printMessages);
-            SystemGameManager.Instance.SystemEventManager.OnSkillListChanged += UpdateCompletionCount;
+            systemEventManager.OnSkillListChanged += UpdateCompletionCount;
             UpdateCompletionCount(printMessages);
         }
 
         public override void OnAbandonQuest() {
             base.OnAbandonQuest();
-            SystemGameManager.Instance.SystemEventManager.OnSkillListChanged -= UpdateCompletionCount;
+            systemEventManager.OnSkillListChanged -= UpdateCompletionCount;
         }
 
-        public override void SetupScriptableObjects() {
-            base.SetupScriptableObjects();
+        public override void SetupScriptableObjects(SystemGameManager systemGameManager) {
+            base.SetupScriptableObjects(systemGameManager);
             skill = null;
             if (MyType != null && MyType != string.Empty) {
-                skill = SystemDataFactory.Instance.GetResource<Skill>(MyType);
+                skill = systemDataFactory.GetResource<Skill>(MyType);
             } else {
                 Debug.LogError("SystemAbilityManager.SetupScriptableObjects(): Could not find ability : " + MyType + " while inititalizing an ability objective.  CHECK INSPECTOR");
             }

@@ -131,7 +131,7 @@ namespace AnyRPG {
 
             if (quests != null) {
                 foreach (QuestNode questNode in quests) {
-                    questNode.SetupScriptableObjects();
+                    questNode.SetupScriptableObjects(systemGameManager);
                 }
             }
             questGiverProps.Quests = quests;

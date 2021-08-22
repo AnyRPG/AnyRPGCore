@@ -138,7 +138,7 @@ namespace AnyRPG {
             characterPetManager = new CharacterPetManager(this, systemGameManager);
             characterCombat = new CharacterCombat(this);
             characterSkillManager = new CharacterSkillManager(this, systemGameManager);
-            characterCurrencyManager = new CharacterCurrencyManager(this);
+            characterCurrencyManager = new CharacterCurrencyManager(this, systemGameManager);
             characterRecipeManager = new CharacterRecipeManager(this, systemGameManager);
             characterAbilityManager = new CharacterAbilityManager(this, systemGameManager);
         }

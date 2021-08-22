@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace AnyRPG {
     [System.Serializable]
-    public class CharacterClassPrerequisite : IPrerequisite {
+    public class CharacterClassPrerequisite : ConfiguredClass, IPrerequisite {
 
         public event System.Action OnStatusUpdated = delegate { };
 
@@ -18,9 +18,14 @@ namespace AnyRPG {
 
         private CharacterClass prerequisiteCharacterClass = null;
 
+        // game manager references
+        private SystemDataFactory systemDataFactory = null;
+        private PlayerManager playerManager = null;
+        private SystemEventManager systemEventManager = null;
+
         public void UpdateStatus(bool notify = true) {
             bool originalResult = prerequisiteMet;
-            bool checkResult = (SystemGameManager.Instance.PlayerManager.MyCharacter.CharacterClass == prerequisiteCharacterClass);
+            bool checkResult = (playerManager.MyCharacter.CharacterClass == prerequisiteCharacterClass);
             if (checkResult != originalResult) {
                 prerequisiteMet = checkResult;
                 if (notify == true) {
@@ -41,21 +46,27 @@ namespace AnyRPG {
             return prerequisiteMet;
         }
 
-        public void SetupScriptableObjects() {
+        public override void SetGameManagerReferences() {
+            base.SetGameManagerReferences();
+            systemDataFactory = systemGameManager.SystemDataFactory;
+            playerManager = systemGameManager.PlayerManager;
+            systemEventManager = systemGameManager.SystemEventManager;
+        }
+
+        public void SetupScriptableObjects(SystemGameManager systemGameManger) {
+            Configure(systemGameManager);
             prerequisiteCharacterClass = null;
             if (requiredCharacterClass != null && requiredCharacterClass != string.Empty) {
-                prerequisiteCharacterClass = SystemDataFactory.Instance.GetResource<CharacterClass>(requiredCharacterClass);
+                prerequisiteCharacterClass = systemDataFactory.GetResource<CharacterClass>(requiredCharacterClass);
             } else {
                 Debug.LogError("SystemAbilityManager.SetupScriptableObjects(): Could not find character class : " + prerequisiteCharacterClass + " while inititalizing a character class prerequisite.  CHECK INSPECTOR");
             }
 
-            SystemGameManager.Instance.SystemEventManager.OnClassChange += HandleClassChange;
+            systemEventManager.OnClassChange += HandleClassChange;
         }
 
         public void CleanupScriptableObjects() {
-            if (SystemGameManager.Instance.SystemEventManager != null) {
-                SystemGameManager.Instance.SystemEventManager.OnClassChange -= HandleClassChange;
-            }
+            systemEventManager.OnClassChange -= HandleClassChange;
         }
     }
 

@@ -6,10 +6,18 @@ using UnityEngine;
 using UnityEngine.UI;
 
 namespace AnyRPG {
-    public static class CurrencyConverter {
+    public class CurrencyConverter : ConfiguredMonoBehaviour {
+
+        // game manager references
+        private SystemDataFactory systemDataFactory = null;
+
+        public override void SetGameManagerReferences() {
+            base.SetGameManagerReferences();
+            systemDataFactory = systemGameManager.SystemDataFactory;
+        }
 
         // converts the currency amount to its base currency and returns it
-        public static int GetConvertedValue(Currency currency, int currencyAmount) {
+        public int GetConvertedValue(Currency currency, int currencyAmount) {
             CurrencyGroup currencyGroup = FindCurrencyGroup(currency);
             if (currencyGroup != null) {
                 // attemp redistribution
@@ -30,7 +38,7 @@ namespace AnyRPG {
         }
 
         // returns the base currency for any given currency if it is part of a group, otherwise, just returns itself
-        public static Currency GetBaseCurrency(Currency currency) {
+        public Currency GetBaseCurrency(Currency currency) {
 
             CurrencyGroup currencyGroup = FindCurrencyGroup(currency);
 
@@ -40,7 +48,7 @@ namespace AnyRPG {
             return currency;
         }
 
-        public static KeyValuePair<Sprite, string> RecalculateValues(List<CurrencyNode> usedCurrencyNodes, bool setIcon = true) {
+        public KeyValuePair<Sprite, string> RecalculateValues(List<CurrencyNode> usedCurrencyNodes, bool setIcon = true) {
             //Debug.Log("CurrencyConverter.RecalculateValues()");
             Sprite returnSprite = null;
             List<string> returnStrings = new List<string>();
@@ -62,7 +70,7 @@ namespace AnyRPG {
             if (squishedNodes.Count > 0) {
                 //Debug.Log("LootableDrop.RecalculateValues(): squishedNodes.count: " + squishedNodes.Count);
                 bool nonZeroFound = false;
-                foreach (KeyValuePair<Currency, int> keyValuePair in CurrencyConverter.RedistributeCurrency(squishedNodes.ElementAt(0).Value.currency, squishedNodes.ElementAt(0).Value.MyAmount)) {
+                foreach (KeyValuePair<Currency, int> keyValuePair in RedistributeCurrency(squishedNodes.ElementAt(0).Value.currency, squishedNodes.ElementAt(0).Value.MyAmount)) {
                     if (keyValuePair.Value > 0 && nonZeroFound == false) {
                         nonZeroFound = true;
                         if (setIcon) {
@@ -82,10 +90,10 @@ namespace AnyRPG {
         }
 
         // finds a currency group that the currency belongs to, or returns null if it does not belong to a group
-        public static CurrencyGroup FindCurrencyGroup(Currency currency) {
+        public CurrencyGroup FindCurrencyGroup(Currency currency) {
             //Debug.Log("CurrencyConverter.FindCurrencyGroup(" + (currency == null ? "null" : currency.MyName) + ")");
             if (currency != null) {
-                foreach (CurrencyGroup currencyGroup in SystemDataFactory.Instance.GetResourceList<CurrencyGroup>()) {
+                foreach (CurrencyGroup currencyGroup in systemDataFactory.GetResourceList<CurrencyGroup>()) {
                     if (currencyGroup.HasCurrency(currency)) {
                         return currencyGroup;
                     }
@@ -109,7 +117,7 @@ namespace AnyRPG {
         */
 
             // returns a list of the redistribution of any currency into its group components
-        public static Dictionary<Currency, int> RedistributeCurrency(Currency currency, int currencyAmount) {
+        public Dictionary<Currency, int> RedistributeCurrency(Currency currency, int currencyAmount) {
 
             // create return dictionary
             Dictionary<Currency, int> returnDictionary = new Dictionary<Currency, int>();
@@ -146,7 +154,7 @@ namespace AnyRPG {
             return returnDictionary;
         }
 
-        public static string GetCombinedPriceSring(Currency currency, int currencyAmount) {
+        public string GetCombinedPriceSring(Currency currency, int currencyAmount) {
             string returnValue = string.Empty;
             Dictionary<Currency, int> tmpDict = RedistributeCurrency(currency, currencyAmount);
             foreach (KeyValuePair<Currency, int> dictEntry in tmpDict) {

@@ -113,6 +113,9 @@ namespace AnyRPG {
         [SerializeField]
         private UIManager uIManager = null;
 
+        [SerializeField]
+        private CurrencyConverter currencyConverter = null;
+
         // system scripts
         private SystemEventManager systemEventManager = null;
 
@@ -152,6 +155,7 @@ namespace AnyRPG {
         public SystemDataFactory SystemDataFactory { get => systemDataFactory; set => systemDataFactory = value; }
         public NewGameManager NewGameManager { get => newGameManager; set => newGameManager = value; }
         public LoadGameManager LoadGameManager { get => loadGameManager; set => loadGameManager = value; }
+        public CurrencyConverter CurrencyConverter { get => currencyConverter; set => currencyConverter = value; }
 
         private void Init() {
             //Debug.Log("SystemGameManager.Init()");
@@ -196,6 +200,7 @@ namespace AnyRPG {
             lootManager.Configure(this);
             systemPlayableDirectorManager.Configure(this);
             uIManager.Configure(this);
+            currencyConverter.Configure(this);
 
         }
 

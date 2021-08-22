@@ -42,7 +42,7 @@ namespace AnyRPG {
 
             // setup any local references first
             foreach (QuestNode questNode in quests) {
-                questNode.SetupScriptableObjects();
+                questNode.SetupScriptableObjects(systemGameManager);
             }
 
             if (questGiverProfileNames != null) {

@@ -582,7 +582,7 @@ namespace AnyRPG {
                 foreach (PrerequisiteConditions tmpPrerequisiteConditions in prerequisiteConditions) {
                     if (tmpPrerequisiteConditions != null) {
                         //Debug.Log(gameObject.name + ".SetupScriptableObjects(): setting up prerequisites");
-                        tmpPrerequisiteConditions.SetupScriptableObjects(this);
+                        tmpPrerequisiteConditions.SetupScriptableObjects(systemGameManager, this);
 
                         // add this so unit spawn nodes can have their prerequisites properly set on the first check
                         tmpPrerequisiteConditions.UpdatePrerequisites(false);

@@ -35,6 +35,7 @@ namespace AnyRPG {
         UIManager uIManager = null;
         MessageFeedManager messageFeedManager = null;
         SystemConfigurationManager systemConfigurationManager = null;
+        private CurrencyConverter currencyConverter = null;
 
         private List<CurrencyAmountController> currencyAmountControllers = new List<CurrencyAmountController>();
 
@@ -42,8 +43,9 @@ namespace AnyRPG {
             base.Configure(systemGameManager);
             playerManager = systemGameManager.PlayerManager;
             uIManager = systemGameManager.UIManager;
+            messageFeedManager = uIManager.MessageFeedManager;
             systemConfigurationManager = systemGameManager.SystemConfigurationManager;
-            messageFeedManager = systemGameManager.UIManager.MessageFeedManager;
+            currencyConverter = systemGameManager.CurrencyConverter;
 
             //vendorUI.CreatePages(items);
             CreateEventSubscriptions();
@@ -218,7 +220,7 @@ namespace AnyRPG {
             if (systemConfigurationManager.VendorAudioProfile?.AudioClip != null) {
                 audioManager.PlayEffect(systemConfigurationManager.VendorAudioProfile.AudioClip);
             }
-            string priceString = CurrencyConverter.GetCombinedPriceSring(sellAmount.Key, sellAmount.Value);
+            string priceString = currencyConverter.GetCombinedPriceSring(sellAmount.Key, sellAmount.Value);
             messageFeedManager.WriteMessage("Sold " + item.DisplayName + " for " + priceString);
 
 

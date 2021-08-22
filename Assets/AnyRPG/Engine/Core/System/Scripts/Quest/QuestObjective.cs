@@ -7,7 +7,7 @@ using UnityEngine;
 
 namespace AnyRPG {
     [System.Serializable]
-    public abstract class QuestObjective {
+    public abstract class QuestObjective : ConfiguredClass {
         [SerializeField]
         private int amount;
 
@@ -19,6 +19,13 @@ namespace AnyRPG {
         [Tooltip("Set this if you want to override the name shown in the quest log objective to be something other than the type")]
         [SerializeField]
         private string overrideDisplayName = string.Empty;
+
+        // game manager references
+        protected SaveManager saveManager = null;
+        protected SystemDataFactory systemDataFactory = null;
+        protected MessageFeedManager messageFeedManager = null;
+        protected SystemEventManager systemEventManager = null;
+        protected PlayerManager playerManager = null;
 
         public int MyAmount {
             get {
@@ -37,13 +44,13 @@ namespace AnyRPG {
 
         public int CurrentAmount {
             get {
-                return SystemGameManager.Instance.SaveManager.GetQuestObjectiveSaveData(quest.DisplayName, ObjectiveType, MyType).MyAmount;
+                return saveManager.GetQuestObjectiveSaveData(quest.DisplayName, ObjectiveType, MyType).MyAmount;
                 //return false;
             }
             set {
-                QuestObjectiveSaveData saveData = SystemGameManager.Instance.SaveManager.GetQuestObjectiveSaveData(quest.DisplayName, ObjectiveType, MyType);
+                QuestObjectiveSaveData saveData = saveManager.GetQuestObjectiveSaveData(quest.DisplayName, ObjectiveType, MyType);
                 saveData.MyAmount = value;
-                SystemGameManager.Instance.SaveManager.QuestObjectiveSaveDataDictionary[quest.DisplayName][ObjectiveType][MyType] = saveData;
+                saveManager.QuestObjectiveSaveDataDictionary[quest.DisplayName][ObjectiveType][MyType] = saveData;
             }
         }
 
@@ -88,8 +95,17 @@ namespace AnyRPG {
             UpdateCompletionCount();
         }
 
-        public virtual void SetupScriptableObjects() {
-            // overwrite me
+        public virtual void SetupScriptableObjects(SystemGameManager systemGameManager) {
+            Configure(systemGameManager);
+        }
+
+        public override void SetGameManagerReferences() {
+            base.SetGameManagerReferences();
+            saveManager = systemGameManager.SaveManager;
+            systemDataFactory = systemGameManager.SystemDataFactory;
+            messageFeedManager = systemGameManager.UIManager.MessageFeedManager;
+            systemEventManager = systemGameManager.SystemEventManager;
+            playerManager = systemGameManager.PlayerManager;
         }
     }
 

@@ -6,7 +6,7 @@ using UnityEngine;
 
 namespace AnyRPG {
     [System.Serializable]
-    public class PrerequisiteConditions {
+    public class PrerequisiteConditions : ConfiguredClass {
 
         // default is require all (AND)
         // set requireAny to use OR logic instead
@@ -47,6 +47,9 @@ namespace AnyRPG {
         private List<IPrerequisiteOwner> prerequisiteOwners = new List<IPrerequisiteOwner>();
 
         List<List<IPrerequisite>> allPrerequisites = new List<List<IPrerequisite>>();
+
+        // game manager references
+        private PlayerManager playerManager = null;
 
         public bool MyReverseMatch {
             get => reverseMatch;
@@ -105,7 +108,7 @@ namespace AnyRPG {
                 tempCount = 0;
                 foreach (IPrerequisite prerequisite in prerequisiteList) {
                     prerequisiteCount++;
-                    bool checkResult = prerequisite.IsMet(SystemGameManager.Instance.PlayerManager.MyCharacter);
+                    bool checkResult = prerequisite.IsMet(playerManager.MyCharacter);
                     if (requireAny && checkResult == true) {
                         returnValue = true;
                         break;
@@ -326,13 +329,19 @@ namespace AnyRPG {
             */
         }
 
-        public void SetupScriptableObjects(IPrerequisiteOwner prerequisiteOwner) {
+        public override void SetGameManagerReferences() {
+            base.SetGameManagerReferences();
+            playerManager = systemGameManager.PlayerManager;
+        }
+
+        public void SetupScriptableObjects(SystemGameManager systemGameManager, IPrerequisiteOwner prerequisiteOwner) {
+            Configure(systemGameManager);
             CreateAllList();
 
             if (prerequisiteOwners.Count == 0) {
                 foreach (List<IPrerequisite> prerequisiteList in allPrerequisites) {
                     foreach (IPrerequisite prerequisite in prerequisiteList) {
-                        prerequisite.SetupScriptableObjects();
+                        prerequisite.SetupScriptableObjects(systemGameManager);
                         prerequisite.OnStatusUpdated += HandlePrerequisiteUpdates;
                     }
                 }

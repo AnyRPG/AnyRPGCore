@@ -93,6 +93,7 @@ namespace AnyRPG {
         private LogManager logManager = null;
         private InventoryManager inventoryManager = null;
         private SystemItemManager systemItemManager = null;
+        private CurrencyConverter currencyConverter = null;
 
         public QuestGiverQuestScript SelectedQuestGiverQuestScript { get => selectedQuestGiverQuestScript; set => selectedQuestGiverQuestScript = value; }
         //public Interactable MyInteractable { get => interactable; set => interactable = value; }
@@ -118,6 +119,7 @@ namespace AnyRPG {
             logManager = systemGameManager.LogManager;
             inventoryManager = systemGameManager.InventoryManager;
             systemItemManager = systemGameManager.SystemItemManager;
+            currencyConverter = systemGameManager.CurrencyConverter;
         }
 
         public void ToggleShowAllQuests(bool showAllQuests) {
@@ -465,7 +467,7 @@ namespace AnyRPG {
                 playerManager.MyCharacter.CharacterCurrencyManager.AddCurrency(currencyNode.currency, currencyNode.MyAmount);
                 List<CurrencyNode> tmpCurrencyNode = new List<CurrencyNode>();
                 tmpCurrencyNode.Add(currencyNode);
-                logManager.WriteSystemMessage("Gained " + CurrencyConverter.RecalculateValues(tmpCurrencyNode, false).Value.Replace("\n", ", "));
+                logManager.WriteSystemMessage("Gained " + currencyConverter.RecalculateValues(tmpCurrencyNode, false).Value.Replace("\n", ", "));
             }
 
             // item rewards first in case not enough space in inventory

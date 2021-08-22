@@ -291,7 +291,7 @@ namespace AnyRPG {
                 //Debug.Log(gameObject.name + ".LootableCharacter.Interact(): Character is dead.  Showing Loot Window on interaction");
                 base.Interact(source, optionIndex);
                 // keep track of currency drops for combining after
-                CurrencyLootDrop droppedCurrencies = new CurrencyLootDrop();
+                CurrencyLootDrop droppedCurrencies = new CurrencyLootDrop(systemGameManager);
 
                 List<LootDrop> drops = new List<LootDrop>();
                 List<LootDrop> itemDrops = new List<LootDrop>();

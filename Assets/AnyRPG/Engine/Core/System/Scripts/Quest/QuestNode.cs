@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace AnyRPG {
     [System.Serializable]
-    public class QuestNode {
+    public class QuestNode : ConfiguredClass {
 
         [SerializeField]
         private bool startQuest = true;
@@ -21,16 +21,19 @@ namespace AnyRPG {
 
         private GameObject questObject;
 
+        // game manager references
+        private SystemDataFactory systemDataFactory = null;
+
         public bool MyStartQuest { get => startQuest; set => startQuest = value; }
         public bool MyEndQuest { get => endQuest; set => endQuest = value; }
         public Quest MyQuest { get => questTemplate; set => questTemplate = value; }
         public GameObject MyGameObject { get => questObject; set => questObject = value; }
 
-        public void SetupScriptableObjects() {
-
+        public void SetupScriptableObjects(SystemGameManager systemGameManager) {
+            Configure(systemGameManager);
             questTemplate = null;
             if (questName != null && questName != string.Empty) {
-                Quest quest = SystemDataFactory.Instance.GetResource<Quest>(questName);
+                Quest quest = systemDataFactory.GetResource<Quest>(questName);
                 if (quest != null) {
                     questTemplate = quest;
                 } else {
@@ -39,6 +42,11 @@ namespace AnyRPG {
             } else {
                 Debug.LogError("QuestNode.SetupScriptableObjects(): questName was null or empty while inititalizing a quest node.  CHECK INSPECTOR");
             }
+        }
+
+        public override void SetGameManagerReferences() {
+            base.SetGameManagerReferences();
+            systemDataFactory = systemGameManager.SystemDataFactory;
         }
 
     }

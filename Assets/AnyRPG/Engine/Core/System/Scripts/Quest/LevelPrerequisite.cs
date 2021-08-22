@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace AnyRPG {
     [System.Serializable]
-    public class LevelPrerequisite : IPrerequisite {
+    public class LevelPrerequisite : ConfiguredClass, IPrerequisite {
 
         public event System.Action OnStatusUpdated = delegate { };
 
@@ -16,9 +16,13 @@ namespace AnyRPG {
 
         private bool prerequisiteMet = false;
 
+        // game manager references
+        private PlayerManager playerManager = null;
+        private SystemEventManager systemEventManager = null;
+
         public void UpdateStatus(bool notify = true) {
             bool originalResult = prerequisiteMet;
-            bool checkResult = (SystemGameManager.Instance.PlayerManager.MyCharacter.CharacterStats.Level >= requiredLevel);
+            bool checkResult = (playerManager.MyCharacter.CharacterStats.Level >= requiredLevel);
             if (checkResult != originalResult) {
                 prerequisiteMet = checkResult;
                 if (notify == true) {
@@ -39,15 +43,20 @@ namespace AnyRPG {
             return prerequisiteMet;
         }
 
-        public void SetupScriptableObjects() {
+        public override void SetGameManagerReferences() {
+            base.SetGameManagerReferences();
+            playerManager = systemGameManager.PlayerManager;
+            systemEventManager = systemGameManager.SystemEventManager;
+        }
+
+        public void SetupScriptableObjects(SystemGameManager systemGameManager) {
+            Configure(systemGameManager);
             //this.prerequisiteConditions = prerequisiteConditions;
-            SystemGameManager.Instance.SystemEventManager.OnLevelChanged += HandleLevelChanged;
+            systemEventManager.OnLevelChanged += HandleLevelChanged;
         }
 
         public void CleanupScriptableObjects() {
-            if (SystemGameManager.Instance.SystemEventManager != null) {
-                SystemGameManager.Instance.SystemEventManager.OnLevelChanged -= HandleLevelChanged;
-            }
+            systemEventManager.OnLevelChanged -= HandleLevelChanged;
         }
 
     }

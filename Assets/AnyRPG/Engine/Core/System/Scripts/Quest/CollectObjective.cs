@@ -9,6 +9,10 @@ namespace AnyRPG {
     [System.Serializable]
     public class CollectObjective : QuestObjective {
 
+
+        // game manager references
+        protected InventoryManager inventoryManager = null;
+
         public override Type ObjectiveType {
             get {
                 return typeof(CollectObjective);
@@ -29,22 +33,22 @@ namespace AnyRPG {
             if (completeBefore) {
                 return;
             }
-            CurrentAmount = SystemGameManager.Instance.InventoryManager.GetItemCount(MyType);
-            CurrentAmount += SystemGameManager.Instance.PlayerManager.MyCharacter.CharacterEquipmentManager.GetEquipmentCount(MyType);
+            CurrentAmount = inventoryManager.GetItemCount(MyType);
+            CurrentAmount += playerManager.MyCharacter.CharacterEquipmentManager.GetEquipmentCount(MyType);
 
             quest.CheckCompletion(true, printMessages);
             if (CurrentAmount <= MyAmount && !quest.IsAchievement && printMessages == true && CurrentAmount != 0) {
-                SystemGameManager.Instance.UIManager.MessageFeedManager.WriteMessage(string.Format("{0}: {1}/{2}", DisplayName, Mathf.Clamp(CurrentAmount, 0, MyAmount), MyAmount));
+                messageFeedManager.WriteMessage(string.Format("{0}: {1}/{2}", DisplayName, Mathf.Clamp(CurrentAmount, 0, MyAmount), MyAmount));
             }
             if (completeBefore == false && IsComplete && !quest.IsAchievement && printMessages == true) {
-                SystemGameManager.Instance.UIManager.MessageFeedManager.WriteMessage(string.Format("Collect {0} {1}: Objective Complete", CurrentAmount, DisplayName));
+                messageFeedManager.WriteMessage(string.Format("Collect {0} {1}: Objective Complete", CurrentAmount, DisplayName));
             }
             //Debug.Log("CollectObjective Updating item count to " + MyCurrentAmount.ToString() + " for type " + MyType);
             base.UpdateCompletionCount(printMessages);
         }
 
         public void Complete() {
-            List<Item> items = SystemGameManager.Instance.InventoryManager.GetItems(MyType, MyAmount);
+            List<Item> items = inventoryManager.GetItems(MyType, MyAmount);
             foreach (Item item in items) {
                 item.Remove();
             }
@@ -52,13 +56,18 @@ namespace AnyRPG {
 
         public override void OnAcceptQuest(Quest quest, bool printMessages = true) {
             base.OnAcceptQuest(quest, printMessages);
-            SystemGameManager.Instance.SystemEventManager.OnItemCountChanged += UpdateItemCount;
+            systemEventManager.OnItemCountChanged += UpdateItemCount;
             UpdateCompletionCount(printMessages);
         }
 
         public override void OnAbandonQuest() {
             base.OnAbandonQuest();
-            SystemGameManager.Instance.SystemEventManager.OnItemCountChanged -= UpdateItemCount;
+            systemEventManager.OnItemCountChanged -= UpdateItemCount;
+        }
+
+        public override void SetGameManagerReferences() {
+            base.SetGameManagerReferences();
+            inventoryManager = systemGameManager.InventoryManager;
         }
 
     }

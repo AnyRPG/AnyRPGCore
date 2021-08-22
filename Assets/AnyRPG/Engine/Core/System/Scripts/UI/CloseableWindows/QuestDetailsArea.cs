@@ -64,14 +64,20 @@ namespace AnyRPG {
         // game manager references
         private ObjectPooler objectPooler = null;
         private PlayerManager playerManager = null;
+        private CurrencyConverter currencyConverter = null;
 
         public override void Configure(SystemGameManager systemGameManager) {
             base.Configure(systemGameManager);
 
+            currencyLootButton.Configure(systemGameManager);
+        }
+
+        public override void SetGameManagerReferences() {
+            base.SetGameManagerReferences();
+
             objectPooler = systemGameManager.ObjectPooler;
             playerManager = systemGameManager.PlayerManager;
-
-            currencyLootButton.Configure(systemGameManager);
+            currencyConverter = systemGameManager.CurrencyConverter;
         }
 
 
@@ -176,7 +182,7 @@ namespace AnyRPG {
                 currencyHeading.gameObject.SetActive(true);
                 currencyArea.gameObject.SetActive(true);
                 if (currencyLootButton != null) {
-                    KeyValuePair<Sprite, string> keyValuePair = CurrencyConverter.RecalculateValues(currencyNodes, true);
+                    KeyValuePair<Sprite, string> keyValuePair = currencyConverter.RecalculateValues(currencyNodes, true);
                     currencyLootButton.MyIcon.sprite = keyValuePair.Key;
                     currencyLootButton.MyTitle.text = keyValuePair.Value;
                 }
