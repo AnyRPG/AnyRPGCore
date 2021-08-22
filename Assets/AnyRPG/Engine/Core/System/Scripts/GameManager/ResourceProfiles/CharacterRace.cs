@@ -68,13 +68,13 @@ namespace AnyRPG {
             return capabilities;
         }
 
-        public override void SetupScriptableObjects() {
-            base.SetupScriptableObjects();
+        public override void SetupScriptableObjects(SystemGameManager systemGameManager) {
+            base.SetupScriptableObjects(systemGameManager);
 
             if (onHitEffects != null) {
                 foreach (string onHitEffectName in onHitEffects) {
                     if (onHitEffectName != null && onHitEffectName != string.Empty) {
-                        AbilityEffect abilityEffect = SystemDataFactory.Instance.GetResource<AbilityEffect>(onHitEffectName);
+                        AbilityEffect abilityEffect = systemDataFactory.GetResource<AbilityEffect>(onHitEffectName);
                         if (abilityEffect != null) {
                             onHitEffectList.Add(abilityEffect);
                         } else {
@@ -89,7 +89,7 @@ namespace AnyRPG {
             if (defaultHitEffects != null) {
                 foreach (string defaultHitEffectName in defaultHitEffects) {
                     if (defaultHitEffectName != null && defaultHitEffectName != string.Empty) {
-                        AbilityEffect abilityEffect = SystemDataFactory.Instance.GetResource<AbilityEffect>(defaultHitEffectName);
+                        AbilityEffect abilityEffect = systemDataFactory.GetResource<AbilityEffect>(defaultHitEffectName);
                         if (abilityEffect != null) {
                             defaultHitEffectList.Add(abilityEffect);
                         } else {
@@ -104,7 +104,7 @@ namespace AnyRPG {
             if (equipmentNames != null) {
                 foreach (string equipmentName in equipmentNames) {
                     Equipment tmpEquipment = null;
-                    tmpEquipment = SystemDataFactory.Instance.GetResource<Item>(equipmentName) as Equipment;
+                    tmpEquipment = systemDataFactory.GetResource<Item>(equipmentName) as Equipment;
                     if (tmpEquipment != null) {
                         equipmentList.Add(tmpEquipment);
                     } else {
@@ -116,7 +116,7 @@ namespace AnyRPG {
             powerResourceList = new List<PowerResource>();
             if (powerResources != null) {
                 foreach (string powerResourcename in powerResources) {
-                    PowerResource tmpPowerResource = SystemDataFactory.Instance.GetResource<PowerResource>(powerResourcename);
+                    PowerResource tmpPowerResource = systemDataFactory.GetResource<PowerResource>(powerResourcename);
                     if (tmpPowerResource != null) {
                         powerResourceList.Add(tmpPowerResource);
                     } else {
@@ -126,10 +126,10 @@ namespace AnyRPG {
             }
 
             foreach (StatScalingNode statScalingNode in primaryStats) {
-                statScalingNode.SetupScriptableObjects();
+                statScalingNode.SetupScriptableObjects(systemDataFactory);
             }
 
-            capabilities.SetupScriptableObjects();
+            capabilities.SetupScriptableObjects(systemDataFactory);
 
         }
 

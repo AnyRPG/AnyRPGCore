@@ -7,7 +7,7 @@ using UnityEngine.UI;
 
 namespace AnyRPG {
     [System.Serializable]
-    public class InteractableOptionProps {
+    public class InteractableOptionProps : ConfiguredClass {
 
         [Header("Interaction Panel")]
 
@@ -31,6 +31,10 @@ namespace AnyRPG {
         [SerializeField]
         protected List<PrerequisiteConditions> prerequisiteConditions = new List<PrerequisiteConditions>();
 
+        // game manager references
+        protected SystemDataFactory systemDataFactory = null;
+        protected SystemConfigurationManager systemConfigurationManager = null;
+
         public virtual string InteractionPanelTitle { set => interactionPanelTitle = value; }
         public virtual Sprite Icon { get => interactionPanelImage; }
         public virtual Sprite NamePlateImage { get => namePlateImage; }
@@ -46,9 +50,14 @@ namespace AnyRPG {
             return interactionPanelTitle;
         }
 
+        public override void SetGameManagerReferences() {
+            base.SetGameManagerReferences();
+            systemDataFactory = systemGameManager.SystemDataFactory;
+            systemConfigurationManager = systemGameManager.SystemConfigurationManager;
+        }
 
-        public virtual void SetupScriptableObjects() {
-            // nothing here
+        public virtual void SetupScriptableObjects(SystemGameManager systemGameManager) {
+            Configure(systemGameManager);
         }
 
     }

@@ -9,7 +9,7 @@ namespace AnyRPG {
 
         public SkillTrainerProps Props { get => interactableOptionProps as SkillTrainerProps; }
 
-        public SkillTrainerComponent(Interactable interactable, SkillTrainerProps interactableOptionProps) : base(interactable, interactableOptionProps) {
+        public SkillTrainerComponent(Interactable interactable, SkillTrainerProps interactableOptionProps, SystemGameManager systemGameManager) : base(interactable, interactableOptionProps, systemGameManager) {
             if (interactableOptionProps.GetInteractionPanelTitle() == string.Empty) {
                 interactableOptionProps.InteractionPanelTitle = "Train Me";
             }

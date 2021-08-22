@@ -27,7 +27,7 @@ namespace AnyRPG {
 
         public float HitBoxSize { get => hitBoxSize; set => hitBoxSize = value; }
 
-        public CharacterUnit(Interactable interactable, InteractableOptionProps interactableOptionProps) : base(interactable, interactableOptionProps) {
+        public CharacterUnit(Interactable interactable, InteractableOptionProps interactableOptionProps, SystemGameManager systemGameManager) : base(interactable, interactableOptionProps, systemGameManager) {
             if (interactable.Collider != null) {
                 hitBoxSize = interactable.Collider.bounds.extents.y * 1.5f;
             }

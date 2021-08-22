@@ -20,7 +20,7 @@ namespace AnyRPG {
         // keep track of looping
         private Coroutine loopCoroutine = null;
 
-        public AnimatedObjectComponent(Interactable interactable, AnimatedObjectProps interactableOptionProps) : base(interactable, interactableOptionProps) {
+        public AnimatedObjectComponent(Interactable interactable, AnimatedObjectProps interactableOptionProps, SystemGameManager systemGameManager) : base(interactable, interactableOptionProps, systemGameManager) {
             interactableOptionProps.InteractionPanelTitle = "Interactable";
         }
 

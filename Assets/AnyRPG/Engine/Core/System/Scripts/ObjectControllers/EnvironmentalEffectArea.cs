@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 namespace AnyRPG {
-    public class EnvironmentalEffectArea : MonoBehaviour, IAbilityCaster {
+    public class EnvironmentalEffectArea : AutoConfiguredMonoBehaviour, IAbilityCaster {
 
         [Tooltip("Every x seconds, the effect will be applied to everyone within the effect radius")]
         [SerializeField]
@@ -25,13 +25,23 @@ namespace AnyRPG {
 
         private AbilityManager abilityManager = null;
 
+        // game manager references
+        private SystemDataFactory systemDataFactory = null;
+
         public IAbilityManager AbilityManager { get => abilityManager; }
 
-        private void Awake() {
-            //Debug.Log(gameObject.name + ".EnvironmentalEffectArea.Awake()");
+        public override void Configure(SystemGameManager systemGameManager) {
+            base.Configure(systemGameManager);
+
             GetComponentReferences();
             SetupScriptableObjects();
-            abilityManager = new AbilityManager(this);
+            abilityManager = new AbilityManager(this, systemGameManager);
+        }
+
+        public override void SetGameManagerReferences() {
+            base.SetGameManagerReferences();
+
+            systemDataFactory = systemGameManager.SystemDataFactory;
         }
 
         public void GetComponentReferences() {
@@ -100,7 +110,7 @@ namespace AnyRPG {
 
         private void SetupScriptableObjects() {
             //Debug.Log(gameObject.name + ".EnvironmentalEffectArea.SetupScriptableObjects()");
-            if (SystemGameManager.Instance == null) {
+            if (systemGameManager == null) {
                 Debug.LogError(gameObject.name + ": SystemAbilityEffectManager not found.  Is the GameManager in the scene?");
                 return;
             }
@@ -108,7 +118,7 @@ namespace AnyRPG {
             if (abilityEffectNames != null) {
                 foreach (string abilityEffectName in abilityEffectNames) {
                     if (abilityEffectName != string.Empty) {
-                        AbilityEffect tmpAbilityEffect = SystemDataFactory.Instance.GetResource<AbilityEffect>(abilityEffectName);
+                        AbilityEffect tmpAbilityEffect = systemDataFactory.GetResource<AbilityEffect>(abilityEffectName);
                         if (tmpAbilityEffect != null) {
                             abilityEffects.Add(tmpAbilityEffect);
                         } else {

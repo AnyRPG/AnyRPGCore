@@ -53,11 +53,11 @@ namespace AnyRPG {
         public int RequiredLevel { get => requiredLevel; set => requiredLevel = value; }
         public List<AbilityAttachmentNode> HoldableObjectList { get => holdableObjectList; set => holdableObjectList = value; }
 
-        public override void SetupScriptableObjects() {
-            base.SetupScriptableObjects();
+        public override void SetupScriptableObjects(SystemGameManager systemGameManager) {
+            base.SetupScriptableObjects(systemGameManager);
             craftAbility = null;
             if (craftAbilityName != null) {
-                BaseAbility baseAbility = SystemDataFactory.Instance.GetResource<BaseAbility>(craftAbilityName);
+                BaseAbility baseAbility = systemDataFactory.GetResource<BaseAbility>(craftAbilityName);
                 if (baseAbility != null) {
                     craftAbility = baseAbility as CraftAbility;
                 } else {
@@ -68,14 +68,14 @@ namespace AnyRPG {
             if (holdableObjectList != null) {
                 foreach (AbilityAttachmentNode holdableObjectAttachment in holdableObjectList) {
                     if (holdableObjectAttachment != null) {
-                        holdableObjectAttachment.SetupScriptableObjects(DisplayName);
+                        holdableObjectAttachment.SetupScriptableObjects(DisplayName, systemGameManager);
                     }
                 }
             }
 
             output = null;
             if (itemOutputName != null && itemOutputName != string.Empty) {
-                Item item = SystemDataFactory.Instance.GetResource<Item>(itemOutputName);
+                Item item = systemDataFactory.GetResource<Item>(itemOutputName);
                 if (item != null) {
                     output = item;
                 } else {
@@ -85,7 +85,7 @@ namespace AnyRPG {
 
             if (craftingMaterials != null) {
                 foreach (CraftingMaterial craftingMaterial in craftingMaterials) {
-                    craftingMaterial.SetupScriptableObjects();
+                    craftingMaterial.SetupScriptableObjects(systemGameManager);
                 }
             }
         }

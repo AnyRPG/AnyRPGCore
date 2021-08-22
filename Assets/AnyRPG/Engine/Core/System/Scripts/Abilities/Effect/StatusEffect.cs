@@ -411,12 +411,12 @@ namespace AnyRPG {
             }
         }
 
-        public override void SetupScriptableObjects() {
-            base.SetupScriptableObjects();
+        public override void SetupScriptableObjects(SystemGameManager systemGameManager) {
+            base.SetupScriptableObjects(systemGameManager);
             reflectAbilityEffectList = new List<AbilityEffect>();
             if (reflectAbilityEffectNames != null) {
                 foreach (string abilityEffectName in reflectAbilityEffectNames) {
-                    AbilityEffect abilityEffect = SystemDataFactory.Instance.GetResource<AbilityEffect>(abilityEffectName);
+                    AbilityEffect abilityEffect = systemDataFactory.GetResource<AbilityEffect>(abilityEffectName);
                     if (abilityEffect != null) {
                         reflectAbilityEffectList.Add(abilityEffect);
                     } else {
@@ -428,7 +428,7 @@ namespace AnyRPG {
             weaponHitAbilityEffectList = new List<AbilityEffect>();
             if (weaponHitAbilityEffectNames != null) {
                 foreach (string abilityEffectName in weaponHitAbilityEffectNames) {
-                    AbilityEffect abilityEffect = SystemDataFactory.Instance.GetResource<AbilityEffect>(abilityEffectName);
+                    AbilityEffect abilityEffect = systemDataFactory.GetResource<AbilityEffect>(abilityEffectName);
                     if (abilityEffect != null) {
                         weaponHitAbilityEffectList.Add(abilityEffect);
                     } else {
@@ -438,7 +438,7 @@ namespace AnyRPG {
             }
 
             if (statusEffectTypeName != null && statusEffectTypeName != string.Empty) {
-                StatusEffectType tmpStatusEffectType = SystemDataFactory.Instance.GetResource<StatusEffectType>(statusEffectTypeName);
+                StatusEffectType tmpStatusEffectType = systemDataFactory.GetResource<StatusEffectType>(statusEffectTypeName);
                 if (tmpStatusEffectType != null) {
                     statusEffectType = tmpStatusEffectType;
                 } else {
@@ -450,7 +450,7 @@ namespace AnyRPG {
             if (factionModifiers != null) {
                 foreach (FactionDisposition factionDisposition in factionModifiers) {
                     if (factionDisposition != null) {
-                        factionDisposition.SetupScriptableObjects();
+                        factionDisposition.SetupScriptableObjects(systemDataFactory);
                     }
                 }
             }

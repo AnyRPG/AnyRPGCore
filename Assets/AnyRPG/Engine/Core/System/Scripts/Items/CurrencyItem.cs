@@ -41,10 +41,10 @@ namespace AnyRPG {
             return base.GetSummary() + string.Format("\n<color=green>Use: Gain {0} {1}</color>", tmpCurrencyName, currencyNode.MyAmount);
         }
 
-        public override void SetupScriptableObjects() {
-            base.SetupScriptableObjects();
+        public override void SetupScriptableObjects(SystemGameManager systemGameManager) {
+            base.SetupScriptableObjects(systemGameManager);
             if (gainCurrencyName != null && gainCurrencyName != string.Empty) {
-                Currency tmpCurrency = SystemDataFactory.Instance.GetResource<Currency>(gainCurrencyName);
+                Currency tmpCurrency = systemDataFactory.GetResource<Currency>(gainCurrencyName);
                 if (tmpCurrency != null) {
                     currencyNode.currency = tmpCurrency;
                     currencyNode.MyAmount = gainCurrencyAmount;

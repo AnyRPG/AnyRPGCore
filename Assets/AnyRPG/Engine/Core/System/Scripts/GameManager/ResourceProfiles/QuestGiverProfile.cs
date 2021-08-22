@@ -19,9 +19,9 @@ namespace AnyRPG {
 
         public List<QuestNode> MyQuests { get => quests; }
 
-        public override void SetupScriptableObjects() {
+        public override void SetupScriptableObjects(SystemGameManager systemGameManager) {
             //Debug.Log(MyName + ".QuestGiverProfile.SetupScriptableObjects()");
-            base.SetupScriptableObjects();
+            base.SetupScriptableObjects(systemGameManager);
 
             if (quests != null) {
                 foreach (QuestNode questNode in quests) {

@@ -31,7 +31,7 @@ namespace AnyRPG {
 
         public List<EquipmentSlotProfile> GetCompatibleSlotProfiles() {
             List<EquipmentSlotProfile> returnValue = new List<EquipmentSlotProfile>();
-            foreach (EquipmentSlotProfile equipmentSlotProfile in SystemDataFactory.Instance.GetResourceList<EquipmentSlotProfile>()) {
+            foreach (EquipmentSlotProfile equipmentSlotProfile in systemDataFactory.GetResourceList<EquipmentSlotProfile>()) {
                 if (equipmentSlotProfile.MyEquipmentSlotTypeList != null && equipmentSlotProfile.MyEquipmentSlotTypeList.Contains(this)) {
                     returnValue.Add(equipmentSlotProfile);
                 }
@@ -39,13 +39,13 @@ namespace AnyRPG {
             return returnValue;
         }
 
-        public override void SetupScriptableObjects() {
-            base.SetupScriptableObjects();
+        public override void SetupScriptableObjects(SystemGameManager systemGameManager) {
+            base.SetupScriptableObjects(systemGameManager);
 
             realExclusiveSlotProfileList = new List<EquipmentSlotProfile>();
             if (exclusiveSlotProfileList != null) {
                 foreach (string exclusiveSlotProfile in exclusiveSlotProfileList) {
-                    EquipmentSlotProfile tmpSlotProfile = SystemDataFactory.Instance.GetResource<EquipmentSlotProfile>(exclusiveSlotProfile);
+                    EquipmentSlotProfile tmpSlotProfile = systemDataFactory.GetResource<EquipmentSlotProfile>(exclusiveSlotProfile);
                     if (tmpSlotProfile != null) {
                         realExclusiveSlotProfileList.Add(tmpSlotProfile);
                     } else {

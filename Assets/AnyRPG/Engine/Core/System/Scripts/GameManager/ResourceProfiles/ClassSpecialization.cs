@@ -73,13 +73,13 @@ namespace AnyRPG {
             return capabilities;
         }
 
-        public override void SetupScriptableObjects() {
-            base.SetupScriptableObjects();
+        public override void SetupScriptableObjects(SystemGameManager systemGameManager) {
+            base.SetupScriptableObjects(systemGameManager);
 
             if (equipmentNames != null) {
                 foreach (string equipmentName in equipmentNames) {
                     Equipment tmpEquipment = null;
-                    tmpEquipment = SystemDataFactory.Instance.GetResource<Item>(equipmentName) as Equipment;
+                    tmpEquipment = systemDataFactory.GetResource<Item>(equipmentName) as Equipment;
                     if (tmpEquipment != null) {
                         equipmentList.Add(tmpEquipment);
                     } else {
@@ -90,7 +90,7 @@ namespace AnyRPG {
 
             if (classNames != null) {
                 foreach (string className in classNames) {
-                    CharacterClass tmpClass = SystemDataFactory.Instance.GetResource<CharacterClass>(className);
+                    CharacterClass tmpClass = systemDataFactory.GetResource<CharacterClass>(className);
                     if (tmpClass != null) {
                         characterClasses.Add(tmpClass);
                     } else {
@@ -102,7 +102,7 @@ namespace AnyRPG {
             powerResourceList = new List<PowerResource>();
             if (powerResources != null) {
                 foreach (string powerResourcename in powerResources) {
-                    PowerResource tmpPowerResource = SystemDataFactory.Instance.GetResource<PowerResource>(powerResourcename);
+                    PowerResource tmpPowerResource = systemDataFactory.GetResource<PowerResource>(powerResourcename);
                     if (tmpPowerResource != null) {
                         powerResourceList.Add(tmpPowerResource);
                     } else {
@@ -111,7 +111,7 @@ namespace AnyRPG {
                 }
             }
 
-            capabilities.SetupScriptableObjects();
+            capabilities.SetupScriptableObjects(systemDataFactory);
 
         }
 

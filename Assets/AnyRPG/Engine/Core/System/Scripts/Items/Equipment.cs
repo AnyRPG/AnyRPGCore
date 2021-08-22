@@ -184,7 +184,7 @@ namespace AnyRPG {
 
         public float GetTotalSlotWeights() {
             float returnValue = 0f;
-            foreach (EquipmentSlotProfile equipmentSlotProfile in SystemDataFactory.Instance.GetResourceList<EquipmentSlotProfile>()) {
+            foreach (EquipmentSlotProfile equipmentSlotProfile in systemDataFactory.GetResourceList<EquipmentSlotProfile>()) {
                 returnValue += equipmentSlotProfile.MyStatWeight;
             }
             return returnValue;
@@ -321,11 +321,11 @@ namespace AnyRPG {
             return base.GetSummary(usedItemQuality) + "\n" + string.Join("\n", summaryLines);
         }
 
-        public override void SetupScriptableObjects() {
-            base.SetupScriptableObjects();
+        public override void SetupScriptableObjects(SystemGameManager systemGameManager) {
+            base.SetupScriptableObjects(systemGameManager);
             onEquipAbility = null;
             if (onEquipAbilityName != null && onEquipAbilityName != string.Empty) {
-                BaseAbility baseAbility = SystemDataFactory.Instance.GetResource<BaseAbility>(onEquipAbilityName);
+                BaseAbility baseAbility = systemDataFactory.GetResource<BaseAbility>(onEquipAbilityName);
                 if (baseAbility != null) {
                     onEquipAbility = baseAbility;
                 } else {
@@ -336,7 +336,7 @@ namespace AnyRPG {
             learnedAbilities = new List<BaseAbility>();
             if (learnedAbilityNames != null) {
                 foreach (string baseAbilityName in learnedAbilityNames) {
-                    BaseAbility baseAbility = SystemDataFactory.Instance.GetResource<BaseAbility>(baseAbilityName);
+                    BaseAbility baseAbility = systemDataFactory.GetResource<BaseAbility>(baseAbilityName);
                     if (baseAbility != null) {
                         learnedAbilities.Add(baseAbility);
                     } else {
@@ -348,7 +348,7 @@ namespace AnyRPG {
             
             realEquipmentSlotType = null;
             if (equipmentSlotType != null && equipmentSlotType != string.Empty) {
-                EquipmentSlotType tmpEquipmentSlotType = SystemDataFactory.Instance.GetResource<EquipmentSlotType>(equipmentSlotType);
+                EquipmentSlotType tmpEquipmentSlotType = systemDataFactory.GetResource<EquipmentSlotType>(equipmentSlotType);
                 if (tmpEquipmentSlotType != null) {
                     realEquipmentSlotType = tmpEquipmentSlotType;
                 } else {
@@ -360,7 +360,7 @@ namespace AnyRPG {
 
             equipmentSet = null;
             if (equipmentSetName != null && equipmentSetName != string.Empty) {
-                EquipmentSet tmpEquipmentSet = SystemDataFactory.Instance.GetResource<EquipmentSet>(equipmentSetName);
+                EquipmentSet tmpEquipmentSet = systemDataFactory.GetResource<EquipmentSet>(equipmentSetName);
                 if (tmpEquipmentSet != null) {
                     equipmentSet = tmpEquipmentSet;
                 } else {
@@ -372,7 +372,7 @@ namespace AnyRPG {
             if (holdableObjectList != null) {
                 foreach (HoldableObjectAttachment holdableObjectAttachment in holdableObjectList) {
                     if (holdableObjectAttachment != null) {
-                        holdableObjectAttachment.SetupScriptableObjects();
+                        holdableObjectAttachment.SetupScriptableObjects(systemGameManager);
                     }
                 }
             }
@@ -381,7 +381,7 @@ namespace AnyRPG {
                 umaRecipeProfileName = ResourceName;
             }
             if (umaRecipeProfileName != null && umaRecipeProfileName != string.Empty) {
-                UMARecipeProfile umaRecipeProfile = SystemDataFactory.Instance.GetResource<UMARecipeProfile>(umaRecipeProfileName);
+                UMARecipeProfile umaRecipeProfile = systemDataFactory.GetResource<UMARecipeProfile>(umaRecipeProfileName);
                 if (umaRecipeProfile != null && umaRecipeProfile.MyUMARecipes != null) {
                     UMARecipes = umaRecipeProfile.MyUMARecipes;
                 } else {

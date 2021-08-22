@@ -6,6 +6,9 @@ using UnityEngine;
 namespace AnyRPG {
     public class ControlSwitchComponent : InteractableOptionComponent {
 
+        // game manager references
+        private UIManager uIManager = null;
+
         public ControlSwitchProps Props { get => interactableOptionProps as ControlSwitchProps; }
 
         // keep track of the number of times this switch has been activated
@@ -16,13 +19,18 @@ namespace AnyRPG {
 
         public bool MyOnState { get => onState; set => onState = value; }
 
-        public ControlSwitchComponent(Interactable interactable, ControlSwitchProps interactableOptionProps) : base(interactable, interactableOptionProps) {
+        public ControlSwitchComponent(Interactable interactable, ControlSwitchProps interactableOptionProps, SystemGameManager systemGameManager) : base(interactable, interactableOptionProps, systemGameManager) {
             interactableOptionProps.InteractionPanelTitle = "Interactable";
+        }
+
+        public override void SetGameManagerReferences() {
+            base.SetGameManagerReferences();
+            uIManager = systemGameManager.UIManager;
         }
 
         public override bool Interact(CharacterUnit source, int optionIndex = 0) {
             //Debug.Log(interactable.gameObject.name + ".ControlSwitchComponent.Interact()");
-            SystemGameManager.Instance.UIManager.interactionWindow.CloseWindow();
+            uIManager.interactionWindow.CloseWindow();
             if (Props.ActivationLimit > 0 && activationCount >= Props.ActivationLimit) {
                 // this has already been activated the number of allowed times
                 return false;

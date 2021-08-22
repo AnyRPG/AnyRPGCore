@@ -12,11 +12,11 @@ namespace AnyRPG {
 
         public List<AbilityAttachmentNode> MyAttachmentNodes { get => attachmentNodes; set => attachmentNodes = value; }
 
-        public void SetupScriptableObjects(string ownerName) {
+        public void SetupScriptableObjects(string ownerName, SystemGameManager systemGameManager) {
             if (attachmentNodes != null) {
                 foreach (AbilityAttachmentNode attachmentNode in attachmentNodes) {
                     if (attachmentNode != null) {
-                        attachmentNode.SetupScriptableObjects(ownerName);
+                        attachmentNode.SetupScriptableObjects(ownerName, systemGameManager);
                     }
                 }
             }

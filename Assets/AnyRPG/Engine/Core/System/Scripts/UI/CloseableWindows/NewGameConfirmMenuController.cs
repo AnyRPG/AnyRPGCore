@@ -29,6 +29,7 @@ namespace AnyRPG {
             base.Configure(systemGameManager);
             cancelButton.Configure(systemGameManager);
             confirmButton.Configure(systemGameManager);
+            confirmGameButton.Configure(systemGameManager);
         }
 
         public override void SetGameManagerReferences() {

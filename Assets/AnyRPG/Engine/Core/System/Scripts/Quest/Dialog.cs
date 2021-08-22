@@ -126,8 +126,8 @@ namespace AnyRPG {
             }
         }
 
-        public override void SetupScriptableObjects() {
-            base.SetupScriptableObjects();
+        public override void SetupScriptableObjects(SystemGameManager systemGameManager) {
+            base.SetupScriptableObjects(systemGameManager);
 
             if (prerequisiteConditions != null) {
                 foreach (PrerequisiteConditions tmpPrerequisiteConditions in prerequisiteConditions) {
@@ -138,7 +138,7 @@ namespace AnyRPG {
             }
 
             if (audioProfileName != null && audioProfileName != string.Empty) {
-                AudioProfile tmpAudioProfile = SystemDataFactory.Instance.GetResource<AudioProfile>(audioProfileName);
+                AudioProfile tmpAudioProfile = systemDataFactory.GetResource<AudioProfile>(audioProfileName);
                 if (tmpAudioProfile != null) {
                     audioProfile = tmpAudioProfile;
                 } else {

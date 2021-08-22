@@ -7,7 +7,7 @@ using UnityEngine;
 using UnityEngine.UI;
 
 namespace AnyRPG {
-    public class BehaviorController {
+    public class BehaviorController : ConfiguredClass {
 
         private UnitController unitController = null;
 
@@ -25,18 +25,30 @@ namespace AnyRPG {
 
         private BehaviorComponent behaviorComponent = null;
 
+        // game manager references
+        private SystemDataFactory systemDataFactory = null;
+        private AudioManager audioManager = null;
+        private LevelManager levelManager = null;
+
         public int MyBehaviorIndex { get => behaviorIndex; }
         public bool BehaviorPlaying { get => behaviorPlaying; set => behaviorPlaying = value; }
         public bool SuppressNameplateImage { get => suppressNameplateImage; }
         public Dictionary<BehaviorProfile, BehaviorProfileState> BehaviorList { get => behaviorList; set => behaviorList = value; }
 
-        public BehaviorController(UnitController unitController) {
+        public BehaviorController(UnitController unitController, SystemGameManager systemGameManager) {
             //Debug.Log(unitController.gameObject.name + "BehaviorController.Constructor()");
 
             this.unitController = unitController;
+            Configure(systemGameManager);
 
             SetupScriptableObjects();
             //HandlePrerequisiteUpdates();
+        }
+
+        public override void SetGameManagerReferences() {
+            base.SetGameManagerReferences();
+            audioManager = systemGameManager.AudioManager;
+            levelManager = systemGameManager.LevelManager;
         }
 
         // this should be run after the unit profile is set
@@ -221,38 +233,12 @@ namespace AnyRPG {
             if (unitController.BehaviorNames != null) {
                 foreach (string behaviorName in unitController.BehaviorNames) {
                     BehaviorProfile tmpBehaviorProfile = null;
-                    // monitor for breakage - behavior copies are theoretically no longer necessary because behavior players now track state individually
-                    //if (unitController.UseBehaviorCopy == true) {
-                        //tmpBehaviorProfile = SystemBehaviorProfileManager.Instance.GetNewResource(behaviorName);
-                    //} else {
-                        tmpBehaviorProfile = SystemDataFactory.Instance.GetResource<BehaviorProfile>(behaviorName);
-                    //}
+                        tmpBehaviorProfile = systemDataFactory.GetResource<BehaviorProfile>(behaviorName);
                     if (tmpBehaviorProfile != null) {
                         AddToBehaviorList(tmpBehaviorProfile);
                     }
                 }
             }
-
-            // behaviors from unit profile
-            // should not be needed anymore since unit profile creates a component from its props
-            /*
-            if (unitController != null && unitController.UnitProfile != null) {
-                if (unitController.UnitProfile.BehaviorProps.BehaviorNames != null) {
-                    foreach (string behaviorProfileName in unitController.UnitProfile.BehaviorProps.BehaviorNames) {
-                        BehaviorProfile tmpBehaviorProfile = null;
-                        if (unitController.UnitProfile.BehaviorProps.UseBehaviorCopy == true) {
-                            tmpBehaviorProfile = SystemBehaviorProfileManager.Instance.GetNewResource(behaviorProfileName);
-                        } else {
-                            tmpBehaviorProfile = SystemBehaviorProfileManager.Instance.GetResource(behaviorProfileName);
-                        }
-                        if (tmpBehaviorProfile != null) {
-                            tmpBehaviorProfile.OnPrerequisiteUpdates += HandlePrerequisiteUpdates;
-                            behaviorList.Add(tmpBehaviorProfile);
-                        }
-                    }
-                }
-            }
-            */
 
         }
 
@@ -263,11 +249,11 @@ namespace AnyRPG {
         }
 
         public void StopBackgroundMusic() {
-            SystemGameManager.Instance.AudioManager.StopMusic();
+            audioManager.StopMusic();
         }
 
         public void StartBackgroundMusic() {
-            SystemGameManager.Instance.LevelManager.PlayLevelSounds();
+            levelManager.PlayLevelSounds();
         }
 
 

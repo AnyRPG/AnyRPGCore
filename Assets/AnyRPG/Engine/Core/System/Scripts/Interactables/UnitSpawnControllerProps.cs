@@ -24,25 +24,25 @@ namespace AnyRPG {
 
         private List<UnitProfile> unitProfileList = new List<UnitProfile>();
 
-        public override Sprite Icon { get => (SystemGameManager.Instance.SystemConfigurationManager.UnitSpawnControllerInteractionPanelImage != null ? SystemGameManager.Instance.SystemConfigurationManager.UnitSpawnControllerInteractionPanelImage : base.Icon); }
-        public override Sprite NamePlateImage { get => (SystemGameManager.Instance.SystemConfigurationManager.UnitSpawnControllerNamePlateImage != null ? SystemGameManager.Instance.SystemConfigurationManager.UnitSpawnControllerNamePlateImage : base.NamePlateImage); }
+        public override Sprite Icon { get => (systemConfigurationManager.UnitSpawnControllerInteractionPanelImage != null ? systemConfigurationManager.UnitSpawnControllerInteractionPanelImage : base.Icon); }
+        public override Sprite NamePlateImage { get => (systemConfigurationManager.UnitSpawnControllerNamePlateImage != null ? systemConfigurationManager.UnitSpawnControllerNamePlateImage : base.NamePlateImage); }
 
         public List<UnitSpawnNode> UnitSpawnNodeList { get => unitSpawnNodeList; set => unitSpawnNodeList = value; }
         public List<UnitProfile> UnitProfileList { get => unitProfileList; set => unitProfileList = value; }
 
         public override InteractableOptionComponent GetInteractableOption(Interactable interactable, InteractableOption interactableOption = null) {
-            InteractableOptionComponent returnValue = new UnitSpawnControllerComponent(interactable, this);
+            InteractableOptionComponent returnValue = new UnitSpawnControllerComponent(interactable, this, systemGameManager);
             if (interactableOption != null) {
                 interactableOption.SetComponent(returnValue);
             }
             return returnValue;
         }
 
-        public override void SetupScriptableObjects() {
-            base.SetupScriptableObjects();
+        public override void SetupScriptableObjects(SystemGameManager systemGameManager) {
+            base.SetupScriptableObjects(systemGameManager);
             if (unitProfileNames != null) {
                 foreach (string unitProfileName in unitProfileNames) {
-                    UnitProfile tmpUnitProfile = SystemDataFactory.Instance.GetResource<UnitProfile>(unitProfileName);
+                    UnitProfile tmpUnitProfile = systemDataFactory.GetResource<UnitProfile>(unitProfileName);
                     if (tmpUnitProfile != null) {
                         unitProfileList.Add(tmpUnitProfile);
                     } else {

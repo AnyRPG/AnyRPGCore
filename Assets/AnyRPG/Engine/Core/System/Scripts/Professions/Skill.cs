@@ -32,12 +32,12 @@ namespace AnyRPG {
             return string.Format("<color=#ffff00ff>{0}</color>\n\n{1}", resourceName, GetSummary());
         }
 
-        public override void SetupScriptableObjects() {
-            base.SetupScriptableObjects();
+        public override void SetupScriptableObjects(SystemGameManager systemGameManager) {
+            base.SetupScriptableObjects(systemGameManager);
             abilityList = new List<BaseAbility>();
             if (abilityNames != null) {
                 foreach (string abilityName in abilityNames) {
-                    BaseAbility baseAbility = SystemDataFactory.Instance.GetResource<BaseAbility>(abilityName);
+                    BaseAbility baseAbility = systemDataFactory.GetResource<BaseAbility>(abilityName);
                     if (baseAbility != null) {
                         abilityList.Add(baseAbility);
                     } else {

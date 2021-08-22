@@ -176,10 +176,10 @@ namespace AnyRPG {
             return true;
         }
 
-        public override void SetupScriptableObjects() {
-            base.SetupScriptableObjects();
+        public override void SetupScriptableObjects(SystemGameManager systemGameManager) {
+            base.SetupScriptableObjects(systemGameManager);
             foreach (ResourceAmountNode resourceAmountNode in resourceAmounts) {
-                resourceAmountNode.SetupScriptableObjects();
+                resourceAmountNode.SetupScriptableObjects(systemDataFactory);
             }
         }
     }
@@ -226,10 +226,10 @@ namespace AnyRPG {
         public bool AddPower { get => addPower; set => addPower = value; }
         public string InputRemap { get => inputRemap; set => inputRemap = value; }
 
-        public void SetupScriptableObjects() {
+        public void SetupScriptableObjects(SystemDataFactory systemDataFactory) {
 
             if (resourceName != null && resourceName != string.Empty) {
-                PowerResource tmpPowerResource = SystemDataFactory.Instance.GetResource<PowerResource>(resourceName);
+                PowerResource tmpPowerResource = systemDataFactory.GetResource<PowerResource>(resourceName);
                 if (tmpPowerResource != null) {
                     powerResource = tmpPowerResource;
                 } else {

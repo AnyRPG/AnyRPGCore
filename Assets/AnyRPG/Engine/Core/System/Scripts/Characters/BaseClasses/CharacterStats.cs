@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 namespace AnyRPG {
-    public class CharacterStats {
+    public class CharacterStats : ConfiguredClass {
 
         public event System.Action<int, int> OnPrimaryResourceAmountChanged = delegate { };
         public event System.Action<PowerResource, int, int> OnResourceAmountChanged = delegate { };
@@ -56,6 +56,9 @@ namespace AnyRPG {
         private List<PowerResource> powerResourceList = new List<PowerResource>();
 
         protected bool eventSubscriptionsInitialized = false;
+
+        // game manager references
+        private SystemDataFactory systemDataFactory = null;
 
         public float WalkSpeed { get => walkSpeed; }
         public float RunSpeed { get => currentRunSpeed; }
@@ -202,11 +205,17 @@ namespace AnyRPG {
         public Dictionary<string, Stat> PrimaryStats { get => primaryStats; set => primaryStats = value; }
         public Dictionary<SecondaryStatType, Stat> SecondaryStats { get => secondaryStats; set => secondaryStats = value; }
 
-        public CharacterStats(BaseCharacter baseCharacter) {
+        public CharacterStats(BaseCharacter baseCharacter, SystemGameManager systemGameManager) {
             //Debug.Log(baseCharacter.gameObject.name + ".CharacterStats()");
             this.baseCharacter = baseCharacter;
+            Configure(systemGameManager);
             SetPrimaryStatModifiers();
             InitializeSecondaryStats();
+        }
+
+        public override void SetGameManagerReferences() {
+            base.SetGameManagerReferences();
+            systemDataFactory = systemGameManager.SystemDataFactory;
         }
 
         public void Init() {
@@ -978,7 +987,7 @@ namespace AnyRPG {
         public void SetResourceAmount(string resourceName, float newAmount) {
             //Debug.Log(baseCharacter.gameObject.name + ".CharacterStats.SetResourceAmount(" + resourceName + ", " + newAmount + "): current " + CurrentPrimaryResource);
             newAmount = Mathf.Clamp(newAmount, 0, int.MaxValue);
-            PowerResource tmpPowerResource = SystemDataFactory.Instance.GetResource<PowerResource>(resourceName);
+            PowerResource tmpPowerResource = systemDataFactory.GetResource<PowerResource>(resourceName);
 
             if (tmpPowerResource != null && powerResourceDictionary.ContainsKey(tmpPowerResource)) {
                 powerResourceDictionary[tmpPowerResource].currentValue = newAmount;
@@ -1000,7 +1009,7 @@ namespace AnyRPG {
         public bool AddResourceAmount(string resourceName, float newAmount) {
             //Debug.Log(baseCharacter.gameObject.name + ".CharacterStats.AddResourceAmount(" + resourceName + ", " + newAmount + ")");
             newAmount = Mathf.Clamp(newAmount, 0, int.MaxValue);
-            PowerResource tmpPowerResource = SystemDataFactory.Instance.GetResource<PowerResource>(resourceName);
+            PowerResource tmpPowerResource = systemDataFactory.GetResource<PowerResource>(resourceName);
 
             bool returnValue = false;
             if (tmpPowerResource != null && powerResourceDictionary.ContainsKey(tmpPowerResource)) {

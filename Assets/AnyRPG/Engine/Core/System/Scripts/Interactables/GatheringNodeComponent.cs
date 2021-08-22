@@ -10,7 +10,7 @@ namespace AnyRPG {
 
         public GatheringNodeProps GatheringNodeProps { get => interactableOptionProps as GatheringNodeProps; }
 
-        public GatheringNodeComponent(Interactable interactable, GatheringNodeProps interactableOptionProps) : base(interactable, interactableOptionProps) {
+        public GatheringNodeComponent(Interactable interactable, GatheringNodeProps interactableOptionProps, SystemGameManager systemGameManager) : base(interactable, interactableOptionProps, systemGameManager) {
         }
 
         public override bool MyPrerequisitesMet {
@@ -29,11 +29,6 @@ namespace AnyRPG {
             }
             base.CreateEventSubscriptions();
 
-            // because the skill is a special type of prerequisite, we need to be notified when it changes
-            if (SystemGameManager.Instance.SystemEventManager == null) {
-                Debug.LogError("SystemEventManager Not Found.  Is the GameManager prefab in the scene?");
-                return;
-            }
             SystemGameManager.Instance.SystemEventManager.OnAbilityListChanged += HandleAbilityListChange;
         }
 

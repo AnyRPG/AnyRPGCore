@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace AnyRPG {
     [System.Serializable]
-    public class AbilityAttachmentNode {
+    public class AbilityAttachmentNode : ConfiguredClass {
 
         [Tooltip("The name of the holdable object profile that refers to the physical prefab")]
         [SerializeField]
@@ -22,14 +22,23 @@ namespace AnyRPG {
         [SerializeField]
         private string attachmentName = string.Empty;
 
+        // game manager references
+        private SystemDataFactory systemDataFactory = null;
+
         public PrefabProfile HoldableObject { get => holdableObject; set => holdableObject = value; }
         public bool UseUniversalAttachment { get => useUniversalAttachment; set => useUniversalAttachment = value; }
         public string AttachmentName { get => attachmentName; set => attachmentName = value; }
 
-        public void SetupScriptableObjects(string ownerName) {
+        public override void SetGameManagerReferences() {
+            base.SetGameManagerReferences();
+            systemDataFactory = systemGameManager.SystemDataFactory;
+        }
+
+        public void SetupScriptableObjects(string ownerName, SystemGameManager systemGameManager) {
+            Configure(systemGameManager);
             holdableObject = null;
             if (holdableObjectName != null && holdableObjectName != string.Empty) {
-                PrefabProfile tmpHoldableObject = SystemDataFactory.Instance.GetResource<PrefabProfile>(holdableObjectName);
+                PrefabProfile tmpHoldableObject = systemDataFactory.GetResource<PrefabProfile>(holdableObjectName);
                 if (tmpHoldableObject != null) {
                     holdableObject = tmpHoldableObject;
                 } else {

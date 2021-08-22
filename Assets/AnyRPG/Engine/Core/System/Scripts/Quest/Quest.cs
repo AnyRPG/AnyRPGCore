@@ -614,13 +614,13 @@ namespace AnyRPG {
             }
         }
 
-        public override void SetupScriptableObjects() {
+        public override void SetupScriptableObjects(SystemGameManager systemGameManager) {
             //Debug.Log(MyName + ".Quest.SetupScriptableObjects(): ID: " + GetInstanceID());
         
-            base.SetupScriptableObjects();
+            base.SetupScriptableObjects(systemGameManager);
 
             if (rewardCurrencyName != null && rewardCurrencyName != string.Empty) {
-                Currency tmpCurrency = SystemDataFactory.Instance.GetResource<Currency>(rewardCurrencyName);
+                Currency tmpCurrency = systemDataFactory.GetResource<Currency>(rewardCurrencyName);
                 if (tmpCurrency != null) {
                     rewardCurrency = tmpCurrency;
                     //currencyNode.MyAmount = gainCurrencyAmount;
@@ -632,7 +632,7 @@ namespace AnyRPG {
             abilityRewardList = new List<BaseAbility>();
             if (abilityRewardNames != null) {
                 foreach (string baseAbilityName in abilityRewardNames) {
-                    BaseAbility baseAbility = SystemDataFactory.Instance.GetResource<BaseAbility>(baseAbilityName);
+                    BaseAbility baseAbility = systemDataFactory.GetResource<BaseAbility>(baseAbilityName);
                     if (baseAbility != null) {
                         abilityRewardList.Add(baseAbility);
                     } else {
@@ -644,7 +644,7 @@ namespace AnyRPG {
             skillRewardList = new List<Skill>();
             if (skillRewardNames != null) {
                 foreach (string skillName in skillRewardNames) {
-                    Skill skill = SystemDataFactory.Instance.GetResource<Skill>(skillName);
+                    Skill skill = systemDataFactory.GetResource<Skill>(skillName);
                     if (skill != null) {
                         skillRewardList.Add(skill);
                     } else {
@@ -656,7 +656,7 @@ namespace AnyRPG {
             itemRewardList = new List<Item>();
             if (itemRewardNames != null) {
                 foreach (string itemName in itemRewardNames) {
-                    Item item = SystemDataFactory.Instance.GetResource<Item>(itemName);
+                    Item item = systemDataFactory.GetResource<Item>(itemName);
                     if (item != null) {
                         itemRewardList.Add(item);
                     } else {
@@ -667,13 +667,13 @@ namespace AnyRPG {
 
             if (factionRewards != null && factionRewards.Count > 0) {
                 foreach (FactionNode factionNode in factionRewards) {
-                    factionNode.SetupScriptableObjects();
+                    factionNode.SetupScriptableObjects(systemGameManager);
                 }
             }
 
             openingDialog = null;
             if (hasOpeningDialog) {
-                Dialog dialog = SystemDataFactory.Instance.GetResource<Dialog>(DisplayName);
+                Dialog dialog = systemDataFactory.GetResource<Dialog>(DisplayName);
                 if (dialog != null) {
                     openingDialog = dialog;
                 } else {

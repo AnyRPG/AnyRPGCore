@@ -72,12 +72,12 @@ namespace AnyRPG {
             return returnValue;
         }
 
-        public override void SetupScriptableObjects() {
-            base.SetupScriptableObjects();
+        public override void SetupScriptableObjects(SystemGameManager systemGameManager) {
+            base.SetupScriptableObjects(systemGameManager);
             if (unitTypeRestrictions != null && unitTypeRestrictions.Count > 0) {
                 foreach (string unitTypeRestriction in unitTypeRestrictions) {
                     //Debug.Log(MyName + ".CapturePetEffect.SetupScriptableObjects(): looping through restrictions: " + unitTypeRestriction);
-                    UnitType tmpUnitType = SystemDataFactory.Instance.GetResource<UnitType>(unitTypeRestriction);
+                    UnitType tmpUnitType = systemDataFactory.GetResource<UnitType>(unitTypeRestriction);
                     if (tmpUnitType != null) {
                         unitTypeRestrictionList.Add(tmpUnitType);
                     } else {

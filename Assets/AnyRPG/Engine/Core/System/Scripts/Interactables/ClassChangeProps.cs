@@ -17,24 +17,24 @@ namespace AnyRPG {
 
         private CharacterClass characterClass;
 
-        public override Sprite Icon { get => (SystemGameManager.Instance.SystemConfigurationManager.ClassChangeInteractionPanelImage != null ? SystemGameManager.Instance.SystemConfigurationManager.ClassChangeInteractionPanelImage : base.Icon); }
-        public override Sprite NamePlateImage { get => (SystemGameManager.Instance.SystemConfigurationManager.ClassChangeNamePlateImage != null ? SystemGameManager.Instance.SystemConfigurationManager.ClassChangeNamePlateImage : base.NamePlateImage); }
+        public override Sprite Icon { get => (systemConfigurationManager.ClassChangeInteractionPanelImage != null ? systemConfigurationManager.ClassChangeInteractionPanelImage : base.Icon); }
+        public override Sprite NamePlateImage { get => (systemConfigurationManager.ClassChangeNamePlateImage != null ? systemConfigurationManager.ClassChangeNamePlateImage : base.NamePlateImage); }
 
         public CharacterClass CharacterClass { get => characterClass; set => characterClass = value; }
 
         public override InteractableOptionComponent GetInteractableOption(Interactable interactable, InteractableOption interactableOption = null) {
-            InteractableOptionComponent returnValue = new ClassChangeComponent(interactable, this);
+            InteractableOptionComponent returnValue = new ClassChangeComponent(interactable, this, systemGameManager);
             if (interactableOption != null) {
                 interactableOption.SetComponent(returnValue);
             }
             return returnValue;
         }
 
-        public override void SetupScriptableObjects() {
-            base.SetupScriptableObjects();
+        public override void SetupScriptableObjects(SystemGameManager systemGameManager) {
+            base.SetupScriptableObjects(systemGameManager);
 
             if (className != null && className != string.Empty) {
-                CharacterClass tmpCharacterClass = SystemDataFactory.Instance.GetResource<CharacterClass>(className);
+                CharacterClass tmpCharacterClass = systemDataFactory.GetResource<CharacterClass>(className);
                 if (tmpCharacterClass != null) {
                     characterClass = tmpCharacterClass;
                 } else {

@@ -248,12 +248,12 @@ namespace AnyRPG {
             //Debug.Log(DisplayName + ".LengthEffect.CancelEffect(" + targetCharacter.MyName + ")");
         }
 
-        public override void SetupScriptableObjects() {
-            base.SetupScriptableObjects();
+        public override void SetupScriptableObjects(SystemGameManager systemGameManager) {
+            base.SetupScriptableObjects(systemGameManager);
             tickAbilityEffectList = new List<AbilityEffect>();
             if (tickAbilityEffectNames != null) {
                 foreach (string abilityEffectName in tickAbilityEffectNames) {
-                    AbilityEffect abilityEffect = SystemDataFactory.Instance.GetResource<AbilityEffect>(abilityEffectName);
+                    AbilityEffect abilityEffect = systemDataFactory.GetResource<AbilityEffect>(abilityEffectName);
                     if (abilityEffect != null) {
                         tickAbilityEffectList.Add(abilityEffect);
                     } else {
@@ -265,7 +265,7 @@ namespace AnyRPG {
             completeAbilityEffectList = new List<AbilityEffect>();
             if (completeAbilityEffectNames != null) {
                 foreach (string abilityEffectName in completeAbilityEffectNames) {
-                    AbilityEffect abilityEffect = SystemDataFactory.Instance.GetResource<AbilityEffect>(abilityEffectName);
+                    AbilityEffect abilityEffect = systemDataFactory.GetResource<AbilityEffect>(abilityEffectName);
                     if (abilityEffect != null) {
                         completeAbilityEffectList.Add(abilityEffect);
                     } else {
@@ -280,7 +280,7 @@ namespace AnyRPG {
                     Debug.LogError("LengthEffect.SetupScriptableObjects(): prefabnames is not null but PrefabSpawnLocation is none while inititalizing " + DisplayName + ".  CHECK INSPECTOR BECAUSE OBJECTS WILL NEVER SPAWN");
                 }
                 foreach (string prefabName in prefabNames) {
-                    PrefabProfile prefabProfile = SystemDataFactory.Instance.GetResource<PrefabProfile>(prefabName);
+                    PrefabProfile prefabProfile = systemDataFactory.GetResource<PrefabProfile>(prefabName);
                     if (prefabProfile != null) {
                         prefabProfileList.Add(prefabProfile);
                     } else {
@@ -293,7 +293,7 @@ namespace AnyRPG {
             onTickAudioProfiles = new List<AudioProfile>();
             if (onTickAudioProfileNames != null) {
                 foreach (string audioProfileName in onTickAudioProfileNames) {
-                    AudioProfile audioProfile = SystemDataFactory.Instance.GetResource<AudioProfile>(audioProfileName);
+                    AudioProfile audioProfile = systemDataFactory.GetResource<AudioProfile>(audioProfileName);
                     if (audioProfile != null) {
                         onTickAudioProfiles.Add(audioProfile);
                     } else {
@@ -305,7 +305,7 @@ namespace AnyRPG {
             if (abilityObjectList != null) {
                 foreach (AbilityAttachmentNode abilityAttachmentNode in abilityObjectList) {
                     if (abilityAttachmentNode != null) {
-                        abilityAttachmentNode.SetupScriptableObjects(DisplayName);
+                        abilityAttachmentNode.SetupScriptableObjects(DisplayName, systemGameManager);
                     }
                 }
             }

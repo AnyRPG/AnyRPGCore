@@ -2,7 +2,7 @@ using AnyRPG;
 using UnityEngine;
 
 namespace AnyRPG {
-    public abstract class ConfiguredMonoBehaviour : MonoBehaviour {
+    public class ConfiguredClass {
 
         protected SystemGameManager systemGameManager = null;
 

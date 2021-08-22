@@ -5,12 +5,15 @@ using UnityEngine;
 
 namespace AnyRPG {
     [System.Serializable]
-    public class FactionNode : IDescribable {
+    public class FactionNode : ConfiguredClass, IDescribable {
 
         public Faction faction;
 
         [SerializeField]
         private string factionName = string.Empty;
+
+        // game manager references
+        private SystemDataFactory systemDataFactory = null;
 
         public int reputationAmount;
 
@@ -26,10 +29,17 @@ namespace AnyRPG {
             return faction.GetSummary();
         }
 
-        public void SetupScriptableObjects() {
+        public override void SetGameManagerReferences() {
+            base.SetGameManagerReferences();
+            systemDataFactory = systemGameManager.SystemDataFactory;
+        }
+
+        public void SetupScriptableObjects(SystemGameManager systemGamenManager) {
+            Configure(systemGamenManager);
+
             if (factionName != null && factionName != string.Empty) {
                 faction = null;
-                Faction tmpFaction = SystemDataFactory.Instance.GetResource<Faction>(factionName);
+                Faction tmpFaction = systemDataFactory.GetResource<Faction>(factionName);
                 if (tmpFaction != null) {
                     faction = tmpFaction;
                 } else {

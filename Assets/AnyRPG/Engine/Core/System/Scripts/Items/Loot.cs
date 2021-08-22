@@ -62,10 +62,10 @@ namespace AnyRPG {
             }
         }
 
-        public void SetupScriptableObjects() {
+        public void SetupScriptableObjects(SystemDataFactory systemDataFactory) {
             item = null;
             if (itemName != null) {
-                Item tmpItem = SystemDataFactory.Instance.GetResource<Item>(itemName);
+                Item tmpItem = systemDataFactory.GetResource<Item>(itemName);
                 if (tmpItem != null) {
                     item = tmpItem;
                 } else {

@@ -70,11 +70,11 @@ namespace AnyRPG {
             return item.BuyPrice();
         }
 
-        public void SetupScriptableObjects() {
+        public void SetupScriptableObjects(SystemDataFactory systemDataFactory) {
 
             item = null;
             if (itemName != null) {
-                Item tmpItem = SystemDataFactory.Instance.GetResource<Item>(itemName);
+                Item tmpItem = systemDataFactory.GetResource<Item>(itemName);
                 if (tmpItem != null) {
                     item = tmpItem;
                 } else {
@@ -84,7 +84,7 @@ namespace AnyRPG {
 
             itemQuality = null;
             if (itemQualityName != null && itemQualityName != string.Empty) {
-                ItemQuality tmpItemQuality = SystemDataFactory.Instance.GetResource<ItemQuality>(itemQualityName);
+                ItemQuality tmpItemQuality = systemDataFactory.GetResource<ItemQuality>(itemQualityName);
                 if (tmpItemQuality != null) {
                     itemQuality = tmpItemQuality;
                 } else {

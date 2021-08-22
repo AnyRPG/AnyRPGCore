@@ -29,18 +29,33 @@ namespace AnyRPG {
 
         private LootHolder lootHolder = new LootHolder();
 
+        // game manager references
+        private SystemDataFactory systemDataFactory = null;
+        private SystemConfigurationManager systemConfigurationManager = null;
+        private SystemAbilityController systemAbilityController = null;
+        private UIManager uIManager = null;
+        private LootManager lootManager = null;
+
         public CharacterUnit MyCharacterUnit { get => characterUnit; set => characterUnit = value; }
         public bool CurrencyRolled { get => currencyRolled; }
         public CurrencyNode CurrencyNode { get => currencyNode; set => currencyNode = value; }
         public bool CurrencyCollected { get => currencyCollected; set => currencyCollected = value; }
         public LootHolder LootHolder { get => lootHolder; set => lootHolder = value; }
 
-        public LootableCharacterComponent(Interactable interactable, LootableCharacterProps interactableOptionProps) : base(interactable, interactableOptionProps) {
+        public LootableCharacterComponent(Interactable interactable, LootableCharacterProps interactableOptionProps, SystemGameManager systemGameManager) : base(interactable, interactableOptionProps, systemGameManager) {
             CreateLootTables();
             if (interactableOptionProps.GetInteractionPanelTitle() == string.Empty) {
                 interactableOptionProps.InteractionPanelTitle = "Loot";
             }
+        }
 
+        public override void SetGameManagerReferences() {
+            base.SetGameManagerReferences();
+            systemDataFactory = systemGameManager.SystemDataFactory;
+            systemConfigurationManager = systemGameManager.SystemConfigurationManager;
+            systemAbilityController = systemGameManager.SystemAbilityController;
+            uIManager = systemGameManager.UIManager;
+            lootManager = systemGameManager.LootManager;
         }
 
         public static LootableCharacterComponent GetLootableCharacterComponent(Interactable searchInteractable) {
@@ -96,7 +111,7 @@ namespace AnyRPG {
         public void CreateLootTables() {
             //Debug.Log(gameObject.name + ".LootableCharacter.CreateLootTables()");
             foreach (string lootTableName in Props.LootTableNames) {
-                LootTable lootTable = SystemDataFactory.Instance.GetResource<LootTable>(lootTableName);
+                LootTable lootTable = systemDataFactory.GetResource<LootTable>(lootTableName);
                 if (lootTable != null) {
                     lootHolder.LootTableStates.Add(lootTable, new LootTableState());
                 }
@@ -109,23 +124,23 @@ namespace AnyRPG {
 
         public void HandleDeath(CharacterStats characterStats) {
             //Debug.Log(gameObject.name + "LootableCharacter.HandleDeath()");
-            if (SystemGameManager.Instance.PlayerManager == null) {
+            if (playerManager == null) {
                 // game is exiting
                 return;
             }
             int lootCount = 0;
             //Debug.Log(gameObject.name + "LootableCharacter.HandleDeath(): MyLootTable != null.  Getting loot");
-            //Debug.Log(gameObject.name + "LootableCharacter.HandleDeath(): characterinAgrotable: " + characterUnit.BaseCharacter.CharacterCombat.MyAggroTable.AggroTableContains(SystemGameManager.Instance.PlayerManager.MyCharacter.CharacterUnit));
-            if (LootHolder.LootTableStates.Count > 0 && characterUnit.BaseCharacter.CharacterCombat.AggroTable.AggroTableContains(SystemGameManager.Instance.PlayerManager.UnitController.CharacterUnit)) {
-                //Debug.Log(gameObject.name + "LootableCharacter.HandleDeath(): characterinAgrotable: " + characterUnit.BaseCharacter.CharacterCombat.MyAggroTable.AggroTableContains(SystemGameManager.Instance.PlayerManager.MyCharacter.CharacterUnit));
+            //Debug.Log(gameObject.name + "LootableCharacter.HandleDeath(): characterinAgrotable: " + characterUnit.BaseCharacter.CharacterCombat.MyAggroTable.AggroTableContains(playerManager.MyCharacter.CharacterUnit));
+            if (LootHolder.LootTableStates.Count > 0 && characterUnit.BaseCharacter.CharacterCombat.AggroTable.AggroTableContains(playerManager.UnitController.CharacterUnit)) {
+                //Debug.Log(gameObject.name + "LootableCharacter.HandleDeath(): characterinAgrotable: " + characterUnit.BaseCharacter.CharacterCombat.MyAggroTable.AggroTableContains(playerManager.MyCharacter.CharacterUnit));
                 lootCount = GetLootCount();
             }
             lootCalculated = true;
-            if (lootCount > 0 && SystemGameManager.Instance.SystemConfigurationManager?.LootSparkleEffect != null) {
+            if (lootCount > 0 && systemConfigurationManager.LootSparkleEffect != null) {
                 //Debug.Log(gameObject.name + "LootableCharacter.HandleDeath(): Loot count: " + MyLootTable.MyDroppedItems.Count + "; performing loot sparkle");
 
-                //SystemGameManager.Instance.SystemAbilityController.BeginAbility(SystemGameManager.Instance.SystemConfigurationManager.MyLootSparkleAbility as IAbility, gameObject);
-                SystemGameManager.Instance.SystemConfigurationManager.LootSparkleEffect.Cast(SystemGameManager.Instance.SystemAbilityController, interactable, interactable, new AbilityEffectContext());
+                //systemAbilityController.BeginAbility(systemConfigurationManager.MyLootSparkleAbility as IAbility, gameObject);
+                systemConfigurationManager.LootSparkleEffect.Cast(systemAbilityController, interactable, interactable, new AbilityEffectContext());
             }
             TryToDespawn();
         }
@@ -151,9 +166,9 @@ namespace AnyRPG {
                 SystemEventManager.StopListening("OnTakeLoot", HandleTakeLoot);
 
                 // cancel loot sparkle here because despawn takes a while
-                if (characterUnit.BaseCharacter.CharacterStats.StatusEffects.ContainsKey(SystemDataFactory.PrepareStringForMatch(SystemGameManager.Instance.SystemConfigurationManager.LootSparkleEffect.DisplayName))) {
+                if (characterUnit.BaseCharacter.CharacterStats.StatusEffects.ContainsKey(SystemDataFactory.PrepareStringForMatch(systemConfigurationManager.LootSparkleEffect.DisplayName))) {
                     //Debug.Log(gameObject.name + ".LootableCharacter.TryToDespawn(): found a sparkle effect: " + SystemDataFactory.PrepareStringForMatch(abilityEffect.MyName) + " and now cancelling it");
-                    characterUnit.BaseCharacter.CharacterStats.StatusEffects[SystemDataFactory.PrepareStringForMatch(SystemGameManager.Instance.SystemConfigurationManager.LootSparkleEffect.DisplayName)].CancelStatusEffect();
+                    characterUnit.BaseCharacter.CharacterStats.StatusEffects[SystemDataFactory.PrepareStringForMatch(systemConfigurationManager.LootSparkleEffect.DisplayName)].CancelStatusEffect();
                 }
                 AdvertiseLootComplete();
                 Despawn();
@@ -255,9 +270,9 @@ namespace AnyRPG {
             }
             if (Props.AutomaticCurrency == true) {
                 //Debug.Log(gameObject.name + ".LootableCharacter.GetCurrencyLoot(): automatic is true");
-                currencyNode.currency = SystemGameManager.Instance.SystemConfigurationManager.KillCurrency;
+                currencyNode.currency = systemConfigurationManager.KillCurrency;
                 if (characterUnit != null) {
-                    currencyNode.MyAmount = SystemGameManager.Instance.SystemConfigurationManager.KillCurrencyAmountPerLevel * characterUnit.BaseCharacter.CharacterStats.Level;
+                    currencyNode.MyAmount = systemConfigurationManager.KillCurrencyAmountPerLevel * characterUnit.BaseCharacter.CharacterStats.Level;
                     if (characterUnit.BaseCharacter.CharacterStats.Toughness != null) {
                         currencyNode.MyAmount *= (int)characterUnit.BaseCharacter.CharacterStats.Toughness.CurrencyMultiplier;
                     }
@@ -271,7 +286,7 @@ namespace AnyRPG {
 
         public override bool Interact(CharacterUnit source, int optionIndex = 0) {
             //Debug.Log(interactable.gameObject.name + ".LootableCharacter.Interact()");
-            SystemGameManager.Instance.UIManager.interactionWindow.CloseWindow();
+            uIManager.interactionWindow.CloseWindow();
             if (!characterUnit.BaseCharacter.CharacterStats.IsAlive) {
                 //Debug.Log(gameObject.name + ".LootableCharacter.Interact(): Character is dead.  Showing Loot Window on interaction");
                 base.Interact(source, optionIndex);
@@ -323,9 +338,9 @@ namespace AnyRPG {
 
                 if (drops.Count > 0) {
                     //Debug.Log(interactable.gameObject.name + ".LootableCharacter.drops.Count: " + drops.Count);
-                    SystemGameManager.Instance.LootManager.CreatePages(drops);
+                    lootManager.CreatePages(drops);
                     //Debug.Log(gameObject.name + ".LootableCharacter.Interact(): about to open window");
-                    SystemGameManager.Instance.UIManager.lootWindow.OpenWindow();
+                    uIManager.lootWindow.OpenWindow();
                     return true;
                 } else {
                     //Debug.Log(gameObject.name + ".LootableCharacter.drops.Count: " + drops.Count);
@@ -353,7 +368,7 @@ namespace AnyRPG {
         public override void StopInteract() {
             //Debug.Log(gameObject.name + ".LootableCharacter.StopInteract()");
             base.StopInteract();
-            SystemGameManager.Instance.UIManager.lootWindow.CloseWindow();
+            uIManager.lootWindow.CloseWindow();
             TryToDespawn();
         }
 

@@ -32,14 +32,14 @@ namespace AnyRPG {
         public List<StatusEffect> MyTraitList { get => traitList; set => traitList = value; }
         public List<Equipment> MyEquipmentList { get => equipmentList; set => equipmentList = value; }
 
-        public override void SetupScriptableObjects() {
-            base.SetupScriptableObjects();
+        public override void SetupScriptableObjects(SystemGameManager systemGameManager) {
+            base.SetupScriptableObjects(systemGameManager);
 
             equipmentList = new List<Equipment>();
             if (equipmentNames != null) {
                 foreach (string equipmentName in equipmentNames) {
                     Equipment tmpEquipment = null;
-                    tmpEquipment = SystemDataFactory.Instance.GetResource<Item>(equipmentName) as Equipment;
+                    tmpEquipment = systemDataFactory.GetResource<Item>(equipmentName) as Equipment;
                     if (tmpEquipment != null) {
                         equipmentList.Add(tmpEquipment);
                     } else {
@@ -55,7 +55,7 @@ namespace AnyRPG {
                     if (traitName == string.Empty) {
                         traitList.Add(null);
                     } else {
-                        tmpStatusEffect = SystemDataFactory.Instance.GetResource<AbilityEffect>(traitName) as StatusEffect;
+                        tmpStatusEffect = systemDataFactory.GetResource<AbilityEffect>(traitName) as StatusEffect;
                         if (tmpStatusEffect != null) {
                             traitList.Add(tmpStatusEffect);
                         } else {

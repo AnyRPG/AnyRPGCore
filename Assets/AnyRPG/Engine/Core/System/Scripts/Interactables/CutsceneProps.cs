@@ -21,22 +21,22 @@ namespace AnyRPG {
         private Cutscene cutscene = null;
 
 
-        public override Sprite Icon { get => (SystemGameManager.Instance.SystemConfigurationManager.CutSceneInteractionPanelImage != null ? SystemGameManager.Instance.SystemConfigurationManager.CutSceneInteractionPanelImage : base.Icon); }
-        public override Sprite NamePlateImage { get => (SystemGameManager.Instance.SystemConfigurationManager.CutSceneNamePlateImage != null ? SystemGameManager.Instance.SystemConfigurationManager.CutSceneNamePlateImage : base.NamePlateImage); }
+        public override Sprite Icon { get => (systemConfigurationManager.CutSceneInteractionPanelImage != null ? systemConfigurationManager.CutSceneInteractionPanelImage : base.Icon); }
+        public override Sprite NamePlateImage { get => (systemConfigurationManager.CutSceneNamePlateImage != null ? systemConfigurationManager.CutSceneNamePlateImage : base.NamePlateImage); }
         public Cutscene Cutscene { get => cutscene; set => cutscene = value; }
 
         public override InteractableOptionComponent GetInteractableOption(Interactable interactable, InteractableOption interactableOption = null) {
-            InteractableOptionComponent returnValue = new CutSceneComponent(interactable, this);
+            InteractableOptionComponent returnValue = new CutSceneComponent(interactable, this, systemGameManager);
             if (interactableOption != null) {
                 interactableOption.SetComponent(returnValue);
             }
             return returnValue;
         }
 
-        public override void SetupScriptableObjects() {
-            base.SetupScriptableObjects();
+        public override void SetupScriptableObjects(SystemGameManager systemGameManager) {
+            base.SetupScriptableObjects(systemGameManager);
             if (cutsceneName != null && cutsceneName != string.Empty) {
-                Cutscene tmpCutscene = SystemDataFactory.Instance.GetResource<Cutscene>(cutsceneName);
+                Cutscene tmpCutscene = systemDataFactory.GetResource<Cutscene>(cutsceneName);
                 if (tmpCutscene != null) {
                     cutscene = tmpCutscene;
                 } else {

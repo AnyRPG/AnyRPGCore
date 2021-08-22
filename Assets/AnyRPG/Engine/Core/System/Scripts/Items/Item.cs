@@ -205,7 +205,7 @@ namespace AnyRPG {
         }
 
         public IUseable GetFactoryUseable() {
-            return SystemDataFactory.Instance.GetResource<Item>(DisplayName);
+            return systemDataFactory.GetResource<Item>(DisplayName);
         }
 
         public bool ActionButtonUse() {
@@ -337,7 +337,7 @@ namespace AnyRPG {
             if (randomItemQuality == true) {
                 // get number of item qualities that are valid for random item quality creation
                 List<ItemQuality> validItemQualities = new List<ItemQuality>();
-                foreach (ItemQuality itemQuality in SystemDataFactory.Instance.GetResourceList<ItemQuality>()) {
+                foreach (ItemQuality itemQuality in systemDataFactory.GetResourceList<ItemQuality>()) {
                     if (itemQuality.AllowRandomItems) {
                         validItemQualities.Add(itemQuality);
                     }
@@ -379,11 +379,11 @@ namespace AnyRPG {
             }
         }
 
-        public override void SetupScriptableObjects() {
-            base.SetupScriptableObjects();
+        public override void SetupScriptableObjects(SystemGameManager systemGameManager) {
+            base.SetupScriptableObjects(systemGameManager);
             currency = null;
             if (currencyName != null && currencyName != string.Empty) {
-                Currency tmpCurrency = SystemDataFactory.Instance.GetResource<Currency>(currencyName);
+                Currency tmpCurrency = systemDataFactory.GetResource<Currency>(currencyName);
                 if (tmpCurrency != null) {
                     currency = tmpCurrency;
                 } else {
@@ -393,7 +393,7 @@ namespace AnyRPG {
 
             realItemQuality = null;
             if (itemQuality != null && itemQuality != string.Empty) {
-                ItemQuality tmpItemQuality = SystemDataFactory.Instance.GetResource<ItemQuality>(itemQuality);
+                ItemQuality tmpItemQuality = systemDataFactory.GetResource<ItemQuality>(itemQuality);
                 if (tmpItemQuality != null) {
                     realItemQuality = tmpItemQuality;
                 } else {
@@ -404,7 +404,7 @@ namespace AnyRPG {
             realCharacterClassRequirementList = new List<CharacterClass>();
             if (characterClassRequirementList != null) {
                 foreach (string characterClassName in characterClassRequirementList) {
-                    CharacterClass tmpCharacterClass = SystemDataFactory.Instance.GetResource<CharacterClass>(characterClassName);
+                    CharacterClass tmpCharacterClass = systemDataFactory.GetResource<CharacterClass>(characterClassName);
                     if (tmpCharacterClass != null) {
                         realCharacterClassRequirementList.Add(tmpCharacterClass);
                     } else {

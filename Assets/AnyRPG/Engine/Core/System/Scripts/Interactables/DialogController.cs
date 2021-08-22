@@ -7,7 +7,7 @@ using UnityEngine;
 using UnityEngine.UI;
 
 namespace AnyRPG {
-    public class DialogController {
+    public class DialogController : ConfiguredClass {
 
         // references
         private Interactable interactable;
@@ -18,10 +18,25 @@ namespace AnyRPG {
 
         private Coroutine dialogCoroutine = null;
 
+        // game manager references
+        private SystemDataFactory systemDataFactory = null;
+        private PlayerManager playerManager = null;
+        private LogManager logManager = null;
+        private SystemConfigurationManager systemConfigurationManager = null;
+
         public int DialogIndex { get => dialogIndex; }
 
-        public DialogController(Interactable interactable) {
+        public DialogController(Interactable interactable, SystemGameManager systemGameManager) {
             this.interactable = interactable;
+            Configure(systemGameManager);
+        }
+
+        public override void SetGameManagerReferences() {
+            base.SetGameManagerReferences();
+            systemDataFactory = systemGameManager.SystemDataFactory;
+            playerManager = systemGameManager.PlayerManager;
+            logManager = systemGameManager.LogManager;
+            systemConfigurationManager = systemGameManager.SystemConfigurationManager;
         }
 
         public void Cleanup() {
@@ -44,7 +59,7 @@ namespace AnyRPG {
 
         public void BeginDialog(string dialogName, DialogComponent caller = null) {
             //Debug.Log(interactable.gameObject.name + ".DialogController.BeginDialog(" + dialogName + ")");
-            Dialog tmpDialog = SystemDataFactory.Instance.GetResource<Dialog>(dialogName);
+            Dialog tmpDialog = systemDataFactory.GetResource<Dialog>(dialogName);
             if (tmpDialog != null) {
                 BeginDialog(tmpDialog, caller);
             }
@@ -77,13 +92,13 @@ namespace AnyRPG {
                             interactable.UnitComponentController.PlayVoice(dialog.AudioProfile.AudioClips[dialogIndex]);
                         }
                         bool writeMessage = true;
-                        if (SystemGameManager.Instance.PlayerManager != null && SystemGameManager.Instance.PlayerManager.ActiveUnitController != null) {
-                            if (Vector3.Distance(interactable.transform.position, SystemGameManager.Instance.PlayerManager.ActiveUnitController.transform.position) > SystemGameManager.Instance.SystemConfigurationManager.MaxChatTextDistance) {
+                        if (playerManager != null && playerManager.ActiveUnitController != null) {
+                            if (Vector3.Distance(interactable.transform.position, playerManager.ActiveUnitController.transform.position) > systemConfigurationManager.MaxChatTextDistance) {
                                 writeMessage = false;
                             }
                         }
-                        if (writeMessage && SystemGameManager.Instance.LogManager != null) {
-                            SystemGameManager.Instance.LogManager.WriteChatMessage(dialogNode.MyDescription);
+                        if (writeMessage && logManager != null) {
+                            logManager.WriteChatMessage(dialogNode.MyDescription);
                         }
 
                         dialogNode.Shown = true;

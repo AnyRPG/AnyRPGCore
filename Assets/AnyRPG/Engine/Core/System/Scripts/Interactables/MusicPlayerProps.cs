@@ -20,23 +20,23 @@ namespace AnyRPG {
 
         private List<AudioProfile> musicProfileList = new List<AudioProfile>();
 
-        public override Sprite Icon { get => (SystemGameManager.Instance.SystemConfigurationManager.MusicPlayerInteractionPanelImage != null ? SystemGameManager.Instance.SystemConfigurationManager.MusicPlayerInteractionPanelImage : base.Icon); }
-        public override Sprite NamePlateImage { get => (SystemGameManager.Instance.SystemConfigurationManager.MusicPlayerNamePlateImage != null ? SystemGameManager.Instance.SystemConfigurationManager.MusicPlayerNamePlateImage : base.NamePlateImage); }
+        public override Sprite Icon { get => (systemConfigurationManager.MusicPlayerInteractionPanelImage != null ? systemConfigurationManager.MusicPlayerInteractionPanelImage : base.Icon); }
+        public override Sprite NamePlateImage { get => (systemConfigurationManager.MusicPlayerNamePlateImage != null ? systemConfigurationManager.MusicPlayerNamePlateImage : base.NamePlateImage); }
         public List<AudioProfile> MusicProfileList { get => musicProfileList; set => musicProfileList = value; }
 
         public override InteractableOptionComponent GetInteractableOption(Interactable interactable, InteractableOption interactableOption = null) {
-            InteractableOptionComponent returnValue = new MusicPlayerComponent(interactable, this);
+            InteractableOptionComponent returnValue = new MusicPlayerComponent(interactable, this, systemGameManager);
             if (interactableOption != null) {
                 interactableOption.SetComponent(returnValue);
             }
             return returnValue;
         }
 
-        public override void SetupScriptableObjects() {
-            base.SetupScriptableObjects();
+        public override void SetupScriptableObjects(SystemGameManager systemGameManager) {
+            base.SetupScriptableObjects(systemGameManager);
             if (musicProfileNames != null) {
                 foreach (string musicProfileName in musicProfileNames) {
-                    AudioProfile tmpMusicProfile = SystemDataFactory.Instance.GetResource<AudioProfile>(musicProfileName);
+                    AudioProfile tmpMusicProfile = systemDataFactory.GetResource<AudioProfile>(musicProfileName);
                     if (tmpMusicProfile != null) {
                         musicProfileList.Add(tmpMusicProfile);
                     } else {

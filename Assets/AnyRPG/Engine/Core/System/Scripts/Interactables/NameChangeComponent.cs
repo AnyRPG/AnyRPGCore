@@ -12,7 +12,7 @@ namespace AnyRPG {
 
         private bool windowEventSubscriptionsInitialized = false;
 
-        public NameChangeComponent(Interactable interactable, NameChangeProps interactableOptionProps) : base(interactable, interactableOptionProps) {
+        public NameChangeComponent(Interactable interactable, NameChangeProps interactableOptionProps, SystemGameManager systemGameManager) : base(interactable, interactableOptionProps, systemGameManager) {
         }
 
         public void CleanupEventSubscriptions(ICloseableWindowContents windowContents) {

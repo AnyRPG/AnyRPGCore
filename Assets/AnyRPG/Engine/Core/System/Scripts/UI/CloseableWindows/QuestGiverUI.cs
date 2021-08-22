@@ -436,7 +436,7 @@ namespace AnyRPG {
             }
 
             // DO THIS NOW SO NO NULL REFERENCES WHEN IT GETS DESELECTED DURING THIS PROCESS
-            //Quest questToComplete = SystemDataFactory.Instance.GetResource<Quest>(currentQuestName);
+            //Quest questToComplete = systemDataFactory.GetResource<Quest>(currentQuestName);
 
             //questDetailsArea.myreward
 

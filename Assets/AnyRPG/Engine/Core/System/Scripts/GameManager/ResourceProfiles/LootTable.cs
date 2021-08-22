@@ -185,13 +185,13 @@ namespace AnyRPG {
             lootTableState.Rolled = false;
         }
 
-        public override void SetupScriptableObjects() {
-            base.SetupScriptableObjects();
+        public override void SetupScriptableObjects(SystemGameManager systemGameManager) {
+            base.SetupScriptableObjects(systemGameManager);
 
             if (lootGroups != null) {
                 foreach (LootGroup lootGroup in lootGroups) {
                     foreach (Loot tmpLoot in lootGroup.Loot) {
-                        tmpLoot.SetupScriptableObjects();
+                        tmpLoot.SetupScriptableObjects(systemDataFactory);
                     }
                 }
             }

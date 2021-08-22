@@ -19,13 +19,13 @@ namespace AnyRPG {
 
         public List<VendorItem> MyVendorItems { get => vendorItems; set => vendorItems = value; }
 
-        public override void SetupScriptableObjects() {
-            base.SetupScriptableObjects();
+        public override void SetupScriptableObjects(SystemGameManager systemGameManager) {
+            base.SetupScriptableObjects(systemGameManager);
 
             if (vendorItems != null) {
                 foreach (VendorItem vendorItem in vendorItems) {
                     if (vendorItem != null) {
-                        vendorItem.SetupScriptableObjects();
+                        vendorItem.SetupScriptableObjects(systemDataFactory);
                     }
 
                 }

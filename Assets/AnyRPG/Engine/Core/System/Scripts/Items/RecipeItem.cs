@@ -57,12 +57,12 @@ namespace AnyRPG {
             return returnString;
         }
 
-        public override void SetupScriptableObjects() {
+        public override void SetupScriptableObjects(SystemGameManager systemGameManager) {
             //Debug.Log("RecipeItem.SetupScriptableObjects():");
-            base.SetupScriptableObjects();
+            base.SetupScriptableObjects(systemGameManager);
 
             if (recipeName != null && recipeName != string.Empty) {
-                Recipe tmpRecipe = SystemDataFactory.Instance.GetResource<Recipe>(recipeName);
+                Recipe tmpRecipe = systemDataFactory.GetResource<Recipe>(recipeName);
                 if (tmpRecipe != null) {
                     recipe = tmpRecipe;
                 } else {

@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 namespace AnyRPG {
-    public class BaseCharacter : MonoBehaviour, IAbilityCaster, ICapabilityConsumer {
+    public class BaseCharacter : ConfiguredMonoBehaviour, IAbilityCaster, ICapabilityConsumer {
 
         //public event System.Action<string> OnNameChange = delegate { };
         //public event System.Action<string> OnTitleChange = delegate { };
@@ -56,6 +56,10 @@ namespace AnyRPG {
         private bool characterInitialized = false;
         private bool eventSubscriptionsInitialized = false;
 
+        // game manager references
+        private SystemDataFactory systemDataFactory = null;
+        private SystemConfigurationManager systemConfigurationManager = null;
+
         public CharacterStats CharacterStats { get => characterStats; }
         public CharacterCombat CharacterCombat { get => characterCombat; }
         public UnitController UnitController { get => unitController; }
@@ -93,6 +97,13 @@ namespace AnyRPG {
         public CapabilityConsumerProcessor CapabilityConsumerProcessor { get => capabilityConsumerProcessor; }
         public string UnitProfileName { get => unitProfileName; }
 
+        public override void SetGameManagerReferences() {
+            base.SetGameManagerReferences();
+
+            systemDataFactory = systemGameManager.SystemDataFactory;
+            systemConfigurationManager = systemGameManager.SystemConfigurationManager;
+        }
+
         // baseCharacter does not initialize itself.  It is initialized by the PlayerManager (player case), or the UnitController (AI case)
         public void Init() {
             //Debug.Log(gameObject.name + ".BaseCharacter.Init()");
@@ -121,15 +132,15 @@ namespace AnyRPG {
 
             // get character components ready for intitalization by allowing them to construct needed internal objects and references back to the character
             capabilityConsumerProcessor = new CapabilityConsumerProcessor(this);
-            characterStats = new CharacterStats(this);
-            characterEquipmentManager = new CharacterEquipmentManager(this);
+            characterStats = new CharacterStats(this, systemGameManager);
+            characterEquipmentManager = new CharacterEquipmentManager(this, systemGameManager);
             characterFactionManager = new CharacterFactionManager(this);
-            characterPetManager = new CharacterPetManager(this);
+            characterPetManager = new CharacterPetManager(this, systemGameManager);
             characterCombat = new CharacterCombat(this);
-            characterSkillManager = new CharacterSkillManager(this);
+            characterSkillManager = new CharacterSkillManager(this, systemGameManager);
             characterCurrencyManager = new CharacterCurrencyManager(this);
-            characterRecipeManager = new CharacterRecipeManager(this);
-            characterAbilityManager = new CharacterAbilityManager(this);
+            characterRecipeManager = new CharacterRecipeManager(this, systemGameManager);
+            characterAbilityManager = new CharacterAbilityManager(this, systemGameManager);
         }
 
         public void InitCharacterComponents() {
@@ -164,10 +175,8 @@ namespace AnyRPG {
             if (!eventSubscriptionsInitialized) {
                 return;
             }
-            if (SystemGameManager.Instance.SystemEventManager != null) {
-                SystemEventManager.StopListening("OnLevelUnload", HandleLevelUnload);
-                SystemEventManager.StopListening("OnLevelLoad", HandleLevelLoad);
-            }
+            SystemEventManager.StopListening("OnLevelUnload", HandleLevelUnload);
+            SystemEventManager.StopListening("OnLevelLoad", HandleLevelLoad);
         }
 
         // currently this is only used for load game panel and loading game, so it's always a player
@@ -274,7 +283,7 @@ namespace AnyRPG {
         public void SetUnitProfile(string unitProfileName, bool notify = true, int unitLevel = -1, bool loadProviderEquipment = true) {
             //Debug.Log(gameObject.name + ".BaseCharacter.SetUnitProfile(" + unitProfileName + ")");
 
-            SetUnitProfile(UnitProfile.GetUnitProfileReference(unitProfileName), notify, unitLevel, loadProviderEquipment);
+            SetUnitProfile(systemDataFactory.GetResource<UnitProfile>(unitProfileName), notify, unitLevel, loadProviderEquipment);
         }
 
         public void SetUnitProfile (UnitProfile unitProfile, bool notify = true, int unitLevel = -1, bool loadProviderEquipment = true, bool processEquipmentRestrictions = true) {
@@ -375,7 +384,7 @@ namespace AnyRPG {
 
         public void UpdateStatProviderList() {
             statProviders = new List<IStatProvider>();
-            statProviders.Add(SystemGameManager.Instance.SystemConfigurationManager);
+            statProviders.Add(systemConfigurationManager);
             if (unitProfile != null) {
                 statProviders.Add(unitProfile);
             }

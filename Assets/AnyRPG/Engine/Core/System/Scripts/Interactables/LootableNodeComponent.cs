@@ -37,7 +37,7 @@ namespace AnyRPG {
 
         public LootHolder LootHolder { get => lootHolder; set => lootHolder = value; }
 
-        public LootableNodeComponent(Interactable interactable, LootableNodeProps interactableOptionProps) : base(interactable, interactableOptionProps) {
+        public LootableNodeComponent(Interactable interactable, LootableNodeProps interactableOptionProps, SystemGameManager systemGameManager) : base(interactable, interactableOptionProps, systemGameManager) {
             // initialize loot tables and states
             foreach (LootTable lootTable in Props.LootTables) {
                 lootHolder.LootTableStates.Add(lootTable, new LootTableState());

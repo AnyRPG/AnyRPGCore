@@ -18,7 +18,7 @@ namespace AnyRPG {
         public float MinimumWeight { get => minimumWeight; set => minimumWeight = value; }
 
         public override InteractableOptionComponent GetInteractableOption(Interactable interactable, InteractableOption interactableOption = null) {
-            InteractableOptionComponent returnValue = new PressureSwitchComponent(interactable, this);
+            InteractableOptionComponent returnValue = new PressureSwitchComponent(interactable, this, systemGameManager);
             if (interactableOption != null) {
                 interactableOption.SetComponent(returnValue);
             }

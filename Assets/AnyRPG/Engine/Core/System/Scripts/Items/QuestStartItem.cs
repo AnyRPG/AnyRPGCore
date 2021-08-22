@@ -126,8 +126,8 @@ namespace AnyRPG {
             return false;
         }
 
-        public override void SetupScriptableObjects() {
-            base.SetupScriptableObjects();
+        public override void SetupScriptableObjects(SystemGameManager systemGameManager) {
+            base.SetupScriptableObjects(systemGameManager);
 
             if (quests != null) {
                 foreach (QuestNode questNode in quests) {

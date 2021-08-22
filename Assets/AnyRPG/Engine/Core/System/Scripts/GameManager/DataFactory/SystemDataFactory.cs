@@ -212,7 +212,7 @@ namespace AnyRPG {
 
             //setup scriptable objects
             foreach (FactoryDataAccess dataAccess in dataDictionary.Values) {
-                dataAccess.SetupScriptableObjects();
+                dataAccess.SetupScriptableObjects(systemGameManager);
             }
         }
 

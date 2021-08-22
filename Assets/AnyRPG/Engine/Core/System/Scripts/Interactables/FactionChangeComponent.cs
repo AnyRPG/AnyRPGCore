@@ -8,14 +8,22 @@ using UnityEngine.UI;
 namespace AnyRPG {
     public class FactionChangeComponent : InteractableOptionComponent {
 
+        // game manager references
+        private UIManager uIManager = null;
+
         public FactionChangeProps Props { get => interactableOptionProps as FactionChangeProps; }
 
         private bool windowEventSubscriptionsInitialized = false;
 
-        public FactionChangeComponent(Interactable interactable, FactionChangeProps interactableOptionProps) : base(interactable, interactableOptionProps) {
+        public FactionChangeComponent(Interactable interactable, FactionChangeProps interactableOptionProps, SystemGameManager systemGameManager) : base(interactable, interactableOptionProps, systemGameManager) {
             if (interactableOptionProps.GetInteractionPanelTitle() == string.Empty) {
                 interactableOptionProps.InteractionPanelTitle = Props.Faction.DisplayName + " Faction";
             }
+        }
+
+        public override void SetGameManagerReferences() {
+            base.SetGameManagerReferences();
+            uIManager = systemGameManager.UIManager;
         }
 
         public override void CreateEventSubscriptions() {
@@ -25,11 +33,6 @@ namespace AnyRPG {
             }
             base.CreateEventSubscriptions();
 
-            // because the class is a special type of prerequisite, we need to be notified when it changes
-            if (SystemGameManager.Instance.SystemEventManager == null) {
-                Debug.LogError("SystemEventManager Not Found.  Is the GameManager prefab in the scene?");
-                return;
-            }
             SystemEventManager.StartListening("OnFactionChange", HandleFactionChange);
         }
 
@@ -39,12 +42,12 @@ namespace AnyRPG {
         }
 
         public void CleanupWindowEventSubscriptions() {
-            if (SystemGameManager.Instance.UIManager != null
-                && SystemGameManager.Instance.UIManager.factionChangeWindow != null
-                && SystemGameManager.Instance.UIManager.factionChangeWindow.CloseableWindowContents != null
-                && (SystemGameManager.Instance.UIManager.factionChangeWindow.CloseableWindowContents as NameChangePanelController) != null) {
-                (SystemGameManager.Instance.UIManager.factionChangeWindow.CloseableWindowContents as FactionChangePanelController).OnConfirmAction -= HandleConfirmAction;
-                (SystemGameManager.Instance.UIManager.factionChangeWindow.CloseableWindowContents as FactionChangePanelController).OnCloseWindow -= CleanupEventSubscriptions;
+            if (uIManager != null
+                && uIManager.factionChangeWindow != null
+                && uIManager.factionChangeWindow.CloseableWindowContents != null
+                && (uIManager.factionChangeWindow.CloseableWindowContents as NameChangePanelController) != null) {
+                (uIManager.factionChangeWindow.CloseableWindowContents as FactionChangePanelController).OnConfirmAction -= HandleConfirmAction;
+                (uIManager.factionChangeWindow.CloseableWindowContents as FactionChangePanelController).OnCloseWindow -= CleanupEventSubscriptions;
             }
         }
 
@@ -73,9 +76,9 @@ namespace AnyRPG {
                 return false;
             }
             base.Interact(source, optionIndex);
-            (SystemGameManager.Instance.UIManager.factionChangeWindow.CloseableWindowContents as FactionChangePanelController).Setup(Props.Faction);
-            (SystemGameManager.Instance.UIManager.factionChangeWindow.CloseableWindowContents as FactionChangePanelController).OnConfirmAction += HandleConfirmAction;
-            (SystemGameManager.Instance.UIManager.factionChangeWindow.CloseableWindowContents as FactionChangePanelController).OnCloseWindow += CleanupEventSubscriptions;
+            (uIManager.factionChangeWindow.CloseableWindowContents as FactionChangePanelController).Setup(Props.Faction);
+            (uIManager.factionChangeWindow.CloseableWindowContents as FactionChangePanelController).OnConfirmAction += HandleConfirmAction;
+            (uIManager.factionChangeWindow.CloseableWindowContents as FactionChangePanelController).OnCloseWindow += CleanupEventSubscriptions;
             windowEventSubscriptionsInitialized = true;
             return true;
         }
@@ -86,7 +89,7 @@ namespace AnyRPG {
 
         public override void StopInteract() {
             base.StopInteract();
-            SystemGameManager.Instance.UIManager.factionChangeWindow.CloseWindow();
+            uIManager.factionChangeWindow.CloseWindow();
         }
 
         public override bool HasMiniMapText() {
@@ -112,7 +115,7 @@ namespace AnyRPG {
         // faction is a special type of prerequisite
         public override bool MyPrerequisitesMet {
             get {
-                if (SystemGameManager.Instance.PlayerManager.MyCharacter.Faction == Props.Faction) {
+                if (playerManager.MyCharacter.Faction == Props.Faction) {
                     return false;
                 }
                 return base.MyPrerequisitesMet;

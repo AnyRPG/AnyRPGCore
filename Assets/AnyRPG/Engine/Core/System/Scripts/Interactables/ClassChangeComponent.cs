@@ -8,14 +8,22 @@ using UnityEngine.UI;
 namespace AnyRPG {
     public class ClassChangeComponent : InteractableOptionComponent {
 
+        // game manager references
+        private UIManager uIManager = null;
+
         public ClassChangeProps Props { get => interactableOptionProps as ClassChangeProps; }
 
         private bool windowEventSubscriptionsInitialized = false;
 
-        public ClassChangeComponent(Interactable interactable, ClassChangeProps interactableOptionProps) : base(interactable, interactableOptionProps) {
+        public ClassChangeComponent(Interactable interactable, ClassChangeProps interactableOptionProps, SystemGameManager systemGameManager) : base(interactable, interactableOptionProps, systemGameManager) {
             if (interactableOptionProps.GetInteractionPanelTitle() == string.Empty) {
                 interactableOptionProps.InteractionPanelTitle = Props.CharacterClass.DisplayName + " Class";
             }
+        }
+
+        public override void SetGameManagerReferences() {
+            base.SetGameManagerReferences();
+            uIManager = systemGameManager.UIManager;
         }
 
         public void CleanupEventSubscriptions(ICloseableWindowContents windowContents) {
@@ -24,9 +32,9 @@ namespace AnyRPG {
         }
 
         public void CleanupWindowEventSubscriptions() {
-            if (SystemGameManager.Instance.UIManager != null && SystemGameManager.Instance.UIManager.classChangeWindow != null && SystemGameManager.Instance.UIManager.classChangeWindow.CloseableWindowContents != null && (SystemGameManager.Instance.UIManager.classChangeWindow.CloseableWindowContents as NameChangePanelController) != null) {
-                (SystemGameManager.Instance.UIManager.classChangeWindow.CloseableWindowContents as ClassChangePanelController).OnConfirmAction -= HandleConfirmAction;
-                (SystemGameManager.Instance.UIManager.classChangeWindow.CloseableWindowContents as ClassChangePanelController).OnCloseWindow -= CleanupEventSubscriptions;
+            if (uIManager != null && uIManager.classChangeWindow != null && uIManager.classChangeWindow.CloseableWindowContents != null && (uIManager.classChangeWindow.CloseableWindowContents as NameChangePanelController) != null) {
+                (uIManager.classChangeWindow.CloseableWindowContents as ClassChangePanelController).OnConfirmAction -= HandleConfirmAction;
+                (uIManager.classChangeWindow.CloseableWindowContents as ClassChangePanelController).OnCloseWindow -= CleanupEventSubscriptions;
             }
             windowEventSubscriptionsInitialized = false;
         }
@@ -35,9 +43,7 @@ namespace AnyRPG {
             //Debug.Log(gameObject.name + ".ClassChangeInteractable.CleanupEventSubscriptions()");
             base.CleanupEventSubscriptions();
             CleanupWindowEventSubscriptions();
-            if (SystemGameManager.Instance.SystemEventManager != null) {
-                SystemGameManager.Instance.SystemEventManager.OnClassChange -= HandleClassChange;
-            }
+            systemEventManager.OnClassChange -= HandleClassChange;
         }
 
         public override void CreateEventSubscriptions() {
@@ -47,12 +53,7 @@ namespace AnyRPG {
             }
             base.CreateEventSubscriptions();
 
-            // because the class is a special type of prerequisite, we need to be notified when it changes
-            if (SystemGameManager.Instance.SystemEventManager == null) {
-                Debug.LogError("SystemEventManager Not Found.  Is the GameManager prefab in the scene?");
-                return;
-            }
-            SystemGameManager.Instance.SystemEventManager.OnClassChange += HandleClassChange;
+            systemEventManager.OnClassChange += HandleClassChange;
         }
 
         public void HandleClassChange(CharacterClass oldCharacterClass, CharacterClass newCharacterClass) {
@@ -74,9 +75,9 @@ namespace AnyRPG {
             }
             base.Interact(source, optionIndex);
 
-            (SystemGameManager.Instance.UIManager.classChangeWindow.CloseableWindowContents as ClassChangePanelController).Setup(Props.CharacterClass);
-            (SystemGameManager.Instance.UIManager.classChangeWindow.CloseableWindowContents as ClassChangePanelController).OnConfirmAction += HandleConfirmAction;
-            (SystemGameManager.Instance.UIManager.classChangeWindow.CloseableWindowContents as ClassChangePanelController).OnCloseWindow += CleanupEventSubscriptions;
+            (uIManager.classChangeWindow.CloseableWindowContents as ClassChangePanelController).Setup(Props.CharacterClass);
+            (uIManager.classChangeWindow.CloseableWindowContents as ClassChangePanelController).OnConfirmAction += HandleConfirmAction;
+            (uIManager.classChangeWindow.CloseableWindowContents as ClassChangePanelController).OnCloseWindow += CleanupEventSubscriptions;
             windowEventSubscriptionsInitialized = true;
             return true;
         }
@@ -87,7 +88,7 @@ namespace AnyRPG {
 
         public override void StopInteract() {
             base.StopInteract();
-            SystemGameManager.Instance.UIManager.classChangeWindow.CloseWindow();
+            uIManager.classChangeWindow.CloseWindow();
         }
 
         public override bool HasMiniMapText() {
@@ -113,7 +114,7 @@ namespace AnyRPG {
         // character class is a special type of prerequisite
         public override bool MyPrerequisitesMet {
             get {
-                if (SystemGameManager.Instance.PlayerManager.MyCharacter.CharacterClass == Props.CharacterClass) {
+                if (playerManager.MyCharacter.CharacterClass == Props.CharacterClass) {
                     return false;
                 }
                 return base.MyPrerequisitesMet;

@@ -51,9 +51,9 @@ namespace AnyRPG {
             return default(TDataType);
         }
 
-        public void SetupScriptableObjects() {
+        public void SetupScriptableObjects(SystemGameManager systemGameManager) {
             foreach (ResourceProfile resourceProfile in factoryData.Values) {
-                resourceProfile.SetupScriptableObjects();
+                resourceProfile.SetupScriptableObjects(systemGameManager);
             }
         }
 

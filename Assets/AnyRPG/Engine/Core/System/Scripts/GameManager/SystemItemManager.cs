@@ -27,7 +27,7 @@ namespace AnyRPG {
                 Item itemTemplate = systemDataFactory.GetResource<Item>(keyName);
                 if (itemTemplate != null) {
                     Item returnValue = ScriptableObject.Instantiate(itemTemplate) as Item;
-                    returnValue.SetupScriptableObjects();
+                    returnValue.SetupScriptableObjects(systemGameManager);
                     returnValue.InitializeNewItem(usedItemQuality);
                     return returnValue;
                 }

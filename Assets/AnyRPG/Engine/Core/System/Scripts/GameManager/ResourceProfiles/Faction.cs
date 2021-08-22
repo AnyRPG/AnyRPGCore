@@ -243,14 +243,14 @@ namespace AnyRPG {
             //Debug.Log("Faction.relationWith(): factions are unaware of each other. returning lowest default disposition from both");
         }
 
-        public override void SetupScriptableObjects() {
+        public override void SetupScriptableObjects(SystemGameManager systemGameManager) {
             //Debug.Log("Faction.SetupScriptableObjects()");
-            base.SetupScriptableObjects();
+            base.SetupScriptableObjects(systemGameManager);
 
             if (equipmentNames != null) {
                 foreach (string equipmentName in equipmentNames) {
                     Equipment tmpEquipment = null;
-                    tmpEquipment = SystemDataFactory.Instance.GetResource<Item>(equipmentName) as Equipment;
+                    tmpEquipment = systemDataFactory.GetResource<Item>(equipmentName) as Equipment;
                     if (tmpEquipment != null) {
                         equipmentList.Add(tmpEquipment);
                     } else {
@@ -262,7 +262,7 @@ namespace AnyRPG {
             if (dispositionList != null) {
                 foreach (FactionDisposition factionDisposition in dispositionList) {
                     if (factionDisposition != null) {
-                        factionDisposition.SetupScriptableObjects();
+                        factionDisposition.SetupScriptableObjects(systemDataFactory);
                     }
                 }
             }
@@ -273,7 +273,7 @@ namespace AnyRPG {
                     //Debug.Log("Faction.SetupScriptableObjects(): found a string");
                     if (characterCreatorProfileName != null && characterCreatorProfileName != string.Empty) {
                         //Debug.Log("Faction.SetupScriptableObjects(): found a string that is not empty");
-                        UnitProfile tmpUnitProfile = SystemDataFactory.Instance.GetResource<UnitProfile>(characterCreatorProfileName);
+                        UnitProfile tmpUnitProfile = systemDataFactory.GetResource<UnitProfile>(characterCreatorProfileName);
                         if (tmpUnitProfile != null) {
                             //Debug.Log("Faction.SetupScriptableObjects(): found a string that is not empty and added it to the list");
                             characterCreatorProfiles.Add(tmpUnitProfile);
@@ -288,10 +288,10 @@ namespace AnyRPG {
             }
 
             foreach (CharacterClassCapabilityNode classCapabilityNode in classCapabilityList) {
-                classCapabilityNode.SetupScriptableObjects();
+                classCapabilityNode.SetupScriptableObjects(systemDataFactory);
             }
 
-            capabilities.SetupScriptableObjects();
+            capabilities.SetupScriptableObjects(systemDataFactory);
 
 
         }
@@ -314,11 +314,11 @@ namespace AnyRPG {
         public List<CharacterClass> CharacterClassList { get => characterClassList; set => characterClassList = value; }
         public CapabilityProps Capabilities { get => capabilities; set => capabilities = value; }
 
-        public void SetupScriptableObjects() {
+        public void SetupScriptableObjects(SystemDataFactory systemDataFactory) {
 
             foreach (string characterClassName in characterClasses) {
                 if (characterClassName != null && characterClassName != string.Empty) {
-                    CharacterClass tmpCharacterClass = SystemDataFactory.Instance.GetResource<CharacterClass>(characterClassName);
+                    CharacterClass tmpCharacterClass = systemDataFactory.GetResource<CharacterClass>(characterClassName);
                     if (tmpCharacterClass != null) {
                         characterClassList.Add(tmpCharacterClass);
                     } else {
@@ -329,7 +329,7 @@ namespace AnyRPG {
                 }
             }
 
-            capabilities.SetupScriptableObjects();
+            capabilities.SetupScriptableObjects(systemDataFactory);
         }
     }
 

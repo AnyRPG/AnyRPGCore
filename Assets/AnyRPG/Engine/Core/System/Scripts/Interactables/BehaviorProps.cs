@@ -23,8 +23,8 @@ namespace AnyRPG {
         private bool useBehaviorCopy = false;
         */
 
-        public override Sprite Icon { get => (SystemGameManager.Instance.SystemConfigurationManager.DialogInteractionPanelImage != null ? SystemGameManager.Instance.SystemConfigurationManager.DialogInteractionPanelImage : base.Icon); }
-        public override Sprite NamePlateImage { get => (SystemGameManager.Instance.SystemConfigurationManager.DialogNamePlateImage != null ? SystemGameManager.Instance.SystemConfigurationManager.DialogNamePlateImage : base.NamePlateImage); }
+        public override Sprite Icon { get => (systemConfigurationManager.DialogInteractionPanelImage != null ? systemConfigurationManager.DialogInteractionPanelImage : base.Icon); }
+        public override Sprite NamePlateImage { get => (systemConfigurationManager.DialogNamePlateImage != null ? systemConfigurationManager.DialogNamePlateImage : base.NamePlateImage); }
 
         //public bool UseBehaviorCopy { get => useBehaviorCopy; }
         public List<string> BehaviorNames { get => behaviorNames; }
@@ -34,7 +34,7 @@ namespace AnyRPG {
         }
 
         public override InteractableOptionComponent GetInteractableOption(Interactable interactable, InteractableOption interactableOption = null) {
-            InteractableOptionComponent returnValue = new BehaviorComponent(interactable, this);
+            InteractableOptionComponent returnValue = new BehaviorComponent(interactable, this, systemGameManager);
             if (interactableOption != null) {
                 interactableOption.SetComponent(returnValue);
             }

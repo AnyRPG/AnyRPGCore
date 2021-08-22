@@ -79,11 +79,11 @@ namespace AnyRPG {
             }
         }
 
-        public override void SetupScriptableObjects() {
-            base.SetupScriptableObjects();
+        public override void SetupScriptableObjects(SystemGameManager systemGameManager) {
+            base.SetupScriptableObjects(systemGameManager);
 
             if (loadSceneName != null && loadSceneName != string.Empty) {
-                SceneNode tmpSceneNode = SystemDataFactory.Instance.GetResource<SceneNode>(loadSceneName);
+                SceneNode tmpSceneNode = systemDataFactory.GetResource<SceneNode>(loadSceneName);
                 if (tmpSceneNode != null) {
                     loadScene = tmpSceneNode;
                 } else {

@@ -10,7 +10,7 @@ namespace AnyRPG {
 
         public PortalProps Props { get => interactableOptionProps as PortalProps; }
 
-        public PortalComponent(Interactable interactable, PortalProps interactableOptionProps) : base(interactable, interactableOptionProps) {
+        public PortalComponent(Interactable interactable, PortalProps interactableOptionProps, SystemGameManager systemGameManager) : base(interactable, interactableOptionProps, systemGameManager) {
         }
         
 

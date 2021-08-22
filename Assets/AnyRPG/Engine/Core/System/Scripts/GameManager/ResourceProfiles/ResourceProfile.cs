@@ -4,7 +4,7 @@ using UnityEngine.Serialization;
 using System.Collections.Generic;
 
 namespace AnyRPG {
-    public abstract class ResourceProfile : ScriptableObject, IDescribable {
+    public abstract class ResourceProfile : ConfiguredScriptableObject, IDescribable {
 
         [SerializeField]
         protected string resourceName;
@@ -75,7 +75,8 @@ namespace AnyRPG {
             return string.Format("{0}", description);
         }
 
-        public virtual void SetupScriptableObjects() {
+        public virtual void SetupScriptableObjects(SystemGameManager systemGameManager) {
+            Configure(systemGameManager);
             /*
             if (displayName == null || displayName == string.Empty) {
                 displayName = resourceName;

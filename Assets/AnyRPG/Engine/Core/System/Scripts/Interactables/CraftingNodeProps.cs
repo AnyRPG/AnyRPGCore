@@ -39,13 +39,13 @@ namespace AnyRPG {
         public BaseAbility Ability { get => ability; set => ability = value; }
 
         public override InteractableOptionComponent GetInteractableOption(Interactable interactable, InteractableOption interactableOption = null) {
-            return new CraftingNodeComponent(interactable, this);
+            return new CraftingNodeComponent(interactable, this, systemGameManager);
         }
 
-        public override void SetupScriptableObjects() {
-            base.SetupScriptableObjects();
+        public override void SetupScriptableObjects(SystemGameManager systemGameManager) {
+            base.SetupScriptableObjects(systemGameManager);
             if (abilityName != null && abilityName != string.Empty) {
-                BaseAbility baseAbility = SystemDataFactory.Instance.GetResource<BaseAbility>(abilityName);
+                BaseAbility baseAbility = systemDataFactory.GetResource<BaseAbility>(abilityName);
                 if (baseAbility != null) {
                     ability = baseAbility;
                 } else {

@@ -147,11 +147,11 @@ namespace AnyRPG {
             OnVisitZone();
         }
 
-        public override void SetupScriptableObjects() {
-            base.SetupScriptableObjects();
+        public override void SetupScriptableObjects(SystemGameManager systemGameManager) {
+            base.SetupScriptableObjects(systemGameManager);
 
             if (movementLoopProfileName != null && movementLoopProfileName != string.Empty) {
-                AudioProfile tmpMovementLoop = SystemDataFactory.Instance.GetResource<AudioProfile>(movementLoopProfileName);
+                AudioProfile tmpMovementLoop = systemDataFactory.GetResource<AudioProfile>(movementLoopProfileName);
                 if (tmpMovementLoop != null) {
                     movementLoopProfile = tmpMovementLoop;
                 } else {
@@ -160,7 +160,7 @@ namespace AnyRPG {
             }
 
             if (movementHitProfileName != null && movementHitProfileName != string.Empty) {
-                AudioProfile tmpMovementHit = SystemDataFactory.Instance.GetResource<AudioProfile>(movementHitProfileName);
+                AudioProfile tmpMovementHit = systemDataFactory.GetResource<AudioProfile>(movementHitProfileName);
                 if (tmpMovementHit != null) {
                     movementHitProfile = tmpMovementHit;
                 } else {
@@ -170,7 +170,7 @@ namespace AnyRPG {
 
             realAmbientMusicProfile = null;
             if (ambientMusicProfile != null && ambientMusicProfile != string.Empty) {
-                AudioProfile tmpAmbientMusicProfile = SystemDataFactory.Instance.GetResource<AudioProfile>(ambientMusicProfile);
+                AudioProfile tmpAmbientMusicProfile = systemDataFactory.GetResource<AudioProfile>(ambientMusicProfile);
                 if (tmpAmbientMusicProfile != null) {
                     realAmbientMusicProfile = tmpAmbientMusicProfile;
                 } else {
@@ -181,7 +181,7 @@ namespace AnyRPG {
 
             realBackgroundMusicProfile = null;
             if (backgroundMusicProfile != null && backgroundMusicProfile != string.Empty) {
-                AudioProfile tmpBackgroundMusicProfile = SystemDataFactory.Instance.GetResource<AudioProfile>(backgroundMusicProfile);
+                AudioProfile tmpBackgroundMusicProfile = systemDataFactory.GetResource<AudioProfile>(backgroundMusicProfile);
                 if (tmpBackgroundMusicProfile != null) {
                     realBackgroundMusicProfile = tmpBackgroundMusicProfile;
                 } else {
@@ -190,7 +190,7 @@ namespace AnyRPG {
             }
 
             if (autoPlayCutsceneName != null && autoPlayCutsceneName != string.Empty) {
-                Cutscene tmpCutscene = SystemDataFactory.Instance.GetResource<Cutscene>(autoPlayCutsceneName);
+                Cutscene tmpCutscene = systemDataFactory.GetResource<Cutscene>(autoPlayCutsceneName);
                 if (tmpCutscene != null) {
                     autoPlayCutscene = tmpCutscene;
                 } else {
@@ -200,7 +200,7 @@ namespace AnyRPG {
 
             if (environmentStateNames != null) {
                 foreach (string environmentStateName in environmentStateNames) {
-                    EnvironmentStateProfile tmpProfile = SystemDataFactory.Instance.GetResource<EnvironmentStateProfile>(environmentStateName);
+                    EnvironmentStateProfile tmpProfile = systemDataFactory.GetResource<EnvironmentStateProfile>(environmentStateName);
                     if (tmpProfile != null) {
                         environmentStates.Add(tmpProfile);
                     } else {
@@ -210,7 +210,7 @@ namespace AnyRPG {
             }
 
             if (useRegionalFile == true) {
-                ResourceDescription tmpResourceDescription = SystemDataFactory.Instance.GetResource<ResourceDescription>(resourceName + "Scene");
+                ResourceDescription tmpResourceDescription = systemDataFactory.GetResource<ResourceDescription>(resourceName + "Scene");
                 if (tmpResourceDescription != null) {
                     sceneFile = tmpResourceDescription.DisplayName;
                 } else {

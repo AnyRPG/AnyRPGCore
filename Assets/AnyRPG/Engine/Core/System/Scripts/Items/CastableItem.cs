@@ -63,11 +63,11 @@ namespace AnyRPG {
             return coolDownString;
         }
 
-        public override void SetupScriptableObjects() {
-            base.SetupScriptableObjects();
+        public override void SetupScriptableObjects(SystemGameManager systemGameManager) {
+            base.SetupScriptableObjects(systemGameManager);
             ability = null;
             if (abilityName != null) {
-                BaseAbility baseAbility = SystemDataFactory.Instance.GetResource<BaseAbility>(abilityName);
+                BaseAbility baseAbility = systemDataFactory.GetResource<BaseAbility>(abilityName);
                 if (baseAbility != null) {
                     ability = baseAbility;
                 } else {

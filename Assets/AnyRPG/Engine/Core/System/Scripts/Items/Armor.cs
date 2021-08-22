@@ -23,7 +23,7 @@ namespace AnyRPG {
             float returnValue = base.GetArmorModifier(characterLevel, usedItemQuality);
             if (useArmorModifier && !useManualArmor) {
                 return (int)Mathf.Ceil(Mathf.Clamp(
-                    (float)GetItemLevel(characterLevel) * (LevelEquations.GetArmorForClass(ArmorClass) * GetItemQualityNumber(usedItemQuality)) * (1f / ((float)(SystemDataFactory.Instance.GetResourceCount<EquipmentSlotProfile>() - 2))),
+                    (float)GetItemLevel(characterLevel) * (LevelEquations.GetArmorForClass(ArmorClass) * GetItemQualityNumber(usedItemQuality)) * (1f / ((float)(systemDataFactory.GetResourceCount<EquipmentSlotProfile>() - 2))),
                     0f,
                     Mathf.Infinity
                     ));
@@ -82,12 +82,12 @@ namespace AnyRPG {
         }
         */
 
-        public override void SetupScriptableObjects() {
-            base.SetupScriptableObjects();
+        public override void SetupScriptableObjects(SystemGameManager systemGameManager) {
+            base.SetupScriptableObjects(systemGameManager);
 
             armorClass = null;
             if (armorClassName != null && armorClassName != string.Empty) {
-                ArmorClass tmpArmorClass = SystemDataFactory.Instance.GetResource<ArmorClass>(armorClassName);
+                ArmorClass tmpArmorClass = systemDataFactory.GetResource<ArmorClass>(armorClassName);
                 if (tmpArmorClass != null) {
                     armorClass = tmpArmorClass;
                 } else {

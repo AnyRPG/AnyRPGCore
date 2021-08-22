@@ -19,12 +19,12 @@ namespace AnyRPG {
 
         private List<VendorCollection> vendorCollections = new List<VendorCollection>();
 
-        public override Sprite Icon { get => (SystemGameManager.Instance.SystemConfigurationManager.VendorInteractionPanelImage != null ? SystemGameManager.Instance.SystemConfigurationManager.VendorInteractionPanelImage : base.Icon); }
-        public override Sprite NamePlateImage { get => (SystemGameManager.Instance.SystemConfigurationManager.VendorNamePlateImage != null ? SystemGameManager.Instance.SystemConfigurationManager.VendorNamePlateImage : base.NamePlateImage); }
+        public override Sprite Icon { get => (systemConfigurationManager.VendorInteractionPanelImage != null ? systemConfigurationManager.VendorInteractionPanelImage : base.Icon); }
+        public override Sprite NamePlateImage { get => (systemConfigurationManager.VendorNamePlateImage != null ? systemConfigurationManager.VendorNamePlateImage : base.NamePlateImage); }
         public List<VendorCollection> VendorCollections { get => vendorCollections; set => vendorCollections = value; }
 
         public override InteractableOptionComponent GetInteractableOption(Interactable interactable, InteractableOption interactableOption = null) {
-            InteractableOptionComponent returnValue = new VendorComponent(interactable, this);
+            InteractableOptionComponent returnValue = new VendorComponent(interactable, this, systemGameManager);
             if (interactableOption != null) {
                 interactableOption.SetComponent(returnValue);
             }
@@ -32,12 +32,12 @@ namespace AnyRPG {
 
         }
 
-        public override void SetupScriptableObjects() {
-            base.SetupScriptableObjects();
+        public override void SetupScriptableObjects(SystemGameManager systemGameManager) {
+            base.SetupScriptableObjects(systemGameManager);
 
             if (vendorCollectionNames != null && vendorCollectionNames.Count > 0) {
                 foreach (string vendorCollectionName in vendorCollectionNames) {
-                    VendorCollection tmpVendorCollection = SystemDataFactory.Instance.GetResource<VendorCollection>(vendorCollectionName);
+                    VendorCollection tmpVendorCollection = systemDataFactory.GetResource<VendorCollection>(vendorCollectionName);
                     if (tmpVendorCollection != null) {
                         vendorCollections.Add(tmpVendorCollection);
                     } else {

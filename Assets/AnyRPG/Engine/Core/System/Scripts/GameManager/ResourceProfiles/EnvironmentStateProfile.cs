@@ -23,11 +23,11 @@ namespace AnyRPG {
 
         public Material MySkyBoxMaterial { get => skyBoxMaterial; set => skyBoxMaterial = value; }
 
-        public override void SetupScriptableObjects() {
-            base.SetupScriptableObjects();
+        public override void SetupScriptableObjects(SystemGameManager systemGameManager) {
+            base.SetupScriptableObjects(systemGameManager);
 
             if (skyBoxMaterialProfileName != null && skyBoxMaterialProfileName != string.Empty) {
-                MaterialProfile tmpMaterialProfile = SystemDataFactory.Instance.GetResource<MaterialProfile>(skyBoxMaterialProfileName);
+                MaterialProfile tmpMaterialProfile = systemDataFactory.GetResource<MaterialProfile>(skyBoxMaterialProfileName);
                 if (tmpMaterialProfile != null && tmpMaterialProfile.MyEffectMaterial != null) {
                     skyBoxMaterial = tmpMaterialProfile.MyEffectMaterial;
                 } else {

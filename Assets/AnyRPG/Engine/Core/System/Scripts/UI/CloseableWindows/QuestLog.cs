@@ -32,7 +32,7 @@ namespace AnyRPG {
         public void LoadQuest(QuestSaveData questSaveData) {
             //Debug.Log("QuestLog.LoadQuest(" + questSaveData.MyName + ")");
 
-            Quest quest = SystemDataFactory.Instance.GetResource<Quest>(questSaveData.MyName);
+            Quest quest = systemDataFactory.GetResource<Quest>(questSaveData.MyName);
             if (quest == null) {
                 //Debug.Log("QuestLog.LoadQuest(" + questSaveData.MyName + "): COULD NOT FIND QUEST!!!");
                 return;

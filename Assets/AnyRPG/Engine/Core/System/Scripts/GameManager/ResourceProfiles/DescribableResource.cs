@@ -19,8 +19,18 @@ namespace AnyRPG {
 
         protected ResourceDescription resourceDescription = null;
 
-        public override void SetupScriptableObjects() {
-            base.SetupScriptableObjects();
+        // game manager references
+
+        protected SystemDataFactory systemDataFactory = null;
+
+        public override void SetGameManagerReferences() {
+            base.SetGameManagerReferences();
+
+            systemDataFactory = systemGameManager.SystemDataFactory;
+        }
+
+        public override void SetupScriptableObjects(SystemGameManager systemGameManager) {
+            base.SetupScriptableObjects(systemGameManager);
 
             // get the description profile if it exists, and then overwrite any local properties that are not null in that profile
             resourceDescription = null;
@@ -28,7 +38,7 @@ namespace AnyRPG {
                 resourceDescriptionProfile = DisplayName;
             }
             if (resourceDescriptionProfile != null && resourceDescriptionProfile != string.Empty) {
-                ResourceDescription tmpResourceDescription = SystemDataFactory.Instance.GetResource<ResourceDescription>(resourceDescriptionProfile);
+                ResourceDescription tmpResourceDescription = systemDataFactory.GetResource<ResourceDescription>(resourceDescriptionProfile);
                 if (tmpResourceDescription != null) {
                     if (tmpResourceDescription.RawDisplayName != null && tmpResourceDescription.RawDisplayName != string.Empty) {
                         //Debug.Log("setting resource name to: " + tmpResourceDescription.MyDisplayName);

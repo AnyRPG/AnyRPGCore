@@ -9,32 +9,44 @@ using UnityEngine.UI;
 namespace AnyRPG {
     public class CutSceneComponent : InteractableOptionComponent {
 
+        // game manager references
+        private LevelManager levelManager = null;
+        private UIManager uIManager = null;
+        private CutSceneBarController cutSceneBarController = null;
+
         public CutsceneProps Props { get => interactableOptionProps as CutsceneProps; }
 
-        public CutSceneComponent(Interactable interactable, CutsceneProps interactableOptionProps) : base(interactable, interactableOptionProps) {
+        public CutSceneComponent(Interactable interactable, CutsceneProps interactableOptionProps, SystemGameManager systemGameManager) : base(interactable, interactableOptionProps, systemGameManager) {
+        }
+
+        public override void SetGameManagerReferences() {
+            base.SetGameManagerReferences();
+            levelManager = systemGameManager.LevelManager;
+            uIManager = systemGameManager.UIManager;
+            cutSceneBarController = uIManager.CutSceneBarController;
         }
 
         public override bool Interact(CharacterUnit source, int optionIndex = 0) {
             base.Interact(source, optionIndex);
             //Debug.Log(gameObject.name + ".CutSceneInteractable.Interact()");
             // save character position and stuff here
-            //SystemGameManager.Instance.UIManager.interactionWindow.CloseWindow();
+            //uIManager.interactionWindow.CloseWindow();
             if (Props.Cutscene != null
-                && SystemGameManager.Instance.UIManager.CutSceneBarController.CurrentCutscene == null
-                && SystemGameManager.Instance.LevelManager.LoadingLevel == false) {
+                && cutSceneBarController.CurrentCutscene == null
+                && levelManager.LoadingLevel == false) {
                 if (Props.Cutscene.Viewed == false || Props.Cutscene.Repeatable == true) {
-                    if (Props.Cutscene.RequirePlayerUnitSpawn == false || (Props.Cutscene.RequirePlayerUnitSpawn == true && SystemGameManager.Instance.PlayerManager.PlayerUnitSpawned == true)) {
+                    if (Props.Cutscene.RequirePlayerUnitSpawn == false || (Props.Cutscene.RequirePlayerUnitSpawn == true && playerManager.PlayerUnitSpawned == true)) {
                         if (Props.Cutscene.MyLoadScene != null) {
-                            SystemGameManager.Instance.LevelManager.LoadCutSceneWithDelay(Props.Cutscene);
+                            levelManager.LoadCutSceneWithDelay(Props.Cutscene);
                         } else {
-                            SystemGameManager.Instance.UIManager.CutSceneBarController.StartCutScene(Props.Cutscene);
+                            cutSceneBarController.StartCutScene(Props.Cutscene);
                         }
                     }
                 }
             }
             // CLOSE WINDOWS BEFORE CUTSCENE LOADS TO PREVENT INVALID REFERENCE ON LOAD
-            SystemGameManager.Instance.UIManager.interactionWindow.CloseWindow();
-            SystemGameManager.Instance.UIManager.questGiverWindow.CloseWindow();
+            uIManager.interactionWindow.CloseWindow();
+            uIManager.questGiverWindow.CloseWindow();
             return true;
         }
 
@@ -44,7 +56,7 @@ namespace AnyRPG {
 
         public override void StopInteract() {
             base.StopInteract();
-            //SystemGameManager.Instance.UIManager.dialogWindow.CloseWindow();
+            //uIManager.dialogWindow.CloseWindow();
         }
 
         public override bool HasMiniMapText() {

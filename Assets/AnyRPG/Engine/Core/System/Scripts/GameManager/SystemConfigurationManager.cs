@@ -729,10 +729,10 @@ namespace AnyRPG {
             }
 
             foreach (StatScalingNode statScalingNode in primaryStats) {
-                statScalingNode.SetupScriptableObjects();
+                statScalingNode.SetupScriptableObjects(systemDataFactory);
             }
 
-            capabilities.SetupScriptableObjects();
+            capabilities.SetupScriptableObjects(systemDataFactory);
 
             if (vendorAudioProfileName != null && vendorAudioProfileName != string.Empty) {
                 AudioProfile tmpAudioProfile = systemDataFactory.GetResource<AudioProfile>(vendorAudioProfileName);

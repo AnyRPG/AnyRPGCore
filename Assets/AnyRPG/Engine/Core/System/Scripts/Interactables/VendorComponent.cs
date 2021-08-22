@@ -9,7 +9,7 @@ namespace AnyRPG {
 
         public VendorProps Props { get => interactableOptionProps as VendorProps; }
 
-        public VendorComponent(Interactable interactable, VendorProps interactableOptionProps) : base(interactable, interactableOptionProps) {
+        public VendorComponent(Interactable interactable, VendorProps interactableOptionProps, SystemGameManager systemGameManager) : base(interactable, interactableOptionProps, systemGameManager) {
             interactableOptionProps.InteractionPanelTitle = "Purchase Items";
         }
 

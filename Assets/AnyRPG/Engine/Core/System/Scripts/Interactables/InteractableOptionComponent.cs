@@ -6,12 +6,16 @@ using UnityEngine;
 using UnityEngine.UI;
 
 namespace AnyRPG {
-    public abstract class InteractableOptionComponent : IPrerequisiteOwner {
+    public abstract class InteractableOptionComponent : ConfiguredClass, IPrerequisiteOwner {
 
         protected Interactable interactable = null;
         protected InteractableOptionProps interactableOptionProps = null;
 
         protected bool eventSubscriptionsInitialized = false;
+
+        // game manager references
+        protected SystemEventManager systemEventManager = null;
+        protected PlayerManager playerManager = null;
 
         public Interactable Interactable { get => interactable; set => interactable = value; }
         public virtual InteractableOptionProps InteractableOptionProps { get => interactableOptionProps; }
@@ -40,11 +44,18 @@ namespace AnyRPG {
             }
         }
 
-        public InteractableOptionComponent(Interactable interactable, InteractableOptionProps interactableOptionProps) {
+        public InteractableOptionComponent(Interactable interactable, InteractableOptionProps interactableOptionProps, SystemGameManager systemGameManager) {
             this.interactable = interactable;
             this.interactableOptionProps = interactableOptionProps;
+            Configure(systemGameManager);
             SetupScriptableObjects();
             CreateEventSubscriptions();
+        }
+
+        public override void SetGameManagerReferences() {
+            base.SetGameManagerReferences();
+            systemEventManager = systemGameManager.SystemEventManager;
+            playerManager = systemGameManager.PlayerManager;
         }
 
         /*
@@ -72,28 +83,15 @@ namespace AnyRPG {
             if (eventSubscriptionsInitialized) {
                 return;
             }
-            //Debug.Log(gameObject.name + ".InteractableOption.CreateEventSubscriptions(): subscribing to player unit spawn");
-            if (SystemGameManager.Instance.SystemEventManager == null) {
-                Debug.LogError("SystemEventManager not found in the scene.  Is the GameManager in the scene?");
-                return;
-                //SystemGameManager.Instance.EventManager.OnPlayerUnitSpawn += HandlePlayerUnitSpawn;
-            }
-            if (SystemGameManager.Instance.PlayerManager == null) {
-                Debug.LogError("PlayerManager not found. Is the GameManager in the scene?");
-                return;
-            }
             eventSubscriptionsInitialized = true;
         }
 
         public virtual void CleanupEventSubscriptions() {
-            if (SystemGameManager.Instance.SystemEventManager != null) {
-                //SystemGameManager.Instance.EventManager.OnPlayerUnitSpawn -= HandlePlayerUnitSpawn;
-            }
             eventSubscriptionsInitialized = false;
         }
 
         public virtual void HandleConfirmAction() {
-            SystemGameManager.Instance.SystemEventManager.NotifyOnInteractionWithOptionCompleted(this);
+            systemEventManager.NotifyOnInteractionWithOptionCompleted(this);
         }
 
         public virtual bool ProcessFactionValue(float factionValue) {
@@ -142,13 +140,13 @@ namespace AnyRPG {
         public virtual bool Interact(CharacterUnit source, int optionIndex = 0) {
             //Debug.Log(interactable.gameObject.name + ".InteractableOptionComponent.Interact()");
             //source.CancelMountEffects();
-            SystemGameManager.Instance.SystemEventManager.NotifyOnInteractionWithOptionStarted(this);
+            systemEventManager.NotifyOnInteractionWithOptionStarted(this);
             return true;
         }
 
         public virtual void StopInteract() {
             //Debug.Log(gameObject.name + ".InanimateUnit.StopInteract()");
-            SystemGameManager.Instance.PlayerManager.PlayerController.StopInteract();
+            playerManager.PlayerController.StopInteract();
         }
 
         public virtual bool HasMiniMapText() {
