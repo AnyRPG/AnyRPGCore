@@ -27,7 +27,6 @@ namespace AnyRPG {
         // game manager references
         private SystemDataFactory systemDataFactory = null;
         private PlayerManager playerManager = null;
-        //private SystemEventManager systemEventManager = null;
 
         public void HandleReputationChange(string eventName, EventParamProperties eventParam) {
             UpdateStatus();
@@ -51,8 +50,7 @@ namespace AnyRPG {
         public override void SetGameManagerReferences() {
             base.SetGameManagerReferences();
             systemDataFactory = systemGameManager.SystemDataFactory;
-            //playerManager = systemGameManager.PlayerManager;
-            //systemEventManager = systemGameManager.SystemEventManager;
+            playerManager = systemGameManager.PlayerManager;
         }
 
         public void SetupScriptableObjects(SystemGameManager systemGameManager) {

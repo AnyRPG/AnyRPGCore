@@ -417,6 +417,7 @@ namespace AnyRPG {
                     
                     // give this unit a unique name
                     unitController.gameObject.name = DisplayName.Replace(" ", "") + systemGameManager.GetSpawnCount();
+                    unitController.Configure(systemGameManager);
                     // test - set unitprofile first so we don't overwrite players baseCharacter settings
                     unitController.SetUnitProfile(this, unitControllerMode, unitLevel);
                 }

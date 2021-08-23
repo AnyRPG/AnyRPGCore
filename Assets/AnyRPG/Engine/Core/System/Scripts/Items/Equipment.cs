@@ -219,7 +219,7 @@ namespace AnyRPG {
         }
 
         public virtual bool CanEquip(BaseCharacter baseCharacter) {
-            //Debug.Log(DisplayName + ".Equipment.CanEquip()");
+            //Debug.Log(DisplayName + ".Equipment.CanEquip(" + baseCharacter.gameObject.name + ")");
             if (!CharacterClassRequirementIsMet(baseCharacter)) {
                 //Debug.Log(DisplayName + ".Equipment.CanEquip(): not the right character class");
                 return false;
@@ -229,6 +229,7 @@ namespace AnyRPG {
                 return false;
             }
             if (GetItemLevel(baseCharacter.CharacterStats.Level) > baseCharacter.CharacterStats.Level) {
+                Debug.Log(DisplayName + ".Equipment.CanEquip(" + baseCharacter.gameObject.name + "): character level too low");
                 return false;
             }
             return true;

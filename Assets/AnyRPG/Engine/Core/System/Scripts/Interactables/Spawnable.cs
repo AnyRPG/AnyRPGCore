@@ -71,6 +71,11 @@ namespace AnyRPG {
 
             GetComponentReferences();
             SetupScriptableObjects();
+            CreateEventSubscriptions();
+            if (playerManager.PlayerUnitSpawned == false) {
+                // this allows us to spawn things with no prerequisites that don't need to check against the player
+                PrerequisiteCheck();
+            }
         }
 
         public override void SetGameManagerReferences() {
@@ -79,20 +84,6 @@ namespace AnyRPG {
             playerManager = systemGameManager.PlayerManager;
             systemDataFactory = systemGameManager.SystemDataFactory;
             objectPooler = systemGameManager.ObjectPooler;
-        }
-
-        protected virtual void OnEnable() {
-            //Debug.Log(gameObject.name + ".Spawnable.OnEnable()");
-            if (initialized == true) {
-                // this unit may have been disabled by a timeline controller.  If so, none of this is necessary
-                return;
-            }
-
-            CreateEventSubscriptions();
-            if (playerManager.PlayerUnitSpawned == false) {
-                // this allows us to spawn things with no prerequisites that don't need to check against the player
-                PrerequisiteCheck();
-            }
         }
 
         public virtual void Init() {

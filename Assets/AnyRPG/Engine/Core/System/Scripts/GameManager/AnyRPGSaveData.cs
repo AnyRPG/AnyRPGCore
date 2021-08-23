@@ -17,9 +17,11 @@ namespace AnyRPG {
         public string characterClass;
         public string classSpecialization;
         public string playerFaction;
+        public bool OverrideLocation;
         public float PlayerLocationX;
         public float PlayerLocationY;
         public float PlayerLocationZ;
+        public bool OverrideRotation;
         public float PlayerRotationX;
         public float PlayerRotationY;
         public float PlayerRotationZ;

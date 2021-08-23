@@ -110,6 +110,10 @@ namespace AnyRPG {
         public AnyRPGSaveData LoadSaveDataFromFile(string fileName) {
             AnyRPGSaveData anyRPGSaveData = JsonUtility.FromJson<AnyRPGSaveData>(File.ReadAllText(fileName));
 
+            // when loaded from file, overrides should always be true because the file may have been saved before these were added
+            anyRPGSaveData.OverrideLocation = true;
+            anyRPGSaveData.OverrideRotation = true;
+
             if (anyRPGSaveData.playerName == null) {
                 //Debug.Log("SaveManager.LoadSaveDataFromFile(" + fileName + "): Player Name is null.  Setting to Unknown");
                 anyRPGSaveData.playerName = "Unknown";
@@ -395,7 +399,8 @@ namespace AnyRPG {
 
             // moved to resource power data
             //anyRPGSaveData.currentHealth = playerManager.MyCharacter.CharacterStats.currentHealth;
-
+            anyRPGSaveData.OverrideLocation = true;
+            anyRPGSaveData.OverrideRotation = true;
             anyRPGSaveData.PlayerLocationX = playerManager.ActiveUnitController.transform.position.x;
             anyRPGSaveData.PlayerLocationY = playerManager.ActiveUnitController.transform.position.y;
             anyRPGSaveData.PlayerLocationZ = playerManager.ActiveUnitController.transform.position.z;
@@ -1227,8 +1232,17 @@ namespace AnyRPG {
             LoadWindowPositions();
 
             uIManager.loadGameWindow.CloseWindow();
+
+            // configure location and rotation overrides
+            if (anyRPGSaveData.OverrideLocation == true) {
+                levelManager.SetSpawnLocationOverride(playerLocation);
+            }
+            if (anyRPGSaveData.OverrideRotation == true) {
+                levelManager.SetSpawnRotationOverride(playerRotation);
+            }
+            //levelManager.LoadLevel(anyRPGSaveData.CurrentScene, playerLocation, playerRotation);
             // load the proper level now that everything should be setup
-            levelManager.LoadLevel(anyRPGSaveData.CurrentScene, playerLocation, playerRotation);
+            levelManager.LoadLevel(anyRPGSaveData.CurrentScene);
         }
 
         public void ClearSystemManagedCharacterData() {

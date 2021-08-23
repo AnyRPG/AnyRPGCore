@@ -94,6 +94,16 @@ namespace AnyRPG {
         protected NamePlateManager namePlateManager = null;
         protected CameraManager cameraManager = null;
 
+        public override void Configure(SystemGameManager systemGameManager) {
+            base.Configure(systemGameManager);
+
+            groundMask = playerManager.DefaultGroundMask;
+            GetComponentReferences();
+            if (movementStateController != null) {
+                movementStateController.enabled = true;
+            }
+        }
+
         public override void SetGameManagerReferences() {
             base.SetGameManagerReferences();
             playerManager = systemGameManager.PlayerManager;
@@ -103,11 +113,6 @@ namespace AnyRPG {
         }
 
         private void OnEnable() {
-            groundMask = playerManager.DefaultGroundMask;
-            GetComponentReferences();
-            if (movementStateController != null) {
-                movementStateController.enabled = true;
-            }
         }
 
         public void Init() {
@@ -127,7 +132,7 @@ namespace AnyRPG {
         }
 
         public void GetComponentReferences() {
-            movementStateController = GetComponent<AnyRPG.PlayerMovementStateController>();
+            movementStateController = GetComponent<PlayerMovementStateController>();
             if (movementStateController == null) {
                 //Debug.Log(gameObject.name + ".PlayerUnitMovementController.GetComponentReferences(): unable to get AnyRPGCharacterController");
             } else {
@@ -869,6 +874,7 @@ namespace AnyRPG {
             Gizmos.DrawWireCube(playerManager.ActiveUnitController.transform.position, maintainingGroundExtents * 2);
         }
 
+        /*
         public void OnDisable() {
             //Debug.Log(gameObject.name + ".PlayerUnitMovementController.OnDisable()");
             if (SystemGameManager.IsShuttingDown) {
@@ -878,6 +884,7 @@ namespace AnyRPG {
                 movementStateController.enabled = false;
             }
         }
+        */
 
     }
 

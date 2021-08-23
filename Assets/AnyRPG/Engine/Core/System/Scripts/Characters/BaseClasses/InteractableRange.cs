@@ -16,23 +16,26 @@ namespace AnyRPG {
         // game manager references
         protected PlayerManager playerManager = null;
 
-        public override void SetGameManagerReferences() {
-            base.SetGameManagerReferences();
-            playerManager = systemGameManager.PlayerManager;
-        }
+        public override void Configure(SystemGameManager systemGameManager) {
+            base.Configure(systemGameManager);
 
-        private void OnEnable() {
             rangeCollider = GetComponent<SphereCollider>();
             if (playerManager.UnitController == null) {
                 // player unit not spawned yet, so this can't be the player.  Disable collider
-                rangeCollider.enabled = false;
+                DisableCollider();
                 return;
             }
             Interactable _interactable = GetComponentInParent<Interactable>();
             //if (_interactable.gameObject != playerManager.ActiveUnitController.gameObject) {
-                // player unit is spawned, but this is not the player unit.  Disable collider
-                rangeCollider.enabled = false;
+            // player unit is spawned, but this is not the player unit.  Disable collider
+            DisableCollider();
             //}
+
+        }
+
+        public override void SetGameManagerReferences() {
+            base.SetGameManagerReferences();
+            playerManager = systemGameManager.PlayerManager;
         }
 
         public void EnableCollider() {

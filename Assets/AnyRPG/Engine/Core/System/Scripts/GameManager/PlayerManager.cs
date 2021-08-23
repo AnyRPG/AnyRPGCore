@@ -454,6 +454,7 @@ namespace AnyRPG {
             }
             playerConnectionObject = objectPooler.GetPooledObject(playerConnectionPrefab, playerConnectionParent.transform);
             character = playerConnectionObject.GetComponent<BaseCharacter>();
+            character.Configure(systemGameManager);
             activeCharacter = character;
             playerController = playerConnectionObject.GetComponent<PlayerController>();
             playerController.Configure(systemGameManager);

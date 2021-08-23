@@ -205,8 +205,21 @@ namespace AnyRPG {
         public bool IsMouseOverNameplate { get => isMouseOverNameplate; set => isMouseOverNameplate = value; }
 
         public override void Configure(SystemGameManager systemGameManager) {
+            Debug.Log(gameObject.name + ".Interactable.Configure()");
             base.Configure(systemGameManager);
-            unitComponentController.Configure(systemGameManager);
+            if (unitComponentController != null) {
+                unitComponentController.Configure(systemGameManager);
+            }
+            dialogController = new DialogController(this, systemGameManager);
+            DisableInteraction();
+            temporaryMaterials = null;
+            if (temporaryMaterial == null) {
+                temporaryMaterial = systemConfigurationManager.TemporaryMaterial;
+            }
+            if (temporaryMaterial == null) {
+                //Debug.Log("No glow materials available. overrideing glowOnMouseover to false");
+                glowOnMouseOver = false;
+            }
         }
 
         public override void SetGameManagerReferences() {
@@ -217,30 +230,6 @@ namespace AnyRPG {
             miniMapManager = uIManager.MiniMapManager;
             mainMapManager = uIManager.MainMapManager;
             interactionManager = systemGameManager.InteractionManager;
-        }
-
-        protected override void OnEnable() {
-            if (initialized == true) {
-                // this unit may have been disabled by a timeline controller.  If so, none of this is necessary
-                return;
-            }
-            base.OnEnable();
-            dialogController = new DialogController(this, systemGameManager);
-            DisableInteraction();
-            temporaryMaterials = null;
-            if (temporaryMaterial == null) {
-                if (systemConfigurationManager == null) {
-                    Debug.LogError(gameObject.name + ": SystemConfigurationManager not found. Is the GameManager in the scene?");
-                    return;
-                } else {
-                    temporaryMaterial = systemConfigurationManager.TemporaryMaterial;
-                }
-            }
-            if (temporaryMaterial == null) {
-                //Debug.Log("No glow materials available. overrideing glowOnMouseover to false");
-                glowOnMouseOver = false;
-            }
-
         }
 
         public override void GetComponentReferences() {

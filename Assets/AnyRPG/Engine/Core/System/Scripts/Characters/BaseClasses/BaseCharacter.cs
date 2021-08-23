@@ -96,6 +96,12 @@ namespace AnyRPG {
         public CapabilityConsumerProcessor CapabilityConsumerProcessor { get => capabilityConsumerProcessor; }
         public string UnitProfileName { get => unitProfileName; }
 
+        public override void Configure(SystemGameManager systemGameManager) {
+            Debug.Log(gameObject.name + ".BaseCharacter.Configure()");
+
+            base.Configure(systemGameManager);
+        }
+
         public override void SetGameManagerReferences() {
             base.SetGameManagerReferences();
 
@@ -104,7 +110,7 @@ namespace AnyRPG {
 
         // baseCharacter does not initialize itself.  It is initialized by the PlayerManager (player case), or the UnitController (AI case)
         public void Init() {
-            //Debug.Log(gameObject.name + ".BaseCharacter.Init()");
+            Debug.Log(gameObject.name + ".BaseCharacter.Init()");
 
             // react to level load and unload events
             CreateEventSubscriptions();
@@ -343,8 +349,6 @@ namespace AnyRPG {
             if (notify) {
                 capabilityConsumerProcessor.UpdateCapabilityProviderList();
 
-                characterEquipmentManager.LoadDefaultEquipment(loadProviderEquipment);
-
                 UpdateStatProviderList();
 
                 if (characterStats != null) {
@@ -355,6 +359,10 @@ namespace AnyRPG {
                     }
                     characterStats.SetLevel(newLevel);
                 }
+
+                // this must be called after setting the level in case the character has gear that is higher than level 1
+                characterEquipmentManager.LoadDefaultEquipment(loadProviderEquipment);
+
             }
 
         }

@@ -189,13 +189,8 @@ namespace AnyRPG {
             namePlateReady = false;
         }
 
-        protected override void OnEnable() {
-            // characters can get disabled by cutscenes, so need to initialize nameplate on re-enable
-            if (initialized == true) {
-                // this unit may have been disabled by a timeline controller.  If so, none of this is necessary
-                return;
-            }
-            base.OnEnable();
+        public override void Configure(SystemGameManager systemGameManager) {
+            base.Configure(systemGameManager);
             namePlateController = new BaseNamePlateController(this, systemGameManager);
             if (startHasRun && namePlateController != null) {
                 namePlateController.InitializeNamePlate();

@@ -562,15 +562,8 @@ namespace AnyRPG {
             }
         }
 
-        protected override void OnEnable() {
-            //Debug.Log(gameObject.name + ".UnitController.OnEnable()");
-            if (initialized == true) {
-                // this unit may have been disabled by a timeline controller.  If so, none of this is necessary
-                return;
-            }
-
-            base.OnEnable();
-
+        public override void Configure(SystemGameManager systemGameManager) {
+            base.Configure(systemGameManager);
             // create components here instead?  which ones rely on other things like unit profile being set before start?
             namePlateController = new UnitNamePlateController(this, systemGameManager);
             unitMotor = new UnitMotor(this, systemGameManager);
@@ -732,6 +725,7 @@ namespace AnyRPG {
             BaseCharacter baseCharacter = GetComponent<BaseCharacter>();
             if (baseCharacter != null) {
                 //Debug.Log(gameObject.name + ".UnitController.GetComponentReferences(): found baseCharacter, creating characterUnit");
+                baseCharacter.Configure(systemGameManager);
                 characterUnit = new CharacterUnit(this as Interactable, new InteractableOptionProps(), systemGameManager);
                 characterUnit.SetBaseCharacter(baseCharacter);
                 baseCharacter.SetUnitController(this);
