@@ -286,6 +286,8 @@ namespace AnyRPG {
             // if we got to here, nothing left to do but use the item
 
             UseItem();
+
+            ProcessMouseEnter();
         }
 
         public void Clear() {
