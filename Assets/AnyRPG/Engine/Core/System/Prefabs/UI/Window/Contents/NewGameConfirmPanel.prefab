@@ -300,6 +300,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   backGroundImage: {fileID: 0}
+  coloredUIElements:
+  - {fileID: 6031723786124242223}
   divider: {fileID: 2382909202454689213}
   confirmGameButton: {fileID: 6744981467161552366}
   confirmButton: {fileID: 3143658161134931978}

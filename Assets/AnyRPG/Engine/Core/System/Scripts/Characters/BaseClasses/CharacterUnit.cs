@@ -102,7 +102,7 @@ namespace AnyRPG {
                 //source.baseCharacter.CharacterCombat.EnterCombat(baseCharacter.UnitController);
 
                 source.BaseCharacter.CharacterCombat.Attack(baseCharacter, true);
-                SystemGameManager.Instance.UIManager.interactionWindow.CloseWindow();
+                uIManager.interactionWindow.CloseWindow();
                 return true;
             }
             //return true;
@@ -167,7 +167,7 @@ namespace AnyRPG {
                 // add all possible delays together
                 float extraTime = 0f;
                 if (addSystemDefaultTime) {
-                    extraTime = SystemGameManager.Instance.SystemConfigurationManager.DefaultDespawnTimer;
+                    extraTime = systemConfigurationManager.DefaultDespawnTimer;
                 }
                 float totalDelay = despawnDelay + this.despawnDelay + extraTime;
                 while (totalDelay > 0f) {
@@ -196,7 +196,7 @@ namespace AnyRPG {
 
         public override Sprite GetMiniMapIcon() {
             if (interactable.CombatOnly) {
-                return SystemGameManager.Instance.SystemConfigurationManager.PlayerMiniMapIcon;
+                return systemConfigurationManager.PlayerMiniMapIcon;
             }
 
             return base.GetMiniMapIcon();

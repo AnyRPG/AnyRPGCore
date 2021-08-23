@@ -93,6 +93,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   backGroundImage: {fileID: 0}
+  coloredUIElements:
+  - {fileID: 3922920464087904197}
   respawnButton: {fileID: 2266661955804695783}
   reviveButton: {fileID: 1568761691388450587}
 --- !u!1 &2382909202413983825

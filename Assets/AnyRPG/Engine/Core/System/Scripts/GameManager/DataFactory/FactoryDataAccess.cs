@@ -13,8 +13,8 @@ namespace AnyRPG {
 
         public Dictionary<string, ResourceProfile> factoryData = new Dictionary<string, ResourceProfile>();
 
-        public void Setup<TDataType>(string dataName) where TDataType : ResourceProfile {
-            FactoryData<TDataType> abilityFactory = new FactoryData<TDataType>(dataName);
+        public void Setup<TDataType>(string dataName, SystemGameManager systemGameManager) where TDataType : ResourceProfile {
+            FactoryData<TDataType> abilityFactory = new FactoryData<TDataType>(dataName, systemGameManager);
             abilityFactory.LoadResourceList();
             factoryData = abilityFactory.ResourceList;
             //return abilityFactory.GetResourceDict();
@@ -52,6 +52,7 @@ namespace AnyRPG {
         }
 
         public void SetupScriptableObjects(SystemGameManager systemGameManager) {
+            //Debug.Log("FactoryDataAccess.SetupScriptableObjects(" + (systemGameManager == null ? "null" : systemGameManager.gameObject.name) + ")");
             foreach (ResourceProfile resourceProfile in factoryData.Values) {
                 resourceProfile.SetupScriptableObjects(systemGameManager);
             }

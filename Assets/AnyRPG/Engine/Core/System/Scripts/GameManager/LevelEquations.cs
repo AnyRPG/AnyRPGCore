@@ -6,8 +6,8 @@ using UnityEngine;
 namespace AnyRPG {
     static class LevelEquations {
 
-        public static int GetXPNeededForLevel(int _level) {
-            return _level * SystemGameManager.Instance.SystemConfigurationManager.XpRequiredPerLevel;
+        public static int GetXPNeededForLevel(int _level, SystemConfigurationManager systemConfigurationManager) {
+            return _level * systemConfigurationManager.XpRequiredPerLevel;
         }
 
         /// <summary>
@@ -48,19 +48,19 @@ namespace AnyRPG {
             }
         }
 
-        public static int GetXPAmountForKill(int sourceLevel, BaseCharacter targetCharacter) {
+        public static int GetXPAmountForKill(int sourceLevel, BaseCharacter targetCharacter, SystemConfigurationManager systemConfigurationManager) {
 
             float multiplierValue = 1f;
             float toughnessMultiplierValue = 1f;
 
-            if (SystemGameManager.Instance.SystemConfigurationManager.UseKillXPLevelMultiplierDemoninator == true) {
-                multiplierValue = 1f / Mathf.Clamp(sourceLevel, 0, (SystemGameManager.Instance.SystemConfigurationManager.KillXPMultiplierLevelCap > 0 ? SystemGameManager.Instance.SystemConfigurationManager.KillXPMultiplierLevelCap : Mathf.Infinity));
+            if (systemConfigurationManager.UseKillXPLevelMultiplierDemoninator == true) {
+                multiplierValue = 1f / Mathf.Clamp(sourceLevel, 0, (systemConfigurationManager.KillXPMultiplierLevelCap > 0 ? systemConfigurationManager.KillXPMultiplierLevelCap : Mathf.Infinity));
             }
             if (targetCharacter.CharacterStats.Toughness != null) {
                 toughnessMultiplierValue = targetCharacter.CharacterStats.Toughness.ExperienceMultiplier;
             }
 
-            int baseXP = (int)((((sourceLevel * SystemGameManager.Instance.SystemConfigurationManager.KillXPPerLevel) * multiplierValue) + SystemGameManager.Instance.SystemConfigurationManager.BaseKillXP) * toughnessMultiplierValue);
+            int baseXP = (int)((((sourceLevel * systemConfigurationManager.KillXPPerLevel) * multiplierValue) + systemConfigurationManager.BaseKillXP) * toughnessMultiplierValue);
 
             int totalXP = 0;
             if (sourceLevel < targetCharacter.CharacterStats.Level) {
@@ -74,16 +74,16 @@ namespace AnyRPG {
             return totalXP;
         }
 
-        public static int GetXPAmountForQuest(int sourceLevel, Quest quest) {
+        public static int GetXPAmountForQuest(int sourceLevel, Quest quest, SystemConfigurationManager systemConfigurationManager) {
 
             float multiplierValue = 1f;
 
-            if (SystemGameManager.Instance.SystemConfigurationManager.UseQuestXPLevelMultiplierDemoninator == true) {
-                multiplierValue = 1f / Mathf.Clamp(sourceLevel, 0, (SystemGameManager.Instance.SystemConfigurationManager.QuestXPMultiplierLevelCap > 0 ? SystemGameManager.Instance.SystemConfigurationManager.QuestXPMultiplierLevelCap : Mathf.Infinity));
+            if (systemConfigurationManager.UseQuestXPLevelMultiplierDemoninator == true) {
+                multiplierValue = 1f / Mathf.Clamp(sourceLevel, 0, (systemConfigurationManager.QuestXPMultiplierLevelCap > 0 ? systemConfigurationManager.QuestXPMultiplierLevelCap : Mathf.Infinity));
             }
 
-            int experiencePerLevel = SystemGameManager.Instance.SystemConfigurationManager.QuestXPPerLevel + quest.ExperienceRewardPerLevel;
-            int baseExperience = SystemGameManager.Instance.SystemConfigurationManager.BaseQuestXP + quest.BaseExperienceReward;
+            int experiencePerLevel = systemConfigurationManager.QuestXPPerLevel + quest.ExperienceRewardPerLevel;
+            int baseExperience = systemConfigurationManager.BaseQuestXP + quest.BaseExperienceReward;
 
             int baseXP = (int)(((quest.ExperienceLevel * experiencePerLevel) * multiplierValue) + baseExperience);
 
@@ -138,7 +138,7 @@ namespace AnyRPG {
             return 100;
         }
 
-        public static float GetPrimaryStatForLevel(string statName, int level, BaseCharacter baseCharacter) {
+        public static float GetPrimaryStatForLevel(string statName, int level, BaseCharacter baseCharacter, SystemConfigurationManager systemConfigurationManager) {
 
             float extraStatPerLevel = 0;
 
@@ -157,7 +157,7 @@ namespace AnyRPG {
 
             // not needed because it should be part of stat providers already ?
             /*
-            foreach (StatScalingNode statScalingNode in SystemGameManager.Instance.SystemConfigurationManager.PrimaryStats) {
+            foreach (StatScalingNode statScalingNode in systemConfigurationManager.PrimaryStats) {
                 if (statScalingNode.StatName == statName) {
                     extraStatPerLevel += statScalingNode.BudgetPerLevel;
                     break;
@@ -165,7 +165,7 @@ namespace AnyRPG {
             }
             */
 
-            return SystemGameManager.Instance.SystemConfigurationManager.StatBudgetPerLevel + extraStatPerLevel;
+            return systemConfigurationManager.StatBudgetPerLevel + extraStatPerLevel;
         }
 
         public static float GetBaseSecondaryStatForCharacter(SecondaryStatType secondaryStatType, CharacterStats characterStats) {

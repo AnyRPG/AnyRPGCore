@@ -1131,7 +1131,7 @@ namespace AnyRPG {
         }
 
         public CapabilityConsumerSnapshot GetCapabilityConsumerSnapshot(AnyRPGSaveData saveData) {
-            CapabilityConsumerSnapshot returnValue = new CapabilityConsumerSnapshot();
+            CapabilityConsumerSnapshot returnValue = new CapabilityConsumerSnapshot(systemGameManager);
             returnValue.UnitProfile = systemDataFactory.GetResource<UnitProfile>(saveData.unitProfileName);
             returnValue.CharacterRace = systemDataFactory.GetResource<CharacterRace>(saveData.characterRace);
             returnValue.CharacterClass = systemDataFactory.GetResource<CharacterClass>(saveData.characterClass);

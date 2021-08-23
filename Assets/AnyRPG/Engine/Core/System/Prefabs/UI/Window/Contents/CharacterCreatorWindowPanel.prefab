@@ -1641,6 +1641,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   backGroundImage: {fileID: 0}
+  coloredUIElements: []
   previewCameraController: {fileID: 262187867039265907}
 --- !u!1 &5976937243996754307
 GameObject:
@@ -1889,6 +1890,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   backGroundImage: {fileID: 0}
+  coloredUIElements: []
   mainButtonsArea: {fileID: 3715863870031771212}
   mainNoOptionsArea: {fileID: 2293276332759159468}
   appearanceButton: {fileID: 1611166967757297484}
@@ -2335,6 +2337,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   backGroundImage: {fileID: 3027280789261577762}
+  coloredUIElements:
+  - {fileID: 3968536697144529060}
+  - {fileID: 1203950473940354709}
+  - {fileID: 111170036201028260}
+  - {fileID: 5648186526516706449}
   characterPreviewPanel: {fileID: 9188048529603247100}
   umaCharacterPanel: {fileID: 5325239240147862514}
   faceButton: {fileID: 1611166967757297484}

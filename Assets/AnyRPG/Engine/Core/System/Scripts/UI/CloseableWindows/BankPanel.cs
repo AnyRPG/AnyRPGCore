@@ -12,6 +12,9 @@ namespace AnyRPG {
         [SerializeField]
         protected BagBarController bagBarController;
 
+        // game manager references
+        protected InventoryManager inventoryManager = null;
+
         public BagBarController MyBagBarController { get => bagBarController; set => bagBarController = value; }
 
         public override void Configure(SystemGameManager systemGameManager) {
@@ -19,14 +22,19 @@ namespace AnyRPG {
             bagBarController.Configure(systemGameManager);
         }
 
+        public override void SetGameManagerReferences() {
+            base.SetGameManagerReferences();
+            inventoryManager = systemGameManager.InventoryManager;
+        }
+
         public override void ReceiveOpenWindowNotification() {
             base.ReceiveOpenWindowNotification();
-            SystemGameManager.Instance.InventoryManager.OpenBank();
+            inventoryManager.OpenBank();
         }
 
         public override void RecieveClosedWindowNotification() {
             base.RecieveClosedWindowNotification();
-            SystemGameManager.Instance.InventoryManager.CloseBank();
+            inventoryManager.CloseBank();
         }
 
     }

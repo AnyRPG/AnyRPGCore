@@ -2569,6 +2569,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   backGroundImage: {fileID: 0}
+  coloredUIElements:
+  - {fileID: 2650991618514602094}
+  - {fileID: 3888164246132159583}
+  - {fileID: 8799224428779401834}
+  - {fileID: 599412904100003971}
   buttonPrefab: {fileID: 3408690417865459949, guid: 66adcc32739b2f44ba7c9e48e949d35b,
     type: 3}
   buttonArea: {fileID: 1049664014951422467}

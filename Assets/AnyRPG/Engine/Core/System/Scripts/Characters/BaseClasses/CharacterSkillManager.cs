@@ -12,6 +12,8 @@ namespace AnyRPG {
 
         // game manager references
         private SystemDataFactory systemDataFactory = null;
+        protected PlayerManager playerManager = null;
+        protected SystemEventManager systemEventManager = null;
 
         public Dictionary<string, Skill> MySkillList { get => skillList; }
 
@@ -24,6 +26,8 @@ namespace AnyRPG {
         public override void SetGameManagerReferences() {
             base.SetGameManagerReferences();
             systemDataFactory = systemGameManager.SystemDataFactory;
+            playerManager = systemGameManager.PlayerManager;
+            systemEventManager = systemGameManager.SystemEventManager;
         }
 
         public void Init() {
@@ -56,11 +60,11 @@ namespace AnyRPG {
                 }
                 foreach (Recipe recipe in systemDataFactory.GetResourceList<Recipe>()) {
                     if (baseCharacter.CharacterStats.Level >= recipe.RequiredLevel && recipe.AutoLearn == true && newSkill.MyAbilityList.Contains(recipe.CraftAbility)) {
-                        SystemGameManager.Instance.PlayerManager.MyCharacter.CharacterRecipeManager.LearnRecipe(recipe);
+                        playerManager.MyCharacter.CharacterRecipeManager.LearnRecipe(recipe);
                     }
                 }
 
-                SystemGameManager.Instance.SystemEventManager.NotifyOnSkillListChanged(newSkill);
+                systemEventManager.NotifyOnSkillListChanged(newSkill);
             }
         }
 

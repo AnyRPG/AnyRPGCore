@@ -210,7 +210,7 @@ namespace AnyRPG {
                     //Debug.Log(gameObject.name + ".PlayerUnitMovementController.LateGlobalSuperUpdate(): resetting playerManager.ActiveUnitController.transform.forward");
 
                     playerManager.ActiveUnitController.transform.forward = new Vector3(cameraManager.MainCameraController.MyWantedDirection.x, 0, cameraManager.MainCameraController.MyWantedDirection.z);
-                    cameraManager.MainCamera.GetComponent<AnyRPGCameraController>().ResetWantedPosition();
+                    cameraManager.MainCameraController.ResetWantedPosition();
                 }
 
                 if (playerManager.PlayerController.inputTurn != 0) {

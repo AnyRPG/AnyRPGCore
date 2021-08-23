@@ -768,6 +768,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   backGroundImage: {fileID: 0}
+  coloredUIElements:
+  - {fileID: 6757898222178015214}
+  - {fileID: 179697353679662647}
+  - {fileID: 8871032254527622042}
   creditTemplate: {fileID: 3129540725068152788, guid: da254ad492f6d784380ddb34e8eb773f,
     type: 3}
   creditCategoryTemplate: {fileID: 7073291999989539490, guid: 9bb7798620bb50f40891bf7dc849bc12,

@@ -16,7 +16,7 @@ namespace AnyRPG {
         protected List<SlotScript> slots = new List<SlotScript>();
 
         // game manager references
-        private ObjectPooler objectPooler = null;
+        protected ObjectPooler objectPooler = null;
 
         public List<SlotScript> MySlots { get => slots; }
 
@@ -30,11 +30,6 @@ namespace AnyRPG {
                 }
                 return count;
             }
-        }
-
-        public override void Configure(SystemGameManager systemGameManager) {
-            base.Configure(systemGameManager);
-
         }
 
         public override void SetGameManagerReferences() {

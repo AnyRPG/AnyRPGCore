@@ -604,7 +604,7 @@ namespace AnyRPG {
         }
 
         public override void SetupScriptableObjects(SystemGameManager systemGameManager) {
-            //Debug.Log(MyName + ".Quest.SetupScriptableObjects(): ID: " + GetInstanceID());
+            //Debug.Log(DisplayName + ".Quest.SetupScriptableObjects(" + (systemGameManager == null ? "null" : systemGameManager.gameObject.name) + "): ID: " + GetInstanceID());
         
             base.SetupScriptableObjects(systemGameManager);
 

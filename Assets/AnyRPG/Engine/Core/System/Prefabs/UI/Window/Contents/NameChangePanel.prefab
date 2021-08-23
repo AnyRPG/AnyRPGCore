@@ -228,6 +228,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   backGroundImage: {fileID: 0}
+  coloredUIElements:
+  - {fileID: 7914807711743799786}
   textInput: {fileID: 1895531751171715944}
   confirmButton: {fileID: 6205143239870174088}
   cancelButton: {fileID: 3151037857080716252}

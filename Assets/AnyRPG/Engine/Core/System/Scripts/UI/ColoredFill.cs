@@ -8,8 +8,8 @@ namespace AnyRPG {
 
         public override void SetImageColor() {
             // intentionally hide base
-            if (SystemGameManager.Instance.SystemConfigurationManager != null && coloredImage != null) {
-                coloredImage.color = SystemGameManager.Instance.SystemConfigurationManager.DefaultUIFillColor;
+            if (systemConfigurationManager != null && coloredImage != null) {
+                coloredImage.color = systemConfigurationManager.DefaultUIFillColor;
             }
         }
     }

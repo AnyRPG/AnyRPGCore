@@ -1433,6 +1433,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   backGroundImage: {fileID: 0}
+  coloredUIElements: []
   previewCameraController: {fileID: 4312250358296713847}
 --- !u!1 &6365534986942991759
 GameObject:
@@ -1700,6 +1701,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   backGroundImage: {fileID: 0}
+  coloredUIElements:
+  - {fileID: 2650991618514602094}
+  - {fileID: 3310382599213395662}
   buttonPrefab: {fileID: 3408690417865459949, guid: 01f18dfa0fd5008409ae5ef6f5bf0cf4,
     type: 3}
   buttonArea: {fileID: 1049664014951422467}

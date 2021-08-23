@@ -171,7 +171,7 @@ namespace AnyRPG {
 
             questDescription.text = quest.GetObjectiveDescription();
 
-            experienceReward.text += LevelEquations.GetXPAmountForQuest(playerManager.MyCharacter.CharacterStats.Level, quest) + " XP";
+            experienceReward.text += LevelEquations.GetXPAmountForQuest(playerManager.MyCharacter.CharacterStats.Level, quest, systemConfigurationManager) + " XP";
 
             // display currency rewards
 

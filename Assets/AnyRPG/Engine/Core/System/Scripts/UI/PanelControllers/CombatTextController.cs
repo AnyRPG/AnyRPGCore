@@ -6,7 +6,7 @@ using UnityEngine;
 using UnityEngine.UI;
 
 namespace AnyRPG {
-    public class CombatTextController : MonoBehaviour {
+    public class CombatTextController : ConfiguredMonoBehaviour {
         //[SerializeField]
         //private TextMeshProUGUI tmpProtext = null;
 
@@ -77,7 +77,19 @@ namespace AnyRPG {
         string preText = string.Empty;
         string postText = string.Empty;
 
+        // game manager references
+        protected CameraManager cameraManager = null;
+        protected CombatTextManager combatTextManager = null;
+        protected PlayerManager playerManager = null;
+
         public RectTransform RectTransform { get => rectTransform; set => rectTransform = value; }
+
+        public override void SetGameManagerReferences() {
+            base.SetGameManagerReferences();
+            cameraManager = systemGameManager.CameraManager;
+            playerManager = systemGameManager.PlayerManager;
+            combatTextManager = systemGameManager.UIManager.CombatTextManager;
+        }
 
         public void InitializeCombatTextController(Interactable mainTarget, Sprite sprite, string displayText, CombatTextType combatTextType, CombatMagnitude combatMagnitude = CombatMagnitude.normal, AbilityEffectContext abilityEffectContext = null) {
             this.mainTarget = mainTarget;
@@ -91,7 +103,7 @@ namespace AnyRPG {
 
             // if the combat text ui is not active, then we should just immediately disable this
             if (gameObject.activeInHierarchy == false) {
-                SystemGameManager.Instance.UIManager.CombatTextManager.returnControllerToPool(this);
+                combatTextManager.returnControllerToPool(this);
                 return;
             }
 
@@ -99,7 +111,7 @@ namespace AnyRPG {
             randomX = Random.Range(0, randomXLimit);
             randomY = Random.Range(0, randomYLimit);
             //Debug.Log("Combat Text spawning: " + textType + "; randomX: " + randomX + "; randomY: " + randomY);
-            targetPos = SystemGameManager.Instance.CameraManager.ActiveMainCamera.WorldToScreenPoint(mainTarget.InteractableGameObject.transform.position);
+            targetPos = cameraManager.ActiveMainCamera.WorldToScreenPoint(mainTarget.InteractableGameObject.transform.position);
             //alpha = text.color.a;
             alpha = 1f;
             fadeOutTimer = fadeTime;
@@ -116,7 +128,7 @@ namespace AnyRPG {
             } else {
                 image.color = Color.white;
             }
-            if (mainTarget.InteractableGameObject == SystemGameManager.Instance.PlayerManager.ActiveUnitController.gameObject) {
+            if (mainTarget.InteractableGameObject == playerManager.ActiveUnitController.gameObject) {
                 directionMultiplier = -1;
                 switch (textType) {
                     case CombatTextType.normal:
@@ -225,7 +237,7 @@ namespace AnyRPG {
             //Debug.Log("CombatTextController.RunCombatTextUpdate() fadeOutTimer: " + fadeOutTimer + " " + tmpProtext.text);
             if (mainTarget != null) {
                 //Debug.Log("CombatTextController.FixedUpdate(): maintarget is not null");
-                targetPos = SystemGameManager.Instance.CameraManager.ActiveMainCamera.WorldToScreenPoint(mainTarget.InteractableGameObject.transform.position + new Vector3(0, yUnitOffset, 0));
+                targetPos = cameraManager.ActiveMainCamera.WorldToScreenPoint(mainTarget.InteractableGameObject.transform.position + new Vector3(0, yUnitOffset, 0));
                 //Debug.Log("CombatTextController.FixedUpdate(): targetpos:" + targetPos);
                 transform.position = targetPos + new Vector2((randomX + xUIOffset + (xDirectionMultiplier == 1 ? 0 : textRectTransform.rect.width)) * xDirectionMultiplier, yUIOffset + randomY);
             }
@@ -249,7 +261,7 @@ namespace AnyRPG {
                 //randomY += (movementSpeed * directionMultiplier);
                 yUIOffset = distanceToMove * (((fadeOutTimer - fadeTime) * -1) / fadeTime) * directionMultiplier;
             } else {
-                SystemGameManager.Instance.UIManager.CombatTextManager.returnControllerToPool(this);
+                combatTextManager.returnControllerToPool(this);
             }
 
         }

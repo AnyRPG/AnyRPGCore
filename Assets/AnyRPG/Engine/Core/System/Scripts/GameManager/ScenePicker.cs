@@ -1,9 +1,9 @@
 using AnyRPG;
-﻿using UnityEngine;
+using UnityEngine;
 
 namespace AnyRPG {
-public class ScenePicker : MonoBehaviour {
-    [SerializeField]
-    public string scenePath;
-}
+    public class ScenePicker : MonoBehaviour {
+        [SerializeField]
+        public string scenePath;
+    }
 }

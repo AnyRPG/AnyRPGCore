@@ -6,6 +6,7 @@ using UnityEngine;
 namespace AnyRPG {
     public class SystemGameManager : MonoBehaviour {
 
+        /*
         #region Singleton
         private static SystemGameManager instance;
 
@@ -20,6 +21,11 @@ namespace AnyRPG {
             Init();
         }
         #endregion
+        */
+
+        private void Awake() {
+            Init();
+        }
 
         [Header("Configuration")]
 
@@ -205,6 +211,7 @@ namespace AnyRPG {
         }
 
         private void SetupPermanentObjects() {
+            //Debug.Log("SystemGameManager.SetupPermanentObjects()");
             DontDestroyOnLoad(this.gameObject);
             GameObject umaDCS = GameObject.Find("UMA_GLIB");
             if (umaDCS == null) {

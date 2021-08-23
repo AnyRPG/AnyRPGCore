@@ -5,19 +5,20 @@ using System.Linq;
 using UnityEngine;
 
 namespace AnyRPG {
-    public class CapabilityConsumerProcessor {
+    public class CapabilityConsumerProcessor : ConfiguredClass {
 
         ICapabilityConsumer capabilityConsumer = null;
 
         private List<ICapabilityProvider> capabilityProviders = new List<ICapabilityProvider>();
 
-        public CapabilityConsumerProcessor(ICapabilityConsumer capabilityConsumer) {
+        public CapabilityConsumerProcessor(ICapabilityConsumer capabilityConsumer, SystemGameManager systemGameManager) {
             this.capabilityConsumer = capabilityConsumer;
+            Configure(systemGameManager);
         }
 
         public void UpdateCapabilityProviderList() {
             capabilityProviders = new List<ICapabilityProvider>();
-            capabilityProviders.Add(SystemGameManager.Instance.SystemConfigurationManager);
+            capabilityProviders.Add(systemConfigurationManager);
             if (capabilityConsumer.UnitProfile != null) {
                 capabilityProviders.Add(capabilityConsumer.UnitProfile);
             }

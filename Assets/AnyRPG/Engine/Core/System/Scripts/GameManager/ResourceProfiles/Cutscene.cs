@@ -51,16 +51,19 @@ namespace AnyRPG {
         [SerializeField]
         private SubtitleProperties subtitleProperties = new SubtitleProperties();
 
+        // game manager references
+        protected SaveManager saveManager = null;
+
         public bool Viewed {
             get {
-                return SystemGameManager.Instance.SaveManager.GetCutsceneSaveData(this).isCutSceneViewed;
+                return saveManager.GetCutsceneSaveData(this).isCutSceneViewed;
             }
             set {
                 //Debug.Log(DisplayName + ".Viewed: setting to: " + value);
-                //SystemGameManager.Instance.SaveManager.GetCutsceneSaveData(this).IsCutSceneViewed = value;
-                CutsceneSaveData saveData = SystemGameManager.Instance.SaveManager.GetCutsceneSaveData(this);
+                //saveManager.GetCutsceneSaveData(this).IsCutSceneViewed = value;
+                CutsceneSaveData saveData = saveManager.GetCutsceneSaveData(this);
                 saveData.isCutSceneViewed = value;
-                SystemGameManager.Instance.SaveManager.CutsceneSaveDataDictionary[saveData.MyName] = saveData;
+                saveManager.CutsceneSaveDataDictionary[saveData.MyName] = saveData;
             }
         }
 
@@ -72,6 +75,11 @@ namespace AnyRPG {
         public bool Repeatable { get => repeatable; set => repeatable = value; }
         public bool AutoAdvanceSubtitles { get => autoAdvanceSubtitles; set => autoAdvanceSubtitles = value; }
         public SubtitleProperties SubtitleProperties { get => subtitleProperties; set => subtitleProperties = value; }
+
+        public override void SetGameManagerReferences() {
+            base.SetGameManagerReferences();
+            saveManager = systemGameManager.SaveManager;
+        }
 
         public void ResetSubtitles() {
             foreach (SubtitleNode subtitleNode in subtitleProperties.SubtitleNodes) {

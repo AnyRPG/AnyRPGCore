@@ -136,7 +136,7 @@ namespace AnyRPG {
         }
 
         public void InitializeController() {
-            Debug.Log(gameObject.name + ".UnitFrameController.InitializeController()");
+            //Debug.Log(gameObject.name + ".UnitFrameController.InitializeController()");
             if (controllerInitialized) {
                 return;
             }

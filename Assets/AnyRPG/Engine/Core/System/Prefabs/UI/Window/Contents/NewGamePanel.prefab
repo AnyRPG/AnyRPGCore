@@ -2736,6 +2736,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   backGroundImage: {fileID: 0}
+  coloredUIElements: []
   previewCameraController: {fileID: 6910987965642543079}
 --- !u!1 &1061125787558603287
 GameObject:
@@ -2984,6 +2985,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   backGroundImage: {fileID: 0}
+  coloredUIElements: []
   mainButtonsArea: {fileID: 8059998613681917400}
   mainNoOptionsArea: {fileID: 9079602331107615533}
   appearanceButton: {fileID: 5338941885594545368}
@@ -7663,6 +7665,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   backGroundImage: {fileID: 0}
+  coloredUIElements: []
   buttonPrefab: {fileID: 3408690417865459949, guid: 6780799de9da68840b89e631a3a8aa8b,
     type: 3}
   buttonArea: {fileID: 2365707611225862481}
@@ -8968,6 +8971,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   backGroundImage: {fileID: 0}
+  coloredUIElements: []
   buttonPrefab: {fileID: 3408690417865459949, guid: 43ef659d63570554191d660962668f35,
     type: 3}
   buttonArea: {fileID: 423526455524440889}
@@ -9923,6 +9927,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   backGroundImage: {fileID: 0}
+  coloredUIElements: []
   textInput: {fileID: 0}
   confirmButton: {fileID: 0}
   cancelButton: {fileID: 0}
@@ -10121,6 +10126,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   backGroundImage: {fileID: 0}
+  coloredUIElements: []
   textInput: {fileID: 5461044076140096161}
   characterClassLabel: {fileID: 2112851245035430740}
   characterClassButton: {fileID: 6424029302724125063}
@@ -11438,6 +11444,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   backGroundImage: {fileID: 0}
+  coloredUIElements: []
   buttonPrefab: {fileID: 3408690417865459949, guid: 8e435cc9b0269ef4c80f1972ea9ab38f,
     type: 3}
   buttonArea: {fileID: 4692299218601077960}
@@ -12384,6 +12391,22 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   backGroundImage: {fileID: 3027280789261577762}
+  coloredUIElements:
+  - {fileID: 2860743347277788722}
+  - {fileID: 2898219483160970312}
+  - {fileID: 977153944683455667}
+  - {fileID: 1127047548783606392}
+  - {fileID: 7735120995160402736}
+  - {fileID: 5548137985560919297}
+  - {fileID: 6755764507122368816}
+  - {fileID: 1308818174362879749}
+  - {fileID: 2701267714597301156}
+  - {fileID: 4922593514819901844}
+  - {fileID: 693762228532385868}
+  - {fileID: 833797762989600980}
+  - {fileID: 7402362111860343032}
+  - {fileID: 1342238598635363406}
+  - {fileID: 8110828210097973311}
   playerNameLabel: {fileID: 1703160643895514288}
   characterPreviewPanel: {fileID: 2578656018663227496}
   detailsPanel: {fileID: 5807937099927844318}
@@ -13953,6 +13976,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   backGroundImage: {fileID: 0}
+  coloredUIElements: []
   buttonPrefab: {fileID: 3408690417865459949, guid: 402f5578b08cd67499ba6e44c4bc98b7,
     type: 3}
   buttonArea: {fileID: 8288497607121598762}

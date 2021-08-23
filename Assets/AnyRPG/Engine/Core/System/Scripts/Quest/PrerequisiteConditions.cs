@@ -335,6 +335,7 @@ namespace AnyRPG {
         }
 
         public void SetupScriptableObjects(SystemGameManager systemGameManager, IPrerequisiteOwner prerequisiteOwner) {
+            //Debug.Log("PrerequisiteConditions.SetupScriptableObjects(" + (systemGameManager == null ? "null" : systemGameManager.gameObject.name) + ")");
             Configure(systemGameManager);
             CreateAllList();
 

@@ -47,13 +47,16 @@ namespace AnyRPG {
         }
 
         public override void SetGameManagerReferences() {
+            //Debug.Log("CharacterClassPrerequisite.SetGameManagerReferences()");
             base.SetGameManagerReferences();
             systemDataFactory = systemGameManager.SystemDataFactory;
             playerManager = systemGameManager.PlayerManager;
             systemEventManager = systemGameManager.SystemEventManager;
         }
 
-        public void SetupScriptableObjects(SystemGameManager systemGameManger) {
+        public void SetupScriptableObjects(SystemGameManager systemGameManager) {
+            //Debug.Log("CharacterClassPrerequisite.SetupScriptableObjects(" + (systemGameManager == null ? "null" : systemGameManager.gameObject.name) + ")");
+
             Configure(systemGameManager);
             prerequisiteCharacterClass = null;
             if (requiredCharacterClass != null && requiredCharacterClass != string.Empty) {

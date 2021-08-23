@@ -1003,7 +1003,7 @@ namespace AnyRPG {
         public void UpdateAbilityList(int newLevel) {
             //Debug.Log(baseCharacter.gameObject.name + ".CharacterAbilityManager.UpdateAbilityList(). length: " + abilityList.Count);
 
-            CapabilityConsumerSnapshot capabilityConsumerSnapshot = new CapabilityConsumerSnapshot(baseCharacter);
+            CapabilityConsumerSnapshot capabilityConsumerSnapshot = new CapabilityConsumerSnapshot(baseCharacter, systemGameManager);
 
             LearnCapabilityProviderAbilities(capabilityConsumerSnapshot.GetAbilityList());
         }

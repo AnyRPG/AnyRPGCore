@@ -13,6 +13,9 @@ namespace AnyRPG {
         [SerializeField]
         private Image backGroundImage;
 
+        [SerializeField]
+        private List<ColoredUIElement> coloredUIElements = new List<ColoredUIElement>();
+
         public Image BackGroundImage { get => backGroundImage; set => backGroundImage = value; }
 
         protected RectTransform rectTransform;
@@ -29,6 +32,9 @@ namespace AnyRPG {
                 backGroundImage = GetComponent<Image>();
             }
             rectTransform = GetComponent<RectTransform>();
+            foreach (ColoredUIElement coloredUIElement in coloredUIElements) {
+                coloredUIElement.Configure(systemGameManager);
+            }
             CreateEventSubscriptions();
         }
 
