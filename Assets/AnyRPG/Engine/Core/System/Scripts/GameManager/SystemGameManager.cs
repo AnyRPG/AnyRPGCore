@@ -182,7 +182,7 @@ namespace AnyRPG {
             objectPooler.Configure(this);
 
             cameraManager.Configure(this);
-            audioManager.Configure(this);
+            //audioManager.Configure(this);
             petPreviewManager.Configure(this);
             unitPreviewManager.Configure(this);
             characterCreatorManager.Configure(this);
@@ -230,6 +230,11 @@ namespace AnyRPG {
 
         private void Start() {
             //Debug.Log("SystemGameManager.Start()");
+
+            // due to "intended" but not officially documented behavior, audio updates will be overwritten if called in Awake() so they must be called in Start()
+            // https://fogbugz.unity3d.com/default.asp?1197165_nik4gg1io942ae13#bugevent_1071843210
+
+            audioManager.Configure(this);
 
             // first turn off the UI
             UIManager.PerformSetupActivities();
