@@ -268,7 +268,13 @@ namespace AnyRPG {
         public void HandleCharacterUnitSpawn() {
             foreach (StatusEffectNode statusEffectNode in StatusEffects.Values) {
                 //Debug.Log("PlayerStats.HandlePlayerUnitSpawn(): re-applying effect object for: " + statusEffectNode.MyStatusEffect.MyName);
-                statusEffectNode.StatusEffect.RawCast(baseCharacter, baseCharacter.UnitController, baseCharacter.UnitController, new AbilityEffectContext(baseCharacter));
+                if (statusEffectNode.StatusEffect.GetPrefabProfileList(baseCharacter).Count > 0
+                    && (statusEffectNode.PrefabObjects == null || statusEffectNode.PrefabObjects.Count == 0)) {
+                    statusEffectNode.PrefabObjects = statusEffectNode.StatusEffect.RawCast(baseCharacter, baseCharacter.UnitController, baseCharacter.UnitController, new AbilityEffectContext(baseCharacter));
+                }/* else {
+                    statusEffectNode.StatusEffect.RawCast(baseCharacter, baseCharacter.UnitController, baseCharacter.UnitController, new AbilityEffectContext(baseCharacter));
+                }*/
+                
             }
         }
 

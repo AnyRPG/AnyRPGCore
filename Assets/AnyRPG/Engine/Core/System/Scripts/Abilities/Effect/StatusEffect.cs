@@ -202,9 +202,9 @@ namespace AnyRPG {
         }
 
         // bypass the creation of the status effect and just make its visual prefab
-        public void RawCast(IAbilityCaster source, Interactable target, Interactable originalTarget, AbilityEffectContext abilityEffectInput) {
-            //Debug.Log(MyName + ".StatusEffect.RawCast()");
-            base.Cast(source, target, originalTarget, abilityEffectInput);
+        public Dictionary<PrefabProfile, GameObject> RawCast(IAbilityCaster source, Interactable target, Interactable originalTarget, AbilityEffectContext abilityEffectInput) {
+            //Debug.Log(DisplayName + ".StatusEffect.RawCast()");
+            return base.Cast(source, target, originalTarget, abilityEffectInput);
         }
 
         public override bool CanUseOn(Interactable target, IAbilityCaster sourceCharacter, AbilityEffectContext abilityEffectContext = null, bool playerInitiated = false, bool performRangeCheck = true) {

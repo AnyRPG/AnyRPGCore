@@ -215,10 +215,6 @@ namespace AnyRPG {
             return prefabObjects;
         }
 
-        public void CreateAbilityObject() {
-
-        }
-
         public virtual void CastTick(IAbilityCaster source, Interactable target, AbilityEffectContext abilityEffectContext) {
             //Debug.Log(DisplayName + ".AbilityEffect.CastTick(" +source.AbilityManager.Name + ", " + (target ? target.name : "null") + ")");
             // play tick audio effects

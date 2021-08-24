@@ -56,6 +56,7 @@ namespace AnyRPG {
         }
 
         public void ClearEffectPrefabs() {
+            //Debug.Log("StatusEffectNode.ClearEffectPrefabs(): " + StatusEffect.DisplayName);
             if (prefabObjects != null) {
                 foreach (GameObject go in prefabObjects.Values) {
                     //Debug.Log(MyName + ".LengthEffect.CancelEffect(" + targetCharacter.MyName + "): Destroy: " + go.name);
