@@ -130,10 +130,7 @@ namespace AnyRPG {
 
 
         public void OnPointerClick(PointerEventData eventData) {
-            Debug.Log("VendorButton.OnPointerClick()");
-            if (buyBackButton == true) {
-                Debug.Log("VendorButton.OnPointerClick(): this is a buyback button");
-            }
+            //Debug.Log("VendorButton.OnPointerClick()");
             if (vendorItem.BuyPrice() == 0
                 || vendorItem.Item.Currency == null
                 || CanAfford()) {
@@ -144,14 +141,9 @@ namespace AnyRPG {
                 } else {
                     // if this is a new purchase, a new copy of the item must be instantiated since the button is referring to the original factory item template
                     tmpItem = systemItemManager.GetNewResource(vendorItem.Item.DisplayName, vendorItem.GetItemQuality());
+                    //Debug.Log("Instantiated an item with id: " + tmpItem.GetInstanceID().ToString());
                 }
-                
-                /*
-                if (vendorItem.GetItemQuality() != null) {
-                    tmpItem.ItemQuality = vendorItem.GetItemQuality();
-                }
-                */
-                //Debug.Log("Instantiated an item with id: " + tmpItem.GetInstanceID().ToString());
+
                 if (inventoryManager.AddItem(tmpItem)) {
                     if (buyBackButton == false) {
                         tmpItem.DropLevel = playerManager.MyCharacter.CharacterStats.Level;
@@ -177,7 +169,7 @@ namespace AnyRPG {
         }
 
         private void SellItem() {
-            Debug.Log("VendorButton.SellItem()");
+            //Debug.Log("VendorButton.SellItem()");
             string priceString = string.Empty;
             if (vendorItem.BuyPrice() == 0 || vendorItem.Item.Currency == null) {
                 priceString = "FREE";

@@ -94,11 +94,11 @@ namespace AnyRPG {
         }
 
         string IDescribable.GetDescription() {
-            return item.GetDescription(itemQuality);
+            return item.GetDescription(GetItemQuality());
         }
 
         string IDescribable.GetSummary() {
-            return item.GetSummary(itemQuality);
+            return item.GetSummary(GetItemQuality());
         }
     }
 

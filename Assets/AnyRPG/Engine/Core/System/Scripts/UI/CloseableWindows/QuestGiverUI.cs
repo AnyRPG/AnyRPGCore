@@ -450,7 +450,7 @@ namespace AnyRPG {
             // currency rewards
             List<CurrencyNode> currencyNodes = currentQuest.GetCurrencyReward();
             foreach (CurrencyNode currencyNode in currencyNodes) {
-                playerManager.MyCharacter.CharacterCurrencyManager.AddCurrency(currencyNode.currency, currencyNode.MyAmount);
+                playerManager.MyCharacter.CharacterCurrencyManager.AddCurrency(currencyNode.currency, currencyNode.Amount);
                 List<CurrencyNode> tmpCurrencyNode = new List<CurrencyNode>();
                 tmpCurrencyNode.Add(currencyNode);
                 logManager.WriteSystemMessage("Gained " + currencyConverter.RecalculateValues(tmpCurrencyNode, false).Value.Replace("\n", ", "));

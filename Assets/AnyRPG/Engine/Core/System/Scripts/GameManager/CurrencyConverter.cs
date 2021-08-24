@@ -30,9 +30,9 @@ namespace AnyRPG {
                 }
                 // the currency needs conversion
                 foreach (CurrencyGroupRate currencyGroupRate in currencyGroup.MyCurrencyGroupRates) {
-                    if (SystemDataFactory.MatchResource(currencyGroupRate.MyCurrency.DisplayName, currency.DisplayName)) {
+                    if (SystemDataFactory.MatchResource(currencyGroupRate.Currency.DisplayName, currency.DisplayName)) {
                         //Debug.Log("CurrencyConverter.GetBaseCurrencyAmount(" + currency.DisplayName + ", " + currencyAmount + ") return: " + (currencyGroupRate.MyBaseMultiple * currencyAmount));
-                        return currencyGroupRate.MyBaseMultiple * currencyAmount;
+                        return currencyGroupRate.BaseMultiple * currencyAmount;
                     }
                 }
                 //Debug.Log("CurrencyConverter.GetBaseCurrencyAmount(" + currency.DisplayName + ", " + currencyAmount + ") return: " + currencyAmount);
@@ -62,12 +62,12 @@ namespace AnyRPG {
                 if (currencyNode.currency != null) {
                     if (squishedNodes.ContainsKey(currencyNode.currency)) {
                         CurrencyNode tmp = squishedNodes[currencyNode.currency];
-                        tmp.MyAmount += currencyNode.MyAmount;
+                        tmp.Amount += currencyNode.Amount;
                         squishedNodes[currencyNode.currency] = tmp;
                     } else {
                         CurrencyNode tmp = new CurrencyNode();
                         tmp.currency = currencyNode.currency;
-                        tmp.MyAmount = currencyNode.MyAmount;
+                        tmp.Amount = currencyNode.Amount;
                         squishedNodes.Add(tmp.currency, tmp);
                     }
                 }
@@ -75,7 +75,7 @@ namespace AnyRPG {
             if (squishedNodes.Count > 0) {
                 //Debug.Log("LootableDrop.RecalculateValues(): squishedNodes.count: " + squishedNodes.Count);
                 bool nonZeroFound = false;
-                foreach (KeyValuePair<Currency, int> keyValuePair in RedistributeCurrency(squishedNodes.ElementAt(0).Value.currency, squishedNodes.ElementAt(0).Value.MyAmount)) {
+                foreach (KeyValuePair<Currency, int> keyValuePair in RedistributeCurrency(squishedNodes.ElementAt(0).Value.currency, squishedNodes.ElementAt(0).Value.Amount)) {
                     if (keyValuePair.Value > 0 && nonZeroFound == false) {
                         nonZeroFound = true;
                         if (setIcon) {
@@ -143,7 +143,7 @@ namespace AnyRPG {
             // create a sorted list of the redistribution of this base currency amount into the higher currencies in the group
             SortedDictionary<int, Currency> sortList = new SortedDictionary<int, Currency>();
             foreach (CurrencyGroupRate currencyGroupRate in currencyGroup.MyCurrencyGroupRates) {
-                sortList.Add(currencyGroupRate.MyBaseMultiple, currencyGroupRate.MyCurrency);
+                sortList.Add(currencyGroupRate.BaseMultiple, currencyGroupRate.Currency);
             }
             foreach (KeyValuePair<int, Currency> currencyGroupRate in sortList.Reverse()) {
                 int exchangedAmount = 0;

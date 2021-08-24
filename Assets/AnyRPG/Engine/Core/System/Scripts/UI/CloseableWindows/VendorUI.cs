@@ -87,9 +87,9 @@ namespace AnyRPG {
             return pages.Count;
         }
 
-        public void CreatePages(List<VendorItem> items) {
+        public void CreatePages(List<VendorItem> items, bool resetPageIndex = true) {
             //Debug.Log("VendorUI.CreatePages(" + items.Count + ")");
-            ClearPages();
+            ClearPages(resetPageIndex);
 
             // remove all items with a quanity of 0 from the list
             items.RemoveAll(item => (item.Unlimited == false && item.Quantity == 0));
@@ -101,6 +101,11 @@ namespace AnyRPG {
                     pages.Add(page);
                     page = new List<VendorItem>();
                 }
+            }
+            if (pages.Count <= pageIndex) {
+                // set the page index to the last page
+                pageIndex = Mathf.Clamp(pages.Count - 1, 0, int.MaxValue);
+                //Debug.Log("VendorUI.CreatePages(" + items.Count + ") pageIndex: " + pageIndex);
             }
             AddItems();
             OnPageCountUpdate(false);
@@ -183,10 +188,12 @@ namespace AnyRPG {
             vendorCollections.Clear();
         }
 
-        private void ClearPages() {
+        private void ClearPages(bool resetPageIndex = true) {
             ClearButtons();
             pages.Clear();
-            pageIndex = 0;
+            if (resetPageIndex == true) {
+                pageIndex = 0;
+            }
         }
 
         public void SetCollection(int dropDownIndex) {
@@ -239,14 +246,9 @@ namespace AnyRPG {
 
         public void RefreshPage() {
             //Debug.Log("VendorUI.RefreshPage()");
-            CreatePages(vendorCollections[dropDownIndex].MyVendorItems);
-            if (pages.Count >= pageIndex) {
-                // the number of pages is at least as many as the page we are looking at so we can safely load it
-                LoadPage(pageIndex);
-            } else {
-                // the number of pages is now less than the index, so load the last page
-                LoadPage(pages.Count);
-            }
+            CreatePages(vendorCollections[dropDownIndex].MyVendorItems, false);
+            //Debug.Log("VendorUI.RefreshPage() count: " + pages.Count + "; index: " + pageIndex);
+            LoadPage(pageIndex);
             OnPageCountUpdate(false);
         }
 

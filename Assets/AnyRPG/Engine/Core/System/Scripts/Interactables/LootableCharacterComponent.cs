@@ -268,9 +268,9 @@ namespace AnyRPG {
                 //Debug.Log(gameObject.name + ".LootableCharacter.GetCurrencyLoot(): automatic is true");
                 currencyNode.currency = systemConfigurationManager.KillCurrency;
                 if (characterUnit != null) {
-                    currencyNode.MyAmount = systemConfigurationManager.KillCurrencyAmountPerLevel * characterUnit.BaseCharacter.CharacterStats.Level;
+                    currencyNode.Amount = systemConfigurationManager.KillCurrencyAmountPerLevel * characterUnit.BaseCharacter.CharacterStats.Level;
                     if (characterUnit.BaseCharacter.CharacterStats.Toughness != null) {
-                        currencyNode.MyAmount *= (int)characterUnit.BaseCharacter.CharacterStats.Toughness.CurrencyMultiplier;
+                        currencyNode.Amount *= (int)characterUnit.BaseCharacter.CharacterStats.Toughness.CurrencyMultiplier;
                     }
                 }
             }

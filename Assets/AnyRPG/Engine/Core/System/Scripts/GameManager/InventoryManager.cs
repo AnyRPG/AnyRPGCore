@@ -472,7 +472,7 @@ namespace AnyRPG {
         /// </summary>
         /// <param name="item"></param>
         public bool AddItem(Item item, bool addToBank = false) {
-            Debug.Log("InventoryManager.AddItem(" + (item == null ? "null" : item.DisplayName) + ", " + addToBank + ")");
+            //Debug.Log("InventoryManager.AddItem(" + (item == null ? "null" : item.DisplayName) + ", " + addToBank + ")");
             if (item == null) {
                 return false;
             }

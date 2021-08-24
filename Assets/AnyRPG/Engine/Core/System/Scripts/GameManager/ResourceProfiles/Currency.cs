@@ -28,7 +28,7 @@ namespace AnyRPG {
     public struct CurrencyNode {
 
         public Currency currency;
-        public int MyAmount;
+        public int Amount;
 
     }
 

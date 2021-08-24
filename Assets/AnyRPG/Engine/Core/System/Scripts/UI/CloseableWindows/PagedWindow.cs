@@ -73,10 +73,15 @@ namespace AnyRPG {
                 CloseWindow();
             }
 
+            if ((windowContents as IPagedWindowContents).GetPageCount() <= pageIndex) {
+                // set the page index to the last page
+                pageIndex = Mathf.Clamp((windowContents as IPagedWindowContents).GetPageCount() - 1, 0, int.MaxValue);
+            }
+
             previousBtn.GetComponent<Button>().interactable = (pageIndex > 0);
             nextBtn.GetComponent<Button>().interactable = ((windowContents as IPagedWindowContents).GetPageCount() > 1 && pageIndex < (windowContents as IPagedWindowContents).GetPageCount() - 1);
 
-            pageNumber.text = pageIndex + 1 + "/" + Mathf.Clamp((windowContents as IPagedWindowContents).GetPageCount(), 1, Mathf.Infinity);
+            pageNumber.text = pageIndex + 1 + "/" + Mathf.Clamp((windowContents as IPagedWindowContents).GetPageCount(), 1, int.MaxValue);
         }
 
         public void OnScroll(PointerEventData eventData) {

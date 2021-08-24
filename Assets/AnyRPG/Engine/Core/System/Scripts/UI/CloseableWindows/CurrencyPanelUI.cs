@@ -24,7 +24,7 @@ namespace AnyRPG {
         protected override void PopulatePages() {
             //Debug.Log("ReputationBookUI.CreatePages()");
             CurrencyNodeContentList page = new CurrencyNodeContentList();
-            foreach (CurrencyNode currencySaveData in playerManager.MyCharacter.CharacterCurrencyManager.MyCurrencyList.Values) {
+            foreach (CurrencyNode currencySaveData in playerManager.MyCharacter.CharacterCurrencyManager.CurrencyList.Values) {
                 page.currencyNodes.Add(currencySaveData);
                 if (page.currencyNodes.Count == pageSize) {
                     pages.Add(page);

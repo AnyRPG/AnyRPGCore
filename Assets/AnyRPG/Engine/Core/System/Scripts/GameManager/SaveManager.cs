@@ -732,9 +732,9 @@ namespace AnyRPG {
 
         public void SaveCurrencyData(AnyRPGSaveData anyRPGSaveData) {
             //Debug.Log("Savemanager.SaveCurrencyData()");
-            foreach (CurrencyNode currencyNode in playerManager.MyCharacter.CharacterCurrencyManager.MyCurrencyList.Values) {
+            foreach (CurrencyNode currencyNode in playerManager.MyCharacter.CharacterCurrencyManager.CurrencyList.Values) {
                 CurrencySaveData currencySaveData = new CurrencySaveData();
-                currencySaveData.MyAmount = currencyNode.MyAmount;
+                currencySaveData.MyAmount = currencyNode.Amount;
                 currencySaveData.MyName = currencyNode.currency.DisplayName;
                 anyRPGSaveData.currencySaveData.Add(currencySaveData);
             }

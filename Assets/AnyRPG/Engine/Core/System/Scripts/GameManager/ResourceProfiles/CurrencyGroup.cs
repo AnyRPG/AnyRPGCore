@@ -40,7 +40,7 @@ namespace AnyRPG {
                 return true;
             }
             foreach (CurrencyGroupRate currencyGroupRate in currencyGroupRates) {
-                if (SystemDataFactory.MatchResource(currencyGroupRate.MyCurrency.DisplayName, currency.DisplayName)) {
+                if (SystemDataFactory.MatchResource(currencyGroupRate.Currency.DisplayName, currency.DisplayName)) {
                     return true;
                 }
             }
@@ -83,8 +83,8 @@ namespace AnyRPG {
         [SerializeField]
         private int baseMultiple = 10;
 
-        public Currency MyCurrency { get => currency; set => currency = value; }
-        public int MyBaseMultiple { get => baseMultiple; set => baseMultiple = value; }
+        public Currency Currency { get => currency; set => currency = value; }
+        public int BaseMultiple { get => baseMultiple; set => baseMultiple = value; }
 
         public void SetupScriptableObjects(SystemDataFactory systemDataFactory) {
             currency = null;

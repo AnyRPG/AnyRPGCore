@@ -110,7 +110,7 @@ namespace AnyRPG {
             base.TakeLoot();
             foreach (LootableCharacterComponent lootableCharacter in currencyNodes.Keys) {
                 if (currencyNodes[lootableCharacter].currency != null) {
-                    playerManager.MyCharacter.CharacterCurrencyManager.AddCurrency(currencyNodes[lootableCharacter].currency, currencyNodes[lootableCharacter].MyAmount);
+                    playerManager.MyCharacter.CharacterCurrencyManager.AddCurrency(currencyNodes[lootableCharacter].currency, currencyNodes[lootableCharacter].Amount);
                     List<CurrencyNode> tmpCurrencyNode = new List<CurrencyNode>();
                     tmpCurrencyNode.Add(currencyNodes[lootableCharacter]);
                     logManager.WriteSystemMessage("Gained " + currencyConverter.RecalculateValues(tmpCurrencyNode, false).Value.Replace("\n", ", "));

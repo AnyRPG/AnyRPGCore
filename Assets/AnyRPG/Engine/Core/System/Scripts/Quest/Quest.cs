@@ -343,13 +343,13 @@ namespace AnyRPG {
                 if (systemConfigurationManager.QuestCurrency != null) {
                     CurrencyNode currencyNode = new CurrencyNode();
                     currencyNode.currency = systemConfigurationManager.QuestCurrency;
-                    currencyNode.MyAmount = systemConfigurationManager.QuestCurrencyAmountPerLevel * ExperienceLevel;
+                    currencyNode.Amount = systemConfigurationManager.QuestCurrencyAmountPerLevel * ExperienceLevel;
                     currencyNodes.Add(currencyNode);
                 }
             }
             if (RewardCurrency != null) {
                 CurrencyNode currencyNode = new CurrencyNode();
-                currencyNode.MyAmount = BaseCurrencyReward + (CurrencyRewardPerLevel * ExperienceLevel);
+                currencyNode.Amount = BaseCurrencyReward + (CurrencyRewardPerLevel * ExperienceLevel);
                 currencyNode.currency = RewardCurrency;
                 currencyNodes.Add(currencyNode);
             }
