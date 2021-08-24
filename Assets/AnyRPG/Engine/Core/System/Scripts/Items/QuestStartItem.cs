@@ -117,8 +117,8 @@ namespace AnyRPG {
             // do nothing because we don't have an indicator over our head or a minimap icon
         }
 
-        public override string GetSummary() {
-            return base.GetSummary() + string.Format("\n<color=green>Use: This item starts a quest</color>");
+        public override string GetSummary(ItemQuality usedItemQuality) {
+            return base.GetSummary(usedItemQuality) + string.Format("\n<color=green>Use: This item starts a quest</color>");
         }
 
         public bool EndsQuest(string questName) {

@@ -54,9 +54,9 @@ namespace AnyRPG {
             return systemAbilityController.StartCoroutine(actionButton.MonitorAbility(ability));
         }
 
-        public override string GetSummary() {
-
-            return base.GetSummary() + GetCastableInformation() + GetCooldownString();
+        public override string GetSummary(ItemQuality usedItemQuality) {
+            //Debug.Log(DisplayName + ".CastableItem.GetSummary()");
+            return base.GetSummary(usedItemQuality) + GetCastableInformation() + GetCooldownString();
         }
 
         public virtual string GetCastableInformation() {
@@ -79,7 +79,7 @@ namespace AnyRPG {
                 if (baseAbility != null) {
                     ability = baseAbility;
                 } else {
-                    Debug.LogError("SystemSkillManager.SetupScriptableObjects(): Could not find ability : " + abilityName + " while inititalizing " + DisplayName + ".  CHECK INSPECTOR");
+                    Debug.LogError("CastableItem.SetupScriptableObjects(): Could not find ability : " + abilityName + " while inititalizing " + DisplayName + ".  CHECK INSPECTOR");
                 }
             }
         }

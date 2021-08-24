@@ -71,8 +71,8 @@ namespace AnyRPG {
             return true;
         }
 
-        public override string GetSummary() {
-            return base.GetSummary() + string.Format("\n<color=green>Use: Equip</color>");
+        public override string GetSummary(ItemQuality usedItemQuality) {
+            return base.GetSummary(usedItemQuality) + string.Format("\n<color=green>Use: Equip</color>");
         }
 
     }
