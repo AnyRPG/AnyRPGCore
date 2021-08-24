@@ -17,23 +17,28 @@ namespace AnyRPG {
         }
 
         // converts the currency amount to its base currency and returns it
-        public int GetConvertedValue(Currency currency, int currencyAmount) {
+        public int GetBaseCurrencyAmount(Currency currency, int currencyAmount) {
+            //Debug.Log("CurrencyConverter.GetBaseCurrencyAmount(" + currency.DisplayName + ", " + currencyAmount + ")");
             CurrencyGroup currencyGroup = FindCurrencyGroup(currency);
             if (currencyGroup != null) {
                 // attemp redistribution
                 Currency baseCurrency = currencyGroup.MyBaseCurrency;
                 // convert everything in the group to the base amount
                 if (SystemDataFactory.MatchResource(currency.DisplayName, currencyGroup.MyBaseCurrency.DisplayName)) {
+                    //Debug.Log("CurrencyConverter.GetBaseCurrencyAmount(" + currency.DisplayName + ", " + currencyAmount + ") return: " + currencyAmount);
                     return currencyAmount;
                 }
                 // the currency needs conversion
                 foreach (CurrencyGroupRate currencyGroupRate in currencyGroup.MyCurrencyGroupRates) {
                     if (SystemDataFactory.MatchResource(currencyGroupRate.MyCurrency.DisplayName, currency.DisplayName)) {
+                        //Debug.Log("CurrencyConverter.GetBaseCurrencyAmount(" + currency.DisplayName + ", " + currencyAmount + ") return: " + (currencyGroupRate.MyBaseMultiple * currencyAmount));
                         return currencyGroupRate.MyBaseMultiple * currencyAmount;
                     }
                 }
+                //Debug.Log("CurrencyConverter.GetBaseCurrencyAmount(" + currency.DisplayName + ", " + currencyAmount + ") return: " + currencyAmount);
                 return currencyAmount;
             }
+            //Debug.Log("CurrencyConverter.GetBaseCurrencyAmount(" + currency.DisplayName + ", " + currencyAmount + ") return: " + currencyAmount);
             return currencyAmount;
         }
 
@@ -133,7 +138,7 @@ namespace AnyRPG {
             Currency baseCurrency = currencyGroup.MyBaseCurrency;
 
             // convert incoming currency to the base amount
-            int baseCurrencyAmount = GetConvertedValue(currency, currencyAmount);
+            int baseCurrencyAmount = GetBaseCurrencyAmount(currency, currencyAmount);
 
             // create a sorted list of the redistribution of this base currency amount into the higher currencies in the group
             SortedDictionary<int, Currency> sortList = new SortedDictionary<int, Currency>();
@@ -154,7 +159,11 @@ namespace AnyRPG {
             return returnDictionary;
         }
 
-        public string GetCombinedPriceSring(Currency currency, int currencyAmount) {
+        public string GetCombinedPriceString(KeyValuePair<Currency, int> keyValuePair) {
+            return GetCombinedPriceString(keyValuePair.Key, keyValuePair.Value);
+        }
+
+        public string GetCombinedPriceString(Currency currency, int currencyAmount) {
             string returnValue = string.Empty;
             Dictionary<Currency, int> tmpDict = RedistributeCurrency(currency, currencyAmount);
             foreach (KeyValuePair<Currency, int> dictEntry in tmpDict) {

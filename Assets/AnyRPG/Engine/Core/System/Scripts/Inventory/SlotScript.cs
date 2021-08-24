@@ -35,7 +35,7 @@ namespace AnyRPG {
 
         public bool IsFull {
             get {
-                if (IsEmpty || Count < MyItem.MyMaximumStackSize) {
+                if (IsEmpty || Count < MyItem.MaximumStackSize) {
                     return false;
                 }
                 return true;
@@ -87,7 +87,7 @@ namespace AnyRPG {
             //Debug.Log("SlotScript.SetSlotOnItems(): MyItem is null");
             foreach (Item tmpItem in MyItems) {
                 //Debug.Log("SlotScript.SetSlotOnItems(): going through MyItems");
-                tmpItem.MySlot = this;
+                tmpItem.Slot = this;
             }
         }
 
@@ -312,10 +312,10 @@ namespace AnyRPG {
         }
 
         public bool StackItem(Item item) {
-            if (!IsEmpty && item.DisplayName == MyItem.DisplayName && MyItems.Count < MyItem.MyMaximumStackSize) {
+            if (!IsEmpty && item.DisplayName == MyItem.DisplayName && MyItems.Count < MyItem.MaximumStackSize) {
                 MyItems.Add(item);
                 UpdateSlot();
-                item.MySlot = this;
+                item.Slot = this;
                 return true;
             }
             return false;
@@ -350,7 +350,7 @@ namespace AnyRPG {
             }
             if (SystemDataFactory.MatchResource(from.MyItem.DisplayName, MyItem.DisplayName) && !IsFull) {
                 // how many free slots there are in the new stack
-                int free = MyItem.MyMaximumStackSize - Count;
+                int free = MyItem.MaximumStackSize - Count;
                 if (free >= from.Count) {
                     int maxCount = from.Count;
                     for (int i = 0; i < maxCount; i++) {

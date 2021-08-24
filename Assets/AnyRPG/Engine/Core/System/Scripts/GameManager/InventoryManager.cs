@@ -472,14 +472,15 @@ namespace AnyRPG {
         /// </summary>
         /// <param name="item"></param>
         public bool AddItem(Item item, bool addToBank = false) {
+            Debug.Log("InventoryManager.AddItem(" + (item == null ? "null" : item.DisplayName) + ", " + addToBank + ")");
             if (item == null) {
                 return false;
             }
-            if (item.MyUniqueItem == true && GetItemCount(item.DisplayName) > 0) {
+            if (item.UniqueItem == true && GetItemCount(item.DisplayName) > 0) {
                 messageFeedManager.WriteMessage(item.DisplayName + " is unique.  You can only carry one at a time.");
                 return false;
             }
-            if (item.MyMaximumStackSize > 0) {
+            if (item.MaximumStackSize > 0) {
                 if (PlaceInStack(item, addToBank)) {
                     return true;
                 }

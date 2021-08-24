@@ -95,8 +95,8 @@ namespace AnyRPG {
         protected UIManager uIManager = null;
         protected PlayerManager playerManager = null;
 
-        public int MyMaximumStackSize { get => stackSize; set => stackSize = value; }
-        public SlotScript MySlot { get => slot; set => slot = value; }
+        public int MaximumStackSize { get => stackSize; set => stackSize = value; }
+        public SlotScript Slot { get => slot; set => slot = value; }
         
         public int BuyPrice() {
             return BuyPrice(realItemQuality);
@@ -104,27 +104,15 @@ namespace AnyRPG {
 
         public int BuyPrice(ItemQuality usedItemQuality) {
             if (dynamicCurrencyAmount) {
+                //Debug.Log(DisplayName + ".Item.BuyPrice(" + (usedItemQuality == null ? "null" : usedItemQuality.DisplayName) + "): return: " + (int)(((pricePerLevel * GetItemLevel(playerManager.MyCharacter.CharacterStats.Level)) + basePrice) * (usedItemQuality == null ? 1 : usedItemQuality.BuyPriceMultiplier)));
                 return (int)(((pricePerLevel * GetItemLevel(playerManager.MyCharacter.CharacterStats.Level)) + basePrice) * (usedItemQuality == null ? 1 : usedItemQuality.BuyPriceMultiplier));
             }
+            //Debug.Log(DisplayName + ".Item.BuyPrice(" + (usedItemQuality == null ? "null" : usedItemQuality.DisplayName) + "): return: " + (int)(basePrice * (usedItemQuality == null ? 1 : usedItemQuality.BuyPriceMultiplier)));
             return (int)(basePrice * (usedItemQuality == null ? 1 : usedItemQuality.BuyPriceMultiplier));
         }
 
-        public int SellPrice {
-            get {
-
-                if (dynamicCurrencyAmount) {
-                    if (realItemQuality == null) {
-                        //Debug.Log("realItemQuality was null");
-                    }
-                    return (int)(((pricePerLevel * GetItemLevel(playerManager.MyCharacter.CharacterStats.Level)) + basePrice) * (realItemQuality == null ? 1 : realItemQuality.SellPriceMultiplier));
-                }
-                return (int)(basePrice * (realItemQuality == null ? 1 : realItemQuality.SellPriceMultiplier));
-            }
-            set => basePrice = value;
-        }
-
-        public bool MyUniqueItem { get => uniqueItem; }
-        public Currency MyCurrency { get => currency; set => currency = value; }
+        public bool UniqueItem { get => uniqueItem; }
+        public Currency Currency { get => currency; set => currency = value; }
         public ItemQuality ItemQuality { get => realItemQuality; set => realItemQuality = value; }
         public int GetItemLevel(int characterLevel) {
             int returnLevel = (int)Mathf.Clamp(itemLevel, 1, Mathf.Infinity);
@@ -191,15 +179,37 @@ namespace AnyRPG {
             return false;
         }
 
-        public KeyValuePair<Currency, int> MySellPrice {
-            get {
+        private int SellPrice() {
+            return SellPrice(realItemQuality);
+        }
+
+        private int SellPrice(ItemQuality usedItemQuality) {
+            //get {
+
+                if (dynamicCurrencyAmount) {
+                    if (realItemQuality == null) {
+                        //Debug.Log("realItemQuality was null");
+                    }
+                    return (int)(((pricePerLevel * GetItemLevel(playerManager.MyCharacter.CharacterStats.Level)) + basePrice) * (usedItemQuality == null ? 1 : usedItemQuality.SellPriceMultiplier));
+                }
+                return (int)(basePrice * (usedItemQuality == null ? 1 : usedItemQuality.SellPriceMultiplier));
+            //}
+            //set => basePrice = value;
+        }
+
+        /// <summary>
+        /// return the sell price in the base currency
+        /// </summary>
+        /// <returns></returns>
+        public KeyValuePair<Currency, int> GetSellPrice() {
+            //get {
                 //Debug.Log(MyName + ".Item.MySellPrice()");
-                int sellAmount = SellPrice;
-                Currency currency = MyCurrency;
+                int sellAmount = SellPrice();
+                Currency currency = Currency;
                 if (currency != null) {
                     CurrencyGroup currencyGroup = currencyConverter.FindCurrencyGroup(currency);
                     if (currencyGroup != null) {
-                        int convertedSellAmount = currencyConverter.GetConvertedValue(currency, sellAmount);
+                        int convertedSellAmount = currencyConverter.GetBaseCurrencyAmount(currency, sellAmount);
                         currency = currencyGroup.MyBaseCurrency;
                         sellAmount = (int)Mathf.Ceil((float)convertedSellAmount * systemConfigurationManager.VendorPriceMultiplier);
                     } else {
@@ -207,7 +217,7 @@ namespace AnyRPG {
                     }
                 }
                 return new KeyValuePair<Currency, int>(currency, sellAmount);
-            }
+            //}
         }
 
         public List<CharacterClass> CharacterClassRequirementList { get => realCharacterClassRequirementList; set => realCharacterClassRequirementList = value; }
@@ -296,10 +306,10 @@ namespace AnyRPG {
         /// </summary>
         public void Remove() {
             //Debug.Log("Item " + GetInstanceID().ToString() + " is about to ask the slot to remove itself");
-            if (MySlot != null) {
+            if (Slot != null) {
                 //Debug.Log("The item's myslot is not null");
-                MySlot.RemoveItem(this);
-                MySlot = null;
+                Slot.RemoveItem(this);
+                Slot = null;
             } else {
                 //Debug.Log("The item's myslot is null!!!");
             }
@@ -326,7 +336,7 @@ namespace AnyRPG {
                 }
                 summaryString += string.Format("\n<color={0}>Required Classes: {1}</color>", colorString, string.Join(",", characterClassRequirementList));
             }
-            if (MyCurrency == null) {
+            if (Currency == null) {
                 summaryString += "\nNo Sell Price";
             }
 

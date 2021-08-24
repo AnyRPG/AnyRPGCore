@@ -97,7 +97,7 @@ namespace AnyRPG {
         public string UnitProfileName { get => unitProfileName; }
 
         public override void Configure(SystemGameManager systemGameManager) {
-            Debug.Log(gameObject.name + ".BaseCharacter.Configure()");
+            //Debug.Log(gameObject.name + ".BaseCharacter.Configure()");
 
             base.Configure(systemGameManager);
         }
@@ -110,7 +110,7 @@ namespace AnyRPG {
 
         // baseCharacter does not initialize itself.  It is initialized by the PlayerManager (player case), or the UnitController (AI case)
         public void Init() {
-            Debug.Log(gameObject.name + ".BaseCharacter.Init()");
+            //Debug.Log(gameObject.name + ".BaseCharacter.Init()");
 
             // react to level load and unload events
             CreateEventSubscriptions();

@@ -974,7 +974,7 @@ namespace AnyRPG {
                 ToolTipCurrencyBarController.ClearCurrencyAmounts();
                 if (describable is Item && showSellPrice != string.Empty) {
                     //Debug.Log("UIManager.ShowToolTipCommon(" + (describable == null ? "null" : describable.MyName) + "): describable is item");
-                    KeyValuePair<Currency, int> sellAmount = (describable as Item).MySellPrice;
+                    KeyValuePair<Currency, int> sellAmount = (describable as Item).GetSellPrice();
                     if (sellAmount.Value == 0 || sellAmount.Key == null) {
                         //Debug.Log("UIManager.ShowToolTipCommon(" + (describable == null ? "null" : describable.MyName) + ")");
                         // don't print a s sell price on things that cannot be sold

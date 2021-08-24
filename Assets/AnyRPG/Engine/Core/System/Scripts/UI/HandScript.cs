@@ -90,16 +90,16 @@ namespace AnyRPG {
             //Debug.Log("HandScript.DeleteItem()");
             if (Moveable is Item) {
                 Item item = (Item)Moveable;
-                if (item.MySlot != null) {
-                    item.MySlot.Clear();
+                if (item.Slot != null) {
+                    item.Slot.Clear();
                 } else {
                     // first we want to get this items equipment slot
                     // next we want to query the equipmentmanager on the charcter to see if he has an item in this items slot, and if it is the item we are dropping
                     // if it is, then we will unequip it, and then destroy it
                     if (item is Equipment) {
                         playerManager.MyCharacter.CharacterEquipmentManager.Unequip(item as Equipment);
-                        if (item.MySlot != null) {
-                            item.MySlot.Clear();
+                        if (item.Slot != null) {
+                            item.Slot.Clear();
                         }
                     }
                 }

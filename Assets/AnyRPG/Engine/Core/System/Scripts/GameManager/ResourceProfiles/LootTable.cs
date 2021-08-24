@@ -85,7 +85,7 @@ namespace AnyRPG {
                     List<Loot> validLoot = new List<Loot>();
                     foreach (Loot loot in lootGroup.Loot) {
                         if (loot.MyPrerequisitesMet == true &&
-                            (loot.MyItem.MyUniqueItem == false ||
+                            (loot.MyItem.UniqueItem == false ||
                             (inventoryManager.GetItemCount(loot.MyItem.DisplayName) == 0 &&
                             playerManager.MyCharacter.CharacterEquipmentManager.HasEquipment(loot.MyItem.DisplayName) == false))) {
                             validLoot.Add(loot);

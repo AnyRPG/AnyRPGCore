@@ -205,7 +205,7 @@ namespace AnyRPG {
         public bool IsMouseOverNameplate { get => isMouseOverNameplate; set => isMouseOverNameplate = value; }
 
         public override void Configure(SystemGameManager systemGameManager) {
-            Debug.Log(gameObject.name + ".Interactable.Configure()");
+            //Debug.Log(gameObject.name + ".Interactable.Configure()");
             base.Configure(systemGameManager);
             if (unitComponentController != null) {
                 unitComponentController.Configure(systemGameManager);
@@ -854,12 +854,11 @@ namespace AnyRPG {
 
             if (!isFlashing) {
                 // there was nothing to interact with on mouseover so just exit instead of trying to reset materials
+                glowQueued = false;
                 return;
             }
             RevertMaterialChange();
             // return emission enabled, emission color, and emission texture to their previous values
-
-            glowQueued = false;
         }
 
         protected void OnMouseDown() {

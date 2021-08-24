@@ -88,8 +88,12 @@ namespace AnyRPG {
         }
 
         public void CreatePages(List<VendorItem> items) {
-            //Debug.Log("VendorUI.CreatePages()");
+            //Debug.Log("VendorUI.CreatePages(" + items.Count + ")");
             ClearPages();
+
+            // remove all items with a quanity of 0 from the list
+            items.RemoveAll(item => (item.Unlimited == false && item.Quantity == 0));
+
             List<VendorItem> page = new List<VendorItem>();
             for (int i = 0; i < items.Count; i++) {
                 page.Add(items[i]);
@@ -122,7 +126,7 @@ namespace AnyRPG {
         }
 
         public void LoadPage(int pageIndex) {
-            //Debug.Log("VendorUI.LoadPage()");
+            //Debug.Log("VendorUI.LoadPage(" + pageIndex + ")");
             ClearButtons();
             this.pageIndex = pageIndex;
             AddItems();
@@ -205,29 +209,46 @@ namespace AnyRPG {
         
 
         public bool SellItem(Item item) {
-            if (item.BuyPrice() <= 0 || item.MySellPrice.Key == null) {
+            if (item.BuyPrice() <= 0 || item.GetSellPrice().Key == null) {
                 messageFeedManager.WriteMessage("The vendor does not want to buy the " + item.DisplayName);
                 return false;
             }
-            KeyValuePair<Currency, int> sellAmount = item.MySellPrice;
+            KeyValuePair<Currency, int> sellAmount = item.GetSellPrice();
 
             playerManager.MyCharacter.CharacterCurrencyManager.AddCurrency(sellAmount.Key, sellAmount.Value);
             AddToBuyBackCollection(item);
-            item.MySlot.RemoveItem(item);
+            item.Slot.RemoveItem(item);
 
             if (systemConfigurationManager.VendorAudioProfile?.AudioClip != null) {
                 audioManager.PlayEffect(systemConfigurationManager.VendorAudioProfile.AudioClip);
             }
-            string priceString = currencyConverter.GetCombinedPriceSring(sellAmount.Key, sellAmount.Value);
+            string priceString = currencyConverter.GetCombinedPriceString(sellAmount.Key, sellAmount.Value);
             messageFeedManager.WriteMessage("Sold " + item.DisplayName + " for " + priceString);
 
 
             if (dropDownIndex == 0) {
+                /*
                 CreatePages(vendorCollections[dropDownIndex].MyVendorItems);
                 LoadPage(pageIndex);
                 OnPageCountUpdate(false);
+                */
+                RefreshPage();
             }
             return true;
         }
+
+        public void RefreshPage() {
+            //Debug.Log("VendorUI.RefreshPage()");
+            CreatePages(vendorCollections[dropDownIndex].MyVendorItems);
+            if (pages.Count >= pageIndex) {
+                // the number of pages is at least as many as the page we are looking at so we can safely load it
+                LoadPage(pageIndex);
+            } else {
+                // the number of pages is now less than the index, so load the last page
+                LoadPage(pages.Count);
+            }
+            OnPageCountUpdate(false);
+        }
+
     }
 }

@@ -139,11 +139,11 @@ namespace AnyRPG {
         }
 
         public Vector3 GetSpawnLocation() {
-            Debug.Log("LevelManager.GetSpawnLocation(): scene is: " + SceneManager.GetActiveScene().name);
+            //Debug.Log("LevelManager.GetSpawnLocation(): scene is: " + SceneManager.GetActiveScene().name);
             // test : disable this, it was preventing games with no scene nodes from recalling save position
             //if (activeSceneNode != null) {
             if (overrideSpawnLocation == true) {
-                Debug.Log("Levelmanager.GetSpawnLocation(). SpawnLocationOverride is set.  returning " + spawnLocationOverride);
+                //Debug.Log("Levelmanager.GetSpawnLocation(). SpawnLocationOverride is set.  returning " + spawnLocationOverride);
                 Vector3 returnValue = spawnLocationOverride;
 
                 // reset to default so the next level loaded will not attempt to use this spawn location override
