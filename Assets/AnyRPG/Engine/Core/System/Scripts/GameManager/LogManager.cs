@@ -37,14 +37,12 @@ namespace AnyRPG {
         private bool eventSubscriptionsInitialized = false;
 
         // game manager references
-        SystemConfigurationManager systemConfigurationManager = null;
         SystemEventManager systemEventManager = null;
         PlayerManager playerManager = null;
 
         public override void Configure(SystemGameManager systemGameManager) {
             //Debug.Log("CombatLogUI.Awake()");
 
-            systemConfigurationManager = systemGameManager.SystemConfigurationManager;
             systemEventManager = systemGameManager.SystemEventManager;
             playerManager = systemGameManager.PlayerManager;
 

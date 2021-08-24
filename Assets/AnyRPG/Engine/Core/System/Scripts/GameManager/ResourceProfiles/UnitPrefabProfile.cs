@@ -11,9 +11,9 @@ namespace AnyRPG {
 
         public UnitPrefabProps UnitPrefabProps { get => unitPrefabProps; set => unitPrefabProps = value; }
 
-        public override void SetupScriptableObjects() {
-            base.SetupScriptableObjects();
-            unitPrefabProps.SetupScriptableObjects();
+        public override void SetupScriptableObjects(SystemGameManager systemGameManager) {
+            base.SetupScriptableObjects(systemGameManager);
+            unitPrefabProps.SetupScriptableObjects(systemDataFactory);
         }
     }
 

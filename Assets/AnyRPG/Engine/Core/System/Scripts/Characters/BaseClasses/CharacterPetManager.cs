@@ -7,7 +7,7 @@ using UnityEngine;
 using UnityEngine.AI;
 
 namespace AnyRPG {
-    public class CharacterPetManager {
+    public class CharacterPetManager : ConfiguredClass {
 
         private List<UnitProfile> unitProfiles = new List<UnitProfile>();
 
@@ -17,6 +17,8 @@ namespace AnyRPG {
 
         protected bool eventSubscriptionsInitialized = false;
 
+        private SystemDataFactory systemDataFactory = null;
+
         public BaseCharacter MyBaseCharacter {
             get => baseCharacter;
             set => baseCharacter = value;
@@ -25,8 +27,14 @@ namespace AnyRPG {
         public List<UnitProfile> UnitProfiles { get => unitProfiles; set => unitProfiles = value; }
         public Dictionary<UnitProfile, UnitController> ActiveUnitProfiles { get => activeUnitProfiles; set => activeUnitProfiles = value; }
 
-        public CharacterPetManager(BaseCharacter baseCharacter) {
+        public CharacterPetManager(BaseCharacter baseCharacter, SystemGameManager systemGameManager) {
             this.baseCharacter = baseCharacter;
+            Configure(systemGameManager);
+        }
+
+        public override void SetGameManagerReferences() {
+            base.SetGameManagerReferences();
+            systemDataFactory = systemGameManager.SystemDataFactory;
         }
 
         public void AddTemporaryPet(UnitProfile unitProfile, UnitController unitController) {
@@ -69,7 +77,7 @@ namespace AnyRPG {
 
         public virtual void AddPet(string unitProfileName) {
             //Debug.Log(baseCharacter.gameObject.name + ".CharacterPetManager.AddPet(" + unitProfileName + ")");
-            UnitProfile unitProfile = SystemDataFactory.Instance.GetResource<UnitProfile>(unitProfileName);
+            UnitProfile unitProfile = systemDataFactory.GetResource<UnitProfile>(unitProfileName);
             if (unitProfile != null) {
                 AddPet(unitProfile);
             } else {

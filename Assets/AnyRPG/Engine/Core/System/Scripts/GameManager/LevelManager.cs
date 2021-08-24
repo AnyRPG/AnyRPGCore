@@ -38,7 +38,6 @@ namespace AnyRPG {
 
         // game manager references
         private SystemDataFactory systemDataFactory = null;
-        private SystemConfigurationManager systemConfigurationManager = null;
         private UIManager uIManager = null;
         private AudioManager audioManager = null;
         private CameraManager cameraManager = null;
@@ -62,7 +61,6 @@ namespace AnyRPG {
         public override void SetGameManagerReferences() {
             base.SetGameManagerReferences();
             systemDataFactory = systemGameManager.SystemDataFactory;
-            systemConfigurationManager = systemGameManager.SystemConfigurationManager;
             uIManager = systemGameManager.UIManager;
             mapManager = uIManager.MapManager;
             audioManager = systemGameManager.AudioManager;
@@ -129,11 +127,13 @@ namespace AnyRPG {
         }
 
         public void SetSpawnRotationOverride(Vector3 spawnRotation) {
+            //Debug.Log("LevelManager.SetSpawnRotationOverride(" + spawnRotation + ")");
             overrideSpawnRotation = true;
             spawnRotationOverride = spawnRotation;
         }
 
         public void SetSpawnLocationOverride(Vector3 spawnLocation) {
+            //Debug.Log("LevelManager.SetSpawnLocationOverride(" + spawnLocation + ")");
             overrideSpawnLocation = true;
             spawnLocationOverride = spawnLocation;
         }

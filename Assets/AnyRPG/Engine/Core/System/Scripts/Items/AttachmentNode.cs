@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace AnyRPG {
     [System.Serializable]
-    public class AttachmentNode {
+    public class AttachmentNode : ConfiguredClass {
 
         [Tooltip("Depending on the equipment slot type (eg one hand), this object may be assigned to different actual slots (main hand vs off hand).  This relationship defines what holdable object to use for what actual slot.")]
         [SerializeField]
@@ -33,6 +33,8 @@ namespace AnyRPG {
         [SerializeField]
         private string unsheathedAttachmentName = string.Empty;
 
+        // game manager references
+        private SystemDataFactory systemDataFactory = null;
 
         public EquipmentSlotProfile MyEquipmentSlotProfile { get => equipmentSlotProfile; set => equipmentSlotProfile = value; }
         public PrefabProfile HoldableObject { get => holdableObject; set => holdableObject = value; }
@@ -40,10 +42,16 @@ namespace AnyRPG {
         public string PrimaryAttachmentName { get => primaryAttachmentName; set => primaryAttachmentName = value; }
         public string UnsheathedAttachmentName { get => unsheathedAttachmentName; set => unsheathedAttachmentName = value; }
 
-        public void SetupScriptableObjects() {
+        public override void SetGameManagerReferences() {
+            base.SetGameManagerReferences();
+            systemDataFactory = systemGameManager.SystemDataFactory;
+        }
+
+        public void SetupScriptableObjects(SystemGameManager systemGameManager) {
+            Configure(systemGameManager);
             holdableObject = null;
             if (holdableObjectName != null && holdableObjectName != string.Empty) {
-                PrefabProfile tmpHoldableObject = SystemDataFactory.Instance.GetResource<PrefabProfile>(holdableObjectName);
+                PrefabProfile tmpHoldableObject = systemDataFactory.GetResource<PrefabProfile>(holdableObjectName);
                 if (tmpHoldableObject != null) {
                     holdableObject = tmpHoldableObject;
                 } else {
@@ -54,7 +62,7 @@ namespace AnyRPG {
             }
             equipmentSlotProfile = null;
             if (equipmentSlotProfileName != null && equipmentSlotProfileName != string.Empty) {
-                EquipmentSlotProfile tmpEquipmentSlotProfile = SystemDataFactory.Instance.GetResource<EquipmentSlotProfile>(equipmentSlotProfileName);
+                EquipmentSlotProfile tmpEquipmentSlotProfile = systemDataFactory.GetResource<EquipmentSlotProfile>(equipmentSlotProfileName);
                 if (tmpEquipmentSlotProfile != null) {
                     equipmentSlotProfile = tmpEquipmentSlotProfile;
                 } else {

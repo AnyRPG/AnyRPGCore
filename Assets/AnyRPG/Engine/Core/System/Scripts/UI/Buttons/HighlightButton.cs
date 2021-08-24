@@ -38,7 +38,6 @@ namespace AnyRPG {
         protected bool CapitalizeText = false;
 
         // game manager references
-        protected SystemConfigurationManager systemConfigurationManager = null;
         protected AudioManager audioManager = null;
 
         public TextMeshProUGUI Text { get => text; }
@@ -63,7 +62,6 @@ namespace AnyRPG {
             //Debug.Log(gameObject.name + ".HighlightButton.SetGameManagerReferences(): " + GetInstanceID());
             base.SetGameManagerReferences();
 
-            systemConfigurationManager = systemGameManager.SystemConfigurationManager;
             audioManager = systemGameManager.AudioManager;
         }
 

@@ -1305,6 +1305,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   backGroundImage: {fileID: 0}
+  coloredUIElements:
+  - {fileID: 4045389512635944704}
   rewardIconPrefab: {fileID: 7470950394934575550, guid: 83ca6799ff9b76c48802e4f65abab075,
     type: 3}
   characterClassButton: {fileID: 911970283278730222}
@@ -1313,6 +1315,7 @@ MonoBehaviour:
   traitsArea: {fileID: 496779105103183865}
   traitIconsArea: {fileID: 6924231646137645056}
   confirmButton: {fileID: 6070184584543479227}
+  coloredDivider: {fileID: 4045389512635944704}
 --- !u!1 &2382909202413983825
 GameObject:
   m_ObjectHideFlags: 0

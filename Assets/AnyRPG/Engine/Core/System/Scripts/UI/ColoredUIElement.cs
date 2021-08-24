@@ -5,7 +5,7 @@ using UnityEngine;
 using UnityEngine.UI;
 
 namespace AnyRPG {
-    public class ColoredUIElement : MonoBehaviour {
+    public class ColoredUIElement : ConfiguredMonoBehaviour {
 
         //[SerializeField]
         protected Image coloredImage;
@@ -20,8 +20,8 @@ namespace AnyRPG {
         }
 
         public virtual void SetImageColor() {
-            if (SystemGameManager.Instance.SystemConfigurationManager != null && coloredImage != null) {
-                coloredImage.color = SystemGameManager.Instance.SystemConfigurationManager.DefaultUIColor;
+            if (systemConfigurationManager != null && coloredImage != null) {
+                coloredImage.color = systemConfigurationManager.DefaultUIColor;
             }
         }
 

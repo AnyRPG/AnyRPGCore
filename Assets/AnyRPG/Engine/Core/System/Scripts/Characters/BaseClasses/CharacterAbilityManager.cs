@@ -54,6 +54,10 @@ namespace AnyRPG {
 
         private bool waitingForAnimatedAbility = false;
 
+        // game manager references
+        private SystemDataFactory systemDataFactory = null;
+        private PlayerManager playerManager = null;
+        private CastTargettingManager castTargettingManager = null;
 
         public BaseCharacter BaseCharacter {
             get => baseCharacter;
@@ -138,8 +142,15 @@ namespace AnyRPG {
         // direct access for save manager so we don't miss saving abilities we know but belong to another class
         public override Dictionary<string, BaseAbility> RawAbilityList { get => abilityList; }
 
-        public CharacterAbilityManager(BaseCharacter baseCharacter) : base(baseCharacter) {
+        public CharacterAbilityManager(BaseCharacter baseCharacter, SystemGameManager systemGameManager) : base(baseCharacter, systemGameManager) {
             this.baseCharacter = baseCharacter;
+        }
+
+        public override void SetGameManagerReferences() {
+            base.SetGameManagerReferences();
+            systemDataFactory = systemGameManager.SystemDataFactory;
+            playerManager = systemGameManager.PlayerManager;
+            castTargettingManager = systemGameManager.CastTargettingManager;
         }
 
         public void Init() {
@@ -171,8 +182,7 @@ namespace AnyRPG {
 
         public void LoadAbility(string abilityName) {
             //Debug.Log(gameObject.name + ".PlayerAbilityManager.LoadAbility(" + abilityName + ")");
-            //BaseAbility ability = SystemDataFactory.Instance.GetResource<BaseAbility>(abilityName);
-            BaseAbility ability = SystemDataFactory.Instance.GetResource<BaseAbility>(abilityName);
+            BaseAbility ability = systemDataFactory.GetResource<BaseAbility>(abilityName);
             if (ability != null) {
                 // if we renamed an ability, old save data could load a null.  prevent invalid abilities from loading.
                 bool isAutoAttack = false;
@@ -266,7 +276,7 @@ namespace AnyRPG {
 
                             if (targetBone != null) {
                                 //Debug.Log("EquipmentManager.HandleWeaponSlot(): " + newItem.name + " has a physical prefab. targetbone is not null: equipSlot: " + newItem.equipSlot);
-                                GameObject newEquipmentPrefab = ObjectPooler.Instance.GetPooledObject(abilityAttachmentNode.HoldableObject.Prefab, targetBone);
+                                GameObject newEquipmentPrefab = objectPooler.GetPooledObject(abilityAttachmentNode.HoldableObject.Prefab, targetBone);
                                 //holdableObjects.Add(attachmentNode.MyHoldableObject, newEquipmentPrefab);
                                 holdableObjects.Add(abilityAttachmentNode, newEquipmentPrefab);
                                 //currentEquipmentPhysicalObjects[equipmentSlotProfile] = newEquipmentPrefab;
@@ -310,7 +320,7 @@ namespace AnyRPG {
                 if (abilityObjectPrefabs != null) {
                     foreach (GameObject abilityObject in abilityObjectPrefabs) {
                         if (abilityObject != null) {
-                            ObjectPooler.Instance.ReturnObjectToPool(abilityObject);
+                            objectPooler.ReturnObjectToPool(abilityObject);
                         }
                     }
                 }
@@ -360,8 +370,8 @@ namespace AnyRPG {
                 && baseCharacter.UnitProfile.UnitPrefabProps.AnimationProps != null) {
                 return baseCharacter.UnitProfile.UnitPrefabProps.AnimationProps;
             }
-            if (SystemGameManager.Instance.SystemConfigurationManager?.DefaultAnimationProfile != null) {
-                return SystemGameManager.Instance.SystemConfigurationManager.DefaultAnimationProfile.AnimationProps;
+            if (systemConfigurationManager.DefaultAnimationProfile != null) {
+                return systemConfigurationManager.DefaultAnimationProfile.AnimationProps;
             }
             return base.GetUnitAnimationProps();
         }
@@ -703,7 +713,7 @@ namespace AnyRPG {
             abilityCoolDownNode.MyAbilityName = baseAbility.DisplayName;
 
             // need to account for auto-attack
-            if (SystemGameManager.Instance.SystemConfigurationManager.AllowAutoAttack == false && (baseAbility is AnimatedAbility) && (baseAbility as AnimatedAbility).IsAutoAttack == true) {
+            if (systemConfigurationManager.AllowAutoAttack == false && (baseAbility is AnimatedAbility) && (baseAbility as AnimatedAbility).IsAutoAttack == true) {
                 abilityCoolDownNode.MyRemainingCoolDown = abilityCoolDown;
             } else {
                 abilityCoolDownNode.MyRemainingCoolDown = abilityCoolDown;
@@ -844,7 +854,7 @@ namespace AnyRPG {
             if (baseCharacter != null &&
                 baseCharacter.UnitController != null &&
                 baseCharacter.UnitController.MasterUnit != null &&
-                baseCharacter.UnitController.MasterUnit == (SystemGameManager.Instance.PlayerManager.MyCharacter as BaseCharacter)) {
+                baseCharacter.UnitController.MasterUnit == (playerManager.MyCharacter as BaseCharacter)) {
 
                 return true;
             }
@@ -861,7 +871,7 @@ namespace AnyRPG {
         }
 
         public void ApplySavedStatusEffects(StatusEffectSaveData statusEffectSaveData) {
-            ApplyStatusEffect(SystemDataFactory.Instance.GetResource<AbilityEffect>(statusEffectSaveData.MyName), statusEffectSaveData.remainingSeconds);
+            ApplyStatusEffect(systemDataFactory.GetResource<AbilityEffect>(statusEffectSaveData.MyName), statusEffectSaveData.remainingSeconds);
         }
 
         public void RemoveCapabilityProviderTraits(List<StatusEffect> statusEffects) {
@@ -987,13 +997,13 @@ namespace AnyRPG {
         public void DeActivateTargettingMode() {
             //Debug.Log("CharacterAbilityManager.DeActivateTargettingMode()");
             targettingModeActive = false;
-            SystemGameManager.Instance.CastTargettingManager.DisableProjector();
+            castTargettingManager.DisableProjector();
         }
 
         public void UpdateAbilityList(int newLevel) {
             //Debug.Log(baseCharacter.gameObject.name + ".CharacterAbilityManager.UpdateAbilityList(). length: " + abilityList.Count);
 
-            CapabilityConsumerSnapshot capabilityConsumerSnapshot = new CapabilityConsumerSnapshot(baseCharacter);
+            CapabilityConsumerSnapshot capabilityConsumerSnapshot = new CapabilityConsumerSnapshot(baseCharacter, systemGameManager);
 
             LearnCapabilityProviderAbilities(capabilityConsumerSnapshot.GetAbilityList());
         }
@@ -1214,7 +1224,7 @@ namespace AnyRPG {
         /// <param name="abilityName"></param>
         public override bool BeginAbility(string abilityName) {
             //Debug.Log(baseCharacter.gameObject.name + "CharacterAbilitymanager.BeginAbility(" + (abilityName == null ? "null" : abilityName) + ")");
-            BaseAbility baseAbility = SystemDataFactory.Instance.GetResource<BaseAbility>(abilityName);
+            BaseAbility baseAbility = systemDataFactory.GetResource<BaseAbility>(abilityName);
             if (baseAbility != null) {
                 return BeginAbility(baseAbility);
             }
@@ -1340,7 +1350,7 @@ namespace AnyRPG {
 
         protected bool BeginAbilityCommon(BaseAbility ability, Interactable target, bool playerInitiated = false) {
             //Debug.Log(baseCharacter.gameObject.name + ".CharacterAbilityManager.BeginAbilityCommon(" + (ability == null ? "null" : ability.DisplayName) + ", " + (target == null ? "null" : target.gameObject.name) + ")");
-            BaseAbility usedAbility = SystemDataFactory.Instance.GetResource<BaseAbility>(ability.DisplayName);
+            BaseAbility usedAbility = systemDataFactory.GetResource<BaseAbility>(ability.DisplayName);
             if (usedAbility == null) {
                 Debug.LogError("CharacterAbilityManager.BeginAbilityCommon(" + (ability == null ? "null" : ability.DisplayName) + ", " + (target == null ? "null" : target.name) + ") NO ABILITY FOUND");
                 return false;
@@ -1432,7 +1442,7 @@ namespace AnyRPG {
                 } else {
                     // return false so that items in the inventory don't get used if this came from a castable item
                     return false;
-                    //SystemGameManager.Instance.LogManager.WriteCombatMessage("A cast was already in progress WE SHOULD NOT BE HERE BECAUSE WE CHECKED FIRST! iscasting: " + isCasting + "; currentcast==null? " + (currentCast == null));
+                    //systemGameManager.LogManager.WriteCombatMessage("A cast was already in progress WE SHOULD NOT BE HERE BECAUSE WE CHECKED FIRST! iscasting: " + isCasting + "; currentcast==null? " + (currentCast == null));
                     // unless.... we got here from the crafting queue, which launches the next item as the last step of the currently in progress cast
                     //Debug.Log(baseCharacter.gameObject.name + ".CharacterAbilityManager.BeginAbilityCommon(): A cast was already in progress!");
                 }
@@ -1597,7 +1607,7 @@ namespace AnyRPG {
             }
 
             // cast the system manager version so we can track globally the spell cooldown
-            SystemDataFactory.Instance.GetResource<BaseAbility>(ability.DisplayName).Cast(baseCharacter, finalTarget, abilityEffectContext);
+            systemDataFactory.GetResource<BaseAbility>(ability.DisplayName).Cast(baseCharacter, finalTarget, abilityEffectContext);
             //ability.Cast(MyBaseCharacter.MyCharacterUnit.gameObject, finalTarget);
             OnPerformAbility(ability);
         }
@@ -1620,7 +1630,7 @@ namespace AnyRPG {
             // adding new code to require some movement distance to prevent gravity while standing still from triggering this
             if (BaseCharacter.UnitController.ApparentVelocity > 0.1f) {
                 //Debug.Log("CharacterAbilityManager.HandleManualMovement(): stop casting");
-                if (currentCastAbility != null && currentCastAbility.GetTargetOptions(baseCharacter).RequiresGroundTarget == true && SystemGameManager.Instance.CastTargettingManager.ProjectorIsActive() == true) {
+                if (currentCastAbility != null && currentCastAbility.GetTargetOptions(baseCharacter).RequiresGroundTarget == true && castTargettingManager.ProjectorIsActive() == true) {
                     // do nothing
                     //Debug.Log("CharacterAbilityManager.HandleManualMovement(): not cancelling casting because we have a ground target active");
                 } else {
@@ -1691,7 +1701,6 @@ namespace AnyRPG {
             if (currentCastAbility != null) {
                 AudioClip audioClip = currentCastAbility.GetAnimationHitSound();
                 if (audioClip != null) {
-                    //SystemGameManager.Instance.AudioManager.PlayEffect(ability.MyCastingAudioClip);
                     baseCharacter.UnitController.UnitComponentController.PlayEffect(audioClip);
                 }
             }
@@ -1726,7 +1735,7 @@ namespace AnyRPG {
         public override void ProcessAbilityCoolDowns(AnimatedAbility baseAbility, float animationLength, float abilityCoolDown) {
             base.ProcessAbilityCoolDowns(baseAbility, animationLength, abilityCoolDown);
             if (baseCharacter?.UnitController != null && baseCharacter.UnitController.UnitControllerMode == UnitControllerMode.Player) {
-                if (SystemGameManager.Instance.SystemConfigurationManager.AllowAutoAttack == true && baseAbility.IsAutoAttack) {
+                if (systemConfigurationManager.AllowAutoAttack == true && baseAbility.IsAutoAttack) {
                     return;
                 }
             }

@@ -42,8 +42,6 @@ namespace AnyRPG {
         [SerializeField]
         private AudioClip uiClickSound = null;
 
-        private bool audioInitialized = false;
-
         private bool musicPaused = false;
 
         public string MasterVolume { get => masterVolume; }
@@ -60,7 +58,7 @@ namespace AnyRPG {
         public AudioSource VoiceAudioSource { get => voiceAudioSource; set => voiceAudioSource = value; }
 
         public override void Configure(SystemGameManager systemGameManager) {
-            //Debug.Log("AudioManager.Start()");
+            //Debug.Log("AudioManager.Configure()");
             base.Configure(systemGameManager);
 
             InitializeVolume();
@@ -68,11 +66,7 @@ namespace AnyRPG {
 
         private void InitializeVolume() {
             //Debug.Log("AudioManager.InitializeVolume()");
-            if (audioInitialized) {
-                return;
-            }
             SetDefaultVolume();
-            audioInitialized = true;
         }
 
         private void SetDefaultVolume() {
@@ -173,14 +167,13 @@ namespace AnyRPG {
         }
 
         public void PlayAmbientSound(AudioClip audioClip) {
-            InitializeVolume();
             ambientAudioSource.clip = audioClip;
             ambientAudioSource.loop = true;
             ambientAudioSource.Play();
         }
 
         public void PlayMusic(AudioClip audioClip) {
-            InitializeVolume();
+            //Debug.Log("AudioManager.PlayMusic()");
             if (musicAudioSource.clip == audioClip && musicPaused == true) {
                 UnPauseMusic();
                 return;
@@ -195,7 +188,6 @@ namespace AnyRPG {
             if (audioClip == null) {
                 return;
             }
-            InitializeVolume();
             effectsAudioSource.PlayOneShot(audioClip);
         }
 
@@ -203,7 +195,6 @@ namespace AnyRPG {
             if (audioClip == null) {
                 return;
             }
-            InitializeVolume();
             uiAudioSource.PlayOneShot(audioClip);
         }
 
@@ -211,7 +202,6 @@ namespace AnyRPG {
             if (audioClip == null) {
                 return;
             }
-            InitializeVolume();
             voiceAudioSource.PlayOneShot(audioClip);
         }
 

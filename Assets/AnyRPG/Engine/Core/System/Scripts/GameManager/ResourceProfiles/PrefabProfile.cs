@@ -119,11 +119,11 @@ namespace AnyRPG {
         public Vector3 PickupRotation { get => pickupRotation; set => pickupRotation = value; }
         public Vector3 PickupScale { get => pickupScale; set => pickupScale = value; }
 
-        public override void SetupScriptableObjects() {
-            base.SetupScriptableObjects();
+        public override void SetupScriptableObjects(SystemGameManager systemGameManager) {
+            base.SetupScriptableObjects(systemGameManager);
 
             if (sheathAudioProfileName != null && sheathAudioProfileName != string.Empty) {
-                AudioProfile tmpAudioProfile = SystemDataFactory.Instance.GetResource<AudioProfile>(sheathAudioProfileName);
+                AudioProfile tmpAudioProfile = systemDataFactory.GetResource<AudioProfile>(sheathAudioProfileName);
                 if (tmpAudioProfile != null) {
                     sheathAudioProfile = tmpAudioProfile;
                 } else {
@@ -132,7 +132,7 @@ namespace AnyRPG {
             }
 
             if (unsheathAudioProfileName != null && unsheathAudioProfileName != string.Empty) {
-                AudioProfile tmpAudioProfile = SystemDataFactory.Instance.GetResource<AudioProfile>(unsheathAudioProfileName);
+                AudioProfile tmpAudioProfile = systemDataFactory.GetResource<AudioProfile>(unsheathAudioProfileName);
                 if (tmpAudioProfile != null) {
                     unsheathAudioProfile = tmpAudioProfile;
                 } else {

@@ -24,7 +24,7 @@ namespace AnyRPG {
 
         public override void CancelEffect(BaseCharacter targetCharacter) {
             //Debug.Log(displayName +  ".MountEffect.CancelEffect(" + (targetCharacter != null ? targetCharacter.name : "null") + ")");
-            if (SystemGameManager.Instance.PlayerManager == null) {
+            if (SystemGameManager.IsShuttingDown == true) {
                 // game is in the middle of exiting
                 return;
             }
@@ -37,7 +37,7 @@ namespace AnyRPG {
         }
 
         public override bool CanCast() {
-            if (SystemGameManager.Instance.LevelManager.GetActiveSceneNode()?.AllowMount == false) {
+            if (levelManager.GetActiveSceneNode()?.AllowMount == false) {
                 //Debug.Log(DisplayName + ".MountEffect.CanCast(): scene does not allow mount");
                 return false;
             }
@@ -63,10 +63,10 @@ namespace AnyRPG {
             return returnObjects;
         }
 
-        public override void SetupScriptableObjects() {
-            base.SetupScriptableObjects();
+        public override void SetupScriptableObjects(SystemGameManager systemGameManager) {
+            base.SetupScriptableObjects(systemGameManager);
             if (unitProfileName != null && unitProfileName != string.Empty) {
-                UnitProfile tmpUnitProfile = SystemDataFactory.Instance.GetResource<UnitProfile>(unitProfileName);
+                UnitProfile tmpUnitProfile = systemDataFactory.GetResource<UnitProfile>(unitProfileName);
                 if (tmpUnitProfile != null) {
                     unitProfile = tmpUnitProfile;
                 } else {

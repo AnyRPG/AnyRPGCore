@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 namespace AnyRPG {
-    public class Spawnable : MonoBehaviour, IPrerequisiteOwner {
+    public class Spawnable : AutoConfiguredMonoBehaviour, IPrerequisiteOwner {
 
         [Header("Spawn Object")]
 
@@ -44,6 +44,12 @@ namespace AnyRPG {
         // subscriptions step tracker
         protected bool eventSubscriptionsInitialized = false;
 
+        // game manager references
+
+        protected PlayerManager playerManager = null;
+        protected SystemDataFactory systemDataFactory = null;
+        protected ObjectPooler objectPooler = null;
+
         public GameObject MySpawnReference { get => spawnReference; set => spawnReference = value; }
         public PrefabProfile MyPrefabProfile { get => prefabProfile; set => prefabProfile = value; }
 
@@ -60,24 +66,24 @@ namespace AnyRPG {
             }
         }
 
-        protected virtual void OnEnable() {
-            //Debug.Log(gameObject.name + ".Spawnable.OnEnable()");
-            if (SystemGameManager.Instance == null) {
-                Debug.LogError(gameObject.name + ": SystemGameManager not found. Is the Game Manager in the scene?");
-                return;
-            }
-            if (initialized == true) {
-                // this unit may have been disabled by a timeline controller.  If so, none of this is necessary
-                return;
-            }
+        public override void Configure(SystemGameManager systemGameManager) {
+            base.Configure(systemGameManager);
 
             GetComponentReferences();
             SetupScriptableObjects();
             CreateEventSubscriptions();
-            if (SystemGameManager.Instance.PlayerManager.PlayerUnitSpawned == false) {
+            if (playerManager.PlayerUnitSpawned == false) {
                 // this allows us to spawn things with no prerequisites that don't need to check against the player
                 PrerequisiteCheck();
             }
+        }
+
+        public override void SetGameManagerReferences() {
+            base.SetGameManagerReferences();
+
+            playerManager = systemGameManager.PlayerManager;
+            systemDataFactory = systemGameManager.SystemDataFactory;
+            objectPooler = systemGameManager.ObjectPooler;
         }
 
         public virtual void Init() {
@@ -87,7 +93,7 @@ namespace AnyRPG {
             ProcessInit();
 
             // moved here from CreateEventSubscriptions.  Init should have time to occur before processing this
-            if (SystemGameManager.Instance.PlayerManager.PlayerUnitSpawned) {
+            if (playerManager.PlayerUnitSpawned) {
                 //Debug.Log(gameObject.name + ".Spawnable.CreateEventSubscriptions(): Player Unit is spawned.  Handling immediate spawn!");
                 ProcessPlayerUnitSpawn();
             } else {
@@ -103,6 +109,11 @@ namespace AnyRPG {
 
         protected virtual void Start() {
             //Debug.Log(gameObject.name + ".Spawnable.Start()");
+            if (systemGameManager == null) {
+                Debug.LogError(gameObject.name + ": SystemGameManager not found. Is the Game Manager in the scene?");
+                return;
+            }
+
             Init();
         }
 
@@ -113,7 +124,6 @@ namespace AnyRPG {
             }
             SystemEventManager.StartListening("OnLevelUnload", HandleLevelUnload);
             SystemEventManager.StartListening("OnPlayerUnitSpawn", HandlePlayerUnitSpawn);
-            //SystemGameManager.Instance.EventManager.OnPrerequisiteUpdated += HandlePrerequisiteUpdates;
             eventSubscriptionsInitialized = true;
         }
 
@@ -123,10 +133,7 @@ namespace AnyRPG {
                 return;
             }
             SystemEventManager.StopListening("OnLevelUnload", HandleLevelUnload);
-            if (SystemGameManager.Instance.SystemEventManager != null) {
-                //SystemGameManager.Instance.EventManager.OnPrerequisiteUpdated -= HandlePrerequisiteUpdates;
-                SystemEventManager.StopListening("OnPlayerUnitSpawn", HandlePlayerUnitSpawn);
-            }
+            SystemEventManager.StopListening("OnPlayerUnitSpawn", HandlePlayerUnitSpawn);
             eventSubscriptionsInitialized = false;
         }
 
@@ -248,7 +255,7 @@ namespace AnyRPG {
                     usedRotation = prefabProfile.PickupRotation;
                 }
 
-                spawnReference = ObjectPooler.Instance.GetPooledObject(prefabProfile.Prefab, transform.TransformPoint(usedPosition), transform.localRotation, transform);
+                spawnReference = objectPooler.GetPooledObject(prefabProfile.Prefab, transform.TransformPoint(usedPosition), transform.localRotation, transform);
 
                 // updated scale from normal to sheathed this allows pickup nodes for things you can't equip to show a different size in hand than on the ground
                 spawnReference.transform.localScale = usedScale;
@@ -274,7 +281,7 @@ namespace AnyRPG {
             //Debug.Log(gameObject.name + ".Spawnable.DestroySpawn()");
             if (spawnReference != null) {
                 //Debug.Log(gameObject.name + ".Spawnable.DestroySpawn(): destroying spawn");
-                ObjectPooler.Instance.ReturnObjectToPool(spawnReference);
+                objectPooler.ReturnObjectToPool(spawnReference);
                 spawnReference = null;
             }
         }
@@ -313,7 +320,7 @@ namespace AnyRPG {
         public virtual void SetupScriptableObjects() {
             //Debug.Log(gameObject.name + ".Spawnable.SetupScriptableObjects()");
             if (prefabProfileName != null && prefabProfileName != string.Empty) {
-                PrefabProfile tmpPrefabProfile = SystemDataFactory.Instance.GetResource<PrefabProfile>(prefabProfileName);
+                PrefabProfile tmpPrefabProfile = systemDataFactory.GetResource<PrefabProfile>(prefabProfileName);
                 if (tmpPrefabProfile != null && tmpPrefabProfile.Prefab != null) {
                     prefabProfile = tmpPrefabProfile;
                 } else {
@@ -324,7 +331,7 @@ namespace AnyRPG {
             if (prerequisiteConditions != null) {
                 foreach (PrerequisiteConditions tmpPrerequisiteConditions in prerequisiteConditions) {
                     if (tmpPrerequisiteConditions != null) {
-                        tmpPrerequisiteConditions.SetupScriptableObjects(this);
+                        tmpPrerequisiteConditions.SetupScriptableObjects(systemGameManager, this);
                     }
                 }
             }

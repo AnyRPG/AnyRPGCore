@@ -4,17 +4,30 @@ using System.Collections.Generic;
 using UnityEngine;
 
 namespace AnyRPG {
-    public class CharacterSkillManager {
+    public class CharacterSkillManager : ConfiguredClass {
 
         private BaseCharacter baseCharacter;
 
         private Dictionary<string, Skill> skillList = new Dictionary<string, Skill>();
 
+        // game manager references
+        private SystemDataFactory systemDataFactory = null;
+        protected PlayerManager playerManager = null;
+        protected SystemEventManager systemEventManager = null;
+
         public Dictionary<string, Skill> MySkillList { get => skillList; }
 
         //public List<string> MySkillList { get => skillList;}
-        public CharacterSkillManager(BaseCharacter baseCharacter) {
+        public CharacterSkillManager(BaseCharacter baseCharacter, SystemGameManager systemGameManager) {
             this.baseCharacter = baseCharacter;
+            Configure(systemGameManager);
+        }
+
+        public override void SetGameManagerReferences() {
+            base.SetGameManagerReferences();
+            systemDataFactory = systemGameManager.SystemDataFactory;
+            playerManager = systemGameManager.PlayerManager;
+            systemEventManager = systemGameManager.SystemEventManager;
         }
 
         public void Init() {
@@ -23,7 +36,7 @@ namespace AnyRPG {
 
         public void UpdateSkillList(int newLevel) {
             //Debug.Log("CharacterSkillManager.UpdateSkillList()");
-            foreach (Skill skill in SystemDataFactory.Instance.GetResourceList<Skill>()) {
+            foreach (Skill skill in systemDataFactory.GetResourceList<Skill>()) {
                 if (!HasSkill(skill) && skill.RequiredLevel <= newLevel && skill.AutoLearn == true) {
                     LearnSkill(skill);
                 }
@@ -45,13 +58,13 @@ namespace AnyRPG {
                 foreach (BaseAbility ability in newSkill.MyAbilityList) {
                     baseCharacter.CharacterAbilityManager.LearnAbility(ability);
                 }
-                foreach (Recipe recipe in SystemDataFactory.Instance.GetResourceList<Recipe>()) {
+                foreach (Recipe recipe in systemDataFactory.GetResourceList<Recipe>()) {
                     if (baseCharacter.CharacterStats.Level >= recipe.RequiredLevel && recipe.AutoLearn == true && newSkill.MyAbilityList.Contains(recipe.CraftAbility)) {
-                        SystemGameManager.Instance.PlayerManager.MyCharacter.CharacterRecipeManager.LearnRecipe(recipe);
+                        playerManager.MyCharacter.CharacterRecipeManager.LearnRecipe(recipe);
                     }
                 }
 
-                SystemGameManager.Instance.SystemEventManager.NotifyOnSkillListChanged(newSkill);
+                systemEventManager.NotifyOnSkillListChanged(newSkill);
             }
         }
 
@@ -59,7 +72,7 @@ namespace AnyRPG {
             //Debug.Log("CharacterSkillManager.LoadSkill()");
             string keyName = SystemDataFactory.PrepareStringForMatch(skillName);
             if (!skillList.ContainsKey(keyName)) {
-                skillList[keyName] = SystemDataFactory.Instance.GetResource<Skill>(skillName);
+                skillList[keyName] = systemDataFactory.GetResource<Skill>(skillName);
             }
         }
 

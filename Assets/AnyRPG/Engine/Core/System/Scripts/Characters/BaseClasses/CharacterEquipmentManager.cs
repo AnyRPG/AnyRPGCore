@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 namespace AnyRPG {
-    public class CharacterEquipmentManager {
+    public class CharacterEquipmentManager : ConfiguredClass {
 
         public System.Action<Equipment, Equipment, int> OnEquipmentChanged = delegate { };
 
@@ -17,11 +17,20 @@ namespace AnyRPG {
         // keep track of holdable objects to be used during weapon attacks such as arrows, glowing hand effects, weapon trails, etc
         private List<AbilityAttachmentNode> weaponHoldableObjects = new List<AbilityAttachmentNode>();
 
+        // game manager references
+        private SystemDataFactory systemDataFactory = null;
+
         public Dictionary<EquipmentSlotProfile, Equipment> CurrentEquipment { get => currentEquipment; set => currentEquipment = value; }
         public List<AbilityAttachmentNode> WeaponHoldableObjects { get => weaponHoldableObjects; }
 
-        public CharacterEquipmentManager (BaseCharacter baseCharacter) {
+        public CharacterEquipmentManager (BaseCharacter baseCharacter, SystemGameManager systemGameManager) {
             this.baseCharacter = baseCharacter;
+            Configure(systemGameManager);
+        }
+
+        public override void SetGameManagerReferences() {
+            base.SetGameManagerReferences();
+            systemDataFactory = systemGameManager.SystemDataFactory;
         }
 
         public void HandleCapabilityConsumerChange() {
@@ -128,7 +137,7 @@ namespace AnyRPG {
         public List<EquipmentSlotProfile> GetCompatibleSlotProfiles(EquipmentSlotType equipmentSlotType) {
             List<EquipmentSlotProfile> returnValue = new List<EquipmentSlotProfile>();
             if (equipmentSlotType != null) {
-                foreach (EquipmentSlotProfile equipmentSlotProfile in SystemDataFactory.Instance.GetResourceList<EquipmentSlotProfile>()) {
+                foreach (EquipmentSlotProfile equipmentSlotProfile in systemDataFactory.GetResourceList<EquipmentSlotProfile>()) {
                     if (equipmentSlotProfile.MyEquipmentSlotTypeList != null && equipmentSlotProfile.MyEquipmentSlotTypeList.Contains(equipmentSlotType)) {
                         returnValue.Add(equipmentSlotProfile);
                     }

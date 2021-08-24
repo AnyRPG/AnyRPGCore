@@ -26,7 +26,7 @@ namespace AnyRPG {
         public bool Loop { get => loop; set => loop = value; }
 
         public override InteractableOptionComponent GetInteractableOption(Interactable interactable, InteractableOption interactableOption = null) {
-            InteractableOptionComponent returnValue = new AnimatedObjectComponent(interactable, this);
+            InteractableOptionComponent returnValue = new AnimatedObjectComponent(interactable, this, systemGameManager);
             if (interactableOption != null) {
                 interactableOption.SetComponent(returnValue);
             }

@@ -8,7 +8,7 @@ namespace AnyRPG {
 
         public PressureSwitchProps PressureSwitchProps { get => interactableOptionProps as PressureSwitchProps; }
 
-        public PressureSwitchComponent(Interactable interactable, PressureSwitchProps interactableOptionProps) : base(interactable, interactableOptionProps) {
+        public PressureSwitchComponent(Interactable interactable, PressureSwitchProps interactableOptionProps, SystemGameManager systemGameManager) : base(interactable, interactableOptionProps, systemGameManager) {
         }
 
         public override bool Interact(CharacterUnit source, int optionIndex = 0) {
@@ -39,7 +39,7 @@ namespace AnyRPG {
                 //Debug.Log(gameObject.name + "Weight: " + totalWeight);
                 base.Interact(source, optionIndex);
             } else {
-                SystemGameManager.Instance.UIManager.interactionWindow.CloseWindow();
+                uIManager.interactionWindow.CloseWindow();
             }
 
             return false;

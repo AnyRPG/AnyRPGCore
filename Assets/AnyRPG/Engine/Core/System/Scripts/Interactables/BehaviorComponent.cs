@@ -15,11 +15,19 @@ namespace AnyRPG {
 
         private List<BehaviorProfile> behaviorList = new List<BehaviorProfile>();
 
-        public BehaviorComponent(Interactable interactable, BehaviorProps interactableOptionProps) : base(interactable, interactableOptionProps) {
+        // game manager references
+        private SystemDataFactory systemDataFactory = null;
+
+        public BehaviorComponent(Interactable interactable, BehaviorProps interactableOptionProps, SystemGameManager systemGameManager) : base(interactable, interactableOptionProps, systemGameManager) {
             if ((interactable as UnitController) is UnitController) {
                 unitController = (interactable as UnitController);
             }
             InitBehaviors();
+        }
+
+        public override void SetGameManagerReferences() {
+            base.SetGameManagerReferences();
+            systemDataFactory = systemGameManager.SystemDataFactory;
         }
 
         public static BehaviorComponent GetBehaviorComponent(Interactable searchInteractable) {
@@ -49,12 +57,7 @@ namespace AnyRPG {
             if (Props.BehaviorNames != null) {
                 foreach (string behaviorName in Props.BehaviorNames) {
                     BehaviorProfile tmpBehaviorProfile = null;
-                    // monitor for breakage - behavior copies are theoretically no longer necessary because behavior players now track state individually
-                    //if (Props.UseBehaviorCopy == true) {
-                        //tmpBehaviorProfile = SystemBehaviorProfileManager.Instance.GetNewResource(behaviorName);
-                    //} else {
-                        tmpBehaviorProfile = SystemDataFactory.Instance.GetResource<BehaviorProfile>(behaviorName);
-                    //}
+                    tmpBehaviorProfile = systemDataFactory.GetResource<BehaviorProfile>(behaviorName);
                     if (tmpBehaviorProfile != null) {
                         unitController.BehaviorController.AddToBehaviorList(tmpBehaviorProfile);
                     }
@@ -95,7 +98,7 @@ namespace AnyRPG {
 
         public override void StopInteract() {
             base.StopInteract();
-            SystemGameManager.Instance.UIManager.dialogWindow.CloseWindow();
+            uIManager.dialogWindow.CloseWindow();
         }
 
         public override bool HasMiniMapText() {

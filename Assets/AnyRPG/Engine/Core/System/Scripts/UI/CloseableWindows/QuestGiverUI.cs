@@ -9,20 +9,6 @@ using UnityEngine.UI;
 namespace AnyRPG {
     public class QuestGiverUI : WindowContentController {
 
-        #region Singleton
-        private static QuestGiverUI instance;
-
-        public static QuestGiverUI Instance {
-            get {
-                if (instance == null) {
-                    instance = FindObjectOfType<QuestGiverUI>();
-                }
-
-                return instance;
-            }
-        }
-        #endregion
-
         private IQuestGiver questGiver;
 
         [SerializeField]
@@ -93,6 +79,7 @@ namespace AnyRPG {
         private LogManager logManager = null;
         private InventoryManager inventoryManager = null;
         private SystemItemManager systemItemManager = null;
+        private CurrencyConverter currencyConverter = null;
 
         public QuestGiverQuestScript SelectedQuestGiverQuestScript { get => selectedQuestGiverQuestScript; set => selectedQuestGiverQuestScript = value; }
         //public Interactable MyInteractable { get => interactable; set => interactable = value; }
@@ -118,6 +105,7 @@ namespace AnyRPG {
             logManager = systemGameManager.LogManager;
             inventoryManager = systemGameManager.InventoryManager;
             systemItemManager = systemGameManager.SystemItemManager;
+            currencyConverter = systemGameManager.CurrencyConverter;
         }
 
         public void ToggleShowAllQuests(bool showAllQuests) {
@@ -436,7 +424,7 @@ namespace AnyRPG {
             }
 
             // DO THIS NOW SO NO NULL REFERENCES WHEN IT GETS DESELECTED DURING THIS PROCESS
-            //Quest questToComplete = SystemDataFactory.Instance.GetResource<Quest>(currentQuestName);
+            //Quest questToComplete = systemDataFactory.GetResource<Quest>(currentQuestName);
 
             //questDetailsArea.myreward
 
@@ -462,10 +450,10 @@ namespace AnyRPG {
             // currency rewards
             List<CurrencyNode> currencyNodes = currentQuest.GetCurrencyReward();
             foreach (CurrencyNode currencyNode in currencyNodes) {
-                playerManager.MyCharacter.CharacterCurrencyManager.AddCurrency(currencyNode.currency, currencyNode.MyAmount);
+                playerManager.MyCharacter.CharacterCurrencyManager.AddCurrency(currencyNode.currency, currencyNode.Amount);
                 List<CurrencyNode> tmpCurrencyNode = new List<CurrencyNode>();
                 tmpCurrencyNode.Add(currencyNode);
-                logManager.WriteSystemMessage("Gained " + CurrencyConverter.RecalculateValues(tmpCurrencyNode, false).Value.Replace("\n", ", "));
+                logManager.WriteSystemMessage("Gained " + currencyConverter.RecalculateValues(tmpCurrencyNode, false).Value.Replace("\n", ", "));
             }
 
             // item rewards first in case not enough space in inventory
@@ -526,7 +514,7 @@ namespace AnyRPG {
             }
 
             // xp reward
-            playerManager.MyCharacter.CharacterStats.GainXP(LevelEquations.GetXPAmountForQuest(playerManager.MyCharacter.CharacterStats.Level, currentQuest));
+            playerManager.MyCharacter.CharacterStats.GainXP(LevelEquations.GetXPAmountForQuest(playerManager.MyCharacter.CharacterStats.Level, currentQuest, systemConfigurationManager));
 
             UpdateButtons(currentQuest);
 

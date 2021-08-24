@@ -3,7 +3,7 @@ using UnityEngine;
 using UnityEngine.AI;
 
 namespace AnyRPG {
-    public class UnitModelController {
+    public class UnitModelController : ConfiguredClass {
 
         public event System.Action OnModelReady = delegate { };
 
@@ -18,15 +18,26 @@ namespace AnyRPG {
         private UMAModelController umaModelController = null;
         private MecanimModelController mecanimModelController = null;
 
+        // game manager references
+        private ObjectPooler objectPooler = null;
+        private UIManager uIManager = null;
+
         public UMAModelController UMAModelController { get => umaModelController; }
         public MecanimModelController MecanimModelController { get => mecanimModelController; }
         public bool ModelReady { get => modelReady; }
 
-        public UnitModelController(UnitController unitController) {
+        public UnitModelController(UnitController unitController, SystemGameManager systemGameManager) {
             this.unitController = unitController;
+            Configure(systemGameManager);
 
-            umaModelController = new UMAModelController(unitController, this);
-            mecanimModelController = new MecanimModelController(unitController);
+            umaModelController = new UMAModelController(unitController, this, systemGameManager);
+            mecanimModelController = new MecanimModelController(unitController, systemGameManager);
+        }
+
+        public override void SetGameManagerReferences() {
+            base.SetGameManagerReferences();
+            objectPooler = systemGameManager.ObjectPooler;
+            uIManager = systemGameManager.UIManager;
         }
 
         public bool isBuilding() {
@@ -186,7 +197,7 @@ namespace AnyRPG {
             mecanimModelController.DespawnModel();
             umaModelController.DespawnModel();
             if (unitController.UnitProfile?.UnitPrefabProps?.ModelPrefab != null) {
-                ObjectPooler.Instance.ReturnObjectToPool(unitModel);
+                objectPooler.ReturnObjectToPool(unitModel);
             }
         }
 
@@ -204,7 +215,7 @@ namespace AnyRPG {
                 }
                 //Debug.Log(gameObject.name + ".UnitController.SetDefaultLayer(): unitModel: " + (unitModel == null ? "null" : unitModel.name));
                 if (unitModel != null && !IsInLayerMask(unitModel.layer, finalmask)) {
-                    SystemGameManager.Instance.UIManager.SetLayerRecursive(unitModel, defaultLayer);
+                    uIManager.SetLayerRecursive(unitModel, defaultLayer);
                     //Debug.Log(gameObject.name + ".UnitController.SetDefaultLayer(): model was not set to correct layer: " + layerName + ". Setting automatically");
                 }
             }

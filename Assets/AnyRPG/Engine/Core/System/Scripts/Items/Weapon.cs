@@ -156,7 +156,7 @@ namespace AnyRPG {
                 return damagePerSecond;
             }
             return Mathf.Ceil(Mathf.Clamp(
-                (float)GetItemLevel(characterLevel) * (SystemGameManager.Instance.SystemConfigurationManager.WeaponDPSBudgetPerLevel * GetItemQualityNumber(usedItemQuality) * EquipmentSlotType.MyStatWeight),
+                (float)GetItemLevel(characterLevel) * (systemConfigurationManager.WeaponDPSBudgetPerLevel * GetItemQualityNumber(usedItemQuality) * EquipmentSlotType.MyStatWeight),
                 0f,
                 Mathf.Infinity
                 ));
@@ -167,7 +167,7 @@ namespace AnyRPG {
             List<string> abilitiesList = new List<string>();
 
             if (useDamagePerSecond) {
-                abilitiesList.Add(string.Format("Damage Per Second: {0}", GetDamagePerSecond(SystemGameManager.Instance.PlayerManager.MyCharacter.CharacterStats.Level, usedItemQuality)));
+                abilitiesList.Add(string.Format("Damage Per Second: {0}", GetDamagePerSecond(playerManager.MyCharacter.CharacterStats.Level, usedItemQuality)));
             }
             if (onHitEffectList != null) {
                 foreach (AbilityEffect abilityEffect in onHitEffectList) {
@@ -181,7 +181,7 @@ namespace AnyRPG {
 
             if (weaponSkill != null) {
                 string colorString = "white";
-                if (!CanEquip(SystemGameManager.Instance.PlayerManager.ActiveCharacter)) {
+                if (!CanEquip(playerManager.ActiveCharacter)) {
                     colorString = "red";
                 }
                 abilitiesString += string.Format("\n<color={0}>Required Skill: {1}</color>", colorString, weaponSkill.DisplayName);
@@ -210,13 +210,13 @@ namespace AnyRPG {
         }
 
 
-        public override void SetupScriptableObjects() {
-            base.SetupScriptableObjects();
+        public override void SetupScriptableObjects(SystemGameManager systemGameManager) {
+            base.SetupScriptableObjects(systemGameManager);
 
             if (onHitEffects != null) {
                 foreach (string onHitEffectName in onHitEffects) {
                     if (onHitEffectName != null && onHitEffectName != string.Empty) {
-                        AbilityEffect abilityEffect = SystemDataFactory.Instance.GetResource<AbilityEffect>(onHitEffectName);
+                        AbilityEffect abilityEffect = systemDataFactory.GetResource<AbilityEffect>(onHitEffectName);
                         if (abilityEffect != null) {
                             onHitEffectList.Add(abilityEffect);
                         } else {
@@ -231,7 +231,7 @@ namespace AnyRPG {
             if (defaultHitEffects != null) {
                 foreach (string defaultHitEffectName in defaultHitEffects) {
                     if (defaultHitEffectName != null && defaultHitEffectName != string.Empty) {
-                        AbilityEffect abilityEffect = SystemDataFactory.Instance.GetResource<AbilityEffect>(defaultHitEffectName);
+                        AbilityEffect abilityEffect = systemDataFactory.GetResource<AbilityEffect>(defaultHitEffectName);
                         if (abilityEffect != null) {
                             defaultHitEffectList.Add(abilityEffect);
                         } else {
@@ -246,7 +246,7 @@ namespace AnyRPG {
 
             animationProfile = null;
             if (animationProfileName != null && animationProfileName != string.Empty) {
-                AnimationProfile tmpAnimationProfile = SystemDataFactory.Instance.GetResource<AnimationProfile>(animationProfileName);
+                AnimationProfile tmpAnimationProfile = systemDataFactory.GetResource<AnimationProfile>(animationProfileName);
                 if (tmpAnimationProfile != null) {
                     animationProfile = tmpAnimationProfile;
                 } else {
@@ -255,7 +255,7 @@ namespace AnyRPG {
             }
 
             if (defaultHitAudioProfile != null && defaultHitAudioProfile != string.Empty) {
-                AudioProfile audioProfile = SystemDataFactory.Instance.GetResource<AudioProfile>(defaultHitAudioProfile);
+                AudioProfile audioProfile = systemDataFactory.GetResource<AudioProfile>(defaultHitAudioProfile);
                 if (audioProfile != null) {
                     defaultHitSoundEffects = audioProfile.AudioClips;
                 } else {
@@ -264,7 +264,7 @@ namespace AnyRPG {
             }
 
             if (weaponType != null && weaponType != string.Empty) {
-                WeaponSkill tmpWeaponSkill = SystemDataFactory.Instance.GetResource<WeaponSkill>(weaponType);
+                WeaponSkill tmpWeaponSkill = systemDataFactory.GetResource<WeaponSkill>(weaponType);
                 if (tmpWeaponSkill != null) {
                     weaponSkill = tmpWeaponSkill;
                 } else {
@@ -275,7 +275,7 @@ namespace AnyRPG {
             if (abilityObjectList != null) {
                 foreach (AbilityAttachmentNode abilityAttachmentNode in abilityObjectList) {
                     if (abilityAttachmentNode != null) {
-                        abilityAttachmentNode.SetupScriptableObjects(DisplayName);
+                        abilityAttachmentNode.SetupScriptableObjects(DisplayName, systemGameManager);
                     }
                 }
             }

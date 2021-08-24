@@ -3,7 +3,7 @@ using UnityEngine;
 using UnityEngine.AI;
 
 namespace AnyRPG {
-    public class UnitMountManager {
+    public class UnitMountManager : ConfiguredClass {
 
         // unit controller of controlling unit
         private UnitController unitController;
@@ -12,10 +12,19 @@ namespace AnyRPG {
         private UnitController mountUnitController = null;
         private UnitProfile mountUnitProfile = null;
 
+        // game manager references
+        private PlayerManager playerManager = null;
+
         public UnitController MountUnitController { get => mountUnitController; }
 
-        public UnitMountManager(UnitController unitController) {
+        public UnitMountManager(UnitController unitController, SystemGameManager systemGameManager) {
             this.unitController = unitController;
+            Configure(systemGameManager);
+        }
+
+        public override void SetGameManagerReferences() {
+            base.SetGameManagerReferences();
+            playerManager = systemGameManager.PlayerManager;
         }
 
         public void SetMountedState(UnitController mountUnitController, UnitProfile mountUnitProfile) {
@@ -58,7 +67,7 @@ namespace AnyRPG {
                 Transform mountPoint = mountUnitController.transform.FindChildByRecursive(originalPrefabSourceBone);
                 if (mountPoint != null) {
                     unitController.transform.parent = mountPoint;
-                    //SystemGameManager.Instance.PlayerManager.MyPlayerUnitObject.transform.localPosition = Vector3.zero;
+                    //playerManager.MyPlayerUnitObject.transform.localPosition = Vector3.zero;
                     unitController.transform.position = mountPoint.transform.TransformPoint(originalPrefabOffset);
                     unitController.transform.localEulerAngles = mountUnitProfile.UnitPrefabProps.Rotation;
                     ActivateMountedState();
@@ -90,19 +99,19 @@ namespace AnyRPG {
 
         public void ConfigureCharacterMountedPhysics() {
             unitController.RigidBody.WakeUp();
-            //SystemGameManager.Instance.PlayerManager.MyCharacter.MyAnimatedUnit.MyRigidBody.collisionDetectionMode = CollisionDetectionMode.Discrete;
+            //playerManager.MyCharacter.MyAnimatedUnit.MyRigidBody.collisionDetectionMode = CollisionDetectionMode.Discrete;
             // DO NOT EVER USE CONTINUOUS SPECULATIVE.  IT WILL MESS THINGS UP EVEN WHEN YOUR RIGIDBODY IS KINEMATIC
             // UNITY ERROR MESSAGE IS MISLEADING AND WRONG HERE....
-            //SystemGameManager.Instance.PlayerManager.MyCharacter.MyAnimatedUnit.MyRigidBody.collisionDetectionMode = CollisionDetectionMode.ContinuousSpeculative;
+            //playerManager.MyCharacter.MyAnimatedUnit.MyRigidBody.collisionDetectionMode = CollisionDetectionMode.ContinuousSpeculative;
             unitController.RigidBody.interpolation = RigidbodyInterpolation.None;
             unitController.RigidBody.detectCollisions = false;
             unitController.RigidBody.isKinematic = true;
             unitController.RigidBody.useGravity = false;
             unitController.FreezeAll();
-            //SystemGameManager.Instance.PlayerManager.MyCharacter.MyAnimatedUnit.MyRigidBody.constraints = RigidbodyConstraints.None;
+            //playerManager.MyCharacter.MyAnimatedUnit.MyRigidBody.constraints = RigidbodyConstraints.None;
 
             // TODO : should this just set to trigger instead so player go through portals and be attacked on mount?
-            //SystemGameManager.Instance.PlayerManager.ActiveUnitController.Collider.enabled = false;
+            //playerManager.ActiveUnitController.Collider.enabled = false;
             // TESTING IT NOW
             // duplicate collider triggers since mount is redirected - disabling
             //unitController.Collider.isTrigger = true;
@@ -117,9 +126,9 @@ namespace AnyRPG {
             UnsubscribeFromMountModelReady();
             if (mountUnitController != null && unitController != null && unitController.enabled == true) {
 
-                unitController.transform.parent = SystemGameManager.Instance.PlayerManager.PlayerUnitParent.transform;
+                unitController.transform.parent = playerManager.PlayerUnitParent.transform;
 
-                //SystemGameManager.Instance.PlayerManager.MyPlayerUnitObject.transform.localEulerAngles = Vector3.zero;
+                //playerManager.MyPlayerUnitObject.transform.localEulerAngles = Vector3.zero;
                 unitController.transform.localEulerAngles = mountUnitController.transform.localEulerAngles;
 
                 // we could skip this and just let the player fall through gravity
@@ -131,12 +140,12 @@ namespace AnyRPG {
                 unitController.Mounted = false;
                 // testing disabled now since there is only one of those
                 /*
-                if (SystemGameManager.Instance.PlayerManager.PlayerUnitMovementController) {
-                    SystemGameManager.Instance.PlayerManager.PlayerUnitMovementController.enabled = true;
+                if (playerManager.PlayerUnitMovementController) {
+                    playerManager.PlayerUnitMovementController.enabled = true;
                 }
                 */
                 unitController.UnitAnimator.SetRiding(false);
-                //SystemGameManager.Instance.PlayerManager.MyCharacter.MyAnimatedUnit.MyCharacterAnimator.SetBool("Riding", false);
+                //playerManager.MyCharacter.MyAnimatedUnit.MyCharacterAnimator.SetBool("Riding", false);
 
                 unitController.NotifyOnDeActivateMountedState();
             }

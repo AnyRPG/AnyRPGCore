@@ -50,7 +50,7 @@ namespace AnyRPG {
         public int ActivationLimit { get => activationLimit; set => activationLimit = value; }
 
         public override InteractableOptionComponent GetInteractableOption(Interactable interactable, InteractableOption interactableOption = null) {
-            InteractableOptionComponent returnValue = new ControlSwitchComponent(interactable, this);
+            InteractableOptionComponent returnValue = new ControlSwitchComponent(interactable, this, systemGameManager);
             if (interactableOption != null) {
                 interactableOption.SetComponent(returnValue);
             }

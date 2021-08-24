@@ -21,7 +21,6 @@ namespace AnyRPG {
 
         // game manager references
         private UIManager uIManager = null;
-        private SystemConfigurationManager systemConfigurationManager = null;
         private SaveManager saveManager = null;
         private NewGameManager newGameManager = null;
 
@@ -29,12 +28,12 @@ namespace AnyRPG {
             base.Configure(systemGameManager);
             cancelButton.Configure(systemGameManager);
             confirmButton.Configure(systemGameManager);
+            confirmGameButton.Configure(systemGameManager);
         }
 
         public override void SetGameManagerReferences() {
             base.SetGameManagerReferences();
             uIManager = systemGameManager.UIManager;
-            systemConfigurationManager = systemGameManager.SystemConfigurationManager;
             saveManager = systemGameManager.SaveManager;
             newGameManager = systemGameManager.NewGameManager;
         }

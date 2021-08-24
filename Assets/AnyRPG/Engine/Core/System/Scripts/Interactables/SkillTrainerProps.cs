@@ -18,24 +18,24 @@ namespace AnyRPG {
 
         private List<Skill> skills = new List<Skill>();
 
-        public override Sprite Icon { get => (SystemGameManager.Instance.SystemConfigurationManager.SkillTrainerInteractionPanelImage != null ? SystemGameManager.Instance.SystemConfigurationManager.SkillTrainerInteractionPanelImage : base.Icon); }
-        public override Sprite NamePlateImage { get => (SystemGameManager.Instance.SystemConfigurationManager.SkillTrainerNamePlateImage != null ? SystemGameManager.Instance.SystemConfigurationManager.SkillTrainerNamePlateImage : base.NamePlateImage); }
+        public override Sprite Icon { get => (systemConfigurationManager.SkillTrainerInteractionPanelImage != null ? systemConfigurationManager.SkillTrainerInteractionPanelImage : base.Icon); }
+        public override Sprite NamePlateImage { get => (systemConfigurationManager.SkillTrainerNamePlateImage != null ? systemConfigurationManager.SkillTrainerNamePlateImage : base.NamePlateImage); }
 
         public List<Skill> Skills { get => skills; }
 
         public override InteractableOptionComponent GetInteractableOption(Interactable interactable, InteractableOption interactableOption = null) {
-            InteractableOptionComponent returnValue = new SkillTrainerComponent(interactable, this);
+            InteractableOptionComponent returnValue = new SkillTrainerComponent(interactable, this, systemGameManager);
             if (interactableOption != null) {
                 interactableOption.SetComponent(returnValue);
             }
             return returnValue;
         }
 
-        public override void SetupScriptableObjects() {
-            base.SetupScriptableObjects();
+        public override void SetupScriptableObjects(SystemGameManager systemGameManager) {
+            base.SetupScriptableObjects(systemGameManager);
             if (skillNames != null) {
                 foreach (string skillName in skillNames) {
-                    Skill tmpSkill = SystemDataFactory.Instance.GetResource<Skill>(skillName);
+                    Skill tmpSkill = systemDataFactory.GetResource<Skill>(skillName);
                     if (tmpSkill != null) {
                         skills.Add(tmpSkill);
                     } else {

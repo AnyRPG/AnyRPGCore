@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 namespace AnyRPG {
-    public class AbilityManager : IAbilityManager {
+    public class AbilityManager : ConfiguredClass, IAbilityManager {
 
         protected BaseAbility currentCastAbility = null;
 
@@ -19,6 +19,9 @@ namespace AnyRPG {
         protected Dictionary<string, AbilityCoolDownNode> abilityCoolDownDictionary = new Dictionary<string, AbilityCoolDownNode>();
 
         protected MonoBehaviour abilityCaster = null;
+
+        // game manager references
+        protected ObjectPooler objectPooler = null;
 
         public virtual bool ControlLocked {
             get {
@@ -72,6 +75,16 @@ namespace AnyRPG {
         public Coroutine DestroyAbilityEffectObjectCoroutine { get => destroyAbilityEffectObjectCoroutine; set => destroyAbilityEffectObjectCoroutine = value; }
         public List<Coroutine> DestroyAbilityEffectObjectCoroutines { get => destroyAbilityEffectObjectCoroutines; set => destroyAbilityEffectObjectCoroutines = value; }
 
+        public AbilityManager(MonoBehaviour abilityCaster, SystemGameManager systemGameManager) {
+            this.abilityCaster = abilityCaster;
+            Configure(systemGameManager);
+        }
+
+        public override void SetGameManagerReferences() {
+            base.SetGameManagerReferences();
+            objectPooler = systemGameManager.ObjectPooler;
+        }
+
         public virtual void SetMountedState(UnitController mountUnitController, UnitProfile mountUnitProfile) {
             // nothing here for now
         }
@@ -84,9 +97,6 @@ namespace AnyRPG {
             destroyAbilityEffectObjectCoroutines.Add(coroutine);
         }
 
-        public AbilityManager(MonoBehaviour abilityCaster) {
-            this.abilityCaster = abilityCaster;
-        }
 
         public virtual AttachmentPointNode GetHeldAttachmentPointNode(AbilityAttachmentNode attachmentNode) {
             if (attachmentNode.UseUniversalAttachment == false) {
@@ -227,7 +237,7 @@ namespace AnyRPG {
         public virtual void CleanupAbilityEffectGameObjects() {
             foreach (GameObject go in abilityEffectGameObjects) {
                 if (go != null) {
-                    ObjectPooler.Instance.ReturnObjectToPool(go);
+                    objectPooler.ReturnObjectToPool(go);
                 }
             }
             abilityEffectGameObjects.Clear();

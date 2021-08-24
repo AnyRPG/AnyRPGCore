@@ -22,6 +22,17 @@ namespace AnyRPG {
         [SerializeField]
         protected List<LootGroup> lootGroups = new List<LootGroup>();
 
+        // game manager references
+        private InventoryManager inventoryManager = null;
+        private PlayerManager playerManager = null;
+        private SystemItemManager systemItemManager = null;
+
+        public override void SetGameManagerReferences() {
+            base.SetGameManagerReferences();
+            inventoryManager = systemGameManager.InventoryManager;
+            playerManager = systemGameManager.PlayerManager;
+            systemItemManager = systemGameManager.SystemItemManager;
+        }
 
         public List<LootDrop> GetLoot(LootTableState lootTableState, bool rollLoot = true) {
             //Debug.Log("LootTable.GetLoot().");
@@ -74,9 +85,9 @@ namespace AnyRPG {
                     List<Loot> validLoot = new List<Loot>();
                     foreach (Loot loot in lootGroup.Loot) {
                         if (loot.MyPrerequisitesMet == true &&
-                            (loot.MyItem.MyUniqueItem == false ||
-                            (SystemGameManager.Instance.InventoryManager.GetItemCount(loot.MyItem.DisplayName) == 0 &&
-                            SystemGameManager.Instance.PlayerManager.MyCharacter.CharacterEquipmentManager.HasEquipment(loot.MyItem.DisplayName) == false))) {
+                            (loot.MyItem.UniqueItem == false ||
+                            (inventoryManager.GetItemCount(loot.MyItem.DisplayName) == 0 &&
+                            playerManager.MyCharacter.CharacterEquipmentManager.HasEquipment(loot.MyItem.DisplayName) == false))) {
                             validLoot.Add(loot);
                         }/* else {
                             Debug.Log(MyName + ".LootTable.RollLoot() item: " + loot.MyItem);
@@ -155,8 +166,8 @@ namespace AnyRPG {
             int itemCount = Random.Range(loot.MyMinDrops, loot.MyMaxDrops + 1);
             //Debug.Log("GatherLootTable.RollLoot(): itemCount: " + itemCount);
             for (int i = 0; i < itemCount; i++) {
-                ItemLootDrop droppedItem = new ItemLootDrop(SystemGameManager.Instance.SystemItemManager.GetNewResource(loot.MyItem.DisplayName), lootTableState);
-                droppedItem.Item.DropLevel = SystemGameManager.Instance.PlayerManager.MyCharacter.CharacterStats.Level;
+                ItemLootDrop droppedItem = new ItemLootDrop(systemItemManager.GetNewResource(loot.MyItem.DisplayName), lootTableState, systemGameManager);
+                droppedItem.Item.DropLevel = playerManager.MyCharacter.CharacterStats.Level;
                 lootTableState.DroppedItems.Add(droppedItem);
                 if (lootGroupUnlimitedDrops == false && ignoreDropLimit == false) {
                     lootGroupRemainingDrops = lootGroupRemainingDrops - 1;
@@ -171,7 +182,7 @@ namespace AnyRPG {
                     }
                 }
             }
-            //droppedItems.Add(new LootDrop(SystemGameManager.Instance.SystemItemManager.GetNewResource(item.MyItem.MyName), this));
+            //droppedItems.Add(new LootDrop(systemItemManager.GetNewResource(item.MyItem.MyName), this));
 
             return returnValue;
         }
@@ -185,13 +196,13 @@ namespace AnyRPG {
             lootTableState.Rolled = false;
         }
 
-        public override void SetupScriptableObjects() {
-            base.SetupScriptableObjects();
+        public override void SetupScriptableObjects(SystemGameManager systemGameManager) {
+            base.SetupScriptableObjects(systemGameManager);
 
             if (lootGroups != null) {
                 foreach (LootGroup lootGroup in lootGroups) {
                     foreach (Loot tmpLoot in lootGroup.Loot) {
-                        tmpLoot.SetupScriptableObjects();
+                        tmpLoot.SetupScriptableObjects(systemGameManager);
                     }
                 }
             }

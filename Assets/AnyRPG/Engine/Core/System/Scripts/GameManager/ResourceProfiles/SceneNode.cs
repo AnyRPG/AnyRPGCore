@@ -85,6 +85,9 @@ namespace AnyRPG {
 
         private List<EnvironmentStateProfile> environmentStates = new List<EnvironmentStateProfile>();
 
+        // game manager referenes
+        private SaveManager saveManager = null;
+
         private Dictionary<string, PersistentObjectSaveData> persistentObjects = new Dictionary<string, PersistentObjectSaveData>();
 
         public string SceneName { get => resourceName; set => resourceName = value; }
@@ -94,7 +97,7 @@ namespace AnyRPG {
         public AudioProfile BackgroundMusicProfile { get => realBackgroundMusicProfile; set => realBackgroundMusicProfile = value; }
         public List<PersistentObjectSaveData> PersistentObjects {
             get {
-                return SystemGameManager.Instance.SaveManager.GetSceneNodeSaveData(this).persistentObjects;
+                return saveManager.GetSceneNodeSaveData(this).persistentObjects;
             }
         }
         public List<EnvironmentStateProfile> EnvironmentStates { get => environmentStates; set => environmentStates = value; }
@@ -106,33 +109,38 @@ namespace AnyRPG {
 
         public bool Visited {
             get {
-                return SystemGameManager.Instance.SaveManager.GetSceneNodeSaveData(this).visited;
+                return saveManager.GetSceneNodeSaveData(this).visited;
             }
             set {
-                SceneNodeSaveData saveData = SystemGameManager.Instance.SaveManager.GetSceneNodeSaveData(this);
+                SceneNodeSaveData saveData = saveManager.GetSceneNodeSaveData(this);
                 saveData.visited = value;
-                SystemGameManager.Instance.SaveManager.SceneNodeSaveDataDictionary[saveData.MyName] = saveData;
+                saveManager.SceneNodeSaveDataDictionary[saveData.MyName] = saveData;
             }
         }
 
         public bool AllowMount { get => allowMount; set => allowMount = value; }
 
+        public override void SetGameManagerReferences() {
+            base.SetGameManagerReferences();
+            saveManager = systemGameManager.SaveManager;
+        }
+
         public void SavePersistentObject(string UUID, PersistentObjectSaveData persistentObjectSaveData) {
             //Debug.Log(DisplayName + ".SceneNode.SavePersistentObject(" + UUID + ")");
-            SceneNodeSaveData saveData = SystemGameManager.Instance.SaveManager.GetSceneNodeSaveData(this);
+            SceneNodeSaveData saveData = saveManager.GetSceneNodeSaveData(this);
             foreach (PersistentObjectSaveData _persistentObjectSaveData in saveData.persistentObjects) {
                 if (_persistentObjectSaveData.UUID == UUID) {
                     saveData.persistentObjects.Remove(_persistentObjectSaveData);
-                    SystemGameManager.Instance.SaveManager.SceneNodeSaveDataDictionary[saveData.MyName] = saveData;
+                    saveManager.SceneNodeSaveDataDictionary[saveData.MyName] = saveData;
                     break;
                 }
             }
             saveData.persistentObjects.Add(persistentObjectSaveData);
-            SystemGameManager.Instance.SaveManager.SceneNodeSaveDataDictionary[saveData.MyName] = saveData;
+            saveManager.SceneNodeSaveDataDictionary[saveData.MyName] = saveData;
         }
 
         public PersistentObjectSaveData GetPersistentObject(string UUID) {
-            foreach (PersistentObjectSaveData _persistentObjectSaveData in SystemGameManager.Instance.SaveManager.GetSceneNodeSaveData(this).persistentObjects) {
+            foreach (PersistentObjectSaveData _persistentObjectSaveData in saveManager.GetSceneNodeSaveData(this).persistentObjects) {
                 if (_persistentObjectSaveData.UUID == UUID) {
                     return _persistentObjectSaveData;
                 }
@@ -147,11 +155,11 @@ namespace AnyRPG {
             OnVisitZone();
         }
 
-        public override void SetupScriptableObjects() {
-            base.SetupScriptableObjects();
+        public override void SetupScriptableObjects(SystemGameManager systemGameManager) {
+            base.SetupScriptableObjects(systemGameManager);
 
             if (movementLoopProfileName != null && movementLoopProfileName != string.Empty) {
-                AudioProfile tmpMovementLoop = SystemDataFactory.Instance.GetResource<AudioProfile>(movementLoopProfileName);
+                AudioProfile tmpMovementLoop = systemDataFactory.GetResource<AudioProfile>(movementLoopProfileName);
                 if (tmpMovementLoop != null) {
                     movementLoopProfile = tmpMovementLoop;
                 } else {
@@ -160,7 +168,7 @@ namespace AnyRPG {
             }
 
             if (movementHitProfileName != null && movementHitProfileName != string.Empty) {
-                AudioProfile tmpMovementHit = SystemDataFactory.Instance.GetResource<AudioProfile>(movementHitProfileName);
+                AudioProfile tmpMovementHit = systemDataFactory.GetResource<AudioProfile>(movementHitProfileName);
                 if (tmpMovementHit != null) {
                     movementHitProfile = tmpMovementHit;
                 } else {
@@ -170,7 +178,7 @@ namespace AnyRPG {
 
             realAmbientMusicProfile = null;
             if (ambientMusicProfile != null && ambientMusicProfile != string.Empty) {
-                AudioProfile tmpAmbientMusicProfile = SystemDataFactory.Instance.GetResource<AudioProfile>(ambientMusicProfile);
+                AudioProfile tmpAmbientMusicProfile = systemDataFactory.GetResource<AudioProfile>(ambientMusicProfile);
                 if (tmpAmbientMusicProfile != null) {
                     realAmbientMusicProfile = tmpAmbientMusicProfile;
                 } else {
@@ -181,7 +189,7 @@ namespace AnyRPG {
 
             realBackgroundMusicProfile = null;
             if (backgroundMusicProfile != null && backgroundMusicProfile != string.Empty) {
-                AudioProfile tmpBackgroundMusicProfile = SystemDataFactory.Instance.GetResource<AudioProfile>(backgroundMusicProfile);
+                AudioProfile tmpBackgroundMusicProfile = systemDataFactory.GetResource<AudioProfile>(backgroundMusicProfile);
                 if (tmpBackgroundMusicProfile != null) {
                     realBackgroundMusicProfile = tmpBackgroundMusicProfile;
                 } else {
@@ -190,7 +198,7 @@ namespace AnyRPG {
             }
 
             if (autoPlayCutsceneName != null && autoPlayCutsceneName != string.Empty) {
-                Cutscene tmpCutscene = SystemDataFactory.Instance.GetResource<Cutscene>(autoPlayCutsceneName);
+                Cutscene tmpCutscene = systemDataFactory.GetResource<Cutscene>(autoPlayCutsceneName);
                 if (tmpCutscene != null) {
                     autoPlayCutscene = tmpCutscene;
                 } else {
@@ -200,7 +208,7 @@ namespace AnyRPG {
 
             if (environmentStateNames != null) {
                 foreach (string environmentStateName in environmentStateNames) {
-                    EnvironmentStateProfile tmpProfile = SystemDataFactory.Instance.GetResource<EnvironmentStateProfile>(environmentStateName);
+                    EnvironmentStateProfile tmpProfile = systemDataFactory.GetResource<EnvironmentStateProfile>(environmentStateName);
                     if (tmpProfile != null) {
                         environmentStates.Add(tmpProfile);
                     } else {
@@ -210,7 +218,7 @@ namespace AnyRPG {
             }
 
             if (useRegionalFile == true) {
-                ResourceDescription tmpResourceDescription = SystemDataFactory.Instance.GetResource<ResourceDescription>(resourceName + "Scene");
+                ResourceDescription tmpResourceDescription = systemDataFactory.GetResource<ResourceDescription>(resourceName + "Scene");
                 if (tmpResourceDescription != null) {
                     sceneFile = tmpResourceDescription.DisplayName;
                 } else {

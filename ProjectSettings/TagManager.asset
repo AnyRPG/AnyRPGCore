@@ -92,6 +92,10 @@ TagManager:
   - Patrol6_5
   - Patrol6_6
   - Patrol7_1
+  - NorthBoundary
+  - SouthBoundary
+  - EastBoundary
+  - WestBoundary
   layers:
   - Default
   - TransparentFX

@@ -14,6 +14,14 @@ namespace AnyRPG {
         //[SerializeField]
         protected BaseAbility ability = null;
 
+        // game manager references
+        protected SystemAbilityController systemAbilityController = null;
+
+        public override void SetGameManagerReferences() {
+            base.SetGameManagerReferences();
+            systemAbilityController = systemGameManager.SystemAbilityController;
+        }
+
         public override bool Use() {
             //Debug.Log("CastableItem.Use()");
             if (ability == null) {
@@ -24,7 +32,7 @@ namespace AnyRPG {
             if (returnValue == false) {
                 return false;
             }
-            if (SystemGameManager.Instance.PlayerManager.MyCharacter.CharacterAbilityManager.BeginAbility(ability)) {
+            if (playerManager.MyCharacter.CharacterAbilityManager.BeginAbility(ability)) {
                 Remove();
             }
             return returnValue;
@@ -43,12 +51,12 @@ namespace AnyRPG {
             if (ability == null) {
                 return null;
             }
-            return SystemGameManager.Instance.SystemAbilityController.StartCoroutine(actionButton.MonitorAbility(ability));
+            return systemAbilityController.StartCoroutine(actionButton.MonitorAbility(ability));
         }
 
-        public override string GetSummary() {
-
-            return base.GetSummary() + GetCastableInformation() + GetCooldownString();
+        public override string GetSummary(ItemQuality usedItemQuality) {
+            //Debug.Log(DisplayName + ".CastableItem.GetSummary()");
+            return base.GetSummary(usedItemQuality) + GetCastableInformation() + GetCooldownString();
         }
 
         public virtual string GetCastableInformation() {
@@ -63,15 +71,15 @@ namespace AnyRPG {
             return coolDownString;
         }
 
-        public override void SetupScriptableObjects() {
-            base.SetupScriptableObjects();
+        public override void SetupScriptableObjects(SystemGameManager systemGameManager) {
+            base.SetupScriptableObjects(systemGameManager);
             ability = null;
             if (abilityName != null) {
-                BaseAbility baseAbility = SystemDataFactory.Instance.GetResource<BaseAbility>(abilityName);
+                BaseAbility baseAbility = systemDataFactory.GetResource<BaseAbility>(abilityName);
                 if (baseAbility != null) {
                     ability = baseAbility;
                 } else {
-                    Debug.LogError("SystemSkillManager.SetupScriptableObjects(): Could not find ability : " + abilityName + " while inititalizing " + DisplayName + ".  CHECK INSPECTOR");
+                    Debug.LogError("CastableItem.SetupScriptableObjects(): Could not find ability : " + abilityName + " while inititalizing " + DisplayName + ".  CHECK INSPECTOR");
                 }
             }
         }

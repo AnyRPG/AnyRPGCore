@@ -64,14 +64,20 @@ namespace AnyRPG {
         // game manager references
         private ObjectPooler objectPooler = null;
         private PlayerManager playerManager = null;
+        private CurrencyConverter currencyConverter = null;
 
         public override void Configure(SystemGameManager systemGameManager) {
             base.Configure(systemGameManager);
 
+            currencyLootButton.Configure(systemGameManager);
+        }
+
+        public override void SetGameManagerReferences() {
+            base.SetGameManagerReferences();
+
             objectPooler = systemGameManager.ObjectPooler;
             playerManager = systemGameManager.PlayerManager;
-
-            currencyLootButton.Configure(systemGameManager);
+            currencyConverter = systemGameManager.CurrencyConverter;
         }
 
 
@@ -165,7 +171,7 @@ namespace AnyRPG {
 
             questDescription.text = quest.GetObjectiveDescription();
 
-            experienceReward.text += LevelEquations.GetXPAmountForQuest(playerManager.MyCharacter.CharacterStats.Level, quest) + " XP";
+            experienceReward.text += LevelEquations.GetXPAmountForQuest(playerManager.MyCharacter.CharacterStats.Level, quest, systemConfigurationManager) + " XP";
 
             // display currency rewards
 
@@ -176,7 +182,7 @@ namespace AnyRPG {
                 currencyHeading.gameObject.SetActive(true);
                 currencyArea.gameObject.SetActive(true);
                 if (currencyLootButton != null) {
-                    KeyValuePair<Sprite, string> keyValuePair = CurrencyConverter.RecalculateValues(currencyNodes, true);
+                    KeyValuePair<Sprite, string> keyValuePair = currencyConverter.RecalculateValues(currencyNodes, true);
                     currencyLootButton.MyIcon.sprite = keyValuePair.Key;
                     currencyLootButton.MyTitle.text = keyValuePair.Value;
                 }

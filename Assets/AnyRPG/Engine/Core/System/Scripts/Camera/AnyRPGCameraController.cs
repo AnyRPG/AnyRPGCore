@@ -3,7 +3,7 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 
 namespace AnyRPG {
-    public class AnyRPGCameraController : MonoBehaviour {
+    public class AnyRPGCameraController : ConfiguredMonoBehaviour {
         // public variables
 
         [SerializeField]
@@ -50,10 +50,22 @@ namespace AnyRPG {
         private bool cameraZoom = false;
 
         // avoid use of local variables
-        RaycastHit wallHit = new RaycastHit();
+        private RaycastHit wallHit = new RaycastHit();
+
+        // game manager references
+        protected InputManager inputManager = null;
+        protected NamePlateManager namePlateManager = null;
+        protected UIManager uIManager = null;
 
         public Transform MyTarget { get => target; set => target = value; }
         public Vector3 MyWantedDirection { get => wantedDirection; set => wantedDirection = value; }
+
+        public override void SetGameManagerReferences() {
+            base.SetGameManagerReferences();
+            inputManager = systemGameManager.InputManager;
+            uIManager = systemGameManager.UIManager;
+            namePlateManager = uIManager.NamePlateManager;
+        }
 
         private void Awake() {
             //Debug.Log("AnyRPGCameraController.Awake()");
@@ -106,7 +118,7 @@ namespace AnyRPG {
 
 
             /*
-            if (SystemGameManager.Instance.SystemConfigurationManager != null && SystemGameManager.Instance.SystemConfigurationManager.MyUseThirdPartyCameraControl == true) {
+            if (systemConfigurationManager != null && systemConfigurationManager.MyUseThirdPartyCameraControl == true) {
                 return;
             }
             */
@@ -127,7 +139,9 @@ namespace AnyRPG {
 
             // handleZoom
             // added code at end to check if over nameplate and allow scrolling
-            if (SystemGameManager.Instance.InputManager.mouseScrolled && (!EventSystem.current.IsPointerOverGameObject() || (SystemGameManager.Instance.UIManager.NamePlateManager != null ? SystemGameManager.Instance.UIManager.NamePlateManager.MouseOverNamePlate() : false))) {
+            //if (inputManager.mouseScrolled && (!EventSystem.current.IsPointerOverGameObject() || (namePlateManager != null ? namePlateManager.MouseOverNamePlate() : false))) {
+            if (inputManager.mouseScrolled
+                && (!EventSystem.current.IsPointerOverGameObject() || namePlateManager.MouseOverNamePlate())) {
                 //Debug.Log("Mouse Scrollwheel: " + Input.GetAxis("Mouse ScrollWheel"));
                 currentZoomDistance += (Input.GetAxis("Mouse ScrollWheel") * zoomSpeed * -1);
                 currentZoomDistance = Mathf.Clamp(currentZoomDistance, minZoom, maxZoom);
@@ -136,11 +150,11 @@ namespace AnyRPG {
 
             // pan with the left or turn with the right mouse button
             // IF START HAVING MORE ISSUES WITH PAN AND TURN IN FUTURE, JUST COMMENT BELOW LINE AND RE-ENABLE COMMENTED LINE BELOW IT SINCE QUATERNIONS ARE NOW ALWAYS CALCULATED IN SETWANTEDPOSITION
-            if (!SystemGameManager.Instance.UIManager.DragInProgress && ((SystemGameManager.Instance.InputManager.rightMouseButtonDown && !SystemGameManager.Instance.InputManager.rightMouseButtonClickedOverUI) || (SystemGameManager.Instance.InputManager.leftMouseButtonDown && !SystemGameManager.Instance.InputManager.leftMouseButtonClickedOverUI))) {
-                //if (!SystemGameManager.Instance.UIManager.MyDragInProgress && ((SystemGameManager.Instance.InputManager.rightMouseButtonDown && !SystemGameManager.Instance.InputManager.rightMouseButtonClickedOverUI && SystemGameManager.Instance.InputManager.rightMouseButtonDownPosition != Input.mousePosition) || (SystemGameManager.Instance.InputManager.leftMouseButtonDown && !SystemGameManager.Instance.InputManager.leftMouseButtonClickedOverUI && SystemGameManager.Instance.InputManager.leftMouseButtonDownPosition != Input.mousePosition))) {
+            if (!uIManager.DragInProgress && ((inputManager.rightMouseButtonDown && !inputManager.rightMouseButtonClickedOverUI) || (inputManager.leftMouseButtonDown && !inputManager.leftMouseButtonClickedOverUI))) {
+                //if (!uIManager.MyDragInProgress && ((inputManager.rightMouseButtonDown && !inputManager.rightMouseButtonClickedOverUI && inputManager.rightMouseButtonDownPosition != Input.mousePosition) || (inputManager.leftMouseButtonDown && !inputManager.leftMouseButtonClickedOverUI && inputManager.leftMouseButtonDownPosition != Input.mousePosition))) {
                 //float xInput = Input.GetAxis("Mouse X") * yawSpeed;
                 float usedTurnSpeed = 0f;
-                if (SystemGameManager.Instance.InputManager.rightMouseButtonDown) {
+                if (inputManager.rightMouseButtonDown) {
                     usedTurnSpeed = PlayerPrefs.GetFloat("MouseTurnSpeed") + 0.5f;
                 } else {
                     usedTurnSpeed = PlayerPrefs.GetFloat("MouseLookSpeed") + 0.5f;
@@ -162,7 +176,7 @@ namespace AnyRPG {
             }
 
             // follow the player
-            //if (hasMoved || cameraZoom || (cameraPan && !SystemGameManager.Instance.InputManager.rightMouseButtonClickedOverUI && !SystemGameManager.Instance.InputManager.leftMouseButtonClickedOverUI) ) {
+            //if (hasMoved || cameraZoom || (cameraPan && !inputManager.rightMouseButtonClickedOverUI && !inputManager.leftMouseButtonClickedOverUI) ) {
             SetWantedPosition();
             //}
 

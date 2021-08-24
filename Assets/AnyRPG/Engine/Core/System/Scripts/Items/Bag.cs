@@ -55,14 +55,14 @@ namespace AnyRPG {
             if (MyBagNode != null) {
                 addToBank = MyBagNode.IsBankNode;
             }
-            if (SystemGameManager.Instance.InventoryManager.CanAddBag(addToBank)) {
+            if (inventoryManager.CanAddBag(addToBank)) {
                 //Debug.Log("Bag.Use(): we can add the bag");
 
                 if (MyBagNode == null) {
-                    SystemGameManager.Instance.InventoryManager.AddBag(this);
+                    inventoryManager.AddBag(this);
                 } else {
                     //Debug.Log("Bag.Use(): i have a bagnode");
-                    SystemGameManager.Instance.InventoryManager.AddBag(this, MyBagNode);
+                    inventoryManager.AddBag(this, MyBagNode);
                 }
                 Remove();
             } else {
@@ -71,8 +71,8 @@ namespace AnyRPG {
             return true;
         }
 
-        public override string GetSummary() {
-            return base.GetSummary() + string.Format("\n<color=green>Use: Equip</color>");
+        public override string GetSummary(ItemQuality usedItemQuality) {
+            return base.GetSummary(usedItemQuality) + string.Format("\n<color=green>Use: Equip</color>");
         }
 
     }

@@ -28,16 +28,16 @@ namespace AnyRPG {
             CurrentAmount++;
             quest.CheckCompletion();
             if (CurrentAmount <= MyAmount && !quest.IsAchievement && CurrentAmount != 0) {
-                SystemGameManager.Instance.UIManager.MessageFeedManager.WriteMessage(string.Format("{0}: {1}/{2}", DisplayName, Mathf.Clamp(CurrentAmount, 0, MyAmount), MyAmount));
+                messageFeedManager.WriteMessage(string.Format("{0}: {1}/{2}", DisplayName, Mathf.Clamp(CurrentAmount, 0, MyAmount), MyAmount));
             }
             if (completeBefore == false && IsComplete && !quest.IsAchievement) {
-                SystemGameManager.Instance.UIManager.MessageFeedManager.WriteMessage(string.Format("{0}: Objective Complete", DisplayName));
+                messageFeedManager.WriteMessage(string.Format("{0}: Objective Complete", DisplayName));
             }
         }
 
         public override void UpdateCompletionCount(bool printMessages = true) {
             base.UpdateCompletionCount(printMessages);
-            SceneNode sceneNode = SystemDataFactory.Instance.GetResource<SceneNode>(MyType);
+            SceneNode sceneNode = systemDataFactory.GetResource<SceneNode>(MyType);
             if (sceneNode != null && sceneNode.Visited == true) {
                 CurrentAmount++;
             }
@@ -49,7 +49,7 @@ namespace AnyRPG {
 
             objectiveSceneNode = null;
             if (MyType != null && MyType != string.Empty) {
-                objectiveSceneNode = SystemDataFactory.Instance.GetResource<SceneNode>(MyType);
+                objectiveSceneNode = systemDataFactory.GetResource<SceneNode>(MyType);
             } else {
                 Debug.LogError("VisitZoneObjective.OnAcceptQuest(): Could not find scene node : " + MyType + " while inititalizing a visit zone objective.  CHECK INSPECTOR");
                 return;
@@ -57,16 +57,12 @@ namespace AnyRPG {
             UpdateCompletionCount(printMessages);
             objectiveSceneNode.OnVisitZone += CheckCompletionCount;
 
-            // don't forget to remove these later
-            //SystemGameManager.Instance.EventManager.OnDialogCompleted += CheckCompletionCount;
-
         }
 
         public override void OnAbandonQuest() {
             //Debug.Log("UseInteractableObjective.OnAbandonQuest()");
             base.OnAbandonQuest();
             objectiveSceneNode.OnVisitZone -= CheckCompletionCount;
-            //SystemGameManager.Instance.EventManager.OnDialogCompleted -= CheckCompletionCount;
         }
 
     }

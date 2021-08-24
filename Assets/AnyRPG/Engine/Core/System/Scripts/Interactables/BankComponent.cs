@@ -1,6 +1,4 @@
 using AnyRPG;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 namespace AnyRPG {
@@ -8,16 +6,16 @@ namespace AnyRPG {
 
         public BankProps Props { get => interactableOptionProps as BankProps; }
 
-        public BankComponent(Interactable interactable, BankProps interactableOptionProps) : base(interactable, interactableOptionProps) {
+        public BankComponent(Interactable interactable, BankProps interactableOptionProps, SystemGameManager systemGameManager) : base(interactable, interactableOptionProps, systemGameManager) {
             interactableOptionProps.InteractionPanelTitle = "Bank";
         }
 
         public override bool Interact(CharacterUnit source, int optionIndex = 0) {
             //Debug.Log(gameObject.name + ".Bank.Interact(" + (source == null ? "null" : source.name) +")");
             base.Interact(source, optionIndex);
-            SystemGameManager.Instance.UIManager.interactionWindow.CloseWindow();
-            if (!SystemGameManager.Instance.UIManager.bankWindow.IsOpen) {
-                SystemGameManager.Instance.UIManager.bankWindow.OpenWindow();
+            uIManager.interactionWindow.CloseWindow();
+            if (!uIManager.bankWindow.IsOpen) {
+                uIManager.bankWindow.OpenWindow();
                 return true;
             }
             return false;
@@ -25,7 +23,7 @@ namespace AnyRPG {
 
         public override void StopInteract() {
             base.StopInteract();
-            SystemGameManager.Instance.UIManager.bankWindow.CloseWindow();
+            uIManager.bankWindow.CloseWindow();
         }
 
     }

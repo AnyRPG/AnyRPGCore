@@ -45,7 +45,6 @@ namespace AnyRPG {
         protected bool eventSubscriptionsInitialized = false;
 
         // game manager references
-        SystemConfigurationManager systemConfigurationManager = null;
         LevelManager levelManager = null;
         PlayerManager playerManager = null;
 
@@ -78,7 +77,6 @@ namespace AnyRPG {
         public override void Configure(SystemGameManager systemGameManager) {
             //Debug.Log("CameraManager.Awake()");
             base.Configure(systemGameManager);
-            systemConfigurationManager = systemGameManager.SystemConfigurationManager;
             levelManager = systemGameManager.LevelManager;
             playerManager = systemGameManager.PlayerManager;
 
@@ -86,6 +84,7 @@ namespace AnyRPG {
 
             // attach camera to player
             mainCameraController = mainCameraGameObject.GetComponent<AnyRPGCameraController>();
+            mainCameraController.Configure(systemGameManager);
 
             if (thirdPartyCameraGameObject == null && systemConfigurationManager.ThirdPartyCamera != null) {
                 thirdPartyCameraGameObject = Instantiate(systemConfigurationManager.ThirdPartyCamera, transform);
@@ -251,12 +250,12 @@ namespace AnyRPG {
 
             if (levelManager.GetActiveSceneNode().SuppressMainCamera != true) {
                 //Debug.Log("CameraManager.ProcessPlayerUnitSpawn(): suppressed by level = false, spawning camera");
-                mainCamera.GetComponent<AnyRPGCameraController>().InitializeCamera(playerManager.ActiveUnitController.transform);
+                mainCameraController.InitializeCamera(playerManager.ActiveUnitController.transform);
             }
         }
 
         public void HandlePlayerUnitDespawn(string eventName, EventParamProperties eventParamProperties) {
-            mainCamera.GetComponent<AnyRPGCameraController>().ClearTarget();
+            mainCameraController.ClearTarget();
         }
     }
 

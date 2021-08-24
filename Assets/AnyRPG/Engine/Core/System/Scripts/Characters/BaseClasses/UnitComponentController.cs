@@ -5,7 +5,7 @@ using UnityEngine;
 using UnityEngine.Audio;
 
 namespace AnyRPG {
-    public class UnitComponentController : MonoBehaviour {
+    public class UnitComponentController : ConfiguredMonoBehaviour {
 
         [Tooltip("Drag an object in the heirarchy here and the nameplate will show at its transform location")]
         [SerializeField]
@@ -36,6 +36,12 @@ namespace AnyRPG {
         public bool GotInitialNamePlatePosition { get => gotInitialNamePlatePosition; set => gotInitialNamePlatePosition = value; }
 
         //public UnitAudioEmitter UnitAudioEmitter { get => unitAudioEmitter; set => unitAudioEmitter = value; }
+
+        public override void Configure(SystemGameManager systemGameManager) {
+            base.Configure(systemGameManager);
+            interactableRange.Configure(systemGameManager);
+            highlightController.Configure(systemGameManager);
+        }
 
         private void OnEnable() {
             //Debug.Log("UnitComponentController.OnEnable()");

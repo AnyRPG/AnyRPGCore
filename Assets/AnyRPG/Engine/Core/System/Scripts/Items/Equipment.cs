@@ -134,7 +134,7 @@ namespace AnyRPG {
                         return itemPrimaryStatNode.ManualModifierValue;
                     }
                     return (int)Mathf.Ceil(Mathf.Clamp(
-                        (float)GetItemLevel(currentLevel) * (LevelEquations.GetPrimaryStatForLevel(statName, currentLevel, baseCharacter) * (GetItemQualityNumber(usedItemQuality) - 1f)) * ((EquipmentSlotType.MyStatWeight * EquipmentSlotType.GetCompatibleSlotProfiles()[0].MyStatWeight) / GetTotalSlotWeights()),
+                        (float)GetItemLevel(currentLevel) * (LevelEquations.GetPrimaryStatForLevel(statName, currentLevel, baseCharacter, systemConfigurationManager) * (GetItemQualityNumber(usedItemQuality) - 1f)) * ((EquipmentSlotType.MyStatWeight * EquipmentSlotType.GetCompatibleSlotProfiles()[0].MyStatWeight) / GetTotalSlotWeights()),
                         0f,
                         Mathf.Infinity
                         ));
@@ -184,7 +184,7 @@ namespace AnyRPG {
 
         public float GetTotalSlotWeights() {
             float returnValue = 0f;
-            foreach (EquipmentSlotProfile equipmentSlotProfile in SystemDataFactory.Instance.GetResourceList<EquipmentSlotProfile>()) {
+            foreach (EquipmentSlotProfile equipmentSlotProfile in systemDataFactory.GetResourceList<EquipmentSlotProfile>()) {
                 returnValue += equipmentSlotProfile.MyStatWeight;
             }
             return returnValue;
@@ -203,12 +203,12 @@ namespace AnyRPG {
         }
 
         public override bool Use() {
-            if (SystemGameManager.Instance.PlayerManager?.MyCharacter?.CharacterEquipmentManager != null) {
+            if (playerManager.MyCharacter?.CharacterEquipmentManager != null) {
                 bool returnValue = base.Use();
                 if (returnValue == false) {
                     return false;
                 }
-                if (SystemGameManager.Instance.PlayerManager.MyCharacter.CharacterEquipmentManager.Equip(this) == true) {
+                if (playerManager.MyCharacter.CharacterEquipmentManager.Equip(this) == true) {
                     Remove();
                     return true;
                 } else {
@@ -219,7 +219,7 @@ namespace AnyRPG {
         }
 
         public virtual bool CanEquip(BaseCharacter baseCharacter) {
-            //Debug.Log(DisplayName + ".Equipment.CanEquip()");
+            //Debug.Log(DisplayName + ".Equipment.CanEquip(" + baseCharacter.gameObject.name + ")");
             if (!CharacterClassRequirementIsMet(baseCharacter)) {
                 //Debug.Log(DisplayName + ".Equipment.CanEquip(): not the right character class");
                 return false;
@@ -229,6 +229,7 @@ namespace AnyRPG {
                 return false;
             }
             if (GetItemLevel(baseCharacter.CharacterStats.Level) > baseCharacter.CharacterStats.Level) {
+                Debug.Log(DisplayName + ".Equipment.CanEquip(" + baseCharacter.gameObject.name + "): character level too low");
                 return false;
             }
             return true;
@@ -254,23 +255,23 @@ namespace AnyRPG {
             string colorstring = string.Empty;
             //Debug.Log(MyName + ": levelcap: " + levelCap + "; dynamicLevel: " + dynamicLevel);
             if (dynamicLevel == true && freezeDropLevel == false) {
-                itemRange = " (1 - " + (levelCap > 0 ? levelCap : SystemGameManager.Instance.SystemConfigurationManager.MaxLevel) + ")";
+                itemRange = " (1 - " + (levelCap > 0 ? levelCap : systemConfigurationManager.MaxLevel) + ")";
             }
-            if (GetItemLevel(SystemGameManager.Instance.PlayerManager.MyCharacter.CharacterStats.Level) > SystemGameManager.Instance.PlayerManager.MyCharacter.CharacterStats.Level) {
+            if (GetItemLevel(playerManager.MyCharacter.CharacterStats.Level) > playerManager.MyCharacter.CharacterStats.Level) {
                 colorstring = "red";
             } else {
                 colorstring = "white";
             }
-            summaryLines.Add(string.Format("<color={0}>Item Level: {1}{2}</color>", colorstring, GetItemLevel(SystemGameManager.Instance.PlayerManager.MyCharacter.CharacterStats.Level), itemRange));
+            summaryLines.Add(string.Format("<color={0}>Item Level: {1}{2}</color>", colorstring, GetItemLevel(playerManager.MyCharacter.CharacterStats.Level), itemRange));
 
             // armor
             if (useArmorModifier) {
-                summaryLines.Add(string.Format(" +{0} Armor", GetArmorModifier(SystemGameManager.Instance.PlayerManager.MyCharacter.CharacterStats.Level, usedItemQuality)));
+                summaryLines.Add(string.Format(" +{0} Armor", GetArmorModifier(playerManager.MyCharacter.CharacterStats.Level, usedItemQuality)));
             }
 
             // primary stats
             foreach (ItemPrimaryStatNode itemPrimaryStatNode in primaryStats) {
-                float primaryStatModifier = GetPrimaryStatModifier(itemPrimaryStatNode.StatName, SystemGameManager.Instance.PlayerManager.MyCharacter.CharacterStats.Level, SystemGameManager.Instance.PlayerManager.MyCharacter, usedItemQuality);
+                float primaryStatModifier = GetPrimaryStatModifier(itemPrimaryStatNode.StatName, playerManager.MyCharacter.CharacterStats.Level, playerManager.MyCharacter, usedItemQuality);
                 if (primaryStatModifier > 0f) {
                     summaryLines.Add(string.Format(" +{0} {1}",
                         primaryStatModifier,
@@ -281,7 +282,7 @@ namespace AnyRPG {
             // secondary stats
             foreach (ItemSecondaryStatNode itemSecondaryStatNode in SecondaryStats) {
                 summaryLines.Add(string.Format("<color=green> +{0} {1}</color>",
-                                   GetSecondaryStatAddModifier(itemSecondaryStatNode.SecondaryStat, SystemGameManager.Instance.PlayerManager.MyCharacter.CharacterStats.Level),
+                                   GetSecondaryStatAddModifier(itemSecondaryStatNode.SecondaryStat, playerManager.MyCharacter.CharacterStats.Level),
                                    itemSecondaryStatNode.SecondaryStat.ToString()));
             }
 
@@ -294,11 +295,11 @@ namespace AnyRPG {
             }
 
             if (equipmentSet != null) {
-                int equipmentCount = SystemGameManager.Instance.PlayerManager.MyCharacter.CharacterEquipmentManager.GetEquipmentSetCount(equipmentSet);
+                int equipmentCount = playerManager.MyCharacter.CharacterEquipmentManager.GetEquipmentSetCount(equipmentSet);
                 summaryLines.Add(string.Format("\n<color=yellow>{0} ({1}/{2})</color>", equipmentSet.DisplayName, equipmentCount, equipmentSet.MyEquipmentList.Count));
                 foreach (Equipment equipment in equipmentSet.MyEquipmentList) {
                     string colorName = "#888888";
-                    if (SystemGameManager.Instance.PlayerManager.MyCharacter.CharacterEquipmentManager.HasEquipment(equipment.DisplayName)) {
+                    if (playerManager.MyCharacter.CharacterEquipmentManager.HasEquipment(equipment.DisplayName)) {
                         colorName = "yellow";
                     }
                     summaryLines.Add(string.Format("  <color={0}>{1}</color>", colorName, equipment.DisplayName));
@@ -321,11 +322,11 @@ namespace AnyRPG {
             return base.GetSummary(usedItemQuality) + "\n" + string.Join("\n", summaryLines);
         }
 
-        public override void SetupScriptableObjects() {
-            base.SetupScriptableObjects();
+        public override void SetupScriptableObjects(SystemGameManager systemGameManager) {
+            base.SetupScriptableObjects(systemGameManager);
             onEquipAbility = null;
             if (onEquipAbilityName != null && onEquipAbilityName != string.Empty) {
-                BaseAbility baseAbility = SystemDataFactory.Instance.GetResource<BaseAbility>(onEquipAbilityName);
+                BaseAbility baseAbility = systemDataFactory.GetResource<BaseAbility>(onEquipAbilityName);
                 if (baseAbility != null) {
                     onEquipAbility = baseAbility;
                 } else {
@@ -336,7 +337,7 @@ namespace AnyRPG {
             learnedAbilities = new List<BaseAbility>();
             if (learnedAbilityNames != null) {
                 foreach (string baseAbilityName in learnedAbilityNames) {
-                    BaseAbility baseAbility = SystemDataFactory.Instance.GetResource<BaseAbility>(baseAbilityName);
+                    BaseAbility baseAbility = systemDataFactory.GetResource<BaseAbility>(baseAbilityName);
                     if (baseAbility != null) {
                         learnedAbilities.Add(baseAbility);
                     } else {
@@ -348,7 +349,7 @@ namespace AnyRPG {
             
             realEquipmentSlotType = null;
             if (equipmentSlotType != null && equipmentSlotType != string.Empty) {
-                EquipmentSlotType tmpEquipmentSlotType = SystemDataFactory.Instance.GetResource<EquipmentSlotType>(equipmentSlotType);
+                EquipmentSlotType tmpEquipmentSlotType = systemDataFactory.GetResource<EquipmentSlotType>(equipmentSlotType);
                 if (tmpEquipmentSlotType != null) {
                     realEquipmentSlotType = tmpEquipmentSlotType;
                 } else {
@@ -360,7 +361,7 @@ namespace AnyRPG {
 
             equipmentSet = null;
             if (equipmentSetName != null && equipmentSetName != string.Empty) {
-                EquipmentSet tmpEquipmentSet = SystemDataFactory.Instance.GetResource<EquipmentSet>(equipmentSetName);
+                EquipmentSet tmpEquipmentSet = systemDataFactory.GetResource<EquipmentSet>(equipmentSetName);
                 if (tmpEquipmentSet != null) {
                     equipmentSet = tmpEquipmentSet;
                 } else {
@@ -372,7 +373,7 @@ namespace AnyRPG {
             if (holdableObjectList != null) {
                 foreach (HoldableObjectAttachment holdableObjectAttachment in holdableObjectList) {
                     if (holdableObjectAttachment != null) {
-                        holdableObjectAttachment.SetupScriptableObjects();
+                        holdableObjectAttachment.SetupScriptableObjects(systemGameManager);
                     }
                 }
             }
@@ -381,7 +382,7 @@ namespace AnyRPG {
                 umaRecipeProfileName = ResourceName;
             }
             if (umaRecipeProfileName != null && umaRecipeProfileName != string.Empty) {
-                UMARecipeProfile umaRecipeProfile = SystemDataFactory.Instance.GetResource<UMARecipeProfile>(umaRecipeProfileName);
+                UMARecipeProfile umaRecipeProfile = systemDataFactory.GetResource<UMARecipeProfile>(umaRecipeProfileName);
                 if (umaRecipeProfile != null && umaRecipeProfile.MyUMARecipes != null) {
                     UMARecipes = umaRecipeProfile.MyUMARecipes;
                 } else {

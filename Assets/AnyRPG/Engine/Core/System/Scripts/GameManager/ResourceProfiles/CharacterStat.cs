@@ -38,10 +38,10 @@ namespace AnyRPG {
         public List<PrimaryToSecondaryStatNode> PrimaryToSecondaryConversion { get => primaryToSecondaryConversion; set => primaryToSecondaryConversion = value; }
         public List<CharacterStatToResourceNode> PrimaryToResourceConversion { get => primaryToResourceConversion; set => primaryToResourceConversion = value; }
 
-        public void SetupScriptableObjects() {
+        public void SetupScriptableObjects(SystemDataFactory systemDataFactory) {
 
             foreach (CharacterStatToResourceNode characterStatToResourceNode in primaryToResourceConversion) {
-                characterStatToResourceNode.SetupScriptableObjects();
+                characterStatToResourceNode.SetupScriptableObjects(systemDataFactory);
             }
 
         }

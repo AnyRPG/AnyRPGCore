@@ -9,7 +9,7 @@ namespace AnyRPG {
     /// <summary>
     /// this class stores snapshots of capabilities to determine what to add or remove when a provider is added or changed
     /// </summary>
-    public class CapabilityConsumerSnapshot : ICapabilityConsumer {
+    public class CapabilityConsumerSnapshot : ConfiguredClass, ICapabilityConsumer {
 
         private UnitProfile unitProfile = null;
         private UnitType unitType = null;
@@ -30,8 +30,9 @@ namespace AnyRPG {
         public Faction Faction { get => faction; set => faction = value; }
         public CapabilityConsumerProcessor CapabilityConsumerProcessor { get => capabilityConsumerProcessor; }
 
-        public CapabilityConsumerSnapshot(ICapabilityConsumer capabilityConsumer) {
-            capabilityProviders.Add(SystemGameManager.Instance.SystemConfigurationManager);
+        public CapabilityConsumerSnapshot(ICapabilityConsumer capabilityConsumer, SystemGameManager systemGameManager) {
+            Configure(systemGameManager);
+            capabilityProviders.Add(systemConfigurationManager);
             if (capabilityConsumer.UnitProfile != null) {
                 unitProfile = capabilityConsumer.UnitProfile;
                 capabilityProviders.Add(capabilityConsumer.UnitProfile);
@@ -58,8 +59,9 @@ namespace AnyRPG {
             }
         }
 
-        public CapabilityConsumerSnapshot() {
-            //capabilityProviders.Add(SystemGameManager.Instance.SystemConfigurationManager);
+        public CapabilityConsumerSnapshot(SystemGameManager systemGameManager) {
+            Configure(systemGameManager);
+            //capabilityProviders.Add(systemConfigurationManager);
         }
 
         public List<StatusEffect> GetTraitList() {

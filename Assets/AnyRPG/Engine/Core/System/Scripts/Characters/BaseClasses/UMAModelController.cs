@@ -8,7 +8,7 @@ using UMA.CharacterSystem;
 using UMA.PoseTools;
 
 namespace AnyRPG {
-    public class UMAModelController {
+    public class UMAModelController : ConfiguredClass {
 
 
         // reference to unit
@@ -25,16 +25,25 @@ namespace AnyRPG {
 
         private bool buildInProgress = false;
 
-        public UMAModelController(UnitController unitController, UnitModelController unitModelController) {
+        // game manager references
+        private SaveManager saveManager = null;
+
+        public UMAModelController(UnitController unitController, UnitModelController unitModelController, SystemGameManager systemGameManager) {
             //Debug.Log(unitController.gameObject.name + ".UMAModelController()");
             this.unitController = unitController;
             this.unitModelController = unitModelController;
+            Configure(systemGameManager);
 
             // avatarDefintion is a struct so needs to have its properties set to something other than null
             avatarDefinition.RaceName = string.Empty;
             avatarDefinition.Wardrobe = new string[0];
             avatarDefinition.Dna = new DnaDef[0];
             avatarDefinition.Colors = new SharedColorDef[0];
+        }
+
+        public override void SetGameManagerReferences() {
+            base.SetGameManagerReferences();
+            saveManager = systemGameManager.SaveManager;
         }
 
         public bool IsBuilding() {
@@ -86,9 +95,9 @@ namespace AnyRPG {
 
         public void SetInitialSavedAppearance() {
             //Debug.Log(unitController.gameObject.name + ".UMAModelController.SetInitialSavedAppearance()");
-            if (SystemGameManager.Instance.SaveManager.RecipeString != null
-                && SystemGameManager.Instance.SaveManager.RecipeString != string.Empty) {
-                initialAppearance = SystemGameManager.Instance.SaveManager.RecipeString;
+            if (saveManager.RecipeString != null
+                && saveManager.RecipeString != string.Empty) {
+                initialAppearance = saveManager.RecipeString;
             }
         }
 
@@ -208,11 +217,11 @@ namespace AnyRPG {
                     //dynamicCharacterAvatar.SetLoadString(recipeString);
 
                 } else if (recipeString == null
-                    && SystemGameManager.Instance.SaveManager.RecipeString != null
-                    && SystemGameManager.Instance.SaveManager.RecipeString != string.Empty) {
-                    //Debug.Log(unitController.gameObject.name + ".UMAModelController.LoadSavedAppearanceSettings() : loading string from SaveManager : " + SystemGameManager.Instance.SaveManager.RecipeString);
+                    && saveManager.RecipeString != null
+                    && saveManager.RecipeString != string.Empty) {
+                    //Debug.Log(unitController.gameObject.name + ".UMAModelController.LoadSavedAppearanceSettings() : loading string from SaveManager : " + saveManager.RecipeString);
                     buildInProgress = true;
-                    dynamicCharacterAvatar.SetLoadString(SystemGameManager.Instance.SaveManager.RecipeString);
+                    dynamicCharacterAvatar.SetLoadString(saveManager.RecipeString);
                 }
                 if (rebuildAppearance == true && dynamicCharacterAvatar.BuildCharacterEnabled == false) {
                     // by default an UMA will build appearance unless the option is disabled, so this call is redundant unless the UMA is configured to not build
@@ -383,8 +392,8 @@ namespace AnyRPG {
         public void SaveAppearanceSettings() {
             //Debug.Log(unitController.gameObject.name + ".UMAModelController.SaveAppearanceSettings()");
             if (dynamicCharacterAvatar != null) {
-                //SystemGameManager.Instance.SaveManager.SaveRecipeString(dynamicCharacterAvatar.GetCurrentRecipe());
-                SystemGameManager.Instance.SaveManager.SaveRecipeString(GetAppearanceString());
+                //saveManager.SaveRecipeString(dynamicCharacterAvatar.GetCurrentRecipe());
+                saveManager.SaveRecipeString(GetAppearanceString());
             }
         }
 

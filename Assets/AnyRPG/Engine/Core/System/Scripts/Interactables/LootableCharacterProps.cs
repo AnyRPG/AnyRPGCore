@@ -24,8 +24,8 @@ namespace AnyRPG {
 
         //private List<LootTable> lootTables = new List<LootTable>();
 
-        public override Sprite Icon { get => (SystemGameManager.Instance.SystemConfigurationManager.LootableCharacterInteractionPanelImage != null ? SystemGameManager.Instance.SystemConfigurationManager.LootableCharacterInteractionPanelImage : base.Icon); }
-        public override Sprite NamePlateImage { get => (SystemGameManager.Instance.SystemConfigurationManager.LootableCharacterNamePlateImage != null ? SystemGameManager.Instance.SystemConfigurationManager.LootableCharacterNamePlateImage : base.NamePlateImage); }
+        public override Sprite Icon { get => (systemConfigurationManager.LootableCharacterInteractionPanelImage != null ? systemConfigurationManager.LootableCharacterInteractionPanelImage : base.Icon); }
+        public override Sprite NamePlateImage { get => (systemConfigurationManager.LootableCharacterNamePlateImage != null ? systemConfigurationManager.LootableCharacterNamePlateImage : base.NamePlateImage); }
         public bool AutomaticCurrency { get => automaticCurrency; set => automaticCurrency = value; }
         public List<string> LootTableNames { get => lootTableNames; set => lootTableNames = value; }
 
@@ -33,7 +33,7 @@ namespace AnyRPG {
 
         public override InteractableOptionComponent GetInteractableOption(Interactable interactable, InteractableOption interactableOption = null) {
             //Debug.Log("InteractableOptionComponent().GetInteractableOption: (" + (interactable == null ? "null" : interactable.DisplayName) + ")");
-            InteractableOptionComponent returnValue = new LootableCharacterComponent(interactable, this);
+            InteractableOptionComponent returnValue = new LootableCharacterComponent(interactable, this, systemGameManager);
             if (interactableOption != null) {
                 interactableOption.SetComponent(returnValue);
             }

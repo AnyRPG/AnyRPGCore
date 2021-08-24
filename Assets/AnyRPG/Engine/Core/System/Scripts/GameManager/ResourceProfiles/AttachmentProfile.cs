@@ -18,8 +18,8 @@ namespace AnyRPG {
 
         public Dictionary<string, AttachmentPointNode> AttachmentPointDictionary { get => attachmentPointDictionary; set => attachmentPointDictionary = value; }
 
-        public override void SetupScriptableObjects() {
-            base.SetupScriptableObjects();
+        public override void SetupScriptableObjects(SystemGameManager systemGameManager) {
+            base.SetupScriptableObjects(systemGameManager);
 
             // define attachment point node dictionary for quick lookup later
             if (attachmentPointNodes != null) {
@@ -58,24 +58,25 @@ namespace AnyRPG {
         [Tooltip("The bone on the character model to attach the physical prefab to")]
         [SerializeField]
         private string targetBone = string.Empty;
-
+        /*
         [Tooltip("The name of the audio profile to play when moving the prefab to this position")]
         [SerializeField]
         private string audioProfileName = string.Empty;
 
         private AudioProfile audioProfile = null;
+        */
 
         public Vector3 Position { get => position; set => position = value; }
         public bool RotationIsGlobal { get => rotationIsGlobal; set => rotationIsGlobal = value; }
         public Vector3 Rotation { get => rotation; set => rotation = value; }
         public Vector3 Scale { get => scale; set => scale = value; }
         public string TargetBone { get => targetBone; set => targetBone = value; }
-        public string AudioProfileName { get => audioProfileName; set => audioProfileName = value; }
+        //public string AudioProfileName { get => audioProfileName; set => audioProfileName = value; }
         public string NodeName { get => nodeName; set => nodeName = value; }
-
-        public void SetupScriptableObjects() {
+        /*
+        public void SetupScriptableObjects(SystemDataFactory systemDataFactory) {
             if (audioProfileName != null && audioProfileName != string.Empty) {
-                AudioProfile tmpAudioProfile = SystemDataFactory.Instance.GetResource<AudioProfile>(audioProfileName);
+                AudioProfile tmpAudioProfile = systemDataFactory.GetResource<AudioProfile>(audioProfileName);
                 if (tmpAudioProfile != null) {
                     audioProfile = tmpAudioProfile;
                 } else {
@@ -83,6 +84,7 @@ namespace AnyRPG {
                 }
             }
         }
+        */
 
     }
 }

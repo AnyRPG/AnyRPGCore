@@ -63,7 +63,6 @@ namespace AnyRPG {
         private UnitToughness unitToughness;
 
         // game manager references
-        private SystemConfigurationManager systemConfigurationManager = null;
         private PlayerManager playerManager = null;
         private SystemDataFactory systemDataFactory = null;
         private UnitPreviewManager unitPreviewManager = null;
@@ -81,11 +80,11 @@ namespace AnyRPG {
 
             returnButton.Configure(systemGameManager);
             spawnButton.Configure(systemGameManager);
+            previewCameraController.Configure(systemGameManager);
         }
 
         public override void SetGameManagerReferences() {
             base.SetGameManagerReferences();
-            systemConfigurationManager = systemGameManager.SystemConfigurationManager;
             playerManager = systemGameManager.PlayerManager;
             systemDataFactory = systemGameManager.SystemDataFactory;
             unitPreviewManager = systemGameManager.UnitPreviewManager;

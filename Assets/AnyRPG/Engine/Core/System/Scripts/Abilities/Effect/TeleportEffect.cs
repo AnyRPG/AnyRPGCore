@@ -32,21 +32,29 @@ namespace AnyRPG {
         [SerializeField]
         private Vector3 spawnForwardDirection = Vector3.zero;
 
+        // game manager references
+        protected LevelManager levelManager = null;
+
         public string MyLevelName { get => levelName; set => levelName = value; }
+
+        public override void SetGameManagerReferences() {
+            base.SetGameManagerReferences();
+            levelManager = systemGameManager.LevelManager;
+        }
 
         public override Dictionary<PrefabProfile, GameObject> Cast(IAbilityCaster source, Interactable target, Interactable originalTarget, AbilityEffectContext abilityEffectInput) {
             Dictionary<PrefabProfile, GameObject> returnObjects = base.Cast(source, target, originalTarget, abilityEffectInput);
             if (levelName != null) {
                 if (overrideSpawnDirection == true) {
-                    SystemGameManager.Instance.LevelManager.SetSpawnRotationOverride(spawnForwardDirection);
+                    levelManager.SetSpawnRotationOverride(spawnForwardDirection);
                 }
                 if (overrideSpawnLocation == true) {
-                    SystemGameManager.Instance.LevelManager.LoadLevel(levelName, spawnLocation);
+                    levelManager.LoadLevel(levelName, spawnLocation);
                 } else {
                     if (locationTag != null && locationTag != string.Empty) {
-                        SystemGameManager.Instance.LevelManager.OverrideSpawnLocationTag = locationTag;
+                        levelManager.OverrideSpawnLocationTag = locationTag;
                     }
-                    SystemGameManager.Instance.LevelManager.LoadLevel(levelName);
+                    levelManager.LoadLevel(levelName);
                 }
             }
             return returnObjects;

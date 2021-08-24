@@ -23,18 +23,18 @@ namespace AnyRPG {
         public BaseAbility BaseAbility { get => ability; }
 
         public override InteractableOptionComponent GetInteractableOption(Interactable interactable, InteractableOption interactableOption = null) {
-            InteractableOptionComponent returnValue = new TeleportComponent(interactable, this);
+            InteractableOptionComponent returnValue = new TeleportComponent(interactable, this, systemGameManager);
             if (interactableOption != null) {
                 interactableOption.SetComponent(returnValue);
             }
             return returnValue;
         }
 
-        public override void SetupScriptableObjects() {
-            base.SetupScriptableObjects();
+        public override void SetupScriptableObjects(SystemGameManager systemGameManager) {
+            base.SetupScriptableObjects(systemGameManager);
 
             if (abilityName != null && abilityName != string.Empty) {
-                BaseAbility baseAbility = SystemDataFactory.Instance.GetResource<BaseAbility>(abilityName);
+                BaseAbility baseAbility = systemDataFactory.GetResource<BaseAbility>(abilityName);
                 if (baseAbility != null) {
                     ability = baseAbility;
                 } else {

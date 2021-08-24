@@ -23,7 +23,7 @@ namespace AnyRPG {
             float returnValue = base.GetArmorModifier(characterLevel, usedItemQuality);
             if (useArmorModifier && !useManualArmor) {
                 return (int)Mathf.Ceil(Mathf.Clamp(
-                    (float)GetItemLevel(characterLevel) * (LevelEquations.GetArmorForClass(ArmorClass) * GetItemQualityNumber(usedItemQuality)) * (1f / ((float)(SystemDataFactory.Instance.GetResourceCount<EquipmentSlotProfile>() - 2))),
+                    (float)GetItemLevel(characterLevel) * (LevelEquations.GetArmorForClass(ArmorClass) * GetItemQualityNumber(usedItemQuality)) * (1f / ((float)(systemDataFactory.GetResourceCount<EquipmentSlotProfile>() - 2))),
                     0f,
                     Mathf.Infinity
                     ));
@@ -45,7 +45,7 @@ namespace AnyRPG {
             List<CharacterClass> allowedCharacterClasses = GetAllowedCharacterClasses();
             if (allowedCharacterClasses.Count > 0) {
                 string colorString = "red";
-                if (allowedCharacterClasses.Contains(SystemGameManager.Instance.PlayerManager.MyCharacter.CharacterClass)) {
+                if (allowedCharacterClasses.Contains(playerManager.MyCharacter.CharacterClass)) {
                     colorString = "white";
                 }
                 abilitiesString += string.Format("\n<color={0}>{1}</color>", colorString, armorClassName);
@@ -54,7 +54,7 @@ namespace AnyRPG {
             // testing replacement for above code
             if (armorClassName != null && armorClassName != string.Empty) {
                 string colorString = "white";
-                if (!CanEquip(SystemGameManager.Instance.PlayerManager.ActiveCharacter)) {
+                if (!CanEquip(playerManager.ActiveCharacter)) {
                     colorString = "red";
                 }
                 abilitiesString += string.Format("\n<color={0}>{1}</color>", colorString, armorClassName);
@@ -75,19 +75,19 @@ namespace AnyRPG {
             }
             List<CharacterClass> allowedCharacterClasses = GetAllowedCharacterClasses();
             if (allowedCharacterClasses != null && allowedCharacterClasses.Count > 0 && !allowedCharacterClasses.Contains(baseCharacter.CharacterClass)) {
-                SystemGameManager.Instance.UIManager.MessageFeedManager.WriteMessage("You do not have the right armor proficiency to equip " + DisplayName);
+                messageFeedManager.WriteMessage("You do not have the right armor proficiency to equip " + DisplayName);
                 return false;
             }
             return true;
         }
         */
 
-        public override void SetupScriptableObjects() {
-            base.SetupScriptableObjects();
+        public override void SetupScriptableObjects(SystemGameManager systemGameManager) {
+            base.SetupScriptableObjects(systemGameManager);
 
             armorClass = null;
             if (armorClassName != null && armorClassName != string.Empty) {
-                ArmorClass tmpArmorClass = SystemDataFactory.Instance.GetResource<ArmorClass>(armorClassName);
+                ArmorClass tmpArmorClass = systemDataFactory.GetResource<ArmorClass>(armorClassName);
                 if (tmpArmorClass != null) {
                     armorClass = tmpArmorClass;
                 } else {

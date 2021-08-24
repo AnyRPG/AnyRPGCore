@@ -8,7 +8,7 @@ using UnityEngine.SceneManagement;
 
 namespace AnyRPG {
     [System.Serializable]
-    public class CombatStrategyNode {
+    public class CombatStrategyNode : ConfiguredClass {
 
         [SerializeField]
         private int maxHealthPercent = 100;
@@ -44,6 +44,10 @@ namespace AnyRPG {
 
         private List<BaseAbility> attackAbilityList = new List<BaseAbility>();
 
+        // game manager references
+        private AudioManager audioManager = null;
+        private SystemDataFactory systemDataFactory = null;
+
         public int MyMaxHealthPercent { get => maxHealthPercent; set => maxHealthPercent = value; }
         public int MyMinHealthPercent { get => minHealthPercent; set => minHealthPercent = value; }
         public string MyPhaseMusicProfileName { get => phaseMusicProfileName; set => phaseMusicProfileName = value; }
@@ -57,17 +61,25 @@ namespace AnyRPG {
         public void StartPhase() {
             if (phaseMusicProfile != null) {
                 if (phaseMusicProfile.AudioClip != null) {
-                    SystemGameManager.Instance.AudioManager.PlayMusic(phaseMusicProfile.AudioClip);
+                    audioManager.PlayMusic(phaseMusicProfile.AudioClip);
                 }
             }
         }
 
-        public void SetupScriptableObjects() {
+        public override void SetGameManagerReferences() {
+            base.SetGameManagerReferences();
+            audioManager = systemGameManager.AudioManager;
+            systemDataFactory = systemGameManager.SystemDataFactory;
+        }
+
+        public void SetupScriptableObjects(SystemGameManager systemGameManager) {
+
+            Configure(systemGameManager);
 
             attackAbilityList = new List<BaseAbility>();
             if (attackAbilityNames != null) {
                 foreach (string baseAbilityName in attackAbilityNames) {
-                    BaseAbility baseAbility = SystemDataFactory.Instance.GetResource<BaseAbility>(baseAbilityName);
+                    BaseAbility baseAbility = systemDataFactory.GetResource<BaseAbility>(baseAbilityName);
                     if (baseAbility != null) {
                         attackAbilityList.Add(baseAbility);
                     } else {
@@ -79,7 +91,7 @@ namespace AnyRPG {
             maintainBuffList = new List<BaseAbility>();
             if (maintainBuffNames != null) {
                 foreach (string baseAbilityName in maintainBuffNames) {
-                    BaseAbility baseAbility = SystemDataFactory.Instance.GetResource<BaseAbility>(baseAbilityName);
+                    BaseAbility baseAbility = systemDataFactory.GetResource<BaseAbility>(baseAbilityName);
                     if (baseAbility != null) {
                         maintainBuffList.Add(baseAbility);
                     } else {
@@ -90,7 +102,7 @@ namespace AnyRPG {
 
             phaseMusicProfile = null;
             if (phaseMusicProfileName != null && phaseMusicProfileName != string.Empty) {
-                AudioProfile musicProfile = SystemDataFactory.Instance.GetResource<AudioProfile>(phaseMusicProfileName);
+                AudioProfile musicProfile = systemDataFactory.GetResource<AudioProfile>(phaseMusicProfileName);
                 if (musicProfile != null) {
                     phaseMusicProfile = musicProfile;
                 } else {

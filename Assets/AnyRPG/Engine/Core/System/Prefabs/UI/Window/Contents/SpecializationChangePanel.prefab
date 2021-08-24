@@ -1279,6 +1279,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   backGroundImage: {fileID: 0}
+  coloredUIElements:
+  - {fileID: 4045389512635944704}
   rewardIconPrefab: {fileID: 7470950394934575550, guid: 83ca6799ff9b76c48802e4f65abab075,
     type: 3}
   classSpecializationButton: {fileID: 1353089800810867062}

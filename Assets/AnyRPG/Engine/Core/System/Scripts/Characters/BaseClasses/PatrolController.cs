@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.AI;
 
 namespace AnyRPG {
-    public class PatrolController {
+    public class PatrolController : ConfiguredClass {
 
         // references
         private UnitController unitController;
@@ -13,6 +13,9 @@ namespace AnyRPG {
         private Dictionary<PatrolProps, PatrolSaveState> patrolSaveStates = new Dictionary<PatrolProps, PatrolSaveState>();
 
         private PatrolProps currentPatrolProps = null;
+
+        // game manager references
+        private SystemDataFactory systemDataFactory = null;
 
         public PatrolProps CurrentPatrol { get => currentPatrolProps; }
         public PatrolProps CurrentPatrolProps { get => currentPatrolProps; }
@@ -26,8 +29,14 @@ namespace AnyRPG {
             }
         }
 
-        public PatrolController(UnitController unitController) {
+        public PatrolController(UnitController unitController, SystemGameManager systemGameManager) {
             this.unitController = unitController;
+            Configure(systemGameManager);
+        }
+
+        public override void SetGameManagerReferences() {
+            base.SetGameManagerReferences();
+            systemDataFactory = systemGameManager.SystemDataFactory;
         }
 
         // this should be run after the unit profile is set
@@ -49,7 +58,7 @@ namespace AnyRPG {
 
         public void BeginPatrol(string patrolName) {
             //Debug.Log(unitController.gameObject.name + ".PatrolController.BeginPatrol(" + (patrolName != null ? patrolName : "null" ) + ")");
-            PatrolProfile tmpPatrolProfile = SystemDataFactory.Instance.GetResource<PatrolProfile>(patrolName);
+            PatrolProfile tmpPatrolProfile = systemDataFactory.GetResource<PatrolProfile>(patrolName);
             if (tmpPatrolProfile != null) {
                 //if (patrolSaveStates.ContainsKey(tmpPatrolProfile.PatrolProperties) == false) {
                     AddPatrolState(tmpPatrolProfile.PatrolProperties);
@@ -105,7 +114,7 @@ namespace AnyRPG {
             if (unitController?.PatrolNames != null) {
                 foreach (string patrolName in unitController.PatrolNames) {
                     if (patrolName != null && patrolName != string.Empty) {
-                        PatrolProfile _tmpPatrolProfile = SystemDataFactory.Instance.GetResource<PatrolProfile>(patrolName);
+                        PatrolProfile _tmpPatrolProfile = systemDataFactory.GetResource<PatrolProfile>(patrolName);
                         if (_tmpPatrolProfile != null) {
                             AddPatrolState(_tmpPatrolProfile.PatrolProperties);
                         } else {
@@ -119,7 +128,7 @@ namespace AnyRPG {
             if (unitController?.UnitProfile?.PatrolNames != null) {
                 foreach (string patrolName in unitController.UnitProfile.PatrolNames) {
                     if (patrolName != null && patrolName != string.Empty) {
-                        PatrolProfile _tmpPatrolProfile = SystemDataFactory.Instance.GetResource<PatrolProfile>(patrolName);
+                        PatrolProfile _tmpPatrolProfile = systemDataFactory.GetResource<PatrolProfile>(patrolName);
                         if (_tmpPatrolProfile != null) {
                             AddPatrolState(_tmpPatrolProfile.PatrolProperties);
                         } else {

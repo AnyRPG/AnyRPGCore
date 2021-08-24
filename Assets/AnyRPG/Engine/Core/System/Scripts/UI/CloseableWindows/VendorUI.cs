@@ -34,7 +34,7 @@ namespace AnyRPG {
         PlayerManager playerManager = null;
         UIManager uIManager = null;
         MessageFeedManager messageFeedManager = null;
-        SystemConfigurationManager systemConfigurationManager = null;
+        private CurrencyConverter currencyConverter = null;
 
         private List<CurrencyAmountController> currencyAmountControllers = new List<CurrencyAmountController>();
 
@@ -42,8 +42,8 @@ namespace AnyRPG {
             base.Configure(systemGameManager);
             playerManager = systemGameManager.PlayerManager;
             uIManager = systemGameManager.UIManager;
-            systemConfigurationManager = systemGameManager.SystemConfigurationManager;
-            messageFeedManager = systemGameManager.UIManager.MessageFeedManager;
+            messageFeedManager = uIManager.MessageFeedManager;
+            currencyConverter = systemGameManager.CurrencyConverter;
 
             //vendorUI.CreatePages(items);
             CreateEventSubscriptions();
@@ -87,9 +87,13 @@ namespace AnyRPG {
             return pages.Count;
         }
 
-        public void CreatePages(List<VendorItem> items) {
-            //Debug.Log("VendorUI.CreatePages()");
-            ClearPages();
+        public void CreatePages(List<VendorItem> items, bool resetPageIndex = true) {
+            //Debug.Log("VendorUI.CreatePages(" + items.Count + ")");
+            ClearPages(resetPageIndex);
+
+            // remove all items with a quanity of 0 from the list
+            items.RemoveAll(item => (item.Unlimited == false && item.Quantity == 0));
+
             List<VendorItem> page = new List<VendorItem>();
             for (int i = 0; i < items.Count; i++) {
                 page.Add(items[i]);
@@ -97,6 +101,11 @@ namespace AnyRPG {
                     pages.Add(page);
                     page = new List<VendorItem>();
                 }
+            }
+            if (pages.Count <= pageIndex) {
+                // set the page index to the last page
+                pageIndex = Mathf.Clamp(pages.Count - 1, 0, int.MaxValue);
+                //Debug.Log("VendorUI.CreatePages(" + items.Count + ") pageIndex: " + pageIndex);
             }
             AddItems();
             OnPageCountUpdate(false);
@@ -122,7 +131,7 @@ namespace AnyRPG {
         }
 
         public void LoadPage(int pageIndex) {
-            //Debug.Log("VendorUI.LoadPage()");
+            //Debug.Log("VendorUI.LoadPage(" + pageIndex + ")");
             ClearButtons();
             this.pageIndex = pageIndex;
             AddItems();
@@ -179,10 +188,12 @@ namespace AnyRPG {
             vendorCollections.Clear();
         }
 
-        private void ClearPages() {
+        private void ClearPages(bool resetPageIndex = true) {
             ClearButtons();
             pages.Clear();
-            pageIndex = 0;
+            if (resetPageIndex == true) {
+                pageIndex = 0;
+            }
         }
 
         public void SetCollection(int dropDownIndex) {
@@ -205,29 +216,41 @@ namespace AnyRPG {
         
 
         public bool SellItem(Item item) {
-            if (item.BuyPrice() <= 0 || item.MySellPrice.Key == null) {
+            if (item.BuyPrice() <= 0 || item.GetSellPrice().Key == null) {
                 messageFeedManager.WriteMessage("The vendor does not want to buy the " + item.DisplayName);
                 return false;
             }
-            KeyValuePair<Currency, int> sellAmount = item.MySellPrice;
+            KeyValuePair<Currency, int> sellAmount = item.GetSellPrice();
 
             playerManager.MyCharacter.CharacterCurrencyManager.AddCurrency(sellAmount.Key, sellAmount.Value);
             AddToBuyBackCollection(item);
-            item.MySlot.RemoveItem(item);
+            item.Slot.RemoveItem(item);
 
             if (systemConfigurationManager.VendorAudioProfile?.AudioClip != null) {
                 audioManager.PlayEffect(systemConfigurationManager.VendorAudioProfile.AudioClip);
             }
-            string priceString = CurrencyConverter.GetCombinedPriceSring(sellAmount.Key, sellAmount.Value);
+            string priceString = currencyConverter.GetCombinedPriceString(sellAmount.Key, sellAmount.Value);
             messageFeedManager.WriteMessage("Sold " + item.DisplayName + " for " + priceString);
 
 
             if (dropDownIndex == 0) {
+                /*
                 CreatePages(vendorCollections[dropDownIndex].MyVendorItems);
                 LoadPage(pageIndex);
                 OnPageCountUpdate(false);
+                */
+                RefreshPage();
             }
             return true;
         }
+
+        public void RefreshPage() {
+            //Debug.Log("VendorUI.RefreshPage()");
+            CreatePages(vendorCollections[dropDownIndex].MyVendorItems, false);
+            //Debug.Log("VendorUI.RefreshPage() count: " + pages.Count + "; index: " + pageIndex);
+            LoadPage(pageIndex);
+            OnPageCountUpdate(false);
+        }
+
     }
 }

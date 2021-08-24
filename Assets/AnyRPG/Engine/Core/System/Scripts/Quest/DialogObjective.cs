@@ -27,17 +27,17 @@ namespace AnyRPG {
                 CurrentAmount++;
                 quest.CheckCompletion();
                 if (CurrentAmount <= MyAmount && !quest.IsAchievement && CurrentAmount != 0) {
-                    SystemGameManager.Instance.UIManager.MessageFeedManager.WriteMessage(string.Format("{0}: {1}/{2}", DisplayName, Mathf.Clamp(CurrentAmount, 0, MyAmount), MyAmount));
+                    messageFeedManager.WriteMessage(string.Format("{0}: {1}/{2}", DisplayName, Mathf.Clamp(CurrentAmount, 0, MyAmount), MyAmount));
                 }
                 if (completeBefore == false && IsComplete && !quest.IsAchievement) {
-                    SystemGameManager.Instance.UIManager.MessageFeedManager.WriteMessage(string.Format("{0}: Objective Complete", DisplayName));
+                    messageFeedManager.WriteMessage(string.Format("{0}: Objective Complete", DisplayName));
                 }
             }
         }
 
         public override void UpdateCompletionCount(bool printMessages = true) {
             base.UpdateCompletionCount(printMessages);
-            Dialog dialog = SystemDataFactory.Instance.GetResource<Dialog>(MyType);
+            Dialog dialog = systemDataFactory.GetResource<Dialog>(MyType);
             if (dialog != null && dialog.TurnedIn == true) {
                 CurrentAmount++;
             }
@@ -50,13 +50,13 @@ namespace AnyRPG {
             UpdateCompletionCount(printMessages);
 
             // don't forget to remove these later
-            SystemGameManager.Instance.SystemEventManager.OnDialogCompleted += CheckCompletionCount;
+            systemEventManager.OnDialogCompleted += CheckCompletionCount;
         }
 
         public override void OnAbandonQuest() {
             //Debug.Log("UseInteractableObjective.OnAbandonQuest()");
             base.OnAbandonQuest();
-            SystemGameManager.Instance.SystemEventManager.OnDialogCompleted -= CheckCompletionCount;
+            systemEventManager.OnDialogCompleted -= CheckCompletionCount;
         }
 
     }

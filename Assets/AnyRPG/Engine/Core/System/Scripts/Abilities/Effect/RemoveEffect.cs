@@ -44,13 +44,13 @@ namespace AnyRPG {
         }
 
 
-        public override void SetupScriptableObjects() {
+        public override void SetupScriptableObjects(SystemGameManager systemGameManager) {
 
-            base.SetupScriptableObjects();
+            base.SetupScriptableObjects(systemGameManager);
 
             if (effectTypeNames != null) {
                 foreach (string statusEffectType in effectTypeNames) {
-                    StatusEffectType tmpStatusEffectType = SystemDataFactory.Instance.GetResource<StatusEffectType>(statusEffectType);
+                    StatusEffectType tmpStatusEffectType = systemDataFactory.GetResource<StatusEffectType>(statusEffectType);
                     if (tmpStatusEffectType != null) {
                         effectTypes.Add(tmpStatusEffectType);
                     } else {

@@ -76,7 +76,6 @@ namespace AnyRPG {
         UIManager uIManager = null;
         LevelManager levelManager = null;
         CameraManager cameraManager = null;
-        SystemConfigurationManager systemConfigurationManager = null;
         SystemAbilityController systemAbilityController = null;
         LogManager logManager = null;
         CastTargettingManager castTargettingManager = null;
@@ -114,7 +113,6 @@ namespace AnyRPG {
             messageFeedManager = uIManager.MessageFeedManager;
             levelManager = systemGameManager.LevelManager;
             cameraManager = systemGameManager.CameraManager;
-            systemConfigurationManager = systemGameManager.SystemConfigurationManager;
             systemAbilityController = systemGameManager.SystemAbilityController;
             logManager = systemGameManager.LogManager;
             castTargettingManager = systemGameManager.CastTargettingManager;
@@ -292,8 +290,11 @@ namespace AnyRPG {
         public void RespawnPlayer() {
             //Debug.Log("PlayerManager.RespawnPlayer()");
             DespawnPlayerUnit();
-            activeCharacter.CharacterStats.ReviveRaw();
             SpawnPlayerUnit();
+
+            if (activeCharacter.CharacterStats.IsAlive == false) {
+                activeCharacter.CharacterStats.ReviveRaw();
+            }
         }
 
         public void RevivePlayerUnit() {
@@ -453,9 +454,12 @@ namespace AnyRPG {
             }
             playerConnectionObject = objectPooler.GetPooledObject(playerConnectionPrefab, playerConnectionParent.transform);
             character = playerConnectionObject.GetComponent<BaseCharacter>();
+            character.Configure(systemGameManager);
             activeCharacter = character;
             playerController = playerConnectionObject.GetComponent<PlayerController>();
+            playerController.Configure(systemGameManager);
             playerUnitMovementController = playerConnectionObject.GetComponent<PlayerUnitMovementController>();
+            playerUnitMovementController.Configure(systemGameManager);
 
             SystemEventManager.TriggerEvent("OnBeforePlayerConnectionSpawn", new EventParamProperties());
             activeCharacter.Init();
@@ -665,7 +669,7 @@ namespace AnyRPG {
                 return;
             }
             //Debug.Log(gameObject.name + ": About to gain xp from kill with creditPercent: " + creditPercent);
-            MyCharacter.CharacterStats.GainXP((int)(LevelEquations.GetXPAmountForKill(activeCharacter.CharacterStats.Level, sourceCharacter) * creditPercent));
+            MyCharacter.CharacterStats.GainXP((int)(LevelEquations.GetXPAmountForKill(activeCharacter.CharacterStats.Level, sourceCharacter, systemConfigurationManager) * creditPercent));
         }
 
 

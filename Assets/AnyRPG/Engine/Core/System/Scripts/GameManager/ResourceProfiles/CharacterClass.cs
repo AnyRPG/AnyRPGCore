@@ -82,13 +82,13 @@ namespace AnyRPG {
             return returnValue;
         }
 
-        public override void SetupScriptableObjects() {
-            base.SetupScriptableObjects();
+        public override void SetupScriptableObjects(SystemGameManager systemGameManager) {
+            base.SetupScriptableObjects(systemGameManager);
 
             if (equipmentNames != null) {
                 foreach (string equipmentName in equipmentNames) {
                     Equipment tmpEquipment = null;
-                    tmpEquipment = SystemDataFactory.Instance.GetResource<Item>(equipmentName) as Equipment;
+                    tmpEquipment = systemDataFactory.GetResource<Item>(equipmentName) as Equipment;
                     if (tmpEquipment != null) {
                         equipmentList.Add(tmpEquipment);
                     } else {
@@ -99,7 +99,7 @@ namespace AnyRPG {
 
             if (validPetTypes != null) {
                 foreach (string petType in validPetTypes) {
-                    UnitType tmpUnitType = SystemDataFactory.Instance.GetResource<UnitType>(petType);
+                    UnitType tmpUnitType = systemDataFactory.GetResource<UnitType>(petType);
                     if (tmpUnitType != null) {
                         validPetTypeList.Add(tmpUnitType);
                     } else {
@@ -112,7 +112,7 @@ namespace AnyRPG {
             powerResourceList = new List<PowerResource>();
             if (powerResources != null) {
                 foreach (string powerResourcename in powerResources) {
-                    PowerResource tmpPowerResource = SystemDataFactory.Instance.GetResource<PowerResource>(powerResourcename);
+                    PowerResource tmpPowerResource = systemDataFactory.GetResource<PowerResource>(powerResourcename);
                     if (tmpPowerResource != null) {
                         powerResourceList.Add(tmpPowerResource);
                     } else {
@@ -122,12 +122,12 @@ namespace AnyRPG {
             }
 
             foreach (StatScalingNode statScalingNode in primaryStats) {
-                statScalingNode.SetupScriptableObjects();
+                statScalingNode.SetupScriptableObjects(systemDataFactory);
             }
 
-            capabilities.SetupScriptableObjects();
+            capabilities.SetupScriptableObjects(systemDataFactory);
             foreach (UnitTypeCapabilityNode unitTypeCapabilityNode in unitTypeCapabilities) {
-                unitTypeCapabilityNode.SetupScriptableObjects();
+                unitTypeCapabilityNode.SetupScriptableObjects(systemDataFactory);
             }
 
         }
@@ -152,10 +152,10 @@ namespace AnyRPG {
         public string ResourceName { get => resourceName; set => resourceName = value; }
         public PowerResource PowerResource { get => powerResource; set => powerResource = value; }
 
-        public void SetupScriptableObjects() {
+        public void SetupScriptableObjects(SystemDataFactory systemDataFactory) {
 
             if (resourceName != null && resourceName != string.Empty) {
-                PowerResource tmpPowerResource = SystemDataFactory.Instance.GetResource<PowerResource>(resourceName);
+                PowerResource tmpPowerResource = systemDataFactory.GetResource<PowerResource>(resourceName);
                 if (tmpPowerResource != null) {
                     powerResource = tmpPowerResource;
                 } else {
@@ -166,7 +166,7 @@ namespace AnyRPG {
         }
 
     }
-
+    /*
     [System.Serializable]
     public class StatToResourceNode {
 
@@ -183,10 +183,10 @@ namespace AnyRPG {
         public PowerResource PowerResource { get => powerResource; set => powerResource = value; }
         public List<CharacterStatToResourceNode> StatConversion { get => statConversion; set => statConversion = value; }
 
-        public void SetupScriptableObjects() {
+        public void SetupScriptableObjects(SystemDataFactory systemDataFactory) {
 
             if (powerResourceName != null && powerResourceName != string.Empty) {
-                PowerResource tmpPowerResource = SystemDataFactory.Instance.GetResource<PowerResource>(powerResourceName);
+                PowerResource tmpPowerResource = systemDataFactory.GetResource<PowerResource>(powerResourceName);
                 if (tmpPowerResource != null) {
                     powerResource = tmpPowerResource;
                 } else {
@@ -196,6 +196,7 @@ namespace AnyRPG {
 
         }
     }
+    */
 
     [System.Serializable]
     public class UnitTypeCapabilityNode {
@@ -213,11 +214,11 @@ namespace AnyRPG {
         public List<UnitType> UnitTypeList { get => unitTypeList; set => unitTypeList = value; }
         public CapabilityProps Capabilities { get => capabilities; set => capabilities = value; }
 
-        public void SetupScriptableObjects() {
+        public void SetupScriptableObjects(SystemDataFactory systemDataFactory) {
 
             foreach (string unitTypeName in unitTypes) {
                 if (unitTypeName != null && unitTypeName != string.Empty) {
-                    UnitType tmpUnitType = SystemDataFactory.Instance.GetResource<UnitType>(unitTypeName);
+                    UnitType tmpUnitType = systemDataFactory.GetResource<UnitType>(unitTypeName);
                     if (tmpUnitType != null) {
                         unitTypeList.Add(tmpUnitType);
                     } else {
@@ -228,7 +229,7 @@ namespace AnyRPG {
                 }
             }
 
-            capabilities.SetupScriptableObjects();
+            capabilities.SetupScriptableObjects(systemDataFactory);
         }
     }
 

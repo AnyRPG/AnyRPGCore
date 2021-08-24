@@ -57,12 +57,19 @@ namespace AnyRPG {
         [SerializeField]
         private List<CharacterClassCapabilityNode> classCapabilityList = new List<CharacterClassCapabilityNode>();
 
+        // game manager references
+        protected PlayerManager playerManager = null;
 
         public bool NewGameOption { get => newGameOption; set => newGameOption = value; }
         public string DefaultStartingZone { get => defaultStartingZone; set => defaultStartingZone = value; }
         public List<UnitProfile> CharacterCreatorProfiles { get => characterCreatorProfiles; set => characterCreatorProfiles = value; }
         public bool HideDefaultProfiles { get => hideDefaultProfiles; set => hideDefaultProfiles = value; }
         public List<Equipment> EquipmentList { get => equipmentList; set => equipmentList = value; }
+
+        public override void SetGameManagerReferences() {
+            base.SetGameManagerReferences();
+            playerManager = systemGameManager.PlayerManager;
+        }
 
         public CapabilityProps GetFilteredCapabilities(ICapabilityConsumer capabilityConsumer, bool returnAll = true) {
             CapabilityProps returnValue = new CapabilityProps();
@@ -77,29 +84,29 @@ namespace AnyRPG {
             return returnValue;
         }
 
-        public static Color GetFactionColor(NamePlateUnit namePlateUnit) {
+        public static Color GetFactionColor(PlayerManager playerManager, NamePlateUnit namePlateUnit) {
             //Debug.Log("Faction.GetFactionColor(" + namePlateUnit.DisplayName + ")");
-            if (SystemGameManager.Instance.PlayerManager?.UnitController != null && (namePlateUnit as MonoBehaviour).gameObject == SystemGameManager.Instance.PlayerManager?.UnitController?.gameObject) {
+            if (playerManager.UnitController != null && (namePlateUnit as MonoBehaviour).gameObject == playerManager.UnitController?.gameObject) {
                 // when retrieving the color that should be displayed on the player character, always green even if it has no faction
                 return Color.green;
             }
             // next check custom gained faction for either character
-            if (namePlateUnit.CharacterUnit != null && SystemGameManager.Instance.PlayerManager?.UnitController != null) {
+            if (namePlateUnit.CharacterUnit != null && playerManager.UnitController != null) {
                 //Debug.Log("Faction.GetFactionColor(" + namePlateUnit.DisplayName + ") : nameplate unit is a character unit AND PLAYER UNIT IS SPAWNED");
-                return GetFactionColor(SystemGameManager.Instance.PlayerManager?.MyCharacter, namePlateUnit.CharacterUnit.BaseCharacter);
+                return GetFactionColor(playerManager, playerManager.MyCharacter, namePlateUnit.CharacterUnit.BaseCharacter);
             } else {
                 //Debug.Log("Faction.GetFactionColor(" + namePlateUnit.DisplayName + ") : nameplate unit is NOT a character unit");
             }
 
             // finally, fallback on dispisition dictionaries and defaults
-            return GetFactionColor(namePlateUnit.NamePlateController.Faction);
+            return GetFactionColor(playerManager, namePlateUnit.NamePlateController.Faction);
         }
 
-        public static Color GetFactionColor(BaseCharacter characterToCheck, BaseCharacter myCharacter) {
+        public static Color GetFactionColor(PlayerManager playerManager, BaseCharacter characterToCheck, BaseCharacter myCharacter) {
             //Debug.Log("Faction.GetFactionColor(): " + myCharacter.MyCharacterName + " checking color for: "  + characterToCheck.MyCharacterName);
             float relationValue = Faction.RelationWith(characterToCheck, myCharacter);
             //Debug.Log("Faction.GetFactionColor(): " + myCharacter.MyCharacterName + " checking color for: "  + characterToCheck.MyCharacterName + "; relationValue: " + relationValue);
-            return GetColorFromRelationValue(relationValue);
+            return GetColorFromRelationValue(playerManager, relationValue);
         }
 
         /// <summary>
@@ -107,8 +114,8 @@ namespace AnyRPG {
         /// </summary>
         /// <param name="otherFaction"></param>
         /// <returns></returns>
-        public static Color GetFactionColor(Faction sourceFaction) {
-            if (SystemGameManager.Instance.PlayerManager?.MyCharacter == null) {
+        public static Color GetFactionColor(PlayerManager playerManager, Faction sourceFaction) {
+            if (playerManager?.MyCharacter == null) {
                 return new Color32(0, 0, 0, 0);
             }
 
@@ -116,18 +123,18 @@ namespace AnyRPG {
                 return Color.yellow;
             }
 
-            float relationValue = Faction.RelationWith(SystemGameManager.Instance.PlayerManager.MyCharacter, sourceFaction);
+            float relationValue = Faction.RelationWith(playerManager.MyCharacter, sourceFaction);
             // override relationValue with default if player is not spawned
-            return GetColorFromRelationValue(relationValue);
+            return GetColorFromRelationValue(playerManager, relationValue);
         }
 
         public Color GetFactionColor() {
-            return GetColorFromRelationValue(defaultDisposition);
+            return GetColorFromRelationValue(playerManager, defaultDisposition);
         }
 
-        public static Color GetColorFromRelationValue(float relationValue) {
+        public static Color GetColorFromRelationValue(PlayerManager playerManager, float relationValue) {
             //Debug.Log("GetColorFromRelationValue(" + relationValue + ")");
-            if (SystemGameManager.Instance.PlayerManager.MyCharacter == null) {
+            if (playerManager.MyCharacter == null) {
                 return new Color32(0, 0, 0, 0);
             }
 
@@ -145,14 +152,14 @@ namespace AnyRPG {
 
         // return the description of relationship between the player and the source faction
         public string GetColoredDescription(Faction sourceFaction) {
-            Color factionColor = GetFactionColor(sourceFaction);
+            Color factionColor = GetFactionColor(playerManager, sourceFaction);
             string colorString = ColorUtility.ToHtmlStringRGB(factionColor);
             return string.Format("<color=#{0}>{1}</color>\n{2}", colorString, DisplayName, GetReputationSummary(sourceFaction));
         }
 
         // return the summary of relationship between the player and the source faction
         public string GetReputationSummary(Faction sourceFaction) {
-            float relationValue = RelationWith(SystemGameManager.Instance.PlayerManager.MyCharacter, sourceFaction);
+            float relationValue = RelationWith(playerManager.MyCharacter, sourceFaction);
             return string.Format("Reputation: {0}", relationValue);
         }
 
@@ -243,14 +250,14 @@ namespace AnyRPG {
             //Debug.Log("Faction.relationWith(): factions are unaware of each other. returning lowest default disposition from both");
         }
 
-        public override void SetupScriptableObjects() {
+        public override void SetupScriptableObjects(SystemGameManager systemGameManager) {
             //Debug.Log("Faction.SetupScriptableObjects()");
-            base.SetupScriptableObjects();
+            base.SetupScriptableObjects(systemGameManager);
 
             if (equipmentNames != null) {
                 foreach (string equipmentName in equipmentNames) {
                     Equipment tmpEquipment = null;
-                    tmpEquipment = SystemDataFactory.Instance.GetResource<Item>(equipmentName) as Equipment;
+                    tmpEquipment = systemDataFactory.GetResource<Item>(equipmentName) as Equipment;
                     if (tmpEquipment != null) {
                         equipmentList.Add(tmpEquipment);
                     } else {
@@ -262,7 +269,7 @@ namespace AnyRPG {
             if (dispositionList != null) {
                 foreach (FactionDisposition factionDisposition in dispositionList) {
                     if (factionDisposition != null) {
-                        factionDisposition.SetupScriptableObjects();
+                        factionDisposition.SetupScriptableObjects(systemDataFactory);
                     }
                 }
             }
@@ -273,7 +280,7 @@ namespace AnyRPG {
                     //Debug.Log("Faction.SetupScriptableObjects(): found a string");
                     if (characterCreatorProfileName != null && characterCreatorProfileName != string.Empty) {
                         //Debug.Log("Faction.SetupScriptableObjects(): found a string that is not empty");
-                        UnitProfile tmpUnitProfile = SystemDataFactory.Instance.GetResource<UnitProfile>(characterCreatorProfileName);
+                        UnitProfile tmpUnitProfile = systemDataFactory.GetResource<UnitProfile>(characterCreatorProfileName);
                         if (tmpUnitProfile != null) {
                             //Debug.Log("Faction.SetupScriptableObjects(): found a string that is not empty and added it to the list");
                             characterCreatorProfiles.Add(tmpUnitProfile);
@@ -288,10 +295,10 @@ namespace AnyRPG {
             }
 
             foreach (CharacterClassCapabilityNode classCapabilityNode in classCapabilityList) {
-                classCapabilityNode.SetupScriptableObjects();
+                classCapabilityNode.SetupScriptableObjects(systemDataFactory);
             }
 
-            capabilities.SetupScriptableObjects();
+            capabilities.SetupScriptableObjects(systemDataFactory);
 
 
         }
@@ -314,11 +321,11 @@ namespace AnyRPG {
         public List<CharacterClass> CharacterClassList { get => characterClassList; set => characterClassList = value; }
         public CapabilityProps Capabilities { get => capabilities; set => capabilities = value; }
 
-        public void SetupScriptableObjects() {
+        public void SetupScriptableObjects(SystemDataFactory systemDataFactory) {
 
             foreach (string characterClassName in characterClasses) {
                 if (characterClassName != null && characterClassName != string.Empty) {
-                    CharacterClass tmpCharacterClass = SystemDataFactory.Instance.GetResource<CharacterClass>(characterClassName);
+                    CharacterClass tmpCharacterClass = systemDataFactory.GetResource<CharacterClass>(characterClassName);
                     if (tmpCharacterClass != null) {
                         characterClassList.Add(tmpCharacterClass);
                     } else {
@@ -329,7 +336,7 @@ namespace AnyRPG {
                 }
             }
 
-            capabilities.SetupScriptableObjects();
+            capabilities.SetupScriptableObjects(systemDataFactory);
         }
     }
 

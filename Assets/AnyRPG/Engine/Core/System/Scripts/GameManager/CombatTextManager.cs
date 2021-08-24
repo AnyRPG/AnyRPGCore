@@ -17,7 +17,6 @@ namespace AnyRPG {
 
         private List<CombatTextController> inUseCombatTextControllers = new List<CombatTextController>();
 
-        private SystemConfigurationManager systemConfigurationManager = null;
         private CameraManager cameraManager = null;
         private PlayerManager playerManager = null;
         private ObjectPooler objectPooler = null;
@@ -27,7 +26,6 @@ namespace AnyRPG {
 
         public override void Configure(SystemGameManager systemGameManager) {
             base.Configure(systemGameManager);
-            systemConfigurationManager = systemGameManager.SystemConfigurationManager;
             cameraManager = systemGameManager.CameraManager;
             playerManager = systemGameManager.PlayerManager;
             objectPooler = systemGameManager.ObjectPooler;
@@ -101,6 +99,7 @@ namespace AnyRPG {
             }
             CombatTextController combatTextController = GetCombatTextController();
             if (combatTextController != null) {
+                combatTextController.Configure(systemGameManager);
                 //Debug.Log("About to Set MainTarget on combat text");
                 inUseCombatTextControllers.Add(combatTextController);
                 /*
@@ -137,6 +136,7 @@ namespace AnyRPG {
             //Debug.Log("About to Set MainTarget on combat text");
             CombatTextController combatTextController = GetCombatTextController();
             if (combatTextController != null) {
+                combatTextController.Configure(systemGameManager);
                 inUseCombatTextControllers.Add(combatTextController);
                 combatTextController.InitializeCombatTextController(target,
                     statusEffect.Icon,

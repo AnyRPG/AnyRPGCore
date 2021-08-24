@@ -9,16 +9,19 @@ namespace AnyRPG {
         //public TDataType dataType { get; set; }
         private string resourceClassName = string.Empty;
 
-        public FactoryData(string resourceClassName) {
+        private SystemConfigurationManager systemConfigurationManager = null;
+
+        public FactoryData(string resourceClassName, SystemGameManager systemGameManager) {
             this.resourceClassName = resourceClassName;
+            systemConfigurationManager = systemGameManager.SystemConfigurationManager;
         }
 
 
         public override void LoadResourceList() {
             //Debug.Log(this.GetType().Name + ".LoadResourceList()");
             masterList.Add(Resources.LoadAll<TDataType>(resourceClassName));
-            if (SystemGameManager.Instance.SystemConfigurationManager != null) {
-                foreach (string loadResourcesFolder in SystemGameManager.Instance.SystemConfigurationManager.LoadResourcesFolders) {
+            if (systemConfigurationManager != null) {
+                foreach (string loadResourcesFolder in systemConfigurationManager.LoadResourcesFolders) {
                     masterList.Add(Resources.LoadAll<TDataType>(loadResourcesFolder + "/" + resourceClassName));
                 }
             }

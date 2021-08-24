@@ -33,6 +33,9 @@ namespace AnyRPG {
         [SerializeField]
         private HighlightButton confirmButton = null;
 
+        [SerializeField]
+        private ColoredUIElement coloredDivider = null;
+
         private List<RewardButton> abilityRewardIcons = new List<RewardButton>();
 
         private List<RewardButton> traitRewardIcons = new List<RewardButton>();
@@ -51,6 +54,7 @@ namespace AnyRPG {
 
             characterClassButton.Configure(systemGameManager);
             confirmButton.Configure(systemGameManager);
+            coloredDivider.Configure(systemGameManager);
         }
 
         public override void SetGameManagerReferences() {
@@ -77,7 +81,7 @@ namespace AnyRPG {
             // show trait rewards
             CapabilityProps capabilityProps = characterClass.GetFilteredCapabilities(playerManager.ActiveCharacter);
             if (playerManager.MyCharacter.Faction != null) {
-                CapabilityConsumerSnapshot capabilityConsumerSnapshot = new CapabilityConsumerSnapshot(playerManager.ActiveCharacter);
+                CapabilityConsumerSnapshot capabilityConsumerSnapshot = new CapabilityConsumerSnapshot(playerManager.ActiveCharacter, systemGameManager);
                 capabilityConsumerSnapshot.CharacterClass = characterClass;
                 CapabilityProps capabilityPropsFaction = playerManager.MyCharacter.Faction.GetFilteredCapabilities(capabilityConsumerSnapshot, false);
                 capabilityProps = capabilityPropsFaction.Join(capabilityProps);
@@ -112,7 +116,7 @@ namespace AnyRPG {
             // show ability rewards
             CapabilityProps capabilityProps = characterClass.GetFilteredCapabilities(playerManager.ActiveCharacter);
             if (playerManager.MyCharacter.Faction != null) {
-                CapabilityConsumerSnapshot capabilityConsumerSnapshot = new CapabilityConsumerSnapshot(playerManager.ActiveCharacter);
+                CapabilityConsumerSnapshot capabilityConsumerSnapshot = new CapabilityConsumerSnapshot(playerManager.ActiveCharacter, systemGameManager);
                 capabilityConsumerSnapshot.CharacterClass = characterClass;
                 CapabilityProps capabilityPropsFaction = playerManager.MyCharacter.Faction.GetFilteredCapabilities(capabilityConsumerSnapshot, false);
                 capabilityProps = capabilityPropsFaction.Join(capabilityProps);

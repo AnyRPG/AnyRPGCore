@@ -8,13 +8,21 @@ namespace AnyRPG {
     [CreateAssetMenu(fileName = "New Craft Ability",menuName = "AnyRPG/Abilities/Effects/CraftAbility")]
     public class CraftAbility : DirectAbility {
 
+        // game manager references
+        protected CraftingManager craftingManager = null;
+
+        public override void SetGameManagerReferences() {
+            base.SetGameManagerReferences();
+            craftingManager = systemGameManager.CraftingManager;
+        }
+
         public override List<AbilityAttachmentNode> GetHoldableObjectList(IAbilityCaster abilityCaster) {
-            if (SystemGameManager.Instance.CraftingManager.CraftingQueue.Count > 0) {
+            if (craftingManager.CraftingQueue.Count > 0) {
                 List<AbilityAttachmentNode> returnList = new List<AbilityAttachmentNode>();
                 foreach (AbilityAttachmentNode prefabProfile in base.GetHoldableObjectList(abilityCaster)) {
                     returnList.Add(prefabProfile);
                 }
-                foreach (AbilityAttachmentNode abilityAttachmentNode in SystemGameManager.Instance.CraftingManager.CraftingQueue[0].HoldableObjectList) {
+                foreach (AbilityAttachmentNode abilityAttachmentNode in craftingManager.CraftingQueue[0].HoldableObjectList) {
                     returnList.Add(abilityAttachmentNode);
                 }
                 return returnList;
@@ -26,7 +34,7 @@ namespace AnyRPG {
             //Debug.Log("CraftAbility.Cast(" + (target ? target.name : "null") + ")");
             bool returnResult = base.Cast(source, target, abilityEffectContext);
             if (returnResult == true) {
-                SystemGameManager.Instance.CraftingManager.CraftNextItemWait();
+                craftingManager.CraftNextItemWait();
             }
             return returnResult;
         }
@@ -38,7 +46,7 @@ namespace AnyRPG {
             }
 
             // to prevent casting this ability on a valid crafting target from action bars with no recipe to make, it is not possible to cast if there is nothing in the queue
-            if (SystemGameManager.Instance.CraftingManager.CraftingQueue.Count == 0) {
+            if (craftingManager.CraftingQueue.Count == 0) {
                 return false;
             }
 

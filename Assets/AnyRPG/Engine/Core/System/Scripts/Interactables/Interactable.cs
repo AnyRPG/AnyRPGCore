@@ -128,9 +128,12 @@ namespace AnyRPG {
         protected CharacterUnit characterUnit = null;
         protected DialogController dialogController = null;
 
-        // references
+        // game manager references
+        protected UIManager uIManager = null;
+        protected NamePlateManager namePlateManager = null;
         protected MiniMapManager miniMapManager = null;
         protected MainMapManager mainMapManager = null;
+        protected InteractionManager interactionManager = null;
 
         // properties
         public bool IsInteracting { get => isInteracting; }
@@ -150,6 +153,9 @@ namespace AnyRPG {
                     return characterUnit.BaseCharacter.CharacterName;
                 }
                 return gameObject.name;
+            }
+            set {
+                interactableName = value;
             }
         }
         public bool NotInteractable { get => notInteractable; set => notInteractable = value; }
@@ -198,33 +204,32 @@ namespace AnyRPG {
         public bool IsMouseOverUnit { get => isMouseOverUnit; set => isMouseOverUnit = value; }
         public bool IsMouseOverNameplate { get => isMouseOverNameplate; set => isMouseOverNameplate = value; }
 
-        protected void Awake() {
-            miniMapManager = SystemGameManager.Instance.UIManager.MiniMapManager;
-            mainMapManager = SystemGameManager.Instance.UIManager.MainMapManager;
-        }
-
-        protected override void OnEnable() {
-            if (initialized == true) {
-                // this unit may have been disabled by a timeline controller.  If so, none of this is necessary
-                return;
+        public override void Configure(SystemGameManager systemGameManager) {
+            //Debug.Log(gameObject.name + ".Interactable.Configure()");
+            base.Configure(systemGameManager);
+            if (unitComponentController != null) {
+                unitComponentController.Configure(systemGameManager);
             }
-            base.OnEnable();
-            dialogController = new DialogController(this);
+            dialogController = new DialogController(this, systemGameManager);
             DisableInteraction();
             temporaryMaterials = null;
             if (temporaryMaterial == null) {
-                if (SystemGameManager.Instance.SystemConfigurationManager == null) {
-                    Debug.LogError(gameObject.name + ": SystemConfigurationManager not found. Is the GameManager in the scene?");
-                    return;
-                } else {
-                    temporaryMaterial = SystemGameManager.Instance.SystemConfigurationManager.TemporaryMaterial;
-                }
+                temporaryMaterial = systemConfigurationManager.TemporaryMaterial;
             }
             if (temporaryMaterial == null) {
                 //Debug.Log("No glow materials available. overrideing glowOnMouseover to false");
                 glowOnMouseOver = false;
             }
+        }
 
+        public override void SetGameManagerReferences() {
+            base.SetGameManagerReferences();
+
+            uIManager = systemGameManager.UIManager;
+            namePlateManager = uIManager.NamePlateManager;
+            miniMapManager = uIManager.MiniMapManager;
+            mainMapManager = uIManager.MainMapManager;
+            interactionManager = systemGameManager.InteractionManager;
         }
 
         public override void GetComponentReferences() {
@@ -241,7 +246,7 @@ namespace AnyRPG {
             InteractableOption[] interactableOptionMonoList = GetComponents<InteractableOption>();
             foreach (InteractableOption interactableOption in interactableOptionMonoList) {
                 if (interactableOption.InteractableOptionProps != null) {
-                    interactableOption.SetupScriptableObjects();
+                    interactableOption.SetupScriptableObjects(systemGameManager);
                     interactables.Add(interactableOption.InteractableOptionProps.GetInteractableOption(this, interactableOption));
                 }
             }
@@ -396,7 +401,7 @@ namespace AnyRPG {
             //Debug.Log(gameObject.name + ".Interactable.HandlePrerequisiteUpdates()");
 
             base.HandlePrerequisiteUpdates();
-            if (!SystemGameManager.Instance.PlayerManager.PlayerUnitSpawned) {
+            if (!playerManager.PlayerUnitSpawned) {
                 return;
             }
             if (spawnReference == null && MyPrerequisitesMet == false) {
@@ -445,14 +450,14 @@ namespace AnyRPG {
 
         public bool InstantiateMiniMapIndicator() {
             //Debug.Log(gameObject.name + ".Interactable.InstantiateMiniMapIndicator()");
-            if (!SystemGameManager.Instance.PlayerManager.PlayerUnitSpawned) {
+            if (!playerManager.PlayerUnitSpawned) {
                 //Debug.Log(gameObject.name + ".Interactable.InstantiateMiniMapIndicator(): player unit not spawned yet.  returning");
                 return false;
             }
 
             List<InteractableOptionComponent> validInteractables = GetValidInteractables();
             if (validInteractables.Count == 0) {
-                //if (GetValidInteractables(SystemGameManager.Instance.PlayerManager.MyCharacter.MyCharacterUnit).Count == 0) {
+                //if (GetValidInteractables(playerManager.MyCharacter.MyCharacterUnit).Count == 0) {
                 //Debug.Log(gameObject.name + ".Interactable.InstantiateMiniMapIndicator(): No valid Interactables.  Not spawning indicator.");
                 return false;
             }
@@ -466,10 +471,8 @@ namespace AnyRPG {
                 */
                 if (interactables.Count > 0) {
                     //Debug.Log(gameObject.name + ".Interactable.InstantiateMiniMapIndicator(): interactables.length > 0");
-                    //miniMapIndicator = miniMapManager.AddIndicator(this);
-                    //mainMapIndicator = SystemGameManager.Instance.UIManager.MainMapManager.AddIndicator(this);
                     miniMapManager.AddIndicator(this);
-                    SystemGameManager.Instance.UIManager.MainMapManager.AddIndicator(this);
+                    mainMapManager.AddIndicator(this);
                     miniMapIndicatorReady = true;
                     return true;
                 }
@@ -498,7 +501,7 @@ namespace AnyRPG {
             //}
             //if (mainMapIndicator != null) {
                 //Debug.Log(gameObject.name + ".Interactable.CleanupMiniMapIndicator(): " + miniMapIndicator.name);
-                //SystemGameManager.Instance.UIManager.MainMapManager.RemoveIndicator(this);
+                //mainMapManager.RemoveIndicator(this);
             mainMapManager.RemoveIndicator(this);
             //}
 
@@ -512,20 +515,14 @@ namespace AnyRPG {
 
         public void OpenInteractionWindow() {
             //Debug.Log(gameObject.name + ".Interactable.OpenInteractionWindow");
-            if (SystemGameManager.Instance.InteractionManager != null) {
-                SystemGameManager.Instance.InteractionManager.CurrentInteractable = this;
-            } else {
-                Debug.Log("interactionpanelUI had no instance");
-            }
-            if (SystemGameManager.Instance.UIManager != null) {
-                SystemGameManager.Instance.UIManager.craftingWindow.CloseWindow();
-                SystemGameManager.Instance.UIManager.interactionWindow.OpenWindow();
-            }
+            interactionManager.CurrentInteractable = this;
+            uIManager.craftingWindow.CloseWindow();
+            uIManager.interactionWindow.OpenWindow();
         }
 
         public void CloseInteractionWindow() {
-            SystemGameManager.Instance.InteractionManager.CurrentInteractable = null;
-            SystemGameManager.Instance.UIManager.interactionWindow.CloseWindow();
+            interactionManager.CurrentInteractable = null;
+            uIManager.interactionWindow.CloseWindow();
         }
 
         public bool CanInteract() {
@@ -534,11 +531,11 @@ namespace AnyRPG {
                 return false;
             }
             //Debug.Log(gameObject.name + ".Interactable.CanInteract()");
-            if (SystemGameManager.Instance.PlayerManager == null || SystemGameManager.Instance.PlayerManager.PlayerUnitSpawned == false) {
+            if (playerManager == null || playerManager.PlayerUnitSpawned == false) {
                 return false;
             }
             List<InteractableOptionComponent> validInteractables = GetValidInteractables();
-            //List<InteractableOptionComponent> validInteractables = GetValidInteractables(SystemGameManager.Instance.PlayerManager.MyCharacter.MyCharacterUnit);
+            //List<InteractableOptionComponent> validInteractables = GetValidInteractables(playerManager.MyCharacter.MyCharacterUnit);
             if (validInteractables.Count > 0) {
                 return true;
             } else {
@@ -603,7 +600,7 @@ namespace AnyRPG {
                     if (validInteractables[0].GetCurrentOptionCount() > 1) {
                         OpenInteractionWindow();
                     } else {
-                        validInteractables[0].Interact(SystemGameManager.Instance.PlayerManager.ActiveUnitController.CharacterUnit);
+                        validInteractables[0].Interact(playerManager.ActiveUnitController.CharacterUnit);
                     }
                 } else {
                     OpenInteractionWindow();
@@ -620,15 +617,15 @@ namespace AnyRPG {
 
         /*
         public bool CheckForInteractableObjectives(string questName) {
-            Quest quest = SystemDataFactory.Instance.GetResource<Quest>(questName);
+            Quest quest = systemDataFactory.GetResource<Quest>(questName);
             foreach (QuestObjective questObjective in quest.MyUseInteractableObjectives) {
                 foreach (InteractableOption interactableOption in MyInteractables) {
                     if (SystemDataFactory.MatchResource(questObjective.MyType, interactableOption.MyName)) {
                         //Debug.Log("auto open interactable on questgiver to complete interactable objective");
-                        if (SystemGameManager.Instance.PlayerManager != null && SystemGameManager.Instance.PlayerManager.MyCharacter != null && SystemGameManager.Instance.PlayerManager.MyCharacter.MyCharacterController != null) {
+                        if (playerManager != null && playerManager.MyCharacter != null && playerManager.MyCharacter.MyCharacterController != null) {
                             Interactable _interactable = this;
                             GameObject _gameObject = gameObject;
-                            SystemGameManager.Instance.PlayerManager.MyCharacter.MyCharacterController.InterActWithInteractableOption(_interactable, interactableOption, _gameObject);
+                            playerManager.MyCharacter.MyCharacterController.InterActWithInteractableOption(_interactable, interactableOption, _gameObject);
                         } else {
                             //Debug.Log("player something is null");
                         }
@@ -683,7 +680,7 @@ namespace AnyRPG {
             //Debug.Log(gameObject.name + ".Interactable.GetCurrentInteractables()");
 
             if (sourceCharacter == null) {
-                sourceCharacter = SystemGameManager.Instance.PlayerManager.ActiveCharacter;
+                sourceCharacter = playerManager.ActiveCharacter;
             }
 
             if (overrideFactionValue == false) {
@@ -716,7 +713,7 @@ namespace AnyRPG {
         /// native unity mouse enter message
         /// </summary>
         public void OnMouseEnter() {
-            if (SystemGameManager.Instance.PlayerManager.UnitController.gameObject == gameObject) {
+            if (playerManager.UnitController.gameObject == gameObject) {
                 return;
             }
             isMouseOverUnit = true;
@@ -738,14 +735,14 @@ namespace AnyRPG {
                 return;
             }
 
-            if (SystemGameManager.Instance.PlayerManager == null) {
+            if (playerManager == null) {
                 return;
             }
-            if (SystemGameManager.Instance.PlayerManager.PlayerUnitSpawned == false) {
+            if (playerManager.PlayerUnitSpawned == false) {
                 return;
             }
 
-            if (SystemGameManager.Instance.PlayerManager.ActiveUnitController.gameObject == gameObject) {
+            if (playerManager.ActiveUnitController.gameObject == gameObject) {
                 return;
             }
 
@@ -753,13 +750,13 @@ namespace AnyRPG {
                 return;
             }
 
-            //SystemGameManager.Instance.PlayerManager.PlayerController.HandleMouseOver(this);
+            //playerManager.PlayerController.HandleMouseOver(this);
 
             if (showTooltip == false) {
                 return;
             }
 
-            if (EventSystem.current.IsPointerOverGameObject() && !SystemGameManager.Instance.UIManager.NamePlateManager.MouseOverNamePlate()) {
+            if (EventSystem.current.IsPointerOverGameObject() && !namePlateManager.MouseOverNamePlate()) {
                 // THIS CODE WILL STILL CAUSE THE GUY TO GLOW IF YOU MOUSE OVER HIS NAMEPLATE WHILE A WINDOW IS UP.  NOT A BIG DEAL FOR NOW
                 // IT HAS TO BE THIS WAY BECAUSE THE MOUSEOVER WINDOW IS A GAMEOBJECT AND WE NEED TO BE ABLE TO GLOW WHEN A WINDOW IS NOT UP AND WE ARE OVER IT
                 // THIS COULD BE POTENTIALLY FIXED BY BLOCKING MOUSEOVER THE SAME WAY WE BLOCK DRAG IN THE UIMANAGER BY RESTRICTING ON MOUSEENTER ON ANY CLOSEABLEWINDOW IF IT'S TOO DISTRACTING
@@ -769,7 +766,7 @@ namespace AnyRPG {
             }
             /*
              * the above case should handle this now - delete this code if no crashes found
-            if (SystemGameManager.Instance.PlayerManager.MyCharacter.MyCharacterUnit == null) {
+            if (playerManager.MyCharacter.MyCharacterUnit == null) {
                 //Debug.Log(gameObject.name + ".Interactable.OnMouseEnter(): Player Unit is not active. Cannot glow.");
                 return;
             }
@@ -782,10 +779,10 @@ namespace AnyRPG {
 
             // moved to before the return statement.  This is because we still want a tooltip even if there are no current interactions to perform
             // added pivot so the tooltip doesn't bounce around
-            SystemGameManager.Instance.UIManager.ShowToolTip(new Vector2(0, 1), SystemGameManager.Instance.UIManager.MouseOverWindow.transform.position, this);
+            uIManager.ShowToolTip(new Vector2(0, 1), uIManager.MouseOverWindow.transform.position, this);
 
             if (GetCurrentInteractables().Count == 0) {
-                //if (GetValidInteractables(SystemGameManager.Instance.PlayerManager.MyCharacter.MyCharacterUnit).Count == 0) {
+                //if (GetValidInteractables(playerManager.MyCharacter.MyCharacterUnit).Count == 0) {
                 //Debug.Log(gameObject.name + ".Interactable.OnMouseEnter(): No current Interactables.  Not glowing.");
                 return;
             }
@@ -809,7 +806,7 @@ namespace AnyRPG {
 
         /*
         public void OnMouseExit() {
-            if (SystemGameManager.Instance.PlayerManager?.UnitController?.gameObject == gameObject) {
+            if (playerManager?.UnitController?.gameObject == gameObject) {
                 return;
             }
 
@@ -822,14 +819,14 @@ namespace AnyRPG {
         public void OnMouseOut() {
             //Debug.Log(gameObject.name + ".Interactable.OnMouseOut()");
 
-            if (SystemGameManager.Instance.PlayerManager == null) {
+            if (playerManager == null) {
                 return;
             }
-            if (SystemGameManager.Instance.PlayerManager.PlayerUnitSpawned == false) {
+            if (playerManager.PlayerUnitSpawned == false) {
                 return;
             }
 
-            if (SystemGameManager.Instance.PlayerManager.ActiveUnitController.gameObject == gameObject) {
+            if (playerManager.ActiveUnitController.gameObject == gameObject) {
                 return;
             }
 
@@ -842,7 +839,7 @@ namespace AnyRPG {
                 return;
             }
 
-            //SystemGameManager.Instance.PlayerManager.PlayerController.HandleMouseOut(this);
+            //playerManager.PlayerController.HandleMouseOut(this);
 
             if (showTooltip == false) {
                 return;
@@ -853,16 +850,15 @@ namespace AnyRPG {
             }
 
             // new mouseover code
-            SystemGameManager.Instance.UIManager.HideToolTip();
+            uIManager.HideToolTip();
 
             if (!isFlashing) {
                 // there was nothing to interact with on mouseover so just exit instead of trying to reset materials
+                glowQueued = false;
                 return;
             }
             RevertMaterialChange();
             // return emission enabled, emission color, and emission texture to their previous values
-
-            glowQueued = false;
         }
 
         protected void OnMouseDown() {
@@ -892,12 +888,12 @@ namespace AnyRPG {
             if (isTrigger) {
                 UnitController unitController = other.gameObject.GetComponent<UnitController>();
                 // ensure ai don't accidentally trigger interactions
-                if (unitController != null && unitController == SystemGameManager.Instance.PlayerManager.ActiveUnitController) {
+                if (unitController != null && unitController == playerManager.ActiveUnitController) {
                     //Debug.Log(gameObject.name + ".Interactable.OnTriggerEnter(): triggered by player");
-                    SystemGameManager.Instance.PlayerManager.PlayerController.InterActWithTarget(this);
+                    playerManager.PlayerController.InterActWithTarget(this);
                     //Interact(otherCharacterUnit);
-                } else if (interactWithAny && SystemGameManager.Instance.PlayerManager.ActiveUnitController.CharacterUnit != null) {
-                    Interact(SystemGameManager.Instance.PlayerManager.ActiveUnitController.CharacterUnit);
+                } else if (interactWithAny && playerManager.ActiveUnitController.CharacterUnit != null) {
+                    Interact(playerManager.ActiveUnitController.CharacterUnit);
                 }
             }
         }
@@ -910,12 +906,12 @@ namespace AnyRPG {
             if (isTrigger == true && interactOnExit == true) {
                 UnitController unitController = other.gameObject.GetComponent<UnitController>();
                 // ensure ai don't accidentally trigger interactions
-                if (unitController != null && unitController == SystemGameManager.Instance.PlayerManager.ActiveUnitController) {
+                if (unitController != null && unitController == playerManager.ActiveUnitController) {
                     //Debug.Log(gameObject.name + ".Interactable.OnTriggerEnter(): triggered by player");
-                    SystemGameManager.Instance.PlayerManager.PlayerController.InterActWithTarget(this);
+                    playerManager.PlayerController.InterActWithTarget(this);
                     //Interact(otherCharacterUnit);
-                } else if (interactWithAny && SystemGameManager.Instance.PlayerManager.ActiveUnitController.CharacterUnit != null) {
-                    Interact(SystemGameManager.Instance.PlayerManager.ActiveUnitController.CharacterUnit);
+                } else if (interactWithAny && playerManager.ActiveUnitController.CharacterUnit != null) {
+                    Interact(playerManager.ActiveUnitController.CharacterUnit);
                 }
             }
 
@@ -924,11 +920,11 @@ namespace AnyRPG {
         public void ClearFromPlayerRangeTable() {
             //Debug.Log(gameObject.name + ".Interactable.ClearFromPlayerRangeTable()");
             // prevent bugs if a unit despawns before the player moves out of range of it
-            if (SystemGameManager.Instance.PlayerManager != null
-                && SystemGameManager.Instance.PlayerManager.PlayerController != null
-                && SystemGameManager.Instance.PlayerManager.ActiveUnitController != null) {
-                if (SystemGameManager.Instance.PlayerManager.PlayerController.MyInteractables.Contains(this)) {
-                    SystemGameManager.Instance.PlayerManager.PlayerController.MyInteractables.Remove(this);
+            if (playerManager != null
+                && playerManager.PlayerController != null
+                && playerManager.ActiveUnitController != null) {
+                if (playerManager.PlayerController.MyInteractables.Contains(this)) {
+                    playerManager.PlayerController.MyInteractables.Remove(this);
                 }
             }
         }
@@ -965,7 +961,7 @@ namespace AnyRPG {
 
 
             // switched this to current interactables so that we don't see mouseover options that we can't current interact with
-            //List<InteractableOptionComponent> validInteractables = GetValidInteractables(SystemGameManager.Instance.PlayerManager.MyCharacter.MyCharacterUnit);
+            //List<InteractableOptionComponent> validInteractables = GetValidInteractables(playerManager.MyCharacter.MyCharacterUnit);
             List<InteractableOptionComponent> currentInteractables = GetCurrentInteractables();
 
             // perform default interaction or open a window if there are multiple valid interactions

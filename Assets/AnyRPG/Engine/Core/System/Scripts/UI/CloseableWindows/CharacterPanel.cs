@@ -224,7 +224,7 @@ namespace AnyRPG {
             updateString += "Unit Type: " + (playerManager.MyCharacter.UnitType == null ? "None" : playerManager.MyCharacter.UnitType.DisplayName) + "\n";
             updateString += "Race: " + (playerManager.MyCharacter.CharacterRace == null ? "None" : playerManager.MyCharacter.CharacterRace.DisplayName) + "\n";
             updateString += "Level: " + playerManager.MyCharacter.CharacterStats.Level + "\n";
-            updateString += "Experience: " + playerManager.MyCharacter.CharacterStats.CurrentXP + " / " + LevelEquations.GetXPNeededForLevel(playerManager.MyCharacter.CharacterStats.Level) + "\n\n";
+            updateString += "Experience: " + playerManager.MyCharacter.CharacterStats.CurrentXP + " / " + LevelEquations.GetXPNeededForLevel(playerManager.MyCharacter.CharacterStats.Level, systemConfigurationManager) + "\n\n";
 
             foreach (string statName in playerManager.MyCharacter.CharacterStats.PrimaryStats.Keys) {
                 updateString += statName + ": " + playerManager.MyCharacter.CharacterStats.PrimaryStats[statName].CurrentValue;

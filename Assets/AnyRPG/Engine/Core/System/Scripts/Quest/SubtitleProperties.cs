@@ -8,7 +8,7 @@ using UnityEngine.Serialization;
 
 namespace AnyRPG {
     [System.Serializable]
-    public class SubtitleProperties  {
+    public class SubtitleProperties : ConfiguredClass {
 
         [Tooltip("The name of an audio profile to play when this dialog is started.")]
         [SerializeField]
@@ -20,13 +20,21 @@ namespace AnyRPG {
         [SerializeField]
         private List<SubtitleNode> subtitleNodes = new List<SubtitleNode>();
 
+        // game manager references
+        private SystemDataFactory systemDataFactory = null;
+
         public List<SubtitleNode> SubtitleNodes { get => subtitleNodes; set => subtitleNodes = value; }
         public AudioProfile AudioProfile { get => audioProfile; set => audioProfile = value; }
 
-        public void SetupScriptableObjects() {
+        public override void SetGameManagerReferences() {
+            base.SetGameManagerReferences();
+            systemDataFactory = systemGameManager.SystemDataFactory;
+        }
 
+        public void SetupScriptableObjects(SystemGameManager systemGameManager) {
+            Configure(systemGameManager);
             if (audioProfileName != null && audioProfileName != string.Empty) {
-                AudioProfile tmpAudioProfile = SystemDataFactory.Instance.GetResource<AudioProfile>(audioProfileName);
+                AudioProfile tmpAudioProfile = systemDataFactory.GetResource<AudioProfile>(audioProfileName);
                 if (tmpAudioProfile != null) {
                     audioProfile = tmpAudioProfile;
                 } else {

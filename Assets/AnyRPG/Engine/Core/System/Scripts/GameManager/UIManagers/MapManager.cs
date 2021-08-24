@@ -23,7 +23,6 @@ namespace AnyRPG {
 
         // game manager references
         private LevelManager levelManager = null;
-        private SystemConfigurationManager systemConfigurationManager = null;
         private CameraManager cameraManager = null;
 
         public Texture2D MapTexture { get => mapTexture; }
@@ -39,7 +38,6 @@ namespace AnyRPG {
         public override void SetGameManagerReferences() {
             base.SetGameManagerReferences();
 
-            systemConfigurationManager = systemGameManager.SystemConfigurationManager;
             levelManager = systemGameManager.LevelManager;
             cameraManager = systemGameManager.CameraManager;
         }

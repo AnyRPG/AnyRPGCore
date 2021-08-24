@@ -14,8 +14,16 @@ namespace AnyRPG {
 
         private QuestGiverProps questGiverProps = new QuestGiverProps();
 
+        // game manager references
+        protected QuestLog questLog = null;
+
         public Interactable Interactable { get => null; }
         public QuestGiverProps Props { get => questGiverProps; set => questGiverProps = value; }
+
+        public override void SetGameManagerReferences() {
+            base.SetGameManagerReferences();
+            questLog = systemGameManager.QuestLog;
+        }
 
         public override bool Use() {
             //Debug.Log(DisplayName + ".QuestStartItem.Use()");
@@ -25,19 +33,19 @@ namespace AnyRPG {
                 return false;
             }
             if (questGiverProps.Quests != null) {
-                if (SystemGameManager.Instance.QuestLog.HasQuest(questGiverProps.Quests[0].MyQuest.DisplayName)) {
-                    SystemGameManager.Instance.UIManager.MessageFeedManager.WriteMessage("You are already on that quest");
+                if (questLog.HasQuest(questGiverProps.Quests[0].MyQuest.DisplayName)) {
+                    messageFeedManager.WriteMessage("You are already on that quest");
                 } else if (questGiverProps.Quests[0].MyQuest.TurnedIn == true) {
-                    SystemGameManager.Instance.UIManager.MessageFeedManager.WriteMessage("You have already completed that quest");
+                    messageFeedManager.WriteMessage("You have already completed that quest");
                 } else {
                     //Debug.Log(DisplayName + ".QuestStartItem.Use(): showing quests");
                     //Debug.Log("QuestStartItem.Use(): opening questgiver window");
-                    if (SystemGameManager.Instance.UIManager.questGiverWindow.IsOpen) {
+                    if (uIManager.questGiverWindow.IsOpen) {
                         // safety to prevent deletion
                         return false;
                     }
                     OpenQuestGiverWindow();
-                    QuestGiverUI.Instance.ShowDescription(Props.Quests[0].MyQuest, this);
+                    questLog.ShowQuestGiverDescription(Props.Quests[0].MyQuest, this);
                 }
             }
             return returnValue;
@@ -51,12 +59,12 @@ namespace AnyRPG {
                         // the next condition is failing on raw complete quest start items because they are always considered complete
                         //&& questNode.MyQuest.IsComplete == false
                         && questNode.MyQuest.TurnedIn == false
-                        && !SystemGameManager.Instance.QuestLog.HasQuest(questNode.MyQuest.DisplayName)
+                        && !questLog.HasQuest(questNode.MyQuest.DisplayName)
                         && (questNode.MyQuest.RepeatableQuest == true || questNode.MyQuest.TurnedIn == false)) {
                         //Debug.Log(DisplayName + ".QuestStartItem.QuestRequirementsAreMet(): return true");
                         return true;
                     } else {
-                        //Debug.Log(DisplayName + ".QuestStartItem.QuestRequirementsAreMet(): prereqs: " + questNode.MyQuest.MyPrerequisitesMet + "; complete: " + questNode.MyQuest.IsComplete + "; " + questNode.MyQuest.TurnedIn + "; has: " + SystemGameManager.Instance.QuestLog.HasQuest(questNode.MyQuest.DisplayName));
+                        //Debug.Log(DisplayName + ".QuestStartItem.QuestRequirementsAreMet(): prereqs: " + questNode.MyQuest.MyPrerequisitesMet + "; complete: " + questNode.MyQuest.IsComplete + "; " + questNode.MyQuest.TurnedIn + "; has: " + questLog.HasQuest(questNode.MyQuest.DisplayName));
                     }
                 }
             } else {
@@ -97,10 +105,10 @@ namespace AnyRPG {
 
         public void OpenQuestGiverWindow() {
             //Debug.Log(DisplayName + ".QuestStartItem.OpenQuestGiverWindow()");
-            if (!SystemGameManager.Instance.UIManager.questGiverWindow.IsOpen) {
+            if (!uIManager.questGiverWindow.IsOpen) {
                 //Debug.Log(source + " interacting with " + gameObject.name);
-                //SystemGameManager.Instance.UIManager.questGiverWindow.MyCloseableWindowContents.OnOpenWindowHandler += InitWindow;
-                SystemGameManager.Instance.UIManager.questGiverWindow.OpenWindow();
+                //uIManager.questGiverWindow.MyCloseableWindowContents.OnOpenWindowHandler += InitWindow;
+                uIManager.questGiverWindow.OpenWindow();
             }
         }
 
@@ -109,8 +117,8 @@ namespace AnyRPG {
             // do nothing because we don't have an indicator over our head or a minimap icon
         }
 
-        public override string GetSummary() {
-            return base.GetSummary() + string.Format("\n<color=green>Use: This item starts a quest</color>");
+        public override string GetSummary(ItemQuality usedItemQuality) {
+            return base.GetSummary(usedItemQuality) + string.Format("\n<color=green>Use: This item starts a quest</color>");
         }
 
         public bool EndsQuest(string questName) {
@@ -126,12 +134,12 @@ namespace AnyRPG {
             return false;
         }
 
-        public override void SetupScriptableObjects() {
-            base.SetupScriptableObjects();
+        public override void SetupScriptableObjects(SystemGameManager systemGameManager) {
+            base.SetupScriptableObjects(systemGameManager);
 
             if (quests != null) {
                 foreach (QuestNode questNode in quests) {
-                    questNode.SetupScriptableObjects();
+                    questNode.SetupScriptableObjects(systemGameManager);
                 }
             }
             questGiverProps.Quests = quests;

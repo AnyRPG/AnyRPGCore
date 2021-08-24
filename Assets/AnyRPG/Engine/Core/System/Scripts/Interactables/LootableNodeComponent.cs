@@ -22,6 +22,9 @@ namespace AnyRPG {
 
         protected Coroutine spawnCoroutine = null;
 
+        // game manager references
+        protected LootManager lootManager = null;
+
         public override bool MyPrerequisitesMet {
             get {
                 bool returnResult = base.MyPrerequisitesMet;
@@ -37,11 +40,16 @@ namespace AnyRPG {
 
         public LootHolder LootHolder { get => lootHolder; set => lootHolder = value; }
 
-        public LootableNodeComponent(Interactable interactable, LootableNodeProps interactableOptionProps) : base(interactable, interactableOptionProps) {
+        public LootableNodeComponent(Interactable interactable, LootableNodeProps interactableOptionProps, SystemGameManager systemGameManager) : base(interactable, interactableOptionProps, systemGameManager) {
             // initialize loot tables and states
             foreach (LootTable lootTable in Props.LootTables) {
                 lootHolder.LootTableStates.Add(lootTable, new LootTableState());
             }
+        }
+
+        public override void SetGameManagerReferences() {
+            base.SetGameManagerReferences();
+            lootManager = systemGameManager.LootManager;
         }
 
         public override void Cleanup() {
@@ -59,7 +67,7 @@ namespace AnyRPG {
 
             DropLoot();
             PickUp();
-            SystemGameManager.Instance.UIManager.interactionWindow.CloseWindow();
+            uIManager.interactionWindow.CloseWindow();
             return true;
         }
 
@@ -100,7 +108,7 @@ namespace AnyRPG {
             foreach (LootTable lootTable in Props.LootTables) {
                 lootDrops.AddRange(lootTable.GetLoot(lootHolder.LootTableStates[lootTable]));
             }
-            SystemGameManager.Instance.LootManager.CreatePages(lootDrops);
+            lootManager.CreatePages(lootDrops);
             lootDropped = true;
         }
 
@@ -109,10 +117,9 @@ namespace AnyRPG {
         /// </summary>
         public void PickUp() {
             //Debug.Log(gameObject.name + ".LootableNode.Pickup()");
-            //LootUI.Instance.CreatePages(lootTable.GetLoot());
             CreateWindowEventSubscriptions();
-            SystemGameManager.Instance.UIManager.lootWindow.CloseableWindowContents.OnCloseWindow += ClearTakeLootHandler;
-            SystemGameManager.Instance.UIManager.lootWindow.OpenWindow();
+            uIManager.lootWindow.CloseableWindowContents.OnCloseWindow += ClearTakeLootHandler;
+            uIManager.lootWindow.OpenWindow();
         }
 
         public void ClearTakeLootHandler(ICloseableWindowContents windowContents) {
@@ -128,8 +135,8 @@ namespace AnyRPG {
         public void CleanupWindowEventSubscriptions() {
             //Debug.Log(gameObject.name + ".LootableNode.CleanupWindowEventSubscriptions()");
             SystemEventManager.StopListening("OnTakeLoot", HandleTakeLoot);
-            if (SystemGameManager.Instance.UIManager?.lootWindow?.CloseableWindowContents != null) {
-                SystemGameManager.Instance.UIManager.lootWindow.CloseableWindowContents.OnCloseWindow -= ClearTakeLootHandler;
+            if (uIManager?.lootWindow?.CloseableWindowContents != null) {
+                uIManager.lootWindow.CloseableWindowContents.OnCloseWindow -= ClearTakeLootHandler;
             }
         }
 
@@ -162,7 +169,7 @@ namespace AnyRPG {
 
                 lootDropped = false;
                 //if (lootTable.MyDroppedItems.Count == 0) {
-                SystemGameManager.Instance.PlayerManager.PlayerController.RemoveInteractable(interactable);
+                playerManager.PlayerController.RemoveInteractable(interactable);
                 interactable.DestroySpawn();
                 foreach (LootTable lootTable in Props.LootTables) {
                     lootTable.Reset(lootHolder.LootTableStates[lootTable]);
@@ -182,7 +189,7 @@ namespace AnyRPG {
         public override void StopInteract() {
             base.StopInteract();
 
-            SystemGameManager.Instance.UIManager.lootWindow.CloseWindow();
+            uIManager.lootWindow.CloseWindow();
         }
 
         public override bool HasMiniMapText() {
@@ -204,7 +211,7 @@ namespace AnyRPG {
         /*
         public override int GetCurrentOptionCount() {
             //Debug.Log(gameObject.name + ".GatheringNode.GetCurrentOptionCount()");
-            return (SystemGameManager.Instance.PlayerManager.MyCharacter.MyCharacterAbilityManager.HasAbility(MyAbility.MyName) == true && interactable.MySpawnReference != null ? 1 : 0);
+            return (playerManager.MyCharacter.MyCharacterAbilityManager.HasAbility(MyAbility.MyName) == true && interactable.MySpawnReference != null ? 1 : 0);
         }
         */
 

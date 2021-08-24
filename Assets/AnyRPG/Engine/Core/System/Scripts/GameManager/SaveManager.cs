@@ -11,7 +11,6 @@ namespace AnyRPG {
 
         // game manager references
         private SystemEventManager systemEventManager = null;
-        private SystemConfigurationManager systemConfigurationManager = null;
         private PlayerManager playerManager = null;
         private MessageFeedManager messageFeedManager = null;
         private LevelManager levelManager = null;
@@ -66,7 +65,6 @@ namespace AnyRPG {
         public override void SetGameManagerReferences() {
             base.SetGameManagerReferences();
             systemEventManager = systemGameManager.SystemEventManager;
-            systemConfigurationManager = systemGameManager.SystemConfigurationManager;
             playerManager = systemGameManager.PlayerManager;
             levelManager = systemGameManager.LevelManager;
             questLog = systemGameManager.QuestLog;
@@ -111,6 +109,10 @@ namespace AnyRPG {
 
         public AnyRPGSaveData LoadSaveDataFromFile(string fileName) {
             AnyRPGSaveData anyRPGSaveData = JsonUtility.FromJson<AnyRPGSaveData>(File.ReadAllText(fileName));
+
+            // when loaded from file, overrides should always be true because the file may have been saved before these were added
+            anyRPGSaveData.OverrideLocation = true;
+            anyRPGSaveData.OverrideRotation = true;
 
             if (anyRPGSaveData.playerName == null) {
                 //Debug.Log("SaveManager.LoadSaveDataFromFile(" + fileName + "): Player Name is null.  Setting to Unknown");
@@ -397,7 +399,8 @@ namespace AnyRPG {
 
             // moved to resource power data
             //anyRPGSaveData.currentHealth = playerManager.MyCharacter.CharacterStats.currentHealth;
-
+            anyRPGSaveData.OverrideLocation = true;
+            anyRPGSaveData.OverrideRotation = true;
             anyRPGSaveData.PlayerLocationX = playerManager.ActiveUnitController.transform.position.x;
             anyRPGSaveData.PlayerLocationY = playerManager.ActiveUnitController.transform.position.y;
             anyRPGSaveData.PlayerLocationZ = playerManager.ActiveUnitController.transform.position.z;
@@ -729,9 +732,9 @@ namespace AnyRPG {
 
         public void SaveCurrencyData(AnyRPGSaveData anyRPGSaveData) {
             //Debug.Log("Savemanager.SaveCurrencyData()");
-            foreach (CurrencyNode currencyNode in playerManager.MyCharacter.CharacterCurrencyManager.MyCurrencyList.Values) {
+            foreach (CurrencyNode currencyNode in playerManager.MyCharacter.CharacterCurrencyManager.CurrencyList.Values) {
                 CurrencySaveData currencySaveData = new CurrencySaveData();
-                currencySaveData.MyAmount = currencyNode.MyAmount;
+                currencySaveData.MyAmount = currencyNode.Amount;
                 currencySaveData.MyName = currencyNode.currency.DisplayName;
                 anyRPGSaveData.currencySaveData.Add(currencySaveData);
             }
@@ -1133,8 +1136,8 @@ namespace AnyRPG {
         }
 
         public CapabilityConsumerSnapshot GetCapabilityConsumerSnapshot(AnyRPGSaveData saveData) {
-            CapabilityConsumerSnapshot returnValue = new CapabilityConsumerSnapshot();
-            returnValue.UnitProfile = UnitProfile.GetUnitProfileReference(saveData.unitProfileName);
+            CapabilityConsumerSnapshot returnValue = new CapabilityConsumerSnapshot(systemGameManager);
+            returnValue.UnitProfile = systemDataFactory.GetResource<UnitProfile>(saveData.unitProfileName);
             returnValue.CharacterRace = systemDataFactory.GetResource<CharacterRace>(saveData.characterRace);
             returnValue.CharacterClass = systemDataFactory.GetResource<CharacterClass>(saveData.characterClass);
             returnValue.ClassSpecialization = systemDataFactory.GetResource<ClassSpecialization>(saveData.classSpecialization);
@@ -1229,8 +1232,17 @@ namespace AnyRPG {
             LoadWindowPositions();
 
             uIManager.loadGameWindow.CloseWindow();
+
+            // configure location and rotation overrides
+            if (anyRPGSaveData.OverrideLocation == true) {
+                levelManager.SetSpawnLocationOverride(playerLocation);
+            }
+            if (anyRPGSaveData.OverrideRotation == true) {
+                levelManager.SetSpawnRotationOverride(playerRotation);
+            }
+            //levelManager.LoadLevel(anyRPGSaveData.CurrentScene, playerLocation, playerRotation);
             // load the proper level now that everything should be setup
-            levelManager.LoadLevel(anyRPGSaveData.CurrentScene, playerLocation, playerRotation);
+            levelManager.LoadLevel(anyRPGSaveData.CurrentScene);
         }
 
         public void ClearSystemManagedCharacterData() {

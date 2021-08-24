@@ -2,9 +2,10 @@ using AnyRPG;
 using UnityEngine;
 
 namespace AnyRPG {
-    public class ConfiguredMonoBehaviour : MonoBehaviour {
+    public abstract class ConfiguredMonoBehaviour : MonoBehaviour {
 
         protected SystemGameManager systemGameManager = null;
+        protected SystemConfigurationManager systemConfigurationManager = null;
 
         public virtual void Configure(SystemGameManager systemGameManager) {
             this.systemGameManager = systemGameManager;
@@ -12,7 +13,7 @@ namespace AnyRPG {
         }
 
         public virtual void SetGameManagerReferences() {
-            // meant to be overwritten
+            systemConfigurationManager = systemGameManager.SystemConfigurationManager;
         }
 
     }

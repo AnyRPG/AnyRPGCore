@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 namespace AnyRPG {
-    public class BaseCharacter : MonoBehaviour, IAbilityCaster, ICapabilityConsumer {
+    public class BaseCharacter : ConfiguredMonoBehaviour, IAbilityCaster, ICapabilityConsumer {
 
         //public event System.Action<string> OnNameChange = delegate { };
         //public event System.Action<string> OnTitleChange = delegate { };
@@ -56,6 +56,9 @@ namespace AnyRPG {
         private bool characterInitialized = false;
         private bool eventSubscriptionsInitialized = false;
 
+        // game manager references
+        private SystemDataFactory systemDataFactory = null;
+
         public CharacterStats CharacterStats { get => characterStats; }
         public CharacterCombat CharacterCombat { get => characterCombat; }
         public UnitController UnitController { get => unitController; }
@@ -93,6 +96,18 @@ namespace AnyRPG {
         public CapabilityConsumerProcessor CapabilityConsumerProcessor { get => capabilityConsumerProcessor; }
         public string UnitProfileName { get => unitProfileName; }
 
+        public override void Configure(SystemGameManager systemGameManager) {
+            //Debug.Log(gameObject.name + ".BaseCharacter.Configure()");
+
+            base.Configure(systemGameManager);
+        }
+
+        public override void SetGameManagerReferences() {
+            base.SetGameManagerReferences();
+
+            systemDataFactory = systemGameManager.SystemDataFactory;
+        }
+
         // baseCharacter does not initialize itself.  It is initialized by the PlayerManager (player case), or the UnitController (AI case)
         public void Init() {
             //Debug.Log(gameObject.name + ".BaseCharacter.Init()");
@@ -120,16 +135,16 @@ namespace AnyRPG {
         public void CreateCharacterComponents() {
 
             // get character components ready for intitalization by allowing them to construct needed internal objects and references back to the character
-            capabilityConsumerProcessor = new CapabilityConsumerProcessor(this);
-            characterStats = new CharacterStats(this);
-            characterEquipmentManager = new CharacterEquipmentManager(this);
+            capabilityConsumerProcessor = new CapabilityConsumerProcessor(this, systemGameManager);
+            characterStats = new CharacterStats(this, systemGameManager);
+            characterEquipmentManager = new CharacterEquipmentManager(this, systemGameManager);
             characterFactionManager = new CharacterFactionManager(this);
-            characterPetManager = new CharacterPetManager(this);
-            characterCombat = new CharacterCombat(this);
-            characterSkillManager = new CharacterSkillManager(this);
-            characterCurrencyManager = new CharacterCurrencyManager(this);
-            characterRecipeManager = new CharacterRecipeManager(this);
-            characterAbilityManager = new CharacterAbilityManager(this);
+            characterPetManager = new CharacterPetManager(this, systemGameManager);
+            characterCombat = new CharacterCombat(this, systemGameManager);
+            characterSkillManager = new CharacterSkillManager(this, systemGameManager);
+            characterCurrencyManager = new CharacterCurrencyManager(this, systemGameManager);
+            characterRecipeManager = new CharacterRecipeManager(this, systemGameManager);
+            characterAbilityManager = new CharacterAbilityManager(this, systemGameManager);
         }
 
         public void InitCharacterComponents() {
@@ -164,10 +179,8 @@ namespace AnyRPG {
             if (!eventSubscriptionsInitialized) {
                 return;
             }
-            if (SystemGameManager.Instance.SystemEventManager != null) {
-                SystemEventManager.StopListening("OnLevelUnload", HandleLevelUnload);
-                SystemEventManager.StopListening("OnLevelLoad", HandleLevelLoad);
-            }
+            SystemEventManager.StopListening("OnLevelUnload", HandleLevelUnload);
+            SystemEventManager.StopListening("OnLevelLoad", HandleLevelLoad);
         }
 
         // currently this is only used for load game panel and loading game, so it's always a player
@@ -175,7 +188,7 @@ namespace AnyRPG {
             //Debug.Log(gameObject.name + ".ApplyCapabilityConsumerSnapshot()");
 
             // get initial snapshot
-            CapabilityConsumerSnapshot oldSnapshot = new CapabilityConsumerSnapshot(this);
+            CapabilityConsumerSnapshot oldSnapshot = new CapabilityConsumerSnapshot(this, systemGameManager);
 
             // there is no need to perform notifications since the level is not loaded and the player isn't physically spawned yet
             // do not let unit profile load provider equipment.  player equipment was decided by the new game panel or saved equipment if loaded from save file
@@ -190,7 +203,7 @@ namespace AnyRPG {
             CapabilityConsumerProcessor.UpdateCapabilityProviderList();
 
             // get updated snapshot
-            CapabilityConsumerSnapshot newSnapshot = new CapabilityConsumerSnapshot(this);
+            CapabilityConsumerSnapshot newSnapshot = new CapabilityConsumerSnapshot(this, systemGameManager);
 
             ProcessCapabilityConsumerChange(oldSnapshot, newSnapshot);
 
@@ -274,20 +287,20 @@ namespace AnyRPG {
         public void SetUnitProfile(string unitProfileName, bool notify = true, int unitLevel = -1, bool loadProviderEquipment = true) {
             //Debug.Log(gameObject.name + ".BaseCharacter.SetUnitProfile(" + unitProfileName + ")");
 
-            SetUnitProfile(UnitProfile.GetUnitProfileReference(unitProfileName), notify, unitLevel, loadProviderEquipment);
+            SetUnitProfile(systemDataFactory.GetResource<UnitProfile>(unitProfileName), notify, unitLevel, loadProviderEquipment);
         }
 
         public void SetUnitProfile (UnitProfile unitProfile, bool notify = true, int unitLevel = -1, bool loadProviderEquipment = true, bool processEquipmentRestrictions = true) {
             //Debug.Log(gameObject.name + ".BaseCharacter.SetUnitProfile(" + (unitProfile == null ? "null" : unitProfile.DisplayName) + ", " + notify + ", " + unitLevel + ", " + loadProviderEquipment + ", " + processEquipmentRestrictions + ")");
 
             // get a snapshot of the current state
-            CapabilityConsumerSnapshot oldSnapshot = new CapabilityConsumerSnapshot(this);
+            CapabilityConsumerSnapshot oldSnapshot = new CapabilityConsumerSnapshot(this, systemGameManager);
 
             // set the new unit profile
             this.unitProfile = unitProfile;
 
             // get a snapshot of the new state
-            CapabilityConsumerSnapshot newSnapshot = new CapabilityConsumerSnapshot(this);
+            CapabilityConsumerSnapshot newSnapshot = new CapabilityConsumerSnapshot(this, systemGameManager);
 
             if (notify) {
                 ProcessCapabilityConsumerChange(oldSnapshot, newSnapshot, processEquipmentRestrictions);
@@ -336,8 +349,6 @@ namespace AnyRPG {
             if (notify) {
                 capabilityConsumerProcessor.UpdateCapabilityProviderList();
 
-                characterEquipmentManager.LoadDefaultEquipment(loadProviderEquipment);
-
                 UpdateStatProviderList();
 
                 if (characterStats != null) {
@@ -348,6 +359,10 @@ namespace AnyRPG {
                     }
                     characterStats.SetLevel(newLevel);
                 }
+
+                // this must be called after setting the level in case the character has gear that is higher than level 1
+                characterEquipmentManager.LoadDefaultEquipment(loadProviderEquipment);
+
             }
 
         }
@@ -375,7 +390,7 @@ namespace AnyRPG {
 
         public void UpdateStatProviderList() {
             statProviders = new List<IStatProvider>();
-            statProviders.Add(SystemGameManager.Instance.SystemConfigurationManager);
+            statProviders.Add(systemConfigurationManager);
             if (unitProfile != null) {
                 statProviders.Add(unitProfile);
             }
@@ -441,7 +456,7 @@ namespace AnyRPG {
             if (newFaction != null) {
                 if (notify) {
                     // get a snapshot of the current state
-                    oldSnapshot = new CapabilityConsumerSnapshot(this);
+                    oldSnapshot = new CapabilityConsumerSnapshot(this, systemGameManager);
                 }
                 Faction oldFaction = faction;
                 faction = newFaction;
@@ -450,7 +465,7 @@ namespace AnyRPG {
                     capabilityConsumerProcessor.UpdateCapabilityProviderList();
 
                     // get a snapshot of the new state
-                    CapabilityConsumerSnapshot newSnapshot = new CapabilityConsumerSnapshot(this);
+                    CapabilityConsumerSnapshot newSnapshot = new CapabilityConsumerSnapshot(this, systemGameManager);
 
                     UpdateStatProviderList();
 
@@ -478,7 +493,7 @@ namespace AnyRPG {
             //if (newClassSpecialization != null) {
                 if (notify) {
                     // get a snapshot of the current state
-                    oldSnapshot = new CapabilityConsumerSnapshot(this);
+                    oldSnapshot = new CapabilityConsumerSnapshot(this, systemGameManager);
                 }
                 ClassSpecialization oldClassSpecialization = classSpecialization;
                 classSpecialization = newClassSpecialization;
@@ -488,7 +503,7 @@ namespace AnyRPG {
                     capabilityConsumerProcessor.UpdateCapabilityProviderList();
 
                     // get a snapshot of the new state
-                    CapabilityConsumerSnapshot newSnapshot = new CapabilityConsumerSnapshot(this);
+                    CapabilityConsumerSnapshot newSnapshot = new CapabilityConsumerSnapshot(this, systemGameManager);
 
                     UpdateStatProviderList();
 
@@ -515,7 +530,7 @@ namespace AnyRPG {
             if (newCharacterClass != null) {
                 if (notify) {
                     // get a snapshot of the current state
-                    oldSnapshot = new CapabilityConsumerSnapshot(this);
+                    oldSnapshot = new CapabilityConsumerSnapshot(this, systemGameManager);
                 }
                 CharacterClass oldCharacterClass = characterClass;
                 characterClass = newCharacterClass;
@@ -523,7 +538,7 @@ namespace AnyRPG {
                     capabilityConsumerProcessor.UpdateCapabilityProviderList();
 
                     // get a snapshot of the new state
-                    CapabilityConsumerSnapshot newSnapshot = new CapabilityConsumerSnapshot(this);
+                    CapabilityConsumerSnapshot newSnapshot = new CapabilityConsumerSnapshot(this, systemGameManager);
 
                     UpdateStatProviderList();
 
@@ -551,7 +566,7 @@ namespace AnyRPG {
 
                 if (notify) {
                     // get a snapshot of the current state
-                    oldSnapshot = new CapabilityConsumerSnapshot(this);
+                    oldSnapshot = new CapabilityConsumerSnapshot(this, systemGameManager);
                 }
 
                 CharacterRace oldCharacterRace = characterRace;
@@ -561,7 +576,7 @@ namespace AnyRPG {
                     capabilityConsumerProcessor.UpdateCapabilityProviderList();
 
                     // get a snapshot of the new state
-                    CapabilityConsumerSnapshot newSnapshot = new CapabilityConsumerSnapshot(this);
+                    CapabilityConsumerSnapshot newSnapshot = new CapabilityConsumerSnapshot(this, systemGameManager);
 
                     UpdateStatProviderList();
 
@@ -594,7 +609,7 @@ namespace AnyRPG {
             if (newUnitType != null) {
                 if (notify) {
                     // get a snapshot of the current state
-                    oldSnapshot = new CapabilityConsumerSnapshot(this);
+                    oldSnapshot = new CapabilityConsumerSnapshot(this, systemGameManager);
                 }
                 UnitType oldUnitType = unitType;
                 unitType = newUnitType;
@@ -603,7 +618,7 @@ namespace AnyRPG {
                     capabilityConsumerProcessor.UpdateCapabilityProviderList();
 
                     // get a snapshot of the new state
-                    CapabilityConsumerSnapshot newSnapshot = new CapabilityConsumerSnapshot(this);
+                    CapabilityConsumerSnapshot newSnapshot = new CapabilityConsumerSnapshot(this, systemGameManager);
 
                     UpdateStatProviderList();
 

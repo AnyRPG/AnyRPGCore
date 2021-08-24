@@ -6,7 +6,7 @@ using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 namespace AnyRPG {
-    public class CastTargetController : MonoBehaviour {
+    public class CastTargetController : ConfiguredMonoBehaviour {
 
         [Tooltip("A reference to the renderer that contains the material with the highlight circle")]
         [SerializeField]
@@ -21,12 +21,19 @@ namespace AnyRPG {
 
         public Color MyCircleColor { get => circleColor; set => circleColor = value; }
 
-        void Start() {
+        // game manager references
+        protected PlayerManager playerManager = null;
+        protected CameraManager cameraManager = null;
+
+        public override void SetGameManagerReferences() {
+            base.SetGameManagerReferences();
+            playerManager = systemGameManager.PlayerManager;
+            cameraManager = systemGameManager.CameraManager;
         }
 
         public void SetupController() {
             if (meshRenderer != null) {
-                meshRenderer.material = new Material(SystemGameManager.Instance.SystemConfigurationManager.DefaultCastingLightProjector);
+                meshRenderer.material = new Material(systemConfigurationManager.DefaultCastingLightProjector);
             }
 
             circleColor = meshRenderer.material.color;
@@ -52,17 +59,17 @@ namespace AnyRPG {
 
         private void FollowMouse() {
             //Debug.Log("CastTargettingController.FollowMouse()");
-            if (SystemGameManager.Instance.PlayerManager == null || SystemGameManager.Instance.PlayerManager.ActiveUnitController == null) {
+            if (playerManager.ActiveUnitController == null) {
                 return;
             }
             if (!EventSystem.current.IsPointerOverGameObject()) {
-                Ray ray = SystemGameManager.Instance.CameraManager.ActiveMainCamera.ScreenPointToRay(Input.mousePosition);
+                Ray ray = cameraManager.ActiveMainCamera.ScreenPointToRay(Input.mousePosition);
                 RaycastHit hit;
                 //if (Physics.Raycast(ray, out hit, 100)) {
-                if (Physics.Raycast(ray, out hit, 100, SystemGameManager.Instance.PlayerManager.PlayerController.movementMask.value)) {
+                if (Physics.Raycast(ray, out hit, 100, playerManager.PlayerController.movementMask.value)) {
                     //Debug.Log("CastTargettingController.FollowMouse() hit movement mask at hit.point: " + hit.point + "; gameObject: " + hit.transform.gameObject.name + hit.transform.gameObject.layer);
                     Vector3 cameraPoint = new Vector3(hit.point.x, hit.point.y + 0.1f, hit.point.z);
-                    if (Vector3.Distance(hit.point, SystemGameManager.Instance.PlayerManager.ActiveUnitController.transform.position) < 40f) {
+                    if (Vector3.Distance(hit.point, playerManager.ActiveUnitController.transform.position) < 40f) {
                         //Debug.Log("CastTargettingController.FollowMouse() hit movement mask and was within 40 meters from player");
                         this.transform.position = cameraPoint;
                     }

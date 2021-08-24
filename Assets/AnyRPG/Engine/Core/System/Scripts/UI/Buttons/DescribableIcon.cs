@@ -133,6 +133,8 @@ namespace AnyRPG {
             if (tmp != null) {
                 //Debug.Log("DescribableIcon.OnPointerEnter(): showing tooltip");
                 ShowToolTip(tmp);
+            } else {
+                uIManager.HideToolTip();
             }
 
         }

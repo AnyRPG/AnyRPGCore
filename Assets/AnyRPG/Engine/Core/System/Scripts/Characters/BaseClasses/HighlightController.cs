@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 namespace AnyRPG {
-    public class HighlightController : MonoBehaviour {
+    public class HighlightController : ConfiguredMonoBehaviour {
 
         [Tooltip("A reference to the renderer that contains the material with the highlight circle")]
         [SerializeField]
@@ -18,9 +18,16 @@ namespace AnyRPG {
 
         private float circleRadius = 0f;
 
-        void OnEnable() {
+        private PlayerManager playerManager = null;
+
+        public override void Configure(SystemGameManager systemGameManager) {
+            base.Configure(systemGameManager);
             SetupController();
-            meshRenderer.enabled = false;
+        }
+
+        public override void SetGameManagerReferences() {
+            base.SetGameManagerReferences();
+            playerManager = systemGameManager.PlayerManager;
         }
 
         public void SetupController() {
@@ -31,10 +38,11 @@ namespace AnyRPG {
             meshRenderer.material = materialCopy;
             */
 
-            foreach (ProjectorColorMapNode colorMapNode in SystemGameManager.Instance.SystemConfigurationManager.FocusProjectorColorMap) {
+            foreach (ProjectorColorMapNode colorMapNode in systemConfigurationManager.FocusProjectorColorMap) {
                 colorDictionary[ColorUtility.ToHtmlStringRGBA(colorMapNode.SourceColor)] = colorMapNode;
                 //Debug.Log("FocusTargettingController.SetupController(): added " + ColorUtility.ToHtmlStringRGBA(colorMapNode.MySourceColor));
             }
+            meshRenderer.enabled = false;
         }
 
         public void ConfigureOwner(CharacterUnit characterUnit) {
@@ -72,7 +80,7 @@ namespace AnyRPG {
 
         public void SetMaterial(Color materialColor) {
             //Debug.Log("FocusTargettingController.SetMaterial(" + (materialColor == null ? "null" : materialColor.ToString()) + ")");
-            if (SystemGameManager.Instance.SystemConfigurationManager == null) {
+            if (systemConfigurationManager == null) {
                 return;
             }
 
@@ -91,7 +99,7 @@ namespace AnyRPG {
                     ProcessTint(colorDictionary[ColorUtility.ToHtmlStringRGBA(materialColor)]);
                     //Debug.Log("FocusTargettingController.SetMaterial(): dictionary contained color  " + ColorUtility.ToHtmlStringRGBA(materialColor));
                 } else {
-                    meshRenderer.material = new Material(SystemGameManager.Instance.SystemConfigurationManager.DefaultCastingLightProjector);
+                    meshRenderer.material = new Material(systemConfigurationManager.DefaultCastingLightProjector);
                     //Debug.Log("FocusTargettingController.SetMaterial(): dictionary did not contain color " + ColorUtility.ToHtmlStringRGBA(materialColor) + ", setting to default highlight");
                 }
             }
@@ -114,7 +122,7 @@ namespace AnyRPG {
             if (characterUnit?.BaseCharacter?.CharacterStats?.IsAlive == false) {
                 SetMaterial(Color.gray);
             } else {
-                Color newColor = Faction.GetFactionColor(characterUnit.BaseCharacter.UnitController);
+                Color newColor = Faction.GetFactionColor(playerManager, characterUnit.BaseCharacter.UnitController);
                 SetMaterial(newColor);
             }
         }

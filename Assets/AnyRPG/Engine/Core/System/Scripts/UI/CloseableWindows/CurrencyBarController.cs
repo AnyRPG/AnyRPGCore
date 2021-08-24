@@ -19,6 +19,9 @@ namespace AnyRPG {
 
         protected bool eventSubscriptionsInitialized = false;
 
+        // game manager references
+        private CurrencyConverter currencyConverter = null;
+
         [SerializeField]
         protected List<CurrencyAmountController> currencyAmountControllers = new List<CurrencyAmountController>();
 
@@ -28,6 +31,11 @@ namespace AnyRPG {
             foreach (CurrencyAmountController currencyAmountController in currencyAmountControllers) {
                 currencyAmountController.Configure(systemGameManager);
             }
+        }
+
+        public override void SetGameManagerReferences() {
+            base.SetGameManagerReferences();
+            currencyConverter = systemGameManager.CurrencyConverter;
         }
 
         public void ClearCurrencyAmounts() {
@@ -46,7 +54,7 @@ namespace AnyRPG {
         public void UpdateCurrencyAmount(Currency currency, int currencyAmount, string priceString) {
             //Debug.Log(gameObject.name + ".CurrencyBarController.UpdateCurrencyAmount(" + currency.DisplayName + ", " + currencyAmount + ", " + priceString + ")");
 
-            Dictionary<Currency, int> currencyList = CurrencyConverter.RedistributeCurrency(currency, currencyAmount);
+            Dictionary<Currency, int> currencyList = currencyConverter.RedistributeCurrency(currency, currencyAmount);
 
             ClearCurrencyAmounts();
             // spawn new ones

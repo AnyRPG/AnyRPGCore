@@ -63,7 +63,7 @@ namespace AnyRPG {
         public override void HandlePrerequisiteUpdates() {
             //Debug.Log(gameObject.name + ".Interactable.HandlePrerequisiteUpdates()");
             base.HandlePrerequisiteUpdates();
-            if (!SystemGameManager.Instance.PlayerManager.PlayerUnitSpawned) {
+            if (!playerManager.PlayerUnitSpawned) {
                 //Debug.Log(gameObject.name + ".Interactable.HandlePrerequisiteUpdates(): player unit not spawned.  returning");
                 return;
             }
@@ -73,7 +73,7 @@ namespace AnyRPG {
         public void UpdateNamePlateImage() {
             //Debug.Log(gameObject.name + ".NamePlateUnit.UpdateNamePlateImage()");
 
-            if (SystemGameManager.Instance.PlayerManager.MyCharacter == null || SystemGameManager.Instance.PlayerManager.UnitController == null) {
+            if (playerManager.MyCharacter == null || playerManager.UnitController == null) {
                 //Debug.Log(gameObject.name + ".Interactable.UpdateNamePlateImage(): player has no character");
                 return;
             }
@@ -114,7 +114,7 @@ namespace AnyRPG {
                 } else {
                     // set a generic indicator if there is more than 1 interactable
                     NamePlateController.NamePlate.GenericIndicatorImage.gameObject.SetActive(true);
-                    NamePlateController.NamePlate.GenericIndicatorImage.sprite = SystemGameManager.Instance.SystemConfigurationManager.MultipleInteractionNamePlateImage;
+                    NamePlateController.NamePlate.GenericIndicatorImage.sprite = systemConfigurationManager.MultipleInteractionNamePlateImage;
                 }
             }
         }
@@ -159,12 +159,12 @@ namespace AnyRPG {
         }
 
         public override Color GetGlowColor() {
-            return Faction.GetFactionColor(this);
+            return Faction.GetFactionColor(playerManager, this);
         }
 
         public override Color GetDescriptionColor() {
             if (NamePlateController != null && NamePlateController.Faction != null) {
-                return Faction.GetFactionColor(this);
+                return Faction.GetFactionColor(playerManager, this);
             }
             return base.GetDescriptionColor();
         }
@@ -189,14 +189,9 @@ namespace AnyRPG {
             namePlateReady = false;
         }
 
-        protected override void OnEnable() {
-            // characters can get disabled by cutscenes, so need to initialize nameplate on re-enable
-            if (initialized == true) {
-                // this unit may have been disabled by a timeline controller.  If so, none of this is necessary
-                return;
-            }
-            base.OnEnable();
-            namePlateController = new BaseNamePlateController(this);
+        public override void Configure(SystemGameManager systemGameManager) {
+            base.Configure(systemGameManager);
+            namePlateController = new BaseNamePlateController(this, systemGameManager);
             if (startHasRun && namePlateController != null) {
                 namePlateController.InitializeNamePlate();
             }

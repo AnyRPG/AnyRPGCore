@@ -46,17 +46,18 @@ namespace AnyRPG {
         }
 
         public override bool HadSpecialIcon(ActionButton actionButton) {
-            if (SystemGameManager.Instance.SystemConfigurationManager.AllowAutoAttack == true && IsAutoAttack == true) {
+            if (systemConfigurationManager.AllowAutoAttack == true && IsAutoAttack == true) {
 
                 /*
-                if (SystemGameManager.Instance.PlayerManager.MyCharacter.MyCharacterEquipmentManager.MyCurrentEquipment.ContainsKey(EquipmentSlot.MainHand) && SystemGameManager.Instance.PlayerManager.MyCharacter.MyCharacterEquipmentManager.MyCurrentEquipment[EquipmentSlot.MainHand] != null) {
-                    if (SystemGameManager.Instance.PlayerManager.MyCharacter.MyCharacterEquipmentManager.MyCurrentEquipment[EquipmentSlot.MainHand].MyIcon != null) {
-                        MyIcon.sprite = SystemGameManager.Instance.PlayerManager.MyCharacter.MyCharacterEquipmentManager.MyCurrentEquipment[EquipmentSlot.MainHand].MyIcon;
+                if (playerManager.MyCharacter.MyCharacterEquipmentManager.MyCurrentEquipment.ContainsKey(EquipmentSlot.MainHand) && playerManager.MyCharacter.MyCharacterEquipmentManager.MyCurrentEquipment[EquipmentSlot.MainHand] != null) {
+                    if (playerManager.MyCharacter.MyCharacterEquipmentManager.MyCurrentEquipment[EquipmentSlot.MainHand].MyIcon != null) {
+                        MyIcon.sprite = playerManager.MyCharacter.MyCharacterEquipmentManager.MyCurrentEquipment[EquipmentSlot.MainHand].MyIcon;
                         //Debug.Log("ActionButton.UpdateVisual(): setting icon");
                     }
                 }
                 */
-                if (SystemGameManager.Instance.PlayerManager.MyCharacter.CharacterCombat.GetInCombat() == true && SystemGameManager.Instance.PlayerManager.MyCharacter.CharacterCombat.AutoAttackActive == true) {
+                if (playerManager.MyCharacter.CharacterCombat.GetInCombat() == true
+                    && playerManager.MyCharacter.CharacterCombat.AutoAttackActive == true) {
                     if (actionButton.CoolDownIcon.isActiveAndEnabled == false) {
                         actionButton.CoolDownIcon.enabled = true;
                     }
@@ -93,7 +94,7 @@ namespace AnyRPG {
             // auto-attack buttons are special and display the current weapon of the character
             if (IsAutoAttack == true) {
                 //Debug.Log("ActionButton.UpdateVisual(): updating auto-attack ability");
-                foreach (Equipment equipment in SystemGameManager.Instance.PlayerManager.MyCharacter.CharacterEquipmentManager.CurrentEquipment.Values) {
+                foreach (Equipment equipment in playerManager.MyCharacter.CharacterEquipmentManager.CurrentEquipment.Values) {
                     if (equipment != null && equipment is Weapon && (equipment as Weapon).UseDamagePerSecond == true) {
                         if (actionButton.MyIcon.sprite != equipment.Icon) {
                             actionButton.MyIcon.sprite = equipment.Icon;
@@ -106,14 +107,14 @@ namespace AnyRPG {
         }
 
         public override Coroutine ChooseMonitorCoroutine(ActionButton actionButton) {
-            if (SystemGameManager.Instance.SystemConfigurationManager.AllowAutoAttack == true && IsAutoAttack == true) {
+            if (systemConfigurationManager.AllowAutoAttack == true && IsAutoAttack == true) {
                 //Debug.Log("ActionButton.OnUseableUse(" + ability.MyName + "): WAS ANIMATED AUTO ATTACK");
                 //if (autoAttackCoRoutine == null) {
                 //if (monitorCoroutine == null) {
-                    return SystemGameManager.Instance.SystemAbilityController.StartCoroutine(actionButton.MonitorAutoAttack(this));
+                    return systemAbilityController.StartCoroutine(actionButton.MonitorAutoAttack(this));
                 //}
             }
-            return SystemGameManager.Instance.SystemAbilityController.StartCoroutine(actionButton.MonitorAbility(this));
+            return systemAbilityController.StartCoroutine(actionButton.MonitorAbility(this));
         }
 
         public override List<AbilityAttachmentNode> GetHoldableObjectList(IAbilityCaster abilityCaster) {

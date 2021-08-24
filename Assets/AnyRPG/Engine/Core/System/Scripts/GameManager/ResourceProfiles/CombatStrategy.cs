@@ -159,13 +159,13 @@ namespace AnyRPG {
             return false;
         }
 
-        public override void SetupScriptableObjects() {
-            base.SetupScriptableObjects();
+        public override void SetupScriptableObjects(SystemGameManager systemGameManager) {
+            base.SetupScriptableObjects(systemGameManager);
 
             if (phaseNodes != null) {
                 foreach (CombatStrategyNode combatStrategyNode in phaseNodes) {
                     if (combatStrategyNode != null) {
-                        combatStrategyNode.SetupScriptableObjects();
+                        combatStrategyNode.SetupScriptableObjects(systemGameManager);
                     }
                     
                 }

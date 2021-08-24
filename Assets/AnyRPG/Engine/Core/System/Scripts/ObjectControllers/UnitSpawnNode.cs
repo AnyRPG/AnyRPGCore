@@ -8,7 +8,7 @@ using UnityEngine.Serialization;
 using UnityEngine.UI;
 
 namespace AnyRPG {
-    public class UnitSpawnNode : MonoBehaviour, IPrerequisiteOwner {
+    public class UnitSpawnNode : AutoConfiguredMonoBehaviour, IPrerequisiteOwner {
 
         [Header("Spawn GameObject")]
 
@@ -111,6 +111,9 @@ namespace AnyRPG {
 
         private List<UnitController> spawnReferences = new List<UnitController>();
 
+        // game manager references
+        private PlayerManager playerManager = null;
+        private SystemDataFactory systemDataFactory = null;
 
         // later on make this spawn mob as player walks into collider ;>
         //private BoxCollider boxCollider;
@@ -118,7 +121,7 @@ namespace AnyRPG {
             get {
                 // disabled next bit because it interferes with spawning in cutscenes
                 /*
-                if (SystemGameManager.Instance.PlayerManager.MyPlayerUnitSpawned == false) {
+                if (playerManager.MyPlayerUnitSpawned == false) {
                     //Debug.Log(gameObject.name + ".MyPrerequisitesMet: returning false because player isn't spawned");
                     return false;
                 }
@@ -136,8 +139,17 @@ namespace AnyRPG {
             }
         }
 
-        private void Awake() {
+        public override void Configure(SystemGameManager systemGameManager) {
+            base.Configure(systemGameManager);
+
             SetupScriptableObjects();
+        }
+
+        public override void SetGameManagerReferences() {
+            base.SetGameManagerReferences();
+
+            playerManager = systemGameManager.PlayerManager;
+            systemDataFactory = systemGameManager.SystemDataFactory;
         }
 
         protected virtual void Start() {
@@ -154,12 +166,12 @@ namespace AnyRPG {
             if (eventSubscriptionsInitialized) {
                 return;
             }
-            if (SystemGameManager.Instance.SystemEventManager == null) {
-                Debug.LogError(gameObject.name + ".UnitSpawnNode.CreateEventSubscriptions(): SystemEventManager not found.  Is the GameManager in the scene?");
+            if (systemGameManager == null) {
+                Debug.LogError(gameObject.name + ".UnitSpawnNode.CreateEventSubscriptions(): systemGameManager not found.  Is the GameManager in the scene?");
                 return;
             }
             SystemEventManager.StartListening("OnPlayerUnitSpawn", HandlePlayerUnitSpawn);
-            if (SystemGameManager.Instance.PlayerManager.PlayerUnitSpawned == true) {
+            if (playerManager.PlayerUnitSpawned == true) {
                 //Debug.Log(gameObject.name + ".UnitSpawnNode.CreateEventSubscriptions(): player unit already spawned.  Handling player unit spawn");
                 ProcessPlayerUnitSpawn();
             }
@@ -172,9 +184,7 @@ namespace AnyRPG {
                 return;
             }
 
-            if (SystemGameManager.Instance.SystemEventManager != null) {
-                SystemEventManager.StopListening("OnPlayerUnitSpawn", HandlePlayerUnitSpawn);
-            }
+            SystemEventManager.StopListening("OnPlayerUnitSpawn", HandlePlayerUnitSpawn);
 
             eventSubscriptionsInitialized = false;
         }
@@ -281,7 +291,7 @@ namespace AnyRPG {
                 Vector3 tempVector = new Vector3(transform.position.x + xLocation, transform.position.y + (ySize / 2), transform.position.z + zLocation);
                 Vector3 attemptVector = tempVector;
                 RaycastHit hit;
-                if (Physics.Raycast(attemptVector, Vector3.down, out hit, 500f, SystemGameManager.Instance.PlayerManager.PlayerController.movementMask)) {
+                if (Physics.Raycast(attemptVector, Vector3.down, out hit, 500f, playerManager.PlayerController.movementMask)) {
                     gotLocation = true;
                     spawnLocation = hit.point;
                     //Debug.Log("We hit " + hit.collider.name + " " + hit.point);
@@ -318,20 +328,17 @@ namespace AnyRPG {
 
         public void CommonSpawn(int unitLevel, int extraLevels, bool dynamicLevel, UnitProfile unitProfile, UnitToughness toughness = null) {
             //Debug.Log(gameObject.name + ".UnitSpawnNode.CommonSpawn()");
-            if (unitProfile == null || SystemGameManager.Instance.PlayerManager.MyCharacter == null) {
+            if (unitProfile == null || playerManager.MyCharacter == null) {
                 return;
             }
 
-            int _unitLevel = (dynamicLevel ? SystemGameManager.Instance.PlayerManager.MyCharacter.CharacterStats.Level : unitLevel) + extraLevels;
+            int _unitLevel = (dynamicLevel ? playerManager.MyCharacter.CharacterStats.Level : unitLevel) + extraLevels;
             UnitController unitController = unitProfile.SpawnUnitPrefab(null, transform.position, transform.forward, UnitControllerMode.AI, _unitLevel);
 
             if (unitController == null) {
                 // something went wrong.  None of the code below will work, so might as well return
                 return;
             }
-
-            // give this unit a unique name
-            //unitController.gameObject.name = unitController.gameObject.name + SystemGameManager.Instance.GetSpawnCount();
 
             Vector3 newSpawnLocation = Vector3.zero;
             Vector3 newSpawnForward = Vector3.forward;
@@ -551,7 +558,7 @@ namespace AnyRPG {
             }
 
             // only players can activate trigger based unit spawn nodes.  we don't want npcs wandering around patrolling to activate these
-            if (SystemGameManager.Instance.PlayerManager.PlayerUnitSpawned == false || other.gameObject != SystemGameManager.Instance.PlayerManager.ActiveUnitController.gameObject) {
+            if (playerManager.PlayerUnitSpawned == false || other.gameObject != playerManager.ActiveUnitController.gameObject) {
                 return;
             }
 
@@ -571,15 +578,11 @@ namespace AnyRPG {
         }
 
         public void SetupScriptableObjects() {
-            if (SystemGameManager.Instance == null) {
-                Debug.LogError(gameObject.name + ": System Game Manager Not Found In The Scene.");
-                return;
-            }
             if (prerequisiteConditions != null) {
                 foreach (PrerequisiteConditions tmpPrerequisiteConditions in prerequisiteConditions) {
                     if (tmpPrerequisiteConditions != null) {
                         //Debug.Log(gameObject.name + ".SetupScriptableObjects(): setting up prerequisites");
-                        tmpPrerequisiteConditions.SetupScriptableObjects(this);
+                        tmpPrerequisiteConditions.SetupScriptableObjects(systemGameManager, this);
 
                         // add this so unit spawn nodes can have their prerequisites properly set on the first check
                         tmpPrerequisiteConditions.UpdatePrerequisites(false);
@@ -591,7 +594,7 @@ namespace AnyRPG {
             if (unitProfileNames != null) {
                 foreach (string unitProfileName in unitProfileNames) {
                     if (unitProfileName != null && unitProfileName != string.Empty) {
-                        UnitProfile unitProfile = SystemDataFactory.Instance.GetResource<UnitProfile>(unitProfileName);
+                        UnitProfile unitProfile = systemDataFactory.GetResource<UnitProfile>(unitProfileName);
                         if (unitProfile != null) {
                             unitProfiles.Add(unitProfile);
                         } else {
@@ -602,7 +605,7 @@ namespace AnyRPG {
             }
 
             if (unitToughness == null && defaultToughness != null && defaultToughness != string.Empty) {
-                UnitToughness tmpToughness = SystemDataFactory.Instance.GetResource<UnitToughness>(defaultToughness);
+                UnitToughness tmpToughness = systemDataFactory.GetResource<UnitToughness>(defaultToughness);
                 if (tmpToughness != null) {
                     unitToughness = tmpToughness;
                 } else {

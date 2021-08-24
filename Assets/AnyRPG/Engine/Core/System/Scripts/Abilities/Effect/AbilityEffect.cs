@@ -282,13 +282,13 @@ namespace AnyRPG {
             return abilityEffectContext;
         }
 
-        public override void SetupScriptableObjects() {
+        public override void SetupScriptableObjects(SystemGameManager systemGameManager) {
             //Debug.Log(MyName + ".AbilityEffect.SetupscriptableObjects()");
-            base.SetupScriptableObjects();
+            base.SetupScriptableObjects(systemGameManager);
             hitAbilityEffectList = new List<AbilityEffect>();
             if (hitAbilityEffectNames != null) {
                 foreach (string abilityEffectName in hitAbilityEffectNames) {
-                    AbilityEffect abilityEffect = SystemDataFactory.Instance.GetResource<AbilityEffect>(abilityEffectName);
+                    AbilityEffect abilityEffect = systemDataFactory.GetResource<AbilityEffect>(abilityEffectName);
                     if (abilityEffect != null) {
                         hitAbilityEffectList.Add(abilityEffect);
                     } else {
@@ -300,7 +300,7 @@ namespace AnyRPG {
             onHitAudioProfiles = new List<AudioProfile>();
             if (onHitAudioProfileNames != null) {
                 foreach (string audioProfileName in onHitAudioProfileNames) {
-                    AudioProfile audioProfile = SystemDataFactory.Instance.GetResource<AudioProfile>(audioProfileName);
+                    AudioProfile audioProfile = systemDataFactory.GetResource<AudioProfile>(audioProfileName);
                     if (audioProfile != null) {
                         onHitAudioProfiles.Add(audioProfile);
                     } else {
@@ -311,7 +311,7 @@ namespace AnyRPG {
 
             if (effectMaterialName != null && effectMaterialName != string.Empty) {
                 effectMaterial = null;
-                MaterialProfile tmpMaterialProfile = SystemDataFactory.Instance.GetResource<MaterialProfile>(effectMaterialName);
+                MaterialProfile tmpMaterialProfile = systemDataFactory.GetResource<MaterialProfile>(effectMaterialName);
                 if (tmpMaterialProfile != null) {
                     effectMaterial = tmpMaterialProfile.MyEffectMaterial;
                 } else {

@@ -6,11 +6,9 @@ namespace AnyRPG {
     public class CharacterPreviewCameraController : PreviewCameraController {
 
         //public event System.Action OnTargetReady = delegate { };
-
-        protected override void Awake() {
-            //Debug.Log("CharacterPreviewCameraController.Awake()");
-            base.Awake();
-            currentCamera = SystemGameManager.Instance.CameraManager.CharacterPreviewCamera;
+        public override void Configure(SystemGameManager systemGameManager) {
+            base.Configure(systemGameManager);
+            currentCamera = cameraManager.CharacterPreviewCamera;
         }
 
     }

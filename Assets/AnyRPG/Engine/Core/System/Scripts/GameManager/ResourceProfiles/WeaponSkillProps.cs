@@ -9,7 +9,7 @@ using UnityEngine.SceneManagement;
 namespace AnyRPG {
 
     [System.Serializable]
-    public class WeaponSkillProps {
+    public class WeaponSkillProps : ConfiguredClass {
 
         [Header("Weapon Skill")]
 
@@ -55,6 +55,8 @@ namespace AnyRPG {
         [SerializeField]
         private List<AbilityAttachmentNode> abilityObjectList = new List<AbilityAttachmentNode>();
 
+        // game manager references
+        private SystemDataFactory systemDataFactory = null;
 
         // properties
         public bool DefaultWeaponSkill { get => defaultWeaponSkill; set => defaultWeaponSkill = value; }
@@ -65,12 +67,19 @@ namespace AnyRPG {
         public List<AbilityAttachmentNode> AbilityObjectList { get => abilityObjectList; set => abilityObjectList = value; }
 
         // methods
-        public void SetupScriptableObjects(string ownerName) {
+
+        public override void SetGameManagerReferences() {
+            base.SetGameManagerReferences();
+            systemDataFactory = systemGameManager.SystemDataFactory;
+        }
+
+        public void SetupScriptableObjects(string ownerName, SystemGameManager systemGameManager) {
+            Configure(systemGameManager);
 
             if (onHitEffects != null) {
                 foreach (string onHitEffectName in onHitEffects) {
                     if (onHitEffectName != null && onHitEffectName != string.Empty) {
-                        AbilityEffect abilityEffect = SystemDataFactory.Instance.GetResource<AbilityEffect>(onHitEffectName);
+                        AbilityEffect abilityEffect = systemDataFactory.GetResource<AbilityEffect>(onHitEffectName);
                         if (abilityEffect != null) {
                             onHitEffectList.Add(abilityEffect);
                         } else {
@@ -85,7 +94,7 @@ namespace AnyRPG {
             if (defaultHitEffects != null) {
                 foreach (string defaultHitEffectName in defaultHitEffects) {
                     if (defaultHitEffectName != null && defaultHitEffectName != string.Empty) {
-                        AbilityEffect abilityEffect = SystemDataFactory.Instance.GetResource<AbilityEffect>(defaultHitEffectName);
+                        AbilityEffect abilityEffect = systemDataFactory.GetResource<AbilityEffect>(defaultHitEffectName);
                         if (abilityEffect != null) {
                             defaultHitEffectList.Add(abilityEffect);
                         } else {
@@ -98,7 +107,7 @@ namespace AnyRPG {
             }
 
             if (animationProfileName != null && animationProfileName != string.Empty) {
-                AnimationProfile tmpAnimationProfile = SystemDataFactory.Instance.GetResource<AnimationProfile>(animationProfileName);
+                AnimationProfile tmpAnimationProfile = systemDataFactory.GetResource<AnimationProfile>(animationProfileName);
                 if (tmpAnimationProfile != null) {
                     animationProfile = tmpAnimationProfile;
                 } else {
@@ -109,7 +118,7 @@ namespace AnyRPG {
             if (onHitAudioProfiles != null) {
                 foreach (string defaultHitAudioProfile in onHitAudioProfiles) {
                     if (defaultHitAudioProfile != null && defaultHitAudioProfile != string.Empty) {
-                        AudioProfile audioProfile = SystemDataFactory.Instance.GetResource<AudioProfile>(defaultHitAudioProfile);
+                        AudioProfile audioProfile = systemDataFactory.GetResource<AudioProfile>(defaultHitAudioProfile);
                         if (audioProfile != null) {
                             onHitSoundEffects.Add(audioProfile.AudioClip);
                         } else {
@@ -124,7 +133,7 @@ namespace AnyRPG {
                 foreach (AbilityAttachmentNode abilityAttachmentNode in abilityObjectList) {
                     if (abilityAttachmentNode != null) {
 
-                        abilityAttachmentNode.SetupScriptableObjects(ownerName);
+                        abilityAttachmentNode.SetupScriptableObjects(ownerName, systemGameManager);
                     }
                 }
             }

@@ -4,7 +4,7 @@ using UnityEngine.EventSystems;
 
 namespace AnyRPG {
 
-    public class PreviewCameraController : MonoBehaviour, IPointerDownHandler {
+    public class PreviewCameraController : ConfiguredMonoBehaviour, IPointerDownHandler {
         // public variables
         public event System.Action OnTargetReady = delegate { };
 
@@ -86,10 +86,19 @@ namespace AnyRPG {
         // keep reference to bone we should be searching for on uma create
         protected string initialTargetString = string.Empty;
 
-        protected virtual void Awake() {
-            //Debug.Log("AnyRPGCharacterPreviewCameraController.Awake()");
+        // game manager references
+        protected InputManager inputManager = null;
+        protected CameraManager cameraManager = null;
 
+        public override void Configure(SystemGameManager systemGameManager) {
+            base.Configure(systemGameManager);
             rectTransform = gameObject.GetComponent<RectTransform>();
+        }
+
+        public override void SetGameManagerReferences() {
+            base.SetGameManagerReferences();
+            inputManager = systemGameManager.InputManager;
+            cameraManager = systemGameManager.CameraManager;
         }
 
         public void ClearTarget() {
@@ -194,13 +203,13 @@ namespace AnyRPG {
             }
             rectTransform.GetWorldCorners(worldCorners);
             Vector3 mousePosition = Input.mousePosition;
-            if (SystemGameManager.Instance.InputManager.rightMouseButtonUp) {
+            if (inputManager.rightMouseButtonUp) {
                 rightMouseClickedOverThisWindow = false;
             }
-            if (SystemGameManager.Instance.InputManager.leftMouseButtonUp) {
+            if (inputManager.leftMouseButtonUp) {
                 leftMouseClickedOverThisWindow = false;
             }
-            if (SystemGameManager.Instance.InputManager.middleMouseButtonUp) {
+            if (inputManager.middleMouseButtonUp) {
                 middleMouseClickedOverThisWindow = false;
             }
             /*
@@ -219,13 +228,13 @@ namespace AnyRPG {
             } else {
                 mouseOutsideWindow = false;
                 /*
-                if (SystemGameManager.Instance.InputManager.rightMouseButtonDown) {
+                if (inputManager.rightMouseButtonDown) {
                     rightMouseClickedOverThisWindow = true;
                 }
-                if (SystemGameManager.Instance.InputManager.leftMouseButtonDown) {
+                if (inputManager.leftMouseButtonDown) {
                     leftMouseClickedOverThisWindow = true;
                 }
-                if (SystemGameManager.Instance.InputManager.middleMouseButtonDown) {
+                if (inputManager.middleMouseButtonDown) {
                     middleMouseClickedOverThisWindow = true;
                 }
                 */
@@ -235,7 +244,7 @@ namespace AnyRPG {
             cameraZoom = false;
 
             // handleZoom
-            if (!mouseOutsideWindow && SystemGameManager.Instance.InputManager.mouseScrolled) {
+            if (!mouseOutsideWindow && inputManager.mouseScrolled) {
                 //Debug.Log("Mouse Scrollwheel: " + Input.GetAxis("Mouse ScrollWheel"));
                 currentZoomDistance += (Input.GetAxis("Mouse ScrollWheel") * cameraSpeed * -1);
                 currentZoomDistance = Mathf.Clamp(currentZoomDistance, minZoom, currentMaxZoom);
@@ -245,7 +254,7 @@ namespace AnyRPG {
             // pan with the left or turn with the right mouse button
             if (!mouseOutsideWindow
                 && (rightMouseClickedOverThisWindow || leftMouseClickedOverThisWindow)
-                && (SystemGameManager.Instance.InputManager.rightMouseButtonDown || SystemGameManager.Instance.InputManager.leftMouseButtonDown)) {
+                && (inputManager.rightMouseButtonDown || inputManager.leftMouseButtonDown)) {
                 float xInput = Input.GetAxis("Mouse X") * yawSpeed;
                 currentXDegrees += xInput;
                 Quaternion xQuaternion = Quaternion.AngleAxis(currentXDegrees, Vector3.up);
@@ -269,7 +278,7 @@ namespace AnyRPG {
             // move the rotation point away from the center of the target using middle mouse button
             if (!mouseOutsideWindow
                 && middleMouseClickedOverThisWindow
-                && SystemGameManager.Instance.InputManager.middleMouseButtonDown) {
+                && inputManager.middleMouseButtonDown) {
                 //float xInput = Input.GetAxis("Mouse X") * yawSpeed;
                 float xInput = Input.GetAxis("Mouse X");
                 float yInput = Input.GetAxis("Mouse Y");
@@ -283,7 +292,7 @@ namespace AnyRPG {
             //SetTargetPosition();
 
             // follow the player
-            //if (hasMoved || cameraZoom || (cameraPan && !SystemGameManager.Instance.InputManager.rightMouseButtonClickedOverUI && !SystemGameManager.Instance.InputManager.leftMouseButtonClickedOverUI) ) {
+            //if (hasMoved || cameraZoom || (cameraPan && !inputManager.rightMouseButtonClickedOverUI && !inputManager.leftMouseButtonClickedOverUI) ) {
             SetWantedPosition();
             //}
 

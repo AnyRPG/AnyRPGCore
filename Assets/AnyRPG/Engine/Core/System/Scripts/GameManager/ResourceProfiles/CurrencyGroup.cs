@@ -40,18 +40,18 @@ namespace AnyRPG {
                 return true;
             }
             foreach (CurrencyGroupRate currencyGroupRate in currencyGroupRates) {
-                if (SystemDataFactory.MatchResource(currencyGroupRate.MyCurrency.DisplayName, currency.DisplayName)) {
+                if (SystemDataFactory.MatchResource(currencyGroupRate.Currency.DisplayName, currency.DisplayName)) {
                     return true;
                 }
             }
             return false;
         }
 
-        public override void SetupScriptableObjects() {
-            base.SetupScriptableObjects();
+        public override void SetupScriptableObjects(SystemGameManager systemGameManager) {
+            base.SetupScriptableObjects(systemGameManager);
             baseCurrency = null;
             if (baseCurrencyName != null) {
-                Currency tmpCurrency = SystemDataFactory.Instance.GetResource<Currency>(baseCurrencyName);
+                Currency tmpCurrency = systemDataFactory.GetResource<Currency>(baseCurrencyName);
                 if (tmpCurrency != null) {
                     baseCurrency = tmpCurrency;
                 } else {
@@ -61,7 +61,7 @@ namespace AnyRPG {
 
             if (currencyGroupRates != null) {
                 foreach (CurrencyGroupRate currencyGroupRate in currencyGroupRates) {
-                    currencyGroupRate.SetupScriptableObjects();
+                    currencyGroupRate.SetupScriptableObjects(systemDataFactory);
                 }
             }
 
@@ -83,13 +83,13 @@ namespace AnyRPG {
         [SerializeField]
         private int baseMultiple = 10;
 
-        public Currency MyCurrency { get => currency; set => currency = value; }
-        public int MyBaseMultiple { get => baseMultiple; set => baseMultiple = value; }
+        public Currency Currency { get => currency; set => currency = value; }
+        public int BaseMultiple { get => baseMultiple; set => baseMultiple = value; }
 
-        public void SetupScriptableObjects() {
+        public void SetupScriptableObjects(SystemDataFactory systemDataFactory) {
             currency = null;
             if (currencyName != null) {
-                Currency tmpCurrency = SystemDataFactory.Instance.GetResource<Currency>(currencyName);
+                Currency tmpCurrency = systemDataFactory.GetResource<Currency>(currencyName);
                 if (tmpCurrency != null) {
                     currency = tmpCurrency;
                 } else {

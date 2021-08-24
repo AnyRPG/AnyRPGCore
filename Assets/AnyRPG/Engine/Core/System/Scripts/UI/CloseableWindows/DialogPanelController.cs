@@ -48,9 +48,9 @@ namespace AnyRPG {
 
         private Quest quest = null;
 
-        public Dialog MyDialog { get => dialog; set => dialog = value; }
-        public Interactable MyInteractable { get => interactable; set => interactable = value; }
-        public Quest MyQuest { get => quest; set => quest = value; }
+        public Dialog Dialog { get => dialog; set => dialog = value; }
+        public Interactable Interactable { get => interactable; set => interactable = value; }
+        public Quest Quest { get => quest; set => quest = value; }
 
         private int dialogIndex = 0;
 
@@ -76,25 +76,25 @@ namespace AnyRPG {
         public void Setup(Quest quest, Interactable interactable) {
             //Debug.Log("DialogPanelController.Setup(" + (quest == null ? "null" : quest.DisplayName) + ", " + (interactable == null ? "null" : interactable.DisplayName) + ")");
             ClearSettings();
-            MyQuest = quest;
-            MyInteractable = interactable;
-            MyDialog = quest.OpeningDialog;
+            Quest = quest;
+            Interactable = interactable;
+            Dialog = quest.OpeningDialog;
             uIManager.dialogWindow.OpenWindow();
         }
 
         public void Setup(Dialog dialog, Interactable interactable) {
             //Debug.Log("DialogPanelController.Setup(" + dialog.DisplayName + ", " + interactable.DisplayName + ")");
             ClearSettings();
-            MyInteractable = interactable;
-            MyDialog = dialog;
+            Interactable = interactable;
+            Dialog = dialog;
             uIManager.dialogWindow.OpenWindow();
         }
 
         public void ClearSettings() {
             dialogIndex = 0;
-            MyInteractable = null;
-            MyQuest = null;
-            MyDialog = null;
+            Interactable = null;
+            Quest = null;
+            Dialog = null;
         }
 
         public void CancelAction() {
@@ -105,8 +105,8 @@ namespace AnyRPG {
         public void ConfirmAction() {
             //Debug.Log("NewGameMenuController.ConfirmAction(): dialogIndex: " + dialogIndex + "; DialogNode Count: " + MyDialog.MyDialogNodes.Count);
             dialogIndex++;
-            if (dialogIndex >= MyDialog.DialogNodes.Count) {
-                MyDialog.TurnedIn = true;
+            if (dialogIndex >= Dialog.DialogNodes.Count) {
+                Dialog.TurnedIn = true;
                 if (quest == null) {
 
                     // next line is no longer true because onconfirmaction calls a prerequisiteupdate on the dialog controller
@@ -135,17 +135,14 @@ namespace AnyRPG {
 
         public void DisplayQuestText() {
             //Debug.Log("DialogPanelController.DisplayQuestText()");
-            if (MyQuest != null) {
-                //nodeText.text = MyQuest.GetObjectiveDescription();
-                dialogText.text = MyQuest.GetObjectiveDescription();
+            if (Quest != null) {
+                dialogText.text = Quest.GetObjectiveDescription();
             }
         }
 
         public void ViewQuest() {
-            // testing disable this because it was already set by showquests
-            //QuestGiverUI.Instance.MyInteractable = interactable;
             uIManager.questGiverWindow.OpenWindow();
-            QuestGiverUI.Instance.ShowDescription(MyQuest);
+            questLog.ShowQuestGiverDescription(Quest, null);
             uIManager.dialogWindow.CloseWindow();
         }
 
@@ -154,31 +151,31 @@ namespace AnyRPG {
             // CLOSE THIS FIRST SO OTHER WINDOWS AREN'T BLOCKED FROM POPPING
             uIManager.dialogWindow.CloseWindow();
 
-            questLog.AcceptQuest(MyQuest);
+            questLog.AcceptQuest(Quest);
             //interactable.CheckForInteractableObjectives(MyQuest.MyName);
         }
 
         public void DisplayNodeText() {
-            if (dialogIndex > MyDialog.DialogNodes.Count + 1) {
+            if (dialogIndex > Dialog.DialogNodes.Count + 1) {
                 //Debug.Log("Past last node index.  will not display");
                 return;
             }
             if (characterNameText != null) {
-                characterNameText.text = MyInteractable.DisplayName;
+                characterNameText.text = Interactable.DisplayName;
             }
             
             if (dialogText != null) {
-                dialogText.text = string.Format("<size={0}>{1}</size>", dialogFontSize, MyDialog.DialogNodes[dialogIndex].MyDescription);
+                dialogText.text = string.Format("<size={0}>{1}</size>", dialogFontSize, Dialog.DialogNodes[dialogIndex].MyDescription);
             }
 
-            logManager.WriteChatMessage(MyDialog.DialogNodes[dialogIndex].MyDescription);
-            if (MyDialog.AudioProfile != null && MyDialog.AudioProfile.AudioClips != null && MyDialog.AudioProfile.AudioClips.Count > dialogIndex) {
-                audioManager.PlayVoice(MyDialog.AudioProfile.AudioClips[dialogIndex]);
+            logManager.WriteChatMessage(Dialog.DialogNodes[dialogIndex].MyDescription);
+            if (Dialog.AudioProfile != null && Dialog.AudioProfile.AudioClips != null && Dialog.AudioProfile.AudioClips.Count > dialogIndex) {
+                audioManager.PlayVoice(Dialog.AudioProfile.AudioClips[dialogIndex]);
             }
 
             if (buttonText != null) {
-                if (MyDialog.DialogNodes[dialogIndex].MyNextOption != string.Empty) {
-                    buttonText.text = MyDialog.DialogNodes[dialogIndex].MyNextOption;
+                if (Dialog.DialogNodes[dialogIndex].MyNextOption != string.Empty) {
+                    buttonText.text = Dialog.DialogNodes[dialogIndex].MyNextOption;
                 } else {
                     buttonText.text = defaultNextText;
                 }

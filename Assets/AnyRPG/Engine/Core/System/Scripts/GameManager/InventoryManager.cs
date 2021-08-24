@@ -35,7 +35,6 @@ namespace AnyRPG {
         protected CanvasGroup canvasGroup = null;
 
         // game manager references
-        private SystemConfigurationManager systemConfigurationManager = null;
         private HandScript handScript = null;
         private MessageFeedManager messageFeedManager = null;
         private SystemItemManager systemItemManager = null;
@@ -100,15 +99,18 @@ namespace AnyRPG {
             //Debug.Log("InventoryManager.Awake()");
             base.Configure(systemGameManager);
             canvasGroup = inventoryContainer.GetComponent<CanvasGroup>();
+
+            bagBarController.Configure(systemGameManager);
+        }
+
+        public override void SetGameManagerReferences() {
+            base.SetGameManagerReferences();
             uIManager = systemGameManager.UIManager;
             handScript = uIManager.HandScript;
             messageFeedManager = uIManager.MessageFeedManager;
-            systemConfigurationManager = systemGameManager.SystemConfigurationManager;
             systemItemManager = systemGameManager.SystemItemManager;
             objectPooler = systemGameManager.ObjectPooler;
             systemEventManager = systemGameManager.SystemEventManager;
-
-            bagBarController.Configure(systemGameManager);
         }
 
         private void Start() {
@@ -470,14 +472,15 @@ namespace AnyRPG {
         /// </summary>
         /// <param name="item"></param>
         public bool AddItem(Item item, bool addToBank = false) {
+            //Debug.Log("InventoryManager.AddItem(" + (item == null ? "null" : item.DisplayName) + ", " + addToBank + ")");
             if (item == null) {
                 return false;
             }
-            if (item.MyUniqueItem == true && GetItemCount(item.DisplayName) > 0) {
+            if (item.UniqueItem == true && GetItemCount(item.DisplayName) > 0) {
                 messageFeedManager.WriteMessage(item.DisplayName + " is unique.  You can only carry one at a time.");
                 return false;
             }
-            if (item.MyMaximumStackSize > 0) {
+            if (item.MaximumStackSize > 0) {
                 if (PlaceInStack(item, addToBank)) {
                     return true;
                 }

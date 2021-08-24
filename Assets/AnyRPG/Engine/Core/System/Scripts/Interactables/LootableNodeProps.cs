@@ -31,10 +31,10 @@ namespace AnyRPG {
         }
         */
 
-        public override void SetupScriptableObjects() {
-            base.SetupScriptableObjects();
+        public override void SetupScriptableObjects(SystemGameManager systemGameManager) {
+            base.SetupScriptableObjects(systemGameManager);
             foreach (string lootTableName in lootTableNames) {
-                LootTable lootTable = SystemDataFactory.Instance.GetResource<LootTable>(lootTableName);
+                LootTable lootTable = systemDataFactory.GetResource<LootTable>(lootTableName);
                 if (lootTable != null) {
                     lootTables.Add(lootTable);
                 } else {

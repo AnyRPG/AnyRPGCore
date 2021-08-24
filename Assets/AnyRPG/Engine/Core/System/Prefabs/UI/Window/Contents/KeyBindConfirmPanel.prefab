@@ -361,6 +361,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   backGroundImage: {fileID: 0}
+  coloredUIElements:
+  - {fileID: 6799846317544015706}
   cancelButton: {fileID: 2472056547317459849}
 --- !u!114 &8015818964886085027
 MonoBehaviour:

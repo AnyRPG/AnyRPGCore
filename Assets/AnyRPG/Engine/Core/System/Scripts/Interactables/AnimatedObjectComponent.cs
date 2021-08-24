@@ -20,7 +20,7 @@ namespace AnyRPG {
         // keep track of looping
         private Coroutine loopCoroutine = null;
 
-        public AnimatedObjectComponent(Interactable interactable, AnimatedObjectProps interactableOptionProps) : base(interactable, interactableOptionProps) {
+        public AnimatedObjectComponent(Interactable interactable, AnimatedObjectProps interactableOptionProps, SystemGameManager systemGameManager) : base(interactable, interactableOptionProps, systemGameManager) {
             interactableOptionProps.InteractionPanelTitle = "Interactable";
         }
 
@@ -43,7 +43,7 @@ namespace AnyRPG {
                 //return false;
             //}
             base.Interact(source, optionIndex);
-            SystemGameManager.Instance.UIManager.interactionWindow.CloseWindow();
+            uIManager.interactionWindow.CloseWindow();
 
             // loop through the animatedobjects prefabobjects
             // check their state (open / closed)

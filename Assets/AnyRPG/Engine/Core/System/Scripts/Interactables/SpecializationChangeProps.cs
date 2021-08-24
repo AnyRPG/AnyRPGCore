@@ -18,23 +18,23 @@ namespace AnyRPG {
 
         private ClassSpecialization classSpecialization;
 
-        public override Sprite Icon { get => (SystemGameManager.Instance.SystemConfigurationManager.ClassChangeInteractionPanelImage != null ? SystemGameManager.Instance.SystemConfigurationManager.ClassChangeInteractionPanelImage : base.Icon); }
-        public override Sprite NamePlateImage { get => (SystemGameManager.Instance.SystemConfigurationManager.ClassChangeNamePlateImage != null ? SystemGameManager.Instance.SystemConfigurationManager.ClassChangeNamePlateImage : base.NamePlateImage); }
+        public override Sprite Icon { get => (systemConfigurationManager.ClassChangeInteractionPanelImage != null ? systemConfigurationManager.ClassChangeInteractionPanelImage : base.Icon); }
+        public override Sprite NamePlateImage { get => (systemConfigurationManager.ClassChangeNamePlateImage != null ? systemConfigurationManager.ClassChangeNamePlateImage : base.NamePlateImage); }
         public ClassSpecialization ClassSpecialization { get => classSpecialization; set => classSpecialization = value; }
 
         public override InteractableOptionComponent GetInteractableOption(Interactable interactable, InteractableOption interactableOption = null) {
-            InteractableOptionComponent returnValue = new SpecializationChangeComponent(interactable, this);
+            InteractableOptionComponent returnValue = new SpecializationChangeComponent(interactable, this, systemGameManager);
             if (interactableOption != null) {
                 interactableOption.SetComponent(returnValue);
             }
             return returnValue;
         }
 
-        public override void SetupScriptableObjects() {
-            base.SetupScriptableObjects();
+        public override void SetupScriptableObjects(SystemGameManager systemGameManager) {
+            base.SetupScriptableObjects(systemGameManager);
 
             if (classSpecialization == null && specializationName != null && specializationName != string.Empty) {
-                ClassSpecialization tmpClassSpecialization = SystemDataFactory.Instance.GetResource<ClassSpecialization>(specializationName);
+                ClassSpecialization tmpClassSpecialization = systemDataFactory.GetResource<ClassSpecialization>(specializationName);
                 if (tmpClassSpecialization != null) {
                     classSpecialization = tmpClassSpecialization;
                 } else {

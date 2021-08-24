@@ -10,14 +10,22 @@ using UnityEngine.UI;
 namespace AnyRPG {
     public class CraftingNodeComponent : InteractableOptionComponent {
 
+        // game manager references
+        private CraftingManager craftingManager = null;
+
         public CraftingNodeProps Props { get => interactableOptionProps as CraftingNodeProps; }
 
-        public CraftingNodeComponent(Interactable interactable, CraftingNodeProps interactableOptionProps) : base(interactable, interactableOptionProps) {
+        public CraftingNodeComponent(Interactable interactable, CraftingNodeProps interactableOptionProps, SystemGameManager systemGameManager) : base(interactable, interactableOptionProps, systemGameManager) {
+        }
+
+        public override void SetGameManagerReferences() {
+            base.SetGameManagerReferences();
+            craftingManager = systemGameManager.CraftingManager;
         }
 
         public override bool MyPrerequisitesMet {
             get {
-                if (SystemGameManager.Instance.PlayerManager.MyCharacter.CharacterAbilityManager.HasAbility(Props.Ability) == false) {
+                if (playerManager.MyCharacter.CharacterAbilityManager.HasAbility(Props.Ability) == false) {
                     return false;
                 }
                 return base.MyPrerequisitesMet;
@@ -31,12 +39,7 @@ namespace AnyRPG {
             }
             base.CreateEventSubscriptions();
 
-            // because the skill is a special type of prerequisite, we need to be notified when it changes
-            if (SystemGameManager.Instance.SystemEventManager == null) {
-                Debug.LogError("SystemEventManager Not Found.  Is the GameManager prefab in the scene?");
-                return;
-            }
-            SystemGameManager.Instance.SystemEventManager.OnAbilityListChanged += HandleAbilityListChange;
+            systemEventManager.OnAbilityListChanged += HandleAbilityListChange;
         }
 
         public override void CleanupEventSubscriptions() {
@@ -46,9 +49,7 @@ namespace AnyRPG {
             }
             base.CleanupEventSubscriptions();
 
-            if (SystemGameManager.Instance.SystemEventManager != null) {
-                SystemGameManager.Instance.SystemEventManager.OnAbilityListChanged -= HandleAbilityListChange;
-            }
+            systemEventManager.OnAbilityListChanged -= HandleAbilityListChange;
         }
 
         public static List<CraftingNodeComponent> GetCraftingNodeComponents(Interactable searchInteractable) {
@@ -65,7 +66,7 @@ namespace AnyRPG {
 
         public override int GetCurrentOptionCount() {
             //Debug.Log(gameObject.name + ".GatheringNode.GetCurrentOptionCount()");
-            return ((SystemGameManager.Instance.PlayerManager.MyCharacter.CharacterAbilityManager.HasAbility(Props.Ability) == true) ? 1 : 0);
+            return ((playerManager.MyCharacter.CharacterAbilityManager.HasAbility(Props.Ability) == true) ? 1 : 0);
         }
 
         public override bool Interact(CharacterUnit source, int optionIndex = 0) {
@@ -74,7 +75,7 @@ namespace AnyRPG {
             if (Props == null || Props.Ability == null) {
                 Debug.Log("Props is null");
             }
-            SystemGameManager.Instance.CraftingManager.SetAbility(Props.Ability as CraftAbility);
+            craftingManager.SetAbility(Props.Ability as CraftAbility);
             //source.MyCharacter.MyCharacterAbilityManager.BeginAbility(ability);
             return true;
             //return PickUp();
@@ -83,7 +84,7 @@ namespace AnyRPG {
         public override void StopInteract() {
             base.StopInteract();
 
-            SystemGameManager.Instance.UIManager.craftingWindow.CloseWindow();
+            uIManager.craftingWindow.CloseWindow();
         }
 
         public override bool HasMiniMapText() {

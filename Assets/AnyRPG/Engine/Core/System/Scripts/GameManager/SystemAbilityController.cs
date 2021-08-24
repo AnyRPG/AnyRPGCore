@@ -18,7 +18,7 @@ namespace AnyRPG {
 
             objectPooler = systemGameManager.ObjectPooler;
 
-            abilityManager = new AbilityManager(this);
+            abilityManager = new AbilityManager(this, systemGameManager);
             SystemEventManager.StartListening("OnLevelUnload", HandleLevelUnload);
         }
 

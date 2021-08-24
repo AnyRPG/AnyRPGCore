@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 namespace AnyRPG {
-    public class CharacterCombat {
+    public class CharacterCombat : ConfiguredClass {
 
         //events
         public event System.Action<BaseCharacter, float> OnKillEvent = delegate { };
@@ -48,6 +48,11 @@ namespace AnyRPG {
         // the target we swung at, in case we try to change target mid swing and we don't put an animation on something too far away
         protected BaseCharacter swingTarget = null;
 
+        // game manager references
+        protected PlayerManager playerManager = null;
+        protected UIManager uIManager = null;
+        protected SystemEventManager systemEventManager = null;
+
         public AggroTable AggroTable {
             get {
                 return aggroTable;
@@ -65,9 +70,17 @@ namespace AnyRPG {
         public List<AbilityEffect> OnHitEffects { get => onHitEffects; set => onHitEffects = value; }
         public List<AbilityEffect> DefaultHitEffects { get => defaultHitEffects; set => defaultHitEffects = value; }
 
-        public CharacterCombat(BaseCharacter baseCharacter) {
+        public CharacterCombat(BaseCharacter baseCharacter, SystemGameManager systemGameManager) {
             this.baseCharacter = baseCharacter;
+            Configure(systemGameManager);
             aggroTable = new AggroTable(baseCharacter as BaseCharacter);
+        }
+
+        public override void SetGameManagerReferences() {
+            base.SetGameManagerReferences();
+            playerManager = systemGameManager.PlayerManager;
+            uIManager = systemGameManager.UIManager;
+            systemEventManager = systemGameManager.SystemEventManager;
         }
 
         public void HandleAutoAttack() {
@@ -170,7 +183,7 @@ namespace AnyRPG {
             //Debug.Log(baseCharacter.gameObject.name + ".CharacterCombat.Attack(" + characterTarget.name + ")");
             if (characterTarget == null) {
                 //Debug.Log("You must have a target to attack");
-                //SystemGameManager.Instance.LogManager.WriteCombatMessage("You must have a target to attack");
+                //logManager.WriteCombatMessage("You must have a target to attack");
             } else {
                 // add this here to prevent characters from not being able to attack
                 swingTarget = characterTarget;
@@ -210,13 +223,12 @@ namespace AnyRPG {
             }
 
             if (target != null
-                && SystemGameManager.Instance.PlayerManager != null
-                && SystemGameManager.Instance.PlayerManager.ActiveUnitController != null
+                && playerManager.ActiveUnitController != null
                 && baseCharacter != null
                 && baseCharacter.UnitController != null
                 && baseCharacter.UnitController.CharacterUnit != null) {
-                if (target == (SystemGameManager.Instance.PlayerManager.MyCharacter as IAbilityCaster) ||
-                    (SystemGameManager.Instance.PlayerManager.MyCharacter as BaseCharacter) == (baseCharacter as BaseCharacter) ||
+                if (target == (playerManager.MyCharacter as IAbilityCaster) ||
+                    (playerManager.MyCharacter as BaseCharacter) == (baseCharacter as BaseCharacter) ||
                     target.AbilityManager.IsPlayerControlled()) {
                     // spawn text over enemies damaged by the player and over the player itself
                     CombatTextType combatTextType = CombatTextType.normal;
@@ -238,8 +250,8 @@ namespace AnyRPG {
                     } else {
                         combatTextType = CombatTextType.ability;
                     }
-                    SystemGameManager.Instance.UIManager.CombatTextManager.SpawnCombatText(baseCharacter.UnitController, damage, combatTextType, combatMagnitude, abilityEffectContext);
-                    SystemGameManager.Instance.SystemEventManager.NotifyOnTakeDamage(target, BaseCharacter.UnitController.CharacterUnit, damage, abilityEffect.DisplayName);
+                    uIManager.CombatTextManager.SpawnCombatText(baseCharacter.UnitController, damage, combatTextType, combatMagnitude, abilityEffectContext);
+                    systemEventManager.NotifyOnTakeDamage(target, BaseCharacter.UnitController.CharacterUnit, damage, abilityEffect.DisplayName);
                 }
                 lastCombatEvent = Time.time;
                 float totalThreat = damage;
@@ -312,7 +324,7 @@ namespace AnyRPG {
 
         public void ActivateAutoAttack() {
             //Debug.Log(gameObject.name + ".CharacterCombat.ActivateAutoAttack()");
-            if (SystemGameManager.Instance.SystemConfigurationManager.AllowAutoAttack == true) {
+            if (systemConfigurationManager.AllowAutoAttack == true) {
                 autoAttackActive = true;
             }
         }
@@ -508,7 +520,7 @@ namespace AnyRPG {
                     if (audioClip != null) {
                         baseCharacter.UnitController.UnitComponentController.PlayEffect(audioClip);
                     }
-                    //SystemGameManager.Instance.AudioManager.PlayEffect(overrideHitSoundEffect);
+                    //audioManager.PlayEffect(overrideHitSoundEffect);
                 }
                 */
 

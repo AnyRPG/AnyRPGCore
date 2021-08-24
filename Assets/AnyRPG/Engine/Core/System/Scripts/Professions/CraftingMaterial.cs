@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace AnyRPG {
     [System.Serializable]
-    public class CraftingMaterial {
+    public class CraftingMaterial : ConfiguredClass {
 
         [SerializeField]
         [ResourceSelector(resourceType = typeof(Item))]
@@ -20,11 +20,20 @@ namespace AnyRPG {
         public Item MyItem { get => item; }
         public int MyCount { get => count; }
 
-        public void SetupScriptableObjects() {
+        // game manager references
+        private SystemDataFactory systemDataFactory = null;
+
+        public override void SetGameManagerReferences() {
+            base.SetGameManagerReferences();
+            systemDataFactory = systemGameManager.SystemDataFactory;
+        }
+
+        public void SetupScriptableObjects(SystemGameManager systemGameManager) {
+            Configure(systemGameManager);
 
             item = null;
             if (itemName != null) {
-                Item tmpItem = SystemDataFactory.Instance.GetResource<Item>(itemName);
+                Item tmpItem = systemDataFactory.GetResource<Item>(itemName);
                 if (tmpItem != null) {
                     item = tmpItem;
                 } else {

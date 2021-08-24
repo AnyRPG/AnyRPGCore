@@ -38,13 +38,13 @@ namespace AnyRPG {
         /// </summary>
         public bool SetOnHitAudio { get => setOnHitAudio; set => setOnHitAudio = value; }
 
-        public override void SetupScriptableObjects() {
-            base.SetupScriptableObjects();
+        public override void SetupScriptableObjects(SystemGameManager systemGameManager) {
+            base.SetupScriptableObjects(systemGameManager);
 
             realEquipmentSlotTypeList = new List<EquipmentSlotType>();
             if (equipmentSlotTypeList != null) {
                 foreach (string equipmentSlotTypeName in equipmentSlotTypeList) {
-                    EquipmentSlotType tmpSlotType = SystemDataFactory.Instance.GetResource<EquipmentSlotType>(equipmentSlotTypeName);
+                    EquipmentSlotType tmpSlotType = systemDataFactory.GetResource<EquipmentSlotType>(equipmentSlotTypeName);
                     if (tmpSlotType != null) {
                         realEquipmentSlotTypeList.Add(tmpSlotType);
                     } else {

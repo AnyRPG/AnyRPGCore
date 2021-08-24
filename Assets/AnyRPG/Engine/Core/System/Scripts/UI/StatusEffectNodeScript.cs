@@ -7,7 +7,7 @@ using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 namespace AnyRPG {
-    public class StatusEffectNodeScript : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler, IPointerExitHandler, IPointerDownHandler, IPointerUpHandler {
+    public class StatusEffectNodeScript : ConfiguredMonoBehaviour, IPointerClickHandler, IPointerEnterHandler, IPointerExitHandler, IPointerDownHandler, IPointerUpHandler {
 
         [SerializeField]
         private Image icon = null;
@@ -30,17 +30,26 @@ namespace AnyRPG {
         private StatusEffectNode statusEffectNode = null;
         private CharacterUnit target = null;
 
+        // game manager references
+        private UIManager uIManager = null;
+
         public TextMeshProUGUI Timer { get => timer; }
         public TextMeshProUGUI StackCount { get => stackCount; set => stackCount = value; }
         public Image Icon { get => icon; set => icon = value; }
         public bool UseTimerText { get => useTimerText; set => useTimerText = value; }
         public bool UseStackText { get => useStackText; set => useStackText = value; }
 
-        public void Initialize(StatusEffectNode statusEffectNode, CharacterUnit target) {
+        public void Initialize(StatusEffectNode statusEffectNode, CharacterUnit target, SystemGameManager systemGameManager) {
             //Debug.Log("StatusEffectNodeScript.Initialize()");
             icon.sprite = statusEffectNode.StatusEffect.Icon;
             this.statusEffectNode = statusEffectNode;
             this.target = target;
+            Configure(systemGameManager);
+        }
+
+        public override void SetGameManagerReferences() {
+            base.SetGameManagerReferences();
+            uIManager = systemGameManager.UIManager;
         }
 
         public void OnPointerClick(PointerEventData eventData) {
@@ -57,21 +66,21 @@ namespace AnyRPG {
                 //Debug.Log("StatusEffectNodeScript.HandleRightClick(): statusEffect is not null, destroying");
                 statusEffectNode.CancelStatusEffect();
             }
-            SystemGameManager.Instance.UIManager.HideToolTip();
+            uIManager.HideToolTip();
         }
 
         public void OnPointerEnter(PointerEventData eventData) {
             //Debug.Log("StatusEffectNodeScript.OnPointerEnter()");
 
             // show tooltip
-            SystemGameManager.Instance.UIManager.ShowToolTip(transform.position, statusEffectNode.StatusEffect);
+            uIManager.ShowToolTip(transform.position, statusEffectNode.StatusEffect);
         }
 
         public void OnPointerExit(PointerEventData eventData) {
             //Debug.Log("StatusEffectNodeScript.OnPointerExit()");
 
             // hide tooltip
-            SystemGameManager.Instance.UIManager.HideToolTip();
+            uIManager.HideToolTip();
         }
 
         public void UpdateFillIcon(float fillAmount) {

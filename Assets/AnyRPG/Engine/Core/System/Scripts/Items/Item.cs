@@ -86,10 +86,17 @@ namespace AnyRPG {
         private Currency currency = null;
 
         // A reference to the slot that this item is sitting on
-        private SlotScript slot;
+        private SlotScript slot = null;
 
-        public int MyMaximumStackSize { get => stackSize; set => stackSize = value; }
-        public SlotScript MySlot { get => slot; set => slot = value; }
+        // game manager references
+        protected CurrencyConverter currencyConverter = null;
+        protected InventoryManager inventoryManager = null;
+        protected MessageFeedManager messageFeedManager = null;
+        protected UIManager uIManager = null;
+        protected PlayerManager playerManager = null;
+
+        public int MaximumStackSize { get => stackSize; set => stackSize = value; }
+        public SlotScript Slot { get => slot; set => slot = value; }
         
         public int BuyPrice() {
             return BuyPrice(realItemQuality);
@@ -97,27 +104,15 @@ namespace AnyRPG {
 
         public int BuyPrice(ItemQuality usedItemQuality) {
             if (dynamicCurrencyAmount) {
-                return (int)(((pricePerLevel * GetItemLevel(SystemGameManager.Instance.PlayerManager.MyCharacter.CharacterStats.Level)) + basePrice) * (usedItemQuality == null ? 1 : usedItemQuality.BuyPriceMultiplier));
+                //Debug.Log(DisplayName + ".Item.BuyPrice(" + (usedItemQuality == null ? "null" : usedItemQuality.DisplayName) + "): return: " + (int)(((pricePerLevel * GetItemLevel(playerManager.MyCharacter.CharacterStats.Level)) + basePrice) * (usedItemQuality == null ? 1 : usedItemQuality.BuyPriceMultiplier)));
+                return (int)(((pricePerLevel * GetItemLevel(playerManager.MyCharacter.CharacterStats.Level)) + basePrice) * (usedItemQuality == null ? 1 : usedItemQuality.BuyPriceMultiplier));
             }
+            //Debug.Log(DisplayName + ".Item.BuyPrice(" + (usedItemQuality == null ? "null" : usedItemQuality.DisplayName) + "): return: " + (int)(basePrice * (usedItemQuality == null ? 1 : usedItemQuality.BuyPriceMultiplier)));
             return (int)(basePrice * (usedItemQuality == null ? 1 : usedItemQuality.BuyPriceMultiplier));
         }
 
-        public int SellPrice {
-            get {
-
-                if (dynamicCurrencyAmount) {
-                    if (realItemQuality == null) {
-                        //Debug.Log("realItemQuality was null");
-                    }
-                    return (int)(((pricePerLevel * GetItemLevel(SystemGameManager.Instance.PlayerManager.MyCharacter.CharacterStats.Level)) + basePrice) * (realItemQuality == null ? 1 : realItemQuality.SellPriceMultiplier));
-                }
-                return (int)(basePrice * (realItemQuality == null ? 1 : realItemQuality.SellPriceMultiplier));
-            }
-            set => basePrice = value;
-        }
-
-        public bool MyUniqueItem { get => uniqueItem; }
-        public Currency MyCurrency { get => currency; set => currency = value; }
+        public bool UniqueItem { get => uniqueItem; }
+        public Currency Currency { get => currency; set => currency = value; }
         public ItemQuality ItemQuality { get => realItemQuality; set => realItemQuality = value; }
         public int GetItemLevel(int characterLevel) {
             int returnLevel = (int)Mathf.Clamp(itemLevel, 1, Mathf.Infinity);
@@ -142,22 +137,31 @@ namespace AnyRPG {
             }
         }
 
+        public override void SetGameManagerReferences() {
+            base.SetGameManagerReferences();
+            inventoryManager = systemGameManager.InventoryManager;
+            currencyConverter = systemGameManager.CurrencyConverter;
+            uIManager = systemGameManager.UIManager;
+            messageFeedManager = uIManager.MessageFeedManager;
+            playerManager = systemGameManager.PlayerManager;
+        }
+
         public virtual void UpdateChargeCount(ActionButton actionButton) {
             //Debug.Log(DisplayName + ".Item.UpdateChargeCount()");
-            int chargeCount = SystemGameManager.Instance.InventoryManager.GetUseableCount(this);
-            SystemGameManager.Instance.UIManager.UpdateStackSize(actionButton, chargeCount, true);
+            int chargeCount = inventoryManager.GetUseableCount(this);
+            uIManager.UpdateStackSize(actionButton, chargeCount, true);
         }
 
         public virtual void UpdateActionButtonVisual(ActionButton actionButton) {
-            int count = SystemGameManager.Instance.InventoryManager.GetUseableCount(this);
+            int count = inventoryManager.GetUseableCount(this);
             // we have to do this to ensure we have a reference to the top item on the stack, otherwise we will try to use an item that has been used already
             //if ((count == 0 && removeStaleActions) || count > 0) {
             /*
             if (count > 0) {
-                Useable = SystemGameManager.Instance.InventoryManager.GetUseable(Useable as IUseable);
+                Useable = inventoryManager.GetUseable(Useable as IUseable);
             }
             */
-            SystemGameManager.Instance.UIManager.UpdateStackSize(actionButton, count, true);
+            uIManager.UpdateStackSize(actionButton, count, true);
 
             
             if (count == 0) {
@@ -175,23 +179,45 @@ namespace AnyRPG {
             return false;
         }
 
-        public KeyValuePair<Currency, int> MySellPrice {
-            get {
+        private int SellPrice() {
+            return SellPrice(realItemQuality);
+        }
+
+        private int SellPrice(ItemQuality usedItemQuality) {
+            //get {
+
+                if (dynamicCurrencyAmount) {
+                    if (realItemQuality == null) {
+                        //Debug.Log("realItemQuality was null");
+                    }
+                    return (int)(((pricePerLevel * GetItemLevel(playerManager.MyCharacter.CharacterStats.Level)) + basePrice) * (usedItemQuality == null ? 1 : usedItemQuality.SellPriceMultiplier));
+                }
+                return (int)(basePrice * (usedItemQuality == null ? 1 : usedItemQuality.SellPriceMultiplier));
+            //}
+            //set => basePrice = value;
+        }
+
+        /// <summary>
+        /// return the sell price in the base currency
+        /// </summary>
+        /// <returns></returns>
+        public KeyValuePair<Currency, int> GetSellPrice() {
+            //get {
                 //Debug.Log(MyName + ".Item.MySellPrice()");
-                int sellAmount = SellPrice;
-                Currency currency = MyCurrency;
+                int sellAmount = SellPrice();
+                Currency currency = Currency;
                 if (currency != null) {
-                    CurrencyGroup currencyGroup = CurrencyConverter.FindCurrencyGroup(currency);
+                    CurrencyGroup currencyGroup = currencyConverter.FindCurrencyGroup(currency);
                     if (currencyGroup != null) {
-                        int convertedSellAmount = CurrencyConverter.GetConvertedValue(currency, sellAmount);
+                        int convertedSellAmount = currencyConverter.GetBaseCurrencyAmount(currency, sellAmount);
                         currency = currencyGroup.MyBaseCurrency;
-                        sellAmount = (int)Mathf.Ceil((float)convertedSellAmount * SystemGameManager.Instance.SystemConfigurationManager.VendorPriceMultiplier);
+                        sellAmount = (int)Mathf.Ceil((float)convertedSellAmount * systemConfigurationManager.VendorPriceMultiplier);
                     } else {
-                        sellAmount = (int)Mathf.Ceil((float)sellAmount * SystemGameManager.Instance.SystemConfigurationManager.VendorPriceMultiplier);
+                        sellAmount = (int)Mathf.Ceil((float)sellAmount * systemConfigurationManager.VendorPriceMultiplier);
                     }
                 }
                 return new KeyValuePair<Currency, int>(currency, sellAmount);
-            }
+            //}
         }
 
         public List<CharacterClass> CharacterClassRequirementList { get => realCharacterClassRequirementList; set => realCharacterClassRequirementList = value; }
@@ -205,11 +231,11 @@ namespace AnyRPG {
         }
 
         public IUseable GetFactoryUseable() {
-            return SystemDataFactory.Instance.GetResource<Item>(DisplayName);
+            return systemDataFactory.GetResource<Item>(DisplayName);
         }
 
         public bool ActionButtonUse() {
-            List<Item> itemList = SystemGameManager.Instance.InventoryManager?.GetItems(DisplayName, 1);
+            List<Item> itemList = inventoryManager?.GetItems(DisplayName, 1);
             if (itemList == null || itemList.Count == 0) {
                 return false;
             }
@@ -232,12 +258,12 @@ namespace AnyRPG {
 
         public virtual bool Use() {
             //Debug.Log("Base item class: using " + itemName);
-            if (!CharacterClassRequirementIsMet(SystemGameManager.Instance.PlayerManager.MyCharacter)) {
-                SystemGameManager.Instance.UIManager.MessageFeedManager.WriteMessage("You are not the right character class to use " + DisplayName);
+            if (!CharacterClassRequirementIsMet(playerManager.MyCharacter)) {
+                messageFeedManager.WriteMessage("You are not the right character class to use " + DisplayName);
                 return false;
             }
-            if (GetItemLevel(SystemGameManager.Instance.PlayerManager.MyCharacter.CharacterStats.Level) > SystemGameManager.Instance.PlayerManager.MyCharacter.CharacterStats.Level) {
-                SystemGameManager.Instance.UIManager.MessageFeedManager.WriteMessage("You are too low level use " + DisplayName);
+            if (GetItemLevel(playerManager.MyCharacter.CharacterStats.Level) > playerManager.MyCharacter.CharacterStats.Level) {
+                messageFeedManager.WriteMessage("You are too low level use " + DisplayName);
                 return false;
             }
 
@@ -266,7 +292,7 @@ namespace AnyRPG {
             // NOTE : currently this is only called from places that apply to characters (quest and loot)
             // if in the future this function is called from somewhere an npc or preview character is used, it would be better to accept the
             // character as a parameter, rather than hard coding to the player
-            if (!CharacterClassRequirementIsMet(SystemGameManager.Instance.PlayerManager.MyCharacter)) {
+            if (!CharacterClassRequirementIsMet(playerManager.MyCharacter)) {
                 //Debug.Log(DisplayName + ".Item.RequirementsAreMet(): return false");
                 return false;
             }
@@ -280,10 +306,10 @@ namespace AnyRPG {
         /// </summary>
         public void Remove() {
             //Debug.Log("Item " + GetInstanceID().ToString() + " is about to ask the slot to remove itself");
-            if (MySlot != null) {
+            if (Slot != null) {
                 //Debug.Log("The item's myslot is not null");
-                MySlot.RemoveItem(this);
-                MySlot = null;
+                Slot.RemoveItem(this);
+                Slot = null;
             } else {
                 //Debug.Log("The item's myslot is null!!!");
             }
@@ -305,12 +331,12 @@ namespace AnyRPG {
             string summaryString = string.Empty;
             if (characterClassRequirementList.Count > 0) {
                 string colorString = "red";
-                if (realCharacterClassRequirementList.Contains(SystemGameManager.Instance.PlayerManager.MyCharacter.CharacterClass)) {
+                if (realCharacterClassRequirementList.Contains(playerManager.MyCharacter.CharacterClass)) {
                     colorString = "white";
                 }
                 summaryString += string.Format("\n<color={0}>Required Classes: {1}</color>", colorString, string.Join(",", characterClassRequirementList));
             }
-            if (MyCurrency == null) {
+            if (Currency == null) {
                 summaryString += "\nNo Sell Price";
             }
 
@@ -337,7 +363,7 @@ namespace AnyRPG {
             if (randomItemQuality == true) {
                 // get number of item qualities that are valid for random item quality creation
                 List<ItemQuality> validItemQualities = new List<ItemQuality>();
-                foreach (ItemQuality itemQuality in SystemDataFactory.Instance.GetResourceList<ItemQuality>()) {
+                foreach (ItemQuality itemQuality in systemDataFactory.GetResourceList<ItemQuality>()) {
                     if (itemQuality.AllowRandomItems) {
                         validItemQualities.Add(itemQuality);
                     }
@@ -379,11 +405,11 @@ namespace AnyRPG {
             }
         }
 
-        public override void SetupScriptableObjects() {
-            base.SetupScriptableObjects();
+        public override void SetupScriptableObjects(SystemGameManager systemGameManager) {
+            base.SetupScriptableObjects(systemGameManager);
             currency = null;
             if (currencyName != null && currencyName != string.Empty) {
-                Currency tmpCurrency = SystemDataFactory.Instance.GetResource<Currency>(currencyName);
+                Currency tmpCurrency = systemDataFactory.GetResource<Currency>(currencyName);
                 if (tmpCurrency != null) {
                     currency = tmpCurrency;
                 } else {
@@ -393,7 +419,7 @@ namespace AnyRPG {
 
             realItemQuality = null;
             if (itemQuality != null && itemQuality != string.Empty) {
-                ItemQuality tmpItemQuality = SystemDataFactory.Instance.GetResource<ItemQuality>(itemQuality);
+                ItemQuality tmpItemQuality = systemDataFactory.GetResource<ItemQuality>(itemQuality);
                 if (tmpItemQuality != null) {
                     realItemQuality = tmpItemQuality;
                 } else {
@@ -404,7 +430,7 @@ namespace AnyRPG {
             realCharacterClassRequirementList = new List<CharacterClass>();
             if (characterClassRequirementList != null) {
                 foreach (string characterClassName in characterClassRequirementList) {
-                    CharacterClass tmpCharacterClass = SystemDataFactory.Instance.GetResource<CharacterClass>(characterClassName);
+                    CharacterClass tmpCharacterClass = systemDataFactory.GetResource<CharacterClass>(characterClassName);
                     if (tmpCharacterClass != null) {
                         realCharacterClassRequirementList.Add(tmpCharacterClass);
                     } else {

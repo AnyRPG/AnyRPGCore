@@ -11,7 +11,7 @@ namespace AnyRPG {
         // whether or not this is a match if the condition is true.  set to false to make a negative match
         bool IsMet(BaseCharacter baseCharacter);
 
-        void SetupScriptableObjects();
+        void SetupScriptableObjects(SystemGameManager systemGameManager);
         void CleanupScriptableObjects();
         void UpdateStatus(bool notify);
     }

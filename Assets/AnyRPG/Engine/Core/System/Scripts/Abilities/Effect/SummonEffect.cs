@@ -48,10 +48,10 @@ namespace AnyRPG {
             // intentionally not calling base to avoid getting our pet destroyed
         }
 
-        public override void SetupScriptableObjects() {
-            base.SetupScriptableObjects();
+        public override void SetupScriptableObjects(SystemGameManager systemGameManager) {
+            base.SetupScriptableObjects(systemGameManager);
             if (unitProfileName != null && unitProfileName != string.Empty) {
-                UnitProfile tmpUnitProfile = SystemDataFactory.Instance.GetResource<UnitProfile>(unitProfileName);
+                UnitProfile tmpUnitProfile = systemDataFactory.GetResource<UnitProfile>(unitProfileName);
                 if (tmpUnitProfile != null) {
                     unitProfile = tmpUnitProfile;
                 } else {

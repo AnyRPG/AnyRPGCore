@@ -30,6 +30,9 @@ namespace AnyRPG {
         [SerializeField]
         private CurrencyBarController currencyBarController = null;
 
+        [SerializeField]
+        private RectTransform rectTransform = null;
+
         private VendorItem vendorItem = null;
 
         private bool buyBackButton;
@@ -38,23 +41,27 @@ namespace AnyRPG {
         private SystemItemManager systemItemManager = null;
         private PlayerManager playerManager = null;
         private InventoryManager inventoryManager = null;
-        private SystemConfigurationManager systemConfigurationManager = null;
         private AudioManager audioManager = null;
         private MessageFeedManager messageFeedManager = null;
+        private CurrencyConverter currencyConverter = null;
 
         public bool MyBuyBackButton { get => buyBackButton; set => buyBackButton = value; }
 
         public override void Configure(SystemGameManager systemGameManager) {
             base.Configure(systemGameManager);
 
+            currencyBarController.Configure(systemGameManager);
+        }
+
+        public override void SetGameManagerReferences() {
+            base.SetGameManagerReferences();
             systemItemManager = systemGameManager.SystemItemManager;
             playerManager = systemGameManager.PlayerManager;
             inventoryManager = systemGameManager.InventoryManager;
             systemConfigurationManager = systemGameManager.SystemConfigurationManager;
             audioManager = systemGameManager.AudioManager;
             messageFeedManager = systemGameManager.UIManager.MessageFeedManager;
-
-            currencyBarController.Configure(systemGameManager);
+            currencyConverter = systemGameManager.CurrencyConverter;
         }
 
         public void AddItem(VendorItem vendorItem, bool buyBackButton = false) {
@@ -79,16 +86,16 @@ namespace AnyRPG {
                 }
                 descriptionText.text = vendorItem.Item.MyDescription;
                 if (vendorItem.BuyPrice() > 0
-                    && vendorItem.Item.MyCurrency != null
-                    && vendorItem.Item.MyCurrency.DisplayName != null
-                    && vendorItem.Item.MyCurrency.DisplayName != string.Empty) {
+                    && vendorItem.Item.Currency != null
+                    && vendorItem.Item.Currency.DisplayName != null
+                    && vendorItem.Item.Currency.DisplayName != string.Empty) {
                     price.gameObject.SetActive(false);
                     //price.text = "Price:";
                     if (currencyBarController != null) {
                         if (buyBackButton == false) {
-                            currencyBarController.UpdateCurrencyAmount(vendorItem.Item.MyCurrency, vendorItem.BuyPrice());
+                            currencyBarController.UpdateCurrencyAmount(vendorItem.Item.Currency, vendorItem.BuyPrice());
                         } else {
-                            currencyBarController.UpdateCurrencyAmount(vendorItem.Item.MySellPrice.Key, vendorItem.Item.MySellPrice.Value, "Buy Back Price: ");
+                            currencyBarController.UpdateCurrencyAmount(vendorItem.Item.GetSellPrice().Key, vendorItem.Item.GetSellPrice().Value, "Buy Back Price: ");
                         }
                     }
                 } else {
@@ -100,23 +107,47 @@ namespace AnyRPG {
 
                 }
                 gameObject.SetActive(true);
+                if (UIManager.MouseInRect(rectTransform)) {
+                    ProcessMouseEnter();
+                }
             }
+        }
+
+        private bool CanAfford() {
+            if (buyBackButton == false) {
+                if (currencyConverter.GetBaseCurrencyAmount(vendorItem.Item.Currency, vendorItem.BuyPrice()) <= playerManager.MyCharacter.CharacterCurrencyManager.GetBaseCurrencyValue(vendorItem.Item.Currency)) {
+                    return true;
+                }
+                return false;
+            }
+
+            if (vendorItem.Item.GetSellPrice().Value <= playerManager.MyCharacter.CharacterCurrencyManager.GetBaseCurrencyValue(vendorItem.Item.Currency)) {
+                return true;
+            }
+            return false;
+
         }
 
 
         public void OnPointerClick(PointerEventData eventData) {
+            //Debug.Log("VendorButton.OnPointerClick()");
             if (vendorItem.BuyPrice() == 0
-                || vendorItem.Item.MyCurrency == null
-                || (CurrencyConverter.GetConvertedValue(vendorItem.Item.MyCurrency, vendorItem.BuyPrice()) <= playerManager.MyCharacter.CharacterCurrencyManager.GetBaseCurrencyValue(vendorItem.Item.MyCurrency))) {
-                Item tmpItem = systemItemManager.GetNewResource(vendorItem.Item.DisplayName, vendorItem.GetItemQuality());
-                /*
-                if (vendorItem.GetItemQuality() != null) {
-                    tmpItem.ItemQuality = vendorItem.GetItemQuality();
+                || vendorItem.Item.Currency == null
+                || CanAfford()) {
+                Item tmpItem = null;
+                if (buyBackButton == true) {
+                    // if this is a buyback, the item has already been instantiated so it is safe to reference it directly
+                    tmpItem = vendorItem.Item;
+                } else {
+                    // if this is a new purchase, a new copy of the item must be instantiated since the button is referring to the original factory item template
+                    tmpItem = systemItemManager.GetNewResource(vendorItem.Item.DisplayName, vendorItem.GetItemQuality());
+                    //Debug.Log("Instantiated an item with id: " + tmpItem.GetInstanceID().ToString());
                 }
-                */
-                //Debug.Log("Instantiated an item with id: " + tmpItem.GetInstanceID().ToString());
+
                 if (inventoryManager.AddItem(tmpItem)) {
-                    tmpItem.DropLevel = playerManager.MyCharacter.CharacterStats.Level;
+                    if (buyBackButton == false) {
+                        tmpItem.DropLevel = playerManager.MyCharacter.CharacterStats.Level;
+                    }
                     SellItem();
                     if (tmpItem is CurrencyItem) {
                         (tmpItem as CurrencyItem).Use();
@@ -126,6 +157,10 @@ namespace AnyRPG {
         }
 
         public void OnPointerEnter(PointerEventData eventData) {
+            ProcessMouseEnter();
+        }
+
+        private void ProcessMouseEnter() {
             uIManager.ShowToolTip(transform.position, vendorItem);
         }
 
@@ -136,16 +171,16 @@ namespace AnyRPG {
         private void SellItem() {
             //Debug.Log("VendorButton.SellItem()");
             string priceString = string.Empty;
-            if (vendorItem.BuyPrice() == 0 || vendorItem.Item.MyCurrency == null) {
+            if (vendorItem.BuyPrice() == 0 || vendorItem.Item.Currency == null) {
                 priceString = "FREE";
             } else {
                 KeyValuePair<Currency, int> usedSellPrice = new KeyValuePair<Currency, int>();
                 if (buyBackButton == false) {
-                    usedSellPrice = new KeyValuePair<Currency, int>(vendorItem.Item.MyCurrency, vendorItem.BuyPrice());
-                    priceString = vendorItem.BuyPrice() + " " + vendorItem.Item.MyCurrency.DisplayName;
+                    usedSellPrice = new KeyValuePair<Currency, int>(vendorItem.Item.Currency, vendorItem.BuyPrice());
+                    priceString = vendorItem.BuyPrice() + " " + vendorItem.Item.Currency.DisplayName;
                 } else {
-                    usedSellPrice = new KeyValuePair<Currency, int>(vendorItem.Item.MySellPrice.Key, vendorItem.Item.MySellPrice.Value);
-                    priceString = CurrencyConverter.GetCombinedPriceSring(vendorItem.Item.MySellPrice.Key, vendorItem.Item.MySellPrice.Value);
+                    usedSellPrice = vendorItem.Item.GetSellPrice();
+                    priceString = currencyConverter.GetCombinedPriceString(usedSellPrice);
                 }
                 playerManager.MyCharacter.CharacterCurrencyManager.SpendCurrency(usedSellPrice.Key, usedSellPrice.Value);
             }
@@ -159,6 +194,9 @@ namespace AnyRPG {
                 quantity.text = vendorItem.Quantity.ToString();
                 if (vendorItem.Quantity == 0) {
                     gameObject.SetActive(false);
+                    uIManager.HideToolTip();
+                    // if there is no longer anything in this slot, re-create the pages so there is no empty slot in the middle of the page
+                    (uIManager.vendorWindow.CloseableWindowContents as VendorUI).RefreshPage();
                 }
             }
         }

@@ -150,6 +150,10 @@ namespace AnyRPG {
 
         protected List<AbilityEffect> weaponHitAbilityEffectList = new List<AbilityEffect>();
 
+        // game manager references
+        protected LevelManager levelManager = null;
+        protected PlayerManager playerManager = null;
+
         public int StatAmount { get => statAmount; }
         public float StatMultiplier { get => statMultiplier; set => statMultiplier = value; }
         public float IncomingDamageMultiplier { get => incomingDamageMultiplier; set => incomingDamageMultiplier = value; }
@@ -186,6 +190,12 @@ namespace AnyRPG {
         public bool RefreshableDuration { get => refreshableDuration; set => refreshableDuration = value; }
         public int MaxStacks { get => maxStacks; set => maxStacks = value; }
 
+        public override void SetGameManagerReferences() {
+            base.SetGameManagerReferences();
+            levelManager = systemGameManager.LevelManager;
+            playerManager = systemGameManager.PlayerManager;
+        }
+
         public override void CancelEffect(BaseCharacter targetCharacter) {
             base.CancelEffect(targetCharacter);
             RemoveControlEffects(targetCharacter);
@@ -214,7 +224,7 @@ namespace AnyRPG {
             if (SceneNames.Count > 0) {
                 bool sceneFound = false;
                 foreach (string sceneName in SceneNames) {
-                    if (SystemDataFactory.PrepareStringForMatch(sceneName) == SystemDataFactory.PrepareStringForMatch(SystemGameManager.Instance.LevelManager.GetActiveSceneNode().SceneName)) {
+                    if (SystemDataFactory.PrepareStringForMatch(sceneName) == SystemDataFactory.PrepareStringForMatch(levelManager.GetActiveSceneNode().SceneName)) {
                         sceneFound = true;
                     }
                 }
@@ -357,8 +367,8 @@ namespace AnyRPG {
 
             if (limitedDuration == true && classTrait == false) {
                 float remainingDuration = 0f;
-                if (SystemGameManager.Instance.PlayerManager?.MyCharacter?.CharacterStats?.HasStatusEffect(this) == true) {
-                    remainingDuration = SystemGameManager.Instance.PlayerManager.MyCharacter.CharacterStats.GetStatusEffectNode(this).RemainingDuration;
+                if (playerManager.MyCharacter?.CharacterStats?.HasStatusEffect(this) == true) {
+                    remainingDuration = playerManager.MyCharacter.CharacterStats.GetStatusEffectNode(this).RemainingDuration;
                 }
                 if (remainingDuration != 0f) {
                     durationLabel = "Remaining Duration: ";
@@ -411,12 +421,12 @@ namespace AnyRPG {
             }
         }
 
-        public override void SetupScriptableObjects() {
-            base.SetupScriptableObjects();
+        public override void SetupScriptableObjects(SystemGameManager systemGameManager) {
+            base.SetupScriptableObjects(systemGameManager);
             reflectAbilityEffectList = new List<AbilityEffect>();
             if (reflectAbilityEffectNames != null) {
                 foreach (string abilityEffectName in reflectAbilityEffectNames) {
-                    AbilityEffect abilityEffect = SystemDataFactory.Instance.GetResource<AbilityEffect>(abilityEffectName);
+                    AbilityEffect abilityEffect = systemDataFactory.GetResource<AbilityEffect>(abilityEffectName);
                     if (abilityEffect != null) {
                         reflectAbilityEffectList.Add(abilityEffect);
                     } else {
@@ -428,7 +438,7 @@ namespace AnyRPG {
             weaponHitAbilityEffectList = new List<AbilityEffect>();
             if (weaponHitAbilityEffectNames != null) {
                 foreach (string abilityEffectName in weaponHitAbilityEffectNames) {
-                    AbilityEffect abilityEffect = SystemDataFactory.Instance.GetResource<AbilityEffect>(abilityEffectName);
+                    AbilityEffect abilityEffect = systemDataFactory.GetResource<AbilityEffect>(abilityEffectName);
                     if (abilityEffect != null) {
                         weaponHitAbilityEffectList.Add(abilityEffect);
                     } else {
@@ -438,7 +448,7 @@ namespace AnyRPG {
             }
 
             if (statusEffectTypeName != null && statusEffectTypeName != string.Empty) {
-                StatusEffectType tmpStatusEffectType = SystemDataFactory.Instance.GetResource<StatusEffectType>(statusEffectTypeName);
+                StatusEffectType tmpStatusEffectType = systemDataFactory.GetResource<StatusEffectType>(statusEffectTypeName);
                 if (tmpStatusEffectType != null) {
                     statusEffectType = tmpStatusEffectType;
                 } else {
@@ -450,7 +460,7 @@ namespace AnyRPG {
             if (factionModifiers != null) {
                 foreach (FactionDisposition factionDisposition in factionModifiers) {
                     if (factionDisposition != null) {
-                        factionDisposition.SetupScriptableObjects();
+                        factionDisposition.SetupScriptableObjects(systemDataFactory);
                     }
                 }
             }

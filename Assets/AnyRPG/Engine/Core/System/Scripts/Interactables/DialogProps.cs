@@ -23,8 +23,8 @@ namespace AnyRPG {
         // need to track this for access to some of its functions
         private DialogComponent dialogComponent = null;
 
-        public override Sprite Icon { get => (SystemGameManager.Instance.SystemConfigurationManager.DialogInteractionPanelImage != null ? SystemGameManager.Instance.SystemConfigurationManager.DialogInteractionPanelImage : base.Icon); }
-        public override Sprite NamePlateImage { get => (SystemGameManager.Instance.SystemConfigurationManager.DialogNamePlateImage != null ? SystemGameManager.Instance.SystemConfigurationManager.DialogNamePlateImage : base.NamePlateImage); }
+        public override Sprite Icon { get => (systemConfigurationManager.DialogInteractionPanelImage != null ? systemConfigurationManager.DialogInteractionPanelImage : base.Icon); }
+        public override Sprite NamePlateImage { get => (systemConfigurationManager.DialogNamePlateImage != null ? systemConfigurationManager.DialogNamePlateImage : base.NamePlateImage); }
 
         public override string GetInteractionPanelTitle(int optionIndex = 0) {
                 List<Dialog> currentList = dialogComponent.GetCurrentOptionList();
@@ -37,7 +37,7 @@ namespace AnyRPG {
         public List<Dialog> DialogList { get => dialogList; }
 
         public override InteractableOptionComponent GetInteractableOption(Interactable interactable, InteractableOption interactableOption = null) {
-            dialogComponent = new DialogComponent(interactable, this);
+            dialogComponent = new DialogComponent(interactable, this, systemGameManager);
             foreach (Dialog dialog in dialogList) {
                 dialog.RegisterPrerequisiteOwner(dialogComponent);
             }
@@ -53,13 +53,13 @@ namespace AnyRPG {
             }
         }
 
-        public override void SetupScriptableObjects() {
+        public override void SetupScriptableObjects(SystemGameManager systemGameManager) {
             //Debug.Log("DialogProps.SetupScriptableObjects()");
-            base.SetupScriptableObjects();
+            base.SetupScriptableObjects(systemGameManager);
 
             if (dialogNames != null) {
                 foreach (string dialogName in dialogNames) {
-                    Dialog tmpDialog = SystemDataFactory.Instance.GetResource<Dialog>(dialogName);
+                    Dialog tmpDialog = systemDataFactory.GetResource<Dialog>(dialogName);
                     if (tmpDialog != null) {
                         dialogList.Add(tmpDialog);
                     } else {

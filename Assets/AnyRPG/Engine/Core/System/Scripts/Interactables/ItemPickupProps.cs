@@ -1,10 +1,5 @@
 using AnyRPG;
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using TMPro;
 using UnityEngine;
-using UnityEngine.UI;
 
 namespace AnyRPG {
 
@@ -13,7 +8,7 @@ namespace AnyRPG {
 
 
         public override InteractableOptionComponent GetInteractableOption(Interactable interactable, InteractableOption interactableOption = null) {
-            InteractableOptionComponent returnValue = new ItemPickupComponent(interactable, this);
+            InteractableOptionComponent returnValue = new ItemPickupComponent(interactable, this, systemGameManager);
             if (interactableOption != null) {
                 interactableOption.SetComponent(returnValue);
             }

@@ -20,7 +20,7 @@ namespace AnyRPG {
         public string SceneName { get => sceneName; set => sceneName = value; }
 
         public override InteractableOptionComponent GetInteractableOption(Interactable interactable, InteractableOption interactableOption = null) {
-            InteractableOptionComponent returnValue = new LoadSceneComponent(interactable, this);
+            InteractableOptionComponent returnValue = new LoadSceneComponent(interactable, this, systemGameManager);
             if (interactableOption != null) {
                 interactableOption.SetComponent(returnValue);
             }

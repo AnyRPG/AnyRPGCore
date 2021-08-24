@@ -1,6 +1,4 @@
 using AnyRPG;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 namespace AnyRPG {
@@ -17,10 +15,10 @@ namespace AnyRPG {
 
         public Faction Faction { get => faction; set => faction = value; }
 
-        public void SetupScriptableObjects() {
+        public void SetupScriptableObjects(SystemDataFactory systemDataFactory) {
             faction = null;
             if (factionName != null && factionName != string.Empty) {
-                Faction tmpFaction = SystemDataFactory.Instance.GetResource<Faction>(factionName);
+                Faction tmpFaction = systemDataFactory.GetResource<Faction>(factionName);
                 if (tmpFaction != null) {
                     faction = tmpFaction;
                 } else {

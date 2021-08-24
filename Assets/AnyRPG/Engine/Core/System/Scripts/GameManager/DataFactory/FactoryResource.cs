@@ -29,12 +29,14 @@ namespace AnyRPG {
         }
         */
 
+            /*
         public void ReloadResourceList() {
             //Debug.Log(gameObject.name + ".SystemResourceManager.ReloadResourceList()");
             CleanupScriptableObjects();
             resourceList.Clear();
             LoadResourceList();
         }
+        */
 
         public virtual void LoadResourceList() {
             //Debug.Log(gameObject.name + ".SystemResourceManager.LoadResourceList()");
@@ -69,17 +71,20 @@ namespace AnyRPG {
             }
         }
 
+        /*
         public virtual void SetupScriptableObjects() {
             foreach (ResourceProfile listItem in resourceList.Values) {
                 listItem.SetupScriptableObjects();
             }
         }
-
+        */
+        /*
         public virtual void CleanupScriptableObjects() {
             foreach (ResourceProfile listItem in resourceList.Values) {
                 listItem.CleanupScriptableObjects();
             }
         }
+        */
 
     }
 

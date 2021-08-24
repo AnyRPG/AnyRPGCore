@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace AnyRPG {
     [RequireComponent(typeof(UUID))]
-    public class PersistentObject : MonoBehaviour, IPersistentObjectOwner {
+    public class PersistentObject : AutoConfiguredMonoBehaviour, IPersistentObjectOwner {
 
         [SerializeField]
         private PersistentObjectComponent persistentObjectComponent = new PersistentObjectComponent();
@@ -14,13 +14,24 @@ namespace AnyRPG {
         public IUUID UUID { get => uuid; }
         public PersistentObjectComponent PersistentObjectComponent { get => persistentObjectComponent; set => persistentObjectComponent = value; }
 
-        private void OnEnable() {
+        public override void Configure(SystemGameManager systemGameManager) {
+            base.Configure(systemGameManager);
             GetComponentReferences();
-            persistentObjectComponent.Setup(this);
+            persistentObjectComponent.Setup(this, systemGameManager);
 
             // testing : moved here from start() for object pooling.  monitor for breakage
             persistentObjectComponent.Init();
         }
+
+        /*
+        private void OnEnable() {
+            GetComponentReferences();
+            persistentObjectComponent.Setup(this, systemGameManager);
+
+            // testing : moved here from start() for object pooling.  monitor for breakage
+            persistentObjectComponent.Init();
+        }
+        */
 
         /*
         void Start() {

@@ -18,13 +18,11 @@ namespace AnyRPG {
 
         // game manager references
         SystemDataFactory systemDataFactory = null;
-        SystemConfigurationManager systemConfigurationManager = null;
 
         public Dictionary<string, Quest> Quests { get => quests; }
 
         public override void SetGameManagerReferences() {
             base.SetGameManagerReferences();
-            systemConfigurationManager = systemGameManager.SystemConfigurationManager;
             systemDataFactory = systemGameManager.SystemDataFactory;
         }
 
@@ -32,7 +30,7 @@ namespace AnyRPG {
         public void LoadQuest(QuestSaveData questSaveData) {
             //Debug.Log("QuestLog.LoadQuest(" + questSaveData.MyName + ")");
 
-            Quest quest = SystemDataFactory.Instance.GetResource<Quest>(questSaveData.MyName);
+            Quest quest = systemDataFactory.GetResource<Quest>(questSaveData.MyName);
             if (quest == null) {
                 //Debug.Log("QuestLog.LoadQuest(" + questSaveData.MyName + "): COULD NOT FIND QUEST!!!");
                 return;
@@ -187,6 +185,34 @@ namespace AnyRPG {
 
         public void ShowQuestGiverDescription(Quest quest, IQuestGiver questGiver) {
             OnShowQuestGiverDescription(quest, questGiver);
+        }
+
+        public List<Quest> GetCompleteQuests(List<QuestNode> questNodeArray, bool requireInQuestLog = false) {
+            return GetQuestListByType("complete", questNodeArray, requireInQuestLog, false, true);
+        }
+
+        public List<Quest> GetInProgressQuests(List<QuestNode> questNodeArray, bool requireInQuestLog = true) {
+            return GetQuestListByType("inprogress", questNodeArray, requireInQuestLog, false, true);
+        }
+
+        public List<Quest> GetAvailableQuests(List<QuestNode> questNodeArray, bool requireInQuestLog = false) {
+            return GetQuestListByType("available", questNodeArray, requireInQuestLog, true, false);
+        }
+
+        public List<Quest> GetQuestListByType(string questStatusType, List<QuestNode> questNodeArray, bool requireInQuestLog = false, bool requireStartQuest = false, bool requireEndQuest = false) {
+            List<Quest> returnList = new List<Quest>();
+            foreach (QuestNode questNode in questNodeArray) {
+                if (questNode.MyQuest != null) {
+                    if (questNode.MyQuest.GetStatus() == questStatusType
+                        && (requireInQuestLog == true ? HasQuest(questNode.MyQuest.DisplayName) : true)
+                        && (requireStartQuest == true ? questNode.MyStartQuest : true)
+                        && (requireEndQuest == true ? questNode.MyEndQuest : true)) {
+                        //Debug.Log("Quest.GetQuestListByType(" + questStatusType + "): adding quest: " + questNode.MyQuest.MyName);
+                        returnList.Add(questNode.MyQuest);
+                    }
+                }
+            }
+            return returnList;
         }
     }
 

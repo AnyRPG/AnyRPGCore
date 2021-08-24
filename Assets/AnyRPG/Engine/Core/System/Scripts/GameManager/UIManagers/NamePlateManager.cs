@@ -22,14 +22,12 @@ namespace AnyRPG {
         private Dictionary<NamePlateUnit, NamePlateController> namePlates = new Dictionary<NamePlateUnit, NamePlateController>();
 
         // game manager references
-        private SystemConfigurationManager systemConfigurationManager = null;
         private CameraManager cameraManager = null;
         private PlayerManager playerManager = null;
         private ObjectPooler objectPooler = null;
 
         public override void Configure(SystemGameManager systemGameManager) {
             base.Configure(systemGameManager);
-            systemConfigurationManager = systemGameManager.SystemConfigurationManager;
             cameraManager = systemGameManager.CameraManager;
             playerManager = systemGameManager.PlayerManager;
             objectPooler = systemGameManager.ObjectPooler;

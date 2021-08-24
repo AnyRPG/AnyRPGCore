@@ -33,7 +33,7 @@ namespace AnyRPG {
     /// Allows creation of simple lightning bolts
     /// </summary>
     [RequireComponent(typeof(LineRenderer))]
-    public class ChanneledObjectScript : MonoBehaviour, IChanneledObject {
+    public class ChanneledObjectScript : ConfiguredMonoBehaviour, IChanneledObject {
 
         [Tooltip("The game object where the lightning will emit from. If null, StartPosition is used.")]
         [SerializeField]
@@ -78,7 +78,6 @@ namespace AnyRPG {
         [Tooltip("The animation mode for the lightning")]
         public LightningBoltAnimationMode AnimationMode = LightningBoltAnimationMode.PingPong;
 
-
         /// <summary>
         /// Assign your own random if you want to have the same lightning appearance
         /// </summary>
@@ -95,22 +94,31 @@ namespace AnyRPG {
         private int animationPingPongDirection = 1;
         private bool orthographic;
 
+        // game manager references
+        private CameraManager cameraManager = null;
+
         public GameObject MyStartObject { get => startObject; set => startObject = value; }
         public Vector3 MyStartPosition { get => startPosition; set => startPosition = value; }
         public GameObject MyEndObject { get => endObject; set => endObject = value; }
         public Vector3 MyEndPosition { get => endPosition; set => endPosition = value; }
 
-        public void Setup(GameObject startObject, Vector3 startPosition, GameObject endObject, Vector3 endPosition) {
+        public void Setup(GameObject startObject, Vector3 startPosition, GameObject endObject, Vector3 endPosition, SystemGameManager systemGameManager) {
             //Debug.Log(gameObject.name + ".ChanneledObjectScript.Setup(" + (startObject == null ? "null" : startObject.name) + ", " + startPosition + ", " + (endObject == null ? "null" : endObject.name) + ", " + endPosition + ")");
+            Configure(systemGameManager);
             MyStartObject = startObject;
             MyStartPosition = startPosition;
             MyEndObject = endObject;
             MyEndPosition = endPosition;
 
-            orthographic = (SystemGameManager.Instance.CameraManager.ActiveMainCamera != null && SystemGameManager.Instance.CameraManager.ActiveMainCamera.orthographic);
+            orthographic = (cameraManager.ActiveMainCamera != null && cameraManager.ActiveMainCamera.orthographic == true);
             lineRenderer = GetComponent<LineRenderer>();
             lineRenderer.positionCount = 0;
             UpdateFromMaterialChange();
+        }
+
+        public override void SetGameManagerReferences() {
+            base.SetGameManagerReferences();
+            cameraManager = systemGameManager.CameraManager;
         }
 
         private void GetPerpendicularVector(ref Vector3 directionNormalized, out Vector3 side) {
@@ -262,7 +270,7 @@ namespace AnyRPG {
         }
 
         private void Update() {
-            orthographic = (SystemGameManager.Instance.CameraManager.ActiveMainCamera != null && SystemGameManager.Instance.CameraManager.ActiveMainCamera.orthographic);
+            orthographic = (cameraManager.ActiveMainCamera != null && cameraManager.ActiveMainCamera.orthographic == true);
             if (timer <= 0.0f) {
                 if (ManualMode) {
                     timer = Duration;

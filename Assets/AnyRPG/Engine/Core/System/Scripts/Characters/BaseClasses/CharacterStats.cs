@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 namespace AnyRPG {
-    public class CharacterStats {
+    public class CharacterStats : ConfiguredClass {
 
         public event System.Action<int, int> OnPrimaryResourceAmountChanged = delegate { };
         public event System.Action<PowerResource, int, int> OnResourceAmountChanged = delegate { };
@@ -57,6 +57,12 @@ namespace AnyRPG {
 
         protected bool eventSubscriptionsInitialized = false;
 
+        // game manager references
+        protected SystemDataFactory systemDataFactory = null;
+        protected LevelManager levelManager = null;
+        protected PlayerManager playerManager = null;
+        protected CombatTextManager combatTextManager = null;
+
         public float WalkSpeed { get => walkSpeed; }
         public float RunSpeed { get => currentRunSpeed; }
         public float SprintSpeed { get => currentSprintSpeed; }
@@ -71,57 +77,6 @@ namespace AnyRPG {
             get {
                 return powerResourceList;
             }
-        }
-
-        /*
-        public void ApplyControlEffects(IAbilityCaster source) {
-            baseCharacter.UnitController.ApplyControlEffects((source as BaseCharacter));
-        }
-        */
-
-        public void ProcessLevelLoad() {
-            // remove scene specific status effects that are not valid in this scene
-            List<StatusEffectNode> removeNodes = new List<StatusEffectNode>();
-            foreach (StatusEffectNode statusEffectNode in statusEffects.Values) {
-                if (statusEffectNode.StatusEffect.SceneNames.Count > 0) {
-                    bool sceneFound = false;
-                    foreach (string sceneName in statusEffectNode.StatusEffect.SceneNames) {
-                        if (SystemDataFactory.PrepareStringForMatch(sceneName) == SystemDataFactory.PrepareStringForMatch(SystemGameManager.Instance.LevelManager.GetActiveSceneNode().DisplayName)) {
-                            sceneFound = true;
-                        }
-                    }
-                    if (!sceneFound) {
-                        removeNodes.Add(statusEffectNode);
-                    }
-                }
-            }
-            foreach (StatusEffectNode statusEffectNode in removeNodes) {
-                statusEffectNode.CancelStatusEffect();
-            }
-        }
-
-        public void UpdatePowerResourceList() {
-
-            // since this is just a list and contains no values, it is safe to overwrite
-            powerResourceList = new List<PowerResource>();
-
-            // add from system
-            powerResourceList.AddRange(SystemGameManager.Instance.SystemConfigurationManager.PowerResourceList);
-
-            if (baseCharacter == null || baseCharacter.StatProviders == null) {
-                return;
-            }
-
-            foreach (IStatProvider statProvider in baseCharacter.StatProviders) {
-                if (statProvider != null) {
-                    foreach (PowerResource powerResource in statProvider.PowerResourceList) {
-                        if (!powerResourceList.Contains(powerResource)) {
-                            powerResourceList.Add(powerResource);
-                        }
-                    }
-                }
-            }
-
         }
 
         public PowerResource PrimaryResource {
@@ -202,16 +157,76 @@ namespace AnyRPG {
         public Dictionary<string, Stat> PrimaryStats { get => primaryStats; set => primaryStats = value; }
         public Dictionary<SecondaryStatType, Stat> SecondaryStats { get => secondaryStats; set => secondaryStats = value; }
 
-        public CharacterStats(BaseCharacter baseCharacter) {
+        public CharacterStats(BaseCharacter baseCharacter, SystemGameManager systemGameManager) {
             //Debug.Log(baseCharacter.gameObject.name + ".CharacterStats()");
             this.baseCharacter = baseCharacter;
+            Configure(systemGameManager);
             SetPrimaryStatModifiers();
             InitializeSecondaryStats();
+        }
+
+        public override void SetGameManagerReferences() {
+            base.SetGameManagerReferences();
+            systemDataFactory = systemGameManager.SystemDataFactory;
+            levelManager = systemGameManager.LevelManager;
+            playerManager = systemGameManager.PlayerManager;
+            combatTextManager = systemGameManager.UIManager.CombatTextManager;
         }
 
         public void Init() {
             SetLevel(level);
             //TrySpawnDead();
+        }
+
+        /*
+               public void ApplyControlEffects(IAbilityCaster source) {
+                   baseCharacter.UnitController.ApplyControlEffects((source as BaseCharacter));
+               }
+               */
+
+        public void ProcessLevelLoad() {
+            // remove scene specific status effects that are not valid in this scene
+            List<StatusEffectNode> removeNodes = new List<StatusEffectNode>();
+            foreach (StatusEffectNode statusEffectNode in statusEffects.Values) {
+                if (statusEffectNode.StatusEffect.SceneNames.Count > 0) {
+                    bool sceneFound = false;
+                    foreach (string sceneName in statusEffectNode.StatusEffect.SceneNames) {
+                        if (SystemDataFactory.PrepareStringForMatch(sceneName) == SystemDataFactory.PrepareStringForMatch(levelManager.GetActiveSceneNode().DisplayName)) {
+                            sceneFound = true;
+                        }
+                    }
+                    if (!sceneFound) {
+                        removeNodes.Add(statusEffectNode);
+                    }
+                }
+            }
+            foreach (StatusEffectNode statusEffectNode in removeNodes) {
+                statusEffectNode.CancelStatusEffect();
+            }
+        }
+
+        public void UpdatePowerResourceList() {
+
+            // since this is just a list and contains no values, it is safe to overwrite
+            powerResourceList = new List<PowerResource>();
+
+            // add from system
+            powerResourceList.AddRange(systemConfigurationManager.PowerResourceList);
+
+            if (baseCharacter == null || baseCharacter.StatProviders == null) {
+                return;
+            }
+
+            foreach (IStatProvider statProvider in baseCharacter.StatProviders) {
+                if (statProvider != null) {
+                    foreach (PowerResource powerResource in statProvider.PowerResourceList) {
+                        if (!powerResourceList.Contains(powerResource)) {
+                            powerResourceList.Add(powerResource);
+                        }
+                    }
+                }
+            }
+
         }
 
         public void CalculatePrimaryStats() {
@@ -314,7 +329,7 @@ namespace AnyRPG {
         public void SetPrimaryStatModifiers() {
             //Debug.Log(gameObject.name + ".CharacterStats.SetPrimaryStatModifiers()");
             // setup the primary stats dictionary with system defined stats
-            AddPrimaryStatModifiers(SystemGameManager.Instance.SystemConfigurationManager.PrimaryStats, false);
+            AddPrimaryStatModifiers(systemConfigurationManager.PrimaryStats, false);
 
             if (baseCharacter != null && baseCharacter.StatProviders != null) {
                 foreach (IStatProvider statProvider in baseCharacter.StatProviders) {
@@ -654,8 +669,8 @@ namespace AnyRPG {
 
         public bool WasImmuneToDamageType(PowerResource powerResource, IAbilityCaster sourceCharacter, AbilityEffectContext abilityEffectContext) {
             if (!powerResourceDictionary.ContainsKey(powerResource)) {
-                if (sourceCharacter == (SystemGameManager.Instance.PlayerManager.MyCharacter as IAbilityCaster)) {
-                    SystemGameManager.Instance.UIManager.CombatTextManager.SpawnCombatText(baseCharacter.UnitController, 0, CombatTextType.immune, CombatMagnitude.normal, abilityEffectContext);
+                if (sourceCharacter == (playerManager.MyCharacter as IAbilityCaster)) {
+                    combatTextManager.SpawnCombatText(baseCharacter.UnitController, 0, CombatTextType.immune, CombatMagnitude.normal, abilityEffectContext);
                 }
                 OnImmuneToEffect(abilityEffectContext);
                 return true;
@@ -665,8 +680,8 @@ namespace AnyRPG {
 
         public bool WasImmuneToFreeze(StatusEffect statusEffect, IAbilityCaster sourceCharacter, AbilityEffectContext abilityEffectContext) {
             if (statusEffect.DisableAnimator == true && baseCharacter.CharacterStats.HasFreezeImmunity()) {
-                if (sourceCharacter == (SystemGameManager.Instance.PlayerManager.MyCharacter as IAbilityCaster)) {
-                    SystemGameManager.Instance.UIManager.CombatTextManager.SpawnCombatText(baseCharacter.UnitController, 0, CombatTextType.immune, CombatMagnitude.normal, abilityEffectContext);
+                if (sourceCharacter == (playerManager.MyCharacter as IAbilityCaster)) {
+                    combatTextManager.SpawnCombatText(baseCharacter.UnitController, 0, CombatTextType.immune, CombatMagnitude.normal, abilityEffectContext);
                 }
                 OnImmuneToEffect(abilityEffectContext);
                 return true;
@@ -677,8 +692,8 @@ namespace AnyRPG {
         public bool WasImmuneToStun(StatusEffect statusEffect, IAbilityCaster sourceCharacter, AbilityEffectContext abilityEffectContext) {
             // check for stun
             if (statusEffect.Stun == true && baseCharacter.CharacterStats.HasStunImmunity()) {
-                if (sourceCharacter == (SystemGameManager.Instance.PlayerManager.MyCharacter as IAbilityCaster)) {
-                    SystemGameManager.Instance.UIManager.CombatTextManager.SpawnCombatText(baseCharacter.UnitController, 0, CombatTextType.immune, CombatMagnitude.normal, abilityEffectContext);
+                if (sourceCharacter == (playerManager.MyCharacter as IAbilityCaster)) {
+                    combatTextManager.SpawnCombatText(baseCharacter.UnitController, 0, CombatTextType.immune, CombatMagnitude.normal, abilityEffectContext);
                 }
                 OnImmuneToEffect(abilityEffectContext);
                 return true;
@@ -689,8 +704,8 @@ namespace AnyRPG {
         public bool WasImmuneToLevitate(StatusEffect statusEffect, IAbilityCaster sourceCharacter, AbilityEffectContext abilityEffectContext) {
             // check for levitate
             if (statusEffect.Levitate == true && baseCharacter.CharacterStats.HasLevitateImmunity()) {
-                if (sourceCharacter == (SystemGameManager.Instance.PlayerManager.MyCharacter as IAbilityCaster)) {
-                    SystemGameManager.Instance.UIManager.CombatTextManager.SpawnCombatText(baseCharacter.UnitController, 0, CombatTextType.immune, CombatMagnitude.normal, abilityEffectContext);
+                if (sourceCharacter == (playerManager.MyCharacter as IAbilityCaster)) {
+                    combatTextManager.SpawnCombatText(baseCharacter.UnitController, 0, CombatTextType.immune, CombatMagnitude.normal, abilityEffectContext);
                 }
                 OnImmuneToEffect(abilityEffectContext);
                 return true;
@@ -753,7 +768,7 @@ namespace AnyRPG {
                     Debug.LogError("CharacterStats.ApplyStatusEffect(): Could not get status effect " + statusEffect.DisplayName);
                     return null;
                 }
-                StatusEffectNode newStatusEffectNode = new StatusEffectNode();
+                StatusEffectNode newStatusEffectNode = new StatusEffectNode(systemGameManager);
                 statusEffects.Add(SystemDataFactory.PrepareStringForMatch(statusEffect.DisplayName), newStatusEffectNode);
 
                 // set base ability to null so that all damage taken by a status effect tick is considered ability damage for combat text purposes
@@ -827,9 +842,7 @@ namespace AnyRPG {
             }
 
             if (statusEffect.FactionModifiers.Count > 0) {
-                if (SystemGameManager.Instance.SystemEventManager != null) {
-                    SystemEventManager.TriggerEvent("OnReputationChange", new EventParamProperties());
-                }
+                SystemEventManager.TriggerEvent("OnReputationChange", new EventParamProperties());
             }
         }
 
@@ -851,8 +864,8 @@ namespace AnyRPG {
             //Debug.Log(gameObject.name + ": GainXP(" + xp + ")");
             currentXP += xp;
             int overflowXP = 0;
-            while (currentXP - LevelEquations.GetXPNeededForLevel(currentLevel) >= 0) {
-                overflowXP = currentXP - LevelEquations.GetXPNeededForLevel(currentLevel);
+            while (currentXP - LevelEquations.GetXPNeededForLevel(currentLevel, systemConfigurationManager) >= 0) {
+                overflowXP = currentXP - LevelEquations.GetXPNeededForLevel(currentLevel, systemConfigurationManager);
                 GainLevel();
                 currentXP = overflowXP;
             }
@@ -905,7 +918,7 @@ namespace AnyRPG {
 
             // calculate base values independent of any modifiers
             foreach (string statName in primaryStats.Keys) {
-                primaryStats[statName].BaseValue = (int)(currentLevel * LevelEquations.GetPrimaryStatForLevel(statName, currentLevel, baseCharacter) * multiplierValues[statName] * primaryStatMultiplier);
+                primaryStats[statName].BaseValue = (int)(currentLevel * LevelEquations.GetPrimaryStatForLevel(statName, currentLevel, baseCharacter, systemConfigurationManager) * multiplierValues[statName] * primaryStatMultiplier);
             }
 
             // reset any amounts from equipment to deal with item level scaling before performing the calculations that include those equipment stat values
@@ -978,7 +991,7 @@ namespace AnyRPG {
         public void SetResourceAmount(string resourceName, float newAmount) {
             //Debug.Log(baseCharacter.gameObject.name + ".CharacterStats.SetResourceAmount(" + resourceName + ", " + newAmount + "): current " + CurrentPrimaryResource);
             newAmount = Mathf.Clamp(newAmount, 0, int.MaxValue);
-            PowerResource tmpPowerResource = SystemDataFactory.Instance.GetResource<PowerResource>(resourceName);
+            PowerResource tmpPowerResource = systemDataFactory.GetResource<PowerResource>(resourceName);
 
             if (tmpPowerResource != null && powerResourceDictionary.ContainsKey(tmpPowerResource)) {
                 powerResourceDictionary[tmpPowerResource].currentValue = newAmount;
@@ -1000,7 +1013,7 @@ namespace AnyRPG {
         public bool AddResourceAmount(string resourceName, float newAmount) {
             //Debug.Log(baseCharacter.gameObject.name + ".CharacterStats.AddResourceAmount(" + resourceName + ", " + newAmount + ")");
             newAmount = Mathf.Clamp(newAmount, 0, int.MaxValue);
-            PowerResource tmpPowerResource = SystemDataFactory.Instance.GetResource<PowerResource>(resourceName);
+            PowerResource tmpPowerResource = systemDataFactory.GetResource<PowerResource>(resourceName);
 
             bool returnValue = false;
             if (tmpPowerResource != null && powerResourceDictionary.ContainsKey(tmpPowerResource)) {
@@ -1023,11 +1036,11 @@ namespace AnyRPG {
             if (returnValue == false) {
                 return false;
             }
-            if (SystemGameManager.Instance.PlayerManager.PlayerUnitSpawned == true
+            if (playerManager.PlayerUnitSpawned == true
                 && showCombatText
-                && (baseCharacter.UnitController.gameObject == SystemGameManager.Instance.PlayerManager.UnitController.gameObject || source.AbilityManager.UnitGameObject == SystemGameManager.Instance.PlayerManager.UnitController.gameObject)) {
+                && (baseCharacter.UnitController.gameObject == playerManager.UnitController.gameObject || source.AbilityManager.UnitGameObject == playerManager.UnitController.gameObject)) {
                 // spawn text over the player
-                SystemGameManager.Instance.UIManager.CombatTextManager.SpawnCombatText(baseCharacter.UnitController, amount, CombatTextType.gainResource, combatMagnitude, abilityEffectContext);
+                combatTextManager.SpawnCombatText(baseCharacter.UnitController, amount, CombatTextType.gainResource, combatMagnitude, abilityEffectContext);
             }
             OnRecoverResource(powerResource, amount);
             return true;
@@ -1142,7 +1155,7 @@ namespace AnyRPG {
         }
 
         public void ReviveRaw() {
-            //Debug.Log(BaseCharacter.CharacterName + ".CharacterStats.ReviveRaw()");
+            //Debug.Log(BaseCharacter.gameObject.name + ".CharacterStats.ReviveRaw()");
             isReviving = false;
             baseCharacter.UnitController.CharacterUnit.DisableCollider();
             baseCharacter.UnitController.CharacterUnit.EnableCollider();

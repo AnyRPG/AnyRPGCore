@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace AnyRPG {
     [System.Serializable]
-    public class QuestPrerequisite : IPrerequisite {
+    public class QuestPrerequisite : ConfiguredClass, IPrerequisite {
 
         public event System.Action OnStatusUpdated = delegate { };
 
@@ -19,12 +19,17 @@ namespace AnyRPG {
 
         private Quest prerequisiteQuest = null;
 
+
         // does the quest need to be complete, or just in progress for this prerequisite to be met
         [SerializeField]
         private bool requireComplete = true;
 
         [SerializeField]
         private bool requireTurnedIn = true;
+
+        // game manager references
+        private SystemDataFactory systemDataFactory = null;
+        private QuestLog questLog = null;
 
         public void HandleQuestStatusUpdated() {
             //Debug.Log("QuestPrerequisite.HandleQuestStatusUpdated()" + prerequisiteQuest.DisplayName);
@@ -41,9 +46,9 @@ namespace AnyRPG {
             if (requireTurnedIn && prerequisiteQuest.TurnedIn == true) {
                 //Debug.Log("QuestPrerequisite.UpdateStatus(): " + prerequisiteQuest.MyName + ";requireTurnedIn = true and prerequisiteQuest.TurnedIn == true; originalresult: " + originalResult);
                 prerequisiteMet = true;
-            } else if (!requireTurnedIn && requireComplete && prerequisiteQuest.IsComplete && SystemGameManager.Instance.QuestLog.HasQuest(prerequisiteQuest.DisplayName)) {
+            } else if (!requireTurnedIn && requireComplete && prerequisiteQuest.IsComplete && questLog.HasQuest(prerequisiteQuest.DisplayName)) {
                 prerequisiteMet = true;
-            } else if (!requireTurnedIn && !requireComplete && SystemGameManager.Instance.QuestLog.HasQuest(prerequisiteQuest.DisplayName)) {
+            } else if (!requireTurnedIn && !requireComplete && questLog.HasQuest(prerequisiteQuest.DisplayName)) {
                 prerequisiteMet = true;
             } else {
                 prerequisiteMet = false;
@@ -61,10 +66,17 @@ namespace AnyRPG {
             return prerequisiteMet;
         }
 
-        public void SetupScriptableObjects() {
+        public override void SetGameManagerReferences() {
+            base.SetGameManagerReferences();
+            systemDataFactory = systemGameManager.SystemDataFactory;
+            questLog = systemGameManager.QuestLog;
+        }
+
+        public void SetupScriptableObjects(SystemGameManager systemGameManager) {
+            Configure(systemGameManager);
             prerequisiteQuest = null;
             if (prerequisiteName != null && prerequisiteName != string.Empty) {
-                Quest tmpPrerequisiteQuest = SystemDataFactory.Instance.GetResource<Quest>(prerequisiteName);
+                Quest tmpPrerequisiteQuest = systemDataFactory.GetResource<Quest>(prerequisiteName);
                 if (tmpPrerequisiteQuest != null) {
                     //Debug.Log("QuestPrerequisite.SetupScriptableObjects(): setting: " + prerequisiteName + " while inititalizing a quest prerequisite.");
                     prerequisiteQuest = tmpPrerequisiteQuest;

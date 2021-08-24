@@ -25,7 +25,7 @@ namespace AnyRPG {
         }
 
         private void LateUpdate() {
-            if (SystemGameManager.Instance == null) {
+            if (systemGameManager == null) {
                 Debug.LogError("InputManager not found in scene.  Is the GameManager in the scene?");
                 return;
             }

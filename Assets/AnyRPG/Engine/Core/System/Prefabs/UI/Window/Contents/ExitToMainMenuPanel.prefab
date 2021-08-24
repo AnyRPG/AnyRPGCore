@@ -129,6 +129,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   backGroundImage: {fileID: 0}
+  coloredUIElements:
+  - {fileID: 448296435739906163}
   noButton: {fileID: 252192074867578156}
   yesButton: {fileID: 2034717618651963736}
 --- !u!1 &2382909202413983825

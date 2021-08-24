@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace AnyRPG {
     [System.Serializable]
-    public class DialogPrerequisite : IPrerequisite {
+    public class DialogPrerequisite : ConfiguredClass, IPrerequisite {
 
         public event System.Action OnStatusUpdated = delegate { };
 
@@ -18,6 +18,9 @@ namespace AnyRPG {
 
 
         private Dialog prerequisiteDialog = null;
+
+        // game manager references
+        private SystemDataFactory systemDataFactory = null;
 
         public void UpdateStatus(bool notify = true) {
             bool originalResult = prerequisiteMet;
@@ -39,23 +42,19 @@ namespace AnyRPG {
         }
 
         public virtual bool IsMet(BaseCharacter baseCharacter) {
-            //Debug.Log("DialogPrerequisite.IsMet(): " + prerequisiteName);
-            /*
-            Dialog _dialog = SystemDataFactory.Instance.GetResource<Dialog>(prerequisiteName);
-            if (_dialog != null) {
-                if (_dialog.TurnedIn == true) {
-                    return true;
-                }
-            }
-            return false;
-            */
             return prerequisiteMet;
         }
 
-        public void SetupScriptableObjects() {
+        public override void SetGameManagerReferences() {
+            base.SetGameManagerReferences();
+            systemDataFactory = systemGameManager.SystemDataFactory;
+        }
+
+        public void SetupScriptableObjects(SystemGameManager systemGameManager) {
+            Configure(systemGameManager);
             prerequisiteDialog = null;
             if (prerequisiteName != null && prerequisiteName != string.Empty) {
-                Dialog tmpDialog = SystemDataFactory.Instance.GetResource<Dialog>(prerequisiteName);
+                Dialog tmpDialog = systemDataFactory.GetResource<Dialog>(prerequisiteName);
                 if (tmpDialog != null) {
                     prerequisiteDialog = tmpDialog;
                     prerequisiteDialog.OnDialogCompleted += HandleDialogCompleted;

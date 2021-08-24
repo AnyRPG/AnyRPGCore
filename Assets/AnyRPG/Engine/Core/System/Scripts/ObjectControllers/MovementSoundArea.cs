@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 namespace AnyRPG {
-    public class MovementSoundArea : MonoBehaviour {
+    public class MovementSoundArea : AutoConfiguredMonoBehaviour {
 
         [Header("Audio")]
 
@@ -22,16 +22,23 @@ namespace AnyRPG {
 
         private AudioProfile movementHitProfile;
 
+        // game manager references
+
+        private SystemDataFactory systemDataFactory = null;
+
         public AudioProfile MovementLoopProfile { get => movementLoopProfile; set => movementLoopProfile = value; }
         public AudioProfile MovementHitProfile { get => movementHitProfile; set => movementHitProfile = value; }
 
-        private void Awake() {
-            //Debug.Log(gameObject.name + ".EnvironmentalEffectArea.Awake()");
-            GetComponentReferences();
+        public override void Configure(SystemGameManager systemGameManager) {
+            base.Configure(systemGameManager);
+
             SetupScriptableObjects();
         }
 
-        public void GetComponentReferences() {
+        public override void SetGameManagerReferences() {
+            base.SetGameManagerReferences();
+
+            systemDataFactory = systemGameManager.SystemDataFactory;
         }
 
         public void OnTriggerEnter(Collider other) {
@@ -55,13 +62,13 @@ namespace AnyRPG {
 
         private void SetupScriptableObjects() {
             //Debug.Log(gameObject.name + ".EnvironmentalEffectArea.SetupScriptableObjects()");
-            if (SystemGameManager.Instance == null) {
-                Debug.LogError(gameObject.name + ": SystemAbilityEffectManager not found.  Is the GameManager in the scene?");
+            if (systemGameManager == null) {
+                Debug.LogError(gameObject.name + ": SystemGameManager not found.  Is the GameManager in the scene?");
                 return;
             }
 
             if (movementLoopProfileName != null && movementLoopProfileName != string.Empty) {
-                AudioProfile tmpMovementLoop = SystemDataFactory.Instance.GetResource<AudioProfile>(movementLoopProfileName);
+                AudioProfile tmpMovementLoop = systemDataFactory.GetResource<AudioProfile>(movementLoopProfileName);
                 if (tmpMovementLoop != null) {
                     movementLoopProfile = tmpMovementLoop;
                 } else {
@@ -70,7 +77,7 @@ namespace AnyRPG {
             }
 
             if (movementHitProfileName != null && movementHitProfileName != string.Empty) {
-                AudioProfile tmpMovementHit = SystemDataFactory.Instance.GetResource<AudioProfile>(movementHitProfileName);
+                AudioProfile tmpMovementHit = systemDataFactory.GetResource<AudioProfile>(movementHitProfileName);
                 if (tmpMovementHit != null) {
                     movementHitProfile = tmpMovementHit;
                 } else {

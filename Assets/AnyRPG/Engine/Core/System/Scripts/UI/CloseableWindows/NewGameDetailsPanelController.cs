@@ -39,7 +39,6 @@ namespace AnyRPG {
         private CanvasGroup canvasGroup = null;
 
         // game manager references
-        private SystemConfigurationManager systemConfigurationManager = null;
         private SystemDataFactory systemDataFactory = null;
         private UIManager uIManager = null;
         private NewGameManager newGameManager = null;
@@ -47,14 +46,16 @@ namespace AnyRPG {
         public override void Configure(SystemGameManager systemGameManager) {
             base.Configure(systemGameManager);
 
-            systemConfigurationManager = systemGameManager.SystemConfigurationManager;
-            systemDataFactory = systemGameManager.SystemDataFactory;
-            uIManager = systemGameManager.UIManager;
-            newGameManager = systemGameManager.NewGameManager;
-
             characterClassButton.Configure(systemGameManager);
             classSpecializationButton.Configure(systemGameManager);
             factionButton.Configure(systemGameManager);
+        }
+
+        public override void SetGameManagerReferences() {
+            base.SetGameManagerReferences();
+            systemDataFactory = systemGameManager.SystemDataFactory;
+            uIManager = systemGameManager.UIManager;
+            newGameManager = systemGameManager.NewGameManager;
         }
 
         public void ResetInputText(string newText) {

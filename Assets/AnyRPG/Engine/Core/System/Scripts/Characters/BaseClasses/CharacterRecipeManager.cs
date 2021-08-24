@@ -4,11 +4,14 @@ using System.Collections.Generic;
 using UnityEngine;
 
 namespace AnyRPG {
-    public class CharacterRecipeManager {
+    public class CharacterRecipeManager : ConfiguredClass {
 
         protected BaseCharacter baseCharacter;
 
         protected Dictionary<string, Recipe> recipeList = new Dictionary<string, Recipe>();
+
+        // game manager references
+        private SystemDataFactory systemDataFactory = null;
 
         public BaseCharacter MyBaseCharacter {
             get => baseCharacter;
@@ -17,8 +20,14 @@ namespace AnyRPG {
 
         public Dictionary<string, Recipe> RecipeList { get => recipeList; }
 
-        public CharacterRecipeManager(BaseCharacter baseCharacter) {
+        public CharacterRecipeManager(BaseCharacter baseCharacter, SystemGameManager systemGameManager) {
             this.baseCharacter = baseCharacter;
+            Configure(systemGameManager);
+        }
+
+        public override void SetGameManagerReferences() {
+            base.SetGameManagerReferences();
+            systemDataFactory = systemGameManager.SystemDataFactory;
         }
 
         public void Init() {
@@ -27,7 +36,7 @@ namespace AnyRPG {
 
         public virtual void UpdateRecipeList(int newLevel) {
             //Debug.Log("CharacterRecipeManager.UpdateRecipeList(" + newLevel + ")");
-            foreach (Recipe recipe in SystemDataFactory.Instance.GetResourceList<Recipe>()) {
+            foreach (Recipe recipe in systemDataFactory.GetResourceList<Recipe>()) {
                 //Debug.Log("CharacterRecipeManager.UpdateRecipeList(" + newLevel + "): evaluating recipe: " + recipe.MyName);
                 foreach (Skill skill in baseCharacter.CharacterSkillManager.MySkillList.Values) {
                     //Debug.Log("CharacterRecipeManager.UpdateRecipeList(" + newLevel + "): recipe: " + recipe.MyName + "evaluating skill: " + skill.MyName);
@@ -63,7 +72,7 @@ namespace AnyRPG {
             //Debug.Log("CharacterRecipeManager.LoadRecipe(" + recipeName + ")");
             string keyName = SystemDataFactory.PrepareStringForMatch(recipeName);
             if (!recipeList.ContainsKey(keyName)) {
-                recipeList[keyName] = SystemDataFactory.Instance.GetResource<Recipe>(recipeName);
+                recipeList[keyName] = systemDataFactory.GetResource<Recipe>(recipeName);
                 if (recipeList[keyName] == null) {
                     // failed to get a valid recipe
                     recipeList.Remove(keyName);

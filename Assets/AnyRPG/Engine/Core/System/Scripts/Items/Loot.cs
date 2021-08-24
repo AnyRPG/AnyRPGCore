@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace AnyRPG {
     [System.Serializable]
-    public class Loot : IPrerequisiteOwner {
+    public class Loot : ConfiguredClass, IPrerequisiteOwner {
 
         [SerializeField]
         [ResourceSelector(resourceType = typeof(Item))]
@@ -31,6 +31,9 @@ namespace AnyRPG {
 
         [SerializeField]
         protected List<PrerequisiteConditions> prerequisiteConditions = new List<PrerequisiteConditions>();
+
+        // game manager references
+        private SystemDataFactory systemDataFactory = null;
 
         public Item MyItem { get => item; }
         public float MyDropChance { get => dropChance; }
@@ -62,10 +65,16 @@ namespace AnyRPG {
             }
         }
 
-        public void SetupScriptableObjects() {
+        public override void SetGameManagerReferences() {
+            base.SetGameManagerReferences();
+            systemDataFactory = systemGameManager.SystemDataFactory;
+        }
+
+        public void SetupScriptableObjects(SystemGameManager systemGameManager) {
+            Configure(systemGameManager);
             item = null;
             if (itemName != null) {
-                Item tmpItem = SystemDataFactory.Instance.GetResource<Item>(itemName);
+                Item tmpItem = systemDataFactory.GetResource<Item>(itemName);
                 if (tmpItem != null) {
                     item = tmpItem;
                 } else {
@@ -76,7 +85,7 @@ namespace AnyRPG {
             if (prerequisiteConditions != null) {
                 foreach (PrerequisiteConditions tmpPrerequisiteConditions in prerequisiteConditions) {
                     if (tmpPrerequisiteConditions != null) {
-                        tmpPrerequisiteConditions.SetupScriptableObjects(this);
+                        tmpPrerequisiteConditions.SetupScriptableObjects(systemGameManager, this);
                     }
                 }
             }

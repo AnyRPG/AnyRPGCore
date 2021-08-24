@@ -10,7 +10,7 @@ namespace AnyRPG {
 
         public CharacterCreatorProps Props { get => interactableOptionProps as CharacterCreatorProps; }
 
-        public CharacterCreatorComponent(Interactable interactable, CharacterCreatorProps interactableOptionProps) : base(interactable, interactableOptionProps) {
+        public CharacterCreatorComponent(Interactable interactable, CharacterCreatorProps interactableOptionProps, SystemGameManager systemGameManager) : base(interactable, interactableOptionProps, systemGameManager) {
         }
 
         public void CleanupEventSubscriptions(ICloseableWindowContents windowContents) {
@@ -18,9 +18,9 @@ namespace AnyRPG {
         }
 
         public void CleanupWindowEventSubscriptions() {
-            if (SystemGameManager.Instance.UIManager != null && SystemGameManager.Instance.UIManager.characterCreatorWindow != null && SystemGameManager.Instance.UIManager.characterCreatorWindow.CloseableWindowContents != null) {
-                (SystemGameManager.Instance.UIManager.characterCreatorWindow.CloseableWindowContents as CharacterCreatorWindowPanel).OnConfirmAction -= HandleConfirmAction;
-                (SystemGameManager.Instance.UIManager.characterCreatorWindow.CloseableWindowContents as CharacterCreatorWindowPanel).OnCloseWindow -= CleanupEventSubscriptions;
+            if (uIManager != null && uIManager.characterCreatorWindow != null && uIManager.characterCreatorWindow.CloseableWindowContents != null) {
+                (uIManager.characterCreatorWindow.CloseableWindowContents as CharacterCreatorWindowPanel).OnConfirmAction -= HandleConfirmAction;
+                (uIManager.characterCreatorWindow.CloseableWindowContents as CharacterCreatorWindowPanel).OnCloseWindow -= CleanupEventSubscriptions;
             }
         }
 
@@ -32,9 +32,9 @@ namespace AnyRPG {
         public override bool Interact(CharacterUnit source, int optionIndex = 0) {
             // was there a reason why we didn't have base.Interact here before or just an oversight?
             base.Interact(source, optionIndex);
-            SystemGameManager.Instance.UIManager.characterCreatorWindow.OpenWindow();
-            (SystemGameManager.Instance.UIManager.characterCreatorWindow.CloseableWindowContents as CharacterCreatorWindowPanel).OnConfirmAction += HandleConfirmAction;
-            (SystemGameManager.Instance.UIManager.characterCreatorWindow.CloseableWindowContents as CharacterCreatorWindowPanel).OnCloseWindow += CleanupEventSubscriptions;
+            uIManager.characterCreatorWindow.OpenWindow();
+            (uIManager.characterCreatorWindow.CloseableWindowContents as CharacterCreatorWindowPanel).OnConfirmAction += HandleConfirmAction;
+            (uIManager.characterCreatorWindow.CloseableWindowContents as CharacterCreatorWindowPanel).OnCloseWindow += CleanupEventSubscriptions;
             return true;
         }
 
@@ -44,7 +44,7 @@ namespace AnyRPG {
 
         public override void StopInteract() {
             base.StopInteract();
-            SystemGameManager.Instance.UIManager.characterCreatorWindow.CloseWindow();
+            uIManager.characterCreatorWindow.CloseWindow();
         }
 
         public override bool HasMiniMapText() {

@@ -39,7 +39,6 @@ namespace AnyRPG {
 
         // game manager references
         private ObjectPooler objectPooler = null;
-        private SystemConfigurationManager systemConfigurationManager = null;
         private NewGameManager newGameManager = null;
 
         public override void Configure(SystemGameManager systemGameManager) {
@@ -52,7 +51,6 @@ namespace AnyRPG {
             base.SetGameManagerReferences();
 
             objectPooler = systemGameManager.ObjectPooler;
-            systemConfigurationManager = systemGameManager.SystemConfigurationManager;
             newGameManager = systemGameManager.NewGameManager;
         }
 

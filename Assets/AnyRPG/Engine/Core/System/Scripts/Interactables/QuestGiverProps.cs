@@ -26,28 +26,28 @@ namespace AnyRPG {
 
         public List<QuestNode> Quests { get => quests; set => quests = value; }
 
-        public override Sprite Icon { get => (SystemGameManager.Instance.SystemConfigurationManager.QuestGiverInteractionPanelImage != null ? SystemGameManager.Instance.SystemConfigurationManager.QuestGiverInteractionPanelImage : base.Icon); }
-        public override Sprite NamePlateImage { get => (SystemGameManager.Instance.SystemConfigurationManager.QuestGiverNamePlateImage != null ? SystemGameManager.Instance.SystemConfigurationManager.QuestGiverNamePlateImage : base.NamePlateImage); }
+        public override Sprite Icon { get => (systemConfigurationManager.QuestGiverInteractionPanelImage != null ? systemConfigurationManager.QuestGiverInteractionPanelImage : base.Icon); }
+        public override Sprite NamePlateImage { get => (systemConfigurationManager.QuestGiverNamePlateImage != null ? systemConfigurationManager.QuestGiverNamePlateImage : base.NamePlateImage); }
 
         public override InteractableOptionComponent GetInteractableOption(Interactable interactable, InteractableOption interactableOption = null) {
-            InteractableOptionComponent returnValue = new QuestGiverComponent(interactable, this);
+            InteractableOptionComponent returnValue = new QuestGiverComponent(interactable, this, systemGameManager);
             if (interactableOption != null) {
                 interactableOption.SetComponent(returnValue);
             }
             return returnValue;
         }
 
-        public override void SetupScriptableObjects() {
-            base.SetupScriptableObjects();
+        public override void SetupScriptableObjects(SystemGameManager systemGameManager) {
+            base.SetupScriptableObjects(systemGameManager);
 
             // setup any local references first
             foreach (QuestNode questNode in quests) {
-                questNode.SetupScriptableObjects();
+                questNode.SetupScriptableObjects(systemGameManager);
             }
 
             if (questGiverProfileNames != null) {
                 foreach (string questGiverProfileName in questGiverProfileNames) {
-                    QuestGiverProfile tmpQuestGiverProfile = SystemDataFactory.Instance.GetResource<QuestGiverProfile>(questGiverProfileName);
+                    QuestGiverProfile tmpQuestGiverProfile = systemDataFactory.GetResource<QuestGiverProfile>(questGiverProfileName);
                     if (tmpQuestGiverProfile != null) {
                         questGiverProfiles.Add(tmpQuestGiverProfile);
                     } else {

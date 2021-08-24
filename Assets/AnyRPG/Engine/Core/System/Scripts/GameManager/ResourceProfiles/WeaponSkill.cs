@@ -1,10 +1,5 @@
 using AnyRPG;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Audio;
-using UnityEngine.Serialization;
-using UnityEngine.SceneManagement;
 
 namespace AnyRPG {
     [CreateAssetMenu(fileName = "New Weapon Skill", menuName = "AnyRPG/WeaponSkill")]
@@ -15,9 +10,9 @@ namespace AnyRPG {
 
         public WeaponSkillProps WeaponSkillProps { get => weaponSkillProps; set => weaponSkillProps = value; }
 
-        public override void SetupScriptableObjects() {
-            base.SetupScriptableObjects();
-            weaponSkillProps.SetupScriptableObjects(DisplayName);
+        public override void SetupScriptableObjects(SystemGameManager systemGameManager) {
+            base.SetupScriptableObjects(systemGameManager);
+            weaponSkillProps.SetupScriptableObjects(DisplayName, systemGameManager);
         }
     }
 

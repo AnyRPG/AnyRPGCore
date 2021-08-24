@@ -59,12 +59,12 @@ namespace AnyRPG {
             return returnValue;
         }
 
-        public void SetupScriptableObjects() {
+        public void SetupScriptableObjects(SystemDataFactory systemDataFactory) {
 
             if (abilityNames != null) {
                 foreach (string baseAbilityName in abilityNames) {
                     if (baseAbilityName != null && baseAbilityName != string.Empty) {
-                        BaseAbility baseAbility = SystemDataFactory.Instance.GetResource<BaseAbility>(baseAbilityName);
+                        BaseAbility baseAbility = systemDataFactory.GetResource<BaseAbility>(baseAbilityName);
                         if (baseAbility != null) {
                             abilityList.Add(baseAbility);
                         } else {
@@ -79,7 +79,7 @@ namespace AnyRPG {
             if (traitNames != null) {
                 foreach (string traitName in traitNames) {
                     if (traitName != null && traitName != string.Empty) {
-                        StatusEffect statusEffect = SystemDataFactory.Instance.GetResource<AbilityEffect>(traitName) as StatusEffect;
+                        StatusEffect statusEffect = systemDataFactory.GetResource<AbilityEffect>(traitName) as StatusEffect;
                         if (statusEffect != null) {
                             traitList.Add(statusEffect);
                         } else {
@@ -94,7 +94,7 @@ namespace AnyRPG {
             if (weaponSkills != null) {
                 foreach (string weaponSkillName in weaponSkills) {
                     if (weaponSkillName != null && weaponSkillName != string.Empty) {
-                        WeaponSkill weaponSkill = SystemDataFactory.Instance.GetResource<WeaponSkill>(weaponSkillName);
+                        WeaponSkill weaponSkill = systemDataFactory.GetResource<WeaponSkill>(weaponSkillName);
                         if (weaponSkill != null) {
                             weaponSkillList.Add(weaponSkill);
                         } else {

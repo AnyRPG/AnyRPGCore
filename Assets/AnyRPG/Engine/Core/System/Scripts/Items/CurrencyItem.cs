@@ -26,28 +26,28 @@ namespace AnyRPG {
                 return false;
             }
             if (currencyNode.currency != null) {
-                SystemGameManager.Instance.PlayerManager.MyCharacter.CharacterCurrencyManager.AddCurrency(currencyNode.currency, currencyNode.MyAmount);
+                playerManager.MyCharacter.CharacterCurrencyManager.AddCurrency(currencyNode.currency, currencyNode.Amount);
             }
             Remove();
             return true;
         }
 
-        public override string GetSummary() {
+        public override string GetSummary(ItemQuality usedItemQuality) {
             //Debug.Log(MyName + ".CurrencyItem.GetSummary();");
             string tmpCurrencyName = string.Empty;
             if (currencyNode.currency != null) {
                 tmpCurrencyName = currencyNode.currency.DisplayName;
             }
-            return base.GetSummary() + string.Format("\n<color=green>Use: Gain {0} {1}</color>", tmpCurrencyName, currencyNode.MyAmount);
+            return base.GetSummary(usedItemQuality) + string.Format("\n<color=green>Use: Gain {0} {1}</color>", tmpCurrencyName, currencyNode.Amount);
         }
 
-        public override void SetupScriptableObjects() {
-            base.SetupScriptableObjects();
+        public override void SetupScriptableObjects(SystemGameManager systemGameManager) {
+            base.SetupScriptableObjects(systemGameManager);
             if (gainCurrencyName != null && gainCurrencyName != string.Empty) {
-                Currency tmpCurrency = SystemDataFactory.Instance.GetResource<Currency>(gainCurrencyName);
+                Currency tmpCurrency = systemDataFactory.GetResource<Currency>(gainCurrencyName);
                 if (tmpCurrency != null) {
                     currencyNode.currency = tmpCurrency;
-                    currencyNode.MyAmount = gainCurrencyAmount;
+                    currencyNode.Amount = gainCurrencyAmount;
                 } else {
                     Debug.LogError("CurrencyItem.SetupScriptableObjects(): Could not find currency : " + gainCurrencyName + " while inititalizing " + DisplayName + ".  CHECK INSPECTOR");
                 }

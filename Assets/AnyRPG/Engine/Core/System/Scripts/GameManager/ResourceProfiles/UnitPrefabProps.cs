@@ -95,10 +95,10 @@ namespace AnyRPG {
         }
 
 
-        public void SetupScriptableObjects() {
+        public void SetupScriptableObjects(SystemDataFactory systemDataFactory) {
 
             if (attachmentProfileName != null && attachmentProfileName != string.Empty) {
-                AttachmentProfile tmpAttachmentProfile = SystemDataFactory.Instance.GetResource<AttachmentProfile>(attachmentProfileName);
+                AttachmentProfile tmpAttachmentProfile = systemDataFactory.GetResource<AttachmentProfile>(attachmentProfileName);
                 if (tmpAttachmentProfile != null) {
                     attachmentProfile = tmpAttachmentProfile;
                 } else {

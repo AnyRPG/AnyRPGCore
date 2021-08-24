@@ -6,7 +6,7 @@ using System.Linq;
 using UnityEngine;
 
 namespace AnyRPG {
-    public class UnitAnimator {
+    public class UnitAnimator : ConfiguredClass {
 
         // events
         public event System.Action OnReviveComplete = delegate { };
@@ -114,12 +114,17 @@ namespace AnyRPG {
         public int LastAnimationHits { get => lastAnimationHits; set => lastAnimationHits = value; }
         public AnimationProps CurrentAnimations { get => currentAnimations; }
 
-        public UnitAnimator(UnitController unitController) {
+        public UnitAnimator(UnitController unitController, SystemGameManager systemGameManager) {
             this.unitController = unitController;
-            systemAnimations = SystemGameManager.Instance.SystemConfigurationManager.SystemAnimationProfile.AnimationProps;
-            currentAnimations = UnityEngine.Object.Instantiate(SystemGameManager.Instance.SystemConfigurationManager.SystemAnimationProfile).AnimationProps;
-            animatorController = SystemGameManager.Instance.SystemConfigurationManager.DefaultAnimatorController;
-            defaultAnimationProps = SystemGameManager.Instance.SystemConfigurationManager.DefaultAnimationProfile.AnimationProps;
+            Configure(systemGameManager);
+            systemAnimations = systemConfigurationManager.SystemAnimationProfile.AnimationProps;
+            currentAnimations = UnityEngine.Object.Instantiate(systemConfigurationManager.SystemAnimationProfile).AnimationProps;
+            animatorController = systemConfigurationManager.DefaultAnimatorController;
+            defaultAnimationProps = systemConfigurationManager.DefaultAnimationProfile.AnimationProps;
+        }
+
+        public override void SetGameManagerReferences() {
+            base.SetGameManagerReferences();
 
         }
 
@@ -169,7 +174,7 @@ namespace AnyRPG {
                 //Debug.Log(gameObject.name + ": CharacterAnimator.InitializeAnimator(): Could not find animator in children");
                 return;
             }
-            if (SystemGameManager.Instance.SystemConfigurationManager.UseThirdPartyMovementControl == true) {
+            if (systemConfigurationManager.UseThirdPartyMovementControl == true) {
                 if (thirdPartyAnimatorController == null) {
                     thirdPartyAnimatorController = animator.runtimeAnimatorController;
                 }
@@ -202,7 +207,7 @@ namespace AnyRPG {
 
         public void SetCorrectOverrideController(bool runUpdate = true) {
             //Debug.Log(unitController.gameObject.name + ".UnitAnimator.SetCorrectOverrideController()");
-            if (unitController.UnitControllerMode == UnitControllerMode.Player && SystemGameManager.Instance.SystemConfigurationManager.UseThirdPartyMovementControl == true) {
+            if (unitController.UnitControllerMode == UnitControllerMode.Player && systemConfigurationManager.UseThirdPartyMovementControl == true) {
                 SetOverrideController(thirdPartyOverrideController, runUpdate);
                 return;
             }
@@ -260,7 +265,7 @@ namespace AnyRPG {
 
         protected void SetAnimationClipOverrides() {
             //Debug.Log(gameObject.name + ": CharacterAnimator.SetAnimationClipOverrides()");
-            if (SystemGameManager.Instance.SystemConfigurationManager == null) {
+            if (systemConfigurationManager == null) {
                 return;
             }
 
@@ -1103,9 +1108,9 @@ namespace AnyRPG {
             }
             unitController.CharacterUnit.BaseCharacter.CharacterCombat.SwingTarget = targetCharacterUnit;
 
-            if (SystemGameManager.Instance.SystemConfigurationManager != null) {
+            if (systemConfigurationManager != null) {
                 // override the default attack animation
-                overrideController[SystemGameManager.Instance.SystemConfigurationManager.SystemAnimationProfile.AnimationProps.AttackClips[0].name] = animationClip;
+                overrideController[systemConfigurationManager.SystemAnimationProfile.AnimationProps.AttackClips[0].name] = animationClip;
             }
             float animationLength = animationClip.length;
 
@@ -1141,15 +1146,15 @@ namespace AnyRPG {
                 return;
             }
 
-            if (SystemGameManager.Instance.SystemConfigurationManager != null) {
+            if (systemConfigurationManager != null) {
                 // override the default attack animation
                 //Debug.Log(gameObject.name + ".CharacterAnimator.HandleCastingAbility() animationClip: " + animationClip.name);
                 foreach (AnimationClip tmpAnimationClip in overrideController.animationClips) {
                     //Debug.Log(gameObject.name + ".CharacterAnimator.HandleCastingAbility() Found clip from overrideController: " + tmpAnimationClip.name);
                 }
 
-                overrideController[SystemGameManager.Instance.SystemConfigurationManager.SystemAnimationProfile.AnimationProps.CastClips[0].name] = animationClip;
-                //Debug.Log(gameObject.name + ".CharacterAnimator.HandleCastingAbility() current casting clip: " + overrideController[SystemGameManager.Instance.SystemConfigurationManager.MySystemAnimationProfile.MyCastClips[0].name].name);
+                overrideController[systemConfigurationManager.SystemAnimationProfile.AnimationProps.CastClips[0].name] = animationClip;
+                //Debug.Log(gameObject.name + ".CharacterAnimator.HandleCastingAbility() current casting clip: " + overrideController[systemConfigurationManager.MySystemAnimationProfile.MyCastClips[0].name].name);
                 float animationLength = animationClip.length;
                 //Debug.Log(gameObject.name + ".CharacterAnimator.HandleCastingAbility() animationlength: " + animationLength);
 
@@ -1344,8 +1349,8 @@ namespace AnyRPG {
             OnStartRevive();
             SetTrigger("ReviveTrigger");
             // add 1 to account for the transition
-            if (SystemGameManager.Instance.SystemConfigurationManager != null) {
-                float animationLength = overrideController[SystemGameManager.Instance.SystemConfigurationManager.SystemAnimationProfile.AnimationProps.ReviveClip.name].length + 2;
+            if (systemConfigurationManager != null) {
+                float animationLength = overrideController[systemConfigurationManager.SystemAnimationProfile.AnimationProps.ReviveClip.name].length + 2;
                 resurrectionCoroutine = unitController.StartCoroutine(WaitForResurrectionAnimation(animationLength));
             }
         }
@@ -1594,7 +1599,7 @@ namespace AnyRPG {
 
                 // if velocity is zero, the unit is stopping and the default animation speed of 1 should be used
                 // if the velocity is greater than zero, and animation speed sync is enabled, use the correct multiplier calculated above
-                if (varValue.magnitude != 0f && SystemGameManager.Instance.SystemConfigurationManager.SyncMovementAnimationSpeed == true) {
+                if (varValue.magnitude != 0f && systemConfigurationManager.SyncMovementAnimationSpeed == true) {
                     animationSpeed = multiplier;
                     //Debug.Log(gameObject.name + ".CharacterAnimator.SetVelocityZ(" + varValue + "): animationSpeed: " + animationSpeed);
                 }

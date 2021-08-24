@@ -10,14 +10,22 @@ namespace AnyRPG {
         [SerializeField]
         private HighlightButton cancelButton = null;
 
+        // game manager references
+        private KeyBindManager keyBindManager = null;
+
         public override void Configure(SystemGameManager systemGameManager) {
             base.Configure(systemGameManager);
 
             cancelButton.Configure(systemGameManager);
         }
 
+        public override void SetGameManagerReferences() {
+            base.SetGameManagerReferences();
+            keyBindManager = systemGameManager.KeyBindManager;
+        }
+
         public void CancelBind() {
-            SystemGameManager.Instance.KeyBindManager.CancelKeyBind();
+            keyBindManager.CancelKeyBind();
         }
 
     }

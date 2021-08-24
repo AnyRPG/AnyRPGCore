@@ -39,17 +39,17 @@ namespace AnyRPG {
         public GatherAbility BaseAbility { get => baseAbility; }
 
         public override InteractableOptionComponent GetInteractableOption(Interactable interactable, InteractableOption interactableOption = null) {
-            InteractableOptionComponent returnValue = new GatheringNodeComponent(interactable, this);
+            InteractableOptionComponent returnValue = new GatheringNodeComponent(interactable, this, systemGameManager);
             if (interactableOption != null) {
                 interactableOption.SetComponent(returnValue);
             }
             return returnValue;
         }
 
-        public override void SetupScriptableObjects() {
-            base.SetupScriptableObjects();
+        public override void SetupScriptableObjects(SystemGameManager systemGameManager) {
+            base.SetupScriptableObjects(systemGameManager);
             if (abilityName != null && abilityName != string.Empty) {
-                GatherAbility tmpBaseAbility = SystemDataFactory.Instance.GetResource<BaseAbility>(abilityName) as GatherAbility;
+                GatherAbility tmpBaseAbility = systemDataFactory.GetResource<BaseAbility>(abilityName) as GatherAbility;
                 if (tmpBaseAbility != null) {
                     baseAbility = tmpBaseAbility;
                 } else {

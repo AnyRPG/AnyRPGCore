@@ -18,7 +18,7 @@ namespace AnyRPG {
 
         public override bool Use() {
             //Debug.Log(DisplayName + ".PowerResourcePotion.Use()");
-            if (SystemGameManager.Instance.PlayerManager.MyCharacter.CharacterStats.GetPowerResourceAmount(powerResource) < SystemGameManager.Instance.PlayerManager.MyCharacter.CharacterStats.GetPowerResourceMaxAmount(powerResource)) {
+            if (playerManager.MyCharacter.CharacterStats.GetPowerResourceAmount(powerResource) < playerManager.MyCharacter.CharacterStats.GetPowerResourceMaxAmount(powerResource)) {
                 //Debug.Log("The current resource amount was less than the max resource amount and we can use the potion: " + this.GetInstanceID().ToString());
                 bool returnValue = base.Use();
                 if (returnValue == false) {
@@ -26,12 +26,13 @@ namespace AnyRPG {
                 }
                 return returnValue;
             } else {
-                SystemGameManager.Instance.UIManager.MessageFeedManager.WriteMessage("Your " + powerResource.DisplayName + " is already full!");
+                messageFeedManager.WriteMessage("Your " + powerResource.DisplayName + " is already full!");
                 return false;
             }
         }
 
         public override string GetCastableInformation() {
+            //Debug.Log(DisplayName + ".PowerResourcePotion.GetCastableInformation()");
             string returnString = string.Empty;
             if (ability != null) {
                 returnString += string.Format("\n<color=green>Use: {0}</color>", ability.MyDescription);
@@ -39,11 +40,11 @@ namespace AnyRPG {
             return returnString;
         }
 
-        public override void SetupScriptableObjects() {
-            base.SetupScriptableObjects();
+        public override void SetupScriptableObjects(SystemGameManager systemGameManager) {
+            base.SetupScriptableObjects(systemGameManager);
 
             if (powerResourceName != null && powerResourceName != string.Empty) {
-                PowerResource tmpPowerResource = SystemDataFactory.Instance.GetResource<PowerResource>(powerResourceName);
+                PowerResource tmpPowerResource = systemDataFactory.GetResource<PowerResource>(powerResourceName);
                 if (tmpPowerResource != null) {
                     powerResource = tmpPowerResource;
                 } else {

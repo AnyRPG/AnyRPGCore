@@ -42,6 +42,9 @@ namespace AnyRPG {
         [SerializeField]
         private bool looping = false;
 
+        // game manager references
+        protected SaveManager saveManager = null;
+
         public bool MyPrerequisitesMet {
             get {
                 foreach (PrerequisiteConditions prerequisiteCondition in prerequisiteConditions) {
@@ -60,12 +63,12 @@ namespace AnyRPG {
         // track whether it is completed to prevent it from repeating if it is automatic
         public bool Completed {
             get {
-                return SystemGameManager.Instance.SaveManager.GetBehaviorSaveData(this).completed;
+                return saveManager.GetBehaviorSaveData(this).completed;
             }
             set {
-                BehaviorSaveData saveData = SystemGameManager.Instance.SaveManager.GetBehaviorSaveData(this);
+                BehaviorSaveData saveData = saveManager.GetBehaviorSaveData(this);
                 saveData.completed = value;
-                SystemGameManager.Instance.SaveManager.BehaviorSaveDataDictionary[saveData.MyName] = saveData;
+                saveManager.BehaviorSaveDataDictionary[saveData.MyName] = saveData;
             }
         }
 
@@ -73,17 +76,22 @@ namespace AnyRPG {
         public bool Looping { get => looping; set => looping = value; }
         public bool AllowManualStart { get => allowManualStart; set => allowManualStart = value; }
 
+        public override void SetGameManagerReferences() {
+            base.SetGameManagerReferences();
+            saveManager = systemGameManager.SaveManager;
+        }
+
         public void HandlePrerequisiteUpdates() {
             // call back to owner
             OnPrerequisiteUpdates();
         }
 
-        public override void SetupScriptableObjects() {
-            base.SetupScriptableObjects();
+        public override void SetupScriptableObjects(SystemGameManager systemGameManager) {
+            base.SetupScriptableObjects(systemGameManager);
             if (prerequisiteConditions != null) {
                 foreach (PrerequisiteConditions tmpPrerequisiteConditions in prerequisiteConditions) {
                     if (tmpPrerequisiteConditions != null) {
-                        tmpPrerequisiteConditions.SetupScriptableObjects(this);
+                        tmpPrerequisiteConditions.SetupScriptableObjects(systemGameManager, this);
                     }
                 }
             }

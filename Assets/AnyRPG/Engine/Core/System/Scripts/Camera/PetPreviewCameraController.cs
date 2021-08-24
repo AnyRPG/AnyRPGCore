@@ -10,10 +10,9 @@ namespace AnyRPG {
     public class PetPreviewCameraController : PreviewCameraController {
 
         //public event System.Action OnTargetReady = delegate { };
-
-        protected override void Awake() {
-            base.Awake();
-            currentCamera = SystemGameManager.Instance.CameraManager.PetPreviewCamera;
+        public override void Configure(SystemGameManager systemGameManager) {
+            base.Configure(systemGameManager);
+            currentCamera = cameraManager.PetPreviewCamera;
         }
 
     }

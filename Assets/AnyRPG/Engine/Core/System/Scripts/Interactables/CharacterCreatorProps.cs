@@ -11,11 +11,11 @@ namespace AnyRPG {
     [System.Serializable]
     public class CharacterCreatorProps : InteractableOptionProps {
 
-        public override Sprite Icon { get => (SystemGameManager.Instance.SystemConfigurationManager.CharacterCreatorInteractionPanelImage != null ? SystemGameManager.Instance.SystemConfigurationManager.CharacterCreatorInteractionPanelImage : base.Icon); }
-        public override Sprite NamePlateImage { get => (SystemGameManager.Instance.SystemConfigurationManager.CharacterCreatorNamePlateImage != null ? SystemGameManager.Instance.SystemConfigurationManager.CharacterCreatorNamePlateImage : base.NamePlateImage); }
+        public override Sprite Icon { get => (systemConfigurationManager.CharacterCreatorInteractionPanelImage != null ? systemConfigurationManager.CharacterCreatorInteractionPanelImage : base.Icon); }
+        public override Sprite NamePlateImage { get => (systemConfigurationManager.CharacterCreatorNamePlateImage != null ? systemConfigurationManager.CharacterCreatorNamePlateImage : base.NamePlateImage); }
 
         public override InteractableOptionComponent GetInteractableOption(Interactable interactable, InteractableOption interactableOption = null) {
-            InteractableOptionComponent returnValue = new CharacterCreatorComponent(interactable, this);
+            InteractableOptionComponent returnValue = new CharacterCreatorComponent(interactable, this, systemGameManager);
             if (interactableOption != null) {
                 interactableOption.SetComponent(returnValue);
             }

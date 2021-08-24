@@ -169,6 +169,12 @@ namespace AnyRPG {
 
         private Quest questTemplate = null;
 
+        // game manager references
+        protected SaveManager saveManager = null;
+        protected PlayerManager playerManager = null;
+        protected MessageFeedManager messageFeedManager = null;
+        protected QuestLog questLog = null;
+
         public CollectObjective[] MyCollectObjectives { get => collectObjectives; set => collectObjectives = value; }
         public KillObjective[] MyKillObjectives { get => killObjectives; set => killObjectives = value; }
         public TradeSkillObjective[] MyTradeSkillObjectives { get => tradeSkillObjectives; set => tradeSkillObjectives = value; }
@@ -239,13 +245,13 @@ namespace AnyRPG {
 
         public bool TurnedIn {
             get {
-                return SystemGameManager.Instance.SaveManager.GetQuestSaveData(this).turnedIn;
+                return saveManager.GetQuestSaveData(this).turnedIn;
                 //return false;
             }
             set {
-                QuestSaveData saveData = SystemGameManager.Instance.SaveManager.GetQuestSaveData(this);
+                QuestSaveData saveData = saveManager.GetQuestSaveData(this);
                 saveData.turnedIn = value;
-                SystemGameManager.Instance.SaveManager.QuestSaveDataDictionary[saveData.MyName] = saveData;
+                saveManager.QuestSaveDataDictionary[saveData.MyName] = saveData;
             }
         }
 
@@ -253,7 +259,7 @@ namespace AnyRPG {
             this.TurnedIn = turnedIn;
             //Debug.Log(MyName + ".Quest.TurnedIn = " + value);
             if (notify) {
-                if (SystemGameManager.Instance.PlayerManager != null && SystemGameManager.Instance.PlayerManager.PlayerUnitSpawned == false) {
+                if (playerManager.PlayerUnitSpawned == false) {
                     // STOP STUFF FROM REACTING WHEN PLAYER ISN'T SPAWNED
                     return;
                 }
@@ -277,7 +283,7 @@ namespace AnyRPG {
         }
 
         public Quest QuestTemplate { get => questTemplate; set => questTemplate = value; }
-        public int ExperienceLevel { get => ((dynamicLevel == true ? SystemGameManager.Instance.PlayerManager.MyCharacter.CharacterStats.Level : experienceLevel) + extraLevels); }
+        public int ExperienceLevel { get => ((dynamicLevel == true ? playerManager.MyCharacter.CharacterStats.Level : experienceLevel) + extraLevels); }
 
         public List<Item> ItemRewards { get => itemRewardList; }
         public List<FactionNode> FactionRewards { get => factionRewards; }
@@ -304,20 +310,28 @@ namespace AnyRPG {
         public int CurrencyRewardPerLevel { get => currencyRewardPerLevel; set => currencyRewardPerLevel = value; }
         public bool MarkedComplete {
             get {
-                return SystemGameManager.Instance.SaveManager.GetQuestSaveData(this).markedComplete;
+                return saveManager.GetQuestSaveData(this).markedComplete;
                 //return false;
             }
             set {
-                QuestSaveData saveData = SystemGameManager.Instance.SaveManager.GetQuestSaveData(this);
+                QuestSaveData saveData = saveManager.GetQuestSaveData(this);
                 saveData.markedComplete = value;
-                SystemGameManager.Instance.SaveManager.QuestSaveDataDictionary[saveData.MyName] = saveData;
+                saveManager.QuestSaveDataDictionary[saveData.MyName] = saveData;
             }
+        }
+
+        public override void SetGameManagerReferences() {
+            base.SetGameManagerReferences();
+            saveManager = systemGameManager.SaveManager;
+            playerManager = systemGameManager.PlayerManager;
+            messageFeedManager = systemGameManager.UIManager.MessageFeedManager;
+            questLog = systemGameManager.QuestLog;
         }
 
         public void RemoveQuest() {
             //Debug.Log("Quest.RemoveQuest(): " + DisplayName + " calling OnQuestStatusUpdated()");
             OnAbandonQuest();
-            if (SystemGameManager.Instance.PlayerManager != null && SystemGameManager.Instance.PlayerManager.PlayerUnitSpawned == false) {
+            if (playerManager != null && playerManager.PlayerUnitSpawned == false) {
                 // STOP STUFF FROM REACTING WHEN PLAYER ISN'T SPAWNED
                 return;
             }
@@ -330,16 +344,16 @@ namespace AnyRPG {
             List<CurrencyNode> currencyNodes = new List<CurrencyNode>();
 
             if (AutomaticCurrencyReward == true) {
-                if (SystemGameManager.Instance.SystemConfigurationManager.QuestCurrency != null) {
+                if (systemConfigurationManager.QuestCurrency != null) {
                     CurrencyNode currencyNode = new CurrencyNode();
-                    currencyNode.currency = SystemGameManager.Instance.SystemConfigurationManager.QuestCurrency;
-                    currencyNode.MyAmount = SystemGameManager.Instance.SystemConfigurationManager.QuestCurrencyAmountPerLevel * ExperienceLevel;
+                    currencyNode.currency = systemConfigurationManager.QuestCurrency;
+                    currencyNode.Amount = systemConfigurationManager.QuestCurrencyAmountPerLevel * ExperienceLevel;
                     currencyNodes.Add(currencyNode);
                 }
             }
             if (RewardCurrency != null) {
                 CurrencyNode currencyNode = new CurrencyNode();
-                currencyNode.MyAmount = BaseCurrencyReward + (CurrencyRewardPerLevel * ExperienceLevel);
+                currencyNode.Amount = BaseCurrencyReward + (CurrencyRewardPerLevel * ExperienceLevel);
                 currencyNode.currency = RewardCurrency;
                 currencyNodes.Add(currencyNode);
             }
@@ -353,20 +367,20 @@ namespace AnyRPG {
             }
             if (isAchievement) {
                 if (printMessages == true) {
-                    SystemGameManager.Instance.UIManager.MessageFeedManager.WriteMessage(string.Format("Achievement: {0} Complete!", DisplayName));
+                    messageFeedManager.WriteMessage(string.Format("Achievement: {0} Complete!", DisplayName));
                 }
-                SystemGameManager.Instance.PlayerManager.PlayLevelUpEffects(0);
+                playerManager.PlayLevelUpEffects(0);
 
                 MarkedComplete = true;
                 TurnedIn = true;
             } else {
                 if (printMessages == true) {
-                    SystemGameManager.Instance.UIManager.MessageFeedManager.WriteMessage(string.Format("{0} Complete!", DisplayName));
+                    messageFeedManager.WriteMessage(string.Format("{0} Complete!", DisplayName));
                 }
             }
             MarkedComplete = true;
             if (notifyOnUpdate == true) {
-                if (SystemGameManager.Instance.PlayerManager != null && SystemGameManager.Instance.PlayerManager.PlayerUnitSpawned == false) {
+                if (playerManager != null && playerManager.PlayerUnitSpawned == false) {
                     // STOP STUFF FROM REACTING WHEN PLAYER ISN'T SPAWNED
                     return;
                 }
@@ -413,17 +427,17 @@ namespace AnyRPG {
                 return "completed";
             }
 
-            if (SystemGameManager.Instance.QuestLog.HasQuest(DisplayName) && IsComplete) {
+            if (questLog.HasQuest(DisplayName) && IsComplete) {
                 //Debug.Log(MyName + ".Quest.GetStatus(): returning complete");
                 return "complete";
             }
 
-            if (SystemGameManager.Instance.QuestLog.HasQuest(DisplayName)) {
+            if (questLog.HasQuest(DisplayName)) {
                 //Debug.Log(MyName + ".Quest.GetStatus(): returning inprogress");
                 return "inprogress";
             }
 
-            if (!SystemGameManager.Instance.QuestLog.HasQuest(DisplayName) && (TurnedIn == false || RepeatableQuest == true) && MyPrerequisitesMet == true) {
+            if (!questLog.HasQuest(DisplayName) && (TurnedIn == false || RepeatableQuest == true) && MyPrerequisitesMet == true) {
                 //Debug.Log(MyName + ".Quest.GetStatus(): returning available");
                 return "available";
             }
@@ -440,7 +454,7 @@ namespace AnyRPG {
 
         public string GetObjectiveDescription() {
 
-            Color titleColor = LevelEquations.GetTargetColor(SystemGameManager.Instance.PlayerManager.MyCharacter.CharacterStats.Level, ExperienceLevel);
+            Color titleColor = LevelEquations.GetTargetColor(playerManager.MyCharacter.CharacterStats.Level, ExperienceLevel);
             return string.Format("<size=30><b><color=#{0}>{1}</color></b></size>\n\n<size=18>{2}</size>\n\n<b><size=24>Objectives:</size></b>\n\n<size=18>{3}</size>", ColorUtility.ToHtmlStringRGB(titleColor), DisplayName, MyDescription, GetUnformattedObjectiveList());
 
         }
@@ -514,11 +528,11 @@ namespace AnyRPG {
                 o.OnAcceptQuest(this, printMessages);
             }
             if (isAchievement == false && printMessages == true) {
-                SystemGameManager.Instance.UIManager.MessageFeedManager.WriteMessage("Quest Accepted: " + DisplayName);
+                messageFeedManager.WriteMessage("Quest Accepted: " + DisplayName);
             }
             if (!MarkedComplete) {
                 // needs to be done here if quest wasn't auto-completed in checkcompletion
-                if (SystemGameManager.Instance.PlayerManager != null && SystemGameManager.Instance.PlayerManager.PlayerUnitSpawned == false) {
+                if (playerManager != null && playerManager.PlayerUnitSpawned == false) {
                     // STOP STUFF FROM REACTING WHEN PLAYER ISN'T SPAWNED
                     return;
                 }
@@ -586,31 +600,6 @@ namespace AnyRPG {
             }
         }
 
-        public static List<Quest> GetCompleteQuests(List<QuestNode> questNodeArray, bool requireInQuestLog = false) {
-            return GetQuestListByType("complete", questNodeArray, requireInQuestLog, false, true);
-        }
-
-        public static List<Quest> GetInProgressQuests(List<QuestNode> questNodeArray, bool requireInQuestLog = true) {
-            return GetQuestListByType("inprogress", questNodeArray, requireInQuestLog, false, true);
-        }
-
-        public static List<Quest> GetAvailableQuests(List<QuestNode> questNodeArray, bool requireInQuestLog = false) {
-            return GetQuestListByType("available", questNodeArray, requireInQuestLog, true, false);
-        }
-
-        public static List<Quest> GetQuestListByType(string questStatusType, List<QuestNode> questNodeArray, bool requireInQuestLog = false, bool requireStartQuest = false, bool requireEndQuest = false) {
-            List<Quest> returnList = new List<Quest>();
-            foreach (QuestNode questNode in questNodeArray) {
-                if (questNode.MyQuest != null) {
-                    if (questNode.MyQuest.GetStatus() == questStatusType && (requireInQuestLog == true ? SystemGameManager.Instance.QuestLog.HasQuest(questNode.MyQuest.DisplayName) : true) && (requireStartQuest == true ? questNode.MyStartQuest : true) && (requireEndQuest == true ? questNode.MyEndQuest : true)) {
-                        //Debug.Log("Quest.GetQuestListByType(" + questStatusType + "): adding quest: " + questNode.MyQuest.MyName);
-                        returnList.Add(questNode.MyQuest);
-                    }
-                }
-            }
-            return returnList;
-        }
-
         // force prerequisite status update outside normal event notification
         public void UpdatePrerequisites(bool notify = true) {
             foreach (PrerequisiteConditions conditions in prerequisiteConditions) {
@@ -618,13 +607,13 @@ namespace AnyRPG {
             }
         }
 
-        public override void SetupScriptableObjects() {
-            //Debug.Log(MyName + ".Quest.SetupScriptableObjects(): ID: " + GetInstanceID());
+        public override void SetupScriptableObjects(SystemGameManager systemGameManager) {
+            //Debug.Log(DisplayName + ".Quest.SetupScriptableObjects(" + (systemGameManager == null ? "null" : systemGameManager.gameObject.name) + "): ID: " + GetInstanceID());
         
-            base.SetupScriptableObjects();
+            base.SetupScriptableObjects(systemGameManager);
 
             if (rewardCurrencyName != null && rewardCurrencyName != string.Empty) {
-                Currency tmpCurrency = SystemDataFactory.Instance.GetResource<Currency>(rewardCurrencyName);
+                Currency tmpCurrency = systemDataFactory.GetResource<Currency>(rewardCurrencyName);
                 if (tmpCurrency != null) {
                     rewardCurrency = tmpCurrency;
                     //currencyNode.MyAmount = gainCurrencyAmount;
@@ -636,7 +625,7 @@ namespace AnyRPG {
             abilityRewardList = new List<BaseAbility>();
             if (abilityRewardNames != null) {
                 foreach (string baseAbilityName in abilityRewardNames) {
-                    BaseAbility baseAbility = SystemDataFactory.Instance.GetResource<BaseAbility>(baseAbilityName);
+                    BaseAbility baseAbility = systemDataFactory.GetResource<BaseAbility>(baseAbilityName);
                     if (baseAbility != null) {
                         abilityRewardList.Add(baseAbility);
                     } else {
@@ -648,7 +637,7 @@ namespace AnyRPG {
             skillRewardList = new List<Skill>();
             if (skillRewardNames != null) {
                 foreach (string skillName in skillRewardNames) {
-                    Skill skill = SystemDataFactory.Instance.GetResource<Skill>(skillName);
+                    Skill skill = systemDataFactory.GetResource<Skill>(skillName);
                     if (skill != null) {
                         skillRewardList.Add(skill);
                     } else {
@@ -660,7 +649,7 @@ namespace AnyRPG {
             itemRewardList = new List<Item>();
             if (itemRewardNames != null) {
                 foreach (string itemName in itemRewardNames) {
-                    Item item = SystemDataFactory.Instance.GetResource<Item>(itemName);
+                    Item item = systemDataFactory.GetResource<Item>(itemName);
                     if (item != null) {
                         itemRewardList.Add(item);
                     } else {
@@ -671,13 +660,13 @@ namespace AnyRPG {
 
             if (factionRewards != null && factionRewards.Count > 0) {
                 foreach (FactionNode factionNode in factionRewards) {
-                    factionNode.SetupScriptableObjects();
+                    factionNode.SetupScriptableObjects(systemGameManager);
                 }
             }
 
             openingDialog = null;
             if (hasOpeningDialog) {
-                Dialog dialog = SystemDataFactory.Instance.GetResource<Dialog>(DisplayName);
+                Dialog dialog = systemDataFactory.GetResource<Dialog>(DisplayName);
                 if (dialog != null) {
                     openingDialog = dialog;
                 } else {
@@ -686,40 +675,40 @@ namespace AnyRPG {
             }
 
             foreach (QuestObjective objective in collectObjectives) {
-                objective.SetupScriptableObjects();
+                objective.SetupScriptableObjects(systemGameManager);
                 objective.SetQuest(this);
             }
             foreach (QuestObjective objective in killObjectives) {
-                objective.SetupScriptableObjects();
+                objective.SetupScriptableObjects(systemGameManager);
                 objective.SetQuest(this);
             }
             foreach (QuestObjective objective in tradeSkillObjectives) {
-                objective.SetupScriptableObjects();
+                objective.SetupScriptableObjects(systemGameManager);
                 objective.SetQuest(this);
             }
             foreach (QuestObjective objective in abilityObjectives) {
-                objective.SetupScriptableObjects();
+                objective.SetupScriptableObjects(systemGameManager);
                 objective.SetQuest(this);
             }
             foreach (QuestObjective objective in useInteractableObjectives) {
-                objective.SetupScriptableObjects();
+                objective.SetupScriptableObjects(systemGameManager);
                 objective.SetQuest(this);
             }
             foreach (QuestObjective objective in questQuestObjectives) {
-                objective.SetupScriptableObjects();
+                objective.SetupScriptableObjects(systemGameManager);
                 objective.SetQuest(this);
             }
             foreach (QuestObjective objective in dialogObjectives) {
-                objective.SetupScriptableObjects();
+                objective.SetupScriptableObjects(systemGameManager);
                 objective.SetQuest(this);
             }
             foreach (QuestObjective objective in visitZoneObjectives) {
-                objective.SetupScriptableObjects();
+                objective.SetupScriptableObjects(systemGameManager);
                 objective.SetQuest(this);
             }
             //Debug.Log("Quest.SetupScriptableObjects(): " + MyName + " about to initialize prerequisiteConditions");
             foreach (PrerequisiteConditions conditions in prerequisiteConditions) {
-                conditions.SetupScriptableObjects(this);
+                conditions.SetupScriptableObjects(systemGameManager, this);
             }
 
         }

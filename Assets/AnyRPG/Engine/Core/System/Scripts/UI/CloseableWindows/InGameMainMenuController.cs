@@ -23,7 +23,6 @@ namespace AnyRPG {
         [SerializeField]
         private HighlightButton exitGameButton = null;
 
-        private SystemConfigurationManager systemConfigurationManager = null;
         private UIManager uIManager = null;
         private SaveManager saveManager = null;
         private MessageFeedManager messageFeedManager = null;
@@ -47,7 +46,6 @@ namespace AnyRPG {
         public override void SetGameManagerReferences() {
             base.SetGameManagerReferences();
 
-            systemConfigurationManager = systemGameManager.SystemConfigurationManager;
             saveManager = systemGameManager.SaveManager;
             uIManager = systemGameManager.UIManager;
             messageFeedManager = uIManager.MessageFeedManager;

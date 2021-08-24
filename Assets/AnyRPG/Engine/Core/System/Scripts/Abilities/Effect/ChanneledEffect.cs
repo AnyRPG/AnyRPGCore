@@ -11,6 +11,14 @@ namespace AnyRPG {
         // the amount of time to delay damage after spawning the prefab
         public float effectDelay = 0f;
 
+        // game manager references
+        protected PlayerManager playerManager = null;
+
+        public override void SetGameManagerReferences() {
+            base.SetGameManagerReferences();
+            playerManager = systemGameManager.PlayerManager;
+        }
+
         public override Dictionary<PrefabProfile, GameObject> Cast(IAbilityCaster source, Interactable target, Interactable originalTarget, AbilityEffectContext abilityEffectContext) {
             //Debug.Log(MyName + "ChanneledEffect.Cast(" + source + ", " + (target == null ? "null" : target.name) + ")");
             if (target == null) {
@@ -34,7 +42,7 @@ namespace AnyRPG {
                     GameObject prefabParent = returnObjects[prefabProfile].transform.parent.gameObject;
                     Vector3 sourcePosition = returnObjects[prefabProfile].transform.localPosition;
 
-                    returnObjects[prefabProfile].transform.parent = SystemGameManager.Instance.PlayerManager.EffectPrefabParent.transform;
+                    returnObjects[prefabProfile].transform.parent = playerManager.EffectPrefabParent.transform;
                     IChanneledObject channeledObjectScript = returnObjects[prefabProfile].GetComponent<IChanneledObject>();
                     if (channeledObjectScript != null) {
                         /*
@@ -57,7 +65,7 @@ namespace AnyRPG {
                             endPosition = target.GetComponent<Collider>().bounds.center - target.transform.position;
                         }
                         
-                        channeledObjectScript.Setup(prefabParent, sourcePosition, usedTarget?.gameObject, endPosition);
+                        channeledObjectScript.Setup(prefabParent, sourcePosition, usedTarget?.gameObject, endPosition, systemGameManager);
                         //channeledObjectScript.MyStartObject = prefabParent;
                         //channeledObjectScript.MyStartPosition = source.AbilityManager.UnitGameObject.GetComponent<Collider>().bounds.center - source.MyCharacterUnit.transform.position;
                         //channeledObjectScript.MyStartPosition = prefabProfile.MyPosition;

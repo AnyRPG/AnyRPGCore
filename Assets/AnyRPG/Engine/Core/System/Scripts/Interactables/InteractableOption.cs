@@ -6,7 +6,7 @@ using UnityEngine;
 using UnityEngine.UI;
 
 namespace AnyRPG {
-    public abstract class InteractableOption : MonoBehaviour {
+    public abstract class InteractableOption : ConfiguredMonoBehaviour {
 
         protected InteractableOptionProps interactableOptionProps = null;
 
@@ -21,8 +21,9 @@ namespace AnyRPG {
             this.interactableOptionComponent = interactableOptionComponent;
         }
 
-        public virtual void SetupScriptableObjects() {
-            InteractableOptionProps.SetupScriptableObjects();
+        public virtual void SetupScriptableObjects(SystemGameManager systemGameManager) {
+            Configure(systemGameManager);
+            InteractableOptionProps.SetupScriptableObjects(systemGameManager);
         }
     }
 

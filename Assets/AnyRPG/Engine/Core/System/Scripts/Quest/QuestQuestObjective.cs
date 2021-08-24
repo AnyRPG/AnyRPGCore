@@ -24,22 +24,20 @@ namespace AnyRPG {
                 //Debug.Log("QuestQuestObjective.UpdateCompletionCount() : COMPLETEBEFORE = TRUE");
                 return;
             }
-            if (SystemGameManager.Instance != null) {
-                if (questObjective == null) {
-                    //Debug.Log("QuestQuestObjective.UpdateCompletionCount(): questObjective is null");
-                    return;
+            if (questObjective == null) {
+                //Debug.Log("QuestQuestObjective.UpdateCompletionCount(): questObjective is null");
+                return;
+            }
+            if (questObjective.GetStatus() == "completed") {
+                CurrentAmount++;
+                // i think that is supposed to be this instead to ask the quest that we are an objective for to check completion
+                quest.CheckCompletion(true, printMessages);
+                //questObjective.CheckCompletion(true, printMessages);
+                if (CurrentAmount <= MyAmount && !questObjective.IsAchievement && printMessages == true && CurrentAmount != 0) {
+                    messageFeedManager.WriteMessage(string.Format("{0}: {1}/{2}", questObjective.DisplayName, Mathf.Clamp(CurrentAmount, 0, MyAmount), MyAmount));
                 }
-                if (questObjective.GetStatus() == "completed") {
-                    CurrentAmount++;
-                    // i think that is supposed to be this instead to ask the quest that we are an objective for to check completion
-                    quest.CheckCompletion(true, printMessages);
-                    //questObjective.CheckCompletion(true, printMessages);
-                    if (CurrentAmount <= MyAmount && !questObjective.IsAchievement && printMessages == true && CurrentAmount != 0) {
-                        SystemGameManager.Instance.UIManager.MessageFeedManager.WriteMessage(string.Format("{0}: {1}/{2}", questObjective.DisplayName, Mathf.Clamp(CurrentAmount, 0, MyAmount), MyAmount));
-                    }
-                    if (completeBefore == false && IsComplete && !questObjective.IsAchievement && printMessages == true) {
-                        SystemGameManager.Instance.UIManager.MessageFeedManager.WriteMessage(string.Format("Complete {1}: Objective Complete", CurrentAmount, questObjective.DisplayName));
-                    }
+                if (completeBefore == false && IsComplete && !questObjective.IsAchievement && printMessages == true) {
+                    messageFeedManager.WriteMessage(string.Format("Complete {1}: Objective Complete", CurrentAmount, questObjective.DisplayName));
                 }
             }
             base.UpdateCompletionCount(printMessages);
@@ -48,26 +46,22 @@ namespace AnyRPG {
         public override void OnAcceptQuest(Quest quest, bool printMessages = true) {
             //Debug.Log("QuestQuestObjective.OnAcceptQuest(" + quest.MyName + ")");
             base.OnAcceptQuest(quest, printMessages);
-            // not needed anymore ?
-            //SystemGameManager.Instance.EventManager.OnQuestStatusUpdated += HandleQuestStatusUpdated;
             questObjective.OnQuestStatusUpdated += HandleQuestStatusUpdated;
             UpdateCompletionCount(printMessages);
         }
 
         public override void OnAbandonQuest() {
             base.OnAbandonQuest();
-            // not needed anymore ?
-            //SystemGameManager.Instance.EventManager.OnQuestStatusUpdated -= HandleQuestStatusUpdated;
             questObjective.OnQuestStatusUpdated -= HandleQuestStatusUpdated;
         }
 
 
-        public override void SetupScriptableObjects() {
+        public override void SetupScriptableObjects(SystemGameManager systemGameManager) {
             //Debug.Log("QuestQuestObjective.SetupScriptableObjects()");
-            base.SetupScriptableObjects();
+            base.SetupScriptableObjects(systemGameManager);
             questObjective = null;
             if (MyType != null && MyType != string.Empty) {
-                Quest tmpQuestObjective = SystemDataFactory.Instance.GetResource<Quest>(MyType);
+                Quest tmpQuestObjective = systemDataFactory.GetResource<Quest>(MyType);
                 if (tmpQuestObjective != null) {
                     questObjective = tmpQuestObjective;
                 } else {
@@ -78,9 +72,10 @@ namespace AnyRPG {
             }
         }
 
-        public void CleanupScriptableObjects () {
-
+        public override void SetGameManagerReferences() {
+            base.SetGameManagerReferences();
         }
+
     }
 
 
