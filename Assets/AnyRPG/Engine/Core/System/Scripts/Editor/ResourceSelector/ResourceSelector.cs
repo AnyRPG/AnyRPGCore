@@ -192,7 +192,7 @@ public class ResourceSelector : EditorWindow
             Label l = e as Label;
             l.text = listElements[i].ResourceName;
             // I would love to put the path in a tooltip but there is currently no way to get it from Resources
-            //l.tooltip = "Path: " + AssetDatabase.GetAssetPath(listElements[i]);
+            l.tooltip = "Type: " + listElements[i].GetType().Name;
         };
 
         // Provide the list view with an explict height for every row
