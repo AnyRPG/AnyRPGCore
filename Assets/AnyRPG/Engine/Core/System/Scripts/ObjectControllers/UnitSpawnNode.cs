@@ -140,6 +140,7 @@ namespace AnyRPG {
         }
 
         public override void Configure(SystemGameManager systemGameManager) {
+            //Debug.Log(gameObject.name + ".UnitSpawnNode.Configure()");
             base.Configure(systemGameManager);
 
             SetupScriptableObjects();

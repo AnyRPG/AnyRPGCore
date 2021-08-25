@@ -34,6 +34,7 @@ namespace AnyRPG {
         }
 
         public override InteractableOptionComponent GetInteractableOption(Interactable interactable, InteractableOption interactableOption = null) {
+            //Debug.Log("BehaviorProps.GetInteractableOption(" + interactable.gameObject.name + ") systemGameManager = " + (systemGameManager == null ? "null" : systemGameManager.gameObject.name));
             InteractableOptionComponent returnValue = new BehaviorComponent(interactable, this, systemGameManager);
             if (interactableOption != null) {
                 interactableOption.SetComponent(returnValue);

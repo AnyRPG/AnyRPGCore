@@ -591,6 +591,10 @@ namespace AnyRPG {
 
             capabilities.SetupScriptableObjects(systemDataFactory);
 
+            // controller configs
+            // patrolConfig doesn't need setup ?
+            behaviorConfig.SetupScriptableObjects(systemGameManager);
+
             // built-in interactables
             LootableCharacterProps.SetupScriptableObjects(systemGameManager);
             DialogProps.SetupScriptableObjects(systemGameManager);

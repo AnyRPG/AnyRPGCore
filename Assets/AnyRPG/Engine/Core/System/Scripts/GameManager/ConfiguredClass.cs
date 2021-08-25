@@ -14,7 +14,7 @@ namespace AnyRPG {
         }
 
         public virtual void SetGameManagerReferences() {
-            //Debug.Log("ConfiguredClass.SetGameManagerReferences()");
+            //Debug.Log("ConfiguredClass.SetGameManagerReferences() systemGameManager = " + (systemGameManager == null ? "null" : systemGameManager.gameObject.name));
             systemConfigurationManager = systemGameManager.SystemConfigurationManager;
         }
 

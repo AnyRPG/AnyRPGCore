@@ -55,6 +55,7 @@ namespace AnyRPG {
         }
 
         public virtual void SetupScriptableObjects(SystemGameManager systemGameManager) {
+            //Debug.Log("InteractableOptionProps.SetupScriptableObjects(" + (systemGameManager == null ? "null" : systemGameManager.gameObject.name) + ")");
             Configure(systemGameManager);
         }
 

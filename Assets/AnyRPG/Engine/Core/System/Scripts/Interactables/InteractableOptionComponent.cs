@@ -46,6 +46,7 @@ namespace AnyRPG {
         }
 
         public InteractableOptionComponent(Interactable interactable, InteractableOptionProps interactableOptionProps, SystemGameManager systemGameManager) {
+            //Debug.Log(interactable.gameObject.name + ".InteractableOptionComponent(" + interactable.gameObject.name + ", " + (systemGameManager == null ? "null" : systemGameManager.gameObject.name) + ")");
             this.interactable = interactable;
             this.interactableOptionProps = interactableOptionProps;
             Configure(systemGameManager);
@@ -54,6 +55,7 @@ namespace AnyRPG {
         }
 
         public override void SetGameManagerReferences() {
+            //Debug.Log(interactable.gameObject.name + ".InteractableOptionComponent.SetGameManagerReferences");
             base.SetGameManagerReferences();
             systemEventManager = systemGameManager.SystemEventManager;
             playerManager = systemGameManager.PlayerManager;
