@@ -229,8 +229,7 @@ namespace AnyRPG {
         }
 
         public void HoldObject(GameObject go, AbilityAttachmentNode attachmentNode, GameObject searchObject) {
-            //public void HoldObject(GameObject go, PrefabProfile holdableObject, GameObject searchObject) {
-            //Debug.Log(gameObject + ".CharacterEquipmentManager.HoldObject(" + go.name + ", " + holdableObjectName + ", " + searchObject.name + ")");
+            //Debug.Log(baseCharacter.gameObject.name + ".CharacterAbilityManager.HoldObject(" + go.name + ", " + searchObject.name + ")");
             if (attachmentNode == null || attachmentNode.HoldableObject == null || go == null || searchObject == null) {
                 //Debug.Log(gameObject + ".CharacterEquipmentManager.HoldObject(): MyHoldableObjectName is empty");
                 return;
@@ -252,13 +251,16 @@ namespace AnyRPG {
                     Debug.Log("CharacterAbilityManager.HoldObject(): Unable to find target bone : " + attachmentPointNode.TargetBone);
                 }
             } else {
+                // this code appears to have been copied from equipmentmanager (now in mecanimModelController) so the below line is false ?
                 // disabled message because some equipment (like quivers) does not have held attachment points intentionally because it should stay in the same place in combat
-                //Debug.Log(gameObject + ".CharacterEquipmentManager.HoldObject(): Unable to get attachment point " + attachmentNode.UnsheathedAttachmentName);
+                //Debug.Log(baseCharacter.gameObject + ".CharacterEquipmentManager.HoldObject(): Unable to get attachment point");
+                // testing because this is ability manager, if no attachment point node or target bone was found, set rotation to match parent
+                go.transform.rotation = searchObject.transform.rotation;
             }
         }
 
         public void SpawnAbilityObjects(List<AbilityAttachmentNode> abilityAttachmentNodes) {
-            //Debug.Log(gameObject.name + ".CharacterEquipmentManager.SpawnAbilityObjects()");
+            //Debug.Log(baseCharacter.gameObject.name + ".CharacterAbilityManager.SpawnAbilityObjects()");
 
             // ensure that any current ability objects are cleared before spawning new ones
             DespawnAbilityObjects();
@@ -275,7 +277,7 @@ namespace AnyRPG {
                             Transform targetBone = baseCharacter.UnitController.transform.FindChildByRecursive(attachmentPointNode.TargetBone);
 
                             if (targetBone != null) {
-                                //Debug.Log("EquipmentManager.HandleWeaponSlot(): " + newItem.name + " has a physical prefab. targetbone is not null: equipSlot: " + newItem.equipSlot);
+                                //Debug.Log("CharacterAbilityManager.SpawnAbilityObjects(): targetbone (" + attachmentPointNode.TargetBone + ") is " + targetBone.gameObject.name);
                                 GameObject newEquipmentPrefab = objectPooler.GetPooledObject(abilityAttachmentNode.HoldableObject.Prefab, targetBone);
                                 //holdableObjects.Add(attachmentNode.MyHoldableObject, newEquipmentPrefab);
                                 holdableObjects.Add(abilityAttachmentNode, newEquipmentPrefab);

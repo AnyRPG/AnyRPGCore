@@ -38,13 +38,13 @@ namespace AnyRPG {
         //public UnitAudioEmitter UnitAudioEmitter { get => unitAudioEmitter; set => unitAudioEmitter = value; }
 
         public override void Configure(SystemGameManager systemGameManager) {
+
             base.Configure(systemGameManager);
             interactableRange.Configure(systemGameManager);
-            highlightController.Configure(systemGameManager);
-        }
+            if (highlightController != null) {
+                highlightController.Configure(systemGameManager);
+            }
 
-        private void OnEnable() {
-            //Debug.Log("UnitComponentController.OnEnable()");
             if (unitAudioEmitter == null) {
                 unitAudioEmitter = GetComponentInChildren<UnitAudioEmitter>();
                 Debug.Log(gameObject.name + "UnitAudioController.OnEnable(): UnitAudioEmitter was not set.  Searching children.");

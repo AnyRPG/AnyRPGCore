@@ -12,18 +12,19 @@ namespace AnyRPG {
         // game manager references
         private SystemPlayableDirectorManager systemPlayableDirectorManager = null;
 
-        public override void SetGameManagerReferences() {
-            base.SetGameManagerReferences();
-            systemPlayableDirectorManager = systemGameManager.SystemPlayableDirectorManager;
-        }
+        public override void Configure(SystemGameManager systemGameManager) {
+            base.Configure(systemGameManager);
 
-        private void Awake() {
-            //Debug.Log("SystemGameManager.Awake()");
             playableDirector = GetComponent<PlayableDirector>();
             if (playableDirector != null) {
                 //Debug.Log("SystemGameManager.Awake(): playableDirector.playableAsset.name: " + playableDirector.playableAsset.name);
                 systemPlayableDirectorManager.PlayableDirectorDictionary[playableDirector.playableAsset.name] = playableDirector;
             }
+        }
+
+        public override void SetGameManagerReferences() {
+            base.SetGameManagerReferences();
+            systemPlayableDirectorManager = systemGameManager.SystemPlayableDirectorManager;
         }
 
 
