@@ -62,6 +62,7 @@ namespace AnyRPG {
                     //Debug.Log(MyName + ".LengthEffect.CancelEffect(" + targetCharacter.MyName + "): Destroy: " + go.name);
                     objectPooler.ReturnObjectToPool(go, StatusEffect.PrefabDestroyDelay);
                 }
+                prefabObjects.Clear();
             }
         }
 
