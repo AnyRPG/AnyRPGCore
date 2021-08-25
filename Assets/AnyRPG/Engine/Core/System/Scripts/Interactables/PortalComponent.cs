@@ -27,8 +27,15 @@ namespace AnyRPG {
             //Debug.Log(gameObject.name + ".PortalInteractable.Interact(): about to close interaction window");
             uIManager.interactionWindow.CloseWindow();
             //Debug.Log(gameObject.name + ".PortalInteractable.Interact(): window should now be closed!!!!!!!!!!!!!!!!!");
-            if (Props.LocationTag != null && Props.LocationTag != string.Empty) {
-                levelManager.OverrideSpawnLocationTag = Props.LocationTag;
+            if (Props.OverrideSpawnDirection == true) {
+                levelManager.SetSpawnRotationOverride(Props.SpawnForwardDirection);
+            }
+            if (Props.OverrideSpawnLocation == true) {
+                levelManager.SetSpawnLocationOverride(Props.SpawnLocation);
+            } else {
+                if (Props.LocationTag != null && Props.LocationTag != string.Empty) {
+                    levelManager.OverrideSpawnLocationTag = Props.LocationTag;
+                }
             }
             return true;
         }

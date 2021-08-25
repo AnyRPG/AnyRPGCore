@@ -17,6 +17,7 @@ namespace AnyRPG {
         [SerializeField]
         private string sceneName = string.Empty;
 
+
         public string SceneName { get => sceneName; set => sceneName = value; }
 
         public override InteractableOptionComponent GetInteractableOption(Interactable interactable, InteractableOption interactableOption = null) {
