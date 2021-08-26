@@ -19,6 +19,7 @@ MonoBehaviour:
   description: 
   useRegionalDescription: 0
   resourceDescriptionProfile: Main Hand Slot
+  mainWeaponSlot: 1
   statWeight: 2
   equipmentSlotTypeList:
   - Two Hand
