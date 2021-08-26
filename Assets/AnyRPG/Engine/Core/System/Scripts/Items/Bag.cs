@@ -51,6 +51,11 @@ namespace AnyRPG {
             if (returnValue == false) {
                 return false;
             }
+            AddToInventoryManager();
+            return true;
+        }
+
+        public void AddToInventoryManager() {
             bool addToBank = false;
             if (MyBagNode != null) {
                 addToBank = MyBagNode.IsBankNode;
@@ -68,7 +73,7 @@ namespace AnyRPG {
             } else {
                 //Debug.Log("Bag.Use(): we can not add the bag!!!");
             }
-            return true;
+
         }
 
         public override string GetSummary(ItemQuality usedItemQuality) {

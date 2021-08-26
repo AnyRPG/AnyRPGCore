@@ -202,7 +202,7 @@ namespace AnyRPG {
                     return;
                 }
                 if (systemConfigurationManager.EquipDefaultBackPack) {
-                    bag.Use();
+                    bag.AddToInventoryManager();
                 } else {
                     AddItem(bag, true);
                 }
