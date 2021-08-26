@@ -63,17 +63,15 @@ namespace AnyRPG {
 
         [Header("Damage")]
 
-        [Tooltip("Automatic damage per second is based on the item level and item quality")]
+        [Tooltip("Automatic damage per second is added, based on the item level, item quality, and Weapon DPS Per Second setting the Game Manager")]
+        [FormerlySerializedAs("useDamagePerSecond")]
         [SerializeField]
-        protected bool useDamagePerSecond = true;
+        protected bool addScaledDamagePerSecond = true;
 
-        [Tooltip("If true, manually specify the damage per second independent of item level and item quallity")]
+        [Tooltip("Base Damage Per Second, unscaled")]
+        [FormerlySerializedAs("damagePerSecond")]
         [SerializeField]
-        protected bool useManualDamagePerSecond = false;
-
-        [Tooltip("This value is used if manual damage per second is enabled")]
-        [SerializeField]
-        protected float damagePerSecond = 0f;
+        protected float baseDamagePerSecond = 0f;
 
         public AnimationProfile AnimationProfile {
             get {
@@ -111,8 +109,7 @@ namespace AnyRPG {
         */
 
         public WeaponSkill WeaponSkill { get => weaponSkill; set => weaponSkill = value; }
-        public bool UseManualDamagePerSecond { get => useManualDamagePerSecond; set => useManualDamagePerSecond = value; }
-        public bool UseDamagePerSecond { get => useDamagePerSecond; set => useDamagePerSecond = value; }
+        public bool AddScaledDamagePerSecond { get => addScaledDamagePerSecond; set => addScaledDamagePerSecond = value; }
         public List<AbilityEffect> DefaultHitEffectList {
             get {
                 if (defaultHitEffectList != null && defaultHitEffectList.Count > 0) {
@@ -149,24 +146,22 @@ namespace AnyRPG {
         }
 
         public float GetDamagePerSecond(int characterLevel, ItemQuality usedItemQuality) {
-            if (!UseDamagePerSecond) {
-                return 0f;
+
+            if (addScaledDamagePerSecond) {
+                return baseDamagePerSecond + Mathf.Ceil(Mathf.Clamp(
+                    (float)GetItemLevel(characterLevel) * (systemConfigurationManager.WeaponDPSBudgetPerLevel * GetItemQualityNumber(usedItemQuality) * EquipmentSlotType.MyStatWeight),
+                    0f,
+                    Mathf.Infinity
+                    ));
             }
-            if (useManualDamagePerSecond) {
-                return damagePerSecond;
-            }
-            return Mathf.Ceil(Mathf.Clamp(
-                (float)GetItemLevel(characterLevel) * (systemConfigurationManager.WeaponDPSBudgetPerLevel * GetItemQualityNumber(usedItemQuality) * EquipmentSlotType.MyStatWeight),
-                0f,
-                Mathf.Infinity
-                ));
+            return baseDamagePerSecond;
         }
 
         public override string GetSummary(ItemQuality usedItemQuality) {
 
             List<string> abilitiesList = new List<string>();
 
-            if (useDamagePerSecond) {
+            if (addScaledDamagePerSecond) {
                 abilitiesList.Add(string.Format("Damage Per Second: {0}", GetDamagePerSecond(playerManager.MyCharacter.CharacterStats.Level, usedItemQuality)));
             }
             if (onHitEffectList != null) {
