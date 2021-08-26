@@ -523,12 +523,21 @@ namespace AnyRPG {
             }
             EnableAgent();
 
-            // ensure player cannot physically push AI units around
-            // first set collision mode to avoid unity errors about dynamic detection not supported for kinematic rigidbodies
-            rigidBody.useGravity = true;
-            rigidBody.collisionDetectionMode = CollisionDetectionMode.ContinuousSpeculative;
-            rigidBody.isKinematic = true;
-            rigidBody.constraints = RigidbodyConstraints.FreezeRotation;
+            if (unitProfile != null && unitProfile.IsMobile == true) {
+                // ensure player cannot physically push AI units around
+                // first set collision mode to avoid unity errors about dynamic detection not supported for kinematic rigidbodies
+                rigidBody.collisionDetectionMode = CollisionDetectionMode.ContinuousSpeculative;
+                rigidBody.isKinematic = true;
+                rigidBody.useGravity = true;
+                rigidBody.constraints = RigidbodyConstraints.FreezeRotation;
+            } else if (unitProfile != null && unitProfile.IsMobile == false) {
+                rigidBody.collisionDetectionMode = CollisionDetectionMode.ContinuousSpeculative;
+                rigidBody.interpolation = RigidbodyInterpolation.None;
+                //rigidBody.detectCollisions = false;
+                rigidBody.isKinematic = true;
+                rigidBody.useGravity = false;
+                rigidBody.constraints = RigidbodyConstraints.FreezeAll;
+            }
 
             // ensure player is not physically blocked or pushed around by AI units
             myCollider.isTrigger = true;
@@ -840,7 +849,7 @@ namespace AnyRPG {
         }
 
         private void SetStartPosition() {
-            //Debug.Log(gameObject.name + ".UnitController.SetStartPosition()");
+            //Debug.Log(gameObject.name + ".UnitController.SetStartPosition(): " + transform.position);
             // pets have their start position set by master
             if (unitControllerMode != UnitControllerMode.Pet) {
                 Vector3 correctedPosition = transform.position;
@@ -952,6 +961,7 @@ namespace AnyRPG {
             }
             UpdateApparentVelocity();
             if (ApparentVelocity > 0.1f) {
+                //Debug.Log(gameObject.name + ".UnitController.Update() : position: " + transform.position + "; apparentVelocity: " + apparentVelocity);
                 characterUnit?.BaseCharacter?.CharacterAbilityManager?.HandleManualMovement();
             }
             HandleMovementAudio();
@@ -1779,7 +1789,7 @@ namespace AnyRPG {
         }
 
         public void BeginAbility(string abilityName) {
-            //Debug.Log(gameObject.name + ".UnitController.BeginAbility()");
+            //Debug.Log(gameObject.name + ".UnitController.BeginAbility(" + abilityName + ")");
             characterUnit.BaseCharacter.AbilityManager.BeginAbility(abilityName);
         }
 

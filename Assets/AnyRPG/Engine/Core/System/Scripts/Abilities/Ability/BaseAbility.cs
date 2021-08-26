@@ -516,7 +516,7 @@ namespace AnyRPG {
         }
 
         public virtual void PerformChanneledEffect(IAbilityCaster source, Interactable target, AbilityEffectContext abilityEffectContext) {
-            //Debug.Log("BaseAbility.PerformChanneledEffect(" + MyName + ", " + (source == null ? "null" : source.name) + ", " + (target == null ? "null" : target.name) + ")");
+            //Debug.Log("BaseAbility.PerformChanneledEffect(" + DisplayName + ", " + (source == null ? "null" : source.AbilityManager.Name) + ", " + (target == null ? "null" : target.name) + ")");
             foreach (AbilityEffect abilityEffect in channeledAbilityEffects) {
 
                 // channeled effects need to override the object lifetime so they get destroyed at the tickrate
@@ -709,7 +709,7 @@ namespace AnyRPG {
         }
 
         public virtual float OnCastTimeChanged(float currentCastPercent, float nextTickPercent, IAbilityCaster source, Interactable target, AbilityEffectContext abilityEffectContext) {
-            //Debug.Log("BaseAbility.OnCastTimeChanged()");
+            //Debug.Log(DisplayName + ".BaseAbility.OnCastTimeChanged(" + currentCastPercent + ", " + nextTickPercent + ")");
             // overwrite me
             if (currentCastPercent >= nextTickPercent) {
                 PerformChanneledEffect(source, target, abilityEffectContext);

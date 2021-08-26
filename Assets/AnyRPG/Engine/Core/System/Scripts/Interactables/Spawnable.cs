@@ -67,6 +67,7 @@ namespace AnyRPG {
         }
 
         public override void Configure(SystemGameManager systemGameManager) {
+            //Debug.Log(gameObject.name + ".Spawnable.Configure()");
             base.Configure(systemGameManager);
 
             GetComponentReferences();

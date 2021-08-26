@@ -244,7 +244,7 @@ namespace AnyRPG {
         }
 
         public virtual void CleanupCoroutines() {
-            //Debug.Log(gameObject.name + ".CharacterAbilitymanager.CleanupCoroutines()");
+            //Debug.Log(abilityCaster.gameObject.name + ".Abilitymanager.CleanupCoroutines()");
             if (currentCastCoroutine != null) {
                 abilityCaster.StopCoroutine(currentCastCoroutine);
                 EndCastCleanup();

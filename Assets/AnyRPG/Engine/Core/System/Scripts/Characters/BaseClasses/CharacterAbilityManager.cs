@@ -637,7 +637,7 @@ namespace AnyRPG {
         }
 
         public override void CleanupCoroutines() {
-            //Debug.Log(gameObject.name + ".CharacterAbilitymanager.CleanupCoroutines()");
+            //Debug.Log(baseCharacter.gameObject.name + ".CharacterAbilitymanager.CleanupCoroutines()");
             base.CleanupCoroutines();
             if (currentCastCoroutine != null) {
                 abilityCaster.StopCoroutine(currentCastCoroutine);
@@ -1081,11 +1081,11 @@ namespace AnyRPG {
                 //Debug.Log("CharacterAbilitymanager.PerformAbilityCast() Ability requires a ground target.");
                 ActivateTargettingMode(ability, target);
                 while (WaitingForTarget() == true) {
-                    //Debug.Log("CharacterAbilitymanager.PerformAbilityCast() waiting for target");
+                    //Debug.Log("CharacterAbilitymanager.PerformAbilityCast(" + ability.DisplayName + ") waiting for target");
                     yield return null;
                 }
                 if (GetGroundTarget() == Vector3.zero) {
-                    //Debug.Log("Ground Targetting: groundtarget is vector3.zero, cannot cast");
+                    //Debug.Log("CharacterAbilitymanager.PerformAbilityCast(" + ability.DisplayName + ") Ground Targetting: groundtarget is vector3.zero, cannot cast");
                     canCast = false;
                 }
                 abilityEffectContext.groundTargetLocation = GetGroundTarget();
@@ -1093,17 +1093,17 @@ namespace AnyRPG {
             if (canCast == true) {
                 // dismount if mounted
 
-                //Debug.Log("Ground Targetting: cancast is true");
+                //Debug.Log(baseCharacter.gameObject.name + ".CharacterAbilitymanager.PerformAbilityCast(" + ability.DisplayName + "): cancast is true");
                 if (!ability.CanSimultaneousCast) {
                     //Debug.Log("CharacterAbilitymanager.PerformAbilityCast() ability: " + ability.MyName + " can simultaneous cast is false, setting casting to true");
                     ability.StartCasting(baseCharacter);
                 }
                 float currentCastPercent = 0f;
                 float nextTickPercent = 0f;
-                //Debug.Log(gameObject.name + ".CharacterAbilitymanager.PerformAbilityCast() currentCastTime: " + currentCastTime + "; MyAbilityCastingTime: " + ability.MyAbilityCastingTime);
+                //Debug.Log(baseCharacter.gameObject.name + ".CharacterAbilitymanager.PerformAbilityCast() currentCastPercent: " + currentCastPercent + "; MyAbilityCastingTime: " + ability.MyAbilityCastingTime);
 
                 if (baseCharacter != null && ability.GetHoldableObjectList(baseCharacter).Count != 0) {
-                    //Debug.Log(gameObject.name + ".CharacterAbilityManager.PerformAbilityCast(" + ability.MyName + "): spawning ability objects");
+                    //Debug.Log(baseCharacter.gameObject.name + ".CharacterAbilityManager.PerformAbilityCast(" + ability.DisplayName + "): spawning ability objects");
                     if (!ability.AnimatorCreatePrefabs) {
                         SpawnAbilityObjects(ability.GetHoldableObjectList(baseCharacter));
                     }
@@ -1120,6 +1120,8 @@ namespace AnyRPG {
                     while (currentCastPercent < 1f
                         && (ability.GetTargetOptions(baseCharacter).RequireTarget == false
                         || (target != null && target.gameObject.activeInHierarchy == true))) {
+                        //Debug.Log(baseCharacter.gameObject.name + ".CharacterAbilitymanager.PerformAbilityCast(" + ability.DisplayName + "): currentCastPercent: " + currentCastPercent);
+
                         yield return null;
                         currentCastPercent += (Time.deltaTime / ability.GetAbilityCastingTime(baseCharacter));
 
@@ -1137,7 +1139,7 @@ namespace AnyRPG {
 
             }
 
-            //Debug.Log(gameObject + ".CharacterAbilityManager.PerformAbilityCast(). nulling tag: " + startTime);
+            //Debug.Log(baseCharacter.gameObject.name + ".CharacterAbilityManager.PerformAbilityCast(" + ability.DisplayName + "). nulling tag: " + startTime);
             // set currentCast to null because it isn't automatically null until the next frame and we are about to do stuff which requires it to be null immediately
             EndCastCleanup();
 
@@ -1403,7 +1405,7 @@ namespace AnyRPG {
 
             // get final target before beginning casting
             Interactable finalTarget = usedAbility.ReturnTarget(baseCharacter, target, true, abilityEffectContext, playerInitiated);
-            //Debug.Log(baseCharacter.gameObject.name + ".CharacterAbilityManager.BeginAbilityCommon() finalTarget: " + (finalTarget == null ? "null" : finalTarget.DisplayName));
+            //Debug.Log(baseCharacter.gameObject.name + ".CharacterAbilityManager.BeginAbilityCommon(" + ability.DisplayName + ") finalTarget: " + (finalTarget == null ? "null" : finalTarget.DisplayName));
 
             OnAttemptPerformAbility(ability);
 
@@ -1429,7 +1431,7 @@ namespace AnyRPG {
                 // there is no ground target yet because that is handled in performabilitycast below
                 PerformAbility(usedAbility, finalTarget, abilityEffectContext);
             } else {
-                //Debug.Log(gameObject.name + ".CharacterAbilityManager.BeginAbilityCommon(): can't simultanous cast");
+                //Debug.Log(baseCharacter.gameObject.name + ".CharacterAbilityManager.BeginAbilityCommon(): can't simultanous cast");
                 if (currentCastCoroutine == null) {
                     //Debug.Log("Performing Ability " + ability.MyName + " at a cost of " + ability.MyAbilityManaCost.ToString() + ": ABOUT TO START COROUTINE");
 
@@ -1632,7 +1634,10 @@ namespace AnyRPG {
             // adding new code to require some movement distance to prevent gravity while standing still from triggering this
             if (BaseCharacter.UnitController.ApparentVelocity > 0.1f) {
                 //Debug.Log("CharacterAbilityManager.HandleManualMovement(): stop casting");
-                if (currentCastAbility != null && currentCastAbility.GetTargetOptions(baseCharacter).RequiresGroundTarget == true && castTargettingManager.ProjectorIsActive() == true) {
+                if (currentCastAbility != null
+                    && (currentCastAbility.CanCastWhileMoving == true || 
+                    currentCastAbility.GetTargetOptions(baseCharacter).RequiresGroundTarget == true
+                    && castTargettingManager.ProjectorIsActive() == true)) {
                     // do nothing
                     //Debug.Log("CharacterAbilityManager.HandleManualMovement(): not cancelling casting because we have a ground target active");
                 } else {
@@ -1651,7 +1656,7 @@ namespace AnyRPG {
             if (stopCast == true && currentCastCoroutine != null) {
                 // REMOVED ISCASTING == TRUE BECAUSE IT WAS PREVENTING THE CRAFTING QUEUE FROM WORKING.  TECHNICALLY THIS GOT CALLED RIGHT AFTER ISCASTING WAS SET TO FALSE, BUT BEFORE CURRENTCAST WAS NULLED
                 //if (currentCast != null && isCasting == true) {
-                //Debug.Log(gameObject.name + ".CharacterAbilityManager.StopCasting(): currentCast is not null, stopping coroutine");
+                //Debug.Log(baseCharacter.gameObject.name + ".CharacterAbilityManager.StopCasting(): currentCast is not null, stopping coroutine");
                 abilityCaster.StopCoroutine(currentCastCoroutine);
                 EndCastCleanup();
                 stoppedCast = true;
