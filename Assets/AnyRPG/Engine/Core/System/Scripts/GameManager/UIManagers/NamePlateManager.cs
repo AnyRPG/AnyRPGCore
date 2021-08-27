@@ -107,7 +107,7 @@ namespace AnyRPG {
                 return SpawnNamePlate(interactable, usePositionOffset);
             }
             //Debug.Log("NamePlateManager.AddNamePlate(" + interactable.gameObject.name + "): key already existed.  returning null!!!");
-            return null;
+            return namePlates[interactable];
         }
 
         public void RemoveNamePlate(NamePlateUnit namePlateUnit) {

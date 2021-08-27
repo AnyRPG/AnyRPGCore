@@ -1318,6 +1318,7 @@ namespace AnyRPG {
         }
 
         public void UpdateApparentVelocity() {
+            //Debug.Log(gameObject.name + "UpdateApparentVelocity()");
             // yes this is being called in update, not fixedupdate, but it's only checked when we are standing still trying to cast, so framerates shouldn't be an issue
             apparentVelocity = Vector3.Distance(transform.position, lastPosition) * (1 / Time.deltaTime);
             lastPosition = transform.position;

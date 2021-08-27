@@ -411,7 +411,7 @@ namespace AnyRPG {
         }
 
         public void RotateTowardsTarget(Vector3 targetPosition, float rotationSpeed) {
-            //Debug.Log("RotateTowardsMovementTarget()");
+            //Debug.Log("UnitMotor.RotateTowardsTarget(" + targetPosition + ", " + rotationSpeed + ")");
             if (frozen) {
                 return;
             }

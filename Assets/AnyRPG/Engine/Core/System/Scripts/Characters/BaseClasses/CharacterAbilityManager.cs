@@ -1630,10 +1630,10 @@ namespace AnyRPG {
         /// Stop casting if the character is manually moved with the movement keys
         /// </summary>
         public void HandleManualMovement() {
-            //Debug.Log(gameObject.name + ".CharacterAbilityManager.HandleManualMovement(): Received On Manual Movement Handler");
+            //Debug.Log(baseCharacter.gameObject.name + ".CharacterAbilityManager.HandleManualMovement()");
             // adding new code to require some movement distance to prevent gravity while standing still from triggering this
-            if (BaseCharacter.UnitController.ApparentVelocity > 0.1f) {
-                //Debug.Log("CharacterAbilityManager.HandleManualMovement(): stop casting");
+            if (baseCharacter.UnitController.ApparentVelocity > 0.1f) {
+                //Debug.Log(baseCharacter.gameObject.name + ".CharacterAbilityManager.HandleManualMovement(): apparent velocity > 0.1f : " + baseCharacter.UnitController.ApparentVelocity);
                 if (currentCastAbility != null
                     && (currentCastAbility.CanCastWhileMoving == true || 
                     currentCastAbility.GetTargetOptions(baseCharacter).RequiresGroundTarget == true

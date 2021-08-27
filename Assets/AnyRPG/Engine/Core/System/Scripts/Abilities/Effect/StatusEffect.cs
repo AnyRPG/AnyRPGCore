@@ -265,6 +265,7 @@ namespace AnyRPG {
                     _statusEffectNode.PrefabObjects = returnObjects;
                 }
                 PerformAbilityHit(source, target, abilityEffectContext);
+
             }
             return returnObjects;
         }

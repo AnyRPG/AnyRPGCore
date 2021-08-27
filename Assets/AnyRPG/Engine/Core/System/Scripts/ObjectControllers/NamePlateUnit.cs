@@ -204,6 +204,19 @@ namespace AnyRPG {
             RemoveNamePlate();
         }
 
+        public void OnDisable() {
+            // characters can get disabled by cutscenes, so need to remove nameplate
+            RemoveNamePlate();
+        }
+
+        // this method needs to exist to allow timeline controlled units to add a nameplate when enabled
+        public void OnEnable() {
+            // characters can get disabled by cutscenes, so need to initialize nameplate on re-enable
+            if (startHasRun && namePlateController != null) {
+                namePlateController.InitializeNamePlate();
+            }
+        }
+
 
     }
 

@@ -95,11 +95,12 @@ namespace AnyRPG {
             if (IsAutoAttack == true) {
                 //Debug.Log("ActionButton.UpdateVisual(): updating auto-attack ability");
                 foreach (EquipmentSlotProfile equipmentSlotProfile in playerManager.MyCharacter.CharacterEquipmentManager.CurrentEquipment.Keys) {
+                    //Debug.Log("ActionButton.UpdateVisual(): updating auto-attack ability");
                     if (equipmentSlotProfile.MainWeaponSlot == true
                         && playerManager.MyCharacter.CharacterEquipmentManager.CurrentEquipment[equipmentSlotProfile] != null
                         && playerManager.MyCharacter.CharacterEquipmentManager.CurrentEquipment[equipmentSlotProfile] is Weapon) {
-                        if (actionButton.MyIcon.sprite != equipmentSlotProfile.Icon) {
-                            actionButton.MyIcon.sprite = equipmentSlotProfile.Icon;
+                        if (actionButton.MyIcon.sprite != playerManager.MyCharacter.CharacterEquipmentManager.CurrentEquipment[equipmentSlotProfile].Icon) {
+                            actionButton.MyIcon.sprite = playerManager.MyCharacter.CharacterEquipmentManager.CurrentEquipment[equipmentSlotProfile].Icon;
                             break;
                         }
                     }

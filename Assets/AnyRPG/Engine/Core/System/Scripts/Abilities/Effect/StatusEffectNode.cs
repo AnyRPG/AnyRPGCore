@@ -59,7 +59,7 @@ namespace AnyRPG {
             //Debug.Log("StatusEffectNode.ClearEffectPrefabs(): " + StatusEffect.DisplayName);
             if (prefabObjects != null) {
                 foreach (GameObject go in prefabObjects.Values) {
-                    //Debug.Log(MyName + ".LengthEffect.CancelEffect(" + targetCharacter.MyName + "): Destroy: " + go.name);
+                    //Debug.Log("StatusEffectNode.ClearEffectPrefabs() statusEffect: " + statusEffect.DisplayName + "; Destroy: " + go.name);
                     objectPooler.ReturnObjectToPool(go, StatusEffect.PrefabDestroyDelay);
                 }
                 prefabObjects.Clear();
