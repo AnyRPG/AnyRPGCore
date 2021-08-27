@@ -18,11 +18,11 @@ namespace AnyRPG {
 
         [Tooltip("Achievements are automatically tracked and automatically completed by the system without being in the player quest log")]
         [SerializeField]
-        private bool isAchievement = false;
+        protected bool isAchievement = false;
 
         [Tooltip("If true, this quest can this quest be completed more than once")]
         [SerializeField]
-        private bool repeatableQuest = false;
+        protected bool repeatableQuest = false;
 
         // a dialog that is not a requirement to interact with the questgiver or see the quest, but must be completed to start it
         //[SerializeField]
@@ -31,139 +31,139 @@ namespace AnyRPG {
         // replaces the above setting to avoid issues with scriptableObjects
         [Tooltip("If true a dialog with the same name as the quest will be used (if found) and will be required to be completed before the quest can be accepted")]
         [SerializeField]
-        private bool hasOpeningDialog;
+        protected bool hasOpeningDialog;
 
-        private Dialog openingDialog;
+        protected Dialog openingDialog;
 
         [Header("Quest Level")]
 
         [Tooltip("The level that is considered appropriate for the quest.  Used to calculate xp reduction")]
         [SerializeField]
-        private int experienceLevel = 1;
+        protected int experienceLevel = 1;
 
         [Tooltip("If true, this quest is always the same level as the player")]
         [SerializeField]
-        private bool dynamicLevel = true;
+        protected bool dynamicLevel = true;
 
         [Tooltip("If dynamic level is true, this amount of extra levels will be added to the quest")]
         [SerializeField]
-        private int extraLevels = 0;
+        protected int extraLevels = 0;
 
         [Header("Experience Reward")]
 
         [Tooltip("The base experience for the quest, not scaled by level, and in addition to any automatic quest xp configured at the game level")]
         [SerializeField]
-        private int baseExperienceReward = 0;
+        protected int baseExperienceReward = 0;
 
         [Tooltip("The experience for the quest, scaled by level, and in addition to any automatic quest xp configured at the game level")]
         [SerializeField]
-        private int experienceRewardPerLevel = 0;
+        protected int experienceRewardPerLevel = 0;
 
         [Header("Currency Reward")]
 
         [Tooltip("If true, the quest will reward currency based on the system quest currency reward settings")]
         [SerializeField]
-        private bool automaticCurrencyReward = false;
+        protected bool automaticCurrencyReward = false;
 
         [Tooltip("If automatic currency is enabled for a quest, this currency will be rewarded")]
         [SerializeField]
         [ResourceSelector(resourceType = typeof(Currency))]
-        private string rewardCurrencyName = string.Empty;
+        protected string rewardCurrencyName = string.Empty;
 
-        private Currency rewardCurrency;
+        protected Currency rewardCurrency;
 
         [Tooltip("The base currency reward for the quest, not scaled by level, and in addition to any automatic quest reward configured at the game level")]
         [SerializeField]
-        private int baseCurrencyReward = 0;
+        protected int baseCurrencyReward = 0;
 
         [Tooltip("The currency for the quest, scaled by level, and in addition to any automatic quest currency configured at the game level")]
         [SerializeField]
-        private int currencyRewardPerLevel = 0;
+        protected int currencyRewardPerLevel = 0;
 
         [Header("Item Rewards")]
 
         [Tooltip("The maximum number of item rewards that can be chosen if there are more than 1 reward")]
         [SerializeField]
-        private int maxItemRewards = 0;
+        protected int maxItemRewards = 0;
 
         [SerializeField]
         [ResourceSelector(resourceType = typeof(Item))]
-        private List<string> itemRewardNames = new List<string>();
+        protected List<string> itemRewardNames = new List<string>();
 
-        private List<Item> itemRewardList = new List<Item>();
+        protected List<Item> itemRewardList = new List<Item>();
 
         [Header("Faction Rewards")]
 
         [SerializeField]
-        private int maxFactionRewards = 0;
+        protected int maxFactionRewards = 0;
 
         [SerializeField]
-        private List<FactionNode> factionRewards = new List<FactionNode>();
+        protected List<FactionNode> factionRewards = new List<FactionNode>();
 
         [Header("Ability Rewards")]
 
         [SerializeField]
-        private int maxAbilityRewards = 0;
+        protected int maxAbilityRewards = 0;
 
         [SerializeField]
         [ResourceSelector(resourceType = typeof(BaseAbility))]
-        private List<string> abilityRewardNames = new List<string>();
+        protected List<string> abilityRewardNames = new List<string>();
 
-        private List<BaseAbility> abilityRewardList = new List<BaseAbility>();
+        protected List<BaseAbility> abilityRewardList = new List<BaseAbility>();
 
         [Header("Skill Rewards")]
 
         [SerializeField]
-        private int maxSkillRewards = 0;
+        protected int maxSkillRewards = 0;
 
         [SerializeField]
         [ResourceSelector(resourceType = typeof(Skill))]
-        private List<string> skillRewardNames = new List<string>();
+        protected List<string> skillRewardNames = new List<string>();
 
-        private List<Skill> skillRewardList = new List<Skill>();
+        protected List<Skill> skillRewardList = new List<Skill>();
 
         [Header("Objectives")]
 
         [SerializeField]
-        private CollectObjective[] collectObjectives;
+        protected CollectObjective[] collectObjectives;
 
         [SerializeField]
-        private KillObjective[] killObjectives;
+        protected KillObjective[] killObjectives;
 
         [SerializeField]
-        private TradeSkillObjective[] tradeSkillObjectives;
+        protected TradeSkillObjective[] tradeSkillObjectives;
 
         [SerializeField]
-        private AbilityObjective[] abilityObjectives;
+        protected AbilityObjective[] abilityObjectives;
 
         [SerializeField]
-        private UseInteractableObjective[] useInteractableObjectives;
+        protected UseInteractableObjective[] useInteractableObjectives;
 
         [SerializeField]
-        private QuestQuestObjective[] questQuestObjectives;
+        protected QuestQuestObjective[] questQuestObjectives;
 
         [SerializeField]
-        private DialogObjective[] dialogObjectives;
+        protected DialogObjective[] dialogObjectives;
 
         [SerializeField]
-        private VisitZoneObjective[] visitZoneObjectives;
+        protected VisitZoneObjective[] visitZoneObjectives;
 
         [Header("Prerequisites")]
 
         [SerializeField]
-        private List<PrerequisiteConditions> prerequisiteConditions = new List<PrerequisiteConditions>();
+        protected List<PrerequisiteConditions> prerequisiteConditions = new List<PrerequisiteConditions>();
 
         [Header("Completion")]
 
         [Tooltip("Whether or not to give the items to the questgiver when you turn in a quest.  If false, you keep the items in your bag.")]
         [SerializeField]
-        private bool turnInItems;
+        protected bool turnInItems;
 
         [Tooltip("the player can complete the quest without having the quest in the questlog")]
         [SerializeField]
-        private bool allowRawComplete = false;
+        protected bool allowRawComplete = false;
 
-        private Quest questTemplate = null;
+        protected Quest questTemplate = null;
 
         // game manager references
         protected SaveManager saveManager = null;
@@ -171,15 +171,15 @@ namespace AnyRPG {
         protected MessageFeedManager messageFeedManager = null;
         protected QuestLog questLog = null;
 
-        public CollectObjective[] MyCollectObjectives { get => collectObjectives; set => collectObjectives = value; }
-        public KillObjective[] MyKillObjectives { get => killObjectives; set => killObjectives = value; }
-        public TradeSkillObjective[] MyTradeSkillObjectives { get => tradeSkillObjectives; set => tradeSkillObjectives = value; }
-        public AbilityObjective[] MyAbilityObjectives { get => abilityObjectives; set => abilityObjectives = value; }
-        public UseInteractableObjective[] MyUseInteractableObjectives { get => useInteractableObjectives; set => useInteractableObjectives = value; }
-        public QuestQuestObjective[] MyQuestQuestObjectives { get => questQuestObjectives; set => questQuestObjectives = value; }
-        public DialogObjective[] MyDialogObjectives { get => dialogObjectives; set => dialogObjectives = value; }
+        public virtual CollectObjective[] MyCollectObjectives { get => collectObjectives; set => collectObjectives = value; }
+        public virtual KillObjective[] MyKillObjectives { get => killObjectives; set => killObjectives = value; }
+        public virtual TradeSkillObjective[] MyTradeSkillObjectives { get => tradeSkillObjectives; set => tradeSkillObjectives = value; }
+        public virtual AbilityObjective[] MyAbilityObjectives { get => abilityObjectives; set => abilityObjectives = value; }
+        public virtual UseInteractableObjective[] MyUseInteractableObjectives { get => useInteractableObjectives; set => useInteractableObjectives = value; }
+        public virtual QuestQuestObjective[] MyQuestQuestObjectives { get => questQuestObjectives; set => questQuestObjectives = value; }
+        public virtual DialogObjective[] MyDialogObjectives { get => dialogObjectives; set => dialogObjectives = value; }
 
-        public bool IsComplete {
+        public virtual bool IsComplete {
             get {
                 //Debug.Log("Quest.IsComplete: " + MyTitle);
                 // disabled because if a quest is raw completable (not required to be in log), it shouldn't have objectives anyway since there is no way to track them
@@ -239,7 +239,7 @@ namespace AnyRPG {
             }
         }
 
-        public bool TurnedIn {
+        public virtual bool TurnedIn {
             get {
                 return saveManager.GetQuestSaveData(this).turnedIn;
                 //return false;
@@ -251,7 +251,7 @@ namespace AnyRPG {
             }
         }
 
-        public void SetTurnedIn(bool turnedIn, bool notify = true) {
+        public virtual void SetTurnedIn(bool turnedIn, bool notify = true) {
             this.TurnedIn = turnedIn;
             //Debug.Log(MyName + ".Quest.TurnedIn = " + value);
             if (notify) {
@@ -265,7 +265,7 @@ namespace AnyRPG {
             }
         }
 
-        public bool MyPrerequisitesMet {
+        public virtual bool MyPrerequisitesMet {
             get {
                 //Debug.Log(MyName + ".Quest.MyPrerequisitesMet: ID: " + GetInstanceID());
                 foreach (PrerequisiteConditions prerequisiteCondition in prerequisiteConditions) {
@@ -278,33 +278,33 @@ namespace AnyRPG {
             }
         }
 
-        public Quest QuestTemplate { get => questTemplate; set => questTemplate = value; }
-        public int ExperienceLevel { get => ((dynamicLevel == true ? playerManager.MyCharacter.CharacterStats.Level : experienceLevel) + extraLevels); }
+        public virtual Quest QuestTemplate { get => questTemplate; set => questTemplate = value; }
+        public virtual int ExperienceLevel { get => ((dynamicLevel == true ? playerManager.MyCharacter.CharacterStats.Level : experienceLevel) + extraLevels); }
 
-        public List<Item> ItemRewards { get => itemRewardList; }
-        public List<FactionNode> FactionRewards { get => factionRewards; }
-        public List<BaseAbility> AbilityRewards { get => abilityRewardList; }
-        public List<Skill> SkillRewards { get => skillRewardList; }
+        public virtual List<Item> ItemRewards { get => itemRewardList; }
+        public virtual List<FactionNode> FactionRewards { get => factionRewards; }
+        public virtual List<BaseAbility> AbilityRewards { get => abilityRewardList; }
+        public virtual List<Skill> SkillRewards { get => skillRewardList; }
 
-        public bool TurnInItems { get => turnInItems; set => turnInItems = value; }
-        public bool AllowRawComplete { get => allowRawComplete; set => allowRawComplete = value; }
-        public int MaxAbilityRewards { get => maxAbilityRewards; set => maxAbilityRewards = value; }
-        public int MaxSkillRewards { get => maxSkillRewards; set => maxSkillRewards = value; }
-        public int MaxItemRewards { get => maxItemRewards; set => maxItemRewards = value; }
-        public int MaxFactionRewards { get => maxFactionRewards; set => maxFactionRewards = value; }
-        public bool RepeatableQuest { get => repeatableQuest; set => repeatableQuest = value; }
-        public bool IsAchievement { get => isAchievement; set => isAchievement = value; }
-        public bool HasOpeningDialog { get => hasOpeningDialog; set => hasOpeningDialog = value; }
-        public Dialog OpeningDialog { get => openingDialog; set => openingDialog = value; }
-        public VisitZoneObjective[] VisitZoneObjectives { get => visitZoneObjectives; set => visitZoneObjectives = value; }
-        public int ExperienceRewardPerLevel { get => experienceRewardPerLevel; set => experienceRewardPerLevel = value; }
-        public int BaseExperienceReward { get => baseExperienceReward; set => baseExperienceReward = value; }
-        public bool AutomaticCurrencyReward { get => automaticCurrencyReward; set => automaticCurrencyReward = value; }
-        public string RewardCurrencyName { get => rewardCurrencyName; set => rewardCurrencyName = value; }
-        public Currency RewardCurrency { get => rewardCurrency; set => rewardCurrency = value; }
-        public int BaseCurrencyReward { get => baseCurrencyReward; set => baseCurrencyReward = value; }
-        public int CurrencyRewardPerLevel { get => currencyRewardPerLevel; set => currencyRewardPerLevel = value; }
-        public bool MarkedComplete {
+        public virtual bool TurnInItems { get => turnInItems; set => turnInItems = value; }
+        public virtual bool AllowRawComplete { get => allowRawComplete; set => allowRawComplete = value; }
+        public virtual int MaxAbilityRewards { get => maxAbilityRewards; set => maxAbilityRewards = value; }
+        public virtual int MaxSkillRewards { get => maxSkillRewards; set => maxSkillRewards = value; }
+        public virtual int MaxItemRewards { get => maxItemRewards; set => maxItemRewards = value; }
+        public virtual int MaxFactionRewards { get => maxFactionRewards; set => maxFactionRewards = value; }
+        public virtual bool RepeatableQuest { get => repeatableQuest; set => repeatableQuest = value; }
+        public virtual bool IsAchievement { get => isAchievement; set => isAchievement = value; }
+        public virtual bool HasOpeningDialog { get => hasOpeningDialog; set => hasOpeningDialog = value; }
+        public virtual Dialog OpeningDialog { get => openingDialog; set => openingDialog = value; }
+        public virtual VisitZoneObjective[] VisitZoneObjectives { get => visitZoneObjectives; set => visitZoneObjectives = value; }
+        public virtual int ExperienceRewardPerLevel { get => experienceRewardPerLevel; set => experienceRewardPerLevel = value; }
+        public virtual int BaseExperienceReward { get => baseExperienceReward; set => baseExperienceReward = value; }
+        public virtual bool AutomaticCurrencyReward { get => automaticCurrencyReward; set => automaticCurrencyReward = value; }
+        public virtual string RewardCurrencyName { get => rewardCurrencyName; set => rewardCurrencyName = value; }
+        public virtual Currency RewardCurrency { get => rewardCurrency; set => rewardCurrency = value; }
+        public virtual int BaseCurrencyReward { get => baseCurrencyReward; set => baseCurrencyReward = value; }
+        public virtual int CurrencyRewardPerLevel { get => currencyRewardPerLevel; set => currencyRewardPerLevel = value; }
+        public virtual bool MarkedComplete {
             get {
                 return saveManager.GetQuestSaveData(this).markedComplete;
                 //return false;
@@ -324,7 +324,7 @@ namespace AnyRPG {
             questLog = systemGameManager.QuestLog;
         }
 
-        public void RemoveQuest() {
+        public virtual void RemoveQuest() {
             //Debug.Log("Quest.RemoveQuest(): " + DisplayName + " calling OnQuestStatusUpdated()");
             OnAbandonQuest();
             if (playerManager != null && playerManager.PlayerUnitSpawned == false) {
@@ -336,7 +336,7 @@ namespace AnyRPG {
             OnQuestStatusUpdated();
         }
 
-        public List<CurrencyNode> GetCurrencyReward() {
+        public virtual List<CurrencyNode> GetCurrencyReward() {
             List<CurrencyNode> currencyNodes = new List<CurrencyNode>();
 
             if (AutomaticCurrencyReward == true) {
@@ -357,7 +357,7 @@ namespace AnyRPG {
             return currencyNodes;
         }
 
-        public void CheckMarkComplete(bool notifyOnUpdate = true, bool printMessages = true) {
+        public virtual void CheckMarkComplete(bool notifyOnUpdate = true, bool printMessages = true) {
             if (MarkedComplete == true) {
                 return;
             }
@@ -386,7 +386,7 @@ namespace AnyRPG {
             }
         }
 
-        public void OnAbandonQuest() {
+        public virtual void OnAbandonQuest() {
             foreach (CollectObjective o in MyCollectObjectives) {
                 o.OnAbandonQuest();
             }
@@ -413,7 +413,7 @@ namespace AnyRPG {
             }
         }
 
-        public string GetStatus() {
+        public virtual string GetStatus() {
             //Debug.Log(MyName + ".Quest.GetStatus()");
 
             string returnString = string.Empty;
@@ -448,14 +448,14 @@ namespace AnyRPG {
             return string.Format("{0}", description);
         }
 
-        public string GetObjectiveDescription() {
+        public virtual string GetObjectiveDescription() {
 
             Color titleColor = LevelEquations.GetTargetColor(playerManager.MyCharacter.CharacterStats.Level, ExperienceLevel);
             return string.Format("<size=30><b><color=#{0}>{1}</color></b></size>\n\n<size=18>{2}</size>\n\n<b><size=24>Objectives:</size></b>\n\n<size=18>{3}</size>", ColorUtility.ToHtmlStringRGB(titleColor), DisplayName, MyDescription, GetUnformattedObjectiveList());
 
         }
 
-        public string GetUnformattedObjectiveList() {
+        public virtual string GetUnformattedObjectiveList() {
             string objectives = string.Empty;
             List<string> objectiveList = new List<string>();
             foreach (CollectObjective obj in MyCollectObjectives) {
@@ -496,7 +496,7 @@ namespace AnyRPG {
             return objectives;
         }
 
-        public void AcceptQuest(bool printMessages = true) {
+        public virtual void AcceptQuest(bool printMessages = true) {
             //Debug.Log("Quest.AcceptQuest(" + MyName + ")");
 
             foreach (CollectObjective o in MyCollectObjectives) {
@@ -538,7 +538,7 @@ namespace AnyRPG {
             }
         }
 
-        public void CheckCompletion(bool notifyOnUpdate = true, bool printMessages = true) {
+        public virtual void CheckCompletion(bool notifyOnUpdate = true, bool printMessages = true) {
             //Debug.Log("QuestLog.CheckCompletion()");
             if (MarkedComplete) {
                 // no need to waste cycles checking, we are already done
@@ -597,7 +597,7 @@ namespace AnyRPG {
         }
 
         // force prerequisite status update outside normal event notification
-        public void UpdatePrerequisites(bool notify = true) {
+        public virtual void UpdatePrerequisites(bool notify = true) {
             foreach (PrerequisiteConditions conditions in prerequisiteConditions) {
                 conditions.UpdatePrerequisites(notify);
             }
@@ -716,7 +716,7 @@ namespace AnyRPG {
             }
         }
 
-        public void HandlePrerequisiteUpdates() {
+        public virtual void HandlePrerequisiteUpdates() {
             OnQuestStatusUpdated();
         }
     }
