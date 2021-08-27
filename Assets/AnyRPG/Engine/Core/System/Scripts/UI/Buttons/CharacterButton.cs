@@ -217,6 +217,19 @@ namespace AnyRPG {
             return "Drag equipment here to equip it";
         }
 
+        public virtual void CheckMouse() {
+            if (UIManager.MouseInRect(icon.rectTransform)) {
+                uIManager.HideToolTip();
+            }
+        }
+
+        public virtual void OnDisable() {
+            if (SystemGameManager.IsShuttingDown) {
+                return;
+            }
+            CheckMouse();
+        }
+
     }
 
 }
