@@ -267,6 +267,8 @@ namespace AnyRPG {
                 } else {
                     //Debug.Log("SlotScript.HandleRightClick(): We clicked on something in a chest or bag");
                 }
+                // default case to prevent using an item when the bank window is open but bank was full
+                return;
             } else if (inventoryManager.BagsClosed() == false && inventoryManager.BankClosed() == true && uIManager.vendorWindow.IsOpen) {
                 // SELL THE ITEM
                 if (MyItem != null) {
@@ -280,11 +282,11 @@ namespace AnyRPG {
                     }
                     
                 }
+                // default case to prevent using an item when the vendor window is open
+                return;
             }
 
-            // WHY ARE WE DOING THAT IF WE DIDN'T RETURN EARLIER AFTER PUTTING THINGS IN THE BANK?
             // if we got to here, nothing left to do but use the item
-
             UseItem();
 
             ProcessMouseEnter();
