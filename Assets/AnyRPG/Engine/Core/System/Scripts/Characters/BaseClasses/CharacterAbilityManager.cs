@@ -36,7 +36,8 @@ namespace AnyRPG {
         protected bool targettingModeActive = false;
 
         // does killing the player you are currently targetting stop your cast.  gets set to false when channeling aoe.
-        private bool killStopCast = true;
+        // disabled to prevent weapon going out of character hand mid animation swing if mob dies while swinging
+        //private bool killStopCast = true;
 
         protected float remainingGlobalCoolDown = 0f;
 
@@ -939,7 +940,7 @@ namespace AnyRPG {
             StopCasting(true, false, true);
         }
 
-
+        /*
         /// <summary>
         /// Called when the type of cast should not be interrupted by the death of your current mob target
         /// </summary>
@@ -956,6 +957,7 @@ namespace AnyRPG {
             //Debug.Log("CharacterAbilityManager.KillStopCastNormal()");
             killStopCast = true;
         }
+        */
 
         public override bool HasAbility(BaseAbility baseAbility) {
             //Debug.Log(gameObject.name + ".CharacterAbilitymanager.HasAbility(" + abilityName + ")");
@@ -1070,12 +1072,14 @@ namespace AnyRPG {
             //Debug.Log(baseCharacter.gameObject.name + "CharacterAbilitymanager.PerformAbilityCast(" + ability.DisplayName + ", " + (target == null ? "null" : target.name) + ") Enter Ienumerator with tag: " + startTime);
 
             bool canCast = true;
+            /*
             if (ability.GetTargetOptions(baseCharacter).RequireTarget == false || ability.GetTargetOptions(baseCharacter).CanCastOnEnemy == false) {
                 // prevent the killing of your enemy target from stopping aoe casts and casts that cannot be cast on an ememy
                 KillStopCastOverride();
             } else {
                 KillStopCastNormal();
             }
+            */
             abilityEffectContext.originalTarget = target;
             if (ability.GetTargetOptions(baseCharacter).RequiresGroundTarget == true) {
                 //Debug.Log("CharacterAbilitymanager.PerformAbilityCast() Ability requires a ground target.");

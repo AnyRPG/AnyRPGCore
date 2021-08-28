@@ -174,6 +174,9 @@ namespace AnyRPG {
             } else {
                 saveData.CurrentScene = systemConfigurationManager.DefaultStartingZone;
             }
+            if (faction != null) {
+                levelManager.OverrideSpawnLocationTag = faction.DefaultStartingLocationTag;
+            }
         }
 
         public void UpdateEquipmentList() {

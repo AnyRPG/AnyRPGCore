@@ -17,6 +17,10 @@ namespace AnyRPG {
         [SerializeField]
         private string defaultStartingZone = string.Empty;
 
+        [Tooltip("When a new game is started, the character should spawn at the object with this tag")]
+        [SerializeField]
+        private string defaultStartingLocationTag = string.Empty;
+
         [Tooltip("If true, hide any default unit profiles when this faction is used")]
         [SerializeField]
         private bool hideDefaultProfiles = false;
@@ -65,6 +69,7 @@ namespace AnyRPG {
         public List<UnitProfile> CharacterCreatorProfiles { get => characterCreatorProfiles; set => characterCreatorProfiles = value; }
         public bool HideDefaultProfiles { get => hideDefaultProfiles; set => hideDefaultProfiles = value; }
         public List<Equipment> EquipmentList { get => equipmentList; set => equipmentList = value; }
+        public string DefaultStartingLocationTag { get => defaultStartingLocationTag; }
 
         public override void SetGameManagerReferences() {
             base.SetGameManagerReferences();

@@ -96,6 +96,8 @@ TagManager:
   - SouthBoundary
   - EastBoundary
   - WestBoundary
+  - FactionSpawnLocation1
+  - FactionSpawnLocation2
   layers:
   - Default
   - TransparentFX
