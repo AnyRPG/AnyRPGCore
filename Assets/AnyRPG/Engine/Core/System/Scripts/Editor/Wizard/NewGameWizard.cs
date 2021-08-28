@@ -18,7 +18,7 @@ namespace AnyRPG {
         private const string pathToResourcesTemplateFolder = "/AnyRPG/Engine/Core/Games/CoreGame/Resources/CoreGame";
 
         private const string pathToGameManagerPrefab = "Assets/AnyRPG/Engine/Core/System/Prefabs/GameManager/GameManager.prefab";
-        private const string pathToUMADCSPrefab = "Getting Started/UMA_DCS.prefab";
+        private const string pathToUMADCSPrefab = "Getting Started/UMA_GLIB.prefab";
 
         // Will be a subfolder of Application.dataPath and should start with "/"
         private const string newGameParentFolder = "/Games/";
@@ -232,7 +232,7 @@ namespace AnyRPG {
             // Create a variant of the GameManager & UMA prefabs
             EditorUtility.DisplayProgressBar("New Game Wizard", "Making prefab variants...", 0.9f);
             MakeGameManagerPrefabVariant(gameManagerGameObject, prefabPath + "/GameManager.prefab");
-            MakeUMAPrefabVariant(umaGameObject, prefabPath + "/UMA_DCS.prefab", fileSystemGameName);
+            MakeUMAPrefabVariant(umaGameObject, prefabPath + "/UMA_GLIB.prefab", fileSystemGameName);
 
             EditorUtility.DisplayProgressBar("New Game Wizard", "Saving scene...", 0.95f);
             // Save changes to the scene
