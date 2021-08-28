@@ -1199,6 +1199,7 @@ namespace AnyRPG {
         }
 
         public override void EndCastCleanup() {
+            //Debug.Log(abilityCaster.gameObject.name + ".CharacterAbilitymanager.EndCastCleanup()");
             base.EndCastCleanup();
             if (baseCharacter.UnitController != null) {
                 baseCharacter.UnitController.UnitComponentController.StopCast();
@@ -1207,11 +1208,16 @@ namespace AnyRPG {
 
         public void ReceiveKillDetails(BaseCharacter killedcharacter, float creditPercent) {
             //Debug.Log("CharacterAbilityManager.ReceiveKillDetails()");
+            // this is disabled in order to allow the character to complete current cast animation instead of suddenly stopping mid cast
+            // the new workflow upon target death is : complete current animation -> wait for 2 seconds -> sheath weapons and go back to normal idle
+            // monitor for breakage elsewhere
+            /*
             if (BaseCharacter.UnitController.Target == killedcharacter.UnitController) {
                 if (killStopCast) {
                     StopCasting();
                 }
             }
+            */
         }
 
         public void AttemptAutoAttack(bool playerInitiated = false) {
@@ -1441,8 +1447,10 @@ namespace AnyRPG {
                     }
 
                     // start the cast (or cast targetting projector)
-                    currentCastCoroutine = abilityCaster.StartCoroutine(PerformAbilityCast(usedAbility, finalTarget, abilityEffectContext));
+                    //Debug.Log(baseCharacter.gameObject.name + ".CharacterAbilityManager.BeginAbilityCommon(" + usedAbility + "): setting currentCastAbility");
+                    // currentCastAbility must be set before starting the coroutine because for animated events, the cast time is zero and the variable will be cleared in the coroutine
                     currentCastAbility = usedAbility;
+                    currentCastCoroutine = abilityCaster.StartCoroutine(PerformAbilityCast(usedAbility, finalTarget, abilityEffectContext));
                 } else {
                     // return false so that items in the inventory don't get used if this came from a castable item
                     return false;

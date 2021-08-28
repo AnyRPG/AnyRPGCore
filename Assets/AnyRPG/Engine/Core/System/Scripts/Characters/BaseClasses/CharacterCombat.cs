@@ -48,6 +48,9 @@ namespace AnyRPG {
         // the target we swung at, in case we try to change target mid swing and we don't put an animation on something too far away
         protected BaseCharacter swingTarget = null;
 
+        private Coroutine waitForCastsCoroutine = null;
+        private Coroutine dropCombatCoroutine = null;
+
         // game manager references
         protected PlayerManager playerManager = null;
         protected UIManager uIManager = null;
@@ -123,7 +126,13 @@ namespace AnyRPG {
         }
 
         public void ProcessLevelUnload() {
-            DropCombat();
+            DropCombat(true);
+            if (waitForCastsCoroutine != null) {
+                baseCharacter.StopCoroutine(waitForCastsCoroutine);
+            }
+            if (dropCombatCoroutine != null) {
+                baseCharacter.StopCoroutine(dropCombatCoroutine);
+            }
         }
 
         public void Update() {
@@ -303,23 +312,70 @@ namespace AnyRPG {
             }
         }
 
-        protected virtual void DropCombat() {
+        protected virtual void DropCombat(bool immediate = false) {
             //Debug.Log(gameObject.name + ".CharacterCombat.DropCombat()");
             if (inCombat) {
                 inCombat = false;
 
+                /*
                 if (waitingForAutoAttack == true) {
                     baseCharacter.CharacterAbilityManager.StopCasting();
                 }
                 if (baseCharacter?.UnitController?.UnitAnimator != null) {
                     baseCharacter.UnitController.UnitAnimator.SetBool("InCombat", false);
                 }
-
+                */
+                if (immediate) {
+                    ProcessDropCombat();
+                } else {
+                    if (waitForCastsCoroutine == null) {
+                        waitForCastsCoroutine = baseCharacter.StartCoroutine(WaitForCastsToFinish());
+                    }
+                }
                 DeActivateAutoAttack();
                 //Debug.Log(gameObject.name + ".CharacterCombat.DropCombat(): dropped combat.");
-                baseCharacter.UnitController?.UnitModelController?.SheathWeapons();
+                //baseCharacter.UnitController?.UnitModelController?.SheathWeapons();
                 OnDropCombat();
             }
+        }
+
+        public IEnumerator WaitForCastsToFinish() {
+            //Debug.Log(baseCharacter.gameObject.name + ".CharacterCombat.WaitForCastsToFinish()");
+
+            while (inCombat == false
+                && (waitingForAutoAttack == true || baseCharacter.CharacterAbilityManager.CurrentCastAbility != null || baseCharacter.CharacterAbilityManager.WaitingForAnimatedAbility == true)) {
+                //Debug.Log(baseCharacter.gameObject.name + ".CharacterCombat.WaitForCastsToFinish() waitingforAutoAttack: " + waitingForAutoAttack + "; currentcastAbility: " + (baseCharacter.CharacterAbilityManager.CurrentCastAbility == null ? "null" : baseCharacter.CharacterAbilityManager.CurrentCastAbility.DisplayName));
+
+                yield return null;
+            }
+            /*
+            if (waitingForAutoAttack == true) {
+                baseCharacter.CharacterAbilityManager.StopCasting();
+            }
+            */
+            if (inCombat == false && dropCombatCoroutine == null) {
+                dropCombatCoroutine = baseCharacter.StartCoroutine(WaitForDropCombat());
+            }
+
+            waitForCastsCoroutine = null;
+        }
+
+        public IEnumerator WaitForDropCombat() {
+            //Debug.Log(baseCharacter.gameObject.name + ".CharacterCombat.WaitForDropCombat()");
+            yield return new WaitForSeconds(2);
+            if (inCombat == false) {
+                ProcessDropCombat();
+            }
+            dropCombatCoroutine = null;
+        }
+
+        private void ProcessDropCombat() {
+            //Debug.Log(baseCharacter.gameObject.name + ".CharacterCombat.ProcessDropCombat()");
+            if (baseCharacter?.UnitController?.UnitAnimator != null) {
+                baseCharacter.UnitController.UnitAnimator.SetBool("InCombat", false);
+            }
+
+            baseCharacter.UnitController?.UnitModelController?.SheathWeapons();
         }
 
         public void ActivateAutoAttack() {

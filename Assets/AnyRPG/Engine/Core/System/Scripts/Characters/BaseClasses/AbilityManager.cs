@@ -74,6 +74,7 @@ namespace AnyRPG {
         public List<GameObject> AbilityEffectGameObjects { get => abilityEffectGameObjects; set => abilityEffectGameObjects = value; }
         public Coroutine DestroyAbilityEffectObjectCoroutine { get => destroyAbilityEffectObjectCoroutine; set => destroyAbilityEffectObjectCoroutine = value; }
         public List<Coroutine> DestroyAbilityEffectObjectCoroutines { get => destroyAbilityEffectObjectCoroutines; set => destroyAbilityEffectObjectCoroutines = value; }
+        public BaseAbility CurrentCastAbility { get => currentCastAbility; }
 
         public AbilityManager(MonoBehaviour abilityCaster, SystemGameManager systemGameManager) {
             this.abilityCaster = abilityCaster;
@@ -267,6 +268,7 @@ namespace AnyRPG {
         }
 
         public virtual void EndCastCleanup() {
+            //Debug.Log(abilityCaster.gameObject.name + ".Abilitymanager.EndCastCleanup()");
             currentCastCoroutine = null;
             currentCastAbility = null;
         }
