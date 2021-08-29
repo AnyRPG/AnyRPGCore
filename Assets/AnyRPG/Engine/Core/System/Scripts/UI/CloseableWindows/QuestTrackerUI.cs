@@ -16,6 +16,9 @@ namespace AnyRPG {
         [SerializeField]
         private Transform questParent = null;
 
+        [SerializeField]
+        private DraggableWindow dragHandle = null;
+
         private List<QuestTrackerQuestScript> questScripts = new List<QuestTrackerQuestScript>();
 
         // game manager references
@@ -23,11 +26,12 @@ namespace AnyRPG {
         private QuestLog questLog = null;
         private ObjectPooler objectPooler = null;
 
-        /*
+        
         public override void Configure(SystemGameManager systemGameManager) {
             base.Configure(systemGameManager);
+            dragHandle.Configure(systemGameManager);
         }
-        */
+        
 
         public override void SetGameManagerReferences() {
             base.SetGameManagerReferences();

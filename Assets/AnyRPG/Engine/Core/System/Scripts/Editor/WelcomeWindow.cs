@@ -82,7 +82,6 @@ namespace AnyRPG {
         }
 
         private void DrawHeader() {
-            //GUILayout.Label(welcomeBanner, GUILayout.Height(110));
             GUILayout.Label(welcomeBanner);
         }
 
