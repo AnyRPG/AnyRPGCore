@@ -67,7 +67,6 @@ namespace AnyRPG {
         }
 
         public void ClearOptionButtons() {
-            // clear the quest list so any quests left over from a previous time opening the window aren't shown
             //Debug.Log("LoadGamePanel.ClearLoadButtons()");
             foreach (NewGameUnitButton optionButton in optionButtons) {
                 if (optionButton != null) {
@@ -80,6 +79,8 @@ namespace AnyRPG {
 
         public void ShowOptionButtonsCommon() {
             //Debug.Log("NewGameMecanimCharacterPanelController.ShowOptionButtonsCommon()");
+            bool foundIndex = false;
+
             ClearOptionButtons();
 
             if ((newGameManager.Faction != null && newGameManager.Faction.HideDefaultProfiles == false)
@@ -98,7 +99,18 @@ namespace AnyRPG {
                     optionButtons.Add(optionButton);
                 }
             }
-            if (optionButtons.Count > 0) {
+
+            // attempt to select the button that matches the current unit profile in case this list has the existing profile on it
+            for (int i = 0; i < optionButtons.Count; i++) {
+                if (optionButtons[i].UnitProfile == newGameManager.UnitProfile) {
+                    optionButtons[i].Select();
+                    foundIndex = true;
+                    break;
+                }
+            }
+
+            // could not find the current profile in the options list, reset the profile to the first available option
+            if (optionButtons.Count > 0 && foundIndex == false) {
                 optionButtons[0].Select();
             }
         }

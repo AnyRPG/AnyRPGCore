@@ -321,6 +321,22 @@ namespace AnyRPG {
         public MovementSoundArea MovementSoundArea { get => movementSoundArea; set => movementSoundArea = value; }
         public UnitModelController UnitModelController { get => unitModelController; }
 
+        public override void Configure(SystemGameManager systemGameManager) {
+            base.Configure(systemGameManager);
+            // create components here instead?  which ones rely on other things like unit profile being set before start?
+            namePlateController = new UnitNamePlateController(this, systemGameManager);
+            unitMotor = new UnitMotor(this, systemGameManager);
+            unitAnimator = new UnitAnimator(this, systemGameManager);
+            patrolController = new PatrolController(this, systemGameManager);
+            behaviorController = new BehaviorController(this, systemGameManager);
+            unitModelController = new UnitModelController(this, systemGameManager);
+            unitMountManager = new UnitMountManager(this, systemGameManager);
+            persistentObjectComponent.Setup(this, systemGameManager);
+
+            // allow the base character to initialize.
+            characterUnit.BaseCharacter.Init();
+        }
+
         public override void SetGameManagerReferences() {
             base.SetGameManagerReferences();
 
@@ -341,6 +357,37 @@ namespace AnyRPG {
         public override void CleanupEventSubscriptions() {
             base.CleanupEventSubscriptions();
             SystemEventManager.StopListening("OnReputationChange", HandleReputationChange);
+        }
+
+        public override void ProcessInit() {
+            //Debug.Log(gameObject.name + ".UnitController.ProcessInit()");
+            if (characterUnit.BaseCharacter.UnitProfile == null
+                && characterUnit.BaseCharacter.UnitProfileName != null
+                && characterUnit.BaseCharacter.UnitProfileName != string.Empty) {
+                SetUnitProfile(systemDataFactory.GetResource<UnitProfile>(characterUnit.BaseCharacter.UnitProfileName), UnitControllerMode.AI);
+            }
+
+            ConfigureAnimator();
+
+            base.ProcessInit();
+
+            persistentObjectComponent.Init();
+
+            SetStartPosition();
+
+            ActivateUnitControllerMode();
+
+            behaviorController.Init();
+            patrolController.Init();
+
+        }
+
+        public override void InitializeNamePlateController() {
+            //Debug.Log(gameObject.name + ".UnitController.InitializeNamePlateController()");
+            // mounts and preview units shouldn't have a namePlateController active
+            if (unitControllerMode != UnitControllerMode.Mount && unitControllerMode != UnitControllerMode.Preview) {
+                base.InitializeNamePlateController();
+            }
         }
 
         public void HandleReputationChange(string eventName, EventParamProperties eventParamProperties) {
@@ -374,7 +421,7 @@ namespace AnyRPG {
         /// set this unit to be a stationary preview
         /// </summary>
         private void SetPreviewMode() {
-            Debug.Log(gameObject.name + ".UnitController.SetPreviewMode()");
+            //Debug.Log(gameObject.name + ".UnitController.SetPreviewMode()");
             SetUnitControllerMode(UnitControllerMode.Preview);
             unitModelController.SetDefaultLayer(systemConfigurationManager.DefaultCharacterUnitLayer);
             useAgent = false;
@@ -466,7 +513,7 @@ namespace AnyRPG {
         /// set this unit to be a player
         /// </summary>
         private void EnablePlayer() {
-            Debug.Log(gameObject.name + ".UnitController.EnablePlayer()");
+            //Debug.Log(gameObject.name + ".UnitController.EnablePlayer()");
             InitializeNamePlateController();
 
             unitModelController.SetDefaultLayer(systemConfigurationManager.DefaultPlayerUnitLayer);
@@ -544,11 +591,12 @@ namespace AnyRPG {
         }
 
         public void ConfigurePlayer() {
-            Debug.Log(gameObject.name + ".UnitController.ConfigurePlayer()");
+            //Debug.Log(gameObject.name + ".UnitController.ConfigurePlayer()");
             playerManager.SetUnitController(this);
 
             // setting default layer here in case layer is wrong during buildModelAppearance calls that happen later in initialization
-            unitModelController.SetDefaultLayer(systemConfigurationManager.DefaultPlayerUnitLayer);
+            // disabled for now, testing new method that checks for renderers before changing layer and allowing it to happen in EnablePlayer()
+            //unitModelController.SetDefaultLayer(systemConfigurationManager.DefaultPlayerUnitLayer);
         }
 
         public void SetUnitControllerMode(UnitControllerMode unitControllerMode) {
@@ -574,52 +622,7 @@ namespace AnyRPG {
             }
         }
 
-        public override void Configure(SystemGameManager systemGameManager) {
-            base.Configure(systemGameManager);
-            // create components here instead?  which ones rely on other things like unit profile being set before start?
-            namePlateController = new UnitNamePlateController(this, systemGameManager);
-            unitMotor = new UnitMotor(this, systemGameManager);
-            unitAnimator = new UnitAnimator(this, systemGameManager);
-            patrolController = new PatrolController(this, systemGameManager);
-            behaviorController = new BehaviorController(this, systemGameManager);
-            unitModelController = new UnitModelController(this, systemGameManager);
-            unitMountManager = new UnitMountManager(this, systemGameManager);
-            persistentObjectComponent.Setup(this, systemGameManager);
-
-            // allow the base character to initialize.
-            characterUnit.BaseCharacter.Init();
-        }
-
-        public override void ProcessInit() {
-            //Debug.Log(gameObject.name + ".UnitController.ProcessInit()");
-            if (characterUnit.BaseCharacter.UnitProfile == null
-                && characterUnit.BaseCharacter.UnitProfileName != null
-                && characterUnit.BaseCharacter.UnitProfileName != string.Empty) {
-                SetUnitProfile(systemDataFactory.GetResource<UnitProfile>(characterUnit.BaseCharacter.UnitProfileName), UnitControllerMode.AI);
-            }
-
-            ConfigureAnimator();
-
-            base.ProcessInit();
-
-            persistentObjectComponent.Init();
-
-            SetStartPosition();
-
-            ActivateUnitControllerMode();
-
-            behaviorController.Init();
-            patrolController.Init();
-
-        }
-
-        public override void InitializeNamePlateController() {
-            //Debug.Log(gameObject.name + ".UnitController.InitializeNamePlateController()");
-            // mounts and preview units shouldn't have a namePlateController active
-            if (unitControllerMode != UnitControllerMode.Mount && unitControllerMode != UnitControllerMode.Preview) {
-                base.InitializeNamePlateController();
-            }
-        }
+       
 
         public void Despawn(float delayTime = 0f) {
             if (delayTime == 0f) {
@@ -1698,7 +1701,7 @@ namespace AnyRPG {
         }
 
         public void OnSendObjectToPool() {
-            Debug.Log(gameObject.name + ".UnitController.OnSendObjectToPool()");
+            //Debug.Log(gameObject.name + ".UnitController.OnSendObjectToPool()");
             // recevied a message from the object pooler
             // this object is about to be pooled.  Re-enable all monobehaviors in case it was in preview mode
             MonoBehaviour[] monoBehaviours = GetComponents<MonoBehaviour>();

@@ -166,7 +166,7 @@ namespace AnyRPG {
         }
 
         public void InitializeAnimator() {
-            Debug.Log(unitController.gameObject.name + ".UnitAnimator.InitializeAnimator()");
+            //Debug.Log(unitController.gameObject.name + ".UnitAnimator.InitializeAnimator()");
             if (initialized) {
                 return;
             }
@@ -206,7 +206,7 @@ namespace AnyRPG {
         }
 
         public void SetCorrectOverrideController(bool runUpdate = true) {
-            Debug.Log(unitController.gameObject.name + ".UnitAnimator.SetCorrectOverrideController()");
+            //Debug.Log(unitController.gameObject.name + ".UnitAnimator.SetCorrectOverrideController()");
             if (unitController.UnitControllerMode == UnitControllerMode.Player && systemConfigurationManager.UseThirdPartyMovementControl == true) {
                 SetOverrideController(thirdPartyOverrideController, runUpdate);
                 return;
@@ -217,7 +217,7 @@ namespace AnyRPG {
         }
 
         public void SetDefaultOverrideController(bool runUpdate = true) {
-            Debug.Log(unitController.gameObject.name + ".UnitAnimator.SetDefaultOverrideController()");
+            //Debug.Log(unitController.gameObject.name + ".UnitAnimator.SetDefaultOverrideController()");
             SetOverrideController(overrideController, runUpdate);
         }
 
@@ -1761,7 +1761,7 @@ namespace AnyRPG {
         }
 
         public void ResetSettings() {
-            Debug.Log(unitController.gameObject.name + ".UnitAnimator.ResetSettings()");
+            //Debug.Log(unitController.gameObject.name + ".UnitAnimator.ResetSettings()");
 
             // return settings to how they were when the unit was initialized in case a third party animator is used and this unit was in preview mode
             if (systemConfigurationManager.UseThirdPartyMovementControl == true) {

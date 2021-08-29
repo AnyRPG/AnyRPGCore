@@ -307,7 +307,7 @@ namespace AnyRPG {
         private IEnumerator WaitForCamera() {
             //private IEnumerator WaitForCamera(int frameNumber) {
             //Debug.Log(gameObject.name + ".UnitFrameController.WaitForCamera(): " + namePlateController.Interactable.GetInstanceID() + "; frame: " + frameNumber);
-            Debug.Log(gameObject.name + ".UnitFrameController.WaitForCamera(): " + namePlateController.Interactable.GetInstanceID());
+            //Debug.Log(gameObject.name + ".UnitFrameController.WaitForCamera(): " + namePlateController.Interactable.GetInstanceID());
             //yield return new WaitForEndOfFrame();
             yield return null;
             //Debug.Log(gameObject.name + ".UnitFrameController.WaitForCamera(): about to render " + namePlateController.Interactable.GetInstanceID() + "; initial frame: " + frameNumber + "; current frame: " + lastWaitFrame);
@@ -315,7 +315,7 @@ namespace AnyRPG {
             if (namePlateController?.Interactable?.IsBuilding() == true) {
                 //Debug.Log(gameObject.name + ".UnitFrameController.WaitForCamera(): a new wait was started. initial frame: " + frameNumber +  "; current wait: " + lastWaitFrame);
             } else {
-                Debug.Log(gameObject.name + ".UnitFrameController.WaitForCamera(): rendering");
+                //Debug.Log(gameObject.name + ".UnitFrameController.WaitForCamera(): rendering");
                 previewCamera.Render();
                 waitForCameraCoroutine = null;
                 namePlateController?.Interactable.ClearSnapshotRequest();

@@ -419,7 +419,7 @@ namespace AnyRPG {
         }
 
         public void BuildModelAppearance() {
-            Debug.Log(unitController.gameObject.name + ".UMAModelController.BuildModelAppearance()");
+            //Debug.Log(unitController.gameObject.name + ".UMAModelController.BuildModelAppearance()");
             if (dynamicCharacterAvatar != null) {
                 //Debug.Log(unitController.gameObject.name + ".UMAModelController.BuildModelAppearance() : " + dynamicCharacterAvatar.GetCurrentRecipe());
                 buildInProgress = true;
