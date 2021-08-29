@@ -111,6 +111,7 @@ namespace AnyRPG {
                 usedObjects[pooledGameObject].Add(freeObjects[pooledGameObject][0]);
                 freeObjects[pooledGameObject].RemoveAt(0);
                 returnValue.SetActive(true);
+                returnValue.SendMessage("OnGetReusedObjectFromPool", SendMessageOptions.DontRequireReceiver);
             } else {
                 // there were no free objects.  check if the list is allowed to expand and instantiate if necessary
                 int maxObjectCount = GetMaximumObjectCount(pooledGameObject);
@@ -118,7 +119,11 @@ namespace AnyRPG {
                     //returnValue = Instantiate(pooledGameObject, spawnLocation, spawnRotation, parentTransform);
                     returnValue = Instantiate(pooledGameObject, spawnLocation, spawnRotation, parentTransform);
                     usedObjects[pooledGameObject].Add(returnValue);
+                    returnValue.SendMessage("OnGetNewObjectFromPool", SendMessageOptions.DontRequireReceiver);
                 }
+            }
+            if (returnValue != null) {
+                returnValue.SendMessage("OnGetObjectFromPool", SendMessageOptions.DontRequireReceiver);
             }
             return returnValue;
         }

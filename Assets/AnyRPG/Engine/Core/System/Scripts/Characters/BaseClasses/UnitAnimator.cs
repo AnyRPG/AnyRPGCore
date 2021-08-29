@@ -166,12 +166,12 @@ namespace AnyRPG {
         }
 
         public void InitializeAnimator() {
-            //Debug.Log(unitController.gameObject.name + ": UnitAnimator.InitializeAnimator()");
+            Debug.Log(unitController.gameObject.name + ".UnitAnimator.InitializeAnimator()");
             if (initialized) {
                 return;
             }
             if (animator == null) {
-                //Debug.Log(gameObject.name + ": CharacterAnimator.InitializeAnimator(): Could not find animator in children");
+                //Debug.Log(gameObject.name + ".UnitAnimator.InitializeAnimator(): Could not find animator in children");
                 return;
             }
             if (systemConfigurationManager.UseThirdPartyMovementControl == true) {
@@ -206,7 +206,7 @@ namespace AnyRPG {
         }
 
         public void SetCorrectOverrideController(bool runUpdate = true) {
-            //Debug.Log(unitController.gameObject.name + ".UnitAnimator.SetCorrectOverrideController()");
+            Debug.Log(unitController.gameObject.name + ".UnitAnimator.SetCorrectOverrideController()");
             if (unitController.UnitControllerMode == UnitControllerMode.Player && systemConfigurationManager.UseThirdPartyMovementControl == true) {
                 SetOverrideController(thirdPartyOverrideController, runUpdate);
                 return;
@@ -217,7 +217,7 @@ namespace AnyRPG {
         }
 
         public void SetDefaultOverrideController(bool runUpdate = true) {
-            //Debug.Log(unitController.gameObject.name + ".UnitAnimator.SetDefaultOverrideController()");
+            Debug.Log(unitController.gameObject.name + ".UnitAnimator.SetDefaultOverrideController()");
             SetOverrideController(overrideController, runUpdate);
         }
 
@@ -1758,6 +1758,17 @@ namespace AnyRPG {
                 //animator.SetLayerWeight(2, 0);
             }
             */
+        }
+
+        public void ResetSettings() {
+            Debug.Log(unitController.gameObject.name + ".UnitAnimator.ResetSettings()");
+
+            // return settings to how they were when the unit was initialized in case a third party animator is used and this unit was in preview mode
+            if (systemConfigurationManager.UseThirdPartyMovementControl == true) {
+                if (thirdPartyAnimatorController != null) {
+                    animator.runtimeAnimatorController = thirdPartyAnimatorController;
+                }
+            }
         }
 
 

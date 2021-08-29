@@ -16,7 +16,7 @@ namespace AnyRPG {
         private DynamicCharacterAvatar dynamicCharacterAvatar = null;
         private UMAExpressionPlayer expressionPlayer = null;
         private UnitModelController unitModelController = null;
-        private AvatarDefinition avatarDefinition =  new AvatarDefinition();
+        private AvatarDefinition avatarDefinition = new AvatarDefinition();
 
         public DynamicCharacterAvatar DynamicCharacterAvatar { get => dynamicCharacterAvatar; }
 
@@ -143,9 +143,9 @@ namespace AnyRPG {
                 //LoadSavedAppearanceSettings(initialAppearance);
                 //}
                 buildInProgress = true;
-            //}
+                //}
             } else {
-            //if (!wasInitialized) {
+                //if (!wasInitialized) {
 
                 //Debug.Log(gameObject.name + "UnitController.ConfigureUnitModel(): dynamicCharacterAvatar has been re-used and is already initialized");
                 //if (initialAppearance != null && initialAppearance != string.Empty) {
@@ -419,7 +419,7 @@ namespace AnyRPG {
         }
 
         public void BuildModelAppearance() {
-            //Debug.Log(unitController.gameObject.name + ".UMAModelController.BuildModelAppearance()");
+            Debug.Log(unitController.gameObject.name + ".UMAModelController.BuildModelAppearance()");
             if (dynamicCharacterAvatar != null) {
                 //Debug.Log(unitController.gameObject.name + ".UMAModelController.BuildModelAppearance() : " + dynamicCharacterAvatar.GetCurrentRecipe());
                 buildInProgress = true;

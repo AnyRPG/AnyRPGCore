@@ -374,7 +374,7 @@ namespace AnyRPG {
         /// set this unit to be a stationary preview
         /// </summary>
         private void SetPreviewMode() {
-            //Debug.Log(gameObject.name + ".UnitController.SetPreviewMode()");
+            Debug.Log(gameObject.name + ".UnitController.SetPreviewMode()");
             SetUnitControllerMode(UnitControllerMode.Preview);
             unitModelController.SetDefaultLayer(systemConfigurationManager.DefaultCharacterUnitLayer);
             useAgent = false;
@@ -466,7 +466,7 @@ namespace AnyRPG {
         /// set this unit to be a player
         /// </summary>
         private void EnablePlayer() {
-            //Debug.Log(gameObject.name + "UnitController.EnablePlayer()");
+            Debug.Log(gameObject.name + ".UnitController.EnablePlayer()");
             InitializeNamePlateController();
 
             unitModelController.SetDefaultLayer(systemConfigurationManager.DefaultPlayerUnitLayer);
@@ -544,8 +544,11 @@ namespace AnyRPG {
         }
 
         public void ConfigurePlayer() {
-            //Debug.Log(gameObject.name + ".UnitController.ConfigurePlayer()");
+            Debug.Log(gameObject.name + ".UnitController.ConfigurePlayer()");
             playerManager.SetUnitController(this);
+
+            // setting default layer here in case layer is wrong during buildModelAppearance calls that happen later in initialization
+            unitModelController.SetDefaultLayer(systemConfigurationManager.DefaultPlayerUnitLayer);
         }
 
         public void SetUnitControllerMode(UnitControllerMode unitControllerMode) {
@@ -658,12 +661,14 @@ namespace AnyRPG {
         /// </summary>
         public override void ResetSettings() {
             //Debug.Log(gameObject.name + ".UnitController.ResetSettings()");
-            
+
             // agents should be disabled so when pool and re-activated they don't throw errors if they are a preview unit
             DisableAgent();
 
             // cleanup unit model type specific settings
             unitModelController.ResetSettings();
+
+            unitAnimator.ResetSettings();
 
             unitProfile = null;
 
@@ -1690,6 +1695,17 @@ namespace AnyRPG {
 
         public override bool IsBuilding() {
             return unitModelController.isBuilding();
+        }
+
+        public void OnSendObjectToPool() {
+            Debug.Log(gameObject.name + ".UnitController.OnSendObjectToPool()");
+            // recevied a message from the object pooler
+            // this object is about to be pooled.  Re-enable all monobehaviors in case it was in preview mode
+            MonoBehaviour[] monoBehaviours = GetComponents<MonoBehaviour>();
+
+            foreach (MonoBehaviour monoBehaviour in monoBehaviours) {
+                monoBehaviour.enabled = true;
+            }
         }
 
         #region EventNotifications

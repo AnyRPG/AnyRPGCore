@@ -24,14 +24,19 @@ namespace AnyRPG {
         public Dictionary<string, SystemEventResponseNode> SystemEventDictionary { get => systemEventDictionary; set => systemEventDictionary = value; }
         public Dictionary<string, LocalEventResponseNode> LocalEventDictionary { get => localEventDictionary; set => localEventDictionary = value; }
 
-        // Start is called before the first frame update
         void Awake() {
-            //Debug.Log(gameObject.name + ".ObjectMessageController.Start()");
+            Debug.Log(gameObject.name + ".ObjectMessageController.Awake()");
+            RunEarlyInit();
+        }
+
+        private void RunEarlyInit() {
+            Debug.Log(gameObject.name + ".ObjectMessageController.RunEarlyInit()");
             SetupScriptableObjects();
             InitializeEventResponses(SubscribeStage.Awake);
         }
 
         private void Start() {
+            Debug.Log(gameObject.name + ".ObjectMessageController.Start()");
             InitializeEventResponses(SubscribeStage.Start);
         }
 
@@ -86,7 +91,7 @@ namespace AnyRPG {
                     // get a reference to the event
                     //Debug.Log("Attempting to get event " + eventResponseNode.MyEventName);
                     eventResponseNode.LocalEventInfo = scriptType.GetEvent(eventResponseNode.MyEventName);
-                    
+
                     if (eventResponseNode.LocalEventInfo == null) {
                         Debug.LogError("Could not get event " + eventResponseNode.MyEventName);
                     }
@@ -523,7 +528,7 @@ namespace AnyRPG {
             if (eventResponseNode.ResponseLimit > 0) {
                 //Debug.Log(gameObject.name + ".ObjectMessageController.ProcessEvent(): responseLimit: " + eventResponseNode.ResponseLimit + "; counter: " + eventResponseNode.ResponseCounter);
                 if (eventResponseNode.ResponseCounter >= eventResponseNode.ResponseLimit) {
-                    
+
                     // unsubscribe first to avoid unnecessary event sending if we have passed the processing limit count
                     eventResponseNode.StopListening(this);
 
@@ -556,8 +561,8 @@ namespace AnyRPG {
             foreach (SystemEventResponseNode systemEventResponseNode in eventTemplate.MySystemEventList) {
                 //Debug.Log(gameObject.name + "ObjectMessageController.CleanupMessageResponses(): processing objectMessageNode");
                 //if (systemEventDictionary.ContainsKey(systemEventResponseNode.MyEventName)) {
-                    //systemEventDictionary.Remove(systemEventResponseNode.MyEventName);
-                    systemEventResponseNode.StopListening(this);
+                //systemEventDictionary.Remove(systemEventResponseNode.MyEventName);
+                systemEventResponseNode.StopListening(this);
                 //}
                 //SystemEventManager.StopListening(systemEventResponseNode.MyEventName, CallbackFunction);
             }
@@ -565,8 +570,8 @@ namespace AnyRPG {
             foreach (LocalEventResponseNode localEventResponseNode in eventTemplate.MyLocalEventList) {
                 //Debug.Log(gameObject.name + "ObjectMessageController.CleanupMessageResponses(): processing objectMessageNode");
                 //if (localEventDictionary.ContainsKey(localEventResponseNode.MyEventName)) {
-                    //localEventDictionary.Remove(localEventResponseNode.MyEventName);
-                    localEventResponseNode.StopListening(this);
+                //localEventDictionary.Remove(localEventResponseNode.MyEventName);
+                localEventResponseNode.StopListening(this);
                 //}
             }
 
@@ -576,6 +581,10 @@ namespace AnyRPG {
             if (messageTemplate != null) {
                 eventTemplate = ScriptableObject.Instantiate(messageTemplate);
             }
+        }
+
+        public void OnGetReusedObjectFromPool() {
+            RunEarlyInit();
         }
 
     }

@@ -193,8 +193,8 @@ namespace AnyRPG {
                 if (namePlateController.NamePlateUnit.CameraTargetReady) {
                     HandleTargetReady();
                 }// else {
-                // testing subscribe no matter what in case unit appearance changes
-                    SubscribeToTargetReady();
+                 // testing subscribe no matter what in case unit appearance changes
+                SubscribeToTargetReady();
                 //}
             } else {
                 //Debug.Log(gameObject.name + ".UnitFrameController.SetTarget(): Unit Frame Not active after activate command.  Likely gameobject under inactive canvas.  Will run StartCoroutien() on enable instead.");
@@ -307,6 +307,7 @@ namespace AnyRPG {
         private IEnumerator WaitForCamera() {
             //private IEnumerator WaitForCamera(int frameNumber) {
             //Debug.Log(gameObject.name + ".UnitFrameController.WaitForCamera(): " + namePlateController.Interactable.GetInstanceID() + "; frame: " + frameNumber);
+            Debug.Log(gameObject.name + ".UnitFrameController.WaitForCamera(): " + namePlateController.Interactable.GetInstanceID());
             //yield return new WaitForEndOfFrame();
             yield return null;
             //Debug.Log(gameObject.name + ".UnitFrameController.WaitForCamera(): about to render " + namePlateController.Interactable.GetInstanceID() + "; initial frame: " + frameNumber + "; current frame: " + lastWaitFrame);
@@ -314,6 +315,7 @@ namespace AnyRPG {
             if (namePlateController?.Interactable?.IsBuilding() == true) {
                 //Debug.Log(gameObject.name + ".UnitFrameController.WaitForCamera(): a new wait was started. initial frame: " + frameNumber +  "; current wait: " + lastWaitFrame);
             } else {
+                Debug.Log(gameObject.name + ".UnitFrameController.WaitForCamera(): rendering");
                 previewCamera.Render();
                 waitForCameraCoroutine = null;
                 namePlateController?.Interactable.ClearSnapshotRequest();
@@ -369,13 +371,13 @@ namespace AnyRPG {
 
             // set initial resource values in character display
             int counter = 0;
-                foreach (PowerResource _powerResource in namePlateController.PowerResourceList) {
-                    HandleResourceAmountChanged(_powerResource, (int)namePlateController.GetPowerResourceMaxAmount(_powerResource), (int)namePlateController.GetPowerResourceAmount(_powerResource));
-                    counter++;
-                    if (counter > 1) {
-                        break;
-                    }
+            foreach (PowerResource _powerResource in namePlateController.PowerResourceList) {
+                HandleResourceAmountChanged(_powerResource, (int)namePlateController.GetPowerResourceMaxAmount(_powerResource), (int)namePlateController.GetPowerResourceAmount(_powerResource));
+                counter++;
+                if (counter > 1) {
+                    break;
                 }
+            }
 
             // allow the character to send us events whenever the hp, mana, or cast time has changed so we can update the windows that display those values
             if ((namePlateController as UnitNamePlateController) is UnitNamePlateController) {
@@ -466,7 +468,7 @@ namespace AnyRPG {
                 string percentText = string.Empty;
                 if (resourcePercent != 0f) {
                     percentText = (resourcePercent * 100).ToString("F0");
-                } 
+                }
                 primaryResourceText.text = string.Format("{0} / {1} ({2}%)", displayedCurrentResource, displayedMaxResource, percentText);
             }
 
@@ -555,7 +557,7 @@ namespace AnyRPG {
                 }
 
             }
-            
+
         }
 
         public void HandleReputationChange() {

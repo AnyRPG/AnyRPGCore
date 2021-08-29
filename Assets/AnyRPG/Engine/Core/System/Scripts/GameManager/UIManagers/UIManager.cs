@@ -213,6 +213,7 @@ namespace AnyRPG {
         public MiniMapManager MiniMapManager { get => miniMapManager; set => miniMapManager = value; }
         public HandScript HandScript { get => handScript; set => handScript = value; }
         public MapManager MapManager { get => mapManager; set => mapManager = value; }
+        public int IgnoreChangeLayer { get => ignoreChangeLayer; }
 
         public override void Configure(SystemGameManager systemGameManager) {
             base.Configure(systemGameManager);
