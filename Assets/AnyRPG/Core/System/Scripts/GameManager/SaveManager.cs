@@ -984,7 +984,7 @@ namespace AnyRPG {
                 FactionDisposition factionDisposition = new FactionDisposition();
                 factionDisposition.Faction = systemDataFactory.GetResource<Faction>(reputationSaveData.MyName);
                 factionDisposition.disposition = reputationSaveData.MyAmount;
-                playerManager.MyCharacter.CharacterFactionManager.AddReputation(factionDisposition.Faction, (int)factionDisposition.disposition, false);
+                playerManager.MyCharacter.CharacterFactionManager.LoadReputation(factionDisposition.Faction, (int)factionDisposition.disposition);
                 //counter++;
             }
         }

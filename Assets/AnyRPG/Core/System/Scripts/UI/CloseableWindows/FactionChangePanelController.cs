@@ -52,7 +52,7 @@ namespace AnyRPG {
         }
 
         public void Setup(Faction newFaction) {
-            //Debug.Log("FactionChangePanelController.Setup(" + newFactionName + ")");
+            //Debug.Log("FactionChangePanelController.Setup(" + newFaction.DisplayName + ")");
             faction = newFaction;
             factionButton.AddFaction(faction);
             uIManager.factionChangeWindow.SetWindowTitle(faction.DisplayName);

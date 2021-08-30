@@ -41,6 +41,7 @@ namespace AnyRPG {
                 (uIManager.factionChangeWindow.CloseableWindowContents as FactionChangePanelController).OnConfirmAction -= HandleConfirmAction;
                 (uIManager.factionChangeWindow.CloseableWindowContents as FactionChangePanelController).OnCloseWindow -= CleanupEventSubscriptions;
             }
+            windowEventSubscriptionsInitialized = false;
         }
 
         public override void CleanupEventSubscriptions() {
@@ -63,7 +64,7 @@ namespace AnyRPG {
         }
 
         public override bool Interact(CharacterUnit source, int optionIndex = 0) {
-            //Debug.Log(gameObject.name + ".FactionChangeInteractable.Interact()");
+            //Debug.Log(interactable.gameObject.name + ".FactionChangeInteractable.Interact()");
             if (windowEventSubscriptionsInitialized == true) {
                 return false;
             }

@@ -47,6 +47,27 @@ namespace AnyRPG {
             NotifyOnReputationChange();
         }
 
+        // loads reputation values from a save file, ignoring all existing values
+        public virtual void LoadReputation(Faction faction, int reputationAmount) {
+            //Debug.Log(baseCharacter.gameObject.name + ".CharacterFactionmanager.LoadReputation(" + faction.DisplayName + ", " + reputationAmount + ")");
+            bool foundReputation = false;
+            foreach (FactionDisposition factionDisposition in DispositionDictionary) {
+                //Debug.Log(gameObject.name + ".PlayerFactionManager.AddReputation(" + realFaction.MyName + ", " + reputationAmount + "): checking a disposition in my dictionary");
+                if (factionDisposition.Faction == faction) {
+                    //Debug.Log(baseCharacter.gameObject.name + ".PlayerFactionManager.AddReputation(" + faction.DisplayName + ", " + reputationAmount + ") existing reputation: " + factionDisposition.disposition);
+                    factionDisposition.disposition = (float)reputationAmount;
+                    foundReputation = true;
+                    break;
+                }
+            }
+            if (!foundReputation) {
+                FactionDisposition _factionDisposition = new FactionDisposition();
+                _factionDisposition.Faction = faction;
+                _factionDisposition.disposition = (float)reputationAmount;
+                DispositionDictionary.Add(_factionDisposition);
+            }
+        }
+
         // adds to existing amount or sets to amount if not existing
         public virtual void AddReputation(Faction faction, int reputationAmount, bool notify = true) {
             //Debug.Log(baseCharacter.gameObject.name + ".CharacterFactionmanager.AddReputation(" + faction.DisplayName + ", " + reputationAmount + ", " + notify + ")");
@@ -54,7 +75,7 @@ namespace AnyRPG {
             foreach (FactionDisposition factionDisposition in DispositionDictionary) {
                 //Debug.Log(gameObject.name + ".PlayerFactionManager.AddReputation(" + realFaction.MyName + ", " + reputationAmount + "): checking a disposition in my dictionary");
                 if (factionDisposition.Faction == faction) {
-                    //Debug.Log(gameObject.name + ".PlayerFactionManager.AddReputation(" + realFaction.MyName + ", " + reputationAmount + "): checking a disposition in my dictionary MATCHED: adding reputation");
+                    //Debug.Log(baseCharacter.gameObject.name + ".PlayerFactionManager.AddReputation(" + faction.DisplayName + ", " + reputationAmount + ") existing reputation: " + factionDisposition.disposition);
                     factionDisposition.disposition += (float)reputationAmount;
                     foundReputation = true;
                     break;
