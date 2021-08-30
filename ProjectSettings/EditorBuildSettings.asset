@@ -15,7 +15,13 @@ EditorBuildSettings:
     path: Assets/AnyRPG/Engine/Games/ContentDemo/Scenes/Game/ContentDemoGame/ContentDemoGame.unity
     guid: ba8bd3a60f57ab64388665a58ea7f4bc
   - enabled: 1
-    path: Assets/AnyRPG/Engine/Core/System/Scenes/MainMenu/MainMenu.unity
+    path: Assets/AnyRPG/Core/Games/FeaturesDemo/Scenes/Game/FeaturesDemoGame/FeaturesDemoGame.unity
+    guid: a6d195ea807f74f4cb08c65ff65b1e52
+  - enabled: 1
+    path: Assets/AnyRPG/Core/Games/EmptyGame/Scenes/EmptyGame/EmptyGame.unity
+    guid: 7f52814d565a8844ba1d58d1b9dc3001
+  - enabled: 1
+    path: Assets/AnyRPG/Core/System/Scenes/MainMenu/MainMenu.unity
     guid: 796bbdccf792ca145a55c45c89ec7454
   - enabled: 1
     path: Assets/ALostSoul/Games/ALostSoul/Scenes/Content/BirchGrove/BirchGrove.unity
@@ -84,19 +90,13 @@ EditorBuildSettings:
     path: Assets/ALostSoul/Content/ALostSoulDemoShared/Scenes/ExampleTempleOfAncientEnergy/ExampleTempleOfAncientEnergy.unity
     guid: a5845d23eec8aad47a9774f4bc7e8311
   - enabled: 1
-    path: Assets/AnyRPG/Engine/Core/Games/CoreGame/Scenes/Game/CoreGame/CoreGame.unity
-    guid: a6d195ea807f74f4cb08c65ff65b1e52
-  - enabled: 1
-    path: Assets/AnyRPG/Engine/Core/Games/CoreGame/Scenes/Content/CoreDungeon/CoreDungeon.unity
+    path: Assets/AnyRPG/Core/Games/FeaturesDemo/Scenes/Content/FeaturesDemoDungeon/FeaturesDemoDungeon.unity
     guid: c094c26c9175d674fafcb14b9282a864
   - enabled: 1
-    path: Assets/AnyRPG/Engine/Core/Games/EmptyGame/Scenes/EmptyGame/EmptyGame.unity
-    guid: 7f52814d565a8844ba1d58d1b9dc3001
-  - enabled: 1
-    path: Assets/AnyRPG/Engine/Core/Games/CoreGame/Scenes/Content/CoreCutsceneZone/CoreCutsceneZone.unity
+    path: Assets/AnyRPG/Core/Games/FeaturesDemo/Scenes/Content/FeaturesDemoCutsceneZone/FeaturesDemoCutsceneZone.unity
     guid: b9ce6cec24f88e343bdd24c31d295b8a
   - enabled: 1
-    path: Assets/AnyRPG/Engine/Core/Games/CoreGame/Scenes/Content/CoreZone/CoreZone.unity
+    path: Assets/AnyRPG/Core/Games/FeaturesDemo/Scenes/Content/FeaturesDemoZone/CoreZone.unity
     guid: a847437ee17c7aa4f98c2d363f671f1d
   - enabled: 1
     path: Assets/AnyRPG/Engine/Games/ContentDemo/Scenes/Content/ContentScene/ContentScene.unity
