@@ -48,7 +48,7 @@ namespace AnyRPG {
         private GameObject thirdPartyCameraPrefab = null;
 
         [MenuItem("Tools/AnyRPG/Wizard/New Game Wizard")]
-        static void CreateWizard() {
+        public static void CreateWizard() {
             ScriptableWizard.DisplayWizard<NewGameWizard>("New Game Wizard", "Create");
         }
 
