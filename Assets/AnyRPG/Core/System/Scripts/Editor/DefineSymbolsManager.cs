@@ -37,29 +37,24 @@ namespace AnyRPG.DefineSymbolsManager {
                 }
             }
 
-            var allDefiniesToRemove = allDefines.FindAll(s => s.ToUpper().Contains("ANYRPG") && !allAnyRPGDefines.Contains(s));
-            var allDefiniesToAdd = allAnyRPGDefines.FindAll(s => !allDefines.Contains(s));
-            var needUpdate = allDefiniesToRemove.Count > 0 || allDefiniesToAdd.Count > 0;
-            if (needUpdate) {
-                for (int i = 0; i < allDefiniesToRemove.Count; i++)
-                    if (allDefines.Contains(allDefiniesToRemove[i])) allDefines.Remove(allDefiniesToRemove[i]);
+            List<string> allDefinesToRemove = allDefines.FindAll(s => s.ToUpper().Contains("ANYRPG") && !allAnyRPGDefines.Contains(s));
+            List<string> allDefinesToAdd = allAnyRPGDefines.FindAll(s => !allDefines.Contains(s));
+            bool needUpdate = allDefinesToRemove.Count > 0 || allDefinesToAdd.Count > 0;
+            if (needUpdate == true) {
+                for (int i = 0; i < allDefinesToRemove.Count; i++)
+                    if (allDefines.Contains(allDefinesToRemove[i])) {
+                        allDefines.Remove(allDefinesToRemove[i]);
+                    }
 
-                AddDefinitionSymbols(allDefiniesToAdd, allDefines);
+                AddDefinitionSymbols(allDefinesToAdd, allDefines);
             }
         }
 
         static void AddDefinitionSymbols(List<string> targetDefineSymbols, List<string> currentDefineSymbols) {
-            bool needUpdate = false;
-            for (int i = 0; i < targetDefineSymbols.Count; i++) {
-                if (!currentDefineSymbols.Contains(targetDefineSymbols[i])) {
-                    needUpdate = true; break;
-                }
-            }
             currentDefineSymbols.AddRange(targetDefineSymbols.Except(currentDefineSymbols));
-            if (needUpdate)
-                PlayerSettings.SetScriptingDefineSymbolsForGroup(
-                    EditorUserBuildSettings.selectedBuildTargetGroup,
-                    string.Join(";", currentDefineSymbols.ToArray()));
+            PlayerSettings.SetScriptingDefineSymbolsForGroup(
+                EditorUserBuildSettings.selectedBuildTargetGroup,
+                string.Join(";", currentDefineSymbols.ToArray()));
         }
 
         static List<System.Type> GetAllDefinitions() {
