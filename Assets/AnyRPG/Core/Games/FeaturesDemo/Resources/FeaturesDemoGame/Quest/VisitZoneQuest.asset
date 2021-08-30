@@ -52,7 +52,7 @@ MonoBehaviour:
   dialogObjectives: []
   visitZoneObjectives:
   - amount: 1
-    type: Core Dungeon
+    type: Features Demo Dungeon
     overrideDisplayName: 
   prerequisiteConditions: []
   turnInItems: 0

@@ -6666,7 +6666,11 @@ MonoBehaviour:
     namePlateImage: {fileID: 0}
     prerequisiteConditions: []
     locationTag: 
-    sceneName: CoreDungeon
+    overrideSpawnLocation: 0
+    spawnLocation: {x: 0, y: 0, z: 0}
+    overrideSpawnDirection: 0
+    spawnForwardDirection: {x: 0, y: 0, z: 0}
+    sceneName: FeaturesDemoDungeon
 --- !u!114 &696891890
 MonoBehaviour:
   m_ObjectHideFlags: 0
