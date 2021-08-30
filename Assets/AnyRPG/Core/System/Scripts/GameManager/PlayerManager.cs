@@ -169,7 +169,7 @@ namespace AnyRPG {
         }
 
         public void ProcessExitToMainMenu() {
-            //Debug.Log("PlayerManager.ExitGameHandler()");
+            //Debug.Log("PlayerManager.ProcessExitToMainMenu()");
             DespawnPlayerUnit();
             DespawnPlayerConnection();
             saveManager.ClearSystemManagedCharacterData();

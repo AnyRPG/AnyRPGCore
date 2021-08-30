@@ -366,11 +366,11 @@ namespace AnyRPG {
             secondaryStats[SecondaryStatType.MovementSpeed].OnModifierUpdate += HandleMovementSpeedUpdate;
         }
 
-
+        /*
         public void ProcessLevelUnload() {
             ClearStatusEffectPrefabs();
         }
-
+        */
 
         public void CalculateRunSpeed() {
             //Debug.Log(baseCharacter.gameObject.name + ".CharacterStats.CalculateRunSpeed() current: " + currentRunSpeed);

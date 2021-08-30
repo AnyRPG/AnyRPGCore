@@ -18,9 +18,9 @@ namespace AnyRPG.DefineSymbolsManager {
             List<string> allDefines = definesString.Split(';').ToList();
             List<string> allAnyRPGDefines = new List<string>();
 
-            var denitionsType = GetAllDefinitions();
-            foreach (var t in denitionsType) {
-                var value = t.InvokeMember(null, BindingFlags.DeclaredOnly |
+            List<Type> denitionsType = GetAllDefinitions();
+            foreach (Type t in denitionsType) {
+                object value = t.InvokeMember(null, BindingFlags.DeclaredOnly |
                 BindingFlags.Public | BindingFlags.NonPublic |
                 BindingFlags.Instance | BindingFlags.CreateInstance, null, null, null);
 

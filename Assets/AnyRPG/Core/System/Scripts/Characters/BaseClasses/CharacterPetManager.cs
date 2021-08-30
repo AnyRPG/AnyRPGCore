@@ -96,6 +96,7 @@ namespace AnyRPG {
         }
 
         public void DespawnAllPets() {
+            //Debug.Log(baseCharacter.gameObject.name + ".CharacterPetManager.DespawnAllPets()");
             foreach (UnitProfile unitProfile in activeUnitProfiles.Keys.ToArray()) {
                 // check that the controller is not null.  It may have already been destroyed somehow
                 if (activeUnitProfiles[unitProfile] != null) {
@@ -128,7 +129,8 @@ namespace AnyRPG {
             }
         }
 
-        public void ProcessLevelUnload() {
+        //public void ProcessLevelUnload() {
+        public void HandleCharacterUnitDespawn() {
             DespawnAllPets();
         }
 

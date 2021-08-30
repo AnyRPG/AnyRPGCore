@@ -1698,7 +1698,8 @@ namespace AnyRPG {
             */
         }
 
-        public void ProcessLevelUnload() {
+        //public void ProcessLevelUnload() {
+        public void HandleCharacterUnitDespawn() {
             // auto attacks will be separately cancelled by characterCombat
             StopCasting(true, false, true);
         }

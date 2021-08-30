@@ -640,6 +640,13 @@ namespace AnyRPG {
         private void DespawnImmediate() {
             //Debug.Log(gameObject.name + ".UnitController.DespawnImmediate()");
             despawning = true;
+
+            ClearTarget();
+            CancelMountEffects();
+            // this could be a mount which has no base character - check for nulls
+            characterUnit?.BaseCharacter?.HandleCharacterUnitDespawn();
+
+
             StopAllCoroutines();
             RemoveControlEffects();
             ProcessPointerExit();
@@ -1341,15 +1348,17 @@ namespace AnyRPG {
             }
 
             base.ProcessLevelUnload();
+            // moved all this code into Despawn() to avoid a situation where player would have despawn called without processLevelUnload called 
+            /*
             ClearTarget();
             CancelMountEffects();
             // this was subject to event ordering and the baseCharacter could catch the event and despawn the unit
             // before the unit could cancel the mounted state - re-enabling
             // moved to baseCharacter
             //Despawn();
-
             // this could be a mount which has no base character - check for nulls
             characterUnit?.BaseCharacter?.ProcessLevelUnload();
+            */
             Despawn();
         }
 

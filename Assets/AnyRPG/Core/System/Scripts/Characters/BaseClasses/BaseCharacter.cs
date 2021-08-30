@@ -216,33 +216,6 @@ namespace AnyRPG {
             this.unitController = unitController;
         }
 
-        public void HandleLevelUnload(string eventName, EventParamProperties eventParamProperties) {
-            //Debug.Log(gameObject.name + ".BaseCharacter.HandleLevelUnload(): instanceID: " + gameObject.GetInstanceID());
-
-            // testing - do nothing here and let the unit call this so that ordering is correct
-            //ProcessLevelUnload()
-        }
-
-        public void ProcessLevelUnload() {
-            // There are multiple situations where a baseCharacter could receive this event after they already despawned.
-            // This is because the event that is invoked will not update its list until the loop is complete.
-            // Things like pets being despawned or player units being despawned as part of the level unload
-            // will result in the object being returned to the pool before the invoke gets to it
-            // so it is necessary to check if this character is already uninitialized
-            if (characterInitialized == false) {
-                return;
-            }
-            characterStats.ProcessLevelUnload();
-            characterAbilityManager.ProcessLevelUnload();
-            characterCombat.ProcessLevelUnload();
-            characterPetManager.ProcessLevelUnload();
-            //unitController?.Despawn();
-        }
-
-        public void HandleLevelLoad(string eventName, EventParamProperties eventParamProperties) {
-            characterStats.ProcessLevelLoad();
-        }
-
         public virtual void GetComponentReferences() {
             //Debug.Log(gameObject.name + ".BaseCharacter.GetComponentReferences()");
 
@@ -656,7 +629,50 @@ namespace AnyRPG {
             //Debug.Log(gameObject.name + ".BaseCharacter.HandleCharacterUnitSpawn()");
             // no longer necessary - moved to UnitModel -> UnitModelController
             //characterEquipmentManager.HandleCharacterUnitDespawn();
+
+            // There are multiple situations where a baseCharacter could receive this event after they already despawned.
+            // This is because the event that is invoked will not update its list until the loop is complete.
+            // Things like pets being despawned or player units being despawned as part of the level unload
+            // will result in the object being returned to the pool before the invoke gets to it
+            // so it is necessary to check if this character is already uninitialized
+            if (characterInitialized == false) {
+                return;
+            }
             characterStats.HandleCharacterUnitDespawn();
+            //characterStats.ProcessLevelUnload();
+            characterAbilityManager.HandleCharacterUnitDespawn();
+            characterCombat.HandleCharacterUnitDespawn();
+            characterPetManager.HandleCharacterUnitDespawn();
+        }
+
+        public void HandleLevelUnload(string eventName, EventParamProperties eventParamProperties) {
+            //Debug.Log(gameObject.name + ".BaseCharacter.HandleLevelUnload(): instanceID: " + gameObject.GetInstanceID());
+
+            // testing - do nothing here and let the unit call this so that ordering is correct
+            //ProcessLevelUnload()
+        }
+
+        // moved all this to HandleCharacterUnitDespawn so player characters can call it too, since they don't receive a LevelUnload event due to already being despawned
+        /*
+    public void ProcessLevelUnload() {
+        // There are multiple situations where a baseCharacter could receive this event after they already despawned.
+        // This is because the event that is invoked will not update its list until the loop is complete.
+        // Things like pets being despawned or player units being despawned as part of the level unload
+        // will result in the object being returned to the pool before the invoke gets to it
+        // so it is necessary to check if this character is already uninitialized
+        if (characterInitialized == false) {
+            return;
+        }
+        characterStats.ProcessLevelUnload();
+        characterAbilityManager.ProcessLevelUnload();
+        characterCombat.ProcessLevelUnload();
+        characterPetManager.ProcessLevelUnload();
+        //unitController?.Despawn();
+    }
+        */
+
+        public void HandleLevelLoad(string eventName, EventParamProperties eventParamProperties) {
+            characterStats.ProcessLevelLoad();
         }
 
         public void DespawnImmediate() {

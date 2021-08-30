@@ -125,7 +125,8 @@ namespace AnyRPG {
             }
         }
 
-        public void ProcessLevelUnload() {
+        //public void ProcessLevelUnload() {
+        public void HandleCharacterUnitDespawn() {
             DropCombat(true);
             if (waitForCastsCoroutine != null) {
                 baseCharacter.StopCoroutine(waitForCastsCoroutine);
