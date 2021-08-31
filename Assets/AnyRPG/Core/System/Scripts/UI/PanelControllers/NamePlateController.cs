@@ -539,7 +539,9 @@ namespace AnyRPG {
             }
         }
 
-        public void OnDisable() {
+        // name plates can be disabled by hiding the ui with the '.' button, so this should only be done when sending them to the pool
+        //public void OnDisable() {
+        public void OnSendObjectToPool() {
             //Debug.Log(unitNamePlateController.NamePlateUnit.gameObject.name + ".NamePlateController.OnDisable()");
             if (SystemGameManager.IsShuttingDown) {
                 return;
