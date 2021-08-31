@@ -18,7 +18,7 @@ namespace AnyRPG {
             if (!uIManager.musicPlayerWindow.IsOpen) {
                 //Debug.Log(source + " interacting with " + gameObject.name);
                 uIManager.musicPlayerWindow.OpenWindow();
-                (uIManager.musicPlayerWindow.CloseableWindowContents as MusicPlayerUI).ShowMusicProfiles(this);
+                (uIManager.musicPlayerWindow.CloseableWindowContents as MusicPlayerUI).ShowAudioProfiles(this);
                 return true;
             }
             return false;

@@ -36,13 +36,15 @@ namespace AnyRPG {
         private GameObject availableArea = null;
 
         //private List<GameObject> Skills = new List<GameObject>();
-        private List<AudioProfile> musicProfileList = new List<AudioProfile>();
+        private List<AudioProfile> audioProfileList = new List<AudioProfile>();
 
         private List<MusicPlayerHighlightButton> musicPlayerHighlightButtons = new List<MusicPlayerHighlightButton>();
 
         private MusicPlayerHighlightButton selectedMusicPlayerHighlightButton;
 
-        private AudioProfile currentMusicProfile = null;
+        private AudioProfile currentAudioProfile = null;
+
+        private AudioType audioType = AudioType.Music;
 
         // game manager references
         private ObjectPooler objectPooler = null;
@@ -75,47 +77,49 @@ namespace AnyRPG {
             }
         }
 
-        public void ShowMusicProfilesCommon(MusicPlayerComponent musicPlayer) {
+        public void ShowAudioProfilesCommon(MusicPlayerComponent musicPlayer) {
             //Debug.Log("SkillTrainerUI.ShowSkillsCommon(" + skillTrainer.name + ")");
 
             ClearMusicProfiles();
 
-            MusicPlayerHighlightButton firstAvailableMusicProfile = null;
+            MusicPlayerHighlightButton firstAvailableAudioProfile = null;
 
-            foreach (AudioProfile musicProfile in musicPlayer.Props.MusicProfileList) {
+            foreach (AudioProfile audioProfile in musicPlayer.Props.AudioProfileList) {
                 GameObject go = objectPooler.GetPooledObject(highlightButtonPrefab, availableArea.transform);
                 MusicPlayerHighlightButton qs = go.GetComponent<MusicPlayerHighlightButton>();
                 qs.Configure(systemGameManager);
-                qs.Text.text = musicProfile.DisplayName;
+                qs.Text.text = audioProfile.DisplayName;
                 qs.Text.color = Color.white;
-                qs.SetMusicProfile(this, musicProfile);
+                qs.SetMusicProfile(this, audioProfile);
                 musicPlayerHighlightButtons.Add(qs);
-                musicProfileList.Add(musicProfile);
-                if (firstAvailableMusicProfile == null) {
-                    firstAvailableMusicProfile = qs;
+                audioProfileList.Add(audioProfile);
+                if (firstAvailableAudioProfile == null) {
+                    firstAvailableAudioProfile = qs;
                 }
             }
 
-            if (firstAvailableMusicProfile == null) {
+            if (firstAvailableAudioProfile == null) {
                 // no available skills anymore, close window
                 uIManager.musicPlayerWindow.CloseWindow();
             }
 
-            if (MySelectedMusicPlayerHighlightButton == null && firstAvailableMusicProfile != null) {
-                firstAvailableMusicProfile.Select();
+            if (MySelectedMusicPlayerHighlightButton == null && firstAvailableAudioProfile != null) {
+                firstAvailableAudioProfile.Select();
             }
         }
 
-
+        /*
         public void ShowMusicProfiles() {
             //Debug.Log("SkillTrainerUI.ShowSkills()");
-            ShowMusicProfilesCommon(musicPlayer);
+            ShowAudioProfilesCommon(musicPlayer);
         }
+        */
 
-        public void ShowMusicProfiles(MusicPlayerComponent musicPlayer) {
+        public void ShowAudioProfiles(MusicPlayerComponent musicPlayer) {
             //Debug.Log("SkillTrainerUI.ShowSkills(" + skillTrainer.name + ")");
             this.musicPlayer = musicPlayer;
-            ShowMusicProfilesCommon(this.musicPlayer);
+            audioType = musicPlayer.Props.AudioType;
+            ShowAudioProfilesCommon(this.musicPlayer);
         }
 
         public void UpdateSelected() {
@@ -128,11 +132,24 @@ namespace AnyRPG {
         private void UpdateButtons(AudioProfile musicProfile) {
             //Debug.Log("MusicPlayerUI.UpdateButtons(" + musicProfile + ")");
             playButton.Button.interactable = true;
-            if (audioManager.MusicAudioSource.isPlaying == true) {
+            if (audioType == AudioType.Music) {
+                if (audioManager.MusicAudioSource.isPlaying == true) {
+                    stopButton.Button.interactable = true;
+                    pauseButton.Button.interactable = true;
+                } else {
+                    stopButton.Button.interactable = false;
+                    pauseButton.Button.interactable = false;
+                }
+            } else if (audioType == AudioType.Ambient) {
+                if (audioManager.AmbientAudioSource.isPlaying == true) {
+                    stopButton.Button.interactable = true;
+                    pauseButton.Button.interactable = true;
+                } else {
+                    stopButton.Button.interactable = false;
+                    pauseButton.Button.interactable = false;
+                }
+            } else if (audioType == AudioType.Effect) {
                 stopButton.Button.interactable = true;
-                pauseButton.Button.interactable = true;
-            } else {
-                stopButton.Button.interactable = false;
                 pauseButton.Button.interactable = false;
             }
         }
@@ -144,7 +161,7 @@ namespace AnyRPG {
             if (musicProfile == null) {
                 return;
             }
-            currentMusicProfile = musicProfile;
+            currentAudioProfile = musicProfile;
 
             UpdateButtons(musicProfile);
 
@@ -192,25 +209,46 @@ namespace AnyRPG {
 
         public void PlayMusic() {
             //Debug.Log("SkillTrainerUI.LearnSkill()");
-            if (currentMusicProfile != null && currentMusicProfile.AudioClip != null) {
-                audioManager.PlayMusic(currentMusicProfile.AudioClip);
-                playButton.Button.interactable = false;
-                stopButton.Button.interactable = true;
-                pauseButton.Button.interactable = true;
-
+            if (currentAudioProfile != null && currentAudioProfile.AudioClip != null) {
+                if (audioType == AudioType.Music) {
+                    audioManager.PlayMusic(currentAudioProfile.AudioClip);
+                    playButton.Button.interactable = false;
+                    pauseButton.Button.interactable = true;
+                    stopButton.Button.interactable = true;
+                } else if (audioType == AudioType.Ambient) {
+                    audioManager.PlayAmbient(currentAudioProfile.AudioClip);
+                    playButton.Button.interactable = false;
+                    pauseButton.Button.interactable = true;
+                    stopButton.Button.interactable = true;
+                } else if (audioType == AudioType.Effect) {
+                    audioManager.PlayEffect(currentAudioProfile.AudioClip);
+                    playButton.Button.interactable = true;
+                    pauseButton.Button.interactable = false;
+                    stopButton.Button.interactable = true;
+                }
             }
         }
 
         public void PauseMusic() {
-            audioManager.PauseMusic();
+            if (audioType == AudioType.Music) {
+                audioManager.PauseMusic();
+            } else if (audioType == AudioType.Ambient) {
+                audioManager.PauseAmbient();
+            }
             playButton.Button.interactable = true;
-            stopButton.Button.interactable = true;
             pauseButton.Button.interactable = false;
+            stopButton.Button.interactable = true;
         }
 
         public void StopMusic() {
             //Debug.Log("SkillTrainerUI.UnlearnSkill()");
-            audioManager.StopMusic();
+            if (audioType == AudioType.Music) {
+                audioManager.StopMusic();
+            } else if (audioType == AudioType.Ambient) {
+                audioManager.StopAmbient();
+            } else if (audioType == AudioType.Effect) {
+                audioManager.StopEffects();
+            }
             playButton.Button.interactable = true;
             stopButton.Button.interactable = false;
             pauseButton.Button.interactable = false;

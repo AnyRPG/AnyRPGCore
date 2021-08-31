@@ -309,9 +309,9 @@ namespace AnyRPG {
             //Debug.Log("Levelmanager.PlayLevelSounds()");
             if (activeSceneNode != null) {
                 if (activeSceneNode.AmbientMusicProfile != null && activeSceneNode.AmbientMusicProfile.AudioClip != null) {
-                    audioManager.PlayAmbientSound(activeSceneNode.AmbientMusicProfile.AudioClip);
+                    audioManager.PlayAmbient(activeSceneNode.AmbientMusicProfile.AudioClip);
                 } else {
-                    audioManager.StopAmbientSound();
+                    audioManager.StopAmbient();
                 }
                 if (activeSceneNode.BackgroundMusicProfile != null && activeSceneNode.BackgroundMusicProfile.AudioClip != null) {
                     //Debug.Log("Levelmanager.PlayLevelSounds(): PLAYING MUSIC");

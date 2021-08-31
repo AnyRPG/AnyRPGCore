@@ -43,6 +43,7 @@ namespace AnyRPG {
         private AudioClip uiClickSound = null;
 
         private bool musicPaused = false;
+        private bool ambientPaused = false;
 
         public string MasterVolume { get => masterVolume; }
         public string MusicVolume { get => musicVolume; }
@@ -166,7 +167,12 @@ namespace AnyRPG {
             return returnValue;
         }
 
-        public void PlayAmbientSound(AudioClip audioClip) {
+        public void PlayAmbient(AudioClip audioClip) {
+            if (ambientAudioSource.clip == audioClip && ambientPaused == true) {
+                UnPauseAmbient();
+                return;
+            }
+            ambientPaused = false;
             ambientAudioSource.clip = audioClip;
             ambientAudioSource.loop = true;
             ambientAudioSource.Play();
@@ -221,8 +227,9 @@ namespace AnyRPG {
             }
         }
 
-        public void StopAmbientSound() {
+        public void StopAmbient() {
             ambientAudioSource.Stop();
+            ambientPaused = false;
         }
 
         public void StopMusic() {
@@ -239,10 +246,23 @@ namespace AnyRPG {
             }
         }
 
-        
+        public void PauseAmbient() {
+            if (ambientPaused == false) {
+                ambientAudioSource.Pause();
+                ambientPaused = true;
+            } else {
+                UnPauseAmbient();
+            }
+        }
+
         private void UnPauseMusic() {
             musicAudioSource.UnPause();
             musicPaused = false;
+        }
+
+        private void UnPauseAmbient() {
+            ambientAudioSource.UnPause();
+            ambientPaused = false;
         }
 
         public void StopEffects() {
@@ -256,5 +276,7 @@ namespace AnyRPG {
         }
 
     }
+
+    public enum AudioType { Music, Ambient, Effect }
 
 }
