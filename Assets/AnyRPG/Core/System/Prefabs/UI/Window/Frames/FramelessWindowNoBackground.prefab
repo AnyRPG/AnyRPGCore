@@ -49,12 +49,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7e9366657eed2f441ada58dc8f743501, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  dragHandle: {fileID: 0}
   contentParent: {fileID: 3428008264492484149}
   contentPrefab: {fileID: 0}
   contentGameObject: {fileID: 0}
   windowTitle: 
   windowText: {fileID: 0}
   backGroundImage: {fileID: 0}
+  rectTransform: {fileID: 70325021750468947}
 --- !u!1 &3428008264492484149
 GameObject:
   m_ObjectHideFlags: 0

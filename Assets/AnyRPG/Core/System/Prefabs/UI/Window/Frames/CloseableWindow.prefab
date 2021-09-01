@@ -325,6 +325,7 @@ MonoBehaviour:
   windowTitle: 
   windowText: {fileID: 2217222874382364951}
   backGroundImage: {fileID: 0}
+  rectTransform: {fileID: 5515843363502165379}
 --- !u!1 &5515843363620107491
 GameObject:
   m_ObjectHideFlags: 0

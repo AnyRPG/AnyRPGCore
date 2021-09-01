@@ -593,6 +593,7 @@ MonoBehaviour:
   windowTitle: 
   windowText: {fileID: 6173729358934625132}
   backGroundImage: {fileID: 5515843363502165382}
+  rectTransform: {fileID: 5515843363502165379}
   pageNumber: {fileID: 597201360853164623}
   previousBtn: {fileID: 5515843363233495109}
   nextBtn: {fileID: 5515843363676385684}

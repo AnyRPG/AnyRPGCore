@@ -351,113 +351,122 @@ namespace AnyRPG {
 
         private void GetDefaultWindowPositions() {
             //Debug.Log("Savemanager.GetDefaultWindowPositions()");
-            defaultWindowPositions.Add("AbilityBookWindowX", abilityBookWindow.transform.position.x);
-            defaultWindowPositions.Add("AbilityBookWindowY", abilityBookWindow.transform.position.y);
+            defaultWindowPositions.Add("AbilityBookWindowX", abilityBookWindow.RectTransform.anchoredPosition.x);
+            defaultWindowPositions.Add("AbilityBookWindowY", abilityBookWindow.RectTransform.anchoredPosition.y);
 
-            defaultWindowPositions.Add("SkillBookWindowX", skillBookWindow.transform.position.x);
-            defaultWindowPositions.Add("SkillBookWindowY", skillBookWindow.transform.position.y);
+            defaultWindowPositions.Add("SkillBookWindowX", skillBookWindow.RectTransform.anchoredPosition.x);
+            defaultWindowPositions.Add("SkillBookWindowY", skillBookWindow.RectTransform.anchoredPosition.y);
 
             //Debug.Log("abilityBookWindowX: " + abilityBookWindowX + "; abilityBookWindowY: " + abilityBookWindowY);
-            defaultWindowPositions.Add("ReputationBookWindowX", reputationBookWindow.transform.position.x);
-            defaultWindowPositions.Add("ReputationBookWindowY", reputationBookWindow.transform.position.y);
-            defaultWindowPositions.Add("CurrencyListWindowX", currencyListWindow.transform.position.x);
-            defaultWindowPositions.Add("CurrencyListWindowY", currencyListWindow.transform.position.y);
+            defaultWindowPositions.Add("ReputationBookWindowX", reputationBookWindow.RectTransform.anchoredPosition.x);
+            defaultWindowPositions.Add("ReputationBookWindowY", reputationBookWindow.RectTransform.anchoredPosition.y);
+            defaultWindowPositions.Add("CurrencyListWindowX", currencyListWindow.RectTransform.anchoredPosition.x);
+            defaultWindowPositions.Add("CurrencyListWindowY", currencyListWindow.RectTransform.anchoredPosition.y);
 
-            defaultWindowPositions.Add("CharacterPanelWindowX", characterPanelWindow.transform.position.x);
-            defaultWindowPositions.Add("CharacterPanelWindowY", characterPanelWindow.transform.position.y);
-            defaultWindowPositions.Add("LootWindowX", lootWindow.transform.position.x);
-            defaultWindowPositions.Add("LootWindowY", lootWindow.transform.position.y);
-            defaultWindowPositions.Add("VendorWindowX", vendorWindow.transform.position.x);
-            defaultWindowPositions.Add("VendorWindowY", vendorWindow.transform.position.y);
-            defaultWindowPositions.Add("ChestWindowX", chestWindow.transform.position.x);
-            defaultWindowPositions.Add("ChestWindowY", chestWindow.transform.position.y);
-            defaultWindowPositions.Add("BankWindowX", bankWindow.transform.position.x);
-            defaultWindowPositions.Add("BankWindowY", bankWindow.transform.position.y);
-            defaultWindowPositions.Add("QuestLogWindowX", questLogWindow.transform.position.x);
-            defaultWindowPositions.Add("QuestLogWindowY", questLogWindow.transform.position.y);
-            defaultWindowPositions.Add("AchievementListWindowX", achievementListWindow.transform.position.x);
-            defaultWindowPositions.Add("AchievementListWindowY", achievementListWindow.transform.position.y);
-            defaultWindowPositions.Add("QuestGiverWindowX", questGiverWindow.transform.position.x);
-            defaultWindowPositions.Add("QuestGiverWindowY", questGiverWindow.transform.position.y);
-            defaultWindowPositions.Add("SkillTrainerWindowX", skillTrainerWindow.transform.position.x);
-            defaultWindowPositions.Add("SkillTrainerWindowY", skillTrainerWindow.transform.position.y);
-            defaultWindowPositions.Add("InteractionWindowX", interactionWindow.transform.position.x);
-            defaultWindowPositions.Add("InteractionWindowY", interactionWindow.transform.position.y);
-            defaultWindowPositions.Add("CraftingWindowX", craftingWindow.transform.position.x);
-            defaultWindowPositions.Add("CraftingWindowY", craftingWindow.transform.position.y);
-            defaultWindowPositions.Add("MainMapWindowX", mainMapWindow.transform.position.x);
-            defaultWindowPositions.Add("MainMapWindowY", mainMapWindow.transform.position.y);
-            defaultWindowPositions.Add("QuestTrackerWindowX", QuestTrackerWindow.transform.position.x);
-            defaultWindowPositions.Add("QuestTrackerWindowY", QuestTrackerWindow.transform.position.y);
-            defaultWindowPositions.Add("CombatLogWindowX", CombatLogWindow.transform.position.x);
-            defaultWindowPositions.Add("CombatLogWindowY", CombatLogWindow.transform.position.y);
+            defaultWindowPositions.Add("CharacterPanelWindowX", characterPanelWindow.RectTransform.anchoredPosition.x);
+            defaultWindowPositions.Add("CharacterPanelWindowY", characterPanelWindow.RectTransform.anchoredPosition.y);
+            defaultWindowPositions.Add("LootWindowX", lootWindow.RectTransform.anchoredPosition.x);
+            defaultWindowPositions.Add("LootWindowY", lootWindow.RectTransform.anchoredPosition.y);
+            defaultWindowPositions.Add("VendorWindowX", vendorWindow.RectTransform.anchoredPosition.x);
+            defaultWindowPositions.Add("VendorWindowY", vendorWindow.RectTransform.anchoredPosition.y);
+            defaultWindowPositions.Add("ChestWindowX", chestWindow.RectTransform.anchoredPosition.x);
+            defaultWindowPositions.Add("ChestWindowY", chestWindow.RectTransform.anchoredPosition.y);
+            defaultWindowPositions.Add("BankWindowX", bankWindow.RectTransform.anchoredPosition.x);
+            defaultWindowPositions.Add("BankWindowY", bankWindow.RectTransform.anchoredPosition.y);
+            defaultWindowPositions.Add("QuestLogWindowX", questLogWindow.RectTransform.anchoredPosition.x);
+            defaultWindowPositions.Add("QuestLogWindowY", questLogWindow.RectTransform.anchoredPosition.y);
+            defaultWindowPositions.Add("AchievementListWindowX", achievementListWindow.RectTransform.anchoredPosition.x);
+            defaultWindowPositions.Add("AchievementListWindowY", achievementListWindow.RectTransform.anchoredPosition.y);
+            defaultWindowPositions.Add("QuestGiverWindowX", questGiverWindow.RectTransform.anchoredPosition.x);
+            defaultWindowPositions.Add("QuestGiverWindowY", questGiverWindow.RectTransform.anchoredPosition.y);
+            defaultWindowPositions.Add("SkillTrainerWindowX", skillTrainerWindow.RectTransform.anchoredPosition.x);
+            defaultWindowPositions.Add("SkillTrainerWindowY", skillTrainerWindow.RectTransform.anchoredPosition.y);
+            defaultWindowPositions.Add("InteractionWindowX", interactionWindow.RectTransform.anchoredPosition.x);
+            defaultWindowPositions.Add("InteractionWindowY", interactionWindow.RectTransform.anchoredPosition.y);
+            defaultWindowPositions.Add("CraftingWindowX", craftingWindow.RectTransform.anchoredPosition.x);
+            defaultWindowPositions.Add("CraftingWindowY", craftingWindow.RectTransform.anchoredPosition.y);
+            defaultWindowPositions.Add("MainMapWindowX", mainMapWindow.RectTransform.anchoredPosition.x);
+            defaultWindowPositions.Add("MainMapWindowY", mainMapWindow.RectTransform.anchoredPosition.y);
+            defaultWindowPositions.Add("QuestTrackerWindowX", QuestTrackerWindow.RectTransform.anchoredPosition.x);
+            defaultWindowPositions.Add("QuestTrackerWindowY", QuestTrackerWindow.RectTransform.anchoredPosition.y);
+            defaultWindowPositions.Add("CombatLogWindowX", CombatLogWindow.RectTransform.anchoredPosition.x);
+            defaultWindowPositions.Add("CombatLogWindowY", CombatLogWindow.RectTransform.anchoredPosition.y);
 
-            defaultWindowPositions.Add("MessageFeedManagerX", MessageFeedManager.MessageFeedWindow.transform.position.x);
-            defaultWindowPositions.Add("MessageFeedManagerY", MessageFeedManager.MessageFeedWindow.transform.position.y);
+            defaultWindowPositions.Add("MessageFeedManagerX", MessageFeedManager.MessageFeedWindow.RectTransform.anchoredPosition.x);
+            defaultWindowPositions.Add("MessageFeedManagerY", MessageFeedManager.MessageFeedWindow.RectTransform.anchoredPosition.y);
 
             //Debug.Log("Saving FloatingCastBarController: " + MyFloatingCastBarController.transform.position.x + "; " + MyFloatingCastBarController.transform.position.y);
-            defaultWindowPositions.Add("FloatingCastBarControllerX", FloatingCastBarController.transform.position.x);
-            defaultWindowPositions.Add("FloatingCastBarControllerY", FloatingCastBarController.transform.position.y);
+            defaultWindowPositions.Add("FloatingCastBarControllerX", FloatingCastBarController.RectTransform.anchoredPosition.x);
+            defaultWindowPositions.Add("FloatingCastBarControllerY", FloatingCastBarController.RectTransform.anchoredPosition.y);
 
-            defaultWindowPositions.Add("StatusEffectPanelControllerX", StatusEffectPanelController.transform.position.x);
-            defaultWindowPositions.Add("StatusEffectPanelControllerY", StatusEffectPanelController.transform.position.y);
+            defaultWindowPositions.Add("StatusEffectPanelControllerX", StatusEffectPanelController.RectTransform.anchoredPosition.x);
+            defaultWindowPositions.Add("StatusEffectPanelControllerY", StatusEffectPanelController.RectTransform.anchoredPosition.y);
 
-            defaultWindowPositions.Add("PlayerUnitFrameControllerX", PlayerUnitFrameController.transform.position.x);
-            defaultWindowPositions.Add("PlayerUnitFrameControllerY", PlayerUnitFrameController.transform.position.y);
+            defaultWindowPositions.Add("PlayerUnitFrameControllerX", PlayerUnitFrameController.RectTransform.anchoredPosition.x);
+            defaultWindowPositions.Add("PlayerUnitFrameControllerY", PlayerUnitFrameController.RectTransform.anchoredPosition.y);
 
-            defaultWindowPositions.Add("FocusUnitFrameControllerX", FocusUnitFrameController.transform.position.x);
-            defaultWindowPositions.Add("FocusUnitFrameControllerY", FocusUnitFrameController.transform.position.y);
+            defaultWindowPositions.Add("FocusUnitFrameControllerX", FocusUnitFrameController.RectTransform.anchoredPosition.x);
+            defaultWindowPositions.Add("FocusUnitFrameControllerY", FocusUnitFrameController.RectTransform.anchoredPosition.y);
 
-            defaultWindowPositions.Add("MiniMapControllerX", MiniMapController.transform.position.x);
-            defaultWindowPositions.Add("MiniMapControllerY", MiniMapController.transform.position.y);
+            defaultWindowPositions.Add("MiniMapControllerX", MiniMapController.RectTransform.anchoredPosition.x);
+            defaultWindowPositions.Add("MiniMapControllerY", MiniMapController.RectTransform.anchoredPosition.y);
 
-            defaultWindowPositions.Add("XPBarControllerX", XPBarController.transform.position.x);
-            defaultWindowPositions.Add("XPBarControllerY", XPBarController.transform.position.y);
+            defaultWindowPositions.Add("XPBarControllerX", XPBarController.RectTransform.anchoredPosition.x);
+            defaultWindowPositions.Add("XPBarControllerY", XPBarController.RectTransform.anchoredPosition.y);
 
-            defaultWindowPositions.Add("BottomPanelX", BottomPanel.transform.position.x);
-            defaultWindowPositions.Add("BottomPanelY", BottomPanel.transform.position.y);
+            defaultWindowPositions.Add("BottomPanelX", BottomPanel.RectTransform.anchoredPosition.x);
+            defaultWindowPositions.Add("BottomPanelY", BottomPanel.RectTransform.anchoredPosition.y);
 
-            defaultWindowPositions.Add("SidePanelX", SidePanel.transform.position.x);
-            defaultWindowPositions.Add("SidePanelY", SidePanel.transform.position.y);
+            defaultWindowPositions.Add("SidePanelX", SidePanel.RectTransform.anchoredPosition.x);
+            defaultWindowPositions.Add("SidePanelY", SidePanel.RectTransform.anchoredPosition.y);
 
-            defaultWindowPositions.Add("MouseOverWindowX", MouseOverWindow.transform.position.x);
-            defaultWindowPositions.Add("MouseOverWindowY", MouseOverWindow.transform.position.y);
+            defaultWindowPositions.Add("MouseOverWindowX", MouseOverWindow.RectTransform.anchoredPosition.x);
+            defaultWindowPositions.Add("MouseOverWindowY", MouseOverWindow.RectTransform.anchoredPosition.y);
         }
 
         public void LoadDefaultWindowPositions() {
             //Debug.Log("UIManager.LoadDefaultWindowPositions()");
 
             // popup windowws
-            abilityBookWindow.transform.position = new Vector3(defaultWindowPositions["AbilityBookWindowX"], defaultWindowPositions["AbilityBookWindowY"], 0);
-            skillBookWindow.transform.position = new Vector3(defaultWindowPositions["SkillBookWindowX"], defaultWindowPositions["SkillBookWindowY"], 0);
-            reputationBookWindow.transform.position = new Vector3(defaultWindowPositions["ReputationBookWindowX"], defaultWindowPositions["ReputationBookWindowY"], 0);
-            currencyListWindow.transform.position = new Vector3(defaultWindowPositions["CurrencyListWindowX"], defaultWindowPositions["CurrencyListWindowY"], 0);
-            characterPanelWindow.transform.position = new Vector3(defaultWindowPositions["CharacterPanelWindowX"], defaultWindowPositions["CharacterPanelWindowY"], 0);
-            lootWindow.transform.position = new Vector3(defaultWindowPositions["LootWindowX"], defaultWindowPositions["LootWindowY"], 0);
-            vendorWindow.transform.position = new Vector3(defaultWindowPositions["VendorWindowX"], defaultWindowPositions["VendorWindowY"], 0);
-            chestWindow.transform.position = new Vector3(defaultWindowPositions["ChestWindowX"], defaultWindowPositions["ChestWindowY"], 0);
-            bankWindow.transform.position = new Vector3(defaultWindowPositions["BankWindowX"], defaultWindowPositions["BankWindowY"], 0);
-            questLogWindow.transform.position = new Vector3(defaultWindowPositions["QuestLogWindowX"], defaultWindowPositions["QuestLogWindowY"], 0);
-            achievementListWindow.transform.position = new Vector3(defaultWindowPositions["AchievementListWindowX"], defaultWindowPositions["AchievementListWindowY"], 0);
-            questGiverWindow.transform.position = new Vector3(defaultWindowPositions["QuestGiverWindowX"], defaultWindowPositions["QuestGiverWindowY"], 0);
-            skillTrainerWindow.transform.position = new Vector3(defaultWindowPositions["SkillTrainerWindowX"], defaultWindowPositions["SkillTrainerWindowY"], 0);
-            interactionWindow.transform.position = new Vector3(defaultWindowPositions["InteractionWindowX"], defaultWindowPositions["InteractionWindowY"], 0);
-            craftingWindow.transform.position = new Vector3(defaultWindowPositions["CraftingWindowX"], defaultWindowPositions["CraftingWindowY"], 0);
-            mainMapWindow.transform.position = new Vector3(defaultWindowPositions["MainMapWindowX"], defaultWindowPositions["MainMapWindowY"], 0);
+            abilityBookWindow.RectTransform.anchoredPosition = new Vector3(defaultWindowPositions["AbilityBookWindowX"], defaultWindowPositions["AbilityBookWindowY"], 0);
+            skillBookWindow.RectTransform.anchoredPosition = new Vector3(defaultWindowPositions["SkillBookWindowX"], defaultWindowPositions["SkillBookWindowY"], 0);
+            reputationBookWindow.RectTransform.anchoredPosition = new Vector3(defaultWindowPositions["ReputationBookWindowX"], defaultWindowPositions["ReputationBookWindowY"], 0);
+            currencyListWindow.RectTransform.anchoredPosition = new Vector3(defaultWindowPositions["CurrencyListWindowX"], defaultWindowPositions["CurrencyListWindowY"], 0);
+            characterPanelWindow.RectTransform.anchoredPosition = new Vector3(defaultWindowPositions["CharacterPanelWindowX"], defaultWindowPositions["CharacterPanelWindowY"], 0);
+            lootWindow.RectTransform.anchoredPosition = new Vector3(defaultWindowPositions["LootWindowX"], defaultWindowPositions["LootWindowY"], 0);
+            vendorWindow.RectTransform.anchoredPosition = new Vector3(defaultWindowPositions["VendorWindowX"], defaultWindowPositions["VendorWindowY"], 0);
+            chestWindow.RectTransform.anchoredPosition = new Vector3(defaultWindowPositions["ChestWindowX"], defaultWindowPositions["ChestWindowY"], 0);
+            bankWindow.RectTransform.anchoredPosition = new Vector3(defaultWindowPositions["BankWindowX"], defaultWindowPositions["BankWindowY"], 0);
+            questLogWindow.RectTransform.anchoredPosition = new Vector3(defaultWindowPositions["QuestLogWindowX"], defaultWindowPositions["QuestLogWindowY"], 0);
+            achievementListWindow.RectTransform.anchoredPosition = new Vector3(defaultWindowPositions["AchievementListWindowX"], defaultWindowPositions["AchievementListWindowY"], 0);
+            questGiverWindow.RectTransform.anchoredPosition = new Vector3(defaultWindowPositions["QuestGiverWindowX"], defaultWindowPositions["QuestGiverWindowY"], 0);
+            skillTrainerWindow.RectTransform.anchoredPosition = new Vector3(defaultWindowPositions["SkillTrainerWindowX"], defaultWindowPositions["SkillTrainerWindowY"], 0);
+            interactionWindow.RectTransform.anchoredPosition = new Vector3(defaultWindowPositions["InteractionWindowX"], defaultWindowPositions["InteractionWindowY"], 0);
+            craftingWindow.RectTransform.anchoredPosition = new Vector3(defaultWindowPositions["CraftingWindowX"], defaultWindowPositions["CraftingWindowY"], 0);
+            mainMapWindow.RectTransform.anchoredPosition = new Vector3(defaultWindowPositions["MainMapWindowX"], defaultWindowPositions["MainMapWindowY"], 0);
 
             // ui elements
-            QuestTrackerWindow.transform.position = new Vector3(defaultWindowPositions["QuestTrackerWindowX"], defaultWindowPositions["QuestTrackerWindowY"], 0);
-            CombatLogWindow.transform.position = new Vector3(defaultWindowPositions["CombatLogWindowX"], defaultWindowPositions["CombatLogWindowY"], 0);
-            MessageFeedManager.MessageFeedWindow.transform.position = new Vector3(defaultWindowPositions["MessageFeedManagerX"], defaultWindowPositions["MessageFeedManagerY"], 0);
-            FloatingCastBarController.transform.position = new Vector3(defaultWindowPositions["FloatingCastBarControllerX"], defaultWindowPositions["FloatingCastBarControllerY"], 0);
-            StatusEffectPanelController.transform.position = new Vector3(defaultWindowPositions["StatusEffectPanelControllerX"], defaultWindowPositions["StatusEffectPanelControllerY"], 0);
-            PlayerUnitFrameController.transform.position = new Vector3(defaultWindowPositions["PlayerUnitFrameControllerX"], defaultWindowPositions["PlayerUnitFrameControllerY"], 0);
-            FocusUnitFrameController.transform.position = new Vector3(defaultWindowPositions["FocusUnitFrameControllerX"], defaultWindowPositions["FocusUnitFrameControllerY"], 0);
-            MiniMapController.transform.position = new Vector3(defaultWindowPositions["MiniMapControllerX"], defaultWindowPositions["MiniMapControllerY"], 0);
-            XPBarController.transform.position = new Vector3(defaultWindowPositions["XPBarControllerX"], defaultWindowPositions["XPBarControllerY"], 0);
-            BottomPanel.transform.position = new Vector3(defaultWindowPositions["BottomPanelX"], defaultWindowPositions["BottomPanelY"], 0);
-            SidePanel.transform.position = new Vector3(defaultWindowPositions["SidePanelX"], defaultWindowPositions["SidePanelY"], 0);
-            MouseOverWindow.transform.position = new Vector3(defaultWindowPositions["MouseOverWindowX"], defaultWindowPositions["MouseOverWindowY"], 0);
+            QuestTrackerWindow.RectTransform.anchoredPosition = new Vector3(defaultWindowPositions["QuestTrackerWindowX"], defaultWindowPositions["QuestTrackerWindowY"], 0);
+            CombatLogWindow.RectTransform.anchoredPosition = new Vector3(defaultWindowPositions["CombatLogWindowX"], defaultWindowPositions["CombatLogWindowY"], 0);
+            MessageFeedManager.MessageFeedWindow.RectTransform.anchoredPosition = new Vector3(defaultWindowPositions["MessageFeedManagerX"], defaultWindowPositions["MessageFeedManagerY"], 0);
+            FloatingCastBarController.RectTransform.anchoredPosition = new Vector3(defaultWindowPositions["FloatingCastBarControllerX"], defaultWindowPositions["FloatingCastBarControllerY"], 0);
+            StatusEffectPanelController.RectTransform.anchoredPosition = new Vector3(defaultWindowPositions["StatusEffectPanelControllerX"], defaultWindowPositions["StatusEffectPanelControllerY"], 0);
+            PlayerUnitFrameController.RectTransform.anchoredPosition = new Vector3(defaultWindowPositions["PlayerUnitFrameControllerX"], defaultWindowPositions["PlayerUnitFrameControllerY"], 0);
+            FocusUnitFrameController.RectTransform.anchoredPosition = new Vector3(defaultWindowPositions["FocusUnitFrameControllerX"], defaultWindowPositions["FocusUnitFrameControllerY"], 0);
+            MiniMapController.RectTransform.anchoredPosition = new Vector3(defaultWindowPositions["MiniMapControllerX"], defaultWindowPositions["MiniMapControllerY"], 0);
+            XPBarController.RectTransform.anchoredPosition = new Vector3(defaultWindowPositions["XPBarControllerX"], defaultWindowPositions["XPBarControllerY"], 0);
+            BottomPanel.RectTransform.anchoredPosition = new Vector3(defaultWindowPositions["BottomPanelX"], defaultWindowPositions["BottomPanelY"], 0);
+            SidePanel.RectTransform.anchoredPosition = new Vector3(defaultWindowPositions["SidePanelX"], defaultWindowPositions["SidePanelY"], 0);
+            MouseOverWindow.RectTransform.anchoredPosition = new Vector3(defaultWindowPositions["MouseOverWindowX"], defaultWindowPositions["MouseOverWindowY"], 0);
+
+            // bags are special since they are in a multiple tier container is never manipluated
+            // just reset them to their anchored position within their grid
+            if (inventoryManager.BagNodes != null && inventoryManager.BagNodes.Count > 0) {
+                for (int i = 0; i < inventoryManager.BagNodes.Count; i++) {
+                    //Debug.Log("UIManager.LoadDefaultWindowPositions(): resetting bagNode[" + i + "]");
+                    inventoryManager.BagNodes[i].BagWindow.RectTransform.anchoredPosition = new Vector2(0, 0);
+                }
+            }
         }
 
         public void CheckMissingConfiguration() {

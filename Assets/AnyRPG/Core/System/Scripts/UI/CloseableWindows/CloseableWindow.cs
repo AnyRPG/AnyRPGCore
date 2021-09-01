@@ -16,28 +16,32 @@ namespace AnyRPG {
         [Header("Closeable Window")]
 
         [SerializeField]
-        protected DraggableWindow dragHandle;
+        protected DraggableWindow dragHandle = null;
 
         [SerializeField]
-        protected GameObject contentParent;
+        protected GameObject contentParent = null;
 
         [SerializeField]
-        protected GameObject contentPrefab;
+        protected GameObject contentPrefab = null;
 
         // put the prefab here if its included directly and not spawned
         [SerializeField]
-        protected GameObject contentGameObject;
+        protected GameObject contentGameObject = null;
 
         [SerializeField]
-        protected string windowTitle;
+        protected string windowTitle = string.Empty;
 
         [SerializeField]
-        protected TextMeshProUGUI windowText;
+        protected TextMeshProUGUI windowText = null;
 
         // for controlling background color
         [SerializeField]
-        protected Image backGroundImage;
+        protected Image backGroundImage = null;
 
+        [SerializeField]
+        protected RectTransform rectTransform = null;
+
+        // game manager references
         protected ObjectPooler objectPooler = null;
 
         public ICloseableWindowContents CloseableWindowContents { get => windowContents; set => windowContents = value; }
@@ -48,6 +52,8 @@ namespace AnyRPG {
                 return gameObject.activeSelf == true;
             }
         }
+
+        public RectTransform RectTransform { get => rectTransform; }
 
         public override void Configure(SystemGameManager systemGameManager) {
             //Debug.Log(gameObject.name + ".CloseableWindow.Awake()");

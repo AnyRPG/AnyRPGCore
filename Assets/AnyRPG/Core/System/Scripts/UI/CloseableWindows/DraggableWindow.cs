@@ -12,13 +12,17 @@ namespace AnyRPG {
         [Header("Draggable Window")]
 
         [SerializeField]
-        private Transform moveableTransform = null;
+        protected Transform moveableTransform = null;
+
+        [Tooltip("This may be different than the moveable transform.  It is used for saving and restoring the window position")]
+        [SerializeField]
+        protected RectTransform rectTransform = null;
 
         [SerializeField]
-        private string dragString = string.Empty;
+        protected string dragString = string.Empty;
 
         [SerializeField]
-        private TextMeshProUGUI dragText = null;
+        protected TextMeshProUGUI dragText = null;
 
         [SerializeField]
         protected bool alwaysDraggable = false;
@@ -26,13 +30,15 @@ namespace AnyRPG {
         [SerializeField]
         protected bool neverDraggable = false;
 
-        private Vector2 startMousePosition, startWindowPosition;
+        protected Vector2 startMousePosition, startWindowPosition;
 
         protected bool uiLocked = true;
 
         // game manager references
         protected UIManager uIManager = null;
         protected SaveManager saveManager = null;
+
+        public RectTransform RectTransform { get => rectTransform; }
 
         public override void Configure(SystemGameManager systemGameManager) {
             base.Configure(systemGameManager);

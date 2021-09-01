@@ -72,9 +72,6 @@ namespace AnyRPG {
         // a multiplier to determine what the image scale will need to be to fit the requested 'real pixels' into the space available in the minimap window
         private float imageScaleFactor = 1f;
 
-        // rect transform of the object this script is on
-        private RectTransform rectTransform = null;
-
         // keep track if mouse is in window bounds
         private Vector3[] worldCorners = new Vector3[4];
 
@@ -114,8 +111,6 @@ namespace AnyRPG {
                 mapButtonImage.color = Color.black;
                 mapButtonText.SetActive(true);
             }
-
-            rectTransform = gameObject.GetComponent<RectTransform>();
 
             // set initial camera size
             if (PlayerPrefs.HasKey("MiniMapZoomLevel")) {

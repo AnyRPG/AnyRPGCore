@@ -259,7 +259,8 @@ namespace AnyRPG {
                     // create a new BagWindow to show the contents of this bag Nodes' bag
                     bagNode.BagWindow = objectPooler.GetPooledObject(windowPrefab, inventoryWindowHolders[i].transform).GetComponent<CloseableWindow>();
                     bagNode.BagWindow.Configure(systemGameManager);
-                    bagNode.BagWindow.transform.GetComponent<RectTransform>().pivot = new Vector2(1, 1);
+                    // testing, to work with new window reset code, pivot needs to stay in the center
+                    //bagNode.BagWindow.transform.GetComponent<RectTransform>().pivot = new Vector2(1, 1);
                     // create a bagbutton to access this bag node
 
                     bagNode.BagButton = bagBarController.AddBagButton();
@@ -278,7 +279,8 @@ namespace AnyRPG {
                         //Debug.Log("InventoryManager.InitializeBagWindows(): create element " + i + " creating bag window");
                         bagNode.BagWindow = objectPooler.GetPooledObject(windowPrefab, inventoryWindowHolders[i - 1].transform).GetComponent<CloseableWindow>();
                         bagNode.BagWindow.Configure(systemGameManager);
-                        bagNode.BagWindow.transform.GetComponent<RectTransform>().pivot = new Vector2(1, 1);
+                        // testing same as above code
+                        //bagNode.BagWindow.transform.GetComponent<RectTransform>().pivot = new Vector2(1, 1);
                     }
 
                     bagNode.BagButton = (uIManager.bankWindow.CloseableWindowContents as BankPanel).MyBagBarController.AddBagButton();
@@ -610,7 +612,7 @@ namespace AnyRPG {
                     //Debug.Log("setting node:" + i + "; to: " + new Vector3(PlayerPrefs.GetFloat("InventoryWindowX" + i), PlayerPrefs.GetFloat("InventoryWindowY" + i), 0));
                     if (BagNodes[i].BagWindow.IsOpen) {
                         //Debug.Log("Window was open, moving it");
-                        BagNodes[i].BagWindow.transform.position = new Vector3(PlayerPrefs.GetFloat("InventoryWindowX" + i), PlayerPrefs.GetFloat("InventoryWindowY" + i), 0);
+                        BagNodes[i].BagWindow.RectTransform.anchoredPosition = new Vector3(PlayerPrefs.GetFloat("InventoryWindowX" + i), PlayerPrefs.GetFloat("InventoryWindowY" + i), 0);
                         //Debug.Log("Window was open, moving it: " + MyBagNodes[i].MyBagWindow.transform.position);
                     } else {
                         //Debug.Log("Window was closed, not moving it");
