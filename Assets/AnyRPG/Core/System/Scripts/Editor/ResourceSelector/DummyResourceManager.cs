@@ -60,6 +60,7 @@ namespace AnyRPG {
                     GenericLoadList<ResourceProfile>(folder);
             } else {
                 if (resourceClassName == "Equipment") {
+                    mappedClassNames.Add("Item/Equipment");
                     mappedClassNames.Add("Item/Accessory");
                     mappedClassNames.Add("Item/Armor");
                     mappedClassNames.Add("Item/Weapon");
