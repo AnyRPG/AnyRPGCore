@@ -174,6 +174,16 @@ namespace AnyRPG {
 
         protected bool eventSubscriptionsInitialized = false;
 
+        // opacity defaults
+        private float defaultInventoryOpacity = 0.5f;
+        private float defaultActionBarOpacity = 0.5f;
+        private float defaultQuestTrackerOpacity = 0.3f;
+        private float defaultPopupWindowOpacity = 0.8f;
+        private float defaultPagedButtonsOpacity = 0.8f;
+        private float defaultInventorySlotOpacity = 0.5f;
+        private float defaultSystemMenuOpacity = 0.8f;
+        private float defaultCombatLogOpacity = 0.8f;
+
         // manager references
         private PlayerManager playerManager = null;
         private KeyBindManager keyBindManager = null;
@@ -292,6 +302,8 @@ namespace AnyRPG {
             CreateEventSubscriptions();
 
             ignoreChangeLayer = LayerMask.NameToLayer("Equipment");
+
+            SetOpacityDefaults();
         }
 
         public override void SetGameManagerReferences() {
@@ -1348,6 +1360,33 @@ namespace AnyRPG {
                 return true;
             }
             return false;
+        }
+
+        public void SetOpacityDefaults() {
+            if (!PlayerPrefs.HasKey("InventoryOpacity")) {
+                PlayerPrefs.SetFloat("InventoryOpacity", defaultInventoryOpacity);
+            }
+            if (!PlayerPrefs.HasKey("InventorySlotOpacity")) {
+                PlayerPrefs.SetFloat("InventorySlotOpacity", defaultInventorySlotOpacity);
+            }
+            if (!PlayerPrefs.HasKey("ActionBarOpacity")) {
+                PlayerPrefs.SetFloat("ActionBarOpacity", defaultActionBarOpacity);
+            }
+            if (!PlayerPrefs.HasKey("QuestTrackerOpacity")) {
+                PlayerPrefs.SetFloat("QuestTrackerOpacity", defaultQuestTrackerOpacity);
+            }
+            if (!PlayerPrefs.HasKey("CombatLogOpacity")) {
+                PlayerPrefs.SetFloat("CombatLogOpacity", defaultCombatLogOpacity);
+            }
+            if (!PlayerPrefs.HasKey("PopupWindowOpacity")) {
+                PlayerPrefs.SetFloat("PopupWindowOpacity", defaultPopupWindowOpacity);
+            }
+            if (!PlayerPrefs.HasKey("PagedButtonsOpacity")) {
+                PlayerPrefs.SetFloat("PagedButtonsOpacity", defaultPagedButtonsOpacity);
+            }
+            if (!PlayerPrefs.HasKey("SystemMenuOpacity")) {
+                PlayerPrefs.SetFloat("SystemMenuOpacity", defaultSystemMenuOpacity);
+            }
         }
     }
 

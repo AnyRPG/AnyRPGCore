@@ -92,6 +92,12 @@ MonoBehaviour:
     rotation: {x: 2.722725, y: 356.621, z: 267.3167}
     scale: {x: 1, y: 1, z: 1}
     targetBone: Hips
+  - nodeName: Main Hand Sword Sheathed
+    position: {x: 0.0232, y: -0.2365, z: 0.0011}
+    rotationIsGlobal: 0
+    rotation: {x: 2.722725, y: 356.621, z: 262.3167}
+    scale: {x: 1, y: 1, z: 1}
+    targetBone: Hips
   - nodeName: Off Hand Sword Sheathed
     position: {x: 0.0232, y: 0.2165, z: 0.0011}
     rotationIsGlobal: 0

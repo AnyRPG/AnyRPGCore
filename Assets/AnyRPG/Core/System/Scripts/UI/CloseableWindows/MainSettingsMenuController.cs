@@ -75,14 +75,6 @@ namespace AnyRPG {
         public Slider pagedButtonsOpacitySlider;
         public Slider inventorySlotOpacitySlider;
 
-        private float defaultInventoryOpacity = 0.5f;
-        private float defaultActionBarOpacity = 0.5f;
-        private float defaultQuestTrackerOpacity = 0.3f;
-        private float defaultPopupWindowOpacity = 0.8f;
-        private float defaultPagedButtonsOpacity = 0.8f;
-        private float defaultInventorySlotOpacity = 0.5f;
-        private float defaultSystemMenuOpacity = 0.8f;
-        private float defaultCombatLogOpacity = 0.8f;
         private int defaultUseQuestTracker = 1;
         private int defaultUseActionBar2 = 1;
         private int defaultUseActionBar3 = 1;
@@ -192,30 +184,7 @@ namespace AnyRPG {
 
         private void LoadUISettings() {
             //Debug.Log("MainSettingsMenuController.LoadUISettings()");
-            if (!PlayerPrefs.HasKey("InventoryOpacity")) {
-                PlayerPrefs.SetFloat("InventoryOpacity", defaultInventoryOpacity);
-            }
-            if (!PlayerPrefs.HasKey("InventorySlotOpacity")) {
-                PlayerPrefs.SetFloat("InventorySlotOpacity", defaultInventorySlotOpacity);
-            }
-            if (!PlayerPrefs.HasKey("ActionBarOpacity")) {
-                PlayerPrefs.SetFloat("ActionBarOpacity", defaultActionBarOpacity);
-            }
-            if (!PlayerPrefs.HasKey("QuestTrackerOpacity")) {
-                PlayerPrefs.SetFloat("QuestTrackerOpacity", defaultQuestTrackerOpacity);
-            }
-            if (!PlayerPrefs.HasKey("CombatLogOpacity")) {
-                PlayerPrefs.SetFloat("CombatLogOpacity", defaultCombatLogOpacity);
-            }
-            if (!PlayerPrefs.HasKey("PopupWindowOpacity")) {
-                PlayerPrefs.SetFloat("PopupWindowOpacity", defaultPopupWindowOpacity);
-            }
-            if (!PlayerPrefs.HasKey("PagedButtonsOpacity")) {
-                PlayerPrefs.SetFloat("PagedButtonsOpacity", defaultPagedButtonsOpacity);
-            }
-            if (!PlayerPrefs.HasKey("SystemMenuOpacity")) {
-                PlayerPrefs.SetFloat("SystemMenuOpacity", defaultSystemMenuOpacity);
-            }
+            
             if (!PlayerPrefs.HasKey("UseQuestTracker")) {
                 PlayerPrefs.SetInt("UseQuestTracker", defaultUseQuestTracker);
             }
