@@ -56,20 +56,17 @@ namespace AnyRPG {
         private const int windowWidth = 600;
         private const int windowHeight = 600;
 
-        public static bool DisplayWelcomeScreen {
-            get { return PlayerPrefs.GetInt("DisplayWelcomeScreen") == 1 ? true : false; }
+        public static bool DisplayWelcomeWindow {
+            get { return PlayerPrefs.GetInt("DisplayWelcomeWindow") == 1 ? true : false; }
             set {
-                if (value != (PlayerPrefs.GetInt("DisplayWelcomeScreen") == 1 ? true : false)) {
-                    PlayerPrefs.SetInt("DisplayWelcomeScreen", value == true ? 1 : 0);
+                if (value != (PlayerPrefs.GetInt("DisplayWelcomeWindow") == 1 ? true : false)) {
+                    PlayerPrefs.SetInt("DisplayWelcomeWindow", value == true ? 1 : 0);
                 }
             }
         }
 
         [MenuItem("Tools/AnyRPG/Welcome Window", false, windowWidth)]
         public static void Open() {
-            if (PlayerPrefs.HasKey("DisplayWelcomeWindow") == false) {
-                PlayerPrefs.SetInt("DisplayWelcomeWindow", 1);
-            }
             GetWindow<WelcomeWindow>(true);
         }
 
@@ -120,7 +117,7 @@ namespace AnyRPG {
         private void DrawBottom() {
             GUILayout.BeginHorizontal("box");
 
-            DisplayWelcomeScreen = GUILayout.Toggle(DisplayWelcomeScreen, "Display this window at startup");
+            DisplayWelcomeWindow = GUILayout.Toggle(DisplayWelcomeWindow, "Display this window at startup");
 
             GUILayout.EndHorizontal();
         }

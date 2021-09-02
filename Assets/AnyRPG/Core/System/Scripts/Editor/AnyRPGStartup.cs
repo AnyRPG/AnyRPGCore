@@ -8,12 +8,16 @@ namespace AnyRPG {
     public class AnyRPGStartup {
 
         static AnyRPGStartup() {
+            if (PlayerPrefs.HasKey("DisplayWelcomeWindow") == false) {
+                PlayerPrefs.SetInt("DisplayWelcomeWindow", 1);
+            }
+
             EditorApplication.update -= TriggerWelcomeScreen;
             EditorApplication.update += TriggerWelcomeScreen;
         }
 
         private static void TriggerWelcomeScreen() {
-            var showAtStartup = PlayerPrefs.GetInt("DisplayWelcomeScreen") == 1 && EditorApplication.timeSinceStartup < 30f;
+            bool showAtStartup = PlayerPrefs.GetInt("DisplayWelcomeWindow") == 1 && EditorApplication.timeSinceStartup < 30f;
 
             if (showAtStartup) {
                 WelcomeWindow.Open();
