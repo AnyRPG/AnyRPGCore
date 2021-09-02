@@ -76,9 +76,6 @@ namespace AnyRPG {
         }
 
         private void CheckGraphicsQuality() {
-            if (!PlayerPrefs.HasKey("GraphicsQualityIndex")) {
-                PlayerPrefs.SetInt("GraphicsQualityIndex", QualitySettings.GetQualityLevel());
-            }
             if (PlayerPrefs.GetInt("GraphicsQualityIndex") == 0) {
                 graphicsQualityArea.SelectButton(0);
             } else if (PlayerPrefs.GetInt("GraphicsQualityIndex") == 1) {
@@ -111,9 +108,6 @@ namespace AnyRPG {
         }
 
         private void CheckFullScreen() {
-            if (!PlayerPrefs.HasKey("FullScreen")) {
-                PlayerPrefs.SetInt("FullScreen", (Screen.fullScreen == true ? 1 : 0));
-            }
             if (PlayerPrefs.GetInt("FullScreen") == 1) {
                 fullScreenButton.Select();
             } else if (PlayerPrefs.GetInt("FullScreen") == 0) {
@@ -139,9 +133,6 @@ namespace AnyRPG {
         }
 
         public void CheckVSync() {
-            if (!PlayerPrefs.HasKey("VSyncValue")) {
-                PlayerPrefs.SetInt("VSyncValue", QualitySettings.vSyncCount);
-            }
             if (PlayerPrefs.GetInt("VSyncValue") == 0) {
                 vSyncButton.DeSelect();
             } else if (PlayerPrefs.GetInt("VSyncValue") == 1) {
@@ -163,9 +154,6 @@ namespace AnyRPG {
 
 
         public void CheckTextureQuality() {
-            if (!PlayerPrefs.HasKey("Textures")) {
-                PlayerPrefs.SetInt("Textures", 2);
-            }
             if (PlayerPrefs.GetInt("Textures") == 0) {
                 QualitySettings.masterTextureLimit = 2;
                 textureQualityArea.SelectButton(0);
@@ -184,9 +172,7 @@ namespace AnyRPG {
         }
 
         public void CheckShadowQuality() {
-            if (!PlayerPrefs.HasKey("Shadows")) {
-                PlayerPrefs.SetInt("Shadows", 2);
-            }
+
             if (PlayerPrefs.GetInt("Shadows") == 0) {
                 QualitySettings.shadowCascades = 0;
                 QualitySettings.shadowDistance = 0;

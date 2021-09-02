@@ -75,28 +75,6 @@ namespace AnyRPG {
         public Slider pagedButtonsOpacitySlider;
         public Slider inventorySlotOpacitySlider;
 
-        private int defaultUseQuestTracker = 1;
-        private int defaultUseActionBar2 = 1;
-        private int defaultUseActionBar3 = 1;
-        private int defaultUseActionBar4 = 1;
-        private int defaultUseActionBar5 = 1;
-        private int defaultUseActionBar6 = 1;
-        private int defaultUseActionBar7 = 1;
-        private int defaultUseFocusUnitFrameButton = 1;
-        private int defaultUsePlayerUnitFrameButton = 1;
-        private int defaultUseFloatingCastBarButton = 1;
-        private int defaultUseMiniMapButton = 1;
-        private int defaultUseExperienceBarButton = 1;
-        private int defaultUseFloatingCombatTextButton = 1;
-        private int defaultUseMessageFeedButton = 1;
-        private int defaultUseStatusEffectBarButton = 1;
-        private int defaultLockUIButton = 1;
-        private int defaultUseCombatLogButton = 1;
-        private int defaultShowPlayerNameButton = 1;
-        private int defaultShowPlayerFactionButton = 1;
-        private int defaultHideFullHealthBarButton = 1;
-
-
         private float defaultMouseLookSpeed = 0.5f;
         private float defaultMouseTurnSpeed = 0.5f;
         private float defaultKeyboardTurnSpeed = 0.5f;
@@ -159,6 +137,7 @@ namespace AnyRPG {
             PanelVideo.Configure(systemGameManager);
             PanelKeyBindings.Configure(systemGameManager);
 
+            SetPlayerPrefsDefaults();
         }
 
         public override void SetGameManagerReferences() {
@@ -185,68 +164,6 @@ namespace AnyRPG {
         private void LoadUISettings() {
             //Debug.Log("MainSettingsMenuController.LoadUISettings()");
             
-            if (!PlayerPrefs.HasKey("UseQuestTracker")) {
-                PlayerPrefs.SetInt("UseQuestTracker", defaultUseQuestTracker);
-            }
-            if (!PlayerPrefs.HasKey("UseActionBar2")) {
-                PlayerPrefs.SetInt("UseActionBar2", defaultUseActionBar2);
-            }
-            if (!PlayerPrefs.HasKey("UseActionBar3")) {
-                PlayerPrefs.SetInt("UseActionBar3", defaultUseActionBar3);
-            }
-            if (!PlayerPrefs.HasKey("UseActionBar4")) {
-                PlayerPrefs.SetInt("UseActionBar4", defaultUseActionBar4);
-            }
-            if (!PlayerPrefs.HasKey("UseActionBar5")) {
-                PlayerPrefs.SetInt("UseActionBar5", defaultUseActionBar5);
-            }
-            if (!PlayerPrefs.HasKey("UseActionBar6")) {
-                PlayerPrefs.SetInt("UseActionBar6", defaultUseActionBar6);
-            }
-            if (!PlayerPrefs.HasKey("UseActionBar7")) {
-                PlayerPrefs.SetInt("UseActionBar7", defaultUseActionBar7);
-            }
-            if (!PlayerPrefs.HasKey("UseFocusUnitFrame")) {
-                PlayerPrefs.SetInt("UseFocusUnitFrame", defaultUseFocusUnitFrameButton);
-            }
-            if (!PlayerPrefs.HasKey("UsePlayerUnitFrame")) {
-                PlayerPrefs.SetInt("UsePlayerUnitFrame", defaultUsePlayerUnitFrameButton);
-            }
-            if (!PlayerPrefs.HasKey("UseFloatingCastBar")) {
-                PlayerPrefs.SetInt("UseFloatingCastBar", defaultUseFloatingCastBarButton);
-            }
-            if (!PlayerPrefs.HasKey("UseMiniMap")) {
-                PlayerPrefs.SetInt("UseMiniMap", defaultUseMiniMapButton);
-            }
-            if (!PlayerPrefs.HasKey("UseExperienceBar")) {
-                PlayerPrefs.SetInt("UseExperienceBar", defaultUseExperienceBarButton);
-            }
-            if (!PlayerPrefs.HasKey("UseFloatingCombatText")) {
-                PlayerPrefs.SetInt("UseFloatingCombatText", defaultUseFloatingCombatTextButton);
-            }
-            if (!PlayerPrefs.HasKey("UseMessageFeed")) {
-                PlayerPrefs.SetInt("UseMessageFeed", defaultUseMessageFeedButton);
-            }
-            if (!PlayerPrefs.HasKey("UseStatusEffectBar")) {
-                PlayerPrefs.SetInt("UseStatusEffectBar", defaultUseStatusEffectBarButton);
-            }
-            if (!PlayerPrefs.HasKey("UseCombatLog")) {
-                PlayerPrefs.SetInt("UseCombatLog", defaultUseCombatLogButton);
-            }
-            if (!PlayerPrefs.HasKey("LockUI")) {
-                PlayerPrefs.SetInt("LockUI", defaultLockUIButton);
-            }
-            if (!PlayerPrefs.HasKey("ShowPlayerName")) {
-                PlayerPrefs.SetInt("ShowPlayerName", defaultShowPlayerNameButton);
-            }
-            if (!PlayerPrefs.HasKey("ShowPlayerFaction")) {
-                PlayerPrefs.SetInt("ShowPlayerFaction", defaultShowPlayerFactionButton);
-            }
-            if (!PlayerPrefs.HasKey("HideFullHealthBar")) {
-                PlayerPrefs.SetInt("HideFullHealthBar", defaultHideFullHealthBarButton);
-            }
-
-
             inventoryOpacitySlider.value = PlayerPrefs.GetFloat("InventoryOpacity");
             inventorySlotOpacitySlider.value = PlayerPrefs.GetFloat("InventorySlotOpacity");
             actionBarOpacitySlider.value = PlayerPrefs.GetFloat("ActionBarOpacity");
@@ -374,7 +291,7 @@ namespace AnyRPG {
 
         }
 
-        private void LoadControlsSettings() {
+        private void SetPlayerPrefsDefaults() {
             if (!PlayerPrefs.HasKey("MouseLookSpeed")) {
                 PlayerPrefs.SetFloat("MouseLookSpeed", defaultMouseLookSpeed);
             }
@@ -387,6 +304,31 @@ namespace AnyRPG {
             if (!PlayerPrefs.HasKey("MouseInvert")) {
                 PlayerPrefs.SetInt("MouseInvert", defaultInvertMouse);
             }
+
+            if (!PlayerPrefs.HasKey("GraphicsQualityIndex")) {
+                PlayerPrefs.SetInt("GraphicsQualityIndex", QualitySettings.GetQualityLevel());
+            }
+
+            if (!PlayerPrefs.HasKey("FullScreen")) {
+                PlayerPrefs.SetInt("FullScreen", (Screen.fullScreen == true ? 1 : 0));
+            }
+
+            if (!PlayerPrefs.HasKey("VSyncValue")) {
+                PlayerPrefs.SetInt("VSyncValue", QualitySettings.vSyncCount);
+            }
+
+            if (!PlayerPrefs.HasKey("Textures")) {
+                PlayerPrefs.SetInt("Textures", 2);
+            }
+
+            if (!PlayerPrefs.HasKey("Shadows")) {
+                PlayerPrefs.SetInt("Shadows", 2);
+            }
+
+        }
+
+        private void LoadControlsSettings() {
+           
             mouseLookSpeedSlider.value = PlayerPrefs.GetFloat("MouseLookSpeed");
             mouseTurnSpeedSlider.value = PlayerPrefs.GetFloat("MouseTurnSpeed");
             keyboardTurnSpeedSlider.value = PlayerPrefs.GetFloat("KeyboardTurnSpeed");
