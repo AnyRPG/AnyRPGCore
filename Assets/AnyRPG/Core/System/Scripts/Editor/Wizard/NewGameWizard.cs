@@ -12,12 +12,12 @@ namespace AnyRPG {
 
         // Template path/scene that will be used to create the new game
         private const string templateName = "TemplateGame";
-        private const string pathToNewGameTemplate = "/AnyRPG/Engine/Core/Templates/Game/" + templateName;
+        private const string pathToNewGameTemplate = "/AnyRPG/Core/Templates/Game/" + templateName;
 
         // for now this is necessary due to git not saving empty folders
-        private const string pathToResourcesTemplateFolder = "/AnyRPG/Engine/Core/Games/CoreGame/Resources/CoreGame";
+        private const string pathToResourcesTemplateFolder = "/AnyRPG/Core/Games/FeaturesDemo/Resources/FeaturesDemoGame";
 
-        private const string pathToGameManagerPrefab = "Assets/AnyRPG/Engine/Core/System/Prefabs/GameManager/GameManager.prefab";
+        private const string pathToGameManagerPrefab = "Assets/AnyRPG/Core/System/Prefabs/GameManager/GameManager.prefab";
         private const string pathToUMADCSPrefab = "Getting Started/UMA_GLIB.prefab";
 
         // Will be a subfolder of Application.dataPath and should start with "/"
@@ -155,7 +155,7 @@ namespace AnyRPG {
                 EditorUtility.DisplayProgressBar("New Game Wizard", "Creating Third Party Prefabs and Resources...", 0.65f);
 
                 // copy unit profile
-                string unitProfileTemplatePath = "/AnyRPG/Engine/Core/Templates/Resource/UnitProfile/InvectorUMAPlayerUnitTemplate.asset";
+                string unitProfileTemplatePath = "/AnyRPG/Core/Templates/Resource/UnitProfile/InvectorUMAPlayerUnitTemplate.asset";
                 FileUtil.CopyFileOrDirectory(Application.dataPath + unitProfileTemplatePath, resourcesFolder + "/UnitProfile/InvectorUMAPlayerUnit.asset");
                 //AssetDatabase.RenameAsset(resourcesFolder + "/UnitProfile/InvectorUMAPlayerUnitTemplate.asset", "InvectorUMAPlayerUnit.asset");
                 
