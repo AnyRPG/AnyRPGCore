@@ -136,7 +136,7 @@ namespace AnyRPG {
                 dynamicCharacterAvatar.LoadAvatarDefinition(avatarDefinition);
             }
             //bool wasInitialized = false;
-            if (dynamicCharacterAvatar.umaData == null) {
+            if (dynamicCharacterAvatar.umaData == null || dynamicCharacterAvatar.umaData.firstBake == true) {
                 //Debug.Log(gameObject.name + "UnitController.ConfigureUnitModel(): dynamicCharacterAvatar.Initialize()");
                 dynamicCharacterAvatar.Initialize();
                 //if (initialAppearance != null && initialAppearance != string.Empty) {
@@ -145,6 +145,7 @@ namespace AnyRPG {
                 buildInProgress = true;
                 //}
             } else {
+                //Debug.Log(unitController.gameObject.name + "UMAModelController.InitializeModel(): umaData.firstbake = " + dynamicCharacterAvatar.umaData.firstBake);
                 //if (!wasInitialized) {
 
                 //Debug.Log(gameObject.name + "UnitController.ConfigureUnitModel(): dynamicCharacterAvatar has been re-used and is already initialized");

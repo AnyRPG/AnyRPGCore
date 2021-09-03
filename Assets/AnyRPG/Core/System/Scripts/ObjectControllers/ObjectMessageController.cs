@@ -25,18 +25,18 @@ namespace AnyRPG {
         public Dictionary<string, LocalEventResponseNode> LocalEventDictionary { get => localEventDictionary; set => localEventDictionary = value; }
 
         void Awake() {
-            Debug.Log(gameObject.name + ".ObjectMessageController.Awake()");
+            //Debug.Log(gameObject.name + ".ObjectMessageController.Awake()");
             RunEarlyInit();
         }
 
         private void RunEarlyInit() {
-            Debug.Log(gameObject.name + ".ObjectMessageController.RunEarlyInit()");
+            //Debug.Log(gameObject.name + ".ObjectMessageController.RunEarlyInit()");
             SetupScriptableObjects();
             InitializeEventResponses(SubscribeStage.Awake);
         }
 
         private void Start() {
-            Debug.Log(gameObject.name + ".ObjectMessageController.Start()");
+            //Debug.Log(gameObject.name + ".ObjectMessageController.Start()");
             InitializeEventResponses(SubscribeStage.Start);
         }
 
