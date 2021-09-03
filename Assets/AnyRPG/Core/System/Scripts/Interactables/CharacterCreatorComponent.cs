@@ -32,10 +32,25 @@ namespace AnyRPG {
         public override bool Interact(CharacterUnit source, int optionIndex = 0) {
             // was there a reason why we didn't have base.Interact here before or just an oversight?
             base.Interact(source, optionIndex);
+            // moved to coroutine because UMA will crash here due to its use of DestroyImmediate in the case where an UMAData was attached to the model.
+            interactable.StartCoroutine(OpenWindowWait());
+            /*
             uIManager.characterCreatorWindow.OpenWindow();
             (uIManager.characterCreatorWindow.CloseableWindowContents as CharacterCreatorWindowPanel).OnConfirmAction += HandleConfirmAction;
             (uIManager.characterCreatorWindow.CloseableWindowContents as CharacterCreatorWindowPanel).OnCloseWindow += CleanupEventSubscriptions;
+            */
             return true;
+        }
+
+        public IEnumerator OpenWindowWait() {
+            yield return null;
+            OpenWindow();
+        }
+
+        public void OpenWindow() {
+            uIManager.characterCreatorWindow.OpenWindow();
+            (uIManager.characterCreatorWindow.CloseableWindowContents as CharacterCreatorWindowPanel).OnConfirmAction += HandleConfirmAction;
+            (uIManager.characterCreatorWindow.CloseableWindowContents as CharacterCreatorWindowPanel).OnCloseWindow += CleanupEventSubscriptions;
         }
 
         /// <summary>
