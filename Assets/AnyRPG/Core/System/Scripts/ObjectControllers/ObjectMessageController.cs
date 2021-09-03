@@ -37,6 +37,12 @@ namespace AnyRPG {
 
         private void Start() {
             //Debug.Log(gameObject.name + ".ObjectMessageController.Start()");
+            RunLateInit();
+            //InitializeEventResponses(SubscribeStage.Start);
+        }
+
+        private void RunLateInit() {
+            //Debug.Log(gameObject.name + ".ObjectMessageController.RunLateInit()");
             InitializeEventResponses(SubscribeStage.Start);
         }
 
@@ -584,7 +590,9 @@ namespace AnyRPG {
         }
 
         public void OnGetReusedObjectFromPool() {
+            //Debug.Log(gameObject.name + ".ObjectMessageController.OnGetReusedObjectFromPool()");
             RunEarlyInit();
+            RunLateInit();
         }
 
     }
