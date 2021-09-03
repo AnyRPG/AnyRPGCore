@@ -20,14 +20,22 @@ namespace AnyRPG {
         [Header("Exclusivity")]
 
         [Tooltip("If this slot type takes up more than one physical slots, the slots listed below will be unequipped to make room for the item in this slot")]
+        [FormerlySerializedAs("exclusiveSlotProfileList")]
         [SerializeField]
         [ResourceSelector(resourceType = typeof(EquipmentSlotProfile))]
-        private List<string> exclusiveSlotProfileList = new List<string>();
+        private List<string> exclusiveSlotProfiles = new List<string>();
 
-        private List<EquipmentSlotProfile> realExclusiveSlotProfileList = new List<EquipmentSlotProfile>();
+        [Tooltip("If this slot type takes up more than one physical slots, the slot types listed below will be unequipped to make room for the item in this slot")]
+        [SerializeField]
+        [ResourceSelector(resourceType = typeof(EquipmentSlotType))]
+        private List<string> exclusiveSlotTypes = new List<string>();
 
-        public List<EquipmentSlotProfile> MyExclusiveSlotProfileList { get => realExclusiveSlotProfileList; set => realExclusiveSlotProfileList = value; }
-        public float MyStatWeight { get => statWeight; set => statWeight = value; }
+        private List<EquipmentSlotProfile> exclusiveSlotProfileList = new List<EquipmentSlotProfile>();
+        private List<EquipmentSlotType> exclusiveSlotTypeList = new List<EquipmentSlotType>();
+
+        public float StatWeight { get => statWeight; set => statWeight = value; }
+        public List<EquipmentSlotProfile> ExclusiveSlotProfileList { get => exclusiveSlotProfileList; set => exclusiveSlotProfileList = value; }
+        public List<EquipmentSlotType> ExclusiveSlotTypeList { get => exclusiveSlotTypeList; set => exclusiveSlotTypeList = value; }
 
         public List<EquipmentSlotProfile> GetCompatibleSlotProfiles() {
             List<EquipmentSlotProfile> returnValue = new List<EquipmentSlotProfile>();
@@ -42,14 +50,26 @@ namespace AnyRPG {
         public override void SetupScriptableObjects(SystemGameManager systemGameManager) {
             base.SetupScriptableObjects(systemGameManager);
 
-            realExclusiveSlotProfileList = new List<EquipmentSlotProfile>();
-            if (exclusiveSlotProfileList != null) {
-                foreach (string exclusiveSlotProfile in exclusiveSlotProfileList) {
+            exclusiveSlotProfileList = new List<EquipmentSlotProfile>();
+            if (exclusiveSlotProfiles != null) {
+                foreach (string exclusiveSlotProfile in exclusiveSlotProfiles) {
                     EquipmentSlotProfile tmpSlotProfile = systemDataFactory.GetResource<EquipmentSlotProfile>(exclusiveSlotProfile);
                     if (tmpSlotProfile != null) {
-                        realExclusiveSlotProfileList.Add(tmpSlotProfile);
+                        exclusiveSlotProfileList.Add(tmpSlotProfile);
                     } else {
                         Debug.LogError("SystemAbilityManager.SetupScriptableObjects(): Could not find realExclusiveSlotProfile: " + exclusiveSlotProfile + " while inititalizing " + DisplayName + ".  CHECK INSPECTOR");
+                    }
+                }
+            }
+
+            exclusiveSlotTypeList = new List<EquipmentSlotType>();
+            if (exclusiveSlotTypes != null) {
+                foreach (string exclusiveSlotType in exclusiveSlotTypes) {
+                    EquipmentSlotType tmpSlotType = systemDataFactory.GetResource<EquipmentSlotType>(exclusiveSlotType);
+                    if (tmpSlotType != null) {
+                        exclusiveSlotTypeList.Add(tmpSlotType);
+                    } else {
+                        Debug.LogError("SystemAbilityManager.SetupScriptableObjects(): Could not find exclusiveSlotType: " + exclusiveSlotType + " while inititalizing " + DisplayName + ".  CHECK INSPECTOR");
                     }
                 }
             }

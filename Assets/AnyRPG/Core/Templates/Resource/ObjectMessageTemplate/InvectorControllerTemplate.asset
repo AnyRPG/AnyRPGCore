@@ -18,16 +18,20 @@ MonoBehaviour:
   iconBackgroundImage: {fileID: 0}
   description: 'This template will:
 
-    -synchronize invector run speed with game run speed
+    -synchronize invector run speed with game
+    run speed
 
-    -require left or right mouse to be held down to turn character with mouse to prevent
-    unintended camera movement when interacting with the ui
+    -require left or right mouse to be held down to turn character
+    with mouse to prevent unintended camera movement when interacting with the ui
 
-    -disable movement when entering text in a text field
+    -disable
+    movement when entering text in a text field
 
-    -respond to select keybind events to set invector keybinds
+    -respond to select keybind events
+    to set invector keybinds
 
-    -listen to local events and inject responses as necessary'
+    -listen to local events and inject responses as
+    necessary'
   useRegionalDescription: 0
   resourceDescriptionProfile: 
   systemEventList:
@@ -649,26 +653,4 @@ MonoBehaviour:
     - scriptName: Invector.vCharacterController.vThirdPersonInput
       componentAction: 0
     invokeResponses: []
-  localEventList:
-  - eventName: onFixedUpdate
-    responseLimit: 1
-    subscribeStage: 1
-    messageResponses: []
-    propertyResponses: []
-    componentResponses: []
-    invokeResponses:
-    - scriptName: Invector.vCharacterController.vThirdPersonInput
-      propertyName: tpCamera
-      subMethodName: Init
-      parameter: 0
-      useCustomParam: 0
-      customParameters:
-        simpleParams:
-          StringParam: 
-          IntParam: 0
-          FloatParam: 0
-          BoolParam: 0
-        objectParam:
-          objectName: 
-          simpleParams: []
-    scriptName: Invector.vCharacterController.vThirdPersonInput
+  localEventList: []

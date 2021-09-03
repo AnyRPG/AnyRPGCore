@@ -119,14 +119,32 @@ namespace AnyRPG {
 
 
         public void UnequipExclusiveSlots(EquipmentSlotType equipmentSlotType) {
-            //Debug.Log(gameObject + ".CharacterEquipmentManager.UnequipExclusiveSlots(" + equipmentSlotTypeName + ")");
+            //Debug.Log(baseCharacter.gameObject.name + ".CharacterEquipmentManager.UnequipExclusiveSlots(" + equipmentSlotType.DisplayName + ")");
             if (equipmentSlotType != null) {
-                //Debug.Log(gameObject + ".CharacterEquipmentManager.UnequipExclusiveSlots(" + equipmentSlotTypeName + "): found resource");
-                if (equipmentSlotType.MyExclusiveSlotProfileList != null && equipmentSlotType.MyExclusiveSlotProfileList.Count > 0) {
-                    //Debug.Log(gameObject + ".CharacterEquipmentManager.UnequipExclusiveSlots(" + equipmentSlotTypeName + "): has exclusive slots");
-                    foreach (EquipmentSlotProfile equipmentSlotProfile in equipmentSlotType.MyExclusiveSlotProfileList) {
-                        //Debug.Log(gameObject + ".CharacterEquipmentManager.UnequipExclusiveSlots(" + equipmentSlotTypeName + "): exclusive slot: " + equipmentSlotProfileName);
+                // unequip exclusive slot profiles
+                //Debug.Log(baseCharacter.gameObject.name + ".CharacterEquipmentManager.UnequipExclusiveSlots(" + equipmentSlotType.DisplayName + "): found resource");
+                if (equipmentSlotType.ExclusiveSlotProfileList != null && equipmentSlotType.ExclusiveSlotProfileList.Count > 0) {
+                    //Debug.Log(baseCharacter.gameObject.name + ".CharacterEquipmentManager.UnequipExclusiveSlots(" + equipmentSlotType.DisplayName + "): has exclusive slots");
+                    foreach (EquipmentSlotProfile equipmentSlotProfile in equipmentSlotType.ExclusiveSlotProfileList) {
+                        //Debug.Log(baseCharacter.gameObject.name + ".CharacterEquipmentManager.UnequipExclusiveSlots(" + equipmentSlotType.DisplayName + "): exclusive slot: " + equipmentSlotProfile.DisplayName);
                         if (equipmentSlotProfile != null) {
+                            Unequip(equipmentSlotProfile);
+                        }
+                    }
+                }
+
+                // unequip exclusive slot types
+                if (equipmentSlotType.ExclusiveSlotTypeList != null && equipmentSlotType.ExclusiveSlotTypeList.Count > 0) {
+                    //Debug.Log(baseCharacter.gameObject.name + ".CharacterEquipmentManager.UnequipExclusiveSlots(" + equipmentSlotType.DisplayName + "): has exclusive slot types");
+                    foreach (EquipmentSlotType exclusiveSlotType in equipmentSlotType.ExclusiveSlotTypeList) {
+                        //Debug.Log(baseCharacter.gameObject.name + ".CharacterEquipmentManager.UnequipExclusiveSlots(" + equipmentSlotType.DisplayName + "): exclusive slot type: " + exclusiveSlotType);
+                        List<EquipmentSlotProfile> removeList = new List<EquipmentSlotProfile>();
+                        foreach (EquipmentSlotProfile equipmentSlotProfile in currentEquipment.Keys) {
+                            if (currentEquipment[equipmentSlotProfile] != null && currentEquipment[equipmentSlotProfile].EquipmentSlotType == exclusiveSlotType) {
+                                removeList.Add(equipmentSlotProfile);
+                            }
+                        }
+                        foreach (EquipmentSlotProfile equipmentSlotProfile in removeList) {
                             Unequip(equipmentSlotProfile);
                         }
                     }

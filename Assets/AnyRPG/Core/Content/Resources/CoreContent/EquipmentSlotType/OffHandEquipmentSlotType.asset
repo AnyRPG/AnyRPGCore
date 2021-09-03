@@ -13,9 +13,13 @@ MonoBehaviour:
   m_Name: OffHandEquipmentSlotType
   m_EditorClassIdentifier: 
   resourceName: Off Hand
+  displayName: 
   icon: {fileID: 0}
+  iconBackgroundImage: {fileID: 0}
   description: 
   useRegionalDescription: 0
   resourceDescriptionProfile: 
   statWeight: 1
-  exclusiveSlotProfileList: []
+  exclusiveSlotProfiles: []
+  exclusiveSlotTypes:
+  - Two Hand

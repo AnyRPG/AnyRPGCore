@@ -149,7 +149,7 @@ namespace AnyRPG {
 
             if (addScaledDamagePerSecond) {
                 return baseDamagePerSecond + Mathf.Ceil(Mathf.Clamp(
-                    (float)GetItemLevel(characterLevel) * (systemConfigurationManager.WeaponDPSBudgetPerLevel * GetItemQualityNumber(usedItemQuality) * EquipmentSlotType.MyStatWeight),
+                    (float)GetItemLevel(characterLevel) * (systemConfigurationManager.WeaponDPSBudgetPerLevel * GetItemQualityNumber(usedItemQuality) * EquipmentSlotType.StatWeight),
                     0f,
                     Mathf.Infinity
                     ));
