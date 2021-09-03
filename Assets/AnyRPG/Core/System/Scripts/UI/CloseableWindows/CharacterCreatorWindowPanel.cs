@@ -172,7 +172,7 @@ namespace AnyRPG {
         }
 
         public void HandleTargetCreated() {
-            Debug.Log("CharacterCreatorWindowPanel.HandleTargetCreated()");
+            //Debug.Log("CharacterCreatorWindowPanel.HandleTargetCreated()");
             characterCreatorManager.PreviewUnitController.UnitModelController.SetInitialSavedAppearance();
         }
 

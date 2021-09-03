@@ -221,15 +221,15 @@ namespace AnyRPG {
         public virtual bool CanEquip(BaseCharacter baseCharacter) {
             //Debug.Log(DisplayName + ".Equipment.CanEquip(" + baseCharacter.gameObject.name + ")");
             if (!CharacterClassRequirementIsMet(baseCharacter)) {
-                //Debug.Log(DisplayName + ".Equipment.CanEquip(): not the right character class");
+                Debug.Log(baseCharacter.gameObject.name + "." + DisplayName + ".Equipment.CanEquip(): not the right character class");
                 return false;
             }
             if (!CapabilityConsumerSupported(baseCharacter)) {
-                //Debug.Log(DisplayName + "CapabilityConsumer unsupported");
+                Debug.Log(baseCharacter.gameObject.name + "." + DisplayName + ".Equipment.CanEquip(): CapabilityConsumer unsupported");
                 return false;
             }
             if (GetItemLevel(baseCharacter.CharacterStats.Level) > baseCharacter.CharacterStats.Level) {
-                Debug.Log(DisplayName + ".Equipment.CanEquip(" + baseCharacter.gameObject.name + "): character level too low");
+                Debug.Log(baseCharacter.gameObject.name + "." + DisplayName + ".Equipment.CanEquip(): character level too low");
                 return false;
             }
             return true;

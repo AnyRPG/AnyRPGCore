@@ -1255,7 +1255,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 49ff920aaeff32c47b919cdd7f10e67d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_UUID: 848f6311-466b-4113-aa48-48060cee682b
+  m_UUID: a3a6569a-ef1f-4264-812b-cdbd5e1bfb2d
   forceUpdateUUID: 0
 --- !u!95 &4897009189913663948
 Animator:
@@ -1474,7 +1474,7 @@ MonoBehaviour:
   ensureSharedColors: 0
   defaultSaveOptions: 15
   BoundsOffset: {x: 0, y: 0, z: 0}
-  editorTimeGeneration: 1
+  editorTimeGeneration: 0
   showPlaceholder: 1
   previewModel: 0
   customModel: {fileID: 0}
