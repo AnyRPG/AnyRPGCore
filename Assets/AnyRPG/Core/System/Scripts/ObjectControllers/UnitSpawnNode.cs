@@ -109,6 +109,8 @@ namespace AnyRPG {
 
         protected bool eventSubscriptionsInitialized = false;
 
+        protected bool disabled = false;
+
         private List<UnitController> spawnReferences = new List<UnitController>();
 
         // game manager references
@@ -231,6 +233,7 @@ namespace AnyRPG {
             countDownRoutine = null;
             delayRoutine = null;
             CleanupScriptableObjects();
+            disabled = true;
         }
 
         public void HandlePrerequisiteUpdates() {
@@ -332,7 +335,7 @@ namespace AnyRPG {
             //Debug.Log(gameObject.name + ".UnitSpawnNode.CommonSpawn()");
 
             // prevent a coroutine that finished during a level load from spawning a character
-            if (eventSubscriptionsInitialized == false) {
+            if (disabled == true) {
                 return;
             }
             if (unitProfile == null || playerManager.MyCharacter == null) {
@@ -473,7 +476,9 @@ namespace AnyRPG {
             }
             // clearing the coroutine so the next round can start
             delayRoutine = null;
-            Spawn();
+            if (disabled == false) {
+                Spawn();
+            }
         }
 
         /// <summary>
@@ -514,7 +519,9 @@ namespace AnyRPG {
             }
             //clearing the coroutine so the next timer will be allowed to start
             countDownRoutine = null;
-            SpawnWithDelay();
+            if (disabled == false) {
+                SpawnWithDelay();
+            }
         }
 
         public void ProcessRespawn(UnitController unitController) {
