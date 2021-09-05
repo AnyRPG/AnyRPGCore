@@ -45,7 +45,9 @@ namespace AnyRPG {
         public void ProcessLevelLoad() {
             //Debug.Log("MapManager.ProcessLevelLoad()");
             //Debug.Log("MapManager.ProcessLevelLoad(): creating Texture2D with size : " + (int)levelManager.SceneBounds.size.x + ", " + (int)levelManager.SceneBounds.size.z);
-            mapTexture = new Texture2D((int)levelManager.SceneBounds.size.x, (int)levelManager.SceneBounds.size.z);
+            UpdateCameraSize();
+            //mapTexture = new Texture2D((int)levelManager.SceneBounds.size.x, (int)levelManager.SceneBounds.size.z);
+            mapTexture = new Texture2D((int)cameraSize, (int)cameraSize);
             string textureFilePath = mapTextureFolder + GetScreenshotFilename();
             if (System.IO.File.Exists(textureFilePath)) {
                 sceneTextureFound = true;
@@ -53,7 +55,7 @@ namespace AnyRPG {
                 mapTexture.LoadImage(fileData);
             } else {
                 sceneTextureFound = true;
-                UpdateCameraSize();
+                //UpdateCameraSize();
                 UpdateCameraPosition();
                 StartCoroutine(WaitForRender());
             }
@@ -84,7 +86,8 @@ namespace AnyRPG {
             //Debug.Log("MapManager.WaitForRender(): rendering now with scene size : " + (int)levelManager.SceneBounds.size.x + ", " + (int)levelManager.SceneBounds.size.z);
 
             //RenderMapFromCamera();
-            renderTexture = new RenderTexture((int)levelManager.SceneBounds.size.x, (int)levelManager.SceneBounds.size.z, 16, RenderTextureFormat.ARGB32);
+            //renderTexture = new RenderTexture((int)levelManager.SceneBounds.size.x, (int)levelManager.SceneBounds.size.z, 16, RenderTextureFormat.ARGB32);
+            renderTexture = new RenderTexture((int)cameraSize, (int)cameraSize, 16, RenderTextureFormat.ARGB32);
             renderTexture.Create();
             cameraManager.MainMapCamera.targetTexture = renderTexture;
             cameraManager.MainMapCamera.Render();
