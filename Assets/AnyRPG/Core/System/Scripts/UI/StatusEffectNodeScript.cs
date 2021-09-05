@@ -32,6 +32,7 @@ namespace AnyRPG {
 
         // game manager references
         private UIManager uIManager = null;
+        private PlayerManager playerManager = null;
 
         public TextMeshProUGUI Timer { get => timer; }
         public TextMeshProUGUI StackCount { get => stackCount; set => stackCount = value; }
@@ -50,6 +51,7 @@ namespace AnyRPG {
         public override void SetGameManagerReferences() {
             base.SetGameManagerReferences();
             uIManager = systemGameManager.UIManager;
+            playerManager = systemGameManager.PlayerManager;
         }
 
         public void OnPointerClick(PointerEventData eventData) {
@@ -62,11 +64,13 @@ namespace AnyRPG {
 
         public void HandleRightClick() {
             //Debug.Log("StatusEffectNodeScript.HandleRightClick()");
-            if (statusEffectNode != null && statusEffectNode.StatusEffect.StatusEffectAlignment != StatusEffectAlignment.Harmful) {
-                //Debug.Log("StatusEffectNodeScript.HandleRightClick(): statusEffect is not null, destroying");
-                statusEffectNode.CancelStatusEffect();
+            if (target == playerManager.UnitController?.CharacterUnit) {
+                if (statusEffectNode != null && statusEffectNode.StatusEffect.StatusEffectAlignment != StatusEffectAlignment.Harmful) {
+                    //Debug.Log("StatusEffectNodeScript.HandleRightClick(): statusEffect is not null, destroying");
+                    statusEffectNode.CancelStatusEffect();
+                }
+                uIManager.HideToolTip();
             }
-            uIManager.HideToolTip();
         }
 
         public void OnPointerEnter(PointerEventData eventData) {
