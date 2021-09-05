@@ -42,12 +42,14 @@ namespace AnyRPG {
 
         public override void Configure(SystemGameManager systemGameManager) {
             //Debug.Log("CombatLogUI.Awake()");
+            base.Configure(systemGameManager);
 
             systemEventManager = systemGameManager.SystemEventManager;
             playerManager = systemGameManager.PlayerManager;
 
             SetWelcomeString();
             ClearLog();
+            CreateEventSubscriptions();
         }
 
         private void SetWelcomeString() {
@@ -78,7 +80,7 @@ namespace AnyRPG {
         }
 
         private void CreateEventSubscriptions() {
-            ////Debug.Log("PlayerManager.CreateEventSubscriptions()");
+            //Debug.Log("LogManager.CreateEventSubscriptions()");
             if (eventSubscriptionsInitialized) {
                 return;
             }
@@ -110,6 +112,7 @@ namespace AnyRPG {
         }
 
         public void HandleTakeDamage(IAbilityCaster source, CharacterUnit target, int damage, string abilityName) {
+            //Debug.Log("LogManager.HandleTakeDamage()");
             Color textColor = Color.white;
             if (playerManager.UnitController != null && target == playerManager.UnitController.CharacterUnit) {
                 textColor = Color.red;
@@ -148,6 +151,10 @@ namespace AnyRPG {
             WriteCombatMessage(completeWelcomeString);
             WriteSystemMessage(completeWelcomeString);
 
+        }
+
+        public void OnDestroy() {
+            CleanupEventSubscriptions();
         }
 
     }

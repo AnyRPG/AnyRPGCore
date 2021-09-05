@@ -243,11 +243,11 @@ namespace AnyRPG {
             }
             base.CreateEventSubscriptions();
             logManager.OnWriteChatMessage += HandleWriteChatMessage;
-            logManager.OnWriteSystemMessage += HandleWriteChatMessage;
-            logManager.OnWriteCombatMessage += HandleWriteChatMessage;
+            logManager.OnWriteSystemMessage += HandleWriteSystemMessage;
+            logManager.OnWriteCombatMessage += HandleWriteCombatMessage;
             logManager.OnClearChatMessages += HandleClearChatMessages;
-            logManager.OnClearSystemMessages += HandleClearChatMessages;
-            logManager.OnClearCombatMessages += HandleClearChatMessages;
+            logManager.OnClearSystemMessages += HandleClearSystemMessages;
+            logManager.OnClearCombatMessages += HandleClearCombatMessages;
             eventSubscriptionsInitialized = true;
         }
 
@@ -258,11 +258,11 @@ namespace AnyRPG {
             }
             base.CleanupEventSubscriptions();
             logManager.OnWriteChatMessage += HandleWriteChatMessage;
-            logManager.OnWriteSystemMessage += HandleWriteChatMessage;
-            logManager.OnWriteCombatMessage += HandleWriteChatMessage;
+            logManager.OnWriteSystemMessage += HandleWriteSystemMessage;
+            logManager.OnWriteCombatMessage += HandleWriteCombatMessage;
             logManager.OnClearChatMessages += HandleClearChatMessages;
-            logManager.OnClearSystemMessages += HandleClearChatMessages;
-            logManager.OnClearCombatMessages += HandleClearChatMessages;
+            logManager.OnClearSystemMessages += HandleClearSystemMessages;
+            logManager.OnClearCombatMessages += HandleClearCombatMessages;
             eventSubscriptionsInitialized = false;
         }
 

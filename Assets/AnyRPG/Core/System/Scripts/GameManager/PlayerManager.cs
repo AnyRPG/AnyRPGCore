@@ -675,7 +675,7 @@ namespace AnyRPG {
 
         public void HandleRecoverResource(PowerResource powerResource, int amount) {
             if (logManager != null) {
-                logManager.WriteSystemMessage("You gain " + amount + " " + powerResource.DisplayName);
+                logManager.WriteCombatMessage("You gain " + amount + " " + powerResource.DisplayName);
             }
         }
 
