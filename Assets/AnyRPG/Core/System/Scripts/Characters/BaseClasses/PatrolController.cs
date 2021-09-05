@@ -71,7 +71,7 @@ namespace AnyRPG {
         }
 
         public void BeginPatrol(PatrolProps patrolProps) {
-            //Debug.Log(unitController.gameObject.name + ".PatrolController.BeginPatrol(" + (patrolName != null ? patrolName : "null" ) + ")");
+            //Debug.Log(unitController.gameObject.name + ".PatrolController.BeginPatrol(" + (patrolProps == null ? "null" : "valid patrolProps") + ")");
                 SetCurrentPatrol(patrolProps);
                 unitController.ChangeState(new PatrolState());
                 return;

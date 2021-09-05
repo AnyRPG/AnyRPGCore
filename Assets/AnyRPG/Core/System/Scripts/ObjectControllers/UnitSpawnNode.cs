@@ -172,6 +172,7 @@ namespace AnyRPG {
                 return;
             }
             SystemEventManager.StartListening("OnPlayerUnitSpawn", HandlePlayerUnitSpawn);
+            SystemEventManager.StartListening("OnLeveOnLevelUnloadlUnload", HandleLevelUnload);
             if (playerManager.PlayerUnitSpawned == true) {
                 //Debug.Log(gameObject.name + ".UnitSpawnNode.CreateEventSubscriptions(): player unit already spawned.  Handling player unit spawn");
                 ProcessPlayerUnitSpawn();
@@ -186,6 +187,7 @@ namespace AnyRPG {
             }
 
             SystemEventManager.StopListening("OnPlayerUnitSpawn", HandlePlayerUnitSpawn);
+            SystemEventManager.StopListening("OnLevelUnload", HandleLevelUnload);
 
             eventSubscriptionsInitialized = false;
         }
@@ -195,6 +197,10 @@ namespace AnyRPG {
             ProcessPlayerUnitSpawn();
         }
 
+        public void HandleLevelUnload(string eventName, EventParamProperties eventParamProperties) {
+            Debug.Log(gameObject.name + ".UnitSpawnNode.HandleLevelUnload()");
+            Cleanup();
+        }
 
         public void ProcessPlayerUnitSpawn() {
             //Debug.Log(gameObject.name + ".UnitSpawnNode.HandlePlayerUnitSpawn()");
@@ -215,20 +221,15 @@ namespace AnyRPG {
         }
 
 
-        public void OnDisable() {
-            //Debug.Log("UnitSpawnNode.OnDisable(): stopping any outstanding coroutines");
+        public void Cleanup() {
+            Debug.Log(gameObject.name + ".UnitSpawnNode.Cleanup()");
             if (SystemGameManager.IsShuttingDown) {
                 return;
             }
             CleanupEventSubscriptions();
-            if (countDownRoutine != null) {
-                StopCoroutine(countDownRoutine);
-                countDownRoutine = null;
-            }
-            if (delayRoutine != null) {
-                StopCoroutine(delayRoutine);
-                delayRoutine = null;
-            }
+            StopAllCoroutines();
+            countDownRoutine = null;
+            delayRoutine = null;
             CleanupScriptableObjects();
         }
 
@@ -329,6 +330,11 @@ namespace AnyRPG {
 
         public void CommonSpawn(int unitLevel, int extraLevels, bool dynamicLevel, UnitProfile unitProfile, UnitToughness toughness = null) {
             //Debug.Log(gameObject.name + ".UnitSpawnNode.CommonSpawn()");
+
+            // prevent a coroutine that finished during a level load from spawning a character
+            if (eventSubscriptionsInitialized == false) {
+                return;
+            }
             if (unitProfile == null || playerManager.MyCharacter == null) {
                 return;
             }

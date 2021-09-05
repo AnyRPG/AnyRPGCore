@@ -469,6 +469,7 @@ namespace AnyRPG {
 
 
         IEnumerator LoadAsynchronously(string sceneName) { // scene name is just the name of the current scene being loaded
+            //Debug.Log("LevelManager.LoadAsynchronously(" + sceneName + ")");
             uIManager.ActivateLoadingUI();
             // try initial value
             loadBar.value = 0.1f;
