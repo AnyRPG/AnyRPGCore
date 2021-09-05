@@ -302,7 +302,7 @@ namespace AnyRPG {
             for (int i = 0; i < 13; i++) {
                 //Debug.Log("Bag Nodes initialized. Checking node: " + i);
                 if (PlayerPrefs.HasKey("InventoryWindowX" + i) && PlayerPrefs.HasKey("InventoryWindowY" + i)) {
-                    BagNodes[i].BagWindow.transform.position = new Vector3(PlayerPrefs.GetFloat("InventoryWindowX" + i), PlayerPrefs.GetFloat("InventoryWindowY" + i), 0);
+                    BagNodes[i].BagWindow.RectTransform.anchoredPosition = new Vector2(PlayerPrefs.GetFloat("InventoryWindowX" + i), PlayerPrefs.GetFloat("InventoryWindowY" + i));
                     //Debug.Log("setting node:" + i + "; to: " + new Vector3(PlayerPrefs.GetFloat("InventoryWindowX" + i), PlayerPrefs.GetFloat("InventoryWindowY" + i), 0));
                 } else {
                     //Debug.Log(WE DON'T HAVE A WINDOW HERE!!!!!!! " + i);
