@@ -13,9 +13,13 @@ namespace AnyRPG {
         //public override event Action<ICloseableWindowContents> OnOpenWindow;
 
         [SerializeField]
+        private TMP_Dropdown graphicsQualityDropdown = null;
+
+        [SerializeField]
         private TMP_Dropdown resolutionDropDown = null;
 
         private Resolution[] resolutions;
+        private string[] graphicsQualities;
 
         [Header("VIDEO SETTINGS")]
         public OnOffTextButton fullScreenButton;
@@ -48,9 +52,15 @@ namespace AnyRPG {
         private void InitializeSettings() {
 
             CheckScreenResolution();
+
+            // set graphics quality to saved value, and then update the dropdown
+            SetGraphicsQuality(PlayerPrefs.GetInt("GraphicsQualityIndex"));
             CheckGraphicsQuality();
+
             CheckFullScreen();
             CheckVSync();
+
+            // check and set advanced settings which may override main quality setting
             CheckAdvancedVideoSettings();
         }
 
@@ -76,35 +86,28 @@ namespace AnyRPG {
         }
 
         private void CheckGraphicsQuality() {
-            if (PlayerPrefs.GetInt("GraphicsQualityIndex") == 0) {
-                graphicsQualityArea.SelectButton(0);
-            } else if (PlayerPrefs.GetInt("GraphicsQualityIndex") == 1) {
-                graphicsQualityArea.SelectButton(1);
-            } else if (PlayerPrefs.GetInt("GraphicsQualityIndex") == 2) {
-                graphicsQualityArea.SelectButton(2);
+
+            graphicsQualities = QualitySettings.names;
+
+            graphicsQualityDropdown.ClearOptions();
+
+            List<string> options = new List<string>();
+
+            for (int i = 0; i < graphicsQualities.Length; i++) {
+                options.Add(graphicsQualities[i]);
             }
-        }
+            graphicsQualityDropdown.AddOptions(options);
+            //graphicsQualityDropdown.value = currentResolutionIndex;
+            graphicsQualityDropdown.value = PlayerPrefs.GetInt("GraphicsQualityIndex");
+            graphicsQualityDropdown.RefreshShownValue();
 
-        public void SetGraphicsQualityLow() {
-            PlayerPrefs.SetInt("GraphicsQualityIndex", 0);
-            SetGraphicsQuality(0);
-            CheckGraphicsQuality();
-        }
-
-        public void SetGraphicsQualityMed() {
-            PlayerPrefs.SetInt("GraphicsQualityIndex", 1);
-            SetGraphicsQuality(1);
-            CheckGraphicsQuality();
-        }
-
-        public void SetGraphicsQualityHigh() {
-            PlayerPrefs.SetInt("GraphicsQualityIndex", 2);
-            SetGraphicsQuality(2);
-            CheckGraphicsQuality();
         }
 
         public void SetGraphicsQuality(int qualityIndex) {
-            QualitySettings.SetQualityLevel(qualityIndex);
+            //Debug.Log("SystemVideoPanelController.SetGraphicsQuality(" + qualityIndex + ")");
+            PlayerPrefs.SetInt("GraphicsQualityIndex", qualityIndex);
+            QualitySettings.SetQualityLevel(qualityIndex, true);
+            //CheckGraphicsQuality();
         }
 
         private void CheckFullScreen() {

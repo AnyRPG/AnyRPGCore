@@ -99,6 +99,9 @@ namespace AnyRPG {
         public override void Configure(SystemGameManager systemGameManager) {
             base.Configure(systemGameManager);
 
+            // set defaults first so that configuration that runs next will use them
+            SetPlayerPrefsDefaults();
+
             // main buttons
             soundButton.Configure(systemGameManager);
             controlsButton.Configure(systemGameManager);
@@ -137,7 +140,6 @@ namespace AnyRPG {
             PanelVideo.Configure(systemGameManager);
             PanelKeyBindings.Configure(systemGameManager);
 
-            SetPlayerPrefsDefaults();
         }
 
         public override void SetGameManagerReferences() {
@@ -306,6 +308,7 @@ namespace AnyRPG {
             }
 
             if (!PlayerPrefs.HasKey("GraphicsQualityIndex")) {
+                Debug.Log("MainSettingsMenuController.SetPlayerPrefsDefaults() graphicsQuality is: " + QualitySettings.GetQualityLevel());
                 PlayerPrefs.SetInt("GraphicsQualityIndex", QualitySettings.GetQualityLevel());
             }
 
