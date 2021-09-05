@@ -16,6 +16,7 @@ namespace AnyRPG {
         private DynamicCharacterAvatar dynamicCharacterAvatar = null;
         private UMAExpressionPlayer expressionPlayer = null;
         private UnitModelController unitModelController = null;
+        private AvatarDefinition originalAvatarDefinition = new AvatarDefinition();
         private AvatarDefinition avatarDefinition = new AvatarDefinition();
 
         public DynamicCharacterAvatar DynamicCharacterAvatar { get => dynamicCharacterAvatar; }
@@ -241,6 +242,10 @@ namespace AnyRPG {
             if (dynamicCharacterAvatar == null) {
                 dynamicCharacterAvatar = unitController.GetComponentInChildren<DynamicCharacterAvatar>();
             }
+            if (dynamicCharacterAvatar != null) {
+                originalAvatarDefinition = GetAvatarDefinition(dynamicCharacterAvatar);
+
+            }
         }
 
         public void SubscribeToUMACreate() {
@@ -429,6 +434,7 @@ namespace AnyRPG {
         }
 
         public void ResetSettings() {
+            //Debug.Log(unitController.gameObject.name + ".UMAModelController.ResetSettings()");
             if (dynamicCharacterAvatar != null) {
 
                 // attempt clear expression player
@@ -439,11 +445,17 @@ namespace AnyRPG {
                 }
                 //dynamicCharacterAvatar.umaAdditionalRecipes = new UMARecipeBase[0];
 
+                /*
                 dynamicCharacterAvatar.ClearSlots();
+                Debug.Log(unitController.gameObject.name + ".UMAModelController.ResetSettings(): Restoring cached body colors");
                 dynamicCharacterAvatar.RestoreCachedBodyColors(false, true);
                 dynamicCharacterAvatar.LoadDefaultWardrobe();
                 // doing the rebuild on despawn so there isn't a frame with this appearance until a rebuild happens when re-using the avatar
                 // testing - see if we don't get extra handleCharacterUpdated after respawn
+                */
+
+                // testing code to make resetting character compatible with avatar definition usage
+                dynamicCharacterAvatar.LoadAvatarDefinition(originalAvatarDefinition, true);
                 BuildModelAppearance();
             }
 
