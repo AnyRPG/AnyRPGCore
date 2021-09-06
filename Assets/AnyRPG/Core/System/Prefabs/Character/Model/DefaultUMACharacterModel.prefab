@@ -1570,10 +1570,6 @@ MonoBehaviour:
       _compatibleRaces:
       - HumanFemaleDCS
       - HumanFemale
-    - _recipeName: Peasant_Trousers_Grey_Recipe
-      _compatibleRaces:
-      - HumanMale
-      - HumanMaleHighPoly
   raceAnimationControllers:
     defaultAnimationController: {fileID: 9100000, guid: 547e6a8928ecb2d49b24c599db6d49c9,
       type: 2}

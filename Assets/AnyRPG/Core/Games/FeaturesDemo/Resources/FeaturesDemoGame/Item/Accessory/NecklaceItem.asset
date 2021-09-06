@@ -35,7 +35,7 @@ MonoBehaviour:
   equipmentSlotType: Necklace
   equipmentSetName: 
   useUMARecipe: 0
-  umaRecipeProfileName: 
+  umaRecipeProfileName: Necklace
   holdableObjectList: []
   useArmorModifier: 0
   useManualArmor: 0

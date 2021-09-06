@@ -438,8 +438,11 @@ namespace AnyRPG {
                 //characterCreatorManager.PreviewUnitController.UnitModelController.LoadSavedAppearanceSettings(maleRecipe, true);
                 characterCreatorManager.PreviewUnitController.UnitModelController.UMAModelController.SetAppearance(maleRecipe);
             } else {
-                //Debug.Log("CharacterCreatorPanel.SetFemale(): maleRecipe == string.Empty");
-                characterCreatorManager.PreviewUnitController.UnitModelController.UMAModelController.DynamicCharacterAvatar.ChangeRace("HumanMaleDCS");
+                //Debug.Log("CharacterCreatorPanel.SetMale(): maleRecipe == string.Empty");
+                //characterCreatorManager.PreviewUnitController.UnitModelController.UMAModelController.DynamicCharacterAvatar.ChangeRace("HumanMaleDCS");
+                characterCreatorManager.PreviewUnitController.UnitModelController.UMAModelController.SetAvatarDefinitionRace("HumanMaleDCS");
+                characterCreatorManager.PreviewUnitController.UnitModelController.UMAModelController.PreloadEquipmentModels(true);
+                characterCreatorManager.PreviewUnitController.UnitModelController.UMAModelController.ReloadAvatarDefinition();
             }
         }
 
@@ -462,7 +465,10 @@ namespace AnyRPG {
                 characterCreatorManager.PreviewUnitController.UnitModelController.UMAModelController.SetAppearance(femaleRecipe);
             } else {
                 //Debug.Log("CharacterCreatorPanel.SetFemale(): femaleRecipe == string.Empty");
-                characterCreatorManager.PreviewUnitController.UnitModelController.UMAModelController.DynamicCharacterAvatar.ChangeRace("HumanFemaleDCS");
+                //characterCreatorManager.PreviewUnitController.UnitModelController.UMAModelController.DynamicCharacterAvatar.ChangeRace("HumanFemaleDCS");
+                characterCreatorManager.PreviewUnitController.UnitModelController.UMAModelController.SetAvatarDefinitionRace("HumanFemaleDCS");
+                characterCreatorManager.PreviewUnitController.UnitModelController.UMAModelController.PreloadEquipmentModels(true);
+                characterCreatorManager.PreviewUnitController.UnitModelController.UMAModelController.ReloadAvatarDefinition();
             }
         }
 

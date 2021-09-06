@@ -239,7 +239,8 @@ namespace AnyRPG {
 
         public void SaveUMASettings(Equipment oldItem, Equipment newItem) {
             //Debug.Log("SaveManager.SaveUMASettings(Equipment, Equipement)");
-            if ((oldItem != null && oldItem.MyUMARecipes.Count > 0) || (newItem != null && newItem.MyUMARecipes.Count > 0)) {
+            if ((oldItem?.UMARecipeProfile?.UMARecipes != null && oldItem.UMARecipeProfile.UMARecipes.Count > 0)
+                || (newItem?.UMARecipeProfile?.UMARecipes != null && newItem.UMARecipeProfile.UMARecipes.Count > 0)) {
                 SaveAppearanceSettings();
             }
         }

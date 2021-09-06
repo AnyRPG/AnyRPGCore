@@ -174,6 +174,9 @@ namespace AnyRPG {
         public void HandleTargetCreated() {
             //Debug.Log("CharacterCreatorWindowPanel.HandleTargetCreated()");
             characterCreatorManager.PreviewUnitController.UnitModelController.SetInitialSavedAppearance();
+            foreach (EquipmentSlotProfile equipmentSlotProfile in playerManager.ActiveCharacter.CharacterEquipmentManager.CurrentEquipment.Keys) {
+                characterCreatorManager.PreviewUnitController.CharacterUnit.BaseCharacter.CharacterEquipmentManager.CurrentEquipment.Add(equipmentSlotProfile, playerManager.ActiveCharacter.CharacterEquipmentManager.CurrentEquipment[equipmentSlotProfile]);
+            }
         }
 
         public void HandleTargetReady() {

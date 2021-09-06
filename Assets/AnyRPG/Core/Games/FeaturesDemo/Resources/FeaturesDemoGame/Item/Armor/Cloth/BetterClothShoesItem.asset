@@ -35,8 +35,8 @@ MonoBehaviour:
   - Magic
   equipmentSlotType: Boots
   equipmentSetName: 
-  useUMARecipe: 0
-  umaRecipeProfileName: Cloth Shoes
+  useUMARecipe: 1
+  umaRecipeProfileName: 
   holdableObjectList: []
   useArmorModifier: 1
   useManualArmor: 0

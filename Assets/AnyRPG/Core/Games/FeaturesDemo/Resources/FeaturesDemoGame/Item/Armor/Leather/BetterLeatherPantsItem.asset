@@ -36,8 +36,8 @@ MonoBehaviour:
   - Ranged
   equipmentSlotType: Pants
   equipmentSetName: 
-  useUMARecipe: 0
-  umaRecipeProfileName: Leather Pants
+  useUMARecipe: 1
+  umaRecipeProfileName: 
   holdableObjectList: []
   useArmorModifier: 1
   useManualArmor: 0

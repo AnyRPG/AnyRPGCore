@@ -104,29 +104,12 @@ namespace AnyRPG {
 
         public void InitializeModel() {
             //Debug.Log(unitController.gameObject.name + ".UMAModelController.InitializeModel()");
-            // testing - pooled UMA units will already be initialized
-            // so they should be considered ready if they have umaData
             int preloadedModels = 0;
-            /*
-            if (initialAppearance != null && initialAppearance != string.Empty) {
-                avatarDefinition = AvatarDefinition.FromCompressedString(initialAppearance, '|');
-            } else {
-                avatarDefinition = dynamicCharacterAvatar.GetAvatarDefinition(true);
-            }
-            if (unitController.CharacterUnit?.BaseCharacter?.CharacterEquipmentManager != null) {
-                preloadedModels = PreloadEquipmentModels(unitController.CharacterUnit.BaseCharacter.CharacterEquipmentManager);
-            }
-            if ((initialAppearance != null && initialAppearance != string.Empty) || preloadedModels > 0) {
-                // only needed if the UMA had some custom appearance or extra equipment loaded onto it
-                dynamicCharacterAvatar.LoadAvatarDefinition(avatarDefinition);
-            }
-            */
 
             if (initialAppearance != null && initialAppearance != string.Empty) {
                 avatarDefinition = AvatarDefinition.FromCompressedString(initialAppearance, '|');
                 CheckAvatarDefinition();
             } else {
-                //avatarDefinition = dynamicCharacterAvatar.GetAvatarDefinition(true);
                 avatarDefinition = GetAvatarDefinition(dynamicCharacterAvatar);
             }
             if (unitController.CharacterUnit?.BaseCharacter?.CharacterEquipmentManager != null) {
@@ -136,25 +119,10 @@ namespace AnyRPG {
                 // only needed if the UMA had some custom appearance or extra equipment loaded onto it
                 dynamicCharacterAvatar.LoadAvatarDefinition(avatarDefinition);
             }
-            //bool wasInitialized = false;
             if (dynamicCharacterAvatar.umaData == null || dynamicCharacterAvatar.umaData.firstBake == true) {
-                //Debug.Log(gameObject.name + "UnitController.ConfigureUnitModel(): dynamicCharacterAvatar.Initialize()");
                 dynamicCharacterAvatar.Initialize();
-                //if (initialAppearance != null && initialAppearance != string.Empty) {
-                //LoadSavedAppearanceSettings(initialAppearance);
-                //}
                 buildInProgress = true;
-                //}
             } else {
-                //Debug.Log(unitController.gameObject.name + "UMAModelController.InitializeModel(): umaData.firstbake = " + dynamicCharacterAvatar.umaData.firstBake);
-                //if (!wasInitialized) {
-
-                //Debug.Log(gameObject.name + "UnitController.ConfigureUnitModel(): dynamicCharacterAvatar has been re-used and is already initialized");
-                //if (initialAppearance != null && initialAppearance != string.Empty) {
-                //LoadSavedAppearanceSettings(initialAppearance);
-                //}
-                //unitModelController.SetModelReady();
-
                 if ((initialAppearance == null || initialAppearance == string.Empty) && preloadedModels == 0) {
                     unitModelController.SetModelReady();
                 } else {
@@ -163,6 +131,18 @@ namespace AnyRPG {
             }
 
             SubscribeToUMACreate();
+        }
+
+        public void SetAvatarDefinitionRace(string raceName) {
+            //Debug.Log(unitController.gameObject.name + ".UMAModelController.SetAvatarDefinitionRace(" + raceName + ")");
+            avatarDefinition = dynamicCharacterAvatar.GetAvatarDefinition(true);
+            avatarDefinition.RaceName = raceName;
+        }
+
+        public void ReloadAvatarDefinition() {
+            //Debug.Log(unitController.gameObject.name + ".UMAModelController.ReloadAvatarDefinition()");
+            dynamicCharacterAvatar.LoadAvatarDefinition(avatarDefinition);
+            BuildModelAppearance();
         }
 
         private AvatarDefinition GetAvatarDefinition(DynamicCharacterAvatar dynamicCharacterAvatar) {
@@ -301,9 +281,16 @@ namespace AnyRPG {
 
         }
 
-        private int PreloadEquipmentModels(CharacterEquipmentManager characterEquipmentManager) {
-            //Debug.Log(unitController.gameObject.name + ".UMAModelController.PreloadEquipmentModels()");
+        public int PreloadEquipmentModels(bool resetWardrobe = false) {
+            return PreloadEquipmentModels(unitController.CharacterUnit.BaseCharacter.CharacterEquipmentManager, resetWardrobe);
+        }
+
+        public int PreloadEquipmentModels(CharacterEquipmentManager characterEquipmentManager, bool resetWardrobe = false) {
+            //Debug.Log(unitController.gameObject.name + ".UMAModelController.PreloadEquipmentModels(" + resetWardrobe + ")");
             int returnValue = 0;
+            if (resetWardrobe == true) {
+                avatarDefinition.Wardrobe = new string[0];
+            }
             foreach (EquipmentSlotProfile equipmentSlotProfile in characterEquipmentManager.CurrentEquipment.Keys) {
                 if (characterEquipmentManager.CurrentEquipment[equipmentSlotProfile] != null) {
                     // armor and weapon models handling
@@ -316,13 +303,18 @@ namespace AnyRPG {
 
         public void UnequipItemModels(Equipment equipment, bool rebuildAppearance) {
             //Debug.Log(unitController.gameObject.name + ".UMAModelController.UnequipItemModels(" + equipment.DisplayName + ", " + rebuildAppearance + ")");
-            if (equipment.MyUMARecipes != null && equipment.MyUMARecipes.Count > 0 && dynamicCharacterAvatar != null) {
+            if (equipment.UMARecipeProfile?.UMARecipes != null && equipment.UMARecipeProfile.UMARecipes.Count > 0 && dynamicCharacterAvatar != null) {
                 // Clear the item from the UMA slot on the UMA character
                 //Debug.Log("Clearing UMA slot " + oldItem.UMARecipe.wardrobeSlot);
                 //avatar.SetSlot(newItem.UMARecipe.wardrobeSlot, newItem.UMARecipe.name);
-                foreach (UMATextRecipe uMARecipe in equipment.MyUMARecipes) {
+                foreach (UMATextRecipe uMARecipe in equipment.UMARecipeProfile.UMARecipes) {
                     if (uMARecipe != null && uMARecipe.compatibleRaces.Contains(dynamicCharacterAvatar.activeRace.name)) {
                         dynamicCharacterAvatar.ClearSlot(uMARecipe.wardrobeSlot);
+                        if (equipment.UMARecipeProfile?.SharedColors != null && equipment.UMARecipeProfile.SharedColors.Count > 0) {
+                            foreach (SharedColorNode sharedColorNode in equipment.UMARecipeProfile.SharedColors) {
+                                dynamicCharacterAvatar.ClearColor(sharedColorNode.SharedColorname, false);
+                            }
+                        }
                     }
                 }
                 if (rebuildAppearance) {
@@ -334,42 +326,77 @@ namespace AnyRPG {
         public int PreloadItemModels(CharacterEquipmentManager characterEquipmentManager, Equipment equipment) {
             //Debug.Log(unitController.gameObject.name + ".UMAModelController.PreloadItemModels(" + equipment.DisplayName + ")");
             int returnValue = 0;
-            if (equipment.MyUMARecipes != null
-            && equipment.MyUMARecipes.Count > 0
+            if (equipment.UMARecipeProfile?.UMARecipes != null
+            && equipment.UMARecipeProfile.UMARecipes.Count > 0
             && dynamicCharacterAvatar != null) {
                 //Debug.Log("EquipmentManager.HandleItemUMARecipe(): " + newItem.DisplayName);
                 // Put the item in the UMA slot on the UMA character
                 //Debug.Log("Putting " + newItem.UMARecipe.name + " in slot " + newItem.UMARecipe.wardrobeSlot);
                 List<string> newWardrobe = new List<string>(avatarDefinition.Wardrobe);
-                foreach (UMATextRecipe uMARecipe in equipment.MyUMARecipes) {
-                    if (uMARecipe != null && uMARecipe.compatibleRaces.Contains(dynamicCharacterAvatar.activeRace.name)) {
+                List<SharedColorDef> newColors = new List<SharedColorDef>(avatarDefinition.Colors);
+                foreach (UMATextRecipe uMARecipe in equipment.UMARecipeProfile.UMARecipes) {
+                    //if (uMARecipe != null && uMARecipe.compatibleRaces.Contains(dynamicCharacterAvatar.activeRace.name)) {
+                    if (uMARecipe != null && uMARecipe.compatibleRaces.Contains(avatarDefinition.RaceName)) {
                         //Debug.Log("EquipmentManager.HandleItemUMARecipe(): SetSlot: " + uMARecipe.wardrobeSlot + ", " + uMARecipe.name);
                         //dynamicCharacterAvatar.SetSlot(uMARecipe.wardrobeSlot, uMARecipe.name);
                         if (newWardrobe.Contains(uMARecipe.name) == false) {
                             newWardrobe.Add(uMARecipe.name);
                             returnValue++;
+                            AddOrUpdateSharedColors(equipment.UMARecipeProfile, newColors);
                         }
                     }
                 }
                 if (returnValue != 0) {
                     avatarDefinition.Wardrobe = newWardrobe.ToArray();
+                    avatarDefinition.Colors = newColors.ToArray();
                 }
             }
             return returnValue;
         }
 
+        public void AddOrUpdateSharedColors(UMARecipeProfile uMARecipeProfile, List<SharedColorDef> sharedColorDefs) {
+            foreach (SharedColorNode sharedColorNode in uMARecipeProfile.SharedColors) {
+                
+                // attempt to find the color in the existing list of sharedColorDefs
+                bool foundColor = false;
+                foreach (SharedColorDef sharedColorDef in sharedColorDefs) {
+                    if (sharedColorDef.name == sharedColorNode.SharedColorname) {
+                        sharedColorDef.channels[0].mCol = ColorDef.ToUInt(sharedColorNode.Color);
+                        foundColor = true;
+                        break;
+                    }
+                }
+
+                // if the color could not be found, add it
+                if (foundColor == false) {
+                    SharedColorDef sharedColorDef = new SharedColorDef(sharedColorNode.SharedColorname, 1);
+                    List<ColorDef> colorchannels = new List<ColorDef>();
+
+                    Color Additive = new Color32(0, 0, 0, 0);
+                    colorchannels.Add(new ColorDef(1, ColorDef.ToUInt(sharedColorNode.Color), ColorDef.ToUInt(Additive)));
+                    sharedColorDef.SetChannels(colorchannels.ToArray());
+                    sharedColorDefs.Add(sharedColorDef);
+                }
+            }
+        }
+
         public void EquipItemModels(CharacterEquipmentManager characterEquipmentManager, Equipment equipment, bool rebuildAppearance = true) {
             //Debug.Log(unitController.gameObject.name + ".UMAModelController.EquipItemModels(" + equipment.DisplayName + ", " + rebuildAppearance + ")");
 
-            if (equipment.MyUMARecipes != null
-            && equipment.MyUMARecipes.Count > 0
+            if (equipment.UMARecipeProfile?.UMARecipes != null
+            && equipment.UMARecipeProfile.UMARecipes.Count > 0
             && dynamicCharacterAvatar != null) {
                 //Debug.Log("EquipmentManager.HandleItemUMARecipe(): " + newItem.DisplayName);
                 // Put the item in the UMA slot on the UMA character
                 //Debug.Log("Putting " + newItem.UMARecipe.name + " in slot " + newItem.UMARecipe.wardrobeSlot);
-                foreach (UMATextRecipe uMARecipe in equipment.MyUMARecipes) {
+                foreach (UMATextRecipe uMARecipe in equipment.UMARecipeProfile.UMARecipes) {
                     if (uMARecipe != null && uMARecipe.compatibleRaces.Contains(dynamicCharacterAvatar.activeRace.name)) {
                         //Debug.Log("EquipmentManager.HandleItemUMARecipe(): SetSlot: " + uMARecipe.wardrobeSlot + ", " + uMARecipe.name);
+                        if (equipment.UMARecipeProfile.SharedColors != null && equipment.UMARecipeProfile.SharedColors.Count > 0) {
+                            foreach (SharedColorNode sharedColorNode in equipment.UMARecipeProfile.SharedColors) {
+                                dynamicCharacterAvatar.SetColor(sharedColorNode.SharedColorname, sharedColorNode.Color);
+                            }
+                        }
                         dynamicCharacterAvatar.SetSlot(uMARecipe.wardrobeSlot, uMARecipe.name);
                     }
                 }

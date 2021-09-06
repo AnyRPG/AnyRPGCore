@@ -36,8 +36,8 @@ MonoBehaviour:
   - Ranged
   equipmentSlotType: Pauldrons
   equipmentSetName: 
-  useUMARecipe: 0
-  umaRecipeProfileName: Leather Shoulders
+  useUMARecipe: 1
+  umaRecipeProfileName: 
   holdableObjectList: []
   useArmorModifier: 1
   useManualArmor: 0

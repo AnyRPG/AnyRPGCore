@@ -35,8 +35,8 @@ MonoBehaviour:
   - Magic
   equipmentSlotType: Gloves
   equipmentSetName: 
-  useUMARecipe: 0
-  umaRecipeProfileName: Cloth Gloves
+  useUMARecipe: 1
+  umaRecipeProfileName: 
   holdableObjectList: []
   useArmorModifier: 1
   useManualArmor: 0

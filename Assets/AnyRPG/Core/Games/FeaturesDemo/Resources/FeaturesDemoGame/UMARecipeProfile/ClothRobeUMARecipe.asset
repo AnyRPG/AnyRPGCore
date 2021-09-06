@@ -21,3 +21,4 @@ MonoBehaviour:
   resourceDescriptionProfile: 
   uMARecipes:
   - {fileID: 11400000, guid: 1ca738b353812974b9fb17357f844bbb, type: 2}
+  - {fileID: 11400000, guid: 8e9d6279950e2fb03b91c2ff675cb13c, type: 2}

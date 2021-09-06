@@ -19,4 +19,6 @@ MonoBehaviour:
   description: 
   useRegionalDescription: 0
   resourceDescriptionProfile: 
-  uMARecipes: []
+  uMARecipes:
+  - {fileID: 11400000, guid: 5b235fc14f0fcd932917492faddd3682, type: 2}
+  - {fileID: 11400000, guid: 31a1659e41204b81388a7109d8f2af38, type: 2}

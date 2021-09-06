@@ -35,8 +35,8 @@ MonoBehaviour:
   - Magic
   equipmentSlotType: Bracers
   equipmentSetName: 
-  useUMARecipe: 0
-  umaRecipeProfileName: Cloth Bracers
+  useUMARecipe: 1
+  umaRecipeProfileName: 
   holdableObjectList: []
   useArmorModifier: 1
   useManualArmor: 0

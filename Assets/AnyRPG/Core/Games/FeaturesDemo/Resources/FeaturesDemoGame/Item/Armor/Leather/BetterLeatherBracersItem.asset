@@ -36,8 +36,8 @@ MonoBehaviour:
   - Ranged
   equipmentSlotType: Bracers
   equipmentSetName: 
-  useUMARecipe: 0
-  umaRecipeProfileName: Leather Bracers
+  useUMARecipe: 1
+  umaRecipeProfileName: 
   holdableObjectList: []
   useArmorModifier: 1
   useManualArmor: 0

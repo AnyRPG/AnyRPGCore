@@ -35,8 +35,8 @@ MonoBehaviour:
   - Magic
   equipmentSlotType: Belt
   equipmentSetName: 
-  useUMARecipe: 0
-  umaRecipeProfileName: Cloth Belt
+  useUMARecipe: 1
+  umaRecipeProfileName: 
   holdableObjectList: []
   useArmorModifier: 1
   useManualArmor: 0

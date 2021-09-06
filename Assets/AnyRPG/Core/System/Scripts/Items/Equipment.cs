@@ -37,8 +37,7 @@ namespace AnyRPG {
         [ResourceSelector(resourceType = typeof(UMARecipeProfile))]
         private string umaRecipeProfileName = string.Empty;
 
-        // hold references to the uma recipes found in the uma recipe profile
-        private List<UMA.UMATextRecipe> UMARecipes = new List<UMATextRecipe>();
+        private UMARecipeProfile uMARecipeProfile = null;
 
         // The next 5 fields are meant for weapons.  They are being left in the base equipment class for now in case we want to do something like attach a cape to the spine
 
@@ -167,7 +166,6 @@ namespace AnyRPG {
         public EquipmentSlotType EquipmentSlotType { get => realEquipmentSlotType; set => realEquipmentSlotType = value; }
         public List<HoldableObjectAttachment> HoldableObjectList { get => holdableObjectList; set => holdableObjectList = value; }
         public EquipmentSet EquipmentSet { get => equipmentSet; set => equipmentSet = value; }
-        public List<UMATextRecipe> MyUMARecipes { get => UMARecipes; set => UMARecipes = value; }
         public List<ItemPrimaryStatNode> PrimaryStats { get => primaryStats; set => primaryStats = value; }
 
         public List<ItemSecondaryStatNode> SecondaryStats {
@@ -181,6 +179,7 @@ namespace AnyRPG {
 
         public List<ItemSecondaryStatNode> ChosenSecondaryStats { get => chosenSecondaryStats; set => chosenSecondaryStats = value; }
         public List<int> RandomStatIndexes { get => randomStatIndexes; set => randomStatIndexes = value; }
+        public UMARecipeProfile UMARecipeProfile { get => uMARecipeProfile; set => uMARecipeProfile = value; }
 
         public float GetTotalSlotWeights() {
             float returnValue = 0f;
@@ -382,9 +381,9 @@ namespace AnyRPG {
                 umaRecipeProfileName = ResourceName;
             }
             if (umaRecipeProfileName != null && umaRecipeProfileName != string.Empty) {
-                UMARecipeProfile umaRecipeProfile = systemDataFactory.GetResource<UMARecipeProfile>(umaRecipeProfileName);
-                if (umaRecipeProfile != null && umaRecipeProfile.MyUMARecipes != null) {
-                    UMARecipes = umaRecipeProfile.MyUMARecipes;
+                UMARecipeProfile tmpUMARecipeProfile = systemDataFactory.GetResource<UMARecipeProfile>(umaRecipeProfileName);
+                if (tmpUMARecipeProfile != null) {
+                    uMARecipeProfile = tmpUMARecipeProfile;
                 } else {
                     Debug.LogError("SystemAbilityManager.SetupScriptableObjects(): Could not find uma recipe profile : " + umaRecipeProfileName + " while inititalizing " + DisplayName + ".  CHECK INSPECTOR");
                 }
