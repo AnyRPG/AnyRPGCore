@@ -83,6 +83,7 @@ namespace AnyRPG {
             returnButton.Configure(systemGameManager);
             spawnButton.Configure(systemGameManager);
             despawnButton.Configure(systemGameManager);
+            characterPreviewPanel.Configure(systemGameManager);
         }
 
         public override void SetGameManagerReferences() {

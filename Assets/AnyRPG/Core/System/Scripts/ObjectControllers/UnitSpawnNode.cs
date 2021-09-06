@@ -224,7 +224,7 @@ namespace AnyRPG {
 
 
         public void Cleanup() {
-            Debug.Log(gameObject.name + ".UnitSpawnNode.Cleanup()");
+            //Debug.Log(gameObject.name + ".UnitSpawnNode.Cleanup()");
             if (SystemGameManager.IsShuttingDown) {
                 return;
             }
