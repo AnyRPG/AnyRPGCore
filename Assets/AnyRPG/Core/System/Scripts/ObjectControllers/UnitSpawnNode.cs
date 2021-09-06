@@ -174,7 +174,7 @@ namespace AnyRPG {
                 return;
             }
             SystemEventManager.StartListening("OnPlayerUnitSpawn", HandlePlayerUnitSpawn);
-            SystemEventManager.StartListening("OnLeveOnLevelUnloadlUnload", HandleLevelUnload);
+            SystemEventManager.StartListening("OnLevelUnload", HandleLevelUnload);
             if (playerManager.PlayerUnitSpawned == true) {
                 //Debug.Log(gameObject.name + ".UnitSpawnNode.CreateEventSubscriptions(): player unit already spawned.  Handling player unit spawn");
                 ProcessPlayerUnitSpawn();
@@ -200,7 +200,7 @@ namespace AnyRPG {
         }
 
         public void HandleLevelUnload(string eventName, EventParamProperties eventParamProperties) {
-            Debug.Log(gameObject.name + ".UnitSpawnNode.HandleLevelUnload()");
+            //Debug.Log(gameObject.name + ".UnitSpawnNode.HandleLevelUnload()");
             Cleanup();
         }
 
