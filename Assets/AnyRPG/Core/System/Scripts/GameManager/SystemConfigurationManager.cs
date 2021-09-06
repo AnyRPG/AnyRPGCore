@@ -326,10 +326,15 @@ namespace AnyRPG {
         private AudioProfile vendorAudioProfile = null;
 
         [Header("MINI MAP")]
-
+        /*
         [Tooltip("If the the minimap texture for a scene cannot be found, what type of map display should be used")]
         [SerializeField]
         private MiniMapFallBackMode miniMapFallBackMode = MiniMapFallBackMode.Empty;
+        */
+
+        [Tooltip("When a minimap texture for a scene cannot be found, how many pixels per meter should be used when taking an automatic snapshot.  A higher number results in better image quality, but also higher memory usage.")]
+        [SerializeField]
+        private int autoPixelsPerMeter = 10;
 
         [Tooltip("The faction icon to show on the load game screen when the player has no faction.")]
         [SerializeField]
@@ -338,6 +343,7 @@ namespace AnyRPG {
         [Tooltip("If the icon does not face up on the screen, enter the number of clockwise degrees the image is naturally rotated.  This will be subtracted from the player angle at run-time")]
         [SerializeField]
         private float playerMiniMapIconRotation = 0f;
+
 
         [Header("UNIT FRAMES")]
 
@@ -623,13 +629,14 @@ namespace AnyRPG {
         public string MainMenuScene { get => mainMenuScene; set => mainMenuScene = value; }
         public string InitializationScene { get => initializationScene; set => initializationScene = value; }
         public bool UseFirstCreatorProfile { get => useFirstCreatorProfile; set => useFirstCreatorProfile = value; }
-        public MiniMapFallBackMode MiniMapFallBackMode { get => miniMapFallBackMode; set => miniMapFallBackMode = value; }
+        //public MiniMapFallBackMode MiniMapFallBackMode { get => miniMapFallBackMode; set => miniMapFallBackMode = value; }
         public Sprite PlayerMiniMapIcon { get => playerMiniMapIcon; set => playerMiniMapIcon = value; }
         public float PlayerMiniMapIconRotation { get => playerMiniMapIconRotation; set => playerMiniMapIconRotation = value; }
         public bool RealTimeUnitFrameCamera { get => realTimeUnitFrameCamera; set => realTimeUnitFrameCamera = value; }
         public List<string> CharacterCreatorProfileNames { get => characterCreatorProfileNames; set => characterCreatorProfileNames = value; }
         public bool SyncMovementAnimationSpeed { get => syncMovementAnimationSpeed; set => syncMovementAnimationSpeed = value; }
         public int QuestLogSize { get => questLogSize; set => questLogSize = value; }
+        public int AutoPixelsPerMeter { get => autoPixelsPerMeter; set => autoPixelsPerMeter = value; }
 
         public override void Configure(SystemGameManager systemGameManager) {
             base.Configure(systemGameManager);

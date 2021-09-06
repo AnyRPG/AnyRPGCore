@@ -9,6 +9,8 @@ using UnityEngine.SceneManagement;
 namespace AnyRPG {
     public class MapManager : ConfiguredMonoBehaviour {
 
+        public event System.Action OnInitializeMap = delegate { };
+
         Texture2D mapTexture = null;
         RenderTexture renderTexture = null;
         private bool sceneTextureFound = false;
@@ -47,12 +49,13 @@ namespace AnyRPG {
             //Debug.Log("MapManager.ProcessLevelLoad(): creating Texture2D with size : " + (int)levelManager.SceneBounds.size.x + ", " + (int)levelManager.SceneBounds.size.z);
             UpdateCameraSize();
             //mapTexture = new Texture2D((int)levelManager.SceneBounds.size.x, (int)levelManager.SceneBounds.size.z);
-            mapTexture = new Texture2D((int)cameraSize, (int)cameraSize);
             string textureFilePath = mapTextureFolder + GetScreenshotFilename();
             if (System.IO.File.Exists(textureFilePath)) {
+                mapTexture = new Texture2D((int)cameraSize, (int)cameraSize);
                 sceneTextureFound = true;
                 byte[] fileData = System.IO.File.ReadAllBytes(textureFilePath);
                 mapTexture.LoadImage(fileData);
+                OnInitializeMap();
             } else {
                 sceneTextureFound = true;
                 //UpdateCameraSize();
@@ -87,7 +90,8 @@ namespace AnyRPG {
 
             //RenderMapFromCamera();
             //renderTexture = new RenderTexture((int)levelManager.SceneBounds.size.x, (int)levelManager.SceneBounds.size.z, 16, RenderTextureFormat.ARGB32);
-            renderTexture = new RenderTexture((int)cameraSize, (int)cameraSize, 16, RenderTextureFormat.ARGB32);
+            mapTexture = new Texture2D((int)cameraSize * systemConfigurationManager.AutoPixelsPerMeter, (int)cameraSize * systemConfigurationManager.AutoPixelsPerMeter);
+            renderTexture = new RenderTexture((int)cameraSize * systemConfigurationManager.AutoPixelsPerMeter, (int)cameraSize * systemConfigurationManager.AutoPixelsPerMeter, 16, RenderTextureFormat.ARGB32);
             renderTexture.Create();
             cameraManager.MainMapCamera.targetTexture = renderTexture;
             cameraManager.MainMapCamera.Render();
@@ -99,7 +103,7 @@ namespace AnyRPG {
             mapTexture.ReadPixels(new Rect(0, 0, renderTexture.width, renderTexture.height), 0, 0);
             //mapTexture.LoadRawTextureData(mapTexture.GetRawTextureData());
             mapTexture.Apply();
-
+            OnInitializeMap();
         }
 
         private void UpdateCameraSize() {

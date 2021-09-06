@@ -141,6 +141,7 @@ namespace AnyRPG {
             miniMapManager.OnRemoveIndicator += HandleRemoveIndicator;
             miniMapManager.OnUpdateIndicatorRotation += HandleIndicatorRotation;
             miniMapManager.OnInteractableStatusUpdate += HandleInteractableStatusUpdate;
+            mapManager.OnInitializeMap += CommonInitialization;
             SystemEventManager.StartListening("AfterCameraUpdate", HandleAfterCameraUpdate);
 
             eventSubscriptionsInitialized = true;
@@ -283,25 +284,22 @@ namespace AnyRPG {
             miniMapGraphicRect.anchoredPosition = new Vector2(imageCenterX, imageCenterY);
         }
 
-        private void CommonInitialization() {
-            SceneNode sceneNode = levelManager.GetActiveSceneNode();
-            if (sceneNode != null) {
-                zoneNameText.text = sceneNode.DisplayName;
-            } else {
-                zoneNameText.text = SceneManager.GetActiveScene().name;
-            }
-            this.gameObject.SetActive(true);
-            StartCoroutine(WaitForFollowTarget());
-
-            InitRenderedMinimap();
-            HandleCameraZoom(true); // Force the image to be zoomed correctly for the first rendering
-        }
-
         public void SetTarget(GameObject target) {
             //Debug.Log("MiniMapController setting target: " + target.name);
             followGameObject = target;
+            //CommonInitialization();
+            //StartCoroutine(WaitUntilNextFrame());
+        }
+        /*
+        /// <summary>
+        /// wait until the next frame when the mapManager has rendered the map for this scene
+        /// </summary>
+        /// <returns></returns>
+        public IEnumerator WaitUntilNextFrame() {
+            yield return null;
             CommonInitialization();
         }
+        */
 
         public void ClearTarget() {
 
@@ -317,6 +315,20 @@ namespace AnyRPG {
             yield return null;
         }
 
+        private void CommonInitialization() {
+            SceneNode sceneNode = levelManager.GetActiveSceneNode();
+            if (sceneNode != null) {
+                zoneNameText.text = sceneNode.DisplayName;
+            } else {
+                zoneNameText.text = SceneManager.GetActiveScene().name;
+            }
+            this.gameObject.SetActive(true);
+            StartCoroutine(WaitForFollowTarget());
+
+            InitRenderedMinimap();
+            HandleCameraZoom(true); // Force the image to be zoomed correctly for the first rendering
+        }
+
         /// <summary>
         /// Load the pre-rendered minimap texture into the appropriate component
         /// </summary>
@@ -330,7 +342,7 @@ namespace AnyRPG {
             // First, try to find the minimap
             if (mapManager.SceneTextureFound == true) {
                 miniMapEnabled = true;
-            } else {
+            }/* else {
                 //Debug.Log("No minimap texture exists at " + textureFilePath + ".  Please run \"Minimap Wizard\" from the Tools menu under AnyRPG.");
                 if (systemConfigurationManager.MiniMapFallBackMode == MiniMapFallBackMode.None) {
                     DisableIndicators();
@@ -340,6 +352,7 @@ namespace AnyRPG {
                 //miniMapGraphicRect.sizeDelta = new Vector2(mapTexture.width, mapTexture.height);
                 //return;
             }
+            */
             miniMapGraphicRawImage.texture = mapManager.MapTexture;
             miniMapGraphicRect.sizeDelta = new Vector2(mapManager.MapTexture.width, mapManager.MapTexture.height);
 
@@ -372,6 +385,7 @@ namespace AnyRPG {
             miniMapManager.OnRemoveIndicator -= HandleRemoveIndicator;
             miniMapManager.OnUpdateIndicatorRotation -= HandleIndicatorRotation;
             miniMapManager.OnInteractableStatusUpdate -= HandleInteractableStatusUpdate;
+            mapManager.OnInitializeMap -= CommonInitialization;
             SystemEventManager.StopListening("AfterCameraUpdate", HandleAfterCameraUpdate);
             eventSubscriptionsInitialized = false;
         }
