@@ -35,7 +35,8 @@ MonoBehaviour:
   OverrideDNA:
     PreloadValues: []
   recipeString: '{"version":3,"packedSlotDataList":[],"slotsV2":[],"slotsV3":[{"id":"MaleChallengerGloves","scale":100,"copyIdx":-1,"overlays":[{"id":"ChallengerGlovesLeather","colorIdx":0,"rect":[0.0,0.0,0.0,0.0],"isTransformed":false,"scale":{"x":0.0,"y":0.0,"z":0.0},"rotation":0.0},{"id":"ChallengerGlovesMetal","colorIdx":1,"rect":[0.0,0.0,0.0,0.0],"isTransformed":false,"scale":{"x":0.0,"y":0.0,"z":0.0},"rotation":0.0}],"Tags":[],"Races":[]}],"colors":[],"fColors":[{"name":"Hand
-    Equipment Color 1","colors":[56,30,8,255,0,0,0,0,255,255,255,255,0,0,0,0,255,255,255,255,0,0,0,0],"ShaderParms":[],"alwaysUpdate":false},{"name":"BronzeMetal","colors":[200,169,88,255,0,0,0,0,255,255,255,255,0,0,0,0,255,255,255,255,255,255,255,133],"ShaderParms":[],"alwaysUpdate":false}],"sharedColorCount":2,"race":"","packedDna":[]}'
+    Equipment Color 1","colors":[56,30,8,255,0,0,0,0,255,255,255,255,0,0,0,0,255,255,255,255,0,0,0,0],"ShaderParms":[],"alwaysUpdate":false},{"name":"Hand
+    Equipment Color 2","colors":[200,169,88,255,0,0,0,0,255,255,255,255,0,0,0,0,255,255,255,255,255,255,255,133],"ShaderParms":[],"alwaysUpdate":false}],"sharedColorCount":2,"race":"","packedDna":[]}'
   IncompatibleRecipes: []
   UserField: 
   replaces: Nothing
