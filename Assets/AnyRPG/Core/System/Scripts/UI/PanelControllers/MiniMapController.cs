@@ -315,7 +315,7 @@ namespace AnyRPG {
             StartCoroutine(WaitForFollowTarget());
 
             //InitRenderedMinimap();
-            HandleCameraZoom(true); // Force the image to be zoomed correctly for the first rendering
+            //HandleCameraZoom(true); // Force the image to be zoomed correctly for the first rendering
         }
 
         /// <summary>
@@ -359,6 +359,8 @@ namespace AnyRPG {
             EnableIndicators();
 
             loadedMapName = SceneManager.GetActiveScene().name;
+
+            HandleCameraZoom(true); // Force the image to be zoomed correctly for the first rendering
         }
 
         public void OpenMainMap() {
