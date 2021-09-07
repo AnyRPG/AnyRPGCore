@@ -141,7 +141,7 @@ namespace AnyRPG {
             miniMapManager.OnRemoveIndicator += HandleRemoveIndicator;
             miniMapManager.OnUpdateIndicatorRotation += HandleIndicatorRotation;
             miniMapManager.OnInteractableStatusUpdate += HandleInteractableStatusUpdate;
-            mapManager.OnInitializeMap += CommonInitialization;
+            mapManager.OnInitializeMap += InitRenderedMinimap;
             SystemEventManager.StartListening("AfterCameraUpdate", HandleAfterCameraUpdate);
 
             eventSubscriptionsInitialized = true;
@@ -287,19 +287,8 @@ namespace AnyRPG {
         public void SetTarget(GameObject target) {
             //Debug.Log("MiniMapController setting target: " + target.name);
             followGameObject = target;
-            //CommonInitialization();
-            //StartCoroutine(WaitUntilNextFrame());
-        }
-        /*
-        /// <summary>
-        /// wait until the next frame when the mapManager has rendered the map for this scene
-        /// </summary>
-        /// <returns></returns>
-        public IEnumerator WaitUntilNextFrame() {
-            yield return null;
             CommonInitialization();
         }
-        */
 
         public void ClearTarget() {
 
@@ -325,7 +314,7 @@ namespace AnyRPG {
             this.gameObject.SetActive(true);
             StartCoroutine(WaitForFollowTarget());
 
-            InitRenderedMinimap();
+            //InitRenderedMinimap();
             HandleCameraZoom(true); // Force the image to be zoomed correctly for the first rendering
         }
 
@@ -385,7 +374,7 @@ namespace AnyRPG {
             miniMapManager.OnRemoveIndicator -= HandleRemoveIndicator;
             miniMapManager.OnUpdateIndicatorRotation -= HandleIndicatorRotation;
             miniMapManager.OnInteractableStatusUpdate -= HandleInteractableStatusUpdate;
-            mapManager.OnInitializeMap -= CommonInitialization;
+            mapManager.OnInitializeMap -= InitRenderedMinimap;
             SystemEventManager.StopListening("AfterCameraUpdate", HandleAfterCameraUpdate);
             eventSubscriptionsInitialized = false;
         }
