@@ -209,5 +209,7 @@ public class ResourceSelector : EditorWindow
         listView.style.flexGrow = 1.0f;
 
         root.Add(listView);
+
+        nameFilter.Focus();
     }
 }
