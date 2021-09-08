@@ -141,7 +141,7 @@ namespace AnyRPG {
 
         public void ReloadAvatarDefinition() {
             //Debug.Log(unitController.gameObject.name + ".UMAModelController.ReloadAvatarDefinition()");
-            dynamicCharacterAvatar.LoadAvatarDefinition(avatarDefinition);
+            dynamicCharacterAvatar.LoadAvatarDefinition(avatarDefinition, true);
             BuildModelAppearance();
         }
 
@@ -373,7 +373,7 @@ namespace AnyRPG {
                     List<ColorDef> colorchannels = new List<ColorDef>();
 
                     Color Additive = new Color32(0, 0, 0, 0);
-                    colorchannels.Add(new ColorDef(1, ColorDef.ToUInt(sharedColorNode.Color), ColorDef.ToUInt(Additive)));
+                    colorchannels.Add(new ColorDef(0, ColorDef.ToUInt(sharedColorNode.Color), ColorDef.ToUInt(Additive)));
                     sharedColorDef.SetChannels(colorchannels.ToArray());
                     sharedColorDefs.Add(sharedColorDef);
                 }

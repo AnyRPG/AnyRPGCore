@@ -308,7 +308,7 @@ namespace AnyRPG {
             }
 
             if (!PlayerPrefs.HasKey("GraphicsQualityIndex")) {
-                Debug.Log("MainSettingsMenuController.SetPlayerPrefsDefaults() graphicsQuality is: " + QualitySettings.GetQualityLevel());
+                //Debug.Log("MainSettingsMenuController.SetPlayerPrefsDefaults() graphicsQuality is: " + QualitySettings.GetQualityLevel());
                 PlayerPrefs.SetInt("GraphicsQualityIndex", QualitySettings.GetQualityLevel());
             }
 
