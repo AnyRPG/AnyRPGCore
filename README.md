@@ -49,7 +49,7 @@ A Unity package that includes this repository (and a complex sample game) is ava
 ### Github Installation
 Video tutorial for version 0.10.1a install can be watched here: https://www.youtube.com/watch?v=oMeWWgNYrYI
 
-1. Install the correct Unity version to open this project.  The current project Unity version is 2020.3.1f1
+1. Install the correct Unity version to open this project.  The current project Unity version is 2020.3.17f1
 1. Clone this repository into a directory on your computer
 1. Open the Unity Hub and add the project
 1. Open the project and install the following Unity packages:
@@ -58,4 +58,12 @@ Video tutorial for version 0.10.1a install can be watched here: https://www.yout
 	* NavMesh Components (from github: https://github.com/Unity-Technologies/NavMeshComponents/tree/2019.3)
 1. Open the Window menu in Unity and choose 'TextMeshPro' > 'Import TMP Essential Resources'
 1. Open the UMA menu in Unity and choose Global Library.  In the Global Library window, choose File > Rebuild From Project
-1. Open the scene "CoreGame" and press play in the editor
+
+## Getting Started
+
+Open the Tools menu in Unity and Choose AnyRPG > Welcome Window
+
+From the welcome window you can easily
+	* Find and open the included sample games
+	* Launch the New Game Wizard to setup your own game
+	* Find and open online support resources to get in depth help and information about using AnyRPG
