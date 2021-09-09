@@ -61,9 +61,9 @@ Video tutorial for version 0.10.1a install can be watched here: https://www.yout
 
 ## Getting Started
 
-Open the Tools menu in Unity and Choose AnyRPG > Welcome Window
+Open the Tools menu in Unity and choose 'AnyRPG' > 'Welcome Window'
 
 From the welcome window you can easily
-	* Find and open the included sample games
-	* Launch the New Game Wizard to setup your own game
-	* Find and open online support resources to get in depth help and information about using AnyRPG
+* Find and open the included sample games
+* Launch the New Game Wizard to setup your own game
+* Find and open online support resources to get in depth help and information about using AnyRPG
