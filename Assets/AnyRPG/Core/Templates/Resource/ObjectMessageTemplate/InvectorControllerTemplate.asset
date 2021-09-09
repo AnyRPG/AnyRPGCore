@@ -1,0 +1,656 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 351f40fa1d073ef40a57974989dca57b, type: 3}
+  m_Name: InvectorControllerTemplate
+  m_EditorClassIdentifier: 
+  resourceName: Invector Controller Template
+  displayName: 
+  icon: {fileID: 0}
+  iconBackgroundImage: {fileID: 0}
+  description: 'This template will:
+
+    -synchronize invector run speed with game
+    run speed
+
+    -require left or right mouse to be held down to turn character
+    with mouse to prevent unintended camera movement when interacting with the ui
+
+    -disable
+    movement when entering text in a text field
+
+    -respond to select keybind events
+    to set invector keybinds
+
+    -listen to local events and inject responses as
+    necessary'
+  useRegionalDescription: 0
+  resourceDescriptionProfile: 
+  systemEventList:
+  - eventName: OnAllowMouseMovement
+    responseLimit: 0
+    subscribeStage: 0
+    messageResponses:
+    - functionName: SetLockCameraInput
+      parameter: 4
+      useCustomParam: 1
+      customParameters:
+        simpleParams:
+          StringParam: 
+          IntParam: 0
+          FloatParam: 0
+          BoolParam: 0
+        objectParam:
+          objectName: 
+          simpleParams: []
+    propertyResponses: []
+    componentResponses: []
+    invokeResponses: []
+  - eventName: OnDisallowMouseMovement
+    responseLimit: 0
+    subscribeStage: 0
+    messageResponses:
+    - functionName: SetLockCameraInput
+      parameter: 4
+      useCustomParam: 1
+      customParameters:
+        simpleParams:
+          StringParam: 
+          IntParam: 0
+          FloatParam: 0
+          BoolParam: 1
+        objectParam:
+          objectName: 
+          simpleParams: []
+    propertyResponses: []
+    componentResponses: []
+    invokeResponses: []
+  - eventName: OnDisableMovement
+    responseLimit: 0
+    subscribeStage: 0
+    messageResponses:
+    - functionName: SetLockAllInput
+      parameter: 4
+      useCustomParam: 1
+      customParameters:
+        simpleParams:
+          StringParam: 
+          IntParam: 0
+          FloatParam: 0
+          BoolParam: 1
+        objectParam:
+          objectName: 
+          simpleParams: []
+    propertyResponses: []
+    componentResponses: []
+    invokeResponses: []
+  - eventName: OnEnableMovement
+    responseLimit: 0
+    subscribeStage: 0
+    messageResponses:
+    - functionName: SetLockAllInput
+      parameter: 4
+      useCustomParam: 1
+      customParameters:
+        simpleParams:
+          StringParam: 
+          IntParam: 0
+          FloatParam: 0
+          BoolParam: 0
+        objectParam:
+          objectName: 
+          simpleParams: []
+    propertyResponses: []
+    componentResponses: []
+    invokeResponses: []
+  - eventName: OnSetRunSpeed
+    responseLimit: 0
+    subscribeStage: 0
+    messageResponses: []
+    propertyResponses:
+    - scriptName: Invector.vCharacterController.vThirdPersonController
+      propertyName: freeSpeed
+      subPropertyName: runningSpeed
+      parameter: 3
+      useCustomParam: 0
+      customParameters:
+        simpleParams:
+          StringParam: 
+          IntParam: 0
+          FloatParam: 0
+          BoolParam: 0
+        objectParam:
+          objectName: 
+          simpleParams: []
+    componentResponses: []
+    invokeResponses: []
+  - eventName: OnToggleRun
+    responseLimit: 0
+    subscribeStage: 0
+    messageResponses: []
+    propertyResponses:
+    - scriptName: Invector.vCharacterController.vThirdPersonController
+      propertyName: freeSpeed
+      subPropertyName: walkByDefault
+      parameter: 4
+      useCustomParam: 0
+      customParameters:
+        simpleParams:
+          StringParam: 
+          IntParam: 0
+          FloatParam: 0
+          BoolParam: 0
+        objectParam:
+          objectName: 
+          simpleParams: []
+    componentResponses: []
+    invokeResponses: []
+  - eventName: OnSetSprintSpeed
+    responseLimit: 0
+    subscribeStage: 0
+    messageResponses: []
+    propertyResponses:
+    - scriptName: Invector.vCharacterController.vThirdPersonController
+      propertyName: freeSpeed
+      subPropertyName: sprintSpeed
+      parameter: 3
+      useCustomParam: 0
+      customParameters:
+        simpleParams:
+          StringParam: 
+          IntParam: 0
+          FloatParam: 0
+          BoolParam: 0
+        objectParam:
+          objectName: 
+          simpleParams: []
+    componentResponses: []
+    invokeResponses: []
+  - eventName: OnStartCasting
+    responseLimit: 0
+    subscribeStage: 0
+    messageResponses: []
+    propertyResponses:
+    - scriptName: Invector.vCharacterController.vThirdPersonMotor
+      propertyName: disableAnimations
+      subPropertyName: 
+      parameter: 4
+      useCustomParam: 1
+      customParameters:
+        simpleParams:
+          StringParam: 
+          IntParam: 0
+          FloatParam: 0
+          BoolParam: 1
+        objectParam:
+          objectName: 
+          simpleParams: []
+    componentResponses:
+    - scriptName: Invector.vCharacterController.vThirdPersonInput
+      componentAction: 1
+    invokeResponses: []
+  - eventName: OnStartStunned
+    responseLimit: 0
+    subscribeStage: 0
+    messageResponses: []
+    propertyResponses:
+    - scriptName: Invector.vCharacterController.vThirdPersonMotor
+      propertyName: disableAnimations
+      subPropertyName: 
+      parameter: 4
+      useCustomParam: 1
+      customParameters:
+        simpleParams:
+          StringParam: 
+          IntParam: 0
+          FloatParam: 0
+          BoolParam: 1
+        objectParam:
+          objectName: 
+          simpleParams: []
+    componentResponses:
+    - scriptName: Invector.vCharacterController.vThirdPersonInput
+      componentAction: 1
+    invokeResponses: []
+  - eventName: OnStartLevitated
+    responseLimit: 0
+    subscribeStage: 0
+    messageResponses: []
+    propertyResponses:
+    - scriptName: Invector.vCharacterController.vThirdPersonMotor
+      propertyName: disableAnimations
+      subPropertyName: 
+      parameter: 4
+      useCustomParam: 1
+      customParameters:
+        simpleParams:
+          StringParam: 
+          IntParam: 0
+          FloatParam: 0
+          BoolParam: 1
+        objectParam:
+          objectName: 
+          simpleParams: []
+    componentResponses:
+    - scriptName: Invector.vCharacterController.vThirdPersonInput
+      componentAction: 1
+    invokeResponses: []
+  - eventName: OnDeath
+    responseLimit: 0
+    subscribeStage: 0
+    messageResponses: []
+    propertyResponses:
+    - scriptName: Invector.vCharacterController.vThirdPersonMotor
+      propertyName: disableAnimations
+      subPropertyName: 
+      parameter: 4
+      useCustomParam: 1
+      customParameters:
+        simpleParams:
+          StringParam: 
+          IntParam: 0
+          FloatParam: 0
+          BoolParam: 1
+        objectParam:
+          objectName: 
+          simpleParams: []
+    componentResponses:
+    - scriptName: Invector.vCharacterController.vThirdPersonInput
+      componentAction: 1
+    invokeResponses: []
+  - eventName: OnReviveComplete
+    responseLimit: 0
+    subscribeStage: 0
+    messageResponses: []
+    propertyResponses:
+    - scriptName: Invector.vCharacterController.vThirdPersonMotor
+      propertyName: disableAnimations
+      subPropertyName: 
+      parameter: 4
+      useCustomParam: 1
+      customParameters:
+        simpleParams:
+          StringParam: 
+          IntParam: 0
+          FloatParam: 0
+          BoolParam: 0
+        objectParam:
+          objectName: 
+          simpleParams: []
+    componentResponses:
+    - scriptName: Invector.vCharacterController.vThirdPersonInput
+      componentAction: 0
+    invokeResponses: []
+  - eventName: OnStartAttacking
+    responseLimit: 0
+    subscribeStage: 0
+    messageResponses: []
+    propertyResponses:
+    - scriptName: Invector.vCharacterController.vThirdPersonMotor
+      propertyName: disableAnimations
+      subPropertyName: 
+      parameter: 4
+      useCustomParam: 1
+      customParameters:
+        simpleParams:
+          StringParam: 
+          IntParam: 0
+          FloatParam: 0
+          BoolParam: 0
+        objectParam:
+          objectName: 
+          simpleParams: []
+    - scriptName: Invector.vCharacterController.vThirdPersonInput
+      propertyName: crouchInput
+      subPropertyName: 
+      parameter: 5
+      useCustomParam: 1
+      customParameters:
+        simpleParams:
+          StringParam: 
+          IntParam: 0
+          FloatParam: 0
+          BoolParam: 1
+        objectParam:
+          objectName: Invector.vCharacterController.GenericInput
+          simpleParams:
+          - paramType: 0
+            useCustomParam: 1
+            simpleParams:
+              StringParam: X
+              IntParam: 0
+              FloatParam: 0
+              BoolParam: 0
+          - paramType: 0
+            useCustomParam: 1
+            simpleParams:
+              StringParam: Y
+              IntParam: 0
+              FloatParam: 0
+              BoolParam: 0
+          - paramType: 0
+            useCustomParam: 1
+            simpleParams:
+              StringParam: Y
+              IntParam: 0
+              FloatParam: 0
+              BoolParam: 0
+    componentResponses:
+    - scriptName: Invector.vCharacterController.vThirdPersonInput
+      componentAction: 1
+    invokeResponses: []
+  - eventName: OnBindKeyCROUCH
+    responseLimit: 0
+    subscribeStage: 0
+    messageResponses: []
+    propertyResponses:
+    - scriptName: Invector.vCharacterController.vThirdPersonInput
+      propertyName: crouchInput
+      subPropertyName: 
+      parameter: 5
+      useCustomParam: 1
+      customParameters:
+        simpleParams:
+          StringParam: 
+          IntParam: 0
+          FloatParam: 0
+          BoolParam: 1
+        objectParam:
+          objectName: Invector.vCharacterController.GenericInput
+          simpleParams:
+          - paramType: 0
+            useCustomParam: 0
+            simpleParams:
+              StringParam: X
+              IntParam: 0
+              FloatParam: 0
+              BoolParam: 0
+          - paramType: 0
+            useCustomParam: 0
+            simpleParams:
+              StringParam: Y
+              IntParam: 0
+              FloatParam: 0
+              BoolParam: 0
+          - paramType: 0
+            useCustomParam: 0
+            simpleParams:
+              StringParam: Y
+              IntParam: 0
+              FloatParam: 0
+              BoolParam: 0
+    componentResponses: []
+    invokeResponses: []
+  - eventName: OnBindKeyJUMP
+    responseLimit: 0
+    subscribeStage: 0
+    messageResponses: []
+    propertyResponses:
+    - scriptName: Invector.vCharacterController.vThirdPersonInput
+      propertyName: jumpInput
+      subPropertyName: 
+      parameter: 5
+      useCustomParam: 1
+      customParameters:
+        simpleParams:
+          StringParam: 
+          IntParam: 0
+          FloatParam: 0
+          BoolParam: 1
+        objectParam:
+          objectName: Invector.vCharacterController.GenericInput
+          simpleParams:
+          - paramType: 0
+            useCustomParam: 0
+            simpleParams:
+              StringParam: X
+              IntParam: 0
+              FloatParam: 0
+              BoolParam: 0
+          - paramType: 0
+            useCustomParam: 0
+            simpleParams:
+              StringParam: Y
+              IntParam: 0
+              FloatParam: 0
+              BoolParam: 0
+          - paramType: 0
+            useCustomParam: 0
+            simpleParams:
+              StringParam: Y
+              IntParam: 0
+              FloatParam: 0
+              BoolParam: 0
+    componentResponses: []
+    invokeResponses: []
+  - eventName: OnBindKeyROLL
+    responseLimit: 0
+    subscribeStage: 0
+    messageResponses: []
+    propertyResponses:
+    - scriptName: Invector.vCharacterController.vThirdPersonInput
+      propertyName: rollInput
+      subPropertyName: 
+      parameter: 5
+      useCustomParam: 1
+      customParameters:
+        simpleParams:
+          StringParam: 
+          IntParam: 0
+          FloatParam: 0
+          BoolParam: 1
+        objectParam:
+          objectName: Invector.vCharacterController.GenericInput
+          simpleParams:
+          - paramType: 0
+            useCustomParam: 0
+            simpleParams:
+              StringParam: X
+              IntParam: 0
+              FloatParam: 0
+              BoolParam: 0
+          - paramType: 0
+            useCustomParam: 0
+            simpleParams:
+              StringParam: Y
+              IntParam: 0
+              FloatParam: 0
+              BoolParam: 0
+          - paramType: 0
+            useCustomParam: 0
+            simpleParams:
+              StringParam: Y
+              IntParam: 0
+              FloatParam: 0
+              BoolParam: 0
+    componentResponses: []
+    invokeResponses: []
+  - eventName: OnBindKeyTOGGLESTRAFE
+    responseLimit: 0
+    subscribeStage: 0
+    messageResponses: []
+    propertyResponses:
+    - scriptName: Invector.vCharacterController.vThirdPersonInput
+      propertyName: strafeInput
+      subPropertyName: 
+      parameter: 5
+      useCustomParam: 1
+      customParameters:
+        simpleParams:
+          StringParam: 
+          IntParam: 0
+          FloatParam: 0
+          BoolParam: 1
+        objectParam:
+          objectName: Invector.vCharacterController.GenericInput
+          simpleParams:
+          - paramType: 0
+            useCustomParam: 0
+            simpleParams:
+              StringParam: X
+              IntParam: 0
+              FloatParam: 0
+              BoolParam: 0
+          - paramType: 0
+            useCustomParam: 0
+            simpleParams:
+              StringParam: Y
+              IntParam: 0
+              FloatParam: 0
+              BoolParam: 0
+          - paramType: 0
+            useCustomParam: 0
+            simpleParams:
+              StringParam: Y
+              IntParam: 0
+              FloatParam: 0
+              BoolParam: 0
+    componentResponses: []
+    invokeResponses: []
+  - eventName: OnStartRiding
+    responseLimit: 0
+    subscribeStage: 0
+    messageResponses: []
+    propertyResponses:
+    - scriptName: Invector.vCharacterController.vThirdPersonMotor
+      propertyName: disableAnimations
+      subPropertyName: 
+      parameter: 4
+      useCustomParam: 1
+      customParameters:
+        simpleParams:
+          StringParam: 
+          IntParam: 0
+          FloatParam: 0
+          BoolParam: 1
+        objectParam:
+          objectName: 
+          simpleParams: []
+    componentResponses:
+    - scriptName: Invector.vCharacterController.vThirdPersonInput
+      componentAction: 1
+    invokeResponses: []
+  - eventName: OnEndCasting
+    responseLimit: 0
+    subscribeStage: 0
+    messageResponses: []
+    propertyResponses:
+    - scriptName: Invector.vCharacterController.vThirdPersonMotor
+      propertyName: disableAnimations
+      subPropertyName: 
+      parameter: 4
+      useCustomParam: 1
+      customParameters:
+        simpleParams:
+          StringParam: 
+          IntParam: 0
+          FloatParam: 0
+          BoolParam: 0
+        objectParam:
+          objectName: 
+          simpleParams: []
+    componentResponses:
+    - scriptName: Invector.vCharacterController.vThirdPersonInput
+      componentAction: 0
+    invokeResponses: []
+  - eventName: OnEndStunned
+    responseLimit: 0
+    subscribeStage: 0
+    messageResponses: []
+    propertyResponses:
+    - scriptName: Invector.vCharacterController.vThirdPersonMotor
+      propertyName: disableAnimations
+      subPropertyName: 
+      parameter: 4
+      useCustomParam: 1
+      customParameters:
+        simpleParams:
+          StringParam: 
+          IntParam: 0
+          FloatParam: 0
+          BoolParam: 0
+        objectParam:
+          objectName: 
+          simpleParams: []
+    componentResponses:
+    - scriptName: Invector.vCharacterController.vThirdPersonInput
+      componentAction: 0
+    invokeResponses: []
+  - eventName: OnEndLevitated
+    responseLimit: 0
+    subscribeStage: 0
+    messageResponses: []
+    propertyResponses:
+    - scriptName: Invector.vCharacterController.vThirdPersonMotor
+      propertyName: disableAnimations
+      subPropertyName: 
+      parameter: 4
+      useCustomParam: 1
+      customParameters:
+        simpleParams:
+          StringParam: 
+          IntParam: 0
+          FloatParam: 0
+          BoolParam: 0
+        objectParam:
+          objectName: 
+          simpleParams: []
+    componentResponses:
+    - scriptName: Invector.vCharacterController.vThirdPersonInput
+      componentAction: 0
+    invokeResponses: []
+  - eventName: OnEndAttacking
+    responseLimit: 0
+    subscribeStage: 0
+    messageResponses: []
+    propertyResponses:
+    - scriptName: Invector.vCharacterController.vThirdPersonMotor
+      propertyName: disableAnimations
+      subPropertyName: 
+      parameter: 4
+      useCustomParam: 1
+      customParameters:
+        simpleParams:
+          StringParam: 
+          IntParam: 0
+          FloatParam: 0
+          BoolParam: 0
+        objectParam:
+          objectName: 
+          simpleParams: []
+    componentResponses:
+    - scriptName: Invector.vCharacterController.vThirdPersonInput
+      componentAction: 0
+    invokeResponses: []
+  - eventName: OnEndRiding
+    responseLimit: 0
+    subscribeStage: 0
+    messageResponses: []
+    propertyResponses:
+    - scriptName: Invector.vCharacterController.vThirdPersonMotor
+      propertyName: disableAnimations
+      subPropertyName: 
+      parameter: 4
+      useCustomParam: 1
+      customParameters:
+        simpleParams:
+          StringParam: 
+          IntParam: 0
+          FloatParam: 0
+          BoolParam: 0
+        objectParam:
+          objectName: 
+          simpleParams: []
+    componentResponses:
+    - scriptName: Invector.vCharacterController.vThirdPersonInput
+      componentAction: 0
+    invokeResponses: []
+  localEventList: []

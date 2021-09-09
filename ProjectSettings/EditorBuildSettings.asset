@@ -6,90 +6,99 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/ALostSoul/Content/ALostSoul/Scenes/Game/ALostSoulGame/ALostSoulGame.unity
+    path: Assets/ALostSoul/Games/ALostSoul/Scenes/Game/ALostSoulGame/ALostSoulGame.unity
     guid: 9ebe3041afae4124286a6eeaa941a5c8
   - enabled: 1
-    path: Assets/AnyRPG/Engine/Core/System/Scenes/MainMenu/MainMenu.unity
-    guid: 796bbdccf792ca145a55c45c89ec7454
+    path: Assets/ALostSoul/Games/ALostSoulCharacterDemo/Scenes/Game/ALostSoulCharacterDemoGame/ALostSoulCharacterDemoGame.unity
+    guid: 4f5e18110aa706b49b11a4673427ebd3
   - enabled: 1
-    path: Assets/ALostSoul/Content/ALostSoul/Scenes/Content/BirchGrove/BirchGrove.unity
-    guid: a4e1d50e5189b67438879344cf2eab7a
+    path: Assets/AnyRPG/Engine/Games/ContentDemo/Scenes/Game/ContentDemoGame/ContentDemoGame.unity
+    guid: ba8bd3a60f57ab64388665a58ea7f4bc
   - enabled: 1
-    path: Assets/ALostSoul/Content/ALostSoul/Scenes/Content/SunTemple/SunTemple.unity
-    guid: dbb1b5ef519de394989582f112444a32
-  - enabled: 1
-    path: Assets/ALostSoul/Content/ALostSoul/Scenes/Content/BirchGroveCutScene/BirchGroveCutScene.unity
-    guid: ed06c27521f1c4144a3985641b363b6f
-  - enabled: 1
-    path: Assets/ALostSoul/Content/ALostSoul/Scenes/Content/CrystalMine/CrystalMine.unity
-    guid: 571c1c435cccf0b4f8f1c8167b81198f
-  - enabled: 1
-    path: Assets/ALostSoul/Content/ALostSoul/Scenes/Content/LightfuryOutpost/LightfuryOutpost.unity
-    guid: be70a482f172d7748b2aac9f6d99bb99
-  - enabled: 1
-    path: Assets/ALostSoul/Content/ALostSoul/Scenes/Content/ManaSeal/ManaSeal.unity
-    guid: bb5fa340d9bd909488bb6e58f56736cb
-  - enabled: 1
-    path: Assets/ALostSoul/Content/ALostSoul/Scenes/Content/ManaSealCutScene/ManaSealCutScene.unity
-    guid: b3061a53fc08c504bbac1a3ce7884330
-  - enabled: 1
-    path: Assets/ALostSoul/Content/ALostSoul/Scenes/Content/HistoryOfMagicCutScene/HistoryOfMagicCutScene.unity
-    guid: b5b79bfee5e6dae4e94bc95069e0a9e4
-  - enabled: 1
-    path: Assets/ALostSoul/Content/ALostSoul/Scenes/Content/WarOfTheMagiCutScene/WarOfTheMagiCutScene.unity
-    guid: 5076096bb7ee6ba479b12e782cd91e7a
-  - enabled: 1
-    path: Assets/ALostSoul/Content/ALostSoul/Scenes/Content/TempleOfAncientEnergy/TempleOfAncientEnergy.unity
-    guid: d8d0b380591bfff4db2868019dddcbf9
-  - enabled: 1
-    path: Assets/ALostSoul/Content/ALostSoulExample/Scenes/Content/ExampleSoulForge/ExampleSoulForge.unity
-    guid: e94e746e738fe2240bfc77cc3c5fad59
-  - enabled: 1
-    path: Assets/ALostSoul/Content/ALostSoulExample/Scenes/Content/ExampleBirchGroveCutScene/ExampleBirchGroveCutScene.unity
-    guid: 8ba906b03d8ec0a4db540ec74893575f
-  - enabled: 1
-    path: Assets/ALostSoul/Content/ALostSoulExample/Scenes/Content/ExampleCrystalMine/ExampleCrystalMine.unity
-    guid: 168b38b5c1eb50b40830abf819d3baba
-  - enabled: 1
-    path: Assets/ALostSoul/Content/ALostSoulExample/Scenes/Content/ExampleBirchGrove/ExampleBirchGrove.unity
-    guid: ec067827c64627e47af9f2d871d6eb8d
-  - enabled: 1
-    path: Assets/ALostSoul/Content/ALostSoulExample/Scenes/Content/ExampleArenaOfTrials/ExampleArenaOfTrials.unity
-    guid: 90778e9d89d9e58429a830e6104ba199
-  - enabled: 1
-    path: Assets/ALostSoul/Content/ALostSoulExample/Scenes/Content/ExampleSunTemple/ExampleSunTemple.unity
-    guid: 0e9fbe95b41ed114489845ba8b42e091
-  - enabled: 1
-    path: Assets/ALostSoul/Content/ALostSoulExample/Scenes/Content/ExampleHistoryOfMagicCutScene/ExampleHistoryOfMagicCutScene.unity
-    guid: f0ebed6ed227c1542913edad4889c0b1
-  - enabled: 1
-    path: Assets/ALostSoul/Content/ALostSoulExample/Scenes/Content/ExampleWarOfTheMagiCutScene/ExampleWarOfTheMagiCutScene.unity
-    guid: 382cac2ff1e697646965631425048251
-  - enabled: 1
-    path: Assets/ALostSoul/Content/ALostSoulExample/Scenes/Content/ExampleManaSealCutScene/ExampleManaSealCutScene.unity
-    guid: 3ac060f8eec5c94469b071341a20361b
-  - enabled: 1
-    path: Assets/ALostSoul/Content/ALostSoulExample/Scenes/Content/ExampleLightfuryOutpost/ExampleLightfuryOutpost.unity
-    guid: e69ccb3cd2b045c438390379d8a1be7b
-  - enabled: 1
-    path: Assets/ALostSoul/Content/ALostSoulExample/Scenes/Content/ExampleManaSeal/ExampleManaSeal.unity
-    guid: 16c4484c86989f44c995328b1b49a1a5
-  - enabled: 1
-    path: Assets/ALostSoul/Content/ALostSoulExample/Scenes/Content/ExampleTempleOfAncientEnergy/ExampleTempleOfAncientEnergy.unity
-    guid: a5845d23eec8aad47a9774f4bc7e8311
-  - enabled: 1
-    path: Assets/AnyRPG/Engine/Core/Games/CoreGame/Scenes/CoreGame/CoreGame.unity
+    path: Assets/AnyRPG/Core/Games/FeaturesDemo/Scenes/Game/FeaturesDemoGame/FeaturesDemoGame.unity
     guid: a6d195ea807f74f4cb08c65ff65b1e52
   - enabled: 1
-    path: Assets/AnyRPG/Engine/Core/Games/CoreGame/Scenes/CoreDungeon/CoreDungeon.unity
-    guid: c094c26c9175d674fafcb14b9282a864
-  - enabled: 1
-    path: Assets/AnyRPG/Engine/Core/Games/EmptyGame/Scenes/EmptyGame/EmptyGame.unity
+    path: Assets/AnyRPG/Core/Games/EmptyGame/Scenes/EmptyGame/EmptyGame.unity
     guid: 7f52814d565a8844ba1d58d1b9dc3001
   - enabled: 1
-    path: Assets/AnyRPG/Engine/Core/Games/CoreGame/Scenes/CoreCutsceneZone/CoreCutsceneZone.unity
+    path: Assets/AnyRPG/Core/System/Scenes/MainMenu/MainMenu.unity
+    guid: 796bbdccf792ca145a55c45c89ec7454
+  - enabled: 1
+    path: Assets/ALostSoul/Games/ALostSoul/Scenes/Content/BirchGrove/BirchGrove.unity
+    guid: a4e1d50e5189b67438879344cf2eab7a
+  - enabled: 1
+    path: Assets/ALostSoul/Games/ALostSoul/Scenes/Content/SunTemple/SunTemple.unity
+    guid: dbb1b5ef519de394989582f112444a32
+  - enabled: 1
+    path: Assets/ALostSoul/Games/ALostSoul/Scenes/Content/BirchGroveCutScene/BirchGroveCutScene.unity
+    guid: ed06c27521f1c4144a3985641b363b6f
+  - enabled: 1
+    path: Assets/ALostSoul/Games/ALostSoul/Scenes/Content/CrystalMine/CrystalMine.unity
+    guid: 571c1c435cccf0b4f8f1c8167b81198f
+  - enabled: 1
+    path: Assets/ALostSoul/Games/ALostSoul/Scenes/Content/LightfuryOutpost/LightfuryOutpost.unity
+    guid: be70a482f172d7748b2aac9f6d99bb99
+  - enabled: 1
+    path: Assets/ALostSoul/Games/ALostSoul/Scenes/Content/ManaSeal/ManaSeal.unity
+    guid: bb5fa340d9bd909488bb6e58f56736cb
+  - enabled: 1
+    path: Assets/ALostSoul/Games/ALostSoul/Scenes/Content/ManaSealCutScene/ManaSealCutScene.unity
+    guid: b3061a53fc08c504bbac1a3ce7884330
+  - enabled: 1
+    path: Assets/ALostSoul/Games/ALostSoul/Scenes/Content/HistoryOfMagicCutScene/HistoryOfMagicCutScene.unity
+    guid: b5b79bfee5e6dae4e94bc95069e0a9e4
+  - enabled: 1
+    path: Assets/ALostSoul/Games/ALostSoul/Scenes/Content/WarOfTheMagiCutScene/WarOfTheMagiCutScene.unity
+    guid: 5076096bb7ee6ba479b12e782cd91e7a
+  - enabled: 1
+    path: Assets/ALostSoul/Games/ALostSoul/Scenes/Content/TempleOfAncientEnergy/TempleOfAncientEnergy.unity
+    guid: d8d0b380591bfff4db2868019dddcbf9
+  - enabled: 1
+    path: Assets/ALostSoul/Content/ALostSoulDemoShared/Scenes/ExampleSoulForge/ExampleSoulForge.unity
+    guid: e94e746e738fe2240bfc77cc3c5fad59
+  - enabled: 1
+    path: Assets/ALostSoul/Content/ALostSoulDemoShared/Scenes/ExampleBirchGroveCutScene/ExampleBirchGroveCutScene.unity
+    guid: 8ba906b03d8ec0a4db540ec74893575f
+  - enabled: 1
+    path: Assets/ALostSoul/Content/ALostSoulDemoShared/Scenes/ExampleCrystalMine/ExampleCrystalMine.unity
+    guid: 168b38b5c1eb50b40830abf819d3baba
+  - enabled: 1
+    path: Assets/ALostSoul/Content/ALostSoulDemoShared/Scenes/ExampleBirchGrove/ExampleBirchGrove.unity
+    guid: ec067827c64627e47af9f2d871d6eb8d
+  - enabled: 1
+    path: Assets/ALostSoul/Content/ALostSoulDemoShared/Scenes/ExampleArenaOfTrials/ExampleArenaOfTrials.unity
+    guid: 90778e9d89d9e58429a830e6104ba199
+  - enabled: 1
+    path: Assets/ALostSoul/Content/ALostSoulDemoShared/Scenes/ExampleSunTemple/ExampleSunTemple.unity
+    guid: 0e9fbe95b41ed114489845ba8b42e091
+  - enabled: 1
+    path: Assets/ALostSoul/Content/ALostSoulDemoShared/Scenes/ExampleHistoryOfMagicCutScene/ExampleHistoryOfMagicCutScene.unity
+    guid: f0ebed6ed227c1542913edad4889c0b1
+  - enabled: 1
+    path: Assets/ALostSoul/Content/ALostSoulDemoShared/Scenes/ExampleWarOfTheMagiCutScene/ExampleWarOfTheMagiCutScene.unity
+    guid: 382cac2ff1e697646965631425048251
+  - enabled: 1
+    path: Assets/ALostSoul/Content/ALostSoulDemoShared/Scenes/ExampleManaSealCutScene/ExampleManaSealCutScene.unity
+    guid: 3ac060f8eec5c94469b071341a20361b
+  - enabled: 1
+    path: Assets/ALostSoul/Content/ALostSoulDemoShared/Scenes/ExampleLightfuryOutpost/ExampleLightfuryOutpost.unity
+    guid: e69ccb3cd2b045c438390379d8a1be7b
+  - enabled: 1
+    path: Assets/ALostSoul/Content/ALostSoulDemoShared/Scenes/ExampleManaSeal/ExampleManaSeal.unity
+    guid: 16c4484c86989f44c995328b1b49a1a5
+  - enabled: 1
+    path: Assets/ALostSoul/Content/ALostSoulDemoShared/Scenes/ExampleTempleOfAncientEnergy/ExampleTempleOfAncientEnergy.unity
+    guid: a5845d23eec8aad47a9774f4bc7e8311
+  - enabled: 1
+    path: Assets/AnyRPG/Core/Games/FeaturesDemo/Scenes/Content/FeaturesDemoDungeon/FeaturesDemoDungeon.unity
+    guid: c094c26c9175d674fafcb14b9282a864
+  - enabled: 1
+    path: Assets/AnyRPG/Core/Games/FeaturesDemo/Scenes/Content/FeaturesDemoCutsceneZone/FeaturesDemoCutsceneZone.unity
     guid: b9ce6cec24f88e343bdd24c31d295b8a
   - enabled: 1
-    path: Assets/AnyRPG/Engine/Core/Games/CoreGame/Scenes/CoreZone/CoreZone.unity
+    path: Assets/AnyRPG/Core/Games/FeaturesDemo/Scenes/Content/FeaturesDemoZone/FeaturesDemoZone.unity
     guid: a847437ee17c7aa4f98c2d363f671f1d
+  - enabled: 1
+    path: Assets/AnyRPG/Engine/Games/ContentDemo/Scenes/Content/ContentScene/ContentScene.unity
+    guid: 79ec306d7083e084bb061eebd6e5f62f
   m_configObjects: {}

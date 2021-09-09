@@ -92,6 +92,12 @@ TagManager:
   - Patrol6_5
   - Patrol6_6
   - Patrol7_1
+  - NorthBoundary
+  - SouthBoundary
+  - EastBoundary
+  - WestBoundary
+  - FactionSpawnLocation1
+  - FactionSpawnLocation2
   layers:
   - Default
   - TransparentFX
