@@ -230,6 +230,72 @@ namespace AnyRPG {
             airForwardDirection = playerManager.ActiveUnitController.transform.forward;
         }
 
+        private bool CheckForSwimming() {
+            if (playerManager.ActiveUnitController.InWater == true) {
+                if ((playerManager.ActiveUnitController.transform.position.y + playerManager.ActiveUnitController.ChestHeight) <= playerManager.ActiveUnitController.CurrentWater[0].SurfaceHeight) {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        void Swim_EnterState() {
+            if (playerManager.ActiveUnitController != null) {
+                playerManager.ActiveUnitController.RigidBody.useGravity = false;
+                playerManager.ActiveUnitController.UnitAnimator.SetTrigger("SwimTrigger");
+                playerManager.ActiveUnitController.UnitAnimator.SetBool("Swimming", true);
+            }
+        }
+
+        void Swim_StateUpdate() {
+            if (playerManager.ActiveUnitController.InWater == true) {
+                if (CheckForSwimming() == false) {
+                    currentState = AnyRPGCharacterState.Move;
+                    return;
+                }
+            } else {
+                currentState = AnyRPGCharacterState.Move;
+                return;
+            }
+
+            if ((playerManager.PlayerController.HasMoveInput() || playerManager.PlayerController.HasTurnInput()) && playerManager.PlayerController.canMove) {
+
+                // set clampValue to default of max movement speed
+                float clampValue = playerManager.MaxMovementSpeed;
+
+                // set a clamp value to limit movement speed to walking if going backward
+                /*
+                if (currentMoveVelocity.z < 0) {
+                    clampValue = 1;
+                }
+                */
+
+                // get current movement speed and clamp it to current clamp value
+                float calculatedSpeed = playerManager.ActiveUnitController.SwimSpeed;
+                calculatedSpeed = Mathf.Clamp(calculatedSpeed, 0, clampValue);
+
+                if (playerManager.PlayerController.HasMoveInput()) {
+                    // multiply normalized movement by calculated speed to get actual movement
+                    currentMoveVelocity = SwimMovement() * calculatedSpeed;
+                }
+                if (playerManager.PlayerController.HasTurnInput()) {
+                    currentTurnVelocity = playerManager.PlayerController.TurnInput * ((PlayerPrefs.GetFloat("KeyboardTurnSpeed") * 5) + 6.0f);
+                }
+            } else {
+                currentMoveVelocity = Vector3.zero;
+                playerManager.ActiveUnitController.UnitAnimator.SetTurnVelocity(0f);
+                playerManager.ActiveUnitController.UnitAnimator.SetVelocity(currentMoveVelocity);
+            }
+        }
+
+        void Swim_ExitState() {
+            if (playerManager.ActiveUnitController != null) {
+                playerManager.ActiveUnitController.RigidBody.useGravity = true;
+                playerManager.ActiveUnitController.UnitAnimator.SetBool("Swimming", false);
+            }
+        }
+
+
         //Below are the state functions. Each one is called based on the name of the state, so when currentState = Idle, we call Idle_EnterState. If currentState = Jump, we call Jump_StateUpdate()
         void Idle_EnterState() {
             //Debug.Log(gameObject.name + ".PlayerUnitMovementController.Idle_EnterState() Freezing all constraints");
@@ -259,6 +325,13 @@ namespace AnyRPG {
                 // still waiting for character to spawn
                 //Debug.Log(gameObject.name + ".PlayerUnitMovementController.Idle_StateUpdate(): not spawned yet");
                 return;
+            }
+
+            if (playerManager.ActiveUnitController.InWater == true) {
+                if (CheckForSwimming() == true) {
+                    currentState = AnyRPGCharacterState.Swim;
+                    return;
+                }
             }
 
             if (playerManager.PlayerController.allowedInput && playerManager.PlayerController.inputJump) {
@@ -318,6 +391,14 @@ namespace AnyRPG {
 
             airForwardDirection = playerManager.ActiveUnitController.transform.forward;
             airRotation = playerManager.ActiveUnitController.transform.rotation;
+
+            if (playerManager.ActiveUnitController.InWater == true) {
+                if (CheckForSwimming() == true) {
+                    currentState = AnyRPGCharacterState.Swim;
+                    return;
+                }
+            }
+
             if (playerManager.PlayerController.allowedInput && playerManager.PlayerController.inputJump) {
                 currentState = AnyRPGCharacterState.Jump;
                 //rpgCharacterState = AnyRPGCharacterState.Jump;
@@ -384,6 +465,14 @@ namespace AnyRPG {
             currentMoveVelocity = playerManager.ActiveUnitController.transform.InverseTransformDirection(playerManager.ActiveUnitController.RigidBody.velocity);
             Vector3 fromtoMoveVelocity = Quaternion.FromToRotation(airForwardDirection, playerManager.ActiveUnitController.transform.forward) * playerManager.ActiveUnitController.transform.InverseTransformDirection(playerManager.ActiveUnitController.RigidBody.velocity);
             currentMoveVelocity = fromtoMoveVelocity;
+
+            if (playerManager.ActiveUnitController.InWater == true) {
+                if (CheckForSwimming() == true) {
+                    currentState = AnyRPGCharacterState.Swim;
+                    return;
+                }
+            }
+
             if (AcquiringGround() && playerManager.ActiveUnitController.RigidBody.velocity.y < 0.1) {
                 if ((playerManager.PlayerController.HasMoveInput() || playerManager.PlayerController.HasTurnInput()) && playerManager.PlayerController.canMove) {
                     // new code to allow not freezing up when landing - fix, should be fall or somehow prevent from getting into move during takeoff
@@ -419,6 +508,14 @@ namespace AnyRPG {
             currentMoveVelocity = playerManager.ActiveUnitController.transform.InverseTransformDirection(playerManager.ActiveUnitController.RigidBody.velocity);
             Vector3 fromtoMoveVelocity = Quaternion.FromToRotation(airForwardDirection, playerManager.ActiveUnitController.transform.forward) * playerManager.ActiveUnitController.transform.InverseTransformDirection(playerManager.ActiveUnitController.RigidBody.velocity);
             currentMoveVelocity = fromtoMoveVelocity;
+
+            if (playerManager.ActiveUnitController.InWater == true) {
+                if (CheckForSwimming() == true) {
+                    currentState = AnyRPGCharacterState.Swim;
+                    return;
+                }
+            }
+
             if (playerManager.ActiveUnitController.RigidBody.velocity.y <= 0f && Time.frameCount > (lastJumpFrame + 2)) {
                 currentState = AnyRPGCharacterState.Fall;
                 //rpgCharacterState = AnyRPGCharacterState.Fall;
@@ -438,6 +535,14 @@ namespace AnyRPG {
             //currentMoveVelocity = playerManager.ActiveUnitController.transform.InverseTransformDirection(CharacterRelativeInput(playerManager.ActiveUnitController.MyRigidBody.velocity));
             currentMoveVelocity = new Vector3(fromtoMoveVelocity.x, Mathf.Clamp(fromtoMoveVelocity.y, -53, 0), fromtoMoveVelocity.z);
             //currentMoveVelocity = new Vector3(currentMoveVelocity.x, 0, currentMoveVelocity.z);
+
+            if (playerManager.ActiveUnitController.InWater == true) {
+                if (CheckForSwimming() == true) {
+                    currentState = AnyRPGCharacterState.Swim;
+                    return;
+                }
+            }
+
             if (AcquiringGround()) {
                 if ((playerManager.PlayerController.HasMoveInput() || playerManager.PlayerController.HasTurnInput()) && playerManager.PlayerController.canMove) {
                     // new code to allow not freezing up when landing
@@ -525,6 +630,14 @@ namespace AnyRPG {
         public bool MaintainingGround() {
             //Debug.Log(gameObject.name + ".PlayerUnitMovementController.MaintainingGround");
             return tempGrounded;
+        }
+
+        private Vector3 SwimMovement() {
+            //Debug.Log("PlayerUnitMovementController.LocalMovement(): groundAngle: " + groundAngle + "; backwardGroundAngle: " + backwardGroundAngle);
+            //Vector3 normalizedInput = playerManager.PlayerController.NormalizedMoveInput;
+
+            //Debug.Log("PlayerUnitMovementController.LocalMovement(): normalizedInput: " + normalizedInput + "; usedAngle: " + usedAngle + "; AngleAxis: " + Quaternion.AngleAxis(usedAngle, -Vector3.right) + "; newReturnValue: " + newReturnValue);
+            return playerManager.PlayerController.NormalizedMoveInput;
         }
 
         private Vector3 LocalMovement() {

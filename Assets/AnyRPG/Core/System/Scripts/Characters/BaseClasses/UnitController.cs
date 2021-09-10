@@ -94,6 +94,12 @@ namespace AnyRPG {
         private bool levitated = false;
         private bool motorEnabled = true;
         private bool despawning = false;
+        private bool inWater = false;
+
+        private List<Water> currentWater = new List<Water>();
+
+        // unit configuration
+        private float chestHeight = 1.5f;
 
         // movement parameters
         private bool useAgent = false;
@@ -150,6 +156,14 @@ namespace AnyRPG {
                     return MasterUnit.UnitController.MovementSpeed;
                 }
                 return (walking == false ? characterUnit.BaseCharacter.CharacterStats.RunSpeed : characterUnit.BaseCharacter.CharacterStats.WalkSpeed);
+            }
+        }
+        public float SwimSpeed {
+            get {
+                if (UnderControl == true && MasterUnit != null && MasterUnit.UnitController != null) {
+                    return MasterUnit.UnitController.SwimSpeed;
+                }
+                return characterUnit.BaseCharacter.CharacterStats.SwimSpeed;
             }
         }
         public bool UnderControl { get => underControl; set => underControl = value; }
@@ -320,6 +334,9 @@ namespace AnyRPG {
         public bool UseAgent { get => useAgent; }
         public MovementSoundArea MovementSoundArea { get => movementSoundArea; set => movementSoundArea = value; }
         public UnitModelController UnitModelController { get => unitModelController; }
+        public bool InWater { get => inWater; set => inWater = value; }
+        public List<Water> CurrentWater { get => currentWater; set => currentWater = value; }
+        public float ChestHeight { get => chestHeight; set => chestHeight = value; }
 
         public override void Configure(SystemGameManager systemGameManager) {
             base.Configure(systemGameManager);
@@ -707,6 +724,11 @@ namespace AnyRPG {
             levitated = false;
             motorEnabled = true;
             despawning = false;
+            inWater = false;
+
+            currentWater.Clear();
+
+            chestHeight = 1.5f;
 
             useAgent = false;
             startPosition = Vector3.zero;
@@ -721,6 +743,7 @@ namespace AnyRPG {
             masterUnit = null;
             riderUnitController = null;
             movementSoundArea = null;
+
 
             base.ResetSettings();
         }
@@ -1707,6 +1730,22 @@ namespace AnyRPG {
 
         public override bool IsBuilding() {
             return unitModelController.isBuilding();
+        }
+
+        public void EnterWater(Water water) {
+            if (currentWater.Contains(water) == false) {
+                currentWater.Add(water);
+                inWater = true;
+            }
+        }
+
+        public void ExitWater(Water water) {
+            if (currentWater.Contains(water) == true) {
+                currentWater.Remove(water);
+                if (currentWater.Count == 0) {
+                    inWater = false;
+                }
+            }
         }
 
         public void OnSendObjectToPool() {

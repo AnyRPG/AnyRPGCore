@@ -42,9 +42,11 @@ namespace AnyRPG {
 
         protected float walkSpeed = 1f;
         protected float runSpeed = 7f;
+        protected float swimSpeed = 2f;
 
         protected float currentRunSpeed = 0f;
         protected float currentSprintSpeed = 0f;
+        protected float currentSwimSpeed = 2f;
 
         protected Dictionary<string, StatusEffectNode> statusEffects = new Dictionary<string, StatusEffectNode>();
         protected BaseCharacter baseCharacter = null;
@@ -66,6 +68,7 @@ namespace AnyRPG {
         public float WalkSpeed { get => walkSpeed; }
         public float RunSpeed { get => currentRunSpeed; }
         public float SprintSpeed { get => currentSprintSpeed; }
+        public float SwimSpeed { get => currentRunSpeed; }
         //public float MyHitBox { get => hitBox; }
         public bool IsAlive { get => isAlive; }
         public BaseCharacter BaseCharacter { get => baseCharacter; set => baseCharacter = value; }
