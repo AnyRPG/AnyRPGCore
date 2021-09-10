@@ -10,7 +10,8 @@ namespace AnyRPG {
         Jump = 2,
         Knockback = 3,
         Fall = 4,
-        Roll = 8
+        Roll = 8,
+        Swim = 16
     }
     [RequireComponent(typeof(PlayerMovementStateController))]
     public class PlayerUnitMovementController : AnyRPGStateMachine {
@@ -18,7 +19,7 @@ namespace AnyRPG {
         //Components.
         private PlayerMovementStateController movementStateController;
 
-        public AnyRPGCharacterState rpgCharacterState;
+        //public AnyRPGCharacterState rpgCharacterState;
 
         [HideInInspector] public bool useMeshNav = false;
         [HideInInspector] public Vector3 lookDirection { get; private set; }
@@ -112,9 +113,6 @@ namespace AnyRPG {
             cameraManager = systemGameManager.CameraManager;
         }
 
-        private void OnEnable() {
-        }
-
         public void Init() {
             //Debug.Log(gameObject.name + ".PlayerUnitMovementController.OrchestrateStartup()");
             //airForwardDirection = playerManager.ActiveUnitController.transform.forward;
@@ -125,7 +123,7 @@ namespace AnyRPG {
         public void ConfigureStateMachine() {
             //Debug.Log(gameObject.name + ".PlayerUnitMovementController.ConfigureStateMachine()");
             currentState = AnyRPGCharacterState.Idle;
-            rpgCharacterState = AnyRPGCharacterState.Idle;
+            //rpgCharacterState = AnyRPGCharacterState.Idle;
             if (movementStateController != null) {
                 movementStateController.Init();
             }
@@ -266,20 +264,20 @@ namespace AnyRPG {
             if (playerManager.PlayerController.allowedInput && playerManager.PlayerController.inputJump) {
                 //Debug.Log(gameObject.name + ".PlayerUnitMovementController.Idle_StateUpdate(): entering jump state");
                 currentState = AnyRPGCharacterState.Jump;
-                rpgCharacterState = AnyRPGCharacterState.Jump;
+                //rpgCharacterState = AnyRPGCharacterState.Jump;
                 return;
             }
             if (!MaintainingGround()) {
                 //Debug.Log(gameObject.name + ".PlayerUnitMovementController.Idle_StateUpdate(): entering fall state");
                 currentState = AnyRPGCharacterState.Fall;
-                rpgCharacterState = AnyRPGCharacterState.Fall;
+                //rpgCharacterState = AnyRPGCharacterState.Fall;
                 playerManager.ActiveUnitController.UnitAnimator.SetTrigger("FallTrigger");
                 return;
             }
             if ((playerManager.PlayerController.HasMoveInput() || playerManager.PlayerController.HasTurnInput()) && playerManager.PlayerController.canMove) {
                 //Debug.Log(gameObject.name + ".PlayerUnitMovementController.Idle_StateUpdate(): entering move state");
                 currentState = AnyRPGCharacterState.Move;
-                rpgCharacterState = AnyRPGCharacterState.Move;
+                //rpgCharacterState = AnyRPGCharacterState.Move;
                 return;
             }
             // factor in slightly uneven ground which gravity will cause the unit to slide on even when standing still with position and rotation locked
@@ -322,12 +320,13 @@ namespace AnyRPG {
             airRotation = playerManager.ActiveUnitController.transform.rotation;
             if (playerManager.PlayerController.allowedInput && playerManager.PlayerController.inputJump) {
                 currentState = AnyRPGCharacterState.Jump;
-                rpgCharacterState = AnyRPGCharacterState.Jump;
+                //rpgCharacterState = AnyRPGCharacterState.Jump;
                 return;
             }
+
             if (!MaintainingGround()) {
                 currentState = AnyRPGCharacterState.Fall;
-                rpgCharacterState = AnyRPGCharacterState.Fall;
+                //rpgCharacterState = AnyRPGCharacterState.Fall;
                 playerManager.ActiveUnitController.UnitAnimator.SetTrigger("FallTrigger");
                 return;
             }
@@ -364,7 +363,7 @@ namespace AnyRPG {
             } else {
                 currentTurnVelocity = Vector3.zero;
                 currentState = AnyRPGCharacterState.Idle;
-                rpgCharacterState = AnyRPGCharacterState.Idle;
+                //rpgCharacterState = AnyRPGCharacterState.Idle;
                 return;
             }
         }
@@ -389,11 +388,11 @@ namespace AnyRPG {
                 if ((playerManager.PlayerController.HasMoveInput() || playerManager.PlayerController.HasTurnInput()) && playerManager.PlayerController.canMove) {
                     // new code to allow not freezing up when landing - fix, should be fall or somehow prevent from getting into move during takeoff
                     currentState = AnyRPGCharacterState.Move;
-                    rpgCharacterState = AnyRPGCharacterState.Move;
+                    //rpgCharacterState = AnyRPGCharacterState.Move;
                     return;
                 }
                 currentState = AnyRPGCharacterState.Idle;
-                rpgCharacterState = AnyRPGCharacterState.Idle;
+                //rpgCharacterState = AnyRPGCharacterState.Idle;
                 return;
             }
         }
@@ -401,7 +400,7 @@ namespace AnyRPG {
         public void KnockBack() {
             //Debug.Log("Knockback()");
             currentState = AnyRPGCharacterState.Knockback;
-            rpgCharacterState = AnyRPGCharacterState.Knockback;
+            //rpgCharacterState = AnyRPGCharacterState.Knockback;
         }
 
 
@@ -422,7 +421,7 @@ namespace AnyRPG {
             currentMoveVelocity = fromtoMoveVelocity;
             if (playerManager.ActiveUnitController.RigidBody.velocity.y <= 0f && Time.frameCount > (lastJumpFrame + 2)) {
                 currentState = AnyRPGCharacterState.Fall;
-                rpgCharacterState = AnyRPGCharacterState.Fall;
+                //rpgCharacterState = AnyRPGCharacterState.Fall;
                 return;
             }
         }
@@ -443,11 +442,11 @@ namespace AnyRPG {
                 if ((playerManager.PlayerController.HasMoveInput() || playerManager.PlayerController.HasTurnInput()) && playerManager.PlayerController.canMove) {
                     // new code to allow not freezing up when landing
                     currentState = AnyRPGCharacterState.Move;
-                    rpgCharacterState = AnyRPGCharacterState.Move;
+                    //rpgCharacterState = AnyRPGCharacterState.Move;
                     return;
                 }
                 currentState = AnyRPGCharacterState.Idle;
-                rpgCharacterState = AnyRPGCharacterState.Idle;
+                //rpgCharacterState = AnyRPGCharacterState.Idle;
                 return;
             }
         }

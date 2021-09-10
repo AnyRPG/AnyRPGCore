@@ -55,9 +55,9 @@ namespace AnyRPG {
             UnitController unitController = other.gameObject.GetComponent<UnitController>();
             if (unitController != null) {
                 unitController.UnsetMovementSoundArea(this);
+                // stop playing sound in case movement sounds will change
+                unitController.UnitComponentController.StopMovement();
             }
-            // stop playing sound in case movement sounds will change
-            unitController.UnitComponentController.StopMovement();
         }
 
         private void SetupScriptableObjects() {
