@@ -19,12 +19,13 @@ namespace AnyRPG {
         [SerializeField]
         private AudioSource voiceSource = null;
 
-        [Tooltip("Play movement sounds like footsteps or engines through this audio source")]
+        [Tooltip("Play looping movement sounds like footsteps or engines through this audio source")]
         [SerializeField]
         private AudioSource movementSource = null;
 
-        private bool movementIsLoop = false;
-
+        [Tooltip("Play non looping movement sounds like footsteps or engine revs through this audio source")]
+        [SerializeField]
+        private AudioSource movementHitSource = null;
 
         public void PlayCast(AudioClip audioClip) {
             if (audioClip == null) {
@@ -63,14 +64,16 @@ namespace AnyRPG {
                 return;
             }
             //Debug.Log(gameObject.name + ".UnitAudioEmitter.PlayMovement(" + audioClip.name + ")");
-            if (movementSource != null) {
-                if (loop) {
-                    movementIsLoop = true;
+
+            if (loop) {
+                if (movementSource != null) {
                     movementSource.loop = true;
                     movementSource.clip = audioClip;
                     movementSource.Play();
-                } else {
-                    movementSource.PlayOneShot(audioClip);
+                }
+            } else {
+                if (movementHitSource != null) {
+                    movementHitSource.PlayOneShot(audioClip);
                 }
             }
         }
@@ -98,19 +101,22 @@ namespace AnyRPG {
 
         public void StopMovement(bool stopLoopsOnly = true) {
             //Debug.Log(gameObject.name + ".UnitAudioEmitter.StopVoice()");
-            if (movementSource != null
-                && (stopLoopsOnly == false || movementIsLoop == true)) {
+            if (movementSource != null) { 
                 movementSource.Stop();
-                movementIsLoop = false;
+            }
+            if (movementHitSource != null && stopLoopsOnly == false) {
+                movementHitSource.Stop();
             }
         }
 
         public bool MovementIsPlaying(bool ignoreOneShots = true) {
-            if (movementSource == null) {
+            if (movementSource == null && movementHitSource == null) {
                 return false;
             }
-            if (movementSource.isPlaying == true
-                && (ignoreOneShots == false || movementIsLoop == true)) {
+            if (movementSource.isPlaying == true) {
+                return true;
+            }
+            if (movementHitSource.isPlaying == true && ignoreOneShots == false) {
                 return true;
             }
 

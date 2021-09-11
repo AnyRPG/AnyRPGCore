@@ -24,12 +24,24 @@ namespace AnyRPG {
 
         [Header("Sound")]
 
-        [Tooltip("This audio will override the movement hit (footstep) sound for a character in this zone")]
+        [Tooltip("A sound to play when a character enters the water")]
         [SerializeField]
         [ResourceSelector(resourceType = typeof(AudioProfile))]
         private string enterWaterAudioProfileName = string.Empty;
 
+        [Tooltip("A looping sound to play while a character is swimming")]
+        [SerializeField]
+        [ResourceSelector(resourceType = typeof(AudioProfile))]
+        private string swimLoopAudioProfileName = string.Empty;
+
+        [Tooltip("A sound to play whenever a character splashes while swimming")]
+        [SerializeField]
+        [ResourceSelector(resourceType = typeof(AudioProfile))]
+        private string swimHitsAudioProfileName = string.Empty;
+
         private AudioProfile enterWaterAudioProfile;
+        private AudioProfile swimLoopAudioProfile;
+        private AudioProfile swimHitsAudioProfile;
 
 
         // deduced settings
@@ -48,7 +60,9 @@ namespace AnyRPG {
 
         public BoxCollider Collider { get => myCollider; set => myCollider = value; }
         public float SurfaceHeight { get => surfaceHeight; set => surfaceHeight = value; }
-        public AudioProfile EnterWaterAudioProfile { get => enterWaterAudioProfile; set => enterWaterAudioProfile = value; }
+        public AudioProfile EnterWaterAudioProfile { get => enterWaterAudioProfile;  }
+        public AudioProfile SwimLoopAudioProfile { get => swimLoopAudioProfile; }
+        public AudioProfile SwimHitsAudioProfile { get => swimHitsAudioProfile;  }
 
         public override void Configure(SystemGameManager systemGameManager) {
             base.Configure(systemGameManager);
@@ -131,6 +145,25 @@ namespace AnyRPG {
                     Debug.LogError("MovementSoundArea.SetupScriptableObjects(): Could not find audio profile : " + enterWaterAudioProfileName + " while inititalizing " + gameObject.name + ".  CHECK INSPECTOR");
                 }
             }
+
+            if (swimLoopAudioProfileName != null && swimLoopAudioProfileName != string.Empty) {
+                AudioProfile tmpAudioProfile = systemDataFactory.GetResource<AudioProfile>(swimLoopAudioProfileName);
+                if (tmpAudioProfile != null) {
+                    swimLoopAudioProfile = tmpAudioProfile;
+                } else {
+                    Debug.LogError("MovementSoundArea.SetupScriptableObjects(): Could not find audio profile : " + swimLoopAudioProfileName + " while inititalizing " + gameObject.name + ".  CHECK INSPECTOR");
+                }
+            }
+
+            if (swimHitsAudioProfileName != null && swimHitsAudioProfileName != string.Empty) {
+                AudioProfile tmpAudioProfile = systemDataFactory.GetResource<AudioProfile>(swimHitsAudioProfileName);
+                if (tmpAudioProfile != null) {
+                    swimHitsAudioProfile = tmpAudioProfile;
+                } else {
+                    Debug.LogError("MovementSoundArea.SetupScriptableObjects(): Could not find audio profile : " + swimHitsAudioProfileName + " while inititalizing " + gameObject.name + ".  CHECK INSPECTOR");
+                }
+            }
+
         }
     }
 

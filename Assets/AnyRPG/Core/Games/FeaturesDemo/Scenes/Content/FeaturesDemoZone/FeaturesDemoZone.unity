@@ -6964,6 +6964,7 @@ MonoBehaviour:
   effectSource: {fileID: 768846930}
   voiceSource: {fileID: 1860421778}
   movementSource: {fileID: 1531882780}
+  movementHitSource: {fileID: 0}
 --- !u!1 &659663575
 GameObject:
   m_ObjectHideFlags: 0
@@ -15013,6 +15014,8 @@ MonoBehaviour:
   fogColor: {r: 0.13385546, g: 0.26270398, b: 0.6037736, a: 1}
   fogDensity: 0.15
   enterWaterAudioProfileName: Footstep Hits Water
+  swimLoopAudioProfileName: 
+  swimHitsAudioProfileName: Footstep Hits Water
 --- !u!114 &1336662564
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -23672,6 +23675,7 @@ MonoBehaviour:
   effectSource: {fileID: 564747179}
   voiceSource: {fileID: 1445175083}
   movementSource: {fileID: 1859352004}
+  movementHitSource: {fileID: 0}
 --- !u!1 &2009372862
 GameObject:
   m_ObjectHideFlags: 0
@@ -24008,9 +24012,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   myCollider: {fileID: 2042888664}
   useFog: 1
-  fogColor: {r: 0.6039216, g: 0.13333331, b: 0.16766873, a: 1}
+  fogColor: {r: 0.78431374, g: 0.28887627, b: 0.14509805, a: 1}
   fogDensity: 0.15
   enterWaterAudioProfileName: 
+  swimLoopAudioProfileName: 
+  swimHitsAudioProfileName: 
 --- !u!65 &2042888664
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -30981,6 +30987,7 @@ MonoBehaviour:
   effectSource: {fileID: 1356023626247467780}
   voiceSource: {fileID: 6174491138755300019}
   movementSource: {fileID: 8957197512240007709}
+  movementHitSource: {fileID: 0}
 --- !u!114 &7178368340903747647
 MonoBehaviour:
   m_ObjectHideFlags: 0

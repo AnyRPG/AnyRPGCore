@@ -1363,6 +1363,15 @@ namespace AnyRPG {
             unitComponentController.PlayMovementSound(audioClip, loop);
         }
 
+        public void PlaySwimSound() {
+            // play swim sound only if near surface
+            if (currentWater.Count > 0
+                && currentWater[0].SwimHitsAudioProfile?.AudioClip != null
+                && Collider.bounds.max.y > currentWater[0].SurfaceHeight) {
+                unitComponentController.PlayMovementSound(currentWater[0].SwimHitsAudioProfile?.AudioClip, false);
+            }
+        }
+
         /// <summary>
         /// reset velocity calculation so that casting in the same frame as the unit stops will not be cancelled
         /// </summary>
