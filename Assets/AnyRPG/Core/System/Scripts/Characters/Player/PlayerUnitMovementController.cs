@@ -246,6 +246,7 @@ namespace AnyRPG {
 
         void Swim_EnterState() {
             if (playerManager.ActiveUnitController != null) {
+                playerManager.ActiveUnitController.StartSwimming();
                 playerManager.ActiveUnitController.RigidBody.useGravity = false;
                 playerManager.ActiveUnitController.UnitAnimator.SetTrigger("SwimTrigger");
                 playerManager.ActiveUnitController.UnitAnimator.SetBool("Swimming", true);
@@ -319,6 +320,7 @@ namespace AnyRPG {
 
         void Swim_ExitState() {
             if (playerManager.ActiveUnitController != null) {
+                playerManager.ActiveUnitController.StopSwimming();
                 playerManager.ActiveUnitController.RigidBody.useGravity = true;
                 playerManager.ActiveUnitController.UnitAnimator.SetBool("Swimming", false);
             }
@@ -671,9 +673,9 @@ namespace AnyRPG {
             Vector3 returnValue = playerManager.PlayerController.NormalizedMoveInput;
 
             // check for right mouse button held down to adjust swim angle based on camera angle
-            
-            if (!MaintainingGround() // ignore angle if already touching ground underwater to prevent hitting bottom and stopping while trying to swim forward
-                && inputManager.rightMouseButtonDown
+            bool chestBelowWater = (playerManager.ActiveUnitController.transform.position.y + playerManager.ActiveUnitController.ChestHeight) < (playerManager.ActiveUnitController.CurrentWater[0].SurfaceHeight - (playerManager.ActiveUnitController.SwimSpeed * Time.deltaTime));
+
+            if (inputManager.rightMouseButtonDown
                 && playerManager.PlayerController.HasMoveInput()
                 && (!inputManager.rightMouseButtonClickedOverUI || (namePlateManager != null ? namePlateManager.MouseOverNamePlate() : false))) {
                 //Debug.Log(gameObject.name + ".PlayerUnitMovementController.LateGlobalSuperUpdate(): resetting playerManager.ActiveUnitController.transform.forward");
@@ -683,8 +685,16 @@ namespace AnyRPG {
                 // prevent constant bouncing out of water using right mouse
                 // always allow downward motion
                 // only allow upward motion if the swim speed would not result in a bounce
-                if ((cameraManager.MainCameraGameObject.transform.localEulerAngles.x > 0f && returnValue.z < 0f && (playerManager.ActiveUnitController.transform.position.y + playerManager.ActiveUnitController.ChestHeight) < (playerManager.ActiveUnitController.CurrentWater[0].SurfaceHeight - (playerManager.ActiveUnitController.SwimSpeed * Time.deltaTime)))
-                    || (cameraManager.MainCameraGameObject.transform.localEulerAngles.x < 0f && returnValue.z > 0f && (playerManager.ActiveUnitController.transform.position.y + playerManager.ActiveUnitController.ChestHeight) < (playerManager.ActiveUnitController.CurrentWater[0].SurfaceHeight - (playerManager.ActiveUnitController.SwimSpeed * Time.deltaTime)))) {
+                float cameraAngle = (cameraManager.MainCameraGameObject.transform.localEulerAngles.x < 180f ? cameraManager.MainCameraGameObject.transform.localEulerAngles.x : cameraManager.MainCameraGameObject.transform.localEulerAngles.x - 360f);
+                //Debug.Log(gameObject.name + ".PlayerUnitMovementController.SwimMovement(): camera Angle: " + cameraAngle);
+                // ignore angle if already touching ground underwater to prevent hitting bottom and stopping while trying to swim forward
+                if ((cameraAngle > 0f && returnValue.z > 0f && !MaintainingGround()) // camera above and moving forward / down
+                    || (cameraAngle > 0f && returnValue.z < 0f && chestBelowWater == true) // camera above and moving back / up
+                    || (cameraAngle < 0f && returnValue.z < 0f && !MaintainingGround()) // camera below and moving back / down
+                    || (cameraAngle < 0f && returnValue.z > 0f && chestBelowWater == true) // camera below and forward / up
+                    ) {
+                    //Debug.Log(gameObject.name + ".PlayerUnitMovementController.SwimMovement(): camera Angle: " + cameraAngle + "; direction: " + returnValue.z +
+                    //    "; chest height: " + (playerManager.ActiveUnitController.transform.position.y + playerManager.ActiveUnitController.ChestHeight) + "; surface: " + playerManager.ActiveUnitController.CurrentWater[0].SurfaceHeight + "; speed: " + (playerManager.ActiveUnitController.SwimSpeed * Time.deltaTime));
                     returnValue = Quaternion.AngleAxis(cameraManager.MainCameraGameObject.transform.localEulerAngles.x, Vector3.right) * returnValue;
                 }
             }
@@ -692,7 +702,7 @@ namespace AnyRPG {
             // if the jump or crouch buttons were held down, their values override the camera angle and allow movement straight up or down
             // ignore if swim speed would not result in a bounce out of the water
             if (playerManager.PlayerController.inputSink == true
-                || (playerManager.PlayerController.inputFly == true && (playerManager.ActiveUnitController.transform.position.y + playerManager.ActiveUnitController.ChestHeight) < (playerManager.ActiveUnitController.CurrentWater[0].SurfaceHeight - (playerManager.ActiveUnitController.SwimSpeed * Time.deltaTime)))) {
+                || (playerManager.PlayerController.inputFly == true && chestBelowWater == true)) {
                 returnValue.y = (playerManager.PlayerController.inputFly == true ? 1 : 0) + (playerManager.PlayerController.inputSink == true ? -1 : 0);
             }
             /*

@@ -124,7 +124,7 @@ namespace AnyRPG {
         }
 
         public void StopMovementSound(bool stopLoopsOnly = true) {
-            //Debug.Log(gameObject.name + "UnitAudio.StopMovement()");
+            //Debug.Log(gameObject.name + ".UnitComponentController.StopMovementSound()");
             if (unitAudioEmitter != null) {
                 unitAudioEmitter.StopMovement(stopLoopsOnly);
             }

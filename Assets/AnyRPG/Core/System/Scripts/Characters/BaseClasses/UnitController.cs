@@ -95,6 +95,7 @@ namespace AnyRPG {
         private bool motorEnabled = true;
         private bool despawning = false;
         private bool inWater = false;
+        private bool swimming = false;
 
         private List<WaterBody> currentWater = new List<WaterBody>();
 
@@ -334,9 +335,10 @@ namespace AnyRPG {
         public bool UseAgent { get => useAgent; }
         public MovementSoundArea MovementSoundArea { get => movementSoundArea; set => movementSoundArea = value; }
         public UnitModelController UnitModelController { get => unitModelController; }
-        public bool InWater { get => inWater; set => inWater = value; }
+        public bool InWater { get => inWater; }
         public List<WaterBody> CurrentWater { get => currentWater; set => currentWater = value; }
         public float ChestHeight { get => chestHeight; set => chestHeight = value; }
+        public bool Swimming { get => swimming; }
 
         public override void Configure(SystemGameManager systemGameManager) {
             base.Configure(systemGameManager);
@@ -725,6 +727,7 @@ namespace AnyRPG {
             motorEnabled = true;
             despawning = false;
             inWater = false;
+            swimming = false;
 
             currentWater.Clear();
 
@@ -1328,6 +1331,7 @@ namespace AnyRPG {
                 && UnitAnimator.IsInAir() == false
                 && mounted == false
                 && ControlLocked == false
+                && swimming == false
                 //&& (apparentVelocity >= (characterUnit.BaseCharacter.CharacterStats.RunSpeed / 2f))) {
                 && unitAnimator.GetBool("Moving") == true) {
                 //Debug.Log(gameObject.name + ".HandleMovementAudio(): up to run speed");
@@ -1344,7 +1348,8 @@ namespace AnyRPG {
         }
 
         public void StopMovementSound() {
-            
+            //Debug.Log(gameObject.name + ".StopMovementSound()");
+
             // stop playing sound in case movement sounds will change
             // only apply if no movement sound area is found, or the current movement sound area is using a loop
             // this should allow the sound of the current footstep to finish instead of getting cut off if it's a hit sound
@@ -1746,11 +1751,20 @@ namespace AnyRPG {
         public void EnterWater(WaterBody water) {
             if (currentWater.Contains(water) == false) {
                 currentWater.Add(water);
-                if (!inWater) {
+                if (!inWater && water.EnterWaterAudioProfile?.AudioClip != null) {
                     unitComponentController.PlayMovementSound(water.EnterWaterAudioProfile.AudioClip, false);
                 }
                 inWater = true;
             }
+        }
+
+        public void StartSwimming() {
+            swimming = true;
+            StopMovementSound();
+        }
+
+        public void StopSwimming() {
+            swimming = false;
         }
 
         public void ExitWater(WaterBody water) {
