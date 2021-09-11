@@ -5,7 +5,7 @@ using UnityEngine;
 
 
 namespace AnyRPG {
-    public class Water : AutoConfiguredMonoBehaviour {
+    public class WaterBody : AutoConfiguredMonoBehaviour {
 
         [SerializeField]
         private BoxCollider myCollider = null;
@@ -38,7 +38,7 @@ namespace AnyRPG {
             base.Configure(systemGameManager);
 
             surfaceHeight = myCollider.bounds.max.y;
-            Debug.Log("surfaceHeight = " + surfaceHeight);
+            //Debug.Log("surfaceHeight = " + surfaceHeight);
         }
 
         private void OnTriggerEnter(Collider other) {

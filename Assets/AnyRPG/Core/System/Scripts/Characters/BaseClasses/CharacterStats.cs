@@ -68,7 +68,7 @@ namespace AnyRPG {
         public float WalkSpeed { get => walkSpeed; }
         public float RunSpeed { get => currentRunSpeed; }
         public float SprintSpeed { get => currentSprintSpeed; }
-        public float SwimSpeed { get => currentRunSpeed; }
+        public float SwimSpeed { get => currentSwimSpeed; }
         //public float MyHitBox { get => hitBox; }
         public bool IsAlive { get => isAlive; }
         public BaseCharacter BaseCharacter { get => baseCharacter; set => baseCharacter = value; }

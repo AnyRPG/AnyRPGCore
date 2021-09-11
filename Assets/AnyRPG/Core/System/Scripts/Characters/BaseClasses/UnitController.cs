@@ -96,7 +96,7 @@ namespace AnyRPG {
         private bool despawning = false;
         private bool inWater = false;
 
-        private List<Water> currentWater = new List<Water>();
+        private List<WaterBody> currentWater = new List<WaterBody>();
 
         // unit configuration
         private float chestHeight = 1.5f;
@@ -335,7 +335,7 @@ namespace AnyRPG {
         public MovementSoundArea MovementSoundArea { get => movementSoundArea; set => movementSoundArea = value; }
         public UnitModelController UnitModelController { get => unitModelController; }
         public bool InWater { get => inWater; set => inWater = value; }
-        public List<Water> CurrentWater { get => currentWater; set => currentWater = value; }
+        public List<WaterBody> CurrentWater { get => currentWater; set => currentWater = value; }
         public float ChestHeight { get => chestHeight; set => chestHeight = value; }
 
         public override void Configure(SystemGameManager systemGameManager) {
@@ -1732,14 +1732,14 @@ namespace AnyRPG {
             return unitModelController.isBuilding();
         }
 
-        public void EnterWater(Water water) {
+        public void EnterWater(WaterBody water) {
             if (currentWater.Contains(water) == false) {
                 currentWater.Add(water);
                 inWater = true;
             }
         }
 
-        public void ExitWater(Water water) {
+        public void ExitWater(WaterBody water) {
             if (currentWater.Contains(water) == true) {
                 currentWater.Remove(water);
                 if (currentWater.Count == 0) {

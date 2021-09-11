@@ -13,7 +13,11 @@ namespace AnyRPG {
 
         //Inputs.
         [HideInInspector] public bool inputJump;
+        // inputFly is inputJump but true if held or pressed
+        [HideInInspector] public bool inputFly;
+        [HideInInspector] public bool inputSink;
         [HideInInspector] public bool inputStrafe;
+        [HideInInspector] public bool inputCrouch;
         //[HideInInspector] public float inputAimVertical = 0;
         //[HideInInspector] public float inputAimHorizontal = 0;
         [HideInInspector] public float inputHorizontal = 0;
@@ -93,7 +97,10 @@ namespace AnyRPG {
 
         private void ResetMoveInput() {
             inputJump = false;
+            inputFly = false;
+            inputSink = false;
             inputStrafe = false;
+            inputCrouch = false;
             //inputAimVertical = 0f;
             //inputAimHorizontal = 0f;
             inputHorizontal = 0;
@@ -108,7 +115,10 @@ namespace AnyRPG {
         private void CollectMoveInput() {
             //Debug.Log("PlayerController.CollectMoveInput()");
             inputJump = inputManager.KeyBindWasPressed("JUMP");
+            inputFly = inputManager.KeyBindWasPressedOrHeld("JUMP");
+            inputSink = inputManager.KeyBindWasPressedOrHeld("CROUCH");
             inputStrafe = inputManager.KeyBindWasPressedOrHeld("STRAFELEFT") || inputManager.KeyBindWasPressedOrHeld("STRAFERIGHT");
+            inputCrouch = inputManager.KeyBindWasPressed("CROUCH");
             //inputAimVertical = Input.GetAxisRaw("AimVertical");
             //inputAimHorizontal = Input.GetAxisRaw("AimHorizontal");
             inputHorizontal = (inputManager.KeyBindWasPressedOrHeld("STRAFELEFT") ? -1 : 0) + (inputManager.KeyBindWasPressedOrHeld("STRAFERIGHT") ? 1 : 0);
@@ -185,6 +195,14 @@ namespace AnyRPG {
 
         public bool HasAnyInput() {
             if (allowedInput && (NormalizedMoveInput != Vector3.zero || TurnInput != Vector3.zero || aimInput != Vector2.zero || inputJump != false)) {
+                return true;
+            } else {
+                return false;
+            }
+        }
+
+        public bool HasWaterMoveInput() {
+            if (allowedInput && (NormalizedMoveInput != Vector3.zero || TurnInput != Vector3.zero || inputSink != false || inputFly != false)) {
                 return true;
             } else {
                 return false;

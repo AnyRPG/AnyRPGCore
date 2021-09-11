@@ -124,7 +124,7 @@ namespace AnyRPG {
                 buildInProgress = true;
             } else {
                 if ((initialAppearance == null || initialAppearance == string.Empty) && preloadedModels == 0) {
-                    unitModelController.SetModelReady();
+                    SetModelReady();
                 } else {
                     BuildModelAppearance();
                 }
@@ -252,8 +252,7 @@ namespace AnyRPG {
         public void HandleCharacterCreated(UMAData umaData) {
             //Debug.Log(unitController.gameObject.name + ".UMAModelController.HandleCharacterCreated()");
             //UnsubscribeFromUMACreate();
-            buildInProgress = false;
-            unitModelController.SetModelReady();
+            SetModelReady();
         }
 
         public void HandleCharacterBeforeDnaUpdated(UMAData umaData) {
@@ -272,6 +271,17 @@ namespace AnyRPG {
             //Debug.Log(unitController.gameObject.name + ".UMAModelController.HandleCharacterUpdated()");
             //Debug.Log("UMAModelController.HandleCharacterUpdated(): " + umaData + "; frame: " + Time.frameCount);
             //HandleCharacterCreated(umaData);
+
+            SetModelReady();
+        }
+
+        public void SetModelReady() {
+            //Debug.Log(unitController.gameObject.name + ".UMAModelController.SetModelReady()");
+
+            // calculate chest position
+            unitController.ChestHeight = unitController.transform.FindChildByRecursive("Spine1").position.y - unitController.transform.position.y;
+            Debug.Log(unitController.gameObject.name + ".UMAModelController.SetModelReady() new chest height: " + unitController.ChestHeight);
+
             buildInProgress = false;
             unitModelController.SetModelReady();
         }
