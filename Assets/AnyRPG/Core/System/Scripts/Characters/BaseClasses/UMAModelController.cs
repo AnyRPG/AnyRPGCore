@@ -280,7 +280,7 @@ namespace AnyRPG {
 
             // calculate chest position
             unitController.ChestHeight = unitController.transform.FindChildByRecursive("Spine1").position.y - unitController.transform.position.y;
-            Debug.Log(unitController.gameObject.name + ".UMAModelController.SetModelReady() new chest height: " + unitController.ChestHeight);
+            //Debug.Log(unitController.gameObject.name + ".UMAModelController.SetModelReady() new chest height: " + unitController.ChestHeight);
 
             buildInProgress = false;
             unitModelController.SetModelReady();

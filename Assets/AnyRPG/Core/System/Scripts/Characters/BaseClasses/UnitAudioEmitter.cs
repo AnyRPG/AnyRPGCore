@@ -23,6 +23,8 @@ namespace AnyRPG {
         [SerializeField]
         private AudioSource movementSource = null;
 
+        private bool movementIsLoop = false;
+
 
         public void PlayCast(AudioClip audioClip) {
             if (audioClip == null) {
@@ -63,6 +65,7 @@ namespace AnyRPG {
             //Debug.Log(gameObject.name + ".UnitAudioEmitter.PlayMovement(" + audioClip.name + ")");
             if (movementSource != null) {
                 if (loop) {
+                    movementIsLoop = true;
                     movementSource.loop = true;
                     movementSource.clip = audioClip;
                     movementSource.Play();
@@ -93,18 +96,21 @@ namespace AnyRPG {
             }
         }
 
-        public void StopMovement() {
+        public void StopMovement(bool stopLoopsOnly = true) {
             //Debug.Log(gameObject.name + ".UnitAudioEmitter.StopVoice()");
-            if (movementSource != null) {
+            if (movementSource != null
+                && (stopLoopsOnly == false || movementIsLoop == true)) {
                 movementSource.Stop();
+                movementIsLoop = false;
             }
         }
 
-        public bool MovementIsPlaying() {
+        public bool MovementIsPlaying(bool ignoreOneShots = true) {
             if (movementSource == null) {
                 return false;
             }
-            if (movementSource.isPlaying == true) {
+            if (movementSource.isPlaying == true
+                && (ignoreOneShots == false || movementIsLoop == true)) {
                 return true;
             }
 

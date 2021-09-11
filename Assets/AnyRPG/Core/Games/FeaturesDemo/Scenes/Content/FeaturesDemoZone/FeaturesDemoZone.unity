@@ -15012,6 +15012,7 @@ MonoBehaviour:
   useFog: 1
   fogColor: {r: 0.13385546, g: 0.26270398, b: 0.6037736, a: 1}
   fogDensity: 0.15
+  enterWaterAudioProfileName: Footstep Hits Water
 --- !u!114 &1336662564
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -24009,6 +24010,7 @@ MonoBehaviour:
   useFog: 1
   fogColor: {r: 0.6039216, g: 0.13333331, b: 0.16766873, a: 1}
   fogDensity: 0.15
+  enterWaterAudioProfileName: 
 --- !u!65 &2042888664
 BoxCollider:
   m_ObjectHideFlags: 0

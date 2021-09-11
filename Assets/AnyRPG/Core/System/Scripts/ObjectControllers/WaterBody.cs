@@ -10,6 +10,8 @@ namespace AnyRPG {
         [SerializeField]
         private BoxCollider myCollider = null;
 
+        [Header("Camera Fog")]
+
         [SerializeField]
         private bool useFog = true;
 
@@ -19,6 +21,16 @@ namespace AnyRPG {
         [SerializeField]
         [Range(0, 1)]
         private float fogDensity = 1f;
+
+        [Header("Sound")]
+
+        [Tooltip("This audio will override the movement hit (footstep) sound for a character in this zone")]
+        [SerializeField]
+        [ResourceSelector(resourceType = typeof(AudioProfile))]
+        private string enterWaterAudioProfileName = string.Empty;
+
+        private AudioProfile enterWaterAudioProfile;
+
 
         // deduced settings
         private float surfaceHeight = 0f;
@@ -31,18 +43,30 @@ namespace AnyRPG {
         // state tracking
         private bool fogActivated = false;
 
+        // game manager references
+        private SystemDataFactory systemDataFactory = null;
+
         public BoxCollider Collider { get => myCollider; set => myCollider = value; }
         public float SurfaceHeight { get => surfaceHeight; set => surfaceHeight = value; }
+        public AudioProfile EnterWaterAudioProfile { get => enterWaterAudioProfile; set => enterWaterAudioProfile = value; }
 
         public override void Configure(SystemGameManager systemGameManager) {
             base.Configure(systemGameManager);
 
             surfaceHeight = myCollider.bounds.max.y;
             //Debug.Log("surfaceHeight = " + surfaceHeight);
+
+            SetupScriptableObjects();
+        }
+
+        public override void SetGameManagerReferences() {
+            base.SetGameManagerReferences();
+
+            systemDataFactory = systemGameManager.SystemDataFactory;
         }
 
         private void OnTriggerEnter(Collider other) {
-            Debug.Log(gameObject.name + ".Water.OnTriggerEnter(" + other.gameObject.name + ")");
+            //Debug.Log(gameObject.name + ".Water.OnTriggerEnter(" + other.gameObject.name + ")");
 
             // configure camera
             if (useFog == true
@@ -70,7 +94,7 @@ namespace AnyRPG {
 
 
         private void OnTriggerExit(Collider other) {
-            Debug.Log(gameObject.name + ".Water.OnTriggerExit(" + other.gameObject.name + ")");
+            //Debug.Log(gameObject.name + ".Water.OnTriggerExit(" + other.gameObject.name + ")");
 
             // configure camera
             if (useFog == true
@@ -90,6 +114,23 @@ namespace AnyRPG {
                 unitController.ExitWater(this);
             }
 
+        }
+
+        private void SetupScriptableObjects() {
+            //Debug.Log(gameObject.name + ".EnvironmentalEffectArea.SetupScriptableObjects()");
+            if (systemGameManager == null) {
+                Debug.LogError(gameObject.name + ": SystemGameManager not found.  Is the GameManager in the scene?");
+                return;
+            }
+
+            if (enterWaterAudioProfileName != null && enterWaterAudioProfileName != string.Empty) {
+                AudioProfile tmpAudioProfile = systemDataFactory.GetResource<AudioProfile>(enterWaterAudioProfileName);
+                if (tmpAudioProfile != null) {
+                    enterWaterAudioProfile = tmpAudioProfile;
+                } else {
+                    Debug.LogError("MovementSoundArea.SetupScriptableObjects(): Could not find audio profile : " + enterWaterAudioProfileName + " while inititalizing " + gameObject.name + ".  CHECK INSPECTOR");
+                }
+            }
         }
     }
 

@@ -1331,20 +1331,31 @@ namespace AnyRPG {
                 //&& (apparentVelocity >= (characterUnit.BaseCharacter.CharacterStats.RunSpeed / 2f))) {
                 && unitAnimator.GetBool("Moving") == true) {
                 //Debug.Log(gameObject.name + ".HandleMovementAudio(): up to run speed");
-                if (!unitComponentController.MovementIsPlaying()) {
-                    PlayMovement(MovementLoopProfile.AudioClip, true);
+                if (!unitComponentController.MovementSoundIsPlaying(true)) {
+                    PlayMovementSound(MovementLoopProfile.AudioClip, true);
                     //unitComponentController.PlayMovement(MovementLoopProfile.AudioClip, true);
                 }
             } else {
                 //Debug.Log(gameObject.name + ".HandleMovementAudio(): not up to run speed");
-                if (unitComponentController?.MovementIsPlaying() == true) {
-                    unitComponentController.StopMovement();
+                if (unitComponentController?.MovementSoundIsPlaying(true) == true) {
+                    unitComponentController.StopMovementSound();
                 }
             }
         }
 
-        public void PlayMovement(AudioClip audioClip, bool loop) {
-            unitComponentController.PlayMovement(audioClip, loop);
+        public void StopMovementSound() {
+            
+            // stop playing sound in case movement sounds will change
+            // only apply if no movement sound area is found, or the current movement sound area is using a loop
+            // this should allow the sound of the current footstep to finish instead of getting cut off if it's a hit sound
+            if (movementSoundArea == null
+                || (movementSoundArea != null && movementSoundArea.MovementLoopProfile != null)) {
+                unitComponentController.StopMovementSound();
+            }
+        }
+
+        public void PlayMovementSound(AudioClip audioClip, bool loop) {
+            unitComponentController.PlayMovementSound(audioClip, loop);
         }
 
         /// <summary>
@@ -1735,6 +1746,9 @@ namespace AnyRPG {
         public void EnterWater(WaterBody water) {
             if (currentWater.Contains(water) == false) {
                 currentWater.Add(water);
+                if (!inWater) {
+                    unitComponentController.PlayMovementSound(water.EnterWaterAudioProfile.AudioClip, false);
+                }
                 inWater = true;
             }
         }
@@ -1772,7 +1786,7 @@ namespace AnyRPG {
         }
 
         public void NotifyOnBeforeDie(CharacterStats characterStats) {
-            unitComponentController.StopMovement();
+            unitComponentController.StopMovementSound();
             unitComponentController.HighlightController.UpdateColors();
             OnBeforeDie(characterStats);
 

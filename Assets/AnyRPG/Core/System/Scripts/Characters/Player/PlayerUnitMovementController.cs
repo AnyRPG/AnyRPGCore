@@ -185,7 +185,9 @@ namespace AnyRPG {
             }
 
             //If alive and is moving, set animator.
-            if (useMeshNav == false && playerManager?.MyCharacter?.CharacterStats?.IsAlive == true && playerManager?.PlayerController?.canMove == true) {
+            if (useMeshNav == false
+                && playerManager?.MyCharacter?.CharacterStats?.IsAlive == true
+                && playerManager?.PlayerController?.canMove == true) {
 
                 // handle movement
                 if (currentMoveVelocity.magnitude > 0 && playerManager.PlayerController.HasMoveInput()) {
@@ -202,7 +204,7 @@ namespace AnyRPG {
                     playerManager.ActiveUnitController.MyCharacterAnimator.SetStrafing(false);
                     playerManager.ActiveUnitController.MyCharacterAnimator.SetVelocity(currentMoveVelocity, rotateModel);
                 }*/
-                if (playerManager.ActiveUnitController != null && playerManager.ActiveUnitController.UnitAnimator != null) {
+                if (playerManager.ActiveUnitController.UnitAnimator != null) {
                     playerManager.ActiveUnitController.UnitAnimator.SetTurnVelocity(currentTurnVelocity.x);
                 } else {
 
@@ -266,7 +268,11 @@ namespace AnyRPG {
 
             if ((playerManager.PlayerController.HasWaterMoveInput() || playerManager.PlayerController.HasTurnInput())
                 && playerManager.PlayerController.canMove) {
+
+                // ============ RIGIDBODY CONSTRAINTS ============
                 playerManager.ActiveUnitController.RigidBody.constraints = RigidbodyConstraints.FreezeRotation;
+
+                // ============ VELOCITY CALCULATIONS ============
 
                 // set clampValue to default of max movement speed
                 float clampValue = playerManager.MaxMovementSpeed;
@@ -285,21 +291,30 @@ namespace AnyRPG {
                 if (playerManager.PlayerController.HasWaterMoveInput()) {
                     // multiply normalized movement by calculated speed to get actual movement
                     currentMoveVelocity = NormalizedSwimMovement() * calculatedSpeed;
-                    Debug.Log(gameObject.name + ".PlayerUnitMovementController.Swim_StateUpdate() currentMoveVelocity: " + currentMoveVelocity);
+                    //Debug.Log(gameObject.name + ".PlayerUnitMovementController.Swim_StateUpdate() currentMoveVelocity: " + currentMoveVelocity);
                 }
                 if (playerManager.PlayerController.HasTurnInput()) {
                     currentTurnVelocity = playerManager.PlayerController.TurnInput * ((PlayerPrefs.GetFloat("KeyboardTurnSpeed") * 5) + 6.0f);
                 }
-            } else {
-                currentMoveVelocity = Vector3.zero;
-                playerManager.ActiveUnitController.UnitAnimator.SetMoving(false);
-                playerManager.ActiveUnitController.UnitAnimator.SetTurnVelocity(0f);
-                playerManager.ActiveUnitController.UnitAnimator.SetVelocity(currentMoveVelocity);
 
+                // ============ ANIMATOR PARAMETERS ============
+                playerManager.ActiveUnitController.UnitAnimator.SetMoving(true);
+                playerManager.ActiveUnitController.UnitAnimator.SetTurnVelocity(currentTurnVelocity.x);
+
+            } else {
+                // ============ RIGIDBODY CONSTRAINTS ============
                 // prevent constant drifting through water after stop moving
                 playerManager.ActiveUnitController.FreezeAll();
 
+                // ============ VELOCITY CALCULATIONS ============
+                currentMoveVelocity = Vector3.zero;
+
+                // ============ ANIMATOR PARAMETERS ============
+                playerManager.ActiveUnitController.UnitAnimator.SetMoving(false);
+                playerManager.ActiveUnitController.UnitAnimator.SetTurnVelocity(0f);
+
             }
+            playerManager.ActiveUnitController.UnitAnimator.SetVelocity(currentMoveVelocity);
         }
 
         void Swim_ExitState() {
@@ -656,24 +671,35 @@ namespace AnyRPG {
             Vector3 returnValue = playerManager.PlayerController.NormalizedMoveInput;
 
             // check for right mouse button held down to adjust swim angle based on camera angle
-            // ignore angle if already touching ground
-            if (!MaintainingGround() && inputManager.rightMouseButtonDown
+            
+            if (!MaintainingGround() // ignore angle if already touching ground underwater to prevent hitting bottom and stopping while trying to swim forward
+                && inputManager.rightMouseButtonDown
                 && playerManager.PlayerController.HasMoveInput()
                 && (!inputManager.rightMouseButtonClickedOverUI || (namePlateManager != null ? namePlateManager.MouseOverNamePlate() : false))) {
                 //Debug.Log(gameObject.name + ".PlayerUnitMovementController.LateGlobalSuperUpdate(): resetting playerManager.ActiveUnitController.transform.forward");
 
-                Debug.Log(gameObject.name + ".PlayerUnitMovementController.SwimMovement(): camera Angle: " + cameraManager.MainCameraGameObject.transform.localEulerAngles.x);
-                returnValue = Quaternion.AngleAxis(cameraManager.MainCameraGameObject.transform.localEulerAngles.x, Vector3.right) * returnValue;
+                //Debug.Log(gameObject.name + ".PlayerUnitMovementController.SwimMovement(): camera Angle: " + cameraManager.MainCameraGameObject.transform.localEulerAngles.x);
+
+                // prevent constant bouncing out of water using right mouse
+                // always allow downward motion
+                // only allow upward motion if the swim speed would not result in a bounce
+                if ((cameraManager.MainCameraGameObject.transform.localEulerAngles.x > 0f && returnValue.z < 0f && (playerManager.ActiveUnitController.transform.position.y + playerManager.ActiveUnitController.ChestHeight) < (playerManager.ActiveUnitController.CurrentWater[0].SurfaceHeight - (playerManager.ActiveUnitController.SwimSpeed * Time.deltaTime)))
+                    || (cameraManager.MainCameraGameObject.transform.localEulerAngles.x < 0f && returnValue.z > 0f && (playerManager.ActiveUnitController.transform.position.y + playerManager.ActiveUnitController.ChestHeight) < (playerManager.ActiveUnitController.CurrentWater[0].SurfaceHeight - (playerManager.ActiveUnitController.SwimSpeed * Time.deltaTime)))) {
+                    returnValue = Quaternion.AngleAxis(cameraManager.MainCameraGameObject.transform.localEulerAngles.x, Vector3.right) * returnValue;
+                }
             }
 
             // if the jump or crouch buttons were held down, their values override the camera angle and allow movement straight up or down
-            if (playerManager.PlayerController.inputSink == true || playerManager.PlayerController.inputFly == true) {
+            // ignore if swim speed would not result in a bounce out of the water
+            if (playerManager.PlayerController.inputSink == true
+                || (playerManager.PlayerController.inputFly == true && (playerManager.ActiveUnitController.transform.position.y + playerManager.ActiveUnitController.ChestHeight) < (playerManager.ActiveUnitController.CurrentWater[0].SurfaceHeight - (playerManager.ActiveUnitController.SwimSpeed * Time.deltaTime)))) {
                 returnValue.y = (playerManager.PlayerController.inputFly == true ? 1 : 0) + (playerManager.PlayerController.inputSink == true ? -1 : 0);
             }
-
+            /*
             if (returnValue.y != 0) {
                 Debug.Log("PlayerUnitMovementController.SwimMovement() y: " + returnValue.y + "; fly: " + playerManager.PlayerController.inputFly + "; sink: " + playerManager.PlayerController.inputSink);
             }
+            */
             //return playerManager.PlayerController.NormalizedMoveInput;
             return returnValue;
         }

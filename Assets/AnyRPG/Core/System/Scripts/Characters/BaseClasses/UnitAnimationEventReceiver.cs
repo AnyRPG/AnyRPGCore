@@ -97,7 +97,7 @@ namespace AnyRPG {
             if (stepIndex >= unitController.MovementHitProfile.AudioClips.Count) {
                 stepIndex = 0;
             }
-            unitController.PlayMovement(unitController.MovementHitProfile.AudioClips[stepIndex], false);
+            unitController.PlayMovementSound(unitController.MovementHitProfile.AudioClips[stepIndex], false);
             stepIndex++;
             if (stepIndex >= unitController.MovementHitProfile.AudioClips.Count) {
                 stepIndex = 0;

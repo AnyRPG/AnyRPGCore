@@ -46,7 +46,7 @@ namespace AnyRPG {
             UnitController unitController = other.gameObject.GetComponent<UnitController>();
             // stop playing sound in case movement sounds will change
             if (unitController != null) {
-                unitController.UnitComponentController.StopMovement();
+                unitController.StopMovementSound();
                 unitController.SetMovementSoundArea(this);
             }
         }
@@ -54,9 +54,10 @@ namespace AnyRPG {
         public void OnTriggerExit(Collider other) {
             UnitController unitController = other.gameObject.GetComponent<UnitController>();
             if (unitController != null) {
-                unitController.UnsetMovementSoundArea(this);
                 // stop playing sound in case movement sounds will change
-                unitController.UnitComponentController.StopMovement();
+                unitController.StopMovementSound();
+
+                unitController.UnsetMovementSoundArea(this);
             }
         }
 
