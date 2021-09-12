@@ -72,7 +72,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   inputJump: 0
+  inputFly: 0
+  inputSink: 0
   inputStrafe: 0
+  inputCrouch: 0
   inputHorizontal: 0
   inputTurn: 0
   inputVertical: 0
@@ -98,7 +101,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 54ccc18f53ac80449997d80aacafe14e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  rpgCharacterState: 0
   useMeshNav: 0
   canJump: 0
   gravity: 50
@@ -106,8 +108,7 @@ MonoBehaviour:
   jumpHeight: 3
   currentMoveVelocity: {x: 0, y: 0, z: 0}
   currentTurnVelocity: {x: 0, y: 0, z: 0}
-  isMoving: 0
-  rotationSpeed: 5
+  rotationSpeed: 360
   inAirSpeed: 6
   stepHeight: 0.5
   maxGroundAngle: 120

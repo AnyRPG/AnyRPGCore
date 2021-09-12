@@ -725,7 +725,7 @@ namespace AnyRPG {
                 //baseCharacter.UnitController.MyCharacterAnimator.EnableRootMotion();
 
                 if (playerManager.PlayerUnitMovementController != null) {
-                    playerManager.PlayerUnitMovementController.currentMoveVelocity = new Vector3(0, 0, 0);
+                    playerManager.PlayerUnitMovementController.localMoveVelocity = new Vector3(0, 0, 0);
                 }
             }
         }
