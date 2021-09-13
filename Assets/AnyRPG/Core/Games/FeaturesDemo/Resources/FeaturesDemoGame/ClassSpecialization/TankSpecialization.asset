@@ -32,7 +32,8 @@ MonoBehaviour:
     - Reflect Damage
     traitNames:
     - Take Less Damage
-    armorClassList: []
+    armorClassList:
+    - Plate
     weaponSkills:
     - One Hand Sword
     - One Hand Mace
