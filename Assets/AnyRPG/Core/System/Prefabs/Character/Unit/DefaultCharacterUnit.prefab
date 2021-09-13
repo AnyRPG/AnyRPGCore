@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2692339740015506124}
   - component: {fileID: 2692339740015506125}
-  - component: {fileID: 2692339740015506114}
+  - component: {fileID: 9206381942535280688}
   - component: {fileID: 2692339740015506115}
   - component: {fileID: 4302159625522003019}
   - component: {fileID: -2928320751916093757}
@@ -59,8 +59,8 @@ NavMeshAgent:
   m_BaseOffset: 0
   m_WalkableMask: 4294967295
   m_ObstacleAvoidanceType: 4
---- !u!136 &2692339740015506114
-CapsuleCollider:
+--- !u!65 &9206381942535280688
+BoxCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -69,9 +69,8 @@ CapsuleCollider:
   m_Material: {fileID: 0}
   m_IsTrigger: 0
   m_Enabled: 1
-  m_Radius: 0.5
-  m_Height: 2
-  m_Direction: 1
+  serializedVersion: 2
+  m_Size: {x: 0.4, y: 2, z: 0.2}
   m_Center: {x: 0, y: 1, z: 0}
 --- !u!54 &2692339740015506115
 Rigidbody:
@@ -170,7 +169,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 49ff920aaeff32c47b919cdd7f10e67d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_UUID: 8cd7d827-c70b-4990-97b3-ce286e1ec9ad
+  m_UUID: 0a0e2f91-02c9-4666-9bd5-c616e4179cf4
   forceUpdateUUID: 0
 --- !u!1001 &8260972880229052764
 PrefabInstance:

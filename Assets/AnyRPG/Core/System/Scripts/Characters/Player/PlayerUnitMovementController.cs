@@ -54,6 +54,10 @@ namespace AnyRPG {
         // calculated value based on stepHeight and slope limit
         private float stairDetectionDistance = 0f;
 
+        // the raw angle of the ground below
+        private float rawGroundAngle;
+        
+        // a calculated value
         private float groundAngle;
 
         private bool closeToGround;
@@ -73,7 +77,7 @@ namespace AnyRPG {
         private float touchingGroundHeight = 0.05f;
         public bool debug = true;
 
-        private Vector3 acquiringGroundExtents = new Vector3(0.3f, 0.09f, 0.3f);
+        private Vector3 touchingGroundExtents = new Vector3(0.2f, 0.01f, 0.1f);
         private Vector3 maintainingGroundExtents = new Vector3(0.65f, 0.5f, 0.65f);
 
         // raycast to determine ground normal
@@ -95,7 +99,7 @@ namespace AnyRPG {
         private int lastJumpFrame;
 
         private List<ContactPoint> forwardContactPoints = new List<ContactPoint>();
-        private List<ContactPoint> backwardContactPoints = new List<ContactPoint>();
+        //private List<ContactPoint> backwardContactPoints = new List<ContactPoint>();
         private List<ContactPoint> bottomContactPoints = new List<ContactPoint>();
 
         // the minimum height at which a collision is considered valid to calculate a forward or backward angle.  This is to prevent bottom collions that falsely register as front or back collisions
@@ -292,7 +296,7 @@ namespace AnyRPG {
                 return;
             }
 
-            if (!MaintainingGround()) {
+            if (!MaintainingGround() || rawGroundAngle > slopeLimit) {
                 currentState = AnyRPGCharacterState.Fall;
                 return;
             }
@@ -344,7 +348,7 @@ namespace AnyRPG {
                 return;
             }
 
-            if (!MaintainingGround()) {
+            if (!MaintainingGround() || rawGroundAngle > slopeLimit) {
                 currentState = AnyRPGCharacterState.Fall;
                 return;
             }
@@ -501,7 +505,7 @@ namespace AnyRPG {
                 }
             }
 
-            if (AcquiringGround() && playerManager.ActiveUnitController.RigidBody.velocity.y < 0.1) {
+            if (TouchingGround() && playerManager.ActiveUnitController.RigidBody.velocity.y < 0.1) {
                 if ((playerManager.PlayerController.HasMoveInput() || playerManager.PlayerController.HasTurnInput()) && playerManager.PlayerController.canMove) {
                     // new code to allow not freezing up when landing - fix, should be fall or somehow prevent from getting into move during takeoff
                     currentState = AnyRPGCharacterState.Move;
@@ -562,6 +566,8 @@ namespace AnyRPG {
             canJump = false;
             playerManager.ActiveUnitController.UnitAnimator.SetTrigger("FallTrigger");
             playerManager.ActiveUnitController.UnitAnimator.SetJumping(2);
+
+            playerManager.ActiveUnitController.UnitMotor?.Move(new Vector3(playerManager.ActiveUnitController.RigidBody.velocity.x, Mathf.Clamp(playerManager.ActiveUnitController.RigidBody.velocity.y, -53, 0), playerManager.ActiveUnitController.RigidBody.velocity.z));
         }
 
         void Fall_StateUpdate() {
@@ -582,7 +588,9 @@ namespace AnyRPG {
                 }
             }
 
-            if (AcquiringGround()) {
+            // testing change condition
+            // see if landing looks funny
+            if (TouchingGround() && rawGroundAngle <= slopeLimit) {
                 if ((playerManager.PlayerController.HasMoveInput() || playerManager.PlayerController.HasTurnInput()) && playerManager.PlayerController.canMove) {
                     // new code to allow not freezing up when landing
                     currentState = AnyRPGCharacterState.Move;
@@ -647,27 +655,45 @@ namespace AnyRPG {
             return relativeVelocity;
         }
 
-        private bool AcquiringGround() {
+        private bool TouchingGround() {
             //Debug.Log("PlayerUnitMovementController.AcquiringGround()");
-            Collider[] hitColliders = Physics.OverlapBox(playerManager.ActiveUnitController.transform.position, acquiringGroundExtents, Quaternion.identity, groundMask);
-            /*
+            Collider[] hitColliders = Physics.OverlapBox(playerManager.ActiveUnitController.transform.position, touchingGroundExtents, playerManager.ActiveUnitController.transform.rotation, groundMask);
+
+            Ray ray;
+            RaycastHit colliderHit;
             foreach (Collider hitCollider in hitColliders) {
-                //Debug.Log("Overlap Box Hit : " + hitColliders[i].name + i);
-                if (((1 << hitCollider.gameObject.layer) & groundMask) != 0) {
+                if (hitCollider.GetType() == typeof(BoxCollider)
+                    || hitCollider.GetType() == typeof(SphereCollider)
+                    || hitCollider.GetType() == typeof(CapsuleCollider)
+                    || (hitCollider.GetType() == typeof(MeshCollider) && (hitCollider as MeshCollider).convex == true)) {
+                    Debug.Log("Overlap Box Hit : " + hitCollider.name + "; type: " + hitCollider.GetType().Name);
+                    ray = new Ray(playerManager.ActiveUnitController.transform.position, hitCollider.ClosestPoint(playerManager.ActiveUnitController.transform.position) - playerManager.ActiveUnitController.transform.position);
+                    hitCollider.Raycast(ray, out colliderHit, Mathf.Infinity);
+                    //hitCollider.ClosestPoint(playerManager.ActiveUnitController.transform.position);
+                    if (Vector3.Angle(colliderHit.normal, Vector3.up) <= slopeLimit) {
+                        return true;
+                    }
+                } else {
                     return true;
                 }
+                /*
+                Debug.Log("Overlap Box Hit : " + hitCollider.name);
+                ray = new Ray(playerManager.ActiveUnitController.transform.position, hitCollider.ClosestPoint(playerManager.ActiveUnitController.transform.position) - playerManager.ActiveUnitController.transform.position);
+                hitCollider.Raycast(ray, out colliderHit, Mathf.Infinity);
+                //hitCollider.ClosestPoint(playerManager.ActiveUnitController.transform.position);
+                if (Vector3.Angle(colliderHit.normal, Vector3.up) <= slopeLimit) {
+                    return true;
+                }
+                */
             }
-            */
+            
+            /*
             if (hitColliders.Length > 0) {
                 //Debug.Log("PlayerUnitMovementController.AcquiringGround(): Grounded!");
                 return true;
             }
+            */
             return false;
-        }
-
-        public bool TouchingGround() {
-            //Debug.Log(gameObject.name + ".PlayerUnitMovementController.MaintainingGround");
-            return touchingGround;
         }
 
         public bool MaintainingGround() {
@@ -748,31 +774,19 @@ namespace AnyRPG {
                     usedAngle = 0f;
                 }
             }
+            Debug.Log("NormalizedLocalMovement() used angle: " + usedAngle + "; forwardDirection: " + forwardDirection);
             //newReturnValue = Quaternion.AngleAxis(usedAngle, -Vector3.right) * normalizedInput;
             Vector3 localGroundNormal = playerManager.ActiveUnitController.transform.InverseTransformDirection(groundHitInfo.normal);
+
             //Debug.Log("groundHitInfo.normal: " + groundHitInfo.normal + "; local translation: " + localGroundNormal + "; forwardDirection: " + forwardDirection);
 
-            //newReturnValue = Quaternion.LookRotation(normalizedInput, localGroundNormal) * normalizedInput;
-            //newReturnValue = Quaternion.LookRotation(forwardDirection, localGroundNormal) * normalizedInput;
-
-            // doesn't work properly
-            //newReturnValue = playerManager.ActiveUnitController.transform.InverseTransformDirection(Quaternion.LookRotation(forwardDirection, downHitInfo.normal) * normalizedInput);
-
-            // doesn't work properly
-            //Vector3 worldInput = playerManager.ActiveUnitController.transform.TransformDirection(normalizedInput);
-            //Vector3 localForwardDirection = playerManager.ActiveUnitController.transform.InverseTransformDirection(forwardDirection);
-            //newReturnValue = playerManager.ActiveUnitController.transform.InverseTransformDirection(Quaternion.LookRotation(forwardDirection, downHitInfo.normal) * worldInput);
-            //newReturnValue = playerManager.ActiveUnitController.transform.InverseTransformDirection(Quaternion.LookRotation(forwardDirection, localGroundNormal) * normalizedInput);
 
             // next line works when facing world axis
             //newReturnValue = playerManager.ActiveUnitController.transform.InverseTransformDirection(Quaternion.LookRotation(forwardDirection, localGroundNormal) * normalizedInput);
 
-            //newReturnValue = Vector3.Cross(Quaternion.LookRotation(normalizedInput, Vector3.up) * playerManager.ActiveUnitController.transform.right, localGroundNormal);
-
-            //newReturnValue = playerManager.ActiveUnitController.transform.InverseTransformDirection(Vector3.Cross(Quaternion.LookRotation(normalizedInput, Vector3.up) * playerManager.ActiveUnitController.transform.InverseTransformDirection(playerManager.ActiveUnitController.transform.right), localGroundNormal));
+            // THIS ONE WORKS!
             newReturnValue = Vector3.Cross(Quaternion.LookRotation(normalizedInput, Vector3.up) * playerManager.ActiveUnitController.transform.InverseTransformDirection(playerManager.ActiveUnitController.transform.right), localGroundNormal);
 
-            //newReturnValue = Quaternion.LookRotation(playerManager.ActiveUnitController.transform.TransformDirection(normalizedInput), localGroundNormal) * normalizedInput;
             //Debug.Log("newReturnValue: " + newReturnValue);
             return newReturnValue;
         }
@@ -814,7 +828,7 @@ namespace AnyRPG {
                     Vector3 directionToContact = (forwardContactPoints[smallestIndex].point - playerManager.ActiveUnitController.transform.position).normalized;
                     forwardDirection = directionToContact;
                     //Debug.Log(gameObject.name + ".PlayerUnitMovementController.CalculateForward(): Vector3.Cross(downHitInfo.normal(" + downHitInfo.normal + "), -transform.right(" + -transform.right + ")): " + forwardDirection);
-                    //Debug.Log(gameObject.name + ".PlayerUnitMovementController.CalculateForward(): directionToContact: " + directionToContact + "; forwardDirection: " + forwardDirection);
+                    Debug.Log(gameObject.name + ".PlayerUnitMovementController.CalculateForward(): directionToContact: " + directionToContact + "; forwardDirection: " + forwardDirection);
                     return;
                 }
             }
@@ -876,6 +890,9 @@ namespace AnyRPG {
         }
         */
 
+        private void GetGroundAngle() {
+
+        }
 
         private void CalculateGroundAngle(Vector3 directionOfTravel) {
             if (!MaintainingGround()) {
@@ -952,13 +969,16 @@ namespace AnyRPG {
             // downward cast for normals
             Physics.Raycast(playerManager.ActiveUnitController.transform.position + (Vector3.up * 0.25f), -Vector3.up, out groundHitInfo, Mathf.Infinity, groundMask);
 
-            if (bottomContactPoints.Count > 0 || forwardContactPoints.Count > 0 || backwardContactPoints.Count > 0) {
+            rawGroundAngle = Vector3.Angle(groundHitInfo.normal, Vector3.up);
+            Debug.Log("rawGroundAngle: " + rawGroundAngle);
+
+            if (bottomContactPoints.Count > 0 || forwardContactPoints.Count > 0) {
                 // extra check to catch contact points below maximum step height in case the character is halfway off a slope
                 //Debug.Log(gameObject.name + ".PlayerUnitMovementController.CheckGround(): grounded is true from contact points; bottom: " + bottomContactPoints.Count + "; front: " + forwardContactPoints.Count + "; back: " + backwardContactPoints.Count);
                 closeToGround = true;
             }
 
-            Collider[] hitColliders = Physics.OverlapBox(playerManager.ActiveUnitController.transform.position, maintainingGroundExtents, Quaternion.identity, groundMask);
+            Collider[] hitColliders = Physics.OverlapBox(playerManager.ActiveUnitController.transform.position, maintainingGroundExtents, playerManager.ActiveUnitController.transform.rotation, groundMask);
             if (hitColliders.Length > 0) {
                 closeToGround = true;
             }
@@ -1015,17 +1035,19 @@ namespace AnyRPG {
             DebugCollision(collision);
         }
 
+        // this code no longer gets called because this controller is no longer on the player, but the player object
         private void DebugCollision(Collision collision) {
             ContactPoint[] contactPoints = new ContactPoint[collision.contactCount];
             collision.GetContacts(contactPoints);
+            Debug.Log("collision count: " + contactPoints.Length);
             foreach (ContactPoint contactPoint in contactPoints) {
                 if (((1 << collision.gameObject.layer) & groundMask) != 0) {
                     //Debug.Log(gameObject.name + ".CharacterUnit.OnCollisionStay(): " + collision.collider.gameObject.name + " matched the ground Layer mask at : " + contactPoint.point + "; player: " + playerManager.ActiveUnitController.transform.position);
                     //float hitAngle = Vector3.Angle(contactPoint.normal, playerManager.ActiveUnitController.transform.forward);
                     //Debug.Log(gameObject.name + ".CharacterUnit.OnCollisionStay(): " + collision.collider.gameObject.name + "; normal: " + contactPoint.normal + "; angle: " + hitAngle);
-                    Vector3 relativePoint = playerManager.ActiveUnitController.transform.InverseTransformPoint(contactPoint.point);
-                    relativePoint = Quaternion.LookRotation(adjustedlocalMoveVelocity) * relativePoint;
-                    //Debug.Log(gameObject.name + ".CharacterUnit.OnCollisionStay(): " + collision.collider.gameObject.name + "; relativePoint: " + relativePoint);
+                    Vector3 absolutePoint = playerManager.ActiveUnitController.transform.InverseTransformPoint(contactPoint.point);
+                    Vector3 relativePoint = Quaternion.LookRotation(localMoveVelocity) * absolutePoint;
+                    Debug.Log("DebugCollision(): " + collision.collider.gameObject.name + "; absolutePoint: " + absolutePoint + "; relativePoint: " + relativePoint + "; velocity: " + localMoveVelocity);
                     if (relativePoint.z > 0 && relativePoint.y < stepHeight) {
                         //Debug.Log(gameObject.name + ".CharacterUnit.DebugCollision(): " + collision.collider.gameObject.name + "; relativePoint: " + relativePoint + " is in front of the player at world point: " + contactPoint.point);
                         // get direction to contact point
@@ -1040,7 +1062,7 @@ namespace AnyRPG {
                         Debug.DrawLine(raycastPoint, new Vector3(raycastPoint.x, raycastPoint.y - stepHeight - 1f, raycastPoint.z), Color.green);
                         RaycastHit stairHitInfo;
                         if (Physics.Raycast(raycastPoint, Vector3.down, out stairHitInfo, stepHeight + 1f, groundMask)) {
-                            //Debug.Log(gameObject.name + ".PlayerUnitMovementController.CheckGround(): There is an obstacle in front of the player: " + forwardHitInfo.collider.gameObject.name + "; normal: " + forwardHitInfo.normal);
+                            Debug.Log(gameObject.name + ".PlayerUnitMovementController.CheckGround(): There is an obstacle in front of the player: " + forwardHitInfo.collider.gameObject.name + "; normal: " + forwardHitInfo.normal);
                             // we hit something that is low enough to step on
                             //nearFrontObstacle = true;
                             if (!forwardContactPoints.Contains(contactPoint)) {
@@ -1067,7 +1089,7 @@ namespace AnyRPG {
         private void FixedUpdate() {
             //Debug.Log(gameObject.name + ".PlayerUnitMovementController.FixedUpdate(): forwardContactPoints.Clear()");
             forwardContactPoints.Clear();
-            backwardContactPoints.Clear();
+            //backwardContactPoints.Clear();
             bottomContactPoints.Clear();
         }
 
@@ -1076,7 +1098,7 @@ namespace AnyRPG {
                 return;
             }
             Gizmos.color = Color.white;
-            Gizmos.DrawWireCube(playerManager.ActiveUnitController.transform.position, acquiringGroundExtents * 2);
+            Gizmos.DrawWireCube(playerManager.ActiveUnitController.transform.position, (Quaternion.LookRotation(playerManager.ActiveUnitController.transform.forward) * touchingGroundExtents) * 2);
 
             Gizmos.color = Color.yellow;
             Gizmos.DrawWireCube(playerManager.ActiveUnitController.transform.position, maintainingGroundExtents * 2);
