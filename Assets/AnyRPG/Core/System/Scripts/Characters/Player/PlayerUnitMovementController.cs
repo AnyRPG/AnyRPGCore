@@ -60,11 +60,21 @@ namespace AnyRPG {
         // a calculated value
         private float groundAngle;
 
+        // is there an obstacle close in front of us in the direction of travel
+        private bool nearFrontObstacle = false;
+
+        // the angle of the obstacle in front of us
+        private float frontObstacleAngle;
+
+        // determine if there is a change in the angle from the current ground (which could be a ramp) to the obstacle in front of us (which could be the same ramp)
+        private bool frontAngleDifferent = false;
+
+        // determine if an obstacle in front of us is a stairs
+        private bool nearStairs = false;
+
         private bool closeToGround;
         private bool touchingGround;
 
-        // technically, "front" and "forward" are the current direction of travel to detect obstacles no matter which way you are heading for these next 2 variables
-        private bool nearFrontObstacle = false;
         // forward raycast length
         //private float rayCastLength = 0.5f;
         private float rayCastLength = 0.5f;
@@ -85,7 +95,12 @@ namespace AnyRPG {
 
         // raycasts to determine 
         private RaycastHit downHitInfo;
+
+        // raycast to determine if an object is in front of the player
         private RaycastHit forwardHitInfo;
+
+        // raycast to determine if an object in front of the player is stairs
+        private RaycastHit stairHitInfo;
 
         // ensure that pressing forward moves us in the direction of the ground angle to avoid jittery movement on slopes
         private Vector3 forwardDirection;
@@ -97,13 +112,6 @@ namespace AnyRPG {
 
         // the frame in which the player last entered a jump state
         private int lastJumpFrame;
-
-        private List<ContactPoint> forwardContactPoints = new List<ContactPoint>();
-        //private List<ContactPoint> backwardContactPoints = new List<ContactPoint>();
-        private List<ContactPoint> bottomContactPoints = new List<ContactPoint>();
-
-        // the minimum height at which a collision is considered valid to calculate a forward or backward angle.  This is to prevent bottom collions that falsely register as front or back collisions
-        private float collisionMinimumHeight = 0.05f;
 
         // game manager references
         protected PlayerManager playerManager = null;
@@ -746,7 +754,9 @@ namespace AnyRPG {
             //Debug.Log("PlayerUnitMovementController.LocalMovement(): groundAngle: " + groundAngle + "; backwardGroundAngle: " + backwardGroundAngle);
             Vector3 normalizedInput = playerManager.PlayerController.NormalizedMoveInput;
 
+            // determine if there is an obstacle in front, and if it is stairs
             CheckFrontObstacle();
+
             CalculateForward();
             //CalculateBackward();
             CalculateGroundAngle(playerManager.ActiveUnitController.transform.TransformDirection(normalizedInput));
@@ -765,18 +775,12 @@ namespace AnyRPG {
             }
             Vector3 newReturnValue;
             float usedAngle = groundAngle;
-            if (!nearFrontObstacle && forwardContactPoints.Count == 0) {
-                // moving forward, use forward angle calculated to get over objects
-                // hopefully this still allows us the correct ground angle when going downhill with no obstacles in front
-                if (groundAngle > 0) {
-                    // code to stop going up if standing with center over slope, but front of feet on flat surface with no obstacles in front
-                    //Debug.Log("PlayerUnitMovementController.LocalMovement(): no front obstacles, ignoring ground angle because we are likely above the ground");
-                    usedAngle = 0f;
-                }
-            }
-            Debug.Log("NormalizedLocalMovement() used angle: " + usedAngle + "; forwardDirection: " + forwardDirection);
-            //newReturnValue = Quaternion.AngleAxis(usedAngle, -Vector3.right) * normalizedInput;
+            
             Vector3 localGroundNormal = playerManager.ActiveUnitController.transform.InverseTransformDirection(groundHitInfo.normal);
+            if (nearFrontObstacle && frontAngleDifferent) {
+                Debug.Log("near front obstacle and front angle is different, adjusting forward direction");
+                localGroundNormal = playerManager.ActiveUnitController.transform.InverseTransformDirection(forwardHitInfo.normal);
+            }
 
             //Debug.Log("groundHitInfo.normal: " + groundHitInfo.normal + "; local translation: " + localGroundNormal + "; forwardDirection: " + forwardDirection);
 
@@ -803,94 +807,15 @@ namespace AnyRPG {
                 return;
             }
 
-            // PUT CODE HERE TO RECOGNIZE THE HIGHEST ANGLE AS THE FORWARD DIRECTION
-
-            if (forwardContactPoints.Count > 0) {
-                Debug.Log(gameObject.name + ".PlayerUnitMovementController.CalculateForward(): forwardContactPoints.Count: " + forwardContactPoints.Count);
-                int counter = 0;
-                int smallestIndex = -1;
-
-                // find highest contact point
-                foreach (ContactPoint contactPoint in forwardContactPoints) {
-                    Vector3 localContactPoint = playerManager.ActiveUnitController.transform.InverseTransformPoint(contactPoint.point);
-                    // ensure forward contact point is above a certain height and actually in front of the character
-                    if (localContactPoint.y > collisionMinimumHeight && localContactPoint != Vector3.zero) {
-                        if (smallestIndex == -1 || localContactPoint.y > playerManager.ActiveUnitController.transform.InverseTransformPoint(forwardContactPoints[smallestIndex].point).y) {
-                            //Debug.Log(gameObject.name + ".PlayerUnitMovementController.CalculateForward(): found highest contact point at: " + contactPoint.point + "; local: " + localContactPoint);
-                            smallestIndex = counter;
-                        }
-                    }
-                    counter++;
-                }
-
-                if (smallestIndex != -1) {
-                    // get vector between contact point and base of player
-                    Vector3 directionToContact = (forwardContactPoints[smallestIndex].point - playerManager.ActiveUnitController.transform.position).normalized;
-                    forwardDirection = directionToContact;
-                    //Debug.Log(gameObject.name + ".PlayerUnitMovementController.CalculateForward(): Vector3.Cross(downHitInfo.normal(" + downHitInfo.normal + "), -transform.right(" + -transform.right + ")): " + forwardDirection);
-                    Debug.Log(gameObject.name + ".PlayerUnitMovementController.CalculateForward(): directionToContact: " + directionToContact + "; forwardDirection: " + forwardDirection);
-                    return;
-                }
-            }
-
             if (nearFrontObstacle && groundHitInfo.normal == Vector3.up) {
-                Debug.Log("CalculateForward(): near front obstacle is true and we didn't get any useful information from the ground normal, trying obstacle normal");
+                //Debug.Log("CalculateForward(): near front obstacle is true and we didn't get any useful information from the ground normal, trying obstacle normal");
                 forwardDirection = Vector3.Cross(forwardHitInfo.normal, -playerManager.ActiveUnitController.transform.right);
                 return;
             }
 
             forwardDirection = Vector3.Cross(groundHitInfo.normal, -playerManager.ActiveUnitController.transform.right);
-            Debug.Log("CalculateForward(): no forward collisions. forwardDirection = Vector3.Cross(groundHitInfo.normal(" + groundHitInfo.normal + "), -transform.right(" + -transform.right + ")): " + forwardDirection);
+            //Debug.Log("CalculateForward(): no forward collisions. forwardDirection = Vector3.Cross(groundHitInfo.normal(" + groundHitInfo.normal + "), -transform.right(" + -transform.right + ")): " + forwardDirection);
             return;
-
-        }
-
-        /*
-        private void CalculateBackward() {
-            if (!MaintainingGround()) {
-                backwardDirection = -airForwardDirection;
-                //backwardDirection = -transform.forward;
-                return;
-            }
-            if (backwardContactPoints.Count > 0) {
-                //Debug.Log(gameObject.name + ".PlayerUnitMovementController.CalculateBackward(): rearContactPoints.Count: " + rearContactPoints.Count);
-                int counter = 0;
-                int smallestIndex = 0;
-
-                // find highest contact point
-                foreach (ContactPoint contactPoint in backwardContactPoints) {
-                    Vector3 localContactPoint = playerManager.ActiveUnitController.transform.InverseTransformPoint(contactPoint.point);
-                    if (localContactPoint.y > collisionMinimumHeight && localContactPoint != Vector3.zero) {
-                        if (smallestIndex == -1 || localContactPoint.y > playerManager.ActiveUnitController.transform.InverseTransformPoint(backwardContactPoints[smallestIndex].point).y) {
-                            //Debug.Log(gameObject.name + ".PlayerUnitMovementController.CalculateBackward(): found highest contact point");
-                            smallestIndex = counter;
-                        }
-                    }
-                    counter++;
-                }
-                if (smallestIndex != -1) {
-                    // get angle between contact point and base of player
-                    Vector3 directionToContact = (backwardContactPoints[smallestIndex].point - playerManager.ActiveUnitController.transform.position).normalized;
-                    backwardDirection = directionToContact;
-                    //forwardDirection = Vector3.Cross(directionToContact, -transform.right);
-                    //Debug.Log(gameObject.name + ".PlayerUnitMovementController.CalculateBackward(): directionToContact: " + directionToContact + "; rearDirection: " + backwardDirection);
-                    return;
-                }
-            }
-
-            if (nearFrontObstacle && groundHitInfo.normal == Vector3.up) {
-                //Debug.Log(gameObject.name + ".PlayerUnitMovementController.CalculateForward(): near front obstacle is true and we didn't get any useful information from the ground normal, trying obstacle normal");
-                backwardDirection = Vector3.Cross(forwardHitInfo.normal, playerManager.ActiveUnitController.transform.right);
-                return;
-            }
-
-            backwardDirection = Vector3.Cross(groundHitInfo.normal, playerManager.ActiveUnitController.transform.right);
-            //Debug.Log(gameObject.name + ".PlayerUnitMovementController.CalculateForward(): no backward collisions. backwardDirection = Vector3.Cross(downHitInfo.normal(" + downHitInfo.normal + "), playerManager.ActiveUnitController.transform.right(" + playerManager.ActiveUnitController.transform.right + ")): " + backwardDirection);
-            return;
-        }
-        */
-
-        private void GetGroundAngle() {
 
         }
 
@@ -900,11 +825,7 @@ namespace AnyRPG {
                 groundAngle = 0f;
                 return;
             }
-            /*
-            if (hitInfo != null) {
-                Debug.Log("hitInfo: " + hitInfo.collider.gameObject.name + "; normal: " + hitInfo.normal);
-            }
-            */
+
             float downHitAngle = Vector3.Angle(groundHitInfo.normal, directionOfTravel) - 90f;
             //Debug.Log(gameObject.name + ".PlayerUnitMovementController.CalculateGroundAngle() from downHitInfo.normal(" + downHitInfo.normal + "): " + downHitAngle);
             float forwardHitAngle = Vector3.Angle(forwardHitInfo.normal, directionOfTravel) - 90f;
@@ -970,29 +891,21 @@ namespace AnyRPG {
             Physics.Raycast(playerManager.ActiveUnitController.transform.position + (Vector3.up * 0.25f), -Vector3.up, out groundHitInfo, Mathf.Infinity, groundMask);
 
             rawGroundAngle = Vector3.Angle(groundHitInfo.normal, Vector3.up);
-            Debug.Log("rawGroundAngle: " + rawGroundAngle);
-
-            if (bottomContactPoints.Count > 0 || forwardContactPoints.Count > 0) {
-                // extra check to catch contact points below maximum step height in case the character is halfway off a slope
-                //Debug.Log(gameObject.name + ".PlayerUnitMovementController.CheckGround(): grounded is true from contact points; bottom: " + bottomContactPoints.Count + "; front: " + forwardContactPoints.Count + "; back: " + backwardContactPoints.Count);
-                closeToGround = true;
-            }
+            //Debug.Log("rawGroundAngle: " + rawGroundAngle);
 
             Collider[] hitColliders = Physics.OverlapBox(playerManager.ActiveUnitController.transform.position, maintainingGroundExtents, playerManager.ActiveUnitController.transform.rotation, groundMask);
             if (hitColliders.Length > 0) {
                 closeToGround = true;
             }
-            /*
-            foreach (Collider hitCollider in hitColliders) {
-                //Debug.Log("Overlap Box Hit : " + hitColliders[i].name + i);
-                if (((1 << hitCollider.gameObject.layer) & groundMask) != 0) {
-                    tempGrounded = true;
-                }
-            }
-            */
+            
         }
 
         private void CheckFrontObstacle() {
+            // reset variables
+            nearFrontObstacle = false;
+            frontAngleDifferent = false;
+            nearStairs = false;
+
             // forward cast
             Vector3 directionOfTravel = playerManager.ActiveUnitController.transform.forward;
             if (localMoveVelocity.x != 0 || localMoveVelocity.z != 0) {
@@ -1000,10 +913,32 @@ namespace AnyRPG {
             }
             Debug.DrawLine(playerManager.ActiveUnitController.transform.position + (Vector3.up * 0.05f), playerManager.ActiveUnitController.transform.position + (Vector3.up * 0.05f) + (directionOfTravel * rayCastLength), Color.black);
             if (Physics.Raycast(playerManager.ActiveUnitController.transform.position + (Vector3.up * 0.05f), directionOfTravel, out forwardHitInfo, rayCastLength, groundMask)) {
-                //Debug.Log(gameObject.name + ".PlayerUnitMovementController.CheckGround(): There is an obstacle in front of the player: " + forwardHitInfo.collider.gameObject.name + "; normal: " + forwardHitInfo.normal);
+                // we are near an obstacle in front
                 nearFrontObstacle = true;
-            } else {
-                nearFrontObstacle = false;
+                frontObstacleAngle = Vector3.Angle(forwardHitInfo.normal, Vector3.up);
+                Debug.Log("front obstacle angle: " + frontObstacleAngle);
+
+                // we could be going up a ramp, determine if the obstacle in front has a different angle than the ground below us
+                if (forwardHitInfo.normal != groundHitInfo.normal) {
+                    Debug.Log("front obstacle angle is different than ground angle: " + rawGroundAngle);
+                    frontAngleDifferent = true;
+                }
+
+                if (frontAngleDifferent == true && frontObstacleAngle > slopeLimit) {
+                    // check if the obstacle is stairs
+                    Vector3 raycastPoint = forwardHitInfo.point + directionOfTravel;
+                    raycastPoint = new Vector3(raycastPoint.x, playerManager.ActiveUnitController.transform.position.y + stepHeight + 0.1f, raycastPoint.z);
+                    //Debug.Log(gameObject.name + ".CharacterUnit.DebugCollision(): " + collision.collider.gameObject.name + "; direction is: " + direction + "; raycastpoint: " + raycastPoint);
+                    Debug.DrawLine(raycastPoint, new Vector3(raycastPoint.x, raycastPoint.y - stepHeight - 0.1f, raycastPoint.z), Color.green);
+                    if (Physics.Raycast(raycastPoint, Vector3.down, out stairHitInfo, stepHeight + 0.1f, groundMask)) {
+                        // we hit something that is low enough to step on, if it is below the slope limit, we can consider it to be a stair step
+                        if (Vector3.Angle(stairHitInfo.normal, Vector3.up) < slopeLimit) {
+                            Debug.Log("CheckFrontObstacle(): stairs detected angle: " + Vector3.Angle(stairHitInfo.normal, Vector3.up));
+                            nearStairs = true;
+                        }
+
+                    }
+                }
             }
 
         }
@@ -1025,74 +960,6 @@ namespace AnyRPG {
 
         }
 
-        public void OnCollisionEnter(Collision collision) {
-            //Debug.Log(gameObject.name + ".PlayerUnitMovementController.OnCollisionEnter()");
-            DebugCollision(collision);
-        }
-
-        public void OnCollisionStay(Collision collision) {
-            //Debug.Log(gameObject.name + ".PlayerUnitMovementController.OnCollisionStay(): " + collision.collider.gameObject.name);
-            DebugCollision(collision);
-        }
-
-        // this code no longer gets called because this controller is no longer on the player, but the player object
-        private void DebugCollision(Collision collision) {
-            ContactPoint[] contactPoints = new ContactPoint[collision.contactCount];
-            collision.GetContacts(contactPoints);
-            Debug.Log("collision count: " + contactPoints.Length);
-            foreach (ContactPoint contactPoint in contactPoints) {
-                if (((1 << collision.gameObject.layer) & groundMask) != 0) {
-                    //Debug.Log(gameObject.name + ".CharacterUnit.OnCollisionStay(): " + collision.collider.gameObject.name + " matched the ground Layer mask at : " + contactPoint.point + "; player: " + playerManager.ActiveUnitController.transform.position);
-                    //float hitAngle = Vector3.Angle(contactPoint.normal, playerManager.ActiveUnitController.transform.forward);
-                    //Debug.Log(gameObject.name + ".CharacterUnit.OnCollisionStay(): " + collision.collider.gameObject.name + "; normal: " + contactPoint.normal + "; angle: " + hitAngle);
-                    Vector3 absolutePoint = playerManager.ActiveUnitController.transform.InverseTransformPoint(contactPoint.point);
-                    Vector3 relativePoint = Quaternion.LookRotation(localMoveVelocity) * absolutePoint;
-                    Debug.Log("DebugCollision(): " + collision.collider.gameObject.name + "; absolutePoint: " + absolutePoint + "; relativePoint: " + relativePoint + "; velocity: " + localMoveVelocity);
-                    if (relativePoint.z > 0 && relativePoint.y < stepHeight) {
-                        //Debug.Log(gameObject.name + ".CharacterUnit.DebugCollision(): " + collision.collider.gameObject.name + "; relativePoint: " + relativePoint + " is in front of the player at world point: " + contactPoint.point);
-                        // get direction to contact point
-                        Vector3 direction = contactPoint.point - playerManager.ActiveUnitController.transform.position;
-                        // extend contact point
-                        direction *= 1.1f;
-                        // shoot raycast downward from new point to detect stairs
-
-                        Vector3 raycastPoint = playerManager.ActiveUnitController.transform.position + direction;
-                        raycastPoint = new Vector3(raycastPoint.x, playerManager.ActiveUnitController.transform.position.y + stepHeight + 1f, raycastPoint.z);
-                        //Debug.Log(gameObject.name + ".CharacterUnit.DebugCollision(): " + collision.collider.gameObject.name + "; direction is: " + direction + "; raycastpoint: " + raycastPoint);
-                        Debug.DrawLine(raycastPoint, new Vector3(raycastPoint.x, raycastPoint.y - stepHeight - 1f, raycastPoint.z), Color.green);
-                        RaycastHit stairHitInfo;
-                        if (Physics.Raycast(raycastPoint, Vector3.down, out stairHitInfo, stepHeight + 1f, groundMask)) {
-                            Debug.Log(gameObject.name + ".PlayerUnitMovementController.CheckGround(): There is an obstacle in front of the player: " + forwardHitInfo.collider.gameObject.name + "; normal: " + forwardHitInfo.normal);
-                            // we hit something that is low enough to step on
-                            //nearFrontObstacle = true;
-                            if (!forwardContactPoints.Contains(contactPoint)) {
-                                forwardContactPoints.Add(contactPoint);
-                            }
-                        } else {
-                            //Debug.Log(gameObject.name + ".CharacterUnit.DebugCollision(): we did not hit anything below the step height");
-                        }
-
-                       
-                    } else if (relativePoint.y < stepHeight) {
-                        //Debug.Log(gameObject.name + ".CharacterUnit.DebugCollision(): " + collision.collider.gameObject.name + "; relativePoint: " + relativePoint + " is under the player!");
-                        if (!bottomContactPoints.Contains(contactPoint)) {
-                            bottomContactPoints.Add(contactPoint);
-                        }
-                    } else {
-                        //Debug.Log(gameObject.name + ".CharacterUnit.OnCollisionStay(): " + collision.collider.gameObject.name + "; relativePoint: " + relativePoint + " is NOT in front of or behind the player or is higher than the stepheight!");
-                    }
-                }
-                Debug.DrawLine(playerManager.ActiveUnitController.transform.position, contactPoint.point, Color.yellow);
-            }
-        }
-
-        private void FixedUpdate() {
-            //Debug.Log(gameObject.name + ".PlayerUnitMovementController.FixedUpdate(): forwardContactPoints.Clear()");
-            forwardContactPoints.Clear();
-            //backwardContactPoints.Clear();
-            bottomContactPoints.Clear();
-        }
-
         private void OnDrawGizmos() {
             if (playerManager == null || playerManager.ActiveUnitController == null) {
                 return;
@@ -1104,17 +971,6 @@ namespace AnyRPG {
             Gizmos.DrawWireCube(playerManager.ActiveUnitController.transform.position, maintainingGroundExtents * 2);
         }
 
-        /*
-        public void OnDisable() {
-            //Debug.Log(gameObject.name + ".PlayerUnitMovementController.OnDisable()");
-            if (SystemGameManager.IsShuttingDown) {
-                return;
-            }
-            if (movementStateController != null) {
-                movementStateController.enabled = false;
-            }
-        }
-        */
 
     }
 
