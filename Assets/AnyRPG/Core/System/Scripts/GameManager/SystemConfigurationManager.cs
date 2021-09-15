@@ -120,6 +120,22 @@ namespace AnyRPG {
 
         [Header("CONTROLLER")]
 
+        [Tooltip("The maximum turn speed in degrees per second")]
+        [SerializeField]
+        private float maxTurnSpeed = 360f;
+
+        [Tooltip("The default character walk speed in meters per second")]
+        [SerializeField]
+        private float walkSpeed = 1f;
+
+        [Tooltip("The default character run speed in meters per second")]
+        [SerializeField]
+        private float runSpeed = 7f;
+
+        [Tooltip("The default character swim speed in meters per second")]
+        [SerializeField]
+        private float swimSpeed = 2f;
+
         [Tooltip("When not mounted, disable native movement input to allow a third party controller (such as Invector) to move the character")]
         [SerializeField]
         private bool useThirdPartyMovementControl = false;
@@ -127,6 +143,7 @@ namespace AnyRPG {
         [Tooltip("If a third party movement controller is used, disable this to prevent movement lock in combat")]
         [SerializeField]
         private bool allowAutoAttack = true;
+       
 
         [Header("CAMERA")]
 
@@ -637,6 +654,10 @@ namespace AnyRPG {
         public bool SyncMovementAnimationSpeed { get => syncMovementAnimationSpeed; set => syncMovementAnimationSpeed = value; }
         public int QuestLogSize { get => questLogSize; set => questLogSize = value; }
         public int AutoPixelsPerMeter { get => autoPixelsPerMeter; set => autoPixelsPerMeter = value; }
+        public float MaxTurnSpeed { get => maxTurnSpeed; }
+        public float WalkSpeed { get => walkSpeed; }
+        public float RunSpeed { get => runSpeed; }
+        public float SwimSpeed { get => swimSpeed; }
 
         public override void Configure(SystemGameManager systemGameManager) {
             base.Configure(systemGameManager);

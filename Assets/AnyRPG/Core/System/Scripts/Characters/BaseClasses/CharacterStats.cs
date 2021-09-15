@@ -166,6 +166,11 @@ namespace AnyRPG {
             Configure(systemGameManager);
             SetPrimaryStatModifiers();
             InitializeSecondaryStats();
+
+            walkSpeed = systemConfigurationManager.WalkSpeed;
+            runSpeed = systemConfigurationManager.RunSpeed;
+            swimSpeed = systemConfigurationManager.SwimSpeed;
+            currentSwimSpeed = swimSpeed;
         }
 
         public override void SetGameManagerReferences() {

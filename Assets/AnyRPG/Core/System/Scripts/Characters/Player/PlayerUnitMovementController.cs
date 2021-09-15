@@ -77,7 +77,7 @@ namespace AnyRPG {
 
         // forward raycast length
         //private float rayCastLength = 0.5f;
-        private float rayCastLength = 0.5f;
+        //private float frontRayCastLength = 0.5f;
 
 
         private LayerMask groundMask;
@@ -99,8 +99,14 @@ namespace AnyRPG {
         // raycast to determine if an object is in front of the player
         private RaycastHit forwardHitInfo;
 
+        // raycast to determine if an object is in an arc in front of the player
+        private RaycastHit obstacleHitInfo;
+
         // raycast to determine if an object in front of the player is stairs
         private RaycastHit stairHitInfo;
+
+        // raycast to determine if player is touching ground in a circle around it
+        private RaycastHit touchingGroundHitInfo;
 
         // ensure that pressing forward moves us in the direction of the ground angle to avoid jittery movement on slopes
         private Vector3 forwardDirection;
@@ -122,6 +128,7 @@ namespace AnyRPG {
         public override void Configure(SystemGameManager systemGameManager) {
             base.Configure(systemGameManager);
 
+            rotationSpeed = systemConfigurationManager.MaxTurnSpeed;
             groundMask = playerManager.DefaultGroundMask;
             GetComponentReferences();
             if (movementStateController != null) {
@@ -513,7 +520,7 @@ namespace AnyRPG {
                 }
             }
 
-            if (TouchingGround() && playerManager.ActiveUnitController.RigidBody.velocity.y < 0.1) {
+            if (RaycastForGround() && playerManager.ActiveUnitController.RigidBody.velocity.y < 0.1) {
                 if ((playerManager.PlayerController.HasMoveInput() || playerManager.PlayerController.HasTurnInput()) && playerManager.PlayerController.canMove) {
                     // new code to allow not freezing up when landing - fix, should be fall or somehow prevent from getting into move during takeoff
                     currentState = AnyRPGCharacterState.Move;
@@ -598,7 +605,7 @@ namespace AnyRPG {
 
             // testing change condition
             // see if landing looks funny
-            if (TouchingGround() && rawGroundAngle <= slopeLimit) {
+            if (RaycastForGround() && rawGroundAngle <= slopeLimit) {
                 if ((playerManager.PlayerController.HasMoveInput() || playerManager.PlayerController.HasTurnInput()) && playerManager.PlayerController.canMove) {
                     // new code to allow not freezing up when landing
                     currentState = AnyRPGCharacterState.Move;
@@ -663,44 +670,58 @@ namespace AnyRPG {
             return relativeVelocity;
         }
 
-        private bool TouchingGround() {
-            //Debug.Log("PlayerUnitMovementController.AcquiringGround()");
-            Collider[] hitColliders = Physics.OverlapBox(playerManager.ActiveUnitController.transform.position, touchingGroundExtents, playerManager.ActiveUnitController.transform.rotation, groundMask);
+        private bool RaycastForGround(float raycastHeight = 0f) {
 
-            Ray ray;
-            RaycastHit colliderHit;
-            foreach (Collider hitCollider in hitColliders) {
-                if (hitCollider.GetType() == typeof(BoxCollider)
-                    || hitCollider.GetType() == typeof(SphereCollider)
-                    || hitCollider.GetType() == typeof(CapsuleCollider)
-                    || (hitCollider.GetType() == typeof(MeshCollider) && (hitCollider as MeshCollider).convex == true)) {
-                    Debug.Log("Overlap Box Hit : " + hitCollider.name + "; type: " + hitCollider.GetType().Name);
-                    ray = new Ray(playerManager.ActiveUnitController.transform.position, hitCollider.ClosestPoint(playerManager.ActiveUnitController.transform.position) - playerManager.ActiveUnitController.transform.position);
-                    hitCollider.Raycast(ray, out colliderHit, Mathf.Infinity);
-                    //hitCollider.ClosestPoint(playerManager.ActiveUnitController.transform.position);
-                    if (Vector3.Angle(colliderHit.normal, Vector3.up) <= slopeLimit) {
+            // NOTE THE 0.3F IN THIS METHOD NEEDS TO BE CHANGED TO RADIUS OF CAPSULE COLLIDER
+            float colliderRadius = 0.3f;
+
+            // create a ring of downward raycasts in a circle around the player at evenly spaced angles
+            for (int i = 0; i < 12; i++) {
+                Vector3 raycastPoint = (playerManager.ActiveUnitController.transform.position + (Vector3.up * raycastHeight) + (Vector3.up * 0.01f)) + (Quaternion.AngleAxis((360f / 12f) * i, Vector3.up) * Vector3.forward * colliderRadius);
+                //Debug.Log("raycastPoint: " + raycastPoint + "; player: " + playerManager.ActiveUnitController.transform.position);
+                Debug.DrawLine(raycastPoint, new Vector3(raycastPoint.x, raycastPoint.y - raycastHeight - 0.02f, raycastPoint.z), Color.cyan);
+                if (Physics.Raycast(raycastPoint, Vector3.down, out touchingGroundHitInfo, raycastHeight + 0.02f, groundMask)) {
+                    // we hit something that is low enough to step on, if it is below the slope limit, we can consider it to be walkable ground
+                    if (Vector3.Angle(touchingGroundHitInfo.normal, Vector3.up) < slopeLimit) {
+                        //Debug.Log("ColliderTouchingGround(): ground detected angle: " + Vector3.Angle(touchingGroundHitInfo.normal, Vector3.up) + "; position: " + touchingGroundHitInfo.point);
                         return true;
                     }
-                } else {
-                    return true;
+
                 }
-                /*
-                Debug.Log("Overlap Box Hit : " + hitCollider.name);
-                ray = new Ray(playerManager.ActiveUnitController.transform.position, hitCollider.ClosestPoint(playerManager.ActiveUnitController.transform.position) - playerManager.ActiveUnitController.transform.position);
-                hitCollider.Raycast(ray, out colliderHit, Mathf.Infinity);
-                //hitCollider.ClosestPoint(playerManager.ActiveUnitController.transform.position);
-                if (Vector3.Angle(colliderHit.normal, Vector3.up) <= slopeLimit) {
-                    return true;
+            }
+            return false;
+        }
+
+        private bool RaycastForStairs(Vector3 directionOfTravel, float raycastHeight = 0f) {
+
+            // NOTE THE 0.3F IN THIS METHOD NEEDS TO BE CHANGED TO RADIUS OF CAPSULE COLLIDER
+            float colliderRadius = 0.3f;
+            // create a ring of downward raycasts in a half circle around the player in the direction of travel at evenly spaced angles
+            for (int i = 0; i < 7; i++) {
+                Vector3 raycastPoint = (playerManager.ActiveUnitController.transform.position + (Vector3.up * raycastHeight) + (Vector3.up * 0.01f)) + (Quaternion.AngleAxis(((360f / 12f) * i) - 90f, Vector3.up) * directionOfTravel * colliderRadius);
+                //Debug.Log("raycastPoint: " + raycastPoint + "; player: " + playerManager.ActiveUnitController.transform.position);
+                Debug.DrawLine(raycastPoint, new Vector3(raycastPoint.x, raycastPoint.y - raycastHeight, raycastPoint.z), Color.yellow);
+                if (Physics.Raycast(raycastPoint, Vector3.down, out stairHitInfo, raycastHeight, groundMask)) {
+                    // we hit something that is low enough to step on, if it is below the slope limit, we can consider it to be a stair step
+                    if (Vector3.Angle(stairHitInfo.normal, Vector3.up) < slopeLimit) {
+                        Debug.Log("RaycastForStairs(): stair detected angle: " + Vector3.Angle(stairHitInfo.normal, Vector3.up) + "; position: " + stairHitInfo.point);
+                        nearStairs = true;
+
+                        // perform a raycast in the direction of the obstacle to find its angle for use as a normal later
+                        Debug.DrawLine(playerManager.ActiveUnitController.transform.position + (Vector3.up * 0.01f),
+                            new Vector3(raycastPoint.x, playerManager.ActiveUnitController.transform.position.y + 0.01f,
+                            raycastPoint.z),
+                            Color.yellow);
+                        Physics.Raycast(playerManager.ActiveUnitController.transform.position + (Vector3.up * 0.01f),
+                            (new Vector3(raycastPoint.x, playerManager.ActiveUnitController.transform.position.y, raycastPoint.z) - playerManager.ActiveUnitController.transform.position).normalized,
+                            out obstacleHitInfo,
+                            colliderRadius,
+                            groundMask);
+
+                        return true;
+                    }
                 }
-                */
             }
-            
-            /*
-            if (hitColliders.Length > 0) {
-                //Debug.Log("PlayerUnitMovementController.AcquiringGround(): Grounded!");
-                return true;
-            }
-            */
             return false;
         }
 
@@ -761,37 +782,54 @@ namespace AnyRPG {
             //CalculateBackward();
             CalculateGroundAngle(playerManager.ActiveUnitController.transform.TransformDirection(normalizedInput));
 
-            // testing applying downforce on ground that is sloped downward - can't do it because that will later be rotated which could result in the "down" force moving backward at angles beyond 45degrees
-            if (groundAngle == 0 && nearFrontObstacle == false) {
-                //if (groundHitInfo.normal == Vector3.up) {
-                // this should make the character stick to the ground better when actively moving while grounded
-                // ONLY APPLY Y DOWNFORCE ON FLAT GROUND, this will apply a y downforce multiplied by speed, not the existing y downforce from physics (gravity)
-                float yValue = 0f;
-                if (playerManager.ActiveUnitController.transform.InverseTransformPoint(groundHitInfo.point) != Vector3.zero) {
-                    yValue = Mathf.Clamp(playerManager.ActiveUnitController.RigidBody.velocity.normalized.y, -1, 0);
-                    //Debug.Log("LocalMovement(): We are above the (flat) ground and there are no near collisions.  Applying extra ground force: " + yValue);
-                }
-                normalizedInput = new Vector3(normalizedInput.x, yValue, normalizedInput.z);
-            }
             Vector3 newReturnValue;
             float usedAngle = groundAngle;
             
+            // the normal is the normal of the ground below the player
             Vector3 localGroundNormal = playerManager.ActiveUnitController.transform.InverseTransformDirection(groundHitInfo.normal);
-            if (nearFrontObstacle && frontAngleDifferent) {
-                Debug.Log("near front obstacle and front angle is different, adjusting forward direction");
+
+            // the player is near a front obstacle, and that obstacle is below the slope limit, use its normal
+            if (nearFrontObstacle && frontAngleDifferent && frontObstacleAngle < slopeLimit) {
+                //Debug.Log("near front obstacle and front angle (" + frontObstacleAngle + ") is different than ground angle (" + rawGroundAngle + "), adjusting forward direction");
                 localGroundNormal = playerManager.ActiveUnitController.transform.InverseTransformDirection(forwardHitInfo.normal);
+            } else {
+                // the player is near stairs in the direction of travel
+                if (RaycastForStairs(playerManager.ActiveUnitController.transform.TransformDirection(normalizedInput), 0.5f)) {
+                    //Debug.Log("near stairs and front angle (" + frontObstacleAngle + ") is different than ground angle (" + rawGroundAngle + "), adjusting forward direction");
+                    localGroundNormal = playerManager.ActiveUnitController.transform.InverseTransformDirection(obstacleHitInfo.normal);
+                }
             }
 
-            //Debug.Log("groundHitInfo.normal: " + groundHitInfo.normal + "; local translation: " + localGroundNormal + "; forwardDirection: " + forwardDirection);
-
+            /*
+            // the player is near a front obstacle, and that obstacle is greater than the slope limit, its height is less than the step limit, so walk up it
+            if (nearFrontObstacle && frontAngleDifferent && frontObstacleAngle > slopeLimit && nearStairs) {
+                //Debug.Log("near stairs and front angle (" + frontObstacleAngle + ") is different than ground angle (" + rawGroundAngle + "), adjusting forward direction");
+                localGroundNormal = playerManager.ActiveUnitController.transform.InverseTransformDirection(forwardHitInfo.normal);
+            } else {
+                //Debug.Log("nearFrontObstacle: " + nearFrontObstacle + "; frontAngleDifferent: " + frontAngleDifferent + "; frontObstacleAngle: " + frontObstacleAngle + "; nearStairs: " + nearStairs);
+            }
+            */
 
             // next line works when facing world axis
             //newReturnValue = playerManager.ActiveUnitController.transform.InverseTransformDirection(Quaternion.LookRotation(forwardDirection, localGroundNormal) * normalizedInput);
 
-            // THIS ONE WORKS!
+            // translate the input so that the up direction is the same as the normal (up direction) of whatever ground or slope the player is on
+            // this prevents losing speed up hills from slamming horizontally into the hill
             newReturnValue = Vector3.Cross(Quaternion.LookRotation(normalizedInput, Vector3.up) * playerManager.ActiveUnitController.transform.InverseTransformDirection(playerManager.ActiveUnitController.transform.right), localGroundNormal);
 
-            //Debug.Log("newReturnValue: " + newReturnValue);
+            // apply downforce
+            if (rawGroundAngle == 0 && nearFrontObstacle == false && nearStairs == false && RaycastForGround() == false) {
+                // this should make the character stick to the ground better when actively moving while grounded
+                // ONLY APPLY Y DOWNFORCE ON FLAT GROUND, this will apply a y downforce multiplied by speed, not the existing y downforce from physics (gravity)
+                float yValue = 0f;
+                if (playerManager.ActiveUnitController.transform.InverseTransformPoint(groundHitInfo.point).y < -0.001f && RaycastForGround() == false) {
+                    yValue = Mathf.Clamp(playerManager.ActiveUnitController.RigidBody.velocity.normalized.magnitude, 0, 1) * -1;
+                    //yValue = -1;
+                    Debug.Log("NormalizedLocalMovement(): Applying extra down force: " + yValue + "; ground distance: " + playerManager.ActiveUnitController.transform.InverseTransformPoint(groundHitInfo.point).y);
+                }
+                newReturnValue = new Vector3(newReturnValue.x, yValue, newReturnValue.z);
+            }
+            Debug.Log("newReturnValue: " + newReturnValue);
             return newReturnValue;
         }
 
@@ -910,26 +948,31 @@ namespace AnyRPG {
             Vector3 directionOfTravel = playerManager.ActiveUnitController.transform.forward;
             if (localMoveVelocity.x != 0 || localMoveVelocity.z != 0) {
                 directionOfTravel = playerManager.ActiveUnitController.transform.TransformDirection(new Vector3(localMoveVelocity.x, 0, localMoveVelocity.z)).normalized;
+            } else {
+                Debug.Log("CheckFrontObstacle() localMoveVelocity: " + localMoveVelocity);
             }
-            Debug.DrawLine(playerManager.ActiveUnitController.transform.position + (Vector3.up * 0.05f), playerManager.ActiveUnitController.transform.position + (Vector3.up * 0.05f) + (directionOfTravel * rayCastLength), Color.black);
-            if (Physics.Raycast(playerManager.ActiveUnitController.transform.position + (Vector3.up * 0.05f), directionOfTravel, out forwardHitInfo, rayCastLength, groundMask)) {
+            //Debug.DrawLine(playerManager.ActiveUnitController.transform.position + (Vector3.up * 0.01f), playerManager.ActiveUnitController.transform.position + (Vector3.up * 0.01f) + (directionOfTravel * frontRayCastLength), Color.black);
+            Debug.DrawLine(playerManager.ActiveUnitController.transform.position + (Vector3.up * 0.01f), playerManager.ActiveUnitController.transform.position + (Vector3.up * 0.01f) + (directionOfTravel * stairDetectionDistance), Color.black);
+            if (Physics.Raycast(playerManager.ActiveUnitController.transform.position + (Vector3.up * 0.01f), directionOfTravel, out forwardHitInfo, stairDetectionDistance, groundMask)) {
+                //if (Physics.Raycast(playerManager.ActiveUnitController.transform.position + (Vector3.up * 0.01f), directionOfTravel, out forwardHitInfo, frontRayCastLength, groundMask)) {
                 // we are near an obstacle in front
                 nearFrontObstacle = true;
                 frontObstacleAngle = Vector3.Angle(forwardHitInfo.normal, Vector3.up);
-                Debug.Log("front obstacle angle: " + frontObstacleAngle);
+                //Debug.Log("front obstacle angle: " + frontObstacleAngle);
 
                 // we could be going up a ramp, determine if the obstacle in front has a different angle than the ground below us
                 if (forwardHitInfo.normal != groundHitInfo.normal) {
-                    Debug.Log("front obstacle angle is different than ground angle: " + rawGroundAngle);
+                    //Debug.Log("front obstacle angle is different than ground angle: " + rawGroundAngle);
                     frontAngleDifferent = true;
                 }
 
+                /*
                 if (frontAngleDifferent == true && frontObstacleAngle > slopeLimit) {
                     // check if the obstacle is stairs
-                    Vector3 raycastPoint = forwardHitInfo.point + directionOfTravel;
+                    Vector3 raycastPoint = forwardHitInfo.point + (directionOfTravel * 0.01f);
                     raycastPoint = new Vector3(raycastPoint.x, playerManager.ActiveUnitController.transform.position.y + stepHeight + 0.1f, raycastPoint.z);
-                    //Debug.Log(gameObject.name + ".CharacterUnit.DebugCollision(): " + collision.collider.gameObject.name + "; direction is: " + direction + "; raycastpoint: " + raycastPoint);
-                    Debug.DrawLine(raycastPoint, new Vector3(raycastPoint.x, raycastPoint.y - stepHeight - 0.1f, raycastPoint.z), Color.green);
+                    //Debug.Log("CheckFrontObstacle() front Angle Different and frontObstacle > slopeLimit; localMoveVelocity: " + localMoveVelocity + "; directionOfTravel: " + directionOfTravel + "; forwardHitInfo: " + forwardHitInfo.point + "; player: " + playerManager.ActiveUnitController.transform.position + "; raycastpoint: " + raycastPoint);
+                    Debug.DrawLine(raycastPoint, new Vector3(raycastPoint.x, raycastPoint.y - stepHeight - 0.1f, raycastPoint.z), Color.cyan);
                     if (Physics.Raycast(raycastPoint, Vector3.down, out stairHitInfo, stepHeight + 0.1f, groundMask)) {
                         // we hit something that is low enough to step on, if it is below the slope limit, we can consider it to be a stair step
                         if (Vector3.Angle(stairHitInfo.normal, Vector3.up) < slopeLimit) {
@@ -939,6 +982,7 @@ namespace AnyRPG {
 
                     }
                 }
+                */
             }
 
         }
