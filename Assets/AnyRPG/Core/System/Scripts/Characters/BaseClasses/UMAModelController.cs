@@ -77,6 +77,10 @@ namespace AnyRPG {
             BuildModelAppearance();
         }
 
+        public bool ShouldCalculateFloatHeight() {
+            return true;
+        }
+
         private void CheckAvatarDefinition() {
             /*if (avatarDefinition.Wardrobe == null
                 || avatarDefinition.RaceName == null

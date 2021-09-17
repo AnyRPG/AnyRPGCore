@@ -100,7 +100,7 @@ namespace AnyRPG {
         private List<WaterBody> currentWater = new List<WaterBody>();
 
         // unit configuration
-        private float chestHeight = 1.5f;
+        private float floatHeight = 1.5f;
 
         // movement parameters
         private bool useAgent = false;
@@ -337,7 +337,7 @@ namespace AnyRPG {
         public UnitModelController UnitModelController { get => unitModelController; }
         public bool InWater { get => inWater; }
         public List<WaterBody> CurrentWater { get => currentWater; set => currentWater = value; }
-        public float ChestHeight { get => chestHeight; set => chestHeight = value; }
+        public float FloatHeight { get => floatHeight; set => floatHeight = value; }
         public bool Swimming { get => swimming; }
 
         public override void Configure(SystemGameManager systemGameManager) {
@@ -731,7 +731,7 @@ namespace AnyRPG {
 
             currentWater.Clear();
 
-            chestHeight = 1.5f;
+            floatHeight = 1.5f;
 
             useAgent = false;
             startPosition = Vector3.zero;

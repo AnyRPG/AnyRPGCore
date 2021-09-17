@@ -9,6 +9,7 @@ namespace AnyRPG {
         
         // reference to unit
         private UnitController unitController = null;
+        private UnitModelController unitModelController = null;
 
         // need a local reference to this for preview characters which don't have a way to reference back to the base character to find this
         protected AttachmentProfile attachmentProfile;
@@ -18,8 +19,9 @@ namespace AnyRPG {
 
         private Dictionary<EquipmentSlotProfile, Dictionary<AttachmentNode, GameObject>> currentEquipmentPhysicalObjects = new Dictionary<EquipmentSlotProfile, Dictionary<AttachmentNode, GameObject>>();
 
-        public MecanimModelController(UnitController unitController, SystemGameManager systemGameManager) {
+        public MecanimModelController(UnitController unitController, UnitModelController unitModelController, SystemGameManager systemGameManager) {
             this.unitController = unitController;
+            this.unitModelController = unitModelController;
             Configure(systemGameManager);
         }
 
@@ -30,6 +32,13 @@ namespace AnyRPG {
 
         public void SetAttachmentProfile(AttachmentProfile attachmentProfile) {
             this.attachmentProfile = attachmentProfile;
+        }
+
+        public bool ShouldCalculateFloatHeight () {
+            if (unitModelController.ModelReady == false) {
+                return true;
+            }
+            return false;
         }
 
         public void EquipItemModels(CharacterEquipmentManager characterEquipmentManager, EquipmentSlotProfile equipmentSlotProfile, Equipment equipment) {

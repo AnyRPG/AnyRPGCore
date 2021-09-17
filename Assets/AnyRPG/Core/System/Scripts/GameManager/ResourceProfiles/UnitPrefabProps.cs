@@ -1,5 +1,6 @@
 using AnyRPG;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace AnyRPG {
 
@@ -68,11 +69,20 @@ namespace AnyRPG {
         [ResourceSelector(resourceType = typeof(AttachmentProfile))]
         private string attachmentProfileName = string.Empty;
 
-        [Header("Configuration")]
+        [Header("Water Configuration")]
 
-        [Tooltip("For the purposes of floating in the water, which bone should be considered the chest")]
+        [Tooltip("When floating in water the height from the bottom of the transform where the water line will come up to")]
         [SerializeField]
-        private string chestBone = "Spine1";
+        private float floatHeight = 1.4f;
+
+        [Tooltip("If true, height of the transform will be added to the value above. If false, transform height will replace float height if the transform is found")]
+        [SerializeField]
+        private bool addFloatHeightToTransform = false;
+
+        [Tooltip("When floating in water, the child transform that will be used for the water line")]
+        [FormerlySerializedAs("chestBone")]
+        [SerializeField]
+        private string floatTransform = "Spine1";
 
         // reference to the actual attachment profile
         private AttachmentProfile attachmentProfile = null;
@@ -100,7 +110,9 @@ namespace AnyRPG {
             }
         }
 
-        public string ChestBone { get => chestBone; }
+        public string FloatTransform { get => floatTransform; }
+        public float FloatHeight { get => floatHeight; }
+        public bool AddFloatHeightToTransform { get => addFloatHeightToTransform; }
 
         public void SetupScriptableObjects(SystemDataFactory systemDataFactory) {
 

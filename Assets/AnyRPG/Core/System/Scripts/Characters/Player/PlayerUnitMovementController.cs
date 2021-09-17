@@ -264,7 +264,7 @@ namespace AnyRPG {
 
         private bool CheckForSwimming() {
             if (playerManager.ActiveUnitController.InWater == true) {
-                if ((playerManager.ActiveUnitController.transform.position.y + playerManager.ActiveUnitController.ChestHeight) <= playerManager.ActiveUnitController.CurrentWater[0].SurfaceHeight) {
+                if ((playerManager.ActiveUnitController.transform.position.y + playerManager.ActiveUnitController.FloatHeight) <= playerManager.ActiveUnitController.CurrentWater[0].SurfaceHeight) {
                     return true;
                 }
             }
@@ -782,7 +782,7 @@ namespace AnyRPG {
             Vector3 returnValue = playerManager.PlayerController.NormalizedMoveInput;
 
             // check for right mouse button held down to adjust swim angle based on camera angle
-            bool chestBelowWater = (playerManager.ActiveUnitController.transform.position.y + playerManager.ActiveUnitController.ChestHeight) < (playerManager.ActiveUnitController.CurrentWater[0].SurfaceHeight - (playerManager.ActiveUnitController.SwimSpeed * Time.fixedDeltaTime));
+            bool chestBelowWater = (playerManager.ActiveUnitController.transform.position.y + playerManager.ActiveUnitController.FloatHeight) < (playerManager.ActiveUnitController.CurrentWater[0].SurfaceHeight - (playerManager.ActiveUnitController.SwimSpeed * Time.fixedDeltaTime));
 
             if (inputManager.rightMouseButtonDown
                 && playerManager.PlayerController.HasMoveInput()
