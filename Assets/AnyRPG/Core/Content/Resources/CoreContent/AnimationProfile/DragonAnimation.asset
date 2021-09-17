@@ -110,3 +110,7 @@ MonoBehaviour:
       type: 3}
     swimMoveClip: {fileID: -5707210424019099851, guid: 2658eb5e1d5eb5444a5167c37973197f,
       type: 3}
+    flyIdleClip: {fileID: -3100369314251171874, guid: 2658eb5e1d5eb5444a5167c37973197f,
+      type: 3}
+    flyMoveClip: {fileID: -5707210424019099851, guid: 2658eb5e1d5eb5444a5167c37973197f,
+      type: 3}

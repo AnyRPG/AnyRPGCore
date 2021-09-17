@@ -222,6 +222,14 @@ namespace AnyRPG {
             }
         }
 
+        public bool HasFlyMoveInput() {
+            if (allowedInput && (NormalizedMoveInput != Vector3.zero || TurnInput != Vector3.zero || inputSink != false || inputFly != false)) {
+                return true;
+            } else {
+                return false;
+            }
+        }
+
         public bool HasMoveInput() {
             if (allowedInput && NormalizedMoveInput != Vector3.zero) {
                 return true;

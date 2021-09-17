@@ -43,10 +43,12 @@ namespace AnyRPG {
         protected float walkSpeed = 1f;
         protected float runSpeed = 7f;
         protected float swimSpeed = 2f;
+        protected float flySpeed = 20f;
 
         protected float currentRunSpeed = 0f;
         protected float currentSprintSpeed = 0f;
         protected float currentSwimSpeed = 2f;
+        protected float currentFlySpeed = 20f;
 
         protected Dictionary<string, StatusEffectNode> statusEffects = new Dictionary<string, StatusEffectNode>();
         protected BaseCharacter baseCharacter = null;
@@ -69,6 +71,7 @@ namespace AnyRPG {
         public float RunSpeed { get => currentRunSpeed; }
         public float SprintSpeed { get => currentSprintSpeed; }
         public float SwimSpeed { get => currentSwimSpeed; }
+        public float FlySpeed { get => currentFlySpeed; }
         //public float MyHitBox { get => hitBox; }
         public bool IsAlive { get => isAlive; }
         public BaseCharacter BaseCharacter { get => baseCharacter; set => baseCharacter = value; }
@@ -170,7 +173,9 @@ namespace AnyRPG {
             walkSpeed = systemConfigurationManager.WalkSpeed;
             runSpeed = systemConfigurationManager.RunSpeed;
             swimSpeed = systemConfigurationManager.SwimSpeed;
+            flySpeed = systemConfigurationManager.FlySpeed;
             currentSwimSpeed = swimSpeed;
+            currentFlySpeed = flySpeed;
         }
 
         public override void SetGameManagerReferences() {

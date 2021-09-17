@@ -28,7 +28,6 @@ MonoBehaviour:
     modelPrefab: {fileID: 943068409625311753, guid: 022ab4d98a489344283da6d08ddec94c,
       type: 3}
     animationProfileName: Dragon
-    animationProfile: {fileID: 11400000, guid: dd0464726b87dc1409ce608d94f38bee, type: 2}
     useInlineAnimationProps: 0
     animationProps:
       useRootMotion: 0
@@ -135,6 +134,7 @@ MonoBehaviour:
     floatTransform: back1
   isUMAUnit: 0
   isPet: 1
+  flightCapable: 1
   characterName: Dragon
   title: 
   factionName: Black

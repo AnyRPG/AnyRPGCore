@@ -85,6 +85,8 @@ namespace AnyRPG {
         // avoid use of local variables for garbage collection
         private AggroNode topNode = null;
 
+        // capabilities
+        private bool canFly = false;
 
         // track current state
         private bool mounted = false;
@@ -96,6 +98,7 @@ namespace AnyRPG {
         private bool despawning = false;
         private bool inWater = false;
         private bool swimming = false;
+        private bool flying = false;
 
         private List<WaterBody> currentWater = new List<WaterBody>();
 
@@ -167,6 +170,15 @@ namespace AnyRPG {
                 return characterUnit.BaseCharacter.CharacterStats.SwimSpeed;
             }
         }
+        public float FlySpeed {
+            get {
+                if (UnderControl == true && MasterUnit != null && MasterUnit.UnitController != null) {
+                    return MasterUnit.UnitController.FlySpeed;
+                }
+                return characterUnit.BaseCharacter.CharacterStats.FlySpeed;
+            }
+        }
+
         public bool UnderControl { get => underControl; set => underControl = value; }
         public BaseCharacter MasterUnit { get => masterUnit; set => masterUnit = value; }
         public bool Frozen { get => frozen; }
@@ -339,6 +351,8 @@ namespace AnyRPG {
         public List<WaterBody> CurrentWater { get => currentWater; set => currentWater = value; }
         public float FloatHeight { get => floatHeight; set => floatHeight = value; }
         public bool Swimming { get => swimming; }
+        public bool Flying { get => flying; }
+        public bool CanFly { get => canFly; }
 
         public override void Configure(SystemGameManager systemGameManager) {
             base.Configure(systemGameManager);
@@ -728,6 +742,7 @@ namespace AnyRPG {
             despawning = false;
             inWater = false;
             swimming = false;
+            flying = false;
 
             currentWater.Clear();
 
@@ -815,6 +830,10 @@ namespace AnyRPG {
         public void SetUnitProfile(UnitProfile unitProfile, UnitControllerMode unitControllerMode, int unitLevel = -1) {
             //Debug.Log(gameObject.name + "UnitController.SetUnitProfile()");
             this.unitProfile = unitProfile;
+
+            if (unitProfile.FlightCapable == true) {
+                canFly = true;
+            }
 
             SetPersistenceProperties();
 
@@ -1332,6 +1351,7 @@ namespace AnyRPG {
                 && mounted == false
                 && ControlLocked == false
                 && swimming == false
+                && flying == false
                 //&& (apparentVelocity >= (characterUnit.BaseCharacter.CharacterStats.RunSpeed / 2f))) {
                 && unitAnimator.GetBool("Moving") == true) {
                 //Debug.Log(gameObject.name + ".HandleMovementAudio(): up to run speed");
@@ -1774,6 +1794,15 @@ namespace AnyRPG {
 
         public void StopSwimming() {
             swimming = false;
+        }
+
+        public void StartFlying() {
+            flying = true;
+            StopMovementSound();
+        }
+
+        public void StopFlying() {
+            flying = false;
         }
 
         public void ExitWater(WaterBody water) {

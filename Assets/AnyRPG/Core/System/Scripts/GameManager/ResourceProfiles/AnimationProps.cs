@@ -261,6 +261,14 @@ namespace AnyRPG {
         [SerializeField]
         private AnimationClip swimMoveClip;
 
+        [Header("Flying")]
+
+        [SerializeField]
+        private AnimationClip flyIdleClip;
+
+        [SerializeField]
+        private AnimationClip flyMoveClip;
+
         private Dictionary<string, AnimationClip> animationClips = new Dictionary<string, AnimationClip>();
 
         //public string MyProfileName { get => profileName; set => profileName = value; }
@@ -505,6 +513,9 @@ namespace AnyRPG {
         public AnimationClip SwimIdleClip { get => swimIdleClip; set => swimIdleClip = value; }
         public AnimationClip SwimMoveClip { get => swimMoveClip; set => swimMoveClip = value; }
 
+        public AnimationClip FlyIdleClip { get => flyIdleClip; set => flyIdleClip = value; }
+        public AnimationClip FlyMoveClip { get => flyMoveClip; set => flyMoveClip = value; }
+
         public bool SuppressAdjustAnimatorSpeed { get => suppressAdjustAnimatorSpeed; set => suppressAdjustAnimatorSpeed = value; }
         public bool UseRootMotion { get => useRootMotion; set => useRootMotion = value; }
         public Dictionary<string, AnimationClip> AnimationClips { get => animationClips; }
@@ -561,6 +572,8 @@ namespace AnyRPG {
             animationClips.Add("LevitatedClip", LevitatedClip);
             animationClips.Add("SwimIdleClip", SwimIdleClip);
             animationClips.Add("SwimMoveClip", SwimMoveClip);
+            animationClips.Add("FlyIdleClip", FlyIdleClip);
+            animationClips.Add("FlyMoveClip", FlyMoveClip);
         }
     }
 
