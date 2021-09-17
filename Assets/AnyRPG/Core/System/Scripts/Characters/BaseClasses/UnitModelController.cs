@@ -24,6 +24,9 @@ namespace AnyRPG {
         private ObjectPooler objectPooler = null;
         private UIManager uIManager = null;
 
+        // properties
+        private Transform chestBone = null;
+
         public UMAModelController UMAModelController { get => umaModelController; }
         public MecanimModelController MecanimModelController { get => mecanimModelController; }
         public bool ModelReady { get => modelReady; }
@@ -269,6 +272,15 @@ namespace AnyRPG {
         public void SetModelReady() {
             //Debug.Log(unitController.gameObject.name + ".UnitModelController.SetModelReady()");
             if (modelReady == false) {
+                // calculate chest position
+                if (unitController.UnitProfile?.UnitPrefabProps?.ChestBone != string.Empty) {
+                    chestBone = unitController.transform.FindChildByRecursive(unitController.UnitProfile?.UnitPrefabProps?.ChestBone);
+                    if (chestBone != null) {
+                        unitController.ChestHeight = chestBone.position.y - unitController.transform.position.y;
+                    }
+                }
+                //Debug.Log(unitController.gameObject.name + ".UMAModelController.SetModelReady() new chest height: " + unitController.ChestHeight);
+
                 unitController.CharacterUnit.BaseCharacter.HandleCharacterUnitSpawn();
                 EquipEquipmentModels(unitController.CharacterUnit.BaseCharacter.CharacterEquipmentManager);
             }

@@ -193,7 +193,7 @@ namespace AnyRPG {
 
         public void MoveRelative() {
             Vector3 relativeMovement = CharacterRelativeInput(adjustedlocalMoveVelocity);
-            Debug.Log("relativeMovement: " + relativeMovement);
+            //Debug.Log("relativeMovement: " + relativeMovement);
             if (relativeMovement.magnitude > 0.1 || playerManager.PlayerController.inputJump) {
                 playerManager.ActiveUnitController.UnitMotor.Move(relativeMovement);
             }
@@ -1049,18 +1049,18 @@ namespace AnyRPG {
                 if (frontAngleDifferent == true && frontObstacleAngle > slopeLimit) {
                     Vector3 raycastPoint = forwardHitInfo.point + (directionOfTravel * 0.01f);
                     raycastPoint = new Vector3(raycastPoint.x, playerManager.ActiveUnitController.transform.position.y + stepHeight + 0.001f, raycastPoint.z);
-                    Debug.Log("CheckFrontObstacle() front Angle Different and frontObstacle > slopeLimit; localMoveVelocity: " + localMoveVelocity + "; directionOfTravel: " + directionOfTravel + "; forwardHitInfo: " + forwardHitInfo.point + "; player: " + playerManager.ActiveUnitController.transform.position + "; raycastpoint: " + raycastPoint);
+                    //Debug.Log("CheckFrontObstacle() front Angle Different and frontObstacle > slopeLimit; localMoveVelocity: " + localMoveVelocity + "; directionOfTravel: " + directionOfTravel + "; forwardHitInfo: " + forwardHitInfo.point + "; player: " + playerManager.ActiveUnitController.transform.position + "; raycastpoint: " + raycastPoint);
                     Debug.DrawLine(raycastPoint, new Vector3(raycastPoint.x, raycastPoint.y - stepHeight - 0.001f, raycastPoint.z), Color.cyan);
                     if (Physics.Raycast(raycastPoint, Vector3.down, out stairDownHitInfo, stepHeight, groundMask)) {
                         // we hit something that is low enough to step on, if it is below the slope limit, we can consider it to be a stair step
                         if (Vector3.Angle(stairDownHitInfo.normal, Vector3.up) < slopeLimit) {
                             Vector3 stairHeight = playerManager.ActiveUnitController.transform.InverseTransformPoint(stairDownHitInfo.point);
-                            
+                            /*
                             Debug.Log("CheckFrontObstacle(): y position: " + playerManager.ActiveUnitController.transform.position.y +
                                 "; stairs detected angle: " + Vector3.Angle(stairDownHitInfo.normal, Vector3.up) +
                                 "; stairHeight: " + "(" + stairHeight.x + ", " + stairHeight.y + ", " + stairHeight.z + ")" +
                                 "; object: " + stairDownHitInfo.collider.gameObject.name);
-
+                                */
                             nearStairs = true;
 
                             // new code to detect stairs from greater distance and make angle upward at a more gradual slope to prevent the jittery updward movement that comes from using
@@ -1096,7 +1096,7 @@ namespace AnyRPG {
                             Debug.DrawLine(bottomPoint,
                                 bottomPoint + calculatedNormal,
                                 Color.red);
-                            Debug.Log("CheckFrontObstacle() calculatedNormal: " + calculatedNormal + "; angleRay: " + angleRay + "; line2: " + (secondPoint - bottomPoint));
+                            //Debug.Log("CheckFrontObstacle() calculatedNormal: " + calculatedNormal + "; angleRay: " + angleRay + "; line2: " + (secondPoint - bottomPoint));
                             stairRampNormal = calculatedNormal;
                         }
 

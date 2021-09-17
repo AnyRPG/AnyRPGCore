@@ -108,6 +108,8 @@ MonoBehaviour:
       deathClip: {fileID: 0}
       reviveClip: {fileID: 0}
       levitatedClip: {fileID: 0}
+      swimIdleClip: {fileID: 0}
+      swimMoveClip: {fileID: 0}
     rotateModel: 1
     namePlateProps:
       displayName: 
@@ -127,6 +129,7 @@ MonoBehaviour:
     scale: {x: 1, y: 1, z: 1}
     targetBone: MountPoint
     attachmentProfileName: 
+    chestBone: back1
   isUMAUnit: 0
   isPet: 1
   characterName: Dragon
@@ -178,7 +181,6 @@ MonoBehaviour:
     namePlateImage: {fileID: 0}
     prerequisiteConditions: []
     behaviorNames: []
-    useBehaviorCopy: 0
   interactionMaxRange: 3
   lootableCharacter:
     interactionPanelTitle: 

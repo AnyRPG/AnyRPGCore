@@ -68,6 +68,12 @@ namespace AnyRPG {
         [ResourceSelector(resourceType = typeof(AttachmentProfile))]
         private string attachmentProfileName = string.Empty;
 
+        [Header("Configuration")]
+
+        [Tooltip("For the purposes of floating in the water, which bone should be considered the chest")]
+        [SerializeField]
+        private string chestBone = "Spine1";
+
         // reference to the actual attachment profile
         private AttachmentProfile attachmentProfile = null;
 
@@ -94,8 +100,11 @@ namespace AnyRPG {
             }
         }
 
+        public string ChestBone { get => chestBone; }
 
         public void SetupScriptableObjects(SystemDataFactory systemDataFactory) {
+
+            animationProps.Configure();
 
             if (attachmentProfileName != null && attachmentProfileName != string.Empty) {
                 AttachmentProfile tmpAttachmentProfile = systemDataFactory.GetResource<AttachmentProfile>(attachmentProfileName);
