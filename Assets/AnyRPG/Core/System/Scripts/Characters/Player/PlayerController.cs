@@ -28,6 +28,9 @@ namespace AnyRPG {
         [HideInInspector]
         public bool allowedInput = true;
 
+        [HideInInspector]
+        public bool autorunActive = false;
+
         public bool canMove = false;
         public bool canAction = false;
 
@@ -125,6 +128,14 @@ namespace AnyRPG {
             inputTurn = (inputManager.KeyBindWasPressedOrHeld("TURNLEFT") ? -1 : 0) + (inputManager.KeyBindWasPressedOrHeld("TURNRIGHT") ? 1 : 0);
             inputVertical = (inputManager.KeyBindWasPressedOrHeld("BACK") ? -1 : 0) + (inputManager.KeyBindWasPressedOrHeld("FORWARD") ? 1 : 0);
 
+            if (((inputHorizontal != 0f) || (inputVertical != 0f) || inputJump || inputFly || inputSink || inputStrafe || inputCrouch) && autorunActive) {
+                ToggleAutorun();
+            }
+
+            if (autorunActive) {
+                inputVertical = 1;
+            }
+
             NormalizedMoveInput = NormalizedVelocity(new Vector3(inputHorizontal, 0, inputVertical));
             TurnInput = new Vector3(inputTurn, 0, 0);
 
@@ -167,6 +178,8 @@ namespace AnyRPG {
 
             // test move this below death check to prevent player getting up after death
             ToggleRun();
+
+            CheckToggleAutorun();
 
             HandleLeftMouseClick();
 
@@ -247,6 +260,25 @@ namespace AnyRPG {
                 messageFeedManager.WriteMessage("Walk: " + playerManager.ActiveUnitController.Walking.ToString());
                 ToggleRunHandler(playerManager.ActiveUnitController.Walking);
             }
+        }
+
+        private void CheckToggleAutorun() {
+            if (inputManager.KeyBindWasPressed("TOGGLEAUTORUN")) {
+                ToggleAutorun();
+            }
+        }
+
+        private void ToggleAutorun() {
+            EventParamProperties eventParamProperties = new EventParamProperties();
+            if (autorunActive == false) {
+                autorunActive = true;
+                eventParamProperties.simpleParams.BoolParam = true;
+            } else {
+                autorunActive = false;
+                eventParamProperties.simpleParams.BoolParam = false;
+            }
+            SystemEventManager.TriggerEvent("OnToggleAutorun", eventParamProperties);
+            messageFeedManager.WriteMessage("Autorun: " + autorunActive.ToString());
         }
 
         protected void FixedUpdate() {
