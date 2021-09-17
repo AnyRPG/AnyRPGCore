@@ -20,7 +20,14 @@ namespace AnyRPG {
         [Header("Animation")]
 
         [Tooltip("A shared animation profile to be used for the unit animations")]
+        [ResourceSelector(resourceType = typeof(AnimationProfile))]
         [SerializeField]
+        private string animationProfileName = null;
+
+        /*
+        [Tooltip("A shared animation profile to be used for the unit animations")]
+        [SerializeField]
+        */
         private AnimationProfile animationProfile = null;
 
         [Tooltip("If true, the inline values below will be used instead of the animation profile above")]
@@ -116,7 +123,18 @@ namespace AnyRPG {
 
         public void SetupScriptableObjects(SystemDataFactory systemDataFactory) {
 
+
             animationProps.Configure();
+
+            if (animationProfileName != null && animationProfileName != string.Empty) {
+                AnimationProfile tmpAnimationProfile = systemDataFactory.GetResource<AnimationProfile>(animationProfileName);
+                if (tmpAnimationProfile != null) {
+                    animationProfile = tmpAnimationProfile;
+                } else {
+                    Debug.LogError("UnitPrefabProps.SetupScriptableObjects(): UNABLE TO FIND Animation Profile " + animationProfileName + " while initializing. CHECK INSPECTOR!");
+                }
+            }
+
 
             if (attachmentProfileName != null && attachmentProfileName != string.Empty) {
                 AttachmentProfile tmpAttachmentProfile = systemDataFactory.GetResource<AttachmentProfile>(attachmentProfileName);

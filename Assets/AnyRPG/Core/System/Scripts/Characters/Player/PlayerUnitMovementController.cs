@@ -854,7 +854,7 @@ namespace AnyRPG {
                         localGroundNormal = playerManager.ActiveUnitController.transform.InverseTransformDirection(stairRampNormal);
                         groundNormal = stairRampNormal;
                     } else {
-                        Debug.Log("distance from wall: " + playerManager.ActiveUnitController.transform.InverseTransformPoint(forwardHitInfo.point).magnitude);
+                        //Debug.Log("distance from wall: " + playerManager.ActiveUnitController.transform.InverseTransformPoint(forwardHitInfo.point).magnitude);
                         localGroundNormal = playerManager.ActiveUnitController.transform.InverseTransformDirection(forwardHitInfo.normal);
                         groundNormal = forwardHitInfo.normal;
                     }

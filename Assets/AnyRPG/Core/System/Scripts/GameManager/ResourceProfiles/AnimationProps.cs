@@ -253,6 +253,16 @@ namespace AnyRPG {
         [SerializeField]
         private AnimationClip levitatedClip;
 
+        [Header("Swimming")]
+
+        [SerializeField]
+        private AnimationClip swimIdleClip;
+
+        [SerializeField]
+        private AnimationClip swimMoveClip;
+
+        private Dictionary<string, AnimationClip> animationClips = new Dictionary<string, AnimationClip>();
+
         //public string MyProfileName { get => profileName; set => profileName = value; }
         public List<AnimationClip> AttackClips { get => attackClips; set => attackClips = value; }
         public List<AnimationClip> CastClips { get => castClips; set => castClips = value; }
@@ -492,8 +502,66 @@ namespace AnyRPG {
         public AnimationClip ReviveClip { get => reviveClip; set => reviveClip = value; }
         public AnimationClip LevitatedClip { get => levitatedClip; set => levitatedClip = value; }
 
+        public AnimationClip SwimIdleClip { get => swimIdleClip; set => swimIdleClip = value; }
+        public AnimationClip SwimMoveClip { get => swimMoveClip; set => swimMoveClip = value; }
+
         public bool SuppressAdjustAnimatorSpeed { get => suppressAdjustAnimatorSpeed; set => suppressAdjustAnimatorSpeed = value; }
         public bool UseRootMotion { get => useRootMotion; set => useRootMotion = value; }
+        public Dictionary<string, AnimationClip> AnimationClips { get => animationClips; }
+
+        public void Configure() {
+            animationClips.Add("IdleClip", IdleClip);
+            animationClips.Add("JumpClip", JumpClip);
+            animationClips.Add("FallClip", FallClip);
+            animationClips.Add("LandClip", LandClip);
+            animationClips.Add("TurnLeftClip", TurnLeftClip);
+            animationClips.Add("TurnRightClip", TurnRightClip);
+            animationClips.Add("MoveForwardClip", MoveForwardClip);
+            animationClips.Add("MoveForwardFastClip", MoveForwardFastClip);
+            animationClips.Add("MoveBackClip", MoveBackClip);
+            animationClips.Add("MoveBackFastClip", MoveBackFastClip);
+            animationClips.Add("StrafeLeftClip", StrafeLeftClip);
+            animationClips.Add("StrafeRightClip", StrafeRightClip);
+            animationClips.Add("StrafeForwardLeftClip", StrafeForwardLeftClip);
+            animationClips.Add("StrafeForwardRightClip", StrafeForwardRightClip);
+            animationClips.Add("StrafeBackLeftClip", StrafeBackLeftClip);
+            animationClips.Add("StrafeBackRightClip", StrafeBackRightClip);
+            animationClips.Add("JogStrafeLeftClip", JogStrafeLeftClip);
+            animationClips.Add("JogStrafeRightClip", JogStrafeRightClip);
+            animationClips.Add("JogStrafeForwardLeftClip", JogStrafeForwardLeftClip);
+            animationClips.Add("JogStrafeForwardRightClip", JogStrafeForwardRightClip);
+            animationClips.Add("JogStrafeBackLeftClip", JogStrafeBackLeftClip);
+            animationClips.Add("JogStrafeBackRightClip", JogStrafeBackRightClip);
+            animationClips.Add("StunnedClip", StunnedClip);
+            animationClips.Add("CombatIdleClip", CombatIdleClip);
+            animationClips.Add("CombatJumpClip", CombatJumpClip);
+            animationClips.Add("CombatFallClip", CombatFallClip);
+            animationClips.Add("CombatLandClip", CombatLandClip);
+            animationClips.Add("CombatMoveForwardClip", CombatMoveForwardClip);
+            animationClips.Add("CombatMoveForwardFastClip", CombatMoveForwardFastClip);
+            animationClips.Add("CombatMoveBackClip", CombatMoveBackClip);
+            animationClips.Add("CombatMoveBackFastClip", CombatMoveBackFastClip);
+            animationClips.Add("CombatTurnLeftClip", CombatTurnLeftClip);
+            animationClips.Add("CombatTurnRightClip", CombatTurnRightClip);
+            animationClips.Add("CombatStrafeLeftClip", CombatStrafeLeftClip);
+            animationClips.Add("CombatJogStrafeLeftClip", CombatJogStrafeLeftClip);
+            animationClips.Add("CombatStrafeRightClip", CombatStrafeRightClip);
+            animationClips.Add("CombatJogStrafeRightClip", CombatJogStrafeRightClip);
+            animationClips.Add("CombatStrafeForwardLeftClip", CombatStrafeForwardLeftClip);
+            animationClips.Add("CombatJogStrafeForwardLeftClip", CombatJogStrafeForwardLeftClip);
+            animationClips.Add("CombatStrafeForwardRightClip", CombatStrafeForwardRightClip);
+            animationClips.Add("CombatJogStrafeForwardRightClip", CombatJogStrafeForwardRightClip);
+            animationClips.Add("CombatStrafeBackLeftClip", CombatStrafeBackLeftClip);
+            animationClips.Add("CombatJogStrafeBackLeftClip", CombatJogStrafeBackLeftClip);
+            animationClips.Add("CombatStrafeBackRightClip", CombatStrafeBackRightClip);
+            animationClips.Add("CombatJogStrafeBackRightClip", CombatJogStrafeBackRightClip);
+            animationClips.Add("CombatStunnedClip", CombatStunnedClip);
+            animationClips.Add("DeathClip", DeathClip);
+            animationClips.Add("ReviveClip", ReviveClip);
+            animationClips.Add("LevitatedClip", LevitatedClip);
+            animationClips.Add("SwimIdleClip", SwimIdleClip);
+            animationClips.Add("SwimMoveClip", SwimMoveClip);
+        }
     }
 
 }

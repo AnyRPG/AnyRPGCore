@@ -158,20 +158,32 @@ namespace AnyRPG {
        
 
         [Header("ANIMATION")]
-
+        /*
         [Tooltip("This profile should contain references to all the default animations that are on the default animation controller so the system knows which animations to replace when overriding them.")]
         [SerializeField]
+        */
         private AnimationProfile systemAnimationProfile;
+
+        [Tooltip("This profile should contain references to all the default animations that are on the default animation controller so the system knows which animations to replace when overriding them.")]
+        [ResourceSelector(resourceType = typeof(AnimationProfile))]
+        [SerializeField]
+        private string systemAnimationProfileName = string.Empty;
 
         [Tooltip("If true, movement animations will be sped up or slowed down to match the actual speed (in m/s) the character is moving at.  This will reduce foot sliding, but may result in more jerky looking movement.")]
         [SerializeField]
         private bool syncMovementAnimationSpeed;
 
         [Header("CHARACTER ANIMATION CONFIGURATION")]
-
+        /*
         [FormerlySerializedAs("defaultAttackAnimationProfile")]
         [SerializeField]
+        */
         private AnimationProfile defaultAnimationProfile;
+
+        [Tooltip("This profile will override the system animations included in the engine when no other unit or weapon specific animations are in use")]
+        [ResourceSelector(resourceType = typeof(AnimationProfile))]
+        [SerializeField]
+        private string defaultAnimationProfileName;
 
         [SerializeField]
         private RuntimeAnimatorController defaultAnimatorController;
@@ -680,6 +692,27 @@ namespace AnyRPG {
 
         // verify that system abilities are available through the factory
         public void SetupScriptableObjects() {
+
+            if (systemAnimationProfileName != null && systemAnimationProfileName != string.Empty) {
+                AnimationProfile animationProfile = systemDataFactory.GetResource<AnimationProfile>(systemAnimationProfileName);
+                if (animationProfile == null) {
+                    Debug.LogError("SystemConfigurationManager.SetupScriptableObjects(): animation profile " + systemAnimationProfileName + " could not be found in factory.  CHECK INSPECTOR");
+                    return;
+                } else {
+                    systemAnimationProfile = animationProfile;
+                }
+            }
+
+            if (defaultAnimationProfileName != null && defaultAnimationProfileName != string.Empty) {
+                AnimationProfile animationProfile = systemDataFactory.GetResource<AnimationProfile>(defaultAnimationProfileName);
+                if (animationProfile == null) {
+                    Debug.LogError("SystemConfigurationManager.SetupScriptableObjects(): animation profile " + defaultAnimationProfileName + " could not be found in factory.  CHECK INSPECTOR");
+                    return;
+                } else {
+                    defaultAnimationProfile = animationProfile;
+                }
+            }
+
 
             if (levelUpEffectName != null && levelUpEffectName != string.Empty) {
                 AbilityEffect testAbility = systemDataFactory.GetResource<AbilityEffect>(levelUpEffectName);
