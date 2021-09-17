@@ -193,7 +193,7 @@ namespace AnyRPG {
 
         public void MoveRelative() {
             Vector3 relativeMovement = CharacterRelativeInput(adjustedlocalMoveVelocity);
-            //Debug.Log("relativeMovement: " + relativeMovement);
+            Debug.Log("relativeMovement: " + relativeMovement);
             if (relativeMovement.magnitude > 0.1 || playerManager.PlayerController.inputJump) {
                 playerManager.ActiveUnitController.UnitMotor.Move(relativeMovement);
             }
@@ -706,6 +706,7 @@ namespace AnyRPG {
             return returnValue;
         }
 
+        /*
         private bool RaycastForStairs(Vector3 directionOfTravel, float raycastHeight = 0f) {
 
             float detectionRadius = colliderRadius + stairDetectionDistance;
@@ -768,6 +769,7 @@ namespace AnyRPG {
             }
             return false;
         }
+        */
 
         public bool MaintainingGround() {
             //Debug.Log(gameObject.name + ".PlayerUnitMovementController.MaintainingGround");
@@ -842,9 +844,20 @@ namespace AnyRPG {
                 if (nearStairs) {
                     //Debug.Log("near stairs and front angle (" + frontObstacleAngle + ") is different than ground angle (" + rawGroundAngle + "), adjusting forward direction");
                     //localGroundNormal = playerManager.ActiveUnitController.transform.InverseTransformDirection(forwardHitInfo.normal);
-                    localGroundNormal = playerManager.ActiveUnitController.transform.InverseTransformDirection(stairRampNormal);
-                    //groundNormal = forwardHitInfo.normal;
-                    groundNormal = stairRampNormal;
+
+                    // 0.2f is an arbitrary distance at the top of the stair is below the start of the curve on the bottom of a capsule collider of 2m height
+                    // if the stairs are higher than 0.3f (the start of the vertical section on the collider) and the player is too close to the stair,
+                    // any angled approach will lose all momentum from running straight into the stair and the player will get stuck
+
+                    if (stairDownHitInfo.point.y - playerManager.ActiveUnitController.transform.position.y < 0.2f
+                        || playerManager.ActiveUnitController.transform.InverseTransformPoint(forwardHitInfo.point).magnitude > (colliderRadius + 0.01f)) {
+                        localGroundNormal = playerManager.ActiveUnitController.transform.InverseTransformDirection(stairRampNormal);
+                        groundNormal = stairRampNormal;
+                    } else {
+                        Debug.Log("distance from wall: " + playerManager.ActiveUnitController.transform.InverseTransformPoint(forwardHitInfo.point).magnitude);
+                        localGroundNormal = playerManager.ActiveUnitController.transform.InverseTransformDirection(forwardHitInfo.normal);
+                        groundNormal = forwardHitInfo.normal;
+                    }
                 }
             }
 
@@ -1035,18 +1048,19 @@ namespace AnyRPG {
                 // check if the obstacle is stairs
                 if (frontAngleDifferent == true && frontObstacleAngle > slopeLimit) {
                     Vector3 raycastPoint = forwardHitInfo.point + (directionOfTravel * 0.01f);
-                    raycastPoint = new Vector3(raycastPoint.x, playerManager.ActiveUnitController.transform.position.y + stepHeight + 0.1f, raycastPoint.z);
-                    //Debug.Log("CheckFrontObstacle() front Angle Different and frontObstacle > slopeLimit; localMoveVelocity: " + localMoveVelocity + "; directionOfTravel: " + directionOfTravel + "; forwardHitInfo: " + forwardHitInfo.point + "; player: " + playerManager.ActiveUnitController.transform.position + "; raycastpoint: " + raycastPoint);
-                    Debug.DrawLine(raycastPoint, new Vector3(raycastPoint.x, raycastPoint.y - stepHeight - 0.1f, raycastPoint.z), Color.cyan);
-                    if (Physics.Raycast(raycastPoint, Vector3.down, out stairDownHitInfo, stepHeight + 0.1f, groundMask)) {
+                    raycastPoint = new Vector3(raycastPoint.x, playerManager.ActiveUnitController.transform.position.y + stepHeight + 0.001f, raycastPoint.z);
+                    Debug.Log("CheckFrontObstacle() front Angle Different and frontObstacle > slopeLimit; localMoveVelocity: " + localMoveVelocity + "; directionOfTravel: " + directionOfTravel + "; forwardHitInfo: " + forwardHitInfo.point + "; player: " + playerManager.ActiveUnitController.transform.position + "; raycastpoint: " + raycastPoint);
+                    Debug.DrawLine(raycastPoint, new Vector3(raycastPoint.x, raycastPoint.y - stepHeight - 0.001f, raycastPoint.z), Color.cyan);
+                    if (Physics.Raycast(raycastPoint, Vector3.down, out stairDownHitInfo, stepHeight, groundMask)) {
                         // we hit something that is low enough to step on, if it is below the slope limit, we can consider it to be a stair step
                         if (Vector3.Angle(stairDownHitInfo.normal, Vector3.up) < slopeLimit) {
                             Vector3 stairHeight = playerManager.ActiveUnitController.transform.InverseTransformPoint(stairDownHitInfo.point);
-                            /*
+                            
                             Debug.Log("CheckFrontObstacle(): y position: " + playerManager.ActiveUnitController.transform.position.y +
                                 "; stairs detected angle: " + Vector3.Angle(stairDownHitInfo.normal, Vector3.up) +
-                                "; stairHeight: " + "(" + stairHeight.x + ", " + stairHeight.y + ", " + stairHeight.z + ")");
-                                */
+                                "; stairHeight: " + "(" + stairHeight.x + ", " + stairHeight.y + ", " + stairHeight.z + ")" +
+                                "; object: " + stairDownHitInfo.collider.gameObject.name);
+
                             nearStairs = true;
 
                             // new code to detect stairs from greater distance and make angle upward at a more gradual slope to prevent the jittery updward movement that comes from using
@@ -1082,7 +1096,7 @@ namespace AnyRPG {
                             Debug.DrawLine(bottomPoint,
                                 bottomPoint + calculatedNormal,
                                 Color.red);
-                            //Debug.Log("RaycastForStairs() calculatedNormal: " + calculatedNormal + "; angleRay: " + angleRay + "; line2: " + (secondPoint - bottomPoint));
+                            Debug.Log("CheckFrontObstacle() calculatedNormal: " + calculatedNormal + "; angleRay: " + angleRay + "; line2: " + (secondPoint - bottomPoint));
                             stairRampNormal = calculatedNormal;
                         }
 
