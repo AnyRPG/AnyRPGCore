@@ -461,6 +461,10 @@ namespace AnyRPG {
                 currentState = AnyRPGCharacterState.Swim;
                 return;
             }
+            if (playerManager.ActiveUnitController.CanFly == false) {
+                currentState = AnyRPGCharacterState.Fall;
+                return;
+            }
 
 
             if ((playerManager.PlayerController.HasFlyMoveInput() || playerManager.PlayerController.HasTurnInput())
@@ -523,6 +527,7 @@ namespace AnyRPG {
                 playerManager.ActiveUnitController.StopFlying();
                 playerManager.ActiveUnitController.RigidBody.useGravity = true;
                 playerManager.ActiveUnitController.UnitAnimator.SetBool("Flying", false);
+                playerManager.ActiveUnitController.RigidBody.constraints = RigidbodyConstraints.FreezeRotation;
             }
         }
 

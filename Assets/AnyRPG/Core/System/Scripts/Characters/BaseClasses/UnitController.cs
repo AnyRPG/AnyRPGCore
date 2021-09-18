@@ -87,6 +87,7 @@ namespace AnyRPG {
 
         // capabilities
         private bool canFly = false;
+        private bool canFlyOverride = false;
 
         // track current state
         private bool mounted = false;
@@ -352,7 +353,8 @@ namespace AnyRPG {
         public float FloatHeight { get => floatHeight; set => floatHeight = value; }
         public bool Swimming { get => swimming; }
         public bool Flying { get => flying; }
-        public bool CanFly { get => canFly; }
+        public bool CanFly { get => (canFly || canFlyOverride); set => canFly = value; }
+        public bool CanFlyOverride { get => canFlyOverride; set => canFlyOverride = value; }
 
         public override void Configure(SystemGameManager systemGameManager) {
             base.Configure(systemGameManager);
@@ -732,6 +734,9 @@ namespace AnyRPG {
             distanceToTarget = 0f;
             lastTargetPosition = Vector3.zero;
             topNode = null;
+
+            canFly = false;
+            canFlyOverride = false;
 
             mounted = false;
             walking = false;

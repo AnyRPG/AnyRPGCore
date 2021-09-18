@@ -393,6 +393,7 @@ namespace AnyRPG {
                 unitController.CharacterUnit.BaseCharacter.SetUnitController(null);
                 // connect the characterUnit back to the baseCharacter that the playerManager owns so we get logged in character settings, not the unit settings
                 unitController.CharacterUnit.SetBaseCharacter(activeCharacter);
+                unitController.CharacterUnit.SetCharacterStatsCapabilities();
             } else {
                 Debug.LogError("UnitProfile.SpawnUnitPrefab(): active unit controller had no characterUnit!");
             }

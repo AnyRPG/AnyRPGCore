@@ -36,6 +36,15 @@ namespace AnyRPG {
         public void SetBaseCharacter(BaseCharacter baseCharacter) {
             //Debug.Log(interactable.gameObject.name + ".CharacterUnit.SetBaseCharacter: " + baseCharacter.gameObject.name);
             this.baseCharacter = baseCharacter;
+
+        }
+
+        public void SetCharacterStatsCapabilities() {
+            // there are some properties that can come from buffs that we want to store on the unitController to avoid expensive lookups every frame
+            // if this is a player those may have been saved in buffs from a loaded game before the actual unit spawn, so set them now
+            if (baseCharacter.CharacterStats.HasFlight() == true) {
+                baseCharacter.UnitController.CanFlyOverride = true;
+            }
         }
 
         public static CharacterUnit GetCharacterUnit(Interactable searchInteractable) {

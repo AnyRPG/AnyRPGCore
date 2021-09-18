@@ -609,6 +609,16 @@ namespace AnyRPG {
             return secondaryStats[SecondaryStatType.Accuracy].CurrentValue;
         }
 
+        public bool HasFlight() {
+            //Debug.Log("CharacterStats.GetDamageModifiers()");
+            foreach (StatusEffectNode statusEffectNode in StatusEffects.Values) {
+                if (statusEffectNode.StatusEffect.CanFly == true) {
+                    return true;
+                }
+            }
+            return false;
+        }
+
         public bool HasFreezeImmunity() {
             //Debug.Log("CharacterStats.GetDamageModifiers()");
             foreach (StatusEffectNode statusEffectNode in StatusEffects.Values) {
@@ -858,6 +868,14 @@ namespace AnyRPG {
             if (statusEffect.SecondaryStatBuffsTypes.Count > 0) {
                 CalculateSecondaryStats();
                 StatChangedNotificationHandler();
+            }
+
+            if (statusEffect.CanFly == true) {
+                if (HasFlight() == false) {
+                    if (baseCharacter.UnitController != null) {
+                        baseCharacter.UnitController.CanFlyOverride = false;
+                    }
+                }
             }
 
             if (statusEffect.FactionModifiers.Count > 0) {

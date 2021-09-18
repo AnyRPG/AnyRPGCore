@@ -101,6 +101,10 @@ namespace AnyRPG {
 
         [Header("Status Effects")]
 
+        [Tooltip("If true, the character can fly")]
+        [SerializeField]
+        protected bool canFly = false;
+
         [Tooltip("Freeze the character and prevent all movement and animation.  Can be combined with different materials for statue, ice block, etc")]
         [SerializeField]
         protected bool disableAnimator = false;
@@ -189,6 +193,7 @@ namespace AnyRPG {
         public List<string> SceneNames { get => sceneNames; set => sceneNames = value; }
         public bool RefreshableDuration { get => refreshableDuration; set => refreshableDuration = value; }
         public int MaxStacks { get => maxStacks; set => maxStacks = value; }
+        public bool CanFly { get => canFly; }
 
         public override void SetGameManagerReferences() {
             base.SetGameManagerReferences();
@@ -404,6 +409,9 @@ namespace AnyRPG {
             if (Levitate == true) {
                 //Debug.Log(abilityEffectName + ".StatusEffect.Tick() levitating");
                 targetCharacter.UnitController.LevitateCharacter();
+            }
+            if (canFly == true) {
+                targetCharacter.UnitController.CanFlyOverride = true;
             }
         }
 
