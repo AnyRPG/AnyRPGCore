@@ -6627,7 +6627,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameName: AnyRPG Engine
-  gameVersion: v0.11a
+  gameVersion: v0.11.1a
   loadResourcesFolders: []
   initializationScene: 
   mainMenuScene: 
@@ -6647,15 +6647,21 @@ MonoBehaviour:
   equipDefaultBackPack: 0
   defaultBackpackItem: 
   defaultBankBagItem: 
+  maxTurnSpeed: 360
+  walkSpeed: 1
+  runSpeed: 7
+  swimSpeed: 2
   useThirdPartyMovementControl: 0
   allowAutoAttack: 1
   useThirdPartyCameraControl: 0
   thirdPartyCamera: {fileID: 0}
   systemAnimationProfile: {fileID: 11400000, guid: 0b6c96b1386813a478955ebd352f885d,
     type: 2}
+  systemAnimationProfileName: System Default Animation Profile
   syncMovementAnimationSpeed: 0
   defaultAnimationProfile: {fileID: 11400000, guid: e8b7eb79ad08d5d4f8bfe735cd9eb840,
     type: 2}
+  defaultAnimationProfileName: Human
   defaultAnimatorController: {fileID: 9100000, guid: 547e6a8928ecb2d49b24c599db6d49c9,
     type: 2}
   maxLevel: 50
@@ -6690,7 +6696,7 @@ MonoBehaviour:
   lootSparkleEffectName: 
   vendorAudioProfileName: 
   maxChatTextDistance: 25
-  miniMapFallBackMode: 1
+  autoPixelsPerMeter: 10
   playerMiniMapIcon: {fileID: 21300000, guid: 2f39e3921edeb8c4991f2e809481b8d6, type: 3}
   playerMiniMapIconRotation: 90
   realTimeUnitFrameCamera: 0

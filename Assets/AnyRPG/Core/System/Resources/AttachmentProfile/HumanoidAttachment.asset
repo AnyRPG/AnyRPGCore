@@ -104,6 +104,12 @@ MonoBehaviour:
     rotation: {x: 0, y: 0, z: 0}
     scale: {x: 1, y: 1, z: 1}
     targetBone: TwoHandSwordSheathedAttachment
+  - nodeName: Wings
+    position: {x: 0, y: 0, z: 0}
+    rotationIsGlobal: 1
+    rotation: {x: 0, y: 0, z: 0}
+    scale: {x: 1, y: 1, z: 1}
+    targetBone: TwoHandSwordSheathedAttachment
   - nodeName: Main Hand Sword Sheathed
     position: {x: 0, y: 0, z: 0}
     rotationIsGlobal: 0

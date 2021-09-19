@@ -213,7 +213,7 @@ namespace AnyRPG {
                         if (audioProfile.AudioClip != null) {
                             //Debug.Log(MyName + ".AbilityEffect.PerformAbilityHit(): playing audio clip: " + audioProfile.MyAudioClip.name);
                             if (target != null && target.UnitComponentController != null) {
-                                target.UnitComponentController.PlayEffect(audioProfile.AudioClip);
+                                target.UnitComponentController.PlayEffectSound(audioProfile.AudioClip);
                             } else {
                                 audioSource.PlayOneShot(audioProfile.AudioClip);
                             }

@@ -13,7 +13,11 @@ namespace AnyRPG {
 
         //Inputs.
         [HideInInspector] public bool inputJump;
+        // inputFly is inputJump but true if held or pressed
+        [HideInInspector] public bool inputFly;
+        [HideInInspector] public bool inputSink;
         [HideInInspector] public bool inputStrafe;
+        [HideInInspector] public bool inputCrouch;
         //[HideInInspector] public float inputAimVertical = 0;
         //[HideInInspector] public float inputAimHorizontal = 0;
         [HideInInspector] public float inputHorizontal = 0;
@@ -23,6 +27,9 @@ namespace AnyRPG {
         //Variables
         [HideInInspector]
         public bool allowedInput = true;
+
+        [HideInInspector]
+        public bool autorunActive = false;
 
         public bool canMove = false;
         public bool canAction = false;
@@ -93,7 +100,10 @@ namespace AnyRPG {
 
         private void ResetMoveInput() {
             inputJump = false;
+            inputFly = false;
+            inputSink = false;
             inputStrafe = false;
+            inputCrouch = false;
             //inputAimVertical = 0f;
             //inputAimHorizontal = 0f;
             inputHorizontal = 0;
@@ -108,12 +118,23 @@ namespace AnyRPG {
         private void CollectMoveInput() {
             //Debug.Log("PlayerController.CollectMoveInput()");
             inputJump = inputManager.KeyBindWasPressed("JUMP");
+            inputFly = inputManager.KeyBindWasPressedOrHeld("JUMP");
+            inputSink = inputManager.KeyBindWasPressedOrHeld("CROUCH");
             inputStrafe = inputManager.KeyBindWasPressedOrHeld("STRAFELEFT") || inputManager.KeyBindWasPressedOrHeld("STRAFERIGHT");
+            inputCrouch = inputManager.KeyBindWasPressed("CROUCH");
             //inputAimVertical = Input.GetAxisRaw("AimVertical");
             //inputAimHorizontal = Input.GetAxisRaw("AimHorizontal");
             inputHorizontal = (inputManager.KeyBindWasPressedOrHeld("STRAFELEFT") ? -1 : 0) + (inputManager.KeyBindWasPressedOrHeld("STRAFERIGHT") ? 1 : 0);
             inputTurn = (inputManager.KeyBindWasPressedOrHeld("TURNLEFT") ? -1 : 0) + (inputManager.KeyBindWasPressedOrHeld("TURNRIGHT") ? 1 : 0);
             inputVertical = (inputManager.KeyBindWasPressedOrHeld("BACK") ? -1 : 0) + (inputManager.KeyBindWasPressedOrHeld("FORWARD") ? 1 : 0);
+
+            if (((inputHorizontal != 0f) || (inputVertical != 0f) || inputJump || inputFly || inputSink || inputStrafe || inputCrouch) && autorunActive) {
+                ToggleAutorun();
+            }
+
+            if (autorunActive) {
+                inputVertical = 1;
+            }
 
             NormalizedMoveInput = NormalizedVelocity(new Vector3(inputHorizontal, 0, inputVertical));
             TurnInput = new Vector3(inputTurn, 0, 0);
@@ -158,6 +179,8 @@ namespace AnyRPG {
             // test move this below death check to prevent player getting up after death
             ToggleRun();
 
+            CheckToggleAutorun();
+
             HandleLeftMouseClick();
 
             RegisterTab();
@@ -185,6 +208,22 @@ namespace AnyRPG {
 
         public bool HasAnyInput() {
             if (allowedInput && (NormalizedMoveInput != Vector3.zero || TurnInput != Vector3.zero || aimInput != Vector2.zero || inputJump != false)) {
+                return true;
+            } else {
+                return false;
+            }
+        }
+
+        public bool HasWaterMoveInput() {
+            if (allowedInput && (NormalizedMoveInput != Vector3.zero || TurnInput != Vector3.zero || inputSink != false || inputFly != false)) {
+                return true;
+            } else {
+                return false;
+            }
+        }
+
+        public bool HasFlyMoveInput() {
+            if (allowedInput && (NormalizedMoveInput != Vector3.zero || TurnInput != Vector3.zero || inputSink != false || inputFly != false)) {
                 return true;
             } else {
                 return false;
@@ -229,6 +268,25 @@ namespace AnyRPG {
                 messageFeedManager.WriteMessage("Walk: " + playerManager.ActiveUnitController.Walking.ToString());
                 ToggleRunHandler(playerManager.ActiveUnitController.Walking);
             }
+        }
+
+        private void CheckToggleAutorun() {
+            if (inputManager.KeyBindWasPressed("TOGGLEAUTORUN")) {
+                ToggleAutorun();
+            }
+        }
+
+        private void ToggleAutorun() {
+            EventParamProperties eventParamProperties = new EventParamProperties();
+            if (autorunActive == false) {
+                autorunActive = true;
+                eventParamProperties.simpleParams.BoolParam = true;
+            } else {
+                autorunActive = false;
+                eventParamProperties.simpleParams.BoolParam = false;
+            }
+            SystemEventManager.TriggerEvent("OnToggleAutorun", eventParamProperties);
+            messageFeedManager.WriteMessage("Autorun: " + autorunActive.ToString());
         }
 
         protected void FixedUpdate() {
@@ -707,7 +765,7 @@ namespace AnyRPG {
                 //baseCharacter.UnitController.MyCharacterAnimator.EnableRootMotion();
 
                 if (playerManager.PlayerUnitMovementController != null) {
-                    playerManager.PlayerUnitMovementController.currentMoveVelocity = new Vector3(0, 0, 0);
+                    playerManager.PlayerUnitMovementController.localMoveVelocity = new Vector3(0, 0, 0);
                 }
             }
         }

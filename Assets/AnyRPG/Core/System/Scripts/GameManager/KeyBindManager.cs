@@ -44,6 +44,7 @@ namespace AnyRPG {
             InitializeKey("CROUCH", KeyCode.X, KeyCode.Y, KeyCode.Y, "Crouch", KeyBindType.Normal);
             InitializeKey("ROLL", KeyCode.R, KeyCode.B, KeyCode.B, "Roll", KeyBindType.Normal);
             InitializeKey("TOGGLERUN", KeyCode.KeypadDivide, KeyCode.None, KeyCode.None, "Toggle Run", KeyBindType.Normal);
+            InitializeKey("TOGGLEAUTORUN", KeyCode.KeypadMultiply, KeyCode.None, KeyCode.None, "Toggle Autorun", KeyBindType.Normal);
             InitializeKey("TOGGLESTRAFE", KeyCode.T, KeyCode.JoystickButton9, KeyCode.JoystickButton9, "Toggle Strafe", KeyBindType.Normal);
 
             InitializeKey("CANCEL", KeyCode.Escape, KeyCode.None, KeyCode.None, "Cancel", KeyBindType.Constant);

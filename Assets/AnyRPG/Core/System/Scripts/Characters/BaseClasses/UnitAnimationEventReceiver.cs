@@ -97,11 +97,22 @@ namespace AnyRPG {
             if (stepIndex >= unitController.MovementHitProfile.AudioClips.Count) {
                 stepIndex = 0;
             }
-            unitController.PlayMovement(unitController.MovementHitProfile.AudioClips[stepIndex], false);
+            unitController.PlayMovementSound(unitController.MovementHitProfile.AudioClips[stepIndex], false);
             stepIndex++;
             if (stepIndex >= unitController.MovementHitProfile.AudioClips.Count) {
                 stepIndex = 0;
             }
+        }
+
+        public void PlaySwimSound() {
+            //Debug.Log(gameObject.name + ".HandleMovementAudio(): " + apparentVelocity);
+            if (unitController == null) {
+                Debug.Log(gameObject.name + ".UnitAnimationEventReceiver.PlayFootStep() unitController is null!!!");
+                return;
+            }
+
+            unitController.PlaySwimSound();
+
         }
 
     }

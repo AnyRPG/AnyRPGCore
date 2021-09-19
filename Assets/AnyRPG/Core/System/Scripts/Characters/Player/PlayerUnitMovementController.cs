@@ -10,7 +10,10 @@ namespace AnyRPG {
         Jump = 2,
         Knockback = 3,
         Fall = 4,
-        Roll = 8
+        Roll = 5,
+        Swim = 6,
+        Fly = 7,
+        Glide = 8
     }
     [RequireComponent(typeof(PlayerMovementStateController))]
     public class PlayerUnitMovementController : AnyRPGStateMachine {
@@ -18,7 +21,7 @@ namespace AnyRPG {
         //Components.
         private PlayerMovementStateController movementStateController;
 
-        public AnyRPGCharacterState rpgCharacterState;
+        //public AnyRPGCharacterState rpgCharacterState;
 
         [HideInInspector] public bool useMeshNav = false;
         [HideInInspector] public Vector3 lookDirection { get; private set; }
@@ -30,37 +33,99 @@ namespace AnyRPG {
         public float jumpAcceleration = 5.0f;
         public float jumpHeight = 3.0f;
 
-        //Movement.
-        [HideInInspector] public Vector3 currentMoveVelocity;
+        // travel vector from the perspective of the character
+        [HideInInspector] public Vector3 localMoveVelocity;
+        // travel vector rotated by ground angle from the perspective of the character
+        [HideInInspector] public Vector3 adjustedlocalMoveVelocity;
         [HideInInspector] public Vector3 currentTurnVelocity;
-        public float rotationSpeed = 5f;
+
+        [Tooltip("Keyboard Rotation speed in degrees per second")]
+        public float rotationSpeed = 360f;
 
         //Air control.
         public float inAirSpeed = 6f;
         //private float acquiringGroundDistance = 0.11f;
         //private float maintainingGroundDistance = 0.5f;
 
+        // maximum step height
         public float stepHeight = 0.5f;
-        public float maxGroundAngle = 120;
-        private float backwardGroundAngle;
+
+        // maximum walkable slope
+        public float slopeLimit = 60f;
+
+        // calculated value based on stepHeight and slope limit
+        private float stairDetectionDistance = 0f;
+
+        // the normal of the closest ground to the player feet
+        private Vector3 groundNormal;
+
+        // the closest ground point to the player feet, determined by raycasts
+        private Vector3 groundPoint;
+
+        // the normal of the closest ground to the player feet
+        private Vector3 slopeNormal;
+
+        // the closest ground point to the player feet, determined by raycasts
+        private Vector3 slopePoint;
+
+        // the downward direction of any slope the player is touching
+        private Vector3 slopeDirection;
+
+        // the raw angle of the ground below
         private float groundAngle;
+        
+        // the raw angle of the ground below
+        private float slopeAngle;
 
-        private bool tempGrounded;
+        // used for determining how far above the ground the player is for applying downforce
+        private float closestGroundDistance = 0f;
 
-        // technically, "front" and "forward" are the current direction of travel to detect obstacles no matter which way you are heading for these next 2 variables
+        private float closestSlopeDistance = 0f;
+        private float closestTouchingGroundDistance = 0f;
+
+        // a calculated value
+        //private float groundAngle;
+
+        // is there an obstacle close in front of us in the direction of travel
         private bool nearFrontObstacle = false;
+
+        // the angle of the obstacle in front of us
+        private float frontObstacleAngle;
+
+        // determine if there is a change in the angle from the current ground (which could be a ramp) to the obstacle in front of us (which could be the same ramp)
+        private bool frontAngleDifferent = false;
+
+        // determine if an obstacle in front of us is a stairs
+        private bool nearStairs = false;
+
+        // a calculated normal to be used when close to stairs to allow a virtual ramp to them isntead of jerky direct upward motion when you collide with them
+        private Vector3 stairRampNormal;
+
+        private bool closeToGround;
+        private bool touchingGround;
+        private bool touchingSlope;
+
         // forward raycast length
         //private float rayCastLength = 0.5f;
-        private float rayCastLength = 0.5f;
+        //private float frontRayCastLength = 0.5f;
+
 
 
         private LayerMask groundMask;
 
         // downward raycast height
-        private float rayCastHeight = 0.75f;
+        private float closeToGroundHeight = 0.25f;
+        private float touchingGroundHeight = 0.05f;
+        private float colliderRadius = 0.3f;
         public bool debug = true;
 
-        private Vector3 acquiringGroundExtents = new Vector3(0.3f, 0.09f, 0.3f);
+        private bool useFallDamage = false;
+        private float fallDamagePerMeter = 2f;
+        private float fallDamageMinDistance = 10f;
+        private float currentFallDistance = 0f;
+        private float fallStartHeight = 0f;
+
+        //private Vector3 touchingGroundExtents = new Vector3(0.2f, 0.01f, 0.1f);
         private Vector3 maintainingGroundExtents = new Vector3(0.65f, 0.5f, 0.65f);
 
         // raycast to determine ground normal
@@ -68,11 +133,22 @@ namespace AnyRPG {
 
         // raycasts to determine 
         private RaycastHit downHitInfo;
+
+        // raycast to determine if an object is in front of the player
         private RaycastHit forwardHitInfo;
 
+        // raycast to determine if an object is in an arc in front of the player
+        private RaycastHit obstacleHitInfo;
+
+        // downward raycast to determine if an object in front of the player is stairs
+        private RaycastHit stairDownHitInfo;
+
+        // raycast to determine if player is touching ground in a circle around it
+        //private RaycastHit touchingGroundHitInfo;
+
         // ensure that pressing forward moves us in the direction of the ground angle to avoid jittery movement on slopes
-        private Vector3 forwardDirection;
-        private Vector3 backwardDirection;
+        //private Vector3 forwardDirection;
+        //private Vector3 backwardDirection;
 
         // keep the player moving the same direction in the air
         private Vector3 airForwardDirection;
@@ -80,13 +156,6 @@ namespace AnyRPG {
 
         // the frame in which the player last entered a jump state
         private int lastJumpFrame;
-
-        private List<ContactPoint> forwardContactPoints = new List<ContactPoint>();
-        private List<ContactPoint> backwardContactPoints = new List<ContactPoint>();
-        private List<ContactPoint> bottomContactPoints = new List<ContactPoint>();
-
-        // the minimum height at which a collision is considered valid to calculate a forward or backward angle.  This is to prevent bottom collions that falsely register as front or back collisions
-        private float collisionMinimumHeight = 0.05f;
 
         // game manager references
         protected PlayerManager playerManager = null;
@@ -97,12 +166,17 @@ namespace AnyRPG {
         public override void Configure(SystemGameManager systemGameManager) {
             base.Configure(systemGameManager);
 
+            rotationSpeed = systemConfigurationManager.MaxTurnSpeed;
             groundMask = playerManager.DefaultGroundMask;
             GetComponentReferences();
             if (movementStateController != null) {
                 movementStateController.enabled = true;
             }
-        }
+            stairDetectionDistance = Mathf.Tan(Mathf.Deg2Rad * (90f - slopeLimit)) * stepHeight;
+            useFallDamage = systemConfigurationManager.UseFallDamage;
+            fallDamagePerMeter = systemConfigurationManager.FallDamagePerMeter;
+            fallDamageMinDistance = systemConfigurationManager.FallDamageMinDistance;
+    }
 
         public override void SetGameManagerReferences() {
             base.SetGameManagerReferences();
@@ -110,9 +184,6 @@ namespace AnyRPG {
             inputManager = systemGameManager.InputManager;
             namePlateManager = systemGameManager.UIManager.NamePlateManager;
             cameraManager = systemGameManager.CameraManager;
-        }
-
-        private void OnEnable() {
         }
 
         public void Init() {
@@ -125,7 +196,7 @@ namespace AnyRPG {
         public void ConfigureStateMachine() {
             //Debug.Log(gameObject.name + ".PlayerUnitMovementController.ConfigureStateMachine()");
             currentState = AnyRPGCharacterState.Idle;
-            rpgCharacterState = AnyRPGCharacterState.Idle;
+            //rpgCharacterState = AnyRPGCharacterState.Idle;
             if (movementStateController != null) {
                 movementStateController.Init();
             }
@@ -143,12 +214,54 @@ namespace AnyRPG {
         //Put any code in here you want to run BEFORE the state's update function. This is run regardless of what state you're in.
         protected override void EarlyGlobalStateUpdate() {
             //Debug.Log(gameObject.name + ".earlyGlobalStateUpdate()");
+            /*
             CalculateForward();
-            CalculateBackward();
+            //CalculateBackward();
             CalculateGroundAngle();
+            CheckGround();
+            */
             CheckGround();
             ApplyGravity();
             DrawDebugLines();
+        }
+
+        public void MoveRelative() {
+            Vector3 relativeMovement = CharacterRelativeInput(adjustedlocalMoveVelocity);
+            //Debug.Log("relativeMovement: (" + relativeMovement.x + ", " + relativeMovement.y + ", " + relativeMovement.z + ")");
+            if (relativeMovement.magnitude > 0.1 || playerManager.PlayerController.inputJump) {
+                playerManager.ActiveUnitController.UnitMotor.Move(relativeMovement);
+            }
+        }
+
+        public void AnimatorMoveUpdate() {
+            //If alive and is moving, set animator.
+            if (useMeshNav == false
+                && playerManager?.MyCharacter?.CharacterStats?.IsAlive == true
+                && playerManager?.PlayerController?.canMove == true) {
+
+                // handle movement
+                if (localMoveVelocity.magnitude > 0 && playerManager.PlayerController.HasMoveInput()) {
+                    //Debug.Log(gameObject.name + ".PlayerUnitMovementController.LateGlobalSuperUpdate(): animator velocity: " + playerManager.ActiveUnitController.MyCharacterAnimator.MyAnimator.velocity + "; angular: " + playerManager.ActiveUnitController.MyCharacterAnimator.MyAnimator.angularVelocity);
+                    if (playerManager.PlayerController.inputStrafe == true) {
+                        playerManager.ActiveUnitController.UnitAnimator.SetStrafing(true);
+                    } else {
+                        playerManager.ActiveUnitController.UnitAnimator.SetStrafing(false);
+                    }
+                    playerManager.ActiveUnitController.UnitAnimator.SetMoving(true);
+                    playerManager.ActiveUnitController.UnitAnimator.SetVelocity(localMoveVelocity);
+                }/* else {
+                    playerManager.ActiveUnitController.MyCharacterAnimator.SetMoving(false);
+                    playerManager.ActiveUnitController.MyCharacterAnimator.SetStrafing(false);
+                    playerManager.ActiveUnitController.MyCharacterAnimator.SetVelocity(currentMoveVelocity, rotateModel);
+                }*/
+                AnimatorTurnUpdate();
+            }
+        }
+
+        public void AnimatorTurnUpdate() {
+            if (playerManager.ActiveUnitController.UnitAnimator != null) {
+                playerManager.ActiveUnitController.UnitAnimator.SetTurnVelocity(currentTurnVelocity.x);
+            }
         }
 
         //Put any code in here you want to run AFTER the state's update function.  This is run regardless of what state you're in.
@@ -157,60 +270,11 @@ namespace AnyRPG {
                 return;
             }
 
-            // testing: do nothing if idle state to prevent resetting movement to zero and interfering with moving platforms
-            // testing: unit still launching up.  I think platforms was rigidbody, not clamped movement so disable for now again
-            /*
-            if (rpgCharacterState == AnyRPGCharacterState.Idle) {
-                //Debug.Log("Idle state active, not moving");
-                return;
-            }
-            */
-
-            //Move the player by our velocity every frame.
-            // transform the velocity from local space to world space so we move the character forward on his z axis, not the global world z axis
-            Vector3 relativeMovement = CharacterRelativeInput(currentMoveVelocity);
-            if (relativeMovement.magnitude > 0.1 || playerManager.PlayerController.inputJump) {
-                playerManager.ActiveUnitController.UnitMotor.Move(relativeMovement);
-            } else {
-
-                Vector3 localVelocity = Vector3.zero;
-                if (playerManager.ActiveUnitController != null && playerManager.ActiveUnitController.RigidBody != null) {
-                    localVelocity = playerManager.ActiveUnitController.transform.InverseTransformDirection(playerManager.ActiveUnitController.RigidBody.velocity);
-                }
-                if (localVelocity.x != 0f || localVelocity.z != 0f || localVelocity.y != 0f) {
-                    //Debug.Log("Character is moving at velocity: " + playerManager.ActiveUnitController.MyRigidBody.velocity + "; local: " + localVelocity + ", but no input was given.  Stopping Character!");
-                    playerManager.ActiveUnitController.UnitMotor?.Move(new Vector3(0, Mathf.Clamp(localVelocity.y, -53, 0), 0));
-                }
-            }
-
-            //If alive and is moving, set animator.
-            if (useMeshNav == false && playerManager?.MyCharacter?.CharacterStats?.IsAlive == true && playerManager?.PlayerController?.canMove == true) {
-
-                // handle movement
-                if (currentMoveVelocity.magnitude > 0 && playerManager.PlayerController.HasMoveInput()) {
-                    //Debug.Log(gameObject.name + ".PlayerUnitMovementController.LateGlobalSuperUpdate(): animator velocity: " + playerManager.ActiveUnitController.MyCharacterAnimator.MyAnimator.velocity + "; angular: " + playerManager.ActiveUnitController.MyCharacterAnimator.MyAnimator.angularVelocity);
-                    if (playerManager.PlayerController.inputStrafe == true) {
-                        playerManager.ActiveUnitController.UnitAnimator.SetStrafing(true);
-                    } else {
-                        playerManager.ActiveUnitController.UnitAnimator.SetStrafing(false);
-                    }
-                    playerManager.ActiveUnitController.UnitAnimator.SetMoving(true);
-                    playerManager.ActiveUnitController.UnitAnimator.SetVelocity(currentMoveVelocity);
-                }/* else {
-                    playerManager.ActiveUnitController.MyCharacterAnimator.SetMoving(false);
-                    playerManager.ActiveUnitController.MyCharacterAnimator.SetStrafing(false);
-                    playerManager.ActiveUnitController.MyCharacterAnimator.SetVelocity(currentMoveVelocity, rotateModel);
-                }*/
-                if (playerManager.ActiveUnitController != null && playerManager.ActiveUnitController.UnitAnimator != null) {
-                    playerManager.ActiveUnitController.UnitAnimator.SetTurnVelocity(currentTurnVelocity.x);
-                } else {
-
-                }
-            }
 
             if (playerManager?.MyCharacter?.CharacterStats?.IsAlive == true && playerManager?.PlayerController?.canMove == true) {
                 // code to prevent turning when clicking on UI elements
-                if (inputManager.rightMouseButtonDown && playerManager.PlayerController.HasMoveInput()
+                // if (inputManager.rightMouseButtonDown && playerManager.PlayerController.HasMoveInput()
+                if (inputManager.rightMouseButtonDown
                     && (!inputManager.rightMouseButtonClickedOverUI || (namePlateManager != null ? namePlateManager.MouseOverNamePlate() : false))) {
                     //Debug.Log(gameObject.name + ".PlayerUnitMovementController.LateGlobalSuperUpdate(): resetting playerManager.ActiveUnitController.transform.forward");
 
@@ -220,7 +284,7 @@ namespace AnyRPG {
 
                 if (playerManager.PlayerController.inputTurn != 0) {
                     //Debug.Log(gameObject.name + ".PlayerUnitMovementController.LateGlobalSuperUpdate(): rotating " + currentTurnVelocity.x);
-                    playerManager.ActiveUnitController.UnitMotor.Rotate(new Vector3(0, currentTurnVelocity.x, 0));
+                    playerManager.ActiveUnitController.UnitMotor.Rotate(new Vector3(0, currentTurnVelocity.x * Time.deltaTime, 0));
                 }
             }
 
@@ -232,111 +296,153 @@ namespace AnyRPG {
             airForwardDirection = playerManager.ActiveUnitController.transform.forward;
         }
 
+        private bool CheckForSwimming() {
+            if (playerManager.ActiveUnitController.InWater == true) {
+                if ((playerManager.ActiveUnitController.transform.position.y + playerManager.ActiveUnitController.FloatHeight) <= playerManager.ActiveUnitController.CurrentWater[0].SurfaceHeight) {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        public void CalculateTurnVelocity() {
+            if (playerManager.PlayerController.HasTurnInput()) {
+                currentTurnVelocity = playerManager.PlayerController.TurnInput * PlayerPrefs.GetFloat("KeyboardTurnSpeed") * rotationSpeed;
+            }
+        }
+
+        public void CalculateFallDamage() {
+            if (useFallDamage && currentFallDistance > fallDamageMinDistance) {
+                playerManager.ActiveCharacter.CharacterStats.TakeFallDamage(currentFallDistance * fallDamagePerMeter);
+            }
+            currentFallDistance = 0f;
+        }
+
         //Below are the state functions. Each one is called based on the name of the state, so when currentState = Idle, we call Idle_EnterState. If currentState = Jump, we call Jump_StateUpdate()
         void Idle_EnterState() {
             //Debug.Log(gameObject.name + ".PlayerUnitMovementController.Idle_EnterState() Freezing all constraints");
-            if (playerManager.ActiveUnitController != null && playerManager.ActiveUnitController.RigidBody != null) {
+            if (playerManager.ActiveUnitController != null) {
+                // allow the character to fall until they reach the ground
                 playerManager.ActiveUnitController.FreezePositionXZ();
             }
 
             // reset velocity from any falling movement that was happening
-            currentMoveVelocity = Vector3.zero;
+            localMoveVelocity = Vector3.zero;
             EnterGroundStateCommon();
 
             playerManager.ActiveUnitController.UnitAnimator.SetMoving(false);
             playerManager.ActiveUnitController.UnitAnimator.SetStrafing(false);
-
-            // testing stop turning animation from playing
             playerManager.ActiveUnitController.UnitAnimator.SetTurnVelocity(0f);
 
-            playerManager.ActiveUnitController.UnitAnimator.SetVelocity(currentMoveVelocity);
+            playerManager.ActiveUnitController.UnitAnimator.SetVelocity(localMoveVelocity);
 
+            playerManager.ActiveUnitController.UnitMotor?.Move(new Vector3(0, Mathf.Clamp(playerManager.ActiveUnitController.RigidBody.velocity.y, -53, 0), 0));
+            CalculateFallDamage();
         }
 
-        //Run every frame we are in the idle state.
         void Idle_StateUpdate() {
             //Debug.Log(gameObject.name + ".PlayerUnitMovementController.Idle_StateUpdate()");
 
             if (playerManager.ActiveUnitController == null) {
                 // still waiting for character to spawn
-                //Debug.Log(gameObject.name + ".PlayerUnitMovementController.Idle_StateUpdate(): not spawned yet");
                 return;
             }
 
+            if (playerManager.ActiveUnitController.InWater == true) {
+                if (CheckForSwimming() == true) {
+                    currentState = AnyRPGCharacterState.Swim;
+                    return;
+                }
+            }
+
             if (playerManager.PlayerController.allowedInput && playerManager.PlayerController.inputJump) {
-                //Debug.Log(gameObject.name + ".PlayerUnitMovementController.Idle_StateUpdate(): entering jump state");
                 currentState = AnyRPGCharacterState.Jump;
-                rpgCharacterState = AnyRPGCharacterState.Jump;
                 return;
             }
-            if (!MaintainingGround()) {
-                //Debug.Log(gameObject.name + ".PlayerUnitMovementController.Idle_StateUpdate(): entering fall state");
+
+            if (playerManager.PlayerController.allowedInput && playerManager.ActiveUnitController.CanFly && playerManager.PlayerController.inputFly) {
+                currentState = AnyRPGCharacterState.Jump;
+                return;
+            }
+
+            if (!MaintainingGround() || groundAngle > slopeLimit) {
                 currentState = AnyRPGCharacterState.Fall;
-                rpgCharacterState = AnyRPGCharacterState.Fall;
-                playerManager.ActiveUnitController.UnitAnimator.SetTrigger("FallTrigger");
                 return;
             }
             if ((playerManager.PlayerController.HasMoveInput() || playerManager.PlayerController.HasTurnInput()) && playerManager.PlayerController.canMove) {
                 //Debug.Log(gameObject.name + ".PlayerUnitMovementController.Idle_StateUpdate(): entering move state");
                 currentState = AnyRPGCharacterState.Move;
-                rpgCharacterState = AnyRPGCharacterState.Move;
                 return;
             }
             // factor in slightly uneven ground which gravity will cause the unit to slide on even when standing still with position and rotation locked
             // DETECT SUPER LOW RIGIDBODY VELOCITY AND FREEZE CHARACTER
+            /*
             if (Mathf.Abs(playerManager.ActiveUnitController.RigidBody.velocity.y) < 0.01 && MaintainingGround() == true) {
 
                 // note: disabled this to test if it was causing issues with moving platforms
                 // note : re-enabled to see if it was not preventing launching up hills
                 currentMoveVelocity = new Vector3(0, 0, 0);
 
-                // disable gravity while this close to the ground so we don't slide down slight inclines
-                // freezing y position was causing character to not get lifted by bridges
-                playerManager.ActiveUnitController.FreezePositionXZ();
-                //playerManager.ActiveUnitController.MyRigidBody.constraints = RigidbodyConstraints.FreezeAll;
             } else {
-
-                // allow the character to fall until they reach the ground
-                playerManager.ActiveUnitController.FreezePositionXZ();
 
                 // note: disabled this to test if it was causing issues with moving platforms
                 // note : re-enabled to see if it was not preventing launching up hills
                 currentMoveVelocity = new Vector3(0, Mathf.Clamp(playerManager.ActiveUnitController.RigidBody.velocity.y, -53, 0), 0);
             }
+            */
         }
 
         void Idle_ExitState() {
             //Debug.Log(gameObject.name + ".PlayerUnitMovementController.Idle_ExitState(). Freezing Rotation only");
             playerManager.ActiveUnitController.RigidBody.constraints = RigidbodyConstraints.FreezeRotation;
-            //Run once when exit the idle state.
         }
 
         void Move_EnterState() {
-            //Debug.Log("Move_EnterState()");
             EnterGroundStateCommon();
+            CalculateFallDamage();
         }
 
         void Move_StateUpdate() {
 
             airForwardDirection = playerManager.ActiveUnitController.transform.forward;
-            airRotation = playerManager.ActiveUnitController.transform.rotation;
+
+            if (playerManager.ActiveUnitController.InWater == true) {
+                if (CheckForSwimming() == true) {
+                    currentState = AnyRPGCharacterState.Swim;
+                    return;
+                }
+            }
+
             if (playerManager.PlayerController.allowedInput && playerManager.PlayerController.inputJump) {
                 currentState = AnyRPGCharacterState.Jump;
-                rpgCharacterState = AnyRPGCharacterState.Jump;
                 return;
             }
-            if (!MaintainingGround()) {
-                currentState = AnyRPGCharacterState.Fall;
-                rpgCharacterState = AnyRPGCharacterState.Fall;
-                playerManager.ActiveUnitController.UnitAnimator.SetTrigger("FallTrigger");
+
+            if (playerManager.PlayerController.allowedInput && playerManager.ActiveUnitController.CanFly && playerManager.PlayerController.inputFly) {
+                currentState = AnyRPGCharacterState.Jump;
                 return;
+            }
+
+            if (!MaintainingGround() || groundAngle > slopeLimit) {
+                if (playerManager.ActiveUnitController.CanFly) {
+                    currentState = AnyRPGCharacterState.Fly;
+                    return;
+                } else {
+                    if (playerManager.ActiveUnitController.CanGlide) {
+                        currentState = AnyRPGCharacterState.Glide;
+                        return;
+                    }
+                    currentState = AnyRPGCharacterState.Fall;
+                    return;
+                }
             }
 
             //Set speed determined by movement type.
 
             // since we are in the move state, reset velocity to zero so we can pick up the new values
             // allow falling while moving by clamping existing y velocity
-            currentMoveVelocity = new Vector3(0, Mathf.Clamp(playerManager.ActiveUnitController.RigidBody.velocity.y, -53, 0), 0);
+            localMoveVelocity = new Vector3(0, Mathf.Clamp(playerManager.ActiveUnitController.RigidBody.velocity.y, -53, 0), 0);
+            adjustedlocalMoveVelocity = localMoveVelocity;
 
             if ((playerManager.PlayerController.HasMoveInput() || playerManager.PlayerController.HasTurnInput()) && playerManager.PlayerController.canMove) {
 
@@ -355,17 +461,217 @@ namespace AnyRPG {
                 calculatedSpeed = Mathf.Clamp(calculatedSpeed, 0, clampValue);
 
                 if (playerManager.PlayerController.HasMoveInput()) {
-                    // multiply normalized movement by calculated speed to get actual movement
-                    currentMoveVelocity = LocalMovement() * calculatedSpeed;
+                    
+                    // multiply normalized movement by calculated speed to get actual local movement
+                    localMoveVelocity = playerManager.PlayerController.NormalizedMoveInput * calculatedSpeed;
+                    adjustedlocalMoveVelocity = NormalizedLocalMovement(calculatedSpeed) * calculatedSpeed;
                 }
-                if (playerManager.PlayerController.HasTurnInput()) {
-                    currentTurnVelocity = playerManager.PlayerController.TurnInput * ((PlayerPrefs.GetFloat("KeyboardTurnSpeed") * 5) + 6.0f);
-                }
+                CalculateTurnVelocity();
             } else {
                 currentTurnVelocity = Vector3.zero;
                 currentState = AnyRPGCharacterState.Idle;
-                rpgCharacterState = AnyRPGCharacterState.Idle;
+                //rpgCharacterState = AnyRPGCharacterState.Idle;
                 return;
+            }
+
+            MoveRelative();
+            AnimatorMoveUpdate();
+        }
+
+        void Move_ExitState() {
+            playerManager.ActiveUnitController.UnitAnimator.SetMoving(false);
+        }
+
+        void Fly_EnterState() {
+            //Debug.Log("PlayerUnitMovementController.Fly_EnterState()");
+            currentFallDistance = 0f;
+            if (playerManager.ActiveUnitController != null) {
+                playerManager.ActiveUnitController.StartFlying();
+                playerManager.ActiveUnitController.RigidBody.useGravity = false;
+                playerManager.ActiveUnitController.UnitAnimator.SetBool("Flying", true);
+                playerManager.ActiveUnitController.UnitAnimator.SetTrigger("FlyTrigger");
+            }
+        }
+
+        void Fly_StateUpdate() {
+            //Debug.Log("PlayerUnitMovementController.Fly_StateUpdate()");
+            airForwardDirection = playerManager.ActiveUnitController.transform.forward;
+
+            if (touchingGround == true && playerManager.PlayerController.inputFly == false) {
+                if (playerManager.PlayerController.HasMoveInput()) {
+                    currentState = AnyRPGCharacterState.Move;
+                    return;
+                } else {
+                    currentState = AnyRPGCharacterState.Idle;
+                    return;
+                }
+            }
+            if (playerManager.ActiveUnitController.InWater == true && CheckForSwimming() == true) {
+                currentState = AnyRPGCharacterState.Swim;
+                return;
+            }
+            if (playerManager.ActiveUnitController.CanFly == false) {
+                currentState = AnyRPGCharacterState.Fall;
+                return;
+            }
+
+
+            if ((playerManager.PlayerController.HasFlyMoveInput() || playerManager.PlayerController.HasTurnInput())
+                && playerManager.PlayerController.canMove) {
+
+                // ============ RIGIDBODY CONSTRAINTS ============
+                playerManager.ActiveUnitController.RigidBody.constraints = RigidbodyConstraints.FreezeRotation;
+
+                // ============ VELOCITY CALCULATIONS ============
+
+                // set clampValue to default of max movement speed
+                float clampValue = playerManager.MaxMovementSpeed;
+
+                // set a clamp value to limit movement speed to walking if going backward
+                /*
+                if (currentMoveVelocity.z < 0) {
+                    clampValue = 1;
+                }
+                */
+
+                // get current movement speed and clamp it to current clamp value
+                float calculatedSpeed = playerManager.ActiveUnitController.FlySpeed;
+                calculatedSpeed = Mathf.Clamp(calculatedSpeed, 0, clampValue);
+
+                if (playerManager.PlayerController.HasFlyMoveInput()) {
+                    // multiply normalized movement by calculated speed to get actual movement
+                    localMoveVelocity = NormalizedFlyMovement() * calculatedSpeed;
+                    adjustedlocalMoveVelocity = localMoveVelocity;
+                    //Debug.Log(gameObject.name + ".PlayerUnitMovementController.Swim_StateUpdate() currentMoveVelocity: " + currentMoveVelocity);
+                }
+                CalculateTurnVelocity();
+
+
+                // ============ ANIMATOR PARAMETERS ============
+                playerManager.ActiveUnitController.UnitAnimator.SetMoving(true);
+                playerManager.ActiveUnitController.UnitAnimator.SetTurnVelocity(currentTurnVelocity.x);
+
+            } else {
+                // ============ RIGIDBODY CONSTRAINTS ============
+                // prevent constant drifting through air after stop moving
+                playerManager.ActiveUnitController.FreezeAll();
+
+                // ============ VELOCITY CALCULATIONS ============
+                localMoveVelocity = Vector3.zero;
+                adjustedlocalMoveVelocity = localMoveVelocity;
+
+                // ============ ANIMATOR PARAMETERS ============
+                playerManager.ActiveUnitController.UnitAnimator.SetMoving(false);
+                playerManager.ActiveUnitController.UnitAnimator.SetTurnVelocity(0f);
+
+            }
+            playerManager.ActiveUnitController.UnitAnimator.SetVelocity(localMoveVelocity);
+
+            MoveRelative();
+        }
+
+        void Fly_ExitState() {
+            //Debug.Log("PlayerUnitMovementController.Fly_ExitState()");
+            if (playerManager.ActiveUnitController != null) {
+                playerManager.ActiveUnitController.StopFlying();
+                playerManager.ActiveUnitController.RigidBody.useGravity = true;
+                playerManager.ActiveUnitController.UnitAnimator.SetBool("Flying", false);
+                playerManager.ActiveUnitController.RigidBody.constraints = RigidbodyConstraints.FreezeRotation;
+            }
+        }
+
+        void Swim_EnterState() {
+            currentFallDistance = 0f;
+            if (playerManager.ActiveUnitController != null) {
+                EnterGroundStateCommon();
+                playerManager.ActiveUnitController.StartSwimming();
+                playerManager.ActiveUnitController.RigidBody.useGravity = false;
+                playerManager.ActiveUnitController.UnitAnimator.SetTrigger("SwimTrigger");
+                playerManager.ActiveUnitController.UnitAnimator.SetBool("Swimming", true);
+            }
+        }
+
+        void Swim_StateUpdate() {
+            //Debug.Log(gameObject.name + ".PlayerUnitMovementController.Swim_StateUpdate()");
+            airForwardDirection = playerManager.ActiveUnitController.transform.forward;
+
+            if (playerManager.ActiveUnitController.InWater == true) {
+                if (playerManager.PlayerController.allowedInput
+                    && playerManager.ActiveUnitController.CanFly
+                    && playerManager.PlayerController.inputFly
+                    && CheckForSwimming() == false) {
+                    currentState = AnyRPGCharacterState.Fly;
+                    return;
+                }
+                if (CheckForSwimming() == false) {
+                    currentState = AnyRPGCharacterState.Move;
+                    return;
+                }
+                
+            } else {
+                currentState = AnyRPGCharacterState.Move;
+                return;
+            }
+
+            if ((playerManager.PlayerController.HasWaterMoveInput() || playerManager.PlayerController.HasTurnInput())
+                && playerManager.PlayerController.canMove) {
+
+                // ============ RIGIDBODY CONSTRAINTS ============
+                playerManager.ActiveUnitController.RigidBody.constraints = RigidbodyConstraints.FreezeRotation;
+
+                // ============ VELOCITY CALCULATIONS ============
+
+                // set clampValue to default of max movement speed
+                float clampValue = playerManager.MaxMovementSpeed;
+
+                // set a clamp value to limit movement speed to walking if going backward
+                /*
+                if (currentMoveVelocity.z < 0) {
+                    clampValue = 1;
+                }
+                */
+
+                // get current movement speed and clamp it to current clamp value
+                float calculatedSpeed = playerManager.ActiveUnitController.SwimSpeed;
+                calculatedSpeed = Mathf.Clamp(calculatedSpeed, 0, clampValue);
+
+                if (playerManager.PlayerController.HasWaterMoveInput()) {
+                    // multiply normalized movement by calculated speed to get actual movement
+                    localMoveVelocity = NormalizedSwimMovement() * calculatedSpeed;
+                    adjustedlocalMoveVelocity = localMoveVelocity;
+                    //Debug.Log(gameObject.name + ".PlayerUnitMovementController.Swim_StateUpdate() currentMoveVelocity: " + currentMoveVelocity);
+                }
+                CalculateTurnVelocity();
+
+
+                // ============ ANIMATOR PARAMETERS ============
+                playerManager.ActiveUnitController.UnitAnimator.SetMoving(true);
+                playerManager.ActiveUnitController.UnitAnimator.SetTurnVelocity(currentTurnVelocity.x);
+
+            } else {
+                // ============ RIGIDBODY CONSTRAINTS ============
+                // prevent constant drifting through water after stop moving
+                playerManager.ActiveUnitController.FreezeAll();
+
+                // ============ VELOCITY CALCULATIONS ============
+                localMoveVelocity = Vector3.zero;
+                adjustedlocalMoveVelocity = localMoveVelocity;
+
+                // ============ ANIMATOR PARAMETERS ============
+                playerManager.ActiveUnitController.UnitAnimator.SetMoving(false);
+                playerManager.ActiveUnitController.UnitAnimator.SetTurnVelocity(0f);
+
+            }
+            playerManager.ActiveUnitController.UnitAnimator.SetVelocity(localMoveVelocity);
+
+            MoveRelative();
+        }
+
+        void Swim_ExitState() {
+            if (playerManager.ActiveUnitController != null) {
+                playerManager.ActiveUnitController.StopSwimming();
+                playerManager.ActiveUnitController.RigidBody.useGravity = true;
+                playerManager.ActiveUnitController.UnitAnimator.SetBool("Swimming", false);
             }
         }
 
@@ -378,77 +684,221 @@ namespace AnyRPG {
         }
 
         void Knockback_StateUpdate() {
-            //Debug.Log("Knockback_StateUpdate()");
-            // new code to allow bouncing off walls instead of getting stuck flying into them
-            //currentMoveVelocity = CharacterRelativeInput(playerManager.ActiveUnitController.transform.InverseTransformDirection(playerManager.ActiveUnitController.MyRigidBody.velocity));
-            Vector3 airForwardVelocity = Quaternion.LookRotation(airForwardDirection, Vector3.up) * playerManager.ActiveUnitController.RigidBody.velocity;
-            currentMoveVelocity = playerManager.ActiveUnitController.transform.InverseTransformDirection(playerManager.ActiveUnitController.RigidBody.velocity);
-            Vector3 fromtoMoveVelocity = Quaternion.FromToRotation(airForwardDirection, playerManager.ActiveUnitController.transform.forward) * playerManager.ActiveUnitController.transform.InverseTransformDirection(playerManager.ActiveUnitController.RigidBody.velocity);
-            currentMoveVelocity = fromtoMoveVelocity;
-            if (AcquiringGround() && playerManager.ActiveUnitController.RigidBody.velocity.y < 0.1) {
+
+            if (playerManager.ActiveUnitController.InWater == true) {
+                if (CheckForSwimming() == true) {
+                    currentState = AnyRPGCharacterState.Swim;
+                    return;
+                }
+            }
+
+            if (touchingGround && playerManager.ActiveUnitController.RigidBody.velocity.y < 0.1) {
                 if ((playerManager.PlayerController.HasMoveInput() || playerManager.PlayerController.HasTurnInput()) && playerManager.PlayerController.canMove) {
                     // new code to allow not freezing up when landing - fix, should be fall or somehow prevent from getting into move during takeoff
                     currentState = AnyRPGCharacterState.Move;
-                    rpgCharacterState = AnyRPGCharacterState.Move;
                     return;
                 }
                 currentState = AnyRPGCharacterState.Idle;
-                rpgCharacterState = AnyRPGCharacterState.Idle;
                 return;
             }
+
+            //MoveRelative();
         }
 
         public void KnockBack() {
             //Debug.Log("Knockback()");
             currentState = AnyRPGCharacterState.Knockback;
-            rpgCharacterState = AnyRPGCharacterState.Knockback;
         }
 
 
         void Jump_EnterState() {
-            currentMoveVelocity.y = (Vector3.up * jumpAcceleration).y;
+            localMoveVelocity.y = (Vector3.up * jumpAcceleration).y;
+            adjustedlocalMoveVelocity = localMoveVelocity;
             canJump = false;
             playerManager.ActiveUnitController.UnitAnimator.SetJumping(1);
             playerManager.ActiveUnitController.UnitAnimator.SetTrigger("JumpTrigger");
             lastJumpFrame = Time.frameCount;
+            MoveRelative();
         }
 
         void Jump_StateUpdate() {
-            // new code to allow bouncing off walls instead of getting stuck flying into them
-            //currentMoveVelocity = CharacterRelativeInput(playerManager.ActiveUnitController.transform.InverseTransformDirection(playerManager.ActiveUnitController.MyRigidBody.velocity));
-            Vector3 airForwardVelocity = Quaternion.LookRotation(airForwardDirection, Vector3.up) * playerManager.ActiveUnitController.RigidBody.velocity;
-            currentMoveVelocity = playerManager.ActiveUnitController.transform.InverseTransformDirection(playerManager.ActiveUnitController.RigidBody.velocity);
-            Vector3 fromtoMoveVelocity = Quaternion.FromToRotation(airForwardDirection, playerManager.ActiveUnitController.transform.forward) * playerManager.ActiveUnitController.transform.InverseTransformDirection(playerManager.ActiveUnitController.RigidBody.velocity);
-            currentMoveVelocity = fromtoMoveVelocity;
-            if (playerManager.ActiveUnitController.RigidBody.velocity.y <= 0f && Time.frameCount > (lastJumpFrame + 2)) {
-                currentState = AnyRPGCharacterState.Fall;
-                rpgCharacterState = AnyRPGCharacterState.Fall;
+
+            if (playerManager.ActiveUnitController.InWater == true) {
+                if (CheckForSwimming() == true) {
+                    currentState = AnyRPGCharacterState.Swim;
+                    return;
+                }
+            }
+
+            if (playerManager.PlayerController.allowedInput
+                && playerManager.ActiveUnitController.CanFly
+                && playerManager.PlayerController.inputFly) { 
+                currentState = AnyRPGCharacterState.Fly;
                 return;
             }
+
+
+            if (playerManager.ActiveUnitController.RigidBody.velocity.y <= 0f && Time.frameCount > (lastJumpFrame + 2)) {
+                if (playerManager.ActiveUnitController.CanGlide) {
+                    currentState = AnyRPGCharacterState.Glide;
+                    return;
+                }
+                currentState = AnyRPGCharacterState.Fall;
+                return;
+            }
+
+            //MoveRelative();
         }
 
         void Fall_EnterState() {
-            //Debug.Log("Fall_EnterState()");
             canJump = false;
-            playerManager.ActiveUnitController.UnitAnimator.SetJumping(2);
+            if (playerManager.ActiveUnitController.UnitAnimator.GetInt("Jumping") != 2) {
+                playerManager.ActiveUnitController.UnitAnimator.SetTrigger("FallTrigger");
+                playerManager.ActiveUnitController.UnitAnimator.SetJumping(2);
+            }
+            currentFallDistance = 0f;
+            fallStartHeight = playerManager.ActiveUnitController.transform.position.y;
+
+            // clamp y velocity to prevent launching off ramps
+            playerManager.ActiveUnitController.UnitMotor?.Move(new Vector3(playerManager.ActiveUnitController.RigidBody.velocity.x, Mathf.Clamp(playerManager.ActiveUnitController.RigidBody.velocity.y, -53, 0), playerManager.ActiveUnitController.RigidBody.velocity.z));
         }
 
         void Fall_StateUpdate() {
-            // new code to allow bouncing off walls instead of getting stuck flying into them
-            Vector3 fromtoMoveVelocity = Quaternion.FromToRotation(airForwardDirection, playerManager.ActiveUnitController.transform.forward) * playerManager.ActiveUnitController.transform.InverseTransformDirection(playerManager.ActiveUnitController.RigidBody.velocity);
-            //currentMoveVelocity = playerManager.ActiveUnitController.transform.InverseTransformDirection(CharacterRelativeInput(playerManager.ActiveUnitController.MyRigidBody.velocity));
-            currentMoveVelocity = new Vector3(fromtoMoveVelocity.x, Mathf.Clamp(fromtoMoveVelocity.y, -53, 0), fromtoMoveVelocity.z);
-            //currentMoveVelocity = new Vector3(currentMoveVelocity.x, 0, currentMoveVelocity.z);
-            if (AcquiringGround()) {
+
+            if (playerManager.ActiveUnitController.InWater == true) {
+                if (CheckForSwimming() == true) {
+                    currentState = AnyRPGCharacterState.Swim;
+                    return;
+                }
+            }
+
+            if (playerManager.PlayerController.allowedInput
+                && playerManager.ActiveUnitController.CanFly
+                && playerManager.PlayerController.inputFly) {
+                currentState = AnyRPGCharacterState.Fly;
+                return;
+            }
+
+            if (playerManager.PlayerController.allowedInput
+                && playerManager.ActiveUnitController.CanGlide) {
+                currentState = AnyRPGCharacterState.Glide;
+                return;
+            }
+
+
+            if (touchingGround && groundAngle <= slopeLimit) {
                 if ((playerManager.PlayerController.HasMoveInput() || playerManager.PlayerController.HasTurnInput()) && playerManager.PlayerController.canMove) {
-                    // new code to allow not freezing up when landing
                     currentState = AnyRPGCharacterState.Move;
-                    rpgCharacterState = AnyRPGCharacterState.Move;
                     return;
                 }
                 currentState = AnyRPGCharacterState.Idle;
-                rpgCharacterState = AnyRPGCharacterState.Idle;
                 return;
+            }
+
+            // testing disable move call to let physics move the character
+            //MoveRelative();
+        }
+
+        void Fall_ExitState() {
+            playerManager.ActiveUnitController.UnitAnimator.SetJumping(0);
+            currentFallDistance = fallStartHeight - playerManager.ActiveUnitController.transform.position.y;
+        }
+
+        void Glide_EnterState() {
+            //Debug.Log("PlayerUnitMovementController.Glide_EnterState()");
+            currentFallDistance = 0f;
+            canJump = false;
+            if (playerManager.ActiveUnitController.UnitAnimator.GetInt("Jumping") != 2) {
+                playerManager.ActiveUnitController.UnitAnimator.SetTrigger("FallTrigger");
+                playerManager.ActiveUnitController.UnitAnimator.SetJumping(2);
+            }
+            playerManager.ActiveUnitController.RigidBody.useGravity = false;
+            playerManager.ActiveUnitController.UnitAnimator.SetTurnVelocity(0f);
+            playerManager.ActiveUnitController.RigidBody.constraints = RigidbodyConstraints.FreezeRotation;
+
+            // clamp y velocity to prevent launching off ramps
+            playerManager.ActiveUnitController.UnitMotor?.Move(new Vector3(playerManager.ActiveUnitController.RigidBody.velocity.x, Mathf.Clamp(playerManager.ActiveUnitController.RigidBody.velocity.y, -53, 0), playerManager.ActiveUnitController.RigidBody.velocity.z));
+        }
+
+        void Glide_StateUpdate() {
+            //Debug.Log("PlayerUnitMovementController.Glide_StateUpdate()");
+
+            if (playerManager.ActiveUnitController.InWater == true) {
+                if (CheckForSwimming() == true) {
+                    //Debug.Log("PlayerUnitMovementController.Glide_StateUpdate() swimming");
+                    currentState = AnyRPGCharacterState.Swim;
+                    return;
+                }
+            }
+
+            if (playerManager.PlayerController.allowedInput
+                && playerManager.ActiveUnitController.CanFly
+                && playerManager.PlayerController.inputFly) {
+                //Debug.Log("PlayerUnitMovementController.Glide_StateUpdate() flying");
+                currentState = AnyRPGCharacterState.Fly;
+                return;
+            }
+
+            if (touchingGround) {
+                if (groundAngle <= slopeLimit) {
+                    if ((playerManager.PlayerController.HasMoveInput() || playerManager.PlayerController.HasTurnInput()) && playerManager.PlayerController.canMove) {
+                        //Debug.Log("PlayerUnitMovementController.Glide_StateUpdate() moving");
+                        currentState = AnyRPGCharacterState.Move;
+                        return;
+                    }
+                    //Debug.Log("PlayerUnitMovementController.Glide_StateUpdate() idling");
+                    currentState = AnyRPGCharacterState.Idle;
+                    return;
+                }
+            }
+
+            if (playerManager.ActiveUnitController.CanGlide == false) {
+                //Debug.Log("PlayerUnitMovementController.Glide_StateUpdate() falling");
+                currentState = AnyRPGCharacterState.Fall;
+                return;
+            }
+
+            // ============ VELOCITY CALCULATIONS ============
+
+            // set clampValue to default of max movement speed
+            float clampValue = playerManager.MaxMovementSpeed;
+
+            // get current movement speed and clamp it to current clamp value
+            float calculatedSpeed = playerManager.ActiveUnitController.GlideSpeed;
+            calculatedSpeed = Mathf.Clamp(calculatedSpeed, 0, clampValue);
+
+            // multiply normalized movement by calculated speed to get actual movement
+            localMoveVelocity = NormalizedGlideMovement(calculatedSpeed) * calculatedSpeed;
+            adjustedlocalMoveVelocity = localMoveVelocity;
+            //Debug.Log(gameObject.name + ".PlayerUnitMovementController.Swim_StateUpdate() currentMoveVelocity: " + currentMoveVelocity);
+
+            CalculateTurnVelocity();
+
+            MoveRelative();
+        }
+
+        void Glide_ExitState() {
+            //Debug.Log("PlayerUnitMovementController.Glide_ExitState()");
+            playerManager.ActiveUnitController.UnitAnimator.SetJumping(0);
+            playerManager.ActiveUnitController.RigidBody.useGravity = true;
+
+        }
+
+        public Vector3 NormalizedGlideMovement(float calculatedSpeed) {
+            // it's safe to check for touching ground here because although we should be gliding
+            // we can still reach this block of code if we touch ground that is too sloped to walk on
+            if (touchingSlope == true && (playerManager.ActiveUnitController.transform.InverseTransformPoint(slopePoint).z > 0f)) {
+                //Debug.Log("NormalizedGlideMovement(" + calculatedSpeed + ") slopePoint: " + playerManager.ActiveUnitController.transform.InverseTransformPoint(slopePoint));
+                //Debug.Log("NormalizedGlideMovement(" + calculatedSpeed + ") downCross: (" + slopeDirection.x + ", " + slopeDirection.y + ", " + slopeDirection.z + ")");
+
+                return playerManager.ActiveUnitController.transform.InverseTransformDirection(slopeDirection * (playerManager.ActiveUnitController.GlideFallSpeed / calculatedSpeed));
+                //Vector3 groundDown = Quaternion.FromToRotation(Vector3.up, Vector3.Cross(groundCross, groundHitInfo.normal)) * playerManager.ActiveUnitController.transform.forward;
+                //Debug.DrawLine(groundHitInfo.point, groundHitInfo.point + groundDown, Color.blue);
+                //return groundDirection * playerManager.ActiveUnitController.GlideFallSpeed;
+            } else { 
+                float glideGravity = -playerManager.ActiveUnitController.GlideFallSpeed / calculatedSpeed;
+                Vector3 returnValue = new Vector3(0f, glideGravity, 1f);
+                return returnValue;
             }
         }
 
@@ -465,24 +915,26 @@ namespace AnyRPG {
             }
         }
 
-        /// <summary>
-        /// switch to quaternion rotation instead of transformDirection so direction can be maintained in air no matter which way player faces in air
-        /// </summary>
-        /// <param name="inputVector"></param>
-        /// <returns></returns>
         Vector3 CharacterRelativeInput(Vector3 inputVector) {
             //Debug.Log("PlayerUnitMovementController.CharacterRelativeInput(" + inputVector + ")");
 
+            // switch to quaternion rotation instead of transformDirection so direction can be maintained in air no matter which way player faces in air
             Vector3 qRelativeVelocity = Vector3.zero;
+            /*
             if (inputVector != Vector3.zero) {
                 qRelativeVelocity = Quaternion.LookRotation(airForwardDirection, Vector3.up) * inputVector;
             }
+            */
+
             Vector3 tRelativeVelocity = playerManager.ActiveUnitController.transform.TransformDirection(inputVector);
+            /*
             if (qRelativeVelocity != Vector3.zero && tRelativeVelocity != Vector3.zero) {
                 //Debug.Log("CharacterRelativeInput(" + inputVector + "): qRelativeVelocity: " + qRelativeVelocity + "; tRelativeVelocity: " + tRelativeVelocity);
             }
             //Debug.Log("PlayerUnitMovementController.CharacterRelativeInput(" + inputVector + "): return " + qRelativeVelocity + "; transformF: " + playerManager.ActiveUnitController.transform.forward + "; airForwardDirection: " + airForwardDirection);
-            return qRelativeVelocity;
+            */
+            //return qRelativeVelocity;
+            return tRelativeVelocity;
         }
 
         Vector3 WorldRelativeInput(float inputX, float inputZ) {
@@ -505,275 +957,419 @@ namespace AnyRPG {
             return relativeVelocity;
         }
 
-        private bool AcquiringGround() {
-            //Debug.Log("PlayerUnitMovementController.AcquiringGround()");
-            Collider[] hitColliders = Physics.OverlapBox(playerManager.ActiveUnitController.transform.position, acquiringGroundExtents, Quaternion.identity, groundMask);
-            /*
-            foreach (Collider hitCollider in hitColliders) {
-                //Debug.Log("Overlap Box Hit : " + hitColliders[i].name + i);
-                if (((1 << hitCollider.gameObject.layer) & groundMask) != 0) {
-                    return true;
+        private bool RaycastForGround(float raycastHeight = 0.3f) {
+            bool returnValue = false;
+            closestSlopeDistance = raycastHeight;
+            closestTouchingGroundDistance = raycastHeight;
+
+            // create a ring of downward raycasts in a circle around the player at evenly spaced angles
+            for (int i = 0; i < 12; i++) {
+                Vector3 raycastPoint = (playerManager.ActiveUnitController.transform.position + (Vector3.up * raycastHeight) + (Vector3.up * 0.01f)) + (Quaternion.AngleAxis((360f / 12f) * i, Vector3.up) * Vector3.forward * colliderRadius);
+                Debug.DrawLine(raycastPoint, new Vector3(raycastPoint.x, raycastPoint.y - raycastHeight - 0.02f, raycastPoint.z), Color.cyan);
+                if (Physics.Raycast(raycastPoint, Vector3.down, out groundHitInfo, Mathf.Infinity, groundMask)) {
+                    float groundHitHeight = playerManager.ActiveUnitController.transform.InverseTransformPoint(groundHitInfo.point).y;
+                    
+                    // determine if this is the closest ground distance, not caring if the player is actually touching it or not
+                    // tihs calculation is only used for applying downforce later
+                    if (groundHitHeight < 0f && groundHitHeight > closestGroundDistance) {
+                        closestGroundDistance = groundHitHeight;
+                    }
+
+                    // determine if the player is touching this ground
+                    if ((groundHitInfo.point.y > (raycastPoint.y - (raycastHeight + 0.02f))) && Vector3.Angle(groundHitInfo.normal, Vector3.up) <= slopeLimit) {
+                        returnValue = true;
+                        // save the ground info if the slope is the closest to the player feet, preferring ground that is at or below the player feet
+                        if (((closestTouchingGroundDistance < 0f) && (groundHitHeight < 0f) && (playerManager.ActiveUnitController.transform.position.y + groundHitHeight < closestTouchingGroundDistance))
+                                || (groundHitHeight == 0f)
+                                || (groundHitHeight < closestTouchingGroundDistance)) {
+                            groundPoint = groundHitInfo.point;
+                            groundNormal = groundHitInfo.normal;
+                            Debug.DrawLine(groundHitInfo.point, groundHitInfo.point + groundHitInfo.normal, Color.red);
+                            Vector3 groundCross = Vector3.Cross(groundHitInfo.normal, Vector3.up);
+                            Debug.DrawLine(groundHitInfo.point, groundHitInfo.point + groundCross, Color.red);
+                            Vector3 downCross = Vector3.Cross(groundHitInfo.normal, groundCross);
+                            Debug.DrawLine(groundHitInfo.point, groundHitInfo.point + downCross, Color.red);
+
+                        }
+                    }
+                    // determine if the player is touching a slope
+                    if (groundHitHeight > 0f && Vector3.Angle(groundHitInfo.normal, Vector3.up) > slopeLimit) {
+                        touchingSlope = true;
+                        // save the slope info if the slope is the closest to the player feet
+                        if (groundHitHeight < closestSlopeDistance) {
+                            closestSlopeDistance = groundHitHeight;
+                            slopePoint = groundHitInfo.point;
+                            slopeNormal = groundHitInfo.normal;
+                            slopeAngle = Vector3.Angle(groundHitInfo.normal, Vector3.up);
+
+                            Debug.DrawLine(slopePoint, slopePoint + slopeNormal, Color.blue);
+                            Vector3 groundCross = Vector3.Cross(slopeNormal, Vector3.up);
+                            Debug.DrawLine(slopePoint, slopePoint + groundCross, Color.blue);
+                            slopeDirection = Vector3.Cross(slopeNormal, groundCross);
+                            Debug.DrawLine(slopePoint, slopePoint + slopeDirection, Color.blue);
+
+                        }
+                    }
+
                 }
             }
-            */
-            if (hitColliders.Length > 0) {
-                //Debug.Log("PlayerUnitMovementController.AcquiringGround(): Grounded!");
-                return true;
+            /*
+            if (returnValue == true) {
+                Debug.Log("RaycastForGround() : ground angle: " + Vector3.Angle(groundNormal, Vector3.up));
             }
-            return false;
+            */
+
+            // in the case that the player is not touching the ground and is touching a slope, set the ground point and ground normal to slope values
+            // because otherwise they will remain set to whatever ground was directly underneath the player, no matter how far below that is
+            if (returnValue == false && touchingSlope == true) {
+                groundPoint = slopePoint;
+                groundNormal = slopeNormal;
+            }
+            Debug.DrawLine(groundPoint, groundPoint + Vector3.up, Color.magenta);
+            return returnValue;
         }
 
         public bool MaintainingGround() {
             //Debug.Log(gameObject.name + ".PlayerUnitMovementController.MaintainingGround");
-            return tempGrounded;
+            return closeToGround;
         }
 
-        private Vector3 LocalMovement() {
+        private Vector3 NormalizedSwimMovement() {
+            //Debug.Log("PlayerUnitMovementController.NormalizedSwimMovement(): groundAngle: " + groundAngle + "; backwardGroundAngle: " + backwardGroundAngle);
+
+            Vector3 returnValue = playerManager.PlayerController.NormalizedMoveInput;
+
+            // check for right mouse button held down to adjust swim angle based on camera angle
+            bool chestBelowWater = (playerManager.ActiveUnitController.transform.position.y + playerManager.ActiveUnitController.FloatHeight) < (playerManager.ActiveUnitController.CurrentWater[0].SurfaceHeight - (playerManager.ActiveUnitController.SwimSpeed * Time.fixedDeltaTime));
+
+            if (inputManager.rightMouseButtonDown
+                && playerManager.PlayerController.HasMoveInput()
+                && (!inputManager.rightMouseButtonClickedOverUI || (namePlateManager != null ? namePlateManager.MouseOverNamePlate() : false))) {
+
+                //Debug.Log(gameObject.name + ".PlayerUnitMovementController.SwimMovement(): camera Angle: " + cameraManager.MainCameraGameObject.transform.localEulerAngles.x);
+
+                // prevent constant bouncing out of water using right mouse
+                // always allow downward motion
+                // only allow upward motion if the swim speed would not result in a bounce
+                float cameraAngle = (cameraManager.MainCameraGameObject.transform.localEulerAngles.x < 180f ? cameraManager.MainCameraGameObject.transform.localEulerAngles.x : cameraManager.MainCameraGameObject.transform.localEulerAngles.x - 360f);
+                //Debug.Log(gameObject.name + ".PlayerUnitMovementController.SwimMovement(): camera Angle: " + cameraAngle);
+                // ignore angle if already touching ground underwater to prevent hitting bottom and stopping while trying to swim forward
+                if ((cameraAngle > 0f && returnValue.z > 0f && !touchingGround) // camera above and moving forward / down
+                    || (cameraAngle > 0f && returnValue.z < 0f && chestBelowWater == true) // camera above and moving back / up
+                    || (cameraAngle < 0f && returnValue.z < 0f && !touchingGround) // camera below and moving back / down
+                    || (cameraAngle < 0f && returnValue.z > 0f && chestBelowWater == true) // camera below and forward / up
+                    ) {
+                    //Debug.Log(gameObject.name + ".PlayerUnitMovementController.SwimMovement(): camera Angle: " + cameraAngle + "; direction: " + returnValue.z +
+                    //    "; chest height: " + (playerManager.ActiveUnitController.transform.position.y + playerManager.ActiveUnitController.ChestHeight) + "; surface: " + playerManager.ActiveUnitController.CurrentWater[0].SurfaceHeight + "; speed: " + (playerManager.ActiveUnitController.SwimSpeed * Time.deltaTime));
+                    returnValue = Quaternion.AngleAxis(cameraManager.MainCameraGameObject.transform.localEulerAngles.x, Vector3.right) * returnValue;
+                }
+            }
+
+            // if the jump or crouch buttons were held down, their values override the camera angle and allow movement straight up or down
+            // ignore if swim speed would not result in a bounce out of the water
+            if (playerManager.PlayerController.inputSink == true
+                || (playerManager.PlayerController.inputFly == true && (chestBelowWater == true || playerManager.ActiveUnitController.CanFly))) {
+                returnValue.y = (playerManager.PlayerController.inputFly == true ? 1 : 0) + (playerManager.PlayerController.inputSink == true ? -1 : 0);
+            }
+
+            return returnValue;
+        }
+
+        private Vector3 NormalizedFlyMovement() {
+            //Debug.Log("PlayerUnitMovementController.NormalizedSwimMovement(): groundAngle: " + groundAngle + "; backwardGroundAngle: " + backwardGroundAngle);
+
+            Vector3 returnValue = playerManager.PlayerController.NormalizedMoveInput;
+
+            if (inputManager.rightMouseButtonDown
+                && playerManager.PlayerController.HasMoveInput()
+                && (!inputManager.rightMouseButtonClickedOverUI || (namePlateManager != null ? namePlateManager.MouseOverNamePlate() : false))) {
+
+                //Debug.Log(gameObject.name + ".PlayerUnitMovementController.SwimMovement(): camera Angle: " + cameraManager.MainCameraGameObject.transform.localEulerAngles.x);
+
+                // prevent constant bouncing out of water using right mouse
+                // always allow downward motion
+                // only allow upward motion if the swim speed would not result in a bounce
+                float cameraAngle = (cameraManager.MainCameraGameObject.transform.localEulerAngles.x < 180f ? cameraManager.MainCameraGameObject.transform.localEulerAngles.x : cameraManager.MainCameraGameObject.transform.localEulerAngles.x - 360f);
+                //Debug.Log(gameObject.name + ".PlayerUnitMovementController.SwimMovement(): camera Angle: " + cameraAngle);
+                // ignore angle if already touching ground underwater to prevent hitting bottom and stopping while trying to swim forward
+                if ((cameraAngle > 0f && returnValue.z > 0f && !touchingGround) // camera above and moving forward / down
+                    || (cameraAngle < 0f && returnValue.z < 0f && !touchingGround) // camera below and moving back / down
+                    ) {
+                    //Debug.Log(gameObject.name + ".PlayerUnitMovementController.SwimMovement(): camera Angle: " + cameraAngle + "; direction: " + returnValue.z +
+                    //    "; chest height: " + (playerManager.ActiveUnitController.transform.position.y + playerManager.ActiveUnitController.ChestHeight) + "; surface: " + playerManager.ActiveUnitController.CurrentWater[0].SurfaceHeight + "; speed: " + (playerManager.ActiveUnitController.SwimSpeed * Time.deltaTime));
+                    returnValue = Quaternion.AngleAxis(cameraManager.MainCameraGameObject.transform.localEulerAngles.x, Vector3.right) * returnValue;
+                }
+            }
+
+            // if the jump or crouch buttons were held down, their values override the camera angle and allow movement straight up or down
+            // ignore if swim speed would not result in a bounce out of the water
+            if (playerManager.PlayerController.inputSink == true
+                || playerManager.PlayerController.inputFly == true) {
+                returnValue.y = (playerManager.PlayerController.inputFly == true ? 1 : 0) + (playerManager.PlayerController.inputSink == true ? -1 : 0);
+            }
+
+            return returnValue;
+        }
+
+        private Vector3 NormalizedLocalMovement(float calculatedSpeed) {
             //Debug.Log("PlayerUnitMovementController.LocalMovement(): groundAngle: " + groundAngle + "; backwardGroundAngle: " + backwardGroundAngle);
             Vector3 normalizedInput = playerManager.PlayerController.NormalizedMoveInput;
 
-            // testing applying downforce on ground that is sloped downward - can't do it because that will later be rotated which could result in the "down" force moving backward at angles beyond 45degrees
-            if (groundAngle == 0 && backwardGroundAngle == 0 && nearFrontObstacle == false) {
-                //if (groundHitInfo.normal == Vector3.up) {
+            // determine if there is an obstacle in front, and if it is stairs
+            CheckFrontObstacle(calculatedSpeed);
+
+            Vector3 newReturnValue;
+            float usedAngle = groundAngle;
+            
+            // the normal is the normal of the ground below the player
+            Vector3 localGroundNormal = playerManager.ActiveUnitController.transform.InverseTransformDirection(groundNormal);
+            Vector3 usedGroundNormal = groundNormal;
+            // the player is near a front obstacle, and that obstacle is below the slope limit, use its normal
+            if (nearFrontObstacle && frontAngleDifferent && frontObstacleAngle < slopeLimit) {
+                //Debug.Log("near front obstacle and front angle (" + frontObstacleAngle + ") is different than ground angle (" + rawGroundAngle + "), adjusting forward direction");
+                localGroundNormal = playerManager.ActiveUnitController.transform.InverseTransformDirection(forwardHitInfo.normal);
+                usedGroundNormal = forwardHitInfo.normal;
+            } else {
+                // the player is near stairs in the direction of travel
+                //if (RaycastForStairs(playerManager.ActiveUnitController.transform.TransformDirection(normalizedInput), 0.5f)) {
+                if (nearStairs) {
+                    //Debug.Log("near stairs and front angle (" + frontObstacleAngle + ") is different than ground angle (" + rawGroundAngle + "), adjusting forward direction");
+                    //localGroundNormal = playerManager.ActiveUnitController.transform.InverseTransformDirection(forwardHitInfo.normal);
+
+                    // 0.2f is an arbitrary distance at the top of the stair is below the start of the curve on the bottom of a capsule collider of 2m height
+                    // if the stairs are higher than 0.3f (the start of the vertical section on the collider) and the player is too close to the stair,
+                    // any angled approach will lose all momentum from running straight into the stair and the player will get stuck
+
+                    if (stairDownHitInfo.point.y - playerManager.ActiveUnitController.transform.position.y < 0.2f
+                        || playerManager.ActiveUnitController.transform.InverseTransformPoint(forwardHitInfo.point).magnitude > (colliderRadius + 0.01f)) {
+                        localGroundNormal = playerManager.ActiveUnitController.transform.InverseTransformDirection(stairRampNormal);
+                        usedGroundNormal = stairRampNormal;
+                    } else {
+                        //Debug.Log("distance from wall: " + playerManager.ActiveUnitController.transform.InverseTransformPoint(forwardHitInfo.point).magnitude);
+                        localGroundNormal = playerManager.ActiveUnitController.transform.InverseTransformDirection(forwardHitInfo.normal);
+                        usedGroundNormal = forwardHitInfo.normal;
+                    }
+                }
+            }
+
+            // translate the input so that the up direction is the same as the normal (up direction) of whatever ground or slope the player is on
+            // this prevents losing speed up hills from slamming horizontally into the hill
+            newReturnValue = Vector3.Cross(Quaternion.LookRotation(normalizedInput, Vector3.up) * playerManager.ActiveUnitController.transform.InverseTransformDirection(playerManager.ActiveUnitController.transform.right), localGroundNormal);
+            // next line works when facing world axis only
+            //newReturnValue = playerManager.ActiveUnitController.transform.InverseTransformDirection(Quaternion.LookRotation(forwardDirection, localGroundNormal) * normalizedInput);
+            //Vector3 forwardDirection = playerManager.ActiveUnitController.transform.forward;
+            /*
+            Vector3 forwardDirection = Vector3.forward;
+            Vector3 worldInput = playerManager.ActiveUnitController.transform.TransformDirection(normalizedInput);
+            //Vector3 rotatedInput = Quaternion.LookRotation(forwardDirection, groundNormal) * worldInput;
+            //Vector3 rotatedForward = Quaternion.LookRotation(forwardDirection, groundNormal) * forwardDirection;
+            Vector3 rotatedInput = Quaternion.LookRotation(forwardDirection, groundNormal) * worldInput;
+            // handle vertical ground normal case, which results in loss of momentum and odd rotations in some directions
+            if (groundNormal.y == 0f) {
+                //rotatedInput = worldInput + (Vector3.up);
+                rotatedInput = Vector3.up;
+            }
+
+            newReturnValue = playerManager.ActiveUnitController.transform.InverseTransformDirection(rotatedInput);
+            Debug.Log("position: " + playerManager.ActiveUnitController.transform.position + "; forwardDirection: " + forwardDirection + "; worldInput: " + worldInput + "; rotatedInput: " + rotatedInput + "; groundNormal: " + groundNormal + "; newReturnValue: " + newReturnValue);
+            */
+
+            // limit upward momentum near stairs to prevent overshooting the stairs in the vertical direction
+            if (nearStairs) {
+                //Debug.Log("unclamped returnValue: " + newReturnValue.y + "; deltaTime: " + Time.deltaTime + "; fixedDeltaTime: " + Time.fixedDeltaTime);
+                //float clampedReturnValue = Mathf.Clamp(newReturnValue.y, 0f, (playerManager.ActiveUnitController.transform.InverseTransformPoint(stairDownHitInfo.point).y / calculatedSpeed) * (1/Time.deltaTime));
+                float clampedReturnValue = Mathf.Clamp(newReturnValue.y, 0f, playerManager.ActiveUnitController.transform.InverseTransformPoint(stairDownHitInfo.point).y / calculatedSpeed / Time.fixedDeltaTime);
+                //Debug.Log("clamped returnValue: " + clampedReturnValue + "; unclamped: " + newReturnValue.y + "; deltaTime: " + Time.deltaTime + "; fixedDeltaTime: " + Time.fixedDeltaTime);
+                newReturnValue.y = clampedReturnValue;
+            }
+
+            // apply downforce
+            if (groundAngle == 0 && nearFrontObstacle == false && nearStairs == false && touchingGround == false) {
                 // this should make the character stick to the ground better when actively moving while grounded
                 // ONLY APPLY Y DOWNFORCE ON FLAT GROUND, this will apply a y downforce multiplied by speed, not the existing y downforce from physics (gravity)
                 float yValue = 0f;
-                if (playerManager.ActiveUnitController.transform.InverseTransformPoint(groundHitInfo.point) != Vector3.zero) {
-                    yValue = Mathf.Clamp(playerManager.ActiveUnitController.RigidBody.velocity.normalized.y, -1, 0);
-                    //Debug.Log("LocalMovement(): We are above the (flat) ground and there are no near collisions.  Applying extra ground force: " + yValue);
+                if (playerManager.ActiveUnitController.transform.InverseTransformPoint(groundPoint).y < -0.001f) {
+                    // set a downforce value that should take the character exactly to the ground, and not lower to avoid losing momentum from physics colission with ground
+                    yValue = Mathf.Clamp(1, 0, -closestGroundDistance / calculatedSpeed / Time.fixedDeltaTime) * -1;
+                    //yValue = -1;
+                    /*
+                    Debug.Log("NormalizedLocalMovement() position: " + playerManager.ActiveUnitController.transform.position.y +
+                        "; Applying extra down force: " + yValue +
+                        "; ground distance: " + closestGroundDistance);
+                        */
+                    //Debug.Break();
                 }
-                normalizedInput = new Vector3(normalizedInput.x, yValue, normalizedInput.z);
+                newReturnValue = new Vector3(newReturnValue.x, yValue, newReturnValue.z);
             }
-            Vector3 newReturnValue;
-            float usedAngle = 0f;
-            if (normalizedInput.z > 0) {
-                usedAngle = groundAngle;
-                if (!nearFrontObstacle && forwardContactPoints.Count == 0) {
-                    // moving forward, use forward angle calculated to get over objects
-                    // hopefully this still allows us the correct ground angle when going downhill with no obstacles in front
-                    if (groundAngle > 0) {
-                        // code to stop going up if standing with center over slope, but front of feet on flat surface with no obstacles in front
-                        //Debug.Log("PlayerUnitMovementController.LocalMovement(): no front obstacles, ignoring ground angle because we are likely above the ground");
-                        usedAngle = 0f;
-                    }
-                }
-                newReturnValue = Quaternion.AngleAxis(usedAngle, -Vector3.right) * normalizedInput;
-            } else {
-                usedAngle = backwardGroundAngle;
-                // moving forward, use forward angle calculated to get over objects
-                if (!nearFrontObstacle) {
-                    // hopefully this still allows us the correct ground angle when going downhill with no obstacles in front
-                    if (backwardGroundAngle > 0) {
-                        // code to stop going up if standing with center over slope, but front of feet on flat surface with no obstacles in front
-                        //Debug.Log("PlayerUnitMovementController.LocalMovement(): no front obstacles, ignoring ground angle because we are likely above the ground");
-                        usedAngle = 0f;
-                    }
-                }
-                newReturnValue = Quaternion.AngleAxis(usedAngle, Vector3.right) * normalizedInput;
-            }
-            //Debug.Log("PlayerUnitMovementController.LocalMovement(): normalizedInput: " + normalizedInput + "; usedAngle: " + usedAngle + "; AngleAxis: " + Quaternion.AngleAxis(usedAngle, -Vector3.right) + "; newReturnValue: " + newReturnValue);
+            //Debug.Log("newReturnValue: (" + newReturnValue.x + ", " + newReturnValue.y + ", " + newReturnValue.z + ")");
             return newReturnValue;
         }
 
-        // Calculate the initial velocity of a jump based off gravity and desired maximum height attained
+        /// <summary>
+        /// Calculate the initial velocity of a jump based off gravity and desired maximum height attained
+        /// </summary>
+        /// <param name="jumpHeight"></param>
+        /// <param name="gravity"></param>
+        /// <returns></returns>
         private float CalculateJumpSpeed(float jumpHeight, float gravity) {
             return Mathf.Sqrt(2 * jumpHeight * gravity);
         }
 
-        private void CalculateForward() {
-            if (!MaintainingGround()) {
-                forwardDirection = airForwardDirection;
-                //forwardDirection = playerManager.ActiveUnitController.transform.forward;
-                return;
-            }
-
-            // PUT CODE HERE TO RECOGNIZE THE HIGHEST ANGLE AS THE FORWARD DIRECTION
-
-            if (forwardContactPoints.Count > 0) {
-                //Debug.Log(gameObject.name + ".PlayerUnitMovementController.CalculateForward(): forwardContactPoints.Count: " + forwardContactPoints.Count);
-                int counter = 0;
-                int smallestIndex = -1;
-
-                // find highest contact point
-                foreach (ContactPoint contactPoint in forwardContactPoints) {
-                    Vector3 localContactPoint = playerManager.ActiveUnitController.transform.InverseTransformPoint(contactPoint.point);
-                    // ensure forward contact point is above a certain height and actually in front of the character
-                    if (localContactPoint.y > collisionMinimumHeight && localContactPoint != Vector3.zero) {
-                        if (smallestIndex == -1 || localContactPoint.y > playerManager.ActiveUnitController.transform.InverseTransformPoint(forwardContactPoints[smallestIndex].point).y) {
-                            //Debug.Log(gameObject.name + ".PlayerUnitMovementController.CalculateForward(): found highest contact point at: " + contactPoint.point + "; local: " + localContactPoint);
-                            smallestIndex = counter;
-                        }
-                    }
-                    counter++;
-                }
-
-                if (smallestIndex != -1) {
-                    // get vector between contact point and base of player
-                    Vector3 directionToContact = (forwardContactPoints[smallestIndex].point - playerManager.ActiveUnitController.transform.position).normalized;
-                    forwardDirection = directionToContact;
-                    //Debug.Log(gameObject.name + ".PlayerUnitMovementController.CalculateForward(): Vector3.Cross(downHitInfo.normal(" + downHitInfo.normal + "), -transform.right(" + -transform.right + ")): " + forwardDirection);
-                    //Debug.Log(gameObject.name + ".PlayerUnitMovementController.CalculateForward(): directionToContact: " + directionToContact + "; forwardDirection: " + forwardDirection);
-                    return;
-                }
-            }
-
-            if (nearFrontObstacle && groundHitInfo.normal == Vector3.up) {
-                //Debug.Log(gameObject.name + ".PlayerUnitMovementController.CalculateForward(): near front obstacle is true and we didn't get any useful information from the ground normal, trying obstacle normal");
-                forwardDirection = Vector3.Cross(forwardHitInfo.normal, -playerManager.ActiveUnitController.transform.right);
-                return;
-            }
-
-            forwardDirection = Vector3.Cross(groundHitInfo.normal, -playerManager.ActiveUnitController.transform.right);
-            //Debug.Log(gameObject.name + ".PlayerUnitMovementController.CalculateForward(): no forward collisions. forwardDirection = Vector3.Cross(downHitInfo.normal(" + downHitInfo.normal + "), -transform.right(" + -transform.right + ")): " + forwardDirection);
-            return;
-
-        }
-
-        private void CalculateBackward() {
-            if (!MaintainingGround()) {
-                backwardDirection = -airForwardDirection;
-                //backwardDirection = -transform.forward;
-                return;
-            }
-            if (backwardContactPoints.Count > 0) {
-                //Debug.Log(gameObject.name + ".PlayerUnitMovementController.CalculateBackward(): rearContactPoints.Count: " + rearContactPoints.Count);
-                int counter = 0;
-                int smallestIndex = 0;
-
-                // find highest contact point
-                foreach (ContactPoint contactPoint in backwardContactPoints) {
-                    Vector3 localContactPoint = playerManager.ActiveUnitController.transform.InverseTransformPoint(contactPoint.point);
-                    if (localContactPoint.y > collisionMinimumHeight && localContactPoint != Vector3.zero) {
-                        if (smallestIndex == -1 || localContactPoint.y > playerManager.ActiveUnitController.transform.InverseTransformPoint(backwardContactPoints[smallestIndex].point).y) {
-                            //Debug.Log(gameObject.name + ".PlayerUnitMovementController.CalculateBackward(): found highest contact point");
-                            smallestIndex = counter;
-                        }
-                    }
-                    counter++;
-                }
-                if (smallestIndex != -1) {
-                    // get angle between contact point and base of player
-                    Vector3 directionToContact = (backwardContactPoints[smallestIndex].point - playerManager.ActiveUnitController.transform.position).normalized;
-                    backwardDirection = directionToContact;
-                    //forwardDirection = Vector3.Cross(directionToContact, -transform.right);
-                    //Debug.Log(gameObject.name + ".PlayerUnitMovementController.CalculateBackward(): directionToContact: " + directionToContact + "; rearDirection: " + backwardDirection);
-                    return;
-                }
-            }
-
-            if (nearFrontObstacle && groundHitInfo.normal == Vector3.up) {
-                //Debug.Log(gameObject.name + ".PlayerUnitMovementController.CalculateForward(): near front obstacle is true and we didn't get any useful information from the ground normal, trying obstacle normal");
-                backwardDirection = Vector3.Cross(forwardHitInfo.normal, playerManager.ActiveUnitController.transform.right);
-                return;
-            }
-
-            backwardDirection = Vector3.Cross(groundHitInfo.normal, playerManager.ActiveUnitController.transform.right);
-            //Debug.Log(gameObject.name + ".PlayerUnitMovementController.CalculateForward(): no backward collisions. backwardDirection = Vector3.Cross(downHitInfo.normal(" + downHitInfo.normal + "), playerManager.ActiveUnitController.transform.right(" + playerManager.ActiveUnitController.transform.right + ")): " + backwardDirection);
-            return;
-        }
-
-
-        private void CalculateGroundAngle() {
-            if (!MaintainingGround()) {
-                //groundAngle = 90;
-                groundAngle = 0;
-                return;
-            }
-            /*
-            if (hitInfo != null) {
-                Debug.Log("hitInfo: " + hitInfo.collider.gameObject.name + "; normal: " + hitInfo.normal);
-            }
-            */
-            float downHitAngle = Vector3.Angle(groundHitInfo.normal, playerManager.ActiveUnitController.transform.forward) - 90f;
-            //Debug.Log(gameObject.name + ".PlayerUnitMovementController.CalculateGroundAngle() from downHitInfo.normal(" + downHitInfo.normal + "): " + downHitAngle);
-            float forwardHitAngle = Vector3.Angle(forwardHitInfo.normal, playerManager.ActiveUnitController.transform.forward) - 90f;
-            //Debug.Log(gameObject.name + ".PlayerUnitMovementController.CalculateGroundAngle() from forwardHitInfo.normal(" + forwardHitInfo.normal + "): " + forwardHitAngle);
-
-            //groundAngle = Vector3.Angle(forwardDirection, playerManager.ActiveUnitController.transform.forward) + 90;
-            float forwardcollisionAngle = Vector3.Angle(forwardDirection, playerManager.ActiveUnitController.transform.forward) * (forwardDirection.y < 0 ? -1 : 1);
-
-            // get ground angle from downhit
-            // because downhit angle is based on fowardcollissionAngle it can return 90 even on flat ground. this is ok because we will use one of the collission points that is lower than step height
-            // to get a reasonable angle (or the raycast, not sure)
-            groundAngle = Mathf.Max(downHitAngle, forwardcollisionAngle);
-            //Debug.Log("Initial groundAngle from downHitAngle (" + groundAngle + ") using forwardcollisionAngle: " + forwardcollisionAngle);
-
-            // we are near an obstacle, let's adjust our angle upward to avoid a head on collission
-            if (nearFrontObstacle && forwardHitAngle < 60f && groundAngle > 60f) {
-                // if ground angle is too big and forward hit angle is ok, use forward hit
-                groundAngle = forwardHitAngle;
-            } else if (nearFrontObstacle && forwardHitAngle < 60f && groundAngle < 60f) {
-                // if both angles are ok, use the biggest one
-                groundAngle = Mathf.Max(forwardHitAngle, groundAngle);
-            }
-            // our original downhit angle was too big, and our forward hit angle was too big, we need to clamp to prevent flying straight upward or climbing a slope more than 60 degrees
-            if (groundAngle > 60f) {
-                //Debug.Log("Warning, groundAngle after all checking > 60f (" + groundAngle + ")! clamping!  This is likely because you are standing in front of an object that is vertical at the raycast hit point");
-                groundAngle = 60f;
-            }
-            if (groundAngle != 0) {
-                //Debug.Log(gameObject.name + ".PlayerUnitMovementController.CalculateGroundAngle() from forwardDirection(" + forwardDirection + "): " + forwardcollisionAngle + "; from downhitInfo: " + downHitAngle);
-            }
-
-            backwardGroundAngle = Vector3.Angle(backwardDirection, -playerManager.ActiveUnitController.transform.forward) * (backwardDirection.y < 0 ? -1 : 1);
-            if (backwardGroundAngle != 0) {
-                //Debug.Log(gameObject.name + ".PlayerUnitMovementController.CalculateGroundAngle() from backwardDirection(" + backwardDirection + "): " + backwardGroundAngle);
-            }
-        }
-
         private void CheckGround() {
             //Debug.Log(gameObject.name + ".PlayerUnitMovementController.CheckGround()");
-            // downward cast for grounding
-            if (Physics.Raycast(playerManager.ActiveUnitController.transform.position + (Vector3.up * 0.25f), -Vector3.up, out downHitInfo, rayCastHeight, groundMask)) {
+
+            closestGroundDistance = 0f;
+            touchingSlope = false;
+
+            // set an inital ground distance based on a direct downward raycast from the center of the player
+            // later, a more accurate search will be done to see if there is a closer ground distance at the edges of the player capsule
+            if (Physics.Raycast(playerManager.ActiveUnitController.transform.position + (Vector3.up * 0.25f), -Vector3.up, out groundHitInfo, Mathf.Infinity, groundMask)) {
+                closestGroundDistance = playerManager.ActiveUnitController.transform.InverseTransformPoint(groundHitInfo.point).y;
+                groundNormal = groundHitInfo.normal;
+                groundPoint = groundHitInfo.point;
+            }
+
+            // downward cast for close to ground
+            if (Physics.Raycast(playerManager.ActiveUnitController.transform.position + (Vector3.up * 0.25f), -Vector3.up, out downHitInfo, (closeToGroundHeight + 0.25f), groundMask)) {
                 //Debug.Log(gameObject.name + ".PlayerUnitMovementController.CheckGround(): grounded is true");
-                tempGrounded = true;
+                closeToGround = true;
             } else {
                 //Debug.Log(gameObject.name + ".PlayerUnitMovementController.CheckGround(): grounded is false");
-                tempGrounded = false;
+                closeToGround = false;
             }
 
-            // downward cast for normals
-            Physics.Raycast(playerManager.ActiveUnitController.transform.position + (Vector3.up * 0.25f), -Vector3.up, out groundHitInfo, Mathf.Infinity, groundMask);
-
-            if (bottomContactPoints.Count > 0 || forwardContactPoints.Count > 0 || backwardContactPoints.Count > 0) {
-                // extra check to catch contact points below maximum step height in case the character is halfway off a slope
-                //Debug.Log(gameObject.name + ".PlayerUnitMovementController.CheckGround(): grounded is true from contact points; bottom: " + bottomContactPoints.Count + "; front: " + forwardContactPoints.Count + "; back: " + backwardContactPoints.Count);
-                tempGrounded = true;
-            }
-
-            Collider[] hitColliders = Physics.OverlapBox(playerManager.ActiveUnitController.transform.position, maintainingGroundExtents, Quaternion.identity, groundMask);
-            if (hitColliders.Length > 0) {
-                //foreach (Collider collider in hitColliders) {
-                //Debug.Log(gameObject.name + ".PlayerUnitMovementController.CheckGround(): grounded is true from overlapbox (" + maintainingGroundExtents + "): " + collider.gameObject.name);
-                //}
-                tempGrounded = true;
-            }
-            /*
-            foreach (Collider hitCollider in hitColliders) {
-                //Debug.Log("Overlap Box Hit : " + hitColliders[i].name + i);
-                if (((1 << hitCollider.gameObject.layer) & groundMask) != 0) {
-                    tempGrounded = true;
+            // downward cast for touching ground
+            if (Physics.Raycast(playerManager.ActiveUnitController.transform.position + (Vector3.up * 0.25f), -Vector3.up, out downHitInfo, (touchingGroundHeight + 0.25f), groundMask)) {
+                //Debug.Log(gameObject.name + ".PlayerUnitMovementController.CheckGround(): grounded is true");
+                touchingGround = true;
+            } else {
+                //Debug.Log(gameObject.name + ".PlayerUnitMovementController.CheckGround(): grounded is false");
+                if (RaycastForGround()) {
+                    touchingGround = true;
+                } else {
+                    touchingGround = false;
+                    // downward cast for normals
                 }
             }
-            */
 
-            // forward cast
-            Vector3 directionOfTravel = playerManager.ActiveUnitController.transform.forward;
-            if (currentMoveVelocity.x != 0 || currentMoveVelocity.z != 0) {
-                directionOfTravel = playerManager.ActiveUnitController.transform.TransformDirection(new Vector3(currentMoveVelocity.x, 0, currentMoveVelocity.z)).normalized;
+            groundAngle = Vector3.Angle(groundNormal, Vector3.up);
+            //Debug.Log("rawGroundAngle: " + rawGroundAngle);
+
+            // this is necessary in case the player is moving fast and went off a cliff and we want to apply downforce
+            // also needed in case of moving up stairs that are higher than 0.25f (the close to ground height)
+            Collider[] hitColliders = Physics.OverlapBox(playerManager.ActiveUnitController.transform.position, maintainingGroundExtents, playerManager.ActiveUnitController.transform.rotation, groundMask);
+            if (hitColliders.Length > 0) {
+                closeToGround = true;
             }
-            Debug.DrawLine(playerManager.ActiveUnitController.transform.position + (Vector3.up * 0.05f), playerManager.ActiveUnitController.transform.position + (Vector3.up * 0.05f) + (directionOfTravel * rayCastLength), Color.black);
-            if (Physics.Raycast(playerManager.ActiveUnitController.transform.position + (Vector3.up * 0.05f), directionOfTravel, out forwardHitInfo, rayCastLength, groundMask)) {
-                //Debug.Log(gameObject.name + ".PlayerUnitMovementController.CheckGround(): There is an obstacle in front of the player: " + forwardHitInfo.collider.gameObject.name + "; normal: " + forwardHitInfo.normal);
+            
+        }
+
+        private void CheckFrontObstacle(float calculatedSpeed) {
+            // reset variables
+            nearFrontObstacle = false;
+            frontAngleDifferent = false;
+            nearStairs = false;
+            float detectionDistance = stairDetectionDistance + (calculatedSpeed * Time.fixedDeltaTime);
+            //float detectionDistance = stairDetectionDistance;
+
+            // determine direction of travel in world space
+            Vector3 directionOfTravel = playerManager.ActiveUnitController.transform.forward;
+            if (localMoveVelocity.x != 0 || localMoveVelocity.z != 0) {
+                directionOfTravel = playerManager.ActiveUnitController.transform.TransformDirection(new Vector3(localMoveVelocity.x, 0, localMoveVelocity.z)).normalized;
+            }
+
+            // raycast from center in direction of travel
+            Vector3 originPoint = playerManager.ActiveUnitController.transform.TransformPoint(Quaternion.LookRotation(playerManager.ActiveUnitController.transform.InverseTransformDirection(directionOfTravel)) * new Vector3(0f, 0.001f, colliderRadius));
+            //Vector3 originPoint = playerManager.ActiveUnitController.transform.TransformPoint(Quaternion.LookRotation(playerManager.ActiveUnitController.transform.InverseTransformDirection(directionOfTravel)) * new Vector3(0f, 0.001f, 0f));
+            Debug.DrawLine(originPoint,
+                originPoint + (directionOfTravel * detectionDistance),
+                Color.black);
+            if (Physics.Raycast(originPoint, directionOfTravel, out forwardHitInfo, detectionDistance, groundMask)) {
+                // we are near an obstacle in front center
                 nearFrontObstacle = true;
             } else {
-                nearFrontObstacle = false;
+                // raycast from left in direction of travel
+                originPoint = playerManager.ActiveUnitController.transform.TransformPoint(Quaternion.LookRotation(playerManager.ActiveUnitController.transform.InverseTransformDirection(directionOfTravel)) * new Vector3(-colliderRadius , 0.001f, 0f));
+                Debug.DrawLine(originPoint,
+                    originPoint + (directionOfTravel * detectionDistance),
+                    Color.black);
+                if (Physics.Raycast(originPoint, directionOfTravel, out forwardHitInfo, detectionDistance, groundMask)) {
+                    // we are near an obstacle in front left
+                    nearFrontObstacle = true;
+                } else {
+                    // raycast from right in direction of travel
+                    originPoint = playerManager.ActiveUnitController.transform.TransformPoint(Quaternion.LookRotation(playerManager.ActiveUnitController.transform.InverseTransformDirection(directionOfTravel)) * new Vector3(colliderRadius, 0.001f, 0f));
+                    Debug.DrawLine(originPoint,
+                        originPoint + (directionOfTravel * detectionDistance),
+                        Color.black);
+                    if (Physics.Raycast(originPoint, directionOfTravel, out forwardHitInfo, detectionDistance, groundMask)) {
+                        // we are near an obstacle in front right
+                        nearFrontObstacle = true;
+                    }
+                }
+            }
+
+
+            if (nearFrontObstacle) {
+                frontObstacleAngle = Vector3.Angle(forwardHitInfo.normal, Vector3.up);
+                //Debug.Log("front obstacle angle: " + frontObstacleAngle);
+
+                // we could be going up a ramp, determine if the obstacle in front has a different angle than the ground below us
+                if (forwardHitInfo.normal != groundNormal) {
+                    //Debug.Log("front obstacle angle is different than ground angle: " + rawGroundAngle);
+                    frontAngleDifferent = true;
+                }
+
+                // check if the obstacle is stairs
+                if (frontAngleDifferent == true && frontObstacleAngle > slopeLimit) {
+                    Vector3 raycastPoint = forwardHitInfo.point + (directionOfTravel * 0.01f);
+                    raycastPoint = new Vector3(raycastPoint.x, playerManager.ActiveUnitController.transform.position.y + stepHeight + 0.001f, raycastPoint.z);
+                    //Debug.Log("CheckFrontObstacle() front Angle Different and frontObstacle > slopeLimit; localMoveVelocity: " + localMoveVelocity + "; directionOfTravel: " + directionOfTravel + "; forwardHitInfo: " + forwardHitInfo.point + "; player: " + playerManager.ActiveUnitController.transform.position + "; raycastpoint: " + raycastPoint);
+                    Debug.DrawLine(raycastPoint, new Vector3(raycastPoint.x, raycastPoint.y - stepHeight - 0.001f, raycastPoint.z), Color.cyan);
+                    if (Physics.Raycast(raycastPoint, Vector3.down, out stairDownHitInfo, stepHeight, groundMask)) {
+                        // we hit something that is low enough to step on, if it is below the slope limit, we can consider it to be a stair step
+                        if (Vector3.Angle(stairDownHitInfo.normal, Vector3.up) < slopeLimit) {
+                            Vector3 stairHeight = playerManager.ActiveUnitController.transform.InverseTransformPoint(stairDownHitInfo.point);
+                            /*
+                            Debug.Log("CheckFrontObstacle(): y position: " + playerManager.ActiveUnitController.transform.position.y +
+                                "; stairs detected angle: " + Vector3.Angle(stairDownHitInfo.normal, Vector3.up) +
+                                "; stairHeight: " + "(" + stairHeight.x + ", " + stairHeight.y + ", " + stairHeight.z + ")" +
+                                "; object: " + stairDownHitInfo.collider.gameObject.name);
+                                */
+                            nearStairs = true;
+
+                            // new code to detect stairs from greater distance and make angle upward at a more gradual slope to prevent the jittery updward movement that comes from using
+                            // the completely horizontal normal you get from striking the front of the stairs
+                            Vector3 bottomPoint = originPoint;
+
+                            Vector3 angleRay = new Vector3(forwardHitInfo.point.x, stairDownHitInfo.point.y, forwardHitInfo.point.z) - bottomPoint;
+
+                            Debug.DrawLine(bottomPoint,
+                                bottomPoint + angleRay,
+                                Color.cyan);
+
+                            Vector3 secondPoint = bottomPoint + (Quaternion.AngleAxis(90f, Vector3.up) * angleRay);
+                            secondPoint = new Vector3(secondPoint.x, bottomPoint.y, secondPoint.z);
+                            Debug.DrawLine(bottomPoint,
+                                secondPoint,
+                                Color.red);
+                            Vector3 calculatedNormal = Vector3.Cross(angleRay, secondPoint - bottomPoint).normalized;
+                            Debug.DrawLine(bottomPoint,
+                                bottomPoint + calculatedNormal,
+                                Color.red);
+                            //Debug.Log("CheckFrontObstacle() calculatedNormal: " + calculatedNormal + "; angleRay: " + angleRay + "; line2: " + (secondPoint - bottomPoint));
+                            stairRampNormal = calculatedNormal;
+                        }
+
+                    }
+                }
+                
             }
 
         }
 
         private void ApplyGravity() {
-            if (!tempGrounded) {
+            if (!closeToGround) {
                 //Debug.Log("PlayerUnitMovementController.ApplyGravity(): Not Grounded");
             }
         }
@@ -783,108 +1379,25 @@ namespace AnyRPG {
                 return;
             }
 
-            Debug.DrawLine(playerManager.ActiveUnitController.transform.position, playerManager.ActiveUnitController.transform.position + forwardDirection * rayCastHeight * 2, Color.blue);
-            Debug.DrawLine(playerManager.ActiveUnitController.transform.position, playerManager.ActiveUnitController.transform.position + backwardDirection * rayCastHeight * 2, Color.magenta);
-            Debug.DrawLine(playerManager.ActiveUnitController.transform.position + (Vector3.up * 0.25f), (playerManager.ActiveUnitController.transform.position + (Vector3.up * 0.25f)) - (Vector3.up * rayCastHeight), Color.green);
+            //Debug.DrawLine(playerManager.ActiveUnitController.transform.position, playerManager.ActiveUnitController.transform.position + forwardDirection * closeToGroundHeight * 2, Color.blue);
+            //Debug.DrawLine(playerManager.ActiveUnitController.transform.position, playerManager.ActiveUnitController.transform.position + backwardDirection * closeToGroundHeight * 2, Color.magenta);
+            Debug.DrawLine(playerManager.ActiveUnitController.transform.position + (Vector3.up * 0.25f), (playerManager.ActiveUnitController.transform.position + (Vector3.up * 0.25f)) - (Vector3.up * closeToGroundHeight), Color.green);
 
-        }
-
-        public void OnCollisionEnter(Collision collision) {
-            //Debug.Log(gameObject.name + ".PlayerUnitMovementController.OnCollisionEnter()");
-            DebugCollision(collision);
-        }
-
-        public void OnCollisionStay(Collision collision) {
-            //Debug.Log(gameObject.name + ".PlayerUnitMovementController.OnCollisionStay(): " + collision.collider.gameObject.name);
-            DebugCollision(collision);
-        }
-
-        private void DebugCollision(Collision collision) {
-            ContactPoint[] contactPoints = new ContactPoint[collision.contactCount];
-            collision.GetContacts(contactPoints);
-            foreach (ContactPoint contactPoint in contactPoints) {
-                if (((1 << collision.gameObject.layer) & groundMask) != 0) {
-                    //Debug.Log(gameObject.name + ".CharacterUnit.OnCollisionStay(): " + collision.collider.gameObject.name + " matched the ground Layer mask at : " + contactPoint.point + "; player: " + playerManager.ActiveUnitController.transform.position);
-                    //float hitAngle = Vector3.Angle(contactPoint.normal, playerManager.ActiveUnitController.transform.forward);
-                    //Debug.Log(gameObject.name + ".CharacterUnit.OnCollisionStay(): " + collision.collider.gameObject.name + "; normal: " + contactPoint.normal + "; angle: " + hitAngle);
-                    Vector3 relativePoint = playerManager.ActiveUnitController.transform.InverseTransformPoint(contactPoint.point);
-                    //Debug.Log(gameObject.name + ".CharacterUnit.OnCollisionStay(): " + collision.collider.gameObject.name + "; relativePoint: " + relativePoint);
-                    if (relativePoint.z > 0 && relativePoint.y < stepHeight) {
-                        //Debug.Log(gameObject.name + ".CharacterUnit.DebugCollision(): " + collision.collider.gameObject.name + "; relativePoint: " + relativePoint + " is in front of the player at world point: " + contactPoint.point);
-                        // get direction to contact point
-                        Vector3 direction = contactPoint.point - playerManager.ActiveUnitController.transform.position;
-                        // extend contact point
-                        direction *= 1.1f;
-                        // shoot raycast downward from new point to detect stairs
-
-                        Vector3 raycastPoint = playerManager.ActiveUnitController.transform.position + direction;
-                        raycastPoint = new Vector3(raycastPoint.x, playerManager.ActiveUnitController.transform.position.y + stepHeight + 1f, raycastPoint.z);
-                        //Debug.Log(gameObject.name + ".CharacterUnit.DebugCollision(): " + collision.collider.gameObject.name + "; direction is: " + direction + "; raycastpoint: " + raycastPoint);
-                        Debug.DrawLine(raycastPoint, new Vector3(raycastPoint.x, raycastPoint.y - stepHeight - 1f, raycastPoint.z), Color.green);
-                        RaycastHit stairHitInfo;
-                        if (Physics.Raycast(raycastPoint, Vector3.down, out stairHitInfo, stepHeight + 1f, groundMask)) {
-                            //Debug.Log(gameObject.name + ".PlayerUnitMovementController.CheckGround(): There is an obstacle in front of the player: " + forwardHitInfo.collider.gameObject.name + "; normal: " + forwardHitInfo.normal);
-                            // we hit something that is low enough to step on
-                            //nearFrontObstacle = true;
-                            if (!forwardContactPoints.Contains(contactPoint)) {
-                                forwardContactPoints.Add(contactPoint);
-                            }
-                        } else {
-                            //Debug.Log(gameObject.name + ".CharacterUnit.DebugCollision(): we did not hit anything below the step height");
-                        }
-
-                        /*
-                        if (!forwardContactPoints.Contains(contactPoint)) {
-                            forwardContactPoints.Add(contactPoint);
-                        }
-                        */
-                    } else if (relativePoint.z < 0 && relativePoint.y < stepHeight) {
-                        //Debug.Log(gameObject.name + ".CharacterUnit.DebugCollision(): " + collision.collider.gameObject.name + "; relativePoint: " + relativePoint + " is behind the player!");
-                        if (!backwardContactPoints.Contains(contactPoint)) {
-                            backwardContactPoints.Add(contactPoint);
-                        }
-                    } else if (relativePoint.y < stepHeight) {
-                        //Debug.Log(gameObject.name + ".CharacterUnit.DebugCollision(): " + collision.collider.gameObject.name + "; relativePoint: " + relativePoint + " is under the player!");
-                        if (!bottomContactPoints.Contains(contactPoint)) {
-                            bottomContactPoints.Add(contactPoint);
-                        }
-                    } else {
-                        //Debug.Log(gameObject.name + ".CharacterUnit.OnCollisionStay(): " + collision.collider.gameObject.name + "; relativePoint: " + relativePoint + " is NOT in front of or behind the player or is higher than the stepheight!");
-                    }
-                }
-                Debug.DrawLine(playerManager.ActiveUnitController.transform.position, contactPoint.point, Color.yellow);
-            }
-        }
-
-        private void FixedUpdate() {
-            //Debug.Log(gameObject.name + ".PlayerUnitMovementController.FixedUpdate(): forwardContactPoints.Clear()");
-            forwardContactPoints.Clear();
-            backwardContactPoints.Clear();
-            bottomContactPoints.Clear();
         }
 
         private void OnDrawGizmos() {
             if (playerManager == null || playerManager.ActiveUnitController == null) {
                 return;
             }
+            /*
             Gizmos.color = Color.white;
-            Gizmos.DrawWireCube(playerManager.ActiveUnitController.transform.position, acquiringGroundExtents * 2);
+            Gizmos.DrawWireCube(playerManager.ActiveUnitController.transform.position, (Quaternion.LookRotation(playerManager.ActiveUnitController.transform.forward) * touchingGroundExtents) * 2);
+            */
 
             Gizmos.color = Color.yellow;
             Gizmos.DrawWireCube(playerManager.ActiveUnitController.transform.position, maintainingGroundExtents * 2);
         }
 
-        /*
-        public void OnDisable() {
-            //Debug.Log(gameObject.name + ".PlayerUnitMovementController.OnDisable()");
-            if (SystemGameManager.IsShuttingDown) {
-                return;
-            }
-            if (movementStateController != null) {
-                movementStateController.enabled = false;
-            }
-        }
-        */
 
     }
 

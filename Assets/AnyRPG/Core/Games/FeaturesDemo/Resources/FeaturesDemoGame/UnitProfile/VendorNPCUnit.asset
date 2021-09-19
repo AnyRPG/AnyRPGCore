@@ -177,7 +177,6 @@ MonoBehaviour:
     namePlateImage: {fileID: 0}
     prerequisiteConditions: []
     behaviorNames: []
-    useBehaviorCopy: 0
   interactionMaxRange: 3
   lootableCharacter:
     interactionPanelTitle: 
@@ -215,6 +214,8 @@ MonoBehaviour:
     - Better Cloth Armor
     - Leather Armor
     - Better Leather Armor
+    - Plate Armor
+    - Better Plate Armor
   interactableOptions: []
   persistObjectPosition: 0
   saveOnLevelUnload: 0

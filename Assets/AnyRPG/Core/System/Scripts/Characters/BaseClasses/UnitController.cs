@@ -85,6 +85,11 @@ namespace AnyRPG {
         // avoid use of local variables for garbage collection
         private AggroNode topNode = null;
 
+        // capabilities
+        private bool canFly = false;
+        private bool canFlyOverride = false;
+        private bool canGlide = false;
+        private bool canGlideOverride = false;
 
         // track current state
         private bool mounted = false;
@@ -94,6 +99,14 @@ namespace AnyRPG {
         private bool levitated = false;
         private bool motorEnabled = true;
         private bool despawning = false;
+        private bool inWater = false;
+        private bool swimming = false;
+        private bool flying = false;
+
+        private List<WaterBody> currentWater = new List<WaterBody>();
+
+        // unit configuration
+        private float floatHeight = 1.5f;
 
         // movement parameters
         private bool useAgent = false;
@@ -152,6 +165,40 @@ namespace AnyRPG {
                 return (walking == false ? characterUnit.BaseCharacter.CharacterStats.RunSpeed : characterUnit.BaseCharacter.CharacterStats.WalkSpeed);
             }
         }
+        public float SwimSpeed {
+            get {
+                if (UnderControl == true && MasterUnit != null && MasterUnit.UnitController != null) {
+                    return MasterUnit.UnitController.SwimSpeed;
+                }
+                return characterUnit.BaseCharacter.CharacterStats.SwimSpeed;
+            }
+        }
+        public float FlySpeed {
+            get {
+                if (UnderControl == true && MasterUnit != null && MasterUnit.UnitController != null) {
+                    return MasterUnit.UnitController.FlySpeed;
+                }
+                return characterUnit.BaseCharacter.CharacterStats.FlySpeed;
+            }
+        }
+        public float GlideSpeed {
+            get {
+                if (UnderControl == true && MasterUnit != null && MasterUnit.UnitController != null) {
+                    return MasterUnit.UnitController.GlideSpeed;
+                }
+                return characterUnit.BaseCharacter.CharacterStats.GlideSpeed;
+            }
+        }
+
+        public float GlideFallSpeed {
+            get {
+                if (UnderControl == true && MasterUnit != null && MasterUnit.UnitController != null) {
+                    return MasterUnit.UnitController.GlideFallSpeed;
+                }
+                return characterUnit.BaseCharacter.CharacterStats.GlideFallSpeed;
+            }
+        }
+
         public bool UnderControl { get => underControl; set => underControl = value; }
         public BaseCharacter MasterUnit { get => masterUnit; set => masterUnit = value; }
         public bool Frozen { get => frozen; }
@@ -320,6 +367,15 @@ namespace AnyRPG {
         public bool UseAgent { get => useAgent; }
         public MovementSoundArea MovementSoundArea { get => movementSoundArea; set => movementSoundArea = value; }
         public UnitModelController UnitModelController { get => unitModelController; }
+        public bool InWater { get => inWater; }
+        public List<WaterBody> CurrentWater { get => currentWater; set => currentWater = value; }
+        public float FloatHeight { get => floatHeight; set => floatHeight = value; }
+        public bool Swimming { get => swimming; }
+        public bool Flying { get => flying; }
+        public bool CanFly { get => (canFly || canFlyOverride); set => canFly = value; }
+        public bool CanGlide { get => (canGlide || canGlideOverride); set => canGlide = value; }
+        public bool CanFlyOverride { get => canFlyOverride; set => canFlyOverride = value; }
+        public bool CanGlideOverride { get => canGlideOverride; set => canGlideOverride = value; }
 
         public override void Configure(SystemGameManager systemGameManager) {
             base.Configure(systemGameManager);
@@ -700,6 +756,11 @@ namespace AnyRPG {
             lastTargetPosition = Vector3.zero;
             topNode = null;
 
+            canFly = false;
+            canFlyOverride = false;
+            canGlide = false;
+            canGlideOverride = false;
+
             mounted = false;
             walking = false;
             frozen = false;
@@ -707,6 +768,13 @@ namespace AnyRPG {
             levitated = false;
             motorEnabled = true;
             despawning = false;
+            inWater = false;
+            swimming = false;
+            flying = false;
+
+            currentWater.Clear();
+
+            floatHeight = 1.5f;
 
             useAgent = false;
             startPosition = Vector3.zero;
@@ -721,6 +789,7 @@ namespace AnyRPG {
             masterUnit = null;
             riderUnitController = null;
             movementSoundArea = null;
+
 
             base.ResetSettings();
         }
@@ -789,6 +858,13 @@ namespace AnyRPG {
         public void SetUnitProfile(UnitProfile unitProfile, UnitControllerMode unitControllerMode, int unitLevel = -1) {
             //Debug.Log(gameObject.name + "UnitController.SetUnitProfile()");
             this.unitProfile = unitProfile;
+
+            if (unitProfile.FlightCapable == true) {
+                canFly = true;
+            }
+            if (unitProfile.GlideCapable == true) {
+                canGlide = true;
+            }
 
             SetPersistenceProperties();
 
@@ -1305,23 +1381,46 @@ namespace AnyRPG {
                 && UnitAnimator.IsInAir() == false
                 && mounted == false
                 && ControlLocked == false
+                && swimming == false
+                && flying == false
                 //&& (apparentVelocity >= (characterUnit.BaseCharacter.CharacterStats.RunSpeed / 2f))) {
                 && unitAnimator.GetBool("Moving") == true) {
                 //Debug.Log(gameObject.name + ".HandleMovementAudio(): up to run speed");
-                if (!unitComponentController.MovementIsPlaying()) {
-                    PlayMovement(MovementLoopProfile.AudioClip, true);
+                if (!unitComponentController.MovementSoundIsPlaying(true)) {
+                    PlayMovementSound(MovementLoopProfile.AudioClip, true);
                     //unitComponentController.PlayMovement(MovementLoopProfile.AudioClip, true);
                 }
             } else {
                 //Debug.Log(gameObject.name + ".HandleMovementAudio(): not up to run speed");
-                if (unitComponentController?.MovementIsPlaying() == true) {
-                    unitComponentController.StopMovement();
+                if (unitComponentController?.MovementSoundIsPlaying(true) == true) {
+                    unitComponentController.StopMovementSound();
                 }
             }
         }
 
-        public void PlayMovement(AudioClip audioClip, bool loop) {
-            unitComponentController.PlayMovement(audioClip, loop);
+        public void StopMovementSound() {
+            //Debug.Log(gameObject.name + ".StopMovementSound()");
+
+            // stop playing sound in case movement sounds will change
+            // only apply if no movement sound area is found, or the current movement sound area is using a loop
+            // this should allow the sound of the current footstep to finish instead of getting cut off if it's a hit sound
+            if (movementSoundArea == null
+                || (movementSoundArea != null && movementSoundArea.MovementLoopProfile != null)) {
+                unitComponentController.StopMovementSound();
+            }
+        }
+
+        public void PlayMovementSound(AudioClip audioClip, bool loop) {
+            unitComponentController.PlayMovementSound(audioClip, loop);
+        }
+
+        public void PlaySwimSound() {
+            // play swim sound only if near surface
+            if (currentWater.Count > 0
+                && currentWater[0].SwimHitsAudioProfile?.AudioClip != null
+                && Collider.bounds.max.y > currentWater[0].SurfaceHeight) {
+                unitComponentController.PlayMovementSound(currentWater[0].SwimHitsAudioProfile?.AudioClip, false);
+            }
         }
 
         /// <summary>
@@ -1709,6 +1808,43 @@ namespace AnyRPG {
             return unitModelController.isBuilding();
         }
 
+        public void EnterWater(WaterBody water) {
+            if (currentWater.Contains(water) == false) {
+                currentWater.Add(water);
+                if (!inWater && water.EnterWaterAudioProfile?.AudioClip != null) {
+                    unitComponentController.PlayMovementSound(water.EnterWaterAudioProfile.AudioClip, false);
+                }
+                inWater = true;
+            }
+        }
+
+        public void StartSwimming() {
+            swimming = true;
+            StopMovementSound();
+        }
+
+        public void StopSwimming() {
+            swimming = false;
+        }
+
+        public void StartFlying() {
+            flying = true;
+            StopMovementSound();
+        }
+
+        public void StopFlying() {
+            flying = false;
+        }
+
+        public void ExitWater(WaterBody water) {
+            if (currentWater.Contains(water) == true) {
+                currentWater.Remove(water);
+                if (currentWater.Count == 0) {
+                    inWater = false;
+                }
+            }
+        }
+
         public void OnSendObjectToPool() {
             //Debug.Log(gameObject.name + ".UnitController.OnSendObjectToPool()");
             // recevied a message from the object pooler
@@ -1733,7 +1869,7 @@ namespace AnyRPG {
         }
 
         public void NotifyOnBeforeDie(CharacterStats characterStats) {
-            unitComponentController.StopMovement();
+            unitComponentController.StopMovementSound();
             unitComponentController.HighlightController.UpdateColors();
             OnBeforeDie(characterStats);
 

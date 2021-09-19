@@ -122,6 +122,12 @@ MonoBehaviour:
     rotation: {x: 70.54667, y: 106.7363, z: 197.6837}
     scale: {x: 1, y: 1, z: 1}
     targetBone: Spine1
+  - nodeName: Wings
+    position: {x: -0.274, y: 0, z: -0.155}
+    rotationIsGlobal: 0
+    rotation: {x: 0, y: 0, z: 0}
+    scale: {x: 1, y: 1, z: 1}
+    targetBone: Spine1
   - nodeName: Two Hand Mace Sheathed
     position: {x: 0.293, y: 0.052, z: -0.155}
     rotationIsGlobal: 0

@@ -27,7 +27,7 @@ MonoBehaviour:
       type: 3}
     modelPrefab: {fileID: 2692339740015506113, guid: 9396e25e38decac4b8b80eb1f92213e2,
       type: 3}
-    animationProfile: {fileID: 0}
+    animationProfileName: 
     useInlineAnimationProps: 0
     animationProps:
       useRootMotion: 0
@@ -108,6 +108,10 @@ MonoBehaviour:
       deathClip: {fileID: 0}
       reviveClip: {fileID: 0}
       levitatedClip: {fileID: 0}
+      swimIdleClip: {fileID: 0}
+      swimMoveClip: {fileID: 0}
+      flyIdleClip: {fileID: 0}
+      flyMoveClip: {fileID: 0}
     rotateModel: 0
     namePlateProps:
       displayName: 
@@ -127,14 +131,18 @@ MonoBehaviour:
     scale: {x: 1, y: 1, z: 1}
     targetBone: 
     attachmentProfileName: UMA
+    floatHeight: 1.4
+    addFloatHeightToTransform: 0
+    floatTransform: Spine1
   isUMAUnit: 1
   isPet: 0
+  flightCapable: 0
   characterName: 
-  factionName: 
   title: 
-  characterClassName: 
+  factionName: 
   unitTypeName: 
   characterRaceName: 
+  characterClassName: 
   classSpecializationName: 
   spawnDead: 0
   preventAutoDespawn: 0
@@ -150,11 +158,13 @@ MonoBehaviour:
   combatStrategyName: 
   primaryStats: []
   powerResources: []
+  useProviderEquipment: 0
   equipmentNameList: []
   isMobile: 1
   playOnFootstep: 0
   movementAudioProfileNames:
   - Default Footstep Loop
+  useInlinePatrol: 0
   patrolConfig:
     autoStart: 0
     destinationList: []
@@ -175,7 +185,6 @@ MonoBehaviour:
     namePlateImage: {fileID: 0}
     prerequisiteConditions: []
     behaviorNames: []
-    useBehaviorCopy: 0
   interactionMaxRange: 3
   lootableCharacter:
     interactionPanelTitle: 
@@ -195,6 +204,7 @@ MonoBehaviour:
     interactionPanelImage: {fileID: 0}
     namePlateImage: {fileID: 0}
     prerequisiteConditions: []
+    quests: []
     questGiverProfileNames: []
   vendorConfig:
     interactionPanelTitle: 
@@ -203,5 +213,8 @@ MonoBehaviour:
     prerequisiteConditions: []
     vendorCollectionNames: []
   interactableOptions: []
+  persistObjectPosition: 0
+  saveOnLevelUnload: 0
+  saveOnGameSave: 0
   overwriteUnitUUID: 0
   m_UUID: b67cb72f-ac58-4ad2-95f0-a825d48806cb
