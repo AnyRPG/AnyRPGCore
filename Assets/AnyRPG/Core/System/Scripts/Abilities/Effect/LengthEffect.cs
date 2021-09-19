@@ -152,7 +152,7 @@ namespace AnyRPG {
                             spawnLocation = target.transform.position;
                             prefabParent = null;
                         }
-                        if (prefabSpawnLocation == PrefabSpawnLocation.Caster || prefabSpawnLocation == PrefabSpawnLocation.CasterPoint) {
+                        if ((prefabSpawnLocation == PrefabSpawnLocation.Caster || prefabSpawnLocation == PrefabSpawnLocation.CasterPoint) && target != null) {
                             //Debug.Log(MyName + ".LengthEffect.Cast(): PrefabSpawnLocation is Caster");
                             //spawnLocation =source.AbilityManager.GetComponent<Collider>().bounds.center;
                             AttachmentPointNode attachmentPointNode = source.AbilityManager.GetHeldAttachmentPointNode(abilityAttachmentNode);
@@ -183,7 +183,8 @@ namespace AnyRPG {
                             spawnLocation = originalTarget.transform.position;
                             prefabParent = originalTarget.transform;
                         }
-                        if (prefabSpawnLocation != PrefabSpawnLocation.None && (target != null || prefabSpawnLocation == PrefabSpawnLocation.GroundTarget || GetTargetOptions(source).RequireTarget == false)) {
+                        if (prefabSpawnLocation != PrefabSpawnLocation.None &&
+                            (target != null || prefabSpawnLocation == PrefabSpawnLocation.GroundTarget || GetTargetOptions(source).RequireTarget == false)) {
                             float finalX = (prefabParent == null ? spawnLocation.x + nodePosition.x : prefabParent.TransformPoint(nodePosition).x);
                             float finalY = (prefabParent == null ? spawnLocation.y + nodePosition.y : prefabParent.TransformPoint(nodePosition).y);
                             float finalZ = (prefabParent == null ? spawnLocation.z + nodePosition.z : prefabParent.TransformPoint(nodePosition).z);

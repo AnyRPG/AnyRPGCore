@@ -44,11 +44,15 @@ namespace AnyRPG {
         protected float runSpeed = 7f;
         protected float swimSpeed = 2f;
         protected float flySpeed = 20f;
+        protected float glideSpeed = 5f;
+        protected float glideFallSpeed = 2f;
 
         protected float currentRunSpeed = 0f;
         protected float currentSprintSpeed = 0f;
         protected float currentSwimSpeed = 2f;
         protected float currentFlySpeed = 20f;
+        protected float currentGlideSpeed = 5f;
+        protected float currentGlideFallSpeed = 2f;
 
         protected Dictionary<string, StatusEffectNode> statusEffects = new Dictionary<string, StatusEffectNode>();
         protected BaseCharacter baseCharacter = null;
@@ -72,6 +76,8 @@ namespace AnyRPG {
         public float SprintSpeed { get => currentSprintSpeed; }
         public float SwimSpeed { get => currentSwimSpeed; }
         public float FlySpeed { get => currentFlySpeed; }
+        public float GlideSpeed { get => currentGlideSpeed; }
+        public float GlideFallSpeed { get => currentGlideFallSpeed; }
         //public float MyHitBox { get => hitBox; }
         public bool IsAlive { get => isAlive; }
         public BaseCharacter BaseCharacter { get => baseCharacter; set => baseCharacter = value; }
@@ -174,8 +180,12 @@ namespace AnyRPG {
             runSpeed = systemConfigurationManager.RunSpeed;
             swimSpeed = systemConfigurationManager.SwimSpeed;
             flySpeed = systemConfigurationManager.FlySpeed;
+            glideSpeed = systemConfigurationManager.GlideSpeed;
+            glideFallSpeed = systemConfigurationManager.GlideFallSpeed;
             currentSwimSpeed = swimSpeed;
             currentFlySpeed = flySpeed;
+            currentGlideSpeed = glideSpeed;
+            currentGlideFallSpeed = glideFallSpeed;
         }
 
         public override void SetGameManagerReferences() {
@@ -619,6 +629,16 @@ namespace AnyRPG {
             return false;
         }
 
+        public bool HasGlide() {
+            //Debug.Log("CharacterStats.GetDamageModifiers()");
+            foreach (StatusEffectNode statusEffectNode in StatusEffects.Values) {
+                if (statusEffectNode.StatusEffect.CanGlide == true) {
+                    return true;
+                }
+            }
+            return false;
+        }
+
         public bool HasFreezeImmunity() {
             //Debug.Log("CharacterStats.GetDamageModifiers()");
             foreach (StatusEffectNode statusEffectNode in StatusEffects.Values) {
@@ -877,6 +897,14 @@ namespace AnyRPG {
                     }
                 }
             }
+            if (statusEffect.CanGlide == true) {
+                if (HasGlide() == false) {
+                    if (baseCharacter.UnitController != null) {
+                        baseCharacter.UnitController.CanGlideOverride = false;
+                    }
+                }
+            }
+
 
             if (statusEffect.FactionModifiers.Count > 0) {
                 SystemEventManager.TriggerEvent("OnReputationChange", new EventParamProperties());

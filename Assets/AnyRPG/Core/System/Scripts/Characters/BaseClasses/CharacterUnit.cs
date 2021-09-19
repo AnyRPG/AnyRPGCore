@@ -45,6 +45,9 @@ namespace AnyRPG {
             if (baseCharacter.CharacterStats.HasFlight() == true) {
                 baseCharacter.UnitController.CanFlyOverride = true;
             }
+            if (baseCharacter.CharacterStats.HasGlide() == true) {
+                baseCharacter.UnitController.CanGlideOverride = true;
+            }
         }
 
         public static CharacterUnit GetCharacterUnit(Interactable searchInteractable) {

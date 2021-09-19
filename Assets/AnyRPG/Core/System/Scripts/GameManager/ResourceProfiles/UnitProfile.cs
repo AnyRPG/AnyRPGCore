@@ -41,6 +41,10 @@ namespace AnyRPG {
         [SerializeField]
         private bool flightCapable = false;
 
+        [Tooltip("If true, this unit can glide")]
+        [SerializeField]
+        private bool glideCapable = false;
+
         [Header("Character")]
 
         [Tooltip("The name that will show over the character head and in unit frames")]
@@ -376,6 +380,7 @@ namespace AnyRPG {
         public bool SaveOnLevelUnload { get => saveOnLevelUnload; set => saveOnLevelUnload = value; }
         public bool SaveOnGameSave { get => saveOnGameSave; set => saveOnGameSave = value; }
         public bool FlightCapable { get => flightCapable; }
+        public bool GlideCapable { get => glideCapable; }
 
         public override void SetGameManagerReferences() {
             base.SetGameManagerReferences();

@@ -35,6 +35,7 @@ MonoBehaviour:
     - Life Drain
     - Revive Enemy
     - Fly
+    - Glide
     traitNames: []
     armorClassList: []
     weaponSkills: []

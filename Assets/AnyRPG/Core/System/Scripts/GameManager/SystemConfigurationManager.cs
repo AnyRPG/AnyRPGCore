@@ -140,6 +140,14 @@ namespace AnyRPG {
         [SerializeField]
         private float flySpeed = 20f;
 
+        [Tooltip("The default character glide speed in meters per second")]
+        [SerializeField]
+        private float glideSpeed = 5f;
+
+        [Tooltip("The speed the character will fall while gliding in meters per second")]
+        [SerializeField]
+        private float glideFallSpeed = 2f;
+
         [Tooltip("When not mounted, disable native movement input to allow a third party controller (such as Invector) to move the character")]
         [SerializeField]
         private bool useThirdPartyMovementControl = false;
@@ -675,6 +683,8 @@ namespace AnyRPG {
         public float RunSpeed { get => runSpeed; }
         public float SwimSpeed { get => swimSpeed; }
         public float FlySpeed { get => flySpeed; }
+        public float GlideSpeed { get => glideSpeed; }
+        public float GlideFallSpeed { get => glideFallSpeed; }
 
         public override void Configure(SystemGameManager systemGameManager) {
             base.Configure(systemGameManager);

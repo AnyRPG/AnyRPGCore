@@ -10,9 +10,10 @@ namespace AnyRPG {
         Jump = 2,
         Knockback = 3,
         Fall = 4,
-        Roll = 8,
-        Swim = 16,
-        Fly = 32
+        Roll = 5,
+        Swim = 6,
+        Fly = 7,
+        Glide = 8
     }
     [RequireComponent(typeof(PlayerMovementStateController))]
     public class PlayerUnitMovementController : AnyRPGStateMachine {
@@ -55,11 +56,33 @@ namespace AnyRPG {
         // calculated value based on stepHeight and slope limit
         private float stairDetectionDistance = 0f;
 
+        // the normal of the closest ground to the player feet
+        private Vector3 groundNormal;
+
+        // the closest ground point to the player feet, determined by raycasts
+        private Vector3 groundPoint;
+
+        // the normal of the closest ground to the player feet
+        private Vector3 slopeNormal;
+
+        // the closest ground point to the player feet, determined by raycasts
+        private Vector3 slopePoint;
+
+        // the downward direction of any slope the player is touching
+        private Vector3 slopeDirection;
+
         // the raw angle of the ground below
         private float groundAngle;
-
-        private float closestGroundDistance = 0f;
         
+        // the raw angle of the ground below
+        private float slopeAngle;
+
+        // used for determining how far above the ground the player is for applying downforce
+        private float closestGroundDistance = 0f;
+
+        private float closestSlopeDistance = 0f;
+        private float closestTouchingGroundDistance = 0f;
+
         // a calculated value
         //private float groundAngle;
 
@@ -80,6 +103,7 @@ namespace AnyRPG {
 
         private bool closeToGround;
         private bool touchingGround;
+        private bool touchingSlope;
 
         // forward raycast length
         //private float rayCastLength = 0.5f;
@@ -114,7 +138,7 @@ namespace AnyRPG {
         private RaycastHit stairDownHitInfo;
 
         // raycast to determine if player is touching ground in a circle around it
-        private RaycastHit touchingGroundHitInfo;
+        //private RaycastHit touchingGroundHitInfo;
 
         // ensure that pressing forward moves us in the direction of the ground angle to avoid jittery movement on slopes
         //private Vector3 forwardDirection;
@@ -194,7 +218,7 @@ namespace AnyRPG {
 
         public void MoveRelative() {
             Vector3 relativeMovement = CharacterRelativeInput(adjustedlocalMoveVelocity);
-            //Debug.Log("relativeMovement: " + relativeMovement);
+            //Debug.Log("relativeMovement: (" + relativeMovement.x + ", " + relativeMovement.y + ", " + relativeMovement.z + ")");
             if (relativeMovement.magnitude > 0.1 || playerManager.PlayerController.inputJump) {
                 playerManager.ActiveUnitController.UnitMotor.Move(relativeMovement);
             }
@@ -387,6 +411,10 @@ namespace AnyRPG {
                     currentState = AnyRPGCharacterState.Fly;
                     return;
                 } else {
+                    if (playerManager.ActiveUnitController.CanGlide) {
+                        currentState = AnyRPGCharacterState.Glide;
+                        return;
+                    }
                     currentState = AnyRPGCharacterState.Fall;
                     return;
                 }
@@ -633,15 +661,6 @@ namespace AnyRPG {
         }
 
         void Knockback_StateUpdate() {
-            //Debug.Log("Knockback_StateUpdate()");
-            // new code to allow bouncing off walls instead of getting stuck flying into them
-            //currentMoveVelocity = CharacterRelativeInput(playerManager.ActiveUnitController.transform.InverseTransformDirection(playerManager.ActiveUnitController.MyRigidBody.velocity));
-            //Vector3 airForwardVelocity = Quaternion.LookRotation(airForwardDirection, Vector3.up) * playerManager.ActiveUnitController.RigidBody.velocity;
-            //localMoveVelocity = playerManager.ActiveUnitController.transform.InverseTransformDirection(playerManager.ActiveUnitController.RigidBody.velocity);
-            /*
-            Vector3 fromtoMoveVelocity = Quaternion.FromToRotation(airForwardDirection, playerManager.ActiveUnitController.transform.forward) * playerManager.ActiveUnitController.transform.InverseTransformDirection(playerManager.ActiveUnitController.RigidBody.velocity);
-            localMoveVelocity = fromtoMoveVelocity;
-            */
 
             if (playerManager.ActiveUnitController.InWater == true) {
                 if (CheckForSwimming() == true) {
@@ -650,15 +669,13 @@ namespace AnyRPG {
                 }
             }
 
-            if (RaycastForGround() && playerManager.ActiveUnitController.RigidBody.velocity.y < 0.1) {
+            if (touchingGround && playerManager.ActiveUnitController.RigidBody.velocity.y < 0.1) {
                 if ((playerManager.PlayerController.HasMoveInput() || playerManager.PlayerController.HasTurnInput()) && playerManager.PlayerController.canMove) {
                     // new code to allow not freezing up when landing - fix, should be fall or somehow prevent from getting into move during takeoff
                     currentState = AnyRPGCharacterState.Move;
-                    //rpgCharacterState = AnyRPGCharacterState.Move;
                     return;
                 }
                 currentState = AnyRPGCharacterState.Idle;
-                //rpgCharacterState = AnyRPGCharacterState.Idle;
                 return;
             }
 
@@ -668,7 +685,6 @@ namespace AnyRPG {
         public void KnockBack() {
             //Debug.Log("Knockback()");
             currentState = AnyRPGCharacterState.Knockback;
-            //rpgCharacterState = AnyRPGCharacterState.Knockback;
         }
 
 
@@ -683,14 +699,6 @@ namespace AnyRPG {
         }
 
         void Jump_StateUpdate() {
-            // new code to allow bouncing off walls instead of getting stuck flying into them
-            //currentMoveVelocity = CharacterRelativeInput(playerManager.ActiveUnitController.transform.InverseTransformDirection(playerManager.ActiveUnitController.MyRigidBody.velocity));
-            //Vector3 airForwardVelocity = Quaternion.LookRotation(airForwardDirection, Vector3.up) * playerManager.ActiveUnitController.RigidBody.velocity;
-            //currentMoveVelocity = playerManager.ActiveUnitController.transform.InverseTransformDirection(playerManager.ActiveUnitController.RigidBody.velocity);
-            /*
-            Vector3 fromtoMoveVelocity = Quaternion.FromToRotation(airForwardDirection, playerManager.ActiveUnitController.transform.forward) * playerManager.ActiveUnitController.transform.InverseTransformDirection(playerManager.ActiveUnitController.RigidBody.velocity);
-            localMoveVelocity = fromtoMoveVelocity;
-            */
 
             if (playerManager.ActiveUnitController.InWater == true) {
                 if (CheckForSwimming() == true) {
@@ -708,6 +716,10 @@ namespace AnyRPG {
 
 
             if (playerManager.ActiveUnitController.RigidBody.velocity.y <= 0f && Time.frameCount > (lastJumpFrame + 2)) {
+                if (playerManager.ActiveUnitController.CanGlide) {
+                    currentState = AnyRPGCharacterState.Glide;
+                    return;
+                }
                 currentState = AnyRPGCharacterState.Fall;
                 return;
             }
@@ -720,19 +732,11 @@ namespace AnyRPG {
             playerManager.ActiveUnitController.UnitAnimator.SetTrigger("FallTrigger");
             playerManager.ActiveUnitController.UnitAnimator.SetJumping(2);
 
+            // clamp y velocity to prevent launching off ramps
             playerManager.ActiveUnitController.UnitMotor?.Move(new Vector3(playerManager.ActiveUnitController.RigidBody.velocity.x, Mathf.Clamp(playerManager.ActiveUnitController.RigidBody.velocity.y, -53, 0), playerManager.ActiveUnitController.RigidBody.velocity.z));
         }
 
         void Fall_StateUpdate() {
-            // new code to allow bouncing off walls instead of getting stuck flying into them
-            /*
-            Vector3 fromtoMoveVelocity = Quaternion.FromToRotation(airForwardDirection, playerManager.ActiveUnitController.transform.forward) * playerManager.ActiveUnitController.transform.InverseTransformDirection(playerManager.ActiveUnitController.RigidBody.velocity);
-            */
-            //currentMoveVelocity = playerManager.ActiveUnitController.transform.InverseTransformDirection(CharacterRelativeInput(playerManager.ActiveUnitController.MyRigidBody.velocity));
-            /*
-            localMoveVelocity = new Vector3(fromtoMoveVelocity.x, Mathf.Clamp(fromtoMoveVelocity.y, -53, 0), fromtoMoveVelocity.z);
-            */
-            //currentMoveVelocity = new Vector3(currentMoveVelocity.x, 0, currentMoveVelocity.z);
 
             if (playerManager.ActiveUnitController.InWater == true) {
                 if (CheckForSwimming() == true) {
@@ -748,11 +752,8 @@ namespace AnyRPG {
                 return;
             }
 
-            // testing change condition
-            // see if landing looks funny
-            if (RaycastForGround() && groundAngle <= slopeLimit) {
+            if (touchingGround && groundAngle <= slopeLimit) {
                 if ((playerManager.PlayerController.HasMoveInput() || playerManager.PlayerController.HasTurnInput()) && playerManager.PlayerController.canMove) {
-                    // new code to allow not freezing up when landing
                     currentState = AnyRPGCharacterState.Move;
                     return;
                 }
@@ -762,6 +763,100 @@ namespace AnyRPG {
 
             // testing disable move call to let physics move the character
             //MoveRelative();
+        }
+
+        void Glide_EnterState() {
+            //Debug.Log("PlayerUnitMovementController.Glide_EnterState()");
+            canJump = false;
+            playerManager.ActiveUnitController.UnitAnimator.SetTrigger("FallTrigger");
+            playerManager.ActiveUnitController.UnitAnimator.SetJumping(2);
+            playerManager.ActiveUnitController.RigidBody.useGravity = false;
+            playerManager.ActiveUnitController.UnitAnimator.SetTurnVelocity(0f);
+            playerManager.ActiveUnitController.RigidBody.constraints = RigidbodyConstraints.FreezeRotation;
+
+            // clamp y velocity to prevent launching off ramps
+            playerManager.ActiveUnitController.UnitMotor?.Move(new Vector3(playerManager.ActiveUnitController.RigidBody.velocity.x, Mathf.Clamp(playerManager.ActiveUnitController.RigidBody.velocity.y, -53, 0), playerManager.ActiveUnitController.RigidBody.velocity.z));
+        }
+
+        void Glide_StateUpdate() {
+            //Debug.Log("PlayerUnitMovementController.Glide_StateUpdate()");
+
+            if (playerManager.ActiveUnitController.InWater == true) {
+                if (CheckForSwimming() == true) {
+                    //Debug.Log("PlayerUnitMovementController.Glide_StateUpdate() swimming");
+                    currentState = AnyRPGCharacterState.Swim;
+                    return;
+                }
+            }
+
+            if (playerManager.PlayerController.allowedInput
+                && playerManager.ActiveUnitController.CanFly
+                && playerManager.PlayerController.inputFly) {
+                //Debug.Log("PlayerUnitMovementController.Glide_StateUpdate() flying");
+                currentState = AnyRPGCharacterState.Fly;
+                return;
+            }
+
+            if (touchingGround) {
+                if (groundAngle <= slopeLimit) {
+                    if ((playerManager.PlayerController.HasMoveInput() || playerManager.PlayerController.HasTurnInput()) && playerManager.PlayerController.canMove) {
+                        //Debug.Log("PlayerUnitMovementController.Glide_StateUpdate() moving");
+                        currentState = AnyRPGCharacterState.Move;
+                        return;
+                    }
+                    //Debug.Log("PlayerUnitMovementController.Glide_StateUpdate() idling");
+                    currentState = AnyRPGCharacterState.Idle;
+                    return;
+                }
+            }
+
+            if (playerManager.ActiveUnitController.CanGlide == false) {
+                //Debug.Log("PlayerUnitMovementController.Glide_StateUpdate() falling");
+                currentState = AnyRPGCharacterState.Fall;
+                return;
+            }
+
+            // ============ VELOCITY CALCULATIONS ============
+
+            // set clampValue to default of max movement speed
+            float clampValue = playerManager.MaxMovementSpeed;
+
+            // get current movement speed and clamp it to current clamp value
+            float calculatedSpeed = playerManager.ActiveUnitController.GlideSpeed;
+            calculatedSpeed = Mathf.Clamp(calculatedSpeed, 0, clampValue);
+
+            // multiply normalized movement by calculated speed to get actual movement
+            localMoveVelocity = NormalizedGlideMovement(calculatedSpeed) * calculatedSpeed;
+            adjustedlocalMoveVelocity = localMoveVelocity;
+            //Debug.Log(gameObject.name + ".PlayerUnitMovementController.Swim_StateUpdate() currentMoveVelocity: " + currentMoveVelocity);
+
+            CalculateTurnVelocity();
+
+            MoveRelative();
+        }
+
+        void Glide_ExitState() {
+            //Debug.Log("PlayerUnitMovementController.Glide_ExitState()");
+            playerManager.ActiveUnitController.RigidBody.useGravity = true;
+
+        }
+
+        public Vector3 NormalizedGlideMovement(float calculatedSpeed) {
+            // it's safe to check for touching ground here because although we should be gliding
+            // we can still reach this block of code if we touch ground that is too sloped to walk on
+            if (touchingSlope == true && (playerManager.ActiveUnitController.transform.InverseTransformPoint(slopePoint).z > 0f)) {
+                //Debug.Log("NormalizedGlideMovement(" + calculatedSpeed + ") slopePoint: " + playerManager.ActiveUnitController.transform.InverseTransformPoint(slopePoint));
+                //Debug.Log("NormalizedGlideMovement(" + calculatedSpeed + ") downCross: (" + slopeDirection.x + ", " + slopeDirection.y + ", " + slopeDirection.z + ")");
+
+                return playerManager.ActiveUnitController.transform.InverseTransformDirection(slopeDirection * (playerManager.ActiveUnitController.GlideFallSpeed / calculatedSpeed));
+                //Vector3 groundDown = Quaternion.FromToRotation(Vector3.up, Vector3.Cross(groundCross, groundHitInfo.normal)) * playerManager.ActiveUnitController.transform.forward;
+                //Debug.DrawLine(groundHitInfo.point, groundHitInfo.point + groundDown, Color.blue);
+                //return groundDirection * playerManager.ActiveUnitController.GlideFallSpeed;
+            } else { 
+                float glideGravity = -playerManager.ActiveUnitController.GlideFallSpeed / calculatedSpeed;
+                Vector3 returnValue = new Vector3(0f, glideGravity, 1f);
+                return returnValue;
+            }
         }
 
         public void SwitchCollisionOn() {
@@ -819,94 +914,77 @@ namespace AnyRPG {
             return relativeVelocity;
         }
 
-        private bool RaycastForGround(float raycastHeight = 0.25f) {
+        private bool RaycastForGround(float raycastHeight = 0.3f) {
             bool returnValue = false;
+            closestSlopeDistance = raycastHeight;
+            closestTouchingGroundDistance = raycastHeight;
 
             // create a ring of downward raycasts in a circle around the player at evenly spaced angles
             for (int i = 0; i < 12; i++) {
                 Vector3 raycastPoint = (playerManager.ActiveUnitController.transform.position + (Vector3.up * raycastHeight) + (Vector3.up * 0.01f)) + (Quaternion.AngleAxis((360f / 12f) * i, Vector3.up) * Vector3.forward * colliderRadius);
-                //Debug.Log("raycastPoint: " + raycastPoint + "; player: " + playerManager.ActiveUnitController.transform.position);
                 Debug.DrawLine(raycastPoint, new Vector3(raycastPoint.x, raycastPoint.y - raycastHeight - 0.02f, raycastPoint.z), Color.cyan);
                 if (Physics.Raycast(raycastPoint, Vector3.down, out groundHitInfo, Mathf.Infinity, groundMask)) {
-                    // we hit something that is low enough to step on, if it is below the slope limit, we can consider it to be walkable ground
                     float groundHitHeight = playerManager.ActiveUnitController.transform.InverseTransformPoint(groundHitInfo.point).y;
+                    
+                    // determine if this is the closest ground distance, not caring if the player is actually touching it or not
+                    // tihs calculation is only used for applying downforce later
                     if (groundHitHeight < 0f && groundHitHeight > closestGroundDistance) {
                         closestGroundDistance = groundHitHeight;
                     }
-                    if (groundHitInfo.point.y > (raycastPoint.y - (raycastHeight + 0.02f)) && Vector3.Angle(groundHitInfo.normal, Vector3.up) < slopeLimit) {
-                        //Debug.Log("ColliderTouchingGround(): ground detected angle: " + Vector3.Angle(touchingGroundHitInfo.normal, Vector3.up) + "; position: " + touchingGroundHitInfo.point);
+
+                    // determine if the player is touching this ground
+                    if ((groundHitInfo.point.y > (raycastPoint.y - (raycastHeight + 0.02f))) && Vector3.Angle(groundHitInfo.normal, Vector3.up) <= slopeLimit) {
                         returnValue = true;
+                        // save the ground info if the slope is the closest to the player feet, preferring ground that is at or below the player feet
+                        if (((closestTouchingGroundDistance < 0f) && (groundHitHeight < 0f) && (playerManager.ActiveUnitController.transform.position.y + groundHitHeight < closestTouchingGroundDistance))
+                                || (groundHitHeight == 0f)
+                                || (groundHitHeight < closestTouchingGroundDistance)) {
+                            groundPoint = groundHitInfo.point;
+                            groundNormal = groundHitInfo.normal;
+                            Debug.DrawLine(groundHitInfo.point, groundHitInfo.point + groundHitInfo.normal, Color.red);
+                            Vector3 groundCross = Vector3.Cross(groundHitInfo.normal, Vector3.up);
+                            Debug.DrawLine(groundHitInfo.point, groundHitInfo.point + groundCross, Color.red);
+                            Vector3 downCross = Vector3.Cross(groundHitInfo.normal, groundCross);
+                            Debug.DrawLine(groundHitInfo.point, groundHitInfo.point + downCross, Color.red);
+
+                        }
+                    }
+                    // determine if the player is touching a slope
+                    if (groundHitHeight > 0f && Vector3.Angle(groundHitInfo.normal, Vector3.up) > slopeLimit) {
+                        touchingSlope = true;
+                        // save the slope info if the slope is the closest to the player feet
+                        if (groundHitHeight < closestSlopeDistance) {
+                            closestSlopeDistance = groundHitHeight;
+                            slopePoint = groundHitInfo.point;
+                            slopeNormal = groundHitInfo.normal;
+                            slopeAngle = Vector3.Angle(groundHitInfo.normal, Vector3.up);
+
+                            Debug.DrawLine(slopePoint, slopePoint + slopeNormal, Color.blue);
+                            Vector3 groundCross = Vector3.Cross(slopeNormal, Vector3.up);
+                            Debug.DrawLine(slopePoint, slopePoint + groundCross, Color.blue);
+                            slopeDirection = Vector3.Cross(slopeNormal, groundCross);
+                            Debug.DrawLine(slopePoint, slopePoint + slopeDirection, Color.blue);
+
+                        }
                     }
 
                 }
             }
+            /*
+            if (returnValue == true) {
+                Debug.Log("RaycastForGround() : ground angle: " + Vector3.Angle(groundNormal, Vector3.up));
+            }
+            */
+
+            // in the case that the player is not touching the ground and is touching a slope, set the ground point and ground normal to slope values
+            // because otherwise they will remain set to whatever ground was directly underneath the player, no matter how far below that is
+            if (returnValue == false && touchingSlope == true) {
+                groundPoint = slopePoint;
+                groundNormal = slopeNormal;
+            }
+            Debug.DrawLine(groundPoint, groundPoint + Vector3.up, Color.magenta);
             return returnValue;
         }
-
-        /*
-        private bool RaycastForStairs(Vector3 directionOfTravel, float raycastHeight = 0f) {
-
-            float detectionRadius = colliderRadius + stairDetectionDistance;
-            // create a ring of downward raycasts in a half circle around the player in the direction of travel at evenly spaced angles
-            for (int i = 0; i < 7; i++) {
-                Vector3 raycastPoint = (playerManager.ActiveUnitController.transform.position + (Vector3.up * raycastHeight) + (Vector3.up * 0.01f)) + (Quaternion.AngleAxis(((360f / 12f) * i) - 90f, Vector3.up) * directionOfTravel * detectionRadius);
-                //Debug.Log("raycastPoint: " + raycastPoint + "; player: " + playerManager.ActiveUnitController.transform.position);
-                Debug.DrawLine(raycastPoint, new Vector3(raycastPoint.x, raycastPoint.y - raycastHeight, raycastPoint.z), Color.yellow);
-                if (Physics.Raycast(raycastPoint, Vector3.down, out stairDownHitInfo, raycastHeight, groundMask)) {
-                    // we hit something that is low enough to step on, if it is below the slope limit, we can consider it to be a stair step
-                    if (Vector3.Angle(stairDownHitInfo.normal, Vector3.up) < slopeLimit) {
-                        Debug.Log("RaycastForStairs(): stair detected angle: " + Vector3.Angle(stairDownHitInfo.normal, Vector3.up) + "; position: " + stairDownHitInfo.point);
-                        nearStairs = true;
-
-                        // perform a raycast in the direction of the obstacle to find its angle for use as a normal later
-                        Debug.DrawLine(playerManager.ActiveUnitController.transform.position + (Vector3.up * 0.01f),
-                            new Vector3(raycastPoint.x, playerManager.ActiveUnitController.transform.position.y + 0.01f, raycastPoint.z),
-                            Color.yellow);
-                        Physics.Raycast(playerManager.ActiveUnitController.transform.position + (Vector3.up * 0.01f),
-                            (new Vector3(raycastPoint.x, playerManager.ActiveUnitController.transform.position.y, raycastPoint.z) - playerManager.ActiveUnitController.transform.position).normalized,
-                            out obstacleHitInfo,
-                            detectionRadius,
-                            groundMask);
-
-                        // new code to detect stairs from greater distance and make angle upward at a more gradual slope to prevent the jittery updward movement that comes from using
-                        // the completely horizontal normal you get from striking the front of the stairs
-                        Vector3 bottomPoint = playerManager.ActiveUnitController.transform.position + (Quaternion.AngleAxis(((360f / 12f) * i) - 90f, Vector3.up) * directionOfTravel * colliderRadius);
-
-                        // inital angleray without intersection
-                        Vector3 angleRay = stairDownHitInfo.point - bottomPoint;
-                        Debug.DrawLine(bottomPoint,
-                            stairDownHitInfo.point,
-                            Color.red);
-
-                        // use the above angleray to recalculate a more precise angle by determining the edge of the stairs
-                        Physics.Raycast(bottomPoint,
-                                                    angleRay.normalized,
-                                                    out obstacleHitInfo,
-                                                    detectionRadius,
-                                                    groundMask);
-
-                        angleRay = new Vector3(obstacleHitInfo.point.x, stairDownHitInfo.point.y, obstacleHitInfo.point.z) - bottomPoint;
-
-                        Debug.DrawLine(bottomPoint,
-                            stairDownHitInfo.point,
-                            Color.cyan);
-
-                        Vector3 secondPoint = bottomPoint + (Quaternion.AngleAxis(90f, Vector3.up) * angleRay);
-                        Debug.DrawLine(bottomPoint,
-                            secondPoint,
-                            Color.red);
-                        Vector3 calculatedNormal = Vector3.Cross(angleRay, secondPoint - bottomPoint);
-                        Debug.DrawLine(bottomPoint,
-                            bottomPoint + calculatedNormal,
-                            Color.red);
-                        Debug.Log("RaycastForStairs() calculatedNormal: " + calculatedNormal);
-                        return true;
-                    }
-                }
-            }
-            return false;
-        }
-        */
 
         public bool MaintainingGround() {
             //Debug.Log(gameObject.name + ".PlayerUnitMovementController.MaintainingGround");
@@ -997,20 +1075,17 @@ namespace AnyRPG {
             // determine if there is an obstacle in front, and if it is stairs
             CheckFrontObstacle(calculatedSpeed);
 
-            //CalculateForward();
-            //CalculateGroundAngle(playerManager.ActiveUnitController.transform.TransformDirection(normalizedInput));
-
             Vector3 newReturnValue;
             float usedAngle = groundAngle;
             
             // the normal is the normal of the ground below the player
-            Vector3 localGroundNormal = playerManager.ActiveUnitController.transform.InverseTransformDirection(groundHitInfo.normal);
-            Vector3 groundNormal = groundHitInfo.normal;
+            Vector3 localGroundNormal = playerManager.ActiveUnitController.transform.InverseTransformDirection(groundNormal);
+            Vector3 usedGroundNormal = groundNormal;
             // the player is near a front obstacle, and that obstacle is below the slope limit, use its normal
             if (nearFrontObstacle && frontAngleDifferent && frontObstacleAngle < slopeLimit) {
                 //Debug.Log("near front obstacle and front angle (" + frontObstacleAngle + ") is different than ground angle (" + rawGroundAngle + "), adjusting forward direction");
                 localGroundNormal = playerManager.ActiveUnitController.transform.InverseTransformDirection(forwardHitInfo.normal);
-                groundNormal = forwardHitInfo.normal;
+                usedGroundNormal = forwardHitInfo.normal;
             } else {
                 // the player is near stairs in the direction of travel
                 //if (RaycastForStairs(playerManager.ActiveUnitController.transform.TransformDirection(normalizedInput), 0.5f)) {
@@ -1025,11 +1100,11 @@ namespace AnyRPG {
                     if (stairDownHitInfo.point.y - playerManager.ActiveUnitController.transform.position.y < 0.2f
                         || playerManager.ActiveUnitController.transform.InverseTransformPoint(forwardHitInfo.point).magnitude > (colliderRadius + 0.01f)) {
                         localGroundNormal = playerManager.ActiveUnitController.transform.InverseTransformDirection(stairRampNormal);
-                        groundNormal = stairRampNormal;
+                        usedGroundNormal = stairRampNormal;
                     } else {
                         //Debug.Log("distance from wall: " + playerManager.ActiveUnitController.transform.InverseTransformPoint(forwardHitInfo.point).magnitude);
                         localGroundNormal = playerManager.ActiveUnitController.transform.InverseTransformDirection(forwardHitInfo.normal);
-                        groundNormal = forwardHitInfo.normal;
+                        usedGroundNormal = forwardHitInfo.normal;
                     }
                 }
             }
@@ -1070,7 +1145,8 @@ namespace AnyRPG {
                 // this should make the character stick to the ground better when actively moving while grounded
                 // ONLY APPLY Y DOWNFORCE ON FLAT GROUND, this will apply a y downforce multiplied by speed, not the existing y downforce from physics (gravity)
                 float yValue = 0f;
-                if (playerManager.ActiveUnitController.transform.InverseTransformPoint(groundHitInfo.point).y < -0.001f) {
+                if (playerManager.ActiveUnitController.transform.InverseTransformPoint(groundPoint).y < -0.001f) {
+                    // set a downforce value that should take the character exactly to the ground, and not lower to avoid losing momentum from physics colission with ground
                     yValue = Mathf.Clamp(1, 0, -closestGroundDistance / calculatedSpeed / Time.fixedDeltaTime) * -1;
                     //yValue = -1;
                     /*
@@ -1086,45 +1162,28 @@ namespace AnyRPG {
             return newReturnValue;
         }
 
-        /*
-        private void FixedUpdate() {
-            if (playerManager.ActiveUnitController != null) {
-                Debug.Log("FixedUpdate() position: " + playerManager.ActiveUnitController.transform.position.y);
-            }
-        }
-        */
-
-        // Calculate the initial velocity of a jump based off gravity and desired maximum height attained
+        /// <summary>
+        /// Calculate the initial velocity of a jump based off gravity and desired maximum height attained
+        /// </summary>
+        /// <param name="jumpHeight"></param>
+        /// <param name="gravity"></param>
+        /// <returns></returns>
         private float CalculateJumpSpeed(float jumpHeight, float gravity) {
             return Mathf.Sqrt(2 * jumpHeight * gravity);
         }
-
-        /*
-        private void CalculateForward() {
-            if (!MaintainingGround()) {
-                forwardDirection = airForwardDirection;
-                //forwardDirection = playerManager.ActiveUnitController.transform.forward;
-                return;
-            }
-
-            if (nearFrontObstacle && groundHitInfo.normal == Vector3.up) {
-                //Debug.Log("CalculateForward(): near front obstacle is true and we didn't get any useful information from the ground normal, trying obstacle normal");
-                forwardDirection = Vector3.Cross(forwardHitInfo.normal, -playerManager.ActiveUnitController.transform.right);
-                return;
-            }
-
-            forwardDirection = Vector3.Cross(groundHitInfo.normal, -playerManager.ActiveUnitController.transform.right);
-            //Debug.Log("CalculateForward(): no forward collisions. forwardDirection = Vector3.Cross(groundHitInfo.normal(" + groundHitInfo.normal + "), -transform.right(" + -transform.right + ")): " + forwardDirection);
-            return;
-        }
-        */
 
         private void CheckGround() {
             //Debug.Log(gameObject.name + ".PlayerUnitMovementController.CheckGround()");
 
             closestGroundDistance = 0f;
+            touchingSlope = false;
+
+            // set an inital ground distance based on a direct downward raycast from the center of the player
+            // later, a more accurate search will be done to see if there is a closer ground distance at the edges of the player capsule
             if (Physics.Raycast(playerManager.ActiveUnitController.transform.position + (Vector3.up * 0.25f), -Vector3.up, out groundHitInfo, Mathf.Infinity, groundMask)) {
                 closestGroundDistance = playerManager.ActiveUnitController.transform.InverseTransformPoint(groundHitInfo.point).y;
+                groundNormal = groundHitInfo.normal;
+                groundPoint = groundHitInfo.point;
             }
 
             // downward cast for close to ground
@@ -1142,7 +1201,7 @@ namespace AnyRPG {
                 touchingGround = true;
             } else {
                 //Debug.Log(gameObject.name + ".PlayerUnitMovementController.CheckGround(): grounded is false");
-                if (RaycastForGround(0.25f)) {
+                if (RaycastForGround()) {
                     touchingGround = true;
                 } else {
                     touchingGround = false;
@@ -1150,7 +1209,7 @@ namespace AnyRPG {
                 }
             }
 
-            groundAngle = Vector3.Angle(groundHitInfo.normal, Vector3.up);
+            groundAngle = Vector3.Angle(groundNormal, Vector3.up);
             //Debug.Log("rawGroundAngle: " + rawGroundAngle);
 
             // this is necessary in case the player is moving fast and went off a cliff and we want to apply downforce
@@ -1213,7 +1272,7 @@ namespace AnyRPG {
                 //Debug.Log("front obstacle angle: " + frontObstacleAngle);
 
                 // we could be going up a ramp, determine if the obstacle in front has a different angle than the ground below us
-                if (forwardHitInfo.normal != groundHitInfo.normal) {
+                if (forwardHitInfo.normal != groundNormal) {
                     //Debug.Log("front obstacle angle is different than ground angle: " + rawGroundAngle);
                     frontAngleDifferent = true;
                 }
@@ -1240,20 +1299,6 @@ namespace AnyRPG {
                             // the completely horizontal normal you get from striking the front of the stairs
                             Vector3 bottomPoint = originPoint;
 
-                            /*
-                            // inital angleray without intersection
-                            Vector3 angleRay = stairDownHitInfo.point - bottomPoint;
-                            Debug.DrawLine(bottomPoint,
-                                stairDownHitInfo.point,
-                                Color.red);
-
-                            // use the above angleray to recalculate a more precise angle by determining the edge of the stairs
-                            Physics.Raycast(bottomPoint,
-                                                        angleRay.normalized,
-                                                        out obstacleHitInfo,
-                                                        detectionRadius,
-                                                        groundMask);
-                                                        */
                             Vector3 angleRay = new Vector3(forwardHitInfo.point.x, stairDownHitInfo.point.y, forwardHitInfo.point.z) - bottomPoint;
 
                             Debug.DrawLine(bottomPoint,

@@ -88,6 +88,8 @@ namespace AnyRPG {
         // capabilities
         private bool canFly = false;
         private bool canFlyOverride = false;
+        private bool canGlide = false;
+        private bool canGlideOverride = false;
 
         // track current state
         private bool mounted = false;
@@ -177,6 +179,23 @@ namespace AnyRPG {
                     return MasterUnit.UnitController.FlySpeed;
                 }
                 return characterUnit.BaseCharacter.CharacterStats.FlySpeed;
+            }
+        }
+        public float GlideSpeed {
+            get {
+                if (UnderControl == true && MasterUnit != null && MasterUnit.UnitController != null) {
+                    return MasterUnit.UnitController.GlideSpeed;
+                }
+                return characterUnit.BaseCharacter.CharacterStats.GlideSpeed;
+            }
+        }
+
+        public float GlideFallSpeed {
+            get {
+                if (UnderControl == true && MasterUnit != null && MasterUnit.UnitController != null) {
+                    return MasterUnit.UnitController.GlideFallSpeed;
+                }
+                return characterUnit.BaseCharacter.CharacterStats.GlideFallSpeed;
             }
         }
 
@@ -354,7 +373,9 @@ namespace AnyRPG {
         public bool Swimming { get => swimming; }
         public bool Flying { get => flying; }
         public bool CanFly { get => (canFly || canFlyOverride); set => canFly = value; }
+        public bool CanGlide { get => (canGlide || canGlideOverride); set => canGlide = value; }
         public bool CanFlyOverride { get => canFlyOverride; set => canFlyOverride = value; }
+        public bool CanGlideOverride { get => canGlideOverride; set => canGlideOverride = value; }
 
         public override void Configure(SystemGameManager systemGameManager) {
             base.Configure(systemGameManager);
@@ -737,6 +758,8 @@ namespace AnyRPG {
 
             canFly = false;
             canFlyOverride = false;
+            canGlide = false;
+            canGlideOverride = false;
 
             mounted = false;
             walking = false;
@@ -838,6 +861,9 @@ namespace AnyRPG {
 
             if (unitProfile.FlightCapable == true) {
                 canFly = true;
+            }
+            if (unitProfile.GlideCapable == true) {
+                canGlide = true;
             }
 
             SetPersistenceProperties();
