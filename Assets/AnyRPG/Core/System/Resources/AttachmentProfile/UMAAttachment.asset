@@ -123,7 +123,7 @@ MonoBehaviour:
     scale: {x: 1, y: 1, z: 1}
     targetBone: Spine1
   - nodeName: Wings
-    position: {x: -0.274, y: 0.056, z: -0.155}
+    position: {x: -0.274, y: 0, z: -0.155}
     rotationIsGlobal: 0
     rotation: {x: 0, y: 0, z: 0}
     scale: {x: 1, y: 1, z: 1}
