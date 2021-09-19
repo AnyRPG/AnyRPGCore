@@ -119,6 +119,12 @@ namespace AnyRPG {
         private float colliderRadius = 0.3f;
         public bool debug = true;
 
+        private bool useFallDamage = false;
+        private float fallDamagePerMeter = 2f;
+        private float fallDamageMinDistance = 10f;
+        private float currentFallDistance = 0f;
+        private float fallStartHeight = 0f;
+
         //private Vector3 touchingGroundExtents = new Vector3(0.2f, 0.01f, 0.1f);
         private Vector3 maintainingGroundExtents = new Vector3(0.65f, 0.5f, 0.65f);
 
@@ -167,7 +173,10 @@ namespace AnyRPG {
                 movementStateController.enabled = true;
             }
             stairDetectionDistance = Mathf.Tan(Mathf.Deg2Rad * (90f - slopeLimit)) * stepHeight;
-        }
+            useFallDamage = systemConfigurationManager.UseFallDamage;
+            fallDamagePerMeter = systemConfigurationManager.FallDamagePerMeter;
+            fallDamageMinDistance = systemConfigurationManager.FallDamageMinDistance;
+    }
 
         public override void SetGameManagerReferences() {
             base.SetGameManagerReferences();
@@ -302,6 +311,13 @@ namespace AnyRPG {
             }
         }
 
+        public void CalculateFallDamage() {
+            if (useFallDamage && currentFallDistance > fallDamageMinDistance) {
+                playerManager.ActiveCharacter.CharacterStats.TakeFallDamage(currentFallDistance * fallDamagePerMeter);
+            }
+            currentFallDistance = 0f;
+        }
+
         //Below are the state functions. Each one is called based on the name of the state, so when currentState = Idle, we call Idle_EnterState. If currentState = Jump, we call Jump_StateUpdate()
         void Idle_EnterState() {
             //Debug.Log(gameObject.name + ".PlayerUnitMovementController.Idle_EnterState() Freezing all constraints");
@@ -321,7 +337,7 @@ namespace AnyRPG {
             playerManager.ActiveUnitController.UnitAnimator.SetVelocity(localMoveVelocity);
 
             playerManager.ActiveUnitController.UnitMotor?.Move(new Vector3(0, Mathf.Clamp(playerManager.ActiveUnitController.RigidBody.velocity.y, -53, 0), 0));
-
+            CalculateFallDamage();
         }
 
         void Idle_StateUpdate() {
@@ -383,6 +399,7 @@ namespace AnyRPG {
 
         void Move_EnterState() {
             EnterGroundStateCommon();
+            CalculateFallDamage();
         }
 
         void Move_StateUpdate() {
@@ -461,14 +478,18 @@ namespace AnyRPG {
             AnimatorMoveUpdate();
         }
 
+        void Move_ExitState() {
+            playerManager.ActiveUnitController.UnitAnimator.SetMoving(false);
+        }
+
         void Fly_EnterState() {
             //Debug.Log("PlayerUnitMovementController.Fly_EnterState()");
-
+            currentFallDistance = 0f;
             if (playerManager.ActiveUnitController != null) {
                 playerManager.ActiveUnitController.StartFlying();
                 playerManager.ActiveUnitController.RigidBody.useGravity = false;
-                playerManager.ActiveUnitController.UnitAnimator.SetTrigger("FlyTrigger");
                 playerManager.ActiveUnitController.UnitAnimator.SetBool("Flying", true);
+                playerManager.ActiveUnitController.UnitAnimator.SetTrigger("FlyTrigger");
             }
         }
 
@@ -532,7 +553,7 @@ namespace AnyRPG {
 
             } else {
                 // ============ RIGIDBODY CONSTRAINTS ============
-                // prevent constant drifting through water after stop moving
+                // prevent constant drifting through air after stop moving
                 playerManager.ActiveUnitController.FreezeAll();
 
                 // ============ VELOCITY CALCULATIONS ============
@@ -560,7 +581,9 @@ namespace AnyRPG {
         }
 
         void Swim_EnterState() {
+            currentFallDistance = 0f;
             if (playerManager.ActiveUnitController != null) {
+                EnterGroundStateCommon();
                 playerManager.ActiveUnitController.StartSwimming();
                 playerManager.ActiveUnitController.RigidBody.useGravity = false;
                 playerManager.ActiveUnitController.UnitAnimator.SetTrigger("SwimTrigger");
@@ -729,8 +752,12 @@ namespace AnyRPG {
 
         void Fall_EnterState() {
             canJump = false;
-            playerManager.ActiveUnitController.UnitAnimator.SetTrigger("FallTrigger");
-            playerManager.ActiveUnitController.UnitAnimator.SetJumping(2);
+            if (playerManager.ActiveUnitController.UnitAnimator.GetInt("Jumping") != 2) {
+                playerManager.ActiveUnitController.UnitAnimator.SetTrigger("FallTrigger");
+                playerManager.ActiveUnitController.UnitAnimator.SetJumping(2);
+            }
+            currentFallDistance = 0f;
+            fallStartHeight = playerManager.ActiveUnitController.transform.position.y;
 
             // clamp y velocity to prevent launching off ramps
             playerManager.ActiveUnitController.UnitMotor?.Move(new Vector3(playerManager.ActiveUnitController.RigidBody.velocity.x, Mathf.Clamp(playerManager.ActiveUnitController.RigidBody.velocity.y, -53, 0), playerManager.ActiveUnitController.RigidBody.velocity.z));
@@ -752,6 +779,13 @@ namespace AnyRPG {
                 return;
             }
 
+            if (playerManager.PlayerController.allowedInput
+                && playerManager.ActiveUnitController.CanGlide) {
+                currentState = AnyRPGCharacterState.Glide;
+                return;
+            }
+
+
             if (touchingGround && groundAngle <= slopeLimit) {
                 if ((playerManager.PlayerController.HasMoveInput() || playerManager.PlayerController.HasTurnInput()) && playerManager.PlayerController.canMove) {
                     currentState = AnyRPGCharacterState.Move;
@@ -765,11 +799,19 @@ namespace AnyRPG {
             //MoveRelative();
         }
 
+        void Fall_ExitState() {
+            playerManager.ActiveUnitController.UnitAnimator.SetJumping(0);
+            currentFallDistance = fallStartHeight - playerManager.ActiveUnitController.transform.position.y;
+        }
+
         void Glide_EnterState() {
             //Debug.Log("PlayerUnitMovementController.Glide_EnterState()");
+            currentFallDistance = 0f;
             canJump = false;
-            playerManager.ActiveUnitController.UnitAnimator.SetTrigger("FallTrigger");
-            playerManager.ActiveUnitController.UnitAnimator.SetJumping(2);
+            if (playerManager.ActiveUnitController.UnitAnimator.GetInt("Jumping") != 2) {
+                playerManager.ActiveUnitController.UnitAnimator.SetTrigger("FallTrigger");
+                playerManager.ActiveUnitController.UnitAnimator.SetJumping(2);
+            }
             playerManager.ActiveUnitController.RigidBody.useGravity = false;
             playerManager.ActiveUnitController.UnitAnimator.SetTurnVelocity(0f);
             playerManager.ActiveUnitController.RigidBody.constraints = RigidbodyConstraints.FreezeRotation;
@@ -837,6 +879,7 @@ namespace AnyRPG {
 
         void Glide_ExitState() {
             //Debug.Log("PlayerUnitMovementController.Glide_ExitState()");
+            playerManager.ActiveUnitController.UnitAnimator.SetJumping(0);
             playerManager.ActiveUnitController.RigidBody.useGravity = true;
 
         }
@@ -1025,7 +1068,7 @@ namespace AnyRPG {
             // if the jump or crouch buttons were held down, their values override the camera angle and allow movement straight up or down
             // ignore if swim speed would not result in a bounce out of the water
             if (playerManager.PlayerController.inputSink == true
-                || (playerManager.PlayerController.inputFly == true && chestBelowWater == true)) {
+                || (playerManager.PlayerController.inputFly == true && (chestBelowWater == true || playerManager.ActiveUnitController.CanFly))) {
                 returnValue.y = (playerManager.PlayerController.inputFly == true ? 1 : 0) + (playerManager.PlayerController.inputSink == true ? -1 : 0);
             }
 

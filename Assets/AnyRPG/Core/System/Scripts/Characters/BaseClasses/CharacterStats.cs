@@ -1020,6 +1020,17 @@ namespace AnyRPG {
             UsePowerResource(powerResource, usedResourceAmount);
         }
 
+        public void TakeFallDamage(float damagePercent) {
+            foreach (PowerResource powerResource in powerResourceDictionary.Keys) {
+                if (powerResource.IsHealth == true) {
+                    ReducePowerResource(powerResource, (int)((damagePercent / 100f) * GetPowerResourceMaxAmount(powerResource)));
+                }
+            }
+            if (systemConfigurationManager.FallDamageAudioProfile?.AudioClip != null) {
+                baseCharacter.UnitController.UnitComponentController.PlayEffectSound(systemConfigurationManager.FallDamageAudioProfile.AudioClip);
+            }
+        }
+
         public void PerformDeathCheck() {
             bool shouldLive = false;
             foreach (PowerResource powerResource in powerResourceDictionary.Keys) {

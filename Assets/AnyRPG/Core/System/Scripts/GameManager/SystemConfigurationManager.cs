@@ -148,6 +148,25 @@ namespace AnyRPG {
         [SerializeField]
         private float glideFallSpeed = 2f;
 
+        [Tooltip("If true, the player will take damage when falling from heights")]
+        [SerializeField]
+        private bool useFallDamage = false;
+
+        [Tooltip("If fall damage is used, the amount of damage per meter fallen the player will take")]
+        [SerializeField]
+        private float fallDamagePerMeter = 2f;
+
+        [Tooltip("If fall damage is used, the minimum distance the player must fall before damage is taken")]
+        [SerializeField]
+        private float fallDamageMinDistance = 10f;
+
+        [Tooltip("The audio profile to play when fall damage is taken")]
+        [SerializeField]
+        [ResourceSelector(resourceType = typeof(AudioProfile))]
+        private string fallDamageAudio = string.Empty;
+
+        private AudioProfile fallDamageAudioProfile = null;
+
         [Tooltip("When not mounted, disable native movement input to allow a third party controller (such as Invector) to move the character")]
         [SerializeField]
         private bool useThirdPartyMovementControl = false;
@@ -685,6 +704,10 @@ namespace AnyRPG {
         public float FlySpeed { get => flySpeed; }
         public float GlideSpeed { get => glideSpeed; }
         public float GlideFallSpeed { get => glideFallSpeed; }
+        public bool UseFallDamage { get => useFallDamage; set => useFallDamage = value; }
+        public float FallDamagePerMeter { get => fallDamagePerMeter; set => fallDamagePerMeter = value; }
+        public float FallDamageMinDistance { get => fallDamageMinDistance; set => fallDamageMinDistance = value; }
+        public AudioProfile FallDamageAudioProfile { get => fallDamageAudioProfile; set => fallDamageAudioProfile = value; }
 
         public override void Configure(SystemGameManager systemGameManager) {
             base.Configure(systemGameManager);
@@ -825,6 +848,15 @@ namespace AnyRPG {
                     newGameAudioProfile = tmpAudioProfile;
                 } else {
                     Debug.LogError("SystemConfigurationManager.SetupScriptableObjects(): Could not find audio profile : " + newGameAudio + " while inititalizing " + gameObject.name + ".  CHECK INSPECTOR");
+                }
+            }
+
+            if (fallDamageAudio != null && fallDamageAudio != string.Empty) {
+                AudioProfile tmpAudioProfile = systemDataFactory.GetResource<AudioProfile>(fallDamageAudio);
+                if (tmpAudioProfile != null) {
+                    fallDamageAudioProfile = tmpAudioProfile;
+                } else {
+                    Debug.LogError("SystemConfigurationManager.SetupScriptableObjects(): Could not find audio profile : " + fallDamageAudio + " while inititalizing " + gameObject.name + ".  CHECK INSPECTOR");
                 }
             }
 
