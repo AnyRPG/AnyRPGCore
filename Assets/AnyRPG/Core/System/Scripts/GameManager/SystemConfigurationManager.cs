@@ -120,6 +120,53 @@ namespace AnyRPG {
 
         [Header("CONTROLLER")]
 
+        [Tooltip("The maximum turn speed in degrees per second")]
+        [SerializeField]
+        private float maxTurnSpeed = 360f;
+
+        [Tooltip("The default character walk speed in meters per second")]
+        [SerializeField]
+        private float walkSpeed = 1f;
+
+        [Tooltip("The default character run speed in meters per second")]
+        [SerializeField]
+        private float runSpeed = 7f;
+
+        [Tooltip("The default character swim speed in meters per second")]
+        [SerializeField]
+        private float swimSpeed = 2f;
+
+        [Tooltip("The default character fly speed in meters per second")]
+        [SerializeField]
+        private float flySpeed = 20f;
+
+        [Tooltip("The default character glide speed in meters per second")]
+        [SerializeField]
+        private float glideSpeed = 5f;
+
+        [Tooltip("The speed the character will fall while gliding in meters per second")]
+        [SerializeField]
+        private float glideFallSpeed = 2f;
+
+        [Tooltip("If true, the player will take damage when falling from heights")]
+        [SerializeField]
+        private bool useFallDamage = false;
+
+        [Tooltip("If fall damage is used, the amount of damage per meter fallen the player will take")]
+        [SerializeField]
+        private float fallDamagePerMeter = 2f;
+
+        [Tooltip("If fall damage is used, the minimum distance the player must fall before damage is taken")]
+        [SerializeField]
+        private float fallDamageMinDistance = 10f;
+
+        [Tooltip("The audio profile to play when fall damage is taken")]
+        [SerializeField]
+        [ResourceSelector(resourceType = typeof(AudioProfile))]
+        private string fallDamageAudio = string.Empty;
+
+        private AudioProfile fallDamageAudioProfile = null;
+
         [Tooltip("When not mounted, disable native movement input to allow a third party controller (such as Invector) to move the character")]
         [SerializeField]
         private bool useThirdPartyMovementControl = false;
@@ -127,6 +174,7 @@ namespace AnyRPG {
         [Tooltip("If a third party movement controller is used, disable this to prevent movement lock in combat")]
         [SerializeField]
         private bool allowAutoAttack = true;
+       
 
         [Header("CAMERA")]
 
@@ -141,20 +189,32 @@ namespace AnyRPG {
        
 
         [Header("ANIMATION")]
-
+        /*
         [Tooltip("This profile should contain references to all the default animations that are on the default animation controller so the system knows which animations to replace when overriding them.")]
         [SerializeField]
+        */
         private AnimationProfile systemAnimationProfile;
+
+        [Tooltip("This profile should contain references to all the default animations that are on the default animation controller so the system knows which animations to replace when overriding them.")]
+        [ResourceSelector(resourceType = typeof(AnimationProfile))]
+        [SerializeField]
+        private string systemAnimationProfileName = string.Empty;
 
         [Tooltip("If true, movement animations will be sped up or slowed down to match the actual speed (in m/s) the character is moving at.  This will reduce foot sliding, but may result in more jerky looking movement.")]
         [SerializeField]
         private bool syncMovementAnimationSpeed;
 
         [Header("CHARACTER ANIMATION CONFIGURATION")]
-
+        /*
         [FormerlySerializedAs("defaultAttackAnimationProfile")]
         [SerializeField]
+        */
         private AnimationProfile defaultAnimationProfile;
+
+        [Tooltip("This profile will override the system animations included in the engine when no other unit or weapon specific animations are in use")]
+        [ResourceSelector(resourceType = typeof(AnimationProfile))]
+        [SerializeField]
+        private string defaultAnimationProfileName;
 
         [SerializeField]
         private RuntimeAnimatorController defaultAnimatorController;
@@ -637,6 +697,17 @@ namespace AnyRPG {
         public bool SyncMovementAnimationSpeed { get => syncMovementAnimationSpeed; set => syncMovementAnimationSpeed = value; }
         public int QuestLogSize { get => questLogSize; set => questLogSize = value; }
         public int AutoPixelsPerMeter { get => autoPixelsPerMeter; set => autoPixelsPerMeter = value; }
+        public float MaxTurnSpeed { get => maxTurnSpeed; }
+        public float WalkSpeed { get => walkSpeed; }
+        public float RunSpeed { get => runSpeed; }
+        public float SwimSpeed { get => swimSpeed; }
+        public float FlySpeed { get => flySpeed; }
+        public float GlideSpeed { get => glideSpeed; }
+        public float GlideFallSpeed { get => glideFallSpeed; }
+        public bool UseFallDamage { get => useFallDamage; set => useFallDamage = value; }
+        public float FallDamagePerMeter { get => fallDamagePerMeter; set => fallDamagePerMeter = value; }
+        public float FallDamageMinDistance { get => fallDamageMinDistance; set => fallDamageMinDistance = value; }
+        public AudioProfile FallDamageAudioProfile { get => fallDamageAudioProfile; set => fallDamageAudioProfile = value; }
 
         public override void Configure(SystemGameManager systemGameManager) {
             base.Configure(systemGameManager);
@@ -659,6 +730,27 @@ namespace AnyRPG {
 
         // verify that system abilities are available through the factory
         public void SetupScriptableObjects() {
+
+            if (systemAnimationProfileName != null && systemAnimationProfileName != string.Empty) {
+                AnimationProfile animationProfile = systemDataFactory.GetResource<AnimationProfile>(systemAnimationProfileName);
+                if (animationProfile == null) {
+                    Debug.LogError("SystemConfigurationManager.SetupScriptableObjects(): animation profile " + systemAnimationProfileName + " could not be found in factory.  CHECK INSPECTOR");
+                    return;
+                } else {
+                    systemAnimationProfile = animationProfile;
+                }
+            }
+
+            if (defaultAnimationProfileName != null && defaultAnimationProfileName != string.Empty) {
+                AnimationProfile animationProfile = systemDataFactory.GetResource<AnimationProfile>(defaultAnimationProfileName);
+                if (animationProfile == null) {
+                    Debug.LogError("SystemConfigurationManager.SetupScriptableObjects(): animation profile " + defaultAnimationProfileName + " could not be found in factory.  CHECK INSPECTOR");
+                    return;
+                } else {
+                    defaultAnimationProfile = animationProfile;
+                }
+            }
+
 
             if (levelUpEffectName != null && levelUpEffectName != string.Empty) {
                 AbilityEffect testAbility = systemDataFactory.GetResource<AbilityEffect>(levelUpEffectName);
@@ -756,6 +848,15 @@ namespace AnyRPG {
                     newGameAudioProfile = tmpAudioProfile;
                 } else {
                     Debug.LogError("SystemConfigurationManager.SetupScriptableObjects(): Could not find audio profile : " + newGameAudio + " while inititalizing " + gameObject.name + ".  CHECK INSPECTOR");
+                }
+            }
+
+            if (fallDamageAudio != null && fallDamageAudio != string.Empty) {
+                AudioProfile tmpAudioProfile = systemDataFactory.GetResource<AudioProfile>(fallDamageAudio);
+                if (tmpAudioProfile != null) {
+                    fallDamageAudioProfile = tmpAudioProfile;
+                } else {
+                    Debug.LogError("SystemConfigurationManager.SetupScriptableObjects(): Could not find audio profile : " + fallDamageAudio + " while inititalizing " + gameObject.name + ".  CHECK INSPECTOR");
                 }
             }
 

@@ -42,9 +42,17 @@ namespace AnyRPG {
 
         protected float walkSpeed = 1f;
         protected float runSpeed = 7f;
+        protected float swimSpeed = 2f;
+        protected float flySpeed = 20f;
+        protected float glideSpeed = 5f;
+        protected float glideFallSpeed = 2f;
 
         protected float currentRunSpeed = 0f;
         protected float currentSprintSpeed = 0f;
+        protected float currentSwimSpeed = 2f;
+        protected float currentFlySpeed = 20f;
+        protected float currentGlideSpeed = 5f;
+        protected float currentGlideFallSpeed = 2f;
 
         protected Dictionary<string, StatusEffectNode> statusEffects = new Dictionary<string, StatusEffectNode>();
         protected BaseCharacter baseCharacter = null;
@@ -66,6 +74,10 @@ namespace AnyRPG {
         public float WalkSpeed { get => walkSpeed; }
         public float RunSpeed { get => currentRunSpeed; }
         public float SprintSpeed { get => currentSprintSpeed; }
+        public float SwimSpeed { get => currentSwimSpeed; }
+        public float FlySpeed { get => currentFlySpeed; }
+        public float GlideSpeed { get => currentGlideSpeed; }
+        public float GlideFallSpeed { get => currentGlideFallSpeed; }
         //public float MyHitBox { get => hitBox; }
         public bool IsAlive { get => isAlive; }
         public BaseCharacter BaseCharacter { get => baseCharacter; set => baseCharacter = value; }
@@ -163,6 +175,17 @@ namespace AnyRPG {
             Configure(systemGameManager);
             SetPrimaryStatModifiers();
             InitializeSecondaryStats();
+
+            walkSpeed = systemConfigurationManager.WalkSpeed;
+            runSpeed = systemConfigurationManager.RunSpeed;
+            swimSpeed = systemConfigurationManager.SwimSpeed;
+            flySpeed = systemConfigurationManager.FlySpeed;
+            glideSpeed = systemConfigurationManager.GlideSpeed;
+            glideFallSpeed = systemConfigurationManager.GlideFallSpeed;
+            currentSwimSpeed = swimSpeed;
+            currentFlySpeed = flySpeed;
+            currentGlideSpeed = glideSpeed;
+            currentGlideFallSpeed = glideFallSpeed;
         }
 
         public override void SetGameManagerReferences() {
@@ -596,6 +619,26 @@ namespace AnyRPG {
             return secondaryStats[SecondaryStatType.Accuracy].CurrentValue;
         }
 
+        public bool HasFlight() {
+            //Debug.Log("CharacterStats.GetDamageModifiers()");
+            foreach (StatusEffectNode statusEffectNode in StatusEffects.Values) {
+                if (statusEffectNode.StatusEffect.CanFly == true) {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        public bool HasGlide() {
+            //Debug.Log("CharacterStats.GetDamageModifiers()");
+            foreach (StatusEffectNode statusEffectNode in StatusEffects.Values) {
+                if (statusEffectNode.StatusEffect.CanGlide == true) {
+                    return true;
+                }
+            }
+            return false;
+        }
+
         public bool HasFreezeImmunity() {
             //Debug.Log("CharacterStats.GetDamageModifiers()");
             foreach (StatusEffectNode statusEffectNode in StatusEffects.Values) {
@@ -847,6 +890,22 @@ namespace AnyRPG {
                 StatChangedNotificationHandler();
             }
 
+            if (statusEffect.CanFly == true) {
+                if (HasFlight() == false) {
+                    if (baseCharacter.UnitController != null) {
+                        baseCharacter.UnitController.CanFlyOverride = false;
+                    }
+                }
+            }
+            if (statusEffect.CanGlide == true) {
+                if (HasGlide() == false) {
+                    if (baseCharacter.UnitController != null) {
+                        baseCharacter.UnitController.CanGlideOverride = false;
+                    }
+                }
+            }
+
+
             if (statusEffect.FactionModifiers.Count > 0) {
                 SystemEventManager.TriggerEvent("OnReputationChange", new EventParamProperties());
             }
@@ -959,6 +1018,17 @@ namespace AnyRPG {
 
         public void ReducePowerResource(PowerResource powerResource, int usedResourceAmount) {
             UsePowerResource(powerResource, usedResourceAmount);
+        }
+
+        public void TakeFallDamage(float damagePercent) {
+            foreach (PowerResource powerResource in powerResourceDictionary.Keys) {
+                if (powerResource.IsHealth == true) {
+                    ReducePowerResource(powerResource, (int)((damagePercent / 100f) * GetPowerResourceMaxAmount(powerResource)));
+                }
+            }
+            if (systemConfigurationManager.FallDamageAudioProfile?.AudioClip != null) {
+                baseCharacter.UnitController.UnitComponentController.PlayEffectSound(systemConfigurationManager.FallDamageAudioProfile.AudioClip);
+            }
         }
 
         public void PerformDeathCheck() {

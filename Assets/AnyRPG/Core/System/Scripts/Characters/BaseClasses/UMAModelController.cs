@@ -77,6 +77,10 @@ namespace AnyRPG {
             BuildModelAppearance();
         }
 
+        public bool ShouldCalculateFloatHeight() {
+            return true;
+        }
+
         private void CheckAvatarDefinition() {
             /*if (avatarDefinition.Wardrobe == null
                 || avatarDefinition.RaceName == null
@@ -124,7 +128,7 @@ namespace AnyRPG {
                 buildInProgress = true;
             } else {
                 if ((initialAppearance == null || initialAppearance == string.Empty) && preloadedModels == 0) {
-                    unitModelController.SetModelReady();
+                    SetModelReady();
                 } else {
                     BuildModelAppearance();
                 }
@@ -252,8 +256,7 @@ namespace AnyRPG {
         public void HandleCharacterCreated(UMAData umaData) {
             //Debug.Log(unitController.gameObject.name + ".UMAModelController.HandleCharacterCreated()");
             //UnsubscribeFromUMACreate();
-            buildInProgress = false;
-            unitModelController.SetModelReady();
+            SetModelReady();
         }
 
         public void HandleCharacterBeforeDnaUpdated(UMAData umaData) {
@@ -272,6 +275,13 @@ namespace AnyRPG {
             //Debug.Log(unitController.gameObject.name + ".UMAModelController.HandleCharacterUpdated()");
             //Debug.Log("UMAModelController.HandleCharacterUpdated(): " + umaData + "; frame: " + Time.frameCount);
             //HandleCharacterCreated(umaData);
+
+            SetModelReady();
+        }
+
+        public void SetModelReady() {
+            //Debug.Log(unitController.gameObject.name + ".UMAModelController.SetModelReady()");
+
             buildInProgress = false;
             unitModelController.SetModelReady();
         }

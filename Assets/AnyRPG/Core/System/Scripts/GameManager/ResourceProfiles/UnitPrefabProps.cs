@@ -1,5 +1,6 @@
 using AnyRPG;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace AnyRPG {
 
@@ -19,7 +20,14 @@ namespace AnyRPG {
         [Header("Animation")]
 
         [Tooltip("A shared animation profile to be used for the unit animations")]
+        [ResourceSelector(resourceType = typeof(AnimationProfile))]
         [SerializeField]
+        private string animationProfileName = null;
+
+        /*
+        [Tooltip("A shared animation profile to be used for the unit animations")]
+        [SerializeField]
+        */
         private AnimationProfile animationProfile = null;
 
         [Tooltip("If true, the inline values below will be used instead of the animation profile above")]
@@ -68,6 +76,21 @@ namespace AnyRPG {
         [ResourceSelector(resourceType = typeof(AttachmentProfile))]
         private string attachmentProfileName = string.Empty;
 
+        [Header("Water Configuration")]
+
+        [Tooltip("When floating in water the height from the bottom of the transform where the water line will come up to")]
+        [SerializeField]
+        private float floatHeight = 1.4f;
+
+        [Tooltip("If true, height of the transform will be added to the value above. If false, transform height will replace float height if the transform is found")]
+        [SerializeField]
+        private bool addFloatHeightToTransform = false;
+
+        [Tooltip("When floating in water, the child transform that will be used for the water line")]
+        [FormerlySerializedAs("chestBone")]
+        [SerializeField]
+        private string floatTransform = "Spine1";
+
         // reference to the actual attachment profile
         private AttachmentProfile attachmentProfile = null;
 
@@ -94,8 +117,24 @@ namespace AnyRPG {
             }
         }
 
+        public string FloatTransform { get => floatTransform; }
+        public float FloatHeight { get => floatHeight; }
+        public bool AddFloatHeightToTransform { get => addFloatHeightToTransform; }
 
         public void SetupScriptableObjects(SystemDataFactory systemDataFactory) {
+
+
+            animationProps.Configure();
+
+            if (animationProfileName != null && animationProfileName != string.Empty) {
+                AnimationProfile tmpAnimationProfile = systemDataFactory.GetResource<AnimationProfile>(animationProfileName);
+                if (tmpAnimationProfile != null) {
+                    animationProfile = tmpAnimationProfile;
+                } else {
+                    Debug.LogError("UnitPrefabProps.SetupScriptableObjects(): UNABLE TO FIND Animation Profile " + animationProfileName + " while initializing. CHECK INSPECTOR!");
+                }
+            }
+
 
             if (attachmentProfileName != null && attachmentProfileName != string.Empty) {
                 AttachmentProfile tmpAttachmentProfile = systemDataFactory.GetResource<AttachmentProfile>(attachmentProfileName);

@@ -1113,7 +1113,7 @@ namespace AnyRPG {
                     }
                 }
                 if (ability.CastingAudioClip != null) {
-                    baseCharacter.UnitController.UnitComponentController.PlayCast(ability.CastingAudioClip);
+                    baseCharacter.UnitController.UnitComponentController.PlayCastSound(ability.CastingAudioClip);
                 }
                 if (ability.CoolDownOnCast == true) {
                     ability.BeginAbilityCoolDown(baseCharacter);
@@ -1206,7 +1206,7 @@ namespace AnyRPG {
             //Debug.Log(abilityCaster.gameObject.name + ".CharacterAbilitymanager.EndCastCleanup()");
             base.EndCastCleanup();
             if (baseCharacter.UnitController != null) {
-                baseCharacter.UnitController.UnitComponentController.StopCast();
+                baseCharacter.UnitController.UnitComponentController.StopCastSound();
             }
         }
 
@@ -1292,7 +1292,7 @@ namespace AnyRPG {
                 if (abilityEffectContext.baseAbility != null) {
                     AudioClip audioClip = abilityEffectContext.baseAbility.GetHitSound(baseCharacter);
                     if (audioClip != null) {
-                        baseCharacter.UnitController.UnitComponentController.PlayEffect(audioClip);
+                        baseCharacter.UnitController.UnitComponentController.PlayEffectSound(audioClip);
                     }
                 }
 
@@ -1721,7 +1721,7 @@ namespace AnyRPG {
             if (currentCastAbility != null) {
                 AudioClip audioClip = currentCastAbility.GetAnimationHitSound();
                 if (audioClip != null) {
-                    baseCharacter.UnitController.UnitComponentController.PlayEffect(audioClip);
+                    baseCharacter.UnitController.UnitComponentController.PlayEffectSound(audioClip);
                 }
             }
         }

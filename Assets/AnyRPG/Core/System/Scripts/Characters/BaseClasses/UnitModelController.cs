@@ -24,6 +24,9 @@ namespace AnyRPG {
         private ObjectPooler objectPooler = null;
         private UIManager uIManager = null;
 
+        // properties
+        private Transform floatTransform = null;
+
         public UMAModelController UMAModelController { get => umaModelController; }
         public MecanimModelController MecanimModelController { get => mecanimModelController; }
         public bool ModelReady { get => modelReady; }
@@ -33,7 +36,7 @@ namespace AnyRPG {
             Configure(systemGameManager);
 
             umaModelController = new UMAModelController(unitController, this, systemGameManager);
-            mecanimModelController = new MecanimModelController(unitController, systemGameManager);
+            mecanimModelController = new MecanimModelController(unitController, this, systemGameManager);
         }
 
         public override void SetGameManagerReferences() {
@@ -269,12 +272,30 @@ namespace AnyRPG {
         public void SetModelReady() {
             //Debug.Log(unitController.gameObject.name + ".UnitModelController.SetModelReady()");
             if (modelReady == false) {
+
                 unitController.CharacterUnit.BaseCharacter.HandleCharacterUnitSpawn();
                 EquipEquipmentModels(unitController.CharacterUnit.BaseCharacter.CharacterEquipmentManager);
+            }
+            if (mecanimModelController.ShouldCalculateFloatHeight() || umaModelController.ShouldCalculateFloatHeight()) {
+                CalculateFloatHeight();
             }
             modelReady = true;
             OnModelReady();
             unitController.SetModelReady();
+        }
+
+        public void CalculateFloatHeight() {
+            unitController.FloatHeight += unitController.UnitProfile.UnitPrefabProps.FloatHeight;
+            if (unitController.UnitProfile?.UnitPrefabProps?.FloatTransform != string.Empty) {
+                floatTransform = unitController.transform.FindChildByRecursive(unitController.UnitProfile.UnitPrefabProps.FloatTransform);
+                if (floatTransform != null) {
+                    unitController.FloatHeight = floatTransform.position.y - unitController.transform.position.y;
+                    if (unitController.UnitProfile.UnitPrefabProps.AddFloatHeightToTransform == true) {
+                        unitController.FloatHeight += unitController.UnitProfile.UnitPrefabProps.FloatHeight;
+                    }
+                }
+            }
+            //Debug.Log(unitController.gameObject.name + ".UnitModelController.CalculateFloatHeight() new float height: " + unitController.FloatHeight);
         }
     }
 
