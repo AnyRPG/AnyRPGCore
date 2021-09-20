@@ -9,6 +9,10 @@ namespace AnyRPG {
     [System.Serializable]
     public class QuestQuestObjective : QuestObjective {
 
+        [SerializeField]
+        [ResourceSelector(resourceType = typeof(Quest))]
+        protected string questName = null;
+
         public override Type ObjectiveType {
             get {
                 return typeof(QuestQuestObjective);
@@ -60,12 +64,12 @@ namespace AnyRPG {
             //Debug.Log("QuestQuestObjective.SetupScriptableObjects()");
             base.SetupScriptableObjects(systemGameManager);
             questObjective = null;
-            if (MyType != null && MyType != string.Empty) {
-                Quest tmpQuestObjective = systemDataFactory.GetResource<Quest>(MyType);
+            if (questName != null && questName != string.Empty) {
+                Quest tmpQuestObjective = systemDataFactory.GetResource<Quest>(questName);
                 if (tmpQuestObjective != null) {
                     questObjective = tmpQuestObjective;
                 } else {
-                    Debug.LogError("SystemAbilityManager.SetupScriptableObjects(): Could not find quest : " + MyType + " while inititalizing a quest quest objective.  CHECK INSPECTOR");
+                    Debug.LogError("SystemAbilityManager.SetupScriptableObjects(): Could not find quest : " + questName + " while inititalizing a quest quest objective.  CHECK INSPECTOR");
                 }
             } else {
                 Debug.LogError("SystemAbilityManager.SetupScriptableObjects(): MyType was null while inititalizing a quest quest objective.  CHECK INSPECTOR");

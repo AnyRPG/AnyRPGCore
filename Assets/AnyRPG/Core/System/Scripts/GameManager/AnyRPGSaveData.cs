@@ -65,6 +65,7 @@ namespace AnyRPG {
     public struct QuestSaveData {
 
         public string MyName;
+        public int questStep;
         public bool turnedIn;
         public bool markedComplete;
         public bool inLog;

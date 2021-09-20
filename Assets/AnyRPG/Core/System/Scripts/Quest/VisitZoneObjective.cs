@@ -10,6 +10,10 @@ namespace AnyRPG {
     [System.Serializable]
     public class VisitZoneObjective : QuestObjective {
 
+        [SerializeField]
+        [ResourceSelector(resourceType = typeof(SceneNode))]
+        protected string zoneName = null;
+
         public override Type ObjectiveType {
             get {
                 return typeof(VisitZoneObjective);
@@ -37,7 +41,7 @@ namespace AnyRPG {
 
         public override void UpdateCompletionCount(bool printMessages = true) {
             base.UpdateCompletionCount(printMessages);
-            SceneNode sceneNode = systemDataFactory.GetResource<SceneNode>(MyType);
+            SceneNode sceneNode = systemDataFactory.GetResource<SceneNode>(zoneName);
             if (sceneNode != null && sceneNode.Visited == true) {
                 CurrentAmount++;
             }
@@ -48,10 +52,10 @@ namespace AnyRPG {
             base.OnAcceptQuest(quest, printMessages);
 
             objectiveSceneNode = null;
-            if (MyType != null && MyType != string.Empty) {
-                objectiveSceneNode = systemDataFactory.GetResource<SceneNode>(MyType);
+            if (zoneName != null && zoneName != string.Empty) {
+                objectiveSceneNode = systemDataFactory.GetResource<SceneNode>(zoneName);
             } else {
-                Debug.LogError("VisitZoneObjective.OnAcceptQuest(): Could not find scene node : " + MyType + " while inititalizing a visit zone objective.  CHECK INSPECTOR");
+                Debug.LogError("VisitZoneObjective.OnAcceptQuest(): Could not find scene node : " + zoneName + " while inititalizing a visit zone objective.  CHECK INSPECTOR");
                 return;
             }
             UpdateCompletionCount(printMessages);

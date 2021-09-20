@@ -7,9 +7,9 @@ using UnityEngine;
 
 namespace AnyRPG {
     [System.Serializable]
-    public abstract class QuestObjective : ConfiguredClass {
+    public class QuestObjective : ConfiguredClass {
         [SerializeField]
-        private int amount;
+        private int amount = 1;
 
         protected Quest quest;
 

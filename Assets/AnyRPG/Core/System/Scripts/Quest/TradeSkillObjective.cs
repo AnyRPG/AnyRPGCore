@@ -9,6 +9,10 @@ namespace AnyRPG {
     [System.Serializable]
     public class TradeSkillObjective : QuestObjective {
 
+        [SerializeField]
+        [ResourceSelector(resourceType = typeof(Skill))]
+        protected string skillName = null;
+
         public override Type ObjectiveType {
             get {
                 return typeof(TradeSkillObjective);
@@ -25,7 +29,7 @@ namespace AnyRPG {
         }
 
         public void UpdateCompletionCount(Skill skill) {
-            if (!SystemDataFactory.MatchResource(skill.DisplayName, MyType)) {
+            if (!SystemDataFactory.MatchResource(skill.DisplayName, skillName)) {
                 // some other skill than this one was learned.  no need to check.
                 return;
             }
@@ -65,10 +69,10 @@ namespace AnyRPG {
         public override void SetupScriptableObjects(SystemGameManager systemGameManager) {
             base.SetupScriptableObjects(systemGameManager);
             skill = null;
-            if (MyType != null && MyType != string.Empty) {
-                skill = systemDataFactory.GetResource<Skill>(MyType);
+            if (skillName != null && skillName != string.Empty) {
+                skill = systemDataFactory.GetResource<Skill>(skillName);
             } else {
-                Debug.LogError("SystemAbilityManager.SetupScriptableObjects(): Could not find ability : " + MyType + " while inititalizing an ability objective.  CHECK INSPECTOR");
+                Debug.LogError("SystemAbilityManager.SetupScriptableObjects(): Could not find ability : " + skillName + " while inititalizing an ability objective.  CHECK INSPECTOR");
             }
         }
 

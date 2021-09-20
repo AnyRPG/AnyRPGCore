@@ -9,6 +9,9 @@ namespace AnyRPG {
     [System.Serializable]
     public class CollectObjective : QuestObjective {
 
+        [SerializeField]
+        [ResourceSelector(resourceType = typeof(Item))]
+        protected string itemName = null;
 
         // game manager references
         protected InventoryManager inventoryManager = null;
@@ -22,7 +25,7 @@ namespace AnyRPG {
         public void UpdateItemCount(Item item) {
 
             // change this with check reference to item prefab in the future
-            if (SystemDataFactory.MatchResource(MyType, item.DisplayName)) {
+            if (SystemDataFactory.MatchResource(itemName, item.DisplayName)) {
                 UpdateCompletionCount();
             }
         }
@@ -33,8 +36,8 @@ namespace AnyRPG {
             if (completeBefore) {
                 return;
             }
-            CurrentAmount = inventoryManager.GetItemCount(MyType);
-            CurrentAmount += playerManager.MyCharacter.CharacterEquipmentManager.GetEquipmentCount(MyType);
+            CurrentAmount = inventoryManager.GetItemCount(itemName);
+            CurrentAmount += playerManager.MyCharacter.CharacterEquipmentManager.GetEquipmentCount(itemName);
 
             quest.CheckCompletion(true, printMessages);
             if (CurrentAmount <= MyAmount && !quest.IsAchievement && printMessages == true && CurrentAmount != 0) {
@@ -48,7 +51,7 @@ namespace AnyRPG {
         }
 
         public void Complete() {
-            List<Item> items = inventoryManager.GetItems(MyType, MyAmount);
+            List<Item> items = inventoryManager.GetItems(itemName, MyAmount);
             foreach (Item item in items) {
                 item.Remove();
             }

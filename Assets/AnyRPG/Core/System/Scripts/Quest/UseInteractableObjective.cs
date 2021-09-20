@@ -10,6 +10,9 @@ namespace AnyRPG {
     [System.Serializable]
     public class UseInteractableObjective : QuestObjective {
 
+        [SerializeField]
+        protected string interactableName = null;
+
         public override Type ObjectiveType {
             get {
                 return typeof(UseInteractableObjective);
@@ -45,7 +48,7 @@ namespace AnyRPG {
             if (completeBefore) {
                 return;
             }
-            if (SystemDataFactory.MatchResource(interactableName, MyType)) {
+            if (SystemDataFactory.MatchResource(interactableName, this.interactableName)) {
                 if (!interactionComplete && requireCompletion == true) {
                     return;
                 }

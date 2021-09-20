@@ -125,6 +125,9 @@ namespace AnyRPG {
         [Header("Objectives")]
 
         [SerializeField]
+        protected List<QuestStep> steps = new List<QuestStep>();
+
+        [SerializeField]
         protected CollectObjective[] collectObjectives;
 
         [SerializeField]
@@ -605,7 +608,7 @@ namespace AnyRPG {
 
         public override void SetupScriptableObjects(SystemGameManager systemGameManager) {
             //Debug.Log(DisplayName + ".Quest.SetupScriptableObjects(" + (systemGameManager == null ? "null" : systemGameManager.gameObject.name) + "): ID: " + GetInstanceID());
-        
+
             base.SetupScriptableObjects(systemGameManager);
 
             if (rewardCurrencyName != null && rewardCurrencyName != string.Empty) {
@@ -670,6 +673,10 @@ namespace AnyRPG {
                 }
             }
 
+            foreach (QuestStep questStep in steps) {
+                questStep.SetupScriptableObjects(this, systemGameManager);
+            }
+
             foreach (QuestObjective objective in collectObjectives) {
                 objective.SetupScriptableObjects(systemGameManager);
                 objective.SetQuest(this);
@@ -719,5 +726,23 @@ namespace AnyRPG {
         public virtual void HandlePrerequisiteUpdates() {
             OnQuestStatusUpdated();
         }
+    }
+
+    [System.Serializable]
+    public class QuestStep : ConfiguredClass{
+        [SerializeReference]
+        [SerializeReferenceButton]
+        private List<QuestObjective> questObjectives = new List<QuestObjective>();
+
+        public List<QuestObjective> QuestObjectives { get => questObjectives; }
+
+        public void SetupScriptableObjects(Quest quest, SystemGameManager systemGameManager) {
+            base.Configure(systemGameManager);
+            foreach (QuestObjective objective in questObjectives) {
+                objective.SetupScriptableObjects(systemGameManager);
+                objective.SetQuest(quest);
+            }
+        }
+
     }
 }

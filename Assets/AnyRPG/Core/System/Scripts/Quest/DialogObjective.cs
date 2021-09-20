@@ -10,6 +10,10 @@ namespace AnyRPG {
     [System.Serializable]
     public class DialogObjective : QuestObjective {
 
+        [SerializeField]
+        [ResourceSelector(resourceType = typeof(Dialog))]
+        protected string dialogName = null;
+
         public override Type ObjectiveType {
             get {
                 return typeof(DialogObjective);
@@ -23,7 +27,7 @@ namespace AnyRPG {
                 return;
             }
 
-            if (SystemDataFactory.MatchResource(MyType, dialog.DisplayName)) {
+            if (SystemDataFactory.MatchResource(dialogName, dialog.DisplayName)) {
                 CurrentAmount++;
                 quest.CheckCompletion();
                 if (CurrentAmount <= MyAmount && !quest.IsAchievement && CurrentAmount != 0) {
@@ -37,7 +41,7 @@ namespace AnyRPG {
 
         public override void UpdateCompletionCount(bool printMessages = true) {
             base.UpdateCompletionCount(printMessages);
-            Dialog dialog = systemDataFactory.GetResource<Dialog>(MyType);
+            Dialog dialog = systemDataFactory.GetResource<Dialog>(dialogName);
             if (dialog != null && dialog.TurnedIn == true) {
                 CurrentAmount++;
             }

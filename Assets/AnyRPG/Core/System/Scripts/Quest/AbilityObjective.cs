@@ -9,6 +9,10 @@ namespace AnyRPG {
     [System.Serializable]
     public class AbilityObjective : QuestObjective {
 
+        [SerializeField]
+        [ResourceSelector(resourceType = typeof(BaseAbility))]
+        protected string abilityName = null;
+
         public override Type ObjectiveType {
             get {
                 return typeof(AbilityObjective);
@@ -94,10 +98,10 @@ namespace AnyRPG {
         public override void SetupScriptableObjects(SystemGameManager systemGameManager) {
             base.SetupScriptableObjects(systemGameManager);
             baseAbility = null;
-            if (MyType != null && MyType != string.Empty) {
-                baseAbility = systemDataFactory.GetResource<BaseAbility>(MyType);
+            if (abilityName != null && abilityName != string.Empty) {
+                baseAbility = systemDataFactory.GetResource<BaseAbility>(abilityName);
             } else {
-                Debug.LogError("SystemAbilityManager.SetupScriptableObjects(): Could not find ability : " + MyType + " while inititalizing an ability objective.  CHECK INSPECTOR");
+                Debug.LogError("SystemAbilityManager.SetupScriptableObjects(): Could not find ability : " + abilityName + " while inititalizing an ability objective.  CHECK INSPECTOR");
             }
         }
 
