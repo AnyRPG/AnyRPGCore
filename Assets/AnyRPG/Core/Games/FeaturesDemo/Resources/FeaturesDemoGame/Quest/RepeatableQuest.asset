@@ -10,24 +10,17 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 7b491a306145b8e4aa064bbcf71f8e01, type: 3}
-  m_Name: CollectionQuest
+  m_Name: RepeatableQuest
   m_EditorClassIdentifier: 
-  resourceName: Collection
+  resourceName: Repeatable
   displayName: 
   icon: {fileID: 0}
   iconBackgroundImage: {fileID: 0}
-  description: 'This is a collection quest.
-
-
-    To complete it, you must collect
-    all the objectives.
-
-
-    You can find the items for this quest on the Vendor.'
+  description: This quest is repeatable.
   useRegionalDescription: 0
   resourceDescriptionProfile: 
   isAchievement: 0
-  repeatableQuest: 0
+  repeatableQuest: 1
   hasOpeningDialog: 0
   experienceLevel: 1
   dynamicLevel: 1
@@ -38,7 +31,7 @@ MonoBehaviour:
   rewardCurrencyName: 
   baseCurrencyReward: 0
   currencyRewardPerLevel: 0
-  maxItemRewards: 0
+  maxItemRewards: 1
   itemRewardNames: []
   maxFactionRewards: 0
   factionRewards: []
@@ -46,19 +39,8 @@ MonoBehaviour:
   abilityRewardNames: []
   maxSkillRewards: 0
   skillRewardNames: []
-  steps:
-  - questObjectives:
-    - id: 0
-    - id: 1
-  collectObjectives:
-  - amount: 1
-    type: Dagger
-    overrideDisplayName: 
-    itemName: 
-  - amount: 0
-    type: Shield
-    overrideDisplayName: 
-    itemName: 
+  steps: []
+  collectObjectives: []
   killObjectives: []
   tradeSkillObjectives: []
   abilityObjectives: []
@@ -68,20 +50,6 @@ MonoBehaviour:
   visitZoneObjectives: []
   prerequisiteConditions: []
   turnInItems: 0
-  allowRawComplete: 0
+  allowRawComplete: 1
   references:
     version: 1
-    00000000:
-      type: {class: CollectObjective, ns: AnyRPG, asm: Assembly-CSharp}
-      data:
-        amount: 1
-        type: 
-        overrideDisplayName: 
-        itemName: Dagger
-    00000001:
-      type: {class: CollectObjective, ns: AnyRPG, asm: Assembly-CSharp}
-      data:
-        amount: 1
-        type: 
-        overrideDisplayName: 
-        itemName: Shield

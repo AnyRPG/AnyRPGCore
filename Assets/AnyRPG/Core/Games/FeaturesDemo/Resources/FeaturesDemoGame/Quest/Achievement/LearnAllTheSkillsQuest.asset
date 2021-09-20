@@ -39,21 +39,31 @@ MonoBehaviour:
   abilityRewardNames: []
   maxSkillRewards: 0
   skillRewardNames: []
+  steps:
+  - questObjectives:
+    - id: 0
+    - id: 1
+    - id: 2
+    - id: 3
   collectObjectives: []
   killObjectives: []
   tradeSkillObjectives:
   - amount: 1
     type: Box Gathering
     overrideDisplayName: 
+    skillName: 
   - amount: 1
     type: Sphere Gathering
     overrideDisplayName: 
+    skillName: 
   - amount: 1
     type: Equipment Crafting
     overrideDisplayName: 
+    skillName: 
   - amount: 1
     type: Consumable Crafting
     overrideDisplayName: 
+    skillName: 
   abilityObjectives: []
   useInteractableObjectives: []
   questQuestObjectives: []
@@ -62,3 +72,33 @@ MonoBehaviour:
   prerequisiteConditions: []
   turnInItems: 0
   allowRawComplete: 0
+  references:
+    version: 1
+    00000000:
+      type: {class: TradeSkillObjective, ns: AnyRPG, asm: Assembly-CSharp}
+      data:
+        amount: 1
+        type: 
+        overrideDisplayName: 
+        skillName: Box Gathering
+    00000001:
+      type: {class: TradeSkillObjective, ns: AnyRPG, asm: Assembly-CSharp}
+      data:
+        amount: 1
+        type: 
+        overrideDisplayName: 
+        skillName: Sphere Gathering
+    00000002:
+      type: {class: TradeSkillObjective, ns: AnyRPG, asm: Assembly-CSharp}
+      data:
+        amount: 1
+        type: 
+        overrideDisplayName: 
+        skillName: Equipment Crafting
+    00000003:
+      type: {class: TradeSkillObjective, ns: AnyRPG, asm: Assembly-CSharp}
+      data:
+        amount: 1
+        type: 
+        overrideDisplayName: 
+        skillName: Consumable Crafting

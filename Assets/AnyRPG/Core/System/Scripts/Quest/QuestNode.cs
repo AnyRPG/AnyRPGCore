@@ -14,6 +14,7 @@ namespace AnyRPG {
         private bool endQuest = true;
 
         [SerializeField]
+        [ResourceSelector(resourceType = typeof(Quest))]
         private string questName = string.Empty;
 
         //[SerializeField]

@@ -27,7 +27,7 @@ MonoBehaviour:
       type: 3}
     modelPrefab: {fileID: 2692339740015506113, guid: 5e4110e291da71541bbc6aebc87266e3,
       type: 3}
-    animationProfile: {fileID: 0}
+    animationProfileName: 
     useInlineAnimationProps: 0
     animationProps:
       useRootMotion: 0
@@ -108,6 +108,10 @@ MonoBehaviour:
       deathClip: {fileID: 0}
       reviveClip: {fileID: 0}
       levitatedClip: {fileID: 0}
+      swimIdleClip: {fileID: 0}
+      swimMoveClip: {fileID: 0}
+      flyIdleClip: {fileID: 0}
+      flyMoveClip: {fileID: 0}
     rotateModel: 0
     namePlateProps:
       displayName: 
@@ -127,8 +131,13 @@ MonoBehaviour:
     scale: {x: 1, y: 1, z: 1}
     targetBone: 
     attachmentProfileName: Humanoid
+    floatHeight: 1.4
+    addFloatHeightToTransform: 0
+    floatTransform: Spine1
   isUMAUnit: 0
   isPet: 0
+  flightCapable: 0
+  glideCapable: 0
   characterName: Quest
   title: 
   factionName: 
@@ -177,7 +186,6 @@ MonoBehaviour:
     namePlateImage: {fileID: 0}
     prerequisiteConditions: []
     behaviorNames: []
-    useBehaviorCopy: 0
   interactionMaxRange: 3
   lootableCharacter:
     interactionPanelTitle: 
@@ -225,6 +233,12 @@ MonoBehaviour:
     - startQuest: 1
       endQuest: 1
       questName: Use Ability
+    - startQuest: 1
+      endQuest: 1
+      questName: Repeatable
+    - startQuest: 1
+      endQuest: 1
+      questName: Repeatable 2 Step
     questGiverProfileNames: []
   vendorConfig:
     interactionPanelTitle: 

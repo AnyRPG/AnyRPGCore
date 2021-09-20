@@ -43,14 +43,20 @@ MonoBehaviour:
   abilityRewardNames: []
   maxSkillRewards: 0
   skillRewardNames: []
+  steps:
+  - questObjectives:
+    - id: 0
+    - id: 1
   collectObjectives: []
   killObjectives:
   - amount: 1
     type: Blue Melee
     overrideDisplayName: 
+    targetName: 
   - amount: 1
     type: Red Ranged
     overrideDisplayName: 
+    targetName: 
   tradeSkillObjectives: []
   abilityObjectives: []
   useInteractableObjectives: []
@@ -60,3 +66,19 @@ MonoBehaviour:
   prerequisiteConditions: []
   turnInItems: 0
   allowRawComplete: 0
+  references:
+    version: 1
+    00000000:
+      type: {class: KillObjective, ns: AnyRPG, asm: Assembly-CSharp}
+      data:
+        amount: 1
+        type: 
+        overrideDisplayName: 
+        targetName: Blue Melee
+    00000001:
+      type: {class: KillObjective, ns: AnyRPG, asm: Assembly-CSharp}
+      data:
+        amount: 1
+        type: 
+        overrideDisplayName: 
+        targetName: Red Ranged

@@ -10,24 +10,25 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 7b491a306145b8e4aa064bbcf71f8e01, type: 3}
-  m_Name: CollectionQuest
+  m_Name: Repeatable2StepQuest
   m_EditorClassIdentifier: 
-  resourceName: Collection
+  resourceName: Repeatable 2 Step
   displayName: 
   icon: {fileID: 0}
   iconBackgroundImage: {fileID: 0}
-  description: 'This is a collection quest.
+  description: 'This quest is repeatable.
 
 
-    To complete it, you must collect
-    all the objectives.
+    It requires you to complete 2 tasks
+    in a specific order.
 
 
-    You can find the items for this quest on the Vendor.'
+    The second step will only show on the quest tracker
+    once the first step is complete'
   useRegionalDescription: 0
   resourceDescriptionProfile: 
   isAchievement: 0
-  repeatableQuest: 0
+  repeatableQuest: 1
   hasOpeningDialog: 0
   experienceLevel: 1
   dynamicLevel: 1
@@ -38,7 +39,7 @@ MonoBehaviour:
   rewardCurrencyName: 
   baseCurrencyReward: 0
   currencyRewardPerLevel: 0
-  maxItemRewards: 0
+  maxItemRewards: 1
   itemRewardNames: []
   maxFactionRewards: 0
   factionRewards: []
@@ -49,16 +50,9 @@ MonoBehaviour:
   steps:
   - questObjectives:
     - id: 0
+  - questObjectives:
     - id: 1
-  collectObjectives:
-  - amount: 1
-    type: Dagger
-    overrideDisplayName: 
-    itemName: 
-  - amount: 0
-    type: Shield
-    overrideDisplayName: 
-    itemName: 
+  collectObjectives: []
   killObjectives: []
   tradeSkillObjectives: []
   abilityObjectives: []
@@ -68,20 +62,21 @@ MonoBehaviour:
   visitZoneObjectives: []
   prerequisiteConditions: []
   turnInItems: 0
-  allowRawComplete: 0
+  allowRawComplete: 1
   references:
     version: 1
     00000000:
-      type: {class: CollectObjective, ns: AnyRPG, asm: Assembly-CSharp}
+      type: {class: VisitZoneObjective, ns: AnyRPG, asm: Assembly-CSharp}
       data:
         amount: 1
         type: 
         overrideDisplayName: 
-        itemName: Dagger
+        zoneName: Features Demo Dungeon
     00000001:
-      type: {class: CollectObjective, ns: AnyRPG, asm: Assembly-CSharp}
+      type: {class: AbilityObjective, ns: AnyRPG, asm: Assembly-CSharp}
       data:
         amount: 1
         type: 
         overrideDisplayName: 
-        itemName: Shield
+        abilityName: Attack
+        requireUse: 1

@@ -43,6 +43,9 @@ MonoBehaviour:
   abilityRewardNames: []
   maxSkillRewards: 0
   skillRewardNames: []
+  steps:
+  - questObjectives:
+    - id: 0
   collectObjectives: []
   killObjectives: []
   tradeSkillObjectives: []
@@ -52,8 +55,18 @@ MonoBehaviour:
   - amount: 1
     type: Collection
     overrideDisplayName: 
+    questName: 
   dialogObjectives: []
   visitZoneObjectives: []
   prerequisiteConditions: []
   turnInItems: 0
   allowRawComplete: 0
+  references:
+    version: 1
+    00000000:
+      type: {class: QuestQuestObjective, ns: AnyRPG, asm: Assembly-CSharp}
+      data:
+        amount: 1
+        type: 
+        overrideDisplayName: 
+        questName: Collection
