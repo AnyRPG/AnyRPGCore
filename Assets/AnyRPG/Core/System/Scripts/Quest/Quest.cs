@@ -127,29 +127,39 @@ namespace AnyRPG {
         [SerializeField]
         protected List<QuestStep> steps = new List<QuestStep>();
 
-        [SerializeField]
-        protected CollectObjective[] collectObjectives;
+        [Header("Deprecated Objectives")]
 
         [SerializeField]
-        protected KillObjective[] killObjectives;
+        [FormerlySerializedAs("collectObjectives")]
+        protected CollectObjective[] deprecatedCollectObjectives;
 
         [SerializeField]
-        protected TradeSkillObjective[] tradeSkillObjectives;
+        [FormerlySerializedAs("killObjectives")]
+        protected KillObjective[] deprecatedKillObjectives;
 
         [SerializeField]
-        protected AbilityObjective[] abilityObjectives;
+        [FormerlySerializedAs("tradeSkillObjectives")]
+        protected TradeSkillObjective[] deprecatedTradeSkillObjectives;
 
         [SerializeField]
-        protected UseInteractableObjective[] useInteractableObjectives;
+        [FormerlySerializedAs("abilityObjectives")]
+        protected AbilityObjective[] deprecatedAbilityObjectives;
 
         [SerializeField]
-        protected QuestQuestObjective[] questQuestObjectives;
+        [FormerlySerializedAs("useInteractableObjectives")]
+        protected UseInteractableObjective[] deprecatedUseInteractableObjectives;
 
         [SerializeField]
-        protected DialogObjective[] dialogObjectives;
+        [FormerlySerializedAs("questQuestObjectives")]
+        protected QuestQuestObjective[] deprecatedQuestQuestObjectives;
 
         [SerializeField]
-        protected VisitZoneObjective[] visitZoneObjectives;
+        [FormerlySerializedAs("dialogObjectives")]
+        protected DialogObjective[] deprecatedDialogObjectives;
+
+        [SerializeField]
+        [FormerlySerializedAs("visitZoneObjectives")]
+        protected VisitZoneObjective[] deprecatedVisitZoneObjectives;
 
         [Header("Prerequisites")]
 
@@ -174,13 +184,13 @@ namespace AnyRPG {
         protected MessageFeedManager messageFeedManager = null;
         protected QuestLog questLog = null;
 
-        public virtual CollectObjective[] MyCollectObjectives { get => collectObjectives; set => collectObjectives = value; }
-        public virtual KillObjective[] MyKillObjectives { get => killObjectives; set => killObjectives = value; }
-        public virtual TradeSkillObjective[] MyTradeSkillObjectives { get => tradeSkillObjectives; set => tradeSkillObjectives = value; }
-        public virtual AbilityObjective[] MyAbilityObjectives { get => abilityObjectives; set => abilityObjectives = value; }
-        public virtual UseInteractableObjective[] MyUseInteractableObjectives { get => useInteractableObjectives; set => useInteractableObjectives = value; }
-        public virtual QuestQuestObjective[] MyQuestQuestObjectives { get => questQuestObjectives; set => questQuestObjectives = value; }
-        public virtual DialogObjective[] MyDialogObjectives { get => dialogObjectives; set => dialogObjectives = value; }
+        public virtual CollectObjective[] MyCollectObjectives { get => deprecatedCollectObjectives; set => deprecatedCollectObjectives = value; }
+        public virtual KillObjective[] MyKillObjectives { get => deprecatedKillObjectives; set => deprecatedKillObjectives = value; }
+        public virtual TradeSkillObjective[] MyTradeSkillObjectives { get => deprecatedTradeSkillObjectives; set => deprecatedTradeSkillObjectives = value; }
+        public virtual AbilityObjective[] MyAbilityObjectives { get => deprecatedAbilityObjectives; set => deprecatedAbilityObjectives = value; }
+        public virtual UseInteractableObjective[] MyUseInteractableObjectives { get => deprecatedUseInteractableObjectives; set => deprecatedUseInteractableObjectives = value; }
+        public virtual QuestQuestObjective[] MyQuestQuestObjectives { get => deprecatedQuestQuestObjectives; set => deprecatedQuestQuestObjectives = value; }
+        public virtual DialogObjective[] MyDialogObjectives { get => deprecatedDialogObjectives; set => deprecatedDialogObjectives = value; }
 
         public virtual bool IsComplete {
             get {
@@ -193,45 +203,45 @@ namespace AnyRPG {
                 }
                 */
 
-                foreach (QuestObjective o in collectObjectives) {
+                foreach (QuestObjective o in deprecatedCollectObjectives) {
                     if (!o.IsComplete) {
                         return false;
                     }
                 }
-                foreach (QuestObjective o in killObjectives) {
+                foreach (QuestObjective o in deprecatedKillObjectives) {
                     if (!o.IsComplete) {
                         return false;
                     }
                 }
-                foreach (QuestObjective o in tradeSkillObjectives) {
+                foreach (QuestObjective o in deprecatedTradeSkillObjectives) {
                     if (!o.IsComplete) {
                         return false;
                     }
                 }
-                foreach (QuestObjective o in abilityObjectives) {
+                foreach (QuestObjective o in deprecatedAbilityObjectives) {
                     if (!o.IsComplete) {
                         return false;
                     }
                 }
-                foreach (QuestObjective o in useInteractableObjectives) {
-                    if (!o.IsComplete) {
-                        return false;
-                    }
-                }
-
-                foreach (QuestQuestObjective o in questQuestObjectives) {
+                foreach (QuestObjective o in deprecatedUseInteractableObjectives) {
                     if (!o.IsComplete) {
                         return false;
                     }
                 }
 
-                foreach (DialogObjective o in dialogObjectives) {
+                foreach (QuestQuestObjective o in deprecatedQuestQuestObjectives) {
                     if (!o.IsComplete) {
                         return false;
                     }
                 }
 
-                foreach (VisitZoneObjective o in visitZoneObjectives) {
+                foreach (DialogObjective o in deprecatedDialogObjectives) {
+                    if (!o.IsComplete) {
+                        return false;
+                    }
+                }
+
+                foreach (VisitZoneObjective o in deprecatedVisitZoneObjectives) {
                     if (!o.IsComplete) {
                         return false;
                     }
@@ -299,7 +309,7 @@ namespace AnyRPG {
         public virtual bool IsAchievement { get => isAchievement; set => isAchievement = value; }
         public virtual bool HasOpeningDialog { get => hasOpeningDialog; set => hasOpeningDialog = value; }
         public virtual Dialog OpeningDialog { get => openingDialog; set => openingDialog = value; }
-        public virtual VisitZoneObjective[] VisitZoneObjectives { get => visitZoneObjectives; set => visitZoneObjectives = value; }
+        public virtual VisitZoneObjective[] VisitZoneObjectives { get => deprecatedVisitZoneObjectives; set => deprecatedVisitZoneObjectives = value; }
         public virtual int ExperienceRewardPerLevel { get => experienceRewardPerLevel; set => experienceRewardPerLevel = value; }
         public virtual int BaseExperienceReward { get => baseExperienceReward; set => baseExperienceReward = value; }
         public virtual bool AutomaticCurrencyReward { get => automaticCurrencyReward; set => automaticCurrencyReward = value; }
@@ -307,6 +317,17 @@ namespace AnyRPG {
         public virtual Currency RewardCurrency { get => rewardCurrency; set => rewardCurrency = value; }
         public virtual int BaseCurrencyReward { get => baseCurrencyReward; set => baseCurrencyReward = value; }
         public virtual int CurrencyRewardPerLevel { get => currencyRewardPerLevel; set => currencyRewardPerLevel = value; }
+        public virtual int CurrentStep {
+            get {
+                return saveManager.GetQuestSaveData(this).questStep;
+                //return false;
+            }
+            set {
+                QuestSaveData saveData = saveManager.GetQuestSaveData(this);
+                saveData.questStep = value;
+                saveManager.QuestSaveDataDictionary[saveData.MyName] = saveData;
+            }
+        }
         public virtual bool MarkedComplete {
             get {
                 return saveManager.GetQuestSaveData(this).markedComplete;
@@ -677,35 +698,35 @@ namespace AnyRPG {
                 questStep.SetupScriptableObjects(this, systemGameManager);
             }
 
-            foreach (QuestObjective objective in collectObjectives) {
+            foreach (QuestObjective objective in deprecatedCollectObjectives) {
                 objective.SetupScriptableObjects(systemGameManager);
                 objective.SetQuest(this);
             }
-            foreach (QuestObjective objective in killObjectives) {
+            foreach (QuestObjective objective in deprecatedKillObjectives) {
                 objective.SetupScriptableObjects(systemGameManager);
                 objective.SetQuest(this);
             }
-            foreach (QuestObjective objective in tradeSkillObjectives) {
+            foreach (QuestObjective objective in deprecatedTradeSkillObjectives) {
                 objective.SetupScriptableObjects(systemGameManager);
                 objective.SetQuest(this);
             }
-            foreach (QuestObjective objective in abilityObjectives) {
+            foreach (QuestObjective objective in deprecatedAbilityObjectives) {
                 objective.SetupScriptableObjects(systemGameManager);
                 objective.SetQuest(this);
             }
-            foreach (QuestObjective objective in useInteractableObjectives) {
+            foreach (QuestObjective objective in deprecatedUseInteractableObjectives) {
                 objective.SetupScriptableObjects(systemGameManager);
                 objective.SetQuest(this);
             }
-            foreach (QuestObjective objective in questQuestObjectives) {
+            foreach (QuestObjective objective in deprecatedQuestQuestObjectives) {
                 objective.SetupScriptableObjects(systemGameManager);
                 objective.SetQuest(this);
             }
-            foreach (QuestObjective objective in dialogObjectives) {
+            foreach (QuestObjective objective in deprecatedDialogObjectives) {
                 objective.SetupScriptableObjects(systemGameManager);
                 objective.SetQuest(this);
             }
-            foreach (QuestObjective objective in visitZoneObjectives) {
+            foreach (QuestObjective objective in deprecatedVisitZoneObjectives) {
                 objective.SetupScriptableObjects(systemGameManager);
                 objective.SetQuest(this);
             }

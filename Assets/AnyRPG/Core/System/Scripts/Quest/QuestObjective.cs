@@ -4,6 +4,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Reflection;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace AnyRPG {
     [System.Serializable]
@@ -14,7 +15,8 @@ namespace AnyRPG {
         protected Quest quest;
 
         [SerializeField]
-        private string type = string.Empty;
+        [FormerlySerializedAs("type")]
+        private string deprecatedType = string.Empty;
 
         [Tooltip("Set this if you want to override the name shown in the quest log objective to be something other than the type")]
         [SerializeField]
@@ -44,17 +46,17 @@ namespace AnyRPG {
 
         public int CurrentAmount {
             get {
-                return saveManager.GetQuestObjectiveSaveData(quest.DisplayName, ObjectiveType, MyType).MyAmount;
+                return saveManager.GetQuestObjectiveSaveData(quest.DisplayName, ObjectiveType, ObjectiveName).MyAmount;
                 //return false;
             }
             set {
-                QuestObjectiveSaveData saveData = saveManager.GetQuestObjectiveSaveData(quest.DisplayName, ObjectiveType, MyType);
+                QuestObjectiveSaveData saveData = saveManager.GetQuestObjectiveSaveData(quest.DisplayName, ObjectiveType, ObjectiveName);
                 saveData.MyAmount = value;
-                saveManager.QuestObjectiveSaveDataDictionary[quest.DisplayName][ObjectiveType][MyType] = saveData;
+                saveManager.QuestObjectiveSaveDataDictionary[quest.DisplayName][ObjectiveType][ObjectiveName] = saveData;
             }
         }
 
-        public string MyType { get => type; set => type = value; }
+        public virtual string ObjectiveName { get => string.Empty; }
 
         public virtual bool IsComplete {
             get {
@@ -63,14 +65,14 @@ namespace AnyRPG {
             }
         }
 
-        public Quest MyQuest { get => quest; set => quest = value; }
+        public Quest Quest { get => quest; set => quest = value; }
         public string OverrideDisplayName { get => overrideDisplayName; set => overrideDisplayName = value; }
         public string DisplayName {
             get {
                 if (overrideDisplayName != string.Empty) {
                     return overrideDisplayName;
                 }
-                return type;
+                return deprecatedType;
             }
             set => overrideDisplayName = value;
         }

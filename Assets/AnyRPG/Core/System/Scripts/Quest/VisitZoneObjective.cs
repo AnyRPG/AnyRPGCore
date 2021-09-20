@@ -14,6 +14,8 @@ namespace AnyRPG {
         [ResourceSelector(resourceType = typeof(SceneNode))]
         protected string zoneName = null;
 
+        public override string ObjectiveName { get => zoneName; }
+
         public override Type ObjectiveType {
             get {
                 return typeof(VisitZoneObjective);

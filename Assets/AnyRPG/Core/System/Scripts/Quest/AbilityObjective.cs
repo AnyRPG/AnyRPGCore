@@ -13,6 +13,8 @@ namespace AnyRPG {
         [ResourceSelector(resourceType = typeof(BaseAbility))]
         protected string abilityName = null;
 
+        public override string ObjectiveName { get => abilityName; }
+
         public override Type ObjectiveType {
             get {
                 return typeof(AbilityObjective);

@@ -16,6 +16,8 @@ namespace AnyRPG {
         // game manager references
         protected InventoryManager inventoryManager = null;
 
+        public override string ObjectiveName { get => itemName; }
+
         public override Type ObjectiveType {
             get {
                 return typeof(CollectObjective);

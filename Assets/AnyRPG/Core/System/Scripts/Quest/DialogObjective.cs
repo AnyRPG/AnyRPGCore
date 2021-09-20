@@ -14,6 +14,8 @@ namespace AnyRPG {
         [ResourceSelector(resourceType = typeof(Dialog))]
         protected string dialogName = null;
 
+        public override string ObjectiveName { get => dialogName; }
+
         public override Type ObjectiveType {
             get {
                 return typeof(DialogObjective);

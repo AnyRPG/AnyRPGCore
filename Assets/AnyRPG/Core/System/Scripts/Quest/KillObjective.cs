@@ -13,6 +13,8 @@ namespace AnyRPG {
         [SerializeField]
         protected string targetName = null;
 
+        public override string ObjectiveName { get => targetName; }
+
         public override Type ObjectiveType {
             get {
                 return typeof(KillObjective);

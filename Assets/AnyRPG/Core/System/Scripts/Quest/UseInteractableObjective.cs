@@ -13,6 +13,8 @@ namespace AnyRPG {
         [SerializeField]
         protected string interactableName = null;
 
+        public override string ObjectiveName { get => interactableName; }
+
         public override Type ObjectiveType {
             get {
                 return typeof(UseInteractableObjective);

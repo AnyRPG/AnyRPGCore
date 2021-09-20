@@ -13,6 +13,8 @@ namespace AnyRPG {
         [ResourceSelector(resourceType = typeof(Skill))]
         protected string skillName = null;
 
+        public override string ObjectiveName { get => skillName; }
+
         public override Type ObjectiveType {
             get {
                 return typeof(TradeSkillObjective);

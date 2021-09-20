@@ -13,6 +13,8 @@ namespace AnyRPG {
         [ResourceSelector(resourceType = typeof(Quest))]
         protected string questName = null;
 
+        public override string ObjectiveName { get => questName; }
+
         public override Type ObjectiveType {
             get {
                 return typeof(QuestQuestObjective);
