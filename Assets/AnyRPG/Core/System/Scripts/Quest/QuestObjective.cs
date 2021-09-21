@@ -29,7 +29,7 @@ namespace AnyRPG {
         protected SystemEventManager systemEventManager = null;
         protected PlayerManager playerManager = null;
 
-        public int MyAmount {
+        public int Amount {
             get {
                 return (int)Mathf.Clamp(amount, 1, Mathf.Infinity);
             }
@@ -61,7 +61,7 @@ namespace AnyRPG {
         public virtual bool IsComplete {
             get {
                 //Debug.Log("checking if quest objective iscomplete, current: " + MyCurrentAmount.ToString() + "; needed: " + amount.ToString());
-                return CurrentAmount >= MyAmount;
+                return CurrentAmount >= Amount;
             }
         }
 
@@ -72,7 +72,7 @@ namespace AnyRPG {
                 if (overrideDisplayName != string.Empty) {
                     return overrideDisplayName;
                 }
-                return deprecatedType;
+                return ObjectiveName;
             }
             set => overrideDisplayName = value;
         }
@@ -95,6 +95,10 @@ namespace AnyRPG {
 
         public virtual void HandleQuestStatusUpdated() {
             UpdateCompletionCount();
+        }
+
+        public virtual string GetUnformattedStatus() {
+            return DisplayName + ": " + Mathf.Clamp(CurrentAmount, 0, Amount) + "/" + Amount;
         }
 
         public virtual void SetupScriptableObjects(SystemGameManager systemGameManager) {

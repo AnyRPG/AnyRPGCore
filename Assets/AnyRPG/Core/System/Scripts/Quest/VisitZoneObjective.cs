@@ -25,7 +25,7 @@ namespace AnyRPG {
         private SceneNode objectiveSceneNode = null;
 
         // NEW (HOPEFULLY) SAFE COMPLETION CHECK CODE THAT SHOULDN'T RESULT IN RUNAWAY STACK OVERFLOW ETC
-        public void CheckCompletionCount() {
+        public void AddCompletionAmount() {
             bool completeBefore = IsComplete;
             if (completeBefore) {
                 return;
@@ -33,8 +33,8 @@ namespace AnyRPG {
 
             CurrentAmount++;
             quest.CheckCompletion();
-            if (CurrentAmount <= MyAmount && !quest.IsAchievement && CurrentAmount != 0) {
-                messageFeedManager.WriteMessage(string.Format("{0}: {1}/{2}", DisplayName, Mathf.Clamp(CurrentAmount, 0, MyAmount), MyAmount));
+            if (CurrentAmount <= Amount && !quest.IsAchievement && CurrentAmount != 0) {
+                messageFeedManager.WriteMessage(string.Format("{0}: {1}/{2}", DisplayName, Mathf.Clamp(CurrentAmount, 0, Amount), Amount));
             }
             if (completeBefore == false && IsComplete && !quest.IsAchievement) {
                 messageFeedManager.WriteMessage(string.Format("{0}: Objective Complete", DisplayName));
@@ -61,14 +61,14 @@ namespace AnyRPG {
                 return;
             }
             UpdateCompletionCount(printMessages);
-            objectiveSceneNode.OnVisitZone += CheckCompletionCount;
+            objectiveSceneNode.OnVisitZone += AddCompletionAmount;
 
         }
 
         public override void OnAbandonQuest() {
             //Debug.Log("UseInteractableObjective.OnAbandonQuest()");
             base.OnAbandonQuest();
-            objectiveSceneNode.OnVisitZone -= CheckCompletionCount;
+            objectiveSceneNode.OnVisitZone -= AddCompletionAmount;
         }
 
     }

@@ -32,8 +32,8 @@ namespace AnyRPG {
             if (SystemDataFactory.MatchResource(dialogName, dialog.DisplayName)) {
                 CurrentAmount++;
                 quest.CheckCompletion();
-                if (CurrentAmount <= MyAmount && !quest.IsAchievement && CurrentAmount != 0) {
-                    messageFeedManager.WriteMessage(string.Format("{0}: {1}/{2}", DisplayName, Mathf.Clamp(CurrentAmount, 0, MyAmount), MyAmount));
+                if (CurrentAmount <= Amount && !quest.IsAchievement && CurrentAmount != 0) {
+                    messageFeedManager.WriteMessage(string.Format("{0}: {1}/{2}", DisplayName, Mathf.Clamp(CurrentAmount, 0, Amount), Amount));
                 }
                 if (completeBefore == false && IsComplete && !quest.IsAchievement) {
                     messageFeedManager.WriteMessage(string.Format("{0}: Objective Complete", DisplayName));

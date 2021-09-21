@@ -476,11 +476,7 @@ namespace AnyRPG {
                 }
             }
 
-            foreach (CollectObjective o in currentQuest.MyCollectObjectives) {
-                if (currentQuest.TurnInItems == true) {
-                    o.Complete();
-                }
-            }
+            currentQuest.HandInItems();
 
             // faction rewards
             if (currentQuest.FactionRewards.Count > 0) {

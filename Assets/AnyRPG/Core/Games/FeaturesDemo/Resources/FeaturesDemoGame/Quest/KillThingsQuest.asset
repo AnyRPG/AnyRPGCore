@@ -47,22 +47,22 @@ MonoBehaviour:
   - questObjectives:
     - id: 0
     - id: 1
-  collectObjectives: []
-  killObjectives:
+  deprecatedCollectObjectives: []
+  deprecatedKillObjectives:
   - amount: 1
-    type: Blue Melee
+    deprecatedType: Blue Melee
     overrideDisplayName: 
     targetName: 
   - amount: 1
-    type: Red Ranged
+    deprecatedType: Red Ranged
     overrideDisplayName: 
     targetName: 
-  tradeSkillObjectives: []
-  abilityObjectives: []
-  useInteractableObjectives: []
-  questQuestObjectives: []
-  dialogObjectives: []
-  visitZoneObjectives: []
+  deprecatedTradeSkillObjectives: []
+  deprecatedAbilityObjectives: []
+  deprecatedUseInteractableObjectives: []
+  deprecatedQuestQuestObjectives: []
+  deprecatedDialogObjectives: []
+  deprecatedVisitZoneObjectives: []
   prerequisiteConditions: []
   turnInItems: 0
   allowRawComplete: 0
@@ -72,13 +72,13 @@ MonoBehaviour:
       type: {class: KillObjective, ns: AnyRPG, asm: Assembly-CSharp}
       data:
         amount: 1
-        type: 
+        deprecatedType: 
         overrideDisplayName: 
-        targetName: Blue Melee
+        targetName: Black Minion
     00000001:
       type: {class: KillObjective, ns: AnyRPG, asm: Assembly-CSharp}
       data:
         amount: 1
-        type: 
+        deprecatedType: 
         overrideDisplayName: 
-        targetName: Red Ranged
+        targetName: Black Boss

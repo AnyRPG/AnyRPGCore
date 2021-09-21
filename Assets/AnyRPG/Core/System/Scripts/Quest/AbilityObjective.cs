@@ -36,8 +36,8 @@ namespace AnyRPG {
             }
             CurrentAmount++;
             quest.CheckCompletion();
-            if (CurrentAmount <= MyAmount && !quest.IsAchievement && CurrentAmount != 0) {
-                messageFeedManager.WriteMessage(string.Format("{0}: {1}/{2}", DisplayName, Mathf.Clamp(CurrentAmount, 0, MyAmount), MyAmount));
+            if (CurrentAmount <= Amount && !quest.IsAchievement && CurrentAmount != 0) {
+                messageFeedManager.WriteMessage(string.Format("{0}: {1}/{2}", DisplayName, Mathf.Clamp(CurrentAmount, 0, Amount), Amount));
             }
             if (completeBefore == false && IsComplete && !quest.IsAchievement) {
                 messageFeedManager.WriteMessage(string.Format("Learn {0} {1}: Objective Complete", CurrentAmount, DisplayName));
@@ -49,8 +49,8 @@ namespace AnyRPG {
             bool completeBefore = IsComplete;
                 CurrentAmount++;
                 quest.CheckCompletion();
-                if (CurrentAmount <= MyAmount && !quest.IsAchievement) {
-                    messageFeedManager.WriteMessage(string.Format("{0}: {1}/{2}", baseAbility.DisplayName, CurrentAmount, MyAmount));
+                if (CurrentAmount <= Amount && !quest.IsAchievement) {
+                    messageFeedManager.WriteMessage(string.Format("{0}: {1}/{2}", baseAbility.DisplayName, CurrentAmount, Amount));
                 }
                 if (completeBefore == false && IsComplete && !quest.IsAchievement) {
                     messageFeedManager.WriteMessage(string.Format("Learn {0} {1}: Objective Complete", CurrentAmount, baseAbility.DisplayName));
@@ -67,8 +67,8 @@ namespace AnyRPG {
             if (playerManager.MyCharacter.CharacterAbilityManager.HasAbility(baseAbility)) {
                 CurrentAmount++;
                 quest.CheckCompletion(true, printMessages);
-                if (CurrentAmount <= MyAmount && !quest.IsAchievement && printMessages == true) {
-                    messageFeedManager.WriteMessage(string.Format("{0}: {1}/{2}", baseAbility.DisplayName, CurrentAmount, MyAmount));
+                if (CurrentAmount <= Amount && !quest.IsAchievement && printMessages == true) {
+                    messageFeedManager.WriteMessage(string.Format("{0}: {1}/{2}", baseAbility.DisplayName, CurrentAmount, Amount));
                 }
                 if (completeBefore == false && IsComplete && !quest.IsAchievement && printMessages == true) {
                     messageFeedManager.WriteMessage(string.Format("Learn {0} {1}: Objective Complete", CurrentAmount, baseAbility.DisplayName));
@@ -76,7 +76,7 @@ namespace AnyRPG {
             }
         }
 
-        public bool MyRequireUse { get => requireUse; set => requireUse = value; }
+        public bool RequireUse { get => requireUse; set => requireUse = value; }
 
         public override void OnAcceptQuest(Quest quest, bool printMessages = true) {
             //Debug.Log("AbilityObjective.OnAcceptQuest(): " + MyType);
@@ -95,6 +95,16 @@ namespace AnyRPG {
             if (requireUse == true) {
                 baseAbility.OnAbilityUsed -= UpdateCastCount;
             }
+        }
+
+        public override string GetUnformattedStatus() {
+            string beginText = string.Empty;
+            if (RequireUse) {
+                beginText = "Use ";
+            } else {
+                beginText = "Learn ";
+            }
+            return beginText + DisplayName + ": " + Mathf.Clamp(CurrentAmount, 0, Amount) + "/" + Amount;
         }
 
         public override void SetupScriptableObjects(SystemGameManager systemGameManager) {

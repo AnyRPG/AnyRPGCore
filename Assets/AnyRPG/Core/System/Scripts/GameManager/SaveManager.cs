@@ -475,6 +475,14 @@ namespace AnyRPG {
 
         }
 
+        public void SetQuestSaveData(string questName, QuestSaveData questSaveData) {
+            if (questSaveDataDictionary.ContainsKey(questName)) {
+                questSaveDataDictionary[questName] = questSaveData;
+            } else {
+                questSaveDataDictionary.Add(questName, questSaveData);
+            }
+        }
+
         public QuestSaveData GetQuestSaveData(Quest quest) {
             QuestSaveData saveData;
             if (questSaveDataDictionary.ContainsKey(quest.DisplayName)) {
