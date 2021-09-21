@@ -55,5 +55,9 @@ MonoBehaviour:
   randomTickAudioProfiles: 0
   completeAbilityEffectNames: []
   defaultPrefabLifetime: 10
-  levelName: CoreDungeon
+  levelName: FeaturesDemoDungeon
+  locationTag: 
+  overrideSpawnLocation: 0
   spawnLocation: {x: 0, y: 0, z: 0}
+  overrideSpawnDirection: 0
+  spawnForwardDirection: {x: 0, y: 0, z: 0}
