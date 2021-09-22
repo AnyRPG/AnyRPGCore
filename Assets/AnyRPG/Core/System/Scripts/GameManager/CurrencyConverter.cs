@@ -96,7 +96,7 @@ namespace AnyRPG {
 
         // finds a currency group that the currency belongs to, or returns null if it does not belong to a group
         public CurrencyGroup FindCurrencyGroup(Currency currency) {
-            //Debug.Log("CurrencyConverter.FindCurrencyGroup(" + (currency == null ? "null" : currency.MyName) + ")");
+            //Debug.Log("CurrencyConverter.FindCurrencyGroup(" + (currency == null ? "null" : currency.DisplayName) + ")");
             if (currency != null) {
                 foreach (CurrencyGroup currencyGroup in systemDataFactory.GetResourceList<CurrencyGroup>()) {
                     if (currencyGroup.HasCurrency(currency)) {
@@ -109,9 +109,9 @@ namespace AnyRPG {
 
         /*
         public int GetCurrencyAmountFromList(Currency currency, List<KeyValuePair<Currency, int>>) {
-            //Debug.Log(gameObject.name + ".PlayerCurrencyManager.GetCurrency(" + currency.MyName + ")");
+            //Debug.Log(gameObject.name + ".PlayerCurrencyManager.GetCurrency(" + currency.DisplayName + ")");
             //bool foundReputation = false;
-            string keyName = SystemDataFactory.PrepareStringForMatch(currency.MyName);
+            string keyName = SystemDataFactory.PrepareStringForMatch(currency.DisplayName);
             if (MyCurrencyList.ContainsKey(keyName)) {
                 return MyCurrencyList[keyName].MyAmount;
             }

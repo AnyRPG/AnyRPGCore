@@ -26,73 +26,6 @@ namespace AnyRPG {
             systemDataFactory = systemGameManager.SystemDataFactory;
         }
 
-        /*
-        public void LoadQuest(QuestSaveData questSaveData) {
-            //Debug.Log("QuestLog.LoadQuest(" + questSaveData.MyName + ")");
-
-            Quest quest = systemDataFactory.GetResource<Quest>(questSaveData.MyName);
-            if (quest == null) {
-                //Debug.Log("QuestLog.LoadQuest(" + questSaveData.MyName + "): COULD NOT FIND QUEST!!!");
-                return;
-            }
-            if (!questSaveData.inLog) {
-                //Debug.Log("QuestLog.LoadQuest(" + questSaveData.MyName + "): quest is not in log. turnedIn: " + questSaveData.turnedIn);
-                return;
-            }
-
-            // add tracked objectives to quest
-            //List<KillObjective> killObjectiveSaveDataList = new List<KillObjective>();
-            foreach (QuestObjectiveSaveData objectiveSaveData in questSaveData.killObjectives) {
-                //Debug.Log("QuestLog.LoadQuest(" + questSaveData.MyName + "): loading kill objectives");
-                foreach (QuestObjective existingQuestObjective in quest.MyKillObjectives) {
-                    //Debug.Log("QuestLog.LoadQuest(" + questSaveData.MyName + "): loading kill objective: " + existingQuestObjective.MyType);
-                    if (SystemDataFactory.MatchResource(existingQuestObjective.MyType, objectiveSaveData.MyName)) {
-                        //Debug.Log("QuestLog.LoadQuest(" + questSaveData.MyName + "): loading kill objective: " + existingQuestObjective.MyType + " matches!!! myamount: " + objectiveSaveData.MyAmount);
-                        existingQuestObjective.CurrentAmount = objectiveSaveData.MyAmount;
-                    }
-                }
-            }
-            List<CollectObjective> collectObjectiveSaveDataList = new List<CollectObjective>();
-            foreach (QuestObjectiveSaveData objectiveSaveData in questSaveData.collectObjectives) {
-                foreach (QuestObjective existingQuestObjective in quest.MyCollectObjectives) {
-                    if (SystemDataFactory.MatchResource(existingQuestObjective.MyType, objectiveSaveData.MyName)) {
-                        existingQuestObjective.CurrentAmount = objectiveSaveData.MyAmount;
-                    }
-                }
-            }
-            List<TradeSkillObjective> tradeSkillObjectiveSaveDataList = new List<TradeSkillObjective>();
-            foreach (QuestObjectiveSaveData objectiveSaveData in questSaveData.tradeSkillObjectives) {
-                //Debug.Log("QuestLog.LoadQuest(" + questSaveData.MyName + "): loading tradeskill objective");
-                foreach (QuestObjective existingQuestObjective in quest.MyTradeSkillObjectives) {
-                    if (SystemDataFactory.MatchResource(existingQuestObjective.MyType, objectiveSaveData.MyName)) {
-                        existingQuestObjective.CurrentAmount = objectiveSaveData.MyAmount;
-                    }
-                }
-            }
-            List<UseInteractableObjective> useInteractableObjectiveSaveDataList = new List<UseInteractableObjective>();
-            foreach (QuestObjectiveSaveData objectiveSaveData in questSaveData.useInteractableObjectives) {
-                foreach (QuestObjective existingQuestObjective in quest.MyUseInteractableObjectives) {
-                    if (SystemDataFactory.MatchResource(existingQuestObjective.MyType, objectiveSaveData.MyName)) {
-                        existingQuestObjective.CurrentAmount = objectiveSaveData.MyAmount;
-                    }
-                }
-            }
-
-            List<AbilityObjective> abilityObjectiveSaveDataList = new List<AbilityObjective>();
-            foreach (QuestObjectiveSaveData objectiveSaveData in questSaveData.abilityObjectives) {
-                foreach (QuestObjective existingQuestObjective in quest.MyAbilityObjectives) {
-                    if (SystemDataFactory.MatchResource(existingQuestObjective.MyType, objectiveSaveData.MyName)) {
-                        //Debug.Log("QuestLog.LoadQuest(" + questSaveData.MyName + "): loading ability objective: " + existingQuestObjective.MyType + " matches!!! myamount: " + objectiveSaveData.MyAmount);
-                        existingQuestObjective.CurrentAmount = objectiveSaveData.MyAmount;
-                    }
-                }
-            }
-
-            // just in case one quest was complete but not turned in
-            //CheckCompletion();
-        }
-        */
-
         public void AcceptQuest(QuestSaveData questSaveData) {
             //Debug.Log("QuestLog.LoadQuest(" + questSaveData.MyName + ")");
 
@@ -207,7 +140,7 @@ namespace AnyRPG {
                         && (requireInQuestLog == true ? HasQuest(questNode.Quest.DisplayName) : true)
                         && (requireStartQuest == true ? questNode.StartQuest : true)
                         && (requireEndQuest == true ? questNode.EndQuest : true)) {
-                        //Debug.Log("Quest.GetQuestListByType(" + questStatusType + "): adding quest: " + questNode.MyQuest.MyName);
+                        //Debug.Log("Quest.GetQuestListByType(" + questStatusType + "): adding quest: " + questNode.MyQuest.DisplayName);
                         returnList.Add(questNode.Quest);
                     }
                 }

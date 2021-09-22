@@ -55,11 +55,11 @@ namespace AnyRPG {
                 */
                 validTargetNode.abilityEffectInput.groundTargetLocation = new Vector3(aoeSpawnCenter.x + Random.Range(-aoeRadius, aoeRadius), aoeSpawnCenter.y + aoeCenter.y, aoeSpawnCenter.z + Random.Range(-aoeRadius, aoeRadius));
 
-                //Debug.Log(MyName + ".RainEffect.GetValidTargets(). prefabLocation: " + validTargetNode.abilityEffectInput.prefabLocation);
+                //Debug.Log(DisplayName + ".RainEffect.GetValidTargets(). prefabLocation: " + validTargetNode.abilityEffectInput.prefabLocation);
                 validTargets.Add(validTargetNode);
             }
 
-            //Debug.Log(MyName + ".RainEffect.GetValidTargets(). Valid targets count: " + validTargets.Count);
+            //Debug.Log(DisplayName + ".RainEffect.GetValidTargets(). Valid targets count: " + validTargets.Count);
             return validTargets;
         }
 

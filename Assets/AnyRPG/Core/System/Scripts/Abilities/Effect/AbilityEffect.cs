@@ -137,7 +137,7 @@ namespace AnyRPG {
                         }
                         Dictionary<PrefabProfile, GameObject> tmpObjects = PerformAbilityEffect(source, target, abilityEffectOutput, abilityEffect);
                         if (tmpObjects != null) {
-                            //Debug.Log(MyName + ".PerformAbilityEffects(): ADDING GAMEOBJECT TO RETURN LIST");
+                            //Debug.Log(DisplayName + ".PerformAbilityEffects(): ADDING GAMEOBJECT TO RETURN LIST");
                             foreach (KeyValuePair<PrefabProfile, GameObject> tmpPair in tmpObjects) {
                                 returnList[tmpPair.Key] = tmpPair.Value;
                             }
@@ -211,7 +211,7 @@ namespace AnyRPG {
                     }
                     foreach (AudioProfile audioProfile in usedAudioProfiles) {
                         if (audioProfile.AudioClip != null) {
-                            //Debug.Log(MyName + ".AbilityEffect.PerformAbilityHit(): playing audio clip: " + audioProfile.MyAudioClip.name);
+                            //Debug.Log(DisplayName + ".AbilityEffect.PerformAbilityHit(): playing audio clip: " + audioProfile.MyAudioClip.name);
                             if (target != null && target.UnitComponentController != null) {
                                 target.UnitComponentController.PlayEffectSound(audioProfile.AudioClip);
                             } else {
@@ -271,7 +271,7 @@ namespace AnyRPG {
         }
 
         public AbilityEffectContext ApplyInputMultiplier(AbilityEffectContext abilityEffectContext) {
-            //Debug.Log(MyName + ".AbilityEffect.ApplyInputMultiplier()");
+            //Debug.Log(DisplayName + ".AbilityEffect.ApplyInputMultiplier()");
 
             foreach (ResourceInputAmountNode resourceInputAmountNode in abilityEffectContext.resourceAmounts) {
                 //Debug.Log(DisplayName + ".AbilityEffect.ApplyInputMultiplier(): before: " + resourceInputAmountNode.amount);
@@ -283,7 +283,7 @@ namespace AnyRPG {
         }
 
         public override void SetupScriptableObjects(SystemGameManager systemGameManager) {
-            //Debug.Log(MyName + ".AbilityEffect.SetupscriptableObjects()");
+            //Debug.Log(DisplayName + ".AbilityEffect.SetupscriptableObjects()");
             base.SetupScriptableObjects(systemGameManager);
             hitAbilityEffectList = new List<AbilityEffect>();
             if (hitAbilityEffectNames != null) {

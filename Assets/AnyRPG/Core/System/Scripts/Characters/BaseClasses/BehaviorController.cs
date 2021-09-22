@@ -138,7 +138,7 @@ namespace AnyRPG {
                 }
                 yield return null;
             }
-            //Debug.Log(gameObject.name + ".BehaviorInteractable.playBehavior(" + (behaviorProfile == null ? "null" : behaviorProfile.MyName) + ") : END LOOP");
+            //Debug.Log(gameObject.name + ".BehaviorInteractable.playBehavior(" + (behaviorProfile == null ? "null" : behaviorProfile.DisplayName) + ") : END LOOP");
             behaviorCoroutine = null;
             SetBehaviorPlaying(false);
             suppressNameplateImage = false;

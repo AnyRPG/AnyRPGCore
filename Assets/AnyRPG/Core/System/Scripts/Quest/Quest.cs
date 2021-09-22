@@ -235,7 +235,7 @@ namespace AnyRPG {
 
         public virtual void SetTurnedIn(bool turnedIn, bool notify = true) {
             this.TurnedIn = turnedIn;
-            //Debug.Log(MyName + ".Quest.TurnedIn = " + value);
+            //Debug.Log(DisplayName + ".Quest.TurnedIn = " + value);
             if (notify) {
                 if (playerManager.PlayerUnitSpawned == false) {
                     // STOP STUFF FROM REACTING WHEN PLAYER ISN'T SPAWNED
@@ -249,7 +249,7 @@ namespace AnyRPG {
 
         public virtual bool MyPrerequisitesMet {
             get {
-                //Debug.Log(MyName + ".Quest.MyPrerequisitesMet: ID: " + GetInstanceID());
+                //Debug.Log(DisplayName + ".Quest.MyPrerequisitesMet: ID: " + GetInstanceID());
                 foreach (PrerequisiteConditions prerequisiteCondition in prerequisiteConditions) {
                     if (!prerequisiteCondition.IsMet()) {
                         return false;
@@ -407,32 +407,32 @@ namespace AnyRPG {
         }
 
         public virtual string GetStatus() {
-            //Debug.Log(MyName + ".Quest.GetStatus()");
+            //Debug.Log(DisplayName + ".Quest.GetStatus()");
 
             string returnString = string.Empty;
 
             if (TurnedIn && !repeatableQuest) {
-                //Debug.Log(MyName + ".Quest.GetStatus(): returning completed");
+                //Debug.Log(DisplayName + ".Quest.GetStatus(): returning completed");
                 return "completed";
             }
 
             if (questLog.HasQuest(DisplayName) && IsComplete) {
-                //Debug.Log(MyName + ".Quest.GetStatus(): returning complete");
+                //Debug.Log(DisplayName + ".Quest.GetStatus(): returning complete");
                 return "complete";
             }
 
             if (questLog.HasQuest(DisplayName)) {
-                //Debug.Log(MyName + ".Quest.GetStatus(): returning inprogress");
+                //Debug.Log(DisplayName + ".Quest.GetStatus(): returning inprogress");
                 return "inprogress";
             }
 
             if (!questLog.HasQuest(DisplayName) && (TurnedIn == false || RepeatableQuest == true) && MyPrerequisitesMet == true) {
-                //Debug.Log(MyName + ".Quest.GetStatus(): returning available");
+                //Debug.Log(DisplayName + ".Quest.GetStatus(): returning available");
                 return "available";
             }
 
             // this quest prerequisites were not met
-            //Debug.Log(MyName + ".Quest.GetStatus(): returning unavailable");
+            //Debug.Log(DisplayName + ".Quest.GetStatus(): returning unavailable");
             return "unavailable";
         }
 
@@ -473,7 +473,7 @@ namespace AnyRPG {
             questSaveData.turnedIn = false;
             saveManager.SetQuestSaveData(DisplayName, questSaveData);
             if (steps.Count > 0) {
-                foreach (QuestObjective questObjective in steps[0].QuestObjectives) {
+                foreach (QuestObjective questObjective in steps[CurrentStep].QuestObjectives) {
                     questObjective.OnAcceptQuest(this, printMessages);
                 }
             }

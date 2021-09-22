@@ -93,7 +93,7 @@ namespace AnyRPG {
         }
 
         protected virtual float TargetAOEComplete(IAbilityCaster source, Interactable target, AbilityEffectContext abilityEffectInput) {
-            //Debug.Log(MyName + "AOEEffect.TargetAOEComplete(" + (source == null ? "null" : source.name) + ", " + (target == null ? "null" : target.name) + ")");
+            //Debug.Log(DisplayName + "AOEEffect.TargetAOEComplete(" + (source == null ? "null" : source.name) + ", " + (target == null ? "null" : target.name) + ")");
             if (completeAbilityEffectList == null | completeAbilityEffectList.Count == 0) {
                 return 0;
             }
@@ -139,7 +139,7 @@ namespace AnyRPG {
                 colliders = Physics.OverlapSphere(aoeSpawnCenter, aoeRadius, validMask);
             }
             if (useExtents) {
-                //Debug.Log(MyName + ".AOEEffect.GetValidTargets(): using aoeSpawnCenter: " + aoeSpawnCenter + ", extents: " + aoeExtents);
+                //Debug.Log(DisplayName + ".AOEEffect.GetValidTargets(): using aoeSpawnCenter: " + aoeSpawnCenter + ", extents: " + aoeExtents);
                 colliders = Physics.OverlapBox(aoeSpawnCenter, aoeExtents / 2f, aoeSpawnRotation, validMask);
             }
             //Debug.Log("AOEEffect.Cast(): Casting OverlapSphere with radius: " + aoeRadius);
@@ -164,7 +164,7 @@ namespace AnyRPG {
                 }
             }
             if (maxTargets > 0) {
-                //Debug.Log(MyName + "AOEEffect.GetValidTargets(). maxTargets: " + maxTargets + "; validTargets.Count: " + validTargets.Count);
+                //Debug.Log(DisplayName + "AOEEffect.GetValidTargets(). maxTargets: " + maxTargets + "; validTargets.Count: " + validTargets.Count);
                 while (validTargets.Count > maxTargets) {
                     int removeNumber = 0;
                     if (preferClosestTargets == true) {

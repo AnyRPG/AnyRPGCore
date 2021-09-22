@@ -220,7 +220,7 @@ namespace AnyRPG {
             // unequip any item in an exclusive slot for this item
             UnequipExclusiveSlots(newItem.EquipmentSlotType);
 
-            //Debug.Log(gameObject.name + ".CharacterEquipmentManager.Equip(): equippping " + newItem.MyName + " in slot: " + emptySlotProfile + "; " + emptySlotProfile.GetInstanceID());
+            //Debug.Log(gameObject.name + ".CharacterEquipmentManager.Equip(): equippping " + newItem.DisplayName + " in slot: " + emptySlotProfile + "; " + emptySlotProfile.GetInstanceID());
             currentEquipment[emptySlotProfile] = newItem;
 
             baseCharacter?.UnitController?.UnitModelController.EquipItemModels(this, emptySlotProfile, newItem, equipModels, setAppearance, rebuildAppearance);
@@ -237,7 +237,7 @@ namespace AnyRPG {
         }
 
         public void HandleWeaponHoldableObjects(Equipment newItem, Equipment oldItem) {
-            //Debug.Log(gameObject.name + ".CharacterAbilityManager.HandleEquipmentChanged(" + (newItem != null ? newItem.MyName : "null") + ", " + (oldItem != null ? oldItem.MyName : "null") + ")");
+            //Debug.Log(gameObject.name + ".CharacterAbilityManager.HandleEquipmentChanged(" + (newItem != null ? newItem.DisplayName : "null") + ", " + (oldItem != null ? oldItem.DisplayName : "null") + ")");
             if (oldItem != null && (oldItem is Weapon) && (oldItem as Weapon).AbilityObjectList != null && (oldItem as Weapon).AbilityObjectList.Count > 0) {
                 foreach (AbilityAttachmentNode abilityAttachmentNode in (oldItem as Weapon).AbilityObjectList) {
                     if (weaponHoldableObjects.Contains(abilityAttachmentNode)) {

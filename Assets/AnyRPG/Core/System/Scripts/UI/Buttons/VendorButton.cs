@@ -71,7 +71,7 @@ namespace AnyRPG {
             if (vendorItem.Quantity > 0 || vendorItem.Unlimited) {
                 icon.sprite = vendorItem.Item.Icon;
                 uIManager.SetItemBackground(vendorItem.Item, backGroundImage, new Color32(0, 0, 0, 255), vendorItem.GetItemQuality());
-                //title.text = string.Format("<color={0}>{1}</color>", QualityColor.MyColors[vendorItem.MyItem.MyQuality], vendorItem.MyItem.MyName);
+                //title.text = string.Format("<color={0}>{1}</color>", QualityColor.MyColors[vendorItem.MyItem.MyQuality], vendorItem.MyItem.DisplayName);
                 title.text = string.Format("{0}", vendorItem.Item.DisplayName);
 
                 if (vendorItem.GetItemQuality() != null) {

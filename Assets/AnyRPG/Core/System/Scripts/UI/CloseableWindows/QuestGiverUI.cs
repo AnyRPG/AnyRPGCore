@@ -136,10 +136,10 @@ namespace AnyRPG {
             // TESTING FOR NOW, WE DON'T USE THE LEFT SIDE LIST ON QUESTGIVERUI ANYWAY, SO NO POINT DRAWING DESCRIPTION 2 OR 3 TIMES ON A WINDOW LOAD
             /*
             foreach (QuestNode questNode in questGiver.MyQuests) {
-                //Debug.Log("QuestGiverUI.ShowQuestsCommon(): questNode.MyQuest.MyName: " + questNode.MyQuest.MyName);
+                //Debug.Log("QuestGiverUI.ShowQuestsCommon(): questNode.MyQuest.DisplayName: " + questNode.MyQuest.DisplayName);
                 GameObject go = Instantiate(questPrefab, questParent);
                 QuestGiverQuestScript qs = go.GetComponent<QuestGiverQuestScript>();
-                qs.MyText.text = "[" + questNode.MyQuest.MyExperienceLevel + "] " + questNode.MyQuest.MyName;
+                qs.MyText.text = "[" + questNode.MyQuest.MyExperienceLevel + "] " + questNode.MyQuest.DisplayName;
                 //Debug.Log("QuestGiverUI.ShowQuestsCommon(" + questGiver.name + "): " + questNode.MyQuest.MyTitle);
                 qs.MyText.color = LevelEquations.GetTargetColor(playerManager.MyCharacter.MyCharacterStats.MyLevel, questNode.MyQuest.MyExperienceLevel);
                 qs.MyQuest = questNode.MyQuest;
@@ -166,7 +166,7 @@ namespace AnyRPG {
             QuestGiverQuestScript firstInProgressQuest = null;
             foreach (QuestNode questNode in questGiver.MyQuests) {
                 QuestGiverQuestScript qs = questNode.MyGameObject.GetComponent<QuestGiverQuestScript>();
-                qs.MyText.text = "[" + questNode.MyQuest.MyExperienceLevel + "] " + questNode.MyQuest.MyName;
+                qs.MyText.text = "[" + questNode.MyQuest.MyExperienceLevel + "] " + questNode.MyQuest.DisplayName;
                 qs.MyText.color = LevelEquations.GetTargetColor(playerManager.MyCharacter.MyCharacterStats.MyLevel, questNode.MyQuest.MyExperienceLevel);
                 //Debug.Log("Evaluating quest: " + qs.MyQuest.MyTitle + "; turnedin: " + qs.MyQuest.TurnedIn.ToString());
                 string questStatus = qs.MyQuest.GetStatus();

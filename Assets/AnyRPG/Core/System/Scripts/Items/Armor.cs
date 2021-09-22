@@ -32,7 +32,7 @@ namespace AnyRPG {
         }
 
         public override string GetSummary(ItemQuality usedItemQuality) {
-            //Debug.Log(MyName + ".Armor.GetSummary()");
+            //Debug.Log(DisplayName + ".Armor.GetSummary()");
 
             List<string> abilitiesList = new List<string>();
 

@@ -275,7 +275,7 @@ namespace AnyRPG {
         }
 
         public bool PerformPowerResourceCheck(BaseAbility ability, float resourceCost) {
-            //Debug.Log(gameObject.name + ".CharacterStats.PerformPowerResourceCheck(" + (ability == null ? "null" : ability.MyName) + ", " + resourceCost + ")");
+            //Debug.Log(gameObject.name + ".CharacterStats.PerformPowerResourceCheck(" + (ability == null ? "null" : ability.DisplayName) + ", " + resourceCost + ")");
             if (resourceCost == 0f || (ability != null & ability.PowerResource == null)) {
                 return true;
             }
@@ -504,7 +504,7 @@ namespace AnyRPG {
         }
 
         public void HandleEquipmentChanged(Equipment newItem, Equipment oldItem, int slotIndex) {
-            //Debug.Log(gameObject.name + ".CharacterStats.OnEquipmentChanged(" + (newItem != null ? newItem.MyName : "null") + ", " + (oldItem != null ? oldItem.MyName : "null") + ")");
+            //Debug.Log(gameObject.name + ".CharacterStats.OnEquipmentChanged(" + (newItem != null ? newItem.DisplayName : "null") + ", " + (oldItem != null ? oldItem.DisplayName : "null") + ")");
 
             CalculateEquipmentChanged(newItem, oldItem);
         }
@@ -1320,7 +1320,7 @@ namespace AnyRPG {
                 // check for tick first so we can do final tick;
 
                 if (elapsedTime >= statusEffect.TickRate && statusEffect.TickRate != 0) {
-                    //Debug.Log(MyName + ".StatusEffect.Tick() TickTime!");
+                    //Debug.Log(DisplayName + ".StatusEffect.Tick() TickTime!");
                     if (baseCharacter != null && baseCharacter.UnitController != null && characterSource != null) {
                         statusEffect.CastTick(characterSource, baseCharacter.UnitController, abilityEffectContext);
                         elapsedTime -= statusEffect.TickRate;

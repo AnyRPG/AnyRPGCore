@@ -29,7 +29,7 @@ namespace AnyRPG {
         public List<CurrencyGroupRate> MyCurrencyGroupRates { get => currencyGroupRates; set => currencyGroupRates = value; }
 
         public bool HasCurrency(Currency currency) {
-            //Debug.Log("CurrencyGroup.HasCurrency(" + (currency == null ? "null" : currency.MyName) + ")");
+            //Debug.Log("CurrencyGroup.HasCurrency(" + (currency == null ? "null" : currency.DisplayName) + ")");
             if (currency == null) {
                 return false;
             }

@@ -102,7 +102,7 @@ namespace AnyRPG {
                 coolDownIcon.enabled = true;
             }
             if (coolDownIcon.sprite != Icon.sprite) {
-                //Debug.Log("Setting coolDownIcon to match MyIcon");
+                //Debug.Log("Setting coolDownIcon to match Icon");
                 coolDownIcon.sprite = Icon.sprite;
                 coolDownIcon.color = new Color32(0, 0, 0, 150);
                 coolDownIcon.fillMethod = Image.FillMethod.Radial360;

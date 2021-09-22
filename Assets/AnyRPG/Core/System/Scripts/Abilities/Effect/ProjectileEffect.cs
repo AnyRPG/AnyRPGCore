@@ -39,11 +39,11 @@ namespace AnyRPG {
             Dictionary<PrefabProfile, GameObject> returnObjects = base.Cast(source, target, originalTarget, abilityEffectContext);
             if (returnObjects != null) {
                 foreach (GameObject go in returnObjects.Values) {
-                    //Debug.Log(MyName + ".ProjectileEffect.Cast(): found gameobject: " + go.name);
+                    //Debug.Log(DisplayName + ".ProjectileEffect.Cast(): found gameobject: " + go.name);
                     go.transform.parent = playerManager.EffectPrefabParent.transform;
                     ProjectileScript projectileScript = go.GetComponentInChildren<ProjectileScript>();
                     if (projectileScript != null) {
-                        //Debug.Log(MyName + ".ProjectileEffect.Cast(): found gameobject: " + go.name + " and it has projectile script");
+                        //Debug.Log(DisplayName + ".ProjectileEffect.Cast(): found gameobject: " + go.name + " and it has projectile script");
                         abilityEffectContext = ApplyInputMultiplier(abilityEffectContext);
                         projectileScript.Initialize(projectileSpeed, source, target, new Vector3(0, 1, 0), go, abilityEffectContext);
                         if (flightAudioProfiles != null && flightAudioProfiles.Count > 0) {

@@ -44,7 +44,7 @@ namespace AnyRPG {
                         // safety to prevent deletion
                         return false;
                     }
-                    OpenQuestGiverWindow();
+                    //OpenQuestGiverWindow();
                     questLog.ShowQuestGiverDescription(Props.Quests[0].Quest, this);
                 }
             }
@@ -103,6 +103,8 @@ namespace AnyRPG {
             return true;
         }
 
+        /*
+         * now handled through questLog
         public void OpenQuestGiverWindow() {
             //Debug.Log(DisplayName + ".QuestStartItem.OpenQuestGiverWindow()");
             if (!uIManager.questGiverWindow.IsOpen) {
@@ -111,6 +113,7 @@ namespace AnyRPG {
                 uIManager.questGiverWindow.OpenWindow();
             }
         }
+        */
 
         public void UpdateQuestStatus() {
             //Debug.Log(DisplayName + ".QuestStartItem.UpdateQuestStatus()");

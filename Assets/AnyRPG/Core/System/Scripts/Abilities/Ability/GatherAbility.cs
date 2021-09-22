@@ -20,14 +20,14 @@ namespace AnyRPG {
                         gatheringNodeComponent.Gather();
                     }
                 } else {
-                    //Debug.Log(MyName + ".GatherAbility.Cast(): target was null");
+                    //Debug.Log(DisplayName + ".GatherAbility.Cast(): target was null");
                 }
             }
             return returnResult;
         }
 
         public override bool CanUseOn(Interactable target, IAbilityCaster sourceCharacter, bool performCooldownChecks = true, AbilityEffectContext abilityEffectContext = null, bool playerInitiated = false, bool performRangeCheck = true) {
-            //Debug.Log(MyName + ".GatherAbility.CanUseOn(" + (target == null ? "null" : target.name) + ", " + (sourceCharacter == null ? "null" : sourceCharacter.AbilityManager.MyName) + ")");
+            //Debug.Log(DisplayName + ".GatherAbility.CanUseOn(" + (target == null ? "null" : target.name) + ", " + (sourceCharacter == null ? "null" : sourceCharacter.AbilityManager.MyName) + ")");
             if (!base.CanUseOn(target, sourceCharacter, performCooldownChecks, abilityEffectContext, playerInitiated, performRangeCheck)) {
                 return false;
             }

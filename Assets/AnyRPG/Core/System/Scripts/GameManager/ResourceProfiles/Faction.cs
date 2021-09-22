@@ -234,7 +234,7 @@ namespace AnyRPG {
                 foreach (FactionDisposition _factionDisposition in thisFaction.dispositionList) {
                     if (_factionDisposition.Faction == otherFaction) {
                         // There is a specific entry for the other faction in our disposition table, return it.
-                        //Debug.Log("Faction.relationWith(): There is a specific entry for " + otherFaction.MyName + " in our disposition table, return it: " + _factionDisposition.factionName);
+                        //Debug.Log("Faction.relationWith(): There is a specific entry for " + otherFaction.DisplayName + " in our disposition table, return it: " + _factionDisposition.factionName);
                         return _factionDisposition.disposition;
                     }
                 }

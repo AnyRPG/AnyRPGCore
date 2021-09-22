@@ -152,7 +152,7 @@ namespace AnyRPG {
             uIManager.dialogWindow.CloseWindow();
 
             questLog.AcceptQuest(Quest);
-            //interactable.CheckForInteractableObjectives(MyQuest.MyName);
+            //interactable.CheckForInteractableObjectives(MyQuest.DisplayName);
         }
 
         public void DisplayNodeText() {

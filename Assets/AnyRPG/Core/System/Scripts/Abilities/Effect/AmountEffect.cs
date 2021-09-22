@@ -30,7 +30,7 @@ namespace AnyRPG {
         public DamageType DamageType { get => damageType; set => damageType = value; }
 
         protected KeyValuePair<float, CombatMagnitude> CalculateAbilityAmount(float abilityBaseAmount, IAbilityCaster sourceCharacter, CharacterUnit target, AbilityEffectContext abilityEffectContext, ResourceAmountNode resourceAmountNode) {
-            //Debug.Log(MyName + ".AmountEffect.CalculateAbilityAmount(" + abilityBaseAmount + ")");
+            //Debug.Log(DisplayName + ".AmountEffect.CalculateAbilityAmount(" + abilityBaseAmount + ")");
 
             float amountAddModifier = 0f;
             float amountMultiplyModifier = 1f;

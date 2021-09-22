@@ -49,9 +49,9 @@ namespace AnyRPG {
             if (systemConfigurationManager.AllowAutoAttack == true && IsAutoAttack == true) {
 
                 /*
-                if (playerManager.MyCharacter.MyCharacterEquipmentManager.MyCurrentEquipment.ContainsKey(EquipmentSlot.MainHand) && playerManager.MyCharacter.MyCharacterEquipmentManager.MyCurrentEquipment[EquipmentSlot.MainHand] != null) {
-                    if (playerManager.MyCharacter.MyCharacterEquipmentManager.MyCurrentEquipment[EquipmentSlot.MainHand].MyIcon != null) {
-                        MyIcon.sprite = playerManager.MyCharacter.MyCharacterEquipmentManager.MyCurrentEquipment[EquipmentSlot.MainHand].MyIcon;
+                if (playerManager.MyCharacter.MyCharacterEquipmentManager.MyCurrentEquipment.ContainsKey(EquipmentSlot.MainHand) && playerManager.MyCharacter.CharacterEquipmentManager.CurrentEquipment[EquipmentSlot.MainHand] != null) {
+                    if (playerManager.MyCharacter.CharacterEquipmentManager.CurrentEquipment[EquipmentSlot.MainHand].MyIcon != null) {
+                        MyIcon.sprite = playerManager.MyCharacter.CharacterEquipmentManager.CurrentEquipment[EquipmentSlot.MainHand].MyIcon;
                         //Debug.Log("ActionButton.UpdateVisual(): setting icon");
                     }
                 }
@@ -62,9 +62,9 @@ namespace AnyRPG {
                         actionButton.CoolDownIcon.enabled = true;
                     }
                     /*
-                    if (coolDownIcon.sprite != MyIcon.sprite) {
-                        Debug.Log("ActionButton.UpdateVisual(): Setting coolDownIcon to match MyIcon");
-                        coolDownIcon.sprite = MyIcon.sprite;
+                    if (coolDownIcon.sprite != Icon.sprite) {
+                        Debug.Log("ActionButton.UpdateVisual(): Setting coolDownIcon to match Icon");
+                        coolDownIcon.sprite = Icon.sprite;
                     }
                     */
                     if (actionButton.CoolDownIcon.color == new Color32(255, 0, 0, 155)) {
@@ -111,7 +111,7 @@ namespace AnyRPG {
 
         public override Coroutine ChooseMonitorCoroutine(ActionButton actionButton) {
             if (systemConfigurationManager.AllowAutoAttack == true && IsAutoAttack == true) {
-                //Debug.Log("ActionButton.OnUseableUse(" + ability.MyName + "): WAS ANIMATED AUTO ATTACK");
+                //Debug.Log("ActionButton.OnUseableUse(" + ability.DisplayName + "): WAS ANIMATED AUTO ATTACK");
                 //if (autoAttackCoRoutine == null) {
                 //if (monitorCoroutine == null) {
                     return systemAbilityController.StartCoroutine(actionButton.MonitorAutoAttack(this));
@@ -142,12 +142,12 @@ namespace AnyRPG {
         /// <param name="abilityCaster"></param>
         /// <returns></returns>
         public override AudioClip GetHitSound(IAbilityCaster abilityCaster) {
-            //Debug.Log(MyName + ".AnimatedAbility.GetHitSound(" + abilityCaster.Name + ")");
+            //Debug.Log(DisplayName + ".AnimatedAbility.GetHitSound(" + abilityCaster.Name + ")");
             if (useWeaponHitSound == true) {
-                //Debug.Log(MyName + ".AnimatedAbility.GetHitSound(" + abilityCaster.Name + "): using weapon hit sound");
+                //Debug.Log(DisplayName + ".AnimatedAbility.GetHitSound(" + abilityCaster.Name + "): using weapon hit sound");
                 return abilityCaster.AbilityManager.GetAnimatedAbilityHitSound();
             }
-            //Debug.Log(MyName + ".AnimatedAbility.GetHitSound(" + abilityCaster.Name + "): not using weapon hit sound");
+            //Debug.Log(DisplayName + ".AnimatedAbility.GetHitSound(" + abilityCaster.Name + "): not using weapon hit sound");
             return base.GetHitSound(abilityCaster);
         }
 
@@ -204,7 +204,7 @@ namespace AnyRPG {
         }
 
         public override void ProcessAbilityPrefabs(IAbilityCaster sourceCharacter) {
-            //Debug.Log(MyName + ".AnimatedAbility.ProcessAbilityPrefabs()");
+            //Debug.Log(DisplayName + ".AnimatedAbility.ProcessAbilityPrefabs()");
             //base.ProcessAbilityPrefabs(sourceCharacter);
             // do nothing intentionally, we will clean these up at the end of the ability
         }
@@ -214,7 +214,7 @@ namespace AnyRPG {
         }
 
         public bool HandleAbilityHit(IAbilityCaster source, Interactable target, AbilityEffectContext abilityEffectContext) {
-            //Debug.Log(MyName + ".AnimatedAbility.HandleAbilityHit()");
+            //Debug.Log(DisplayName + ".AnimatedAbility.HandleAbilityHit()");
             bool returnResult = true;
             // perform a check that includes range to target
             bool rangeResult = base.CanUseOn(target, source);
@@ -259,7 +259,7 @@ namespace AnyRPG {
         }
 
         public override void ProcessGCDAuto(IAbilityCaster sourceCharacter) {
-            //Debug.Log(MyName + "AnimatedAbility.ProcessGCDAuto()");
+            //Debug.Log(DisplayName + "AnimatedAbility.ProcessGCDAuto()");
             //intentionally do nothing
         }
 

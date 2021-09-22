@@ -59,7 +59,7 @@ namespace AnyRPG {
             foreach (QuestGiverProfile questGiverProfile in questGiverProfiles) {
                 if (questGiverProfile != null && questGiverProfile.MyQuests != null) {
                     foreach (QuestNode questNode in questGiverProfile.MyQuests) {
-                        //Debug.Log(gameObject.name + ".SetupScriptableObjects(): Adding quest: " + questNode.MyQuest.MyName);
+                        //Debug.Log(gameObject.name + ".SetupScriptableObjects(): Adding quest: " + questNode.MyQuest.DisplayName);
                         quests.Add(questNode);
                     }
                 }

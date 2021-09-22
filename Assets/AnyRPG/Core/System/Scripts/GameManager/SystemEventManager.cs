@@ -116,7 +116,7 @@ namespace AnyRPG {
         
 
         public void NotifyOnAbilityUsed(BaseAbility ability) {
-            //Debug.Log("SystemEventManager.NotifyAbilityused(" + ability.MyName + ")");
+            //Debug.Log("SystemEventManager.NotifyAbilityused(" + ability.DisplayName + ")");
             OnAbilityUsed(ability);
         }
 

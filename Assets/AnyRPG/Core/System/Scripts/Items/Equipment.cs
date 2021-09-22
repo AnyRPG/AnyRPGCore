@@ -246,13 +246,13 @@ namespace AnyRPG {
         }
 
         public override string GetSummary(ItemQuality usedItemQuality) {
-            //Debug.Log(MyName + ".Equipment.GetSummary()");
+            //Debug.Log(DisplayName + ".Equipment.GetSummary()");
             //string stats = string.Empty;
             List<string> summaryLines = new List<string>();
 
             string itemRange = "";
             string colorstring = string.Empty;
-            //Debug.Log(MyName + ": levelcap: " + levelCap + "; dynamicLevel: " + dynamicLevel);
+            //Debug.Log(DisplayName + ": levelcap: " + levelCap + "; dynamicLevel: " + dynamicLevel);
             if (dynamicLevel == true && freezeDropLevel == false) {
                 itemRange = " (1 - " + (levelCap > 0 ? levelCap : systemConfigurationManager.MaxLevel) + ")";
             }

@@ -531,7 +531,7 @@ namespace AnyRPG {
         }
 
         public void SetCharacterRace(CharacterRace newCharacterRace, bool notify = true, bool resetStats = true, bool processEquipmentRestrictions = true) {
-            //Debug.Log(gameObject.name + ".BaseCharacter.SetCharacterClass(" + (newCharacterClass != null ? newCharacterClass.MyName : "null") + ", " + notify + ")");
+            //Debug.Log(gameObject.name + ".BaseCharacter.SetCharacterClass(" + (newCharacterClass != null ? newCharacterClass.DisplayName : "null") + ", " + notify + ")");
 
             CapabilityConsumerSnapshot oldSnapshot = null;
 

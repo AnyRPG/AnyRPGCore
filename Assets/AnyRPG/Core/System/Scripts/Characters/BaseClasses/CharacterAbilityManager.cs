@@ -332,14 +332,14 @@ namespace AnyRPG {
         }
 
         public override void GeneratePower(BaseAbility ability) {
-            //Debug.Log(gameObject.name + ".CharacterAbilityManager.GeneratePower(" + ability.MyName + ")");
+            //Debug.Log(gameObject.name + ".CharacterAbilityManager.GeneratePower(" + ability.DisplayName + ")");
             if (ability.GeneratePowerResource == null) {
                 // nothing to generate
                 return;
             }
             base.GeneratePower(ability);
             if (baseCharacter != null && baseCharacter.CharacterStats != null) {
-                //Debug.Log(gameObject.name + ".GeneratePower(" + ability.MyName + "): name " + ability.GeneratePowerResource.MyName  + "; " + ability.GetResourceGain(this));
+                //Debug.Log(gameObject.name + ".GeneratePower(" + ability.DisplayName + "): name " + ability.GeneratePowerResource.DisplayName  + "; " + ability.GetResourceGain(this));
                 baseCharacter.CharacterStats.AddResourceAmount(ability.GeneratePowerResource.DisplayName, ability.GetResourceGain(baseCharacter));
             }
         }
@@ -589,7 +589,7 @@ namespace AnyRPG {
         /// <returns></returns>
         public override bool AbilityHit(Interactable target, AbilityEffectContext abilityEffectContext) {
             if (baseCharacter.CharacterCombat.DidAttackMiss() == true) {
-                //Debug.Log(MyName + ".BaseAbility.PerformAbilityHit(" + source.name + ", " + target.name + "): attack missed");
+                //Debug.Log(DisplayName + ".BaseAbility.PerformAbilityHit(" + source.name + ", " + target.name + "): attack missed");
                 baseCharacter.CharacterCombat.ReceiveCombatMiss(target, abilityEffectContext);
                 if (target?.CharacterUnit != null) {
                     target.CharacterUnit.BaseCharacter.CharacterCombat.ReceiveCombatMiss(target, abilityEffectContext);
@@ -736,7 +736,7 @@ namespace AnyRPG {
         }
 
         public void HandleEquipmentChanged(Equipment newItem, Equipment oldItem, int slotIndex) {
-            //Debug.Log(gameObject.name + ".CharacterAbilityManager.HandleEquipmentChanged(" + (newItem != null ? newItem.MyName : "null") + ", " + (oldItem != null ? oldItem.MyName : "null") + ")");
+            //Debug.Log(gameObject.name + ".CharacterAbilityManager.HandleEquipmentChanged(" + (newItem != null ? newItem.DisplayName : "null") + ", " + (oldItem != null ? oldItem.DisplayName : "null") + ")");
             if (oldItem != null) {
                 foreach (BaseAbility baseAbility in oldItem.LearnedAbilities) {
                     UnlearnAbility(baseAbility);
@@ -1099,7 +1099,7 @@ namespace AnyRPG {
 
                 //Debug.Log(baseCharacter.gameObject.name + ".CharacterAbilitymanager.PerformAbilityCast(" + ability.DisplayName + "): cancast is true");
                 if (!ability.CanSimultaneousCast) {
-                    //Debug.Log("CharacterAbilitymanager.PerformAbilityCast() ability: " + ability.MyName + " can simultaneous cast is false, setting casting to true");
+                    //Debug.Log("CharacterAbilitymanager.PerformAbilityCast() ability: " + ability.DisplayName + " can simultaneous cast is false, setting casting to true");
                     ability.StartCasting(baseCharacter);
                 }
                 float currentCastPercent = 0f;
@@ -1255,13 +1255,13 @@ namespace AnyRPG {
                 //Debug.Log("CharacterAbilityManager.BeginAbility(): ability is null! Exiting!");
                 return false;
             } else {
-                //Debug.Log("CharacterAbilityManager.BeginAbility(" + ability.MyName + ")");
+                //Debug.Log("CharacterAbilityManager.BeginAbility(" + ability.DisplayName + ")");
             }
             return BeginAbilityCommon(ability, baseCharacter.UnitController.Target, playerInitiated);
         }
 
         public bool BeginAbility(BaseAbility ability, Interactable target) {
-            //Debug.Log(gameObject.name + ".CharacterAbilityManager.BeginAbility(" + ability.MyName + ")");
+            //Debug.Log(gameObject.name + ".CharacterAbilityManager.BeginAbility(" + ability.DisplayName + ")");
             return BeginAbilityCommon(ability, target);
         }
 
@@ -1443,7 +1443,7 @@ namespace AnyRPG {
             } else {
                 //Debug.Log(baseCharacter.gameObject.name + ".CharacterAbilityManager.BeginAbilityCommon(): can't simultanous cast");
                 if (currentCastCoroutine == null) {
-                    //Debug.Log("Performing Ability " + ability.MyName + " at a cost of " + ability.MyAbilityManaCost.ToString() + ": ABOUT TO START COROUTINE");
+                    //Debug.Log("Performing Ability " + ability.DisplayName + " at a cost of " + ability.MyAbilityManaCost.ToString() + ": ABOUT TO START COROUTINE");
 
                     // we need to do this because we are allowed to stop an outstanding auto-attack to start this cast
                     if (BaseCharacter != null && BaseCharacter.UnitController != null && BaseCharacter.UnitController.UnitAnimator != null) {
