@@ -28,6 +28,7 @@ namespace AnyRPG {
         protected MessageFeedManager messageFeedManager = null;
         protected SystemEventManager systemEventManager = null;
         protected PlayerManager playerManager = null;
+        protected LevelManager levelManager = null;
 
         public int Amount {
             get {
@@ -112,6 +113,7 @@ namespace AnyRPG {
             messageFeedManager = systemGameManager.UIManager.MessageFeedManager;
             systemEventManager = systemGameManager.SystemEventManager;
             playerManager = systemGameManager.PlayerManager;
+            levelManager = systemGameManager.LevelManager;
         }
     }
 

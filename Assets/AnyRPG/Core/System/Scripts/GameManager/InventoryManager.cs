@@ -654,14 +654,14 @@ namespace AnyRPG {
             systemEventManager.NotifyOnItemCountChanged(item);
         }
 
-        public int GetItemCount(string type) {
+        public int GetItemCount(string type, bool partialMatch = false) {
             //Debug.Log("InventoryManager.GetItemCount(" + type + ")");
             int itemCount = 0;
 
             foreach (BagNode bagNode in bagNodes) {
                 if (bagNode.MyBag != null) {
                     foreach (SlotScript slot in bagNode.BagPanel.MySlots) {
-                        if (!slot.IsEmpty && SystemDataFactory.MatchResource(slot.MyItem.DisplayName, type)) {
+                        if (!slot.IsEmpty && SystemDataFactory.MatchResource(slot.MyItem.DisplayName, type, partialMatch)) {
                             itemCount += slot.Count;
                         }
                     }

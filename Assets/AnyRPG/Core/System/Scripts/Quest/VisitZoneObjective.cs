@@ -41,18 +41,13 @@ namespace AnyRPG {
             }
         }
 
-        /*
-         // disabled for now.  this should be an active objective, and not able to be completed if a zone was previously visited
-         // this allows creating quests where you have to travel back to a zone you've already been to and perform a new task
-
         public override void UpdateCompletionCount(bool printMessages = true) {
             base.UpdateCompletionCount(printMessages);
             SceneNode sceneNode = systemDataFactory.GetResource<SceneNode>(zoneName);
-            if (sceneNode != null && sceneNode.Visited == true) {
-                CurrentAmount++;
+            if (sceneNode != null && sceneNode.SceneFile == levelManager.ActiveSceneName) {
+                AddCompletionAmount();
             }
         }
-        */
 
         public override void OnAcceptQuest(Quest quest, bool printMessages = true) {
             //Debug.Log("UseInteractableObjective.OnAcceptQuest()");
@@ -69,7 +64,7 @@ namespace AnyRPG {
             // this allows creating quests where you have to travel back to a zone you've already been to and perform a new task
             //UpdateCompletionCount(printMessages);
             objectiveSceneNode.OnVisitZone += AddCompletionAmount;
-
+            UpdateCompletionCount(printMessages);
         }
 
         public override void OnAbandonQuest() {

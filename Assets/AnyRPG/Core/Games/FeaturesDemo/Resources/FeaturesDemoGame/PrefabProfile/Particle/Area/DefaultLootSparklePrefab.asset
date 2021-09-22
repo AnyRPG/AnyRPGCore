@@ -20,15 +20,15 @@ MonoBehaviour:
   useRegionalDescription: 0
   resourceDescriptionProfile: 
   prefab: {fileID: 165734, guid: ec8238b560e37054ca86a83bb2e15a7b, type: 3}
-  position: {x: 0, y: 1, z: 0}
+  position: {x: 0, y: 0, z: 0}
   rotationIsGlobal: 0
   rotation: {x: 0, y: 0, z: 0}
-  scale: {x: 1, y: 1, z: 1}
+  scale: {x: 0.5, y: 0.5, z: 0.5}
   targetBone: 
   unsheathAudioProfileName: 
   sheathedPosition: {x: 0, y: 0, z: 0}
   sheathedRotation: {x: 0, y: 0, z: 0}
-  sheathedScale: {x: 1, y: 1, z: 1}
+  sheathedScale: {x: 0.5, y: 0.5, z: 0.5}
   sheathedTargetBone: 
   sheathAudioProfileName: 
   useItemPickup: 0

@@ -233,10 +233,23 @@ namespace AnyRPG {
             return oldString.ToLower().Replace(" ", string.Empty).Replace("'", string.Empty);
         }
 
-        public static bool MatchResource(string resourceName, string resourceMatchName) {
+        /// <summary>
+        /// check if resourceMatchName fully or partially matches resourceName
+        /// </summary>
+        /// <param name="resourceName"></param>
+        /// <param name="resourceMatchName"></param>
+        /// <param name="partialMatch"></param>
+        /// <returns></returns>
+        public static bool MatchResource(string resourceName, string resourceMatchName, bool partialMatch = false) {
             if (resourceName != null && resourceMatchName != null) {
-                if (PrepareStringForMatch(resourceName) == PrepareStringForMatch(resourceMatchName)) {
-                    return true;
+                if (partialMatch == true) {
+                    if (PrepareStringForMatch(resourceName).Contains(PrepareStringForMatch(resourceMatchName))) {
+                        return true;
+                    }
+                } else {
+                    if (PrepareStringForMatch(resourceName) == PrepareStringForMatch(resourceMatchName)) {
+                        return true;
+                    }
                 }
             } else {
                 //Debug.Log("SystemGameManager.MatchResource(" + (resourceName == null ? "null" : resourceName) + ", " + (resourceMatchName == null ? "null" : resourceMatchName) + ")");

@@ -207,7 +207,7 @@ namespace AnyRPG {
                 */
 
                 if (steps.Count > 0) {
-                    foreach (QuestObjective questObjective in steps[CurrentStep].QuestObjectives) {
+                    foreach (QuestObjective questObjective in steps[steps.Count -1].QuestObjectives) {
                         if (!questObjective.IsComplete) {
                             return false;
                         }

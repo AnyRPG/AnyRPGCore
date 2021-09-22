@@ -384,10 +384,10 @@ namespace AnyRPG {
         }
         */
 
-        public bool HasEquipment(string equipmentName) {
+        public bool HasEquipment(string equipmentName, bool partialMatch = false) {
             foreach (Equipment equipment in currentEquipment.Values) {
                 if (equipment != null) {
-                    if (SystemDataFactory.MatchResource(equipment.DisplayName, equipmentName)) {
+                    if (SystemDataFactory.MatchResource(equipment.DisplayName, equipmentName, partialMatch)) {
                         return true;
                     }
                 }
@@ -395,11 +395,11 @@ namespace AnyRPG {
             return false;
         }
 
-        public int GetEquipmentCount(string equipmentName) {
+        public int GetEquipmentCount(string equipmentName, bool partialMatch = false) {
             int returnValue = 0;
             foreach (Equipment equipment in currentEquipment.Values) {
                 if (equipment != null) {
-                    if (SystemDataFactory.MatchResource(equipment.DisplayName, equipmentName)) {
+                    if (SystemDataFactory.MatchResource(equipment.DisplayName, equipmentName, partialMatch)) {
                         returnValue++;
                     }
                 }

@@ -13,6 +13,10 @@ namespace AnyRPG {
         [ResourceSelector(resourceType = typeof(Item))]
         protected string itemName = null;
 
+        [Tooltip("If true, the name can be partially matched")]
+        [SerializeField]
+        protected bool partialMatch = false;
+
         // game manager references
         protected InventoryManager inventoryManager = null;
 
@@ -27,7 +31,7 @@ namespace AnyRPG {
         public void UpdateItemCount(Item item) {
 
             // change this with check reference to item prefab in the future
-            if (SystemDataFactory.MatchResource(itemName, item.DisplayName)) {
+            if (SystemDataFactory.MatchResource(item.DisplayName, itemName, partialMatch)) {
                 UpdateCompletionCount();
             }
         }
@@ -38,8 +42,8 @@ namespace AnyRPG {
             if (completeBefore) {
                 return;
             }
-            CurrentAmount = inventoryManager.GetItemCount(itemName);
-            CurrentAmount += playerManager.MyCharacter.CharacterEquipmentManager.GetEquipmentCount(itemName);
+            CurrentAmount = inventoryManager.GetItemCount(itemName, partialMatch);
+            CurrentAmount += playerManager.MyCharacter.CharacterEquipmentManager.GetEquipmentCount(itemName, partialMatch);
 
             quest.CheckCompletion(true, printMessages);
             if (CurrentAmount <= Amount && !quest.IsAchievement && printMessages == true && CurrentAmount != 0) {

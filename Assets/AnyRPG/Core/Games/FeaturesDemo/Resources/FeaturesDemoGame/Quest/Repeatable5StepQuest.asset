@@ -19,7 +19,7 @@ MonoBehaviour:
   description: 'This quest is repeatable.
 
 
-    It requires you to complete 4 tasks
+    It requires you to complete 5 tasks
     in a specific order.
 
 
@@ -85,6 +85,7 @@ MonoBehaviour:
         deprecatedType: 
         overrideDisplayName: 
         itemName: Dagger
+        partialMatch: 1
     00000002:
       type: {class: AbilityObjective, ns: AnyRPG, asm: Assembly-CSharp}
       data:

@@ -53,10 +53,9 @@ namespace AnyRPG {
             //Debug.Log("UseInteractableObjective.OnAcceptQuest()");
             base.OnAcceptQuest(quest, printMessages);
 
-            UpdateCompletionCount(printMessages);
-
             // don't forget to remove these later
             systemEventManager.OnDialogCompleted += CheckCompletionCount;
+            UpdateCompletionCount(printMessages);
         }
 
         public override void OnAbandonQuest() {

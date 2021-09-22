@@ -74,6 +74,7 @@ MonoBehaviour:
         deprecatedType: 
         overrideDisplayName: 
         itemName: Dagger
+        partialMatch: 1
     00000001:
       type: {class: VisitZoneObjective, ns: AnyRPG, asm: Assembly-CSharp}
       data:
