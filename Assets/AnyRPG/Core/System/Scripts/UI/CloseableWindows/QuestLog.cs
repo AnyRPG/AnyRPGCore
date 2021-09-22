@@ -107,7 +107,7 @@ namespace AnyRPG {
             }
 
             // change to new subscription method in quest to avoid duplicated out of date code not tracking newer objective types
-            quest.AcceptQuest(false);
+            quest.AcceptQuest(false, false);
             // gotta check here because kills and ability use are not automatically checked on accept because under normal circumstances those amounts must start at 0
             quest.CheckCompletion(true, false);
             string keyName = SystemDataFactory.PrepareStringForMatch(quest.DisplayName);
@@ -202,13 +202,13 @@ namespace AnyRPG {
         public List<Quest> GetQuestListByType(string questStatusType, List<QuestNode> questNodeArray, bool requireInQuestLog = false, bool requireStartQuest = false, bool requireEndQuest = false) {
             List<Quest> returnList = new List<Quest>();
             foreach (QuestNode questNode in questNodeArray) {
-                if (questNode.MyQuest != null) {
-                    if (questNode.MyQuest.GetStatus() == questStatusType
-                        && (requireInQuestLog == true ? HasQuest(questNode.MyQuest.DisplayName) : true)
-                        && (requireStartQuest == true ? questNode.MyStartQuest : true)
-                        && (requireEndQuest == true ? questNode.MyEndQuest : true)) {
+                if (questNode.Quest != null) {
+                    if (questNode.Quest.GetStatus() == questStatusType
+                        && (requireInQuestLog == true ? HasQuest(questNode.Quest.DisplayName) : true)
+                        && (requireStartQuest == true ? questNode.StartQuest : true)
+                        && (requireEndQuest == true ? questNode.EndQuest : true)) {
                         //Debug.Log("Quest.GetQuestListByType(" + questStatusType + "): adding quest: " + questNode.MyQuest.MyName);
-                        returnList.Add(questNode.MyQuest);
+                        returnList.Add(questNode.Quest);
                     }
                 }
             }

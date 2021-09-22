@@ -43,14 +43,15 @@ namespace AnyRPG {
         private Dictionary<string, SceneNodeSaveData> sceneNodeSaveDataDictionary = new Dictionary<string, SceneNodeSaveData>();
         private Dictionary<string, CutsceneSaveData> cutsceneSaveDataDictionary = new Dictionary<string, CutsceneSaveData>();
 
-        private Dictionary<string, Dictionary<Type, Dictionary<string, QuestObjectiveSaveData>>> questObjectiveSaveDataDictionary = new Dictionary<string, Dictionary<Type, Dictionary<string, QuestObjectiveSaveData>>>();
+        // [questName][objectiveType][objectiveName] : questObjectiveSavaData
+        private Dictionary<string, Dictionary<string, Dictionary<string, QuestObjectiveSaveData>>> questObjectiveSaveDataDictionary = new Dictionary<string, Dictionary<string, Dictionary<string, QuestObjectiveSaveData>>>();
 
         public Dictionary<string, QuestSaveData> QuestSaveDataDictionary { get => questSaveDataDictionary; set => questSaveDataDictionary = value; }
         public Dictionary<string, BehaviorSaveData> BehaviorSaveDataDictionary { get => behaviorSaveDataDictionary; set => behaviorSaveDataDictionary = value; }
         public Dictionary<string, DialogSaveData> DialogSaveDataDictionary { get => dialogSaveDataDictionary; set => dialogSaveDataDictionary = value; }
         public Dictionary<string, SceneNodeSaveData> SceneNodeSaveDataDictionary { get => sceneNodeSaveDataDictionary; set => sceneNodeSaveDataDictionary = value; }
         public Dictionary<string, CutsceneSaveData> CutsceneSaveDataDictionary { get => cutsceneSaveDataDictionary; set => cutsceneSaveDataDictionary = value; }
-        public Dictionary<string, Dictionary<Type, Dictionary<string, QuestObjectiveSaveData>>> QuestObjectiveSaveDataDictionary { get => questObjectiveSaveDataDictionary; set => questObjectiveSaveDataDictionary = value; }
+        public Dictionary<string, Dictionary<string, Dictionary<string, QuestObjectiveSaveData>>> QuestObjectiveSaveDataDictionary { get => questObjectiveSaveDataDictionary; set => questObjectiveSaveDataDictionary = value; }
         public string RecipeString { get => recipeString; }
 
         protected bool eventSubscriptionsInitialized = false;
@@ -546,15 +547,19 @@ namespace AnyRPG {
             return saveData;
         }
 
-        public QuestObjectiveSaveData GetQuestObjectiveSaveData(string questName, Type objectiveType, string objectiveName) {
+        public void ResetQuestObjectiveSaveData(string questName) {
+            questObjectiveSaveDataDictionary[questName] = new Dictionary<string, Dictionary<string, QuestObjectiveSaveData>>();
+        }
+
+        public QuestObjectiveSaveData GetQuestObjectiveSaveData(string questName, string objectiveType, string objectiveName) {
             QuestObjectiveSaveData saveData;
 
             // first, check if this quest is in the main objective dictionary.  If not, add it.
-            Dictionary<Type, Dictionary<string, QuestObjectiveSaveData>> questObjectiveSaveData;
+            Dictionary<string, Dictionary<string, QuestObjectiveSaveData>> questObjectiveSaveData;
             if (questObjectiveSaveDataDictionary.ContainsKey(questName)) {
                 questObjectiveSaveData = questObjectiveSaveDataDictionary[questName];
             } else {
-                questObjectiveSaveData = new Dictionary<Type, Dictionary<string, QuestObjectiveSaveData>>();
+                questObjectiveSaveData = new Dictionary<string, Dictionary<string, QuestObjectiveSaveData>>();
                 questObjectiveSaveDataDictionary.Add(questName, questObjectiveSaveData);
             }
 
@@ -571,6 +576,7 @@ namespace AnyRPG {
             } else {
                 saveData = new QuestObjectiveSaveData();
                 saveData.MyName = objectiveName;
+                saveData.ObjectiveType = objectiveType;
                 questObjectiveSaveDataType.Add(objectiveName, saveData);
             }
 
@@ -587,7 +593,8 @@ namespace AnyRPG {
                 QuestSaveData finalSaveData = questSaveData;
 
                 if (questObjectiveSaveDataDictionary.ContainsKey(questSaveData.MyName)) {
-
+                    
+                    /*
                     // kill
                     List<QuestObjectiveSaveData> killObjectiveSaveDataList = new List<QuestObjectiveSaveData>();
                     if (questObjectiveSaveDataDictionary[questSaveData.MyName].ContainsKey(typeof(KillObjective))) {
@@ -628,11 +635,32 @@ namespace AnyRPG {
                         }
                     }
 
+                    // visit zone
+                    List<QuestObjectiveSaveData> visitZoneObjectiveSaveDataList = new List<QuestObjectiveSaveData>();
+                    if (questObjectiveSaveDataDictionary[questSaveData.MyName].ContainsKey(typeof(VisitZoneObjective))) {
+                        foreach (QuestObjectiveSaveData saveData in questObjectiveSaveDataDictionary[questSaveData.MyName][typeof(VisitZoneObjective)].Values) {
+                            visitZoneObjectiveSaveDataList.Add(saveData);
+                        }
+                    }
+                    */
+
+                    List<QuestObjectiveSaveData> questObjectiveSaveDataList = new List<QuestObjectiveSaveData>();
+                    foreach (string typeName in questObjectiveSaveDataDictionary[questSaveData.MyName].Keys) {
+                        foreach (QuestObjectiveSaveData saveData in questObjectiveSaveDataDictionary[questSaveData.MyName][typeName].Values) {
+                            questObjectiveSaveDataList.Add(saveData);
+                        }
+
+                    }
+
+                    finalSaveData.questObjectives = questObjectiveSaveDataList;
+                    /*
                     finalSaveData.killObjectives = killObjectiveSaveDataList;
                     finalSaveData.collectObjectives = collectObjectiveSaveDataList;
                     finalSaveData.useInteractableObjectives = useInteractableObjectiveSaveDataList;
                     finalSaveData.tradeSkillObjectives = tradeSkillObjectiveSaveDataList;
                     finalSaveData.abilityObjectives = abilityObjectiveSaveDataList;
+                    finalSaveData.visitZoneObjectives = visitZoneObjectiveSaveDataList;
+                    */
                 }
                 finalSaveData.inLog = questLog.HasQuest(questSaveData.MyName);
                 anyRPGSaveData.questSaveData.Add(finalSaveData);
@@ -833,9 +861,23 @@ namespace AnyRPG {
             foreach (QuestSaveData questSaveData in anyRPGSaveData.questSaveData) {
                 questSaveDataDictionary.Add(questSaveData.MyName, questSaveData);
 
+                Dictionary<string, Dictionary<string, QuestObjectiveSaveData>> objectiveDictionary = new Dictionary<string, Dictionary<string, QuestObjectiveSaveData>>();
+
+                // add objectives to dictionary
+                foreach (QuestObjectiveSaveData questObjectiveSaveData in questSaveData.questObjectives) {
+                    // perform null check to allow opening of older save files without null reference
+                    if (questObjectiveSaveData.ObjectiveType != null && questObjectiveSaveData.ObjectiveType != string.Empty) {
+                        //Debug.Log("objectiveType: " + questObjectiveSaveData.ObjectiveType);
+                        if (!objectiveDictionary.ContainsKey(questObjectiveSaveData.ObjectiveType)) {
+                            objectiveDictionary.Add(questObjectiveSaveData.ObjectiveType, new Dictionary<string, QuestObjectiveSaveData>());
+                        }
+                        objectiveDictionary[questObjectiveSaveData.ObjectiveType].Add(questObjectiveSaveData.MyName, questObjectiveSaveData);
+                    }
+                }
+
+                /*
                 // add kill objectives to dictionary
                 Dictionary<string, QuestObjectiveSaveData> tmpDictionary = new Dictionary<string, QuestObjectiveSaveData>();
-                Dictionary<Type, Dictionary<string, QuestObjectiveSaveData>> objectiveDictionary = new Dictionary<Type, Dictionary<string, QuestObjectiveSaveData>>();
                 foreach (QuestObjectiveSaveData questObjectiveSaveData in questSaveData.killObjectives) {
                     tmpDictionary.Add(questObjectiveSaveData.MyName, questObjectiveSaveData);
                 }
@@ -868,6 +910,15 @@ namespace AnyRPG {
                     tmpDictionary.Add(questObjectiveSaveData.MyName, questObjectiveSaveData);
                 }
                 objectiveDictionary.Add(typeof(AbilityObjective), tmpDictionary);
+
+                // add visitzone objectives to dictionary
+                tmpDictionary = new Dictionary<string, QuestObjectiveSaveData>();
+                foreach (QuestObjectiveSaveData questObjectiveSaveData in questSaveData.visitZoneObjectives) {
+                    tmpDictionary.Add(questObjectiveSaveData.MyName, questObjectiveSaveData);
+                }
+                objectiveDictionary.Add(typeof(VisitZoneObjective), tmpDictionary);
+                */
+
                 questObjectiveSaveDataDictionary.Add(questSaveData.MyName, objectiveDictionary);
             }
 

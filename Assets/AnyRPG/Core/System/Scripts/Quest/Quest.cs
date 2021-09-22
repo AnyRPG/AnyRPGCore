@@ -293,7 +293,7 @@ namespace AnyRPG {
             set {
                 QuestSaveData saveData = saveManager.GetQuestSaveData(this);
                 saveData.questStep = value;
-                saveManager.QuestSaveDataDictionary[saveData.MyName] = saveData;
+                saveManager.SetQuestSaveData(saveData.MyName, saveData);
             }
         }
         public virtual bool MarkedComplete {
@@ -308,7 +308,7 @@ namespace AnyRPG {
             }
         }
 
-        protected List<QuestStep> Steps { get => steps; set => steps = value; }
+        public List<QuestStep> Steps { get => steps; }
 
         public override void SetGameManagerReferences() {
             base.SetGameManagerReferences();
@@ -320,7 +320,12 @@ namespace AnyRPG {
 
         public virtual void RemoveQuest() {
             //Debug.Log("Quest.RemoveQuest(): " + DisplayName + " calling OnQuestStatusUpdated()");
+
+            // reset the quest objective save data so any completed portion is reset in case the quest is picked back up
+            saveManager.ResetQuestObjectiveSaveData(DisplayName);
+
             OnAbandonQuest();
+
             if (playerManager != null && playerManager.PlayerUnitSpawned == false) {
                 // STOP STUFF FROM REACTING WHEN PLAYER ISN'T SPAWNED
                 return;
@@ -394,7 +399,7 @@ namespace AnyRPG {
 
         public virtual void OnAbandonQuest() {
             if (steps.Count > 0) {
-                foreach (QuestObjective questObjective in steps[saveManager.GetQuestSaveData(this).questStep].QuestObjectives) {
+                foreach (QuestObjective questObjective in steps[CurrentStep].QuestObjectives) {
                     questObjective.OnAbandonQuest();
                 }
             }
@@ -458,10 +463,15 @@ namespace AnyRPG {
             return objectives;
         }
 
-        public virtual void AcceptQuest(bool printMessages = true) {
+        public virtual void AcceptQuest(bool printMessages = true, bool resetStep = true) {
             //Debug.Log("Quest.AcceptQuest(" + MyName + ")");
             QuestSaveData questSaveData = saveManager.GetQuestSaveData(this);
-            questSaveData.questStep = 0;
+            if (resetStep == true) {
+                questSaveData.questStep = 0;
+            }
+            questSaveData.markedComplete = false;
+            questSaveData.turnedIn = false;
+            saveManager.SetQuestSaveData(DisplayName, questSaveData);
             if (steps.Count > 0) {
                 foreach (QuestObjective questObjective in steps[0].QuestObjectives) {
                     questObjective.OnAcceptQuest(this, printMessages);
@@ -471,7 +481,9 @@ namespace AnyRPG {
             if (isAchievement == false && printMessages == true) {
                 messageFeedManager.WriteMessage("Quest Accepted: " + DisplayName);
             }
-            if (!MarkedComplete) {
+            // this next statement seems unnecessary.  is it a holdover from when quests were cloned ?
+            // disable for now and see if anything breaks
+            //if (!MarkedComplete) {
                 // needs to be done here if quest wasn't auto-completed in checkcompletion
                 if (playerManager != null && playerManager.PlayerUnitSpawned == false) {
                     // STOP STUFF FROM REACTING WHEN PLAYER ISN'T SPAWNED
@@ -480,7 +492,7 @@ namespace AnyRPG {
                 SystemEventManager.TriggerEvent("OnQuestStatusUpdated", new EventParamProperties());
                 SystemEventManager.TriggerEvent("OnAfterQuestStatusUpdated", new EventParamProperties());
                 OnQuestStatusUpdated();
-            }
+            //}
         }
 
         public virtual void CheckCompletion(bool notifyOnUpdate = true, bool printMessages = true) {
@@ -492,7 +504,24 @@ namespace AnyRPG {
             bool questComplete = true;
 
             if (steps.Count > 0) {
-                for (int i = 0; i < steps.Count; i++) {
+                for (int i = CurrentStep; i < steps.Count; i++) {
+                    // advance current step to ensure quest tracker and log show proper objectives
+                    if (CurrentStep != i) {
+                        CurrentStep = i;
+
+                        // unsubscribe the previous step objectives
+                        foreach (QuestObjective questObjective in steps[i-1].QuestObjectives) {
+                            questObjective.OnAbandonQuest();
+                        }
+
+                        // reset save data from this step in case the next step contains an objective of the same type, but different amount
+                        saveManager.ResetQuestObjectiveSaveData(DisplayName);
+
+                        // subscribe the current step objectives
+                        foreach (QuestObjective questObjective in steps[i].QuestObjectives) {
+                            questObjective.OnAcceptQuest(this, printMessages);
+                        }
+                    }
                     foreach (QuestObjective questObjective in steps[i].QuestObjectives) {
                         if (!questObjective.IsComplete) {
                             questComplete = false;
@@ -509,7 +538,7 @@ namespace AnyRPG {
                 CheckMarkComplete(notifyOnUpdate, printMessages);
             } else {
                 // since this method only gets called as a result of a quest objective status updating, we need to notify for that at minimum
-                //Debug.Log("Quest.CheckCompletion(): about to notify for objective status updated");
+                //Debug.Log(DisplayName + ".Quest.CheckCompletion(): about to notify for objective status updated");
                 SystemEventManager.TriggerEvent("OnQuestObjectiveStatusUpdated", new EventParamProperties());
             }
         }

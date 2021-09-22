@@ -52,7 +52,6 @@ namespace AnyRPG {
                 questLog.ShowQuestGiverDescription(quest, questGiver);
             } else {
                 //Debug.Log("InteractionPanelQuestScript.Select(): has no dialog, or dialog is completed, opening questgiver window");
-                uIManager.questGiverWindow.OpenWindow();
                 questLog.ShowQuestGiverDescription(quest, questGiver);
             }
         }

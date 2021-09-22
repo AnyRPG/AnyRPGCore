@@ -40,16 +40,16 @@ MonoBehaviour:
   maxSkillRewards: 0
   skillRewardNames: []
   steps: []
-  collectObjectives: []
-  killObjectives: []
-  tradeSkillObjectives: []
-  abilityObjectives: []
-  useInteractableObjectives: []
-  questQuestObjectives: []
-  dialogObjectives: []
-  visitZoneObjectives: []
+  deprecatedCollectObjectives: []
+  deprecatedKillObjectives: []
+  deprecatedTradeSkillObjectives: []
+  deprecatedAbilityObjectives: []
+  deprecatedUseInteractableObjectives: []
+  deprecatedQuestQuestObjectives: []
+  deprecatedDialogObjectives: []
+  deprecatedVisitZoneObjectives: []
   prerequisiteConditions: []
   turnInItems: 0
-  allowRawComplete: 1
+  allowRawComplete: 0
   references:
     version: 1

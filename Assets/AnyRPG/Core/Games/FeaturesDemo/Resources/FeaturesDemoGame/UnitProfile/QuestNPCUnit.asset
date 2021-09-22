@@ -219,7 +219,7 @@ MonoBehaviour:
       endQuest: 1
       questName: Dialog Objective
     - startQuest: 1
-      endQuest: 0
+      endQuest: 1
       questName: Kill Things
     - startQuest: 1
       endQuest: 0
@@ -239,6 +239,12 @@ MonoBehaviour:
     - startQuest: 1
       endQuest: 1
       questName: Repeatable 2 Step
+    - startQuest: 1
+      endQuest: 1
+      questName: Repeatable 3 Step
+    - startQuest: 1
+      endQuest: 1
+      questName: Repeatable 5 Step
     questGiverProfileNames: []
   vendorConfig:
     interactionPanelTitle: 

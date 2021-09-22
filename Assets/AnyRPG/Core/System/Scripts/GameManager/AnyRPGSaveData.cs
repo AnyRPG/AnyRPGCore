@@ -70,11 +70,16 @@ namespace AnyRPG {
         public bool markedComplete;
         public bool inLog;
 
+        public List<QuestObjectiveSaveData> questObjectives;
+
+        /*
         public List<QuestObjectiveSaveData> killObjectives;
         public List<QuestObjectiveSaveData> useInteractableObjectives;
         public List<QuestObjectiveSaveData> collectObjectives;
         public List<QuestObjectiveSaveData> tradeSkillObjectives;
         public List<QuestObjectiveSaveData> abilityObjectives;
+        public List<QuestObjectiveSaveData> visitZoneObjectives;
+        */
     }
 
     [Serializable]
@@ -150,6 +155,7 @@ namespace AnyRPG {
     [Serializable]
     public struct QuestObjectiveSaveData {
 
+        public string ObjectiveType;
         public string MyName;
         public int MyAmount;
         //public int MyCurrentAmount;

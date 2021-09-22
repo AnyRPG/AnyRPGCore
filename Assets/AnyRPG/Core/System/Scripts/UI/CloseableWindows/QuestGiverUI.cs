@@ -235,15 +235,18 @@ namespace AnyRPG {
             ShowQuestsCommon(this.questGiver);
         }
 
+        /*
+         * not currently in use because questgiverUI gets quests from interaction window now
         public void UpdateSelected() {
             if (selectedQuestGiverQuestScript != null) {
                 ShowDescription(selectedQuestGiverQuestScript.MyQuest);
             }
         }
+        */
 
         private void UpdateButtons(Quest newQuest) {
             //Debug.Log("QuestGiverUI.UpdateButtons(" + newQuest.DisplayName + "). iscomplete: " + newQuest.IsComplete + ". HasQuest: " + questLog.HasQuest(newQuest.DisplayName));
-            if (newQuest.AllowRawComplete == true) {
+            if (newQuest.AllowRawComplete == true && newQuest.Steps.Count == 0) {
                 acceptButton.gameObject.SetActive(false);
                 completeButton.gameObject.SetActive(true);
                 completeButton.Button.enabled = true;
@@ -278,6 +281,10 @@ namespace AnyRPG {
         }
 
         public void HandleShowQuestGiverDescription(Quest quest, IQuestGiver questGiver) {
+            SetQuestGiver(questGiver);
+            if (uIManager.questGiverWindow.IsOpen == false) {
+                uIManager.questGiverWindow.OpenWindow();
+            }
             ShowDescription(quest, questGiver);
         }
 
@@ -288,7 +295,7 @@ namespace AnyRPG {
                 //Debug.Log("QuestGiverUI.ShowDescription(): quest is null, doing nothing");
                 return;
             }
-            SetQuestGiver(questGiver);
+            //SetQuestGiver(questGiver);
             //currentQuestName = quest.MyName;
             currentQuest = quest;
 
@@ -303,12 +310,13 @@ namespace AnyRPG {
                     return;
                 }
             }
-
+            /*
             if (!uIManager.questGiverWindow.IsOpen) {
                 uIManager.questGiverWindow.OpenWindow();
                 //ShowDescription(quest);
                 return;
             }
+            */
             /*
             if (SelectedQuestGiverQuestScript == null || SelectedQuestGiverQuestScript.MyQuest != quest) {
                 foreach (QuestGiverQuestScript questScript in questScripts) {
@@ -347,11 +355,11 @@ namespace AnyRPG {
             // clear the quest list so any quests left over from a previous time opening the window aren't shown
             //Debug.Log("QuestGiverUI.ClearQuests()");
             foreach (QuestNode questNode in questNodes) {
-                if (questNode.MyGameObject != null) {
+                if (questNode.GameObject != null) {
                     //Debug.Log("The questnode has a gameobject we need to clear");
-                    questNode.MyGameObject.transform.SetParent(null);
-                    objectPooler.ReturnObjectToPool(questNode.MyGameObject);
-                    questNode.MyGameObject = null;
+                    questNode.GameObject.transform.SetParent(null);
+                    objectPooler.ReturnObjectToPool(questNode.GameObject);
+                    questNode.GameObject = null;
                 }
             }
             // TRY THIS FOR FIX.  OTHERWISE REFERENCE CAN REMAIN TO DESTROYED QUESTSCRIPT
@@ -540,7 +548,7 @@ namespace AnyRPG {
         }
 
         public override void ReceiveOpenWindowNotification() {
-            //Debug.Log("QuestGiverUI.ReceiveOpenWindowNotification()");
+            base.ReceiveOpenWindowNotification();
             SetBackGroundColor(new Color32(0, 0, 0, (byte)(int)(PlayerPrefs.GetFloat("PopupWindowOpacity") * 255)));
 
             // clear first because open window handler could show a description
@@ -551,6 +559,9 @@ namespace AnyRPG {
 
             if (interactable != null) {
                 uIManager.questGiverWindow.SetWindowTitle(interactable.DisplayName + " (Quests)");
+            } else {
+                Debug.Log("QuestGiverUI.ReceiveOpenWindowNotification() interactable is null");
+                uIManager.questGiverWindow.SetWindowTitle("");
             }
         }
 

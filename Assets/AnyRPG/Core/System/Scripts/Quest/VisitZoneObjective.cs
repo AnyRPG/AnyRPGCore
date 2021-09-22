@@ -41,6 +41,10 @@ namespace AnyRPG {
             }
         }
 
+        /*
+         // disabled for now.  this should be an active objective, and not able to be completed if a zone was previously visited
+         // this allows creating quests where you have to travel back to a zone you've already been to and perform a new task
+
         public override void UpdateCompletionCount(bool printMessages = true) {
             base.UpdateCompletionCount(printMessages);
             SceneNode sceneNode = systemDataFactory.GetResource<SceneNode>(zoneName);
@@ -48,6 +52,7 @@ namespace AnyRPG {
                 CurrentAmount++;
             }
         }
+        */
 
         public override void OnAcceptQuest(Quest quest, bool printMessages = true) {
             //Debug.Log("UseInteractableObjective.OnAcceptQuest()");
@@ -60,7 +65,9 @@ namespace AnyRPG {
                 Debug.LogError("VisitZoneObjective.OnAcceptQuest(): Could not find scene node : " + zoneName + " while inititalizing a visit zone objective.  CHECK INSPECTOR");
                 return;
             }
-            UpdateCompletionCount(printMessages);
+            // disabled for now.  this should be an active objective, and not able to be completed if a zone was previously visited
+            // this allows creating quests where you have to travel back to a zone you've already been to and perform a new task
+            //UpdateCompletionCount(printMessages);
             objectiveSceneNode.OnVisitZone += AddCompletionAmount;
 
         }

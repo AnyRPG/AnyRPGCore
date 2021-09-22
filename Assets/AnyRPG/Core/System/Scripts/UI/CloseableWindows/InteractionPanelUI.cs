@@ -133,14 +133,14 @@ namespace AnyRPG {
                 // handle questgiver
                 if (_interactable is QuestGiverComponent) {
                     foreach (QuestNode questNode in (_interactable as QuestGiverComponent).Props.Quests) {
-                        Quest quest = questNode.MyQuest;
+                        Quest quest = questNode.Quest;
                         if (quest != null) {
                             //Debug.Log("InteractionPanelUI.ShowQuestsCommon(): quest: " + quest.MyName);
                             string displayText = string.Empty;
                             string questStatus = quest.GetStatus();
-                            if (questStatus == "complete" && questNode.MyEndQuest == true) {
+                            if (questStatus == "complete" && questNode.EndQuest == true) {
                                 displayText = "<color=yellow>?</color> ";
-                            } else if (questNode.MyStartQuest == true && questStatus == "available") {
+                            } else if (questNode.StartQuest == true && questStatus == "available") {
                                 displayText = "<color=yellow>!</color> ";
                             }
                             // only display complete and available quests here

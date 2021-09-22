@@ -83,7 +83,9 @@ namespace AnyRPG {
                 return;
             }
             BaseCharacter otherBaseCharacter = _characterUnit.BaseCharacter;
-            if (otherBaseCharacter != null && otherBaseCharacter.CharacterCombat != null && otherBaseCharacter.CharacterStats.IsAlive == true && otherBaseCharacter.Faction != null && baseCharacter != null && baseCharacter.Faction != null) {
+            // remove requirement for other character to have faction because a neutral character would not get attacked by hostile factions
+            //if (otherBaseCharacter != null && otherBaseCharacter.CharacterCombat != null && otherBaseCharacter.CharacterStats.IsAlive == true && otherBaseCharacter.Faction != null && baseCharacter != null && baseCharacter.Faction != null) {
+            if (otherBaseCharacter != null && otherBaseCharacter.CharacterCombat != null && otherBaseCharacter.CharacterStats.IsAlive == true && baseCharacter != null && baseCharacter.Faction != null) {
                 if (Faction.RelationWith(otherBaseCharacter, BaseCharacter) <= -1) {
                     //baseCharacter.CharacterCombat.MyAggroTable.AddToAggroTable(_characterUnit, -1);
                     baseCharacter.CharacterCombat.EnterCombat(targetInteractable);

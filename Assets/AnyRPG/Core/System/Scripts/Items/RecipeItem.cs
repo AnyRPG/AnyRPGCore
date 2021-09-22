@@ -30,7 +30,7 @@ namespace AnyRPG {
                     messageFeedManager.WriteMessage("You learned the recipe " + recipe.DisplayName);
                     Remove();
                 } else {
-                    messageFeedManager.WriteMessage("To learn this recipe, you must know " + recipe.CraftAbility + "!");
+                    messageFeedManager.WriteMessage("To learn this recipe, you must know " + recipe.CraftAbility.DisplayName + "!");
                 }
                 return returnValue;
             } else {
