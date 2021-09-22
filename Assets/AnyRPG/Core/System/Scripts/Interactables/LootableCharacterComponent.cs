@@ -163,23 +163,11 @@ namespace AnyRPG {
 
                 // cancel loot sparkle here because despawn takes a while
                 if (characterUnit.BaseCharacter.CharacterStats.StatusEffects.ContainsKey(SystemDataFactory.PrepareStringForMatch(systemConfigurationManager.LootSparkleEffect.DisplayName))) {
-                    //Debug.Log(gameObject.name + ".LootableCharacter.TryToDespawn(): found a sparkle effect: " + SystemDataFactory.PrepareStringForMatch(abilityEffect.MyName) + " and now cancelling it");
                     characterUnit.BaseCharacter.CharacterStats.StatusEffects[SystemDataFactory.PrepareStringForMatch(systemConfigurationManager.LootSparkleEffect.DisplayName)].CancelStatusEffect();
                 }
                 AdvertiseLootComplete();
                 Despawn();
-            }/* else {
-                // 2. moved here from below to prevent dead units that have been looted from re-displaying their health bar
-                HandlePrerequisiteUpdates();
-
-            }*/
-
-            // 1. this is going here because if we didn't successfully despawn, we should check for loot and display minimap icon
-            //HandlePrerequisiteUpdates();
-
-            // 3. re-enabled because this is going here because if we didn't successfully despawn, we should check for loot and display minimap icon or hide it (if no loot left)
-            // also, there is now code in the healthbar update that detects if the unit spawns dead, and if not, will not re-enable the healthbar
-            // having it in the else block caused units that had been looted and have no loot left, and are now on despawn countdown to still display the minimap icon
+            }
             HandlePrerequisiteUpdates();
         }
 
@@ -193,23 +181,19 @@ namespace AnyRPG {
         }
 
         public override bool CanInteract(bool processRangeCheck = false, bool passedRangeCheck = false, float factionValue = 0f, bool processNonCombatCheck = true) {
-            //Debug.Log(gameObject.name + ".LootableCharacter.canInteract(" + (source == null ? "null" : source.MyName) + ")");
 
             // you can't loot friendly characters
             if (factionValue > -1f ) {
                 return false;
             }
             // testing, this could include a a range check, and we want that to be processed, so send in a fake faction value
-            //if (base.CanInteract(processRangeCheck, passedRangeCheck, factionValue) == false || GetCurrentOptionCount() == 0) {
             if (base.CanInteract(processRangeCheck, passedRangeCheck, 0f, false) == false || GetCurrentOptionCount() == 0) {
-                //Debug.Log(gameObject.name + ".LootableCharacter.canInteract(): base.caninteract failed");
                 return false;
             }
 
             int lootCount = GetLootCount();
             // changed this next line to getcurrentoptioncount to cover the size of the loot table and aliveness checks.  This should prevent an empty window from popping up after the character is looted
             if (lootHolder.LootTableStates.Count > 0 && lootCount > 0) {
-                //Debug.Log(gameObject.name + ".LootableCharacter.canInteract(): isalive: false lootTable: " + lootTable.MyDroppedItems.Count);
                 return true;
             }
             return false;

@@ -463,17 +463,12 @@ namespace AnyRPG {
         }
 
         public void SaveResourcePowerData(AnyRPGSaveData anyRPGSaveData) {
-            //Debug.Log("Savemanager.SaveResourcePowerData()");
             foreach (PowerResource powerResource in playerManager.MyCharacter.CharacterStats.PowerResourceDictionary.Keys) {
-                //Debug.Log("Savemanager.SaveQuestData(): Getting quest data from SystemQuestManager: " + quest.MyName);
                 ResourcePowerSaveData resourcePowerData = new ResourcePowerSaveData();
                 resourcePowerData.ResourceName = powerResource.DisplayName;
                 resourcePowerData.amount = playerManager.MyCharacter.CharacterStats.PowerResourceDictionary[powerResource].currentValue;
                 anyRPGSaveData.resourcePowerSaveData.Add(resourcePowerData);
-                //Debug.Log("Savemanager.SaveQuestData(): " + questSaveData.MyName + ", turnedIn: " + questSaveData.turnedIn + ", inLog: " + questSaveData.inLog);
             }
-            //Debug.Log("Savemanager.SaveQuestData(): size: " + anyRPGSaveData.questSaveData.Count);
-
         }
 
         public void SetQuestSaveData(string questName, QuestSaveData questSaveData) {
@@ -588,62 +583,9 @@ namespace AnyRPG {
 
             anyRPGSaveData.questSaveData.Clear();
             foreach (QuestSaveData questSaveData in questSaveDataDictionary.Values) {
-                //Debug.Log("Savemanager.SaveQuestData(): Getting quest data from SystemQuestManager: " + quest.MyName);
-
                 QuestSaveData finalSaveData = questSaveData;
-
                 if (questObjectiveSaveDataDictionary.ContainsKey(questSaveData.QuestName)) {
                     
-                    /*
-                    // kill
-                    List<QuestObjectiveSaveData> killObjectiveSaveDataList = new List<QuestObjectiveSaveData>();
-                    if (questObjectiveSaveDataDictionary[questSaveData.MyName].ContainsKey(typeof(KillObjective))) {
-                        foreach (QuestObjectiveSaveData saveData in questObjectiveSaveDataDictionary[questSaveData.MyName][typeof(KillObjective)].Values) {
-                            killObjectiveSaveDataList.Add(saveData);
-                        }
-                    }
-
-                    // use interactable
-                    List<QuestObjectiveSaveData> useInteractableObjectiveSaveDataList = new List<QuestObjectiveSaveData>();
-                    if (questObjectiveSaveDataDictionary[questSaveData.MyName].ContainsKey(typeof(UseInteractableObjective))) {
-                        foreach (QuestObjectiveSaveData saveData in questObjectiveSaveDataDictionary[questSaveData.MyName][typeof(UseInteractableObjective)].Values) {
-                            useInteractableObjectiveSaveDataList.Add(saveData);
-                        }
-                    }
-
-                    // ability
-                    List<QuestObjectiveSaveData> abilityObjectiveSaveDataList = new List<QuestObjectiveSaveData>();
-                    if (questObjectiveSaveDataDictionary[questSaveData.MyName].ContainsKey(typeof(AbilityObjective))) {
-                        foreach (QuestObjectiveSaveData saveData in questObjectiveSaveDataDictionary[questSaveData.MyName][typeof(AbilityObjective)].Values) {
-                            abilityObjectiveSaveDataList.Add(saveData);
-                        }
-                    }
-
-                    // collect
-                    List<QuestObjectiveSaveData> collectObjectiveSaveDataList = new List<QuestObjectiveSaveData>();
-                    if (questObjectiveSaveDataDictionary[questSaveData.MyName].ContainsKey(typeof(CollectObjective))) {
-                        foreach (QuestObjectiveSaveData saveData in questObjectiveSaveDataDictionary[questSaveData.MyName][typeof(CollectObjective)].Values) {
-                            collectObjectiveSaveDataList.Add(saveData);
-                        }
-                    }
-
-                    // trade skill
-                    List<QuestObjectiveSaveData> tradeSkillObjectiveSaveDataList = new List<QuestObjectiveSaveData>();
-                    if (questObjectiveSaveDataDictionary[questSaveData.MyName].ContainsKey(typeof(TradeSkillObjective))) {
-                        foreach (QuestObjectiveSaveData saveData in questObjectiveSaveDataDictionary[questSaveData.MyName][typeof(TradeSkillObjective)].Values) {
-                            tradeSkillObjectiveSaveDataList.Add(saveData);
-                        }
-                    }
-
-                    // visit zone
-                    List<QuestObjectiveSaveData> visitZoneObjectiveSaveDataList = new List<QuestObjectiveSaveData>();
-                    if (questObjectiveSaveDataDictionary[questSaveData.MyName].ContainsKey(typeof(VisitZoneObjective))) {
-                        foreach (QuestObjectiveSaveData saveData in questObjectiveSaveDataDictionary[questSaveData.MyName][typeof(VisitZoneObjective)].Values) {
-                            visitZoneObjectiveSaveDataList.Add(saveData);
-                        }
-                    }
-                    */
-
                     List<QuestObjectiveSaveData> questObjectiveSaveDataList = new List<QuestObjectiveSaveData>();
                     foreach (string typeName in questObjectiveSaveDataDictionary[questSaveData.QuestName].Keys) {
                         foreach (QuestObjectiveSaveData saveData in questObjectiveSaveDataDictionary[questSaveData.QuestName][typeName].Values) {
@@ -653,14 +595,6 @@ namespace AnyRPG {
                     }
 
                     finalSaveData.questObjectives = questObjectiveSaveDataList;
-                    /*
-                    finalSaveData.killObjectives = killObjectiveSaveDataList;
-                    finalSaveData.collectObjectives = collectObjectiveSaveDataList;
-                    finalSaveData.useInteractableObjectives = useInteractableObjectiveSaveDataList;
-                    finalSaveData.tradeSkillObjectives = tradeSkillObjectiveSaveDataList;
-                    finalSaveData.abilityObjectives = abilityObjectiveSaveDataList;
-                    finalSaveData.visitZoneObjectives = visitZoneObjectiveSaveDataList;
-                    */
                 }
                 finalSaveData.inLog = questLog.HasQuest(questSaveData.QuestName);
                 anyRPGSaveData.questSaveData.Add(finalSaveData);
@@ -723,7 +657,6 @@ namespace AnyRPG {
                 saveData.DisplayName = (actionButton.Useable == null ? string.Empty : (actionButton.Useable as IDescribable).DisplayName);
                 saveData.savedName = (actionButton.SavedUseable == null ? string.Empty : (actionButton.SavedUseable as IDescribable).DisplayName);
                 saveData.isItem = (actionButton.Useable == null ? false : (actionButton.Useable is Item ? true : false));
-                //Debug.Log("Savemanager.SaveActionBarData(): saveData.MyName:" + saveData.MyName + "; saveData.isItem" + saveData.isItem);
                 anyRPGSaveData.actionBarSaveData.Add(saveData);
             }
         }
@@ -867,57 +800,12 @@ namespace AnyRPG {
                 foreach (QuestObjectiveSaveData questObjectiveSaveData in questSaveData.questObjectives) {
                     // perform null check to allow opening of older save files without null reference
                     if (questObjectiveSaveData.ObjectiveType != null && questObjectiveSaveData.ObjectiveType != string.Empty) {
-                        //Debug.Log("objectiveType: " + questObjectiveSaveData.ObjectiveType);
                         if (!objectiveDictionary.ContainsKey(questObjectiveSaveData.ObjectiveType)) {
                             objectiveDictionary.Add(questObjectiveSaveData.ObjectiveType, new Dictionary<string, QuestObjectiveSaveData>());
                         }
                         objectiveDictionary[questObjectiveSaveData.ObjectiveType].Add(questObjectiveSaveData.ObjectiveName, questObjectiveSaveData);
                     }
                 }
-
-                /*
-                // add kill objectives to dictionary
-                Dictionary<string, QuestObjectiveSaveData> tmpDictionary = new Dictionary<string, QuestObjectiveSaveData>();
-                foreach (QuestObjectiveSaveData questObjectiveSaveData in questSaveData.killObjectives) {
-                    tmpDictionary.Add(questObjectiveSaveData.MyName, questObjectiveSaveData);
-                }
-                objectiveDictionary.Add(typeof(KillObjective), tmpDictionary);
-
-                // add collect objectives to dictionary
-                tmpDictionary = new Dictionary<string, QuestObjectiveSaveData>();
-                foreach (QuestObjectiveSaveData questObjectiveSaveData in questSaveData.collectObjectives) {
-                    tmpDictionary.Add(questObjectiveSaveData.MyName, questObjectiveSaveData);
-                }
-                objectiveDictionary.Add(typeof(CollectObjective), tmpDictionary);
-
-                // add use interactable objectives to dictionary
-                tmpDictionary = new Dictionary<string, QuestObjectiveSaveData>();
-                foreach (QuestObjectiveSaveData questObjectiveSaveData in questSaveData.useInteractableObjectives) {
-                    tmpDictionary.Add(questObjectiveSaveData.MyName, questObjectiveSaveData);
-                }
-                objectiveDictionary.Add(typeof(UseInteractableObjective), tmpDictionary);
-
-                // add tradeskill objectives to dictionary
-                tmpDictionary = new Dictionary<string, QuestObjectiveSaveData>();
-                foreach (QuestObjectiveSaveData questObjectiveSaveData in questSaveData.tradeSkillObjectives) {
-                    tmpDictionary.Add(questObjectiveSaveData.MyName, questObjectiveSaveData);
-                }
-                objectiveDictionary.Add(typeof(TradeSkillObjective), tmpDictionary);
-
-                // add ability objectives to dictionary
-                tmpDictionary = new Dictionary<string, QuestObjectiveSaveData>();
-                foreach (QuestObjectiveSaveData questObjectiveSaveData in questSaveData.abilityObjectives) {
-                    tmpDictionary.Add(questObjectiveSaveData.MyName, questObjectiveSaveData);
-                }
-                objectiveDictionary.Add(typeof(AbilityObjective), tmpDictionary);
-
-                // add visitzone objectives to dictionary
-                tmpDictionary = new Dictionary<string, QuestObjectiveSaveData>();
-                foreach (QuestObjectiveSaveData questObjectiveSaveData in questSaveData.visitZoneObjectives) {
-                    tmpDictionary.Add(questObjectiveSaveData.MyName, questObjectiveSaveData);
-                }
-                objectiveDictionary.Add(typeof(VisitZoneObjective), tmpDictionary);
-                */
 
                 questObjectiveSaveDataDictionary.Add(questSaveData.QuestName, objectiveDictionary);
             }
@@ -961,17 +849,13 @@ namespace AnyRPG {
         public void LoadStatusEffectData(AnyRPGSaveData anyRPGSaveData) {
             //Debug.Log("Savemanager.LoadStatusEffectData()");
             foreach (StatusEffectSaveData statusEffectSaveData in anyRPGSaveData.statusEffectSaveData) {
-                //Debug.Log("Savemanager.LoadStatusEffectData(): applying " + statusEffectSaveData.MyName);
                 playerManager.MyCharacter.CharacterAbilityManager.ApplySavedStatusEffects(statusEffectSaveData);
             }
         }
 
         public void LoadEquippedBagData(AnyRPGSaveData anyRPGSaveData) {
             //Debug.Log("Savemanager.LoadEquippedBagData()");
-            //foreach (EquippedBagSaveData saveData in anyRPGSaveData.equippedBagSaveData) {
             inventoryManager.LoadEquippedBagData(anyRPGSaveData.equippedBagSaveData);
-            //}
-
         }
 
         public void LoadInventorySlotData(AnyRPGSaveData anyRPGSaveData) {
@@ -1010,27 +894,20 @@ namespace AnyRPG {
         public void LoadEquipmentData(AnyRPGSaveData anyRPGSaveData, CharacterEquipmentManager characterEquipmentManager) {
             //Debug.Log("Savemanager.LoadEquipmentData()");
             foreach (EquipmentSaveData equipmentSaveData in anyRPGSaveData.equipmentSaveData) {
-                //Debug.Log("Savemanager.LoadEquipmentData(): checking equipment");
                 if (equipmentSaveData.EquipmentName != string.Empty) {
-                    //Debug.Log("Savemanager.LoadEquipmentData(): checking equipment: using item: " + equipmentSaveData.MyName);
                     Equipment newItem = (systemItemManager.GetNewResource(equipmentSaveData.EquipmentName) as Equipment);
                     if (newItem != null) {
                         newItem.DisplayName = equipmentSaveData.DisplayName;
                         newItem.DropLevel = equipmentSaveData.dropLevel;
-                        //if (newItem.RandomItemQuality == true) {
                         if (equipmentSaveData.itemQuality != null && equipmentSaveData.itemQuality != string.Empty) {
                             newItem.ItemQuality = systemDataFactory.GetResource<ItemQuality>(equipmentSaveData.itemQuality);
                         }
-                        //newItem.ItemQuality = systemDataFactory.GetResource<ItemQuality>(equipmentSaveData.itemQuality);
-                        //}
                         if (equipmentSaveData.randomSecondaryStatIndexes != null) {
                             newItem.RandomStatIndexes = equipmentSaveData.randomSecondaryStatIndexes;
                             newItem.InitializeRandomStatsFromIndex();
                         }
                         if (characterEquipmentManager != null) {
                             characterEquipmentManager.Equip(newItem, null, false, false, false);
-                        } else {
-                            //Debug.Log("Issue with equipment manager on player");
                         }
                     }
                 }

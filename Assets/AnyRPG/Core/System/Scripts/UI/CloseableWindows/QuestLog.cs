@@ -27,15 +27,12 @@ namespace AnyRPG {
         }
 
         public void AcceptQuest(QuestSaveData questSaveData) {
-            //Debug.Log("QuestLog.LoadQuest(" + questSaveData.MyName + ")");
 
             Quest quest = systemDataFactory.GetResource<Quest>(questSaveData.QuestName);
             if (quest == null) {
-                //Debug.Log("QuestLog.LoadQuest(" + questSaveData.MyName + "): COULD NOT FIND QUEST!!!");
                 return;
             }
             if (!questSaveData.inLog) {
-                //Debug.Log("QuestLog.LoadQuest(" + questSaveData.MyName + "): quest is not in log. turnedIn: " + questSaveData.turnedIn);
                 return;
             }
 

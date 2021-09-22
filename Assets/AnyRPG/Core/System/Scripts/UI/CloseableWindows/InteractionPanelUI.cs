@@ -129,13 +129,11 @@ namespace AnyRPG {
             // going to just pop the first available interaction window for now and see how that feels
             //bool optionOpened = false;
             foreach (InteractableOptionComponent _interactable in currentInteractables) {
-                //Debug.Log("InteractionPanelUI.ShowInteractablesCommon(" + interactable.name + "): _interactable: " + _interactable.MyName + "; type: " + _interactable.GetType() + "; Checking for valid button");
                 // handle questgiver
                 if (_interactable is QuestGiverComponent) {
                     foreach (QuestNode questNode in (_interactable as QuestGiverComponent).Props.Quests) {
                         Quest quest = questNode.Quest;
                         if (quest != null) {
-                            //Debug.Log("InteractionPanelUI.ShowQuestsCommon(): quest: " + quest.MyName);
                             string displayText = string.Empty;
                             string questStatus = quest.GetStatus();
                             if (questStatus == "complete" && questNode.EndQuest == true) {
@@ -239,10 +237,7 @@ namespace AnyRPG {
         public void ShowInteractables(bool suppressAutoInteract = false) {
             //Debug.Log("InteractionPanelUI.ShowInteractables(" + suppressAutoInteract + ")");
             if (interactable != null) {
-                //Debug.Log("InteractionPanelUI.ShowInteractables() interactable: " + interactable.MyName);
                 ShowInteractablesCommon(interactable, suppressAutoInteract);
-            } else {
-                //Debug.Log("InteractionPanelUI.ShowInteractables() interactable IS NULL!!!");
             }
         }
 

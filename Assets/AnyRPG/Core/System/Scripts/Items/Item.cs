@@ -318,7 +318,6 @@ namespace AnyRPG {
         public virtual string GetDescription(ItemQuality usedItemQuality) {
 
             return string.Format("<color={0}>{1}</color>\n{2}", QualityColor.GetQualityColorString(usedItemQuality), DisplayName, GetSummary(usedItemQuality));
-            //return string.Format("<color=yellow>{0}</color>\n{1}", MyName, GetSummary());
         }
 
         public override string GetDescription() {
@@ -327,7 +326,6 @@ namespace AnyRPG {
         }
 
         public virtual string GetSummary(ItemQuality usedItemQuality) {
-            //Debug.Log("Quality is " + quality.ToString() + QualityColor.MyColors.ToString());
             string summaryString = string.Empty;
             if (characterClassRequirementList.Count > 0) {
                 string colorString = "red";

@@ -69,7 +69,6 @@ namespace AnyRPG {
         public CharacterEquipmentManager CharacterEquipmentManager { get => characterEquipmentManager; set => characterEquipmentManager = value; }
 
         public string CharacterName { get => characterName; }
-        public string MyName { get => CharacterName; }
 
         public UnitProfile UnitProfile { get => unitProfile; set => unitProfile = value; }
         public UnitType UnitType { get => unitType; set => unitType = value; }

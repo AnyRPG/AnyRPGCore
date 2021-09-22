@@ -50,7 +50,6 @@ namespace AnyRPG {
         }
 
         public override void OnAcceptQuest(Quest quest, bool printMessages = true) {
-            //Debug.Log("QuestQuestObjective.OnAcceptQuest(" + quest.MyName + ")");
             base.OnAcceptQuest(quest, printMessages);
             questObjective.OnQuestStatusUpdated += HandleQuestStatusUpdated;
             UpdateCompletionCount(printMessages);

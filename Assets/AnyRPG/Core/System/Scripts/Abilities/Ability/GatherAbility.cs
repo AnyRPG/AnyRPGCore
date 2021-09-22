@@ -27,7 +27,7 @@ namespace AnyRPG {
         }
 
         public override bool CanUseOn(Interactable target, IAbilityCaster sourceCharacter, bool performCooldownChecks = true, AbilityEffectContext abilityEffectContext = null, bool playerInitiated = false, bool performRangeCheck = true) {
-            //Debug.Log(DisplayName + ".GatherAbility.CanUseOn(" + (target == null ? "null" : target.name) + ", " + (sourceCharacter == null ? "null" : sourceCharacter.AbilityManager.MyName) + ")");
+            //Debug.Log(DisplayName + ".GatherAbility.CanUseOn(" + (target == null ? "null" : target.name) + ", " + (sourceCharacter == null ? "null" : sourceCharacter.AbilityManager.DisplayName) + ")");
             if (!base.CanUseOn(target, sourceCharacter, performCooldownChecks, abilityEffectContext, playerInitiated, performRangeCheck)) {
                 return false;
             }
@@ -41,7 +41,7 @@ namespace AnyRPG {
 
             GatheringNodeComponent gatheringNodeComponent = GatheringNodeComponent.GetGatheringNodeComponent(target);
             if (gatheringNodeComponent == null) {
-                //Debug.Log("You cannot use " + MyName + " on: " + target.name);
+                //Debug.Log("You cannot use " + DisplayName + " on: " + target.name);
                 if (playerInitiated) {
                     sourceCharacter.AbilityManager.ReceiveCombatMessage("Cannot cast " + resourceName + ". This ability must target a gathering node");
                 }

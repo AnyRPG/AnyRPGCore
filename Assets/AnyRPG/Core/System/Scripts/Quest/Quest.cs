@@ -463,7 +463,6 @@ namespace AnyRPG {
         }
 
         public virtual void AcceptQuest(bool printMessages = true, bool resetStep = true) {
-            //Debug.Log("Quest.AcceptQuest(" + MyName + ")");
             QuestSaveData questSaveData = saveManager.GetQuestSaveData(this);
             if (resetStep == true) {
                 questSaveData.questStep = 0;
@@ -620,7 +619,6 @@ namespace AnyRPG {
                 questStep.SetupScriptableObjects(this, systemGameManager);
             }
 
-            //Debug.Log("Quest.SetupScriptableObjects(): " + MyName + " about to initialize prerequisiteConditions");
             foreach (PrerequisiteConditions conditions in prerequisiteConditions) {
                 conditions.SetupScriptableObjects(systemGameManager, this);
             }

@@ -22,10 +22,8 @@ namespace AnyRPG {
         private SystemEventManager systemEventManager = null;
 
         public void UpdateStatus(bool notify = true) {
-            //Debug.Log("TradeSkillPrerequisite.UpdateStatus(): " + (prerequisiteSkill != null ? prerequisiteSkill.MyName : "null") + "; originalResult: " + prerequisiteMet);
             bool originalResult = prerequisiteMet;
             bool checkResult = playerManager.MyCharacter.CharacterSkillManager.HasSkill(prerequisiteSkill);
-            //Debug.Log("TradeSkillPrerequisite.UpdateStatus(): checkResult: " + checkResult);
             if (checkResult != originalResult) {
                 prerequisiteMet = checkResult;
                 if (notify == true) {
@@ -39,7 +37,6 @@ namespace AnyRPG {
         }
 
         public virtual bool IsMet(BaseCharacter baseCharacter) {
-            //Debug.Log("TradeSkillPrerequisite.IsMet()");
             return prerequisiteMet;
         }
 

@@ -292,11 +292,8 @@ namespace AnyRPG {
             //Debug.Log("QuestGiverUI.ShowDescription(" + quest.DisplayName + ", " + (questGiver == null ? "null" : questGiver.ToString()) + ")");
 
             if (quest == null) {
-                //Debug.Log("QuestGiverUI.ShowDescription(): quest is null, doing nothing");
                 return;
             }
-            //SetQuestGiver(questGiver);
-            //currentQuestName = quest.MyName;
             currentQuest = quest;
 
             if (quest.HasOpeningDialog == true) {
@@ -472,7 +469,6 @@ namespace AnyRPG {
                     return;
                 }
                 foreach (RewardButton rewardButton in questDetailsArea.GetHighlightedItemRewardIcons()) {
-                    //Debug.Log("rewardButton.MyDescribable: " + rewardButton.MyDescribable.MyName);
                     if (rewardButton.Describable != null && rewardButton.Describable.DisplayName != null && rewardButton.Describable.DisplayName != string.Empty) {
                         Item newItem = systemItemManager.GetNewResource(rewardButton.Describable.DisplayName);
                         if (newItem != null) {

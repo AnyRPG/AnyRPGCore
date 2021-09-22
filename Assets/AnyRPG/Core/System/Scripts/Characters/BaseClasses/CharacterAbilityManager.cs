@@ -417,8 +417,6 @@ namespace AnyRPG {
             base.GenerateAgro(targetCharacterUnit, usedAgroValue);
             if (baseCharacter != null && baseCharacter.UnitController != null && baseCharacter.UnitController.CharacterUnit != null) {
                 AddToAggroTable(baseCharacter.UnitController.CharacterUnit, usedAgroValue);
-                //AgroNode = targetCharacterUnit.MyCharacter.MyCharacterCombat.MyAggroTable.MyTopAgroNode;
-                //Debug.Log("StatusEffect.Cast(" + source.name + ", " + (target ? target.name : "null") + ") topNode agro value: " + AgroNode.aggroValue + "; target: " + AgroNode.aggroTarget.MyName);
                 targetCharacterUnit.BaseCharacter.CharacterCombat.AggroTable.LockAgro();
             }
 
@@ -1030,19 +1028,11 @@ namespace AnyRPG {
             if (!HasAbility(newAbility) && newAbility.RequiredLevel <= BaseCharacter.CharacterStats.Level) {
                 abilityList[SystemDataFactory.PrepareStringForMatch(newAbility.DisplayName)] = newAbility;
                 if (isAutoAttack) {
-                    //Debug.Log(gameObject.name + ".CharacterAbilityManager.LearnAbility(" + (newAbility == null ? "null" : newAbility.MyName) + "): setting auto-attack ability");
                     autoAttackAbility = newAbility;
                 }
                 OnLearnAbility(newAbility);
                 return true;
-            }/* else {
-                if (HasAbility(newAbility)) {
-                    //Debug.Log(gameObject.name + ".CharacterAbilityManager.LearnAbility(): already had ability");
-                }
-                if (!(newAbility.MyRequiredLevel <= MyBaseCharacter.MyCharacterStats.MyLevel)) {
-                    //Debug.Log(gameObject.name + ".CharacterAbilityManager.LearnAbility(): level is too low");
-                }
-            }*/
+            }
             return false;
         }
 
@@ -1760,7 +1750,6 @@ namespace AnyRPG {
                 }
             }
 
-            //Debug.Log(baseAbility.MyName + ".Cast(): Setting GCD for length: " + animationLength);
             baseAbility.ProcessGCDManual(baseCharacter, Mathf.Min(animationLength, abilityCoolDown));
             BeginAbilityCoolDown(baseAbility, Mathf.Max(animationLength, abilityCoolDown));
         }

@@ -89,9 +89,7 @@ namespace AnyRPG {
                             (inventoryManager.GetItemCount(loot.MyItem.DisplayName) == 0 &&
                             playerManager.MyCharacter.CharacterEquipmentManager.HasEquipment(loot.MyItem.DisplayName) == false))) {
                             validLoot.Add(loot);
-                        }/* else {
-                            Debug.Log(MyName + ".LootTable.RollLoot() item: " + loot.MyItem);
-                        }*/
+                        }
                     }
 
                     if (lootGroup.GuaranteedDrop == true) {

@@ -57,13 +57,11 @@ namespace AnyRPG {
                 return useable;
             }
             set {
-                //Debug.Log(gameObject.name + GetInstanceID() + ".ActionButton.Useable = " + (useable == null ? "null" : useable.MyName) + "; new = " + value);
                 if (value == null) {
                     useable = value;
                     return;
                 }
                 useable = value.GetFactoryUseable();
-                //UpdateVisual(true);
             }
         }
         public Image CoolDownIcon { get => coolDownIcon; set => coolDownIcon = value; }
@@ -97,12 +95,10 @@ namespace AnyRPG {
         }
 
         public void OnClickFromButton() {
-            //Debug.Log("ActionButton.OnClickFromButton(): useable: " + (Useable != null ? Useable.MyName : "null"));
             OnClick();
         }
 
         public void OnClick(bool fromKeyBind = false) {
-            //Debug.Log(gameObject.name + GetInstanceID() +  ".ActionButton.OnClick(" + fromKeyBind + "): useable: " + (Useable != null ? Useable.MyName : "null"));
             // this may seem like duplicate with the next method, but right now it is used to simulate click events when keypresses happen
 
             if (!fromKeyBind) {
@@ -122,7 +118,6 @@ namespace AnyRPG {
         }
 
         public void OnPointerClick(PointerEventData eventData) {
-            //Debug.Log(gameObject.name + GetInstanceID() + ".ActionButton.OnPointerClick(): useable: " + (Useable != null ? Useable.MyName : "null"));
             if (playerManager.ActiveUnitController != null) {
                 if (playerManager.ActiveUnitController.ControlLocked == true) {
                     return;

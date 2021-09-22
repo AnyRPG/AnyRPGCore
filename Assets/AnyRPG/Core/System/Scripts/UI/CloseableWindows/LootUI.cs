@@ -82,7 +82,6 @@ namespace AnyRPG {
         }
 
         public void TakeLoot(LootDrop lootDrop) {
-            //Debug.Log("LootUI.TakeLoot(" + loot.MyName + ")");
 
             lootManager.Pages[pageIndex].Remove(lootDrop);
             lootManager.RemoveFromDroppedItems(lootDrop);

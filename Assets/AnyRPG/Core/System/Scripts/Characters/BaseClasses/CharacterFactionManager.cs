@@ -96,38 +96,24 @@ namespace AnyRPG {
             if (faction == null) {
                 return false;
             }
-            //Debug.Log(gameObject.name + ".CharacterFactionManager.HasReputationModifer(" + faction.DisplayName + "): searching for reputation modifer");
 
             // checking dictionary first
-            //Debug.Log(gameObject.name + ".CharacterFactionManager.HasReputationModifer(" + faction.DisplayName + "): checking local disposition dictionary");
             List<FactionDisposition> usedDictionary = DispositionDictionary;
             if (baseCharacter.UnitController != null && baseCharacter.UnitController.UnderControl == true) {
                 usedDictionary = baseCharacter.UnitController.MasterUnit.CharacterFactionManager.DispositionDictionary;
             }
             foreach (FactionDisposition factionDisposition in usedDictionary) {
                 if (factionDisposition.Faction == faction) {
-                    //Debug.Log(baseCharacter.gameObject.name + ".CharacterFactionManager.HasReputationModifer(" + faction.DisplayName + "): name matched a disposition in local dictionary");
                     return true;
                 }
             }
 
             // checking status effects next
-            //Debug.Log(gameObject.name + ".CharacterFactionManager.HasReputationModifer(" + faction.DisplayName + "): no match disposition dictionary, checking status effect buffs");
             if (baseCharacter != null && baseCharacter.CharacterStats != null && baseCharacter.CharacterStats.StatusEffects != null) {
                 foreach (StatusEffectNode statusEffectNode in baseCharacter.CharacterStats.StatusEffects.Values) {
-                    /*
-                    if (statusEffectNode.MyStatusEffect == null) {
-                        Debug.LogError("STATUS EFFECT IS NULL");
-                    }
-                    if (statusEffectNode.MyStatusEffect.MyFactionModifiers == null) {
-                        Debug.LogError("FACTION MODIFIERS IS NULL");
-                    }
-                    */
                     if (statusEffectNode != null && statusEffectNode.StatusEffect != null && statusEffectNode.StatusEffect.FactionModifiers != null) {
                         foreach (FactionDisposition factionDisposition in statusEffectNode.StatusEffect.FactionModifiers) {
-                            //Debug.Log(gameObject.name + "Faction.RelationWith(" + faction.DisplayName + "): " + statusEffect.MyName + " had disposition: " + factionDisposition.factionName + ": " + factionDisposition.disposition);
                             if (factionDisposition.Faction == faction) {
-                                //Debug.Log(baseCharacter.gameObject.name + "Faction.RelationWith(" + faction.DisplayName + "): found special disposition in status effects and it matches the requested faction: " + factionDisposition.Faction.DisplayName + ": " + factionDisposition.disposition);
                                 return true;
                             }
                         }
@@ -135,7 +121,6 @@ namespace AnyRPG {
                     }
                 }
             }
-            //Debug.Log(gameObject.name + ".CharacterFactionManager.HasReputationModifer(" + faction.DisplayName + "): no match disposition dictionary or buffs, return false");
             return false;
         }
 
@@ -159,9 +144,7 @@ namespace AnyRPG {
                 // checking status effect disposition modifiers
                 foreach (StatusEffectNode statusEffectNode in baseCharacter.CharacterStats.StatusEffects.Values) {
                     foreach (FactionDisposition factionDisposition in statusEffectNode.StatusEffect.FactionModifiers) {
-                        //Debug.Log(gameObject.name + "Faction.RelationWith(" + faction.DisplayName + "): " + statusEffect.MyName + " had disposition: " + factionDisposition.factionName + ": " + factionDisposition.disposition);
                         if (factionDisposition.Faction == faction) {
-                            //Debug.Log(gameObject.name + "Faction.RelationWith(" + faction.DisplayName + "): found special disposition in status effects and it matches the requested faction: " + factionDisposition.factionName + ": " + factionDisposition.disposition);
                             return factionDisposition.disposition;
                         }
                     }

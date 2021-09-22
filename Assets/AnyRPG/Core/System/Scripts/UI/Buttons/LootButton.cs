@@ -62,8 +62,6 @@ namespace AnyRPG {
 
             bool result = LootDrop.TakeLoot();
             if (result) {
-                //Debug.Log("LootButton.TakeLoot(): added item to inventory");
-                //Debug.Log("LootUI.TakeAllLoot(): Loot drop type is: " + MyLoot.GetType() + " and name is " + MyLoot.MyName);
                 LootDrop.AfterLoot();
 
                 gameObject.SetActive(false);

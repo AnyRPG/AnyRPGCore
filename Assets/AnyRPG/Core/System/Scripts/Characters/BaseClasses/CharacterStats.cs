@@ -290,14 +290,10 @@ namespace AnyRPG {
 
         public void HandleCharacterUnitSpawn() {
             foreach (StatusEffectNode statusEffectNode in StatusEffects.Values) {
-                //Debug.Log("PlayerStats.HandlePlayerUnitSpawn(): re-applying effect object for: " + statusEffectNode.MyStatusEffect.MyName);
                 if (statusEffectNode.StatusEffect.GetPrefabProfileList(baseCharacter).Count > 0
                     && (statusEffectNode.PrefabObjects == null || statusEffectNode.PrefabObjects.Count == 0)) {
                     statusEffectNode.PrefabObjects = statusEffectNode.StatusEffect.RawCast(baseCharacter, baseCharacter.UnitController, baseCharacter.UnitController, new AbilityEffectContext(baseCharacter));
-                }/* else {
-                    statusEffectNode.StatusEffect.RawCast(baseCharacter, baseCharacter.UnitController, baseCharacter.UnitController, new AbilityEffectContext(baseCharacter));
-                }*/
-                
+                }
             }
         }
 
@@ -1275,10 +1271,8 @@ namespace AnyRPG {
             //List<string> RemoveList = new List<string>();
             List<StatusEffectNode> statusEffectNodes = new List<StatusEffectNode>();
             foreach (StatusEffectNode statusEffectNode in StatusEffects.Values) {
-                //Debug.Log(gameObject.name + ".CharacterStatus.ClearInvalidStatusEffects(): checking statusEffectNode: " + statusEffectNode.MyStatusEffect.MyName);
                 // TODO : pass in the original source caster of the status effect for more accurate character based check
                 if (statusEffectNode.StatusEffect.GetTargetOptions(baseCharacter).RequireDeadTarget == true && statusEffectNode.StatusEffect.GetTargetOptions(baseCharacter).RequireLiveTarget == false) {
-                    //Debug.Log(gameObject.name + ".CharacterStatus.ClearInvalidStatusEffects(): checking statusEffectNode: " + statusEffectNode.MyStatusEffect.MyName + " requires dead target");
                     statusEffectNodes.Add(statusEffectNode);
                 }
             }
@@ -1298,29 +1292,19 @@ namespace AnyRPG {
             } else {
                 statusEffectNode.SetRemainingDuration(statusEffect.Duration);
             }
-            //Debug.Log("duration: " + duration);
-            //nextTickTime = remainingDuration - tickRate;
-            //DateTime nextTickTime2 = System.DateTime.Now + tickRate;
-            //int milliseconds = (int)((statusEffect.MyTickRate - (int)statusEffect.MyTickRate) * 1000);
-            //Debug.Log(abilityEffectName + ".StatusEffect.Tick() milliseconds: " + milliseconds);
-            //TimeSpan tickRateTimeSpan = new TimeSpan(0, 0, 0, (statusEffect.MyTickRate == 0f ? (int)statusEffect.MyDuration + 1 : (int)statusEffect.MyTickRate), milliseconds);
-            //Debug.Log(abilityEffectName + ".StatusEffect.Tick() tickRateTimeSpan: " + tickRateTimeSpan);
             if (statusEffect.CastZeroTick) {
                 if (baseCharacter != null && baseCharacter.UnitController != null && characterSource != null) {
                     statusEffect.CastTick(characterSource, baseCharacter.UnitController, abilityEffectContext);
                 }
             }
-            //Debug.Log(abilityEffectName + ".StatusEffect.Tick() nextTickTime: " + nextTickTime);
 
             while ((statusEffect.LimitedDuration == false || statusEffect.ClassTrait == true || statusEffectNode.GetRemainingDuration() > 0f) && baseCharacter != null) {
                 yield return null;
-                //Debug.Log(gameObject.name + ".CharacterStats.Tick(): statusEffect: " + statusEffect.MyName + "; remaining: " + statusEffect.GetRemainingDuration());
                 statusEffectNode.SetRemainingDuration(statusEffectNode.GetRemainingDuration() - Time.deltaTime);
                 elapsedTime += Time.deltaTime;
                 // check for tick first so we can do final tick;
 
                 if (elapsedTime >= statusEffect.TickRate && statusEffect.TickRate != 0) {
-                    //Debug.Log(DisplayName + ".StatusEffect.Tick() TickTime!");
                     if (baseCharacter != null && baseCharacter.UnitController != null && characterSource != null) {
                         statusEffect.CastTick(characterSource, baseCharacter.UnitController, abilityEffectContext);
                         elapsedTime -= statusEffect.TickRate;
@@ -1328,7 +1312,6 @@ namespace AnyRPG {
                 }
                 statusEffectNode.UpdateStatusNode();
             }
-            //Debug.Log(gameObject.name + ".CharacterStats.Tick(): statusEffect: " + statusEffect.MyName + "; remaining: " + statusEffect.GetRemainingDuration());
             if (baseCharacter != null) {
                 if (characterSource != null & baseCharacter.UnitController != null) {
                     statusEffect.CastComplete(characterSource, baseCharacter.UnitController, abilityEffectContext);
@@ -1336,7 +1319,6 @@ namespace AnyRPG {
             }
 
             if (statusEffects.ContainsKey(SystemDataFactory.PrepareStringForMatch(statusEffect.DisplayName))) {
-                //Debug.Log(gameObject.name + ".CharacterStats.Tick(): statusEffect: " + statusEffect.MyName + "; cancelling ");
                 statusEffects[SystemDataFactory.PrepareStringForMatch(statusEffect.DisplayName)].CancelStatusEffect();
             }
         }

@@ -1318,7 +1318,6 @@ namespace AnyRPG {
                 // get random attack if no strategy exists
                 BaseAbility validAttackAbility = characterUnit.BaseCharacter.CharacterCombat.GetMeleeAbility();
                 if (validAttackAbility != null) {
-                    //Debug.Log(gameObject.name + ".AIController.CanGetValidAttack(" + beginAttack + "): Got valid attack ability: " + validAttackAbility.MyName);
                     return true;
                 }
             }
@@ -1715,13 +1714,11 @@ namespace AnyRPG {
                 // get random attack if no strategy exists
                 BaseAbility validAttackAbility = characterUnit.BaseCharacter.CharacterCombat.GetValidAttackAbility();
                 if (validAttackAbility != null) {
-                    //Debug.Log(gameObject.name + ".AIController.CanGetValidAttack(" + beginAttack + "): Got valid attack ability: " + validAttackAbility.MyName);
                     characterUnit.BaseCharacter.CharacterAbilityManager.BeginAbility(validAttackAbility);
                     return true;
                 }
             }
 
-            //Debug.Log(gameObject.name + ".CanGetValidAttack(): return false");
             return false;
         }
 

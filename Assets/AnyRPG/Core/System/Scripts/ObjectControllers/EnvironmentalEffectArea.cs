@@ -64,8 +64,6 @@ namespace AnyRPG {
             List<AOETargetNode> validTargets = GetValidTargets();
             foreach (AOETargetNode validTarget in validTargets) {
                 foreach (AbilityEffect abilityEffect in abilityEffects) {
-                    //Debug.Log(gameObject.name + ".EnvironmentalEffectArea.PerformAbilityEffects(): casting " + abilityEffect.MyName);
-
                     abilityEffect.Cast(this, validTarget.targetGameObject, null, new AbilityEffectContext());
                 }
             }

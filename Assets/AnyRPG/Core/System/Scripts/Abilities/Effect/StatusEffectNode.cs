@@ -48,7 +48,6 @@ namespace AnyRPG {
 
         //public void Setup(CharacterStats characterStats, StatusEffect _statusEffect, Coroutine newCoroutine) {
         public void Setup(CharacterStats characterStats, StatusEffect statusEffect, AbilityEffectContext abilityEffectContext) {
-            //Debug.Log("StatusEffectNode.Setup(): " + _statusEffect.MyName);
             this.characterStats = characterStats;
             this.statusEffect = statusEffect;
             this.abilityEffectContext = abilityEffectContext;
@@ -109,7 +108,6 @@ namespace AnyRPG {
                         stackText = currentStacks.ToString();
                     }
                     if (statusEffect.LimitedDuration == true && statusEffect.ClassTrait == false) {
-                        //Debug.Log(GetInstanceID() + MyName + ".StatusEffect.UpdateStatusNode(): limted");
                         float printedDuration = (int)remainingDuration;
                         if (printedDuration < 60 && printedDuration >= 0) {
                             // less than 1 minute

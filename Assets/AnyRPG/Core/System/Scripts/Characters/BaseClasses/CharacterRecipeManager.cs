@@ -35,11 +35,8 @@ namespace AnyRPG {
         }
 
         public virtual void UpdateRecipeList(int newLevel) {
-            //Debug.Log("CharacterRecipeManager.UpdateRecipeList(" + newLevel + ")");
             foreach (Recipe recipe in systemDataFactory.GetResourceList<Recipe>()) {
-                //Debug.Log("CharacterRecipeManager.UpdateRecipeList(" + newLevel + "): evaluating recipe: " + recipe.MyName);
                 foreach (Skill skill in baseCharacter.CharacterSkillManager.MySkillList.Values) {
-                    //Debug.Log("CharacterRecipeManager.UpdateRecipeList(" + newLevel + "): recipe: " + recipe.MyName + "evaluating skill: " + skill.MyName);
                     if (!HasRecipe(recipe) && recipe.RequiredLevel <= newLevel && recipe.AutoLearn == true && skill.MyAbilityList.Contains(recipe.CraftAbility)) {
                         LearnRecipe(recipe);
                     }
@@ -48,7 +45,6 @@ namespace AnyRPG {
         }
 
         public bool HasRecipe(Recipe checkRecipe) {
-            //Debug.Log(gameObject.name + ".CharacterRecipeManager.HasRecipe(" + checkRecipe.MyName + ")");
             if (recipeList.ContainsValue(checkRecipe)) {
                 return true;
             }

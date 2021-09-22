@@ -456,7 +456,6 @@ namespace AnyRPG {
         public float HandleAbility(AnimationClip animationClip, BaseAbility baseAbility, BaseCharacter targetCharacterUnit, AbilityEffectContext abilityEffectContext) {
             //Debug.Log(unitController.gameObject.name + ".CharacterAnimator.HandleAbility(" + baseAbility.DisplayName + ")");
             if (animator == null) {
-                //Debug.Log(gameObject.name + ".CharacterAnimator.HandleAbility(" + baseAbility.MyName + ") ANIMATOR IS NULL!!!");
                 return 0f;
             }
             unitController.CharacterUnit.BaseCharacter.CharacterCombat.SwingTarget = targetCharacterUnit;
@@ -479,7 +478,6 @@ namespace AnyRPG {
             float speedNormalizedAnimationLength = 1f;
             if (unitController != null && unitController.CharacterUnit.BaseCharacter != null && unitController.CharacterUnit.BaseCharacter.CharacterStats != null) {
                 speedNormalizedAnimationLength = (1f / (unitController.CharacterUnit.BaseCharacter.CharacterStats.GetSpeedModifiers() / 100f)) * animationLength;
-                //Debug.Log(gameObject.name + ".CharacterAnimator.HandleAbility(" + baseAbility.MyName + "): speedNormalizedAnimationLength: " + speedNormalizedAnimationLength + "; length: " + animationLength);
             }
             SetAnimationSpeed(unitController.CharacterUnit.BaseCharacter.CharacterStats.GetSpeedModifiers() / 100f);
 

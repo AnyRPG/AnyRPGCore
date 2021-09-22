@@ -116,9 +116,7 @@ namespace AnyRPG {
         }
 
         public void RemoveItem(Item item) {
-            //Debug.Log("SlotScript.RemoveItem(" + item.MyName + ")");
             if (!IsEmpty) {
-                //Debug.Log("slotscript getting ready to remove item: " + item.GetInstanceID().ToString() + "; MyItems count: " + MyItems.Count.ToString());
                 MyItems.Remove(item);
                 UpdateSlot();
                 inventoryManager.OnItemCountChanged(item);
