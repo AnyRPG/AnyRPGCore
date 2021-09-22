@@ -199,7 +199,7 @@ namespace AnyRPG {
             // priority open - completed quest first
             foreach (InteractionPanelQuestScript questScript in questScripts) {
                 //Debug.Log("InteractionPanelUI.ShowInteractablesCommon(" + interactable.name + "): Checking questScript for complete quest");
-                if (questScript.Quest.IsComplete) {
+                if (questScript.Quest.MarkedComplete) {
                     //Debug.Log("InteractionPanelUI.ShowInteractablesCommon(" + interactable.name + "): Checking questScript: quest is complete, selecting");
                     questScript.Select();
                     //optionOpened = true;

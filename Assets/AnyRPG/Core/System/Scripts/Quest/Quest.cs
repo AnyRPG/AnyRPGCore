@@ -207,11 +207,9 @@ namespace AnyRPG {
                 */
 
                 if (steps.Count > 0) {
-                    for (int i = 0; i < steps.Count; i++) {
-                        foreach (QuestObjective questObjective in steps[i].QuestObjectives) {
-                            if (!questObjective.IsComplete) {
-                                return false;
-                            }
+                    foreach (QuestObjective questObjective in steps[CurrentStep].QuestObjectives) {
+                        if (!questObjective.IsComplete) {
+                            return false;
                         }
                     }
                 }
@@ -322,6 +320,7 @@ namespace AnyRPG {
             //Debug.Log("Quest.RemoveQuest(): " + DisplayName + " calling OnQuestStatusUpdated()");
 
             // reset the quest objective save data so any completed portion is reset in case the quest is picked back up
+            MarkedComplete = false;
             saveManager.ResetQuestObjectiveSaveData(DisplayName);
 
             OnAbandonQuest();
