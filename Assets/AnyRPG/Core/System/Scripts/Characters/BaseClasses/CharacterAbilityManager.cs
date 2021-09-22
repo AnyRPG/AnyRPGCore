@@ -872,6 +872,10 @@ namespace AnyRPG {
         }
 
         public void ApplySavedStatusEffects(StatusEffectSaveData statusEffectSaveData) {
+            // don't crash when loading old save data
+            if (statusEffectSaveData.StatusEffectName == null || statusEffectSaveData.StatusEffectName == string.Empty) {
+                return;
+            }
             ApplyStatusEffect(systemDataFactory.GetResource<AbilityEffect>(statusEffectSaveData.StatusEffectName), statusEffectSaveData.remainingSeconds);
         }
 

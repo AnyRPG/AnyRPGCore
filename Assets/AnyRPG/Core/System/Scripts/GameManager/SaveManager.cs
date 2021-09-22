@@ -792,6 +792,11 @@ namespace AnyRPG {
             questSaveDataDictionary.Clear();
             questObjectiveSaveDataDictionary.Clear();
             foreach (QuestSaveData questSaveData in anyRPGSaveData.questSaveData) {
+
+                if (questSaveData.QuestName == null || questSaveData.QuestName == string.Empty) {
+                    // don't load invalid quest data
+                    continue;
+                }
                 questSaveDataDictionary.Add(questSaveData.QuestName, questSaveData);
 
                 Dictionary<string, Dictionary<string, QuestObjectiveSaveData>> objectiveDictionary = new Dictionary<string, Dictionary<string, QuestObjectiveSaveData>>();
@@ -820,28 +825,36 @@ namespace AnyRPG {
         public void LoadDialogData(AnyRPGSaveData anyRPGSaveData) {
             dialogSaveDataDictionary.Clear();
             foreach (DialogSaveData dialogSaveData in anyRPGSaveData.dialogSaveData) {
-                dialogSaveDataDictionary.Add(dialogSaveData.DialogName, dialogSaveData);
+                if (dialogSaveData.DialogName != null && dialogSaveData.DialogName != string.Empty) {
+                    dialogSaveDataDictionary.Add(dialogSaveData.DialogName, dialogSaveData);
+                }
             }
         }
 
         public void LoadBehaviorData(AnyRPGSaveData anyRPGSaveData) {
             behaviorSaveDataDictionary.Clear();
             foreach (BehaviorSaveData behaviorSaveData in anyRPGSaveData.behaviorSaveData) {
-                behaviorSaveDataDictionary.Add(behaviorSaveData.BehaviorName, behaviorSaveData);
+                if (behaviorSaveData.BehaviorName != null && behaviorSaveData.BehaviorName != string.Empty) {
+                    behaviorSaveDataDictionary.Add(behaviorSaveData.BehaviorName, behaviorSaveData);
+                }
             }
         }
 
         public void LoadSceneNodeData(AnyRPGSaveData anyRPGSaveData) {
             sceneNodeSaveDataDictionary.Clear();
             foreach (SceneNodeSaveData sceneNodeSaveData in anyRPGSaveData.sceneNodeSaveData) {
-                sceneNodeSaveDataDictionary.Add(sceneNodeSaveData.SceneName, sceneNodeSaveData);
+                if (sceneNodeSaveData.SceneName != null && sceneNodeSaveData.SceneName != string.Empty) {
+                    sceneNodeSaveDataDictionary.Add(sceneNodeSaveData.SceneName, sceneNodeSaveData);
+                }
             }
         }
         
         public void LoadCutsceneData(AnyRPGSaveData anyRPGSaveData) {
             cutsceneSaveDataDictionary.Clear();
             foreach (CutsceneSaveData cutsceneSaveData in anyRPGSaveData.cutsceneSaveData) {
-                cutsceneSaveDataDictionary.Add(cutsceneSaveData.CutsceneName, cutsceneSaveData);
+                if (cutsceneSaveData.CutsceneName != null && cutsceneSaveData.CutsceneName != string.Empty) {
+                    cutsceneSaveDataDictionary.Add(cutsceneSaveData.CutsceneName, cutsceneSaveData);
+                }
             }
         }
         

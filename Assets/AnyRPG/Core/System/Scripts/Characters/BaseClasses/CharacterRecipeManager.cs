@@ -66,6 +66,11 @@ namespace AnyRPG {
 
         public void LoadRecipe(string recipeName) {
             //Debug.Log("CharacterRecipeManager.LoadRecipe(" + recipeName + ")");
+
+            // don't crash when loading old save data
+            if (recipeName == null || recipeName == string.Empty) {
+                return;
+            }
             string keyName = SystemDataFactory.PrepareStringForMatch(recipeName);
             if (!recipeList.ContainsKey(keyName)) {
                 recipeList[keyName] = systemDataFactory.GetResource<Recipe>(recipeName);
