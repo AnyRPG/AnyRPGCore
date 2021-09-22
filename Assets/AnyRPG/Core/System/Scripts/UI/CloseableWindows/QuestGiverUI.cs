@@ -560,7 +560,9 @@ namespace AnyRPG {
             if (interactable != null) {
                 uIManager.questGiverWindow.SetWindowTitle(interactable.DisplayName + " (Quests)");
             } else {
-                Debug.Log("QuestGiverUI.ReceiveOpenWindowNotification() interactable is null");
+                //Debug.Log("QuestGiverUI.ReceiveOpenWindowNotification() interactable is null");
+                // interactable is null if this quest is started from an item in the inventory
+                // in that case it doesn't make sense to show a questGiver name
                 uIManager.questGiverWindow.SetWindowTitle("");
             }
         }
