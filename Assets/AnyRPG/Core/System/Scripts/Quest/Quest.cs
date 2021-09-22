@@ -227,7 +227,7 @@ namespace AnyRPG {
             set {
                 QuestSaveData saveData = saveManager.GetQuestSaveData(this);
                 saveData.turnedIn = value;
-                saveManager.QuestSaveDataDictionary[saveData.MyName] = saveData;
+                saveManager.QuestSaveDataDictionary[saveData.QuestName] = saveData;
             }
         }
 
@@ -291,7 +291,7 @@ namespace AnyRPG {
             set {
                 QuestSaveData saveData = saveManager.GetQuestSaveData(this);
                 saveData.questStep = value;
-                saveManager.SetQuestSaveData(saveData.MyName, saveData);
+                saveManager.SetQuestSaveData(saveData.QuestName, saveData);
             }
         }
         public virtual bool MarkedComplete {
@@ -302,7 +302,7 @@ namespace AnyRPG {
             set {
                 QuestSaveData saveData = saveManager.GetQuestSaveData(this);
                 saveData.markedComplete = value;
-                saveManager.SetQuestSaveData(saveData.MyName, saveData);
+                saveManager.SetQuestSaveData(saveData.QuestName, saveData);
             }
         }
 

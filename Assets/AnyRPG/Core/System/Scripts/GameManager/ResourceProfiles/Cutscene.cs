@@ -63,7 +63,7 @@ namespace AnyRPG {
                 //saveManager.GetCutsceneSaveData(this).IsCutSceneViewed = value;
                 CutsceneSaveData saveData = saveManager.GetCutsceneSaveData(this);
                 saveData.isCutSceneViewed = value;
-                saveManager.CutsceneSaveDataDictionary[saveData.MyName] = saveData;
+                saveManager.CutsceneSaveDataDictionary[saveData.CutsceneName] = saveData;
             }
         }
 

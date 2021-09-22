@@ -114,7 +114,7 @@ namespace AnyRPG {
             set {
                 SceneNodeSaveData saveData = saveManager.GetSceneNodeSaveData(this);
                 saveData.visited = value;
-                saveManager.SceneNodeSaveDataDictionary[saveData.MyName] = saveData;
+                saveManager.SceneNodeSaveDataDictionary[saveData.SceneName] = saveData;
             }
         }
 
@@ -131,12 +131,12 @@ namespace AnyRPG {
             foreach (PersistentObjectSaveData _persistentObjectSaveData in saveData.persistentObjects) {
                 if (_persistentObjectSaveData.UUID == UUID) {
                     saveData.persistentObjects.Remove(_persistentObjectSaveData);
-                    saveManager.SceneNodeSaveDataDictionary[saveData.MyName] = saveData;
+                    saveManager.SceneNodeSaveDataDictionary[saveData.SceneName] = saveData;
                     break;
                 }
             }
             saveData.persistentObjects.Add(persistentObjectSaveData);
-            saveManager.SceneNodeSaveDataDictionary[saveData.MyName] = saveData;
+            saveManager.SceneNodeSaveDataDictionary[saveData.SceneName] = saveData;
         }
 
         public PersistentObjectSaveData GetPersistentObject(string UUID) {

@@ -227,7 +227,7 @@ namespace AnyRPG {
             int counter = 0;
             foreach (EquippedBagSaveData saveData in equippedBagSaveData) {
                 if (saveData.slotCount > 0) {
-                    Bag newBag = systemItemManager.GetNewResource(saveData.MyName) as Bag;
+                    Bag newBag = systemItemManager.GetNewResource(saveData.BagName) as Bag;
                     if (newBag != null) {
                         AddBag(newBag, BagNodes[counter]);
                     } else {

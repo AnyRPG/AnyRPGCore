@@ -68,7 +68,7 @@ namespace AnyRPG {
             set {
                 BehaviorSaveData saveData = saveManager.GetBehaviorSaveData(this);
                 saveData.completed = value;
-                saveManager.BehaviorSaveDataDictionary[saveData.MyName] = saveData;
+                saveManager.BehaviorSaveDataDictionary[saveData.BehaviorName] = saveData;
             }
         }
 
