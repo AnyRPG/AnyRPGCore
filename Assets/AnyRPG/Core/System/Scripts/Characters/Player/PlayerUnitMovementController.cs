@@ -1216,7 +1216,7 @@ namespace AnyRPG {
                     Debug.Log("NormalizedLocalMovement() position: " + playerManager.ActiveUnitController.transform.position.y +
                         "; Applying extra down force: " + yValue +
                         "; ground distance: " + closestGroundDistance);
-                        */
+                      */  
                     //Debug.Break();
                 }
                 newReturnValue = new Vector3(newReturnValue.x, yValue, newReturnValue.z);
@@ -1340,12 +1340,12 @@ namespace AnyRPG {
                 RaycastHit frontHighStairDownHitInfo;
 
                 // raycast from front in direction of travel downwards
-                Vector3 downOriginPoint = playerManager.ActiveUnitController.transform.TransformPoint(Quaternion.LookRotation(playerManager.ActiveUnitController.transform.InverseTransformDirection(directionOfTravel)) * new Vector3(0f, 0.3f, colliderRadius));
+                Vector3 downOriginPoint = playerManager.ActiveUnitController.transform.TransformPoint(Quaternion.LookRotation(playerManager.ActiveUnitController.transform.InverseTransformDirection(directionOfTravel)) * new Vector3(0f, stepHeight + 0.01f, detectionDistance));
                 //Vector3 originPoint = playerManager.ActiveUnitController.transform.TransformPoint(Quaternion.LookRotation(playerManager.ActiveUnitController.transform.InverseTransformDirection(directionOfTravel)) * new Vector3(0f, 0.001f, 0f));
                 Debug.DrawLine(downOriginPoint,
-                    downOriginPoint + (Vector3.down * 0.3f),
+                    downOriginPoint + (Vector3.down * stepHeight),
                     Color.black);
-                if (Physics.Raycast(downOriginPoint, Vector3.down, out frontHighStairDownHitInfo, 0.3f, groundMask)) {
+                if (Physics.Raycast(downOriginPoint, Vector3.down, out frontHighStairDownHitInfo, stepHeight, groundMask)) {
                     //Debug.Log("we are near an obstacle in front center at " + frontHighStairDownHitInfo.point);
                     // we are near an obstacle in front center
                     if (Vector3.Angle(frontHighStairDownHitInfo.normal, Vector3.up) <= slopeLimit) {
@@ -1360,11 +1360,11 @@ namespace AnyRPG {
                 }
                 
                 // raycast from left in direction of travel
-                downOriginPoint = playerManager.ActiveUnitController.transform.TransformPoint(Quaternion.LookRotation(playerManager.ActiveUnitController.transform.InverseTransformDirection(directionOfTravel)) * new Vector3(-colliderRadius, 0.3f, colliderRadius));
+                downOriginPoint = playerManager.ActiveUnitController.transform.TransformPoint(Quaternion.LookRotation(playerManager.ActiveUnitController.transform.InverseTransformDirection(directionOfTravel)) * new Vector3(-colliderRadius, stepHeight + 0.01f, detectionDistance));
                 Debug.DrawLine(downOriginPoint,
-                    downOriginPoint + (Vector3.down * 0.3f),
+                    downOriginPoint + (Vector3.down * stepHeight),
                     Color.black);
-                if (Physics.Raycast(downOriginPoint, Vector3.down, out frontHighStairDownHitInfo, 0.3f, groundMask)) {
+                if (Physics.Raycast(downOriginPoint, Vector3.down, out frontHighStairDownHitInfo, stepHeight, groundMask)) {
                     //Debug.Log("we are near an obstacle in front left at " + frontHighStairDownHitInfo.point);
                     // we are near an obstacle in front left
                     if (Vector3.Angle(frontHighStairDownHitInfo.normal, Vector3.up) <= slopeLimit) {
@@ -1381,11 +1381,11 @@ namespace AnyRPG {
                     }
                 }
                 // raycast from right in direction of travel
-                downOriginPoint = playerManager.ActiveUnitController.transform.TransformPoint(Quaternion.LookRotation(playerManager.ActiveUnitController.transform.InverseTransformDirection(directionOfTravel)) * new Vector3(colliderRadius, 0.3f, colliderRadius));
+                downOriginPoint = playerManager.ActiveUnitController.transform.TransformPoint(Quaternion.LookRotation(playerManager.ActiveUnitController.transform.InverseTransformDirection(directionOfTravel)) * new Vector3(colliderRadius, stepHeight + 0.01f, detectionDistance));
                 Debug.DrawLine(downOriginPoint,
-                    downOriginPoint + (Vector3.down * 0.3f),
+                    downOriginPoint + (Vector3.down * stepHeight),
                     Color.black);
-                if (Physics.Raycast(downOriginPoint, Vector3.down, out frontHighStairDownHitInfo, 0.3f, groundMask)) {
+                if (Physics.Raycast(downOriginPoint, Vector3.down, out frontHighStairDownHitInfo, stepHeight, groundMask)) {
                     //Debug.Log("we are near an obstacle in front right at " + frontHighStairDownHitInfo.point);
                     // we are near an obstacle in front right
                     if (Vector3.Angle(frontHighStairDownHitInfo.normal, Vector3.up) <= slopeLimit) {
@@ -1469,7 +1469,8 @@ namespace AnyRPG {
                     Debug.DrawLine(bottomPoint,
                         bottomPoint + calculatedNormal,
                         Color.red);
-                    //Debug.Log("CheckFrontObstacle() calculatedNormal: " + calculatedNormal + "; angleRay: " + angleRay + "; line2: " + (secondPoint - bottomPoint));
+                    //Debug.Log("CheckFrontObstacle() calculatedNormal: " + calculatedNormal + "; angleRay: " + angleRay + "; line2: " + (secondPoint - bottomPoint) + "; angle: " + Vector3.Angle(angleRay.normalized, Vector3.up));
+                    //Debug.Log("CheckFrontObstacle() angle: " + Vector3.Angle(angleRay.normalized, Vector3.up));
                     stairRampNormal = calculatedNormal;
                 }
 
