@@ -14,6 +14,10 @@ namespace AnyRPG {
         [ResourceSelector(resourceType = typeof(Quest))]
         private string prerequisiteName = string.Empty;
 
+        [Tooltip("If the step index is 0 or greater, the quest must be on that step for this prerequisite to be met")]
+        [SerializeField]
+        private int stepIndex = -1;
+
         private bool prerequisiteMet = false;
 
 
@@ -48,7 +52,7 @@ namespace AnyRPG {
                 prerequisiteMet = true;
             } else if (!requireTurnedIn && requireComplete && prerequisiteQuest.IsComplete && questLog.HasQuest(prerequisiteQuest.DisplayName)) {
                 prerequisiteMet = true;
-            } else if (!requireTurnedIn && !requireComplete && questLog.HasQuest(prerequisiteQuest.DisplayName)) {
+            } else if (!requireTurnedIn && !requireComplete && questLog.HasQuest(prerequisiteQuest.DisplayName) && (stepIndex == -1 || prerequisiteQuest.CurrentStep == stepIndex)) {
                 prerequisiteMet = true;
             } else {
                 prerequisiteMet = false;
@@ -88,12 +92,14 @@ namespace AnyRPG {
             }
             if (prerequisiteQuest != null) {
                 prerequisiteQuest.OnQuestStatusUpdated += HandleQuestStatusUpdated;
+                prerequisiteQuest.OnQuestObjectiveStatusUpdated += HandleQuestStatusUpdated;
             }
         }
 
         public void CleanupScriptableObjects() {
             if (prerequisiteQuest != null) {
                 prerequisiteQuest.OnQuestStatusUpdated -= HandleQuestStatusUpdated;
+                prerequisiteQuest.OnQuestObjectiveStatusUpdated -= HandleQuestStatusUpdated;
             }
         }
 

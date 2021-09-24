@@ -13,6 +13,7 @@ namespace AnyRPG {
     public class Quest : DescribableResource, IPrerequisiteOwner {
 
         public event System.Action OnQuestStatusUpdated = delegate { };
+        public event System.Action OnQuestObjectiveStatusUpdated = delegate { };
 
         [Header("Quest")]
 
@@ -538,6 +539,7 @@ namespace AnyRPG {
                 // since this method only gets called as a result of a quest objective status updating, we need to notify for that at minimum
                 //Debug.Log(DisplayName + ".Quest.CheckCompletion(): about to notify for objective status updated");
                 SystemEventManager.TriggerEvent("OnQuestObjectiveStatusUpdated", new EventParamProperties());
+                OnQuestObjectiveStatusUpdated();
             }
         }
 

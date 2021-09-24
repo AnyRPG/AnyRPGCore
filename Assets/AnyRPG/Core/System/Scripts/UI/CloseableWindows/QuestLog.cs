@@ -59,7 +59,12 @@ namespace AnyRPG {
                 string keyName = SystemDataFactory.PrepareStringForMatch(newQuest.DisplayName);
                 quests[keyName] = newQuest;
                 newQuest.AcceptQuest();
-                //CheckCompletion();
+
+                // if the quest has steps, then the completion check will be triggered by the objectives
+                // if the quest has no steps, then checking completion should be done here
+                if (newQuest.Steps.Count == 0) {
+                    newQuest.CheckCompletion();
+                }
             }
         }
 
