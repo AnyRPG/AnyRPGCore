@@ -77,12 +77,12 @@ namespace AnyRPG {
             return false;
         }
 
-        public void AbandonQuest(Quest oldQuest) {
+        public void AbandonQuest(Quest oldQuest, bool resetQuestStep = true) {
             //Debug.Log("QuestLog.AbandonQuest(" + quest.name + ")");
             RemoveQuest(oldQuest);
 
             // moved here instead of inside the above function so turnInQuest doesn't think a quest is available in the middle of turn-in
-            oldQuest.RemoveQuest();
+            oldQuest.RemoveQuest(resetQuestStep);
         }
 
         public void TurnInQuest(Quest oldQuest) {
@@ -109,7 +109,7 @@ namespace AnyRPG {
                 removeList.Add(quest);
             }
             foreach (Quest oldQuest in removeList) {
-                AbandonQuest(oldQuest);
+                AbandonQuest(oldQuest, false);
             }
             Quests.Clear();
         }

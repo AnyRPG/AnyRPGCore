@@ -317,14 +317,20 @@ namespace AnyRPG {
             questLog = systemGameManager.QuestLog;
         }
 
-        public virtual void RemoveQuest() {
+        public virtual void RemoveQuest(bool resetQuestStep = true) {
             //Debug.Log("Quest.RemoveQuest(): " + DisplayName + " calling OnQuestStatusUpdated()");
 
-            // reset the quest objective save data so any completed portion is reset in case the quest is picked back up
-            MarkedComplete = false;
-            saveManager.ResetQuestObjectiveSaveData(DisplayName);
 
             OnAbandonQuest();
+
+            // reset the quest objective save data so any completed portion is reset in case the quest is picked back up
+            saveManager.ResetQuestObjectiveSaveData(DisplayName);
+
+            // reset current step so the correct objective shows up in the quest giver window when the quest is picked back up
+            if (resetQuestStep == true) {
+                CurrentStep = 0;
+            }
+            MarkedComplete = false;
 
             if (playerManager != null && playerManager.PlayerUnitSpawned == false) {
                 // STOP STUFF FROM REACTING WHEN PLAYER ISN'T SPAWNED
