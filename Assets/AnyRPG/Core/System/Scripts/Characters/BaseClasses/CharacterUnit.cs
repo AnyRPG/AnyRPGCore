@@ -164,11 +164,14 @@ namespace AnyRPG {
         }
 
         public void Despawn(float despawnDelay = 0f, bool addSystemDefaultTime = true, bool forceDespawn = false) {
-            //Debug.Log(gameObject.name + ".CharacterUnit.Despawn(" + despawnDelay + ", " + addSystemDefaultTime + ", " + forceDespawn + ")");
+            //Debug.Log(BaseCharacter.gameObject.name + ".CharacterUnit.Despawn(" + despawnDelay + ", " + addSystemDefaultTime + ", " + forceDespawn + ")");
             //gameObject.SetActive(false);
             // TEST ADDING A MANDATORY DELAY
             if (despawnCoroutine == null && interactable.gameObject.activeSelf == true && interactable.isActiveAndEnabled) {
+                //Debug.Log(BaseCharacter.gameObject.name + ".CharacterUnit.Despawn(" + despawnDelay + ", " + addSystemDefaultTime + ", " + forceDespawn + ") starting despawn coroutine");
                 despawnCoroutine = interactable.StartCoroutine(PerformDespawnDelay(despawnDelay, addSystemDefaultTime, forceDespawn));
+            } else {
+                //Debug.Log(BaseCharacter.gameObject.name + ".CharacterUnit.Despawn(" + despawnDelay + ", " + addSystemDefaultTime + ", " + forceDespawn + ") despawncoroutine was not null");
             }
         }
 
@@ -176,6 +179,7 @@ namespace AnyRPG {
             //Debug.Log(BaseCharacter.gameObject.name + ".CharacterUnit.CancelDespawnDelay()");
             if (despawnCoroutine != null) {
                 interactable.StopCoroutine(despawnCoroutine);
+                despawnCoroutine = null;
             }
         }
 
@@ -204,6 +208,7 @@ namespace AnyRPG {
             } else {
                 //Debug.Log(BaseCharacter.gameObject.name + ".CharacterUnit.PerformDespawnDelay(" + despawnDelay + ", " + addSystemDefaultTime + ", " + forceDespawn + "): unit is alive or reviving !! NOT DESPAWNING");
             }
+            despawnCoroutine = null;
         }
 
         public override bool CanShowMiniMapIcon() {

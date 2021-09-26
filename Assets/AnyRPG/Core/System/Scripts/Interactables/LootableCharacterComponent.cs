@@ -119,7 +119,7 @@ namespace AnyRPG {
         }
 
         public void HandleDeath(CharacterStats characterStats) {
-            //Debug.Log(gameObject.name + "LootableCharacter.HandleDeath()");
+            //Debug.Log(interactable.gameObject.name + "LootableCharacter.HandleDeath()");
             if (playerManager == null) {
                 // game is exiting
                 return;
@@ -143,7 +143,7 @@ namespace AnyRPG {
 
         public void TryToDespawn() {
 
-            //Debug.Log(gameObject.name + ".LootableCharacter.TryToDespawn()");
+            //Debug.Log(interactable.gameObject.name + ".LootableCharacter.TryToDespawn()");
             if (MyCharacterUnit.BaseCharacter.CharacterStats.IsAlive == true) {
                 //Debug.Log("LootableCharacter.TryToDespawn(): Character is alive.  Returning and doing nothing.");
                 return;
