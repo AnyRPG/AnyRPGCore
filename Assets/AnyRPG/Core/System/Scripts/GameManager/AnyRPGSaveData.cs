@@ -57,36 +57,42 @@ namespace AnyRPG {
     [Serializable]
     public struct ResourcePowerSaveData {
 
-        public string MyName;
+        public string ResourceName;
         public float amount;
     }
 
     [Serializable]
     public struct QuestSaveData {
 
-        public string MyName;
+        public string QuestName;
+        public int questStep;
         public bool turnedIn;
         public bool markedComplete;
         public bool inLog;
 
+        public List<QuestObjectiveSaveData> questObjectives;
+
+        /*
         public List<QuestObjectiveSaveData> killObjectives;
         public List<QuestObjectiveSaveData> useInteractableObjectives;
         public List<QuestObjectiveSaveData> collectObjectives;
         public List<QuestObjectiveSaveData> tradeSkillObjectives;
         public List<QuestObjectiveSaveData> abilityObjectives;
+        public List<QuestObjectiveSaveData> visitZoneObjectives;
+        */
     }
 
     [Serializable]
     public struct StatusEffectSaveData {
 
-        public string MyName;
+        public string StatusEffectName;
         public int remainingSeconds;
     }
 
     [Serializable]
     public struct SceneNodeSaveData {
 
-        public string MyName;
+        public string SceneName;
         public bool visited;
 
         public List<PersistentObjectSaveData> persistentObjects;
@@ -95,7 +101,7 @@ namespace AnyRPG {
     [Serializable]
     public struct CutsceneSaveData {
 
-        public string MyName;
+        public string CutsceneName;
 
         public bool isCutSceneViewed;
     }
@@ -115,21 +121,21 @@ namespace AnyRPG {
     [Serializable]
     public struct DialogSaveData {
 
-        public string MyName;
+        public string DialogName;
         public bool turnedIn;
     }
 
     [Serializable]
     public struct BehaviorSaveData {
 
-        public string MyName;
+        public string BehaviorName;
         public bool completed;
     }
 
     [Serializable]
     public struct ActionBarSaveData {
 
-        public string MyName;
+        public string DisplayName;
         public bool isItem;
         public string savedName;
     }
@@ -137,7 +143,7 @@ namespace AnyRPG {
     [Serializable]
     public struct InventorySlotSaveData {
 
-        public string MyName;
+        public string ItemName;
         public string DisplayName;
         public string itemQuality;
         public int dropLevel;
@@ -149,16 +155,15 @@ namespace AnyRPG {
     [Serializable]
     public struct QuestObjectiveSaveData {
 
-        public string MyName;
-        public int MyAmount;
-        //public int MyCurrentAmount;
+        public string ObjectiveType;
+        public string ObjectiveName;
+        public int Amount;
     }
 
     [Serializable]
     public struct EquippedBagSaveData {
 
-        public string MyName;
-        public string itemName;
+        public string BagName;
         public int slotCount;
         public bool isBankBag;
 
@@ -167,21 +172,21 @@ namespace AnyRPG {
     [Serializable]
     public struct AbilitySaveData {
 
-        public string MyName;
+        public string AbilityName;
 
     }
 
     [Serializable]
     public struct PetSaveData {
 
-        public string MyName;
+        public string PetName;
 
     }
 
     [Serializable]
     public struct EquipmentSaveData {
 
-        public string MyName;
+        public string EquipmentName;
         public string DisplayName;
         public string itemQuality;
         public int dropLevel;
@@ -192,28 +197,28 @@ namespace AnyRPG {
     [Serializable]
     public struct SkillSaveData {
 
-        public string MyName;
+        public string SkillName;
     }
 
     [Serializable]
     public struct RecipeSaveData {
 
-        public string MyName;
+        public string RecipeName;
     }
 
     [Serializable]
     public struct ReputationSaveData {
 
-        public string MyName;
-        public float MyAmount;
+        public string ReputationName;
+        public float Amount;
 
     }
 
     [Serializable]
     public struct CurrencySaveData {
 
-        public string MyName;
-        public int MyAmount;
+        public string CurrencyName;
+        public int Amount;
 
     }
 

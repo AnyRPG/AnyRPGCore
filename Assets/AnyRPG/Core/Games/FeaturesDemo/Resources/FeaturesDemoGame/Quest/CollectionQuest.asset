@@ -46,13 +46,19 @@ MonoBehaviour:
   abilityRewardNames: []
   maxSkillRewards: 0
   skillRewardNames: []
+  steps:
+  - questObjectives:
+    - id: 0
+    - id: 1
   collectObjectives:
   - amount: 1
     type: Dagger
     overrideDisplayName: 
+    itemName: 
   - amount: 0
     type: Shield
     overrideDisplayName: 
+    itemName: 
   killObjectives: []
   tradeSkillObjectives: []
   abilityObjectives: []
@@ -63,3 +69,19 @@ MonoBehaviour:
   prerequisiteConditions: []
   turnInItems: 0
   allowRawComplete: 0
+  references:
+    version: 1
+    00000000:
+      type: {class: CollectObjective, ns: AnyRPG, asm: Assembly-CSharp}
+      data:
+        amount: 1
+        type: 
+        overrideDisplayName: 
+        itemName: Dagger
+    00000001:
+      type: {class: CollectObjective, ns: AnyRPG, asm: Assembly-CSharp}
+      data:
+        amount: 1
+        type: 
+        overrideDisplayName: 
+        itemName: Shield

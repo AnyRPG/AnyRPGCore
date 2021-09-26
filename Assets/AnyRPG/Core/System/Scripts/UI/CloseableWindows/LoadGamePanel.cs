@@ -81,8 +81,12 @@ namespace AnyRPG {
             // testing - character will load its own equipment when it spawns
             //characterPreviewPanel.OnTargetReady -= HandleTargetReady;
             characterPreviewPanel.OnTargetCreated -= HandleTargetCreated;
+            characterPreviewPanel.CapabilityConsumer = null;
             characterPreviewPanel.RecieveClosedWindowNotification();
             //saveManager.ClearSharedData();
+
+            ClearLoadButtons();
+
             OnCloseWindow(this);
         }
 
@@ -90,7 +94,7 @@ namespace AnyRPG {
             //Debug.Log("LoadGamePanel.OnOpenWindow()");
             base.ReceiveOpenWindowNotification();
 
-            ShowLoadButtonsCommon();
+            //ShowLoadButtonsCommon();
 
             // inform the preview panel so the character can be rendered
             // testing - character will load its own equipment when it spawns
@@ -98,6 +102,9 @@ namespace AnyRPG {
             characterPreviewPanel.OnTargetCreated += HandleTargetCreated;
             characterPreviewPanel.CapabilityConsumer = loadGameManager;
             characterPreviewPanel.ReceiveOpenWindowNotification();
+
+            // testing - move this down here so re-used UMA units don't trigger handleTargetCreated before we can subscribe to it
+            ShowLoadButtonsCommon();
 
             // this needs to be run here because the initial run in ShowLoadButtonsCommon will have done nothing because the preview panel wasn't open yet
             //LoadSavedAppearanceSettings();

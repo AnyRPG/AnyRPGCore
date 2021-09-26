@@ -177,22 +177,15 @@ namespace AnyRPG {
             thisFaction = myCharacter.Faction;
             if (otherFaction != null && thisFaction != null) {
                 // first, checking if mycharacter has a reputation modifier for the other faction
-                //Debug.Log("Faction.RelationWith(): " + myCharacter.MyName + " is checking if it's own faction manager has a reputation modifier for the faction of target: " + characterToCheck.MyName);
                 if (myCharacter.CharacterFactionManager != null && myCharacter.CharacterFactionManager.HasReputationModifier(otherFaction)) {
-                    //Debug.Log(".Faction.RelationWith(" + (targetCharacter == null ? "null" : targetCharacter.gameObject.name) + ", " + (sourceCharacter != null ? sourceCharacter.AbilityManager.MyCharacterName : "null") + "): SOURCE HAS MODIFIER!");
                     return myCharacter.CharacterFactionManager.GetReputationValue(otherFaction);
                 }
-                //Debug.Log("Faction.RelationWith(): " + myCharacter.MyName + " did not have a local reputation modifer.  now checking modifer for it's own faction modifer exists in the target: " + characterToCheck.MyName);
                 if (characterToCheck.CharacterFactionManager != null && characterToCheck.CharacterFactionManager.HasReputationModifier(thisFaction)) {
-                    //Debug.Log(".Faction.RelationWith(" + (targetCharacter == null ? "null" : targetCharacter.gameObject.name) + ", " + (sourceCharacter != null ? sourceCharacter.AbilityManager.MyCharacterName : "null") + "): TARGET HAS MODIFIER!");
                     return characterToCheck.CharacterFactionManager.GetReputationValue(thisFaction);
                 }
-            } else {
-                //Debug.Log(".Faction.RelationWith(" + (targetCharacter == null ? "null" : targetCharacter.gameObject.name) + ", " + (sourceCharacter != null ? sourceCharacter.AbilityManager.MyCharacterName : "null") + "): ONE CHARACTER WAS NULL!");
             }
 
             // neither had a special gained reputation with the other, go on to default dispositions
-            //Debug.Log("Faction.RelationWith(): " + myCharacter.MyName + " did not have a local reputation modifer and there was no modifer in the target: " + characterToCheck.MyName + " now checking default dispositions for source and target");
             return RelationWith(characterToCheck, myCharacter.Faction);
         }
 
@@ -234,7 +227,7 @@ namespace AnyRPG {
                 foreach (FactionDisposition _factionDisposition in thisFaction.dispositionList) {
                     if (_factionDisposition.Faction == otherFaction) {
                         // There is a specific entry for the other faction in our disposition table, return it.
-                        //Debug.Log("Faction.relationWith(): There is a specific entry for " + otherFaction.MyName + " in our disposition table, return it: " + _factionDisposition.factionName);
+                        //Debug.Log("Faction.relationWith(): There is a specific entry for " + otherFaction.DisplayName + " in our disposition table, return it: " + _factionDisposition.factionName);
                         return _factionDisposition.disposition;
                     }
                 }

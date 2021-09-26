@@ -26,7 +26,7 @@ MonoBehaviour:
     unitPrefab: {fileID: 3544550570938047708, guid: 58bbef68663d83f4d8cd8b01b420c9e6,
       type: 3}
     modelPrefab: {fileID: 0}
-    animationProfile: {fileID: 0}
+    animationProfileName: 
     useInlineAnimationProps: 0
     animationProps:
       useRootMotion: 0
@@ -107,6 +107,10 @@ MonoBehaviour:
       deathClip: {fileID: 0}
       reviveClip: {fileID: 0}
       levitatedClip: {fileID: 0}
+      swimIdleClip: {fileID: 0}
+      swimMoveClip: {fileID: 0}
+      flyIdleClip: {fileID: 0}
+      flyMoveClip: {fileID: 0}
     rotateModel: 0
     namePlateProps:
       displayName: 
@@ -126,14 +130,19 @@ MonoBehaviour:
     scale: {x: 1, y: 1, z: 1}
     targetBone: 
     attachmentProfileName: Humanoid
+    floatHeight: 1.4
+    addFloatHeightToTransform: 0
+    floatTransform: Spine1
   isUMAUnit: 0
   isPet: 0
+  flightCapable: 0
+  glideCapable: 0
   characterName: Spawn Characters
-  factionName: 
   title: 
-  characterClassName: 
+  factionName: 
   unitTypeName: 
   characterRaceName: 
+  characterClassName: 
   classSpecializationName: 
   spawnDead: 0
   preventAutoDespawn: 0
@@ -149,6 +158,7 @@ MonoBehaviour:
   combatStrategyName: 
   primaryStats: []
   powerResources: []
+  useProviderEquipment: 0
   equipmentNameList: []
   isMobile: 1
   playOnFootstep: 0
@@ -175,7 +185,6 @@ MonoBehaviour:
     namePlateImage: {fileID: 0}
     prerequisiteConditions: []
     behaviorNames: []
-    useBehaviorCopy: 0
   interactionMaxRange: 3
   lootableCharacter:
     interactionPanelTitle: 
@@ -198,9 +207,6 @@ MonoBehaviour:
     quests:
     - startQuest: 0
       endQuest: 1
-      questName: Kill Things
-    - startQuest: 0
-      endQuest: 1
       questName: Use Interactable
     questGiverProfileNames: []
   vendorConfig:
@@ -210,5 +216,8 @@ MonoBehaviour:
     prerequisiteConditions: []
     vendorCollectionNames: []
   interactableOptions: []
+  persistObjectPosition: 0
+  saveOnLevelUnload: 0
+  saveOnGameSave: 0
   overwriteUnitUUID: 0
   m_UUID: 6f871381-f6c9-4e3e-bf2d-c2f97d764998

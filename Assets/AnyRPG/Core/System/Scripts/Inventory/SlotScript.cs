@@ -116,9 +116,7 @@ namespace AnyRPG {
         }
 
         public void RemoveItem(Item item) {
-            //Debug.Log("SlotScript.RemoveItem(" + item.MyName + ")");
             if (!IsEmpty) {
-                //Debug.Log("slotscript getting ready to remove item: " + item.GetInstanceID().ToString() + "; MyItems count: " + MyItems.Count.ToString());
                 MyItems.Remove(item);
                 UpdateSlot();
                 inventoryManager.OnItemCountChanged(item);
@@ -372,7 +370,7 @@ namespace AnyRPG {
         /// Updates the Stack Size count graphic
         /// </summary>
         private void UpdateSlot() {
-            //Debug.Log("SlotScript.UpdateSlot(): Update Slot called on slot " + GetInstanceID().ToString() + "; MyItem: " + (MyItem != null ? MyItem.MyName : "null"));
+            //Debug.Log("SlotScript.UpdateSlot(): Update Slot called on slot " + GetInstanceID().ToString() + "; MyItem: " + (MyItem != null ? MyItem.DisplayName : "null"));
             if (MyItem != null) {
                 SetSlotOnItems();
             }

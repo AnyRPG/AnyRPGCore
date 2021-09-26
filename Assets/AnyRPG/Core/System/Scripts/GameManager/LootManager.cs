@@ -79,8 +79,6 @@ namespace AnyRPG {
         }
 
         public void TakeLoot(LootDrop lootDrop) {
-            //Debug.Log("LootUI.TakeLoot(" + loot.MyName + ")");
-
             (uIManager.lootWindow.CloseableWindowContents as LootUI).TakeLoot(lootDrop);
         }
 

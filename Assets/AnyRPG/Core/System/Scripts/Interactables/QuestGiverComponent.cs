@@ -20,7 +20,7 @@ namespace AnyRPG {
 
         public QuestGiverComponent(Interactable interactable, QuestGiverProps interactableOptionProps, SystemGameManager systemGameManager) : base(interactable, interactableOptionProps, systemGameManager) {
             foreach (QuestNode questNode in Props.Quests) {
-                questNode.MyQuest.OnQuestStatusUpdated += HandlePrerequisiteUpdates;
+                questNode.Quest.OnQuestStatusUpdated += HandlePrerequisiteUpdates;
             }
 
             // moved here from Init() monitor for breakage
@@ -71,17 +71,17 @@ namespace AnyRPG {
             interactableOptionProps.InteractionPanelTitle = "Quests";
             foreach (QuestNode questNode in Props.Quests) {
                 //Type questType = questNode.MyQuestTemplate.GetType();
-                if (questNode.MyQuest == null) {
+                if (questNode.Quest == null) {
                     //Debug.Log(gameObject.name + ".InitializeQuestGiver(): questnode.MyQuestTemplate is null!!!!");
                     return;
                 }
-                if (questNode.MyQuest.DisplayName == null) {
+                if (questNode.Quest.DisplayName == null) {
                     //Debug.Log(gameObject.name + ".InitializeQuestGiver(): questnode.MyQuestTemplate.MyTitle is null!!!!");
                     return;
                 } else {
                     //Debug.Log(gameObject.name + ".InitializeQuestGiver(): Adding watches on " + questNode.MyQuestTemplate.MyTitle);
                 }
-                questNode.MyQuest = systemDataFactory.GetResource<Quest>(questNode.MyQuest.DisplayName);
+                questNode.Quest = systemDataFactory.GetResource<Quest>(questNode.Quest.DisplayName);
             }
             questGiverInitialized = true;
         }
@@ -93,7 +93,7 @@ namespace AnyRPG {
             InitializeQuestGiver();
             foreach (QuestNode questNode in Props.Quests) {
                 //if (questNode.MyQuest.TurnedIn != true) {
-                    questNode.MyQuest.UpdatePrerequisites(false);
+                    questNode.Quest.UpdatePrerequisites(false);
                 //}
             }
 
@@ -136,7 +136,7 @@ namespace AnyRPG {
             // we got here: we only have a single complete quest, or a single available quest with the opening dialog competed already
             if (!uIManager.questGiverWindow.IsOpen) {
                 //Debug.Log(source + " interacting with " + gameObject.name);
-                uIManager.questGiverWindow.OpenWindow();
+                //uIManager.questGiverWindow.OpenWindow();
                 questLog.ShowQuestGiverDescription(questLog.GetAvailableQuests(Props.Quests).Union(questLog.GetCompleteQuests(Props.Quests)).ToList()[0], this);
                 return true;
             }
@@ -190,18 +190,18 @@ namespace AnyRPG {
             int availableCount = 0;
             //Debug.Log(gameObject.name + "QuestGiver.GetIndicatorType(): quests.length: " + quests.Length);
             foreach (QuestNode questNode in Props.Quests) {
-                if (questNode != null && questNode.MyQuest != null) {
-                    if (questLog.HasQuest(questNode.MyQuest.DisplayName)) {
-                        if (questNode.MyQuest.IsComplete && !questNode.MyQuest.TurnedIn && questNode.MyEndQuest) {
+                if (questNode != null && questNode.Quest != null) {
+                    if (questLog.HasQuest(questNode.Quest.DisplayName)) {
+                        if (questNode.Quest.IsComplete && !questNode.Quest.TurnedIn && questNode.EndQuest) {
                             //Debug.Log(gameObject.name + ": There is a complete quest to turn in.  Incrementing inProgressCount.");
                             completeCount++;
-                        } else if (!questNode.MyQuest.IsComplete && questNode.MyEndQuest) {
+                        } else if (!questNode.Quest.IsComplete && questNode.EndQuest) {
                             //Debug.Log(gameObject.name + ": A quest is in progress.  Incrementing inProgressCount.");
                             inProgressCount++;
                         } else {
                             //Debug.Log(gameObject.name + ": This quest must have been turned in already or we are not responsible for ending it.  doing nothing.");
                         }
-                    } else if (!questNode.MyQuest.TurnedIn && questNode.MyStartQuest && questNode.MyQuest.MyPrerequisitesMet == true) {
+                    } else if ((questNode.Quest.TurnedIn == false || (questNode.Quest.RepeatableQuest == true && questLog.HasQuest(questNode.Quest.DisplayName) == false)) && questNode.StartQuest && questNode.Quest.MyPrerequisitesMet == true) {
                         availableCount++;
                         //Debug.Log(gameObject.name + ": The quest is not in the log and hasn't been turned in yet.  Incrementing available count");
                     }
@@ -209,7 +209,7 @@ namespace AnyRPG {
                     if (questNode == null) {
                         //Debug.Log(gameObject.name + ": The quest node was null");
                     }
-                    if (questNode.MyQuest == null) {
+                    if (questNode.Quest == null) {
                         //Debug.Log(gameObject.name + ": The questNode.MyQuest was null");
                     }
                 }
@@ -231,10 +231,10 @@ namespace AnyRPG {
             if (indicatorType == "complete") {
                 text.text = "?";
                 text.color = Color.yellow;
-            } else if (indicatorType == "inProgress") {
+            }/* else if (indicatorType == "inProgress") {
                 text.text = "?";
                 text.color = Color.gray;
-            } else if (indicatorType == "available") {
+            }*/ else if (indicatorType == "available") {
                 text.text = "!";
                 text.color = Color.yellow;
             } else {
@@ -291,8 +291,8 @@ namespace AnyRPG {
 
         public bool EndsQuest(string questName) {
             foreach (QuestNode questNode in Props.Quests) {
-                if (SystemDataFactory.MatchResource(questNode.MyQuest.DisplayName, questName)) {
-                    if (questNode.MyEndQuest == true) {
+                if (SystemDataFactory.MatchResource(questNode.Quest.DisplayName, questName)) {
+                    if (questNode.EndQuest == true) {
                         return true;
                     } else {
                         return false;
@@ -305,7 +305,7 @@ namespace AnyRPG {
         public override void CleanupScriptableObjects() {
             base.CleanupScriptableObjects();
             foreach (QuestNode questNode in Props.Quests) {
-                questNode.MyQuest.OnQuestStatusUpdated -= HandlePrerequisiteUpdates;
+                questNode.Quest.OnQuestStatusUpdated -= HandlePrerequisiteUpdates;
             }
         }
     }

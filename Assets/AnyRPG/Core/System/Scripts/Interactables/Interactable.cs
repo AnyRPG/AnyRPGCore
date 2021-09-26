@@ -615,29 +615,6 @@ namespace AnyRPG {
             return false;
         }
 
-        /*
-        public bool CheckForInteractableObjectives(string questName) {
-            Quest quest = systemDataFactory.GetResource<Quest>(questName);
-            foreach (QuestObjective questObjective in quest.MyUseInteractableObjectives) {
-                foreach (InteractableOption interactableOption in MyInteractables) {
-                    if (SystemDataFactory.MatchResource(questObjective.MyType, interactableOption.MyName)) {
-                        //Debug.Log("auto open interactable on questgiver to complete interactable objective");
-                        if (playerManager != null && playerManager.MyCharacter != null && playerManager.MyCharacter.MyCharacterController != null) {
-                            Interactable _interactable = this;
-                            GameObject _gameObject = gameObject;
-                            playerManager.MyCharacter.MyCharacterController.InterActWithInteractableOption(_interactable, interactableOption, _gameObject);
-                        } else {
-                            //Debug.Log("player something is null");
-                        }
-                        return true;
-                    }
-                }
-            }
-            return false;
-        }
-        */
-
-
         public List<InteractableOptionComponent> GetValidInteractables() {
             //Debug.Log(gameObject.name + ".Interactable.GetValidInteractables(" + processRangeCheck + ", " + passedRangeCheck + ")");
 
@@ -936,7 +913,6 @@ namespace AnyRPG {
             if (DisplayName == string.Empty) {
                 CharacterUnit baseCharacter = CharacterUnit.GetCharacterUnit(this);
                 if (baseCharacter != null) {
-                    //Debug.Log(gameObject.name + ".Interactable.GetDescription(): MyName is empty and baseCharacter exists: " + baseCharacter.MyCharacterName);
                     nameString = baseCharacter.DisplayName;
                 }
             }

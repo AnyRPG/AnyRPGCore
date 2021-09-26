@@ -11,7 +11,7 @@ namespace AnyRPG {
     public class DirectEffect : FixedLengthEffect {
 
         public override Dictionary<PrefabProfile, GameObject> Cast(IAbilityCaster source, Interactable target, Interactable originalTarget, AbilityEffectContext abilityEffectInput) {
-            //Debug.Log(MyName + ".DirectEffect.Cast()");
+            //Debug.Log(DisplayName + ".DirectEffect.Cast()");
             return base.Cast(source, target, originalTarget, abilityEffectInput);
         }
 

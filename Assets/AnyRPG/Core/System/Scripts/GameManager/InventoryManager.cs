@@ -227,14 +227,10 @@ namespace AnyRPG {
             int counter = 0;
             foreach (EquippedBagSaveData saveData in equippedBagSaveData) {
                 if (saveData.slotCount > 0) {
-                    Bag newBag = systemItemManager.GetNewResource(saveData.MyName) as Bag;
+                    Bag newBag = systemItemManager.GetNewResource(saveData.BagName) as Bag;
                     if (newBag != null) {
                         AddBag(newBag, BagNodes[counter]);
-                    } else {
-                        //Debug.Log("InventoryManager.LoadEquippedBagData(): COULD NOT FIND BAG WITH NAME: " + saveData.MyName);
                     }
-                } else {
-                    //Debug.Log("InventoryManager.LoadEquippedBagData(): Bag At index: " + counter + " has no slots; MyBagNodes.Count: " + MyBagNodes.Count);
                 }
                 counter++;
             }
@@ -492,7 +488,6 @@ namespace AnyRPG {
         }
 
         public bool AddItem(Item item, int slotIndex) {
-            //Debug.Log("InventoryManager.AddItem(" + item.MyName + ", " + slotIndex + ")");
             if (GetSlots().Count > slotIndex) {
                 return GetSlots()[slotIndex].AddItem(item);
             }
@@ -500,15 +495,10 @@ namespace AnyRPG {
         }
 
         public void RemoveItem(Item item) {
-            //Debug.Log("InventoryManager.RemoveItem(" + item.MyName + ")");
             foreach (BagNode bagNode in bagNodes) {
-                //Debug.Log("InventoryManager.RemoveItem(" + item.itemName + "): checking bagNode");
                 if (bagNode.MyBag != null) {
-                    //Debug.Log("InventoryManager.RemoveItem(" + item.itemName + "): checking bagNode and bag is not null");
                     foreach (SlotScript slot in bagNode.BagPanel.MySlots) {
-                        //Debug.Log("InventoryManager.RemoveItem(" + item.itemName + "): checking bagNode and bag is not null and checking slotscript");
                         if (!slot.IsEmpty && SystemDataFactory.MatchResource(slot.MyItem.DisplayName, item.DisplayName)) {
-                            //Debug.Log("InventoryManager.RemoveItem(" + item.itemName + "): about to remove item from slot");
                             slot.RemoveItem(item);
                             return;
                         }
@@ -654,14 +644,14 @@ namespace AnyRPG {
             systemEventManager.NotifyOnItemCountChanged(item);
         }
 
-        public int GetItemCount(string type) {
+        public int GetItemCount(string type, bool partialMatch = false) {
             //Debug.Log("InventoryManager.GetItemCount(" + type + ")");
             int itemCount = 0;
 
             foreach (BagNode bagNode in bagNodes) {
                 if (bagNode.MyBag != null) {
                     foreach (SlotScript slot in bagNode.BagPanel.MySlots) {
-                        if (!slot.IsEmpty && SystemDataFactory.MatchResource(slot.MyItem.DisplayName, type)) {
+                        if (!slot.IsEmpty && SystemDataFactory.MatchResource(slot.MyItem.DisplayName, type, partialMatch)) {
                             itemCount += slot.Count;
                         }
                     }

@@ -414,10 +414,8 @@ namespace AnyRPG {
         /// <param name="target"></param>
         /// return true if this is a new entry, false if not
         public virtual bool EnterCombat(Interactable target) {
-            //Debug.Log(gameObject.name + ".CharacterCombat.EnterCombat(" + (target != null && target.MyName != null ? target.MyName : "null") + ")");
             CharacterUnit _characterUnit = CharacterUnit.GetCharacterUnit(target);
             if (_characterUnit == null || _characterUnit.BaseCharacter.CharacterStats.IsAlive == false || BaseCharacter.CharacterStats.IsAlive == false) {
-                //Debug.Log(gameObject.name + ".CharacterCombat.EnterCombat(" + (target != null && target.MyName != null ? target.MyName : "null") + "): character is not alive, returning!");
                 return false;
             }
 
@@ -468,32 +466,19 @@ namespace AnyRPG {
         }
 
         public BaseAbility GetMeleeAbility() {
-            //Debug.Log(gameObject.name + ".AICombat.GetValidAttackAbility()");
-
             if (BaseCharacter != null && BaseCharacter.CharacterAbilityManager != null) {
-                //Debug.Log(gameObject.name + ".AICombat.GetValidAttackAbility(): CHARACTER HAS ABILITY MANAGER");
-
                 foreach (BaseAbility baseAbility in BaseCharacter.CharacterAbilityManager.AbilityList.Values) {
-                    //Debug.Log(gameObject.name + ".AICombat.GetValidAttackAbility(): Checking ability: " + baseAbility.MyName);
-                    //if (baseAbility.maxRange == 0 || Vector3.Distance(aiController.MyBaseCharacter.MyCharacterUnit.transform.position, aiController.MyTarget.transform.position) < baseAbility.maxRange) {
                     if (baseAbility.GetTargetOptions(baseCharacter).CanCastOnEnemy && baseAbility.GetTargetOptions(baseCharacter).UseMeleeRange == true) {
-                        //Debug.Log(gameObject.name + ".AICombat.GetValidAttackAbility(): ADDING AN ABILITY TO LIST");
-                        //if (baseAbility.MyCanCastOnEnemy) {
                         return baseAbility;
                     }
-                    //}
                 }
             }
-            //Debug.Log(gameObject.name + ".AICombat.GetValidAttackAbility(): ABOUT TO RETURN NULL!");
             return null;
         }
 
         public List<BaseAbility> GetAttackRangeAbilityList() {
             List<BaseAbility> returnList = new List<BaseAbility>();
-
             if (BaseCharacter != null && BaseCharacter.CharacterAbilityManager != null) {
-                //Debug.Log(gameObject.name + ".AICombat.GetValidAttackAbility(): CHARACTER HAS ABILITY MANAGER");
-
                 foreach (BaseAbility baseAbility in BaseCharacter.CharacterAbilityManager.AbilityList.Values) {
                     returnList.Add(baseAbility);
                 }
@@ -502,27 +487,20 @@ namespace AnyRPG {
         }
 
         public float GetMinAttackRange(List<BaseAbility> baseAbilityList) {
-            //Debug.Log(gameObject.name + ".AICombat.GetValidAttackAbility()");
-
             float returnValue = 0f;
 
             if (BaseCharacter != null && BaseCharacter.CharacterAbilityManager != null) {
-                //Debug.Log(gameObject.name + ".AICombat.GetValidAttackAbility(): CHARACTER HAS ABILITY MANAGER");
-
                 foreach (BaseAbility baseAbility in baseAbilityList) {
-                    //Debug.Log(gameObject.name + ".AICombat.GetValidAttackAbility(): Checking ability: " + baseAbility.MyName);
                     if (baseAbility.GetTargetOptions(baseCharacter).CanCastOnEnemy
                         && baseAbility.GetTargetOptions(baseCharacter).UseMeleeRange == false
                         && baseAbility.GetTargetOptions(baseCharacter).MaxRange > 0f) {
                         float returnedMaxRange = baseAbility.GetLOSMaxRange(baseCharacter, baseCharacter.UnitController.Target);
                         if (returnValue == 0f || returnedMaxRange < returnValue) {
-                            //Debug.Log(sourceCharacter.AbilityManager.MyName + ".AICombat.GetValidAttackAbility(): ADDING AN ABILITY TO LIST: " + baseAbility.MyName);
                             returnValue = returnedMaxRange;
                         }
                     }
                 }
             }
-            //Debug.Log(baseCharacter.gameObject.name + ".CharacterCombat.GetMinAttackRange(): return " + returnValue);
             return returnValue;
         }
 
@@ -750,23 +728,14 @@ namespace AnyRPG {
 
             if (newItem != null) {
                 if (newItem is Weapon) {
-                    // testing: disabled these because equipping a shield after a sword would clear the hit effects
-                    //onHitEffects.Clear();
-                    //defaultHitEffects.Clear();
-                    //Debug.Log(gameObject.name + ".CharacterCombat.HandleEquipmentChanged(): item is a weapon");
-                    //overrideHitSoundEffect = null;
-                    //defaultHitSoundEffect = null;
                     if ((newItem as Weapon).OnHitEffectList != null && (newItem as Weapon).OnHitEffectList.Count > 0) {
-                        //Debug.Log(gameObject.name + ".CharacterCombat.HandleEquipmentChanged(): New item is a weapon and has the on hit effect " + (newItem as Weapon).MyOnHitEffect.MyName);
                         onHitEffects.AddRange((newItem as Weapon).OnHitEffectList);
                     }
                     if ((newItem as Weapon).DefaultHitEffectList != null && (newItem as Weapon).DefaultHitEffectList.Count > 0) {
-                        //Debug.Log(baseCharacter.gameObject.name + ".CharacterCombat.HandleEquipmentChanged(): New item (" + newItem.DisplayName + ") is a weapon and has default hit effects");
                         defaultHitEffects.AddRange((newItem as Weapon).DefaultHitEffectList);
                     }
                     if (equipmentSlotProfile != null && equipmentSlotProfile.SetOnHitAudio == true) {
                         if ((newItem as Weapon).DefaultHitSoundEffects != null) {
-                            //Debug.Log(baseCharacter.gameObject.name + ".CharacterCombat.HandleEquipmentChanged(): setting default hit sound");
                             defaultHitSoundEffects.AddRange((newItem as Weapon).DefaultHitSoundEffects);
                         }
                     }

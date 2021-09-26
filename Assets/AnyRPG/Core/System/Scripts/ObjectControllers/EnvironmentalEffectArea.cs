@@ -64,8 +64,6 @@ namespace AnyRPG {
             List<AOETargetNode> validTargets = GetValidTargets();
             foreach (AOETargetNode validTarget in validTargets) {
                 foreach (AbilityEffect abilityEffect in abilityEffects) {
-                    //Debug.Log(gameObject.name + ".EnvironmentalEffectArea.PerformAbilityEffects(): casting " + abilityEffect.MyName);
-
                     abilityEffect.Cast(this, validTarget.targetGameObject, null, new AbilityEffectContext());
                 }
             }
@@ -81,7 +79,7 @@ namespace AnyRPG {
             int characterMask = 1 << LayerMask.NameToLayer("CharacterUnit");
             int validMask = (playerMask | characterMask);
 
-            //Debug.Log(MyName + ".AOEEffect.GetValidTargets(): using aoeSpawnCenter: " + aoeSpawnCenter + ", extents: " + aoeExtents);
+            //Debug.Log(DisplayName + ".AOEEffect.GetValidTargets(): using aoeSpawnCenter: " + aoeSpawnCenter + ", extents: " + aoeExtents);
             colliders = Physics.OverlapBox(aoeSpawnCenter, boxCollider.bounds.extents, Quaternion.identity, validMask);
 
             //Debug.Log("AOEEffect.Cast(): Casting OverlapSphere with radius: " + aoeRadius);

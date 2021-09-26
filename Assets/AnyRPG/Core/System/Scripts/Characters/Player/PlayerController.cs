@@ -325,18 +325,15 @@ namespace AnyRPG {
                         if (newInteractable == null) {
                             newInteractable = mouseOverhit.collider.GetComponentInParent<Interactable>();
                         }
-                        //Debug.Log("We hit " + mouseOverhit.collider.name + " " + mouseOverhit.point + "; old: " + (mouseOverInteractable != null ? mouseOverInteractable.MyName : "null") + "; new: " + (newInteractable != null ? newInteractable.MyName : "null"));
 
                         if (mouseOverInteractable != null && mouseOverInteractable != newInteractable) {
                             // since we hit something, and our existing thing was not null, we have to exit the old one
-                            //Debug.Log("We hit " + mouseOverhit.collider.name + " " + mouseOverhit.point + "; old: " + (mouseOverInteractable != null ? mouseOverInteractable.MyName : "null")+ "; new: " + (newInteractable != null ? newInteractable.MyName : "null" ));
                             mouseOverInteractable.IsMouseOverUnit = false;
                             mouseOverInteractable.OnMouseOut();
                         }
 
                         if (newInteractable != null && mouseOverInteractable != newInteractable) {
                             // we have a new interactable, activate mouseover
-                            //Debug.Log("We hit " + mouseOverhit.collider.name + " " + mouseOverhit.point + " and it had an interactable.  activating mouseover");
                             newInteractable.IsMouseOverUnit = true;
                             newInteractable.OnMouseIn();
                         }
@@ -597,13 +594,8 @@ namespace AnyRPG {
         }
 
         public void InterActWithInteractableOption(Interactable interactable, InteractableOptionComponent interactableOption) {
-            //Debug.Log(gameObject.name + ".InterActWithTarget(" + interactable.MyName + ", " + _gameObject.name.ToString() + ")");
             playerManager.UnitController.SetTarget(interactable);
-            if (interactable == null) {
-                //Debug.Log(gameObject.name + ".PlayerController.InteractWithTarget(): interactable is null!!!");
-            }
             if (InteractionWithOptionSucceeded(interactableOption)) {
-                //Debug.Log("We were able to interact with the target");
                 // not actually stopping interacting.  just clearing target if this was a trigger interaction and we are not interacting with a focus
                 StopInteract();
             } else {

@@ -134,7 +134,7 @@ namespace AnyRPG {
             //Equipment equipment = characterEquipmentManager.CurrentEquipment[equipmentSlotProfile];
             //public void HandleWeaponSlot(Equipment newItem) {
             if (equipment == null || unitController == null) {
-                //Debug.Log(gameObject.name + ".CharacterEquipmentManager.HandleWeaponSlot(): MyHoldableObjectName is empty on " + newItem.MyName);
+                //Debug.Log(gameObject.name + ".CharacterEquipmentManager.HandleWeaponSlot(): MyHoldableObjectName is empty on " + newItem.DisplayName);
                 return;
             }
 

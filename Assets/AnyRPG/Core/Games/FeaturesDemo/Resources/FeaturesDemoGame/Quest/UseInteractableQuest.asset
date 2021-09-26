@@ -43,6 +43,9 @@ MonoBehaviour:
   abilityRewardNames: []
   maxSkillRewards: 0
   skillRewardNames: []
+  steps:
+  - questObjectives:
+    - id: 0
   collectObjectives: []
   killObjectives: []
   tradeSkillObjectives: []
@@ -51,6 +54,7 @@ MonoBehaviour:
   - amount: 0
     type: Spawn Characters
     overrideDisplayName: 
+    interactableName: 
     requireCompletion: 0
   questQuestObjectives: []
   dialogObjectives: []
@@ -58,3 +62,13 @@ MonoBehaviour:
   prerequisiteConditions: []
   turnInItems: 0
   allowRawComplete: 0
+  references:
+    version: 1
+    00000000:
+      type: {class: UseInteractableObjective, ns: AnyRPG, asm: Assembly-CSharp}
+      data:
+        amount: 1
+        type: 
+        overrideDisplayName: 
+        interactableName: Spawn Characters
+        requireCompletion: 0

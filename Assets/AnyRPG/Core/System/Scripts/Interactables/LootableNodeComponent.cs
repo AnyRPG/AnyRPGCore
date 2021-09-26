@@ -208,13 +208,6 @@ namespace AnyRPG {
             return true;
         }
 
-        /*
-        public override int GetCurrentOptionCount() {
-            //Debug.Log(gameObject.name + ".GatheringNode.GetCurrentOptionCount()");
-            return (playerManager.MyCharacter.MyCharacterAbilityManager.HasAbility(MyAbility.MyName) == true && interactable.MySpawnReference != null ? 1 : 0);
-        }
-        */
-
         public override bool CanInteract(bool processRangeCheck = false, bool passedRangeCheck = false, float factionValue = 0f, bool processNonCombatCheck = true) {
             //Debug.Log(interactable.gameObject.name + ".LootableNode.CanInteract()");
             bool returnValue = base.CanInteract(processRangeCheck, passedRangeCheck, factionValue, processNonCombatCheck);

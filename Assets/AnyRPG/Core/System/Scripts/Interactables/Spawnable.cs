@@ -245,7 +245,6 @@ namespace AnyRPG {
             //Debug.Log(gameObject.name + ".Spawnable.Spawn()");
 
             if (spawnReference == null && prefabProfile?.Prefab != null) {
-                //Debug.Log(gameObject.name + ".Spawnable.Spawn(): Spawning " + prefabProfile.MyName);
                 Vector3 usedPosition = prefabProfile.SheathedPosition;
                 Vector3 usedScale = prefabProfile.SheathedScale;
                 Vector3 usedRotation = prefabProfile.SheathedRotation;

@@ -945,7 +945,6 @@ namespace AnyRPG {
         }
 
         public void ShowToolTip(Vector3 position, IDescribable describable, string showSellPrice) {
-            //Debug.Log("UIManager.ShowToolTip(): Input.MousePosition: " + Input.mousePosition + "; description: " + (describable == null ? "null" : describable.MyName));
             if (describable == null) {
                 HideToolTip();
                 return;
@@ -1017,15 +1016,12 @@ namespace AnyRPG {
             if (ToolTipCurrencyBarController != null) {
                 ToolTipCurrencyBarController.ClearCurrencyAmounts();
                 if (describable is Item && showSellPrice != string.Empty) {
-                    //Debug.Log("UIManager.ShowToolTipCommon(" + (describable == null ? "null" : describable.MyName) + "): describable is item");
                     KeyValuePair<Currency, int> sellAmount = (describable as Item).GetSellPrice();
                     if (sellAmount.Value == 0 || sellAmount.Key == null) {
-                        //Debug.Log("UIManager.ShowToolTipCommon(" + (describable == null ? "null" : describable.MyName) + ")");
-                        // don't print a s sell price on things that cannot be sold
+                        // don't print a sell price on things that cannot be sold
                         return;
                     }
                     ToolTipCurrencyBarController.UpdateCurrencyAmount(sellAmount.Key, sellAmount.Value, showSellPrice);
-                    //currencyAmountController.MyAmountText.text = "Vendor Price: " + sellAmount;
                 }
             }
 
@@ -1042,7 +1038,6 @@ namespace AnyRPG {
             RefreshTooltip(describable, string.Empty);
         }
         public void RefreshTooltip(IDescribable describable, string showSellPrice) {
-            //Debug.Log("UIManager.RefreshTooltip(" + describable.MyName + ")");
             if (describable != null && toolTipText != null && toolTipText.text != null) {
                 ShowToolTipCommon(describable, showSellPrice);
                 //toolTipText.text = description.GetDescription();

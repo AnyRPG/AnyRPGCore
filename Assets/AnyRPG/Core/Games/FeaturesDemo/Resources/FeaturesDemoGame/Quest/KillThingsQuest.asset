@@ -20,7 +20,7 @@ MonoBehaviour:
 
 
     You
-    can spawn these targets at the Spawn Arena'
+    can find these targets in the dungeon.'
   useRegionalDescription: 0
   resourceDescriptionProfile: 
   isAchievement: 0
@@ -43,20 +43,42 @@ MonoBehaviour:
   abilityRewardNames: []
   maxSkillRewards: 0
   skillRewardNames: []
-  collectObjectives: []
-  killObjectives:
+  steps:
+  - questObjectives:
+    - id: 0
+    - id: 1
+  deprecatedCollectObjectives: []
+  deprecatedKillObjectives:
   - amount: 1
-    type: Blue Melee
+    deprecatedType: Blue Melee
     overrideDisplayName: 
+    targetName: 
   - amount: 1
-    type: Red Ranged
+    deprecatedType: Red Ranged
     overrideDisplayName: 
-  tradeSkillObjectives: []
-  abilityObjectives: []
-  useInteractableObjectives: []
-  questQuestObjectives: []
-  dialogObjectives: []
-  visitZoneObjectives: []
+    targetName: 
+  deprecatedTradeSkillObjectives: []
+  deprecatedAbilityObjectives: []
+  deprecatedUseInteractableObjectives: []
+  deprecatedQuestQuestObjectives: []
+  deprecatedDialogObjectives: []
+  deprecatedVisitZoneObjectives: []
   prerequisiteConditions: []
   turnInItems: 0
   allowRawComplete: 0
+  references:
+    version: 1
+    00000000:
+      type: {class: KillObjective, ns: AnyRPG, asm: Assembly-CSharp}
+      data:
+        amount: 1
+        deprecatedType: 
+        overrideDisplayName: 
+        targetName: Black Minion
+    00000001:
+      type: {class: KillObjective, ns: AnyRPG, asm: Assembly-CSharp}
+      data:
+        amount: 1
+        deprecatedType: 
+        overrideDisplayName: 
+        targetName: Black Boss

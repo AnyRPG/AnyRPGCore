@@ -9,9 +9,18 @@ namespace AnyRPG {
     [System.Serializable]
     public class CollectObjective : QuestObjective {
 
+        [SerializeField]
+        [ResourceSelector(resourceType = typeof(Item))]
+        protected string itemName = null;
+
+        [Tooltip("If true, the name can be partially matched")]
+        [SerializeField]
+        protected bool partialMatch = false;
 
         // game manager references
         protected InventoryManager inventoryManager = null;
+
+        public override string ObjectiveName { get => itemName; }
 
         public override Type ObjectiveType {
             get {
@@ -22,7 +31,7 @@ namespace AnyRPG {
         public void UpdateItemCount(Item item) {
 
             // change this with check reference to item prefab in the future
-            if (SystemDataFactory.MatchResource(MyType, item.DisplayName)) {
+            if (SystemDataFactory.MatchResource(item.DisplayName, itemName, partialMatch)) {
                 UpdateCompletionCount();
             }
         }
@@ -33,12 +42,12 @@ namespace AnyRPG {
             if (completeBefore) {
                 return;
             }
-            CurrentAmount = inventoryManager.GetItemCount(MyType);
-            CurrentAmount += playerManager.MyCharacter.CharacterEquipmentManager.GetEquipmentCount(MyType);
+            CurrentAmount = inventoryManager.GetItemCount(itemName, partialMatch);
+            CurrentAmount += playerManager.MyCharacter.CharacterEquipmentManager.GetEquipmentCount(itemName, partialMatch);
 
             quest.CheckCompletion(true, printMessages);
-            if (CurrentAmount <= MyAmount && !quest.IsAchievement && printMessages == true && CurrentAmount != 0) {
-                messageFeedManager.WriteMessage(string.Format("{0}: {1}/{2}", DisplayName, Mathf.Clamp(CurrentAmount, 0, MyAmount), MyAmount));
+            if (CurrentAmount <= Amount && !quest.IsAchievement && printMessages == true && CurrentAmount != 0) {
+                messageFeedManager.WriteMessage(string.Format("{0}: {1}/{2}", DisplayName, Mathf.Clamp(CurrentAmount, 0, Amount), Amount));
             }
             if (completeBefore == false && IsComplete && !quest.IsAchievement && printMessages == true) {
                 messageFeedManager.WriteMessage(string.Format("Collect {0} {1}: Objective Complete", CurrentAmount, DisplayName));
@@ -48,7 +57,7 @@ namespace AnyRPG {
         }
 
         public void Complete() {
-            List<Item> items = inventoryManager.GetItems(MyType, MyAmount);
+            List<Item> items = inventoryManager.GetItems(itemName, Amount);
             foreach (Item item in items) {
                 item.Remove();
             }

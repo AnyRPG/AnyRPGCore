@@ -20,7 +20,7 @@ namespace AnyRPG {
         public List<QuestNode> MyQuests { get => quests; }
 
         public override void SetupScriptableObjects(SystemGameManager systemGameManager) {
-            //Debug.Log(MyName + ".QuestGiverProfile.SetupScriptableObjects()");
+            //Debug.Log(DisplayName + ".QuestGiverProfile.SetupScriptableObjects()");
             base.SetupScriptableObjects(systemGameManager);
 
             if (quests != null) {

@@ -32,12 +32,9 @@ namespace AnyRPG {
                     // ATTEMPT BUFF AND IMMEDIATELY RETURN ANY BUFF THAT NEEDS CASTING
                     foreach (BaseAbility baseAbility in validPhaseNode.MyMaintainBuffList) {
                         if (sourceCharacter.AbilityManager.HasAbility(baseAbility)) {
-                            //Debug.Log(MyName + ".AICombat.GetValidAttackAbility(): Checking ability: " + baseAbility.MyName);
-                            //if (baseAbility.maxRange == 0 || Vector3.Distance(aiController.MyBaseCharacter.MyCharacterUnit.transform.position, aiController.MyTarget.transform.position) < baseAbility.maxRange) {
                             if (!sourceCharacter.CharacterStats.StatusEffects.ContainsKey(SystemDataFactory.PrepareStringForMatch(baseAbility.GetAbilityEffects(sourceCharacter)[0].DisplayName))
                                 && sourceCharacter.AbilityManager.CanCastAbility(baseAbility)
                                 && baseAbility.CanUseOn(sourceCharacter.UnitController, sourceCharacter)) {
-                                //Debug.Log(MyName + ".AICombat.GetValidAbility(): ADDING A BUFF ABILITY TO LIST");
                                 return baseAbility;
                             }
                         }
@@ -45,18 +42,12 @@ namespace AnyRPG {
 
                     // IF NO BUFF AVAILABLE, GET A LIST OF VALID ATTACKS
                     foreach (BaseAbility baseAbility in validPhaseNode.MyAttackAbilityList) {
-                        //Debug.Log(sourceCharacter.UnitController.gameObject.name + ".CombatStrategy.GetValidAttackAbility(): Checking if ability known: " + baseAbility.DisplayName);
                         if (sourceCharacter.AbilityManager.HasAbility(baseAbility)) {
-                            //Debug.Log(sourceCharacter.UnitController.gameObject.name + ".AICombat.GetValidAttackAbility(): Checking ability: " + baseAbility.DisplayName);
-                            //if (baseAbility.maxRange == 0 || Vector3.Distance(aiController.MyBaseCharacter.MyCharacterUnit.transform.position, aiController.MyTarget.transform.position) < baseAbility.maxRange) {
                             if (sourceCharacter.AbilityManager.CanCastAbility(baseAbility)
                                 && baseAbility.CanUseOn(sourceCharacter.UnitController.Target, sourceCharacter)
                                 && sourceCharacter.AbilityManager.PerformLOSCheck(sourceCharacter.UnitController.Target, baseAbility)) {
-                                //Debug.Log(sourceCharacter.UnitController.gameObject.name + ".AICombat.GetValidAttackAbility(): ADDING AN ABILITY TO LIST: " + baseAbility.DisplayName);
                                 returnList.Add(baseAbility);
                             }
-                        } else {
-                            //Debug.Log("CombatStrategy.GetValidAttackAbility(): ABILITY NOT KNOWN: " + baseAbility.DisplayName);
                         }
                     }
 
@@ -84,12 +75,8 @@ namespace AnyRPG {
 
                     // IF NO BUFF AVAILABLE, GET A LIST OF VALID ATTACKS
                     foreach (BaseAbility baseAbility in validPhaseNode.MyAttackAbilityList) {
-                        //Debug.Log(sourceCharacter.AbilityManager.MyName + ".AICombat.GetValidAttackAbility(): Checking if ability known: " + usedBaseAbilityName);
                         if (sourceCharacter.AbilityManager.HasAbility(baseAbility)) {
-                            //Debug.Log(sourceCharacter.AbilityManager.MyName + ".AICombat.GetValidAttackAbility(): Checking ability: " + baseAbility.MyName);
-                            //if (baseAbility.maxRange == 0 || Vector3.Distance(aiController.MyBaseCharacter.MyCharacterUnit.transform.position, aiController.MyTarget.transform.position) < baseAbility.maxRange) {
                             if (baseAbility.GetTargetOptions(sourceCharacter).CanCastOnEnemy && baseAbility.GetTargetOptions(sourceCharacter).UseMeleeRange == true) {
-                                //Debug.Log(sourceCharacter.AbilityManager.MyName + ".AICombat.GetValidAttackAbility(): ADDING AN ABILITY TO LIST: " + baseAbility.MyName);
                                 return baseAbility;
                             }
                         } else {
@@ -99,7 +86,6 @@ namespace AnyRPG {
 
                 }
             }
-            //Debug.Log(sourceCharacter.AbilityManager.MyName + ".AICombat.GetValidAttackAbility(): ABOUT TO RETURN NULL!");
             return null;
 
         }
@@ -142,7 +128,6 @@ namespace AnyRPG {
                 if (sourceCharacter != null && sourceCharacter.CharacterStats != null) {
                     if (Mathf.Ceil((sourceCharacter.CharacterStats.CurrentPrimaryResource / (float)sourceCharacter.CharacterStats.MaxPrimaryResource) * 100f) <= phaseNode.MyMaxHealthPercent
                         && Mathf.Floor((sourceCharacter.CharacterStats.CurrentPrimaryResource / (float)sourceCharacter.CharacterStats.MaxPrimaryResource) * 100f) >= phaseNode.MyMinHealthPercent) {
-                        //Debug.Log(sourceCharacter.AbilityManager.MyName + ".GetValidPhaseNodes: currentHealth: " + sourceCharacter.AbilityManager.MyCharacterStats.currentHealth + "; MaxHealth: " + sourceCharacter.AbilityManager.MyCharacterStats.MyMaxHealth);
                         returnList.Add(phaseNode);
                     }
                 }

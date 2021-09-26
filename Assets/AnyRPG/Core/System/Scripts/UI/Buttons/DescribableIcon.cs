@@ -38,18 +38,15 @@ namespace AnyRPG {
         /// </summary>
         /// <param name="describable"></param>
         public virtual void SetDescribable(IDescribable describable) {
-            //Debug.Log("DescribableIcon.SetDescribable(" + (describable == null ? "null" : describable.MyName) + ")");
             SetDescribableCommon(describable);
         }
 
         public virtual void SetDescribable(IDescribable describable, int count) {
-            //Debug.Log("DescribableIcon.SetDescribable(" + describable.MyName + ")");
             this.count = count;
             SetDescribableCommon(describable);
         }
 
         protected virtual void SetDescribableCommon(IDescribable describable) {
-            //Debug.Log("DescribableIcon.SetDescribableCommon(" + (describable == null ? "null" : describable.MyName) + ")");
             this.Describable = describable;
             UpdateVisual();
 
@@ -76,12 +73,6 @@ namespace AnyRPG {
         }
 
         public virtual void UpdateVisual(Item item) {
-            //Debug.Log("DescribableIcon.UpdateVisual()");
-            /*
-            if ((item as IDescribable) == MyDescribable) {
-                count = SystemGameManager.Instance.InventoryManager.GetItemCount(item.MyName);
-            }
-            */
             UpdateVisual();
         }
 
@@ -90,12 +81,6 @@ namespace AnyRPG {
         /// </summary>
         public virtual void UpdateVisual() {
             //Debug.Log("DescribableIcon.UpdateVisual()");
-            if (Describable == null) {
-                //Debug.Log("DescribableIcon.UpdateVisual(): MyDescribable is null!");
-            }
-            if (MyIcon == null) {
-                //Debug.Log("DescribableIcon.UpdateVisual(): MyIcon is null!");
-            }
             if (Describable != null && MyIcon != null) {
                 if (MyIcon.sprite != Describable.Icon) {
                     //Debug.Log("DescribableIcon.UpdateVisual(): Updating Icon for : " + MyDescribable.MyName);

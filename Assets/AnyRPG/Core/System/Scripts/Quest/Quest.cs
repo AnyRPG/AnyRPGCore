@@ -13,6 +13,7 @@ namespace AnyRPG {
     public class Quest : DescribableResource, IPrerequisiteOwner {
 
         public event System.Action OnQuestStatusUpdated = delegate { };
+        public event System.Action OnQuestObjectiveStatusUpdated = delegate { };
 
         [Header("Quest")]
 
@@ -125,28 +126,41 @@ namespace AnyRPG {
         [Header("Objectives")]
 
         [SerializeField]
-        protected CollectObjective[] collectObjectives;
+        protected List<QuestStep> steps = new List<QuestStep>();
+
+        [Header("Deprecated Objectives")]
 
         [SerializeField]
-        protected KillObjective[] killObjectives;
+        [FormerlySerializedAs("collectObjectives")]
+        protected CollectObjective[] deprecatedCollectObjectives;
 
         [SerializeField]
-        protected TradeSkillObjective[] tradeSkillObjectives;
+        [FormerlySerializedAs("killObjectives")]
+        protected KillObjective[] deprecatedKillObjectives;
 
         [SerializeField]
-        protected AbilityObjective[] abilityObjectives;
+        [FormerlySerializedAs("tradeSkillObjectives")]
+        protected TradeSkillObjective[] deprecatedTradeSkillObjectives;
 
         [SerializeField]
-        protected UseInteractableObjective[] useInteractableObjectives;
+        [FormerlySerializedAs("abilityObjectives")]
+        protected AbilityObjective[] deprecatedAbilityObjectives;
 
         [SerializeField]
-        protected QuestQuestObjective[] questQuestObjectives;
+        [FormerlySerializedAs("useInteractableObjectives")]
+        protected UseInteractableObjective[] deprecatedUseInteractableObjectives;
 
         [SerializeField]
-        protected DialogObjective[] dialogObjectives;
+        [FormerlySerializedAs("questQuestObjectives")]
+        protected QuestQuestObjective[] deprecatedQuestQuestObjectives;
 
         [SerializeField]
-        protected VisitZoneObjective[] visitZoneObjectives;
+        [FormerlySerializedAs("dialogObjectives")]
+        protected DialogObjective[] deprecatedDialogObjectives;
+
+        [SerializeField]
+        [FormerlySerializedAs("visitZoneObjectives")]
+        protected VisitZoneObjective[] deprecatedVisitZoneObjectives;
 
         [Header("Prerequisites")]
 
@@ -171,13 +185,16 @@ namespace AnyRPG {
         protected MessageFeedManager messageFeedManager = null;
         protected QuestLog questLog = null;
 
-        public virtual CollectObjective[] MyCollectObjectives { get => collectObjectives; set => collectObjectives = value; }
-        public virtual KillObjective[] MyKillObjectives { get => killObjectives; set => killObjectives = value; }
-        public virtual TradeSkillObjective[] MyTradeSkillObjectives { get => tradeSkillObjectives; set => tradeSkillObjectives = value; }
-        public virtual AbilityObjective[] MyAbilityObjectives { get => abilityObjectives; set => abilityObjectives = value; }
-        public virtual UseInteractableObjective[] MyUseInteractableObjectives { get => useInteractableObjectives; set => useInteractableObjectives = value; }
-        public virtual QuestQuestObjective[] MyQuestQuestObjectives { get => questQuestObjectives; set => questQuestObjectives = value; }
-        public virtual DialogObjective[] MyDialogObjectives { get => dialogObjectives; set => dialogObjectives = value; }
+        /*
+        public virtual CollectObjective[] MyCollectObjectives { get => deprecatedCollectObjectives; set => deprecatedCollectObjectives = value; }
+        public virtual KillObjective[] MyKillObjectives { get => deprecatedKillObjectives; set => deprecatedKillObjectives = value; }
+        public virtual TradeSkillObjective[] MyTradeSkillObjectives { get => deprecatedTradeSkillObjectives; set => deprecatedTradeSkillObjectives = value; }
+        public virtual AbilityObjective[] MyAbilityObjectives { get => deprecatedAbilityObjectives; set => deprecatedAbilityObjectives = value; }
+        public virtual UseInteractableObjective[] MyUseInteractableObjectives { get => deprecatedUseInteractableObjectives; set => deprecatedUseInteractableObjectives = value; }
+        public virtual QuestQuestObjective[] MyQuestQuestObjectives { get => deprecatedQuestQuestObjectives; set => deprecatedQuestQuestObjectives = value; }
+        public virtual DialogObjective[] MyDialogObjectives { get => deprecatedDialogObjectives; set => deprecatedDialogObjectives = value; }
+        public virtual VisitZoneObjective[] VisitZoneObjectives { get => deprecatedVisitZoneObjectives; set => deprecatedVisitZoneObjectives = value; }
+        */
 
         public virtual bool IsComplete {
             get {
@@ -190,47 +207,11 @@ namespace AnyRPG {
                 }
                 */
 
-                foreach (QuestObjective o in collectObjectives) {
-                    if (!o.IsComplete) {
-                        return false;
-                    }
-                }
-                foreach (QuestObjective o in killObjectives) {
-                    if (!o.IsComplete) {
-                        return false;
-                    }
-                }
-                foreach (QuestObjective o in tradeSkillObjectives) {
-                    if (!o.IsComplete) {
-                        return false;
-                    }
-                }
-                foreach (QuestObjective o in abilityObjectives) {
-                    if (!o.IsComplete) {
-                        return false;
-                    }
-                }
-                foreach (QuestObjective o in useInteractableObjectives) {
-                    if (!o.IsComplete) {
-                        return false;
-                    }
-                }
-
-                foreach (QuestQuestObjective o in questQuestObjectives) {
-                    if (!o.IsComplete) {
-                        return false;
-                    }
-                }
-
-                foreach (DialogObjective o in dialogObjectives) {
-                    if (!o.IsComplete) {
-                        return false;
-                    }
-                }
-
-                foreach (VisitZoneObjective o in visitZoneObjectives) {
-                    if (!o.IsComplete) {
-                        return false;
+                if (steps.Count > 0) {
+                    foreach (QuestObjective questObjective in steps[steps.Count -1].QuestObjectives) {
+                        if (!questObjective.IsComplete) {
+                            return false;
+                        }
                     }
                 }
 
@@ -247,13 +228,13 @@ namespace AnyRPG {
             set {
                 QuestSaveData saveData = saveManager.GetQuestSaveData(this);
                 saveData.turnedIn = value;
-                saveManager.QuestSaveDataDictionary[saveData.MyName] = saveData;
+                saveManager.QuestSaveDataDictionary[saveData.QuestName] = saveData;
             }
         }
 
         public virtual void SetTurnedIn(bool turnedIn, bool notify = true) {
             this.TurnedIn = turnedIn;
-            //Debug.Log(MyName + ".Quest.TurnedIn = " + value);
+            //Debug.Log(DisplayName + ".Quest.TurnedIn = " + value);
             if (notify) {
                 if (playerManager.PlayerUnitSpawned == false) {
                     // STOP STUFF FROM REACTING WHEN PLAYER ISN'T SPAWNED
@@ -267,7 +248,7 @@ namespace AnyRPG {
 
         public virtual bool MyPrerequisitesMet {
             get {
-                //Debug.Log(MyName + ".Quest.MyPrerequisitesMet: ID: " + GetInstanceID());
+                //Debug.Log(DisplayName + ".Quest.MyPrerequisitesMet: ID: " + GetInstanceID());
                 foreach (PrerequisiteConditions prerequisiteCondition in prerequisiteConditions) {
                     if (!prerequisiteCondition.IsMet()) {
                         return false;
@@ -296,7 +277,6 @@ namespace AnyRPG {
         public virtual bool IsAchievement { get => isAchievement; set => isAchievement = value; }
         public virtual bool HasOpeningDialog { get => hasOpeningDialog; set => hasOpeningDialog = value; }
         public virtual Dialog OpeningDialog { get => openingDialog; set => openingDialog = value; }
-        public virtual VisitZoneObjective[] VisitZoneObjectives { get => visitZoneObjectives; set => visitZoneObjectives = value; }
         public virtual int ExperienceRewardPerLevel { get => experienceRewardPerLevel; set => experienceRewardPerLevel = value; }
         public virtual int BaseExperienceReward { get => baseExperienceReward; set => baseExperienceReward = value; }
         public virtual bool AutomaticCurrencyReward { get => automaticCurrencyReward; set => automaticCurrencyReward = value; }
@@ -304,6 +284,17 @@ namespace AnyRPG {
         public virtual Currency RewardCurrency { get => rewardCurrency; set => rewardCurrency = value; }
         public virtual int BaseCurrencyReward { get => baseCurrencyReward; set => baseCurrencyReward = value; }
         public virtual int CurrencyRewardPerLevel { get => currencyRewardPerLevel; set => currencyRewardPerLevel = value; }
+        public virtual int CurrentStep {
+            get {
+                return saveManager.GetQuestSaveData(this).questStep;
+                //return false;
+            }
+            set {
+                QuestSaveData saveData = saveManager.GetQuestSaveData(this);
+                saveData.questStep = value;
+                saveManager.SetQuestSaveData(saveData.QuestName, saveData);
+            }
+        }
         public virtual bool MarkedComplete {
             get {
                 return saveManager.GetQuestSaveData(this).markedComplete;
@@ -312,9 +303,11 @@ namespace AnyRPG {
             set {
                 QuestSaveData saveData = saveManager.GetQuestSaveData(this);
                 saveData.markedComplete = value;
-                saveManager.QuestSaveDataDictionary[saveData.MyName] = saveData;
+                saveManager.SetQuestSaveData(saveData.QuestName, saveData);
             }
         }
+
+        public List<QuestStep> Steps { get => steps; }
 
         public override void SetGameManagerReferences() {
             base.SetGameManagerReferences();
@@ -324,9 +317,21 @@ namespace AnyRPG {
             questLog = systemGameManager.QuestLog;
         }
 
-        public virtual void RemoveQuest() {
+        public virtual void RemoveQuest(bool resetQuestStep = true) {
             //Debug.Log("Quest.RemoveQuest(): " + DisplayName + " calling OnQuestStatusUpdated()");
+
+
             OnAbandonQuest();
+
+            // reset the quest objective save data so any completed portion is reset in case the quest is picked back up
+            saveManager.ResetQuestObjectiveSaveData(DisplayName);
+
+            // reset current step so the correct objective shows up in the quest giver window when the quest is picked back up
+            if (resetQuestStep == true) {
+                CurrentStep = 0;
+            }
+            MarkedComplete = false;
+
             if (playerManager != null && playerManager.PlayerUnitSpawned == false) {
                 // STOP STUFF FROM REACTING WHEN PLAYER ISN'T SPAWNED
                 return;
@@ -334,6 +339,18 @@ namespace AnyRPG {
             SystemEventManager.TriggerEvent("OnQuestStatusUpdated", new EventParamProperties());
             SystemEventManager.TriggerEvent("OnAfterQuestStatusUpdated", new EventParamProperties());
             OnQuestStatusUpdated();
+        }
+
+        public virtual void HandInItems() {
+            if (turnInItems == true) {
+                if (steps.Count > 0) {
+                    foreach (QuestObjective questObjective in steps[saveManager.GetQuestSaveData(this).questStep].QuestObjectives) {
+                        if ((questObjective as CollectObjective) is CollectObjective) {
+                            (questObjective as CollectObjective).Complete();
+                        }
+                    }
+                }
+            }
         }
 
         public virtual List<CurrencyNode> GetCurrencyReward() {
@@ -387,59 +404,41 @@ namespace AnyRPG {
         }
 
         public virtual void OnAbandonQuest() {
-            foreach (CollectObjective o in MyCollectObjectives) {
-                o.OnAbandonQuest();
+            if (steps.Count > 0) {
+                foreach (QuestObjective questObjective in steps[CurrentStep].QuestObjectives) {
+                    questObjective.OnAbandonQuest();
+                }
             }
-            foreach (KillObjective o in MyKillObjectives) {
-                o.OnAbandonQuest();
-            }
-            foreach (TradeSkillObjective o in MyTradeSkillObjectives) {
-                o.OnAbandonQuest();
-            }
-            foreach (AbilityObjective o in MyAbilityObjectives) {
-                o.OnAbandonQuest();
-            }
-            foreach (UseInteractableObjective o in MyUseInteractableObjectives) {
-                o.OnAbandonQuest();
-            }
-            foreach (QuestQuestObjective o in MyQuestQuestObjectives) {
-                o.OnAbandonQuest();
-            }
-            foreach (DialogObjective o in MyDialogObjectives) {
-                o.OnAbandonQuest();
-            }
-            foreach (VisitZoneObjective o in VisitZoneObjectives) {
-                o.OnAbandonQuest();
-            }
+           
         }
 
         public virtual string GetStatus() {
-            //Debug.Log(MyName + ".Quest.GetStatus()");
+            //Debug.Log(DisplayName + ".Quest.GetStatus()");
 
             string returnString = string.Empty;
 
             if (TurnedIn && !repeatableQuest) {
-                //Debug.Log(MyName + ".Quest.GetStatus(): returning completed");
+                //Debug.Log(DisplayName + ".Quest.GetStatus(): returning completed");
                 return "completed";
             }
 
             if (questLog.HasQuest(DisplayName) && IsComplete) {
-                //Debug.Log(MyName + ".Quest.GetStatus(): returning complete");
+                //Debug.Log(DisplayName + ".Quest.GetStatus(): returning complete");
                 return "complete";
             }
 
             if (questLog.HasQuest(DisplayName)) {
-                //Debug.Log(MyName + ".Quest.GetStatus(): returning inprogress");
+                //Debug.Log(DisplayName + ".Quest.GetStatus(): returning inprogress");
                 return "inprogress";
             }
 
             if (!questLog.HasQuest(DisplayName) && (TurnedIn == false || RepeatableQuest == true) && MyPrerequisitesMet == true) {
-                //Debug.Log(MyName + ".Quest.GetStatus(): returning available");
+                //Debug.Log(DisplayName + ".Quest.GetStatus(): returning available");
                 return "available";
             }
 
             // this quest prerequisites were not met
-            //Debug.Log(MyName + ".Quest.GetStatus(): returning unavailable");
+            //Debug.Log(DisplayName + ".Quest.GetStatus(): returning unavailable");
             return "unavailable";
         }
 
@@ -458,36 +457,10 @@ namespace AnyRPG {
         public virtual string GetUnformattedObjectiveList() {
             string objectives = string.Empty;
             List<string> objectiveList = new List<string>();
-            foreach (CollectObjective obj in MyCollectObjectives) {
-                objectiveList.Add(obj.DisplayName + ": " + Mathf.Clamp(obj.CurrentAmount, 0, obj.MyAmount) + "/" + obj.MyAmount);
-            }
-            foreach (KillObjective obj in MyKillObjectives) {
-                objectiveList.Add(obj.DisplayName + ": " + Mathf.Clamp(obj.CurrentAmount, 0, obj.MyAmount) + "/" + obj.MyAmount);
-            }
-            foreach (TradeSkillObjective obj in MyTradeSkillObjectives) {
-                objectiveList.Add(obj.DisplayName + ": " + Mathf.Clamp(obj.CurrentAmount, 0, obj.MyAmount) + "/" + obj.MyAmount);
-            }
-            foreach (QuestQuestObjective obj in MyQuestQuestObjectives) {
-                //Debug.Log("questquestobjective display");
-                objectiveList.Add(obj.DisplayName + ": " + Mathf.Clamp(obj.CurrentAmount, 0, obj.MyAmount) + "/" + obj.MyAmount);
-            }
-            foreach (UseInteractableObjective obj in MyUseInteractableObjectives) {
-                objectiveList.Add(obj.DisplayName + ": " + Mathf.Clamp(obj.CurrentAmount, 0, obj.MyAmount) + "/" + obj.MyAmount);
-            }
-            foreach (AbilityObjective obj in MyAbilityObjectives) {
-                string beginText = string.Empty;
-                if (obj.MyRequireUse) {
-                    beginText = "Use ";
-                } else {
-                    beginText = "Learn ";
+            if (steps.Count > 0) {
+                foreach (QuestObjective questObjective in steps[saveManager.GetQuestSaveData(this).questStep].QuestObjectives) {
+                    objectiveList.Add(questObjective.GetUnformattedStatus());
                 }
-                objectiveList.Add(beginText + obj.DisplayName + ": " + Mathf.Clamp(obj.CurrentAmount, 0, obj.MyAmount) + "/" + obj.MyAmount);
-            }
-            foreach (DialogObjective obj in MyDialogObjectives) {
-                objectiveList.Add(obj.DisplayName + ": " + Mathf.Clamp(obj.CurrentAmount, 0, obj.MyAmount) + "/" + obj.MyAmount);
-            }
-            foreach (VisitZoneObjective obj in VisitZoneObjectives) {
-                objectiveList.Add(obj.DisplayName + ": " + Mathf.Clamp(obj.CurrentAmount, 0, obj.MyAmount) + "/" + obj.MyAmount);
             }
             objectives = string.Join("\n", objectiveList);
             if (objectives == string.Empty) {
@@ -496,37 +469,26 @@ namespace AnyRPG {
             return objectives;
         }
 
-        public virtual void AcceptQuest(bool printMessages = true) {
-            //Debug.Log("Quest.AcceptQuest(" + MyName + ")");
+        public virtual void AcceptQuest(bool printMessages = true, bool resetStep = true) {
+            QuestSaveData questSaveData = saveManager.GetQuestSaveData(this);
+            if (resetStep == true) {
+                questSaveData.questStep = 0;
+            }
+            questSaveData.markedComplete = false;
+            questSaveData.turnedIn = false;
+            saveManager.SetQuestSaveData(DisplayName, questSaveData);
+            if (steps.Count > 0) {
+                foreach (QuestObjective questObjective in steps[CurrentStep].QuestObjectives) {
+                    questObjective.OnAcceptQuest(this, printMessages);
+                }
+            }
 
-            foreach (CollectObjective o in MyCollectObjectives) {
-                o.OnAcceptQuest(this, printMessages);
-            }
-            foreach (TradeSkillObjective o in MyTradeSkillObjectives) {
-                o.OnAcceptQuest(this, printMessages);
-            }
-            foreach (AbilityObjective o in MyAbilityObjectives) {
-                o.OnAcceptQuest(this, printMessages);
-            }
-            foreach (KillObjective o in MyKillObjectives) {
-                o.OnAcceptQuest(this, printMessages);
-            }
-            foreach (UseInteractableObjective o in MyUseInteractableObjectives) {
-                o.OnAcceptQuest(this, printMessages);
-            }
-            foreach (DialogObjective o in MyDialogObjectives) {
-                o.OnAcceptQuest(this, printMessages);
-            }
-            foreach (VisitZoneObjective o in VisitZoneObjectives) {
-                o.OnAcceptQuest(this, printMessages);
-            }
-            foreach (QuestQuestObjective o in MyQuestQuestObjectives) {
-                o.OnAcceptQuest(this, printMessages);
-            }
             if (isAchievement == false && printMessages == true) {
                 messageFeedManager.WriteMessage("Quest Accepted: " + DisplayName);
             }
-            if (!MarkedComplete) {
+            // this next statement seems unnecessary.  is it a holdover from when quests were cloned ?
+            // disable for now and see if anything breaks
+            //if (!MarkedComplete) {
                 // needs to be done here if quest wasn't auto-completed in checkcompletion
                 if (playerManager != null && playerManager.PlayerUnitSpawned == false) {
                     // STOP STUFF FROM REACTING WHEN PLAYER ISN'T SPAWNED
@@ -535,7 +497,7 @@ namespace AnyRPG {
                 SystemEventManager.TriggerEvent("OnQuestStatusUpdated", new EventParamProperties());
                 SystemEventManager.TriggerEvent("OnAfterQuestStatusUpdated", new EventParamProperties());
                 OnQuestStatusUpdated();
-            }
+            //}
         }
 
         public virtual void CheckCompletion(bool notifyOnUpdate = true, bool printMessages = true) {
@@ -546,44 +508,34 @@ namespace AnyRPG {
             }
             bool questComplete = true;
 
-            foreach (CollectObjective o in MyCollectObjectives) {
-                if (!o.IsComplete) {
-                    questComplete = false;
-                }
-            }
-            foreach (TradeSkillObjective o in MyTradeSkillObjectives) {
-                if (!o.IsComplete) {
-                    questComplete = false;
-                }
-            }
-            foreach (AbilityObjective o in MyAbilityObjectives) {
-                if (!o.IsComplete) {
-                    questComplete = false;
-                }
-            }
-            foreach (KillObjective o in MyKillObjectives) {
-                if (!o.IsComplete) {
-                    questComplete = false;
-                }
-            }
-            foreach (UseInteractableObjective o in MyUseInteractableObjectives) {
-                if (!o.IsComplete) {
-                    questComplete = false;
-                }
-            }
-            foreach (DialogObjective o in MyDialogObjectives) {
-                if (!o.IsComplete) {
-                    questComplete = false;
-                }
-            }
-            foreach (VisitZoneObjective o in VisitZoneObjectives) {
-                if (!o.IsComplete) {
-                    questComplete = false;
-                }
-            }
-            foreach (QuestQuestObjective o in MyQuestQuestObjectives) {
-                if (!o.IsComplete) {
-                    questComplete = false;
+            if (steps.Count > 0) {
+                for (int i = CurrentStep; i < steps.Count; i++) {
+                    // advance current step to ensure quest tracker and log show proper objectives
+                    if (CurrentStep != i) {
+                        CurrentStep = i;
+
+                        // unsubscribe the previous step objectives
+                        foreach (QuestObjective questObjective in steps[i-1].QuestObjectives) {
+                            questObjective.OnAbandonQuest();
+                        }
+
+                        // reset save data from this step in case the next step contains an objective of the same type, but different amount
+                        saveManager.ResetQuestObjectiveSaveData(DisplayName);
+
+                        // subscribe the current step objectives
+                        foreach (QuestObjective questObjective in steps[i].QuestObjectives) {
+                            questObjective.OnAcceptQuest(this, printMessages);
+                        }
+                    }
+                    foreach (QuestObjective questObjective in steps[i].QuestObjectives) {
+                        if (!questObjective.IsComplete) {
+                            questComplete = false;
+                            break;
+                        }
+                    }
+                    if (questComplete == false) {
+                        break;
+                    }
                 }
             }
 
@@ -591,8 +543,9 @@ namespace AnyRPG {
                 CheckMarkComplete(notifyOnUpdate, printMessages);
             } else {
                 // since this method only gets called as a result of a quest objective status updating, we need to notify for that at minimum
-                //Debug.Log("Quest.CheckCompletion(): about to notify for objective status updated");
+                //Debug.Log(DisplayName + ".Quest.CheckCompletion(): about to notify for objective status updated");
                 SystemEventManager.TriggerEvent("OnQuestObjectiveStatusUpdated", new EventParamProperties());
+                OnQuestObjectiveStatusUpdated();
             }
         }
 
@@ -605,7 +558,7 @@ namespace AnyRPG {
 
         public override void SetupScriptableObjects(SystemGameManager systemGameManager) {
             //Debug.Log(DisplayName + ".Quest.SetupScriptableObjects(" + (systemGameManager == null ? "null" : systemGameManager.gameObject.name) + "): ID: " + GetInstanceID());
-        
+
             base.SetupScriptableObjects(systemGameManager);
 
             if (rewardCurrencyName != null && rewardCurrencyName != string.Empty) {
@@ -670,39 +623,10 @@ namespace AnyRPG {
                 }
             }
 
-            foreach (QuestObjective objective in collectObjectives) {
-                objective.SetupScriptableObjects(systemGameManager);
-                objective.SetQuest(this);
+            foreach (QuestStep questStep in steps) {
+                questStep.SetupScriptableObjects(this, systemGameManager);
             }
-            foreach (QuestObjective objective in killObjectives) {
-                objective.SetupScriptableObjects(systemGameManager);
-                objective.SetQuest(this);
-            }
-            foreach (QuestObjective objective in tradeSkillObjectives) {
-                objective.SetupScriptableObjects(systemGameManager);
-                objective.SetQuest(this);
-            }
-            foreach (QuestObjective objective in abilityObjectives) {
-                objective.SetupScriptableObjects(systemGameManager);
-                objective.SetQuest(this);
-            }
-            foreach (QuestObjective objective in useInteractableObjectives) {
-                objective.SetupScriptableObjects(systemGameManager);
-                objective.SetQuest(this);
-            }
-            foreach (QuestObjective objective in questQuestObjectives) {
-                objective.SetupScriptableObjects(systemGameManager);
-                objective.SetQuest(this);
-            }
-            foreach (QuestObjective objective in dialogObjectives) {
-                objective.SetupScriptableObjects(systemGameManager);
-                objective.SetQuest(this);
-            }
-            foreach (QuestObjective objective in visitZoneObjectives) {
-                objective.SetupScriptableObjects(systemGameManager);
-                objective.SetQuest(this);
-            }
-            //Debug.Log("Quest.SetupScriptableObjects(): " + MyName + " about to initialize prerequisiteConditions");
+
             foreach (PrerequisiteConditions conditions in prerequisiteConditions) {
                 conditions.SetupScriptableObjects(systemGameManager, this);
             }
@@ -719,5 +643,23 @@ namespace AnyRPG {
         public virtual void HandlePrerequisiteUpdates() {
             OnQuestStatusUpdated();
         }
+    }
+
+    [System.Serializable]
+    public class QuestStep : ConfiguredClass{
+        [SerializeReference]
+        [SerializeReferenceButton]
+        private List<QuestObjective> questObjectives = new List<QuestObjective>();
+
+        public List<QuestObjective> QuestObjectives { get => questObjectives; }
+
+        public void SetupScriptableObjects(Quest quest, SystemGameManager systemGameManager) {
+            base.Configure(systemGameManager);
+            foreach (QuestObjective objective in questObjectives) {
+                objective.SetupScriptableObjects(systemGameManager);
+                objective.SetQuest(quest);
+            }
+        }
+
     }
 }

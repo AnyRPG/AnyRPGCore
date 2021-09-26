@@ -88,7 +88,7 @@ namespace AnyRPG {
         }
 
         public void AddCurrencyNode(LootableCharacterComponent lootableCharacter, CurrencyNode currencyNode) {
-            //Debug.Log("LootableDrop.AddCurrencyNode(" + lootableCharacter.name + ", " + currencyNode.currency.MyName + " " + currencyNode.MyAmount +")");
+            //Debug.Log("LootableDrop.AddCurrencyNode(" + lootableCharacter.name + ", " + currencyNode.currency.DisplayName + " " + currencyNode.MyAmount +")");
 
             currencyNodes.Add(lootableCharacter, currencyNode);
 
@@ -193,13 +193,9 @@ namespace AnyRPG {
         public override void AfterLoot() {
             base.AfterLoot();
             if ((Item as CurrencyItem) is CurrencyItem) {
-                //Debug.Log("LootUI.TakeAllLoot(): item is currency: " + MyLoot.MyName);
                 (Item as CurrencyItem).Use();
             } else if ((Item as QuestStartItem) is QuestStartItem) {
-                //Debug.Log("LootUI.TakeAllLoot(): item is questStartItem: " + MyLoot.MyName);
                 (Item as QuestStartItem).Use();
-            } else {
-                //Debug.Log("LootUI.TakeAllLoot(): item is normal item");
             }
         }
 

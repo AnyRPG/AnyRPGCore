@@ -168,32 +168,6 @@ namespace AnyRPG {
             }
         }
 
-        /*
-        public void SetEquipment(Equipment newEquipment) {
-            //Debug.Log("CharacterButton.SetEquipment(" + (newEquipment == null ? "null" : newEquipment.MyName) + ")");
-            this.equippedEquipment = newEquipment;
-            this.equippedEquipment.MyCharacterButton = this;
-            UpdateVisual();
-        }
-        */
-        /*
-        public void DequipEquipment(int slotIndex = -1) {
-            //Debug.Log("attempting to unequip the item in slot " + equipmentSlot.ToString());
-            equippedEquipment.MyCharacterButton = null;
-            if (playerManager != null && playerManager.MyCharacter != null && playerManager.MyCharacter.MyCharacterEquipmentManager != null) {
-                playerManager.MyCharacter.MyCharacterEquipmentManager.Unequip(equipmentSlot, slotIndex);
-            }
-            ClearButton();
-        }
-
-        public void ClearButton(bool resetDisplay = true) {
-            //Debug.Log("CharacterButton.ClearButton()");
-            equippedEquipment = null;
-            UpdateVisual(resetDisplay);
-        }
-        */
-
-
         public void OnPointerEnter(PointerEventData eventData) {
             uIManager.ShowToolTip(transform.position, this);
         }

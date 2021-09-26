@@ -131,7 +131,7 @@ namespace AnyRPG {
             // add velocity to the now correct flight direction
             finalDirection *= knockBackVelocity;
 
-            //Debug.Log(MyName + "KnockBackEffect.GetKnockBackVelocity() return: " + finalDirection);
+            //Debug.Log(DisplayName + "KnockBackEffect.GetKnockBackVelocity() return: " + finalDirection);
 
             return finalDirection;
 

@@ -55,7 +55,7 @@ namespace AnyRPG {
                 }
                 foreach (AudioProfile audioProfile in usedAudioProfiles) {
                     if (audioProfile.AudioClip != null) {
-                        //Debug.Log(MyName + ".AbilityEffect.PerformAbilityHit(): playing audio clip: " + audioProfile.MyAudioClip.name);
+                        //Debug.Log(DisplayName + ".AbilityEffect.PerformAbilityHit(): playing audio clip: " + audioProfile.MyAudioClip.name);
                         audioSource.PlayOneShot(audioProfile.AudioClip);
                     }
                 }

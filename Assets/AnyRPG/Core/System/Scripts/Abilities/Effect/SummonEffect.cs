@@ -25,7 +25,7 @@ namespace AnyRPG {
         public UnitProfile UnitProfile { get => unitProfile; set => unitProfile = value; }
 
         public override Dictionary<PrefabProfile, GameObject> Cast(IAbilityCaster source, Interactable target, Interactable originalTarget, AbilityEffectContext abilityEffectInput) {
-            //Debug.Log(MyName + ".SummonEffect.Cast()");
+            //Debug.Log(DisplayName + ".SummonEffect.Cast()");
             base.Cast(source, target, originalTarget, abilityEffectInput);
             Dictionary<PrefabProfile, GameObject> returnObjects = base.Cast(source, target, originalTarget, abilityEffectInput);
             (source.AbilityManager as CharacterAbilityManager).BaseCharacter.CharacterPetManager.SpawnPet(unitProfile);
@@ -33,7 +33,7 @@ namespace AnyRPG {
         }
         /*
         private void Spawn(BaseCharacter source) {
-            //Debug.Log(MyName + ".SummonEffect.Spawn(): prefabObjects.count: " + prefabObjects.Count);
+            //Debug.Log(DisplayName + ".SummonEffect.Spawn(): prefabObjects.count: " + prefabObjects.Count);
 
             UnitController unitController = unitProfile.SpawnUnitPrefab(source.UnitController.transform.parent);
             if (unitController != null) {

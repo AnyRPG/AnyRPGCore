@@ -38,7 +38,7 @@ namespace AnyRPG {
                 if (SystemDataFactory.MatchResource(petEffect.DisplayName, DisplayName)) {
                     Debug.LogError(DisplayName + ".PerformAbilityEffects(): circular reference detected.  Tried to cast self.  CHECK INSPECTOR AND FIX ABILITY EFFECT CONFIGURATION!!!");
                 } else {
-                    //Debug.Log(MyName + ".PetEffect.CheckPetSpawn(): adding to cast list");
+                    //Debug.Log(DisplayName + ".PetEffect.CheckPetSpawn(): adding to cast list");
                     if (petEffect.UnitProfile != null
                         && characterPetManager.ActiveUnitProfiles.ContainsKey(petEffect.UnitProfile) == false) {
                         //Debug.Log(DisplayName + ".PetEffect.CheckPetSpawn(): adding cast:" + petEffect.DisplayName);
@@ -57,7 +57,7 @@ namespace AnyRPG {
             //Debug.Log("PetControlEffect.CancelEffect(" + (targetCharacter != null ? targetCharacter.name : "null") + ")");
 
             foreach (SummonEffect petEffect in petEffectList) {
-                //Debug.Log(MyName + ".PetEffect.CheckPetSpawn(): adding to cast list");
+                //Debug.Log(DisplayName + ".PetEffect.CheckPetSpawn(): adding to cast list");
                 if (petEffect.UnitProfile != null
                     && targetCharacter.CharacterPetManager.ActiveUnitProfiles.ContainsKey(petEffect.UnitProfile) == true) {
                     targetCharacter.CharacterPetManager.DespawnPet(petEffect.UnitProfile);

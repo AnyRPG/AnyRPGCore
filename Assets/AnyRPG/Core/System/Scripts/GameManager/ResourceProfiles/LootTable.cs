@@ -89,9 +89,7 @@ namespace AnyRPG {
                             (inventoryManager.GetItemCount(loot.MyItem.DisplayName) == 0 &&
                             playerManager.MyCharacter.CharacterEquipmentManager.HasEquipment(loot.MyItem.DisplayName) == false))) {
                             validLoot.Add(loot);
-                        }/* else {
-                            Debug.Log(MyName + ".LootTable.RollLoot() item: " + loot.MyItem);
-                        }*/
+                        }
                     }
 
                     if (lootGroup.GuaranteedDrop == true) {
@@ -111,15 +109,15 @@ namespace AnyRPG {
                             for (int i = 0; i < validLoot.Count; i++) {
                                 sum_of_weight += (int)validLoot[i].MyDropChance;
                             }
-                            //Debug.Log(MyName + ".Item.InitilizeNewItem(): sum_of_weight: " + sum_of_weight);
+                            //Debug.Log(DisplayName + ".Item.InitilizeNewItem(): sum_of_weight: " + sum_of_weight);
                             int rnd = UnityEngine.Random.Range(0, sum_of_weight);
-                            //Debug.Log(MyName + ".Item.InitilizeNewItem(): sum_of_weight: " + sum_of_weight + "; rnd: " + rnd);
+                            //Debug.Log(DisplayName + ".Item.InitilizeNewItem(): sum_of_weight: " + sum_of_weight + "; rnd: " + rnd);
                             for (int i = 0; i < validLoot.Count; i++) {
-                                //Debug.Log(MyName + ".Item.InitilizeNewItem(): weightCompare: " + validItemQualities[i].RandomWeight + "; rnd: " + rnd);
+                                //Debug.Log(DisplayName + ".Item.InitilizeNewItem(): weightCompare: " + validItemQualities[i].RandomWeight + "; rnd: " + rnd);
                                 accumulatedWeight += (int)validLoot[i].MyDropChance;
                                 if (rnd < accumulatedWeight) {
                                     usedIndex = i;
-                                    //Debug.Log(MyName + ".Item.InitilizeNewItem(): break");
+                                    //Debug.Log(DisplayName + ".Item.InitilizeNewItem(): break");
                                     break;
                                 }
                                 //rnd -= validItemQualities[i].RandomWeight;
@@ -140,7 +138,7 @@ namespace AnyRPG {
                         }
                     } else {
                         foreach (Loot item in validLoot) {
-                            //Debug.Log("LootTable.RollLoot(): " + item.MyItem.MyName + " rolling");
+                            //Debug.Log("LootTable.RollLoot(): " + item.MyItem.DisplayName + " rolling");
                             int roll = Random.Range(0, 100);
                             if (roll <= item.MyDropChance) {
                                 lootTableState.DroppedItems.AddRange(GetLootDrop(lootTableState, item, lootGroupUnlimitedDrops, ignoreDropLimit, lootTableUnlimitedDrops, ref lootGroupRemainingDrops));
@@ -182,7 +180,7 @@ namespace AnyRPG {
                     }
                 }
             }
-            //droppedItems.Add(new LootDrop(systemItemManager.GetNewResource(item.MyItem.MyName), this));
+            //droppedItems.Add(new LootDrop(systemItemManager.GetNewResource(item.MyItem.DisplayName), this));
 
             return returnValue;
         }

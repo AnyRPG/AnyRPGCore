@@ -52,7 +52,7 @@ namespace AnyRPG {
             //Debug.Log(baseCharacter.gameObject.name + ".CharacterFactionmanager.LoadReputation(" + faction.DisplayName + ", " + reputationAmount + ")");
             bool foundReputation = false;
             foreach (FactionDisposition factionDisposition in DispositionDictionary) {
-                //Debug.Log(gameObject.name + ".PlayerFactionManager.AddReputation(" + realFaction.MyName + ", " + reputationAmount + "): checking a disposition in my dictionary");
+                //Debug.Log(gameObject.name + ".PlayerFactionManager.AddReputation(" + realFaction.DisplayName + ", " + reputationAmount + "): checking a disposition in my dictionary");
                 if (factionDisposition.Faction == faction) {
                     //Debug.Log(baseCharacter.gameObject.name + ".PlayerFactionManager.AddReputation(" + faction.DisplayName + ", " + reputationAmount + ") existing reputation: " + factionDisposition.disposition);
                     factionDisposition.disposition = (float)reputationAmount;
@@ -73,7 +73,7 @@ namespace AnyRPG {
             //Debug.Log(baseCharacter.gameObject.name + ".CharacterFactionmanager.AddReputation(" + faction.DisplayName + ", " + reputationAmount + ", " + notify + ")");
             bool foundReputation = false;
             foreach (FactionDisposition factionDisposition in DispositionDictionary) {
-                //Debug.Log(gameObject.name + ".PlayerFactionManager.AddReputation(" + realFaction.MyName + ", " + reputationAmount + "): checking a disposition in my dictionary");
+                //Debug.Log(gameObject.name + ".PlayerFactionManager.AddReputation(" + realFaction.DisplayName + ", " + reputationAmount + "): checking a disposition in my dictionary");
                 if (factionDisposition.Faction == faction) {
                     //Debug.Log(baseCharacter.gameObject.name + ".PlayerFactionManager.AddReputation(" + faction.DisplayName + ", " + reputationAmount + ") existing reputation: " + factionDisposition.disposition);
                     factionDisposition.disposition += (float)reputationAmount;
@@ -96,38 +96,24 @@ namespace AnyRPG {
             if (faction == null) {
                 return false;
             }
-            //Debug.Log(gameObject.name + ".CharacterFactionManager.HasReputationModifer(" + faction.MyName + "): searching for reputation modifer");
 
             // checking dictionary first
-            //Debug.Log(gameObject.name + ".CharacterFactionManager.HasReputationModifer(" + faction.MyName + "): checking local disposition dictionary");
             List<FactionDisposition> usedDictionary = DispositionDictionary;
             if (baseCharacter.UnitController != null && baseCharacter.UnitController.UnderControl == true) {
                 usedDictionary = baseCharacter.UnitController.MasterUnit.CharacterFactionManager.DispositionDictionary;
             }
             foreach (FactionDisposition factionDisposition in usedDictionary) {
                 if (factionDisposition.Faction == faction) {
-                    //Debug.Log(baseCharacter.gameObject.name + ".CharacterFactionManager.HasReputationModifer(" + faction.DisplayName + "): name matched a disposition in local dictionary");
                     return true;
                 }
             }
 
             // checking status effects next
-            //Debug.Log(gameObject.name + ".CharacterFactionManager.HasReputationModifer(" + faction.MyName + "): no match disposition dictionary, checking status effect buffs");
             if (baseCharacter != null && baseCharacter.CharacterStats != null && baseCharacter.CharacterStats.StatusEffects != null) {
                 foreach (StatusEffectNode statusEffectNode in baseCharacter.CharacterStats.StatusEffects.Values) {
-                    /*
-                    if (statusEffectNode.MyStatusEffect == null) {
-                        Debug.LogError("STATUS EFFECT IS NULL");
-                    }
-                    if (statusEffectNode.MyStatusEffect.MyFactionModifiers == null) {
-                        Debug.LogError("FACTION MODIFIERS IS NULL");
-                    }
-                    */
                     if (statusEffectNode != null && statusEffectNode.StatusEffect != null && statusEffectNode.StatusEffect.FactionModifiers != null) {
                         foreach (FactionDisposition factionDisposition in statusEffectNode.StatusEffect.FactionModifiers) {
-                            //Debug.Log(gameObject.name + "Faction.RelationWith(" + faction.MyName + "): " + statusEffect.MyName + " had disposition: " + factionDisposition.factionName + ": " + factionDisposition.disposition);
                             if (factionDisposition.Faction == faction) {
-                                //Debug.Log(baseCharacter.gameObject.name + "Faction.RelationWith(" + faction.DisplayName + "): found special disposition in status effects and it matches the requested faction: " + factionDisposition.Faction.DisplayName + ": " + factionDisposition.disposition);
                                 return true;
                             }
                         }
@@ -135,12 +121,11 @@ namespace AnyRPG {
                     }
                 }
             }
-            //Debug.Log(gameObject.name + ".CharacterFactionManager.HasReputationModifer(" + faction.MyName + "): no match disposition dictionary or buffs, return false");
             return false;
         }
 
         public float GetReputationValue(Faction faction) {
-            //Debug.Log(gameObject.name + ".CharacterFactionManager.RelationWith(" + faction.MyName + "): checking personal status dictionary and status effects to get special dispositions toward faction");
+            //Debug.Log(gameObject.name + ".CharacterFactionManager.RelationWith(" + faction.DisplayName + "): checking personal status dictionary and status effects to get special dispositions toward faction");
 
             List<FactionDisposition> usedDictionary = DispositionDictionary;
             if (baseCharacter?.UnitController?.UnderControl == true) {
@@ -150,7 +135,7 @@ namespace AnyRPG {
             // checking personal dictionary before status effects?
             foreach (FactionDisposition factionDisposition in usedDictionary) {
                 if (factionDisposition.Faction == faction) {
-                    //Debug.Log("CharacterFactionManager.RelationWith(" + faction.MyName + "): dictionary contained: " + faction.MyName + "; returning value: " + factionDisposition.disposition);
+                    //Debug.Log("CharacterFactionManager.RelationWith(" + faction.DisplayName + "): dictionary contained: " + faction.DisplayName + "; returning value: " + factionDisposition.disposition);
                     return factionDisposition.disposition;
                 }
             }
@@ -159,9 +144,7 @@ namespace AnyRPG {
                 // checking status effect disposition modifiers
                 foreach (StatusEffectNode statusEffectNode in baseCharacter.CharacterStats.StatusEffects.Values) {
                     foreach (FactionDisposition factionDisposition in statusEffectNode.StatusEffect.FactionModifiers) {
-                        //Debug.Log(gameObject.name + "Faction.RelationWith(" + faction.MyName + "): " + statusEffect.MyName + " had disposition: " + factionDisposition.factionName + ": " + factionDisposition.disposition);
                         if (factionDisposition.Faction == faction) {
-                            //Debug.Log(gameObject.name + "Faction.RelationWith(" + faction.MyName + "): found special disposition in status effects and it matches the requested faction: " + factionDisposition.factionName + ": " + factionDisposition.disposition);
                             return factionDisposition.disposition;
                         }
                     }

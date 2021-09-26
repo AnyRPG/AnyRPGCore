@@ -67,7 +67,7 @@ namespace AnyRPG {
             }
             int counter = 0;
             foreach (KeyValuePair<Currency, int> currencyPair in currencyList) {
-                //Debug.Log(gameObject.name + ".CurrencyBarController.UpdateCurrencyAmount(" + currency.MyName + ", " + currencyAmount + "): currencyPair.Key: " + currencyPair.Key + "; currencyPair.Value: " + currencyPair.Value);
+                //Debug.Log(gameObject.name + ".CurrencyBarController.UpdateCurrencyAmount(" + currency.DisplayName + ", " + currencyAmount + "): currencyPair.Key: " + currencyPair.Key + "; currencyPair.Value: " + currencyPair.Value);
                 if (currencyAmountControllers.Count > counter) {
                     CurrencyAmountController currencyAmountController = currencyAmountControllers[counter];
                     currencyAmountController.gameObject.SetActive(true);

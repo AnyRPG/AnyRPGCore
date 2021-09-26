@@ -33,7 +33,7 @@ namespace AnyRPG {
         }
 
         public override string GetSummary(ItemQuality usedItemQuality) {
-            //Debug.Log(MyName + ".CurrencyItem.GetSummary();");
+            //Debug.Log(DisplayName + ".CurrencyItem.GetSummary();");
             string tmpCurrencyName = string.Empty;
             if (currencyNode.currency != null) {
                 tmpCurrencyName = currencyNode.currency.DisplayName;

@@ -151,11 +151,8 @@ namespace AnyRPG {
                 foreach (ActionButton actionButton in GetActionButtons()) {
                     if ((actionButton.Useable as BaseAbility) is BaseAbility) {
                         BaseAbility baseAbility = actionButton.Useable as BaseAbility;
-                        //Debug.Log("ActionBarmanager.UpdateTargetRange(): actionbutton: " + baseAbility.MyName);
 
                         Interactable finalTarget = baseAbility.ReturnTarget(playerManager.MyCharacter, target, false);
-                        //distanceToTarget = Vector3.Distance(playerManager.ActiveUnitController.transform.position, target.transform.position);
-                        //Debug.Log("ActionBarmanager.UpdateTargetRange(): actionbutton: " + baseAbility.DisplayName + "; finalTarget: " + (finalTarget == null ? "null" : finalTarget.gameObject.name));
 
                         inRange = false;
                         if (finalTarget != null) {
@@ -164,25 +161,21 @@ namespace AnyRPG {
                         if (inRange) {
                             if (actionButton.KeyBindText.color != Color.white) {
                                 actionButton.KeyBindText.color = Color.white;
-                                //Debug.Log("ActionBarmanager.UpdateTargetRange(): setting color to white for ability " + baseAbility.MyName);
                             }
                         } else {
                             if (actionButton.KeyBindText.color != Color.red) {
                                 actionButton.KeyBindText.color = Color.red;
-                                //Debug.Log("ActionBarmanager.UpdateTargetRange(): setting color to red for ability " + baseAbility.MyName);
                             }
                         }
                     } else {
                         if (actionButton.KeyBindText.color != Color.white) {
                             actionButton.KeyBindText.color = Color.white;
-                            //Debug.Log("ActionBarmanager.UpdateTargetRange(): setting color to white");
                         }
                     }
                 }
                 yield return null;
             }
             targetRangeRoutine = null;
-            //Debug.Log("ActionBarmanager.UpdateTargetRange(): exiting coroutine");
         }
 
         public List<ActionButton> GetActionButtons() {

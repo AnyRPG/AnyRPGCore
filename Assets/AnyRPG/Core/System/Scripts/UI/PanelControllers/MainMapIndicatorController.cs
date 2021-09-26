@@ -76,15 +76,11 @@ namespace AnyRPG {
                 return;
             }
             // this only supports one or the other too - prioritizing images
-            //if (_interactable.GetCurrentOptionCount() > 0) {
             if (_interactable.HasMainMapIcon()) {
-                //Debug.Log(_interactable.DisplayName + ".MainMapIndicatorController.HandleMainMapStatusUpdate() : hasicon");
                 _interactable.SetMiniMapIcon(mainMapLayers[_interactable].GetComponent<Image>());
             } else if (_interactable.HasMainMapText()) {
-                //Debug.Log(_interactable.MyName + ".MainMapIndicatorController.HandleMainMapStatusUpdate() : hastext");
                 _interactable.SetMiniMapText(mainMapLayers[_interactable].GetComponent<TextMeshProUGUI>());
             }
-            //}
         }
 
         public void ResetSettings() {

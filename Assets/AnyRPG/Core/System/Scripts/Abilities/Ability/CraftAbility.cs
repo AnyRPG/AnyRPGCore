@@ -52,7 +52,6 @@ namespace AnyRPG {
 
             List<CraftingNodeComponent> craftingNodeComponents = CraftingNodeComponent.GetCraftingNodeComponents(target);
             if (craftingNodeComponents == null || craftingNodeComponents.Count == 0) {
-                //Debug.Log("You cannot use " + MyName + " on: " + target.name);
                 if (playerInitiated) {
                     source.AbilityManager.ReceiveCombatMessage("Cannot cast " + resourceName + ". This ability must target a crafting node");
                 }

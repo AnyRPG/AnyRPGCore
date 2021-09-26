@@ -7,10 +7,11 @@ namespace AnyRPG {
     [System.Serializable]
     public class FactionNode : ConfiguredClass, IDescribable {
 
-        public Faction faction;
-
         [SerializeField]
+        [ResourceSelector(resourceType = typeof(Faction))]
         private string factionName = string.Empty;
+
+        private Faction faction;
 
         // game manager references
         private SystemDataFactory systemDataFactory = null;
@@ -18,8 +19,8 @@ namespace AnyRPG {
         public int reputationAmount;
 
         public Sprite Icon { get => faction.Icon; }
-
         public string DisplayName { get => faction.DisplayName; }
+        public Faction Faction { get => faction; }
 
         public string GetDescription() {
             return faction.GetDescription(); ;

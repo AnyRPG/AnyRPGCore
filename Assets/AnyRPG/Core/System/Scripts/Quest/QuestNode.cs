@@ -14,6 +14,7 @@ namespace AnyRPG {
         private bool endQuest = true;
 
         [SerializeField]
+        [ResourceSelector(resourceType = typeof(Quest))]
         private string questName = string.Empty;
 
         //[SerializeField]
@@ -24,10 +25,10 @@ namespace AnyRPG {
         // game manager references
         private SystemDataFactory systemDataFactory = null;
 
-        public bool MyStartQuest { get => startQuest; set => startQuest = value; }
-        public bool MyEndQuest { get => endQuest; set => endQuest = value; }
-        public Quest MyQuest { get => questTemplate; set => questTemplate = value; }
-        public GameObject MyGameObject { get => questObject; set => questObject = value; }
+        public bool StartQuest { get => startQuest; set => startQuest = value; }
+        public bool EndQuest { get => endQuest; set => endQuest = value; }
+        public Quest Quest { get => questTemplate; set => questTemplate = value; }
+        public GameObject GameObject { get => questObject; set => questObject = value; }
 
         public void SetupScriptableObjects(SystemGameManager systemGameManager) {
             Configure(systemGameManager);

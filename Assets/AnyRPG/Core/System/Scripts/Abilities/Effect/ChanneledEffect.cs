@@ -20,10 +20,10 @@ namespace AnyRPG {
         }
 
         public override Dictionary<PrefabProfile, GameObject> Cast(IAbilityCaster source, Interactable target, Interactable originalTarget, AbilityEffectContext abilityEffectContext) {
-            //Debug.Log(MyName + "ChanneledEffect.Cast(" + source + ", " + (target == null ? "null" : target.name) + ")");
+            //Debug.Log(DisplayName + "ChanneledEffect.Cast(" + source + ", " + (target == null ? "null" : target.name) + ")");
             if (target == null) {
                 // maybe target died or despawned in the middle of cast?
-                //Debug.Log(MyName + "ChanneledEffect.Cast(" + source + ", " + (target == null ? "null" : target.name) + "): TARGE IS NULL");
+                //Debug.Log(DisplayName + "ChanneledEffect.Cast(" + source + ", " + (target == null ? "null" : target.name) + "): TARGE IS NULL");
 
                 return null;
             }
@@ -32,7 +32,7 @@ namespace AnyRPG {
             }
             Dictionary<PrefabProfile, GameObject> returnObjects = base.Cast(source, target, originalTarget, abilityEffectContext);
             if (returnObjects != null) {
-                //Debug.Log(MyName + "ChanneledEffect.Cast(" + source + ", " + (target == null ? "null" : target.name) + ") PREFABOBJECTS WAS NOT NULL");
+                //Debug.Log(DisplayName + "ChanneledEffect.Cast(" + source + ", " + (target == null ? "null" : target.name) + ") PREFABOBJECTS WAS NOT NULL");
 
                 foreach (PrefabProfile prefabProfile in returnObjects.Keys) {
 
@@ -60,7 +60,7 @@ namespace AnyRPG {
                         if (abilityEffectContext.baseAbility != null && abilityEffectContext.baseAbility.GetTargetOptions(source).RequiresGroundTarget == true) {
                             endPosition = abilityEffectContext.groundTargetLocation;
                             usedTarget = null;
-                            //Debug.Log(MyName + "ChanneledEffect.Cast() abilityEffectInput.prefabLocation: " + abilityEffectInput.prefabLocation);
+                            //Debug.Log(DisplayName + "ChanneledEffect.Cast() abilityEffectInput.prefabLocation: " + abilityEffectInput.prefabLocation);
                         } else {
                             endPosition = target.GetComponent<Collider>().bounds.center - target.transform.position;
                         }
@@ -81,7 +81,7 @@ namespace AnyRPG {
                 //source.StartCoroutine(PerformAbilityHitDelay(source, target, abilityEffectInput));
                 source.AbilityManager.BeginPerformAbilityHitDelay(source, target, abilityEffectContext, this);
             } else {
-                //Debug.Log(MyName + ".ChanneledEffect.Cast(" + source + ", " + (target == null ? "null" : target.name) + ") PREFABOBJECTS WAS NULL");
+                //Debug.Log(DisplayName + ".ChanneledEffect.Cast(" + source + ", " + (target == null ? "null" : target.name) + ") PREFABOBJECTS WAS NULL");
 
             }
             return returnObjects;

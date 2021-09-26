@@ -70,6 +70,11 @@ namespace AnyRPG {
 
         public void LoadSkill(string skillName) {
             //Debug.Log("CharacterSkillManager.LoadSkill()");
+            
+            // don't crash on loading old save Data
+            if (skillName == null || skillName == string.Empty) {
+                return;
+            }
             string keyName = SystemDataFactory.PrepareStringForMatch(skillName);
             if (!skillList.ContainsKey(keyName)) {
                 skillList[keyName] = systemDataFactory.GetResource<Skill>(skillName);

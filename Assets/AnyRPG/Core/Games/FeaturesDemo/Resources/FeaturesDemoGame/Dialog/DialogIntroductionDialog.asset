@@ -32,7 +32,7 @@ MonoBehaviour:
   - startTime: 0
     showTime: 0
     description: Because the Opening Dialog box is ticked in the configuration, it
-      will automatically look for a dial with the quest and display it before giving
+      will automatically look for a dialog with the quest and display it before giving
       the option to accept the quest.
     nextOption: 
   prerequisiteConditions: []

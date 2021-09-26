@@ -26,88 +26,18 @@ namespace AnyRPG {
             systemDataFactory = systemGameManager.SystemDataFactory;
         }
 
-        /*
-        public void LoadQuest(QuestSaveData questSaveData) {
-            //Debug.Log("QuestLog.LoadQuest(" + questSaveData.MyName + ")");
-
-            Quest quest = systemDataFactory.GetResource<Quest>(questSaveData.MyName);
-            if (quest == null) {
-                //Debug.Log("QuestLog.LoadQuest(" + questSaveData.MyName + "): COULD NOT FIND QUEST!!!");
-                return;
-            }
-            if (!questSaveData.inLog) {
-                //Debug.Log("QuestLog.LoadQuest(" + questSaveData.MyName + "): quest is not in log. turnedIn: " + questSaveData.turnedIn);
-                return;
-            }
-
-            // add tracked objectives to quest
-            //List<KillObjective> killObjectiveSaveDataList = new List<KillObjective>();
-            foreach (QuestObjectiveSaveData objectiveSaveData in questSaveData.killObjectives) {
-                //Debug.Log("QuestLog.LoadQuest(" + questSaveData.MyName + "): loading kill objectives");
-                foreach (QuestObjective existingQuestObjective in quest.MyKillObjectives) {
-                    //Debug.Log("QuestLog.LoadQuest(" + questSaveData.MyName + "): loading kill objective: " + existingQuestObjective.MyType);
-                    if (SystemDataFactory.MatchResource(existingQuestObjective.MyType, objectiveSaveData.MyName)) {
-                        //Debug.Log("QuestLog.LoadQuest(" + questSaveData.MyName + "): loading kill objective: " + existingQuestObjective.MyType + " matches!!! myamount: " + objectiveSaveData.MyAmount);
-                        existingQuestObjective.CurrentAmount = objectiveSaveData.MyAmount;
-                    }
-                }
-            }
-            List<CollectObjective> collectObjectiveSaveDataList = new List<CollectObjective>();
-            foreach (QuestObjectiveSaveData objectiveSaveData in questSaveData.collectObjectives) {
-                foreach (QuestObjective existingQuestObjective in quest.MyCollectObjectives) {
-                    if (SystemDataFactory.MatchResource(existingQuestObjective.MyType, objectiveSaveData.MyName)) {
-                        existingQuestObjective.CurrentAmount = objectiveSaveData.MyAmount;
-                    }
-                }
-            }
-            List<TradeSkillObjective> tradeSkillObjectiveSaveDataList = new List<TradeSkillObjective>();
-            foreach (QuestObjectiveSaveData objectiveSaveData in questSaveData.tradeSkillObjectives) {
-                //Debug.Log("QuestLog.LoadQuest(" + questSaveData.MyName + "): loading tradeskill objective");
-                foreach (QuestObjective existingQuestObjective in quest.MyTradeSkillObjectives) {
-                    if (SystemDataFactory.MatchResource(existingQuestObjective.MyType, objectiveSaveData.MyName)) {
-                        existingQuestObjective.CurrentAmount = objectiveSaveData.MyAmount;
-                    }
-                }
-            }
-            List<UseInteractableObjective> useInteractableObjectiveSaveDataList = new List<UseInteractableObjective>();
-            foreach (QuestObjectiveSaveData objectiveSaveData in questSaveData.useInteractableObjectives) {
-                foreach (QuestObjective existingQuestObjective in quest.MyUseInteractableObjectives) {
-                    if (SystemDataFactory.MatchResource(existingQuestObjective.MyType, objectiveSaveData.MyName)) {
-                        existingQuestObjective.CurrentAmount = objectiveSaveData.MyAmount;
-                    }
-                }
-            }
-
-            List<AbilityObjective> abilityObjectiveSaveDataList = new List<AbilityObjective>();
-            foreach (QuestObjectiveSaveData objectiveSaveData in questSaveData.abilityObjectives) {
-                foreach (QuestObjective existingQuestObjective in quest.MyAbilityObjectives) {
-                    if (SystemDataFactory.MatchResource(existingQuestObjective.MyType, objectiveSaveData.MyName)) {
-                        //Debug.Log("QuestLog.LoadQuest(" + questSaveData.MyName + "): loading ability objective: " + existingQuestObjective.MyType + " matches!!! myamount: " + objectiveSaveData.MyAmount);
-                        existingQuestObjective.CurrentAmount = objectiveSaveData.MyAmount;
-                    }
-                }
-            }
-
-            // just in case one quest was complete but not turned in
-            //CheckCompletion();
-        }
-        */
-
         public void AcceptQuest(QuestSaveData questSaveData) {
-            //Debug.Log("QuestLog.LoadQuest(" + questSaveData.MyName + ")");
 
-            Quest quest = systemDataFactory.GetResource<Quest>(questSaveData.MyName);
+            Quest quest = systemDataFactory.GetResource<Quest>(questSaveData.QuestName);
             if (quest == null) {
-                //Debug.Log("QuestLog.LoadQuest(" + questSaveData.MyName + "): COULD NOT FIND QUEST!!!");
                 return;
             }
             if (!questSaveData.inLog) {
-                //Debug.Log("QuestLog.LoadQuest(" + questSaveData.MyName + "): quest is not in log. turnedIn: " + questSaveData.turnedIn);
                 return;
             }
 
             // change to new subscription method in quest to avoid duplicated out of date code not tracking newer objective types
-            quest.AcceptQuest(false);
+            quest.AcceptQuest(false, false);
             // gotta check here because kills and ability use are not automatically checked on accept because under normal circumstances those amounts must start at 0
             quest.CheckCompletion(true, false);
             string keyName = SystemDataFactory.PrepareStringForMatch(quest.DisplayName);
@@ -129,7 +59,12 @@ namespace AnyRPG {
                 string keyName = SystemDataFactory.PrepareStringForMatch(newQuest.DisplayName);
                 quests[keyName] = newQuest;
                 newQuest.AcceptQuest();
-                //CheckCompletion();
+
+                // if the quest has steps, then the completion check will be triggered by the objectives
+                // if the quest has no steps, then checking completion should be done here
+                if (newQuest.Steps.Count == 0) {
+                    newQuest.CheckCompletion();
+                }
             }
         }
 
@@ -142,12 +77,12 @@ namespace AnyRPG {
             return false;
         }
 
-        public void AbandonQuest(Quest oldQuest) {
+        public void AbandonQuest(Quest oldQuest, bool resetQuestStep = true) {
             //Debug.Log("QuestLog.AbandonQuest(" + quest.name + ")");
             RemoveQuest(oldQuest);
 
             // moved here instead of inside the above function so turnInQuest doesn't think a quest is available in the middle of turn-in
-            oldQuest.RemoveQuest();
+            oldQuest.RemoveQuest(resetQuestStep);
         }
 
         public void TurnInQuest(Quest oldQuest) {
@@ -174,7 +109,7 @@ namespace AnyRPG {
                 removeList.Add(quest);
             }
             foreach (Quest oldQuest in removeList) {
-                AbandonQuest(oldQuest);
+                AbandonQuest(oldQuest, false);
             }
             Quests.Clear();
         }
@@ -202,13 +137,13 @@ namespace AnyRPG {
         public List<Quest> GetQuestListByType(string questStatusType, List<QuestNode> questNodeArray, bool requireInQuestLog = false, bool requireStartQuest = false, bool requireEndQuest = false) {
             List<Quest> returnList = new List<Quest>();
             foreach (QuestNode questNode in questNodeArray) {
-                if (questNode.MyQuest != null) {
-                    if (questNode.MyQuest.GetStatus() == questStatusType
-                        && (requireInQuestLog == true ? HasQuest(questNode.MyQuest.DisplayName) : true)
-                        && (requireStartQuest == true ? questNode.MyStartQuest : true)
-                        && (requireEndQuest == true ? questNode.MyEndQuest : true)) {
-                        //Debug.Log("Quest.GetQuestListByType(" + questStatusType + "): adding quest: " + questNode.MyQuest.MyName);
-                        returnList.Add(questNode.MyQuest);
+                if (questNode.Quest != null) {
+                    if (questNode.Quest.GetStatus() == questStatusType
+                        && (requireInQuestLog == true ? HasQuest(questNode.Quest.DisplayName) : true)
+                        && (requireStartQuest == true ? questNode.StartQuest : true)
+                        && (requireEndQuest == true ? questNode.EndQuest : true)) {
+                        //Debug.Log("Quest.GetQuestListByType(" + questStatusType + "): adding quest: " + questNode.MyQuest.DisplayName);
+                        returnList.Add(questNode.Quest);
                     }
                 }
             }

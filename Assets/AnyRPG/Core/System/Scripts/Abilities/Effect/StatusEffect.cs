@@ -314,7 +314,7 @@ namespace AnyRPG {
         }
 
         public virtual void CastReflect(IAbilityCaster source, Interactable target, AbilityEffectContext abilityEffectContext) {
-            //Debug.Log(MyName + ".AbilityEffect.CastReflect(" + source.Name + ", " + (target ? target.name : "null") + ")");
+            //Debug.Log(DisplayName + ".AbilityEffect.CastReflect(" + source.Name + ", " + (target ? target.name : "null") + ")");
             PerformAbilityReflect(source, target, abilityEffectContext);
         }
 

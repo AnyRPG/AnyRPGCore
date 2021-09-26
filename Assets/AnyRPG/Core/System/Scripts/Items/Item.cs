@@ -203,7 +203,7 @@ namespace AnyRPG {
         /// <returns></returns>
         public KeyValuePair<Currency, int> GetSellPrice() {
             //get {
-                //Debug.Log(MyName + ".Item.MySellPrice()");
+                //Debug.Log(DisplayName + ".Item.MySellPrice()");
                 int sellAmount = SellPrice();
                 Currency currency = Currency;
                 if (currency != null) {
@@ -318,16 +318,14 @@ namespace AnyRPG {
         public virtual string GetDescription(ItemQuality usedItemQuality) {
 
             return string.Format("<color={0}>{1}</color>\n{2}", QualityColor.GetQualityColorString(usedItemQuality), DisplayName, GetSummary(usedItemQuality));
-            //return string.Format("<color=yellow>{0}</color>\n{1}", MyName, GetSummary());
         }
 
         public override string GetDescription() {
-            //Debug.Log(MyName + ".Item.GetDescription()");
+            //Debug.Log(DisplayName + ".Item.GetDescription()");
             return GetDescription(realItemQuality);
         }
 
         public virtual string GetSummary(ItemQuality usedItemQuality) {
-            //Debug.Log("Quality is " + quality.ToString() + QualityColor.MyColors.ToString());
             string summaryString = string.Empty;
             if (characterClassRequirementList.Count > 0) {
                 string colorString = "red";
@@ -369,7 +367,7 @@ namespace AnyRPG {
                     }
                 }
                 if (validItemQualities.Count > 0) {
-                    //Debug.Log(MyName + ".Item.InitilizeNewItem(): validQualities: " + validItemQualities.Count);
+                    //Debug.Log(DisplayName + ".Item.InitilizeNewItem(): validQualities: " + validItemQualities.Count);
 
                     int usedIndex = 0;
 
@@ -380,15 +378,15 @@ namespace AnyRPG {
                     for (int i = 0; i < validItemQualities.Count; i++) {
                         sum_of_weight += validItemQualities[i].RandomWeight;
                     }
-                    //Debug.Log(MyName + ".Item.InitilizeNewItem(): sum_of_weight: " + sum_of_weight);
+                    //Debug.Log(DisplayName + ".Item.InitilizeNewItem(): sum_of_weight: " + sum_of_weight);
                     int rnd = UnityEngine.Random.Range(0, sum_of_weight);
-                    //Debug.Log(MyName + ".Item.InitilizeNewItem(): sum_of_weight: " + sum_of_weight + "; rnd: " + rnd);
+                    //Debug.Log(DisplayName + ".Item.InitilizeNewItem(): sum_of_weight: " + sum_of_weight + "; rnd: " + rnd);
                     for (int i = 0; i < validItemQualities.Count; i++) {
-                        //Debug.Log(MyName + ".Item.InitilizeNewItem(): weightCompare: " + validItemQualities[i].RandomWeight + "; rnd: " + rnd);
+                        //Debug.Log(DisplayName + ".Item.InitilizeNewItem(): weightCompare: " + validItemQualities[i].RandomWeight + "; rnd: " + rnd);
                         accumulatedWeight += validItemQualities[i].RandomWeight;
                         if (rnd < accumulatedWeight) {
                             usedIndex = i;
-                            //Debug.Log(MyName + ".Item.InitilizeNewItem(): break");
+                            //Debug.Log(DisplayName + ".Item.InitilizeNewItem(): break");
                             break;
                         }
                         //rnd -= validItemQualities[i].RandomWeight;

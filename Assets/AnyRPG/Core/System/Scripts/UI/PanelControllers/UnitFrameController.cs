@@ -568,7 +568,7 @@ namespace AnyRPG {
                 return;
             }
             reputationColor = Faction.GetFactionColor(playerManager, namePlateController.NamePlateUnit);
-            //Color tmp = Faction.GetFactionColor(baseCharacter.MyFaction);
+            //Color tmp = Faction.GetFactionColor(baseCharacter.Faction);
             reputationColor.a = 0.5f;
             unitNameBackground.color = reputationColor;
 

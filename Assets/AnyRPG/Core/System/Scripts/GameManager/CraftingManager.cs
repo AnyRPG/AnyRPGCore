@@ -67,7 +67,6 @@ namespace AnyRPG {
         }
 
         private bool CanCraft(Recipe recipe) {
-            //Debug.Log("CraftingUI.CanCraft(" + recipe.MyOutput.MyName + ")");
             for (int i = 0; i < recipe.MyCraftingMaterials.Count; i++) {
                 if (inventoryManager.GetItemCount(recipe.MyCraftingMaterials[i].MyItem.DisplayName) < recipe.MyCraftingMaterials[i].MyCount) {
                     return false;

@@ -57,13 +57,11 @@ namespace AnyRPG {
                 return useable;
             }
             set {
-                //Debug.Log(gameObject.name + GetInstanceID() + ".ActionButton.Useable = " + (useable == null ? "null" : useable.MyName) + "; new = " + value);
                 if (value == null) {
                     useable = value;
                     return;
                 }
                 useable = value.GetFactoryUseable();
-                //UpdateVisual(true);
             }
         }
         public Image CoolDownIcon { get => coolDownIcon; set => coolDownIcon = value; }
@@ -97,12 +95,10 @@ namespace AnyRPG {
         }
 
         public void OnClickFromButton() {
-            //Debug.Log("ActionButton.OnClickFromButton(): useable: " + (Useable != null ? Useable.MyName : "null"));
             OnClick();
         }
 
         public void OnClick(bool fromKeyBind = false) {
-            //Debug.Log(gameObject.name + GetInstanceID() +  ".ActionButton.OnClick(" + fromKeyBind + "): useable: " + (Useable != null ? Useable.MyName : "null"));
             // this may seem like duplicate with the next method, but right now it is used to simulate click events when keypresses happen
 
             if (!fromKeyBind) {
@@ -122,7 +118,6 @@ namespace AnyRPG {
         }
 
         public void OnPointerClick(PointerEventData eventData) {
-            //Debug.Log(gameObject.name + GetInstanceID() + ".ActionButton.OnPointerClick(): useable: " + (Useable != null ? Useable.MyName : "null"));
             if (playerManager.ActiveUnitController != null) {
                 if (playerManager.ActiveUnitController.ControlLocked == true) {
                     return;
@@ -223,12 +218,12 @@ namespace AnyRPG {
         }
 
         public void OnAttemptUseableUse(BaseAbility ability) {
-            //Debug.Log("ActionButton.OnUseableUse(" + ability.MyName + ")");
+            //Debug.Log("ActionButton.OnUseableUse(" + ability.DisplayName + ")");
             ChooseMonitorCoroutine();
         }
 
         public void HandleBeginAbilityCooldown() {
-            //Debug.Log("ActionButton.OnUseableUse(" + ability.MyName + ")");
+            //Debug.Log("ActionButton.OnUseableUse(" + ability.DisplayName + ")");
             ChooseMonitorCoroutine();
         }
 
@@ -246,12 +241,12 @@ namespace AnyRPG {
         }
 
         public void OnUseableUse(BaseAbility ability) {
-            //Debug.Log("ActionButton.OnUseableUse(" + ability.MyName + ")");
+            //Debug.Log("ActionButton.OnUseableUse(" + ability.DisplayName + ")");
             ChooseMonitorCoroutine();
         }
 
         public IEnumerator MonitorAutoAttack(BaseAbility ability) {
-            //Debug.Log("ActionButton.MonitorautoAttack(" + ability.MyName + ")");
+            //Debug.Log("ActionButton.MonitorautoAttack(" + ability.DisplayName + ")");
             yield return null;
 
             while (Useable != null
@@ -261,7 +256,7 @@ namespace AnyRPG {
                 UpdateVisual();
                 yield return new WaitForSeconds(0.5f);
             }
-            //Debug.Log("ActionButton.MonitorAbility(" + ability.MyName + "): Done Monitoring");
+            //Debug.Log("ActionButton.MonitorAbility(" + ability.DisplayName + "): Done Monitoring");
             if (Useable != null) {
                 // could switch buttons while an ability is on cooldown
                 UpdateVisual();

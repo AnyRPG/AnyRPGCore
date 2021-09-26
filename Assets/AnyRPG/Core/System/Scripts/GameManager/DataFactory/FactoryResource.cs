@@ -55,7 +55,7 @@ namespace AnyRPG {
             // do this after the parent function so it's properly set
             foreach (ResourceProfile resource in rawResourceList) {
                 if (resource.ResourceName == null) {
-                    Debug.Log(resource.name + " had empty MyName value");
+                    Debug.Log(resource.name + " had empty ResourceName value");
                     (resource as ResourceProfile).ResourceName = resource.name;
                 }
                 if (resource.MyDescription == null) {

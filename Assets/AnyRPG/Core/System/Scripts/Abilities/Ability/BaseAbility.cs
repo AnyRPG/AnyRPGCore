@@ -367,7 +367,7 @@ namespace AnyRPG {
 
         public virtual Coroutine ChooseMonitorCoroutine(ActionButton actionButton) {
             // actionbuttons can be disabled, but the systemability manager will not.  That's why the ability is monitored here
-                //Debug.Log("ActionButton.OnUseableUse(" + ability.MyName + "): WAS NOT ANIMATED AUTO ATTACK");
+                //Debug.Log("ActionButton.OnUseableUse(" + ability.DisplayName + "): WAS NOT ANIMATED AUTO ATTACK");
                 //if (abilityCoRoutine == null) {
                 //if (monitorCoroutine == null) {
                     return systemAbilityController.StartCoroutine(actionButton.MonitorAbility(this));
@@ -487,9 +487,9 @@ namespace AnyRPG {
         }
 
         public virtual float GetResourceGain(IAbilityCaster abilityCaster) {
-            //Debug.Log(MyName + ".BaseAbility.GetResourceGain(" + (abilityCaster == null ? "null" : abilityCaster.Name) + ")");
+            //Debug.Log(DisplayName + ".BaseAbility.GetResourceGain(" + (abilityCaster == null ? "null" : abilityCaster.Name) + ")");
             if (abilityCaster != null) {
-                //Debug.Log(MyName + ".BaseAbility.GetResourceGain() level: " + abilityCaster.Level + "; gainperLevel: " + resourceGainPerLevel + "; base: " + baseResourceGain);
+                //Debug.Log(DisplayName + ".BaseAbility.GetResourceGain() level: " + abilityCaster.Level + "; gainperLevel: " + resourceGainPerLevel + "; base: " + baseResourceGain);
 
                 return baseResourceGain + (abilityCaster.AbilityManager.Level * resourceGainPerLevel);
             }
@@ -583,21 +583,21 @@ namespace AnyRPG {
         }
 
         public virtual void ProcessGCDAuto(IAbilityCaster sourceCharacter) {
-            //Debug.Log(MyName + ".BaseAbility.ProcessGCDManual()");
+            //Debug.Log(DisplayName + ".BaseAbility.ProcessGCDManual()");
             ProcessGCDManual(sourceCharacter);
         }
 
         public virtual void ProcessGCDManual(IAbilityCaster sourceCharacter, float usedCoolDown = 0f) {
-            //Debug.Log(MyName + ".BaseAbility.ProcessGCDManual(" + usedCoolDown + ")");
+            //Debug.Log(DisplayName + ".BaseAbility.ProcessGCDManual(" + usedCoolDown + ")");
             if (CanSimultaneousCast == false && IgnoreGlobalCoolDown == false && GetAbilityCastingTime(sourceCharacter) == 0f) {
                 sourceCharacter.AbilityManager.InitiateGlobalCooldown(usedCoolDown);
             } else {
-                //Debug.Log(gameObject.name + ".PlayerAbilityManager.PerformAbility(" + ability.MyName + "): ability.MyAbilityCastingTime: " + ability.MyAbilityCastingTime);
+                //Debug.Log(gameObject.name + ".PlayerAbilityManager.PerformAbility(" + ability.DisplayName + "): ability.MyAbilityCastingTime: " + ability.MyAbilityCastingTime);
             }
         }
 
         public virtual void ProcessAbilityPrefabs(IAbilityCaster sourceCharacter) {
-            //Debug.Log(MyName + ".BaseAbility.ProcessAbilityPrefabs()");
+            //Debug.Log(DisplayName + ".BaseAbility.ProcessAbilityPrefabs()");
             if (GetHoldableObjectList(sourceCharacter) == null || GetHoldableObjectList(sourceCharacter).Count == 0) {
                 return;
             }

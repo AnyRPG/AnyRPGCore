@@ -76,7 +76,7 @@ namespace AnyRPG {
             base.SetupScriptableObjects(systemGameManager);
             if (unitTypeRestrictions != null && unitTypeRestrictions.Count > 0) {
                 foreach (string unitTypeRestriction in unitTypeRestrictions) {
-                    //Debug.Log(MyName + ".CapturePetEffect.SetupScriptableObjects(): looping through restrictions: " + unitTypeRestriction);
+                    //Debug.Log(DisplayName + ".CapturePetEffect.SetupScriptableObjects(): looping through restrictions: " + unitTypeRestriction);
                     UnitType tmpUnitType = systemDataFactory.GetResource<UnitType>(unitTypeRestriction);
                     if (tmpUnitType != null) {
                         unitTypeRestrictionList.Add(tmpUnitType);

@@ -153,7 +153,7 @@ namespace AnyRPG {
                             prefabParent = null;
                         }
                         if ((prefabSpawnLocation == PrefabSpawnLocation.Caster || prefabSpawnLocation == PrefabSpawnLocation.CasterPoint) && target != null) {
-                            //Debug.Log(MyName + ".LengthEffect.Cast(): PrefabSpawnLocation is Caster");
+                            //Debug.Log(DisplayName + ".LengthEffect.Cast(): PrefabSpawnLocation is Caster");
                             //spawnLocation =source.AbilityManager.GetComponent<Collider>().bounds.center;
                             AttachmentPointNode attachmentPointNode = source.AbilityManager.GetHeldAttachmentPointNode(abilityAttachmentNode);
                             nodePosition = attachmentPointNode.Position;
@@ -190,7 +190,7 @@ namespace AnyRPG {
                             float finalZ = (prefabParent == null ? spawnLocation.z + nodePosition.z : prefabParent.TransformPoint(nodePosition).z);
                             //Vector3 finalSpawnLocation = new Vector3(spawnLocation.x + finalX, spawnLocation.y + prefabOffset.y, spawnLocation.z + finalZ);
                             Vector3 finalSpawnLocation = new Vector3(finalX, finalY, finalZ);
-                            //Debug.Log("Instantiating Ability Effect Prefab for: " + MyName + " at " + finalSpawnLocation + "; prefabParent: " + (prefabParent == null ? "null " : prefabParent.name) + ";");
+                            //Debug.Log("Instantiating Ability Effect Prefab for: " + DisplayName + " at " + finalSpawnLocation + "; prefabParent: " + (prefabParent == null ? "null " : prefabParent.name) + ";");
                             Vector3 usedForwardDirection = Vector3.forward;
                             if (source != null && source.AbilityManager.UnitGameObject != null) {
                                 usedForwardDirection = source.AbilityManager.UnitGameObject.transform.forward;
@@ -227,7 +227,7 @@ namespace AnyRPG {
         }
 
         protected virtual void BeginMonitoring(Dictionary<PrefabProfile, GameObject> abilityEffectObjects, IAbilityCaster source, Interactable target, AbilityEffectContext abilityEffectInput) {
-            //Debug.Log(MyName + ".LengthEffect.BeginMonitoring(" +source.AbilityManager.name + ", " + (target == null ? "null" : target.name) + ")");
+            //Debug.Log(DisplayName + ".LengthEffect.BeginMonitoring(" +source.AbilityManager.name + ", " + (target == null ? "null" : target.name) + ")");
             // overwrite me
         }
 
@@ -250,7 +250,7 @@ namespace AnyRPG {
         }
 
         public virtual void CancelEffect(BaseCharacter targetCharacter) {
-            //Debug.Log(DisplayName + ".LengthEffect.CancelEffect(" + targetCharacter.MyName + ")");
+            //Debug.Log(DisplayName + ".LengthEffect.CancelEffect(" + targetCharacter.DisplayName + ")");
         }
 
         public override void SetupScriptableObjects(SystemGameManager systemGameManager) {

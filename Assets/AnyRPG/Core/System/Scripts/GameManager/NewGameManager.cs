@@ -264,7 +264,7 @@ namespace AnyRPG {
             saveData.equipmentSaveData = new List<EquipmentSaveData>();
             foreach (Equipment equipment in equipmentList.Values) {
                 EquipmentSaveData tmpSaveData = new EquipmentSaveData();
-                tmpSaveData.MyName = (equipment == null ? string.Empty : equipment.ResourceName);
+                tmpSaveData.EquipmentName = (equipment == null ? string.Empty : equipment.ResourceName);
                 tmpSaveData.DisplayName = (equipment == null ? string.Empty : equipment.DisplayName);
                 if (equipment != null) {
                     if (equipment.ItemQuality != null) {
