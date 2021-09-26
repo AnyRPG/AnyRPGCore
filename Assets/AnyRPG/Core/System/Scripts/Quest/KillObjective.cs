@@ -44,7 +44,6 @@ namespace AnyRPG {
         }
 
         public override void OnAcceptQuest(Quest quest, bool printMessages = true) {
-            //Debug.Log("KillObjective.OnAcceptQuest(): MyCurrentAmount: " + MyCurrentAmount);
             base.OnAcceptQuest(quest, printMessages);
 
             // don't forget to remove these later

@@ -53,9 +53,9 @@ namespace AnyRPG {
         public void Initialize(KeyBindNode keyBindNode) {
             //Debug.Log("KeyBindSlotScript.Initialize()");
             this.keyBindNode = keyBindNode;
-            this.keyBindID = keyBindNode.MyKeyBindID;
+            this.keyBindID = keyBindNode.KeyBindID;
             //Debug.Log("KeyBindSlotScript.Initialize(): keyBindID: " + this.keyBindID);
-            this.slotLabel.text = keyBindNode.MyLabel;
+            this.slotLabel.text = keyBindNode.Label;
             this.keyboardButtonLabel.text = (keyBindNode.Control ? "ctrl+" : "") + (keyBindNode.Shift ? "shift+" : "") + keyBindNode.KeyboardKeyCode.ToString();
             this.joystickButtonLabel.text = keyBindNode.JoystickKeyCode.ToString();
             this.mobileButtonLabel.text = keyBindNode.MobileKeyCode.ToString();

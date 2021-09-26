@@ -35,7 +35,7 @@ namespace AnyRPG {
             //Debug.Log(DisplayName + ".PowerResourcePotion.GetCastableInformation()");
             string returnString = string.Empty;
             if (ability != null) {
-                returnString += string.Format("\n<color=green>Use: {0}</color>", ability.MyDescription);
+                returnString += string.Format("\n<color=green>Use: {0}</color>", ability.Description);
             }
             return returnString;
         }

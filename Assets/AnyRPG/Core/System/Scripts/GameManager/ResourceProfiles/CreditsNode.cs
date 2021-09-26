@@ -29,7 +29,7 @@ namespace AnyRPG {
 
         public string CreditName { get => creditName; set => creditName = value; }
         public string CreditAttribution { get => creditAttribution; set => creditAttribution = value; }
-        public string MyUrl {
+        public string Url {
             get {
                 if (userUrl != null && userUrl != string.Empty) {
                     return userUrl;

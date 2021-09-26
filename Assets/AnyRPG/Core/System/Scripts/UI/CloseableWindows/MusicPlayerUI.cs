@@ -50,7 +50,7 @@ namespace AnyRPG {
         private ObjectPooler objectPooler = null;
         private UIManager uIManager = null;
 
-        public MusicPlayerHighlightButton MySelectedMusicPlayerHighlightButton { get => selectedMusicPlayerHighlightButton; set => selectedMusicPlayerHighlightButton = value; }
+        public MusicPlayerHighlightButton SelectedMusicPlayerHighlightButton { get => selectedMusicPlayerHighlightButton; set => selectedMusicPlayerHighlightButton = value; }
 
         public override void Configure(SystemGameManager systemGameManager) {
             base.Configure(systemGameManager);
@@ -103,7 +103,7 @@ namespace AnyRPG {
                 uIManager.musicPlayerWindow.CloseWindow();
             }
 
-            if (MySelectedMusicPlayerHighlightButton == null && firstAvailableAudioProfile != null) {
+            if (SelectedMusicPlayerHighlightButton == null && firstAvailableAudioProfile != null) {
                 firstAvailableAudioProfile.Select();
             }
         }
@@ -124,8 +124,8 @@ namespace AnyRPG {
 
         public void UpdateSelected() {
             //Debug.Log("SkillTrainerUI.UpdateSelected()");
-            if (MySelectedMusicPlayerHighlightButton != null) {
-                ShowDescription(MySelectedMusicPlayerHighlightButton.MyMusicProfile);
+            if (SelectedMusicPlayerHighlightButton != null) {
+                ShowDescription(SelectedMusicPlayerHighlightButton.MyMusicProfile);
             }
         }
 
@@ -165,7 +165,7 @@ namespace AnyRPG {
 
             UpdateButtons(musicProfile);
 
-            musicDescription.text = string.Format("<size=30><b><color=yellow>{0}</color></b></size>\n\n<size=18>{1}</size>", musicProfile.DisplayName, musicProfile.MyDescription);
+            musicDescription.text = string.Format("<size=30><b><color=yellow>{0}</color></b></size>\n\n<size=18>{1}</size>", musicProfile.DisplayName, musicProfile.Description);
             if (musicProfile.ArtistName != null && musicProfile.ArtistName != string.Empty) {
                 musicDescription.text += string.Format("\n\n<size=20><b>Author:</b></size> {0}\n\n", musicProfile.ArtistName);
             }
@@ -181,7 +181,7 @@ namespace AnyRPG {
             //Debug.Log("MusicPlayerUI.DeselectMusicButtons()");
             foreach (MusicPlayerHighlightButton musicPlayerHighlightButton in musicPlayerHighlightButtons) {
                 //Debug.Log("MusicPlayerUI.DeselectMusicButtons(): got a button");
-                if (musicPlayerHighlightButton != MySelectedMusicPlayerHighlightButton) {
+                if (musicPlayerHighlightButton != SelectedMusicPlayerHighlightButton) {
                     //Debug.Log("MusicPlayerUI.DeselectMusicButtons(): got a button and clearing it");
                     musicPlayerHighlightButton.DeSelect();
                 }
@@ -204,7 +204,7 @@ namespace AnyRPG {
         public override void RecieveClosedWindowNotification() {
             //Debug.Log("SkillTrainerUI.OnCloseWindow()");
             base.RecieveClosedWindowNotification();
-            MySelectedMusicPlayerHighlightButton = null;
+            SelectedMusicPlayerHighlightButton = null;
         }
 
         public void PlayMusic() {

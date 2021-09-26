@@ -45,7 +45,7 @@ namespace AnyRPG {
         // game manager references
         protected SaveManager saveManager = null;
 
-        public bool MyPrerequisitesMet {
+        public bool PrerequisitesMet {
             get {
                 foreach (PrerequisiteConditions prerequisiteCondition in prerequisiteConditions) {
                     if (!prerequisiteCondition.IsMet()) {
@@ -58,7 +58,7 @@ namespace AnyRPG {
         }
 
         public List<BehaviorNode> BehaviorNodes { get => behaviorNodes; set => behaviorNodes = value; }
-        public bool MyAutomatic { get => automatic; set => automatic = value; }
+        public bool Automatic { get => automatic; set => automatic = value; }
 
         // track whether it is completed to prevent it from repeating if it is automatic
         public bool Completed {

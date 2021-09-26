@@ -155,14 +155,14 @@ namespace AnyRPG {
             RecipeScript firstScript = null;
             foreach (Recipe recipe in GetRecipes()) {
                 //Debug.Log("craftingUI.ShowRecipesCommon(" + craftAbility.name + ") : adding recipe:" + recipe.MyOutput.itemName);
-                if (recipe.MyOutput != null) {
+                if (recipe.Output != null) {
                     GameObject go = objectPooler.GetPooledObject(recipePrefab, recipeParent);
                     RecipeScript qs = go.GetComponentInChildren<RecipeScript>();
                     qs.Configure(systemGameManager);
                     if (firstScript == null) {
                         firstScript = qs;
                     }
-                    qs.Text.text = recipe.MyOutput.DisplayName;
+                    qs.Text.text = recipe.Output.DisplayName;
                     qs.SetRecipe(recipe);
                     recipeScripts.Add(recipe, qs);
                 } else {
@@ -208,18 +208,18 @@ namespace AnyRPG {
             }
             currentRecipe = newRecipe;
 
-            recipeDescription.text = string.Format("<b>{0}</b>", newRecipe.MyOutput.DisplayName, newRecipe.MyDescription);
+            recipeDescription.text = string.Format("<b>{0}</b>", newRecipe.Output.DisplayName, newRecipe.Description);
 
-            outputIcon.SetDescribable(newRecipe.MyOutput, newRecipe.MyOutputCount);
+            outputIcon.SetDescribable(newRecipe.Output, newRecipe.OutputCount);
 
-            if (newRecipe.MyCraftingMaterials.Count > 0) {
+            if (newRecipe.CraftingMaterials.Count > 0) {
                 materialsHeading.gameObject.SetActive(true);
             }
 
             // show crafting materials
-            for (int i = 0; i < newRecipe.MyCraftingMaterials.Count; i++) {
-                inputIcons[i].MyMaterialSlot.SetActive(true);
-                inputIcons[i].SetDescribable(newRecipe.MyCraftingMaterials[i].MyItem, newRecipe.MyCraftingMaterials[i].MyCount);
+            for (int i = 0; i < newRecipe.CraftingMaterials.Count; i++) {
+                inputIcons[i].MaterialSlot.SetActive(true);
+                inputIcons[i].SetDescribable(newRecipe.CraftingMaterials[i].Item, newRecipe.CraftingMaterials[i].Count);
             }
 
             UpdateCraftAmountArea();
@@ -283,7 +283,7 @@ namespace AnyRPG {
 
         private void ClearInputIcons() {
             foreach (DescribableCraftingInputIcon inputIcon in inputIcons) {
-                inputIcon.MyMaterialSlot.SetActive(false);
+                inputIcon.MaterialSlot.SetActive(false);
             }
         }
 

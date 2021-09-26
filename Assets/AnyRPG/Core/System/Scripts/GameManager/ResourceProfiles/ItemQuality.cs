@@ -67,10 +67,10 @@ namespace AnyRPG {
         private bool tintBackgroundImage = false;
 
 
-        public float MyStatMultiplier { get => statMultiplier; set => statMultiplier = value; }
-        public Color MyQualityColor { get => qualityColor; set => qualityColor = value; }
-        public bool MyDynamicItemLevel { get => dynamicItemLevel; set => dynamicItemLevel = value; }
-        public bool MyRequireSellConfirmation { get => requireSellConfirmation; set => requireSellConfirmation = value; }
+        public float StatMultiplier { get => statMultiplier; set => statMultiplier = value; }
+        public Color QualityColor { get => qualityColor; set => qualityColor = value; }
+        public bool DynamicItemLevel { get => dynamicItemLevel; set => dynamicItemLevel = value; }
+        public bool RequireSellConfirmation { get => requireSellConfirmation; set => requireSellConfirmation = value; }
         public float BuyPriceMultiplier { get => buyPriceMultiplier; set => buyPriceMultiplier = value; }
         public float SellPriceMultiplier { get => sellPriceMultiplier; set => sellPriceMultiplier = value; }
         public bool TintBackgroundImage { get => tintBackgroundImage; set => tintBackgroundImage = value; }

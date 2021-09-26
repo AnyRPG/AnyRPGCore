@@ -26,7 +26,7 @@ namespace AnyRPG {
             //Debug.Log(gameObject.name + ".MusicPlayerHighlightButton.Select()");
 
             base.Select();
-            musicPlayerUI.MySelectedMusicPlayerHighlightButton = this;
+            musicPlayerUI.SelectedMusicPlayerHighlightButton = this;
 
             musicPlayerUI.ShowDescription(musicProfile);
 

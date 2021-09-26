@@ -87,7 +87,6 @@ namespace AnyRPG {
         public float TickRate { get => tickRate; set => tickRate = value; }
         public float PrefabDestroyDelay { get => prefabDestroyDelay; set => prefabDestroyDelay = value; }
         public PrefabSpawnLocation PrefabSpawnLocation { get => prefabSpawnLocation; set => prefabSpawnLocation = value; }
-        //public GameObject MyAbilityEffectPrefab { get => abilityEffectPrefab; set => abilityEffectPrefab = value; }
         public bool CastZeroTick { get => castZeroTick; set => castZeroTick = value; }
 
         public override void SetGameManagerReferences() {

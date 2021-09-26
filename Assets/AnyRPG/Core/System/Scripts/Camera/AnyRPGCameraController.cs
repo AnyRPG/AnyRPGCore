@@ -57,8 +57,8 @@ namespace AnyRPG {
         protected NamePlateManager namePlateManager = null;
         protected UIManager uIManager = null;
 
-        public Transform MyTarget { get => target; set => target = value; }
-        public Vector3 MyWantedDirection { get => wantedDirection; set => wantedDirection = value; }
+        public Transform Target { get => target; set => target = value; }
+        public Vector3 WantedDirection { get => wantedDirection; set => wantedDirection = value; }
 
         public override void SetGameManagerReferences() {
             base.SetGameManagerReferences();

@@ -275,8 +275,8 @@ namespace AnyRPG {
 
         public void CleanupCoolDownRoutines() {
             foreach (AbilityCoolDownNode abilityCoolDownNode in abilityCoolDownDictionary.Values) {
-                if (abilityCoolDownNode.MyCoroutine != null) {
-                    abilityCaster.StopCoroutine(abilityCoolDownNode.MyCoroutine);
+                if (abilityCoolDownNode.Coroutine != null) {
+                    abilityCaster.StopCoroutine(abilityCoolDownNode.Coroutine);
                 }
             }
             abilityCoolDownDictionary.Clear();

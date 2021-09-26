@@ -562,7 +562,7 @@ namespace AnyRPG {
             */
 
             // don't hide windows while binding keys
-            if (keyBindManager.MyBindName == string.Empty && playerManager.PlayerUnitSpawned != false) {
+            if (keyBindManager.BindName == string.Empty && playerManager.PlayerUnitSpawned != false) {
 
                 // ui element keys pressed
                 if (inputManager.KeyBindWasPressed("HIDEUI")) {
@@ -879,7 +879,6 @@ namespace AnyRPG {
                 if (clickable.StackSizeText.color != Color.white) {
                     clickable.StackSizeText.color = Color.white;
                 }
-                //clickable.MyIcon.color = Color.white;
             } else {
                 ClearStackCount(clickable);
             }
@@ -921,7 +920,7 @@ namespace AnyRPG {
                         backgroundImage.sprite = itemQuality.IconBackgroundImage;
                     }
                     if (itemQuality.TintBackgroundImage == true) {
-                        finalColor = itemQuality.MyQualityColor;
+                        finalColor = itemQuality.QualityColor;
                     } else {
                         finalColor = Color.white;
                     }

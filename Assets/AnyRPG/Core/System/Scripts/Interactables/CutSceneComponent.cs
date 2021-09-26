@@ -34,7 +34,7 @@ namespace AnyRPG {
                 && levelManager.LoadingLevel == false) {
                 if (Props.Cutscene.Viewed == false || Props.Cutscene.Repeatable == true) {
                     if (Props.Cutscene.RequirePlayerUnitSpawn == false || (Props.Cutscene.RequirePlayerUnitSpawn == true && playerManager.PlayerUnitSpawned == true)) {
-                        if (Props.Cutscene.MyLoadScene != null) {
+                        if (Props.Cutscene.LoadScene != null) {
                             levelManager.LoadCutSceneWithDelay(Props.Cutscene);
                         } else {
                             cutSceneBarController.StartCutScene(Props.Cutscene);

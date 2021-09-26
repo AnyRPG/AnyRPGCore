@@ -169,7 +169,7 @@ namespace AnyRPG {
             UpdateButtons(describeSkill);
 
 
-            skillDescription.text = string.Format("<size=30><b><color=yellow>{0}</color></b></size>\n\n<size=18>{1}</size>", currentSkill.DisplayName, currentSkill.MyDescription);
+            skillDescription.text = string.Format("<size=30><b><color=yellow>{0}</color></b></size>\n\n<size=18>{1}</size>", currentSkill.DisplayName, currentSkill.Description);
 
             skillDescription.text += "\n\n<size=20><b>Abilities Learned:</b></size>\n\n";
 

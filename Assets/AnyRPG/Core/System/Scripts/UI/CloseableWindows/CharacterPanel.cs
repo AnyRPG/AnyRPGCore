@@ -58,13 +58,13 @@ namespace AnyRPG {
 
             foreach (CharacterButton characterButton in characterButtons) {
                 characterButton.Configure(systemGameManager);
-                characterButton.MyEmptyBackGroundColor = emptySlotColor;
-                characterButton.MyFullBackGroundColor = fullSlotColor;
+                characterButton.EmptyBackGroundColor = emptySlotColor;
+                characterButton.FullBackGroundColor = fullSlotColor;
                 characterButton.CharacterPanel = this;
                 //Debug.Log("CharacterPanel.Start(): checking icon");
-                if (characterButton.MyEquipmentSlotProfile != null && characterButton.MyEquipmentSlotProfile.Icon != null) {
+                if (characterButton.EquipmentSlotProfile != null && characterButton.EquipmentSlotProfile.Icon != null) {
                     //Debug.Log("CharacterPanel.Start(): equipment slot profile is not null, setting icon");
-                    characterButton.MyEmptySlotImage.sprite = characterButton.MyEquipmentSlotProfile.Icon;
+                    characterButton.EmptySlotImage.sprite = characterButton.EquipmentSlotProfile.Icon;
                 }
                 characterButton.UpdateVisual();
             }

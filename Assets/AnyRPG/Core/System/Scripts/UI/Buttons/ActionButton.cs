@@ -45,9 +45,9 @@ namespace AnyRPG {
         /// <summary>
         /// A reference to the actual button that this button uses
         /// </summary>
-        public Button MyButton { get; private set; }
+        public Button Button { get; private set; }
 
-        public Image MyIcon { get => icon; set => icon = value; }
+        public Image Icon { get => icon; set => icon = value; }
         public int Count { get => count; }
         public TextMeshProUGUI StackSizeText { get => stackSizeText; }
         public TextMeshProUGUI KeyBindText { get => keyBindText; }
@@ -78,8 +78,8 @@ namespace AnyRPG {
             inventoryManager = systemGameManager.InventoryManager;
 
             Useable = null;
-            MyButton = GetComponent<Button>();
-            MyButton.onClick.AddListener(OnClickFromButton);
+            Button = GetComponent<Button>();
+            Button.onClick.AddListener(OnClickFromButton);
             if (backGroundImage == null) {
                 backGroundImage = GetComponent<Image>();
             }
@@ -184,7 +184,7 @@ namespace AnyRPG {
                 //Debug.Log("the useable is an item");
                 if (inventoryManager.FromSlot != null) {
                     // white, really?  this doesn't actually happen...
-                    inventoryManager.FromSlot.MyIcon.color = Color.white;
+                    inventoryManager.FromSlot.Icon.color = Color.white;
                     inventoryManager.FromSlot = null;
                 } else {
                     //Debug.Log("ActionButton.SetUseable(): This must have come from another actionbar, not the inventory");
@@ -204,7 +204,7 @@ namespace AnyRPG {
             }
 
             // there was the assumption that these were only being called when a player clicked to add an ability
-            if (UIManager.MouseInRect(MyIcon.rectTransform)) {
+            if (UIManager.MouseInRect(Icon.rectTransform)) {
                 uIManager.ShowToolTip(transform.position, useable as IDescribable);
             }
 
@@ -252,7 +252,6 @@ namespace AnyRPG {
             while (Useable != null
                 && playerManager.MyCharacter.CharacterCombat.GetInCombat() == true
                 && playerManager.MyCharacter.CharacterCombat.AutoAttackActive == true) {
-                //Debug.Log("ActionButton.MonitorAbility(): cooldown : " + remainingCooldown + "useable cooldown: " + (MyUseable as IAbility).MyRemainingCoolDown);
                 UpdateVisual();
                 yield return new WaitForSeconds(0.5f);
             }
@@ -268,9 +267,8 @@ namespace AnyRPG {
         public IEnumerator MonitorAbility(BaseAbility ability) {
             //Debug.Log("ActionButton.MonitorAbility(" + ability.DisplayName + ")");
             while (Useable != null
-                && (playerManager.MyCharacter.CharacterAbilityManager.MyRemainingGlobalCoolDown > 0f
+                && (playerManager.MyCharacter.CharacterAbilityManager.RemainingGlobalCoolDown > 0f
                 || playerManager.MyCharacter.CharacterAbilityManager.MyAbilityCoolDownDictionary.ContainsKey(ability.DisplayName))) {
-                //Debug.Log("ActionButton.MonitorAbility(" + ability.DisplayName + "): global cooldown : " + playerManager.MyCharacter.CharacterAbilityManager.MyRemainingGlobalCoolDown + "dictionary cooldown: " + playerManager.MyCharacter.CharacterAbilityManager.MyAbilityCoolDownDictionary[ability.DisplayName].MyRemainingCoolDown);
                 UpdateVisual();
                 yield return null;
             }
@@ -316,24 +314,24 @@ namespace AnyRPG {
             if (Useable == null) {
                 //Debug.Log("ActionButton.UpdateVisual(): useable is null. clearing stack count and setting icon to empty");
                 uIManager.ClearStackCount(this);
-                MyIcon.sprite = null;
-                MyIcon.color = icon.color = new Color32(0, 0, 0, 0);
+                Icon.sprite = null;
+                Icon.color = icon.color = new Color32(0, 0, 0, 0);
                 DisableCoolDownIcon();
                 return;
             }
 
-            if (MyIcon.sprite != Useable.Icon) {
-                MyIcon.sprite = Useable.Icon;
+            if (Icon.sprite != Useable.Icon) {
+                Icon.sprite = Useable.Icon;
             }
-            if (MyIcon.color != Color.white) {
-                MyIcon.color = Color.white;
+            if (Icon.color != Color.white) {
+                Icon.color = Color.white;
             }
 
             //Debug.Log("ActionButton.UpdateVisual(): about to get useable count");
             Useable.UpdateChargeCount(this);
             Useable.UpdateActionButtonVisual(this);
 
-            if (UIManager.MouseInRect(MyIcon.rectTransform)) {
+            if (UIManager.MouseInRect(Icon.rectTransform)) {
                 ProcessOnPointerEnter();
             }
         }
@@ -343,9 +341,8 @@ namespace AnyRPG {
             if (coolDownIcon.isActiveAndEnabled == false) {
                 coolDownIcon.enabled = true;
             }
-            if (coolDownIcon.sprite != MyIcon.sprite) {
-                //Debug.Log("Setting coolDownIcon to match MyIcon");
-                coolDownIcon.sprite = MyIcon.sprite;
+            if (coolDownIcon.sprite != Icon.sprite) {
+                coolDownIcon.sprite = Icon.sprite;
             }
             coolDownIcon.color = new Color32(0, 0, 0, 150);
             coolDownIcon.fillMethod = Image.FillMethod.Radial360;

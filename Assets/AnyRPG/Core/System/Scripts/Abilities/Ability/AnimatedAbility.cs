@@ -48,25 +48,11 @@ namespace AnyRPG {
         public override bool HadSpecialIcon(ActionButton actionButton) {
             if (systemConfigurationManager.AllowAutoAttack == true && IsAutoAttack == true) {
 
-                /*
-                if (playerManager.MyCharacter.MyCharacterEquipmentManager.MyCurrentEquipment.ContainsKey(EquipmentSlot.MainHand) && playerManager.MyCharacter.CharacterEquipmentManager.CurrentEquipment[EquipmentSlot.MainHand] != null) {
-                    if (playerManager.MyCharacter.CharacterEquipmentManager.CurrentEquipment[EquipmentSlot.MainHand].MyIcon != null) {
-                        MyIcon.sprite = playerManager.MyCharacter.CharacterEquipmentManager.CurrentEquipment[EquipmentSlot.MainHand].MyIcon;
-                        //Debug.Log("ActionButton.UpdateVisual(): setting icon");
-                    }
-                }
-                */
                 if (playerManager.MyCharacter.CharacterCombat.GetInCombat() == true
                     && playerManager.MyCharacter.CharacterCombat.AutoAttackActive == true) {
                     if (actionButton.CoolDownIcon.isActiveAndEnabled == false) {
                         actionButton.CoolDownIcon.enabled = true;
                     }
-                    /*
-                    if (coolDownIcon.sprite != Icon.sprite) {
-                        Debug.Log("ActionButton.UpdateVisual(): Setting coolDownIcon to match Icon");
-                        coolDownIcon.sprite = Icon.sprite;
-                    }
-                    */
                     if (actionButton.CoolDownIcon.color == new Color32(255, 0, 0, 155)) {
                         actionButton.CoolDownIcon.color = new Color32(255, 146, 146, 155);
                     } else {
@@ -99,8 +85,8 @@ namespace AnyRPG {
                     if (equipmentSlotProfile.MainWeaponSlot == true
                         && playerManager.MyCharacter.CharacterEquipmentManager.CurrentEquipment[equipmentSlotProfile] != null
                         && playerManager.MyCharacter.CharacterEquipmentManager.CurrentEquipment[equipmentSlotProfile] is Weapon) {
-                        if (actionButton.MyIcon.sprite != playerManager.MyCharacter.CharacterEquipmentManager.CurrentEquipment[equipmentSlotProfile].Icon) {
-                            actionButton.MyIcon.sprite = playerManager.MyCharacter.CharacterEquipmentManager.CurrentEquipment[equipmentSlotProfile].Icon;
+                        if (actionButton.Icon.sprite != playerManager.MyCharacter.CharacterEquipmentManager.CurrentEquipment[equipmentSlotProfile].Icon) {
+                            actionButton.Icon.sprite = playerManager.MyCharacter.CharacterEquipmentManager.CurrentEquipment[equipmentSlotProfile].Icon;
                             break;
                         }
                     }
@@ -210,7 +196,6 @@ namespace AnyRPG {
         }
 
         public void CleanupEventSubscriptions(BaseCharacter source) {
-            //source.MyCharacterCombat.OnHitEvent -= HandleAbilityHit;
         }
 
         public bool HandleAbilityHit(IAbilityCaster source, Interactable target, AbilityEffectContext abilityEffectContext) {

@@ -81,7 +81,7 @@ namespace AnyRPG {
         public BagButton AddBagButton() {
             //Debug.Log(gameObject.name + "BagBarController.AddBagButton()");
             foreach (BagButton _bagButton in bagButtons) {
-                if (_bagButton.MyBagNode == null) {
+                if (_bagButton.BagNode == null) {
                     //Debug.Log("BagBarController.AddBagButton(): found an empty bag button");
                     return _bagButton;
                 }
@@ -100,10 +100,10 @@ namespace AnyRPG {
 
         public void ClearBagButtons() {
             foreach (BagButton _bagButton in bagButtons) {
-                if (_bagButton.MyBagNode != null) {
-                    if (_bagButton.MyBagNode.MyBag != null) {
-                        Destroy(_bagButton.MyBagNode.MyBag);
-                        _bagButton.MyBagNode.MyBag = null;
+                if (_bagButton.BagNode != null) {
+                    if (_bagButton.BagNode.Bag != null) {
+                        Destroy(_bagButton.BagNode.Bag);
+                        _bagButton.BagNode.Bag = null;
                     }
                 }
             }

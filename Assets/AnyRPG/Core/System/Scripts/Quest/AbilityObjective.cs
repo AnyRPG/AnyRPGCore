@@ -79,7 +79,6 @@ namespace AnyRPG {
         public bool RequireUse { get => requireUse; set => requireUse = value; }
 
         public override void OnAcceptQuest(Quest quest, bool printMessages = true) {
-            //Debug.Log("AbilityObjective.OnAcceptQuest(): " + MyType);
             base.OnAcceptQuest(quest, printMessages);
             if (requireUse == true) {
                 baseAbility.OnAbilityUsed += UpdateCastCount;

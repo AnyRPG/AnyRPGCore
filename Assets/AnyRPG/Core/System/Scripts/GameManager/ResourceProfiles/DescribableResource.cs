@@ -50,8 +50,8 @@ namespace AnyRPG {
                     if (tmpResourceDescription.IconBackgroundImage != null) {
                         iconBackgroundImage = tmpResourceDescription.IconBackgroundImage;
                     }
-                    if (tmpResourceDescription.MyDescription != null && tmpResourceDescription.MyDescription != string.Empty) {
-                        description = tmpResourceDescription.MyDescription;
+                    if (tmpResourceDescription.Description != null && tmpResourceDescription.Description != string.Empty) {
+                        description = tmpResourceDescription.Description;
                     }
                 } else {
                     Debug.LogError("DescribableResource.SetupScriptableObjects(): Could Not Find " + resourceDescriptionProfile + " resource description while processing " + DisplayName + ". CHECK INSPECTOR!");

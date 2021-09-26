@@ -23,7 +23,7 @@ namespace AnyRPG {
             get => baseCharacter;
         }
 
-        protected float MyDespawnDelay { get => despawnDelay; set => despawnDelay = value; }
+        protected float DespawnDelay { get => despawnDelay; set => despawnDelay = value; }
 
         public float HitBoxSize { get => hitBoxSize; set => hitBoxSize = value; }
 
@@ -164,16 +164,27 @@ namespace AnyRPG {
         }
 
         public void Despawn(float despawnDelay = 0f, bool addSystemDefaultTime = true, bool forceDespawn = false) {
-            //Debug.Log(gameObject.name + ".CharacterUnit.Despawn(" + despawnDelay + ", " + addSystemDefaultTime + ", " + forceDespawn + ")");
+            //Debug.Log(BaseCharacter.gameObject.name + ".CharacterUnit.Despawn(" + despawnDelay + ", " + addSystemDefaultTime + ", " + forceDespawn + ")");
             //gameObject.SetActive(false);
             // TEST ADDING A MANDATORY DELAY
             if (despawnCoroutine == null && interactable.gameObject.activeSelf == true && interactable.isActiveAndEnabled) {
+                //Debug.Log(BaseCharacter.gameObject.name + ".CharacterUnit.Despawn(" + despawnDelay + ", " + addSystemDefaultTime + ", " + forceDespawn + ") starting despawn coroutine");
                 despawnCoroutine = interactable.StartCoroutine(PerformDespawnDelay(despawnDelay, addSystemDefaultTime, forceDespawn));
+            } else {
+                //Debug.Log(BaseCharacter.gameObject.name + ".CharacterUnit.Despawn(" + despawnDelay + ", " + addSystemDefaultTime + ", " + forceDespawn + ") despawncoroutine was not null");
+            }
+        }
+
+        public void CancelDespawnDelay() {
+            //Debug.Log(BaseCharacter.gameObject.name + ".CharacterUnit.CancelDespawnDelay()");
+            if (despawnCoroutine != null) {
+                interactable.StopCoroutine(despawnCoroutine);
+                despawnCoroutine = null;
             }
         }
 
         public IEnumerator PerformDespawnDelay(float despawnDelay, bool addSystemDefaultTime = true, bool forceDespawn = false) {
-            //Debug.Log(gameObject.name + ".CharacterUnit.PerformDespawnDelay(" + despawnDelay + ", " + addSystemDefaultTime + ", " + forceDespawn + ")");
+            //Debug.Log(BaseCharacter.gameObject.name + ".CharacterUnit.PerformDespawnDelay(" + despawnDelay + ", " + addSystemDefaultTime + ", " + forceDespawn + ") " + this.despawnDelay);
 
             if (forceDespawn == false) {
                 // add all possible delays together
@@ -188,15 +199,16 @@ namespace AnyRPG {
                 }
             }
 
-            if (baseCharacter.CharacterStats.IsAlive == false || forceDespawn == true) {
-                //Debug.Log(gameObject.name + ".CharacterUnit.PerformDespawnDelay(" + despawnDelay + ", " + addSystemDefaultTime + ", " + forceDespawn + "): despawning");
+            if ((baseCharacter.CharacterStats.IsAlive == false && baseCharacter.CharacterStats.IsReviving == false) || forceDespawn == true) {
+                //Debug.Log(BaseCharacter.gameObject.name + ".CharacterUnit.PerformDespawnDelay(" + despawnDelay + ", " + addSystemDefaultTime + ", " + forceDespawn + "): despawning");
                 // this character could have been ressed while waiting to despawn.  don't let it despawn if that happened unless forceDesapwn is true (such as at the end of a patrol)
                 // we are going to send this ondespawn call now to allow another unit to respawn from a spawn node without a long wait during events that require rapid mob spawning
                 OnDespawn(baseCharacter.UnitController);
                 baseCharacter.UnitController.Despawn();
             } else {
-                //Debug.Log(gameObject.name + ".CharacterUnit.PerformDespawnDelay(" + despawnDelay + ", " + addSystemDefaultTime + ", " + forceDespawn + "): unit is alive!! NOT DESPAWNING");
+                //Debug.Log(BaseCharacter.gameObject.name + ".CharacterUnit.PerformDespawnDelay(" + despawnDelay + ", " + addSystemDefaultTime + ", " + forceDespawn + "): unit is alive or reviving !! NOT DESPAWNING");
             }
+            despawnCoroutine = null;
         }
 
         public override bool CanShowMiniMapIcon() {

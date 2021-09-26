@@ -165,17 +165,17 @@ namespace AnyRPG {
             }
             
             if (dialogText != null) {
-                dialogText.text = string.Format("<size={0}>{1}</size>", dialogFontSize, Dialog.DialogNodes[dialogIndex].MyDescription);
+                dialogText.text = string.Format("<size={0}>{1}</size>", dialogFontSize, Dialog.DialogNodes[dialogIndex].Description);
             }
 
-            logManager.WriteChatMessage(Dialog.DialogNodes[dialogIndex].MyDescription);
+            logManager.WriteChatMessage(Dialog.DialogNodes[dialogIndex].Description);
             if (Dialog.AudioProfile != null && Dialog.AudioProfile.AudioClips != null && Dialog.AudioProfile.AudioClips.Count > dialogIndex) {
                 audioManager.PlayVoice(Dialog.AudioProfile.AudioClips[dialogIndex]);
             }
 
             if (buttonText != null) {
-                if (Dialog.DialogNodes[dialogIndex].MyNextOption != string.Empty) {
-                    buttonText.text = Dialog.DialogNodes[dialogIndex].MyNextOption;
+                if (Dialog.DialogNodes[dialogIndex].NextOption != string.Empty) {
+                    buttonText.text = Dialog.DialogNodes[dialogIndex].NextOption;
                 } else {
                     buttonText.text = defaultNextText;
                 }

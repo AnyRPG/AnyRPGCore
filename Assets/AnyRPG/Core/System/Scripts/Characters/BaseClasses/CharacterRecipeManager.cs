@@ -13,7 +13,7 @@ namespace AnyRPG {
         // game manager references
         private SystemDataFactory systemDataFactory = null;
 
-        public BaseCharacter MyBaseCharacter {
+        public BaseCharacter BaseCharacter {
             get => baseCharacter;
             set => baseCharacter = value;
         }

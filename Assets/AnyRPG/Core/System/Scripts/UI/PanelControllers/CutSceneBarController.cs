@@ -176,7 +176,7 @@ namespace AnyRPG {
         private void ProcessSubtitleNode(int subtitleIndex) {
             //Debug.Log("CharacterAbilitymanager.ProcessDialogNode()");
             SubtitleNode currentSubtitleNode = currentCutscene.SubtitleProperties.SubtitleNodes[subtitleIndex];
-            captionText.text = currentSubtitleNode.MyDescription;
+            captionText.text = currentSubtitleNode.Description;
             captionText.color = new Color32(255, 255, 255, 0);
             subtitleCoroutine = StartCoroutine(FadeInText());
 
@@ -198,7 +198,7 @@ namespace AnyRPG {
 
             while (elapsedTime < maxSubtitleTime) {
                 foreach (SubtitleNode subtitleNode in currentCutscene.SubtitleProperties.SubtitleNodes) {
-                    if (subtitleNode.MyStartTime <= elapsedTime && subtitleNode.Shown == false) {
+                    if (subtitleNode.StartTime <= elapsedTime && subtitleNode.Shown == false) {
                         currentSubtitleNode = subtitleNode;
 
                         ProcessSubtitleNode(subtitleIndex);

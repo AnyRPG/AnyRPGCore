@@ -72,7 +72,7 @@ namespace AnyRPG {
             if (interactable.CombatOnly == false) {
                 foreach (BehaviorProfile behaviorProfile in unitController.BehaviorController.BehaviorList.Keys) {
                     //Debug.Log(unitController.gameObject.name + ".BehaviorComponent.GetCurrentOptionList() processing behavior: " + behaviorProfile.DisplayName);
-                    if (behaviorProfile.MyPrerequisitesMet == true
+                    if (behaviorProfile.PrerequisitesMet == true
                         && (behaviorProfile.Completed == false || behaviorProfile.Repeatable == true)
                         && behaviorProfile.AllowManualStart == true) {
                         //Debug.Log(unitController.gameObject.name +  ".BehaviorComponent.GetCurrentOptionList() adding behaviorProfile " + behaviorProfile.DisplayName + "; id: " + behaviorProfile.GetInstanceID());

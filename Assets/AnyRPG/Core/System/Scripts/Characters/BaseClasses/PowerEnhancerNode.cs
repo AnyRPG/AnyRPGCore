@@ -26,8 +26,8 @@ namespace AnyRPG {
         [SerializeField]
         private bool powerToPhysicalDamage;
 
-        public bool MyPowerToSpellDamage { get => powerToSpellDamage; set => powerToSpellDamage = value; }
-        public bool MyPowerToPhysicalDamage { get => powerToPhysicalDamage; set => powerToPhysicalDamage = value; }
+        public bool PowerToSpellDamage { get => powerToSpellDamage; set => powerToSpellDamage = value; }
+        public bool PowerToPhysicalDamage { get => powerToPhysicalDamage; set => powerToPhysicalDamage = value; }
         public List<CharacterStatToPowerNode> StatToPowerConversion { get => statToPowerConversion; set => statToPowerConversion = value; }
         public List<CharacterStatToCritNode> StatToCritRatingConversion { get => statToCritRatingConversion; set => statToCritRatingConversion = value; }
         public List<PrimaryToSecondaryStatNode> PrimaryToSecondaryConversion { get => primaryToSecondaryConversion; set => primaryToSecondaryConversion = value; }

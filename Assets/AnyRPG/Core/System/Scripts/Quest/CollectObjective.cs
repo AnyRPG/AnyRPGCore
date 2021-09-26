@@ -52,7 +52,6 @@ namespace AnyRPG {
             if (completeBefore == false && IsComplete && !quest.IsAchievement && printMessages == true) {
                 messageFeedManager.WriteMessage(string.Format("Collect {0} {1}: Objective Complete", CurrentAmount, DisplayName));
             }
-            //Debug.Log("CollectObjective Updating item count to " + MyCurrentAmount.ToString() + " for type " + MyType);
             base.UpdateCompletionCount(printMessages);
         }
 

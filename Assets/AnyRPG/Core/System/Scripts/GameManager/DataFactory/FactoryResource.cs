@@ -58,9 +58,9 @@ namespace AnyRPG {
                     Debug.Log(resource.name + " had empty ResourceName value");
                     (resource as ResourceProfile).ResourceName = resource.name;
                 }
-                if (resource.MyDescription == null) {
+                if (resource.Description == null) {
                     //Debug.Log(resource.name + " had empty description value");
-                    resource.MyDescription = string.Empty;
+                    resource.Description = string.Empty;
                 }
                 string keyName = SystemDataFactory.PrepareStringForMatch(resource.ResourceName);
                 if (!resourceList.ContainsKey(keyName)) {

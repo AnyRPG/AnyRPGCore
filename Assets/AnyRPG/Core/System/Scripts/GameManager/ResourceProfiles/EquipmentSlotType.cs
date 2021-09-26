@@ -40,7 +40,7 @@ namespace AnyRPG {
         public List<EquipmentSlotProfile> GetCompatibleSlotProfiles() {
             List<EquipmentSlotProfile> returnValue = new List<EquipmentSlotProfile>();
             foreach (EquipmentSlotProfile equipmentSlotProfile in systemDataFactory.GetResourceList<EquipmentSlotProfile>()) {
-                if (equipmentSlotProfile.MyEquipmentSlotTypeList != null && equipmentSlotProfile.MyEquipmentSlotTypeList.Contains(this)) {
+                if (equipmentSlotProfile.EquipmentSlotTypeList != null && equipmentSlotProfile.EquipmentSlotTypeList.Contains(this)) {
                     returnValue.Add(equipmentSlotProfile);
                 }
             }

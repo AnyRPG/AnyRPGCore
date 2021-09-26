@@ -55,7 +55,7 @@ namespace AnyRPG {
             //Debug.Log(DisplayName + ".QuestStartItem.QuestRequirementsAreMet()");
             if (questGiverProps.Quests != null) {
                 foreach (QuestNode questNode in questGiverProps.Quests) {
-                    if (questNode.Quest.MyPrerequisitesMet
+                    if (questNode.Quest.PrerequisitesMet
                         // the next condition is failing on raw complete quest start items because they are always considered complete
                         //&& questNode.MyQuest.IsComplete == false
                         && questNode.Quest.TurnedIn == false

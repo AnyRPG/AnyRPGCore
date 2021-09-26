@@ -49,7 +49,7 @@ namespace AnyRPG {
             this.KeyboardKeyCode = keyboardKeyCode;
         }
 
-        public string MyKeyBindID { get => keyBindID; set => keyBindID = value; }
+        public string KeyBindID { get => keyBindID; set => keyBindID = value; }
 
         public KeyCode KeyboardKeyCode {
             get => keyCode;
@@ -98,7 +98,7 @@ namespace AnyRPG {
             }
         }
 
-        public string MyLabel { get => label; set => label = value; }
+        public string Label { get => label; set => label = value; }
 
         public ActionButton ActionButton {
             get => actionButton;
@@ -153,16 +153,16 @@ namespace AnyRPG {
         public void SendKeyBindEvent() {
             EventParamProperties eventParamProperties = new EventParamProperties();
             SimpleParamNode simpleParamNode = new SimpleParamNode();
-            simpleParamNode.MyParamType = SimpleParamType.stringType;
-            simpleParamNode.MySimpleParams.StringParam = this.keyCode.ToString();
+            simpleParamNode.ParamType = SimpleParamType.stringType;
+            simpleParamNode.SimpleParams.StringParam = this.keyCode.ToString();
             eventParamProperties.objectParam.MySimpleParams.Add(simpleParamNode);
             simpleParamNode = new SimpleParamNode();
-            simpleParamNode.MyParamType = SimpleParamType.stringType;
-            simpleParamNode.MySimpleParams.StringParam = this.joystickKeyCode.ToString();
+            simpleParamNode.ParamType = SimpleParamType.stringType;
+            simpleParamNode.SimpleParams.StringParam = this.joystickKeyCode.ToString();
             eventParamProperties.objectParam.MySimpleParams.Add(simpleParamNode);
             simpleParamNode = new SimpleParamNode();
-            simpleParamNode.MyParamType = SimpleParamType.stringType;
-            simpleParamNode.MySimpleParams.StringParam = this.mobileKeyCode.ToString();
+            simpleParamNode.ParamType = SimpleParamType.stringType;
+            simpleParamNode.SimpleParams.StringParam = this.mobileKeyCode.ToString();
             eventParamProperties.objectParam.MySimpleParams.Add(simpleParamNode);
             SystemEventManager.TriggerEvent("OnBindKey" + keyBindID, eventParamProperties);
         }

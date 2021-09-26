@@ -19,7 +19,7 @@ namespace AnyRPG {
 
         public Dictionary<string, KeyBindNode> KeyBinds { get => keyBinds; set => keyBinds = value; }
 
-        public string MyBindName { get => bindName; set => bindName = value; }
+        public string BindName { get => bindName; set => bindName = value; }
 
         public override void Configure(SystemGameManager systemGameManager) {
             base.Configure(systemGameManager);
@@ -146,16 +146,16 @@ namespace AnyRPG {
             keyBinds.Add(key, keyBindNode);
             EventParamProperties eventParamProperties = new EventParamProperties();
             SimpleParamNode simpleParamNode = new SimpleParamNode();
-            simpleParamNode.MyParamType = SimpleParamType.stringType;
-            simpleParamNode.MySimpleParams.StringParam = keyCode.ToString();
+            simpleParamNode.ParamType = SimpleParamType.stringType;
+            simpleParamNode.SimpleParams.StringParam = keyCode.ToString();
             eventParamProperties.objectParam.MySimpleParams.Add(simpleParamNode);
             simpleParamNode = new SimpleParamNode();
-            simpleParamNode.MyParamType = SimpleParamType.stringType;
-            simpleParamNode.MySimpleParams.StringParam = joystickKeyCode.ToString();
+            simpleParamNode.ParamType = SimpleParamType.stringType;
+            simpleParamNode.SimpleParams.StringParam = joystickKeyCode.ToString();
             eventParamProperties.objectParam.MySimpleParams.Add(simpleParamNode);
             simpleParamNode = new SimpleParamNode();
-            simpleParamNode.MyParamType = SimpleParamType.stringType;
-            simpleParamNode.MySimpleParams.StringParam = mobileKeyCode.ToString();
+            simpleParamNode.ParamType = SimpleParamType.stringType;
+            simpleParamNode.SimpleParams.StringParam = mobileKeyCode.ToString();
             eventParamProperties.objectParam.MySimpleParams.Add(simpleParamNode);
             SystemEventManager.TriggerEvent("OnBindKey" + key, eventParamProperties);
         }

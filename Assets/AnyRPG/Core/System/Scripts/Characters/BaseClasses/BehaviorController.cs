@@ -30,7 +30,7 @@ namespace AnyRPG {
         private AudioManager audioManager = null;
         private LevelManager levelManager = null;
 
-        public int MyBehaviorIndex { get => behaviorIndex; }
+        public int BehaviorIndex { get => behaviorIndex; }
         public bool BehaviorPlaying { get => behaviorPlaying; set => behaviorPlaying = value; }
         public bool SuppressNameplateImage { get => suppressNameplateImage; }
         public Dictionary<BehaviorProfile, BehaviorProfileState> BehaviorList { get => behaviorList; set => behaviorList = value; }
@@ -110,17 +110,17 @@ namespace AnyRPG {
             //ProcessBehaviorBeginEnd();
             while (behaviorIndex < behaviorProfile.BehaviorNodes.Count) {
                 foreach (BehaviorNode behaviorNode in behaviorProfile.BehaviorNodes) {
-                    if (behaviorNode.MyStartTime <= elapsedTime && behaviorList[behaviorProfile].BehaviorNodeStates[behaviorNode].Completed == false) {
+                    if (behaviorNode.StartTime <= elapsedTime && behaviorList[behaviorProfile].BehaviorNodeStates[behaviorNode].Completed == false) {
                         currentbehaviorNode = behaviorNode;
 
-                        if (currentbehaviorNode.MyBehaviorActionNodes != null) {
-                            foreach (BehaviorActionNode behaviorActionNode in currentbehaviorNode.MyBehaviorActionNodes) {
-                                if (behaviorActionNode.MyBehaviorMethod != null && behaviorActionNode.MyBehaviorMethod != string.Empty) {
+                        if (currentbehaviorNode.BehaviorActionNodes != null) {
+                            foreach (BehaviorActionNode behaviorActionNode in currentbehaviorNode.BehaviorActionNodes) {
+                                if (behaviorActionNode.BehaviorMethod != null && behaviorActionNode.BehaviorMethod != string.Empty) {
                                     //Debug.Log(unitController.gameObject.name + ".BehaviorInteractable.playBehavior(): sending Message " + behaviorActionNode.MyBehaviorMethod + "(" + behaviorActionNode.MyBehaviorParameter + ")");
-                                    if (behaviorActionNode.MyBehaviorParameter != null && behaviorActionNode.MyBehaviorParameter != string.Empty) {
-                                        unitController.gameObject.SendMessage(behaviorActionNode.MyBehaviorMethod, behaviorActionNode.MyBehaviorParameter, SendMessageOptions.DontRequireReceiver);
+                                    if (behaviorActionNode.BehaviorParameter != null && behaviorActionNode.BehaviorParameter != string.Empty) {
+                                        unitController.gameObject.SendMessage(behaviorActionNode.BehaviorMethod, behaviorActionNode.BehaviorParameter, SendMessageOptions.DontRequireReceiver);
                                     } else {
-                                        unitController.gameObject.SendMessage(behaviorActionNode.MyBehaviorMethod, SendMessageOptions.DontRequireReceiver);
+                                        unitController.gameObject.SendMessage(behaviorActionNode.BehaviorMethod, SendMessageOptions.DontRequireReceiver);
                                     }
                                 }
                             }
@@ -201,7 +201,7 @@ namespace AnyRPG {
             }
 
             foreach (BehaviorProfile behaviorProfile in GetCurrentOptionList()) {
-                if (behaviorProfile.MyAutomatic == true && (behaviorProfile.Completed == false || behaviorProfile.Repeatable == true)) {
+                if (behaviorProfile.Automatic == true && (behaviorProfile.Completed == false || behaviorProfile.Repeatable == true)) {
                     TryPlayBehavior(behaviorProfile);
                 }
             }
@@ -211,7 +211,7 @@ namespace AnyRPG {
             //Debug.Log(unitController.gameObject.name + ".BehaviorController.GetCurrentOptionList()");
             List<BehaviorProfile> currentList = new List<BehaviorProfile>();
             foreach (BehaviorProfile behaviorProfile in behaviorList.Keys) {
-                if (behaviorProfile.MyPrerequisitesMet == true
+                if (behaviorProfile.PrerequisitesMet == true
                     && (behaviorProfile.Completed == false || behaviorProfile.Repeatable == true)) {
                     //Debug.Log("BehaviorInteractable.GetCurrentOptionList() adding behaviorProfile " + behaviorProfile.DisplayName + "; id: " + behaviorProfile.GetInstanceID());
                     currentList.Add(behaviorProfile);

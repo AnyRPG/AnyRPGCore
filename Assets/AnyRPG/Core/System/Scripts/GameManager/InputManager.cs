@@ -72,7 +72,7 @@ namespace AnyRPG {
         }
 
         void Update() {
-            if (keyBindManager.MyBindName != string.Empty) {
+            if (keyBindManager.BindName != string.Empty) {
                 // we are binding a key.  discard all input
                 //Debug.Log("Key Binding in progress.  returning.");
                 foreach (KeyBindNode keyBindNode in keyBindManager.KeyBinds.Values) {

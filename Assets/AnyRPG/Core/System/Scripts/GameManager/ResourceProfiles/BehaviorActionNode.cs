@@ -14,8 +14,8 @@ namespace AnyRPG {
         [SerializeField]
         private string behaviorParameter = string.Empty;
 
-        public string MyBehaviorMethod { get => behaviorMethod; set => behaviorMethod = value; }
-        public string MyBehaviorParameter { get => behaviorParameter; set => behaviorParameter = value; }
+        public string BehaviorMethod { get => behaviorMethod; set => behaviorMethod = value; }
+        public string BehaviorParameter { get => behaviorParameter; set => behaviorParameter = value; }
     }
 
 }

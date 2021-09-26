@@ -83,9 +83,9 @@ namespace AnyRPG {
 
             while (dialog.TurnedIn == false) {
                 foreach (DialogNode dialogNode in dialog.DialogNodes) {
-                    if (dialogNode.MyStartTime <= elapsedTime && dialogNode.Shown == false) {
+                    if (dialogNode.StartTime <= elapsedTime && dialogNode.Shown == false) {
                         currentdialogNode = dialogNode;
-                        interactable.ProcessDialogTextUpdate(dialogNode.MyDescription);
+                        interactable.ProcessDialogTextUpdate(dialogNode.Description);
                         if (interactable != null && dialog.AudioProfile != null && dialog.AudioProfile.AudioClips != null && dialog.AudioProfile.AudioClips.Count > dialogIndex) {
                             interactable.UnitComponentController.PlayVoiceSound(dialog.AudioProfile.AudioClips[dialogIndex]);
                         }
@@ -96,7 +96,7 @@ namespace AnyRPG {
                             }
                         }
                         if (writeMessage && logManager != null) {
-                            logManager.WriteChatMessage(dialogNode.MyDescription);
+                            logManager.WriteChatMessage(dialogNode.Description);
                         }
 
                         dialogNode.Shown = true;
@@ -120,7 +120,7 @@ namespace AnyRPG {
             }
 
             if (currentdialogNode != null) {
-                yield return new WaitForSeconds(currentdialogNode.MyShowTime);
+                yield return new WaitForSeconds(currentdialogNode.ShowTime);
             }
             interactable.ProcessEndDialog();
         }

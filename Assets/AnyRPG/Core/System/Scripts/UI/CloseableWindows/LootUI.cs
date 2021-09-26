@@ -54,7 +54,7 @@ namespace AnyRPG {
 
                         string colorString = "white";
                         if (lootManager.Pages[pageIndex][i].ItemQuality != null) {
-                            colorString = "#" + ColorUtility.ToHtmlStringRGB(lootManager.Pages[pageIndex][i].ItemQuality.MyQualityColor);
+                            colorString = "#" + ColorUtility.ToHtmlStringRGB(lootManager.Pages[pageIndex][i].ItemQuality.QualityColor);
                         }
                         string title = string.Format("<color={0}>{1}</color>", colorString, lootManager.Pages[pageIndex][i].DisplayName);
                         // set the title

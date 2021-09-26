@@ -35,7 +35,7 @@ namespace AnyRPG {
         // game manager references
         protected LevelManager levelManager = null;
 
-        public string MyLevelName { get => levelName; set => levelName = value; }
+        public string LevelName { get => levelName; set => levelName = value; }
 
         public override void SetGameManagerReferences() {
             base.SetGameManagerReferences();

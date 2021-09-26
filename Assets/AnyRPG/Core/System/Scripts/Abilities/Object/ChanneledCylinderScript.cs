@@ -37,31 +37,31 @@ namespace AnyRPG {
         // game manager references
         private ObjectPooler objectPooler = null;
 
-        public GameObject MyStartObject { get => startObject;
+        public GameObject StartObject { get => startObject;
             set {
                 startObject = value;
                 //Debug.Log("start Object : " + startObject.name);
             }
         }
-        public Vector3 MyStartPosition { get => startPosition; set => startPosition = value; }
-        public GameObject MyEndObject { get => endObject;
+        public Vector3 StartPosition { get => startPosition; set => startPosition = value; }
+        public GameObject EndObject { get => endObject;
             set {
                 endObject = value;
                 //Debug.Log("end Object : " + endObject.name);
             }
         }
-        public Vector3 MyEndPosition { get => endPosition; set => endPosition = value; }
+        public Vector3 EndPosition { get => endPosition; set => endPosition = value; }
 
         public void Setup(GameObject startObject, Vector3 startPosition, GameObject endObject, Vector3 endPosition, SystemGameManager systemGameManager) {
             //Debug.Log(gameObject.name + ".ChanneledCylinderScript.Setup(" + (startObject == null ? "null" : startObject.name) + ", " + startPosition + ", " + (endObject == null ? "null" : endObject.name) + ", " + endPosition + ")");
             Configure(systemGameManager);
-            MyStartObject = startObject;
-            MyStartPosition = startPosition;
-            MyEndObject = endObject;
+            StartObject = startObject;
+            StartPosition = startPosition;
+            EndObject = endObject;
             if (endObject == null) {
                 nullEndObject = true;
             }
-            MyEndPosition = endPosition;
+            EndPosition = endPosition;
             UpdateTransform();
         }
 
@@ -72,7 +72,7 @@ namespace AnyRPG {
 
         private void Update() {
 
-            if (MyStartObject == null || (nullEndObject == false && (endObject == null || endObject.activeInHierarchy == false))) {
+            if (StartObject == null || (nullEndObject == false && (endObject == null || endObject.activeInHierarchy == false))) {
                 // need to be able to shoot at ground, but should still exit if we had an actual original target
                 objectPooler.ReturnObjectToPool(gameObject);
                 return;
@@ -88,17 +88,17 @@ namespace AnyRPG {
         }
 
         private void UpdateTransform() {
-            if (MyStartObject == null || (nullEndObject == false && (endObject == null || endObject.activeInHierarchy == false))) {
+            if (StartObject == null || (nullEndObject == false && (endObject == null || endObject.activeInHierarchy == false))) {
                 // need to be able to shoot at ground, but should still exit if we had an actual original target
                 objectPooler.ReturnObjectToPool(gameObject);
                 return;
             }
-            Vector3 absoluteStartPosition = MyStartObject.transform.TransformPoint(MyStartPosition);
+            Vector3 absoluteStartPosition = StartObject.transform.TransformPoint(StartPosition);
             Vector3 absoluteEndPosition = Vector3.zero;
-            if (MyEndObject == null) {
-                absoluteEndPosition = MyEndPosition;
+            if (EndObject == null) {
+                absoluteEndPosition = EndPosition;
             } else {
-                absoluteEndPosition = MyEndObject.transform.TransformPoint(MyEndPosition);
+                absoluteEndPosition = EndObject.transform.TransformPoint(EndPosition);
             }
 
             Vector3 directionVector = (absoluteStartPosition - absoluteEndPosition).normalized;

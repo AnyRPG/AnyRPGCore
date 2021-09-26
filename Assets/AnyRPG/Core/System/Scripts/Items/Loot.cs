@@ -35,12 +35,12 @@ namespace AnyRPG {
         // game manager references
         private SystemDataFactory systemDataFactory = null;
 
-        public Item MyItem { get => item; }
-        public float MyDropChance { get => dropChance; }
-        public int MyMinDrops { get => minDrops; set => minDrops = value; }
-        public int MyMaxDrops { get => maxDrops; set => maxDrops = value; }
+        public Item Item { get => item; }
+        public float DropChance { get => dropChance; }
+        public int MinDrops { get => minDrops; set => minDrops = value; }
+        public int MaxDrops { get => maxDrops; set => maxDrops = value; }
 
-        public bool MyPrerequisitesMet {
+        public bool PrerequisitesMet {
             get {
                 //Debug.Log(itemName + ".MyPrerequisitesMet");
 

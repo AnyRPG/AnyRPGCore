@@ -133,7 +133,7 @@ namespace AnyRPG {
                         return itemPrimaryStatNode.ManualModifierValue;
                     }
                     return (int)Mathf.Ceil(Mathf.Clamp(
-                        (float)GetItemLevel(currentLevel) * (LevelEquations.GetPrimaryStatForLevel(statName, currentLevel, baseCharacter, systemConfigurationManager) * (GetItemQualityNumber(usedItemQuality) - 1f)) * ((EquipmentSlotType.StatWeight * EquipmentSlotType.GetCompatibleSlotProfiles()[0].MyStatWeight) / GetTotalSlotWeights()),
+                        (float)GetItemLevel(currentLevel) * (LevelEquations.GetPrimaryStatForLevel(statName, currentLevel, baseCharacter, systemConfigurationManager) * (GetItemQualityNumber(usedItemQuality) - 1f)) * ((EquipmentSlotType.StatWeight * EquipmentSlotType.GetCompatibleSlotProfiles()[0].StatWeight) / GetTotalSlotWeights()),
                         0f,
                         Mathf.Infinity
                         ));
@@ -184,7 +184,7 @@ namespace AnyRPG {
         public float GetTotalSlotWeights() {
             float returnValue = 0f;
             foreach (EquipmentSlotProfile equipmentSlotProfile in systemDataFactory.GetResourceList<EquipmentSlotProfile>()) {
-                returnValue += equipmentSlotProfile.MyStatWeight;
+                returnValue += equipmentSlotProfile.StatWeight;
             }
             return returnValue;
         }
@@ -196,7 +196,7 @@ namespace AnyRPG {
         public float GetItemQualityNumber(ItemQuality usedItemQuality) {
             float returnValue = 1;
             if (usedItemQuality != null) {
-                returnValue = usedItemQuality.MyStatMultiplier;
+                returnValue = usedItemQuality.StatMultiplier;
             }
             return returnValue;
         }

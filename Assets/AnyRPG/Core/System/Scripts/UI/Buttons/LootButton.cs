@@ -26,12 +26,12 @@ namespace AnyRPG {
 
         private LootDrop lootDrop = null;
 
-        public Image MyIcon { get => icon; }
+        public Image Icon { get => icon; }
         public LootDrop LootDrop {
             get => lootDrop;
             set {
                 lootDrop = value;
-                MyIcon.sprite = lootDrop.Icon;
+                Icon.sprite = lootDrop.Icon;
                 lootDrop.SetBackgroundImage(lootBackGroundImage);
             }
         }

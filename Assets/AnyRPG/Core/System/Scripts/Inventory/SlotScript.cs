@@ -195,7 +195,7 @@ namespace AnyRPG {
                     //Debug.Log("SlotScript.HandleLeftClick(): We are trying to drop a bag into the inventory.");
                     // the handscript had a bag in it, and therefore we are trying to unequip a bag
                     Bag bag = (Bag)handScript.Moveable;
-                    if (bag.MyBagPanel != MyBag && inventoryManager.EmptySlotCount() - bag.MySlots > 0) {
+                    if (bag.MyBagPanel != MyBag && inventoryManager.EmptySlotCount() - bag.Slots > 0) {
                         //Debug.Log("SlotScript.HandleLeftClick(): We are trying to drop a bag into the inventory. There is enough empty space.");
                         AddItem(bag);
                         inventoryManager.RemoveBag(bag);
@@ -270,7 +270,7 @@ namespace AnyRPG {
             } else if (inventoryManager.BagsClosed() == false && inventoryManager.BankClosed() == true && uIManager.vendorWindow.IsOpen) {
                 // SELL THE ITEM
                 if (MyItem != null) {
-                    if (MyItem.ItemQuality != null && MyItem.ItemQuality.MyRequireSellConfirmation) {
+                    if (MyItem.ItemQuality != null && MyItem.ItemQuality.RequireSellConfirmation) {
                         uIManager.confirmSellItemMenuWindow.OpenWindow();
                         (uIManager.confirmSellItemMenuWindow.CloseableWindowContents as ConfirmSellItemPanelController).MyItem = MyItem;
                         return;

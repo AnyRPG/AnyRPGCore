@@ -57,7 +57,7 @@ namespace AnyRPG {
             get {
                 int count = 0;
                 foreach (BagNode bagNode in bagNodes) {
-                    if (bagNode.MyBag != null && bagNode.IsBankNode == false) {
+                    if (bagNode.Bag != null && bagNode.IsBankNode == false) {
                         count++;
                     }
                 }
@@ -69,8 +69,8 @@ namespace AnyRPG {
             get {
                 int count = 0;
                 foreach (BagNode bagNode in bagNodes) {
-                    if (bagNode.MyBag != null) {
-                        count += bagNode.BagPanel.MySlots.Count;
+                    if (bagNode.Bag != null) {
+                        count += bagNode.BagPanel.Slots.Count;
                     }
                 }
                 return count;
@@ -87,7 +87,7 @@ namespace AnyRPG {
             set {
                 fromSlot = value;
                 if (value != null) {
-                    fromSlot.MyIcon.color = Color.grey;
+                    fromSlot.Icon.color = Color.grey;
                 }
             }
         }
@@ -156,7 +156,7 @@ namespace AnyRPG {
                 //bagNode.MyBag = null;
                 if (bagNode.IsBankNode == false) {
                     //Debug.Log("Got a bag node, removing!");
-                    RemoveBag(bagNode.MyBag, true);
+                    RemoveBag(bagNode.Bag, true);
                 } else {
                     //Debug.Log("Got a bank node, not removing!");
                 }
@@ -169,8 +169,8 @@ namespace AnyRPG {
         public int EmptySlotCount(bool bankSlot = false) {
             int count = 0;
             foreach (BagNode bagNode in bagNodes) {
-                if (bagNode.MyBag != null && bagNode.IsBankNode == bankSlot) {
-                    count += bagNode.BagPanel.MyEmptySlotCount;
+                if (bagNode.Bag != null && bagNode.IsBankNode == bankSlot) {
+                    count += bagNode.BagPanel.EmptySlotCount;
                 }
             }
             return count;
@@ -182,7 +182,7 @@ namespace AnyRPG {
             foreach (BagNode bagNode in bagNodes) {
                 if (bagNode.IsBankNode == addToBank) {
                     //Debug.Log("Checking BagNode for the presence of a bag: " + counter);
-                    if (bagNode.MyBag == null) {
+                    if (bagNode.Bag == null) {
                         //Debug.Log("found empty bagnode at:" + counter);
                         return true;
                     }
@@ -261,7 +261,7 @@ namespace AnyRPG {
 
                     bagNode.BagButton = bagBarController.AddBagButton();
                     if (bagNode.BagButton != null) {
-                        bagNode.BagButton.MyBagNode = bagNode;
+                        bagNode.BagButton.BagNode = bagNode;
                     } else {
                         //Debug.Log("InventoryManager.InitializeBagWindows(): create element " + i + " bagNode.MyBagButton is null!!!");
                     }
@@ -282,7 +282,7 @@ namespace AnyRPG {
                     bagNode.BagButton = (uIManager.bankWindow.CloseableWindowContents as BankPanel).MyBagBarController.AddBagButton();
 
                     if (bagNode.BagButton != null) {
-                        bagNode.BagButton.MyBagNode = bagNode;
+                        bagNode.BagButton.BagNode = bagNode;
                     } else {
                         //Debug.Log("InventoryManager.InitializeBagWindows(): create element " + i + " bagNode.MyBagButton is null!!!");
                     }
@@ -312,7 +312,7 @@ namespace AnyRPG {
             //Debug.Log("InventoryManager.AddBag(Bag, " + addBank + ")");
 
             foreach (BagNode bagNode in bagNodes) {
-                if (bagNode.MyBag == null && bagNode.IsBankNode == addBank) {
+                if (bagNode.Bag == null && bagNode.IsBankNode == addBank) {
                     PopulateBagNode(bagNode, bag);
                     //bags.Add(bag);
                     //bag.MyBagButton = bagButton;
@@ -338,7 +338,7 @@ namespace AnyRPG {
         private void PopulateBagNode(BagNode bagNode, Bag bag) {
             //Debug.Log("InventoryManager.PopulateBagNode(" + (bagNode != null ? bagNode.ToString() : "null") + ", " + (bag != null ? bag.DisplayName : "null") + ")");
             if (bag != null) {
-                bagNode.MyBag = bag;
+                bagNode.Bag = bag;
                 if (bagNode.IsBankNode) {
                     if (bagNode.BagWindow != null) {
                         bagNode.BagWindow.InitalizeWindowContents(bankBagPrefab, bag.DisplayName);
@@ -351,7 +351,7 @@ namespace AnyRPG {
                 bagNode.BagPanel = bagNode.BagWindow.CloseableWindowContents as BagPanel;
                 if (bagNode.BagPanel != null) {
                     //Debug.Log("InventoryManager.PopulateBagNode() bagPanel: " + bagNode.MyBagPanel.gameObject.GetInstanceID() + " for window: " + bagNode.MyBagWindow.gameObject.name);
-                    bagNode.BagPanel.AddSlots(bag.MySlots);
+                    bagNode.BagPanel.AddSlots(bag.Slots);
                     bag.MyBagNode = bagNode;
                     bag.MyBagPanel = bagNode.BagPanel;
                 }
@@ -395,7 +395,7 @@ namespace AnyRPG {
         public void RemoveBag(Bag bag, bool clearOnly = false) {
             //Debug.Log("InventoryManager.RemoveBag()");
             foreach (BagNode bagNode in bagNodes) {
-                if (bagNode.MyBag == bag) {
+                if (bagNode.Bag == bag) {
                     // give the old bagNode a temp location so we can add its items back to the inventory
                     BagPanel tmpBagPanel = bagNode.BagPanel;
 
@@ -408,7 +408,7 @@ namespace AnyRPG {
                     }
 
                     // null the bag so the items won't get added back, as we are trying to empty it so we can remove it
-                    bagNode.MyBag = null;
+                    bagNode.Bag = null;
 
                     if (!clearOnly) {
                         // bag is now gone, can add items back to inventory and they won't go back in that bag
@@ -445,7 +445,7 @@ namespace AnyRPG {
         }
 
         public void SwapBags(Bag oldBag, Bag newBag) {
-            int newSlotCount = (TotalSlotCount - oldBag.MySlots) + newBag.MySlots;
+            int newSlotCount = (TotalSlotCount - oldBag.Slots) + newBag.Slots;
 
             if (newSlotCount - FullSlotCount >= 0) {
                 // do swap
@@ -496,8 +496,8 @@ namespace AnyRPG {
 
         public void RemoveItem(Item item) {
             foreach (BagNode bagNode in bagNodes) {
-                if (bagNode.MyBag != null) {
-                    foreach (SlotScript slot in bagNode.BagPanel.MySlots) {
+                if (bagNode.Bag != null) {
+                    foreach (SlotScript slot in bagNode.BagPanel.Slots) {
                         if (!slot.IsEmpty && SystemDataFactory.MatchResource(slot.MyItem.DisplayName, item.DisplayName)) {
                             slot.RemoveItem(item);
                             return;
@@ -509,7 +509,7 @@ namespace AnyRPG {
 
         private bool PlaceInEmpty(Item item, bool addToBank = false) {
             foreach (BagNode bagNode in bagNodes) {
-                if (bagNode.MyBag != null && bagNode.IsBankNode == addToBank) {
+                if (bagNode.Bag != null && bagNode.IsBankNode == addToBank) {
                     if (bagNode.BagPanel.AddItem(item)) {
                         OnItemCountChanged(item);
                         return true;
@@ -525,8 +525,8 @@ namespace AnyRPG {
 
         private bool PlaceInStack(Item item, bool addToBank = false) {
             foreach (BagNode bagNode in bagNodes) {
-                if (bagNode.MyBag != null && bagNode.IsBankNode == addToBank) {
-                    foreach (SlotScript slotScript in bagNode.BagPanel.MySlots) {
+                if (bagNode.Bag != null && bagNode.IsBankNode == addToBank) {
+                    foreach (SlotScript slotScript in bagNode.BagPanel.Slots) {
                         if (slotScript.StackItem(item)) {
                             OnItemCountChanged(item);
                             return true;
@@ -614,8 +614,8 @@ namespace AnyRPG {
         public IUseable GetUseable(IUseable useable) {
             //IUseable useable = new Stack<IUseable>();
             foreach (BagNode bagNode in bagNodes) {
-                if (bagNode.MyBag != null) {
-                    foreach (SlotScript slot in bagNode.BagPanel.MySlots) {
+                if (bagNode.Bag != null) {
+                    foreach (SlotScript slot in bagNode.BagPanel.Slots) {
                         if (!slot.IsEmpty && SystemDataFactory.MatchResource(slot.MyItem.DisplayName, useable.DisplayName)) {
                             return (slot.MyItem as IUseable);
                         }
@@ -629,8 +629,8 @@ namespace AnyRPG {
         public int GetUseableCount(IUseable useable) {
             int count = 0;
             foreach (BagNode bagNode in bagNodes) {
-                if (bagNode.MyBag != null) {
-                    foreach (SlotScript slot in bagNode.BagPanel.MySlots) {
+                if (bagNode.Bag != null) {
+                    foreach (SlotScript slot in bagNode.BagPanel.Slots) {
                         if (!slot.IsEmpty && SystemDataFactory.MatchResource(slot.MyItem.DisplayName, useable.DisplayName)) {
                             count += slot.Count;
                         }
@@ -649,8 +649,8 @@ namespace AnyRPG {
             int itemCount = 0;
 
             foreach (BagNode bagNode in bagNodes) {
-                if (bagNode.MyBag != null) {
-                    foreach (SlotScript slot in bagNode.BagPanel.MySlots) {
+                if (bagNode.Bag != null) {
+                    foreach (SlotScript slot in bagNode.BagPanel.Slots) {
                         if (!slot.IsEmpty && SystemDataFactory.MatchResource(slot.MyItem.DisplayName, type, partialMatch)) {
                             itemCount += slot.Count;
                         }
@@ -666,9 +666,9 @@ namespace AnyRPG {
             List<Item> items = new List<Item>();
             foreach (BagNode bagNode in bagNodes) {
                 //Debug.Log("InventoryManager.GetItems() got bagnode");
-                if (bagNode.MyBag != null) {
+                if (bagNode.Bag != null) {
                     //Debug.Log("InventoryManager.GetItems() got bagnode and it has a bag");
-                    foreach (SlotScript slot in bagNode.BagPanel.MySlots) {
+                    foreach (SlotScript slot in bagNode.BagPanel.Slots) {
                         //Debug.Log("InventoryManager.GetItems() got bagnode and it has a bag and we are looking in a slotscript");
                         if (!slot.IsEmpty && SystemDataFactory.MatchResource(slot.MyItem.DisplayName, itemType)) {
                             //Debug.Log("InventoryManager.GetItems() got bagnode and it has a bag and we are looking in a slotscript and the slot is not empty and it matches");
@@ -690,8 +690,8 @@ namespace AnyRPG {
         public List<SlotScript> GetSlots() {
             List<SlotScript> items = new List<SlotScript>();
             foreach (BagNode bagNode in bagNodes) {
-                if (bagNode.MyBag != null) {
-                    foreach (SlotScript slot in bagNode.BagPanel.MySlots) {
+                if (bagNode.Bag != null) {
+                    foreach (SlotScript slot in bagNode.BagPanel.Slots) {
                         items.Add(slot);
                     }
                 }

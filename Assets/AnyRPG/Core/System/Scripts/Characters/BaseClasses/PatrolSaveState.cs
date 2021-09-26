@@ -102,7 +102,7 @@ namespace AnyRPG {
                 }
 
                 // get a random point that's on the navmesh
-                Vector3 randomPoint = patrolController.UnitController.MyStartPosition + new Vector3(randomXNumber, 0, randomZNumber);
+                Vector3 randomPoint = patrolController.UnitController.StartPosition + new Vector3(randomXNumber, 0, randomZNumber);
                 randomPoint = patrolController.UnitController.UnitMotor.CorrectedNavmeshPosition(randomPoint);
                 
                 return randomPoint;

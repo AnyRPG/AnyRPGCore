@@ -103,7 +103,7 @@ namespace AnyRPG {
                     traitRewardIcons.Add(rewardIcon);
                     if (traitList[i].RequiredLevel > playerManager.MyCharacter.CharacterStats.Level) {
                         rewardIcon.StackSizeText.text = "Level\n" + traitList[i].RequiredLevel;
-                        rewardIcon.MyHighlightIcon.color = new Color32(255, 255, 255, 80);
+                        rewardIcon.HighlightIcon.color = new Color32(255, 255, 255, 80);
                     }
                 }
             }
@@ -136,7 +136,7 @@ namespace AnyRPG {
                     abilityRewardIcons.Add(rewardIcon);
                     if (abilityList[i].RequiredLevel > playerManager.MyCharacter.CharacterStats.Level) {
                         rewardIcon.StackSizeText.text = "Level\n" + abilityList[i].RequiredLevel;
-                        rewardIcon.MyHighlightIcon.color = new Color32(255, 255, 255, 80);
+                        rewardIcon.HighlightIcon.color = new Color32(255, 255, 255, 80);
                     }
                 }
             }

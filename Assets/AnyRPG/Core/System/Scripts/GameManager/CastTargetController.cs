@@ -19,7 +19,7 @@ namespace AnyRPG {
 
         private float circleRadius = 0f;
 
-        public Color MyCircleColor { get => circleColor; set => circleColor = value; }
+        public Color CircleColor { get => circleColor; set => circleColor = value; }
 
         // game manager references
         protected PlayerManager playerManager = null;

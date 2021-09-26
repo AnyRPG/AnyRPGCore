@@ -14,7 +14,7 @@ namespace AnyRPG {
         // can be on or off
         protected bool onState = false;
 
-        public bool MyOnState { get => onState; set => onState = value; }
+        public bool OnState { get => onState; set => onState = value; }
 
         public ControlSwitchComponent(Interactable interactable, ControlSwitchProps interactableOptionProps, SystemGameManager systemGameManager) : base(interactable, interactableOptionProps, systemGameManager) {
             interactableOptionProps.InteractionPanelTitle = "Interactable";
@@ -31,7 +31,7 @@ namespace AnyRPG {
             if (Props.SwitchGroup != null && Props.SwitchGroup.Count > 0) {
                 int activeSwitches = 0;
                 foreach (ControlSwitchComponent controlSwitch in Props.SwitchGroup) {
-                    if (controlSwitch.MyOnState) {
+                    if (controlSwitch.OnState) {
                         activeSwitches++;
                     }
                 }

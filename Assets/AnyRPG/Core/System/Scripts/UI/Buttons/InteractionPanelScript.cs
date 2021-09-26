@@ -24,7 +24,7 @@ namespace AnyRPG {
         // game manager references
         protected PlayerManager playerManager = null;
 
-        public Image MyIcon { get => icon; set => icon = value; }
+        public Image Icon { get => icon; set => icon = value; }
         public InteractableOptionComponent InteractableOption {
             get => interactableOption;
             set {

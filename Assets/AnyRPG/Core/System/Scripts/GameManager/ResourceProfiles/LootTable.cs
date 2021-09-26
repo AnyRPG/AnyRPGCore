@@ -84,10 +84,10 @@ namespace AnyRPG {
                     // get list of loot that is currenly valid to be rolled so that weights can be properly calculated based on only valid loot
                     List<Loot> validLoot = new List<Loot>();
                     foreach (Loot loot in lootGroup.Loot) {
-                        if (loot.MyPrerequisitesMet == true &&
-                            (loot.MyItem.UniqueItem == false ||
-                            (inventoryManager.GetItemCount(loot.MyItem.DisplayName) == 0 &&
-                            playerManager.MyCharacter.CharacterEquipmentManager.HasEquipment(loot.MyItem.DisplayName) == false))) {
+                        if (loot.PrerequisitesMet == true &&
+                            (loot.Item.UniqueItem == false ||
+                            (inventoryManager.GetItemCount(loot.Item.DisplayName) == 0 &&
+                            playerManager.MyCharacter.CharacterEquipmentManager.HasEquipment(loot.Item.DisplayName) == false))) {
                             validLoot.Add(loot);
                         }
                     }
@@ -107,14 +107,14 @@ namespace AnyRPG {
                             int accumulatedWeight = 0;
 
                             for (int i = 0; i < validLoot.Count; i++) {
-                                sum_of_weight += (int)validLoot[i].MyDropChance;
+                                sum_of_weight += (int)validLoot[i].DropChance;
                             }
                             //Debug.Log(DisplayName + ".Item.InitilizeNewItem(): sum_of_weight: " + sum_of_weight);
                             int rnd = UnityEngine.Random.Range(0, sum_of_weight);
                             //Debug.Log(DisplayName + ".Item.InitilizeNewItem(): sum_of_weight: " + sum_of_weight + "; rnd: " + rnd);
                             for (int i = 0; i < validLoot.Count; i++) {
                                 //Debug.Log(DisplayName + ".Item.InitilizeNewItem(): weightCompare: " + validItemQualities[i].RandomWeight + "; rnd: " + rnd);
-                                accumulatedWeight += (int)validLoot[i].MyDropChance;
+                                accumulatedWeight += (int)validLoot[i].DropChance;
                                 if (rnd < accumulatedWeight) {
                                     usedIndex = i;
                                     //Debug.Log(DisplayName + ".Item.InitilizeNewItem(): break");
@@ -140,7 +140,7 @@ namespace AnyRPG {
                         foreach (Loot item in validLoot) {
                             //Debug.Log("LootTable.RollLoot(): " + item.MyItem.DisplayName + " rolling");
                             int roll = Random.Range(0, 100);
-                            if (roll <= item.MyDropChance) {
+                            if (roll <= item.DropChance) {
                                 lootTableState.DroppedItems.AddRange(GetLootDrop(lootTableState, item, lootGroupUnlimitedDrops, ignoreDropLimit, lootTableUnlimitedDrops, ref lootGroupRemainingDrops));
                             }
                             if ((lootGroupUnlimitedDrops == false && lootGroupRemainingDrops <= 0) || (lootTableUnlimitedDrops == false && lootTableRemainingDrops <= 0)) {
@@ -161,10 +161,10 @@ namespace AnyRPG {
 
         public List<ItemLootDrop> GetLootDrop(LootTableState lootTableState, Loot loot, bool lootGroupUnlimitedDrops, bool ignoreDropLimit, bool lootTableUnlimitedDrops, ref int lootGroupRemainingDrops) {
             List<ItemLootDrop> returnValue = new List<ItemLootDrop>();
-            int itemCount = Random.Range(loot.MyMinDrops, loot.MyMaxDrops + 1);
+            int itemCount = Random.Range(loot.MinDrops, loot.MaxDrops + 1);
             //Debug.Log("GatherLootTable.RollLoot(): itemCount: " + itemCount);
             for (int i = 0; i < itemCount; i++) {
-                ItemLootDrop droppedItem = new ItemLootDrop(systemItemManager.GetNewResource(loot.MyItem.DisplayName), lootTableState, systemGameManager);
+                ItemLootDrop droppedItem = new ItemLootDrop(systemItemManager.GetNewResource(loot.Item.DisplayName), lootTableState, systemGameManager);
                 droppedItem.Item.DropLevel = playerManager.MyCharacter.CharacterStats.Level;
                 lootTableState.DroppedItems.Add(droppedItem);
                 if (lootGroupUnlimitedDrops == false && ignoreDropLimit == false) {

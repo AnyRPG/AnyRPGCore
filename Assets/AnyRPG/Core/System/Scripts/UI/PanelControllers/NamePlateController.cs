@@ -198,7 +198,7 @@ namespace AnyRPG {
                     if (unitNamePlateController.Faction != null) {
                         //Debug.Log(namePlateUnit.DisplayName + ".NamePlateController.SetCharacterName(): getting color for faction: " + namePlateUnit.MyFaction.DisplayName + " isplayerUnitNamePlate: " + isPlayerUnitNamePlate + "; name: " + namePlateUnit.DisplayName);
                         Color textColor;
-                        if (uIManager.CutSceneBarController.CurrentCutscene != null && uIManager.CutSceneBarController.CurrentCutscene.MyUseDefaultFactionColors == true) {
+                        if (uIManager.CutSceneBarController.CurrentCutscene != null && uIManager.CutSceneBarController.CurrentCutscene.UseDefaultFactionColors == true) {
                             if (unitNamePlateController.Faction != null) {
                                 //Debug.Log(namePlateUnit.DisplayName + ".NamePlateController.SetCharacterName(): getting color for faction: " + namePlateUnit.MyFaction.DisplayName + " isplayerUnitNamePlate: " + isPlayerUnitNamePlate + "; name: " + namePlateUnit.DisplayName + "; color: USING DEFAULT");
                                 textColor = unitNamePlateController.Faction.GetFactionColor();
@@ -440,7 +440,7 @@ namespace AnyRPG {
             //CheckForPlayerOwnerShip();
             if (unitNamePlateController.HasHealth() == true) {
                 //Debug.Log(namePlateUnit.DisplayName + ".NamePlateController.SetFactionColor(): nameplateUnit has health, setting bar color");
-                if (uIManager.CutSceneBarController.CurrentCutscene != null && uIManager.CutSceneBarController.CurrentCutscene.MyUseDefaultFactionColors == true) {
+                if (uIManager.CutSceneBarController.CurrentCutscene != null && uIManager.CutSceneBarController.CurrentCutscene.UseDefaultFactionColors == true) {
                     if (unitNamePlateController.Faction != null) {
                         //Debug.Log(namePlateUnit.DisplayName + ".NamePlateController.SetFactionColor(): getting color for faction: " + namePlateUnit.MyFaction.DisplayName + " isplayerUnitNamePlate: " + isPlayerUnitNamePlate + "; name: " + namePlateUnit.DisplayName + "; color: USING DEFAULT");
                         HealthSlider.color = unitNamePlateController.Faction.GetFactionColor();

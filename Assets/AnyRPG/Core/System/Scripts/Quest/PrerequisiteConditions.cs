@@ -51,7 +51,7 @@ namespace AnyRPG {
         // game manager references
         private PlayerManager playerManager = null;
 
-        public bool MyReverseMatch {
+        public bool ReverseMatch {
             get => reverseMatch;
         }
 
