@@ -13,12 +13,12 @@ namespace AnyRPG {
         public GatheringNodeComponent(Interactable interactable, GatheringNodeProps interactableOptionProps, SystemGameManager systemGameManager) : base(interactable, interactableOptionProps, systemGameManager) {
         }
 
-        public override bool MyPrerequisitesMet {
+        public override bool PrerequisitesMet {
             get {
                 if (playerManager.MyCharacter.CharacterAbilityManager.HasAbility(GatheringNodeProps.BaseAbility) == false) {
                     return false;
                 }
-                return base.MyPrerequisitesMet;
+                return base.PrerequisitesMet;
             }
         }
 
@@ -105,7 +105,7 @@ namespace AnyRPG {
         public override int GetCurrentOptionCount() {
             //Debug.Log(gameObject.name + ".GatheringNode.GetCurrentOptionCount()");
             return ((playerManager.MyCharacter.CharacterAbilityManager.HasAbility(GatheringNodeProps.BaseAbility) == true
-                && interactable.MySpawnReference != null
+                && interactable.SpawnReference != null
                 && currentTimer <= 0f) ? 1 : 0);
         }
 

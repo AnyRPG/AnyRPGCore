@@ -45,7 +45,7 @@ namespace AnyRPG {
             } else {
                 float agentDestinationDrift = Vector3.Distance(baseController.LeashPosition, baseController.NavMeshAgent.destination);
                 if (agentDestinationDrift >= baseController.NavMeshAgent.stoppingDistance + baseController.UnitMotor.NavMeshDistancePadding) {
-                    //Debug.Log("ReturnState.Update(). agent destination is: " + aiController.MyBaseCharacter.MyAnimatedUnit.MyAgent.destination + "; resetting to: " + aiController.MyStartPosition);
+                    //Debug.Log("ReturnState.Update(). agent destination is: " + aiController.BaseCharacter.MyAnimatedUnit.MyAgent.destination + "; resetting to: " + aiController.MyStartPosition);
                     this.baseController.SetDestination(baseController.LeashPosition);
                 }
             }

@@ -89,7 +89,7 @@ namespace AnyRPG {
                     traitRewardIcons.Add(rewardIcon);
                     if ((capabilityProps.TraitList[i] as StatusEffect).RequiredLevel > playerManager.MyCharacter.CharacterStats.Level) {
                         rewardIcon.StackSizeText.text = "Level\n" + (capabilityProps.TraitList[i] as StatusEffect).RequiredLevel;
-                        rewardIcon.MyHighlightIcon.color = new Color32(255, 255, 255, 80);
+                        rewardIcon.HighlightIcon.color = new Color32(255, 255, 255, 80);
                     }
                 }
             }
@@ -115,7 +115,7 @@ namespace AnyRPG {
                     abilityRewardIcons.Add(rewardIcon);
                     if (capabilityProps.AbilityList[i].RequiredLevel > playerManager.MyCharacter.CharacterStats.Level) {
                         rewardIcon.StackSizeText.text = "Level\n" + capabilityProps.AbilityList[i].RequiredLevel;
-                        rewardIcon.MyHighlightIcon.color = new Color32(255, 255, 255, 80);
+                        rewardIcon.HighlightIcon.color = new Color32(255, 255, 255, 80);
                     }
                 }
             }

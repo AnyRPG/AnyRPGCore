@@ -27,11 +27,11 @@ namespace AnyRPG {
         // whether or not this node has been shown
         private bool shown;
 
-        public string MyDescription { get => description; set => description = value; }
-        public string MyNextOption { get => nextOption; set => nextOption = value; }
-        public float MyStartTime { get => startTime; set => startTime = value; }
+        public string Description { get => description; set => description = value; }
+        public string NextOption { get => nextOption; set => nextOption = value; }
+        public float StartTime { get => startTime; set => startTime = value; }
         public bool Shown { get => shown; set => shown = value; }
-        public float MyShowTime { get => showTime; set => showTime = value; }
+        public float ShowTime { get => showTime; set => showTime = value; }
 
         /// <summary>
         /// Set the shown value to false

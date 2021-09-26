@@ -60,7 +60,7 @@ namespace AnyRPG {
             set => displayName = value;
         }
 
-        public string MyDescription { get => description; set => description = value; }
+        public string Description { get => description; set => description = value; }
         public Sprite IconBackgroundImage { get => iconBackgroundImage; set => iconBackgroundImage = value; }
 
         public virtual string GetName() {

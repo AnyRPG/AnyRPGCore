@@ -49,9 +49,9 @@ namespace AnyRPG {
         // the holdable objects spawned during an ability cast and removed when the cast is complete
         protected Dictionary<AbilityAttachmentNode, List<GameObject>> abilityObjects = new Dictionary<AbilityAttachmentNode, List<GameObject>>();
 
-        public float MyInitialGlobalCoolDown { get => initialGlobalCoolDown; set => initialGlobalCoolDown = value; }
+        public float InitialGlobalCoolDown { get => initialGlobalCoolDown; set => initialGlobalCoolDown = value; }
 
-        public float MyRemainingGlobalCoolDown { get => remainingGlobalCoolDown; set => remainingGlobalCoolDown = value; }
+        public float RemainingGlobalCoolDown { get => remainingGlobalCoolDown; set => remainingGlobalCoolDown = value; }
 
         private bool waitingForAnimatedAbility = false;
 
@@ -711,16 +711,16 @@ namespace AnyRPG {
             }
 
             AbilityCoolDownNode abilityCoolDownNode = new AbilityCoolDownNode();
-            abilityCoolDownNode.MyAbilityName = baseAbility.DisplayName;
+            abilityCoolDownNode.AbilityName = baseAbility.DisplayName;
 
             // need to account for auto-attack
             if (systemConfigurationManager.AllowAutoAttack == false && (baseAbility is AnimatedAbility) && (baseAbility as AnimatedAbility).IsAutoAttack == true) {
-                abilityCoolDownNode.MyRemainingCoolDown = abilityCoolDown;
+                abilityCoolDownNode.RemainingCoolDown = abilityCoolDown;
             } else {
-                abilityCoolDownNode.MyRemainingCoolDown = abilityCoolDown;
+                abilityCoolDownNode.RemainingCoolDown = abilityCoolDown;
             }
 
-            abilityCoolDownNode.MyInitialCoolDown = abilityCoolDownNode.MyRemainingCoolDown;
+            abilityCoolDownNode.InitialCoolDown = abilityCoolDownNode.RemainingCoolDown;
 
             if (!abilityCoolDownDictionary.ContainsKey(baseAbility.DisplayName)) {
                 abilityCoolDownDictionary[baseAbility.DisplayName] = abilityCoolDownNode;
@@ -728,7 +728,7 @@ namespace AnyRPG {
 
             // ordering important.  don't start till after its in the dictionary or it will fail to remove itself from the dictionary, then add it self
             Coroutine coroutine = abilityCaster.StartCoroutine(PerformAbilityCoolDown(baseAbility.DisplayName));
-            abilityCoolDownNode.MyCoroutine = coroutine;
+            abilityCoolDownNode.Coroutine = coroutine;
 
             OnBeginAbilityCoolDown();
         }
@@ -921,9 +921,9 @@ namespace AnyRPG {
 
             //Debug.Log(gameObject + ".BaseAbility.BeginAbilityCoolDown(): about to enter loop  IENUMERATOR");
 
-            while (abilityCoolDownDictionary.ContainsKey(abilityName) && abilityCoolDownDictionary[abilityName].MyRemainingCoolDown > 0f) {
+            while (abilityCoolDownDictionary.ContainsKey(abilityName) && abilityCoolDownDictionary[abilityName].RemainingCoolDown > 0f) {
                 yield return null;
-                abilityCoolDownDictionary[abilityName].MyRemainingCoolDown -= Time.deltaTime;
+                abilityCoolDownDictionary[abilityName].RemainingCoolDown -= Time.deltaTime;
                 //Debug.Log(gameObject.name + ".CharacterAbilityManager.PerformAbilityCooldown():  IENUMERATOR: " + abilityCoolDownDictionary[abilityName].MyRemainingCoolDown);
             }
             if (abilityCoolDownDictionary.ContainsKey(abilityName)) {
@@ -1563,7 +1563,7 @@ namespace AnyRPG {
         public bool PerformCooldownCheck(BaseAbility ability) {
             //Debug.Log(gameObject.name + ".CharacterAbilityManager.PerformCooldownCheck(" + ability.DisplayName + ") : global: " + MyRemainingGlobalCoolDown);
             if (abilityCoolDownDictionary.ContainsKey(ability.DisplayName) ||
-                (MyRemainingGlobalCoolDown > 0f && ability.IgnoreGlobalCoolDown == false)) {
+                (RemainingGlobalCoolDown > 0f && ability.IgnoreGlobalCoolDown == false)) {
                 return false;
             }
             return true;
@@ -1618,7 +1618,7 @@ namespace AnyRPG {
 
             // cast the system manager version so we can track globally the spell cooldown
             systemDataFactory.GetResource<BaseAbility>(ability.DisplayName).Cast(baseCharacter, finalTarget, abilityEffectContext);
-            //ability.Cast(MyBaseCharacter.MyCharacterUnit.gameObject, finalTarget);
+            //ability.Cast(BaseCharacter.MyCharacterUnit.gameObject, finalTarget);
             OnPerformAbility(ability);
         }
 

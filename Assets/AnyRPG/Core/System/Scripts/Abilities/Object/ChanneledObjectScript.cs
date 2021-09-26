@@ -97,18 +97,18 @@ namespace AnyRPG {
         // game manager references
         private CameraManager cameraManager = null;
 
-        public GameObject MyStartObject { get => startObject; set => startObject = value; }
-        public Vector3 MyStartPosition { get => startPosition; set => startPosition = value; }
-        public GameObject MyEndObject { get => endObject; set => endObject = value; }
-        public Vector3 MyEndPosition { get => endPosition; set => endPosition = value; }
+        public GameObject StartObject { get => startObject; set => startObject = value; }
+        public Vector3 StartPosition { get => startPosition; set => startPosition = value; }
+        public GameObject EndObject { get => endObject; set => endObject = value; }
+        public Vector3 EndPosition { get => endPosition; set => endPosition = value; }
 
         public void Setup(GameObject startObject, Vector3 startPosition, GameObject endObject, Vector3 endPosition, SystemGameManager systemGameManager) {
             //Debug.Log(gameObject.name + ".ChanneledObjectScript.Setup(" + (startObject == null ? "null" : startObject.name) + ", " + startPosition + ", " + (endObject == null ? "null" : endObject.name) + ", " + endPosition + ")");
             Configure(systemGameManager);
-            MyStartObject = startObject;
-            MyStartPosition = startPosition;
-            MyEndObject = endObject;
-            MyEndPosition = endPosition;
+            StartObject = startObject;
+            StartPosition = startPosition;
+            EndObject = endObject;
+            EndPosition = endPosition;
 
             orthographic = (cameraManager.ActiveMainCamera != null && cameraManager.ActiveMainCamera.orthographic == true);
             lineRenderer = GetComponent<LineRenderer>();
@@ -288,15 +288,15 @@ namespace AnyRPG {
         public void Trigger() {
             Vector3 start, end;
             timer = Duration + Mathf.Min(0.0f, timer);
-            if (MyStartObject == null) {
-                start = MyStartPosition;
+            if (StartObject == null) {
+                start = StartPosition;
             } else {
-                start = MyStartObject.transform.position + MyStartPosition;
+                start = StartObject.transform.position + StartPosition;
             }
-            if (MyEndObject == null) {
-                end = MyEndPosition;
+            if (EndObject == null) {
+                end = EndPosition;
             } else {
-                end = MyEndObject.transform.position + MyEndPosition;
+                end = EndObject.transform.position + EndPosition;
             }
             startIndex = 0;
             GenerateLightningBolt(start, end, Generations, Generations, 0.0f);

@@ -17,8 +17,8 @@ namespace AnyRPG {
         [SerializeField]
         private int count = 1;
 
-        public Item MyItem { get => item; }
-        public int MyCount { get => count; }
+        public Item Item { get => item; }
+        public int Count { get => count; }
 
         // game manager references
         private SystemDataFactory systemDataFactory = null;

@@ -78,7 +78,6 @@ namespace AnyRPG {
         public float FlySpeed { get => currentFlySpeed; }
         public float GlideSpeed { get => currentGlideSpeed; }
         public float GlideFallSpeed { get => currentGlideFallSpeed; }
-        //public float MyHitBox { get => hitBox; }
         public bool IsAlive { get => isAlive; }
         public BaseCharacter BaseCharacter { get => baseCharacter; set => baseCharacter = value; }
 
@@ -1202,15 +1201,16 @@ namespace AnyRPG {
         }
 
         public void Revive() {
-            //Debug.Log(MyBaseCharacter.MyCharacterName + "Triggering Revive Animation");
+            //Debug.Log(BaseCharacter.MyCharacterName + "Triggering Revive Animation");
             if (isReviving) {
-                //Debug.Log(MyBaseCharacter.MyCharacterName + " is already reviving.  Doing nothing");
+                //Debug.Log(BaseCharacter.MyCharacterName + " is already reviving.  Doing nothing");
                 return;
             }
             if (baseCharacter != null && baseCharacter.UnitController != null && baseCharacter.UnitController.UnitAnimator != null) {
                 baseCharacter.UnitController.UnitAnimator.EnableAnimator();
             }
             isReviving = true;
+            baseCharacter.UnitController?.CharacterUnit?.CancelDespawnDelay();
             //baseCharacter.MyCharacterUnit.DisableCollider();
             OnReviveBegin();
             baseCharacter.UnitController.UnitAnimator.HandleReviveBegin();

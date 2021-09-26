@@ -201,7 +201,7 @@ namespace AnyRPG {
                         } else {
                             //Debug.Log(gameObject.name + ": This quest must have been turned in already or we are not responsible for ending it.  doing nothing.");
                         }
-                    } else if ((questNode.Quest.TurnedIn == false || (questNode.Quest.RepeatableQuest == true && questLog.HasQuest(questNode.Quest.DisplayName) == false)) && questNode.StartQuest && questNode.Quest.MyPrerequisitesMet == true) {
+                    } else if ((questNode.Quest.TurnedIn == false || (questNode.Quest.RepeatableQuest == true && questLog.HasQuest(questNode.Quest.DisplayName) == false)) && questNode.StartQuest && questNode.Quest.PrerequisitesMet == true) {
                         availableCount++;
                         //Debug.Log(gameObject.name + ": The quest is not in the log and hasn't been turned in yet.  Incrementing available count");
                     }

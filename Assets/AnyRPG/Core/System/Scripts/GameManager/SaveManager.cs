@@ -715,8 +715,8 @@ namespace AnyRPG {
             foreach (BagNode bagNode in inventoryManager.BagNodes) {
                 //Debug.Log("Savemanager.SaveEquippedBagData(): got bagNode");
                 EquippedBagSaveData saveData = new EquippedBagSaveData();
-                saveData.BagName = (bagNode.MyBag != null ? bagNode.MyBag.DisplayName : string.Empty);
-                saveData.slotCount = (bagNode.MyBag != null ? bagNode.MyBag.MySlots : 0);
+                saveData.BagName = (bagNode.Bag != null ? bagNode.Bag.DisplayName : string.Empty);
+                saveData.slotCount = (bagNode.Bag != null ? bagNode.Bag.Slots : 0);
                 saveData.isBankBag = bagNode.IsBankNode;
                 anyRPGSaveData.equippedBagSaveData.Add(saveData);
             }

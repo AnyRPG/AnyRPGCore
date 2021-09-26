@@ -48,9 +48,9 @@ namespace AnyRPG {
         private AudioManager audioManager = null;
         private SystemDataFactory systemDataFactory = null;
 
-        public int MyMaxHealthPercent { get => maxHealthPercent; set => maxHealthPercent = value; }
-        public int MyMinHealthPercent { get => minHealthPercent; set => minHealthPercent = value; }
-        public string MyPhaseMusicProfileName { get => phaseMusicProfileName; set => phaseMusicProfileName = value; }
+        public int MaxHealthPercent { get => maxHealthPercent; set => maxHealthPercent = value; }
+        public int MinHealthPercent { get => minHealthPercent; set => minHealthPercent = value; }
+        public string PhaseMusicProfileName { get => phaseMusicProfileName; set => phaseMusicProfileName = value; }
         /*
         public List<string> MyMaintainBuffs { get => maintainBuffs; set => maintainBuffs = value; }
         public List<string> MyAttackAbilities { get => attackAbilities; set => attackAbilities = value; }

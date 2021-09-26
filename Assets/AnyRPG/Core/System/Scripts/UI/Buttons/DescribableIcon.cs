@@ -22,7 +22,7 @@ namespace AnyRPG {
         // game manager references
         protected UIManager uIManager = null;
 
-        public Image MyIcon { get => icon; set => icon = value; }
+        public Image Icon { get => icon; set => icon = value; }
         public TextMeshProUGUI StackSizeText { get => stackSize; }
         public IDescribable Describable { get => describable; set => describable = value; }
         public virtual int Count { get => count; }
@@ -50,15 +50,7 @@ namespace AnyRPG {
             this.Describable = describable;
             UpdateVisual();
 
-            //Debug.Log("Mouse Position: " + Input.mousePosition);
-            //Debug.Log("RectTransformToScreenSpace: " + RectTransformToScreenSpace(MyIcon.rectTransform));
-            //Debug.Log("Rect Contains Mouse: " + RectTransformUtility.RectangleContainsScreenPoint(MyIcon.rectTransform, Input.mousePosition));
-            //Debug.Log("New MouseInRect: " + MouseInRect(MyIcon.rectTransform));
-
-            if (UIManager.MouseInRect(MyIcon.rectTransform)) {
-                //if (RectTransformUtility.RectangleContainsScreenPoint(MyIcon.rectTransform, Input.mousePosition)) {
-                //uIManager.RefreshTooltip(describable as IDescribable);
-                //uIManager.ShowToolTip(transform.position, describable as IDescribable);
+            if (UIManager.MouseInRect(Icon.rectTransform)) {
                 ProcessMouseEnter();
             }
 
@@ -81,16 +73,16 @@ namespace AnyRPG {
         /// </summary>
         public virtual void UpdateVisual() {
             //Debug.Log("DescribableIcon.UpdateVisual()");
-            if (Describable != null && MyIcon != null) {
-                if (MyIcon.sprite != Describable.Icon) {
+            if (Describable != null && Icon != null) {
+                if (Icon.sprite != Describable.Icon) {
                     //Debug.Log("DescribableIcon.UpdateVisual(): Updating Icon for : " + MyDescribable.MyName);
-                    MyIcon.sprite = null;
-                    MyIcon.sprite = Describable.Icon;
+                    Icon.sprite = null;
+                    Icon.sprite = Describable.Icon;
                 }
-                MyIcon.color = Color.white;
-            } else if (Describable == null && MyIcon != null) {
-                MyIcon.sprite = null;
-                MyIcon.color = new Color32(0, 0, 0, 0);
+                Icon.color = Color.white;
+            } else if (Describable == null && Icon != null) {
+                Icon.sprite = null;
+                Icon.color = new Color32(0, 0, 0, 0);
             }
 
             /*
@@ -133,7 +125,7 @@ namespace AnyRPG {
         }
 
         public virtual void CheckMouse() {
-            if (UIManager.MouseInRect(MyIcon.rectTransform)) {
+            if (UIManager.MouseInRect(Icon.rectTransform)) {
                 uIManager.HideToolTip();
             }
         }

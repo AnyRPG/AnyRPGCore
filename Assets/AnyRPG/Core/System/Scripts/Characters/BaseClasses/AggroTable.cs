@@ -28,7 +28,7 @@ namespace AnyRPG {
                     if (node.aggroTarget?.Interactable?.gameObject == null
                         || node.aggroTarget.Interactable.gameObject.activeInHierarchy == false
                         || node.aggroTarget.BaseCharacter?.gameObject == null
-                        || Faction.RelationWith(node.aggroTarget.BaseCharacter, MyBaseCharacter) > -1
+                        || Faction.RelationWith(node.aggroTarget.BaseCharacter, BaseCharacter) > -1
                         || node.aggroTarget.BaseCharacter.CharacterStats.IsAlive == false) {
                         //Debug.Log(node.aggroTarget.name + ". alive: " + node.aggroTarget.MyCharacter.MyCharacterStats.IsAlive);
                         // we could be in combat with someone who has switched faction from a faction buff mid combat or died
@@ -64,7 +64,7 @@ namespace AnyRPG {
             }
         }
 
-        public BaseCharacter MyBaseCharacter { get => baseCharacter; set => baseCharacter = value; }
+        public BaseCharacter BaseCharacter { get => baseCharacter; set => baseCharacter = value; }
 
         public AggroTable(BaseCharacter baseCharacter) {
             //Debug.Log("AggroTable.AggroTable(" + baseCharacter.gameObject.name + ")");

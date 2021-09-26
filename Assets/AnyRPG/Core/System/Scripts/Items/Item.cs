@@ -129,7 +129,7 @@ namespace AnyRPG {
             if (ItemQuality == null) {
                 return returnLevel;
             } else {
-                if (ItemQuality.MyDynamicItemLevel) {
+                if (ItemQuality.DynamicItemLevel) {
                     return (int)Mathf.Clamp(characterLevel, 1, (levelCap > 0 ? levelCap : Mathf.Infinity));
                 } else {
                     return returnLevel;

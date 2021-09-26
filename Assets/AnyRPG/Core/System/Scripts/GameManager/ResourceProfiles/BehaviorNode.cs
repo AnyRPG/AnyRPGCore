@@ -15,8 +15,8 @@ namespace AnyRPG {
         [SerializeField]
         private List<BehaviorActionNode> behaviorActionNodes = new List<BehaviorActionNode>();
 
-        public float MyStartTime { get => startTime; set => startTime = value; }
-        public List<BehaviorActionNode> MyBehaviorActionNodes { get => behaviorActionNodes; set => behaviorActionNodes = value; }
+        public float StartTime { get => startTime; set => startTime = value; }
+        public List<BehaviorActionNode> BehaviorActionNodes { get => behaviorActionNodes; set => behaviorActionNodes = value; }
 
         /// <summary>
         /// Reset the completion status

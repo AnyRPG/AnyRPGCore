@@ -19,9 +19,9 @@ namespace AnyRPG {
         // is this reward button currently highlighted
         protected bool selected = false;
 
-        public bool MySelected { get => selected; set => selected = value; }
-        public Image MyHighlightIcon { get => highlightIcon; set => highlightIcon = value; }
-        public bool MyLimitReached { get => limitReached; set => limitReached = value; }
+        public bool Selected { get => selected; set => selected = value; }
+        public Image HighlightIcon { get => highlightIcon; set => highlightIcon = value; }
+        public bool LimitReached { get => limitReached; set => limitReached = value; }
 
         /// <summary>
         /// UPdates the visual representation of the describablebutton
@@ -32,15 +32,9 @@ namespace AnyRPG {
 
 
             if (selected == true) {
-                //Debug.Log("RewardButton.UpdateVisual(): selected is true");
-                //Debug.Log("Setting coolDownIcon to match MyIcon");
-                //if (highlightIcon.sprite != MyIcon.sprite) {
                 highlightIcon.sprite = null;
-                //highlightIcon.sprite = MyIcon.sprite;
-                //}
                 highlightIcon.color = new Color32(255, 255, 255, 180);
             } else {
-                //Debug.Log("RewardButton.UpdateVisual(): selected is false");
                 highlightIcon.sprite = null;
                 highlightIcon.color = new Color32(0, 0, 0, 0);
             }

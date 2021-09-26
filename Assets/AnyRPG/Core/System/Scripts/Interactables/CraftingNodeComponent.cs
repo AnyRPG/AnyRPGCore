@@ -23,12 +23,12 @@ namespace AnyRPG {
             craftingManager = systemGameManager.CraftingManager;
         }
 
-        public override bool MyPrerequisitesMet {
+        public override bool PrerequisitesMet {
             get {
                 if (playerManager.MyCharacter.CharacterAbilityManager.HasAbility(Props.Ability) == false) {
                     return false;
                 }
-                return base.MyPrerequisitesMet;
+                return base.PrerequisitesMet;
             }
         } 
 

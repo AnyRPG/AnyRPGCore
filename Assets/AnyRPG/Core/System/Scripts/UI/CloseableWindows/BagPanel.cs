@@ -18,12 +18,12 @@ namespace AnyRPG {
         // game manager references
         protected ObjectPooler objectPooler = null;
 
-        public List<SlotScript> MySlots { get => slots; }
+        public List<SlotScript> Slots { get => slots; }
 
-        public virtual int MyEmptySlotCount {
+        public virtual int EmptySlotCount {
             get {
                 int count = 0;
-                foreach (SlotScript slot in MySlots) {
+                foreach (SlotScript slot in Slots) {
                     if (slot.IsEmpty) {
                         count++;
                     }
@@ -57,7 +57,7 @@ namespace AnyRPG {
         }
 
         public void SetSlotColor() {
-            foreach (SlotScript slotScript in MySlots) {
+            foreach (SlotScript slotScript in Slots) {
                 slotScript.SetBackGroundColor();
             }
         }
@@ -74,14 +74,14 @@ namespace AnyRPG {
                 SlotScript slot = objectPooler.GetPooledObject(slotPrefab, contentArea).GetComponent<SlotScript>();
                 slot.Configure(systemGameManager);
                 slot.MyBag = this;
-                MySlots.Add(slot);
+                Slots.Add(slot);
                 slot.SetBackGroundColor();
             }
         }
 
         public virtual bool AddItem(Item item) {
             //Debug.Log("BagPanel.AddItem(" + item.name + ")");
-            foreach (SlotScript slot in MySlots) {
+            foreach (SlotScript slot in Slots) {
                 //Debug.Log("BagPanel.AddItem(" + item.name + "): checking slot");
                 if (slot.IsEmpty) {
                     //Debug.Log("BagPanel.AddItem(" + item.name + "): checking slot: its empty.  adding item");

@@ -67,9 +67,9 @@ namespace AnyRPG {
             }
         }
 
-        public bool MyUseDefaultFactionColors { get => useDefaultFactionColors; set => useDefaultFactionColors = value; }
-        public bool MyUnloadSceneOnEnd { get => unloadSceneOnEnd; set => unloadSceneOnEnd = value; }
-        public SceneNode MyLoadScene { get => loadScene; set => loadScene = value; }
+        public bool UseDefaultFactionColors { get => useDefaultFactionColors; set => useDefaultFactionColors = value; }
+        public bool UnloadSceneOnEnd { get => unloadSceneOnEnd; set => unloadSceneOnEnd = value; }
+        public SceneNode LoadScene { get => loadScene; set => loadScene = value; }
         public string TimelineName { get => timelineName; set => timelineName = value; }
         public bool RequirePlayerUnitSpawn { get => requirePlayerUnitSpawn; set => requirePlayerUnitSpawn = value; }
         public bool Repeatable { get => repeatable; set => repeatable = value; }

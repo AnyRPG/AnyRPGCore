@@ -106,12 +106,12 @@ namespace AnyRPG {
         }
 
         // faction is a special type of prerequisite
-        public override bool MyPrerequisitesMet {
+        public override bool PrerequisitesMet {
             get {
                 if (playerManager.MyCharacter.Faction == Props.Faction) {
                     return false;
                 }
-                return base.MyPrerequisitesMet;
+                return base.PrerequisitesMet;
             }
         }
 

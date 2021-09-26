@@ -26,7 +26,7 @@ namespace AnyRPG {
         private HandScript handScript = null;
         private UIManager uIManager = null;
 
-        public BagNode MyBagNode {
+        public BagNode BagNode {
             get {
                 return bagNode;
             }
@@ -47,8 +47,8 @@ namespace AnyRPG {
 
         public Image Image { get => icon; set => icon = value; }
 
-        public Sprite Icon { get => (MyBagNode.MyBag != null ? MyBagNode.MyBag.Icon : null); }
-        public string DisplayName { get => (MyBagNode.MyBag != null ? MyBagNode.MyBag.DisplayName : null); }
+        public Sprite Icon { get => (BagNode.Bag != null ? BagNode.Bag.Icon : null); }
+        public string DisplayName { get => (BagNode.Bag != null ? BagNode.Bag.DisplayName : null); }
 
         public override void Configure(SystemGameManager systemGameManager) {
             base.Configure(systemGameManager);
@@ -65,11 +65,6 @@ namespace AnyRPG {
         }
 
         public void OnAddBag(Bag bag) {
-            //Debug.Log("BagButton.OnAddBag: setting icon: " + bag.MyIcon.name);
-            /*
-            icon.GetComponent<Image>().sprite = bag.Icon;
-            icon.GetComponent<Image>().color = Color.white;
-            */
             icon.sprite = bag.Icon;
             icon.color = Color.white;
             SetBackGroundColor();
@@ -85,18 +80,6 @@ namespace AnyRPG {
             icon.color = new Color32(0, 0, 0, 0);
             SetBackGroundColor();
         }
-
-        /*
-        public int MyBagIndex {
-            get {
-                return bagIndex;
-            }
-
-            set {
-                bagIndex = value;
-            }
-        }
-        */
 
         public void GetLocalComponents() {
             if (localComponentsGotten == true) {
@@ -121,13 +104,13 @@ namespace AnyRPG {
             if (eventData.button == PointerEventData.InputButton.Left) {
                 //Debug.Log("BagButton.OnPointerClick() LEFT CLICK DETECTED");
                 if (inventoryManager.FromSlot != null && handScript.Moveable != null && handScript.Moveable is Bag) {
-                    if (MyBagNode.MyBag != null) {
-                        inventoryManager.SwapBags(MyBagNode.MyBag, handScript.Moveable as Bag);
+                    if (BagNode.Bag != null) {
+                        inventoryManager.SwapBags(BagNode.Bag, handScript.Moveable as Bag);
                     } else {
                         Bag tmp = (Bag)handScript.Moveable;
                         tmp.MyBagNode = bagNode;
                         tmp.Use();
-                        MyBagNode.MyBag = tmp;
+                        BagNode.Bag = tmp;
                         handScript.Drop();
                         inventoryManager.FromSlot = null;
 
@@ -135,24 +118,24 @@ namespace AnyRPG {
                 } else if (Input.GetKey(KeyCode.LeftShift)) {
                     //Debug.Log("BagButton.OnPointerClick() LEFT CLICK DETECTED WITH SHIFT KEY on bagNode.mybag: " + bagNode.MyBag.GetInstanceID());
                     //Debug.Log("InventoryManager.RemoveBag(): Found matching bag in bagNode: " + bagNode.MyBag.GetInstanceID() + "; " + bag.GetInstanceID());
-                    handScript.TakeMoveable(MyBagNode.MyBag);
-                } else if (bagNode?.MyBag != null) {
+                    handScript.TakeMoveable(BagNode.Bag);
+                } else if (bagNode?.Bag != null) {
                     bagNode.BagWindow.ToggleOpenClose();
                 }
             }
         }
 
         public string GetDescription() {
-            if (MyBagNode?.MyBag != null) {
-                return MyBagNode.MyBag.GetDescription();
+            if (BagNode?.Bag != null) {
+                return BagNode.Bag.GetDescription();
             }
             // cyan
             return string.Format("<color=#00FFFF>Empty Bag Slot</color>\n{0}", GetSummary());
         }
 
         public string GetSummary() {
-            if (MyBagNode?.MyBag != null) {
-                return MyBagNode.MyBag.GetSummary();
+            if (BagNode?.Bag != null) {
+                return BagNode.Bag.GetSummary();
             }
             return "Place a bag in this slot to expand your storage";
         }
@@ -167,7 +150,7 @@ namespace AnyRPG {
         }
 
         public void OnDestroy() {
-            MyBagNode = null;
+            BagNode = null;
         }
 
         public void OnPointerDown(PointerEventData eventData) {
@@ -179,7 +162,7 @@ namespace AnyRPG {
         public void SetBackGroundColor() {
             GetLocalComponents();
             Color finalColor;
-            if (bagNode?.MyBag == null) {
+            if (bagNode?.Bag == null) {
                 int slotOpacityLevel = (int)(PlayerPrefs.GetFloat("InventorySlotOpacity") * 255);
                 finalColor = new Color32(0, 0, 0, (byte)slotOpacityLevel);
             } else {

@@ -16,7 +16,7 @@ namespace AnyRPG {
         [SerializeField]
         private float armorPerLevel;
 
-        public float MyArmorPerLevel { get => armorPerLevel; set => armorPerLevel = value; }
+        public float ArmorPerLevel { get => armorPerLevel; set => armorPerLevel = value; }
     }
 
 }

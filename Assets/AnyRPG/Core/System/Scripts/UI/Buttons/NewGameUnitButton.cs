@@ -48,8 +48,7 @@ namespace AnyRPG {
 
             // format the button text
             string descriptionText = string.Empty;
-            //descriptionText += "Description: " + unitProfile.MyDescription + "\n";
-            descriptionText += unitProfile.MyDescription + "\n";
+            descriptionText += unitProfile.Description + "\n";
 
             // set the text on the button
             description.text = descriptionText;

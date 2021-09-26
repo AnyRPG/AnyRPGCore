@@ -45,9 +45,9 @@ namespace AnyRPG {
         // a reference to the actual craft ability
         private CraftAbility craftAbility;
 
-        public Item MyOutput { get => output; set => output = value; }
-        public List<CraftingMaterial> MyCraftingMaterials { get => craftingMaterials; set => craftingMaterials = value; }
-        public int MyOutputCount { get => outputCount; set => outputCount = value; }
+        public Item Output { get => output; set => output = value; }
+        public List<CraftingMaterial> CraftingMaterials { get => craftingMaterials; set => craftingMaterials = value; }
+        public int OutputCount { get => outputCount; set => outputCount = value; }
         public CraftAbility CraftAbility { get => craftAbility; set => craftAbility = value; }
         public bool AutoLearn { get => autoLearn; set => autoLearn = value; }
         public int RequiredLevel { get => requiredLevel; set => requiredLevel = value; }

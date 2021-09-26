@@ -315,7 +315,7 @@ namespace AnyRPG {
                     && (!inputManager.rightMouseButtonClickedOverUI || (namePlateManager != null ? namePlateManager.MouseOverNamePlate() : false))) {
                     //Debug.Log(gameObject.name + ".PlayerUnitMovementController.LateGlobalSuperUpdate(): resetting playerManager.ActiveUnitController.transform.forward");
 
-                    playerManager.ActiveUnitController.transform.forward = new Vector3(cameraManager.MainCameraController.MyWantedDirection.x, 0, cameraManager.MainCameraController.MyWantedDirection.z);
+                    playerManager.ActiveUnitController.transform.forward = new Vector3(cameraManager.MainCameraController.WantedDirection.x, 0, cameraManager.MainCameraController.WantedDirection.z);
                     cameraManager.MainCameraController.ResetWantedPosition();
                 }
 

@@ -19,7 +19,7 @@ namespace AnyRPG {
         // game manager references
         protected SystemAbilityController systemAbilityController = null;
 
-        public float MyAbilityEffectObjectLifetime { get => defaultPrefabLifetime; set => defaultPrefabLifetime = value; }
+        public float AbilityEffectObjectLifetime { get => defaultPrefabLifetime; set => defaultPrefabLifetime = value; }
 
         public override void SetGameManagerReferences() {
             base.SetGameManagerReferences();

@@ -53,7 +53,7 @@ namespace AnyRPG {
                     CreditController creditController = go.GetComponent<CreditController>();
                     creditController.CreditNameText.text = creditsNode.CreditName;
                     creditController.AttributionText.text = creditsNode.CreditAttribution;
-                    creditController.UserUrl = creditsNode.MyUrl;
+                    creditController.UserUrl = creditsNode.Url;
                     creditController.DownloadUrl = creditsNode.DownloadUrl;
                 }
             }

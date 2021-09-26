@@ -32,7 +32,7 @@ namespace AnyRPG {
             }
         }
 
-        public virtual bool MyPrerequisitesMet {
+        public virtual bool PrerequisitesMet {
             get {
                 //Debug.Log(gameObject.name + ".InteractableOption.MyPrerequisitesMet");
                 foreach (PrerequisiteConditions prerequisiteCondition in interactableOptionProps.PrerequisiteConditions) {
@@ -134,7 +134,7 @@ namespace AnyRPG {
                 return false;
             }
 
-            bool returnValue = MyPrerequisitesMet;
+            bool returnValue = PrerequisitesMet;
             if (returnValue == false) {
                 //Debug.Log(interactable.gameObject.name + this.ToString() + ".InteractableOptionComponent.Interact(): prerequisites not met");
             }
@@ -236,7 +236,7 @@ namespace AnyRPG {
             if (interactable.CombatOnly) {
                 return 0;
             }
-            return (MyPrerequisitesMet == true ? 1 : 0);
+            return (PrerequisitesMet == true ? 1 : 0);
         }
 
         public virtual int GetCurrentOptionCount() {

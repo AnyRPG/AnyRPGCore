@@ -25,9 +25,9 @@ namespace AnyRPG {
         // game manager references
         protected LootManager lootManager = null;
 
-        public override bool MyPrerequisitesMet {
+        public override bool PrerequisitesMet {
             get {
-                bool returnResult = base.MyPrerequisitesMet;
+                bool returnResult = base.PrerequisitesMet;
                 if (returnResult == false) {
                     return returnResult;
                 }

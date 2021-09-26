@@ -7,7 +7,7 @@ using UnityEngine.UI;
 
 namespace AnyRPG {
 public interface IClickable {
-    Image MyIcon {
+    Image Icon {
         get;
         set;
     }

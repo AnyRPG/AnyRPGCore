@@ -119,24 +119,21 @@ namespace AnyRPG {
 
         // later on make this spawn mob as player walks into collider ;>
         //private BoxCollider boxCollider;
-        public bool MyPrerequisitesMet {
+        public bool PrerequisitesMet {
             get {
                 // disabled next bit because it interferes with spawning in cutscenes
                 /*
                 if (playerManager.MyPlayerUnitSpawned == false) {
-                    //Debug.Log(gameObject.name + ".MyPrerequisitesMet: returning false because player isn't spawned");
+                    //Debug.Log(gameObject.name + ".PrerequisitesMet: returning false because player isn't spawned");
                     return false;
                 }
                 */
                 foreach (PrerequisiteConditions prerequisiteCondition in prerequisiteConditions) {
-                    //Debug.Log(gameObject.name + ".MyPrerequisitesMet: checking prerequisite");
                     if (!prerequisiteCondition.IsMet()) {
-                        //Debug.Log(gameObject.name + ".MyPrerequisitesMet: returning false");
                         return false;
                     }
                 }
                 // there are no prerequisites, or all prerequisites are complete
-                //Debug.Log(gameObject.name + ".MyPrerequisitesMet: returning true");
                 return true;
             }
         }
@@ -212,7 +209,7 @@ namespace AnyRPG {
                         tmpPrerequisiteConditions.UpdatePrerequisites(false);
                     }
                 }
-                if (MyPrerequisitesMet) {
+                if (PrerequisitesMet) {
                     HandlePrerequisiteUpdates();
                 }
             } else {
@@ -243,10 +240,10 @@ namespace AnyRPG {
 
         public void CheckPrerequisites() {
             //Debug.Log(gameObject.name + ".UnitSpawnNode.CheckPrerequisites()");
-            if (MyPrerequisitesMet && !triggerBased) {
+            if (PrerequisitesMet && !triggerBased) {
                 SpawnWithDelay();
             }
-            if (forceDespawnUnits && !MyPrerequisitesMet) {
+            if (forceDespawnUnits && !PrerequisitesMet) {
                 StartCoroutine(DestroySpawnsAtEndOfFrame());
             }
         }
@@ -372,7 +369,7 @@ namespace AnyRPG {
             }
 
             // now that we have a good final position and rotation, set it
-            unitController.MyStartPosition = newSpawnLocation;
+            unitController.StartPosition = newSpawnLocation;
             unitController.NavMeshAgent.Warp(newSpawnLocation);
             unitController.transform.forward = newSpawnForward;
 
@@ -416,7 +413,7 @@ namespace AnyRPG {
         /// </summary>
         /// <returns></returns>
         private bool CanTriggerSpawn() {
-            if ((spawnReferences.Count < GetMaxUnits() || GetMaxUnits() == -1) && MyPrerequisitesMet) {
+            if ((spawnReferences.Count < GetMaxUnits() || GetMaxUnits() == -1) && PrerequisitesMet) {
                 return true;
             }
             return false;

@@ -65,7 +65,7 @@ namespace AnyRPG {
         [SerializeField]
         private List<InvokeResponseNode> invokeResponses = new List<InvokeResponseNode>();
 
-        public string MyEventName { get => eventName; set => eventName = value; }
+        public string EventName { get => eventName; set => eventName = value; }
         public List<MessageResponseNode> MessageResponses { get => messageResponses; set => messageResponses = value; }
         public List<PropertyResponseNode> PropertyResponses { get => propertyResponses; set => propertyResponses = value; }
         public List<ComponentResponseNode> ComponentResponses { get => componentResponses; set => componentResponses = value; }
@@ -97,7 +97,7 @@ namespace AnyRPG {
 
         private Component scriptComponent = null;
 
-        public string MyScriptName { get => scriptName; set => scriptName = value; }
+        public string ScriptName { get => scriptName; set => scriptName = value; }
         public EventInfo LocalEventInfo { get => localEventInfo; set => localEventInfo = value; }
         public DynamicMethod DynamicHandler { get => dynamicHandler; set => dynamicHandler = value; }
         public Delegate DynamicDelegate { get => dynamicDelegate; set => dynamicDelegate = value; }
@@ -105,7 +105,7 @@ namespace AnyRPG {
 
         public override void StopListening(ObjectMessageController objectMessageController) {
             base.StopListening(objectMessageController);
-            if (objectMessageController.LocalEventDictionary.ContainsKey(MyEventName)) {
+            if (objectMessageController.LocalEventDictionary.ContainsKey(EventName)) {
 
                 // get a areference to the delegate add method
                 MethodInfo removeHandler = localEventInfo.GetRemoveMethod();
@@ -119,7 +119,7 @@ namespace AnyRPG {
                 scriptComponent = null;
                 dynamicHandler = null;
 
-                objectMessageController.LocalEventDictionary.Remove(MyEventName);
+                objectMessageController.LocalEventDictionary.Remove(EventName);
             }
         }
     }
@@ -134,9 +134,9 @@ namespace AnyRPG {
 
         public override void StopListening(ObjectMessageController objectMessageController) {
             base.StopListening(objectMessageController);
-            if (objectMessageController.SystemEventDictionary.ContainsKey(MyEventName)) {
-                SystemEventManager.StopListening(MyEventName, listener);
-                objectMessageController.SystemEventDictionary.Remove(MyEventName);
+            if (objectMessageController.SystemEventDictionary.ContainsKey(EventName)) {
+                SystemEventManager.StopListening(EventName, listener);
+                objectMessageController.SystemEventDictionary.Remove(EventName);
             }
         }
     }
@@ -157,10 +157,10 @@ namespace AnyRPG {
         [SerializeField]
         private EventParamProperties customParameters = new EventParamProperties();
 
-        public EventParamType MyParameter { get => parameter; set => parameter = value; }
-        public bool MyUseCustomParam { get => useCustomParam; set => useCustomParam = value; }
-        public string MyFunctionName { get => functionName; set => functionName = value; }
-        public EventParamProperties MyCustomParameters { get => customParameters; set => customParameters = value; }
+        public EventParamType Parameter { get => parameter; set => parameter = value; }
+        public bool UseCustomParam { get => useCustomParam; set => useCustomParam = value; }
+        public string FunctionName { get => functionName; set => functionName = value; }
+        public EventParamProperties CustomParameters { get => customParameters; set => customParameters = value; }
     }
 
     [System.Serializable]
@@ -243,8 +243,8 @@ namespace AnyRPG {
         private ComponentAction componentAction = ComponentAction.Disable;
 
 
-        public string MyScriptName { get => scriptName; set => scriptName = value; }
-        public ComponentAction MyComponentAction { get => componentAction; set => componentAction = value; }
+        public string ScriptName { get => scriptName; set => scriptName = value; }
+        public ComponentAction ComponentAction { get => componentAction; set => componentAction = value; }
     }
 
     [System.Serializable]
@@ -272,9 +272,9 @@ namespace AnyRPG {
         [SerializeField]
         private EventParam simpleParams = new EventParam();
 
-        public SimpleParamType MyParamType { get => paramType; set => paramType = value; }
-        public bool MyUseCustomParam { get => useCustomParam; set => useCustomParam = value; }
-        public EventParam MySimpleParams { get => simpleParams; set => simpleParams = value; }
+        public SimpleParamType ParamType { get => paramType; set => paramType = value; }
+        public bool UseCustomParam { get => useCustomParam; set => useCustomParam = value; }
+        public EventParam SimpleParams { get => simpleParams; set => simpleParams = value; }
     }
 
 

@@ -19,7 +19,7 @@ namespace AnyRPG {
         private CraftingManager craftingManager = null;
         private SystemEventManager systemEventManager = null;
 
-        public GameObject MyMaterialSlot { get => materialSlot; }
+        public GameObject MaterialSlot { get => materialSlot; }
 
         public override void Configure(SystemGameManager systemGameManager) {
             base.Configure(systemGameManager);

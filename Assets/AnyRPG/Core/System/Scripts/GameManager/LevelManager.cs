@@ -370,12 +370,12 @@ namespace AnyRPG {
             }
             returnSceneName = activeSceneNode.ResourceName;
             uIManager.CutSceneBarController.AssignCutScene(cutscene);
-            LoadLevel(cutscene.MyLoadScene.ResourceName);
+            LoadLevel(cutscene.LoadScene.ResourceName);
         }
 
         public void EndCutscene(Cutscene cutscene) {
             //Debug.Log("LevelManager.EndCutscene()");
-            if (cutscene != null && cutscene.MyUnloadSceneOnEnd == true) {
+            if (cutscene != null && cutscene.UnloadSceneOnEnd == true) {
                 //Debug.Log("Levelmanager.ActivateSceneCamera(): activating cutscene bars");
                 LoadLevel(returnSceneName);
             } else {

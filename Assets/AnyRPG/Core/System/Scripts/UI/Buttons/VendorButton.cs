@@ -45,7 +45,7 @@ namespace AnyRPG {
         private MessageFeedManager messageFeedManager = null;
         private CurrencyConverter currencyConverter = null;
 
-        public bool MyBuyBackButton { get => buyBackButton; set => buyBackButton = value; }
+        public bool BuyBackButton { get => buyBackButton; set => buyBackButton = value; }
 
         public override void Configure(SystemGameManager systemGameManager) {
             base.Configure(systemGameManager);
@@ -76,7 +76,7 @@ namespace AnyRPG {
 
                 if (vendorItem.GetItemQuality() != null) {
                     //qualityColorOutline.effectColor = vendorItem.MyItem.MyItemQuality.MyQualityColor;
-                    title.outlineColor = vendorItem.GetItemQuality().MyQualityColor;
+                    title.outlineColor = vendorItem.GetItemQuality().QualityColor;
                 }
 
                 if (!vendorItem.Unlimited) {
@@ -84,7 +84,7 @@ namespace AnyRPG {
                 } else {
                     quantity.text = string.Empty;
                 }
-                descriptionText.text = vendorItem.Item.MyDescription;
+                descriptionText.text = vendorItem.Item.Description;
                 if (vendorItem.BuyPrice() > 0
                     && vendorItem.Item.Currency != null
                     && vendorItem.Item.Currency.DisplayName != null

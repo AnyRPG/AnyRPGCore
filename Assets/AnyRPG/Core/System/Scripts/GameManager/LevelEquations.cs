@@ -203,7 +203,7 @@ namespace AnyRPG {
         public static float GetArmorForClass(ArmorClass armorClass) {
             float returnValue = 0f;
             if (armorClass != null) {
-                return armorClass.MyArmorPerLevel;
+                return armorClass.ArmorPerLevel;
             }
             return returnValue;
         }

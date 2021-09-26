@@ -34,7 +34,7 @@ namespace AnyRPG {
 
         public static string GetQualityColorString(ItemQuality itemQuality) {
             if (itemQuality != null) {
-                return "#" + ColorUtility.ToHtmlStringRGB(itemQuality.MyQualityColor);
+                return "#" + ColorUtility.ToHtmlStringRGB(itemQuality.QualityColor);
             }
             return "#" + ColorUtility.ToHtmlStringRGB(Color.white);
         }

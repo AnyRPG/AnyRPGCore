@@ -24,7 +24,7 @@ namespace AnyRPG {
         /// <summary>
         /// Property for getting the slots
         /// </summary>
-        public int MySlots {
+        public int Slots {
             get {
                 return slots;
             }

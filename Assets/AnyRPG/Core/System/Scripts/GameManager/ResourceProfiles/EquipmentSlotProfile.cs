@@ -34,8 +34,8 @@ namespace AnyRPG {
 
         private List<EquipmentSlotType> realEquipmentSlotTypeList = new List<EquipmentSlotType>();
 
-        public List<EquipmentSlotType> MyEquipmentSlotTypeList { get => realEquipmentSlotTypeList; set => realEquipmentSlotTypeList = value; }
-        public float MyStatWeight { get => statWeight; set => statWeight = value; }
+        public List<EquipmentSlotType> EquipmentSlotTypeList { get => realEquipmentSlotTypeList; set => realEquipmentSlotTypeList = value; }
+        public float StatWeight { get => statWeight; set => statWeight = value; }
 
         /// <summary>
         /// If true, items in this slot will set on hit audio sounds if they have one

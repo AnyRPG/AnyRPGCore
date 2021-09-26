@@ -19,7 +19,7 @@ namespace AnyRPG {
 
         private SystemDataFactory systemDataFactory = null;
 
-        public BaseCharacter MyBaseCharacter {
+        public BaseCharacter BaseCharacter {
             get => baseCharacter;
             set => baseCharacter = value;
         }

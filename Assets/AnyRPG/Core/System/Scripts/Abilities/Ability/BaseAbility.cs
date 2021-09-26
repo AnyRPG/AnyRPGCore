@@ -329,33 +329,30 @@ namespace AnyRPG {
             }
 
 
-            if (playerManager.MyCharacter.CharacterAbilityManager.MyRemainingGlobalCoolDown > 0f
+            if (playerManager.MyCharacter.CharacterAbilityManager.RemainingGlobalCoolDown > 0f
                 || playerManager.MyCharacter.CharacterAbilityManager.MyAbilityCoolDownDictionary.ContainsKey(DisplayName)) {
                 //Debug.Log(DisplayName + ".BaseAbility.UpdateActionButtonVisual(): Ability is on cooldown");
                 if (actionButton.CoolDownIcon.isActiveAndEnabled != true) {
                     //Debug.Log("ActionButton.UpdateVisual(): coolDownIcon is not enabled: " + (useable == null ? "null" : useable.DisplayName));
                     actionButton.CoolDownIcon.enabled = true;
                 }
-                if (actionButton.CoolDownIcon.sprite != actionButton.MyIcon.sprite) {
-                    //Debug.Log("Setting coolDownIcon to match MyIcon");
-                    actionButton.CoolDownIcon.sprite = actionButton.MyIcon.sprite;
+                if (actionButton.CoolDownIcon.sprite != actionButton.Icon.sprite) {
+                    actionButton.CoolDownIcon.sprite = actionButton.Icon.sprite;
                     actionButton.CoolDownIcon.color = new Color32(0, 0, 0, 230);
                     actionButton.CoolDownIcon.fillMethod = Image.FillMethod.Radial360;
-                    //coolDownIcon.fillOrigin = Image.Origin360.Top;
                     actionButton.CoolDownIcon.fillClockwise = false;
                 }
-                //Debug.Log("remainingCooldown: " + this.remainingCooldown + "; totalcooldown: " + (MyUseable as BaseAbility).abilityCoolDown);
                 float remainingAbilityCoolDown = 0f;
                 float initialCoolDown = 0f;
                 if (playerManager.MyCharacter.CharacterAbilityManager.MyAbilityCoolDownDictionary.ContainsKey(DisplayName)) {
-                    remainingAbilityCoolDown = playerManager.MyCharacter.CharacterAbilityManager.MyAbilityCoolDownDictionary[DisplayName].MyRemainingCoolDown;
-                    initialCoolDown = playerManager.MyCharacter.CharacterAbilityManager.MyAbilityCoolDownDictionary[DisplayName].MyInitialCoolDown;
+                    remainingAbilityCoolDown = playerManager.MyCharacter.CharacterAbilityManager.MyAbilityCoolDownDictionary[DisplayName].RemainingCoolDown;
+                    initialCoolDown = playerManager.MyCharacter.CharacterAbilityManager.MyAbilityCoolDownDictionary[DisplayName].InitialCoolDown;
                 } else {
                     initialCoolDown = abilityCoolDown;
                 }
                 //float globalCoolDown
-                float fillAmount = Mathf.Max(remainingAbilityCoolDown, playerManager.MyCharacter.CharacterAbilityManager.MyRemainingGlobalCoolDown) /
-                    (remainingAbilityCoolDown > playerManager.MyCharacter.CharacterAbilityManager.MyRemainingGlobalCoolDown ? initialCoolDown : playerManager.MyCharacter.CharacterAbilityManager.MyInitialGlobalCoolDown);
+                float fillAmount = Mathf.Max(remainingAbilityCoolDown, playerManager.MyCharacter.CharacterAbilityManager.RemainingGlobalCoolDown) /
+                    (remainingAbilityCoolDown > playerManager.MyCharacter.CharacterAbilityManager.RemainingGlobalCoolDown ? initialCoolDown : playerManager.MyCharacter.CharacterAbilityManager.InitialGlobalCoolDown);
                 //Debug.Log("Setting fill amount to: " + fillAmount);
                 if (actionButton.CoolDownIcon.fillAmount != fillAmount) {
                     actionButton.CoolDownIcon.fillAmount = fillAmount;
@@ -464,13 +461,13 @@ namespace AnyRPG {
         public string GetCooldownString() {
             string coolDownString = string.Empty;
             if (playerManager?.MyCharacter?.CharacterAbilityManager != null
-                && (playerManager.MyCharacter.CharacterAbilityManager.MyRemainingGlobalCoolDown > 0f
+                && (playerManager.MyCharacter.CharacterAbilityManager.RemainingGlobalCoolDown > 0f
                 || playerManager.MyCharacter.CharacterAbilityManager.MyAbilityCoolDownDictionary.ContainsKey(DisplayName))) {
                 float dictionaryCooldown = 0f;
                 if (playerManager.MyCharacter.CharacterAbilityManager.MyAbilityCoolDownDictionary.ContainsKey(DisplayName)) {
-                    dictionaryCooldown = playerManager.MyCharacter.CharacterAbilityManager.MyAbilityCoolDownDictionary[DisplayName].MyRemainingCoolDown;
+                    dictionaryCooldown = playerManager.MyCharacter.CharacterAbilityManager.MyAbilityCoolDownDictionary[DisplayName].RemainingCoolDown;
                 }
-                coolDownString = "\n\nCooldown Remaining: " + SystemAbilityController.GetTimeText(Mathf.Max(dictionaryCooldown, playerManager.MyCharacter.CharacterAbilityManager.MyRemainingGlobalCoolDown)); ;
+                coolDownString = "\n\nCooldown Remaining: " + SystemAbilityController.GetTimeText(Mathf.Max(dictionaryCooldown, playerManager.MyCharacter.CharacterAbilityManager.RemainingGlobalCoolDown)); ;
             }
             return coolDownString;
         }
@@ -520,7 +517,6 @@ namespace AnyRPG {
             foreach (AbilityEffect abilityEffect in channeledAbilityEffects) {
 
                 // channeled effects need to override the object lifetime so they get destroyed at the tickrate
-                //_abilityEffect.MyAbilityEffectObjectLifetime = tickRate;
                 if (abilityEffect.ChanceToCast >= 100f || abilityEffect.ChanceToCast >= UnityEngine.Random.Range(0f, 100f)) {
                     abilityEffect.Cast(source, target, target, abilityEffectContext);
                 }
@@ -591,8 +587,6 @@ namespace AnyRPG {
             //Debug.Log(DisplayName + ".BaseAbility.ProcessGCDManual(" + usedCoolDown + ")");
             if (CanSimultaneousCast == false && IgnoreGlobalCoolDown == false && GetAbilityCastingTime(sourceCharacter) == 0f) {
                 sourceCharacter.AbilityManager.InitiateGlobalCooldown(usedCoolDown);
-            } else {
-                //Debug.Log(gameObject.name + ".PlayerAbilityManager.PerformAbility(" + ability.DisplayName + "): ability.MyAbilityCastingTime: " + ability.MyAbilityCastingTime);
             }
         }
 
@@ -704,7 +698,7 @@ namespace AnyRPG {
             // GRAVITY FREEZE FOR CASTING
             // DISABLING SINCE IT IS CAUSING INSTANT CASTS TO STOP CHARACTER WHILE MOVING.  MAYBE CHECK IF CAST TIMER AND THEN DO IT?
             // NEXT LINE NO LONGER NEEDED SINCE WE NOW ACTUALLY CHECK THE REAL DISTANCE MOVED BY THE CHARACTER AND DON'T CANCEL CAST UNTIL DISTANCE IS > 0.1F
-            //source.MyRigidBody.constraints = RigidbodyConstraints.FreezeAll;
+            //source.RigidBody.constraints = RigidbodyConstraints.FreezeAll;
             
         }
 

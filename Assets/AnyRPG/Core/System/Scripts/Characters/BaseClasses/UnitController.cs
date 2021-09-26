@@ -140,7 +140,7 @@ namespace AnyRPG {
         public Rigidbody RigidBody { get => rigidBody; set => rigidBody = value; }
         public UnitMotor UnitMotor { get => unitMotor; set => unitMotor = value; }
         public UnitAnimator UnitAnimator { get => unitAnimator; set => unitAnimator = value; }
-        public Vector3 MyStartPosition {
+        public Vector3 StartPosition {
             get {
                 return startPosition;
             }
@@ -947,7 +947,7 @@ namespace AnyRPG {
                 if (unitMotor != null) {
                     correctedPosition = unitMotor.CorrectedNavmeshPosition(transform.position);
                 }
-                MyStartPosition = correctedPosition;
+                StartPosition = correctedPosition;
             }
 
             // prevent apparent velocity on first update by setting lastposition to currentposition

@@ -126,8 +126,8 @@ namespace AnyRPG {
             List<CombatStrategyNode> returnList = new List<CombatStrategyNode>();
             foreach (CombatStrategyNode phaseNode in phaseNodes) {
                 if (sourceCharacter != null && sourceCharacter.CharacterStats != null) {
-                    if (Mathf.Ceil((sourceCharacter.CharacterStats.CurrentPrimaryResource / (float)sourceCharacter.CharacterStats.MaxPrimaryResource) * 100f) <= phaseNode.MyMaxHealthPercent
-                        && Mathf.Floor((sourceCharacter.CharacterStats.CurrentPrimaryResource / (float)sourceCharacter.CharacterStats.MaxPrimaryResource) * 100f) >= phaseNode.MyMinHealthPercent) {
+                    if (Mathf.Ceil((sourceCharacter.CharacterStats.CurrentPrimaryResource / (float)sourceCharacter.CharacterStats.MaxPrimaryResource) * 100f) <= phaseNode.MaxHealthPercent
+                        && Mathf.Floor((sourceCharacter.CharacterStats.CurrentPrimaryResource / (float)sourceCharacter.CharacterStats.MaxPrimaryResource) * 100f) >= phaseNode.MinHealthPercent) {
                         returnList.Add(phaseNode);
                     }
                 }
@@ -137,7 +137,7 @@ namespace AnyRPG {
 
         public bool HasMusic() {
             foreach (CombatStrategyNode phaseNode in phaseNodes) {
-                if (phaseNode.MyPhaseMusicProfileName != null && phaseNode.MyPhaseMusicProfileName != string.Empty) {
+                if (phaseNode.PhaseMusicProfileName != null && phaseNode.PhaseMusicProfileName != string.Empty) {
                     return true;
                 }
             }

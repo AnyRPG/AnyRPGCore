@@ -65,7 +65,7 @@ namespace AnyRPG {
             if (interactable.CombatOnly == false) {
                 foreach (Dialog dialog in Props.DialogList) {
                     //Debug.Log(interactable.gameObject.name + ".DialogInteractable.GetCurrentOptionList() : found dialog: " + dialog.DisplayName);
-                    if (dialog.MyPrerequisitesMet == true && (dialog.TurnedIn == false || dialog.Repeatable == true)) {
+                    if (dialog.PrerequisitesMet == true && (dialog.TurnedIn == false || dialog.Repeatable == true)) {
                         currentList.Add(dialog);
                     }
                 }
@@ -147,7 +147,7 @@ namespace AnyRPG {
 
             bool preRequisitesUpdated = false;
             foreach (Dialog dialog in Props.DialogList) {
-                if (dialog.MyPrerequisitesMet == true) {
+                if (dialog.PrerequisitesMet == true) {
                     preRequisitesUpdated = true;
                 }
             }

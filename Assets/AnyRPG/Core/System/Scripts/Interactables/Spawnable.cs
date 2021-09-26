@@ -50,10 +50,10 @@ namespace AnyRPG {
         protected SystemDataFactory systemDataFactory = null;
         protected ObjectPooler objectPooler = null;
 
-        public GameObject MySpawnReference { get => spawnReference; set => spawnReference = value; }
-        public PrefabProfile MyPrefabProfile { get => prefabProfile; set => prefabProfile = value; }
+        public GameObject SpawnReference { get => spawnReference; set => spawnReference = value; }
+        public PrefabProfile PrefabProfile { get => prefabProfile; set => prefabProfile = value; }
 
-        public virtual bool MyPrerequisitesMet {
+        public virtual bool PrerequisitesMet {
             get {
                 //Debug.Log(gameObject.name + ".Spawnable.MyPrerequisitesMet");
                 foreach (PrerequisiteConditions prerequisiteCondition in prerequisiteConditions) {
@@ -213,7 +213,7 @@ namespace AnyRPG {
 
         protected virtual bool CanDespawn() {
             //Debug.Log(gameObject.name + ".Spawnable.CanDespawn()");
-            if (!MyPrerequisitesMet) {
+            if (!PrerequisitesMet) {
                 return true;
             }
             return false;
@@ -221,7 +221,7 @@ namespace AnyRPG {
 
         public virtual bool CanSpawn() {
             //Debug.Log(gameObject.name + ".Spawnable.CanSpawn()");
-            if (MyPrerequisitesMet && prefabProfile?.Prefab != null) {
+            if (PrerequisitesMet && prefabProfile?.Prefab != null) {
                 return true;
             }
             return false;
@@ -297,12 +297,12 @@ namespace AnyRPG {
                         tmpPrerequisiteConditions.UpdatePrerequisites(false);
                     }
                 }
-                if (MyPrerequisitesMet) {
+                if (PrerequisitesMet) {
                     HandlePrerequisiteUpdates();
                     return true;
                 }
             } else {
-                if (MyPrerequisitesMet) {
+                if (PrerequisitesMet) {
                     HandlePrerequisiteUpdates();
                     return true;
                 }

@@ -96,18 +96,6 @@ namespace AnyRPG {
             }
         }
 
-        /*
-        public override int MyDamageModifier {
-            get {
-                if (!useManualDamage) {
-                    return (int)(base.MyDamageModifier * MyRealEquipmentSlotType.MyStatWeight);
-                }
-                return base.MyDamageModifier;
-            }
-            set => base.MyDamageModifier = value;
-        }
-        */
-
         public WeaponSkill WeaponSkill { get => weaponSkill; set => weaponSkill = value; }
         public bool AddScaledDamagePerSecond { get => addScaledDamagePerSecond; set => addScaledDamagePerSecond = value; }
         public List<AbilityEffect> DefaultHitEffectList {

@@ -215,7 +215,6 @@ namespace AnyRPG {
                     }
                 }
 
-                //Debug.Log("Quest: " + MyTitle + ": no objectives for this quest:  were not complete, about to return true");
                 return true;
             }
         }
@@ -246,9 +245,8 @@ namespace AnyRPG {
             }
         }
 
-        public virtual bool MyPrerequisitesMet {
+        public virtual bool PrerequisitesMet {
             get {
-                //Debug.Log(DisplayName + ".Quest.MyPrerequisitesMet: ID: " + GetInstanceID());
                 foreach (PrerequisiteConditions prerequisiteCondition in prerequisiteConditions) {
                     if (!prerequisiteCondition.IsMet()) {
                         return false;
@@ -432,7 +430,7 @@ namespace AnyRPG {
                 return "inprogress";
             }
 
-            if (!questLog.HasQuest(DisplayName) && (TurnedIn == false || RepeatableQuest == true) && MyPrerequisitesMet == true) {
+            if (!questLog.HasQuest(DisplayName) && (TurnedIn == false || RepeatableQuest == true) && PrerequisitesMet == true) {
                 //Debug.Log(DisplayName + ".Quest.GetStatus(): returning available");
                 return "available";
             }
@@ -450,7 +448,7 @@ namespace AnyRPG {
         public virtual string GetObjectiveDescription() {
 
             Color titleColor = LevelEquations.GetTargetColor(playerManager.MyCharacter.CharacterStats.Level, ExperienceLevel);
-            return string.Format("<size=30><b><color=#{0}>{1}</color></b></size>\n\n<size=18>{2}</size>\n\n<b><size=24>Objectives:</size></b>\n\n<size=18>{3}</size>", ColorUtility.ToHtmlStringRGB(titleColor), DisplayName, MyDescription, GetUnformattedObjectiveList());
+            return string.Format("<size=30><b><color=#{0}>{1}</color></b></size>\n\n<size=18>{2}</size>\n\n<b><size=24>Objectives:</size></b>\n\n<size=18>{3}</size>", ColorUtility.ToHtmlStringRGB(titleColor), DisplayName, Description, GetUnformattedObjectiveList());
 
         }
 
@@ -565,7 +563,6 @@ namespace AnyRPG {
                 Currency tmpCurrency = systemDataFactory.GetResource<Currency>(rewardCurrencyName);
                 if (tmpCurrency != null) {
                     rewardCurrency = tmpCurrency;
-                    //currencyNode.MyAmount = gainCurrencyAmount;
                 } else {
                     Debug.LogError("Quest.SetupScriptableObjects(): Could not find currency : " + rewardCurrencyName + ".  CHECK INSPECTOR");
                 }

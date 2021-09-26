@@ -22,7 +22,7 @@ namespace AnyRPG {
 
         private BagPanel bagPanel;
 
-        public Bag MyBag {
+        public Bag Bag {
             get {
                 return bag;
             }

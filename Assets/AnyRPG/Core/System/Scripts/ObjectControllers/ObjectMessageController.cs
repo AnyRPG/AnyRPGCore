@@ -62,9 +62,9 @@ namespace AnyRPG {
             // system event responses
             foreach (SystemEventResponseNode eventResponseNode in eventTemplate.MySystemEventList) {
                 if (eventResponseNode.SubscribeStage == subscribeStage) {
-                    systemEventDictionary[eventResponseNode.MyEventName] = eventResponseNode;
+                    systemEventDictionary[eventResponseNode.EventName] = eventResponseNode;
                     //Debug.Log(gameObject.name + ".ObjectMessageController.InitializeMessageResponses(): listening to: " + objectMessageNode.MyEventName);
-                    SystemEventManager.StartListening(eventResponseNode.MyEventName, CallbackFunction);
+                    SystemEventManager.StartListening(eventResponseNode.EventName, CallbackFunction);
                     eventResponseNode.Listener = CallbackFunction;
                 }
             }
@@ -77,14 +77,14 @@ namespace AnyRPG {
 
                 if (eventResponseNode.SubscribeStage == subscribeStage) {
                     // add this event response to the dictionary for lookups when the event is received
-                    localEventDictionary[eventResponseNode.MyEventName] = eventResponseNode;
+                    localEventDictionary[eventResponseNode.EventName] = eventResponseNode;
 
                     ObjectMessageController objectMessageController = this;
                     // get the type of the script that has the event that we want to subscribe to
-                    Type scriptType = Type.GetType(eventResponseNode.MyScriptName);
+                    Type scriptType = Type.GetType(eventResponseNode.ScriptName);
 
                     if (scriptType == null) {
-                        Debug.LogError("Could not get Got scriptType " + eventResponseNode.MyScriptName);
+                        Debug.LogError("Could not get Got scriptType " + eventResponseNode.ScriptName);
                     }
 
                     // get a reference to the script
@@ -96,10 +96,10 @@ namespace AnyRPG {
 
                     // get a reference to the event
                     //Debug.Log("Attempting to get event " + eventResponseNode.MyEventName);
-                    eventResponseNode.LocalEventInfo = scriptType.GetEvent(eventResponseNode.MyEventName);
+                    eventResponseNode.LocalEventInfo = scriptType.GetEvent(eventResponseNode.EventName);
 
                     if (eventResponseNode.LocalEventInfo == null) {
-                        Debug.LogError("Could not get event " + eventResponseNode.MyEventName);
+                        Debug.LogError("Could not get event " + eventResponseNode.EventName);
                     }
 
                     // get a reference to the event type
@@ -136,7 +136,7 @@ namespace AnyRPG {
                     ilgen.Emit(OpCodes.Ldarg_0);
 
                     // now we can put the string parameter on the stack
-                    ilgen.Emit(OpCodes.Ldstr, eventResponseNode.MyEventName);
+                    ilgen.Emit(OpCodes.Ldstr, eventResponseNode.EventName);
 
                     // call the ProcessLocalEvent function with the 2 parameters we just placed on the stack
                     ilgen.Emit(OpCodes.Call, processLocalEvent);
@@ -203,20 +203,20 @@ namespace AnyRPG {
             // message responses
             foreach (MessageResponseNode messageResponseNode in objectMessageNode.MessageResponses) {
                 EventParamProperties usedEventParam = eventParam;
-                if (messageResponseNode.MyUseCustomParam == true) {
-                    usedEventParam = messageResponseNode.MyCustomParameters;
+                if (messageResponseNode.UseCustomParam == true) {
+                    usedEventParam = messageResponseNode.CustomParameters;
                 }
 
-                if (messageResponseNode.MyParameter == EventParamType.noneType) {
-                    gameObject.SendMessage(messageResponseNode.MyFunctionName, SendMessageOptions.DontRequireReceiver);
-                } else if (messageResponseNode.MyParameter == EventParamType.floatType) {
-                    gameObject.SendMessage(messageResponseNode.MyFunctionName, usedEventParam.simpleParams.FloatParam, SendMessageOptions.DontRequireReceiver);
-                } else if (messageResponseNode.MyParameter == EventParamType.intType) {
-                    gameObject.SendMessage(messageResponseNode.MyFunctionName, usedEventParam.simpleParams.IntParam, SendMessageOptions.DontRequireReceiver);
-                } else if (messageResponseNode.MyParameter == EventParamType.boolType) {
-                    gameObject.SendMessage(messageResponseNode.MyFunctionName, usedEventParam.simpleParams.BoolParam, SendMessageOptions.DontRequireReceiver);
-                } else if (messageResponseNode.MyParameter == EventParamType.stringType) {
-                    gameObject.SendMessage(messageResponseNode.MyFunctionName, usedEventParam.simpleParams.StringParam, SendMessageOptions.DontRequireReceiver);
+                if (messageResponseNode.Parameter == EventParamType.noneType) {
+                    gameObject.SendMessage(messageResponseNode.FunctionName, SendMessageOptions.DontRequireReceiver);
+                } else if (messageResponseNode.Parameter == EventParamType.floatType) {
+                    gameObject.SendMessage(messageResponseNode.FunctionName, usedEventParam.simpleParams.FloatParam, SendMessageOptions.DontRequireReceiver);
+                } else if (messageResponseNode.Parameter == EventParamType.intType) {
+                    gameObject.SendMessage(messageResponseNode.FunctionName, usedEventParam.simpleParams.IntParam, SendMessageOptions.DontRequireReceiver);
+                } else if (messageResponseNode.Parameter == EventParamType.boolType) {
+                    gameObject.SendMessage(messageResponseNode.FunctionName, usedEventParam.simpleParams.BoolParam, SendMessageOptions.DontRequireReceiver);
+                } else if (messageResponseNode.Parameter == EventParamType.stringType) {
+                    gameObject.SendMessage(messageResponseNode.FunctionName, usedEventParam.simpleParams.StringParam, SendMessageOptions.DontRequireReceiver);
                 }
             }
         }
@@ -319,33 +319,33 @@ namespace AnyRPG {
                         // set parameter types and values
                         int index = 0;
                         foreach (SimpleParamNode simpleParamNode in paramNodes) {
-                            if (simpleParamNode.MyParamType == SimpleParamType.intType) {
+                            if (simpleParamNode.ParamType == SimpleParamType.intType) {
                                 parameterTypes[index] = typeof(int);
-                                if (simpleParamNode.MyUseCustomParam == true) {
-                                    parameterValues[index] = simpleParamNode.MySimpleParams.IntParam;
+                                if (simpleParamNode.UseCustomParam == true) {
+                                    parameterValues[index] = simpleParamNode.SimpleParams.IntParam;
                                 } else {
-                                    parameterValues[index] = eventParam.objectParam.MySimpleParams[index].MySimpleParams.IntParam;
+                                    parameterValues[index] = eventParam.objectParam.MySimpleParams[index].SimpleParams.IntParam;
                                 }
-                            } else if (simpleParamNode.MyParamType == SimpleParamType.floatType) {
+                            } else if (simpleParamNode.ParamType == SimpleParamType.floatType) {
                                 parameterTypes[index] = typeof(float);
-                                if (simpleParamNode.MyUseCustomParam == true) {
-                                    parameterValues[index] = simpleParamNode.MySimpleParams.FloatParam;
+                                if (simpleParamNode.UseCustomParam == true) {
+                                    parameterValues[index] = simpleParamNode.SimpleParams.FloatParam;
                                 } else {
-                                    parameterValues[index] = eventParam.objectParam.MySimpleParams[index].MySimpleParams.FloatParam;
+                                    parameterValues[index] = eventParam.objectParam.MySimpleParams[index].SimpleParams.FloatParam;
                                 }
-                            } else if (simpleParamNode.MyParamType == SimpleParamType.stringType) {
+                            } else if (simpleParamNode.ParamType == SimpleParamType.stringType) {
                                 parameterTypes[index] = typeof(string);
-                                if (simpleParamNode.MyUseCustomParam == true) {
-                                    parameterValues[index] = simpleParamNode.MySimpleParams.StringParam;
+                                if (simpleParamNode.UseCustomParam == true) {
+                                    parameterValues[index] = simpleParamNode.SimpleParams.StringParam;
                                 } else {
-                                    parameterValues[index] = eventParam.objectParam.MySimpleParams[index].MySimpleParams.StringParam;
+                                    parameterValues[index] = eventParam.objectParam.MySimpleParams[index].SimpleParams.StringParam;
                                 }
-                            } else if (simpleParamNode.MyParamType == SimpleParamType.boolType) {
+                            } else if (simpleParamNode.ParamType == SimpleParamType.boolType) {
                                 parameterTypes[index] = typeof(bool);
-                                if (simpleParamNode.MyUseCustomParam == true) {
-                                    parameterValues[index] = simpleParamNode.MySimpleParams.BoolParam;
+                                if (simpleParamNode.UseCustomParam == true) {
+                                    parameterValues[index] = simpleParamNode.SimpleParams.BoolParam;
                                 } else {
-                                    parameterValues[index] = eventParam.objectParam.MySimpleParams[index].MySimpleParams.BoolParam;
+                                    parameterValues[index] = eventParam.objectParam.MySimpleParams[index].SimpleParams.BoolParam;
                                 }
                             }
                             index++;
@@ -456,33 +456,33 @@ namespace AnyRPG {
                         // set parameter types and values
                         int index = 0;
                         foreach (SimpleParamNode simpleParamNode in paramNodes) {
-                            if (simpleParamNode.MyParamType == SimpleParamType.intType) {
+                            if (simpleParamNode.ParamType == SimpleParamType.intType) {
                                 parameterTypes[index] = typeof(int);
-                                if (simpleParamNode.MyUseCustomParam == true) {
-                                    parameterValues[index] = simpleParamNode.MySimpleParams.IntParam;
+                                if (simpleParamNode.UseCustomParam == true) {
+                                    parameterValues[index] = simpleParamNode.SimpleParams.IntParam;
                                 } else {
-                                    parameterValues[index] = eventParam.objectParam.MySimpleParams[index].MySimpleParams.IntParam;
+                                    parameterValues[index] = eventParam.objectParam.MySimpleParams[index].SimpleParams.IntParam;
                                 }
-                            } else if (simpleParamNode.MyParamType == SimpleParamType.floatType) {
+                            } else if (simpleParamNode.ParamType == SimpleParamType.floatType) {
                                 parameterTypes[index] = typeof(float);
-                                if (simpleParamNode.MyUseCustomParam == true) {
-                                    parameterValues[index] = simpleParamNode.MySimpleParams.FloatParam;
+                                if (simpleParamNode.UseCustomParam == true) {
+                                    parameterValues[index] = simpleParamNode.SimpleParams.FloatParam;
                                 } else {
-                                    parameterValues[index] = eventParam.objectParam.MySimpleParams[index].MySimpleParams.FloatParam;
+                                    parameterValues[index] = eventParam.objectParam.MySimpleParams[index].SimpleParams.FloatParam;
                                 }
-                            } else if (simpleParamNode.MyParamType == SimpleParamType.stringType) {
+                            } else if (simpleParamNode.ParamType == SimpleParamType.stringType) {
                                 parameterTypes[index] = typeof(string);
-                                if (simpleParamNode.MyUseCustomParam == true) {
-                                    parameterValues[index] = simpleParamNode.MySimpleParams.StringParam;
+                                if (simpleParamNode.UseCustomParam == true) {
+                                    parameterValues[index] = simpleParamNode.SimpleParams.StringParam;
                                 } else {
-                                    parameterValues[index] = eventParam.objectParam.MySimpleParams[index].MySimpleParams.StringParam;
+                                    parameterValues[index] = eventParam.objectParam.MySimpleParams[index].SimpleParams.StringParam;
                                 }
-                            } else if (simpleParamNode.MyParamType == SimpleParamType.boolType) {
+                            } else if (simpleParamNode.ParamType == SimpleParamType.boolType) {
                                 parameterTypes[index] = typeof(bool);
-                                if (simpleParamNode.MyUseCustomParam == true) {
-                                    parameterValues[index] = simpleParamNode.MySimpleParams.BoolParam;
+                                if (simpleParamNode.UseCustomParam == true) {
+                                    parameterValues[index] = simpleParamNode.SimpleParams.BoolParam;
                                 } else {
-                                    parameterValues[index] = eventParam.objectParam.MySimpleParams[index].MySimpleParams.BoolParam;
+                                    parameterValues[index] = eventParam.objectParam.MySimpleParams[index].SimpleParams.BoolParam;
                                 }
                             }
                             index++;
@@ -507,12 +507,12 @@ namespace AnyRPG {
             foreach (ComponentResponseNode componentResponseNode in objectMessageNode.ComponentResponses) {
 
                 //Debug.Log(gameObject.name + "ObjectMessageController.ProcessEvent(): MyScriptName: " + propertyResponseNode.MyScriptName);
-                Type type = Type.GetType(componentResponseNode.MyScriptName);
+                Type type = Type.GetType(componentResponseNode.ScriptName);
                 //Debug.Log(gameObject.name + "ObjectMessageController.ProcessEvent(): MyScriptName: " + propertyResponseNode.MyScriptName + "; type: " + (type == null ? "null" : type.Name));
 
-                Component component = GetComponent(Type.GetType(componentResponseNode.MyScriptName));
+                Component component = GetComponent(Type.GetType(componentResponseNode.ScriptName));
                 if (component != null) {
-                    if (componentResponseNode.MyComponentAction == ComponentAction.Enable) {
+                    if (componentResponseNode.ComponentAction == ComponentAction.Enable) {
                         //Debug.Log(gameObject.name + "ObjectMessageController.ProcessEvent(): eventName: " + objectMessageNode.MyEventName + "; enabling " + component.name);
                         (component as MonoBehaviour).enabled = true;
                     } else {

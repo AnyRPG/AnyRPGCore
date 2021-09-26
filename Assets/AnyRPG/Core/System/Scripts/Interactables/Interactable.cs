@@ -167,9 +167,9 @@ namespace AnyRPG {
         public virtual bool CombatOnly { get => false; }
         public virtual bool NonCombatOptionsAvailable { get => true; }
 
-        public override bool MyPrerequisitesMet {
+        public override bool PrerequisitesMet {
             get {
-                bool returnResult = base.MyPrerequisitesMet;
+                bool returnResult = base.PrerequisitesMet;
                 if (returnResult != true) {
                     return returnResult;
                 }
@@ -376,7 +376,7 @@ namespace AnyRPG {
             }
             bool preRequisitesUpdated = false;
             foreach (InteractableOptionComponent _interactable in interactables) {
-                if (_interactable.MyPrerequisitesMet == true) {
+                if (_interactable.PrerequisitesMet == true) {
                     preRequisitesUpdated = true;
                 }
             }
@@ -404,7 +404,7 @@ namespace AnyRPG {
             if (!playerManager.PlayerUnitSpawned) {
                 return;
             }
-            if (spawnReference == null && MyPrerequisitesMet == false) {
+            if (spawnReference == null && PrerequisitesMet == false) {
                 DisableInteraction();
             } else {
                 EnableInteraction();
@@ -632,7 +632,7 @@ namespace AnyRPG {
             foreach (InteractableOptionComponent _interactable in interactables) {
                 if (_interactable != null && !_interactable.Equals(null)) {
                     if (_interactable.GetValidOptionCount() > 0
-                        && _interactable.MyPrerequisitesMet
+                        && _interactable.PrerequisitesMet
                         //&& (processRangeCheck == false || _interactable.CanInteract())
                         ) {
 
@@ -750,7 +750,7 @@ namespace AnyRPG {
             */
            
 
-            if (MyPrerequisitesMet == false) {
+            if (PrerequisitesMet == false) {
                 return;
             }
 
@@ -822,7 +822,7 @@ namespace AnyRPG {
                 return;
             }
 
-            if (MyPrerequisitesMet == false) {
+            if (PrerequisitesMet == false) {
                 return;
             }
 

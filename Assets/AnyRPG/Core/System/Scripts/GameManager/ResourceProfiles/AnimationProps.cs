@@ -271,7 +271,6 @@ namespace AnyRPG {
 
         private Dictionary<string, AnimationClip> animationClips = new Dictionary<string, AnimationClip>();
 
-        //public string MyProfileName { get => profileName; set => profileName = value; }
         public List<AnimationClip> AttackClips { get => attackClips; set => attackClips = value; }
         public List<AnimationClip> CastClips { get => castClips; set => castClips = value; }
         public List<AnimationClip> TakeDamageClips { get => takeDamageClips; set => takeDamageClips = value; }

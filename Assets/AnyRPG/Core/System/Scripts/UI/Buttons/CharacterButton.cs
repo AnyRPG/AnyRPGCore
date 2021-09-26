@@ -41,10 +41,10 @@ namespace AnyRPG {
         private HandScript handScript = null;
         private SystemDataFactory systemDataFactory = null;
 
-        public Color MyEmptyBackGroundColor { get => emptyBackGroundColor; set => emptyBackGroundColor = value; }
-        public Color MyFullBackGroundColor { get => fullBackGroundColor; set => fullBackGroundColor = value; }
+        public Color EmptyBackGroundColor { get => emptyBackGroundColor; set => emptyBackGroundColor = value; }
+        public Color FullBackGroundColor { get => fullBackGroundColor; set => fullBackGroundColor = value; }
         public Sprite Icon { get => icon.sprite; set => icon.sprite = value; }
-        public Image MyEmptySlotImage { get => emptySlotImage; set => emptySlotImage = value; }
+        public Image EmptySlotImage { get => emptySlotImage; set => emptySlotImage = value; }
 
         public string DisplayName {
             get {
@@ -56,8 +56,8 @@ namespace AnyRPG {
             }
         }
 
-        public string MyEquipmentSlotProfileName { get => equipmentSlotProfileName; set => equipmentSlotProfileName = value; }
-        public EquipmentSlotProfile MyEquipmentSlotProfile { get => equipmentSlotProfile; }
+        public string EquipmentSlotProfileName { get => equipmentSlotProfileName; set => equipmentSlotProfileName = value; }
+        public EquipmentSlotProfile EquipmentSlotProfile { get => equipmentSlotProfile; }
         public CharacterPanel CharacterPanel { get => characterPanel; set => characterPanel = value; }
 
         public override void Configure(SystemGameManager systemGameManager) {
@@ -83,7 +83,7 @@ namespace AnyRPG {
             if (eventData.button == PointerEventData.InputButton.Left) {
                 if (handScript.Moveable is Equipment) {
                     Equipment tmp = (Equipment)handScript.Moveable;
-                    if (equipmentSlotProfile.MyEquipmentSlotTypeList.Contains(tmp.EquipmentSlotType)) {
+                    if (equipmentSlotProfile.EquipmentSlotTypeList.Contains(tmp.EquipmentSlotType)) {
                         playerManager.MyCharacter.CharacterEquipmentManager.Unequip(equipmentSlotProfile);
                         //if (tmp.equipSlot == equipmentSlot) {
 
@@ -140,8 +140,8 @@ namespace AnyRPG {
                     backGroundImage.color = emptyBackGroundColor;
                 }
                 emptySlotImage.sprite = null;
-                if (MyEquipmentSlotProfile != null && MyEquipmentSlotProfile.Icon != null) {
-                    emptySlotImage.sprite = MyEquipmentSlotProfile.Icon;
+                if (EquipmentSlotProfile != null && EquipmentSlotProfile.Icon != null) {
+                    emptySlotImage.sprite = EquipmentSlotProfile.Icon;
                     emptySlotImage.color = Color.white;
                 } else {
                     emptySlotImage.color = new Color32(0, 0, 0, 0);

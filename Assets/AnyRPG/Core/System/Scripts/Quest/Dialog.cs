@@ -104,7 +104,7 @@ namespace AnyRPG {
             //HandlePrerequisiteUpdates();
         }
 
-        public bool MyPrerequisitesMet {
+        public bool PrerequisitesMet {
             get {
                 foreach (PrerequisiteConditions prerequisiteCondition in prerequisiteConditions) {
                     if (!prerequisiteCondition.IsMet()) {

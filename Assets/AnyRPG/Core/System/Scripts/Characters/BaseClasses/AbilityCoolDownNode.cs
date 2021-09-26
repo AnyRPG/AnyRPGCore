@@ -11,10 +11,10 @@ namespace AnyRPG {
         private float remainingCoolDown = 0f;
         private float initialCoolDown = 0f;
 
-        public string MyAbilityName { get => abilityName; set => abilityName = value; }
-        public Coroutine MyCoroutine { get => coroutine; set => coroutine = value; }
-        public float MyRemainingCoolDown { get => remainingCoolDown; set => remainingCoolDown = value; }
-        public float MyInitialCoolDown { get => initialCoolDown; set => initialCoolDown = value; }
+        public string AbilityName { get => abilityName; set => abilityName = value; }
+        public Coroutine Coroutine { get => coroutine; set => coroutine = value; }
+        public float RemainingCoolDown { get => remainingCoolDown; set => remainingCoolDown = value; }
+        public float InitialCoolDown { get => initialCoolDown; set => initialCoolDown = value; }
     }
 
 }
