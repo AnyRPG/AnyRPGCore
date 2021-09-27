@@ -22,4 +22,6 @@ MonoBehaviour:
   uMARecipes:
   - {fileID: 11400000, guid: 757c42a47f5810183a5f59843c860b13, type: 2}
   - {fileID: 11400000, guid: 8d775c7cbbacf4684a669aa6ed889680, type: 2}
-  sharedColors: []
+  sharedColors:
+  - sharedColorname: Hand Equipment Color 1
+    color: {r: 1, g: 1, b: 1, a: 1}

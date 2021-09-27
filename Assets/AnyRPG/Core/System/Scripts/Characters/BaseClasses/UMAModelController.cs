@@ -372,6 +372,7 @@ namespace AnyRPG {
                 foreach (SharedColorDef sharedColorDef in sharedColorDefs) {
                     if (sharedColorDef.name == sharedColorNode.SharedColorname) {
                         sharedColorDef.channels[0].mCol = ColorDef.ToUInt(sharedColorNode.Color);
+                        //Debug.Log("Setting shared color " + sharedColorNode.SharedColorname + " to " + sharedColorNode.Color.ToString());
                         foundColor = true;
                         break;
                     }
@@ -384,6 +385,8 @@ namespace AnyRPG {
 
                     Color Additive = new Color32(0, 0, 0, 0);
                     colorchannels.Add(new ColorDef(0, ColorDef.ToUInt(sharedColorNode.Color), ColorDef.ToUInt(Additive)));
+                    //Debug.Log("Adding shared color " + sharedColorNode.SharedColorname + " as " + sharedColorNode.Color.ToString());
+
                     sharedColorDef.SetChannels(colorchannels.ToArray());
                     sharedColorDefs.Add(sharedColorDef);
                 }

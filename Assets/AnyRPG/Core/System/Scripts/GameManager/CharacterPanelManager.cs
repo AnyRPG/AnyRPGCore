@@ -11,21 +11,6 @@ namespace AnyRPG {
         protected PlayerManager playerManager = null;
         protected SystemEventManager systemEventManager = null;
 
-        public void HandleOpenWindow(UnitProfile unitProfile) {
-            //Debug.Log("CharacterPanelManager.HandleOpenWindow()");
-
-            if (unitProfile == null) {
-                Debug.Log("CharacterPanelManager.HandleOpenWindow(): unitProfile is null");
-                return;
-            }
-            cloneSource = unitProfile;
-            if (cloneSource == null) {
-                return;
-            }
-
-            OpenWindowCommon();
-        }
-
         public override void Configure(SystemGameManager systemGameManager) {
             base.Configure(systemGameManager);
             CreateEventSubscriptions();
@@ -34,6 +19,7 @@ namespace AnyRPG {
         public override void SetGameManagerReferences() {
             base.SetGameManagerReferences();
             playerManager = systemGameManager.PlayerManager;
+            systemEventManager = systemGameManager.SystemEventManager;
         }
 
         protected void CreateEventSubscriptions() {
@@ -68,12 +54,15 @@ namespace AnyRPG {
 
         public void ProcessPlayerUnitSpawn() {
             //Debug.Log("CharacterPanel.HandlePlayerUnitSpawn()");
+            cloneSource = playerManager.ActiveUnitController.UnitProfile;
+            SpawnUnit();
             systemEventManager.OnEquipmentChanged += HandleEquipmentChanged;
         }
 
         public void HandlePlayerUnitDespawn(string eventName, EventParamProperties eventParamProperties) {
             //Debug.Log("CharacterPanel.HandlePlayerUnitDespawn()");
             systemEventManager.OnEquipmentChanged -= HandleEquipmentChanged;
+            DespawnUnit();
         }
 
         public void HandleEquipmentChanged(Equipment newEquipment, Equipment oldEquipment) {
@@ -105,7 +94,7 @@ namespace AnyRPG {
             unitController.CharacterUnit.BaseCharacter.SetClassSpecialization(playerManager.MyCharacter.ClassSpecialization, true, false, false);
 
             if (characterEquipmentManager != null) {
-                if (playerManager != null && playerManager.MyCharacter != null && playerManager.MyCharacter.CharacterEquipmentManager != null) {
+                if (playerManager.MyCharacter?.CharacterEquipmentManager != null) {
 
                     //characterEquipmentManager.CurrentEquipment = playerManager.MyCharacter.CharacterEquipmentManager.CurrentEquipment;
                     // testing new code to avoid just making a pointer to the player gear, which results in equip/unequip not working properly

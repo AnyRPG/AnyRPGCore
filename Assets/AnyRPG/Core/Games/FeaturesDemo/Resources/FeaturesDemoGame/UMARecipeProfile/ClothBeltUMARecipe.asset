@@ -22,4 +22,6 @@ MonoBehaviour:
   uMARecipes:
   - {fileID: 11400000, guid: c305cefdcee3987c488bea4ffb60f010, type: 2}
   - {fileID: 11400000, guid: c9838d08053968d6a8a94d156203adc4, type: 2}
-  sharedColors: []
+  sharedColors:
+  - sharedColorname: Waist Equipment Color 1
+    color: {r: 1, g: 1, b: 1, a: 1}

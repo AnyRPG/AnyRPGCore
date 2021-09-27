@@ -35,7 +35,7 @@ namespace AnyRPG {
         private TextMeshProUGUI statsDescription = null;
 
         [SerializeField]
-        private CharacterPreviewPanelController characterPreviewPanel;
+        private PreviewCameraController previewCameraController = null;
 
         [SerializeField]
         private Color emptySlotColor = new Color32(0, 0, 0, 0);
@@ -49,6 +49,7 @@ namespace AnyRPG {
         private UIManager uIManager = null;
         private CameraManager cameraManager = null;
         private SaveManager saveManager = null;
+        private CharacterPanelManager characterPanelManager = null;
 
         public CharacterButton SelectedButton { get; set; }
 
@@ -68,7 +69,7 @@ namespace AnyRPG {
                 characterButton.UpdateVisual();
             }
 
-            characterPreviewPanel.Configure(systemGameManager);
+            previewCameraController.Configure(systemGameManager);
             reputationButton.Configure(systemGameManager);
             achievementsButton.Configure(systemGameManager);
             skillsButton.Configure(systemGameManager);
@@ -84,6 +85,7 @@ namespace AnyRPG {
             uIManager = systemGameManager.UIManager;
             cameraManager = systemGameManager.CameraManager;
             saveManager = systemGameManager.SaveManager;
+            characterPanelManager = systemGameManager.CharacterPanelManager;
         }
 
         protected override void CreateEventSubscriptions() {
@@ -143,7 +145,7 @@ namespace AnyRPG {
             //Debug.Log("CharacterPanel.RecieveClosedWindowNotification()");
             base.RecieveClosedWindowNotification();
             //characterPreviewPanel.OnTargetReady -= HandleTargetReady;
-            characterPreviewPanel.RecieveClosedWindowNotification();
+            previewCameraController.ClearTarget();
         }
 
         public override void ReceiveOpenWindowNotification() {
@@ -155,10 +157,33 @@ namespace AnyRPG {
             if (playerManager.MyCharacter != null) {
                 uIManager.characterPanelWindow.SetWindowTitle(playerManager.MyCharacter.CharacterName);
             }
-            characterPreviewPanel.CapabilityConsumer = playerManager.MyCharacter;
-            characterPreviewPanel.ReceiveOpenWindowNotification();
-
+            SetPreviewTarget();
         }
+
+        private void SetPreviewTarget() {
+            //Debug.Log("CharacterPreviewPanelController.SetPreviewTarget()");
+
+            if (cameraManager.CharacterPanelCamera != null) {
+                //Debug.Log("CharacterPanel.SetPreviewTarget(): preview camera was available, setting target");
+                if (previewCameraController != null) {
+                    //previewCameraController.OnTargetReady += HandleTargetReady;
+                    previewCameraController.InitializeCamera(characterPanelManager.PreviewUnitController);
+                    //Debug.Log("CharacterPanel.SetPreviewTarget(): preview camera was available, setting Target Ready Callback");
+                } else {
+                    Debug.LogError("CharacterPanel.SetPreviewTarget(): Character Panel Camera Controller is null. Please set it in the inspector");
+                }
+            }
+        }
+
+        /*
+        public void HandleTargetReady() {
+            //Debug.Log("CharacterPreviewPanelController.TargetReadyCallback()");
+            previewCameraController.OnTargetReady -= HandleTargetReady;
+            characterReady = true;
+
+            OnTargetReady();
+        }
+        */
 
         public void HandleEquipmentChanged(Equipment newEquipment, Equipment oldEquipment) {
             //Debug.Log("CharacterPanel.HandleEquipmentChanged(" + (newEquipment == null ? "null" : newEquipment.DisplayName) + ", " + (oldEquipment == null ? "null" : oldEquipment.DisplayName) + ")");

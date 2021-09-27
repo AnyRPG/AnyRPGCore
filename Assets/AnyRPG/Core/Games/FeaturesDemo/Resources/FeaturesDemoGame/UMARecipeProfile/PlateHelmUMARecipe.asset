@@ -22,4 +22,8 @@ MonoBehaviour:
   uMARecipes:
   - {fileID: 11400000, guid: 69901e08fcc89cc51ae6160746331784, type: 2}
   - {fileID: 11400000, guid: 4a3ca8dc8a0a0d92ea4d47d7d38416dd, type: 2}
-  sharedColors: []
+  sharedColors:
+  - sharedColorname: Head Equipment Color 1
+    color: {r: 1, g: 1, b: 1, a: 1}
+  - sharedColorname: Head Equipment Color 2
+    color: {r: 1, g: 1, b: 1, a: 1}

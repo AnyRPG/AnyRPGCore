@@ -29,6 +29,9 @@ namespace AnyRPG {
         private Camera characterPreviewCamera = null;
 
         [SerializeField]
+        private Camera characterPanelCamera = null;
+
+        [SerializeField]
         private Camera unitPreviewCamera = null;
 
         [SerializeField]
@@ -54,6 +57,7 @@ namespace AnyRPG {
         public Camera CharacterPortraitCamera { get => characterPortraitCamera; set => characterPortraitCamera = value; }
         public Camera FocusPortraitCamera { get => focusPortraitCamera; set => focusPortraitCamera = value; }
         public Camera CharacterCreatorCamera { get => characterCreatorCamera; set => characterCreatorCamera = value; }
+        public Camera CharacterPanelCamera { get => characterPanelCamera; set => characterPanelCamera = value; }
         public Camera CharacterPreviewCamera { get => characterPreviewCamera; set => characterPreviewCamera = value; }
         public AnyRPGCameraController MainCameraController { get => mainCameraController; set => mainCameraController = value; }
         public Camera UnitPreviewCamera { get => unitPreviewCamera; set => unitPreviewCamera = value; }
@@ -192,8 +196,11 @@ namespace AnyRPG {
         }
 
         private void DisablePreviewCameras() {
+            if (characterPanelCamera != null) {
+                characterPanelCamera.enabled = false;
+            }
             if (characterPreviewCamera != null) {
-                unitPreviewCamera.enabled = false;
+                characterPreviewCamera.enabled = false;
             }
             if (unitPreviewCamera != null) {
                 unitPreviewCamera.enabled = false;
