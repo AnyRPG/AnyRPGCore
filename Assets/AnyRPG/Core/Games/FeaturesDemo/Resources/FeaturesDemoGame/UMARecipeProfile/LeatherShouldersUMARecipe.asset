@@ -22,4 +22,6 @@ MonoBehaviour:
   uMARecipes:
   - {fileID: 11400000, guid: 31a1659e41204b81388a7109d8f2af38, type: 2}
   - {fileID: 11400000, guid: 5b235fc14f0fcd932917492faddd3682, type: 2}
-  sharedColors: []
+  sharedColors:
+  - sharedColorname: Shoulder Equipment Color 1
+    color: {r: 1, g: 1, b: 1, a: 1}

@@ -21,4 +21,8 @@ MonoBehaviour:
   resourceDescriptionProfile: 
   uMARecipes:
   - {fileID: 11400000, guid: ae3bb7b6610c819deb1bc5ecbe630995, type: 2}
-  sharedColors: []
+  sharedColors:
+  - sharedColorname: Foot Equipment Color 1
+    color: {r: 1, g: 1, b: 1, a: 1}
+  - sharedColorname: Foot Equipment Color 2
+    color: {r: 1, g: 1, b: 1, a: 1}

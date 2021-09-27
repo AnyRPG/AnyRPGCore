@@ -35,7 +35,7 @@ namespace AnyRPG {
         private TextMeshProUGUI statsDescription = null;
 
         [SerializeField]
-        private CharacterPreviewPanelController characterPreviewPanel;
+        private PreviewCameraController previewCameraController = null;
 
         [SerializeField]
         private Color emptySlotColor = new Color32(0, 0, 0, 0);
@@ -47,9 +47,9 @@ namespace AnyRPG {
         private PlayerManager playerManager = null;
         private SystemEventManager systemEventManager = null;
         private UIManager uIManager = null;
-        private CharacterCreatorManager characterCreatorManager = null;
         private CameraManager cameraManager = null;
         private SaveManager saveManager = null;
+        private CharacterPanelManager characterPanelManager = null;
 
         public CharacterButton SelectedButton { get; set; }
 
@@ -69,7 +69,7 @@ namespace AnyRPG {
                 characterButton.UpdateVisual();
             }
 
-            characterPreviewPanel.Configure(systemGameManager);
+            previewCameraController.Configure(systemGameManager);
             reputationButton.Configure(systemGameManager);
             achievementsButton.Configure(systemGameManager);
             skillsButton.Configure(systemGameManager);
@@ -83,16 +83,10 @@ namespace AnyRPG {
             playerManager = systemGameManager.PlayerManager;
             systemEventManager = systemGameManager.SystemEventManager;
             uIManager = systemGameManager.UIManager;
-            characterCreatorManager = systemGameManager.CharacterCreatorManager;
             cameraManager = systemGameManager.CameraManager;
             saveManager = systemGameManager.SaveManager;
+            characterPanelManager = systemGameManager.CharacterPanelManager;
         }
-
-        /*
-        private void Start() {
-            //Debug.Log("CharacterPanel.Start()");
-        }
-        */
 
         protected override void CreateEventSubscriptions() {
             //Debug.Log("CharacterPanel.CreateEventSubscriptions()");
@@ -150,10 +144,8 @@ namespace AnyRPG {
         public override void RecieveClosedWindowNotification() {
             //Debug.Log("CharacterPanel.RecieveClosedWindowNotification()");
             base.RecieveClosedWindowNotification();
-            characterCreatorManager.HandleCloseWindow();
-            characterPreviewPanel.OnTargetCreated -= HandleTargetCreated;
             //characterPreviewPanel.OnTargetReady -= HandleTargetReady;
-            characterPreviewPanel.RecieveClosedWindowNotification();
+            previewCameraController.ClearTarget();
         }
 
         public override void ReceiveOpenWindowNotification() {
@@ -165,40 +157,38 @@ namespace AnyRPG {
             if (playerManager.MyCharacter != null) {
                 uIManager.characterPanelWindow.SetWindowTitle(playerManager.MyCharacter.CharacterName);
             }
-            characterPreviewPanel.OnTargetCreated += HandleTargetCreated;
-            characterPreviewPanel.CapabilityConsumer = playerManager.MyCharacter;
-            characterPreviewPanel.ReceiveOpenWindowNotification();
+            SetPreviewTarget();
+        }
 
+        private void SetPreviewTarget() {
+            //Debug.Log("CharacterPreviewPanelController.SetPreviewTarget()");
+
+            if (cameraManager.CharacterPanelCamera != null) {
+                //Debug.Log("CharacterPanel.SetPreviewTarget(): preview camera was available, setting target");
+                if (previewCameraController != null) {
+                    //previewCameraController.OnTargetReady += HandleTargetReady;
+                    previewCameraController.InitializeCamera(characterPanelManager.PreviewUnitController);
+                    //Debug.Log("CharacterPanel.SetPreviewTarget(): preview camera was available, setting Target Ready Callback");
+                } else {
+                    Debug.LogError("CharacterPanel.SetPreviewTarget(): Character Panel Camera Controller is null. Please set it in the inspector");
+                }
+            }
         }
 
         /*
-        public void ResetDisplay() {
-            //Debug.Log("CharacterPanel.ResetDisplay()");
-            if (uIManager != null && uIManager.characterPanelWindow != null && uIManager.characterPanelWindow.IsOpen) {
-                // reset display
-                //characterPreviewPanel.ClearTarget();
-                characterCreatorManager.HandleCloseWindow();
+        public void HandleTargetReady() {
+            //Debug.Log("CharacterPreviewPanelController.TargetReadyCallback()");
+            previewCameraController.OnTargetReady -= HandleTargetReady;
+            characterReady = true;
 
-                // TODO : ADD CODE TO LOOP THROUGH BUTTONS AND RE-DISPLAY ANY ITEMS
-
-                // update display
-                SetPreviewTarget();
-            }
+            OnTargetReady();
         }
         */
 
         public void HandleEquipmentChanged(Equipment newEquipment, Equipment oldEquipment) {
             //Debug.Log("CharacterPanel.HandleEquipmentChanged(" + (newEquipment == null ? "null" : newEquipment.DisplayName) + ", " + (oldEquipment == null ? "null" : oldEquipment.DisplayName) + ")");
             if (uIManager != null && uIManager.characterPanelWindow != null && uIManager.characterPanelWindow.IsOpen) {
-                //ResetDisplay();
-                //characterPreviewPanel.ReloadUnit();
-                if (oldEquipment != null) {
-                    characterCreatorManager.PreviewUnitController.CharacterUnit.BaseCharacter.CharacterEquipmentManager.Unequip(oldEquipment, true, true, false);
-                }
-                if (newEquipment != null) {
-                    characterCreatorManager.PreviewUnitController.CharacterUnit.BaseCharacter.CharacterEquipmentManager.Equip(newEquipment, null, true, true, false);
-                }
-                characterCreatorManager.PreviewUnitController.UnitModelController.BuildModelAppearance();
+
                 UpdateStatsDescription();
             }
         }
@@ -311,90 +301,6 @@ namespace AnyRPG {
 
             statsDescription.text = updateString;
         }
-
-        /*
-        private void SetPreviewTarget() {
-            Debug.Log("CharacterPanel.SetPreviewTarget()");
-
-
-            //spawn correct preview unit
-            characterCreatorManager.HandleOpenWindow(playerManager.MyCharacter.UnitProfile);
-            */
-            // testing do this earlier
-            //LoadSavedAppearanceSettings();
-
-            /*
-            if (cameraManager != null && cameraManager.CharacterPreviewCamera != null) {
-                //Debug.Log("CharacterPanel.SetPreviewTarget(): preview camera was available, setting target");
-                if (PreviewCameraController != null) {
-                    //Debug.Log("CharacterPanel.SetPreviewTarget(): subscribing to OnTargetReady()");
-                    PreviewCameraController.OnTargetReady += TargetReadyCallback;
-                    PreviewCameraController.InitializeCamera(characterCreatorManager.PreviewUnitController);
-                } else {
-                    Debug.LogError("CharacterPanel.SetPreviewTarget(): Character Preview Camera Controller is null. Please set it in the inspector");
-                }
-            }
-            */
-            /*
-        }
-        */
-
-        /*
-        public void TargetReadyCallback() {
-            //Debug.Log("CharacterPanel.TargetReadyCallback()");
-            PreviewCameraController.OnTargetReady -= TargetReadyCallback;
-            TargetReadyCallbackCommon();
-        }
-
-
-        public void LoadSavedAppearanceSettings() {
-            characterCreatorManager.PreviewUnitController?.UnitModelController.LoadSavedAppearanceSettings();
-        }
-        */
-
-        public void HandleTargetCreated() {
-            //Debug.Log("CharacterPanel.HandleTargetCreated()");
-            characterCreatorManager.PreviewUnitController?.UnitModelController.SetInitialSavedAppearance();
-            CharacterEquipmentManager characterEquipmentManager = characterCreatorManager.PreviewUnitController.CharacterUnit.BaseCharacter.CharacterEquipmentManager;
-
-            // providers need to be set or equipment won't be able to be equipped
-            characterCreatorManager.PreviewUnitController.CharacterUnit.BaseCharacter.SetUnitType(playerManager.MyCharacter.UnitType, true, false, false);
-            characterCreatorManager.PreviewUnitController.CharacterUnit.BaseCharacter.SetCharacterRace(playerManager.MyCharacter.CharacterRace, true, false, false);
-            characterCreatorManager.PreviewUnitController.CharacterUnit.BaseCharacter.SetCharacterFaction(playerManager.MyCharacter.Faction, true, false, false);
-            characterCreatorManager.PreviewUnitController.CharacterUnit.BaseCharacter.SetCharacterClass(playerManager.MyCharacter.CharacterClass, true, false, false);
-            characterCreatorManager.PreviewUnitController.CharacterUnit.BaseCharacter.SetClassSpecialization(playerManager.MyCharacter.ClassSpecialization, true, false, false);
-
-            if (characterEquipmentManager != null) {
-                if (playerManager != null && playerManager.MyCharacter != null && playerManager.MyCharacter.CharacterEquipmentManager != null) {
-                    
-                    //characterEquipmentManager.CurrentEquipment = playerManager.MyCharacter.CharacterEquipmentManager.CurrentEquipment;
-                    // testing new code to avoid just making a pointer to the player gear, which results in equip/unequip not working properly
-                    characterEquipmentManager.CurrentEquipment.Clear();
-                    foreach (EquipmentSlotProfile equipmentSlotProfile in playerManager.MyCharacter.CharacterEquipmentManager.CurrentEquipment.Keys) {
-                        characterEquipmentManager.CurrentEquipment.Add(equipmentSlotProfile, playerManager.MyCharacter.CharacterEquipmentManager.CurrentEquipment[equipmentSlotProfile]);
-                    }
-                }
-            } else {
-                Debug.Log("CharacterPanel.HandleTargetCreated(): could not find a characterEquipmentManager");
-            }
-        }
-
-        /*
-        public void TargetReadyCallbackCommon() {
-            //Debug.Log("CharacterPanel.TargetReadyCallbackCommon()");
-
-            CharacterEquipmentManager characterEquipmentManager = characterCreatorManager.PreviewUnitController.CharacterUnit.BaseCharacter.CharacterEquipmentManager;
-            if (characterEquipmentManager != null) {
-                if (playerManager != null && playerManager.MyCharacter != null && playerManager.MyCharacter.CharacterEquipmentManager != null) {
-                    characterEquipmentManager.CurrentEquipment = playerManager.MyCharacter.CharacterEquipmentManager.CurrentEquipment;
-                    characterCreatorManager.PreviewUnitController.UnitModelController.EquipEquipmentModels(characterEquipmentManager);
-                }
-            } else {
-                Debug.Log("CharacterPanel.TargetReadyCallbackCommon(): could not find a characterEquipmentManager");
-            }
-        }
-        */
-
 
         public void OpenReputationWindow() {
             //Debug.Log("CharacterPanel.OpenReputationWindow()");
