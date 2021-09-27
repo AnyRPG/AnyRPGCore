@@ -38,6 +38,10 @@ namespace AnyRPG {
 
         public void HandleCloseWindow() {
             //Debug.Log("PreviewManager.HandleCloseWindow()");
+            DespawnUnit();
+        }
+
+        protected virtual void DespawnUnit() {
             if (unitController != null) {
                 unitController.Despawn();
                 unitController = null;
@@ -52,14 +56,22 @@ namespace AnyRPG {
         public void OpenWindowCommon() {
             //Debug.Log("PreviewManager.OpenWindowCommon()");
 
+            SpawnUnit();
+        }
+
+        protected virtual void SpawnUnit() {
             unitController = cloneSource.SpawnUnitPrefab(transform, transform.position, transform.forward, UnitControllerMode.Preview);
             if (unitController != null) {
                 if (unitController.UnitModelController != null) {
                     unitController.UnitModelController.SetAttachmentProfile(cloneSource.UnitPrefabProps.AttachmentProfile);
                 }
-                OnTargetCreated();
+                BroadcastTargetCreated();
                 unitController.Init();
             }
+        }
+
+        protected virtual void BroadcastTargetCreated() {
+            OnTargetCreated();
         }
 
     }
