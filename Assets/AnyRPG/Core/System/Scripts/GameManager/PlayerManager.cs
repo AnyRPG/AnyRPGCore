@@ -68,6 +68,12 @@ namespace AnyRPG {
         // a reference to the active unit.  This could change in cases of both mind control and mounted states
         private UnitController activeUnitController = null;
 
+        // track if subscription to target ready should happen
+        // only used when loading new level or respawning
+        private bool subscribeToTargetReady = false;
+
+        private Coroutine waitForPlayerReadyCoroutine = null;
+
         protected bool eventSubscriptionsInitialized = false;
 
         // game manager references
@@ -302,8 +308,43 @@ namespace AnyRPG {
             activeCharacter.CharacterStats.Revive();
         }
 
+        public void SubscribeToTargetReady() {
+            activeUnitController.OnCameraTargetReady += HandleTargetReady;
+            subscribeToTargetReady = false;
+        }
+
+        public void UnsubscribeFromTargetReady() {
+            if (activeUnitController != null) {
+                activeUnitController.OnCameraTargetReady -= HandleTargetReady;
+            }
+        }
+
+        public void HandleTargetReady() {
+            //Debug.Log(gameObject.name + ".UnitFrameController.HandleTargetReady()");
+
+            waitForPlayerReadyCoroutine = StartCoroutine(WaitForPlayerReady());
+        }
+
+        private IEnumerator WaitForPlayerReady() {
+            //Debug.Log("PlayerManager.WaitForPlayerReady()");
+            //private IEnumerator WaitForCamera(int frameNumber) {
+            yield return null;
+            //Debug.Log(gameObject.name + ".UnitFrameController.WaitForCamera(): about to render " + namePlateController.Interactable.GetInstanceID() + "; initial frame: " + frameNumber + "; current frame: " + lastWaitFrame);
+            //if (lastWaitFrame != frameNumber) {
+            if (activeUnitController.IsBuilding() == true) {
+                //Debug.Log(gameObject.name + ".UnitFrameController.WaitForCamera(): a new wait was started. initial frame: " + frameNumber +  "; current wait: " + lastWaitFrame);
+            } else {
+                //Debug.Log(gameObject.name + ".UnitFrameController.WaitForCamera(): rendering");
+                waitForPlayerReadyCoroutine = null;
+                UnsubscribeFromTargetReady();
+                cameraManager.ShowPlayers();
+            }
+        }
+
         public Vector3 SpawnPlayerUnit() {
             //Debug.Log("PlayerManager.SpawnPlayerUnit()");
+            cameraManager.HidePlayers();
+            subscribeToTargetReady = true;
             Vector3 spawnLocation = levelManager.GetSpawnLocation();
             SpawnPlayerUnit(spawnLocation);
             return spawnLocation;
@@ -349,6 +390,9 @@ namespace AnyRPG {
 
             // testing - move this to before the below calls so its initialized if a model is already ready
             activeUnitController.UnitModelController.SetInitialSavedAppearance();
+            if (subscribeToTargetReady) {
+                SubscribeToTargetReady();
+            }
             activeUnitController.Init();
 
             // saved appearance settings should only be run after the above Init() call or there is no reference to the avatar to load the settings onto

@@ -531,7 +531,7 @@ namespace AnyRPG {
             SystemEventManager.StopListening("OnLevelLoad", HandleLevelLoad);
             SystemEventManager.StopListening("OnPlayerUnitSpawn", HandlePlayerUnitSpawn);
             SystemEventManager.StopListening("OnPlayerUnitDespawn", HandlePlayerUnitDespawn);
-            SystemEventManager.StopListening("OnPlayerUnitSpawn", HandleMainCamera);
+            //SystemEventManager.StopListening("OnPlayerUnitSpawn", HandleMainCamera);
             SystemEventManager.StopListening("OnBeforePlayerConnectionSpawn", HandleBeforePlayerConnectionSpawn);
             SystemEventManager.StopListening("OnPlayerConnectionSpawn", HandlePlayerConnectionSpawn);
             SystemEventManager.StopListening("OnPlayerConnectionDespawn", HandlePlayerConnectionDespawn);
@@ -685,7 +685,7 @@ namespace AnyRPG {
             if (inGameUI.activeSelf == true) {
                 inGameUI.SetActive(false);
             }
-            SystemEventManager.StopListening("OnPlayerUnitSpawn", HandleMainCamera);
+            //SystemEventManager.StopListening("OnPlayerUnitSpawn", HandleMainCamera);
             dragInProgress = false;
         }
 
@@ -698,19 +698,22 @@ namespace AnyRPG {
             if (cameraManager != null) {
                 cameraManager.DisableCutsceneCamera();
             }
+            /*
             if (!playerManager.PlayerUnitSpawned) {
                 SystemEventManager.StartListening("OnPlayerUnitSpawn", HandleMainCamera);
             } else {
                 InitializeMainCamera();
             }
+            */
             dragInProgress = false;
         }
 
+        
         public void HandlePlayerUnitSpawn(string eventName, EventParamProperties eventParamProperties) {
             //Debug.Log(gameObject.name + ".UIManager.HandlePlayerUnitSpawn()");
             ProcessPlayerUnitSpawn();
         }
-
+        /*
         public void HandleMainCamera(string eventName, EventParamProperties eventParamProperties) {
             //Debug.Log(gameObject.name + ".InanimateUnit.HandlePlayerUnitSpawn()");
             ProcessMainCamera();
@@ -724,6 +727,7 @@ namespace AnyRPG {
         public void InitializeMainCamera() {
             cameraManager.MainCameraController.InitializeCamera(playerManager.ActiveUnitController.transform);
         }
+        */
 
         public void DeactivatePlayerUI() {
             //Debug.Log("UIManager.DeactivatePlayerUI()");

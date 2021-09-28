@@ -45,6 +45,10 @@ namespace AnyRPG {
 
         private CutsceneCameraController currentCutsceneCameraController = null;
 
+        private int playerLayer;
+        private int equipmentLayer;
+        private int hideLayers;
+
         protected bool eventSubscriptionsInitialized = false;
 
         // game manager references
@@ -107,6 +111,20 @@ namespace AnyRPG {
             DisableFocusCamera();
 
             CreateEventSubscriptions();
+
+            playerLayer = LayerMask.NameToLayer("Player");
+            equipmentLayer = LayerMask.NameToLayer("Equipment");
+            hideLayers = (1 << playerLayer | 1 << equipmentLayer);
+        }
+
+        public void HidePlayers() {
+            //Debug.Log("CameraManager.HidePlayers()");
+            mainCamera.cullingMask = mainCamera.cullingMask & ~hideLayers;
+        }
+
+        public void ShowPlayers() {
+            //Debug.Log("CameraManager.ShowPlayers()");
+            mainCamera.cullingMask = mainCamera.cullingMask | hideLayers;
         }
 
         public void CheckForCutsceneCamera() {
@@ -127,11 +145,15 @@ namespace AnyRPG {
                 return;
             }
             if (levelManager.IsMainMenu()
-                || levelManager.IsInitializationScene()
-                || systemConfigurationManager.UseThirdPartyCameraControl == false) {
+                || levelManager.IsInitializationScene()) {
                 MainCameraGameObject.SetActive(true);
                 return;
             }
+            if (systemConfigurationManager.UseThirdPartyCameraControl == false) {
+                MainCameraGameObject.SetActive(true);
+                return;
+            }
+
             if (systemConfigurationManager.UseThirdPartyCameraControl == true) {
                 EnableThirdPartyCamera(prePositionCamera);
                 return;
@@ -250,15 +272,20 @@ namespace AnyRPG {
 
         public void ProcessPlayerUnitSpawn() {
             //Debug.Log("CameraManager.ProcessPlayerUnitSpawn()");
+            /*
+             // disabled this next condition because it was causing EmptyGame to fail
             if (levelManager.GetActiveSceneNode() == null) {
                 //Debug.Log("CameraManager.ProcessPlayerUnitSpawn(): ACTIVE SCENE NODE WAS NULL");
                 return;
             }
+            */
 
-            if (levelManager.GetActiveSceneNode().SuppressMainCamera != true) {
+            // disabled this condition because there is no situation where the player would spawn automatically in a camera suppressed level anyway
+            // if there is a cutscene in the level, the player will spawn after the cutscene so the need to initialize the camera remains
+            //if (levelManager.GetActiveSceneNode().SuppressMainCamera != true) {
                 //Debug.Log("CameraManager.ProcessPlayerUnitSpawn(): suppressed by level = false, spawning camera");
                 mainCameraController.InitializeCamera(playerManager.ActiveUnitController.transform);
-            }
+            //}
         }
 
         public void HandlePlayerUnitDespawn(string eventName, EventParamProperties eventParamProperties) {
