@@ -94,10 +94,19 @@ namespace AnyRPG {
 
         // use this to set camera position before player spawn so we aren't staring at some wierd spot of the level while player loads
         public void SetTargetPositionRaw(Vector3 rawTargetPosition, Vector3 forwardDirection) {
-            //Debug.Log("SetTargetPosition()");
+            //Debug.Log("AnyRPGCameraController.SetTargetPosition(" + rawTargetPosition + ", " + forwardDirection + ")");
+
+            // reset the camera to directly behind the player at the previous zoom level
+            currentXDegrees = 0f;
+            currentYDegrees = 0f;
+            currentZoomDistance = initialZOffset;
+
             targetPosition = rawTargetPosition + Vector3.up * pitch;
-            transform.position = targetPosition - new Vector3(0, 0, 2);
-            transform.rotation = Quaternion.LookRotation(forwardDirection);
+            transform.position = targetPosition - (Quaternion.LookRotation(forwardDirection) * new Vector3(0, 0, currentZoomDistance));
+
+            // this next line will give an exact duplicate of where the camera was in relation to the player at the time they changed scenes
+            // it's disabled for now because it actually makes a bit more sense to have the camera behind the player so they can see the level they are zoning into
+            //transform.position = rawTargetPosition + Quaternion.LookRotation(forwardDirection) * (Quaternion.LookRotation(Vector3.forward) * ((cameraOffsetVector.normalized * currentZoomDistance) + new Vector3(0, pitch, 0)));
             LookAtTargetPosition();
             //Debug.Log("SetTargetPosition(): " + targetPosition);
         }
@@ -231,7 +240,7 @@ namespace AnyRPG {
         }
 
         private void JumpToWantedPosition() {
-            //Debug.Log("JumpToWantedPosition()");
+            //Debug.Log("AnyRPGCameraController.JumpToWantedPosition()");
             transform.position = wantedPosition;
         }
 
@@ -246,7 +255,7 @@ namespace AnyRPG {
         }
 
         private void InitializeFollowLocation() {
-            //Debug.Log("CameraController.InitializeFollowLocation()");
+            //Debug.Log("AnyRPGCameraController.InitializeFollowLocation()");
             Vector3 initialCameraLocalLocation = new Vector3(0, pitch, -initialZOffset);
             //Debug.Log("CameraController.InitializeFollowLocation(): initialCameraLocation in local space: " + initialCameraLocalLocation);
             Vector3 initialCameraLocation = target.TransformPoint(initialCameraLocalLocation);
