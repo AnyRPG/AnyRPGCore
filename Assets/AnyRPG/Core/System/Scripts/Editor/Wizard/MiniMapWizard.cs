@@ -62,7 +62,7 @@ namespace AnyRPG {
             miniMapGeneratorController.mapCamera = camera;
             miniMapGeneratorController.minimapTextureFolder = newGameImagesFolder;
             miniMapGeneratorController.pixelsPerMeter = pixelsPerMeter;
-            miniMapGeneratorController.CreateMinimapTextures();
+            CreateMiniMapTextures(miniMapGeneratorController);
 
             AssetDatabase.Refresh();
 
@@ -72,6 +72,21 @@ namespace AnyRPG {
 
             EditorUtility.ClearProgressBar();
             EditorUtility.DisplayDialog(wizardTitle, wizardTitle +" Complete! The minimap image can be found at " + newGameImagesFolder, "OK");
+
+        }
+
+        private void CreateMiniMapTextures(MiniMapGeneratorController miniMapGeneratorController) {
+            EditorUtility.DisplayProgressBar("Generating Minimap...", "Please wait", 0.1f);
+            miniMapGeneratorController.EnableCamera();
+            EditorUtility.DisplayProgressBar("Generating Minimap...", "Please wait", 0.5f);
+            miniMapGeneratorController.GetSceneBounds();
+            EditorUtility.DisplayProgressBar("Generating Minimap...", "Please wait", 0.6f);
+            miniMapGeneratorController.CreateFolder();
+            EditorUtility.DisplayProgressBar("Generating Minimap...", "Please wait", 0.7f);
+            miniMapGeneratorController.CreateMinimapTextures(EditorSceneManager.GetActiveScene().name + ".png");
+            EditorUtility.DisplayProgressBar("Generating Minimap...", "Complete", 1);
+            EditorUtility.ClearProgressBar();
+
 
         }
 
@@ -96,6 +111,10 @@ namespace AnyRPG {
 
         private void ShowError(string message) {
             EditorUtility.DisplayDialog("Error", message, "OK");
+        }
+
+        public static void DisplayProgressBar(string title, string info, float progress) {
+            EditorUtility.DisplayProgressBar(title, info, progress);
         }
 
     }

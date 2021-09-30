@@ -2,10 +2,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEditor;
-using UnityEngine.SceneManagement;
-using UnityEditor.SceneManagement;
-
 
 namespace AnyRPG
 {
@@ -23,26 +19,28 @@ namespace AnyRPG
         [SerializeField]
         public string minimapTextureFolder = "Assets/Minimap/Textures";
 
+        private float ySize;
+        private float cameraSize;
+
         /*
          * Creates the file(s) necessary to pre-generate a minimap for the _active_ scene.  Files will be saved
          * with a naming convention that indicates the scene that they were saved from.
          */
-        public void CreateMinimapTextures()
-        {
+        public void EnableCamera() {
             mapCamera.enabled = true;
 
-            if (snapDelay < 0.1f)
-            {
+            if (snapDelay < 0.1f) {
                 snapDelay = 0.1f;
                 Debug.LogWarning("Snap delay cannot be lower than 0.1 seconds, setting it back to 0.1 seconds.");
             }
+        }
 
-            EditorUtility.DisplayProgressBar("Generating Minimap...", "Please wait", 0.5f);
+        public void GetSceneBounds() {
 
             Bounds sceneBounds = LevelManager.GetSceneBounds();
             mapCamera.orthographic = true;
 
-            float cameraSize = System.Math.Max(sceneBounds.size.x, sceneBounds.size.z);
+            cameraSize = System.Math.Max(sceneBounds.size.x, sceneBounds.size.z);
 
             // orthographic camera size is a half extent so the camera diamater needs to be turned into a radius
             mapCamera.orthographicSize = cameraSize / 2f;
@@ -50,7 +48,7 @@ namespace AnyRPG
             float yMin = sceneBounds.min.y;
             float yMax = sceneBounds.max.y;
             float xSize = Mathf.Abs(sceneBounds.max.x - sceneBounds.min.x);
-            float ySize = Mathf.Abs(sceneBounds.max.y - sceneBounds.min.y);
+            ySize = Mathf.Abs(sceneBounds.max.y - sceneBounds.min.y);
             float zSize = Mathf.Abs(sceneBounds.max.z - sceneBounds.min.z);
             Debug.Log("Determined scene bounds to be X: " + xSize + "(" + sceneBounds.max.x + "/" + sceneBounds.min.x + ") Y: " + ySize + "(" + yMax + "/" + yMin + ") Z: " + zSize + "(" + sceneBounds.max.z + "/" + sceneBounds.min.z + ")");
             // Place the camera at the top of the the level right in the center
@@ -61,26 +59,27 @@ namespace AnyRPG
             Vector3 lookAt = new Vector3(sceneBounds.center.x, sceneBounds.center.y, sceneBounds.center.z);
             mapCamera.transform.LookAt(lookAt);
             Debug.Log("Pointing camera at  " + lookAt.x + " / " + lookAt.y + " / " + lookAt.z);
+        }
 
-            EditorUtility.DisplayProgressBar("Generating Minimap...", "Please wait", 0.6f);
+        public void CreateFolder() {
 
             // Set the far clip to reach all the way to the Y bottom of the map so that is captured
             mapCamera.farClipPlane = ySize + 1f;
             Debug.Log("Setting far clip plane to " + mapCamera.farClipPlane);
             //yield return new WaitForSeconds(snapDelay);
 
-            if (!System.IO.Directory.Exists(minimapTextureFolder))
-            {
+            if (!System.IO.Directory.Exists(minimapTextureFolder)) {
                 System.IO.Directory.CreateDirectory(minimapTextureFolder);
             }
-                
-            //string screenshotFilename = EditorSceneManager.GetActiveScene().name + "_minimap.png";
-            string screenshotFilename = EditorSceneManager.GetActiveScene().name + ".png";
+        }
 
-            EditorUtility.DisplayProgressBar("Generating Minimap...", "Please wait", 0.7f);
+        public void CreateMinimapTextures(string screenshotFileName) {
+
+            //string screenshotFilename = EditorSceneManager.GetActiveScene().name + "_minimap.png";
+
             Debug.Log("Taking screenshot...");
             //yield return TakeAndSaveSnapshot(camera, screenshotFilename, (int)cameraSize * superSize, (int)cameraSize * superSize);
-            TakeAndSaveSnapshot(screenshotFilename, (int)cameraSize * pixelsPerMeter, (int)cameraSize * pixelsPerMeter);
+            TakeAndSaveSnapshot(screenshotFileName, (int)cameraSize * pixelsPerMeter, (int)cameraSize * pixelsPerMeter);
 
             /*  NOTE: Multiple y-levels code below
             // Loop over all the Y "levels" and grab snapshots of all of them
@@ -99,10 +98,8 @@ namespace AnyRPG
             */
             //Debug.Log("Destroying camera object " + minimapGenerator.name);
             //UnityEngine.Object.Destroy(minimapGenerator);
-            EditorUtility.DisplayProgressBar("Generating Minimap...", "Complete", 1);
-            EditorUtility.ClearProgressBar();
 
-            Debug.Log("Minimap generation complete!  Output at " + minimapTextureFolder + "/" + screenshotFilename);
+            Debug.Log("Minimap generation complete!  Output at " + minimapTextureFolder + "/" + screenshotFileName);
             mapCamera.enabled = false;
         }
 
