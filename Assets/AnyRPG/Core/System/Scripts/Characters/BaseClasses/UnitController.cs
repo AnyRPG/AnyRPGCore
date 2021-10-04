@@ -561,6 +561,7 @@ namespace AnyRPG {
             }
             rigidBody.isKinematic = false;
             rigidBody.useGravity = true;
+            rigidBody.collisionDetectionMode = CollisionDetectionMode.ContinuousDynamic;
             useAgent = false;
             DisableAgent();
         }
