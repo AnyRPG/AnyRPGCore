@@ -120,6 +120,12 @@ namespace AnyRPG {
 
         [Header("CONTROLLER")]
 
+        /*
+        [Tooltip("If true, allow clicking on the ground with the mouse to move to a location")]
+        [SerializeField]
+        private bool allowClickToMove = false;
+        */
+
         [Tooltip("The maximum turn speed in degrees per second")]
         [SerializeField]
         private float maxTurnSpeed = 360f;
@@ -214,7 +220,7 @@ namespace AnyRPG {
         [Tooltip("This profile will override the system animations included in the engine when no other unit or weapon specific animations are in use")]
         [ResourceSelector(resourceType = typeof(AnimationProfile))]
         [SerializeField]
-        private string defaultAnimationProfileName;
+        private string defaultAnimationProfileName = string.Empty;
 
         [SerializeField]
         private RuntimeAnimatorController defaultAnimatorController;
@@ -708,6 +714,7 @@ namespace AnyRPG {
         public float FallDamagePerMeter { get => fallDamagePerMeter; set => fallDamagePerMeter = value; }
         public float FallDamageMinDistance { get => fallDamageMinDistance; set => fallDamageMinDistance = value; }
         public AudioProfile FallDamageAudioProfile { get => fallDamageAudioProfile; set => fallDamageAudioProfile = value; }
+        //public bool AllowClickToMove { get => allowClickToMove; }
 
         public override void Configure(SystemGameManager systemGameManager) {
             base.Configure(systemGameManager);

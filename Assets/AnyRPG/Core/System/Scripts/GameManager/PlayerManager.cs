@@ -560,6 +560,7 @@ namespace AnyRPG {
             activeCharacter.CharacterAbilityManager.OnLearnAbility += HandleLearnAbility;
             activeCharacter.CharacterAbilityManager.OnActivateTargetingMode += HandleActivateTargetingMode;
             activeCharacter.CharacterAbilityManager.OnCombatMessage += HandleCombatMessage;
+            activeCharacter.CharacterAbilityManager.OnMessageFeedMessage += HandleMessageFeedMessage;
         }
 
         public void UnsubscribeFromPlayerEvents() {
@@ -592,6 +593,7 @@ namespace AnyRPG {
             activeCharacter.CharacterAbilityManager.OnLearnAbility -= HandleLearnAbility;
             activeCharacter.CharacterAbilityManager.OnActivateTargetingMode -= HandleActivateTargetingMode;
             activeCharacter.CharacterAbilityManager.OnCombatMessage -= HandleCombatMessage;
+            activeCharacter.CharacterAbilityManager.OnMessageFeedMessage -= HandleMessageFeedMessage;
         }
 
         public void HandleBeginAbilityCoolDown() {
@@ -600,6 +602,10 @@ namespace AnyRPG {
 
         public void HandleCombatMessage(string messageText) {
             logManager.WriteCombatMessage(messageText);
+        }
+
+        public void HandleMessageFeedMessage(string messageText) {
+            messageFeedManager.WriteMessage(messageText);
         }
 
         public void HandleCombatMiss(Interactable targetObject, AbilityEffectContext abilityEffectContext) {

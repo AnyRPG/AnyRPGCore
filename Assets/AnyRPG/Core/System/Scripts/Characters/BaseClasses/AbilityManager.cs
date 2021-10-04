@@ -403,5 +403,11 @@ namespace AnyRPG {
             return;
         }
 
+        public virtual void ReceiveMessageFeedMessage(string messageText) {
+            // do nothing
+            return;
+        }
+
+
     }
 }

@@ -77,7 +77,8 @@ namespace AnyRPG {
         public virtual TargetRangeSourceLocation TargetRangeSourceLocation { get => TargetRangeSourceLocation.Caster; }
         public virtual bool RequiresGroundTarget { get => false; }
 
-        public static bool CanUseOn(ITargetable targetable, Interactable target, IAbilityCaster sourceCharacter, AbilityEffectContext abilityEffectContext = null, bool playerInitiated = false, bool performRangeCheck = true) {
+        public virtual bool CanUseOn(ITargetable targetable, Interactable target, IAbilityCaster sourceCharacter, AbilityEffectContext abilityEffectContext = null, bool playerInitiated = false, bool performRangeCheck = true) {
+            //Debug.Log("TargetProps.CanUseOn()");
             // create target booleans
             bool targetIsSelf = false;
             CharacterUnit targetCharacterUnit = null;

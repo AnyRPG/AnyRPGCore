@@ -23,6 +23,7 @@ namespace AnyRPG {
         public event System.Action<BaseAbility> OnLearnAbility = delegate { };
         public event System.Action<BaseAbility> OnActivateTargetingMode = delegate { };
         public event System.Action<string> OnCombatMessage = delegate { };
+        public event System.Action<string> OnMessageFeedMessage = delegate { };
         public event System.Action OnBeginAbilityCoolDown = delegate { };
 
         protected BaseCharacter baseCharacter;
@@ -460,6 +461,7 @@ namespace AnyRPG {
         }
 
         public override bool PerformLOSCheck(Interactable target, ITargetable targetable, AbilityEffectContext abilityEffectContext = null) {
+            //Debug.Log(baseCharacter.gameObject.name + ".CharacterAbilityManager.PerformLOSCheck()");
 
             if (targetable.GetTargetOptions(baseCharacter).RequireLineOfSight == false) {
                 return true;
@@ -1478,6 +1480,12 @@ namespace AnyRPG {
             OnCombatMessage(messageText);
         }
 
+        public override void ReceiveMessageFeedMessage(string messageText) {
+            base.ReceiveMessageFeedMessage(messageText);
+            OnMessageFeedMessage(messageText);
+        }
+
+
         // this only checks if the ability is able to be cast based on character state.  It does not check validity of target or ability specific requirements
         public override bool CanCastAbility(BaseAbility ability, bool playerInitiated = false) {
             //Debug.Log(gameObject.name + ".CharacterAbilityManager.CanCastAbility(" + ability.DisplayName + ")");
@@ -1522,7 +1530,9 @@ namespace AnyRPG {
                 return false;
             }
 
-            if (!PerformMovementCheck(ability)) {
+            // for now require a player to perform movement check because an NPC will by default stop and go into attack mode to cast an ability
+            // this check is designed to prevent players from casting anything other than instant casts while running
+            if (playerInitiated && !PerformMovementCheck(ability)) {
                 //Debug.Log(baseCharacter.gameObject.name + ".CharacterAbilityManager.CanCastAbility(" + ability.DisplayName + "): velocity too high to cast!");
                 if (playerInitiated) {
                     OnCombatMessage("Cannot cast " + ability.DisplayName + "): cannot cast while moving!");

@@ -29,7 +29,7 @@ namespace AnyRPG {
             baseController.UpdateTarget();
 
             if (baseController.Target != null) {
-                //Debug.Log("current agro range is " + parent.MyAggroRange.ToString() + " and current distance to target is " + parent.MyDistanceToTarget);
+                //Debug.Log("current agro range is " + baseController.Target.name + " and current distance to target is " + baseController.DistanceToTarget);
                 // evade if the target is out of aggro range.  In the future this could also be calculated as distance from start point if we would rather use a leash approach
                 // temporarily disable leashing.
                 /*

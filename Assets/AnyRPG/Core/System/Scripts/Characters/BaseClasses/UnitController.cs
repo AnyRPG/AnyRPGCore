@@ -1703,7 +1703,7 @@ namespace AnyRPG {
         }
 
         public bool CanGetValidAttack(bool beginAttack = false) {
-
+            //Debug.Log(gameObject.name + ".UnitController.CanGetValidAttack(" + beginAttack + ")");
             if (CombatStrategy != null) {
                 // attempt to get a valid ability from combat strategy before defaulting to random attacks
                 BaseAbility validCombatStrategyAbility = CombatStrategy.GetValidAbility(CharacterUnit.BaseCharacter);

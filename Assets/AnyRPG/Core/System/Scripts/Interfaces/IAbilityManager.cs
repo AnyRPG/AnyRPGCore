@@ -295,6 +295,11 @@ namespace AnyRPG {
         /// </summary>
         void ReceiveCombatMessage(string messageText);
 
+        /// <summary>
+        /// pass a message to be emitted as an event
+        /// </summary>
+        void ReceiveMessageFeedMessage(string messageText);
+
     }
 
 }

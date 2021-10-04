@@ -29,19 +29,19 @@ namespace AnyRPG {
             }
 
             if (baseController.CharacterUnit.BaseCharacter.CharacterAbilityManager.WaitingForAnimatedAbility == true) {
-                //Debug.Log(aiController.gameObject.name + ".AttackState.Update() MyWaitingForAnimatedAbility is true");
+                //Debug.Log(baseController.gameObject.name + ".AttackState.Update() WaitingForAnimatedAbility is true");
                 // nothing to do, animated ability in progress
                 return;
             }
 
             if (baseController.CharacterUnit.BaseCharacter.CharacterCombat.WaitingForAutoAttack == true) {
-                //Debug.Log(aiController.gameObject.name + ".AttackState.Update() MyWaitingForAutoAttack == true");
+                //Debug.Log(baseController.gameObject.name + ".AttackState.Update() WaitingForAutoAttack == true");
                 // nothing to do, auto-attack in progress
                 return;
             }
 
             if (baseController.CharacterUnit.BaseCharacter.CharacterAbilityManager.IsCasting == true || baseController.CharacterUnit.BaseCharacter.CharacterAbilityManager.MyCurrentCastCoroutine != null) {
-                //Debug.Log(aiController.gameObject.name + ".AttackState.Update() MyCurrentCast != null || MyIsCasting == true");
+                //Debug.Log(baseController.gameObject.name + ".AttackState.Update() CurrentCast != null || IsCasting == true");
                 // nothing to do, cast in progress
                 return;
             }
