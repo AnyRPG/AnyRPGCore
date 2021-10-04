@@ -1204,18 +1204,30 @@ namespace AnyRPG {
                     // if the stairs are higher than 0.3f (the start of the vertical section on the collider) and the player is too close to the stair,
                     // any angled approach will lose all momentum from running straight into the stair and the player will get stuck
 
-                    if (stairDownHitPoint.y - playerManager.ActiveUnitController.transform.position.y < 0.2f
+                    //if (stairDownHitPoint.y - playerManager.ActiveUnitController.transform.position.y < 0.2f
+                    if (bottomStairDownHitInfo.point.y - playerManager.ActiveUnitController.transform.position.y < 0.2f
                         || playerManager.ActiveUnitController.transform.InverseTransformPoint(new Vector3(forwardHitPoint.x, playerManager.ActiveUnitController.transform.position.y, forwardHitPoint.z)).magnitude > (colliderRadius + 0.01f)) {
                         localGroundNormal = playerManager.ActiveUnitController.transform.InverseTransformDirection(stairRampNormal);
                         usedGroundNormal = stairRampNormal;
                         //Debug.Log("using stair ramp normal: " + localGroundNormal + "; height: " + (stairDownHitPoint.y - playerManager.ActiveUnitController.transform.position.y));
+                        //Debug.Break();
                     } else {
                         //Debug.Log("distance from wall: " + playerManager.ActiveUnitController.transform.InverseTransformPoint(forwardHitInfo.point).magnitude);
                         localGroundNormal = playerManager.ActiveUnitController.transform.InverseTransformDirection(bottomForwardHitInfo.normal);
                         usedGroundNormal = bottomForwardHitInfo.normal;
-                        //Debug.Log("using front normal: " + localGroundNormal);
+                        /*
+                        Debug.Log("using front normal: " + localGroundNormal);
+                        Debug.Break();
+                        */
                     }
                 }
+            }
+
+            // to prevent odd floating point issues, set any ground normal that is up to directly up
+            if (Mathf.Approximately(localGroundNormal.y, 1f)) {
+                localGroundNormal = Vector3.up;
+            } else {
+                //Debug.Break();
             }
 
             // translate the input so that the up direction is the same as the normal (up direction) of whatever ground or slope the player is on
@@ -1243,9 +1255,9 @@ namespace AnyRPG {
             // limit upward momentum near stairs to prevent overshooting the stairs in the vertical direction
             if (nearBottomStairs) {
                 //Debug.Log("unclamped returnValue: " + newReturnValue.y + "; deltaTime: " + Time.deltaTime + "; fixedDeltaTime: " + Time.fixedDeltaTime);
-                //float clampedReturnValue = Mathf.Clamp(newReturnValue.y, 0f, (playerManager.ActiveUnitController.transform.InverseTransformPoint(stairDownHitInfo.point).y / calculatedSpeed) * (1/Time.deltaTime));
                 float clampedReturnValue = Mathf.Clamp(newReturnValue.y, 0f, playerManager.ActiveUnitController.transform.InverseTransformPoint(stairDownHitPoint).y / calculatedSpeed / Time.fixedDeltaTime);
-                //Debug.Log("clamped returnValue: " + clampedReturnValue + "; unclamped: " + newReturnValue.y + "; deltaTime: " + Time.deltaTime + "; fixedDeltaTime: " + Time.fixedDeltaTime);
+                //float clampedReturnValue = Mathf.Clamp(newReturnValue.y, 0f, playerManager.ActiveUnitController.transform.InverseTransformPoint(bottomStairDownHitInfo.point).y / calculatedSpeed / Time.fixedDeltaTime);
+                //Debug.Log("clamped returnValue: " + clampedReturnValue + "; unclamped: " + newReturnValue.y + "; deltaTime: " + Time.deltaTime + " distanceToGround: " + closestGroundDistance + " stairHeight: " + playerManager.ActiveUnitController.transform.InverseTransformPoint(bottomStairDownHitInfo.point).y);
                 newReturnValue.y = clampedReturnValue;
             }
 
@@ -1259,15 +1271,16 @@ namespace AnyRPG {
                     yValue = Mathf.Clamp(1, 0, -closestGroundDistance / calculatedSpeed / Time.fixedDeltaTime) * -1;
                     //yValue = -1;
                     /*
-                    Debug.Log("NormalizedLocalMovement() position: " + playerManager.ActiveUnitController.transform.position.y +
+                    Debug.Log("NormalizedLocalMovement() position.y: " + playerManager.ActiveUnitController.transform.position.y +
                         "; Applying extra down force: " + yValue +
                         "; ground distance: " + closestGroundDistance);
-                      */  
-                    //Debug.Break();
+                        
+                    Debug.Break();
+                    */
                 }
                 newReturnValue = new Vector3(newReturnValue.x, yValue, newReturnValue.z);
             }
-            //Debug.Log("newReturnValue: (" + newReturnValue.x + ", " + newReturnValue.y + ", " + newReturnValue.z + ")");
+            //Debug.Log("newReturnValue: (" + newReturnValue.x + ", " + newReturnValue.y + ", " + newReturnValue.z + ") localGroundNormal: (" + localGroundNormal.x + ", " + localGroundNormal.y + ", " + localGroundNormal.z + ") nearBottomStairs: " + nearBottomStairs + "; closestGroundDistance: " + closestGroundDistance);
             return newReturnValue;
         }
 

@@ -367,7 +367,7 @@ namespace AnyRPG {
         }
 
         public void Move(Vector3 moveDirection, bool isKnockBack = false) {
-            //Debug.Log(unitController.gameObject.name + ".UnitMotor.Move(" + moveDirection + "). current position: " + unitController.transform.position);
+            //Debug.Log(unitController.gameObject.name + ".UnitMotor.Move(" + moveDirection.x + ", " + moveDirection.y + ", " + moveDirection.z + "). current position: " + unitController.transform.position + "; Rigidbody velocity: " + unitController.RigidBody.velocity);
             if (isKnockBack
                 && unitController != null
                 && unitController.UnitControllerMode == UnitControllerMode.Player) {
@@ -403,7 +403,7 @@ namespace AnyRPG {
         }
 
         public void Jump(float jumpSpeed) {
-            //Debug.Log(gameObject.name + ".UnitMotor.Jump(" + jumpSpeed + "). current position: " + transform.position);
+            //Debug.Log(unitController.gameObject.name + ".UnitMotor.Jump(" + jumpSpeed + "). current position: " + unitController.transform.position);
             if (frozen) {
                 return;
             }
