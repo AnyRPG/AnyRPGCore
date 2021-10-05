@@ -44,20 +44,25 @@ namespace AnyRPG {
             if (namePlateReady == true) {
                 return;
             }
-            InitializeNamePlate();
-            namePlateReady = true;
+            if (InitializeNamePlate()) {
+                namePlateReady = true;
+            }
         }
 
         /// <summary>
         /// directly initialize a nameplate
         /// </summary>
-        protected void InitializeNamePlate() {
+        protected bool InitializeNamePlate() {
+            //Debug.Log(gameObject.name + ".NamePlateUnit.InitializenamePlate() namePlateReady: " + namePlateReady);
             // account for characters that spawn dead 
             if (namePlateReady == true) {
-                return;
+                return false;
             }
-            NamePlateController.InitializeNamePlate();
-            OnInitializeNamePlate();
+            if (NamePlateController.InitializeNamePlate()) {
+                OnInitializeNamePlate();
+                return true;
+            }
+            return false;
         }
 
         public override void HandlePrerequisiteUpdates() {
@@ -185,6 +190,7 @@ namespace AnyRPG {
         }
 
         public void RemoveNamePlate() {
+            //Debug.Log(gameObject.name + ".NamePlateUnit.RemoveNamePlate()");
             namePlateController?.RemoveNamePlate();
             namePlateReady = false;
         }

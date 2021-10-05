@@ -143,18 +143,20 @@ namespace AnyRPG {
             }
         }
 
-        public virtual void InitializeNamePlate() {
+        public virtual bool InitializeNamePlate() {
             //Debug.Log(namePlateUnit.gameObject.name + ".BasenamePlateController.InitializeNamePlate()");
             if (SuppressNamePlate == true) {
                 //Debug.Log(namePlateUnit.gameObject.name + ".BasenamePlateController.InitializeNamePlate(): suppressing NamePlate");
-                return;
+                return false;
             }
             if (CanSpawnNamePlate()) {
                 SetNamePlatePosition();
                 namePlate = AddNamePlate();
                 SetupNamePlate();
                 BroadcastInitializeNamePlate();
+                return true;
             }
+            return false;
         }
 
         public virtual NamePlateController AddNamePlate() {
@@ -163,10 +165,12 @@ namespace AnyRPG {
         }
 
         public virtual void RemoveNamePlate() {
+            //Debug.Log(namePlateUnit.gameObject.name + ".BasenamePlateController.RemoveNamePlate()");
             namePlateManager.RemoveNamePlate(namePlateUnit);
         }
 
         public virtual bool CanSpawnNamePlate() {
+            //Debug.Log((namePlateUnit == null ? "null" : namePlateUnit.gameObject.name) + ".BasenamePlateController.CanSpawnNamePlate()");
             if (namePlateUnit == null) {
                 return false;
             }

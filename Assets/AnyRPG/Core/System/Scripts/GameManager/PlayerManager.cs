@@ -299,7 +299,7 @@ namespace AnyRPG {
             SpawnPlayerUnit();
 
             if (activeCharacter.CharacterStats.IsAlive == false) {
-                activeCharacter.CharacterStats.ReviveRaw();
+                activeCharacter.CharacterStats.ReviveComplete();
             }
         }
 

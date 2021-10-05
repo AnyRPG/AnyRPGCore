@@ -138,6 +138,7 @@ namespace AnyRPG {
         }
 
         public override bool CanSpawnNamePlate() {
+            //Debug.Log((unitController == null ? "null" : unitController.gameObject.name) + ".UnitNamePlateController.CanSpawnNamePlate()");
             if (unitController == null) {
                 return false;
             }
