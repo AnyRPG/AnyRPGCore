@@ -57,16 +57,58 @@ namespace AnyRPG {
             cloneSource = playerManager.ActiveUnitController.UnitProfile;
             SpawnUnit();
             systemEventManager.OnEquipmentChanged += HandleEquipmentChanged;
+            playerManager.ActiveUnitController.OnUnitTypeChange += HandleUnitTypeChange;
+            playerManager.ActiveUnitController.OnRaceChange += HandleRaceChange;
+            playerManager.ActiveUnitController.OnFactionChange += HandleFactionChange;
+            playerManager.ActiveUnitController.OnClassChange += HandleClassChange;
+            playerManager.ActiveUnitController.OnSpecializationChange += HandleSpecializationChange;
+            playerManager.ActiveUnitController.OnLevelChanged += HandleLevelChanged;
+        }
+
+        public void HandleUnitTypeChange(UnitType newUnitType, UnitType oldUnitType) {
+            //Debug.Log("CharacterPanelManager.HandleUnitTypeChange()");
+            unitController.CharacterUnit.BaseCharacter.SetUnitType(newUnitType, true, false, false);
+        }
+
+        public void HandleRaceChange(CharacterRace newRace, CharacterRace oldRace) {
+            //Debug.Log("CharacterPanelManager.HandleRaceChange()");
+            unitController.CharacterUnit.BaseCharacter.SetCharacterRace(newRace, true, false, false);
+        }
+
+        public void HandleFactionChange(Faction newFaction, Faction oldFaction) {
+            //Debug.Log("CharacterPanelManager.HandleFactionChange()");
+            unitController.CharacterUnit.BaseCharacter.SetCharacterFaction(newFaction, true, false, false);
+        }
+
+        public void HandleClassChange(CharacterClass newClass, CharacterClass oldClass) {
+            //Debug.Log("CharacterPanelManager.HandleClassChange()");
+            unitController.CharacterUnit.BaseCharacter.SetCharacterClass(newClass, true, false, false);
+        }
+
+        public void HandleSpecializationChange(ClassSpecialization newSpecialization, ClassSpecialization oldSpecialization) {
+            //Debug.Log("CharacterPanelManager.HandleSpecializationChange()");
+            unitController.CharacterUnit.BaseCharacter.SetClassSpecialization(newSpecialization, true, false, false);
         }
 
         public void HandlePlayerUnitDespawn(string eventName, EventParamProperties eventParamProperties) {
             //Debug.Log("CharacterPanel.HandlePlayerUnitDespawn()");
             systemEventManager.OnEquipmentChanged -= HandleEquipmentChanged;
+            playerManager.ActiveUnitController.OnUnitTypeChange -= HandleUnitTypeChange;
+            playerManager.ActiveUnitController.OnRaceChange -= HandleRaceChange;
+            playerManager.ActiveUnitController.OnFactionChange -= HandleFactionChange;
+            playerManager.ActiveUnitController.OnClassChange -= HandleClassChange;
+            playerManager.ActiveUnitController.OnSpecializationChange -= HandleSpecializationChange;
+            playerManager.ActiveUnitController.OnLevelChanged -= HandleLevelChanged;
+
             DespawnUnit();
         }
 
+        public void HandleLevelChanged(int newLevel) {
+            unitController.CharacterUnit.BaseCharacter.CharacterStats.SetLevel(newLevel);
+        }
+
         public void HandleEquipmentChanged(Equipment newEquipment, Equipment oldEquipment) {
-            //Debug.Log("CharacterPanel.HandleEquipmentChanged(" + (newEquipment == null ? "null" : newEquipment.DisplayName) + ", " + (oldEquipment == null ? "null" : oldEquipment.DisplayName) + ")");
+            //Debug.Log("CharacterPanelManager.HandleEquipmentChanged(" + (newEquipment == null ? "null" : newEquipment.DisplayName) + ", " + (oldEquipment == null ? "null" : oldEquipment.DisplayName) + ")");
                 if (oldEquipment != null) {
                     unitController.CharacterUnit.BaseCharacter.CharacterEquipmentManager.Unequip(oldEquipment, true, true, false);
                 }
@@ -92,6 +134,7 @@ namespace AnyRPG {
             unitController.CharacterUnit.BaseCharacter.SetCharacterFaction(playerManager.MyCharacter.Faction, true, false, false);
             unitController.CharacterUnit.BaseCharacter.SetCharacterClass(playerManager.MyCharacter.CharacterClass, true, false, false);
             unitController.CharacterUnit.BaseCharacter.SetClassSpecialization(playerManager.MyCharacter.ClassSpecialization, true, false, false);
+            unitController.CharacterUnit.BaseCharacter.CharacterStats.SetLevel(playerManager.MyCharacter.CharacterStats.Level);
 
             if (characterEquipmentManager != null) {
                 if (playerManager.MyCharacter?.CharacterEquipmentManager != null) {
