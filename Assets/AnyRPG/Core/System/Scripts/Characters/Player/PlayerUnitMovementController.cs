@@ -73,6 +73,7 @@ namespace AnyRPG {
 
         private Vector3 bottomOriginPoint = Vector3.zero;
         private Vector3 topOriginPoint = Vector3.zero;
+        private Vector3 forwardOriginPoint = Vector3.zero;
 
         // the raw angle of the ground below
         private float groundAngle;
@@ -160,6 +161,9 @@ namespace AnyRPG {
 
         // raycast to determine if an object is in front of the player near the ground
         private RaycastHit bottomForwardHitInfo;
+
+        // raycast to determine if an object is in front of the player near the ground
+        private RaycastHit obstacleCastHitInfo;
 
         // raycast to determine if an object is in front of the player near the stair limit
         private RaycastHit topForwardHitInfo;
@@ -357,7 +361,7 @@ namespace AnyRPG {
 
         //Below are the state functions. Each one is called based on the name of the state, so when currentState = Idle, we call Idle_EnterState. If currentState = Jump, we call Jump_StateUpdate()
         void Idle_EnterState() {
-            //Debug.Log(gameObject.name + ".PlayerUnitMovementController.Idle_EnterState() Freezing all constraints");
+            //Debug.Log(gameObject.name + ".PlayerUnitMovementController.Idle_EnterState()");
             if (playerManager.ActiveUnitController != null) {
                 // allow the character to fall until they reach the ground
                 playerManager.ActiveUnitController.FreezePositionXZ();
@@ -620,6 +624,7 @@ namespace AnyRPG {
         }
 
         void Swim_EnterState() {
+            //Debug.Log("PlayerUnitMovementController.Swim_EnterState()");
             currentFallDistance = 0f;
             if (playerManager.ActiveUnitController != null) {
                 EnterGroundStateCommon();
@@ -1197,7 +1202,7 @@ namespace AnyRPG {
                 // the player is near stairs in the direction of travel
                 //if (RaycastForStairs(playerManager.ActiveUnitController.transform.TransformDirection(normalizedInput), 0.5f)) {
                 if (nearBottomStairs) {
-                    //Debug.Log("near stairs, adjusting forward direction");
+                    //Debug.Log("near bottom stairs, adjusting forward direction");
                     //localGroundNormal = playerManager.ActiveUnitController.transform.InverseTransformDirection(forwardHitInfo.normal);
 
                     // 0.2f is an arbitrary distance at the top of the stair is below the start of the curve on the bottom of a capsule collider of 2m height
@@ -1538,6 +1543,34 @@ namespace AnyRPG {
             }
         }
 
+        private float GetFrontObstacleCastHeight(Vector3 directionOfTravel) {
+            forwardOriginPoint = playerManager.ActiveUnitController.transform.TransformPoint(Quaternion.LookRotation(playerManager.ActiveUnitController.transform.InverseTransformDirection(directionOfTravel)) * new Vector3(0f, stepHeight + 0.001f, colliderRadius + 0.01f));
+            Debug.DrawLine(forwardOriginPoint,
+                forwardOriginPoint + (Vector3.down * stepHeight),
+                Color.black);
+            if (Physics.Raycast(forwardOriginPoint, Vector3.down, out obstacleCastHitInfo, stepHeight, groundMask)) {
+                return playerManager.ActiveUnitController.transform.InverseTransformPoint(obstacleCastHitInfo.point).y - 0.001f;
+            } else {
+                forwardOriginPoint = playerManager.ActiveUnitController.transform.TransformPoint(Quaternion.LookRotation(playerManager.ActiveUnitController.transform.InverseTransformDirection(directionOfTravel)) * new Vector3(colliderRadius, stepHeight + 0.001f, colliderRadius + 0.01f));
+                Debug.DrawLine(forwardOriginPoint,
+                    forwardOriginPoint + (Vector3.down * stepHeight),
+                    Color.black);
+                if (Physics.Raycast(forwardOriginPoint, Vector3.down, out obstacleCastHitInfo, stepHeight, groundMask)) {
+                    return playerManager.ActiveUnitController.transform.InverseTransformPoint(obstacleCastHitInfo.point).y - 0.001f;
+                } else {
+                    forwardOriginPoint = playerManager.ActiveUnitController.transform.TransformPoint(Quaternion.LookRotation(playerManager.ActiveUnitController.transform.InverseTransformDirection(directionOfTravel)) * new Vector3(-colliderRadius, stepHeight + 0.001f, colliderRadius + 0.01f));
+                    Debug.DrawLine(forwardOriginPoint,
+                        forwardOriginPoint + (Vector3.down * stepHeight),
+                        Color.black);
+                    if (Physics.Raycast(forwardOriginPoint, Vector3.down, out obstacleCastHitInfo, stepHeight, groundMask)) {
+                        return playerManager.ActiveUnitController.transform.InverseTransformPoint(obstacleCastHitInfo.point).y - 0.001f;
+                    }
+                }
+            }
+
+            return 0.001f;
+        }
+
         private void CheckFrontObstacle(float calculatedSpeed) {
             // reset variables
             nearBottomFrontObstacle = false;
@@ -1554,7 +1587,8 @@ namespace AnyRPG {
                 directionOfTravel = playerManager.ActiveUnitController.transform.TransformDirection(new Vector3(localMoveVelocity.x, 0, localMoveVelocity.z)).normalized;
             }
 
-            PerformFrontObstacleCasts(directionOfTravel, detectionDistance, 0.001f);
+            //PerformFrontObstacleCasts(directionOfTravel, detectionDistance, 0.001f);
+            PerformFrontObstacleCasts(directionOfTravel, detectionDistance, GetFrontObstacleCastHeight(directionOfTravel));
 
             // it is possible that an obstacle in front starts above the ground
             // if no obstacle was detected at the ground, perform a downward raycast from slightly in front of the character to determine a better height to check from
