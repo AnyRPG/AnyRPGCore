@@ -697,6 +697,7 @@ namespace AnyRPG {
                 // lootable character handles its own despawn logic
                 return;
             }
+
             Despawn();
         }
 

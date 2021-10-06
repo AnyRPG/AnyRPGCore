@@ -6,10 +6,6 @@ using UnityEngine;
 using UnityEngine.UI;
 
 namespace AnyRPG {
-    /// <summary>
-    /// Currently enemy is a subclass of interactable to inherit right click and move toward functionality.
-    /// This may be better implemented as an interface in the future.
-    /// </summary>
     public class LootableCharacterComponent : InteractableOptionComponent, ILootHolder {
 
         public event System.Action<UnitController> OnLootComplete = delegate { };
@@ -120,6 +116,8 @@ namespace AnyRPG {
         }
 
         public void ClearLootTables() {
+            //Debug.Log(interactable.gameObject.name + "LootableCharacterComponent.ClearLootTables()");
+            ResetLootTableStates();
             lootHolder.LootTableStates.Clear();
         }
 
@@ -346,16 +344,6 @@ namespace AnyRPG {
             }
         }
 
-        public void ClearTakeLootHandler(ICloseableWindowContents windowContents) {
-            ClearTakeLootHandler();
-        }
-
-        public void ClearTakeLootHandler() {
-            //Debug.Log(gameObject.name + ".LootableCharacter.ClearTakeLoothandler(): MyLootTable.MyDroppedItems.Count" + MyLootTable.MyDroppedItems.Count);
-            TryToDespawn();
-        }
-
-
         public override void StopInteract() {
             //Debug.Log(gameObject.name + ".LootableCharacter.StopInteract()");
             base.StopInteract();
@@ -379,7 +367,7 @@ namespace AnyRPG {
         }
 
         public void Despawn() {
-            //Debug.Log(gameObject.name + ".LootableCharacter.Despawn()");
+            //Debug.Log(interactable.gameObject.name + ".LootableCharacterComponent.Despawn()");
             //gameObject.SetActive(false);
             ResetLootTableStates();
             if (MyCharacterUnit != null) {

@@ -66,7 +66,7 @@ namespace AnyRPG {
         private Rigidbody rigidBody = null;
         private UnitMotor unitMotor = null;
         private UnitAnimator unitAnimator = null;
-        private LootableCharacter lootableCharacter = null;
+        private LootableCharacterComponent lootableCharacter = null;
         private PatrolController patrolController = null;
         private BehaviorController behaviorController = null;
         private UnitModelController unitModelController = null;
@@ -237,7 +237,7 @@ namespace AnyRPG {
         public UnitControllerMode UnitControllerMode {
             get => unitControllerMode;
         }
-        public LootableCharacter LootableCharacter { get => lootableCharacter; set => lootableCharacter = value; }
+        public LootableCharacterComponent LootableCharacter { get => lootableCharacter; set => lootableCharacter = value; }
         public bool Walking { get => walking; set => walking = value; }
         public AudioProfile MovementLoopProfile {
             get {
@@ -832,7 +832,7 @@ namespace AnyRPG {
             base.GetComponentReferences();
 
             uuid = GetComponent<UUID>();
-            lootableCharacter = GetComponent<LootableCharacter>();
+            lootableCharacter = LootableCharacterComponent.GetLootableCharacterComponent(this);
             agent = GetComponent<NavMeshAgent>();
             rigidBody = GetComponent<Rigidbody>();
         }
@@ -898,6 +898,9 @@ namespace AnyRPG {
             if (unitProfile.LootableCharacterProps.AutomaticCurrency == true || unitProfile.LootableCharacterProps.LootTableNames.Count > 0) {
                 InteractableOptionComponent interactableOptionComponent = unitProfile.LootableCharacterProps.GetInteractableOption(this);
                 interactables.Add(interactableOptionComponent);
+                if (lootableCharacter == null) {
+                    lootableCharacter = interactableOptionComponent as LootableCharacterComponent;
+                }
                 //interactableOptionComponent.HandlePrerequisiteUpdates();
             }
 
