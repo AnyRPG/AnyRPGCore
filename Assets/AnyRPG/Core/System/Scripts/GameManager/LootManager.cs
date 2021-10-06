@@ -12,10 +12,13 @@ namespace AnyRPG {
 
         private List<LootDrop> droppedLoot = new List<LootDrop>();
 
+        private List<LootTableState> lootTableStates = new List<LootTableState>();
+
         // game manager references
-        UIManager uIManager = null;
-        InventoryManager inventoryManager = null;
-        MessageFeedManager messageFeedManager = null;
+        private UIManager uIManager = null;
+        private InventoryManager inventoryManager = null;
+        private MessageFeedManager messageFeedManager = null;
+        private PlayerManager playerManager = null;
 
         public List<List<LootDrop>> Pages { get => pages; set => pages = value; }
         public List<LootDrop> DroppedLoot { get => droppedLoot; set => droppedLoot = value; }
@@ -25,6 +28,7 @@ namespace AnyRPG {
             uIManager = systemGameManager.UIManager;
             inventoryManager = systemGameManager.InventoryManager;
             messageFeedManager = systemGameManager.UIManager.MessageFeedManager;
+            playerManager = systemGameManager.PlayerManager;
         }
 
         public void CreatePages(List<LootDrop> items) {
@@ -86,6 +90,38 @@ namespace AnyRPG {
         public void ClearPages() {
             pages.Clear();
             (uIManager.lootWindow.CloseableWindowContents as LootUI).ClearPages();
+        }
+
+        public void AddLootTableState(LootTableState lootTableState) {
+            //Debug.Log("LootManager.AddLootTableState()");
+            if (lootTableStates.Contains(lootTableState) == false) {
+                lootTableStates.Add(lootTableState);
+            }
+        }
+
+        public void RemoveLootTableState(LootTableState lootTableState) {
+            //Debug.Log("LootManager.RemoveLootTableState()");
+            if (lootTableStates.Contains(lootTableState)) {
+                lootTableStates.Remove(lootTableState);
+            }
+        }
+
+        public bool CanDropUniqueItem(Item item) {
+            //Debug.Log("LootManager.CanDropUniqueItem(" + item.DisplayName + ")");
+            if (inventoryManager.GetItemCount(item.DisplayName) > 0) {
+                return false;
+            }
+            if (playerManager.MyCharacter.CharacterEquipmentManager.HasEquipment(item.DisplayName) == true) {
+                return false;
+            }
+            foreach (LootTableState lootTableState in lootTableStates) {
+                foreach (LootDrop lootDrop in lootTableState.DroppedItems) {
+                    if (lootDrop.HasItem(item)) {
+                        return false;
+                    }
+                }
+            }
+            return true;
         }
 
     }

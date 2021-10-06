@@ -208,7 +208,7 @@ namespace AnyRPG {
         }
 
         public int GetLootCount() {
-            //Debug.Log(gameObject.name + ".LootableCharacter.GetLootCount()");
+            //Debug.Log(interactable.gameObject.name + ".LootableCharacter.GetLootCount()");
             int lootCount = 0;
             
             foreach (LootTable lootTable in lootHolder.LootTableStates.Keys) {
@@ -381,6 +381,7 @@ namespace AnyRPG {
         public void Despawn() {
             //Debug.Log(gameObject.name + ".LootableCharacter.Despawn()");
             //gameObject.SetActive(false);
+            ResetLootTableStates();
             if (MyCharacterUnit != null) {
                 MyCharacterUnit.Despawn();
             }
@@ -406,13 +407,14 @@ namespace AnyRPG {
         }
 
         public void HandleRevive() {
-            ClearLootTable();
+            ResetLootTableStates();
         }
 
-        public void ClearLootTable() {
+        public void ResetLootTableStates() {
             foreach (LootTable lootTable in lootHolder.LootTableStates.Keys) {
                 if (lootTable != null) {
-                    lootTable.HandleRevive(lootHolder.LootTableStates[lootTable]);
+                    lootHolder.LootTableStates[lootTable].ResetLootTableState();
+                    lootManager.RemoveLootTableState(lootHolder.LootTableStates[lootTable]);
                 }
             }
         }

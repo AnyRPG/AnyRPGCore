@@ -26,12 +26,14 @@ namespace AnyRPG {
         private InventoryManager inventoryManager = null;
         private PlayerManager playerManager = null;
         private SystemItemManager systemItemManager = null;
+        private LootManager lootManager = null;
 
         public override void SetGameManagerReferences() {
             base.SetGameManagerReferences();
             inventoryManager = systemGameManager.InventoryManager;
             playerManager = systemGameManager.PlayerManager;
             systemItemManager = systemGameManager.SystemItemManager;
+            lootManager = systemGameManager.LootManager;
         }
 
         public List<LootDrop> GetLoot(LootTableState lootTableState, bool rollLoot = true) {
@@ -85,9 +87,7 @@ namespace AnyRPG {
                     List<Loot> validLoot = new List<Loot>();
                     foreach (Loot loot in lootGroup.Loot) {
                         if (loot.PrerequisitesMet == true &&
-                            (loot.Item.UniqueItem == false ||
-                            (inventoryManager.GetItemCount(loot.Item.DisplayName) == 0 &&
-                            playerManager.MyCharacter.CharacterEquipmentManager.HasEquipment(loot.Item.DisplayName) == false))) {
+                            (loot.Item.UniqueItem == false || lootManager.CanDropUniqueItem(loot.Item) == true)) {
                             validLoot.Add(loot);
                         }
                     }
@@ -156,6 +156,7 @@ namespace AnyRPG {
             }
 
             lootTableState.Rolled = true;
+            lootManager.AddLootTableState(lootTableState);
         }
 
 
@@ -183,15 +184,6 @@ namespace AnyRPG {
             //droppedItems.Add(new LootDrop(systemItemManager.GetNewResource(item.MyItem.DisplayName), this));
 
             return returnValue;
-        }
-
-        public void HandleRevive(LootTableState lootTableState) {
-            lootTableState.DroppedItems.Clear();
-            Reset(lootTableState);
-        }
-
-        public void Reset(LootTableState lootTableState) {
-            lootTableState.Rolled = false;
         }
 
         public override void SetupScriptableObjects(SystemGameManager systemGameManager) {

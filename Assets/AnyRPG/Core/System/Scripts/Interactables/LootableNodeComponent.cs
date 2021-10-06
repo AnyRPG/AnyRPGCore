@@ -172,7 +172,7 @@ namespace AnyRPG {
                 playerManager.PlayerController.RemoveInteractable(interactable);
                 interactable.DestroySpawn();
                 foreach (LootTable lootTable in Props.LootTables) {
-                    lootTable.Reset(lootHolder.LootTableStates[lootTable]);
+                    lootHolder.LootTableStates[lootTable].Reset();
                 }
 
                 // spawn timer of -1 means don't spawn again

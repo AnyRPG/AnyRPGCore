@@ -17,5 +17,15 @@ namespace AnyRPG {
         public List<LootDrop> DroppedItems { get => droppedItems; set => droppedItems = value; }
         public bool Rolled { get => rolled; set => rolled = value; }
         public int LootTableRemainingDrops { get => lootTableRemainingDrops; set => lootTableRemainingDrops = value; }
+
+        public void ResetLootTableState() {
+            DroppedItems.Clear();
+            Reset();
+        }
+
+        public void Reset() {
+            Rolled = false;
+        }
+
     }
 }

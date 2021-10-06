@@ -26,6 +26,10 @@ namespace AnyRPG {
             // do nothing, only used in child classes
         }
 
+        public virtual bool HasItem(Item item) {
+            return false;
+        }
+
 
         public virtual bool TakeLoot() {
             // need a fake value by default
@@ -132,6 +136,7 @@ namespace AnyRPG {
         // game manager references
         private UIManager uIManager = null;
         private InventoryManager inventoryManager = null;
+        private LootManager lootManager = null;
 
         public override ItemQuality ItemQuality {
             get {
@@ -173,11 +178,16 @@ namespace AnyRPG {
             base.SetGameManagerReferences();
             uIManager = systemGameManager.UIManager;
             inventoryManager = systemGameManager.InventoryManager;
+            lootManager = systemGameManager.LootManager;
         }
 
         public override void SetBackgroundImage(Image backgroundImage) {
             base.SetBackgroundImage(backgroundImage);
             uIManager.SetItemBackground(Item, backgroundImage, new Color32(0, 0, 0, 255));
+        }
+
+        public override bool HasItem(Item item) {
+            return (Item.DisplayName == item.DisplayName);
         }
 
         public override bool TakeLoot() {
@@ -188,6 +198,9 @@ namespace AnyRPG {
         public override void Remove() {
             base.Remove();
             LootTableState.DroppedItems.Remove(this);
+            if (LootTableState.DroppedItems.Count == 0) {
+                lootManager.RemoveLootTableState(LootTableState);
+            }
         }
 
         public override void AfterLoot() {
