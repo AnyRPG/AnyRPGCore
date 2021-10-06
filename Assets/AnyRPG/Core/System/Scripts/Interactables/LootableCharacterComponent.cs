@@ -24,6 +24,8 @@ namespace AnyRPG {
 
         private bool lootCalculated = false;
 
+        private bool monitoringTakeLoot = false;
+
         // hold the rolled currency amount
         private CurrencyNode currencyNode;
 
@@ -97,7 +99,10 @@ namespace AnyRPG {
                 (characterUnit.Interactable as UnitController).OnBeforeDie -= HandleDeath;
                 (characterUnit.Interactable as UnitController).OnReviveComplete -= HandleRevive;
             }
-            SystemEventManager.StopListening("OnTakeLoot", HandleTakeLoot);
+            if (monitoringTakeLoot) {
+                SystemEventManager.StopListening("OnTakeLoot", HandleTakeLoot);
+                monitoringTakeLoot = false;
+            }
         }
 
         public void HandleTakeLoot(string eventName, EventParamProperties eventParamProperties) {
@@ -159,7 +164,10 @@ namespace AnyRPG {
             int lootCount = GetLootCount();
             if (lootCount == 0) {
                 //Debug.Log(gameObject.name + ".LootableCharacter.TryToDespawn(): loot table had no dropped items, despawning");
-                SystemEventManager.StopListening("OnTakeLoot", HandleTakeLoot);
+                if (monitoringTakeLoot) {
+                    SystemEventManager.StopListening("OnTakeLoot", HandleTakeLoot);
+                    monitoringTakeLoot = false;
+                }
 
                 // cancel loot sparkle here because despawn takes a while
                 if (characterUnit.BaseCharacter.CharacterStats.StatusEffects.ContainsKey(SystemDataFactory.PrepareStringForMatch(systemConfigurationManager.LootSparkleEffect.DisplayName))) {
@@ -332,7 +340,10 @@ namespace AnyRPG {
 
         public void MonitorLootTable() {
             //Debug.Log(interactable.gameObject.name + ".LootableCharacterComponent.MonitorLootTable()");
-            SystemEventManager.StartListening("OnTakeLoot", HandleTakeLoot);
+            if (!monitoringTakeLoot) {
+                SystemEventManager.StartListening("OnTakeLoot", HandleTakeLoot);
+                monitoringTakeLoot = true;
+            }
         }
 
         public void ClearTakeLootHandler(ICloseableWindowContents windowContents) {
