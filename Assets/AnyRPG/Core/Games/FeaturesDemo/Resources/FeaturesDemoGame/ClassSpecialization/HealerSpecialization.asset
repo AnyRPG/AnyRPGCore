@@ -33,6 +33,7 @@ MonoBehaviour:
     - Healing Explosion
     - Revive Ally
     - Cure Poison
+    - White Wings
     traitNames: []
     armorClassList: []
     weaponSkills: []

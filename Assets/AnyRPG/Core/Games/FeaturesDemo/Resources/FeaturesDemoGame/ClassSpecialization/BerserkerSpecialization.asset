@@ -28,6 +28,7 @@ MonoBehaviour:
     abilityNames:
     - Berserker Strikes
     - Life Drain Strikes
+    - Orange Wings
     traitNames:
     - Rage Generation
     armorClassList: []

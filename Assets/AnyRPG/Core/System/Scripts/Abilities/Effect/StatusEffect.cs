@@ -14,11 +14,19 @@ namespace AnyRPG {
         [SerializeField]
         private StatusEffectAlignment statusEffectAlignment = StatusEffectAlignment.None;
 
+        [Tooltip("Set this value to determine the status effect type for the purpose of removeEffects (eg remove bleed or remove poison)")]
         [SerializeField]
         [ResourceSelector(resourceType = typeof(StatusEffectType))]
         private string statusEffectTypeName = string.Empty;
 
         private StatusEffectType statusEffectType = null;
+
+        [Tooltip("Only one status effect with this group name can be on a character at a time")]
+        [SerializeField]
+        [ResourceSelector(resourceType = typeof(StatusEffectGroup))]
+        private string statusEffectGroupName = string.Empty;
+
+        protected StatusEffectGroup statusEffectGroup = null;
 
         [Header("Trait")]
 
@@ -199,6 +207,7 @@ namespace AnyRPG {
         public int MaxStacks { get => maxStacks; set => maxStacks = value; }
         public bool CanFly { get => canFly; }
         public bool CanGlide { get => canGlide; }
+        public StatusEffectGroup StatusEffectGroup { get => statusEffectGroup; set => statusEffectGroup = value; }
 
         public override void SetGameManagerReferences() {
             base.SetGameManagerReferences();
@@ -473,6 +482,15 @@ namespace AnyRPG {
                 }
             }
 
+            if (statusEffectGroupName != null && statusEffectGroupName != string.Empty) {
+                StatusEffectGroup tmpStatusEffectGroup = systemDataFactory.GetResource<StatusEffectGroup>(statusEffectGroupName);
+                if (tmpStatusEffectGroup != null) {
+                    statusEffectGroup = tmpStatusEffectGroup;
+                } else {
+                    Debug.LogError("SystemAbilityManager.SetupScriptableObjects(): Could not find status effect group: " + statusEffectGroupName + " while inititalizing " + DisplayName + ".  CHECK INSPECTOR");
+                }
+            }
+
 
             if (factionModifiers != null) {
                 foreach (FactionDisposition factionDisposition in factionModifiers) {
@@ -490,4 +508,5 @@ namespace AnyRPG {
     public enum SecondaryStatType { MovementSpeed, Accuracy, CriticalStrike, Speed, Damage, PhysicalDamage, SpellDamage, Armor }
 
     public enum StatusEffectAlignment { None, Beneficial, Harmful }
+
 }

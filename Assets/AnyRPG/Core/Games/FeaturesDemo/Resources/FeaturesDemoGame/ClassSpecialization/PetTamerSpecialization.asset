@@ -26,6 +26,7 @@ MonoBehaviour:
   capabilities:
     abilityNames:
     - Capture Beast
+    - Cyan Wings
     traitNames: []
     armorClassList: []
     weaponSkills: []

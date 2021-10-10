@@ -28,6 +28,7 @@ MonoBehaviour:
   capabilities:
     abilityNames:
     - Punch Combo
+    - Yellow Wings
     traitNames: []
     armorClassList: []
     weaponSkills:

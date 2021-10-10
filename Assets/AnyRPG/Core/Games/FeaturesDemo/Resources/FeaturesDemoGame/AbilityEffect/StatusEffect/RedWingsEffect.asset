@@ -59,6 +59,7 @@ MonoBehaviour:
   completeAbilityEffectNames: []
   statusEffectAlignment: 1
   statusEffectTypeName: 
+  statusEffectGroupName: Wings
   classTrait: 0
   requiredLevel: 1
   sceneNames: []

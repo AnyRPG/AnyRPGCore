@@ -30,6 +30,7 @@ MonoBehaviour:
     - Threatening Strike
     - Taunt
     - Reflect Damage
+    - Violet Wings
     traitNames:
     - Take Less Damage
     armorClassList:

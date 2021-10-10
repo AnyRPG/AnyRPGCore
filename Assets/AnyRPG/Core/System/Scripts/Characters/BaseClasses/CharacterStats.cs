@@ -790,6 +790,34 @@ namespace AnyRPG {
             //Debug.Log("CharacterStats.ApplyStatusEffect(" + statusEffect.ToString() + ", " + source.name + ", " + target.name + ")");
             //Debug.Log("statuseffects count: " + statusEffects.Count);
 
+            // check if another effect from the same status effect group already exists on the target
+            if (statusEffect.StatusEffectGroup != null) {
+
+                // keep a list of status effects to overwrite
+                List<StatusEffectNode> removeNodes = new List<StatusEffectNode>();
+
+                foreach (StatusEffectNode statusEffectNode in statusEffects.Values) {
+                    if (statusEffectNode.StatusEffect.StatusEffectGroup == statusEffect.StatusEffectGroup) {
+                        // another effect of this group type exists
+                        if (statusEffectNode.StatusEffect.StatusEffectGroup.ExclusiveOption == StatusEffectGroupOption.First) {
+                            // the first status effect cannot be overwritten, do nothing
+                            sourceCharacter.AbilityManager.ReceiveMessageFeedMessage("Another effect of this type already exists and cannot be overwritten");
+                            return null;
+                        } else if (statusEffectNode.StatusEffect.StatusEffectGroup.ExclusiveOption == StatusEffectGroupOption.Last) {
+                            // the first status effect should be overwritten, add to removal list
+                            removeNodes.Add(statusEffectNode);
+                        }
+                    }
+                }
+
+                // remove any status effects that were flagged for removal
+                foreach (StatusEffectNode removeNode in removeNodes) {
+                    removeNode.CancelStatusEffect();
+                }
+            }
+
+
+            // check if status effect already exists on target
             StatusEffect comparedStatusEffect = null;
             string peparedString = SystemDataFactory.PrepareStringForMatch(statusEffect.DisplayName);
             if (statusEffects.ContainsKey(peparedString)) {

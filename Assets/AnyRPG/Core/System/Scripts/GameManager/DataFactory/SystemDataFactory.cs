@@ -198,6 +198,10 @@ namespace AnyRPG {
             factoryDataAccess.Setup<CharacterRace>("CharacterRace", systemGameManager);
             dataDictionary.Add(typeof(CharacterRace), factoryDataAccess);
 
+            factoryDataAccess = new FactoryDataAccess();
+            factoryDataAccess.Setup<StatusEffectGroup>("StatusEffectGroup", systemGameManager);
+            dataDictionary.Add(typeof(StatusEffectGroup), factoryDataAccess);
+
             //setup scriptable objects
             foreach (FactoryDataAccess dataAccess in dataDictionary.Values) {
                 dataAccess.SetupScriptableObjects(systemGameManager);
