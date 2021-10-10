@@ -168,6 +168,13 @@ namespace AnyRPG {
             uIManager.HideToolTip();
         }
 
+        public virtual void OnDisable() {
+            if (SystemGameManager.IsShuttingDown) {
+                return;
+            }
+            CheckMouse();
+        }
+
         private void SellItem() {
             //Debug.Log("VendorButton.SellItem()");
             string priceString = string.Empty;
