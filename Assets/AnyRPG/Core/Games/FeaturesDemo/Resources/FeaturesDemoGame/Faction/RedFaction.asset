@@ -21,6 +21,7 @@ MonoBehaviour:
   resourceDescriptionProfile: 
   newGameOption: 0
   defaultStartingZone: 
+  defaultStartingLocationTag: 
   hideDefaultProfiles: 0
   characterCreatorProfileNames: []
   equipmentNames: []
@@ -29,7 +30,8 @@ MonoBehaviour:
   - factionName: Blue
     disposition: -1
   capabilities:
-    abilityNames: []
+    abilityNames:
+    - Red Wings
     traitNames: []
     armorClassList: []
     weaponSkills: []

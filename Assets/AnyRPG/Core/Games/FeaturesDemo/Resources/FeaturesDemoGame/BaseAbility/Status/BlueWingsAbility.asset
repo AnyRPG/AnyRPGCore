@@ -10,9 +10,9 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: c80d744dccc642148ab1014a88212085, type: 3}
-  m_Name: FlyAbility
+  m_Name: BlueWingsAbility
   m_EditorClassIdentifier: 
-  resourceName: Fly
+  resourceName: Blue Wings
   displayName: 
   icon: {fileID: 21300000, guid: e029593ae7518d743830eccfc3e4e2b7, type: 3}
   iconBackgroundImage: {fileID: 0}
@@ -62,10 +62,12 @@ MonoBehaviour:
     autoSelfCast: 1
     useMeleeRange: 0
     maxRange: 0
+    requireFacingTarget: 0
+    maxAngle: 45
     requiresGroundTarget: 0
     groundTargetColor: {r: 1, g: 1, b: 1, a: 1}
     groundTargetRadius: 0
   abilityEffectNames:
-  - Fly
+  - Blue Wings
   tickRate: 1
   channeledAbilityEffectnames: []

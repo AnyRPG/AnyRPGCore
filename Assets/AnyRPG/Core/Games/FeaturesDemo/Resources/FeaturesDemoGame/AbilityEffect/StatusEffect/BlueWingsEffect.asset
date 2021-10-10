@@ -10,9 +10,9 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 499bdf3134e84df4c99414d0ac47ec01, type: 3}
-  m_Name: FlyEffect
+  m_Name: BlueWingsEffect
   m_EditorClassIdentifier: 
-  resourceName: Fly
+  resourceName: Blue Wings
   displayName: 
   icon: {fileID: 21300000, guid: e029593ae7518d743830eccfc3e4e2b7, type: 3}
   iconBackgroundImage: {fileID: 0}
@@ -75,6 +75,7 @@ MonoBehaviour:
   incomingDamageMultiplier: 1
   factionModifiers: []
   canFly: 1
+  canGlide: 0
   disableAnimator: 0
   stun: 0
   levitate: 0

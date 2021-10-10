@@ -34,7 +34,6 @@ MonoBehaviour:
     - Tornado
     - Life Drain
     - Revive Enemy
-    - Fly
     - Glide
     traitNames: []
     armorClassList: []

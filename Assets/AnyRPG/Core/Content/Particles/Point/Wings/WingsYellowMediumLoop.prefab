@@ -4828,7 +4828,7 @@ ParticleSystemRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 407042d343dbb0742904706485ac0909, type: 2}
+  - {fileID: 2100000, guid: fea1f5ab1c01e314d84936270f46e245, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -9702,7 +9702,7 @@ ParticleSystemRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 407042d343dbb0742904706485ac0909, type: 2}
+  - {fileID: 2100000, guid: fea1f5ab1c01e314d84936270f46e245, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -14576,7 +14576,7 @@ ParticleSystemRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 407042d343dbb0742904706485ac0909, type: 2}
+  - {fileID: 2100000, guid: fea1f5ab1c01e314d84936270f46e245, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -14634,7 +14634,7 @@ GameObject:
   - component: {fileID: 8718077794265594818}
   - component: {fileID: 9056139226748570408}
   m_Layer: 20
-  m_Name: BlueWingsMediumLoop
+  m_Name: WingsYellowMediumLoop
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -19453,7 +19453,7 @@ ParticleSystemRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 407042d343dbb0742904706485ac0909, type: 2}
+  - {fileID: 2100000, guid: fea1f5ab1c01e314d84936270f46e245, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0

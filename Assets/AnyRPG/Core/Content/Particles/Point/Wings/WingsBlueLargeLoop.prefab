@@ -19508,7 +19508,7 @@ GameObject:
   - component: {fileID: 8718077794265594818}
   - component: {fileID: 9056139226748570408}
   m_Layer: 20
-  m_Name: BlueWingsLargeLoop
+  m_Name: WingsBlueLargeLoop
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
