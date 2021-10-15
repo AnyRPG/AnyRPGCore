@@ -14,6 +14,7 @@ namespace AnyRPG {
         // Will be a subfolder of Application.dataPath and should start with "/"
         //private const string newGameParentFolder = "/Games/";
         public string parentFolder = "/Screenshots/";
+        public string fileName = string.Empty;
         //private const string imagesFolder = "Images/Screenshot";
 
         private const string wizardTitle = "Screenshot Wizard";
@@ -149,7 +150,7 @@ namespace AnyRPG {
             screenShot.ReadPixels(new Rect(0, 0, captureWidth, captureHeight), 0, 0);
             screenShot.Apply();
 
-            string screenshotFilename = folderName + "/" + DateTime.Now.ToString("yyyy_MM_dd_HH_mm_ss") + ".png";
+            string screenshotFilename = GetFinalFileName(folderName);
             byte[] screenshotData = screenShot.EncodeToPNG();
             Debug.Log("Capturing screenshot to file " + screenshotFilename + ". width: " + captureWidth + " Height: " + captureHeight);
 
@@ -171,7 +172,17 @@ namespace AnyRPG {
                 // DestroyImmediate must be used in the editor
                 GameObject.DestroyImmediate(screenShot);
             }
+        }
 
+        public string GetFinalFileName(string folderName) {
+            if (fileName == string.Empty) {
+                return folderName + "/" + DateTime.Now.ToString("yyyy_MM_dd_HH_mm_ss") + ".png";
+            }
+            if (System.IO.File.Exists(folderName + "/" + fileName + ".png")) {
+                return folderName + "/" + fileName + "_" + DateTime.Now.ToString("yyyy_MM_dd_HH_mm_ss") + ".png";
+            } else {
+                return folderName + "/" + fileName + ".png";
+            }
         }
 
         void OnWizardUpdate() {
