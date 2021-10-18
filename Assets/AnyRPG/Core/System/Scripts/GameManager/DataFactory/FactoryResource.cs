@@ -66,7 +66,7 @@ namespace AnyRPG {
                 if (!resourceList.ContainsKey(keyName)) {
                     resourceList[keyName] = ScriptableObject.Instantiate(resource);
                 } else {
-                    Debug.LogError("SystemResourceManager.LoadResourceList(): duplicate name key: " + keyName);
+                    Debug.LogError("SystemResourceManager.LoadResourceList(): duplicate name key: " + keyName + " in " + resource.name + ". Other item: " + resourceList[keyName].name);
                 }
             }
         }
