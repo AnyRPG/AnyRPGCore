@@ -22,6 +22,9 @@ namespace AnyRPG {
         private TextMeshProUGUI keyBindText = null;
 
         [SerializeField]
+        private Image backgroundImage = null;
+
+        [SerializeField]
         private Image icon = null;
 
         [SerializeField]
@@ -191,6 +194,8 @@ namespace AnyRPG {
                 }
             }
             Useable = useable;
+
+            backgroundImage.color = new Color32(0, 0, 0, 255);
 
             playerManager.MyCharacter.CharacterAbilityManager.OnAttemptPerformAbility += OnAttemptUseableUse;
             playerManager.MyCharacter.CharacterAbilityManager.OnPerformAbility += OnUseableUse;
@@ -399,6 +404,7 @@ namespace AnyRPG {
             }
             Useable = null;
             DisableCoolDownIcon();
+            backgroundImage.color = new Color32(0, 0, 0, 0);
             UpdateVisual();
         }
     }
