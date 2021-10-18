@@ -7413,7 +7413,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameName: AnyRPG Engine
-  gameVersion: v0.11.1a
+  gameVersion: v0.12a
   loadResourcesFolders: []
   initializationScene: 
   mainMenuScene: 
