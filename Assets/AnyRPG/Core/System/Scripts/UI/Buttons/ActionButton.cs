@@ -308,10 +308,21 @@ namespace AnyRPG {
 
             if (Useable == null) {
                 //Debug.Log("ActionButton.UpdateVisual(): useable is null. clearing stack count and setting icon to empty");
+                
+                // clear stack count
                 uIManager.ClearStackCount(this);
+
+                // clear icon
                 Icon.sprite = null;
                 Icon.color = icon.color = new Color32(0, 0, 0, 0);
+                
+                // clear background image
+                backgroundImage.color = new Color32(0, 0, 0, 0);
+                backgroundImage.sprite = null;
+
+                // clear cooldown icon
                 DisableCoolDownIcon();
+
                 return;
             }
 
@@ -394,8 +405,6 @@ namespace AnyRPG {
             }
             Useable = null;
             DisableCoolDownIcon();
-            backgroundImage.color = new Color32(0, 0, 0, 0);
-            backgroundImage.sprite = null;
             UpdateVisual();
         }
     }
