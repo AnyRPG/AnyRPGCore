@@ -284,6 +284,10 @@ namespace AnyRPG {
             return true;
         }
 
+        public void AssignToActionButton(ActionButton actionButton) {
+            actionButton.BackgroundImage.color = new Color32(0, 0, 0, 255);
+        }
+
         public bool ActionButtonUse() {
             return Use();
         }

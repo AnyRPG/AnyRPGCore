@@ -69,6 +69,7 @@ namespace AnyRPG {
         }
         public Image CoolDownIcon { get => coolDownIcon; set => coolDownIcon = value; }
         public Coroutine MonitorCoroutine { get => monitorCoroutine; set => monitorCoroutine = value; }
+        public Image BackgroundImage { get => backgroundImage; set => backgroundImage = value; }
 
         public override void Configure(SystemGameManager systemGameManager) {
             base.Configure(systemGameManager);
@@ -183,19 +184,8 @@ namespace AnyRPG {
 
             DisableCoolDownIcon();
 
-            if (useable is Item) {
-                //Debug.Log("the useable is an item");
-                if (inventoryManager.FromSlot != null) {
-                    // white, really?  this doesn't actually happen...
-                    inventoryManager.FromSlot.Icon.color = Color.white;
-                    inventoryManager.FromSlot = null;
-                } else {
-                    //Debug.Log("ActionButton.SetUseable(): This must have come from another actionbar, not the inventory");
-                }
-            }
+            useable.AssignToActionButton(this);
             Useable = useable;
-
-            backgroundImage.color = new Color32(0, 0, 0, 255);
 
             playerManager.MyCharacter.CharacterAbilityManager.OnAttemptPerformAbility += OnAttemptUseableUse;
             playerManager.MyCharacter.CharacterAbilityManager.OnPerformAbility += OnUseableUse;
@@ -405,6 +395,7 @@ namespace AnyRPG {
             Useable = null;
             DisableCoolDownIcon();
             backgroundImage.color = new Color32(0, 0, 0, 0);
+            backgroundImage.sprite = null;
             UpdateVisual();
         }
     }

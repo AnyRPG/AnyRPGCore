@@ -152,6 +152,18 @@ namespace AnyRPG {
             uIManager.UpdateStackSize(actionButton, chargeCount, true);
         }
 
+        public void AssignToActionButton(ActionButton actionButton) {
+            //Debug.Log("the useable is an item");
+            if (inventoryManager.FromSlot != null) {
+                // white, really?  this doesn't actually happen...
+                inventoryManager.FromSlot.Icon.color = Color.white;
+                inventoryManager.FromSlot = null;
+            } else {
+                //Debug.Log("ActionButton.SetUseable(): This must have come from another actionbar, not the inventory");
+            }
+            uIManager.SetItemBackground(this, actionButton.BackgroundImage, new Color32(0, 0, 0, 255));
+        }
+
         public virtual void UpdateActionButtonVisual(ActionButton actionButton) {
             int count = inventoryManager.GetUseableCount(this);
             // we have to do this to ensure we have a reference to the top item on the stack, otherwise we will try to use an item that has been used already

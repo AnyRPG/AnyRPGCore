@@ -17,5 +17,6 @@ namespace AnyRPG {
         void UpdateActionButtonVisual(ActionButton actionButton);
         void UpdateChargeCount(ActionButton actionButton);
         IUseable GetFactoryUseable();
+        void AssignToActionButton(ActionButton actionButton);
     }
 }
