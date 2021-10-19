@@ -995,6 +995,9 @@ namespace AnyRPG {
             if (movementSoundArea == this.movementSoundArea) {
                 this.movementSoundArea = null;
             }
+            if (unitControllerMode == UnitControllerMode.Mount && riderUnitController != null) {
+                riderUnitController.UnsetMovementSoundArea(movementSoundArea);
+            }
         }
 
         public void EnableMotor() {
