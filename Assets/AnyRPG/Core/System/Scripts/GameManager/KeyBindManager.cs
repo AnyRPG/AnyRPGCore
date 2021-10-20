@@ -19,6 +19,9 @@ namespace AnyRPG {
 
         public Dictionary<string, KeyBindNode> KeyBinds { get => keyBinds; set => keyBinds = value; }
 
+        private Dictionary<string, KeyCode> xBoxKeys = new Dictionary<string, KeyCode>();
+        private Dictionary<string, KeyCode> invectorKeys = new Dictionary<string, KeyCode>();
+
         public string BindName { get => bindName; set => bindName = value; }
 
         public override void Configure(SystemGameManager systemGameManager) {
@@ -34,21 +37,30 @@ namespace AnyRPG {
         private void InitializeKeys() {
             //Debug.Log("KeyBindManager.InitializeKeys()");
 
+            invectorKeys.Add("JUMP", KeyCode.X);
+            invectorKeys.Add("CROUCH", KeyCode.Y);
+
+            xBoxKeys.Add("JUMP", KeyCode.JoystickButton2);
+            xBoxKeys.Add("CROUCH", KeyCode.JoystickButton3);
+            xBoxKeys.Add("CANCEL", KeyCode.JoystickButton1);
+            xBoxKeys.Add("INTERACT", KeyCode.JoystickButton0);
+            xBoxKeys.Add("MAINMENU", KeyCode.JoystickButton7);
+
             InitializeKey("FORWARD", KeyCode.W, KeyCode.W, KeyCode.W, "Forward", KeyBindType.Normal);
             InitializeKey("BACK", KeyCode.S, KeyCode.S, KeyCode.S, "Backward", KeyBindType.Normal);
             InitializeKey("STRAFELEFT", KeyCode.A, KeyCode.A, KeyCode.A, "Strafe Left", KeyBindType.Normal);
             InitializeKey("STRAFERIGHT", KeyCode.D, KeyCode.D, KeyCode.D, "Strafe Right", KeyBindType.Normal);
             InitializeKey("TURNLEFT", KeyCode.Q, KeyCode.Q, KeyCode.Q, "Turn Left", KeyBindType.Normal);
             InitializeKey("TURNRIGHT", KeyCode.E, KeyCode.E, KeyCode.E, "Turn Right", KeyBindType.Normal);
-            InitializeKey("JUMP", KeyCode.Space, KeyCode.X, KeyCode.X, "Jump", KeyBindType.Normal);
-            InitializeKey("CROUCH", KeyCode.X, KeyCode.Y, KeyCode.Y, "Crouch", KeyBindType.Normal);
+            InitializeKey("JUMP", KeyCode.Space, xBoxKeys["JUMP"], KeyCode.X, "Jump", KeyBindType.Normal);
+            InitializeKey("CROUCH", KeyCode.X, xBoxKeys["CROUCH"], KeyCode.Y, "Crouch", KeyBindType.Normal);
             InitializeKey("ROLL", KeyCode.R, KeyCode.B, KeyCode.B, "Roll", KeyBindType.Normal);
             InitializeKey("TOGGLERUN", KeyCode.KeypadDivide, KeyCode.None, KeyCode.None, "Toggle Run", KeyBindType.Normal);
-            InitializeKey("TOGGLEAUTORUN", KeyCode.KeypadMultiply, KeyCode.None, KeyCode.None, "Toggle Autorun", KeyBindType.Normal);
+            InitializeKey("TOGGLEAUTORUN", KeyCode.KeypadMultiply, KeyCode.JoystickButton8, KeyCode.None, "Toggle Autorun", KeyBindType.Normal);
             InitializeKey("TOGGLESTRAFE", KeyCode.T, KeyCode.JoystickButton9, KeyCode.JoystickButton9, "Toggle Strafe", KeyBindType.Normal);
 
-            InitializeKey("CANCEL", KeyCode.Escape, KeyCode.None, KeyCode.None, "Cancel", KeyBindType.Constant);
-            InitializeKey("MAINMENU", KeyCode.F12, KeyCode.None, KeyCode.None, "Main Menu", KeyBindType.Constant);
+            InitializeKey("CANCEL", KeyCode.Escape, xBoxKeys["CANCEL"], KeyCode.None, "Cancel", KeyBindType.Constant);
+            InitializeKey("MAINMENU", KeyCode.F12, xBoxKeys["MAINMENU"], KeyCode.None, "Main Menu", KeyBindType.Constant);
             InitializeKey("QUESTLOG", KeyCode.L, KeyCode.None, KeyCode.None, "Quest Log", KeyBindType.System);
             InitializeKey("CHARACTERPANEL", KeyCode.C, KeyCode.None, KeyCode.None, "Character Panel", KeyBindType.System);
             InitializeKey("CURRENCYPANEL", KeyCode.I, KeyCode.None, KeyCode.None, "Currency Panel", KeyBindType.System);
@@ -231,6 +243,15 @@ namespace AnyRPG {
                 if (e.isKey && e.keyCode != KeyCode.LeftShift && e.keyCode != KeyCode.RightShift && e.keyCode != KeyCode.LeftControl && e.keyCode != KeyCode.RightControl) {
                     //Debug.Log("KeyBindManager.OnGUI(): the bind was a key");
                     BindKey(bindName, inputDeviceType, e.keyCode, e.control, e.shift);
+                    return;
+                }
+                for (int i = 0; i < 20; i++) {
+                    if (Input.GetKey("joystick button " + i.ToString())) {
+                        //System.Enum.Parse(typeof(KeyCode), "JoystickButton" + i)
+                        Debug.Log("joystick button " + i);
+                        BindKey(bindName, inputDeviceType, (KeyCode)System.Enum.Parse(typeof(KeyCode), "JoystickButton" + i), false, false);
+                        return;
+                    }
                 }
             }
         }
