@@ -124,9 +124,17 @@ namespace AnyRPG {
             inputCrouch = inputManager.KeyBindWasPressed("CROUCH");
             //inputAimVertical = Input.GetAxisRaw("AimVertical");
             //inputAimHorizontal = Input.GetAxisRaw("AimHorizontal");
-            inputHorizontal = (inputManager.KeyBindWasPressedOrHeld("STRAFELEFT") ? -1 : 0) + (inputManager.KeyBindWasPressedOrHeld("STRAFERIGHT") ? 1 : 0);
-            inputTurn = (inputManager.KeyBindWasPressedOrHeld("TURNLEFT") ? -1 : 0) + (inputManager.KeyBindWasPressedOrHeld("TURNRIGHT") ? 1 : 0);
-            inputVertical = (inputManager.KeyBindWasPressedOrHeld("BACK") ? -1 : 0) + (inputManager.KeyBindWasPressedOrHeld("FORWARD") ? 1 : 0);
+
+            // gather joystick input
+            inputHorizontal = Input.GetAxis("LeftAnalogHorizontal");
+            inputVertical = Input.GetAxis("LeftAnalogVertical");
+            inputTurn = Input.GetAxis("RightAnalogHorizontal");
+            //Debug.Log("Joystick inputHorizontal: " + inputHorizontal + "; vertical: " + inputVertical);
+
+            // gather keyboard input
+            inputHorizontal += (inputManager.KeyBindWasPressedOrHeld("STRAFELEFT") ? -1 : 0) + (inputManager.KeyBindWasPressedOrHeld("STRAFERIGHT") ? 1 : 0);
+            inputVertical += (inputManager.KeyBindWasPressedOrHeld("BACK") ? -1 : 0) + (inputManager.KeyBindWasPressedOrHeld("FORWARD") ? 1 : 0);
+            inputTurn += (inputManager.KeyBindWasPressedOrHeld("TURNLEFT") ? -1 : 0) + (inputManager.KeyBindWasPressedOrHeld("TURNRIGHT") ? 1 : 0);
 
             if (((inputHorizontal != 0f) || (inputVertical != 0f) || inputJump || inputFly || inputSink || inputStrafe || inputCrouch) && autorunActive) {
                 ToggleAutorun();
