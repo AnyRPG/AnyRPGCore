@@ -44,6 +44,10 @@ namespace AnyRPG {
         [Header("Monobehavior Managers")]
 
         // sub manager monobehaviors
+
+        [SerializeField]
+        private ControlsManager controlsManager = null;
+
         [SerializeField]
         private CameraManager cameraManager = null;
 
@@ -145,6 +149,7 @@ namespace AnyRPG {
         public QuestLog QuestLog { get => questLog; set => questLog = value; }
 
         public SystemConfigurationManager SystemConfigurationManager { get => systemConfigurationManager; set => systemConfigurationManager = value; }
+        public ControlsManager ControlsManager { get => controlsManager; }
         public CameraManager CameraManager { get => cameraManager; set => cameraManager = value; }
         public AudioManager AudioManager { get => audioManager; set => audioManager = value; }
         public PetPreviewManager PetPreviewManager { get => petPreviewManager; set => petPreviewManager = value; }
@@ -185,6 +190,7 @@ namespace AnyRPG {
             // then everything else that relies on system configuration and data resources
             objectPooler.Configure(this);
 
+            controlsManager.Configure(this);
             cameraManager.Configure(this);
             //audioManager.Configure(this);
             petPreviewManager.Configure(this);

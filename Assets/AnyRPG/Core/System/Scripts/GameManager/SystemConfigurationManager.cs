@@ -126,6 +126,10 @@ namespace AnyRPG {
         private bool allowClickToMove = false;
         */
 
+        [Tooltip("The controller configuration set on first game load")]
+        [SerializeField]
+        private DefaultControllerConfiguration defaultControllerConfiguration;
+
         [Tooltip("The maximum turn speed in degrees per second")]
         [SerializeField]
         private float maxTurnSpeed = 360f;
@@ -714,6 +718,8 @@ namespace AnyRPG {
         public float FallDamagePerMeter { get => fallDamagePerMeter; set => fallDamagePerMeter = value; }
         public float FallDamageMinDistance { get => fallDamageMinDistance; set => fallDamageMinDistance = value; }
         public AudioProfile FallDamageAudioProfile { get => fallDamageAudioProfile; set => fallDamageAudioProfile = value; }
+        public DefaultControllerConfiguration DefaultControllerConfiguration { get => defaultControllerConfiguration; set => defaultControllerConfiguration = value; }
+
         //public bool AllowClickToMove { get => allowClickToMove; }
 
         public override void Configure(SystemGameManager systemGameManager) {
@@ -923,5 +929,7 @@ namespace AnyRPG {
         }
 
     }
+
+    public enum DefaultControllerConfiguration { MouseAndKeyboard, GamePad }
 
 }

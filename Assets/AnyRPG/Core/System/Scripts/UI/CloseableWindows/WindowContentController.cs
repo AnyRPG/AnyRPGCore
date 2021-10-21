@@ -20,6 +20,8 @@ namespace AnyRPG {
 
         protected RectTransform rectTransform;
 
+        protected CloseableWindow closeableWindow = null;
+
         protected bool eventSubscriptionsInitialized = false;
 
         // game manager references
@@ -41,6 +43,16 @@ namespace AnyRPG {
         public override void SetGameManagerReferences() {
             base.SetGameManagerReferences();
             audioManager = systemGameManager.AudioManager;
+        }
+
+        public virtual void SetWindow(CloseableWindow closeableWindow) {
+            this.closeableWindow = closeableWindow;
+        }
+
+        public virtual void Close() {
+            if (closeableWindow != null) {
+                closeableWindow.CloseWindow();
+            }
         }
 
         protected virtual void CreateEventSubscriptions() {
@@ -77,7 +89,7 @@ namespace AnyRPG {
         }
 
         public virtual void ReceiveOpenWindowNotification() {
-            //Debug.Log("WindowContentController.OnOpenWindow()");
+            //Debug.Log(gameObject.name + "WindowContentController.ReceiveOpenWindowNotification()");
         }
 
         public void SetBackGroundColor(Color color) {

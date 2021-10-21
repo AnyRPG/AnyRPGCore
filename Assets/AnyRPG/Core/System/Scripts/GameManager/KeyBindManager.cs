@@ -40,11 +40,11 @@ namespace AnyRPG {
             invectorKeys.Add("JUMP", KeyCode.X);
             invectorKeys.Add("CROUCH", KeyCode.Y);
 
+            xBoxKeys.Add("CANCEL", KeyCode.JoystickButton1);
+            xBoxKeys.Add("ACCEPT", KeyCode.JoystickButton0);
+            xBoxKeys.Add("MAINMENU", KeyCode.JoystickButton7);
             xBoxKeys.Add("JUMP", KeyCode.JoystickButton2);
             xBoxKeys.Add("CROUCH", KeyCode.JoystickButton3);
-            xBoxKeys.Add("CANCEL", KeyCode.JoystickButton1);
-            xBoxKeys.Add("INTERACT", KeyCode.JoystickButton0);
-            xBoxKeys.Add("MAINMENU", KeyCode.JoystickButton7);
 
             InitializeKey("FORWARD", KeyCode.W, KeyCode.W, KeyCode.W, "Forward", KeyBindType.Normal);
             InitializeKey("BACK", KeyCode.S, KeyCode.S, KeyCode.S, "Backward", KeyBindType.Normal);
@@ -59,6 +59,7 @@ namespace AnyRPG {
             InitializeKey("TOGGLEAUTORUN", KeyCode.KeypadMultiply, KeyCode.JoystickButton8, KeyCode.None, "Toggle Autorun", KeyBindType.Normal);
             InitializeKey("TOGGLESTRAFE", KeyCode.T, KeyCode.JoystickButton9, KeyCode.JoystickButton9, "Toggle Strafe", KeyBindType.Normal);
 
+            InitializeKey("ACCEPT", KeyCode.KeypadEnter, xBoxKeys["ACCEPT"], KeyCode.None, "Accept", KeyBindType.Constant);
             InitializeKey("CANCEL", KeyCode.Escape, xBoxKeys["CANCEL"], KeyCode.None, "Cancel", KeyBindType.Constant);
             InitializeKey("MAINMENU", KeyCode.F12, xBoxKeys["MAINMENU"], KeyCode.None, "Main Menu", KeyBindType.Constant);
             InitializeKey("QUESTLOG", KeyCode.L, KeyCode.None, KeyCode.None, "Quest Log", KeyBindType.System);

@@ -19,12 +19,24 @@ namespace AnyRPG {
         [SerializeField]
         protected Image backGroundImage;
 
+        protected CloseableWindow closeableWindow = null;
+
         public Image BackGroundImage { get => backGroundImage; set => backGroundImage = value; }
 
         public override void Configure(SystemGameManager systemGameManager) {
             base.Configure(systemGameManager);
             if (backGroundImage == null) {
                 backGroundImage = GetComponent<Image>();
+            }
+        }
+
+        public virtual void SetWindow(CloseableWindow closeableWindow) {
+            this.closeableWindow = closeableWindow;
+        }
+
+        public virtual void Close() {
+            if (closeableWindow != null) {
+                closeableWindow.CloseWindow();
             }
         }
 

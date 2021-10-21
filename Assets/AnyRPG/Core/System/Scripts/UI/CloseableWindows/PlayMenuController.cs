@@ -16,15 +16,24 @@ namespace AnyRPG {
         [SerializeField]
         private HighlightButton loadGameButton = null;
 
+        [Header("Navigation")]
+
+        [SerializeField]
+        protected UINavigationController navigationController = new UINavigationController();
+
         // game manager references
-        private UIManager uIManager = null;
-        private SaveManager saveManager = null;
+        protected UIManager uIManager = null;
+        protected SaveManager saveManager = null;
 
         public override void Configure(SystemGameManager systemGameManager) {
             base.Configure(systemGameManager);
             continueButton.Configure(systemGameManager);
             newGameButton.Configure(systemGameManager);
             loadGameButton.Configure(systemGameManager);
+
+            navigationController.Configure(systemGameManager);
+            navigationController.SetOwner(this);
+
         }
 
         public override void SetGameManagerReferences() {
@@ -52,6 +61,19 @@ namespace AnyRPG {
             //Debug.Log("PlayMenuController.LoadGame()");
             uIManager.loadGameWindow.OpenWindow();
             uIManager.playMenuWindow.CloseWindow();
+        }
+
+        public override void ReceiveOpenWindowNotification() {
+            navigationController.RegisterNavigationController();
+            if (systemConfigurationManager.DefaultControllerConfiguration == DefaultControllerConfiguration.GamePad) {
+                navigationController.FocusInitialButton();
+            }
+            base.ReceiveOpenWindowNotification();
+        }
+
+        public override void RecieveClosedWindowNotification() {
+            navigationController.UnRegisterNavigationController();
+            base.RecieveClosedWindowNotification();
         }
 
     }
