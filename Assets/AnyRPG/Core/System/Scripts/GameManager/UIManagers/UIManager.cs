@@ -604,7 +604,7 @@ namespace AnyRPG {
                 }
             }
 
-            if (inputManager.KeyBindWasPressed("CANCEL")) {
+            if (inputManager.KeyBindWasPressed("CANCELALL")) {
                 CloseAllPopupWindows();
             }
 
@@ -614,7 +614,7 @@ namespace AnyRPG {
                 return;
             }
 
-            if (inputManager.KeyBindWasPressed("CANCEL")) {
+            if (inputManager.KeyBindWasPressed("CANCELALL")) {
                 settingsMenuWindow.CloseWindow();
                 creditsWindow.CloseWindow();
                 exitMenuWindow.CloseWindow();

@@ -8,7 +8,8 @@ namespace AnyRPG {
 
     public class ControlsManager : ConfiguredMonoBehaviour {
 
-        private List<UINavigationController> navigationStack = new List<UINavigationController>();
+        private List<CloseableWindowContents> windowStack = new List<CloseableWindowContents>();
+        //private List<UINavigationController> navigationStack = new List<UINavigationController>();
 
         private float dPadHorizontal = 0f;
         private float dPadVertical = 0f;
@@ -42,9 +43,23 @@ namespace AnyRPG {
 
         public void HandleLevelUnload(string eventName, EventParamProperties eventParamProperties) {
             Debug.Log("ControlsManager.HandleLevelUnload()");
-            navigationStack.Clear();
+            windowStack.Clear();
+            //navigationStack.Clear();
         }
 
+        public void AddWindow(CloseableWindowContents closeableWindowContents) {
+            Debug.Log("ControlsManager.AddWindow()");
+            windowStack.Add(closeableWindowContents);
+        }
+
+        public void RemoveWindow(CloseableWindowContents closeableWindowContents) {
+            Debug.Log("ControlsManager.RemoveNavigationController()");
+            if (windowStack.Contains(closeableWindowContents)) {
+                windowStack.Remove(closeableWindowContents);
+            }
+        }
+
+        /*
         public void AddNavigationController(UINavigationController uINavigationController) {
             Debug.Log("ControlsManager.AddNavigationController()");
             navigationStack.Add(uINavigationController);
@@ -56,6 +71,7 @@ namespace AnyRPG {
                 navigationStack.Remove(uINavigationController);
             }
         }
+        */
 
         void Update() {
             RegisterAxis();
@@ -65,22 +81,28 @@ namespace AnyRPG {
         }
 
         private void Navigate() {
-            if (navigationStack.Count != 0) {
-                
+            if (windowStack.Count != 0) {
+
                 // d pad navigation
-                if (dPadDownPressed || dPadRightPressed) {
-                    navigationStack[navigationStack.Count - 1].NextButton();
+                if (dPadUpPressed) {
+                    windowStack[windowStack.Count - 1].UpButton();
                 }
-                if (dPadUpPressed || dPadLeftPressed) {
-                    navigationStack[navigationStack.Count - 1].PreviousButton();
+                if (dPadDownPressed) {
+                    windowStack[windowStack.Count - 1].DownButton();
+                }
+                if (dPadLeftPressed) {
+                    windowStack[windowStack.Count - 1].LeftButton();
+                }
+                if (dPadRightPressed) {
+                    windowStack[windowStack.Count - 1].RightButton();
                 }
 
                 // buttons
                 if (inputManager.KeyBindWasPressed("ACCEPT")) {
-                    navigationStack[navigationStack.Count - 1].Accept();
+                    windowStack[windowStack.Count - 1].Accept();
                 }
                 if (inputManager.KeyBindWasPressed("CANCEL")) {
-                    navigationStack[navigationStack.Count - 1].Cancel();
+                    windowStack[windowStack.Count - 1].Cancel();
                 }
             }
         }

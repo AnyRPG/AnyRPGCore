@@ -14,5 +14,6 @@ namespace AnyRPG {
         void Close();
         GameObject gameObject { get; }
         Image BackGroundImage { get; }
+        //bool Closeable { get; }
     }
 }

@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 2382909202382707812}
   - component: {fileID: 3989129407494939074}
   - component: {fileID: 5119275444362265663}
+  - component: {fileID: 3486577489604677558}
   m_Layer: 5
   m_Name: ConfirmSellItemPanel
   m_TagString: Untagged
@@ -95,8 +96,31 @@ MonoBehaviour:
   backGroundImage: {fileID: 0}
   coloredUIElements:
   - {fileID: 7645209801653798085}
+  userCloseable: 1
+  focusFirstButtonOnOpen: 1
+  uINavigationControllers:
+  - {fileID: 3486577489604677558}
   noButton: {fileID: 3455157825829121507}
   yesButton: {fileID: 6555256872484762144}
+--- !u!114 &3486577489604677558
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2382909202382707832}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8995f41cb132f3148a9912f89e49421b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  leftController: {fileID: 0}
+  rightController: {fileID: 0}
+  upController: {fileID: 0}
+  downController: {fileID: 0}
+  navigableButtons:
+  - {fileID: 3455157825829121507}
+  - {fileID: 6555256872484762144}
 --- !u!1 &2382909202413983825
 GameObject:
   m_ObjectHideFlags: 0

@@ -1,7 +1,7 @@
 using AnyRPG;
 
 namespace AnyRPG {
-    public interface IPagedWindowContents : ICloseableWindowContents {
+    public interface IPagedWindowContents {
         event System.Action<bool> OnPageCountUpdate;
         int GetPageCount();
         void LoadPage(int pageIndex);

@@ -5,46 +5,16 @@ using UnityEngine;
 using UnityEngine.UI;
 
 namespace AnyRPG {
-    public class PagedWindowContents : ConfiguredMonoBehaviour, IPagedWindowContents {
+    public class PagedWindowContents : CloseableWindowContents, IPagedWindowContents {
 
         public event System.Action<bool> OnPageCountUpdate = delegate { };
-        public event System.Action<ICloseableWindowContents> OnCloseWindow = delegate { };
+        public override event System.Action<ICloseableWindowContents> OnCloseWindow = delegate { };
 
         protected List<PagedContentList> pages = new List<PagedContentList>();
 
         protected int pageSize = 10;
 
         protected int pageIndex = 0;
-
-        [SerializeField]
-        protected Image backGroundImage;
-
-        protected CloseableWindow closeableWindow = null;
-
-        public Image BackGroundImage { get => backGroundImage; set => backGroundImage = value; }
-
-        public override void Configure(SystemGameManager systemGameManager) {
-            base.Configure(systemGameManager);
-            if (backGroundImage == null) {
-                backGroundImage = GetComponent<Image>();
-            }
-        }
-
-        public virtual void SetWindow(CloseableWindow closeableWindow) {
-            this.closeableWindow = closeableWindow;
-        }
-
-        public virtual void Close() {
-            if (closeableWindow != null) {
-                closeableWindow.CloseWindow();
-            }
-        }
-
-        public void SetBackGroundColor(Color color) {
-            if (backGroundImage != null) {
-                backGroundImage.color = color;
-            }
-        }
 
         public int GetPageCount() {
             return pages.Count;
@@ -72,10 +42,8 @@ namespace AnyRPG {
             this.pageIndex = pageIndex;
         }
 
-        public void RecieveClosedWindowNotification() {
-        }
-
-        public void ReceiveOpenWindowNotification() {
+        public override void ReceiveOpenWindowNotification() {
+            base.ReceiveOpenWindowNotification();
             SetBackGroundColor(new Color32(0, 0, 0, (byte)(int)(PlayerPrefs.GetFloat("PopupWindowOpacity") * 255)));
             CreatePages();
         }

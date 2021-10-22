@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 7172179673932484053}
   - component: {fileID: 4026808573726876085}
   - component: {fileID: 2682182123893273607}
+  - component: {fileID: 5311598313139156414}
   m_Layer: 5
   m_Name: InGameMainMenuPanel
   m_TagString: Untagged
@@ -94,11 +95,36 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   backGroundImage: {fileID: 0}
+  coloredUIElements: []
+  userCloseable: 1
+  uINavigationControllers: []
   saveButton: {fileID: 3249158636845063192}
   settingsButton: {fileID: 1597165892630499296}
   continueButton: {fileID: 1034197417366089657}
   mainMenuButton: {fileID: 8596303712244432722}
   exitGameButton: {fileID: 7886698005782213368}
+--- !u!114 &5311598313139156414
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3983013924557802447}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 03715bb91f4a7fa47b3d93745fb1b35e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  leftController: {fileID: 0}
+  rightController: {fileID: 0}
+  upController: {fileID: 0}
+  downController: {fileID: 0}
+  navigableButtons:
+  - {fileID: 3249158636845063192}
+  - {fileID: 1597165892630499296}
+  - {fileID: 1034197417366089657}
+  - {fileID: 8596303712244432722}
+  - {fileID: 7886698005782213368}
 --- !u!1001 &1017000907693800610
 PrefabInstance:
   m_ObjectHideFlags: 0

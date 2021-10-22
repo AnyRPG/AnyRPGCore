@@ -648,7 +648,7 @@ namespace AnyRPG {
 
         private void HandleCancelButtonPressed() {
             //Debug.Log("HandleCancelButtonPressed()");
-            if (inputManager.KeyBindWasPressed("CANCEL")) {
+            if (inputManager.KeyBindWasPressed("CANCEL") || inputManager.KeyBindWasPressed("CANCELALL")) {
                 playerManager.UnitController.ClearTarget();
                 if (playerManager.ActiveCharacter.CharacterStats.IsAlive != false) {
                     // prevent character from swapping to third party controller while dead

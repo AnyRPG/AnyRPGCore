@@ -219,6 +219,7 @@ GameObject:
   - component: {fileID: 2382909202382707812}
   - component: {fileID: 3989129407494939074}
   - component: {fileID: 4746720747128426712}
+  - component: {fileID: 2116711420154138759}
   m_Layer: 5
   m_Name: NewGameConfirmPanel
   m_TagString: Untagged
@@ -302,10 +303,33 @@ MonoBehaviour:
   backGroundImage: {fileID: 0}
   coloredUIElements:
   - {fileID: 6031723786124242223}
+  userCloseable: 1
+  focusFirstButtonOnOpen: 1
+  uINavigationControllers:
+  - {fileID: 2116711420154138759}
   divider: {fileID: 2382909202454689213}
   confirmGameButton: {fileID: 6744981467161552366}
   confirmButton: {fileID: 3143658161134931978}
   cancelButton: {fileID: 7958697662184066785}
+--- !u!114 &2116711420154138759
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2382909202382707832}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8995f41cb132f3148a9912f89e49421b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  leftController: {fileID: 0}
+  rightController: {fileID: 0}
+  upController: {fileID: 0}
+  downController: {fileID: 0}
+  navigableButtons:
+  - {fileID: 7958697662184066785}
+  - {fileID: 3143658161134931978}
 --- !u!1 &2382909202413983825
 GameObject:
   m_ObjectHideFlags: 0
@@ -852,9 +876,11 @@ MonoBehaviour:
     characterClass: 
     classSpecialization: 
     playerFaction: 
+    OverrideLocation: 0
     PlayerLocationX: 0
     PlayerLocationY: 0
     PlayerLocationZ: 0
+    OverrideRotation: 0
     PlayerRotationX: 0
     PlayerRotationY: 0
     PlayerRotationZ: 0

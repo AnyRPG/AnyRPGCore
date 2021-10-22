@@ -60,7 +60,8 @@ namespace AnyRPG {
             InitializeKey("TOGGLESTRAFE", KeyCode.T, KeyCode.JoystickButton9, KeyCode.JoystickButton9, "Toggle Strafe", KeyBindType.Normal);
 
             InitializeKey("ACCEPT", KeyCode.KeypadEnter, xBoxKeys["ACCEPT"], KeyCode.None, "Accept", KeyBindType.Constant);
-            InitializeKey("CANCEL", KeyCode.Escape, xBoxKeys["CANCEL"], KeyCode.None, "Cancel", KeyBindType.Constant);
+            InitializeKey("CANCEL", KeyCode.Backspace, xBoxKeys["CANCEL"], KeyCode.None, "Cancel", KeyBindType.Constant);
+            InitializeKey("CANCELALL", KeyCode.Escape, KeyCode.None, KeyCode.None, "Cancel All", KeyBindType.Constant);
             InitializeKey("MAINMENU", KeyCode.F12, xBoxKeys["MAINMENU"], KeyCode.None, "Main Menu", KeyBindType.Constant);
             InitializeKey("QUESTLOG", KeyCode.L, KeyCode.None, KeyCode.None, "Quest Log", KeyBindType.System);
             InitializeKey("CHARACTERPANEL", KeyCode.C, KeyCode.None, KeyCode.None, "Character Panel", KeyBindType.System);

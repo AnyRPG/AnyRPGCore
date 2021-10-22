@@ -8,7 +8,7 @@ using UnityEngine.UI;
 
 namespace AnyRPG {
 
-    public class HighlightButton : ConfiguredMonoBehaviour, IPointerEnterHandler, IPointerClickHandler, IPointerDownHandler, IPointerUpHandler {
+    public class HighlightButton : NavigableElement, IPointerEnterHandler, IPointerClickHandler, IPointerDownHandler, IPointerUpHandler {
 
         [SerializeField]
         protected TextMeshProUGUI text;
@@ -65,7 +65,8 @@ namespace AnyRPG {
             audioManager = systemGameManager.AudioManager;
         }
 
-        public virtual void Select() {
+        public override void Select() {
+            base.Select();
             //Debug.Log(gameObject.name + ".HighlightButton.Select()");
             if (highlightImage != null) {
                 //Debug.Log(gameObject.name + ".HighlightButton.Select(): highlightimage is not null");
@@ -83,6 +84,9 @@ namespace AnyRPG {
             }
             if (CapitalizeText == true) {
                 text.text = text.text.ToUpper();
+            }
+            if (highlightButton != null) {
+                EventSystem.current.SetSelectedGameObject(highlightButton.gameObject);
             }
         }
 
@@ -136,6 +140,13 @@ namespace AnyRPG {
         }
 
         public void OnPointerUp(PointerEventData eventData) {
+        }
+
+        public override void Accept() {
+            base.Accept();
+            if (highlightButton != null) {
+                highlightButton.onClick.Invoke();
+            }
         }
     }
 

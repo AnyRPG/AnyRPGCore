@@ -7,26 +7,37 @@ using UnityEngine.UI;
 
 namespace AnyRPG {
     [System.Serializable]
-    public class UINavigationController : ConfiguredClass {
+    public class UINavigationController : ConfiguredMonoBehaviour {
+
+        [Tooltip("If the far left of the buttons is passed, switch to this controller")]
+        [SerializeField]
+        protected UINavigationController leftController = null;
+
+        [Tooltip("If the far right of the buttons is passed, switch to this controller")]
+        [SerializeField]
+        protected UINavigationController rightController = null;
+
+        [Tooltip("If the top button is passed, switch to this controller")]
+        [SerializeField]
+        protected UINavigationController upController = null;
+
+        [Tooltip("If the bottom button is passed, switch to this controller")]
+        [SerializeField]
+        protected UINavigationController downController = null;
 
         [SerializeField]
-        private bool closeable = true;
+        protected List<NavigableElement> navigableButtons = new List<NavigableElement>();
 
-        [SerializeField]
-        private NavigationControllerDirection navigationDirection = NavigationControllerDirection.Vertical;
-
-        [SerializeField]
-        private List<Button> navigableButtons = new List<Button>();
+        protected List<NavigableElement> activeNavigableButtons = new List<NavigableElement>();
 
         // setting index to -1 so that if gamepad isn't default, the first down press will highlight the first button instead of the second one
-        private int currentIndex = -1;
+        //private int currentIndex = -1;
 
-        private ICloseableWindowContents owner = null;
+        protected CloseableWindowContents owner = null;
 
-        public bool Closeable { get => closeable; }
-        public NavigationControllerDirection NavigationDirection { get => navigationDirection; }
+        //public NavigationControllerDirection NavigationDirection { get => navigationDirection; }
 
-        private ControlsManager controlsManager = null;
+        protected ControlsManager controlsManager = null;
 
         public override void SetGameManagerReferences() {
             base.SetGameManagerReferences();
@@ -34,69 +45,59 @@ namespace AnyRPG {
             controlsManager = systemGameManager.ControlsManager;
         }
 
-        public void SetOwner(ICloseableWindowContents closeableWindowContents) {
+        public void SetOwner(CloseableWindowContents closeableWindowContents) {
             owner = closeableWindowContents;
         }
 
-        public void RegisterNavigationController() {
-            Debug.Log("UINavigationController.RegisterNavigationController()");
-            controlsManager.AddNavigationController(this);
+        public virtual void AddActiveButton(NavigableElement navigableElement) {
+            activeNavigableButtons.Add(navigableElement);
         }
 
-        public void UnRegisterNavigationController() {
-            Debug.Log("UINavigationController.UnRegisterNavigationController()");
-            controlsManager.RemoveNavigationController(this);
+        public virtual void ClearActiveButtons() {
+            activeNavigableButtons.Clear();
         }
 
-        public void FocusInitialButton() {
+        public virtual void FocusFirstButton() {
             Debug.Log("UINavigationController.FocusInitialButton()");
-            if (navigableButtons.Count == 0) {
-                return;
-            }
-            //navigableButtons[currentIndex].Select();
-            EventSystem.current.SetSelectedGameObject(navigableButtons[currentIndex].gameObject);
         }
 
-        public void NextButton() {
-            Debug.Log("UINavigationController.NextButton()");
-            if (navigableButtons.Count == 0) {
-                return;
-            }
-            currentIndex++;
-            if (currentIndex >= navigableButtons.Count) {
-                currentIndex = 0;
-            }
-            EventSystem.current.SetSelectedGameObject(navigableButtons[currentIndex].gameObject);
-            //navigableButtons[currentIndex].Select();
+        public virtual void FocusCurrentButton() {
+            Debug.Log("UINavigationController.FocusCurrentButton()");
         }
 
-        public void PreviousButton() {
-            Debug.Log("UINavigationController.PreviousButton()");
-            if (navigableButtons.Count == 0) {
-                return;
-            }
-            currentIndex--;
-            if (currentIndex < 0) {
-                currentIndex = navigableButtons.Count - 1;
-            }
-            navigableButtons[currentIndex].Select();
+        public virtual void UpButton() {
+            Debug.Log("UINavigationController.UpButton()");
         }
 
-        public void Cancel() {
-            if (closeable == true) {
-                owner.Close();
-            }
+        public virtual void DownButton() {
+            Debug.Log("UINavigationController.DownButton()");
         }
 
-        public void Accept() {
-            if (navigableButtons.Count == 0) {
-                return;
-            }
-            navigableButtons[currentIndex].onClick.Invoke();
+        public virtual void LeftButton() {
+            Debug.Log("UINavigationController.LeftButton()");
         }
+
+        public virtual void RightButton() {
+            Debug.Log("UINavigationController.RightButton()");
+        }
+
+
+        public virtual void Accept() {
+            Debug.Log("UINavigationController.Accept()");
+        }
+
+        public virtual void UpdateNavigationList() {
+            Debug.Log("UINavigationController.UpdateNavigationList()");
+        }
+
+        public virtual void ReceiveOpenWindowNotification() {
+            Debug.Log("UINavigationController.ReceiveOpenWindowNotification()");
+            UpdateNavigationList();
+        }
+
+
 
     }
 
-    public enum NavigationControllerDirection { Vertical, Horizontal }
 }
 

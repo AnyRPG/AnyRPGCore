@@ -148,6 +148,7 @@ namespace AnyRPG {
                 }
             }
             loadGameButtons.Clear();
+            uINavigationControllers[0].ClearActiveButtons();
             selectedLoadGameButton = null;
             loadGameButton.Button.interactable = false;
             copyGameButton.Button.interactable = false;
@@ -170,12 +171,15 @@ namespace AnyRPG {
                 loadGameButton.Configure(systemGameManager);
                 loadGameButton.AddSaveData(this, anyRPGSaveData);
                 loadGameButtons.Add(loadGameButton);
+                uINavigationControllers[0].AddActiveButton(loadGameButton);
                 if (anyRPGSaveData.DataFileName == fileName) {
                     selectedButton = count;
                 }
                 count++;
             }
             if (loadGameButtons.Count > 0) {
+                SetNavigationController(uINavigationControllers[0]);
+
                 loadGameButtons[selectedButton].Select();
             }
             //SetPreviewTarget();
