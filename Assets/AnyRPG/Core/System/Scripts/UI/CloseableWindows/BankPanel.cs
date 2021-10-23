@@ -32,8 +32,8 @@ namespace AnyRPG {
             inventoryManager.OpenBank();
         }
 
-        public override void RecieveClosedWindowNotification() {
-            base.RecieveClosedWindowNotification();
+        public override void ReceiveClosedWindowNotification() {
+            base.ReceiveClosedWindowNotification();
             inventoryManager.CloseBank();
         }
 

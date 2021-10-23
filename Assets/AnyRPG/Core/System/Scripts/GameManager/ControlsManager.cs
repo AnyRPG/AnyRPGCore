@@ -48,14 +48,17 @@ namespace AnyRPG {
         }
 
         public void AddWindow(CloseableWindowContents closeableWindowContents) {
-            Debug.Log("ControlsManager.AddWindow()");
+            Debug.Log("ControlsManager.AddWindow(" + closeableWindowContents.name + ")");
             windowStack.Add(closeableWindowContents);
         }
 
         public void RemoveWindow(CloseableWindowContents closeableWindowContents) {
-            Debug.Log("ControlsManager.RemoveNavigationController()");
+            Debug.Log("ControlsManager.RemoveWindow(" + closeableWindowContents.name + ")");
             if (windowStack.Contains(closeableWindowContents)) {
                 windowStack.Remove(closeableWindowContents);
+            }
+            if (windowStack.Count > 0) {
+                windowStack[windowStack.Count - 1].Focus();
             }
         }
 

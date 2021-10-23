@@ -111,12 +111,24 @@ namespace AnyRPG {
 
             startButton = null;
             characterPreviewPanel.Configure(systemGameManager);
+
             detailsPanel.Configure(systemGameManager);
+            detailsPanel.SetNewGamePanel(this);
+
             characterPanel.Configure(systemGameManager);
+            characterPanel.SetParentPanel(this);
+
             umaCharacterPanel.Configure(systemGameManager);
+            umaCharacterPanel.SetParentPanel(this);
+
             classPanel.Configure(systemGameManager);
+            classPanel.SetParentPanel(this);
+
             factionPanel.Configure(systemGameManager);
+            factionPanel.SetParentPanel(this);
+
             specializationPanel.Configure(systemGameManager);
+            specializationPanel.SetParentPanel(this);
         }
 
         public override void SetGameManagerReferences() {
@@ -129,9 +141,9 @@ namespace AnyRPG {
             newGameManager = systemGameManager.NewGameManager;
         }
 
-        public override void RecieveClosedWindowNotification() {
+        public override void ReceiveClosedWindowNotification() {
             //Debug.Log("LoadGamePanel.OnCloseWindow()");
-            base.RecieveClosedWindowNotification();
+            base.ReceiveClosedWindowNotification();
 
             newGameManager.OnSetPlayerName -= HandleSetPlayerName;
             newGameManager.OnSetUnitProfile -= HandleSetUnitProfile;
@@ -144,16 +156,16 @@ namespace AnyRPG {
             saveManager.ClearSharedData();
             characterPreviewPanel.OnTargetCreated -= HandleTargetCreated;
             characterPreviewPanel.OnTargetReady -= HandleTargetReady;
-            characterPreviewPanel.RecieveClosedWindowNotification();
+            characterPreviewPanel.ReceiveClosedWindowNotification();
             if (systemConfigurationManager.NewGameUMAAppearance == true) {
-                umaCharacterPanel.RecieveClosedWindowNotification();
+                umaCharacterPanel.ReceiveClosedWindowNotification();
             } else {
-                characterPanel.RecieveClosedWindowNotification();
+                characterPanel.ReceiveClosedWindowNotification();
             }
-            specializationPanel.RecieveClosedWindowNotification();
-            factionPanel.RecieveClosedWindowNotification();
-            classPanel.RecieveClosedWindowNotification();
-            detailsPanel.RecieveClosedWindowNotification();
+            specializationPanel.ReceiveClosedWindowNotification();
+            factionPanel.ReceiveClosedWindowNotification();
+            classPanel.ReceiveClosedWindowNotification();
+            detailsPanel.ReceiveClosedWindowNotification();
             OnCloseWindow(this);
         }
 
@@ -243,6 +255,8 @@ namespace AnyRPG {
                 audioManager.StopMusic();
                 audioManager.PlayMusic(systemConfigurationManager.NewGameAudioProfile.AudioClip);
             }
+
+            base.ReceiveOpenWindowNotification();
         }
 
         public void ClearButtons() {

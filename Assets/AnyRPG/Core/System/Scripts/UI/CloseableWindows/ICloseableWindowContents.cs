@@ -7,7 +7,7 @@ namespace AnyRPG {
         //event System.Action<ICloseableWindowContents> OnOpenWindow;
         event System.Action<ICloseableWindowContents> OnCloseWindow;
         void Configure(SystemGameManager systemGameManager);
-        void RecieveClosedWindowNotification();
+        void ReceiveClosedWindowNotification();
         void ReceiveOpenWindowNotification();
         void SetBackGroundColor(Color color);
         void SetWindow(CloseableWindow closeableWindow);

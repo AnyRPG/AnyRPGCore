@@ -75,14 +75,14 @@ namespace AnyRPG {
             loadGameManager = systemGameManager.LoadGameManager;
         }
 
-        public override void RecieveClosedWindowNotification() {
+        public override void ReceiveClosedWindowNotification() {
             //Debug.Log("LoadGamePanel.RecieveClosedWindowNotification()");
-            base.RecieveClosedWindowNotification();
+            base.ReceiveClosedWindowNotification();
             // testing - character will load its own equipment when it spawns
             //characterPreviewPanel.OnTargetReady -= HandleTargetReady;
             characterPreviewPanel.OnTargetCreated -= HandleTargetCreated;
             characterPreviewPanel.CapabilityConsumer = null;
-            characterPreviewPanel.RecieveClosedWindowNotification();
+            characterPreviewPanel.ReceiveClosedWindowNotification();
             //saveManager.ClearSharedData();
 
             ClearLoadButtons();

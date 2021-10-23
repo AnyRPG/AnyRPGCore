@@ -142,9 +142,9 @@ namespace AnyRPG {
             questScripts.Clear();
         }
 
-        public override void RecieveClosedWindowNotification() {
+        public override void ReceiveClosedWindowNotification() {
             //Debug.Log("QuestTrackerUI.OnCloseWindow()");
-            base.RecieveClosedWindowNotification();
+            base.ReceiveClosedWindowNotification();
             //CleanupEventSubscriptions();
         }
 

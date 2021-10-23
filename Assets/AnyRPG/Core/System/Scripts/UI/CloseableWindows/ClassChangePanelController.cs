@@ -180,9 +180,9 @@ namespace AnyRPG {
 
         }
 
-        public override void RecieveClosedWindowNotification() {
+        public override void ReceiveClosedWindowNotification() {
             //Debug.Log("ClassChangePanelController.OnCloseWindow()");
-            base.RecieveClosedWindowNotification();
+            base.ReceiveClosedWindowNotification();
             OnCloseWindow(this);
         }
     }

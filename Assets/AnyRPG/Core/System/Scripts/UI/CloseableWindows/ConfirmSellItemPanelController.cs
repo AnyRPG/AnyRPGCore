@@ -51,8 +51,8 @@ namespace AnyRPG {
         }
 
 
-        public override void RecieveClosedWindowNotification() {
-            base.RecieveClosedWindowNotification();
+        public override void ReceiveClosedWindowNotification() {
+            base.ReceiveClosedWindowNotification();
             item = null;
         }
 

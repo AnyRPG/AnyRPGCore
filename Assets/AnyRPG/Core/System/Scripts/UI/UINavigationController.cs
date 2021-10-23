@@ -33,11 +33,19 @@ namespace AnyRPG {
         // setting index to -1 so that if gamepad isn't default, the first down press will highlight the first button instead of the second one
         //private int currentIndex = -1;
 
+        protected NavigableElement currentNavigableElement = null;
+
         protected CloseableWindowContents owner = null;
 
         //public NavigationControllerDirection NavigationDirection { get => navigationDirection; }
 
         protected ControlsManager controlsManager = null;
+
+        public virtual NavigableElement CurrentNavigableElement {
+            get {
+                return currentNavigableElement;
+            }
+        }
 
         public override void SetGameManagerReferences() {
             base.SetGameManagerReferences();
@@ -46,6 +54,7 @@ namespace AnyRPG {
         }
 
         public void SetOwner(CloseableWindowContents closeableWindowContents) {
+            Debug.Log(gameObject.name + ".UINavigationController.SetOwner(" + closeableWindowContents.name + ")");
             owner = closeableWindowContents;
         }
 

@@ -54,9 +54,9 @@ namespace AnyRPG {
             newGameManager = systemGameManager.NewGameManager;
         }
 
-        public override void RecieveClosedWindowNotification() {
+        public override void ReceiveClosedWindowNotification() {
             //Debug.Log("NewGameMecanimCharacterPanelController.RecieveClosedWindowNotification()");
-            base.RecieveClosedWindowNotification();
+            base.ReceiveClosedWindowNotification();
             OnCloseWindow(this);
         }
 
@@ -137,12 +137,14 @@ namespace AnyRPG {
             canvasGroup.alpha = 0;
             canvasGroup.blocksRaycasts = false;
             canvasGroup.interactable = false;
+            //RemoveFromWindowStack();
         }
 
         public void ShowPanel() {
             canvasGroup.alpha = 1;
             canvasGroup.blocksRaycasts = true;
             canvasGroup.interactable = true;
+            //AddToWindowStack();
             ShowOptionButtonsCommon();
         }
 

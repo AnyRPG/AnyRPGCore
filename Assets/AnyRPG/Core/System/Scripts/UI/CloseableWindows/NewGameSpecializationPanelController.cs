@@ -127,12 +127,14 @@ namespace AnyRPG {
             canvasGroup.alpha = 0;
             canvasGroup.blocksRaycasts = false;
             canvasGroup.interactable = false;
+            RemoveFromWindowStack();
         }
 
         public void ShowPanel() {
             canvasGroup.alpha = 1;
             canvasGroup.blocksRaycasts = true;
             canvasGroup.interactable = true;
+            AddToWindowStack();
         }
 
         public void ShowTraitRewards() {
@@ -221,9 +223,9 @@ namespace AnyRPG {
 
         }
 
-        public override void RecieveClosedWindowNotification() {
+        public override void ReceiveClosedWindowNotification() {
             //Debug.Log("ClassChangePanelController.OnCloseWindow()");
-            base.RecieveClosedWindowNotification();
+            base.ReceiveClosedWindowNotification();
             OnCloseWindow(this);
         }
     }

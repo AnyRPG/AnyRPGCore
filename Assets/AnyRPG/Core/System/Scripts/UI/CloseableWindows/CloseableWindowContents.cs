@@ -34,6 +34,8 @@ namespace AnyRPG {
 
         protected CloseableWindow closeableWindow = null;
 
+        protected CloseableWindowContents parentPanel = null;
+
         protected bool eventSubscriptionsInitialized = false;
 
         // game manager references
@@ -72,52 +74,82 @@ namespace AnyRPG {
             this.closeableWindow = closeableWindow;
         }
 
+        public virtual void SetParentPanel(CloseableWindowContents closeableWindowContents) {
+            parentPanel = closeableWindowContents;
+        }
+
         public virtual void SetNavigationController(UINavigationController uINavigationController) {
+            Debug.Log(gameObject.name + ".CloseableWindowContents.SetNavigationController(" + uINavigationController.name + ")");
             if (uINavigationControllers.Contains(uINavigationController)) {
                 currentNavigationController = uINavigationController;
                 currentNavigationController.FocusCurrentButton();
             }
         }
 
+        /// <summary>
+        /// re-focus a window after closing another window
+        /// </summary>
+        public void Focus() {
+            Debug.Log(gameObject.name + ".CloseableWindowContents.Focus()");
+            if (currentNavigationController != null) {
+                currentNavigationController.FocusCurrentButton();
+            }
+        }
+
         public void Accept() {
+            Debug.Log(gameObject.name + ".CloseableWindowContents.Accept()");
             if (currentNavigationController != null) {
                 currentNavigationController.Accept();
             }
         }
 
         public void Cancel() {
+            Debug.Log(gameObject.name + ".CloseableWindowContents.Cancel()");
+            if (currentNavigationController != null && currentNavigationController.CurrentNavigableElement.CaptureCancelButton == true) {
+                currentNavigationController.CurrentNavigableElement.Cancel();
+                return;
+            }
             if (userCloseable == true) {
                 Close();
             }
         }
 
         public void UpButton() {
+            Debug.Log(gameObject.name + ".CloseableWindowContents.UpButton()");
             if (currentNavigationController != null) {
                 currentNavigationController.UpButton();
             }
         }
 
         public void DownButton() {
+            Debug.Log(gameObject.name + ".CloseableWindowContents.DownButton()");
             if (currentNavigationController != null) {
                 currentNavigationController.DownButton();
             }
         }
 
         public void LeftButton() {
+            Debug.Log(gameObject.name + ".CloseableWindowContents.LeftButton()");
             if (currentNavigationController != null) {
                 currentNavigationController.LeftButton();
             }
         }
 
         public void RightButton() {
+            Debug.Log(gameObject.name + ".CloseableWindowContents.RightButton()");
             if (currentNavigationController != null) {
                 currentNavigationController.RightButton();
             }
         }
 
         public virtual void Close() {
+            Debug.Log(gameObject.name + ".CloseableWindowContents.Close()");
             if (closeableWindow != null) {
                 closeableWindow.CloseWindow();
+                return;
+            }
+            if (parentPanel != null) {
+                parentPanel.Close();
             }
         }
 
@@ -150,9 +182,19 @@ namespace AnyRPG {
             audioManager.PlayUIClickSound();
         }
 
-        public virtual void ReceiveOpenWindowNotification() {
-            //Debug.Log(gameObject.name + "WindowContentController.ReceiveOpenWindowNotification()");
+        public virtual void AddToWindowStack() {
             controlsManager.AddWindow(this);
+        }
+
+        public virtual void RemoveFromWindowStack() {
+            controlsManager.RemoveWindow(this);
+        }
+
+        public virtual void ReceiveOpenWindowNotification() {
+            Debug.Log(gameObject.name + ".CloseableWindowContents.ReceiveOpenWindowNotification()");
+            if (parentPanel == null) {
+                AddToWindowStack();
+            }
             if (currentNavigationController != null) {
                 currentNavigationController.ReceiveOpenWindowNotification();
                 if (systemConfigurationManager.DefaultControllerConfiguration == DefaultControllerConfiguration.GamePad && focusFirstButtonOnOpen == true) {
@@ -163,8 +205,8 @@ namespace AnyRPG {
             }
         }
 
-        public virtual void RecieveClosedWindowNotification() {
-            controlsManager.RemoveWindow(this);
+        public virtual void ReceiveClosedWindowNotification() {
+            RemoveFromWindowStack();
             OnCloseWindow(this);
         }
 

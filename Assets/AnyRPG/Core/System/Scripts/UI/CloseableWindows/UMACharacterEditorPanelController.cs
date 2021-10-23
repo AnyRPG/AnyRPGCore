@@ -18,9 +18,9 @@ namespace AnyRPG {
 
         private DynamicCharacterAvatar dynamicCharacterAvatar = null;
 
-        public override void RecieveClosedWindowNotification() {
+        public override void ReceiveClosedWindowNotification() {
             //Debug.Log("CharacterCreatorPanel.OnCloseWindow()");
-            base.RecieveClosedWindowNotification();
+            base.ReceiveClosedWindowNotification();
             OnCloseWindow(this);
         }
 

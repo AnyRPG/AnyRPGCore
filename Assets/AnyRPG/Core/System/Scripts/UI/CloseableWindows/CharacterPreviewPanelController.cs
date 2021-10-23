@@ -44,9 +44,9 @@ namespace AnyRPG {
             cameraManager = systemGameManager.CameraManager;
         }
 
-        public override void RecieveClosedWindowNotification() {
+        public override void ReceiveClosedWindowNotification() {
             //Debug.Log("CharacterPreviewPanelController.RecieveClosedWindowNotification()");
-            base.RecieveClosedWindowNotification();
+            base.ReceiveClosedWindowNotification();
             characterReady = false;
             characterCreatorManager.OnTargetCreated -= HandleTargetCreated;
             characterCreatorManager.HandleCloseWindow();

@@ -21,6 +21,9 @@ namespace AnyRPG {
         private GameObject characterClassLabel = null;
 
         [SerializeField]
+        private NavigableInputField playerNameInput = null;
+
+        [SerializeField]
         private NewGameCharacterClassButton characterClassButton = null;
 
         [SerializeField]
@@ -38,6 +41,8 @@ namespace AnyRPG {
         [SerializeField]
         private CanvasGroup canvasGroup = null;
 
+        private NewGamePanel newGamePanel = null;
+
         // game manager references
         private SystemDataFactory systemDataFactory = null;
         private UIManager uIManager = null;
@@ -46,9 +51,14 @@ namespace AnyRPG {
         public override void Configure(SystemGameManager systemGameManager) {
             base.Configure(systemGameManager);
 
+            playerNameInput.Configure(systemGameManager);
             characterClassButton.Configure(systemGameManager);
             classSpecializationButton.Configure(systemGameManager);
             factionButton.Configure(systemGameManager);
+
+            factionButton.OnInteract += OpenFactionPanel;
+            characterClassButton.OnInteract += OpenClassPanel;
+            classSpecializationButton.OnInteract += OpenSpecializationPanel;
         }
 
         public override void SetGameManagerReferences() {
@@ -58,13 +68,36 @@ namespace AnyRPG {
             newGameManager = systemGameManager.NewGameManager;
         }
 
+        public void SetNewGamePanel(NewGamePanel newGamePanel) {
+            this.newGamePanel = newGamePanel;
+            parentPanel = newGamePanel;
+        }
+
+        public void OpenFactionPanel() {
+            if (newGamePanel != null) {
+                newGamePanel.OpenFactionPanel();
+            }
+        }
+
+        public void OpenClassPanel() {
+            if (newGamePanel != null) {
+                newGamePanel.OpenClassPanel();
+            }
+        }
+
+        public void OpenSpecializationPanel() {
+            if (newGamePanel != null) {
+                newGamePanel.OpenSpecializationPanel();
+            }
+        }
+
         public void ResetInputText(string newText) {
             textInput.text = newText;
         }
 
-        public override void RecieveClosedWindowNotification() {
+        public override void ReceiveClosedWindowNotification() {
             //Debug.Log("CharacterCreatorPanel.OnCloseWindow()");
-            base.RecieveClosedWindowNotification();
+            base.ReceiveClosedWindowNotification();
             OnCloseWindow(this);
         }
 
@@ -121,12 +154,14 @@ namespace AnyRPG {
             canvasGroup.alpha = 0;
             canvasGroup.blocksRaycasts = false;
             canvasGroup.interactable = false;
+            //RemoveFromWindowStack();
         }
 
         public void ShowPanel() {
             canvasGroup.alpha = 1;
             canvasGroup.blocksRaycasts = true;
             canvasGroup.interactable = true;
+            //AddToWindowStack();
         }
 
 
@@ -170,6 +205,11 @@ namespace AnyRPG {
                 classSpecializationButton.gameObject.SetActive(false);
 
             }
+        }
+
+        protected override void OnDestroy() {
+            base.OnDestroy();
+            factionButton.OnInteract -= OpenFactionPanel;
         }
 
 

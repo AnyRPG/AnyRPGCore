@@ -207,9 +207,9 @@ namespace AnyRPG {
             uIManager.interactionWindow.CloseWindow();
         }
 
-        public override void RecieveClosedWindowNotification() {
+        public override void ReceiveClosedWindowNotification() {
             //Debug.Log("LoadGamePanel.OnCloseWindow()");
-            base.RecieveClosedWindowNotification();
+            base.ReceiveClosedWindowNotification();
             previewCameraController.ClearTarget();
             unitPreviewManager.HandleCloseWindow();
             OnCloseWindow(this);

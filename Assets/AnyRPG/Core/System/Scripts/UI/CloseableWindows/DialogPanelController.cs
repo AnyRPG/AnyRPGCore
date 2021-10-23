@@ -206,8 +206,8 @@ namespace AnyRPG {
             DisplayNodeText();
         }
 
-        public override void RecieveClosedWindowNotification() {
-            base.RecieveClosedWindowNotification();
+        public override void ReceiveClosedWindowNotification() {
+            base.ReceiveClosedWindowNotification();
             OnCloseWindow(this);
 
             viewQuestButton.gameObject.SetActive(false);

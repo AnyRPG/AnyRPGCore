@@ -10,6 +10,8 @@ namespace AnyRPG {
 
     public class HighlightButton : NavigableElement, IPointerEnterHandler, IPointerClickHandler, IPointerDownHandler, IPointerUpHandler {
 
+        [Header("Highlight Button")]
+
         [SerializeField]
         protected TextMeshProUGUI text;
 
@@ -90,7 +92,7 @@ namespace AnyRPG {
             }
         }
 
-        public virtual void DeSelect() {
+        public override void DeSelect() {
             //Debug.Log(gameObject.name + ".HightlightButton.DeSelect()");
             if (highlightImage != null) {
                 if (useHighlightColor) {
@@ -128,18 +130,15 @@ namespace AnyRPG {
             audioManager.PlayUIClickSound();
         }
 
-        public void OnPointerEnter(PointerEventData eventData) {
+        public override void OnPointerEnter(PointerEventData eventData) {
+            base.OnPointerEnter(eventData);
             OnHoverSound();
         }
 
-        public void OnPointerClick(PointerEventData eventData) {
+        public override void OnPointerClick(PointerEventData eventData) {
+            base.OnPointerClick(eventData);
             OnClickSound();
-        }
-
-        public void OnPointerDown(PointerEventData eventData) {
-        }
-
-        public void OnPointerUp(PointerEventData eventData) {
+            Interact();
         }
 
         public override void Accept() {

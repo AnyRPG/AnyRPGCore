@@ -265,10 +265,10 @@ namespace AnyRPG {
             interactionPanelScripts.Clear();
         }
 
-        public override void RecieveClosedWindowNotification() {
+        public override void ReceiveClosedWindowNotification() {
             //Debug.Log("InteractionPanelUI.OnCloseWindow()");
             //ClearButtons();
-            base.RecieveClosedWindowNotification();
+            base.ReceiveClosedWindowNotification();
             // clear this so window doesn't pop open again when it's closed
             interactionManager.CurrentInteractable = null;
         }

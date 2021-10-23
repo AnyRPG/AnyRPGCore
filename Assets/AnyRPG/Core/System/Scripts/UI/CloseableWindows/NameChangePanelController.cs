@@ -59,8 +59,8 @@ namespace AnyRPG {
             textInput.text = playerManager.MyCharacter.CharacterName;
         }
 
-        public override void RecieveClosedWindowNotification() {
-            base.RecieveClosedWindowNotification();
+        public override void ReceiveClosedWindowNotification() {
+            base.ReceiveClosedWindowNotification();
             OnCloseWindow(this);
         }
 

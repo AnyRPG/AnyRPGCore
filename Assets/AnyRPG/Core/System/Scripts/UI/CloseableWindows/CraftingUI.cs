@@ -258,9 +258,9 @@ namespace AnyRPG {
             recipeScripts.Clear();
         }
 
-        public override void RecieveClosedWindowNotification() {
+        public override void ReceiveClosedWindowNotification() {
             //Debug.Log("craftingUI.OnCloseWindow()");
-            base.RecieveClosedWindowNotification();
+            base.ReceiveClosedWindowNotification();
             //Debug.Log("craftingUI.OnCloseWindow(): nulling recipe script");
             SelectedRecipeScript = null;
         }

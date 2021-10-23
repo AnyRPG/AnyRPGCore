@@ -201,9 +201,9 @@ namespace AnyRPG {
             musicPlayerHighlightButtons.Clear();
         }
 
-        public override void RecieveClosedWindowNotification() {
+        public override void ReceiveClosedWindowNotification() {
             //Debug.Log("SkillTrainerUI.OnCloseWindow()");
-            base.RecieveClosedWindowNotification();
+            base.ReceiveClosedWindowNotification();
             SelectedMusicPlayerHighlightButton = null;
         }
 

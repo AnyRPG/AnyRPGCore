@@ -119,8 +119,8 @@ namespace AnyRPG {
             base.ReceiveOpenWindowNotification();
         }
 
-        public override void RecieveClosedWindowNotification() {
-            base.RecieveClosedWindowNotification();
+        public override void ReceiveClosedWindowNotification() {
+            base.ReceiveClosedWindowNotification();
             foreach (SlotScript slotScript in slots) {
                 slotScript.CheckMouse();
             }

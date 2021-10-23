@@ -164,9 +164,9 @@ namespace AnyRPG {
             //trackButton.GetComponent<Button>().enabled = false;
         }
 
-        public override void RecieveClosedWindowNotification() {
+        public override void ReceiveClosedWindowNotification() {
             //Debug.Log("QuestLogUI.OnCloseWindow()");
-            base.RecieveClosedWindowNotification();
+            base.ReceiveClosedWindowNotification();
             ClearQuests();
             MySelectedQuestScript = null;
         }

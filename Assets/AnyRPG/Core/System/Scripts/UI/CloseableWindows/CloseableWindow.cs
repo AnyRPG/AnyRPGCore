@@ -149,7 +149,7 @@ namespace AnyRPG {
             //Debug.Log(gameObject.name + ".CloseableWindow.CloseWindow(): alpha should be set to zero: doing callbacks");
             OnCloseWindowCallback();
             if (windowContents != null) {
-                windowContents.RecieveClosedWindowNotification();
+                windowContents.ReceiveClosedWindowNotification();
             }
             if (windowText != null && windowTitle != null && windowTitle != string.Empty) {
                 windowText.text = windowTitle;

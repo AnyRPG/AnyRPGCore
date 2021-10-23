@@ -104,13 +104,13 @@ namespace AnyRPG {
             levelManager = systemGameManager.LevelManager;
         }
 
-        public override void RecieveClosedWindowNotification() {
+        public override void ReceiveClosedWindowNotification() {
             //Debug.Log("CharacterCreatorPanel.OnCloseWindow()");
-            base.RecieveClosedWindowNotification();
+            base.ReceiveClosedWindowNotification();
             characterPreviewPanel.OnTargetCreated -= HandleTargetCreated;
             characterPreviewPanel.OnTargetReady -= HandleTargetReady;
-            characterPreviewPanel.RecieveClosedWindowNotification();
-            umaCharacterPanel.RecieveClosedWindowNotification();
+            characterPreviewPanel.ReceiveClosedWindowNotification();
+            umaCharacterPanel.ReceiveClosedWindowNotification();
             OnCloseWindow(this);
             // close interaction window too for smoother experience
             uIManager.interactionWindow.CloseWindow();

@@ -141,9 +141,9 @@ namespace AnyRPG {
             }
         }
 
-        public override void RecieveClosedWindowNotification() {
+        public override void ReceiveClosedWindowNotification() {
             //Debug.Log("CharacterPanel.RecieveClosedWindowNotification()");
-            base.RecieveClosedWindowNotification();
+            base.ReceiveClosedWindowNotification();
             //characterPreviewPanel.OnTargetReady -= HandleTargetReady;
             previewCameraController.ClearTarget();
         }

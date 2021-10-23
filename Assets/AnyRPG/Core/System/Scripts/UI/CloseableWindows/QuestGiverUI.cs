@@ -373,9 +373,9 @@ namespace AnyRPG {
             //quests.Clear();
         }
 
-        public override void RecieveClosedWindowNotification() {
+        public override void ReceiveClosedWindowNotification() {
             //Debug.Log("QuestGiverUI.OnCloseWindow()");
-            base.RecieveClosedWindowNotification();
+            base.ReceiveClosedWindowNotification();
             SelectedQuestGiverQuestScript = null;
         }
 

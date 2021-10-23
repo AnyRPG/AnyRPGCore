@@ -106,9 +106,9 @@ namespace AnyRPG {
             uIManager.factionChangeWindow.CloseWindow();
         }
 
-        public override void RecieveClosedWindowNotification() {
+        public override void ReceiveClosedWindowNotification() {
             //Debug.Log("FactionChangePanelController.OnCloseWindow()");
-            base.RecieveClosedWindowNotification();
+            base.ReceiveClosedWindowNotification();
             OnCloseWindow(this);
         }
     }

@@ -137,9 +137,9 @@ namespace AnyRPG {
             AddItems();
         }
 
-        public override void RecieveClosedWindowNotification() {
+        public override void ReceiveClosedWindowNotification() {
             //Debug.Log("VendorUI.OnCloseWindow()");
-            base.RecieveClosedWindowNotification();
+            base.ReceiveClosedWindowNotification();
             ClearButtons();
             ClearPages();
             ClearVendorCollections();
