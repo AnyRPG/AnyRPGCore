@@ -43,7 +43,7 @@ namespace AnyRPG {
             }
             currentIndex = 0;
             currentNavigableElement = activeNavigableButtons[currentIndex];
-            currentNavigableElement.Select();
+            SelectCurrentNavigableElement();
         }
 
         public override void FocusCurrentButton() {
@@ -55,7 +55,7 @@ namespace AnyRPG {
                 currentIndex = 0;
             }
             currentNavigableElement = activeNavigableButtons[currentIndex];
-            currentNavigableElement.Select();
+            SelectCurrentNavigableElement();
         }
 
         public override void UpButton() {
@@ -63,24 +63,26 @@ namespace AnyRPG {
             if (activeNavigableButtons.Count == 0) {
                 return;
             }
+            /*
             if (currentIndex > 0) {
                 currentNavigableElement.LeaveElement();
             }
+            */
             currentIndex--;
             if (currentIndex < 0) {
-                if (upController != null) {
+                if (upController != null || upPanel != null) {
                     currentIndex = 0;
                     currentNavigableElement = activeNavigableButtons[currentIndex];
-                    currentNavigableElement.LeaveElement();
-                    owner.SetNavigationController(upController);
+                    LeaveUp();
                     return;
                 } else {
                     currentIndex = activeNavigableButtons.Count - 1;
                 }
             }
             //EventSystem.current.SetSelectedGameObject(activeNavigableButtons[currentIndex].gameObject);
+            currentNavigableElement.LeaveElement();
             currentNavigableElement = activeNavigableButtons[currentIndex];
-            currentNavigableElement.Select();
+            SelectCurrentNavigableElement();
         }
 
         public override void DownButton() {
@@ -88,41 +90,37 @@ namespace AnyRPG {
             if (activeNavigableButtons.Count == 0) {
                 return;
             }
+            /*
             if (currentIndex < activeNavigableButtons.Count - 1) {
                 currentNavigableElement.LeaveElement();
             }
+            */
             currentIndex++;
             Debug.Log("currentIndex: " + currentIndex + "; downController: " + (downController == null ? "null" : downController.gameObject.name) + "; buttonCount: " + activeNavigableButtons.Count);
             if (currentIndex >= activeNavigableButtons.Count) {
-                if (downController != null) {
+                if (downController != null || downPanel != null) {
                     currentIndex = activeNavigableButtons.Count - 1;
                     currentNavigableElement = activeNavigableButtons[currentIndex];
-                    currentNavigableElement.LeaveElement();
-                    owner.SetNavigationController(downController);
+                    LeaveDown();
                     return;
                 } else {
                     currentIndex = 0;
                 }
             }
             //EventSystem.current.SetSelectedGameObject(activeNavigableButtons[currentIndex].gameObject);
+            currentNavigableElement.LeaveElement();
             currentNavigableElement = activeNavigableButtons[currentIndex];
-            currentNavigableElement.Select();
+            SelectCurrentNavigableElement();
         }
 
         public override void LeftButton() {
             Debug.Log(gameObject.name + ".UINavigationListVertical.LeftButton()");
-            if (leftController != null) {
-                currentNavigableElement.LeaveElement();
-                owner.SetNavigationController(leftController);
-            }
+            LeaveLeft();
         }
 
         public override void RightButton() {
             Debug.Log(gameObject.name + ".UINavigationListVertical.RightButton()");
-            if (rightController != null) {
-                currentNavigableElement.LeaveElement();
-                owner.SetNavigationController(rightController);
-            }
+            LeaveRight();
         }
 
         public override void Accept() {
@@ -134,6 +132,27 @@ namespace AnyRPG {
             }
             currentNavigableElement = activeNavigableButtons[currentIndex];
             currentNavigableElement.Accept();
+        }
+
+        public void SelectCurrentNavigableElement() {
+            Debug.Log(gameObject.name + ".UINavigationListVertical.SelectCurrentNavigableElement()");
+            currentNavigableElement.Select();
+            if (scrollRect != null) {
+                scrollRect.content.localPosition = GetSnapToPositionToBringChildIntoView(scrollRect, currentNavigableElement.RectTransform);
+            }
+        }
+
+        public Vector2 GetSnapToPositionToBringChildIntoView(ScrollRect instance, RectTransform child) {
+            Debug.Log(gameObject.name + ".UINavigationListVertical.GetSnapToPositionToBringChildIntoView()");
+            Canvas.ForceUpdateCanvases();
+            Vector2 viewportLocalPosition = instance.viewport.localPosition;
+            Vector2 childLocalPosition = child.localPosition;
+            Vector2 result = new Vector2(
+                //0 - (viewportLocalPosition.x + childLocalPosition.x),
+                instance.content.localPosition.x,
+                0 - (viewportLocalPosition.y + childLocalPosition.y)
+            );
+            return result;
         }
 
     }

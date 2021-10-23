@@ -58,7 +58,7 @@ namespace AnyRPG {
                 windowStack.Remove(closeableWindowContents);
             }
             if (windowStack.Count > 0) {
-                windowStack[windowStack.Count - 1].Focus();
+                windowStack[windowStack.Count - 1].FocusCurrentButton();
             }
         }
 

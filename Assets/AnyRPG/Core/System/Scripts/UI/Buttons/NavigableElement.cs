@@ -12,8 +12,17 @@ namespace AnyRPG {
 
         public event System.Action OnInteract = delegate { };
 
+        private RectTransform rectTransform = null;
+
         public virtual bool DeselectOnLeave { get => true; }
         public virtual bool CaptureCancelButton { get => false; }
+        public RectTransform RectTransform { get => rectTransform; }
+
+        public override void Configure(SystemGameManager systemGameManager) {
+            base.Configure(systemGameManager);
+
+            rectTransform = transform as RectTransform;
+        }
 
         public virtual void Accept() {
             Interact();
@@ -28,7 +37,7 @@ namespace AnyRPG {
         }
 
         public virtual void DeSelect() {
-
+            Debug.Log(gameObject.name + "NavigableElement.DeSelect()");
         }
 
         public virtual void Interact() {
@@ -36,6 +45,7 @@ namespace AnyRPG {
         }
 
         public virtual void LeaveElement() {
+            Debug.Log(gameObject.name + ".NavigableElement.LeaveElement()");
             if (DeselectOnLeave) {
                 DeSelect();
             }

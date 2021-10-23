@@ -65,6 +65,7 @@ namespace AnyRPG {
                     objectPooler.ReturnObjectToPool(optionButton.gameObject);
                 }
             }
+            uINavigationControllers[0].ClearActiveButtons();
             optionButtons.Clear();
         }
 
@@ -92,9 +93,11 @@ namespace AnyRPG {
                     optionButton.Configure(systemGameManager);
                     optionButton.AddClassSpecialization(classSpecialization);
                     optionButtons.Add(optionButton);
+                    uINavigationControllers[0].AddActiveButton(optionButton);
                 }
             }
             if (optionButtons.Count > 0) {
+                SetNavigationController(uINavigationControllers[0]);
                 optionButtons[0].Select();
             }
             // that should not be needed

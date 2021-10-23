@@ -26,7 +26,17 @@ namespace AnyRPG {
         protected bool focusFirstButtonOnOpen = true;
 
         [SerializeField]
+        protected bool focusActiveSubPanel = false;
+
+        [Tooltip("Set this to false if another panel will configure the navigation controllers")]
+        [SerializeField]
+        protected bool navigationControllerOwner = true;
+
+        [SerializeField]
         protected List<UINavigationController> uINavigationControllers = new List<UINavigationController>();
+
+        [SerializeField]
+        protected List<CloseableWindowContents> subPanels = new List<CloseableWindowContents>();
 
         protected UINavigationController currentNavigationController = null;
 
@@ -36,6 +46,8 @@ namespace AnyRPG {
 
         protected CloseableWindowContents parentPanel = null;
 
+        protected CloseableWindowContents activeSubPanel = null;
+
         protected bool eventSubscriptionsInitialized = false;
 
         // game manager references
@@ -43,9 +55,10 @@ namespace AnyRPG {
         protected ControlsManager controlsManager = null;
 
         public Image BackGroundImage { get => backGroundImage; set => backGroundImage = value; }
+        public UINavigationController CurrentNavigationController { get => currentNavigationController; }
 
         public override void Configure(SystemGameManager systemGameManager) {
-            //Debug.Log(gameObject.name + ".WindowContentController.Init()");
+            Debug.Log(gameObject.name + ".CloseableWindowContents.Configure()");
             base.Configure(systemGameManager);
             if (backGroundImage == null) {
                 backGroundImage = GetComponent<Image>();
@@ -55,9 +68,11 @@ namespace AnyRPG {
                 coloredUIElement.Configure(systemGameManager);
             }
             if (uINavigationControllers.Count != 0) {
-                foreach (UINavigationController uINavigationController in uINavigationControllers) {
-                    uINavigationController.Configure(systemGameManager);
-                    uINavigationController.SetOwner(this);
+                if (navigationControllerOwner) {
+                    foreach (UINavigationController uINavigationController in uINavigationControllers) {
+                        uINavigationController.Configure(systemGameManager);
+                        uINavigationController.SetOwner(this);
+                    }
                 }
                 currentNavigationController = uINavigationControllers[0];
             }
@@ -78,6 +93,11 @@ namespace AnyRPG {
             parentPanel = closeableWindowContents;
         }
 
+        public virtual void SetActiveSubPanel(CloseableWindowContents closeableWindowContents) {
+            activeSubPanel = closeableWindowContents;
+            SetNavigationController(activeSubPanel.currentNavigationController);
+        }
+
         public virtual void SetNavigationController(UINavigationController uINavigationController) {
             Debug.Log(gameObject.name + ".CloseableWindowContents.SetNavigationController(" + uINavigationController.name + ")");
             if (uINavigationControllers.Contains(uINavigationController)) {
@@ -89,11 +109,33 @@ namespace AnyRPG {
         /// <summary>
         /// re-focus a window after closing another window
         /// </summary>
-        public void Focus() {
+        public UINavigationController FocusCurrentButton() {
             Debug.Log(gameObject.name + ".CloseableWindowContents.Focus()");
             if (currentNavigationController != null) {
                 currentNavigationController.FocusCurrentButton();
+                return currentNavigationController;
             }
+            return null;
+        }
+
+        public UINavigationController FocusFirstButton() {
+            Debug.Log(gameObject.name + ".CloseableWindowContents.FocusFirstButton()");
+            if (currentNavigationController != null) {
+                currentNavigationController.FocusFirstButton();
+                return currentNavigationController;
+            } else {
+                Debug.Log(gameObject.name + ".CloseableWindowContents.FocusFirstButton(): currentNavigationController is null");
+            }
+            return null;
+        }
+
+        public void ChooseFocus() {
+            Debug.Log(gameObject.name + ".CloseableWindowContents.ChooseFocus()");
+            if (systemConfigurationManager.DefaultControllerConfiguration == DefaultControllerConfiguration.GamePad && focusActiveSubPanel == true) {
+                currentNavigationController = activeSubPanel.FocusCurrentButton();
+                return;
+            }
+
         }
 
         public void Accept() {

@@ -89,11 +89,13 @@ namespace AnyRPG {
             }
             if (highlightButton != null) {
                 EventSystem.current.SetSelectedGameObject(highlightButton.gameObject);
-            }
+            }/* else {
+                EventSystem.current.SetSelectedGameObject(gameObject);
+            }*/
         }
 
         public override void DeSelect() {
-            //Debug.Log(gameObject.name + ".HightlightButton.DeSelect()");
+            Debug.Log(gameObject.name + ".HightlightButton.DeSelect()");
             if (highlightImage != null) {
                 if (useHighlightColor) {
                     highlightImage.color = baseColor;
@@ -111,6 +113,7 @@ namespace AnyRPG {
             if (CapitalizeText == true) {
                 text.text = text.text.ToLower();
             }
+            EventSystem.current.SetSelectedGameObject(null);
         }
 
         public virtual void OnHoverSound() {

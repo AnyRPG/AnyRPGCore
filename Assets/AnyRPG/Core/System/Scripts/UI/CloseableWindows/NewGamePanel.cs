@@ -257,6 +257,17 @@ namespace AnyRPG {
             }
 
             base.ReceiveOpenWindowNotification();
+
+            if (systemConfigurationManager.DefaultControllerConfiguration == DefaultControllerConfiguration.GamePad && focusFirstButtonOnOpen == true) {
+                currentNavigationController.FocusFirstButton();
+                return;
+            }
+
+            if (systemConfigurationManager.DefaultControllerConfiguration == DefaultControllerConfiguration.GamePad && focusActiveSubPanel == true) {
+                activeSubPanel.FocusFirstButton();
+                return;
+            }
+
         }
 
         public void ClearButtons() {
@@ -336,21 +347,25 @@ namespace AnyRPG {
         public void OpenDetailsPanel() {
             ClosePanels();
             detailsPanel.ShowPanel();
+            SetActiveSubPanel(detailsPanel);
         }
 
         public void OpenClassPanel() {
             ClosePanels();
             classPanel.ShowPanel();
+            SetActiveSubPanel(classPanel);
         }
 
         public void OpenCharacterPanel() {
             ClosePanels();
             characterPanel.ShowPanel();
+            SetActiveSubPanel(characterPanel);
         }
 
         public void OpenAppearancePanel() {
             ClosePanels();
             umaCharacterPanel.ShowPanel();
+            SetActiveSubPanel(umaCharacterPanel);
         }
 
         public void OpenFactionPanel() {
@@ -358,6 +373,7 @@ namespace AnyRPG {
 
             ClosePanels();
             factionPanel.ShowPanel();
+            SetActiveSubPanel(factionPanel);
         }
 
         public void OpenSpecializationPanel() {
@@ -365,6 +381,7 @@ namespace AnyRPG {
             if (specializationPanel.OptionButtons.Count > 0) {
                 ClosePanels();
                 specializationPanel.ShowPanel();
+                SetActiveSubPanel(specializationPanel);
             }
         }
 

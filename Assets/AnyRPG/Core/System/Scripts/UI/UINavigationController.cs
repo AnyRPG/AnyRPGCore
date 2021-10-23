@@ -9,21 +9,40 @@ namespace AnyRPG {
     [System.Serializable]
     public class UINavigationController : ConfiguredMonoBehaviour {
 
-        [Tooltip("If the far left of the buttons is passed, switch to this controller")]
+        [Tooltip("If the left button is passed, switch to the first controller on this panel")]
+        [SerializeField]
+        protected CloseableWindowContents leftPanel = null;
+
+        [Tooltip("If the left button is passed, switch to this controller")]
         [SerializeField]
         protected UINavigationController leftController = null;
 
-        [Tooltip("If the far right of the buttons is passed, switch to this controller")]
+        [Tooltip("If the right button is passed, switch to the first controller on this panel")]
+        [SerializeField]
+        protected CloseableWindowContents rightPanel = null;
+
+        [Tooltip("If the righ button is passed, switch to this controller")]
         [SerializeField]
         protected UINavigationController rightController = null;
+
+        [Tooltip("If the top button is passed, switch to the first controller on this panel")]
+        [SerializeField]
+        protected CloseableWindowContents upPanel = null;
 
         [Tooltip("If the top button is passed, switch to this controller")]
         [SerializeField]
         protected UINavigationController upController = null;
 
+        [Tooltip("If the bottom button is passed, switch to the first controller on this panel")]
+        [SerializeField]
+        protected CloseableWindowContents downPanel = null;
+
         [Tooltip("If the bottom button is passed, switch to this controller")]
         [SerializeField]
         protected UINavigationController downController = null;
+
+        [SerializeField]
+        protected ScrollRect scrollRect = null;
 
         [SerializeField]
         protected List<NavigableElement> navigableButtons = new List<NavigableElement>();
@@ -67,40 +86,100 @@ namespace AnyRPG {
         }
 
         public virtual void FocusFirstButton() {
-            Debug.Log("UINavigationController.FocusInitialButton()");
+            Debug.Log(gameObject.name + "UINavigationController.FocusInitialButton()");
         }
 
         public virtual void FocusCurrentButton() {
-            Debug.Log("UINavigationController.FocusCurrentButton()");
+            Debug.Log(gameObject.name + "UINavigationController.FocusCurrentButton()");
         }
 
         public virtual void UpButton() {
-            Debug.Log("UINavigationController.UpButton()");
+            Debug.Log(gameObject.name + "UINavigationController.UpButton()");
+        }
+
+        public virtual bool LeaveUp() {
+            Debug.Log(gameObject.name + "UINavigationController.LeaveUp()");
+            if (upController != null) {
+                currentNavigableElement.LeaveElement();
+                owner.SetNavigationController(upController);
+                return true;
+            }
+            if (upPanel != null) {
+                currentNavigableElement.LeaveElement();
+                upPanel.ChooseFocus();
+                return true;
+            }
+            return false;
         }
 
         public virtual void DownButton() {
-            Debug.Log("UINavigationController.DownButton()");
+            Debug.Log(gameObject.name + "UINavigationController.DownButton()");
+        }
+
+        public virtual bool LeaveDown() {
+            Debug.Log(gameObject.name + "UINavigationController.LeaveDown()");
+            if (downController != null) {
+                currentNavigableElement.LeaveElement();
+                owner.SetNavigationController(downController);
+                return true;
+            }
+            if (downPanel != null) {
+                currentNavigableElement.LeaveElement();
+                downPanel.ChooseFocus();
+                return true;
+            }
+            return false;
         }
 
         public virtual void LeftButton() {
-            Debug.Log("UINavigationController.LeftButton()");
+            Debug.Log(gameObject.name + "UINavigationController.LeftButton()");
+        }
+
+        public virtual bool LeaveLeft() {
+            Debug.Log(gameObject.name + "UINavigationController.LeaveLeft()");
+            if (leftController != null) {
+                currentNavigableElement.LeaveElement();
+                owner.SetNavigationController(leftController);
+                return true;
+            }
+            if (leftPanel != null) {
+                currentNavigableElement.LeaveElement();
+                leftPanel.ChooseFocus();
+                return true;
+            }
+            return false;
         }
 
         public virtual void RightButton() {
-            Debug.Log("UINavigationController.RightButton()");
+            Debug.Log(gameObject.name + "UINavigationController.RightButton()");
+        }
+
+        public virtual bool LeaveRight() {
+            Debug.Log(gameObject.name + "UINavigationController.LeaveRight()");
+            if (rightController != null) {
+                currentNavigableElement.LeaveElement();
+                owner.SetNavigationController(rightController);
+                return true;
+            }
+            if (rightPanel != null) {
+                currentNavigableElement.LeaveElement();
+                rightPanel.ChooseFocus();
+                return true;
+            }
+            return false;
         }
 
 
         public virtual void Accept() {
-            Debug.Log("UINavigationController.Accept()");
+            Debug.Log(gameObject.name + "UINavigationController.Accept()");
         }
 
         public virtual void UpdateNavigationList() {
-            Debug.Log("UINavigationController.UpdateNavigationList()");
+            Debug.Log(gameObject.name + "UINavigationController.UpdateNavigationList()");
         }
 
         public virtual void ReceiveOpenWindowNotification() {
-            Debug.Log("UINavigationController.ReceiveOpenWindowNotification()");
+            Debug.Log(gameObject.name + "UINavigationController.ReceiveOpenWindowNotification()");
             UpdateNavigationList();
         }
 

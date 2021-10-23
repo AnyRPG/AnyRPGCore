@@ -74,6 +74,7 @@ namespace AnyRPG {
                     objectPooler.ReturnObjectToPool(optionButton.gameObject);
                 }
             }
+            uINavigationControllers[1].ClearActiveButtons();
             optionButtons.Clear();
         }
 
@@ -97,7 +98,13 @@ namespace AnyRPG {
                     optionButton.Configure(systemGameManager);
                     optionButton.AddUnitProfile(unitProfile);
                     optionButtons.Add(optionButton);
+                    uINavigationControllers[1].AddActiveButton(optionButton);
+
                 }
+            }
+
+            if (optionButtons.Count > 0) {
+                SetNavigationController(uINavigationControllers[1]);
             }
 
             // attempt to select the button that matches the current unit profile in case this list has the existing profile on it
@@ -122,6 +129,7 @@ namespace AnyRPG {
                 optionButton.Configure(systemGameManager);
                 optionButton.AddUnitProfile(systemConfigurationManager.DefaultPlayerUnitProfile);
                 optionButtons.Add(optionButton);
+                uINavigationControllers[1].AddActiveButton(optionButton);
             }
             foreach (UnitProfile unitProfile in systemConfigurationManager.CharacterCreatorProfiles) {
                 //Debug.Log("NewGameMecanimCharacterPanelController.ShowOptionButtonsCommon(): found valid unit profile: " + unitProfile.DisplayName);
@@ -130,6 +138,7 @@ namespace AnyRPG {
                 optionButton.Configure(systemGameManager);
                 optionButton.AddUnitProfile(unitProfile);
                 optionButtons.Add(optionButton);
+                uINavigationControllers[1].AddActiveButton(optionButton);
             }
         }
 
