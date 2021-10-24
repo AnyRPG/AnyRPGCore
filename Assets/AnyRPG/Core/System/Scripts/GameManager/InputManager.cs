@@ -71,7 +71,7 @@ namespace AnyRPG {
             mouseScrolled = false;
         }
 
-        void Update() {
+        public void RegisterInput() {
             if (keyBindManager.BindName != string.Empty) {
                 // we are binding a key.  discard all input
                 //Debug.Log("Key Binding in progress.  returning.");
@@ -169,7 +169,6 @@ namespace AnyRPG {
         }
 
         public bool KeyBindWasPressedOrHeld(string keyBindID) {
-            RegisterKeyPresses();
             if (keyBindManager.KeyBinds.ContainsKey(keyBindID) &&
                 (keyBindManager.KeyBinds[keyBindID].KeyPressed == true || keyBindManager.KeyBinds[keyBindID].KeyHeld == true)) {
                 return true;
@@ -178,7 +177,6 @@ namespace AnyRPG {
         }
 
         public bool KeyBindWasPressed(string keyBindID) {
-            RegisterKeyPresses();
             if (keyBindManager.KeyBinds.ContainsKey(keyBindID) && keyBindManager.KeyBinds[keyBindID].KeyPressed == true) {
                 return true;
             }

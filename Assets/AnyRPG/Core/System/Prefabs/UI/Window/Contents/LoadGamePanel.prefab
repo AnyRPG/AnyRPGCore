@@ -355,7 +355,10 @@ MonoBehaviour:
   coloredUIElements: []
   userCloseable: 1
   focusFirstButtonOnOpen: 1
+  focusActiveSubPanel: 0
+  navigationControllerOwner: 1
   uINavigationControllers: []
+  subPanels: []
   previewCameraController: {fileID: 8371723547566795880}
 --- !u!1 &4692299217823133985
 GameObject:
@@ -1004,10 +1007,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 03715bb91f4a7fa47b3d93745fb1b35e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  leftPanel: {fileID: 0}
   leftController: {fileID: 0}
+  rightPanel: {fileID: 0}
   rightController: {fileID: 1126385356333861572}
+  upPanel: {fileID: 0}
   upController: {fileID: 0}
+  downPanel: {fileID: 0}
   downController: {fileID: 1126385356333861572}
+  scrollRect: {fileID: 4692299217850708635}
   navigableButtons: []
 --- !u!1 &6529658237067183697
 GameObject:
@@ -1071,10 +1079,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8995f41cb132f3148a9912f89e49421b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  leftPanel: {fileID: 0}
   leftController: {fileID: 0}
+  rightPanel: {fileID: 0}
   rightController: {fileID: 0}
+  upPanel: {fileID: 0}
   upController: {fileID: 4380524380536158505}
+  downPanel: {fileID: 0}
   downController: {fileID: 0}
+  scrollRect: {fileID: 0}
   navigableButtons:
   - {fileID: 4670905920152662219}
   - {fileID: 5226171536529183247}
@@ -1221,9 +1234,12 @@ MonoBehaviour:
   coloredUIElements: []
   userCloseable: 1
   focusFirstButtonOnOpen: 0
+  focusActiveSubPanel: 0
+  navigationControllerOwner: 1
   uINavigationControllers:
   - {fileID: 4380524380536158505}
   - {fileID: 1126385356333861572}
+  subPanels: []
   characterPreviewPanel: {fileID: 580873345184703463}
   buttonPrefab: {fileID: 3408690417865459949, guid: 564e273fe37306a40bd90e88a18eb21c,
     type: 3}
@@ -2356,6 +2372,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: CharacterPreviewPanel
+      objectReference: {fileID: 0}
+    - target: {fileID: 4668107325015325410, guid: 2813171c6b982da40be36cc19182891e,
+        type: 3}
+      propertyPath: analogYawSpeed
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5540552276615009493, guid: 2813171c6b982da40be36cc19182891e,
         type: 3}

@@ -36,7 +36,6 @@ namespace AnyRPG {
             base.SetGameManagerReferences();
 
             uIManager = systemGameManager.UIManager;
-            controlsManager = systemGameManager.ControlsManager;
         }
 
         public void PlayMenu() {

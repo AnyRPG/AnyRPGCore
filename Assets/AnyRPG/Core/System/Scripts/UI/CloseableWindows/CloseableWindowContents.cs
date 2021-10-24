@@ -53,7 +53,7 @@ namespace AnyRPG {
 
         // game manager references
         protected AudioManager audioManager = null;
-        protected ControlsManager controlsManager = null;
+        protected WindowManager windowManager = null;
 
         public Image BackGroundImage { get => backGroundImage; set => backGroundImage = value; }
         public UINavigationController CurrentNavigationController { get => currentNavigationController; }
@@ -84,7 +84,7 @@ namespace AnyRPG {
         public override void SetGameManagerReferences() {
             base.SetGameManagerReferences();
             audioManager = systemGameManager.AudioManager;
-            controlsManager = systemGameManager.ControlsManager;
+            windowManager = systemGameManager.WindowManager;
         }
 
         public virtual void SetWindow(CloseableWindow closeableWindow) {
@@ -278,12 +278,12 @@ namespace AnyRPG {
 
         public virtual void AddToWindowStack() {
             Debug.Log(gameObject.name + ".CloseableWindowContents.AddToWindowStack()");
-            controlsManager.AddWindow(this);
+            windowManager.AddWindow(this);
         }
 
         public virtual void RemoveFromWindowStack() {
             Debug.Log(gameObject.name + ".CloseableWindowContents.RemoveFromWindowStack()");
-            controlsManager.RemoveWindow(this);
+            windowManager.RemoveWindow(this);
         }
 
         public virtual void ReceiveOpenWindowNotification() {

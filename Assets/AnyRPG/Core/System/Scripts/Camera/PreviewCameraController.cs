@@ -48,7 +48,11 @@ namespace AnyRPG {
 
         protected Vector3 initialLookVector = Vector3.zero;
 
+        [Tooltip("Mouse Yaw Speed")]
         public float yawSpeed = 10f;
+
+        [Tooltip("Gamepad analog stick yaw speed")]
+        public float analogYawSpeed = 1f;
 
         // the calculated position we want the camera to go to
         protected Vector3 wantedPosition;
@@ -251,13 +255,12 @@ namespace AnyRPG {
                 cameraZoom = true;
             }
 
-            // pan with the left or turn with the right mouse button
+            // pan with the left or right mouse button
             if (!mouseOutsideWindow
                 && (rightMouseClickedOverThisWindow || leftMouseClickedOverThisWindow)
                 && (inputManager.rightMouseButtonDown || inputManager.leftMouseButtonDown)) {
                 float xInput = Input.GetAxis("Mouse X") * yawSpeed;
                 currentXDegrees += xInput;
-                Quaternion xQuaternion = Quaternion.AngleAxis(currentXDegrees, Vector3.up);
                 //Debug.Log("xInput: " + xInput + "; currentXDegrees: " + currentXDegrees + "; xQuaternion: " + xQuaternion);
                 //Quaternion camTurnAngle = Quaternion.AngleAxis(Input.GetAxis("Mouse X") * yawSpeed, Vector3.up);
                 //cameraOffsetVector = camTurnAngle * cameraOffsetVector;
@@ -265,14 +268,33 @@ namespace AnyRPG {
                 //camTurnAngle = Quaternion.AngleAxis(-Input.GetAxis("Mouse Y") * yawSpeed, transform.right);
                 float yInput = Input.GetAxis("Mouse Y") * yawSpeed;
                 currentYDegrees += yInput;
+
+                //Debug.Log("currentYDegrees: " + currentYDegrees + "; currentXDegrees: " + currentXDegrees + "xInput: " + xInput + "; yInput: " + yInput + "; initialCameraOffset: " + initialCameraOffset + "; currentCameraOffset: " + currentCameraOffset);
+                cameraPan = true;
+            }
+
+            // ====GAMEPAD PAN====
+            if (Input.GetAxis("RightAnalogHorizontal") != 0 || Input.GetAxis("RightAnalogVertical") != 0) {
+
+                if (Input.GetAxis("RightAnalogHorizontal") != 0) {
+                    currentXDegrees += Input.GetAxis("RightAnalogHorizontal") * analogYawSpeed;
+                }
+
+                if (Input.GetAxis("RightAnalogVertical") != 0) {
+                    currentYDegrees += Input.GetAxis("RightAnalogVertical") * analogYawSpeed;
+                }
+
+                cameraPan = true;
+            }
+
+            if (cameraPan == true) {
                 currentYDegrees = Mathf.Clamp(currentYDegrees, minVerticalPan, maxVerticalPan);
+                Quaternion xQuaternion = Quaternion.AngleAxis(currentXDegrees, Vector3.up);
                 Quaternion yQuaternion = Quaternion.AngleAxis(currentYDegrees, Vector3.right);
                 //currentCameraOffset = xQuaternion * yQuaternion * initialCameraPositionOffset;
                 //currentCameraPositionOffset = xQuaternion * yQuaternion * initialCameraPositionOffset;
                 //currentCameraPositionOffset = xQuaternion * yQuaternion * initialCameraLookOffset;
                 currentCameraPositionOffset = xQuaternion * yQuaternion * initialLookVector;
-                //Debug.Log("currentYDegrees: " + currentYDegrees + "; currentXDegrees: " + currentXDegrees + "xInput: " + xInput + "; yInput: " + yInput + "; initialCameraOffset: " + initialCameraOffset + "; currentCameraOffset: " + currentCameraOffset);
-                cameraPan = true;
             }
 
             // move the rotation point away from the center of the target using middle mouse button

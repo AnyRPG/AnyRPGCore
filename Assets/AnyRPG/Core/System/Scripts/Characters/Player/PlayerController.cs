@@ -61,6 +61,7 @@ namespace AnyRPG {
         protected KeyBindManager keyBindManager = null;
         protected CraftingManager craftingManager = null;
         protected UIManager uIManager = null;
+        protected WindowManager windowManager = null;
 
         public List<Interactable> MyInteractables { get => interactables; }
         public RaycastHit MyMouseOverhit { get => mouseOverhit; set => mouseOverhit = value; }
@@ -76,6 +77,7 @@ namespace AnyRPG {
             keyBindManager = systemGameManager.KeyBindManager;
             craftingManager = systemGameManager.CraftingManager;
             uIManager = systemGameManager.UIManager;
+            windowManager = systemGameManager.WindowManager;
         }
 
         protected void OnEnable() {
@@ -125,18 +127,26 @@ namespace AnyRPG {
             //inputAimVertical = Input.GetAxisRaw("AimVertical");
             //inputAimHorizontal = Input.GetAxisRaw("AimHorizontal");
 
-            // gather joystick input
+            // gather joystick move input
             inputHorizontal = Input.GetAxis("LeftAnalogHorizontal");
             inputVertical = Input.GetAxis("LeftAnalogVertical");
-            inputTurn = Input.GetAxis("RightAnalogHorizontal");
             //Debug.Log("Joystick inputHorizontal: " + inputHorizontal + "; vertical: " + inputVertical);
 
-            // gather keyboard input
+            // gather keyboard move input
             inputHorizontal += (inputManager.KeyBindWasPressedOrHeld("STRAFELEFT") ? -1 : 0) + (inputManager.KeyBindWasPressedOrHeld("STRAFERIGHT") ? 1 : 0);
             inputVertical += (inputManager.KeyBindWasPressedOrHeld("BACK") ? -1 : 0) + (inputManager.KeyBindWasPressedOrHeld("FORWARD") ? 1 : 0);
+
+            // only gather gamepad turn input while moving
+            if (inputHorizontal != 0f || inputVertical != 0f) {
+                inputTurn = Input.GetAxis("RightAnalogHorizontal");
+            }
+
+            // gather keyboard turn input
             inputTurn += (inputManager.KeyBindWasPressedOrHeld("TURNLEFT") ? -1 : 0) + (inputManager.KeyBindWasPressedOrHeld("TURNRIGHT") ? 1 : 0);
 
-            if (((inputHorizontal != 0f) || (inputVertical != 0f) || inputJump || inputFly || inputSink || inputStrafe || inputCrouch) && autorunActive) {
+            // turn off autorun if there is any movement input
+            if (autorunActive
+                && ((inputHorizontal != 0f) || (inputVertical != 0f) || inputJump || inputFly || inputSink || inputStrafe || inputCrouch)) {
                 ToggleAutorun();
             }
 
@@ -159,7 +169,7 @@ namespace AnyRPG {
         }
         */
 
-        protected void Update() {
+        public void ProcessInput() {
             //Debug.Log("PlayerController.Update()");
             ResetMoveInput();
 
@@ -480,16 +490,22 @@ namespace AnyRPG {
         }
 
         private void RegisterTab() {
+
+            //Interactable oldTarget = playerManager.UnitController.Target;
+
+            // register gamepad tab target, allow friendly target
+            if (windowManager.WindowStack.Count == 0 && playerManager.UnitController.Target == null && inputManager.KeyBindWasPressed("ACCEPT")) {
+                GetNextTabTarget(playerManager.UnitController.Target, true);
+            }
+
+            // register keyboard tab target, only allow enemy target
             if (inputManager.KeyBindWasPressed("NEXTTARGET")) {
                 //Debug.Log("Tab Target Registered");
-                Interactable oldTarget = playerManager.UnitController.Target;
-                // moving this inside getnexttabtarget
-                //playerManager.UnitController.ClearTarget();
-                GetNextTabTarget(oldTarget);
+                GetNextTabTarget(playerManager.UnitController.Target);
             }
         }
 
-        private void GetNextTabTarget(Interactable oldTarget) {
+        private void GetNextTabTarget(Interactable oldTarget, bool includeFriendly = false) {
             //Debug.Log("PlayerController.GetNextTabTarget(): maxDistance: " + tabTargetMaxDistance);
             DateTime currentTime = DateTime.Now;
             TimeSpan timeSinceLastTab = currentTime - lastTabTargetTime;
@@ -507,7 +523,8 @@ namespace AnyRPG {
                 //Debug.Log("GetNextTabTarget(): collider length: " + hitColliders.Length);
                 GameObject collidedGameObject = hitCollider.gameObject;
                 UnitController targetCharacterUnit = collidedGameObject.GetComponent<UnitController>();
-                if (targetCharacterUnit != null && targetCharacterUnit.CharacterUnit.BaseCharacter.CharacterStats.IsAlive == true && Faction.RelationWith(targetCharacterUnit.CharacterUnit.BaseCharacter, playerManager.MyCharacter.Faction) <= -1) {
+                if (targetCharacterUnit != null && targetCharacterUnit.CharacterUnit.BaseCharacter.CharacterStats.IsAlive == true
+                    && (includeFriendly == true || (includeFriendly == false && Faction.RelationWith(targetCharacterUnit.CharacterUnit.BaseCharacter, playerManager.MyCharacter.Faction) <= -1))) {
 
                     // check if the unit is actually in front of our character.
                     // not doing any cone or angles for now, anywhere in front will do.  might adjust this a bit later to prevent targetting units nearly adjacent to us and far away

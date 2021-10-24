@@ -26,7 +26,9 @@ namespace AnyRPG {
         public float initialZOffset = 4f;
 
         public float pitch = 2f;
-        public float yawSpeed = 10;
+        public float yawSpeed = 10f;
+
+        public float analogYawSpeed = 5f;
 
         public bool followBehind = true;
 
@@ -56,6 +58,7 @@ namespace AnyRPG {
         protected InputManager inputManager = null;
         protected NamePlateManager namePlateManager = null;
         protected UIManager uIManager = null;
+        protected WindowManager windowManager = null;
 
         public Transform Target { get => target; set => target = value; }
         public Vector3 WantedDirection { get => wantedDirection; set => wantedDirection = value; }
@@ -65,6 +68,7 @@ namespace AnyRPG {
             inputManager = systemGameManager.InputManager;
             uIManager = systemGameManager.UIManager;
             namePlateManager = uIManager.NamePlateManager;
+            windowManager = systemGameManager.WindowManager;
         }
 
         private void Awake() {
@@ -157,10 +161,12 @@ namespace AnyRPG {
                 cameraZoom = true;
             }
 
+
+            // ====MOUSE PAN====
             // pan with the left or turn with the right mouse button
             // IF START HAVING MORE ISSUES WITH PAN AND TURN IN FUTURE, JUST COMMENT BELOW LINE AND RE-ENABLE COMMENTED LINE BELOW IT SINCE QUATERNIONS ARE NOW ALWAYS CALCULATED IN SETWANTEDPOSITION
             if (!uIManager.DragInProgress && ((inputManager.rightMouseButtonDown && !inputManager.rightMouseButtonClickedOverUI) || (inputManager.leftMouseButtonDown && !inputManager.leftMouseButtonClickedOverUI))) {
-                //if (!uIManager.MyDragInProgress && ((inputManager.rightMouseButtonDown && !inputManager.rightMouseButtonClickedOverUI && inputManager.rightMouseButtonDownPosition != Input.mousePosition) || (inputManager.leftMouseButtonDown && !inputManager.leftMouseButtonClickedOverUI && inputManager.leftMouseButtonDownPosition != Input.mousePosition))) {
+                //if (!uIManager.DragInProgress && ((inputManager.rightMouseButtonDown && !inputManager.rightMouseButtonClickedOverUI && inputManager.rightMouseButtonDownPosition != Input.mousePosition) || (inputManager.leftMouseButtonDown && !inputManager.leftMouseButtonClickedOverUI && inputManager.leftMouseButtonDownPosition != Input.mousePosition))) {
                 //float xInput = Input.GetAxis("Mouse X") * yawSpeed;
                 float usedTurnSpeed = 0f;
                 if (inputManager.rightMouseButtonDown) {
@@ -178,10 +184,28 @@ namespace AnyRPG {
                 //float yInput = Input.GetAxis("Mouse Y") * yawSpeed;
                 //currentYDegrees += (yInput * usedTurnSpeed) * (PlayerPrefs.GetInt("MouseInvert") == 0 ? 1 : -1);
                 currentYDegrees += (Input.GetAxis("Mouse Y") * yawSpeed * usedTurnSpeed) * (PlayerPrefs.GetInt("MouseInvert") == 0 ? 1 : -1);
-                currentYDegrees = Mathf.Clamp(currentYDegrees, minVerticalPan, maxVerticalPan);
+                //currentYDegrees = Mathf.Clamp(currentYDegrees, minVerticalPan, maxVerticalPan);
 
                 cameraPan = true;
+            }
 
+            // ====GAMEPAD PAN====
+            if (windowManager.WindowStack.Count == 0
+                && (Input.GetAxis("RightAnalogHorizontal") != 0 || Input.GetAxis("RightAnalogVertical") != 0)) {
+
+                if (Input.GetAxis("RightAnalogHorizontal") != 0) {
+                    currentXDegrees += Input.GetAxis("RightAnalogHorizontal") * analogYawSpeed * (PlayerPrefs.GetFloat("MouseLookSpeed"));
+                }
+
+                if (Input.GetAxis("RightAnalogVertical") != 0) {
+                    currentYDegrees += (Input.GetAxis("RightAnalogVertical") * analogYawSpeed * (PlayerPrefs.GetFloat("MouseLookSpeed"))) * (PlayerPrefs.GetInt("MouseInvert") == 0 ? 1 : -1);
+                }
+
+                cameraPan = true;
+            }
+
+            if (cameraPan) {
+                currentYDegrees = Mathf.Clamp(currentYDegrees, minVerticalPan, maxVerticalPan);
             }
 
             // follow the player

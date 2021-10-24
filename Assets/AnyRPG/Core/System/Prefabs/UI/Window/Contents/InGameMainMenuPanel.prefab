@@ -97,7 +97,12 @@ MonoBehaviour:
   backGroundImage: {fileID: 0}
   coloredUIElements: []
   userCloseable: 1
-  uINavigationControllers: []
+  focusFirstButtonOnOpen: 1
+  focusActiveSubPanel: 0
+  navigationControllerOwner: 1
+  uINavigationControllers:
+  - {fileID: 5311598313139156414}
+  subPanels: []
   saveButton: {fileID: 3249158636845063192}
   settingsButton: {fileID: 1597165892630499296}
   continueButton: {fileID: 1034197417366089657}
@@ -115,10 +120,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 03715bb91f4a7fa47b3d93745fb1b35e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  leftPanel: {fileID: 0}
   leftController: {fileID: 0}
+  rightPanel: {fileID: 0}
   rightController: {fileID: 0}
+  upPanel: {fileID: 0}
   upController: {fileID: 0}
+  downPanel: {fileID: 0}
   downController: {fileID: 0}
+  scrollRect: {fileID: 0}
   navigableButtons:
   - {fileID: 3249158636845063192}
   - {fileID: 1597165892630499296}

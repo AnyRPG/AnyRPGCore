@@ -62,7 +62,9 @@ namespace AnyRPG {
             newGameButton.Configure(systemGameManager);
             deleteGameButton.Configure(systemGameManager);
             copyGameButton.Configure(systemGameManager);
+
             characterPreviewPanel.Configure(systemGameManager);
+            characterPreviewPanel.SetParentPanel(this);
         }
 
         public override void SetGameManagerReferences() {
@@ -77,7 +79,6 @@ namespace AnyRPG {
 
         public override void ReceiveClosedWindowNotification() {
             //Debug.Log("LoadGamePanel.RecieveClosedWindowNotification()");
-            base.ReceiveClosedWindowNotification();
             // testing - character will load its own equipment when it spawns
             //characterPreviewPanel.OnTargetReady -= HandleTargetReady;
             characterPreviewPanel.OnTargetCreated -= HandleTargetCreated;
@@ -87,6 +88,7 @@ namespace AnyRPG {
 
             ClearLoadButtons();
 
+            base.ReceiveClosedWindowNotification();
             OnCloseWindow(this);
         }
 

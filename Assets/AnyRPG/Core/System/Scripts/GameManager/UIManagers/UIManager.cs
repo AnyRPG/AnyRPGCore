@@ -550,16 +550,7 @@ namespace AnyRPG {
             CleanupEventSubscriptions();
         }
 
-        void Update() {
-
-            /*
-             * commented out for now because the UIManager now handles system windows also
-             * added condition below to prevent typeing a new character name from triggering a popup window
-            if (playerManager.PlayerUnitSpawned == false) {
-                // if there is no player, these windows shouldn't be open
-                return;
-            }
-            */
+        public void ProcessInput() {
 
             // don't hide windows while binding keys
             if (keyBindManager.BindName == string.Empty && playerManager.PlayerUnitSpawned != false) {
@@ -601,6 +592,10 @@ namespace AnyRPG {
                 if (inputManager.KeyBindWasPressed("MAINMAP")) {
                     //Debug.Log("mainmap was pressed");
                     mainMapWindow.ToggleOpenClose();
+                }
+
+                if (playerUI.activeInHierarchy == true) {
+                    handScript.ProcessInput();
                 }
             }
 
