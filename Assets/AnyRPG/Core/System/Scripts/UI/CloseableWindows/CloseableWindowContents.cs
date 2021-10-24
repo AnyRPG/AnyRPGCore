@@ -46,6 +46,7 @@ namespace AnyRPG {
 
         protected CloseableWindowContents parentPanel = null;
 
+        protected CloseableWindowContents openSubPanel = null;
         protected CloseableWindowContents activeSubPanel = null;
 
         protected bool eventSubscriptionsInitialized = false;
@@ -56,6 +57,7 @@ namespace AnyRPG {
 
         public Image BackGroundImage { get => backGroundImage; set => backGroundImage = value; }
         public UINavigationController CurrentNavigationController { get => currentNavigationController; }
+        public CloseableWindowContents ParentPanel { get => parentPanel; }
 
         public override void Configure(SystemGameManager systemGameManager) {
             Debug.Log(gameObject.name + ".CloseableWindowContents.Configure()");
@@ -94,8 +96,17 @@ namespace AnyRPG {
         }
 
         public virtual void SetActiveSubPanel(CloseableWindowContents closeableWindowContents) {
+            Debug.Log(gameObject.name + ".CloseableWindowContents.SetActiveSubPanel(" + (closeableWindowContents == null ? "null" : closeableWindowContents.name) + ")");
             activeSubPanel = closeableWindowContents;
-            SetNavigationController(activeSubPanel.currentNavigationController);
+            if (activeSubPanel != null) {
+                currentNavigationController = null;
+            }
+        }
+
+        public virtual void SetOpenSubPanel(CloseableWindowContents closeableWindowContents) {
+            Debug.Log(gameObject.name + ".CloseableWindowContents.SetOpenSubPanel(" + closeableWindowContents.name + ")");
+            openSubPanel = closeableWindowContents;
+            SetActiveSubPanel(closeableWindowContents);
         }
 
         public virtual void SetNavigationController(UINavigationController uINavigationController) {
@@ -109,76 +120,115 @@ namespace AnyRPG {
         /// <summary>
         /// re-focus a window after closing another window
         /// </summary>
-        public UINavigationController FocusCurrentButton() {
-            Debug.Log(gameObject.name + ".CloseableWindowContents.Focus()");
+        public void FocusCurrentButton() {
+            Debug.Log(gameObject.name + ".CloseableWindowContents.FocusCurrentButton()");
+            if (currentNavigationController == null && uINavigationControllers != null) {
+                currentNavigationController = uINavigationControllers[0];
+            }
             if (currentNavigationController != null) {
                 currentNavigationController.FocusCurrentButton();
-                return currentNavigationController;
+            } else {
+                Debug.Log(gameObject.name + ".CloseableWindowContents.FocusCurrentButton(): currentNavigationController is null");
             }
-            return null;
         }
 
-        public UINavigationController FocusFirstButton() {
+        public void FocusFirstButton() {
             Debug.Log(gameObject.name + ".CloseableWindowContents.FocusFirstButton()");
+            if (currentNavigationController == null && uINavigationControllers != null) {
+                currentNavigationController = uINavigationControllers[0];
+            }
             if (currentNavigationController != null) {
                 currentNavigationController.FocusFirstButton();
-                return currentNavigationController;
             } else {
                 Debug.Log(gameObject.name + ".CloseableWindowContents.FocusFirstButton(): currentNavigationController is null");
             }
-            return null;
         }
 
-        public void ChooseFocus() {
+        public virtual void ChooseFocus() {
             Debug.Log(gameObject.name + ".CloseableWindowContents.ChooseFocus()");
             if (systemConfigurationManager.DefaultControllerConfiguration == DefaultControllerConfiguration.GamePad && focusActiveSubPanel == true) {
-                currentNavigationController = activeSubPanel.FocusCurrentButton();
+                if (openSubPanel != null) {
+                    SetActiveSubPanel(openSubPanel);
+                    //currentNavigationController = openSubPanel.FocusCurrentButton();
+                    openSubPanel.FocusCurrentButton();
+                }
                 return;
             }
 
         }
 
-        public void Accept() {
+        public virtual void Accept() {
             Debug.Log(gameObject.name + ".CloseableWindowContents.Accept()");
+            if (activeSubPanel != null) {
+                activeSubPanel.Accept();
+                return;
+            }
             if (currentNavigationController != null) {
                 currentNavigationController.Accept();
             }
         }
 
-        public void Cancel() {
+        public virtual bool Cancel() {
             Debug.Log(gameObject.name + ".CloseableWindowContents.Cancel()");
+            if (activeSubPanel != null) {
+                if (activeSubPanel.Cancel()) {
+                    activeSubPanel = null;
+                    FocusCurrentButton();
+                }
+                return false;
+            }
             if (currentNavigationController != null && currentNavigationController.CurrentNavigableElement.CaptureCancelButton == true) {
                 currentNavigationController.CurrentNavigableElement.Cancel();
-                return;
+                return false;
             }
-            if (userCloseable == true) {
+            if (currentNavigationController != null) {
+                currentNavigationController.Cancel();
+            }
+            if (userCloseable == true && parentPanel == null) {
                 Close();
             }
+            return true;
         }
 
-        public void UpButton() {
+        public virtual void UpButton() {
             Debug.Log(gameObject.name + ".CloseableWindowContents.UpButton()");
+            if (activeSubPanel != null) {
+                activeSubPanel.UpButton();
+                return;
+            }
             if (currentNavigationController != null) {
                 currentNavigationController.UpButton();
             }
         }
 
-        public void DownButton() {
+        public virtual void DownButton() {
             Debug.Log(gameObject.name + ".CloseableWindowContents.DownButton()");
+            if (activeSubPanel != null) {
+                activeSubPanel.DownButton();
+                return;
+            }
             if (currentNavigationController != null) {
                 currentNavigationController.DownButton();
             }
         }
 
-        public void LeftButton() {
+        public virtual void LeftButton() {
             Debug.Log(gameObject.name + ".CloseableWindowContents.LeftButton()");
+            if (activeSubPanel != null) {
+                activeSubPanel.LeftButton();
+                return;
+            }
             if (currentNavigationController != null) {
                 currentNavigationController.LeftButton();
             }
         }
 
-        public void RightButton() {
+        public virtual void RightButton() {
             Debug.Log(gameObject.name + ".CloseableWindowContents.RightButton()");
+            if (activeSubPanel != null) {
+                activeSubPanel.RightButton();
+                return;
+            }
             if (currentNavigationController != null) {
                 currentNavigationController.RightButton();
             }
@@ -190,9 +240,11 @@ namespace AnyRPG {
                 closeableWindow.CloseWindow();
                 return;
             }
+            /*
             if (parentPanel != null) {
                 parentPanel.Close();
             }
+            */
         }
 
         protected virtual void CreateEventSubscriptions() {
@@ -225,10 +277,12 @@ namespace AnyRPG {
         }
 
         public virtual void AddToWindowStack() {
+            Debug.Log(gameObject.name + ".CloseableWindowContents.AddToWindowStack()");
             controlsManager.AddWindow(this);
         }
 
         public virtual void RemoveFromWindowStack() {
+            Debug.Log(gameObject.name + ".CloseableWindowContents.RemoveFromWindowStack()");
             controlsManager.RemoveWindow(this);
         }
 

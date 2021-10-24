@@ -10360,7 +10360,7 @@ MonoBehaviour:
   userCloseable: 1
   focusFirstButtonOnOpen: 1
   focusActiveSubPanel: 0
-  navigationControllerOwner: 0
+  navigationControllerOwner: 1
   uINavigationControllers:
   - {fileID: 247818268808140860}
   subPanels: []
@@ -12811,14 +12811,7 @@ MonoBehaviour:
   focusActiveSubPanel: 1
   navigationControllerOwner: 1
   uINavigationControllers:
-  - {fileID: 247818268808140860}
   - {fileID: 1195257474298769629}
-  - {fileID: 206260364228150467}
-  - {fileID: 7626182369620008702}
-  - {fileID: 6445197090161893035}
-  - {fileID: 4524423954067061076}
-  - {fileID: 3876649864152510167}
-  - {fileID: 4097394113938673115}
   subPanels: []
   playerNameLabel: {fileID: 1703160643895514288}
   characterPreviewPanel: {fileID: 2578656018663227496}

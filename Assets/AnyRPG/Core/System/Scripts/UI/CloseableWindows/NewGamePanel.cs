@@ -122,13 +122,13 @@ namespace AnyRPG {
             umaCharacterPanel.SetParentPanel(this);
 
             classPanel.Configure(systemGameManager);
-            classPanel.SetParentPanel(this);
+            classPanel.SetNewGamePanel(this);
 
             factionPanel.Configure(systemGameManager);
-            factionPanel.SetParentPanel(this);
+            factionPanel.SetNewGamePanel(this);
 
             specializationPanel.Configure(systemGameManager);
-            specializationPanel.SetParentPanel(this);
+            specializationPanel.SetNewGamePanel(this);
         }
 
         public override void SetGameManagerReferences() {
@@ -264,7 +264,7 @@ namespace AnyRPG {
             }
 
             if (systemConfigurationManager.DefaultControllerConfiguration == DefaultControllerConfiguration.GamePad && focusActiveSubPanel == true) {
-                activeSubPanel.FocusFirstButton();
+                openSubPanel.FocusFirstButton();
                 return;
             }
 
@@ -347,25 +347,25 @@ namespace AnyRPG {
         public void OpenDetailsPanel() {
             ClosePanels();
             detailsPanel.ShowPanel();
-            SetActiveSubPanel(detailsPanel);
+            SetOpenSubPanel(detailsPanel);
         }
 
         public void OpenClassPanel() {
             ClosePanels();
             classPanel.ShowPanel();
-            SetActiveSubPanel(classPanel);
+            SetOpenSubPanel(classPanel);
         }
 
         public void OpenCharacterPanel() {
             ClosePanels();
             characterPanel.ShowPanel();
-            SetActiveSubPanel(characterPanel);
+            SetOpenSubPanel(characterPanel);
         }
 
         public void OpenAppearancePanel() {
             ClosePanels();
             umaCharacterPanel.ShowPanel();
-            SetActiveSubPanel(umaCharacterPanel);
+            SetOpenSubPanel(umaCharacterPanel);
         }
 
         public void OpenFactionPanel() {
@@ -373,7 +373,7 @@ namespace AnyRPG {
 
             ClosePanels();
             factionPanel.ShowPanel();
-            SetActiveSubPanel(factionPanel);
+            SetOpenSubPanel(factionPanel);
         }
 
         public void OpenSpecializationPanel() {
@@ -381,7 +381,7 @@ namespace AnyRPG {
             if (specializationPanel.OptionButtons.Count > 0) {
                 ClosePanels();
                 specializationPanel.ShowPanel();
-                SetActiveSubPanel(specializationPanel);
+                SetOpenSubPanel(specializationPanel);
             }
         }
 

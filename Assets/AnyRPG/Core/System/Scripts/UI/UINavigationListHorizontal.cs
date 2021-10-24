@@ -107,6 +107,7 @@ namespace AnyRPG {
         }
 
         public override void Accept() {
+            Debug.Log(gameObject.name + ".UINavigationListHorizontal.Accept()");
             if (activeNavigableButtons.Count == 0) {
                 return;
             }

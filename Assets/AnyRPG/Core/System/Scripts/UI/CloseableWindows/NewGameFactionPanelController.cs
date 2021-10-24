@@ -41,6 +41,8 @@ namespace AnyRPG {
 
         private List<NewGameFactionButton> optionButtons = new List<NewGameFactionButton>();
 
+        private NewGamePanel newGamePanel = null;
+
         // game manager references
         private ObjectPooler objectPooler = null;
         private SystemDataFactory systemDataFactory = null;
@@ -52,6 +54,11 @@ namespace AnyRPG {
             objectPooler = systemGameManager.ObjectPooler;
             systemDataFactory = systemGameManager.SystemDataFactory;
             newGameManager = systemGameManager.NewGameManager;
+        }
+
+        public void SetNewGamePanel(NewGamePanel newGamePanel) {
+            this.newGamePanel = newGamePanel;
+            parentPanel = newGamePanel;
         }
 
         public void ClearOptionButtons() {
@@ -207,6 +214,14 @@ namespace AnyRPG {
             //Debug.Log("ClassChangePanelController.OnCloseWindow()");
             base.ReceiveClosedWindowNotification();
             OnCloseWindow(this);
+        }
+
+        public override void Accept() {
+            Debug.Log(gameObject.name + ".NewGameFactionPanelController.Accept()");
+            base.Accept();
+            if (currentNavigationController == uINavigationControllers[0]) {
+                newGamePanel.OpenDetailsPanel();
+            }
         }
     }
 

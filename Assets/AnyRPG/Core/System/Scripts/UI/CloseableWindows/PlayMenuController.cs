@@ -37,8 +37,8 @@ namespace AnyRPG {
         public void NewGame() {
             //Debug.Log("PlayMenuController.NewGame()");
             if (systemConfigurationManager.UseNewGameWindow == true) {
-                uIManager.newGameWindow.OpenWindow();
                 uIManager.playMenuWindow.CloseWindow();
+                uIManager.newGameWindow.OpenWindow();
             } else {
                 uIManager.confirmNewGameMenuWindow.OpenWindow();
             }
@@ -51,8 +51,8 @@ namespace AnyRPG {
 
         public void LoadGame() {
             //Debug.Log("PlayMenuController.LoadGame()");
-            uIManager.loadGameWindow.OpenWindow();
             uIManager.playMenuWindow.CloseWindow();
+            uIManager.loadGameWindow.OpenWindow();
         }
 
     }

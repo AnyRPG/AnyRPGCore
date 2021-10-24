@@ -43,6 +43,8 @@ namespace AnyRPG {
 
         public List<NewGameClassSpecializationButton> OptionButtons { get => optionButtons; }
 
+        private NewGamePanel newGamePanel = null;
+
         // game manager references
         private ObjectPooler objectPooler = null;
         private SystemDataFactory systemDataFactory = null;
@@ -54,6 +56,11 @@ namespace AnyRPG {
             objectPooler = systemGameManager.ObjectPooler;
             systemDataFactory = systemGameManager.SystemDataFactory;
             newGameManager = systemGameManager.NewGameManager;
+        }
+
+        public void SetNewGamePanel(NewGamePanel newGamePanel) {
+            this.newGamePanel = newGamePanel;
+            parentPanel = newGamePanel;
         }
 
         public void ClearOptionButtons() {
@@ -130,14 +137,14 @@ namespace AnyRPG {
             canvasGroup.alpha = 0;
             canvasGroup.blocksRaycasts = false;
             canvasGroup.interactable = false;
-            RemoveFromWindowStack();
+            //RemoveFromWindowStack();
         }
 
         public void ShowPanel() {
             canvasGroup.alpha = 1;
             canvasGroup.blocksRaycasts = true;
             canvasGroup.interactable = true;
-            AddToWindowStack();
+            //AddToWindowStack();
         }
 
         public void ShowTraitRewards() {
@@ -231,6 +238,14 @@ namespace AnyRPG {
             base.ReceiveClosedWindowNotification();
             OnCloseWindow(this);
         }
+
+        public override void Accept() {
+            base.Accept();
+            if (currentNavigationController == uINavigationControllers[0]) {
+                newGamePanel.OpenDetailsPanel();
+            }
+        }
+
     }
 
 }

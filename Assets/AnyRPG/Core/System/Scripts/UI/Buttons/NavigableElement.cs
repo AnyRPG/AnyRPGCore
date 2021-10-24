@@ -25,6 +25,7 @@ namespace AnyRPG {
         }
 
         public virtual void Accept() {
+            Debug.Log(gameObject.name + "NavigableElement.Accept()");
             Interact();
         }
 

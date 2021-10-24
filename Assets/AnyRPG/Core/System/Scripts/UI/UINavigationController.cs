@@ -77,6 +77,18 @@ namespace AnyRPG {
             owner = closeableWindowContents;
         }
 
+        public virtual void SetActive() {
+            Debug.Log(gameObject.name + ".UINavigationController.SetActive()");
+            if (owner != null) {
+                owner.SetActiveSubPanel(null);
+                owner.SetNavigationController(this);
+                if (owner.ParentPanel != null) {
+                    owner.ParentPanel.SetActiveSubPanel(owner);
+                }
+
+            }
+        }
+
         public virtual void AddActiveButton(NavigableElement navigableElement) {
             activeNavigableButtons.Add(navigableElement);
         }
@@ -101,7 +113,7 @@ namespace AnyRPG {
             Debug.Log(gameObject.name + "UINavigationController.LeaveUp()");
             if (upController != null) {
                 currentNavigableElement.LeaveElement();
-                owner.SetNavigationController(upController);
+                upController.SetActive();
                 return true;
             }
             if (upPanel != null) {
@@ -120,7 +132,7 @@ namespace AnyRPG {
             Debug.Log(gameObject.name + "UINavigationController.LeaveDown()");
             if (downController != null) {
                 currentNavigableElement.LeaveElement();
-                owner.SetNavigationController(downController);
+                downController.SetActive();
                 return true;
             }
             if (downPanel != null) {
@@ -139,7 +151,7 @@ namespace AnyRPG {
             Debug.Log(gameObject.name + "UINavigationController.LeaveLeft()");
             if (leftController != null) {
                 currentNavigableElement.LeaveElement();
-                owner.SetNavigationController(leftController);
+                leftController.SetActive();
                 return true;
             }
             if (leftPanel != null) {
@@ -158,7 +170,7 @@ namespace AnyRPG {
             Debug.Log(gameObject.name + "UINavigationController.LeaveRight()");
             if (rightController != null) {
                 currentNavigableElement.LeaveElement();
-                owner.SetNavigationController(rightController);
+                rightController.SetActive();
                 return true;
             }
             if (rightPanel != null) {
@@ -172,6 +184,13 @@ namespace AnyRPG {
 
         public virtual void Accept() {
             Debug.Log(gameObject.name + "UINavigationController.Accept()");
+        }
+
+        public virtual void Cancel() {
+            Debug.Log(gameObject.name + "UINavigationController.Cancel()");
+            if (currentNavigableElement != null) {
+                currentNavigableElement.LeaveElement();
+            }
         }
 
         public virtual void UpdateNavigationList() {
