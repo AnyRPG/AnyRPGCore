@@ -208,6 +208,12 @@ namespace AnyRPG {
 
         public virtual void UpdateNavigationList() {
             Debug.Log(gameObject.name + "UINavigationController.UpdateNavigationList()");
+            activeNavigableButtons.Clear();
+            foreach (NavigableElement navigableElement in navigableButtons) {
+                if (navigableElement.gameObject.activeSelf == true) {
+                    activeNavigableButtons.Add(navigableElement);
+                }
+            }
         }
 
         public virtual void ReceiveOpenWindowNotification() {

@@ -28,9 +28,11 @@ namespace AnyRPG {
         [SerializeField]
         protected bool focusActiveSubPanel = false;
 
+        /*
         [Tooltip("Set this to false if another panel will configure the navigation controllers")]
         [SerializeField]
         protected bool navigationControllerOwner = true;
+        */
 
         [SerializeField]
         protected List<UINavigationController> uINavigationControllers = new List<UINavigationController>();
@@ -70,12 +72,12 @@ namespace AnyRPG {
                 coloredUIElement.Configure(systemGameManager);
             }
             if (uINavigationControllers.Count != 0) {
-                if (navigationControllerOwner) {
+                //if (navigationControllerOwner) {
                     foreach (UINavigationController uINavigationController in uINavigationControllers) {
                         uINavigationController.Configure(systemGameManager);
                         uINavigationController.SetOwner(this);
                     }
-                }
+                //}
                 currentNavigationController = uINavigationControllers[0];
             }
             CreateEventSubscriptions();
@@ -177,7 +179,7 @@ namespace AnyRPG {
                 }
                 return false;
             }
-            if (currentNavigationController != null && currentNavigationController.CurrentNavigableElement.CaptureCancelButton == true) {
+            if (currentNavigationController != null && currentNavigationController.CurrentNavigableElement?.CaptureCancelButton == true) {
                 currentNavigationController.CurrentNavigableElement.Cancel();
                 return false;
             }

@@ -538,6 +538,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   backGroundImage: {fileID: 0}
+  coloredUIElements: []
+  userCloseable: 1
+  focusFirstButtonOnOpen: 1
+  focusActiveSubPanel: 0
+  navigationControllerOwner: 1
+  uINavigationControllers:
+  - {fileID: 2447269729933671565}
+  subPanels: []
   defaultNextText: Next
   characterNameText: {fileID: 0}
   dialogText: {fileID: 1723618456600313269}
@@ -1090,6 +1098,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3767841566785989900}
   - component: {fileID: 4349001006577634499}
+  - component: {fileID: 2447269729933671565}
   m_Layer: 5
   m_Name: ButtonContainer
   m_TagString: Untagged
@@ -1127,6 +1136,32 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8317061985243932807}
   m_CullTransparentMesh: 0
+--- !u!114 &2447269729933671565
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8317061985243932807}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8995f41cb132f3148a9912f89e49421b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  leftPanel: {fileID: 0}
+  leftController: {fileID: 0}
+  rightPanel: {fileID: 0}
+  rightController: {fileID: 0}
+  upPanel: {fileID: 0}
+  upController: {fileID: 0}
+  downPanel: {fileID: 0}
+  downController: {fileID: 0}
+  acceptController: {fileID: 0}
+  scrollRect: {fileID: 0}
+  navigableButtons:
+  - {fileID: 7401077208548695849}
+  - {fileID: 5754674889825006895}
+  - {fileID: 7940204633215222608}
 --- !u!1001 &939643219926857226
 PrefabInstance:
   m_ObjectHideFlags: 0

@@ -24,6 +24,7 @@ namespace AnyRPG {
             UpdateNavigationList();
         }
 
+        /*
         public override void UpdateNavigationList() {
             foreach (NavigableElement navigableElement in navigableButtons) {
                 if (navigableElement.gameObject.activeSelf == true) {
@@ -31,6 +32,7 @@ namespace AnyRPG {
                 }
             }
         }
+        */
 
         public override void FocusFirstButton() {
             Debug.Log(gameObject.name + ".UINavigationListHorizontal.FocusFirstButton()");

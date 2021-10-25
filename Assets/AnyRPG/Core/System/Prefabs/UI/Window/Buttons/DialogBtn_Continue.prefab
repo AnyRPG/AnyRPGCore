@@ -37,7 +37,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 392.03, y: 0}
+  m_AnchoredPosition: {x: 384.44, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!33 &3178278877195375661
@@ -105,6 +105,7 @@ MonoBehaviour:
   m_Material: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
+  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
@@ -243,6 +244,7 @@ MonoBehaviour:
   m_Material: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
+  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
@@ -271,6 +273,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Navigation:
     m_Mode: 0
+    m_WrapAround: 0
     m_SelectOnUp: {fileID: 0}
     m_SelectOnDown: {fileID: 0}
     m_SelectOnLeft: {fileID: 0}
@@ -301,17 +304,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 0}
-        m_MethodName: OnClickSound
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: IntroCinematic
-          m_BoolArgument: 0
-        m_CallState: 2
-      - m_Target: {fileID: 0}
+        m_TargetAssemblyTypeName: 
         m_MethodName: ConfirmAction
         m_Mode: 1
         m_Arguments:
@@ -361,6 +354,7 @@ MonoBehaviour:
   m_ChildControlHeight: 0
   m_ChildScaleWidth: 0
   m_ChildScaleHeight: 0
+  m_ReverseArrangement: 0
 --- !u!114 &-1459271808735712989
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -377,8 +371,11 @@ MonoBehaviour:
   highlightImage: {fileID: 0}
   highlightButton: {fileID: 3178278877513880678}
   useHighlightColor: 0
-  useHighlightColorOnButton: 0
+  useHighlightColorOnButton: 1
   highlightColor: {r: 0.64705884, g: 0.64705884, b: 0.64705884, a: 0.403}
-  baseColor: {r: 0.6397059, g: 0.6397059, b: 0.6397059, a: 0.10980392}
-  baseHighlightColor: {r: 0.64705884, g: 0.64705884, b: 0.64705884, a: 0.403}
+  normalColor: {r: 0.6392157, g: 0.6392157, b: 0.6392157, a: 0.10980392}
+  highlightedColor: {r: 0.64705884, g: 0.64705884, b: 0.64705884, a: 0.40392157}
+  pressedColor: {r: 0.47058824, g: 0.47058824, b: 0.47058824, a: 0.2901961}
+  selectedColor: {r: 0.64705884, g: 0.64705884, b: 0.64705884, a: 0.40392157}
+  disabledColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 0.5019608}
   CapitalizeText: 0

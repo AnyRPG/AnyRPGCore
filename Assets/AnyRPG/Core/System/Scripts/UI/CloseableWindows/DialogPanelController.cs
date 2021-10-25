@@ -120,6 +120,11 @@ namespace AnyRPG {
                         continueButton.gameObject.SetActive(false);
                         viewQuestButton.gameObject.SetActive(true);
                         acceptQuestButton.gameObject.SetActive(true);
+                        currentNavigationController.UpdateNavigationList();
+                        if (systemConfigurationManager.DefaultControllerConfiguration == DefaultControllerConfiguration.GamePad) {
+                            currentNavigationController.FocusFirstButton();
+                        }
+
                     } else {
                         //Debug.Log("NewGameMenuController.ConfirmAction(): dialogIndex: " + dialogIndex + "; DialogNode Count: " + MyDialog.MyDialogNodes.Count + "; TRIED TO DISPLAY ALREADY TURNED IN QUEST!");
                         uIManager.dialogWindow.CloseWindow();
@@ -187,6 +192,10 @@ namespace AnyRPG {
                 //LayoutRebuilder.ForceRebuildLayoutImmediate(gameObject.GetComponentInParent<RectTransform>());
             } else {
                 //Debug.Log("DialogPanelController.OnOpenWindow(): ButtonText is null!!");
+            }
+            currentNavigationController.UpdateNavigationList();
+            if (systemConfigurationManager.DefaultControllerConfiguration == DefaultControllerConfiguration.GamePad) {
+                currentNavigationController.FocusFirstButton();
             }
         }
 

@@ -31,10 +31,19 @@ namespace AnyRPG {
         protected Color highlightColor;
 
         [SerializeField]
-        protected Color baseColor;
+        protected Color normalColor = new Color32(163, 163, 163, 28);
 
         [SerializeField]
-        protected Color baseHighlightColor;
+        protected Color highlightedColor = new Color32(165, 165, 165, 103);
+
+        [SerializeField]
+        protected Color pressedColor = new Color32(120, 120, 120, 74);
+
+        [SerializeField]
+        protected Color selectedColor = new Color32(165, 165, 165, 103);
+
+        [SerializeField]
+        protected Color disabledColor = new Color32(200, 200, 200, 128);
 
         [SerializeField]
         protected bool CapitalizeText = false;
@@ -56,6 +65,15 @@ namespace AnyRPG {
                 if (highlightButtonImage != null) {
                     highlightButtonImage.color = systemConfigurationManager.DefaultUISolidColor;
                 }
+            }
+            if (highlightButton != null && useHighlightColorOnButton == true) {
+                ColorBlock colorBlock = highlightButton.colors;
+                colorBlock.normalColor = normalColor;
+                colorBlock.highlightedColor = highlightedColor;
+                colorBlock.pressedColor = pressedColor;
+                colorBlock.selectedColor = selectedColor;
+                colorBlock.disabledColor = disabledColor;
+                highlightButton.colors = colorBlock;
             }
             DeSelect();
         }
@@ -98,16 +116,18 @@ namespace AnyRPG {
             Debug.Log(gameObject.name + ".HightlightButton.DeSelect()");
             if (highlightImage != null) {
                 if (useHighlightColor) {
-                    highlightImage.color = baseColor;
+                    highlightImage.color = normalColor;
                 }
             } else {
                 //Debug.Log(gameObject.name + ".HightlightButton.DeSelect(): highlight image is null");
             }
             if (highlightButton != null && useHighlightColorOnButton == true) {
                 ColorBlock colorBlock = highlightButton.colors;
-                colorBlock.normalColor = baseColor;
-                colorBlock.highlightedColor = baseHighlightColor;
-                colorBlock.selectedColor = baseHighlightColor;
+                colorBlock.normalColor = normalColor;
+                colorBlock.highlightedColor = highlightedColor;
+                colorBlock.pressedColor = pressedColor;
+                colorBlock.selectedColor = selectedColor;
+                colorBlock.disabledColor = disabledColor;
                 highlightButton.colors = colorBlock;
             }
             if (CapitalizeText == true) {
