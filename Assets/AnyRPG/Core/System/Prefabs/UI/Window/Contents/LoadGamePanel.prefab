@@ -1015,6 +1015,7 @@ MonoBehaviour:
   upController: {fileID: 0}
   downPanel: {fileID: 0}
   downController: {fileID: 1126385356333861572}
+  acceptController: {fileID: 1126385356333861572}
   scrollRect: {fileID: 4692299217850708635}
   navigableButtons: []
 --- !u!1 &6529658237067183697
@@ -1087,6 +1088,7 @@ MonoBehaviour:
   upController: {fileID: 4380524380536158505}
   downPanel: {fileID: 0}
   downController: {fileID: 0}
+  acceptController: {fileID: 0}
   scrollRect: {fileID: 0}
   navigableButtons:
   - {fileID: 4670905920152662219}

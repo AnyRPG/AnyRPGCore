@@ -59,6 +59,7 @@ namespace AnyRPG {
         protected NamePlateManager namePlateManager = null;
         protected UIManager uIManager = null;
         protected WindowManager windowManager = null;
+        protected PlayerManager playerManager = null;
 
         public Transform Target { get => target; set => target = value; }
         public Vector3 WantedDirection { get => wantedDirection; set => wantedDirection = value; }
@@ -69,6 +70,7 @@ namespace AnyRPG {
             uIManager = systemGameManager.UIManager;
             namePlateManager = uIManager.NamePlateManager;
             windowManager = systemGameManager.WindowManager;
+            playerManager = systemGameManager.PlayerManager;
         }
 
         private void Awake() {
@@ -193,15 +195,17 @@ namespace AnyRPG {
             if (windowManager.WindowStack.Count == 0
                 && (Input.GetAxis("RightAnalogHorizontal") != 0 || Input.GetAxis("RightAnalogVertical") != 0)) {
 
-                if (Input.GetAxis("RightAnalogHorizontal") != 0) {
+
+                if (Input.GetAxis("RightAnalogHorizontal") != 0 && playerManager.PlayerController?.HasMoveInput() != true) {
                     currentXDegrees += Input.GetAxis("RightAnalogHorizontal") * analogYawSpeed * (PlayerPrefs.GetFloat("MouseLookSpeed"));
+                    cameraPan = true;
                 }
 
                 if (Input.GetAxis("RightAnalogVertical") != 0) {
                     currentYDegrees += (Input.GetAxis("RightAnalogVertical") * analogYawSpeed * (PlayerPrefs.GetFloat("MouseLookSpeed"))) * (PlayerPrefs.GetInt("MouseInvert") == 0 ? 1 : -1);
+                    cameraPan = true;
                 }
 
-                cameraPan = true;
             }
 
             if (cameraPan) {

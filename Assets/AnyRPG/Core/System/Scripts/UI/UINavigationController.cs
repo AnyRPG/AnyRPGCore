@@ -9,6 +9,8 @@ namespace AnyRPG {
     [System.Serializable]
     public class UINavigationController : ConfiguredMonoBehaviour {
 
+        [Header("DPad Movement")]
+
         [Tooltip("If the left button is passed, switch to the first controller on this panel")]
         [SerializeField]
         protected CloseableWindowContents leftPanel = null;
@@ -40,6 +42,14 @@ namespace AnyRPG {
         [Tooltip("If the bottom button is passed, switch to this controller")]
         [SerializeField]
         protected UINavigationController downController = null;
+
+        [Header("Button Presses")]
+
+        [Tooltip("If the accept button is passed, switch to this controller")]
+        [SerializeField]
+        protected UINavigationController acceptController = null;
+
+        [Header("Elements")]
 
         [SerializeField]
         protected ScrollRect scrollRect = null;
@@ -184,6 +194,9 @@ namespace AnyRPG {
 
         public virtual void Accept() {
             Debug.Log(gameObject.name + "UINavigationController.Accept()");
+            if (acceptController != null) {
+                acceptController.SetActive();
+            }
         }
 
         public virtual void Cancel() {

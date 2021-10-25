@@ -211,6 +211,8 @@ namespace AnyRPG {
 
             HandleRightMouseClick();
 
+            ProcessGamepadButtonClicks();
+
             RegisterAbilityButtonPresses();
 
 
@@ -409,6 +411,25 @@ namespace AnyRPG {
             }
         }
 
+        private void ProcessGamepadButtonClicks() {
+            //Debug.Log(gameObject.name + ".PlayerController.ProcessGamepadButtonClicks()");
+            // check if the right mouse button clicked on something and interact with it
+
+            // register gamepad accept, allow friendly target
+            if (windowManager.WindowStack.Count > 0) {
+                return;
+            }
+
+            if (inputManager.KeyBindWasPressed("ACCEPT")) {
+                if (playerManager.UnitController.Target == null) {
+                    GetNextTabTarget(playerManager.UnitController.Target, true);
+                } else {
+                    InterActWithTarget(playerManager.UnitController.Target);
+                }
+            }
+
+        }
+
         private void HandleLeftMouseClick() {
             //Debug.Log("PlayerController.HandleLeftMouseClick()");
             // Check if the left mouse button clicked on an interactable and focus it
@@ -493,11 +514,6 @@ namespace AnyRPG {
 
             //Interactable oldTarget = playerManager.UnitController.Target;
 
-            // register gamepad tab target, allow friendly target
-            if (windowManager.WindowStack.Count == 0 && playerManager.UnitController.Target == null && inputManager.KeyBindWasPressed("ACCEPT")) {
-                GetNextTabTarget(playerManager.UnitController.Target, true);
-            }
-
             // register keyboard tab target, only allow enemy target
             if (inputManager.KeyBindWasPressed("NEXTTARGET")) {
                 //Debug.Log("Tab Target Registered");
@@ -505,12 +521,36 @@ namespace AnyRPG {
             }
         }
 
+        /*
+        private bool ValidFriendlyTarget(Interactable interactable) {
+            if (interactable != null) {
+                return true;
+            }
+            return false;
+        }
+        */
+
+        private bool ValidEnemyTarget(Interactable interactable) {
+            UnitController targetCharacterUnit = interactable.GetComponent<UnitController>();
+            if (targetCharacterUnit != null
+                && targetCharacterUnit.CharacterUnit.BaseCharacter.CharacterStats.IsAlive == true
+                && Faction.RelationWith(targetCharacterUnit.CharacterUnit.BaseCharacter, playerManager.MyCharacter.Faction) <= -1) {
+                return true;
+            }
+            return false;
+        }
+
         private void GetNextTabTarget(Interactable oldTarget, bool includeFriendly = false) {
             //Debug.Log("PlayerController.GetNextTabTarget(): maxDistance: " + tabTargetMaxDistance);
             DateTime currentTime = DateTime.Now;
             TimeSpan timeSinceLastTab = currentTime - lastTabTargetTime;
             lastTabTargetTime = DateTime.Now;
-            int validMask = 1 << LayerMask.NameToLayer("CharacterUnit");
+            int validMask = 0;
+            if (includeFriendly) {
+                validMask = (1 << LayerMask.NameToLayer("CharacterUnit")) | (1 << LayerMask.NameToLayer("Interactable"));
+            } else {
+                validMask = 1 << LayerMask.NameToLayer("CharacterUnit");
+            }
             Collider[] hitColliders = Physics.OverlapSphere(playerManager.ActiveUnitController.transform.position, tabTargetMaxDistance, validMask);
             int i = 0;
             //Debug.Log("GetNextTabTarget(): collider length: " + hitColliders.Length + "; index: " + tabTargetIndex);
@@ -518,17 +558,17 @@ namespace AnyRPG {
             int closestTargetIndex = -1;
 
             // although the layermask on the collider should have only delivered us valid characterUnits, they may be dead or friendly.  We need to put all the valid attack targets in a list first
-            List<UnitController> characterUnitList = new List<UnitController>();
+            List<Interactable> characterUnitList = new List<Interactable>();
             foreach (Collider hitCollider in hitColliders) {
                 //Debug.Log("GetNextTabTarget(): collider length: " + hitColliders.Length);
-                GameObject collidedGameObject = hitCollider.gameObject;
-                UnitController targetCharacterUnit = collidedGameObject.GetComponent<UnitController>();
-                if (targetCharacterUnit != null && targetCharacterUnit.CharacterUnit.BaseCharacter.CharacterStats.IsAlive == true
-                    && (includeFriendly == true || (includeFriendly == false && Faction.RelationWith(targetCharacterUnit.CharacterUnit.BaseCharacter, playerManager.MyCharacter.Faction) <= -1))) {
+                //GameObject collidedGameObject = hitCollider.gameObject;
+                Interactable targetCharacterUnit = hitCollider.gameObject.GetComponent<Interactable>();
+                if (targetCharacterUnit != null
+                    && (includeFriendly == true || ValidEnemyTarget(targetCharacterUnit))) {
 
                     // check if the unit is actually in front of our character.
                     // not doing any cone or angles for now, anywhere in front will do.  might adjust this a bit later to prevent targetting units nearly adjacent to us and far away
-                    Vector3 transformedPosition = playerManager.ActiveUnitController.transform.InverseTransformPoint(collidedGameObject.transform.position);
+                    Vector3 transformedPosition = playerManager.ActiveUnitController.transform.InverseTransformPoint(targetCharacterUnit.transform.position);
                     if (transformedPosition.z > 0f) {
                         characterUnitList.Add(targetCharacterUnit);
 
@@ -546,7 +586,7 @@ namespace AnyRPG {
 
             // now that we have all valid attack targets, we need to process the list a bit before choosing a target
             i = 0;
-            foreach (UnitController collidedGameObject in characterUnitList) {
+            foreach (Interactable collidedGameObject in characterUnitList) {
                 //Debug.Log("PlayerController.GetNextTabTarget(): processing target: " + i + "; " + collidedGameObject.name);
                 if (closestTargetIndex == -1) {
                     closestTargetIndex = i;
