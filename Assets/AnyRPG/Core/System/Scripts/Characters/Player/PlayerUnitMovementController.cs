@@ -216,6 +216,7 @@ namespace AnyRPG {
         protected InputManager inputManager = null;
         protected NamePlateManager namePlateManager = null;
         protected CameraManager cameraManager = null;
+        protected ControlsManager controlsManager = null;
 
         public override void Configure(SystemGameManager systemGameManager) {
             base.Configure(systemGameManager);
@@ -241,6 +242,7 @@ namespace AnyRPG {
             inputManager = systemGameManager.InputManager;
             namePlateManager = systemGameManager.UIManager.NamePlateManager;
             cameraManager = systemGameManager.CameraManager;
+            controlsManager = systemGameManager.ControlsManager;
         }
 
         public void Init() {
@@ -283,8 +285,13 @@ namespace AnyRPG {
         }
 
         public void MoveRelative() {
-            Vector3 relativeMovement = CharacterRelativeInput(adjustedlocalMoveVelocity);
-            //Debug.Log("relativeMovement: (" + relativeMovement.x + ", " + relativeMovement.y + ", " + relativeMovement.z + ")");
+            Vector3 relativeMovement;
+            //if (controlsManager.GamePadModeActive) {
+                //relativeMovement = CameraRelativeInput(adjustedlocalMoveVelocity);
+            //} else {
+                relativeMovement = CharacterRelativeInput(adjustedlocalMoveVelocity);
+            //}
+            Debug.Log("relativeMovement: (" + relativeMovement.x + ", " + relativeMovement.y + ", " + relativeMovement.z + ")");
             if (relativeMovement.magnitude > 0.1 || playerManager.PlayerController.inputJump) {
                 playerManager.ActiveUnitController.UnitMotor.Move(relativeMovement);
             }
@@ -510,7 +517,12 @@ namespace AnyRPG {
                 localMoveVelocity = playerManager.PlayerController.NormalizedMoveInput * calculatedSpeed;
 
                 if (localMoveVelocity.x != 0 || localMoveVelocity.z != 0) {
-                    directionOfTravel = playerManager.ActiveUnitController.transform.TransformDirection(new Vector3(localMoveVelocity.x, 0, localMoveVelocity.z)).normalized;
+                    if (controlsManager.GamePadModeActive == true) {
+                        directionOfTravel = CameraRelativeInput(new Vector3(localMoveVelocity.x, 0, localMoveVelocity.z)).normalized;
+                        Debug.Log("directionOfTravel: " + directionOfTravel);
+                    } else {
+                        directionOfTravel = playerManager.ActiveUnitController.transform.TransformDirection(new Vector3(localMoveVelocity.x, 0, localMoveVelocity.z)).normalized;
+                    }
                 }
 
                 // determine if there is an obstacle in front, and if it is stairs
@@ -1003,7 +1015,7 @@ namespace AnyRPG {
         }
 
         Vector3 CharacterRelativeInput(Vector3 inputVector) {
-            //Debug.Log("PlayerUnitMovementController.CharacterRelativeInput(" + inputVector + ")");
+            Debug.Log("PlayerUnitMovementController.CharacterRelativeInput(" + inputVector + ")");
 
             // switch to quaternion rotation instead of transformDirection so direction can be maintained in air no matter which way player faces in air
             Vector3 qRelativeVelocity = Vector3.zero;
@@ -1032,7 +1044,14 @@ namespace AnyRPG {
         /// <summary>
         /// Movement based off camera facing.
         /// </summary>
-        Vector3 CameraRelativeInput(float inputX, float inputZ) {
+        Vector3 CameraRelativeInput(Vector3 inputVector) {
+            Debug.Log("PlayerUnitMovementController.CameraRelativeInput(" + inputVector + ")");
+            //Forward vector relative to the camera
+            
+            return Quaternion.LookRotation(new Vector3(cameraManager.ActiveMainCamera.transform.forward.x, 0f, cameraManager.ActiveMainCamera.transform.forward.z).normalized) * inputVector;
+        }
+
+        Vector3 CameraRelativeInputOld(float inputX, float inputZ) {
             //Forward vector relative to the camera along the x-z plane   
             Vector3 forward = cameraManager.ActiveMainCamera.transform.TransformDirection(Vector3.forward);
             forward.y = 0;
@@ -1219,7 +1238,7 @@ namespace AnyRPG {
         }
 
         private Vector3 NormalizedLocalMovement(float calculatedSpeed, Vector3 directionOfTravel) {
-            //Debug.Log("PlayerUnitMovementController.LocalMovement(): groundAngle: " + groundAngle + "; backwardGroundAngle: " + backwardGroundAngle);
+            Debug.Log("PlayerUnitMovementController.NormalizedLocalMovement(" + directionOfTravel + ")");
             Vector3 normalizedInput = playerManager.PlayerController.NormalizedMoveInput;
 
             Vector3 newReturnValue;
@@ -1236,15 +1255,16 @@ namespace AnyRPG {
             }
 
             // the player is near a front obstacle, and that obstacle is below the slope limit, use its normal
-            /*
+            
             Debug.Log("nearBottomFrontObstacle: " + nearBottomFrontObstacle +
                 "; angle: " + bottomFrontObstacleAngle + "; nearTopFrontObstacle: " + nearTopFrontObstacle + "; nearBottomStairs: " + nearBottomStairs + "; nearFrontObstacle: " + nearFrontObstacle);
-                */
+               
             if (nearBottomFrontObstacle &&
                 ((bottomFrontAngleDifferent && bottomFrontObstacleAngle < slopeLimit && nearFrontObstacle == true)
                 || (nearTopFrontObstacle == false && nearBottomStairs == false && nearFrontObstacle == true))
                 ) {
                 localGroundNormal = playerManager.ActiveUnitController.transform.InverseTransformDirection(bottomForwardHitInfo.normal);
+                Debug.Log("using bottomForwardHitInfo.normal");
                 //usedGroundNormal = bottomForwardHitInfo.normal;
                 //Debug.Break();
             } else {
@@ -1270,14 +1290,14 @@ namespace AnyRPG {
                         ) {
                         localGroundNormal = playerManager.ActiveUnitController.transform.InverseTransformDirection(stairRampNormal);
                         //usedGroundNormal = stairRampNormal;
-                        //Debug.Log("using stair ramp normal: " + localGroundNormal + "; height: " + (stairDownHitPoint.y - playerManager.ActiveUnitController.transform.position.y));
+                        Debug.Log("using stair ramp normal: " + localGroundNormal + "; height: " + (stairDownHitPoint.y - playerManager.ActiveUnitController.transform.position.y));
                         //Debug.Break();
                     } else {
                         //Debug.Log("distance from wall: " + playerManager.ActiveUnitController.transform.InverseTransformPoint(forwardHitInfo.point).magnitude);
                         localGroundNormal = playerManager.ActiveUnitController.transform.InverseTransformDirection(bottomForwardHitInfo.normal);
                         //usedGroundNormal = bottomForwardHitInfo.normal;
 
-                        //Debug.Log("using front normal: " + localGroundNormal + "; nearFrontObstacle: " + nearFrontObstacle);
+                        Debug.Log("using front normal: " + localGroundNormal + "; nearFrontObstacle: " + nearFrontObstacle);
                         //Debug.Break();
                         
                     }
@@ -1287,6 +1307,7 @@ namespace AnyRPG {
             // to prevent odd floating point issues, set any ground normal that is up to directly up
             if (Mathf.Approximately(localGroundNormal.y, 1f)) {
                 localGroundNormal = Vector3.up;
+                Debug.Log("localGroundNormal is now vector3.up");
             } else {
                 //Debug.Break();
             }
@@ -1295,8 +1316,19 @@ namespace AnyRPG {
             // this prevents losing speed up hills from slamming horizontally into the hill
 
             // WORKING VALUE
-            newReturnValue = Vector3.Cross(Quaternion.LookRotation(normalizedInput, Vector3.up) * playerManager.ActiveUnitController.transform.InverseTransformDirection(playerManager.ActiveUnitController.transform.right), localGroundNormal);
-
+            if (controlsManager.GamePadModeActive) {
+                //Vector3 cameraInput = Quaternion.LookRotation(new Vector3(cameraManager.ActiveMainCamera.transform.forward.x, 0f, cameraManager.ActiveMainCamera.transform.forward.z)) * normalizedInput;
+                //Vector3 cameraInput = Quaternion.FromToRotation(new Vector3(cameraManager.ActiveMainCamera.transform.forward.x, 0f, cameraManager.ActiveMainCamera.transform.forward.z)) * normalizedInput;
+                //Vector3 cameraInput = cameraManager.ActiveMainCamera.transform.TransformDirection(normalizedInput);
+                Vector3 cameraInput = Quaternion.Euler(0f, cameraManager.ActiveMainCamera.transform.rotation.eulerAngles.y, 0f) * normalizedInput;
+                Vector3 newNormalizedInput = playerManager.ActiveUnitController.transform.InverseTransformDirection(cameraInput);
+                Debug.Log("normalizedInput: " + normalizedInput + "; cameraInput: "+ cameraInput + "; newNormalizedInput: " + newNormalizedInput);
+                //newReturnValue = Vector3.Cross(Quaternion.LookRotation(normalizedInput, Vector3.up) * cameraManager.ActiveMainCamera.transform.InverseTransformDirection(cameraManager.ActiveMainCamera.transform.right), localGroundNormal);
+                newReturnValue = Vector3.Cross(Quaternion.LookRotation(newNormalizedInput, Vector3.up) * playerManager.ActiveUnitController.transform.InverseTransformDirection(playerManager.ActiveUnitController.transform.right), localGroundNormal);
+            } else {
+                newReturnValue = Vector3.Cross(Quaternion.LookRotation(normalizedInput, Vector3.up) * playerManager.ActiveUnitController.transform.InverseTransformDirection(playerManager.ActiveUnitController.transform.right), localGroundNormal);
+            }
+            Debug.Log("newReturnValue: " + newReturnValue);
             // next line works when facing world axis only
             //newReturnValue = playerManager.ActiveUnitController.transform.InverseTransformDirection(Quaternion.LookRotation(forwardDirection, localGroundNormal) * normalizedInput);
             //Vector3 forwardDirection = playerManager.ActiveUnitController.transform.forward;
@@ -1321,12 +1353,13 @@ namespace AnyRPG {
                 //Debug.Log("unclamped returnValue: " + newReturnValue.y + "; deltaTime: " + Time.deltaTime + "; fixedDeltaTime: " + Time.fixedDeltaTime);
                 float clampedReturnValue = Mathf.Clamp(newReturnValue.y, 0f, playerManager.ActiveUnitController.transform.InverseTransformPoint(stairDownHitPoint).y / calculatedSpeed / Time.fixedDeltaTime);
                 //float clampedReturnValue = Mathf.Clamp(newReturnValue.y, 0f, playerManager.ActiveUnitController.transform.InverseTransformPoint(bottomStairDownHitInfo.point).y / calculatedSpeed / Time.fixedDeltaTime);
-                //Debug.Log("clamped returnValue: " + clampedReturnValue + "; unclamped: " + newReturnValue.y + "; deltaTime: " + Time.deltaTime + " distanceToGround: " + closestGroundDistance + " stairHeight: " + playerManager.ActiveUnitController.transform.InverseTransformPoint(bottomStairDownHitInfo.point).y);
+                Debug.Log("clamped returnValue: " + clampedReturnValue + "; unclamped: " + newReturnValue.y + "; deltaTime: " + Time.deltaTime + " distanceToGround: " + closestGroundDistance + " stairHeight: " + playerManager.ActiveUnitController.transform.InverseTransformPoint(bottomStairDownHitInfo.point).y);
                 newReturnValue.y = clampedReturnValue;
             }
 
             // apply downforce
             if (groundAngle == 0 && nearBottomFrontObstacle == false && nearBottomStairs == false && touchingGround == false) {
+                Debug.Log("apply downforce");
                 // this should make the character stick to the ground better when actively moving while grounded
                 // ONLY APPLY Y DOWNFORCE ON FLAT GROUND, this will apply a y downforce multiplied by speed, not the existing y downforce from physics (gravity)
                 float yValue = 0f;
@@ -1334,17 +1367,17 @@ namespace AnyRPG {
                     // set a downforce value that should take the character exactly to the ground, and not lower to avoid losing momentum from physics colission with ground
                     yValue = Mathf.Clamp(1, 0, -closestGroundDistance / calculatedSpeed / Time.fixedDeltaTime) * -1;
                     //yValue = -1;
-                    /*
+                    
                     Debug.Log("NormalizedLocalMovement() position.y: " + playerManager.ActiveUnitController.transform.position.y +
                         "; Applying extra down force: " + yValue +
                         "; ground distance: " + closestGroundDistance);
                         
-                    Debug.Break();
-                    */
+                    //Debug.Break();
+                    
                 }
                 newReturnValue = new Vector3(newReturnValue.x, yValue, newReturnValue.z);
             }
-            //Debug.Log("newReturnValue: (" + newReturnValue.x + ", " + newReturnValue.y + ", " + newReturnValue.z + ") localGroundNormal: (" + localGroundNormal.x + ", " + localGroundNormal.y + ", " + localGroundNormal.z + ") nearBottomStairs: " + nearBottomStairs + "; closestGroundDistance: " + closestGroundDistance);
+            Debug.Log("newReturnValue: (" + newReturnValue.x + ", " + newReturnValue.y + ", " + newReturnValue.z + ") localGroundNormal: (" + localGroundNormal.x + ", " + localGroundNormal.y + ", " + localGroundNormal.z + ") nearBottomStairs: " + nearBottomStairs + "; closestGroundDistance: " + closestGroundDistance);
             return newReturnValue;
         }
 

@@ -103,8 +103,8 @@ namespace AnyRPG {
 
         public override void ReceiveOpenWindowNotification() {
             //Debug.Log("NewGameCharacterPanelController.ReceiveOpenWindowNotification()");
-            base.ReceiveOpenWindowNotification();
             ClearLabels();
+            base.ReceiveOpenWindowNotification();
         }
 
         public void ClearLabels() {
@@ -143,6 +143,11 @@ namespace AnyRPG {
                     }
                 }
             }
+            /*
+            foreach (UINavigationController uINavigationController in uINavigationControllers) {
+                uINavigationController.UpdateNavigationList();
+            }
+            */
 
         }
 

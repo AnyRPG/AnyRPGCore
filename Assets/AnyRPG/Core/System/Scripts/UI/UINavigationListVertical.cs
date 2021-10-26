@@ -80,7 +80,9 @@ namespace AnyRPG {
                 }
             }
             //EventSystem.current.SetSelectedGameObject(activeNavigableButtons[currentIndex].gameObject);
-            currentNavigableElement.LeaveElement();
+            if (currentNavigableElement != null) {
+                currentNavigableElement.LeaveElement();
+            }
             currentNavigableElement = activeNavigableButtons[currentIndex];
             SelectCurrentNavigableElement();
         }
@@ -108,7 +110,9 @@ namespace AnyRPG {
                 }
             }
             //EventSystem.current.SetSelectedGameObject(activeNavigableButtons[currentIndex].gameObject);
-            currentNavigableElement.LeaveElement();
+            if (currentNavigableElement != null) {
+                currentNavigableElement.LeaveElement();
+            }
             currentNavigableElement = activeNavigableButtons[currentIndex];
             SelectCurrentNavigableElement();
         }
@@ -130,6 +134,9 @@ namespace AnyRPG {
             }
             if (currentIndex < 0) {
                 currentIndex = 0;
+                currentNavigableElement = activeNavigableButtons[currentIndex];
+                currentNavigableElement.Select();
+                return;
             }
             currentNavigableElement = activeNavigableButtons[currentIndex];
             currentNavigableElement.Accept();

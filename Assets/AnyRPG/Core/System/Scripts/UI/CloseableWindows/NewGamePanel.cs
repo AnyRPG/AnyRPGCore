@@ -78,12 +78,12 @@ namespace AnyRPG {
         */
 
         // game manager references
-        private SaveManager saveManager = null;
-        private SystemDataFactory systemDataFactory = null;
-        private CharacterCreatorManager characterCreatorManager = null;
-        private UIManager uIManager = null;
-        private LevelManager levelManager = null;
-        private NewGameManager newGameManager = null;
+        protected SaveManager saveManager = null;
+        protected SystemDataFactory systemDataFactory = null;
+        protected CharacterCreatorManager characterCreatorManager = null;
+        protected UIManager uIManager = null;
+        protected LevelManager levelManager = null;
+        protected NewGameManager newGameManager = null;
 
         /*
         public CharacterClass CharacterClass { get => characterClass; set => characterClass = value; }
@@ -258,12 +258,12 @@ namespace AnyRPG {
 
             base.ReceiveOpenWindowNotification();
 
-            if (systemConfigurationManager.DefaultControllerConfiguration == DefaultControllerConfiguration.GamePad && focusFirstButtonOnOpen == true) {
+            if (controlsManager.GamePadModeActive && focusFirstButtonOnOpen == true) {
                 currentNavigationController.FocusFirstButton();
                 return;
             }
 
-            if (systemConfigurationManager.DefaultControllerConfiguration == DefaultControllerConfiguration.GamePad && focusActiveSubPanel == true) {
+            if (controlsManager.GamePadModeActive && focusActiveSubPanel == true) {
                 openSubPanel.FocusFirstButton();
                 return;
             }

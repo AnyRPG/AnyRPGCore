@@ -55,9 +55,9 @@ namespace AnyRPG {
         private int dialogIndex = 0;
 
         // game manager references
-        private UIManager uIManager = null;
-        private QuestLog questLog = null;
-        private LogManager logManager = null;
+        protected UIManager uIManager = null;
+        protected QuestLog questLog = null;
+        protected LogManager logManager = null;
 
         public override void Configure(SystemGameManager systemGameManager) {
             base.Configure(systemGameManager);
@@ -121,7 +121,7 @@ namespace AnyRPG {
                         viewQuestButton.gameObject.SetActive(true);
                         acceptQuestButton.gameObject.SetActive(true);
                         currentNavigationController.UpdateNavigationList();
-                        if (systemConfigurationManager.DefaultControllerConfiguration == DefaultControllerConfiguration.GamePad) {
+                        if (controlsManager.GamePadModeActive) {
                             currentNavigationController.FocusFirstButton();
                         }
 
@@ -194,7 +194,7 @@ namespace AnyRPG {
                 //Debug.Log("DialogPanelController.OnOpenWindow(): ButtonText is null!!");
             }
             currentNavigationController.UpdateNavigationList();
-            if (systemConfigurationManager.DefaultControllerConfiguration == DefaultControllerConfiguration.GamePad) {
+            if (controlsManager.GamePadModeActive) {
                 currentNavigationController.FocusFirstButton();
             }
         }

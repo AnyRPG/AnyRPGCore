@@ -19,6 +19,8 @@ namespace AnyRPG {
         private bool dPadRight = false;
         private bool dPadRightPressed = false;
 
+        private bool gamePadModeActive = false;
+
         // game manager references
         protected InputManager inputManager = null;
         protected UIManager uIManager = null;
@@ -29,6 +31,15 @@ namespace AnyRPG {
         public bool DPadUpPressed { get => dPadUpPressed; }
         public bool DPadLeftPressed { get => dPadLeftPressed; }
         public bool DPadRightPressed { get => dPadRightPressed; }
+        public bool GamePadModeActive { get => gamePadModeActive; }
+
+        public override void Configure(SystemGameManager systemGameManager) {
+            base.Configure(systemGameManager);
+
+            if (systemConfigurationManager.DefaultControllerConfiguration == DefaultControllerConfiguration.GamePad) {
+                gamePadModeActive = true;
+            }
+        }
 
         public override void SetGameManagerReferences() {
             base.SetGameManagerReferences();
@@ -42,6 +53,11 @@ namespace AnyRPG {
         void Update() {
             RegisterAxis();
             inputManager.RegisterInput();
+
+            if (inputManager.KeyBindWasPressed("ACCEPT") || inputManager.KeyBindWasPressed("CANCEL")) {
+                gamePadModeActive = true;
+            }
+
 
             uIManager.ProcessInput();
             windowManager.Navigate();
@@ -64,6 +80,7 @@ namespace AnyRPG {
                 if (dPadDown) {
                     Debug.Log("dPadDownPressed");
                     dPadDownPressed = true;
+                    gamePadModeActive = true;
                 }
             } else if (dPadVertical >= 0f) {
                 dPadDown = false;
@@ -73,6 +90,7 @@ namespace AnyRPG {
                 if (dPadUp) {
                     Debug.Log("dPadUpPressed");
                     dPadUpPressed = true;
+                    gamePadModeActive = true;
                 }
             } else if (dPadVertical <= 0f) {
                 dPadUp = false;
@@ -82,6 +100,7 @@ namespace AnyRPG {
                 if (dPadLeft) {
                     Debug.Log("dPadLeftPressed");
                     dPadLeftPressed = true;
+                    gamePadModeActive = true;
                 }
             } else if (dPadHorizontal >= 0f) {
                 dPadLeft = false;
@@ -91,6 +110,7 @@ namespace AnyRPG {
                 if (dPadRight) {
                     Debug.Log("dPadRightPressed");
                     dPadRightPressed = true;
+                    gamePadModeActive = true;
                 }
             } else if (dPadHorizontal <= 0f) {
                 dPadRight = false;

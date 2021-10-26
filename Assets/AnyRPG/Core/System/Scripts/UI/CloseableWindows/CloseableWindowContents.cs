@@ -56,6 +56,7 @@ namespace AnyRPG {
         // game manager references
         protected AudioManager audioManager = null;
         protected WindowManager windowManager = null;
+        protected ControlsManager controlsManager = null;
 
         public Image BackGroundImage { get => backGroundImage; set => backGroundImage = value; }
         public UINavigationController CurrentNavigationController { get => currentNavigationController; }
@@ -87,6 +88,7 @@ namespace AnyRPG {
             base.SetGameManagerReferences();
             audioManager = systemGameManager.AudioManager;
             windowManager = systemGameManager.WindowManager;
+            controlsManager = systemGameManager.ControlsManager;
         }
 
         public virtual void SetWindow(CloseableWindow closeableWindow) {
@@ -148,7 +150,7 @@ namespace AnyRPG {
 
         public virtual void ChooseFocus() {
             Debug.Log(gameObject.name + ".CloseableWindowContents.ChooseFocus()");
-            if (systemConfigurationManager.DefaultControllerConfiguration == DefaultControllerConfiguration.GamePad && focusActiveSubPanel == true) {
+            if (controlsManager.GamePadModeActive && focusActiveSubPanel == true) {
                 if (openSubPanel != null) {
                     SetActiveSubPanel(openSubPanel);
                     //currentNavigationController = openSubPanel.FocusCurrentButton();
@@ -293,9 +295,12 @@ namespace AnyRPG {
             if (parentPanel == null) {
                 AddToWindowStack();
             }
+            foreach (UINavigationController uINavigationController in uINavigationControllers) {
+                uINavigationController.ReceiveOpenWindowNotification();
+            }
             if (currentNavigationController != null) {
-                currentNavigationController.ReceiveOpenWindowNotification();
-                if (systemConfigurationManager.DefaultControllerConfiguration == DefaultControllerConfiguration.GamePad && focusFirstButtonOnOpen == true) {
+                //currentNavigationController.ReceiveOpenWindowNotification();
+                if (controlsManager.GamePadModeActive && focusFirstButtonOnOpen == true) {
                     currentNavigationController.FocusFirstButton();
                 }
             } else {
