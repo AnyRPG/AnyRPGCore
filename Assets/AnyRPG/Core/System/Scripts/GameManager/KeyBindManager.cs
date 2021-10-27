@@ -43,8 +43,8 @@ namespace AnyRPG {
             xBoxKeys.Add("CANCEL", KeyCode.JoystickButton1);
             xBoxKeys.Add("ACCEPT", KeyCode.JoystickButton0);
             xBoxKeys.Add("MAINMENU", KeyCode.JoystickButton7);
-            xBoxKeys.Add("JUMP", KeyCode.JoystickButton2);
-            xBoxKeys.Add("CROUCH", KeyCode.JoystickButton3);
+            xBoxKeys.Add("JUMP", KeyCode.JoystickButton3);
+            xBoxKeys.Add("CROUCH", KeyCode.JoystickButton2);
 
             InitializeKey("FORWARD", KeyCode.W, KeyCode.W, KeyCode.W, "Forward", KeyBindType.Normal);
             InitializeKey("BACK", KeyCode.S, KeyCode.S, KeyCode.S, "Backward", KeyBindType.Normal);

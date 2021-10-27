@@ -137,9 +137,12 @@ namespace AnyRPG {
             inputVertical += (inputManager.KeyBindWasPressedOrHeld("BACK") ? -1 : 0) + (inputManager.KeyBindWasPressedOrHeld("FORWARD") ? 1 : 0);
 
             // only gather gamepad turn input while moving
+            // temporarily disabled because gamepad movement turning is done by rotating the camera since everything is camera relative
+            /*
             if (inputHorizontal != 0f || inputVertical != 0f) {
                 inputTurn = Input.GetAxis("RightAnalogHorizontal");
             }
+            */
 
             // gather keyboard turn input
             inputTurn += (inputManager.KeyBindWasPressedOrHeld("TURNLEFT") ? -1 : 0) + (inputManager.KeyBindWasPressedOrHeld("TURNRIGHT") ? 1 : 0);

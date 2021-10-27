@@ -8431,7 +8431,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ee1eb60f0eb4e9b439c355bb875a4c96, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  mainCamera: {fileID: 5793331057073808568}
+  mainCamera: {fileID: 4857892935139143783}
   mainCameraGameObject: {fileID: 5793331057073808572}
   mainMapCamera: {fileID: 2597024624114562679}
   characterPortraitCamera: {fileID: 664596880785486704}
@@ -24057,9 +24057,9 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 5067627252420186030}
   m_PrefabAsset: {fileID: 0}
---- !u!20 &5793331057073808568 stripped
+--- !u!20 &4857892935139143783 stripped
 Camera:
-  m_CorrespondingSourceObject: {fileID: 1600431275800750870, guid: 127f9d6e30fbd644882440aa59a99f29,
+  m_CorrespondingSourceObject: {fileID: 376446118617235401, guid: 127f9d6e30fbd644882440aa59a99f29,
     type: 3}
   m_PrefabInstance: {fileID: 5067627252420186030}
   m_PrefabAsset: {fileID: 0}

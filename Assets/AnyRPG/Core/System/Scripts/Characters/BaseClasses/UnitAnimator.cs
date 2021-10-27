@@ -829,7 +829,7 @@ namespace AnyRPG {
         }
 
         public void SetVelocity(Vector3 varValue) {
-            //Debug.Log(gameObject.name + ".CharacterAnimator.SetVelocity(" + varValue + ", " + rotateModel + ")");
+            //Debug.Log(unitController.gameObject.name + ".CharacterAnimator.SetVelocity(" + varValue + ")");
             // receives velocity in LOCAL SPACE
 
             if (animator == null) {
@@ -838,7 +838,7 @@ namespace AnyRPG {
 
             // testing, no real need to restrict this to player.  anything should be able to rotate instead of strafe?
             //if (unitController.UnitProfile.UnitPrefabProps.RotateModel && unitController.UnitControllerMode == UnitControllerMode.Player) {
-            if (unitController.UnitProfile.UnitPrefabProps.RotateModel) {
+            if (unitController.UnitProfile.UnitPrefabProps.RotateModel || controlsManager.GamePadModeActive == true) {
                 //Debug.Log(gameObject.name + ".CharacterAnimator.SetVelocity(" + varValue + "): rotating model");
 
                 if (varValue == Vector3.zero) {
@@ -849,14 +849,15 @@ namespace AnyRPG {
                     Vector3 normalizedVector = varValue.normalized;
                     if (normalizedVector.x != 0 || normalizedVector.z != 0) {
                         Vector3 newDirection;
-                        if (controlsManager.GamePadModeActive == true && unitController.UnitControllerMode == UnitControllerMode.Player) {
-                            newDirection = Quaternion.LookRotation(new Vector3(cameraManager.ActiveMainCamera.transform.forward.x, 0f, cameraManager.ActiveMainCamera.transform.forward.z).normalized) * new Vector3(normalizedVector.x, 0, normalizedVector.z);
-                        } else {
+                        //if (controlsManager.GamePadModeActive == true && unitController.UnitControllerMode == UnitControllerMode.Player) {
+                            //newDirection = Quaternion.LookRotation(new Vector3(cameraManager.ActiveMainCamera.transform.forward.x, 0f, cameraManager.ActiveMainCamera.transform.forward.z).normalized) * new Vector3(normalizedVector.x, 0, normalizedVector.z);
+                            //newDirection = cameraManager.MainCameraGameObject.transform.TransformDirection
+                        //} else {
                             newDirection = unitController.transform.TransformDirection(new Vector3(normalizedVector.x, 0, normalizedVector.z));
-                        }
+                        //}
                         if (newDirection != Vector3.zero) {
-                            animator.transform.forward = newDirection;
-                            //unitController.transform.forward = newDirection;
+                            //animator.transform.forward = newDirection;
+                            unitController.transform.forward = newDirection;
                         }
                         //Debug.Log(gameObject.name + ".CharacterAnimator.SetVelocity(" + varValue + "): setting forward to: " + transform.TransformDirection(new Vector3(normalizedVector.x, 0, normalizedVector.z)));
                     }

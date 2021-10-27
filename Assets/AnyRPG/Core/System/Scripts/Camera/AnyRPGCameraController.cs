@@ -7,6 +7,11 @@ namespace AnyRPG {
         // public variables
 
         [SerializeField]
+        private Camera usedCamera = null;
+
+        private Transform cameraTransform = null;
+
+        [SerializeField]
         private Transform target = null;
 
         [Tooltip("Ignore these layers when checking if walls are in the way of the camera view of the character")]
@@ -36,6 +41,7 @@ namespace AnyRPG {
         private Vector3 wantedPosition;
         private Vector3 cameraOffsetVector;
         private Vector3 lastPlayerPosition;
+        private Vector3 lastTargetForward;
         private Vector3 targetPosition;
         private Vector3 initialCameraOffset;
 
@@ -45,6 +51,9 @@ namespace AnyRPG {
         private float currentZoomDistance = 0f;
         private float currentYDegrees = 0f;
         private float currentXDegrees = 0f;
+
+        // when using free run mode, the player angle needs to be calculated when the player rotation changes to keep the camera relative
+        private float calculatedAngle = 0f;
 
         //private bool hasMoved = false;
         // keep track if we are panning or zooming this frame
@@ -60,9 +69,21 @@ namespace AnyRPG {
         protected UIManager uIManager = null;
         protected WindowManager windowManager = null;
         protected PlayerManager playerManager = null;
+        protected ControlsManager controlsManager = null;
 
         public Transform Target { get => target; set => target = value; }
         public Vector3 WantedDirection { get => wantedDirection; set => wantedDirection = value; }
+
+        public override void Configure(SystemGameManager systemGameManager) {
+            base.Configure(systemGameManager);
+
+            currentZoomDistance = initialZOffset;
+            currentYDegrees = initialYDegrees;
+
+            if (usedCamera != null) {
+                cameraTransform = usedCamera.transform;
+            }
+        }
 
         public override void SetGameManagerReferences() {
             base.SetGameManagerReferences();
@@ -71,14 +92,7 @@ namespace AnyRPG {
             namePlateManager = uIManager.NamePlateManager;
             windowManager = systemGameManager.WindowManager;
             playerManager = systemGameManager.PlayerManager;
-        }
-
-        private void Awake() {
-            //Debug.Log("AnyRPGCameraController.Awake()");
-            //currentZoomDistance = new Vector3(0, initialYOffset, initialZOffset).magnitude;
-            currentZoomDistance = initialZOffset;
-            currentYDegrees = initialYDegrees;
-            //Debug.Log("Awake(): currentZoomDistance: " + currentZoomDistance);
+            controlsManager = systemGameManager.ControlsManager;
         }
 
         public void ClearTarget() {
@@ -88,6 +102,7 @@ namespace AnyRPG {
         public void SetTarget(Transform newTarget) {
             //Debug.Log("AnyRPGCameraController.SetTarget(" + newTarget + ")");
             target = newTarget;
+            lastTargetForward = newTarget.transform.forward;
             SetTargetPosition();
 
         }
@@ -149,6 +164,13 @@ namespace AnyRPG {
                 hasMoved = true;
             }
             */
+            if (lastTargetForward != target.transform.forward) {
+                calculatedAngle = Vector3.SignedAngle(target.transform.forward, transform.forward, Vector3.up);
+                //Debug.Log("currentXDegrees: " + currentXDegrees + "; calculatedAngle: " + calculatedAngle);
+                currentXDegrees = calculatedAngle;
+            }
+            lastTargetForward = target.transform.forward;
+
             lastPlayerPosition = target.position;
             SetTargetPosition();
 
@@ -193,19 +215,28 @@ namespace AnyRPG {
 
             // ====GAMEPAD PAN====
             if (windowManager.WindowStack.Count == 0
-                && (Input.GetAxis("RightAnalogHorizontal") != 0 || Input.GetAxis("RightAnalogVertical") != 0)) {
+                && (Input.GetAxis("RightAnalogHorizontal") != 0f || Input.GetAxis("RightAnalogVertical") != 0f)) {
 
 
-                if (Input.GetAxis("RightAnalogHorizontal") != 0 && playerManager.PlayerController?.HasMoveInput() != true) {
+                //if (Input.GetAxis("RightAnalogHorizontal") != 0 && playerManager.PlayerController?.HasMoveInput() != true) {
+                if (Input.GetAxis("RightAnalogHorizontal") != 0f) {
                     currentXDegrees += Input.GetAxis("RightAnalogHorizontal") * analogYawSpeed * (PlayerPrefs.GetFloat("MouseLookSpeed"));
                     cameraPan = true;
                 }
 
-                if (Input.GetAxis("RightAnalogVertical") != 0) {
+                if (Input.GetAxis("RightAnalogVertical") != 0f) {
                     currentYDegrees += (Input.GetAxis("RightAnalogVertical") * analogYawSpeed * (PlayerPrefs.GetFloat("MouseLookSpeed"))) * (PlayerPrefs.GetInt("MouseInvert") == 0 ? 1 : -1);
                     cameraPan = true;
                 }
 
+            }
+
+            if (currentXDegrees > 180f) {
+                currentXDegrees -= 360f;
+            }
+
+            if (currentXDegrees < -180f) {
+                currentXDegrees += 360f;
             }
 
             if (cameraPan) {
@@ -225,7 +256,7 @@ namespace AnyRPG {
                 // camera is just doing a regular follow, smoother motion is good
                 SmoothToWantedPosition();
             }
-            transform.LookAt(targetPosition);
+            LookAtTargetPosition();
 
             SystemEventManager.TriggerEvent("AfterCameraUpdate", new EventParamProperties());
         }
@@ -279,7 +310,8 @@ namespace AnyRPG {
 
         private void LookAtTargetPosition() {
             //Debug.Log("AnyRPGCameraController.LookAtTargetPosition()");
-            transform.LookAt(targetPosition);
+            transform.forward = new Vector3(targetPosition.x, 0f, targetPosition.z) - new Vector3(transform.position.x, 0f, transform.position.z);
+            cameraTransform.LookAt(targetPosition);
         }
 
         private void InitializeFollowLocation() {
