@@ -8,6 +8,7 @@ using UnityEngine.UI;
 namespace AnyRPG {
     public class InGameMainMenuController : WindowContentController {
 
+        /*
         [SerializeField]
         private HighlightButton saveButton = null;
 
@@ -16,12 +17,15 @@ namespace AnyRPG {
 
         [SerializeField]
         private HighlightButton continueButton = null;
+        */
 
         [SerializeField]
         private HighlightButton mainMenuButton = null;
 
+        /*
         [SerializeField]
         private HighlightButton exitGameButton = null;
+        */
 
         private UIManager uIManager = null;
         private SaveManager saveManager = null;
@@ -36,11 +40,13 @@ namespace AnyRPG {
                 mainMenuButton.Button.interactable = false;
             }
 
+            /*
             saveButton.Configure(systemGameManager);
             settingsButton.Configure(systemGameManager);
             continueButton.Configure(systemGameManager);
             mainMenuButton.Configure(systemGameManager);
             exitGameButton.Configure(systemGameManager);
+            */
         }
 
         public override void SetGameManagerReferences() {

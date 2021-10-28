@@ -20,14 +20,18 @@ namespace AnyRPG {
         [SerializeField]
         private GameObject buttonArea = null;
 
+        /*
         [SerializeField]
         private HighlightButton returnButton = null;
+        */
 
         [SerializeField]
         private HighlightButton loadGameButton = null;
 
+        /*
         [SerializeField]
         private HighlightButton newGameButton = null;
+        */
 
         [SerializeField]
         private HighlightButton deleteGameButton = null;
@@ -57,11 +61,13 @@ namespace AnyRPG {
             loadGameManager.OnDeleteGame += HandleDeleteGame;
             loadGameManager.OnCopyGame += HandleCopyGame;
 
+            /*
             returnButton.Configure(systemGameManager);
             loadGameButton.Configure(systemGameManager);
             newGameButton.Configure(systemGameManager);
             deleteGameButton.Configure(systemGameManager);
             copyGameButton.Configure(systemGameManager);
+            */
 
             characterPreviewPanel.Configure(systemGameManager);
             characterPreviewPanel.SetParentPanel(this);

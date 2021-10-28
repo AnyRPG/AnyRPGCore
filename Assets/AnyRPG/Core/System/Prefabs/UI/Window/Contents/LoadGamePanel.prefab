@@ -356,7 +356,6 @@ MonoBehaviour:
   userCloseable: 1
   focusFirstButtonOnOpen: 1
   focusActiveSubPanel: 0
-  navigationControllerOwner: 1
   uINavigationControllers: []
   subPanels: []
   previewCameraController: {fileID: 8371723547566795880}
@@ -1007,14 +1006,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 03715bb91f4a7fa47b3d93745fb1b35e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  moveToSameIndex: 0
   leftPanel: {fileID: 0}
   leftController: {fileID: 0}
+  leftControllers: []
   rightPanel: {fileID: 0}
-  rightController: {fileID: 1126385356333861572}
+  rightController: {fileID: 0}
+  rightControllers:
+  - {fileID: 1126385356333861572}
   upPanel: {fileID: 0}
   upController: {fileID: 0}
+  upControllers: []
   downPanel: {fileID: 0}
-  downController: {fileID: 1126385356333861572}
+  downController: {fileID: 0}
+  downControllers:
+  - {fileID: 1126385356333861572}
   acceptController: {fileID: 1126385356333861572}
   scrollRect: {fileID: 4692299217850708635}
   navigableButtons: []
@@ -1080,14 +1086,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8995f41cb132f3148a9912f89e49421b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  moveToSameIndex: 0
   leftPanel: {fileID: 0}
   leftController: {fileID: 0}
+  leftControllers: []
   rightPanel: {fileID: 0}
   rightController: {fileID: 0}
+  rightControllers: []
   upPanel: {fileID: 0}
-  upController: {fileID: 4380524380536158505}
+  upController: {fileID: 0}
+  upControllers:
+  - {fileID: 4380524380536158505}
   downPanel: {fileID: 0}
   downController: {fileID: 0}
+  downControllers: []
   acceptController: {fileID: 0}
   scrollRect: {fileID: 0}
   navigableButtons:
@@ -1237,7 +1249,6 @@ MonoBehaviour:
   userCloseable: 1
   focusFirstButtonOnOpen: 0
   focusActiveSubPanel: 0
-  navigationControllerOwner: 1
   uINavigationControllers:
   - {fileID: 4380524380536158505}
   - {fileID: 1126385356333861572}
@@ -1246,9 +1257,7 @@ MonoBehaviour:
   buttonPrefab: {fileID: 3408690417865459949, guid: 564e273fe37306a40bd90e88a18eb21c,
     type: 3}
   buttonArea: {fileID: 4692299218601077960}
-  returnButton: {fileID: 4670905920152662219}
   loadGameButton: {fileID: 5226171536529183247}
-  newGameButton: {fileID: 605341228961935955}
   deleteGameButton: {fileID: 1898941663262190405}
   copyGameButton: {fileID: 4556489472843252539}
   nameText: {fileID: 6888749679032890322}

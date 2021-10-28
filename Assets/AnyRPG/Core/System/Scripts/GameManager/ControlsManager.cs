@@ -21,6 +21,8 @@ namespace AnyRPG {
 
         private bool gamePadModeActive = false;
 
+        private int windowStackCount = 0;
+
         // game manager references
         protected InputManager inputManager = null;
         protected UIManager uIManager = null;
@@ -58,12 +60,22 @@ namespace AnyRPG {
                 gamePadModeActive = true;
             }
 
-
             uIManager.ProcessInput();
-            windowManager.Navigate();
 
-            if (playerManager.PlayerController != null) {
-                playerManager.PlayerController.ProcessInput();
+            // if the window manager has open windows, allow it to process commands
+            // don't send input to the player controller if windows are open
+            // because the input could close the window, and accidentally do something like select the nearest target
+            // by passing the input to the player controller after the window manager
+
+            windowStackCount = windowManager.WindowStack.Count;
+            if (windowStackCount > 0) {
+                windowManager.Navigate();
+            }
+
+            if (windowStackCount == 0 || gamePadModeActive == false) {
+                if (playerManager.PlayerController != null) {
+                    playerManager.PlayerController.ProcessInput();
+                }
             }
         }
 
@@ -78,7 +90,7 @@ namespace AnyRPG {
             if (dPadDown == false) {
                 dPadDown = (dPadVertical < 0f);
                 if (dPadDown) {
-                    Debug.Log("dPadDownPressed");
+                    //Debug.Log("dPadDownPressed");
                     dPadDownPressed = true;
                     gamePadModeActive = true;
                 }
@@ -88,7 +100,7 @@ namespace AnyRPG {
             if (dPadUp == false) {
                 dPadUp = (dPadVertical > 0f);
                 if (dPadUp) {
-                    Debug.Log("dPadUpPressed");
+                    //Debug.Log("dPadUpPressed");
                     dPadUpPressed = true;
                     gamePadModeActive = true;
                 }
@@ -98,7 +110,7 @@ namespace AnyRPG {
             if (dPadLeft == false) {
                 dPadLeft = (dPadHorizontal < 0f);
                 if (dPadLeft) {
-                    Debug.Log("dPadLeftPressed");
+                    //Debug.Log("dPadLeftPressed");
                     dPadLeftPressed = true;
                     gamePadModeActive = true;
                 }
@@ -108,7 +120,7 @@ namespace AnyRPG {
             if (dPadRight == false) {
                 dPadRight = (dPadHorizontal > 0f);
                 if (dPadRight) {
-                    Debug.Log("dPadRightPressed");
+                    //Debug.Log("dPadRightPressed");
                     dPadRightPressed = true;
                     gamePadModeActive = true;
                 }

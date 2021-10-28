@@ -35,13 +35,14 @@ namespace AnyRPG {
         [SerializeField]
         private NewGameSpecializationPanelController specializationPanel = null;
 
-        [Header("Button Buttons")]
-
+        [Header("Bottom Buttons")]
+        /*
         [SerializeField]
         private HighlightButton returnButton = null;
 
         [SerializeField]
         private HighlightButton detailsButton = null;
+        */
 
         [SerializeField]
         private HighlightButton characterButton = null;
@@ -58,8 +59,10 @@ namespace AnyRPG {
         [SerializeField]
         private HighlightButton specializationButton = null;
 
+        /*
         [SerializeField]
         private HighlightButton startButton = null;
+        */
 
         /*
         private string playerName = "Player Name";
@@ -100,16 +103,15 @@ namespace AnyRPG {
         public override void Configure(SystemGameManager systemGameManager) {
             base.Configure(systemGameManager);
 
-            returnButton.Configure(systemGameManager);
-            detailsButton.Configure(systemGameManager);
-            characterButton.Configure(systemGameManager);
-            appearanceButton.Configure(systemGameManager);
-            factionButton.Configure(systemGameManager);
-            classButton.Configure(systemGameManager);
-            specializationButton.Configure(systemGameManager);
-            startButton.Configure(systemGameManager);
+            //returnButton.Configure(systemGameManager);
+            //detailsButton.Configure(systemGameManager);
+            //characterButton.Configure(systemGameManager);
+            //appearanceButton.Configure(systemGameManager);
+            //factionButton.Configure(systemGameManager);
+            //classButton.Configure(systemGameManager);
+            //specializationButton.Configure(systemGameManager);
+            //startButton.Configure(systemGameManager);
 
-            startButton = null;
             characterPreviewPanel.Configure(systemGameManager);
 
             detailsPanel.Configure(systemGameManager);

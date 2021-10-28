@@ -35,18 +35,18 @@ namespace AnyRPG {
         }
 
         public void HandleLevelUnload(string eventName, EventParamProperties eventParamProperties) {
-            Debug.Log("ControlsManager.HandleLevelUnload()");
+            //Debug.Log("ControlsManager.HandleLevelUnload()");
             windowStack.Clear();
             //navigationStack.Clear();
         }
 
         public void AddWindow(CloseableWindowContents closeableWindowContents) {
-            Debug.Log("ControlsManager.AddWindow(" + closeableWindowContents.name + ")");
+            //Debug.Log("ControlsManager.AddWindow(" + closeableWindowContents.name + ")");
             windowStack.Add(closeableWindowContents);
         }
 
         public void RemoveWindow(CloseableWindowContents closeableWindowContents) {
-            Debug.Log("ControlsManager.RemoveWindow(" + closeableWindowContents.name + ")");
+            //Debug.Log("ControlsManager.RemoveWindow(" + closeableWindowContents.name + ")");
             if (windowStack.Contains(closeableWindowContents)) {
                 windowStack.Remove(closeableWindowContents);
             }
@@ -79,6 +79,19 @@ namespace AnyRPG {
                 if (inputManager.KeyBindWasPressed("CANCEL")) {
                     windowStack[windowStack.Count - 1].Cancel();
                 }
+                if (inputManager.KeyBindWasPressed("JOYSTICKBUTTON2")) {
+                    windowStack[windowStack.Count - 1].JoystickButton2();
+                }
+                if (inputManager.KeyBindWasPressed("JOYSTICKBUTTON3")) {
+                    windowStack[windowStack.Count - 1].JoystickButton3();
+                }
+                if (inputManager.KeyBindWasPressed("JOYSTICKBUTTON4")) {
+                    windowStack[windowStack.Count - 1].JoystickButton4();
+                }
+                if (inputManager.KeyBindWasPressed("JOYSTICKBUTTON5")) {
+                    windowStack[windowStack.Count - 1].JoystickButton5();
+                }
+
             }
         }
 

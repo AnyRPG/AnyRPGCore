@@ -7,11 +7,13 @@ using UnityEngine;
 namespace AnyRPG {
     public class ConfirmSellItemPanelController : WindowContentController {
 
+        /*
         [SerializeField]
         private HighlightButton noButton = null;
 
         [SerializeField]
         private HighlightButton yesButton = null;
+        */
 
         private Item item = null;
 
@@ -22,8 +24,10 @@ namespace AnyRPG {
 
         public override void Configure(SystemGameManager systemGameManager) {
             base.Configure(systemGameManager);
+            /*
             noButton.Configure(systemGameManager);
             yesButton.Configure(systemGameManager);
+            */
         }
 
         public override void SetGameManagerReferences() {

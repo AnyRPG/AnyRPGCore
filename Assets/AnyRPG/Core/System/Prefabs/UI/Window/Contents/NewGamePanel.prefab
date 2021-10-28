@@ -944,14 +944,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 03715bb91f4a7fa47b3d93745fb1b35e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  moveToSameIndex: 0
   leftPanel: {fileID: 0}
-  leftController: {fileID: 3876649864152510167}
+  leftController: {fileID: 0}
+  leftControllers:
+  - {fileID: 3876649864152510167}
   rightPanel: {fileID: 0}
   rightController: {fileID: 0}
+  rightControllers: []
   upPanel: {fileID: 0}
   upController: {fileID: 0}
+  upControllers: []
   downPanel: {fileID: 0}
-  downController: {fileID: 1195257474298769629}
+  downController: {fileID: 0}
+  downControllers:
+  - {fileID: 1195257474298769629}
   acceptController: {fileID: 1195257474298769629}
   scrollRect: {fileID: 793595986223075588}
   navigableButtons: []
@@ -3107,14 +3114,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 03715bb91f4a7fa47b3d93745fb1b35e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  moveToSameIndex: 0
   leftPanel: {fileID: 0}
   leftController: {fileID: 0}
+  leftControllers: []
   rightPanel: {fileID: 0}
   rightController: {fileID: 0}
+  rightControllers: []
   upPanel: {fileID: 0}
   upController: {fileID: 0}
+  upControllers: []
   downPanel: {fileID: 0}
   downController: {fileID: 0}
+  downControllers: []
   acceptController: {fileID: 0}
   scrollRect: {fileID: 0}
   navigableButtons:
@@ -7783,14 +7795,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 03715bb91f4a7fa47b3d93745fb1b35e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  moveToSameIndex: 0
   leftPanel: {fileID: 0}
   leftController: {fileID: 0}
+  leftControllers: []
   rightPanel: {fileID: 0}
   rightController: {fileID: 0}
+  rightControllers: []
   upPanel: {fileID: 0}
   upController: {fileID: 0}
+  upControllers: []
   downPanel: {fileID: 0}
-  downController: {fileID: 1195257474298769629}
+  downController: {fileID: 0}
+  downControllers:
+  - {fileID: 1195257474298769629}
   acceptController: {fileID: 0}
   scrollRect: {fileID: 5541298148665525057}
   navigableButtons: []
@@ -9110,14 +9128,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 03715bb91f4a7fa47b3d93745fb1b35e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  moveToSameIndex: 0
   leftPanel: {fileID: 0}
   leftController: {fileID: 0}
+  leftControllers: []
   rightPanel: {fileID: 0}
   rightController: {fileID: 0}
+  rightControllers: []
   upPanel: {fileID: 0}
   upController: {fileID: 0}
+  upControllers: []
   downPanel: {fileID: 0}
-  downController: {fileID: 1195257474298769629}
+  downController: {fileID: 0}
+  downControllers:
+  - {fileID: 1195257474298769629}
   acceptController: {fileID: 0}
   scrollRect: {fileID: 6944769786716367189}
   navigableButtons: []
@@ -10150,8 +10174,6 @@ MonoBehaviour:
   uINavigationControllers: []
   subPanels: []
   textInput: {fileID: 0}
-  confirmButton: {fileID: 0}
-  cancelButton: {fileID: 0}
 --- !u!114 &247818268808140860
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -10164,14 +10186,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 03715bb91f4a7fa47b3d93745fb1b35e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  moveToSameIndex: 0
   leftPanel: {fileID: 0}
   leftController: {fileID: 0}
+  leftControllers: []
   rightPanel: {fileID: 0}
   rightController: {fileID: 0}
+  rightControllers: []
   upPanel: {fileID: 0}
   upController: {fileID: 0}
+  upControllers: []
   downPanel: {fileID: 0}
-  downController: {fileID: 1195257474298769629}
+  downController: {fileID: 0}
+  downControllers:
+  - {fileID: 1195257474298769629}
   acceptController: {fileID: 0}
   scrollRect: {fileID: 0}
   navigableButtons:
@@ -10383,7 +10411,6 @@ MonoBehaviour:
   subPanels: []
   textInput: {fileID: 5461044076140096161}
   characterClassLabel: {fileID: 2112851245035430740}
-  playerNameInput: {fileID: 6283213864115283957}
   characterClassButton: {fileID: 6424029302724125063}
   classSpecializationLabel: {fileID: 6563290767052889029}
   classSpecializationButton: {fileID: 2778665008614730597}
@@ -11289,14 +11316,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8995f41cb132f3148a9912f89e49421b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  moveToSameIndex: 0
   leftPanel: {fileID: 0}
   leftController: {fileID: 0}
+  leftControllers: []
   rightPanel: {fileID: 0}
   rightController: {fileID: 0}
+  rightControllers: []
   upPanel: {fileID: 8931399857463243809}
   upController: {fileID: 0}
+  upControllers: []
   downPanel: {fileID: 0}
   downController: {fileID: 0}
+  downControllers: []
   acceptController: {fileID: 0}
   scrollRect: {fileID: 0}
   navigableButtons:
@@ -11863,14 +11895,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 03715bb91f4a7fa47b3d93745fb1b35e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  moveToSameIndex: 0
   leftPanel: {fileID: 0}
   leftController: {fileID: 0}
+  leftControllers: []
   rightPanel: {fileID: 0}
   rightController: {fileID: 0}
+  rightControllers: []
   upPanel: {fileID: 0}
   upController: {fileID: 0}
+  upControllers: []
   downPanel: {fileID: 0}
-  downController: {fileID: 1195257474298769629}
+  downController: {fileID: 0}
+  downControllers:
+  - {fileID: 1195257474298769629}
   acceptController: {fileID: 0}
   scrollRect: {fileID: 0}
   navigableButtons: []
@@ -12841,14 +12879,11 @@ MonoBehaviour:
   classPanel: {fileID: 2321146245981330637}
   factionPanel: {fileID: 1877650454947291675}
   specializationPanel: {fileID: 3435203890770850752}
-  returnButton: {fileID: 4670905920152662219}
-  detailsButton: {fileID: 1874541556475754127}
   characterButton: {fileID: 2490806992443256968}
   appearanceButton: {fileID: 5226171536529183247}
   factionButton: {fileID: 1898941663262190405}
   classButton: {fileID: 605341228961935955}
   specializationButton: {fileID: 4556489472843252539}
-  startButton: {fileID: 1602450354012078779}
 --- !u!114 &3027280789261577762
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -14418,7 +14453,6 @@ MonoBehaviour:
     type: 3}
   buttonArea: {fileID: 8288497607121598762}
   canvasGroup: {fileID: 5318343297554183723}
-  appearanceButton: {fileID: 6723715505083985678}
 --- !u!114 &2146919642134934079
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -14473,14 +14507,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 03715bb91f4a7fa47b3d93745fb1b35e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  moveToSameIndex: 0
   leftPanel: {fileID: 0}
   leftController: {fileID: 0}
+  leftControllers: []
   rightPanel: {fileID: 0}
   rightController: {fileID: 0}
+  rightControllers: []
   upPanel: {fileID: 0}
   upController: {fileID: 0}
+  upControllers: []
   downPanel: {fileID: 0}
-  downController: {fileID: 1195257474298769629}
+  downController: {fileID: 0}
+  downControllers:
+  - {fileID: 1195257474298769629}
   acceptController: {fileID: 0}
   scrollRect: {fileID: 0}
   navigableButtons:

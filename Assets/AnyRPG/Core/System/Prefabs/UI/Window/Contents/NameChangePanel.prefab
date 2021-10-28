@@ -239,8 +239,6 @@ MonoBehaviour:
   - {fileID: 5736625245067532920}
   subPanels: []
   textInput: {fileID: 1895531751171715944}
-  confirmButton: {fileID: 6205143239870174088}
-  cancelButton: {fileID: 3151037857080716252}
 --- !u!114 &5736625245067532920
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -253,14 +251,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8995f41cb132f3148a9912f89e49421b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  moveToSameIndex: 0
   leftPanel: {fileID: 0}
   leftController: {fileID: 0}
+  leftControllers: []
   rightPanel: {fileID: 0}
   rightController: {fileID: 0}
+  rightControllers: []
   upPanel: {fileID: 0}
-  upController: {fileID: 7283883483841375801}
+  upController: {fileID: 0}
+  upControllers:
+  - {fileID: 7283883483841375801}
   downPanel: {fileID: 0}
   downController: {fileID: 0}
+  downControllers: []
   acceptController: {fileID: 0}
   scrollRect: {fileID: 0}
   navigableButtons:
@@ -905,14 +909,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8995f41cb132f3148a9912f89e49421b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  moveToSameIndex: 0
   leftPanel: {fileID: 0}
   leftController: {fileID: 0}
+  leftControllers: []
   rightPanel: {fileID: 0}
   rightController: {fileID: 0}
+  rightControllers: []
   upPanel: {fileID: 0}
   upController: {fileID: 0}
+  upControllers: []
   downPanel: {fileID: 0}
-  downController: {fileID: 5736625245067532920}
+  downController: {fileID: 0}
+  downControllers:
+  - {fileID: 5736625245067532920}
   acceptController: {fileID: 0}
   scrollRect: {fileID: 0}
   navigableButtons:

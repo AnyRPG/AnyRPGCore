@@ -18,14 +18,20 @@ namespace AnyRPG {
         public virtual bool CaptureCancelButton { get => false; }
         public RectTransform RectTransform { get => rectTransform; }
 
+        private int configureCount = 0;
+
         public override void Configure(SystemGameManager systemGameManager) {
             base.Configure(systemGameManager);
+            configureCount++;
+            if (configureCount > 1) {
+                Debug.LogWarning(gameObject.name + ".NavigableElement.Configure() This element has been configured multiple times");
+            }
 
             rectTransform = transform as RectTransform;
         }
 
         public virtual void Accept() {
-            Debug.Log(gameObject.name + "NavigableElement.Accept()");
+            //Debug.Log(gameObject.name + "NavigableElement.Accept()");
             Interact();
         }
 
@@ -38,7 +44,7 @@ namespace AnyRPG {
         }
 
         public virtual void DeSelect() {
-            Debug.Log(gameObject.name + "NavigableElement.DeSelect()");
+            //Debug.Log(gameObject.name + "NavigableElement.DeSelect()");
         }
 
         public virtual void Interact() {
@@ -46,7 +52,7 @@ namespace AnyRPG {
         }
 
         public virtual void LeaveElement() {
-            Debug.Log(gameObject.name + ".NavigableElement.LeaveElement()");
+            //Debug.Log(gameObject.name + ".NavigableElement.LeaveElement()");
             if (DeselectOnLeave) {
                 DeSelect();
             }

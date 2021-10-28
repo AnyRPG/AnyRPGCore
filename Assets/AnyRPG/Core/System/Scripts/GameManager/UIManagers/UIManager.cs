@@ -33,6 +33,9 @@ namespace AnyRPG {
         [SerializeField]
         private MiniMapManager miniMapManager = null;
 
+        [SerializeField]
+        private OnScreenKeyboardManager onScreenKeyboardManager = null;
+
         [Header("UI Elements")]
 
         [SerializeField]
@@ -159,6 +162,7 @@ namespace AnyRPG {
         public CloseableWindow nameChangeWindow;
         public CloseableWindow exitToMainMenuWindow;
         public CloseableWindow confirmNewGameMenuWindow;
+        public CloseableWindow onScreenKeyboardWindow;
 
         // objects in the mouseover window
         private TextMeshProUGUI mouseOverText;
@@ -243,6 +247,7 @@ namespace AnyRPG {
         public NamePlateManager NamePlateManager { get => namePlateManager; set => namePlateManager = value; }
         public MainMapManager MainMapManager { get => mainMapManager; set => mainMapManager = value; }
         public MiniMapManager MiniMapManager { get => miniMapManager; set => miniMapManager = value; }
+        public OnScreenKeyboardManager OnScreenKeyboardManager { get => onScreenKeyboardManager; set => onScreenKeyboardManager = value; }
         public HandScript HandScript { get => handScript; set => handScript = value; }
         public MapManager MapManager { get => mapManager; set => mapManager = value; }
         public int IgnoreChangeLayer { get => ignoreChangeLayer; }
@@ -258,6 +263,8 @@ namespace AnyRPG {
             mapManager.Configure(systemGameManager);
             mainMapManager.Configure(systemGameManager);
             miniMapManager.Configure(systemGameManager);
+            onScreenKeyboardManager.Configure(systemGameManager);
+
 
             // initialize ui elements
             playerUnitFrameController.Configure(systemGameManager);
@@ -320,6 +327,7 @@ namespace AnyRPG {
             nameChangeWindow.Configure(systemGameManager);
             exitToMainMenuWindow.Configure(systemGameManager);
             confirmNewGameMenuWindow.Configure(systemGameManager);
+            onScreenKeyboardWindow.Configure(systemGameManager);
 
             CreateEventSubscriptions();
 
@@ -1355,6 +1363,7 @@ namespace AnyRPG {
             playMenuWindow.CloseableWindowContents.SetBackGroundColor(new Color32(0, 0, 0, (byte)opacityLevel));
             settingsMenuWindow.CloseableWindowContents.SetBackGroundColor(new Color32(0, 0, 0, (byte)opacityLevel));
             playerOptionsMenuWindow.CloseableWindowContents.SetBackGroundColor(new Color32(0, 0, 0, (byte)opacityLevel));
+            onScreenKeyboardWindow.CloseableWindowContents.SetBackGroundColor(new Color32(0, 0, 0, (byte)opacityLevel));
         }
 
         public void SetLayerRecursive(GameObject objectName, int newLayer) {

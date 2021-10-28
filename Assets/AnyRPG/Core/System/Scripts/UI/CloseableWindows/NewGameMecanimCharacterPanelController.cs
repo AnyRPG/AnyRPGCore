@@ -30,8 +30,10 @@ namespace AnyRPG {
         [SerializeField]
         private CanvasGroup canvasGroup = null;
 
+        /*
         [SerializeField]
         private HighlightButton appearanceButton = null;
+        */
 
         private NewGameUnitButton selectedUnitButton = null;
 
@@ -44,7 +46,7 @@ namespace AnyRPG {
         public override void Configure(SystemGameManager systemGameManager) {
             base.Configure(systemGameManager);
 
-            appearanceButton.Configure(systemGameManager);
+            //appearanceButton.Configure(systemGameManager);
         }
 
         public override void SetGameManagerReferences() {

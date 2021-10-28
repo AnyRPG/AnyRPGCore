@@ -110,14 +110,14 @@ namespace AnyRPG {
         public override void Configure(SystemGameManager systemGameManager) {
             base.Configure(systemGameManager);
 
-            appearanceButton.Configure(systemGameManager);
-            colorsButton.Configure(systemGameManager);
-            hairColorsButton.Configure(systemGameManager);
-            skinColorsButton.Configure(systemGameManager);
-            eyesColorsButton.Configure(systemGameManager);
-            sexButton.Configure(systemGameManager);
-            maleButton.Configure(systemGameManager);
-            femaleButton.Configure(systemGameManager);
+            //appearanceButton.Configure(systemGameManager);
+            //colorsButton.Configure(systemGameManager);
+            //hairColorsButton.Configure(systemGameManager);
+            //skinColorsButton.Configure(systemGameManager);
+            //eyesColorsButton.Configure(systemGameManager);
+            //sexButton.Configure(systemGameManager);
+            //maleButton.Configure(systemGameManager);
+            //femaleButton.Configure(systemGameManager);
         }
 
         public override void SetGameManagerReferences() {

@@ -116,7 +116,7 @@ namespace AnyRPG {
         }
 
         public virtual void OpenWindow() {
-            Debug.Log(gameObject.name + ".CloseableWindow.OpenWindow()");
+            //Debug.Log(gameObject.name + ".CloseableWindow.OpenWindow()");
             //InitializeWindow();
             if (IsOpen) {
                 return;
@@ -139,7 +139,7 @@ namespace AnyRPG {
         }
 
         public virtual void CloseWindow() {
-            Debug.Log(gameObject.name + ".CloseableWindow.CloseWindow()");
+            //Debug.Log(gameObject.name + ".CloseableWindow.CloseWindow()");
             //InitializeWindow();
             if (IsOpen == false) {
                 RawCloseWindow();

@@ -15,6 +15,16 @@ namespace AnyRPG {
 
         private bool interacting = false;
 
+        // game managager references
+
+        protected OnScreenKeyboardManager onScreenKeyboardManager = null;
+
+        public override void SetGameManagerReferences() {
+            base.SetGameManagerReferences();
+
+            onScreenKeyboardManager = systemGameManager.UIManager.OnScreenKeyboardManager;
+        }
+
         public override bool CaptureCancelButton {
             get {
                 if (interacting == true) {
@@ -27,7 +37,8 @@ namespace AnyRPG {
         public override void Interact() {
             base.Interact();
             interacting = true;
-            inputField.ActivateInputField();
+            //inputField.ActivateInputField();
+            onScreenKeyboardManager.ActivateKeyboard(inputField);
         }
 
         public override void Cancel() {

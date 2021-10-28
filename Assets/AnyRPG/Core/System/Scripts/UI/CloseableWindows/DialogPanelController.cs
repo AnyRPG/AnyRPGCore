@@ -61,9 +61,11 @@ namespace AnyRPG {
 
         public override void Configure(SystemGameManager systemGameManager) {
             base.Configure(systemGameManager);
+            /*
             continueButton.Configure(systemGameManager);
             viewQuestButton.Configure(systemGameManager);
             acceptQuestButton.Configure(systemGameManager);
+            */
         }
 
         public override void SetGameManagerReferences() {

@@ -20,8 +20,10 @@ namespace AnyRPG {
         [SerializeField]
         private GameObject characterClassLabel = null;
 
+        /*
         [SerializeField]
         private NavigableInputField playerNameInput = null;
+        */
 
         [SerializeField]
         private NewGameCharacterClassButton characterClassButton = null;
@@ -51,10 +53,12 @@ namespace AnyRPG {
         public override void Configure(SystemGameManager systemGameManager) {
             base.Configure(systemGameManager);
 
+            /*
             playerNameInput.Configure(systemGameManager);
             characterClassButton.Configure(systemGameManager);
             classSpecializationButton.Configure(systemGameManager);
             factionButton.Configure(systemGameManager);
+            */
 
             factionButton.OnInteract += OpenFactionPanel;
             characterClassButton.OnInteract += OpenClassPanel;

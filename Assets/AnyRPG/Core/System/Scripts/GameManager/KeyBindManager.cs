@@ -45,6 +45,10 @@ namespace AnyRPG {
             xBoxKeys.Add("MAINMENU", KeyCode.JoystickButton7);
             xBoxKeys.Add("JUMP", KeyCode.JoystickButton3);
             xBoxKeys.Add("CROUCH", KeyCode.JoystickButton2);
+            xBoxKeys.Add("JOYSTICKBUTTON2", KeyCode.JoystickButton2);
+            xBoxKeys.Add("JOYSTICKBUTTON3", KeyCode.JoystickButton3);
+            xBoxKeys.Add("JOYSTICKBUTTON4", KeyCode.JoystickButton4);
+            xBoxKeys.Add("JOYSTICKBUTTON5", KeyCode.JoystickButton5);
 
             InitializeKey("FORWARD", KeyCode.W, KeyCode.W, KeyCode.W, "Forward", KeyBindType.Normal);
             InitializeKey("BACK", KeyCode.S, KeyCode.S, KeyCode.S, "Backward", KeyBindType.Normal);
@@ -63,6 +67,10 @@ namespace AnyRPG {
             InitializeKey("CANCEL", KeyCode.Backspace, xBoxKeys["CANCEL"], KeyCode.None, "Cancel", KeyBindType.Constant);
             InitializeKey("CANCELALL", KeyCode.Escape, KeyCode.None, KeyCode.None, "Cancel All", KeyBindType.Constant);
             InitializeKey("MAINMENU", KeyCode.F12, xBoxKeys["MAINMENU"], KeyCode.None, "Main Menu", KeyBindType.Constant);
+            InitializeKey("JOYSTICKBUTTON2", KeyCode.None, xBoxKeys["JOYSTICKBUTTON2"], KeyCode.None, "Joystick Button 2", KeyBindType.Constant);
+            InitializeKey("JOYSTICKBUTTON3", KeyCode.None, xBoxKeys["JOYSTICKBUTTON3"], KeyCode.None, "Joystick Button 3", KeyBindType.Constant);
+            InitializeKey("JOYSTICKBUTTON4", KeyCode.None, xBoxKeys["JOYSTICKBUTTON4"], KeyCode.None, "Joystick Button 4", KeyBindType.Constant);
+            InitializeKey("JOYSTICKBUTTON5", KeyCode.None, xBoxKeys["JOYSTICKBUTTON5"], KeyCode.None, "Joystick Button 5", KeyBindType.Constant);
             InitializeKey("QUESTLOG", KeyCode.L, KeyCode.None, KeyCode.None, "Quest Log", KeyBindType.System);
             InitializeKey("CHARACTERPANEL", KeyCode.C, KeyCode.None, KeyCode.None, "Character Panel", KeyBindType.System);
             InitializeKey("CURRENCYPANEL", KeyCode.I, KeyCode.None, KeyCode.None, "Currency Panel", KeyBindType.System);
