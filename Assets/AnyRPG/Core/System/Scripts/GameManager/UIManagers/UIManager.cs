@@ -143,6 +143,7 @@ namespace AnyRPG {
 
         public CloseableWindow mainMenuWindow;
         public CloseableWindow inGameMainMenuWindow;
+        public CloseableWindow gamepadMainMenuWindow;
         public CloseableWindow keyBindConfirmWindow;
         public CloseableWindow playerOptionsMenuWindow;
         public CloseableWindow characterCreatorWindow;
@@ -309,6 +310,7 @@ namespace AnyRPG {
             // initialize system windows
             mainMenuWindow.Configure(systemGameManager);
             inGameMainMenuWindow.Configure(systemGameManager);
+            gamepadMainMenuWindow.Configure(systemGameManager);
             keyBindConfirmWindow.Configure(systemGameManager);
             playerOptionsMenuWindow.Configure(systemGameManager);
             characterCreatorWindow.Configure(systemGameManager);
@@ -629,6 +631,7 @@ namespace AnyRPG {
                 confirmDestroyMenuWindow.CloseWindow();
                 confirmSellItemMenuWindow.CloseWindow();
                 inGameMainMenuWindow.CloseWindow();
+                gamepadMainMenuWindow.CloseWindow();
                 petSpawnWindow.CloseWindow();
 
                 // do not allow accidentally closing this while dead
@@ -638,7 +641,11 @@ namespace AnyRPG {
             }
 
             if (inputManager.KeyBindWasPressed("MAINMENU")) {
-                inGameMainMenuWindow.ToggleOpenClose();
+                if (controlsManager.GamePadModeActive == true) {
+                    gamepadMainMenuWindow.ToggleOpenClose();
+                } else {
+                    inGameMainMenuWindow.ToggleOpenClose();
+                }
             }
 
         }
@@ -673,6 +680,7 @@ namespace AnyRPG {
             //Debug.Log("SystemWindowManager.CloseAllWindows()");
             mainMenuWindow.CloseWindow();
             inGameMainMenuWindow.CloseWindow();
+            gamepadMainMenuWindow.CloseWindow();
             settingsMenuWindow.CloseWindow();
             creditsWindow.CloseWindow();
             exitMenuWindow.CloseWindow();
@@ -1103,98 +1111,7 @@ namespace AnyRPG {
         public void UpdateActionBars() {
             //Debug.Log("UIManager.UpdateActionBars()");
 
-            if (controlsManager.GamePadModeActive == true) {
-
-                // hide system bar
-                if (actionBarManager.SystemBarController.gameObject.activeSelf) {
-                    actionBarManager.SystemBarController.gameObject.SetActive(false);
-                }
-
-                // deactivate action bar controllers
-                for (int i = 0; i <= 6; i++) {
-                    if (actionBarManager.ActionBarControllers[i].gameObject.activeSelf) {
-                        actionBarManager.ActionBarControllers[i].gameObject.SetActive(false);
-                    }
-                }
-
-                // activate gamepad action bar controllers
-                for (int i = 0; i <= 1; i++) {
-                    if (!actionBarManager.GamepadActionBarControllers[i].gameObject.activeSelf) {
-                        actionBarManager.GamepadActionBarControllers[i].gameObject.SetActive(true);
-                    }
-                }
-
-            } else {
-                // hide gamepad controllers
-                for (int i = 0; i <= 1; i++) {
-                    if (actionBarManager.GamepadActionBarControllers[i].gameObject.activeSelf) {
-                        actionBarManager.GamepadActionBarControllers[i].gameObject.SetActive(false);
-                    }
-                }
-
-                // show systembar
-                if (!actionBarManager.SystemBarController.gameObject.activeSelf) {
-                    actionBarManager.SystemBarController.gameObject.SetActive(true);
-                }
-
-                if (PlayerPrefs.GetInt("UseActionBar2") == 0) {
-                    if (actionBarManager.ActionBarControllers[1].gameObject.activeSelf) {
-                        actionBarManager.ActionBarControllers[1].gameObject.SetActive(false);
-                    }
-                } else if (PlayerPrefs.GetInt("UseActionBar2") == 1) {
-                    if (!actionBarManager.ActionBarControllers[1].gameObject.activeSelf) {
-                        actionBarManager.ActionBarControllers[1].gameObject.SetActive(true);
-                    }
-                }
-
-                if (PlayerPrefs.GetInt("UseActionBar3") == 0) {
-                    if (actionBarManager.ActionBarControllers[2].gameObject.activeSelf) {
-                        actionBarManager.ActionBarControllers[2].gameObject.SetActive(false);
-                    }
-                } else if (PlayerPrefs.GetInt("UseActionBar3") == 1) {
-                    if (!actionBarManager.ActionBarControllers[2].gameObject.activeSelf) {
-                        actionBarManager.ActionBarControllers[2].gameObject.SetActive(true);
-                    }
-                }
-
-                if (PlayerPrefs.GetInt("UseActionBar4") == 0) {
-                    if (actionBarManager.ActionBarControllers[3].gameObject.activeSelf) {
-                        actionBarManager.ActionBarControllers[3].gameObject.SetActive(false);
-                    }
-                } else if (PlayerPrefs.GetInt("UseActionBar4") == 1) {
-                    if (!actionBarManager.ActionBarControllers[3].gameObject.activeSelf) {
-                        actionBarManager.ActionBarControllers[3].gameObject.SetActive(true);
-                    }
-                }
-                if (PlayerPrefs.GetInt("UseActionBar5") == 0) {
-                    if (actionBarManager.ActionBarControllers[4].gameObject.activeSelf) {
-                        actionBarManager.ActionBarControllers[4].gameObject.SetActive(false);
-                    }
-                } else if (PlayerPrefs.GetInt("UseActionBar5") == 1) {
-                    if (!actionBarManager.ActionBarControllers[4].gameObject.activeSelf) {
-                        actionBarManager.ActionBarControllers[4].gameObject.SetActive(true);
-                    }
-                }
-                if (PlayerPrefs.GetInt("UseActionBar6") == 0) {
-                    if (actionBarManager.ActionBarControllers[5].gameObject.activeSelf) {
-                        actionBarManager.ActionBarControllers[5].gameObject.SetActive(false);
-                    }
-                } else if (PlayerPrefs.GetInt("UseActionBar6") == 1) {
-                    if (!actionBarManager.ActionBarControllers[5].gameObject.activeSelf) {
-                        actionBarManager.ActionBarControllers[5].gameObject.SetActive(true);
-                    }
-                }
-                if (PlayerPrefs.GetInt("UseActionBar7") == 0) {
-                    if (actionBarManager.ActionBarControllers[6].gameObject.activeSelf) {
-                        actionBarManager.ActionBarControllers[6].gameObject.SetActive(false);
-                    }
-                } else if (PlayerPrefs.GetInt("UseActionBar7") == 1) {
-                    if (!actionBarManager.ActionBarControllers[6].gameObject.activeSelf) {
-                        actionBarManager.ActionBarControllers[6].gameObject.SetActive(true);
-                    }
-                }
-            }
-
+            actionBarManager.UpdateActionBars();
             
             UpdateActionBarOpacity();
         }
@@ -1406,6 +1323,7 @@ namespace AnyRPG {
             characterCreatorWindow.CloseableWindowContents.SetBackGroundColor(new Color32(0, 0, 0, (byte)opacityLevel));
             exitMenuWindow.CloseableWindowContents.SetBackGroundColor(new Color32(0, 0, 0, (byte)opacityLevel));
             inGameMainMenuWindow.CloseableWindowContents.SetBackGroundColor(new Color32(0, 0, 0, (byte)opacityLevel));
+            gamepadMainMenuWindow.CloseableWindowContents.SetBackGroundColor(new Color32(0, 0, 0, (byte)opacityLevel));
             keyBindConfirmWindow.CloseableWindowContents.SetBackGroundColor(new Color32(0, 0, 0, (byte)opacityLevel));
             playMenuWindow.CloseableWindowContents.SetBackGroundColor(new Color32(0, 0, 0, (byte)opacityLevel));
             settingsMenuWindow.CloseableWindowContents.SetBackGroundColor(new Color32(0, 0, 0, (byte)opacityLevel));

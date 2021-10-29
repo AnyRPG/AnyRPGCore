@@ -397,6 +397,111 @@ namespace AnyRPG {
             UpdateVisuals();
         }
 
+        public void UpdateActionBars() {
+            //Debug.Log("UIManager.UpdateActionBars()");
+
+            if (controlsManager.GamePadModeActive == true) {
+
+                // hide system bar
+                if (systemBarController.gameObject.activeSelf) {
+                    systemBarController.gameObject.SetActive(false);
+                }
+
+                // deactivate action bar controllers
+                for (int i = 0; i <= 6; i++) {
+                    if (actionBarControllers[i].gameObject.activeSelf) {
+                        actionBarControllers[i].gameObject.SetActive(false);
+                    }
+                }
+
+                // show gamepad hints
+                leftBackground.gameObject.SetActive(true);
+                rightBackground.gameObject.SetActive(true);
+
+                // activate gamepad action bar controllers
+                for (int i = 0; i <= 1; i++) {
+                    if (!gamepadActionBarControllers[i].gameObject.activeSelf) {
+                        gamepadActionBarControllers[i].gameObject.SetActive(true);
+                    }
+                }
+
+            } else {
+                // hide gamepad controllers
+                for (int i = 0; i <= 1; i++) {
+                    if (gamepadActionBarControllers[i].gameObject.activeSelf) {
+                        gamepadActionBarControllers[i].gameObject.SetActive(false);
+                    }
+                }
+
+                // hide gamepad hints
+                leftBackground.gameObject.SetActive(false);
+                rightBackground.gameObject.SetActive(false);
+
+                // show systembar
+                if (!systemBarController.gameObject.activeSelf) {
+                    systemBarController.gameObject.SetActive(true);
+                }
+
+                if (PlayerPrefs.GetInt("UseActionBar2") == 0) {
+                    if (actionBarControllers[1].gameObject.activeSelf) {
+                        actionBarControllers[1].gameObject.SetActive(false);
+                    }
+                } else if (PlayerPrefs.GetInt("UseActionBar2") == 1) {
+                    if (!actionBarControllers[1].gameObject.activeSelf) {
+                        actionBarControllers[1].gameObject.SetActive(true);
+                    }
+                }
+
+                if (PlayerPrefs.GetInt("UseActionBar3") == 0) {
+                    if (actionBarControllers[2].gameObject.activeSelf) {
+                        actionBarControllers[2].gameObject.SetActive(false);
+                    }
+                } else if (PlayerPrefs.GetInt("UseActionBar3") == 1) {
+                    if (!actionBarControllers[2].gameObject.activeSelf) {
+                        actionBarControllers[2].gameObject.SetActive(true);
+                    }
+                }
+
+                if (PlayerPrefs.GetInt("UseActionBar4") == 0) {
+                    if (actionBarControllers[3].gameObject.activeSelf) {
+                        actionBarControllers[3].gameObject.SetActive(false);
+                    }
+                } else if (PlayerPrefs.GetInt("UseActionBar4") == 1) {
+                    if (!actionBarControllers[3].gameObject.activeSelf) {
+                        actionBarControllers[3].gameObject.SetActive(true);
+                    }
+                }
+                if (PlayerPrefs.GetInt("UseActionBar5") == 0) {
+                    if (actionBarControllers[4].gameObject.activeSelf) {
+                        actionBarControllers[4].gameObject.SetActive(false);
+                    }
+                } else if (PlayerPrefs.GetInt("UseActionBar5") == 1) {
+                    if (!actionBarControllers[4].gameObject.activeSelf) {
+                        actionBarControllers[4].gameObject.SetActive(true);
+                    }
+                }
+                if (PlayerPrefs.GetInt("UseActionBar6") == 0) {
+                    if (actionBarControllers[5].gameObject.activeSelf) {
+                        actionBarControllers[5].gameObject.SetActive(false);
+                    }
+                } else if (PlayerPrefs.GetInt("UseActionBar6") == 1) {
+                    if (!actionBarControllers[5].gameObject.activeSelf) {
+                        actionBarControllers[5].gameObject.SetActive(true);
+                    }
+                }
+                if (PlayerPrefs.GetInt("UseActionBar7") == 0) {
+                    if (actionBarControllers[6].gameObject.activeSelf) {
+                        actionBarControllers[6].gameObject.SetActive(false);
+                    }
+                } else if (PlayerPrefs.GetInt("UseActionBar7") == 1) {
+                    if (!actionBarControllers[6].gameObject.activeSelf) {
+                        actionBarControllers[6].gameObject.SetActive(true);
+                    }
+                }
+            }
+
+        }
+
     }
 
 }

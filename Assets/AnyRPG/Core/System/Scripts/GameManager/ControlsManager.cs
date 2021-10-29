@@ -73,7 +73,9 @@ namespace AnyRPG {
             RegisterAxis();
             inputManager.RegisterInput();
 
-            if (inputManager.KeyBindWasPressed("JOYSTICKBUTTON1") || inputManager.KeyBindWasPressed("JOYSTICKBUTTON2")) {
+            if (inputManager.KeyBindWasPressed("JOYSTICKBUTTON0")
+                || inputManager.KeyBindWasPressed("JOYSTICKBUTTON1")
+                || inputManager.KeyBindWasPressed("JOYSTICKBUTTON2")) {
                 gamePadModeActive = true;
             }
 

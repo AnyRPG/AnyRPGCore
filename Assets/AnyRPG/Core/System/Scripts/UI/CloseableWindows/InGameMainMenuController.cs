@@ -30,6 +30,7 @@ namespace AnyRPG {
         private UIManager uIManager = null;
         private SaveManager saveManager = null;
         private MessageFeedManager messageFeedManager = null;
+        private InventoryManager inventoryManager = null;
 
         public override void Configure(SystemGameManager systemGameManager) {
             base.Configure(systemGameManager);
@@ -55,26 +56,25 @@ namespace AnyRPG {
             saveManager = systemGameManager.SaveManager;
             uIManager = systemGameManager.UIManager;
             messageFeedManager = uIManager.MessageFeedManager;
+            inventoryManager = systemGameManager.InventoryManager;
         }
 
 
         public void ExitMenu() {
             //Debug.Log("MainMenuController.ExitMenu()");
-            uIManager.playMenuWindow.CloseWindow();
-            uIManager.deleteGameMenuWindow.CloseWindow();
+            uIManager.CloseAllSystemWindows();
             uIManager.exitMenuWindow.OpenWindow();
         }
 
         public void MainMenu() {
             //Debug.Log("MainMenuController.MainMenu()");
+            uIManager.CloseAllSystemWindows();
             uIManager.exitToMainMenuWindow.OpenWindow();
         }
 
         public void SettingsMenu() {
             //Debug.Log("MainMenuController.SettingsMenu()");
-            uIManager.playMenuWindow.CloseWindow();
-            uIManager.deleteGameMenuWindow.CloseWindow();
-            //systemWindowManager.mainMenuWindow.CloseWindow();
+            uIManager.CloseAllSystemWindows();
             uIManager.settingsMenuWindow.OpenWindow();
         }
 
@@ -92,6 +92,32 @@ namespace AnyRPG {
             //Debug.Log("MainMenuController.ContinueGame()");
             uIManager.CloseAllSystemWindows();
         }
+
+        public void CharacterDetails() {
+            uIManager.CloseAllSystemWindows();
+            uIManager.characterPanelWindow.OpenWindow();
+        }
+
+        public void CharacterAbilities() {
+            uIManager.CloseAllSystemWindows();
+            uIManager.abilityBookWindow.OpenWindow();
+        }
+
+        public void CharacterQuestLog() {
+            uIManager.CloseAllSystemWindows();
+            uIManager.questLogWindow.OpenWindow();
+        }
+
+        public void CharacterMap() {
+            uIManager.CloseAllSystemWindows();
+            uIManager.mainMapWindow.OpenWindow();
+        }
+
+        public void CharacterInventory() {
+            uIManager.CloseAllSystemWindows();
+            inventoryManager.OpenClose();
+        }
+
 
     }
 

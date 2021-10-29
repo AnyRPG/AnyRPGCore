@@ -262,6 +262,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7702823785965781839, guid: 756e8674000d23b45a8aafcafdecd1d4,
         type: 3}
+      propertyPath: defaultControllerConfiguration
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7702823785965781839, guid: 756e8674000d23b45a8aafcafdecd1d4,
+        type: 3}
       propertyPath: focusProjectorColorMap.Array.data[2].projectorMaterial
       value: 
       objectReference: {fileID: 2100000, guid: e0adbcbf43af54c45b048a9e7b2ebf79, type: 2}
