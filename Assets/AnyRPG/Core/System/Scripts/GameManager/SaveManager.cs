@@ -194,6 +194,9 @@ namespace AnyRPG {
             if (anyRPGSaveData.actionBarSaveData == null || overWrite) {
                 anyRPGSaveData.actionBarSaveData = new List<ActionBarSaveData>();
             }
+            if (anyRPGSaveData.gamepadActionBarSaveData == null || overWrite) {
+                anyRPGSaveData.gamepadActionBarSaveData = new List<ActionBarSaveData>();
+            }
             if (anyRPGSaveData.inventorySlotSaveData == null || overWrite) {
                 anyRPGSaveData.inventorySlotSaveData = new List<InventorySlotSaveData>();
             }
@@ -652,13 +655,20 @@ namespace AnyRPG {
 
         public void SaveActionBarData(AnyRPGSaveData anyRPGSaveData) {
             //Debug.Log("Savemanager.SaveActionBarData()");
-            foreach (ActionButton actionButton in actionBarManager.GetActionButtons()) {
-                ActionBarSaveData saveData = new ActionBarSaveData();
-                saveData.DisplayName = (actionButton.Useable == null ? string.Empty : (actionButton.Useable as IDescribable).DisplayName);
-                saveData.savedName = (actionButton.SavedUseable == null ? string.Empty : (actionButton.SavedUseable as IDescribable).DisplayName);
-                saveData.isItem = (actionButton.Useable == null ? false : (actionButton.Useable is Item ? true : false));
-                anyRPGSaveData.actionBarSaveData.Add(saveData);
+            foreach (ActionButton actionButton in actionBarManager.GetMouseActionButtons()) {
+                SaveActionButtonSaveData(actionButton, anyRPGSaveData.actionBarSaveData);
             }
+            foreach (ActionButton actionButton in actionBarManager.GetGamepadActionButtons()) {
+                SaveActionButtonSaveData(actionButton, anyRPGSaveData.gamepadActionBarSaveData);
+            }
+        }
+
+        private void SaveActionButtonSaveData(ActionButton actionButton, List<ActionBarSaveData> actionBarSaveData) {
+            ActionBarSaveData saveData = new ActionBarSaveData();
+            saveData.DisplayName = (actionButton.Useable == null ? string.Empty : (actionButton.Useable as IDescribable).DisplayName);
+            saveData.savedName = (actionButton.SavedUseable == null ? string.Empty : (actionButton.SavedUseable as IDescribable).DisplayName);
+            saveData.isItem = (actionButton.Useable == null ? false : (actionButton.Useable is Item ? true : false));
+            actionBarSaveData.Add(saveData);
         }
 
         public void SaveInventorySlotData(AnyRPGSaveData anyRPGSaveData) {
@@ -984,9 +994,15 @@ namespace AnyRPG {
         public void LoadActionBarData(AnyRPGSaveData anyRPGSaveData) {
             //Debug.Log("Savemanager.LoadActionBarData()");
 
+            LoadActionButtonData(anyRPGSaveData.actionBarSaveData, actionBarManager.GetMouseActionButtons());
+            LoadActionButtonData(anyRPGSaveData.gamepadActionBarSaveData, actionBarManager.GetGamepadActionButtons());
+            actionBarManager.UpdateVisuals();
+        }
+
+        private void LoadActionButtonData(List<ActionBarSaveData> actionBarSaveDatas, List<ActionButton> actionButtons) {
             IUseable useable = null;
             int counter = 0;
-            foreach (ActionBarSaveData actionBarSaveData in anyRPGSaveData.actionBarSaveData) {
+            foreach (ActionBarSaveData actionBarSaveData in actionBarSaveDatas) {
                 useable = null;
                 if (actionBarSaveData.isItem == true) {
                     // find item in bag
@@ -1003,21 +1019,20 @@ namespace AnyRPG {
                     if (actionBarSaveData.savedName != null && actionBarSaveData.savedName != string.Empty) {
                         IUseable savedUseable = systemDataFactory.GetResource<BaseAbility>(actionBarSaveData.savedName);
                         if (savedUseable != null) {
-                            actionBarManager.GetActionButtons()[counter].SavedUseable = savedUseable;
+                            actionButtons[counter].SavedUseable = savedUseable;
                         }
                     }
                 }
                 if (useable != null) {
-                    actionBarManager.GetActionButtons()[counter].SetUseable(useable, false);
+                    actionButtons[counter].SetUseable(useable, false);
                 } else {
                     //Debug.Log("Savemanager.LoadActionBarData(): no usable set on this actionbutton");
                     // testing remove things that weren't saved, it will prevent duplicate abilities if they are moved
                     // this means if new abilities are added to a class/etc between play sessions they won't be on the bars
-                    actionBarManager.GetActionButtons()[counter].ClearUseable();
+                    actionButtons[counter].ClearUseable();
                 }
                 counter++;
             }
-            actionBarManager.UpdateVisuals();
         }
 
         public void TryNewGame() {

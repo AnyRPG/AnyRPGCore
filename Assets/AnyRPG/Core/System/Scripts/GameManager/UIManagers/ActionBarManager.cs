@@ -2,6 +2,7 @@ using AnyRPG;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace AnyRPG {
     public class ActionBarManager : ConfiguredMonoBehaviour {
@@ -11,6 +12,21 @@ namespace AnyRPG {
 
         [SerializeField]
         private List<ActionBarController> actionBarControllers = new List<ActionBarController>();
+
+        [SerializeField]
+        private List<ActionBarController> gamepadActionBarControllers = new List<ActionBarController>();
+
+        [SerializeField]
+        protected Image leftBackground;
+
+        [SerializeField]
+        protected Image rightBackground;
+
+        [SerializeField]
+        protected Color normalColor = new Color32(0, 0, 0, 0);
+
+        [SerializeField]
+        protected Color pressedColor = new Color32(255, 255, 255, 128);
 
         private bool abilityBarsPopulated = false;
 
@@ -23,18 +39,22 @@ namespace AnyRPG {
         // the action bar target for range checks
         private Interactable target = null;
 
-        private PlayerManager playerManager = null;
-        private KeyBindManager keyBindManager = null;
-        private SystemEventManager systemEventManager = null;
+        protected PlayerManager playerManager = null;
+        protected KeyBindManager keyBindManager = null;
+        protected SystemEventManager systemEventManager = null;
+        protected ControlsManager controlsManager = null;
 
         public ActionButton FromButton { get => fromButton; set => fromButton = value; }
         public List<ActionBarController> ActionBarControllers { get => actionBarControllers; set => actionBarControllers = value; }
+        public List<ActionBarController> GamepadActionBarControllers { get => gamepadActionBarControllers; set => gamepadActionBarControllers = value; }
+        public SystemBarController SystemBarController { get => systemBarController; }
 
         public override void Configure(SystemGameManager systemGameManager) {
             base.Configure(systemGameManager);
             playerManager = systemGameManager.PlayerManager;
             keyBindManager = systemGameManager.KeyBindManager;
             systemEventManager = systemGameManager.SystemEventManager;
+            controlsManager = systemGameManager.ControlsManager;
 
             systemBarController.Configure(systemGameManager);
             InitializeActionbars();
@@ -67,8 +87,46 @@ namespace AnyRPG {
             eventSubscriptionsInitialized = false;
         }
 
+        public void ProcessInput() {
+            if (controlsManager.LeftTriggerDown) {
+                PressLeftTrigger();
+            }
+            if (controlsManager.LeftTriggerUp) {
+                LiftLeftTrigger();
+            }
+            if (controlsManager.RightTriggerDown) {
+                PressRightTrigger();
+            }
+            if (controlsManager.RightTriggerUp) {
+                LiftRightTrigger();
+            }
+        }
+
+        public void PressLeftTrigger() {
+            //Debug.Log("ActionBarManager.PressLeftTrigger()");
+            leftBackground.color = pressedColor;
+        }
+
+        public void LiftLeftTrigger() {
+            //Debug.Log("ActionBarManager.LiftLeftTrigger()");
+            leftBackground.color = normalColor;
+        }
+
+        public void PressRightTrigger() {
+            //Debug.Log("ActionBarManager.PressRightTrigger()");
+            rightBackground.color = pressedColor;
+        }
+
+        public void LiftRightTrigger() {
+            //Debug.Log("ActionBarManager.LiftRightTrigger()");
+            rightBackground.color = normalColor;
+        }
+
         public void InitializeActionbars() {
             foreach (ActionBarController actionBarController in actionBarControllers) {
+                actionBarController.Configure(systemGameManager);
+            }
+            foreach (ActionBarController actionBarController in gamepadActionBarControllers) {
                 actionBarController.Configure(systemGameManager);
             }
         }
@@ -132,7 +190,7 @@ namespace AnyRPG {
 
         public void ResetRangeColors() {
             //Debug.Log("ActionBarmanager.ResetRangeColors()");
-            foreach (ActionButton actionButton in GetActionButtons()) {
+            foreach (ActionButton actionButton in GetCurrentActionButtons()) {
                 if (actionButton.KeyBindText.color != Color.white) {
                     actionButton.KeyBindText.color = Color.white;
                 }
@@ -148,7 +206,7 @@ namespace AnyRPG {
                     break;
                 }
                 //Debug.Log("ActionBarmanager.UpdateTargetRange(): still have target at distance: " + distanceToTarget);
-                foreach (ActionButton actionButton in GetActionButtons()) {
+                foreach (ActionButton actionButton in GetCurrentActionButtons()) {
                     if ((actionButton.Useable as BaseAbility) is BaseAbility) {
                         BaseAbility baseAbility = actionButton.Useable as BaseAbility;
 
@@ -178,11 +236,19 @@ namespace AnyRPG {
             targetRangeRoutine = null;
         }
 
-        public List<ActionButton> GetActionButtons() {
+        public List<ActionButton> GetCurrentActionButtons() {
+            if (controlsManager.GamePadModeActive == true) {
+                return GetActionButtons(gamepadActionBarControllers);
+            } else {
+                return GetActionButtons(actionBarControllers);
+            }
+        }
+
+        public List<ActionButton> GetActionButtons(List<ActionBarController> barControllers) {
             //Debug.Log("ActionBarManager.GetActionButtons()");
             List<ActionButton> actionButtons = new List<ActionButton>();
             int count = 0;
-            foreach (ActionBarController actionBarController in actionBarControllers) {
+            foreach (ActionBarController actionBarController in barControllers) {
                 foreach (ActionButton actionButton in actionBarController.ActionButtons) {
                     actionButtons.Add(actionButton);
                     //Debug.Log("ActionBarManager.GetActionButtons() count: " + count + "; actionbutton: " + actionButton.name + actionButton.GetInstanceID());
@@ -193,10 +259,22 @@ namespace AnyRPG {
             return actionButtons;
         }
 
+        public List<ActionButton> GetMouseActionButtons() {
+            //Debug.Log("ActionBarManager.GetActionButtons()");
+            
+            return GetActionButtons(actionBarControllers);
+        }
+
+        public List<ActionButton> GetGamepadActionButtons() {
+            //Debug.Log("ActionBarManager.GetActionButtons()");
+
+            return GetActionButtons(GamepadActionBarControllers);
+        }
+
         private void AssociateActionBarKeyBinds() {
             //Debug.Log("ActionBarManager.AssociateActionBarKeyBinds()");
             int count = 1;
-            foreach (ActionButton actionButton in GetActionButtons()) {
+            foreach (ActionButton actionButton in GetMouseActionButtons()) {
                 if (keyBindManager.KeyBinds.Count >= count) {
                     //Debug.Log("ActionBarManager.AssociateActionBarKeyBinds(): associate count: ACT" + count + " with actionButton " + actionButton.name + actionButton.GetInstanceID());
                     if (keyBindManager.KeyBinds.ContainsKey("ACT" + count.ToString())) {
@@ -215,19 +293,54 @@ namespace AnyRPG {
 
         public bool AddNewAbility(BaseAbility newAbility) {
             //Debug.Log("ActionBarManager.AddNewAbility()");
+            bool returnValue = false;
+            bool foundSlot = false;
+            foreach (ActionBarController actionBarController in gamepadActionBarControllers) {
+                //Debug.Log("ActionBarManager.AddNewAbility(): looping through a controller");
+                if (actionBarController.AddSavedAbility(newAbility)) {
+                    if (controlsManager.GamePadModeActive) {
+                        returnValue = true;
+                    }
+                    foundSlot = true;
+                    break;
+                }
+            }
+            if (foundSlot != true) {
+                foreach (ActionBarController actionBarController in gamepadActionBarControllers) {
+                    if (actionBarController.AddNewAbility(newAbility)) {
+                        //Debug.Log("ActionBarManager.AddNewAbility(): we were able to add " + newAbility.name);
+                        if (controlsManager.GamePadModeActive) {
+                            returnValue = true;
+                        }
+                        break;
+                    }
+                }
+            }
+
+            foundSlot = false;
             foreach (ActionBarController actionBarController in actionBarControllers) {
                 //Debug.Log("ActionBarManager.AddNewAbility(): looping through a controller");
                 if (actionBarController.AddSavedAbility(newAbility)) {
-                    return true;
+                    if (controlsManager.GamePadModeActive == false) {
+                        returnValue = true;
+                    }
+                    foundSlot = true;
+                    break;
                 }
             }
-            foreach (ActionBarController actionBarController in actionBarControllers) {
-                if (actionBarController.AddNewAbility(newAbility)) {
-                    //Debug.Log("ActionBarManager.AddNewAbility(): we were able to add " + newAbility.name);
-                    return true;
+            if (foundSlot == false) {
+                foreach (ActionBarController actionBarController in actionBarControllers) {
+                    if (actionBarController.AddNewAbility(newAbility)) {
+                        //Debug.Log("ActionBarManager.AddNewAbility(): we were able to add " + newAbility.name);
+                        if (controlsManager.GamePadModeActive == false) {
+                            returnValue = true;
+                        }
+                        break;
+                    }
                 }
             }
-            return false;
+
+            return returnValue;
         }
 
         public void ClearActionBars(bool clearSavedUseables = false) {
@@ -236,6 +349,11 @@ namespace AnyRPG {
                 //Debug.Log("ActionBarManager.AddNewAbility(): looping through a controller");
                 actionBarController.ClearActionBar(clearSavedUseables);
             }
+            foreach (ActionBarController actionBarController in gamepadActionBarControllers) {
+                //Debug.Log("ActionBarManager.AddNewAbility(): looping through a controller");
+                actionBarController.ClearActionBar(clearSavedUseables);
+            }
+
         }
 
 
@@ -262,9 +380,16 @@ namespace AnyRPG {
         }
 
         public void UpdateVisuals(bool removeStaleActions = false) {
-            foreach (ActionBarController actionBarController in actionBarControllers) {
-                //Debug.Log("ActionBarManager.AddNewAbility(): looping through a controller");
-                actionBarController.UpdateVisuals(removeStaleActions);
+            if (controlsManager.GamePadModeActive == true) {
+                foreach (ActionBarController actionBarController in gamepadActionBarControllers) {
+                    //Debug.Log("ActionBarManager.AddNewAbility(): looping through a controller");
+                    actionBarController.UpdateVisuals(removeStaleActions);
+                }
+            } else {
+                foreach (ActionBarController actionBarController in actionBarControllers) {
+                    //Debug.Log("ActionBarManager.AddNewAbility(): looping through a controller");
+                    actionBarController.UpdateVisuals(removeStaleActions);
+                }
             }
         }
 

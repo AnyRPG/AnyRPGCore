@@ -29,7 +29,9 @@ namespace AnyRPG {
                 Debug.LogError("InputManager not found in scene.  Is the GameManager in the scene?");
                 return;
             }
-            if (inputManager.KeyBindWasPressed("CANCEL") || inputManager.KeyBindWasPressed("CANCELALL")) {
+            if (inputManager.KeyBindWasPressed("CANCEL")
+                || inputManager.KeyBindWasPressed("CANCELALL")
+                || inputManager.KeyBindWasPressed("JOYSTICKBUTTON1")) {
                 //Debug.Log("AnyRPGCutsceneCameraController.LateUpdate(): open cancel cutscene window");
                 uIManager.confirmCancelCutsceneMenuWindow.OpenWindow();
             }

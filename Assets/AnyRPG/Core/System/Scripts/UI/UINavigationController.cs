@@ -142,7 +142,7 @@ namespace AnyRPG {
         }
 
         public virtual void FocusFirstButton() {
-            Debug.Log(gameObject.name + ".UINavigationController.FocusFirstButton()");
+            //Debug.Log(gameObject.name + ".UINavigationController.FocusFirstButton()");
             if (activeNavigableButtons.Count == 0) {
                 return;
             }
@@ -158,7 +158,7 @@ namespace AnyRPG {
 
 
         public virtual void FocusCurrentButton() {
-            Debug.Log(gameObject.name + ".UINavigationController.FocusCurrentButton()");
+            //Debug.Log(gameObject.name + ".UINavigationController.FocusCurrentButton()");
         }
 
         public virtual void UpButton() {

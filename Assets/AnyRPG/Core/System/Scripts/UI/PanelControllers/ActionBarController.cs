@@ -9,7 +9,7 @@ namespace AnyRPG {
     public class ActionBarController : ConfiguredMonoBehaviour {
 
         [SerializeField]
-        private List<ActionButton> actionButtons = new List<ActionButton>();
+        protected List<ActionButton> actionButtons = new List<ActionButton>();
 
         //private bool initialized = false;
 

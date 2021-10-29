@@ -19,6 +19,15 @@ namespace AnyRPG {
         private bool dPadRight = false;
         private bool dPadRightPressed = false;
 
+        private float leftTriggerAxis = 0f;
+        private float rightTriggerAxis = 0f;
+        private bool leftTriggerDown = false;
+        private bool leftTriggerUp = false;
+        private bool leftTriggerPressed = false;
+        private bool rightTriggerDown = false;
+        private bool rightTriggerUp = false;
+        private bool rightTriggerPressed = false;
+
         private bool gamePadModeActive = false;
 
         private int windowStackCount = 0;
@@ -28,12 +37,19 @@ namespace AnyRPG {
         protected UIManager uIManager = null;
         protected WindowManager windowManager = null;
         protected PlayerManager playerManager = null;
+        protected ActionBarManager actionBarManager = null;
 
+        public bool GamePadModeActive { get => gamePadModeActive; }
         public bool DPadDownPressed { get => dPadDownPressed; }
         public bool DPadUpPressed { get => dPadUpPressed; }
         public bool DPadLeftPressed { get => dPadLeftPressed; }
         public bool DPadRightPressed { get => dPadRightPressed; }
-        public bool GamePadModeActive { get => gamePadModeActive; }
+        public bool LeftTriggerDown { get => leftTriggerDown; }
+        public bool LeftTriggerUp { get => leftTriggerUp; }
+        public bool LeftTriggerPressed { get => leftTriggerPressed; }
+        public bool RightTriggerDown { get => rightTriggerDown; }
+        public bool RightTriggerUp { get => rightTriggerUp; }
+        public bool RightTriggerPressed { get => rightTriggerPressed; }
 
         public override void Configure(SystemGameManager systemGameManager) {
             base.Configure(systemGameManager);
@@ -50,13 +66,14 @@ namespace AnyRPG {
             uIManager = systemGameManager.UIManager;
             windowManager = systemGameManager.WindowManager;
             playerManager = systemGameManager.PlayerManager;
+            actionBarManager = uIManager.ActionBarManager;
         }
 
         void Update() {
             RegisterAxis();
             inputManager.RegisterInput();
 
-            if (inputManager.KeyBindWasPressed("ACCEPT") || inputManager.KeyBindWasPressed("CANCEL")) {
+            if (inputManager.KeyBindWasPressed("JOYSTICKBUTTON1") || inputManager.KeyBindWasPressed("JOYSTICKBUTTON2")) {
                 gamePadModeActive = true;
             }
 
@@ -74,6 +91,9 @@ namespace AnyRPG {
 
             if (windowStackCount == 0 || gamePadModeActive == false) {
                 if (playerManager.PlayerController != null) {
+                    if (gamePadModeActive) {
+                        actionBarManager.ProcessInput();
+                    }
                     playerManager.PlayerController.ProcessInput();
                 }
             }
@@ -81,6 +101,48 @@ namespace AnyRPG {
 
 
         private void RegisterAxis() {
+
+            RegisterDPadAxis();
+            RegisterTriggerAxis();
+
+        }
+
+        private void RegisterTriggerAxis() {
+            
+            leftTriggerAxis = Input.GetAxis("LT");
+            rightTriggerAxis = Input.GetAxis("RT");
+
+            //Debug.Log("leftTriggerAxis: " + leftTriggerAxis + "; rightTriggerAxis: " + rightTriggerAxis);
+
+            //leftTriggerDown = false;
+            leftTriggerUp = false;
+            leftTriggerPressed = false;
+            //rightTriggerDown = false;
+            rightTriggerUp = false;
+            rightTriggerPressed = false;
+
+            if (leftTriggerAxis == 1 && leftTriggerDown == false) {
+                leftTriggerDown = true;
+            }
+            if (leftTriggerAxis == 0 && leftTriggerDown == true) {
+                leftTriggerDown = false;
+                leftTriggerUp = true;
+                leftTriggerPressed = true;
+            }
+
+            if (rightTriggerAxis == 1 && rightTriggerDown == false) {
+                rightTriggerDown = true;
+            }
+            if (rightTriggerAxis == 0 && rightTriggerDown == true) {
+                rightTriggerDown = false;
+                rightTriggerUp = true;
+                rightTriggerPressed = true;
+            }
+
+
+        }
+
+        private void RegisterDPadAxis() {
             dPadHorizontal = Input.GetAxis("D-Pad Horizontal");
             dPadVertical = Input.GetAxis("D-Pad Vertical");
             dPadDownPressed = false;
@@ -127,7 +189,6 @@ namespace AnyRPG {
             } else if (dPadHorizontal <= 0f) {
                 dPadRight = false;
             }
-
         }
 
     }

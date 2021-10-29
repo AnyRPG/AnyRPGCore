@@ -73,10 +73,10 @@ namespace AnyRPG {
                 }
 
                 // buttons
-                if (inputManager.KeyBindWasPressed("ACCEPT")) {
+                if (inputManager.KeyBindWasPressed("ACCEPT") || inputManager.KeyBindWasPressed("JOYSTICKBUTTON0")) {
                     windowStack[windowStack.Count - 1].Accept();
                 }
-                if (inputManager.KeyBindWasPressed("CANCEL")) {
+                if (inputManager.KeyBindWasPressed("CANCEL") || inputManager.KeyBindWasPressed("JOYSTICKBUTTON1")) {
                     windowStack[windowStack.Count - 1].Cancel();
                 }
                 if (inputManager.KeyBindWasPressed("JOYSTICKBUTTON2")) {

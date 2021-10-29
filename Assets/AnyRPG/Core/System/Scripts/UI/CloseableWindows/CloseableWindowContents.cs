@@ -102,6 +102,7 @@ namespace AnyRPG {
             activeSubPanel = closeableWindowContents;
             if (activeSubPanel != null) {
                 currentNavigationController = null;
+                activeSubPanel.FocusCurrentButton();
             }
         }
 

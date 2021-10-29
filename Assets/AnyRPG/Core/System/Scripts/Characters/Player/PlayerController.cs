@@ -47,6 +47,8 @@ namespace AnyRPG {
 
         private int tabTargetIndex = 0;
 
+        private int crossBarIndex = 0;
+
         private DateTime lastTabTargetTime;
 
         private RaycastHit mouseOverhit;
@@ -62,6 +64,8 @@ namespace AnyRPG {
         protected CraftingManager craftingManager = null;
         protected UIManager uIManager = null;
         protected WindowManager windowManager = null;
+        protected ControlsManager controlsManager = null;
+        protected ActionBarManager actionBarManager = null;
 
         public List<Interactable> MyInteractables { get => interactables; }
         public RaycastHit MyMouseOverhit { get => mouseOverhit; set => mouseOverhit = value; }
@@ -78,6 +82,8 @@ namespace AnyRPG {
             craftingManager = systemGameManager.CraftingManager;
             uIManager = systemGameManager.UIManager;
             windowManager = systemGameManager.WindowManager;
+            controlsManager = systemGameManager.ControlsManager;
+            actionBarManager = uIManager.ActionBarManager;
         }
 
         protected void OnEnable() {
@@ -119,11 +125,16 @@ namespace AnyRPG {
 
         private void CollectMoveInput() {
             //Debug.Log("PlayerController.CollectMoveInput()");
-            inputJump = inputManager.KeyBindWasPressed("JUMP");
-            inputFly = inputManager.KeyBindWasPressedOrHeld("JUMP");
-            inputSink = inputManager.KeyBindWasPressedOrHeld("CROUCH");
+
+            // don't allow jump or crouch while activating action bars
+            if (controlsManager.LeftTriggerDown == false && controlsManager.RightTriggerDown == false) {
+                inputJump = inputManager.KeyBindWasPressed("JUMP");
+                inputFly = inputManager.KeyBindWasPressedOrHeld("JUMP");
+                inputSink = inputManager.KeyBindWasPressedOrHeld("CROUCH");
+                inputCrouch = inputManager.KeyBindWasPressed("CROUCH");
+            }
+
             inputStrafe = inputManager.KeyBindWasPressedOrHeld("STRAFELEFT") || inputManager.KeyBindWasPressedOrHeld("STRAFERIGHT");
-            inputCrouch = inputManager.KeyBindWasPressed("CROUCH");
             //inputAimVertical = Input.GetAxisRaw("AimVertical");
             //inputAimHorizontal = Input.GetAxisRaw("AimHorizontal");
 
@@ -416,14 +427,47 @@ namespace AnyRPG {
 
         private void ProcessGamepadButtonClicks() {
             //Debug.Log(gameObject.name + ".PlayerController.ProcessGamepadButtonClicks()");
-            // check if the right mouse button clicked on something and interact with it
 
-            // register gamepad accept, allow friendly target
+            // if a window is open, all button clicks will be processed by that window instead of the player
             if (windowManager.WindowStack.Count > 0) {
                 return;
             }
 
+            // determine which crossbar, if any, is active
+            if (controlsManager.RightTriggerDown) {
+                crossBarIndex = 1;
+            } else if (controlsManager.LeftTriggerDown) {
+                crossBarIndex = 0;
+            } else {
+                crossBarIndex = -1;
+            }
+
+            // if a crossbar is activated, send the input to it
+            if (crossBarIndex > -1) {
+                if (controlsManager.DPadDownPressed) {
+                    actionBarManager.GamepadActionBarControllers[crossBarIndex].ActionButtons[0].OnClick(false);
+                } else if (controlsManager.DPadRightPressed) {
+                    actionBarManager.GamepadActionBarControllers[crossBarIndex].ActionButtons[1].OnClick(false);
+                } else if (controlsManager.DPadLeftPressed) {
+                    actionBarManager.GamepadActionBarControllers[crossBarIndex].ActionButtons[2].OnClick(false);
+                } else if (controlsManager.DPadUpPressed) {
+                    actionBarManager.GamepadActionBarControllers[crossBarIndex].ActionButtons[3].OnClick(false);
+                } else if (inputManager.KeyBindWasPressed("JOYSTICKBUTTON0")) {
+                    actionBarManager.GamepadActionBarControllers[crossBarIndex].ActionButtons[4].OnClick(false);
+                } else if (inputManager.KeyBindWasPressed("JOYSTICKBUTTON1")) {
+                    actionBarManager.GamepadActionBarControllers[crossBarIndex].ActionButtons[5].OnClick(false);
+                } else if (inputManager.KeyBindWasPressed("JOYSTICKBUTTON2")) {
+                    actionBarManager.GamepadActionBarControllers[crossBarIndex].ActionButtons[6].OnClick(false);
+                } else if (inputManager.KeyBindWasPressed("JOYSTICKBUTTON3")) {
+                    actionBarManager.GamepadActionBarControllers[crossBarIndex].ActionButtons[7].OnClick(false);
+                }
+
+                return;
+            }
+
+            // no crossbar was activated, buttons will perform their native functions
             if (inputManager.KeyBindWasPressed("ACCEPT")) {
+                // allow friendly target when nothing is targeted
                 if (playerManager.UnitController.Target == null) {
                     GetNextTabTarget(playerManager.UnitController.Target, true);
                 } else {
@@ -708,7 +752,9 @@ namespace AnyRPG {
 
         private void HandleCancelButtonPressed() {
             //Debug.Log("HandleCancelButtonPressed()");
-            if (inputManager.KeyBindWasPressed("CANCEL") || inputManager.KeyBindWasPressed("CANCELALL")) {
+            if (inputManager.KeyBindWasPressed("CANCEL")
+                || inputManager.KeyBindWasPressed("CANCELALL")
+                || (inputManager.KeyBindWasPressed("JOYSTICKBUTTON1") && controlsManager.RightTriggerDown == false && controlsManager.LeftTriggerDown == false)) {
                 playerManager.UnitController.ClearTarget();
                 if (playerManager.ActiveCharacter.CharacterStats.IsAlive != false) {
                     // prevent character from swapping to third party controller while dead

@@ -33,6 +33,7 @@ namespace AnyRPG {
 
         public List<ResourcePowerSaveData> resourcePowerSaveData;
         public List<ActionBarSaveData> actionBarSaveData;
+        public List<ActionBarSaveData> gamepadActionBarSaveData;
         public List<InventorySlotSaveData> inventorySlotSaveData;
         public List<EquippedBagSaveData> equippedBagSaveData;
         public List<AbilitySaveData> abilitySaveData;

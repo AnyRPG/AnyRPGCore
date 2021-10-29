@@ -24,7 +24,9 @@ namespace AnyRPG {
             base.Configure(systemGameManager);
             configureCount++;
             if (configureCount > 1) {
-                Debug.LogWarning(gameObject.name + ".NavigableElement.Configure() This element has been configured multiple times");
+                // disabled because these objects can be pooled
+                //Debug.LogWarning(gameObject.name + ".NavigableElement.Configure() This element has been configured multiple times");
+                return;
             }
 
             rectTransform = transform as RectTransform;

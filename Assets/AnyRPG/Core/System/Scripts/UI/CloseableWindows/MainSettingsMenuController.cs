@@ -103,12 +103,14 @@ namespace AnyRPG {
             SetPlayerPrefsDefaults();
 
             // main buttons
+            /*
             soundButton.Configure(systemGameManager);
             controlsButton.Configure(systemGameManager);
             videoButton.Configure(systemGameManager);
             keyBindingsButton.Configure(systemGameManager);
             userInterfaceButton.Configure(systemGameManager);
             returnButton.Configure(systemGameManager);
+            */
 
             // ui buttons
             resetWindowPositionsButton.Configure(systemGameManager);
