@@ -13,7 +13,7 @@ namespace AnyRPG {
         [SerializeField]
         TMP_InputField inputField = null;
 
-        private bool interacting = false;
+        protected bool interacting = false;
 
         // game managager references
 

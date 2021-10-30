@@ -10,18 +10,18 @@ namespace AnyRPG {
     public class SkillButton : TransparencyButton {
 
         [SerializeField]
-        private string skillName = string.Empty;
+        protected string skillName = string.Empty;
 
-        private Skill skill = null;
-
-        [SerializeField]
-        private Image icon = null;
+        protected Skill skill = null;
 
         [SerializeField]
-        private TextMeshProUGUI skillNameText = null;
+        protected Image icon = null;
 
         [SerializeField]
-        private TextMeshProUGUI description = null;
+        protected TextMeshProUGUI skillNameText = null;
+
+        [SerializeField]
+        protected TextMeshProUGUI description = null;
 
         public void AddSkill(Skill newSkill) {
             //Debug.Log("SkillButton.AddSkill(" + (skillName != null && skillName != string.Empty ? skillName : "null") + ")");

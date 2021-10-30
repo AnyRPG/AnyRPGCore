@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 2398778688789424965}
   - component: {fileID: 13718882214389942}
   - component: {fileID: 6720707288669486917}
+  - component: {fileID: 1407007968955288887}
   m_Layer: 5
   m_Name: ButtonBar
   m_TagString: Untagged
@@ -76,6 +77,31 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!114 &1407007968955288887
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2830494398562697954}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8995f41cb132f3148a9912f89e49421b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  leftPanel: {fileID: 0}
+  leftControllers: []
+  rightPanel: {fileID: 0}
+  rightControllers: []
+  upPanel: {fileID: 0}
+  upControllers:
+  - {fileID: 5931933804605604865}
+  downPanel: {fileID: 0}
+  downControllers: []
+  acceptController: {fileID: 0}
+  scrollRect: {fileID: 0}
+  navigableButtons:
+  - {fileID: 7453093046273437292}
 --- !u!1 &2961181104440227127
 GameObject:
   m_ObjectHideFlags: 0
@@ -167,6 +193,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   backGroundImage: {fileID: 0}
+  coloredUIElements: []
+  userCloseable: 1
+  focusFirstButtonOnOpen: 1
+  focusActiveSubPanel: 0
+  uINavigationControllers:
+  - {fileID: 5931933804605604865}
+  - {fileID: 1407007968955288887}
+  subPanels: []
   lootButtons:
   - {fileID: 2961181105924322078}
   - {fileID: 9121423000255772728}
@@ -184,6 +218,7 @@ GameObject:
   - component: {fileID: 6543428208003169822}
   - component: {fileID: 4161341987650284716}
   - component: {fileID: 6870561302815693473}
+  - component: {fileID: 5931933804605604865}
   m_Layer: 5
   m_Name: LootArea
   m_TagString: Untagged
@@ -252,6 +287,30 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!114 &5931933804605604865
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4802114677271152279}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 03715bb91f4a7fa47b3d93745fb1b35e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  leftPanel: {fileID: 0}
+  leftControllers: []
+  rightPanel: {fileID: 0}
+  rightControllers: []
+  upPanel: {fileID: 0}
+  upControllers: []
+  downPanel: {fileID: 0}
+  downControllers:
+  - {fileID: 1407007968955288887}
+  acceptController: {fileID: 0}
+  scrollRect: {fileID: 0}
+  navigableButtons: []
 --- !u!1001 &816127304351840273
 PrefabInstance:
   m_ObjectHideFlags: 0

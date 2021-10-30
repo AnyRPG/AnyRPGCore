@@ -8,11 +8,11 @@ using UnityEngine.UI;
 
 namespace AnyRPG {
 
-    public class NavigableElement : ConfiguredMonoBehaviour, IPointerEnterHandler, IPointerClickHandler, IPointerDownHandler, IPointerUpHandler {
+    public class NavigableElement : ConfiguredMonoBehaviour, IPointerEnterHandler, IPointerClickHandler, IPointerDownHandler, IPointerUpHandler, IPointerExitHandler {
 
         public event System.Action OnInteract = delegate { };
 
-        private RectTransform rectTransform = null;
+        protected RectTransform rectTransform = null;
 
         public virtual bool DeselectOnLeave { get => true; }
         public virtual bool CaptureCancelButton { get => false; }
@@ -61,6 +61,9 @@ namespace AnyRPG {
         }
 
         public virtual void OnPointerEnter(PointerEventData eventData) {
+        }
+
+        public virtual void OnPointerExit(PointerEventData eventData) {
         }
 
         public virtual void OnPointerClick(PointerEventData eventData) {

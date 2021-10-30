@@ -255,8 +255,8 @@ namespace AnyRPG {
         }
 
         public override void ReceiveOpenWindowNotification() {
-            //Debug.Log("SkillTrainerUI.OnOpenWindow()");
-            // clear before open window handler, because it shows quests
+            //Debug.Log("MusicPlayerUI.OnOpenWindow()");
+            base.ReceiveOpenWindowNotification();
             SetBackGroundColor(new Color32(0, 0, 0, (byte)(int)(PlayerPrefs.GetFloat("PopupWindowOpacity") * 255)));
             DeactivateButtons();
             ClearDescription();

@@ -6,18 +6,16 @@ using UnityEngine;
 using UnityEngine.UI;
 
 namespace AnyRPG {
-    public class LootUI : WindowContentController, IPagedWindowContents {
+    public class LootUI : PagedWindowContents {
 
-        public event System.Action<bool> OnPageCountUpdate = delegate { };
+        public override event System.Action<bool> OnPageCountUpdate = delegate { };
         public override event Action<ICloseableWindowContents> OnCloseWindow = delegate { };
 
         [SerializeField]
-        private List<LootButton> lootButtons = new List<LootButton>();
+        protected List<LootButton> lootButtons = new List<LootButton>();
 
         [SerializeField]
-        private HighlightButton takeAllButton = null;
-
-        private int pageIndex = 0;
+        protected HighlightButton takeAllButton = null;
 
         // game manager references
         private LootManager lootManager = null;
@@ -51,6 +49,8 @@ namespace AnyRPG {
 
                         // make sure the loot button is visible
                         lootButtons[i].gameObject.SetActive(true);
+                        uINavigationControllers[0].AddActiveButton(lootButtons[i]);
+
 
                         string colorString = "white";
                         if (lootManager.Pages[pageIndex][i].ItemQuality != null) {
@@ -61,8 +61,10 @@ namespace AnyRPG {
                         lootButtons[i].MyTitle.text = title;
                     }
                 }
+                currentNavigationController.FocusCurrentButton();
             } else {
                 //Debug.Log("LootUI.AddLoot() pages.count: " + pages.Count);
+
             }
         }
 
@@ -74,11 +76,12 @@ namespace AnyRPG {
             OnPageCountUpdate(true);
         }
 
-        public void ClearButtons() {
+        public override void ClearButtons() {
             //Debug.Log("LootUI.ClearButtons()");
             foreach (LootButton button in lootButtons) {
                 button.gameObject.SetActive(false);
             }
+            uINavigationControllers[0].ClearActiveButtons();
         }
 
         public void TakeLoot(LootDrop lootDrop) {
@@ -96,8 +99,11 @@ namespace AnyRPG {
                 if (pageIndex == lootManager.Pages.Count && pageIndex > 0) {
                     pageIndex--;
                 }
+                uINavigationControllers[0].ClearActiveButtons();
                 AddLoot();
                 OnPageCountUpdate(true);
+            } else {
+                uINavigationControllers[0].FocusCurrentButton();
             }
         }
 
@@ -118,18 +124,13 @@ namespace AnyRPG {
             OnPageCountUpdate(true);
         }
 
-        public void LoadPage(int pageIndex) {
-            this.pageIndex = pageIndex;
-            ClearButtons();
+        public override void AddPageContent() {
+            base.AddPageContent();
             AddLoot();
         }
 
-        public void ClearPages() {
-            ClearButtons();
-            pageIndex = 0;
-        }
 
-        public int GetPageCount() {
+        public override int GetPageCount() {
             //Debug.Log("LootUI.GetPageCount()");
 
             return lootManager.Pages.Count;

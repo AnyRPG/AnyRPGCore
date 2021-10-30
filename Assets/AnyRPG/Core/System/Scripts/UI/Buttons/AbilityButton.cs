@@ -7,22 +7,22 @@ using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 namespace AnyRPG {
-    public class AbilityButton : TransparencyButton, IPointerClickHandler {
+    public class AbilityButton : TransparencyButton {
 
         [SerializeField]
-        private BaseAbility ability = null;
+        protected BaseAbility ability = null;
 
         [SerializeField]
-        private Image icon = null;
+        protected Image icon = null;
 
         [SerializeField]
-        private TextMeshProUGUI spellName = null;
+        protected TextMeshProUGUI spellName = null;
 
         [SerializeField]
-        private TextMeshProUGUI description = null;
+        protected TextMeshProUGUI description = null;
 
         // game manager references
-        PlayerManager playerManager = null;
+        protected PlayerManager playerManager = null;
 
         public override void Configure(SystemGameManager systemGameManager) {
             base.Configure(systemGameManager);
@@ -46,8 +46,9 @@ namespace AnyRPG {
             description.text = string.Empty;
         }
 
-        public void OnPointerClick(PointerEventData eventData) {
+        public override void OnPointerClick(PointerEventData eventData) {
             //Debug.Log("AbilityButton.OnPointerClick()");
+            base.OnPointerClick(eventData);
             if (eventData.button == PointerEventData.InputButton.Left) {
                 //Debug.Log("AbilityButton.OnPointerClick(): left click");
                 uIManager.HandScript.TakeMoveable(ability);

@@ -239,6 +239,8 @@ namespace AnyRPG {
 
         public override void ReceiveOpenWindowNotification() {
             //Debug.Log("SkillTrainerUI.OnOpenWindow()");
+            base.ReceiveOpenWindowNotification();
+
             SetBackGroundColor(new Color32(0, 0, 0, (byte)(int)(PlayerPrefs.GetFloat("PopupWindowOpacity") * 255)));
 
             // reset button state from last window open

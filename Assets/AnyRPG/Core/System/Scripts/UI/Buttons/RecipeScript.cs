@@ -9,10 +9,10 @@ namespace AnyRPG {
 
     public class RecipeScript : HighlightButton {
 
-        private Recipe recipe;
+        protected Recipe recipe;
 
         // game manager references
-        private CraftingManager craftingManager = null;
+        protected CraftingManager craftingManager = null;
 
         public Recipe Recipe { get => recipe; set => recipe = value; }
 

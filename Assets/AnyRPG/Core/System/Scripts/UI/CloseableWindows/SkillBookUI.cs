@@ -57,8 +57,15 @@ namespace AnyRPG {
             }
         }
 
+        /*
         public override void LoadPage(int pageIndex) {
             base.LoadPage(pageIndex);
+            AddSkills();
+        }
+        */
+
+        public override void AddPageContent() {
+            base.AddPageContent();
             AddSkills();
         }
 

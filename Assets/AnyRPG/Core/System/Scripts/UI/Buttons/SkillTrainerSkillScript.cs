@@ -9,11 +9,11 @@ namespace AnyRPG {
 
     public class SkillTrainerSkillScript : HighlightButton {
 
-        private Skill skill;
+        protected Skill skill;
 
-        private string skillName;
+        protected string skillName;
 
-        private SkillTrainerUI skillTrainerUI = null;
+        protected SkillTrainerUI skillTrainerUI = null;
 
         public Skill MySkill { get => skill; }
 

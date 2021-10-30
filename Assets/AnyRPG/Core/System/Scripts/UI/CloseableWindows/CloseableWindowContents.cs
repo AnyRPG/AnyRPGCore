@@ -257,6 +257,33 @@ namespace AnyRPG {
             }
         }
 
+        /// <summary>
+        /// return true if there was an active sub panel to pass the command to
+        /// </summary>
+        /// <returns></returns>
+        public virtual bool LeftTrigger() {
+            //Debug.Log(gameObject.name + ".CloseableWindowContents.RightButton()");
+            if (activeSubPanel != null) {
+                activeSubPanel.LeftTrigger();
+                return true;
+            }
+            return false;
+        }
+
+        /// <summary>
+        /// return true if there was an active sub panel to pass the command to
+        /// </summary>
+        /// <returns></returns>
+        public virtual bool RightTrigger() {
+            //Debug.Log(gameObject.name + ".CloseableWindowContents.RightButton()");
+            if (activeSubPanel != null) {
+                activeSubPanel.RightTrigger();
+                return true;
+            }
+            return false;
+        }
+
+
         public virtual void Close() {
             //Debug.Log(gameObject.name + ".CloseableWindowContents.Close()");
             if (closeableWindow != null) {

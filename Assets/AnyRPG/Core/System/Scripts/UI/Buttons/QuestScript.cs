@@ -12,14 +12,14 @@ namespace AnyRPG {
 
         //private string questName;
 
-        private Quest quest = null;
+        protected Quest quest = null;
 
-        private bool markedComplete = false;
+        protected bool markedComplete = false;
 
-        private QuestLogUI questLogUI = null;
+        protected QuestLogUI questLogUI = null;
 
         // game manager references
-        private PlayerManager playerManager = null;
+        protected PlayerManager playerManager = null;
 
         public Quest Quest { get => quest; }
 

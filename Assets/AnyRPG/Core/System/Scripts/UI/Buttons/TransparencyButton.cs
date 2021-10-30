@@ -6,7 +6,7 @@ using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 namespace AnyRPG {
-    public class TransparencyButton : ConfiguredMonoBehaviour {
+    public class TransparencyButton : NavigableElement {
 
         [SerializeField]
         protected Image backGroundImage;

@@ -8,7 +8,7 @@ using UnityEngine.UI;
 
 namespace AnyRPG {
 
-    public class HighlightButton : NavigableElement, IPointerEnterHandler, IPointerClickHandler, IPointerDownHandler, IPointerUpHandler {
+    public class HighlightButton : NavigableElement {
 
         [Header("Highlight Button")]
 

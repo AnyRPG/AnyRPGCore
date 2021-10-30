@@ -10,16 +10,16 @@ namespace AnyRPG {
     public class CurrencyButton : TransparencyButton {
 
         [SerializeField]
-        private Currency currency = null;
+        protected Currency currency = null;
 
         [SerializeField]
-        private Image icon = null;
+        protected Image icon = null;
 
         [SerializeField]
-        private TextMeshProUGUI currencyName = null;
+        protected TextMeshProUGUI currencyName = null;
 
         [SerializeField]
-        private TextMeshProUGUI description = null;
+        protected TextMeshProUGUI description = null;
 
         /*
         public void AddCurrency(string currency) {

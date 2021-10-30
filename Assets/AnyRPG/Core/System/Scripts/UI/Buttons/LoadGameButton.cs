@@ -14,29 +14,29 @@ namespace AnyRPG {
         LoadGamePanel loadGamePanel = null;
 
         [SerializeField]
-        private Image icon = null;
+        protected Image icon = null;
 
         //[SerializeField]
         //private TextMeshProUGUI playerName = null;
 
         [SerializeField]
-        private TextMeshProUGUI playerName = null;
+        protected TextMeshProUGUI playerName = null;
 
         //[SerializeField]
         //private TextMeshProUGUI description = null;
 
         [SerializeField]
-        private TextMeshProUGUI description = null;
+        protected TextMeshProUGUI description = null;
 
         [SerializeField]
-        private AnyRPGSaveData mySaveData;
+        protected AnyRPGSaveData mySaveData;
 
-        private UnitProfile unitProfile;
+        protected UnitProfile unitProfile;
 
-        private string currentScene = string.Empty;
+        protected string currentScene = string.Empty;
 
         // game manager references
-        private SystemDataFactory systemDataFactory = null;
+        protected SystemDataFactory systemDataFactory = null;
 
         public AnyRPGSaveData SaveData { get => mySaveData; set => mySaveData = value; }
         public UnitProfile UnitProfile { get => unitProfile; set => unitProfile = value; }

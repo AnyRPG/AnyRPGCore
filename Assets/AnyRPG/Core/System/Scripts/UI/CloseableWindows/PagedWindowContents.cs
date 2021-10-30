@@ -7,8 +7,10 @@ using UnityEngine.UI;
 namespace AnyRPG {
     public class PagedWindowContents : CloseableWindowContents, IPagedWindowContents {
 
-        public event System.Action<bool> OnPageCountUpdate = delegate { };
+        public virtual event System.Action<bool> OnPageCountUpdate = delegate { };
         public override event System.Action<ICloseableWindowContents> OnCloseWindow = delegate { };
+
+        protected PagedWindow pagedWindow = null;
 
         protected List<PagedContentList> pages = new List<PagedContentList>();
 
@@ -16,7 +18,11 @@ namespace AnyRPG {
 
         protected int pageIndex = 0;
 
-        public int GetPageCount() {
+        public void SetPagedWindow(PagedWindow pagedWindow) {
+            this.pagedWindow = pagedWindow;
+        }
+
+        public virtual int GetPageCount() {
             return pages.Count;
         }
 
@@ -32,7 +38,7 @@ namespace AnyRPG {
         }
 
         public virtual void ClearButtons() {
-            //Debug.Log("SkillBookUI.ClearButtons()");
+            //Debug.Log("PagedWindowContents.ClearButtons()");
             // meant to be overwritten
         }
 
@@ -40,6 +46,16 @@ namespace AnyRPG {
             //Debug.Log("PagedWindowContents.LoadPage(" + pageIndex + ")");
             ClearButtons();
             this.pageIndex = pageIndex;
+            AddPageContent();
+            /*
+            if (controlsManager.GamePadModeActive) {
+            // future use - highlight page content so context menus can be used, like add to ability bars etc
+            }
+            */
+        }
+
+        public virtual void AddPageContent() {
+            // meant to be overwritten
         }
 
         public override void ReceiveOpenWindowNotification() {
@@ -48,11 +64,32 @@ namespace AnyRPG {
             CreatePages();
         }
 
-        private void ClearPages() {
+        public virtual void ClearPages() {
             ClearButtons();
             pages.Clear();
             pageIndex = 0;
         }
+
+        public override bool LeftTrigger() {
+            if (base.LeftTrigger()) {
+                return true;
+            }
+            if (pagedWindow != null) {
+                pagedWindow.PreviousPage();
+            }
+            return false;
+        }
+
+        public override bool RightTrigger() {
+            if (base.RightTrigger()) {
+                return true;
+            }
+            if (pagedWindow != null) {
+                pagedWindow.NextPage();
+            }
+            return false;
+        }
+
 
     }
 

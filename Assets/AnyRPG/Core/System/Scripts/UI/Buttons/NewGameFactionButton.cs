@@ -10,19 +10,19 @@ namespace AnyRPG {
     public class NewGameFactionButton : HighlightButton {
 
         [SerializeField]
-        private Faction faction = null;
+        protected Faction faction = null;
 
         [SerializeField]
-        private Image icon = null;
+        protected Image icon = null;
 
         [SerializeField]
-        private TextMeshProUGUI factionName = null;
+        protected TextMeshProUGUI factionName = null;
 
         [SerializeField]
-        private TextMeshProUGUI description = null;
+        protected TextMeshProUGUI description = null;
 
         // game manager references
-        private NewGameManager newGameManager = null;
+        protected NewGameManager newGameManager = null;
 
         public Faction Faction { get => faction; set => faction = value; }
 

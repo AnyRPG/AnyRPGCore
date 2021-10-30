@@ -12,15 +12,25 @@ namespace AnyRPG {
         [Header("Paged Window")]
 
         [SerializeField]
-        private TextMeshProUGUI pageNumber = null;
+        protected TextMeshProUGUI pageNumber = null;
 
         [SerializeField]
-        private GameObject previousBtn = null;
+        protected GameObject previousBtn = null;
 
         [SerializeField]
-        private GameObject nextBtn = null;
+        protected GameObject nextBtn = null;
+
+        [SerializeField]
+        protected GameObject leftTriggerHint = null;
+
+        [SerializeField]
+        protected GameObject rightTriggerHint = null;
 
         private int pageIndex = 0;
+
+        // game manager references
+
+        protected ControlsManager controlsManager = null;
 
         public override void Configure(SystemGameManager systemGameManager) {
             base.Configure(systemGameManager);
@@ -31,10 +41,31 @@ namespace AnyRPG {
             }
         }
 
+        public override void SetGameManagerReferences() {
+            base.SetGameManagerReferences();
+            controlsManager = systemGameManager.ControlsManager;
+        }
+
+        public override void SetContentOwner() {
+            Debug.Log(gameObject.name + ".PagedWindow.SetContentOwner()");
+            if (windowContents != null) {
+                (windowContents as PagedWindowContents).SetPagedWindow(this);
+            }
+            base.SetContentOwner();
+        }
+
         public override void OpenWindow() {
             //Debug.Log("PagedWindow.OpenWindow()");
             // do this first because openwindow will update the page count
             pageIndex = 0;
+
+            if (controlsManager.GamePadModeActive == true) {
+                leftTriggerHint.SetActive(true);
+                rightTriggerHint.SetActive(true);
+            } else {
+                leftTriggerHint.SetActive(false);
+                rightTriggerHint.SetActive(false);
+            }
 
             base.OpenWindow();
         }
@@ -97,6 +128,7 @@ namespace AnyRPG {
             }
 
         }
+
     }
 
 }

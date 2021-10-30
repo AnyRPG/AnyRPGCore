@@ -12,34 +12,34 @@ namespace AnyRPG {
         [Header("Map")]
 
         [SerializeField]
-        private LayoutElement graphicLayoutElement = null;
+        protected LayoutElement graphicLayoutElement = null;
 
         [SerializeField]
-        private RawImage mapRawImage = null;
+        protected RawImage mapRawImage = null;
 
         [SerializeField]
-        private RectTransform mainMapBackground = null;
+        protected RectTransform mainMapBackground = null;
 
         [SerializeField]
-        private GameObject mapGraphic = null;
+        protected GameObject mapGraphic = null;
 
-        private string loadedMapName = string.Empty;
+        protected string loadedMapName = string.Empty;
 
         // the number of pixels per meter of level based on the total map pixels
-        private float levelScaleFactor = 1f;
+        protected float levelScaleFactor = 1f;
 
         //private bool activeEventSubscriptionsInitialized = false;
 
         // system component references
-        private CameraManager cameraManager = null;
-        private PlayerManager playerManager = null;
-        private MapManager mapManager = null;
-        private MainMapManager mainMapManager = null;
-        private LevelManager levelManager = null;
-        private UIManager uIManager = null;
-        private ObjectPooler objectPooler = null;
+        protected CameraManager cameraManager = null;
+        protected PlayerManager playerManager = null;
+        protected MapManager mapManager = null;
+        protected MainMapManager mainMapManager = null;
+        protected LevelManager levelManager = null;
+        protected UIManager uIManager = null;
+        protected ObjectPooler objectPooler = null;
 
-        private Dictionary<Interactable, MainMapIndicatorController> mapIndicatorControllers = new Dictionary<Interactable, MainMapIndicatorController>();
+        protected Dictionary<Interactable, MainMapIndicatorController> mapIndicatorControllers = new Dictionary<Interactable, MainMapIndicatorController>();
 
         public Dictionary<Interactable, MainMapIndicatorController> MapIndicatorControllers { get => mapIndicatorControllers; }
 
@@ -216,6 +216,7 @@ namespace AnyRPG {
 
         public override void ReceiveOpenWindowNotification() {
             //Debug.Log("MainMapController.OnOpenWindow()");
+            base.ReceiveOpenWindowNotification();
             SetBackGroundColor(new Color32(0, 0, 0, (byte)(int)(PlayerPrefs.GetFloat("PopupWindowOpacity") * 255)));
 
             // take snapshot of map or load from file

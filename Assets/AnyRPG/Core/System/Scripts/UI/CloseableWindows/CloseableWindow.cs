@@ -88,8 +88,12 @@ namespace AnyRPG {
                 //Debug.Log(gameObject.name + ".CloseableWindow.InitializeWindow(): Instanted; setting window Contents");
                 windowContents = contentGameObject.GetComponent<ICloseableWindowContents>();
                 windowContents.Configure(systemGameManager);
-                windowContents.SetWindow(this);
+                SetContentOwner();
             }
+        }
+
+        public virtual void SetContentOwner() {
+            windowContents.SetWindow(this);
         }
 
         public virtual void InitalizeWindowContents(GameObject contentPrefab, string title) {

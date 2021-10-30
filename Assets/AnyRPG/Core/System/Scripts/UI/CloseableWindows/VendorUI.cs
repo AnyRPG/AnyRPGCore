@@ -7,36 +7,34 @@ using UnityEngine;
 using UnityEngine.UI;
 
 namespace AnyRPG {
-    public class VendorUI : WindowContentController, IPagedWindowContents {
+    public class VendorUI : PagedWindowContents {
 
-        public event System.Action<bool> OnPageCountUpdate = delegate { };
-
-        [SerializeField]
-        private List<VendorButton> vendorButtons = new List<VendorButton>();
+        public override event System.Action<bool> OnPageCountUpdate = delegate { };
 
         [SerializeField]
-        private TMP_Dropdown dropdown = null;
+        protected List<VendorButton> vendorButtons = new List<VendorButton>();
 
         [SerializeField]
-        private CurrencyBarController currencyBarController = null;
+        protected TMP_Dropdown dropdown = null;
 
-        private List<List<VendorItem>> pages = new List<List<VendorItem>>();
+        [SerializeField]
+        protected CurrencyBarController currencyBarController = null;
 
-        private List<VendorCollection> vendorCollections = new List<VendorCollection>();
+        //protected List<List<VendorItem>> pages = new List<List<VendorItem>>();
 
-        private int pageIndex = 0;
+        protected List<VendorCollection> vendorCollections = new List<VendorCollection>();
 
-        private int dropDownIndex = 0;
+        protected int dropDownIndex = 0;
 
         VendorCollection buyBackCollection = null;
 
         // game manager references
-        PlayerManager playerManager = null;
-        UIManager uIManager = null;
-        MessageFeedManager messageFeedManager = null;
-        private CurrencyConverter currencyConverter = null;
+        protected PlayerManager playerManager = null;
+        protected UIManager uIManager = null;
+        protected MessageFeedManager messageFeedManager = null;
+        protected CurrencyConverter currencyConverter = null;
 
-        private List<CurrencyAmountController> currencyAmountControllers = new List<CurrencyAmountController>();
+        protected List<CurrencyAmountController> currencyAmountControllers = new List<CurrencyAmountController>();
 
         public override void Configure(SystemGameManager systemGameManager) {
             base.Configure(systemGameManager);
@@ -83,10 +81,6 @@ namespace AnyRPG {
             UpdateCurrencyAmount();
         }
 
-        public int GetPageCount() {
-            return pages.Count;
-        }
-
         public void CreatePages(List<VendorItem> items, bool resetPageIndex = true) {
             //Debug.Log("VendorUI.CreatePages(" + items.Count + ")");
             ClearPages(resetPageIndex);
@@ -94,12 +88,13 @@ namespace AnyRPG {
             // remove all items with a quanity of 0 from the list
             items.RemoveAll(item => (item.Unlimited == false && item.Quantity == 0));
 
-            List<VendorItem> page = new List<VendorItem>();
+            VendorItemContentList page = new VendorItemContentList();
+
             for (int i = 0; i < items.Count; i++) {
-                page.Add(items[i]);
-                if (page.Count == 10 || i == items.Count - 1) {
+                page.vendorItems.Add(items[i]);
+                if (page.vendorItems.Count == 10 || i == items.Count - 1) {
                     pages.Add(page);
-                    page = new List<VendorItem>();
+                    page = new VendorItemContentList();
                 }
             }
             if (pages.Count <= pageIndex) {
@@ -114,27 +109,21 @@ namespace AnyRPG {
         public void AddItems() {
             //Debug.Log("VendorUI.AddItems()");
             if (pages.Count > 0) {
-                for (int i = 0; i < pages[pageIndex].Count; i++) {
-                    if (pages[pageIndex][i] != null) {
-                        vendorButtons[i].AddItem(pages[pageIndex][i], (dropDownIndex == 0 ? true : false));
+                //for (int i = 0; i < (pages[pageIndex] as VendorItemContentList).vendorItems.Count; i++) {
+                for (int i = 0; i < pageSize; i++) {
+                    if ((pages[pageIndex] as VendorItemContentList).vendorItems[i] != null) {
+                        vendorButtons[i].AddItem((pages[pageIndex] as VendorItemContentList).vendorItems[i], (dropDownIndex == 0 ? true : false));
                     }
                 }
             }
         }
 
-        public void ClearButtons() {
+        public override void ClearButtons() {
             //Debug.Log("VendorUI.ClearButtons()");
             foreach (VendorButton btn in vendorButtons) {
                 //Debug.Log("VendorUI.ClearButtons() setting a button to not active");
                 btn.gameObject.SetActive(false);
             }
-        }
-
-        public void LoadPage(int pageIndex) {
-            //Debug.Log("VendorUI.LoadPage(" + pageIndex + ")");
-            ClearButtons();
-            this.pageIndex = pageIndex;
-            AddItems();
         }
 
         public override void ReceiveClosedWindowNotification() {
@@ -147,7 +136,7 @@ namespace AnyRPG {
 
         public override void ReceiveOpenWindowNotification() {
             //Debug.Log("VendorUI.ReceiveOpenWindowNotification()");
-            SetBackGroundColor(new Color32(0, 0, 0, (byte)(int)(PlayerPrefs.GetFloat("PopupWindowOpacity") * 255)));
+            //SetBackGroundColor(new Color32(0, 0, 0, (byte)(int)(PlayerPrefs.GetFloat("PopupWindowOpacity") * 255)));
             ClearButtons();
             ClearPages();
             base.ReceiveOpenWindowNotification();
@@ -252,5 +241,9 @@ namespace AnyRPG {
             OnPageCountUpdate(false);
         }
 
+    }
+
+    public class VendorItemContentList : PagedContentList {
+        public List<VendorItem> vendorItems = new List<VendorItem>();
     }
 }

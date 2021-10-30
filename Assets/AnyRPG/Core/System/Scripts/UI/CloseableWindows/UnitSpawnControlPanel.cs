@@ -217,6 +217,7 @@ namespace AnyRPG {
 
         public override void ReceiveOpenWindowNotification() {
             //Debug.Log("LoadGamePanel.OnOpenWindow()");
+            base.ReceiveOpenWindowNotification();
             PopulateDropDownValues();
             ShowPreviewButtonsCommon();
             SetLevelType(0);

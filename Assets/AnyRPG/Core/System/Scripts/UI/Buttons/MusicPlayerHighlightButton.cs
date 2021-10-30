@@ -9,9 +9,9 @@ namespace AnyRPG {
 
     public class MusicPlayerHighlightButton : HighlightButton {
 
-        private MusicPlayerUI musicPlayerUI = null;
+        protected MusicPlayerUI musicPlayerUI = null;
 
-        private AudioProfile musicProfile;
+        protected AudioProfile musicProfile;
 
         public AudioProfile MyMusicProfile { get => musicProfile; }
 

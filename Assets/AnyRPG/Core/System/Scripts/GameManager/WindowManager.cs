@@ -71,6 +71,12 @@ namespace AnyRPG {
                 if (controlsManager.DPadRightPressed) {
                     windowStack[windowStack.Count - 1].RightButton();
                 }
+                if (controlsManager.LeftTriggerPressed) {
+                    windowStack[windowStack.Count - 1].LeftTrigger();
+                }
+                if (controlsManager.RightTriggerPressed) {
+                    windowStack[windowStack.Count - 1].RightTrigger();
+                }
 
                 // buttons
                 if (inputManager.KeyBindWasPressed("ACCEPT") || inputManager.KeyBindWasPressed("JOYSTICKBUTTON0")) {

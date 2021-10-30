@@ -30,7 +30,7 @@ MonoBehaviour:
     loot:
     - itemName: Green Box
       dropChance: 100
-      minDrops: 1
-      maxDrops: 3
+      minDrops: 5
+      maxDrops: 7
       matchItemRestrictions: 0
       prerequisiteConditions: []

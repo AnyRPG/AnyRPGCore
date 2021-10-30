@@ -7,43 +7,40 @@ using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 namespace AnyRPG {
-    public class VendorButton : TransparencyButton, IPointerEnterHandler, IPointerExitHandler, IPointerClickHandler {
+    public class VendorButton : TransparencyButton {
 
         [SerializeField]
-        private Image icon = null;
+        protected Image icon = null;
 
         [SerializeField]
-        private TextMeshProUGUI title = null;
+        protected TextMeshProUGUI title = null;
 
         [SerializeField]
-        private TextMeshProUGUI price = null;
+        protected TextMeshProUGUI price = null;
 
         [SerializeField]
-        private TextMeshProUGUI descriptionText = null;
+        protected TextMeshProUGUI descriptionText = null;
 
         //[SerializeField]
         //private Outline qualityColorOutline = null;
 
         [SerializeField]
-        private TextMeshProUGUI quantity = null;
+        protected TextMeshProUGUI quantity = null;
 
         [SerializeField]
-        private CurrencyBarController currencyBarController = null;
+        protected CurrencyBarController currencyBarController = null;
 
-        [SerializeField]
-        private RectTransform rectTransform = null;
+        protected VendorItem vendorItem = null;
 
-        private VendorItem vendorItem = null;
-
-        private bool buyBackButton;
+        protected bool buyBackButton;
 
         // game manager references
-        private SystemItemManager systemItemManager = null;
-        private PlayerManager playerManager = null;
-        private InventoryManager inventoryManager = null;
-        private AudioManager audioManager = null;
-        private MessageFeedManager messageFeedManager = null;
-        private CurrencyConverter currencyConverter = null;
+        protected SystemItemManager systemItemManager = null;
+        protected PlayerManager playerManager = null;
+        protected InventoryManager inventoryManager = null;
+        protected AudioManager audioManager = null;
+        protected MessageFeedManager messageFeedManager = null;
+        protected CurrencyConverter currencyConverter = null;
 
         public bool BuyBackButton { get => buyBackButton; set => buyBackButton = value; }
 
@@ -129,7 +126,8 @@ namespace AnyRPG {
         }
 
 
-        public void OnPointerClick(PointerEventData eventData) {
+        public override void OnPointerClick(PointerEventData eventData) {
+            base.OnPointerClick(eventData);
             //Debug.Log("VendorButton.OnPointerClick()");
             if (vendorItem.BuyPrice() == 0
                 || vendorItem.Item.Currency == null
@@ -156,7 +154,8 @@ namespace AnyRPG {
             }
         }
 
-        public void OnPointerEnter(PointerEventData eventData) {
+        public override void OnPointerEnter(PointerEventData eventData) {
+            base.OnPointerEnter(eventData);
             ProcessMouseEnter();
         }
 
@@ -164,7 +163,8 @@ namespace AnyRPG {
             uIManager.ShowToolTip(transform.position, vendorItem);
         }
 
-        public void OnPointerExit(PointerEventData eventData) {
+        public override void OnPointerExit(PointerEventData eventData) {
+            base.OnPointerExit(eventData);
             uIManager.HideToolTip();
         }
 

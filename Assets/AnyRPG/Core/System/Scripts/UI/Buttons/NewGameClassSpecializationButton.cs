@@ -10,19 +10,19 @@ namespace AnyRPG {
     public class NewGameClassSpecializationButton : HighlightButton {
 
         [SerializeField]
-        private ClassSpecialization classSpecialization = null;
+        protected ClassSpecialization classSpecialization = null;
 
         [SerializeField]
-        private Image icon = null;
+        protected Image icon = null;
 
         [SerializeField]
-        private TextMeshProUGUI characterClassName = null;
+        protected TextMeshProUGUI characterClassName = null;
 
         [SerializeField]
-        private TextMeshProUGUI description = null;
+        protected TextMeshProUGUI description = null;
 
         // game manager references
-        private NewGameManager newGameManager = null;
+        protected NewGameManager newGameManager = null;
 
         public ClassSpecialization ClassSpecialization { get => classSpecialization; set => classSpecialization = value; }
 

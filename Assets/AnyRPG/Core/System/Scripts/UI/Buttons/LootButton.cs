@@ -7,7 +7,7 @@ using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 namespace AnyRPG {
-    public class LootButton : TransparencyButton, IPointerEnterHandler, IPointerExitHandler, IPointerClickHandler {
+    public class LootButton : TransparencyButton {
 
         [Header("Loot")]
 
@@ -15,16 +15,16 @@ namespace AnyRPG {
         protected Image lootBackGroundImage;
 
         [SerializeField]
-        private Image icon = null;
+        protected Image icon = null;
 
         [SerializeField]
-        private TextMeshProUGUI title = null;
+        protected TextMeshProUGUI title = null;
 
-        private LootUI lootWindow = null;
+        protected LootUI lootWindow = null;
 
         public TextMeshProUGUI MyTitle { get => title; }
 
-        private LootDrop lootDrop = null;
+        protected LootDrop lootDrop = null;
 
         public Image Icon { get => icon; }
         public LootDrop LootDrop {
@@ -45,15 +45,6 @@ namespace AnyRPG {
             lootWindow = lootUI;
         }
 
-        public void OnPointerClick(PointerEventData eventData) {
-            if (LootDrop == null) {
-                return;
-            }
-
-            // loot the item
-            TakeLoot();
-        }
-
         public bool TakeLoot() {
             //Debug.Log("LootButton.TakeLoot()");
             if (LootDrop == null) {
@@ -72,8 +63,9 @@ namespace AnyRPG {
             return false;
         }
 
-        public void OnPointerEnter(PointerEventData eventData) {
+        public override void OnPointerEnter(PointerEventData eventData) {
             //Debug.Log("LootButton.OnPointerEnter(): " + GetInstanceID());
+            base.OnPointerEnter(eventData);
             if (LootDrop == null) {
                 return;
             }
@@ -81,9 +73,21 @@ namespace AnyRPG {
             uIManager.ShowToolTip(transform.position, LootDrop);
         }
 
-        public void OnPointerExit(PointerEventData eventData) {
+        public override void OnPointerExit(PointerEventData eventData) {
+            base.OnPointerExit(eventData);
             uIManager.HideToolTip();
         }
+
+        public override void OnPointerClick(PointerEventData eventData) {
+            base.OnPointerClick(eventData);
+            if (LootDrop == null) {
+                return;
+            }
+
+            // loot the item
+            TakeLoot();
+        }
+
     }
 
 }

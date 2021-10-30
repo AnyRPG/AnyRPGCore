@@ -9,19 +9,19 @@ namespace AnyRPG {
     public class NewGameUnitButton : HighlightButton {
 
         [SerializeField]
-        private Image icon = null;
+        protected Image icon = null;
 
         [SerializeField]
-        private TextMeshProUGUI unitName = null;
+        protected TextMeshProUGUI unitName = null;
 
         [SerializeField]
-        private TextMeshProUGUI description = null;
+        protected TextMeshProUGUI description = null;
 
         //[SerializeField]
-        private UnitProfile unitProfile = null;
+        protected UnitProfile unitProfile = null;
 
         // game manager references
-        private NewGameManager newGameManager = null;
+        protected NewGameManager newGameManager = null;
 
         public UnitProfile UnitProfile { get => unitProfile; set => unitProfile = value; }
 
