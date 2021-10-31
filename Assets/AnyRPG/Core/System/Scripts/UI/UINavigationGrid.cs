@@ -51,7 +51,7 @@ namespace AnyRPG {
             currentIndex = (currentRow * numColumns) + currentColumn;
         }
 
-        public override void LeftButton() {
+        public override void ProcessLeftButton() {
             //Debug.Log(gameObject.name + ".UINavigationGrid.LeftButton()");
             if (activeNavigableButtons.Count == 0) {
                 return;
@@ -70,11 +70,15 @@ namespace AnyRPG {
                 currentNavigableElement.LeaveElement();
             }
             CalculateCurrentIndex();
+            if (activeNavigableButtons[currentIndex].gameObject.activeSelf != true) {
+                currentColumn++;
+                CalculateCurrentIndex();
+            }
             currentNavigableElement = activeNavigableButtons[currentIndex];
             currentNavigableElement.Select();
         }
 
-        public override void RightButton() {
+        public override void ProcessRightButton() {
             //Debug.Log(gameObject.name + ".UINavigationGrid.RightButton()");
             if (activeNavigableButtons.Count == 0) {
                 return;
@@ -93,11 +97,15 @@ namespace AnyRPG {
                 currentNavigableElement.LeaveElement();
             }
             CalculateCurrentIndex();
+            if (activeNavigableButtons[currentIndex].gameObject.activeSelf != true) {
+                currentColumn--;
+                CalculateCurrentIndex();
+            }
             currentNavigableElement = activeNavigableButtons[currentIndex];
             currentNavigableElement.Select();
         }
 
-        public override void UpButton() {
+        public override void ProcessUpButton() {
             //Debug.Log(gameObject.name + ".UINavigationGrid.UpButton()");
             currentRow--;
             if (currentRow < 0) {
@@ -113,11 +121,15 @@ namespace AnyRPG {
                 currentNavigableElement.LeaveElement();
             }
             CalculateCurrentIndex();
+            if (activeNavigableButtons[currentIndex].gameObject.activeSelf != true) {
+                currentRow++;
+                CalculateCurrentIndex();
+            }
             currentNavigableElement = activeNavigableButtons[currentIndex];
             currentNavigableElement.Select();
         }
 
-        public override void DownButton() {
+        public override void ProcessDownButton() {
             //Debug.Log(gameObject.name + ".UINavigationGrid.DownButton()");
             currentRow++;
             if (currentRow >= numRows) {
@@ -133,6 +145,10 @@ namespace AnyRPG {
                 currentNavigableElement.LeaveElement();
             }
             CalculateCurrentIndex();
+            if (activeNavigableButtons[currentIndex].gameObject.activeSelf != true) {
+                currentRow--;
+                CalculateCurrentIndex();
+            }
             currentNavigableElement = activeNavigableButtons[currentIndex];
             currentNavigableElement.Select();
         }

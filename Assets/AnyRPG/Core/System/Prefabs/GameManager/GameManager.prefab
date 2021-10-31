@@ -56402,11 +56402,6 @@ PrefabInstance:
       propertyPath: m_TextStyleHashCode
       value: -1183493901
       objectReference: {fileID: 0}
-    - target: {fileID: 6930621787731130402, guid: bd618836e3b5bd34882e0ee7d4bdf16b,
-        type: 3}
-      propertyPath: m_SizeDelta.y
-      value: 70
-      objectReference: {fileID: 0}
     - target: {fileID: 7170987640456787062, guid: bd618836e3b5bd34882e0ee7d4bdf16b,
         type: 3}
       propertyPath: m_textAlignment

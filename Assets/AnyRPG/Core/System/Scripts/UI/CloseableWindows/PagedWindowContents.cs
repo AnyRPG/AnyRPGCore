@@ -43,7 +43,7 @@ namespace AnyRPG {
         }
 
         public virtual void LoadPage(int pageIndex) {
-            //Debug.Log("PagedWindowContents.LoadPage(" + pageIndex + ")");
+            Debug.Log("PagedWindowContents.LoadPage(" + pageIndex + ")");
             ClearButtons();
             this.pageIndex = pageIndex;
             AddPageContent();

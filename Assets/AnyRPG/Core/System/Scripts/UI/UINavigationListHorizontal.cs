@@ -20,7 +20,7 @@ namespace AnyRPG {
             currentNavigableElement.Select();
         }
 
-        public override void LeftButton() {
+        public override void ProcessLeftButton() {
             //Debug.Log(gameObject.name + ".UINavigationListHorizontal.LeftButton()");
             if (activeNavigableButtons.Count == 0) {
                 return;
@@ -43,7 +43,7 @@ namespace AnyRPG {
             currentNavigableElement.Select();
         }
 
-        public override void RightButton() {
+        public override void ProcessRightButton() {
             //Debug.Log(gameObject.name + ".UINavigationListHorizontal.RightButton()");
             if (activeNavigableButtons.Count == 0) {
                 return;
@@ -66,12 +66,12 @@ namespace AnyRPG {
             currentNavigableElement.Select();
         }
 
-        public override void UpButton() {
+        public override void ProcessUpButton() {
             //Debug.Log(gameObject.name + ".UINavigationListHorizontal.UpButton()");
             LeaveUp();
         }
 
-        public override void DownButton() {
+        public override void ProcessDownButton() {
             //Debug.Log(gameObject.name + ".UINavigationListHorizontal.DownButton()");
             LeaveDown();
         }

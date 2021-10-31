@@ -50,6 +50,7 @@ namespace AnyRPG {
 
         // game manager references
         protected AudioManager audioManager = null;
+        protected UIManager uIManager = null;
 
         public TextMeshProUGUI Text { get => text; }
         public Button Button { get => highlightButton; set => highlightButton = value; }
@@ -83,6 +84,7 @@ namespace AnyRPG {
             base.SetGameManagerReferences();
 
             audioManager = systemGameManager.AudioManager;
+            uIManager = systemGameManager.UIManager;
         }
 
         public override void Select() {
@@ -170,6 +172,13 @@ namespace AnyRPG {
                 highlightButton.onClick.Invoke();
             }
         }
+
+        public virtual void CheckMouse() {
+            if (UIManager.MouseInRect(transform as RectTransform)) {
+                uIManager.HideToolTip();
+            }
+        }
+
     }
 
 }

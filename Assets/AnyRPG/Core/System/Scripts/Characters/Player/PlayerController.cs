@@ -45,7 +45,7 @@ namespace AnyRPG {
         private List<Interactable> interactables = new List<Interactable>();
         private Interactable mouseOverInteractable = null;
 
-        private int tabTargetIndex = 0;
+        //private int tabTargetIndex = 0;
 
         private int crossBarIndex = 0;
 
@@ -469,10 +469,14 @@ namespace AnyRPG {
             if (inputManager.KeyBindWasPressed("ACCEPT")) {
                 // allow friendly target when nothing is targeted
                 if (playerManager.UnitController.Target == null) {
-                    GetNextTabTarget(playerManager.UnitController.Target, true);
+                    GetNextTabTarget(playerManager.UnitController.Target, true, true);
                 } else {
                     InterActWithTarget(playerManager.UnitController.Target);
                 }
+            } else if (controlsManager.DPadRightPressed) {
+                GetNextTabTarget(playerManager.UnitController.Target, true, false);
+            } else if (controlsManager.DPadLeftPressed) {
+                GetNextTabTarget(playerManager.UnitController.Target, true, false, false);
             }
 
         }
@@ -564,7 +568,7 @@ namespace AnyRPG {
             // register keyboard tab target, only allow enemy target
             if (inputManager.KeyBindWasPressed("NEXTTARGET")) {
                 //Debug.Log("Tab Target Registered");
-                GetNextTabTarget(playerManager.UnitController.Target);
+                GetNextTabTarget(playerManager.UnitController.Target, false, false);
             }
         }
 
@@ -587,99 +591,205 @@ namespace AnyRPG {
             return false;
         }
 
-        private void GetNextTabTarget(Interactable oldTarget, bool includeFriendly = false) {
-            //Debug.Log("PlayerController.GetNextTabTarget(): maxDistance: " + tabTargetMaxDistance);
-            DateTime currentTime = DateTime.Now;
-            TimeSpan timeSinceLastTab = currentTime - lastTabTargetTime;
-            lastTabTargetTime = DateTime.Now;
+        private List<Interactable> GetTabTargets(Interactable oldTarget, bool includeFriendly, bool includeInteractable) {
+            List<Interactable> allTabTargets = new List<Interactable>();
             int validMask = 0;
-            if (includeFriendly) {
+            if (includeInteractable) {
                 validMask = (1 << LayerMask.NameToLayer("CharacterUnit")) | (1 << LayerMask.NameToLayer("Interactable"));
             } else {
                 validMask = 1 << LayerMask.NameToLayer("CharacterUnit");
             }
             Collider[] hitColliders = Physics.OverlapSphere(playerManager.ActiveUnitController.transform.position, tabTargetMaxDistance, validMask);
-            int i = 0;
             //Debug.Log("GetNextTabTarget(): collider length: " + hitColliders.Length + "; index: " + tabTargetIndex);
-            int preferredTargetIndex = -1;
-            int closestTargetIndex = -1;
 
             // although the layermask on the collider should have only delivered us valid characterUnits, they may be dead or friendly.  We need to put all the valid attack targets in a list first
-            List<Interactable> characterUnitList = new List<Interactable>();
             foreach (Collider hitCollider in hitColliders) {
                 //Debug.Log("GetNextTabTarget(): collider length: " + hitColliders.Length);
                 //GameObject collidedGameObject = hitCollider.gameObject;
                 Interactable targetCharacterUnit = hitCollider.gameObject.GetComponent<Interactable>();
                 if (targetCharacterUnit != null
+                    && targetCharacterUnit != oldTarget
+                    //&& (includeFriendly == true || ValidEnemyTarget(targetCharacterUnit))) {
                     && (includeFriendly == true || ValidEnemyTarget(targetCharacterUnit))) {
 
                     // check if the unit is actually in front of our character.
                     // not doing any cone or angles for now, anywhere in front will do.  might adjust this a bit later to prevent targetting units nearly adjacent to us and far away
                     Vector3 transformedPosition = playerManager.ActiveUnitController.transform.InverseTransformPoint(targetCharacterUnit.transform.position);
                     if (transformedPosition.z > 0f) {
-                        characterUnitList.Add(targetCharacterUnit);
+                        allTabTargets.Add(targetCharacterUnit);
 
                     }
                 }
             }
 
-            if (characterUnitList.Count == 0) {
+            return allTabTargets;
+        }
+
+        private void GetNextTabTarget(Interactable oldTarget, bool includeFriendly, bool includeInteractable, bool right = true) {
+            //Debug.Log("PlayerController.GetNextTabTarget(): maxDistance: " + tabTargetMaxDistance);
+            DateTime currentTime = DateTime.Now;
+            TimeSpan timeSinceLastTab = currentTime - lastTabTargetTime;
+            lastTabTargetTime = DateTime.Now;
+            //int preferredTargetIndex = -1;
+            int closestTargetIndex = -1;
+            float closestTargetDistance = 0f;
+            float targetDistance = 0f;
+            float xPosition = 0f;
+
+            List<Interactable> allTabTargets = GetTabTargets(oldTarget, includeFriendly, includeInteractable);
+
+            if (allTabTargets.Count == 0) {
                 // no valid characters in range
                 //Debug.Log("PlayerController.GetNextTabTarget(): no valid characters in range, returning");
                 return;
             } else {
-                //Debug.Log("PlayerController.GetNextTabTarget(): valid character count: " + characterUnitList.Count);
+                //Debug.Log("PlayerController.GetNextTabTarget(): valid target count: " + allTabTargets.Count);
             }
 
             // now that we have all valid attack targets, we need to process the list a bit before choosing a target
-            i = 0;
-            foreach (Interactable collidedGameObject in characterUnitList) {
+            float currentx = 0f;
+            float closestLeftDistance = 0f;
+            int closestLeftIndex = -1;
+            float farthestLeftDistance = 0f;
+            int farthestLeftIndex = -1;
+            float closestRightDistance = 0f;
+            int closestRightIndex = -1;
+            float farthestRightDistance = 0f;
+            int farthestRightIndex = -1;
+
+            if (oldTarget != null) {
+                currentx = playerManager.ActiveUnitController.transform.InverseTransformPoint(oldTarget.transform.position).x;
+            }
+
+            int i = 0;
+            foreach (Interactable collidedGameObject in allTabTargets) {
                 //Debug.Log("PlayerController.GetNextTabTarget(): processing target: " + i + "; " + collidedGameObject.name);
+                targetDistance = Vector3.Distance(playerManager.ActiveUnitController.transform.position, collidedGameObject.transform.position);
                 if (closestTargetIndex == -1) {
                     closestTargetIndex = i;
+                    closestTargetDistance = targetDistance;
                 }
-                if (Vector3.Distance(playerManager.ActiveUnitController.transform.position, collidedGameObject.transform.position) < Vector3.Distance(playerManager.ActiveUnitController.transform.position, characterUnitList[closestTargetIndex].transform.position)) {
+                if (targetDistance < closestTargetDistance) {
                     closestTargetIndex = i;
+                    closestTargetDistance = targetDistance;
                 }
+                xPosition = playerManager.ActiveUnitController.transform.InverseTransformPoint(collidedGameObject.transform.position).x;
+                if (closestLeftIndex == -1 && xPosition <= currentx ) {
+                    //Debug.Log("no left index and x position " + xPosition + " < currentx " + currentx);
+                    closestLeftDistance = xPosition;
+                    farthestLeftDistance = xPosition;
+                    closestLeftIndex = i;
+                    farthestLeftIndex = i;
+                }
+                if (closestRightIndex == -1 && xPosition >= currentx) {
+                    //Debug.Log("no right index and x position " + xPosition + " > currentx " + currentx);
+                    closestRightDistance = xPosition;
+                    farthestRightDistance = xPosition;
+                    closestRightIndex = i;
+                    farthestRightIndex = i;
+                }
+                // closer than current closest left
+                if (closestLeftIndex != -1 && xPosition > closestLeftDistance && xPosition < currentx) {
+                    closestLeftDistance = xPosition;
+                    closestLeftIndex = i;
+                }
+                // farther than current farthest left
+                if (farthestLeftIndex != -1 && xPosition < farthestLeftDistance) {
+                    farthestLeftDistance = xPosition;
+                    farthestLeftIndex = i;
+                }
+                // closer than current closest right
+                if (closestRightIndex != -1 && xPosition < closestRightDistance && xPosition > currentx) {
+                    closestRightDistance = xPosition;
+                    closestRightIndex = i;
+                }
+                // farther than current farthest right
+                if (farthestRightIndex != -1 && xPosition > farthestRightDistance) {
+                    farthestRightDistance = xPosition;
+                    farthestRightIndex = i;
+                }
+
+                /*
                 // this next variable shouldn't actually be needed.  i think it was a logic error with not tracking the target index properly
                 if (preferredTargetIndex == -1) {
                     preferredTargetIndex = i;
                 }
+                */
                 i++;
             }
 
-
+            /*
             tabTargetIndex++;
-            if (tabTargetIndex >= characterUnitList.Count) {
+            if (tabTargetIndex >= allTabTargets.Count) {
                 tabTargetIndex = 0;
             }
+            */
             //Debug.Log("PlayerController.GetNextTabTarget(): processing complete: closestTargetIndex: " + closestTargetIndex + "; target: " + (target == null ? "null" : target.name) + "; closestTargetName: " + characterUnitList[closestTargetIndex]);
 
             // reset to closest unit every 3 seconds if starting a new round of tabbing.
             // otherwise, just keep going through the index
-            if (timeSinceLastTab.TotalSeconds > 3f) {
+            if (controlsManager.DPadRightPressed == true) {
+                playerManager.UnitController.ClearTarget();
+                if (oldTarget == null) {
+                    //Debug.Log("DPadRightPressed : setting closest Target Index: " + closestTargetIndex + "; " + allTabTargets[closestTargetIndex]);
+                    playerManager.UnitController.SetTarget(allTabTargets[closestTargetIndex]);
+                    return;
+                }
+                if (closestRightIndex != -1) {
+                    //Debug.Log("DPadRightPressed : setting closest Right Index: " + closestRightIndex + "; " + allTabTargets[closestRightIndex]);
+                    playerManager.UnitController.SetTarget(allTabTargets[closestRightIndex]);
+                } else {
+                    //Debug.Log("DPadRightPressed : setting farthest Left Index: " + farthestLeftIndex + "; " + allTabTargets[farthestLeftIndex]);
+                    playerManager.UnitController.SetTarget(allTabTargets[farthestLeftIndex]);
+                }
+                return;
+            } else if (controlsManager.DPadLeftPressed == true) {
+                playerManager.UnitController.ClearTarget();
+                if (oldTarget == null) {
+                    playerManager.UnitController.SetTarget(allTabTargets[closestTargetIndex]);
+                    return;
+                }
+                if (closestLeftIndex != -1) {
+                    playerManager.UnitController.SetTarget(allTabTargets[closestLeftIndex]);
+                } else {
+                    playerManager.UnitController.SetTarget(allTabTargets[farthestRightIndex]);
+                }
+                return;
+            }
+            if (timeSinceLastTab.TotalSeconds > 3f || oldTarget == null) {
                 //Debug.Log("PlayerController.GetNextTabTarget(): More than 3 seconds since last tab");
-                if (closestTargetIndex != -1 && characterUnitList[closestTargetIndex] != playerManager.UnitController.Target) {
+                playerManager.UnitController.ClearTarget();
+                playerManager.UnitController.SetTarget(allTabTargets[closestTargetIndex]);
+                /*
+                if (closestTargetIndex != -1 && allTabTargets[closestTargetIndex] != playerManager.UnitController.Target) {
                     // prevent a tab from re-targetting the same unit just because it's closest to us
                     // we only want to clear the target if we are actually setting a new target
                     playerManager.UnitController.ClearTarget();
-                    playerManager.UnitController.SetTarget(characterUnitList[closestTargetIndex]);
+                    playerManager.UnitController.SetTarget(allTabTargets[closestTargetIndex]);
                     // we need to manually set this here, otherwise our tab target index won't match our actual target, resulting in the next tab possibly not switching to a new target
                     tabTargetIndex = closestTargetIndex;
                     //} else if (preferredTarget != null) {
                 } else {
-                    if (characterUnitList[tabTargetIndex] != playerManager.UnitController.Target) {
+                    if (allTabTargets[tabTargetIndex] != playerManager.UnitController.Target) {
                         // we only want to clear the target if we are actually setting a new target
                         playerManager.UnitController.ClearTarget();
-                        playerManager.UnitController.SetTarget(characterUnitList[tabTargetIndex]);
+                        playerManager.UnitController.SetTarget(allTabTargets[tabTargetIndex]);
                     }
                 }
+                */
             } else {
                 //Debug.Log("PlayerController.GetNextTabTarget(): Less than 3 seconds since last tab, using index: " + tabTargetIndex);
                 // we only want to clear the target if we are actually setting a new target
-                if (characterUnitList[tabTargetIndex] != playerManager.UnitController.Target) {
+                /*
+                if (allTabTargets[tabTargetIndex] != playerManager.UnitController.Target) {
                     playerManager.UnitController.ClearTarget();
-                    playerManager.UnitController.SetTarget(characterUnitList[tabTargetIndex]);
+                    playerManager.UnitController.SetTarget(allTabTargets[tabTargetIndex]);
+                }
+                */
+                if (closestRightIndex != -1) {
+                    playerManager.UnitController.SetTarget(allTabTargets[closestRightIndex]);
+                } else {
+                    playerManager.UnitController.SetTarget(allTabTargets[farthestLeftIndex]);
                 }
             }
         }

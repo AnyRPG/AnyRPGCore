@@ -188,10 +188,10 @@ namespace AnyRPG {
                 currentNavigationController.CurrentNavigableElement.Cancel();
                 return false;
             }
-            if (currentNavigationController != null) {
-                currentNavigationController.Cancel();
-            }
             if (userCloseable == true && parentPanel == null) {
+                if (currentNavigationController != null) {
+                    currentNavigationController.Cancel();
+                }
                 Close();
             }
             return true;

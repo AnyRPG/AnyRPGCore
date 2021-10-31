@@ -82,7 +82,7 @@ namespace AnyRPG {
         }
 
         public void CreatePages(List<VendorItem> items, bool resetPageIndex = true) {
-            //Debug.Log("VendorUI.CreatePages(" + items.Count + ")");
+            Debug.Log("VendorUI.CreatePages(" + items.Count + ", " + resetPageIndex + ")");
             ClearPages(resetPageIndex);
 
             // remove all items with a quanity of 0 from the list
@@ -107,16 +107,20 @@ namespace AnyRPG {
         }
 
         public void AddItems() {
-            //Debug.Log("VendorUI.AddItems()");
+            Debug.Log("VendorUI.AddItems()");
             if (pages.Count > 0) {
                 //for (int i = 0; i < (pages[pageIndex] as VendorItemContentList).vendorItems.Count; i++) {
-                for (int i = 0; i < pageSize; i++) {
+                for (int i = 0; i < (pages[pageIndex] as VendorItemContentList).vendorItems.Count; i++) {
                     if ((pages[pageIndex] as VendorItemContentList).vendorItems[i] != null) {
                         vendorButtons[i].AddItem((pages[pageIndex] as VendorItemContentList).vendorItems[i], (dropDownIndex == 0 ? true : false));
                     }
                 }
             }
-        }
+            if (currentNavigationController != null) {
+                currentNavigationController.UpdateNavigationList();
+            }
+            //FocusCurrentButton();
+        }   
 
         public override void ClearButtons() {
             //Debug.Log("VendorUI.ClearButtons()");
@@ -234,11 +238,16 @@ namespace AnyRPG {
         }
 
         public void RefreshPage() {
-            //Debug.Log("VendorUI.RefreshPage()");
+            Debug.Log("VendorUI.RefreshPage()");
             CreatePages(vendorCollections[dropDownIndex].MyVendorItems, false);
             //Debug.Log("VendorUI.RefreshPage() count: " + pages.Count + "; index: " + pageIndex);
             LoadPage(pageIndex);
             OnPageCountUpdate(false);
+        }
+
+        public override void AddPageContent() {
+            base.AddPageContent();
+            AddItems();
         }
 
     }

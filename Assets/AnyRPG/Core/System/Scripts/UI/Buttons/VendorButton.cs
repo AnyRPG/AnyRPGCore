@@ -7,7 +7,10 @@ using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 namespace AnyRPG {
-    public class VendorButton : TransparencyButton {
+    public class VendorButton : HighlightButton {
+
+        [SerializeField]
+        protected Image backGroundImage = null;
 
         [SerializeField]
         protected Image icon = null;
@@ -38,7 +41,6 @@ namespace AnyRPG {
         protected SystemItemManager systemItemManager = null;
         protected PlayerManager playerManager = null;
         protected InventoryManager inventoryManager = null;
-        protected AudioManager audioManager = null;
         protected MessageFeedManager messageFeedManager = null;
         protected CurrencyConverter currencyConverter = null;
 
@@ -56,7 +58,6 @@ namespace AnyRPG {
             playerManager = systemGameManager.PlayerManager;
             inventoryManager = systemGameManager.InventoryManager;
             systemConfigurationManager = systemGameManager.SystemConfigurationManager;
-            audioManager = systemGameManager.AudioManager;
             messageFeedManager = systemGameManager.UIManager.MessageFeedManager;
             currencyConverter = systemGameManager.CurrencyConverter;
         }
@@ -110,7 +111,7 @@ namespace AnyRPG {
             }
         }
 
-        private bool CanAfford() {
+        protected bool CanAfford() {
             if (buyBackButton == false) {
                 if (currencyConverter.GetBaseCurrencyAmount(vendorItem.Item.Currency, vendorItem.BuyPrice()) <= playerManager.MyCharacter.CharacterCurrencyManager.GetBaseCurrencyValue(vendorItem.Item.Currency)) {
                     return true;
@@ -129,9 +130,18 @@ namespace AnyRPG {
         public override void OnPointerClick(PointerEventData eventData) {
             base.OnPointerClick(eventData);
             //Debug.Log("VendorButton.OnPointerClick()");
+            ProcessMouseClick();
+        }
+
+        public override void Interact() {
+            base.Interact();
+            ProcessMouseClick();
+        }
+
+        public void ProcessMouseClick() {
             if (vendorItem.BuyPrice() == 0
-                || vendorItem.Item.Currency == null
-                || CanAfford()) {
+                            || vendorItem.Item.Currency == null
+                            || CanAfford()) {
                 Item tmpItem = null;
                 if (buyBackButton == true) {
                     // if this is a buyback, the item has already been instantiated so it is safe to reference it directly

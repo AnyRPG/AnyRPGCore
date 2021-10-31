@@ -16,6 +16,7 @@ namespace AnyRPG {
 
         public virtual bool DeselectOnLeave { get => true; }
         public virtual bool CaptureCancelButton { get => false; }
+        public virtual bool CaptureDPad { get => false; }
         public RectTransform RectTransform { get => rectTransform; }
 
         private int configureCount = 0;
@@ -51,6 +52,18 @@ namespace AnyRPG {
 
         public virtual void Interact() {
             OnInteract();
+        }
+
+        public virtual void UpButton() {
+        }
+
+        public virtual void DownButton() {
+        }
+
+        public virtual void LeftButton() {
+        }
+
+        public virtual void RightButton() {
         }
 
         public virtual void LeaveElement() {

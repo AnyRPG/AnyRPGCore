@@ -61,6 +61,9 @@ namespace AnyRPG {
         protected ScrollRect scrollRect = null;
 
         [SerializeField]
+        protected bool pruneInactiveElements = true;
+
+        [SerializeField]
         protected List<NavigableElement> navigableButtons = new List<NavigableElement>();
 
         protected List<NavigableElement> activeNavigableButtons = new List<NavigableElement>();
@@ -90,7 +93,7 @@ namespace AnyRPG {
             base.Configure(systemGameManager);
             foreach (NavigableElement navigableElement in navigableButtons) {
                 navigableElement.Configure(systemGameManager);
-                if (navigableElement.gameObject.activeSelf == true) {
+                if (pruneInactiveElements == false || navigableElement.gameObject.activeSelf == true) {
                     activeNavigableButtons.Add(navigableElement);
                 }
             }
@@ -115,7 +118,7 @@ namespace AnyRPG {
             //Debug.Log(gameObject.name + ".UINavigationController.UpdateNavigationList()");
             activeNavigableButtons.Clear();
             foreach (NavigableElement navigableElement in navigableButtons) {
-                if (navigableElement.gameObject.activeSelf == true) {
+                if (pruneInactiveElements == false || navigableElement.gameObject.activeSelf == true) {
                     activeNavigableButtons.Add(navigableElement);
                 }
             }
@@ -161,14 +164,24 @@ namespace AnyRPG {
             //Debug.Log(gameObject.name + ".UINavigationController.FocusCurrentButton()");
         }
 
-        public virtual void UpButton() {
+        public void UpButton() {
             //Debug.Log(gameObject.name + ".UINavigationController.UpButton()");
+            if (currentNavigableElement != null && currentNavigableElement.CaptureDPad == true) {
+                currentNavigableElement.UpButton();
+                return;
+            }
+            ProcessUpButton();
+        }
+
+        public virtual void ProcessUpButton() {
         }
 
         public virtual bool LeaveUp() {
-            //Debug.Log(gameObject.name + ".UINavigationController.LeaveUp()");
+            Debug.Log(gameObject.name + ".UINavigationController.LeaveUp()");
             if (upControllers.Count != 0) {
-                currentNavigableElement.LeaveElement();
+                if (currentNavigableElement != null) {
+                    currentNavigableElement.LeaveElement();
+                }
                 foreach (UINavigationController uINavigationController in upControllers) {
                     if (uINavigationController.gameObject.activeInHierarchy == true) {
                         uINavigationController.SetActive();
@@ -184,14 +197,25 @@ namespace AnyRPG {
             return false;
         }
 
-        public virtual void DownButton() {
+        public void DownButton() {
             //Debug.Log(gameObject.name + ".UINavigationController.DownButton()");
+            if (currentNavigableElement != null && currentNavigableElement.CaptureDPad == true) {
+                currentNavigableElement.DownButton();
+                return;
+            }
+            ProcessDownButton();
+        }
+
+        public virtual void ProcessDownButton() {
+
         }
 
         public virtual bool LeaveDown() {
-            //Debug.Log(gameObject.name + ".UINavigationController.LeaveDown()");
+            Debug.Log(gameObject.name + ".UINavigationController.LeaveDown()");
             if (downControllers.Count != 0) {
-                currentNavigableElement.LeaveElement();
+                if (currentNavigableElement != null) {
+                    currentNavigableElement.LeaveElement();
+                }
                 foreach (UINavigationController uINavigationController in downControllers) {
                     if (uINavigationController.gameObject.activeInHierarchy == true) {
                         uINavigationController.SetActive();
@@ -207,14 +231,24 @@ namespace AnyRPG {
             return false;
         }
 
-        public virtual void LeftButton() {
+        public void LeftButton() {
             Debug.Log(gameObject.name + ".UINavigationController.LeftButton()");
+            if (currentNavigableElement != null && currentNavigableElement.CaptureDPad == true) {
+                currentNavigableElement.LeftButton();
+                return;
+            }
+            ProcessLeftButton();
+        }
+
+        public virtual void ProcessLeftButton() {
         }
 
         public virtual bool LeaveLeft() {
             Debug.Log(gameObject.name + ".UINavigationController.LeaveLeft()");
             if (leftControllers.Count != 0) {
-                currentNavigableElement.LeaveElement();
+                if (currentNavigableElement != null) {
+                    currentNavigableElement.LeaveElement();
+                }
                 foreach (UINavigationController uINavigationController in downControllers) {
                     if (uINavigationController.gameObject.activeInHierarchy == true) {
                         uINavigationController.SetActive();
@@ -230,14 +264,24 @@ namespace AnyRPG {
             return false;
         }
 
-        public virtual void RightButton() {
+        public void RightButton() {
             Debug.Log(gameObject.name + ".UINavigationController.RightButton()");
+            if (currentNavigableElement != null && currentNavigableElement.CaptureDPad == true) {
+                currentNavigableElement.RightButton();
+                return;
+            }
+            ProcessRightButton();
+        }
+
+        public virtual void ProcessRightButton() {
         }
 
         public virtual bool LeaveRight() {
             Debug.Log(gameObject.name + ".UINavigationController.LeaveRight()");
             if (rightControllers.Count != 0) {
-                currentNavigableElement.LeaveElement();
+                if (currentNavigableElement != null) {
+                    currentNavigableElement.LeaveElement();
+                }
                 foreach (UINavigationController uINavigationController in downControllers) {
                     if (uINavigationController.gameObject.activeInHierarchy == true) {
                         uINavigationController.SetActive();
@@ -283,6 +327,7 @@ namespace AnyRPG {
         public virtual void ReceiveOpenWindowNotification() {
             //Debug.Log(gameObject.name + ".UINavigationController.ReceiveOpenWindowNotification()");
             UpdateNavigationList();
+            currentIndex = -1;
         }
 
 
