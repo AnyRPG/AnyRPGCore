@@ -10,6 +10,8 @@ namespace AnyRPG {
 
         public virtual event Action<ICloseableWindowContents> OnCloseWindow = delegate { };
 
+        [Header("Closeable Window")]
+
         [SerializeField]
         protected Image backGroundImage;
 

@@ -115,7 +115,7 @@ namespace AnyRPG {
 
         public void CharacterInventory() {
             uIManager.CloseAllSystemWindows();
-            inventoryManager.OpenClose();
+            uIManager.inventoryWindow.ToggleOpenClose();
         }
 
 

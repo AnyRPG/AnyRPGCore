@@ -7,20 +7,23 @@ using UnityEngine.UI;
 
 namespace AnyRPG {
     public class SlotScript : DescribableIcon, IPointerClickHandler, IClickable {
+
+        [Header("Slot Script")]
+
+        [SerializeField]
+        protected Image backGroundImage;
+
         /// <summary>
         /// A stack for all items on this slot
         /// </summary>
-        private List<Item> items = new List<Item>();
+        protected List<Item> items = new List<Item>();
 
-        [SerializeField]
-        private Image backGroundImage;
-
-        private bool localComponentsGotten = false;
+        protected bool localComponentsGotten = false;
 
         // game manager references
-        private InventoryManager inventoryManager = null;
-        private HandScript handScript = null;
-        private PlayerManager playerManager = null;
+        protected InventoryManager inventoryManager = null;
+        protected HandScript handScript = null;
+        protected PlayerManager playerManager = null;
 
         /// <summary>
         /// A referecne to the bag that this slot belongs to
@@ -123,9 +126,9 @@ namespace AnyRPG {
             }
         }
 
-        public void OnPointerClick(PointerEventData eventData) {
+        public override void OnPointerClick(PointerEventData eventData) {
             //Debug.Log("SlotScript.OnPointerClick()");
-
+            base.OnPointerClick(eventData);
             // Detect a left click on a slot in a bag
             if (eventData.button == PointerEventData.InputButton.Left) {
                 HandleLeftClick();
@@ -228,6 +231,11 @@ namespace AnyRPG {
 
         public void HandleRightClick() {
             //Debug.Log("SlotScript.HandleRightClick()");
+            InteractWithSlot();
+            ProcessMouseEnter();
+        }
+
+        public void InteractWithSlot() {
             // ignore right clicks when something is in the handscript
             if (handScript.Moveable != null) {
                 return;
@@ -236,7 +244,7 @@ namespace AnyRPG {
             // DO SWAPITEMS CALL HERE - OR NOT BECAUSE THAT REQUIRES GETTING A SLOT FIRST
 
             // send items back and forth between inventory and bank if they are both open
-            if (inventoryManager.BagsClosed() == false && inventoryManager.BankClosed() == false) {
+            if (uIManager.inventoryWindow.IsOpen == true && uIManager.bankWindow.IsOpen == true) {
                 List<Item> moveList = new List<Item>();
                 if (MyBag is BankPanel) {
                     //Debug.Log("SlotScript.HandleRightClick(): We clicked on something in a bank");
@@ -267,7 +275,7 @@ namespace AnyRPG {
                 }
                 // default case to prevent using an item when the bank window is open but bank was full
                 return;
-            } else if (inventoryManager.BagsClosed() == false && inventoryManager.BankClosed() == true && uIManager.vendorWindow.IsOpen) {
+            } else if (uIManager.inventoryWindow.IsOpen == true && uIManager.bankWindow.IsOpen == false && uIManager.vendorWindow.IsOpen) {
                 // SELL THE ITEM
                 if (MyItem != null) {
                     if (MyItem.ItemQuality != null && MyItem.ItemQuality.RequireSellConfirmation) {
@@ -278,7 +286,7 @@ namespace AnyRPG {
                     if ((uIManager.vendorWindow.CloseableWindowContents as VendorUI).SellItem(MyItem)) {
                         return;
                     }
-                    
+
                 }
                 // default case to prevent using an item when the vendor window is open
                 return;
@@ -286,8 +294,11 @@ namespace AnyRPG {
 
             // if we got to here, nothing left to do but use the item
             UseItem();
+        }
 
-            ProcessMouseEnter();
+        public override void Accept() {
+            base.Accept();
+            InteractWithSlot();
         }
 
         public void Clear() {

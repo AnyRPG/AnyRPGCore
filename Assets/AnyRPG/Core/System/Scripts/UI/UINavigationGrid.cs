@@ -9,13 +9,16 @@ namespace AnyRPG {
     public class UINavigationGrid : UINavigationController {
 
         [SerializeField]
-        private int numRows = 0;
+        protected int numRows = 0;
 
         [SerializeField]
-        private int numColumns = 0;
+        protected int numColumns = 0;
 
-        private int currentRow = 0;
-        private int currentColumn = 0;
+        protected int currentRow = 0;
+        protected int currentColumn = 0;
+
+        public int NumRows { get => numRows; set => numRows = value; }
+        public int NumColumns { get => numColumns; set => numColumns = value; }
 
         public override void Configure(SystemGameManager systemGameManager) {
             base.Configure(systemGameManager);
@@ -24,11 +27,11 @@ namespace AnyRPG {
 
 
         public override void FocusCurrentButton() {
-            //Debug.Log(gameObject.name + ".UINavigationGrid.FocusCurrentButton()");
+            Debug.Log(gameObject.name + ".UINavigationGrid.FocusCurrentButton()");
             if (activeNavigableButtons.Count == 0) {
                 return;
             }
-            if (currentIndex < 0) {
+            if (currentIndex < 0 || currentIndex >= activeNavigableButtons.Count || activeNavigableButtons[currentIndex].gameObject.activeSelf == false) {
                 currentIndex = 0;
                 currentRow = 0;
                 currentColumn = 0;
@@ -97,7 +100,7 @@ namespace AnyRPG {
                 currentNavigableElement.LeaveElement();
             }
             CalculateCurrentIndex();
-            if (activeNavigableButtons[currentIndex].gameObject.activeSelf != true) {
+            if (currentIndex >= activeNavigableButtons.Count || activeNavigableButtons[currentIndex].gameObject.activeSelf != true) {
                 currentColumn--;
                 CalculateCurrentIndex();
             }
@@ -145,7 +148,7 @@ namespace AnyRPG {
                 currentNavigableElement.LeaveElement();
             }
             CalculateCurrentIndex();
-            if (activeNavigableButtons[currentIndex].gameObject.activeSelf != true) {
+            if (currentIndex >= activeNavigableButtons.Count || activeNavigableButtons[currentIndex].gameObject.activeSelf != true) {
                 currentRow--;
                 CalculateCurrentIndex();
             }

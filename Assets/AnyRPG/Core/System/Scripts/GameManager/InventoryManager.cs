@@ -14,9 +14,6 @@ namespace AnyRPG {
         private List<BagNode> bagNodes = new List<BagNode>();
 
         [SerializeField]
-        private GameObject inventoryContainer = null;
-
-        [SerializeField]
         private GameObject windowPrefab = null;
 
         [SerializeField]
@@ -24,15 +21,6 @@ namespace AnyRPG {
 
         [SerializeField]
         private GameObject bankBagPrefab = null;
-
-        [SerializeField]
-        private BagBarController bagBarController = null;
-
-        // have trouble stopping grid from expanding windows, making holders instead
-        [SerializeField]
-        private List<GameObject> inventoryWindowHolders = new List<GameObject>();
-
-        protected CanvasGroup canvasGroup = null;
 
         // game manager references
         private HandScript handScript = null;
@@ -98,9 +86,7 @@ namespace AnyRPG {
         public override void Configure(SystemGameManager systemGameManager) {
             //Debug.Log("InventoryManager.Awake()");
             base.Configure(systemGameManager);
-            canvasGroup = inventoryContainer.GetComponent<CanvasGroup>();
 
-            bagBarController.Configure(systemGameManager);
         }
 
         public override void SetGameManagerReferences() {
@@ -162,7 +148,8 @@ namespace AnyRPG {
                 }
             }
             //bagWindowPositionsSet = false;
-            Close();
+            uIManager.bankWindow.CloseWindow();
+            uIManager.inventoryWindow.CloseWindow();
             //MyBagNodes.Clear();
         }
 
@@ -252,14 +239,8 @@ namespace AnyRPG {
                 BagNode bagNode = new BagNode();
 
                 if (i < bagCount) {
-                    // create a new BagWindow to show the contents of this bag Nodes' bag
-                    bagNode.BagWindow = objectPooler.GetPooledObject(windowPrefab, inventoryWindowHolders[i].transform).GetComponent<CloseableWindow>();
-                    bagNode.BagWindow.Configure(systemGameManager);
-                    // testing, to work with new window reset code, pivot needs to stay in the center
-                    //bagNode.BagWindow.transform.GetComponent<RectTransform>().pivot = new Vector2(1, 1);
                     // create a bagbutton to access this bag node
-
-                    bagNode.BagButton = bagBarController.AddBagButton();
+                    bagNode.BagButton = (uIManager.inventoryWindow.CloseableWindowContents as InventoryPanel).BagBarController.AddBagButton();
                     if (bagNode.BagButton != null) {
                         bagNode.BagButton.BagNode = bagNode;
                     } else {
@@ -268,18 +249,8 @@ namespace AnyRPG {
                     // give the bagbutton a reference back to the bag node that holds its data
                     bagNode.IsBankNode = false;
                 } else {
-                    if (i == bagCount) {
-                        //Debug.Log("InventoryManager.InitializeBagWindows(): create element " + i + " setting bag window to bank window");
-                        bagNode.BagWindow = uIManager.bankWindow;
-                    } else {
-                        //Debug.Log("InventoryManager.InitializeBagWindows(): create element " + i + " creating bag window");
-                        bagNode.BagWindow = objectPooler.GetPooledObject(windowPrefab, inventoryWindowHolders[i - 1].transform).GetComponent<CloseableWindow>();
-                        bagNode.BagWindow.Configure(systemGameManager);
-                        // testing same as above code
-                        //bagNode.BagWindow.transform.GetComponent<RectTransform>().pivot = new Vector2(1, 1);
-                    }
 
-                    bagNode.BagButton = (uIManager.bankWindow.CloseableWindowContents as BankPanel).MyBagBarController.AddBagButton();
+                    bagNode.BagButton = (uIManager.bankWindow.CloseableWindowContents as BankPanel).BagBarController.AddBagButton();
 
                     if (bagNode.BagButton != null) {
                         bagNode.BagButton.BagNode = bagNode;
@@ -293,16 +264,6 @@ namespace AnyRPG {
                 // save a reference to this bagNode in the main list of bagNodes
                 bagNodes.Add(bagNode);
                 //Debug.Log("InventoryManager.InitializeBagNodes(): added bag and bagNodes.count is now: " + bagNodes.Count);
-            }
-            // always update opacity immediately after load
-            for (int i = 0; i < 13; i++) {
-                //Debug.Log("Bag Nodes initialized. Checking node: " + i);
-                if (PlayerPrefs.HasKey("InventoryWindowX" + i) && PlayerPrefs.HasKey("InventoryWindowY" + i)) {
-                    BagNodes[i].BagWindow.RectTransform.anchoredPosition = new Vector2(PlayerPrefs.GetFloat("InventoryWindowX" + i), PlayerPrefs.GetFloat("InventoryWindowY" + i));
-                    //Debug.Log("setting node:" + i + "; to: " + new Vector3(PlayerPrefs.GetFloat("InventoryWindowX" + i), PlayerPrefs.GetFloat("InventoryWindowY" + i), 0));
-                } else {
-                    //Debug.Log(WE DON'T HAVE A WINDOW HERE!!!!!!! " + i);
-                }
             }
 
         }
@@ -340,15 +301,10 @@ namespace AnyRPG {
             if (bag != null) {
                 bagNode.Bag = bag;
                 if (bagNode.IsBankNode) {
-                    if (bagNode.BagWindow != null) {
-                        bagNode.BagWindow.InitalizeWindowContents(bankBagPrefab, bag.DisplayName);
-                    } else {
-                        //Debug.Log("InventoryManager.PopulateBagNode(BagNode, Bag): bagwindow was null");
-                    }
+                    bagNode.BagPanel = uIManager.bankWindow.CloseableWindowContents as BagPanel;
                 } else {
-                    bagNode.BagWindow.InitalizeWindowContents(bagPrefab, bag.DisplayName);
+                    bagNode.BagPanel = uIManager.inventoryWindow.CloseableWindowContents as BagPanel;
                 }
-                bagNode.BagPanel = bagNode.BagWindow.CloseableWindowContents as BagPanel;
                 if (bagNode.BagPanel != null) {
                     //Debug.Log("InventoryManager.PopulateBagNode() bagPanel: " + bagNode.MyBagPanel.gameObject.GetInstanceID() + " for window: " + bagNode.MyBagWindow.gameObject.name);
                     bagNode.BagPanel.AddSlots(bag.Slots);
@@ -361,31 +317,6 @@ namespace AnyRPG {
 
             uIManager.UpdateInventoryOpacity();
 
-        }
-
-        public void CloseBank() {
-            foreach (BagNode bagNode in bagNodes) {
-                if (bagNode.BagWindow != null && bagNode.IsBankNode) {
-                    bagNode.BagWindow.CloseWindow();
-                }
-            }
-        }
-
-        public void OpenBank() {
-            foreach (BagNode bagNode in bagNodes) {
-                if (bagNode.BagWindow != null && bagNode.IsBankNode && bagNode.BagWindow.IsOpen == false) {
-                    bagNode.BagWindow.OpenWindow();
-                }
-            }
-        }
-
-        public void Close() {
-
-            foreach (BagNode bagNode in bagNodes) {
-                if (bagNode.BagWindow != null) {
-                    bagNode.BagWindow.CloseWindow();
-                }
-            }
         }
 
         /// <summary>
@@ -416,13 +347,6 @@ namespace AnyRPG {
                             AddItem(item);
                         }
                     }
-
-                    // destroy the bagpanel gameobject before setting its reference to null
-                    bagNode.BagWindow.DestroyWindowContents();
-
-                    // MAKE EMPTY TITLE BAR GO AWAY
-                    bagNode.BagWindow.CloseWindow();
-
 
                     bagNode.BagPanel = null;
 
@@ -535,80 +459,6 @@ namespace AnyRPG {
                 }
             }
             return false;
-        }
-
-        public bool InventoryClosed() {
-            /*
-            if (canvasGroup.alpha == 0) {
-                return true;
-            }
-            return false;
-            */
-            return BagsClosed();
-        }
-
-        public bool BankClosed() {
-            //Debug.Log("InventoryManager.BankClosed()");
-            foreach (BagNode bagNode in bagNodes) {
-                if (bagNode.BagWindow.IsOpen && bagNode.IsBankNode == true) {
-                    //Debug.Log("InventoryManager.BagsClosed(); isOpen: " + bagNode.MyBagWindow.IsOpen + "; isBankNode: " + bagNode.MyIsBankNode);
-                    return false;
-                }
-            }
-            return true;
-        }
-
-        public bool BagsClosed() {
-            //Debug.Log("InventoryManager.BagsClosed()");
-            foreach (BagNode bagNode in bagNodes) {
-                if (bagNode.BagWindow.IsOpen && bagNode.IsBankNode == false) {
-                    //Debug.Log("InventoryManager.BagsClosed(); isOpen: " + bagNode.MyBagWindow.IsOpen + "; isBankNode: " + bagNode.MyIsBankNode);
-                    return false;
-                }
-            }
-            return true;
-        }
-
-        public void OpenClose() {
-            //Debug.Log("InventoryManager.OpenClose()");
-            // if the closed bag is true, open all closed bags
-            // if closed bag is false, then close all open bags
-            bool inventoryClosed = InventoryClosed();
-            if (CurrentBagCount == 0) {
-                messageFeedManager.WriteMessage("You do not have any bags equipped");
-                return;
-            }
-            //Debug.Log("Inventory is closed: " + inventoryClosed);
-            foreach (BagNode bagNode in bagNodes) {
-                if (bagNode.BagWindow.IsOpen != inventoryClosed && bagNode.IsBankNode == false) {
-                    //Debug.Log("Inventory is closed: " + inventoryClosed + "; isOpen: " + bagNode.MyBagWindow.IsOpen + "; isBankNode: " + bagNode.MyIsBankNode);
-                    bagNode.BagWindow.ToggleOpenClose();
-                }
-            }
-            uIManager.UpdateInventoryOpacity();
-            // that may look wrong, but it will still read as closed, because we opened it after taking that reading
-            //if (inventoryClosed) {
-            SetWindowPositions();
-            //}
-
-        }
-
-        public void SetWindowPositions() {
-            //Debug.Log("InventoryManager.SetWindowPositions()");
-
-            for (int i = 0; i < 13; i++) {
-                //Debug.Log("Checking window " + i + " on openclose");
-                if (PlayerPrefs.HasKey("InventoryWindowX" + i) && PlayerPrefs.HasKey("InventoryWindowY" + i)) {
-                    //Debug.Log("setting node:" + i + "; to: " + new Vector3(PlayerPrefs.GetFloat("InventoryWindowX" + i), PlayerPrefs.GetFloat("InventoryWindowY" + i), 0));
-                    if (BagNodes[i].BagWindow.IsOpen) {
-                        //Debug.Log("Window was open, moving it");
-                        BagNodes[i].BagWindow.RectTransform.anchoredPosition = new Vector3(PlayerPrefs.GetFloat("InventoryWindowX" + i), PlayerPrefs.GetFloat("InventoryWindowY" + i), 0);
-                        //Debug.Log("Window was open, moving it: " + MyBagNodes[i].MyBagWindow.transform.position);
-                    } else {
-                        //Debug.Log("Window was closed, not moving it");
-                    }
-                }
-            }
         }
 
         public IUseable GetUseable(IUseable useable) {

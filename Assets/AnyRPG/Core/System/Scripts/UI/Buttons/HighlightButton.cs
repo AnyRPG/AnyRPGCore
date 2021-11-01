@@ -21,8 +21,17 @@ namespace AnyRPG {
         [SerializeField]
         protected Button highlightButton;
 
+        [Tooltip("The highlight image will be invisible when not selected or hovered")]
         [SerializeField]
-        protected bool useHighlightColor;
+        protected bool hideImageWhenInactive = true;
+
+        [Tooltip("Tint the image with the highlight color")]
+        [SerializeField]
+        protected bool tintImage = true;
+
+        [Tooltip("use the system image color for the tint")]
+        [SerializeField]
+        protected bool useSystemImageTintColor = true;
 
         [SerializeField]
         protected bool useHighlightColorOnButton;
@@ -57,10 +66,10 @@ namespace AnyRPG {
 
         public override void Configure(SystemGameManager systemGameManager) {
             base.Configure(systemGameManager);
-
-            if (highlightImage != null) {
+            if (useSystemImageTintColor) {
                 highlightColor = systemConfigurationManager.DefaultUIColor;
             }
+            SetDefaultImageColor();
             if (highlightButton != null) {
                 Image highlightButtonImage = highlightButton.GetComponent<Image>();
                 if (highlightButtonImage != null) {
@@ -79,6 +88,20 @@ namespace AnyRPG {
             DeSelect();
         }
 
+        private void SetDefaultImageColor() {
+            if (highlightImage != null) {
+                if (hideImageWhenInactive) {
+                    highlightImage.color = new Color32(0, 0, 0, 0);
+                } else {
+                    highlightImage.color = normalColor;
+                }
+            }
+        }
+
+        private void SetNormalColors() {
+
+        }
+
         public override void SetGameManagerReferences() {
             //Debug.Log(gameObject.name + ".HighlightButton.SetGameManagerReferences(): " + GetInstanceID());
             base.SetGameManagerReferences();
@@ -88,11 +111,11 @@ namespace AnyRPG {
         }
 
         public override void Select() {
+            Debug.Log(gameObject.name + ".HighlightButton.Select()");
             base.Select();
-            //Debug.Log(gameObject.name + ".HighlightButton.Select()");
             if (highlightImage != null) {
                 //Debug.Log(gameObject.name + ".HighlightButton.Select(): highlightimage is not null");
-                if (useHighlightColor) {
+                if (tintImage) {
                     //Debug.Log(gameObject.name + ".HighlightButton.Select(): highlightimage is not null: setting highlightcolor on image");
                     highlightImage.color = highlightColor;
                 }
@@ -116,13 +139,7 @@ namespace AnyRPG {
 
         public override void DeSelect() {
             //Debug.Log(gameObject.name + ".HightlightButton.DeSelect()");
-            if (highlightImage != null) {
-                if (useHighlightColor) {
-                    highlightImage.color = normalColor;
-                }
-            } else {
-                //Debug.Log(gameObject.name + ".HightlightButton.DeSelect(): highlight image is null");
-            }
+            SetDefaultImageColor();
             if (highlightButton != null && useHighlightColorOnButton == true) {
                 ColorBlock colorBlock = highlightButton.colors;
                 colorBlock.normalColor = normalColor;

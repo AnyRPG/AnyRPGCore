@@ -5,10 +5,11 @@ using System.Collections.Generic;
 using UnityEngine;
 
 namespace AnyRPG {
-    public class BankPanel : BagPanel {
+    public class InventoryPanel : BagPanel {
 
         //public override event Action<ICloseableWindowContents> OnOpenWindow;
-        [Header("Bank Panel")]
+
+        [Header("Inventory Panel")]
 
         [SerializeField]
         protected BagBarController bagBarController;
@@ -27,6 +28,7 @@ namespace AnyRPG {
             base.SetGameManagerReferences();
             inventoryManager = systemGameManager.InventoryManager;
         }
+
 
     }
 

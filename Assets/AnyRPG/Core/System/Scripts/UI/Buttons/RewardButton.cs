@@ -45,8 +45,9 @@ namespace AnyRPG {
             selected = false;
         }
 
-        public void OnPointerClick(PointerEventData eventData) {
+        public override void OnPointerClick(PointerEventData eventData) {
             //Debug.Log("RewardButton: OnPointerClick()");
+            base.OnPointerClick(eventData);
 
             if (selected) {
                 selected = false;

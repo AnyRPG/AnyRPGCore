@@ -14,6 +14,7 @@ GameObject:
   - component: {fileID: 5704424913579309281}
   - component: {fileID: 2676349124086808231}
   - component: {fileID: 8566606007182322891}
+  - component: {fileID: 1114839503601124169}
   m_Layer: 5
   m_Name: ChestPanel
   m_TagString: Untagged
@@ -57,17 +58,17 @@ MonoBehaviour:
   m_GameObject: {fileID: 3217724046775721825}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: -765806418, guid: f70555f144d8491a825f0804e09c671c, type: 3}
+  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
   m_Color: {r: 0, g: 0, b: 0, a: 0}
   m_RaycastTarget: 1
+  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
+  m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-    m_TypeName: UnityEngine.UI.MaskableGraphic+CullStateChangedEvent, UnityEngine.UI,
-      Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
   m_Sprite: {fileID: 0}
   m_Type: 0
   m_PreserveAspect: 0
@@ -77,6 +78,7 @@ MonoBehaviour:
   m_FillClockwise: 1
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
+  m_PixelsPerUnitMultiplier: 1
 --- !u!114 &5704424913579309281
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -86,7 +88,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 3217724046775721825}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 1741964061, guid: f70555f144d8491a825f0804e09c671c, type: 3}
+  m_Script: {fileID: 11500000, guid: 3245ec927659c4140ac4f8d17403cc18, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   m_HorizontalFit: 2
@@ -104,9 +106,17 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   backGroundImage: {fileID: 0}
+  coloredUIElements: []
+  userCloseable: 1
+  focusFirstButtonOnOpen: 1
+  focusActiveSubPanel: 0
+  uINavigationControllers:
+  - {fileID: 1114839503601124169}
+  subPanels: []
   slotPrefab: {fileID: 3712797229454731437, guid: d165fb5d237465c4a9d2edabacb9e601,
     type: 3}
   contentArea: {fileID: 1588991849519034293}
+  slotController: {fileID: 1114839503601124169}
 --- !u!114 &8566606007182322891
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -116,7 +126,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 3217724046775721825}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: -2095666955, guid: f70555f144d8491a825f0804e09c671c, type: 3}
+  m_Script: {fileID: 11500000, guid: 8a8695521f0d02e499659fee002a26c2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   m_Padding:
@@ -131,3 +141,29 @@ MonoBehaviour:
   m_Spacing: {x: 2, y: 2}
   m_Constraint: 1
   m_ConstraintCount: 8
+--- !u!114 &1114839503601124169
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3217724046775721825}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 30e086dccacef8d45959cb3d8f7ea6b1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  leftPanel: {fileID: 0}
+  leftControllers: []
+  rightPanel: {fileID: 0}
+  rightControllers: []
+  upPanel: {fileID: 0}
+  upControllers: []
+  downPanel: {fileID: 0}
+  downControllers: []
+  acceptController: {fileID: 0}
+  scrollRect: {fileID: 0}
+  pruneInactiveElements: 1
+  navigableButtons: []
+  numRows: 0
+  numColumns: 0

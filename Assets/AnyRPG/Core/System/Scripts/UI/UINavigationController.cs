@@ -60,8 +60,13 @@ namespace AnyRPG {
         [SerializeField]
         protected ScrollRect scrollRect = null;
 
+        [Tooltip("Should the active element list be cleared and rebuilt when the window is opened")]
+        [SerializeField]
+        protected bool updateActiveListOnOpen = true;
+
         [SerializeField]
         protected bool pruneInactiveElements = true;
+
 
         [SerializeField]
         protected List<NavigableElement> navigableButtons = new List<NavigableElement>();
@@ -326,8 +331,10 @@ namespace AnyRPG {
 
         public virtual void ReceiveOpenWindowNotification() {
             //Debug.Log(gameObject.name + ".UINavigationController.ReceiveOpenWindowNotification()");
-            UpdateNavigationList();
-            currentIndex = -1;
+            if (updateActiveListOnOpen) {
+                UpdateNavigationList();
+                currentIndex = -1;
+            }
         }
 
 

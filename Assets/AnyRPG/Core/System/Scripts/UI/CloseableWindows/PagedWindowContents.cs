@@ -5,7 +5,7 @@ using UnityEngine;
 using UnityEngine.UI;
 
 namespace AnyRPG {
-    public class PagedWindowContents : CloseableWindowContents, IPagedWindowContents {
+    public class PagedWindowContents : CloseableWindowContents {
 
         public virtual event System.Action<bool> OnPageCountUpdate = delegate { };
         public override event System.Action<ICloseableWindowContents> OnCloseWindow = delegate { };
@@ -75,7 +75,13 @@ namespace AnyRPG {
                 return true;
             }
             if (pagedWindow != null) {
+                if (currentNavigationController?.CurrentNavigableElement != null) {
+                    currentNavigationController.CurrentNavigableElement.LeaveElement();
+                }
                 pagedWindow.PreviousPage();
+                if (currentNavigationController != null) {
+                    currentNavigationController.FocusCurrentButton();
+                }
             }
             return false;
         }
@@ -85,7 +91,13 @@ namespace AnyRPG {
                 return true;
             }
             if (pagedWindow != null) {
+                if (currentNavigationController?.CurrentNavigableElement != null) {
+                    currentNavigationController.CurrentNavigableElement.LeaveElement();
+                }
                 pagedWindow.NextPage();
+                if (currentNavigationController != null) {
+                    currentNavigationController.FocusCurrentButton();
+                }
             }
             return false;
         }

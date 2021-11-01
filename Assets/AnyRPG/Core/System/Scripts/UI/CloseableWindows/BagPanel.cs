@@ -7,11 +7,16 @@ using UnityEngine;
 namespace AnyRPG {
     public class BagPanel : WindowContentController {
 
+        [Header("Bag Panel")]
+
         [SerializeField]
         protected GameObject slotPrefab;
 
         [SerializeField]
         protected Transform contentArea;
+
+        [SerializeField]
+        protected UINavigationGrid slotController = null;
 
         protected List<SlotScript> slots = new List<SlotScript>();
 
@@ -68,7 +73,7 @@ namespace AnyRPG {
         /// </summary>
         /// <param name="slotCount"></param>
         public virtual void AddSlots(int slotCount) {
-            //Debug.Log(gameObject.name + gameObject.GetInstanceID() + ".BagPanel.AddSlots(" + slotCount + ")");
+            Debug.Log(gameObject.name + gameObject.GetInstanceID() + ".BagPanel.AddSlots(" + slotCount + ")");
             for (int i = 0; i < slotCount; i++) {
                 //Debug.Log(gameObject.GetInstanceID() + ".BagPanel.AddSlots(" + slotCount + "): Adding slot " + i);
                 SlotScript slot = objectPooler.GetPooledObject(slotPrefab, contentArea).GetComponent<SlotScript>();
@@ -76,7 +81,9 @@ namespace AnyRPG {
                 slot.MyBag = this;
                 Slots.Add(slot);
                 slot.SetBackGroundColor();
+                slotController.AddActiveButton(slot);
             }
+            slotController.NumRows = Mathf.CeilToInt((float)slots.Count / (float)8);
         }
 
         public virtual bool AddItem(Item item) {
@@ -98,6 +105,7 @@ namespace AnyRPG {
                 slot.Clear();
                 //Debug.Log("BagPanel.Clear(): cleared slot");
             }
+            uINavigationControllers[1].ClearActiveButtons();
         }
 
         public virtual void ClearSlots() {
@@ -113,6 +121,8 @@ namespace AnyRPG {
                 //Debug.Log("BagPanel.Clear(): destroyed slot");
             }
             slots.Clear();
+            uINavigationControllers[1].ClearActiveButtons();
+
         }
 
         public override void ReceiveOpenWindowNotification() {

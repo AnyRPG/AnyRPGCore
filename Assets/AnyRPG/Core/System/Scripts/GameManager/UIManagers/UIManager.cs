@@ -127,6 +127,7 @@ namespace AnyRPG {
         public PagedWindow vendorWindow;
         public CloseableWindow chestWindow;
         public CloseableWindow bankWindow;
+        public CloseableWindow inventoryWindow;
         public CloseableWindow questLogWindow;
         public CloseableWindow questGiverWindow;
         public CloseableWindow skillTrainerWindow;
@@ -295,6 +296,7 @@ namespace AnyRPG {
             vendorWindow.Configure(systemGameManager);
             chestWindow.Configure(systemGameManager);
             bankWindow.Configure(systemGameManager);
+            inventoryWindow.Configure(systemGameManager);
             questLogWindow.Configure(systemGameManager);
             questGiverWindow.Configure(systemGameManager);
             skillTrainerWindow.Configure(systemGameManager);
@@ -386,7 +388,6 @@ namespace AnyRPG {
 
             DeActivateMouseOverWindow();
 
-            inventoryManager.Close();
         }
 
         /*
@@ -419,6 +420,8 @@ namespace AnyRPG {
             defaultWindowPositions.Add("ChestWindowY", chestWindow.RectTransform.anchoredPosition.y);
             defaultWindowPositions.Add("BankWindowX", bankWindow.RectTransform.anchoredPosition.x);
             defaultWindowPositions.Add("BankWindowY", bankWindow.RectTransform.anchoredPosition.y);
+            defaultWindowPositions.Add("InventoryWindowX", inventoryWindow.RectTransform.anchoredPosition.x);
+            defaultWindowPositions.Add("InventoryWindowY", inventoryWindow.RectTransform.anchoredPosition.y);
             defaultWindowPositions.Add("QuestLogWindowX", questLogWindow.RectTransform.anchoredPosition.x);
             defaultWindowPositions.Add("QuestLogWindowY", questLogWindow.RectTransform.anchoredPosition.y);
             defaultWindowPositions.Add("AchievementListWindowX", achievementListWindow.RectTransform.anchoredPosition.x);
@@ -483,6 +486,7 @@ namespace AnyRPG {
             vendorWindow.RectTransform.anchoredPosition = new Vector3(defaultWindowPositions["VendorWindowX"], defaultWindowPositions["VendorWindowY"], 0);
             chestWindow.RectTransform.anchoredPosition = new Vector3(defaultWindowPositions["ChestWindowX"], defaultWindowPositions["ChestWindowY"], 0);
             bankWindow.RectTransform.anchoredPosition = new Vector3(defaultWindowPositions["BankWindowX"], defaultWindowPositions["BankWindowY"], 0);
+            inventoryWindow.RectTransform.anchoredPosition = new Vector3(defaultWindowPositions["InventoryWindowX"], defaultWindowPositions["InventoryWindowY"], 0);
             questLogWindow.RectTransform.anchoredPosition = new Vector3(defaultWindowPositions["QuestLogWindowX"], defaultWindowPositions["QuestLogWindowY"], 0);
             achievementListWindow.RectTransform.anchoredPosition = new Vector3(defaultWindowPositions["AchievementListWindowX"], defaultWindowPositions["AchievementListWindowY"], 0);
             questGiverWindow.RectTransform.anchoredPosition = new Vector3(defaultWindowPositions["QuestGiverWindowX"], defaultWindowPositions["QuestGiverWindowY"], 0);
@@ -505,14 +509,6 @@ namespace AnyRPG {
             SidePanel.RectTransform.anchoredPosition = new Vector3(defaultWindowPositions["SidePanelX"], defaultWindowPositions["SidePanelY"], 0);
             MouseOverWindow.RectTransform.anchoredPosition = new Vector3(defaultWindowPositions["MouseOverWindowX"], defaultWindowPositions["MouseOverWindowY"], 0);
 
-            // bags are special since they are in a multiple tier container is never manipluated
-            // just reset them to their anchored position within their grid
-            if (inventoryManager.BagNodes != null && inventoryManager.BagNodes.Count > 0) {
-                for (int i = 0; i < inventoryManager.BagNodes.Count; i++) {
-                    //Debug.Log("UIManager.LoadDefaultWindowPositions(): resetting bagNode[" + i + "]");
-                    inventoryManager.BagNodes[i].BagWindow.RectTransform.anchoredPosition = new Vector2(0, 0);
-                }
-            }
         }
 
         public void CheckMissingConfiguration() {
@@ -578,7 +574,7 @@ namespace AnyRPG {
 
                 // popup window keys pressed
                 if (inputManager.KeyBindWasPressed("INVENTORY")) {
-                    inventoryManager.OpenClose();
+                    inventoryWindow.ToggleOpenClose();
                 }
                 if (inputManager.KeyBindWasPressed("ABILITYBOOK")) {
                     abilityBookWindow.ToggleOpenClose();
@@ -662,6 +658,7 @@ namespace AnyRPG {
             vendorWindow.CloseWindow();
             chestWindow.CloseWindow();
             bankWindow.CloseWindow();
+            inventoryWindow.CloseWindow();
             questLogWindow.CloseWindow();
             questGiverWindow.CloseWindow();
             skillTrainerWindow.CloseWindow();
@@ -673,7 +670,6 @@ namespace AnyRPG {
             classChangeWindow.CloseWindow();
             specializationChangeWindow.CloseWindow();
             dialogWindow.CloseWindow();
-            inventoryManager.Close();
         }
 
         public void CloseAllSystemWindows() {
@@ -1290,6 +1286,9 @@ namespace AnyRPG {
             }
             if (bankWindow.CloseableWindowContents != null) {
                 bankWindow.CloseableWindowContents.SetBackGroundColor(new Color32(0, 0, 0, (byte)opacityLevel));
+            }
+            if (inventoryWindow.CloseableWindowContents != null) {
+                inventoryWindow.CloseableWindowContents.SetBackGroundColor(new Color32(0, 0, 0, (byte)opacityLevel));
             }
 
         }

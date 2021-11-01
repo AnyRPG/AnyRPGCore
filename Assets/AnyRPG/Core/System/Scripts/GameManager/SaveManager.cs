@@ -1217,7 +1217,7 @@ namespace AnyRPG {
             if (uIManager.bankWindow != null) {
                 if (uIManager.bankWindow.CloseableWindowContents != null) {
                     (uIManager.bankWindow.CloseableWindowContents as BankPanel).ClearSlots();
-                    (uIManager.bankWindow.CloseableWindowContents as BankPanel).MyBagBarController.ClearBagButtons();
+                    (uIManager.bankWindow.CloseableWindowContents as BankPanel).BagBarController.ClearBagButtons();
                 } else {
                     //Debug.Log("windowcontents was null");
                 }
@@ -1390,18 +1390,6 @@ namespace AnyRPG {
 
             PlayerPrefs.SetFloat("MouseOverWindowX", uIManager.MouseOverWindow.RectTransform.anchoredPosition.x);
             PlayerPrefs.SetFloat("MouseOverWindowY", uIManager.MouseOverWindow.RectTransform.anchoredPosition.y);
-
-            if (inventoryManager.BagNodes != null && inventoryManager.BagNodes.Count > 0) {
-                for (int i = 0; i < 13; i++) {
-                    //Debug.Log("SaveManager.SaveWindowPositions(): " + i);
-                    //if (inventoryManager.BagNodes[i].BagWindow.IsOpen) {
-                        PlayerPrefs.SetFloat("InventoryWindowX" + i, inventoryManager.BagNodes[i].BagWindow.RectTransform.anchoredPosition.x);
-                        PlayerPrefs.SetFloat("InventoryWindowY" + i, inventoryManager.BagNodes[i].BagWindow.RectTransform.anchoredPosition.y);
-                    //} else {
-                        //Debug.Log("SaveManager.SaveWindowPositions(): " + i + "X: " + inventoryManager.MyBagNodes[i].MyBagWindow.RectTransform.anchoredPosition.x + "; y: " + inventoryManager.MyBagNodes[i].MyBagWindow.RectTransform.anchoredPosition.y + " WINDOW CLOSED@!!!!, NOT SAVING");
-                    //}
-                }
-            }
 
         }
 

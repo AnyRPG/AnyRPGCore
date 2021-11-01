@@ -16,7 +16,7 @@ namespace AnyRPG {
         [SerializeField]
         private bool isBankNode = false;
 
-        private CloseableWindow bagWindow;
+        //private CloseableWindow bagWindow;
 
         private Bag bag;
 
@@ -43,7 +43,7 @@ namespace AnyRPG {
         public BagPanel BagPanel { get => bagPanel; set => bagPanel = value; }
         public bool IsBankNode { get => isBankNode; set => isBankNode = value; }
         public BagButton BagButton { get => bagButton; set => bagButton = value; }
-        public CloseableWindow BagWindow { get => bagWindow; set => bagWindow = value; }
+        //public CloseableWindow BagWindow { get => bagWindow; set => bagWindow = value; }
     }
 
 }

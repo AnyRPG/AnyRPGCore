@@ -6,25 +6,26 @@ using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 namespace AnyRPG {
-    public class BagButton : ConfiguredMonoBehaviour, IPointerClickHandler, IDescribable, IPointerEnterHandler, IPointerExitHandler, IPointerDownHandler, IPointerUpHandler {
+    public class BagButton : HighlightButton, IDescribable {
 
-        private BagNode bagNode = null;
-
-        [SerializeField]
-        private Image icon = null;
+        [Header("Bag Button")]
 
         [SerializeField]
-        private Sprite emptySprite = null;
+        protected Image icon = null;
 
         [SerializeField]
-        private Image backGroundImage = null;
+        protected Sprite emptySprite = null;
 
-        private bool localComponentsGotten = false;
+        [SerializeField]
+        protected Image backGroundImage = null;
+
+        protected BagNode bagNode = null;
+
+        protected bool localComponentsGotten = false;
 
         // game manager references
-        private InventoryManager inventoryManager = null;
-        private HandScript handScript = null;
-        private UIManager uIManager = null;
+        protected InventoryManager inventoryManager = null;
+        protected HandScript handScript = null;
 
         public BagNode BagNode {
             get {
@@ -53,8 +54,9 @@ namespace AnyRPG {
         public override void Configure(SystemGameManager systemGameManager) {
             base.Configure(systemGameManager);
 
-            GetLocalComponents();
+            //GetLocalComponents();
             SetBackGroundColor();
+            SetDefaultIcon();
         }
 
         public override void SetGameManagerReferences() {
@@ -65,6 +67,7 @@ namespace AnyRPG {
         }
 
         public void OnAddBag(Bag bag) {
+            Debug.Log(gameObject.name + ".BagButton.OnAddBag()");
             icon.sprite = bag.Icon;
             icon.color = Color.white;
             SetBackGroundColor();
@@ -76,11 +79,21 @@ namespace AnyRPG {
             icon.GetComponent<Image>().sprite = null;
             icon.GetComponent<Image>().color = new Color32(0, 0, 0, 0);
             */
-            icon.sprite = null;
-            icon.color = new Color32(0, 0, 0, 0);
+            SetDefaultIcon();
             SetBackGroundColor();
         }
 
+        private void SetDefaultIcon() {
+            if (emptySprite != null) {
+                icon.sprite = emptySprite;
+                icon.color = Color.white;
+            } else {
+                icon.sprite = null;
+                icon.color = new Color32(0, 0, 0, 0);
+            }
+        }
+
+        /*
         public void GetLocalComponents() {
             if (localComponentsGotten == true) {
                 return;
@@ -89,18 +102,20 @@ namespace AnyRPG {
                 //Debug.Log(gameObject.name + "SlotScript.Awake(): background image is null, trying to get component");
                 backGroundImage = GetComponent<Image>();
             }
-            if (emptySprite != null) {
-                GetComponent<Image>().sprite = emptySprite;
-            }
+            SetDefaultIcon();
             localComponentsGotten = true;
         }
+        */
 
 
-        public void OnPointerClick(PointerEventData eventData) {
+        public override void OnPointerClick(PointerEventData eventData) {
             //Debug.Log("BagButton.OnPointerClick()");
             if (bagNode == null) {
                 return;
             }
+
+            base.OnPointerClick(eventData);
+
             if (eventData.button == PointerEventData.InputButton.Left) {
                 //Debug.Log("BagButton.OnPointerClick() LEFT CLICK DETECTED");
                 if (inventoryManager.FromSlot != null && handScript.Moveable != null && handScript.Moveable is Bag) {
@@ -119,8 +134,6 @@ namespace AnyRPG {
                     //Debug.Log("BagButton.OnPointerClick() LEFT CLICK DETECTED WITH SHIFT KEY on bagNode.mybag: " + bagNode.MyBag.GetInstanceID());
                     //Debug.Log("InventoryManager.RemoveBag(): Found matching bag in bagNode: " + bagNode.MyBag.GetInstanceID() + "; " + bag.GetInstanceID());
                     handScript.TakeMoveable(BagNode.Bag);
-                } else if (bagNode?.Bag != null) {
-                    bagNode.BagWindow.ToggleOpenClose();
                 }
             }
         }
@@ -140,12 +153,15 @@ namespace AnyRPG {
             return "Place a bag in this slot to expand your storage";
         }
 
-        public void OnPointerEnter(PointerEventData eventData) {
+        public override void OnPointerEnter(PointerEventData eventData) {
+            base.OnPointerEnter(eventData);
 
             uIManager.ShowToolTip(transform.position, this);
         }
 
-        public void OnPointerExit(PointerEventData eventData) {
+        public override void OnPointerExit(PointerEventData eventData) {
+            base.OnPointerExit(eventData);
+
             uIManager.HideToolTip();
         }
 
@@ -153,21 +169,10 @@ namespace AnyRPG {
             BagNode = null;
         }
 
-        public void OnPointerDown(PointerEventData eventData) {
-        }
-
-        public void OnPointerUp(PointerEventData eventData) {
-        }
-
         public void SetBackGroundColor() {
-            GetLocalComponents();
+            //GetLocalComponents();
             Color finalColor;
-            if (bagNode?.Bag == null) {
-                int slotOpacityLevel = (int)(PlayerPrefs.GetFloat("InventorySlotOpacity") * 255);
-                finalColor = new Color32(0, 0, 0, (byte)slotOpacityLevel);
-            } else {
-                finalColor = new Color32(0, 0, 0, 255);
-            }
+            finalColor = new Color32(0, 0, 0, 255);
             //Debug.Log(gameObject.name + ".WindowContentController.SetBackGroundColor()");
             if (backGroundImage != null) {
                 //Debug.Log(gameObject.name + ".WindowContentController.SetBackGroundColor(): background image is not null, setting color: " + slotOpacityLevel);

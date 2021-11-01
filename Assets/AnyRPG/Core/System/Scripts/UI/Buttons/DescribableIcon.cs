@@ -7,9 +7,11 @@ using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 namespace AnyRPG {
-    public class DescribableIcon : ConfiguredMonoBehaviour, IPointerEnterHandler, IPointerExitHandler {
+    public class DescribableIcon : HighlightButton {
 
         protected IDescribable describable = null;
+
+        [Header("Describable Icon")]
 
         [SerializeField]
         protected TextMeshProUGUI stackSize;
@@ -20,7 +22,7 @@ namespace AnyRPG {
         protected int count;
 
         // game manager references
-        protected UIManager uIManager = null;
+        //protected UIManager uIManager = null;
 
         public Image Icon { get => icon; set => icon = value; }
         public TextMeshProUGUI StackSizeText { get => stackSize; }
@@ -56,6 +58,7 @@ namespace AnyRPG {
 
         }
 
+        /*
         public static Rect RectTransformToScreenSpace(RectTransform transform) {
             Vector2 size = Vector2.Scale(transform.rect.size, transform.lossyScale);
             float x = transform.position.x + transform.anchoredPosition.x;
@@ -63,6 +66,7 @@ namespace AnyRPG {
 
             return new Rect(x, y, size.x, size.y);
         }
+        */
 
         public virtual void UpdateVisual(Item item) {
             UpdateVisual();
@@ -94,8 +98,9 @@ namespace AnyRPG {
             */
         }
 
-        public virtual void OnPointerEnter(PointerEventData eventData) {
+        public override void OnPointerEnter(PointerEventData eventData) {
             //Debug.Log("DescribableIcon.OnPointerEnter()");
+            base.OnPointerEnter(eventData);
             ProcessMouseEnter();
         }
 
@@ -120,15 +125,18 @@ namespace AnyRPG {
             uIManager.ShowToolTip(transform.position, describable);
         }
 
-        public virtual void OnPointerExit(PointerEventData eventData) {
+        public override void OnPointerExit(PointerEventData eventData) {
+            base.OnPointerExit(eventData);
             uIManager.HideToolTip();
         }
 
+        /*
         public virtual void CheckMouse() {
             if (UIManager.MouseInRect(Icon.rectTransform)) {
                 uIManager.HideToolTip();
             }
         }
+        */
 
         public virtual void OnDisable() {
             if (SystemGameManager.IsShuttingDown) {
