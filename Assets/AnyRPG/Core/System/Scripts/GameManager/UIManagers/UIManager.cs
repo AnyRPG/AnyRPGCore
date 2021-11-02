@@ -1275,6 +1275,7 @@ namespace AnyRPG {
             int slotOpacityLevel = (int)(PlayerPrefs.GetFloat("InventorySlotOpacity") * 255);
             foreach (BagNode bagNode in inventoryManager.BagNodes) {
                 //Debug.Log("UIManager.UpdateInventoryOpacity(): found bagNode");
+                /*
                 if (bagNode.BagPanel != null) {
                     //Debug.Log("UIManager.UpdateInventoryOpacity(): found bagNode and bagpanel is not null!");
                     bagNode.BagPanel.SetBackGroundColor(new Color32(0, 0, 0, (byte)opacityLevel));
@@ -1282,6 +1283,10 @@ namespace AnyRPG {
                 }
                 if (bagNode.BagButton != null) {
                     bagNode.BagButton.SetBackGroundColor();
+                }
+                */
+                foreach (SlotScript slotScript in bagNode.InventorySlots) {
+                    slotScript.SetBackGroundColor();
                 }
             }
             if (bankWindow.CloseableWindowContents != null) {

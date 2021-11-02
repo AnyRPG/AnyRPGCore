@@ -29,6 +29,30 @@ namespace AnyRPG {
             inventoryManager = systemGameManager.InventoryManager;
         }
 
+        protected override void ProcessCreateEventSubscriptions() {
+            base.ProcessCreateEventSubscriptions();
+
+            inventoryManager.OnClearData += ProcessClearData;
+            inventoryManager.OnAddInventoryBagNode += HandleAddInventoryBagNode;
+        }
+
+        protected override void ProcessCleanupEventSubscriptions() {
+            base.ProcessCleanupEventSubscriptions();
+
+            inventoryManager.OnClearData -= ProcessClearData;
+            inventoryManager.OnAddInventoryBagNode -= HandleAddInventoryBagNode;
+        }
+
+        public void ProcessClearData() {
+            ClearSlots();
+            bagBarController.ClearBagButtons();
+        }
+
+        public void HandleAddInventoryBagNode(BagNode bagNode) {
+            bagBarController.AddBagButton(bagNode);
+            bagNode.BagPanel = this;
+        }
+
 
     }
 

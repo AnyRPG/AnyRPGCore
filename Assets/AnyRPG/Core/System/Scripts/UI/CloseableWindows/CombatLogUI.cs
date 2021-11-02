@@ -236,34 +236,26 @@ namespace AnyRPG {
 
         }
 
-        protected override void CreateEventSubscriptions() {
+        protected override void ProcessCreateEventSubscriptions() {
             ////Debug.Log("PlayerManager.CreateEventSubscriptions()");
-            if (eventSubscriptionsInitialized) {
-                return;
-            }
-            base.CreateEventSubscriptions();
+            base.ProcessCreateEventSubscriptions();
             logManager.OnWriteChatMessage += HandleWriteChatMessage;
             logManager.OnWriteSystemMessage += HandleWriteSystemMessage;
             logManager.OnWriteCombatMessage += HandleWriteCombatMessage;
             logManager.OnClearChatMessages += HandleClearChatMessages;
             logManager.OnClearSystemMessages += HandleClearSystemMessages;
             logManager.OnClearCombatMessages += HandleClearCombatMessages;
-            eventSubscriptionsInitialized = true;
         }
 
-        protected override void CleanupEventSubscriptions() {
+        protected override void ProcessCleanupEventSubscriptions() {
             ////Debug.Log("PlayerManager.CleanupEventSubscriptions()");
-            if (!eventSubscriptionsInitialized) {
-                return;
-            }
-            base.CleanupEventSubscriptions();
+            base.ProcessCleanupEventSubscriptions();
             logManager.OnWriteChatMessage += HandleWriteChatMessage;
             logManager.OnWriteSystemMessage += HandleWriteSystemMessage;
             logManager.OnWriteCombatMessage += HandleWriteCombatMessage;
             logManager.OnClearChatMessages += HandleClearChatMessages;
             logManager.OnClearSystemMessages += HandleClearSystemMessages;
             logManager.OnClearCombatMessages += HandleClearCombatMessages;
-            eventSubscriptionsInitialized = false;
         }
 
         public void HandleClearCombatMessages() {

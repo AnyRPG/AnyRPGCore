@@ -59,22 +59,16 @@ namespace AnyRPG {
             }
         }
 
-        protected override void CreateEventSubscriptions() {
+        protected override void ProcessCreateEventSubscriptions() {
             //Debug.Log("VendorUI.CreateEventSubscriptions()");
-            if (eventSubscriptionsInitialized) {
-                return;
-            }
+            base.ProcessCreateEventSubscriptions();
             SystemEventManager.StartListening("OnCurrencyChange", HandleCurrencyChange);
-            eventSubscriptionsInitialized = true;
         }
 
-        protected override void CleanupEventSubscriptions() {
+        protected override void ProcessCleanupEventSubscriptions() {
             //Debug.Log("UnitSpawnNode.CleanupEventSubscriptions()");
-            if (!eventSubscriptionsInitialized) {
-                return;
-            }
+            base.ProcessCleanupEventSubscriptions();
             SystemEventManager.StopListening("OnCurrencyChange", HandleCurrencyChange);
-            eventSubscriptionsInitialized = false;
         }
 
         public void HandleCurrencyChange(string eventName, EventParamProperties eventParamProperties) {

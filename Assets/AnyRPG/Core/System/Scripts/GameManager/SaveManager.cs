@@ -675,17 +675,17 @@ namespace AnyRPG {
             //Debug.Log("Savemanager.SaveInventorySlotData()");
             foreach (SlotScript slotScript in inventoryManager.GetSlots()) {
                 InventorySlotSaveData saveData = new InventorySlotSaveData();
-                saveData.ItemName = (slotScript.MyItem == null ? string.Empty : slotScript.MyItem.ResourceName);
-                saveData.stackCount = (slotScript.MyItem == null ? 0 : slotScript.Count);
-                saveData.DisplayName = (slotScript.MyItem == null ? string.Empty : slotScript.MyItem.DisplayName);
-                if (slotScript.MyItem != null) {
-                    if (slotScript.MyItem.ItemQuality != null) {
-                        saveData.itemQuality = (slotScript.MyItem == null ? string.Empty : slotScript.MyItem.ItemQuality.ResourceName);
+                saveData.ItemName = (slotScript.Item == null ? string.Empty : slotScript.Item.ResourceName);
+                saveData.stackCount = (slotScript.Item == null ? 0 : slotScript.Count);
+                saveData.DisplayName = (slotScript.Item == null ? string.Empty : slotScript.Item.DisplayName);
+                if (slotScript.Item != null) {
+                    if (slotScript.Item.ItemQuality != null) {
+                        saveData.itemQuality = (slotScript.Item == null ? string.Empty : slotScript.Item.ItemQuality.ResourceName);
                     }
-                    if ((slotScript.MyItem as Equipment is Equipment)) {
-                        saveData.randomSecondaryStatIndexes = (slotScript.MyItem == null ? null : (slotScript.MyItem as Equipment).RandomStatIndexes);
+                    if ((slotScript.Item as Equipment is Equipment)) {
+                        saveData.randomSecondaryStatIndexes = (slotScript.Item == null ? null : (slotScript.Item as Equipment).RandomStatIndexes);
                     }
-                    saveData.dropLevel = (slotScript.MyItem == null ? 0 : slotScript.MyItem.DropLevel);
+                    saveData.dropLevel = (slotScript.Item == null ? 0 : slotScript.Item.DropLevel);
                 }
 
                 anyRPGSaveData.inventorySlotSaveData.Add(saveData);
@@ -1214,14 +1214,6 @@ namespace AnyRPG {
             //Debug.Log("Savemanager.ClearSystemmanagedCharacterData()");
 
             inventoryManager.ClearData();
-            if (uIManager.bankWindow != null) {
-                if (uIManager.bankWindow.CloseableWindowContents != null) {
-                    (uIManager.bankWindow.CloseableWindowContents as BankPanel).ClearSlots();
-                    (uIManager.bankWindow.CloseableWindowContents as BankPanel).BagBarController.ClearBagButtons();
-                } else {
-                    //Debug.Log("windowcontents was null");
-                }
-            }
 
             actionBarManager.ClearActionBars(true);
             questLog.ClearLog();

@@ -34,12 +34,12 @@ namespace AnyRPG {
 
             set {
                 if (value != null) {
-                    value.OnAddBagHandler += OnAddBag;
-                    value.OnRemoveBagHandler += OnRemoveBag;
+                    value.OnAddBag += HandleAddBag;
+                    value.OnRemoveBag += HandleRemoveBag;
                 } else {
                     if (bagNode != null) {
-                        bagNode.OnAddBagHandler -= OnAddBag;
-                        bagNode.OnRemoveBagHandler -= OnRemoveBag;
+                        bagNode.OnAddBag -= HandleAddBag;
+                        bagNode.OnRemoveBag -= HandleRemoveBag;
                     }
                 }
                 bagNode = value;
@@ -66,14 +66,14 @@ namespace AnyRPG {
             handScript = uIManager.HandScript;
         }
 
-        public void OnAddBag(Bag bag) {
+        public void HandleAddBag(Bag bag) {
             Debug.Log(gameObject.name + ".BagButton.OnAddBag()");
             icon.sprite = bag.Icon;
             icon.color = Color.white;
             SetBackGroundColor();
         }
 
-        public void OnRemoveBag() {
+        public void HandleRemoveBag() {
             //Debug.Log("BagButton.OnRemoveBag(): setting icon to null");
             /*
             icon.GetComponent<Image>().sprite = null;
@@ -123,9 +123,9 @@ namespace AnyRPG {
                         inventoryManager.SwapBags(BagNode.Bag, handScript.Moveable as Bag);
                     } else {
                         Bag tmp = (Bag)handScript.Moveable;
-                        tmp.MyBagNode = bagNode;
+                        tmp.BagNode = bagNode;
                         tmp.Use();
-                        BagNode.Bag = tmp;
+                        BagNode.AddBag(tmp);
                         handScript.Drop();
                         inventoryManager.FromSlot = null;
 

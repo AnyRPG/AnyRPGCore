@@ -64,21 +64,15 @@ namespace AnyRPG {
             }
         }
 
-        protected override void CreateEventSubscriptions() {
+        protected override void ProcessCreateEventSubscriptions() {
             //Debug.Log("InteractionPanelUI.CreateEventSubscriptions()");
-            if (eventSubscriptionsInitialized) {
-                return;
-            }
-            base.CreateEventSubscriptions();
+            base.ProcessCreateEventSubscriptions();
             interactionManager.OnSetInteractable += HandleSetInteractable;
         }
 
-        protected override void CleanupEventSubscriptions() {
+        protected override void ProcessCleanupEventSubscriptions() {
             //Debug.Log("InteractionPanelUI.CleanupEventSubscriptions()");
-            if (!eventSubscriptionsInitialized) {
-                return;
-            }
-            base.CleanupEventSubscriptions();
+            base.ProcessCleanupEventSubscriptions();
             interactionManager.OnSetInteractable -= HandleSetInteractable;
         }
 
@@ -180,6 +174,7 @@ namespace AnyRPG {
                                 iPS.Configure(systemGameManager);
                                 iPS.Setup(_interactable, i);
                                 interactionPanelScripts.Add(go);
+                                uINavigationControllers[0].AddActiveButton(iPS);
                             }
                         }
                     }
@@ -187,6 +182,7 @@ namespace AnyRPG {
                 }
 
             }
+            uINavigationControllers[0].FocusFirstButton();
 
             if (uIManager.dialogWindow.IsOpen) {
                 //Debug.Log("InteractionPanelUI.ShowInteractablesCommon(" + interactable.name + "): Dialog Window is open, returning to prevent other windows from popping");
@@ -263,6 +259,7 @@ namespace AnyRPG {
                 objectPooler.ReturnObjectToPool(go);
             }
             interactionPanelScripts.Clear();
+            uINavigationControllers[0].ClearActiveButtons();
         }
 
         public override void ReceiveClosedWindowNotification() {

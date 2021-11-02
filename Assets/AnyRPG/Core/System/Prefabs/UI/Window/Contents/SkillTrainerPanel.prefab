@@ -89,6 +89,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7f4724b087dbea9448c39dc518ffc48e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  text: {fileID: 0}
+  highlightImage: {fileID: 0}
+  highlightButton: {fileID: 0}
+  hideImageWhenInactive: 1
+  tintImage: 1
+  useSystemImageTintColor: 1
+  useHighlightColorOnButton: 0
+  highlightColor: {r: 0, g: 0, b: 0, a: 0}
+  normalColor: {r: 0.6392157, g: 0.6392157, b: 0.6392157, a: 0.10980392}
+  highlightedColor: {r: 0.64705884, g: 0.64705884, b: 0.64705884, a: 0.40392157}
+  pressedColor: {r: 0.47058824, g: 0.47058824, b: 0.47058824, a: 0.2901961}
+  selectedColor: {r: 0.64705884, g: 0.64705884, b: 0.64705884, a: 0.40392157}
+  disabledColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 0.5019608}
+  CapitalizeText: 0
   stackSize: {fileID: 0}
   icon: {fileID: 4291538717853319901}
 --- !u!1 &664407974223500228
@@ -418,6 +432,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7f4724b087dbea9448c39dc518ffc48e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  text: {fileID: 0}
+  highlightImage: {fileID: 0}
+  highlightButton: {fileID: 0}
+  hideImageWhenInactive: 1
+  tintImage: 1
+  useSystemImageTintColor: 1
+  useHighlightColorOnButton: 0
+  highlightColor: {r: 0, g: 0, b: 0, a: 0}
+  normalColor: {r: 0.6392157, g: 0.6392157, b: 0.6392157, a: 0.10980392}
+  highlightedColor: {r: 0.64705884, g: 0.64705884, b: 0.64705884, a: 0.40392157}
+  pressedColor: {r: 0.47058824, g: 0.47058824, b: 0.47058824, a: 0.2901961}
+  selectedColor: {r: 0.64705884, g: 0.64705884, b: 0.64705884, a: 0.40392157}
+  disabledColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 0.5019608}
+  CapitalizeText: 0
   stackSize: {fileID: 0}
   icon: {fileID: 7803529795577365721}
 --- !u!1 &6624804668947653027
@@ -927,6 +955,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7f4724b087dbea9448c39dc518ffc48e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  text: {fileID: 0}
+  highlightImage: {fileID: 0}
+  highlightButton: {fileID: 0}
+  hideImageWhenInactive: 1
+  tintImage: 1
+  useSystemImageTintColor: 1
+  useHighlightColorOnButton: 0
+  highlightColor: {r: 0, g: 0, b: 0, a: 0}
+  normalColor: {r: 0.6392157, g: 0.6392157, b: 0.6392157, a: 0.10980392}
+  highlightedColor: {r: 0.64705884, g: 0.64705884, b: 0.64705884, a: 0.40392157}
+  pressedColor: {r: 0.47058824, g: 0.47058824, b: 0.47058824, a: 0.2901961}
+  selectedColor: {r: 0.64705884, g: 0.64705884, b: 0.64705884, a: 0.40392157}
+  disabledColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 0.5019608}
+  CapitalizeText: 0
   stackSize: {fileID: 0}
   icon: {fileID: 8373603760178314208}
 --- !u!1 &8329855269896031713
@@ -978,6 +1020,7 @@ GameObject:
   - component: {fileID: 8329855269910001707}
   - component: {fileID: 8329855269910001706}
   - component: {fileID: 8329855269910001709}
+  - component: {fileID: 3617047887764661706}
   m_Layer: 5
   m_Name: SkillListArea
   m_TagString: Untagged
@@ -1003,7 +1046,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 170, y: 0}
+  m_SizeDelta: {x: 270, y: 0}
   m_Pivot: {x: 0, y: 1}
 --- !u!222 &8329855269910001704
 CanvasRenderer:
@@ -1083,6 +1126,32 @@ MonoBehaviour:
   m_ChildScaleWidth: 0
   m_ChildScaleHeight: 0
   m_ReverseArrangement: 0
+--- !u!114 &3617047887764661706
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8329855269910001711}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 03715bb91f4a7fa47b3d93745fb1b35e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  leftPanel: {fileID: 0}
+  leftControllers: []
+  rightPanel: {fileID: 0}
+  rightControllers: []
+  upPanel: {fileID: 0}
+  upControllers: []
+  downPanel: {fileID: 0}
+  downControllers:
+  - {fileID: 5889367872730099514}
+  acceptController: {fileID: 5889367872730099514}
+  scrollRect: {fileID: 0}
+  updateActiveListOnOpen: 0
+  pruneInactiveElements: 0
+  navigableButtons: []
 --- !u!1 &8329855270071052304
 GameObject:
   m_ObjectHideFlags: 0
@@ -1117,10 +1186,10 @@ RectTransform:
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 250, y: -150}
-  m_SizeDelta: {x: 500, y: 300}
-  m_Pivot: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 1, y: 1}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 0, y: 300}
+  m_Pivot: {x: 0.5, y: 1}
 --- !u!222 &8329855270071052300
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -1290,11 +1359,11 @@ RectTransform:
   m_Father: {fileID: 8329855270071052305}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 100, y: -150}
-  m_SizeDelta: {x: 200, y: 300}
-  m_Pivot: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 300, y: 0}
+  m_Pivot: {x: 0, y: 0.5}
 --- !u!222 &8329855270479444314
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -1473,11 +1542,11 @@ RectTransform:
   m_Father: {fileID: 8329855270071052305}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 350, y: -150}
-  m_SizeDelta: {x: 300, y: 300}
-  m_Pivot: {x: 0.5, y: 0.5}
+  m_AnchorMin: {x: 1, y: 0}
+  m_AnchorMax: {x: 1, y: 1}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 300, y: 0}
+  m_Pivot: {x: 1, y: 0.5}
 --- !u!222 &8329855270630399872
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -1654,10 +1723,10 @@ RectTransform:
   m_Father: {fileID: 8329855270630399878}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 296, y: -150}
-  m_SizeDelta: {x: 20, y: 292}
+  m_AnchorMin: {x: 1, y: 0}
+  m_AnchorMax: {x: 1, y: 1}
+  m_AnchoredPosition: {x: 0, y: 2.5}
+  m_SizeDelta: {x: 20, y: -5}
   m_Pivot: {x: 1, y: 0.5}
 --- !u!222 &8329855270851429934
 CanvasRenderer:
@@ -1731,11 +1800,11 @@ RectTransform:
   m_Father: {fileID: 8329855270479444256}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 89, y: -150}
-  m_SizeDelta: {x: 170, y: 292}
-  m_Pivot: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 270, y: 0}
+  m_Pivot: {x: 0, y: 0.5}
 --- !u!222 &8329855271058325202
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -2221,11 +2290,11 @@ RectTransform:
   m_Father: {fileID: 8329855270630399878}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 137, y: -150}
-  m_SizeDelta: {x: 270, y: 292}
-  m_Pivot: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: 0, y: 2.5}
+  m_SizeDelta: {x: 270, y: -5}
+  m_Pivot: {x: 0, y: 0.5}
 --- !u!222 &8329855271395244235
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -2288,6 +2357,7 @@ GameObject:
   - component: {fileID: 8329855271405920920}
   - component: {fileID: 8329855271405920919}
   - component: {fileID: 8329855271405920918}
+  - component: {fileID: 5889367872730099514}
   m_Layer: 5
   m_Name: ActionButtons
   m_TagString: Untagged
@@ -2311,11 +2381,11 @@ RectTransform:
   m_Father: {fileID: 8329855271617722955}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 250, y: -330}
-  m_SizeDelta: {x: 500, y: 60}
-  m_Pivot: {x: 0.5, y: 0.5}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 1, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 0, y: 60}
+  m_Pivot: {x: 0.5, y: 0}
 --- !u!222 &8329855271405920919
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -2354,6 +2424,34 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!114 &5889367872730099514
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8329855271405920923}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8995f41cb132f3148a9912f89e49421b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  leftPanel: {fileID: 0}
+  leftControllers: []
+  rightPanel: {fileID: 0}
+  rightControllers: []
+  upPanel: {fileID: 0}
+  upControllers:
+  - {fileID: 3617047887764661706}
+  downPanel: {fileID: 0}
+  downControllers: []
+  acceptController: {fileID: 0}
+  scrollRect: {fileID: 0}
+  updateActiveListOnOpen: 1
+  pruneInactiveElements: 1
+  navigableButtons:
+  - {fileID: 4216152181943939570}
+  - {fileID: 5830202441143397512}
 --- !u!1 &8329855271617722954
 GameObject:
   m_ObjectHideFlags: 0
@@ -2392,7 +2490,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 500, y: 360}
+  m_SizeDelta: {x: 600, y: 360}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &8329855271617722949
 CanvasRenderer:
@@ -2445,6 +2543,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   backGroundImage: {fileID: 0}
+  coloredUIElements: []
+  userCloseable: 1
+  focusFirstButtonOnOpen: 0
+  focusActiveSubPanel: 0
+  uINavigationControllers:
+  - {fileID: 3617047887764661706}
+  - {fileID: 5889367872730099514}
+  subPanels: []
   learnButton: {fileID: 4216152181943939570}
   unlearnButton: {fileID: 5830202441143397512}
   skillPrefab: {fileID: 5181954922283900111, guid: fd9e227504db48247b3a425079c1231f,
@@ -2525,10 +2631,10 @@ RectTransform:
   m_Father: {fileID: 8329855270479444256}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 198, y: -150}
-  m_SizeDelta: {x: 20, y: 292}
+  m_AnchorMin: {x: 1, y: 0}
+  m_AnchorMax: {x: 1, y: 1}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 20, y: 0}
   m_Pivot: {x: 1, y: 0.5}
 --- !u!222 &8329855271713378855
 CanvasRenderer:
@@ -2733,6 +2839,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7f4724b087dbea9448c39dc518ffc48e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  text: {fileID: 0}
+  highlightImage: {fileID: 0}
+  highlightButton: {fileID: 0}
+  hideImageWhenInactive: 1
+  tintImage: 1
+  useSystemImageTintColor: 1
+  useHighlightColorOnButton: 0
+  highlightColor: {r: 0, g: 0, b: 0, a: 0}
+  normalColor: {r: 0.6392157, g: 0.6392157, b: 0.6392157, a: 0.10980392}
+  highlightedColor: {r: 0.64705884, g: 0.64705884, b: 0.64705884, a: 0.40392157}
+  pressedColor: {r: 0.47058824, g: 0.47058824, b: 0.47058824, a: 0.2901961}
+  selectedColor: {r: 0.64705884, g: 0.64705884, b: 0.64705884, a: 0.40392157}
+  disabledColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 0.5019608}
+  CapitalizeText: 0
   stackSize: {fileID: 0}
   icon: {fileID: 1114934647111148309}
 --- !u!1001 &902543238607206864
@@ -2800,7 +2920,7 @@ PrefabInstance:
     - target: {fileID: 4395445216702176322, guid: fd9e227504db48247b3a425079c1231f,
         type: 3}
       propertyPath: m_SizeDelta.x
-      value: 170
+      value: 270
       objectReference: {fileID: 0}
     - target: {fileID: 4395445216702176322, guid: fd9e227504db48247b3a425079c1231f,
         type: 3}
@@ -2845,7 +2965,7 @@ PrefabInstance:
     - target: {fileID: 4395445216702176322, guid: fd9e227504db48247b3a425079c1231f,
         type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 85
+      value: 135
       objectReference: {fileID: 0}
     - target: {fileID: 4395445216702176322, guid: fd9e227504db48247b3a425079c1231f,
         type: 3}

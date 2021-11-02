@@ -401,17 +401,14 @@ namespace AnyRPG {
             audioManager = systemGameManager.AudioManager;
         }
 
-        public override void CreateEventSubscriptions() {
-            if (eventSubscriptionsInitialized == true) {
-                return;
-            }
-            base.CreateEventSubscriptions();
+        public override void ProcessCreateEventSubscriptions() {
+            base.ProcessCreateEventSubscriptions();
             SystemEventManager.StartListening("OnReputationChange", HandleReputationChange);
 
         }
 
-        public override void CleanupEventSubscriptions() {
-            base.CleanupEventSubscriptions();
+        public override void ProcessCleanupEventSubscriptions() {
+            base.ProcessCleanupEventSubscriptions();
             SystemEventManager.StopListening("OnReputationChange", HandleReputationChange);
         }
 

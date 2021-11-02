@@ -18,12 +18,9 @@ namespace AnyRPG {
             }
         }
 
-        public override void CreateEventSubscriptions() {
+        public override void ProcessCreateEventSubscriptions() {
             //Debug.Log("GatheringNode.CreateEventSubscriptions()");
-            if (eventSubscriptionsInitialized) {
-                return;
-            }
-            base.CreateEventSubscriptions();
+            base.ProcessCreateEventSubscriptions();
 
             // because the class is a special type of prerequisite, we need to be notified when it changes
             SystemEventManager.StartListening("OnSpecializationChange", HandleSpecializationChange);
@@ -45,9 +42,9 @@ namespace AnyRPG {
             windowEventSubscriptionsInitialized = false;
         }
 
-        public override void CleanupEventSubscriptions() {
+        public override void ProcessCleanupEventSubscriptions() {
             //Debug.Log(gameObject.name + ".ClassChangeInteractable.CleanupEventSubscriptions()");
-            base.CleanupEventSubscriptions();
+            base.ProcessCleanupEventSubscriptions();
             CleanupWindowEventSubscriptions();
             SystemEventManager.StopListening("OnSpecializationChange", HandleSpecializationChange);
             if (systemEventManager != null) {

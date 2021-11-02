@@ -83,15 +83,28 @@ namespace AnyRPG {
         public virtual void ProcessStatusIndicatorSourceInit() {
         }
 
-        public virtual void CreateEventSubscriptions() {
+        public void CreateEventSubscriptions() {
             if (eventSubscriptionsInitialized) {
                 return;
             }
+            ProcessCreateEventSubscriptions();
             eventSubscriptionsInitialized = true;
         }
 
-        public virtual void CleanupEventSubscriptions() {
+        public virtual void ProcessCreateEventSubscriptions() {
+        }
+
+        public void CleanupEventSubscriptions() {
+            /*
+            if (!eventSubscriptionsInitialized) {
+                return;
+            }
+            */
+            ProcessCleanupEventSubscriptions();
             eventSubscriptionsInitialized = false;
+        }
+
+        public virtual void ProcessCleanupEventSubscriptions() {
         }
 
         public virtual void HandleConfirmAction() {

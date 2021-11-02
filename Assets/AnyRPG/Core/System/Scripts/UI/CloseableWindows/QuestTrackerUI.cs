@@ -41,12 +41,10 @@ namespace AnyRPG {
             objectPooler = systemGameManager.ObjectPooler;
         }
 
-        protected override void CreateEventSubscriptions() {
+        protected override void ProcessCreateEventSubscriptions() {
             //Debug.Log("QuestTrackerUI.InitializeReferences()");
-            if (eventSubscriptionsInitialized == true) {
-                return;
-            }
-            base.CreateEventSubscriptions();
+            base.ProcessCreateEventSubscriptions();
+
             SystemEventManager.StartListening("OnQuestObjectiveStatusUpdated", HandleQuestObjectiveStatusUpdated);
             SystemEventManager.StartListening("OnAfterQuestStatusUpdated", HandleAfterQuestStatusUpdated);
             SystemEventManager.StartListening("OnPlayerUnitSpawn", HandlePlayerUnitSpawn);
@@ -55,12 +53,9 @@ namespace AnyRPG {
             }
         }
 
-        protected override void CleanupEventSubscriptions() {
+        protected override void ProcessCleanupEventSubscriptions() {
             //Debug.Log("QuestTrackerUI.CleanupEventSubscriptions()");
-            if (eventSubscriptionsInitialized == false) {
-                return;
-            }
-            base.CleanupEventSubscriptions();
+            base.ProcessCleanupEventSubscriptions();
             SystemEventManager.StopListening("OnQuestObjectiveStatusUpdated", HandleQuestObjectiveStatusUpdated);
             SystemEventManager.StopListening("OnAfterQuestStatusUpdated", HandleAfterQuestStatusUpdated);
             SystemEventManager.StopListening("OnPlayerUnitSpawn", HandlePlayerUnitSpawn);

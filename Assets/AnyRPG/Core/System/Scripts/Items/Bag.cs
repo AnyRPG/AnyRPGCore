@@ -17,9 +17,9 @@ namespace AnyRPG {
         /// <summary>
         /// A reference to the bagScript, that this bag belongs to
         /// </summary>
-        public BagPanel MyBagPanel { get; set; }
+        public BagPanel BagPanel { get; set; }
 
-        public BagNode MyBagNode { get; set; }
+        public BagNode BagNode { get; set; }
 
         /// <summary>
         /// Property for getting the slots
@@ -57,17 +57,17 @@ namespace AnyRPG {
 
         public void AddToInventoryManager() {
             bool addToBank = false;
-            if (MyBagNode != null) {
-                addToBank = MyBagNode.IsBankNode;
+            if (BagNode != null) {
+                addToBank = BagNode.IsBankNode;
             }
             if (inventoryManager.CanAddBag(addToBank)) {
                 //Debug.Log("Bag.Use(): we can add the bag");
 
-                if (MyBagNode == null) {
+                if (BagNode == null) {
                     inventoryManager.AddBag(this);
                 } else {
                     //Debug.Log("Bag.Use(): i have a bagnode");
-                    inventoryManager.AddBag(this, MyBagNode);
+                    inventoryManager.AddBag(this, BagNode);
                 }
                 Remove();
             } else {

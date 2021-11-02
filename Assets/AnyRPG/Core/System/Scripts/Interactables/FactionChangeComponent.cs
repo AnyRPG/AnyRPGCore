@@ -18,12 +18,9 @@ namespace AnyRPG {
             }
         }
 
-        public override void CreateEventSubscriptions() {
+        public override void ProcessCreateEventSubscriptions() {
             //Debug.Log("GatheringNode.CreateEventSubscriptions()");
-            if (eventSubscriptionsInitialized) {
-                return;
-            }
-            base.CreateEventSubscriptions();
+            base.ProcessCreateEventSubscriptions();
 
             SystemEventManager.StartListening("OnFactionChange", HandleFactionChange);
         }
@@ -44,9 +41,9 @@ namespace AnyRPG {
             windowEventSubscriptionsInitialized = false;
         }
 
-        public override void CleanupEventSubscriptions() {
+        public override void ProcessCleanupEventSubscriptions() {
             //Debug.Log(gameObject.name + ".FactionChangeInteractable.CleanupEventSubscriptions()");
-            base.CleanupEventSubscriptions();
+            base.ProcessCleanupEventSubscriptions();
             CleanupWindowEventSubscriptions();
             SystemEventManager.StopListening("OnFactionChange", HandleFactionChange);
         }

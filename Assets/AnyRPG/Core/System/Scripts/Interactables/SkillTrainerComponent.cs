@@ -36,9 +36,9 @@ namespace AnyRPG {
             uIManager.skillTrainerWindow.CloseWindow();
         }
 
-        public override void CleanupEventSubscriptions() {
+        public override void ProcessCleanupEventSubscriptions() {
             //Debug.Log(gameObject.name + ".SkillTrainer.CleanupEventSubscriptions()");
-            base.CleanupEventSubscriptions();
+            base.ProcessCleanupEventSubscriptions();
             if (systemEventManager != null) {
                 systemEventManager.OnSkillListChanged -= HandleSkillListChanged;
             }

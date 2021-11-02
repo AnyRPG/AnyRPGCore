@@ -8,18 +8,16 @@ using UnityEngine.UI;
 namespace AnyRPG {
     // this is almost identical to questscript
 
-    public class InteractionPanelScript : ConfiguredMonoBehaviour {
+    public class InteractionPanelScript : HighlightButton {
 
-
-        [SerializeField]
-        private TextMeshProUGUI text = null;
+        [Header("Interaction Panel Option")]
 
         [SerializeField]
-        private Image icon = null;
+        protected Image icon = null;
 
-        private InteractableOptionComponent interactableOption = null;
+        protected InteractableOptionComponent interactableOption = null;
 
-        private int optionIndex = 0;
+        protected int optionIndex = 0;
 
         // game manager references
         protected PlayerManager playerManager = null;
@@ -53,7 +51,8 @@ namespace AnyRPG {
             this.optionIndex = optionIndex;
         }
 
-        public void Interact() {
+        public override void Interact() {
+            base.Interact();
             if (playerManager.UnitController != null) {
                 InteractableOption.Interact(playerManager.UnitController.CharacterUnit, optionIndex);
             }

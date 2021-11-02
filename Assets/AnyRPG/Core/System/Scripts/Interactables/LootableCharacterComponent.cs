@@ -74,12 +74,9 @@ namespace AnyRPG {
         */
 
 
-        public override void CreateEventSubscriptions() {
+        public override void ProcessCreateEventSubscriptions() {
             //Debug.Log(gameObject.name + ".LootableCharacter.CreateEventSubscriptions()");
-            if (eventSubscriptionsInitialized) {
-                return;
-            }
-            base.CreateEventSubscriptions();
+            base.ProcessCreateEventSubscriptions();
 
             // have to set this here instead of constructor because the base constructor will call this before the local constructor runs
             characterUnit = CharacterUnit.GetCharacterUnit(interactable);
@@ -88,9 +85,9 @@ namespace AnyRPG {
             (characterUnit.Interactable as UnitController).OnReviveComplete += HandleRevive;
         }
 
-        public override void CleanupEventSubscriptions() {
+        public override void ProcessCleanupEventSubscriptions() {
             //Debug.Log(gameObject.name + ".LootableCharacter.CleanupEventSubscriptions()");
-            base.CleanupEventSubscriptions();
+            base.ProcessCleanupEventSubscriptions();
             if (characterUnit != null && characterUnit.BaseCharacter != null && characterUnit.BaseCharacter.CharacterStats != null) {
                 (characterUnit.Interactable as UnitController).OnBeforeDie -= HandleDeath;
                 (characterUnit.Interactable as UnitController).OnReviveComplete -= HandleRevive;

@@ -28,9 +28,9 @@ namespace AnyRPG {
             windowEventSubscriptionsInitialized = false;
         }
 
-        public override void CleanupEventSubscriptions() {
+        public override void ProcessCleanupEventSubscriptions() {
             //Debug.Log(gameObject.name + ".NameChangeInteractable.CleanupEventSubscriptions()");
-            base.CleanupEventSubscriptions();
+            base.ProcessCleanupEventSubscriptions();
             CleanupWindowEventSubscriptions();
         }
 

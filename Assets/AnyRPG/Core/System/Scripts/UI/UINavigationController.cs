@@ -149,8 +149,12 @@ namespace AnyRPG {
             activeNavigableButtons.Clear();
         }
 
+        public virtual void ClearActiveButton(NavigableElement clearButton) {
+            activeNavigableButtons.Remove(clearButton);
+        }
+
         public virtual void FocusFirstButton() {
-            //Debug.Log(gameObject.name + ".UINavigationController.FocusFirstButton()");
+            Debug.Log(gameObject.name + ".UINavigationController.FocusFirstButton()");
             if (activeNavigableButtons.Count == 0) {
                 return;
             }

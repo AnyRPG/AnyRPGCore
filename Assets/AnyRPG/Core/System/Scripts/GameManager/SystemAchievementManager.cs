@@ -25,7 +25,7 @@ namespace AnyRPG {
             CreateEventSubscriptions();
         }
 
-        public  void CreateEventSubscriptions() {
+        public void CreateEventSubscriptions() {
             //Debug.Log("PlayerManager.CreateEventSubscriptions()");
             if (eventSubscriptionsInitialized) {
                 return;

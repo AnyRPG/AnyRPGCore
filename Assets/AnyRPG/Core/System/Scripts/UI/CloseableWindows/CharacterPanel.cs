@@ -88,21 +88,19 @@ namespace AnyRPG {
             characterPanelManager = systemGameManager.CharacterPanelManager;
         }
 
-        protected override void CreateEventSubscriptions() {
+        protected override void ProcessCreateEventSubscriptions() {
             //Debug.Log("CharacterPanel.CreateEventSubscriptions()");
-            if (eventSubscriptionsInitialized) {
-                return;
-            }
+            base.ProcessCreateEventSubscriptions();
             SystemEventManager.StartListening("OnPlayerUnitSpawn", HandlePlayerUnitSpawn);
             SystemEventManager.StartListening("OnPlayerUnitDespawn", HandlePlayerUnitDespawn);
             if (playerManager.PlayerUnitSpawned == true) {
                 ProcessPlayerUnitSpawn();
             }
-            eventSubscriptionsInitialized = true;
         }
 
-        protected override void CleanupEventSubscriptions() {
+        protected override void ProcessCleanupEventSubscriptions() {
             //Debug.Log("PlayerCombat.CleanupEventSubscriptions()");
+            base.ProcessCleanupEventSubscriptions();
             SystemEventManager.StopListening("OnPlayerUnitSpawn", HandlePlayerUnitSpawn);
             SystemEventManager.StopListening("OnPlayerUnitDespawn", HandlePlayerUnitDespawn);
         }

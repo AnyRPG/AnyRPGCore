@@ -299,20 +299,28 @@ namespace AnyRPG {
             */
         }
 
-        protected virtual void CreateEventSubscriptions() {
+        protected void CreateEventSubscriptions() {
             //Debug.Log("PlayerManager.CreateEventSubscriptions()");
             if (eventSubscriptionsInitialized) {
                 return;
             }
+            ProcessCreateEventSubscriptions();
             eventSubscriptionsInitialized = true;
         }
 
-        protected virtual void CleanupEventSubscriptions() {
+        protected virtual void ProcessCreateEventSubscriptions() {
+        }
+
+        protected void CleanupEventSubscriptions() {
             //Debug.Log("PlayerManager.CleanupEventSubscriptions()");
             if (!eventSubscriptionsInitialized) {
                 return;
             }
+            ProcessCleanupEventSubscriptions();
             eventSubscriptionsInitialized = false;
+        }
+
+        protected virtual void ProcessCleanupEventSubscriptions() {
         }
 
         protected virtual void OnDestroy() {

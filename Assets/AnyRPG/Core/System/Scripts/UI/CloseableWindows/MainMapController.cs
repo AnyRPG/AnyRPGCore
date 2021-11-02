@@ -143,12 +143,9 @@ namespace AnyRPG {
         }
         */
 
-        protected override void CreateEventSubscriptions() {
+        protected override void ProcessCreateEventSubscriptions() {
             //Debug.Log("MainMapController.CreateEventSubscriptions()");
-            if (eventSubscriptionsInitialized) {
-                return;
-            }
-            base.CreateEventSubscriptions();
+            base.ProcessCreateEventSubscriptions();
             mainMapManager.OnAddIndicator += HandleAddIndicator;
             mainMapManager.OnRemoveIndicator += HandleRemoveIndicator;
             mainMapManager.OnUpdateIndicatorRotation += HandleIndicatorRotation;
@@ -156,12 +153,9 @@ namespace AnyRPG {
             SystemEventManager.StartListening("AfterCameraUpdate", HandleAfterCameraUpdate);
         }
 
-        protected override void CleanupEventSubscriptions() {
+        protected override void ProcessCleanupEventSubscriptions() {
             //Debug.Log("MainMapController.CleanupEventSubscriptions()");
-            if (!eventSubscriptionsInitialized) {
-                return;
-            }
-            base.CleanupEventSubscriptions();
+            base.ProcessCleanupEventSubscriptions();
             mainMapManager.OnAddIndicator += HandleAddIndicator;
             mainMapManager.OnRemoveIndicator += HandleRemoveIndicator;
             mainMapManager.OnUpdateIndicatorRotation += HandleIndicatorRotation;

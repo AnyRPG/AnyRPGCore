@@ -74,7 +74,7 @@ namespace AnyRPG {
         public void RegisterInput() {
             if (keyBindManager.BindName != string.Empty) {
                 // we are binding a key.  discard all input
-                //Debug.Log("Key Binding in progress.  returning.");
+                Debug.Log("Key Binding in progress.  returning.");
                 foreach (KeyBindNode keyBindNode in keyBindManager.KeyBinds.Values) {
                     keyBindNode.UnRegisterKeyPress();
                     keyBindNode.UnRegisterKeyHeld();
@@ -95,10 +95,12 @@ namespace AnyRPG {
             }
             lastRegisteredFrame = Time.frameCount;
 
+            /*
             if (uIManager.nameChangeWindow.IsOpen) {
                 //Debug.Log("Not allowing registration of keystrokes to keybinds during name change");
                 return;
             }
+            */
 
             bool control = false;
 

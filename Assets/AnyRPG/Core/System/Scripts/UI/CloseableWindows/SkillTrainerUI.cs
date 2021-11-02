@@ -99,6 +99,7 @@ namespace AnyRPG {
                     qs.SetSkill(this, skill);
                     skillScripts.Add(qs);
                     skills.Add(skill);
+                    uINavigationControllers[0].AddActiveButton(qs);
                     if (firstAvailableSkill == null) {
                         firstAvailableSkill = qs;
                     }
@@ -111,8 +112,10 @@ namespace AnyRPG {
             }
 
             if (MySelectedSkillTrainerSkillScript == null && firstAvailableSkill != null) {
-                firstAvailableSkill.Select();
+                //firstAvailableSkill.Select();
+                uINavigationControllers[0].FocusFirstButton();
             }
+            SetNavigationController(uINavigationControllers[0]);
         }
 
 
@@ -207,6 +210,7 @@ namespace AnyRPG {
                 }
             }
             skillScripts.Clear();
+            uINavigationControllers[0].ClearActiveButtons();
         }
 
         public override void ReceiveClosedWindowNotification() {

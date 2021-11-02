@@ -93,6 +93,7 @@ namespace AnyRPG {
                 qs.SetMusicProfile(this, audioProfile);
                 musicPlayerHighlightButtons.Add(qs);
                 audioProfileList.Add(audioProfile);
+                uINavigationControllers[0].AddActiveButton(qs);
                 if (firstAvailableAudioProfile == null) {
                     firstAvailableAudioProfile = qs;
                 }
@@ -104,7 +105,8 @@ namespace AnyRPG {
             }
 
             if (SelectedMusicPlayerHighlightButton == null && firstAvailableAudioProfile != null) {
-                firstAvailableAudioProfile.Select();
+                //firstAvailableAudioProfile.Select();
+                uINavigationControllers[0].FocusFirstButton();
             }
         }
 
@@ -199,6 +201,7 @@ namespace AnyRPG {
                 }
             }
             musicPlayerHighlightButtons.Clear();
+            uINavigationControllers[0].ClearActiveButtons();
         }
 
         public override void ReceiveClosedWindowNotification() {

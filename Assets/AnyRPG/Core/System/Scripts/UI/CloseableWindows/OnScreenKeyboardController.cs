@@ -85,28 +85,22 @@ namespace AnyRPG {
         }
 
         public void HandleActivateKeyboard(TMP_InputField sourceInputField) {
+            Debug.Log("OnScreenKeyboardController.HandleActivateKeyboard()");
             this.sourceInputField = sourceInputField;
-            this.sourceInputField.text = sourceInputField.text;
+            inputField.text = sourceInputField.text;
         }
 
-        protected override void CreateEventSubscriptions() {
-            if (eventSubscriptionsInitialized) {
-                return;
-            }
+        protected override void ProcessCreateEventSubscriptions() {
+            base.ProcessCreateEventSubscriptions();
 
             onScreenKeyboardManager.OnActivateKeyboard += HandleActivateKeyboard;
-
-            base.CreateEventSubscriptions();
         }
 
-        protected override void CleanupEventSubscriptions() {
-            if (!eventSubscriptionsInitialized) {
-                return;
-            }
+        protected override void ProcessCleanupEventSubscriptions() {
+            base.ProcessCleanupEventSubscriptions();
 
             onScreenKeyboardManager.OnActivateKeyboard -= HandleActivateKeyboard;
 
-            base.CleanupEventSubscriptions();
         }
 
     }

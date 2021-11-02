@@ -192,6 +192,11 @@ namespace AnyRPG {
                 return;
             }
 
+            if (uIManager.nameChangeWindow.IsOpen) {
+                //Debug.Log("Not allowing movement during name change");
+                return;
+            }
+
             if (allowedInput == false) {
                 //Debug.Log("Not allowed to Collect Move Input. Exiting PlayerController Update!");
                 return;

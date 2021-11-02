@@ -118,24 +118,32 @@ namespace AnyRPG {
             Init();
         }
 
-        public virtual void CreateEventSubscriptions() {
+        public void CreateEventSubscriptions() {
             //Debug.Log(gameObject.name + ".Spawnable.CreateEventSubscriptions()");
             if (eventSubscriptionsInitialized) {
                 return;
             }
-            SystemEventManager.StartListening("OnLevelUnload", HandleLevelUnload);
-            SystemEventManager.StartListening("OnPlayerUnitSpawn", HandlePlayerUnitSpawn);
+            ProcessCreateEventSubscriptions();
             eventSubscriptionsInitialized = true;
         }
 
-        public virtual void CleanupEventSubscriptions() {
+        public virtual void ProcessCreateEventSubscriptions() {
+            SystemEventManager.StartListening("OnLevelUnload", HandleLevelUnload);
+            SystemEventManager.StartListening("OnPlayerUnitSpawn", HandlePlayerUnitSpawn);
+        }
+
+        public void CleanupEventSubscriptions() {
             //Debug.Log(gameObject.name + "Spawnable.CleanupEventSubscriptions()");
             if (!eventSubscriptionsInitialized) {
                 return;
             }
+            ProcessCleanupEventSubscriptions();
+            eventSubscriptionsInitialized = false;
+        }
+
+        public virtual void ProcessCleanupEventSubscriptions() {
             SystemEventManager.StopListening("OnLevelUnload", HandleLevelUnload);
             SystemEventManager.StopListening("OnPlayerUnitSpawn", HandlePlayerUnitSpawn);
-            eventSubscriptionsInitialized = false;
         }
 
         public void HandleLevelUnload(string eventName, EventParamProperties eventParamProperties) {

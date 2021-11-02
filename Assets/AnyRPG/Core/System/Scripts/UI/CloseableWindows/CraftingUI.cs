@@ -93,23 +93,17 @@ namespace AnyRPG {
             uIManager = systemGameManager.UIManager;
         }
 
-        protected override void CreateEventSubscriptions() {
+        protected override void ProcessCreateEventSubscriptions() {
             //Debug.Log("CraftingUI.CreateEventSubscriptions()");
-            if (eventSubscriptionsInitialized) {
-                return;
-            }
-            base.CreateEventSubscriptions();
+            base.ProcessCreateEventSubscriptions();
             craftingManager.OnSelectRecipe += SelectRecipe;
             craftingManager.OnCraftAmountUpdated += UpdateCraftAmountArea;
             craftingManager.OnSetCraftAbility += ViewRecipes;
         }
 
-        protected override void CleanupEventSubscriptions() {
+        protected override void ProcessCleanupEventSubscriptions() {
             //Debug.Log("CraftingUI.CleanupEventSubscriptions()");
-            if (!eventSubscriptionsInitialized) {
-                return;
-            }
-            base.CleanupEventSubscriptions();
+            base.ProcessCleanupEventSubscriptions();
             craftingManager.OnSelectRecipe -= SelectRecipe;
             craftingManager.OnCraftAmountUpdated -= UpdateCraftAmountArea;
             craftingManager.OnSetCraftAbility -= ViewRecipes;

@@ -49,6 +49,7 @@ GameObject:
   - component: {fileID: 8329855269910001707}
   - component: {fileID: 8329855269910001706}
   - component: {fileID: 8329855269910001709}
+  - component: {fileID: 7590843320882866510}
   m_Layer: 5
   m_Name: MusicButtonArea
   m_TagString: Untagged
@@ -153,6 +154,32 @@ MonoBehaviour:
   m_ChildScaleWidth: 0
   m_ChildScaleHeight: 0
   m_ReverseArrangement: 0
+--- !u!114 &7590843320882866510
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8329855269910001711}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 03715bb91f4a7fa47b3d93745fb1b35e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  leftPanel: {fileID: 0}
+  leftControllers: []
+  rightPanel: {fileID: 0}
+  rightControllers: []
+  upPanel: {fileID: 0}
+  upControllers: []
+  downPanel: {fileID: 0}
+  downControllers:
+  - {fileID: 6469887197683398745}
+  acceptController: {fileID: 6469887197683398745}
+  scrollRect: {fileID: 0}
+  updateActiveListOnOpen: 0
+  pruneInactiveElements: 0
+  navigableButtons: []
 --- !u!1 &8329855270071052304
 GameObject:
   m_ObjectHideFlags: 0
@@ -1357,6 +1384,7 @@ GameObject:
   - component: {fileID: 8329855271405920920}
   - component: {fileID: 8329855271405920919}
   - component: {fileID: 8329855271405920918}
+  - component: {fileID: 6469887197683398745}
   m_Layer: 5
   m_Name: ActionButtons
   m_TagString: Untagged
@@ -1424,6 +1452,35 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!114 &6469887197683398745
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8329855271405920923}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8995f41cb132f3148a9912f89e49421b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  leftPanel: {fileID: 0}
+  leftControllers: []
+  rightPanel: {fileID: 0}
+  rightControllers: []
+  upPanel: {fileID: 0}
+  upControllers:
+  - {fileID: 7590843320882866510}
+  downPanel: {fileID: 0}
+  downControllers: []
+  acceptController: {fileID: 0}
+  scrollRect: {fileID: 0}
+  updateActiveListOnOpen: 1
+  pruneInactiveElements: 1
+  navigableButtons:
+  - {fileID: 4216152181943939570}
+  - {fileID: 4521491052036706060}
+  - {fileID: 5830202441143397512}
 --- !u!1 &8329855271617722954
 GameObject:
   m_ObjectHideFlags: 0
@@ -1515,6 +1572,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   backGroundImage: {fileID: 0}
+  coloredUIElements: []
+  userCloseable: 1
+  focusFirstButtonOnOpen: 1
+  focusActiveSubPanel: 0
+  uINavigationControllers:
+  - {fileID: 7590843320882866510}
+  - {fileID: 6469887197683398745}
+  subPanels: []
   playButton: {fileID: 4216152181943939570}
   pauseButton: {fileID: 4521491052036706060}
   stopButton: {fileID: 5830202441143397512}

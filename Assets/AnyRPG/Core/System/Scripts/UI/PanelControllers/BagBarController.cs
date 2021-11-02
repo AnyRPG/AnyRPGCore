@@ -78,11 +78,12 @@ namespace AnyRPG {
             localComponentsGotten = true;
         }
 
-        public BagButton AddBagButton() {
+        public BagButton AddBagButton(BagNode bagNode) {
             //Debug.Log(gameObject.name + "BagBarController.AddBagButton()");
             foreach (BagButton _bagButton in bagButtons) {
                 if (_bagButton.BagNode == null) {
                     //Debug.Log("BagBarController.AddBagButton(): found an empty bag button");
+                    _bagButton.BagNode = bagNode;
                     return _bagButton;
                 }
             }
@@ -103,7 +104,7 @@ namespace AnyRPG {
                 if (_bagButton.BagNode != null) {
                     if (_bagButton.BagNode.Bag != null) {
                         Destroy(_bagButton.BagNode.Bag);
-                        _bagButton.BagNode.Bag = null;
+                        _bagButton.BagNode.RemoveBag();
                     }
                 }
             }
