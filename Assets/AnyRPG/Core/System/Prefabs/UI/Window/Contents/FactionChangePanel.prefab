@@ -191,6 +191,12 @@ MonoBehaviour:
   backGroundImage: {fileID: 0}
   coloredUIElements:
   - {fileID: 4045389512635944704}
+  userCloseable: 1
+  focusFirstButtonOnOpen: 1
+  focusActiveSubPanel: 0
+  uINavigationControllers:
+  - {fileID: 17176373198845151}
+  subPanels: []
   rewardIconPrefab: {fileID: 7470950394934575550, guid: 83ca6799ff9b76c48802e4f65abab075,
     type: 3}
   factionButton: {fileID: 5136628312331300565}
@@ -581,6 +587,7 @@ GameObject:
   - component: {fileID: 7390273578900235811}
   - component: {fileID: 8391822505905491273}
   - component: {fileID: 6917650391240188156}
+  - component: {fileID: 17176373198845151}
   m_Layer: 5
   m_Name: ButtonRow
   m_TagString: Untagged
@@ -646,6 +653,32 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!114 &17176373198845151
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7013872250037122746}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8995f41cb132f3148a9912f89e49421b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  leftPanel: {fileID: 0}
+  leftControllers: []
+  rightPanel: {fileID: 0}
+  rightControllers: []
+  upPanel: {fileID: 0}
+  upControllers: []
+  downPanel: {fileID: 0}
+  downControllers: []
+  acceptController: {fileID: 0}
+  scrollRect: {fileID: 0}
+  updateActiveListOnOpen: 1
+  pruneInactiveElements: 1
+  navigableButtons:
+  - {fileID: 6070184584543479227}
 --- !u!1 &7054252649250697496
 GameObject:
   m_ObjectHideFlags: 0

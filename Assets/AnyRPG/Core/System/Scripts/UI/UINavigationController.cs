@@ -258,7 +258,7 @@ namespace AnyRPG {
                 if (currentNavigableElement != null) {
                     currentNavigableElement.LeaveElement();
                 }
-                foreach (UINavigationController uINavigationController in downControllers) {
+                foreach (UINavigationController uINavigationController in leftControllers) {
                     if (uINavigationController.gameObject.activeInHierarchy == true) {
                         uINavigationController.SetActive();
                         return true;
@@ -291,7 +291,7 @@ namespace AnyRPG {
                 if (currentNavigableElement != null) {
                     currentNavigableElement.LeaveElement();
                 }
-                foreach (UINavigationController uINavigationController in downControllers) {
+                foreach (UINavigationController uINavigationController in rightControllers) {
                     if (uINavigationController.gameObject.activeInHierarchy == true) {
                         uINavigationController.SetActive();
                         return true;

@@ -152,11 +152,17 @@ namespace AnyRPG {
                                 qs.Text.color = LevelEquations.GetTargetColor(playerManager.MyCharacter.CharacterStats.Level, quest.ExperienceLevel);
                                 //quests.Add(go);
                                 questScripts.Add(qs);
+                                uINavigationControllers[0].AddActiveButton(qs);
+                                // disabled this next bit because it was causing repeatables with no objectives to be marked as complete
+                                // may need to do different logic and loop through questscripts and interactionpanelscripts after this loop
+                                // if want to show complete quests at the top and still have ordering work properly for gamepad navigation
+                                /*
                                 if (quest.IsComplete && !quest.TurnedIn) {
                                     go.transform.SetParent(completeQuestArea.transform);
                                 } else if (!quest.IsComplete && questLog.HasQuest(quest.DisplayName) == false) {
                                     go.transform.SetParent(availableQuestArea.transform);
                                 }
+                                */
 
                             }
 

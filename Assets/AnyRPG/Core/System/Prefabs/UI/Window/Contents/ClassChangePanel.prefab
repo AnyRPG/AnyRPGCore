@@ -497,6 +497,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7f4724b087dbea9448c39dc518ffc48e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  text: {fileID: 0}
+  highlightImage: {fileID: 0}
+  highlightButton: {fileID: 0}
+  hideImageWhenInactive: 1
+  tintImage: 1
+  useSystemImageTintColor: 1
+  useHighlightColorOnButton: 0
+  highlightColor: {r: 0, g: 0, b: 0, a: 0}
+  normalColor: {r: 0.6392157, g: 0.6392157, b: 0.6392157, a: 0.10980392}
+  highlightedColor: {r: 0.64705884, g: 0.64705884, b: 0.64705884, a: 0.40392157}
+  pressedColor: {r: 0.47058824, g: 0.47058824, b: 0.47058824, a: 0.2901961}
+  selectedColor: {r: 0.64705884, g: 0.64705884, b: 0.64705884, a: 0.40392157}
+  disabledColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 0.5019608}
+  CapitalizeText: 0
   stackSize: {fileID: 6822580533253464800}
   icon: {fileID: 9092500395162716546}
 --- !u!1 &1057865676734831185
@@ -588,6 +602,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7f4724b087dbea9448c39dc518ffc48e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  text: {fileID: 0}
+  highlightImage: {fileID: 0}
+  highlightButton: {fileID: 0}
+  hideImageWhenInactive: 1
+  tintImage: 1
+  useSystemImageTintColor: 1
+  useHighlightColorOnButton: 0
+  highlightColor: {r: 0, g: 0, b: 0, a: 0}
+  normalColor: {r: 0.6392157, g: 0.6392157, b: 0.6392157, a: 0.10980392}
+  highlightedColor: {r: 0.64705884, g: 0.64705884, b: 0.64705884, a: 0.40392157}
+  pressedColor: {r: 0.47058824, g: 0.47058824, b: 0.47058824, a: 0.2901961}
+  selectedColor: {r: 0.64705884, g: 0.64705884, b: 0.64705884, a: 0.40392157}
+  disabledColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 0.5019608}
+  CapitalizeText: 0
   stackSize: {fileID: 5585089524284976535}
   icon: {fileID: 9102507486858900149}
 --- !u!1 &1395653051951287631
@@ -679,6 +707,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7f4724b087dbea9448c39dc518ffc48e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  text: {fileID: 0}
+  highlightImage: {fileID: 0}
+  highlightButton: {fileID: 0}
+  hideImageWhenInactive: 1
+  tintImage: 1
+  useSystemImageTintColor: 1
+  useHighlightColorOnButton: 0
+  highlightColor: {r: 0, g: 0, b: 0, a: 0}
+  normalColor: {r: 0.6392157, g: 0.6392157, b: 0.6392157, a: 0.10980392}
+  highlightedColor: {r: 0.64705884, g: 0.64705884, b: 0.64705884, a: 0.40392157}
+  pressedColor: {r: 0.47058824, g: 0.47058824, b: 0.47058824, a: 0.2901961}
+  selectedColor: {r: 0.64705884, g: 0.64705884, b: 0.64705884, a: 0.40392157}
+  disabledColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 0.5019608}
+  CapitalizeText: 0
   stackSize: {fileID: 1441804319063055856}
   icon: {fileID: 1495741159276409195}
 --- !u!1 &1532519050905085604
@@ -999,6 +1041,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7f4724b087dbea9448c39dc518ffc48e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  text: {fileID: 0}
+  highlightImage: {fileID: 0}
+  highlightButton: {fileID: 0}
+  hideImageWhenInactive: 1
+  tintImage: 1
+  useSystemImageTintColor: 1
+  useHighlightColorOnButton: 0
+  highlightColor: {r: 0, g: 0, b: 0, a: 0}
+  normalColor: {r: 0.6392157, g: 0.6392157, b: 0.6392157, a: 0.10980392}
+  highlightedColor: {r: 0.64705884, g: 0.64705884, b: 0.64705884, a: 0.40392157}
+  pressedColor: {r: 0.47058824, g: 0.47058824, b: 0.47058824, a: 0.2901961}
+  selectedColor: {r: 0.64705884, g: 0.64705884, b: 0.64705884, a: 0.40392157}
+  disabledColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 0.5019608}
+  CapitalizeText: 0
   stackSize: {fileID: 8453866115167915394}
   icon: {fileID: 3374503293125901830}
 --- !u!1 &2297304630357282186
@@ -1307,6 +1363,12 @@ MonoBehaviour:
   backGroundImage: {fileID: 0}
   coloredUIElements:
   - {fileID: 4045389512635944704}
+  userCloseable: 1
+  focusFirstButtonOnOpen: 1
+  focusActiveSubPanel: 0
+  uINavigationControllers:
+  - {fileID: 5012518593485221941}
+  subPanels: []
   rewardIconPrefab: {fileID: 7470950394934575550, guid: 83ca6799ff9b76c48802e4f65abab075,
     type: 3}
   characterClassButton: {fileID: 911970283278730222}
@@ -1761,6 +1823,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7f4724b087dbea9448c39dc518ffc48e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  text: {fileID: 0}
+  highlightImage: {fileID: 0}
+  highlightButton: {fileID: 0}
+  hideImageWhenInactive: 1
+  tintImage: 1
+  useSystemImageTintColor: 1
+  useHighlightColorOnButton: 0
+  highlightColor: {r: 0, g: 0, b: 0, a: 0}
+  normalColor: {r: 0.6392157, g: 0.6392157, b: 0.6392157, a: 0.10980392}
+  highlightedColor: {r: 0.64705884, g: 0.64705884, b: 0.64705884, a: 0.40392157}
+  pressedColor: {r: 0.47058824, g: 0.47058824, b: 0.47058824, a: 0.2901961}
+  selectedColor: {r: 0.64705884, g: 0.64705884, b: 0.64705884, a: 0.40392157}
+  disabledColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 0.5019608}
+  CapitalizeText: 0
   stackSize: {fileID: 3465756434209861736}
   icon: {fileID: 7600347903971502989}
 --- !u!1 &3483946166939263616
@@ -2020,6 +2096,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7f4724b087dbea9448c39dc518ffc48e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  text: {fileID: 0}
+  highlightImage: {fileID: 0}
+  highlightButton: {fileID: 0}
+  hideImageWhenInactive: 1
+  tintImage: 1
+  useSystemImageTintColor: 1
+  useHighlightColorOnButton: 0
+  highlightColor: {r: 0, g: 0, b: 0, a: 0}
+  normalColor: {r: 0.6392157, g: 0.6392157, b: 0.6392157, a: 0.10980392}
+  highlightedColor: {r: 0.64705884, g: 0.64705884, b: 0.64705884, a: 0.40392157}
+  pressedColor: {r: 0.47058824, g: 0.47058824, b: 0.47058824, a: 0.2901961}
+  selectedColor: {r: 0.64705884, g: 0.64705884, b: 0.64705884, a: 0.40392157}
+  disabledColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 0.5019608}
+  CapitalizeText: 0
   stackSize: {fileID: 8717243465731454242}
   icon: {fileID: 6027297121915893053}
 --- !u!1 &3786720660123791409
@@ -2589,6 +2679,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7f4724b087dbea9448c39dc518ffc48e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  text: {fileID: 0}
+  highlightImage: {fileID: 0}
+  highlightButton: {fileID: 0}
+  hideImageWhenInactive: 1
+  tintImage: 1
+  useSystemImageTintColor: 1
+  useHighlightColorOnButton: 0
+  highlightColor: {r: 0, g: 0, b: 0, a: 0}
+  normalColor: {r: 0.6392157, g: 0.6392157, b: 0.6392157, a: 0.10980392}
+  highlightedColor: {r: 0.64705884, g: 0.64705884, b: 0.64705884, a: 0.40392157}
+  pressedColor: {r: 0.47058824, g: 0.47058824, b: 0.47058824, a: 0.2901961}
+  selectedColor: {r: 0.64705884, g: 0.64705884, b: 0.64705884, a: 0.40392157}
+  disabledColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 0.5019608}
+  CapitalizeText: 0
   stackSize: {fileID: 8442679913076980434}
   icon: {fileID: 1064292047823368607}
 --- !u!1 &4789827558109865609
@@ -2680,6 +2784,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7f4724b087dbea9448c39dc518ffc48e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  text: {fileID: 0}
+  highlightImage: {fileID: 0}
+  highlightButton: {fileID: 0}
+  hideImageWhenInactive: 1
+  tintImage: 1
+  useSystemImageTintColor: 1
+  useHighlightColorOnButton: 0
+  highlightColor: {r: 0, g: 0, b: 0, a: 0}
+  normalColor: {r: 0.6392157, g: 0.6392157, b: 0.6392157, a: 0.10980392}
+  highlightedColor: {r: 0.64705884, g: 0.64705884, b: 0.64705884, a: 0.40392157}
+  pressedColor: {r: 0.47058824, g: 0.47058824, b: 0.47058824, a: 0.2901961}
+  selectedColor: {r: 0.64705884, g: 0.64705884, b: 0.64705884, a: 0.40392157}
+  disabledColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 0.5019608}
+  CapitalizeText: 0
   stackSize: {fileID: 583508750164320294}
   icon: {fileID: 3510271072642842005}
 --- !u!1 &4960791920228416017
@@ -2771,6 +2889,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7f4724b087dbea9448c39dc518ffc48e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  text: {fileID: 0}
+  highlightImage: {fileID: 0}
+  highlightButton: {fileID: 0}
+  hideImageWhenInactive: 1
+  tintImage: 1
+  useSystemImageTintColor: 1
+  useHighlightColorOnButton: 0
+  highlightColor: {r: 0, g: 0, b: 0, a: 0}
+  normalColor: {r: 0.6392157, g: 0.6392157, b: 0.6392157, a: 0.10980392}
+  highlightedColor: {r: 0.64705884, g: 0.64705884, b: 0.64705884, a: 0.40392157}
+  pressedColor: {r: 0.47058824, g: 0.47058824, b: 0.47058824, a: 0.2901961}
+  selectedColor: {r: 0.64705884, g: 0.64705884, b: 0.64705884, a: 0.40392157}
+  disabledColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 0.5019608}
+  CapitalizeText: 0
   stackSize: {fileID: 6711689668272734072}
   icon: {fileID: 542128110040377333}
 --- !u!1 &5115654664665519307
@@ -3164,6 +3296,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7f4724b087dbea9448c39dc518ffc48e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  text: {fileID: 0}
+  highlightImage: {fileID: 0}
+  highlightButton: {fileID: 0}
+  hideImageWhenInactive: 1
+  tintImage: 1
+  useSystemImageTintColor: 1
+  useHighlightColorOnButton: 0
+  highlightColor: {r: 0, g: 0, b: 0, a: 0}
+  normalColor: {r: 0.6392157, g: 0.6392157, b: 0.6392157, a: 0.10980392}
+  highlightedColor: {r: 0.64705884, g: 0.64705884, b: 0.64705884, a: 0.40392157}
+  pressedColor: {r: 0.47058824, g: 0.47058824, b: 0.47058824, a: 0.2901961}
+  selectedColor: {r: 0.64705884, g: 0.64705884, b: 0.64705884, a: 0.40392157}
+  disabledColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 0.5019608}
+  CapitalizeText: 0
   stackSize: {fileID: 80957239402247186}
   icon: {fileID: 1554902465818928156}
 --- !u!1 &5690261448813702078
@@ -3255,6 +3401,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7f4724b087dbea9448c39dc518ffc48e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  text: {fileID: 0}
+  highlightImage: {fileID: 0}
+  highlightButton: {fileID: 0}
+  hideImageWhenInactive: 1
+  tintImage: 1
+  useSystemImageTintColor: 1
+  useHighlightColorOnButton: 0
+  highlightColor: {r: 0, g: 0, b: 0, a: 0}
+  normalColor: {r: 0.6392157, g: 0.6392157, b: 0.6392157, a: 0.10980392}
+  highlightedColor: {r: 0.64705884, g: 0.64705884, b: 0.64705884, a: 0.40392157}
+  pressedColor: {r: 0.47058824, g: 0.47058824, b: 0.47058824, a: 0.2901961}
+  selectedColor: {r: 0.64705884, g: 0.64705884, b: 0.64705884, a: 0.40392157}
+  disabledColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 0.5019608}
+  CapitalizeText: 0
   stackSize: {fileID: 1114131568390052921}
   icon: {fileID: 2880120834500942181}
 --- !u!1 &5693226083620373579
@@ -3646,6 +3806,7 @@ GameObject:
   - component: {fileID: 7390273578900235811}
   - component: {fileID: 8391822505905491273}
   - component: {fileID: 6917650391240188156}
+  - component: {fileID: 5012518593485221941}
   m_Layer: 5
   m_Name: ButtonRow
   m_TagString: Untagged
@@ -3711,6 +3872,32 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!114 &5012518593485221941
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7013872250037122746}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8995f41cb132f3148a9912f89e49421b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  leftPanel: {fileID: 0}
+  leftControllers: []
+  rightPanel: {fileID: 0}
+  rightControllers: []
+  upPanel: {fileID: 0}
+  upControllers: []
+  downPanel: {fileID: 0}
+  downControllers: []
+  acceptController: {fileID: 0}
+  scrollRect: {fileID: 0}
+  updateActiveListOnOpen: 1
+  pruneInactiveElements: 1
+  navigableButtons:
+  - {fileID: 6070184584543479227}
 --- !u!1 &7054252649250697496
 GameObject:
   m_ObjectHideFlags: 0
@@ -3877,6 +4064,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7f4724b087dbea9448c39dc518ffc48e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  text: {fileID: 0}
+  highlightImage: {fileID: 0}
+  highlightButton: {fileID: 0}
+  hideImageWhenInactive: 1
+  tintImage: 1
+  useSystemImageTintColor: 1
+  useHighlightColorOnButton: 0
+  highlightColor: {r: 0, g: 0, b: 0, a: 0}
+  normalColor: {r: 0.6392157, g: 0.6392157, b: 0.6392157, a: 0.10980392}
+  highlightedColor: {r: 0.64705884, g: 0.64705884, b: 0.64705884, a: 0.40392157}
+  pressedColor: {r: 0.47058824, g: 0.47058824, b: 0.47058824, a: 0.2901961}
+  selectedColor: {r: 0.64705884, g: 0.64705884, b: 0.64705884, a: 0.40392157}
+  disabledColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 0.5019608}
+  CapitalizeText: 0
   stackSize: {fileID: 3868415196990231314}
   icon: {fileID: 2295531137001308959}
 --- !u!1 &7209181614437256765
@@ -4522,6 +4723,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7f4724b087dbea9448c39dc518ffc48e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  text: {fileID: 0}
+  highlightImage: {fileID: 0}
+  highlightButton: {fileID: 0}
+  hideImageWhenInactive: 1
+  tintImage: 1
+  useSystemImageTintColor: 1
+  useHighlightColorOnButton: 0
+  highlightColor: {r: 0, g: 0, b: 0, a: 0}
+  normalColor: {r: 0.6392157, g: 0.6392157, b: 0.6392157, a: 0.10980392}
+  highlightedColor: {r: 0.64705884, g: 0.64705884, b: 0.64705884, a: 0.40392157}
+  pressedColor: {r: 0.47058824, g: 0.47058824, b: 0.47058824, a: 0.2901961}
+  selectedColor: {r: 0.64705884, g: 0.64705884, b: 0.64705884, a: 0.40392157}
+  disabledColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 0.5019608}
+  CapitalizeText: 0
   stackSize: {fileID: 7377780864092432765}
   icon: {fileID: 3585124362738237110}
 --- !u!1 &7747984774225633652
@@ -4944,6 +5159,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7f4724b087dbea9448c39dc518ffc48e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  text: {fileID: 0}
+  highlightImage: {fileID: 0}
+  highlightButton: {fileID: 0}
+  hideImageWhenInactive: 1
+  tintImage: 1
+  useSystemImageTintColor: 1
+  useHighlightColorOnButton: 0
+  highlightColor: {r: 0, g: 0, b: 0, a: 0}
+  normalColor: {r: 0.6392157, g: 0.6392157, b: 0.6392157, a: 0.10980392}
+  highlightedColor: {r: 0.64705884, g: 0.64705884, b: 0.64705884, a: 0.40392157}
+  pressedColor: {r: 0.47058824, g: 0.47058824, b: 0.47058824, a: 0.2901961}
+  selectedColor: {r: 0.64705884, g: 0.64705884, b: 0.64705884, a: 0.40392157}
+  disabledColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 0.5019608}
+  CapitalizeText: 0
   stackSize: {fileID: 6937660354230186655}
   icon: {fileID: 694353023352677407}
 --- !u!1 &8454015962243131415
@@ -5035,6 +5264,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7f4724b087dbea9448c39dc518ffc48e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  text: {fileID: 0}
+  highlightImage: {fileID: 0}
+  highlightButton: {fileID: 0}
+  hideImageWhenInactive: 1
+  tintImage: 1
+  useSystemImageTintColor: 1
+  useHighlightColorOnButton: 0
+  highlightColor: {r: 0, g: 0, b: 0, a: 0}
+  normalColor: {r: 0.6392157, g: 0.6392157, b: 0.6392157, a: 0.10980392}
+  highlightedColor: {r: 0.64705884, g: 0.64705884, b: 0.64705884, a: 0.40392157}
+  pressedColor: {r: 0.47058824, g: 0.47058824, b: 0.47058824, a: 0.2901961}
+  selectedColor: {r: 0.64705884, g: 0.64705884, b: 0.64705884, a: 0.40392157}
+  disabledColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 0.5019608}
+  CapitalizeText: 0
   stackSize: {fileID: 6880753240710540654}
   icon: {fileID: 7428053808195769454}
 --- !u!1 &8546841545644975774
@@ -5859,6 +6102,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7f4724b087dbea9448c39dc518ffc48e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  text: {fileID: 0}
+  highlightImage: {fileID: 0}
+  highlightButton: {fileID: 0}
+  hideImageWhenInactive: 1
+  tintImage: 1
+  useSystemImageTintColor: 1
+  useHighlightColorOnButton: 0
+  highlightColor: {r: 0, g: 0, b: 0, a: 0}
+  normalColor: {r: 0.6392157, g: 0.6392157, b: 0.6392157, a: 0.10980392}
+  highlightedColor: {r: 0.64705884, g: 0.64705884, b: 0.64705884, a: 0.40392157}
+  pressedColor: {r: 0.47058824, g: 0.47058824, b: 0.47058824, a: 0.2901961}
+  selectedColor: {r: 0.64705884, g: 0.64705884, b: 0.64705884, a: 0.40392157}
+  disabledColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 0.5019608}
+  CapitalizeText: 0
   stackSize: {fileID: 4895898445794654539}
   icon: {fileID: 3204680991600874382}
 --- !u!1 &9070282739450619301

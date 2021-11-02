@@ -38,6 +38,7 @@ namespace AnyRPG {
         protected WindowManager windowManager = null;
         protected PlayerManager playerManager = null;
         protected ActionBarManager actionBarManager = null;
+        protected CutSceneBarController cutSceneBarController = null;
 
         public bool GamePadModeActive { get => gamePadModeActive; }
         public bool DPadDownPressed { get => dPadDownPressed; }
@@ -67,6 +68,7 @@ namespace AnyRPG {
             windowManager = systemGameManager.WindowManager;
             playerManager = systemGameManager.PlayerManager;
             actionBarManager = uIManager.ActionBarManager;
+            cutSceneBarController = uIManager.CutSceneBarController;
         }
 
         void Update() {
@@ -92,11 +94,15 @@ namespace AnyRPG {
             }
 
             if (windowStackCount == 0 || gamePadModeActive == false) {
-                if (playerManager.PlayerController != null) {
-                    if (gamePadModeActive) {
-                        actionBarManager.ProcessInput();
+                if (cutSceneBarController.CurrentCutscene != null) {
+                    cutSceneBarController.ProcessInput();
+                } else {
+                    if (playerManager.PlayerController != null) {
+                        if (gamePadModeActive) {
+                            actionBarManager.ProcessInput();
+                        }
+                        playerManager.PlayerController.ProcessInput();
                     }
-                    playerManager.PlayerController.ProcessInput();
                 }
             }
         }

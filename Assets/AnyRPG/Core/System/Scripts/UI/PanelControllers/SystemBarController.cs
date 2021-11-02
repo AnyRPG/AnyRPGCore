@@ -22,6 +22,21 @@ namespace AnyRPG {
         [SerializeField]
         private SystemPanelButton mapButton = null;
 
+        [SerializeField]
+        private SystemPanelButton skillsButton = null;
+
+        [SerializeField]
+        private SystemPanelButton reputationsButton = null;
+
+        [SerializeField]
+        private SystemPanelButton currenciesButton = null;
+
+        [SerializeField]
+        private SystemPanelButton achievementsButton = null;
+
+        [SerializeField]
+        private SystemPanelButton inventoryButton = null;
+
         // game manager references
         UIManager uIManager = null;
 
@@ -33,6 +48,11 @@ namespace AnyRPG {
             questLogButton.Configure(systemGameManager);
             characterButton.Configure(systemGameManager);
             mapButton.Configure(systemGameManager);
+            skillsButton.Configure(systemGameManager);
+            reputationsButton.Configure(systemGameManager);
+            currenciesButton.Configure(systemGameManager);
+            achievementsButton.Configure(systemGameManager);
+            inventoryButton.Configure(systemGameManager);
 
             if (systemConfigurationManager.SystemBarMainMenu != null) {
                 mainMenuButton.Icon = systemConfigurationManager.SystemBarMainMenu;
@@ -48,6 +68,21 @@ namespace AnyRPG {
             }
             if (systemConfigurationManager.SystemBarMap != null) {
                 mapButton.Icon = systemConfigurationManager.SystemBarMap;
+            }
+            if (systemConfigurationManager.SystemBarSkills != null) {
+                skillsButton.Icon = systemConfigurationManager.SystemBarSkills;
+            }
+            if (systemConfigurationManager.SystemBarReputations != null) {
+                reputationsButton.Icon = systemConfigurationManager.SystemBarReputations;
+            }
+            if (systemConfigurationManager.SystemBarCurrencies != null) {
+                currenciesButton.Icon = systemConfigurationManager.SystemBarCurrencies;
+            }
+            if (systemConfigurationManager.SystemBarAchievements != null) {
+                achievementsButton.Icon = systemConfigurationManager.SystemBarAchievements;
+            }
+            if (systemConfigurationManager.SystemBarInventory != null) {
+                inventoryButton.Icon = systemConfigurationManager.SystemBarInventory;
             }
         }
 
@@ -77,6 +112,25 @@ namespace AnyRPG {
             uIManager.mainMapWindow.ToggleOpenClose();
         }
 
+        public void ClickSkills() {
+            uIManager.skillBookWindow.ToggleOpenClose();
+        }
+
+        public void ClickReputations() {
+            uIManager.reputationBookWindow.ToggleOpenClose();
+        }
+
+        public void ClickCurrencies() {
+            uIManager.currencyListWindow.ToggleOpenClose();
+        }
+
+        public void ClickAchievements() {
+            uIManager.achievementListWindow.ToggleOpenClose();
+        }
+
+        public void ClickInventory() {
+            uIManager.inventoryWindow.ToggleOpenClose();
+        }
 
 
     }

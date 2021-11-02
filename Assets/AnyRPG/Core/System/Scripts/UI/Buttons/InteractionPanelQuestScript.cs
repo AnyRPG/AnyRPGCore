@@ -8,23 +8,18 @@ using UnityEngine.UI;
 namespace AnyRPG {
     // this is almost identical to questscript
 
-    public class InteractionPanelQuestScript : ConfiguredMonoBehaviour {
+    public class InteractionPanelQuestScript : HighlightButton {
 
-        [SerializeField]
-        private TextMeshProUGUI text = null;
+        protected Quest quest = null;
 
-        private Quest quest = null;
+        protected QuestGiverComponent questGiver;
 
-        private QuestGiverComponent questGiver;
-
-        private bool markedComplete = false;
+        protected bool markedComplete = false;
 
         // game manager references
-        private UIManager uIManager = null;
-        private PlayerManager playerManager = null;
-        private QuestLog questLog = null;
+        protected PlayerManager playerManager = null;
+        protected QuestLog questLog = null;
 
-        public TextMeshProUGUI Text { get => text; }
         public Quest Quest { get => quest; set => quest = value; }
         public QuestGiverComponent QuestGiver { get => questGiver; set => questGiver = value; }
 
@@ -36,12 +31,12 @@ namespace AnyRPG {
         public override void SetGameManagerReferences() {
             base.SetGameManagerReferences();
 
-            uIManager = systemGameManager.UIManager;
             playerManager = systemGameManager.PlayerManager;
             questLog = systemGameManager.QuestLog;
         }
 
-        public void Select() {
+        public override void Interact() {
+            base.Interact();
             //Debug.Log((MyQuest == null ? "null" : MyQuest.DisplayName) + ".InteractionPanelQuestScript.Select()");
             if (quest == null) {
                 return;
@@ -56,10 +51,7 @@ namespace AnyRPG {
             }
         }
 
-        public void DeSelect() {
-            //Debug.Log("QuestTrackerQuestScript.DeSelect()");
-        }
-
+        /*
         public void IsComplete() {
             //Debug.Log("QuestTrackerQuestScript.IsComplete(): Checking questscript iscomplete on myquest: " + MyQuest.MyTitle);
             if (quest.IsComplete && !markedComplete) {
@@ -72,6 +64,7 @@ namespace AnyRPG {
             }
             Text.color = LevelEquations.GetTargetColor(playerManager.MyCharacter.CharacterStats.Level, quest.ExperienceLevel);
         }
+        */
 
 
     }

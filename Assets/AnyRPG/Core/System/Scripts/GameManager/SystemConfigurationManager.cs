@@ -465,6 +465,21 @@ namespace AnyRPG {
         [SerializeField]
         private Sprite systemBarMap;
 
+        [SerializeField]
+        private Sprite systemBarSkills;
+
+        [SerializeField]
+        private Sprite systemBarReputations;
+
+        [SerializeField]
+        private Sprite systemBarCurrencies;
+
+        [SerializeField]
+        private Sprite systemBarAchievements;
+
+        [SerializeField]
+        private Sprite systemBarInventory;
+
         [Header("INTERACTABLE CONFIGURATION")]
 
         [SerializeField]
@@ -615,6 +630,11 @@ namespace AnyRPG {
         public Sprite SystemBarCharacter { get => systemBarCharacter; set => systemBarCharacter = value; }
         public Sprite SystemBarQuestLog { get => systemBarQuestLog; set => systemBarQuestLog = value; }
         public Sprite SystemBarMap { get => systemBarMap; set => systemBarMap = value; }
+        public Sprite SystemBarSkills { get => systemBarSkills; set => systemBarSkills = value; }
+        public Sprite SystemBarReputations { get => systemBarReputations; set => systemBarReputations = value; }
+        public Sprite SystemBarCurrencies { get => systemBarCurrencies; set => systemBarCurrencies = value; }
+        public Sprite SystemBarAchievements { get => systemBarAchievements; set => systemBarAchievements = value; }
+        public Sprite SystemBarInventory { get => systemBarInventory; set => systemBarInventory = value; }
         public Sprite UnitSpawnControllerInteractionPanelImage { get => unitSpawnControllerInteractionPanelImage; set => unitSpawnControllerInteractionPanelImage = value; }
         public Sprite UnitSpawnControllerNamePlateImage { get => unitSpawnControllerNamePlateImage; set => unitSpawnControllerNamePlateImage = value; }
         public Sprite MusicPlayerInteractionPanelImage { get => musicPlayerInteractionPanelImage; set => musicPlayerInteractionPanelImage = value; }

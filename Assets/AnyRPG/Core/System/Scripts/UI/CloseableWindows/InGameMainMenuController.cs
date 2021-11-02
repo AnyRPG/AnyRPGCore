@@ -62,18 +62,21 @@ namespace AnyRPG {
 
         public void ExitMenu() {
             //Debug.Log("MainMenuController.ExitMenu()");
+            currentNavigationController.CurrentNavigableElement.DeSelect();
             uIManager.CloseAllSystemWindows();
             uIManager.exitMenuWindow.OpenWindow();
         }
 
         public void MainMenu() {
             //Debug.Log("MainMenuController.MainMenu()");
+            currentNavigationController.CurrentNavigableElement.DeSelect();
             uIManager.CloseAllSystemWindows();
             uIManager.exitToMainMenuWindow.OpenWindow();
         }
 
         public void SettingsMenu() {
             //Debug.Log("MainMenuController.SettingsMenu()");
+            currentNavigationController.CurrentNavigableElement.DeSelect();
             uIManager.CloseAllSystemWindows();
             uIManager.settingsMenuWindow.OpenWindow();
         }
@@ -81,6 +84,7 @@ namespace AnyRPG {
 
         public void SaveGame() {
             //Debug.Log("MainMenuController.SaveGame()");
+            currentNavigationController.CurrentNavigableElement.DeSelect();
             if (saveManager.SaveGame()) {
                 uIManager.CloseAllSystemWindows();
                 messageFeedManager.WriteMessage("Game Saved");
@@ -90,32 +94,62 @@ namespace AnyRPG {
 
         public void ContinueGame() {
             //Debug.Log("MainMenuController.ContinueGame()");
+            currentNavigationController.CurrentNavigableElement.DeSelect();
             uIManager.CloseAllSystemWindows();
         }
 
         public void CharacterDetails() {
+            currentNavigationController.CurrentNavigableElement.DeSelect();
             uIManager.CloseAllSystemWindows();
             uIManager.characterPanelWindow.OpenWindow();
         }
 
         public void CharacterAbilities() {
+            currentNavigationController.CurrentNavigableElement.DeSelect();
             uIManager.CloseAllSystemWindows();
             uIManager.abilityBookWindow.OpenWindow();
         }
 
         public void CharacterQuestLog() {
+            currentNavigationController.CurrentNavigableElement.DeSelect();
             uIManager.CloseAllSystemWindows();
             uIManager.questLogWindow.OpenWindow();
         }
 
         public void CharacterMap() {
+            currentNavigationController.CurrentNavigableElement.DeSelect();
             uIManager.CloseAllSystemWindows();
             uIManager.mainMapWindow.OpenWindow();
         }
 
         public void CharacterInventory() {
+            currentNavigationController.CurrentNavigableElement.DeSelect();
             uIManager.CloseAllSystemWindows();
             uIManager.inventoryWindow.ToggleOpenClose();
+        }
+
+        public void CharacterSkills() {
+            currentNavigationController.CurrentNavigableElement.DeSelect();
+            uIManager.CloseAllSystemWindows();
+            uIManager.skillBookWindow.ToggleOpenClose();
+        }
+
+        public void CharacterReputations() {
+            currentNavigationController.CurrentNavigableElement.DeSelect();
+            uIManager.CloseAllSystemWindows();
+            uIManager.reputationBookWindow.ToggleOpenClose();
+        }
+
+        public void CharacterCurrencies() {
+            currentNavigationController.CurrentNavigableElement.DeSelect();
+            uIManager.CloseAllSystemWindows();
+            uIManager.currencyListWindow.ToggleOpenClose();
+        }
+
+        public void CharacterAchievements() {
+            currentNavigationController.CurrentNavigableElement.DeSelect();
+            uIManager.CloseAllSystemWindows();
+            uIManager.achievementListWindow.ToggleOpenClose();
         }
 
 

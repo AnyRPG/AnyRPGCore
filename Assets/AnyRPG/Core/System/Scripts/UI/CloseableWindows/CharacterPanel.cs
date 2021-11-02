@@ -16,6 +16,7 @@ namespace AnyRPG {
         [SerializeField]
         private List<CharacterButton> characterButtons = new List<CharacterButton>();
 
+        /*
         [SerializeField]
         private HighlightButton reputationButton = null;
 
@@ -27,6 +28,7 @@ namespace AnyRPG {
 
         [SerializeField]
         private HighlightButton currencyButton = null;
+        */
 
         [SerializeField]
         private HighlightButton petButton = null;
@@ -70,10 +72,10 @@ namespace AnyRPG {
             }
 
             previewCameraController.Configure(systemGameManager);
-            reputationButton.Configure(systemGameManager);
-            achievementsButton.Configure(systemGameManager);
-            skillsButton.Configure(systemGameManager);
-            currencyButton.Configure(systemGameManager);
+            //reputationButton.Configure(systemGameManager);
+            //achievementsButton.Configure(systemGameManager);
+            //skillsButton.Configure(systemGameManager);
+            //currencyButton.Configure(systemGameManager);
             petButton.Configure(systemGameManager);
         }
 

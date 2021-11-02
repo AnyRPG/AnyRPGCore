@@ -6985,6 +6985,14 @@ MonoBehaviour:
   systemBarCharacter: {fileID: 21300000, guid: cd7ceadb20d51b24493744dc9b9039d0, type: 3}
   systemBarQuestLog: {fileID: 21300000, guid: f59d9e6e0cdb2b1469bd9eacf47a8fda, type: 3}
   systemBarMap: {fileID: 21300000, guid: 32c21f6777b4c754f80bee0b05d1986f, type: 3}
+  systemBarSkills: {fileID: 21300000, guid: f6be84cbe9207d24184a8c145e7d01d7, type: 3}
+  systemBarReputations: {fileID: 21300000, guid: b73b395da57a61c49be20ce07e80e647,
+    type: 3}
+  systemBarCurrencies: {fileID: 21300000, guid: 984479b8c770f6e4c91569e28bcd2832,
+    type: 3}
+  systemBarAchievements: {fileID: 21300000, guid: 3bf430a228332f045915bb67d0fd57e4,
+    type: 3}
+  systemBarInventory: {fileID: 21300000, guid: 45ca158daa82b924db1bc873944e51e3, type: 3}
   temporaryMaterial: {fileID: 2100000, guid: 41a797d66a16d984e9d7de6fc6b78a57, type: 2}
   multipleInteractionNamePlateImage: {fileID: 21300000, guid: cd62bacdc6666fa4c88ff42d8cb179fa,
     type: 3}
@@ -12361,16 +12369,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_AnchorMin.y
       value: 0.5
-      objectReference: {fileID: 0}
-    - target: {fileID: 7826749334729153561, guid: b82aeade51324cd4180127efa10f120c,
-        type: 3}
-      propertyPath: m_SizeDelta.x
-      value: 924
-      objectReference: {fileID: 0}
-    - target: {fileID: 7826749334729153561, guid: b82aeade51324cd4180127efa10f120c,
-        type: 3}
-      propertyPath: m_SizeDelta.y
-      value: 625
       objectReference: {fileID: 0}
     - target: {fileID: 7826749334729153561, guid: b82aeade51324cd4180127efa10f120c,
         type: 3}
