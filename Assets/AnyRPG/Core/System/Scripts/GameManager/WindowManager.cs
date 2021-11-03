@@ -46,7 +46,7 @@ namespace AnyRPG {
         }
 
         public void RemoveWindow(CloseableWindowContents closeableWindowContents) {
-            //Debug.Log("ControlsManager.RemoveWindow(" + closeableWindowContents.name + ")");
+            //Debug.Log("WindowManager.RemoveWindow(" + closeableWindowContents.name + ")");
             if (windowStack.Contains(closeableWindowContents)) {
                 windowStack.Remove(closeableWindowContents);
             }

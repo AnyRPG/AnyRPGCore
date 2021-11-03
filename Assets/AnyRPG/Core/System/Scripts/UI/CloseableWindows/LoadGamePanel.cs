@@ -147,8 +147,8 @@ namespace AnyRPG {
 
 
         public void ClearLoadButtons() {
-            // clear the quest list so any quests left over from a previous time opening the window aren't shown
             //Debug.Log("LoadGamePanel.ClearLoadButtons()");
+            // clear the quest list so any quests left over from a previous time opening the window aren't shown
             foreach (LoadGameButton loadGameButton in loadGameButtons) {
                 if (loadGameButton != null) {
                     loadGameButton.DeSelect();
@@ -188,7 +188,8 @@ namespace AnyRPG {
             if (loadGameButtons.Count > 0) {
                 SetNavigationController(uINavigationControllers[0]);
 
-                loadGameButtons[selectedButton].Select();
+                // no longer necessary since setting the navigation controller will select the button
+                //loadGameButtons[selectedButton].Select();
             }
             //SetPreviewTarget();
         }
@@ -246,10 +247,12 @@ namespace AnyRPG {
 
         }
 
+        /*
         public void ClosePanel() {
             //Debug.Log("LoadGamePanel.ClosePanel()");
             uIManager.loadGameWindow.CloseWindow();
         }
+        */
 
         /*
         public void RebuildUMA() {
@@ -263,14 +266,16 @@ namespace AnyRPG {
 
         public void LoadGame() {
             if (SelectedLoadGameButton != null) {
-                loadGameManager.LoadGame(SelectedLoadGameButton.SaveData);
+                AnyRPGSaveData saveData = SelectedLoadGameButton.SaveData;
+                Close();
+                loadGameManager.LoadGame(saveData);
             }
         }
 
         public void NewGame() {
             //Debug.Log("LoadGamePanel.NewGame()");
             if (systemConfigurationManager.UseNewGameWindow == true) {
-                ClosePanel();
+                Close();
                 uIManager.newGameWindow.OpenWindow();
             } else {
                 uIManager.confirmNewGameMenuWindow.OpenWindow();

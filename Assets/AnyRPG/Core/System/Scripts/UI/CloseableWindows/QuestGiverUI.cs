@@ -87,8 +87,8 @@ namespace AnyRPG {
         public override void Configure(SystemGameManager systemGameManager) {
             base.Configure(systemGameManager);
 
-            acceptButton.Configure(systemGameManager);
-            completeButton.Configure(systemGameManager);
+            //acceptButton.Configure(systemGameManager);
+            //completeButton.Configure(systemGameManager);
 
             questDetailsArea.Configure(systemGameManager);
 
@@ -331,6 +331,8 @@ namespace AnyRPG {
 
             UpdateButtons(quest);
 
+            uINavigationControllers[0].UpdateNavigationList();
+            FocusCurrentButton();
         }
 
         public void ClearDescription() {
@@ -561,6 +563,7 @@ namespace AnyRPG {
                 // in that case it doesn't make sense to show a questGiver name
                 uIManager.questGiverWindow.SetWindowTitle("");
             }
+
         }
 
         public void OnDisable() {

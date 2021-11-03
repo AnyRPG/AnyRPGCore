@@ -20,6 +20,10 @@ namespace AnyRPG {
 
         [Header("Navigation")]
 
+        [Tooltip("Set this field to false for sub panels")]
+        [SerializeField]
+        protected bool addToWindowStack = true;
+
         [Tooltip("Set this field to false for a base window that should not be closed by the player.  This does not prevent the window from being closed by the system when necessary")]
         [SerializeField]
         protected bool userCloseable = true;
@@ -126,7 +130,7 @@ namespace AnyRPG {
         /// re-focus a window after closing another window
         /// </summary>
         public void FocusCurrentButton() {
-            //Debug.Log(gameObject.name + ".CloseableWindowContents.FocusCurrentButton()");
+            Debug.Log(gameObject.name + ".CloseableWindowContents.FocusCurrentButton()");
             if (activeSubPanel != null) {
                 activeSubPanel.FocusCurrentButton();
                 return;
@@ -209,10 +213,12 @@ namespace AnyRPG {
 
         public virtual void JoystickButton4() {
             //Debug.Log(gameObject.name + ".CloseableWindowContents.JoystickButton3()");
+            LBButton();
         }
 
         public virtual void JoystickButton5() {
             //Debug.Log(gameObject.name + ".CloseableWindowContents.JoystickButton3()");
+            RBButton();
         }
 
         public virtual void UpButton() {
@@ -285,6 +291,29 @@ namespace AnyRPG {
             return false;
         }
 
+        public virtual void LBButton() {
+            //Debug.Log(gameObject.name + ".CloseableWindowContents.LeftButton()");
+            if (activeSubPanel != null) {
+                activeSubPanel.LBButton();
+                return;
+            }
+            if (currentNavigationController != null) {
+                currentNavigationController.LBButton();
+            }
+        }
+
+        public virtual void RBButton() {
+            //Debug.Log(gameObject.name + ".CloseableWindowContents.RightButton()");
+            if (activeSubPanel != null) {
+                activeSubPanel.RBButton();
+                return;
+            }
+            if (currentNavigationController != null) {
+                currentNavigationController.RBButton();
+            }
+        }
+
+
 
         public virtual void Close() {
             //Debug.Log(gameObject.name + ".CloseableWindowContents.Close()");
@@ -343,12 +372,14 @@ namespace AnyRPG {
 
         public virtual void RemoveFromWindowStack() {
             //Debug.Log(gameObject.name + ".CloseableWindowContents.RemoveFromWindowStack()");
-            windowManager.RemoveWindow(this);
+            if (parentPanel == null && addToWindowStack) {
+                windowManager.RemoveWindow(this);
+            }
         }
 
         public virtual void ReceiveOpenWindowNotification() {
             //Debug.Log(gameObject.name + ".CloseableWindowContents.ReceiveOpenWindowNotification()");
-            if (parentPanel == null) {
+            if (parentPanel == null && addToWindowStack == true) {
                 AddToWindowStack();
             }
             foreach (UINavigationController uINavigationController in uINavigationControllers) {
@@ -365,6 +396,7 @@ namespace AnyRPG {
         }
 
         public virtual void ReceiveClosedWindowNotification() {
+            //Debug.Log(gameObject.name + ".CloseableWindowContents.ReceiveClosedWindowNotification()");
             RemoveFromWindowStack();
             OnCloseWindow(this);
         }

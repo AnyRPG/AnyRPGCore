@@ -553,6 +553,7 @@ GameObject:
   - component: {fileID: 1049664015810839634}
   - component: {fileID: 1049664015810839635}
   - component: {fileID: 1049664015810839632}
+  - component: {fileID: 4394318420971097687}
   m_Layer: 5
   m_Name: LeftPane
   m_TagString: Untagged
@@ -649,6 +650,32 @@ MonoBehaviour:
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls: []
+--- !u!114 &4394318420971097687
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1049664015810839647}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 03715bb91f4a7fa47b3d93745fb1b35e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  leftPanel: {fileID: 0}
+  leftControllers: []
+  rightPanel: {fileID: 0}
+  rightControllers: []
+  upPanel: {fileID: 0}
+  upControllers: []
+  downPanel: {fileID: 0}
+  downControllers:
+  - {fileID: 8375393756399834779}
+  acceptController: {fileID: 8375393756399834779}
+  scrollRect: {fileID: 1049664015810839632}
+  updateActiveListOnOpen: 1
+  pruneInactiveElements: 1
+  navigableButtons: []
 --- !u!1 &1245289277639961583
 GameObject:
   m_ObjectHideFlags: 0
@@ -740,6 +767,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1910905581269361167}
+  - component: {fileID: 8375393756399834779}
   m_Layer: 5
   m_Name: BottomRow
   m_TagString: Untagged
@@ -769,6 +797,35 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 133}
   m_Pivot: {x: 0.5, y: 0}
+--- !u!114 &8375393756399834779
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1518068256897249434}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8995f41cb132f3148a9912f89e49421b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  leftPanel: {fileID: 0}
+  leftControllers: []
+  rightPanel: {fileID: 0}
+  rightControllers: []
+  upPanel: {fileID: 0}
+  upControllers:
+  - {fileID: 4394318420971097687}
+  downPanel: {fileID: 0}
+  downControllers: []
+  acceptController: {fileID: 0}
+  scrollRect: {fileID: 0}
+  updateActiveListOnOpen: 1
+  pruneInactiveElements: 1
+  navigableButtons:
+  - {fileID: 1107083640720328192}
+  - {fileID: 506749283113608388}
+  - {fileID: 4244467954655980267}
 --- !u!1 &2412592105116491747
 GameObject:
   m_ObjectHideFlags: 0
@@ -1434,6 +1491,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   backGroundImage: {fileID: 0}
   coloredUIElements: []
+  addToWindowStack: 0
+  userCloseable: 0
+  focusFirstButtonOnOpen: 0
+  focusActiveSubPanel: 0
+  uINavigationControllers: []
+  subPanels: []
   previewCameraController: {fileID: 4312250358296713847}
 --- !u!1 &6365534986942991759
 GameObject:
@@ -1704,6 +1767,14 @@ MonoBehaviour:
   coloredUIElements:
   - {fileID: 2650991618514602094}
   - {fileID: 3310382599213395662}
+  addToWindowStack: 1
+  userCloseable: 1
+  focusFirstButtonOnOpen: 0
+  focusActiveSubPanel: 0
+  uINavigationControllers:
+  - {fileID: 4394318420971097687}
+  - {fileID: 8375393756399834779}
+  subPanels: []
   buttonPrefab: {fileID: 3408690417865459949, guid: 01f18dfa0fd5008409ae5ef6f5bf0cf4,
     type: 3}
   buttonArea: {fileID: 1049664014951422467}
@@ -2598,12 +2669,6 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 2813171c6b982da40be36cc19182891e, type: 3}
---- !u!224 &4031773673221452864 stripped
-RectTransform:
-  m_CorrespondingSourceObject: {fileID: 5540552276615009493, guid: 2813171c6b982da40be36cc19182891e,
-    type: 3}
-  m_PrefabInstance: {fileID: 8867660490218430613}
-  m_PrefabAsset: {fileID: 0}
 --- !u!114 &4312250358296713847 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 4668107325015325410, guid: 2813171c6b982da40be36cc19182891e,
@@ -2616,3 +2681,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b159da32d9a20974b9b2a7dec54c4da0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!224 &4031773673221452864 stripped
+RectTransform:
+  m_CorrespondingSourceObject: {fileID: 5540552276615009493, guid: 2813171c6b982da40be36cc19182891e,
+    type: 3}
+  m_PrefabInstance: {fileID: 8867660490218430613}
+  m_PrefabAsset: {fileID: 0}

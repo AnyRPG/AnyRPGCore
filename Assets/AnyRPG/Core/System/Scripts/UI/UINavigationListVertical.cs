@@ -9,7 +9,8 @@ namespace AnyRPG {
     public class UINavigationListVertical : UINavigationController {
 
         public override void FocusCurrentButton() {
-            //Debug.Log(gameObject.name + ".UINavigationListVertical.FocusCurrentButton()");
+            Debug.Log(gameObject.name + ".UINavigationListVertical.FocusCurrentButton()");
+            base.FocusCurrentButton();
             if (activeNavigableButtons.Count == 0) {
                 return;
             }

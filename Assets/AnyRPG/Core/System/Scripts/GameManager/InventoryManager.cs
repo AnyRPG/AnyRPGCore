@@ -17,6 +17,7 @@ namespace AnyRPG {
         // BagNodes contain a bag and some metadata about the bag
         private List<BagNode> bagNodes = new List<BagNode>();
 
+        /*
         [SerializeField]
         private GameObject windowPrefab = null;
 
@@ -25,6 +26,7 @@ namespace AnyRPG {
 
         [SerializeField]
         private GameObject bankBagPrefab = null;
+        */
 
         // game manager references
         private HandScript handScript = null;
@@ -91,6 +93,7 @@ namespace AnyRPG {
             //Debug.Log("InventoryManager.Awake()");
             base.Configure(systemGameManager);
 
+            CreateEventSubscriptions();
         }
 
         public override void SetGameManagerReferences() {
@@ -101,11 +104,6 @@ namespace AnyRPG {
             systemItemManager = systemGameManager.SystemItemManager;
             objectPooler = systemGameManager.ObjectPooler;
             systemEventManager = systemGameManager.SystemEventManager;
-        }
-
-        private void Start() {
-            //Debug.Log("InventoryManager.Start()");
-            CreateEventSubscriptions();
         }
 
         private void CreateEventSubscriptions() {
@@ -306,7 +304,7 @@ namespace AnyRPG {
         /// </summary>
         /// <param name="bag"></param>
         public void RemoveBag(Bag bag, bool clearOnly = false) {
-            //Debug.Log("InventoryManager.RemoveBag()");
+            Debug.Log("InventoryManager.RemoveBag()");
             foreach (BagNode bagNode in bagNodes) {
                 if (bagNode.Bag == bag) {
                     // give the old bagNode a temp location so we can add its items back to the inventory

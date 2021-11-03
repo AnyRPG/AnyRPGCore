@@ -47,7 +47,7 @@ namespace AnyRPG {
         }
 
         public override void SetContentOwner() {
-            Debug.Log(gameObject.name + ".PagedWindow.SetContentOwner()");
+            //Debug.Log(gameObject.name + ".PagedWindow.SetContentOwner()");
             if (windowContents != null) {
                 (windowContents as PagedWindowContents).SetPagedWindow(this);
             }

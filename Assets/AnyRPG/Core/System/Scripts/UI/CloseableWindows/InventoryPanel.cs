@@ -44,11 +44,14 @@ namespace AnyRPG {
         }
 
         public void ProcessClearData() {
+            //Debug.Log("InventoryPanel.ProcessClearData()");
+
             ClearSlots();
             bagBarController.ClearBagButtons();
         }
 
         public void HandleAddInventoryBagNode(BagNode bagNode) {
+            //Debug.Log("InventoryPanel.HandleAddInventoryBagNode()");
             bagBarController.AddBagButton(bagNode);
             bagNode.BagPanel = this;
         }

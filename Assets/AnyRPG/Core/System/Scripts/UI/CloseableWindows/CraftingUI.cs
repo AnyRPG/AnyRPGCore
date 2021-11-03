@@ -9,8 +9,7 @@ using UnityEngine.UI;
 namespace AnyRPG {
     public class CraftingUI : WindowContentController {
 
-        // holds all the recipes
-        private CraftAbility craftAbility = null;
+        [Header("Crafting")]
 
         [SerializeField]
         private HighlightButton craftButton = null;
@@ -18,14 +17,22 @@ namespace AnyRPG {
         [SerializeField]
         private HighlightButton craftAllButton = null;
 
+        /*
         [SerializeField]
         private HighlightButton cancelButton = null;
+        */
 
         [SerializeField]
         private Button lessButton = null;
 
         [SerializeField]
         private Button moreButton = null;
+
+        [SerializeField]
+        private Image leftButton = null;
+
+        [SerializeField]
+        private Image rightButton = null;
 
         //[SerializeField]
         //private GameObject cancelButton = null;
@@ -52,6 +59,10 @@ namespace AnyRPG {
         [SerializeField]
         private List<DescribableCraftingInputIcon> inputIcons = new List<DescribableCraftingInputIcon>();
 
+        // holds all the recipes
+        private CraftAbility craftAbility = null;
+
+
         // the number of items to craft
         private int craftAmount = 1;
 
@@ -75,9 +86,11 @@ namespace AnyRPG {
 
         public override void Configure(SystemGameManager systemGameManager) {
             base.Configure(systemGameManager);
+            /*
             craftButton.Configure(systemGameManager);
             craftAllButton.Configure(systemGameManager);
             cancelButton.Configure(systemGameManager);
+            */
 
             foreach (DescribableCraftingInputIcon inputIcon in inputIcons) {
                 inputIcon.Configure(systemGameManager);
@@ -118,6 +131,7 @@ namespace AnyRPG {
         public void DeactivateButtons() {
             craftButton.Button.interactable = false;
             craftAllButton.Button.interactable = false;
+            uINavigationControllers[1].UpdateNavigationList();
         }
 
         public void CancelCrafting() {
@@ -159,6 +173,7 @@ namespace AnyRPG {
                     qs.Text.text = recipe.Output.DisplayName;
                     qs.SetRecipe(recipe);
                     recipeScripts.Add(recipe, qs);
+                    uINavigationControllers[0].AddActiveButton(qs);
                 } else {
                     //Debug.Log("Recipe Output is null!");
                 }
@@ -168,9 +183,13 @@ namespace AnyRPG {
             //MySelectedRecipeScript.Select();
             //} else {
             SelectedRecipeScript = firstScript;
+            /*
             if (firstScript != null) {
                 firstScript.Select();
             }
+            */
+            SetNavigationController(uINavigationControllers[0]);
+
             //}
         }
 
@@ -267,6 +286,14 @@ namespace AnyRPG {
             DeactivateButtons();
 
             craftingManager.ClearCraftingQueue();
+
+            if (controlsManager.GamePadModeActive == true) {
+                leftButton.gameObject.SetActive(true);
+                rightButton.gameObject.SetActive(true);
+            } else {
+                leftButton.gameObject.SetActive(false);
+                rightButton.gameObject.SetActive(false);
+            }
         }
 
         private void ResetWindow() {
@@ -339,6 +366,9 @@ namespace AnyRPG {
                 craftAllButton.Button.interactable = true;
             }
             craftAmountText.text = craftAmount.ToString();
+
+
+            uINavigationControllers[1].UpdateNavigationList();
         }
 
         public void IncreaseCraftAmount() {
@@ -351,6 +381,16 @@ namespace AnyRPG {
                 craftAmount--;
                 UpdateCraftAmountArea();
             }
+        }
+
+        public override void LBButton() {
+            base.LBButton();
+            DecreaseCraftAmount();
+        }
+
+        public override void RBButton() {
+            base.RBButton();
+            IncreaseCraftAmount();
         }
 
 

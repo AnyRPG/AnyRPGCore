@@ -44,11 +44,13 @@ namespace AnyRPG {
         [SerializeField]
         private TextMeshProUGUI nameText = null;
 
+        /*
         [SerializeField]
         private HighlightButton returnButton = null;
 
         [SerializeField]
         private HighlightButton spawnButton = null;
+        */
 
         private List<UnitProfile> unitProfileList = new List<UnitProfile>();
 
@@ -78,8 +80,8 @@ namespace AnyRPG {
         public override void Configure(SystemGameManager systemGameManager) {
             base.Configure(systemGameManager);
 
-            returnButton.Configure(systemGameManager);
-            spawnButton.Configure(systemGameManager);
+            //returnButton.Configure(systemGameManager);
+            //spawnButton.Configure(systemGameManager);
             previewCameraController.Configure(systemGameManager);
         }
 
@@ -93,9 +95,11 @@ namespace AnyRPG {
             objectPooler = systemGameManager.ObjectPooler;
         }
 
+        /*
         protected void Start() {
             CloseExtraLevelsOptionsArea();
         }
+        */
 
         public void PopulateDropDownValues() {
 
@@ -238,11 +242,14 @@ namespace AnyRPG {
                     unitSpawnButton.UnitSpawnControlPanel = this;
                     unitSpawnButton.AddUnitProfile(unitProfile);
                     unitSpawnButtons.Add(unitSpawnButton);
+                    uINavigationControllers[0].AddActiveButton(unitSpawnButton);
                 }
 
             }
             if (unitSpawnButtons.Count > 0) {
-                unitSpawnButtons[0].Select();
+                SetNavigationController(uINavigationControllers[0]);
+
+                //unitSpawnButtons[0].Select();
             }
             //SetPreviewTarget();
         }
@@ -259,33 +266,38 @@ namespace AnyRPG {
                 }
             }
             unitSpawnButtons.Clear();
+            uINavigationControllers[0].ClearActiveButtons();
             SelectedUnitSpawnButton = null;
             nameText.text = "";
         }
 
 
         public void CloseLevelOptionsArea() {
-            //Debug.Log("CharacterCreatorPanel.CloseEyebrowsAppearanceOptionsArea()");
+            Debug.Log("UnitSpawnControlPanel.CloseLevelOptionsArea()");
             levelOptionsArea.gameObject.SetActive(false);
+            uINavigationControllers[1].UpdateNavigationList();
         }
 
         public void OpenLevelOptionsArea() {
-            //Debug.Log("CharacterCreatorPanel.OpenEyebrowsAppearanceOptionsArea()");
+            Debug.Log("UnitSpawnControlPanel.OpenLevelOptionsArea()");
             levelOptionsArea.gameObject.SetActive(true);
+            uINavigationControllers[1].UpdateNavigationList();
         }
 
         public void CloseExtraLevelsOptionsArea() {
-            //Debug.Log("CharacterCreatorPanel.CloseBeardAppearanceOptionsArea()");
+            Debug.Log("UnitSpawnControlPanel.CloseExtraLevelsOptionsArea()");
             extraLevelsOptionsArea.gameObject.SetActive(false);
+            uINavigationControllers[1].UpdateNavigationList();
         }
 
         public void OpenExtraLevelsOptionsArea() {
-            //Debug.Log("CharacterCreatorPanel.OpenBeardAppearanceOptionsArea()");
+            Debug.Log("UnitSpawnControlPanel.OpenExtraLevelsOptionsArea()");
             extraLevelsOptionsArea.gameObject.SetActive(true);
+            uINavigationControllers[1].UpdateNavigationList();
         }
 
         public void SetLevelType(int dropdownIndex) {
-            //Debug.Log("CharacterCreatorPanel.SetHair(" + dropdownIndex + "): " + hairAppearanceDropdown.options[hairAppearanceDropdown.value].text);
+            Debug.Log("UnitSpawnControlPanel.SetLevelType(" + dropdownIndex + ")");
             if (levelTypeDropdown.options[levelTypeDropdown.value].text == "Fixed") {
                 CloseExtraLevelsOptionsArea();
                 OpenLevelOptionsArea();

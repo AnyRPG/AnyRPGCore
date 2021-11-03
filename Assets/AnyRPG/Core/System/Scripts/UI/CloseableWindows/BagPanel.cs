@@ -64,7 +64,7 @@ namespace AnyRPG {
         /// </summary>
         /// <param name="slotCount"></param>
         public virtual List<SlotScript> AddSlots(int slotCount) {
-            Debug.Log(gameObject.name + gameObject.GetInstanceID() + ".BagPanel.AddSlots(" + slotCount + ")");
+            //Debug.Log(gameObject.name + gameObject.GetInstanceID() + ".BagPanel.AddSlots(" + slotCount + ")");
 
             List<SlotScript> returnList = new List<SlotScript>();
             for (int i = 0; i < slotCount; i++) {

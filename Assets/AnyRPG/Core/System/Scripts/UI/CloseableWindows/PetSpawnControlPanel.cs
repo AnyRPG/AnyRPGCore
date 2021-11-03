@@ -32,8 +32,10 @@ namespace AnyRPG {
         [SerializeField]
         private TextMeshProUGUI classText = null;
 
+        /*
         [SerializeField]
         private HighlightButton returnButton = null;
+        */
 
         [SerializeField]
         private HighlightButton spawnButton = null;
@@ -80,9 +82,11 @@ namespace AnyRPG {
 
         public override void Configure(SystemGameManager systemGameManager) {
             base.Configure(systemGameManager);
+            /*
             returnButton.Configure(systemGameManager);
             spawnButton.Configure(systemGameManager);
             despawnButton.Configure(systemGameManager);
+            */
             characterPreviewPanel.Configure(systemGameManager);
         }
 
@@ -129,6 +133,7 @@ namespace AnyRPG {
                     despawnButton.Button.interactable = false;
                 }
             }
+            uINavigationControllers[1].UpdateNavigationList();
         }
 
         public void ClearPanel() {
@@ -200,11 +205,14 @@ namespace AnyRPG {
                         petSpawnButton.PetSpawnControlPanel = this;
                         petSpawnButton.AddUnitProfile(unitProfile);
                         petSpawnButtons.Add(petSpawnButton);
+                        uINavigationControllers[0].AddActiveButton(petSpawnButton);
                     }
                 }
             }
             if (petSpawnButtons.Count > 0) {
-                petSpawnButtons[0].Select();
+                SetNavigationController(uINavigationControllers[0]);
+
+                //petSpawnButtons[0].Select();
             }
             //SetPreviewTarget();
         }
@@ -219,6 +227,7 @@ namespace AnyRPG {
                 }
             }
             petSpawnButtons.Clear();
+            uINavigationControllers[0].ClearActiveButtons();
             SelectedPetSpawnButton = null;
             nameText.text = "";
         }

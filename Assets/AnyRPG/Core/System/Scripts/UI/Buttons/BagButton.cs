@@ -67,7 +67,7 @@ namespace AnyRPG {
         }
 
         public void HandleAddBag(Bag bag) {
-            Debug.Log(gameObject.name + ".BagButton.OnAddBag()");
+            //Debug.Log(gameObject.name + ".BagButton.OnAddBag()");
             icon.sprite = bag.Icon;
             icon.color = Color.white;
             SetBackGroundColor();

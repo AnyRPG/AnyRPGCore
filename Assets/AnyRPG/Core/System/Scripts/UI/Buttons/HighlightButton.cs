@@ -111,7 +111,7 @@ namespace AnyRPG {
         }
 
         public override void Select() {
-            Debug.Log(gameObject.name + ".HighlightButton.Select()");
+            //Debug.Log(gameObject.name + ".HighlightButton.Select()");
             base.Select();
             if (highlightImage != null) {
                 //Debug.Log(gameObject.name + ".HighlightButton.Select(): highlightimage is not null");

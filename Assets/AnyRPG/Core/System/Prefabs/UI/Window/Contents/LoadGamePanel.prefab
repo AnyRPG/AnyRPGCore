@@ -353,8 +353,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   backGroundImage: {fileID: 0}
   coloredUIElements: []
-  userCloseable: 1
-  focusFirstButtonOnOpen: 1
+  addToWindowStack: 0
+  userCloseable: 0
+  focusFirstButtonOnOpen: 0
   focusActiveSubPanel: 0
   uINavigationControllers: []
   subPanels: []
@@ -1006,23 +1007,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 03715bb91f4a7fa47b3d93745fb1b35e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  moveToSameIndex: 0
   leftPanel: {fileID: 0}
-  leftController: {fileID: 0}
   leftControllers: []
   rightPanel: {fileID: 0}
-  rightController: {fileID: 0}
   rightControllers:
   - {fileID: 1126385356333861572}
   upPanel: {fileID: 0}
-  upController: {fileID: 0}
   upControllers: []
   downPanel: {fileID: 0}
-  downController: {fileID: 0}
   downControllers:
   - {fileID: 1126385356333861572}
   acceptController: {fileID: 1126385356333861572}
   scrollRect: {fileID: 4692299217850708635}
+  updateActiveListOnOpen: 1
+  pruneInactiveElements: 1
   navigableButtons: []
 --- !u!1 &6529658237067183697
 GameObject:
@@ -1086,22 +1084,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8995f41cb132f3148a9912f89e49421b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  moveToSameIndex: 0
   leftPanel: {fileID: 0}
-  leftController: {fileID: 0}
   leftControllers: []
   rightPanel: {fileID: 0}
-  rightController: {fileID: 0}
   rightControllers: []
   upPanel: {fileID: 0}
-  upController: {fileID: 0}
   upControllers:
   - {fileID: 4380524380536158505}
   downPanel: {fileID: 0}
-  downController: {fileID: 0}
   downControllers: []
   acceptController: {fileID: 0}
   scrollRect: {fileID: 0}
+  updateActiveListOnOpen: 1
+  pruneInactiveElements: 1
   navigableButtons:
   - {fileID: 4670905920152662219}
   - {fileID: 5226171536529183247}
@@ -1246,6 +1241,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   backGroundImage: {fileID: 3027280789261577762}
   coloredUIElements: []
+  addToWindowStack: 1
   userCloseable: 1
   focusFirstButtonOnOpen: 0
   focusActiveSubPanel: 0

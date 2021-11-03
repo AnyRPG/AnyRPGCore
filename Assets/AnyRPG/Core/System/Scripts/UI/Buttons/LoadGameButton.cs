@@ -122,6 +122,7 @@ namespace AnyRPG {
         }
 
         public override void Select() {
+            Debug.Log(gameObject.name + ".LoadGameButton.Select()");
             CommonSelect();
             base.Select();
         }

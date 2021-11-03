@@ -877,7 +877,7 @@ namespace AnyRPG {
         }
 
         public void LoadEquippedBagData(AnyRPGSaveData anyRPGSaveData) {
-            //Debug.Log("Savemanager.LoadEquippedBagData()");
+            Debug.Log("Savemanager.LoadEquippedBagData()");
             inventoryManager.LoadEquippedBagData(anyRPGSaveData.equippedBagSaveData);
         }
 

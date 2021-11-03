@@ -106,11 +106,11 @@ namespace AnyRPG {
             yield return new WaitForEndOfFrame();
             scrollRect = dropDown.gameObject.GetComponentInChildren<ScrollRect>();
             if (scrollRect != null) {
-                Debug.Log("scrollRect: " + scrollRect.gameObject.name);
+                //Debug.Log("scrollRect: " + scrollRect.gameObject.name);
                 contentPane = scrollRect.content;
                 if (contentPane != null) {
                     dropDownList = contentPane.GetComponentsInChildren<Toggle>();
-                    Debug.Log("Toggle Count: " + dropDownList.Length + "; current: " + dropDown.value + "current position: " + contentPane.localPosition);
+                    //Debug.Log("Toggle Count: " + dropDownList.Length + "; current: " + dropDown.value + "; current position: " + contentPane.localPosition);
                     contentPane.localPosition = GetSnapToPositionToBringChildIntoView(scrollRect, dropDownList[dropDown.value].transform as RectTransform);
                 }
             }
@@ -126,7 +126,7 @@ namespace AnyRPG {
                 instance.content.localPosition.x,
                 0 - (viewportLocalPosition.y + childLocalPosition.y + (child.rect.height / 2))
             );
-            Debug.Log("return " + result);
+            //Debug.Log("return " + result);
             return result;
         }
 
