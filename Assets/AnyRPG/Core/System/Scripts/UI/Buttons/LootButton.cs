@@ -7,7 +7,7 @@ using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 namespace AnyRPG {
-    public class LootButton : TransparencyButton {
+    public class LootButton : HighlightButton {
 
         [Header("Loot")]
 
@@ -22,45 +22,63 @@ namespace AnyRPG {
 
         protected LootUI lootWindow = null;
 
-        public TextMeshProUGUI MyTitle { get => title; }
-
         protected LootDrop lootDrop = null;
 
-        public Image Icon { get => icon; }
-        public LootDrop LootDrop {
-            get => lootDrop;
-            set {
-                lootDrop = value;
-                Icon.sprite = lootDrop.Icon;
-                lootDrop.SetBackgroundImage(lootBackGroundImage);
-            }
-        }
+        /*
+        // game manager references
+        protected LootManager lootManager = null;
+        */
 
+        public TextMeshProUGUI Title { get => title; }
+        public Image Icon { get => icon; }
+        public LootDrop LootDrop { get => lootDrop; }
+
+        /*
         public override void Configure(SystemGameManager systemGameManager) {
             //Debug.Log(gameObject.name + ".LootButton.Configure(): " + GetInstanceID());
             base.Configure(systemGameManager);
         }
 
+        public override void SetGameManagerReferences() {
+            base.SetGameManagerReferences();
+            lootManager = systemGameManager.LootManager;
+        }
+        */
+
+        /*
         public void SetLootUI(LootUI lootUI) {
             lootWindow = lootUI;
         }
+        */
 
-        public bool TakeLoot() {
-            //Debug.Log("LootButton.TakeLoot()");
+        public void SetLootDrop(LootDrop lootDrop) {
+            this.lootDrop = lootDrop;
+            Icon.sprite = lootDrop.Icon;
+            lootDrop.SetBackgroundImage(lootBackGroundImage);
+
+            string colorString = "white";
+            if (lootDrop.ItemQuality != null) {
+                colorString = "#" + ColorUtility.ToHtmlStringRGB(lootDrop.ItemQuality.QualityColor);
+            }
+            string title = string.Format("<color={0}>{1}</color>", colorString, lootDrop.DisplayName);
+            // set the title
+            Title.text = title;
+        }
+
+        public void ClearLootDrop() {
+            lootDrop = null;
+            icon.sprite = null;
+            lootBackGroundImage.sprite = null;
+            title.text = "";
+        }
+
+        public void TakeLoot() {
+            Debug.Log("LootButton.TakeLoot()");
             if (LootDrop == null) {
-                return false;
+                return;
             }
 
-            bool result = LootDrop.TakeLoot();
-            if (result) {
-                LootDrop.AfterLoot();
-
-                gameObject.SetActive(false);
-                lootWindow.TakeLoot(LootDrop);
-                uIManager.HideToolTip();
-                return true;
-            }
-            return false;
+            LootDrop.TakeLoot();
         }
 
         public override void OnPointerEnter(PointerEventData eventData) {
@@ -85,6 +103,11 @@ namespace AnyRPG {
             }
 
             // loot the item
+            TakeLoot();
+        }
+
+        public override void Accept() {
+            base.Accept();
             TakeLoot();
         }
 

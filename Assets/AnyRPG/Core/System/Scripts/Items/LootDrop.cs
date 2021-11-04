@@ -8,6 +8,9 @@ using UnityEngine.UI;
 namespace AnyRPG {
     public class LootDrop : ConfiguredClass, IDescribable {
 
+        // game manager references
+        protected LootManager lootManager = null;
+
         public virtual Sprite Icon => null;
 
         public virtual string DisplayName => string.Empty;
@@ -18,8 +21,14 @@ namespace AnyRPG {
             }
         }
 
+
         public LootDrop(SystemGameManager systemGameManager) {
             Configure(systemGameManager);
+        }
+
+        public override void SetGameManagerReferences() {
+            base.SetGameManagerReferences();
+            lootManager = systemGameManager.LootManager;
         }
 
         public virtual void SetBackgroundImage(Image backgroundImage) {
@@ -31,7 +40,17 @@ namespace AnyRPG {
         }
 
 
-        public virtual bool TakeLoot() {
+        public virtual void TakeLoot() {
+
+            if (ProcessTakeLoot()) {
+                AfterLoot();
+                Remove();
+                lootManager.TakeLoot(this);
+            }
+
+        }
+
+        protected virtual bool ProcessTakeLoot() {
             // need a fake value by default
             return true;
         }
@@ -110,8 +129,8 @@ namespace AnyRPG {
             return GetSummary();
         }
 
-        public override bool TakeLoot() {
-            base.TakeLoot();
+        protected override bool ProcessTakeLoot() {
+            base.ProcessTakeLoot();
             foreach (LootableCharacterComponent lootableCharacter in currencyNodes.Keys) {
                 if (currencyNodes[lootableCharacter].currency != null) {
                     playerManager.MyCharacter.CharacterCurrencyManager.AddCurrency(currencyNodes[lootableCharacter].currency, currencyNodes[lootableCharacter].Amount);
@@ -136,7 +155,6 @@ namespace AnyRPG {
         // game manager references
         private UIManager uIManager = null;
         private InventoryManager inventoryManager = null;
-        private LootManager lootManager = null;
 
         public override ItemQuality ItemQuality {
             get {
@@ -178,7 +196,6 @@ namespace AnyRPG {
             base.SetGameManagerReferences();
             uIManager = systemGameManager.UIManager;
             inventoryManager = systemGameManager.InventoryManager;
-            lootManager = systemGameManager.LootManager;
         }
 
         public override void SetBackgroundImage(Image backgroundImage) {
@@ -190,8 +207,8 @@ namespace AnyRPG {
             return (Item.DisplayName == item.DisplayName);
         }
 
-        public override bool TakeLoot() {
-            base.TakeLoot();
+        protected override bool ProcessTakeLoot() {
+            base.ProcessTakeLoot();
             return inventoryManager.AddItem(Item);
         }
 

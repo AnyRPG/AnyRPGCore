@@ -184,7 +184,7 @@ namespace AnyRPG {
                 if (currencyLootButton != null) {
                     KeyValuePair<Sprite, string> keyValuePair = currencyConverter.RecalculateValues(currencyNodes, true);
                     currencyLootButton.Icon.sprite = keyValuePair.Key;
-                    currencyLootButton.MyTitle.text = keyValuePair.Value;
+                    currencyLootButton.Title.text = keyValuePair.Value;
                 }
             } else {
                 currencyHeading.gameObject.SetActive(false);

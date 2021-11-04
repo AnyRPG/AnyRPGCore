@@ -186,7 +186,7 @@ namespace AnyRPG {
         }
 
         public virtual bool LeaveUp() {
-            Debug.Log(gameObject.name + ".UINavigationController.LeaveUp()");
+            //Debug.Log(gameObject.name + ".UINavigationController.LeaveUp()");
             if (upControllers.Count != 0) {
                 if (currentNavigableElement != null) {
                     currentNavigableElement.LeaveElement();
@@ -220,7 +220,7 @@ namespace AnyRPG {
         }
 
         public virtual bool LeaveDown() {
-            Debug.Log(gameObject.name + ".UINavigationController.LeaveDown()");
+            //Debug.Log(gameObject.name + ".UINavigationController.LeaveDown()");
             if (downControllers.Count != 0) {
                 if (currentNavigableElement != null) {
                     currentNavigableElement.LeaveElement();
@@ -241,7 +241,7 @@ namespace AnyRPG {
         }
 
         public void LeftButton() {
-            Debug.Log(gameObject.name + ".UINavigationController.LeftButton()");
+            //Debug.Log(gameObject.name + ".UINavigationController.LeftButton()");
             if (currentNavigableElement != null && currentNavigableElement.CaptureDPad == true) {
                 currentNavigableElement.LeftButton();
                 return;
@@ -253,7 +253,7 @@ namespace AnyRPG {
         }
 
         public virtual bool LeaveLeft() {
-            Debug.Log(gameObject.name + ".UINavigationController.LeaveLeft()");
+            //Debug.Log(gameObject.name + ".UINavigationController.LeaveLeft()");
             if (leftControllers.Count != 0) {
                 if (currentNavigableElement != null) {
                     currentNavigableElement.LeaveElement();
@@ -274,7 +274,7 @@ namespace AnyRPG {
         }
 
         public void RightButton() {
-            Debug.Log(gameObject.name + ".UINavigationController.RightButton()");
+            //Debug.Log(gameObject.name + ".UINavigationController.RightButton()");
             if (currentNavigableElement != null && currentNavigableElement.CaptureDPad == true) {
                 currentNavigableElement.RightButton();
                 return;
@@ -286,7 +286,7 @@ namespace AnyRPG {
         }
 
         public virtual bool LeaveRight() {
-            Debug.Log(gameObject.name + ".UINavigationController.LeaveRight()");
+            //Debug.Log(gameObject.name + ".UINavigationController.LeaveRight()");
             if (rightControllers.Count != 0) {
                 if (currentNavigableElement != null) {
                     currentNavigableElement.LeaveElement();

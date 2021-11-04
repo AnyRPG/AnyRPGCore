@@ -108,7 +108,8 @@ namespace AnyRPG {
             foreach (LootTable lootTable in Props.LootTables) {
                 lootDrops.AddRange(lootTable.GetLoot(lootHolder.LootTableStates[lootTable]));
             }
-            lootManager.CreatePages(lootDrops);
+            //lootManager.CreatePages(lootDrops);
+            lootManager.AddLoot(lootDrops);
             lootDropped = true;
         }
 

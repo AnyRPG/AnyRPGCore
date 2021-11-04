@@ -27,7 +27,7 @@ namespace AnyRPG {
         }
 
         public virtual void CreatePages() {
-            //Debug.Log("SkillBookUI.CreatePages()");
+            //Debug.Log("PagedWindowContents.CreatePages()");
             ClearPages();
             PopulatePages();
             OnPageCountUpdate(false);
