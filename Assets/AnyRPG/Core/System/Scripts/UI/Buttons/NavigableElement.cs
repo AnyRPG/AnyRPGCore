@@ -43,7 +43,7 @@ namespace AnyRPG {
         }
 
         public virtual void Select() {
-
+            Debug.Log(gameObject.name + "NavigableElement.Select()");
         }
 
         public virtual void DeSelect() {

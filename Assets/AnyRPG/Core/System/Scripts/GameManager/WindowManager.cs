@@ -35,13 +35,13 @@ namespace AnyRPG {
         }
 
         public void HandleLevelUnload(string eventName, EventParamProperties eventParamProperties) {
-            //Debug.Log("ControlsManager.HandleLevelUnload()");
+            //Debug.Log("WindowManager.HandleLevelUnload()");
             windowStack.Clear();
             //navigationStack.Clear();
         }
 
         public void AddWindow(CloseableWindowContents closeableWindowContents) {
-            //Debug.Log("ControlsManager.AddWindow(" + closeableWindowContents.name + ")");
+            Debug.Log("WindowManager.AddWindow(" + closeableWindowContents.name + ")");
             windowStack.Add(closeableWindowContents);
         }
 

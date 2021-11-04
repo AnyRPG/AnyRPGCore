@@ -35,12 +35,12 @@ namespace AnyRPG {
         }
 
         public void ClearDroppedLoot() {
-            Debug.Log("LootManager.ClearDroppedLoot()");
+            //Debug.Log("LootManager.ClearDroppedLoot()");
             droppedLoot.Clear();
         }
 
         public void TakeLoot(LootDrop lootDrop) {
-            Debug.Log("LootManager.TakeLoot()");
+            //Debug.Log("LootManager.TakeLoot()");
 
             RemoveFromDroppedItems(lootDrop);
 
@@ -49,7 +49,7 @@ namespace AnyRPG {
         }
 
         public void RemoveFromDroppedItems(LootDrop lootDrop) {
-            Debug.Log("LootManager.RemoveFromDroppedItems()");
+            //Debug.Log("LootManager.RemoveFromDroppedItems()");
 
             if (droppedLoot.Contains(lootDrop)) {
                 droppedLoot.Remove(lootDrop);
@@ -57,7 +57,7 @@ namespace AnyRPG {
         }
 
         public void TakeAllLoot() {
-            Debug.Log("LootManager.TakeAllLoot()");
+            //Debug.Log("LootManager.TakeAllLoot()");
 
             // added emptyslotcount to prevent game from freezup when no bag space left and takeall button pressed
             int maximumLoopCount = droppedLoot.Count;

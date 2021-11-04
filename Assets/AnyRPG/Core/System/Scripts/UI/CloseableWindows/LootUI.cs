@@ -41,7 +41,7 @@ namespace AnyRPG {
         }
 
         protected override void PopulatePages() {
-            Debug.Log("LootUI.PopulatePages()");
+            //Debug.Log("LootUI.PopulatePages()");
             base.PopulatePages();
 
             pages.Clear();
@@ -60,7 +60,7 @@ namespace AnyRPG {
         }
 
         public void AddLoot() {
-            Debug.Log("LootUI.AddLoot()");
+            //Debug.Log("LootUI.AddLoot()");
             if (pages.Count > 0) {
                 if (pageIndex >= pages.Count) {
                     pageIndex = pages.Count - 1;
@@ -85,18 +85,18 @@ namespace AnyRPG {
         }
 
         public void TakeAllLoot() {
-            Debug.Log("LootUI.TakeAllLoot()");
+            //Debug.Log("LootUI.TakeAllLoot()");
             lootManager.TakeAllLoot();
             BroadcastPageCountUpdate();
         }
 
         public void BroadcastPageCountUpdate() {
-            Debug.Log("LootUI.BroadcastPageCountUpdate()");
+            //Debug.Log("LootUI.BroadcastPageCountUpdate()");
             OnPageCountUpdate(true);
         }
 
         public override void ClearButtons() {
-            Debug.Log("LootUI.ClearButtons()");
+            //Debug.Log("LootUI.ClearButtons()");
             foreach (LootButton button in lootButtons) {
                 button.DeSelect();
                 button.gameObject.SetActive(false);
@@ -105,7 +105,7 @@ namespace AnyRPG {
         }
 
         public override void ReceiveClosedWindowNotification() {
-            Debug.Log("LootUI.ReceiveClosedWindowNotification(): clearing pages");
+            //Debug.Log("LootUI.ReceiveClosedWindowNotification()");
             base.ReceiveClosedWindowNotification();
             foreach (LootButton lootButton in lootButtons) {
                 lootButton.CheckMouse();
@@ -115,14 +115,14 @@ namespace AnyRPG {
         }
 
         public override void ReceiveOpenWindowNotification() {
-            Debug.Log("LootUI.ReceiveOpenWindowNotification()");
+            //Debug.Log("LootUI.ReceiveOpenWindowNotification()");
             base.ReceiveOpenWindowNotification();
             SetBackGroundColor(new Color32(0, 0, 0, (byte)(int)(PlayerPrefs.GetFloat("PopupWindowOpacity") * 255)));
             BroadcastPageCountUpdate();
         }
 
         public override void AddPageContent() {
-            Debug.Log("LootUI.AddPageContent()");
+            //Debug.Log("LootUI.AddPageContent()");
             base.AddPageContent();
             AddLoot();
         }
@@ -136,7 +136,7 @@ namespace AnyRPG {
         */
 
         public void HandleTakeLoot() {
-            Debug.Log("LootUI.HandleTakeLoot()");
+            //Debug.Log("LootUI.HandleTakeLoot()");
 
             ClearButtons();
             PopulatePages();

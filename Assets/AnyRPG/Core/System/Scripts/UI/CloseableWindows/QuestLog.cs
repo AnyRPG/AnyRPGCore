@@ -86,7 +86,7 @@ namespace AnyRPG {
         }
 
         public void TurnInQuest(Quest oldQuest) {
-            //Debug.Log("QuestLog.TurnInQuest()");
+            Debug.Log("QuestLog.TurnInQuest()");
             // REMOVE FIRST SO WHEN TURNEDIN TRIGGERS STATUSUPDATED CALL, QUEST DOES NOT EXIST IN LOG SO SUBSCRIBERS GET CORRECT STATUS
             RemoveQuest(oldQuest);
             oldQuest.SetTurnedIn(true);

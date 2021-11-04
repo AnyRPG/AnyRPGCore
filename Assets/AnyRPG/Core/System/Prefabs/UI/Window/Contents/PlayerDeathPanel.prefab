@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 2382909202382707812}
   - component: {fileID: 3989129407494939074}
   - component: {fileID: 6741401700076175409}
+  - component: {fileID: 6195977222406581820}
   m_Layer: 5
   m_Name: PlayerDeathPanel
   m_TagString: Untagged
@@ -95,8 +96,42 @@ MonoBehaviour:
   backGroundImage: {fileID: 0}
   coloredUIElements:
   - {fileID: 3922920464087904197}
+  addToWindowStack: 1
+  userCloseable: 1
+  focusFirstButtonOnOpen: 1
+  focusActiveSubPanel: 0
+  uINavigationControllers:
+  - {fileID: 6195977222406581820}
+  subPanels: []
   respawnButton: {fileID: 2266661955804695783}
   reviveButton: {fileID: 1568761691388450587}
+--- !u!114 &6195977222406581820
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2382909202382707832}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8995f41cb132f3148a9912f89e49421b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  leftPanel: {fileID: 0}
+  leftControllers: []
+  rightPanel: {fileID: 0}
+  rightControllers: []
+  upPanel: {fileID: 0}
+  upControllers: []
+  downPanel: {fileID: 0}
+  downControllers: []
+  acceptController: {fileID: 0}
+  scrollRect: {fileID: 0}
+  updateActiveListOnOpen: 1
+  pruneInactiveElements: 1
+  navigableButtons:
+  - {fileID: 2266661955804695783}
+  - {fileID: 1568761691388450587}
 --- !u!1 &2382909202413983825
 GameObject:
   m_ObjectHideFlags: 0
