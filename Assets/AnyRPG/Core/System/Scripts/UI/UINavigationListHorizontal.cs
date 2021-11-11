@@ -14,7 +14,7 @@ namespace AnyRPG {
             if (activeNavigableButtons.Count == 0) {
                 return;
             }
-            if (currentIndex < 0) {
+            if (currentIndex < 0 || currentIndex >= activeNavigableButtons.Count) {
                 currentIndex = 0;
             }
             currentNavigableElement = activeNavigableButtons[currentIndex];

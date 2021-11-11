@@ -141,6 +141,7 @@ namespace AnyRPG {
             loadGameButton.Button.interactable = true;
             copyGameButton.Button.interactable = true;
             deleteGameButton.Button.interactable = true;
+            uINavigationControllers[1].UpdateNavigationList();
 
             nameText.text = loadGameManager.AnyRPGSaveData.playerName;
         }

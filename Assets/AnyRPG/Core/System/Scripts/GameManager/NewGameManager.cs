@@ -9,13 +9,16 @@ namespace AnyRPG {
 
     public class NewGameManager : ConfiguredMonoBehaviour, ICapabilityConsumer {
 
-        public event System.Action<NewGameUnitButton> OnSetUnitProfile = delegate { };
+        public event System.Action<UnitProfile> OnSetUnitProfile = delegate { };
         public event System.Action<string> OnSetPlayerName = delegate { };
-        public event System.Action<NewGameCharacterClassButton> OnShowCharacterClass = delegate { };
-        public event System.Action<NewGameCharacterClassButton> OnChangeCharacterClass = delegate { };
-        public event System.Action<NewGameClassSpecializationButton> OnShowClassSpecialization = delegate { };
-        public event System.Action<NewGameFactionButton> OnShowFaction = delegate { };
+        public event System.Action<CharacterClass> OnSetCharacterClass = delegate { };
+        public event System.Action<ClassSpecialization> OnSetClassSpecialization = delegate { };
+        public event System.Action<Faction> OnSetFaction = delegate { };
         public event System.Action OnUpdateEquipmentList = delegate { };
+        public event System.Action OnUpdateFactionList = delegate { };
+        public event System.Action OnUpdateCharacterClassList = delegate { };
+        public event System.Action OnUpdateClassSpecializationList = delegate { };
+        public event System.Action OnUpdateUnitProfileList = delegate { };
 
         private string playerName = "Player Name";
         private UnitProfile unitProfile = null;
@@ -31,6 +34,12 @@ namespace AnyRPG {
 
         private Dictionary<EquipmentSlotType, Equipment> equipmentList = new Dictionary<EquipmentSlotType, Equipment>();
 
+        // valid choices for new game
+        private List<Faction> factionList = new List<Faction>();
+        private List<CharacterClass> characterClassList = new List<CharacterClass>();
+        private List<ClassSpecialization> classSpecializationList = new List<ClassSpecialization>();
+        private List<UnitProfile> unitProfileList = new List<UnitProfile>();
+
         // game manager references
         private SaveManager saveManager = null;
         private SystemDataFactory systemDataFactory = null;
@@ -38,9 +47,9 @@ namespace AnyRPG {
         private UIManager uIManager = null;
         private LevelManager levelManager = null;
 
-        public CharacterClass CharacterClass { get => characterClass; set => characterClass = value; }
+        public CharacterClass CharacterClass { get => characterClass; }
         public ClassSpecialization ClassSpecialization { get => classSpecialization; set => classSpecialization = value; }
-        public Faction Faction { get => faction; set => faction = value; }
+        public Faction Faction { get => faction; }
         public UnitProfile UnitProfile { get => unitProfile; set => unitProfile = value; }
         public AnyRPGSaveData SaveData { get => saveData; set => saveData = value; }
         public Dictionary<EquipmentSlotType, Equipment> EquipmentList { get => equipmentList; set => equipmentList = value; }
@@ -48,6 +57,10 @@ namespace AnyRPG {
         public CharacterRace CharacterRace { get => characterRace; set => characterRace = value; }
         public CapabilityConsumerProcessor CapabilityConsumerProcessor { get => capabilityConsumerProcessor; }
         public string PlayerName { get => playerName; set => playerName = value; }
+        public List<Faction> FactionList { get => factionList; }
+        public List<CharacterClass> CharacterClassList { get => characterClassList; }
+        public List<ClassSpecialization> ClassSpecializationList { get => classSpecializationList; }
+        public List<UnitProfile> UnitProfileList { get => unitProfileList; }
 
         public override void Configure(SystemGameManager systemGameManager) {
             base.Configure(systemGameManager);
@@ -72,7 +85,7 @@ namespace AnyRPG {
         }
 
         public void SetupSaveData() {
-            //Debug.Log("NewGamePanel.SetupSaveData()");
+            Debug.Log("NewGameManager.SetupSaveData()");
 
             saveData = new AnyRPGSaveData();
             saveData = saveManager.InitializeResourceLists(saveData, false);
@@ -81,15 +94,108 @@ namespace AnyRPG {
             saveData.CurrentScene = systemConfigurationManager.DefaultStartingZone;
             unitProfile = systemConfigurationManager.CharacterCreatorUnitProfile;
             saveData.unitProfileName = systemConfigurationManager.CharacterCreatorUnitProfileName;
+
+            UpdateFactionList();
+            UpdateCharacterClassList();
+            UpdateClassSpecializationList();
+            UpdateUnitProfileList();
         }
 
-        public void SetUnitProfile(NewGameUnitButton newGameUnitButton) {
-            //Debug.Log("NewGamePanel.SetUnitProfile(" + newGameUnitButton.UnitProfile.DisplayName + ")");
+        protected void UpdateFactionList() {
 
-            unitProfile = newGameUnitButton.UnitProfile;
-            saveData.unitProfileName = unitProfile.DisplayName;
+            factionList.Clear();
 
-            OnSetUnitProfile(newGameUnitButton);
+            foreach (Faction faction in systemDataFactory.GetResourceList<Faction>()) {
+                if (faction.NewGameOption == true) {
+                    factionList.Add(faction);
+                }
+            }
+
+            OnUpdateFactionList();
+
+            if (factionList.Count > 0
+                && (factionList.Contains(faction) == false || faction == null)) {
+                SetFaction(factionList[0]);
+            }
+        }
+
+        protected void UpdateCharacterClassList() {
+
+            characterClassList.Clear();
+
+            foreach (CharacterClass characterClass in systemDataFactory.GetResourceList<CharacterClass>()) {
+                if (characterClass.NewGameOption == true) {
+                    characterClassList.Add(characterClass);
+                }
+            }
+
+            OnUpdateCharacterClassList();
+
+            if (characterClassList.Count > 0
+                && (characterClassList.Contains(characterClass) == false || characterClass == null)) {
+                SetCharacterClass(characterClassList[0]);
+            }
+        }
+
+        protected void UpdateClassSpecializationList() {
+
+            classSpecializationList.Clear();
+
+            foreach (ClassSpecialization classSpecialization in systemDataFactory.GetResourceList<ClassSpecialization>()) {
+                //Debug.Log("LoadGamePanel.ShowLoadButtonsCommon(): setting a button with saved game data");
+                if (characterClass != null
+                    && classSpecialization.CharacterClasses != null
+                    && classSpecialization.CharacterClasses.Contains(characterClass)
+                    && classSpecialization.NewGameOption == true) {
+                    classSpecializationList.Add(classSpecialization);
+                }
+            }
+
+            OnUpdateClassSpecializationList();
+
+            if (classSpecializationList.Count > 0
+                && (classSpecializationList.Contains(classSpecialization) == false || classSpecialization == null)) {
+                SetClassSpecialization(classSpecializationList[0]);
+            }
+        }
+
+        protected void UpdateUnitProfileList() {
+            
+            unitProfileList.Clear();
+
+            if ((faction != null && faction.HideDefaultProfiles == false)
+                            || systemConfigurationManager.AlwaysShowDefaultProfiles == true
+                            || faction == null) {
+                //Debug.Log("NewGameMecanimCharacterPanelController.ShowOptionButtonsCommon(): showing default profiles");
+                AddDefaultProfiles();
+            }
+
+            if (faction != null) {
+                foreach (UnitProfile unitProfile in faction.CharacterCreatorProfiles) {
+                    unitProfileList.Add(unitProfile);
+                }
+            }
+
+            OnUpdateUnitProfileList();
+
+            if (unitProfileList.Count > 0
+                //&& (unitProfileList.Contains(unitProfile) == false || unitProfile == null)) {
+                ) {
+                if (unitProfileList.Contains(unitProfile)) {
+                    SetUnitProfile(unitProfileList[unitProfileList.IndexOf(unitProfile)]);
+                } else {
+                    SetUnitProfile(unitProfileList[0]);
+                }
+            }
+        }
+
+        private void AddDefaultProfiles() {
+            if (systemConfigurationManager.DefaultPlayerUnitProfile != null) {
+                unitProfileList.Add(systemConfigurationManager.DefaultPlayerUnitProfile);
+            }
+            foreach (UnitProfile unitProfile in systemConfigurationManager.CharacterCreatorProfiles) {
+                unitProfileList.Add(unitProfile);
+            }
         }
 
         public void SetPlayerName(string newPlayerName) {
@@ -99,76 +205,54 @@ namespace AnyRPG {
             OnSetPlayerName(newPlayerName);
         }
 
-        public void ShowCharacterClass(NewGameCharacterClassButton newGameCharacterClassButton) {
+        public void SetUnitProfile(UnitProfile newUnitProfile) {
+            Debug.Log("NewGameManager.SetUnitProfile(" + newUnitProfile.DisplayName + ")");
+
+            unitProfile = newUnitProfile;
+            saveData.unitProfileName = unitProfile.DisplayName;
+
+            OnSetUnitProfile(newUnitProfile);
+        }
+
+        public void SetCharacterClass(CharacterClass newCharacterClass) {
             //Debug.Log("NewGamePanel.ShowCharacterClass()");
-            OnShowCharacterClass(newGameCharacterClassButton);
 
-            if (characterClass != newGameCharacterClassButton.CharacterClass) {
-                classSpecialization = null;
-                characterClass = newGameCharacterClassButton.CharacterClass;
+            if (characterClass != newCharacterClass) {
+                characterClass = newCharacterClass;
                 saveData.characterClass = characterClass.DisplayName;
+                OnSetCharacterClass(newCharacterClass);
 
-                OnChangeCharacterClass(newGameCharacterClassButton);
+                UpdateClassSpecializationList();
+            }
+        }
 
+        public void SetClassSpecialization(ClassSpecialization newClassSpecialization) {
+
+            if (classSpecialization !=  newClassSpecialization) {
+                classSpecialization = newClassSpecialization;
                 if (classSpecialization != null) {
                     saveData.classSpecialization = classSpecialization.DisplayName;
                 } else {
                     saveData.classSpecialization = string.Empty;
-                    // only update equipment if specialization is null.  otherwise it has already been updated
-                    UpdateEquipmentList();
                 }
-            }
-        }
-
-        public void ShowClassSpecialization(NewGameClassSpecializationButton newGameClassSpecializationButton) {
-
-            if (classSpecialization !=  newGameClassSpecializationButton.ClassSpecialization) {
-                classSpecialization = newGameClassSpecializationButton.ClassSpecialization;
 
                 UpdateEquipmentList();
 
                 // must call this after setting specialization so its available to the UI
-                OnShowClassSpecialization(newGameClassSpecializationButton);
+                OnSetClassSpecialization(newClassSpecialization);
 
-                if (classSpecialization != null) {
-                    saveData.classSpecialization = classSpecialization.DisplayName;
-                } else {
-                    saveData.classSpecialization = string.Empty;
-                }
             }
-            /*
-             * if (newGameClassSpecializationButton == null) {
-                classSpecialization = null;
-            } else {
-                classSpecialization = newGameClassSpecializationButton.ClassSpecialization;
-            }
-            */
-
-            /*
-            UpdateEquipmentList();
-
-            // must call this after setting specialization so its available to the UI
-            OnShowClassSpecialization(newGameClassSpecializationButton);
-
-            if (classSpecialization != null) {
-                saveData.classSpecialization = classSpecialization.DisplayName;
-            } else {
-                saveData.classSpecialization = string.Empty;
-            }
-            */
-
         }
 
-        public void ShowFaction(NewGameFactionButton newGameFactionButton) {
+        public void SetFaction(Faction newFaction) {
             //Debug.Log("NewGameManager.ShowFaction()");
 
-            faction = newGameFactionButton.Faction;
+            faction = newFaction;
 
             UpdateEquipmentList();
 
-            OnShowFaction(newGameFactionButton);
-
             saveData.playerFaction = faction.DisplayName;
+
             if (faction != null && faction.DefaultStartingZone != null && faction.DefaultStartingZone != string.Empty) {
                 saveData.CurrentScene = faction.DefaultStartingZone;
             } else {
@@ -177,6 +261,8 @@ namespace AnyRPG {
             if (faction != null) {
                 levelManager.OverrideSpawnLocationTag = faction.DefaultStartingLocationTag;
             }
+
+            OnSetFaction(newFaction);
         }
 
         public void UpdateEquipmentList() {

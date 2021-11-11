@@ -142,7 +142,7 @@ namespace AnyRPG {
             if (characterCreatorManager.PreviewUnitController.UnitModelController.UMAModelController.DynamicCharacterAvatar.activeRace.name == "HumanMaleDCS"
                 || characterCreatorManager.PreviewUnitController.UnitModelController.UMAModelController.DynamicCharacterAvatar.activeRace.name == "HumanMale") {
                 if (maleButton != null) {
-                    maleButton.Select();
+                    maleButton.HighlightBackground();
                 }
                 if (femaleButton != null) {
                     femaleButton.DeSelect();
@@ -152,7 +152,7 @@ namespace AnyRPG {
                     maleButton.DeSelect();
                 }
                 if (femaleButton != null) {
-                    femaleButton.Select();
+                    femaleButton.HighlightBackground();
                 }
             }
         }
@@ -168,11 +168,11 @@ namespace AnyRPG {
         }
         */
 
-        public void OpenAppearanceOptionsArea() {
+        public virtual void OpenAppearanceOptionsArea() {
             //Debug.Log("CharacterCreatorPanel.OpenAppearanceOptions()");
 
             // reset areas and buttons
-            UnHighlightAllButtons();
+            uINavigationControllers[0].UnHightlightButtons(appearanceButton);
             CloseColorsOptionsArea();
             CloseSexOptionsArea();
 
@@ -189,16 +189,16 @@ namespace AnyRPG {
             appearanceOptionsArea.gameObject.SetActive(false);
         }
 
-        public void OpenColorsOptionsArea() {
+        public virtual void OpenColorsOptionsArea() {
             //Debug.Log("CharacterCreatorPanel.OpenColorsOptionsArea()");
 
             // reset areas and buttons
-            UnHighlightAllButtons();
+            uINavigationControllers[0].UnHightlightButtons(colorsButton);
             CloseAppearanceOptionsArea();
             CloseSexOptionsArea();
 
             // configure colors options display
-            colorsButton.Select();
+            //colorsButton.Select();
             colorsOptionsArea.gameObject.SetActive(true);
             OpenHairColorsOptionsArea();
         }
@@ -213,16 +213,16 @@ namespace AnyRPG {
             sexOptionsArea.gameObject.SetActive(false);
         }
 
-        public void OpenSexOptionsArea() {
+        public virtual void OpenSexOptionsArea() {
             //Debug.Log("CharacterCreatorPanel.OpenSexOptionsArea()");
 
             // reset areas and buttons
-            UnHighlightAllButtons();
+            uINavigationControllers[0].UnHightlightButtons(sexButton);
             CloseColorsOptionsArea();
             CloseAppearanceOptionsArea();
 
             // configure sex options display
-            sexButton.Select();
+            //sexButton.HighlightBackground();
             sexOptionsArea.gameObject.SetActive(true);
             InitializeSexButtons();
         }
@@ -315,12 +315,12 @@ namespace AnyRPG {
         public void UnHighlightAllButtons() {
             //Debug.Log("CharacterCreatorPanel.UnHighlightAllButtons()");
 
-            appearanceButton.DeSelect();
-            colorsButton.DeSelect();
+            appearanceButton.UnHighlightBackground();
+            colorsButton.UnHighlightBackground();
+            sexButton.UnHighlightBackground();
             hairColorsButton.DeSelect();
             skinColorsButton.DeSelect();
             eyesColorsButton.DeSelect();
-            sexButton.DeSelect();
         }
 
         public void UnHighlightColorsButtons() {
@@ -430,8 +430,8 @@ namespace AnyRPG {
                 return;
             }
             femaleRecipe = characterCreatorManager.PreviewUnitController.UnitModelController.UMAModelController.GetAppearanceString();
-            femaleButton.DeSelect();
-            maleButton.Select();
+            femaleButton.UnHighlightBackground();
+            //maleButton.HighlightBackground();
             if (maleRecipe != string.Empty) {
                 //Debug.Log("CharacterCreatorPanel.SetFemale(): maleRecipe != string.Empty");
                 characterCreatorManager.PreviewUnitController.UnitModelController.UMAModelController.DynamicCharacterAvatar.ChangeRace("HumanMaleDCS");
@@ -456,8 +456,8 @@ namespace AnyRPG {
             }
             //maleRecipe = characterCreatorManager.PreviewUnitController.UnitModelController.UMAModelController.DynamicCharacterAvatar.GetCurrentRecipe();
             maleRecipe = characterCreatorManager.PreviewUnitController.UnitModelController.UMAModelController.GetAppearanceString();
-            maleButton.DeSelect();
-            femaleButton.Select();
+            maleButton.UnHighlightBackground();
+            //femaleButton.Select();
             if (femaleRecipe != string.Empty) {
                 //Debug.Log("CharacterCreatorPanel.SetFemale(): femaleRecipe != string.Empty");
                 characterCreatorManager.PreviewUnitController.UnitModelController.UMAModelController.DynamicCharacterAvatar.ChangeRace("HumanFemaleDCS");

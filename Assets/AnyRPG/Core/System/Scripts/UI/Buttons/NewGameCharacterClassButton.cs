@@ -50,7 +50,7 @@ namespace AnyRPG {
         }
 
         public void CommonSelect() {
-            newGameManager.ShowCharacterClass(this);
+            newGameManager.SetCharacterClass(characterClass);
         }
 
         public void RawSelect() {

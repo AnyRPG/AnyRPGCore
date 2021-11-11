@@ -6,7 +6,7 @@ namespace AnyRPG {
     public class CharacterCreatorManager : PreviewManager {
 
         public void HandleOpenWindow(UnitProfile unitProfile) {
-            //Debug.Log("CharacterCreatorManager.HandleOpenWindow()");
+            Debug.Log("CharacterCreatorManager.HandleOpenWindow(" + (unitProfile == null ? "null" : unitProfile.DisplayName) + ")");
 
             if (unitProfile == null) {
                 Debug.Log("CharacterCreatorManager.HandleOpenWindow(): unitProfile is null");

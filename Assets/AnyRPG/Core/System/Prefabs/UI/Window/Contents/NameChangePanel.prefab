@@ -231,6 +231,7 @@ MonoBehaviour:
   backGroundImage: {fileID: 0}
   coloredUIElements:
   - {fileID: 7914807711743799786}
+  addToWindowStack: 1
   userCloseable: 1
   focusFirstButtonOnOpen: 1
   focusActiveSubPanel: 0
@@ -251,22 +252,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8995f41cb132f3148a9912f89e49421b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  moveToSameIndex: 0
   leftPanel: {fileID: 0}
-  leftController: {fileID: 0}
   leftControllers: []
   rightPanel: {fileID: 0}
-  rightController: {fileID: 0}
   rightControllers: []
   upPanel: {fileID: 0}
-  upController: {fileID: 0}
   upControllers:
   - {fileID: 7283883483841375801}
   downPanel: {fileID: 0}
-  downController: {fileID: 0}
   downControllers: []
   acceptController: {fileID: 0}
   scrollRect: {fileID: 0}
+  updateActiveListOnOpen: 1
+  pruneInactiveElements: 1
   navigableButtons:
   - {fileID: 3151037857080716252}
   - {fileID: 6205143239870174088}
@@ -887,7 +885,10 @@ MonoBehaviour:
   text: {fileID: 0}
   highlightImage: {fileID: 2885548792749362925}
   highlightButton: {fileID: 0}
-  useHighlightColor: 1
+  hideImageWhenInactive: 1
+  tintImage: 1
+  useSystemImageTintColor: 1
+  useSystemButtonColors: 1
   useHighlightColorOnButton: 0
   highlightColor: {r: 1, g: 1, b: 1, a: 0.15294118}
   normalColor: {r: 0.6392157, g: 0.6392157, b: 0.6392157, a: 0.10980392}
@@ -909,22 +910,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8995f41cb132f3148a9912f89e49421b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  moveToSameIndex: 0
   leftPanel: {fileID: 0}
-  leftController: {fileID: 0}
   leftControllers: []
   rightPanel: {fileID: 0}
-  rightController: {fileID: 0}
   rightControllers: []
   upPanel: {fileID: 0}
-  upController: {fileID: 0}
   upControllers: []
   downPanel: {fileID: 0}
-  downController: {fileID: 0}
   downControllers:
   - {fileID: 5736625245067532920}
   acceptController: {fileID: 0}
   scrollRect: {fileID: 0}
+  updateActiveListOnOpen: 1
+  pruneInactiveElements: 1
   navigableButtons:
   - {fileID: 5277971902448142811}
 --- !u!1001 &3994151747793377424

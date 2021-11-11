@@ -434,12 +434,44 @@ namespace AnyRPG {
         [SerializeField]
         private Color defaultUIColor;
 
+        /*
         [Tooltip("defaultUIColor with full opacity for button frames")]
         [SerializeField]
         private Color defaultUISolidColor;
+        */
 
+        [Tooltip("default UI color for background of UI sliders")]
         [SerializeField]
         private Color defaultUIFillColor;
+
+        [Tooltip("default UI color for outline image")]
+        [SerializeField]
+        private Color highlightOutlineColor;
+
+        [Tooltip("default UI color for background highlight image")]
+        [SerializeField]
+        private Color highlightImageColor;
+
+        [Tooltip("default UI color for the button image on highlight buttons")]
+        [SerializeField]
+        private Color highlightButtonColor;
+
+
+        [SerializeField]
+        private Color buttonNormalColor = new Color32(163, 163, 163, 82);
+
+        [SerializeField]
+        private Color buttonHighlightedColor = new Color32(165, 165, 165, 166);
+
+        [SerializeField]
+        private Color buttonPressedColor = new Color32(120, 120, 120, 71);
+
+        [SerializeField]
+        private Color buttonSelectedColor = new Color32(165, 165, 165, 166);
+
+        [SerializeField]
+        private Color buttonDisabledColor = new Color32(82, 82, 82, 17);
+
 
         [SerializeField]
         private Sprite defaultUIPanelFrame;
@@ -644,7 +676,7 @@ namespace AnyRPG {
         public Material DefaultCastingLightProjector { get => defaultCastTargetCircle; set => defaultCastTargetCircle = value; }
         public Color DefaultUIColor { get => defaultUIColor; set => defaultUIColor = value; }
         public Color DefaultUIFillColor { get => defaultUIFillColor; set => defaultUIFillColor = value; }
-        public Color DefaultUISolidColor { get => defaultUISolidColor; set => defaultUISolidColor = value; }
+        //public Color DefaultUISolidColor { get => defaultUISolidColor; set => defaultUISolidColor = value; }
         public List<string> LoadResourcesFolders { get => loadResourcesFolders; set => loadResourcesFolders = value; }
         public int MaxLevel { get => maxLevel; set => maxLevel = value; }
         public float StatBudgetPerLevel { get => statBudgetPerLevel; set => statBudgetPerLevel = value; }
@@ -739,6 +771,14 @@ namespace AnyRPG {
         public float FallDamageMinDistance { get => fallDamageMinDistance; set => fallDamageMinDistance = value; }
         public AudioProfile FallDamageAudioProfile { get => fallDamageAudioProfile; set => fallDamageAudioProfile = value; }
         public DefaultControllerConfiguration DefaultControllerConfiguration { get => defaultControllerConfiguration; set => defaultControllerConfiguration = value; }
+        public Color ButtonNormalColor { get => buttonNormalColor; set => buttonNormalColor = value; }
+        public Color ButtonHighlightedColor { get => buttonHighlightedColor; set => buttonHighlightedColor = value; }
+        public Color ButtonPressedColor { get => buttonPressedColor; set => buttonPressedColor = value; }
+        public Color ButtonSelectedColor { get => buttonSelectedColor; set => buttonSelectedColor = value; }
+        public Color ButtonDisabledColor { get => buttonDisabledColor; set => buttonDisabledColor = value; }
+        public Color HighlightOutlineColor { get => highlightOutlineColor; set => highlightOutlineColor = value; }
+        public Color HighlightImageColor { get => highlightImageColor; set => highlightImageColor = value; }
+        public Color HighlightButtonColor { get => highlightButtonColor; set => highlightButtonColor = value; }
 
         //public bool AllowClickToMove { get => allowClickToMove; }
 

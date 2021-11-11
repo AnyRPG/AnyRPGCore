@@ -6974,8 +6974,15 @@ MonoBehaviour:
     projectorMaterial: {fileID: 2100000, guid: e0adbcbf43af54c45b048a9e7b2ebf79, type: 2}
     tintMaterial: 1
   defaultUIColor: {r: 0.9960785, g: 0.68235296, b: 0.007843138, a: 0.153}
-  defaultUISolidColor: {r: 0.9960785, g: 0.68235296, b: 0.007843138, a: 1}
   defaultUIFillColor: {r: 0.8588236, g: 0.5176471, b: 0, a: 1}
+  highlightOutlineColor: {r: 0.99607843, g: 0.68235296, b: 0.007843138, a: 0.4}
+  highlightImageColor: {r: 0.99607843, g: 0.68235296, b: 0.007843138, a: 0.15294118}
+  highlightButtonColor: {r: 0.99607843, g: 0.68235296, b: 0.007843138, a: 1}
+  buttonNormalColor: {r: 0.6392157, g: 0.6392157, b: 0.6392157, a: 0.32156864}
+  buttonHighlightedColor: {r: 0.64705884, g: 0.64705884, b: 0.64705884, a: 0.6509804}
+  buttonPressedColor: {r: 0.47058824, g: 0.47058824, b: 0.47058824, a: 0.2784314}
+  buttonSelectedColor: {r: 0.64705884, g: 0.64705884, b: 0.64705884, a: 0.6509804}
+  buttonDisabledColor: {r: 0.32156864, g: 0.32156864, b: 0.32156864, a: 0.06666667}
   defaultUIPanelFrame: {fileID: 21300000, guid: 0281ba7261dc9534981ec2c944a817d9,
     type: 3}
   defaultFactionIcon: {fileID: 21300000, guid: a5049d8fafbe58a47989c22139dbbe65, type: 3}
@@ -59958,16 +59965,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 6556004072113210663}
     m_Modifications:
-    - target: {fileID: 72047155279667229, guid: ed21a9be7bc2ae742b0c692e51b3b968,
-        type: 3}
-      propertyPath: m_SizeDelta.x
-      value: 150
-      objectReference: {fileID: 0}
-    - target: {fileID: 72047155279667229, guid: ed21a9be7bc2ae742b0c692e51b3b968,
-        type: 3}
-      propertyPath: m_SizeDelta.y
-      value: 50
-      objectReference: {fileID: 0}
     - target: {fileID: 1596044144622448878, guid: ed21a9be7bc2ae742b0c692e51b3b968,
         type: 3}
       propertyPath: m_Name
@@ -60077,26 +60074,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_VerticalAlignment
       value: 512
-      objectReference: {fileID: 0}
-    - target: {fileID: 6560639404352091019, guid: ed21a9be7bc2ae742b0c692e51b3b968,
-        type: 3}
-      propertyPath: m_SizeDelta.x
-      value: 150
-      objectReference: {fileID: 0}
-    - target: {fileID: 6560639404352091019, guid: ed21a9be7bc2ae742b0c692e51b3b968,
-        type: 3}
-      propertyPath: m_SizeDelta.y
-      value: 50
-      objectReference: {fileID: 0}
-    - target: {fileID: 7679821164133465447, guid: ed21a9be7bc2ae742b0c692e51b3b968,
-        type: 3}
-      propertyPath: m_SizeDelta.x
-      value: 150
-      objectReference: {fileID: 0}
-    - target: {fileID: 7679821164133465447, guid: ed21a9be7bc2ae742b0c692e51b3b968,
-        type: 3}
-      propertyPath: m_SizeDelta.y
-      value: 50
       objectReference: {fileID: 0}
     - target: {fileID: 7976728899931360667, guid: ed21a9be7bc2ae742b0c692e51b3b968,
         type: 3}

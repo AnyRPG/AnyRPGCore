@@ -182,7 +182,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: f6b294e28d4da7349940fcb9ef6e075f, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 8da48cffb618593408a2a254b1a9b78c, type: 3}
   m_Type: 1
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -263,11 +263,17 @@ MonoBehaviour:
   text: {fileID: 2698383802237378752}
   highlightImage: {fileID: 0}
   highlightButton: {fileID: 4154079068316661478}
-  useHighlightColor: 0
+  hideImageWhenInactive: 1
+  tintImage: 1
+  useSystemImageTintColor: 1
+  useSystemButtonColors: 1
   useHighlightColorOnButton: 0
   highlightColor: {r: 0.64705884, g: 0.64705884, b: 0.64705884, a: 0.403}
-  baseColor: {r: 0.6397059, g: 0.6397059, b: 0.6397059, a: 0.10980392}
-  baseHighlightColor: {r: 0.64705884, g: 0.64705884, b: 0.64705884, a: 0.403}
+  normalColor: {r: 0.6392157, g: 0.6392157, b: 0.6392157, a: 0.32156864}
+  highlightedColor: {r: 0.64705884, g: 0.64705884, b: 0.64705884, a: 0.6509804}
+  pressedColor: {r: 0.47058824, g: 0.47058824, b: 0.47058824, a: 0.2784314}
+  selectedColor: {r: 0.64705884, g: 0.64705884, b: 0.64705884, a: 0.6509804}
+  disabledColor: {r: 0.32156864, g: 0.32156864, b: 0.32156864, a: 0.06666667}
   CapitalizeText: 0
 --- !u!1 &4154079068713420242
 GameObject:
@@ -772,6 +778,12 @@ MonoBehaviour:
   - {fileID: 6757898222178015214}
   - {fileID: 179697353679662647}
   - {fileID: 8871032254527622042}
+  addToWindowStack: 1
+  userCloseable: 1
+  focusFirstButtonOnOpen: 1
+  focusActiveSubPanel: 0
+  uINavigationControllers: []
+  subPanels: []
   creditTemplate: {fileID: 3129540725068152788, guid: da254ad492f6d784380ddb34e8eb773f,
     type: 3}
   creditCategoryTemplate: {fileID: 7073291999989539490, guid: 9bb7798620bb50f40891bf7dc849bc12,

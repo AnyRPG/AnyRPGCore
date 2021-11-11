@@ -59,7 +59,7 @@ namespace AnyRPG {
         }
 
         public void CommonSelect() {
-            newGameManager.ShowClassSpecialization(this);
+            newGameManager.SetClassSpecialization(classSpecialization);
         }
 
         public void RawSelect() {

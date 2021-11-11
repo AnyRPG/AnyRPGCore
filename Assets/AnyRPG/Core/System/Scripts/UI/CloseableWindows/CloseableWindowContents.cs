@@ -103,26 +103,49 @@ namespace AnyRPG {
             parentPanel = closeableWindowContents;
         }
 
-        public virtual void SetActiveSubPanel(CloseableWindowContents closeableWindowContents) {
-            //Debug.Log(gameObject.name + ".CloseableWindowContents.SetActiveSubPanel(" + (closeableWindowContents == null ? "null" : closeableWindowContents.name) + ")");
+        public virtual void SetActiveSubPanel(CloseableWindowContents closeableWindowContents, bool focus = true) {
+            Debug.Log(gameObject.name + ".CloseableWindowContents.SetActiveSubPanel(" + (closeableWindowContents == null ? "null" : closeableWindowContents.name) + ")");
+            if (closeableWindowContents != null) {
+                foreach (UINavigationController uINavigationController in uINavigationControllers) {
+                    uINavigationController.UnFocus();
+                }
+            }
+
             activeSubPanel = closeableWindowContents;
+
             if (activeSubPanel != null) {
                 currentNavigationController = null;
-                activeSubPanel.FocusCurrentButton();
+                if (focus == true) {
+                    activeSubPanel.FocusCurrentButton();
+                }
             }
         }
 
-        public virtual void SetOpenSubPanel(CloseableWindowContents closeableWindowContents) {
+        public virtual void SetOpenSubPanel(CloseableWindowContents closeableWindowContents, bool focus = false) {
             //Debug.Log(gameObject.name + ".CloseableWindowContents.SetOpenSubPanel(" + closeableWindowContents.name + ")");
             openSubPanel = closeableWindowContents;
-            SetActiveSubPanel(closeableWindowContents);
+            if (focus == true) {
+                SetActiveSubPanel(closeableWindowContents);
+            }
         }
 
         public virtual void SetNavigationController(UINavigationController uINavigationController) {
-            //Debug.Log(gameObject.name + ".CloseableWindowContents.SetNavigationController(" + uINavigationController.name + ")");
+            Debug.Log(gameObject.name + ".CloseableWindowContents.SetNavigationController(" + uINavigationController.gameObject.name + ")");
             if (uINavigationControllers.Contains(uINavigationController)) {
+                if (currentNavigationController != null &&  currentNavigationController != uINavigationController) {
+                    currentNavigationController.UnFocus();
+                }
                 currentNavigationController = uINavigationController;
-                currentNavigationController.FocusCurrentButton();
+                currentNavigationController.Focus();
+            }
+        }
+
+        public virtual void ActivateNavigationController(UINavigationController uINavigationController) {
+            Debug.Log(gameObject.name + ".CloseableWindowContents.ActivateNavigationController(" + uINavigationController.gameObject.name + ")");
+            SetActiveSubPanel(null);
+            SetNavigationController(uINavigationController);
+            if (parentPanel != null) {
+                parentPanel.SetActiveSubPanel(this, false);
             }
         }
 
@@ -135,35 +158,29 @@ namespace AnyRPG {
                 activeSubPanel.FocusCurrentButton();
                 return;
             }
-            if (currentNavigationController == null && uINavigationControllers != null) {
-                currentNavigationController = uINavigationControllers[0];
-            }
             if (currentNavigationController != null) {
-                currentNavigationController.FocusCurrentButton();
-            } else {
-                Debug.Log(gameObject.name + ".CloseableWindowContents.FocusCurrentButton(): currentNavigationController is null");
+                currentNavigationController.Focus();
+                return;
+            }
+            if (currentNavigationController == null && uINavigationControllers != null) {
+                SetNavigationController(uINavigationControllers[0]);
             }
         }
 
         public void FocusFirstButton() {
             //Debug.Log(gameObject.name + ".CloseableWindowContents.FocusFirstButton()");
             if (currentNavigationController == null && uINavigationControllers != null) {
-                currentNavigationController = uINavigationControllers[0];
-            }
-            if (currentNavigationController != null) {
-                currentNavigationController.FocusFirstButton();
-            } else {
-                Debug.Log(gameObject.name + ".CloseableWindowContents.FocusFirstButton(): currentNavigationController is null");
+                SetNavigationController(uINavigationControllers[0]);
             }
         }
 
         public virtual void ChooseFocus() {
-            //Debug.Log(gameObject.name + ".CloseableWindowContents.ChooseFocus()");
+            Debug.Log(gameObject.name + ".CloseableWindowContents.ChooseFocus()");
             if (controlsManager.GamePadModeActive && focusActiveSubPanel == true) {
                 if (openSubPanel != null) {
                     SetActiveSubPanel(openSubPanel);
                     //currentNavigationController = openSubPanel.FocusCurrentButton();
-                    openSubPanel.FocusCurrentButton();
+                    //openSubPanel.FocusCurrentButton();
                 }
                 return;
             }
@@ -194,10 +211,10 @@ namespace AnyRPG {
                 currentNavigationController.CurrentNavigableElement.Cancel();
                 return false;
             }
+            if (currentNavigationController != null) {
+                currentNavigationController.Cancel();
+            }
             if (userCloseable == true && parentPanel == null) {
-                if (currentNavigationController != null) {
-                    currentNavigationController.Cancel();
-                }
                 Close();
             }
             return true;

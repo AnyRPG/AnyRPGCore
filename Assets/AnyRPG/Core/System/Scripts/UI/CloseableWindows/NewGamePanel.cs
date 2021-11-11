@@ -39,10 +39,10 @@ namespace AnyRPG {
         /*
         [SerializeField]
         private HighlightButton returnButton = null;
+        */
 
         [SerializeField]
         private HighlightButton detailsButton = null;
-        */
 
         [SerializeField]
         private HighlightButton characterButton = null;
@@ -64,22 +64,6 @@ namespace AnyRPG {
         private HighlightButton startButton = null;
         */
 
-        /*
-        private string playerName = "Player Name";
-        private UnitProfile unitProfile = null;
-        private UnitType unitType = null;
-        private CharacterRace characterRace = null;
-        private CharacterClass characterClass = null;
-        private ClassSpecialization classSpecialization = null;
-        private Faction faction = null;
-
-        private CapabilityConsumerProcessor capabilityConsumerProcessor = null;
-
-        private AnyRPGSaveData saveData;
-
-        private Dictionary<EquipmentSlotType, Equipment> equipmentList = new Dictionary<EquipmentSlotType, Equipment>();
-        */
-
         // game manager references
         protected SaveManager saveManager = null;
         protected SystemDataFactory systemDataFactory = null;
@@ -87,18 +71,6 @@ namespace AnyRPG {
         protected UIManager uIManager = null;
         protected LevelManager levelManager = null;
         protected NewGameManager newGameManager = null;
-
-        /*
-        public CharacterClass CharacterClass { get => characterClass; set => characterClass = value; }
-        public ClassSpecialization ClassSpecialization { get => classSpecialization; set => classSpecialization = value; }
-        public Faction Faction { get => faction; set => faction = value; }
-        public UnitProfile UnitProfile { get => unitProfile; set => unitProfile = value; }
-        public AnyRPGSaveData SaveData { get => saveData; set => saveData = value; }
-        public Dictionary<EquipmentSlotType, Equipment> EquipmentList { get => equipmentList; set => equipmentList = value; }
-        public UnitType UnitType { get => unitType; set => unitType = value; }
-        public CharacterRace CharacterRace { get => characterRace; set => characterRace = value; }
-        public CapabilityConsumerProcessor CapabilityConsumerProcessor { get => capabilityConsumerProcessor; }
-        */
 
         public override void Configure(SystemGameManager systemGameManager) {
             base.Configure(systemGameManager);
@@ -149,11 +121,14 @@ namespace AnyRPG {
 
             newGameManager.OnSetPlayerName -= HandleSetPlayerName;
             newGameManager.OnSetUnitProfile -= HandleSetUnitProfile;
+            newGameManager.OnSetCharacterClass -= HandleSetCharacterClass;
+            newGameManager.OnSetClassSpecialization -= HandleSetClassSpecialization;
+            newGameManager.OnSetFaction -= HandleSetFaction;
             newGameManager.OnUpdateEquipmentList -= HandleUpdateEquipmentList;
-            newGameManager.OnShowCharacterClass -= HandleShowCharacterClass;
-            newGameManager.OnChangeCharacterClass -= HandleChangeCharacterClass;
-            newGameManager.OnShowClassSpecialization -= HandleShowClassSpecialization;
-            newGameManager.OnShowFaction -= HandleShowFaction;
+            newGameManager.OnUpdateFactionList -= HandleUpdateFactionList;
+            newGameManager.OnUpdateCharacterClassList -= HandleUpdateCharacterClassList;
+            newGameManager.OnUpdateClassSpecializationList -= HandleUpdateClassSpecializationList;
+            newGameManager.OnUpdateUnitProfileList -= HandleUpdateUnitProfileList;
 
             saveManager.ClearSharedData();
             characterPreviewPanel.OnTargetCreated -= HandleTargetCreated;
@@ -173,13 +148,19 @@ namespace AnyRPG {
 
         public override void ReceiveOpenWindowNotification() {
             //Debug.Log("LoadGamePanel.OnOpenWindow()");
+
+            base.ReceiveOpenWindowNotification();
+
             newGameManager.OnSetPlayerName += HandleSetPlayerName;
             newGameManager.OnSetUnitProfile += HandleSetUnitProfile;
+            newGameManager.OnSetCharacterClass += HandleSetCharacterClass;
+            newGameManager.OnSetClassSpecialization += HandleSetClassSpecialization;
+            newGameManager.OnSetFaction += HandleSetFaction;
             newGameManager.OnUpdateEquipmentList += HandleUpdateEquipmentList;
-            newGameManager.OnShowCharacterClass += HandleShowCharacterClass;
-            newGameManager.OnChangeCharacterClass += HandleChangeCharacterClass;
-            newGameManager.OnShowClassSpecialization += HandleShowClassSpecialization;
-            newGameManager.OnShowFaction += HandleShowFaction;
+            newGameManager.OnUpdateFactionList += HandleUpdateFactionList;
+            newGameManager.OnUpdateCharacterClassList += HandleUpdateCharacterClassList;
+            newGameManager.OnUpdateClassSpecializationList += HandleUpdateClassSpecializationList;
+            newGameManager.OnUpdateUnitProfileList += HandleUpdateUnitProfileList;
 
             ClearData();
 
@@ -189,42 +170,12 @@ namespace AnyRPG {
 
             newGameManager.SetupSaveData();
 
-            /*
-            if (systemConfigurationManager.NewGameUMAAppearance == true) {
-                umaCharacterPanel.ReceiveOpenWindowNotification();
-                // first, inform the preview panel so the character can be rendered
-            }
-            characterPreviewPanel.OnTargetReady += HandleTargetReady;
-            characterPreviewPanel.CapabilityConsumer = this;
-            characterPreviewPanel.ReceiveOpenWindowNotification();
-            */
-
             factionPanel.ReceiveOpenWindowNotification();
 
-            /*
-            // now that faction is set, and character panel is opened (which caused the first available unit to be selected), it's time to render the unit
-            // inform the preview panel so the character can be rendered
-            characterPreviewPanel.OnTargetReady += HandleTargetReady;
-            characterPreviewPanel.OnTargetCreated += HandleTargetCreated;
-            characterPreviewPanel.CapabilityConsumer = newGameManager;
-            characterPreviewPanel.ReceiveOpenWindowNotification();
-
-            // attempt to open the UMA window first
-            if (systemConfigurationManager.NewGameUMAAppearance == true) {
-                umaCharacterPanel.ReceiveOpenWindowNotification();
-            }
-
-            // if the UMA window is not in use, or there was no UMA unit available, try the mecanim window
-            if (systemConfigurationManager.NewGameUMAAppearance == false
-                || (systemConfigurationManager.NewGameUMAAppearance == true && characterCreatorManager.PreviewUnitController == null)) {
-                characterPanel.ReceiveOpenWindowNotification();
-            }
-            */
 
             // class goes before specialization because it acts as a filter for it
             classPanel.ReceiveOpenWindowNotification();
             specializationPanel.ReceiveOpenWindowNotification();
-
             
             // now that faction is set, and character panel is opened (which caused the first available unit to be selected), it's time to render the unit
             // inform the preview panel so the character can be rendered
@@ -243,13 +194,14 @@ namespace AnyRPG {
                 || (systemConfigurationManager.NewGameUMAAppearance == true && characterCreatorManager.PreviewUnitController == null)) {
                 characterPanel.ReceiveOpenWindowNotification();
             }
-            
-
 
             // details should be last because it relies on all the information set in the previous methods
             detailsPanel.ReceiveOpenWindowNotification();
 
-            OpenDetailsPanel();
+            //OpenDetailsPanel();
+            uINavigationControllers[0].SetCurrentButton(detailsButton);
+            SetNavigationController(uINavigationControllers[0]);
+            detailsButton.Interact();
 
             // testing appearance last since it relies on at very minimum the unit profile being set
 
@@ -258,8 +210,7 @@ namespace AnyRPG {
                 audioManager.PlayMusic(systemConfigurationManager.NewGameAudioProfile.AudioClip);
             }
 
-            base.ReceiveOpenWindowNotification();
-
+            /*
             if (controlsManager.GamePadModeActive && focusFirstButtonOnOpen == true) {
                 currentNavigationController.FocusFirstButton();
                 return;
@@ -269,6 +220,7 @@ namespace AnyRPG {
                 openSubPanel.FocusFirstButton();
                 return;
             }
+            */
 
         }
 
@@ -325,16 +277,88 @@ namespace AnyRPG {
             detailsPanel.ResetInputText(newGameManager.PlayerName);
         }
 
-
-        public void HandleSetUnitProfile(NewGameUnitButton newGameUnitButton) {
-            //Debug.Log("NewGamePanel.SetUnitProfile(" + newGameUnitButton.UnitProfile.DisplayName + ")");
-
-            characterPreviewPanel.ReloadUnit();
-            characterPanel.SetBody(newGameUnitButton);
-        }
-
         public void HandleSetPlayerName(string newPlayerName) {
             playerNameLabel.text = newPlayerName;
+        }
+
+        public void HandleSetUnitProfile(UnitProfile newUnitProfile) {
+            Debug.Log("NewGamePanel.HandleSetUnitProfile(" + newUnitProfile.DisplayName + ")");
+
+            characterPreviewPanel.ReloadUnit();
+            characterPanel.SetUnitProfile(newUnitProfile);
+        }
+
+        public void HandleSetCharacterClass(CharacterClass newCharacterClass) {
+            //Debug.Log("NewGamePanel.HandleShowCharacterClass()");
+            detailsPanel.SetCharacterClass(newCharacterClass);
+
+            classPanel.SetCharacterClass(newCharacterClass);
+        }
+
+        public void HandleSetClassSpecialization(ClassSpecialization newClassSpecialization) {
+            detailsPanel.SetClassSpecialization(newGameManager.ClassSpecialization);
+
+            specializationPanel.SetClassSpecialization(newClassSpecialization);
+
+            if (newGameManager.ClassSpecialization != null) {
+                specializationButton.Button.interactable = true;
+            } else {
+                specializationButton.Button.interactable = false;
+            }
+        }
+
+        public void HandleSetFaction(Faction newFaction) {
+            //Debug.Log("NewGamePanel.HandleShowFaction()");
+
+            detailsPanel.SetFaction(newFaction);
+
+            factionPanel.SetFaction(newFaction);
+
+        }
+
+        public void HandleUpdateEquipmentList() {
+            //Debug.Log("NameGamePanel.UpdateEquipmentList()");
+
+            // show the equipment
+            EquipCharacter();
+
+        }
+
+        public void HandleUpdateUnitProfileList() {
+            characterPanel.ShowOptionButtons();
+        }
+
+        public void HandleUpdateFactionList() {
+            factionPanel.ShowOptionButtons();
+        }
+
+        public void HandleUpdateCharacterClassList() {
+            classPanel.ShowOptionButtons();
+        }
+
+        public void HandleUpdateClassSpecializationList() {
+            specializationPanel.ShowOptionButtons();
+        }
+
+        protected void UnHightlightButtons(HighlightButton skipButton = null) {
+            if (skipButton != detailsButton) {
+                detailsButton.UnHighlightBackground();
+            }
+            if (skipButton != characterButton) {
+                characterButton.UnHighlightBackground();
+            }
+            if (skipButton != appearanceButton) {
+                appearanceButton.UnHighlightBackground();
+            }
+            if (skipButton != factionButton) {
+                factionButton.UnHighlightBackground();
+            }
+            if (skipButton != classButton) {
+                classButton.UnHighlightBackground();
+            }
+            if (skipButton != specializationButton) {
+                specializationButton.UnHighlightBackground();
+            }
         }
 
         private void ClosePanels() {
@@ -347,27 +371,35 @@ namespace AnyRPG {
         }
 
         public void OpenDetailsPanel() {
+            Debug.Log("NewGamePanel.OpenDetailsPanel()");
+
             ClosePanels();
             detailsPanel.ShowPanel();
             SetOpenSubPanel(detailsPanel);
+            UnHightlightButtons(detailsButton);
         }
 
         public void OpenClassPanel() {
             ClosePanels();
             classPanel.ShowPanel();
             SetOpenSubPanel(classPanel);
+            UnHightlightButtons(classButton);
         }
 
         public void OpenCharacterPanel() {
+            Debug.Log("NewGamePanel.OpenCharacterPanel()");
+
             ClosePanels();
             characterPanel.ShowPanel();
             SetOpenSubPanel(characterPanel);
+            UnHightlightButtons(characterButton);
         }
 
         public void OpenAppearancePanel() {
             ClosePanels();
             umaCharacterPanel.ShowPanel();
             SetOpenSubPanel(umaCharacterPanel);
+            UnHightlightButtons(appearanceButton);
         }
 
         public void OpenFactionPanel() {
@@ -376,6 +408,7 @@ namespace AnyRPG {
             ClosePanels();
             factionPanel.ShowPanel();
             SetOpenSubPanel(factionPanel);
+            UnHightlightButtons(factionButton);
         }
 
         public void OpenSpecializationPanel() {
@@ -385,57 +418,7 @@ namespace AnyRPG {
                 specializationPanel.ShowPanel();
                 SetOpenSubPanel(specializationPanel);
             }
-        }
-
-        public void HandleChangeCharacterClass(NewGameCharacterClassButton newGameCharacterClassButton) {
-            detailsPanel.SetCharacterClass(newGameCharacterClassButton.CharacterClass);
-
-            // since a new character class is chosen, the specialization list must be updated to match the class
-            specializationPanel.ShowOptionButtonsCommon();
-
-            // the specialization must also be updated on the details panel
-            detailsPanel.SetClassSpecialization(newGameManager.ClassSpecialization);
-
-            if (newGameManager.ClassSpecialization != null) {
-                specializationButton.Button.interactable = true;
-            } else {
-                specializationButton.Button.interactable = false;
-            }
-        }
-
-        public void HandleShowCharacterClass(NewGameCharacterClassButton newGameCharacterClassButton) {
-            //Debug.Log("NewGamePanel.HandleShowCharacterClass()");
-
-            classPanel.ShowCharacterClass(newGameCharacterClassButton);
-        }
-
-        public void HandleShowClassSpecialization(NewGameClassSpecializationButton newGameClassSpecializationButton) {
-            specializationPanel.ShowClassSpecialization(newGameClassSpecializationButton);
-
-            detailsPanel.SetClassSpecialization(newGameClassSpecializationButton.ClassSpecialization);
-        }
-
-        public void HandleShowFaction(NewGameFactionButton newGameFactionButton) {
-            //Debug.Log("NewGamePanel.HandleShowFaction()");
-
-            factionPanel.ShowFaction(newGameFactionButton);
-
-            detailsPanel.SetFaction(newGameFactionButton.Faction);
-
-            /*
-            if (systemConfigurationManager.NewGameUMAAppearance == false) {
-                characterPanel.ShowOptionButtonsCommon();
-            }
-            */
-
-        }
-
-        public void HandleUpdateEquipmentList() {
-            //Debug.Log("NameGamePanel.UpdateEquipmentList()");
-
-            // show the equipment
-            EquipCharacter();
-
+            UnHightlightButtons(specializationButton);
         }
 
         public void SetCharacterProperties() {

@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.Serialization;
 using UnityEngine.UI;
 
 namespace AnyRPG {
@@ -16,43 +17,51 @@ namespace AnyRPG {
         protected TextMeshProUGUI text;
 
         [SerializeField]
-        protected Image highlightImage;
-
-        [SerializeField]
         protected Button highlightButton;
 
+        /*
         [Tooltip("The highlight image will be invisible when not selected or hovered")]
         [SerializeField]
         protected bool hideImageWhenInactive = true;
+        */
 
-        [Tooltip("Tint the image with the highlight color")]
+        [Tooltip("Use the colors defined in the system configuration manager for buttons.  This is separate from tint")]
         [SerializeField]
-        protected bool tintImage = true;
+        protected bool useSystemButtonColors = true;
 
-        [Tooltip("use the system image color for the tint")]
-        [SerializeField]
-        protected bool useSystemImageTintColor = true;
-
+        /*
         [SerializeField]
         protected bool useHighlightColorOnButton;
+        */
 
+        [Tooltip("The normalColor, highlightedColor, and selectedColor will be overwritten with this color when the button is selected")]
         [SerializeField]
-        protected Color highlightColor;
+        protected Color selectedButtonColor = new Color32(165, 165, 165, 166);
 
+        [Tooltip("Use locally defined local color instead of system configuration manager normal color")]
         [SerializeField]
-        protected Color normalColor = new Color32(163, 163, 163, 28);
+        protected bool overrideNormalColor = false;
 
+        [Tooltip("Color when not clicked or hovered")]
         [SerializeField]
-        protected Color highlightedColor = new Color32(165, 165, 165, 103);
+        protected Color normalColor = new Color32(163, 163, 163, 82);
 
+        [Tooltip("Color when mouse hovered")]
         [SerializeField]
-        protected Color pressedColor = new Color32(120, 120, 120, 74);
+        protected Color highlightedColor = new Color32(165, 165, 165, 166);
 
+        [Tooltip("Color during mouse click")]
         [SerializeField]
-        protected Color selectedColor = new Color32(165, 165, 165, 103);
+        protected Color pressedColor = new Color32(120, 120, 120, 71);
 
+        [Tooltip("Color after mouse click")]
         [SerializeField]
-        protected Color disabledColor = new Color32(200, 200, 200, 128);
+        protected Color selectedColor = new Color32(165, 165, 165, 166);
+
+        [Tooltip("Color when not interactable")]
+        [SerializeField]
+        //protected Color disabledColor = new Color32(200, 200, 200, 128);
+        protected Color disabledColor = new Color32(82, 82, 82, 17);
 
         [SerializeField]
         protected bool CapitalizeText = false;
@@ -66,17 +75,25 @@ namespace AnyRPG {
 
         public override void Configure(SystemGameManager systemGameManager) {
             base.Configure(systemGameManager);
-            if (useSystemImageTintColor) {
-                highlightColor = systemConfigurationManager.DefaultUIColor;
-            }
-            SetDefaultImageColor();
-            if (highlightButton != null) {
-                Image highlightButtonImage = highlightButton.GetComponent<Image>();
-                if (highlightButtonImage != null) {
-                    highlightButtonImage.color = systemConfigurationManager.DefaultUISolidColor;
+            //if (useSystemImageTintColor) {
+                //highlightedButtonColor = systemConfigurationManager.DefaultUISolidColor;
+                if (highlightButton != null) {
+                    Image highlightButtonImage = highlightButton.GetComponent<Image>();
+                    if (highlightButtonImage != null) {
+                        highlightButtonImage.color = systemConfigurationManager.HighlightButtonColor;
+                    }
                 }
+            //}
+            if (useSystemButtonColors) {
+                if (!overrideNormalColor) {
+                    normalColor = systemConfigurationManager.ButtonNormalColor;
+                }
+                highlightedColor = systemConfigurationManager.ButtonHighlightedColor;
+                pressedColor = systemConfigurationManager.ButtonPressedColor;
+                selectedColor = systemConfigurationManager.ButtonSelectedColor;
+                disabledColor = systemConfigurationManager.ButtonDisabledColor;
             }
-            if (highlightButton != null && useHighlightColorOnButton == true) {
+            if (highlightButton != null) {
                 ColorBlock colorBlock = highlightButton.colors;
                 colorBlock.normalColor = normalColor;
                 colorBlock.highlightedColor = highlightedColor;
@@ -88,20 +105,6 @@ namespace AnyRPG {
             DeSelect();
         }
 
-        private void SetDefaultImageColor() {
-            if (highlightImage != null) {
-                if (hideImageWhenInactive) {
-                    highlightImage.color = new Color32(0, 0, 0, 0);
-                } else {
-                    highlightImage.color = normalColor;
-                }
-            }
-        }
-
-        private void SetNormalColors() {
-
-        }
-
         public override void SetGameManagerReferences() {
             //Debug.Log(gameObject.name + ".HighlightButton.SetGameManagerReferences(): " + GetInstanceID());
             base.SetGameManagerReferences();
@@ -110,21 +113,24 @@ namespace AnyRPG {
             uIManager = systemGameManager.UIManager;
         }
 
+        public override bool Available() {
+            if (highlightButton != null && highlightButton.interactable == false) {
+                return false;
+            }
+
+            return base.Available();
+        }
+
+
         public override void Select() {
             //Debug.Log(gameObject.name + ".HighlightButton.Select()");
             base.Select();
-            if (highlightImage != null) {
-                //Debug.Log(gameObject.name + ".HighlightButton.Select(): highlightimage is not null");
-                if (tintImage) {
-                    //Debug.Log(gameObject.name + ".HighlightButton.Select(): highlightimage is not null: setting highlightcolor on image");
-                    highlightImage.color = highlightColor;
-                }
-            }
-            if (highlightButton != null && useHighlightColorOnButton == true) {
+            //if (highlightButton != null && useHighlightColorOnButton == true) {
+            if (highlightButton != null) {
                 ColorBlock colorBlock = highlightButton.colors;
-                colorBlock.normalColor = highlightColor;
-                colorBlock.highlightedColor = highlightColor;
-                colorBlock.selectedColor = highlightColor;
+                colorBlock.normalColor = selectedButtonColor;
+                colorBlock.highlightedColor = selectedButtonColor;
+                colorBlock.selectedColor = selectedButtonColor;
                 highlightButton.colors = colorBlock;
             }
             if (CapitalizeText == true) {
@@ -139,8 +145,8 @@ namespace AnyRPG {
 
         public override void DeSelect() {
             //Debug.Log(gameObject.name + ".HightlightButton.DeSelect()");
-            SetDefaultImageColor();
-            if (highlightButton != null && useHighlightColorOnButton == true) {
+            base.DeSelect();
+            if (highlightButton != null) {
                 ColorBlock colorBlock = highlightButton.colors;
                 colorBlock.normalColor = normalColor;
                 colorBlock.highlightedColor = highlightedColor;
@@ -156,11 +162,6 @@ namespace AnyRPG {
         }
 
         public virtual void OnHoverSound() {
-            /*
-            if (audioManager == null) {
-                Debug.Log(gameObject.name + ".HighlightButton.OnHoverSound() : audioManager is null!: " + GetInstanceID());
-            }
-            */
             if (highlightButton != null && highlightButton.interactable == false) {
                 // don't do hover sound for buttons we can't click
                 return;
@@ -178,16 +179,21 @@ namespace AnyRPG {
         }
 
         public override void OnPointerClick(PointerEventData eventData) {
+            Debug.Log(gameObject.name + ".HighlightButton.OnPointerClick()");
             base.OnPointerClick(eventData);
             OnClickSound();
             Interact();
         }
 
-        public override void Accept() {
-            base.Accept();
+        public override void Interact() {
+            Debug.Log(gameObject.name + ".HighlightButton.Interact()");
+
+            base.Interact();
+            
             if (highlightButton != null) {
                 highlightButton.onClick.Invoke();
             }
+            
         }
 
         public virtual void CheckMouse() {

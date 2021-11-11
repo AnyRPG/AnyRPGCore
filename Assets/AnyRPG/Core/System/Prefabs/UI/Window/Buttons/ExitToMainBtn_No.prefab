@@ -202,7 +202,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: f6b294e28d4da7349940fcb9ef6e075f, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 8da48cffb618593408a2a254b1a9b78c, type: 3}
   m_Type: 1
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -283,7 +283,10 @@ MonoBehaviour:
   text: {fileID: 999671437512149398}
   highlightImage: {fileID: 0}
   highlightButton: {fileID: 1011721320924828829}
-  useHighlightColor: 0
+  hideImageWhenInactive: 1
+  tintImage: 1
+  useSystemImageTintColor: 1
+  useSystemButtonColors: 1
   useHighlightColorOnButton: 0
   highlightColor: {r: 0.64705884, g: 0.64705884, b: 0.64705884, a: 0.403}
   normalColor: {r: 0.6392157, g: 0.6392157, b: 0.6392157, a: 0.10980392}

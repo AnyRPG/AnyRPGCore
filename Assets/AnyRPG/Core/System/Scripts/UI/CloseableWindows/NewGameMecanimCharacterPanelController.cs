@@ -10,8 +10,6 @@ namespace AnyRPG {
 
     public class NewGameMecanimCharacterPanelController : WindowContentController {
 
-        public override event Action<ICloseableWindowContents> OnCloseWindow = delegate { };
-
         /*
         [Header("Appearance")]
 
@@ -56,6 +54,7 @@ namespace AnyRPG {
             newGameManager = systemGameManager.NewGameManager;
         }
 
+        /*
         public override void ReceiveClosedWindowNotification() {
             //Debug.Log("NewGameMecanimCharacterPanelController.RecieveClosedWindowNotification()");
             base.ReceiveClosedWindowNotification();
@@ -65,8 +64,9 @@ namespace AnyRPG {
         public override void ReceiveOpenWindowNotification() {
             //Debug.Log("NewGameMecanimCharacterPanelController.ReceiveOpenWindowNotification()");
             base.ReceiveOpenWindowNotification();
-            ShowOptionButtonsCommon();
+
         }
+        */
 
         public void ClearOptionButtons() {
             //Debug.Log("LoadGamePanel.ClearLoadButtons()");
@@ -76,94 +76,62 @@ namespace AnyRPG {
                     objectPooler.ReturnObjectToPool(optionButton.gameObject);
                 }
             }
-            uINavigationControllers[1].ClearActiveButtons();
+            uINavigationControllers[0].ClearActiveButtons();
             optionButtons.Clear();
         }
 
-        public void ShowOptionButtonsCommon() {
-            //Debug.Log("NewGameMecanimCharacterPanelController.ShowOptionButtonsCommon()");
-            bool foundIndex = false;
+        public void ShowOptionButtons() {
+            Debug.Log("NewGameMecanimCharacterPanelController.ShowOptionButtons()");
 
             ClearOptionButtons();
 
-            if ((newGameManager.Faction != null && newGameManager.Faction.HideDefaultProfiles == false)
-                || systemConfigurationManager.AlwaysShowDefaultProfiles == true
-                || newGameManager.Faction == null) {
-                //Debug.Log("NewGameMecanimCharacterPanelController.ShowOptionButtonsCommon(): showing default profiles");
-                AddDefaultProfiles();
-            }
-            if (newGameManager.Faction != null) {
-                foreach (UnitProfile unitProfile in newGameManager.Faction.CharacterCreatorProfiles) {
-                    //Debug.Log("NewGameMecanimCharacterPanelController.ShowOptionButtonsCommon(): found valid unit profile: " + unitProfile.DisplayName);
-                    GameObject go = objectPooler.GetPooledObject(buttonPrefab, buttonArea.transform);
-                    NewGameUnitButton optionButton = go.GetComponent<NewGameUnitButton>();
-                    optionButton.Configure(systemGameManager);
-                    optionButton.AddUnitProfile(unitProfile);
-                    optionButtons.Add(optionButton);
-                    uINavigationControllers[1].AddActiveButton(optionButton);
-
-                }
-            }
-
-            if (optionButtons.Count > 0) {
-                SetNavigationController(uINavigationControllers[1]);
-            }
-
-            // attempt to select the button that matches the current unit profile in case this list has the existing profile on it
-            for (int i = 0; i < optionButtons.Count; i++) {
-                if (optionButtons[i].UnitProfile == newGameManager.UnitProfile) {
-                    optionButtons[i].Select();
-                    foundIndex = true;
-                    break;
-                }
-            }
-
-            // could not find the current profile in the options list, reset the profile to the first available option
-            if (optionButtons.Count > 0 && foundIndex == false) {
-                optionButtons[0].Select();
-            }
-        }
-
-        private void AddDefaultProfiles() {
-            if (systemConfigurationManager.DefaultPlayerUnitProfile != null) {
-                GameObject go = objectPooler.GetPooledObject(buttonPrefab, buttonArea.transform);
-                NewGameUnitButton optionButton = go.GetComponent<NewGameUnitButton>();
-                optionButton.Configure(systemGameManager);
-                optionButton.AddUnitProfile(systemConfigurationManager.DefaultPlayerUnitProfile);
-                optionButtons.Add(optionButton);
-                uINavigationControllers[1].AddActiveButton(optionButton);
-            }
-            foreach (UnitProfile unitProfile in systemConfigurationManager.CharacterCreatorProfiles) {
+            for (int i = 0; i < newGameManager.UnitProfileList.Count; i++) {
                 //Debug.Log("NewGameMecanimCharacterPanelController.ShowOptionButtonsCommon(): found valid unit profile: " + unitProfile.DisplayName);
                 GameObject go = objectPooler.GetPooledObject(buttonPrefab, buttonArea.transform);
                 NewGameUnitButton optionButton = go.GetComponent<NewGameUnitButton>();
                 optionButton.Configure(systemGameManager);
-                optionButton.AddUnitProfile(unitProfile);
+                optionButton.AddUnitProfile(newGameManager.UnitProfileList[i]);
                 optionButtons.Add(optionButton);
-                uINavigationControllers[1].AddActiveButton(optionButton);
+                uINavigationControllers[0].AddActiveButton(optionButton);
             }
+            /*
+            if (optionButtons.Count > 0) {
+                SetNavigationController(uINavigationControllers[0]);
+            }
+            */
         }
+
 
         public void HidePanel() {
             canvasGroup.alpha = 0;
             canvasGroup.blocksRaycasts = false;
             canvasGroup.interactable = false;
-            //RemoveFromWindowStack();
         }
 
         public void ShowPanel() {
             canvasGroup.alpha = 1;
             canvasGroup.blocksRaycasts = true;
             canvasGroup.interactable = true;
-            //AddToWindowStack();
-            ShowOptionButtonsCommon();
+            //ShowOptionButtonsCommon();
         }
 
-        public void SetBody(NewGameUnitButton newGameUnitButton) {
-            if (selectedUnitButton != null && selectedUnitButton != newGameUnitButton) {
+        public void SetUnitProfile(UnitProfile newUnitProfile) {
+            Debug.Log("NewGameMecanimCharacterPanelController.SetUnitProfile(" + (newUnitProfile == null ? "null" : newUnitProfile.DisplayName) + ")");
+
+            // deselect old button
+            if (selectedUnitButton != null && selectedUnitButton.UnitProfile != newUnitProfile) {
                 selectedUnitButton.DeSelect();
+                selectedUnitButton.UnHighlightBackground();
             }
-            selectedUnitButton = newGameUnitButton;
+
+            // select new button
+            for (int i = 0; i < optionButtons.Count; i++) {
+                if (optionButtons[i].UnitProfile == newUnitProfile) {
+                    selectedUnitButton = optionButtons[i];
+                    uINavigationControllers[0].SetCurrentIndex(i);
+                    optionButtons[i].HighlightBackground();
+                }
+            }
         }
 
 

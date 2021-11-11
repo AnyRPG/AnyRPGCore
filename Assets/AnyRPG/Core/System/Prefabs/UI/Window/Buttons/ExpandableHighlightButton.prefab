@@ -479,7 +479,7 @@ GameObject:
   - component: {fileID: 7256569345083184405}
   - component: {fileID: 7677429565109484649}
   m_Layer: 5
-  m_Name: ExpandableHighlightButton 1
+  m_Name: ExpandableHighlightButton
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

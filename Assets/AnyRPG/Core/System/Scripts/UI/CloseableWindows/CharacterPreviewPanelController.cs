@@ -63,7 +63,7 @@ namespace AnyRPG {
         }
 
         public void ReloadUnit() {
-            //Debug.Log("CharacterPreviewPanelController.ReloadUnit()");
+            Debug.Log("CharacterPreviewPanelController.ReloadUnit()");
             if (windowOpened == false) {
                 // the window has not been opened (initialized) yet, so don't try to spawn any unit
                 return;
@@ -80,7 +80,7 @@ namespace AnyRPG {
         }
 
         private void SetPreviewTarget() {
-            //Debug.Log("CharacterPreviewPanelController.SetPreviewTarget()");
+            Debug.Log("CharacterPreviewPanelController.SetPreviewTarget()");
             if (characterCreatorManager.PreviewUnitController != null
                 || capabilityConsumer == null
                 || capabilityConsumer.UnitProfile == null) {

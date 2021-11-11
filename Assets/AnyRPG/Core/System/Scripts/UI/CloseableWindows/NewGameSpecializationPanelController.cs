@@ -37,7 +37,7 @@ namespace AnyRPG {
 
         private NewGameClassSpecializationButton selectedClassSpecializationButton = null;
 
-        private ClassSpecialization classSpecialization;
+        //private ClassSpecialization classSpecialization;
 
         private List<NewGameClassSpecializationButton> optionButtons = new List<NewGameClassSpecializationButton>();
 
@@ -83,52 +83,46 @@ namespace AnyRPG {
             ClearAbilityRewardIcons();
         }
 
-        public void ShowOptionButtonsCommon() {
+        public void ShowOptionButtons() {
             //Debug.Log("LoadGamePanel.ShowOptionButtonsCommon()");
             ClearOptionButtons();
             HideInfoArea();
-            classSpecialization = null;
+            //classSpecialization = null;
 
-            foreach (ClassSpecialization classSpecialization in systemDataFactory.GetResourceList<ClassSpecialization>()) {
+            for (int i = 0; i < newGameManager.ClassSpecializationList.Count; i++) {
                 //Debug.Log("LoadGamePanel.ShowLoadButtonsCommon(): setting a button with saved game data");
-                if (newGameManager.CharacterClass != null
-                    && classSpecialization.CharacterClasses != null
-                    && classSpecialization.CharacterClasses.Contains(newGameManager.CharacterClass)
-                    && classSpecialization.NewGameOption == true) {
-                    GameObject go = objectPooler.GetPooledObject(buttonPrefab, buttonArea.transform);
-                    NewGameClassSpecializationButton optionButton = go.GetComponent<NewGameClassSpecializationButton>();
-                    optionButton.Configure(systemGameManager);
-                    optionButton.AddClassSpecialization(classSpecialization);
-                    optionButtons.Add(optionButton);
-                    uINavigationControllers[0].AddActiveButton(optionButton);
+                GameObject go = objectPooler.GetPooledObject(buttonPrefab, buttonArea.transform);
+                NewGameClassSpecializationButton optionButton = go.GetComponent<NewGameClassSpecializationButton>();
+                optionButton.Configure(systemGameManager);
+                optionButton.AddClassSpecialization(newGameManager.ClassSpecializationList[i]);
+                optionButtons.Add(optionButton);
+                uINavigationControllers[0].AddActiveButton(optionButton);
+                if (newGameManager.ClassSpecializationList[i] == newGameManager.ClassSpecialization) {
+                    uINavigationControllers[0].SetCurrentIndex(i);
                 }
             }
             if (optionButtons.Count > 0) {
                 SetNavigationController(uINavigationControllers[0]);
-                optionButtons[0].Select();
             }
-            // that should not be needed
-            /*
-            else {
-                newGameManager.ShowClassSpecialization(null);
-            }
-            */
         }
 
-
-
-        public void ShowClassSpecialization(NewGameClassSpecializationButton newGameClassSpecializationButton) {
+        public void SetClassSpecialization(ClassSpecialization newClassSpecialization) {
             //Debug.Log("LoadGamePanel.ShowSavedGame()");
-            if (selectedClassSpecializationButton != null && selectedClassSpecializationButton != newGameClassSpecializationButton) {
+
+            // deselect old button
+            if (selectedClassSpecializationButton != null && selectedClassSpecializationButton.ClassSpecialization != newClassSpecialization) {
                 selectedClassSpecializationButton.DeSelect();
             }
 
-            selectedClassSpecializationButton = newGameClassSpecializationButton;
-            if (newGameClassSpecializationButton == null) {
-                classSpecialization = null;
-            } else {
-                classSpecialization = newGameClassSpecializationButton.ClassSpecialization;
+            // select new button
+            for (int i = 0; i < optionButtons.Count; i++) {
+                if (optionButtons[i].ClassSpecialization == newClassSpecialization) {
+                    selectedClassSpecializationButton = optionButtons[i];
+                    uINavigationControllers[0].SetCurrentIndex(i);
+                    optionButtons[uINavigationControllers[0].CurrentIndex].HighlightBackground();
+                }
             }
+
             ShowAbilityRewards();
             ShowTraitRewards();
         }
@@ -137,14 +131,12 @@ namespace AnyRPG {
             canvasGroup.alpha = 0;
             canvasGroup.blocksRaycasts = false;
             canvasGroup.interactable = false;
-            //RemoveFromWindowStack();
         }
 
         public void ShowPanel() {
             canvasGroup.alpha = 1;
             canvasGroup.blocksRaycasts = true;
             canvasGroup.interactable = true;
-            //AddToWindowStack();
         }
 
         public void ShowTraitRewards() {
@@ -152,8 +144,8 @@ namespace AnyRPG {
 
             ClearTraitRewardIcons();
             // show trait rewards
-            if (classSpecialization != null && classSpecialization.GetFilteredCapabilities(newGameManager).TraitList.Count > 0) {
-                CapabilityProps capabilityProps = classSpecialization.GetFilteredCapabilities(newGameManager);
+            if (newGameManager.ClassSpecialization != null && newGameManager.ClassSpecialization.GetFilteredCapabilities(newGameManager).TraitList.Count > 0) {
+                CapabilityProps capabilityProps = newGameManager.ClassSpecialization.GetFilteredCapabilities(newGameManager);
                 traitLabel.SetActive(true);
                 // move to bottom of list before putting traits below it
                 traitLabel.transform.SetAsLastSibling();
@@ -181,8 +173,8 @@ namespace AnyRPG {
 
             ClearAbilityRewardIcons();
             // show ability rewards
-            if (classSpecialization != null && classSpecialization.GetFilteredCapabilities(newGameManager).AbilityList.Count > 0) {
-                CapabilityProps capabilityProps = classSpecialization.GetFilteredCapabilities(newGameManager);
+            if (newGameManager.ClassSpecialization != null && newGameManager.ClassSpecialization.GetFilteredCapabilities(newGameManager).AbilityList.Count > 0) {
+                CapabilityProps capabilityProps = newGameManager.ClassSpecialization.GetFilteredCapabilities(newGameManager);
                 abilityLabel.SetActive(true);
                 abilityLabel.transform.SetAsFirstSibling();
                 for (int i = 0; i < capabilityProps.AbilityList.Count; i++) {
@@ -229,7 +221,7 @@ namespace AnyRPG {
             traitLabel.SetActive(false);
             LayoutRebuilder.ForceRebuildLayoutImmediate(abilityButtonArea.GetComponent<RectTransform>());
 
-            ShowOptionButtonsCommon();
+            ShowOptionButtons();
 
         }
 

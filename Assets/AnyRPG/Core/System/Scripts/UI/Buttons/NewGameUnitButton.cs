@@ -54,19 +54,32 @@ namespace AnyRPG {
             description.text = descriptionText;
         }
 
+        public override void Interact() {
+            Debug.Log(gameObject.name + ".NewGameUnitButton.Interact()");
 
-        public void CommonSelect() {
-            newGameManager.SetUnitProfile(this);
+            base.Interact();
+            newGameManager.SetUnitProfile(unitProfile);
         }
 
+        /*
+        public void CommonSelect() {
+            Debug.Log(gameObject.name + ".NewGameUnitButton.CommonSelect()");
+            //newGameManager.SetUnitProfile(unitProfile);
+        }
+        */
+
+        /*
         public void RawSelect() {
             CommonSelect();
         }
+        */
 
+        /*
         public override void Select() {
             CommonSelect();
             base.Select();
         }
+        */
 
     }
 

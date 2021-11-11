@@ -154,6 +154,9 @@ namespace AnyRPG {
                 stopButton.Button.interactable = true;
                 pauseButton.Button.interactable = false;
             }
+
+            uINavigationControllers[1].UpdateNavigationList();
+            uINavigationControllers[1].FocusCurrentButton();
         }
 
         public void ShowDescription(AudioProfile musicProfile) {
@@ -230,6 +233,8 @@ namespace AnyRPG {
                     stopButton.Button.interactable = true;
                 }
             }
+            uINavigationControllers[1].UpdateNavigationList();
+            uINavigationControllers[1].FocusCurrentButton();
         }
 
         public void PauseMusic() {
@@ -241,6 +246,9 @@ namespace AnyRPG {
             playButton.Button.interactable = true;
             pauseButton.Button.interactable = false;
             stopButton.Button.interactable = true;
+
+            uINavigationControllers[1].UpdateNavigationList();
+            uINavigationControllers[1].FocusCurrentButton();
         }
 
         public void StopMusic() {
@@ -255,6 +263,9 @@ namespace AnyRPG {
             playButton.Button.interactable = true;
             stopButton.Button.interactable = false;
             pauseButton.Button.interactable = false;
+
+            uINavigationControllers[1].UpdateNavigationList();
+            uINavigationControllers[1].FocusCurrentButton();
         }
 
         public override void ReceiveOpenWindowNotification() {
