@@ -122,7 +122,7 @@ namespace AnyRPG {
         }
 
         public virtual void SetOpenSubPanel(CloseableWindowContents closeableWindowContents, bool focus = false) {
-            //Debug.Log(gameObject.name + ".CloseableWindowContents.SetOpenSubPanel(" + closeableWindowContents.name + ")");
+            Debug.Log(gameObject.name + ".CloseableWindowContents.SetOpenSubPanel(" + closeableWindowContents.name + ")");
             openSubPanel = closeableWindowContents;
             if (focus == true) {
                 SetActiveSubPanel(closeableWindowContents);
@@ -391,6 +391,9 @@ namespace AnyRPG {
             //Debug.Log(gameObject.name + ".CloseableWindowContents.RemoveFromWindowStack()");
             if (parentPanel == null && addToWindowStack) {
                 windowManager.RemoveWindow(this);
+            }
+            if (currentNavigationController != null) {
+                currentNavigationController.LeaveController();
             }
         }
 

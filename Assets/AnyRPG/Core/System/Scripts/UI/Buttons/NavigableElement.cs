@@ -44,12 +44,15 @@ namespace AnyRPG {
         [SerializeField]
         private Color highlightImageColor = new Color32(165, 165, 165, 166);
 
-
-
         // the color to change the highlight image when not hidden
         private Color hiddenColor = new Color32(0, 0, 0, 0);
 
-        // the color to change the highlight image when navigation controller is not focused
+        [Tooltip("If false, the highlight image will retain its color when the navigation controller is unfocused")]
+        [SerializeField]
+        private bool useUnfocusedColor = true;
+
+        [Tooltip("the color to change the highlight image when navigation controller is not focused")]
+        [SerializeField]
         private Color unFocusedColor = new Color32(255, 255, 255, 39);
 
 
@@ -168,7 +171,7 @@ namespace AnyRPG {
 
         public void HighlightBackground() {
             if (highlightImage != null) {
-                if (navigationControllerFocused) {
+                if (navigationControllerFocused || useUnfocusedColor == false) {
                     //highlightImage.color = highlightImageColor * selectedColor;
                     highlightImage.color = highlightImageColor;
                 } else {
@@ -205,7 +208,7 @@ namespace AnyRPG {
             if (highlightImage == null) {
                 return;
             }
-            if (highlightImage.color != hiddenColor) {
+            if (highlightImage.color != hiddenColor && useUnfocusedColor == true) {
                 highlightImage.color = unFocusedColor;
             }
         }

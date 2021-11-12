@@ -166,6 +166,7 @@ namespace AnyRPG {
             Debug.Log(gameObject.name + ".UINavigationController.Unfocus()");
             foreach (NavigableElement navigableElement in activeNavigableButtons) {
                 navigableElement.UnFocus();
+                navigableElement.LeaveElement();
             }
         }
 
@@ -182,7 +183,7 @@ namespace AnyRPG {
         }
 
         public virtual void FocusFirstButton() {
-            //Debug.Log(gameObject.name + ".UINavigationController.FocusFirstButton()");
+            Debug.Log(gameObject.name + ".UINavigationController.FocusFirstButton()");
             if (activeNavigableButtons.Count == 0) {
                 return;
             }
@@ -357,6 +358,9 @@ namespace AnyRPG {
                 currentNavigableElement.Accept();
             }
             if (acceptController != null) {
+                if (currentNavigableElement != null) {
+                    currentNavigableElement.LeaveElement();
+                }
                 UnFocus();
                 acceptController.Activate();
                 return;

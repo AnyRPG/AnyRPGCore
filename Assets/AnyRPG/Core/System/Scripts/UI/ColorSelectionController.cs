@@ -18,6 +18,9 @@ namespace AnyRPG {
         public string ColorName;
         public GameObject LabelPrefab;
 
+        [SerializeField]
+        private UINavigationController colorButtonsController = null;
+
         // game manager references
 
         private ObjectPooler objectPooler = null;
@@ -54,32 +57,29 @@ namespace AnyRPG {
 
         private void AddRemoverButton() {
             GameObject go = objectPooler.GetPooledObject(ColorButtonPrefab);
-            ColorHandler ch = go.GetComponent<ColorHandler>();
-            ch.SetupRemover(Avatar, ColorName);
-            Image i = go.GetComponent<Image>();
-            i.color = Color.white;
-            /*
-            TextMeshProUGUI t = go.GetComponentInChildren<TextMeshProUGUI>();
-            t.text = "<default>";
-            */
+            ColorPickerButton colorPickerButton = go.GetComponent<ColorPickerButton>();
+            colorPickerButton.Configure(systemGameManager);
+            colorPickerButton.SetupRemover(Avatar, ColorName, Color.white);
             go.transform.SetParent(ColorPanel.transform);
+            colorButtonsController.AddActiveButton(colorPickerButton);
         }
 
         private void AddButton(OverlayColorData ocd) {
             //Debug.Log("AvailableColorsHandler.AddButton(): " + ColorName);
 
             GameObject go = objectPooler.GetPooledObject(ColorButtonPrefab);
-            ColorHandler ch = go.GetComponent<ColorHandler>();
-            ch.Setup(Avatar, ColorName, ocd);
-            Image i = go.GetComponent<Image>();
-            i.color = ocd.color;
+            ColorPickerButton colorPickerButton = go.GetComponent<ColorPickerButton>();
+            colorPickerButton.Configure(systemGameManager);
+            colorPickerButton.Setup(Avatar, ColorName, ocd, ocd.color);
             go.transform.SetParent(ColorPanel.transform);
+            colorButtonsController.AddActiveButton(colorPickerButton);
         }
 
         private void Cleanup() {
             foreach (Transform t in ColorPanel.transform) {
                 UMAUtils.DestroySceneObject(t.gameObject);
             }
+            colorButtonsController.ClearActiveButtons();
         }
     }
 

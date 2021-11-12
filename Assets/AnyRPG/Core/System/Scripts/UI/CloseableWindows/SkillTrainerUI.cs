@@ -57,8 +57,6 @@ namespace AnyRPG {
         private PlayerManager playerManager = null;
         private UIManager uIManager = null;
 
-        public SkillTrainerSkillScript MySelectedSkillTrainerSkillScript { get => selectedSkillTrainerSkillScript; set => selectedSkillTrainerSkillScript = value; }
-
         public override void Configure(SystemGameManager systemGameManager) {
             base.Configure(systemGameManager);
 
@@ -75,6 +73,11 @@ namespace AnyRPG {
             objectPooler = systemGameManager.ObjectPooler;
             playerManager = systemGameManager.PlayerManager;
             uIManager = systemGameManager.UIManager;
+        }
+
+        public void SetSelectedButton(SkillTrainerSkillScript selectedSkillTrainerSkillScript) {
+            this.selectedSkillTrainerSkillScript = selectedSkillTrainerSkillScript;
+            ShowDescription(selectedSkillTrainerSkillScript.Skill);
         }
 
         public void DeactivateButtons() {
@@ -111,7 +114,7 @@ namespace AnyRPG {
                 uIManager.skillTrainerWindow.CloseWindow();
             }
 
-            if (MySelectedSkillTrainerSkillScript == null && firstAvailableSkill != null) {
+            if (selectedSkillTrainerSkillScript == null && firstAvailableSkill != null) {
                 //firstAvailableSkill.Select();
                 uINavigationControllers[0].FocusFirstButton();
             }
@@ -133,7 +136,7 @@ namespace AnyRPG {
         public void UpdateSelected() {
             //Debug.Log("SkillTrainerUI.UpdateSelected()");
             if (selectedSkillTrainerSkillScript != null) {
-                ShowDescription(selectedSkillTrainerSkillScript.MySkill);
+                ShowDescription(selectedSkillTrainerSkillScript.Skill);
             }
         }
 
@@ -193,10 +196,12 @@ namespace AnyRPG {
         public void DeselectSkillScripts() {
             //Debug.Log("SkillTrainerUI.DeselectSkillScripts()");
             foreach (SkillTrainerSkillScript skill in skillScripts) {
-                if (skill != MySelectedSkillTrainerSkillScript) {
+                if (skill != selectedSkillTrainerSkillScript) {
                     skill.DeSelect();
                 }
             }
+            uINavigationControllers[0].UnHightlightButtons(selectedSkillTrainerSkillScript);
+
         }
 
         public void ClearSkills() {
@@ -217,16 +222,16 @@ namespace AnyRPG {
             //Debug.Log("SkillTrainerUI.OnCloseWindow()");
             base.ReceiveClosedWindowNotification();
             DeactivateButtons();
-            MySelectedSkillTrainerSkillScript = null;
+            selectedSkillTrainerSkillScript = null;
         }
 
         public void LearnSkill() {
             //Debug.Log("SkillTrainerUI.LearnSkill()");
             if (currentSkill != null) {
                 //if (MySelectedSkillTrainerSkillScript != null && MySelectedSkillTrainerSkillScript.MySkillName != null) {
-                playerManager.MyCharacter.CharacterSkillManager.LearnSkill(MySelectedSkillTrainerSkillScript.MySkill);
+                playerManager.MyCharacter.CharacterSkillManager.LearnSkill(selectedSkillTrainerSkillScript.Skill);
                 //UpdateButtons(MySelectedSkillTrainerSkillScript.MySkillName);
-                MySelectedSkillTrainerSkillScript = null;
+                selectedSkillTrainerSkillScript = null;
                 ClearDescription();
                 ShowSkills();
             }
@@ -234,9 +239,9 @@ namespace AnyRPG {
 
         public void UnlearnSkill() {
             //Debug.Log("SkillTrainerUI.UnlearnSkill()");
-            if (MySelectedSkillTrainerSkillScript != null && MySelectedSkillTrainerSkillScript.MySkill != null) {
-                playerManager.MyCharacter.CharacterSkillManager.UnlearnSkill(MySelectedSkillTrainerSkillScript.MySkill);
-                UpdateButtons(MySelectedSkillTrainerSkillScript.MySkill);
+            if (selectedSkillTrainerSkillScript != null && selectedSkillTrainerSkillScript.Skill != null) {
+                playerManager.MyCharacter.CharacterSkillManager.UnlearnSkill(selectedSkillTrainerSkillScript.Skill);
+                UpdateButtons(selectedSkillTrainerSkillScript.Skill);
                 ShowSkills();
             }
         }

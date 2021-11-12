@@ -16,6 +16,10 @@ namespace AnyRPG {
         [SerializeField]
         protected TextMeshProUGUI text;
 
+        [Tooltip("If true, the image attached to the button will not be tinted with the system defined highlightButtonColor")]
+        [SerializeField]
+        protected bool ignoreSystemImageTint = false;
+
         [SerializeField]
         protected Button highlightButton;
 
@@ -25,14 +29,6 @@ namespace AnyRPG {
         protected bool hideImageWhenInactive = true;
         */
 
-        [Tooltip("Use the colors defined in the system configuration manager for buttons.  This is separate from tint")]
-        [SerializeField]
-        protected bool useSystemButtonColors = true;
-
-        /*
-        [SerializeField]
-        protected bool useHighlightColorOnButton;
-        */
 
         [Tooltip("The normalColor, highlightedColor, and selectedColor will be overwritten with this color when the button is selected")]
         [SerializeField]
@@ -46,17 +42,33 @@ namespace AnyRPG {
         [SerializeField]
         protected Color normalColor = new Color32(163, 163, 163, 82);
 
+        [Tooltip("Use locally defined local color instead of system configuration manager highlighted color")]
+        [SerializeField]
+        protected bool overrideHighlightedColor = false;
+
         [Tooltip("Color when mouse hovered")]
         [SerializeField]
         protected Color highlightedColor = new Color32(165, 165, 165, 166);
+
+        [Tooltip("Use locally defined local color instead of system configuration manager highlighted color")]
+        [SerializeField]
+        protected bool overridePressedColor = false;
 
         [Tooltip("Color during mouse click")]
         [SerializeField]
         protected Color pressedColor = new Color32(120, 120, 120, 71);
 
+        [Tooltip("Use locally defined local color instead of system configuration manager highlighted color")]
+        [SerializeField]
+        protected bool overrideSelectedColor = false;
+
         [Tooltip("Color after mouse click")]
         [SerializeField]
         protected Color selectedColor = new Color32(165, 165, 165, 166);
+
+        [Tooltip("Use locally defined local color instead of system configuration manager highlighted color")]
+        [SerializeField]
+        protected bool overrideDisabledColor = false;
 
         [Tooltip("Color when not interactable")]
         [SerializeField]
@@ -75,7 +87,7 @@ namespace AnyRPG {
 
         public override void Configure(SystemGameManager systemGameManager) {
             base.Configure(systemGameManager);
-            //if (useSystemImageTintColor) {
+            if (!ignoreSystemImageTint) {
                 //highlightedButtonColor = systemConfigurationManager.DefaultUISolidColor;
                 if (highlightButton != null) {
                     Image highlightButtonImage = highlightButton.GetComponent<Image>();
@@ -83,14 +95,20 @@ namespace AnyRPG {
                         highlightButtonImage.color = systemConfigurationManager.HighlightButtonColor;
                     }
                 }
-            //}
-            if (useSystemButtonColors) {
-                if (!overrideNormalColor) {
-                    normalColor = systemConfigurationManager.ButtonNormalColor;
-                }
+            }
+            if (!overrideNormalColor) {
+                normalColor = systemConfigurationManager.ButtonNormalColor;
+            }
+            if (!overrideHighlightedColor) {
                 highlightedColor = systemConfigurationManager.ButtonHighlightedColor;
+            }
+            if (!overridePressedColor) {
                 pressedColor = systemConfigurationManager.ButtonPressedColor;
+            }
+            if (!overrideSelectedColor) {
                 selectedColor = systemConfigurationManager.ButtonSelectedColor;
+            }
+            if (!overrideDisabledColor) {
                 disabledColor = systemConfigurationManager.ButtonDisabledColor;
             }
             if (highlightButton != null) {

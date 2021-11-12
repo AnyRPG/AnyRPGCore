@@ -270,6 +270,8 @@ namespace AnyRPG {
             } else {
                 specializationButton.gameObject.SetActive(false);
             }
+
+            uINavigationControllers[0].UpdateNavigationList();
         }
 
         private void ClearData() {

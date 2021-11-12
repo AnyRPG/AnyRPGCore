@@ -17,7 +17,8 @@ namespace AnyRPG {
 
         [SerializeField]
         private UMACharacterEditorPanelController umaCharacterPanel = null;
-
+        
+        /*
         // appearance buttons
         [SerializeField]
         private HighlightButton faceButton = null;
@@ -46,11 +47,11 @@ namespace AnyRPG {
         // bottom row
         [SerializeField]
         private HighlightButton closeButton = null;
+        */
 
         [SerializeField]
         private HighlightButton saveButton = null;
 
-        //private string playerName = "Player Name";
         private UnitProfile unitProfile = null;
         private UnitType unitType = null;
         private CharacterRace characterRace = null;
@@ -80,16 +81,16 @@ namespace AnyRPG {
 
         public override void Configure(SystemGameManager systemGameManager) {
             base.Configure(systemGameManager);
-            faceButton.Configure(systemGameManager);
-            colorsButton.Configure(systemGameManager);
-            sexButton.Configure(systemGameManager);
-            maleButton.Configure(systemGameManager);
-            femaleButton.Configure(systemGameManager);
-            hairButton.Configure(systemGameManager);
-            skinButton.Configure(systemGameManager);
-            eyesButton.Configure(systemGameManager);
-            closeButton.Configure(systemGameManager);
-            saveButton.Configure(systemGameManager);
+            //faceButton.Configure(systemGameManager);
+            //colorsButton.Configure(systemGameManager);
+            //sexButton.Configure(systemGameManager);
+            //maleButton.Configure(systemGameManager);
+            //femaleButton.Configure(systemGameManager);
+            //hairButton.Configure(systemGameManager);
+            //skinButton.Configure(systemGameManager);
+            //eyesButton.Configure(systemGameManager);
+            //closeButton.Configure(systemGameManager);
+            //saveButton.Configure(systemGameManager);
 
             characterPreviewPanel.Configure(systemGameManager);
             umaCharacterPanel.Configure(systemGameManager);
@@ -122,6 +123,7 @@ namespace AnyRPG {
             saveButton.Button.interactable = false;
             umaCharacterPanel.ReceiveOpenWindowNotification();
             umaCharacterPanel.ShowPanel();
+            SetOpenSubPanel(umaCharacterPanel);
 
             // set unit profile to default
             if (systemConfigurationManager.UseFirstCreatorProfile) {

@@ -200,6 +200,7 @@ namespace AnyRPG {
             // configure colors options display
             //colorsButton.Select();
             colorsOptionsArea.gameObject.SetActive(true);
+            hairColorsButton.HighlightBackground();
             OpenHairColorsOptionsArea();
         }
 
@@ -233,12 +234,13 @@ namespace AnyRPG {
         }
 
         public void OpenEyesColorsOptionsArea() {
-            //Debug.Log("CharacterCreatorPanel.OpenEyesColorsOptionsArea()");
+            Debug.Log("CharacterAppearancePanel.OpenEyesColorsOptionsArea()");
 
             CloseColorsOptionsAreas();
-            UnHighlightColorsButtons();
+            uINavigationControllers[2].UnHightlightButtons(eyesColorsButton);
+            //UnHighlightColorsButtons();
 
-            eyesColorsButton.Select();
+            //eyesColorsButton.Select();
             InitializeEyesColors();
             eyesColorsOptionsArea.gameObject.SetActive(true);
         }
@@ -259,9 +261,10 @@ namespace AnyRPG {
             //Debug.Log("CharacterCreatorPanel.OpenSkinColorsOptionsArea()");
 
             CloseColorsOptionsAreas();
-            UnHighlightColorsButtons();
+            uINavigationControllers[2].UnHightlightButtons(skinColorsButton);
+            //UnHighlightColorsButtons();
 
-            skinColorsButton.Select();
+            //skinColorsButton.Select();
             InitializeSkinColors();
             skinColorsOptionsArea.gameObject.SetActive(true);
         }
@@ -275,9 +278,10 @@ namespace AnyRPG {
             //Debug.Log("CharacterCreatorPanel.OpenHairColorsOptionsArea()");
 
             CloseColorsOptionsAreas();
-            UnHighlightColorsButtons();
+            uINavigationControllers[2].UnHightlightButtons(hairColorsButton);
+            //UnHighlightColorsButtons();
 
-            hairColorsButton.Select();
+            //hairColorsButton.Select();
             InitializeHairColors();
             hairColorsOptionsArea.gameObject.SetActive(true);
         }
@@ -367,7 +371,7 @@ namespace AnyRPG {
         }
 
         public void ColorsClick() {
-            //Debug.Log("CharacterCreatorPanel.ColorsClick()");
+            Debug.Log("CharacterAppearancePanel.ColorsClick()");
 
             CleanupDynamicMenus();
             GameObject setupParent = null;

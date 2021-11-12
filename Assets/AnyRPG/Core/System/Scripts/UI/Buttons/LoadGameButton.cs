@@ -40,7 +40,6 @@ namespace AnyRPG {
 
         public AnyRPGSaveData SaveData { get => mySaveData; set => mySaveData = value; }
         public UnitProfile UnitProfile { get => unitProfile; set => unitProfile = value; }
-        public override bool DeselectOnLeave => false;
 
         public override void Configure(SystemGameManager systemGameManager) {
             base.Configure(systemGameManager);
