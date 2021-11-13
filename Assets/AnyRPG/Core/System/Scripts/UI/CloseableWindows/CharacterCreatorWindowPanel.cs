@@ -123,7 +123,7 @@ namespace AnyRPG {
             saveButton.Button.interactable = false;
             umaCharacterPanel.ReceiveOpenWindowNotification();
             umaCharacterPanel.ShowPanel();
-            SetOpenSubPanel(umaCharacterPanel);
+            SetOpenSubPanel(umaCharacterPanel, true);
 
             // set unit profile to default
             if (systemConfigurationManager.UseFirstCreatorProfile) {

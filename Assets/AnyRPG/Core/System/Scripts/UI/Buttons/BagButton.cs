@@ -24,7 +24,9 @@ namespace AnyRPG {
         protected bool localComponentsGotten = false;
 
         // game manager references
-        protected InventoryManager inventoryManager = null;
+        //protected InventoryManager inventoryManager = null;
+        protected PlayerManager playerManager = null;
+
         protected HandScript handScript = null;
 
         public BagNode BagNode {
@@ -61,9 +63,10 @@ namespace AnyRPG {
 
         public override void SetGameManagerReferences() {
             base.SetGameManagerReferences();
-            inventoryManager = systemGameManager.InventoryManager;
+            //inventoryManager = systemGameManager.InventoryManager;
             uIManager = systemGameManager.UIManager;
             handScript = uIManager.HandScript;
+            playerManager = systemGameManager.PlayerManager;
         }
 
         public void HandleAddBag(Bag bag) {
@@ -118,16 +121,16 @@ namespace AnyRPG {
 
             if (eventData.button == PointerEventData.InputButton.Left) {
                 //Debug.Log("BagButton.OnPointerClick() LEFT CLICK DETECTED");
-                if (inventoryManager.FromSlot != null && handScript.Moveable != null && handScript.Moveable is Bag) {
+                if (playerManager.MyCharacter.CharacterInventoryManager.FromSlot != null && handScript.Moveable != null && handScript.Moveable is Bag) {
                     if (BagNode.Bag != null) {
-                        inventoryManager.SwapBags(BagNode.Bag, handScript.Moveable as Bag);
+                        playerManager.MyCharacter.CharacterInventoryManager.SwapBags(BagNode.Bag, handScript.Moveable as Bag);
                     } else {
                         Bag tmp = (Bag)handScript.Moveable;
                         tmp.BagNode = bagNode;
                         tmp.Use();
                         BagNode.AddBag(tmp);
                         handScript.Drop();
-                        inventoryManager.FromSlot = null;
+                        playerManager.MyCharacter.CharacterInventoryManager.FromSlot = null;
 
                     }
                 } else if (Input.GetKey(KeyCode.LeftShift)) {

@@ -43,7 +43,7 @@ namespace AnyRPG {
         PlayerManager playerManager = null;
         HandScript handScript = null;
         ActionBarManager actionBarManager = null;
-        InventoryManager inventoryManager = null;
+        //InventoryManager inventoryManager = null;
 
         /// <summary>
         /// A reference to the actual button that this button uses
@@ -79,7 +79,7 @@ namespace AnyRPG {
             playerManager = systemGameManager.PlayerManager;
             handScript = uIManager.HandScript;
             actionBarManager = uIManager.ActionBarManager;
-            inventoryManager = systemGameManager.InventoryManager;
+            //inventoryManager = systemGameManager.InventoryManager;
 
             Useable = null;
             Button = GetComponent<Button>();

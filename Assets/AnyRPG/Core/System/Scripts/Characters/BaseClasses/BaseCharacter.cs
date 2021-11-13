@@ -45,6 +45,7 @@ namespace AnyRPG {
         private CharacterStats characterStats = null;
         private CharacterCurrencyManager characterCurrencyManager = null;
         private CharacterRecipeManager characterRecipeManager = null;
+        private CharacterInventoryManager characterInventoryManager = null;
 
         // logic for processing capabilities lives here
         private CapabilityConsumerProcessor capabilityConsumerProcessor = null;
@@ -67,6 +68,8 @@ namespace AnyRPG {
         public CharacterSkillManager CharacterSkillManager { get => characterSkillManager; }
         public CharacterFactionManager CharacterFactionManager { get => characterFactionManager; set => characterFactionManager = value; }
         public CharacterEquipmentManager CharacterEquipmentManager { get => characterEquipmentManager; set => characterEquipmentManager = value; }
+        public CharacterInventoryManager CharacterInventoryManager { get => characterInventoryManager; }
+
 
         public string CharacterName { get => characterName; }
 
@@ -144,6 +147,7 @@ namespace AnyRPG {
             characterCurrencyManager = new CharacterCurrencyManager(this, systemGameManager);
             characterRecipeManager = new CharacterRecipeManager(this, systemGameManager);
             characterAbilityManager = new CharacterAbilityManager(this, systemGameManager);
+            characterInventoryManager = new CharacterInventoryManager(this, systemGameManager);
         }
 
         public void InitCharacterComponents() {

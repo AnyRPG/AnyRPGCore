@@ -77,7 +77,7 @@ namespace AnyRPG {
         private MessageFeedManager messageFeedManager = null;
         private PlayerManager playerManager = null;
         private LogManager logManager = null;
-        private InventoryManager inventoryManager = null;
+        //private InventoryManager inventoryManager = null;
         private SystemItemManager systemItemManager = null;
         private CurrencyConverter currencyConverter = null;
 
@@ -103,7 +103,7 @@ namespace AnyRPG {
             messageFeedManager = uIManager.MessageFeedManager;
             playerManager = systemGameManager.PlayerManager;
             logManager = systemGameManager.LogManager;
-            inventoryManager = systemGameManager.InventoryManager;
+            //inventoryManager = systemGameManager.InventoryManager;
             systemItemManager = systemGameManager.SystemItemManager;
             currencyConverter = systemGameManager.CurrencyConverter;
         }
@@ -466,7 +466,7 @@ namespace AnyRPG {
             // item rewards first in case not enough space in inventory
             // TO FIX: THIS CODE DOES NOT DEAL WITH PARTIAL STACKS AND WILL REQUEST ONE FULL SLOT FOR EVERY REWARD
             if (questDetailsArea.GetHighlightedItemRewardIcons().Count > 0) {
-                if (inventoryManager.EmptySlotCount() < questDetailsArea.GetHighlightedItemRewardIcons().Count) {
+                if (playerManager.MyCharacter.CharacterInventoryManager.EmptySlotCount() < questDetailsArea.GetHighlightedItemRewardIcons().Count) {
                     messageFeedManager.WriteMessage("Not enough room in inventory!");
                     return;
                 }
@@ -476,7 +476,7 @@ namespace AnyRPG {
                         if (newItem != null) {
                             //Debug.Log("RewardButton.CompleteQuest(): newItem is not null, adding to inventory");
                             newItem.DropLevel = playerManager.MyCharacter.CharacterStats.Level;
-                            inventoryManager.AddItem(newItem);
+                            playerManager.MyCharacter.CharacterInventoryManager.AddItem(newItem);
                         }
                     }
                 }

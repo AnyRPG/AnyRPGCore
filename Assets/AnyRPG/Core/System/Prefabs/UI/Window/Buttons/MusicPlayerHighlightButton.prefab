@@ -446,17 +446,26 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f314ea894610d964cab7c89f7b097b14, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  text: {fileID: 3340100688699013304}
+  outlineImage: {fileID: 0}
+  highlightOutlineColor: {r: 0.64705884, g: 0.64705884, b: 0.64705884, a: 0.6509804}
   highlightImage: {fileID: 4545391215097032966}
+  highlightBackgroundOnSelect: 1
+  highlightBackgroundOnInteract: 1
+  highlightImageColor: {r: 0.64705884, g: 0.64705884, b: 0.64705884, a: 0.6509804}
+  useUnfocusedColor: 1
+  unFocusedColor: {r: 1, g: 1, b: 1, a: 0.15294118}
+  text: {fileID: 3340100688699013304}
+  ignoreSystemImageTint: 0
   highlightButton: {fileID: 4545391215403948059}
-  hideImageWhenInactive: 1
-  tintImage: 1
-  useSystemImageTintColor: 1
-  useHighlightColorOnButton: 1
-  highlightColor: {r: 0.5188679, g: 0.5188679, b: 0.5188679, a: 0.7137255}
-  normalColor: {r: 0.6392157, g: 0.6392157, b: 0.6392157, a: 0.10980392}
+  selectedButtonColor: {r: 0.64705884, g: 0.64705884, b: 0.64705884, a: 0.6509804}
+  overrideNormalColor: 1
+  normalColor: {r: 0.6392157, g: 0.6392157, b: 0.6392157, a: 0}
+  overrideHighlightedColor: 0
   highlightedColor: {r: 0.64705884, g: 0.64705884, b: 0.64705884, a: 0.40392157}
+  overridePressedColor: 0
   pressedColor: {r: 0.47058824, g: 0.47058824, b: 0.47058824, a: 0.2901961}
+  overrideSelectedColor: 0
   selectedColor: {r: 0.64705884, g: 0.64705884, b: 0.64705884, a: 0.40392157}
+  overrideDisabledColor: 0
   disabledColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 0.5019608}
   CapitalizeText: 0

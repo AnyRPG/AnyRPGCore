@@ -19,7 +19,7 @@ namespace AnyRPG {
         UIManager uIManager = null;
         ActionBarManager actionBarManager = null;
         InputManager inputManager = null;
-        InventoryManager inventoryManager = null;
+        //InventoryManager inventoryManager = null;
         PlayerManager playerManager = null;
         LogManager logManager = null;
 
@@ -28,7 +28,7 @@ namespace AnyRPG {
             uIManager = systemGameManager.UIManager;
             actionBarManager = uIManager.ActionBarManager;
             inputManager = systemGameManager.InputManager;
-            inventoryManager = systemGameManager.InventoryManager;
+            //inventoryManager = systemGameManager.InventoryManager;
             playerManager = systemGameManager.PlayerManager;
             logManager = systemGameManager.LogManager;
 
@@ -72,14 +72,14 @@ namespace AnyRPG {
         public void Drop() {
             //Debug.Log("HandScript.Drop()");
             ClearMoveable();
-            inventoryManager.FromSlot = null;
+            playerManager.MyCharacter.CharacterInventoryManager.FromSlot = null;
             actionBarManager.FromButton = null;
         }
 
         private void ClearMoveable() {
             //Debug.Log("HandScript.ClearMoveable()");
-            if (inventoryManager.FromSlot != null) {
-                inventoryManager.FromSlot.PutItemBack();
+            if (playerManager.MyCharacter.CharacterInventoryManager.FromSlot != null) {
+                playerManager.MyCharacter.CharacterInventoryManager.FromSlot.PutItemBack();
             }
             Moveable = null;
             icon.sprite = null;

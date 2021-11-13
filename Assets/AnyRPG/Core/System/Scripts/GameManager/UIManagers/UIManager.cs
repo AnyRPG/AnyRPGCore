@@ -217,7 +217,7 @@ namespace AnyRPG {
         private KeyBindManager keyBindManager = null;
         private InputManager inputManager = null;
         private CameraManager cameraManager = null;
-        private InventoryManager inventoryManager = null;
+        //private InventoryManager inventoryManager = null;
         private SystemEventManager systemEventManager = null;
         private ControlsManager controlsManager = null;
 
@@ -348,7 +348,7 @@ namespace AnyRPG {
             keyBindManager = systemGameManager.KeyBindManager;
             inputManager = systemGameManager.InputManager;
             cameraManager = systemGameManager.CameraManager;
-            inventoryManager = systemGameManager.InventoryManager;
+            //inventoryManager = systemGameManager.InventoryManager;
             systemEventManager = systemGameManager.SystemEventManager;
             controlsManager = systemGameManager.ControlsManager;
         }
@@ -1273,7 +1273,7 @@ namespace AnyRPG {
 
             int opacityLevel = (int)(PlayerPrefs.GetFloat("InventoryOpacity") * 255);
             int slotOpacityLevel = (int)(PlayerPrefs.GetFloat("InventorySlotOpacity") * 255);
-            foreach (BagNode bagNode in inventoryManager.BagNodes) {
+            foreach (BagNode bagNode in playerManager.MyCharacter.CharacterInventoryManager.BagNodes) {
                 //Debug.Log("UIManager.UpdateInventoryOpacity(): found bagNode");
                 /*
                 if (bagNode.BagPanel != null) {

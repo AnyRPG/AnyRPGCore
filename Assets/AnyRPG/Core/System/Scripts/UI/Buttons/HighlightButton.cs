@@ -90,9 +90,11 @@ namespace AnyRPG {
             if (!ignoreSystemImageTint) {
                 //highlightedButtonColor = systemConfigurationManager.DefaultUISolidColor;
                 if (highlightButton != null) {
-                    Image highlightButtonImage = highlightButton.GetComponent<Image>();
-                    if (highlightButtonImage != null) {
-                        highlightButtonImage.color = systemConfigurationManager.HighlightButtonColor;
+                    //Image highlightButtonImage = highlightButton.GetComponent<Image>();
+                    //if (highlightButtonImage != null) {
+                    if (highlightButton.targetGraphic != null) {
+                        //highlightButtonImage.color = systemConfigurationManager.HighlightButtonColor;
+                        highlightButton.targetGraphic.color = systemConfigurationManager.HighlightButtonColor;
                     }
                 }
             }
@@ -141,24 +143,20 @@ namespace AnyRPG {
 
 
         public override void Select() {
-            //Debug.Log(gameObject.name + ".HighlightButton.Select()");
+            Debug.Log(gameObject.name + ".HighlightButton.Select()");
             base.Select();
             //if (highlightButton != null && useHighlightColorOnButton == true) {
-            if (highlightButton != null) {
+            if (highlightButton != null && navigationControllerFocused == true) {
                 ColorBlock colorBlock = highlightButton.colors;
                 colorBlock.normalColor = selectedButtonColor;
                 colorBlock.highlightedColor = selectedButtonColor;
                 colorBlock.selectedColor = selectedButtonColor;
                 highlightButton.colors = colorBlock;
+                EventSystem.current.SetSelectedGameObject(highlightButton.gameObject);
             }
             if (CapitalizeText == true) {
                 text.text = text.text.ToUpper();
             }
-            if (highlightButton != null) {
-                EventSystem.current.SetSelectedGameObject(highlightButton.gameObject);
-            }/* else {
-                EventSystem.current.SetSelectedGameObject(gameObject);
-            }*/
         }
 
         public override void DeSelect() {

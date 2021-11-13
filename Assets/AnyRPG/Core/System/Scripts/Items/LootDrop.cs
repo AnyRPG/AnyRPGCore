@@ -154,7 +154,8 @@ namespace AnyRPG {
 
         // game manager references
         private UIManager uIManager = null;
-        private InventoryManager inventoryManager = null;
+        //private InventoryManager inventoryManager = null;
+        private PlayerManager playerManager = null;
 
         public override ItemQuality ItemQuality {
             get {
@@ -195,7 +196,8 @@ namespace AnyRPG {
         public override void SetGameManagerReferences() {
             base.SetGameManagerReferences();
             uIManager = systemGameManager.UIManager;
-            inventoryManager = systemGameManager.InventoryManager;
+            //inventoryManager = systemGameManager.InventoryManager;
+            playerManager = systemGameManager.PlayerManager;
         }
 
         public override void SetBackgroundImage(Image backgroundImage) {
@@ -209,7 +211,7 @@ namespace AnyRPG {
 
         protected override bool ProcessTakeLoot() {
             base.ProcessTakeLoot();
-            return inventoryManager.AddItem(Item);
+            return playerManager.MyCharacter.CharacterInventoryManager.AddItem(Item);
         }
 
         public override void Remove() {

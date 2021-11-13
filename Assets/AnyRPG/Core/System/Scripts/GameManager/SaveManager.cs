@@ -16,7 +16,7 @@ namespace AnyRPG {
         private LevelManager levelManager = null;
         private QuestLog questLog = null;
         private ActionBarManager actionBarManager = null;
-        private InventoryManager inventoryManager = null;
+        //private InventoryManager inventoryManager = null;
         private SystemItemManager systemItemManager = null;
         private SystemDataFactory systemDataFactory = null;
         private UIManager uIManager = null;
@@ -69,7 +69,7 @@ namespace AnyRPG {
             playerManager = systemGameManager.PlayerManager;
             levelManager = systemGameManager.LevelManager;
             questLog = systemGameManager.QuestLog;
-            inventoryManager = systemGameManager.InventoryManager;
+            //inventoryManager = systemGameManager.InventoryManager;
             systemItemManager = systemGameManager.SystemItemManager;
             systemDataFactory = systemGameManager.SystemDataFactory;
             systemAchievementManager = systemGameManager.SystemAchievementManager;
@@ -673,7 +673,7 @@ namespace AnyRPG {
 
         public void SaveInventorySlotData(AnyRPGSaveData anyRPGSaveData) {
             //Debug.Log("Savemanager.SaveInventorySlotData()");
-            foreach (SlotScript slotScript in inventoryManager.GetSlots()) {
+            foreach (SlotScript slotScript in playerManager.MyCharacter.CharacterInventoryManager.GetSlots()) {
                 InventorySlotSaveData saveData = new InventorySlotSaveData();
                 saveData.ItemName = (slotScript.Item == null ? string.Empty : slotScript.Item.ResourceName);
                 saveData.stackCount = (slotScript.Item == null ? 0 : slotScript.Count);
@@ -722,7 +722,7 @@ namespace AnyRPG {
 
         public void SaveEquippedBagData(AnyRPGSaveData anyRPGSaveData) {
             //Debug.Log("Savemanager.SaveEquippedBagData()");
-            foreach (BagNode bagNode in inventoryManager.BagNodes) {
+            foreach (BagNode bagNode in playerManager.MyCharacter.CharacterInventoryManager.BagNodes) {
                 //Debug.Log("Savemanager.SaveEquippedBagData(): got bagNode");
                 EquippedBagSaveData saveData = new EquippedBagSaveData();
                 saveData.BagName = (bagNode.Bag != null ? bagNode.Bag.DisplayName : string.Empty);
@@ -878,7 +878,7 @@ namespace AnyRPG {
 
         public void LoadEquippedBagData(AnyRPGSaveData anyRPGSaveData) {
             //Debug.Log("Savemanager.LoadEquippedBagData()");
-            inventoryManager.LoadEquippedBagData(anyRPGSaveData.equippedBagSaveData);
+            playerManager.MyCharacter.CharacterInventoryManager.LoadEquippedBagData(anyRPGSaveData.equippedBagSaveData);
         }
 
         public void LoadInventorySlotData(AnyRPGSaveData anyRPGSaveData) {
@@ -906,7 +906,7 @@ namespace AnyRPG {
                                 }
                             }
 
-                            inventoryManager.AddItem(newItem, counter);
+                            playerManager.MyCharacter.CharacterInventoryManager.AddItem(newItem, counter);
                         }
                     }
                 }
@@ -1041,17 +1041,27 @@ namespace AnyRPG {
             NewGame();
         }
 
+        public void NewGameFromSaveData(AnyRPGSaveData anyRPGSaveData) {
+            PerformInventorySetup();
+            SaveEquippedBagData(anyRPGSaveData);
+            SaveInventorySlotData(anyRPGSaveData);
+            LoadGame(anyRPGSaveData);
+
+        }
+
         public void NewGame() {
+
+            uIManager.loadGameWindow.CloseWindow();
+            uIManager.newGameWindow.CloseWindow();
+
             //Debug.Log("Savemanager.NewGame()");
             ClearSharedData();
 
             // do this so a new game doesn't reset window positions every time
             LoadWindowPositions();
 
+            playerManager.SpawnPlayerConnection();
             PerformInventorySetup();
-
-            uIManager.loadGameWindow.CloseWindow();
-            uIManager.newGameWindow.CloseWindow();
 
             // load default scene
             levelManager.LoadFirstScene();
@@ -1059,10 +1069,9 @@ namespace AnyRPG {
 
         public void PerformInventorySetup() {
             // initialize inventory so there is a place to put the inventory
-            inventoryManager.PerformSetupActivities();
 
-            inventoryManager.CreateDefaultBankBag();
-            inventoryManager.CreateDefaultBackpack();
+            playerManager.MyCharacter.CharacterInventoryManager.CreateDefaultBankBag();
+            playerManager.MyCharacter.CharacterInventoryManager.CreateDefaultBackpack();
         }
 
         public void LoadGame() {
@@ -1127,9 +1136,6 @@ namespace AnyRPG {
             //Debug.Log("Savemanager.LoadGame()");
             ClearSharedData();
             currentSaveData = anyRPGSaveData;
-
-            // initialize inventory so there is a place to put the inventory
-            inventoryManager.PerformSetupActivities();
 
             // player level
             playerManager.InitialLevel = anyRPGSaveData.PlayerLevel;
@@ -1212,8 +1218,6 @@ namespace AnyRPG {
 
         public void ClearSystemManagedCharacterData() {
             //Debug.Log("Savemanager.ClearSystemmanagedCharacterData()");
-
-            inventoryManager.ClearData();
 
             actionBarManager.ClearActionBars(true);
             questLog.ClearLog();

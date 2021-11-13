@@ -90,7 +90,7 @@ namespace AnyRPG {
 
         // game manager references
         protected CurrencyConverter currencyConverter = null;
-        protected InventoryManager inventoryManager = null;
+        //protected InventoryManager inventoryManager = null;
         protected MessageFeedManager messageFeedManager = null;
         protected UIManager uIManager = null;
         protected PlayerManager playerManager = null;
@@ -139,7 +139,7 @@ namespace AnyRPG {
 
         public override void SetGameManagerReferences() {
             base.SetGameManagerReferences();
-            inventoryManager = systemGameManager.InventoryManager;
+            //inventoryManager = systemGameManager.InventoryManager;
             currencyConverter = systemGameManager.CurrencyConverter;
             uIManager = systemGameManager.UIManager;
             messageFeedManager = uIManager.MessageFeedManager;
@@ -148,16 +148,16 @@ namespace AnyRPG {
 
         public virtual void UpdateChargeCount(ActionButton actionButton) {
             //Debug.Log(DisplayName + ".Item.UpdateChargeCount()");
-            int chargeCount = inventoryManager.GetUseableCount(this);
+            int chargeCount = playerManager.MyCharacter.CharacterInventoryManager.GetUseableCount(this);
             uIManager.UpdateStackSize(actionButton, chargeCount, true);
         }
 
         public void AssignToActionButton(ActionButton actionButton) {
             //Debug.Log("the useable is an item");
-            if (inventoryManager.FromSlot != null) {
+            if (playerManager.MyCharacter.CharacterInventoryManager.FromSlot != null) {
                 // white, really?  this doesn't actually happen...
-                inventoryManager.FromSlot.Icon.color = Color.white;
-                inventoryManager.FromSlot = null;
+                playerManager.MyCharacter.CharacterInventoryManager.FromSlot.Icon.color = Color.white;
+                playerManager.MyCharacter.CharacterInventoryManager.FromSlot = null;
             } else {
                 //Debug.Log("ActionButton.SetUseable(): This must have come from another actionbar, not the inventory");
             }
@@ -165,7 +165,7 @@ namespace AnyRPG {
         }
 
         public virtual void UpdateActionButtonVisual(ActionButton actionButton) {
-            int count = inventoryManager.GetUseableCount(this);
+            int count = playerManager.MyCharacter.CharacterInventoryManager.GetUseableCount(this);
             // we have to do this to ensure we have a reference to the top item on the stack, otherwise we will try to use an item that has been used already
             //if ((count == 0 && removeStaleActions) || count > 0) {
             /*
@@ -247,7 +247,7 @@ namespace AnyRPG {
         }
 
         public bool ActionButtonUse() {
-            List<Item> itemList = inventoryManager?.GetItems(DisplayName, 1);
+            List<Item> itemList = playerManager.MyCharacter.CharacterInventoryManager?.GetItems(DisplayName, 1);
             if (itemList == null || itemList.Count == 0) {
                 return false;
             }

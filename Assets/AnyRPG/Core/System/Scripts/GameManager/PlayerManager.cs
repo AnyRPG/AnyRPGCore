@@ -86,7 +86,7 @@ namespace AnyRPG {
         LogManager logManager = null;
         CastTargettingManager castTargettingManager = null;
         CombatTextManager combatTextManager = null;
-        InventoryManager inventoryManager = null;
+        //InventoryManager inventoryManager = null;
         ActionBarManager actionBarManager = null;
         MessageFeedManager messageFeedManager = null;
         ObjectPooler objectPooler = null;
@@ -122,7 +122,7 @@ namespace AnyRPG {
             systemAbilityController = systemGameManager.SystemAbilityController;
             logManager = systemGameManager.LogManager;
             castTargettingManager = systemGameManager.CastTargettingManager;
-            inventoryManager = systemGameManager.InventoryManager;
+            //inventoryManager = systemGameManager.InventoryManager;
             objectPooler = systemGameManager.ObjectPooler;
 
             PerformRequiredPropertyChecks();
@@ -685,9 +685,9 @@ namespace AnyRPG {
         public void HandleEquipmentChanged(Equipment newItem, Equipment oldItem, int slotIndex) {
             if (PlayerUnitSpawned) {
                 if (slotIndex != -1) {
-                    inventoryManager.AddItem(oldItem, slotIndex);
+                    MyCharacter.CharacterInventoryManager.AddItem(oldItem, slotIndex);
                 } else if (oldItem != null) {
-                    inventoryManager.AddItem(oldItem);
+                    MyCharacter.CharacterInventoryManager.AddItem(oldItem);
                 }
             }
             systemEventManager.NotifyOnEquipmentChanged(newItem, oldItem);

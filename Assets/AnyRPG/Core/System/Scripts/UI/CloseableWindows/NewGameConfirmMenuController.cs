@@ -61,10 +61,7 @@ namespace AnyRPG {
             uIManager.loadGameWindow.CloseWindow();
             uIManager.newGameWindow.CloseWindow();
             if (systemConfigurationManager.UseNewGameWindow == true) {
-                saveManager.PerformInventorySetup();
-                saveManager.SaveEquippedBagData(newGameManager.SaveData);
-                saveManager.SaveInventorySlotData(newGameManager.SaveData);
-                saveManager.LoadGame(newGameManager.SaveData);
+                saveManager.NewGameFromSaveData(newGameManager.SaveData);
             } else {
                 saveManager.TryNewGame();
             }

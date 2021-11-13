@@ -40,7 +40,7 @@ namespace AnyRPG {
         // game manager references
         protected SystemItemManager systemItemManager = null;
         protected PlayerManager playerManager = null;
-        protected InventoryManager inventoryManager = null;
+        //protected InventoryManager inventoryManager = null;
         protected MessageFeedManager messageFeedManager = null;
         protected CurrencyConverter currencyConverter = null;
 
@@ -56,7 +56,7 @@ namespace AnyRPG {
             base.SetGameManagerReferences();
             systemItemManager = systemGameManager.SystemItemManager;
             playerManager = systemGameManager.PlayerManager;
-            inventoryManager = systemGameManager.InventoryManager;
+            //inventoryManager = systemGameManager.InventoryManager;
             systemConfigurationManager = systemGameManager.SystemConfigurationManager;
             messageFeedManager = systemGameManager.UIManager.MessageFeedManager;
             currencyConverter = systemGameManager.CurrencyConverter;
@@ -152,7 +152,7 @@ namespace AnyRPG {
                     //Debug.Log("Instantiated an item with id: " + tmpItem.GetInstanceID().ToString());
                 }
 
-                if (inventoryManager.AddItem(tmpItem)) {
+                if (playerManager.MyCharacter.CharacterInventoryManager.AddItem(tmpItem)) {
                     if (buyBackButton == false) {
                         tmpItem.DropLevel = playerManager.MyCharacter.CharacterStats.Level;
                     }

@@ -15,7 +15,8 @@ namespace AnyRPG {
         protected BagBarController bagBarController;
 
         // game manager references
-        protected InventoryManager inventoryManager = null;
+        //protected InventoryManager inventoryManager = null;
+        protected PlayerManager playerManager = null;
 
         public BagBarController BagBarController { get => bagBarController; set => bagBarController = value; }
 
@@ -26,24 +27,25 @@ namespace AnyRPG {
 
         public override void SetGameManagerReferences() {
             base.SetGameManagerReferences();
-            inventoryManager = systemGameManager.InventoryManager;
+            //inventoryManager = systemGameManager.InventoryManager;
+            playerManager = systemGameManager.PlayerManager;
         }
 
         protected override void ProcessCreateEventSubscriptions() {
             base.ProcessCreateEventSubscriptions();
 
-            inventoryManager.OnClearData += ProcessClearData;
-            inventoryManager.OnAddInventoryBagNode += HandleAddInventoryBagNode;
+            SystemEventManager.StartListening("OnPlayerConnectionDespawn", HandlePlayerConnectionDespawn);
+            playerManager.MyCharacter.CharacterInventoryManager.OnAddInventoryBagNode += HandleAddInventoryBagNode;
         }
 
         protected override void ProcessCleanupEventSubscriptions() {
             base.ProcessCleanupEventSubscriptions();
 
-            inventoryManager.OnClearData -= ProcessClearData;
-            inventoryManager.OnAddInventoryBagNode -= HandleAddInventoryBagNode;
+            SystemEventManager.StopListening("OnPlayerConnectionDespawn", HandlePlayerConnectionDespawn);
+            playerManager.MyCharacter.CharacterInventoryManager.OnAddInventoryBagNode -= HandleAddInventoryBagNode;
         }
 
-        public void ProcessClearData() {
+        public void HandlePlayerConnectionDespawn(string eventName, EventParamProperties eventParamProperties) {
             //Debug.Log("InventoryPanel.ProcessClearData()");
 
             ClearSlots();

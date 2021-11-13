@@ -83,6 +83,8 @@ namespace AnyRPG {
         // setting index to -1 so that if gamepad isn't default, the first down press will highlight the first button instead of the second one
         protected int currentIndex = -1;
 
+        bool focused = false;
+
         // game manager references
         protected ControlsManager controlsManager = null;
 
@@ -149,21 +151,26 @@ namespace AnyRPG {
         }
 
         public virtual void Activate() {
+            Debug.Log(gameObject.name + ".UINavigationController.Activate()");
             if (owner != null) {
                 owner.ActivateNavigationController(this);
             }
         }
 
-        public virtual void Focus() {
+        public virtual void Focus(bool focusCurrentButton = true) {
             Debug.Log(gameObject.name + ".UINavigationController.Focus()");
+            focused = true;
             foreach (NavigableElement navigableElement in activeNavigableButtons) {
                 navigableElement.FocusNavigationController();
             }
-            FocusCurrentButton();
+            if (focusCurrentButton == true) {
+                FocusCurrentButton();
+            }
         }
 
         public virtual void UnFocus() {
             Debug.Log(gameObject.name + ".UINavigationController.Unfocus()");
+            focused = false;
             foreach (NavigableElement navigableElement in activeNavigableButtons) {
                 navigableElement.UnFocus();
                 navigableElement.LeaveElement();
@@ -172,6 +179,9 @@ namespace AnyRPG {
 
         public virtual void AddActiveButton(NavigableElement navigableElement) {
             activeNavigableButtons.Add(navigableElement);
+            if (focused) {
+                navigableElement.FocusNavigationController();
+            }
         }
 
         public virtual void ClearActiveButtons() {
@@ -328,7 +338,7 @@ namespace AnyRPG {
         }
 
         public virtual void LeaveController() {
-            Debug.Log(gameObject.name + ".UINavigationController.LeaveController()");
+            //Debug.Log(gameObject.name + ".UINavigationController.LeaveController()");
             UnFocus();
             if (currentNavigableElement != null) {
                 currentNavigableElement.LeaveElement();
@@ -337,16 +347,16 @@ namespace AnyRPG {
         }
 
         public void LBButton() {
-            Debug.Log(gameObject.name + ".UINavigationController.LBButton()");
+            //Debug.Log(gameObject.name + ".UINavigationController.LBButton()");
         }
 
         public void RBButton() {
-            Debug.Log(gameObject.name + ".UINavigationController.RBButton()");
+            //Debug.Log(gameObject.name + ".UINavigationController.RBButton()");
         }
 
 
         public virtual void Accept() {
-            Debug.Log(gameObject.name + ".UINavigationController.Accept()");
+            //Debug.Log(gameObject.name + ".UINavigationController.Accept()");
             if (activeNavigableButtons.Count != 0) {
                 if (currentIndex < 0) {
                     currentIndex = 0;

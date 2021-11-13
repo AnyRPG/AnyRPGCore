@@ -406,7 +406,9 @@ namespace AnyRPG {
                 uINavigationController.ReceiveOpenWindowNotification();
             }
             if (currentNavigationController != null) {
-                //currentNavigationController.ReceiveOpenWindowNotification();
+                if (parentPanel == null) {
+                    currentNavigationController.Focus(false);
+                }
                 if (controlsManager.GamePadModeActive && focusFirstButtonOnOpen == true) {
                     currentNavigationController.FocusFirstButton();
                 }

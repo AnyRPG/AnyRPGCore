@@ -15,8 +15,8 @@ namespace AnyRPG {
         private List<LootTableState> lootTableStates = new List<LootTableState>();
 
         // game manager references
-        private UIManager uIManager = null;
-        private InventoryManager inventoryManager = null;
+        //private UIManager uIManager = null;
+        //private InventoryManager inventoryManager = null;
         private MessageFeedManager messageFeedManager = null;
         private PlayerManager playerManager = null;
 
@@ -24,8 +24,8 @@ namespace AnyRPG {
 
         public override void SetGameManagerReferences() {
             base.SetGameManagerReferences();
-            uIManager = systemGameManager.UIManager;
-            inventoryManager = systemGameManager.InventoryManager;
+            //uIManager = systemGameManager.UIManager;
+            //inventoryManager = systemGameManager.InventoryManager;
             messageFeedManager = systemGameManager.UIManager.MessageFeedManager;
             playerManager = systemGameManager.PlayerManager;
         }
@@ -62,13 +62,13 @@ namespace AnyRPG {
             // added emptyslotcount to prevent game from freezup when no bag space left and takeall button pressed
             int maximumLoopCount = droppedLoot.Count;
             int currentLoopCount = 0;
-            while (droppedLoot.Count > 0 && inventoryManager.EmptySlotCount() > 0 && currentLoopCount < maximumLoopCount) {
+            while (droppedLoot.Count > 0 && playerManager.MyCharacter.CharacterInventoryManager.EmptySlotCount() > 0 && currentLoopCount < maximumLoopCount) {
                 droppedLoot[0].TakeLoot();
                 currentLoopCount++;
             }
 
-            if (droppedLoot.Count > 0 && inventoryManager.EmptySlotCount() == 0) {
-                if (inventoryManager.EmptySlotCount() == 0) {
+            if (droppedLoot.Count > 0 && playerManager.MyCharacter.CharacterInventoryManager.EmptySlotCount() == 0) {
+                if (playerManager.MyCharacter.CharacterInventoryManager.EmptySlotCount() == 0) {
                     //Debug.Log("No space left in inventory");
                 }
                 messageFeedManager.WriteMessage("Inventory is full!");
@@ -91,7 +91,7 @@ namespace AnyRPG {
 
         public bool CanDropUniqueItem(Item item) {
             //Debug.Log("LootManager.CanDropUniqueItem(" + item.DisplayName + ")");
-            if (inventoryManager.GetItemCount(item.DisplayName) > 0) {
+            if (playerManager.MyCharacter.CharacterInventoryManager.GetItemCount(item.DisplayName) > 0) {
                 return false;
             }
             if (playerManager.MyCharacter.CharacterEquipmentManager.HasEquipment(item.DisplayName) == true) {

@@ -23,14 +23,14 @@ namespace AnyRPG {
         protected List<LootGroup> lootGroups = new List<LootGroup>();
 
         // game manager references
-        private InventoryManager inventoryManager = null;
+        //private InventoryManager inventoryManager = null;
         private PlayerManager playerManager = null;
         private SystemItemManager systemItemManager = null;
         private LootManager lootManager = null;
 
         public override void SetGameManagerReferences() {
             base.SetGameManagerReferences();
-            inventoryManager = systemGameManager.InventoryManager;
+            //inventoryManager = systemGameManager.InventoryManager;
             playerManager = systemGameManager.PlayerManager;
             systemItemManager = systemGameManager.SystemItemManager;
             lootManager = systemGameManager.LootManager;

@@ -5869,7 +5869,7 @@ MonoBehaviour:
   coloredUIElements: []
   addToWindowStack: 1
   userCloseable: 1
-  focusFirstButtonOnOpen: 1
+  focusFirstButtonOnOpen: 0
   focusActiveSubPanel: 1
   uINavigationControllers:
   - {fileID: 7350695298376983607}
