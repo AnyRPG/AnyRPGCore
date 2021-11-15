@@ -22,6 +22,7 @@ namespace AnyRPG {
 
         // game manager references
         protected ObjectPooler objectPooler = null;
+        protected InventoryManager inventoryManager = null;
 
         public List<SlotScript> Slots { get => slots; }
 
@@ -29,6 +30,24 @@ namespace AnyRPG {
             base.SetGameManagerReferences();
 
             objectPooler = systemGameManager.ObjectPooler;
+            inventoryManager = systemGameManager.InventoryManager;
+        }
+        
+        protected override void ProcessCreateEventSubscriptions() {
+            base.ProcessCreateEventSubscriptions();
+
+            inventoryManager.OnSetSlotBackgroundColor += HandleSetSlotBackgroundColor;
+
+        }
+
+        protected override void ProcessCleanupEventSubscriptions() {
+            base.ProcessCleanupEventSubscriptions();
+
+            inventoryManager.OnSetSlotBackgroundColor -= HandleSetSlotBackgroundColor;
+        }
+
+        public void HandleSetSlotBackgroundColor() {
+            SetSlotColor();
         }
 
         /*
@@ -81,7 +100,31 @@ namespace AnyRPG {
 
             return returnList;
         }
-       
+
+        public void HandleAddSlot(InventorySlot inventorySlot) {
+            SlotScript slot = objectPooler.GetPooledObject(slotPrefab, contentArea).GetComponent<SlotScript>();
+            slot.Configure(systemGameManager);
+            slot.InventorySlot = inventorySlot;
+            slot.BagPanel = this;
+            Slots.Add(slot);
+            slot.SetBackGroundColor();
+            slotController.AddActiveButton(slot);
+            slotController.NumRows = Mathf.CeilToInt((float) slots.Count / (float)8);
+        }
+
+        public virtual void HandleRemoveSlot(InventorySlot inventorySlot) {
+            //Debug.Log(gameObject.name + gameObject.GetInstanceID() + ".BagPanel.ClearSlots()");
+            foreach (SlotScript slot in slots) {
+                if (slot.InventorySlot == inventorySlot) {
+                    objectPooler.ReturnObjectToPool(slot.gameObject);
+                    slots.Remove(slot);
+                    slotController.ClearActiveButton(slot);
+                    return;
+                }
+            }
+
+        }
+
         /*
         public virtual void Clear() {
             //Debug.Log(gameObject.name + gameObject.GetInstanceID() + ".BagPanel.Clear()");
@@ -97,7 +140,8 @@ namespace AnyRPG {
             //Debug.Log(gameObject.name + gameObject.GetInstanceID() + ".BagPanel.ClearSlots()");
             List<SlotScript> removeList = new List<SlotScript>();
             foreach (SlotScript slot in slots) {
-                slot.Clear();
+                // clearing the slot should not be necessary any more because the inventory slot exists on the character, which got despawned
+                //slot.InventorySlot.Clear();
                 //Debug.Log("BagPanel.Clear(): cleared slot");
                 removeList.Add(slot);
             }

@@ -106,17 +106,37 @@ namespace AnyRPG {
 
         [Header("Inventory")]
 
+        /*
         [Tooltip("if false, default backpack goes in bank")]
         [SerializeField]
         private bool equipDefaultBackPack = true;
+        */
+
+        [Tooltip("The number of inventory slots a character has with no extra bags equipped")]
+        [SerializeField]
+        private int defaultInventorySlots = 0;
+
+        [Tooltip("The number of bank slots a character has with no extra bags equipped")]
+        [SerializeField]
+        private int defaultBankSlots = 0;
+
+        [Tooltip("The maximum number of bags a character can have equipped")]
+        [SerializeField]
+        private int maxInventoryBags = 5;
+
+        [Tooltip("The maximum number of bags a character can have equipped in their bank")]
+        [SerializeField]
+        private int maxBankBags = 8;
 
         [SerializeField]
         [ResourceSelector(resourceType = typeof(Bag))]
         private string defaultBackpackItem = "Backpack";
 
+        /*
         [SerializeField]
         [ResourceSelector(resourceType = typeof(Bag))]
         private string defaultBankBagItem = "Bank";
+        */
 
         [Header("CONTROLLER")]
 
@@ -742,11 +762,11 @@ namespace AnyRPG {
         }
 
         public bool NewGameUMAAppearance { get => newGameUMAAppearance; set => newGameUMAAppearance = value; }
-        public bool EquipDefaultBackPack { get => equipDefaultBackPack; set => equipDefaultBackPack = value; }
+        //public bool EquipDefaultBackPack { get => equipDefaultBackPack; set => equipDefaultBackPack = value; }
         public string DefaultPlayerUnitLayer { get => defaultPlayerUnitLayer; set => defaultPlayerUnitLayer = value; }
         public GameObject ThirdPartyCamera { get => thirdPartyCamera; set => thirdPartyCamera = value; }
         public string DefaultBackpackItem { get => defaultBackpackItem; set => defaultBackpackItem = value; }
-        public string DefaultBankBagItem { get => defaultBankBagItem; set => defaultBankBagItem = value; }
+        //public string DefaultBankBagItem { get => defaultBankBagItem; set => defaultBankBagItem = value; }
         public bool AlwaysShowDefaultProfiles { get => alwaysShowDefaultProfiles; set => alwaysShowDefaultProfiles = value; }
         public string MainMenuScene { get => mainMenuScene; set => mainMenuScene = value; }
         public string InitializationScene { get => initializationScene; set => initializationScene = value; }
@@ -779,6 +799,10 @@ namespace AnyRPG {
         public Color HighlightOutlineColor { get => highlightOutlineColor; set => highlightOutlineColor = value; }
         public Color HighlightImageColor { get => highlightImageColor; set => highlightImageColor = value; }
         public Color HighlightButtonColor { get => highlightButtonColor; set => highlightButtonColor = value; }
+        public int DefaultInventorySlots { get => defaultInventorySlots; set => defaultInventorySlots = value; }
+        public int DefaultBankSlots { get => defaultBankSlots; set => defaultBankSlots = value; }
+        public int MaxInventoryBags { get => maxInventoryBags; set => maxInventoryBags = value; }
+        public int MaxBankBags { get => maxBankBags; set => maxBankBags = value; }
 
         //public bool AllowClickToMove { get => allowClickToMove; }
 

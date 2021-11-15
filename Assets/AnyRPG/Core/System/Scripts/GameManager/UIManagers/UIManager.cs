@@ -125,7 +125,7 @@ namespace AnyRPG {
         public CloseableWindow characterPanelWindow;
         public PagedWindow lootWindow;
         public PagedWindow vendorWindow;
-        public CloseableWindow chestWindow;
+        //public CloseableWindow chestWindow;
         public CloseableWindow bankWindow;
         public CloseableWindow inventoryWindow;
         public CloseableWindow questLogWindow;
@@ -167,8 +167,8 @@ namespace AnyRPG {
         public CloseableWindow onScreenKeyboardWindow;
 
         // objects in the mouseover window
-        private TextMeshProUGUI mouseOverText;
-        private GameObject mouseOverTarget;
+        protected TextMeshProUGUI mouseOverText;
+        protected GameObject mouseOverTarget;
 
         private int ignoreChangeLayer = 0;
 
@@ -217,7 +217,7 @@ namespace AnyRPG {
         private KeyBindManager keyBindManager = null;
         private InputManager inputManager = null;
         private CameraManager cameraManager = null;
-        //private InventoryManager inventoryManager = null;
+        private InventoryManager inventoryManager = null;
         private SystemEventManager systemEventManager = null;
         private ControlsManager controlsManager = null;
 
@@ -294,7 +294,7 @@ namespace AnyRPG {
             characterPanelWindow.Configure(systemGameManager);
             lootWindow.Configure(systemGameManager);
             vendorWindow.Configure(systemGameManager);
-            chestWindow.Configure(systemGameManager);
+            //chestWindow.Configure(systemGameManager);
             bankWindow.Configure(systemGameManager);
             inventoryWindow.Configure(systemGameManager);
             questLogWindow.Configure(systemGameManager);
@@ -348,7 +348,7 @@ namespace AnyRPG {
             keyBindManager = systemGameManager.KeyBindManager;
             inputManager = systemGameManager.InputManager;
             cameraManager = systemGameManager.CameraManager;
-            //inventoryManager = systemGameManager.InventoryManager;
+            inventoryManager = systemGameManager.InventoryManager;
             systemEventManager = systemGameManager.SystemEventManager;
             controlsManager = systemGameManager.ControlsManager;
         }
@@ -416,8 +416,8 @@ namespace AnyRPG {
             defaultWindowPositions.Add("LootWindowY", lootWindow.RectTransform.anchoredPosition.y);
             defaultWindowPositions.Add("VendorWindowX", vendorWindow.RectTransform.anchoredPosition.x);
             defaultWindowPositions.Add("VendorWindowY", vendorWindow.RectTransform.anchoredPosition.y);
-            defaultWindowPositions.Add("ChestWindowX", chestWindow.RectTransform.anchoredPosition.x);
-            defaultWindowPositions.Add("ChestWindowY", chestWindow.RectTransform.anchoredPosition.y);
+            //defaultWindowPositions.Add("ChestWindowX", chestWindow.RectTransform.anchoredPosition.x);
+            //defaultWindowPositions.Add("ChestWindowY", chestWindow.RectTransform.anchoredPosition.y);
             defaultWindowPositions.Add("BankWindowX", bankWindow.RectTransform.anchoredPosition.x);
             defaultWindowPositions.Add("BankWindowY", bankWindow.RectTransform.anchoredPosition.y);
             defaultWindowPositions.Add("InventoryWindowX", inventoryWindow.RectTransform.anchoredPosition.x);
@@ -484,7 +484,7 @@ namespace AnyRPG {
             characterPanelWindow.RectTransform.anchoredPosition = new Vector3(defaultWindowPositions["CharacterPanelWindowX"], defaultWindowPositions["CharacterPanelWindowY"], 0);
             lootWindow.RectTransform.anchoredPosition = new Vector3(defaultWindowPositions["LootWindowX"], defaultWindowPositions["LootWindowY"], 0);
             vendorWindow.RectTransform.anchoredPosition = new Vector3(defaultWindowPositions["VendorWindowX"], defaultWindowPositions["VendorWindowY"], 0);
-            chestWindow.RectTransform.anchoredPosition = new Vector3(defaultWindowPositions["ChestWindowX"], defaultWindowPositions["ChestWindowY"], 0);
+            //chestWindow.RectTransform.anchoredPosition = new Vector3(defaultWindowPositions["ChestWindowX"], defaultWindowPositions["ChestWindowY"], 0);
             bankWindow.RectTransform.anchoredPosition = new Vector3(defaultWindowPositions["BankWindowX"], defaultWindowPositions["BankWindowY"], 0);
             inventoryWindow.RectTransform.anchoredPosition = new Vector3(defaultWindowPositions["InventoryWindowX"], defaultWindowPositions["InventoryWindowY"], 0);
             questLogWindow.RectTransform.anchoredPosition = new Vector3(defaultWindowPositions["QuestLogWindowX"], defaultWindowPositions["QuestLogWindowY"], 0);
@@ -656,7 +656,7 @@ namespace AnyRPG {
             characterPanelWindow.CloseWindow();
             lootWindow.CloseWindow();
             vendorWindow.CloseWindow();
-            chestWindow.CloseWindow();
+            //chestWindow.CloseWindow();
             bankWindow.CloseWindow();
             inventoryWindow.CloseWindow();
             questLogWindow.CloseWindow();
@@ -1272,23 +1272,8 @@ namespace AnyRPG {
             //Debug.Log("UIManager.UpdateInventoryOpacity()");
 
             int opacityLevel = (int)(PlayerPrefs.GetFloat("InventoryOpacity") * 255);
-            int slotOpacityLevel = (int)(PlayerPrefs.GetFloat("InventorySlotOpacity") * 255);
-            foreach (BagNode bagNode in playerManager.MyCharacter.CharacterInventoryManager.BagNodes) {
-                //Debug.Log("UIManager.UpdateInventoryOpacity(): found bagNode");
-                /*
-                if (bagNode.BagPanel != null) {
-                    //Debug.Log("UIManager.UpdateInventoryOpacity(): found bagNode and bagpanel is not null!");
-                    bagNode.BagPanel.SetBackGroundColor(new Color32(0, 0, 0, (byte)opacityLevel));
-                    bagNode.BagPanel.SetSlotColor();
-                }
-                if (bagNode.BagButton != null) {
-                    bagNode.BagButton.SetBackGroundColor();
-                }
-                */
-                foreach (SlotScript slotScript in bagNode.InventorySlots) {
-                    slotScript.SetBackGroundColor();
-                }
-            }
+            //int slotOpacityLevel = (int)(PlayerPrefs.GetFloat("InventorySlotOpacity") * 255);
+            inventoryManager.SetSlotBackgroundColor();
             if (bankWindow.CloseableWindowContents != null) {
                 bankWindow.CloseableWindowContents.SetBackGroundColor(new Color32(0, 0, 0, (byte)opacityLevel));
             }

@@ -392,6 +392,7 @@ namespace AnyRPG {
             //Debug.Log(gameObject.name + ": BaseCharacter.Initialize()");
             this.characterName = characterName;
             characterStats.SetLevel(characterLevel);
+            characterInventoryManager.PerformSetupActivities();
         }
 
         public void SetUnitToughness(UnitToughness newUnitToughness, bool resetLevel = false) {
@@ -686,7 +687,7 @@ namespace AnyRPG {
         }
 
         public void Despawn() {
-            //Debug.Log(gameObject.name + ".BaseCharacter.Despawn()");
+            Debug.Log(gameObject.name + ".BaseCharacter.Despawn()");
             if (unitController != null && unitController.CharacterUnit != null) {
                 unitController.CharacterUnit.Despawn();
             }
@@ -706,7 +707,7 @@ namespace AnyRPG {
         }
 
         public void OnSendObjectToPool() {
-            //Debug.Log(gameObject.name + ".BaseCharacter.OnSendObjectToPool()");
+            Debug.Log(gameObject.name + ".BaseCharacter.OnSendObjectToPool()");
             if (SystemGameManager.IsShuttingDown) {
                 return;
             }

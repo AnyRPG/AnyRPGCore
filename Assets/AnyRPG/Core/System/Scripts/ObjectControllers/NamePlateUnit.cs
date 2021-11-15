@@ -210,7 +210,7 @@ namespace AnyRPG {
             RemoveNamePlate();
         }
 
-        public void OnDisable() {
+        public virtual void OnDisable() {
             // characters can get disabled by cutscenes, so need to remove nameplate
             RemoveNamePlate();
         }

@@ -86,7 +86,7 @@ namespace AnyRPG {
         LogManager logManager = null;
         CastTargettingManager castTargettingManager = null;
         CombatTextManager combatTextManager = null;
-        //InventoryManager inventoryManager = null;
+        InventoryManager inventoryManager = null;
         ActionBarManager actionBarManager = null;
         MessageFeedManager messageFeedManager = null;
         ObjectPooler objectPooler = null;
@@ -122,7 +122,7 @@ namespace AnyRPG {
             systemAbilityController = systemGameManager.SystemAbilityController;
             logManager = systemGameManager.LogManager;
             castTargettingManager = systemGameManager.CastTargettingManager;
-            //inventoryManager = systemGameManager.InventoryManager;
+            inventoryManager = systemGameManager.InventoryManager;
             objectPooler = systemGameManager.ObjectPooler;
 
             PerformRequiredPropertyChecks();
@@ -508,6 +508,7 @@ namespace AnyRPG {
 
             SystemEventManager.TriggerEvent("OnBeforePlayerConnectionSpawn", new EventParamProperties());
             activeCharacter.Init();
+            SubscribeToPlayerInventoryEvents();
             activeCharacter.Initialize(systemConfigurationManager.DefaultPlayerName, initialLevel);
             playerConnectionSpawned = true;
             SystemEventManager.TriggerEvent("OnPlayerConnectionSpawn", new EventParamProperties());
@@ -520,6 +521,7 @@ namespace AnyRPG {
                 //Debug.Log("PlayerManager.SpawnPlayerConnection(): The Player Connection is null.  exiting.");
                 return;
             }
+            UnsubscribeFromPlayerInventoryEvents();
             UnsubscribeFromPlayerEvents();
             SystemEventManager.TriggerEvent("OnPlayerConnectionDespawn", new EventParamProperties());
             objectPooler.ReturnObjectToPool(playerConnectionObject);
@@ -528,6 +530,24 @@ namespace AnyRPG {
             activeCharacter = null;
             playerUnitMovementController = null;
             playerConnectionSpawned = false;
+        }
+
+        public void SubscribeToPlayerInventoryEvents() {
+            activeCharacter.CharacterInventoryManager.OnAddInventoryBagNode += HandleAddInventoryBagNode;
+            activeCharacter.CharacterInventoryManager.OnAddBankBagNode += HandleAddBankBagNode;
+            activeCharacter.CharacterInventoryManager.OnAddInventorySlot += HandleAddInventorySlot;
+            activeCharacter.CharacterInventoryManager.OnAddBankSlot += HandleAddBankSlot;
+            activeCharacter.CharacterInventoryManager.OnRemoveInventorySlot += HandleAddInventorySlot;
+            activeCharacter.CharacterInventoryManager.OnRemoveBankSlot += HandleAddBankSlot;
+        }
+
+        public void UnsubscribeFromPlayerInventoryEvents() {
+            activeCharacter.CharacterInventoryManager.OnAddInventoryBagNode -= HandleAddInventoryBagNode;
+            activeCharacter.CharacterInventoryManager.OnAddBankBagNode -= HandleAddBankBagNode;
+            activeCharacter.CharacterInventoryManager.OnAddInventorySlot -= HandleAddInventorySlot;
+            activeCharacter.CharacterInventoryManager.OnAddBankSlot -= HandleAddBankSlot;
+            activeCharacter.CharacterInventoryManager.OnRemoveInventorySlot -= HandleAddInventorySlot;
+            activeCharacter.CharacterInventoryManager.OnRemoveBankSlot -= HandleAddBankSlot;
         }
 
         public void SubscribeToPlayerEvents() {
@@ -594,6 +614,30 @@ namespace AnyRPG {
             activeCharacter.CharacterAbilityManager.OnActivateTargetingMode -= HandleActivateTargetingMode;
             activeCharacter.CharacterAbilityManager.OnCombatMessage -= HandleCombatMessage;
             activeCharacter.CharacterAbilityManager.OnMessageFeedMessage -= HandleMessageFeedMessage;
+        }
+
+        public void HandleAddInventoryBagNode(BagNode bagNode) {
+            inventoryManager.AddInventoryBagNode(bagNode);
+        }
+
+        public void HandleAddBankBagNode(BagNode bagNode) {
+            inventoryManager.AddBankBagNode(bagNode);
+        }
+
+        public void HandleAddInventorySlot(InventorySlot inventorySlot) {
+            inventoryManager.AddInventorySlot(inventorySlot);
+        }
+
+        public void HandleAddBankSlot(InventorySlot inventorySlot) {
+            inventoryManager.AddBankSlot(inventorySlot);
+        }
+
+        public void HandleRemoveInventorySlot(InventorySlot inventorySlot) {
+            inventoryManager.RemoveInventorySlot(inventorySlot);
+        }
+
+        public void HandleRemoveBankSlot(InventorySlot inventorySlot) {
+            inventoryManager.RemoveBankSlot(inventorySlot);
         }
 
         public void HandleBeginAbilityCoolDown() {

@@ -14,11 +14,6 @@ namespace AnyRPG {
         [SerializeField]
         private GameObject bagPrefab;
 
-        /// <summary>
-        /// A reference to the bagScript, that this bag belongs to
-        /// </summary>
-        public BagPanel BagPanel { get; set; }
-
         public BagNode BagNode { get; set; }
 
         /// <summary>
@@ -56,11 +51,14 @@ namespace AnyRPG {
         }
 
         public void AddToInventoryManager() {
+            /*
             bool addToBank = false;
             if (BagNode != null) {
                 addToBank = BagNode.IsBankNode;
             }
-            if (playerManager.MyCharacter.CharacterInventoryManager.CanAddBag(addToBank)) {
+            */
+            //if (playerManager.MyCharacter.CharacterInventoryManager.CanAddBag(addToBank)) {
+            if (playerManager.MyCharacter.CharacterInventoryManager.CanAddBag()) {
                 //Debug.Log("Bag.Use(): we can add the bag");
 
                 if (BagNode == null) {

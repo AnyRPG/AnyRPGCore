@@ -200,8 +200,14 @@ namespace AnyRPG {
             if (anyRPGSaveData.inventorySlotSaveData == null || overWrite) {
                 anyRPGSaveData.inventorySlotSaveData = new List<InventorySlotSaveData>();
             }
+            if (anyRPGSaveData.bankSlotSaveData == null || overWrite) {
+                anyRPGSaveData.bankSlotSaveData = new List<InventorySlotSaveData>();
+            }
             if (anyRPGSaveData.equippedBagSaveData == null || overWrite) {
                 anyRPGSaveData.equippedBagSaveData = new List<EquippedBagSaveData>();
+            }
+            if (anyRPGSaveData.equippedBankBagSaveData == null || overWrite) {
+                anyRPGSaveData.equippedBankBagSaveData = new List<EquippedBagSaveData>();
             }
             if (anyRPGSaveData.abilitySaveData == null || overWrite) {
                 anyRPGSaveData.abilitySaveData = new List<AbilitySaveData>();
@@ -429,6 +435,7 @@ namespace AnyRPG {
             SaveActionBarData(anyRPGSaveData);
             SaveInventorySlotData(anyRPGSaveData);
             SaveEquippedBagData(anyRPGSaveData);
+            SaveEquippedBankBagData(anyRPGSaveData);
             SaveAbilityData(anyRPGSaveData);
             SaveSkillData(anyRPGSaveData);
             SaveRecipeData(anyRPGSaveData);
@@ -671,24 +678,33 @@ namespace AnyRPG {
             actionBarSaveData.Add(saveData);
         }
 
+        private InventorySlotSaveData GetSlotSaveData(InventorySlot inventorySlot) {
+            InventorySlotSaveData saveData = new InventorySlotSaveData();
+            saveData.ItemName = (inventorySlot.Item == null ? string.Empty : inventorySlot.Item.ResourceName);
+            saveData.stackCount = (inventorySlot.Item == null ? 0 : inventorySlot.Count);
+            saveData.DisplayName = (inventorySlot.Item == null ? string.Empty : inventorySlot.Item.DisplayName);
+            if (inventorySlot.Item != null) {
+                if (inventorySlot.Item.ItemQuality != null) {
+                    saveData.itemQuality = (inventorySlot.Item == null ? string.Empty : inventorySlot.Item.ItemQuality.ResourceName);
+                }
+                if ((inventorySlot.Item as Equipment is Equipment)) {
+                    saveData.randomSecondaryStatIndexes = (inventorySlot.Item == null ? null : (inventorySlot.Item as Equipment).RandomStatIndexes);
+                }
+                saveData.dropLevel = (inventorySlot.Item == null ? 0 : inventorySlot.Item.DropLevel);
+            }
+            return saveData;
+        }
+
         public void SaveInventorySlotData(AnyRPGSaveData anyRPGSaveData) {
             //Debug.Log("Savemanager.SaveInventorySlotData()");
-            foreach (SlotScript slotScript in playerManager.MyCharacter.CharacterInventoryManager.GetSlots()) {
-                InventorySlotSaveData saveData = new InventorySlotSaveData();
-                saveData.ItemName = (slotScript.Item == null ? string.Empty : slotScript.Item.ResourceName);
-                saveData.stackCount = (slotScript.Item == null ? 0 : slotScript.Count);
-                saveData.DisplayName = (slotScript.Item == null ? string.Empty : slotScript.Item.DisplayName);
-                if (slotScript.Item != null) {
-                    if (slotScript.Item.ItemQuality != null) {
-                        saveData.itemQuality = (slotScript.Item == null ? string.Empty : slotScript.Item.ItemQuality.ResourceName);
-                    }
-                    if ((slotScript.Item as Equipment is Equipment)) {
-                        saveData.randomSecondaryStatIndexes = (slotScript.Item == null ? null : (slotScript.Item as Equipment).RandomStatIndexes);
-                    }
-                    saveData.dropLevel = (slotScript.Item == null ? 0 : slotScript.Item.DropLevel);
-                }
+            foreach (InventorySlot inventorySlot in playerManager.MyCharacter.CharacterInventoryManager.InventorySlots) {
+                anyRPGSaveData.inventorySlotSaveData.Add(GetSlotSaveData(inventorySlot));
+            }
+        }
 
-                anyRPGSaveData.inventorySlotSaveData.Add(saveData);
+        public void SaveBankSlotData(AnyRPGSaveData anyRPGSaveData) {
+            foreach (InventorySlot inventorySlot in playerManager.MyCharacter.CharacterInventoryManager.BankSlots) {
+                anyRPGSaveData.bankSlotSaveData.Add(GetSlotSaveData(inventorySlot));
             }
         }
 
@@ -724,12 +740,24 @@ namespace AnyRPG {
             //Debug.Log("Savemanager.SaveEquippedBagData()");
             foreach (BagNode bagNode in playerManager.MyCharacter.CharacterInventoryManager.BagNodes) {
                 //Debug.Log("Savemanager.SaveEquippedBagData(): got bagNode");
-                EquippedBagSaveData saveData = new EquippedBagSaveData();
-                saveData.BagName = (bagNode.Bag != null ? bagNode.Bag.DisplayName : string.Empty);
-                saveData.slotCount = (bagNode.Bag != null ? bagNode.Bag.Slots : 0);
-                saveData.isBankBag = bagNode.IsBankNode;
-                anyRPGSaveData.equippedBagSaveData.Add(saveData);
+                anyRPGSaveData.equippedBagSaveData.Add(GetBagSaveData(bagNode));
             }
+        }
+
+        public void SaveEquippedBankBagData(AnyRPGSaveData anyRPGSaveData) {
+            //Debug.Log("Savemanager.SaveEquippedBagData()");
+            foreach (BagNode bagNode in playerManager.MyCharacter.CharacterInventoryManager.BankNodes) {
+                //Debug.Log("Savemanager.SaveEquippedBagData(): got bagNode");
+                anyRPGSaveData.equippedBankBagSaveData.Add(GetBagSaveData(bagNode));
+            }
+        }
+
+        private EquippedBagSaveData GetBagSaveData(BagNode bagNode) {
+            EquippedBagSaveData saveData = new EquippedBagSaveData();
+            saveData.BagName = (bagNode.Bag != null ? bagNode.Bag.DisplayName : string.Empty);
+            saveData.slotCount = (bagNode.Bag != null ? bagNode.Bag.Slots : 0);
+            
+            return saveData;
         }
 
         public void SaveAbilityData(AnyRPGSaveData anyRPGSaveData) {
@@ -878,39 +906,56 @@ namespace AnyRPG {
 
         public void LoadEquippedBagData(AnyRPGSaveData anyRPGSaveData) {
             //Debug.Log("Savemanager.LoadEquippedBagData()");
-            playerManager.MyCharacter.CharacterInventoryManager.LoadEquippedBagData(anyRPGSaveData.equippedBagSaveData);
+            playerManager.MyCharacter.CharacterInventoryManager.LoadEquippedBagData(anyRPGSaveData.equippedBagSaveData, false);
+            playerManager.MyCharacter.CharacterInventoryManager.LoadEquippedBagData(anyRPGSaveData.equippedBankBagSaveData, true);
         }
 
         public void LoadInventorySlotData(AnyRPGSaveData anyRPGSaveData) {
             //Debug.Log("Savemanager.LoadInventorySlotData()");
             int counter = 0;
             foreach (InventorySlotSaveData inventorySlotSaveData in anyRPGSaveData.inventorySlotSaveData) {
-                if (inventorySlotSaveData.ItemName != string.Empty && inventorySlotSaveData.ItemName != null) {
-                    for (int i = 0; i < inventorySlotSaveData.stackCount; i++) {
-                        Item newItem = systemItemManager.GetNewResource(inventorySlotSaveData.ItemName);
-                        if (newItem == null) {
-                            Debug.Log("Savemanager.LoadInventorySlotData(): COULD NOT LOAD ITEM FROM ITEM MANAGER: " + inventorySlotSaveData.ItemName);
-                        } else {
-                            newItem.DisplayName = inventorySlotSaveData.DisplayName;
-                            newItem.DropLevel = inventorySlotSaveData.dropLevel;
-                            // disabled the if condition since all items can now have item quality overrides from vendor
-                            //if (newItem.RandomItemQuality == true) {
-                            if (inventorySlotSaveData.itemQuality != null && inventorySlotSaveData.itemQuality != string.Empty) {
-                                newItem.ItemQuality = systemDataFactory.GetResource<ItemQuality>(inventorySlotSaveData.itemQuality);
-                            }
-                            //}
-                            if ((newItem as Equipment) is Equipment) {
-                                if (inventorySlotSaveData.randomSecondaryStatIndexes != null) {
-                                    (newItem as Equipment).RandomStatIndexes = inventorySlotSaveData.randomSecondaryStatIndexes;
-                                    (newItem as Equipment).InitializeRandomStatsFromIndex();
-                                }
-                            }
+                LoadSlotData(inventorySlotSaveData, counter, false);
+                counter++;
+            }
+        }
 
+        public void LoadBankSlotData(AnyRPGSaveData anyRPGSaveData) {
+            //Debug.Log("Savemanager.LoadInventorySlotData()");
+            int counter = 0;
+            foreach (InventorySlotSaveData inventorySlotSaveData in anyRPGSaveData.bankSlotSaveData) {
+                LoadSlotData(inventorySlotSaveData, counter, true);
+                counter++;
+            }
+        }
+
+        private void LoadSlotData(InventorySlotSaveData inventorySlotSaveData, int counter, bool bank) {
+            if (inventorySlotSaveData.ItemName != string.Empty && inventorySlotSaveData.ItemName != null) {
+                for (int i = 0; i < inventorySlotSaveData.stackCount; i++) {
+                    Item newItem = systemItemManager.GetNewResource(inventorySlotSaveData.ItemName);
+                    if (newItem == null) {
+                        Debug.Log("Savemanager.LoadInventorySlotData(): COULD NOT LOAD ITEM FROM ITEM MANAGER: " + inventorySlotSaveData.ItemName);
+                    } else {
+                        newItem.DisplayName = inventorySlotSaveData.DisplayName;
+                        newItem.DropLevel = inventorySlotSaveData.dropLevel;
+                        // disabled the if condition since all items can now have item quality overrides from vendor
+                        //if (newItem.RandomItemQuality == true) {
+                        if (inventorySlotSaveData.itemQuality != null && inventorySlotSaveData.itemQuality != string.Empty) {
+                            newItem.ItemQuality = systemDataFactory.GetResource<ItemQuality>(inventorySlotSaveData.itemQuality);
+                        }
+                        //}
+                        if ((newItem as Equipment) is Equipment) {
+                            if (inventorySlotSaveData.randomSecondaryStatIndexes != null) {
+                                (newItem as Equipment).RandomStatIndexes = inventorySlotSaveData.randomSecondaryStatIndexes;
+                                (newItem as Equipment).InitializeRandomStatsFromIndex();
+                            }
+                        }
+                        if (bank == true) {
+                            playerManager.MyCharacter.CharacterInventoryManager.AddBankItem(newItem, counter);
+                        } else {
                             playerManager.MyCharacter.CharacterInventoryManager.AddItem(newItem, counter);
                         }
                     }
                 }
-                counter++;
             }
         }
 
@@ -1041,12 +1086,27 @@ namespace AnyRPG {
             NewGame();
         }
 
-        public void NewGameFromSaveData(AnyRPGSaveData anyRPGSaveData) {
-            PerformInventorySetup();
-            SaveEquippedBagData(anyRPGSaveData);
-            SaveInventorySlotData(anyRPGSaveData);
-            LoadGame(anyRPGSaveData);
+        public void InitalizeNewGameSettings(AnyRPGSaveData anyRPGSaveData) {
 
+            // initialize inventory
+            PerformInventorySetup(anyRPGSaveData);
+
+            // set initial scene
+            SceneNode sceneNode = systemDataFactory.GetResource<SceneNode>(systemConfigurationManager.DefaultStartingZone);
+            if (sceneNode != null) {
+                anyRPGSaveData.CurrentScene = sceneNode.SceneFile;
+            } else {
+                anyRPGSaveData.CurrentScene = systemConfigurationManager.DefaultStartingZone;
+                //Debug.LogError("LevelManager.LoadLevel(" + levelName + "): could not find scene node with that name!");
+            }
+
+        }
+
+        public void NewGameFromSaveData(AnyRPGSaveData anyRPGSaveData) {
+            
+            InitalizeNewGameSettings(anyRPGSaveData);
+
+            LoadGame(anyRPGSaveData);
         }
 
         public void NewGame() {
@@ -1056,22 +1116,66 @@ namespace AnyRPG {
 
             //Debug.Log("Savemanager.NewGame()");
             ClearSharedData();
+            InitalizeNewGameSettings(currentSaveData);
 
+            /*
             // do this so a new game doesn't reset window positions every time
             LoadWindowPositions();
+            */
 
+            /*
             playerManager.SpawnPlayerConnection();
-            PerformInventorySetup();
 
             // load default scene
             levelManager.LoadFirstScene();
+            */
+            LoadGame(currentSaveData);
         }
 
-        public void PerformInventorySetup() {
-            // initialize inventory so there is a place to put the inventory
+        public void PerformInventorySetup(AnyRPGSaveData anyRPGSaveData) {
+            // initialize inventory
+            int bagCount = 0;
 
-            playerManager.MyCharacter.CharacterInventoryManager.CreateDefaultBankBag();
-            playerManager.MyCharacter.CharacterInventoryManager.CreateDefaultBackpack();
+            // add default backpack
+            if (systemConfigurationManager.DefaultBackpackItem != null && systemConfigurationManager.DefaultBackpackItem != string.Empty) {
+                Bag bag = systemDataFactory.GetResource<Item>(systemConfigurationManager.DefaultBackpackItem) as Bag;
+                if (bag == null) {
+                    Debug.LogError("SaveManager.PerformInventorySetup(): Check SystemConfigurationManager in inspector and set DefaultBackpack to valid name");
+                    return;
+                }
+                EquippedBagSaveData saveData = new EquippedBagSaveData();
+                saveData.BagName = bag.DisplayName;
+                saveData.slotCount = bag.Slots;
+                anyRPGSaveData.equippedBagSaveData.Add(saveData);
+                bagCount++;
+
+                // add inventory slots from bag
+                for (int i = 0; i < bag.Slots; i++) {
+                    anyRPGSaveData.inventorySlotSaveData.Add(new InventorySlotSaveData());
+                }
+            }
+
+            // add empty bag nodes
+            for (int i = bagCount; i < systemConfigurationManager.MaxInventoryBags; i++) {
+                anyRPGSaveData.equippedBagSaveData.Add(new EquippedBagSaveData());
+            }
+
+            // add empty bank nodes
+            for (int i = bagCount; i < systemConfigurationManager.MaxBankBags; i++) {
+                anyRPGSaveData.equippedBankBagSaveData.Add(new EquippedBagSaveData());
+            }
+        }
+
+        public void CreateDefaultBackpack() {
+            //Debug.Log("InventoryManager.CreateDefaultBackpack()");
+            if (systemConfigurationManager.DefaultBackpackItem != null && systemConfigurationManager.DefaultBackpackItem != string.Empty) {
+                Bag bag = systemItemManager.GetNewResource(systemConfigurationManager.DefaultBackpackItem) as Bag;
+                if (bag == null) {
+                    Debug.LogError("InventoryManager.CreateDefaultBankBag(): CHECK INVENTORYMANAGER IN INSPECTOR AND SET DEFAULTBACKPACK TO VALID NAME");
+                    return;
+                }
+                bag.AddToInventoryManager();
+            }
         }
 
         public void LoadGame() {
@@ -1169,6 +1273,7 @@ namespace AnyRPG {
             // complex data
             LoadEquippedBagData(anyRPGSaveData);
             LoadInventorySlotData(anyRPGSaveData);
+            LoadBankSlotData(anyRPGSaveData);
             LoadAbilityData(anyRPGSaveData);
 
 
@@ -1252,8 +1357,8 @@ namespace AnyRPG {
                 uIManager.lootWindow.RectTransform.anchoredPosition = new Vector3(PlayerPrefs.GetFloat("LootWindowX"), PlayerPrefs.GetFloat("LootWindowY"), 0);
             if (PlayerPrefs.HasKey("VendorWindowX") && PlayerPrefs.HasKey("VendorWindowY"))
                 uIManager.vendorWindow.RectTransform.anchoredPosition = new Vector3(PlayerPrefs.GetFloat("VendorWindowX"), PlayerPrefs.GetFloat("VendorWindowY"), 0);
-            if (PlayerPrefs.HasKey("ChestWindowX") && PlayerPrefs.HasKey("ChestWindowY"))
-                uIManager.chestWindow.RectTransform.anchoredPosition = new Vector3(PlayerPrefs.GetFloat("ChestWindowX"), PlayerPrefs.GetFloat("ChestWindowY"), 0);
+            //if (PlayerPrefs.HasKey("ChestWindowX") && PlayerPrefs.HasKey("ChestWindowY"))
+                //uIManager.chestWindow.RectTransform.anchoredPosition = new Vector3(PlayerPrefs.GetFloat("ChestWindowX"), PlayerPrefs.GetFloat("ChestWindowY"), 0);
             if (PlayerPrefs.HasKey("BankWindowX") && PlayerPrefs.HasKey("BankWindowY"))
                 uIManager.bankWindow.RectTransform.anchoredPosition = new Vector3(PlayerPrefs.GetFloat("BankWindowX"), PlayerPrefs.GetFloat("BankWindowY"), 0);
             if (PlayerPrefs.HasKey("QuestLogWindowX") && PlayerPrefs.HasKey("QuestLogWindowY"))
@@ -1331,8 +1436,8 @@ namespace AnyRPG {
             PlayerPrefs.SetFloat("LootWindowY", uIManager.lootWindow.RectTransform.anchoredPosition.y);
             PlayerPrefs.SetFloat("VendorWindowX", uIManager.vendorWindow.RectTransform.anchoredPosition.x);
             PlayerPrefs.SetFloat("VendorWindowY", uIManager.vendorWindow.RectTransform.anchoredPosition.y);
-            PlayerPrefs.SetFloat("ChestWindowX", uIManager.chestWindow.RectTransform.anchoredPosition.x);
-            PlayerPrefs.SetFloat("ChestWindowY", uIManager.chestWindow.RectTransform.anchoredPosition.y);
+            //PlayerPrefs.SetFloat("ChestWindowX", uIManager.chestWindow.RectTransform.anchoredPosition.x);
+            //PlayerPrefs.SetFloat("ChestWindowY", uIManager.chestWindow.RectTransform.anchoredPosition.y);
             PlayerPrefs.SetFloat("BankWindowX", uIManager.bankWindow.RectTransform.anchoredPosition.x);
             PlayerPrefs.SetFloat("BankWindowY", uIManager.bankWindow.RectTransform.anchoredPosition.y);
             PlayerPrefs.SetFloat("QuestLogWindowX", uIManager.questLogWindow.RectTransform.anchoredPosition.x);

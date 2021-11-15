@@ -32,7 +32,7 @@ namespace AnyRPG {
         }
 
         public void HandleLevelUnload(string eventName, EventParamProperties eventParamProperties) {
-            //Debug.Log("ObjectPooler.HandleLevelUnload()");
+            Debug.Log("ObjectPooler.HandleLevelUnload()");
             // if object should persist through scene changes globally, do nothing
             if (persistSceneChange == true) {
                 return;

@@ -198,6 +198,7 @@ namespace AnyRPG {
             Debug.Log(gameObject.name + ".HighlightButton.OnPointerClick()");
             base.OnPointerClick(eventData);
             OnClickSound();
+
             Interact();
         }
 
@@ -206,11 +207,15 @@ namespace AnyRPG {
 
             base.Interact();
             
+        }
+
+        public override void Accept() {
+            base.Accept();
             if (highlightButton != null) {
                 highlightButton.onClick.Invoke();
             }
-            
         }
+
 
         public virtual void CheckMouse() {
             if (UIManager.MouseInRect(transform as RectTransform)) {

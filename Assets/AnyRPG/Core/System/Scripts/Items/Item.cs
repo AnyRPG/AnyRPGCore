@@ -86,7 +86,7 @@ namespace AnyRPG {
         private Currency currency = null;
 
         // A reference to the slot that this item is sitting on
-        private SlotScript slot = null;
+        private InventorySlot slot = null;
 
         // game manager references
         protected CurrencyConverter currencyConverter = null;
@@ -96,7 +96,7 @@ namespace AnyRPG {
         protected PlayerManager playerManager = null;
 
         public int MaximumStackSize { get => stackSize; set => stackSize = value; }
-        public SlotScript Slot { get => slot; set => slot = value; }
+        public InventorySlot Slot { get => slot; set => slot = value; }
         
         public int BuyPrice() {
             return BuyPrice(realItemQuality);

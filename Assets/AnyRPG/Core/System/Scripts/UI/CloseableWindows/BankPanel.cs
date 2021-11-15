@@ -14,7 +14,6 @@ namespace AnyRPG {
         protected BagBarController bagBarController;
 
         // game manager references
-        //protected InventoryManager inventoryManager = null;
         protected PlayerManager playerManager = null;
 
         public BagBarController BagBarController { get => bagBarController; set => bagBarController = value; }
@@ -26,7 +25,6 @@ namespace AnyRPG {
 
         public override void SetGameManagerReferences() {
             base.SetGameManagerReferences();
-            //inventoryManager = systemGameManager.InventoryManager;
             playerManager = systemGameManager.PlayerManager;
         }
 
@@ -34,14 +32,19 @@ namespace AnyRPG {
             base.ProcessCreateEventSubscriptions();
 
             SystemEventManager.StartListening("OnPlayerConnectionDespawn", HandlePlayerConnectionDespawn);
-            playerManager.MyCharacter.CharacterInventoryManager.OnAddBankBagNode += HandleAddBankBagNode;
+            inventoryManager.OnAddBankBagNode += HandleAddBankBagNode;
+            inventoryManager.OnAddBankSlot += HandleAddSlot;
+            inventoryManager.OnRemoveBankSlot += HandleRemoveSlot;
+
         }
 
         protected override void ProcessCleanupEventSubscriptions() {
             base.ProcessCleanupEventSubscriptions();
 
             SystemEventManager.StopListening("OnPlayerConnectionDespawn", HandlePlayerConnectionDespawn);
-            playerManager.MyCharacter.CharacterInventoryManager.OnAddBankBagNode -= HandleAddBankBagNode;
+            inventoryManager.OnAddBankBagNode -= HandleAddBankBagNode;
+            inventoryManager.OnAddBankSlot -= HandleAddSlot;
+            inventoryManager.OnRemoveBankSlot -= HandleRemoveSlot;
         }
 
         public void HandlePlayerConnectionDespawn(string eventName, EventParamProperties eventParamProperties) {
@@ -52,7 +55,7 @@ namespace AnyRPG {
         public void HandleAddBankBagNode(BagNode bagNode) {
             Debug.Log("BankPanel.HandleAddBankBagNode()");
             bagBarController.AddBagButton(bagNode);
-            bagNode.BagPanel = this;
+            //bagNode.BagPanel = this;
         }
 
 

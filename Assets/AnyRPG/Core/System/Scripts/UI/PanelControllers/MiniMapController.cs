@@ -162,7 +162,7 @@ namespace AnyRPG {
         }
 
         public void HandleAddIndicator(Interactable interactable) {
-            //Debug.Log("MainMapController.AddIndicator(" + interactable.gameObject.name + ")");
+            //Debug.Log("MiniMapController.HandleAddIndicator(" + interactable.gameObject.name + interactable.gameObject.GetInstanceID() + ")");
             if (mapIndicatorControllers.ContainsKey(interactable) == false) {
                 GameObject mapIndicator = objectPooler.GetPooledObject(miniMapIndicatorPrefab, (mapGraphic.transform));
                 if (mapIndicator != null) {
@@ -285,7 +285,7 @@ namespace AnyRPG {
         }
 
         public void SetTarget(GameObject target) {
-            //Debug.Log("MiniMapController setting target: " + target.name);
+            Debug.Log("MiniMapController setting target: " + target.name);
             followGameObject = target;
             CommonInitialization();
         }
