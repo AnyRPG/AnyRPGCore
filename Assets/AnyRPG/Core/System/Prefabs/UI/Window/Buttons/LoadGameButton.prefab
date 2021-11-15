@@ -215,6 +215,8 @@ MonoBehaviour:
   highlightImage: {fileID: 4696556366279087835}
   highlightBackgroundOnSelect: 1
   highlightBackgroundOnInteract: 1
+  unHighlightBackgroundOnUnFocus: 0
+  unHighlightBackgroundOnLeave: 1
   highlightImageColor: {r: 0.64705884, g: 0.64705884, b: 0.64705884, a: 0.6509804}
   useUnfocusedColor: 0
   unFocusedColor: {r: 1, g: 1, b: 1, a: 0.15294118}
@@ -262,7 +264,9 @@ MonoBehaviour:
     actionBarSaveData: []
     gamepadActionBarSaveData: []
     inventorySlotSaveData: []
+    bankSlotSaveData: []
     equippedBagSaveData: []
+    equippedBankBagSaveData: []
     abilitySaveData: []
     skillSaveData: []
     recipeSaveData: []

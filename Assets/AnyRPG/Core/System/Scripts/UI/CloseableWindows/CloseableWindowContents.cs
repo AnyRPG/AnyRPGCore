@@ -188,7 +188,7 @@ namespace AnyRPG {
         }
 
         public virtual void Accept() {
-            //Debug.Log(gameObject.name + ".CloseableWindowContents.Accept()");
+            Debug.Log(gameObject.name + ".CloseableWindowContents.Accept()");
             if (activeSubPanel != null) {
                 activeSubPanel.Accept();
                 return;

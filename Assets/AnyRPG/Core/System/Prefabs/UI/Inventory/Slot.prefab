@@ -167,18 +167,29 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 34bcc3c3d03ed9b42b62dbbfc1e83102, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  outlineImage: {fileID: 8570930298364522122}
+  highlightOutlineColor: {r: 0.64705884, g: 0.64705884, b: 0.64705884, a: 0.6509804}
+  highlightImage: {fileID: 0}
+  highlightBackgroundOnSelect: 0
+  highlightBackgroundOnInteract: 0
+  unHighlightBackgroundOnUnFocus: 0
+  unHighlightBackgroundOnLeave: 0
+  highlightImageColor: {r: 0.64705884, g: 0.64705884, b: 0.64705884, a: 0.6509804}
+  useUnfocusedColor: 0
+  unFocusedColor: {r: 1, g: 1, b: 1, a: 0.15294118}
   text: {fileID: 0}
-  highlightImage: {fileID: 8570930298364522122}
+  ignoreSystemImageTint: 0
   highlightButton: {fileID: 0}
-  hideImageWhenInactive: 1
-  tintImage: 1
-  useSystemImageTintColor: 0
-  useHighlightColorOnButton: 0
-  highlightColor: {r: 1, g: 1, b: 1, a: 1}
+  selectedButtonColor: {r: 0.64705884, g: 0.64705884, b: 0.64705884, a: 0.6509804}
+  overrideNormalColor: 0
   normalColor: {r: 0.6392157, g: 0.6392157, b: 0.6392157, a: 0.10980392}
+  overrideHighlightedColor: 0
   highlightedColor: {r: 0.64705884, g: 0.64705884, b: 0.64705884, a: 0.40392157}
+  overridePressedColor: 0
   pressedColor: {r: 0.47058824, g: 0.47058824, b: 0.47058824, a: 0.2901961}
+  overrideSelectedColor: 0
   selectedColor: {r: 0.64705884, g: 0.64705884, b: 0.64705884, a: 0.40392157}
+  overrideDisabledColor: 0
   disabledColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 0.5019608}
   CapitalizeText: 0
   stackSize: {fileID: 2187069144266771125}
@@ -420,7 +431,7 @@ GameObject:
   - component: {fileID: 5562338221947758166}
   - component: {fileID: 8570930298364522122}
   m_Layer: 5
-  m_Name: Highlight
+  m_Name: Outline
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

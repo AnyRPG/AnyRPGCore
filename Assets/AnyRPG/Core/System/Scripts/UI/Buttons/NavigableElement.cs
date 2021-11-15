@@ -40,6 +40,14 @@ namespace AnyRPG {
         [SerializeField]
         private bool highlightBackgroundOnInteract = true;
 
+        [Tooltip("The highlight image will be hidden when unfocusing the controller")]
+        [SerializeField]
+        private bool unHighlightBackgroundOnUnFocus = true;
+
+        [Tooltip("The highlight image will be hidden when leaving the element")]
+        [SerializeField]
+        private bool unHighlightBackgroundOnLeave = true;
+
         [Tooltip("The color that will be used on the highlight image")]
         [SerializeField]
         private Color highlightImageColor = new Color32(165, 165, 165, 166);
@@ -120,10 +128,16 @@ namespace AnyRPG {
         public virtual void RightButton() {
         }
 
+        /// <summary>
+        /// leave the element for another element on the same navigation controller
+        /// </summary>
         public virtual void LeaveElement() {
             Debug.Log(gameObject.name + ".NavigableElement.LeaveElement()");
             if (DeselectOnLeave) {
                 DeSelect();
+            }
+            if (unHighlightBackgroundOnLeave) {
+                UnHighlightBackground();
             }
         }
 
@@ -153,9 +167,11 @@ namespace AnyRPG {
 
         public virtual void DeSelect() {
             //Debug.Log(gameObject.name + "NavigableElement.DeSelect()");
+            /*
             if (highlightBackgroundOnSelect == true) {
                 UnHighlightBackground();
             }
+            */
             UnHighlightOutline();
         }
 
@@ -185,16 +201,21 @@ namespace AnyRPG {
         }
 
         public void UnHighlightBackground() {
-            //Debug.Log(gameObject.name + ".HightlightButton.UnHighlight()");
+            Debug.Log(gameObject.name + ".HightlightButton.UnHighlightBackground()");
             if (highlightImage != null) {
                 highlightImage.color = hiddenColor;
             }
         }
 
         public virtual void FocusNavigationController() {
-            //Debug.Log(gameObject.name + ".NavigableElement.FocusNavigationController()");
+            Debug.Log(gameObject.name + ".NavigableElement.FocusNavigationController()");
 
             navigationControllerFocused = true;
+
+            // buttons that are currently disabled could still receive notification that their controller is active
+            if (Available() == false) {
+                return;
+            }
 
             if (highlightImage == null) {
                 return;
@@ -204,17 +225,27 @@ namespace AnyRPG {
             }
         }
 
+        /// <summary>
+        /// leave the current navigation controller
+        /// </summary>
         public virtual void UnFocus() {
             //Debug.Log(gameObject.name + ".NavigableElement.UnFocus()");
 
             navigationControllerFocused = false;
 
+            DeSelect();
+
             if (highlightImage == null) {
                 return;
             }
-            if (highlightImage.color != hiddenColor && useUnfocusedColor == true) {
-                highlightImage.color = unFocusedColor;
+            if (unHighlightBackgroundOnUnFocus) {
+                UnHighlightBackground();
+            } else {
+                if (highlightImage.color != hiddenColor && useUnfocusedColor == true) {
+                    highlightImage.color = unFocusedColor;
+                }
             }
+
         }
 
     }

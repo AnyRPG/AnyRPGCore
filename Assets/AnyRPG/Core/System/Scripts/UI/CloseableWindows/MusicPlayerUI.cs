@@ -40,7 +40,7 @@ namespace AnyRPG {
 
         private List<MusicPlayerHighlightButton> musicPlayerHighlightButtons = new List<MusicPlayerHighlightButton>();
 
-        private MusicPlayerHighlightButton selectedMusicPlayerHighlightButton;
+        //private MusicPlayerHighlightButton selectedMusicPlayerHighlightButton;
 
         private AudioProfile currentAudioProfile = null;
 
@@ -50,7 +50,7 @@ namespace AnyRPG {
         private ObjectPooler objectPooler = null;
         private UIManager uIManager = null;
 
-        public MusicPlayerHighlightButton SelectedMusicPlayerHighlightButton { get => selectedMusicPlayerHighlightButton; set => selectedMusicPlayerHighlightButton = value; }
+        //public MusicPlayerHighlightButton SelectedMusicPlayerHighlightButton { get => selectedMusicPlayerHighlightButton; set => selectedMusicPlayerHighlightButton = value; }
 
         public override void Configure(SystemGameManager systemGameManager) {
             base.Configure(systemGameManager);
@@ -78,7 +78,7 @@ namespace AnyRPG {
         }
 
         public void ShowAudioProfilesCommon(MusicPlayerComponent musicPlayer) {
-            //Debug.Log("SkillTrainerUI.ShowSkillsCommon(" + skillTrainer.name + ")");
+            Debug.Log("MusicPlayerUI.ShowAudioProfilesCommon()");
 
             ClearMusicProfiles();
 
@@ -104,7 +104,8 @@ namespace AnyRPG {
                 uIManager.musicPlayerWindow.CloseWindow();
             }
 
-            if (SelectedMusicPlayerHighlightButton == null && firstAvailableAudioProfile != null) {
+            //if (SelectedMusicPlayerHighlightButton == null && firstAvailableAudioProfile != null) {
+            if (firstAvailableAudioProfile != null) {
                 //firstAvailableAudioProfile.Select();
                 uINavigationControllers[0].FocusFirstButton();
             }
@@ -124,15 +125,17 @@ namespace AnyRPG {
             ShowAudioProfilesCommon(this.musicPlayer);
         }
 
+        /*
         public void UpdateSelected() {
             //Debug.Log("SkillTrainerUI.UpdateSelected()");
             if (SelectedMusicPlayerHighlightButton != null) {
                 ShowDescription(SelectedMusicPlayerHighlightButton.MyMusicProfile);
             }
         }
+        */
 
         private void UpdateButtons(AudioProfile musicProfile) {
-            //Debug.Log("MusicPlayerUI.UpdateButtons(" + musicProfile + ")");
+            Debug.Log("MusicPlayerUI.UpdateButtons(" + musicProfile + ")");
             playButton.Button.interactable = true;
             if (audioType == AudioType.Music) {
                 if (audioManager.MusicAudioSource.isPlaying == true) {
@@ -179,18 +182,10 @@ namespace AnyRPG {
         public void ClearDescription() {
             //Debug.Log("SkillTrainerUI.ClearDescription()");
             musicDescription.text = string.Empty;
-            DeselectMusicButtons();
         }
 
-        public void DeselectMusicButtons() {
-            //Debug.Log("MusicPlayerUI.DeselectMusicButtons()");
-            foreach (MusicPlayerHighlightButton musicPlayerHighlightButton in musicPlayerHighlightButtons) {
-                //Debug.Log("MusicPlayerUI.DeselectMusicButtons(): got a button");
-                if (musicPlayerHighlightButton != SelectedMusicPlayerHighlightButton) {
-                    //Debug.Log("MusicPlayerUI.DeselectMusicButtons(): got a button and clearing it");
-                    musicPlayerHighlightButton.DeSelect();
-                }
-            }
+        public void SetSelectedButton(MusicPlayerHighlightButton musicPlayerHighlightButton) {
+            uINavigationControllers[0].UnHightlightButtons(musicPlayerHighlightButton);
         }
 
         public void ClearMusicProfiles() {
@@ -210,11 +205,11 @@ namespace AnyRPG {
         public override void ReceiveClosedWindowNotification() {
             //Debug.Log("SkillTrainerUI.OnCloseWindow()");
             base.ReceiveClosedWindowNotification();
-            SelectedMusicPlayerHighlightButton = null;
+            //SelectedMusicPlayerHighlightButton = null;
         }
 
         public void PlayMusic() {
-            //Debug.Log("SkillTrainerUI.LearnSkill()");
+            Debug.Log("MusicPlayerUI.PlayMusic()");
             if (currentAudioProfile != null && currentAudioProfile.AudioClip != null) {
                 if (audioType == AudioType.Music) {
                     audioManager.PlayMusic(currentAudioProfile.AudioClip);
@@ -270,6 +265,7 @@ namespace AnyRPG {
 
         public override void ReceiveOpenWindowNotification() {
             //Debug.Log("MusicPlayerUI.OnOpenWindow()");
+            SetNavigationController(uINavigationControllers[0]);
             base.ReceiveOpenWindowNotification();
             SetBackGroundColor(new Color32(0, 0, 0, (byte)(int)(PlayerPrefs.GetFloat("PopupWindowOpacity") * 255)));
             DeactivateButtons();

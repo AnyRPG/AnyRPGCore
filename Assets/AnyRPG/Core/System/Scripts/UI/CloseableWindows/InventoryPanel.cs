@@ -22,6 +22,7 @@ namespace AnyRPG {
         public override void Configure(SystemGameManager systemGameManager) {
             base.Configure(systemGameManager);
             bagBarController.Configure(systemGameManager);
+            bagBarController.SetBagButtonCount(systemConfigurationManager.MaxInventoryBags);
         }
 
         public override void SetGameManagerReferences() {

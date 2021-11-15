@@ -201,7 +201,7 @@ namespace AnyRPG {
             //OpenDetailsPanel();
             uINavigationControllers[0].SetCurrentButton(detailsButton);
             SetNavigationController(uINavigationControllers[0]);
-            detailsButton.Interact();
+            detailsButton.Accept();
 
             // testing appearance last since it relies on at very minimum the unit profile being set
 

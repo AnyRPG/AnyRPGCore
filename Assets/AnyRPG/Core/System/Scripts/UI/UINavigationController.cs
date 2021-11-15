@@ -1,6 +1,7 @@
 ﻿using AnyRPG;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
@@ -142,6 +143,12 @@ namespace AnyRPG {
 
         public virtual void UpdateNavigationList() {
             Debug.Log(gameObject.name + ".UINavigationController.UpdateNavigationList()");
+
+            // deselect the buttons before clearing the list
+            foreach (NavigableElement navigableElement in activeNavigableButtons) {
+                navigableElement.DeSelect();
+                navigableElement.UnHighlightBackground();
+            }
             activeNavigableButtons.Clear();
             foreach (NavigableElement navigableElement in navigableButtons) {
                 if (pruneInactiveElements == false || navigableElement.Available()) {
@@ -160,7 +167,10 @@ namespace AnyRPG {
         public virtual void Focus(bool focusCurrentButton = true) {
             Debug.Log(gameObject.name + ".UINavigationController.Focus()");
             focused = true;
-            foreach (NavigableElement navigableElement in activeNavigableButtons) {
+            // testing - active navigable buttons is needed for lists that are dynamically created (skill buttons etc)
+            // regular navigable buttons are needed for lists that are static, but may have temporarily disabled elements (music player)
+            // union them both to ensure nothing is missed
+            foreach (NavigableElement navigableElement in activeNavigableButtons.Union(navigableButtons)) {
                 navigableElement.FocusNavigationController();
             }
             if (focusCurrentButton == true) {
@@ -171,9 +181,9 @@ namespace AnyRPG {
         public virtual void UnFocus() {
             Debug.Log(gameObject.name + ".UINavigationController.Unfocus()");
             focused = false;
-            foreach (NavigableElement navigableElement in activeNavigableButtons) {
+            foreach (NavigableElement navigableElement in activeNavigableButtons.Union(navigableButtons)) {
                 navigableElement.UnFocus();
-                navigableElement.LeaveElement();
+                //navigableElement.LeaveElement();
             }
         }
 
@@ -340,10 +350,11 @@ namespace AnyRPG {
         public virtual void LeaveController() {
             //Debug.Log(gameObject.name + ".UINavigationController.LeaveController()");
             UnFocus();
+            /*
             if (currentNavigableElement != null) {
                 currentNavigableElement.LeaveElement();
             }
-
+            */
         }
 
         public void LBButton() {
@@ -356,7 +367,7 @@ namespace AnyRPG {
 
 
         public virtual void Accept() {
-            //Debug.Log(gameObject.name + ".UINavigationController.Accept()");
+            Debug.Log(gameObject.name + ".UINavigationController.Accept()");
             if (activeNavigableButtons.Count != 0) {
                 if (currentIndex < 0) {
                     currentIndex = 0;
@@ -368,9 +379,11 @@ namespace AnyRPG {
                 currentNavigableElement.Accept();
             }
             if (acceptController != null) {
+                /*
                 if (currentNavigableElement != null) {
                     currentNavigableElement.LeaveElement();
                 }
+                */
                 UnFocus();
                 acceptController.Activate();
                 return;
@@ -380,9 +393,11 @@ namespace AnyRPG {
         public virtual void Cancel() {
             Debug.Log(gameObject.name + ".UINavigationController.Cancel()");
             UnFocus();
+            /*
             if (currentNavigableElement != null) {
                 currentNavigableElement.LeaveElement();
             }
+            */
         }
 
         public virtual void ReceiveOpenWindowNotification() {

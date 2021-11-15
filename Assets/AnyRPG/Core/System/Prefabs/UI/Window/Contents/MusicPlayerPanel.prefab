@@ -138,9 +138,11 @@ MonoBehaviour:
   highlightOutlineColor: {r: 0.64705884, g: 0.64705884, b: 0.64705884, a: 0.6509804}
   highlightImage: {fileID: 6431714542525529137}
   highlightBackgroundOnSelect: 0
-  highlightBackgroundOnInteract: 1
+  highlightBackgroundOnInteract: 0
+  unHighlightBackgroundOnUnFocus: 0
+  unHighlightBackgroundOnLeave: 0
   highlightImageColor: {r: 0.64705884, g: 0.64705884, b: 0.64705884, a: 0.6509804}
-  useUnfocusedColor: 1
+  useUnfocusedColor: 0
   unFocusedColor: {r: 1, g: 1, b: 1, a: 0.15294118}
   text: {fileID: 478455576556544659}
   ignoreSystemImageTint: 0
@@ -220,9 +222,11 @@ MonoBehaviour:
   highlightOutlineColor: {r: 0.64705884, g: 0.64705884, b: 0.64705884, a: 0.6509804}
   highlightImage: {fileID: 2939470474648831301}
   highlightBackgroundOnSelect: 0
-  highlightBackgroundOnInteract: 1
+  highlightBackgroundOnInteract: 0
+  unHighlightBackgroundOnUnFocus: 0
+  unHighlightBackgroundOnLeave: 0
   highlightImageColor: {r: 0.64705884, g: 0.64705884, b: 0.64705884, a: 0.6509804}
-  useUnfocusedColor: 1
+  useUnfocusedColor: 0
   unFocusedColor: {r: 1, g: 1, b: 1, a: 0.15294118}
   text: {fileID: 6046542237571187490}
   ignoreSystemImageTint: 0
@@ -1280,9 +1284,11 @@ MonoBehaviour:
   highlightOutlineColor: {r: 0.64705884, g: 0.64705884, b: 0.64705884, a: 0.6509804}
   highlightImage: {fileID: 4801077978073618495}
   highlightBackgroundOnSelect: 0
-  highlightBackgroundOnInteract: 1
+  highlightBackgroundOnInteract: 0
+  unHighlightBackgroundOnUnFocus: 0
+  unHighlightBackgroundOnLeave: 0
   highlightImageColor: {r: 0.64705884, g: 0.64705884, b: 0.64705884, a: 0.6509804}
-  useUnfocusedColor: 1
+  useUnfocusedColor: 0
   unFocusedColor: {r: 1, g: 1, b: 1, a: 0.15294118}
   text: {fileID: 351842567048146208}
   ignoreSystemImageTint: 0
