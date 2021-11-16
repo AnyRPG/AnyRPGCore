@@ -41,6 +41,9 @@ namespace AnyRPG {
         [SerializeField]
         protected RectTransform rectTransform = null;
 
+        [SerializeField]
+        protected HintBarController hintBarController = null;
+
         // game manager references
         protected ObjectPooler objectPooler = null;
 
@@ -158,6 +161,9 @@ namespace AnyRPG {
             if (windowText != null && windowTitle != null && windowTitle != string.Empty) {
                 windowText.text = windowTitle;
             }
+            if (hintBarController != null) {
+                hintBarController.Hide();
+            }
         }
 
         public void RawCloseWindow() {
@@ -187,6 +193,19 @@ namespace AnyRPG {
 
         public void SetWindowTitle(string newTitle) {
             windowText.text = newTitle;
+        }
+
+        public void SetControllerHints(string aOption, string xOption, string yOption, string bOption) {
+            Debug.Log(gameObject.name + ".CloseableWindow.SetControllerHints()");
+            if (hintBarController != null) {
+                hintBarController.SetOptions(aOption, xOption, yOption, bOption);
+            }
+        }
+
+        public void HideControllerHints() {
+            if (hintBarController != null) {
+                hintBarController.Hide();
+            }
         }
 
     }

@@ -63,6 +63,7 @@ namespace AnyRPG {
         [SerializeField]
         private Color unFocusedColor = new Color32(255, 255, 255, 39);
 
+        protected UINavigationController owner = null;
 
         protected RectTransform rectTransform = null;
 
@@ -95,6 +96,10 @@ namespace AnyRPG {
             UnHighlightOutline();
         }
 
+        public void SetController(UINavigationController uINavigationController) {
+            owner = uINavigationController;
+        }
+
         public virtual bool Available() {
             return gameObject.activeInHierarchy;
         }
@@ -106,6 +111,14 @@ namespace AnyRPG {
 
         public virtual void Cancel() {
 
+        }
+
+        public virtual void JoystickButton2() {
+            Debug.Log(gameObject.name + ".NavigableElement.JoystickButton2()");
+        }
+
+        public virtual void JoystickButton3() {
+            Debug.Log(gameObject.name + ".NavigableElement.JoystickButton3()");
         }
 
         public virtual void Interact() {
@@ -157,7 +170,7 @@ namespace AnyRPG {
         }
 
         public virtual void Select() {
-            //Debug.Log(gameObject.name + ".NavigableElement.Select()");
+            Debug.Log(gameObject.name + ".NavigableElement.Select()");
 
             if (highlightBackgroundOnSelect == true) {
                 HighlightBackground();

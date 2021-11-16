@@ -31,7 +31,7 @@ namespace AnyRPG {
             if (activeNavigableButtons.Count == 0) {
                 return;
             }
-            if (currentIndex < 0 || currentIndex >= activeNavigableButtons.Count || activeNavigableButtons[currentIndex].gameObject.activeSelf == false) {
+            if (currentIndex < 0 || currentIndex >= activeNavigableButtons.Count || activeNavigableButtons[currentIndex].gameObject.activeInHierarchy == false) {
                 currentIndex = 0;
                 currentRow = 0;
                 currentColumn = 0;
@@ -73,7 +73,7 @@ namespace AnyRPG {
                 currentNavigableElement.LeaveElement();
             }
             CalculateCurrentIndex();
-            if (activeNavigableButtons[currentIndex].gameObject.activeSelf != true) {
+            if (activeNavigableButtons[currentIndex].gameObject.activeInHierarchy != true) {
                 currentColumn++;
                 CalculateCurrentIndex();
             }
@@ -100,7 +100,7 @@ namespace AnyRPG {
                 currentNavigableElement.LeaveElement();
             }
             CalculateCurrentIndex();
-            if (currentIndex >= activeNavigableButtons.Count || activeNavigableButtons[currentIndex].gameObject.activeSelf != true) {
+            if (currentIndex >= activeNavigableButtons.Count || activeNavigableButtons[currentIndex].gameObject.activeInHierarchy != true) {
                 currentColumn--;
                 CalculateCurrentIndex();
             }
@@ -124,7 +124,7 @@ namespace AnyRPG {
                 currentNavigableElement.LeaveElement();
             }
             CalculateCurrentIndex();
-            if (activeNavigableButtons[currentIndex].gameObject.activeSelf != true) {
+            if (activeNavigableButtons[currentIndex].gameObject.activeInHierarchy != true) {
                 currentRow++;
                 CalculateCurrentIndex();
             }
@@ -148,7 +148,7 @@ namespace AnyRPG {
                 currentNavigableElement.LeaveElement();
             }
             CalculateCurrentIndex();
-            if (currentIndex >= activeNavigableButtons.Count || activeNavigableButtons[currentIndex].gameObject.activeSelf != true) {
+            if (currentIndex >= activeNavigableButtons.Count || activeNavigableButtons[currentIndex].gameObject.activeInHierarchy != true) {
                 currentRow--;
                 CalculateCurrentIndex();
             }

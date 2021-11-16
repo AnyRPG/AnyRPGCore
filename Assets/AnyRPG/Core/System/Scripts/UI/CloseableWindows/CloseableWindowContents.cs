@@ -222,10 +222,24 @@ namespace AnyRPG {
 
         public virtual void JoystickButton2() {
             //Debug.Log(gameObject.name + ".CloseableWindowContents.JoystickButton2()");
+            if (activeSubPanel != null) {
+                activeSubPanel.JoystickButton2();
+                return;
+            }
+            if (currentNavigationController != null) {
+                currentNavigationController.JoystickButton2();
+            }
         }
 
         public virtual void JoystickButton3() {
             //Debug.Log(gameObject.name + ".CloseableWindowContents.JoystickButton3()");
+            if (activeSubPanel != null) {
+                activeSubPanel.JoystickButton3();
+                return;
+            }
+            if (currentNavigationController != null) {
+                currentNavigationController.JoystickButton3();
+            }
         }
 
         public virtual void JoystickButton4() {
@@ -430,6 +444,27 @@ namespace AnyRPG {
                 backGroundImage.color = color;
             } else {
                 //Debug.Log(gameObject.name + ".WindowContentController.SetBackGroundColor(): background image IS NULL!");
+            }
+        }
+
+        public void SetControllerHints(string aOption, string xOption, string yOption, string bOption) {
+            Debug.Log(gameObject.name + ".WindowContentController.SetControllerHints()");
+            if (parentPanel != null) {
+                parentPanel.SetControllerHints(aOption, xOption, yOption, bOption);
+                return;
+            }
+            if (closeableWindow != null) {
+                closeableWindow.SetControllerHints(aOption, xOption, yOption, bOption);
+            }
+        }
+
+        public void HideControllerHints() {
+            if (parentPanel != null) {
+                parentPanel.HideControllerHints();
+                return;
+            }
+            if (closeableWindow != null) {
+                closeableWindow.HideControllerHints();
             }
         }
     }

@@ -707,7 +707,7 @@ namespace AnyRPG {
         }
 
         public void OnSendObjectToPool() {
-            Debug.Log(gameObject.name + ".BaseCharacter.OnSendObjectToPool()");
+            //Debug.Log(gameObject.name + ".BaseCharacter.OnSendObjectToPool()");
             if (SystemGameManager.IsShuttingDown) {
                 return;
             }

@@ -58,6 +58,36 @@ namespace AnyRPG {
                 playerManager.MyCharacter.CharacterAbilityManager.BeginAbility(ability);
             }
         }
+
+        public override void Select() {
+            Debug.Log("AbilityButton.Select()");
+            base.Select();
+            if (owner != null) {
+                owner.SetControllerHints("Cast", "Add To Action Bars", "", "");
+            }
+        }
+
+        public override void DeSelect() {
+            Debug.Log("AbilityButton.DeSelect()");
+            base.DeSelect();
+            if (owner != null) {
+                owner.HideControllerHints();
+            }
+        }
+
+        public override void Accept() {
+            Debug.Log("AbilityButton.Accept()");
+            base.Accept();
+            if (ability.CanCast(playerManager.MyCharacter, true)) {
+                playerManager.MyCharacter.CharacterAbilityManager.BeginAbility(ability);
+            }
+        }
+
+        public override void JoystickButton2() {
+            Debug.Log("AbilityButton.JoystickButton2()");
+            base.JoystickButton2();
+        }
+
     }
 
 }

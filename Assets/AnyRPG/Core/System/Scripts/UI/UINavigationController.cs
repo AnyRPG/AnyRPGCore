@@ -101,6 +101,7 @@ namespace AnyRPG {
             base.Configure(systemGameManager);
             foreach (NavigableElement navigableElement in navigableButtons) {
                 navigableElement.Configure(systemGameManager);
+                navigableElement.SetController(this);
                 if (pruneInactiveElements == false || navigableElement.gameObject.activeSelf == true) {
                     activeNavigableButtons.Add(navigableElement);
                 }
@@ -189,6 +190,7 @@ namespace AnyRPG {
 
         public virtual void AddActiveButton(NavigableElement navigableElement) {
             activeNavigableButtons.Add(navigableElement);
+            navigableElement.SetController(this);
             if (focused) {
                 navigableElement.FocusNavigationController();
             }
@@ -400,6 +402,20 @@ namespace AnyRPG {
             */
         }
 
+        public virtual void JoystickButton2() {
+            Debug.Log(gameObject.name + ".UINavigationController.JoystickButton2()");
+            if (activeNavigableButtons.Count != 0 && currentIndex >= 0) {
+                currentNavigableElement.JoystickButton2();
+            }
+        }
+
+        public virtual void JoystickButton3() {
+            Debug.Log(gameObject.name + ".UINavigationController.JoystickButton3()");
+            if (activeNavigableButtons.Count != 0 && currentIndex >= 0) {
+                currentNavigableElement.JoystickButton3();
+            }
+        }
+
         public virtual void ReceiveOpenWindowNotification() {
             //Debug.Log(gameObject.name + ".UINavigationController.ReceiveOpenWindowNotification()");
             if (updateActiveListOnOpen) {
@@ -408,7 +424,18 @@ namespace AnyRPG {
             }
         }
 
+        public void SetControllerHints(string aOption, string xOption, string yOption, string bOption) {
+            Debug.Log(gameObject.name + ".UINavigationController.SetControllerHints()");
+            if (owner != null) {
+                owner.SetControllerHints(aOption, xOption, yOption, bOption);
+            }
+        }
 
+        public void HideControllerHints() {
+            if (owner != null) {
+                owner.HideControllerHints();
+            }
+        }
 
     }
 
