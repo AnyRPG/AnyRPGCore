@@ -4,38 +4,44 @@ using System.Collections.Generic;
 using UnityEngine;
 
 namespace AnyRPG {
-    [RequireComponent(typeof(SphereCollider))]
     public class InteractableRange : ConfiguredMonoBehaviour {
 
-        // THIS SHOULD ONLY BE ON THE PLAYER OR ANYTHING LEAVING ANYTHINGS RANGE WILL REMOVE THEMSELVES FROM THE PLAYERS RANGE TABLE!!!
+        [SerializeField]
+        protected Collider rangeCollider = null;
 
-        private SphereCollider rangeCollider;
+        /*
+        [SerializeField]
+        protected bool autoSetRadius = true;
+        */
 
-        //private CharacterUnit playerUnit;
+        protected Interactable interactable = null;
 
         // game manager references
         protected PlayerManager playerManager = null;
 
         public override void Configure(SystemGameManager systemGameManager) {
             base.Configure(systemGameManager);
-
-            rangeCollider = GetComponent<SphereCollider>();
-            if (playerManager.UnitController == null) {
-                // player unit not spawned yet, so this can't be the player.  Disable collider
-                DisableCollider();
-                return;
-            }
-            Interactable _interactable = GetComponentInParent<Interactable>();
-            //if (_interactable.gameObject != playerManager.ActiveUnitController.gameObject) {
-            // player unit is spawned, but this is not the player unit.  Disable collider
-            DisableCollider();
-            //}
-
         }
 
         public override void SetGameManagerReferences() {
             base.SetGameManagerReferences();
             playerManager = systemGameManager.PlayerManager;
+        }
+
+        public void SetInteractable(Interactable interactable) {
+            Debug.Log("InteractableRange.SetInteractable(" + interactable.gameObject.name + ")");
+            this.interactable = interactable;
+            /*
+            if (autoSetRadius == true) {
+                Debug.Log("setting bounds");
+                Vector3 extents = rangeCollider.bounds.extents;
+                rangeCollider.
+                //extents.x = interactable.InteractionMaxRange;
+                //extents.y = interactable.InteractionMaxRange;
+                //extents.z = interactable.InteractionMaxRange;
+                extents = new Vector3(interactable.InteractionMaxRange, interactable.InteractionMaxRange, interactable.InteractionMaxRange);
+            }
+            */
         }
 
         public void EnableCollider() {
@@ -47,59 +53,31 @@ namespace AnyRPG {
         }
 
         private void OnTriggerEnter(Collider collider) {
-            //Debug.Log("InteractableRange.OnTriggerEnter()");
-            /*
-            if (playerUnit == null) {
+            Debug.Log(interactable.gameObject.name + ".InteractableRange.OnTriggerEnter(" + collider.gameObject.name + ")");
+
+            if (interactable.NotInteractable == true) {
                 return;
             }
-            */
-            bool isAlreadyInRangeTable = false;
+            if (interactable.PrerequisitesMet == false) {
+                return;
+            }
+            if (interactable.GetCurrentInteractables().Count == 0) {
+                //if (GetValidInteractables(playerManager.MyCharacter.MyCharacterUnit).Count == 0) {
+                //Debug.Log(gameObject.name + ".Interactable.OnMouseEnter(): No current Interactables.  Not glowing.");
+                return;
+            }
 
-            Interactable _interactable = collider.GetComponent<Interactable>();
-            if (_interactable != null) {
-                if (playerManager.MyCharacter == null) {
-                    //Debug.Log("playerManager.MyCharacter == null: true");
-                    return;
-                }
-                if (playerManager.PlayerController.MyInteractables.Count != 0) {
-                    // loop through the table and see if the target is already in it.
-                    foreach (Interactable interactable in playerManager.PlayerController.MyInteractables) {
-                        if (_interactable == interactable) {
-                            isAlreadyInRangeTable = true;
-                            //Debug.Log(gameObject.name + " adding " + aggroAmount.ToString() + " aggro to entry: " + target.name + "; total: " + aggroNode.aggroValue.ToString());
-                        }
-                    }
-                }
-
-                if (!isAlreadyInRangeTable) {
-                    //Debug.Log(gameObject.name + " adding new entry " + target.name + " to aggro table");
-                    playerManager.PlayerController.MyInteractables.Add(_interactable);
-                }
-                //Debug.Log("OnTriggerEnter(): Rangetable size: " + playerManager.MyCharacter.MyCharacterController.MyInteractables.Count);
+            if (collider.gameObject == playerManager.ActiveUnitController.gameObject) {
+                playerManager.PlayerController.AddInteractable(interactable);
             }
         }
 
         private void OnTriggerExit(Collider collider) {
-            //Debug.Log(gameObject.name + ".InteractableRange.OnTriggerExit()");
-            /*
-            if (playerUnit == null) {
-                return;
+            Debug.Log(interactable.gameObject.name + ".InteractableRange.OnTriggerExit(" + collider.gameObject.name + ")");
+
+            if (collider.gameObject == playerManager.ActiveUnitController.gameObject) {
+                playerManager.PlayerController.RemoveInteractable(interactable);
             }
-            */
-            Interactable _interactable = collider.GetComponent<Interactable>();
-            //Debug.Log(gameObject.name + " at " + transform.position + ".InteractableRange.OnTriggerExit(): " + collider.gameObject.name + " at " + collider.gameObject.transform.position);
-            if (_interactable != null) {
-                for (int i = 0; i < playerManager.PlayerController.MyInteractables.Count; i++) {
-                    if (playerManager.PlayerController.MyInteractables[i] == _interactable) {
-                        if (_interactable.IsInteracting == true) {
-                            _interactable.StopInteract();
-                        }
-                        playerManager.PlayerController.MyInteractables.Remove(_interactable);
-                        return;
-                    }
-                }
-            }
-            //Debug.Log("OnTriggerExit(): Rangetable size: " + playerManager.MyCharacter.MyCharacterController.MyInteractables.Count);
         }
 
 

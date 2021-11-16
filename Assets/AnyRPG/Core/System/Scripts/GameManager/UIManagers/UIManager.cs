@@ -102,6 +102,9 @@ namespace AnyRPG {
         private CloseableWindow combatLogWindow = null;
 
         [SerializeField]
+        private InteractionTooltipController interactionTooltipController = null;
+
+        [SerializeField]
         private GameObject toolTip = null;
 
         private TextMeshProUGUI toolTipText = null;
@@ -282,6 +285,7 @@ namespace AnyRPG {
             floatingCastBarController.Configure(systemGameManager);
             questTrackerWindow.Configure(systemGameManager);
             combatLogWindow.Configure(systemGameManager);
+            interactionTooltipController.Configure(systemGameManager);
             toolTipCurrencyBarController.Configure(systemGameManager);
             handScript.Configure(systemGameManager);
 
@@ -742,6 +746,7 @@ namespace AnyRPG {
             //Debug.Log("UIManager.DeactivatePlayerUI()");
             playerUI.SetActive(false);
             HideToolTip();
+            HideInteractionToolTip();
         }
 
         public void ActivatePlayerUI() {
@@ -1036,7 +1041,10 @@ namespace AnyRPG {
                     ToolTipCurrencyBarController.UpdateCurrencyAmount(sellAmount.Key, sellAmount.Value, showSellPrice);
                 }
             }
+        }
 
+        public void ShowInteractionTooltip(Interactable interactable) {
+            interactionTooltipController.ShowInteractionTooltip(interactable);
         }
 
         /// <summary>
@@ -1046,6 +1054,12 @@ namespace AnyRPG {
             //Debug.Log("UIManager.HideToolTip()");
             toolTip.SetActive(false);
         }
+
+        public void HideInteractionToolTip() {
+            //Debug.Log("UIManager.HideToolTip()");
+            interactionTooltipController.HideInteractionTooltip();
+        }
+
         public void RefreshTooltip(IDescribable describable) {
             RefreshTooltip(describable, string.Empty);
         }

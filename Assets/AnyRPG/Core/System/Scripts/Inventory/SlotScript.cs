@@ -13,9 +13,7 @@ namespace AnyRPG {
         [SerializeField]
         protected Image backGroundImage;
 
-        private InventorySlot inventorySlot = null;
-
-        protected bool localComponentsGotten = false;
+        protected InventorySlot inventorySlot = null;
 
         // game manager references
         //protected InventoryManager inventoryManager = null;
@@ -27,7 +25,7 @@ namespace AnyRPG {
         /// </summary>
         public BagPanel BagPanel { get; set; }
 
-        public InventorySlot InventorySlot { get => inventorySlot; set => inventorySlot = value; }
+        public InventorySlot InventorySlot { get => inventorySlot; }
 
         public override void Configure(SystemGameManager systemGameManager) {
             base.Configure(systemGameManager);
@@ -35,21 +33,12 @@ namespace AnyRPG {
             //inventoryManager = systemGameManager.InventoryManager;
             handScript = systemGameManager.UIManager.HandScript;
             playerManager = systemGameManager.PlayerManager;
-
-            GetLocalComponents();
         }
 
-        public void GetLocalComponents() {
-            if (localComponentsGotten == true) {
-                return;
-            }
-            if (backGroundImage == null) {
-                //Debug.Log(gameObject.name + "SlotScript.Awake(): background image is null, trying to get component");
-                backGroundImage = GetComponent<Image>();
-            }
-            localComponentsGotten = true;
+        public void SetInventorySlot(InventorySlot inventorySlot) {
+            this.inventorySlot = inventorySlot;
+            inventorySlot.OnUpdateSlot += UpdateSlot;
         }
-
 
         public override void OnPointerClick(PointerEventData eventData) {
             //Debug.Log("SlotScript.OnPointerClick()");
@@ -314,7 +303,6 @@ namespace AnyRPG {
         }
 
         public void SetBackGroundColor() {
-            GetLocalComponents();
             Color finalColor;
             if (inventorySlot.Item == null) {
                 int slotOpacityLevel = (int)(PlayerPrefs.GetFloat("InventorySlotOpacity") * 255);
@@ -338,7 +326,11 @@ namespace AnyRPG {
             uIManager.ShowToolTip(transform.position, describable, "Sell Price: ");
         }
 
-
+        public void OnSendObjectToPool() {
+            if (inventorySlot != null) {
+                inventorySlot.OnUpdateSlot -= UpdateSlot;
+            }
+        }
     }
 
 }

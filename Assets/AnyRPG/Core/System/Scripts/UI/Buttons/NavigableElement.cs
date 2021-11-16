@@ -177,6 +177,7 @@ namespace AnyRPG {
 
 
         public void HighlightOutline() {
+            Debug.Log(gameObject.name + "NavigableElement.HighlightOutline()");
             if (outlineImage != null) {
                 outlineImage.color = highlightOutlineColor;
             }

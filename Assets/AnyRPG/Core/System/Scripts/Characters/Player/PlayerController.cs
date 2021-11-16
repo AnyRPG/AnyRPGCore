@@ -67,8 +67,8 @@ namespace AnyRPG {
         protected ControlsManager controlsManager = null;
         protected ActionBarManager actionBarManager = null;
 
-        public List<Interactable> MyInteractables { get => interactables; }
-        public RaycastHit MyMouseOverhit { get => mouseOverhit; set => mouseOverhit = value; }
+        public List<Interactable> Interactables { get => interactables; }
+        public RaycastHit MouseOverhit { get => mouseOverhit; set => mouseOverhit = value; }
 
         public override void SetGameManagerReferences() {
             base.SetGameManagerReferences();
@@ -84,6 +84,32 @@ namespace AnyRPG {
             windowManager = systemGameManager.WindowManager;
             controlsManager = systemGameManager.ControlsManager;
             actionBarManager = uIManager.ActionBarManager;
+        }
+
+        public void AddInteractable(Interactable interactable) {
+            if (interactables.Contains(interactable) == false) {
+                interactables.Add(interactable);
+            }
+            ShowHideInteractionPopup();
+        }
+
+        /// <summary>
+        /// Remove an interactable from the list of interactables in range
+        /// </summary>
+        /// <param name="_interactable"></param>
+        public void RemoveInteractable(Interactable interactable) {
+            if (interactables.Contains(interactable)) {
+                interactables.Remove(interactable);
+            }
+            ShowHideInteractionPopup();
+        }
+
+        public void ShowHideInteractionPopup() {
+            if (interactables.Count > 0) {
+                uIManager.ShowInteractionTooltip(interactables[interactables.Count - 1]);
+            } else {
+                uIManager.HideInteractionToolTip();
+            }
         }
 
         protected void OnEnable() {
@@ -472,12 +498,18 @@ namespace AnyRPG {
 
             // no crossbar was activated, buttons will perform their native functions
             if (inputManager.KeyBindWasPressed("ACCEPT")) {
-                // allow friendly target when nothing is targeted
-                if (playerManager.UnitController.Target == null) {
-                    GetNextTabTarget(playerManager.UnitController.Target, true, true);
+                if (interactables.Count > 0) {
+                    // range interactables are priority
+                    InterActWithTarget(interactables[interactables.Count - 1]);
                 } else {
-                    InterActWithTarget(playerManager.UnitController.Target);
+                    // allow friendly target when nothing is targeted
+                    if (playerManager.UnitController.Target == null) {
+                        GetNextTabTarget(playerManager.UnitController.Target, true, true);
+                    } else {
+                        InterActWithTarget(playerManager.UnitController.Target);
+                    }
                 }
+
             } else if (controlsManager.DPadRightPressed) {
                 GetNextTabTarget(playerManager.UnitController.Target, true, false);
             } else if (controlsManager.DPadLeftPressed) {
@@ -853,18 +885,6 @@ namespace AnyRPG {
             //return false;
         }
 
-
-
-        /// <summary>
-        /// Remove an interactable from the list of interactables in range
-        /// </summary>
-        /// <param name="_interactable"></param>
-        public void RemoveInteractable(Interactable _interactable) {
-            if (interactables.Contains(_interactable)) {
-                interactables.Remove(_interactable);
-            }
-        }
-
         private void HandleCancelButtonPressed() {
             //Debug.Log("HandleCancelButtonPressed()");
             if (inputManager.KeyBindWasPressed("CANCEL")
@@ -1213,6 +1233,10 @@ namespace AnyRPG {
                 }
                 SystemEventManager.TriggerEvent("OnEndAttacking", eventParam);
             }
+        }
+
+        public void OnSendObjectToPool() {
+            ClearInteractables();
         }
 
     }

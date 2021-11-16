@@ -55,6 +55,10 @@ namespace AnyRPG {
 
         [Header("Interaction Options")]
 
+        [Tooltip("Set this value to override the default 'Interact' option for the gamepad interaction tooltip")]
+        [SerializeField]
+        protected string interactionTooltipText = string.Empty;
+
         [Tooltip("Set this value to prevent direct interaction from the player.  This can be useful for interactables that only need to be activated with control switches.")]
         [SerializeField]
         protected bool notInteractable = false;
@@ -92,6 +96,10 @@ namespace AnyRPG {
         [Tooltip("require no valid interactable options in addition to any preqrequisites. For example, quests on a questgiver, a class changer, and dialogs.")]
         [SerializeField]
         protected bool despawnRequiresNoValidOption = false;
+
+        [Tooltip("Reference to local component controller prefab with nameplate target, speakers, etc")]
+        [SerializeField]
+        protected ComponentController componentController = null;
 
         [Tooltip("Reference to local component controller prefab with nameplate target, speakers, etc")]
         [SerializeField]
@@ -203,10 +211,15 @@ namespace AnyRPG {
 
         public bool IsMouseOverUnit { get => isMouseOverUnit; set => isMouseOverUnit = value; }
         public bool IsMouseOverNameplate { get => isMouseOverNameplate; set => isMouseOverNameplate = value; }
+        public string InteractionTooltipText { get => interactionTooltipText; set => interactionTooltipText = value; }
 
         public override void Configure(SystemGameManager systemGameManager) {
             //Debug.Log(gameObject.name + ".Interactable.Configure()");
             base.Configure(systemGameManager);
+            if (componentController != null) {
+                componentController.Configure(systemGameManager);
+                componentController.SetInteractable(this);
+            }
             if (unitComponentController != null) {
                 unitComponentController.Configure(systemGameManager);
             }
@@ -900,8 +913,8 @@ namespace AnyRPG {
             if (playerManager != null
                 && playerManager.PlayerController != null
                 && playerManager.ActiveUnitController != null) {
-                if (playerManager.PlayerController.MyInteractables.Contains(this)) {
-                    playerManager.PlayerController.MyInteractables.Remove(this);
+                if (playerManager.PlayerController.Interactables.Contains(this)) {
+                    playerManager.PlayerController.Interactables.Remove(this);
                 }
             }
         }

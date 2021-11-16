@@ -110,9 +110,9 @@ namespace AnyRPG {
                     }
                 }
             }
-            if (currentNavigationController != null) {
-                currentNavigationController.UpdateNavigationList();
-            }
+            //if (currentNavigationController != null) {
+                uINavigationControllers[1].UpdateNavigationList();
+            //}
             //FocusCurrentButton();
         }   
 
@@ -168,7 +168,8 @@ namespace AnyRPG {
             }
             dropdown.AddOptions(vendorCollectionNames);
             dropdown.value = dropDownIndex;
-            CreatePages(this.vendorCollections[dropDownIndex].MyVendorItems);
+            // testing - does this get done automatically when the dropdown value is set?
+            //CreatePages(this.vendorCollections[dropDownIndex].MyVendorItems);
         }
 
         private void ClearVendorCollections() {
