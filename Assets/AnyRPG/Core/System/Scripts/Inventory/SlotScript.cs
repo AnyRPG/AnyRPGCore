@@ -19,9 +19,10 @@ namespace AnyRPG {
         //protected InventoryManager inventoryManager = null;
         protected HandScript handScript = null;
         protected PlayerManager playerManager = null;
+        protected ActionBarManager actionBarManager = null;
 
         /// <summary>
-        /// A referencne to the bag that this slot belongs to
+        /// A reference to the bag that this slot belongs to
         /// </summary>
         public BagPanel BagPanel { get; set; }
 
@@ -33,6 +34,7 @@ namespace AnyRPG {
             //inventoryManager = systemGameManager.InventoryManager;
             handScript = systemGameManager.UIManager.HandScript;
             playerManager = systemGameManager.PlayerManager;
+            actionBarManager = systemGameManager.UIManager.ActionBarManager;
         }
 
         public void SetInventorySlot(InventorySlot inventorySlot) {
@@ -204,6 +206,62 @@ namespace AnyRPG {
             base.Accept();
             InteractWithSlot();
         }
+
+        public override void JoystickButton2() {
+            Debug.Log("SlotScript.JoystickButton2()");
+            base.JoystickButton2();
+            
+            if (inventorySlot.Item is IUseable) {
+                actionBarManager.StartUseableAssignment(inventorySlot.Item as IUseable);
+                uIManager.assignToActionBarsWindow.OpenWindow();
+            }
+        }
+
+        public override void Select() {
+            Debug.Log("SlotScript.Select()");
+            base.Select();
+            if (owner != null) {
+                if (inventorySlot.Item == null) {
+                    return;
+                }
+                ShowToolTip(inventorySlot.Item);
+                if (uIManager.inventoryWindow.IsOpen == true && uIManager.bankWindow.IsOpen == true) {
+                    List<Item> moveList = new List<Item>();
+                    if (BagPanel is BankPanel) {
+                        // move to inventory
+                        owner.SetControllerHints("Move To Inventory", "", "", "");
+                    } else if (BagPanel is BagPanel) {
+                        // move to bank
+                        owner.SetControllerHints("Move To Bank", "", "", "");
+                    }
+                    // default case to prevent using an item when the bank window is open but bank was full
+                    return;
+                } else if (uIManager.inventoryWindow.IsOpen == true && uIManager.bankWindow.IsOpen == false && uIManager.vendorWindow.IsOpen) {
+                    // SELL THE ITEM
+                    owner.SetControllerHints("Sell", "", "", "");
+                    // default case to prevent using an item when the vendor window is open
+                    return;
+                }
+
+                if (inventorySlot.Item is Equipment) {
+                    owner.SetControllerHints("Equip", "", "", "");
+                } else if (inventorySlot.Item is IUseable) {
+                    owner.SetControllerHints("Use", "Add To Action Bars", "", "");
+                }
+            }
+
+        }
+
+        public override void DeSelect() {
+            Debug.Log("SlotScript.DeSelect()");
+            base.DeSelect();
+            if (owner != null) {
+                owner.HideControllerHints();
+            }
+            uIManager.HideToolTip();
+        }
+
+
 
         /*
         public void Clear() {

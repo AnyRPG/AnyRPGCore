@@ -46,6 +46,12 @@ namespace AnyRPG {
         [SerializeField]
         protected List<CloseableWindowContents> subPanels = new List<CloseableWindowContents>();
 
+        [Header("Controller Hints")]
+
+        [SerializeField]
+        protected HintBarController hintBarController = null;
+
+
         protected UINavigationController currentNavigationController = null;
 
         protected RectTransform rectTransform;
@@ -413,6 +419,9 @@ namespace AnyRPG {
 
         public virtual void ReceiveOpenWindowNotification() {
             //Debug.Log(gameObject.name + ".CloseableWindowContents.ReceiveOpenWindowNotification()");
+            if (hintBarController != null) {
+                hintBarController.Hide();
+            }
             if (parentPanel == null && addToWindowStack == true) {
                 AddToWindowStack();
             }
@@ -449,20 +458,41 @@ namespace AnyRPG {
 
         public void SetControllerHints(string aOption, string xOption, string yOption, string bOption) {
             Debug.Log(gameObject.name + ".WindowContentController.SetControllerHints()");
+            
+            // first, check for a local hint bar
+            if (hintBarController != null) {
+                hintBarController.SetOptions(aOption, xOption, yOption, bOption);
+                return;
+            }
+
+            // if no local hint bar found, check for a parent panel
             if (parentPanel != null) {
                 parentPanel.SetControllerHints(aOption, xOption, yOption, bOption);
                 return;
             }
+
+            // if no parent panel found, check for a parent window frame
             if (closeableWindow != null) {
                 closeableWindow.SetControllerHints(aOption, xOption, yOption, bOption);
             }
         }
 
         public void HideControllerHints() {
+            Debug.Log(gameObject.name + ".WindowContentController.HideControllerHints()");
+
+            // first, check for a local hint bar
+            if (hintBarController != null) {
+                hintBarController.Hide();
+                return;
+            }
+
+            // if no local hint bar found, check for a parent panel
             if (parentPanel != null) {
                 parentPanel.HideControllerHints();
                 return;
             }
+
+            // if no parent panel found, check for a parent window frame
             if (closeableWindow != null) {
                 closeableWindow.HideControllerHints();
             }

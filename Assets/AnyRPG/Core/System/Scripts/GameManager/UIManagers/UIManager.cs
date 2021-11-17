@@ -142,6 +142,7 @@ namespace AnyRPG {
         public CloseableWindow factionChangeWindow;
         public CloseableWindow classChangeWindow;
         public CloseableWindow specializationChangeWindow;
+        public CloseableWindow assignToActionBarsWindow;
 
         [Header("System Windows")]
 
@@ -312,6 +313,7 @@ namespace AnyRPG {
             factionChangeWindow.Configure(systemGameManager);
             classChangeWindow.Configure(systemGameManager);
             specializationChangeWindow.Configure(systemGameManager);
+            assignToActionBarsWindow.Configure(systemGameManager);
 
             // initialize system windows
             mainMenuWindow.Configure(systemGameManager);
@@ -673,6 +675,7 @@ namespace AnyRPG {
             factionChangeWindow.CloseWindow();
             classChangeWindow.CloseWindow();
             specializationChangeWindow.CloseWindow();
+            assignToActionBarsWindow.CloseWindow();
             dialogWindow.CloseWindow();
         }
 

@@ -23,11 +23,13 @@ namespace AnyRPG {
 
         // game manager references
         protected PlayerManager playerManager = null;
+        protected ActionBarManager actionBarManager = null;
 
         public override void Configure(SystemGameManager systemGameManager) {
             base.Configure(systemGameManager);
 
             playerManager = systemGameManager.PlayerManager;
+            actionBarManager = systemGameManager.UIManager.ActionBarManager;
         }
 
         public void AddAbility(BaseAbility ability) {
@@ -86,6 +88,8 @@ namespace AnyRPG {
         public override void JoystickButton2() {
             Debug.Log("AbilityButton.JoystickButton2()");
             base.JoystickButton2();
+            actionBarManager.StartUseableAssignment(ability);
+            uIManager.assignToActionBarsWindow.OpenWindow();
         }
 
     }

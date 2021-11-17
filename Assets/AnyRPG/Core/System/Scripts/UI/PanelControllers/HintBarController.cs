@@ -12,26 +12,34 @@ namespace AnyRPG {
         [SerializeField]
         private RectTransform rectTransform = null;
 
+        /*
         [SerializeField]
         private GameObject aOption = null;
+        */
 
         [SerializeField]
         private GameObject aImage = null;
 
+        /*
         [SerializeField]
         private GameObject xOption = null;
+        */
 
         [SerializeField]
         private GameObject xImage = null;
 
+        /*
         [SerializeField]
         private GameObject yOption = null;
+        */
 
         [SerializeField]
         private GameObject yImage = null;
 
+        /*
         [SerializeField]
         private GameObject bOption = null;
+        */
 
         [SerializeField]
         private GameObject bImage = null;

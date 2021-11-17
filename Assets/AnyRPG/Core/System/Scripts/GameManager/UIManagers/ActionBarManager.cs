@@ -37,6 +37,8 @@ namespace AnyRPG {
 
         private Coroutine targetRangeRoutine = null;
 
+        protected IUseable assigningUseable = null;
+
         // the action bar target for range checks
         private Interactable target = null;
 
@@ -49,6 +51,7 @@ namespace AnyRPG {
         public List<ActionBarController> ActionBarControllers { get => actionBarControllers; set => actionBarControllers = value; }
         public List<GamepadActionBarController> GamepadActionBarControllers { get => gamepadActionBarControllers; set => gamepadActionBarControllers = value; }
         public SystemBarController SystemBarController { get => systemBarController; }
+        public IUseable AssigningUseable { get => assigningUseable; }
 
         public override void Configure(SystemGameManager systemGameManager) {
             base.Configure(systemGameManager);
@@ -86,6 +89,20 @@ namespace AnyRPG {
             SystemEventManager.StopListening("OnPlayerConnectionDespawn", HandlePlayerConnectionDespawn);
             systemEventManager.OnEquipmentChanged -= HandleEquipmentChange;
             eventSubscriptionsInitialized = false;
+        }
+
+        public void StartUseableAssignment(IUseable useable) {
+            assigningUseable = useable;
+        }
+
+        public void ClearUseableAssignment() {
+            assigningUseable = null;
+        }
+
+        public void AssignUseableByIndex(int index) {
+            int controllerIndex = Mathf.FloorToInt((float)index / (float)gamepadActionBarControllers[0].ActionButtons.Count);
+            int buttonIdex = index % gamepadActionBarControllers[0].ActionButtons.Count;
+            gamepadActionBarControllers[controllerIndex].ActionButtons[buttonIdex].SetUseable(assigningUseable);
         }
 
         public void ProcessInput() {

@@ -53,7 +53,7 @@ namespace AnyRPG {
         private Color highlightImageColor = new Color32(165, 165, 165, 166);
 
         // the color to change the highlight image when not hidden
-        private Color hiddenColor = new Color32(0, 0, 0, 0);
+        protected Color hiddenColor = new Color32(0, 0, 0, 0);
 
         [Tooltip("If false, the highlight image will retain its color when the navigation controller is unfocused")]
         [SerializeField]

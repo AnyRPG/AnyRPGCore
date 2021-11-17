@@ -163,11 +163,11 @@ namespace AnyRPG {
         /// </summary>
         public void UseItem() {
             //Debug.Log("SlotScript.HandleRightClick()");
-            if (Item is IUseable) {
-                (Item as IUseable).Use();
-            } else if (Item is Equipment) {
+            if (Item is Equipment) {
                 (Item as Equipment).Use();
-            }
+            } else if (Item is IUseable) {
+                (Item as IUseable).Use();
+            } 
         }
 
         public bool StackItem(Item item) {
