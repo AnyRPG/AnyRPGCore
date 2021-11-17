@@ -25,6 +25,7 @@ namespace AnyRPG {
         protected InventoryManager inventoryManager = null;
 
         public List<SlotScript> Slots { get => slots; }
+        public Transform ContentArea { get => contentArea; }
 
         public override void SetGameManagerReferences() {
             base.SetGameManagerReferences();

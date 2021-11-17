@@ -224,13 +224,13 @@ namespace AnyRPG {
                 if (inventorySlot.Item == null) {
                     return;
                 }
-                ShowToolTip(inventorySlot.Item);
+                ShowGamepadTooltip();
                 if (uIManager.inventoryWindow.IsOpen == true && uIManager.bankWindow.IsOpen == true) {
                     List<Item> moveList = new List<Item>();
                     if (BagPanel is BankPanel) {
                         // move to inventory
                         owner.SetControllerHints("Move To Inventory", "", "", "");
-                    } else if (BagPanel is BagPanel) {
+                    } else if (BagPanel is InventoryPanel) {
                         // move to bank
                         owner.SetControllerHints("Move To Bank", "", "", "");
                     }
@@ -380,9 +380,38 @@ namespace AnyRPG {
             //Debug.Log(gameObject.name + ".WindowContentController.SetBackGroundColor()");
         }
 
+        
         public override void ShowToolTip(IDescribable describable) {
             uIManager.ShowToolTip(transform.position, describable, "Sell Price: ");
         }
+
+        public void ShowGamepadTooltip() {
+            //Rect panelRect = RectTransformToScreenSpace((BagPanel.ContentArea as RectTransform));
+            Vector3[] WorldCorners = new Vector3[4];
+            (BagPanel.ContentArea as RectTransform).GetWorldCorners(WorldCorners);
+            float xMin = WorldCorners[0].x;
+            float xMax = WorldCorners[2].x;
+            //Debug.Log("panel bounds: xmin: " + xMin + "; xmax: " + xMax);
+            
+            if (Mathf.Abs((Screen.width / 2f) - xMin) < Mathf.Abs((Screen.width / 2f) - xMax)) {
+                // left side is closer to center of the screen
+                uIManager.ShowToolTip(new Vector2(1, 0.5f), new Vector3(xMin, transform.position.y, 0f), inventorySlot.Item, "Sell Price: ");
+            } else {
+                // right side is closer to the center of the screen
+                uIManager.ShowToolTip(new Vector2(0, 0.5f), new Vector3(xMax, transform.position.y, 0f), inventorySlot.Item, "Sell Price: ");
+            }
+            
+            //uIManager.ShowToolTip(transform.position, inventorySlot.Item, "Sell Price: ");
+        }
+
+        public static Rect RectTransformToScreenSpace(RectTransform transform) {
+            Vector2 size = Vector2.Scale(transform.rect.size, transform.lossyScale);
+            float x = transform.position.x + transform.anchoredPosition.x;
+            float y = Screen.height - transform.position.y - transform.anchoredPosition.y;
+
+            return new Rect(x, y, size.x, size.y);
+        }
+
 
         public void OnSendObjectToPool() {
             if (inventorySlot != null) {
