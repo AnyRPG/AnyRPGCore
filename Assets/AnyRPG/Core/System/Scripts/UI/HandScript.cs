@@ -16,12 +16,14 @@ namespace AnyRPG {
         private Vector3 offset = Vector3.zero;
 
         // game manager references
-        UIManager uIManager = null;
-        ActionBarManager actionBarManager = null;
-        InputManager inputManager = null;
+        private UIManager uIManager = null;
+        private ActionBarManager actionBarManager = null;
+        private InputManager inputManager = null;
         //InventoryManager inventoryManager = null;
-        PlayerManager playerManager = null;
-        LogManager logManager = null;
+        private PlayerManager playerManager = null;
+        private LogManager logManager = null;
+        private ControlsManager controlsManager = null;
+
 
         public override void Configure(SystemGameManager systemGameManager) {
             base.Configure(systemGameManager);
@@ -31,12 +33,20 @@ namespace AnyRPG {
             //inventoryManager = systemGameManager.InventoryManager;
             playerManager = systemGameManager.PlayerManager;
             logManager = systemGameManager.LogManager;
+            controlsManager = systemGameManager.ControlsManager;
 
             icon = GetComponent<Image>();
         }
 
+        public void SetPosition(Vector3 position) {
+            icon.transform.position = position;
+        }
+
         // Update is called once per frame
         public void ProcessInput() {
+            if (controlsManager.GamePadModeActive == true) {
+                return;
+            }
             icon.transform.position = Input.mousePosition + offset;
             if (Input.GetMouseButtonDown(0) && !EventSystem.current.IsPointerOverGameObject() && Moveable != null) {
                 if (Moveable is Item) {

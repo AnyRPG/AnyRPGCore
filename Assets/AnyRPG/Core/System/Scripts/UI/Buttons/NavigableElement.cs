@@ -65,6 +65,8 @@ namespace AnyRPG {
 
         protected UINavigationController owner = null;
 
+        protected bool selected = false;
+
         protected RectTransform rectTransform = null;
 
         protected bool navigationControllerFocused = false;
@@ -176,6 +178,7 @@ namespace AnyRPG {
                 HighlightBackground();
             }
             HighlightOutline();
+            selected = true;
         }
 
         public virtual void DeSelect() {
@@ -186,6 +189,7 @@ namespace AnyRPG {
             }
             */
             UnHighlightOutline();
+            selected = false;
         }
 
 

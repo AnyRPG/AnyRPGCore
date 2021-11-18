@@ -988,6 +988,25 @@ namespace AnyRPG {
             ShowToolTip(pivot, position, describable, string.Empty);
         }
 
+        public void ShowGamepadTooltip(RectTransform paneltransform, Transform buttonTransform, IDescribable describable, string sellPriceString) {
+            //Rect panelRect = RectTransformToScreenSpace((BagPanel.ContentArea as RectTransform));
+            Vector3[] WorldCorners = new Vector3[4];
+            paneltransform.GetWorldCorners(WorldCorners);
+            float xMin = WorldCorners[0].x;
+            float xMax = WorldCorners[2].x;
+            //Debug.Log("panel bounds: xmin: " + xMin + "; xmax: " + xMax);
+
+            if (Mathf.Abs((Screen.width / 2f) - xMin) < Mathf.Abs((Screen.width / 2f) - xMax)) {
+                // left side is closer to center of the screen
+                ShowToolTip(new Vector2(1, 0.5f), new Vector3(xMin, buttonTransform.position.y, 0f), describable, sellPriceString);
+            } else {
+                // right side is closer to the center of the screen
+                ShowToolTip(new Vector2(0, 0.5f), new Vector3(xMax, buttonTransform.position.y, 0f), describable, sellPriceString);
+            }
+
+            //uIManager.ShowToolTip(transform.position, inventorySlot.Item, "Sell Price: ");
+        }
+
         /// <summary>
         /// Show the tooltip
         /// </summary>

@@ -476,7 +476,7 @@ namespace AnyRPG {
                         if (newItem != null) {
                             //Debug.Log("RewardButton.CompleteQuest(): newItem is not null, adding to inventory");
                             newItem.DropLevel = playerManager.MyCharacter.CharacterStats.Level;
-                            playerManager.MyCharacter.CharacterInventoryManager.AddItem(newItem);
+                            playerManager.MyCharacter.CharacterInventoryManager.AddItem(newItem, false);
                         }
                     }
                 }

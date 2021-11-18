@@ -17,9 +17,9 @@ namespace AnyRPG {
         protected bool limitReached = false;
 
         // is this reward button currently highlighted
-        protected bool selected = false;
+        protected bool chosen = false;
 
-        public bool Selected { get => selected; set => selected = value; }
+        public bool Chosen { get => chosen; set => chosen = value; }
         public Image HighlightIcon { get => highlightIcon; set => highlightIcon = value; }
         public bool LimitReached { get => limitReached; set => limitReached = value; }
 
@@ -31,7 +31,7 @@ namespace AnyRPG {
             base.UpdateVisual();
 
 
-            if (selected == true) {
+            if (chosen == true) {
                 highlightIcon.sprite = null;
                 highlightIcon.color = new Color32(255, 255, 255, 180);
             } else {
@@ -42,18 +42,18 @@ namespace AnyRPG {
 
         public void Unselect() {
             //Debug.Log("RewardButton: Unselect()");
-            selected = false;
+            chosen = false;
         }
 
         public override void OnPointerClick(PointerEventData eventData) {
             //Debug.Log("RewardButton: OnPointerClick()");
             base.OnPointerClick(eventData);
 
-            if (selected) {
-                selected = false;
+            if (chosen) {
+                chosen = false;
                 //Debug.Log("RewardButton: OnPointerClick() set selected to false");
             } else {
-                selected = true;
+                chosen = true;
                 //Debug.Log("RewardButton: OnPointerClick() set selected to true");
             }
             OnAttempSelect(this);

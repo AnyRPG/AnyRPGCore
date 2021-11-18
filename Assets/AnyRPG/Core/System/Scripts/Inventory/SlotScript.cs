@@ -20,6 +20,7 @@ namespace AnyRPG {
         protected HandScript handScript = null;
         protected PlayerManager playerManager = null;
         protected ActionBarManager actionBarManager = null;
+        protected MessageFeedManager messageFeedManager = null;
 
         /// <summary>
         /// A reference to the bag that this slot belongs to
@@ -28,6 +29,8 @@ namespace AnyRPG {
 
         public InventorySlot InventorySlot { get => inventorySlot; }
 
+        public override int Count => inventorySlot.Count;
+
         public override void Configure(SystemGameManager systemGameManager) {
             base.Configure(systemGameManager);
 
@@ -35,6 +38,7 @@ namespace AnyRPG {
             handScript = systemGameManager.UIManager.HandScript;
             playerManager = systemGameManager.PlayerManager;
             actionBarManager = systemGameManager.UIManager.ActionBarManager;
+            messageFeedManager = systemGameManager.UIManager.MessageFeedManager;
         }
 
         public void SetInventorySlot(InventorySlot inventorySlot) {
@@ -147,22 +151,26 @@ namespace AnyRPG {
                 return;
             }
 
-            // DO SWAPITEMS CALL HERE - OR NOT BECAUSE THAT REQUIRES GETTING A SLOT FIRST
+            // the 
+            if (BagPanel is BankPanel) {
+                List<Item> moveList = new List<Item>();
+                Debug.Log("SlotScript.InteractWithSlot(): interacting with item in bank");
+                foreach (Item item in inventorySlot.Items) {
+                    moveList.Add(item);
+                }
+                foreach (Item item in moveList) {
+                    if (playerManager.MyCharacter.CharacterInventoryManager.AddItem(item, false)) {
+                        inventorySlot.RemoveItem(item);
+                    }
+                }
+                return;
+            }
 
             // send items back and forth between inventory and bank if they are both open
             if (uIManager.inventoryWindow.IsOpen == true && uIManager.bankWindow.IsOpen == true) {
                 List<Item> moveList = new List<Item>();
-                if (BagPanel is BankPanel) {
-                    //Debug.Log("SlotScript.HandleRightClick(): We clicked on something in a bank");
-                    foreach (Item item in inventorySlot.Items) {
-                        moveList.Add(item);
-                    }
-                    foreach (Item item in moveList) {
-                        if (playerManager.MyCharacter.CharacterInventoryManager.AddItem(item)) {
-                            inventorySlot.RemoveItem(item);
-                        }
-                    }
-                } else if (BagPanel is BagPanel) {
+                if (BagPanel is InventoryPanel) {
+                    Debug.Log("SlotScript.InteractWithSlot(): interacting with item in inventory");
                     /*
                     if (inventoryManager.AddItem(MyItem, true)) {
                         Clear();
@@ -177,7 +185,7 @@ namespace AnyRPG {
                         }
                     }
                 } else {
-                    //Debug.Log("SlotScript.HandleRightClick(): We clicked on something in a chest or bag");
+                    Debug.Log("SlotScript.InteractWithSlot(): We clicked on something in a chest or bag");
                 }
                 // default case to prevent using an item when the bank window is open but bank was full
                 return;
@@ -210,47 +218,108 @@ namespace AnyRPG {
         public override void JoystickButton2() {
             Debug.Log("SlotScript.JoystickButton2()");
             base.JoystickButton2();
-            
+
+            if (inventorySlot.Item == null) {
+                return;
+            }
+
+            if (inventorySlot.Item is Bag) {
+                if (BagPanel is BankPanel) {
+                    if ((BagPanel as BankPanel).BagBarController.FreeBagSlots == 0) {
+                        messageFeedManager.WriteMessage("There are no free bank bag slots");
+                        return;
+                    }
+                    playerManager.MyCharacter.CharacterInventoryManager.AddBankBag(inventorySlot.Item as Bag);
+                    inventorySlot.Item.Remove();
+                }
+                if (BagPanel is InventoryPanel) {
+                    if ((BagPanel as InventoryPanel).BagBarController.FreeBagSlots == 0) {
+                        messageFeedManager.WriteMessage("There are no free inventory bag slots");
+                        return;
+                    }
+                    playerManager.MyCharacter.CharacterInventoryManager.AddInventoryBag(inventorySlot.Item as Bag);
+                    inventorySlot.Item.Remove();
+                }
+                return;
+            }
+
             if (inventorySlot.Item is IUseable) {
                 actionBarManager.StartUseableAssignment(inventorySlot.Item as IUseable);
                 uIManager.assignToActionBarsWindow.OpenWindow();
             }
         }
 
+        public override void JoystickButton3() {
+            Debug.Log("SlotScript.JoystickButton3()");
+            base.JoystickButton3();
+
+            if (inventorySlot.Item == null) {
+                return;
+            }
+
+            if (BagPanel is InventoryPanel) {
+                // drop item
+                handScript.SetPosition(transform.position);
+                SendItemToHandScript();
+                uIManager.confirmDestroyMenuWindow.OpenWindow();
+            }
+        }
+
         public override void Select() {
             Debug.Log("SlotScript.Select()");
             base.Select();
+
+            ShowContextInfo();
+        }
+
+        /// <summary>
+        /// show or hide the appropriate tooltip and controller hints
+        /// </summary>
+        private void ShowContextInfo() {
             if (owner != null) {
                 if (inventorySlot.Item == null) {
+                    uIManager.HideToolTip();
+                    owner.HideControllerHints();
                     return;
                 }
                 ShowGamepadTooltip();
-                if (uIManager.inventoryWindow.IsOpen == true && uIManager.bankWindow.IsOpen == true) {
-                    List<Item> moveList = new List<Item>();
-                    if (BagPanel is BankPanel) {
-                        // move to inventory
+
+                if (BagPanel is BankPanel) {
+                    if (inventorySlot.Item is Bag) {
+                        owner.SetControllerHints("Move To Inventory", "Equip", "", "");
+                    } else {
                         owner.SetControllerHints("Move To Inventory", "", "", "");
-                    } else if (BagPanel is InventoryPanel) {
+                    }
+                    return;
+                }
+
+                if (uIManager.inventoryWindow.IsOpen == true && uIManager.bankWindow.IsOpen == true) {
+                    if (BagPanel is InventoryPanel) {
                         // move to bank
-                        owner.SetControllerHints("Move To Bank", "", "", "");
+                        owner.SetControllerHints("Move To Bank", "", "Drop", "");
                     }
                     // default case to prevent using an item when the bank window is open but bank was full
                     return;
                 } else if (uIManager.inventoryWindow.IsOpen == true && uIManager.bankWindow.IsOpen == false && uIManager.vendorWindow.IsOpen) {
                     // SELL THE ITEM
-                    owner.SetControllerHints("Sell", "", "", "");
+                    owner.SetControllerHints("Sell", "", "Drop", "");
                     // default case to prevent using an item when the vendor window is open
                     return;
                 }
 
                 if (inventorySlot.Item is Equipment) {
-                    owner.SetControllerHints("Equip", "", "", "");
+                    owner.SetControllerHints("Equip", "", "Drop", "");
                 } else if (inventorySlot.Item is IUseable) {
-                    owner.SetControllerHints("Use", "Add To Action Bars", "", "");
+                    if (inventorySlot.Item is Bag) {
+                        owner.SetControllerHints("Use", "Equip", "Drop", "");
+                    } else {
+                        owner.SetControllerHints("Use", "Add To Action Bars", "Drop", "");
+                    }
                 }
             }
-
         }
+
+
 
         public override void DeSelect() {
             Debug.Log("SlotScript.DeSelect()");
@@ -358,6 +427,10 @@ namespace AnyRPG {
             SetDescribable(inventorySlot.Item);
             uIManager.UpdateStackSize(this, Count);
             SetBackGroundColor();
+
+            if (selected) {
+                ShowContextInfo();
+            }
         }
 
         public void SetBackGroundColor() {
@@ -387,31 +460,8 @@ namespace AnyRPG {
 
         public void ShowGamepadTooltip() {
             //Rect panelRect = RectTransformToScreenSpace((BagPanel.ContentArea as RectTransform));
-            Vector3[] WorldCorners = new Vector3[4];
-            (BagPanel.ContentArea as RectTransform).GetWorldCorners(WorldCorners);
-            float xMin = WorldCorners[0].x;
-            float xMax = WorldCorners[2].x;
-            //Debug.Log("panel bounds: xmin: " + xMin + "; xmax: " + xMax);
-            
-            if (Mathf.Abs((Screen.width / 2f) - xMin) < Mathf.Abs((Screen.width / 2f) - xMax)) {
-                // left side is closer to center of the screen
-                uIManager.ShowToolTip(new Vector2(1, 0.5f), new Vector3(xMin, transform.position.y, 0f), inventorySlot.Item, "Sell Price: ");
-            } else {
-                // right side is closer to the center of the screen
-                uIManager.ShowToolTip(new Vector2(0, 0.5f), new Vector3(xMax, transform.position.y, 0f), inventorySlot.Item, "Sell Price: ");
-            }
-            
-            //uIManager.ShowToolTip(transform.position, inventorySlot.Item, "Sell Price: ");
+            uIManager.ShowGamepadTooltip((BagPanel.ContentArea as RectTransform), transform, inventorySlot.Item, "Sell Price: ");
         }
-
-        public static Rect RectTransformToScreenSpace(RectTransform transform) {
-            Vector2 size = Vector2.Scale(transform.rect.size, transform.lossyScale);
-            float x = transform.position.x + transform.anchoredPosition.x;
-            float y = Screen.height - transform.position.y - transform.anchoredPosition.y;
-
-            return new Rect(x, y, size.x, size.y);
-        }
-
 
         public void OnSendObjectToPool() {
             if (inventorySlot != null) {

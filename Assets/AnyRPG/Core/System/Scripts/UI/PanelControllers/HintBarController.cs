@@ -69,8 +69,8 @@ namespace AnyRPG {
             if (aOptionString != null && aOptionString != string.Empty) {
                 //aOption.SetActive(true);
                 aImage.SetActive(true);
-                aOptionText.gameObject.SetActive(true);
                 aOptionText.text = aOptionString;
+                aOptionText.gameObject.SetActive(true);
             } else {
                 //aOption.SetActive(false);
                 aImage.SetActive(false);
@@ -79,8 +79,8 @@ namespace AnyRPG {
             if (xOptionString != null && xOptionString != string.Empty) {
                 //xOption.SetActive(true);
                 xImage.SetActive(true);
-                xOptionText.gameObject.SetActive(true);
                 xOptionText.text = xOptionString;
+                xOptionText.gameObject.SetActive(true);
             } else {
                 //xOption.SetActive(false);
                 xImage.SetActive(false);
@@ -89,8 +89,8 @@ namespace AnyRPG {
             if (yOptionString != null && yOptionString != string.Empty) {
                 //yOption.SetActive(true);
                 yImage.SetActive(true);
-                yOptionText.gameObject.SetActive(true);
                 yOptionText.text = yOptionString;
+                yOptionText.gameObject.SetActive(true);
             } else {
                 //yOption.SetActive(false);
                 yImage.SetActive(false);
@@ -99,8 +99,8 @@ namespace AnyRPG {
             if (bOptionString != null && bOptionString != string.Empty) {
                 //bOption.SetActive(true);
                 bImage.SetActive(true);
-                bOptionText.gameObject.SetActive(true);
                 bOptionText.text = bOptionString;
+                bOptionText.gameObject.SetActive(true);
             } else {
                 //bOption.SetActive(false);
                 bImage.SetActive(false);

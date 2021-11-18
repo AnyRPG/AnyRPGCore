@@ -86,7 +86,7 @@ namespace AnyRPG {
             List<RewardButton> returnList = new List<RewardButton>();
             foreach (RewardButton rewardButton in itemRewardIcons) {
                 //Debug.Log("QuestDetailsArea.GetHighlightedItemRewardIcons(): passing over rewardbutton");
-                if (rewardButton.isActiveAndEnabled == true && (rewardButton.Selected == true || quest.MaxItemRewards == 0)) {
+                if (rewardButton.isActiveAndEnabled == true && (rewardButton.Chosen == true || quest.MaxItemRewards == 0)) {
                     //Debug.Log("QuestDetailsArea.GetHighlightedItemRewardIcons(): adding button to the list");
                     returnList.Add(rewardButton);
                 }
@@ -99,7 +99,7 @@ namespace AnyRPG {
             List<RewardButton> returnList = new List<RewardButton>();
             foreach (RewardButton rewardButton in abilityRewardIcons) {
                 //Debug.Log("QuestDetailsArea.GetHighlightedAbilityRewardIcons(): passing over rewardbutton");
-                if (rewardButton.isActiveAndEnabled == true && (rewardButton.Selected == true || quest.MaxAbilityRewards == 0)) {
+                if (rewardButton.isActiveAndEnabled == true && (rewardButton.Chosen == true || quest.MaxAbilityRewards == 0)) {
                     //Debug.Log("QuestDetailsArea.GetHighlightedAbilityRewardIcons(): adding button to the list");
                     returnList.Add(rewardButton);
                 }
@@ -113,7 +113,7 @@ namespace AnyRPG {
             List<RewardButton> returnList = new List<RewardButton>();
             foreach (RewardButton rewardButton in skillRewardIcons) {
                 //Debug.Log("QuestDetailsArea.GetHighlightedSkillRewardIcons(): passing over rewardbutton");
-                if (rewardButton.isActiveAndEnabled == true && (rewardButton.Selected == true || quest.MaxSkillRewards == 0)) {
+                if (rewardButton.isActiveAndEnabled == true && (rewardButton.Chosen == true || quest.MaxSkillRewards == 0)) {
                     //Debug.Log("QuestDetailsArea.GetHighlightedSkillRewardIcons(): adding button to the list");
                     returnList.Add(rewardButton);
                 }
@@ -127,7 +127,7 @@ namespace AnyRPG {
             List<RewardButton> returnList = new List<RewardButton>();
             foreach (RewardButton rewardButton in factionRewardIcons) {
                 //Debug.Log("QuestDetailsArea.GetHighlightedFactionRewardIcons(): passing over rewardbutton");
-                if (rewardButton.isActiveAndEnabled == true && (rewardButton.Selected == true || quest.MaxFactionRewards == 0)) {
+                if (rewardButton.isActiveAndEnabled == true && (rewardButton.Chosen == true || quest.MaxFactionRewards == 0)) {
                     //Debug.Log("QuestDetailsArea.GetHighlightedFactionRewardIcons(): adding button to the list");
                     returnList.Add(rewardButton);
                 }

@@ -35,11 +35,12 @@ namespace AnyRPG {
         public void CancelAction() {
             //Debug.Log("NewGameMenuController.CancelAction()");
             uIManager.confirmDestroyMenuWindow.CloseWindow();
+            handScript.Drop();
         }
 
         public void ConfirmAction() {
             //Debug.Log("NewGameMenuController.ConfirmAction()");
-            handScript.DeleteItem(); ;
+            handScript.DeleteItem();
             uIManager.confirmDestroyMenuWindow.CloseWindow();
         }
 

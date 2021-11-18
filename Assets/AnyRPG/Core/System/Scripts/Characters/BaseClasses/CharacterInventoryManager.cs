@@ -143,42 +143,8 @@ namespace AnyRPG {
             return count;
         }
 
-
-        public bool CanAddBag(bool addToBank = false) {
-            if (addToBank == true) {
-                foreach (BagNode bagNode in bankNodes) {
-                    if (bagNode.Bag == null) {
-                        return true;
-                    }
-                }
-            } else {
-                foreach (BagNode bagNode in bagNodes) {
-                    if (bagNode.Bag == null) {
-                        return true;
-                    }
-                }
-            }
-            return false;
-        }
-
-
-        /*
-        public void CreateDefaultBankBag() {
-            //Debug.Log("InventoryManager.CreateDefaultBankBag()");
-            if (systemConfigurationManager.DefaultBankBagItem == null || systemConfigurationManager.DefaultBankBagItem == string.Empty) {
-                return;
-            }
-            Bag bag = systemItemManager.GetNewResource(systemConfigurationManager.DefaultBankBagItem) as Bag;
-            if (bag == null) {
-                Debug.LogError("InventoryManager.CreateDefaultBankBag() Check SystemConfigurationManager in inspector and set defaultbankbag to valid name");
-                return;
-            }
-            AddBag(bag, true);
-        }
-        */
-
         public void LoadEquippedBagData(List<EquippedBagSaveData> equippedBagSaveData, bool bank) {
-            //Debug.Log("InventoryManager.LoadEquippedBagData()");
+            Debug.Log("InventoryManager.LoadEquippedBagData(" + bank + ")");
             int counter = 0;
             foreach (EquippedBagSaveData saveData in equippedBagSaveData) {
                 if (saveData.slotCount > 0) {
@@ -195,13 +161,26 @@ namespace AnyRPG {
             }
         }
 
-        public List<InventorySlot> AddSlots(int numSlots) {
+        public List<InventorySlot> AddInventorySlots(int numSlots) {
+            Debug.Log("CharacterInventoryManager.AddInventorySlots(" + numSlots + ")");
             List<InventorySlot> returnList = new List<InventorySlot>();
             for (int i = 0; i < numSlots; i++) {
                 InventorySlot inventorySlot = new InventorySlot(systemGameManager);
                 inventorySlots.Add(inventorySlot);
                 returnList.Add(inventorySlot);
                 OnAddInventorySlot(inventorySlot);
+            }
+            return returnList;
+        }
+
+        public List<InventorySlot> AddBankSlots(int numSlots) {
+            Debug.Log("CharacterInventoryManager.AddBankSlots(" + numSlots + ")");
+            List<InventorySlot> returnList = new List<InventorySlot>();
+            for (int i = 0; i < numSlots; i++) {
+                InventorySlot inventorySlot = new InventorySlot(systemGameManager);
+                bankSlots.Add(inventorySlot);
+                returnList.Add(inventorySlot);
+                OnAddBankSlot(inventorySlot);
             }
             return returnList;
         }
@@ -250,7 +229,7 @@ namespace AnyRPG {
                 return;
             }
             for (int i = 0; i < systemConfigurationManager.MaxInventoryBags; i++) {
-                BagNode bagNode = new BagNode(this);
+                BagNode bagNode = new BagNode(this, false);
                 bagNodes.Add(bagNode);
                 OnAddInventoryBagNode(bagNode);
             }
@@ -263,28 +242,29 @@ namespace AnyRPG {
                 return;
             }
             for (int i = 0; i < systemConfigurationManager.MaxBankBags; i++) {
-                BagNode bagNode = new BagNode(this);
+                BagNode bagNode = new BagNode(this, true);
                 bankNodes.Add(bagNode);
                 OnAddBankBagNode(bagNode);
             }
         }
         
 
-        public void AddBag(Bag bag, bool addBank = false) {
-            //Debug.Log("InventoryManager.AddBag(Bag, " + addBank + ")");
-            if (addBank == true) {
-                foreach (BagNode bagNode in bankNodes) {
-                    if (bagNode.Bag == null) {
-                        PopulateBagNode(bagNode, bag);
-                        break;
-                    }
+        public void AddInventoryBag(Bag bag) {
+            Debug.Log("InventoryManager.AddInventoryBag(" + bag.DisplayName + ")");
+            foreach (BagNode bagNode in bagNodes) {
+                if (bagNode.Bag == null) {
+                    PopulateBagNode(bagNode, bag);
+                    break;
                 }
-            } else {
-                foreach (BagNode bagNode in bagNodes) {
-                    if (bagNode.Bag == null) {
-                        PopulateBagNode(bagNode, bag);
-                        break;
-                    }
+            }
+        }
+
+        public void AddBankBag(Bag bag) {
+            Debug.Log("InventoryManager.AddBankBag(" + bag.DisplayName + ")");
+            foreach (BagNode bagNode in bankNodes) {
+                if (bagNode.Bag == null) {
+                    PopulateBagNode(bagNode, bag);
+                    break;
                 }
             }
         }
@@ -311,40 +291,47 @@ namespace AnyRPG {
         /// </summary>
         /// <param name="bag"></param>
         public void RemoveBag(Bag bag, bool clearOnly = false) {
-            Debug.Log("InventoryManager.RemoveBag()");
+            Debug.Log("InventoryManager.RemoveBag(" + bag.DisplayName + ", " + clearOnly + ")");
             foreach (BagNode bagNode in bagNodes) {
                 if (bagNode.Bag == bag) {
-                    // give the old bagNode a temp location so we can add its items back to the inventory
-                    //BagPanel tmpBagPanel = bagNode.BagPanel;
-
-                    // make item list before nulling the bag, because that will clear the pane slots
-                    List<Item> itemsToAddBack = new List<Item>();
-                    foreach (Item item in bagNode.GetItems()) {
-                        itemsToAddBack.Add(item);
-                    }
-
-                    // null the bag so the items won't get added back, as we are trying to empty it so we can remove it
-                    bagNode.RemoveBag();
-
-                    if (!clearOnly) {
-                        // bag is now gone, can add items back to inventory and they won't go back in that bag
-                        foreach (Item item in itemsToAddBack) {
-                            AddItem(item);
-                        }
-                    }
-
-                    // remove references the bag held to the node it belonged to and the panel it spawned
-                    if (bag != null) {
-                        if (bag.BagNode != null) {
-                            bag.BagNode = null;
-                        }
-                    }
-
+                    ProcessRemovebag(bagNode, bag, true, clearOnly);
                     return;
                 }
             }
-            //Debug.Log("InventoryManager.RemoveBag(): Did not find matching bag in bagNodes");
-            //MyBagNode.MyBagButton = null;
+            foreach (BagNode bagNode in bankNodes) {
+                if (bagNode.Bag == bag) {
+                    ProcessRemovebag(bagNode, bag, true, clearOnly);
+                    return;
+                }
+            }
+        }
+
+        public void ProcessRemovebag(BagNode bagNode, Bag bag, bool bankNode, bool clearOnly) {
+            // give the old bagNode a temp location so we can add its items back to the inventory
+            //BagPanel tmpBagPanel = bagNode.BagPanel;
+
+            // make item list before nulling the bag, because that will clear the pane slots
+            List<Item> itemsToAddBack = new List<Item>();
+            foreach (Item item in bagNode.GetItems()) {
+                itemsToAddBack.Add(item);
+            }
+
+            // null the bag so the items won't get added back, as we are trying to empty it so we can remove it
+            bagNode.RemoveBag();
+
+            if (!clearOnly) {
+                // bag is now gone, can add items back to inventory and they won't go back in that bag
+                foreach (Item item in itemsToAddBack) {
+                    AddItem(item, bankNode);
+                }
+            }
+
+            // remove references the bag held to the node it belonged to and the panel it spawned
+            if (bag != null) {
+                if (bag.BagNode != null) {
+                    bag.BagNode = null;
+                }
+            }
 
         }
 
@@ -361,10 +348,10 @@ namespace AnyRPG {
                 newBag.Use();
                 foreach (Item item in bagItems) {
                     if (item != newBag) {
-                        AddItem(item);
+                        AddItem(item, newBag.BagNode.IsBankNode);
                     }
                 }
-                AddItem(oldBag);
+                AddItem(oldBag, oldBag.BagNode.IsBankNode);
                 handScript.Drop();
                 fromSlot = null;
             }
@@ -374,8 +361,8 @@ namespace AnyRPG {
         /// Adds an item to the inventory
         /// </summary>
         /// <param name="item"></param>
-        public bool AddItem(Item item, bool addToBank = false) {
-            //Debug.Log("InventoryManager.AddItem(" + (item == null ? "null" : item.DisplayName) + ", " + addToBank + ")");
+        public bool AddItem(Item item, bool addToBank) {
+            Debug.Log("CharacterInventoryManager.AddItem(" + (item == null ? "null" : item.DisplayName) + ", " + addToBank + ")");
             if (item == null) {
                 return false;
             }
@@ -392,18 +379,19 @@ namespace AnyRPG {
             return PlaceInEmpty(item, addToBank);
         }
 
-        public bool AddItem(Item item, int slotIndex) {
+        public bool AddInventoryItem(Item item, int slotIndex) {
             if (inventorySlots.Count > slotIndex) {
                 return inventorySlots[slotIndex].AddItem(item);
             }
-            return AddItem(item);
+            return AddItem(item, false);
         }
 
         public bool AddBankItem(Item item, int slotIndex) {
+            Debug.Log("CharacterInventoryManager.AddBankItem(" + item.DisplayName + ", " + slotIndex + ")");
             if (bankSlots.Count > slotIndex) {
                 return bankSlots[slotIndex].AddItem(item);
             }
-            return AddItem(item);
+            return AddItem(item, true);
         }
 
         public void RemoveItem(Item item) {
@@ -415,12 +403,13 @@ namespace AnyRPG {
             }
         }
 
-        private bool PlaceInEmpty(Item item, bool addToBank = false) {
+        private bool PlaceInEmpty(Item item, bool addToBank) {
+            Debug.Log("CharacterInventoryManager.PlaceInEmpty(" + item.name + ", " + addToBank + "): checking slot");
             if (addToBank == true) {
                 foreach (InventorySlot inventorySlot in bankSlots) {
-                    //Debug.Log("BagPanel.AddItem(" + item.name + "): checking slot");
+                    //Debug.Log("CharacterInventoryManager.PlaceInEmpty(" + item.name + "): checking slot");
                     if (inventorySlot.IsEmpty) {
-                        //Debug.Log("BagPanel.AddItem(" + item.name + "): checking slot: its empty.  adding item");
+                        //Debug.Log("CharacterInventoryManager.PlaceInEmpty(" + item.name + "): checking slot: its empty.  adding item");
                         inventorySlot.AddItem(item);
                         OnItemCountChanged(item);
                         return true;
@@ -444,8 +433,8 @@ namespace AnyRPG {
             return false;
         }
 
-        private bool PlaceInStack(Item item, bool addToBank = false) {
-            if (addToBank) {
+        private bool PlaceInStack(Item item, bool addToBank) {
+            if (addToBank == false) {
                 foreach (InventorySlot inventorySlot in inventorySlots) {
                     if (inventorySlot.StackItem(item)) {
                         OnItemCountChanged(item);

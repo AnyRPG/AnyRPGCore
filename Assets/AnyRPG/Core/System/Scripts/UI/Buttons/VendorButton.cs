@@ -152,7 +152,7 @@ namespace AnyRPG {
                     //Debug.Log("Instantiated an item with id: " + tmpItem.GetInstanceID().ToString());
                 }
 
-                if (playerManager.MyCharacter.CharacterInventoryManager.AddItem(tmpItem)) {
+                if (playerManager.MyCharacter.CharacterInventoryManager.AddItem(tmpItem, false)) {
                     if (buyBackButton == false) {
                         tmpItem.DropLevel = playerManager.MyCharacter.CharacterStats.Level;
                     }
@@ -215,6 +215,22 @@ namespace AnyRPG {
                     // if there is no longer anything in this slot, re-create the pages so there is no empty slot in the middle of the page
                     (uIManager.vendorWindow.CloseableWindowContents as VendorUI).RefreshPage();
                 }
+            }
+        }
+
+        public override void Select() {
+            Debug.Log("VendorButton.Select()");
+            base.Select();
+            if (owner != null) {
+                owner.SetControllerHints("Purchase", "", "", "");
+            }
+        }
+
+        public override void DeSelect() {
+            Debug.Log("AbilityButton.DeSelect()");
+            base.DeSelect();
+            if (owner != null) {
+                owner.HideControllerHints();
             }
         }
 

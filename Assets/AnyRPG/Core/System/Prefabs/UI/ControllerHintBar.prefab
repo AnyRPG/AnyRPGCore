@@ -657,14 +657,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 669b28b4cd236dc44b220aac6635d49b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  rectTransform: {fileID: 4493734298604036986}
-  aOption: {fileID: 7559574832255785734}
+  rectTransform: {fileID: 6739255763216103671}
   aImage: {fileID: 2183370753853298870}
-  xOption: {fileID: 139078076925947934}
   xImage: {fileID: 490149038400655058}
-  yOption: {fileID: 3807816145511794304}
   yImage: {fileID: 3229429316818806642}
-  bOption: {fileID: 1983366491483109091}
   bImage: {fileID: 5879587689012867087}
   aOptionText: {fileID: 8272204001135125552}
   xOptionText: {fileID: 6685351289348853457}

@@ -211,7 +211,7 @@ namespace AnyRPG {
 
         protected override bool ProcessTakeLoot() {
             base.ProcessTakeLoot();
-            return playerManager.MyCharacter.CharacterInventoryManager.AddItem(Item);
+            return playerManager.MyCharacter.CharacterInventoryManager.AddItem(Item, false);
         }
 
         public override void Remove() {

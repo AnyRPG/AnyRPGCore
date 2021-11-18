@@ -130,7 +130,7 @@ namespace AnyRPG {
             if (GetMaxCraftAmount(craftingQueue[0]) > 0) {
                 Item tmpItem = systemItemManager.GetNewResource(craftingQueue[0].Output.DisplayName);
                 tmpItem.DropLevel = playerManager.MyCharacter.CharacterStats.Level;
-                if (playerManager.MyCharacter.CharacterInventoryManager.AddItem(tmpItem)) {
+                if (playerManager.MyCharacter.CharacterInventoryManager.AddItem(tmpItem, false)) {
                     //Debug.Log("CraftingUI.CraftNextItem(): got an item successfully");
                     foreach (CraftingMaterial craftingMaterial in craftingQueue[0].CraftingMaterials) {
                         //Debug.Log("CraftingUI.CraftNextItem(): looping through crafting materials");

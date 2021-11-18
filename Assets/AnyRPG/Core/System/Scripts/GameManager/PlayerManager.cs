@@ -537,8 +537,8 @@ namespace AnyRPG {
             activeCharacter.CharacterInventoryManager.OnAddBankBagNode += HandleAddBankBagNode;
             activeCharacter.CharacterInventoryManager.OnAddInventorySlot += HandleAddInventorySlot;
             activeCharacter.CharacterInventoryManager.OnAddBankSlot += HandleAddBankSlot;
-            activeCharacter.CharacterInventoryManager.OnRemoveInventorySlot += HandleAddInventorySlot;
-            activeCharacter.CharacterInventoryManager.OnRemoveBankSlot += HandleAddBankSlot;
+            activeCharacter.CharacterInventoryManager.OnRemoveInventorySlot += HandleRemoveInventorySlot;
+            activeCharacter.CharacterInventoryManager.OnRemoveBankSlot += HandleRemoveBankSlot;
         }
 
         public void UnsubscribeFromPlayerInventoryEvents() {
@@ -546,8 +546,8 @@ namespace AnyRPG {
             activeCharacter.CharacterInventoryManager.OnAddBankBagNode -= HandleAddBankBagNode;
             activeCharacter.CharacterInventoryManager.OnAddInventorySlot -= HandleAddInventorySlot;
             activeCharacter.CharacterInventoryManager.OnAddBankSlot -= HandleAddBankSlot;
-            activeCharacter.CharacterInventoryManager.OnRemoveInventorySlot -= HandleAddInventorySlot;
-            activeCharacter.CharacterInventoryManager.OnRemoveBankSlot -= HandleAddBankSlot;
+            activeCharacter.CharacterInventoryManager.OnRemoveInventorySlot -= HandleRemoveInventorySlot;
+            activeCharacter.CharacterInventoryManager.OnRemoveBankSlot -= HandleRemoveBankSlot;
         }
 
         public void SubscribeToPlayerEvents() {
@@ -729,9 +729,9 @@ namespace AnyRPG {
         public void HandleEquipmentChanged(Equipment newItem, Equipment oldItem, int slotIndex) {
             if (PlayerUnitSpawned) {
                 if (slotIndex != -1) {
-                    MyCharacter.CharacterInventoryManager.AddItem(oldItem, slotIndex);
+                    MyCharacter.CharacterInventoryManager.AddInventoryItem(oldItem, slotIndex);
                 } else if (oldItem != null) {
-                    MyCharacter.CharacterInventoryManager.AddItem(oldItem);
+                    MyCharacter.CharacterInventoryManager.AddItem(oldItem, false);
                 }
             }
             systemEventManager.NotifyOnEquipmentChanged(newItem, oldItem);

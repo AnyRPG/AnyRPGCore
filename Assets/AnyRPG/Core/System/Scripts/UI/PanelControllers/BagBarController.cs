@@ -23,7 +23,17 @@ namespace AnyRPG {
         // game manager references
         private ObjectPooler objectPooler = null;
 
-
+        public int FreeBagSlots {
+            get {
+                int freeBagSlots = 0;
+                for (int i = 0; i < bagButtonCount; i++) {
+                    if (bagButtons[i].BagNode.Bag == null) {
+                        freeBagSlots++;
+                    }
+                }
+                return freeBagSlots;
+            }
+        }
         public List<BagButton> MyBagButtons { get => bagButtons; set => bagButtons = value; }
 
         public override void Configure(SystemGameManager systemGameManager) {
@@ -41,6 +51,12 @@ namespace AnyRPG {
             base.SetGameManagerReferences();
 
             objectPooler = systemGameManager.ObjectPooler;
+        }
+
+        public void SetBagPanel(BagPanel bagPanel) {
+            foreach (BagButton bagButton in bagButtons) {
+                bagButton.SetBagpanel(bagPanel);
+            }
         }
 
 

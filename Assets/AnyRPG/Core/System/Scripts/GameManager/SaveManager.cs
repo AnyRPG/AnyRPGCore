@@ -434,6 +434,7 @@ namespace AnyRPG {
             SaveBehaviorData(anyRPGSaveData);
             SaveActionBarData(anyRPGSaveData);
             SaveInventorySlotData(anyRPGSaveData);
+            SaveBankSlotData(anyRPGSaveData);
             SaveEquippedBagData(anyRPGSaveData);
             SaveEquippedBankBagData(anyRPGSaveData);
             SaveAbilityData(anyRPGSaveData);
@@ -703,6 +704,7 @@ namespace AnyRPG {
         }
 
         public void SaveBankSlotData(AnyRPGSaveData anyRPGSaveData) {
+            Debug.Log("Savemanager.SaveBankSlotData()");
             foreach (InventorySlot inventorySlot in playerManager.MyCharacter.CharacterInventoryManager.BankSlots) {
                 anyRPGSaveData.bankSlotSaveData.Add(GetSlotSaveData(inventorySlot));
             }
@@ -920,7 +922,7 @@ namespace AnyRPG {
         }
 
         public void LoadBankSlotData(AnyRPGSaveData anyRPGSaveData) {
-            //Debug.Log("Savemanager.LoadInventorySlotData()");
+            Debug.Log("Savemanager.LoadBankSlotData()");
             int counter = 0;
             foreach (InventorySlotSaveData inventorySlotSaveData in anyRPGSaveData.bankSlotSaveData) {
                 LoadSlotData(inventorySlotSaveData, counter, true);
@@ -952,7 +954,7 @@ namespace AnyRPG {
                         if (bank == true) {
                             playerManager.MyCharacter.CharacterInventoryManager.AddBankItem(newItem, counter);
                         } else {
-                            playerManager.MyCharacter.CharacterInventoryManager.AddItem(newItem, counter);
+                            playerManager.MyCharacter.CharacterInventoryManager.AddInventoryItem(newItem, counter);
                         }
                     }
                 }
@@ -1174,7 +1176,7 @@ namespace AnyRPG {
                     Debug.LogError("InventoryManager.CreateDefaultBankBag(): CHECK INVENTORYMANAGER IN INSPECTOR AND SET DEFAULTBACKPACK TO VALID NAME");
                     return;
                 }
-                bag.AddToInventoryManager();
+                playerManager.MyCharacter.CharacterInventoryManager.AddInventoryBag(bag);
             }
         }
 
