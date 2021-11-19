@@ -42,7 +42,7 @@ namespace AnyRPG {
         private QuestLog questLog = null;
         private ObjectPooler objectPooler = null;
 
-        public QuestScript MySelectedQuestScript { get => selectedQuestScript; set => selectedQuestScript = value; }
+        public QuestScript SelectedQuestScript { get => selectedQuestScript; set => selectedQuestScript = value; }
 
         public override void Configure(SystemGameManager systemGameManager) {
             base.Configure(systemGameManager);
@@ -85,6 +85,7 @@ namespace AnyRPG {
                 qs.Configure(systemGameManager);
                 qs.SetQuest(this, quest);
                 questScripts.Add(qs);
+                uINavigationControllers[0].AddActiveButton(qs);
                 if (firstAvailableQuest == null) {
                     firstAvailableQuest = qs;
                 }
@@ -92,9 +93,9 @@ namespace AnyRPG {
 
             if (selectedQuestScript == null && firstAvailableQuest != null) {
                 firstAvailableQuest.Select();
-            } else if (firstAvailableQuest == null) {
-
+                uINavigationControllers[0].FocusFirstButton();
             }
+            SetNavigationController(uINavigationControllers[0]);
 
             UpdateQuestCount();
         }
@@ -130,23 +131,25 @@ namespace AnyRPG {
         public void DeselectQuestScripts(Quest newQuest) {
             //Debug.Log("QuestLogUI.DeselectQuestScripts()");
             foreach (QuestScript questScript in questScripts) {
-                if (MySelectedQuestScript == null) {
+                if (SelectedQuestScript == null) {
                     // we came from questtracker UI
                     if (SystemDataFactory.MatchResource(newQuest.DisplayName, questScript.Quest.DisplayName)) {
                         questScript.RawSelect();
-                        MySelectedQuestScript = questScript;
+                        SelectedQuestScript = questScript;
                     } else {
                         questScript.DeSelect();
                     }
                 } else {
                     if (SystemDataFactory.MatchResource(newQuest.DisplayName, questScript.Quest.DisplayName)) {
                         questScript.RawSelect();
-                        MySelectedQuestScript = questScript;
+                        SelectedQuestScript = questScript;
                     } else {
                         questScript.DeSelect();
                     }
                 }
             }
+
+            uINavigationControllers[0].UnHightlightButtons(SelectedQuestScript);
 
             // since questlog can be 
         }
@@ -168,7 +171,7 @@ namespace AnyRPG {
             //Debug.Log("QuestLogUI.OnCloseWindow()");
             base.ReceiveClosedWindowNotification();
             ClearQuests();
-            MySelectedQuestScript = null;
+            SelectedQuestScript = null;
         }
 
         public override void ReceiveOpenWindowNotification() {
@@ -191,10 +194,11 @@ namespace AnyRPG {
             }
             questScripts.Clear();
             selectedQuestScript = null;
+            uINavigationControllers[0].ClearActiveButtons();
         }
 
         public void AbandonQuest() {
-            questLog.AbandonQuest(MySelectedQuestScript.Quest);
+            questLog.AbandonQuest(SelectedQuestScript.Quest);
             ShowQuestsCommon();
         }
     }

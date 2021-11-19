@@ -500,10 +500,13 @@ MonoBehaviour:
   coloredUIElements: []
   addToWindowStack: 1
   userCloseable: 1
-  focusFirstButtonOnOpen: 1
+  focusFirstButtonOnOpen: 0
   focusActiveSubPanel: 0
-  uINavigationControllers: []
+  uINavigationControllers:
+  - {fileID: 4261424334714345851}
+  - {fileID: 5520874411801079506}
   subPanels: []
+  hintBarController: {fileID: 0}
   abandonButton: {fileID: 4938841471383006901}
   questPrefab: {fileID: 5181954922283900111, guid: 65fba604edbf69e439d3466a57090673,
     type: 3}
@@ -598,6 +601,7 @@ GameObject:
   - component: {fileID: 3502122887853419046}
   - component: {fileID: 3502122887853419065}
   - component: {fileID: 3502122887853419064}
+  - component: {fileID: 5520874411801079506}
   m_Layer: 5
   m_Name: ActionButtons
   m_TagString: Untagged
@@ -664,6 +668,33 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!114 &5520874411801079506
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3502122887853419045}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8995f41cb132f3148a9912f89e49421b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  leftPanel: {fileID: 0}
+  leftControllers: []
+  rightPanel: {fileID: 0}
+  rightControllers: []
+  upPanel: {fileID: 0}
+  upControllers:
+  - {fileID: 4261424334714345851}
+  downPanel: {fileID: 0}
+  downControllers: []
+  acceptController: {fileID: 0}
+  scrollRect: {fileID: 0}
+  updateActiveListOnOpen: 1
+  pruneInactiveElements: 1
+  navigableButtons:
+  - {fileID: 4938841471383006901}
 --- !u!1 &3502122887858942384
 GameObject:
   m_ObjectHideFlags: 0
@@ -1706,6 +1737,7 @@ GameObject:
   - component: {fileID: 3502122889187045345}
   - component: {fileID: 3502122889187045344}
   - component: {fileID: 3502122889187045347}
+  - component: {fileID: 4261424334714345851}
   m_Layer: 5
   m_Name: LeftPane
   m_TagString: Untagged
@@ -1802,6 +1834,31 @@ MonoBehaviour:
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls: []
+--- !u!114 &4261424334714345851
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3502122889187045356}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 03715bb91f4a7fa47b3d93745fb1b35e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  leftPanel: {fileID: 0}
+  leftControllers: []
+  rightPanel: {fileID: 0}
+  rightControllers: []
+  upPanel: {fileID: 0}
+  upControllers: []
+  downPanel: {fileID: 0}
+  downControllers: []
+  acceptController: {fileID: 5520874411801079506}
+  scrollRect: {fileID: 0}
+  updateActiveListOnOpen: 1
+  pruneInactiveElements: 1
+  navigableButtons: []
 --- !u!1 &3502122889286039357
 GameObject:
   m_ObjectHideFlags: 0

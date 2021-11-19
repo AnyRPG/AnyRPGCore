@@ -199,6 +199,13 @@ namespace AnyRPG {
                 return;
             }
 
+
+            // priority open - any other current interactable third, but only if there is one
+            if (currentInteractables.Count > 1 || suppressAutoInteract == true || uINavigationControllers[0].ActiveNavigableButtonCount > 1) {
+                //Debug.Log("InteractionPanelUI.Interact(): currentInteractables count: " + currentInteractables.Count);
+                return;
+            }
+
             // priority open - completed quest first
             foreach (InteractionPanelQuestScript questScript in questScripts) {
                 //Debug.Log("InteractionPanelUI.ShowInteractablesCommon(" + interactable.name + "): Checking questScript for complete quest");
@@ -221,11 +228,6 @@ namespace AnyRPG {
                 }
             }
 
-            // priority open - any other current interactable third, but only if there is one
-            if (currentInteractables.Count > 1 || suppressAutoInteract == true) {
-                //Debug.Log("InteractionPanelUI.Interact(): currentInteractables count: " + currentInteractables.Count);
-                return;
-            }
             foreach (InteractionPanelScript interactionPanelScript in interactionPanelScripts) {
                 //Debug.Log("InteractionPanelUI.ShowInteractablesCommon(" + interactable.name + "): Checking interaction Panel Script");
                 if (interactionPanelScript.InteractableOption.CanInteract() && interactionPanelScript.InteractableOption.GetCurrentOptionCount() == 1) {

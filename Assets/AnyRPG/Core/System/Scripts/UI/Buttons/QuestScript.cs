@@ -14,7 +14,7 @@ namespace AnyRPG {
 
         protected Quest quest = null;
 
-        protected bool markedComplete = false;
+        //protected bool markedComplete = false;
 
         protected QuestLogUI questLogUI = null;
 
@@ -33,7 +33,7 @@ namespace AnyRPG {
             this.questLogUI = questLogUI;
             if (newQuest != null) {
                 quest = newQuest;
-                Text.text = quest.DisplayName;
+                Text.text = "[" + quest.ExperienceLevel + "] " + quest.DisplayName;
                 IsComplete();
             }
         }
@@ -43,7 +43,7 @@ namespace AnyRPG {
 
             RawSelect();
 
-            questLogUI.MySelectedQuestScript = this;
+            questLogUI.SelectedQuestScript = this;
 
             questLogUI.ShowDescription(Quest);
         }
@@ -56,13 +56,15 @@ namespace AnyRPG {
         public void IsComplete() {
             //Debug.Log("Checking questscript iscomplete on myquest: " + MyQuest.MyTitle);
 
-            if (quest.IsComplete && !markedComplete) {
-                markedComplete = true;
+            //if (quest.IsComplete && !markedComplete) {
+            if (quest.IsComplete) {
+                //markedComplete = true;
                 //Debug.Log("the quest is complete");
-                Text.text = "[" + quest.ExperienceLevel + "] " + quest.DisplayName + " (Complete)";
+                //Text.text = "[" + quest.ExperienceLevel + "] " + quest.DisplayName + " (Complete)";
+                Text.text += " (Complete)";
             } else if (!quest.IsComplete) {
-                markedComplete = false;
-                Text.text = "[" + quest.ExperienceLevel + "] " + quest.DisplayName;
+                //markedComplete = false;
+                //Text.text = "[" + quest.ExperienceLevel + "] " + quest.DisplayName;
             }
             Text.color = LevelEquations.GetTargetColor(playerManager.MyCharacter.CharacterStats.Level, quest.ExperienceLevel);
         }

@@ -36,8 +36,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 59, y: 0}
-  m_SizeDelta: {x: 98, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &5675483731353231781
 CanvasRenderer:
@@ -345,19 +345,30 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 401ccaa1b851a6340a3d9fb40975a654, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  text: {fileID: 2626507539219597791}
+  outlineImage: {fileID: 6126983531033012425}
+  highlightOutlineColor: {r: 0.64705884, g: 0.64705884, b: 0.64705884, a: 0.6509804}
   highlightImage: {fileID: 6126983531033012425}
+  highlightBackgroundOnSelect: 0
+  highlightBackgroundOnInteract: 1
+  unHighlightBackgroundOnUnFocus: 1
+  unHighlightBackgroundOnLeave: 1
+  highlightImageColor: {r: 0.64705884, g: 0.64705884, b: 0.64705884, a: 0.6509804}
+  useUnfocusedColor: 1
+  unFocusedColor: {r: 1, g: 1, b: 1, a: 0.15294118}
+  text: {fileID: 2626507539219597791}
+  ignoreSystemImageTint: 1
   highlightButton: {fileID: 2375841951747209864}
-  hideImageWhenInactive: 1
-  tintImage: 1
-  useSystemImageTintColor: 1
-  useHighlightColorOnButton: 0
-  highlightColor: {r: 0, g: 0, b: 0, a: 0}
-  normalColor: {r: 0.6392157, g: 0.6392157, b: 0.6392157, a: 0.10980392}
-  highlightedColor: {r: 0.64705884, g: 0.64705884, b: 0.64705884, a: 0.40392157}
-  pressedColor: {r: 0.47058824, g: 0.47058824, b: 0.47058824, a: 0.2901961}
-  selectedColor: {r: 0.64705884, g: 0.64705884, b: 0.64705884, a: 0.40392157}
-  disabledColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 0.5019608}
+  selectedButtonColor: {r: 1, g: 1, b: 1, a: 1}
+  overrideNormalColor: 1
+  normalColor: {r: 1, g: 1, b: 1, a: 1}
+  overrideHighlightedColor: 1
+  highlightedColor: {r: 1, g: 1, b: 1, a: 1}
+  overridePressedColor: 1
+  pressedColor: {r: 1, g: 1, b: 1, a: 1}
+  overrideSelectedColor: 1
+  selectedColor: {r: 1, g: 1, b: 1, a: 1}
+  overrideDisabledColor: 1
+  disabledColor: {r: 1, g: 1, b: 1, a: 1}
   CapitalizeText: 0
 --- !u!114 &4726253106125479915
 MonoBehaviour:
@@ -387,7 +398,7 @@ GameObject:
   - component: {fileID: 2087540925415195840}
   - component: {fileID: 4559827493211277235}
   m_Layer: 5
-  m_Name: HighlightLine
+  m_Name: Outline
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -440,8 +451,8 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: b7facaf16fa121a4bae5604e0be72d81, type: 3}
-  m_Type: 0
+  m_Sprite: {fileID: 21300000, guid: 8da48cffb618593408a2a254b1a9b78c, type: 3}
+  m_Type: 1
   m_PreserveAspect: 0
   m_FillCenter: 1
   m_FillMethod: 4

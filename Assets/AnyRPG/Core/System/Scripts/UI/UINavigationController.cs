@@ -97,6 +97,7 @@ namespace AnyRPG {
 
         public int CurrentIndex { get => currentIndex; }
         public List<NavigableElement> NavigableButtons { get => navigableButtons; }
+        public int ActiveNavigableButtonCount { get => activeNavigableButtons.Count; }
 
         public override void Configure(SystemGameManager systemGameManager) {
             base.Configure(systemGameManager);
