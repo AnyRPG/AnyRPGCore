@@ -59,7 +59,7 @@ namespace AnyRPG {
             base.Configure(systemGameManager);
 
             foreach (CharacterButton characterButton in characterButtons) {
-                characterButton.Configure(systemGameManager);
+                //characterButton.Configure(systemGameManager);
                 characterButton.EmptyBackGroundColor = emptySlotColor;
                 characterButton.FullBackGroundColor = fullSlotColor;
                 characterButton.CharacterPanel = this;
