@@ -11,11 +11,16 @@ namespace AnyRPG {
         private List<CloseableWindowContents> windowStack = new List<CloseableWindowContents>();
         //private List<UINavigationController> navigationStack = new List<UINavigationController>();
 
+        private bool navigatingInterface = false;
+        private int interfaceIndex = -1;
+
         // game manager references
         protected InputManager inputManager = null;
         protected ControlsManager controlsManager = null;
+        protected UIManager uIManager = null;
 
         public List<CloseableWindowContents> WindowStack { get => windowStack; }
+        public bool NavigatingInterface { get => navigatingInterface; }
 
         public override void Configure(SystemGameManager systemGameManager) {
             base.Configure(systemGameManager);
@@ -28,6 +33,7 @@ namespace AnyRPG {
 
             inputManager = systemGameManager.InputManager;
             controlsManager = systemGameManager.ControlsManager;
+            uIManager = systemGameManager.UIManager;
         }
 
         public void OnDestroy() {
@@ -55,7 +61,29 @@ namespace AnyRPG {
             }
         }
 
+        public void NavigateInterface() {
+            navigatingInterface = true;
+            if (interfaceIndex != -1) {
+                uIManager.NavigableInterfaceElements[interfaceIndex].UnFocus();
+                windowStack.Remove(uIManager.NavigableInterfaceElements[interfaceIndex]);
+            }
+            interfaceIndex++;
+            if (interfaceIndex >= uIManager.NavigableInterfaceElements.Count) {
+                interfaceIndex = 0;
+            }
+            uIManager.NavigableInterfaceElements[interfaceIndex].Focus();
+            windowStack.Add(uIManager.NavigableInterfaceElements[interfaceIndex]);
+        }
+
+        public void EndNavigateInterface() {
+            navigatingInterface = true;
+            uIManager.NavigableInterfaceElements[interfaceIndex].UnFocus();
+            windowStack.Remove(uIManager.NavigableInterfaceElements[interfaceIndex]);
+            interfaceIndex = -1;
+        }
+
         public void Navigate() {
+
             if (windowStack.Count != 0) {
 
                 // d pad navigation

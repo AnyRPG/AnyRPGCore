@@ -8,91 +8,90 @@ using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 
 namespace AnyRPG {
-    public class MiniMapController : DraggableWindow {
+    public class MiniMapController : NavigableInterfaceElement {
 
         [Header("MiniMap")]
 
         [SerializeField]
-        private TextMeshProUGUI zoneNameText = null;
+        protected TextMeshProUGUI zoneNameText = null;
 
         [SerializeField]
-        private GameObject mapButtonText = null;
+        protected GameObject mapButtonText = null;
 
         [SerializeField]
-        private Image mapButtonImage = null;
+        protected Image mapButtonImage = null;
 
         [SerializeField]
-        private GameObject mapGraphic = null;
+        protected GameObject mapGraphic = null;
 
         [SerializeField]
-        private RawImage miniMapGraphicRawImage = null;
+        protected RawImage miniMapGraphicRawImage = null;
 
         [SerializeField]
-        private RectTransform miniMapGraphicRect = null;
+        protected RectTransform miniMapGraphicRect = null;
 
         [SerializeField]
-        private GameObject miniMapIndicatorPrefab = null;
+        protected GameObject miniMapIndicatorPrefab = null;
 
         [Tooltip("The default number of meters to display on the minimap")]
         [SerializeField]
-        private float cameraSizeDefault = 20f;
+        protected float cameraSizeDefault = 20f;
 
         [Tooltip("The smallest number of meters to display on the minimap (full zoomed in)")]
         [SerializeField]
-        private float minZoom = 20f;
+        protected float minZoom = 20f;
 
         [Tooltip("The largest number of meters to display on the minimap (full zoomed out)")]
         [SerializeField]
-        private float maxZoom = 50f;
+        protected float maxZoom = 50f;
 
         [SerializeField]
-        private float zoomSpeed = 10f;
+        protected float zoomSpeed = 10f;
 
         [SerializeField]
-        private GameObject followGameObject = null;
+        protected GameObject followGameObject = null;
 
         // the diameter in game meters that should be shown on the map
-        private float cameraSize = 0f;
+        protected float cameraSize = 0f;
 
         // the object the map should center over
-        private Transform followTransform = null;
+        protected Transform followTransform = null;
 
-        private bool initialized = false;
+        protected bool initialized = false;
         //private bool sceneTextureFound = false;
 
         // keep track of the width in pixels of the map window
-        private float windowSize = 150f;
+        protected float windowSize = 150f;
 
         // the number of pixels per meter of level based on the total map pixels
-        private float levelScaleFactor = 1f;
+        protected float levelScaleFactor = 1f;
 
         // the center of the scene bounds
-        private Vector3 levelOffset = Vector3.zero;
+        protected Vector3 levelOffset = Vector3.zero;
 
         // a multiplier to determine what the image scale will need to be to fit the requested 'real pixels' into the space available in the minimap window
-        private float imageScaleFactor = 1f;
+        protected float imageScaleFactor = 1f;
 
         // keep track if mouse is in window bounds
-        private Vector3[] worldCorners = new Vector3[4];
+        protected Vector3[] worldCorners = new Vector3[4];
 
         // track current minimap status and state
-        private bool miniMapEnabled = false;
+        protected bool miniMapEnabled = false;
 
-        private string loadedMapName = string.Empty;
-
-        protected bool eventSubscriptionsInitialized = false;
+        protected string loadedMapName = string.Empty;
 
         // system component references
-        private CameraManager cameraManager = null;
-        private PlayerManager playerManager = null;
-        private InputManager inputManager = null;
-        private LevelManager levelManager = null;
-        private MiniMapManager miniMapManager = null;
-        private ObjectPooler objectPooler = null;
-        private MapManager mapManager = null;
+        protected CameraManager cameraManager = null;
+        protected PlayerManager playerManager = null;
+        protected InputManager inputManager = null;
+        protected LevelManager levelManager = null;
+        protected MiniMapManager miniMapManager = null;
+        protected ObjectPooler objectPooler = null;
+        protected MapManager mapManager = null;
+        protected UIManager uIManager = null;
 
         // map indicators
-        private Dictionary<Interactable, MiniMapIndicatorController> mapIndicatorControllers = new Dictionary<Interactable, MiniMapIndicatorController>();
+        protected Dictionary<Interactable, MiniMapIndicatorController> mapIndicatorControllers = new Dictionary<Interactable, MiniMapIndicatorController>();
 
         public GameObject MapGraphic { get => mapGraphic; set => mapGraphic = value; }
 
@@ -123,6 +122,7 @@ namespace AnyRPG {
         public override void SetGameManagerReferences() {
             base.SetGameManagerReferences();
 
+            uIManager = systemGameManager.UIManager;
             cameraManager = systemGameManager.CameraManager;
             playerManager = systemGameManager.PlayerManager;
             inputManager = systemGameManager.InputManager;
@@ -132,19 +132,15 @@ namespace AnyRPG {
             mapManager = systemGameManager.UIManager.MapManager;
         }
 
-        private void CreateEventSubscriptions() {
+        protected override void ProcessCreateEventSubscriptions() {
             //Debug.Log("MainMapController.CreateEventSubscriptions()");
-            if (eventSubscriptionsInitialized) {
-                return;
-            }
+            base.ProcessCreateEventSubscriptions();
             miniMapManager.OnAddIndicator += HandleAddIndicator;
             miniMapManager.OnRemoveIndicator += HandleRemoveIndicator;
             miniMapManager.OnUpdateIndicatorRotation += HandleIndicatorRotation;
             miniMapManager.OnInteractableStatusUpdate += HandleInteractableStatusUpdate;
             mapManager.OnInitializeMap += InitRenderedMinimap;
             SystemEventManager.StartListening("AfterCameraUpdate", HandleAfterCameraUpdate);
-
-            eventSubscriptionsInitialized = true;
         }
 
         public void HandleAfterCameraUpdate(string eventName, EventParamProperties eventParamProperties) {
@@ -367,22 +363,49 @@ namespace AnyRPG {
             uIManager.mainMapWindow.ToggleOpenClose();
         }
 
-        private void CleanupEventSubscriptions() {
+        protected override void ProcessCleanupEventSubscriptions() {
             //Debug.Log("PlayerManager.CleanupEventSubscriptions()");
-            if (!eventSubscriptionsInitialized) {
-                return;
-            }
+            base.ProcessCleanupEventSubscriptions();
             miniMapManager.OnAddIndicator -= HandleAddIndicator;
             miniMapManager.OnRemoveIndicator -= HandleRemoveIndicator;
             miniMapManager.OnUpdateIndicatorRotation -= HandleIndicatorRotation;
             miniMapManager.OnInteractableStatusUpdate -= HandleInteractableStatusUpdate;
             mapManager.OnInitializeMap -= InitRenderedMinimap;
             SystemEventManager.StopListening("AfterCameraUpdate", HandleAfterCameraUpdate);
-            eventSubscriptionsInitialized = false;
         }
 
-        public void OnDestroy() {
-            CleanupEventSubscriptions();
+        public override void Focus() {
+            base.Focus();
+            SetControllerHints("", "", "", "", "Zoom In/Out");
+        }
+
+        public override void DownButton() {
+            base.DownButton();
+
+            cameraSize += 1;
+            HandleCameraZoom(true);
+        }
+
+        public override void UpButton() {
+            base.UpButton();
+
+            cameraSize -= 1;
+            HandleCameraZoom(true);
+
+        }
+
+        public override void LeftButton() {
+            base.LeftButton();
+
+            cameraSize += zoomSpeed;
+            HandleCameraZoom(true);
+        }
+
+        public override void RightButton() {
+            base.RightButton();
+
+            cameraSize -= zoomSpeed;
+            HandleCameraZoom(true);
         }
 
     }

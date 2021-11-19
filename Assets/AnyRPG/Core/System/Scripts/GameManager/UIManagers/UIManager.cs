@@ -84,6 +84,9 @@ namespace AnyRPG {
         private MiniMapController miniMapController = null;
 
         [SerializeField]
+        private CloseableWindow miniMapWindow = null;
+
+        [SerializeField]
         private CutSceneBarController cutSceneBarController = null;
 
         [SerializeField]
@@ -169,6 +172,11 @@ namespace AnyRPG {
         public CloseableWindow exitToMainMenuWindow;
         public CloseableWindow confirmNewGameMenuWindow;
         public CloseableWindow onScreenKeyboardWindow;
+
+        [Header("Navigable Interface Elements")]
+
+        [SerializeField]
+        private List<NavigableInterfaceElement> navigableInterfaceElements = new List<NavigableInterfaceElement>();
 
         // objects in the mouseover window
         protected TextMeshProUGUI mouseOverText;
@@ -258,6 +266,8 @@ namespace AnyRPG {
         public HandScript HandScript { get => handScript; set => handScript = value; }
         public MapManager MapManager { get => mapManager; set => mapManager = value; }
         public int IgnoreChangeLayer { get => ignoreChangeLayer; }
+        public CloseableWindow MiniMapWindow { get => miniMapWindow; set => miniMapWindow = value; }
+        public List<NavigableInterfaceElement> NavigableInterfaceElements { get => navigableInterfaceElements; set => navigableInterfaceElements = value; }
 
         public override void Configure(SystemGameManager systemGameManager) {
             base.Configure(systemGameManager);
@@ -276,7 +286,8 @@ namespace AnyRPG {
             // initialize ui elements
             playerUnitFrameController.Configure(systemGameManager);
             focusUnitFrameController.Configure(systemGameManager);
-            miniMapController.Configure(systemGameManager);
+            //miniMapController.Configure(systemGameManager);
+            miniMapWindow.Configure(systemGameManager);
             cutSceneBarController.Configure(systemGameManager);
             xpBarController.Configure(systemGameManager);
             bottomPanel.Configure(systemGameManager);
@@ -463,8 +474,8 @@ namespace AnyRPG {
             defaultWindowPositions.Add("FocusUnitFrameControllerX", FocusUnitFrameController.RectTransform.anchoredPosition.x);
             defaultWindowPositions.Add("FocusUnitFrameControllerY", FocusUnitFrameController.RectTransform.anchoredPosition.y);
 
-            defaultWindowPositions.Add("MiniMapControllerX", MiniMapController.RectTransform.anchoredPosition.x);
-            defaultWindowPositions.Add("MiniMapControllerY", MiniMapController.RectTransform.anchoredPosition.y);
+            defaultWindowPositions.Add("MiniMapControllerX", MiniMapWindow.RectTransform.anchoredPosition.x);
+            defaultWindowPositions.Add("MiniMapControllerY", MiniMapWindow.RectTransform.anchoredPosition.y);
 
             defaultWindowPositions.Add("XPBarControllerX", XPBarController.RectTransform.anchoredPosition.x);
             defaultWindowPositions.Add("XPBarControllerY", XPBarController.RectTransform.anchoredPosition.y);
@@ -509,7 +520,7 @@ namespace AnyRPG {
             StatusEffectPanelController.RectTransform.anchoredPosition = new Vector3(defaultWindowPositions["StatusEffectPanelControllerX"], defaultWindowPositions["StatusEffectPanelControllerY"], 0);
             PlayerUnitFrameController.RectTransform.anchoredPosition = new Vector3(defaultWindowPositions["PlayerUnitFrameControllerX"], defaultWindowPositions["PlayerUnitFrameControllerY"], 0);
             FocusUnitFrameController.RectTransform.anchoredPosition = new Vector3(defaultWindowPositions["FocusUnitFrameControllerX"], defaultWindowPositions["FocusUnitFrameControllerY"], 0);
-            MiniMapController.RectTransform.anchoredPosition = new Vector3(defaultWindowPositions["MiniMapControllerX"], defaultWindowPositions["MiniMapControllerY"], 0);
+            MiniMapWindow.RectTransform.anchoredPosition = new Vector3(defaultWindowPositions["MiniMapControllerX"], defaultWindowPositions["MiniMapControllerY"], 0);
             XPBarController.RectTransform.anchoredPosition = new Vector3(defaultWindowPositions["XPBarControllerX"], defaultWindowPositions["XPBarControllerY"], 0);
             BottomPanel.RectTransform.anchoredPosition = new Vector3(defaultWindowPositions["BottomPanelX"], defaultWindowPositions["BottomPanelY"], 0);
             SidePanel.RectTransform.anchoredPosition = new Vector3(defaultWindowPositions["SidePanelX"], defaultWindowPositions["SidePanelY"], 0);
@@ -760,6 +771,7 @@ namespace AnyRPG {
             PopupPanelContainer.SetActive(true);
             CombatTextCanvas.SetActive(true);
             questTrackerWindow.OpenWindow();
+            miniMapWindow.OpenWindow();
             combatLogWindow.OpenWindow();
             UpdateLockUI();
         }
@@ -1257,7 +1269,7 @@ namespace AnyRPG {
             statusEffectPanelController.LockUI();
             playerUnitFrameController.LockUI();
             focusUnitFrameController.LockUI();
-            miniMapController.LockUI();
+            miniMapWindow.LockUI();
             xpBarController.LockUI();
             bottomPanel.LockUI();
             sidePanel.LockUI();

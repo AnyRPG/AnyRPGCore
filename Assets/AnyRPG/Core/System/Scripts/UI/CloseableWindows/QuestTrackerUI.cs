@@ -6,25 +6,27 @@ using UnityEngine;
 using UnityEngine.UI;
 
 namespace AnyRPG {
-    public class QuestTrackerUI : WindowContentController {
+    public class QuestTrackerUI : NavigableInterfaceElement {
+
+        [Header("Quest Tracker")]
 
         [Tooltip("The gameobject to use for each quest item")]
         [SerializeField]
-        private GameObject questPrefab = null;
+        protected GameObject questPrefab = null;
 
         [Tooltip("Quests will be spawned under this transform")]
         [SerializeField]
-        private Transform questParent = null;
+        protected Transform questParent = null;
 
         [SerializeField]
-        private DraggableWindow dragHandle = null;
+        protected DraggableWindow dragHandle = null;
 
-        private List<QuestTrackerQuestScript> questScripts = new List<QuestTrackerQuestScript>();
+        protected List<QuestTrackerQuestScript> questScripts = new List<QuestTrackerQuestScript>();
 
         // game manager references
-        private PlayerManager playerManager = null;
-        private QuestLog questLog = null;
-        private ObjectPooler objectPooler = null;
+        protected PlayerManager playerManager = null;
+        protected QuestLog questLog = null;
+        protected ObjectPooler objectPooler = null;
 
         
         public override void Configure(SystemGameManager systemGameManager) {

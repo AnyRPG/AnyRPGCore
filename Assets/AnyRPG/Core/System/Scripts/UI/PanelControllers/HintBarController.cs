@@ -45,6 +45,10 @@ namespace AnyRPG {
         private GameObject bImage = null;
 
         [SerializeField]
+        private GameObject dPadImage = null;
+
+
+        [SerializeField]
         private TMP_Text aOptionText = null;
 
         [SerializeField]
@@ -56,6 +60,9 @@ namespace AnyRPG {
         [SerializeField]
         private TMP_Text bOptionText = null;
 
+        [SerializeField]
+        private TMP_Text dPadOptionText = null;
+
         public void Show() {
             gameObject.SetActive(true);
         }
@@ -64,7 +71,7 @@ namespace AnyRPG {
             gameObject.SetActive(false);
         }
 
-        public void SetOptions(string aOptionString, string xOptionString, string yOptionString, string bOptionString) {
+        public void SetOptions(string aOptionString, string xOptionString, string yOptionString, string bOptionString, string dPadOptionString = "") {
             Debug.Log("HintBarController.SetOptions()");
             if (aOptionString != null && aOptionString != string.Empty) {
                 //aOption.SetActive(true);
@@ -105,6 +112,16 @@ namespace AnyRPG {
                 //bOption.SetActive(false);
                 bImage.SetActive(false);
                 bOptionText.gameObject.SetActive(false);
+            }
+            if (dPadOptionString != null && dPadOptionString != string.Empty) {
+                //bOption.SetActive(true);
+                dPadImage.SetActive(true);
+                dPadOptionText.text = dPadOptionString;
+                dPadOptionText.gameObject.SetActive(true);
+            } else {
+                //bOption.SetActive(false);
+                dPadImage.SetActive(false);
+                dPadOptionText.gameObject.SetActive(false);
             }
             Show();
             LayoutRebuilder.ForceRebuildLayoutImmediate(rectTransform);

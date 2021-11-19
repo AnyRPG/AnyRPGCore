@@ -456,24 +456,24 @@ namespace AnyRPG {
             }
         }
 
-        public void SetControllerHints(string aOption, string xOption, string yOption, string bOption) {
+        public void SetControllerHints(string aOption, string xOption, string yOption, string bOption, string dPadOption = "") {
             Debug.Log(gameObject.name + ".WindowContentController.SetControllerHints()");
             
             // first, check for a local hint bar
             if (hintBarController != null) {
-                hintBarController.SetOptions(aOption, xOption, yOption, bOption);
+                hintBarController.SetOptions(aOption, xOption, yOption, bOption, dPadOption);
                 return;
             }
 
             // if no local hint bar found, check for a parent panel
             if (parentPanel != null) {
-                parentPanel.SetControllerHints(aOption, xOption, yOption, bOption);
+                parentPanel.SetControllerHints(aOption, xOption, yOption, bOption, dPadOption);
                 return;
             }
 
             // if no parent panel found, check for a parent window frame
             if (closeableWindow != null) {
-                closeableWindow.SetControllerHints(aOption, xOption, yOption, bOption);
+                closeableWindow.SetControllerHints(aOption, xOption, yOption, bOption, dPadOption);
             }
         }
 

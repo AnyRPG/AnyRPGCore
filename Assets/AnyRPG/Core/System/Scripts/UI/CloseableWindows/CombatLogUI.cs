@@ -6,7 +6,7 @@ using UnityEngine;
 using UnityEngine.UI;
 
 namespace AnyRPG {
-    public class CombatLogUI : WindowContentController {
+    public class CombatLogUI : NavigableInterfaceElement {
 
         //[SerializeField]
         //private GameObject textPrefab = null;
@@ -14,50 +14,50 @@ namespace AnyRPG {
         [Header("Buttons")]
 
         [SerializeField]
-        private HighlightButton chatHighlightButton = null;
+        protected HighlightButton chatHighlightButton = null;
 
         [SerializeField]
-        private HighlightButton combatHighlightButton = null;
+        protected HighlightButton combatHighlightButton = null;
 
         [SerializeField]
-        private HighlightButton systemHighlightButton = null;
+        protected HighlightButton systemHighlightButton = null;
 
         [Header("Areas")]
 
         [SerializeField]
-        private GameObject chatArea = null;
+        protected GameObject chatArea = null;
 
         [SerializeField]
-        private GameObject chatContentArea = null;
+        protected GameObject chatContentArea = null;
 
         [SerializeField]
-        private RectTransform chatRectTranform = null;
+        protected RectTransform chatRectTranform = null;
 
         //[SerializeField]
         //private Scrollbar chatScrollBar = null;
 
 
         [SerializeField]
-        private GameObject combatArea = null;
+        protected GameObject combatArea = null;
 
         [SerializeField]
-        private GameObject combatContentArea = null;
+        protected GameObject combatContentArea = null;
 
         [SerializeField]
-        private RectTransform combatRectTransform = null;
+        protected RectTransform combatRectTransform = null;
 
         //[SerializeField]
         //private Scrollbar combatScrollBar = null;
 
 
         [SerializeField]
-        private GameObject systemArea = null;
+        protected GameObject systemArea = null;
 
         [SerializeField]
-        private GameObject systemContentArea = null;
+        protected GameObject systemContentArea = null;
 
         [SerializeField]
-        private RectTransform systemRectTransform = null;
+        protected RectTransform systemRectTransform = null;
 
         //[SerializeField]
         //private Scrollbar systemScrollBar = null;
@@ -69,31 +69,31 @@ namespace AnyRPG {
         // a list to hold the messages
         //private List<string> combatMessageList = new List<string>();
 
-        private List<GameObject> combatMessageList = new List<GameObject>();
+        protected List<GameObject> combatMessageList = new List<GameObject>();
 
         // a list to hold the messages
         //private List<string> systemMessageList = new List<string>();
 
-        private List<GameObject> systemMessageList = new List<GameObject>();
+        protected List<GameObject> systemMessageList = new List<GameObject>();
 
         // a list to hold the messages
         //private List<string> chatMessageList = new List<string>();
 
-        private List<GameObject> chatMessageList = new List<GameObject>();
+        protected List<GameObject> chatMessageList = new List<GameObject>();
 
-        private List<TextLogController> combatLogControllers = new List<TextLogController>();
+        protected List<TextLogController> combatLogControllers = new List<TextLogController>();
 
-        private List<TextLogController> usedCombatLogControllers = new List<TextLogController>();
+        protected List<TextLogController> usedCombatLogControllers = new List<TextLogController>();
 
-        private List<TextLogController> chatLogControllers = new List<TextLogController>();
+        protected List<TextLogController> chatLogControllers = new List<TextLogController>();
 
-        private List<TextLogController> usedChatLogControllers = new List<TextLogController>();
+        protected List<TextLogController> usedChatLogControllers = new List<TextLogController>();
 
-        private List<TextLogController> systemLogControllers = new List<TextLogController>();
+        protected List<TextLogController> systemLogControllers = new List<TextLogController>();
 
-        private List<TextLogController> usedSystemLogControllers = new List<TextLogController>();
+        protected List<TextLogController> usedSystemLogControllers = new List<TextLogController>();
 
-        private LogManager logManager = null;
+        protected LogManager logManager = null;
 
         public override void Configure(SystemGameManager systemGameManager) {
             //Debug.Log("CombatLogUI.Awake()");

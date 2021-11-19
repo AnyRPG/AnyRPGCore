@@ -66,6 +66,7 @@ namespace AnyRPG {
             }
             InitializeWindow();
             RawCloseWindow();
+            HideControllerHints();
         }
 
         public override void SetGameManagerReferences() {
@@ -146,7 +147,7 @@ namespace AnyRPG {
         }
 
         public virtual void CloseWindow() {
-            //Debug.Log(gameObject.name + ".CloseableWindow.CloseWindow()");
+            Debug.Log(gameObject.name + ".CloseableWindow.CloseWindow()");
             //InitializeWindow();
             if (IsOpen == false) {
                 RawCloseWindow();
@@ -195,16 +196,23 @@ namespace AnyRPG {
             windowText.text = newTitle;
         }
 
-        public void SetControllerHints(string aOption, string xOption, string yOption, string bOption) {
+        public void SetControllerHints(string aOption, string xOption, string yOption, string bOption, string dPadOption = "") {
             Debug.Log(gameObject.name + ".CloseableWindow.SetControllerHints()");
             if (hintBarController != null) {
-                hintBarController.SetOptions(aOption, xOption, yOption, bOption);
+                hintBarController.SetOptions(aOption, xOption, yOption, bOption, dPadOption);
             }
         }
 
         public void HideControllerHints() {
+            Debug.Log(gameObject.name + ".CloseableWindow.HideControllerHints()");
             if (hintBarController != null) {
                 hintBarController.Hide();
+            }
+        }
+
+        public void LockUI() {
+            if (dragHandle != null) {
+                dragHandle.LockUI();
             }
         }
 

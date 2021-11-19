@@ -83,11 +83,17 @@ namespace AnyRPG {
 
             uIManager.ProcessInput();
 
+            if (windowManager.NavigatingInterface && (inputManager.KeyBindWasPressed("CANCEL") || inputManager.KeyBindWasPressed("JOYSTICKBUTTON1"))) {
+                windowManager.EndNavigateInterface();
+            }
+            if (inputManager.KeyBindWasPressed("JOYSTICKBUTTON6")) {
+                windowManager.NavigateInterface();
+            }
+
             // if the window manager has open windows, allow it to process commands
             // don't send input to the player controller if windows are open
             // because the input could close the window, and accidentally do something like select the nearest target
             // by passing the input to the player controller after the window manager
-
             windowStackCount = windowManager.WindowStack.Count;
             if (windowStackCount > 0) {
                 windowManager.Navigate();

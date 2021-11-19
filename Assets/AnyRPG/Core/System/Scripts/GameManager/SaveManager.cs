@@ -1399,7 +1399,7 @@ namespace AnyRPG {
                 uIManager.FocusUnitFrameController.RectTransform.anchoredPosition = new Vector3(PlayerPrefs.GetFloat("FocusUnitFrameControllerX"), PlayerPrefs.GetFloat("FocusUnitFrameControllerY"), 0);
 
             if (PlayerPrefs.HasKey("MiniMapControllerX") && PlayerPrefs.HasKey("MiniMapControllerY"))
-                uIManager.MiniMapController.RectTransform.anchoredPosition = new Vector3(PlayerPrefs.GetFloat("MiniMapControllerX"), PlayerPrefs.GetFloat("MiniMapControllerY"), 0);
+                uIManager.MiniMapWindow.RectTransform.anchoredPosition = new Vector3(PlayerPrefs.GetFloat("MiniMapControllerX"), PlayerPrefs.GetFloat("MiniMapControllerY"), 0);
 
             if (PlayerPrefs.HasKey("XPBarControllerX") && PlayerPrefs.HasKey("XPBarControllerY"))
                 uIManager.XPBarController.RectTransform.anchoredPosition = new Vector3(PlayerPrefs.GetFloat("XPBarControllerX"), PlayerPrefs.GetFloat("XPBarControllerY"), 0);
@@ -1479,8 +1479,8 @@ namespace AnyRPG {
             PlayerPrefs.SetFloat("FocusUnitFrameControllerX", uIManager.FocusUnitFrameController.RectTransform.anchoredPosition.x);
             PlayerPrefs.SetFloat("FocusUnitFrameControllerY", uIManager.FocusUnitFrameController.RectTransform.anchoredPosition.y);
 
-            PlayerPrefs.SetFloat("MiniMapControllerX", uIManager.MiniMapController.RectTransform.anchoredPosition.x);
-            PlayerPrefs.SetFloat("MiniMapControllerY", uIManager.MiniMapController.RectTransform.anchoredPosition.y);
+            PlayerPrefs.SetFloat("MiniMapControllerX", uIManager.MiniMapWindow.RectTransform.anchoredPosition.x);
+            PlayerPrefs.SetFloat("MiniMapControllerY", uIManager.MiniMapWindow.RectTransform.anchoredPosition.y);
 
             PlayerPrefs.SetFloat("XPBarControllerX", uIManager.XPBarController.RectTransform.anchoredPosition.x);
             PlayerPrefs.SetFloat("XPBarControllerY", uIManager.XPBarController.RectTransform.anchoredPosition.y);
