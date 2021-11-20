@@ -827,6 +827,7 @@ GameObject:
   - component: {fileID: 8329855271617722949}
   - component: {fileID: 8329855271617722948}
   - component: {fileID: 3703776206831849685}
+  - component: {fileID: 2557252955018670444}
   m_Layer: 5
   m_Name: QuestTrackerPanel
   m_TagString: Untagged
@@ -907,11 +908,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   backGroundImage: {fileID: 0}
   coloredUIElements: []
-  addToWindowStack: 1
-  userCloseable: 1
-  focusFirstButtonOnOpen: 1
+  addToWindowStack: 0
+  userCloseable: 0
+  focusFirstButtonOnOpen: 0
   focusActiveSubPanel: 0
-  uINavigationControllers: []
+  uINavigationControllers:
+  - {fileID: 2557252955018670444}
   subPanels: []
   hintBarController: {fileID: 0}
   outline: {fileID: 5952403611529388192}
@@ -919,6 +921,31 @@ MonoBehaviour:
     type: 3}
   questParent: {fileID: 8329855271768900061}
   dragHandle: {fileID: 8503946463421976959}
+--- !u!114 &2557252955018670444
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8329855271617722954}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 03715bb91f4a7fa47b3d93745fb1b35e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  leftPanel: {fileID: 0}
+  leftControllers: []
+  rightPanel: {fileID: 0}
+  rightControllers: []
+  upPanel: {fileID: 0}
+  upControllers: []
+  downPanel: {fileID: 0}
+  downControllers: []
+  acceptController: {fileID: 0}
+  scrollRect: {fileID: 0}
+  updateActiveListOnOpen: 1
+  pruneInactiveElements: 1
+  navigableButtons: []
 --- !u!1 &8329855271712349302
 GameObject:
   m_ObjectHideFlags: 0

@@ -21,12 +21,28 @@ namespace AnyRPG {
         }
 
         public virtual void Focus() {
+            Debug.Log(gameObject.name + ".NavigableInterfaceElement.Focus()");
             outline.color = Color.white;
+            if (currentNavigationController != null) {
+                currentNavigationController.Focus();
+            }
         }
 
         public virtual void UnFocus() {
+            Debug.Log(gameObject.name + ".NavigableInterfaceElement.UnFocus()");
             outline.color = hiddenColor;
             HideControllerHints();
+            if (currentNavigationController != null) {
+                currentNavigationController.UnFocus();
+            }
+        }
+
+        public override void ReceiveOpenWindowNotification() {
+            Debug.Log(gameObject.name + ".NavigableInterfaceElement.ReceiveOpenWindowNotification()");
+            base.ReceiveOpenWindowNotification();
+            if (currentNavigationController != null) {
+                currentNavigationController.UnFocus();
+            }
         }
 
     }

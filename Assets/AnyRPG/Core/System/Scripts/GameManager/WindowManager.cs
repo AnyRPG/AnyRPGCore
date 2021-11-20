@@ -76,7 +76,7 @@ namespace AnyRPG {
         }
 
         public void EndNavigateInterface() {
-            navigatingInterface = true;
+            navigatingInterface = false;
             uIManager.NavigableInterfaceElements[interfaceIndex].UnFocus();
             windowStack.Remove(uIManager.NavigableInterfaceElements[interfaceIndex]);
             interfaceIndex = -1;

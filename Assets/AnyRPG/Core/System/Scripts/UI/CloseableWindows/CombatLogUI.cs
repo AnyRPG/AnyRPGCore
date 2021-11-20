@@ -144,9 +144,10 @@ namespace AnyRPG {
 
 
         public void ShowChatLog() {
-            chatHighlightButton.Select();
-            combatHighlightButton.DeSelect();
-            systemHighlightButton.DeSelect();
+            //chatHighlightButton.Select();
+            uINavigationControllers[0].UnHightlightButtons(chatHighlightButton);
+            //combatHighlightButton.DeSelect();
+            //systemHighlightButton.DeSelect();
             combatArea.SetActive(false);
             systemArea.SetActive(false);
             chatArea.SetActive(true);
@@ -157,9 +158,10 @@ namespace AnyRPG {
         }
 
         public void ShowCombatLog() {
-            chatHighlightButton.DeSelect();
-            combatHighlightButton.Select();
-            systemHighlightButton.DeSelect();
+            //chatHighlightButton.DeSelect();
+            uINavigationControllers[0].UnHightlightButtons(combatHighlightButton);
+            //combatHighlightButton.Select();
+            //systemHighlightButton.DeSelect();
             systemArea.SetActive(false);
             chatArea.SetActive(false);
             combatArea.SetActive(true);
@@ -170,9 +172,10 @@ namespace AnyRPG {
         }
 
         public void ShowSystemLog() {
-            chatHighlightButton.DeSelect();
-            systemHighlightButton.Select();
-            combatHighlightButton.DeSelect();
+            //chatHighlightButton.DeSelect();
+            //systemHighlightButton.Select();
+            //combatHighlightButton.DeSelect();
+            uINavigationControllers[0].UnHightlightButtons(systemHighlightButton);
             chatArea.SetActive(false);
             combatArea.SetActive(false);
             systemArea.SetActive(true);
@@ -286,6 +289,9 @@ namespace AnyRPG {
 
         public override void ReceiveOpenWindowNotification() {
             //Debug.Log("QuestTrackerUI.OnOpenWindow()");
+            base.ReceiveOpenWindowNotification();
+            //SetNavigationController();
+            chatHighlightButton.HighlightBackground();
             ShowChatLog();
         }
     }

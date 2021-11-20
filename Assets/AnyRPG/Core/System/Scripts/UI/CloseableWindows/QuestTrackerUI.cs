@@ -95,22 +95,23 @@ namespace AnyRPG {
                 GameObject go = objectPooler.GetPooledObject(questPrefab, questParent);
                 QuestTrackerQuestScript qs = go.GetComponent<QuestTrackerQuestScript>();
                 qs.Configure(systemGameManager);
-                qs.MyQuest = quest;
+                qs.Quest = quest;
                 if (qs == null) {
                     //Debug.Log("QuestTrackerUI.ShowQuestsCommon(): QuestGiverQuestScript is null");
                 }
-                qs.MyText.text = "[" + quest.ExperienceLevel + "] " + quest.DisplayName;
+                qs.Text.text = "[" + quest.ExperienceLevel + "] " + quest.DisplayName;
                 if (quest.IsComplete) {
-                    qs.MyText.text += " (Complete)";
+                    qs.Text.text += " (Complete)";
                 }
                 string objectives = string.Empty;
 
-                qs.MyText.text += "\n<size=12>" + quest.GetUnformattedObjectiveList() + "</size>";
+                qs.Text.text += "\n<size=12>" + quest.GetUnformattedObjectiveList() + "</size>";
 
                 //Debug.Log("QuestTrackerUI.ShowQuestsCommon(" + questGiver.name + "): " + questNode.MyQuest.MyTitle);
-                qs.MyText.color = LevelEquations.GetTargetColor(playerManager.MyCharacter.CharacterStats.Level, quest.ExperienceLevel);
+                qs.Text.color = LevelEquations.GetTargetColor(playerManager.MyCharacter.CharacterStats.Level, quest.ExperienceLevel);
                 //quests.Add(go);
                 questScripts.Add(qs);
+                uINavigationControllers[0].AddActiveButton(qs);
 
             }
 
@@ -137,6 +138,7 @@ namespace AnyRPG {
                 }
             }
             questScripts.Clear();
+            uINavigationControllers[0].ClearActiveButtons();
         }
 
         public override void ReceiveClosedWindowNotification() {
