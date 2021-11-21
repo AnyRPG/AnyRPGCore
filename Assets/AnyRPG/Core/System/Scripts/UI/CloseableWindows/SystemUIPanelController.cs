@@ -52,7 +52,7 @@ namespace AnyRPG {
         public override void Configure(SystemGameManager systemGameManager) {
             base.Configure(systemGameManager);
 
-            LoadUISettings();
+            //LoadUISettings();
         }
 
         public override void SetGameManagerReferences() {
@@ -67,12 +67,13 @@ namespace AnyRPG {
             saveManager.SaveWindowPositions();
         }
 
-        /*
-        public void Start() {
-
+        
+        public override void Init() {
+            base.Init();
+            // this must be done in start because the defaults are set in the UI manager after all the Configure() calls are made
             LoadUISettings();
         }
-        */
+        
 
         private void LoadUISettings() {
             //Debug.Log("MainSettingsMenuController.LoadUISettings()");

@@ -126,7 +126,7 @@ namespace AnyRPG {
         }
 
         public virtual void SetCurrentButton(NavigableElement navigableElement) {
-            Debug.Log(gameObject.name + ".UINavigationController.SetCurrentButton(" + navigableElement.name + ")");
+            //Debug.Log(gameObject.name + ".UINavigationController.SetCurrentButton(" + navigableElement.name + ")");
             for (int i = 0; i < activeNavigableButtons.Count; i++) {
                 if (activeNavigableButtons[i] == navigableElement) {
                     SetCurrentIndex(i);
@@ -137,7 +137,7 @@ namespace AnyRPG {
         }
 
         public virtual void UnHightlightButtons(NavigableElement skipButton = null) {
-            Debug.Log(gameObject.name + ".UINavigationController.UnHightlightButtons(" + (skipButton == null ? "null" : skipButton.gameObject.name) + ")");
+            //Debug.Log(gameObject.name + ".UINavigationController.UnHightlightButtons(" + (skipButton == null ? "null" : skipButton.gameObject.name) + ")");
             foreach (NavigableElement navigableElement in activeNavigableButtons) {
                 if (skipButton != navigableElement) {
                     navigableElement.UnHighlightBackground();
@@ -146,7 +146,7 @@ namespace AnyRPG {
         }
 
         public virtual void UpdateNavigationList() {
-            Debug.Log(gameObject.name + ".UINavigationController.UpdateNavigationList()");
+            //Debug.Log(gameObject.name + ".UINavigationController.UpdateNavigationList()");
 
             // deselect the buttons before clearing the list
             foreach (NavigableElement navigableElement in activeNavigableButtons) {
@@ -162,14 +162,14 @@ namespace AnyRPG {
         }
 
         public virtual void Activate() {
-            Debug.Log(gameObject.name + ".UINavigationController.Activate()");
+            //Debug.Log(gameObject.name + ".UINavigationController.Activate()");
             if (owner != null) {
                 owner.ActivateNavigationController(this);
             }
         }
 
         public virtual void Focus(bool focusCurrentButton = true) {
-            Debug.Log(gameObject.name + ".UINavigationController.Focus()");
+            //Debug.Log(gameObject.name + ".UINavigationController.Focus()");
             focused = true;
             // testing - active navigable buttons is needed for lists that are dynamically created (skill buttons etc)
             // regular navigable buttons are needed for lists that are static, but may have temporarily disabled elements (music player)
@@ -183,7 +183,7 @@ namespace AnyRPG {
         }
 
         public virtual void UnFocus() {
-            Debug.Log(gameObject.name + ".UINavigationController.Unfocus()");
+            //Debug.Log(gameObject.name + ".UINavigationController.Unfocus()");
             focused = false;
             foreach (NavigableElement navigableElement in activeNavigableButtons.Union(navigableButtons)) {
                 navigableElement.UnFocus();
@@ -397,7 +397,12 @@ namespace AnyRPG {
 
         public virtual void Cancel() {
             Debug.Log(gameObject.name + ".UINavigationController.Cancel()");
-            UnFocus();
+
+            // should not automatically unfocus because this may be the only navigation controller on a window that is not closeable
+            if (owner.UserCloseable) {
+                UnFocus();
+            }
+
             /*
             if (currentNavigableElement != null) {
                 currentNavigableElement.LeaveElement();

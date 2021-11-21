@@ -12,6 +12,7 @@ namespace AnyRPG {
         void SetBackGroundColor(Color color);
         void SetWindow(CloseableWindow closeableWindow);
         void Close();
+        void Init();
         GameObject gameObject { get; }
         Image BackGroundImage { get; }
         //bool Closeable { get; }

@@ -46,7 +46,7 @@ namespace AnyRPG {
             //shadowQualityArea.Configure(systemGameManager);
             //textureQualityArea.Configure(systemGameManager);
             //graphicsQualityArea.Configure(systemGameManager);
-
+            SetPlayerPrefsDefaults();
             InitializeSettings();
         }
 
@@ -55,6 +55,31 @@ namespace AnyRPG {
             InitializeSettings();
         }
         */
+
+        private void SetPlayerPrefsDefaults() {
+
+            if (!PlayerPrefs.HasKey("GraphicsQualityIndex")) {
+                //Debug.Log("MainSettingsMenuController.SetPlayerPrefsDefaults() graphicsQuality is: " + QualitySettings.GetQualityLevel());
+                PlayerPrefs.SetInt("GraphicsQualityIndex", QualitySettings.GetQualityLevel());
+            }
+
+            if (!PlayerPrefs.HasKey("FullScreen")) {
+                PlayerPrefs.SetInt("FullScreen", (Screen.fullScreen == true ? 1 : 0));
+            }
+
+            if (!PlayerPrefs.HasKey("VSyncValue")) {
+                PlayerPrefs.SetInt("VSyncValue", QualitySettings.vSyncCount);
+            }
+
+            if (!PlayerPrefs.HasKey("Textures")) {
+                PlayerPrefs.SetInt("Textures", 2);
+            }
+
+            if (!PlayerPrefs.HasKey("Shadows")) {
+                PlayerPrefs.SetInt("Shadows", 2);
+            }
+
+        }
 
         private void InitializeSettings() {
 
@@ -150,21 +175,22 @@ namespace AnyRPG {
         }
 
         public void CheckVSync() {
+            Debug.Log("SystemVideoPanelController.CheckVSync()");
             if (PlayerPrefs.GetInt("VSyncValue") == 0) {
                 vSyncButton.SetOff();
+                QualitySettings.vSyncCount = 0;
             } else if (PlayerPrefs.GetInt("VSyncValue") == 1) {
                 vSyncButton.SetOn();
+                QualitySettings.vSyncCount = 1;
             }
-
         }
 
         public void ToggleVSync() {
+            Debug.Log("SystemVideoPanelController.ToggleVSync()");
             if (QualitySettings.vSyncCount == 0) {
                 PlayerPrefs.SetInt("VSyncValue", 1);
-                QualitySettings.vSyncCount = 1;
             } else if (QualitySettings.vSyncCount == 1) {
                 PlayerPrefs.SetInt("VSyncValue", 0);
-                QualitySettings.vSyncCount = 0;
             }
             CheckVSync();
         }

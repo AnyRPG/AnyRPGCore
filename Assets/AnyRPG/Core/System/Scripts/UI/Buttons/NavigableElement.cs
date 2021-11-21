@@ -63,11 +63,16 @@ namespace AnyRPG {
         [SerializeField]
         private Color unFocusedColor = new Color32(255, 255, 255, 39);
 
+        [Header("Scrolling")]
+
+        [Tooltip("used to determine if scroll rect should scroll to keep element in frame and for tooltips")]
+        [SerializeField]
+        protected RectTransform rectTransform = null;
+
         protected UINavigationController owner = null;
 
         protected bool selected = false;
-
-        protected RectTransform rectTransform = null;
+        
 
         protected bool navigationControllerFocused = false;
 
@@ -90,10 +95,12 @@ namespace AnyRPG {
                 return;
             }
 
-            rectTransform = transform as RectTransform;
+            if (rectTransform == null) {
+                rectTransform = transform as RectTransform;
+            }
 
             //if (useSystemImageTintColor) {
-                highlightOutlineColor = systemConfigurationManager.HighlightOutlineColor;
+            highlightOutlineColor = systemConfigurationManager.HighlightOutlineColor;
                 highlightImageColor = systemConfigurationManager.HighlightImageColor;
             //}
 
@@ -235,7 +242,7 @@ namespace AnyRPG {
         }
 
         public virtual void FocusNavigationController() {
-            Debug.Log(gameObject.name + ".NavigableElement.FocusNavigationController()");
+            //Debug.Log(gameObject.name + ".NavigableElement.FocusNavigationController()");
 
             navigationControllerFocused = true;
 

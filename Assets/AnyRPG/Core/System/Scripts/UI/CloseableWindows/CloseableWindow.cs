@@ -74,6 +74,10 @@ namespace AnyRPG {
             objectPooler = systemGameManager.ObjectPooler;
         }
 
+        public void Init() {
+            windowContents.Init();
+        }
+
         protected virtual void InitializeWindow() {
             //Debug.Log(gameObject.name + ".CloseableWindow.InitializeWindow()");
             if (windowText != null) {

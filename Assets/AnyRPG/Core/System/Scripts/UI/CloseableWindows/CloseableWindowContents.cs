@@ -73,6 +73,7 @@ namespace AnyRPG {
         public Image BackGroundImage { get => backGroundImage; set => backGroundImage = value; }
         public UINavigationController CurrentNavigationController { get => currentNavigationController; }
         public CloseableWindowContents ParentPanel { get => parentPanel; }
+        public bool UserCloseable { get => userCloseable; }
 
         public override void Configure(SystemGameManager systemGameManager) {
             //Debug.Log(gameObject.name + ".CloseableWindowContents.Configure()");
@@ -104,6 +105,12 @@ namespace AnyRPG {
             audioManager = systemGameManager.AudioManager;
             windowManager = systemGameManager.WindowManager;
             controlsManager = systemGameManager.ControlsManager;
+        }
+
+        public virtual void Init() {
+            foreach (CloseableWindowContents closeableWindowContents in subPanels) {
+                closeableWindowContents.Init();
+            }
         }
 
         public virtual void SetWindow(CloseableWindow closeableWindow) {

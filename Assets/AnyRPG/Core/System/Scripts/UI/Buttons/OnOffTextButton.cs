@@ -24,12 +24,12 @@ namespace AnyRPG {
 
 
         public void SetOn() {
-            //Debug.Log(gameObject.name + ".HightlightButton.Select()");
+            //Debug.Log(gameObject.name + ".OnOffTextButton.SetOn()");
             text.text = "on";
         }
 
         public void SetOff() {
-            //Debug.Log(gameObject.name + ".HightlightButton.DeSelect()");
+            //Debug.Log(gameObject.name + ".OnOffTextButton.SetOff()");
             text.text = "off";
         }
 

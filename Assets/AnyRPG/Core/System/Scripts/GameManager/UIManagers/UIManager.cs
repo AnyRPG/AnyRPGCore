@@ -360,6 +360,8 @@ namespace AnyRPG {
             ignoreChangeLayer = LayerMask.NameToLayer("Equipment");
 
             SetUIDefaults();
+
+            settingsMenuWindow.Init();
         }
 
         public override void SetGameManagerReferences() {
