@@ -81,6 +81,11 @@ namespace AnyRPG {
                 backGroundImage = GetComponent<Image>();
             }
             rectTransform = GetComponent<RectTransform>();
+            if (subPanels.Count > 0) {
+                foreach (CloseableWindowContents closeableWindowContents in subPanels) {
+                    closeableWindowContents.Configure(systemGameManager);
+                }
+            }
             foreach (ColoredUIElement coloredUIElement in coloredUIElements) {
                 coloredUIElement.Configure(systemGameManager);
             }
@@ -447,18 +452,18 @@ namespace AnyRPG {
         }
 
         public void SetBackGroundColor(Color color) {
-            //Debug.Log(gameObject.name + ".WindowContentController.SetBackGroundColor()");
+            //Debug.Log(gameObject.name + ".CloseableWindowContents.SetBackGroundColor()");
             if (backGroundImage != null) {
-                //Debug.Log(gameObject.name + ".WindowContentController.SetBackGroundColor(): background image is not null, setting color");
+                //Debug.Log(gameObject.name + ".CloseableWindowContents.SetBackGroundColor(): background image is not null, setting color");
                 backGroundImage.color = color;
             } else {
-                //Debug.Log(gameObject.name + ".WindowContentController.SetBackGroundColor(): background image IS NULL!");
+                //Debug.Log(gameObject.name + ".CloseableWindowContents.SetBackGroundColor(): background image IS NULL!");
             }
         }
 
         public void SetControllerHints(string aOption, string xOption, string yOption, string bOption, string dPadOption = "") {
-            Debug.Log(gameObject.name + ".WindowContentController.SetControllerHints()");
-            
+            //Debug.Log(gameObject.name + ".CloseableWindowContents.SetControllerHints()");
+
             // first, check for a local hint bar
             if (hintBarController != null) {
                 hintBarController.SetOptions(aOption, xOption, yOption, bOption, dPadOption);
@@ -478,7 +483,7 @@ namespace AnyRPG {
         }
 
         public void HideControllerHints() {
-            Debug.Log(gameObject.name + ".WindowContentController.HideControllerHints()");
+            //Debug.Log(gameObject.name + ".CloseableWindowContents.HideControllerHints()");
 
             // first, check for a local hint bar
             if (hintBarController != null) {

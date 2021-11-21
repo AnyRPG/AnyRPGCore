@@ -147,7 +147,7 @@ namespace AnyRPG {
         }
 
         public virtual void CloseWindow() {
-            Debug.Log(gameObject.name + ".CloseableWindow.CloseWindow()");
+            //Debug.Log(gameObject.name + ".CloseableWindow.CloseWindow()");
             //InitializeWindow();
             if (IsOpen == false) {
                 RawCloseWindow();
@@ -197,14 +197,14 @@ namespace AnyRPG {
         }
 
         public void SetControllerHints(string aOption, string xOption, string yOption, string bOption, string dPadOption = "") {
-            Debug.Log(gameObject.name + ".CloseableWindow.SetControllerHints()");
+            //Debug.Log(gameObject.name + ".CloseableWindow.SetControllerHints()");
             if (hintBarController != null) {
                 hintBarController.SetOptions(aOption, xOption, yOption, bOption, dPadOption);
             }
         }
 
         public void HideControllerHints() {
-            Debug.Log(gameObject.name + ".CloseableWindow.HideControllerHints()");
+            //Debug.Log(gameObject.name + ".CloseableWindow.HideControllerHints()");
             if (hintBarController != null) {
                 hintBarController.Hide();
             }

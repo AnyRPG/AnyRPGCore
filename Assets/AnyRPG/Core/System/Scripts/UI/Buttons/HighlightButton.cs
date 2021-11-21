@@ -79,7 +79,6 @@ namespace AnyRPG {
         protected bool CapitalizeText = false;
 
         // game manager references
-        protected AudioManager audioManager = null;
         protected UIManager uIManager = null;
 
         public TextMeshProUGUI Text { get => text; }
@@ -129,7 +128,6 @@ namespace AnyRPG {
             //Debug.Log(gameObject.name + ".HighlightButton.SetGameManagerReferences(): " + GetInstanceID());
             base.SetGameManagerReferences();
 
-            audioManager = systemGameManager.AudioManager;
             uIManager = systemGameManager.UIManager;
         }
 
@@ -160,7 +158,7 @@ namespace AnyRPG {
         }
 
         public override void DeSelect() {
-            //Debug.Log(gameObject.name + ".HightlightButton.DeSelect()");
+            Debug.Log(gameObject.name + ".HightlightButton.DeSelect()");
             base.DeSelect();
             if (highlightButton != null) {
                 ColorBlock colorBlock = highlightButton.colors;
@@ -177,16 +175,12 @@ namespace AnyRPG {
             EventSystem.current.SetSelectedGameObject(null);
         }
 
-        public virtual void OnHoverSound() {
+        public override void OnHoverSound() {
             if (highlightButton != null && highlightButton.interactable == false) {
                 // don't do hover sound for buttons we can't click
                 return;
             }
-            audioManager.PlayUIHoverSound();
-        }
-
-        public virtual void OnClickSound() {
-            audioManager.PlayUIClickSound();
+            base.OnHoverSound();
         }
 
         public override void OnPointerEnter(PointerEventData eventData) {

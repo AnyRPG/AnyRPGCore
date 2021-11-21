@@ -84,24 +84,24 @@ namespace AnyRPG {
             //specializationButton.Configure(systemGameManager);
             //startButton.Configure(systemGameManager);
 
-            characterPreviewPanel.Configure(systemGameManager);
+            //characterPreviewPanel.Configure(systemGameManager);
 
-            detailsPanel.Configure(systemGameManager);
+            //detailsPanel.Configure(systemGameManager);
             detailsPanel.SetNewGamePanel(this);
 
-            characterPanel.Configure(systemGameManager);
+            //characterPanel.Configure(systemGameManager);
             characterPanel.SetParentPanel(this);
 
-            umaCharacterPanel.Configure(systemGameManager);
+            //umaCharacterPanel.Configure(systemGameManager);
             umaCharacterPanel.SetParentPanel(this);
 
-            classPanel.Configure(systemGameManager);
+            //classPanel.Configure(systemGameManager);
             classPanel.SetNewGamePanel(this);
 
-            factionPanel.Configure(systemGameManager);
+            //factionPanel.Configure(systemGameManager);
             factionPanel.SetNewGamePanel(this);
 
-            specializationPanel.Configure(systemGameManager);
+            //specializationPanel.Configure(systemGameManager);
             specializationPanel.SetNewGamePanel(this);
         }
 

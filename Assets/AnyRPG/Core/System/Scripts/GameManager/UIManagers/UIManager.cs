@@ -336,7 +336,6 @@ namespace AnyRPG {
             unitSpawnWindow.Configure(systemGameManager);
             petSpawnWindow.Configure(systemGameManager);
             playMenuWindow.Configure(systemGameManager);
-            settingsMenuWindow.Configure(systemGameManager);
             creditsWindow.Configure(systemGameManager);
             exitMenuWindow.Configure(systemGameManager);
             deleteGameMenuWindow.Configure(systemGameManager);
@@ -350,6 +349,11 @@ namespace AnyRPG {
             exitToMainMenuWindow.Configure(systemGameManager);
             confirmNewGameMenuWindow.Configure(systemGameManager);
             onScreenKeyboardWindow.Configure(systemGameManager);
+
+            // setting menu must go last because it checks all other windows opacity
+            // which requires them to have configured their panels first
+            settingsMenuWindow.Configure(systemGameManager);
+
 
             CreateEventSubscriptions();
 

@@ -6,7 +6,7 @@ using UnityEngine.UI;
 
 namespace AnyRPG {
 
-    public class TextOptionHighlightArea : ConfiguredMonoBehaviour {
+    public class TextOptionHighlightArea : NavigableElement {
 
         [SerializeField]
         private List<HighlightButton> highlightButtons = new List<HighlightButton>();

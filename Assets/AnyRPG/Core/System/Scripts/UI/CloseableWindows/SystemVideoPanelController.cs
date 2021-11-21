@@ -12,11 +12,18 @@ namespace AnyRPG {
 
         //public override event Action<ICloseableWindowContents> OnOpenWindow;
 
+        [Header("Video Panel")]
+
         [SerializeField]
         private TMP_Dropdown graphicsQualityDropdown = null;
 
         [SerializeField]
         private TMP_Dropdown resolutionDropDown = null;
+
+        /*
+        [SerializeField]
+        private TMP_Text graphicsDescription = null;
+        */
 
         private Resolution[] resolutions;
         private string[] graphicsQualities;
@@ -29,16 +36,16 @@ namespace AnyRPG {
         //public OnOffTextButton cameraEffectsButton;
         public TextOptionHighlightArea shadowQualityArea;
         public TextOptionHighlightArea textureQualityArea;
-        public TextOptionHighlightArea graphicsQualityArea;
+        //public TextOptionHighlightArea graphicsQualityArea;
 
         public override void Configure(SystemGameManager systemGameManager) {
             base.Configure(systemGameManager);
 
-            fullScreenButton.Configure(systemGameManager);
-            vSyncButton.Configure(systemGameManager);
-            shadowQualityArea.Configure(systemGameManager);
-            textureQualityArea.Configure(systemGameManager);
-            graphicsQualityArea.Configure(systemGameManager);
+            //fullScreenButton.Configure(systemGameManager);
+            //vSyncButton.Configure(systemGameManager);
+            //shadowQualityArea.Configure(systemGameManager);
+            //textureQualityArea.Configure(systemGameManager);
+            //graphicsQualityArea.Configure(systemGameManager);
 
             InitializeSettings();
         }
@@ -101,6 +108,7 @@ namespace AnyRPG {
             graphicsQualityDropdown.value = PlayerPrefs.GetInt("GraphicsQualityIndex");
             graphicsQualityDropdown.RefreshShownValue();
 
+            UpdateGraphicsDescription();
         }
 
         public void SetGraphicsQuality(int qualityIndex) {
@@ -108,13 +116,19 @@ namespace AnyRPG {
             PlayerPrefs.SetInt("GraphicsQualityIndex", qualityIndex);
             QualitySettings.SetQualityLevel(qualityIndex, true);
             //CheckGraphicsQuality();
+            UpdateGraphicsDescription();
+        }
+
+        public void UpdateGraphicsDescription() {
+
+            //QualitySettings.
         }
 
         private void CheckFullScreen() {
             if (PlayerPrefs.GetInt("FullScreen") == 1) {
-                fullScreenButton.Select();
+                fullScreenButton.SetOn();
             } else if (PlayerPrefs.GetInt("FullScreen") == 0) {
-                fullScreenButton.DeSelect();
+                fullScreenButton.SetOff();
             }
         }
 
@@ -137,9 +151,9 @@ namespace AnyRPG {
 
         public void CheckVSync() {
             if (PlayerPrefs.GetInt("VSyncValue") == 0) {
-                vSyncButton.DeSelect();
+                vSyncButton.SetOff();
             } else if (PlayerPrefs.GetInt("VSyncValue") == 1) {
-                vSyncButton.Select();
+                vSyncButton.SetOn();
             }
 
         }

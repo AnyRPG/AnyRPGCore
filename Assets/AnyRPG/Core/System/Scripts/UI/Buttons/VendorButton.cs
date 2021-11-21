@@ -219,7 +219,7 @@ namespace AnyRPG {
         }
 
         public override void Select() {
-            Debug.Log("VendorButton.Select()");
+            //Debug.Log("VendorButton.Select()");
             base.Select();
             if (owner != null) {
                 owner.SetControllerHints("Purchase", "", "", "");
@@ -227,7 +227,7 @@ namespace AnyRPG {
         }
 
         public override void DeSelect() {
-            Debug.Log("AbilityButton.DeSelect()");
+            //Debug.Log("VendorButton.DeSelect()");
             base.DeSelect();
             if (owner != null) {
                 owner.HideControllerHints();

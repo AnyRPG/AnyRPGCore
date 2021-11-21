@@ -130,6 +130,7 @@ namespace AnyRPG {
             for (int i = 0; i < activeNavigableButtons.Count; i++) {
                 if (activeNavigableButtons[i] == navigableElement) {
                     SetCurrentIndex(i);
+                    currentNavigableElement = navigableElement;
                     break;
                 }
             }

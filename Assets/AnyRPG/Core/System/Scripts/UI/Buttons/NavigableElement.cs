@@ -78,6 +78,9 @@ namespace AnyRPG {
 
         protected int configureCount = 0;
 
+        // game manager references
+        protected AudioManager audioManager = null;
+
         public override void Configure(SystemGameManager systemGameManager) {
             base.Configure(systemGameManager);
             configureCount++;
@@ -96,6 +99,12 @@ namespace AnyRPG {
 
             UnHighlightBackground();
             UnHighlightOutline();
+        }
+
+        public override void SetGameManagerReferences() {
+            base.SetGameManagerReferences();
+
+            audioManager = systemGameManager.AudioManager;
         }
 
         public void SetController(UINavigationController uINavigationController) {
@@ -194,7 +203,7 @@ namespace AnyRPG {
 
 
         public void HighlightOutline() {
-            Debug.Log(gameObject.name + "NavigableElement.HighlightOutline()");
+            //Debug.Log(gameObject.name + "NavigableElement.HighlightOutline()");
             if (outlineImage != null) {
                 outlineImage.color = highlightOutlineColor;
             }
@@ -219,7 +228,7 @@ namespace AnyRPG {
         }
 
         public void UnHighlightBackground() {
-            Debug.Log(gameObject.name + ".HightlightButton.UnHighlightBackground()");
+            //Debug.Log(gameObject.name + ".HightlightButton.UnHighlightBackground()");
             if (highlightImage != null) {
                 highlightImage.color = hiddenColor;
             }
@@ -265,6 +274,15 @@ namespace AnyRPG {
             }
 
         }
+
+        public virtual void OnHoverSound() {
+            audioManager.PlayUIHoverSound();
+        }
+
+        public virtual void OnClickSound() {
+            audioManager.PlayUIClickSound();
+        }
+
 
     }
 
