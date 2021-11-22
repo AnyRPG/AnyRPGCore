@@ -70,13 +70,13 @@ namespace AnyRPG {
             InitializeKey("CANCEL", KeyCode.Backspace, KeyCode.None, KeyCode.None, "Cancel", KeyBindType.Constant);
             InitializeKey("CANCELALL", KeyCode.Escape, KeyCode.None, KeyCode.None, "Cancel All", KeyBindType.Constant);
             InitializeKey("MAINMENU", KeyCode.F12, xBoxKeys["MAINMENU"], KeyCode.None, "Main Menu", KeyBindType.Constant);
-            InitializeKey("JOYSTICKBUTTON0", KeyCode.None, xBoxKeys["JOYSTICKBUTTON0"], KeyCode.None, "Joystick Button 0", KeyBindType.Constant);
-            InitializeKey("JOYSTICKBUTTON1", KeyCode.None, xBoxKeys["JOYSTICKBUTTON1"], KeyCode.None, "Joystick Button 1", KeyBindType.Constant);
-            InitializeKey("JOYSTICKBUTTON2", KeyCode.None, xBoxKeys["JOYSTICKBUTTON2"], KeyCode.None, "Joystick Button 2", KeyBindType.Constant);
-            InitializeKey("JOYSTICKBUTTON3", KeyCode.None, xBoxKeys["JOYSTICKBUTTON3"], KeyCode.None, "Joystick Button 3", KeyBindType.Constant);
-            InitializeKey("JOYSTICKBUTTON4", KeyCode.None, xBoxKeys["JOYSTICKBUTTON4"], KeyCode.None, "Joystick Button 4", KeyBindType.Constant);
-            InitializeKey("JOYSTICKBUTTON5", KeyCode.None, xBoxKeys["JOYSTICKBUTTON5"], KeyCode.None, "Joystick Button 5", KeyBindType.Constant);
-            InitializeKey("JOYSTICKBUTTON6", KeyCode.None, xBoxKeys["JOYSTICKBUTTON6"], KeyCode.None, "Joystick Button 6", KeyBindType.Constant);
+            InitializeKey("JOYSTICKBUTTON0", KeyCode.None, xBoxKeys["JOYSTICKBUTTON0"], KeyCode.None, "Joystick Button 0", KeyBindType.Hidden);
+            InitializeKey("JOYSTICKBUTTON1", KeyCode.None, xBoxKeys["JOYSTICKBUTTON1"], KeyCode.None, "Joystick Button 1", KeyBindType.Hidden);
+            InitializeKey("JOYSTICKBUTTON2", KeyCode.None, xBoxKeys["JOYSTICKBUTTON2"], KeyCode.None, "Joystick Button 2", KeyBindType.Hidden);
+            InitializeKey("JOYSTICKBUTTON3", KeyCode.None, xBoxKeys["JOYSTICKBUTTON3"], KeyCode.None, "Joystick Button 3", KeyBindType.Hidden);
+            InitializeKey("JOYSTICKBUTTON4", KeyCode.None, xBoxKeys["JOYSTICKBUTTON4"], KeyCode.None, "Joystick Button 4", KeyBindType.Hidden);
+            InitializeKey("JOYSTICKBUTTON5", KeyCode.None, xBoxKeys["JOYSTICKBUTTON5"], KeyCode.None, "Joystick Button 5", KeyBindType.Hidden);
+            InitializeKey("JOYSTICKBUTTON6", KeyCode.None, xBoxKeys["JOYSTICKBUTTON6"], KeyCode.None, "Joystick Button 6", KeyBindType.Hidden);
             InitializeKey("QUESTLOG", KeyCode.L, KeyCode.None, KeyCode.None, "Quest Log", KeyBindType.System);
             InitializeKey("CHARACTERPANEL", KeyCode.C, KeyCode.None, KeyCode.None, "Character Panel", KeyBindType.System);
             InitializeKey("CURRENCYPANEL", KeyCode.I, KeyCode.None, KeyCode.None, "Currency Panel", KeyBindType.System);
@@ -210,7 +210,7 @@ namespace AnyRPG {
                         keyBindNode.Control = false;
                         return;
                     }
-                } else if(inputDeviceType == InputDeviceType.Joystick) {
+                }/* else if(inputDeviceType == InputDeviceType.Joystick) {
                     if (keyBindNode.JoystickKeyCode == keyCode) {
                         keyBindNode.JoystickKeyCode = KeyCode.None;
                         return;
@@ -223,6 +223,7 @@ namespace AnyRPG {
                     }
 
                 }
+                */
             }
         }
 
@@ -261,6 +262,7 @@ namespace AnyRPG {
                     BindKey(bindName, inputDeviceType, e.keyCode, e.control, e.shift);
                     return;
                 }
+                /*
                 for (int i = 0; i < 20; i++) {
                     if (Input.GetKey("joystick button " + i.ToString())) {
                         //System.Enum.Parse(typeof(KeyCode), "JoystickButton" + i)
@@ -269,6 +271,7 @@ namespace AnyRPG {
                         return;
                     }
                 }
+                */
             }
         }
 
@@ -280,5 +283,5 @@ namespace AnyRPG {
 
     }
 
-    public enum KeyBindType { Normal, Action, Constant, System }
+    public enum KeyBindType { Normal, Action, Constant, System, Hidden }
 }

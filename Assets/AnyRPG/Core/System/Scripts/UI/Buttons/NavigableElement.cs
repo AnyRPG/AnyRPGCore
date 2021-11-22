@@ -72,7 +72,6 @@ namespace AnyRPG {
         protected UINavigationController owner = null;
 
         protected bool selected = false;
-        
 
         protected bool navigationControllerFocused = false;
 
@@ -223,7 +222,7 @@ namespace AnyRPG {
         }
 
         public void HighlightBackground() {
-            //Debug.Log(gameObject.name + ".HightlightButton.HighlightBackground()");
+            Debug.Log(gameObject.name + ".HightlightButton.HighlightBackground()");
             if (highlightImage != null) {
                 if (navigationControllerFocused || useUnfocusedColor == false) {
                     //highlightImage.color = highlightImageColor * selectedColor;
@@ -242,7 +241,7 @@ namespace AnyRPG {
         }
 
         public virtual void FocusNavigationController() {
-            //Debug.Log(gameObject.name + ".NavigableElement.FocusNavigationController()");
+            Debug.Log(gameObject.name + ".NavigableElement.FocusNavigationController()");
 
             navigationControllerFocused = true;
 
@@ -263,7 +262,7 @@ namespace AnyRPG {
         /// leave the current navigation controller
         /// </summary>
         public virtual void UnFocus() {
-            //Debug.Log(gameObject.name + ".NavigableElement.UnFocus()");
+            Debug.Log(gameObject.name + ".NavigableElement.UnFocus()");
 
             navigationControllerFocused = false;
 
@@ -276,6 +275,7 @@ namespace AnyRPG {
                 UnHighlightBackground();
             } else {
                 if (highlightImage.color != hiddenColor && useUnfocusedColor == true) {
+                    Debug.Log(gameObject.name + ".NavigableElement.UnFocus() setting unFocusedColor ");
                     highlightImage.color = unFocusedColor;
                 }
             }

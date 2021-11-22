@@ -21,6 +21,7 @@ namespace AnyRPG {
         [SerializeField]
         private HighlightButton keyboardAssignButton = null;
 
+        /*
         [SerializeField]
         private TextMeshProUGUI joystickButtonLabel = null;
 
@@ -32,17 +33,22 @@ namespace AnyRPG {
 
         [SerializeField]
         private HighlightButton mobileAssignButton = null;
+        */
 
         private KeyBindNode keyBindNode = null;
 
         // game manager references
         KeyBindManager keyBindManager = null;
 
+        public HighlightButton KeyboardAssignButton { get => keyboardAssignButton; }
+
         public override void Configure(SystemGameManager systemGameManager) {
             base.Configure(systemGameManager);
             keyboardAssignButton.Configure(systemGameManager);
+            /*
             joystickAssignButton.Configure(systemGameManager);
             mobileAssignButton.Configure(systemGameManager);
+            */
         }
 
         public override void SetGameManagerReferences() {
@@ -57,8 +63,8 @@ namespace AnyRPG {
             //Debug.Log("KeyBindSlotScript.Initialize(): keyBindID: " + this.keyBindID);
             this.slotLabel.text = keyBindNode.Label;
             this.keyboardButtonLabel.text = (keyBindNode.Control ? "ctrl+" : "") + (keyBindNode.Shift ? "shift+" : "") + keyBindNode.KeyboardKeyCode.ToString();
-            this.joystickButtonLabel.text = keyBindNode.JoystickKeyCode.ToString();
-            this.mobileButtonLabel.text = keyBindNode.MobileKeyCode.ToString();
+            //this.joystickButtonLabel.text = keyBindNode.JoystickKeyCode.ToString();
+            //this.mobileButtonLabel.text = keyBindNode.MobileKeyCode.ToString();
         }
 
         /*

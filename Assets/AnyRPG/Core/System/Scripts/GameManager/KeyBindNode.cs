@@ -12,7 +12,7 @@ namespace AnyRPG {
 
         private KeyCode keyCode;
         private KeyCode joystickKeyCode;
-        private KeyCode mobileKeyCode;
+        //private KeyCode mobileKeyCode;
 
         private bool controlModifier = false;
 
@@ -45,7 +45,7 @@ namespace AnyRPG {
             this.controlModifier = control;
             this.shiftModifier = shift;
             this.joystickKeyCode = joystickKeyCode;
-            this.mobileKeyCode = mobileKeyCode;
+            //this.mobileKeyCode = mobileKeyCode;
             this.KeyboardKeyCode = keyboardKeyCode;
         }
 
@@ -82,21 +82,22 @@ namespace AnyRPG {
             }
         }
 
+        /*
         public KeyCode MobileKeyCode {
             get => mobileKeyCode;
             set {
                 //Debug.Log("KeyBindNode.SetMyKeyCode");
                 mobileKeyCode = value;
-                /*
-                if (MyActionButton != null) {
-                    MyActionButton.MyKeyBindText.text = FormatActionButtonLabel();
-                }
-                */
+                
+                //if (MyActionButton != null) {
+                  //  MyActionButton.MyKeyBindText.text = FormatActionButtonLabel();
+                //}
                 if (KeyBindSlotScript != null) {
                     KeyBindSlotScript.Initialize(this);
                 }
             }
         }
+*/
 
         public string Label { get => label; set => label = value; }
 
@@ -144,9 +145,9 @@ namespace AnyRPG {
                 this.shiftModifier = shift;
             } else if (inputDeviceType == InputDeviceType.Joystick) {
                 this.JoystickKeyCode = keyCode;
-            } else if (inputDeviceType == InputDeviceType.Mobile) {
+            }/* else if (inputDeviceType == InputDeviceType.Mobile) {
                 this.MobileKeyCode = keyCode;
-            }
+            }*/
             SendKeyBindEvent();
         }
 
@@ -160,10 +161,12 @@ namespace AnyRPG {
             simpleParamNode.ParamType = SimpleParamType.stringType;
             simpleParamNode.SimpleParams.StringParam = this.joystickKeyCode.ToString();
             eventParamProperties.objectParam.MySimpleParams.Add(simpleParamNode);
+            /*
             simpleParamNode = new SimpleParamNode();
             simpleParamNode.ParamType = SimpleParamType.stringType;
             simpleParamNode.SimpleParams.StringParam = this.mobileKeyCode.ToString();
             eventParamProperties.objectParam.MySimpleParams.Add(simpleParamNode);
+            */
             SystemEventManager.TriggerEvent("OnBindKey" + keyBindID, eventParamProperties);
         }
 
@@ -184,8 +187,11 @@ namespace AnyRPG {
             }
         }
 
-        public void UnRegisterKeyPress() {
+        public void UnRegisterKeyPress(bool unlock = false) {
             keyPressed = false;
+            if (unlock == true) {
+                keyLocked = false;
+            }
         }
 
         public void RegisterKeyHeld() {

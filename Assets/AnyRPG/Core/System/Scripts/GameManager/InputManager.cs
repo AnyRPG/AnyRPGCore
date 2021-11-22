@@ -74,9 +74,9 @@ namespace AnyRPG {
         public void RegisterInput() {
             if (keyBindManager.BindName != string.Empty) {
                 // we are binding a key.  discard all input
-                Debug.Log("Key Binding in progress.  returning.");
+                //Debug.Log("Key Binding in progress.  returning.");
                 foreach (KeyBindNode keyBindNode in keyBindManager.KeyBinds.Values) {
-                    keyBindNode.UnRegisterKeyPress();
+                    keyBindNode.UnRegisterKeyPress(true);
                     keyBindNode.UnRegisterKeyHeld();
                     keyBindNode.UnRegisterKeyUp();
                 }
@@ -145,7 +145,7 @@ namespace AnyRPG {
                 // register key down
                 if ((Input.GetKeyDown(keyBindNode.KeyboardKeyCode) || Input.GetKeyDown(keyBindNode.JoystickKeyCode))
                     && (keyBindNode.KeyBindType == KeyBindType.Normal || ((control == keyBindNode.Control) && (shift == keyBindNode.Shift)))) {
-                    //Debug.Log(keyBindNode.MyKeyCode + " pressed true!");
+                    //Debug.Log(keyBindNode.KeyboardKeyCode + " " + keyBindNode.JoystickKeyCode + " pressed true! " + keyBindNode.KeyBindID);
                     keyBindNode.RegisterKeyPress();
                 } else {
                     keyBindNode.UnRegisterKeyPress();
@@ -153,7 +153,7 @@ namespace AnyRPG {
 
                 if ((Input.GetKey(keyBindNode.KeyboardKeyCode) || Input.GetKey(keyBindNode.JoystickKeyCode))
                     && (keyBindNode.KeyBindType == KeyBindType.Normal || (control == keyBindNode.Control) && (shift == keyBindNode.Shift))) {
-                    //Debug.Log(keyBindNode.MyKeyCode + " held true!");
+                    //Debug.Log(keyBindNode.KeyboardKeyCode + " " + keyBindNode.JoystickKeyCode + " held true!");
                     keyBindNode.RegisterKeyHeld();
                 } else {
                     keyBindNode.UnRegisterKeyHeld();
@@ -161,7 +161,7 @@ namespace AnyRPG {
 
                 // register key up
                 if (Input.GetKeyUp(keyBindNode.KeyboardKeyCode) || Input.GetKeyUp(keyBindNode.JoystickKeyCode)) {
-                    //Debug.Log(keyBindNode.MyKeyCode + " pressed true!");
+                    //Debug.Log(keyBindNode.KeyboardKeyCode + " pressed true!");
                     keyBindNode.RegisterKeyUp();
                 } else {
                     keyBindNode.UnRegisterKeyUp();

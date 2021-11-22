@@ -183,7 +183,7 @@ namespace AnyRPG {
         }
 
         public virtual void UnFocus() {
-            //Debug.Log(gameObject.name + ".UINavigationController.Unfocus()");
+            Debug.Log(gameObject.name + ".UINavigationController.Unfocus()");
             focused = false;
             foreach (NavigableElement navigableElement in activeNavigableButtons.Union(navigableButtons)) {
                 navigableElement.UnFocus();
@@ -399,7 +399,9 @@ namespace AnyRPG {
             Debug.Log(gameObject.name + ".UINavigationController.Cancel()");
 
             // should not automatically unfocus because this may be the only navigation controller on a window that is not closeable
-            if (owner.UserCloseable) {
+            Debug.Log(gameObject.name + ".UINavigationController.Cancel(): parentpanel: " + (owner.ParentPanel == null ? "null" : owner.ParentPanel.gameObject.name));
+
+            if (owner.UserCloseable == true || owner.ParentPanel != null) {
                 UnFocus();
             }
 

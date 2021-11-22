@@ -90,10 +90,10 @@ namespace AnyRPG {
             detailsPanel.SetNewGamePanel(this);
 
             //characterPanel.Configure(systemGameManager);
-            characterPanel.SetParentPanel(this);
+            //characterPanel.SetParentPanel(this);
 
             //umaCharacterPanel.Configure(systemGameManager);
-            umaCharacterPanel.SetParentPanel(this);
+            //umaCharacterPanel.SetParentPanel(this);
 
             //classPanel.Configure(systemGameManager);
             classPanel.SetNewGamePanel(this);

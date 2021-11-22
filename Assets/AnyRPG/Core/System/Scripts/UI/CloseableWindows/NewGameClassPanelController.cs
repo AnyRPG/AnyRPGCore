@@ -54,7 +54,7 @@ namespace AnyRPG {
 
         public void SetNewGamePanel(NewGamePanel newGamePanel) {
             this.newGamePanel = newGamePanel;
-            parentPanel = newGamePanel;
+            //parentPanel = newGamePanel;
         }
 
         public void ClearOptionButtons() {

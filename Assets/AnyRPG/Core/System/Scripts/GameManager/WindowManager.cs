@@ -83,8 +83,10 @@ namespace AnyRPG {
         }
 
         public void Navigate() {
+            //Debug.Log("WindowManager.Navigate()");
 
             if (windowStack.Count != 0) {
+                //Debug.Log("WindowManager.Navigate() : windowstack is not zero");
 
                 // d pad navigation
                 if (controlsManager.DPadUpPressed) {

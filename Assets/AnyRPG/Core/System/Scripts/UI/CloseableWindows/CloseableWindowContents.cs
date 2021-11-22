@@ -85,6 +85,7 @@ namespace AnyRPG {
             if (subPanels.Count > 0) {
                 foreach (CloseableWindowContents closeableWindowContents in subPanels) {
                     closeableWindowContents.Configure(systemGameManager);
+                    closeableWindowContents.SetParentPanel(this);
                 }
             }
             foreach (ColoredUIElement coloredUIElement in coloredUIElements) {
