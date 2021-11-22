@@ -260,19 +260,30 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7c3c5d4d28c73df48ad352b682a49e88, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  text: {fileID: 2698383802237378752}
+  outlineImage: {fileID: 0}
+  highlightOutlineColor: {r: 0.64705884, g: 0.64705884, b: 0.64705884, a: 0.6509804}
   highlightImage: {fileID: 0}
+  highlightBackgroundOnSelect: 0
+  highlightBackgroundOnInteract: 1
+  unHighlightBackgroundOnUnFocus: 1
+  unHighlightBackgroundOnLeave: 1
+  highlightImageColor: {r: 0.64705884, g: 0.64705884, b: 0.64705884, a: 0.6509804}
+  useUnfocusedColor: 1
+  unFocusedColor: {r: 1, g: 1, b: 1, a: 0.15294118}
+  rectTransform: {fileID: 0}
+  text: {fileID: 2698383802237378752}
+  ignoreSystemImageTint: 0
   highlightButton: {fileID: 4154079068316661478}
-  hideImageWhenInactive: 1
-  tintImage: 1
-  useSystemImageTintColor: 1
-  useSystemButtonColors: 1
-  useHighlightColorOnButton: 0
-  highlightColor: {r: 0.64705884, g: 0.64705884, b: 0.64705884, a: 0.403}
+  selectedButtonColor: {r: 0.64705884, g: 0.64705884, b: 0.64705884, a: 0.6509804}
+  overrideNormalColor: 0
   normalColor: {r: 0.6392157, g: 0.6392157, b: 0.6392157, a: 0.32156864}
+  overrideHighlightedColor: 0
   highlightedColor: {r: 0.64705884, g: 0.64705884, b: 0.64705884, a: 0.6509804}
+  overridePressedColor: 0
   pressedColor: {r: 0.47058824, g: 0.47058824, b: 0.47058824, a: 0.2784314}
+  overrideSelectedColor: 0
   selectedColor: {r: 0.64705884, g: 0.64705884, b: 0.64705884, a: 0.6509804}
+  overrideDisabledColor: 0
   disabledColor: {r: 0.32156864, g: 0.32156864, b: 0.32156864, a: 0.06666667}
   CapitalizeText: 0
 --- !u!1 &4154079068713420242
@@ -782,9 +793,12 @@ MonoBehaviour:
   userCloseable: 1
   focusFirstButtonOnOpen: 1
   focusActiveSubPanel: 0
-  uINavigationControllers: []
+  uINavigationControllers:
+  - {fileID: 7994819743669621666}
+  - {fileID: 3209957080387787074}
   subPanels: []
-  creditTemplate: {fileID: 3129540725068152788, guid: da254ad492f6d784380ddb34e8eb773f,
+  hintBarController: {fileID: 0}
+  creditTemplate: {fileID: 3129540725068152788, guid: 7cc888a734ac44e4780ff4315cb85130,
     type: 3}
   creditCategoryTemplate: {fileID: 7073291999989539490, guid: 9bb7798620bb50f40891bf7dc849bc12,
     type: 3}
@@ -915,6 +929,7 @@ GameObject:
   - component: {fileID: 5912610079627168753}
   - component: {fileID: 1298638072278685855}
   - component: {fileID: 179697353679662647}
+  - component: {fileID: 3209957080387787074}
   m_Layer: 5
   m_Name: PanelUI
   m_TagString: Untagged
@@ -992,6 +1007,34 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2d01d4f237c435947ada6ebde8e36d50, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &3209957080387787074
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6134400192395149418}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 30e086dccacef8d45959cb3d8f7ea6b1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  leftPanel: {fileID: 0}
+  leftControllers: []
+  rightPanel: {fileID: 0}
+  rightControllers: []
+  upPanel: {fileID: 0}
+  upControllers: []
+  downPanel: {fileID: 0}
+  downControllers:
+  - {fileID: 7994819743669621666}
+  acceptController: {fileID: 0}
+  scrollRect: {fileID: 4885900671330896347}
+  updateActiveListOnOpen: 0
+  pruneInactiveElements: 0
+  navigableButtons: []
+  numRows: 0
+  numColumns: 2
 --- !u!1 &6786455707970483053
 GameObject:
   m_ObjectHideFlags: 0
@@ -1037,6 +1080,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2440663541707998929}
+  - component: {fileID: 7994819743669621666}
   m_Layer: 5
   m_Name: Navigation
   m_TagString: Untagged
@@ -1064,6 +1108,33 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 100}
   m_Pivot: {x: 0.5, y: 0}
+--- !u!114 &7994819743669621666
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7317039371937138602}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8995f41cb132f3148a9912f89e49421b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  leftPanel: {fileID: 0}
+  leftControllers: []
+  rightPanel: {fileID: 0}
+  rightControllers: []
+  upPanel: {fileID: 0}
+  upControllers:
+  - {fileID: 3209957080387787074}
+  downPanel: {fileID: 0}
+  downControllers: []
+  acceptController: {fileID: 0}
+  scrollRect: {fileID: 0}
+  updateActiveListOnOpen: 0
+  pruneInactiveElements: 0
+  navigableButtons:
+  - {fileID: 2453065572062217909}
 --- !u!1 &7648967537109525354
 GameObject:
   m_ObjectHideFlags: 0

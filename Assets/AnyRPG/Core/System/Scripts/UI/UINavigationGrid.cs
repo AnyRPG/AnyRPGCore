@@ -37,7 +37,7 @@ namespace AnyRPG {
                 currentColumn = 0;
             }
             currentNavigableElement = activeNavigableButtons[currentIndex];
-            currentNavigableElement.Select();
+            SelectCurrentNavigableElement();
         }
 
         public override void SetCurrentIndex(int newIndex) {
@@ -78,7 +78,7 @@ namespace AnyRPG {
                 CalculateCurrentIndex();
             }
             currentNavigableElement = activeNavigableButtons[currentIndex];
-            currentNavigableElement.Select();
+            SelectCurrentNavigableElement();
         }
 
         public override void ProcessRightButton() {
@@ -105,7 +105,7 @@ namespace AnyRPG {
                 CalculateCurrentIndex();
             }
             currentNavigableElement = activeNavigableButtons[currentIndex];
-            currentNavigableElement.Select();
+            SelectCurrentNavigableElement();
         }
 
         public override void ProcessUpButton() {
@@ -129,7 +129,7 @@ namespace AnyRPG {
                 CalculateCurrentIndex();
             }
             currentNavigableElement = activeNavigableButtons[currentIndex];
-            currentNavigableElement.Select();
+            SelectCurrentNavigableElement();
         }
 
         public override void ProcessDownButton() {
@@ -153,13 +153,21 @@ namespace AnyRPG {
                 CalculateCurrentIndex();
             }
             currentNavigableElement = activeNavigableButtons[currentIndex];
-            currentNavigableElement.Select();
+            SelectCurrentNavigableElement();
         }
 
         public override void FocusFirstButton() {
             Debug.Log(gameObject.name + ".UINavigationGrid.FocusFirstButton()");
             base.FocusFirstButton();
             CalculatePosition();
+        }
+
+        public override void SelectCurrentNavigableElement() {
+            Debug.Log(gameObject.name + ".UINavigationListVertical.SelectCurrentNavigableElement()");
+            base.SelectCurrentNavigableElement();
+            if (scrollRect != null) {
+                scrollRect.content.localPosition = GetSnapToPositionToBringChildIntoView(scrollRect, currentNavigableElement.RectTransform);
+            }
         }
 
     }

@@ -14,6 +14,12 @@ namespace AnyRPG {
         [SerializeField]
         private TextMeshProUGUI attributionText = null;
 
+        [SerializeField]
+        private HighlightButton nameHighlightButton = null;
+
+        [SerializeField]
+        private HighlightButton attributionHighlightButton = null;
+
         private string url = string.Empty;
         private string downloadUrl = string.Empty;
 
@@ -21,6 +27,8 @@ namespace AnyRPG {
         public TextMeshProUGUI AttributionText { get => attributionText; set => attributionText = value; }
         public string UserUrl { get => url; set => url = value; }
         public string DownloadUrl { get => downloadUrl; set => downloadUrl = value; }
+        public HighlightButton NameHighlightButton { get => nameHighlightButton; }
+        public HighlightButton AttributionHighlightButton { get => attributionHighlightButton; }
 
         public void OpenURL() {
             if (UserUrl != null && UserUrl != string.Empty) {
