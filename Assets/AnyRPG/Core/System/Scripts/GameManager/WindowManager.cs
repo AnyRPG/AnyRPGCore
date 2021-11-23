@@ -88,6 +88,11 @@ namespace AnyRPG {
             if (windowStack.Count != 0) {
                 //Debug.Log("WindowManager.Navigate() : windowstack is not zero");
 
+                // joystick movement
+                if (controlsManager.InputHorizontal != 0f || controlsManager.InputVertical != 0f) {
+                    windowStack[windowStack.Count - 1].LeftAnalog(controlsManager.InputHorizontal, controlsManager.InputVertical);
+                }
+
                 // d pad navigation
                 if (controlsManager.DPadUpPressed) {
                     windowStack[windowStack.Count - 1].UpButton();

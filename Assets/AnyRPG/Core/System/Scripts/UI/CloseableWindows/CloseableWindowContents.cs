@@ -509,6 +509,14 @@ namespace AnyRPG {
             if (closeableWindow != null) {
                 closeableWindow.HideControllerHints();
             }
+
+        }
+
+        public void LeftAnalog(float inputHorizontal, float inputVertical) {
+            if (closeableWindow != null) {
+                closeableWindow.LeftAnalog(inputHorizontal, inputVertical);
+                return;
+            }
         }
     }
 

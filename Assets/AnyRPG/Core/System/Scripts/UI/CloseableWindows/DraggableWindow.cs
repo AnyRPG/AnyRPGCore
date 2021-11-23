@@ -133,6 +133,17 @@ namespace AnyRPG {
             }
             uIManager.DragInProgress = false;
         }
+
+        public void LeftAnalog(float inputHorizontal, float inputVertical) {
+            if (neverDraggable) {
+                return;
+            }
+            if (uiLocked == true && alwaysDraggable == false) {
+                return;
+            }
+            moveableTransform.position += new Vector3(inputHorizontal, inputVertical, 0f);
+            saveManager.SaveWindowPositions();
+        }
     }
 
 }

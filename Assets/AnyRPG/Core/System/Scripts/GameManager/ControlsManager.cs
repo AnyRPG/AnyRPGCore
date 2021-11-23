@@ -8,6 +8,9 @@ namespace AnyRPG {
 
     public class ControlsManager : ConfiguredMonoBehaviour {
 
+        private float inputHorizontal = 0f;
+        private float inputVertical = 0f;
+
         private float dPadHorizontal = 0f;
         private float dPadVertical = 0f;
         private bool dPadDown = false;
@@ -51,6 +54,8 @@ namespace AnyRPG {
         public bool RightTriggerDown { get => rightTriggerDown; }
         public bool RightTriggerUp { get => rightTriggerUp; }
         public bool RightTriggerPressed { get => rightTriggerPressed; }
+        public float InputHorizontal { get => inputHorizontal; }
+        public float InputVertical { get => inputVertical; }
 
         public override void Configure(SystemGameManager systemGameManager) {
             base.Configure(systemGameManager);
@@ -116,9 +121,15 @@ namespace AnyRPG {
 
         private void RegisterAxis() {
 
+            RegisterJoystickAxis();
             RegisterDPadAxis();
             RegisterTriggerAxis();
 
+        }
+
+        private void RegisterJoystickAxis() {
+            inputHorizontal = Input.GetAxis("LeftAnalogHorizontal");
+            inputVertical = Input.GetAxis("LeftAnalogVertical");
         }
 
         private void RegisterTriggerAxis() {

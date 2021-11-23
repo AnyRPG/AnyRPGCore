@@ -220,6 +220,14 @@ namespace AnyRPG {
             }
         }
 
+        public void LeftAnalog(float inputHorizontal, float inputVertical) {
+            if (dragHandle != null) {
+                dragHandle.LeftAnalog(inputHorizontal, inputVertical);
+                return;
+            }
+            //windowContents.LeftAnalog(inputHorizontal, inputVertical);
+        }
+
     }
 
 }
