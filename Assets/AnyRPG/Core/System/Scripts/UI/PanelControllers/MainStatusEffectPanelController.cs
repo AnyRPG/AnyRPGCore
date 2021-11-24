@@ -33,7 +33,6 @@ namespace AnyRPG {
                 statusEffectWindowPanel.AddStatusNode(returnValue);
             }
 
-
             return returnValue;
         }
       

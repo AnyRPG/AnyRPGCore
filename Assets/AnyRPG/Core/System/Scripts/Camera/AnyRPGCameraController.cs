@@ -174,7 +174,7 @@ namespace AnyRPG {
             lastPlayerPosition = target.position;
             SetTargetPosition();
 
-            // handleZoom
+            // ====MOUSE ZOOM====
             // added code at end to check if over nameplate and allow scrolling
             //if (inputManager.mouseScrolled && (!EventSystem.current.IsPointerOverGameObject() || (namePlateManager != null ? namePlateManager.MouseOverNamePlate() : false))) {
             if (inputManager.mouseScrolled
@@ -183,6 +183,18 @@ namespace AnyRPG {
                 currentZoomDistance += (Input.GetAxis("Mouse ScrollWheel") * zoomSpeed * -1);
                 currentZoomDistance = Mathf.Clamp(currentZoomDistance, minZoom, maxZoom);
                 cameraZoom = true;
+            }
+
+            // ====GAMEPAD ZOOM====
+            if (windowManager.WindowStack.Count == 0
+                && Input.GetAxis("RightAnalogVertical") != 0f
+                && inputManager.KeyBindWasPressedOrHeld("JOYSTICKBUTTON9")) {
+
+                //currentZoomDistance += (Input.GetAxis("RightAnalogVertical") * zoomSpeed * -1);
+                currentZoomDistance += (Input.GetAxis("RightAnalogVertical") * -1);
+                currentZoomDistance = Mathf.Clamp(currentZoomDistance, minZoom, maxZoom);
+                cameraZoom = true;
+
             }
 
 

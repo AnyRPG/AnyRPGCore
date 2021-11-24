@@ -204,6 +204,7 @@ namespace AnyRPG {
         }
 
         public virtual void ClearActiveButton(NavigableElement clearButton) {
+            clearButton.DeSelect();
             activeNavigableButtons.Remove(clearButton);
         }
 

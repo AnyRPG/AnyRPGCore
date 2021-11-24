@@ -67,10 +67,16 @@ namespace AnyRPG {
                 uIManager.NavigableInterfaceElements[interfaceIndex].UnFocus();
                 windowStack.Remove(uIManager.NavigableInterfaceElements[interfaceIndex]);
             }
+
+            // increase the index
             interfaceIndex++;
+
+            // if the last element has been navigated past, reset to the first element
             if (interfaceIndex >= uIManager.NavigableInterfaceElements.Count) {
                 interfaceIndex = 0;
             }
+
+            // focus the current element and add it to the window stack
             uIManager.NavigableInterfaceElements[interfaceIndex].Focus();
             windowStack.Add(uIManager.NavigableInterfaceElements[interfaceIndex]);
         }

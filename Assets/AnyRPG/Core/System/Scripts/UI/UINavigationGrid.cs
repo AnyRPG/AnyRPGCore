@@ -14,6 +14,10 @@ namespace AnyRPG {
         [SerializeField]
         protected int numColumns = 0;
 
+        [Tooltip("If true, column 1 is on the right side instead of the left")]
+        [SerializeField]
+        protected bool reverseLeftRight = false;
+
         protected int currentRow = 0;
         protected int currentColumn = 0;
 
@@ -59,6 +63,14 @@ namespace AnyRPG {
             if (activeNavigableButtons.Count == 0) {
                 return;
             }
+            if (!reverseLeftRight) {
+                LessColumn();
+            } else {
+                MoreColumn();
+            }
+        }
+
+        private void LessColumn() {
             currentColumn--;
             if (currentColumn < 0) {
                 if (leftControllers.Count != 0 || leftPanel != null) {
@@ -86,6 +98,14 @@ namespace AnyRPG {
             if (activeNavigableButtons.Count == 0) {
                 return;
             }
+            if (!reverseLeftRight) {
+                MoreColumn();
+            } else {
+                LessColumn();
+            }
+        }
+
+        private void MoreColumn() {
             currentColumn++;
             if (currentColumn >= numColumns) {
                 if (rightControllers.Count != 0 || rightPanel != null) {

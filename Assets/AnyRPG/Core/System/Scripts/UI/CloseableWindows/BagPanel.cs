@@ -97,7 +97,7 @@ namespace AnyRPG {
                 slot.SetBackGroundColor();
                 slotController.AddActiveButton(slot);
             }
-            slotController.NumRows = Mathf.CeilToInt((float)slots.Count / (float)8);
+            slotController.NumRows = Mathf.CeilToInt((float)slots.Count / 8f);
 
             return returnList;
         }
@@ -111,7 +111,7 @@ namespace AnyRPG {
             Slots.Add(slot);
             slot.SetBackGroundColor();
             slotController.AddActiveButton(slot);
-            slotController.NumRows = Mathf.CeilToInt((float) slots.Count / (float)8);
+            slotController.NumRows = Mathf.CeilToInt((float) slots.Count / 8f);
         }
 
         public virtual void HandleRemoveSlot(InventorySlot inventorySlot) {

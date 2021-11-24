@@ -1011,6 +1011,7 @@ namespace AnyRPG {
         }
 
         public void ShowGamepadTooltip(RectTransform paneltransform, Transform buttonTransform, IDescribable describable, string sellPriceString) {
+            Debug.Log("UIManager.ShowGamepadTooltip()");
             //Rect panelRect = RectTransformToScreenSpace((BagPanel.ContentArea as RectTransform));
             Vector3[] WorldCorners = new Vector3[4];
             paneltransform.GetWorldCorners(WorldCorners);
@@ -1095,7 +1096,7 @@ namespace AnyRPG {
         /// Hide the tooltip
         /// </summary>
         public void HideToolTip() {
-            //Debug.Log("UIManager.HideToolTip()");
+            Debug.Log("UIManager.HideToolTip()");
             toolTip.SetActive(false);
         }
 
@@ -1484,6 +1485,18 @@ namespace AnyRPG {
             }
             if (!PlayerPrefs.HasKey("HideFullHealthBar")) {
                 PlayerPrefs.SetInt("HideFullHealthBar", defaultHideFullHealthBarButton);
+            }
+        }
+
+        public void AddNavigableInterfaceElement(NavigableInterfaceElement navigableInterfaceElement) {
+            if (activeNavigableInterfaceElements.Contains(navigableInterfaceElement) == false) {
+                activeNavigableInterfaceElements.Add(navigableInterfaceElement);
+            }
+        }
+
+        public void RemoveNavigableInterfaceElement(NavigableInterfaceElement navigableInterfaceElement) {
+            if (activeNavigableInterfaceElements.Contains(navigableInterfaceElement)) {
+                activeNavigableInterfaceElements.Remove(navigableInterfaceElement);
             }
         }
     }

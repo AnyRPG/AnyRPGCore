@@ -52,6 +52,9 @@ namespace AnyRPG {
             xBoxKeys.Add("JOYSTICKBUTTON4", KeyCode.JoystickButton4);
             xBoxKeys.Add("JOYSTICKBUTTON5", KeyCode.JoystickButton5);
             xBoxKeys.Add("JOYSTICKBUTTON6", KeyCode.JoystickButton6);
+            xBoxKeys.Add("JOYSTICKBUTTON7", KeyCode.JoystickButton7);
+            xBoxKeys.Add("JOYSTICKBUTTON8", KeyCode.JoystickButton8);
+            xBoxKeys.Add("JOYSTICKBUTTON9", KeyCode.JoystickButton9);
 
             InitializeKey("FORWARD", KeyCode.W, KeyCode.W, KeyCode.W, "Forward", KeyBindType.Normal);
             InitializeKey("BACK", KeyCode.S, KeyCode.S, KeyCode.S, "Backward", KeyBindType.Normal);
@@ -77,6 +80,9 @@ namespace AnyRPG {
             InitializeKey("JOYSTICKBUTTON4", KeyCode.None, xBoxKeys["JOYSTICKBUTTON4"], KeyCode.None, "Joystick Button 4", KeyBindType.Hidden);
             InitializeKey("JOYSTICKBUTTON5", KeyCode.None, xBoxKeys["JOYSTICKBUTTON5"], KeyCode.None, "Joystick Button 5", KeyBindType.Hidden);
             InitializeKey("JOYSTICKBUTTON6", KeyCode.None, xBoxKeys["JOYSTICKBUTTON6"], KeyCode.None, "Joystick Button 6", KeyBindType.Hidden);
+            InitializeKey("JOYSTICKBUTTON7", KeyCode.None, xBoxKeys["JOYSTICKBUTTON7"], KeyCode.None, "Joystick Button 7", KeyBindType.Hidden);
+            InitializeKey("JOYSTICKBUTTON8", KeyCode.None, xBoxKeys["JOYSTICKBUTTON8"], KeyCode.None, "Joystick Button 8", KeyBindType.Hidden);
+            InitializeKey("JOYSTICKBUTTON9", KeyCode.None, xBoxKeys["JOYSTICKBUTTON9"], KeyCode.None, "Joystick Button 9", KeyBindType.Hidden);
             InitializeKey("QUESTLOG", KeyCode.L, KeyCode.None, KeyCode.None, "Quest Log", KeyBindType.System);
             InitializeKey("CHARACTERPANEL", KeyCode.C, KeyCode.None, KeyCode.None, "Character Panel", KeyBindType.System);
             InitializeKey("CURRENCYPANEL", KeyCode.I, KeyCode.None, KeyCode.None, "Currency Panel", KeyBindType.System);

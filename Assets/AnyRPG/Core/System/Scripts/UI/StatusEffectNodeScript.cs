@@ -62,12 +62,16 @@ namespace AnyRPG {
 
         public void HandleRightClick() {
             //Debug.Log("StatusEffectNodeScript.HandleRightClick()");
+            CancelStatusEffect();
+            uIManager.HideToolTip();
+        }
+
+        private void CancelStatusEffect() {
             if (target == playerManager.UnitController?.CharacterUnit) {
                 if (statusEffectNode != null && statusEffectNode.StatusEffect.StatusEffectAlignment != StatusEffectAlignment.Harmful) {
                     //Debug.Log("StatusEffectNodeScript.HandleRightClick(): statusEffect is not null, destroying");
                     statusEffectNode.CancelStatusEffect();
                 }
-                uIManager.HideToolTip();
             }
         }
 
@@ -125,6 +129,14 @@ namespace AnyRPG {
                 //Debug.Log("StatusEffectNodeScript.HandleRightClick(): statusEffect is not null, destroying");
                 owner.SetControllerHints("", "Cancel Effect", "", "");
             }
+            if (owner != null) {
+                ShowGamepadTooltip();
+            }
+        }
+
+        public void ShowGamepadTooltip() {
+            Debug.Log("StatusEffectNodeScript.ShowGamepadTooltip()");
+            uIManager.ShowGamepadTooltip(owner.transform as RectTransform, transform, statusEffectNode.StatusEffect, "Sell Price: ");
         }
 
         public override void DeSelect() {
@@ -132,13 +144,14 @@ namespace AnyRPG {
             base.DeSelect();
             if (owner != null) {
                 owner.HideControllerHints();
+                uIManager.HideToolTip();
             }
         }
 
         public override void JoystickButton2() {
             Debug.Log("StatusEffectNodeScript.JoystickButton2()");
             base.JoystickButton2();
-            HandleRightClick();
+            CancelStatusEffect();
         }
 
 
