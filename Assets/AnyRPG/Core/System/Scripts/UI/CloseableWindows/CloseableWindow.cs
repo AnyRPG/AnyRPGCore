@@ -151,7 +151,7 @@ namespace AnyRPG {
         }
 
         public virtual void CloseWindow() {
-            //Debug.Log(gameObject.name + ".CloseableWindow.CloseWindow()");
+            Debug.Log(gameObject.name + ".CloseableWindow.CloseWindow()");
             //InitializeWindow();
             if (IsOpen == false) {
                 RawCloseWindow();
@@ -172,7 +172,7 @@ namespace AnyRPG {
         }
 
         public void RawCloseWindow() {
-            //Debug.Log(gameObject.name + ".CloseableWindow.RawCloseWindow()");
+            Debug.Log(gameObject.name + ".CloseableWindow.RawCloseWindow()");
             /*
             canvasGroup.alpha = 0;
             canvasGroup.interactable = false;
@@ -182,7 +182,7 @@ namespace AnyRPG {
         }
 
         public void ToggleOpenClose() {
-            //Debug.Log("CloseableWindow.ToggleOpenClose()");
+            Debug.Log(gameObject.name + ".CloseableWindow.ToggleOpenClose()");
             if (IsOpen) {
                 CloseWindow();
             } else {
@@ -226,6 +226,10 @@ namespace AnyRPG {
                 return;
             }
             //windowContents.LeftAnalog(inputHorizontal, inputVertical);
+        }
+
+        public void OnDisable() {
+            Debug.Log(gameObject.name + ".CloseableWindow.OnDisable()");
         }
 
     }

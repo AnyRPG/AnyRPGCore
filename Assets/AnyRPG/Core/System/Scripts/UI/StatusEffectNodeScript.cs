@@ -5,7 +5,7 @@ using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 namespace AnyRPG {
-    public class StatusEffectNodeScript : ConfiguredMonoBehaviour, IPointerClickHandler, IPointerEnterHandler, IPointerExitHandler, IPointerDownHandler, IPointerUpHandler {
+    public class StatusEffectNodeScript : NavigableElement {
 
         [SerializeField]
         private Image icon = null;
@@ -52,9 +52,9 @@ namespace AnyRPG {
             playerManager = systemGameManager.PlayerManager;
         }
 
-        public void OnPointerClick(PointerEventData eventData) {
+        public override void OnPointerClick(PointerEventData eventData) {
             //Debug.Log("StatusEffectNodeScript.OnPointerClick()");
-
+            base.OnPointerClick(eventData);
             if (eventData.button == PointerEventData.InputButton.Right) {
                 HandleRightClick();
             }
@@ -71,16 +71,16 @@ namespace AnyRPG {
             }
         }
 
-        public void OnPointerEnter(PointerEventData eventData) {
+        public override void OnPointerEnter(PointerEventData eventData) {
             //Debug.Log("StatusEffectNodeScript.OnPointerEnter()");
-
+            base.OnPointerEnter(eventData);
             // show tooltip
             uIManager.ShowToolTip(transform.position, statusEffectNode.StatusEffect);
         }
 
-        public void OnPointerExit(PointerEventData eventData) {
+        public override void OnPointerExit(PointerEventData eventData) {
             //Debug.Log("StatusEffectNodeScript.OnPointerExit()");
-
+            base.OnPointerExit(eventData);
             // hide tooltip
             uIManager.HideToolTip();
         }
@@ -112,16 +112,33 @@ namespace AnyRPG {
             }
         }
 
-        public void OnPointerDown(PointerEventData eventData) {
-        }
-
-        public void OnPointerUp(PointerEventData eventData) {
-        }
-
         public void OnSendObjectToPool() {
             //Debug.Log("StatusEffectNodeScript.OnSendObjectToPool()");
             statusEffectNode = null;
             target = null;
+        }
+
+        public override void Select() {
+            Debug.Log("StatusEffectNodeScript.Select()");
+            base.Select();
+            if (owner != null && statusEffectNode != null && statusEffectNode.StatusEffect.StatusEffectAlignment != StatusEffectAlignment.Harmful) {
+                //Debug.Log("StatusEffectNodeScript.HandleRightClick(): statusEffect is not null, destroying");
+                owner.SetControllerHints("", "Cancel Effect", "", "");
+            }
+        }
+
+        public override void DeSelect() {
+            Debug.Log("StatusEffectNodeScript.DeSelect()");
+            base.DeSelect();
+            if (owner != null) {
+                owner.HideControllerHints();
+            }
+        }
+
+        public override void JoystickButton2() {
+            Debug.Log("StatusEffectNodeScript.JoystickButton2()");
+            base.JoystickButton2();
+            HandleRightClick();
         }
 
 

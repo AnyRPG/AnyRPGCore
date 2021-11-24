@@ -6,23 +6,6 @@ using UnityEngine;
 namespace AnyRPG {
     public class SystemGameManager : MonoBehaviour {
 
-        /*
-        #region Singleton
-        private static SystemGameManager instance;
-
-        public static SystemGameManager Instance {
-            get {
-                return instance;
-            }
-        }
-
-        private void Awake() {
-            instance = this;
-            Init();
-        }
-        #endregion
-        */
-
         private void Awake() {
             Init();
         }
@@ -194,6 +177,7 @@ namespace AnyRPG {
             // then everything else that relies on system configuration and data resources
             objectPooler.Configure(this);
 
+
             controlsManager.Configure(this);
             windowManager.Configure(this);
             cameraManager.Configure(this);
@@ -223,6 +207,7 @@ namespace AnyRPG {
             systemPlayableDirectorManager.Configure(this);
             uIManager.Configure(this);
             currencyConverter.Configure(this);
+
 
         }
 

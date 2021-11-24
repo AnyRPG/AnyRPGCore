@@ -1390,7 +1390,7 @@ namespace AnyRPG {
             }
 
             if (PlayerPrefs.HasKey("StatusEffectPanelControllerX") && PlayerPrefs.HasKey("StatusEffectPanelControllerY"))
-                uIManager.StatusEffectPanelController.RectTransform.anchoredPosition = new Vector3(PlayerPrefs.GetFloat("StatusEffectPanelControllerX"), PlayerPrefs.GetFloat("StatusEffectPanelControllerY"), 0);
+                uIManager.StatusEffectWindow.RectTransform.anchoredPosition = new Vector3(PlayerPrefs.GetFloat("StatusEffectPanelControllerX"), PlayerPrefs.GetFloat("StatusEffectPanelControllerY"), 0);
 
             if (PlayerPrefs.HasKey("PlayerUnitFrameControllerX") && PlayerPrefs.HasKey("PlayerUnitFrameControllerY"))
                 uIManager.PlayerUnitFrameController.RectTransform.anchoredPosition = new Vector3(PlayerPrefs.GetFloat("PlayerUnitFrameControllerX"), PlayerPrefs.GetFloat("PlayerUnitFrameControllerY"), 0);
@@ -1470,8 +1470,8 @@ namespace AnyRPG {
             PlayerPrefs.SetFloat("FloatingCastBarControllerX", uIManager.FloatingCastBarController.RectTransform.anchoredPosition.x);
             PlayerPrefs.SetFloat("FloatingCastBarControllerY", uIManager.FloatingCastBarController.RectTransform.anchoredPosition.y);
 
-            PlayerPrefs.SetFloat("StatusEffectPanelControllerX", uIManager.StatusEffectPanelController.RectTransform.anchoredPosition.x);
-            PlayerPrefs.SetFloat("StatusEffectPanelControllerY", uIManager.StatusEffectPanelController.RectTransform.anchoredPosition.y);
+            PlayerPrefs.SetFloat("StatusEffectPanelControllerX", uIManager.StatusEffectWindow.RectTransform.anchoredPosition.x);
+            PlayerPrefs.SetFloat("StatusEffectPanelControllerY", uIManager.StatusEffectWindow.RectTransform.anchoredPosition.y);
 
             PlayerPrefs.SetFloat("PlayerUnitFrameControllerX", uIManager.PlayerUnitFrameController.RectTransform.anchoredPosition.x);
             PlayerPrefs.SetFloat("PlayerUnitFrameControllerY", uIManager.PlayerUnitFrameController.RectTransform.anchoredPosition.y);
