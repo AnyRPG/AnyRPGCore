@@ -371,6 +371,12 @@ namespace AnyRPG {
                 // we are in a cutscene and shouldn't be dealing with mouseover
                 return;
             }
+
+            // gamepad mode can hide the cursor.  Mouseover should not be activated when the cursor is hidden
+            if (Cursor.visible == false) {
+                return;
+            }
+
             Ray ray = cameraManager.ActiveMainCamera.ScreenPointToRay(Input.mousePosition);
             int playerMask = 1 << LayerMask.NameToLayer("Player");
             int ignoreMask = 1 << LayerMask.NameToLayer("Ignore Raycast");
@@ -412,13 +418,17 @@ namespace AnyRPG {
 
             if (disableMouseOver) {
                 // we did not hit any interactable, check if a current interactable is set and unset it
-                if (mouseOverInteractable != null) {
-                    mouseOverInteractable.IsMouseOverUnit = false;
-                    mouseOverInteractable.OnMouseOut();
-                    mouseOverInteractable = null;
-                }
+                DisableMouseOver();
             }
 
+        }
+
+        public void DisableMouseOver() {
+            if (mouseOverInteractable != null) {
+                mouseOverInteractable.IsMouseOverUnit = false;
+                mouseOverInteractable.OnMouseOut();
+                mouseOverInteractable = null;
+            }
         }
 
         /*
@@ -913,8 +923,11 @@ namespace AnyRPG {
 
         public void HandleClearTarget(Interactable oldTarget) {
             //Debug.Log("PlayerController.HandleClearTarget()");
-
-            uIManager.FocusUnitFrameController.ClearTarget();
+            if (PlayerPrefs.HasKey("LockUI") == true && PlayerPrefs.GetInt("LockUI") == 0) {
+                uIManager.FocusUnitFrameController.ClearTarget(false);
+            } else {
+                uIManager.FocusUnitFrameController.ClearTarget();
+            }
             namePlateManager.ClearFocus();
             oldTarget?.UnitComponentController?.HighlightController?.HandleClearTarget();
         }

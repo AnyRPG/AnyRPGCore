@@ -61,7 +61,7 @@ namespace AnyRPG {
             base.Configure(systemGameManager);
 
             if (systemConfigurationManager.DefaultControllerConfiguration == DefaultControllerConfiguration.GamePad) {
-                gamePadModeActive = true;
+                ActivateGamepadMode();
             }
         }
 
@@ -76,14 +76,44 @@ namespace AnyRPG {
             cutSceneBarController = uIManager.CutSceneBarController;
         }
 
+        private void ActivateGamepadMode() {
+            gamePadModeActive = true;
+            LockMouse();
+        }
+
+        private void LockMouse() {
+            Cursor.visible = false;
+            if (playerManager.PlayerController != null) {
+                playerManager.PlayerController.DisableMouseOver();
+            }
+        }
+
+        private void UnlockMouse() {
+            Cursor.visible = true;
+        }
+
+        private void CheckMouse() {
+            if (Input.GetAxis("Mouse X") != 0f || Input.GetAxis("Mouse Y") != 0f) {
+                UnlockMouse();
+            }
+        }
+
         void Update() {
+            CheckMouse();
             RegisterAxis();
             inputManager.RegisterInput();
 
             if (inputManager.KeyBindWasPressed("JOYSTICKBUTTON0")
                 || inputManager.KeyBindWasPressed("JOYSTICKBUTTON1")
-                || inputManager.KeyBindWasPressed("JOYSTICKBUTTON2")) {
-                gamePadModeActive = true;
+                || inputManager.KeyBindWasPressed("JOYSTICKBUTTON2")
+                || inputManager.KeyBindWasPressed("JOYSTICKBUTTON3")
+                || inputManager.KeyBindWasPressed("JOYSTICKBUTTON4")
+                || inputManager.KeyBindWasPressed("JOYSTICKBUTTON5")
+                || inputManager.KeyBindWasPressed("JOYSTICKBUTTON6")
+                || inputManager.KeyBindWasPressed("JOYSTICKBUTTON7")
+                || inputManager.KeyBindWasPressed("JOYSTICKBUTTON8")
+                || inputManager.KeyBindWasPressed("JOYSTICKBUTTON9")) {
+                ActivateGamepadMode();
             }
 
             uIManager.ProcessInput();

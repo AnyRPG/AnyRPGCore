@@ -201,12 +201,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dd92a28c4c336d94384d4dbbccc4830a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  moveableTransform: {fileID: 0}
-  rectTransform: {fileID: 0}
-  dragString: Click Here To Drag Cast Bar
-  dragText: {fileID: 0}
-  alwaysDraggable: 0
-  neverDraggable: 0
   castBackground: {fileID: 7501799908441892102}
   castSlider: {fileID: 7904073252328028407}
   castText: {fileID: 8585741124151826620}
@@ -878,9 +872,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   backGroundImage: {fileID: 0}
   coloredUIElements: []
-  addToWindowStack: 1
-  userCloseable: 1
-  focusFirstButtonOnOpen: 1
+  addToWindowStack: 0
+  userCloseable: 0
+  focusFirstButtonOnOpen: 0
   focusActiveSubPanel: 0
   uINavigationControllers: []
   subPanels: []

@@ -7,56 +7,47 @@ using UnityEngine;
 using UnityEngine.UI;
 
 namespace AnyRPG {
-    public class XPBarController : DraggableWindow {
+    public class XPBarController : NavigableInterfaceElement {
+
+        [Header("XP Bar")]
 
         [SerializeField]
-        private Image xpSlider = null;
+        protected Image xpSlider = null;
 
         //[SerializeField]
         //private GameObject xpBarBackGround = null;
 
         [SerializeField]
-        private TextMeshProUGUI xpText = null;
+        protected TextMeshProUGUI xpText = null;
 
-        private float originalXPSliderWidth = 0f;
-
-        protected bool eventSubscriptionsInitialized = false;
+        protected float originalXPSliderWidth = 0f;
 
         // game manager references
-        SystemEventManager systemEventManager = null;
-        PlayerManager playerManager = null;
+        protected SystemEventManager systemEventManager = null;
+        protected PlayerManager playerManager = null;
 
-        public override void Configure(SystemGameManager systemGameManager) {
-            base.Configure(systemGameManager);
+        public override void SetGameManagerReferences() {
+            base.SetGameManagerReferences();
+
             systemEventManager = systemGameManager.SystemEventManager;
             playerManager = systemGameManager.PlayerManager;
-
-            CreateEventSubscriptions();
         }
 
-        public void CreateEventSubscriptions() {
-            //Debug.Log("XPBarController.CreateEventSubscriptions()");
-            if (eventSubscriptionsInitialized) {
-                return;
-            }
+        protected override void ProcessCreateEventSubscriptions() {
+            base.ProcessCreateEventSubscriptions();
             SystemEventManager.StartListening("OnXPGained", HandleXPGained);
             systemEventManager.OnLevelChanged += UpdateXPBar;
             SystemEventManager.StartListening("OnPlayerUnitSpawn", HandlePlayerUnitSpawn);
             if (playerManager.PlayerUnitSpawned == true) {
                 ProcessPlayerUnitSpawn();
             }
-            eventSubscriptionsInitialized = true;
         }
 
-        public void CleanupEventSubscriptions() {
+        protected override void ProcessCleanupEventSubscriptions() {
             //Debug.Log("XPBarController.CleanupEventSubscriptions()");
-            if (!eventSubscriptionsInitialized) {
-                return;
-            }
             SystemEventManager.StopListening("OnXPGained", HandleXPGained);
             systemEventManager.OnLevelChanged -= UpdateXPBar;
             SystemEventManager.StopListening("OnPlayerUnitSpawn", HandlePlayerUnitSpawn);
-            eventSubscriptionsInitialized = false;
         }
 
         public void HandleXPGained(string eventName, EventParamProperties eventParamProperties) {
@@ -67,12 +58,6 @@ namespace AnyRPG {
         public void HandlePlayerUnitSpawn(string eventName, EventParamProperties eventParamProperties) {
             //Debug.Log(gameObject.name + ".InanimateUnit.HandlePlayerUnitSpawn()");
             ProcessPlayerUnitSpawn();
-        }
-
-
-        private void OnDestroy() {
-            // this gameobject will be enabled and disabled multiple times during the game and doesn't need to reset its references every time
-            CleanupEventSubscriptions();
         }
 
         public void ProcessPlayerUnitSpawn() {
