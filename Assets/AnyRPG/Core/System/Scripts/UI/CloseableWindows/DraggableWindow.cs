@@ -28,7 +28,7 @@ namespace AnyRPG {
         protected bool alwaysDraggable = false;
 
         [SerializeField]
-        protected bool neverDraggable = false;
+        private bool neverDraggable = false;
 
         protected Vector2 startMousePosition, startWindowPosition;
 
@@ -39,6 +39,8 @@ namespace AnyRPG {
         protected SaveManager saveManager = null;
 
         public RectTransform RectTransform { get => rectTransform; }
+        public bool UiLocked { get => uiLocked; }
+        public bool NeverDraggable { get => neverDraggable;  }
 
         public override void Configure(SystemGameManager systemGameManager) {
             base.Configure(systemGameManager);

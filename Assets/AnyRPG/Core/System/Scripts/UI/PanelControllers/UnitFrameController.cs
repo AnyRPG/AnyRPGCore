@@ -7,109 +7,109 @@ using UnityEngine.Serialization;
 using UnityEngine.UI;
 
 namespace AnyRPG {
-    public class UnitFrameController : DraggableWindow {
+    public class UnitFrameController : NavigableInterfaceElement {
 
         [Header("Unit Name")]
 
         [SerializeField]
-        private TextMeshProUGUI unitNameText = null;
+        protected TextMeshProUGUI unitNameText = null;
 
         [SerializeField]
-        private TextMeshProUGUI unitLevelText = null;
+        protected TextMeshProUGUI unitLevelText = null;
 
         [SerializeField]
-        private Image unitNameBackground = null;
+        protected Image unitNameBackground = null;
 
         [Header("Resources")]
 
         [SerializeField]
-        private LayoutElement primaryResourceSliderLayout = null;
+        protected LayoutElement primaryResourceSliderLayout = null;
 
         [SerializeField]
-        private LayoutElement secondaryResourceSliderLayout = null;
+        protected LayoutElement secondaryResourceSliderLayout = null;
 
 
         [FormerlySerializedAs("healthSlider")]
         [SerializeField]
-        private Image primaryResourceSlider = null;
+        protected Image primaryResourceSlider = null;
 
         [FormerlySerializedAs("healthText")]
         [SerializeField]
-        private TextMeshProUGUI primaryResourceText = null;
+        protected TextMeshProUGUI primaryResourceText = null;
 
         [FormerlySerializedAs("manaSlider")]
         [SerializeField]
-        private Image secondaryResourceSlider = null;
+        protected Image secondaryResourceSlider = null;
 
         [FormerlySerializedAs("manaText")]
         [SerializeField]
-        private TextMeshProUGUI secondaryResourceText = null;
+        protected TextMeshProUGUI secondaryResourceText = null;
 
         [Header("Cast Bar")]
 
         [SerializeField]
-        private CastBarController castBarController = null;
+        protected CastBarController castBarController = null;
 
         [Header("Unit Preview")]
 
         // the next 2 things need to be updated to focus on the right character
         [SerializeField]
-        private Transform cameraTransform = null;
+        protected Transform cameraTransform = null;
 
         // replaces cameraTransform;
         [SerializeField]
-        private Camera previewCamera = null;
+        protected Camera previewCamera = null;
 
         [SerializeField]
-        private Texture portraitTexture = null;
+        protected Texture portraitTexture = null;
 
         [SerializeField]
-        private RawImage portraitImage = null;
+        protected RawImage portraitImage = null;
 
         [SerializeField]
-        private Vector3 cameraLookOffsetDefault = new Vector3(0, 1.6f, 0);
+        protected Vector3 cameraLookOffsetDefault = new Vector3(0, 1.6f, 0);
 
         [SerializeField]
-        private Vector3 cameraPositionOffsetDefault = new Vector3(0, 1.6f, 0.66f);
+        protected Vector3 cameraPositionOffsetDefault = new Vector3(0, 1.6f, 0.66f);
 
-        private Vector3 cameraLookOffset = Vector3.zero;
+        protected Vector3 cameraLookOffset = Vector3.zero;
 
-        private Vector3 cameraPositionOffset = Vector3.zero;
+        protected Vector3 cameraPositionOffset = Vector3.zero;
 
-        private float originalPrimaryResourceSliderWidth = 0f;
-        private float originalSecondaryResourceSliderWidth = 0f;
+        protected float originalPrimaryResourceSliderWidth = 0f;
+        protected float originalSecondaryResourceSliderWidth = 0f;
 
-        private BaseNamePlateController namePlateController = null;
+        protected BaseNamePlateController namePlateController = null;
 
         [Header("Status Effects")]
 
         [SerializeField]
-        private StatusEffectPanelController statusEffectPanelController = null;
+        protected StatusEffectPanelController statusEffectPanelController = null;
 
-        private Transform followTransform = null;
+        protected Transform followTransform = null;
 
-        private PowerResource primaryPowerResource = null;
-        private PowerResource secondaryPowerResource = null;
+        protected PowerResource primaryPowerResource = null;
+        protected PowerResource secondaryPowerResource = null;
 
-        private Color powerResourceColor1 = Color.green;
-        private Color powerResourceColor2 = Color.blue;
+        protected Color powerResourceColor1 = Color.green;
+        protected Color powerResourceColor2 = Color.blue;
 
-        private bool controllerInitialized = false;
-        private bool targetInitialized = false;
+        protected bool controllerInitialized = false;
+        protected bool targetInitialized = false;
 
-        private Color reputationColor;
+        protected Color reputationColor;
 
-        private Coroutine waitForCameraCoroutine = null;
+        protected Coroutine waitForCameraCoroutine = null;
 
         // avoid GC by using global variables for these
-        private Vector3 wantedPosition = Vector3.zero;
-        private Vector3 wantedLookPosition = Vector3.zero;
+        protected Vector3 wantedPosition = Vector3.zero;
+        protected Vector3 wantedLookPosition = Vector3.zero;
 
         // track the camera wait start frame to ensure the current camera wait routine is still valid
         //private int lastWaitFrame = 0;
 
         // game manager references
-        private PlayerManager playerManager = null;
+        protected PlayerManager playerManager = null;
 
         public BaseNamePlateController UnitNamePlateController { get => namePlateController; set => namePlateController = value; }
 
@@ -574,19 +574,17 @@ namespace AnyRPG {
 
         }
 
-        public override void OnEnable() {
+        public void OnEnable() {
             //Debug.Log(gameObject.name + ".UnitFrameController.OnEnable()");
-            base.OnEnable();
             // just in case something was targetted before the canvas became active
             TargetInitialization();
         }
 
-        public override void OnDisable() {
+        public void OnDisable() {
             //Debug.Log(gameObject.name + ".UnitFrameController.OnDisable()");
             if (SystemGameManager.IsShuttingDown) {
                 return;
             }
-            base.OnDisable();
             UnsubscribeFromTargetReady();
         }
     }

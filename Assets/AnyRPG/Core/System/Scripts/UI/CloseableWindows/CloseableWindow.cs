@@ -38,6 +38,7 @@ namespace AnyRPG {
         [SerializeField]
         protected Image backGroundImage = null;
 
+        [Tooltip("Used to save and load window positions")]
         [SerializeField]
         protected RectTransform rectTransform = null;
 
@@ -57,6 +58,7 @@ namespace AnyRPG {
         }
 
         public RectTransform RectTransform { get => rectTransform; }
+        public DraggableWindow DragHandle { get => dragHandle; }
 
         public override void Configure(SystemGameManager systemGameManager) {
             //Debug.Log(gameObject.name + ".CloseableWindow.Awake()");

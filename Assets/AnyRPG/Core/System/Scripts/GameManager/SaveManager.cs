@@ -1386,17 +1386,17 @@ namespace AnyRPG {
                 messageFeedManager.MessageFeedWindow.RectTransform.anchoredPosition = new Vector3(PlayerPrefs.GetFloat("MessageFeedManagerX"), PlayerPrefs.GetFloat("MessageFeedManagerY"), 0);
 
             if (PlayerPrefs.HasKey("FloatingCastBarControllerX") && PlayerPrefs.HasKey("FloatingCastBarControllerY")) {
-                uIManager.FloatingCastBarController.RectTransform.anchoredPosition = new Vector3(PlayerPrefs.GetFloat("FloatingCastBarControllerX"), PlayerPrefs.GetFloat("FloatingCastBarControllerY"), 0);
+                uIManager.FloatingCastBarWindow.RectTransform.anchoredPosition = new Vector3(PlayerPrefs.GetFloat("FloatingCastBarControllerX"), PlayerPrefs.GetFloat("FloatingCastBarControllerY"), 0);
             }
 
             if (PlayerPrefs.HasKey("StatusEffectPanelControllerX") && PlayerPrefs.HasKey("StatusEffectPanelControllerY"))
                 uIManager.StatusEffectWindow.RectTransform.anchoredPosition = new Vector3(PlayerPrefs.GetFloat("StatusEffectPanelControllerX"), PlayerPrefs.GetFloat("StatusEffectPanelControllerY"), 0);
 
             if (PlayerPrefs.HasKey("PlayerUnitFrameControllerX") && PlayerPrefs.HasKey("PlayerUnitFrameControllerY"))
-                uIManager.PlayerUnitFrameController.RectTransform.anchoredPosition = new Vector3(PlayerPrefs.GetFloat("PlayerUnitFrameControllerX"), PlayerPrefs.GetFloat("PlayerUnitFrameControllerY"), 0);
+                uIManager.PlayerUnitFrameWindow.RectTransform.anchoredPosition = new Vector3(PlayerPrefs.GetFloat("PlayerUnitFrameControllerX"), PlayerPrefs.GetFloat("PlayerUnitFrameControllerY"), 0);
 
             if (PlayerPrefs.HasKey("FocusUnitFrameControllerX") && PlayerPrefs.HasKey("FocusUnitFrameControllerY"))
-                uIManager.FocusUnitFrameController.RectTransform.anchoredPosition = new Vector3(PlayerPrefs.GetFloat("FocusUnitFrameControllerX"), PlayerPrefs.GetFloat("FocusUnitFrameControllerY"), 0);
+                uIManager.FocusUnitFrameWindow.RectTransform.anchoredPosition = new Vector3(PlayerPrefs.GetFloat("FocusUnitFrameControllerX"), PlayerPrefs.GetFloat("FocusUnitFrameControllerY"), 0);
 
             if (PlayerPrefs.HasKey("MiniMapControllerX") && PlayerPrefs.HasKey("MiniMapControllerY"))
                 uIManager.MiniMapWindow.RectTransform.anchoredPosition = new Vector3(PlayerPrefs.GetFloat("MiniMapControllerX"), PlayerPrefs.GetFloat("MiniMapControllerY"), 0);
@@ -1467,17 +1467,17 @@ namespace AnyRPG {
             PlayerPrefs.SetFloat("MessageFeedManagerY", messageFeedManager.MessageFeedWindow.RectTransform.anchoredPosition.y);
 
             //Debug.Log("Saving FloatingCastBarController: " + uIManager.MyFloatingCastBarController.RectTransform.anchoredPosition.x + "; " + uIManager.MyFloatingCastBarController.RectTransform.anchoredPosition.y);
-            PlayerPrefs.SetFloat("FloatingCastBarControllerX", uIManager.FloatingCastBarController.RectTransform.anchoredPosition.x);
-            PlayerPrefs.SetFloat("FloatingCastBarControllerY", uIManager.FloatingCastBarController.RectTransform.anchoredPosition.y);
+            PlayerPrefs.SetFloat("FloatingCastBarControllerX", uIManager.FloatingCastBarWindow.RectTransform.anchoredPosition.x);
+            PlayerPrefs.SetFloat("FloatingCastBarControllerY", uIManager.FloatingCastBarWindow.RectTransform.anchoredPosition.y);
 
             PlayerPrefs.SetFloat("StatusEffectPanelControllerX", uIManager.StatusEffectWindow.RectTransform.anchoredPosition.x);
             PlayerPrefs.SetFloat("StatusEffectPanelControllerY", uIManager.StatusEffectWindow.RectTransform.anchoredPosition.y);
 
-            PlayerPrefs.SetFloat("PlayerUnitFrameControllerX", uIManager.PlayerUnitFrameController.RectTransform.anchoredPosition.x);
-            PlayerPrefs.SetFloat("PlayerUnitFrameControllerY", uIManager.PlayerUnitFrameController.RectTransform.anchoredPosition.y);
+            PlayerPrefs.SetFloat("PlayerUnitFrameControllerX", uIManager.PlayerUnitFrameWindow.RectTransform.anchoredPosition.x);
+            PlayerPrefs.SetFloat("PlayerUnitFrameControllerY", uIManager.PlayerUnitFrameWindow.RectTransform.anchoredPosition.y);
 
-            PlayerPrefs.SetFloat("FocusUnitFrameControllerX", uIManager.FocusUnitFrameController.RectTransform.anchoredPosition.x);
-            PlayerPrefs.SetFloat("FocusUnitFrameControllerY", uIManager.FocusUnitFrameController.RectTransform.anchoredPosition.y);
+            PlayerPrefs.SetFloat("FocusUnitFrameControllerX", uIManager.FocusUnitFrameWindow.RectTransform.anchoredPosition.x);
+            PlayerPrefs.SetFloat("FocusUnitFrameControllerY", uIManager.FocusUnitFrameWindow.RectTransform.anchoredPosition.y);
 
             PlayerPrefs.SetFloat("MiniMapControllerX", uIManager.MiniMapWindow.RectTransform.anchoredPosition.x);
             PlayerPrefs.SetFloat("MiniMapControllerY", uIManager.MiniMapWindow.RectTransform.anchoredPosition.y);

@@ -20,6 +20,7 @@ namespace AnyRPG {
 
         public float cameraFollowSpeed = 10f;
         public float zoomSpeed = 4f;
+        public float gamepadZoomSpeed = 0.5f;
         public float minZoom = 2f;
         public float maxZoom = 15f;
         public float maxVerticalPan = 45;
@@ -191,7 +192,7 @@ namespace AnyRPG {
                 && inputManager.KeyBindWasPressedOrHeld("JOYSTICKBUTTON9")) {
 
                 //currentZoomDistance += (Input.GetAxis("RightAnalogVertical") * zoomSpeed * -1);
-                currentZoomDistance += (Input.GetAxis("RightAnalogVertical") * -1);
+                currentZoomDistance += (Input.GetAxis("RightAnalogVertical") * gamepadZoomSpeed * -1);
                 currentZoomDistance = Mathf.Clamp(currentZoomDistance, minZoom, maxZoom);
                 cameraZoom = true;
 
@@ -227,6 +228,7 @@ namespace AnyRPG {
 
             // ====GAMEPAD PAN====
             if (windowManager.WindowStack.Count == 0
+                && inputManager.KeyBindWasPressedOrHeld("JOYSTICKBUTTON9") == false
                 && (Input.GetAxis("RightAnalogHorizontal") != 0f || Input.GetAxis("RightAnalogVertical") != 0f)) {
 
 
