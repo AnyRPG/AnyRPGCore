@@ -83,7 +83,6 @@ namespace AnyRPG {
         // system component references
         protected CameraManager cameraManager = null;
         protected PlayerManager playerManager = null;
-        protected InputManager inputManager = null;
         protected LevelManager levelManager = null;
         protected MiniMapManager miniMapManager = null;
         protected ObjectPooler objectPooler = null;
@@ -125,7 +124,6 @@ namespace AnyRPG {
             uIManager = systemGameManager.UIManager;
             cameraManager = systemGameManager.CameraManager;
             playerManager = systemGameManager.PlayerManager;
-            inputManager = systemGameManager.InputManager;
             levelManager = systemGameManager.LevelManager;
             miniMapManager = uIManager.MiniMapManager;
             objectPooler = systemGameManager.ObjectPooler;

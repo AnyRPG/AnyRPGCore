@@ -69,6 +69,7 @@ namespace AnyRPG {
         protected AudioManager audioManager = null;
         protected WindowManager windowManager = null;
         protected ControlsManager controlsManager = null;
+        protected InputManager inputManager = null;
 
         public Image BackGroundImage { get => backGroundImage; set => backGroundImage = value; }
         public UINavigationController CurrentNavigationController { get => currentNavigationController; }
@@ -106,6 +107,7 @@ namespace AnyRPG {
             audioManager = systemGameManager.AudioManager;
             windowManager = systemGameManager.WindowManager;
             controlsManager = systemGameManager.ControlsManager;
+            inputManager = systemGameManager.InputManager;
         }
 
         public virtual void Init() {
@@ -513,9 +515,19 @@ namespace AnyRPG {
         }
 
         public void LeftAnalog(float inputHorizontal, float inputVertical) {
-            if (closeableWindow != null) {
+            Debug.Log(gameObject.name + ".NavigableElement.LeftAnalog()");
+
+            // if the left analog stick was held down, then this is a movement of the window
+            // send the event to the window so it can pass it on to the drag handle
+            if (closeableWindow != null && inputManager.KeyBindWasPressedOrHeld("JOYSTICKBUTTON8")) {
                 closeableWindow.LeftAnalog(inputHorizontal, inputVertical);
                 return;
+            }
+
+            // if the left analog stick was not clicked, this is to scroll a scrollrect
+            // pass it onto the navigation controller
+            if (currentNavigationController != null) {
+                currentNavigationController.LeftAnalog(inputHorizontal, inputVertical);
             }
         }
     }

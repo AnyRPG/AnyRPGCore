@@ -13,6 +13,7 @@ namespace AnyRPG {
         void SetWindow(CloseableWindow closeableWindow);
         void Close();
         void Init();
+        void LeftAnalog(float inputHorizontal, float inputVertical);
         GameObject gameObject { get; }
         Image BackGroundImage { get; }
         //bool Closeable { get; }

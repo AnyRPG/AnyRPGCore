@@ -223,11 +223,12 @@ namespace AnyRPG {
         }
 
         public void LeftAnalog(float inputHorizontal, float inputVertical) {
+            Debug.Log(gameObject.name + ".CloseableWindow.LeftAnalog()");
+
             if (dragHandle != null) {
                 dragHandle.LeftAnalog(inputHorizontal, inputVertical);
                 return;
             }
-            //windowContents.LeftAnalog(inputHorizontal, inputVertical);
         }
 
         public void OnDisable() {

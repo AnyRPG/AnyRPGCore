@@ -427,6 +427,14 @@ namespace AnyRPG {
             }
         }
 
+        public virtual void LeftAnalog(float inputHorizontal, float inputVertical) {
+            Debug.Log(gameObject.name + ".UINavigationController.LeftAnalog()");
+
+            if (currentNavigableElement != null) {
+                currentNavigableElement.LeftAnalog(inputHorizontal, inputVertical);
+            }
+        }
+
         public virtual void ReceiveOpenWindowNotification() {
             //Debug.Log(gameObject.name + ".UINavigationController.ReceiveOpenWindowNotification()");
             if (updateActiveListOnOpen) {
