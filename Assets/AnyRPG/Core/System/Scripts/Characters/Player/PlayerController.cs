@@ -66,6 +66,7 @@ namespace AnyRPG {
         protected WindowManager windowManager = null;
         protected ControlsManager controlsManager = null;
         protected ActionBarManager actionBarManager = null;
+        protected CastTargettingManager castTargettingManager = null;
 
         public List<Interactable> Interactables { get => interactables; }
         public RaycastHit MouseOverhit { get => mouseOverhit; set => mouseOverhit = value; }
@@ -84,6 +85,7 @@ namespace AnyRPG {
             windowManager = systemGameManager.WindowManager;
             controlsManager = systemGameManager.ControlsManager;
             actionBarManager = uIManager.ActionBarManager;
+            castTargettingManager = systemGameManager.CastTargettingManager;
         }
 
         public void AddInteractable(Interactable interactable) {
@@ -508,24 +510,38 @@ namespace AnyRPG {
 
             // no crossbar was activated, buttons will perform their native functions
             if (inputManager.KeyBindWasPressed("ACCEPT")) {
-                if (interactables.Count > 0) {
-                    // range interactables are priority
-                    InterActWithTarget(interactables[interactables.Count - 1]);
-                } else {
-                    // allow friendly target when nothing is targeted
-                    if (playerManager.UnitController.Target == null) {
-                        GetNextTabTarget(playerManager.UnitController.Target, true, true);
-                    } else {
-                        InterActWithTarget(playerManager.UnitController.Target);
-                    }
-                }
+                // accept button when targeting should just confirm target and nothing else
+                if (playerManager.ActiveCharacter?.CharacterAbilityManager?.WaitingForTarget() == false) {
 
+                    if (interactables.Count > 0) {
+                        // range interactables are priority
+                        InterActWithTarget(interactables[interactables.Count - 1]);
+                    } else {
+                        // allow friendly target when nothing is targeted
+                        if (playerManager.UnitController.Target == null) {
+                            GetNextTabTarget(playerManager.UnitController.Target, true, true);
+                        } else {
+                            InterActWithTarget(playerManager.UnitController.Target);
+                        }
+                    }
+                } else {
+                    FinishGroundTarget(castTargettingManager.CastTargetController.VirtualCursor);
+                }
             } else if (controlsManager.DPadRightPressed) {
                 GetNextTabTarget(playerManager.UnitController.Target, true, false);
             } else if (controlsManager.DPadLeftPressed) {
                 GetNextTabTarget(playerManager.UnitController.Target, true, false, false);
             }
+        }
 
+        private void FinishGroundTarget(Vector3 targetPosition) {
+            Ray ray = cameraManager.ActiveMainCamera.ScreenPointToRay(targetPosition);
+            RaycastHit hit;
+            if (Physics.Raycast(ray, out hit, 100, movementMask)) {
+                if (playerManager.ActiveCharacter.CharacterAbilityManager.WaitingForTarget()) {
+                    playerManager.ActiveCharacter.CharacterAbilityManager.SetGroundTarget(hit.point);
+                }
+            }
         }
 
         private void HandleLeftMouseClick() {
@@ -555,13 +571,7 @@ namespace AnyRPG {
             }
             //}
 
-            Ray ray = cameraManager.ActiveMainCamera.ScreenPointToRay(Input.mousePosition);
-            RaycastHit hit;
-            if (Physics.Raycast(ray, out hit, 100, movementMask)) {
-                if (playerManager.ActiveCharacter.CharacterAbilityManager.WaitingForTarget()) {
-                    playerManager.ActiveCharacter.CharacterAbilityManager.SetGroundTarget(hit.point);
-                }
-            }
+            FinishGroundTarget(Input.mousePosition);
         }
 
         /// <summary>

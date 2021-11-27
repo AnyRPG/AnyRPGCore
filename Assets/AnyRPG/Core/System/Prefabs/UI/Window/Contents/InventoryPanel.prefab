@@ -100,6 +100,7 @@ MonoBehaviour:
   highlightImageColor: {r: 0.64705884, g: 0.64705884, b: 0.64705884, a: 0.6509804}
   useUnfocusedColor: 0
   unFocusedColor: {r: 1, g: 1, b: 1, a: 0.15294118}
+  rectTransform: {fileID: 0}
   text: {fileID: 0}
   ignoreSystemImageTint: 0
   highlightButton: {fileID: 0}
@@ -218,6 +219,7 @@ MonoBehaviour:
   highlightImageColor: {r: 0.64705884, g: 0.64705884, b: 0.64705884, a: 0.6509804}
   useUnfocusedColor: 0
   unFocusedColor: {r: 1, g: 1, b: 1, a: 0.15294118}
+  rectTransform: {fileID: 0}
   text: {fileID: 0}
   ignoreSystemImageTint: 0
   highlightButton: {fileID: 0}
@@ -440,6 +442,7 @@ MonoBehaviour:
   navigableButtons: []
   numRows: 0
   numColumns: 8
+  reverseLeftRight: 0
 --- !u!1 &2056653839617313829
 GameObject:
   m_ObjectHideFlags: 0
@@ -765,6 +768,7 @@ MonoBehaviour:
   highlightImageColor: {r: 0.64705884, g: 0.64705884, b: 0.64705884, a: 0.6509804}
   useUnfocusedColor: 0
   unFocusedColor: {r: 1, g: 1, b: 1, a: 0.15294118}
+  rectTransform: {fileID: 0}
   text: {fileID: 0}
   ignoreSystemImageTint: 0
   highlightButton: {fileID: 0}
@@ -1033,6 +1037,7 @@ MonoBehaviour:
   highlightImageColor: {r: 0.64705884, g: 0.64705884, b: 0.64705884, a: 0.6509804}
   useUnfocusedColor: 0
   unFocusedColor: {r: 1, g: 1, b: 1, a: 0.15294118}
+  rectTransform: {fileID: 0}
   text: {fileID: 0}
   ignoreSystemImageTint: 0
   highlightButton: {fileID: 0}
@@ -1151,6 +1156,7 @@ MonoBehaviour:
   highlightImageColor: {r: 0.64705884, g: 0.64705884, b: 0.64705884, a: 0.6509804}
   useUnfocusedColor: 0
   unFocusedColor: {r: 1, g: 1, b: 1, a: 0.15294118}
+  rectTransform: {fileID: 0}
   text: {fileID: 0}
   ignoreSystemImageTint: 0
   highlightButton: {fileID: 0}
@@ -1664,6 +1670,7 @@ MonoBehaviour:
   highlightImageColor: {r: 0.64705884, g: 0.64705884, b: 0.64705884, a: 0.6509804}
   useUnfocusedColor: 0
   unFocusedColor: {r: 1, g: 1, b: 1, a: 0.15294118}
+  rectTransform: {fileID: 0}
   text: {fileID: 0}
   ignoreSystemImageTint: 0
   highlightButton: {fileID: 0}
@@ -2044,6 +2051,7 @@ MonoBehaviour:
   highlightImageColor: {r: 0.64705884, g: 0.64705884, b: 0.64705884, a: 0.6509804}
   useUnfocusedColor: 0
   unFocusedColor: {r: 1, g: 1, b: 1, a: 0.15294118}
+  rectTransform: {fileID: 0}
   text: {fileID: 0}
   ignoreSystemImageTint: 0
   highlightButton: {fileID: 0}
@@ -2273,6 +2281,7 @@ MonoBehaviour:
   highlightImageColor: {r: 0.64705884, g: 0.64705884, b: 0.64705884, a: 0.6509804}
   useUnfocusedColor: 0
   unFocusedColor: {r: 1, g: 1, b: 1, a: 0.15294118}
+  rectTransform: {fileID: 0}
   text: {fileID: 0}
   ignoreSystemImageTint: 0
   highlightButton: {fileID: 0}

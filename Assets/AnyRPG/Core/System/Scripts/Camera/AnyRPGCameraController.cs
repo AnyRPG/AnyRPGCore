@@ -187,16 +187,19 @@ namespace AnyRPG {
             }
 
             // ====GAMEPAD ZOOM====
-            if (windowManager.WindowStack.Count == 0
-                && Input.GetAxis("RightAnalogVertical") != 0f
-                && inputManager.KeyBindWasPressedOrHeld("JOYSTICKBUTTON9")) {
+            if (playerManager.ActiveCharacter?.CharacterAbilityManager?.WaitingForTarget() == false) {
+                if (windowManager.WindowStack.Count == 0
+                    && Input.GetAxis("RightAnalogVertical") != 0f
+                    && inputManager.KeyBindWasPressedOrHeld("JOYSTICKBUTTON9")) {
 
-                //currentZoomDistance += (Input.GetAxis("RightAnalogVertical") * zoomSpeed * -1);
-                currentZoomDistance += (Input.GetAxis("RightAnalogVertical") * gamepadZoomSpeed * -1);
-                currentZoomDistance = Mathf.Clamp(currentZoomDistance, minZoom, maxZoom);
-                cameraZoom = true;
+                    //currentZoomDistance += (Input.GetAxis("RightAnalogVertical") * zoomSpeed * -1);
+                    currentZoomDistance += (Input.GetAxis("RightAnalogVertical") * gamepadZoomSpeed * -1);
+                    currentZoomDistance = Mathf.Clamp(currentZoomDistance, minZoom, maxZoom);
+                    cameraZoom = true;
 
+                }
             }
+
 
 
             // ====MOUSE PAN====
@@ -227,22 +230,25 @@ namespace AnyRPG {
             }
 
             // ====GAMEPAD PAN====
-            if (windowManager.WindowStack.Count == 0
+            if (playerManager.ActiveCharacter?.CharacterAbilityManager?.WaitingForTarget() == false) {
+
+                if (windowManager.WindowStack.Count == 0
                 && inputManager.KeyBindWasPressedOrHeld("JOYSTICKBUTTON9") == false
                 && (Input.GetAxis("RightAnalogHorizontal") != 0f || Input.GetAxis("RightAnalogVertical") != 0f)) {
 
 
-                //if (Input.GetAxis("RightAnalogHorizontal") != 0 && playerManager.PlayerController?.HasMoveInput() != true) {
-                if (Input.GetAxis("RightAnalogHorizontal") != 0f) {
-                    currentXDegrees += Input.GetAxis("RightAnalogHorizontal") * analogYawSpeed * (PlayerPrefs.GetFloat("MouseLookSpeed"));
-                    cameraPan = true;
-                }
+                    //if (Input.GetAxis("RightAnalogHorizontal") != 0 && playerManager.PlayerController?.HasMoveInput() != true) {
+                    if (Input.GetAxis("RightAnalogHorizontal") != 0f) {
+                        currentXDegrees += Input.GetAxis("RightAnalogHorizontal") * analogYawSpeed * (PlayerPrefs.GetFloat("MouseLookSpeed"));
+                        cameraPan = true;
+                    }
 
-                if (Input.GetAxis("RightAnalogVertical") != 0f) {
-                    currentYDegrees += (Input.GetAxis("RightAnalogVertical") * analogYawSpeed * (PlayerPrefs.GetFloat("MouseLookSpeed"))) * (PlayerPrefs.GetInt("MouseInvert") == 0 ? 1 : -1);
-                    cameraPan = true;
-                }
+                    if (Input.GetAxis("RightAnalogVertical") != 0f) {
+                        currentYDegrees += (Input.GetAxis("RightAnalogVertical") * analogYawSpeed * (PlayerPrefs.GetFloat("MouseLookSpeed"))) * (PlayerPrefs.GetInt("MouseInvert") == 0 ? 1 : -1);
+                        cameraPan = true;
+                    }
 
+                }
             }
 
             if (currentXDegrees > 180f) {

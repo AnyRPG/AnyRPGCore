@@ -22,6 +22,7 @@ namespace AnyRPG {
         private PlayerManager playerManager = null;
 
         public Color CircleColor { get => circleColor; set => circleColor = value; }
+        public CastTargetController CastTargetController { get => castTargetController; }
 
         public override void Configure(SystemGameManager systemGameManager) {
             //Debug.Log("CastTargettingmanager.Configure()");
