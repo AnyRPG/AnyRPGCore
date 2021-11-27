@@ -63,7 +63,7 @@ namespace AnyRPG {
             if (activeNavigableButtons.Count == 0) {
                 return;
             }
-            if (!reverseLeftRight) {
+            if (reverseLeftRight == false) {
                 LessColumn();
             } else {
                 MoreColumn();
@@ -98,7 +98,7 @@ namespace AnyRPG {
             if (activeNavigableButtons.Count == 0) {
                 return;
             }
-            if (!reverseLeftRight) {
+            if (reverseLeftRight == false) {
                 MoreColumn();
             } else {
                 LessColumn();

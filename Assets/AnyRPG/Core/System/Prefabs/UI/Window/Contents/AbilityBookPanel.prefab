@@ -140,6 +140,7 @@ MonoBehaviour:
   uINavigationControllers:
   - {fileID: 1747733612547441915}
   subPanels: []
+  hintBarController: {fileID: 0}
   abilityButtons:
   - {fileID: 7431006380489994639}
   - {fileID: 4839697514944797923}
@@ -199,6 +200,7 @@ MonoBehaviour:
   - {fileID: 345205465521256168}
   numRows: 5
   numColumns: 2
+  reverseLeftRight: 0
 --- !u!1 &8967105751652694362
 GameObject:
   m_ObjectHideFlags: 0

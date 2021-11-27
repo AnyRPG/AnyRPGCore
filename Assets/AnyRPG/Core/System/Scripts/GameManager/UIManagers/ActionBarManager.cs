@@ -2,6 +2,7 @@ using AnyRPG;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -24,10 +25,23 @@ namespace AnyRPG {
         protected Image rightBackground;
 
         [SerializeField]
+        protected TMP_Text actionBarSetText = null;
+
+        [SerializeField]
         protected Color normalColor = new Color32(0, 0, 0, 0);
 
         [SerializeField]
         protected Color pressedColor = new Color32(255, 255, 255, 128);
+
+        protected int numActionBarSets = 4;
+
+        protected int currentActionBarSet = 0;
+
+        protected int gamepadActionButtonCount = 64;
+
+        //protected List<List<IUseable>> actionBarSet = new List<List<IUseable>>();
+        //protected List<IUseable> actionButtons = new List<IUseable>(70);
+        protected List<ActionButtonNode> gamepadActionButtons = new List<ActionButtonNode>();
 
         private bool abilityBarsPopulated = false;
 
@@ -46,12 +60,15 @@ namespace AnyRPG {
         protected KeyBindManager keyBindManager = null;
         protected SystemEventManager systemEventManager = null;
         protected ControlsManager controlsManager = null;
+        protected InputManager inputManager = null;
 
         public ActionButton FromButton { get => fromButton; set => fromButton = value; }
         public List<ActionBarController> ActionBarControllers { get => actionBarControllers; set => actionBarControllers = value; }
         public List<GamepadActionBarController> GamepadActionBarControllers { get => gamepadActionBarControllers; set => gamepadActionBarControllers = value; }
         public SystemBarController SystemBarController { get => systemBarController; }
         public IUseable AssigningUseable { get => assigningUseable; }
+        public List<ActionButtonNode> GamepadActionButtons { get => gamepadActionButtons; }
+        public int CurrentActionBarSet { get => currentActionBarSet; }
 
         public override void Configure(SystemGameManager systemGameManager) {
             base.Configure(systemGameManager);
@@ -59,12 +76,30 @@ namespace AnyRPG {
             keyBindManager = systemGameManager.KeyBindManager;
             systemEventManager = systemGameManager.SystemEventManager;
             controlsManager = systemGameManager.ControlsManager;
+            inputManager = systemGameManager.InputManager;
 
             systemBarController.Configure(systemGameManager);
+
+            InitializeGamepadActionButtonNodes();
             InitializeActionbars();
 
             AssociateActionBarKeyBinds();
             CreateEventSubscriptions();
+
+        }
+
+        private void InitializeGamepadActionButtonNodes() {
+            Debug.Log("ActionBarManager.InitializeGamepadActionButtonNodes()");
+            for (int i = 0; i < gamepadActionButtonCount; i++) {
+                gamepadActionButtons.Add(new ActionButtonNode());
+            }
+        }
+
+        private void ClearGamepadActionButtonNodes() {
+            Debug.Log("ActionBarManager.ClearGamepadActionButtonNodes()");
+            for (int i = 0; i < gamepadActionButtonCount; i++) {
+                gamepadActionButtons[i] = new ActionButtonNode();
+            }
         }
 
         private void CreateEventSubscriptions() {
@@ -100,9 +135,11 @@ namespace AnyRPG {
         }
 
         public void AssignUseableByIndex(int index) {
-            int controllerIndex = Mathf.FloorToInt((float)index / (float)gamepadActionBarControllers[0].ActionButtons.Count);
-            int buttonIdex = index % gamepadActionBarControllers[0].ActionButtons.Count;
-            gamepadActionBarControllers[controllerIndex].ActionButtons[buttonIdex].SetUseable(assigningUseable);
+            Debug.Log("ActionBarManager.AssignUseableByIndex(" + index + ")");
+            int controllerIndex = Mathf.FloorToInt((float)index / 8f);
+            int buttonIndex = index % 8;
+            gamepadActionButtons[(currentActionBarSet * 16) + index].Useable = assigningUseable;
+            gamepadActionBarControllers[controllerIndex].ActionButtons[buttonIndex].SetUseable(assigningUseable);
         }
 
         public void ProcessInput() {
@@ -117,6 +154,18 @@ namespace AnyRPG {
             }
             if (controlsManager.RightTriggerUp) {
                 LiftRightTrigger();
+            }
+
+            if (inputManager.KeyBindWasPressed("JOYSTICKBUTTON4")) {
+                // LB
+                if (currentActionBarSet > 0) {
+                    SetGamepadActionButtonSet(currentActionBarSet -1);
+                }
+            } else if (inputManager.KeyBindWasPressed("JOYSTICKBUTTON5")) {
+                // RB
+                if (currentActionBarSet < (numActionBarSets - 1)) {
+                    SetGamepadActionButtonSet(currentActionBarSet + 1);
+                }
             }
         }
 
@@ -375,6 +424,7 @@ namespace AnyRPG {
                 //Debug.Log("ActionBarManager.AddNewAbility(): looping through a controller");
                 actionBarController.ClearActionBar(clearSavedUseables);
             }
+            ClearGamepadActionButtonNodes();
 
         }
 
@@ -401,6 +451,28 @@ namespace AnyRPG {
             abilityBarsPopulated = true;
         }
 
+        public void SetGamepadActionButtonSet(int actionButtonSet, bool updateVisuals = true) {
+            Debug.Log("ActionBarmanager.SetGamepadActionButtonSet(" + actionButtonSet + ")");
+            currentActionBarSet = actionButtonSet;
+            actionBarSetText.text = "Set " + (actionButtonSet + 1);
+            UpdateGamepadActionButtons(actionButtonSet, GetGamepadActionButtons());
+            if (updateVisuals) {
+                UpdateVisuals();
+            }
+        }
+
+        private void UpdateGamepadActionButtons(int actionButtonSet, List<ActionButton> actionButtons) {
+            Debug.Log("ActionBarmanager.UpdateGamepadActionButtons(" + actionButtonSet + ")");
+            for (int i = 0; i < 16; i++) {
+                Debug.Log("ActionBarmanager.UpdateGamepadActionButtons(" + actionButtonSet + ") checking: " + (i + (actionButtonSet * 16)));
+                if (gamepadActionButtons[i + (actionButtonSet * 16)].Useable == null) {
+                    actionButtons[i].ClearUseable();
+                } else {
+                    actionButtons[i].SetUseable(gamepadActionButtons[i + (actionButtonSet * 16)].Useable, false);
+                }
+            }
+        }
+
         public void UpdateVisuals(bool removeStaleActions = false) {
             if (controlsManager.GamePadModeActive == true) {
                 foreach (ActionBarController actionBarController in gamepadActionBarControllers) {
@@ -420,7 +492,7 @@ namespace AnyRPG {
         }
 
         public void UpdateActionBars() {
-            //Debug.Log("UIManager.UpdateActionBars()");
+            //Debug.Log("ActionBarmanager.UpdateActionBars()");
 
             if (controlsManager.GamePadModeActive == true) {
 

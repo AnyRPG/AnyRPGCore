@@ -45,16 +45,16 @@ namespace AnyRPG {
             xBoxKeys.Add("MAINMENU", KeyCode.JoystickButton7);
             xBoxKeys.Add("JUMP", KeyCode.JoystickButton3);
             xBoxKeys.Add("CROUCH", KeyCode.JoystickButton2);
-            xBoxKeys.Add("JOYSTICKBUTTON0", KeyCode.JoystickButton0);
-            xBoxKeys.Add("JOYSTICKBUTTON1", KeyCode.JoystickButton1);
-            xBoxKeys.Add("JOYSTICKBUTTON2", KeyCode.JoystickButton2);
-            xBoxKeys.Add("JOYSTICKBUTTON3", KeyCode.JoystickButton3);
-            xBoxKeys.Add("JOYSTICKBUTTON4", KeyCode.JoystickButton4);
-            xBoxKeys.Add("JOYSTICKBUTTON5", KeyCode.JoystickButton5);
-            xBoxKeys.Add("JOYSTICKBUTTON6", KeyCode.JoystickButton6);
-            xBoxKeys.Add("JOYSTICKBUTTON7", KeyCode.JoystickButton7);
-            xBoxKeys.Add("JOYSTICKBUTTON8", KeyCode.JoystickButton8);
-            xBoxKeys.Add("JOYSTICKBUTTON9", KeyCode.JoystickButton9);
+            xBoxKeys.Add("JOYSTICKBUTTON0", KeyCode.JoystickButton0); // A
+            xBoxKeys.Add("JOYSTICKBUTTON1", KeyCode.JoystickButton1); // B
+            xBoxKeys.Add("JOYSTICKBUTTON2", KeyCode.JoystickButton2); // X
+            xBoxKeys.Add("JOYSTICKBUTTON3", KeyCode.JoystickButton3); // Y
+            xBoxKeys.Add("JOYSTICKBUTTON4", KeyCode.JoystickButton4); // LB
+            xBoxKeys.Add("JOYSTICKBUTTON5", KeyCode.JoystickButton5); // RB
+            xBoxKeys.Add("JOYSTICKBUTTON6", KeyCode.JoystickButton6); // Window
+            xBoxKeys.Add("JOYSTICKBUTTON7", KeyCode.JoystickButton7); // Menu
+            xBoxKeys.Add("JOYSTICKBUTTON8", KeyCode.JoystickButton8); // Left Analog
+            xBoxKeys.Add("JOYSTICKBUTTON9", KeyCode.JoystickButton9); // Right Analog
 
             InitializeKey("FORWARD", KeyCode.W, KeyCode.W, KeyCode.W, "Forward", KeyBindType.Normal);
             InitializeKey("BACK", KeyCode.S, KeyCode.S, KeyCode.S, "Backward", KeyBindType.Normal);

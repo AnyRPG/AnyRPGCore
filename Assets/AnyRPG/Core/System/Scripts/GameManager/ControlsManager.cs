@@ -77,18 +77,24 @@ namespace AnyRPG {
         }
 
         private void ActivateGamepadMode() {
+            Debug.Log("ControlsManager.ActivateGamepadMode()");
             gamePadModeActive = true;
             LockMouse();
         }
 
         private void LockMouse() {
+            //Debug.Log("ControlsManager.LockMouse()");
+            Cursor.lockState = CursorLockMode.Locked;
             Cursor.visible = false;
             if (playerManager.PlayerController != null) {
                 playerManager.PlayerController.DisableMouseOver();
             }
+            Debug.Log("ControlsManager.LockMouse() visibility: " + Cursor.visible);
         }
 
         private void UnlockMouse() {
+            //Debug.Log("ControlsManager.UnlockMouse()");
+            Cursor.lockState = CursorLockMode.None;
             Cursor.visible = true;
         }
 

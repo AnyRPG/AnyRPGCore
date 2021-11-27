@@ -30,6 +30,7 @@ namespace AnyRPG {
         public string DataCreatedOn;
         public string DataSavedOn;
         public string DataFileName;
+        public int GamepadActionButtonSet;
 
         public List<ResourcePowerSaveData> resourcePowerSaveData;
         public List<ActionBarSaveData> actionBarSaveData;
