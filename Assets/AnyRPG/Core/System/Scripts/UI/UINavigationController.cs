@@ -245,7 +245,7 @@ namespace AnyRPG {
             if (upControllers.Count != 0) {
                 LeaveController();
                 foreach (UINavigationController uINavigationController in upControllers) {
-                    if (uINavigationController.gameObject.activeInHierarchy == true) {
+                    if (uINavigationController.gameObject.activeInHierarchy == true && uINavigationController.ActiveNavigableButtonCount > 0) {
                         uINavigationController.Activate();
                         return true;
                     }
@@ -277,7 +277,7 @@ namespace AnyRPG {
             if (downControllers.Count != 0) {
                 LeaveController();
                 foreach (UINavigationController uINavigationController in downControllers) {
-                    if (uINavigationController.gameObject.activeInHierarchy == true) {
+                    if (uINavigationController.gameObject.activeInHierarchy == true && uINavigationController.ActiveNavigableButtonCount > 0) {
                         uINavigationController.Activate();
                         return true;
                     }
@@ -308,7 +308,7 @@ namespace AnyRPG {
             if (leftControllers.Count != 0) {
                 LeaveController();
                 foreach (UINavigationController uINavigationController in leftControllers) {
-                    if (uINavigationController.gameObject.activeInHierarchy == true) {
+                    if (uINavigationController.gameObject.activeInHierarchy == true && uINavigationController.ActiveNavigableButtonCount > 0) {
                         uINavigationController.Activate();
                         return true;
                     }
@@ -339,7 +339,7 @@ namespace AnyRPG {
             if (rightControllers.Count != 0) {
                 LeaveController();
                 foreach (UINavigationController uINavigationController in rightControllers) {
-                    if (uINavigationController.gameObject.activeInHierarchy == true) {
+                    if (uINavigationController.gameObject.activeInHierarchy == true && uINavigationController.ActiveNavigableButtonCount > 0) {
                         uINavigationController.Activate();
                         return true;
                     }

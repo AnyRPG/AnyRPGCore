@@ -1117,7 +1117,7 @@ namespace AnyRPG {
         /// Hide the tooltip
         /// </summary>
         public void HideToolTip() {
-            Debug.Log("UIManager.HideToolTip()");
+            //Debug.Log("UIManager.HideToolTip()");
             toolTip.SetActive(false);
         }
 

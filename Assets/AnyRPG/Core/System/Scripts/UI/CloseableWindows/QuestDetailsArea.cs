@@ -28,10 +28,16 @@ namespace AnyRPG {
         private GameObject itemIconsArea = null;
 
         [SerializeField]
+        private UINavigationGrid itemGrid = null;
+
+        [SerializeField]
         private GameObject factionsHeading = null;
 
         [SerializeField]
         private GameObject factionIconsArea = null;
+
+        [SerializeField]
+        private UINavigationGrid factionGrid = null;
 
         [SerializeField]
         private GameObject abilitiesHeading = null;
@@ -40,10 +46,16 @@ namespace AnyRPG {
         private GameObject abilityIconsArea = null;
 
         [SerializeField]
+        private UINavigationGrid abilityGrid = null;
+
+        [SerializeField]
         private GameObject skillHeading = null;
 
         [SerializeField]
         private GameObject skillIconsArea = null;
+
+        [SerializeField]
+        private UINavigationGrid skillGrid = null;
 
         [SerializeField]
         private LootButton currencyLootButton = null;
@@ -208,6 +220,7 @@ namespace AnyRPG {
                 //Debug.Log("QuestDetailsArea.ShowDescription(): setting describable (and attemptselect) for: " + quest.MyItemRewards[i]);
                 rewardIcon.SetDescribable(quest.ItemRewards[i]);
                 itemRewardIcons.Add(rewardIcon);
+                itemGrid.AddActiveButton(rewardIcon);
             }
 
             // show ability rewards
@@ -228,6 +241,7 @@ namespace AnyRPG {
                 //Debug.Log("QuestDetailsArea.ShowDescription(): setting describable (and attemptselect) for: " + quest.MyAbilityRewards[i]);
                 rewardIcon.SetDescribable(quest.AbilityRewards[i]);
                 abilityRewardIcons.Add(rewardIcon);
+                abilityGrid.AddActiveButton(rewardIcon);
             }
 
             // show faction rewards
@@ -248,6 +262,7 @@ namespace AnyRPG {
                 //Debug.Log("QuestDetailsArea.ShowDescription(): setting describable (and attemptselect) for: " + quest.MyFactionRewards[i]);
                 rewardIcon.SetDescribable(quest.FactionRewards[i]);
                 factionRewardIcons.Add(rewardIcon);
+                factionGrid.AddActiveButton(rewardIcon);
             }
 
             // show Skill rewards
@@ -266,6 +281,7 @@ namespace AnyRPG {
                 rewardIcon.Configure(systemGameManager);
                 rewardIcon.SetDescribable(quest.SkillRewards[i]);
                 skillRewardIcons.Add(rewardIcon);
+                skillGrid.AddActiveButton(rewardIcon);
             }
 
         }
@@ -291,6 +307,7 @@ namespace AnyRPG {
                 objectPooler.ReturnObjectToPool(rewardIcon.gameObject);
             }
             itemRewardIcons.Clear();
+            itemGrid.ClearActiveButtons();
 
             // abilties
             foreach (RewardButton rewardIcon in abilityRewardIcons) {
@@ -298,6 +315,7 @@ namespace AnyRPG {
                 objectPooler.ReturnObjectToPool(rewardIcon.gameObject);
             }
             abilityRewardIcons.Clear();
+            abilityGrid.ClearActiveButtons();
 
             // skills
             foreach (RewardButton rewardIcon in skillRewardIcons) {
@@ -305,6 +323,7 @@ namespace AnyRPG {
                 objectPooler.ReturnObjectToPool(rewardIcon.gameObject);
             }
             skillRewardIcons.Clear();
+            skillGrid.ClearActiveButtons();
 
             // factions
             foreach (RewardButton rewardIcon in factionRewardIcons) {
@@ -312,6 +331,7 @@ namespace AnyRPG {
                 objectPooler.ReturnObjectToPool(rewardIcon.gameObject);
             }
             factionRewardIcons.Clear();
+            factionGrid.ClearActiveButtons();
         }
 
     }

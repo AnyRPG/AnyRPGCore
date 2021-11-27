@@ -183,7 +183,7 @@ namespace AnyRPG {
                 currentNavigationController.Focus();
                 return;
             }
-            if (currentNavigationController == null && uINavigationControllers != null) {
+            if (currentNavigationController == null && uINavigationControllers != null && uINavigationControllers.Count > 0) {
                 SetNavigationController(uINavigationControllers[0]);
             }
         }
@@ -515,7 +515,7 @@ namespace AnyRPG {
         }
 
         public void LeftAnalog(float inputHorizontal, float inputVertical) {
-            Debug.Log(gameObject.name + ".NavigableElement.LeftAnalog()");
+            //Debug.Log(gameObject.name + ".NavigableElement.LeftAnalog()");
 
             // if the left analog stick was held down, then this is a movement of the window
             // send the event to the window so it can pass it on to the drag handle

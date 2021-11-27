@@ -32,7 +32,7 @@ namespace AnyRPG {
         }
 
         public void SetTarget(UnitController unitController) {
-            Debug.Log(gameObject.name + ".StatusEffectPanelController.SetTarget(" + unitController.DisplayName + ")");
+            //Debug.Log(gameObject.name + ".StatusEffectPanelController.SetTarget(" + unitController.DisplayName + ")");
             this.targetUnitController = unitController;
             if (targetUnitController.CharacterUnit.BaseCharacter != null && targetUnitController.CharacterUnit.BaseCharacter.CharacterStats != null) {
                 //Debug.Log("StatusEffectPanelController.SetTarget(" + characterUnit.MyDisplayName + "): checking status effects");

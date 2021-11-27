@@ -6,7 +6,7 @@ using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 namespace AnyRPG {
-    public class RewardButton : DescribableIcon, IClickable, IPointerClickHandler {
+    public class RewardButton : DescribableIcon, IClickable {
 
         public event System.Action<RewardButton> OnAttempSelect = delegate { };
 
@@ -46,9 +46,13 @@ namespace AnyRPG {
         }
 
         public override void OnPointerClick(PointerEventData eventData) {
-            //Debug.Log("RewardButton: OnPointerClick()");
+            Debug.Log("RewardButton: OnPointerClick()");
             base.OnPointerClick(eventData);
 
+            ToggleChosen();
+        }
+
+        private void ToggleChosen() {
             if (chosen) {
                 chosen = false;
                 //Debug.Log("RewardButton: OnPointerClick() set selected to false");
@@ -59,6 +63,13 @@ namespace AnyRPG {
             OnAttempSelect(this);
             UpdateVisual();
         }
+
+        
+        public override void Accept() {
+            base.Accept();
+            ToggleChosen();
+        }
+        
 
     }
 

@@ -126,6 +126,7 @@ namespace AnyRPG {
         }
 
         public void ProcessLevelUnload() {
+            //Debug.Log(gameObject.name + ".PlayerController.ProcessLevelUnload()");
             ClearInteractables();
         }
 

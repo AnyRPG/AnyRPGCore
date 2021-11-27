@@ -64,8 +64,10 @@ namespace AnyRPG {
         public void NavigateInterface() {
             navigatingInterface = true;
             if (interfaceIndex != -1) {
-                uIManager.NavigableInterfaceElements[interfaceIndex].UnFocus();
-                windowStack.Remove(uIManager.NavigableInterfaceElements[interfaceIndex]);
+                if (interfaceIndex < uIManager.NavigableInterfaceElements.Count) {
+                    uIManager.NavigableInterfaceElements[interfaceIndex].UnFocus();
+                    windowStack.Remove(uIManager.NavigableInterfaceElements[interfaceIndex]);
+                }
             }
 
             // increase the index
@@ -77,6 +79,7 @@ namespace AnyRPG {
             }
 
             // focus the current element and add it to the window stack
+            Debug.Log("index: " + interfaceIndex + "; count: " + uIManager.NavigableInterfaceElements.Count);
             uIManager.NavigableInterfaceElements[interfaceIndex].Focus();
             windowStack.Add(uIManager.NavigableInterfaceElements[interfaceIndex]);
         }

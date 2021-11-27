@@ -153,7 +153,7 @@ namespace AnyRPG {
         }
 
         public virtual void CloseWindow() {
-            Debug.Log(gameObject.name + ".CloseableWindow.CloseWindow()");
+            //Debug.Log(gameObject.name + ".CloseableWindow.CloseWindow()");
             //InitializeWindow();
             if (IsOpen == false) {
                 RawCloseWindow();
@@ -223,7 +223,7 @@ namespace AnyRPG {
         }
 
         public void LeftAnalog(float inputHorizontal, float inputVertical) {
-            Debug.Log(gameObject.name + ".CloseableWindow.LeftAnalog()");
+            //Debug.Log(gameObject.name + ".CloseableWindow.LeftAnalog()");
 
             if (dragHandle != null) {
                 dragHandle.LeftAnalog(inputHorizontal, inputVertical);
@@ -231,9 +231,11 @@ namespace AnyRPG {
             }
         }
 
+        /*
         public void OnDisable() {
             Debug.Log(gameObject.name + ".CloseableWindow.OnDisable()");
         }
+        */
 
     }
 

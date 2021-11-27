@@ -279,7 +279,7 @@ namespace AnyRPG {
         }
 
         public void SetTarget(GameObject target) {
-            Debug.Log("MiniMapController setting target: " + target.name);
+            //Debug.Log("MiniMapController.SetTarget(" + target.name + ")");
             followGameObject = target;
             CommonInitialization();
         }

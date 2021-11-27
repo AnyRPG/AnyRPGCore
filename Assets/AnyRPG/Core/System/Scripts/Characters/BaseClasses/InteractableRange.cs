@@ -29,7 +29,7 @@ namespace AnyRPG {
         }
 
         public void SetInteractable(Interactable interactable) {
-            Debug.Log("InteractableRange.SetInteractable(" + interactable.gameObject.name + ")");
+            //Debug.Log("InteractableRange.SetInteractable(" + interactable.gameObject.name + ")");
             this.interactable = interactable;
             /*
             if (autoSetRadius == true) {
