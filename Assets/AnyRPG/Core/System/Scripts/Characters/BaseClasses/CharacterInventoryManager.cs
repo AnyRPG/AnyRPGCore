@@ -174,7 +174,7 @@ namespace AnyRPG {
         }
 
         public List<InventorySlot> AddBankSlots(int numSlots) {
-            Debug.Log("CharacterInventoryManager.AddBankSlots(" + numSlots + ")");
+            //Debug.Log("CharacterInventoryManager.AddBankSlots(" + numSlots + ")");
             List<InventorySlot> returnList = new List<InventorySlot>();
             for (int i = 0; i < numSlots; i++) {
                 InventorySlot inventorySlot = new InventorySlot(systemGameManager);
@@ -250,7 +250,7 @@ namespace AnyRPG {
         
 
         public void AddInventoryBag(Bag bag) {
-            Debug.Log("InventoryManager.AddInventoryBag(" + bag.DisplayName + ")");
+            //Debug.Log("InventoryManager.AddInventoryBag(" + bag.DisplayName + ")");
             foreach (BagNode bagNode in bagNodes) {
                 if (bagNode.Bag == null) {
                     PopulateBagNode(bagNode, bag);
@@ -260,7 +260,7 @@ namespace AnyRPG {
         }
 
         public void AddBankBag(Bag bag) {
-            Debug.Log("InventoryManager.AddBankBag(" + bag.DisplayName + ")");
+            //Debug.Log("InventoryManager.AddBankBag(" + bag.DisplayName + ")");
             foreach (BagNode bagNode in bankNodes) {
                 if (bagNode.Bag == null) {
                     PopulateBagNode(bagNode, bag);
@@ -291,7 +291,7 @@ namespace AnyRPG {
         /// </summary>
         /// <param name="bag"></param>
         public void RemoveBag(Bag bag, bool clearOnly = false) {
-            Debug.Log("InventoryManager.RemoveBag(" + bag.DisplayName + ", " + clearOnly + ")");
+            //Debug.Log("InventoryManager.RemoveBag(" + bag.DisplayName + ", " + clearOnly + ")");
             foreach (BagNode bagNode in bagNodes) {
                 if (bagNode.Bag == bag) {
                     ProcessRemovebag(bagNode, bag, true, clearOnly);
@@ -362,7 +362,7 @@ namespace AnyRPG {
         /// </summary>
         /// <param name="item"></param>
         public bool AddItem(Item item, bool addToBank) {
-            Debug.Log("CharacterInventoryManager.AddItem(" + (item == null ? "null" : item.DisplayName) + ", " + addToBank + ")");
+            //Debug.Log("CharacterInventoryManager.AddItem(" + (item == null ? "null" : item.DisplayName) + ", " + addToBank + ")");
             if (item == null) {
                 return false;
             }
@@ -387,7 +387,7 @@ namespace AnyRPG {
         }
 
         public bool AddBankItem(Item item, int slotIndex) {
-            Debug.Log("CharacterInventoryManager.AddBankItem(" + item.DisplayName + ", " + slotIndex + ")");
+            //Debug.Log("CharacterInventoryManager.AddBankItem(" + item.DisplayName + ", " + slotIndex + ")");
             if (bankSlots.Count > slotIndex) {
                 return bankSlots[slotIndex].AddItem(item);
             }
@@ -404,7 +404,7 @@ namespace AnyRPG {
         }
 
         private bool PlaceInEmpty(Item item, bool addToBank) {
-            Debug.Log("CharacterInventoryManager.PlaceInEmpty(" + item.name + ", " + addToBank + "): checking slot");
+            //Debug.Log("CharacterInventoryManager.PlaceInEmpty(" + item.name + ", " + addToBank + "): checking slot");
             if (addToBank == true) {
                 foreach (InventorySlot inventorySlot in bankSlots) {
                     //Debug.Log("CharacterInventoryManager.PlaceInEmpty(" + item.name + "): checking slot");

@@ -146,6 +146,8 @@ namespace AnyRPG {
         }
 
         public void InteractWithSlot() {
+            //Debug.Log("SlotScript.InteractWithSlot()");
+
             // ignore right clicks when something is in the handscript
             if (handScript.Moveable != null) {
                 return;
@@ -154,7 +156,7 @@ namespace AnyRPG {
             // the 
             if (BagPanel is BankPanel) {
                 List<Item> moveList = new List<Item>();
-                Debug.Log("SlotScript.InteractWithSlot(): interacting with item in bank");
+                //Debug.Log("SlotScript.InteractWithSlot(): interacting with item in bank");
                 foreach (Item item in inventorySlot.Items) {
                     moveList.Add(item);
                 }
@@ -170,7 +172,7 @@ namespace AnyRPG {
             if (uIManager.inventoryWindow.IsOpen == true && uIManager.bankWindow.IsOpen == true) {
                 List<Item> moveList = new List<Item>();
                 if (BagPanel is InventoryPanel) {
-                    Debug.Log("SlotScript.InteractWithSlot(): interacting with item in inventory");
+                    //Debug.Log("SlotScript.InteractWithSlot(): interacting with item in inventory");
                     /*
                     if (inventoryManager.AddItem(MyItem, true)) {
                         Clear();
@@ -184,9 +186,9 @@ namespace AnyRPG {
                             inventorySlot.RemoveItem(item);
                         }
                     }
-                } else {
+                } /*else {
                     Debug.Log("SlotScript.InteractWithSlot(): We clicked on something in a chest or bag");
-                }
+                }*/
                 // default case to prevent using an item when the bank window is open but bank was full
                 return;
             } else if (uIManager.inventoryWindow.IsOpen == true && uIManager.bankWindow.IsOpen == false && uIManager.vendorWindow.IsOpen) {
@@ -216,7 +218,7 @@ namespace AnyRPG {
         }
 
         public override void JoystickButton2() {
-            Debug.Log("SlotScript.JoystickButton2()");
+            //Debug.Log("SlotScript.JoystickButton2()");
             base.JoystickButton2();
 
             if (inventorySlot.Item == null) {
@@ -250,13 +252,25 @@ namespace AnyRPG {
         }
 
         public override void JoystickButton3() {
-            Debug.Log("SlotScript.JoystickButton3()");
+            //Debug.Log("SlotScript.JoystickButton3()");
             base.JoystickButton3();
 
             if (inventorySlot.Item == null) {
                 return;
             }
 
+            if (BagPanel is BankPanel) {
+                if (inventorySlot.Item is Bag) {
+                    // if Y button pressed and this is a bag in the bank, equip in the inventory
+                    if ((uIManager.inventoryWindow.CloseableWindowContents as InventoryPanel).BagBarController.FreeBagSlots == 0) {
+                        messageFeedManager.WriteMessage("There are no free inventory bag slots");
+                        return;
+                    }
+                    playerManager.MyCharacter.CharacterInventoryManager.AddInventoryBag(inventorySlot.Item as Bag);
+                    inventorySlot.Item.Remove();
+                }
+                return;
+            }
             if (BagPanel is InventoryPanel) {
                 // drop item
                 handScript.SetPosition(transform.position);
@@ -266,7 +280,7 @@ namespace AnyRPG {
         }
 
         public override void Select() {
-            Debug.Log("SlotScript.Select()");
+            //Debug.Log("SlotScript.Select()");
             base.Select();
 
             ShowContextInfo();
@@ -286,7 +300,7 @@ namespace AnyRPG {
 
                 if (BagPanel is BankPanel) {
                     if (inventorySlot.Item is Bag) {
-                        owner.SetControllerHints("Move To Inventory", "Equip", "", "");
+                        owner.SetControllerHints("Move To Inventory", "Equip In Bank", "Equip In Inventory", "");
                     } else {
                         owner.SetControllerHints("Move To Inventory", "", "", "");
                     }

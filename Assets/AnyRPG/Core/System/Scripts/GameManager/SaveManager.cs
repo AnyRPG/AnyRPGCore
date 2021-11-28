@@ -1219,6 +1219,27 @@ namespace AnyRPG {
                 anyRPGSaveData.equippedBankBagSaveData.Add(new EquippedBagSaveData());
             }
 
+            // add default bank contents
+            for (int i = 0; i < systemConfigurationManager.DefaultBankSlots; i++) {
+                if (systemConfigurationManager.DefaultBankContents.Count > i) {
+                    InventorySlotSaveData inventorySlotSaveData = new InventorySlotSaveData();
+                    Item item = systemItemManager.GetNewResource(systemConfigurationManager.DefaultBankContents[i]);
+                    inventorySlotSaveData.ItemName = (item == null ? string.Empty : item.ResourceName);
+                    inventorySlotSaveData.stackCount = (item == null ? 0 : 1);
+                    inventorySlotSaveData.DisplayName = (item == null ? string.Empty : item.DisplayName);
+                    if (item != null) {
+                        if (item.ItemQuality != null) {
+                            inventorySlotSaveData.itemQuality = (item == null ? string.Empty : item.ItemQuality.ResourceName);
+                        }
+                        if ((item as Equipment is Equipment)) {
+                            inventorySlotSaveData.randomSecondaryStatIndexes = (item == null ? null : (item as Equipment).RandomStatIndexes);
+                        }
+                        inventorySlotSaveData.dropLevel = (item == null ? 0 : item.DropLevel);
+                    }
+                    anyRPGSaveData.bankSlotSaveData.Add(inventorySlotSaveData);
+                }
+            }
+
             return anyRPGSaveData;
         }
 

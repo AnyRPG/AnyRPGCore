@@ -90,7 +90,7 @@ namespace AnyRPG {
             if (!interacting) {
                 interacting = true;
                 dropDown.Show();
-                Debug.Log("Dropdown value: " + dropDown.value);
+                //Debug.Log("Dropdown value: " + dropDown.value);
                 ScrollToCurrentItem();
             } else {
                 interacting = false;

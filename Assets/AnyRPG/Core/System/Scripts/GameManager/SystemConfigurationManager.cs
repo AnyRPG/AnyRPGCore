@@ -132,6 +132,11 @@ namespace AnyRPG {
         [ResourceSelector(resourceType = typeof(Bag))]
         private string defaultBackpackItem = "Backpack";
 
+        [Tooltip("Default items that will be in the player bank when a new player is created")]
+        [SerializeField]
+        [ResourceSelector(resourceType = typeof(Item))]
+        private List<string> defaultBankContents = new List<string>();
+
         /*
         [SerializeField]
         [ResourceSelector(resourceType = typeof(Bag))]
@@ -803,6 +808,7 @@ namespace AnyRPG {
         public int DefaultBankSlots { get => defaultBankSlots; set => defaultBankSlots = value; }
         public int MaxInventoryBags { get => maxInventoryBags; set => maxInventoryBags = value; }
         public int MaxBankBags { get => maxBankBags; set => maxBankBags = value; }
+        public List<string> DefaultBankContents { get => defaultBankContents; set => defaultBankContents = value; }
 
         //public bool AllowClickToMove { get => allowClickToMove; }
 

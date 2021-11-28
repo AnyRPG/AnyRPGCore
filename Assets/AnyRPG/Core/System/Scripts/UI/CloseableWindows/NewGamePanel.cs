@@ -11,6 +11,8 @@ namespace AnyRPG {
 
         public override event Action<ICloseableWindowContents> OnCloseWindow = delegate { };
 
+        [Header("New Game Panel")]
+
         [SerializeField]
         private TextMeshProUGUI playerNameLabel = null;
 
@@ -84,7 +86,7 @@ namespace AnyRPG {
             //specializationButton.Configure(systemGameManager);
             //startButton.Configure(systemGameManager);
 
-            //characterPreviewPanel.Configure(systemGameManager);
+            characterPreviewPanel.Configure(systemGameManager);
 
             //detailsPanel.Configure(systemGameManager);
             detailsPanel.SetNewGamePanel(this);
@@ -284,7 +286,7 @@ namespace AnyRPG {
         }
 
         public void HandleSetUnitProfile(UnitProfile newUnitProfile) {
-            Debug.Log("NewGamePanel.HandleSetUnitProfile(" + newUnitProfile.DisplayName + ")");
+            //Debug.Log("NewGamePanel.HandleSetUnitProfile(" + newUnitProfile.DisplayName + ")");
 
             characterPreviewPanel.ReloadUnit();
             characterPanel.SetUnitProfile(newUnitProfile);
@@ -373,7 +375,7 @@ namespace AnyRPG {
         }
 
         public void OpenDetailsPanel() {
-            Debug.Log("NewGamePanel.OpenDetailsPanel()");
+            //Debug.Log("NewGamePanel.OpenDetailsPanel()");
 
             ClosePanels();
             detailsPanel.ShowPanel();
@@ -389,7 +391,7 @@ namespace AnyRPG {
         }
 
         public void OpenCharacterPanel() {
-            Debug.Log("NewGamePanel.OpenCharacterPanel()");
+            //Debug.Log("NewGamePanel.OpenCharacterPanel()");
 
             ClosePanels();
             characterPanel.ShowPanel();

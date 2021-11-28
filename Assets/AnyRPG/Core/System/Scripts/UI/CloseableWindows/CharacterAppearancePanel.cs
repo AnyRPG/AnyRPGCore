@@ -234,7 +234,7 @@ namespace AnyRPG {
         }
 
         public void OpenEyesColorsOptionsArea() {
-            Debug.Log("CharacterAppearancePanel.OpenEyesColorsOptionsArea()");
+            //Debug.Log("CharacterAppearancePanel.OpenEyesColorsOptionsArea()");
 
             CloseColorsOptionsAreas();
             uINavigationControllers[2].UnHightlightButtons(eyesColorsButton);

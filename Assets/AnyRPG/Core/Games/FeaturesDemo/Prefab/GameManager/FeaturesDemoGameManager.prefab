@@ -199,8 +199,23 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8448294747759913886, guid: 940327016906947448ca06fe7bf422fb,
         type: 3}
+      propertyPath: defaultBankContents.Array.size
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 8448294747759913886, guid: 940327016906947448ca06fe7bf422fb,
+        type: 3}
       propertyPath: loadResourcesFolders.Array.size
       value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 8448294747759913886, guid: 940327016906947448ca06fe7bf422fb,
+        type: 3}
+      propertyPath: defaultBankContents.Array.data[0]
+      value: Health Potion
+      objectReference: {fileID: 0}
+    - target: {fileID: 8448294747759913886, guid: 940327016906947448ca06fe7bf422fb,
+        type: 3}
+      propertyPath: defaultBankContents.Array.data[1]
+      value: Bag
       objectReference: {fileID: 0}
     - target: {fileID: 8448294747759913886, guid: 940327016906947448ca06fe7bf422fb,
         type: 3}

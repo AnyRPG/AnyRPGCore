@@ -85,7 +85,7 @@ namespace AnyRPG {
         }
 
         public void SetupSaveData() {
-            Debug.Log("NewGameManager.SetupSaveData()");
+            //Debug.Log("NewGameManager.SetupSaveData()");
 
             saveData = new AnyRPGSaveData();
             saveData = saveManager.InitializeResourceLists(saveData, false);
@@ -206,7 +206,7 @@ namespace AnyRPG {
         }
 
         public void SetUnitProfile(UnitProfile newUnitProfile) {
-            Debug.Log("NewGameManager.SetUnitProfile(" + newUnitProfile.DisplayName + ")");
+            //Debug.Log("NewGameManager.SetUnitProfile(" + newUnitProfile.DisplayName + ")");
 
             unitProfile = newUnitProfile;
             saveData.unitProfileName = unitProfile.DisplayName;

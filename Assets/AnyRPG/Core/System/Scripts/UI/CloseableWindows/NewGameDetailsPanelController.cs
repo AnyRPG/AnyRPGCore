@@ -106,7 +106,7 @@ namespace AnyRPG {
         }
 
         public override void ReceiveOpenWindowNotification() {
-            Debug.Log("NewGameCharacterPanelController.ReceiveOpenWindowNotification()");
+            //Debug.Log("NewGameCharacterPanelController.ReceiveOpenWindowNotification()");
             ClearLabels();
             base.ReceiveOpenWindowNotification();
         }
