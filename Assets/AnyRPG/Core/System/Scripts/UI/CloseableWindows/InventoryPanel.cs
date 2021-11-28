@@ -57,7 +57,7 @@ namespace AnyRPG {
         }
 
         public void HandleAddInventoryBagNode(BagNode bagNode) {
-            Debug.Log("InventoryPanel.HandleAddInventoryBagNode()");
+            //Debug.Log("InventoryPanel.HandleAddInventoryBagNode()");
             bagBarController.AddBagButton(bagNode);
             //bagNode.BagPanel = this;
         }

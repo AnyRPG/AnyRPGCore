@@ -31,7 +31,7 @@ namespace AnyRPG {
         }
 
         public void SetTarget(UnitController unitController) {
-            Debug.Log(gameObject.name + ".StatusEffectWindowPanel.SetTarget(" + unitController.DisplayName + ")");
+            //Debug.Log(gameObject.name + ".StatusEffectWindowPanel.SetTarget(" + unitController.DisplayName + ")");
             if (statusEffectPanel != null) {
                 statusEffectPanel.SetTarget(unitController);
             }

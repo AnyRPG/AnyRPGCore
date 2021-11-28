@@ -175,7 +175,7 @@ namespace AnyRPG {
         }
 
         public void CheckVSync() {
-            Debug.Log("SystemVideoPanelController.CheckVSync()");
+            //Debug.Log("SystemVideoPanelController.CheckVSync()");
             if (PlayerPrefs.GetInt("VSyncValue") == 0) {
                 vSyncButton.SetOff();
                 QualitySettings.vSyncCount = 0;
@@ -186,7 +186,7 @@ namespace AnyRPG {
         }
 
         public void ToggleVSync() {
-            Debug.Log("SystemVideoPanelController.ToggleVSync()");
+            //Debug.Log("SystemVideoPanelController.ToggleVSync()");
             if (QualitySettings.vSyncCount == 0) {
                 PlayerPrefs.SetInt("VSyncValue", 1);
             } else if (QualitySettings.vSyncCount == 1) {

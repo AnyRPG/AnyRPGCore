@@ -93,7 +93,7 @@ namespace AnyRPG {
             //saveButton.Configure(systemGameManager);
 
             characterPreviewPanel.Configure(systemGameManager);
-            umaCharacterPanel.Configure(systemGameManager);
+            //umaCharacterPanel.Configure(systemGameManager);
         }
 
         public override void SetGameManagerReferences() {

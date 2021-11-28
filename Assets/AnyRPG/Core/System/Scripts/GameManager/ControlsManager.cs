@@ -105,21 +105,36 @@ namespace AnyRPG {
         }
 
         void Update() {
+            if (playerManager.PlayerController != null) {
+                playerManager.PlayerController.ResetMoveInput();
+            }
             CheckMouse();
             RegisterAxis();
             inputManager.RegisterInput();
 
-            if (inputManager.KeyBindWasPressed("JOYSTICKBUTTON0")
-                || inputManager.KeyBindWasPressed("JOYSTICKBUTTON1")
-                || inputManager.KeyBindWasPressed("JOYSTICKBUTTON2")
-                || inputManager.KeyBindWasPressed("JOYSTICKBUTTON3")
-                || inputManager.KeyBindWasPressed("JOYSTICKBUTTON4")
-                || inputManager.KeyBindWasPressed("JOYSTICKBUTTON5")
-                || inputManager.KeyBindWasPressed("JOYSTICKBUTTON6")
-                || inputManager.KeyBindWasPressed("JOYSTICKBUTTON7")
-                || inputManager.KeyBindWasPressed("JOYSTICKBUTTON8")
-                || inputManager.KeyBindWasPressed("JOYSTICKBUTTON9")) {
-                ActivateGamepadMode();
+            if (gamePadModeActive == false) {
+                if (inputManager.KeyBindWasPressed("JOYSTICKBUTTON0")
+                    || inputManager.KeyBindWasPressed("JOYSTICKBUTTON1")
+                    || inputManager.KeyBindWasPressed("JOYSTICKBUTTON2")
+                    || inputManager.KeyBindWasPressed("JOYSTICKBUTTON3")
+                    || inputManager.KeyBindWasPressed("JOYSTICKBUTTON4")
+                    || inputManager.KeyBindWasPressed("JOYSTICKBUTTON5")
+                    || inputManager.KeyBindWasPressed("JOYSTICKBUTTON6")
+                    || inputManager.KeyBindWasPressed("JOYSTICKBUTTON7")
+                    || inputManager.KeyBindWasPressed("JOYSTICKBUTTON8")
+                    || inputManager.KeyBindWasPressed("JOYSTICKBUTTON9")
+                    || rightTriggerPressed
+                    || leftTriggerPressed
+                    || dPadDownPressed
+                    || dPadUpPressed
+                    || dPadLeftPressed
+                    || dPadRightPressed) {
+                    ActivateGamepadMode();
+                    if (windowManager.WindowStack.Count > 0) {
+                        windowManager.Navigate();
+                    }
+                    return;
+                }
             }
 
             uIManager.ProcessInput();

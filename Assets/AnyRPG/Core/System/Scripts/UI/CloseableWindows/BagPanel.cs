@@ -84,7 +84,7 @@ namespace AnyRPG {
         /// </summary>
         /// <param name="slotCount"></param>
         public virtual List<SlotScript> AddSlots(int slotCount) {
-            Debug.Log(gameObject.name + ".BagPanel.AddSlots(" + slotCount + ")");
+            //Debug.Log(gameObject.name + ".BagPanel.AddSlots(" + slotCount + ")");
 
             List<SlotScript> returnList = new List<SlotScript>();
             for (int i = 0; i < slotCount; i++) {
@@ -103,7 +103,7 @@ namespace AnyRPG {
         }
 
         public void HandleAddSlot(InventorySlot inventorySlot) {
-            Debug.Log(gameObject.name + ".BagPanel.HandleAddSlot()");
+            //Debug.Log(gameObject.name + ".BagPanel.HandleAddSlot()");
             SlotScript slot = objectPooler.GetPooledObject(slotPrefab, contentArea).GetComponent<SlotScript>();
             slot.Configure(systemGameManager);
             slot.SetInventorySlot(inventorySlot);
@@ -115,7 +115,7 @@ namespace AnyRPG {
         }
 
         public virtual void HandleRemoveSlot(InventorySlot inventorySlot) {
-            Debug.Log(gameObject.name + ".BagPanel.HandleRemoveSlot()");
+            //Debug.Log(gameObject.name + ".BagPanel.HandleRemoveSlot()");
             foreach (SlotScript slot in slots) {
                 if (slot.InventorySlot == inventorySlot) {
                     objectPooler.ReturnObjectToPool(slot.gameObject);

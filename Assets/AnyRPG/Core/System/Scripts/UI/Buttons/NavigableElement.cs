@@ -131,15 +131,15 @@ namespace AnyRPG {
         }
 
         public virtual void JoystickButton2() {
-            Debug.Log(gameObject.name + ".NavigableElement.JoystickButton2()");
+            //Debug.Log(gameObject.name + ".NavigableElement.JoystickButton2()");
         }
 
         public virtual void JoystickButton3() {
-            Debug.Log(gameObject.name + ".NavigableElement.JoystickButton3()");
+            //Debug.Log(gameObject.name + ".NavigableElement.JoystickButton3()");
         }
 
         public virtual void LeftAnalog(float inputHorizontal, float inputVertical) {
-            Debug.Log(gameObject.name + ".NavigableElement.LeftAnalog()");
+            //Debug.Log(gameObject.name + ".NavigableElement.LeftAnalog()");
         }
 
         public virtual void Interact() {
@@ -166,7 +166,7 @@ namespace AnyRPG {
         /// leave the element for another element on the same navigation controller
         /// </summary>
         public virtual void LeaveElement() {
-            Debug.Log(gameObject.name + ".NavigableElement.LeaveElement()");
+            //Debug.Log(gameObject.name + ".NavigableElement.LeaveElement()");
             if (DeselectOnLeave) {
                 DeSelect();
             }
@@ -191,7 +191,7 @@ namespace AnyRPG {
         }
 
         public virtual void Select() {
-            Debug.Log(gameObject.name + ".NavigableElement.Select()");
+            //Debug.Log(gameObject.name + ".NavigableElement.Select()");
 
             if (highlightBackgroundOnSelect == true) {
                 HighlightBackground();
@@ -226,7 +226,7 @@ namespace AnyRPG {
         }
 
         public void HighlightBackground() {
-            Debug.Log(gameObject.name + ".HightlightButton.HighlightBackground()");
+            //Debug.Log(gameObject.name + ".HightlightButton.HighlightBackground()");
             if (highlightImage != null) {
                 if (navigationControllerFocused || useUnfocusedColor == false) {
                     //highlightImage.color = highlightImageColor * selectedColor;
@@ -245,7 +245,7 @@ namespace AnyRPG {
         }
 
         public virtual void FocusNavigationController() {
-            Debug.Log(gameObject.name + ".NavigableElement.FocusNavigationController()");
+            //Debug.Log(gameObject.name + ".NavigableElement.FocusNavigationController()");
 
             navigationControllerFocused = true;
 
@@ -266,7 +266,7 @@ namespace AnyRPG {
         /// leave the current navigation controller
         /// </summary>
         public virtual void UnFocus() {
-            Debug.Log(gameObject.name + ".NavigableElement.UnFocus()");
+            //Debug.Log(gameObject.name + ".NavigableElement.UnFocus()");
 
             navigationControllerFocused = false;
 
@@ -279,7 +279,6 @@ namespace AnyRPG {
                 UnHighlightBackground();
             } else {
                 if (highlightImage.color != hiddenColor && useUnfocusedColor == true) {
-                    Debug.Log(gameObject.name + ".NavigableElement.UnFocus() setting unFocusedColor ");
                     highlightImage.color = unFocusedColor;
                 }
             }

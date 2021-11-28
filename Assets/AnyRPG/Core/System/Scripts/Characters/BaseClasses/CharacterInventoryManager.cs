@@ -144,7 +144,7 @@ namespace AnyRPG {
         }
 
         public void LoadEquippedBagData(List<EquippedBagSaveData> equippedBagSaveData, bool bank) {
-            Debug.Log("InventoryManager.LoadEquippedBagData(" + bank + ")");
+            //Debug.Log("InventoryManager.LoadEquippedBagData(" + bank + ")");
             int counter = 0;
             foreach (EquippedBagSaveData saveData in equippedBagSaveData) {
                 if (saveData.slotCount > 0) {
@@ -162,7 +162,7 @@ namespace AnyRPG {
         }
 
         public List<InventorySlot> AddInventorySlots(int numSlots) {
-            Debug.Log("CharacterInventoryManager.AddInventorySlots(" + numSlots + ")");
+            //Debug.Log("CharacterInventoryManager.AddInventorySlots(" + numSlots + ")");
             List<InventorySlot> returnList = new List<InventorySlot>();
             for (int i = 0; i < numSlots; i++) {
                 InventorySlot inventorySlot = new InventorySlot(systemGameManager);

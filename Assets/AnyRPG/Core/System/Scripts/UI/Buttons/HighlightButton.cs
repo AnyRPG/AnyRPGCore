@@ -158,7 +158,7 @@ namespace AnyRPG {
         }
 
         public override void DeSelect() {
-            Debug.Log(gameObject.name + ".HightlightButton.DeSelect()");
+            //Debug.Log(gameObject.name + ".HightlightButton.DeSelect()");
             base.DeSelect();
             if (highlightButton != null) {
                 ColorBlock colorBlock = highlightButton.colors;
@@ -189,7 +189,7 @@ namespace AnyRPG {
         }
 
         public override void OnPointerClick(PointerEventData eventData) {
-            Debug.Log(gameObject.name + ".HighlightButton.OnPointerClick()");
+            //Debug.Log(gameObject.name + ".HighlightButton.OnPointerClick()");
             base.OnPointerClick(eventData);
             OnClickSound();
 
@@ -197,7 +197,7 @@ namespace AnyRPG {
         }
 
         public override void Interact() {
-            Debug.Log(gameObject.name + ".HighlightButton.Interact()");
+            //Debug.Log(gameObject.name + ".HighlightButton.Interact()");
 
             base.Interact();
             

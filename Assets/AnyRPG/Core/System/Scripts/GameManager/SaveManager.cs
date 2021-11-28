@@ -931,7 +931,7 @@ namespace AnyRPG {
         }
 
         public void LoadBankSlotData(AnyRPGSaveData anyRPGSaveData) {
-            Debug.Log("Savemanager.LoadBankSlotData()");
+            //Debug.Log("Savemanager.LoadBankSlotData()");
             int counter = 0;
             foreach (InventorySlotSaveData inventorySlotSaveData in anyRPGSaveData.bankSlotSaveData) {
                 LoadSlotData(inventorySlotSaveData, counter, true);
@@ -1134,10 +1134,11 @@ namespace AnyRPG {
             NewGame();
         }
 
-        public void InitalizeNewGameSettings(AnyRPGSaveData anyRPGSaveData) {
+        public AnyRPGSaveData InitalizeNewGameSettings(AnyRPGSaveData anyRPGSaveData) {
+            //Debug.Log("Savemanager.InitalizeNewGameSettings()");
 
             // initialize inventory
-            PerformInventorySetup(anyRPGSaveData);
+            anyRPGSaveData = PerformInventorySetup(anyRPGSaveData);
 
             // set initial scene
             SceneNode sceneNode = systemDataFactory.GetResource<SceneNode>(systemConfigurationManager.DefaultStartingZone);
@@ -1148,23 +1149,27 @@ namespace AnyRPG {
                 //Debug.LogError("LevelManager.LoadLevel(" + levelName + "): could not find scene node with that name!");
             }
 
+            // set level
+            anyRPGSaveData.PlayerLevel = 1;
+
+            return anyRPGSaveData;
         }
 
         public void NewGameFromSaveData(AnyRPGSaveData anyRPGSaveData) {
-            
-            InitalizeNewGameSettings(anyRPGSaveData);
+
+            anyRPGSaveData = InitalizeNewGameSettings(anyRPGSaveData);
 
             LoadGame(anyRPGSaveData);
         }
 
         public void NewGame() {
+            //Debug.Log("Savemanager.NewGame()");
 
             uIManager.loadGameWindow.CloseWindow();
             uIManager.newGameWindow.CloseWindow();
 
-            //Debug.Log("Savemanager.NewGame()");
             ClearSharedData();
-            InitalizeNewGameSettings(currentSaveData);
+            currentSaveData = InitalizeNewGameSettings(currentSaveData);
 
             /*
             // do this so a new game doesn't reset window positions every time
@@ -1180,7 +1185,7 @@ namespace AnyRPG {
             LoadGame(currentSaveData);
         }
 
-        public void PerformInventorySetup(AnyRPGSaveData anyRPGSaveData) {
+        public AnyRPGSaveData PerformInventorySetup(AnyRPGSaveData anyRPGSaveData) {
             // initialize inventory
             int bagCount = 0;
 
@@ -1189,7 +1194,8 @@ namespace AnyRPG {
                 Bag bag = systemDataFactory.GetResource<Item>(systemConfigurationManager.DefaultBackpackItem) as Bag;
                 if (bag == null) {
                     Debug.LogError("SaveManager.PerformInventorySetup(): Check SystemConfigurationManager in inspector and set DefaultBackpack to valid name");
-                    return;
+                    // would like to return null here but this is a value type :(
+                    return anyRPGSaveData;
                 }
                 EquippedBagSaveData saveData = new EquippedBagSaveData();
                 saveData.BagName = bag.DisplayName;
@@ -1212,6 +1218,8 @@ namespace AnyRPG {
             for (int i = bagCount; i < systemConfigurationManager.MaxBankBags; i++) {
                 anyRPGSaveData.equippedBankBagSaveData.Add(new EquippedBagSaveData());
             }
+
+            return anyRPGSaveData;
         }
 
         public void CreateDefaultBackpack() {

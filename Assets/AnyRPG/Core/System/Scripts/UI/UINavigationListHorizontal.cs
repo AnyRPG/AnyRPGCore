@@ -9,7 +9,7 @@ namespace AnyRPG {
     public class UINavigationListHorizontal : UINavigationController {
 
         public override void FocusCurrentButton() {
-            Debug.Log(gameObject.name + ".UINavigationListHorizontal.FocusCurrentButton()");
+            //Debug.Log(gameObject.name + ".UINavigationListHorizontal.FocusCurrentButton()");
             base.FocusCurrentButton();
             if (activeNavigableButtons.Count == 0) {
                 return;
@@ -26,22 +26,24 @@ namespace AnyRPG {
             if (activeNavigableButtons.Count == 0) {
                 return;
             }
-            currentIndex--;
-            if (currentIndex < 0) {
-                if (leftControllers.Count != 0) {
-                    currentIndex = 0;
-                    currentNavigableElement = activeNavigableButtons[currentIndex];
+
+            // already at far left
+            if (currentIndex == 0) {
+                if (leftControllers.Count != 0 || leftPanel != null) {
                     LeaveLeft();
-                    return;
-                } else {
-                    currentIndex = activeNavigableButtons.Count - 1;
                 }
+                return;
             }
-            if (currentNavigableElement != null) {
-                currentNavigableElement.LeaveElement();
+
+            // not at far left
+            if (currentIndex > 0) {
+                currentIndex--;
+                if (currentNavigableElement != null) {
+                    currentNavigableElement.LeaveElement();
+                }
+                currentNavigableElement = activeNavigableButtons[currentIndex];
+                SelectCurrentNavigableElement();
             }
-            currentNavigableElement = activeNavigableButtons[currentIndex];
-            currentNavigableElement.Select();
         }
 
         public override void ProcessRightButton() {
@@ -49,22 +51,23 @@ namespace AnyRPG {
             if (activeNavigableButtons.Count == 0) {
                 return;
             }
-            currentIndex++;
-            if (currentIndex >= activeNavigableButtons.Count) {
+            // already at right
+            if (currentIndex == (activeNavigableButtons.Count - 1)) {
                 if (rightControllers.Count != 0 || rightPanel != null) {
-                    currentIndex = activeNavigableButtons.Count - 1;
-                    currentNavigableElement = activeNavigableButtons[currentIndex];
                     LeaveRight();
                     return;
-                } else {
-                    currentIndex = 0;
                 }
             }
-            if (currentNavigableElement != null) {
-                currentNavigableElement.LeaveElement();
+
+            // not at right
+            if (currentIndex < (activeNavigableButtons.Count - 1)) {
+                currentIndex++;
+                if (currentNavigableElement != null) {
+                    currentNavigableElement.LeaveElement();
+                }
+                currentNavigableElement = activeNavigableButtons[currentIndex];
+                SelectCurrentNavigableElement();
             }
-            currentNavigableElement = activeNavigableButtons[currentIndex];
-            currentNavigableElement.Select();
         }
 
         public override void ProcessUpButton() {

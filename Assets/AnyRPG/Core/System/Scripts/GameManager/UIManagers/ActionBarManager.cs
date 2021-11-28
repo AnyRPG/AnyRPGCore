@@ -89,14 +89,14 @@ namespace AnyRPG {
         }
 
         private void InitializeGamepadActionButtonNodes() {
-            Debug.Log("ActionBarManager.InitializeGamepadActionButtonNodes()");
+            //Debug.Log("ActionBarManager.InitializeGamepadActionButtonNodes()");
             for (int i = 0; i < gamepadActionButtonCount; i++) {
                 gamepadActionButtons.Add(new ActionButtonNode());
             }
         }
 
         private void ClearGamepadActionButtonNodes() {
-            Debug.Log("ActionBarManager.ClearGamepadActionButtonNodes()");
+            //Debug.Log("ActionBarManager.ClearGamepadActionButtonNodes()");
             for (int i = 0; i < gamepadActionButtonCount; i++) {
                 gamepadActionButtons[i] = new ActionButtonNode();
             }
@@ -452,7 +452,7 @@ namespace AnyRPG {
         }
 
         public void SetGamepadActionButtonSet(int actionButtonSet, bool updateVisuals = true) {
-            Debug.Log("ActionBarmanager.SetGamepadActionButtonSet(" + actionButtonSet + ")");
+            //Debug.Log("ActionBarmanager.SetGamepadActionButtonSet(" + actionButtonSet + ")");
             currentActionBarSet = actionButtonSet;
             actionBarSetText.text = "Set " + (actionButtonSet + 1);
             UpdateGamepadActionButtons(actionButtonSet, GetGamepadActionButtons());
@@ -462,9 +462,9 @@ namespace AnyRPG {
         }
 
         private void UpdateGamepadActionButtons(int actionButtonSet, List<ActionButton> actionButtons) {
-            Debug.Log("ActionBarmanager.UpdateGamepadActionButtons(" + actionButtonSet + ")");
+            //Debug.Log("ActionBarmanager.UpdateGamepadActionButtons(" + actionButtonSet + ")");
             for (int i = 0; i < 16; i++) {
-                Debug.Log("ActionBarmanager.UpdateGamepadActionButtons(" + actionButtonSet + ") checking: " + (i + (actionButtonSet * 16)));
+                //Debug.Log("ActionBarmanager.UpdateGamepadActionButtons(" + actionButtonSet + ") checking: " + (i + (actionButtonSet * 16)));
                 if (gamepadActionButtons[i + (actionButtonSet * 16)].Useable == null) {
                     actionButtons[i].ClearUseable();
                 } else {

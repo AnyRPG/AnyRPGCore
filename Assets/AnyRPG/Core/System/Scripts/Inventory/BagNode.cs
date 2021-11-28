@@ -37,7 +37,7 @@ namespace AnyRPG {
         }
 
         public void AddBag(Bag bag) {
-            Debug.Log("BagNode.AddBag()");
+            //Debug.Log("BagNode.AddBag()");
             this.bag = bag;
             //inventorySlots = bagPanel.AddSlots(bag.Slots);
             if (isBankNode) {

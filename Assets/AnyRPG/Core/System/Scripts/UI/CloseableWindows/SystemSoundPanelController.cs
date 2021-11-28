@@ -29,10 +29,12 @@ namespace AnyRPG {
         [SerializeField]
         public Slider voiceSlider;
 
+        /*
         public override void Configure(SystemGameManager systemGameManager) {
-            Debug.Log("SystemSoundPanelController.Configure()");
+            //Debug.Log("SystemSoundPanelController.Configure()");
             base.Configure(systemGameManager);
         }
+        */
 
         public void Start() {
             //Debug.Log("SoundMenuController.Start()");

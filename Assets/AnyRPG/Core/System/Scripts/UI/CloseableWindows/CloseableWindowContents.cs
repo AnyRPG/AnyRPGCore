@@ -162,7 +162,7 @@ namespace AnyRPG {
         }
 
         public virtual void ActivateNavigationController(UINavigationController uINavigationController) {
-            Debug.Log(gameObject.name + ".CloseableWindowContents.ActivateNavigationController(" + uINavigationController.gameObject.name + ")");
+            //Debug.Log(gameObject.name + ".CloseableWindowContents.ActivateNavigationController(" + uINavigationController.gameObject.name + ")");
             SetActiveSubPanel(null);
             SetNavigationController(uINavigationController);
             if (parentPanel != null) {
@@ -174,7 +174,7 @@ namespace AnyRPG {
         /// re-focus a window after closing another window
         /// </summary>
         public void FocusCurrentButton() {
-            Debug.Log(gameObject.name + ".CloseableWindowContents.FocusCurrentButton()");
+            //Debug.Log(gameObject.name + ".CloseableWindowContents.FocusCurrentButton()");
             if (activeSubPanel != null) {
                 activeSubPanel.FocusCurrentButton();
                 return;
@@ -209,7 +209,7 @@ namespace AnyRPG {
         }
 
         public virtual void Accept() {
-            Debug.Log(gameObject.name + ".CloseableWindowContents.Accept()");
+            //Debug.Log(gameObject.name + ".CloseableWindowContents.Accept()");
             if (activeSubPanel != null) {
                 activeSubPanel.Accept();
                 return;

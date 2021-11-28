@@ -135,7 +135,7 @@ namespace AnyRPG {
             interactables.Clear();
         }
 
-        private void ResetMoveInput() {
+        public void ResetMoveInput() {
             inputJump = false;
             inputFly = false;
             inputSink = false;
@@ -214,7 +214,7 @@ namespace AnyRPG {
 
         public void ProcessInput() {
             //Debug.Log("PlayerController.Update()");
-            ResetMoveInput();
+            //ResetMoveInput();
 
             if (playerManager.ActiveUnitController == null) {
                 //Debug.Log(gameObject.name + ".PlayerController.Update(): Player Unit is not spawned. Exiting");

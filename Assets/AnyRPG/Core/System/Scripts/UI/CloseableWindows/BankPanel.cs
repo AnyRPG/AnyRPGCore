@@ -55,7 +55,7 @@ namespace AnyRPG {
         }
 
         public void HandleAddBankBagNode(BagNode bagNode) {
-            Debug.Log("BankPanel.HandleAddBankBagNode()");
+            //Debug.Log("BankPanel.HandleAddBankBagNode()");
             bagBarController.AddBagButton(bagNode);
             //bagNode.BagPanel = this;
         }

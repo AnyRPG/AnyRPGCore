@@ -174,7 +174,7 @@ namespace AnyRPG {
         }
 
         public void RawCloseWindow() {
-            Debug.Log(gameObject.name + ".CloseableWindow.RawCloseWindow()");
+            //Debug.Log(gameObject.name + ".CloseableWindow.RawCloseWindow()");
             /*
             canvasGroup.alpha = 0;
             canvasGroup.interactable = false;
@@ -184,7 +184,7 @@ namespace AnyRPG {
         }
 
         public void ToggleOpenClose() {
-            Debug.Log(gameObject.name + ".CloseableWindow.ToggleOpenClose()");
+            //Debug.Log(gameObject.name + ".CloseableWindow.ToggleOpenClose()");
             if (IsOpen) {
                 CloseWindow();
             } else {

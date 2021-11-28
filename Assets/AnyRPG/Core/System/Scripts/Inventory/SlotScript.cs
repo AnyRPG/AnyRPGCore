@@ -322,7 +322,7 @@ namespace AnyRPG {
 
 
         public override void DeSelect() {
-            Debug.Log("SlotScript.DeSelect()");
+            //Debug.Log("SlotScript.DeSelect()");
             base.DeSelect();
             if (owner != null) {
                 owner.HideControllerHints();
