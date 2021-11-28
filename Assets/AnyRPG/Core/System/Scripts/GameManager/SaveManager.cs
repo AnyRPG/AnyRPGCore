@@ -713,7 +713,7 @@ namespace AnyRPG {
         }
 
         public void SaveBankSlotData(AnyRPGSaveData anyRPGSaveData) {
-            Debug.Log("Savemanager.SaveBankSlotData()");
+            //Debug.Log("Savemanager.SaveBankSlotData()");
             foreach (InventorySlot inventorySlot in playerManager.MyCharacter.CharacterInventoryManager.BankSlots) {
                 anyRPGSaveData.bankSlotSaveData.Add(GetSlotSaveData(inventorySlot));
             }

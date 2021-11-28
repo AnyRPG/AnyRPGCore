@@ -47,7 +47,7 @@ namespace AnyRPG {
         }
 
         public void AddWindow(CloseableWindowContents closeableWindowContents) {
-            Debug.Log("WindowManager.AddWindow(" + closeableWindowContents.name + ")");
+            //Debug.Log("WindowManager.AddWindow(" + closeableWindowContents.name + ")");
             windowStack.Add(closeableWindowContents);
         }
 
@@ -79,7 +79,7 @@ namespace AnyRPG {
             }
 
             // focus the current element and add it to the window stack
-            Debug.Log("index: " + interfaceIndex + "; count: " + uIManager.NavigableInterfaceElements.Count);
+            //Debug.Log("index: " + interfaceIndex + "; count: " + uIManager.NavigableInterfaceElements.Count);
             uIManager.NavigableInterfaceElements[interfaceIndex].Focus();
             windowStack.Add(uIManager.NavigableInterfaceElements[interfaceIndex]);
         }

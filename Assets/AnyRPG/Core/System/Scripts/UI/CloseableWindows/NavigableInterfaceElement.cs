@@ -21,7 +21,7 @@ namespace AnyRPG {
         }
 
         public virtual void Focus() {
-            Debug.Log(gameObject.name + ".NavigableInterfaceElement.Focus()");
+            //Debug.Log(gameObject.name + ".NavigableInterfaceElement.Focus()");
             outline.color = Color.white;
             if (currentNavigationController != null) {
                 currentNavigationController.Focus();

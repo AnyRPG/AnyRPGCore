@@ -13,15 +13,20 @@ namespace AnyRPG {
         [SerializeField]
         protected Image highlightIcon;
 
-        [SerializeField]
-        protected bool limitReached = false;
-
         // is this reward button currently highlighted
         protected bool chosen = false;
 
+        protected bool chooseable = false;
+
+        protected CloseableWindowContents closeableWindowContents = null;
+
         public bool Chosen { get => chosen; set => chosen = value; }
         public Image HighlightIcon { get => highlightIcon; set => highlightIcon = value; }
-        public bool LimitReached { get => limitReached; set => limitReached = value; }
+
+        public void SetOptions(CloseableWindowContents closeableWindowContents, bool chooseable) {
+            this.closeableWindowContents = closeableWindowContents;
+            this.chooseable = chooseable;
+        }
 
         /// <summary>
         /// UPdates the visual representation of the describablebutton
@@ -69,7 +74,31 @@ namespace AnyRPG {
             base.Accept();
             ToggleChosen();
         }
-        
+
+        public override void Select() {
+            base.Select();
+            ShowContextInfo();
+        }
+
+        public override void DeSelect() {
+            base.DeSelect();
+            uIManager.HideToolTip();
+            if (owner != null) {
+                owner.HideControllerHints();
+            }
+        }
+
+        public void ShowContextInfo() {
+            ShowGamepadTooltip();
+            if (chooseable == true) {
+                owner.SetControllerHints("Choose", "", "", "");
+            }
+        }
+
+        public void ShowGamepadTooltip() {
+            //Rect panelRect = RectTransformToScreenSpace((BagPanel.ContentArea as RectTransform));
+            uIManager.ShowGamepadTooltip(closeableWindowContents.transform as RectTransform, transform, describable, "");
+        }
 
     }
 

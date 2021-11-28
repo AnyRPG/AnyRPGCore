@@ -125,7 +125,7 @@ namespace AnyRPG {
         }
 
         public virtual void SetActiveSubPanel(CloseableWindowContents closeableWindowContents, bool focus = true) {
-            Debug.Log(gameObject.name + ".CloseableWindowContents.SetActiveSubPanel(" + (closeableWindowContents == null ? "null" : closeableWindowContents.name) + ")");
+            //Debug.Log(gameObject.name + ".CloseableWindowContents.SetActiveSubPanel(" + (closeableWindowContents == null ? "null" : closeableWindowContents.name) + ")");
             if (closeableWindowContents != null) {
                 foreach (UINavigationController uINavigationController in uINavigationControllers) {
                     uINavigationController.UnFocus();
@@ -143,7 +143,7 @@ namespace AnyRPG {
         }
 
         public virtual void SetOpenSubPanel(CloseableWindowContents closeableWindowContents, bool focus = false) {
-            Debug.Log(gameObject.name + ".CloseableWindowContents.SetOpenSubPanel(" + closeableWindowContents.name + ")");
+            //Debug.Log(gameObject.name + ".CloseableWindowContents.SetOpenSubPanel(" + closeableWindowContents.name + ")");
             openSubPanel = closeableWindowContents;
             if (focus == true) {
                 SetActiveSubPanel(closeableWindowContents);
@@ -151,7 +151,7 @@ namespace AnyRPG {
         }
 
         public virtual void SetNavigationController(UINavigationController uINavigationController) {
-            Debug.Log(gameObject.name + ".CloseableWindowContents.SetNavigationController(" + uINavigationController.gameObject.name + ")");
+            //Debug.Log(gameObject.name + ".CloseableWindowContents.SetNavigationController(" + uINavigationController.gameObject.name + ")");
             if (uINavigationControllers.Contains(uINavigationController)) {
                 if (currentNavigationController != null &&  currentNavigationController != uINavigationController) {
                     currentNavigationController.UnFocus();
@@ -451,7 +451,7 @@ namespace AnyRPG {
                     currentNavigationController.FocusFirstButton();
                 }
             } else {
-                Debug.Log("No navigation controller for " + gameObject.name);
+                //Debug.Log("No navigation controller for " + gameObject.name);
             }
         }
 

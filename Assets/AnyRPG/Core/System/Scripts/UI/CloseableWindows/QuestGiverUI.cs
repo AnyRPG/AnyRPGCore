@@ -91,6 +91,7 @@ namespace AnyRPG {
             //completeButton.Configure(systemGameManager);
 
             questDetailsArea.Configure(systemGameManager);
+            questDetailsArea.SetOwner(this);
 
             questLog.OnShowQuestGiverDescription += HandleShowQuestGiverDescription;
         }

@@ -17,7 +17,7 @@ namespace AnyRPG {
 
 
         public override void LeftAnalog(float inputHorizontal, float inputVertical) {
-            Debug.Log(gameObject.name + ".NavigableScrollRect.LeftAnalog(" + inputHorizontal + ", " + inputVertical + ")");
+            //Debug.Log(gameObject.name + ".NavigableScrollRect.LeftAnalog(" + inputHorizontal + ", " + inputVertical + ")");
 
             base.LeftAnalog(inputHorizontal, inputVertical);
 

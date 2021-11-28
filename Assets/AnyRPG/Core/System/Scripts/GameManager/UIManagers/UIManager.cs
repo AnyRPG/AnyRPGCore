@@ -1032,7 +1032,7 @@ namespace AnyRPG {
         }
 
         public void ShowGamepadTooltip(RectTransform paneltransform, Transform buttonTransform, IDescribable describable, string sellPriceString) {
-            Debug.Log("UIManager.ShowGamepadTooltip()");
+            //Debug.Log("UIManager.ShowGamepadTooltip()");
             //Rect panelRect = RectTransformToScreenSpace((BagPanel.ContentArea as RectTransform));
             Vector3[] WorldCorners = new Vector3[4];
             paneltransform.GetWorldCorners(WorldCorners);

@@ -62,7 +62,7 @@ namespace AnyRPG {
         }
 
         public override void Select() {
-            Debug.Log("AbilityButton.Select()");
+            //Debug.Log("AbilityButton.Select()");
             base.Select();
             if (owner != null) {
                 owner.SetControllerHints("Cast", "Add To Action Bars", "", "");
@@ -70,7 +70,7 @@ namespace AnyRPG {
         }
 
         public override void DeSelect() {
-            Debug.Log("AbilityButton.DeSelect()");
+            //Debug.Log("AbilityButton.DeSelect()");
             base.DeSelect();
             if (owner != null) {
                 owner.HideControllerHints();
@@ -78,7 +78,7 @@ namespace AnyRPG {
         }
 
         public override void Accept() {
-            Debug.Log("AbilityButton.Accept()");
+            //Debug.Log("AbilityButton.Accept()");
             base.Accept();
             if (ability.CanCast(playerManager.MyCharacter, true)) {
                 playerManager.MyCharacter.CharacterAbilityManager.BeginAbility(ability);
@@ -86,7 +86,7 @@ namespace AnyRPG {
         }
 
         public override void JoystickButton2() {
-            Debug.Log("AbilityButton.JoystickButton2()");
+            //Debug.Log("AbilityButton.JoystickButton2()");
             base.JoystickButton2();
             actionBarManager.StartUseableAssignment(ability);
             uIManager.assignToActionBarsWindow.OpenWindow();

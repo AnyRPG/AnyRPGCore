@@ -31,7 +31,7 @@ namespace AnyRPG {
 
 
         public override void FocusCurrentButton() {
-            Debug.Log(gameObject.name + ".UINavigationGrid.FocusCurrentButton()");
+            //Debug.Log(gameObject.name + ".UINavigationGrid.FocusCurrentButton()");
             if (activeNavigableButtons.Count == 0) {
                 return;
             }
@@ -177,13 +177,13 @@ namespace AnyRPG {
         }
 
         public override void FocusFirstButton() {
-            Debug.Log(gameObject.name + ".UINavigationGrid.FocusFirstButton()");
+            //Debug.Log(gameObject.name + ".UINavigationGrid.FocusFirstButton()");
             base.FocusFirstButton();
             CalculatePosition();
         }
 
         public override void SelectCurrentNavigableElement() {
-            Debug.Log(gameObject.name + ".UINavigationListVertical.SelectCurrentNavigableElement()");
+            //Debug.Log(gameObject.name + ".UINavigationListVertical.SelectCurrentNavigableElement()");
             base.SelectCurrentNavigableElement();
             if (scrollRect != null) {
                 scrollRect.content.localPosition = GetSnapToPositionToBringChildIntoView(scrollRect, currentNavigableElement.RectTransform);

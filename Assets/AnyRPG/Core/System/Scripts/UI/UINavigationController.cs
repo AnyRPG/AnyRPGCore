@@ -273,7 +273,7 @@ namespace AnyRPG {
         }
 
         public virtual bool LeaveDown() {
-            Debug.Log(gameObject.name + ".UINavigationController.LeaveDown()");
+            //Debug.Log(gameObject.name + ".UINavigationController.LeaveDown()");
             if (downControllers.Count != 0) {
                 foreach (UINavigationController uINavigationController in downControllers) {
                     if (uINavigationController.gameObject.activeInHierarchy == true && uINavigationController.ActiveNavigableButtonCount > 0) {
@@ -444,7 +444,7 @@ namespace AnyRPG {
         }
 
         public void SetControllerHints(string aOption, string xOption, string yOption, string bOption) {
-            Debug.Log(gameObject.name + ".UINavigationController.SetControllerHints()");
+            //Debug.Log(gameObject.name + ".UINavigationController.SetControllerHints()");
             if (owner != null) {
                 owner.SetControllerHints(aOption, xOption, yOption, bOption);
             }

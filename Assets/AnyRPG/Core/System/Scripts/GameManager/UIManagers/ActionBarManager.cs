@@ -135,7 +135,7 @@ namespace AnyRPG {
         }
 
         public void AssignUseableByIndex(int index) {
-            Debug.Log("ActionBarManager.AssignUseableByIndex(" + index + ")");
+            //Debug.Log("ActionBarManager.AssignUseableByIndex(" + index + ")");
             int controllerIndex = Mathf.FloorToInt((float)index / 8f);
             int buttonIndex = index % 8;
             gamepadActionButtons[(currentActionBarSet * 16) + index].Useable = assigningUseable;
@@ -362,10 +362,53 @@ namespace AnyRPG {
             }
         }
 
+        public bool AddGamepadSavedAbility(BaseAbility newAbility) {
+            //Debug.Log("AbilityBarController.AddNewAbility(" + newAbility + ")");
+            for (int i = 0; i < 16; i++) {
+                if (gamepadActionButtons[i + (currentActionBarSet * 16)].Useable == null
+                    && gamepadActionButtons[i + (currentActionBarSet * 16)].SavedUseable != null
+                    && gamepadActionButtons[i + (currentActionBarSet * 16)].SavedUseable.DisplayName == newAbility.DisplayName) {
+                    //Debug.Log("Adding ability: " + newAbility + " to empty action button " + i);
+                    //gamepadActionButtons[i + (currentActionBarSet * 16)].SetUseable(newAbility);
+                    assigningUseable = newAbility;
+                    AssignUseableByIndex(i);
+                    return true;
+                } else if (gamepadActionButtons[i + (currentActionBarSet * 16)].Useable == (newAbility as IUseable)) {
+                    //Debug.Log("Ability exists on bars already!");
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        public bool AddGamepadNewAbility(BaseAbility newAbility) {
+            //Debug.Log("AbilityBarController.AddNewAbility(" + newAbility + ")");
+            for (int i = 0; i < 16; i++) {
+                if (gamepadActionButtons[i + (currentActionBarSet * 16)].Useable == null) {
+                    //Debug.Log("Adding ability: " + newAbility + " to empty action button " + i);
+                    //gamepadActionButtons[i + (currentActionBarSet * 16)].SetUseable(newAbility);
+                    assigningUseable = newAbility;
+                    AssignUseableByIndex(i);
+                    return true;
+                } else if (gamepadActionButtons[i + (currentActionBarSet * 16)].Useable == (newAbility as IUseable)) {
+                    //Debug.Log("Ability exists on bars already!");
+                    return true;
+                }
+            }
+            return false;
+        }
+
         public bool AddNewAbility(BaseAbility newAbility) {
             //Debug.Log("ActionBarManager.AddNewAbility()");
             bool returnValue = false;
             bool foundSlot = false;
+            if (AddGamepadSavedAbility(newAbility)) {
+                if (controlsManager.GamePadModeActive) {
+                    returnValue = true;
+                }
+                foundSlot = true;
+            }
+            /*
             foreach (ActionBarController actionBarController in gamepadActionBarControllers) {
                 //Debug.Log("ActionBarManager.AddNewAbility(): looping through a controller");
                 if (actionBarController.AddSavedAbility(newAbility)) {
@@ -376,7 +419,14 @@ namespace AnyRPG {
                     break;
                 }
             }
+            */
             if (foundSlot != true) {
+                if (AddGamepadNewAbility(newAbility)) {
+                    if (controlsManager.GamePadModeActive) {
+                        returnValue = true;
+                    }
+                }
+                /*
                 foreach (ActionBarController actionBarController in gamepadActionBarControllers) {
                     if (actionBarController.AddNewAbility(newAbility)) {
                         //Debug.Log("ActionBarManager.AddNewAbility(): we were able to add " + newAbility.name);
@@ -386,6 +436,7 @@ namespace AnyRPG {
                         break;
                     }
                 }
+                */
             }
 
             foundSlot = false;
