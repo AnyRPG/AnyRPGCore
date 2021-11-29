@@ -211,23 +211,23 @@ namespace AnyRPG {
 
         private void ShowContextInfo() {
             if (equippedEquipment != null) {
-                uIManager.ShowGamepadTooltip((characterPanel.transform as RectTransform), transform, this, "Sell Price: ");
+                uIManager.ShowGamepadTooltip(characterPanel.RectTransform, transform, this, "Sell Price: ");
                 owner.SetControllerHints("Unequip", "", "", "");
             } else {
-                uIManager.ShowGamepadTooltip((characterPanel.transform as RectTransform), transform, this, "");
+                uIManager.ShowGamepadTooltip(characterPanel.RectTransform, transform, this, "");
                 owner.HideControllerHints();
             }
         }
 
         public override void Select() {
-            Debug.Log("SlotScript.Select()");
+            //Debug.Log("SlotScript.Select()");
             base.Select();
 
             ShowContextInfo();
         }
 
         public override void DeSelect() {
-            Debug.Log("SlotScript.DeSelect()");
+            //Debug.Log("SlotScript.DeSelect()");
             base.DeSelect();
             if (owner != null) {
                 owner.HideControllerHints();

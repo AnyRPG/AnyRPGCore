@@ -11,7 +11,7 @@ namespace AnyRPG {
         [Header("Slot Script")]
 
         [SerializeField]
-        protected Image backGroundImage;
+        protected Image backGroundImage = null;
 
         protected InventorySlot inventorySlot = null;
 

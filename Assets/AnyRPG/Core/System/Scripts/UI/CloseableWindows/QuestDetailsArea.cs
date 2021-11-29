@@ -235,7 +235,7 @@ namespace AnyRPG {
             for (int i = 0; i < quest.ItemRewards.Count; i++) {
                 RewardButton rewardIcon = objectPooler.GetPooledObject(rewardIconPrefab, itemIconsArea.transform).GetComponent<RewardButton>();
                 rewardIcon.Configure(systemGameManager);
-                rewardIcon.SetOptions(owner, quest.MaxItemRewards > 0);
+                rewardIcon.SetOptions(owner.RectTransform, quest.MaxItemRewards > 0);
                 rewardIcon.OnAttempSelect += HandleAttemptSelect;
                 //Debug.Log("QuestDetailsArea.ShowDescription(): setting describable (and attemptselect) for: " + quest.MyItemRewards[i]);
                 rewardIcon.SetDescribable(quest.ItemRewards[i]);
@@ -259,7 +259,7 @@ namespace AnyRPG {
             for (int i = 0; i < quest.AbilityRewards.Count; i++) {
                 RewardButton rewardIcon = objectPooler.GetPooledObject(rewardIconPrefab, abilityIconsArea.transform).GetComponent<RewardButton>();
                 rewardIcon.Configure(systemGameManager);
-                rewardIcon.SetOptions(owner, quest.MaxAbilityRewards > 0);
+                rewardIcon.SetOptions(owner.RectTransform, quest.MaxAbilityRewards > 0);
                 rewardIcon.OnAttempSelect += HandleAttemptSelect;
                 //Debug.Log("QuestDetailsArea.ShowDescription(): setting describable (and attemptselect) for: " + quest.MyAbilityRewards[i]);
                 rewardIcon.SetDescribable(quest.AbilityRewards[i]);
@@ -283,7 +283,7 @@ namespace AnyRPG {
             for (int i = 0; i < quest.FactionRewards.Count; i++) {
                 FactionRewardButton rewardIcon = objectPooler.GetPooledObject(factionRewardIconPrefab, factionIconsArea.transform).GetComponent<FactionRewardButton>();
                 rewardIcon.Configure(systemGameManager);
-                rewardIcon.SetOptions(owner, quest.MaxFactionRewards > 0);
+                rewardIcon.SetOptions(owner.RectTransform, quest.MaxFactionRewards > 0);
                 rewardIcon.OnAttempSelect += HandleAttemptSelect;
                 //Debug.Log("QuestDetailsArea.ShowDescription(): setting describable (and attemptselect) for: " + quest.MyFactionRewards[i]);
                 rewardIcon.SetDescribable(quest.FactionRewards[i]);
@@ -307,7 +307,7 @@ namespace AnyRPG {
             for (int i = 0; i < quest.SkillRewards.Count; i++) {
                 RewardButton rewardIcon = objectPooler.GetPooledObject(rewardIconPrefab, skillIconsArea.transform).GetComponent<RewardButton>();
                 rewardIcon.Configure(systemGameManager);
-                rewardIcon.SetOptions(owner, quest.MaxSkillRewards > 0);
+                rewardIcon.SetOptions(owner.RectTransform, quest.MaxSkillRewards > 0);
                 rewardIcon.SetDescribable(quest.SkillRewards[i]);
                 skillRewardIcons.Add(rewardIcon);
                 //if (quest.MaxSkillRewards > 0) {

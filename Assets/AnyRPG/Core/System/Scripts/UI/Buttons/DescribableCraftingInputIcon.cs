@@ -7,7 +7,10 @@ using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 namespace AnyRPG {
-    public class DescribableCraftingInputIcon : DescribableIcon {
+    public class DescribableCraftingInputIcon : DescribableCraftingIcon {
+        
+        [Header("Crafting Input")]
+
         [SerializeField]
         private TextMeshProUGUI description = null;
 
@@ -16,9 +19,9 @@ namespace AnyRPG {
 
         // game manager references
         //private InventoryManager inventoryManager = null;
-        private CraftingManager craftingManager = null;
-        private SystemEventManager systemEventManager = null;
-        private PlayerManager playerManager = null;
+        protected CraftingManager craftingManager = null;
+        protected SystemEventManager systemEventManager = null;
+        protected PlayerManager playerManager = null;
 
         public GameObject MaterialSlot { get => materialSlot; }
 
@@ -43,6 +46,8 @@ namespace AnyRPG {
             //}
             craftingManager.TriggerCraftAmountUpdated();
         }
+
+        
 
         protected override void SetDescribableCommon(IDescribable describable) {
             base.SetDescribableCommon(describable);

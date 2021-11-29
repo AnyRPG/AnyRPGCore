@@ -435,7 +435,7 @@ namespace AnyRPG {
             if (useable != null) {
                 owner.SetControllerHints("Move", "Clear", "", "");
                 if (windowPanel != null) {
-                    uIManager.ShowGamepadTooltip(windowPanel.transform as RectTransform, transform, useable as IDescribable, "");
+                    uIManager.ShowGamepadTooltip(windowPanel.RectTransform, transform, useable as IDescribable, "");
                 }
             } else {
                 owner.HideControllerHints();

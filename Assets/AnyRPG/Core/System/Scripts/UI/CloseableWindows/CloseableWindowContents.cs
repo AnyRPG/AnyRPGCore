@@ -78,6 +78,7 @@ namespace AnyRPG {
         public UINavigationController CurrentNavigationController { get => currentNavigationController; }
         public CloseableWindowContents ParentPanel { get => parentPanel; }
         public bool UserCloseable { get => userCloseable; }
+        public RectTransform RectTransform { get => rectTransform; }
 
         public override void Configure(SystemGameManager systemGameManager) {
             //Debug.Log(gameObject.name + ".CloseableWindowContents.Configure()");

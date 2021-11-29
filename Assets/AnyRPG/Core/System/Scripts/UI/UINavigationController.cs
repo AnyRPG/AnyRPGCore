@@ -65,6 +65,7 @@ namespace AnyRPG {
         [SerializeField]
         protected bool updateActiveListOnOpen = true;
 
+        [Tooltip("Whenever UpdateNavigationList() is called, inactive elements will be removed")]
         [SerializeField]
         protected bool pruneInactiveElements = true;
 

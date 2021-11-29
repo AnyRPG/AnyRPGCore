@@ -21,6 +21,9 @@ namespace AnyRPG {
 
         protected int count;
 
+        // the transform that will be used to calculate tooltip position
+        protected RectTransform toolTipTransform = null;
+
         // game manager references
         //protected UIManager uIManager = null;
 
@@ -33,6 +36,10 @@ namespace AnyRPG {
             base.Configure(systemGameManager);
 
             uIManager = systemGameManager.UIManager;
+        }
+
+        public void SetToolTipTransform(RectTransform toolTipTransform) {
+            this.toolTipTransform = toolTipTransform;
         }
 
         /// <summary>

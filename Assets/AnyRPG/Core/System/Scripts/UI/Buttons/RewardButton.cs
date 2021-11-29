@@ -18,13 +18,11 @@ namespace AnyRPG {
 
         protected bool chooseable = false;
 
-        protected CloseableWindowContents closeableWindowContents = null;
-
         public bool Chosen { get => chosen; set => chosen = value; }
         public Image HighlightIcon { get => highlightIcon; set => highlightIcon = value; }
 
-        public void SetOptions(CloseableWindowContents closeableWindowContents, bool chooseable) {
-            this.closeableWindowContents = closeableWindowContents;
+        public void SetOptions(RectTransform rectTransform, bool chooseable) {
+            SetToolTipTransform(rectTransform);
             this.chooseable = chooseable;
         }
 
@@ -99,7 +97,7 @@ namespace AnyRPG {
 
         public void ShowGamepadTooltip() {
             //Rect panelRect = RectTransformToScreenSpace((BagPanel.ContentArea as RectTransform));
-            uIManager.ShowGamepadTooltip(closeableWindowContents.transform as RectTransform, transform, describable, "");
+            uIManager.ShowGamepadTooltip(toolTipTransform, transform, describable, "");
         }
 
     }

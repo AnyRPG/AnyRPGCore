@@ -92,10 +92,12 @@ namespace AnyRPG {
             cancelButton.Configure(systemGameManager);
             */
 
+            
             foreach (DescribableCraftingInputIcon inputIcon in inputIcons) {
-                inputIcon.Configure(systemGameManager);
+                inputIcon.SetToolTipTransform(rectTransform);
             }
-            outputIcon.Configure(systemGameManager);
+            outputIcon.SetToolTipTransform(rectTransform);
+            
         }
 
         public override void SetGameManagerReferences() {
@@ -223,7 +225,7 @@ namespace AnyRPG {
 
             recipeDescription.text = string.Format("<b>{0}</b>", newRecipe.Output.DisplayName, newRecipe.Description);
 
-            outputIcon.SetDescribable(newRecipe.Output, newRecipe.OutputCount);
+            outputIcon.SetItem(newRecipe.Output, newRecipe.OutputCount);
 
             if (newRecipe.CraftingMaterials.Count > 0) {
                 materialsHeading.gameObject.SetActive(true);
@@ -232,10 +234,12 @@ namespace AnyRPG {
             // show crafting materials
             for (int i = 0; i < newRecipe.CraftingMaterials.Count; i++) {
                 inputIcons[i].MaterialSlot.SetActive(true);
-                inputIcons[i].SetDescribable(newRecipe.CraftingMaterials[i].Item, newRecipe.CraftingMaterials[i].Count);
+                inputIcons[i].SetItem(newRecipe.CraftingMaterials[i].Item, newRecipe.CraftingMaterials[i].Count);
             }
 
             UpdateCraftAmountArea();
+
+            uINavigationControllers[2].UpdateNavigationList();
 
         }
 

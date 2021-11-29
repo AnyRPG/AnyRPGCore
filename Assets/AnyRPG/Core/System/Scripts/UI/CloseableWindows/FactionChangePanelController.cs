@@ -81,7 +81,7 @@ namespace AnyRPG {
             for (int i = 0; i < capabilityProps.AbilityList.Count; i++) {
                 RewardButton rewardIcon = objectPooler.GetPooledObject(rewardIconPrefab, abilityIconsArea.transform).GetComponent<RewardButton>();
                 rewardIcon.Configure(systemGameManager);
-                rewardIcon.SetOptions(this, false);
+                rewardIcon.SetOptions(rectTransform, false);
                 rewardIcon.SetDescribable(capabilityProps.AbilityList[i]);
                 abilityRewardIcons.Add(rewardIcon);
                 if (capabilityProps.AbilityList[i].RequiredLevel > playerManager.MyCharacter.CharacterStats.Level) {
