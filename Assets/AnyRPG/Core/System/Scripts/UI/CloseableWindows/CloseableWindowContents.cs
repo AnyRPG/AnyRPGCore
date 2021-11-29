@@ -32,6 +32,9 @@ namespace AnyRPG {
         protected bool focusFirstButtonOnOpen = true;
 
         [SerializeField]
+        protected bool focusCurrentButtonOnOpen = false;
+
+        [SerializeField]
         protected bool focusActiveSubPanel = false;
 
         /*
@@ -160,6 +163,27 @@ namespace AnyRPG {
                 currentNavigationController.Focus();
             }
         }
+
+        public virtual void SetNavigationControllerByIndex(int controllerIndex) {
+            //Debug.Log(gameObject.name + ".CloseableWindowContents.SetNavigationController(" + uINavigationController.gameObject.name + ")");
+            if (uINavigationControllers.Contains(uINavigationControllers[controllerIndex])) {
+                if (currentNavigationController != null && currentNavigationController != uINavigationControllers[controllerIndex]) {
+                    currentNavigationController.UnFocus();
+                }
+                currentNavigationController = uINavigationControllers[controllerIndex];
+                //currentNavigationController.Focus();
+            }
+        }
+
+        public virtual int GetNavigationControllerIndex() {
+            for (int i = 0; i < uINavigationControllers.Count; i++) {
+                if (currentNavigationController == uINavigationControllers[i]) {
+                    return i;
+                }
+            }
+            return 0;
+        }
+
 
         public virtual void ActivateNavigationController(UINavigationController uINavigationController) {
             //Debug.Log(gameObject.name + ".CloseableWindowContents.ActivateNavigationController(" + uINavigationController.gameObject.name + ")");
@@ -447,8 +471,12 @@ namespace AnyRPG {
                 if (parentPanel == null) {
                     currentNavigationController.Focus(false);
                 }
-                if (controlsManager.GamePadModeActive && focusFirstButtonOnOpen == true) {
-                    currentNavigationController.FocusFirstButton();
+                if (controlsManager.GamePadModeActive) {
+                    if (focusFirstButtonOnOpen) {
+                        currentNavigationController.FocusFirstButton();
+                    } else if (focusCurrentButtonOnOpen) {
+                        currentNavigationController.FocusCurrentButton();
+                    }
                 }
             } else {
                 //Debug.Log("No navigation controller for " + gameObject.name);

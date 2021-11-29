@@ -57,24 +57,26 @@ namespace AnyRPG {
         }
 
         public void RemoveStatusNode(StatusEffectNodeScript statusEffectNodeScript) {
-            //Debug.Log(gameObject.name + ".StatusEffectWindowPanel.AddStatusNode()");
+            //Debug.Log(gameObject.name + ".StatusEffectWindowPanel.RemoveStatusNode()");
             uINavigationControllers[0].ClearActiveButton(statusEffectNodeScript);
             //UpdateGrid();
+            
+            if (uINavigationControllers[0].ActiveNavigableButtonCount == 0) {
+                uIManager.RemoveNavigableInterfaceElement(this);
+            }
 
             // only process active element code if actively browsing this panel
+            // status effects can be removed when not browsing this window
+            // check if this window is actively browsed, and if so, navigate to the next one instead
             if (windowManager.WindowStack.Count > 0 && windowManager.WindowStack[windowManager.WindowStack.Count - 1] == this) {
                 if (uINavigationControllers[0].ActiveNavigableButtonCount > 0) {
                     uINavigationControllers[0].FocusCurrentButton();
                 } else {
-                    uIManager.RemoveNavigableInterfaceElement(this);
-
-                    // status effects can be removed when not browsing this window
-                    // check if this window is actively browsed, and if so, navigate to the next one instead
-                    if (windowManager.WindowStack[windowManager.WindowStack.Count - 1] == this) {
+                    //if (windowManager.WindowStack[windowManager.WindowStack.Count - 1] == this) {
                         windowManager.RemoveWindow(this);
                         UnFocus();
                         windowManager.NavigateInterface();
-                    }
+                    //}
                 }
             }
 

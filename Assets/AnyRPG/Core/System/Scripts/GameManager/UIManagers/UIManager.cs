@@ -127,6 +127,9 @@ namespace AnyRPG {
         private CastBarController floatingCastBarController = null;
 
         [SerializeField]
+        private CloseableWindow gamepadWindow = null;
+
+        [SerializeField]
         private CloseableWindow xpBarWindow = null;
 
         [SerializeField]
@@ -291,6 +294,7 @@ namespace AnyRPG {
         public CloseableWindow FocusUnitFrameWindow { get => focusUnitFrameWindow; }
         public CloseableWindow FloatingCastBarWindow { get => floatingCastBarWindow; }
         public CloseableWindow XPBarWindow { get => xpBarWindow; }
+        public CloseableWindow GamepadWindow { get => gamepadWindow; set => gamepadWindow = value; }
 
         public override void Configure(SystemGameManager systemGameManager) {
             base.Configure(systemGameManager);
@@ -313,6 +317,7 @@ namespace AnyRPG {
             statusEffectWindow.Configure(systemGameManager);
             miniMapWindow.Configure(systemGameManager);
             floatingCastBarWindow.Configure(systemGameManager);
+            gamepadWindow.Configure(systemGameManager);
             xpBarWindow.Configure(systemGameManager);
             bottomPanel.Configure(systemGameManager);
             sidePanel.Configure(systemGameManager);
@@ -804,6 +809,7 @@ namespace AnyRPG {
             miniMapWindow.OpenWindow();
             questTrackerWindow.OpenWindow();
             messageFeedManager.MessageFeedWindow.OpenWindow();
+            gamepadWindow.OpenWindow();
             xpBarWindow.OpenWindow();
             combatLogWindow.OpenWindow();
             UpdateLockUI();

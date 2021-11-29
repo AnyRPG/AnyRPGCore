@@ -33,11 +33,11 @@ RectTransform:
   m_Father: {fileID: 4374621193969361574}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0}
-  m_AnchorMax: {x: 0.5, y: 0}
-  m_AnchoredPosition: {x: 0, y: -25}
+  m_AnchorMin: {x: 0.5, y: 1}
+  m_AnchorMax: {x: 0.5, y: 1}
+  m_AnchoredPosition: {x: 0, y: 30}
   m_SizeDelta: {x: 480, y: 30}
-  m_Pivot: {x: 0.5, y: 0}
+  m_Pivot: {x: 0.5, y: 1}
 --- !u!222 &8267551720077717064
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -135,8 +135,8 @@ MonoBehaviour:
   downControllers: []
   acceptController: {fileID: 0}
   scrollRect: {fileID: 0}
-  updateActiveListOnOpen: 1
-  pruneInactiveElements: 1
+  updateActiveListOnOpen: 0
+  pruneInactiveElements: 0
   navigableButtons:
   - {fileID: 1482078154954308040}
 --- !u!1 &1116473601095221814
@@ -281,8 +281,8 @@ MonoBehaviour:
   downControllers: []
   acceptController: {fileID: 0}
   scrollRect: {fileID: 0}
-  updateActiveListOnOpen: 1
-  pruneInactiveElements: 1
+  updateActiveListOnOpen: 0
+  pruneInactiveElements: 0
   navigableButtons:
   - {fileID: 6402427029494438761}
 --- !u!1 &1854830025691320385
@@ -569,8 +569,8 @@ MonoBehaviour:
   downControllers: []
   acceptController: {fileID: 0}
   scrollRect: {fileID: 0}
-  updateActiveListOnOpen: 1
-  pruneInactiveElements: 1
+  updateActiveListOnOpen: 0
+  pruneInactiveElements: 0
   navigableButtons:
   - {fileID: 8790603696195103321}
   - {fileID: 3707484519835989394}
@@ -716,8 +716,8 @@ MonoBehaviour:
   downControllers: []
   acceptController: {fileID: 0}
   scrollRect: {fileID: 0}
-  updateActiveListOnOpen: 1
-  pruneInactiveElements: 1
+  updateActiveListOnOpen: 0
+  pruneInactiveElements: 0
   navigableButtons:
   - {fileID: 3418060101503493644}
 --- !u!1 &3934212410447365955
@@ -933,8 +933,8 @@ MonoBehaviour:
   downControllers: []
   acceptController: {fileID: 0}
   scrollRect: {fileID: 0}
-  updateActiveListOnOpen: 1
-  pruneInactiveElements: 1
+  updateActiveListOnOpen: 0
+  pruneInactiveElements: 0
   navigableButtons:
   - {fileID: 9110684938717091043}
 --- !u!1 &4726713915057666074
@@ -1032,7 +1032,8 @@ MonoBehaviour:
   coloredUIElements: []
   addToWindowStack: 1
   userCloseable: 1
-  focusFirstButtonOnOpen: 1
+  focusFirstButtonOnOpen: 0
+  focusCurrentButtonOnOpen: 1
   focusActiveSubPanel: 0
   uINavigationControllers:
   - {fileID: 4300602023276743190}
@@ -1048,6 +1049,7 @@ MonoBehaviour:
   - {fileID: 142032072080398330}
   - {fileID: 6395794541085673740}
   subPanels: []
+  hintBarController: {fileID: 0}
   assignActionButtons:
   - {fileID: 1400310766067817910}
   - {fileID: 5200812791007669760}
@@ -1125,8 +1127,8 @@ MonoBehaviour:
   downControllers: []
   acceptController: {fileID: 0}
   scrollRect: {fileID: 0}
-  updateActiveListOnOpen: 1
-  pruneInactiveElements: 1
+  updateActiveListOnOpen: 0
+  pruneInactiveElements: 0
   navigableButtons:
   - {fileID: 946009120563521158}
   - {fileID: 6438926571734816224}
@@ -1190,8 +1192,8 @@ MonoBehaviour:
   downControllers: []
   acceptController: {fileID: 0}
   scrollRect: {fileID: 0}
-  updateActiveListOnOpen: 1
-  pruneInactiveElements: 1
+  updateActiveListOnOpen: 0
+  pruneInactiveElements: 0
   navigableButtons:
   - {fileID: 6219445765963647987}
 --- !u!1 &5713536039408104317
@@ -1254,8 +1256,8 @@ MonoBehaviour:
   downControllers: []
   acceptController: {fileID: 0}
   scrollRect: {fileID: 0}
-  updateActiveListOnOpen: 1
-  pruneInactiveElements: 1
+  updateActiveListOnOpen: 0
+  pruneInactiveElements: 0
   navigableButtons:
   - {fileID: 8811489024945847849}
   - {fileID: 1400310766067817910}
@@ -1319,8 +1321,8 @@ MonoBehaviour:
   downControllers: []
   acceptController: {fileID: 0}
   scrollRect: {fileID: 0}
-  updateActiveListOnOpen: 1
-  pruneInactiveElements: 1
+  updateActiveListOnOpen: 0
+  pruneInactiveElements: 0
   navigableButtons:
   - {fileID: 8555223083586136295}
   - {fileID: 358829259075558884}
@@ -1542,8 +1544,8 @@ MonoBehaviour:
   downControllers: []
   acceptController: {fileID: 0}
   scrollRect: {fileID: 0}
-  updateActiveListOnOpen: 1
-  pruneInactiveElements: 1
+  updateActiveListOnOpen: 0
+  pruneInactiveElements: 0
   navigableButtons:
   - {fileID: 8859884615327991917}
 --- !u!1 &7075366751289045082
@@ -1754,8 +1756,8 @@ MonoBehaviour:
   downControllers: []
   acceptController: {fileID: 0}
   scrollRect: {fileID: 0}
-  updateActiveListOnOpen: 1
-  pruneInactiveElements: 1
+  updateActiveListOnOpen: 0
+  pruneInactiveElements: 0
   navigableButtons:
   - {fileID: 5200812791007669760}
 --- !u!1 &7697648739328984170
@@ -2086,8 +2088,8 @@ MonoBehaviour:
   downControllers: []
   acceptController: {fileID: 0}
   scrollRect: {fileID: 0}
-  updateActiveListOnOpen: 1
-  pruneInactiveElements: 1
+  updateActiveListOnOpen: 0
+  pruneInactiveElements: 0
   navigableButtons:
   - {fileID: 1015063569503596382}
 --- !u!1 &8531963644053500018

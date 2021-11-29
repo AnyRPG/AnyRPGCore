@@ -19,6 +19,8 @@ namespace AnyRPG {
 
         protected int actionButtonIndex = 0;
 
+        protected CloseableWindowContents windowPanel = null;
+
         // game manager references
         protected ActionBarManager actionBarManager = null;
         protected UIManager uIManager = null;
@@ -27,10 +29,15 @@ namespace AnyRPG {
             base.SetGameManagerReferences();
             uIManager = systemGameManager.UIManager;
             actionBarManager = systemGameManager.UIManager.ActionBarManager;
+            ResetGraphics();
         }
 
         public void SetIndex(int index) {
             actionButtonIndex = index;
+        }
+
+        public void SetWindowPanel(CloseableWindowContents windowPanel) {
+            this.windowPanel = windowPanel;
         }
 
         public override void Select() {
@@ -42,6 +49,10 @@ namespace AnyRPG {
 
         public override void DeSelect() {
             base.DeSelect();
+            ResetGraphics();
+        }
+
+        private void ResetGraphics() {
             icon.sprite = null;
             icon.color = hiddenColor;
             backgroundImage.color = hiddenColor;
@@ -50,6 +61,9 @@ namespace AnyRPG {
         public override void Accept() {
             base.Accept();
             actionBarManager.AssignUseableByIndex(actionButtonIndex);
+            (uIManager.GamepadWindow.CloseableWindowContents as GamepadPanel).SetNavigationControllerByIndex(windowPanel.GetNavigationControllerIndex());
+            (uIManager.GamepadWindow.CloseableWindowContents as GamepadPanel).CurrentNavigationController.SetCurrentIndex(windowPanel.CurrentNavigationController.CurrentIndex);
+
             uIManager.assignToActionBarsWindow.CloseWindow();
         }
 

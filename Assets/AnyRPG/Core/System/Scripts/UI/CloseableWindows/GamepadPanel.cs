@@ -6,26 +6,28 @@ using UnityEngine;
 using UnityEngine.UI;
 
 namespace AnyRPG {
-    public class AssignToActionBarsUI : WindowContentController {
+    public class GamepadPanel : NavigableInterfaceElement {
 
-        [Header("Assign To Action Bars")]
+        [Header("Gamepad")]
 
         [SerializeField]
-        List<AssignActionButton> assignActionButtons = new List<AssignActionButton>();
+        protected List<ActionButton> actionButtons = new List<ActionButton>();
 
         // game manager references
-        private ActionBarManager actionBarManager = null;
-        private UIManager uIManager = null;
+        protected ActionBarManager actionBarManager = null;
+        protected UIManager uIManager = null;
 
         public override void Configure(SystemGameManager systemGameManager) {
             base.Configure(systemGameManager);
 
+            
             int buttonIndex = 0;
-            foreach (AssignActionButton assignActionButton in assignActionButtons) {
+            foreach (ActionButton assignActionButton in actionButtons) {
                 assignActionButton.SetIndex(buttonIndex);
-                assignActionButton.SetWindowPanel(this);
+                assignActionButton.SetPanel(this);
                 buttonIndex++;
             }
+            
         }
 
         public override void SetGameManagerReferences() {

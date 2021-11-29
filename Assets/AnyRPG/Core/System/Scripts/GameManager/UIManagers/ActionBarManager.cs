@@ -39,6 +39,9 @@ namespace AnyRPG {
 
         protected int gamepadActionButtonCount = 64;
 
+        // index of button that move started from, -1 = nothing
+        protected int moveIndex = -1;
+
         //protected List<List<IUseable>> actionBarSet = new List<List<IUseable>>();
         //protected List<IUseable> actionButtons = new List<IUseable>(70);
         protected List<ActionButtonNode> gamepadActionButtons = new List<ActionButtonNode>();
@@ -126,7 +129,8 @@ namespace AnyRPG {
             eventSubscriptionsInitialized = false;
         }
 
-        public void StartUseableAssignment(IUseable useable) {
+        public void StartUseableAssignment(IUseable useable, int moveIndex = -1) {
+            this.moveIndex = moveIndex;
             assigningUseable = useable;
         }
 
@@ -138,8 +142,36 @@ namespace AnyRPG {
             //Debug.Log("ActionBarManager.AssignUseableByIndex(" + index + ")");
             int controllerIndex = Mathf.FloorToInt((float)index / 8f);
             int buttonIndex = index % 8;
+
+            IUseable oldUseable = null;
+            if (moveIndex > -1) {
+                oldUseable = gamepadActionButtons[(currentActionBarSet * 16) + index].Useable;
+            }
+
             gamepadActionButtons[(currentActionBarSet * 16) + index].Useable = assigningUseable;
             gamepadActionBarControllers[controllerIndex].ActionButtons[buttonIndex].SetUseable(assigningUseable);
+
+            if (moveIndex > -1) {
+                if (oldUseable == null) {
+                    // the spot where the useable was placed was empty, clear the original slot
+                    ClearUseableByIndex(moveIndex);
+                } else {
+                    // the spot where the useable was placed was not empty, put the replaced useable in the old position (swap)
+                    controllerIndex = Mathf.FloorToInt((float)moveIndex / 8f);
+                    buttonIndex = moveIndex % 8;
+                    gamepadActionButtons[(currentActionBarSet * 16) + moveIndex].Useable = oldUseable;
+                    gamepadActionBarControllers[controllerIndex].ActionButtons[buttonIndex].SetUseable(oldUseable);
+                }
+
+            }
+        }
+
+        public void ClearUseableByIndex(int index) {
+            //Debug.Log("ActionBarManager.AssignUseableByIndex(" + index + ")");
+            int controllerIndex = Mathf.FloorToInt((float)index / 8f);
+            int buttonIndex = index % 8;
+            gamepadActionButtons[(currentActionBarSet * 16) + index].Useable = null;
+            gamepadActionBarControllers[controllerIndex].ActionButtons[buttonIndex].ClearUseable(); ;
         }
 
         public void ProcessInput() {

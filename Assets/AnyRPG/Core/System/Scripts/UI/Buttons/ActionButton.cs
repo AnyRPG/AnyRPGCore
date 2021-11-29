@@ -7,42 +7,48 @@ using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 namespace AnyRPG {
-    public class ActionButton : ConfiguredMonoBehaviour, IPointerClickHandler, IClickable, IPointerEnterHandler, IPointerExitHandler {
+    public class ActionButton : NavigableElement, IClickable {
 
         // A reference to the useable on the actionbutton
-        private IUseable useable = null;
+        protected IUseable useable = null;
 
         // keep track of the last usable that was on this button in case an ability is re-learned
-        private IUseable savedUseable = null;
+        protected IUseable savedUseable = null;
+
+        [Header("Action Button")]
 
         [SerializeField]
-        private TextMeshProUGUI stackSizeText = null;
+        protected TextMeshProUGUI stackSizeText = null;
 
         [SerializeField]
-        private TextMeshProUGUI keyBindText = null;
+        protected TextMeshProUGUI keyBindText = null;
 
         [SerializeField]
-        private Image backgroundImage = null;
+        protected Image backgroundImage = null;
 
         [SerializeField]
-        private Image icon = null;
+        protected Image icon = null;
 
         [SerializeField]
-        private Image coolDownIcon = null;
+        protected Image coolDownIcon = null;
 
         [SerializeField]
         protected Image backGroundImage;
 
-        private int count = 0;
+        protected int count = 0;
 
-        private Coroutine monitorCoroutine = null;
+        protected int actionButtonIndex = 0;
+
+        protected Coroutine monitorCoroutine = null;
+
+        protected CloseableWindowContents windowPanel = null;
 
         // game manager references
-        UIManager uIManager = null;
-        SystemEventManager systemEventManager = null;
-        PlayerManager playerManager = null;
-        HandScript handScript = null;
-        ActionBarManager actionBarManager = null;
+        protected UIManager uIManager = null;
+        protected SystemEventManager systemEventManager = null;
+        protected PlayerManager playerManager = null;
+        protected HandScript handScript = null;
+        protected ActionBarManager actionBarManager = null;
         //InventoryManager inventoryManager = null;
 
         /// <summary>
@@ -72,6 +78,9 @@ namespace AnyRPG {
         public Image BackgroundImage { get => backgroundImage; set => backgroundImage = value; }
 
         public override void Configure(SystemGameManager systemGameManager) {
+            if (configureCount > 0) {
+                return;
+            }
             base.Configure(systemGameManager);
 
             uIManager = systemGameManager.UIManager;
@@ -91,6 +100,16 @@ namespace AnyRPG {
 
             systemEventManager.OnItemCountChanged += UpdateItemCount;
         }
+
+        
+        public void SetIndex(int index) {
+            actionButtonIndex = index;
+        }
+
+        public void SetPanel(CloseableWindowContents windowPanel) {
+            this.windowPanel = windowPanel;
+        }
+        
 
         public void SetBackGroundColor(Color color) {
             if (backGroundImage != null) {
@@ -121,7 +140,8 @@ namespace AnyRPG {
             }
         }
 
-        public void OnPointerClick(PointerEventData eventData) {
+        public override void OnPointerClick(PointerEventData eventData) {
+            base.OnPointerClick(eventData);
             if (playerManager.ActiveUnitController != null) {
                 if (playerManager.ActiveUnitController.ControlLocked == true) {
                     return;
@@ -368,7 +388,8 @@ namespace AnyRPG {
             }
         }
 
-        public void OnPointerEnter(PointerEventData eventData) {
+        public override void OnPointerEnter(PointerEventData eventData) {
+            base.OnPointerEnter(eventData);
             //Debug.Log(gameObject + ".ActionButton.OnPointerEnter()");
 
             ProcessOnPointerEnter();
@@ -385,7 +406,8 @@ namespace AnyRPG {
             }
         }
 
-        public void OnPointerExit(PointerEventData eventData) {
+        public override void OnPointerExit(PointerEventData eventData) {
+            base.OnPointerExit(eventData);
             uIManager.HideToolTip();
         }
 
@@ -406,6 +428,48 @@ namespace AnyRPG {
             Useable = null;
             DisableCoolDownIcon();
             UpdateVisual();
+        }
+
+        public override void Select() {
+            base.Select();
+            if (useable != null) {
+                owner.SetControllerHints("Move", "Clear", "", "");
+                if (windowPanel != null) {
+                    uIManager.ShowGamepadTooltip(windowPanel.transform as RectTransform, transform, useable as IDescribable, "");
+                }
+            } else {
+                owner.HideControllerHints();
+                uIManager.HideToolTip();
+            }
+        }
+
+        public override void DeSelect() {
+            base.DeSelect();
+            owner.HideControllerHints();
+            uIManager.HideToolTip();
+        }
+
+        public override void JoystickButton2() {
+            base.JoystickButton2();
+            if (useable == null) {
+                return;
+            }
+            actionBarManager.ClearUseableByIndex(actionButtonIndex);
+            owner.HideControllerHints();
+        }
+
+        public override void Accept() {
+            base.Accept();
+            if (useable == null) {
+                return;
+            }
+            actionBarManager.StartUseableAssignment(useable, actionButtonIndex);
+
+            // ensure the assignment window is set to the same navigation controller and element index so the move starts in the same spot on the screen
+            (uIManager.assignToActionBarsWindow.CloseableWindowContents as AssignToActionBarsUI).SetNavigationControllerByIndex(windowPanel.GetNavigationControllerIndex());
+            (uIManager.assignToActionBarsWindow.CloseableWindowContents as AssignToActionBarsUI).CurrentNavigationController.SetCurrentIndex(windowPanel.CurrentNavigationController.CurrentIndex);
+
+            uIManager.assignToActionBarsWindow.OpenWindow();
         }
     }
 
