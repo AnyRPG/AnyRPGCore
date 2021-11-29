@@ -80,14 +80,11 @@ namespace AnyRPG {
         public virtual bool CaptureDPad { get => false; }
         public RectTransform RectTransform { get => rectTransform; }
 
-        protected int configureCount = 0;
-
         // game manager references
         protected AudioManager audioManager = null;
 
         public override void Configure(SystemGameManager systemGameManager) {
             base.Configure(systemGameManager);
-            configureCount++;
             if (configureCount > 1) {
                 // disabled because these objects can be pooled
                 //Debug.LogWarning(gameObject.name + ".NavigableElement.Configure() This element has been configured multiple times");

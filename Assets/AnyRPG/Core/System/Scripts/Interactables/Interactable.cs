@@ -411,7 +411,7 @@ namespace AnyRPG {
         }
 
         public override void HandlePrerequisiteUpdates() {
-            //Debug.Log(gameObject.name + ".Interactable.HandlePrerequisiteUpdates()");
+            Debug.Log(gameObject.name + ".Interactable.HandlePrerequisiteUpdates()");
 
             base.HandlePrerequisiteUpdates();
             if (!playerManager.PlayerUnitSpawned) {
@@ -527,7 +527,7 @@ namespace AnyRPG {
         */
 
         public void OpenInteractionWindow() {
-            Debug.Log(gameObject.name + ".Interactable.OpenInteractionWindow");
+            //Debug.Log(gameObject.name + ".Interactable.OpenInteractionWindow");
             interactionManager.CurrentInteractable = this;
             uIManager.craftingWindow.CloseWindow();
             uIManager.interactionWindow.OpenWindow();

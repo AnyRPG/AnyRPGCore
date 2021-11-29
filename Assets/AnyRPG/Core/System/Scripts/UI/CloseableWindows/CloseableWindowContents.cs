@@ -196,7 +196,7 @@ namespace AnyRPG {
         }
 
         public virtual void ChooseFocus() {
-            Debug.Log(gameObject.name + ".CloseableWindowContents.ChooseFocus()");
+            //Debug.Log(gameObject.name + ".CloseableWindowContents.ChooseFocus()");
             if (controlsManager.GamePadModeActive && focusActiveSubPanel == true) {
                 if (openSubPanel != null) {
                     SetActiveSubPanel(openSubPanel);

@@ -7,9 +7,12 @@ namespace AnyRPG {
         protected SystemGameManager systemGameManager = null;
         protected SystemConfigurationManager systemConfigurationManager = null;
 
+        protected int configureCount = 0;
+
         public virtual void Configure(SystemGameManager systemGameManager) {
             this.systemGameManager = systemGameManager;
             SetGameManagerReferences();
+            configureCount++;
         }
 
         public virtual void SetGameManagerReferences() {

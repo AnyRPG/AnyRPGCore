@@ -15,6 +15,12 @@ namespace AnyRPG {
         [SerializeField]
         Slider slider = null;
 
+        [SerializeField]
+        ColoredUIElement fill = null;
+
+        [SerializeField]
+        ColoredUIElement handle = null;
+
         protected bool interacting = false;
 
 
@@ -34,6 +40,13 @@ namespace AnyRPG {
                 }
                 return base.CaptureDPad;
             }
+        }
+
+        public override void Configure(SystemGameManager systemGameManager) {
+            base.Configure(systemGameManager);
+
+            fill.Configure(systemGameManager);
+            handle.Configure(systemGameManager);
         }
 
         /*

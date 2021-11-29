@@ -209,6 +209,7 @@ namespace AnyRPG {
 
         protected bool eventSubscriptionsInitialized = false;
 
+        /*
         // ui opacity defaults
         private float defaultInventoryOpacity = 0.5f;
         private float defaultActionBarOpacity = 0.5f;
@@ -240,8 +241,9 @@ namespace AnyRPG {
         private int defaultShowPlayerNameButton = 1;
         private int defaultShowPlayerFactionButton = 1;
         private int defaultHideFullHealthBarButton = 1;
+        */
 
-        // manager references
+        // game manager references
         private PlayerManager playerManager = null;
         private KeyBindManager keyBindManager = null;
         private InputManager inputManager = null;
@@ -378,7 +380,7 @@ namespace AnyRPG {
 
             ignoreChangeLayer = LayerMask.NameToLayer("Equipment");
 
-            SetUIDefaults();
+            //SetUIDefaults();
 
             settingsMenuWindow.Init();
 
@@ -1442,6 +1444,7 @@ namespace AnyRPG {
             return false;
         }
 
+        /*
         public void SetUIDefaults() {
             if (!PlayerPrefs.HasKey("InventoryOpacity")) {
                 PlayerPrefs.SetFloat("InventoryOpacity", defaultInventoryOpacity);
@@ -1528,6 +1531,7 @@ namespace AnyRPG {
                 PlayerPrefs.SetInt("HideFullHealthBar", defaultHideFullHealthBarButton);
             }
         }
+        */
 
         public void AddNavigableInterfaceElement(NavigableInterfaceElement navigableInterfaceElement) {
             if (activeNavigableInterfaceElements.Contains(navigableInterfaceElement) == false) {

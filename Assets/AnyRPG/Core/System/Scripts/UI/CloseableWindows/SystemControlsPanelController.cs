@@ -12,11 +12,18 @@ namespace AnyRPG {
         public Slider mouseTurnSpeedSlider;
         public Slider keyboardTurnSpeedSlider;
         public OnOffTextButton invertMouseButton;
+        public Slider joystickLookSpeedSlider;
+        public Slider joystickTurnSpeedSlider;
+        public OnOffTextButton invertJoystickButton;
+
 
         private float defaultMouseLookSpeed = 0.5f;
         private float defaultMouseTurnSpeed = 0.5f;
         private float defaultKeyboardTurnSpeed = 0.5f;
         private int defaultInvertMouse = 0;
+        private float defaultJoystickLookSpeed = 0.5f;
+        private float defaultJoystickTurnSpeed = 0.5f;
+        private int defaultInvertJoystick = 0;
 
         // game manager references
         private UIManager uIManager = null;
@@ -65,28 +72,26 @@ namespace AnyRPG {
             if (!PlayerPrefs.HasKey("MouseInvert")) {
                 PlayerPrefs.SetInt("MouseInvert", defaultInvertMouse);
             }
-
-            if (!PlayerPrefs.HasKey("GraphicsQualityIndex")) {
-                //Debug.Log("MainSettingsMenuController.SetPlayerPrefsDefaults() graphicsQuality is: " + QualitySettings.GetQualityLevel());
-                PlayerPrefs.SetInt("GraphicsQualityIndex", QualitySettings.GetQualityLevel());
+            if (!PlayerPrefs.HasKey("JoystickLookSpeed")) {
+                PlayerPrefs.SetFloat("JoystickLookSpeed", defaultJoystickLookSpeed);
             }
-
-            if (!PlayerPrefs.HasKey("FullScreen")) {
-                PlayerPrefs.SetInt("FullScreen", (Screen.fullScreen == true ? 1 : 0));
+            if (!PlayerPrefs.HasKey("JoystickTurnSpeed")) {
+                PlayerPrefs.SetFloat("JoystickTurnSpeed", defaultJoystickTurnSpeed);
             }
-
-            if (!PlayerPrefs.HasKey("VSyncValue")) {
-                PlayerPrefs.SetInt("VSyncValue", QualitySettings.vSyncCount);
+            if (!PlayerPrefs.HasKey("JoystickInvert")) {
+                PlayerPrefs.SetInt("JoystickInvert", defaultInvertJoystick);
             }
+        }
 
-            if (!PlayerPrefs.HasKey("Textures")) {
-                PlayerPrefs.SetInt("Textures", 2);
-            }
-
-            if (!PlayerPrefs.HasKey("Shadows")) {
-                PlayerPrefs.SetInt("Shadows", 2);
-            }
-
+        public void ResetToDefaults() {
+            PlayerPrefs.SetFloat("MouseLookSpeed", defaultMouseLookSpeed);
+            PlayerPrefs.SetFloat("MouseTurnSpeed", defaultMouseTurnSpeed);
+            PlayerPrefs.SetFloat("KeyboardTurnSpeed", defaultKeyboardTurnSpeed);
+            PlayerPrefs.SetInt("MouseInvert", defaultInvertMouse);
+            PlayerPrefs.SetFloat("JoystickLookSpeed", defaultJoystickLookSpeed);
+            PlayerPrefs.SetFloat("JoystickTurnSpeed", defaultJoystickTurnSpeed);
+            PlayerPrefs.SetInt("JoystickInvert", defaultInvertJoystick);
+            LoadControlsSettings();
         }
 
         private void LoadControlsSettings() {
@@ -95,12 +100,23 @@ namespace AnyRPG {
             mouseTurnSpeedSlider.value = PlayerPrefs.GetFloat("MouseTurnSpeed");
             keyboardTurnSpeedSlider.value = PlayerPrefs.GetFloat("KeyboardTurnSpeed");
 
+            joystickLookSpeedSlider.value = PlayerPrefs.GetFloat("JoystickLookSpeed");
+            joystickTurnSpeedSlider.value = PlayerPrefs.GetFloat("JoystickTurnSpeed");
+
             // check mouse inverse
             if (PlayerPrefs.GetInt("MouseInvert") == 0) {
                 invertMouseButton.SetOff();
             } else if (PlayerPrefs.GetInt("MouseInvert") == 1) {
                 invertMouseButton.SetOn();
             }
+
+            // check joystick inverse
+            if (PlayerPrefs.GetInt("JoystickInvert") == 0) {
+                invertJoystickButton.SetOff();
+            } else if (PlayerPrefs.GetInt("JoystickInvert") == 1) {
+                invertJoystickButton.SetOn();
+            }
+
         }
 
         public void ToggleinvertMouse() {
@@ -115,17 +131,52 @@ namespace AnyRPG {
             }
         }
 
+        public void ToggleInvertJoystick() {
+            if (PlayerPrefs.GetInt("JoystickInvert") == 0) {
+                PlayerPrefs.SetInt("JoystickInvert", 1);
+                uIManager.MessageFeedManager.WriteMessage("Invert Joystick: on");
+                invertJoystickButton.SetOn();
+            } else {
+                PlayerPrefs.SetInt("JoystickInvert", 0);
+                uIManager.MessageFeedManager.WriteMessage("Invert Joystick: off");
+                invertJoystickButton.SetOff();
+            }
+        }
+
 
         public void MouseLookSpeedSlider() {
+            if (configureCount == 0) {
+                return;
+            }
             PlayerPrefs.SetFloat("MouseLookSpeed", mouseLookSpeedSlider.value);
         }
 
         public void MouseTurnSpeedSlider() {
+            if (configureCount == 0) {
+                return;
+            }
             PlayerPrefs.SetFloat("MouseTurnSpeed", mouseTurnSpeedSlider.value);
         }
 
         public void KeyboardTurnSpeedSlider() {
+            if (configureCount == 0) {
+                return;
+            }
             PlayerPrefs.SetFloat("KeyboardTurnSpeed", keyboardTurnSpeedSlider.value);
+        }
+
+        public void JoystickLookSpeedSlider() {
+            if (configureCount == 0) {
+                return;
+            }
+            PlayerPrefs.SetFloat("JoystickLookSpeed", joystickLookSpeedSlider.value);
+        }
+
+        public void JoystickTurnSpeedSlider() {
+            if (configureCount == 0) {
+                return;
+            }
+            PlayerPrefs.SetFloat("JoystickTurnSpeed", joystickTurnSpeedSlider.value);
         }
 
 

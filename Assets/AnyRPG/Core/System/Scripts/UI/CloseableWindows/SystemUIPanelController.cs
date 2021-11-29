@@ -45,6 +45,38 @@ namespace AnyRPG {
         public Slider pagedButtonsOpacitySlider;
         public Slider inventorySlotOpacitySlider;
 
+        // ui opacity defaults
+        private float defaultInventoryOpacity = 0.5f;
+        private float defaultActionBarOpacity = 0.5f;
+        private float defaultQuestTrackerOpacity = 0.3f;
+        private float defaultPopupWindowOpacity = 0.8f;
+        private float defaultPagedButtonsOpacity = 0.8f;
+        private float defaultInventorySlotOpacity = 0.5f;
+        private float defaultSystemMenuOpacity = 0.8f;
+        private float defaultCombatLogOpacity = 0.8f;
+
+        // ui element visibility defaults
+        private int defaultUseQuestTracker = 1;
+        private int defaultUseActionBar2 = 1;
+        private int defaultUseActionBar3 = 1;
+        private int defaultUseActionBar4 = 1;
+        private int defaultUseActionBar5 = 1;
+        private int defaultUseActionBar6 = 1;
+        private int defaultUseActionBar7 = 1;
+        private int defaultUseFocusUnitFrameButton = 1;
+        private int defaultUsePlayerUnitFrameButton = 1;
+        private int defaultUseFloatingCastBarButton = 1;
+        private int defaultUseMiniMapButton = 1;
+        private int defaultUseExperienceBarButton = 1;
+        private int defaultUseFloatingCombatTextButton = 1;
+        private int defaultUseMessageFeedButton = 1;
+        private int defaultUseStatusEffectBarButton = 1;
+        private int defaultLockUIButton = 1;
+        private int defaultUseCombatLogButton = 1;
+        private int defaultShowPlayerNameButton = 1;
+        private int defaultShowPlayerFactionButton = 1;
+        private int defaultHideFullHealthBarButton = 1;
+
         // game manager references
         private UIManager uIManager = null;
         private SaveManager saveManager = null;
@@ -52,6 +84,7 @@ namespace AnyRPG {
         public override void Configure(SystemGameManager systemGameManager) {
             base.Configure(systemGameManager);
 
+            SetUIDefaults();
             //LoadUISettings();
         }
 
@@ -67,7 +100,128 @@ namespace AnyRPG {
             saveManager.SaveWindowPositions();
         }
 
-        
+        public void SetUIDefaults() {
+            if (!PlayerPrefs.HasKey("InventoryOpacity")) {
+                PlayerPrefs.SetFloat("InventoryOpacity", defaultInventoryOpacity);
+            }
+            if (!PlayerPrefs.HasKey("InventorySlotOpacity")) {
+                PlayerPrefs.SetFloat("InventorySlotOpacity", defaultInventorySlotOpacity);
+            }
+            if (!PlayerPrefs.HasKey("ActionBarOpacity")) {
+                PlayerPrefs.SetFloat("ActionBarOpacity", defaultActionBarOpacity);
+            }
+            if (!PlayerPrefs.HasKey("QuestTrackerOpacity")) {
+                PlayerPrefs.SetFloat("QuestTrackerOpacity", defaultQuestTrackerOpacity);
+            }
+            if (!PlayerPrefs.HasKey("CombatLogOpacity")) {
+                PlayerPrefs.SetFloat("CombatLogOpacity", defaultCombatLogOpacity);
+            }
+            if (!PlayerPrefs.HasKey("PopupWindowOpacity")) {
+                PlayerPrefs.SetFloat("PopupWindowOpacity", defaultPopupWindowOpacity);
+            }
+            if (!PlayerPrefs.HasKey("PagedButtonsOpacity")) {
+                PlayerPrefs.SetFloat("PagedButtonsOpacity", defaultPagedButtonsOpacity);
+            }
+            if (!PlayerPrefs.HasKey("SystemMenuOpacity")) {
+                PlayerPrefs.SetFloat("SystemMenuOpacity", defaultSystemMenuOpacity);
+            }
+            if (!PlayerPrefs.HasKey("UseQuestTracker")) {
+                PlayerPrefs.SetInt("UseQuestTracker", defaultUseQuestTracker);
+            }
+            if (!PlayerPrefs.HasKey("UseActionBar2")) {
+                PlayerPrefs.SetInt("UseActionBar2", defaultUseActionBar2);
+            }
+            if (!PlayerPrefs.HasKey("UseActionBar3")) {
+                PlayerPrefs.SetInt("UseActionBar3", defaultUseActionBar3);
+            }
+            if (!PlayerPrefs.HasKey("UseActionBar4")) {
+                PlayerPrefs.SetInt("UseActionBar4", defaultUseActionBar4);
+            }
+            if (!PlayerPrefs.HasKey("UseActionBar5")) {
+                PlayerPrefs.SetInt("UseActionBar5", defaultUseActionBar5);
+            }
+            if (!PlayerPrefs.HasKey("UseActionBar6")) {
+                PlayerPrefs.SetInt("UseActionBar6", defaultUseActionBar6);
+            }
+            if (!PlayerPrefs.HasKey("UseActionBar7")) {
+                PlayerPrefs.SetInt("UseActionBar7", defaultUseActionBar7);
+            }
+            if (!PlayerPrefs.HasKey("UseFocusUnitFrame")) {
+                PlayerPrefs.SetInt("UseFocusUnitFrame", defaultUseFocusUnitFrameButton);
+            }
+            if (!PlayerPrefs.HasKey("UsePlayerUnitFrame")) {
+                PlayerPrefs.SetInt("UsePlayerUnitFrame", defaultUsePlayerUnitFrameButton);
+            }
+            if (!PlayerPrefs.HasKey("UseFloatingCastBar")) {
+                PlayerPrefs.SetInt("UseFloatingCastBar", defaultUseFloatingCastBarButton);
+            }
+            if (!PlayerPrefs.HasKey("UseMiniMap")) {
+                PlayerPrefs.SetInt("UseMiniMap", defaultUseMiniMapButton);
+            }
+            if (!PlayerPrefs.HasKey("UseExperienceBar")) {
+                PlayerPrefs.SetInt("UseExperienceBar", defaultUseExperienceBarButton);
+            }
+            if (!PlayerPrefs.HasKey("UseFloatingCombatText")) {
+                PlayerPrefs.SetInt("UseFloatingCombatText", defaultUseFloatingCombatTextButton);
+            }
+            if (!PlayerPrefs.HasKey("UseMessageFeed")) {
+                PlayerPrefs.SetInt("UseMessageFeed", defaultUseMessageFeedButton);
+            }
+            if (!PlayerPrefs.HasKey("UseStatusEffectBar")) {
+                PlayerPrefs.SetInt("UseStatusEffectBar", defaultUseStatusEffectBarButton);
+            }
+            if (!PlayerPrefs.HasKey("UseCombatLog")) {
+                PlayerPrefs.SetInt("UseCombatLog", defaultUseCombatLogButton);
+            }
+            if (!PlayerPrefs.HasKey("LockUI")) {
+                PlayerPrefs.SetInt("LockUI", defaultLockUIButton);
+            }
+            if (!PlayerPrefs.HasKey("ShowPlayerName")) {
+                PlayerPrefs.SetInt("ShowPlayerName", defaultShowPlayerNameButton);
+            }
+            if (!PlayerPrefs.HasKey("ShowPlayerFaction")) {
+                PlayerPrefs.SetInt("ShowPlayerFaction", defaultShowPlayerFactionButton);
+            }
+            if (!PlayerPrefs.HasKey("HideFullHealthBar")) {
+                PlayerPrefs.SetInt("HideFullHealthBar", defaultHideFullHealthBarButton);
+            }
+        }
+
+        public void ResetToDefaults() {
+
+            PlayerPrefs.SetFloat("InventoryOpacity", defaultInventoryOpacity);
+            PlayerPrefs.SetFloat("InventorySlotOpacity", defaultInventorySlotOpacity);
+            PlayerPrefs.SetFloat("ActionBarOpacity", defaultActionBarOpacity);
+            PlayerPrefs.SetFloat("QuestTrackerOpacity", defaultQuestTrackerOpacity);
+            PlayerPrefs.SetFloat("CombatLogOpacity", defaultCombatLogOpacity);
+            PlayerPrefs.SetFloat("PopupWindowOpacity", defaultPopupWindowOpacity);
+            PlayerPrefs.SetFloat("PagedButtonsOpacity", defaultPagedButtonsOpacity);
+            PlayerPrefs.SetFloat("SystemMenuOpacity", defaultSystemMenuOpacity);
+            PlayerPrefs.SetInt("UseQuestTracker", defaultUseQuestTracker);
+            PlayerPrefs.SetInt("UseActionBar2", defaultUseActionBar2);
+            PlayerPrefs.SetInt("UseActionBar3", defaultUseActionBar3);
+            PlayerPrefs.SetInt("UseActionBar4", defaultUseActionBar4);
+            PlayerPrefs.SetInt("UseActionBar5", defaultUseActionBar5);
+            PlayerPrefs.SetInt("UseActionBar6", defaultUseActionBar6);
+            PlayerPrefs.SetInt("UseActionBar7", defaultUseActionBar7);
+            PlayerPrefs.SetInt("UseFocusUnitFrame", defaultUseFocusUnitFrameButton);
+            PlayerPrefs.SetInt("UsePlayerUnitFrame", defaultUsePlayerUnitFrameButton);
+            PlayerPrefs.SetInt("UseFloatingCastBar", defaultUseFloatingCastBarButton);
+            PlayerPrefs.SetInt("UseMiniMap", defaultUseMiniMapButton);
+            PlayerPrefs.SetInt("UseExperienceBar", defaultUseExperienceBarButton);
+            PlayerPrefs.SetInt("UseFloatingCombatText", defaultUseFloatingCombatTextButton);
+            PlayerPrefs.SetInt("UseMessageFeed", defaultUseMessageFeedButton);
+            PlayerPrefs.SetInt("UseStatusEffectBar", defaultUseStatusEffectBarButton);
+            PlayerPrefs.SetInt("UseCombatLog", defaultUseCombatLogButton);
+            PlayerPrefs.SetInt("LockUI", defaultLockUIButton);
+            PlayerPrefs.SetInt("ShowPlayerName", defaultShowPlayerNameButton);
+            PlayerPrefs.SetInt("ShowPlayerFaction", defaultShowPlayerFactionButton);
+            PlayerPrefs.SetInt("HideFullHealthBar", defaultHideFullHealthBarButton);
+
+            LoadUISettings();
+        }
+
+
         public override void Init() {
             base.Init();
             // this must be done in start because the defaults are set in the UI manager after all the Configure() calls are made
@@ -476,44 +630,68 @@ namespace AnyRPG {
         }
 
         public void InventoryOpacitySliderUpdate() {
+            if (configureCount == 0) {
+                return;
+            }
             PlayerPrefs.SetFloat("InventoryOpacity", inventoryOpacitySlider.value);
             uIManager.UpdateInventoryOpacity();
             SystemEventManager.TriggerEvent("OnInventoryTransparencyUpdate", new EventParamProperties());
         }
 
         public void InventorySlotOpacitySliderUpdate() {
+            if (configureCount == 0) {
+                return;
+            }
             PlayerPrefs.SetFloat("InventorySlotOpacity", inventorySlotOpacitySlider.value);
             uIManager.UpdateInventoryOpacity();
             SystemEventManager.TriggerEvent("OnInventoryTransparencyUpdate", new EventParamProperties());
         }
 
         public void ActionBarOpacitySliderUpdate() {
+            if (configureCount == 0) {
+                return;
+            }
             PlayerPrefs.SetFloat("ActionBarOpacity", actionBarOpacitySlider.value);
             uIManager.UpdateActionBarOpacity();
         }
 
         public void QuestTrackerOpacitySliderUpdate() {
+            if (configureCount == 0) {
+                return;
+            }
             PlayerPrefs.SetFloat("QuestTrackerOpacity", questTrackerOpacitySlider.value);
             uIManager.UpdateQuestTrackerOpacity();
         }
 
         public void CombatLogOpacitySliderUpdate() {
+            if (configureCount == 0) {
+                return;
+            }
             PlayerPrefs.SetFloat("CombatLogOpacity", combatLogOpacitySlider.value);
             uIManager.UpdateCombatLogOpacity();
         }
 
         public void PopupWindowOpacitySliderUpdate() {
+            if (configureCount == 0) {
+                return;
+            }
             PlayerPrefs.SetFloat("PopupWindowOpacity", popupWindowOpacitySlider.value);
             uIManager.UpdatePopupWindowOpacity();
         }
 
         public void PagedButtonsOpacitySliderUpdate() {
             //Debug.Log("MainSettingsMenuController.PagedButtonsOpacitySliderUpdate()");
+            if (configureCount == 0) {
+                return;
+            }
             PlayerPrefs.SetFloat("PagedButtonsOpacity", pagedButtonsOpacitySlider.value);
             SystemEventManager.TriggerEvent("OnPagedButtonsTransparencyUpdate", new EventParamProperties());
         }
 
         public void SystemMenuOpacitySliderUpdate() {
+            if (configureCount == 0) {
+                return;
+            }
             PlayerPrefs.SetFloat("SystemMenuOpacity", systemMenuOpacitySlider.value);
             uIManager.UpdateSystemMenuOpacity();
         }

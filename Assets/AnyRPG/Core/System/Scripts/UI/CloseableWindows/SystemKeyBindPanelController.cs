@@ -100,7 +100,7 @@ namespace AnyRPG {
         */
 
         public void ToggleMovementPanel() {
-            Debug.Log("SystemKeyBindPanelController.ToggleMovementPanel()");
+            //Debug.Log("SystemKeyBindPanelController.ToggleMovementPanel()");
             ResetPanels();
             PanelMovement.gameObject.SetActive(true);
 
@@ -128,7 +128,7 @@ namespace AnyRPG {
         }
 
         public override void ReceiveOpenWindowNotification() {
-            Debug.Log("SystemKeyBindPanelController.ReceiveOpenWindowNotification()");
+            //Debug.Log("SystemKeyBindPanelController.ReceiveOpenWindowNotification()");
             base.ReceiveOpenWindowNotification();
             //currentNavigationController.Focus();
             //uINavigationControllers[0].SetCurrentButton(movementButton);

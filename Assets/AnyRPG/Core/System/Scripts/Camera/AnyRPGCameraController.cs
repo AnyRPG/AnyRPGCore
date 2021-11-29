@@ -239,12 +239,12 @@ namespace AnyRPG {
 
                     //if (Input.GetAxis("RightAnalogHorizontal") != 0 && playerManager.PlayerController?.HasMoveInput() != true) {
                     if (Input.GetAxis("RightAnalogHorizontal") != 0f) {
-                        currentXDegrees += Input.GetAxis("RightAnalogHorizontal") * analogYawSpeed * (PlayerPrefs.GetFloat("MouseLookSpeed"));
+                        currentXDegrees += Input.GetAxis("RightAnalogHorizontal") * analogYawSpeed * (PlayerPrefs.GetFloat("JoystickLookSpeed"));
                         cameraPan = true;
                     }
 
                     if (Input.GetAxis("RightAnalogVertical") != 0f) {
-                        currentYDegrees += (Input.GetAxis("RightAnalogVertical") * analogYawSpeed * (PlayerPrefs.GetFloat("MouseLookSpeed"))) * (PlayerPrefs.GetInt("MouseInvert") == 0 ? 1 : -1);
+                        currentYDegrees += (Input.GetAxis("RightAnalogVertical") * analogYawSpeed * (PlayerPrefs.GetFloat("JoystickLookSpeed"))) * (PlayerPrefs.GetInt("JoystickInvert") == 0 ? 1 : -1);
                         cameraPan = true;
                     }
 
