@@ -366,6 +366,16 @@ namespace AnyRPG {
             //CheckForInteraction();
         }
 
+        private bool MouseOutsideScreen() {
+            if (Input.mousePosition.x < 0f
+                            || Input.mousePosition.x > Screen.width
+                            || Input.mousePosition.y < 0f
+                            || Input.mousePosition.y > Screen.height) {
+                return true;
+            }
+            return false;
+        }
+
         /// <summary>
         /// this code is necessary because the only other solution to mouseover through the player is to set the player to layer Ignore Raycast
         /// which breaks the invector controller
@@ -374,6 +384,12 @@ namespace AnyRPG {
             //Debug.Log(gameObject.name + ".PlayerController.HandleMouseOver()");
             if (cameraManager.ActiveMainCamera == null) {
                 // we are in a cutscene and shouldn't be dealing with mouseover
+                return;
+            }
+
+            // don't do anything if the mouse is outside the screen bounds
+            if (MouseOutsideScreen()) {
+                DisableMouseOver();
                 return;
             }
 
@@ -457,6 +473,11 @@ namespace AnyRPG {
 
         private void HandleRightMouseClick() {
             //Debug.Log(gameObject.name + ".PlayerController.HandleRightMouseClick()");
+
+            if (MouseOutsideScreen()) {
+                return;
+            }
+
             // check if the right mouse button clicked on something and interact with it
             if (inputManager.rightMouseButtonClicked && !EventSystem.current.IsPointerOverGameObject()) {
                 //Debug.Log(gameObject.name + ".PlayerController.HandleRightMouseClick(): !EventSystem.current.IsPointerOverGameObject() == true!!!");
@@ -549,6 +570,10 @@ namespace AnyRPG {
 
         private void HandleLeftMouseClick() {
             //Debug.Log("PlayerController.HandleLeftMouseClick()");
+            if (MouseOutsideScreen()) {
+                return;
+            }
+
             // Check if the left mouse button clicked on an interactable and focus it
             if (!inputManager.leftMouseButtonClicked) {
                 return;
