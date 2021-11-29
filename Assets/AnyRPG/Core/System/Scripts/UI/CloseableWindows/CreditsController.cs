@@ -79,7 +79,7 @@ namespace AnyRPG {
                     creditController.NameHighlightButton.Configure(systemGameManager);
                     creditController.AttributionHighlightButton.Configure(systemGameManager);
                 }
-                (uINavigationControllers[1] as UINavigationGrid).NumRows = Mathf.CeilToInt((float)(uINavigationControllers[1].ActiveNavigableButtonCount) / 2f);
+                //(uINavigationControllers[1] as UINavigationGrid).NumRows = Mathf.CeilToInt((float)(uINavigationControllers[1].ActiveNavigableButtonCount) / 2f);
 
             }
         }

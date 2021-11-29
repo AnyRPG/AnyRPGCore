@@ -18,15 +18,19 @@ namespace AnyRPG {
         [SerializeField]
         protected bool reverseLeftRight = false;
 
+        protected int currentNumRows = 0;
+        protected int currentNumColumns = 0;
         protected int currentRow = 0;
         protected int currentColumn = 0;
 
-        public int NumRows { get => numRows; set => numRows = value; }
-        public int NumColumns { get => numColumns; set => numColumns = value; }
+        public int NumRows { get => currentNumRows; }
+        public int NumColumns { get => currentNumColumns; }
 
         public override void Configure(SystemGameManager systemGameManager) {
             base.Configure(systemGameManager);
 
+            currentNumRows = numRows;
+            currentNumColumns = numColumns;
         }
 
 
@@ -50,12 +54,12 @@ namespace AnyRPG {
         }
 
         private void CalculatePosition() {
-            currentRow = Mathf.FloorToInt(currentIndex / numColumns);
-            currentColumn = currentIndex - (currentRow * numColumns);
+            currentRow = Mathf.FloorToInt(currentIndex / currentNumColumns);
+            currentColumn = currentIndex - (currentRow * currentNumColumns);
         }
 
         private void CalculateCurrentIndex() {
-            currentIndex = (currentRow * numColumns) + currentColumn;
+            currentIndex = (currentRow * currentNumColumns) + currentColumn;
         }
 
         public override void ProcessLeftButton() {
@@ -107,7 +111,7 @@ namespace AnyRPG {
 
         private void MoreColumn() {
             currentColumn++;
-            if (currentColumn >= numColumns) {
+            if (currentColumn >= currentNumColumns) {
                 if (rightControllers.Count != 0 || rightPanel != null) {
                     currentColumn--;
                     LeaveRight();
@@ -155,7 +159,7 @@ namespace AnyRPG {
         public override void ProcessDownButton() {
             //Debug.Log(gameObject.name + ".UINavigationGrid.DownButton()");
             currentRow++;
-            if (currentRow >= numRows) {
+            if (currentRow >= currentNumRows) {
                 if (downControllers.Count != 0 || downPanel != null) {
                     currentRow--;
                     LeaveDown();
@@ -188,6 +192,31 @@ namespace AnyRPG {
             if (scrollRect != null) {
                 scrollRect.content.localPosition = GetSnapToPositionToBringChildIntoView(scrollRect, currentNavigableElement.RectTransform);
             }
+        }
+
+        public void ReCalculateSize() {
+            if (numRows == 0) {
+                CalculateNumRows();
+            }
+        }
+
+        public override void AddActiveButton(NavigableElement navigableElement) {
+            base.AddActiveButton(navigableElement);
+            ReCalculateSize();
+        }
+
+        public override void ClearActiveButton(NavigableElement clearButton) {
+            base.ClearActiveButton(clearButton);
+            ReCalculateSize();
+        }
+
+        public override void ClearActiveButtons() {
+            base.ClearActiveButtons();
+            ReCalculateSize();
+        }
+
+        public void CalculateNumRows() {
+            currentNumRows = Mathf.CeilToInt((float)(ActiveNavigableButtonCount) / (float)numColumns);
         }
 
     }

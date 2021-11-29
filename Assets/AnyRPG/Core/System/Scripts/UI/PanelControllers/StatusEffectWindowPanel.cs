@@ -11,8 +11,10 @@ namespace AnyRPG {
         [SerializeField]
         private MainStatusEffectPanelController statusEffectPanel = null;
 
+        /*
         [SerializeField]
         private UINavigationGrid uINavigationGrid = null;
+        */
 
         // game manager references
         protected UIManager uIManager = null;
@@ -51,13 +53,13 @@ namespace AnyRPG {
                 uIManager.AddNavigableInterfaceElement(this);
             }
             uINavigationControllers[0].AddActiveButton(statusEffectNodeScript);
-            UpdateGrid();
+            //UpdateGrid();
         }
 
         public void RemoveStatusNode(StatusEffectNodeScript statusEffectNodeScript) {
             //Debug.Log(gameObject.name + ".StatusEffectWindowPanel.AddStatusNode()");
             uINavigationControllers[0].ClearActiveButton(statusEffectNodeScript);
-            UpdateGrid();
+            //UpdateGrid();
 
             // only process active element code if actively browsing this panel
             if (windowManager.WindowStack.Count > 0 && windowManager.WindowStack[windowManager.WindowStack.Count - 1] == this) {
@@ -78,11 +80,13 @@ namespace AnyRPG {
 
         }
 
+        /*
         private void UpdateGrid() {
             //Debug.Log(gameObject.name + ".StatusEffectWindowPanel.UpdateGrid()");
             uINavigationGrid.NumRows = Mathf.CeilToInt((float)(uINavigationGrid.ActiveNavigableButtonCount) / 8f);
 
         }
+        */
 
     }
 

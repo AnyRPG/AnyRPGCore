@@ -687,7 +687,7 @@ namespace AnyRPG {
         }
 
         public void Despawn() {
-            Debug.Log(gameObject.name + ".BaseCharacter.Despawn()");
+            //Debug.Log(gameObject.name + ".BaseCharacter.Despawn()");
             if (unitController != null && unitController.CharacterUnit != null) {
                 unitController.CharacterUnit.Despawn();
             }

@@ -72,7 +72,9 @@ namespace AnyRPG {
         
         public override void Accept() {
             base.Accept();
-            ToggleChosen();
+            if (chooseable == true) {
+                ToggleChosen();
+            }
         }
 
         public override void Select() {

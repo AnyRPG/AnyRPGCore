@@ -11,6 +11,8 @@ namespace AnyRPG {
         public event System.Action OnConfirmAction = delegate { };
         public override event Action<ICloseableWindowContents> OnCloseWindow = delegate { };
 
+        [Header("Faction Change Panel")]
+
         [SerializeField]
         private GameObject rewardIconPrefab = null;
 
@@ -25,6 +27,9 @@ namespace AnyRPG {
 
         [SerializeField]
         private GameObject abilityIconsArea = null;
+
+        [SerializeField]
+        private UINavigationGrid abilityRewardsGrid = null;
 
         private List<RewardButton> abilityRewardIcons = new List<RewardButton>();
 
@@ -76,12 +81,14 @@ namespace AnyRPG {
             for (int i = 0; i < capabilityProps.AbilityList.Count; i++) {
                 RewardButton rewardIcon = objectPooler.GetPooledObject(rewardIconPrefab, abilityIconsArea.transform).GetComponent<RewardButton>();
                 rewardIcon.Configure(systemGameManager);
+                rewardIcon.SetOptions(this, false);
                 rewardIcon.SetDescribable(capabilityProps.AbilityList[i]);
                 abilityRewardIcons.Add(rewardIcon);
                 if (capabilityProps.AbilityList[i].RequiredLevel > playerManager.MyCharacter.CharacterStats.Level) {
                     rewardIcon.StackSizeText.text = "Level\n" + capabilityProps.AbilityList[i].RequiredLevel;
                     rewardIcon.HighlightIcon.color = new Color32(255, 255, 255, 80);
                 }
+                abilityRewardsGrid.AddActiveButton(rewardIcon);
             }
         }
 
@@ -92,6 +99,7 @@ namespace AnyRPG {
                 objectPooler.ReturnObjectToPool(rewardIcon.gameObject);
             }
             abilityRewardIcons.Clear();
+            abilityRewardsGrid.ClearActiveButtons();
         }
 
         public void CancelAction() {

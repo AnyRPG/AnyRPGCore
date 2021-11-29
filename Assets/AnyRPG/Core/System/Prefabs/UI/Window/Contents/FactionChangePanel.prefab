@@ -208,6 +208,7 @@ MonoBehaviour:
   focusActiveSubPanel: 0
   uINavigationControllers:
   - {fileID: 17176373198845151}
+  - {fileID: 6839235777309802110}
   subPanels: []
   hintBarController: {fileID: 0}
   rewardIconPrefab: {fileID: 7470950394934575550, guid: 83ca6799ff9b76c48802e4f65abab075,
@@ -216,6 +217,7 @@ MonoBehaviour:
   confirmButton: {fileID: 6070184584543479227}
   abilitiesArea: {fileID: 5606163965169281405}
   abilityIconsArea: {fileID: 3483946166939263616}
+  abilityRewardsGrid: {fileID: 6839235777309802110}
 --- !u!1 &2382909202413983825
 GameObject:
   m_ObjectHideFlags: 0
@@ -485,6 +487,7 @@ GameObject:
   - component: {fileID: 7901305788987773916}
   - component: {fileID: 7383133335429929086}
   - component: {fileID: 5629132841587068079}
+  - component: {fileID: 6839235777309802110}
   m_Layer: 5
   m_Name: AbilityRewardsArea
   m_TagString: Untagged
@@ -543,6 +546,35 @@ MonoBehaviour:
   m_Spacing: {x: 2, y: 2}
   m_Constraint: 1
   m_ConstraintCount: 4
+--- !u!114 &6839235777309802110
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3483946166939263616}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 30e086dccacef8d45959cb3d8f7ea6b1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  leftPanel: {fileID: 0}
+  leftControllers: []
+  rightPanel: {fileID: 0}
+  rightControllers: []
+  upPanel: {fileID: 0}
+  upControllers: []
+  downPanel: {fileID: 0}
+  downControllers:
+  - {fileID: 17176373198845151}
+  acceptController: {fileID: 0}
+  scrollRect: {fileID: 0}
+  updateActiveListOnOpen: 0
+  pruneInactiveElements: 0
+  navigableButtons: []
+  numRows: 0
+  numColumns: 4
+  reverseLeftRight: 0
 --- !u!1 &5141365663185638899
 GameObject:
   m_ObjectHideFlags: 0
@@ -665,18 +697,6 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 2745725311752205276}
-        m_TargetAssemblyTypeName: 
-        m_MethodName: OnClickSound
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: IntroCinematic
-          m_BoolArgument: 0
-        m_CallState: 2
       - m_Target: {fileID: 2745725311752205276}
         m_TargetAssemblyTypeName: 
         m_MethodName: ConfirmAction
@@ -1010,7 +1030,8 @@ MonoBehaviour:
   rightPanel: {fileID: 0}
   rightControllers: []
   upPanel: {fileID: 0}
-  upControllers: []
+  upControllers:
+  - {fileID: 6839235777309802110}
   downPanel: {fileID: 0}
   downControllers: []
   acceptController: {fileID: 0}
