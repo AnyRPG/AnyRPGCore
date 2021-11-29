@@ -1846,10 +1846,13 @@ namespace AnyRPG {
             }
         }
 
-        public void OnSendObjectToPool() {
+        public override void OnSendObjectToPool() {
             //Debug.Log(gameObject.name + ".UnitController.OnSendObjectToPool()");
             // recevied a message from the object pooler
             // this object is about to be pooled.  Re-enable all monobehaviors in case it was in preview mode
+
+            base.OnSendObjectToPool();
+
             MonoBehaviour[] monoBehaviours = GetComponents<MonoBehaviour>();
 
             foreach (MonoBehaviour monoBehaviour in monoBehaviours) {

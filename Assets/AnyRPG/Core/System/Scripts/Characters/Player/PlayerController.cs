@@ -107,7 +107,9 @@ namespace AnyRPG {
         }
 
         public void ShowHideInteractionPopup() {
-            if (interactables.Count > 0) {
+            if (interactables.Count > 0
+                && interactables[interactables.Count - 1].PrerequisitesMet == true
+                && interactables[interactables.Count - 1].GetCurrentInteractables().Count > 0) {
                 uIManager.ShowInteractionTooltip(interactables[interactables.Count - 1]);
             } else {
                 uIManager.HideInteractionToolTip();

@@ -19,6 +19,8 @@ namespace AnyRPG {
         // game manager references
         protected PlayerManager playerManager = null;
 
+        protected List<Collider> inRangeColliders = new List<Collider>();
+
         public override void Configure(SystemGameManager systemGameManager) {
             base.Configure(systemGameManager);
         }
@@ -58,17 +60,10 @@ namespace AnyRPG {
             if (interactable.NotInteractable == true) {
                 return;
             }
-            if (interactable.PrerequisitesMet == false) {
-                return;
-            }
-            if (interactable.GetCurrentInteractables().Count == 0) {
-                //if (GetValidInteractables(playerManager.MyCharacter.MyCharacterUnit).Count == 0) {
-                //Debug.Log(gameObject.name + ".Interactable.OnMouseEnter(): No current Interactables.  Not glowing.");
-                return;
-            }
 
             if (collider.gameObject == playerManager.ActiveUnitController.gameObject) {
                 playerManager.PlayerController.AddInteractable(interactable);
+                inRangeColliders.Add(collider);
             }
         }
 
@@ -77,7 +72,26 @@ namespace AnyRPG {
 
             if (collider.gameObject == playerManager.ActiveUnitController.gameObject) {
                 playerManager.PlayerController.RemoveInteractable(interactable);
+                inRangeColliders.Remove(collider);
             }
+        }
+
+        public void UpdateStatus() {
+            //Debug.Log("InteractableRange.UpdateStatus()");
+            foreach (Collider collider in inRangeColliders) {
+                if (collider.gameObject == playerManager.ActiveUnitController.gameObject) {
+                    playerManager.PlayerController.ShowHideInteractionPopup();
+                }
+            }
+        }
+
+        public void OnSendObjectToPool() {
+            foreach (Collider collider in inRangeColliders) {
+                if (collider.gameObject == playerManager.ActiveUnitController.gameObject) {
+                    playerManager.PlayerController.RemoveInteractable(interactable);
+                }
+            }
+            inRangeColliders.Clear();
         }
 
 

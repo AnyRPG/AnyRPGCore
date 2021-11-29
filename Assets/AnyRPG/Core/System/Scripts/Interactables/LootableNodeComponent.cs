@@ -167,7 +167,8 @@ namespace AnyRPG {
 
                 lootDropped = false;
                 //if (lootTable.MyDroppedItems.Count == 0) {
-                playerManager.PlayerController.RemoveInteractable(interactable);
+                // TODO : monitor is this next line needed if the interactable will handle a generic status update?
+                //playerManager.PlayerController.RemoveInteractable(interactable);
                 interactable.DestroySpawn();
                 foreach (LootTable lootTable in Props.LootTables) {
                     lootHolder.LootTableStates[lootTable].Reset();

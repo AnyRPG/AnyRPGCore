@@ -411,7 +411,7 @@ namespace AnyRPG {
         }
 
         public override void HandlePrerequisiteUpdates() {
-            Debug.Log(gameObject.name + ".Interactable.HandlePrerequisiteUpdates()");
+            //Debug.Log(gameObject.name + ".Interactable.HandlePrerequisiteUpdates()");
 
             base.HandlePrerequisiteUpdates();
             if (!playerManager.PlayerUnitSpawned) {
@@ -427,6 +427,10 @@ namespace AnyRPG {
             OnPrerequisiteUpdates();
 
             InstantiateMiniMapIndicator();
+
+            if (componentController != null) {
+                componentController.InteractableRange.UpdateStatus();
+            }
         }
 
         public override void Spawn() {
@@ -1151,6 +1155,12 @@ namespace AnyRPG {
 
             // base is intentionally last because we want to unitialize children first
             base.ResetSettings();
+        }
+
+        public virtual void OnSendObjectToPool() {
+            if (componentController != null) {
+                componentController.InteractableRange.OnSendObjectToPool();
+            }
         }
 
 
