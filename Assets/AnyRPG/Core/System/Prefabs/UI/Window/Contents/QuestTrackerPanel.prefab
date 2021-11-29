@@ -543,6 +543,7 @@ MonoBehaviour:
   moveableTransform: {fileID: 0}
   rectTransform: {fileID: 0}
   dragString: 
+  gamepadDragString: 
   dragText: {fileID: 0}
   alwaysDraggable: 1
   neverDraggable: 0
@@ -911,6 +912,7 @@ MonoBehaviour:
   addToWindowStack: 0
   userCloseable: 0
   focusFirstButtonOnOpen: 0
+  focusCurrentButtonOnOpen: 0
   focusActiveSubPanel: 0
   uINavigationControllers:
   - {fileID: 2557252955018670444}
@@ -920,7 +922,6 @@ MonoBehaviour:
   questPrefab: {fileID: 4085810228724571188, guid: db22a40f031fc8245a9c5707a19fb9d1,
     type: 3}
   questParent: {fileID: 8329855271768900061}
-  dragHandle: {fileID: 8503946463421976959}
 --- !u!114 &2557252955018670444
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -942,7 +943,7 @@ MonoBehaviour:
   downPanel: {fileID: 0}
   downControllers: []
   acceptController: {fileID: 0}
-  scrollRect: {fileID: 0}
+  scrollRect: {fileID: 8329855270479444257}
   updateActiveListOnOpen: 1
   pruneInactiveElements: 1
   navigableButtons: []

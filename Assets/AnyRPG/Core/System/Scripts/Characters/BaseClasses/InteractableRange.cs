@@ -57,13 +57,14 @@ namespace AnyRPG {
         private void OnTriggerEnter(Collider collider) {
             //Debug.Log(interactable.gameObject.name + ".InteractableRange.OnTriggerEnter(" + collider.gameObject.name + ")");
 
-            if (interactable.NotInteractable == true) {
-                return;
-            }
-
             if (collider.gameObject == playerManager.ActiveUnitController.gameObject) {
-                playerManager.PlayerController.AddInteractable(interactable);
                 inRangeColliders.Add(collider);
+
+                if (interactable.PrerequisitesMet == false || interactable.GetCurrentInteractables().Count == 0) {
+                    return;
+                }
+
+                playerManager.PlayerController.AddInteractable(interactable);
             }
         }
 
@@ -78,10 +79,14 @@ namespace AnyRPG {
 
         public void UpdateStatus() {
             //Debug.Log("InteractableRange.UpdateStatus()");
+
             foreach (Collider collider in inRangeColliders) {
-                if (collider.gameObject == playerManager.ActiveUnitController.gameObject) {
-                    playerManager.PlayerController.ShowHideInteractionPopup();
+                if (interactable.PrerequisitesMet == false || interactable.GetCurrentInteractables().Count == 0) {
+                    playerManager.PlayerController.RemoveInteractable(interactable);
+                } else {
+                    playerManager.PlayerController.AddInteractable(interactable);
                 }
+
             }
         }
 

@@ -76,7 +76,7 @@ namespace AnyRPG {
         }
 
         public void CreatePages(List<VendorItem> items, bool resetPageIndex = true) {
-            Debug.Log("VendorUI.CreatePages(" + items.Count + ", " + resetPageIndex + ")");
+            //Debug.Log("VendorUI.CreatePages(" + items.Count + ", " + resetPageIndex + ")");
             ClearPages(resetPageIndex);
 
             // remove all items with a quanity of 0 from the list
@@ -101,7 +101,7 @@ namespace AnyRPG {
         }
 
         public void AddItems() {
-            Debug.Log("VendorUI.AddItems()");
+            //Debug.Log("VendorUI.AddItems()");
             if (pages.Count > 0) {
                 //for (int i = 0; i < (pages[pageIndex] as VendorItemContentList).vendorItems.Count; i++) {
                 for (int i = 0; i < (pages[pageIndex] as VendorItemContentList).vendorItems.Count; i++) {

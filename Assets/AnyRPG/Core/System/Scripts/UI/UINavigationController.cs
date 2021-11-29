@@ -84,7 +84,7 @@ namespace AnyRPG {
         // setting index to -1 so that if gamepad isn't default, the first down press will highlight the first button instead of the second one
         protected int currentIndex = 0;
 
-        bool focused = false;
+        protected bool focused = false;
 
         // game manager references
         protected ControlsManager controlsManager = null;

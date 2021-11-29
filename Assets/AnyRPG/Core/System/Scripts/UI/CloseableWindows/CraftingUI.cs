@@ -369,6 +369,10 @@ namespace AnyRPG {
 
 
             uINavigationControllers[1].UpdateNavigationList();
+
+            if (currentNavigationController ==  uINavigationControllers[1]) {
+                currentNavigationController.FocusCurrentButton();
+            }
         }
 
         public void IncreaseCraftAmount() {
