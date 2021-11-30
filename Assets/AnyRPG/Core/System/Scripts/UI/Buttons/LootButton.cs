@@ -88,6 +88,18 @@ namespace AnyRPG {
             TakeLoot();
         }
 
+        public override void Select() {
+            base.Select();
+
+            uIManager.ShowGamepadTooltip(owner.transform as RectTransform, transform, lootDrop, "");
+        }
+
+        public override void DeSelect() {
+            base.DeSelect();
+
+            uIManager.HideToolTip();
+        }
+
     }
 
 }

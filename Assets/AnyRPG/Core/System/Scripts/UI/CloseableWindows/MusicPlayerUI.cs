@@ -78,7 +78,7 @@ namespace AnyRPG {
         }
 
         public void ShowAudioProfilesCommon(MusicPlayerComponent musicPlayer) {
-            Debug.Log("MusicPlayerUI.ShowAudioProfilesCommon()");
+            //Debug.Log("MusicPlayerUI.ShowAudioProfilesCommon()");
 
             ClearMusicProfiles();
 
@@ -135,7 +135,7 @@ namespace AnyRPG {
         */
 
         private void UpdateButtons(AudioProfile musicProfile) {
-            Debug.Log("MusicPlayerUI.UpdateButtons(" + musicProfile + ")");
+            //Debug.Log("MusicPlayerUI.UpdateButtons(" + musicProfile + ")");
             playButton.Button.interactable = true;
             if (audioType == AudioType.Music) {
                 if (audioManager.MusicAudioSource.isPlaying == true) {
@@ -209,7 +209,7 @@ namespace AnyRPG {
         }
 
         public void PlayMusic() {
-            Debug.Log("MusicPlayerUI.PlayMusic()");
+            //Debug.Log("MusicPlayerUI.PlayMusic()");
             if (currentAudioProfile != null && currentAudioProfile.AudioClip != null) {
                 if (audioType == AudioType.Music) {
                     audioManager.PlayMusic(currentAudioProfile.AudioClip);
