@@ -33,6 +33,8 @@ namespace AnyRPG {
         [SerializeField]
         protected Color pressedColor = new Color32(255, 255, 255, 128);
 
+        protected Color hiddenColor = new Color32(0, 0, 0, 0);
+
         protected int numActionBarSets = 4;
 
         protected int currentActionBarSet = 0;
@@ -294,9 +296,17 @@ namespace AnyRPG {
         public void ResetRangeColors() {
             //Debug.Log("ActionBarmanager.ResetRangeColors()");
             foreach (ActionButton actionButton in GetCurrentActionButtons()) {
+                /*
                 if (actionButton.KeyBindText.color != Color.white) {
                     actionButton.KeyBindText.color = Color.white;
                 }
+                */
+                /*
+                if (actionButton.RangeIndicator.color != Color.white && actionButton.Useable != null) {
+                    actionButton.RangeIndicator.color = Color.white;
+                }
+                */
+                actionButton.RangeIndicator.color = hiddenColor;
             }
         }
 
@@ -320,22 +330,45 @@ namespace AnyRPG {
                             inRange = playerManager.MyCharacter.CharacterAbilityManager.IsTargetInRange(finalTarget, baseAbility);
                         }
                         if (inRange) {
+                            /*
                             if (actionButton.KeyBindText.color != Color.white) {
                                 actionButton.KeyBindText.color = Color.white;
                             }
+                            */
+                            /*
+                            if (actionButton.RangeIndicator.color != Color.white && actionButton.Useable != null) {
+                                actionButton.RangeIndicator.color = Color.white;
+                            }
+                            */
+                            if (actionButton.RangeIndicator.color != hiddenColor) {
+                                actionButton.RangeIndicator.color = hiddenColor;
+                            }
                         } else {
+                            /*
                             if (actionButton.KeyBindText.color != Color.red) {
                                 actionButton.KeyBindText.color = Color.red;
                             }
+                            */
+                            if (actionButton.RangeIndicator.color != Color.red && actionButton.Useable != null) {
+                                actionButton.RangeIndicator.color = Color.red;
+                            }
                         }
                     } else {
+                        /*
                         if (actionButton.KeyBindText.color != Color.white) {
                             actionButton.KeyBindText.color = Color.white;
                         }
+                        */
+                        /*
+                        if (actionButton.RangeIndicator.color != Color.white && actionButton.Useable != null) {
+                            actionButton.RangeIndicator.color = Color.white;
+                        }
+                        */
                     }
                 }
                 yield return null;
             }
+
             targetRangeRoutine = null;
         }
 

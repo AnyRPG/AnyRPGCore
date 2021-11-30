@@ -33,11 +33,15 @@ namespace AnyRPG {
         protected Image coolDownIcon = null;
 
         [SerializeField]
-        protected Image backGroundImage;
+        protected Image backGroundImage = null;
+
+        [SerializeField]
+        protected Image rangeIndicator = null;
 
         protected int count = 0;
 
         protected int actionButtonIndex = 0;
+        protected bool gamepadButton = false;
 
         protected Coroutine monitorCoroutine = null;
 
@@ -76,6 +80,7 @@ namespace AnyRPG {
         public Image CoolDownIcon { get => coolDownIcon; set => coolDownIcon = value; }
         public Coroutine MonitorCoroutine { get => monitorCoroutine; set => monitorCoroutine = value; }
         public Image BackgroundImage { get => backgroundImage; set => backgroundImage = value; }
+        public Image RangeIndicator { get => rangeIndicator; set => rangeIndicator = value; }
 
         public override void Configure(SystemGameManager systemGameManager) {
             if (configureCount > 0) {
@@ -99,11 +104,14 @@ namespace AnyRPG {
             DisableCoolDownIcon();
 
             systemEventManager.OnItemCountChanged += UpdateItemCount;
+            rangeIndicator.color = hiddenColor;
         }
 
         
         public void SetIndex(int index) {
             actionButtonIndex = index;
+            // for now, we only set index on gamepad buttons, so this call can tell the button it's a gamepad button
+            gamepadButton = true;
         }
 
         public void SetPanel(CloseableWindowContents windowPanel) {
@@ -223,6 +231,9 @@ namespace AnyRPG {
                 uIManager.ShowToolTip(transform.position, useable as IDescribable);
             }
 
+            //if (gamepadButton == true) {
+                //rangeIndicator.color = Color.white;
+            //}
         }
 
         public void SubscribeToCombatEvents() {
@@ -428,6 +439,8 @@ namespace AnyRPG {
             Useable = null;
             DisableCoolDownIcon();
             UpdateVisual();
+
+            rangeIndicator.color = hiddenColor;
         }
 
         public override void Select() {
