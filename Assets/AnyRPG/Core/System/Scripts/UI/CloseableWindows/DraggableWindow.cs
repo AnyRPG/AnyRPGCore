@@ -156,6 +156,7 @@ namespace AnyRPG {
             }
             moveableTransform.position += new Vector3(inputHorizontal, inputVertical, 0f);
             saveManager.SaveWindowPositions();
+            uIManager.RefreshGamepadToolTip();
         }
     }
 

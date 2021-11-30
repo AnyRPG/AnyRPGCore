@@ -35,6 +35,29 @@ namespace AnyRPG {
         [SerializeField]
         TMP_Text buttonUpHint = null;
 
+        [SerializeField]
+        protected Image dPadButtonHints = null;
+
+        [SerializeField]
+        protected Image aButtonHint = null;
+
+        [SerializeField]
+        protected Image bButtonHint = null;
+
+        [SerializeField]
+        protected Image xButtonHint = null;
+
+        [SerializeField]
+        protected Image yButtonHint = null;
+
+        protected Color hiddenColor = new Color32(0, 0, 0, 0);
+
+        public override void Configure(SystemGameManager systemGameManager) {
+            base.Configure(systemGameManager);
+            HideHints();
+        }
+
+
         public void HideHints() {
             dPadDownHint.text = "";
             dPadRightHint.text = "";
@@ -44,6 +67,11 @@ namespace AnyRPG {
             buttonRightHint.text = "";
             buttonLeftHint.text = "";
             buttonUpHint.text = "";
+            dPadButtonHints.color = hiddenColor;
+            aButtonHint.color = hiddenColor;
+            bButtonHint.color = hiddenColor;
+            xButtonHint.color = hiddenColor;
+            yButtonHint.color = hiddenColor;
         }
 
         public void ShowHints() {
@@ -71,6 +99,12 @@ namespace AnyRPG {
             if (actionButtons[7].Useable != null) {
                 buttonUpHint.text = actionButtons[7].Useable.DisplayName;
             }
+            dPadButtonHints.color = Color.white;
+            aButtonHint.color = Color.white;
+            bButtonHint.color = Color.white;
+            xButtonHint.color = Color.white;
+            yButtonHint.color = Color.white;
+
         }
 
     }

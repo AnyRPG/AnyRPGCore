@@ -1428,6 +1428,8 @@ namespace AnyRPG {
                 uIManager.reputationBookWindow.RectTransform.anchoredPosition = new Vector3(PlayerPrefs.GetFloat("ReputationBookWindowX"), PlayerPrefs.GetFloat("ReputationBookWindowY"), 0);
             if (PlayerPrefs.HasKey("CurrencyListWindowX") && PlayerPrefs.HasKey("CurrencyListWindowY"))
                 uIManager.currencyListWindow.RectTransform.anchoredPosition = new Vector3(PlayerPrefs.GetFloat("CurrencyListWindowX"), PlayerPrefs.GetFloat("CurrencyListWindowY"), 0);
+            if (PlayerPrefs.HasKey("AchievementListWindowX") && PlayerPrefs.HasKey("AchievementListWindowY"))
+                uIManager.achievementListWindow.RectTransform.anchoredPosition = new Vector3(PlayerPrefs.GetFloat("AchievementListWindowX"), PlayerPrefs.GetFloat("AchievementListWindowY"), 0);
             if (PlayerPrefs.HasKey("CharacterPanelWindowX") && PlayerPrefs.HasKey("CharacterPanelWindowY"))
                 uIManager.characterPanelWindow.RectTransform.anchoredPosition = new Vector3(PlayerPrefs.GetFloat("CharacterPanelWindowX"), PlayerPrefs.GetFloat("CharacterPanelWindowY"), 0);
             if (PlayerPrefs.HasKey("LootWindowX") && PlayerPrefs.HasKey("LootWindowY"))
@@ -1438,20 +1440,25 @@ namespace AnyRPG {
                 //uIManager.chestWindow.RectTransform.anchoredPosition = new Vector3(PlayerPrefs.GetFloat("ChestWindowX"), PlayerPrefs.GetFloat("ChestWindowY"), 0);
             if (PlayerPrefs.HasKey("BankWindowX") && PlayerPrefs.HasKey("BankWindowY"))
                 uIManager.bankWindow.RectTransform.anchoredPosition = new Vector3(PlayerPrefs.GetFloat("BankWindowX"), PlayerPrefs.GetFloat("BankWindowY"), 0);
+            if (PlayerPrefs.HasKey("InventoryWindowX") && PlayerPrefs.HasKey("InventoryWindowY"))
+                uIManager.inventoryWindow.RectTransform.anchoredPosition = new Vector3(PlayerPrefs.GetFloat("InventoryWindowX"), PlayerPrefs.GetFloat("InventoryWindowY"), 0);
             if (PlayerPrefs.HasKey("QuestLogWindowX") && PlayerPrefs.HasKey("QuestLogWindowY"))
                 uIManager.questLogWindow.RectTransform.anchoredPosition = new Vector3(PlayerPrefs.GetFloat("QuestLogWindowX"), PlayerPrefs.GetFloat("QuestLogWindowY"), 0);
-            if (PlayerPrefs.HasKey("AchievementListWindowX") && PlayerPrefs.HasKey("AchievementListWindowY"))
-                uIManager.achievementListWindow.RectTransform.anchoredPosition = new Vector3(PlayerPrefs.GetFloat("AchievementListWindowX"), PlayerPrefs.GetFloat("AchievementListWindowY"), 0);
             if (PlayerPrefs.HasKey("QuestGiverWindowX") && PlayerPrefs.HasKey("QuestGiverWindowY"))
                 uIManager.questGiverWindow.RectTransform.anchoredPosition = new Vector3(PlayerPrefs.GetFloat("QuestGiverWindowX"), PlayerPrefs.GetFloat("QuestGiverWindowY"), 0);
             if (PlayerPrefs.HasKey("SkillTrainerWindowX") && PlayerPrefs.HasKey("SkillTrainerWindowY"))
                 uIManager.skillTrainerWindow.RectTransform.anchoredPosition = new Vector3(PlayerPrefs.GetFloat("SkillTrainerWindowX"), PlayerPrefs.GetFloat("SkillTrainerWindowY"), 0);
+            if (PlayerPrefs.HasKey("MusicPlayerWindowX") && PlayerPrefs.HasKey("MusicPlayerWindowY"))
+                uIManager.musicPlayerWindow.RectTransform.anchoredPosition = new Vector3(PlayerPrefs.GetFloat("MusicPlayerWindowX"), PlayerPrefs.GetFloat("MusicPlayerWindowY"), 0);
             if (PlayerPrefs.HasKey("InteractionWindowX") && PlayerPrefs.HasKey("InteractionWindowY"))
                 uIManager.interactionWindow.RectTransform.anchoredPosition = new Vector3(PlayerPrefs.GetFloat("InteractionWindowX"), PlayerPrefs.GetFloat("InteractionWindowY"), 0);
             if (PlayerPrefs.HasKey("CraftingWindowX") && PlayerPrefs.HasKey("CraftingWindowY"))
                 uIManager.craftingWindow.RectTransform.anchoredPosition = new Vector3(PlayerPrefs.GetFloat("CraftingWindowX"), PlayerPrefs.GetFloat("CraftingWindowY"), 0);
             if (PlayerPrefs.HasKey("MainMapWindowX") && PlayerPrefs.HasKey("MainMapWindowY"))
                 uIManager.mainMapWindow.RectTransform.anchoredPosition = new Vector3(PlayerPrefs.GetFloat("MainMapWindowX"), PlayerPrefs.GetFloat("MainMapWindowY"), 0);
+            if (PlayerPrefs.HasKey("DialogWindowX") && PlayerPrefs.HasKey("DialogWindowY"))
+                uIManager.dialogWindow.RectTransform.anchoredPosition = new Vector3(PlayerPrefs.GetFloat("DialogWindowX"), PlayerPrefs.GetFloat("DialogWindowY"), 0);
+
             if (PlayerPrefs.HasKey("QuestTrackerWindowX") && PlayerPrefs.HasKey("QuestTrackerWindowY"))
                 uIManager.QuestTrackerWindow.RectTransform.anchoredPosition = new Vector3(PlayerPrefs.GetFloat("QuestTrackerWindowX"), PlayerPrefs.GetFloat("QuestTrackerWindowY"), 0);
             if (PlayerPrefs.HasKey("CombatLogWindowX") && PlayerPrefs.HasKey("CombatLogWindowY"))
@@ -1517,6 +1524,8 @@ namespace AnyRPG {
             //PlayerPrefs.SetFloat("ChestWindowY", uIManager.chestWindow.RectTransform.anchoredPosition.y);
             PlayerPrefs.SetFloat("BankWindowX", uIManager.bankWindow.RectTransform.anchoredPosition.x);
             PlayerPrefs.SetFloat("BankWindowY", uIManager.bankWindow.RectTransform.anchoredPosition.y);
+            PlayerPrefs.SetFloat("InventoryWindowX", uIManager.inventoryWindow.RectTransform.anchoredPosition.x);
+            PlayerPrefs.SetFloat("InventoryWindowY", uIManager.inventoryWindow.RectTransform.anchoredPosition.y);
             PlayerPrefs.SetFloat("QuestLogWindowX", uIManager.questLogWindow.RectTransform.anchoredPosition.x);
             PlayerPrefs.SetFloat("QuestLogWindowY", uIManager.questLogWindow.RectTransform.anchoredPosition.y);
             PlayerPrefs.SetFloat("AchievementListWindowX", uIManager.achievementListWindow.RectTransform.anchoredPosition.x);
@@ -1525,12 +1534,16 @@ namespace AnyRPG {
             PlayerPrefs.SetFloat("QuestGiverWindowY", uIManager.questGiverWindow.RectTransform.anchoredPosition.y);
             PlayerPrefs.SetFloat("SkillTrainerWindowX", uIManager.skillTrainerWindow.RectTransform.anchoredPosition.x);
             PlayerPrefs.SetFloat("SkillTrainerWindowY", uIManager.skillTrainerWindow.RectTransform.anchoredPosition.y);
+            PlayerPrefs.SetFloat("MusicPlayerWindowX", uIManager.musicPlayerWindow.RectTransform.anchoredPosition.x);
+            PlayerPrefs.SetFloat("MusicPlayerWindowY", uIManager.musicPlayerWindow.RectTransform.anchoredPosition.y);
             PlayerPrefs.SetFloat("InteractionWindowX", uIManager.interactionWindow.RectTransform.anchoredPosition.x);
             PlayerPrefs.SetFloat("InteractionWindowY", uIManager.interactionWindow.RectTransform.anchoredPosition.y);
             PlayerPrefs.SetFloat("CraftingWindowX", uIManager.craftingWindow.RectTransform.anchoredPosition.x);
             PlayerPrefs.SetFloat("CraftingWindowY", uIManager.craftingWindow.RectTransform.anchoredPosition.y);
             PlayerPrefs.SetFloat("MainMapWindowX", uIManager.mainMapWindow.RectTransform.anchoredPosition.x);
             PlayerPrefs.SetFloat("MainMapWindowY", uIManager.mainMapWindow.RectTransform.anchoredPosition.y);
+            PlayerPrefs.SetFloat("DialogWindowX", uIManager.dialogWindow.RectTransform.anchoredPosition.x);
+            PlayerPrefs.SetFloat("DialogWindowY", uIManager.dialogWindow.RectTransform.anchoredPosition.y);
 
             PlayerPrefs.SetFloat("QuestTrackerWindowX", uIManager.QuestTrackerWindow.RectTransform.anchoredPosition.x);
             PlayerPrefs.SetFloat("QuestTrackerWindowY", uIManager.QuestTrackerWindow.RectTransform.anchoredPosition.y);

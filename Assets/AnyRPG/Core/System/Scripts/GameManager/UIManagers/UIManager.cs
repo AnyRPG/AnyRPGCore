@@ -210,6 +210,13 @@ namespace AnyRPG {
         // is a window currently being dragged.  used to suppres camera turn and pan
         private bool dragInProgress = false;
 
+        // keep track of tooltip parameters for updating on window move
+        private RectTransform toolTipPanelTransform = null;
+        private Transform toolTipButtonTransform = null;
+        private IDescribable toolTipDescribable = null;
+        private string toolTipSellString = string.Empty;
+        private bool toolTipVisible = false;
+
         protected bool eventSubscriptionsInitialized = false;
 
         /*
@@ -481,12 +488,16 @@ namespace AnyRPG {
             defaultWindowPositions.Add("QuestGiverWindowY", questGiverWindow.RectTransform.anchoredPosition.y);
             defaultWindowPositions.Add("SkillTrainerWindowX", skillTrainerWindow.RectTransform.anchoredPosition.x);
             defaultWindowPositions.Add("SkillTrainerWindowY", skillTrainerWindow.RectTransform.anchoredPosition.y);
+            defaultWindowPositions.Add("MusicPlayerWindowX", musicPlayerWindow.RectTransform.anchoredPosition.x);
+            defaultWindowPositions.Add("MusicPlayerWindowY", musicPlayerWindow.RectTransform.anchoredPosition.y);
             defaultWindowPositions.Add("InteractionWindowX", interactionWindow.RectTransform.anchoredPosition.x);
             defaultWindowPositions.Add("InteractionWindowY", interactionWindow.RectTransform.anchoredPosition.y);
             defaultWindowPositions.Add("CraftingWindowX", craftingWindow.RectTransform.anchoredPosition.x);
             defaultWindowPositions.Add("CraftingWindowY", craftingWindow.RectTransform.anchoredPosition.y);
             defaultWindowPositions.Add("MainMapWindowX", mainMapWindow.RectTransform.anchoredPosition.x);
             defaultWindowPositions.Add("MainMapWindowY", mainMapWindow.RectTransform.anchoredPosition.y);
+            defaultWindowPositions.Add("DialogWindowX", dialogWindow.RectTransform.anchoredPosition.x);
+            defaultWindowPositions.Add("DialogWindowY", dialogWindow.RectTransform.anchoredPosition.y);
             defaultWindowPositions.Add("QuestTrackerWindowX", QuestTrackerWindow.RectTransform.anchoredPosition.x);
             defaultWindowPositions.Add("QuestTrackerWindowY", QuestTrackerWindow.RectTransform.anchoredPosition.y);
             defaultWindowPositions.Add("CombatLogWindowX", CombatLogWindow.RectTransform.anchoredPosition.x);
@@ -542,9 +553,11 @@ namespace AnyRPG {
             achievementListWindow.RectTransform.anchoredPosition = new Vector3(defaultWindowPositions["AchievementListWindowX"], defaultWindowPositions["AchievementListWindowY"], 0);
             questGiverWindow.RectTransform.anchoredPosition = new Vector3(defaultWindowPositions["QuestGiverWindowX"], defaultWindowPositions["QuestGiverWindowY"], 0);
             skillTrainerWindow.RectTransform.anchoredPosition = new Vector3(defaultWindowPositions["SkillTrainerWindowX"], defaultWindowPositions["SkillTrainerWindowY"], 0);
+            musicPlayerWindow.RectTransform.anchoredPosition = new Vector3(defaultWindowPositions["MusicPlayerWindowX"], defaultWindowPositions["MusicPlayerWindowY"], 0);
             interactionWindow.RectTransform.anchoredPosition = new Vector3(defaultWindowPositions["InteractionWindowX"], defaultWindowPositions["InteractionWindowY"], 0);
             craftingWindow.RectTransform.anchoredPosition = new Vector3(defaultWindowPositions["CraftingWindowX"], defaultWindowPositions["CraftingWindowY"], 0);
             mainMapWindow.RectTransform.anchoredPosition = new Vector3(defaultWindowPositions["MainMapWindowX"], defaultWindowPositions["MainMapWindowY"], 0);
+            dialogWindow.RectTransform.anchoredPosition = new Vector3(defaultWindowPositions["DialogWindowX"], defaultWindowPositions["DialogWindowY"], 0);
 
             // ui elements
             QuestTrackerWindow.RectTransform.anchoredPosition = new Vector3(defaultWindowPositions["QuestTrackerWindowX"], defaultWindowPositions["QuestTrackerWindowY"], 0);
@@ -717,11 +730,11 @@ namespace AnyRPG {
             interactionWindow.CloseWindow();
             craftingWindow.CloseWindow();
             mainMapWindow.CloseWindow();
+            dialogWindow.CloseWindow();
             factionChangeWindow.CloseWindow();
             classChangeWindow.CloseWindow();
             specializationChangeWindow.CloseWindow();
             assignToActionBarsWindow.CloseWindow();
-            dialogWindow.CloseWindow();
         }
 
         public void CloseAllSystemWindows() {
@@ -1039,9 +1052,21 @@ namespace AnyRPG {
             ShowToolTip(pivot, position, describable, string.Empty);
         }
 
+        public void RefreshGamepadToolTip() {
+            if (toolTipVisible == false) {
+                return;
+            }
+            ShowGamepadTooltip(toolTipPanelTransform, toolTipButtonTransform, toolTipDescribable, toolTipSellString);
+        }
+
         public void ShowGamepadTooltip(RectTransform paneltransform, Transform buttonTransform, IDescribable describable, string sellPriceString) {
             //Debug.Log("UIManager.ShowGamepadTooltip()");
             //Rect panelRect = RectTransformToScreenSpace((BagPanel.ContentArea as RectTransform));
+            toolTipPanelTransform = paneltransform;
+            toolTipButtonTransform = buttonTransform;
+            toolTipDescribable = describable;
+            toolTipSellString = sellPriceString;
+
             Vector3[] WorldCorners = new Vector3[4];
             paneltransform.GetWorldCorners(WorldCorners);
             float xMin = WorldCorners[0].x;
@@ -1055,8 +1080,8 @@ namespace AnyRPG {
                 // right side is closer to the center of the screen
                 ShowToolTip(new Vector2(0, 0.5f), new Vector3(xMax, buttonTransform.position.y, 0f), describable, sellPriceString);
             }
-
             //uIManager.ShowToolTip(transform.position, inventorySlot.Item, "Sell Price: ");
+            toolTipVisible = true;
         }
 
         /// <summary>
@@ -1127,6 +1152,7 @@ namespace AnyRPG {
         public void HideToolTip() {
             //Debug.Log("UIManager.HideToolTip()");
             toolTip.SetActive(false);
+            toolTipVisible = false;
         }
 
         public void HideInteractionToolTip() {
@@ -1408,10 +1434,10 @@ namespace AnyRPG {
             interactionWindow.CloseableWindowContents.SetBackGroundColor(new Color32(0, 0, 0, (byte)opacityLevel));
             lootWindow.CloseableWindowContents.SetBackGroundColor(new Color32(0, 0, 0, (byte)opacityLevel));
             mainMapWindow.CloseableWindowContents.SetBackGroundColor(new Color32(0, 0, 0, (byte)opacityLevel));
+            dialogWindow.CloseableWindowContents.SetBackGroundColor(new Color32(0, 0, 0, (byte)opacityLevel));
             questGiverWindow.CloseableWindowContents.SetBackGroundColor(new Color32(0, 0, 0, (byte)opacityLevel));
             questLogWindow.CloseableWindowContents.SetBackGroundColor(new Color32(0, 0, 0, (byte)opacityLevel));
             vendorWindow.CloseableWindowContents.SetBackGroundColor(new Color32(0, 0, 0, (byte)opacityLevel));
-            dialogWindow.CloseableWindowContents.SetBackGroundColor(new Color32(0, 0, 0, (byte)opacityLevel));
         }
 
         public void UpdateSystemMenuOpacity() {
