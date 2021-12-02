@@ -135,6 +135,10 @@ namespace AnyRPG {
             //Debug.Log(gameObject.name + ".NavigableElement.JoystickButton3()");
         }
 
+        public virtual void JoystickButton9() {
+            //Debug.Log(gameObject.name + ".NavigableElement.JoystickButton9()");
+        }
+
         public virtual void LeftAnalog(float inputHorizontal, float inputVertical) {
             //Debug.Log(gameObject.name + ".NavigableElement.LeftAnalog()");
         }

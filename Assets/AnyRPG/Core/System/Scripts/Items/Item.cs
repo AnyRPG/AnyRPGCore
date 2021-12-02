@@ -4,6 +4,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Serialization;
+using UnityEngine.UI;
 
 namespace AnyRPG {
     /// <summary>
@@ -162,6 +163,12 @@ namespace AnyRPG {
                 //Debug.Log("ActionButton.SetUseable(): This must have come from another actionbar, not the inventory");
             }
             uIManager.SetItemBackground(this, actionButton.BackgroundImage, new Color32(0, 0, 0, 255));
+        }
+
+        public void AssignToHandScript(Image backgroundImage) {
+            //Debug.Log("the useable is an item");
+            
+            uIManager.SetItemBackground(this, backgroundImage, new Color32(0, 0, 0, 255));
         }
 
         public virtual void UpdateActionButtonVisual(ActionButton actionButton) {

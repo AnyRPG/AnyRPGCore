@@ -374,7 +374,7 @@ namespace AnyRPG {
 
         public override void Focus() {
             base.Focus();
-            SetControllerHints("", "", "", "", "Zoom In/Out");
+            SetControllerHints("", "", "", "", "Zoom In/Out", "");
         }
 
         public override void DownButton() {

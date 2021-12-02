@@ -446,7 +446,7 @@ namespace AnyRPG {
         public override void Select() {
             base.Select();
             if (useable != null) {
-                owner.SetControllerHints("Move", "Clear", "", "");
+                owner.SetControllerHints("Move", "Clear", "", "", "", "");
                 if (windowPanel != null) {
                     uIManager.ShowGamepadTooltip(windowPanel.RectTransform, transform, useable as IDescribable, "");
                 }

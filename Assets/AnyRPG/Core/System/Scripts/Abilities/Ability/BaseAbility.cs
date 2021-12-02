@@ -288,6 +288,10 @@ namespace AnyRPG {
             actionButton.BackgroundImage.color = new Color32(0, 0, 0, 255);
         }
 
+        public void AssignToHandScript(Image backgroundImage) {
+            backgroundImage.color = new Color32(0, 0, 0, 255);
+        }
+
         public bool ActionButtonUse() {
             return Use();
         }

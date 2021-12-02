@@ -56,7 +56,7 @@ namespace AnyRPG {
             gameObject.SetActive(false);
         }
 
-        public void SetOptions(string aOptionString, string xOptionString, string yOptionString, string bOptionString, string dPadOptionString = "", string rDownOptionString = "") {
+        public void SetOptions(string aOptionString, string xOptionString, string yOptionString, string bOptionString, string dPadOptionString, string rDownOptionString) {
             //Debug.Log("HintBarController.SetOptions()");
             if (aOptionString != null && aOptionString != string.Empty) {
                 aImage.SetActive(true);

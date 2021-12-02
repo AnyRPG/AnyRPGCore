@@ -182,7 +182,7 @@ namespace AnyRPG {
         private void ShowGamepadTooltip() {
             if (bagNode?.Bag != null) {
                 uIManager.ShowGamepadTooltip((bagPanel.ContentArea as RectTransform), transform, this, "Sell Price: ");
-                bagPanel.SetControllerHints("Unequip", "", "", "");
+                bagPanel.SetControllerHints("Unequip", "", "", "", "", "");
             } else {
                 uIManager.ShowGamepadTooltip((bagPanel.ContentArea as RectTransform), transform, this, "");
                 bagPanel.HideControllerHints();

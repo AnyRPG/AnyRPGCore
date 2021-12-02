@@ -202,10 +202,10 @@ namespace AnyRPG {
             windowText.text = newTitle;
         }
 
-        public void SetControllerHints(string aOption, string xOption, string yOption, string bOption, string dPadOption = "") {
+        public void SetControllerHints(string aOption, string xOption, string yOption, string bOption, string dPadOption, string rDownOption) {
             //Debug.Log(gameObject.name + ".CloseableWindow.SetControllerHints()");
             if (hintBarController != null) {
-                hintBarController.SetOptions(aOption, xOption, yOption, bOption, dPadOption);
+                hintBarController.SetOptions(aOption, xOption, yOption, bOption, dPadOption, rDownOption);
             }
         }
 

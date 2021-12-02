@@ -141,6 +141,9 @@ namespace AnyRPG {
                 if (inputManager.KeyBindWasPressed("JOYSTICKBUTTON5")) {
                     windowStack[windowStack.Count - 1].JoystickButton5();
                 }
+                if (inputManager.KeyBindWasPressed("JOYSTICKBUTTON9")) {
+                    windowStack[windowStack.Count - 1].JoystickButton9();
+                }
 
             }
         }

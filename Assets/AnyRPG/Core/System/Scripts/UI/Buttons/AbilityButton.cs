@@ -65,7 +65,7 @@ namespace AnyRPG {
             //Debug.Log("AbilityButton.Select()");
             base.Select();
             if (owner != null) {
-                owner.SetControllerHints("Cast", "Add To Action Bars", "", "");
+                owner.SetControllerHints("Cast", "Add To Action Bars", "", "", "", "");
             }
         }
 

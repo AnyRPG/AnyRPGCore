@@ -91,7 +91,7 @@ namespace AnyRPG {
         public void ShowContextInfo() {
             ShowGamepadTooltip();
             if (chooseable == true) {
-                owner.SetControllerHints("Choose", "", "", "");
+                owner.SetControllerHints("Choose", "", "", "", "", "");
             }
         }
 

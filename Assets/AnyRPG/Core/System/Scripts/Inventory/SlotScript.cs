@@ -21,6 +21,7 @@ namespace AnyRPG {
         protected PlayerManager playerManager = null;
         protected ActionBarManager actionBarManager = null;
         protected MessageFeedManager messageFeedManager = null;
+        protected ControlsManager controlsManager = null;
 
         /// <summary>
         /// A reference to the bag that this slot belongs to
@@ -31,6 +32,15 @@ namespace AnyRPG {
 
         public override int Count => inventorySlot.Count;
 
+        public override bool CaptureCancelButton {
+            get {
+                if (handScript.Moveable != null) {
+                    return true;
+                }
+                return base.CaptureCancelButton;
+            }
+        }
+
         public override void Configure(SystemGameManager systemGameManager) {
             base.Configure(systemGameManager);
 
@@ -39,6 +49,7 @@ namespace AnyRPG {
             playerManager = systemGameManager.PlayerManager;
             actionBarManager = systemGameManager.UIManager.ActionBarManager;
             messageFeedManager = systemGameManager.UIManager.MessageFeedManager;
+            controlsManager = systemGameManager.ControlsManager;
         }
 
         public void SetInventorySlot(InventorySlot inventorySlot) {
@@ -66,6 +77,9 @@ namespace AnyRPG {
             //Debug.Log("SlotScript.SendItemToHandScript(): setting inventorymanager.myinstance.fromslot to this");
             handScript.TakeMoveable(inventorySlot.Item);
             playerManager.MyCharacter.CharacterInventoryManager.FromSlot = this;
+            if (controlsManager.GamePadModeActive == true) {
+                handScript.SetPosition(transform.position);
+            }
         }
 
         public void DropItemFromInventorySlot() {
@@ -217,9 +231,21 @@ namespace AnyRPG {
             InteractWithSlot();
         }
 
+        public override void Cancel() {
+            base.Cancel();
+            if (handScript.Moveable != null) {
+                handScript.Drop();
+                ShowContextInfo();
+            }
+        }
+
         public override void JoystickButton2() {
             //Debug.Log("SlotScript.JoystickButton2()");
             base.JoystickButton2();
+
+            if (handScript.Moveable != null) {
+                return;
+            }
 
             if (inventorySlot.Item == null) {
                 return;
@@ -255,6 +281,10 @@ namespace AnyRPG {
             //Debug.Log("SlotScript.JoystickButton3()");
             base.JoystickButton3();
 
+            if (handScript.Moveable != null) {
+                return;
+            }
+
             if (inventorySlot.Item == null) {
                 return;
             }
@@ -279,9 +309,34 @@ namespace AnyRPG {
             }
         }
 
+        public override void JoystickButton9() {
+            base.JoystickButton9();
+
+            if (controlsManager.GamePadModeActive == true && handScript.Moveable != null) {
+                if (playerManager.MyCharacter.CharacterInventoryManager.FromSlot != null) {
+                    DropItemFromInventorySlot();
+                    ShowContextInfo();
+                    return;
+                }
+            }
+
+            if (!inventorySlot.IsEmpty) {
+                // This slot has something in it, and the hand script is empty, so we are trying to pick it up
+                if (handScript.Moveable == null) {
+                    SendItemToHandScript();
+                    ShowContextInfo();
+                    return;
+                }
+            }
+        }
+
         public override void Select() {
             //Debug.Log("SlotScript.Select()");
             base.Select();
+
+            if (controlsManager.GamePadModeActive == true && handScript.Moveable != null) {
+                handScript.SetPosition(transform.position);
+            }
 
             ShowContextInfo();
         }
@@ -291,6 +346,12 @@ namespace AnyRPG {
         /// </summary>
         private void ShowContextInfo() {
             if (owner != null) {
+
+                if (handScript.Moveable != null) {
+                    owner.SetControllerHints("", "", "", "", "", "Place");
+                    return;
+                }
+
                 if (inventorySlot.Item == null) {
                     uIManager.HideToolTip();
                     owner.HideControllerHints();
@@ -298,11 +359,12 @@ namespace AnyRPG {
                 }
                 ShowGamepadTooltip();
 
+
                 if (BagPanel is BankPanel) {
                     if (inventorySlot.Item is Bag) {
-                        owner.SetControllerHints("Move To Inventory", "Equip In Bank", "Equip In Inventory", "");
+                        owner.SetControllerHints("Move To Inventory", "Equip In Bank", "Equip In Inventory", "", "", "Reorder");
                     } else {
-                        owner.SetControllerHints("Move To Inventory", "", "", "");
+                        owner.SetControllerHints("Move To Inventory", "", "", "", "", "Reorder");
                     }
                     return;
                 }
@@ -310,24 +372,24 @@ namespace AnyRPG {
                 if (uIManager.inventoryWindow.IsOpen == true && uIManager.bankWindow.IsOpen == true) {
                     if (BagPanel is InventoryPanel) {
                         // move to bank
-                        owner.SetControllerHints("Move To Bank", "", "Drop", "");
+                        owner.SetControllerHints("Move To Bank", "", "Drop", "", "", "Reorder");
                     }
                     // default case to prevent using an item when the bank window is open but bank was full
                     return;
                 } else if (uIManager.inventoryWindow.IsOpen == true && uIManager.bankWindow.IsOpen == false && uIManager.vendorWindow.IsOpen) {
                     // SELL THE ITEM
-                    owner.SetControllerHints("Sell", "", "Drop", "");
+                    owner.SetControllerHints("Sell", "", "Drop", "", "", "Reorder");
                     // default case to prevent using an item when the vendor window is open
                     return;
                 }
 
                 if (inventorySlot.Item is Equipment) {
-                    owner.SetControllerHints("Equip", "", "Drop", "");
+                    owner.SetControllerHints("Equip", "", "Drop", "", "", "Reorder");
                 } else if (inventorySlot.Item is IUseable) {
                     if (inventorySlot.Item is Bag) {
-                        owner.SetControllerHints("Use", "Equip", "Drop", "");
+                        owner.SetControllerHints("Use", "Equip", "Drop", "", "", "Reorder");
                     } else {
-                        owner.SetControllerHints("Use", "Add To Action Bars", "Drop", "");
+                        owner.SetControllerHints("Use", "Add To Action Bars", "Drop", "", "", "Reorder");
                     }
                 }
             }

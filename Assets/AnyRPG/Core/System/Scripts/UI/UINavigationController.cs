@@ -428,6 +428,13 @@ namespace AnyRPG {
             }
         }
 
+        public virtual void JoystickButton9() {
+            //Debug.Log(gameObject.name + ".UINavigationController.JoystickButton3()");
+            if (activeNavigableButtons.Count != 0 && currentIndex >= 0) {
+                currentNavigableElement.JoystickButton9();
+            }
+        }
+
         public virtual void LeftAnalog(float inputHorizontal, float inputVertical) {
             //Debug.Log(gameObject.name + ".UINavigationController.LeftAnalog()");
 
@@ -444,10 +451,10 @@ namespace AnyRPG {
             }
         }
 
-        public void SetControllerHints(string aOption, string xOption, string yOption, string bOption) {
+        public void SetControllerHints(string aOption, string xOption, string yOption, string bOption, string dPadOption, string rDownOption) {
             //Debug.Log(gameObject.name + ".UINavigationController.SetControllerHints()");
             if (owner != null) {
-                owner.SetControllerHints(aOption, xOption, yOption, bOption);
+                owner.SetControllerHints(aOption, xOption, yOption, bOption, dPadOption, rDownOption);
             }
         }
 

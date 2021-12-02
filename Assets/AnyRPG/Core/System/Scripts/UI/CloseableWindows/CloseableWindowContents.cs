@@ -288,6 +288,17 @@ namespace AnyRPG {
             }
         }
 
+        public virtual void JoystickButton9() {
+            //Debug.Log(gameObject.name + ".CloseableWindowContents.JoystickButton3()");
+            if (activeSubPanel != null) {
+                activeSubPanel.JoystickButton9();
+                return;
+            }
+            if (currentNavigationController != null) {
+                currentNavigationController.JoystickButton9();
+            }
+        }
+
         public virtual void JoystickButton4() {
             //Debug.Log(gameObject.name + ".CloseableWindowContents.JoystickButton3()");
             LBButton();
@@ -500,24 +511,24 @@ namespace AnyRPG {
             }
         }
 
-        public void SetControllerHints(string aOption, string xOption, string yOption, string bOption, string dPadOption = "") {
+        public void SetControllerHints(string aOption, string xOption, string yOption, string bOption, string dPadOption, string rDownOption) {
             //Debug.Log(gameObject.name + ".CloseableWindowContents.SetControllerHints()");
 
             // first, check for a local hint bar
             if (hintBarController != null) {
-                hintBarController.SetOptions(aOption, xOption, yOption, bOption, dPadOption);
+                hintBarController.SetOptions(aOption, xOption, yOption, bOption, dPadOption, rDownOption);
                 return;
             }
 
             // if no local hint bar found, check for a parent panel
             if (parentPanel != null) {
-                parentPanel.SetControllerHints(aOption, xOption, yOption, bOption, dPadOption);
+                parentPanel.SetControllerHints(aOption, xOption, yOption, bOption, dPadOption, rDownOption);
                 return;
             }
 
             // if no parent panel found, check for a parent window frame
             if (closeableWindow != null) {
-                closeableWindow.SetControllerHints(aOption, xOption, yOption, bOption, dPadOption);
+                closeableWindow.SetControllerHints(aOption, xOption, yOption, bOption, dPadOption, rDownOption);
             }
         }
 

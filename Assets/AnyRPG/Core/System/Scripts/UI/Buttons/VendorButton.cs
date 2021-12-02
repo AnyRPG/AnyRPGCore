@@ -222,7 +222,7 @@ namespace AnyRPG {
             //Debug.Log("VendorButton.Select()");
             base.Select();
             if (owner != null) {
-                owner.SetControllerHints("Purchase", "", "", "");
+                owner.SetControllerHints("Purchase", "", "", "", "", "");
             }
         }
 

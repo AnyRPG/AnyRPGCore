@@ -127,7 +127,7 @@ namespace AnyRPG {
             base.Select();
             if (owner != null && statusEffectNode != null && statusEffectNode.StatusEffect.StatusEffectAlignment != StatusEffectAlignment.Harmful) {
                 //Debug.Log("StatusEffectNodeScript.HandleRightClick(): statusEffect is not null, destroying");
-                owner.SetControllerHints("", "Cancel Effect", "", "");
+                owner.SetControllerHints("", "Cancel Effect", "", "", "", "");
             }
             if (owner != null) {
                 ShowGamepadTooltip();

@@ -216,7 +216,7 @@ namespace AnyRPG {
         private void ShowContextInfo() {
             if (equippedEquipment != null) {
                 uIManager.ShowGamepadTooltip(characterPanel.RectTransform, transform, this, "Sell Price: ");
-                owner.SetControllerHints("Unequip", "", "", "");
+                owner.SetControllerHints("Unequip", "", "", "", "", "");
             } else {
                 uIManager.ShowGamepadTooltip(characterPanel.RectTransform, transform, this, "");
                 owner.HideControllerHints();

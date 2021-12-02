@@ -10,10 +10,17 @@ namespace AnyRPG {
 
         public IMoveable Moveable { get; set; }
 
-        private Image icon;
-
         [SerializeField]
         private Vector3 offset = Vector3.zero;
+
+        [SerializeField]
+        private RectTransform rectTransform = null;
+
+        [SerializeField]
+        private Image backgroundImage = null;
+
+        [SerializeField]
+        private Image icon = null;
 
         // game manager references
         private UIManager uIManager = null;
@@ -34,32 +41,29 @@ namespace AnyRPG {
             playerManager = systemGameManager.PlayerManager;
             logManager = systemGameManager.LogManager;
             controlsManager = systemGameManager.ControlsManager;
-
-            icon = GetComponent<Image>();
         }
 
         public void SetPosition(Vector3 position) {
-            icon.transform.position = position;
+            transform.position = position;
         }
 
         // Update is called once per frame
         public void ProcessInput() {
-            if (controlsManager.GamePadModeActive == true) {
-                return;
-            }
-            icon.transform.position = Input.mousePosition + offset;
-            if (Input.GetMouseButtonDown(0) && !EventSystem.current.IsPointerOverGameObject() && Moveable != null) {
-                if (Moveable is Item) {
-                    uIManager.confirmDestroyMenuWindow.OpenWindow();
-                } else if (Moveable is BaseAbility) {
-                    // DROP ABILITY SAFELY
-                    if (actionBarManager.FromButton != null) {
-                        actionBarManager.FromButton.ClearUseable();
+            if (controlsManager.GamePadModeActive == false) {
+                icon.transform.position = Input.mousePosition + offset;
+                if (Input.GetMouseButtonDown(0) && !EventSystem.current.IsPointerOverGameObject() && Moveable != null) {
+                    if (Moveable is Item) {
+                        uIManager.confirmDestroyMenuWindow.OpenWindow();
+                    } else if (Moveable is BaseAbility) {
+                        // DROP ABILITY SAFELY
+                        if (actionBarManager.FromButton != null) {
+                            actionBarManager.FromButton.ClearUseable();
+                        }
+                        Drop();
                     }
-                    Drop();
                 }
             }
-            if (inputManager.KeyBindWasPressed("CANCEL") || inputManager.KeyBindWasPressed("CANCELALL") || inputManager.KeyBindWasPressed("JOYSTICKBUTTON1")) {
+            if (inputManager.KeyBindWasPressed("CANCEL") || inputManager.KeyBindWasPressed("CANCELALL")) {
                 Drop();
             }
         }
@@ -67,8 +71,17 @@ namespace AnyRPG {
         public void TakeMoveable(IMoveable moveable) {
             //Debug.Log("HandScript.TakeMoveable(" + moveable.ToString() + ")");
             this.Moveable = moveable;
+
+            moveable.AssignToHandScript(backgroundImage);
+
             icon.sprite = moveable.Icon;
             icon.color = Color.white;
+
+            
+            if (controlsManager.GamePadModeActive == true) {
+                rectTransform.pivot = new Vector2(0, 1);
+            }
+            
         }
 
         public IMoveable Put() {
@@ -92,8 +105,20 @@ namespace AnyRPG {
                 playerManager.MyCharacter.CharacterInventoryManager.FromSlot.PutItemBack();
             }
             Moveable = null;
+            
+            // clear background image
+            backgroundImage.color = new Color32(0, 0, 0, 0);
+            backgroundImage.sprite = null;
+
+            // clear icon
             icon.sprite = null;
             icon.color = new Color(0, 0, 0, 0);
+
+            /*
+            if (controlsManager.GamePadModeActive == true) {
+                rectTransform.pivot = new Vector2(0.5f, 0.5f);
+            }
+            */
         }
 
         public void DeleteItem() {
