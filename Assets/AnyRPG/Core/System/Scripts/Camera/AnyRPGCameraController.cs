@@ -20,7 +20,7 @@ namespace AnyRPG {
 
         public float cameraFollowSpeed = 10f;
         public float zoomSpeed = 4f;
-        public float gamepadZoomSpeed = 0.5f;
+        private float gamepadZoomSpeed = 0.05f;
         public float minZoom = 2f;
         public float maxZoom = 15f;
         public float maxVerticalPan = 45;

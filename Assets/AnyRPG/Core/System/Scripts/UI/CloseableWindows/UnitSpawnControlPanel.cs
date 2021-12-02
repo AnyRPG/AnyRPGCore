@@ -273,31 +273,31 @@ namespace AnyRPG {
 
 
         public void CloseLevelOptionsArea() {
-            Debug.Log("UnitSpawnControlPanel.CloseLevelOptionsArea()");
+            //Debug.Log("UnitSpawnControlPanel.CloseLevelOptionsArea()");
             levelOptionsArea.gameObject.SetActive(false);
             uINavigationControllers[1].UpdateNavigationList();
         }
 
         public void OpenLevelOptionsArea() {
-            Debug.Log("UnitSpawnControlPanel.OpenLevelOptionsArea()");
+            //Debug.Log("UnitSpawnControlPanel.OpenLevelOptionsArea()");
             levelOptionsArea.gameObject.SetActive(true);
             uINavigationControllers[1].UpdateNavigationList();
         }
 
         public void CloseExtraLevelsOptionsArea() {
-            Debug.Log("UnitSpawnControlPanel.CloseExtraLevelsOptionsArea()");
+            //Debug.Log("UnitSpawnControlPanel.CloseExtraLevelsOptionsArea()");
             extraLevelsOptionsArea.gameObject.SetActive(false);
             uINavigationControllers[1].UpdateNavigationList();
         }
 
         public void OpenExtraLevelsOptionsArea() {
-            Debug.Log("UnitSpawnControlPanel.OpenExtraLevelsOptionsArea()");
+            //Debug.Log("UnitSpawnControlPanel.OpenExtraLevelsOptionsArea()");
             extraLevelsOptionsArea.gameObject.SetActive(true);
             uINavigationControllers[1].UpdateNavigationList();
         }
 
         public void SetLevelType(int dropdownIndex) {
-            Debug.Log("UnitSpawnControlPanel.SetLevelType(" + dropdownIndex + ")");
+            //Debug.Log("UnitSpawnControlPanel.SetLevelType(" + dropdownIndex + ")");
             if (levelTypeDropdown.options[levelTypeDropdown.value].text == "Fixed") {
                 CloseExtraLevelsOptionsArea();
                 OpenLevelOptionsArea();

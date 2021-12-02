@@ -23,6 +23,7 @@ namespace AnyRPG {
         //public Vector3 offset;
         //public float rightMouseLookSpeed = 10f;
         public float cameraSpeed = 4f;
+        private float gamepadZoomSpeed = 0.05f;
         public float minZoom = 1f;
 
         [Tooltip("The maximum zoom distance is how far past the initial zoom you can zoom out")]
@@ -247,7 +248,7 @@ namespace AnyRPG {
             cameraPan = false;
             cameraZoom = false;
 
-            // handleZoom
+            // ==== MOUSE ZOOM ====
             if (!mouseOutsideWindow && inputManager.mouseScrolled) {
                 //Debug.Log("Mouse Scrollwheel: " + Input.GetAxis("Mouse ScrollWheel"));
                 currentZoomDistance += (Input.GetAxis("Mouse ScrollWheel") * cameraSpeed * -1);
@@ -255,7 +256,17 @@ namespace AnyRPG {
                 cameraZoom = true;
             }
 
-            // pan with the left or right mouse button
+            // ==== GAMEPAD ZOOM ====
+            if (Input.GetAxis("RightAnalogVertical") != 0f
+                && inputManager.KeyBindWasPressedOrHeld("JOYSTICKBUTTON9")) {
+
+                currentZoomDistance += (Input.GetAxis("RightAnalogVertical") * gamepadZoomSpeed * -1);
+                currentZoomDistance = Mathf.Clamp(currentZoomDistance, minZoom, currentMaxZoom);
+                cameraZoom = true;
+
+            }
+
+            // ==== MOUSE PAN ====
             if (!mouseOutsideWindow
                 && (rightMouseClickedOverThisWindow || leftMouseClickedOverThisWindow)
                 && (inputManager.rightMouseButtonDown || inputManager.leftMouseButtonDown)) {
@@ -273,8 +284,9 @@ namespace AnyRPG {
                 cameraPan = true;
             }
 
-            // ====GAMEPAD PAN====
-            if (Input.GetAxis("RightAnalogHorizontal") != 0 || Input.GetAxis("RightAnalogVertical") != 0) {
+            // ==== GAMEPAD PAN ====
+            if (inputManager.KeyBindWasPressedOrHeld("JOYSTICKBUTTON9") == false
+                && (Input.GetAxis("RightAnalogHorizontal") != 0 || Input.GetAxis("RightAnalogVertical") != 0)) {
 
                 if (Input.GetAxis("RightAnalogHorizontal") != 0) {
                     currentXDegrees += Input.GetAxis("RightAnalogHorizontal") * analogYawSpeed;
