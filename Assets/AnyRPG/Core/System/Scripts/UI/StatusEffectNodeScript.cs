@@ -136,7 +136,7 @@ namespace AnyRPG {
 
         public void ShowGamepadTooltip() {
             //Debug.Log("StatusEffectNodeScript.ShowGamepadTooltip()");
-            uIManager.ShowGamepadTooltip(owner.transform as RectTransform, transform, statusEffectNode.StatusEffect, "Sell Price: ");
+            uIManager.ShowGamepadTooltip(owner.transform as RectTransform, transform, statusEffectNode.StatusEffect, "");
         }
 
         public override void DeSelect() {

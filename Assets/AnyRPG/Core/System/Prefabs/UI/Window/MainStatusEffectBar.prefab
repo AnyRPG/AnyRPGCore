@@ -374,7 +374,7 @@ MonoBehaviour:
   acceptController: {fileID: 0}
   scrollRect: {fileID: 0}
   updateActiveListOnOpen: 0
-  pruneInactiveElements: 0
+  pruneInactiveElements: 1
   navigableButtons: []
   numRows: 0
   numColumns: 8
