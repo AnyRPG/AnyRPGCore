@@ -12,34 +12,14 @@ namespace AnyRPG {
         [SerializeField]
         private RectTransform rectTransform = null;
 
-        /*
-        [SerializeField]
-        private GameObject aOption = null;
-        */
-
         [SerializeField]
         private GameObject aImage = null;
-
-        /*
-        [SerializeField]
-        private GameObject xOption = null;
-        */
 
         [SerializeField]
         private GameObject xImage = null;
 
-        /*
-        [SerializeField]
-        private GameObject yOption = null;
-        */
-
         [SerializeField]
         private GameObject yImage = null;
-
-        /*
-        [SerializeField]
-        private GameObject bOption = null;
-        */
 
         [SerializeField]
         private GameObject bImage = null;
@@ -47,6 +27,8 @@ namespace AnyRPG {
         [SerializeField]
         private GameObject dPadImage = null;
 
+        [SerializeField]
+        private GameObject rDownImage = null;
 
         [SerializeField]
         private TMP_Text aOptionText = null;
@@ -63,6 +45,9 @@ namespace AnyRPG {
         [SerializeField]
         private TMP_Text dPadOptionText = null;
 
+        [SerializeField]
+        private TMP_Text rDownOptionText = null;
+
         public void Show() {
             gameObject.SetActive(true);
         }
@@ -71,57 +56,55 @@ namespace AnyRPG {
             gameObject.SetActive(false);
         }
 
-        public void SetOptions(string aOptionString, string xOptionString, string yOptionString, string bOptionString, string dPadOptionString = "") {
+        public void SetOptions(string aOptionString, string xOptionString, string yOptionString, string bOptionString, string dPadOptionString = "", string rDownOptionString = "") {
             //Debug.Log("HintBarController.SetOptions()");
             if (aOptionString != null && aOptionString != string.Empty) {
-                //aOption.SetActive(true);
                 aImage.SetActive(true);
                 aOptionText.text = aOptionString;
                 aOptionText.gameObject.SetActive(true);
             } else {
-                //aOption.SetActive(false);
                 aImage.SetActive(false);
                 aOptionText.gameObject.SetActive(false);
             }
             if (xOptionString != null && xOptionString != string.Empty) {
-                //xOption.SetActive(true);
                 xImage.SetActive(true);
                 xOptionText.text = xOptionString;
                 xOptionText.gameObject.SetActive(true);
             } else {
-                //xOption.SetActive(false);
                 xImage.SetActive(false);
                 xOptionText.gameObject.SetActive(false);
             }
             if (yOptionString != null && yOptionString != string.Empty) {
-                //yOption.SetActive(true);
                 yImage.SetActive(true);
                 yOptionText.text = yOptionString;
                 yOptionText.gameObject.SetActive(true);
             } else {
-                //yOption.SetActive(false);
                 yImage.SetActive(false);
                 yOptionText.gameObject.SetActive(false);
             }
             if (bOptionString != null && bOptionString != string.Empty) {
-                //bOption.SetActive(true);
                 bImage.SetActive(true);
                 bOptionText.text = bOptionString;
                 bOptionText.gameObject.SetActive(true);
             } else {
-                //bOption.SetActive(false);
                 bImage.SetActive(false);
                 bOptionText.gameObject.SetActive(false);
             }
             if (dPadOptionString != null && dPadOptionString != string.Empty) {
-                //bOption.SetActive(true);
                 dPadImage.SetActive(true);
                 dPadOptionText.text = dPadOptionString;
                 dPadOptionText.gameObject.SetActive(true);
             } else {
-                //bOption.SetActive(false);
                 dPadImage.SetActive(false);
                 dPadOptionText.gameObject.SetActive(false);
+            }
+            if (rDownOptionString != null && rDownOptionString != string.Empty) {
+                rDownImage.SetActive(true);
+                rDownOptionText.text = rDownOptionString;
+                rDownOptionText.gameObject.SetActive(true);
+            } else {
+                rDownImage.SetActive(false);
+                rDownOptionText.gameObject.SetActive(false);
             }
             Show();
             LayoutRebuilder.ForceRebuildLayoutImmediate(rectTransform);

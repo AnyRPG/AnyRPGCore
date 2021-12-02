@@ -169,6 +169,10 @@ namespace AnyRPG {
                 // prevent unnecessary actions when window is not open
                 return;
             }
+
+            if (selected == true) {
+                ShowContextInfo();
+            }
         }
 
         public override void OnPointerEnter(PointerEventData eventData) {
