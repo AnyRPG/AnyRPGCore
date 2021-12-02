@@ -112,25 +112,33 @@ namespace AnyRPG {
         }
 
         public virtual void ProcessMouseEnter() {
-            IDescribable tmp = null;
+            //IDescribable tmp = null;
 
+            /*
             if (Describable != null && Describable is IDescribable) {
                 tmp = (IDescribable)Describable;
                 //Debug.Log("DescribableIcon.OnPointerEnter(): describable is not null");
                 //uIManager.ShowToolTip(transform.position);
             }
-            if (tmp != null) {
+            */
+            if (describable != null) {
                 //Debug.Log("DescribableIcon.OnPointerEnter(): showing tooltip");
-                ShowToolTip(tmp);
+                ShowToolTip();
             } else {
                 uIManager.HideToolTip();
             }
 
         }
 
+        public virtual void ShowToolTip() {
+            uIManager.ShowGamepadTooltip(toolTipTransform, transform, describable, "");
+        }
+
+        /*
         public virtual void ShowToolTip(IDescribable describable) {
             uIManager.ShowToolTip(transform.position, describable);
         }
+        */
 
         public override void OnPointerExit(PointerEventData eventData) {
             base.OnPointerExit(eventData);

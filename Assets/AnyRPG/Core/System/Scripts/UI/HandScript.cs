@@ -50,7 +50,7 @@ namespace AnyRPG {
         // Update is called once per frame
         public void ProcessInput() {
             if (controlsManager.GamePadModeActive == false) {
-                icon.transform.position = Input.mousePosition + offset;
+                transform.position = Input.mousePosition + offset;
                 if (Input.GetMouseButtonDown(0) && !EventSystem.current.IsPointerOverGameObject() && Moveable != null) {
                     if (Moveable is Item) {
                         uIManager.confirmDestroyMenuWindow.OpenWindow();

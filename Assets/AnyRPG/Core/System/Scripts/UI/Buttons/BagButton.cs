@@ -164,7 +164,8 @@ namespace AnyRPG {
         public override void OnPointerEnter(PointerEventData eventData) {
             base.OnPointerEnter(eventData);
 
-            uIManager.ShowToolTip(transform.position, this);
+            //uIManager.ShowToolTip(transform.position, this);
+            ShowGamepadTooltip();
         }
 
         public override void OnPointerExit(PointerEventData eventData) {

@@ -144,7 +144,7 @@ namespace AnyRPG {
             //Debug.Log(gameObject.name + ".HighlightButton.Select()");
             base.Select();
             //if (highlightButton != null && useHighlightColorOnButton == true) {
-            if (highlightButton != null && navigationControllerFocused == true) {
+            if (highlightButton != null && navigationControllerFocused == true && controlsManager.GamePadModeActive == true) {
                 ColorBlock colorBlock = highlightButton.colors;
                 colorBlock.normalColor = selectedButtonColor;
                 colorBlock.highlightedColor = selectedButtonColor;

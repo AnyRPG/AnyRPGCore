@@ -93,7 +93,7 @@ namespace AnyRPG {
             CheckVSync();
 
             // check and set advanced settings which may override main quality setting
-            CheckAdvancedVideoSettings();
+            //CheckAdvancedVideoSettings();
         }
 
         public void CheckScreenResolution() {
@@ -208,6 +208,7 @@ namespace AnyRPG {
                 textureQualityArea.SelectButton(2);
             }
         }
+
 
         public void CheckAdvancedVideoSettings() {
             CheckShadowQuality();

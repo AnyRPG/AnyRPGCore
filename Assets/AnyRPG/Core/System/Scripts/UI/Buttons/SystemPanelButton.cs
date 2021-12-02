@@ -20,6 +20,8 @@ namespace AnyRPG {
         [SerializeField]
         private Image menuImage = null;
 
+        protected RectTransform tooltipTransform = null;
+
         // game manager references
         private UIManager uIManager = null;
 
@@ -34,6 +36,10 @@ namespace AnyRPG {
         }
 
         public string DisplayName { get => optionName; }
+
+        public void SetTooltipTransform(RectTransform rectTransform) {
+            tooltipTransform = rectTransform;
+        }
 
         public override void SetGameManagerReferences() {
             base.SetGameManagerReferences();
@@ -50,7 +56,8 @@ namespace AnyRPG {
         }
 
         public void OnPointerEnter(PointerEventData eventData) {
-            uIManager.ShowToolTip(transform.position, this);
+            //uIManager.ShowToolTip(transform.position, this);
+            uIManager.ShowGamepadTooltip(tooltipTransform, transform, this, "");
         }
 
         public void OnPointerExit(PointerEventData eventData) {

@@ -34,6 +34,12 @@ namespace AnyRPG {
             InitializeActionButtons(systemGameManager);
         }
 
+        public void SetTooltipTransform(RectTransform rectTransform) {
+            for (int i = 0; i < actionButtons.Count; i++) {
+                actionButtons[i].SetTooltipTransform(rectTransform);
+            }
+        }
+
         public void InitializeActionButtons(SystemGameManager systemGameManager) {
             for (int i = 0; i < actionButtons.Count; i++) {
                 actionButtons[i].Configure(systemGameManager);

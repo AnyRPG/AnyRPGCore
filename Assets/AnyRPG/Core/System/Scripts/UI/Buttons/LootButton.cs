@@ -65,7 +65,8 @@ namespace AnyRPG {
                 return;
             }
 
-            uIManager.ShowToolTip(transform.position, LootDrop);
+            //uIManager.ShowToolTip(transform.position, LootDrop);
+            ShowGamepadTooltip();
         }
 
         public override void OnPointerExit(PointerEventData eventData) {
@@ -88,10 +89,14 @@ namespace AnyRPG {
             TakeLoot();
         }
 
+        public void ShowGamepadTooltip() {
+            uIManager.ShowGamepadTooltip(owner.transform as RectTransform, transform, lootDrop, "");
+        }
+
         public override void Select() {
             base.Select();
 
-            uIManager.ShowGamepadTooltip(owner.transform as RectTransform, transform, lootDrop, "");
+            ShowGamepadTooltip();
         }
 
         public override void DeSelect() {

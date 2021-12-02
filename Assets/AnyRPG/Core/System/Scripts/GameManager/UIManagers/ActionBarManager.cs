@@ -16,22 +16,10 @@ namespace AnyRPG {
         private List<ActionBarController> actionBarControllers = new List<ActionBarController>();
 
         [SerializeField]
+        private GamepadPanel gamepadPanel = null;
+
+        [SerializeField]
         private List<GamepadActionBarController> gamepadActionBarControllers = new List<GamepadActionBarController>();
-
-        [SerializeField]
-        protected Image leftBackground;
-
-        [SerializeField]
-        protected Image rightBackground;
-
-        [SerializeField]
-        protected TMP_Text actionBarSetText = null;
-
-        [SerializeField]
-        protected Color normalColor = new Color32(0, 0, 0, 0);
-
-        [SerializeField]
-        protected Color pressedColor = new Color32(255, 255, 255, 128);
 
         protected Color hiddenColor = new Color32(0, 0, 0, 0);
 
@@ -66,6 +54,8 @@ namespace AnyRPG {
         protected SystemEventManager systemEventManager = null;
         protected ControlsManager controlsManager = null;
         protected InputManager inputManager = null;
+        protected UIManager uIManager = null;
+
 
         public ActionButton FromButton { get => fromButton; set => fromButton = value; }
         public List<ActionBarController> ActionBarControllers { get => actionBarControllers; set => actionBarControllers = value; }
@@ -82,6 +72,7 @@ namespace AnyRPG {
             systemEventManager = systemGameManager.SystemEventManager;
             controlsManager = systemGameManager.ControlsManager;
             inputManager = systemGameManager.InputManager;
+            uIManager = systemGameManager.UIManager;
 
             systemBarController.Configure(systemGameManager);
 
@@ -205,31 +196,34 @@ namespace AnyRPG {
 
         public void PressLeftTrigger() {
             //Debug.Log("ActionBarManager.PressLeftTrigger()");
-            leftBackground.color = pressedColor;
-            gamepadActionBarControllers[0].ShowHints();
+            gamepadPanel.PressLeftTrigger();
         }
 
         public void LiftLeftTrigger() {
             //Debug.Log("ActionBarManager.LiftLeftTrigger()");
-            leftBackground.color = normalColor;
-            gamepadActionBarControllers[0].HideHints();
+            gamepadPanel.LiftLeftTrigger();
         }
 
         public void PressRightTrigger() {
             //Debug.Log("ActionBarManager.PressRightTrigger()");
-            rightBackground.color = pressedColor;
-            gamepadActionBarControllers[1].ShowHints();
+            gamepadPanel.PressRightTrigger();
         }
 
         public void LiftRightTrigger() {
             //Debug.Log("ActionBarManager.LiftRightTrigger()");
-            rightBackground.color = normalColor;
-            gamepadActionBarControllers[1].HideHints();
+            gamepadPanel.LiftRightTrigger();
         }
 
         public void InitializeActionbars() {
+            for (int i = 0; i < actionBarControllers.Count; i++) {
+                actionBarControllers[i].Configure(systemGameManager);
+                if (i <= 2) {
+                    actionBarControllers[i].SetTooltipTransform(uIManager.BottomPanel.RectTransform);
+                } else {
+                    actionBarControllers[i].SetTooltipTransform(uIManager.SidePanel.RectTransform);
+                }
+            }
             foreach (ActionBarController actionBarController in actionBarControllers) {
-                actionBarController.Configure(systemGameManager);
             }
             foreach (ActionBarController actionBarController in gamepadActionBarControllers) {
                 actionBarController.Configure(systemGameManager);
@@ -570,7 +564,7 @@ namespace AnyRPG {
         public void SetGamepadActionButtonSet(int actionButtonSet, bool updateVisuals = true) {
             //Debug.Log("ActionBarmanager.SetGamepadActionButtonSet(" + actionButtonSet + ")");
             currentActionBarSet = actionButtonSet;
-            actionBarSetText.text = "Set " + (actionButtonSet + 1);
+            gamepadPanel.SetGamepadActionButtonSet(actionButtonSet);
             UpdateGamepadActionButtons(actionButtonSet, GetGamepadActionButtons());
             if (updateVisuals) {
                 UpdateVisuals();
@@ -624,9 +618,9 @@ namespace AnyRPG {
                     }
                 }
 
-                // show gamepad hints
-                leftBackground.gameObject.SetActive(true);
-                rightBackground.gameObject.SetActive(true);
+                // show gamepad
+                //gamepadPanel.ShowGamepad();
+                //gamepadPanel.gameObject.SetActive(true);
 
                 // activate gamepad action bar controllers
                 for (int i = 0; i <= 1; i++) {
@@ -643,9 +637,9 @@ namespace AnyRPG {
                     }
                 }
 
-                // hide gamepad hints
-                leftBackground.gameObject.SetActive(false);
-                rightBackground.gameObject.SetActive(false);
+                // hide gamepad
+                //gamepadPanel.HideGamepad();
+                //gamepadPanel.gameObject.SetActive(false);
 
                 // show systembar
                 if (!systemBarController.gameObject.activeSelf) {

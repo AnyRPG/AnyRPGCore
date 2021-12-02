@@ -55,7 +55,7 @@ namespace AnyRPG {
         // the color to change the highlight image when not hidden
         protected Color hiddenColor = new Color32(0, 0, 0, 0);
 
-        [Tooltip("If false, the highlight image will retain its color when the navigation controller is unfocused")]
+        [Tooltip("If gamepad mode is active, and the navigation controller is unfocused, and the button background is highlighted, change the highlight to the unfocused color")]
         [SerializeField]
         private bool useUnfocusedColor = true;
 
@@ -82,6 +82,7 @@ namespace AnyRPG {
 
         // game manager references
         protected AudioManager audioManager = null;
+        protected ControlsManager controlsManager = null;
 
         public override void Configure(SystemGameManager systemGameManager) {
             base.Configure(systemGameManager);
@@ -108,6 +109,7 @@ namespace AnyRPG {
             base.SetGameManagerReferences();
 
             audioManager = systemGameManager.AudioManager;
+            controlsManager = systemGameManager.ControlsManager;
         }
 
         public void SetController(UINavigationController uINavigationController) {
@@ -197,7 +199,9 @@ namespace AnyRPG {
             if (highlightBackgroundOnSelect == true) {
                 HighlightBackground();
             }
-            HighlightOutline();
+            if (controlsManager.GamePadModeActive == true) {
+                HighlightOutline();
+            }
             selected = true;
         }
 
@@ -229,7 +233,9 @@ namespace AnyRPG {
         public void HighlightBackground() {
             //Debug.Log(gameObject.name + ".HightlightButton.HighlightBackground()");
             if (highlightImage != null) {
-                if (navigationControllerFocused || useUnfocusedColor == false) {
+                if (navigationControllerFocused == true
+                    || useUnfocusedColor == false
+                    || controlsManager.GamePadModeActive == false) {
                     //highlightImage.color = highlightImageColor * selectedColor;
                     highlightImage.color = highlightImageColor;
                 } else {
@@ -279,7 +285,9 @@ namespace AnyRPG {
             if (unHighlightBackgroundOnUnFocus) {
                 UnHighlightBackground();
             } else {
-                if (highlightImage.color != hiddenColor && useUnfocusedColor == true) {
+                if (highlightImage.color != hiddenColor
+                    && useUnfocusedColor == true
+                    && controlsManager.GamePadModeActive == true) {
                     highlightImage.color = unFocusedColor;
                 }
             }

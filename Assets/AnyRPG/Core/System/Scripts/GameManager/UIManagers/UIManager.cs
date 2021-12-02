@@ -210,6 +210,8 @@ namespace AnyRPG {
         // is a window currently being dragged.  used to suppres camera turn and pan
         private bool dragInProgress = false;
 
+        private bool hadMoveable = false;
+
         // keep track of tooltip parameters for updating on window move
         private RectTransform toolTipPanelTransform = null;
         private Transform toolTipButtonTransform = null;
@@ -624,6 +626,12 @@ namespace AnyRPG {
 
         public void ProcessInput() {
 
+            if (handScript.Moveable != null) {
+                hadMoveable = true;
+            } else {
+                hadMoveable = false;
+            }
+
             // don't hide windows while binding keys
             if (keyBindManager.BindName == string.Empty && playerManager.PlayerUnitSpawned != false) {
 
@@ -671,7 +679,7 @@ namespace AnyRPG {
                 }
             }
 
-            if (inputManager.KeyBindWasPressed("CANCELALL")) {
+            if (inputManager.KeyBindWasPressed("CANCELALL") && hadMoveable == false) {
                 CloseAllPopupWindows();
             }
 
@@ -822,7 +830,9 @@ namespace AnyRPG {
             miniMapWindow.OpenWindow();
             questTrackerWindow.OpenWindow();
             messageFeedManager.MessageFeedWindow.OpenWindow();
-            gamepadWindow.OpenWindow();
+            if (controlsManager.GamePadModeActive == true) {
+                gamepadWindow.OpenWindow();
+            }
             xpBarWindow.OpenWindow();
             combatLogWindow.OpenWindow();
             UpdateLockUI();

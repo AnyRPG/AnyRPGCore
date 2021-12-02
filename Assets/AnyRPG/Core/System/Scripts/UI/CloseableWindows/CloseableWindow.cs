@@ -66,6 +66,9 @@ namespace AnyRPG {
             if (dragHandle != null) {
                 dragHandle.Configure(systemGameManager);
             }
+            if (hintBarController != null) {
+                hintBarController.Configure(systemGameManager);
+            }
             InitializeWindow();
             RawCloseWindow();
             HideControllerHints();

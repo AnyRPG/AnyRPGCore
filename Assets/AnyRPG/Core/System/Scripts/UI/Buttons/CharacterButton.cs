@@ -177,7 +177,8 @@ namespace AnyRPG {
 
         public override void OnPointerEnter(PointerEventData eventData) {
             base.OnPointerEnter(eventData);
-            uIManager.ShowToolTip(transform.position, this);
+            //uIManager.ShowToolTip(transform.position, this);
+            ShowContextInfo();
         }
 
         public override void OnPointerExit(PointerEventData eventData) {
@@ -215,7 +216,7 @@ namespace AnyRPG {
 
         private void ShowContextInfo() {
             if (equippedEquipment != null) {
-                uIManager.ShowGamepadTooltip(characterPanel.RectTransform, transform, this, "Sell Price: ");
+                uIManager.ShowGamepadTooltip(characterPanel.RectTransform, transform, this, "");
                 owner.SetControllerHints("Unequip", "", "", "", "", "");
             } else {
                 uIManager.ShowGamepadTooltip(characterPanel.RectTransform, transform, this, "");

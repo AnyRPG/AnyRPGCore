@@ -170,7 +170,12 @@ namespace AnyRPG {
         }
 
         private void ProcessMouseEnter() {
-            uIManager.ShowToolTip(transform.position, vendorItem);
+            //uIManager.ShowToolTip(transform.position, vendorItem);
+            ShowGamepadTooltip();
+        }
+
+        private void ShowGamepadTooltip() {
+            uIManager.ShowGamepadTooltip(owner.transform as RectTransform, transform, vendorItem, "Sell Price: ");
         }
 
         public override void OnPointerExit(PointerEventData eventData) {
@@ -221,6 +226,7 @@ namespace AnyRPG {
         public override void Select() {
             //Debug.Log("VendorButton.Select()");
             base.Select();
+            ShowGamepadTooltip();
             if (owner != null) {
                 owner.SetControllerHints("Purchase", "", "", "", "", "");
             }
@@ -229,6 +235,7 @@ namespace AnyRPG {
         public override void DeSelect() {
             //Debug.Log("VendorButton.DeSelect()");
             base.DeSelect();
+            uIManager.HideToolTip();
             if (owner != null) {
                 owner.HideControllerHints();
             }

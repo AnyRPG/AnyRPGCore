@@ -104,27 +104,30 @@ namespace AnyRPG {
             ResetPanels();
             PanelMovement.gameObject.SetActive(true);
 
-            //ResetButtons();
-            movementButton.Select();
             uINavigationControllers[0].UnHightlightButtons(movementButton);
+
+            movementButton.HighlightBackground();
+            movementButton.Select();
         }
 
         public void ToggleActionBarsPanel() {
             ResetPanels();
             PanelCombat.gameObject.SetActive(true);
 
-            //ResetButtons();
-            actionBarsButton.Select();
             uINavigationControllers[0].UnHightlightButtons(actionBarsButton);
+
+            actionBarsButton.HighlightBackground();
+            actionBarsButton.Select();
         }
 
         public void ToggleSystemPanel() {
             ResetPanels();
             PanelGeneral.gameObject.SetActive(true);
 
-            //ResetButtons();
-            systemButton.Select();
             uINavigationControllers[0].UnHightlightButtons(systemButton);
+
+            systemButton.HighlightBackground();
+            systemButton.Select();
         }
 
         public override void ReceiveOpenWindowNotification() {
@@ -132,7 +135,7 @@ namespace AnyRPG {
             base.ReceiveOpenWindowNotification();
             //currentNavigationController.Focus();
             //uINavigationControllers[0].SetCurrentButton(movementButton);
-            movementButton.HighlightBackground();
+            
             ToggleMovementPanel();
             uINavigationControllers[0].UnFocus();
 

@@ -21,7 +21,6 @@ namespace AnyRPG {
         protected PlayerManager playerManager = null;
         protected ActionBarManager actionBarManager = null;
         protected MessageFeedManager messageFeedManager = null;
-        protected ControlsManager controlsManager = null;
 
         /// <summary>
         /// A reference to the bag that this slot belongs to
@@ -49,7 +48,6 @@ namespace AnyRPG {
             playerManager = systemGameManager.PlayerManager;
             actionBarManager = systemGameManager.UIManager.ActionBarManager;
             messageFeedManager = systemGameManager.UIManager.MessageFeedManager;
-            controlsManager = systemGameManager.ControlsManager;
         }
 
         public void SetInventorySlot(InventorySlot inventorySlot) {
@@ -530,8 +528,10 @@ namespace AnyRPG {
         }
 
         
-        public override void ShowToolTip(IDescribable describable) {
-            uIManager.ShowToolTip(transform.position, describable, "Sell Price: ");
+        public override void ShowToolTip() {
+            //base.ShowToolTip
+            //uIManager.ShowToolTip(transform.position, describable, "Sell Price: ");
+            ShowGamepadTooltip();
         }
 
         public void ShowGamepadTooltip() {

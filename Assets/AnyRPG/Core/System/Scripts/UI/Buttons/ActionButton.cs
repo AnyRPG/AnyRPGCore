@@ -47,6 +47,8 @@ namespace AnyRPG {
 
         protected CloseableWindowContents windowPanel = null;
 
+        protected RectTransform tooltipTransform = null;
+
         // game manager references
         protected UIManager uIManager = null;
         protected SystemEventManager systemEventManager = null;
@@ -116,6 +118,10 @@ namespace AnyRPG {
 
         public void SetPanel(CloseableWindowContents windowPanel) {
             this.windowPanel = windowPanel;
+        }
+
+        public void SetTooltipTransform(RectTransform rectTransform) {
+            tooltipTransform = rectTransform;
         }
         
 
@@ -228,11 +234,13 @@ namespace AnyRPG {
 
             // there was the assumption that these were only being called when a player clicked to add an ability
             if (UIManager.MouseInRect(Icon.rectTransform)) {
-                uIManager.ShowToolTip(transform.position, useable as IDescribable);
+                //uIManager.ShowToolTip(transform.position, useable as IDescribable);
+                uIManager.ShowGamepadTooltip(tooltipTransform, transform, useable as IDescribable, "");
+
             }
 
             //if (gamepadButton == true) {
-                //rangeIndicator.color = Color.white;
+            //rangeIndicator.color = Color.white;
             //}
         }
 
@@ -413,7 +421,9 @@ namespace AnyRPG {
                 tmp = (IDescribable)Useable;
             }
             if (tmp != null) {
-                uIManager.ShowToolTip(transform.position, tmp);
+                //uIManager.ShowToolTip(transform.position, tmp);
+                uIManager.ShowGamepadTooltip(tooltipTransform, transform, useable as IDescribable, "");
+
             }
         }
 
@@ -447,8 +457,8 @@ namespace AnyRPG {
             base.Select();
             if (useable != null) {
                 owner.SetControllerHints("Move", "Clear", "", "", "", "");
-                if (windowPanel != null) {
-                    uIManager.ShowGamepadTooltip(windowPanel.RectTransform, transform, useable as IDescribable, "");
+                if (tooltipTransform != null) {
+                    uIManager.ShowGamepadTooltip(tooltipTransform, transform, useable as IDescribable, "");
                 }
             } else {
                 owner.HideControllerHints();

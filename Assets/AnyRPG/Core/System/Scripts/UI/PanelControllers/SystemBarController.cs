@@ -7,6 +7,11 @@ using UnityEngine.UI;
 namespace AnyRPG {
     public class SystemBarController : ConfiguredMonoBehaviour {
 
+        /*
+        [SerializeField]
+        private RectTransform rectTransform = null;
+        */
+
         [SerializeField]
         private SystemPanelButton mainMenuButton = null;
 
@@ -53,6 +58,18 @@ namespace AnyRPG {
             currenciesButton.Configure(systemGameManager);
             achievementsButton.Configure(systemGameManager);
             inventoryButton.Configure(systemGameManager);
+
+            mainMenuButton.SetTooltipTransform(uIManager.BottomPanel.RectTransform);
+            abilityBookButton.SetTooltipTransform(uIManager.BottomPanel.RectTransform);
+            questLogButton.SetTooltipTransform(uIManager.BottomPanel.RectTransform);
+            characterButton.SetTooltipTransform(uIManager.BottomPanel.RectTransform);
+            mapButton.SetTooltipTransform(uIManager.BottomPanel.RectTransform);
+            skillsButton.SetTooltipTransform(uIManager.BottomPanel.RectTransform);
+            reputationsButton.SetTooltipTransform(uIManager.BottomPanel.RectTransform);
+            currenciesButton.SetTooltipTransform(uIManager.BottomPanel.RectTransform);
+            achievementsButton.SetTooltipTransform(uIManager.BottomPanel.RectTransform);
+            inventoryButton.SetTooltipTransform(uIManager.BottomPanel.RectTransform);
+
 
             if (systemConfigurationManager.SystemBarMainMenu != null) {
                 mainMenuButton.Icon = systemConfigurationManager.SystemBarMainMenu;

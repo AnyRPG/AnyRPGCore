@@ -48,6 +48,8 @@ namespace AnyRPG {
 
             uINavigationControllers[0].UnHightlightButtons(soundButton);
             SetOpenSubPanel(PanelSound);
+
+            soundButton.HighlightBackground();
             soundButton.Select();
         }
 
@@ -58,6 +60,7 @@ namespace AnyRPG {
             uINavigationControllers[0].UnHightlightButtons(videoButton);
             SetOpenSubPanel(PanelVideo);
 
+            videoButton.HighlightBackground();
             videoButton.Select();
         }
 
@@ -67,6 +70,8 @@ namespace AnyRPG {
 
             uINavigationControllers[0].UnHightlightButtons(controlsButton);
             SetOpenSubPanel(PanelControls);
+
+            controlsButton.HighlightBackground();
             controlsButton.Select();
         }
 
@@ -77,6 +82,7 @@ namespace AnyRPG {
             uINavigationControllers[0].UnHightlightButtons(keyBindingsButton);
             SetOpenSubPanel(PanelKeyBindings);
 
+            keyBindingsButton.HighlightBackground();
             keyBindingsButton.Select();
         }
 
@@ -87,6 +93,8 @@ namespace AnyRPG {
 
             uINavigationControllers[0].UnHightlightButtons(userInterfaceButton);
             SetOpenSubPanel(PanelUserInterface);
+
+            userInterfaceButton.HighlightBackground();
             userInterfaceButton.Select();
         }
 

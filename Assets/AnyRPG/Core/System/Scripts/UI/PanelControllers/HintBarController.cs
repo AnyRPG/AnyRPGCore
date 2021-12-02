@@ -48,6 +48,15 @@ namespace AnyRPG {
         [SerializeField]
         private TMP_Text rDownOptionText = null;
 
+        // game manager references
+        protected ControlsManager controlsManager = null;
+
+        public override void SetGameManagerReferences() {
+            base.SetGameManagerReferences();
+
+            controlsManager = systemGameManager.ControlsManager;
+        }
+
         public void Show() {
             gameObject.SetActive(true);
         }
@@ -58,6 +67,11 @@ namespace AnyRPG {
 
         public void SetOptions(string aOptionString, string xOptionString, string yOptionString, string bOptionString, string dPadOptionString, string rDownOptionString) {
             //Debug.Log("HintBarController.SetOptions()");
+
+            if (controlsManager.GamePadModeActive == false) {
+                return;
+            }
+
             if (aOptionString != null && aOptionString != string.Empty) {
                 aImage.SetActive(true);
                 aOptionText.text = aOptionString;

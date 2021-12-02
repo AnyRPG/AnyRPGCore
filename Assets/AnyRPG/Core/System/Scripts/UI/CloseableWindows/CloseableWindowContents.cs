@@ -87,6 +87,9 @@ namespace AnyRPG {
                 backGroundImage = GetComponent<Image>();
             }
             rectTransform = GetComponent<RectTransform>();
+            if (hintBarController != null) {
+                hintBarController.Configure(systemGameManager);
+            }
             if (subPanels.Count > 0) {
                 foreach (CloseableWindowContents closeableWindowContents in subPanels) {
                     closeableWindowContents.Configure(systemGameManager);
