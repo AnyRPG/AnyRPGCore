@@ -32,6 +32,7 @@ namespace AnyRPG {
         private bool rightTriggerPressed = false;
 
         private bool gamePadModeActive = false;
+        private bool mouseDisabled = false;
 
         private int windowStackCount = 0;
 
@@ -56,6 +57,7 @@ namespace AnyRPG {
         public bool RightTriggerPressed { get => rightTriggerPressed; }
         public float InputHorizontal { get => inputHorizontal; }
         public float InputVertical { get => inputVertical; }
+        public bool MouseDisabled { get => mouseDisabled; }
 
         public override void Configure(SystemGameManager systemGameManager) {
             base.Configure(systemGameManager);
@@ -84,8 +86,9 @@ namespace AnyRPG {
 
         private void LockMouse() {
             //Debug.Log("ControlsManager.LockMouse()");
-            Cursor.lockState = CursorLockMode.Locked;
+            //Cursor.lockState = CursorLockMode.Locked;
             Cursor.visible = false;
+            mouseDisabled = true;
             if (playerManager.PlayerController != null) {
                 playerManager.PlayerController.DisableMouseOver();
             }
@@ -94,8 +97,9 @@ namespace AnyRPG {
 
         private void UnlockMouse() {
             //Debug.Log("ControlsManager.UnlockMouse()");
-            Cursor.lockState = CursorLockMode.None;
+            //Cursor.lockState = CursorLockMode.None;
             Cursor.visible = true;
+            mouseDisabled = false;
         }
 
         private void CheckMouse() {

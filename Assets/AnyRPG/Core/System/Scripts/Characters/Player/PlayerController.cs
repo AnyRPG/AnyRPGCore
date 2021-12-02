@@ -325,7 +325,8 @@ namespace AnyRPG {
         }
 
         private void ToggleRun() {
-            if (inputManager.KeyBindWasPressed("TOGGLERUN")) {
+            if (inputManager.KeyBindWasPressed("TOGGLERUN")
+                || controlsManager.DPadUpPressed == true) {
                 EventParamProperties eventParamProperties = new EventParamProperties();
                 if (playerManager.ActiveUnitController.Walking == false) {
                     playerManager.ActiveUnitController.Walking = true;
@@ -341,7 +342,8 @@ namespace AnyRPG {
         }
 
         private void CheckToggleAutorun() {
-            if (inputManager.KeyBindWasPressed("TOGGLEAUTORUN")) {
+            if (inputManager.KeyBindWasPressed("TOGGLEAUTORUN")
+                || inputManager.KeyBindWasPressed("JOYSTICKBUTTON8") == true) {
                 ToggleAutorun();
             }
         }
@@ -394,7 +396,7 @@ namespace AnyRPG {
             }
 
             // gamepad mode can hide the cursor.  Mouseover should not be activated when the cursor is hidden
-            if (Cursor.visible == false) {
+            if (controlsManager.MouseDisabled == true) {
                 return;
             }
 
