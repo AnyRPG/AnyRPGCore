@@ -348,7 +348,7 @@ namespace AnyRPG {
             if (owner != null) {
 
                 if (handScript.Moveable != null) {
-                    owner.SetControllerHints("", "", "", "", "", "Place");
+                    owner.SetControllerHints("", "", "", "Cancel Reorder", "Move", "Place");
                     return;
                 }
 
