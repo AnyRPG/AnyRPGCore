@@ -221,6 +221,7 @@ namespace AnyRPG {
         protected NamePlateManager namePlateManager = null;
         protected CameraManager cameraManager = null;
         protected ControlsManager controlsManager = null;
+        protected WindowManager windowManager = null;
 
         public override void Configure(SystemGameManager systemGameManager) {
             base.Configure(systemGameManager);
@@ -247,6 +248,7 @@ namespace AnyRPG {
             namePlateManager = systemGameManager.UIManager.NamePlateManager;
             cameraManager = systemGameManager.CameraManager;
             controlsManager = systemGameManager.ControlsManager;
+            windowManager = systemGameManager.WindowManager;
         }
 
         public void Init() {
@@ -342,8 +344,9 @@ namespace AnyRPG {
             if (playerManager?.MyCharacter?.CharacterStats?.IsAlive == true && playerManager?.PlayerController?.canMove == true) {
                 // code to prevent turning when clicking on UI elements
                 // if (inputManager.rightMouseButtonDown && playerManager.PlayerController.HasMoveInput()
-                if (inputManager.rightMouseButtonDown
-                    && (!inputManager.rightMouseButtonClickedOverUI || (namePlateManager != null ? namePlateManager.MouseOverNamePlate() : false))) {
+                if ((inputManager.rightMouseButtonDown
+                    && (!inputManager.rightMouseButtonClickedOverUI || (namePlateManager != null ? namePlateManager.MouseOverNamePlate() : false)))
+                    || (controlsManager.GamePadModeActive == false && Input.GetAxis("RightAnalogHorizontal") != 0f && windowManager.WindowStack.Count == 0)) {
                     //Debug.Log(gameObject.name + ".PlayerUnitMovementController.LateGlobalSuperUpdate(): resetting playerManager.ActiveUnitController.transform.forward");
 
                     playerManager.ActiveUnitController.transform.forward = new Vector3(cameraManager.MainCameraController.WantedDirection.x, 0, cameraManager.MainCameraController.WantedDirection.z);
