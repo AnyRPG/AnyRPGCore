@@ -35,9 +35,30 @@ namespace AnyRPG {
             questLog = systemGameManager.QuestLog;
         }
 
+        /*
         public override void Interact() {
+            Debug.Log("InteractionPanelQuestScript.Interact()");
+
             base.Interact();
             //Debug.Log((MyQuest == null ? "null" : MyQuest.DisplayName) + ".InteractionPanelQuestScript.Select()");
+            if (quest == null) {
+                return;
+            }
+
+            if (quest.HasOpeningDialog == true && quest.OpeningDialog != null && quest.OpeningDialog.TurnedIn == false) {
+                //Debug.Log("InteractionPanelQuestScript.Select(): dialog is not completed, popping dialog with questGiver: " + (questGiver == null ? "null" : questGiver.Interactable.DisplayName));
+                questLog.ShowQuestGiverDescription(quest, questGiver);
+            } else {
+                //Debug.Log("InteractionPanelQuestScript.Select(): has no dialog, or dialog is completed, opening questgiver window");
+                questLog.ShowQuestGiverDescription(quest, questGiver);
+            }
+        }
+        */
+
+        public override void ButtonClickAction() {
+            //Debug.Log("InteractionPanelQuestScript.ButtonClickAction()");
+            base.ButtonClickAction();
+
             if (quest == null) {
                 return;
             }

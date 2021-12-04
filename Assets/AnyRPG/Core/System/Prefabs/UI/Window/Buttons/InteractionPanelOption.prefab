@@ -279,7 +279,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1173044566764289446}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 385302426032994185}
+        m_TargetAssemblyTypeName: AnyRPG.InteractionPanelScript, Assembly-CSharp
+        m_MethodName: ButtonClickAction
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &385302426032994185
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -297,9 +309,12 @@ MonoBehaviour:
   highlightImage: {fileID: 0}
   highlightBackgroundOnSelect: 0
   highlightBackgroundOnInteract: 0
+  unHighlightBackgroundOnUnFocus: 1
+  unHighlightBackgroundOnLeave: 1
   highlightImageColor: {r: 0.64705884, g: 0.64705884, b: 0.64705884, a: 0.6509804}
   useUnfocusedColor: 1
   unFocusedColor: {r: 1, g: 1, b: 1, a: 0.15294118}
+  rectTransform: {fileID: 0}
   text: {fileID: 439576833692822957}
   ignoreSystemImageTint: 0
   highlightButton: {fileID: 1984971072169514076}

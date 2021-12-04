@@ -51,12 +51,25 @@ namespace AnyRPG {
             this.optionIndex = optionIndex;
         }
 
+        /*
         public override void Interact() {
             base.Interact();
             if (playerManager.UnitController != null) {
                 InteractableOption.Interact(playerManager.UnitController.CharacterUnit, optionIndex);
             }
             InteractableOption.Interactable.CloseInteractionWindow();
+        }
+        */
+
+        public override void ButtonClickAction() {
+            //Debug.Log("InteractionPanelScript.ButtonClickAction()");
+
+            base.ButtonClickAction();
+            if (playerManager.UnitController != null) {
+                InteractableOption.Interact(playerManager.UnitController.CharacterUnit, optionIndex);
+            }
+            InteractableOption.Interactable.CloseInteractionWindow();
+
         }
 
     }

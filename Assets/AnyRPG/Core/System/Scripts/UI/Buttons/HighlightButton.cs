@@ -144,7 +144,7 @@ namespace AnyRPG {
             //Debug.Log(gameObject.name + ".HighlightButton.Select()");
             base.Select();
             //if (highlightButton != null && useHighlightColorOnButton == true) {
-            if (highlightButton != null && navigationControllerFocused == true && controlsManager.GamePadModeActive == true) {
+            if (highlightButton != null && navigationControllerFocused == true && controlsManager.GamePadInputActive == true) {
                 ColorBlock colorBlock = highlightButton.colors;
                 colorBlock.normalColor = selectedButtonColor;
                 colorBlock.highlightedColor = selectedButtonColor;
@@ -196,18 +196,24 @@ namespace AnyRPG {
             Interact();
         }
 
+        /*
         public override void Interact() {
             //Debug.Log(gameObject.name + ".HighlightButton.Interact()");
 
             base.Interact();
             
         }
+        */
 
         public override void Accept() {
             base.Accept();
             if (highlightButton != null) {
                 highlightButton.onClick.Invoke();
             }
+        }
+
+        public virtual void ButtonClickAction() {
+            // only use in child classes
         }
 
 

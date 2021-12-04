@@ -94,9 +94,12 @@ MonoBehaviour:
   highlightImage: {fileID: 0}
   highlightBackgroundOnSelect: 0
   highlightBackgroundOnInteract: 1
+  unHighlightBackgroundOnUnFocus: 1
+  unHighlightBackgroundOnLeave: 1
   highlightImageColor: {r: 0.64705884, g: 0.64705884, b: 0.64705884, a: 0.6509804}
   useUnfocusedColor: 1
   unFocusedColor: {r: 1, g: 1, b: 1, a: 0.15294118}
+  rectTransform: {fileID: 0}
   text: {fileID: 0}
   ignoreSystemImageTint: 0
   highlightButton: {fileID: 0}
@@ -180,9 +183,12 @@ MonoBehaviour:
   highlightImage: {fileID: 2939470474648831301}
   highlightBackgroundOnSelect: 0
   highlightBackgroundOnInteract: 1
+  unHighlightBackgroundOnUnFocus: 1
+  unHighlightBackgroundOnLeave: 1
   highlightImageColor: {r: 0.64705884, g: 0.64705884, b: 0.64705884, a: 0.6509804}
   useUnfocusedColor: 1
   unFocusedColor: {r: 1, g: 1, b: 1, a: 0.15294118}
+  rectTransform: {fileID: 0}
   text: {fileID: 3363715389514639504}
   ignoreSystemImageTint: 0
   highlightButton: {fileID: 2939470474215634777}
@@ -432,6 +438,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7017054421676494738}
   - component: {fileID: 1462530097719307834}
+  - component: {fileID: 7969628298929732698}
   m_Layer: 5
   m_Name: RewardsArea
   m_TagString: Untagged
@@ -470,6 +477,36 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1464149139979219808}
   m_CullTransparentMesh: 0
+--- !u!114 &7969628298929732698
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1464149139979219808}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 03715bb91f4a7fa47b3d93745fb1b35e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  leftPanel: {fileID: 0}
+  leftControllers:
+  - {fileID: 3617047887764661706}
+  rightPanel: {fileID: 0}
+  rightControllers: []
+  upPanel: {fileID: 0}
+  upControllers: []
+  downPanel: {fileID: 0}
+  downControllers: []
+  acceptController: {fileID: 0}
+  scrollRect: {fileID: 0}
+  updateActiveListOnOpen: 0
+  pruneInactiveElements: 1
+  navigableButtons:
+  - {fileID: 6332632585315361939}
+  - {fileID: 7312354865148307172}
+  - {fileID: 8680183005732550555}
+  - {fileID: 8200410085871555863}
 --- !u!1 &2939470474215634780
 GameObject:
   m_ObjectHideFlags: 0
@@ -1350,9 +1387,12 @@ MonoBehaviour:
   highlightImage: {fileID: 0}
   highlightBackgroundOnSelect: 0
   highlightBackgroundOnInteract: 1
+  unHighlightBackgroundOnUnFocus: 1
+  unHighlightBackgroundOnLeave: 1
   highlightImageColor: {r: 0.64705884, g: 0.64705884, b: 0.64705884, a: 0.6509804}
   useUnfocusedColor: 1
   unFocusedColor: {r: 1, g: 1, b: 1, a: 0.15294118}
+  rectTransform: {fileID: 0}
   text: {fileID: 0}
   ignoreSystemImageTint: 0
   highlightButton: {fileID: 0}
@@ -1778,9 +1818,12 @@ MonoBehaviour:
   highlightImage: {fileID: 4801077978073618495}
   highlightBackgroundOnSelect: 0
   highlightBackgroundOnInteract: 1
+  unHighlightBackgroundOnUnFocus: 1
+  unHighlightBackgroundOnLeave: 1
   highlightImageColor: {r: 0.64705884, g: 0.64705884, b: 0.64705884, a: 0.6509804}
   useUnfocusedColor: 1
   unFocusedColor: {r: 1, g: 1, b: 1, a: 0.15294118}
+  rectTransform: {fileID: 0}
   text: {fileID: 2418768824519938493}
   ignoreSystemImageTint: 0
   highlightButton: {fileID: 4801077977576712739}
@@ -2000,9 +2043,12 @@ MonoBehaviour:
   highlightImage: {fileID: 0}
   highlightBackgroundOnSelect: 0
   highlightBackgroundOnInteract: 1
+  unHighlightBackgroundOnUnFocus: 1
+  unHighlightBackgroundOnLeave: 1
   highlightImageColor: {r: 0.64705884, g: 0.64705884, b: 0.64705884, a: 0.6509804}
   useUnfocusedColor: 1
   unFocusedColor: {r: 1, g: 1, b: 1, a: 0.15294118}
+  rectTransform: {fileID: 0}
   text: {fileID: 0}
   ignoreSystemImageTint: 0
   highlightButton: {fileID: 0}
@@ -2190,7 +2236,8 @@ MonoBehaviour:
   leftPanel: {fileID: 0}
   leftControllers: []
   rightPanel: {fileID: 0}
-  rightControllers: []
+  rightControllers:
+  - {fileID: 7969628298929732698}
   upPanel: {fileID: 0}
   upControllers: []
   downPanel: {fileID: 0}
@@ -3595,11 +3642,14 @@ MonoBehaviour:
   addToWindowStack: 1
   userCloseable: 1
   focusFirstButtonOnOpen: 0
+  focusCurrentButtonOnOpen: 0
   focusActiveSubPanel: 0
   uINavigationControllers:
   - {fileID: 3617047887764661706}
   - {fileID: 5889367872730099514}
+  - {fileID: 7969628298929732698}
   subPanels: []
+  hintBarController: {fileID: 0}
   learnButton: {fileID: 4216152181943939570}
   unlearnButton: {fileID: 5830202441143397512}
   skillPrefab: {fileID: 5181954922283900111, guid: fd9e227504db48247b3a425079c1231f,
@@ -3893,9 +3943,12 @@ MonoBehaviour:
   highlightImage: {fileID: 0}
   highlightBackgroundOnSelect: 0
   highlightBackgroundOnInteract: 1
+  unHighlightBackgroundOnUnFocus: 1
+  unHighlightBackgroundOnLeave: 1
   highlightImageColor: {r: 0.64705884, g: 0.64705884, b: 0.64705884, a: 0.6509804}
   useUnfocusedColor: 1
   unFocusedColor: {r: 1, g: 1, b: 1, a: 0.15294118}
+  rectTransform: {fileID: 0}
   text: {fileID: 0}
   ignoreSystemImageTint: 0
   highlightButton: {fileID: 0}

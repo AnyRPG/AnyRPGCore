@@ -45,6 +45,7 @@ namespace AnyRPG {
             questLog.ShowQuestLogDescription(Quest);
         }
 
+
         /*
         public void IsComplete() {
             //Debug.Log("QuestTrackerQuestScript.IsComplete(): Checking questscript iscomplete on myquest: " + MyQuest.MyTitle);

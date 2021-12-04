@@ -79,8 +79,8 @@ namespace AnyRPG {
             //Debug.Log("StatusEffectNodeScript.OnPointerEnter()");
             base.OnPointerEnter(eventData);
             // show tooltip
-            //uIManager.ShowToolTip(transform.position, statusEffectNode.StatusEffect);
-            ShowGamepadTooltip();
+            uIManager.ShowToolTip(transform.position, statusEffectNode.StatusEffect);
+            //ShowGamepadTooltip();
         }
 
         public override void OnPointerExit(PointerEventData eventData) {

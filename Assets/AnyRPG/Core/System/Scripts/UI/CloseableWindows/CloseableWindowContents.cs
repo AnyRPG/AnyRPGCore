@@ -225,7 +225,7 @@ namespace AnyRPG {
 
         public virtual void ChooseFocus() {
             //Debug.Log(gameObject.name + ".CloseableWindowContents.ChooseFocus()");
-            if (controlsManager.GamePadModeActive && focusActiveSubPanel == true) {
+            if (controlsManager.GamePadInputActive && focusActiveSubPanel == true) {
                 if (openSubPanel != null) {
                     SetActiveSubPanel(openSubPanel);
                     //currentNavigationController = openSubPanel.FocusCurrentButton();
@@ -486,7 +486,7 @@ namespace AnyRPG {
                 if (parentPanel == null) {
                     currentNavigationController.Focus(false);
                 }
-                if (controlsManager.GamePadModeActive) {
+                if (controlsManager.GamePadInputActive) {
                     if (focusFirstButtonOnOpen) {
                         currentNavigationController.FocusFirstButton();
                     } else if (focusCurrentButtonOnOpen) {

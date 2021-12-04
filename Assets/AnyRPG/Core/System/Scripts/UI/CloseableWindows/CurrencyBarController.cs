@@ -33,6 +33,12 @@ namespace AnyRPG {
             }
         }
 
+        public void SetToolTipTransform(RectTransform toolTipTransform) {
+            foreach (CurrencyAmountController currencyAmountController in currencyAmountControllers) {
+                currencyAmountController.SetToolTipTransform(toolTipTransform);
+            }
+        }
+
         public override void SetGameManagerReferences() {
             base.SetGameManagerReferences();
             currencyConverter = systemGameManager.CurrencyConverter;

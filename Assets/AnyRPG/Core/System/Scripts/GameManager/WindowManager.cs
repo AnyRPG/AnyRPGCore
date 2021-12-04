@@ -85,10 +85,18 @@ namespace AnyRPG {
         }
 
         public void EndNavigateInterface() {
-            navigatingInterface = false;
-            uIManager.NavigableInterfaceElements[interfaceIndex].UnFocus();
-            windowStack.Remove(uIManager.NavigableInterfaceElements[interfaceIndex]);
-            interfaceIndex = -1;
+            if (navigatingInterface == true) {
+                navigatingInterface = false;
+                uIManager.NavigableInterfaceElements[interfaceIndex].UnFocus();
+                windowStack.Remove(uIManager.NavigableInterfaceElements[interfaceIndex]);
+                interfaceIndex = -1;
+            }
+        }
+
+        public void ActivateGamepadMode() {
+            if (windowStack.Count != 0) {
+                windowStack[windowStack.Count - 1].FocusCurrentButton();
+            }
         }
 
         public void Navigate() {

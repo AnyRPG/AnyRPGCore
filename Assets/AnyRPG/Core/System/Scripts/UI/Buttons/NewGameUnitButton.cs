@@ -54,10 +54,19 @@ namespace AnyRPG {
             description.text = descriptionText;
         }
 
+        /*
         public override void Interact() {
             Debug.Log(gameObject.name + ".NewGameUnitButton.Interact()");
 
             base.Interact();
+            newGameManager.SetUnitProfile(unitProfile);
+        }
+        */
+
+        public override void ButtonClickAction() {
+            //Debug.Log(gameObject.name + ".NewGameUnitButton.ButtonClickAction()");
+            base.ButtonClickAction();
+
             newGameManager.SetUnitProfile(unitProfile);
         }
 

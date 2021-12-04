@@ -64,7 +64,8 @@ namespace AnyRPG {
             unlearnButton.Configure(systemGameManager);
 
             foreach (DescribableIcon describableIcon in rewardButtons) {
-                describableIcon.Configure(systemGameManager);
+                //describableIcon.Configure(systemGameManager);
+                describableIcon.SetToolTipTransform(rectTransform);
             }
         }
 
@@ -195,9 +196,9 @@ namespace AnyRPG {
 
         public void DeselectSkillScripts() {
             //Debug.Log("SkillTrainerUI.DeselectSkillScripts()");
-            foreach (SkillTrainerSkillScript skill in skillScripts) {
-                if (skill != selectedSkillTrainerSkillScript) {
-                    skill.DeSelect();
+            foreach (SkillTrainerSkillScript skillTrainerSkillScript in skillScripts) {
+                if (skillTrainerSkillScript != selectedSkillTrainerSkillScript) {
+                    skillTrainerSkillScript.DeSelect();
                 }
             }
             uINavigationControllers[0].UnHightlightButtons(selectedSkillTrainerSkillScript);

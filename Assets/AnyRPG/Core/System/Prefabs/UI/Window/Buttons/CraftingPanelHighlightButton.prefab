@@ -513,6 +513,7 @@ MonoBehaviour:
   highlightImageColor: {r: 0.64705884, g: 0.64705884, b: 0.64705884, a: 0.6509804}
   useUnfocusedColor: 0
   unFocusedColor: {r: 1, g: 1, b: 1, a: 0.15294118}
+  rectTransform: {fileID: 0}
   text: {fileID: 1541912249115166426}
   ignoreSystemImageTint: 0
   highlightButton: {fileID: 4545391215403948059}

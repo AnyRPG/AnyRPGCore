@@ -123,7 +123,7 @@ namespace AnyRPG {
                         viewQuestButton.gameObject.SetActive(true);
                         acceptQuestButton.gameObject.SetActive(true);
                         currentNavigationController.UpdateNavigationList();
-                        if (controlsManager.GamePadModeActive) {
+                        if (controlsManager.GamePadInputActive) {
                             currentNavigationController.FocusFirstButton();
                         }
 
@@ -196,7 +196,7 @@ namespace AnyRPG {
                 //Debug.Log("DialogPanelController.OnOpenWindow(): ButtonText is null!!");
             }
             currentNavigationController.UpdateNavigationList();
-            if (controlsManager.GamePadModeActive) {
+            if (controlsManager.GamePadInputActive) {
                 currentNavigationController.FocusFirstButton();
             }
         }

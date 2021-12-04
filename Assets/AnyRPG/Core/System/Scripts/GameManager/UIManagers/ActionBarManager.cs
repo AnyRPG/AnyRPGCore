@@ -167,7 +167,7 @@ namespace AnyRPG {
             gamepadActionBarControllers[controllerIndex].ActionButtons[buttonIndex].ClearUseable(); ;
         }
 
-        public void ProcessInput() {
+        public void ProcessGamepadInput() {
             if (controlsManager.LeftTriggerDown) {
                 PressLeftTrigger();
             }

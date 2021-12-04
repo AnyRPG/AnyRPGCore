@@ -92,8 +92,8 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 5480696061460745490}
-        m_TargetAssemblyTypeName: AnyRPG.InteractionPanelQuestScript, Assembly-CSharp
-        m_MethodName: Interact
+        m_TargetAssemblyTypeName: AnyRPG.HighlightButton, Assembly-CSharp
+        m_MethodName: ButtonClickAction
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -355,6 +355,7 @@ MonoBehaviour:
   highlightImageColor: {r: 0.64705884, g: 0.64705884, b: 0.64705884, a: 0.6509804}
   useUnfocusedColor: 1
   unFocusedColor: {r: 1, g: 1, b: 1, a: 0.15294118}
+  rectTransform: {fileID: 0}
   text: {fileID: 2626507539219597791}
   ignoreSystemImageTint: 1
   highlightButton: {fileID: 2375841951747209864}

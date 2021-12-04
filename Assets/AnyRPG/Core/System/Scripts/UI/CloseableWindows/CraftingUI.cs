@@ -126,7 +126,7 @@ namespace AnyRPG {
 
         public void SelectRecipe(Recipe recipe) {
             selectedRecipeScript = recipeScripts[recipe];
-            DeselectOtherRecipes();
+            //DeselectOtherRecipes();
             ShowDescription(recipe);
         }
 
@@ -251,6 +251,7 @@ namespace AnyRPG {
             //materialsHeading.gameObject.SetActive(false);
             ClearInputIcons();
             //DeselectRecipes();
+            DeselectOtherRecipes();
         }
 
         public void DeselectOtherRecipes() {
@@ -260,6 +261,8 @@ namespace AnyRPG {
                     recipeScripts[recipe].DeSelect();
                 }
             }
+            uINavigationControllers[0].UnHightlightButtons(SelectedRecipeScript);
+
         }
 
         public void Clearrecipes() {
@@ -273,6 +276,7 @@ namespace AnyRPG {
                 objectPooler.ReturnObjectToPool(recipeScript.gameObject);
             }
             recipeScripts.Clear();
+            uINavigationControllers[0].ClearActiveButtons();
         }
 
         public override void ReceiveClosedWindowNotification() {

@@ -32,6 +32,7 @@ namespace AnyRPG {
         private bool rightTriggerPressed = false;
 
         private bool gamePadModeActive = false;
+        private bool gamePadInputActive = false;
         private bool mouseDisabled = false;
 
         private int windowStackCount = 0;
@@ -45,6 +46,7 @@ namespace AnyRPG {
         protected CutSceneBarController cutSceneBarController = null;
 
         public bool GamePadModeActive { get => gamePadModeActive; }
+        public bool GamePadInputActive { get => gamePadInputActive; }
         public bool DPadDownPressed { get => dPadDownPressed; }
         public bool DPadUpPressed { get => dPadUpPressed; }
         public bool DPadLeftPressed { get => dPadLeftPressed; }
@@ -81,7 +83,19 @@ namespace AnyRPG {
         private void ActivateGamepadMode() {
             //Debug.Log("ControlsManager.ActivateGamepadMode()");
             gamePadModeActive = true;
+            gamePadInputActive = true;
             LockMouse();
+        }
+
+        private void ActivateGamepadInput() {
+            //Debug.Log("ControlsManager.ActivateGamepadMode()");
+            gamePadInputActive = true;
+            LockMouse();
+        }
+
+        private void DeactivateGamepadInput() {
+            //Debug.Log("ControlsManager.DeactivateGamepadInput()");
+            gamePadInputActive = false;
         }
 
         private void LockMouse() {
@@ -106,17 +120,22 @@ namespace AnyRPG {
             if (Input.GetAxis("Mouse X") != 0f || Input.GetAxis("Mouse Y") != 0f) {
                 UnlockMouse();
             }
+            if (inputManager.leftMouseButtonClicked == true
+                || inputManager.rightMouseButtonClicked == true) {
+                UnlockMouse();
+                DeactivateGamepadInput();
+            }
         }
 
         void Update() {
             if (playerManager.PlayerController != null) {
                 playerManager.PlayerController.ResetMoveInput();
             }
-            CheckMouse();
             RegisterAxis();
             inputManager.RegisterInput();
+            CheckMouse();
 
-            if (gamePadModeActive == false) {
+            if (gamePadInputActive == false) {
                 if (inputManager.KeyBindWasPressed("JOYSTICKBUTTON0")
                     || inputManager.KeyBindWasPressed("JOYSTICKBUTTON1")
                     || inputManager.KeyBindWasPressed("JOYSTICKBUTTON2")
@@ -133,9 +152,10 @@ namespace AnyRPG {
                     || dPadUpPressed
                     || dPadLeftPressed
                     || dPadRightPressed) {
-                    ActivateGamepadMode();
+                    //ActivateGamepadMode();
+                    ActivateGamepadInput();
                     if (windowManager.WindowStack.Count > 0) {
-                        windowManager.Navigate();
+                        windowManager.ActivateGamepadMode();
                     }
                     return;
                 }
@@ -159,13 +179,13 @@ namespace AnyRPG {
                 windowManager.Navigate();
             }
 
-            if (windowStackCount == 0 || gamePadModeActive == false) {
+            if (windowStackCount == 0 || gamePadInputActive == false) {
                 if (cutSceneBarController.CurrentCutscene != null) {
                     cutSceneBarController.ProcessInput();
                 } else {
                     if (playerManager.PlayerController != null) {
                         if (gamePadModeActive) {
-                            actionBarManager.ProcessInput();
+                            actionBarManager.ProcessGamepadInput();
                         }
                         playerManager.PlayerController.ProcessInput();
                     }
@@ -234,7 +254,7 @@ namespace AnyRPG {
                 if (dPadDown) {
                     //Debug.Log("dPadDownPressed");
                     dPadDownPressed = true;
-                    gamePadModeActive = true;
+                    //gamePadModeActive = true;
                 }
             } else if (dPadVertical >= 0f) {
                 dPadDown = false;
@@ -244,7 +264,7 @@ namespace AnyRPG {
                 if (dPadUp) {
                     //Debug.Log("dPadUpPressed");
                     dPadUpPressed = true;
-                    gamePadModeActive = true;
+                    //gamePadModeActive = true;
                 }
             } else if (dPadVertical <= 0f) {
                 dPadUp = false;
@@ -254,7 +274,7 @@ namespace AnyRPG {
                 if (dPadLeft) {
                     //Debug.Log("dPadLeftPressed");
                     dPadLeftPressed = true;
-                    gamePadModeActive = true;
+                    //gamePadModeActive = true;
                 }
             } else if (dPadHorizontal >= 0f) {
                 dPadLeft = false;
@@ -264,7 +284,7 @@ namespace AnyRPG {
                 if (dPadRight) {
                     //Debug.Log("dPadRightPressed");
                     dPadRightPressed = true;
-                    gamePadModeActive = true;
+                    //gamePadModeActive = true;
                 }
             } else if (dPadHorizontal <= 0f) {
                 dPadRight = false;

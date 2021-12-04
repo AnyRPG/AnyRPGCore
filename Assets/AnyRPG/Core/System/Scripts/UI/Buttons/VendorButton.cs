@@ -7,7 +7,9 @@ using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 namespace AnyRPG {
-    public class VendorButton : HighlightButton {
+    public class VendorButton : NavigableElement {
+
+        [Header("Vendor Button")]
 
         [SerializeField]
         protected Image backGroundImage = null;
@@ -43,6 +45,7 @@ namespace AnyRPG {
         //protected InventoryManager inventoryManager = null;
         protected MessageFeedManager messageFeedManager = null;
         protected CurrencyConverter currencyConverter = null;
+        protected UIManager uIManager = null;
 
         public bool BuyBackButton { get => buyBackButton; set => buyBackButton = value; }
 
@@ -60,6 +63,12 @@ namespace AnyRPG {
             systemConfigurationManager = systemGameManager.SystemConfigurationManager;
             messageFeedManager = systemGameManager.UIManager.MessageFeedManager;
             currencyConverter = systemGameManager.CurrencyConverter;
+            uIManager = systemGameManager.UIManager;
+        }
+
+        public override void SetController(UINavigationController uINavigationController) {
+            base.SetController(uINavigationController);
+            currencyBarController.SetToolTipTransform(owner.transform as RectTransform);
         }
 
         public void AddItem(VendorItem vendorItem, bool buyBackButton = false) {
@@ -161,6 +170,8 @@ namespace AnyRPG {
                         (tmpItem as CurrencyItem).Use();
                     }
                 }
+            } else {
+                messageFeedManager.WriteMessage("You cannot afford " + vendorItem.Item.DisplayName);
             }
         }
 
@@ -188,6 +199,12 @@ namespace AnyRPG {
                 return;
             }
             CheckMouse();
+        }
+
+        public virtual void CheckMouse() {
+            if (UIManager.MouseInRect(transform as RectTransform)) {
+                uIManager.HideToolTip();
+            }
         }
 
         private void SellItem() {

@@ -112,7 +112,7 @@ namespace AnyRPG {
             controlsManager = systemGameManager.ControlsManager;
         }
 
-        public void SetController(UINavigationController uINavigationController) {
+        public virtual void SetController(UINavigationController uINavigationController) {
             owner = uINavigationController;
         }
 
@@ -199,7 +199,7 @@ namespace AnyRPG {
             if (highlightBackgroundOnSelect == true) {
                 HighlightBackground();
             }
-            if (controlsManager.GamePadModeActive == true) {
+            if (controlsManager.GamePadInputActive == true) {
                 HighlightOutline();
             }
             selected = true;
@@ -235,7 +235,7 @@ namespace AnyRPG {
             if (highlightImage != null) {
                 if (navigationControllerFocused == true
                     || useUnfocusedColor == false
-                    || controlsManager.GamePadModeActive == false) {
+                    || controlsManager.GamePadInputActive == false) {
                     //highlightImage.color = highlightImageColor * selectedColor;
                     highlightImage.color = highlightImageColor;
                 } else {
@@ -287,7 +287,7 @@ namespace AnyRPG {
             } else {
                 if (highlightImage.color != hiddenColor
                     && useUnfocusedColor == true
-                    && controlsManager.GamePadModeActive == true) {
+                    && controlsManager.GamePadInputActive == true) {
                     highlightImage.color = unFocusedColor;
                 }
             }

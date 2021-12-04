@@ -172,6 +172,7 @@ namespace AnyRPG {
             //Debug.Log("CharacterCreatorPanel.OpenAppearanceOptions()");
 
             // reset areas and buttons
+            appearanceButton.HighlightBackground();
             uINavigationControllers[0].UnHightlightButtons(appearanceButton);
             CloseColorsOptionsArea();
             CloseSexOptionsArea();
@@ -182,6 +183,8 @@ namespace AnyRPG {
 
             // get valid appearance options values
             CheckAppearance();
+
+            uINavigationControllers[1].UpdateNavigationList();
         }
 
         public void CloseAppearanceOptionsArea() {
@@ -193,6 +196,7 @@ namespace AnyRPG {
             //Debug.Log("CharacterCreatorPanel.OpenColorsOptionsArea()");
 
             // reset areas and buttons
+            colorsButton.HighlightBackground();
             uINavigationControllers[0].UnHightlightButtons(colorsButton);
             CloseAppearanceOptionsArea();
             CloseSexOptionsArea();
@@ -200,7 +204,7 @@ namespace AnyRPG {
             // configure colors options display
             //colorsButton.Select();
             colorsOptionsArea.gameObject.SetActive(true);
-            hairColorsButton.HighlightBackground();
+            //hairColorsButton.HighlightBackground();
             OpenHairColorsOptionsArea();
         }
 
@@ -218,6 +222,7 @@ namespace AnyRPG {
             //Debug.Log("CharacterCreatorPanel.OpenSexOptionsArea()");
 
             // reset areas and buttons
+            sexButton.HighlightBackground();
             uINavigationControllers[0].UnHightlightButtons(sexButton);
             CloseColorsOptionsArea();
             CloseAppearanceOptionsArea();
@@ -237,6 +242,7 @@ namespace AnyRPG {
             //Debug.Log("CharacterAppearancePanel.OpenEyesColorsOptionsArea()");
 
             CloseColorsOptionsAreas();
+            eyesColorsButton.HighlightBackground();
             uINavigationControllers[2].UnHightlightButtons(eyesColorsButton);
             //UnHighlightColorsButtons();
 
@@ -261,6 +267,7 @@ namespace AnyRPG {
             //Debug.Log("CharacterCreatorPanel.OpenSkinColorsOptionsArea()");
 
             CloseColorsOptionsAreas();
+            skinColorsButton.HighlightBackground();
             uINavigationControllers[2].UnHightlightButtons(skinColorsButton);
             //UnHighlightColorsButtons();
 
@@ -278,6 +285,7 @@ namespace AnyRPG {
             //Debug.Log("CharacterCreatorPanel.OpenHairColorsOptionsArea()");
 
             CloseColorsOptionsAreas();
+            hairColorsButton.HighlightBackground();
             uINavigationControllers[2].UnHightlightButtons(hairColorsButton);
             //UnHighlightColorsButtons();
 
@@ -435,6 +443,7 @@ namespace AnyRPG {
             }
             femaleRecipe = characterCreatorManager.PreviewUnitController.UnitModelController.UMAModelController.GetAppearanceString();
             femaleButton.UnHighlightBackground();
+            maleButton.HighlightBackground();
             //maleButton.HighlightBackground();
             if (maleRecipe != string.Empty) {
                 //Debug.Log("CharacterCreatorPanel.SetFemale(): maleRecipe != string.Empty");
@@ -461,6 +470,7 @@ namespace AnyRPG {
             //maleRecipe = characterCreatorManager.PreviewUnitController.UnitModelController.UMAModelController.DynamicCharacterAvatar.GetCurrentRecipe();
             maleRecipe = characterCreatorManager.PreviewUnitController.UnitModelController.UMAModelController.GetAppearanceString();
             maleButton.UnHighlightBackground();
+            femaleButton.HighlightBackground();
             //femaleButton.Select();
             if (femaleRecipe != string.Empty) {
                 //Debug.Log("CharacterCreatorPanel.SetFemale(): femaleRecipe != string.Empty");

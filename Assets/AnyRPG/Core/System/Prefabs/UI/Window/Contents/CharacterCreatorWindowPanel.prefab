@@ -175,6 +175,7 @@ MonoBehaviour:
   highlightImageColor: {r: 0.64705884, g: 0.64705884, b: 0.64705884, a: 0.6509804}
   useUnfocusedColor: 1
   unFocusedColor: {r: 1, g: 1, b: 1, a: 0.15294118}
+  rectTransform: {fileID: 0}
   text: {fileID: 0}
   ignoreSystemImageTint: 0
   highlightButton: {fileID: 0}
@@ -1260,12 +1261,13 @@ MonoBehaviour:
   highlightOutlineColor: {r: 0.64705884, g: 0.64705884, b: 0.64705884, a: 0.6509804}
   highlightImage: {fileID: 5489131555173713532}
   highlightBackgroundOnSelect: 0
-  highlightBackgroundOnInteract: 1
+  highlightBackgroundOnInteract: 0
   unHighlightBackgroundOnUnFocus: 0
   unHighlightBackgroundOnLeave: 0
   highlightImageColor: {r: 0.64705884, g: 0.64705884, b: 0.64705884, a: 0.6509804}
   useUnfocusedColor: 1
   unFocusedColor: {r: 1, g: 1, b: 1, a: 0.15294118}
+  rectTransform: {fileID: 0}
   text: {fileID: 3021315750522845811}
   ignoreSystemImageTint: 0
   highlightButton: {fileID: 61595287914135867}
@@ -1560,12 +1562,13 @@ MonoBehaviour:
   highlightOutlineColor: {r: 0.64705884, g: 0.64705884, b: 0.64705884, a: 0.6509804}
   highlightImage: {fileID: 21992524926618046}
   highlightBackgroundOnSelect: 0
-  highlightBackgroundOnInteract: 1
+  highlightBackgroundOnInteract: 0
   unHighlightBackgroundOnUnFocus: 0
   unHighlightBackgroundOnLeave: 0
   highlightImageColor: {r: 0.64705884, g: 0.64705884, b: 0.64705884, a: 0.6509804}
   useUnfocusedColor: 1
   unFocusedColor: {r: 1, g: 1, b: 1, a: 0.15294118}
+  rectTransform: {fileID: 0}
   text: {fileID: 5395301221348709482}
   ignoreSystemImageTint: 0
   highlightButton: {fileID: 5399254022401985575}
@@ -2216,12 +2219,13 @@ MonoBehaviour:
   highlightOutlineColor: {r: 0.64705884, g: 0.64705884, b: 0.64705884, a: 0.6509804}
   highlightImage: {fileID: 5774120881641313349}
   highlightBackgroundOnSelect: 0
-  highlightBackgroundOnInteract: 1
+  highlightBackgroundOnInteract: 0
   unHighlightBackgroundOnUnFocus: 0
   unHighlightBackgroundOnLeave: 0
   highlightImageColor: {r: 0.64705884, g: 0.64705884, b: 0.64705884, a: 0.6509804}
   useUnfocusedColor: 1
   unFocusedColor: {r: 1, g: 1, b: 1, a: 0.15294118}
+  rectTransform: {fileID: 0}
   text: {fileID: 4672081837620451757}
   ignoreSystemImageTint: 0
   highlightButton: {fileID: 8249978887710042811}
@@ -2337,6 +2341,7 @@ MonoBehaviour:
   highlightImageColor: {r: 0.64705884, g: 0.64705884, b: 0.64705884, a: 0.6509804}
   useUnfocusedColor: 1
   unFocusedColor: {r: 1, g: 1, b: 1, a: 0.15294118}
+  rectTransform: {fileID: 0}
   text: {fileID: 0}
   ignoreSystemImageTint: 0
   highlightButton: {fileID: 0}
@@ -2521,6 +2526,7 @@ MonoBehaviour:
   highlightImageColor: {r: 0.64705884, g: 0.64705884, b: 0.64705884, a: 0.6509804}
   useUnfocusedColor: 1
   unFocusedColor: {r: 1, g: 1, b: 1, a: 0.15294118}
+  rectTransform: {fileID: 0}
   text: {fileID: 6687459244659774974}
   ignoreSystemImageTint: 0
   highlightButton: {fileID: 3944649277116023657}
@@ -4382,9 +4388,11 @@ MonoBehaviour:
   addToWindowStack: 1
   userCloseable: 1
   focusFirstButtonOnOpen: 1
+  focusCurrentButtonOnOpen: 0
   focusActiveSubPanel: 0
   uINavigationControllers: []
   subPanels: []
+  hintBarController: {fileID: 0}
   previewCameraController: {fileID: 262187867039265907}
 --- !u!1 &6086304705466696772
 GameObject:
@@ -4544,6 +4552,7 @@ MonoBehaviour:
   addToWindowStack: 0
   userCloseable: 0
   focusFirstButtonOnOpen: 0
+  focusCurrentButtonOnOpen: 0
   focusActiveSubPanel: 0
   uINavigationControllers:
   - {fileID: 4508740306659092817}
@@ -4554,6 +4563,7 @@ MonoBehaviour:
   - {fileID: 3267013978131105461}
   - {fileID: 527584024516182966}
   subPanels: []
+  hintBarController: {fileID: 0}
   mainButtonsArea: {fileID: 4139585555546893791}
   mainNoOptionsArea: {fileID: 7929148980942733379}
   appearanceButton: {fileID: 90832302406773785}
@@ -5021,12 +5031,13 @@ MonoBehaviour:
   highlightOutlineColor: {r: 0.64705884, g: 0.64705884, b: 0.64705884, a: 0.6509804}
   highlightImage: {fileID: 7622860795147420620}
   highlightBackgroundOnSelect: 0
-  highlightBackgroundOnInteract: 1
+  highlightBackgroundOnInteract: 0
   unHighlightBackgroundOnUnFocus: 0
   unHighlightBackgroundOnLeave: 0
   highlightImageColor: {r: 0.64705884, g: 0.64705884, b: 0.64705884, a: 0.6509804}
   useUnfocusedColor: 1
   unFocusedColor: {r: 1, g: 1, b: 1, a: 0.15294118}
+  rectTransform: {fileID: 0}
   text: {fileID: 6302751514942274697}
   ignoreSystemImageTint: 0
   highlightButton: {fileID: 210570892559470917}
@@ -5408,12 +5419,13 @@ MonoBehaviour:
   highlightOutlineColor: {r: 0.64705884, g: 0.64705884, b: 0.64705884, a: 0.6509804}
   highlightImage: {fileID: 406111628854014778}
   highlightBackgroundOnSelect: 0
-  highlightBackgroundOnInteract: 1
+  highlightBackgroundOnInteract: 0
   unHighlightBackgroundOnUnFocus: 0
   unHighlightBackgroundOnLeave: 0
   highlightImageColor: {r: 0.64705884, g: 0.64705884, b: 0.64705884, a: 0.6509804}
   useUnfocusedColor: 1
   unFocusedColor: {r: 1, g: 1, b: 1, a: 0.15294118}
+  rectTransform: {fileID: 0}
   text: {fileID: 2377185802186799064}
   ignoreSystemImageTint: 0
   highlightButton: {fileID: 6022593038023750415}
@@ -5886,11 +5898,13 @@ MonoBehaviour:
   addToWindowStack: 1
   userCloseable: 1
   focusFirstButtonOnOpen: 0
+  focusCurrentButtonOnOpen: 0
   focusActiveSubPanel: 1
   uINavigationControllers:
   - {fileID: 7350695298376983607}
   subPanels:
   - {fileID: 2832531851620986278}
+  hintBarController: {fileID: 0}
   characterPreviewPanel: {fileID: 9188048529603247100}
   umaCharacterPanel: {fileID: 2832531851620986278}
   saveButton: {fileID: 3625730046546142198}
@@ -5949,12 +5963,13 @@ MonoBehaviour:
   highlightOutlineColor: {r: 0.64705884, g: 0.64705884, b: 0.64705884, a: 0.6509804}
   highlightImage: {fileID: 8531473689564264976}
   highlightBackgroundOnSelect: 0
-  highlightBackgroundOnInteract: 1
+  highlightBackgroundOnInteract: 0
   unHighlightBackgroundOnUnFocus: 0
   unHighlightBackgroundOnLeave: 0
   highlightImageColor: {r: 0.64705884, g: 0.64705884, b: 0.64705884, a: 0.6509804}
   useUnfocusedColor: 1
   unFocusedColor: {r: 1, g: 1, b: 1, a: 0.15294118}
+  rectTransform: {fileID: 0}
   text: {fileID: 4411132904074826567}
   ignoreSystemImageTint: 0
   highlightButton: {fileID: 8374933615811647983}
@@ -6250,12 +6265,13 @@ MonoBehaviour:
   highlightOutlineColor: {r: 0.64705884, g: 0.64705884, b: 0.64705884, a: 0.6509804}
   highlightImage: {fileID: 2144149537023507844}
   highlightBackgroundOnSelect: 0
-  highlightBackgroundOnInteract: 1
+  highlightBackgroundOnInteract: 0
   unHighlightBackgroundOnUnFocus: 0
   unHighlightBackgroundOnLeave: 0
   highlightImageColor: {r: 0.64705884, g: 0.64705884, b: 0.64705884, a: 0.6509804}
   useUnfocusedColor: 1
   unFocusedColor: {r: 1, g: 1, b: 1, a: 0.15294118}
+  rectTransform: {fileID: 0}
   text: {fileID: 8534207619209481319}
   ignoreSystemImageTint: 0
   highlightButton: {fileID: 7084014529101520795}
@@ -6711,6 +6727,7 @@ MonoBehaviour:
   highlightImageColor: {r: 0.64705884, g: 0.64705884, b: 0.64705884, a: 0.6509804}
   useUnfocusedColor: 1
   unFocusedColor: {r: 1, g: 1, b: 1, a: 0.15294118}
+  rectTransform: {fileID: 0}
   text: {fileID: 0}
   ignoreSystemImageTint: 0
   highlightButton: {fileID: 0}
@@ -6895,6 +6912,7 @@ MonoBehaviour:
   highlightImageColor: {r: 0.64705884, g: 0.64705884, b: 0.64705884, a: 0.6509804}
   useUnfocusedColor: 1
   unFocusedColor: {r: 1, g: 1, b: 1, a: 0.15294118}
+  rectTransform: {fileID: 0}
   text: {fileID: 8191205829851840318}
   ignoreSystemImageTint: 0
   highlightButton: {fileID: 8533329821663375142}
@@ -7462,12 +7480,13 @@ MonoBehaviour:
   highlightOutlineColor: {r: 0.64705884, g: 0.64705884, b: 0.64705884, a: 0.6509804}
   highlightImage: {fileID: 4661182975478725317}
   highlightBackgroundOnSelect: 0
-  highlightBackgroundOnInteract: 1
+  highlightBackgroundOnInteract: 0
   unHighlightBackgroundOnUnFocus: 0
   unHighlightBackgroundOnLeave: 0
   highlightImageColor: {r: 0.64705884, g: 0.64705884, b: 0.64705884, a: 0.6509804}
   useUnfocusedColor: 1
   unFocusedColor: {r: 1, g: 1, b: 1, a: 0.15294118}
+  rectTransform: {fileID: 0}
   text: {fileID: 7052817620019622183}
   ignoreSystemImageTint: 0
   highlightButton: {fileID: 2423840114536288936}

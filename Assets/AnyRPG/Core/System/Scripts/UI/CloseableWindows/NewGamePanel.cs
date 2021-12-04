@@ -344,6 +344,7 @@ namespace AnyRPG {
             specializationPanel.ShowOptionButtons();
         }
 
+        /*
         protected void UnHightlightButtons(HighlightButton skipButton = null) {
             if (skipButton != detailsButton) {
                 detailsButton.UnHighlightBackground();
@@ -364,6 +365,7 @@ namespace AnyRPG {
                 specializationButton.UnHighlightBackground();
             }
         }
+        */
 
         private void ClosePanels() {
             characterPanel.HidePanel();
@@ -380,14 +382,18 @@ namespace AnyRPG {
             ClosePanels();
             detailsPanel.ShowPanel();
             SetOpenSubPanel(detailsPanel);
-            UnHightlightButtons(detailsButton);
+
+            detailsButton.HighlightBackground();
+            uINavigationControllers[0].UnHightlightButtons(detailsButton);
         }
 
         public void OpenClassPanel() {
             ClosePanels();
             classPanel.ShowPanel();
             SetOpenSubPanel(classPanel);
-            UnHightlightButtons(classButton);
+
+            classButton.HighlightBackground();
+            uINavigationControllers[0].UnHightlightButtons(classButton);
         }
 
         public void OpenCharacterPanel() {
@@ -396,14 +402,18 @@ namespace AnyRPG {
             ClosePanels();
             characterPanel.ShowPanel();
             SetOpenSubPanel(characterPanel);
-            UnHightlightButtons(characterButton);
+
+            characterButton.HighlightBackground();
+            uINavigationControllers[0].UnHightlightButtons(characterButton);
         }
 
         public void OpenAppearancePanel() {
             ClosePanels();
             umaCharacterPanel.ShowPanel();
             SetOpenSubPanel(umaCharacterPanel);
-            UnHightlightButtons(appearanceButton);
+
+            appearanceButton.HighlightBackground();
+            uINavigationControllers[0].UnHightlightButtons(appearanceButton);
         }
 
         public void OpenFactionPanel() {
@@ -412,7 +422,9 @@ namespace AnyRPG {
             ClosePanels();
             factionPanel.ShowPanel();
             SetOpenSubPanel(factionPanel);
-            UnHightlightButtons(factionButton);
+
+            factionButton.HighlightBackground();
+            uINavigationControllers[0].UnHightlightButtons(factionButton);
         }
 
         public void OpenSpecializationPanel() {
@@ -422,7 +434,9 @@ namespace AnyRPG {
                 specializationPanel.ShowPanel();
                 SetOpenSubPanel(specializationPanel);
             }
-            UnHightlightButtons(specializationButton);
+
+            specializationButton.HighlightBackground();
+            uINavigationControllers[0].UnHightlightButtons(specializationButton);
         }
 
         public void SetCharacterProperties() {

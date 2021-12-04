@@ -64,7 +64,7 @@ namespace AnyRPG {
             if (characterCreatorManager.PreviewUnitController?.UnitModelController?.ModelReady == true) {
                 mainButtonsArea.SetActive(true);
                 OpenAppearanceOptionsArea();
-                appearanceButton.HighlightBackground();
+                //appearanceButton.HighlightBackground();
                 InitializeSexButtons();
             }
         }
@@ -75,21 +75,27 @@ namespace AnyRPG {
             SetupOptions();
         }
 
+        /*
         public override void OpenAppearanceOptionsArea() {
             base.OpenAppearanceOptionsArea();
             uINavigationControllers[1].UpdateNavigationList();
             //SetNavigationController(uINavigationControllers[1]);
         }
+        */
 
+        /*
         public override void OpenColorsOptionsArea() {
             base.OpenColorsOptionsArea();
             //SetNavigationController(uINavigationControllers[2]);
         }
+        */
 
+        /*
         public override void OpenSexOptionsArea() {
             base.OpenSexOptionsArea();
             //SetNavigationController(uINavigationControllers[3]);
         }
+        */
 
     }
 
