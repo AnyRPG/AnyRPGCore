@@ -279,12 +279,12 @@ namespace AnyRPG {
             interactionManager.CurrentInteractable = null;
         }
 
-        public override void ReceiveOpenWindowNotification() {
-            //Debug.Log("InteractionPanelUI.ReceiveOpenWindowNotification()");
+        public override void ProcessOpenWindowNotification() {
+            //Debug.Log("InteractionPanelUI.ProcessOpenWindowNotification()");
 
             // do this last or it could close the window before we set the title.  it just calls the onopenwindowhandler, so nothing that needs to be done before the 2 above lines
             // ??? ??? IS THIS STILL TRUE?  WINDOW STACKS ARE IN WRONG ORDER BECAUSE OF THIS.  MOVED FROM BOTTOM TO TOP TO TEST
-            base.ReceiveOpenWindowNotification();
+            base.ProcessOpenWindowNotification();
 
             SetBackGroundColor(new Color32(0, 0, 0, (byte)(int)(PlayerPrefs.GetFloat("PopupWindowOpacity") * 255)));
 
@@ -306,7 +306,7 @@ namespace AnyRPG {
 
             // do this last or it could close the window before we set the title.  it just calls the onopenwindowhandler, so nothing that needs to be done before the 2 above lines
             // ??? ??? IS THIS STILL TRUE?  WINDOW STACKS ARE IN WRONG ORDER BECAUSE OF THIS.  MOVED FROM BOTTOM TO TOP TO TEST
-            //base.ReceiveOpenWindowNotification();
+            //base.ProcessOpenWindowNotification();
         }
     }
 

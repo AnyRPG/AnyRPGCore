@@ -72,6 +72,7 @@ MonoBehaviour:
   highlightImageColor: {r: 0.64705884, g: 0.64705884, b: 0.64705884, a: 0.6509804}
   useUnfocusedColor: 1
   unFocusedColor: {r: 1, g: 1, b: 1, a: 0.15294118}
+  rectTransform: {fileID: 0}
   text: {fileID: 5497043607182032032}
   ignoreSystemImageTint: 0
   highlightButton: {fileID: 1735231549690523777}
@@ -685,6 +686,7 @@ MonoBehaviour:
   highlightImageColor: {r: 0.64705884, g: 0.64705884, b: 0.64705884, a: 0.6509804}
   useUnfocusedColor: 1
   unFocusedColor: {r: 1, g: 1, b: 1, a: 0.15294118}
+  rectTransform: {fileID: 0}
   text: {fileID: 2274448151439949596}
   ignoreSystemImageTint: 0
   highlightButton: {fileID: 4590375624734521441}
@@ -1056,9 +1058,11 @@ MonoBehaviour:
   addToWindowStack: 0
   userCloseable: 0
   focusFirstButtonOnOpen: 0
+  focusCurrentButtonOnOpen: 0
   focusActiveSubPanel: 0
   uINavigationControllers: []
   subPanels: []
+  hintBarController: {fileID: 0}
   previewCameraController: {fileID: 8371723547566795880}
 --- !u!1 &3920571842168694222
 GameObject:
@@ -1395,6 +1399,7 @@ MonoBehaviour:
   highlightImageColor: {r: 0.64705884, g: 0.64705884, b: 0.64705884, a: 0.6509804}
   useUnfocusedColor: 1
   unFocusedColor: {r: 1, g: 1, b: 1, a: 0.15294118}
+  rectTransform: {fileID: 0}
   text: {fileID: 9142068417513465727}
   ignoreSystemImageTint: 0
   highlightButton: {fileID: 1933671681191448607}
@@ -1745,6 +1750,7 @@ MonoBehaviour:
   highlightImageColor: {r: 0.64705884, g: 0.64705884, b: 0.64705884, a: 0.6509804}
   useUnfocusedColor: 1
   unFocusedColor: {r: 1, g: 1, b: 1, a: 0.15294118}
+  rectTransform: {fileID: 0}
   text: {fileID: 2752978317281341979}
   ignoreSystemImageTint: 0
   highlightButton: {fileID: 935794945949856974}
@@ -2419,7 +2425,7 @@ MonoBehaviour:
   - {fileID: 1126385356333861572}
   acceptController: {fileID: 1126385356333861572}
   scrollRect: {fileID: 4692299217850708635}
-  updateActiveListOnOpen: 1
+  updateActiveListOnOpen: 0
   pruneInactiveElements: 1
   navigableButtons: []
 --- !u!1 &6529658237067183697
@@ -2644,11 +2650,13 @@ MonoBehaviour:
   addToWindowStack: 1
   userCloseable: 1
   focusFirstButtonOnOpen: 0
+  focusCurrentButtonOnOpen: 0
   focusActiveSubPanel: 0
   uINavigationControllers:
   - {fileID: 4380524380536158505}
   - {fileID: 1126385356333861572}
   subPanels: []
+  hintBarController: {fileID: 0}
   characterPreviewPanel: {fileID: 580873345184703463}
   buttonPrefab: {fileID: 3408690417865459949, guid: 564e273fe37306a40bd90e88a18eb21c,
     type: 3}
@@ -3022,6 +3030,7 @@ MonoBehaviour:
   highlightImageColor: {r: 0.64705884, g: 0.64705884, b: 0.64705884, a: 0.6509804}
   useUnfocusedColor: 1
   unFocusedColor: {r: 1, g: 1, b: 1, a: 0.15294118}
+  rectTransform: {fileID: 0}
   text: {fileID: 2074685711674633147}
   ignoreSystemImageTint: 0
   highlightButton: {fileID: 9018499298044460084}

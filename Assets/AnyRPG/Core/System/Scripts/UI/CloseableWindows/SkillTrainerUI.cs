@@ -247,9 +247,9 @@ namespace AnyRPG {
             }
         }
 
-        public override void ReceiveOpenWindowNotification() {
+        public override void ProcessOpenWindowNotification() {
             //Debug.Log("SkillTrainerUI.OnOpenWindow()");
-            base.ReceiveOpenWindowNotification();
+            base.ProcessOpenWindowNotification();
 
             SetBackGroundColor(new Color32(0, 0, 0, (byte)(int)(PlayerPrefs.GetFloat("PopupWindowOpacity") * 255)));
 

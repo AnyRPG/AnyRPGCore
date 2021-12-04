@@ -114,9 +114,9 @@ namespace AnyRPG {
             OnCloseWindow(this);
         }
 
-        public override void ReceiveOpenWindowNotification() {
-            //Debug.Log("LootUI.ReceiveOpenWindowNotification()");
-            base.ReceiveOpenWindowNotification();
+        public override void ProcessOpenWindowNotification() {
+            //Debug.Log("LootUI.ProcessOpenWindowNotification()");
+            base.ProcessOpenWindowNotification();
             SetBackGroundColor(new Color32(0, 0, 0, (byte)(int)(PlayerPrefs.GetFloat("PopupWindowOpacity") * 255)));
             BroadcastPageCountUpdate();
         }

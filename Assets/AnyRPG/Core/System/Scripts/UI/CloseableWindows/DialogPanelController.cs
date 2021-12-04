@@ -201,9 +201,9 @@ namespace AnyRPG {
             }
         }
 
-        public override void ReceiveOpenWindowNotification() {
+        public override void ProcessOpenWindowNotification() {
             //Debug.Log("DialogPanelController.OnOpenWindow()");
-            base.ReceiveOpenWindowNotification();
+            base.ProcessOpenWindowNotification();
             SetBackGroundColor(new Color32(0, 0, 0, (byte)(int)(PlayerPrefs.GetFloat("PopupWindowOpacity") * 255)));
 
             // these go first or they will squish the text of the continue button out of place

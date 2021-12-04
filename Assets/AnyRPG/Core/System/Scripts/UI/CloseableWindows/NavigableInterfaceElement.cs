@@ -39,9 +39,9 @@ namespace AnyRPG {
             }
         }
 
-        public override void ReceiveOpenWindowNotification() {
-            //Debug.Log(gameObject.name + ".NavigableInterfaceElement.ReceiveOpenWindowNotification()");
-            base.ReceiveOpenWindowNotification();
+        public override void ProcessOpenWindowNotification() {
+            //Debug.Log(gameObject.name + ".NavigableInterfaceElement.ProcessOpenWindowNotification()");
+            base.ProcessOpenWindowNotification();
             if (currentNavigationController != null) {
                 currentNavigationController.UnFocus();
             }

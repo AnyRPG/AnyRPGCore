@@ -72,8 +72,8 @@ namespace AnyRPG {
         }
         */
 
-        public override void ReceiveOpenWindowNotification() {
-            base.ReceiveOpenWindowNotification();
+        public override void ProcessOpenWindowNotification() {
+            base.ProcessOpenWindowNotification();
             uINavigationControllers[0].FocusCurrentButton();
         }
 

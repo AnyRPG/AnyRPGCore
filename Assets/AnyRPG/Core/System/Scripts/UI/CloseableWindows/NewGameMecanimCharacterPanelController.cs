@@ -61,9 +61,9 @@ namespace AnyRPG {
             OnCloseWindow(this);
         }
 
-        public override void ReceiveOpenWindowNotification() {
-            //Debug.Log("NewGameMecanimCharacterPanelController.ReceiveOpenWindowNotification()");
-            base.ReceiveOpenWindowNotification();
+        public override void ProcessOpenWindowNotification() {
+            //Debug.Log("NewGameMecanimCharacterPanelController.ProcessOpenWindowNotification()");
+            base.ProcessOpenWindowNotification();
 
         }
         */

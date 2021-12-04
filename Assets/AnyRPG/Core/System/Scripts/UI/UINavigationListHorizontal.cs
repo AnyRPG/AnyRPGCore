@@ -9,7 +9,7 @@ namespace AnyRPG {
     public class UINavigationListHorizontal : UINavigationController {
 
         public override void FocusCurrentButton() {
-            //Debug.Log(gameObject.name + ".UINavigationListHorizontal.FocusCurrentButton()");
+            Debug.Log(gameObject.name + ".UINavigationListHorizontal.FocusCurrentButton()");
             base.FocusCurrentButton();
             if (activeNavigableButtons.Count == 0) {
                 return;
@@ -18,7 +18,7 @@ namespace AnyRPG {
                 currentIndex = 0;
             }
             currentNavigableElement = activeNavigableButtons[currentIndex];
-            currentNavigableElement.Select();
+            SelectCurrentNavigableElement();
         }
 
         public override void ProcessLeftButton() {

@@ -24,10 +24,10 @@ namespace AnyRPG {
             OnCloseWindow(this);
         }
 
-        public override void ReceiveOpenWindowNotification() {
-            //Debug.Log("UMACharacterEditorPanelController.ReceiveOpenWindowNotification()");
-            base.ReceiveOpenWindowNotification();
-            uINavigationControllers[0].FocusCurrentButton();
+        public override void ProcessOpenWindowNotification() {
+            //Debug.Log("UMACharacterEditorPanelController.ProcessOpenWindowNotification()");
+            base.ProcessOpenWindowNotification();
+            //uINavigationControllers[0].FocusCurrentButton();
         }
 
         public void HidePanel() {
@@ -66,6 +66,7 @@ namespace AnyRPG {
                 OpenAppearanceOptionsArea();
                 //appearanceButton.HighlightBackground();
                 InitializeSexButtons();
+                uINavigationControllers[0].FocusCurrentButton();
             }
         }
 

@@ -54,8 +54,8 @@ namespace AnyRPG {
             OnCloseWindow(this);
         }
 
-        public override void ReceiveOpenWindowNotification() {
-            //Debug.Log("CharacterPreviewPanelController.ReceiveOpenWindowNotification()");
+        public override void ProcessOpenWindowNotification() {
+            //Debug.Log("CharacterPreviewPanelController.ProcessOpenWindowNotification()");
             windowOpened = true;
             characterReady = false;
             characterCreatorManager.OnTargetCreated += HandleTargetCreated;

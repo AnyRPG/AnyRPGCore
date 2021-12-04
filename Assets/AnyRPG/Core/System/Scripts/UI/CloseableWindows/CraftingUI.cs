@@ -286,9 +286,9 @@ namespace AnyRPG {
             SelectedRecipeScript = null;
         }
 
-        public override void ReceiveOpenWindowNotification() {
-            //Debug.Log("CraftingUI.ReceiveOpenWindowNotification()");
-            base.ReceiveOpenWindowNotification();
+        public override void ProcessOpenWindowNotification() {
+            //Debug.Log("CraftingUI.ProcessOpenWindowNotification()");
+            base.ProcessOpenWindowNotification();
             SetBackGroundColor(new Color32(0, 0, 0, (byte)(int)(PlayerPrefs.GetFloat("PopupWindowOpacity") * 255)));
 
             DeactivateButtons();

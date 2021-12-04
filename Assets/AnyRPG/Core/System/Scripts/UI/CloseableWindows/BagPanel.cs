@@ -165,8 +165,8 @@ namespace AnyRPG {
 
         }
 
-        public override void ReceiveOpenWindowNotification() {
-            base.ReceiveOpenWindowNotification();
+        public override void ProcessOpenWindowNotification() {
+            base.ProcessOpenWindowNotification();
         }
 
         public override void ReceiveClosedWindowNotification() {

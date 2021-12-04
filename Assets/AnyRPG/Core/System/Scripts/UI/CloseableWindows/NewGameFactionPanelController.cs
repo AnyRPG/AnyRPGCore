@@ -205,9 +205,9 @@ namespace AnyRPG {
             abilityRewardIcons.Clear();
         }
 
-        public override void ReceiveOpenWindowNotification() {
-            //Debug.Log("NewGameFactionPanelController.ReceiveOpenWindowNotification()");
-            base.ReceiveOpenWindowNotification();
+        public override void ProcessOpenWindowNotification() {
+            //Debug.Log("NewGameFactionPanelController.ProcessOpenWindowNotification()");
+            base.ProcessOpenWindowNotification();
             abilityLabel.SetActive(false);
             traitLabel.SetActive(false);
 

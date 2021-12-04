@@ -132,12 +132,12 @@ namespace AnyRPG {
             ClearVendorCollections();
         }
 
-        public override void ReceiveOpenWindowNotification() {
-            //Debug.Log("VendorUI.ReceiveOpenWindowNotification()");
+        public override void ProcessOpenWindowNotification() {
+            //Debug.Log("VendorUI.ProcessOpenWindowNotification()");
             //SetBackGroundColor(new Color32(0, 0, 0, (byte)(int)(PlayerPrefs.GetFloat("PopupWindowOpacity") * 255)));
             ClearButtons();
             ClearPages();
-            base.ReceiveOpenWindowNotification();
+            base.ProcessOpenWindowNotification();
             LoadPage(0);
             OnPageCountUpdate(false);
         }

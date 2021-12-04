@@ -546,8 +546,8 @@ namespace AnyRPG {
 
         }
 
-        public override void ReceiveOpenWindowNotification() {
-            base.ReceiveOpenWindowNotification();
+        public override void ProcessOpenWindowNotification() {
+            base.ProcessOpenWindowNotification();
             SetBackGroundColor(new Color32(0, 0, 0, (byte)(int)(PlayerPrefs.GetFloat("PopupWindowOpacity") * 255)));
 
             // clear first because open window handler could show a description
@@ -559,7 +559,6 @@ namespace AnyRPG {
             if (interactable != null) {
                 uIManager.questGiverWindow.SetWindowTitle(interactable.DisplayName + " (Quests)");
             } else {
-                //Debug.Log("QuestGiverUI.ReceiveOpenWindowNotification() interactable is null");
                 // interactable is null if this quest is started from an item in the inventory
                 // in that case it doesn't make sense to show a questGiver name
                 uIManager.questGiverWindow.SetWindowTitle("");

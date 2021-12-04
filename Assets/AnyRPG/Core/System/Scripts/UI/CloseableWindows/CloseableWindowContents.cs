@@ -34,6 +34,7 @@ namespace AnyRPG {
         [SerializeField]
         protected bool focusCurrentButtonOnOpen = false;
 
+        [Tooltip("When leaving a navigation controller for a panel (parent window) choose the open sub panel in that window")]
         [SerializeField]
         protected bool focusActiveSubPanel = false;
 
@@ -104,6 +105,7 @@ namespace AnyRPG {
                     uINavigationController.Configure(systemGameManager);
                     uINavigationController.SetOwner(this);
                 }
+                Debug.Log(gameObject.name + ".CloseableWindowContents.Configure() setting current navigation controller");
                 currentNavigationController = uINavigationControllers[0];
             }
             CreateEventSubscriptions();
@@ -115,6 +117,12 @@ namespace AnyRPG {
             windowManager = systemGameManager.WindowManager;
             controlsManager = systemGameManager.ControlsManager;
             inputManager = systemGameManager.InputManager;
+        }
+
+        public bool HasOpenSubPanel() {
+            //Debug.Log(gameObject.name + ".CloseableWindowContents.HasOpenSubPanel()");
+
+            return openSubPanel != null;
         }
 
         public virtual void Init() {
@@ -132,7 +140,7 @@ namespace AnyRPG {
         }
 
         public virtual void SetActiveSubPanel(CloseableWindowContents closeableWindowContents, bool focus = true) {
-            //Debug.Log(gameObject.name + ".CloseableWindowContents.SetActiveSubPanel(" + (closeableWindowContents == null ? "null" : closeableWindowContents.name) + ")");
+            Debug.Log(gameObject.name + ".CloseableWindowContents.SetActiveSubPanel(" + (closeableWindowContents == null ? "null" : closeableWindowContents.name) + ")");
             if (closeableWindowContents != null) {
                 foreach (UINavigationController uINavigationController in uINavigationControllers) {
                     uINavigationController.UnFocus();
@@ -471,7 +479,11 @@ namespace AnyRPG {
             }
         }
 
-        public virtual void ReceiveOpenWindowNotification() {
+        public virtual void ProcessOpenWindowNotification() {
+
+        }
+
+        public void ReceiveOpenWindowNotification() {
             //Debug.Log(gameObject.name + ".CloseableWindowContents.ReceiveOpenWindowNotification()");
             if (hintBarController != null) {
                 hintBarController.Hide();
@@ -496,6 +508,7 @@ namespace AnyRPG {
             } else {
                 //Debug.Log("No navigation controller for " + gameObject.name);
             }
+            ProcessOpenWindowNotification();
         }
 
         public virtual void ReceiveClosedWindowNotification() {

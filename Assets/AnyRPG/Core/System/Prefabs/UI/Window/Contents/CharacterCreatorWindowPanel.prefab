@@ -4385,9 +4385,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   backGroundImage: {fileID: 0}
   coloredUIElements: []
-  addToWindowStack: 1
-  userCloseable: 1
-  focusFirstButtonOnOpen: 1
+  addToWindowStack: 0
+  userCloseable: 0
+  focusFirstButtonOnOpen: 0
   focusCurrentButtonOnOpen: 0
   focusActiveSubPanel: 0
   uINavigationControllers: []
@@ -5897,7 +5897,7 @@ MonoBehaviour:
   coloredUIElements: []
   addToWindowStack: 1
   userCloseable: 1
-  focusFirstButtonOnOpen: 0
+  focusFirstButtonOnOpen: 1
   focusCurrentButtonOnOpen: 0
   focusActiveSubPanel: 1
   uINavigationControllers:

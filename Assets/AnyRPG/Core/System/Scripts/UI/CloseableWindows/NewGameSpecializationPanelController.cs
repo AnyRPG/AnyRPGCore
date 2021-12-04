@@ -214,9 +214,9 @@ namespace AnyRPG {
             abilityRewardIcons.Clear();
         }
 
-        public override void ReceiveOpenWindowNotification() {
+        public override void ProcessOpenWindowNotification() {
             //Debug.Log("ClassChangePanelController.OnOpenWindow()");
-            base.ReceiveOpenWindowNotification();
+            base.ProcessOpenWindowNotification();
             abilityLabel.SetActive(false);
             traitLabel.SetActive(false);
             LayoutRebuilder.ForceRebuildLayoutImmediate(abilityButtonArea.GetComponent<RectTransform>());

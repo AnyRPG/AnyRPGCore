@@ -263,10 +263,10 @@ namespace AnyRPG {
             uINavigationControllers[1].FocusCurrentButton();
         }
 
-        public override void ReceiveOpenWindowNotification() {
+        public override void ProcessOpenWindowNotification() {
             //Debug.Log("MusicPlayerUI.OnOpenWindow()");
             SetNavigationController(uINavigationControllers[0]);
-            base.ReceiveOpenWindowNotification();
+            base.ProcessOpenWindowNotification();
             SetBackGroundColor(new Color32(0, 0, 0, (byte)(int)(PlayerPrefs.GetFloat("PopupWindowOpacity") * 255)));
             DeactivateButtons();
             ClearDescription();

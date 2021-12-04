@@ -49,8 +49,8 @@ namespace AnyRPG {
             uIManager.confirmSellItemMenuWindow.CloseWindow();
         }
 
-        public override void ReceiveOpenWindowNotification() {
-            base.ReceiveOpenWindowNotification();
+        public override void ProcessOpenWindowNotification() {
+            base.ProcessOpenWindowNotification();
             item = null;
         }
 

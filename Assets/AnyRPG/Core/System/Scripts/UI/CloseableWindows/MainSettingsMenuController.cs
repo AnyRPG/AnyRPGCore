@@ -103,9 +103,9 @@ namespace AnyRPG {
             uIManager.settingsMenuWindow.CloseWindow();
         }
 
-        public override void ReceiveOpenWindowNotification() {
-            //Debug.Log("MainSettingsMenuController.ReceiveOpenWindowNotification()");
-            base.ReceiveOpenWindowNotification();
+        public override void ProcessOpenWindowNotification() {
+            //Debug.Log("MainSettingsMenuController.ProcessOpenWindowNotification()");
+            base.ProcessOpenWindowNotification();
             foreach (CloseableWindowContents closeableWindowContents in subPanels) {
                 closeableWindowContents.ReceiveOpenWindowNotification();
             }

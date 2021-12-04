@@ -281,9 +281,9 @@ namespace AnyRPG {
             base.ReceiveClosedWindowNotification();
         }
 
-        public override void ReceiveOpenWindowNotification() {
+        public override void ProcessOpenWindowNotification() {
             //Debug.Log("QuestTrackerUI.OnOpenWindow()");
-            base.ReceiveOpenWindowNotification();
+            base.ProcessOpenWindowNotification();
             //SetNavigationController();
             chatHighlightButton.HighlightBackground();
             ShowChatLog();

@@ -130,9 +130,9 @@ namespace AnyRPG {
             systemButton.Select();
         }
 
-        public override void ReceiveOpenWindowNotification() {
-            //Debug.Log("SystemKeyBindPanelController.ReceiveOpenWindowNotification()");
-            base.ReceiveOpenWindowNotification();
+        public override void ProcessOpenWindowNotification() {
+            //Debug.Log("SystemKeyBindPanelController.ProcessOpenWindowNotification()");
+            base.ProcessOpenWindowNotification();
             //currentNavigationController.Focus();
             //uINavigationControllers[0].SetCurrentButton(movementButton);
             

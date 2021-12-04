@@ -173,9 +173,9 @@ namespace AnyRPG {
             OnCloseWindow(this);
         }
 
-        public override void ReceiveOpenWindowNotification() {
-            //Debug.Log("PetSpawnControlPanel.ReceiveOpenWindowNotification()");
-            base.ReceiveOpenWindowNotification();
+        public override void ProcessOpenWindowNotification() {
+            //Debug.Log("PetSpawnControlPanel.ProcessOpenWindowNotification()");
+            base.ProcessOpenWindowNotification();
             ClearPanel();
 
             if (playerManager.MyCharacter.CharacterPetManager != null) {

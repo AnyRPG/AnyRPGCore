@@ -7,7 +7,7 @@ using UnityEngine.UI;
 
 namespace AnyRPG {
 
-    public class CharacterCreatorWindowPanel : WindowContentController, ICapabilityConsumer {
+    public class CharacterCreatorWindowPanel : CloseableWindowContents, ICapabilityConsumer {
 
         public event System.Action OnConfirmAction = delegate { };
         public override event Action<ICloseableWindowContents> OnCloseWindow = delegate { };
@@ -117,13 +117,16 @@ namespace AnyRPG {
             uIManager.interactionWindow.CloseWindow();
         }
 
-        public override void ReceiveOpenWindowNotification() {
-            //Debug.Log("LoadGamePanel.OnOpenWindow()");
-            base.ReceiveOpenWindowNotification();
+        public override void ProcessOpenWindowNotification() {
+            Debug.Log("CharacterCreatorPanel.ProcessOpenWindowNotification()");
+            base.ProcessOpenWindowNotification();
             saveButton.Button.interactable = false;
+            uINavigationControllers[0].UpdateNavigationList();
+            uINavigationControllers[0].FocusCurrentButton();
             umaCharacterPanel.ReceiveOpenWindowNotification();
             umaCharacterPanel.ShowPanel();
-            SetOpenSubPanel(umaCharacterPanel, true);
+            //SetOpenSubPanel(umaCharacterPanel, true);
+            SetOpenSubPanel(umaCharacterPanel, false);
 
             // set unit profile to default
             if (systemConfigurationManager.UseFirstCreatorProfile) {
@@ -187,6 +190,12 @@ namespace AnyRPG {
             umaCharacterPanel.HandleTargetReady();
             if (umaCharacterPanel.MainNoOptionsArea.activeSelf == false) {
                 saveButton.Button.interactable = true;
+            } else {
+                openSubPanel = null;
+            }
+            uINavigationControllers[0].UpdateNavigationList();
+            if (activeSubPanel == null) {
+                uINavigationControllers[0].FocusCurrentButton();
             }
         }
 

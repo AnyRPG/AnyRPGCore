@@ -55,9 +55,9 @@ namespace AnyRPG {
             }
         }
 
-        public override void ReceiveOpenWindowNotification() {
-            //Debug.Log("NameChangePanelController.ReceiveOpenWindowNotification()");
-            base.ReceiveOpenWindowNotification();
+        public override void ProcessOpenWindowNotification() {
+            //Debug.Log("NameChangePanelController.ProcessOpenWindowNotification()");
+            base.ProcessOpenWindowNotification();
             textInput.text = playerManager.MyCharacter.CharacterName;
         }
 

@@ -38,8 +38,8 @@ namespace AnyRPG {
             newGameManager = systemGameManager.NewGameManager;
         }
 
-        public override void ReceiveOpenWindowNotification() {
-            base.ReceiveOpenWindowNotification();
+        public override void ProcessOpenWindowNotification() {
+            base.ProcessOpenWindowNotification();
             if (systemConfigurationManager.UseNewGameWindow == true) {
                 divider.SetActive(false);
                 confirmGameButton.gameObject.SetActive(true);

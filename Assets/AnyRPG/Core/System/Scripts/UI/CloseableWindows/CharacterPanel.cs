@@ -148,9 +148,9 @@ namespace AnyRPG {
             previewCameraController.ClearTarget();
         }
 
-        public override void ReceiveOpenWindowNotification() {
-            //Debug.Log("CharacterPanel.ReceiveOpenWindowNotification()");
-            base.ReceiveOpenWindowNotification();
+        public override void ProcessOpenWindowNotification() {
+            //Debug.Log("CharacterPanel.ProcessOpenWindowNotification()");
+            base.ProcessOpenWindowNotification();
             SetBackGroundColor(new Color32(0, 0, 0, (byte)(int)(PlayerPrefs.GetFloat("PopupWindowOpacity") * 255)));
             //SetPreviewTarget();
             UpdateStatsDescription();
