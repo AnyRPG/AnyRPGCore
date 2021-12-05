@@ -117,8 +117,10 @@ namespace AnyRPG {
             }
         }
 
-        public void OnSendObjectToPool() {
+        public override void OnSendObjectToPool() {
             //Debug.Log("StatusEffectNodeScript.OnSendObjectToPool()");
+            base.OnSendObjectToPool();
+
             statusEffectNode = null;
             target = null;
         }

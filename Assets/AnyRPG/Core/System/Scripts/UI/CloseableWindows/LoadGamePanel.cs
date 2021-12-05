@@ -244,11 +244,6 @@ namespace AnyRPG {
             }
         }
 
-        public void UnHighlightAllButtons() {
-            //Debug.Log("CharacterCreatorPanel.UnHighlightAllButtons()");
-
-        }
-
         /*
         public void ClosePanel() {
             //Debug.Log("LoadGamePanel.ClosePanel()");

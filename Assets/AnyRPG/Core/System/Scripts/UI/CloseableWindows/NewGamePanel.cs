@@ -170,14 +170,20 @@ namespace AnyRPG {
 
             saveManager.ClearSharedData();
 
-            newGameManager.SetupSaveData();
-
             factionPanel.ReceiveOpenWindowNotification();
-
-
             // class goes before specialization because it acts as a filter for it
             classPanel.ReceiveOpenWindowNotification();
             specializationPanel.ReceiveOpenWindowNotification();
+
+            newGameManager.SetupSaveData();
+
+            // testing move above SetupSaveData() to prevent clearing selected button
+            /*
+            factionPanel.ReceiveOpenWindowNotification();
+            // class goes before specialization because it acts as a filter for it
+            classPanel.ReceiveOpenWindowNotification();
+            specializationPanel.ReceiveOpenWindowNotification();
+            */
             
             // now that faction is set, and character panel is opened (which caused the first available unit to be selected), it's time to render the unit
             // inform the preview panel so the character can be rendered
@@ -185,6 +191,8 @@ namespace AnyRPG {
             characterPreviewPanel.OnTargetCreated += HandleTargetCreated;
             characterPreviewPanel.CapabilityConsumer = newGameManager;
             characterPreviewPanel.ReceiveOpenWindowNotification();
+
+            Debug.Log("Preview Unit Ready: " + characterCreatorManager?.PreviewUnitController?.CameraTargetReady);
 
             // attempt to open the UMA window first
             if (systemConfigurationManager.NewGameUMAAppearance == true) {
@@ -200,7 +208,8 @@ namespace AnyRPG {
             // details should be last because it relies on all the information set in the previous methods
             detailsPanel.ReceiveOpenWindowNotification();
 
-            //OpenDetailsPanel();
+            OpenDetailsPanel();
+
             uINavigationControllers[0].SetCurrentButton(detailsButton);
             SetNavigationController(uINavigationControllers[0]);
             detailsButton.Accept();
@@ -388,6 +397,8 @@ namespace AnyRPG {
         }
 
         public void OpenClassPanel() {
+            //Debug.Log("NewGamePanel.OpenClassPanel()");
+
             ClosePanels();
             classPanel.ShowPanel();
             SetOpenSubPanel(classPanel);

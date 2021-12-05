@@ -86,9 +86,11 @@ namespace AnyRPG {
                     uINavigationControllers[0].SetCurrentIndex(i);
                 }
             }
+            /*
             if (optionButtons.Count > 0) {
                 SetNavigationController(uINavigationControllers[0]);
             }
+            */
         }
 
         public void SetCharacterClass(CharacterClass newCharacterClass) {
@@ -97,6 +99,7 @@ namespace AnyRPG {
             // deselect old button
             if (selectedClassButton != null && newCharacterClass != selectedClassButton.CharacterClass) {
                 selectedClassButton.DeSelect();
+                selectedClassButton.UnHighlightBackground();
             }
 
             // select new button
@@ -212,12 +215,14 @@ namespace AnyRPG {
 
         }
 
+        /*
         public override void Accept() {
             base.Accept();
             if (currentNavigationController == uINavigationControllers[0]) {
                 newGamePanel.OpenDetailsPanel();
             }
         }
+        */
 
     }
 

@@ -539,7 +539,8 @@ namespace AnyRPG {
             uIManager.ShowGamepadTooltip((BagPanel.ContentArea as RectTransform), transform, inventorySlot.Item, "Sell Price: ");
         }
 
-        public void OnSendObjectToPool() {
+        public override void OnSendObjectToPool() {
+            base.OnSendObjectToPool();
             if (inventorySlot != null) {
                 inventorySlot.OnUpdateSlot -= UpdateSlot;
             }

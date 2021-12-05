@@ -75,7 +75,7 @@ namespace AnyRPG {
         }
 
         public void ShowOptionButtons() {
-            //Debug.Log("NewGameFactionPanelController.ShowOptionButtonsCommon()");
+            Debug.Log("NewGameFactionPanelController.ShowOptionButtons()");
             ClearOptionButtons();
 
             for (int i = 0; i < newGameManager.FactionList.Count; i++) {
@@ -90,17 +90,20 @@ namespace AnyRPG {
                     uINavigationControllers[0].SetCurrentIndex(i);
                 }
             }
+            /*
             if (optionButtons.Count > 0) {
                 SetNavigationController(uINavigationControllers[0]);
             }
+            */
         }
 
         public void SetFaction(Faction newFaction) {
-            //Debug.Log("LoadGamePanel.ShowSavedGame()");
+            Debug.Log("NewGameFactionPanelController.SetFaction(" + newFaction.DisplayName + ")");
 
             // deselect old button
             if (selectedFactionButton != null && selectedFactionButton.Faction != newFaction) {
                 selectedFactionButton.DeSelect();
+                selectedFactionButton.UnHighlightBackground();
             }
 
             // select new button
@@ -213,7 +216,7 @@ namespace AnyRPG {
 
             LayoutRebuilder.ForceRebuildLayoutImmediate(abilityButtonArea.GetComponent<RectTransform>());
 
-            ShowOptionButtons();
+            //ShowOptionButtons();
 
         }
 
@@ -223,6 +226,7 @@ namespace AnyRPG {
             OnCloseWindow(this);
         }
 
+        /*
         public override void Accept() {
             Debug.Log(gameObject.name + ".NewGameFactionPanelController.Accept()");
             base.Accept();
@@ -230,6 +234,8 @@ namespace AnyRPG {
                 newGamePanel.OpenDetailsPanel();
             }
         }
+            */
+
     }
 
 }

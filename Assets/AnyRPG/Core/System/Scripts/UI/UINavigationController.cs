@@ -170,7 +170,7 @@ namespace AnyRPG {
         }
 
         public virtual void Focus(bool focusCurrentButton = true) {
-            //Debug.Log(gameObject.name + ".UINavigationController.Focus()");
+            Debug.Log(gameObject.name + ".UINavigationController.Focus(" + focusCurrentButton + ")");
             focused = true;
             // testing - active navigable buttons is needed for lists that are dynamically created (skill buttons etc)
             // regular navigable buttons are needed for lists that are static, but may have temporarily disabled elements (music player)
@@ -184,7 +184,7 @@ namespace AnyRPG {
         }
 
         public virtual void UnFocus() {
-            //Debug.Log(gameObject.name + ".UINavigationController.Unfocus()");
+            Debug.Log(gameObject.name + ".UINavigationController.Unfocus()");
             focused = false;
             foreach (NavigableElement navigableElement in activeNavigableButtons.Union(navigableButtons)) {
                 navigableElement.UnFocus();
@@ -226,7 +226,7 @@ namespace AnyRPG {
 
 
         public virtual void FocusCurrentButton() {
-            Debug.Log(gameObject.name + ".UINavigationController.FocusCurrentButton()");
+            //Debug.Log(gameObject.name + ".UINavigationController.FocusCurrentButton()");
         }
 
         public void UpButton() {

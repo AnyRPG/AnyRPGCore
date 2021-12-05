@@ -81,7 +81,7 @@ namespace AnyRPG {
         }
 
         public void ShowOptionButtons() {
-            //Debug.Log("NewGameMecanimCharacterPanelController.ShowOptionButtons()");
+            Debug.Log("NewGameMecanimCharacterPanelController.ShowOptionButtons()");
 
             ClearOptionButtons();
 
@@ -116,7 +116,7 @@ namespace AnyRPG {
         }
 
         public void SetUnitProfile(UnitProfile newUnitProfile) {
-            //Debug.Log("NewGameMecanimCharacterPanelController.SetUnitProfile(" + (newUnitProfile == null ? "null" : newUnitProfile.DisplayName) + ")");
+            Debug.Log("NewGameMecanimCharacterPanelController.SetUnitProfile(" + (newUnitProfile == null ? "null" : newUnitProfile.DisplayName) + ")");
 
             // deselect old button
             if (selectedUnitButton != null && selectedUnitButton.UnitProfile != newUnitProfile) {

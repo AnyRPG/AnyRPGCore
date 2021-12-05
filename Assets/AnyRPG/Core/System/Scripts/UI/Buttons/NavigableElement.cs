@@ -302,6 +302,11 @@ namespace AnyRPG {
             audioManager.PlayUIClickSound();
         }
 
+        public virtual void OnSendObjectToPool() {
+            UnHighlightOutline();
+            UnHighlightBackground();
+        }
+
 
     }
 

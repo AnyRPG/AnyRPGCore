@@ -84,7 +84,8 @@ namespace AnyRPG {
         }
 
         public void ShowOptionButtons() {
-            //Debug.Log("LoadGamePanel.ShowOptionButtonsCommon()");
+            Debug.Log("NewGameSpecializationPanelController.ShowOptionButtons()");
+
             ClearOptionButtons();
             HideInfoArea();
             //classSpecialization = null;
@@ -101,17 +102,20 @@ namespace AnyRPG {
                     uINavigationControllers[0].SetCurrentIndex(i);
                 }
             }
+            /*
             if (optionButtons.Count > 0) {
                 SetNavigationController(uINavigationControllers[0]);
             }
+            */
         }
 
         public void SetClassSpecialization(ClassSpecialization newClassSpecialization) {
-            //Debug.Log("LoadGamePanel.ShowSavedGame()");
+            Debug.Log("NewGameSpecializationPanelController.SetClassSpecialization()");
 
             // deselect old button
             if (selectedClassSpecializationButton != null && selectedClassSpecializationButton.ClassSpecialization != newClassSpecialization) {
                 selectedClassSpecializationButton.DeSelect();
+                selectedClassSpecializationButton.UnHighlightBackground();
             }
 
             // select new button
@@ -231,12 +235,14 @@ namespace AnyRPG {
             OnCloseWindow(this);
         }
 
+        /*
         public override void Accept() {
             base.Accept();
             if (currentNavigationController == uINavigationControllers[0]) {
                 newGamePanel.OpenDetailsPanel();
             }
         }
+        */
 
     }
 

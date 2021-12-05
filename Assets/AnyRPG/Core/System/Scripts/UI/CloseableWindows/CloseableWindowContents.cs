@@ -105,7 +105,7 @@ namespace AnyRPG {
                     uINavigationController.Configure(systemGameManager);
                     uINavigationController.SetOwner(this);
                 }
-                Debug.Log(gameObject.name + ".CloseableWindowContents.Configure() setting current navigation controller");
+                //Debug.Log(gameObject.name + ".CloseableWindowContents.Configure() setting current navigation controller");
                 currentNavigationController = uINavigationControllers[0];
             }
             CreateEventSubscriptions();
@@ -140,7 +140,7 @@ namespace AnyRPG {
         }
 
         public virtual void SetActiveSubPanel(CloseableWindowContents closeableWindowContents, bool focus = true) {
-            Debug.Log(gameObject.name + ".CloseableWindowContents.SetActiveSubPanel(" + (closeableWindowContents == null ? "null" : closeableWindowContents.name) + ")");
+            //Debug.Log(gameObject.name + ".CloseableWindowContents.SetActiveSubPanel(" + (closeableWindowContents == null ? "null" : closeableWindowContents.name) + ")");
             if (closeableWindowContents != null) {
                 foreach (UINavigationController uINavigationController in uINavigationControllers) {
                     uINavigationController.UnFocus();
@@ -354,7 +354,7 @@ namespace AnyRPG {
         }
 
         public virtual void RightButton() {
-            //Debug.Log(gameObject.name + ".CloseableWindowContents.RightButton()");
+            Debug.Log(gameObject.name + ".CloseableWindowContents.RightButton()");
             if (activeSubPanel != null) {
                 activeSubPanel.RightButton();
                 return;

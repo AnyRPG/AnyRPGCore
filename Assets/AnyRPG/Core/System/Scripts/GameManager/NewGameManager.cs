@@ -98,7 +98,10 @@ namespace AnyRPG {
             UpdateFactionList();
             UpdateCharacterClassList();
             UpdateClassSpecializationList();
-            UpdateUnitProfileList();
+
+            if (systemConfigurationManager.NewGameFaction == false) {
+                UpdateUnitProfileList();
+            }
         }
 
         protected void UpdateFactionList() {
@@ -263,6 +266,8 @@ namespace AnyRPG {
             }
 
             OnSetFaction(newFaction);
+
+            UpdateUnitProfileList();
         }
 
         public void UpdateEquipmentList() {
