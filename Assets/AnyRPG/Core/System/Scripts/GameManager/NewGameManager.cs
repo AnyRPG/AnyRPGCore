@@ -97,7 +97,9 @@ namespace AnyRPG {
 
             UpdateFactionList();
             UpdateCharacterClassList();
-            UpdateClassSpecializationList();
+            
+            // testing - not needed because updating character class list will result in class getting set, which will update the class specialization list
+            //UpdateClassSpecializationList();
 
             if (systemConfigurationManager.NewGameFaction == false) {
                 UpdateUnitProfileList();
@@ -156,9 +158,12 @@ namespace AnyRPG {
 
             OnUpdateClassSpecializationList();
 
-            if (classSpecializationList.Count > 0
-                && (classSpecializationList.Contains(classSpecialization) == false || classSpecialization == null)) {
-                SetClassSpecialization(classSpecializationList[0]);
+            if (classSpecializationList.Count > 0) { 
+                if (classSpecializationList.Contains(classSpecialization) == false || classSpecialization == null) {
+                    SetClassSpecialization(classSpecializationList[0]);
+                }
+            } else {
+                SetClassSpecialization(null);
             }
         }
 
@@ -224,8 +229,17 @@ namespace AnyRPG {
                 characterClass = newCharacterClass;
                 saveData.characterClass = characterClass.DisplayName;
                 OnSetCharacterClass(newCharacterClass);
+                //OnSetClassSpecialization(null);
 
                 UpdateClassSpecializationList();
+
+                /*
+                // not all classes have specializations
+                // update equipment list manually in that case
+                if (classSpecializationList.Count == 0) {
+                    UpdateEquipmentList();
+                }
+                */
             }
         }
 

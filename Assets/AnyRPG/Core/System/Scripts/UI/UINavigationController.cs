@@ -170,7 +170,7 @@ namespace AnyRPG {
         }
 
         public virtual void Focus(bool focusCurrentButton = true) {
-            Debug.Log(gameObject.name + ".UINavigationController.Focus(" + focusCurrentButton + ")");
+            //Debug.Log(gameObject.name + ".UINavigationController.Focus(" + focusCurrentButton + ")");
             focused = true;
             // testing - active navigable buttons is needed for lists that are dynamically created (skill buttons etc)
             // regular navigable buttons are needed for lists that are static, but may have temporarily disabled elements (music player)
@@ -184,7 +184,7 @@ namespace AnyRPG {
         }
 
         public virtual void UnFocus() {
-            Debug.Log(gameObject.name + ".UINavigationController.Unfocus()");
+            //Debug.Log(gameObject.name + ".UINavigationController.Unfocus()");
             focused = false;
             foreach (NavigableElement navigableElement in activeNavigableButtons.Union(navigableButtons)) {
                 navigableElement.UnFocus();
@@ -210,7 +210,7 @@ namespace AnyRPG {
         }
 
         public virtual void FocusFirstButton() {
-            Debug.Log(gameObject.name + ".UINavigationController.FocusFirstButton()");
+            //Debug.Log(gameObject.name + ".UINavigationController.FocusFirstButton()");
             if (activeNavigableButtons.Count == 0) {
                 return;
             }
@@ -224,8 +224,16 @@ namespace AnyRPG {
             currentNavigableElement.Select();
         }
 
+        public virtual void HighlightCurrentNavigableElement() {
+            //Debug.Log(gameObject.name + ".UINavigationController.FocusCurrentButton()");
+            currentNavigableElement.HighlightBackground();
+        }
 
         public virtual void FocusCurrentButton() {
+            //Debug.Log(gameObject.name + ".UINavigationController.FocusCurrentButton()");
+        }
+
+        public virtual void HighlightCurrentButton() {
             //Debug.Log(gameObject.name + ".UINavigationController.FocusCurrentButton()");
         }
 
@@ -436,7 +444,7 @@ namespace AnyRPG {
         }
 
         public virtual void LeftAnalog(float inputHorizontal, float inputVertical) {
-            //Debug.Log(gameObject.name + ".UINavigationController.LeftAnalog()");
+            Debug.Log(gameObject.name + ".UINavigationController.LeftAnalog()");
 
             if (currentNavigableElement != null) {
                 currentNavigableElement.LeftAnalog(inputHorizontal, inputVertical);

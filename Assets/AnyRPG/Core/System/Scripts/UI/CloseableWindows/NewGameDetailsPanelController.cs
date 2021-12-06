@@ -26,19 +26,19 @@ namespace AnyRPG {
         */
 
         [SerializeField]
-        private NewGameCharacterClassButton characterClassButton = null;
+        private NewGameDetailsCharacterClassButton characterClassButton = null;
 
         [SerializeField]
         private GameObject classSpecializationLabel = null;
 
         [SerializeField]
-        private NewGameClassSpecializationButton classSpecializationButton = null;
+        private NewGameDetailsClassSpecializationButton classSpecializationButton = null;
 
         [SerializeField]
         private GameObject factionLabel = null;
 
         [SerializeField]
-        private NewGameFactionButton factionButton = null;
+        private NewGameDetailsFactionButton factionButton = null;
 
         [SerializeField]
         private CanvasGroup canvasGroup = null;
@@ -60,9 +60,9 @@ namespace AnyRPG {
             factionButton.Configure(systemGameManager);
             */
 
-            factionButton.OnInteract += OpenFactionPanel;
-            characterClassButton.OnInteract += OpenClassPanel;
-            classSpecializationButton.OnInteract += OpenSpecializationPanel;
+            //factionButton.OnInteract += OpenFactionPanel;
+            //characterClassButton.OnInteract += OpenClassPanel;
+            //classSpecializationButton.OnInteract += OpenSpecializationPanel;
         }
 
         public override void SetGameManagerReferences() {
@@ -78,20 +78,25 @@ namespace AnyRPG {
         }
 
         public void OpenFactionPanel() {
+            Debug.Log("NewGameDetailsPanelController.OpenfactionPanel()");
             if (newGamePanel != null) {
-                newGamePanel.OpenFactionPanel();
+                newGamePanel.OpenFactionPanel(true);
+                //newGamePanel.SetNavigationControllerByIndex(0);
             }
         }
 
         public void OpenClassPanel() {
             if (newGamePanel != null) {
-                newGamePanel.OpenClassPanel();
+                newGamePanel.OpenClassPanel(true);
             }
         }
 
         public void OpenSpecializationPanel() {
+            if (newGameManager.ClassSpecializationList.Count == 0) {
+                return;
+            }
             if (newGamePanel != null) {
-                newGamePanel.OpenSpecializationPanel();
+                newGamePanel.OpenSpecializationPanel(true);
             }
         }
 
@@ -218,7 +223,7 @@ namespace AnyRPG {
 
         protected override void OnDestroy() {
             base.OnDestroy();
-            factionButton.OnInteract -= OpenFactionPanel;
+            //factionButton.OnInteract -= OpenFactionPanel;
         }
 
 

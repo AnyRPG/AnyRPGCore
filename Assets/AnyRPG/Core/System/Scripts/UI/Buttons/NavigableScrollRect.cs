@@ -12,12 +12,13 @@ namespace AnyRPG {
 
         [Header("ScrollRect")]
 
+        [Tooltip("This scroll rect can be scrolled directly by using the analog stick")]
         [SerializeField]
         protected ScrollRect scrollRect = null;
 
 
         public override void LeftAnalog(float inputHorizontal, float inputVertical) {
-            //Debug.Log(gameObject.name + ".NavigableScrollRect.LeftAnalog(" + inputHorizontal + ", " + inputVertical + ")");
+            Debug.Log(gameObject.name + ".NavigableScrollRect.LeftAnalog(" + inputHorizontal + ", " + inputVertical + ")");
 
             base.LeftAnalog(inputHorizontal, inputVertical);
 

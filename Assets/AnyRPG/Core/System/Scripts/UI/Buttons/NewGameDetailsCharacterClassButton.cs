@@ -7,16 +7,16 @@ using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 namespace AnyRPG {
-    public class NewGameFactionButton : HighlightButton {
+    public class NewGameDetailsCharacterClassButton : HighlightButton {
 
         [SerializeField]
-        protected Faction faction = null;
+        protected CharacterClass characterClass = null;
 
         [SerializeField]
         protected Image icon = null;
 
         [SerializeField]
-        protected TextMeshProUGUI factionName = null;
+        protected TextMeshProUGUI characterClassName = null;
 
         [SerializeField]
         protected TextMeshProUGUI description = null;
@@ -24,7 +24,7 @@ namespace AnyRPG {
         // game manager references
         protected NewGameManager newGameManager = null;
 
-        public Faction Faction { get => faction; set => faction = value; }
+        public CharacterClass CharacterClass { get => characterClass; set => characterClass = value; }
 
         public override void Configure(SystemGameManager systemGameManager) {
             base.Configure(systemGameManager);
@@ -32,37 +32,22 @@ namespace AnyRPG {
             newGameManager = systemGameManager.NewGameManager;
         }
 
-        public void AddFaction(Faction newFaction) {
-            faction = newFaction;
-            icon.sprite = this.faction.Icon;
+        public void AddCharacterClass(CharacterClass newCharacterClass) {
+            characterClass = newCharacterClass;
+            icon.sprite = this.characterClass.Icon;
             icon.color = Color.white;
-            factionName.text = faction.DisplayName;
+            characterClassName.text = characterClass.DisplayName;
             //description.text = this.faction.GetSummary();
-            description.text = faction.GetSummary();
+            description.text = characterClass.GetSummary();
 
         }
 
-        public void ClearFaction() {
+        public void ClearCharacterClass() {
             icon.sprite = null;
             icon.color = new Color32(0, 0, 0, 0);
-            factionName.text = string.Empty;
+            characterClassName.text = string.Empty;
             description.text = string.Empty;
         }
-
-        public void CommonSelect() {
-            newGameManager.SetFaction(faction);
-        }
-
-        public void RawSelect() {
-            CommonSelect();
-        }
-
-        public override void Select() {
-            Debug.Log("NewGameFactionButton.Select()");
-            CommonSelect();
-            base.Select();
-        }
-
 
 
     }

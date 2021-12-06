@@ -140,7 +140,7 @@ namespace AnyRPG {
         }
 
         public virtual void SetActiveSubPanel(CloseableWindowContents closeableWindowContents, bool focus = true) {
-            //Debug.Log(gameObject.name + ".CloseableWindowContents.SetActiveSubPanel(" + (closeableWindowContents == null ? "null" : closeableWindowContents.name) + ")");
+            Debug.Log(gameObject.name + ".CloseableWindowContents.SetActiveSubPanel(" + (closeableWindowContents == null ? "null" : closeableWindowContents.name) + ")");
             if (closeableWindowContents != null) {
                 foreach (UINavigationController uINavigationController in uINavigationControllers) {
                     uINavigationController.UnFocus();
@@ -157,8 +157,17 @@ namespace AnyRPG {
             }
         }
 
+        public virtual void UnFocus() {
+            if (currentNavigationController != null) {
+                currentNavigationController.UnFocus();
+            }
+        }
+
         public virtual void SetOpenSubPanel(CloseableWindowContents closeableWindowContents, bool focus = false) {
             //Debug.Log(gameObject.name + ".CloseableWindowContents.SetOpenSubPanel(" + closeableWindowContents.name + ")");
+            if (openSubPanel != null) {
+                openSubPanel.UnFocus();
+            }
             openSubPanel = closeableWindowContents;
             if (focus == true) {
                 SetActiveSubPanel(closeableWindowContents);
@@ -232,7 +241,7 @@ namespace AnyRPG {
         }
 
         public virtual void ChooseFocus() {
-            //Debug.Log(gameObject.name + ".CloseableWindowContents.ChooseFocus()");
+            Debug.Log(gameObject.name + ".CloseableWindowContents.ChooseFocus()");
             if (controlsManager.GamePadInputActive && focusActiveSubPanel == true) {
                 if (openSubPanel != null) {
                     SetActiveSubPanel(openSubPanel);
@@ -354,7 +363,7 @@ namespace AnyRPG {
         }
 
         public virtual void RightButton() {
-            Debug.Log(gameObject.name + ".CloseableWindowContents.RightButton()");
+            //Debug.Log(gameObject.name + ".CloseableWindowContents.RightButton()");
             if (activeSubPanel != null) {
                 activeSubPanel.RightButton();
                 return;
@@ -571,7 +580,7 @@ namespace AnyRPG {
         }
 
         public void LeftAnalog(float inputHorizontal, float inputVertical) {
-            //Debug.Log(gameObject.name + ".NavigableElement.LeftAnalog()");
+            Debug.Log(gameObject.name + ".NavigableElement.LeftAnalog()");
 
             // if the left analog stick was held down, then this is a movement of the window
             // send the event to the window so it can pass it on to the drag handle
@@ -581,6 +590,13 @@ namespace AnyRPG {
             }
 
             // if the left analog stick was not clicked, this is to scroll a scrollrect
+
+            if (activeSubPanel != null) {
+                activeSubPanel.LeftAnalog(inputHorizontal, inputVertical);
+                return;
+            }
+
+            // there are no sub panels
             // pass it onto the navigation controller
             if (currentNavigationController != null) {
                 currentNavigationController.LeftAnalog(inputHorizontal, inputVertical);

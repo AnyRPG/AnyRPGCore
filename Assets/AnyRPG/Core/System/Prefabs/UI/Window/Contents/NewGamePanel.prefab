@@ -12,6 +12,8 @@ GameObject:
   - component: {fileID: 6397654168607277196}
   - component: {fileID: 3935190779809247327}
   - component: {fileID: 4139151602730056177}
+  - component: {fileID: 7756583551911884056}
+  - component: {fileID: 6704937204139348553}
   m_Layer: 5
   m_Name: ClassRightPane
   m_TagString: Untagged
@@ -108,6 +110,57 @@ MonoBehaviour:
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls: []
+--- !u!114 &7756583551911884056
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 13528572767288199}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8995f41cb132f3148a9912f89e49421b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  leftPanel: {fileID: 0}
+  leftControllers:
+  - {fileID: 7626182369620008702}
+  rightPanel: {fileID: 0}
+  rightControllers: []
+  upPanel: {fileID: 0}
+  upControllers: []
+  downPanel: {fileID: 0}
+  downControllers: []
+  acceptController: {fileID: 0}
+  scrollRect: {fileID: 0}
+  updateActiveListOnOpen: 0
+  pruneInactiveElements: 0
+  navigableButtons:
+  - {fileID: 6704937204139348553}
+--- !u!114 &6704937204139348553
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 13528572767288199}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2aee469b85d0bc045b5a4bf72fcc5a4d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  outlineImage: {fileID: 7706798529869015155}
+  highlightOutlineColor: {r: 0.64705884, g: 0.64705884, b: 0.64705884, a: 0.6509804}
+  highlightImage: {fileID: 0}
+  highlightBackgroundOnSelect: 0
+  highlightBackgroundOnInteract: 0
+  unHighlightBackgroundOnUnFocus: 0
+  unHighlightBackgroundOnLeave: 0
+  highlightImageColor: {r: 0.64705884, g: 0.64705884, b: 0.64705884, a: 0.6509804}
+  useUnfocusedColor: 0
+  unFocusedColor: {r: 1, g: 1, b: 1, a: 0.15294118}
+  rectTransform: {fileID: 0}
+  scrollRect: {fileID: 4139151602730056177}
 --- !u!1 &156400502447273645
 GameObject:
   m_ObjectHideFlags: 0
@@ -1495,9 +1548,8 @@ MonoBehaviour:
   upPanel: {fileID: 0}
   upControllers: []
   downPanel: {fileID: 0}
-  downControllers:
-  - {fileID: 1195257474298769629}
-  acceptController: {fileID: 0}
+  downControllers: []
+  acceptController: {fileID: 1195257474298769629}
   scrollRect: {fileID: 793595986223075588}
   updateActiveListOnOpen: 1
   pruneInactiveElements: 1
@@ -2662,6 +2714,7 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 966031867344380532}
+  - {fileID: 2522066334288979780}
   m_Father: {fileID: 254697935868588788}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -2692,9 +2745,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_RaycastTarget: 1
+  m_RaycastTarget: 0
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
-  m_Maskable: 1
+  m_Maskable: 0
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
@@ -5358,7 +5411,7 @@ RectTransform:
   - {fileID: 622338413577573074}
   - {fileID: 7494539957232135564}
   m_Father: {fileID: 1704591166371614295}
-  m_RootOrder: 2
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
@@ -5450,12 +5503,11 @@ GameObject:
   - component: {fileID: 4356013033530746674}
   - component: {fileID: 958144399470694821}
   - component: {fileID: 7319782109456880075}
-  - component: {fileID: 4479994414547213744}
+  - component: {fileID: 7185032455471584130}
   - component: {fileID: 6649476074477535952}
-  - component: {fileID: 5387042893076652105}
   - component: {fileID: 6945924804430241271}
   m_Layer: 5
-  m_Name: NewGameFactionButton
+  m_Name: NewGameDetailsFactionButton
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -5473,8 +5525,8 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 8394195329330393654}
-  - {fileID: 32288379171103257}
   - {fileID: 8791160883321591311}
+  - {fileID: 32288379171103257}
   m_Father: {fileID: 32359863265534556}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -5505,7 +5557,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_HorizontalFit: 2
   m_VerticalFit: 2
---- !u!114 &4479994414547213744
+--- !u!114 &7185032455471584130
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -5514,7 +5566,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 1881854750433420286}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fbf1a742abfdd6e448b574d9eb4d47c3, type: 3}
+  m_Script: {fileID: 11500000, guid: ebadd72167e8678429118bd6c4a68c0e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   outlineImage: {fileID: 8018860555910536682}
@@ -5530,10 +5582,10 @@ MonoBehaviour:
   rectTransform: {fileID: 0}
   text: {fileID: 0}
   ignoreSystemImageTint: 0
-  highlightButton: {fileID: 0}
+  highlightButton: {fileID: 6945924804430241271}
   selectedButtonColor: {r: 0.64705884, g: 0.64705884, b: 0.64705884, a: 0.6509804}
-  overrideNormalColor: 0
-  normalColor: {r: 0.6392157, g: 0.6392157, b: 0.6392157, a: 0.32156864}
+  overrideNormalColor: 1
+  normalColor: {r: 0, g: 0, b: 0, a: 0}
   overrideHighlightedColor: 0
   highlightedColor: {r: 0.64705884, g: 0.64705884, b: 0.64705884, a: 0.6509804}
   overridePressedColor: 0
@@ -5567,36 +5619,6 @@ MonoBehaviour:
   m_FlexibleWidth: -1
   m_FlexibleHeight: -1
   m_LayoutPriority: 1
---- !u!114 &5387042893076652105
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1881854750433420286}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_Material: {fileID: 0}
-  m_Color: {r: 0, g: 0, b: 0, a: 0}
-  m_RaycastTarget: 1
-  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
-  m_Maskable: 1
-  m_OnCullStateChanged:
-    m_PersistentCalls:
-      m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: f6b294e28d4da7349940fcb9ef6e075f, type: 3}
-  m_Type: 1
-  m_PreserveAspect: 0
-  m_FillCenter: 1
-  m_FillMethod: 4
-  m_FillAmount: 1
-  m_FillClockwise: 1
-  m_FillOrigin: 0
-  m_UseSpriteMesh: 0
-  m_PixelsPerUnitMultiplier: 1
 --- !u!114 &6945924804430241271
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5637,10 +5659,22 @@ MonoBehaviour:
     m_SelectedTrigger: Highlighted
     m_DisabledTrigger: Disabled
   m_Interactable: 1
-  m_TargetGraphic: {fileID: 5387042893076652105}
+  m_TargetGraphic: {fileID: 0}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 5807937099927844318}
+        m_TargetAssemblyTypeName: AnyRPG.NewGameDetailsPanelController, Assembly-CSharp
+        m_MethodName: OpenFactionPanel
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1 &2007655965074067242
 GameObject:
   m_ObjectHideFlags: 0
@@ -6278,16 +6312,16 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 8931399857463243809}
-        m_TargetAssemblyTypeName: 
+        m_TargetAssemblyTypeName: AnyRPG.NewGamePanel, Assembly-CSharp
         m_MethodName: OpenFactionPanel
-        m_Mode: 1
+        m_Mode: 6
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: 
-          m_BoolArgument: 0
+          m_BoolArgument: 1
         m_CallState: 2
 --- !u!1 &2365707611225862481
 GameObject:
@@ -8134,6 +8168,81 @@ MonoBehaviour:
   overrideDisabledColor: 0
   disabledColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 0.5019608}
   CapitalizeText: 0
+--- !u!1 &3041052238646787085
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2522066334288979780}
+  - component: {fileID: 5054482469814398747}
+  - component: {fileID: 7706798529869015155}
+  m_Layer: 5
+  m_Name: Outline
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &2522066334288979780
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3041052238646787085}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 8216132894290171862}
+  m_RootOrder: 1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 1, y: 1}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 0, y: 0}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!222 &5054482469814398747
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3041052238646787085}
+  m_CullTransparentMesh: 1
+--- !u!114 &7706798529869015155
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3041052238646787085}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Material: {fileID: 0}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_RaycastTarget: 0
+  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
+  m_Maskable: 0
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  m_Sprite: {fileID: 21300000, guid: 8da48cffb618593408a2a254b1a9b78c, type: 3}
+  m_Type: 1
+  m_PreserveAspect: 0
+  m_FillCenter: 1
+  m_FillMethod: 4
+  m_FillAmount: 1
+  m_FillClockwise: 1
+  m_FillOrigin: 0
+  m_UseSpriteMesh: 0
+  m_PixelsPerUnitMultiplier: 1
 --- !u!1 &3111463342811922860
 GameObject:
   m_ObjectHideFlags: 0
@@ -8801,16 +8910,16 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 8931399857463243809}
-        m_TargetAssemblyTypeName: 
+        m_TargetAssemblyTypeName: AnyRPG.NewGamePanel, Assembly-CSharp
         m_MethodName: OpenSpecializationPanel
-        m_Mode: 1
+        m_Mode: 6
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: 
-          m_BoolArgument: 0
+          m_BoolArgument: 1
         m_CallState: 2
 --- !u!1 &3525254471002357418
 GameObject:
@@ -8931,12 +9040,12 @@ GameObject:
   - component: {fileID: 1704591166371614295}
   - component: {fileID: 2781048795380594880}
   - component: {fileID: 5638877748868217006}
-  - component: {fileID: 2778665008614730597}
+  - component: {fileID: 4200942390453436240}
   - component: {fileID: 8616486862916840373}
   - component: {fileID: 6996017236195100972}
   - component: {fileID: 5454043500803306642}
   m_Layer: 5
-  m_Name: NewGameSpecializationButton
+  m_Name: NewGameDetailsSpecializationButton
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -8954,8 +9063,8 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 6893439042645400403}
-  - {fileID: 722433069675758555}
   - {fileID: 5896404173137280874}
+  - {fileID: 722433069675758555}
   m_Father: {fileID: 32359863265534556}
   m_RootOrder: 7
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -8986,7 +9095,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_HorizontalFit: 2
   m_VerticalFit: 2
---- !u!114 &2778665008614730597
+--- !u!114 &4200942390453436240
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -8995,26 +9104,26 @@ MonoBehaviour:
   m_GameObject: {fileID: 3587669646385089179}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5993834175ccec548935c4d429a8f060, type: 3}
+  m_Script: {fileID: 11500000, guid: e3647e8b8746f5e44a25ec8695c58f79, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   outlineImage: {fileID: 145901006363183537}
   highlightOutlineColor: {r: 0.64705884, g: 0.64705884, b: 0.64705884, a: 0.6509804}
   highlightImage: {fileID: 6893439042645398701}
   highlightBackgroundOnSelect: 0
-  highlightBackgroundOnInteract: 1
-  unHighlightBackgroundOnUnFocus: 1
-  unHighlightBackgroundOnLeave: 1
+  highlightBackgroundOnInteract: 0
+  unHighlightBackgroundOnUnFocus: 0
+  unHighlightBackgroundOnLeave: 0
   highlightImageColor: {r: 0.64705884, g: 0.64705884, b: 0.64705884, a: 0.6509804}
-  useUnfocusedColor: 1
+  useUnfocusedColor: 0
   unFocusedColor: {r: 1, g: 1, b: 1, a: 0.15294118}
   rectTransform: {fileID: 0}
   text: {fileID: 0}
   ignoreSystemImageTint: 0
-  highlightButton: {fileID: 0}
+  highlightButton: {fileID: 5454043500803306642}
   selectedButtonColor: {r: 0.64705884, g: 0.64705884, b: 0.64705884, a: 0.6509804}
-  overrideNormalColor: 0
-  normalColor: {r: 0.6392157, g: 0.6392157, b: 0.6392157, a: 0.32156864}
+  overrideNormalColor: 1
+  normalColor: {r: 0, g: 0, b: 0, a: 0}
   overrideHighlightedColor: 0
   highlightedColor: {r: 0.64705884, g: 0.64705884, b: 0.64705884, a: 0.6509804}
   overridePressedColor: 0
@@ -9055,7 +9164,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3587669646385089179}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
   m_Name: 
@@ -9118,10 +9227,22 @@ MonoBehaviour:
     m_SelectedTrigger: Highlighted
     m_DisabledTrigger: Disabled
   m_Interactable: 1
-  m_TargetGraphic: {fileID: 6996017236195100972}
+  m_TargetGraphic: {fileID: 0}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 5807937099927844318}
+        m_TargetAssemblyTypeName: AnyRPG.NewGameDetailsPanelController, Assembly-CSharp
+        m_MethodName: OpenSpecializationPanel
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1 &3625102248015012054
 GameObject:
   m_ObjectHideFlags: 0
@@ -9230,7 +9351,7 @@ RectTransform:
   - {fileID: 2555435556055301047}
   - {fileID: 4888008709747361001}
   m_Father: {fileID: 4356013033530746674}
-  m_RootOrder: 2
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
@@ -10549,7 +10670,7 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 4631547074031597339}
-  m_RootOrder: 1
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
@@ -10871,8 +10992,7 @@ MonoBehaviour:
   upPanel: {fileID: 0}
   upControllers: []
   downPanel: {fileID: 0}
-  downControllers:
-  - {fileID: 1195257474298769629}
+  downControllers: []
   acceptController: {fileID: 1195257474298769629}
   scrollRect: {fileID: 5541298148665525057}
   updateActiveListOnOpen: 1
@@ -11699,7 +11819,7 @@ GameObject:
   - component: {fileID: 4692299217850708632}
   - component: {fileID: 4692299217850708635}
   m_Layer: 5
-  m_Name: LeftPane
+  m_Name: ClassLeftPane
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -12531,8 +12651,7 @@ MonoBehaviour:
   upPanel: {fileID: 0}
   upControllers: []
   downPanel: {fileID: 0}
-  downControllers:
-  - {fileID: 1195257474298769629}
+  downControllers: []
   acceptController: {fileID: 1195257474298769629}
   scrollRect: {fileID: 6944769786716367189}
   updateActiveListOnOpen: 1
@@ -13615,16 +13734,16 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 8931399857463243809}
-        m_TargetAssemblyTypeName: 
+        m_TargetAssemblyTypeName: AnyRPG.NewGamePanel, Assembly-CSharp
         m_MethodName: OpenClassPanel
-        m_Mode: 1
+        m_Mode: 6
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: 
-          m_BoolArgument: 0
+          m_BoolArgument: 1
         m_CallState: 2
 --- !u!1 &5187300125167688942
 GameObject:
@@ -14301,7 +14420,7 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 1704591166371614295}
-  m_RootOrder: 1
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
@@ -14517,9 +14636,9 @@ MonoBehaviour:
   pruneInactiveElements: 1
   navigableButtons:
   - {fileID: 6283213864115283957}
-  - {fileID: 4479994414547213744}
-  - {fileID: 6424029302724125063}
-  - {fileID: 2778665008614730597}
+  - {fileID: 7185032455471584130}
+  - {fileID: 5695809198941288070}
+  - {fileID: 4200942390453436240}
 --- !u!1 &5708000249215269338
 GameObject:
   m_ObjectHideFlags: 0
@@ -14552,7 +14671,7 @@ RectTransform:
   - {fileID: 6864504363568688030}
   - {fileID: 4602845146398364864}
   m_Father: {fileID: 4631547074031597339}
-  m_RootOrder: 2
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
@@ -14889,11 +15008,11 @@ MonoBehaviour:
   hintBarController: {fileID: 0}
   textInput: {fileID: 5461044076140096161}
   characterClassLabel: {fileID: 2112851245035430740}
-  characterClassButton: {fileID: 6424029302724125063}
+  characterClassButton: {fileID: 5695809198941288070}
   classSpecializationLabel: {fileID: 6563290767052889029}
-  classSpecializationButton: {fileID: 2778665008614730597}
+  classSpecializationButton: {fileID: 4200942390453436240}
   factionLabel: {fileID: 6712956463502177638}
-  factionButton: {fileID: 4479994414547213744}
+  factionButton: {fileID: 7185032455471584130}
   canvasGroup: {fileID: 1307705059707542861}
 --- !u!114 &7080667115725989563
 MonoBehaviour:
@@ -16436,7 +16555,7 @@ MonoBehaviour:
   leftControllers: []
   rightPanel: {fileID: 0}
   rightControllers: []
-  upPanel: {fileID: 8931399857463243809}
+  upPanel: {fileID: 0}
   upControllers: []
   downPanel: {fileID: 0}
   downControllers: []
@@ -17272,6 +17391,7 @@ MonoBehaviour:
   focusActiveSubPanel: 0
   uINavigationControllers:
   - {fileID: 7626182369620008702}
+  - {fileID: 7756583551911884056}
   subPanels: []
   hintBarController: {fileID: 0}
   buttonPrefab: {fileID: 3408690417865459949, guid: d6378b0fea62cf1498600aa04cbfb602,
@@ -17298,12 +17418,12 @@ MonoBehaviour:
   leftPanel: {fileID: 0}
   leftControllers: []
   rightPanel: {fileID: 0}
-  rightControllers: []
+  rightControllers:
+  - {fileID: 7756583551911884056}
   upPanel: {fileID: 0}
   upControllers: []
   downPanel: {fileID: 0}
-  downControllers:
-  - {fileID: 1195257474298769629}
+  downControllers: []
   acceptController: {fileID: 1195257474298769629}
   scrollRect: {fileID: 4692299217850708635}
   updateActiveListOnOpen: 1
@@ -17535,8 +17655,7 @@ MonoBehaviour:
   upPanel: {fileID: 0}
   upControllers: []
   downPanel: {fileID: 0}
-  downControllers:
-  - {fileID: 1195257474298769629}
+  downControllers: []
   acceptController: {fileID: 0}
   scrollRect: {fileID: 0}
   updateActiveListOnOpen: 0
@@ -18362,12 +18481,12 @@ GameObject:
   - component: {fileID: 4631547074031597339}
   - component: {fileID: 8176608385233207692}
   - component: {fileID: 1846531149017022946}
-  - component: {fileID: 6424029302724125063}
+  - component: {fileID: 5695809198941288070}
   - component: {fileID: 2338082899380933369}
   - component: {fileID: 3960840797033934944}
   - component: {fileID: 2040628224569298398}
   m_Layer: 5
-  m_Name: NewGameClassButton
+  m_Name: NewGameDetailsClassButton
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -18385,8 +18504,8 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 597581741381542431}
-  - {fileID: 1526834146376677328}
   - {fileID: 447368736740214310}
+  - {fileID: 1526834146376677328}
   m_Father: {fileID: 32359863265534556}
   m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -18417,7 +18536,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_HorizontalFit: 2
   m_VerticalFit: 2
---- !u!114 &6424029302724125063
+--- !u!114 &5695809198941288070
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -18426,26 +18545,26 @@ MonoBehaviour:
   m_GameObject: {fileID: 7361298160372839383}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 39e73b580b72fa44ea20d7a0bafdcf70, type: 3}
+  m_Script: {fileID: 11500000, guid: 255ef3fed1e6e49489fb807eca1aecbd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   outlineImage: {fileID: 8381621004227190728}
   highlightOutlineColor: {r: 0.64705884, g: 0.64705884, b: 0.64705884, a: 0.6509804}
   highlightImage: {fileID: 597581741381545441}
   highlightBackgroundOnSelect: 0
-  highlightBackgroundOnInteract: 1
-  unHighlightBackgroundOnUnFocus: 1
-  unHighlightBackgroundOnLeave: 1
+  highlightBackgroundOnInteract: 0
+  unHighlightBackgroundOnUnFocus: 0
+  unHighlightBackgroundOnLeave: 0
   highlightImageColor: {r: 0.64705884, g: 0.64705884, b: 0.64705884, a: 0.6509804}
-  useUnfocusedColor: 1
+  useUnfocusedColor: 0
   unFocusedColor: {r: 1, g: 1, b: 1, a: 0.15294118}
   rectTransform: {fileID: 0}
   text: {fileID: 0}
   ignoreSystemImageTint: 0
-  highlightButton: {fileID: 0}
+  highlightButton: {fileID: 2040628224569298398}
   selectedButtonColor: {r: 0.64705884, g: 0.64705884, b: 0.64705884, a: 0.6509804}
-  overrideNormalColor: 0
-  normalColor: {r: 0.6392157, g: 0.6392157, b: 0.6392157, a: 0.32156864}
+  overrideNormalColor: 1
+  normalColor: {r: 0, g: 0, b: 0, a: 0}
   overrideHighlightedColor: 0
   highlightedColor: {r: 0.64705884, g: 0.64705884, b: 0.64705884, a: 0.6509804}
   overridePressedColor: 0
@@ -18486,7 +18605,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7361298160372839383}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
   m_Name: 
@@ -18549,10 +18668,22 @@ MonoBehaviour:
     m_SelectedTrigger: Highlighted
     m_DisabledTrigger: Disabled
   m_Interactable: 1
-  m_TargetGraphic: {fileID: 3960840797033934944}
+  m_TargetGraphic: {fileID: 0}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 5807937099927844318}
+        m_TargetAssemblyTypeName: AnyRPG.NewGameDetailsPanelController, Assembly-CSharp
+        m_MethodName: OpenClassPanel
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1 &7389602725390465838
 GameObject:
   m_ObjectHideFlags: 0
@@ -22615,7 +22746,7 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 4356013033530746674}
-  m_RootOrder: 1
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
@@ -26087,6 +26218,12 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 9f7ef94a253a9e748b721f0b82a8462e, type: 3}
+--- !u!224 &5194033008548537947 stripped
+RectTransform:
+  m_CorrespondingSourceObject: {fileID: 836000948282463063, guid: 9f7ef94a253a9e748b721f0b82a8462e,
+    type: 3}
+  m_PrefabInstance: {fileID: 4868105248607335692}
+  m_PrefabAsset: {fileID: 0}
 --- !u!114 &2985361857925386833 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 7701394113657104221, guid: 9f7ef94a253a9e748b721f0b82a8462e,
@@ -26099,12 +26236,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7b743370ac3e4ec2a1668f5455a8ef8a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!224 &5194033008548537947 stripped
-RectTransform:
-  m_CorrespondingSourceObject: {fileID: 836000948282463063, guid: 9f7ef94a253a9e748b721f0b82a8462e,
-    type: 3}
-  m_PrefabInstance: {fileID: 4868105248607335692}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &4902784743281084617
 PrefabInstance:
   m_ObjectHideFlags: 0

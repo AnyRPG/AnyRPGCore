@@ -70,25 +70,21 @@ namespace AnyRPG {
             newGameManager.SetUnitProfile(unitProfile);
         }
 
-        /*
+        
         public void CommonSelect() {
             Debug.Log(gameObject.name + ".NewGameUnitButton.CommonSelect()");
-            //newGameManager.SetUnitProfile(unitProfile);
+            newGameManager.SetUnitProfile(unitProfile);
         }
-        */
-
-        /*
+        
         public void RawSelect() {
             CommonSelect();
         }
-        */
-
-        /*
+        
         public override void Select() {
             CommonSelect();
             base.Select();
         }
-        */
+        
 
     }
 

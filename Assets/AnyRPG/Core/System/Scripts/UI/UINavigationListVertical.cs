@@ -8,18 +8,40 @@ using UnityEngine.UI;
 namespace AnyRPG {
     public class UINavigationListVertical : UINavigationController {
 
+        public void SetCurrentButton() {
+            Debug.Log(gameObject.name + ".UINavigationListHorizontal.SetCurrentButton()");
+            if (activeNavigableButtons.Count == 0) {
+                return;
+            }
+            if (currentIndex < 0 || currentIndex >= activeNavigableButtons.Count) {
+                currentIndex = 0;
+                currentNavigableElement = null;
+            }
+            if (currentNavigableElement == null || activeNavigableButtons.Contains(currentNavigableElement) == false) {
+                currentNavigableElement = activeNavigableButtons[currentIndex];
+            }
+        }
+
         public override void FocusCurrentButton() {
             //Debug.Log(gameObject.name + ".UINavigationListVertical.FocusCurrentButton()");
             base.FocusCurrentButton();
             if (activeNavigableButtons.Count == 0) {
                 return;
             }
-            if (currentIndex < 0 || currentIndex >= activeNavigableButtons.Count) {
-                currentIndex = 0;
-            }
-            currentNavigableElement = activeNavigableButtons[currentIndex];
+            SetCurrentButton();
             SelectCurrentNavigableElement();
         }
+
+        public override void HighlightCurrentButton() {
+            //Debug.Log(gameObject.name + ".UINavigationListVertical.FocusCurrentButton()");
+            base.FocusCurrentButton();
+            if (activeNavigableButtons.Count == 0) {
+                return;
+            }
+            SetCurrentButton();
+            HighlightCurrentNavigableElement();
+        }
+
 
         public override void ProcessUpButton() {
             //Debug.Log(gameObject.name + ".UINavigationListVertical.UpButton()");

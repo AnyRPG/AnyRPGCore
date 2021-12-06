@@ -7,7 +7,7 @@ using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 namespace AnyRPG {
-    public class NewGameFactionButton : HighlightButton {
+    public class NewGameDetailsFactionButton : HighlightButton {
 
         [SerializeField]
         protected Faction faction = null;
@@ -48,21 +48,6 @@ namespace AnyRPG {
             factionName.text = string.Empty;
             description.text = string.Empty;
         }
-
-        public void CommonSelect() {
-            newGameManager.SetFaction(faction);
-        }
-
-        public void RawSelect() {
-            CommonSelect();
-        }
-
-        public override void Select() {
-            Debug.Log("NewGameFactionButton.Select()");
-            CommonSelect();
-            base.Select();
-        }
-
 
 
     }

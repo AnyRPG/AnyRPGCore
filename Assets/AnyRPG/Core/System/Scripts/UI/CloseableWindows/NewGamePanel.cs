@@ -192,7 +192,7 @@ namespace AnyRPG {
             characterPreviewPanel.CapabilityConsumer = newGameManager;
             characterPreviewPanel.ReceiveOpenWindowNotification();
 
-            Debug.Log("Preview Unit Ready: " + characterCreatorManager?.PreviewUnitController?.CameraTargetReady);
+            //Debug.Log("Preview Unit Ready: " + characterCreatorManager?.PreviewUnitController?.CameraTargetReady);
 
             // attempt to open the UMA window first
             if (systemConfigurationManager.NewGameUMAAppearance == true) {
@@ -208,11 +208,12 @@ namespace AnyRPG {
             // details should be last because it relies on all the information set in the previous methods
             detailsPanel.ReceiveOpenWindowNotification();
 
+            uINavigationControllers[0].SetCurrentButton(detailsButton);
+
             OpenDetailsPanel();
 
-            uINavigationControllers[0].SetCurrentButton(detailsButton);
-            SetNavigationController(uINavigationControllers[0]);
-            detailsButton.Accept();
+            //SetNavigationController(uINavigationControllers[0]);
+            //detailsButton.Accept();
 
             // testing appearance last since it relies on at very minimum the unit profile being set
 
@@ -318,6 +319,9 @@ namespace AnyRPG {
             } else {
                 specializationButton.Button.interactable = false;
             }
+
+            uINavigationControllers[0].UpdateNavigationList();
+            uINavigationControllers[0].HighlightCurrentButton();
         }
 
         public void HandleSetFaction(Faction newFaction) {
@@ -390,21 +394,10 @@ namespace AnyRPG {
 
             ClosePanels();
             detailsPanel.ShowPanel();
-            SetOpenSubPanel(detailsPanel);
+            SetOpenSubPanel(detailsPanel, true);
 
             detailsButton.HighlightBackground();
             uINavigationControllers[0].UnHightlightButtons(detailsButton);
-        }
-
-        public void OpenClassPanel() {
-            //Debug.Log("NewGamePanel.OpenClassPanel()");
-
-            ClosePanels();
-            classPanel.ShowPanel();
-            SetOpenSubPanel(classPanel);
-
-            classButton.HighlightBackground();
-            uINavigationControllers[0].UnHightlightButtons(classButton);
         }
 
         public void OpenCharacterPanel() {
@@ -412,40 +405,57 @@ namespace AnyRPG {
 
             ClosePanels();
             characterPanel.ShowPanel();
-            SetOpenSubPanel(characterPanel);
+            SetOpenSubPanel(characterPanel, true);
 
             characterButton.HighlightBackground();
             uINavigationControllers[0].UnHightlightButtons(characterButton);
         }
 
         public void OpenAppearancePanel() {
+            Debug.Log("NewGamePanel.OpenAppearancePanel()");
             ClosePanels();
             umaCharacterPanel.ShowPanel();
-            SetOpenSubPanel(umaCharacterPanel);
+            SetOpenSubPanel(umaCharacterPanel, umaCharacterPanel.MainNoOptionsArea.activeSelf == false);
 
             appearanceButton.HighlightBackground();
             uINavigationControllers[0].UnHightlightButtons(appearanceButton);
         }
 
-        public void OpenFactionPanel() {
-            //Debug.Log("NewGamePanel.OpenFactionPanel()");
+        public void OpenFactionPanel(bool focus = true) {
+            Debug.Log("NewGamePanel.OpenFactionPanel()");
 
             ClosePanels();
             factionPanel.ShowPanel();
-            SetOpenSubPanel(factionPanel);
+            SetOpenSubPanel(factionPanel, focus);
 
+            uINavigationControllers[0].SetCurrentButton(factionButton);
             factionButton.HighlightBackground();
             uINavigationControllers[0].UnHightlightButtons(factionButton);
         }
 
-        public void OpenSpecializationPanel() {
+        public void OpenClassPanel(bool focus = true) {
+            //Debug.Log("NewGamePanel.OpenClassPanel()");
+
+            ClosePanels();
+            classPanel.ShowPanel();
+            SetOpenSubPanel(classPanel, focus);
+
+            uINavigationControllers[0].SetCurrentButton(classButton);
+            classButton.HighlightBackground();
+            uINavigationControllers[0].UnHightlightButtons(classButton);
+        }
+
+        public void OpenSpecializationPanel(bool focus = true) {
+            Debug.Log("NewGamePanel.OpenSpecializationPanel()");
+
             // this is only called from buttons, so safe to assume it's already been populated with buttons when the window opened or a class was selected
             if (specializationPanel.OptionButtons.Count > 0) {
                 ClosePanels();
                 specializationPanel.ShowPanel();
-                SetOpenSubPanel(specializationPanel);
+                SetOpenSubPanel(specializationPanel, focus);
             }
 
+            uINavigationControllers[0].SetCurrentButton(specializationButton);
             specializationButton.HighlightBackground();
             uINavigationControllers[0].UnHightlightButtons(specializationButton);
         }

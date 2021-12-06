@@ -28,15 +28,13 @@ namespace AnyRPG {
             }
         }
 
-        public virtual void UnFocus() {
+        public override void UnFocus() {
             //Debug.Log(gameObject.name + ".NavigableInterfaceElement.UnFocus()");
             if (outline != null) {
                 outline.color = hiddenColor;
             }
             HideControllerHints();
-            if (currentNavigationController != null) {
-                currentNavigationController.UnFocus();
-            }
+            base.UnFocus();
         }
 
         public override void ProcessOpenWindowNotification() {
