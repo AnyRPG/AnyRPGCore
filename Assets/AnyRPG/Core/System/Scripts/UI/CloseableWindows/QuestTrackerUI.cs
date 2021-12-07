@@ -139,6 +139,8 @@ namespace AnyRPG {
 
         public override void ProcessOpenWindowNotification() {
             //Debug.Log("QuestTrackerUI.OnOpenWindow()");
+            base.ProcessOpenWindowNotification();
+
             // prevent attempting to show quests if no player is logged in
             if (playerManager.PlayerConnectionSpawned == false) {
                 return;

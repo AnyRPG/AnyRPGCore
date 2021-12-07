@@ -118,7 +118,7 @@ namespace AnyRPG {
         }
 
         public override void ProcessOpenWindowNotification() {
-            Debug.Log("CharacterCreatorPanel.ProcessOpenWindowNotification()");
+            //Debug.Log("CharacterCreatorPanel.ProcessOpenWindowNotification()");
             base.ProcessOpenWindowNotification();
             saveButton.Button.interactable = false;
             uINavigationControllers[0].UpdateNavigationList();

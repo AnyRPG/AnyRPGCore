@@ -9,7 +9,7 @@ namespace AnyRPG {
     public class UINavigationListVertical : UINavigationController {
 
         public void SetCurrentButton() {
-            Debug.Log(gameObject.name + ".UINavigationListHorizontal.SetCurrentButton()");
+            //Debug.Log(gameObject.name + ".UINavigationListHorizontal.SetCurrentButton()");
             if (activeNavigableButtons.Count == 0) {
                 return;
             }
@@ -44,7 +44,7 @@ namespace AnyRPG {
 
 
         public override void ProcessUpButton() {
-            //Debug.Log(gameObject.name + ".UINavigationListVertical.UpButton()");
+            //Debug.Log(gameObject.name + ".UINavigationListVertical.ProcessUpButton()");
             if (activeNavigableButtons.Count == 0) {
                 return;
             }

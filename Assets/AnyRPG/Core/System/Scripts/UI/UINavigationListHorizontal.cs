@@ -9,7 +9,7 @@ namespace AnyRPG {
     public class UINavigationListHorizontal : UINavigationController {
 
         public void SetCurrentButton() {
-            Debug.Log(gameObject.name + ".UINavigationListHorizontal.SetCurrentButton()");
+            //Debug.Log(gameObject.name + ".UINavigationListHorizontal.SetCurrentButton()");
             if (activeNavigableButtons.Count == 0) {
                 return;
             }
@@ -23,7 +23,7 @@ namespace AnyRPG {
         }
 
         public override void FocusCurrentButton() {
-            Debug.Log(gameObject.name + ".UINavigationListHorizontal.FocusCurrentButton()");
+            //Debug.Log(gameObject.name + ".UINavigationListHorizontal.FocusCurrentButton()");
             base.FocusCurrentButton();
             if (activeNavigableButtons.Count == 0) {
                 return;
@@ -33,7 +33,7 @@ namespace AnyRPG {
         }
 
         public override void HighlightCurrentButton() {
-            Debug.Log(gameObject.name + ".UINavigationListHorizontal.HighlightCurrentButton()");
+            //Debug.Log(gameObject.name + ".UINavigationListHorizontal.HighlightCurrentButton()");
             base.FocusCurrentButton();
             if (activeNavigableButtons.Count == 0) {
                 return;

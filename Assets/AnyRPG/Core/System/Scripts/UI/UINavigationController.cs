@@ -124,6 +124,10 @@ namespace AnyRPG {
 
         public virtual void SetCurrentIndex(int newIndex) {
             currentIndex = newIndex;
+            currentNavigableElement = null;
+            if (activeNavigableButtons.Count > currentIndex) {
+                currentNavigableElement = activeNavigableButtons[currentIndex];
+            }
         }
 
         public virtual void SetCurrentButton(NavigableElement navigableElement) {
@@ -131,7 +135,7 @@ namespace AnyRPG {
             for (int i = 0; i < activeNavigableButtons.Count; i++) {
                 if (activeNavigableButtons[i] == navigableElement) {
                     SetCurrentIndex(i);
-                    currentNavigableElement = navigableElement;
+                    //currentNavigableElement = navigableElement;
                     break;
                 }
             }
@@ -214,8 +218,7 @@ namespace AnyRPG {
             if (activeNavigableButtons.Count == 0) {
                 return;
             }
-            currentIndex = 0;
-            currentNavigableElement = activeNavigableButtons[currentIndex];
+            SetCurrentIndex(0);
             SelectCurrentNavigableElement();
         }
 
@@ -247,6 +250,7 @@ namespace AnyRPG {
         }
 
         public virtual void ProcessUpButton() {
+            //Debug.Log(gameObject.name + ".UINavigationController.ProcessUpButton()");
         }
 
         public virtual bool LeaveUp() {
@@ -385,8 +389,7 @@ namespace AnyRPG {
             //Debug.Log(gameObject.name + ".UINavigationController.Accept()");
             if (activeNavigableButtons.Count != 0) {
                 if (currentIndex < 0) {
-                    currentIndex = 0;
-                    currentNavigableElement = activeNavigableButtons[currentIndex];
+                    SetCurrentIndex(0);
                     currentNavigableElement.Select();
                     return;
                 }
@@ -455,7 +458,7 @@ namespace AnyRPG {
             //Debug.Log(gameObject.name + ".UINavigationController.ReceiveOpenWindowNotification()");
             if (updateActiveListOnOpen) {
                 UpdateNavigationList();
-                currentIndex = 0;
+                SetCurrentIndex(0);
             }
         }
 

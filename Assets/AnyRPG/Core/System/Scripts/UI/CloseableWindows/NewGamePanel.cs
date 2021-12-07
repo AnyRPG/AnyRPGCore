@@ -412,7 +412,7 @@ namespace AnyRPG {
         }
 
         public void OpenAppearancePanel() {
-            Debug.Log("NewGamePanel.OpenAppearancePanel()");
+            //Debug.Log("NewGamePanel.OpenAppearancePanel()");
             ClosePanels();
             umaCharacterPanel.ShowPanel();
             SetOpenSubPanel(umaCharacterPanel, umaCharacterPanel.MainNoOptionsArea.activeSelf == false);
@@ -422,7 +422,7 @@ namespace AnyRPG {
         }
 
         public void OpenFactionPanel(bool focus = true) {
-            Debug.Log("NewGamePanel.OpenFactionPanel()");
+            //Debug.Log("NewGamePanel.OpenFactionPanel()");
 
             ClosePanels();
             factionPanel.ShowPanel();
@@ -446,7 +446,7 @@ namespace AnyRPG {
         }
 
         public void OpenSpecializationPanel(bool focus = true) {
-            Debug.Log("NewGamePanel.OpenSpecializationPanel()");
+            //Debug.Log("NewGamePanel.OpenSpecializationPanel()");
 
             // this is only called from buttons, so safe to assume it's already been populated with buttons when the window opened or a class was selected
             if (specializationPanel.OptionButtons.Count > 0) {

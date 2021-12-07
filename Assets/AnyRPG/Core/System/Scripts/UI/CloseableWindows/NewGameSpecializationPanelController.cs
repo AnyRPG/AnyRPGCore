@@ -84,7 +84,7 @@ namespace AnyRPG {
         }
 
         public void ShowOptionButtons() {
-            Debug.Log("NewGameSpecializationPanelController.ShowOptionButtons()");
+            //Debug.Log("NewGameSpecializationPanelController.ShowOptionButtons()");
 
             ClearOptionButtons();
             HideInfoArea();
@@ -110,7 +110,7 @@ namespace AnyRPG {
         }
 
         public void SetClassSpecialization(ClassSpecialization newClassSpecialization) {
-            Debug.Log("NewGameSpecializationPanelController.SetClassSpecialization()");
+            //Debug.Log("NewGameSpecializationPanelController.SetClassSpecialization()");
 
             // deselect old button
             if (selectedClassSpecializationButton != null && selectedClassSpecializationButton.ClassSpecialization != newClassSpecialization) {

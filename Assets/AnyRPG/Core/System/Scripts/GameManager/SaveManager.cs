@@ -1141,12 +1141,14 @@ namespace AnyRPG {
             anyRPGSaveData = PerformInventorySetup(anyRPGSaveData);
 
             // set initial scene
-            SceneNode sceneNode = systemDataFactory.GetResource<SceneNode>(systemConfigurationManager.DefaultStartingZone);
-            if (sceneNode != null) {
-                anyRPGSaveData.CurrentScene = sceneNode.SceneFile;
-            } else {
-                anyRPGSaveData.CurrentScene = systemConfigurationManager.DefaultStartingZone;
-                //Debug.LogError("LevelManager.LoadLevel(" + levelName + "): could not find scene node with that name!");
+            if (anyRPGSaveData.CurrentScene == null || anyRPGSaveData.CurrentScene == string.Empty) {
+                SceneNode sceneNode = systemDataFactory.GetResource<SceneNode>(systemConfigurationManager.DefaultStartingZone);
+                if (sceneNode != null) {
+                    anyRPGSaveData.CurrentScene = sceneNode.SceneFile;
+                } else {
+                    anyRPGSaveData.CurrentScene = systemConfigurationManager.DefaultStartingZone;
+                    //Debug.LogError("LevelManager.LoadLevel(" + levelName + "): could not find scene node with that name!");
+                }
             }
 
             // set level

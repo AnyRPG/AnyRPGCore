@@ -24,11 +24,13 @@ namespace AnyRPG {
             OnCloseWindow(this);
         }
 
+        /*
         public override void ProcessOpenWindowNotification() {
             //Debug.Log("UMACharacterEditorPanelController.ProcessOpenWindowNotification()");
             base.ProcessOpenWindowNotification();
             //uINavigationControllers[0].FocusCurrentButton();
         }
+        */
 
         public void HidePanel() {
             //Debug.Log("UMACharacterEditorPanelController.HidePanel()");

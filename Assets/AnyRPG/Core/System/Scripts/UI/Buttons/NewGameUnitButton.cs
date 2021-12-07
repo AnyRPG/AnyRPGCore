@@ -72,7 +72,7 @@ namespace AnyRPG {
 
         
         public void CommonSelect() {
-            Debug.Log(gameObject.name + ".NewGameUnitButton.CommonSelect()");
+            //Debug.Log(gameObject.name + ".NewGameUnitButton.CommonSelect()");
             newGameManager.SetUnitProfile(unitProfile);
         }
         

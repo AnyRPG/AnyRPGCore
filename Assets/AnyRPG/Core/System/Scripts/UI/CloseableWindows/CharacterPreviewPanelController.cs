@@ -56,6 +56,7 @@ namespace AnyRPG {
 
         public override void ProcessOpenWindowNotification() {
             //Debug.Log("CharacterPreviewPanelController.ProcessOpenWindowNotification()");
+            base.ProcessOpenWindowNotification();
             windowOpened = true;
             characterReady = false;
             characterCreatorManager.OnTargetCreated += HandleTargetCreated;

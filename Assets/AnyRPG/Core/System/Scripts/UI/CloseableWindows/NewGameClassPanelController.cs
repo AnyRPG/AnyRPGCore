@@ -71,7 +71,7 @@ namespace AnyRPG {
         }
 
         public void ShowOptionButtons() {
-            Debug.Log("NewGameClassPanelController.ShowOptionButtons()");
+            //Debug.Log("NewGameClassPanelController.ShowOptionButtons()");
             ClearOptionButtons();
 
             for (int i = 0; i < newGameManager.CharacterClassList.Count; i++) {
@@ -94,7 +94,7 @@ namespace AnyRPG {
         }
 
         public void SetCharacterClass(CharacterClass newCharacterClass) {
-            Debug.Log("NewGameClassPanelController.SetCharacterClass()");
+            //Debug.Log("NewGameClassPanelController.SetCharacterClass()");
 
             // deselect old button
             if (selectedClassButton != null && newCharacterClass != selectedClassButton.CharacterClass) {

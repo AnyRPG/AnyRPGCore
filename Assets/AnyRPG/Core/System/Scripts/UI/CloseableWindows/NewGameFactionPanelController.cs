@@ -75,7 +75,7 @@ namespace AnyRPG {
         }
 
         public void ShowOptionButtons() {
-            Debug.Log("NewGameFactionPanelController.ShowOptionButtons()");
+            //Debug.Log("NewGameFactionPanelController.ShowOptionButtons()");
             ClearOptionButtons();
 
             for (int i = 0; i < newGameManager.FactionList.Count; i++) {
@@ -98,7 +98,7 @@ namespace AnyRPG {
         }
 
         public void SetFaction(Faction newFaction) {
-            Debug.Log("NewGameFactionPanelController.SetFaction(" + newFaction.DisplayName + ")");
+            //Debug.Log("NewGameFactionPanelController.SetFaction(" + newFaction.DisplayName + ")");
 
             // deselect old button
             if (selectedFactionButton != null && selectedFactionButton.Faction != newFaction) {

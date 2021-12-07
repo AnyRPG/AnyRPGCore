@@ -140,7 +140,7 @@ namespace AnyRPG {
         }
 
         public virtual void SetActiveSubPanel(CloseableWindowContents closeableWindowContents, bool focus = true) {
-            Debug.Log(gameObject.name + ".CloseableWindowContents.SetActiveSubPanel(" + (closeableWindowContents == null ? "null" : closeableWindowContents.name) + ")");
+            //Debug.Log(gameObject.name + ".CloseableWindowContents.SetActiveSubPanel(" + (closeableWindowContents == null ? "null" : closeableWindowContents.name) + ")");
             if (closeableWindowContents != null) {
                 foreach (UINavigationController uINavigationController in uINavigationControllers) {
                     uINavigationController.UnFocus();
@@ -158,6 +158,7 @@ namespace AnyRPG {
         }
 
         public virtual void UnFocus() {
+            //Debug.Log(gameObject.name + ".CloseableWindowContents.UnFocus()");
             if (currentNavigationController != null) {
                 currentNavigationController.UnFocus();
             }
@@ -489,11 +490,6 @@ namespace AnyRPG {
         }
 
         public virtual void ProcessOpenWindowNotification() {
-
-        }
-
-        public void ReceiveOpenWindowNotification() {
-            //Debug.Log(gameObject.name + ".CloseableWindowContents.ReceiveOpenWindowNotification()");
             if (hintBarController != null) {
                 hintBarController.Hide();
             }
@@ -517,6 +513,11 @@ namespace AnyRPG {
             } else {
                 //Debug.Log("No navigation controller for " + gameObject.name);
             }
+        }
+
+        public void ReceiveOpenWindowNotification() {
+            //Debug.Log(gameObject.name + ".CloseableWindowContents.ReceiveOpenWindowNotification()");
+            
             ProcessOpenWindowNotification();
         }
 
