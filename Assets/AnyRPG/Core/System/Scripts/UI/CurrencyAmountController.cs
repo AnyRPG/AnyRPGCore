@@ -22,6 +22,10 @@ namespace AnyRPG {
             currencyIcon.Configure(systemGameManager);
         }
 
+        public void DisableTooltip() {
+            currencyIcon.DisableTooltip();
+        }
+
         public void SetToolTipTransform(RectTransform toolTipTransform) {
             currencyIcon.SetToolTipTransform(toolTipTransform);
         }

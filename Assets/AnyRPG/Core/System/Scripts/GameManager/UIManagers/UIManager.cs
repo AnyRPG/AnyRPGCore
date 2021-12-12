@@ -81,6 +81,10 @@ namespace AnyRPG {
         private InteractionTooltipController interactionTooltipController = null;
 
         [SerializeField]
+        private TooltipController tooltipController = null;
+
+        /*
+        [SerializeField]
         private GameObject toolTip = null;
 
         private TextMeshProUGUI toolTipText = null;
@@ -90,6 +94,7 @@ namespace AnyRPG {
 
         [SerializeField]
         private RectTransform tooltipRect = null;
+        */
 
         [SerializeField]
         private HandScript handScript = null;
@@ -212,13 +217,6 @@ namespace AnyRPG {
 
         private bool hadMoveable = false;
 
-        // keep track of tooltip parameters for updating on window move
-        private RectTransform toolTipPanelTransform = null;
-        private Transform toolTipButtonTransform = null;
-        private IDescribable toolTipDescribable = null;
-        private string toolTipSellString = string.Empty;
-        private bool toolTipVisible = false;
-
         protected bool eventSubscriptionsInitialized = false;
 
         /*
@@ -277,7 +275,6 @@ namespace AnyRPG {
         public DraggableWindow SidePanel { get => sidePanel; set => sidePanel = value; }
         public GameObject MouseOverTarget { get => mouseOverTarget; set => mouseOverTarget = value; }
         public DraggableWindow MouseOverWindow { get => mouseOverWindow; set => mouseOverWindow = value; }
-        public GameObject ToolTip { get => toolTip; set => toolTip = value; }
         public CutSceneBarController CutSceneBarController { get => cutSceneBarController; set => cutSceneBarController = value; }
         public GameObject PlayerInterfaceCanvas { get => playerInterface; set => playerInterface = value; }
         public GameObject PopupWindowContainer { get => popupWindowContainer; set => popupWindowContainer = value; }
@@ -285,7 +282,6 @@ namespace AnyRPG {
         public GameObject CombatTextCanvas { get => combatTextCanvas; set => combatTextCanvas = value; }
         public bool DragInProgress { get => dragInProgress; set => dragInProgress = value; }
         public GameObject CutSceneBarsCanvas { get => cutSceneBarsCanvas; set => cutSceneBarsCanvas = value; }
-        public CurrencyBarController ToolTipCurrencyBarController { get => toolTipCurrencyBarController; set => toolTipCurrencyBarController = value; }
         public GameObject PlayerUI { get => playerUI; }
         public Dictionary<string, float> DefaultWindowPositions { get => defaultWindowPositions; }
         public CombatTextManager CombatTextManager { get => combatTextManager; set => combatTextManager = value; }
@@ -333,8 +329,8 @@ namespace AnyRPG {
             mouseOverWindow.Configure(systemGameManager);
             questTrackerWindow.Configure(systemGameManager);
             combatLogWindow.Configure(systemGameManager);
+            tooltipController.Configure(systemGameManager);
             interactionTooltipController.Configure(systemGameManager);
-            toolTipCurrencyBarController.Configure(systemGameManager);
             handScript.Configure(systemGameManager);
 
             // initialize popup windows
@@ -442,7 +438,6 @@ namespace AnyRPG {
             if (playerManager.PlayerUnitSpawned) {
                 ProcessPlayerUnitSpawn();
             }
-            toolTipText = toolTip.GetComponentInChildren<TextMeshProUGUI>();
 
             // get references to all the items in the mouseover window we will need to update
             mouseOverText = mouseOverWindow.transform.GetComponentInChildren<TextMeshProUGUI>();
@@ -624,6 +619,38 @@ namespace AnyRPG {
             }
             CleanupEventSubscriptions();
         }
+
+        public void ShowInteractionTooltip(Interactable interactable) {
+            if (controlsManager.GamePadModeActive == false) {
+                return;
+            }
+            interactionTooltipController.ShowInteractionTooltip(interactable);
+        }
+
+        public void ShowToolTip(Vector3 position, IDescribable describable) {
+            tooltipController.ShowToolTip(position, describable, string.Empty);
+        }
+
+        public void ShowToolTip(Vector2 pivot, Vector3 position, IDescribable describable) {
+            tooltipController.ShowToolTip(pivot, position, describable);
+        }
+
+        public void ShowGamepadTooltip(RectTransform paneltransform, Transform buttonTransform, IDescribable describable, string sellPriceString) {
+            tooltipController.ShowGamepadTooltip(paneltransform, buttonTransform, describable, sellPriceString);
+        }
+
+        public void RefreshTooltip(IDescribable describable) {
+            tooltipController.RefreshTooltip(describable);
+        }
+
+        public void RefreshGamepadToolTip() {
+            tooltipController.RefreshGamepadToolTip();
+        }
+
+        public void HideToolTip() {
+            tooltipController.HideToolTip();
+        }
+
 
         public void ProcessInput() {
 
@@ -1048,156 +1075,9 @@ namespace AnyRPG {
 
         }
 
-        public void ShowToolTip(Vector3 position, IDescribable describable) {
-            ShowToolTip(position, describable, string.Empty);
-        }
-
-        public void ShowToolTip(Vector3 position, IDescribable describable, string showSellPrice) {
-            if (describable == null) {
-                HideToolTip();
-                return;
-            }
-            int pivotX;
-            int pivotY;
-            if (Input.mousePosition.x < (Screen.width / 2)) {
-                pivotX = 0;
-            } else {
-                pivotX = 1;
-            }
-            if (Input.mousePosition.y < (Screen.height / 2)) {
-                pivotY = 0;
-            } else {
-                pivotY = 1;
-            }
-            ShowToolTip(new Vector2(pivotX, pivotY), position, describable, showSellPrice);
-        }
-
-        public void ShowToolTip(Vector2 pivot, Vector3 position, IDescribable describable) {
-            ShowToolTip(pivot, position, describable, string.Empty);
-        }
-
-        public void RefreshGamepadToolTip() {
-            if (toolTipVisible == false) {
-                return;
-            }
-            ShowGamepadTooltip(toolTipPanelTransform, toolTipButtonTransform, toolTipDescribable, toolTipSellString);
-        }
-
-        public void ShowGamepadTooltip(RectTransform paneltransform, Transform buttonTransform, IDescribable describable, string sellPriceString) {
-            //Debug.Log("UIManager.ShowGamepadTooltip()");
-            //Rect panelRect = RectTransformToScreenSpace((BagPanel.ContentArea as RectTransform));
-            toolTipPanelTransform = paneltransform;
-            toolTipButtonTransform = buttonTransform;
-            toolTipDescribable = describable;
-            toolTipSellString = sellPriceString;
-
-            Vector3[] WorldCorners = new Vector3[4];
-            paneltransform.GetWorldCorners(WorldCorners);
-            float xMin = WorldCorners[0].x;
-            float xMax = WorldCorners[2].x;
-            //Debug.Log("panel bounds: xmin: " + xMin + "; xmax: " + xMax);
-
-            if (Mathf.Abs((Screen.width / 2f) - xMin) < Mathf.Abs((Screen.width / 2f) - xMax)) {
-                // left side is closer to center of the screen
-                ShowToolTip(new Vector2(1, 0.5f), new Vector3(xMin, buttonTransform.position.y, 0f), describable, sellPriceString);
-            } else {
-                // right side is closer to the center of the screen
-                ShowToolTip(new Vector2(0, 0.5f), new Vector3(xMax, buttonTransform.position.y, 0f), describable, sellPriceString);
-            }
-            //uIManager.ShowToolTip(transform.position, inventorySlot.Item, "Sell Price: ");
-            toolTipVisible = true;
-        }
-
-        /// <summary>
-        /// Show the tooltip
-        /// </summary>
-        public void ShowToolTip(Vector2 pivot, Vector3 position, IDescribable describable, string showSellPrice) {
-            //Debug.Log("UIManager.ShowToolTip(" + pivot + ", " + position + ", " + (describable == null ? "null" : describable.DisplayName) + ", " + showSellPrice + ")");
-            if (describable == null) {
-                HideToolTip();
-                return;
-            }
-            tooltipRect.pivot = pivot;
-            toolTip.SetActive(true);
-
-            toolTip.transform.position = position;
-            ShowToolTipCommon(describable, showSellPrice);
-            //toolTipText.text = description.GetDescription();
-
-            LayoutRebuilder.ForceRebuildLayoutImmediate(tooltipRect);
-            float topPoint = tooltipRect.rect.yMax + position.y;
-            float bottomPoint = tooltipRect.rect.yMin + position.y;
-            //Debug.Log("screen height : " + Screen.height + "; position: " + position + "; top: " + tooltipRect.rect.yMax + "; bottom: " + tooltipRect.rect.yMin);
-
-            // move up if too low
-            if (bottomPoint < 0f) {
-                toolTip.transform.position = new Vector3(toolTip.transform.position.x, (toolTip.transform.position.y - bottomPoint) + 20, toolTip.transform.position.z);
-                LayoutRebuilder.ForceRebuildLayoutImmediate(tooltipRect);
-            }
-
-            // move down if too high
-            if (topPoint > Screen.height) {
-                toolTip.transform.position = new Vector3(toolTip.transform.position.x, toolTip.transform.position.y - ((topPoint - Screen.height) + 20), toolTip.transform.position.z);
-                LayoutRebuilder.ForceRebuildLayoutImmediate(tooltipRect);
-            }
-
-
-        }
-
-        public void ShowToolTipCommon(IDescribable describable, string showSellPrice) {
-            //Debug.Log("UIManager.ShowToolTipCommon(" + (describable == null ? "null" : describable.DisplayName) + ", " + showSellPrice + ")");
-            if (describable == null) {
-                HideToolTip();
-                return;
-            }
-
-            // show new price
-            toolTipText.text = describable.GetDescription();
-            if (ToolTipCurrencyBarController != null) {
-                ToolTipCurrencyBarController.ClearCurrencyAmounts();
-                if (describable is Item && showSellPrice != string.Empty) {
-                    KeyValuePair<Currency, int> sellAmount = (describable as Item).GetSellPrice();
-                    if (sellAmount.Value == 0 || sellAmount.Key == null) {
-                        // don't print a sell price on things that cannot be sold
-                        return;
-                    }
-                    ToolTipCurrencyBarController.UpdateCurrencyAmount(sellAmount.Key, sellAmount.Value, showSellPrice);
-                }
-            }
-        }
-
-
-        public void ShowInteractionTooltip(Interactable interactable) {
-            if (controlsManager.GamePadModeActive == false) {
-                return;
-            }
-            interactionTooltipController.ShowInteractionTooltip(interactable);
-        }
-
-        /// <summary>
-        /// Hide the tooltip
-        /// </summary>
-        public void HideToolTip() {
-            //Debug.Log("UIManager.HideToolTip()");
-            toolTip.SetActive(false);
-            toolTipVisible = false;
-        }
-
         public void HideInteractionToolTip() {
             //Debug.Log("UIManager.HideToolTip()");
             interactionTooltipController.HideInteractionTooltip();
-        }
-
-        public void RefreshTooltip(IDescribable describable) {
-            RefreshTooltip(describable, string.Empty);
-        }
-        public void RefreshTooltip(IDescribable describable, string showSellPrice) {
-            if (describable != null && toolTipText != null && toolTipText.text != null) {
-                ShowToolTipCommon(describable, showSellPrice);
-                //toolTipText.text = description.GetDescription();
-            } else {
-                HideToolTip();
-            }
         }
 
         public void CheckQuestTrackerSettings() {

@@ -24,6 +24,8 @@ namespace AnyRPG {
         // the transform that will be used to calculate tooltip position
         protected RectTransform toolTipTransform = null;
 
+        protected bool tooltipEnabled = true;
+
         // game manager references
         //protected UIManager uIManager = null;
 
@@ -36,6 +38,10 @@ namespace AnyRPG {
             base.Configure(systemGameManager);
 
             uIManager = systemGameManager.UIManager;
+        }
+
+        public void DisableTooltip() {
+            tooltipEnabled = false;
         }
 
         public void SetToolTipTransform(RectTransform toolTipTransform) {
@@ -131,6 +137,9 @@ namespace AnyRPG {
         }
 
         public virtual void ShowToolTip() {
+            if (tooltipEnabled == false) {
+                return;
+            }
             uIManager.ShowGamepadTooltip(toolTipTransform, transform, describable, "");
         }
 

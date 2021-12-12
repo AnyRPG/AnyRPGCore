@@ -33,6 +33,12 @@ namespace AnyRPG {
             }
         }
 
+        public void DisableTooltip() {
+            foreach (CurrencyAmountController currencyAmountController in currencyAmountControllers) {
+                currencyAmountController.DisableTooltip();
+            }
+        }
+
         public void SetToolTipTransform(RectTransform toolTipTransform) {
             foreach (CurrencyAmountController currencyAmountController in currencyAmountControllers) {
                 currencyAmountController.SetToolTipTransform(toolTipTransform);

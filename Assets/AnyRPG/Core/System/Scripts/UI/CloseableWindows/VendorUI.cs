@@ -34,7 +34,7 @@ namespace AnyRPG {
         protected MessageFeedManager messageFeedManager = null;
         protected CurrencyConverter currencyConverter = null;
 
-        protected List<CurrencyAmountController> currencyAmountControllers = new List<CurrencyAmountController>();
+        //protected List<CurrencyAmountController> currencyAmountControllers = new List<CurrencyAmountController>();
 
         public override void Configure(SystemGameManager systemGameManager) {
             base.Configure(systemGameManager);
@@ -50,13 +50,17 @@ namespace AnyRPG {
             buyBackCollection = ScriptableObject.CreateInstance(typeof(VendorCollection)) as VendorCollection;
 
             currencyBarController.Configure(systemGameManager);
+            currencyBarController.SetToolTipTransform(rectTransform);
+
             foreach (VendorButton vendorButton in vendorButtons) {
                 vendorButton.Configure(systemGameManager);
             }
 
+            /*
             foreach (CurrencyAmountController currencyAmountController in currencyAmountControllers) {
                 currencyAmountController.Configure(systemGameManager);
             }
+            */
         }
 
         protected override void ProcessCreateEventSubscriptions() {
