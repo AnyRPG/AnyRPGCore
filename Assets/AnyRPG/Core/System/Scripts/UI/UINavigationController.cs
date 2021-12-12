@@ -141,6 +141,12 @@ namespace AnyRPG {
             }
         }
 
+        public void DeactivateGamepadInput() {
+            foreach (NavigableElement navigableElement in activeNavigableButtons) {
+                navigableElement.DeSelect();
+            }
+        }
+
         public virtual void UnHightlightButtons(NavigableElement skipButton = null) {
             //Debug.Log(gameObject.name + ".UINavigationController.UnHightlightButtons(" + (skipButton == null ? "null" : skipButton.gameObject.name) + ")");
             foreach (NavigableElement navigableElement in activeNavigableButtons) {

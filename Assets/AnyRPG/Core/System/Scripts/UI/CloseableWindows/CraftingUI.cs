@@ -257,7 +257,7 @@ namespace AnyRPG {
         public void DeselectOtherRecipes() {
             //Debug.Log("CraftingUI.DeselectRecipes()");
             foreach (Recipe recipe in recipeScripts.Keys) {
-                if (recipe != SelectedRecipeScript.Recipe) {
+                if (recipe != SelectedRecipeScript?.Recipe) {
                     recipeScripts[recipe].DeSelect();
                 }
             }

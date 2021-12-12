@@ -157,6 +157,15 @@ namespace AnyRPG {
             }
         }
 
+        public void DeactivateGamepadInput() {
+            foreach (CloseableWindowContents closeableWindowContents in subPanels) {
+                closeableWindowContents.DeactivateGamepadInput();
+            }
+            foreach (UINavigationController uINavigationController in uINavigationControllers) {
+                uINavigationController.DeactivateGamepadInput();
+            }
+        }
+
         public virtual void UnFocus() {
             //Debug.Log(gameObject.name + ".CloseableWindowContents.UnFocus()");
             if (currentNavigationController != null) {

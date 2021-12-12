@@ -321,7 +321,7 @@ namespace AnyRPG {
         }
 
         /// <summary>
-        /// removes the item from the inventory.  new inventory system.
+        /// removes the item from the inventory system
         /// </summary>
         public void Remove() {
             //Debug.Log("Item " + GetInstanceID().ToString() + " is about to ask the slot to remove itself");

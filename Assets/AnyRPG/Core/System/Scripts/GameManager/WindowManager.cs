@@ -99,6 +99,12 @@ namespace AnyRPG {
             }
         }
 
+        public void DeactivateGamepadInput() {
+            foreach (CloseableWindowContents closeableWindowContents in windowStack) {
+                closeableWindowContents.DeactivateGamepadInput();
+            }
+        }
+
         public void Navigate() {
             //Debug.Log("WindowManager.Navigate()");
 

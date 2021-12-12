@@ -418,12 +418,13 @@ namespace AnyRPG {
 
             // activate in game UI to get default positions
             ActivateInGameUI();
-            //return;
+
             // system menu needs to be activated so that the UI settings check can adjust its opacity
             ActivateSystemMenuUI();
 
             // this call will activate the player UI
             CheckUISettings(false);
+
 
             GetDefaultWindowPositions();
 
@@ -821,6 +822,17 @@ namespace AnyRPG {
         public void ActivatePlayerUI() {
             //Debug.Log("UIManager.ActivatePlayerUI()");
             playerUI.SetActive(true);
+
+            // canvases need to be activated because a cutscene could have deactivated them
+            PlayerInterfaceCanvas.SetActive(true);
+            PopupWindowContainer.SetActive(true);
+            PopupPanelContainer.SetActive(true);
+            CombatTextCanvas.SetActive(true);
+        }
+
+        public void InitializePlayerUI() {
+            //Debug.Log("UIManager.InitializePlayerUI()");
+            playerUI.SetActive(true);
             PlayerInterfaceCanvas.SetActive(true);
             PopupWindowContainer.SetActive(true);
             PopupPanelContainer.SetActive(true);
@@ -830,12 +842,14 @@ namespace AnyRPG {
             miniMapWindow.OpenWindow();
             questTrackerWindow.OpenWindow();
             messageFeedManager.MessageFeedWindow.OpenWindow();
-            if (controlsManager.GamePadModeActive == true) {
-                gamepadWindow.OpenWindow();
-            }
+            //actionBarManager.ActivateCorrectActionBars();
+            // open gamepad window even though gamepad mode may not be active
+            // so that the window position can be retrieved
+            gamepadWindow.OpenWindow();
             xpBarWindow.OpenWindow();
             combatLogWindow.OpenWindow();
             UpdateLockUI();
+
         }
 
         public void DeactivateLoadingUI() {
@@ -1152,7 +1166,11 @@ namespace AnyRPG {
             }
         }
 
+
         public void ShowInteractionTooltip(Interactable interactable) {
+            if (controlsManager.GamePadModeActive == false) {
+                return;
+            }
             interactionTooltipController.ShowInteractionTooltip(interactable);
         }
 
@@ -1206,12 +1224,15 @@ namespace AnyRPG {
             }
         }
 
-
+        /// <summary>
+        /// show or hide ui elements and adjust opacity according to current settings
+        /// </summary>
+        /// <param name="closeAfterUpdate"></param>
         public void CheckUISettings(bool closeAfterUpdate = false) {
             //Debug.Log("UIManager.CheckUISettings()");
 
             // player interaface settings
-            ActivatePlayerUI();
+            InitializePlayerUI();
 
             CheckQuestTrackerSettings();
             CheckCombatLogSettings();
@@ -1228,10 +1249,16 @@ namespace AnyRPG {
             UpdateSystemMenuOpacity();
         }
 
+        public void ToggleGamepadMode() {
+            //Debug.Log("UIManager.ToggleGamepadMode()");
+            UpdateActionBars();
+            UpdateLockUI();
+        }
+
         public void UpdateActionBars() {
             //Debug.Log("UIManager.UpdateActionBars()");
 
-            actionBarManager.UpdateActionBars();
+            actionBarManager.ActivateCorrectActionBars();
             
             UpdateActionBarOpacity();
         }

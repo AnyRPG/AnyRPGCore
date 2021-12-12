@@ -584,6 +584,7 @@ namespace AnyRPG {
         }
 
         public void UpdateVisuals(bool removeStaleActions = false) {
+            //Debug.Log("ActionBarmanager.UpdateVisuals(" + removeStaleActions + ")");
             if (controlsManager.GamePadModeActive == true) {
                 foreach (ActionBarController actionBarController in gamepadActionBarControllers) {
                     //Debug.Log("ActionBarManager.AddNewAbility(): looping through a controller");
@@ -601,8 +602,8 @@ namespace AnyRPG {
             UpdateVisuals();
         }
 
-        public void UpdateActionBars() {
-            //Debug.Log("ActionBarmanager.UpdateActionBars()");
+        public void ActivateCorrectActionBars() {
+            //Debug.Log("ActionBarmanager.ActivateCorrectActionBars()");
 
             if (controlsManager.GamePadModeActive == true) {
 
@@ -621,37 +622,48 @@ namespace AnyRPG {
                 // show gamepad
                 //gamepadPanel.ShowGamepad();
                 //gamepadPanel.gameObject.SetActive(true);
+                uIManager.GamepadWindow.OpenWindow();
 
+                /*
                 // activate gamepad action bar controllers
                 for (int i = 0; i <= 1; i++) {
                     if (!gamepadActionBarControllers[i].gameObject.activeSelf) {
                         gamepadActionBarControllers[i].gameObject.SetActive(true);
                     }
                 }
-
+                */
             } else {
+
                 // hide gamepad controllers
+                /*
                 for (int i = 0; i <= 1; i++) {
                     if (gamepadActionBarControllers[i].gameObject.activeSelf) {
                         gamepadActionBarControllers[i].gameObject.SetActive(false);
                     }
                 }
+                */
 
                 // hide gamepad
                 //gamepadPanel.HideGamepad();
                 //gamepadPanel.gameObject.SetActive(false);
+                uIManager.GamepadWindow.CloseWindow();
 
                 // show systembar
-                if (!systemBarController.gameObject.activeSelf) {
+                if (systemBarController.gameObject.activeSelf == false) {
                     systemBarController.gameObject.SetActive(true);
                 }
 
+                // activate action bar controller 1
+                if (actionBarControllers[0].gameObject.activeSelf == false) {
+                    actionBarControllers[0].gameObject.SetActive(true);
+                }
+
                 if (PlayerPrefs.GetInt("UseActionBar2") == 0) {
-                    if (actionBarControllers[1].gameObject.activeSelf) {
+                    if (actionBarControllers[1].gameObject.activeSelf == true) {
                         actionBarControllers[1].gameObject.SetActive(false);
                     }
                 } else if (PlayerPrefs.GetInt("UseActionBar2") == 1) {
-                    if (!actionBarControllers[1].gameObject.activeSelf) {
+                    if (actionBarControllers[1].gameObject.activeSelf == false) {
                         actionBarControllers[1].gameObject.SetActive(true);
                     }
                 }
@@ -703,6 +715,8 @@ namespace AnyRPG {
                     }
                 }
             }
+
+            UpdateVisuals(false);
 
         }
 

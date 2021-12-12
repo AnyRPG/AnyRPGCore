@@ -78,6 +78,10 @@ namespace AnyRPG {
         [SerializeField]
         protected bool CapitalizeText = false;
 
+        [Tooltip("If true, the hover sound is played when the mouse moves over this button")]
+        [SerializeField]
+        protected bool mouseHoverSound = true;
+
         // game manager references
         protected UIManager uIManager = null;
 
@@ -185,7 +189,9 @@ namespace AnyRPG {
 
         public override void OnPointerEnter(PointerEventData eventData) {
             base.OnPointerEnter(eventData);
-            OnHoverSound();
+            if (mouseHoverSound == true) {
+                OnHoverSound();
+            }
         }
 
         public override void OnPointerClick(PointerEventData eventData) {

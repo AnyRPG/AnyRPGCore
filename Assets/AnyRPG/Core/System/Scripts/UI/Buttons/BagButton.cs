@@ -134,6 +134,7 @@ namespace AnyRPG {
                     } else {
                         Bag tmp = (Bag)handScript.Moveable;
                         playerManager.MyCharacter.CharacterInventoryManager.AddBag(tmp, bagNode);
+                        tmp.Remove();
                         handScript.Drop();
                         playerManager.MyCharacter.CharacterInventoryManager.FromSlot = null;
 

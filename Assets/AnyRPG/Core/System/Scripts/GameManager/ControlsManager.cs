@@ -65,7 +65,7 @@ namespace AnyRPG {
             base.Configure(systemGameManager);
 
             if (systemConfigurationManager.DefaultControllerConfiguration == DefaultControllerConfiguration.GamePad) {
-                ActivateGamepadMode();
+                ActivateGamepadMode(false);
             }
         }
 
@@ -80,12 +80,26 @@ namespace AnyRPG {
             cutSceneBarController = uIManager.CutSceneBarController;
         }
 
-        private void ActivateGamepadMode() {
+        public void ActivateGamepadMode(bool toggleUI) {
             //Debug.Log("ControlsManager.ActivateGamepadMode()");
             gamePadModeActive = true;
             gamePadInputActive = true;
             LockMouse();
+            if (toggleUI == true) {
+                uIManager.ToggleGamepadMode();
+            }
         }
+
+        public void DeActivateGamepadMode(bool toggleUI) {
+            //Debug.Log("ControlsManager.DeActivateGamepadMode()");
+            gamePadModeActive = false;
+            gamePadInputActive = false;
+            UnlockMouse();
+            if (toggleUI == true) {
+                uIManager.ToggleGamepadMode();
+            }
+        }
+
 
         private void ActivateGamepadInput() {
             //Debug.Log("ControlsManager.ActivateGamepadMode()");
@@ -96,6 +110,7 @@ namespace AnyRPG {
         private void DeactivateGamepadInput() {
             //Debug.Log("ControlsManager.DeactivateGamepadInput()");
             gamePadInputActive = false;
+            windowManager.DeactivateGamepadInput();
         }
 
         private void LockMouse() {

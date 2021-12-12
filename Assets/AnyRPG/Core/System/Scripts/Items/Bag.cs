@@ -40,9 +40,12 @@ namespace AnyRPG {
             }
         }
 
+        
         public override string GetSummary(ItemQuality usedItemQuality) {
-            return base.GetSummary(usedItemQuality) + string.Format("\n<color=green>Use: Equip</color>");
+            //return base.GetSummary(usedItemQuality) + string.Format("\n<color=green>Use: Equip</color>");
+            return base.GetSummary(usedItemQuality) + string.Format("\n{0} slots", slots);
         }
+        
 
     }
 

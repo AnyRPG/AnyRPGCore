@@ -15,6 +15,7 @@ namespace AnyRPG {
         public Slider joystickLookSpeedSlider;
         public Slider joystickTurnSpeedSlider;
         public OnOffTextButton invertJoystickButton;
+        public OnOffTextButton gamepadModeButton;
 
 
         private float defaultMouseLookSpeed = 0.5f;
@@ -81,6 +82,9 @@ namespace AnyRPG {
             if (!PlayerPrefs.HasKey("JoystickInvert")) {
                 PlayerPrefs.SetInt("JoystickInvert", defaultInvertJoystick);
             }
+            if (!PlayerPrefs.HasKey("GamepadMode")) {
+                PlayerPrefs.SetInt("GamepadMode", systemConfigurationManager.DefaultControllerConfiguration == DefaultControllerConfiguration.GamePad ? 1 : 0);
+            }
         }
 
         public void ResetToDefaults() {
@@ -91,6 +95,7 @@ namespace AnyRPG {
             PlayerPrefs.SetFloat("JoystickLookSpeed", defaultJoystickLookSpeed);
             PlayerPrefs.SetFloat("JoystickTurnSpeed", defaultJoystickTurnSpeed);
             PlayerPrefs.SetInt("JoystickInvert", defaultInvertJoystick);
+            PlayerPrefs.SetInt("GamepadMode", systemConfigurationManager.DefaultControllerConfiguration == DefaultControllerConfiguration.GamePad ? 1 : 0);
             LoadControlsSettings();
         }
 
@@ -117,6 +122,15 @@ namespace AnyRPG {
                 invertJoystickButton.SetOn();
             }
 
+            // check joystick inverse
+            if (PlayerPrefs.GetInt("GamepadMode") == 0) {
+                gamepadModeButton.SetOff();
+                controlsManager.DeActivateGamepadMode(false);
+            } else if (PlayerPrefs.GetInt("GamepadMode") == 1) {
+                gamepadModeButton.SetOn();
+                controlsManager.ActivateGamepadMode(false);
+            }
+
         }
 
         public void ToggleinvertMouse() {
@@ -140,6 +154,20 @@ namespace AnyRPG {
                 PlayerPrefs.SetInt("JoystickInvert", 0);
                 uIManager.MessageFeedManager.WriteMessage("Invert Joystick: off");
                 invertJoystickButton.SetOff();
+            }
+        }
+
+        public void ToggleGamepadMode() {
+            if (PlayerPrefs.GetInt("GamepadMode") == 0) {
+                PlayerPrefs.SetInt("GamepadMode", 1);
+                uIManager.MessageFeedManager.WriteMessage("Gamepad Mode: on");
+                gamepadModeButton.SetOn();
+                controlsManager.ActivateGamepadMode(true);
+            } else {
+                PlayerPrefs.SetInt("GamepadMode", 0);
+                uIManager.MessageFeedManager.WriteMessage("Gamepad Mode: off");
+                gamepadModeButton.SetOff();
+                controlsManager.DeActivateGamepadMode(true);
             }
         }
 

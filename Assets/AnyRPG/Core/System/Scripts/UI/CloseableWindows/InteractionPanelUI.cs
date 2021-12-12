@@ -27,8 +27,10 @@ namespace AnyRPG {
         [SerializeField]
         private GameObject availableQuestArea = null;
 
+        /*
         [SerializeField]
         private GameObject completeQuestArea = null;
+        */
 
         private List<InteractionPanelScript> interactionPanelScripts = new List<InteractionPanelScript>();
 

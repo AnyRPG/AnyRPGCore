@@ -172,7 +172,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0.5}
   m_AnchorMax: {x: 0, y: 0.5}
-  m_AnchoredPosition: {x: 750.87, y: 0}
+  m_AnchoredPosition: {x: 250.87, y: 0}
   m_SizeDelta: {x: 300, y: 84}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &1635549431076034413
@@ -893,6 +893,7 @@ MonoBehaviour:
   addToWindowStack: 1
   userCloseable: 1
   focusFirstButtonOnOpen: 1
+  focusCurrentButtonOnOpen: 0
   focusActiveSubPanel: 0
   uINavigationControllers:
   - {fileID: 2447269729933671565}
@@ -1614,7 +1615,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0.5}
   m_AnchorMax: {x: 0, y: 0.5}
-  m_AnchoredPosition: {x: 250.87, y: 0}
+  m_AnchoredPosition: {x: 750.87, y: 0}
   m_SizeDelta: {x: 296.52, y: 84.69}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &9084085514708367181
@@ -2347,5 +2348,5 @@ MonoBehaviour:
   pruneInactiveElements: 1
   navigableButtons:
   - {fileID: 7401077208548695849}
-  - {fileID: 7940204633215222608}
   - {fileID: 5754674889825006895}
+  - {fileID: 7940204633215222608}
