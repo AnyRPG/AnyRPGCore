@@ -165,7 +165,9 @@ namespace AnyRPG {
                 hasMoved = true;
             }
             */
-            if (lastTargetForward != target.transform.forward) {
+
+            if (lastTargetForward != target.transform.forward
+                && playerManager.PlayerController.inputTurn == 0f) {
                 calculatedAngle = Vector3.SignedAngle(target.transform.forward, transform.forward, Vector3.up);
                 //Debug.Log("currentXDegrees: " + currentXDegrees + "; calculatedAngle: " + calculatedAngle);
                 currentXDegrees = calculatedAngle;
