@@ -664,7 +664,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   outlineImage: {fileID: 3596557305518874166}
-  highlightOutlineColor: {r: 0.64705884, g: 0.64705884, b: 0.64705884, a: 0.6509804}
+  highlightOutlineColor: {r: 1, g: 1, b: 1, a: 1}
+  useSystemOutlineColor: 0
   highlightImage: {fileID: 0}
   highlightBackgroundOnSelect: 0
   highlightBackgroundOnInteract: 0

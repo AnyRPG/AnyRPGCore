@@ -27,6 +27,9 @@ namespace AnyRPG {
         [SerializeField]
         protected Color highlightOutlineColor = new Color32(165, 165, 165, 166);
 
+        [SerializeField]
+        protected bool useSystemOutlineColor = true;
+
         [Header("Highlight Image")]
 
         [SerializeField]
@@ -97,8 +100,10 @@ namespace AnyRPG {
             }
 
             //if (useSystemImageTintColor) {
-            highlightOutlineColor = systemConfigurationManager.HighlightOutlineColor;
-                highlightImageColor = systemConfigurationManager.HighlightImageColor;
+            if (useSystemOutlineColor == true) {
+                highlightOutlineColor = systemConfigurationManager.HighlightOutlineColor;
+            }
+            highlightImageColor = systemConfigurationManager.HighlightImageColor;
             //}
 
             UnHighlightBackground();

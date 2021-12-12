@@ -478,6 +478,7 @@ namespace AnyRPG {
                 return;
             }
             actionBarManager.ClearUseableByIndex(actionButtonIndex);
+            uIManager.HideToolTip();
             owner.HideControllerHints();
         }
 
