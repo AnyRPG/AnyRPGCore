@@ -102,7 +102,7 @@ namespace AnyRPG {
 
 
         private void ActivateGamepadInput() {
-            //Debug.Log("ControlsManager.ActivateGamepadMode()");
+            Debug.Log("ControlsManager.ActivateGamepadInput()");
             gamePadInputActive = true;
             LockMouse();
         }

@@ -69,12 +69,21 @@ namespace AnyRPG {
             middleMouseButtonDown = false;
             middleMouseButtonUp = false;
             mouseScrolled = false;
+            ResetKeyBindNodes();
+        }
+
+        public void ResetKeyBindNodes() {
+            foreach (KeyBindNode keyBindNode in keyBindManager.KeyBinds.Values) {
+                keyBindNode.UnRegisterKeyPress(true);
+                keyBindNode.UnRegisterKeyHeld();
+                keyBindNode.UnRegisterKeyUp();
+            }
         }
 
         public void RegisterInput() {
             if (keyBindManager.BindName != string.Empty) {
                 // we are binding a key.  discard all input
-                //Debug.Log("Key Binding in progress.  returning.");
+                Debug.Log("Key Binding in progress.  returning.");
                 foreach (KeyBindNode keyBindNode in keyBindManager.KeyBinds.Values) {
                     keyBindNode.UnRegisterKeyPress(true);
                     keyBindNode.UnRegisterKeyHeld();
@@ -91,6 +100,7 @@ namespace AnyRPG {
         public void RegisterKeyPresses() {
             if (lastRegisteredFrame >= Time.frameCount) {
                 // we have already registered keypresses this frame
+                Debug.Log("keypresses already registered this frame");
                 return;
             }
             lastRegisteredFrame = Time.frameCount;
@@ -161,7 +171,7 @@ namespace AnyRPG {
 
                 // register key up
                 if (Input.GetKeyUp(keyBindNode.KeyboardKeyCode) || Input.GetKeyUp(keyBindNode.JoystickKeyCode)) {
-                    //Debug.Log(keyBindNode.KeyboardKeyCode + " pressed true!");
+                    //Debug.Log(keyBindNode.KeyboardKeyCode + " " + keyBindNode.JoystickKeyCode + " up true! " + keyBindNode.KeyBindID);
                     keyBindNode.RegisterKeyUp();
                 } else {
                     keyBindNode.UnRegisterKeyUp();
@@ -182,6 +192,7 @@ namespace AnyRPG {
             if (keyBindManager.KeyBinds.ContainsKey(keyBindID) && keyBindManager.KeyBinds[keyBindID].KeyPressed == true) {
                 return true;
             }
+            //Debug.Log(keyBindID + " : False");
             return false;
         }
 

@@ -85,7 +85,7 @@ namespace AnyRPG {
         }
 
         public void HandleActivateKeyboard(TMP_InputField sourceInputField) {
-            Debug.Log("OnScreenKeyboardController.HandleActivateKeyboard()");
+            //Debug.Log("OnScreenKeyboardController.HandleActivateKeyboard()");
             this.sourceInputField = sourceInputField;
             inputField.text = sourceInputField.text;
         }

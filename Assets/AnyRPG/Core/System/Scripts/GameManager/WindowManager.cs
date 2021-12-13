@@ -109,7 +109,7 @@ namespace AnyRPG {
             //Debug.Log("WindowManager.Navigate()");
 
             if (windowStack.Count != 0) {
-                //Debug.Log("WindowManager.Navigate() : windowstack is not zero");
+                //Debug.Log("WindowManager.Navigate() : windowstack is not zero: " + windowStack[windowStack.Count - 1].gameObject.name);
 
                 // joystick movement
                 if (controlsManager.InputHorizontal != 0f || controlsManager.InputVertical != 0f) {
@@ -138,6 +138,7 @@ namespace AnyRPG {
 
                 // buttons
                 if (inputManager.KeyBindWasPressed("ACCEPT") || inputManager.KeyBindWasPressed("JOYSTICKBUTTON0")) {
+                    //Debug.Log("Accept");
                     windowStack[windowStack.Count - 1].Accept();
                 }
                 if (inputManager.KeyBindWasPressed("CANCEL") || inputManager.KeyBindWasPressed("JOYSTICKBUTTON1")) {
