@@ -325,8 +325,9 @@ namespace AnyRPG {
         }
 
         private void ToggleRun() {
+            //Debug.Log("PlayerController.ToggleRun()");
             if (inputManager.KeyBindWasPressed("TOGGLERUN")
-                || (controlsManager.DPadUpPressed == true && controlsManager.LeftTriggerDown == false && controlsManager.RightTriggerDown == false)) {
+                || (controlsManager.DPadDownPressed == true && controlsManager.LeftTriggerDown == false && controlsManager.RightTriggerDown == false)) {
                 EventParamProperties eventParamProperties = new EventParamProperties();
                 if (playerManager.ActiveUnitController.Walking == false) {
                     playerManager.ActiveUnitController.Walking = true;

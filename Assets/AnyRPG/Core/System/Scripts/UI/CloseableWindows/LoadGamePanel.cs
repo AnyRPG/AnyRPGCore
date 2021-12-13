@@ -53,7 +53,7 @@ namespace AnyRPG {
         private UIManager uIManager = null;
         private LoadGameManager loadGameManager = null;
 
-        public LoadGameButton SelectedLoadGameButton { get => selectedLoadGameButton; set => selectedLoadGameButton = value; }
+        public LoadGameButton SelectedLoadGameButton { get => selectedLoadGameButton; }
 
         public override void Configure(SystemGameManager systemGameManager) {
             base.Configure(systemGameManager);
