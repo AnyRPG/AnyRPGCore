@@ -300,7 +300,8 @@ namespace AnyRPG {
                     actionButton.RangeIndicator.color = Color.white;
                 }
                 */
-                actionButton.RangeIndicator.color = hiddenColor;
+                actionButton.HideRangeIndicator();
+                //actionButton.RangeIndicator.color = hiddenColor;
             }
         }
 
@@ -335,7 +336,8 @@ namespace AnyRPG {
                             }
                             */
                             if (actionButton.RangeIndicator.color != hiddenColor) {
-                                actionButton.RangeIndicator.color = hiddenColor;
+                                //actionButton.RangeIndicator.color = hiddenColor;
+                                actionButton.HideRangeIndicator();
                             }
                         } else {
                             /*
@@ -583,18 +585,45 @@ namespace AnyRPG {
             }
         }
 
-        public void UpdateVisuals(bool removeStaleActions = false) {
+        public void UpdateVisuals() {
             //Debug.Log("ActionBarmanager.UpdateVisuals(" + removeStaleActions + ")");
             if (controlsManager.GamePadModeActive == true) {
                 foreach (ActionBarController actionBarController in gamepadActionBarControllers) {
                     //Debug.Log("ActionBarManager.AddNewAbility(): looping through a controller");
-                    actionBarController.UpdateVisuals(removeStaleActions);
+                    actionBarController.UpdateVisuals();
                 }
             } else {
                 foreach (ActionBarController actionBarController in actionBarControllers) {
                     //Debug.Log("ActionBarManager.AddNewAbility(): looping through a controller");
-                    actionBarController.UpdateVisuals(removeStaleActions);
+                    actionBarController.UpdateVisuals();
                 }
+            }
+        }
+
+        private void RemoveStaleGamepadActions() {
+
+            foreach (ActionButtonNode actionButtonNode in gamepadActionButtons) {
+                if (actionButtonNode.Useable != null && actionButtonNode.Useable.IsUseableStale()) {
+                        actionButtonNode.SavedUseable = actionButtonNode.Useable;
+                        actionButtonNode.Useable = null;
+                }
+            }
+            UpdateGamepadActionButtons(currentActionBarSet, GetGamepadActionButtons());
+            
+            /*
+            foreach (ActionBarController actionBarController in gamepadActionBarControllers) {
+                //Debug.Log("ActionBarManager.AddNewAbility(): looping through a controller");
+                actionBarController.UpdateVisuals();
+            }
+            */
+        }
+
+        public void RemoveStaleActions() {
+
+            RemoveStaleGamepadActions();
+            foreach (ActionBarController actionBarController in actionBarControllers) {
+                //Debug.Log("ActionBarManager.AddNewAbility(): looping through a controller");
+                actionBarController.RemoveStaleActions();
             }
         }
 
@@ -716,7 +745,7 @@ namespace AnyRPG {
                 }
             }
 
-            UpdateVisuals(false);
+            UpdateVisuals();
 
         }
 

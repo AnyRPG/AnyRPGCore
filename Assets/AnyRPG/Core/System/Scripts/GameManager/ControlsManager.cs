@@ -171,8 +171,8 @@ namespace AnyRPG {
                     ActivateGamepadInput();
                     if (windowManager.WindowStack.Count > 0) {
                         windowManager.ActivateGamepadMode();
+                        return;
                     }
-                    return;
                 }
             }
 

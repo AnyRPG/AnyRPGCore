@@ -265,7 +265,7 @@ namespace AnyRPG {
             return newItem.Use();
         }
 
-        public virtual bool IsUseableStale(ActionButton actionButton) {
+        public virtual bool IsUseableStale() {
             // items are never stale
             // they should stay on action buttons in case the player picks up more
             return false;

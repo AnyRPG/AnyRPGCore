@@ -674,7 +674,7 @@ namespace AnyRPG {
 
         public void HandleUnlearnAbility(bool updateActionBars) {
             if (updateActionBars) {
-                actionBarManager.UpdateVisuals(true);
+                actionBarManager.RemoveStaleActions();
             }
         }
 
@@ -724,7 +724,7 @@ namespace AnyRPG {
 
         public void HandleUnlearnClassAbilities() {
             // now perform a single action bar update
-            actionBarManager.UpdateVisuals(true);
+            actionBarManager.RemoveStaleActions();
         }
 
         public void HandleEquipmentChanged(Equipment newItem, Equipment oldItem, int slotIndex) {

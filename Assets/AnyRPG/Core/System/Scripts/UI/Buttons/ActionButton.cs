@@ -38,6 +38,9 @@ namespace AnyRPG {
         [SerializeField]
         protected Image rangeIndicator = null;
 
+        [SerializeField]
+        protected Button button = null;
+
         protected int count = 0;
 
         protected int actionButtonIndex = 0;
@@ -57,32 +60,16 @@ namespace AnyRPG {
         protected ActionBarManager actionBarManager = null;
         //InventoryManager inventoryManager = null;
 
-        /// <summary>
-        /// A reference to the actual button that this button uses
-        /// </summary>
-        public Button Button { get; private set; }
-
         public Image Icon { get => icon; set => icon = value; }
         public int Count { get => count; }
         public TextMeshProUGUI StackSizeText { get => stackSizeText; }
         public TextMeshProUGUI KeyBindText { get => keyBindText; }
         public IUseable SavedUseable { get => savedUseable; set => savedUseable = value; }
-        public IUseable Useable {
-            get {
-                return useable;
-            }
-            set {
-                if (value == null) {
-                    useable = value;
-                    return;
-                }
-                useable = value.GetFactoryUseable();
-            }
-        }
+        public IUseable Useable { get => useable; }
         public Image CoolDownIcon { get => coolDownIcon; set => coolDownIcon = value; }
         public Coroutine MonitorCoroutine { get => monitorCoroutine; set => monitorCoroutine = value; }
         public Image BackgroundImage { get => backgroundImage; set => backgroundImage = value; }
-        public Image RangeIndicator { get => rangeIndicator; set => rangeIndicator = value; }
+        public Image RangeIndicator { get => rangeIndicator; }
 
         public override void Configure(SystemGameManager systemGameManager) {
             if (configureCount > 0) {
@@ -97,19 +84,20 @@ namespace AnyRPG {
             actionBarManager = uIManager.ActionBarManager;
             //inventoryManager = systemGameManager.InventoryManager;
 
-            Useable = null;
-            Button = GetComponent<Button>();
-            Button.onClick.AddListener(OnClickFromButton);
-            if (backGroundImage == null) {
-                backGroundImage = GetComponent<Image>();
-            }
+            // setting useable to null should not be necessary since useable is already null at start
+            //Useable = null;
+            button.onClick.AddListener(OnClickFromButton);
             DisableCoolDownIcon();
 
             systemEventManager.OnItemCountChanged += UpdateItemCount;
+            HideRangeIndicator();
+        }
+
+        public void HideRangeIndicator() {
             rangeIndicator.color = hiddenColor;
         }
 
-        
+
         public void SetIndex(int index) {
             actionButtonIndex = index;
             // for now, we only set index on gamepad buttons, so this call can tell the button it's a gamepad button
@@ -204,6 +192,10 @@ namespace AnyRPG {
             UpdateVisual();
         }
 
+        public void LoadUseable(IUseable newUseable) {
+            useable = newUseable.GetFactoryUseable();
+        }
+
         /// <summary>
         /// Sets the useable on the actionbutton
         /// </summary>
@@ -219,7 +211,10 @@ namespace AnyRPG {
             DisableCoolDownIcon();
 
             useable.AssignToActionButton(this);
-            Useable = useable;
+
+            // replaced with new call
+            //Useable = useable;
+            LoadUseable(useable);
 
             playerManager.MyCharacter.CharacterAbilityManager.OnAttemptPerformAbility += OnAttemptUseableUse;
             playerManager.MyCharacter.CharacterAbilityManager.OnPerformAbility += OnUseableUse;
@@ -327,22 +322,25 @@ namespace AnyRPG {
         }
 
         /// <summary>
+        /// attempt to remove unlearned spells from the button
+        /// </summary>
+        public void RemoveStaleActions() {
+            if (Useable != null && Useable.IsUseableStale()) {
+                //if (!playerManager.MyCharacter.CharacterAbilityManager.HasAbility(Useable as BaseAbility)) {
+                    savedUseable = Useable;
+                    useable = null;
+                    UpdateVisual();
+                //}
+            }
+        }
+
+        /// <summary>
         /// Updates the visual representation of the actionbutton
         /// </summary>
-        public void UpdateVisual(bool removeStaleActions = false) {
+        public void UpdateVisual() {
             //Debug.Log(gameObject.name + GetInstanceID() + ".ActionButton.UpdateVisual() useable: " + (useable == null ? "null" : useable.DisplayName));
             if (playerManager == null || playerManager.MyCharacter == null) {
                 return;
-            }
-            // attempt to remove unlearned spells from the bars
-            if (removeStaleActions) {
-                //Debug.Log("ActionButton.UpdateVisual(): removeStaleActions = true");
-                if (Useable != null && Useable.IsUseableStale(this)) {
-                    if (!playerManager.MyCharacter.CharacterAbilityManager.HasAbility(Useable as BaseAbility)) {
-                        savedUseable = Useable;
-                        Useable = null;
-                    }
-                }
             }
 
             if (Useable == null) {
@@ -361,6 +359,7 @@ namespace AnyRPG {
 
                 // clear cooldown icon
                 DisableCoolDownIcon();
+                HideRangeIndicator();
 
                 return;
             }
@@ -446,11 +445,14 @@ namespace AnyRPG {
             if (Useable != null) {
                 savedUseable = Useable;
             }
-            Useable = null;
-            DisableCoolDownIcon();
+            useable = null;
+
+            // disablecooldownIcon is done in updatevisual
+            //DisableCoolDownIcon();
             UpdateVisual();
 
-            rangeIndicator.color = hiddenColor;
+            // hiderangeindicator is done in updatevisual
+            //HideRangeIndicator();
         }
 
         public override void Select() {

@@ -682,6 +682,7 @@ MonoBehaviour:
   coolDownIcon: {fileID: 3562106708842270525}
   backGroundImage: {fileID: 4110044010023018086}
   rangeIndicator: {fileID: 383265416707136020}
+  button: {fileID: 2173732695104293297}
 --- !u!1 &8147723759096378609
 GameObject:
   m_ObjectHideFlags: 0

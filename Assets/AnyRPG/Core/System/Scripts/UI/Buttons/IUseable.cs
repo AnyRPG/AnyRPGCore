@@ -13,7 +13,7 @@ namespace AnyRPG {
         bool Use();
         bool ActionButtonUse();
         Coroutine ChooseMonitorCoroutine(ActionButton actionButton);
-        bool IsUseableStale(ActionButton actionButton);
+        bool IsUseableStale();
         void UpdateActionButtonVisual(ActionButton actionButton);
         void UpdateChargeCount(ActionButton actionButton);
         IUseable GetFactoryUseable();

@@ -113,10 +113,17 @@ namespace AnyRPG {
             LayoutRebuilder.ForceRebuildLayoutImmediate(gameObject.transform.parent.GetComponent<RectTransform>());
         }
 
-        public void UpdateVisuals(bool removeStaleActions = false) {
+        public void UpdateVisuals() {
             for (int i = 0; i < actionButtons.Count; i++) {
                 //Debug.Log(gameObject.name + ".ActionBarController.ClearActionBar(): clearing button: " + i);
-                actionButtons[i].UpdateVisual(removeStaleActions);
+                actionButtons[i].UpdateVisual();
+            }
+        }
+
+        public void RemoveStaleActions() {
+            for (int i = 0; i < actionButtons.Count; i++) {
+                //Debug.Log(gameObject.name + ".ActionBarController.ClearActionBar(): clearing button: " + i);
+                actionButtons[i].RemoveStaleActions();
             }
         }
 

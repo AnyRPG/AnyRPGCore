@@ -277,7 +277,7 @@ namespace AnyRPG {
             systemAbilityController = systemGameManager.SystemAbilityController;
         }
 
-        public virtual bool IsUseableStale(ActionButton actionButton) {
+        public virtual bool IsUseableStale() {
             if (playerManager.MyCharacter.CharacterAbilityManager.HasAbility(this)) {
                 return false;
             }
