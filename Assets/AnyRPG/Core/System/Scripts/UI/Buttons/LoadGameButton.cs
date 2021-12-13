@@ -28,8 +28,8 @@ namespace AnyRPG {
         [SerializeField]
         protected TextMeshProUGUI description = null;
 
-        [SerializeField]
-        protected AnyRPGSaveData mySaveData;
+        //[SerializeField]
+        protected AnyRPGSaveData saveData;
 
         protected UnitProfile unitProfile;
 
@@ -38,7 +38,7 @@ namespace AnyRPG {
         // game manager references
         protected SystemDataFactory systemDataFactory = null;
 
-        public AnyRPGSaveData SaveData { get => mySaveData; set => mySaveData = value; }
+        public AnyRPGSaveData SaveData { get => saveData; set => saveData = value; }
         public UnitProfile UnitProfile { get => unitProfile; set => unitProfile = value; }
 
         public override void Configure(SystemGameManager systemGameManager) {
@@ -47,14 +47,14 @@ namespace AnyRPG {
             systemDataFactory = systemGameManager.SystemDataFactory;
         }
 
-        public void AddSaveData(LoadGamePanel loadGamePanel, AnyRPGSaveData mySaveData) {
+        public void AddSaveData(LoadGamePanel loadGamePanel, AnyRPGSaveData saveData) {
             //Debug.Log("LoadGameButton.AddSaveData()");
             this.loadGamePanel = loadGamePanel;
-            this.mySaveData = mySaveData;
+            this.saveData = saveData;
 
             icon.sprite = null;
-            if (mySaveData.playerFaction != null && SaveData.playerFaction != string.Empty) {
-                Faction playerFaction = systemDataFactory.GetResource<Faction>(mySaveData.playerFaction);
+            if (saveData.playerFaction != null && SaveData.playerFaction != string.Empty) {
+                Faction playerFaction = systemDataFactory.GetResource<Faction>(saveData.playerFaction);
                 // needs to be checked anyway.  could have invalid faction in save data
                 if (playerFaction != null) {
                     icon.sprite = playerFaction.Icon;
@@ -67,37 +67,37 @@ namespace AnyRPG {
             icon.color = Color.white;
             //Debug.Log("LoadGameButton.AddSaveData(): Setting playerName.text: " + mySaveData.playerName);
             //Debug.Log("LoadGameButton.AddSaveData(): Setting DataFileName: " + mySaveData.DataFileName);
-            playerName.text = mySaveData.playerName;
+            playerName.text = saveData.playerName;
 
             // format the button text
             description.text = string.Empty;
             currentScene = string.Empty;
             // todo : fix; save scene DisplayName to file and load scene from resource description to avoid this loop
             foreach (SceneNode sceneNode in systemDataFactory.GetResourceList<SceneNode>()) {
-                if (sceneNode.SceneFile == mySaveData.CurrentScene) {
+                if (sceneNode.SceneFile == saveData.CurrentScene) {
                     currentScene = sceneNode.DisplayName;
                     break;
                 }
             }
             if (currentScene == null || currentScene == string.Empty) {
-                currentScene = mySaveData.CurrentScene;
+                currentScene = saveData.CurrentScene;
             }
             description.text += "Zone: " + currentScene + "\n";
-            description.text += "Race: " + (mySaveData.characterRace == null || mySaveData.characterRace == string.Empty ? "None" : mySaveData.characterRace) + "\n";
-            description.text += "Class: " + (mySaveData.characterClass == null || mySaveData.characterClass == string.Empty ? "None" : mySaveData.characterClass) + "\n";
-            description.text += "Level: " + mySaveData.PlayerLevel + "\n";
-            description.text += "Experience: " + mySaveData.currentExperience + "\n";
-            description.text += "Faction: " + (mySaveData.playerFaction == string.Empty ? "None" : SaveData.playerFaction) + "\n";
-            description.text += "Created: " + mySaveData.DataCreatedOn + "\n";
-            description.text += "Saved: " + mySaveData.DataSavedOn + "\n";
-            description.text += "FileName: " + mySaveData.DataFileName + "\n";
+            description.text += "Race: " + (saveData.characterRace == null || saveData.characterRace == string.Empty ? "None" : saveData.characterRace) + "\n";
+            description.text += "Class: " + (saveData.characterClass == null || saveData.characterClass == string.Empty ? "None" : saveData.characterClass) + "\n";
+            description.text += "Level: " + saveData.PlayerLevel + "\n";
+            description.text += "Experience: " + saveData.currentExperience + "\n";
+            description.text += "Faction: " + (saveData.playerFaction == string.Empty ? "None" : SaveData.playerFaction) + "\n";
+            description.text += "Created: " + saveData.DataCreatedOn + "\n";
+            description.text += "Saved: " + saveData.DataSavedOn + "\n";
+            description.text += "FileName: " + saveData.DataFileName + "\n";
 
             // set the text on the button
             /*
             description.text = descriptionText;
             */
 
-            unitProfile = systemDataFactory.GetResource<UnitProfile>(mySaveData.unitProfileName);
+            unitProfile = systemDataFactory.GetResource<UnitProfile>(saveData.unitProfileName);
         }
 
         /*

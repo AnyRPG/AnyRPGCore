@@ -212,6 +212,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   outlineImage: {fileID: 0}
   highlightOutlineColor: {r: 0.64705884, g: 0.64705884, b: 0.64705884, a: 0.6509804}
+  useSystemOutlineColor: 1
   highlightImage: {fileID: 4696556366279087835}
   highlightBackgroundOnSelect: 1
   highlightBackgroundOnInteract: 1
@@ -220,6 +221,7 @@ MonoBehaviour:
   highlightImageColor: {r: 0.64705884, g: 0.64705884, b: 0.64705884, a: 0.6509804}
   useUnfocusedColor: 0
   unFocusedColor: {r: 1, g: 1, b: 1, a: 0.15294118}
+  rectTransform: {fileID: 0}
   text: {fileID: 0}
   ignoreSystemImageTint: 0
   highlightButton: {fileID: 5421047129991489707}
@@ -235,51 +237,10 @@ MonoBehaviour:
   overrideDisabledColor: 0
   disabledColor: {r: 0.32156864, g: 0.32156864, b: 0.32156864, a: 0.06666667}
   CapitalizeText: 0
+  mouseHoverSound: 1
   icon: {fileID: 5536912050292289367}
   playerName: {fileID: 5908885743323304726}
   description: {fileID: 8117457182756157329}
-  mySaveData:
-    PlayerLevel: 0
-    currentExperience: 0
-    playerName: 
-    unitProfileName: 
-    characterRace: 
-    characterClass: 
-    classSpecialization: 
-    playerFaction: 
-    OverrideLocation: 0
-    PlayerLocationX: 0
-    PlayerLocationY: 0
-    PlayerLocationZ: 0
-    OverrideRotation: 0
-    PlayerRotationX: 0
-    PlayerRotationY: 0
-    PlayerRotationZ: 0
-    PlayerUMARecipe: 
-    CurrentScene: 
-    DataCreatedOn: 
-    DataSavedOn: 
-    DataFileName: 
-    resourcePowerSaveData: []
-    actionBarSaveData: []
-    gamepadActionBarSaveData: []
-    inventorySlotSaveData: []
-    bankSlotSaveData: []
-    equippedBagSaveData: []
-    equippedBankBagSaveData: []
-    abilitySaveData: []
-    skillSaveData: []
-    recipeSaveData: []
-    reputationSaveData: []
-    equipmentSaveData: []
-    currencySaveData: []
-    statusEffectSaveData: []
-    petSaveData: []
-    behaviorSaveData: []
-    questSaveData: []
-    dialogSaveData: []
-    sceneNodeSaveData: []
-    cutsceneSaveData: []
 --- !u!114 &7571683808511027651
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -356,7 +317,7 @@ RectTransform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4696556366279087834}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0.000047683716}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 657529714143087649}
@@ -389,7 +350,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
   m_Color: {r: 0, g: 0, b: 0, a: 0}
-  m_RaycastTarget: 1
+  m_RaycastTarget: 0
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
@@ -464,7 +425,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_RaycastTarget: 1
+  m_RaycastTarget: 0
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
@@ -561,8 +522,6 @@ GameObject:
   - component: {fileID: 1595701526947762340}
   - component: {fileID: 9171626706910208949}
   - component: {fileID: 5536912050292289367}
-  - component: {fileID: 7018565421360375276}
-  - component: {fileID: 140918417000242661}
   m_Layer: 5
   m_Name: Icon
   m_TagString: Untagged
@@ -587,7 +546,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
   m_AnchoredPosition: {x: 52, y: -52}
-  m_SizeDelta: {x: 0, y: 0}
+  m_SizeDelta: {x: 64, y: 64}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &9171626706910208949
 CanvasRenderer:
@@ -611,13 +570,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_RaycastTarget: 1
+  m_RaycastTarget: 0
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: c8f296ec2c0e5a944967ea2ce0e0495c, type: 3}
+  m_Sprite: {fileID: 21300000, guid: d8e9a6081aa6a53419c9baf8365a564b, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -627,40 +586,6 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
---- !u!114 &7018565421360375276
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5538223284776260206}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3245ec927659c4140ac4f8d17403cc18, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_HorizontalFit: 2
-  m_VerticalFit: 2
---- !u!114 &140918417000242661
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5538223284776260206}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 306cc8c2b49d7114eaa3623786fc2126, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_IgnoreLayout: 0
-  m_MinWidth: 64
-  m_MinHeight: 64
-  m_PreferredWidth: 64
-  m_PreferredHeight: 64
-  m_FlexibleWidth: -1
-  m_FlexibleHeight: -1
-  m_LayoutPriority: 1
 --- !u!1 &6624581187604275025
 GameObject:
   m_ObjectHideFlags: 0
@@ -722,7 +647,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
   m_Color: {r: 0, g: 0, b: 0, a: 0}
-  m_RaycastTarget: 1
+  m_RaycastTarget: 0
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
@@ -797,7 +722,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_RaycastTarget: 1
+  m_RaycastTarget: 0
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
