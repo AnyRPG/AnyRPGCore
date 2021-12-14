@@ -8,20 +8,6 @@ using UnityEngine.UI;
 namespace AnyRPG {
     public class UINavigationListHorizontal : UINavigationController {
 
-        public void SetCurrentButton() {
-            //Debug.Log(gameObject.name + ".UINavigationListHorizontal.SetCurrentButton()");
-            if (activeNavigableButtons.Count == 0) {
-                return;
-            }
-            if (currentIndex < 0 || currentIndex >= activeNavigableButtons.Count) {
-                currentIndex = 0;
-                currentNavigableElement = null;
-            }
-            if (currentNavigableElement == null || activeNavigableButtons.Contains(currentNavigableElement) == false) {
-                currentNavigableElement = activeNavigableButtons[currentIndex];
-            }
-        }
-
         public override void FocusCurrentButton() {
             //Debug.Log(gameObject.name + ".UINavigationListHorizontal.FocusCurrentButton()");
             base.FocusCurrentButton();
@@ -34,7 +20,8 @@ namespace AnyRPG {
 
         public override void HighlightCurrentButton() {
             //Debug.Log(gameObject.name + ".UINavigationListHorizontal.HighlightCurrentButton()");
-            base.FocusCurrentButton();
+            //base.FocusCurrentButton();
+            base.HighlightCurrentButton();
             if (activeNavigableButtons.Count == 0) {
                 return;
             }

@@ -241,6 +241,9 @@ namespace AnyRPG {
 
             uINavigationControllers[2].UpdateNavigationList();
 
+            if (craftButton.Button.interactable == true && uINavigationControllers[1].CurrentIndex == 2) {
+                uINavigationControllers[1].SetCurrentIndex(0);
+            }
         }
 
         public void ClearDescription() {

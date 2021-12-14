@@ -51,8 +51,10 @@ namespace AnyRPG {
         }
 
         public void SetSelectedRecipe(Recipe recipe) {
-            currentRecipe = recipe;
-            OnSelectRecipe(currentRecipe);
+            if (currentRecipe != recipe) {
+                currentRecipe = recipe;
+                OnSelectRecipe(currentRecipe);
+            }
         }
 
         public List<Recipe> GetRecipes() {

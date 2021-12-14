@@ -170,6 +170,35 @@ namespace AnyRPG {
                     activeNavigableButtons.Add(navigableElement);
                 }
             }
+
+            SetCurrentButton();
+        }
+
+        /// <summary>
+        /// identify and fix any mismatch between current navigable element and navigable index
+        /// </summary>
+        public virtual void SetCurrentButton() {
+            // list is updated, check to ensure current button and index are valid
+            if (activeNavigableButtons.Count == 0) {
+                return;
+            }
+
+            // check for index out of range, or button not in new list
+            if (currentIndex < 0
+                || currentIndex >= activeNavigableButtons.Count
+                || activeNavigableButtons.Contains(currentNavigableElement) == false) {
+                currentIndex = 0;
+                currentNavigableElement = null;
+            }
+            if (currentNavigableElement == null) {
+                currentNavigableElement = activeNavigableButtons[currentIndex];
+            }
+
+            // check for button mismatch with index
+            if (currentNavigableElement != activeNavigableButtons[currentIndex]) {
+                //Debug.Log("index : " + currentIndex + " element: " + currentNavigableElement.gameObject.name);
+                SetCurrentButton(currentNavigableElement);
+            }
         }
 
         public virtual void Activate() {

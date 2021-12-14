@@ -5,7 +5,6 @@ using UnityEngine;
 using UnityEngine.UI;
 
 namespace AnyRPG {
-    // this is almost identical to questscript
 
     public class RecipeScript : HighlightButton {
 
