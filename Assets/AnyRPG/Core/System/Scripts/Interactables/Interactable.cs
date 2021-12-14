@@ -274,6 +274,12 @@ namespace AnyRPG {
             }
         }
 
+        public void RegisterDespawn(GameObject go) {
+            if (componentController != null) {
+                componentController.RegisterDespawn(go);
+            }
+        }
+
 
 
         /// <summary>

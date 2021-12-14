@@ -89,6 +89,7 @@ namespace AnyRPG {
         }
 
         public void AddInteractable(Interactable interactable) {
+            //Debug.Log("PlayerController.AddInteractable(" + interactable.gameObject.name + ")");
             if (interactables.Contains(interactable) == false) {
                 interactables.Add(interactable);
             }
@@ -100,6 +101,7 @@ namespace AnyRPG {
         /// </summary>
         /// <param name="_interactable"></param>
         public void RemoveInteractable(Interactable interactable) {
+            //Debug.Log("PlayerController.RemoveInteractable(" + interactable.gameObject.name + ")");
             if (interactables.Contains(interactable)) {
                 interactables.Remove(interactable);
             }
@@ -107,6 +109,8 @@ namespace AnyRPG {
         }
 
         public void ShowHideInteractionPopup() {
+            //Debug.Log("PlayerController.ShowHideInteractionPopup() count: " + interactables.Count);
+
             if (interactables.Count > 0
                 && interactables[interactables.Count - 1].PrerequisitesMet == true
                 && interactables[interactables.Count - 1].GetCurrentInteractables().Count > 0) {
@@ -1158,7 +1162,14 @@ namespace AnyRPG {
             //Debug.Log(gameObject.name + ".PlayerController.HandleUnitDestroy()");
             SystemEventManager.TriggerEvent("OnPlayerUnitDespawn", new EventParamProperties());
             UnsubscribeFromUnitEvents();
+            NotifyInteractablesOnDespawn();
             playerManager.SetUnitController(null);
+        }
+
+        public void NotifyInteractablesOnDespawn() {
+            foreach (Interactable interactable in interactables) {
+                interactable.RegisterDespawn(playerManager.ActiveUnitController.gameObject);
+            }
         }
 
         public void HandleMessageFeed(string message) {

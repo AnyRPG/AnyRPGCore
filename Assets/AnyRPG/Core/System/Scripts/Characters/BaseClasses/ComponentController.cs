@@ -25,6 +25,13 @@ namespace AnyRPG {
             interactableRange.SetInteractable(interactable);
         }
 
+        public void RegisterDespawn(GameObject go) {
+            if (interactableRange != null) {
+                interactableRange.RegisterDespawn(go);
+            }
+        }
+
+
 
     }
 
