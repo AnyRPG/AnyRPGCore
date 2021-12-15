@@ -344,9 +344,12 @@ namespace AnyRPG {
             if (playerManager?.MyCharacter?.CharacterStats?.IsAlive == true && playerManager?.PlayerController?.canMove == true) {
                 // code to prevent turning when clicking on UI elements
                 // if (inputManager.rightMouseButtonDown && playerManager.PlayerController.HasMoveInput()
-                if ((inputManager.rightMouseButtonDown
+                if (
+                    (inputManager.rightMouseButtonDown
+                    && playerManager.ActiveUnitController.UnitProfile.UnitPrefabProps.RotateModel == false // account for rotate model mode when using keyboard
                     && (!inputManager.rightMouseButtonClickedOverUI || (namePlateManager != null ? namePlateManager.MouseOverNamePlate() : false)))
-                    || (controlsManager.GamePadModeActive == false && Input.GetAxis("RightAnalogHorizontal") != 0f && windowManager.WindowStack.Count == 0)) {
+                    || (controlsManager.GamePadModeActive == false && Input.GetAxis("RightAnalogHorizontal") != 0f && windowManager.WindowStack.Count == 0)
+                    ) {
                     //Debug.Log(gameObject.name + ".PlayerUnitMovementController.LateGlobalSuperUpdate(): resetting playerManager.ActiveUnitController.transform.forward");
 
                     playerManager.ActiveUnitController.transform.forward = new Vector3(cameraManager.MainCameraController.WantedDirection.x, 0, cameraManager.MainCameraController.WantedDirection.z);
@@ -474,7 +477,7 @@ namespace AnyRPG {
         }
 
         private void GetLocalInput() {
-            if (controlsManager.GamePadModeActive) {
+            if (controlsManager.GamePadModeActive || playerManager.ActiveUnitController.UnitProfile.UnitPrefabProps.RotateModel) {
                 // calculate the input relative to the camera in world space
                 Vector3 cameraInput = Quaternion.Euler(0f, cameraManager.ActiveMainCamera.transform.rotation.eulerAngles.y, 0f) * playerManager.PlayerController.NormalizedMoveInput;
 
