@@ -5,10 +5,12 @@ using UnityEngine;
 using UnityEngine.UI;
 
 namespace AnyRPG {
-    public class PagedWindowContents : ConfiguredMonoBehaviour, IPagedWindowContents {
+    public class PagedWindowContents : CloseableWindowContents {
 
-        public event System.Action<bool> OnPageCountUpdate = delegate { };
-        public event System.Action<ICloseableWindowContents> OnCloseWindow = delegate { };
+        public virtual event System.Action<bool> OnPageCountUpdate = delegate { };
+        public override event System.Action<ICloseableWindowContents> OnCloseWindow = delegate { };
+
+        protected PagedWindow pagedWindow = null;
 
         protected List<PagedContentList> pages = new List<PagedContentList>();
 
@@ -16,30 +18,16 @@ namespace AnyRPG {
 
         protected int pageIndex = 0;
 
-        [SerializeField]
-        protected Image backGroundImage;
-
-        public Image BackGroundImage { get => backGroundImage; set => backGroundImage = value; }
-
-        public override void Configure(SystemGameManager systemGameManager) {
-            base.Configure(systemGameManager);
-            if (backGroundImage == null) {
-                backGroundImage = GetComponent<Image>();
-            }
+        public void SetPagedWindow(PagedWindow pagedWindow) {
+            this.pagedWindow = pagedWindow;
         }
 
-        public void SetBackGroundColor(Color color) {
-            if (backGroundImage != null) {
-                backGroundImage.color = color;
-            }
-        }
-
-        public int GetPageCount() {
+        public virtual int GetPageCount() {
             return pages.Count;
         }
 
         public virtual void CreatePages() {
-            //Debug.Log("SkillBookUI.CreatePages()");
+            //Debug.Log("PagedWindowContents.CreatePages()");
             ClearPages();
             PopulatePages();
             OnPageCountUpdate(false);
@@ -50,7 +38,7 @@ namespace AnyRPG {
         }
 
         public virtual void ClearButtons() {
-            //Debug.Log("SkillBookUI.ClearButtons()");
+            //Debug.Log("PagedWindowContents.ClearButtons()");
             // meant to be overwritten
         }
 
@@ -58,21 +46,63 @@ namespace AnyRPG {
             //Debug.Log("PagedWindowContents.LoadPage(" + pageIndex + ")");
             ClearButtons();
             this.pageIndex = pageIndex;
+            AddPageContent();
+            /*
+            if (controlsManager.GamePadModeActive) {
+            // future use - highlight page content so context menus can be used, like add to ability bars etc
+            }
+            */
         }
 
-        public void RecieveClosedWindowNotification() {
+        public virtual void AddPageContent() {
+            // meant to be overwritten
         }
 
-        public void ReceiveOpenWindowNotification() {
+        public override void ProcessOpenWindowNotification() {
+            base.ProcessOpenWindowNotification();
             SetBackGroundColor(new Color32(0, 0, 0, (byte)(int)(PlayerPrefs.GetFloat("PopupWindowOpacity") * 255)));
             CreatePages();
         }
 
-        private void ClearPages() {
+        public virtual void ClearPages() {
             ClearButtons();
             pages.Clear();
             pageIndex = 0;
         }
+
+        public override bool LeftTrigger() {
+            if (base.LeftTrigger()) {
+                return true;
+            }
+            if (pagedWindow != null) {
+                if (currentNavigationController?.CurrentNavigableElement != null) {
+                    currentNavigationController.CurrentNavigableElement.LeaveElement();
+                }
+                pagedWindow.PreviousPage();
+                if (currentNavigationController != null) {
+                    currentNavigationController.FocusCurrentButton();
+                }
+            }
+            return false;
+        }
+
+        public override bool RightTrigger() {
+            //Debug.Log(gameObject.name + ".PagedWindowContents.RightTrigger()");
+            if (base.RightTrigger()) {
+                return true;
+            }
+            if (pagedWindow != null) {
+                if (currentNavigationController?.CurrentNavigableElement != null) {
+                    currentNavigationController.CurrentNavigableElement.LeaveElement();
+                }
+                pagedWindow.NextPage();
+                if (currentNavigationController != null) {
+                    currentNavigationController.FocusCurrentButton();
+                }
+            }
+            return false;
+        }
+
 
     }
 

@@ -4,17 +4,18 @@ using System.Collections.Generic;
 using UnityEngine;
 
 namespace AnyRPG {
-    public class StatusEffectPanelController : DraggableWindow {
+    public class StatusEffectPanelController : ConfiguredMonoBehaviour {
+        
         [SerializeField]
-        private GameObject statusNodePrefab = null;
+        protected GameObject statusNodePrefab = null;
 
         // how many effects can be shown before not showing anymore.  needed for small controllers like the ones on nameplates
         [SerializeField]
-        private int effectLimit = 0;
+        protected int effectLimit = 0;
 
-        private UnitController targetUnitController = null;
+        protected UnitController targetUnitController = null;
 
-        private Dictionary<StatusEffectNode, StatusEffectNodeScript> statusEffectNodes = new Dictionary<StatusEffectNode, StatusEffectNodeScript>();
+        protected Dictionary<StatusEffectNode, StatusEffectNodeScript> statusEffectNodes = new Dictionary<StatusEffectNode, StatusEffectNodeScript>();
 
         public int EffectLimit { get => effectLimit; set => effectLimit = value; }
 
@@ -31,7 +32,7 @@ namespace AnyRPG {
         }
 
         public void SetTarget(UnitController unitController) {
-            //Debug.Log(gameObject.name + "StatusEffectPanelController.SetTarget(" + unitController.DisplayName + ")");
+            //Debug.Log(gameObject.name + ".StatusEffectPanelController.SetTarget(" + unitController.DisplayName + ")");
             this.targetUnitController = unitController;
             if (targetUnitController.CharacterUnit.BaseCharacter != null && targetUnitController.CharacterUnit.BaseCharacter.CharacterStats != null) {
                 //Debug.Log("StatusEffectPanelController.SetTarget(" + characterUnit.MyDisplayName + "): checking status effects");
@@ -81,10 +82,13 @@ namespace AnyRPG {
             }
         }
 
-        public void ClearStatusEffectNode(StatusEffectNode statusEffectNode) {
+        public virtual StatusEffectNodeScript ClearStatusEffectNode(StatusEffectNode statusEffectNode) {
             //Debug.Log(gameObject.name + ".StatusEffectPanelController.ClearStatusEffectNode()");
+            StatusEffectNodeScript returnValue = null;
+
             if (statusEffectNodes.ContainsKey(statusEffectNode)) {
                 if (statusEffectNodes[statusEffectNode] != null) {
+                    returnValue = statusEffectNodes[statusEffectNode];
                     objectPooler.ReturnObjectToPool(statusEffectNodes[statusEffectNode].gameObject);
                 }
                 statusEffectNodes.Remove(statusEffectNode);
@@ -100,6 +104,8 @@ namespace AnyRPG {
             } else {
                 Debug.Log(gameObject.name + ".StatusEffectPanelController.ClearStatusEffectNodeScript() received a clear request from a node script that was not in the list.  How did this happne?");
             }
+
+            return returnValue;
         }
 
         public void AddStatusNode(StatusEffectNode statusEffectNode) {
@@ -111,7 +117,7 @@ namespace AnyRPG {
             SpawnStatusNode(statusEffectNode);
         }
 
-        public StatusEffectNodeScript SpawnStatusNode(StatusEffectNode statusEffectNode) {
+        public virtual StatusEffectNodeScript SpawnStatusNode(StatusEffectNode statusEffectNode) {
             //Debug.Log(gameObject.name + ".StatusEffectPanelController.SpawnStatusNode()");
 
             // do not spawn visible icons for traits
@@ -152,6 +158,7 @@ namespace AnyRPG {
                 statusEffectNodes[statusEffectNode] = statusEffectNodeScript;
                 statusEffectNodeScript.Initialize(statusEffectNode, targetUnitController.CharacterUnit, systemGameManager);
                 statusEffectNode.AddStatusTracker(this, statusEffectNodeScript);
+                
             } else {
                 //Debug.Log("StatusEffectPanelController.SpawnStatusNode(): statusEffectNodeScript is null!");
             }
@@ -170,18 +177,16 @@ namespace AnyRPG {
             return statusEffectNodeScriptCount;
         }
 
-        public override void OnDisable() {
+        public void OnDisable() {
             //Debug.Log(gameObject.name + ".StatusEffectPanelController.OnDisable()");
             if (SystemGameManager.IsShuttingDown) {
                 return;
             }
-            base.OnDisable();
             CleanupEventSubscriptions();
         }
 
-        public override void OnEnable() {
+        public void OnEnable() {
             //Debug.Log(gameObject.name + ".StatusEffectPanelController.OnEnable()");
-            base.OnEnable();
             CreateEventSubscriptions();
         }
     }

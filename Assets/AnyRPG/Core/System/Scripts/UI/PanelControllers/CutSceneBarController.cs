@@ -52,6 +52,7 @@ namespace AnyRPG {
         UIManager uIManager = null;
         LevelManager levelManager = null;
         AudioManager audioManager = null;
+        InputManager inputManager = null;
 
         public Cutscene CurrentCutscene { get => currentCutscene; set => currentCutscene = value; }
 
@@ -62,6 +63,7 @@ namespace AnyRPG {
             uIManager = systemGameManager.UIManager;
             levelManager = systemGameManager.LevelManager;
             audioManager = systemGameManager.AudioManager;
+            inputManager = systemGameManager.InputManager;
         }
 
         public void ClearCoRoutine() {
@@ -76,7 +78,16 @@ namespace AnyRPG {
             }
         }
 
-       
+        public void ProcessInput() {
+            if (inputManager.KeyBindWasPressed("CANCEL")
+                            || inputManager.KeyBindWasPressed("CANCELALL")
+                            || inputManager.KeyBindWasPressed("JOYSTICKBUTTON1")) {
+                //Debug.Log("AnyRPGCutsceneCameraController.LateUpdate(): open cancel cutscene window");
+                uIManager.confirmCancelCutsceneMenuWindow.OpenWindow();
+            }
+        }
+
+
         // ensure that a cutscene can be considered active even if it loads late in the scene load order
         public void AssignCutScene(Cutscene cutscene) {
             currentCutscene = cutscene;

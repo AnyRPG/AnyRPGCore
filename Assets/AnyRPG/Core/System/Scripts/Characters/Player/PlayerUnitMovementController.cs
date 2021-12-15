@@ -35,6 +35,10 @@ namespace AnyRPG {
 
         // travel vector from the perspective of the character
         [HideInInspector] public Vector3 localMoveVelocity;
+
+        // the movement input in relation to the character, without speed adjustment
+        private Vector3 localInput;
+
         // travel vector rotated by ground angle from the perspective of the character
         [HideInInspector] public Vector3 adjustedlocalMoveVelocity;
         [HideInInspector] public Vector3 currentTurnVelocity;
@@ -216,6 +220,8 @@ namespace AnyRPG {
         protected InputManager inputManager = null;
         protected NamePlateManager namePlateManager = null;
         protected CameraManager cameraManager = null;
+        protected ControlsManager controlsManager = null;
+        protected WindowManager windowManager = null;
 
         public override void Configure(SystemGameManager systemGameManager) {
             base.Configure(systemGameManager);
@@ -241,6 +247,8 @@ namespace AnyRPG {
             inputManager = systemGameManager.InputManager;
             namePlateManager = systemGameManager.UIManager.NamePlateManager;
             cameraManager = systemGameManager.CameraManager;
+            controlsManager = systemGameManager.ControlsManager;
+            windowManager = systemGameManager.WindowManager;
         }
 
         public void Init() {
@@ -283,7 +291,12 @@ namespace AnyRPG {
         }
 
         public void MoveRelative() {
-            Vector3 relativeMovement = CharacterRelativeInput(adjustedlocalMoveVelocity);
+            Vector3 relativeMovement;
+            //if (controlsManager.GamePadModeActive) {
+                //relativeMovement = CameraRelativeInput(adjustedlocalMoveVelocity);
+            //} else {
+                relativeMovement = CharacterRelativeInput(adjustedlocalMoveVelocity);
+            //}
             //Debug.Log("relativeMovement: (" + relativeMovement.x + ", " + relativeMovement.y + ", " + relativeMovement.z + ")");
             if (relativeMovement.magnitude > 0.1 || playerManager.PlayerController.inputJump) {
                 playerManager.ActiveUnitController.UnitMotor.Move(relativeMovement);
@@ -331,8 +344,12 @@ namespace AnyRPG {
             if (playerManager?.MyCharacter?.CharacterStats?.IsAlive == true && playerManager?.PlayerController?.canMove == true) {
                 // code to prevent turning when clicking on UI elements
                 // if (inputManager.rightMouseButtonDown && playerManager.PlayerController.HasMoveInput()
-                if (inputManager.rightMouseButtonDown
-                    && (!inputManager.rightMouseButtonClickedOverUI || (namePlateManager != null ? namePlateManager.MouseOverNamePlate() : false))) {
+                if (
+                    (inputManager.rightMouseButtonDown
+                    && playerManager.ActiveUnitController.UnitProfile.UnitPrefabProps.RotateModel == false // account for rotate model mode when using keyboard
+                    && (!inputManager.rightMouseButtonClickedOverUI || (namePlateManager != null ? namePlateManager.MouseOverNamePlate() : false)))
+                    || (controlsManager.GamePadModeActive == false && Input.GetAxis("RightAnalogHorizontal") != 0f && windowManager.WindowStack.Count == 0)
+                    ) {
                     //Debug.Log(gameObject.name + ".PlayerUnitMovementController.LateGlobalSuperUpdate(): resetting playerManager.ActiveUnitController.transform.forward");
 
                     playerManager.ActiveUnitController.transform.forward = new Vector3(cameraManager.MainCameraController.WantedDirection.x, 0, cameraManager.MainCameraController.WantedDirection.z);
@@ -459,6 +476,18 @@ namespace AnyRPG {
             CalculateFallDamage();
         }
 
+        private void GetLocalInput() {
+            if (controlsManager.GamePadModeActive || playerManager.ActiveUnitController.UnitProfile.UnitPrefabProps.RotateModel) {
+                // calculate the input relative to the camera in world space
+                Vector3 cameraInput = Quaternion.Euler(0f, cameraManager.ActiveMainCamera.transform.rotation.eulerAngles.y, 0f) * playerManager.PlayerController.NormalizedMoveInput;
+
+                localInput = playerManager.ActiveUnitController.transform.InverseTransformDirection(cameraInput);
+                //Debug.Log("normalizedInput: " + playerManager.PlayerController.NormalizedMoveInput + "; cameraInput: " + cameraInput + "; localInput: " + localInput);
+            } else {
+                localInput = playerManager.PlayerController.NormalizedMoveInput;
+            }
+        }
+
         void Move_StateUpdate() {
 
             airForwardDirection = playerManager.ActiveUnitController.transform.forward;
@@ -503,14 +532,21 @@ namespace AnyRPG {
                 }
                 */
 
+                GetLocalInput();
+
                 // get current movement speed and clamp it to current clamp value
                 calculatedSpeed = Mathf.Clamp(playerManager.ActiveUnitController.MovementSpeed, 0, clampValue);
 
                 // multiply normalized movement by calculated speed to get actual local movement
-                localMoveVelocity = playerManager.PlayerController.NormalizedMoveInput * calculatedSpeed;
+                localMoveVelocity = localInput * calculatedSpeed;
 
                 if (localMoveVelocity.x != 0 || localMoveVelocity.z != 0) {
-                    directionOfTravel = playerManager.ActiveUnitController.transform.TransformDirection(new Vector3(localMoveVelocity.x, 0, localMoveVelocity.z)).normalized;
+                    //if (controlsManager.GamePadModeActive == true) {
+                        //directionOfTravel = CameraRelativeInput(new Vector3(localMoveVelocity.x, 0, localMoveVelocity.z)).normalized;
+                        //Debug.Log("directionOfTravel: " + directionOfTravel);
+                    //} else {
+                        directionOfTravel = playerManager.ActiveUnitController.transform.TransformDirection(new Vector3(localMoveVelocity.x, 0, localMoveVelocity.z)).normalized;
+                    //}
                 }
 
                 // determine if there is an obstacle in front, and if it is stairs
@@ -1030,9 +1066,16 @@ namespace AnyRPG {
         }
 
         /// <summary>
-        /// Movement based off camera facing.
+        /// World space movement based off camera facing.
         /// </summary>
-        Vector3 CameraRelativeInput(float inputX, float inputZ) {
+        Vector3 CameraRelativeInput(Vector3 inputVector) {
+            Debug.Log("PlayerUnitMovementController.CameraRelativeInput(" + inputVector + ")");
+            //Forward vector relative to the camera
+            
+            return Quaternion.LookRotation(new Vector3(cameraManager.ActiveMainCamera.transform.forward.x, 0f, cameraManager.ActiveMainCamera.transform.forward.z).normalized) * inputVector;
+        }
+
+        Vector3 CameraRelativeInputOld(float inputX, float inputZ) {
             //Forward vector relative to the camera along the x-z plane   
             Vector3 forward = cameraManager.ActiveMainCamera.transform.TransformDirection(Vector3.forward);
             forward.y = 0;
@@ -1144,7 +1187,8 @@ namespace AnyRPG {
         private Vector3 NormalizedSwimMovement() {
             //Debug.Log("PlayerUnitMovementController.NormalizedSwimMovement(): groundAngle: " + groundAngle + "; backwardGroundAngle: " + backwardGroundAngle);
 
-            Vector3 returnValue = playerManager.PlayerController.NormalizedMoveInput;
+            GetLocalInput();
+            Vector3 returnValue = localInput;
 
             // check for right mouse button held down to adjust swim angle based on camera angle
             bool chestBelowWater = (playerManager.ActiveUnitController.transform.position.y + playerManager.ActiveUnitController.FloatHeight) < (playerManager.ActiveUnitController.CurrentWater[0].SurfaceHeight - (playerManager.ActiveUnitController.SwimSpeed * Time.fixedDeltaTime));
@@ -1158,7 +1202,7 @@ namespace AnyRPG {
                 // prevent constant bouncing out of water using right mouse
                 // always allow downward motion
                 // only allow upward motion if the swim speed would not result in a bounce
-                float cameraAngle = (cameraManager.MainCameraGameObject.transform.localEulerAngles.x < 180f ? cameraManager.MainCameraGameObject.transform.localEulerAngles.x : cameraManager.MainCameraGameObject.transform.localEulerAngles.x - 360f);
+                float cameraAngle = (cameraManager.MainCamera.transform.localEulerAngles.x < 180f ? cameraManager.MainCamera.transform.localEulerAngles.x : cameraManager.MainCamera.transform.localEulerAngles.x - 360f);
                 //Debug.Log(gameObject.name + ".PlayerUnitMovementController.SwimMovement(): camera Angle: " + cameraAngle);
                 // ignore angle if already touching ground underwater to prevent hitting bottom and stopping while trying to swim forward
                 if ((cameraAngle > 0f && returnValue.z > 0f && !touchingGround) // camera above and moving forward / down
@@ -1168,7 +1212,7 @@ namespace AnyRPG {
                     ) {
                     //Debug.Log(gameObject.name + ".PlayerUnitMovementController.SwimMovement(): camera Angle: " + cameraAngle + "; direction: " + returnValue.z +
                     //    "; chest height: " + (playerManager.ActiveUnitController.transform.position.y + playerManager.ActiveUnitController.ChestHeight) + "; surface: " + playerManager.ActiveUnitController.CurrentWater[0].SurfaceHeight + "; speed: " + (playerManager.ActiveUnitController.SwimSpeed * Time.deltaTime));
-                    returnValue = Quaternion.AngleAxis(cameraManager.MainCameraGameObject.transform.localEulerAngles.x, Vector3.right) * returnValue;
+                    returnValue = Quaternion.AngleAxis(cameraManager.MainCamera.transform.localEulerAngles.x, Vector3.right) * returnValue;
                 }
             }
 
@@ -1185,7 +1229,8 @@ namespace AnyRPG {
         private Vector3 NormalizedFlyMovement() {
             //Debug.Log("PlayerUnitMovementController.NormalizedSwimMovement(): groundAngle: " + groundAngle + "; backwardGroundAngle: " + backwardGroundAngle);
 
-            Vector3 returnValue = playerManager.PlayerController.NormalizedMoveInput;
+            GetLocalInput();
+            Vector3 returnValue = localInput;
 
             if (inputManager.rightMouseButtonDown
                 && playerManager.PlayerController.HasMoveInput()
@@ -1196,7 +1241,7 @@ namespace AnyRPG {
                 // prevent constant bouncing out of water using right mouse
                 // always allow downward motion
                 // only allow upward motion if the swim speed would not result in a bounce
-                float cameraAngle = (cameraManager.MainCameraGameObject.transform.localEulerAngles.x < 180f ? cameraManager.MainCameraGameObject.transform.localEulerAngles.x : cameraManager.MainCameraGameObject.transform.localEulerAngles.x - 360f);
+                float cameraAngle = (cameraManager.MainCamera.transform.localEulerAngles.x < 180f ? cameraManager.MainCamera.transform.localEulerAngles.x : cameraManager.MainCamera.transform.localEulerAngles.x - 360f);
                 //Debug.Log(gameObject.name + ".PlayerUnitMovementController.SwimMovement(): camera Angle: " + cameraAngle);
                 // ignore angle if already touching ground underwater to prevent hitting bottom and stopping while trying to swim forward
                 if ((cameraAngle > 0f && returnValue.z > 0f && !touchingGround) // camera above and moving forward / down
@@ -1204,7 +1249,7 @@ namespace AnyRPG {
                     ) {
                     //Debug.Log(gameObject.name + ".PlayerUnitMovementController.SwimMovement(): camera Angle: " + cameraAngle + "; direction: " + returnValue.z +
                     //    "; chest height: " + (playerManager.ActiveUnitController.transform.position.y + playerManager.ActiveUnitController.ChestHeight) + "; surface: " + playerManager.ActiveUnitController.CurrentWater[0].SurfaceHeight + "; speed: " + (playerManager.ActiveUnitController.SwimSpeed * Time.deltaTime));
-                    returnValue = Quaternion.AngleAxis(cameraManager.MainCameraGameObject.transform.localEulerAngles.x, Vector3.right) * returnValue;
+                    returnValue = Quaternion.AngleAxis(cameraManager.MainCamera.transform.localEulerAngles.x, Vector3.right) * returnValue;
                 }
             }
 
@@ -1219,8 +1264,7 @@ namespace AnyRPG {
         }
 
         private Vector3 NormalizedLocalMovement(float calculatedSpeed, Vector3 directionOfTravel) {
-            //Debug.Log("PlayerUnitMovementController.LocalMovement(): groundAngle: " + groundAngle + "; backwardGroundAngle: " + backwardGroundAngle);
-            Vector3 normalizedInput = playerManager.PlayerController.NormalizedMoveInput;
+            //Debug.Log("PlayerUnitMovementController.NormalizedLocalMovement(" + directionOfTravel + ")");
 
             Vector3 newReturnValue;
             float usedAngle = groundAngle;
@@ -1236,15 +1280,16 @@ namespace AnyRPG {
             }
 
             // the player is near a front obstacle, and that obstacle is below the slope limit, use its normal
-            /*
-            Debug.Log("nearBottomFrontObstacle: " + nearBottomFrontObstacle +
-                "; angle: " + bottomFrontObstacleAngle + "; nearTopFrontObstacle: " + nearTopFrontObstacle + "; nearBottomStairs: " + nearBottomStairs + "; nearFrontObstacle: " + nearFrontObstacle);
-                */
+            
+            //Debug.Log("nearBottomFrontObstacle: " + nearBottomFrontObstacle +
+                //"; angle: " + bottomFrontObstacleAngle + "; nearTopFrontObstacle: " + nearTopFrontObstacle + "; nearBottomStairs: " + nearBottomStairs + "; nearFrontObstacle: " + nearFrontObstacle);
+               
             if (nearBottomFrontObstacle &&
                 ((bottomFrontAngleDifferent && bottomFrontObstacleAngle < slopeLimit && nearFrontObstacle == true)
                 || (nearTopFrontObstacle == false && nearBottomStairs == false && nearFrontObstacle == true))
                 ) {
                 localGroundNormal = playerManager.ActiveUnitController.transform.InverseTransformDirection(bottomForwardHitInfo.normal);
+                //Debug.Log("using bottomForwardHitInfo.normal");
                 //usedGroundNormal = bottomForwardHitInfo.normal;
                 //Debug.Break();
             } else {
@@ -1287,6 +1332,7 @@ namespace AnyRPG {
             // to prevent odd floating point issues, set any ground normal that is up to directly up
             if (Mathf.Approximately(localGroundNormal.y, 1f)) {
                 localGroundNormal = Vector3.up;
+                //Debug.Log("localGroundNormal is now vector3.up");
             } else {
                 //Debug.Break();
             }
@@ -1295,8 +1341,16 @@ namespace AnyRPG {
             // this prevents losing speed up hills from slamming horizontally into the hill
 
             // WORKING VALUE
-            newReturnValue = Vector3.Cross(Quaternion.LookRotation(normalizedInput, Vector3.up) * playerManager.ActiveUnitController.transform.InverseTransformDirection(playerManager.ActiveUnitController.transform.right), localGroundNormal);
-
+            //if (controlsManager.GamePadModeActive) {
+                //Vector3 cameraInput = Quaternion.Euler(0f, cameraManager.ActiveMainCamera.transform.rotation.eulerAngles.y, 0f) * normalizedInput;
+                //Vector3 newNormalizedInput = playerManager.ActiveUnitController.transform.InverseTransformDirection(cameraInput);
+                //Debug.Log("normalizedInput: " + normalizedInput + "; cameraInput: "+ cameraInput + "; newNormalizedInput: " + newNormalizedInput);
+                //newReturnValue = Vector3.Cross(Quaternion.LookRotation(normalizedInput, Vector3.up) * cameraManager.ActiveMainCamera.transform.InverseTransformDirection(cameraManager.ActiveMainCamera.transform.right), localGroundNormal);
+                //newReturnValue = Vector3.Cross(Quaternion.LookRotation(newNormalizedInput, Vector3.up) * playerManager.ActiveUnitController.transform.InverseTransformDirection(playerManager.ActiveUnitController.transform.right), localGroundNormal);
+            //} else {
+                newReturnValue = Vector3.Cross(Quaternion.LookRotation(localInput, Vector3.up) * playerManager.ActiveUnitController.transform.InverseTransformDirection(playerManager.ActiveUnitController.transform.right), localGroundNormal);
+            //}
+            //Debug.Log("newReturnValue: " + newReturnValue);
             // next line works when facing world axis only
             //newReturnValue = playerManager.ActiveUnitController.transform.InverseTransformDirection(Quaternion.LookRotation(forwardDirection, localGroundNormal) * normalizedInput);
             //Vector3 forwardDirection = playerManager.ActiveUnitController.transform.forward;
@@ -1327,6 +1381,7 @@ namespace AnyRPG {
 
             // apply downforce
             if (groundAngle == 0 && nearBottomFrontObstacle == false && nearBottomStairs == false && touchingGround == false) {
+                //Debug.Log("apply downforce");
                 // this should make the character stick to the ground better when actively moving while grounded
                 // ONLY APPLY Y DOWNFORCE ON FLAT GROUND, this will apply a y downforce multiplied by speed, not the existing y downforce from physics (gravity)
                 float yValue = 0f;
@@ -1338,9 +1393,9 @@ namespace AnyRPG {
                     Debug.Log("NormalizedLocalMovement() position.y: " + playerManager.ActiveUnitController.transform.position.y +
                         "; Applying extra down force: " + yValue +
                         "; ground distance: " + closestGroundDistance);
-                        
-                    Debug.Break();
-                    */
+                      */  
+                    //Debug.Break();
+                    
                 }
                 newReturnValue = new Vector3(newReturnValue.x, yValue, newReturnValue.z);
             }

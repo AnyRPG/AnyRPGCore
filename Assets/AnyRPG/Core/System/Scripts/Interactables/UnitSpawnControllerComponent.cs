@@ -28,8 +28,8 @@ namespace AnyRPG {
             }
         }
 
-        public override void CleanupEventSubscriptions() {
-            base.CleanupEventSubscriptions();
+        public override void ProcessCleanupEventSubscriptions() {
+            base.ProcessCleanupEventSubscriptions();
             CleanupWindowEventSubscriptions();
         }
 

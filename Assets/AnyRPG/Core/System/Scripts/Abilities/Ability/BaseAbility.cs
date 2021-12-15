@@ -277,7 +277,7 @@ namespace AnyRPG {
             systemAbilityController = systemGameManager.SystemAbilityController;
         }
 
-        public virtual bool IsUseableStale(ActionButton actionButton) {
+        public virtual bool IsUseableStale() {
             if (playerManager.MyCharacter.CharacterAbilityManager.HasAbility(this)) {
                 return false;
             }
@@ -286,6 +286,10 @@ namespace AnyRPG {
 
         public void AssignToActionButton(ActionButton actionButton) {
             actionButton.BackgroundImage.color = new Color32(0, 0, 0, 255);
+        }
+
+        public void AssignToHandScript(Image backgroundImage) {
+            backgroundImage.color = new Color32(0, 0, 0, 255);
         }
 
         public bool ActionButtonUse() {

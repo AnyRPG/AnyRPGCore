@@ -16,11 +16,13 @@ namespace AnyRPG {
         [SerializeField]
         private TMP_InputField textInput = null;
 
+        /*
         [SerializeField]
         private HighlightButton confirmButton = null;
 
         [SerializeField]
         private HighlightButton cancelButton = null;
+        */
 
         // game manager references
         private UIManager uIManager = null;
@@ -28,8 +30,8 @@ namespace AnyRPG {
 
         public override void Configure(SystemGameManager systemGameManager) {
             base.Configure(systemGameManager);
-            confirmButton.Configure(systemGameManager);
-            cancelButton.Configure(systemGameManager);
+            //confirmButton.Configure(systemGameManager);
+            //cancelButton.Configure(systemGameManager);
         }
 
         public override void SetGameManagerReferences() {
@@ -53,14 +55,15 @@ namespace AnyRPG {
             }
         }
 
-        public override void ReceiveOpenWindowNotification() {
-            //Debug.Log("NameChangePanelController.OnOpenWindow()");
-            base.ReceiveOpenWindowNotification();
+        public override void ProcessOpenWindowNotification() {
+            //Debug.Log("NameChangePanelController.ProcessOpenWindowNotification()");
+            base.ProcessOpenWindowNotification();
             textInput.text = playerManager.MyCharacter.CharacterName;
         }
 
-        public override void RecieveClosedWindowNotification() {
-            base.RecieveClosedWindowNotification();
+        public override void ReceiveClosedWindowNotification() {
+            //Debug.Log("NameChangePanelController.ReceiveClosedWindowNotification()");
+            base.ReceiveClosedWindowNotification();
             OnCloseWindow(this);
         }
 

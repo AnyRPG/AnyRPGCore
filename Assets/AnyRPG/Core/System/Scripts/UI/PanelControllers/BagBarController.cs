@@ -16,20 +16,29 @@ namespace AnyRPG {
         [SerializeField]
         protected Image backGroundImage = null;
 
-        private bool localComponentsGotten = false;
+        protected int bagButtonCount = 0;
 
         protected bool eventSubscriptionsInitialized = false;
 
         // game manager references
         private ObjectPooler objectPooler = null;
 
-
+        public int FreeBagSlots {
+            get {
+                int freeBagSlots = 0;
+                for (int i = 0; i < bagButtonCount; i++) {
+                    if (bagButtons[i].BagNode.Bag == null) {
+                        freeBagSlots++;
+                    }
+                }
+                return freeBagSlots;
+            }
+        }
         public List<BagButton> MyBagButtons { get => bagButtons; set => bagButtons = value; }
 
         public override void Configure(SystemGameManager systemGameManager) {
             base.Configure(systemGameManager);
 
-            GetComponentReferences();
             SetBackGroundColor();
             CreateEventSubscriptions();
 
@@ -42,6 +51,12 @@ namespace AnyRPG {
             base.SetGameManagerReferences();
 
             objectPooler = systemGameManager.ObjectPooler;
+        }
+
+        public void SetBagPanel(BagPanel bagPanel) {
+            foreach (BagButton bagButton in bagButtons) {
+                bagButton.SetBagpanel(bagPanel);
+            }
         }
 
 
@@ -63,27 +78,26 @@ namespace AnyRPG {
             eventSubscriptionsInitialized = false;
         }
 
+        public void SetBagButtonCount(int count) {
+            bagButtonCount = count;
+            for (int i = 0; i < bagButtons.Count; i++) {
+                if (i >= bagButtonCount) {
+                    bagButtons[i].gameObject.SetActive(false);
+                }
+            }
+        }
+
         public void HandleInventoryTransparencyUpdate(string eventName, EventParamProperties eventParamProperties) {
             SetBackGroundColor();
         }
 
-        public void GetComponentReferences() {
-            if (localComponentsGotten == true) {
-                return;
-            }
-            if (backGroundImage == null) {
-                //Debug.Log(gameObject.name + "SlotScript.Awake(): background image is null, trying to get component");
-                backGroundImage = GetComponent<Image>();
-            }
-            localComponentsGotten = true;
-        }
-
-        public BagButton AddBagButton() {
+        public BagButton AddBagButton(BagNode bagNode) {
             //Debug.Log(gameObject.name + "BagBarController.AddBagButton()");
-            foreach (BagButton _bagButton in bagButtons) {
-                if (_bagButton.BagNode == null) {
+            for (int i = 0; i < bagButtonCount; i++) {
+                if (bagButtons[i].BagNode == null) {
                     //Debug.Log("BagBarController.AddBagButton(): found an empty bag button");
-                    return _bagButton;
+                    bagButtons[i].BagNode = bagNode;
+                    return bagButtons[i];
                 }
             }
             //Debug.Log("BagBarController.AddBagButton(): Could not find an unused bag button!");
@@ -103,7 +117,7 @@ namespace AnyRPG {
                 if (_bagButton.BagNode != null) {
                     if (_bagButton.BagNode.Bag != null) {
                         Destroy(_bagButton.BagNode.Bag);
-                        _bagButton.BagNode.Bag = null;
+                        _bagButton.BagNode.RemoveBag();
                     }
                 }
             }

@@ -55,15 +55,17 @@ namespace AnyRPG {
         private int dialogIndex = 0;
 
         // game manager references
-        private UIManager uIManager = null;
-        private QuestLog questLog = null;
-        private LogManager logManager = null;
+        protected UIManager uIManager = null;
+        protected QuestLog questLog = null;
+        protected LogManager logManager = null;
 
         public override void Configure(SystemGameManager systemGameManager) {
             base.Configure(systemGameManager);
+            /*
             continueButton.Configure(systemGameManager);
             viewQuestButton.Configure(systemGameManager);
             acceptQuestButton.Configure(systemGameManager);
+            */
         }
 
         public override void SetGameManagerReferences() {
@@ -120,6 +122,11 @@ namespace AnyRPG {
                         continueButton.gameObject.SetActive(false);
                         viewQuestButton.gameObject.SetActive(true);
                         acceptQuestButton.gameObject.SetActive(true);
+                        currentNavigationController.UpdateNavigationList();
+                        if (controlsManager.GamePadInputActive) {
+                            currentNavigationController.FocusFirstButton();
+                        }
+
                     } else {
                         //Debug.Log("NewGameMenuController.ConfirmAction(): dialogIndex: " + dialogIndex + "; DialogNode Count: " + MyDialog.MyDialogNodes.Count + "; TRIED TO DISPLAY ALREADY TURNED IN QUEST!");
                         uIManager.dialogWindow.CloseWindow();
@@ -188,11 +195,15 @@ namespace AnyRPG {
             } else {
                 //Debug.Log("DialogPanelController.OnOpenWindow(): ButtonText is null!!");
             }
+            uINavigationControllers[0].UpdateNavigationList();
+            if (controlsManager.GamePadInputActive) {
+                currentNavigationController.FocusFirstButton();
+            }
         }
 
-        public override void ReceiveOpenWindowNotification() {
+        public override void ProcessOpenWindowNotification() {
             //Debug.Log("DialogPanelController.OnOpenWindow()");
-            base.ReceiveOpenWindowNotification();
+            base.ProcessOpenWindowNotification();
             SetBackGroundColor(new Color32(0, 0, 0, (byte)(int)(PlayerPrefs.GetFloat("PopupWindowOpacity") * 255)));
 
             // these go first or they will squish the text of the continue button out of place
@@ -202,12 +213,14 @@ namespace AnyRPG {
             dialogIndex = 0;
             uIManager.dialogWindow.SetWindowTitle(interactable.DisplayName);
 
+            SetNavigationController(uINavigationControllers[0]);
+
             // this one last because it does a layout rebuild
             DisplayNodeText();
         }
 
-        public override void RecieveClosedWindowNotification() {
-            base.RecieveClosedWindowNotification();
+        public override void ReceiveClosedWindowNotification() {
+            base.ReceiveClosedWindowNotification();
             OnCloseWindow(this);
 
             viewQuestButton.gameObject.SetActive(false);

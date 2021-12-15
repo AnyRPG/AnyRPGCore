@@ -7,6 +7,8 @@ using UnityEngine.UI;
 namespace AnyRPG {
     public class AbilityBookUI : PagedWindowContents {
 
+        [Header("Ability Book")]
+
         [SerializeField]
         private List<AbilityButton> abilityButtons = new List<AbilityButton>();
 
@@ -60,10 +62,23 @@ namespace AnyRPG {
                     }
                 }
             }
+            uINavigationControllers[0].UpdateNavigationList();
         }
 
+        /*
         public override void LoadPage(int pageIndex) {
             base.LoadPage(pageIndex);
+            AddAbilities();
+        }
+        */
+
+        public override void ProcessOpenWindowNotification() {
+            base.ProcessOpenWindowNotification();
+            uINavigationControllers[0].FocusCurrentButton();
+        }
+
+        public override void AddPageContent() {
+            base.AddPageContent();
             AddAbilities();
         }
 

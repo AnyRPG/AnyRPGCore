@@ -27,10 +27,12 @@ namespace AnyRPG {
         [SerializeField]
         private GameObject availableQuestArea = null;
 
+        /*
         [SerializeField]
         private GameObject completeQuestArea = null;
+        */
 
-        private List<GameObject> interactionPanelScripts = new List<GameObject>();
+        private List<InteractionPanelScript> interactionPanelScripts = new List<InteractionPanelScript>();
 
         // game manager references
         private InteractionManager interactionManager = null;
@@ -64,21 +66,15 @@ namespace AnyRPG {
             }
         }
 
-        protected override void CreateEventSubscriptions() {
+        protected override void ProcessCreateEventSubscriptions() {
             //Debug.Log("InteractionPanelUI.CreateEventSubscriptions()");
-            if (eventSubscriptionsInitialized) {
-                return;
-            }
-            base.CreateEventSubscriptions();
+            base.ProcessCreateEventSubscriptions();
             interactionManager.OnSetInteractable += HandleSetInteractable;
         }
 
-        protected override void CleanupEventSubscriptions() {
+        protected override void ProcessCleanupEventSubscriptions() {
             //Debug.Log("InteractionPanelUI.CleanupEventSubscriptions()");
-            if (!eventSubscriptionsInitialized) {
-                return;
-            }
-            base.CleanupEventSubscriptions();
+            base.ProcessCleanupEventSubscriptions();
             interactionManager.OnSetInteractable -= HandleSetInteractable;
         }
 
@@ -156,13 +152,16 @@ namespace AnyRPG {
 
                                 //Debug.Log("QuestTrackerUI.ShowQuestsCommon(" + questGiver.name + "): " + questNode.MyQuest.MyTitle);
                                 qs.Text.color = LevelEquations.GetTargetColor(playerManager.MyCharacter.CharacterStats.Level, quest.ExperienceLevel);
-                                //quests.Add(go);
                                 questScripts.Add(qs);
+                                // disabled this next bit because it was causing repeatables with no objectives to be marked as complete
+                                /*
                                 if (quest.IsComplete && !quest.TurnedIn) {
                                     go.transform.SetParent(completeQuestArea.transform);
                                 } else if (!quest.IsComplete && questLog.HasQuest(quest.DisplayName) == false) {
                                     go.transform.SetParent(availableQuestArea.transform);
                                 }
+                                */
+                                
 
                             }
 
@@ -179,7 +178,7 @@ namespace AnyRPG {
                             if (iPS != null) {
                                 iPS.Configure(systemGameManager);
                                 iPS.Setup(_interactable, i);
-                                interactionPanelScripts.Add(go);
+                                interactionPanelScripts.Add(iPS);
                             }
                         }
                     }
@@ -187,10 +186,25 @@ namespace AnyRPG {
                 }
 
             }
+            foreach (InteractionPanelQuestScript questScript in questScripts) {
+                uINavigationControllers[0].AddActiveButton(questScript);
+            }
+            foreach (InteractionPanelScript interactionPanelScript in interactionPanelScripts) {
+                uINavigationControllers[0].AddActiveButton(interactionPanelScript);
+            }
+
+            uINavigationControllers[0].FocusFirstButton();
 
             if (uIManager.dialogWindow.IsOpen) {
                 //Debug.Log("InteractionPanelUI.ShowInteractablesCommon(" + interactable.name + "): Dialog Window is open, returning to prevent other windows from popping");
                 // if we are mid dialog, we don't want to pop another window yet
+                return;
+            }
+
+
+            // priority open - any other current interactable third, but only if there is one
+            if (currentInteractables.Count > 1 || suppressAutoInteract == true || uINavigationControllers[0].ActiveNavigableButtonCount > 1) {
+                //Debug.Log("InteractionPanelUI.Interact(): currentInteractables count: " + currentInteractables.Count);
                 return;
             }
 
@@ -199,7 +213,7 @@ namespace AnyRPG {
                 //Debug.Log("InteractionPanelUI.ShowInteractablesCommon(" + interactable.name + "): Checking questScript for complete quest");
                 if (questScript.Quest.MarkedComplete) {
                     //Debug.Log("InteractionPanelUI.ShowInteractablesCommon(" + interactable.name + "): Checking questScript: quest is complete, selecting");
-                    questScript.Select();
+                    questScript.Interact();
                     //optionOpened = true;
                     return;
                 }
@@ -210,23 +224,17 @@ namespace AnyRPG {
                 //Debug.Log("InteractionPanelUI.ShowInteractablesCommon(" + interactable.name + "): Checking questScript for available quest");
                 if (questScript.Quest.GetStatus() == "available") {
                     //Debug.Log("InteractionPanelUI.ShowInteractablesCommon(" + interactable.name + "): Checking questScript: quest is available, selecting");
-                    questScript.Select();
+                    questScript.Interact();
                     //optionOpened = true;
                     return;
                 }
             }
 
-            // priority open - any other current interactable third, but only if there is one
-            if (currentInteractables.Count > 1 || suppressAutoInteract == true) {
-                //Debug.Log("InteractionPanelUI.Interact(): currentInteractables count: " + currentInteractables.Count);
-                return;
-            }
-            foreach (GameObject interactionPanelScript in interactionPanelScripts) {
+            foreach (InteractionPanelScript interactionPanelScript in interactionPanelScripts) {
                 //Debug.Log("InteractionPanelUI.ShowInteractablesCommon(" + interactable.name + "): Checking interaction Panel Script");
-                InteractionPanelScript iPS = interactionPanelScript.GetComponent<InteractionPanelScript>();
-                if (iPS.InteractableOption.CanInteract() && iPS.InteractableOption.GetCurrentOptionCount() == 1) {
+                if (interactionPanelScript.InteractableOption.CanInteract() && interactionPanelScript.InteractableOption.GetCurrentOptionCount() == 1) {
                     //Debug.Log("InteractionPanelUI.ShowInteractablesCommon(" + interactable.name + "): Checking interaction Panel Script: canInteract is TRUE!!!");
-                    iPS.InteractableOption.Interact(playerManager.UnitController.CharacterUnit);
+                    interactionPanelScript.InteractableOption.Interact(playerManager.UnitController.CharacterUnit);
                     //optionOpened = true;
                     return;
                 }
@@ -257,24 +265,29 @@ namespace AnyRPG {
             }
             questScripts.Clear();
 
-            foreach (GameObject go in interactionPanelScripts) {
-                InteractionPanelScript iPS = go.GetComponent<InteractionPanelScript>();
-                go.transform.SetParent(null);
-                objectPooler.ReturnObjectToPool(go);
+            foreach (InteractionPanelScript interactionPanelScript in interactionPanelScripts) {
+                interactionPanelScript.transform.SetParent(null);
+                objectPooler.ReturnObjectToPool(interactionPanelScript.gameObject);
             }
             interactionPanelScripts.Clear();
+            uINavigationControllers[0].ClearActiveButtons();
         }
 
-        public override void RecieveClosedWindowNotification() {
+        public override void ReceiveClosedWindowNotification() {
             //Debug.Log("InteractionPanelUI.OnCloseWindow()");
             //ClearButtons();
-            base.RecieveClosedWindowNotification();
+            base.ReceiveClosedWindowNotification();
             // clear this so window doesn't pop open again when it's closed
             interactionManager.CurrentInteractable = null;
         }
 
-        public override void ReceiveOpenWindowNotification() {
-            //Debug.Log("InteractionPanelUI.ReceiveOpenWindowNotification()");
+        public override void ProcessOpenWindowNotification() {
+            //Debug.Log("InteractionPanelUI.ProcessOpenWindowNotification()");
+
+            // do this last or it could close the window before we set the title.  it just calls the onopenwindowhandler, so nothing that needs to be done before the 2 above lines
+            // ??? ??? IS THIS STILL TRUE?  WINDOW STACKS ARE IN WRONG ORDER BECAUSE OF THIS.  MOVED FROM BOTTOM TO TOP TO TEST
+            base.ProcessOpenWindowNotification();
+
             SetBackGroundColor(new Color32(0, 0, 0, (byte)(int)(PlayerPrefs.GetFloat("PopupWindowOpacity") * 255)));
 
             // this has to be done first, because the next line after could close the window and set the interactable to null
@@ -294,7 +307,8 @@ namespace AnyRPG {
             ShowInteractables();
 
             // do this last or it could close the window before we set the title.  it just calls the onopenwindowhandler, so nothing that needs to be done before the 2 above lines
-            base.ReceiveOpenWindowNotification();
+            // ??? ??? IS THIS STILL TRUE?  WINDOW STACKS ARE IN WRONG ORDER BECAUSE OF THIS.  MOVED FROM BOTTOM TO TOP TO TEST
+            //base.ProcessOpenWindowNotification();
         }
     }
 

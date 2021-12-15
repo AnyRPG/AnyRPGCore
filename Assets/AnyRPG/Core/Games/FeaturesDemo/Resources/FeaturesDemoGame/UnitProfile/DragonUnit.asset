@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   resourceName: Dragon
   displayName: 
-  icon: {fileID: 21300000, guid: f01ba990ee8d9424eb8921eb983ba038, type: 3}
+  icon: {fileID: 21300000, guid: ccab25b46d3775445a1820d216903970, type: 3}
   iconBackgroundImage: {fileID: 0}
   description: A fire breathing dragon
   useRegionalDescription: 0
@@ -110,6 +110,8 @@ MonoBehaviour:
       levitatedClip: {fileID: 0}
       swimIdleClip: {fileID: 0}
       swimMoveClip: {fileID: 0}
+      flyIdleClip: {fileID: 0}
+      flyMoveClip: {fileID: 0}
     rotateModel: 1
     namePlateProps:
       displayName: 
@@ -135,6 +137,7 @@ MonoBehaviour:
   isUMAUnit: 0
   isPet: 1
   flightCapable: 1
+  glideCapable: 0
   characterName: Dragon
   title: 
   factionName: Black

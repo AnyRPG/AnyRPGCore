@@ -104,6 +104,15 @@ namespace AnyRPG {
             }
         }
 
+        public void ResetDefaultVolume() {
+            SetMasterVolume(defaultMasterVolume);
+            SetMusicVolume(defaultMusicVolume);
+            SetAmbientVolume(defaultAmbientVolume);
+            SetEffectsVolume(defaultEffectsVolume);
+            SetUIVolume(defaultUIVolume);
+            SetVoiceVolume(defaultVoiceVolume);
+        }
+
         private void SetVolume(string volumeType, float volume) {
             //Debug.Log("AudioManager.SetVolume(" + volumeType + ", " + volume + "): setting audioMixer float");
             audioMixer.SetFloat(volumeType, GetLogVolume(volume));

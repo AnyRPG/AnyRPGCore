@@ -7,71 +7,74 @@ using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 namespace AnyRPG {
-    public class ActionButton : ConfiguredMonoBehaviour, IPointerClickHandler, IClickable, IPointerEnterHandler, IPointerExitHandler {
+    public class ActionButton : NavigableElement, IClickable {
 
         // A reference to the useable on the actionbutton
-        private IUseable useable = null;
+        protected IUseable useable = null;
 
         // keep track of the last usable that was on this button in case an ability is re-learned
-        private IUseable savedUseable = null;
+        protected IUseable savedUseable = null;
+
+        [Header("Action Button")]
 
         [SerializeField]
-        private TextMeshProUGUI stackSizeText = null;
+        protected TextMeshProUGUI stackSizeText = null;
 
         [SerializeField]
-        private TextMeshProUGUI keyBindText = null;
+        protected TextMeshProUGUI keyBindText = null;
 
         [SerializeField]
-        private Image backgroundImage = null;
+        protected Image backgroundImage = null;
 
         [SerializeField]
-        private Image icon = null;
+        protected Image icon = null;
 
         [SerializeField]
-        private Image coolDownIcon = null;
+        protected Image coolDownIcon = null;
 
         [SerializeField]
-        protected Image backGroundImage;
+        protected Image backGroundImage = null;
 
-        private int count = 0;
+        [SerializeField]
+        protected Image rangeIndicator = null;
 
-        private Coroutine monitorCoroutine = null;
+        [SerializeField]
+        protected Button button = null;
+
+        protected int count = 0;
+
+        protected int actionButtonIndex = 0;
+        protected bool gamepadButton = false;
+
+        protected Coroutine monitorCoroutine = null;
+
+        protected CloseableWindowContents windowPanel = null;
+
+        protected RectTransform tooltipTransform = null;
 
         // game manager references
-        UIManager uIManager = null;
-        SystemEventManager systemEventManager = null;
-        PlayerManager playerManager = null;
-        HandScript handScript = null;
-        ActionBarManager actionBarManager = null;
-        InventoryManager inventoryManager = null;
-
-        /// <summary>
-        /// A reference to the actual button that this button uses
-        /// </summary>
-        public Button Button { get; private set; }
+        protected UIManager uIManager = null;
+        protected SystemEventManager systemEventManager = null;
+        protected PlayerManager playerManager = null;
+        protected HandScript handScript = null;
+        protected ActionBarManager actionBarManager = null;
+        //InventoryManager inventoryManager = null;
 
         public Image Icon { get => icon; set => icon = value; }
         public int Count { get => count; }
         public TextMeshProUGUI StackSizeText { get => stackSizeText; }
         public TextMeshProUGUI KeyBindText { get => keyBindText; }
         public IUseable SavedUseable { get => savedUseable; set => savedUseable = value; }
-        public IUseable Useable {
-            get {
-                return useable;
-            }
-            set {
-                if (value == null) {
-                    useable = value;
-                    return;
-                }
-                useable = value.GetFactoryUseable();
-            }
-        }
+        public IUseable Useable { get => useable; }
         public Image CoolDownIcon { get => coolDownIcon; set => coolDownIcon = value; }
         public Coroutine MonitorCoroutine { get => monitorCoroutine; set => monitorCoroutine = value; }
         public Image BackgroundImage { get => backgroundImage; set => backgroundImage = value; }
+        public Image RangeIndicator { get => rangeIndicator; }
 
         public override void Configure(SystemGameManager systemGameManager) {
+            if (configureCount > 0) {
+                return;
+            }
             base.Configure(systemGameManager);
 
             uIManager = systemGameManager.UIManager;
@@ -79,18 +82,36 @@ namespace AnyRPG {
             playerManager = systemGameManager.PlayerManager;
             handScript = uIManager.HandScript;
             actionBarManager = uIManager.ActionBarManager;
-            inventoryManager = systemGameManager.InventoryManager;
+            //inventoryManager = systemGameManager.InventoryManager;
 
-            Useable = null;
-            Button = GetComponent<Button>();
-            Button.onClick.AddListener(OnClickFromButton);
-            if (backGroundImage == null) {
-                backGroundImage = GetComponent<Image>();
-            }
+            // setting useable to null should not be necessary since useable is already null at start
+            //Useable = null;
+            button.onClick.AddListener(OnClickFromButton);
             DisableCoolDownIcon();
 
             systemEventManager.OnItemCountChanged += UpdateItemCount;
+            HideRangeIndicator();
         }
+
+        public void HideRangeIndicator() {
+            rangeIndicator.color = hiddenColor;
+        }
+
+
+        public void SetIndex(int index) {
+            actionButtonIndex = index;
+            // for now, we only set index on gamepad buttons, so this call can tell the button it's a gamepad button
+            gamepadButton = true;
+        }
+
+        public void SetPanel(CloseableWindowContents windowPanel) {
+            this.windowPanel = windowPanel;
+        }
+
+        public void SetTooltipTransform(RectTransform rectTransform) {
+            tooltipTransform = rectTransform;
+        }
+        
 
         public void SetBackGroundColor(Color color) {
             if (backGroundImage != null) {
@@ -121,7 +142,8 @@ namespace AnyRPG {
             }
         }
 
-        public void OnPointerClick(PointerEventData eventData) {
+        public override void OnPointerClick(PointerEventData eventData) {
+            base.OnPointerClick(eventData);
             if (playerManager.ActiveUnitController != null) {
                 if (playerManager.ActiveUnitController.ControlLocked == true) {
                     return;
@@ -170,12 +192,16 @@ namespace AnyRPG {
             UpdateVisual();
         }
 
+        public void LoadUseable(IUseable newUseable) {
+            useable = newUseable.GetFactoryUseable();
+        }
+
         /// <summary>
         /// Sets the useable on the actionbutton
         /// </summary>
         /// <param name="useable"></param>
         public void SetUseable(IUseable useable, bool monitor = true) {
-            //Debug.Log(gameObject.name + GetInstanceID() + ".ActionButton.SetUsable(" + (useable == null ? "null" : useable.ToString()) + ")");
+            //Debug.Log(gameObject.name + ".ActionButton.SetUsable(" + (useable == null ? "null" : useable.DisplayName) + ")");
             playerManager.MyCharacter.CharacterAbilityManager.OnAttemptPerformAbility -= OnAttemptUseableUse;
             playerManager.MyCharacter.CharacterAbilityManager.OnPerformAbility -= OnUseableUse;
             playerManager.MyCharacter.CharacterAbilityManager.OnBeginAbilityCoolDown -= HandleBeginAbilityCooldown;
@@ -185,7 +211,10 @@ namespace AnyRPG {
             DisableCoolDownIcon();
 
             useable.AssignToActionButton(this);
-            Useable = useable;
+
+            // replaced with new call
+            //Useable = useable;
+            LoadUseable(useable);
 
             playerManager.MyCharacter.CharacterAbilityManager.OnAttemptPerformAbility += OnAttemptUseableUse;
             playerManager.MyCharacter.CharacterAbilityManager.OnPerformAbility += OnUseableUse;
@@ -200,9 +229,14 @@ namespace AnyRPG {
 
             // there was the assumption that these were only being called when a player clicked to add an ability
             if (UIManager.MouseInRect(Icon.rectTransform)) {
-                uIManager.ShowToolTip(transform.position, useable as IDescribable);
+                //uIManager.ShowToolTip(transform.position, useable as IDescribable);
+                uIManager.ShowGamepadTooltip(tooltipTransform, transform, useable as IDescribable, "");
+
             }
 
+            //if (gamepadButton == true) {
+            //rangeIndicator.color = Color.white;
+            //}
         }
 
         public void SubscribeToCombatEvents() {
@@ -288,22 +322,25 @@ namespace AnyRPG {
         }
 
         /// <summary>
+        /// attempt to remove unlearned spells from the button
+        /// </summary>
+        public void RemoveStaleActions() {
+            if (Useable != null && Useable.IsUseableStale()) {
+                //if (!playerManager.MyCharacter.CharacterAbilityManager.HasAbility(Useable as BaseAbility)) {
+                    savedUseable = Useable;
+                    useable = null;
+                    UpdateVisual();
+                //}
+            }
+        }
+
+        /// <summary>
         /// Updates the visual representation of the actionbutton
         /// </summary>
-        public void UpdateVisual(bool removeStaleActions = false) {
+        public void UpdateVisual() {
             //Debug.Log(gameObject.name + GetInstanceID() + ".ActionButton.UpdateVisual() useable: " + (useable == null ? "null" : useable.DisplayName));
             if (playerManager == null || playerManager.MyCharacter == null) {
                 return;
-            }
-            // attempt to remove unlearned spells from the bars
-            if (removeStaleActions) {
-                //Debug.Log("ActionButton.UpdateVisual(): removeStaleActions = true");
-                if (Useable != null && Useable.IsUseableStale(this)) {
-                    if (!playerManager.MyCharacter.CharacterAbilityManager.HasAbility(Useable as BaseAbility)) {
-                        savedUseable = Useable;
-                        Useable = null;
-                    }
-                }
             }
 
             if (Useable == null) {
@@ -322,6 +359,7 @@ namespace AnyRPG {
 
                 // clear cooldown icon
                 DisableCoolDownIcon();
+                HideRangeIndicator();
 
                 return;
             }
@@ -368,7 +406,8 @@ namespace AnyRPG {
             }
         }
 
-        public void OnPointerEnter(PointerEventData eventData) {
+        public override void OnPointerEnter(PointerEventData eventData) {
+            base.OnPointerEnter(eventData);
             //Debug.Log(gameObject + ".ActionButton.OnPointerEnter()");
 
             ProcessOnPointerEnter();
@@ -381,11 +420,14 @@ namespace AnyRPG {
                 tmp = (IDescribable)Useable;
             }
             if (tmp != null) {
-                uIManager.ShowToolTip(transform.position, tmp);
+                //uIManager.ShowToolTip(transform.position, tmp);
+                uIManager.ShowGamepadTooltip(tooltipTransform, transform, useable as IDescribable, "");
+
             }
         }
 
-        public void OnPointerExit(PointerEventData eventData) {
+        public override void OnPointerExit(PointerEventData eventData) {
+            base.OnPointerExit(eventData);
             uIManager.HideToolTip();
         }
 
@@ -403,9 +445,57 @@ namespace AnyRPG {
             if (Useable != null) {
                 savedUseable = Useable;
             }
-            Useable = null;
-            DisableCoolDownIcon();
+            useable = null;
+
+            // disablecooldownIcon is done in updatevisual
+            //DisableCoolDownIcon();
             UpdateVisual();
+
+            // hiderangeindicator is done in updatevisual
+            //HideRangeIndicator();
+        }
+
+        public override void Select() {
+            base.Select();
+            if (useable != null) {
+                owner.SetControllerHints("Move", "Clear", "", "", "", "");
+                if (tooltipTransform != null) {
+                    uIManager.ShowGamepadTooltip(tooltipTransform, transform, useable as IDescribable, "");
+                }
+            } else {
+                owner.HideControllerHints();
+                uIManager.HideToolTip();
+            }
+        }
+
+        public override void DeSelect() {
+            base.DeSelect();
+            owner.HideControllerHints();
+            uIManager.HideToolTip();
+        }
+
+        public override void JoystickButton2() {
+            base.JoystickButton2();
+            if (useable == null) {
+                return;
+            }
+            actionBarManager.ClearUseableByIndex(actionButtonIndex);
+            uIManager.HideToolTip();
+            owner.HideControllerHints();
+        }
+
+        public override void Accept() {
+            base.Accept();
+            if (useable == null) {
+                return;
+            }
+            actionBarManager.StartUseableAssignment(useable, actionButtonIndex);
+
+            // ensure the assignment window is set to the same navigation controller and element index so the move starts in the same spot on the screen
+            (uIManager.assignToActionBarsWindow.CloseableWindowContents as AssignToActionBarsUI).SetNavigationControllerByIndex(windowPanel.GetNavigationControllerIndex());
+            (uIManager.assignToActionBarsWindow.CloseableWindowContents as AssignToActionBarsUI).CurrentNavigationController.SetCurrentIndex(windowPanel.CurrentNavigationController.CurrentIndex);
+
+            uIManager.assignToActionBarsWindow.OpenWindow();
         }
     }
 

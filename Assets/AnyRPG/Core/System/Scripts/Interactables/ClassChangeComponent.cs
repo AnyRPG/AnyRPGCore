@@ -31,21 +31,18 @@ namespace AnyRPG {
             windowEventSubscriptionsInitialized = false;
         }
 
-        public override void CleanupEventSubscriptions() {
-            //Debug.Log(gameObject.name + ".ClassChangeInteractable.CleanupEventSubscriptions()");
-            base.CleanupEventSubscriptions();
-            CleanupWindowEventSubscriptions();
-            systemEventManager.OnClassChange -= HandleClassChange;
-        }
-
-        public override void CreateEventSubscriptions() {
+        public override void ProcessCreateEventSubscriptions() {
             //Debug.Log("GatheringNode.CreateEventSubscriptions()");
-            if (eventSubscriptionsInitialized) {
-                return;
-            }
-            base.CreateEventSubscriptions();
+            base.ProcessCreateEventSubscriptions();
 
             systemEventManager.OnClassChange += HandleClassChange;
+        }
+
+        public override void ProcessCleanupEventSubscriptions() {
+            //Debug.Log(gameObject.name + ".ClassChangeInteractable.CleanupEventSubscriptions()");
+            base.ProcessCleanupEventSubscriptions();
+            CleanupWindowEventSubscriptions();
+            systemEventManager.OnClassChange -= HandleClassChange;
         }
 
         public void HandleClassChange(CharacterClass oldCharacterClass, CharacterClass newCharacterClass) {

@@ -10,16 +10,16 @@ namespace AnyRPG {
     public class CharacterClassButton : TransparencyButton {
 
         [SerializeField]
-        private CharacterClass characterClass = null;
+        protected CharacterClass characterClass = null;
 
         [SerializeField]
-        private Image icon = null;
+        protected Image icon = null;
 
         [SerializeField]
-        private TextMeshProUGUI characterClassName = null;
+        protected TextMeshProUGUI characterClassName = null;
 
         [SerializeField]
-        private TextMeshProUGUI description = null;
+        protected TextMeshProUGUI description = null;
 
         public void AddCharacterClass(CharacterClass newCharacterClass) {
             characterClass = newCharacterClass;

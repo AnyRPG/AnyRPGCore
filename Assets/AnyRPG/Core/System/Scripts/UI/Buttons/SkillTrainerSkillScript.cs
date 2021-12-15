@@ -9,13 +9,13 @@ namespace AnyRPG {
 
     public class SkillTrainerSkillScript : HighlightButton {
 
-        private Skill skill;
+        protected Skill skill;
 
-        private string skillName;
+        protected string skillName;
 
-        private SkillTrainerUI skillTrainerUI = null;
+        protected SkillTrainerUI skillTrainerUI = null;
 
-        public Skill MySkill { get => skill; }
+        public Skill Skill { get => skill; }
 
         public void SetSkill(SkillTrainerUI skillTrainerUI, Skill newSkill) {
             this.skillTrainerUI = skillTrainerUI;
@@ -28,10 +28,7 @@ namespace AnyRPG {
             //Debug.Log(gameObject.name + ".SkillTrainerSkillScript.Select()");
 
             base.Select();
-            skillTrainerUI.MySelectedSkillTrainerSkillScript = this;
-
-            skillTrainerUI.ShowDescription(skill);
-
+            skillTrainerUI.SetSelectedButton(this);
         }
 
         public override void DeSelect() {

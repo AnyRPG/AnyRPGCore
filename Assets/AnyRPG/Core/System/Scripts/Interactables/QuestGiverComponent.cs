@@ -48,11 +48,6 @@ namespace AnyRPG {
             HandlePrerequisiteUpdates();
         }
 
-        public override void CleanupEventSubscriptions() {
-            //Debug.Log("QuestGiver.CleanupEventSubscriptions()");
-            base.CleanupEventSubscriptions();
-        }
-
         public override bool CanInteract(bool processRangeCheck = false, bool passedRangeCheck = false, float factionValue = 0f, bool processNonCombatCheck = true) {
             //Debug.Log(gameObject.name + ".QuestGiver.CanInteract()");
             if (questLog.GetCompleteQuests(Props.Quests).Count + questLog.GetAvailableQuests(Props.Quests).Count == 0) {

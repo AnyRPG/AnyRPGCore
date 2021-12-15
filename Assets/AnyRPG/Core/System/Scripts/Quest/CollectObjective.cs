@@ -18,7 +18,8 @@ namespace AnyRPG {
         protected bool partialMatch = false;
 
         // game manager references
-        protected InventoryManager inventoryManager = null;
+        //protected InventoryManager inventoryManager = null;
+        
 
         public override string ObjectiveName { get => itemName; }
 
@@ -42,7 +43,7 @@ namespace AnyRPG {
             if (completeBefore) {
                 return;
             }
-            CurrentAmount = inventoryManager.GetItemCount(itemName, partialMatch);
+            CurrentAmount = playerManager.MyCharacter.CharacterInventoryManager.GetItemCount(itemName, partialMatch);
             CurrentAmount += playerManager.MyCharacter.CharacterEquipmentManager.GetEquipmentCount(itemName, partialMatch);
 
             quest.CheckCompletion(true, printMessages);
@@ -56,7 +57,7 @@ namespace AnyRPG {
         }
 
         public void Complete() {
-            List<Item> items = inventoryManager.GetItems(itemName, Amount);
+            List<Item> items = playerManager.MyCharacter.CharacterInventoryManager.GetItems(itemName, Amount);
             foreach (Item item in items) {
                 item.Remove();
             }
@@ -73,10 +74,12 @@ namespace AnyRPG {
             systemEventManager.OnItemCountChanged -= UpdateItemCount;
         }
 
+        /*
         public override void SetGameManagerReferences() {
             base.SetGameManagerReferences();
             inventoryManager = systemGameManager.InventoryManager;
         }
+        */
 
     }
 

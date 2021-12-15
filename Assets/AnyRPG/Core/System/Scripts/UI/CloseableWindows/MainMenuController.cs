@@ -8,6 +8,7 @@ using UnityEngine.UI;
 namespace AnyRPG {
     public class MainMenuController : WindowContentController {
 
+        /*
         [SerializeField]
         private HighlightButton playButton = null;
 
@@ -19,16 +20,19 @@ namespace AnyRPG {
 
         [SerializeField]
         private HighlightButton exitGameButton = null;
+        */
 
-        private UIManager uIManager = null;
+        // game manager references
+        protected UIManager uIManager = null;
 
         public override void Configure(SystemGameManager systemGameManager) {
             base.Configure(systemGameManager);
-
+            /*
             playButton.Configure(systemGameManager);
             settingsButton.Configure(systemGameManager);
             creditsButton.Configure(systemGameManager);
             exitGameButton.Configure(systemGameManager);
+            */
         }
 
         public override void SetGameManagerReferences() {

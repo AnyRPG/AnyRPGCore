@@ -45,7 +45,9 @@ namespace AnyRPG {
         private List<Interactable> interactables = new List<Interactable>();
         private Interactable mouseOverInteractable = null;
 
-        private int tabTargetIndex = 0;
+        //private int tabTargetIndex = 0;
+
+        private int crossBarIndex = 0;
 
         private DateTime lastTabTargetTime;
 
@@ -61,9 +63,13 @@ namespace AnyRPG {
         protected KeyBindManager keyBindManager = null;
         protected CraftingManager craftingManager = null;
         protected UIManager uIManager = null;
+        protected WindowManager windowManager = null;
+        protected ControlsManager controlsManager = null;
+        protected ActionBarManager actionBarManager = null;
+        protected CastTargettingManager castTargettingManager = null;
 
-        public List<Interactable> MyInteractables { get => interactables; }
-        public RaycastHit MyMouseOverhit { get => mouseOverhit; set => mouseOverhit = value; }
+        public List<Interactable> Interactables { get => interactables; }
+        public RaycastHit MouseOverhit { get => mouseOverhit; set => mouseOverhit = value; }
 
         public override void SetGameManagerReferences() {
             base.SetGameManagerReferences();
@@ -76,6 +82,42 @@ namespace AnyRPG {
             keyBindManager = systemGameManager.KeyBindManager;
             craftingManager = systemGameManager.CraftingManager;
             uIManager = systemGameManager.UIManager;
+            windowManager = systemGameManager.WindowManager;
+            controlsManager = systemGameManager.ControlsManager;
+            actionBarManager = uIManager.ActionBarManager;
+            castTargettingManager = systemGameManager.CastTargettingManager;
+        }
+
+        public void AddInteractable(Interactable interactable) {
+            //Debug.Log("PlayerController.AddInteractable(" + interactable.gameObject.name + ")");
+            if (interactables.Contains(interactable) == false) {
+                interactables.Add(interactable);
+            }
+            ShowHideInteractionPopup();
+        }
+
+        /// <summary>
+        /// Remove an interactable from the list of interactables in range
+        /// </summary>
+        /// <param name="_interactable"></param>
+        public void RemoveInteractable(Interactable interactable) {
+            //Debug.Log("PlayerController.RemoveInteractable(" + interactable.gameObject.name + ")");
+            if (interactables.Contains(interactable)) {
+                interactables.Remove(interactable);
+            }
+            ShowHideInteractionPopup();
+        }
+
+        public void ShowHideInteractionPopup() {
+            //Debug.Log("PlayerController.ShowHideInteractionPopup() count: " + interactables.Count);
+
+            if (interactables.Count > 0
+                && interactables[interactables.Count - 1].PrerequisitesMet == true
+                && interactables[interactables.Count - 1].GetCurrentInteractables().Count > 0) {
+                uIManager.ShowInteractionTooltip(interactables[interactables.Count - 1]);
+            } else {
+                uIManager.HideInteractionToolTip();
+            }
         }
 
         protected void OnEnable() {
@@ -90,6 +132,7 @@ namespace AnyRPG {
         }
 
         public void ProcessLevelUnload() {
+            //Debug.Log(gameObject.name + ".PlayerController.ProcessLevelUnload()");
             ClearInteractables();
         }
 
@@ -98,7 +141,7 @@ namespace AnyRPG {
             interactables.Clear();
         }
 
-        private void ResetMoveInput() {
+        public void ResetMoveInput() {
             inputJump = false;
             inputFly = false;
             inputSink = false;
@@ -117,18 +160,42 @@ namespace AnyRPG {
 
         private void CollectMoveInput() {
             //Debug.Log("PlayerController.CollectMoveInput()");
-            inputJump = inputManager.KeyBindWasPressed("JUMP");
-            inputFly = inputManager.KeyBindWasPressedOrHeld("JUMP");
-            inputSink = inputManager.KeyBindWasPressedOrHeld("CROUCH");
+
+            // don't allow jump or crouch while activating action bars
+            if (controlsManager.LeftTriggerDown == false && controlsManager.RightTriggerDown == false) {
+                inputJump = inputManager.KeyBindWasPressed("JUMP");
+                inputFly = inputManager.KeyBindWasPressedOrHeld("JUMP");
+                inputSink = inputManager.KeyBindWasPressedOrHeld("CROUCH");
+                inputCrouch = inputManager.KeyBindWasPressed("CROUCH");
+            }
+
             inputStrafe = inputManager.KeyBindWasPressedOrHeld("STRAFELEFT") || inputManager.KeyBindWasPressedOrHeld("STRAFERIGHT");
-            inputCrouch = inputManager.KeyBindWasPressed("CROUCH");
             //inputAimVertical = Input.GetAxisRaw("AimVertical");
             //inputAimHorizontal = Input.GetAxisRaw("AimHorizontal");
-            inputHorizontal = (inputManager.KeyBindWasPressedOrHeld("STRAFELEFT") ? -1 : 0) + (inputManager.KeyBindWasPressedOrHeld("STRAFERIGHT") ? 1 : 0);
-            inputTurn = (inputManager.KeyBindWasPressedOrHeld("TURNLEFT") ? -1 : 0) + (inputManager.KeyBindWasPressedOrHeld("TURNRIGHT") ? 1 : 0);
-            inputVertical = (inputManager.KeyBindWasPressedOrHeld("BACK") ? -1 : 0) + (inputManager.KeyBindWasPressedOrHeld("FORWARD") ? 1 : 0);
 
-            if (((inputHorizontal != 0f) || (inputVertical != 0f) || inputJump || inputFly || inputSink || inputStrafe || inputCrouch) && autorunActive) {
+            // gather joystick move input
+            inputHorizontal = Input.GetAxis("LeftAnalogHorizontal");
+            inputVertical = Input.GetAxis("LeftAnalogVertical");
+            //Debug.Log("Joystick inputHorizontal: " + inputHorizontal + "; vertical: " + inputVertical);
+
+            // gather keyboard move input
+            inputHorizontal += (inputManager.KeyBindWasPressedOrHeld("STRAFELEFT") ? -1 : 0) + (inputManager.KeyBindWasPressedOrHeld("STRAFERIGHT") ? 1 : 0);
+            inputVertical += (inputManager.KeyBindWasPressedOrHeld("BACK") ? -1 : 0) + (inputManager.KeyBindWasPressedOrHeld("FORWARD") ? 1 : 0);
+
+            // only gather gamepad turn input while moving
+            // temporarily disabled because gamepad movement turning is done by rotating the camera since everything is camera relative
+            /*
+            if (inputHorizontal != 0f || inputVertical != 0f) {
+                inputTurn = Input.GetAxis("RightAnalogHorizontal");
+            }
+            */
+
+            // gather keyboard turn input
+            inputTurn += (inputManager.KeyBindWasPressedOrHeld("TURNLEFT") ? -1 : 0) + (inputManager.KeyBindWasPressedOrHeld("TURNRIGHT") ? 1 : 0);
+
+            // turn off autorun if there is any movement input
+            if (autorunActive
+                && ((inputHorizontal != 0f) || (inputVertical != 0f) || inputJump || inputFly || inputSink || inputStrafe || inputCrouch)) {
                 ToggleAutorun();
             }
 
@@ -151,12 +218,17 @@ namespace AnyRPG {
         }
         */
 
-        protected void Update() {
+        public void ProcessInput() {
             //Debug.Log("PlayerController.Update()");
-            ResetMoveInput();
+            //ResetMoveInput();
 
             if (playerManager.ActiveUnitController == null) {
                 //Debug.Log(gameObject.name + ".PlayerController.Update(): Player Unit is not spawned. Exiting");
+                return;
+            }
+
+            if (uIManager.nameChangeWindow.IsOpen) {
+                //Debug.Log("Not allowing movement during name change");
                 return;
             }
 
@@ -192,6 +264,8 @@ namespace AnyRPG {
             CollectMoveInput();
 
             HandleRightMouseClick();
+
+            ProcessGamepadButtonClicks();
 
             RegisterAbilityButtonPresses();
 
@@ -255,7 +329,9 @@ namespace AnyRPG {
         }
 
         private void ToggleRun() {
-            if (inputManager.KeyBindWasPressed("TOGGLERUN")) {
+            //Debug.Log("PlayerController.ToggleRun()");
+            if (inputManager.KeyBindWasPressed("TOGGLERUN")
+                || (controlsManager.DPadDownPressed == true && controlsManager.LeftTriggerDown == false && controlsManager.RightTriggerDown == false)) {
                 EventParamProperties eventParamProperties = new EventParamProperties();
                 if (playerManager.ActiveUnitController.Walking == false) {
                     playerManager.ActiveUnitController.Walking = true;
@@ -271,7 +347,8 @@ namespace AnyRPG {
         }
 
         private void CheckToggleAutorun() {
-            if (inputManager.KeyBindWasPressed("TOGGLEAUTORUN")) {
+            if (inputManager.KeyBindWasPressed("TOGGLEAUTORUN")
+                || inputManager.KeyBindWasPressed("JOYSTICKBUTTON8") == true) {
                 ToggleAutorun();
             }
         }
@@ -296,6 +373,16 @@ namespace AnyRPG {
             //CheckForInteraction();
         }
 
+        private bool MouseOutsideScreen() {
+            if (Input.mousePosition.x < 0f
+                            || Input.mousePosition.x > Screen.width
+                            || Input.mousePosition.y < 0f
+                            || Input.mousePosition.y > Screen.height) {
+                return true;
+            }
+            return false;
+        }
+
         /// <summary>
         /// this code is necessary because the only other solution to mouseover through the player is to set the player to layer Ignore Raycast
         /// which breaks the invector controller
@@ -306,6 +393,18 @@ namespace AnyRPG {
                 // we are in a cutscene and shouldn't be dealing with mouseover
                 return;
             }
+
+            // don't do anything if the mouse is outside the screen bounds
+            if (MouseOutsideScreen()) {
+                DisableMouseOver();
+                return;
+            }
+
+            // gamepad mode can hide the cursor.  Mouseover should not be activated when the cursor is hidden
+            if (controlsManager.MouseDisabled == true) {
+                return;
+            }
+
             Ray ray = cameraManager.ActiveMainCamera.ScreenPointToRay(Input.mousePosition);
             int playerMask = 1 << LayerMask.NameToLayer("Player");
             int ignoreMask = 1 << LayerMask.NameToLayer("Ignore Raycast");
@@ -347,13 +446,17 @@ namespace AnyRPG {
 
             if (disableMouseOver) {
                 // we did not hit any interactable, check if a current interactable is set and unset it
-                if (mouseOverInteractable != null) {
-                    mouseOverInteractable.IsMouseOverUnit = false;
-                    mouseOverInteractable.OnMouseOut();
-                    mouseOverInteractable = null;
-                }
+                DisableMouseOver();
             }
 
+        }
+
+        public void DisableMouseOver() {
+            if (mouseOverInteractable != null) {
+                mouseOverInteractable.IsMouseOverUnit = false;
+                mouseOverInteractable.OnMouseOut();
+                mouseOverInteractable = null;
+            }
         }
 
         /*
@@ -377,6 +480,11 @@ namespace AnyRPG {
 
         private void HandleRightMouseClick() {
             //Debug.Log(gameObject.name + ".PlayerController.HandleRightMouseClick()");
+
+            if (MouseOutsideScreen()) {
+                return;
+            }
+
             // check if the right mouse button clicked on something and interact with it
             if (inputManager.rightMouseButtonClicked && !EventSystem.current.IsPointerOverGameObject()) {
                 //Debug.Log(gameObject.name + ".PlayerController.HandleRightMouseClick(): !EventSystem.current.IsPointerOverGameObject() == true!!!");
@@ -391,8 +499,88 @@ namespace AnyRPG {
             }
         }
 
+        private void ProcessGamepadButtonClicks() {
+            //Debug.Log(gameObject.name + ".PlayerController.ProcessGamepadButtonClicks()");
+
+            // if a window is open, all button clicks will be processed by that window instead of the player
+            if (windowManager.WindowStack.Count > 0) {
+                return;
+            }
+
+            // determine which crossbar, if any, is active
+            if (controlsManager.RightTriggerDown) {
+                crossBarIndex = 1;
+            } else if (controlsManager.LeftTriggerDown) {
+                crossBarIndex = 0;
+            } else {
+                crossBarIndex = -1;
+            }
+
+            // if a crossbar is activated, send the input to it
+            if (crossBarIndex > -1) {
+                if (controlsManager.DPadDownPressed) {
+                    actionBarManager.GamepadActionBarControllers[crossBarIndex].ActionButtons[0].OnClick(false);
+                } else if (controlsManager.DPadRightPressed) {
+                    actionBarManager.GamepadActionBarControllers[crossBarIndex].ActionButtons[1].OnClick(false);
+                } else if (controlsManager.DPadLeftPressed) {
+                    actionBarManager.GamepadActionBarControllers[crossBarIndex].ActionButtons[2].OnClick(false);
+                } else if (controlsManager.DPadUpPressed) {
+                    actionBarManager.GamepadActionBarControllers[crossBarIndex].ActionButtons[3].OnClick(false);
+                } else if (inputManager.KeyBindWasPressed("JOYSTICKBUTTON0")) {
+                    actionBarManager.GamepadActionBarControllers[crossBarIndex].ActionButtons[4].OnClick(false);
+                } else if (inputManager.KeyBindWasPressed("JOYSTICKBUTTON1")) {
+                    actionBarManager.GamepadActionBarControllers[crossBarIndex].ActionButtons[5].OnClick(false);
+                } else if (inputManager.KeyBindWasPressed("JOYSTICKBUTTON2")) {
+                    actionBarManager.GamepadActionBarControllers[crossBarIndex].ActionButtons[6].OnClick(false);
+                } else if (inputManager.KeyBindWasPressed("JOYSTICKBUTTON3")) {
+                    actionBarManager.GamepadActionBarControllers[crossBarIndex].ActionButtons[7].OnClick(false);
+                }
+
+                return;
+            }
+
+            // no crossbar was activated, buttons will perform their native functions
+            if (inputManager.KeyBindWasPressed("ACCEPT")) {
+                // accept button when targeting should just confirm target and nothing else
+                if (playerManager.ActiveCharacter?.CharacterAbilityManager?.WaitingForTarget() == false) {
+
+                    if (interactables.Count > 0) {
+                        // range interactables are priority
+                        InterActWithTarget(interactables[interactables.Count - 1]);
+                    } else {
+                        // allow friendly target when nothing is targeted
+                        if (playerManager.UnitController.Target == null) {
+                            GetNextTabTarget(playerManager.UnitController.Target, true, true);
+                        } else {
+                            InterActWithTarget(playerManager.UnitController.Target);
+                        }
+                    }
+                } else {
+                    FinishGroundTarget(castTargettingManager.CastTargetController.VirtualCursor);
+                }
+            } else if (controlsManager.DPadRightPressed) {
+                GetNextTabTarget(playerManager.UnitController.Target, true, false);
+            } else if (controlsManager.DPadLeftPressed) {
+                GetNextTabTarget(playerManager.UnitController.Target, true, false, false);
+            }
+        }
+
+        private void FinishGroundTarget(Vector3 targetPosition) {
+            Ray ray = cameraManager.ActiveMainCamera.ScreenPointToRay(targetPosition);
+            RaycastHit hit;
+            if (Physics.Raycast(ray, out hit, 100, movementMask)) {
+                if (playerManager.ActiveCharacter.CharacterAbilityManager.WaitingForTarget()) {
+                    playerManager.ActiveCharacter.CharacterAbilityManager.SetGroundTarget(hit.point);
+                }
+            }
+        }
+
         private void HandleLeftMouseClick() {
             //Debug.Log("PlayerController.HandleLeftMouseClick()");
+            if (MouseOutsideScreen()) {
+                return;
+            }
+
             // Check if the left mouse button clicked on an interactable and focus it
             if (!inputManager.leftMouseButtonClicked) {
                 return;
@@ -418,13 +606,7 @@ namespace AnyRPG {
             }
             //}
 
-            Ray ray = cameraManager.ActiveMainCamera.ScreenPointToRay(Input.mousePosition);
-            RaycastHit hit;
-            if (Physics.Raycast(ray, out hit, 100, movementMask)) {
-                if (playerManager.ActiveCharacter.CharacterAbilityManager.WaitingForTarget()) {
-                    playerManager.ActiveCharacter.CharacterAbilityManager.SetGroundTarget(hit.point);
-                }
-            }
+            FinishGroundTarget(Input.mousePosition);
         }
 
         /// <summary>
@@ -472,102 +654,234 @@ namespace AnyRPG {
         }
 
         private void RegisterTab() {
+
+            //Interactable oldTarget = playerManager.UnitController.Target;
+
+            // register keyboard tab target, only allow enemy target
             if (inputManager.KeyBindWasPressed("NEXTTARGET")) {
                 //Debug.Log("Tab Target Registered");
-                Interactable oldTarget = playerManager.UnitController.Target;
-                // moving this inside getnexttabtarget
-                //playerManager.UnitController.ClearTarget();
-                GetNextTabTarget(oldTarget);
+                GetNextTabTarget(playerManager.UnitController.Target, false, false);
             }
         }
 
-        private void GetNextTabTarget(Interactable oldTarget) {
+        /*
+        private bool ValidFriendlyTarget(Interactable interactable) {
+            if (interactable != null) {
+                return true;
+            }
+            return false;
+        }
+        */
+
+        private bool ValidEnemyTarget(Interactable interactable) {
+            UnitController targetCharacterUnit = interactable.GetComponent<UnitController>();
+            if (targetCharacterUnit != null
+                && targetCharacterUnit.CharacterUnit.BaseCharacter.CharacterStats.IsAlive == true
+                && Faction.RelationWith(targetCharacterUnit.CharacterUnit.BaseCharacter, playerManager.MyCharacter.Faction) <= -1) {
+                return true;
+            }
+            return false;
+        }
+
+        private List<Interactable> GetTabTargets(Interactable oldTarget, bool includeFriendly, bool includeInteractable) {
+            List<Interactable> allTabTargets = new List<Interactable>();
+            int validMask = 0;
+            if (includeInteractable) {
+                validMask = (1 << LayerMask.NameToLayer("CharacterUnit")) | (1 << LayerMask.NameToLayer("Interactable"));
+            } else {
+                validMask = 1 << LayerMask.NameToLayer("CharacterUnit");
+            }
+            Collider[] hitColliders = Physics.OverlapSphere(playerManager.ActiveUnitController.transform.position, tabTargetMaxDistance, validMask);
+            //Debug.Log("GetNextTabTarget(): collider length: " + hitColliders.Length + "; index: " + tabTargetIndex);
+
+            // although the layermask on the collider should have only delivered us valid characterUnits, they may be dead or friendly.  We need to put all the valid attack targets in a list first
+            foreach (Collider hitCollider in hitColliders) {
+                //Debug.Log("GetNextTabTarget(): collider length: " + hitColliders.Length);
+                //GameObject collidedGameObject = hitCollider.gameObject;
+                Interactable targetCharacterUnit = hitCollider.gameObject.GetComponent<Interactable>();
+                if (targetCharacterUnit != null
+                    && targetCharacterUnit != oldTarget
+                    //&& (includeFriendly == true || ValidEnemyTarget(targetCharacterUnit))) {
+                    && (includeFriendly == true || ValidEnemyTarget(targetCharacterUnit))) {
+
+                    // check if the unit is actually in front of our character.
+                    // not doing any cone or angles for now, anywhere in front will do.  might adjust this a bit later to prevent targetting units nearly adjacent to us and far away
+                    Vector3 transformedPosition = playerManager.ActiveUnitController.transform.InverseTransformPoint(targetCharacterUnit.transform.position);
+                    if (transformedPosition.z > 0f) {
+                        allTabTargets.Add(targetCharacterUnit);
+
+                    }
+                }
+            }
+
+            return allTabTargets;
+        }
+
+        private void GetNextTabTarget(Interactable oldTarget, bool includeFriendly, bool includeInteractable, bool right = true) {
             //Debug.Log("PlayerController.GetNextTabTarget(): maxDistance: " + tabTargetMaxDistance);
             DateTime currentTime = DateTime.Now;
             TimeSpan timeSinceLastTab = currentTime - lastTabTargetTime;
             lastTabTargetTime = DateTime.Now;
-            int validMask = 1 << LayerMask.NameToLayer("CharacterUnit");
-            Collider[] hitColliders = Physics.OverlapSphere(playerManager.ActiveUnitController.transform.position, tabTargetMaxDistance, validMask);
-            int i = 0;
-            //Debug.Log("GetNextTabTarget(): collider length: " + hitColliders.Length + "; index: " + tabTargetIndex);
-            int preferredTargetIndex = -1;
+            //int preferredTargetIndex = -1;
             int closestTargetIndex = -1;
+            float closestTargetDistance = 0f;
+            float targetDistance = 0f;
+            float xPosition = 0f;
 
-            // although the layermask on the collider should have only delivered us valid characterUnits, they may be dead or friendly.  We need to put all the valid attack targets in a list first
-            List<UnitController> characterUnitList = new List<UnitController>();
-            foreach (Collider hitCollider in hitColliders) {
-                //Debug.Log("GetNextTabTarget(): collider length: " + hitColliders.Length);
-                GameObject collidedGameObject = hitCollider.gameObject;
-                UnitController targetCharacterUnit = collidedGameObject.GetComponent<UnitController>();
-                if (targetCharacterUnit != null && targetCharacterUnit.CharacterUnit.BaseCharacter.CharacterStats.IsAlive == true && Faction.RelationWith(targetCharacterUnit.CharacterUnit.BaseCharacter, playerManager.MyCharacter.Faction) <= -1) {
+            List<Interactable> allTabTargets = GetTabTargets(oldTarget, includeFriendly, includeInteractable);
 
-                    // check if the unit is actually in front of our character.
-                    // not doing any cone or angles for now, anywhere in front will do.  might adjust this a bit later to prevent targetting units nearly adjacent to us and far away
-                    Vector3 transformedPosition = playerManager.ActiveUnitController.transform.InverseTransformPoint(collidedGameObject.transform.position);
-                    if (transformedPosition.z > 0f) {
-                        characterUnitList.Add(targetCharacterUnit);
-
-                    }
-                }
-            }
-
-            if (characterUnitList.Count == 0) {
+            if (allTabTargets.Count == 0) {
                 // no valid characters in range
                 //Debug.Log("PlayerController.GetNextTabTarget(): no valid characters in range, returning");
                 return;
             } else {
-                //Debug.Log("PlayerController.GetNextTabTarget(): valid character count: " + characterUnitList.Count);
+                //Debug.Log("PlayerController.GetNextTabTarget(): valid target count: " + allTabTargets.Count);
             }
 
             // now that we have all valid attack targets, we need to process the list a bit before choosing a target
-            i = 0;
-            foreach (UnitController collidedGameObject in characterUnitList) {
+            float currentx = 0f;
+            float closestLeftDistance = 0f;
+            int closestLeftIndex = -1;
+            float farthestLeftDistance = 0f;
+            int farthestLeftIndex = -1;
+            float closestRightDistance = 0f;
+            int closestRightIndex = -1;
+            float farthestRightDistance = 0f;
+            int farthestRightIndex = -1;
+
+            if (oldTarget != null) {
+                currentx = playerManager.ActiveUnitController.transform.InverseTransformPoint(oldTarget.transform.position).x;
+            }
+
+            int i = 0;
+            foreach (Interactable collidedGameObject in allTabTargets) {
                 //Debug.Log("PlayerController.GetNextTabTarget(): processing target: " + i + "; " + collidedGameObject.name);
+                targetDistance = Vector3.Distance(playerManager.ActiveUnitController.transform.position, collidedGameObject.transform.position);
                 if (closestTargetIndex == -1) {
                     closestTargetIndex = i;
+                    closestTargetDistance = targetDistance;
                 }
-                if (Vector3.Distance(playerManager.ActiveUnitController.transform.position, collidedGameObject.transform.position) < Vector3.Distance(playerManager.ActiveUnitController.transform.position, characterUnitList[closestTargetIndex].transform.position)) {
+                if (targetDistance < closestTargetDistance) {
                     closestTargetIndex = i;
+                    closestTargetDistance = targetDistance;
                 }
+                xPosition = playerManager.ActiveUnitController.transform.InverseTransformPoint(collidedGameObject.transform.position).x;
+                if (closestLeftIndex == -1 && xPosition <= currentx ) {
+                    //Debug.Log("no left index and x position " + xPosition + " < currentx " + currentx);
+                    closestLeftDistance = xPosition;
+                    farthestLeftDistance = xPosition;
+                    closestLeftIndex = i;
+                    farthestLeftIndex = i;
+                }
+                if (closestRightIndex == -1 && xPosition >= currentx) {
+                    //Debug.Log("no right index and x position " + xPosition + " > currentx " + currentx);
+                    closestRightDistance = xPosition;
+                    farthestRightDistance = xPosition;
+                    closestRightIndex = i;
+                    farthestRightIndex = i;
+                }
+                // closer than current closest left
+                if (closestLeftIndex != -1 && xPosition > closestLeftDistance && xPosition < currentx) {
+                    closestLeftDistance = xPosition;
+                    closestLeftIndex = i;
+                }
+                // farther than current farthest left
+                if (farthestLeftIndex != -1 && xPosition < farthestLeftDistance) {
+                    farthestLeftDistance = xPosition;
+                    farthestLeftIndex = i;
+                }
+                // closer than current closest right
+                if (closestRightIndex != -1 && xPosition < closestRightDistance && xPosition > currentx) {
+                    closestRightDistance = xPosition;
+                    closestRightIndex = i;
+                }
+                // farther than current farthest right
+                if (farthestRightIndex != -1 && xPosition > farthestRightDistance) {
+                    farthestRightDistance = xPosition;
+                    farthestRightIndex = i;
+                }
+
+                /*
                 // this next variable shouldn't actually be needed.  i think it was a logic error with not tracking the target index properly
                 if (preferredTargetIndex == -1) {
                     preferredTargetIndex = i;
                 }
+                */
                 i++;
             }
 
-
+            /*
             tabTargetIndex++;
-            if (tabTargetIndex >= characterUnitList.Count) {
+            if (tabTargetIndex >= allTabTargets.Count) {
                 tabTargetIndex = 0;
             }
+            */
             //Debug.Log("PlayerController.GetNextTabTarget(): processing complete: closestTargetIndex: " + closestTargetIndex + "; target: " + (target == null ? "null" : target.name) + "; closestTargetName: " + characterUnitList[closestTargetIndex]);
 
             // reset to closest unit every 3 seconds if starting a new round of tabbing.
             // otherwise, just keep going through the index
-            if (timeSinceLastTab.TotalSeconds > 3f) {
+            if (controlsManager.DPadRightPressed == true) {
+                playerManager.UnitController.ClearTarget();
+                if (oldTarget == null) {
+                    //Debug.Log("DPadRightPressed : setting closest Target Index: " + closestTargetIndex + "; " + allTabTargets[closestTargetIndex]);
+                    playerManager.UnitController.SetTarget(allTabTargets[closestTargetIndex]);
+                    return;
+                }
+                if (closestRightIndex != -1) {
+                    //Debug.Log("DPadRightPressed : setting closest Right Index: " + closestRightIndex + "; " + allTabTargets[closestRightIndex]);
+                    playerManager.UnitController.SetTarget(allTabTargets[closestRightIndex]);
+                } else {
+                    //Debug.Log("DPadRightPressed : setting farthest Left Index: " + farthestLeftIndex + "; " + allTabTargets[farthestLeftIndex]);
+                    playerManager.UnitController.SetTarget(allTabTargets[farthestLeftIndex]);
+                }
+                return;
+            } else if (controlsManager.DPadLeftPressed == true) {
+                playerManager.UnitController.ClearTarget();
+                if (oldTarget == null) {
+                    playerManager.UnitController.SetTarget(allTabTargets[closestTargetIndex]);
+                    return;
+                }
+                if (closestLeftIndex != -1) {
+                    playerManager.UnitController.SetTarget(allTabTargets[closestLeftIndex]);
+                } else {
+                    playerManager.UnitController.SetTarget(allTabTargets[farthestRightIndex]);
+                }
+                return;
+            }
+            if (timeSinceLastTab.TotalSeconds > 3f || oldTarget == null) {
                 //Debug.Log("PlayerController.GetNextTabTarget(): More than 3 seconds since last tab");
-                if (closestTargetIndex != -1 && characterUnitList[closestTargetIndex] != playerManager.UnitController.Target) {
+                playerManager.UnitController.ClearTarget();
+                playerManager.UnitController.SetTarget(allTabTargets[closestTargetIndex]);
+                /*
+                if (closestTargetIndex != -1 && allTabTargets[closestTargetIndex] != playerManager.UnitController.Target) {
                     // prevent a tab from re-targetting the same unit just because it's closest to us
                     // we only want to clear the target if we are actually setting a new target
                     playerManager.UnitController.ClearTarget();
-                    playerManager.UnitController.SetTarget(characterUnitList[closestTargetIndex]);
+                    playerManager.UnitController.SetTarget(allTabTargets[closestTargetIndex]);
                     // we need to manually set this here, otherwise our tab target index won't match our actual target, resulting in the next tab possibly not switching to a new target
                     tabTargetIndex = closestTargetIndex;
                     //} else if (preferredTarget != null) {
                 } else {
-                    if (characterUnitList[tabTargetIndex] != playerManager.UnitController.Target) {
+                    if (allTabTargets[tabTargetIndex] != playerManager.UnitController.Target) {
                         // we only want to clear the target if we are actually setting a new target
                         playerManager.UnitController.ClearTarget();
-                        playerManager.UnitController.SetTarget(characterUnitList[tabTargetIndex]);
+                        playerManager.UnitController.SetTarget(allTabTargets[tabTargetIndex]);
                     }
                 }
+                */
             } else {
                 //Debug.Log("PlayerController.GetNextTabTarget(): Less than 3 seconds since last tab, using index: " + tabTargetIndex);
                 // we only want to clear the target if we are actually setting a new target
-                if (characterUnitList[tabTargetIndex] != playerManager.UnitController.Target) {
+                /*
+                if (allTabTargets[tabTargetIndex] != playerManager.UnitController.Target) {
                     playerManager.UnitController.ClearTarget();
-                    playerManager.UnitController.SetTarget(characterUnitList[tabTargetIndex]);
+                    playerManager.UnitController.SetTarget(allTabTargets[tabTargetIndex]);
+                }
+                */
+                if (closestRightIndex != -1) {
+                    playerManager.UnitController.SetTarget(allTabTargets[closestRightIndex]);
+                } else {
+                    playerManager.UnitController.SetTarget(allTabTargets[farthestLeftIndex]);
                 }
             }
         }
@@ -626,21 +940,11 @@ namespace AnyRPG {
             //return false;
         }
 
-
-
-        /// <summary>
-        /// Remove an interactable from the list of interactables in range
-        /// </summary>
-        /// <param name="_interactable"></param>
-        public void RemoveInteractable(Interactable _interactable) {
-            if (interactables.Contains(_interactable)) {
-                interactables.Remove(_interactable);
-            }
-        }
-
         private void HandleCancelButtonPressed() {
             //Debug.Log("HandleCancelButtonPressed()");
-            if (inputManager.KeyBindWasPressed("CANCEL")) {
+            if (inputManager.KeyBindWasPressed("CANCEL")
+                || inputManager.KeyBindWasPressed("CANCELALL")
+                || (inputManager.KeyBindWasPressed("JOYSTICKBUTTON1") && controlsManager.RightTriggerDown == false && controlsManager.LeftTriggerDown == false)) {
                 playerManager.UnitController.ClearTarget();
                 if (playerManager.ActiveCharacter.CharacterStats.IsAlive != false) {
                     // prevent character from swapping to third party controller while dead
@@ -664,8 +968,11 @@ namespace AnyRPG {
 
         public void HandleClearTarget(Interactable oldTarget) {
             //Debug.Log("PlayerController.HandleClearTarget()");
-
-            uIManager.FocusUnitFrameController.ClearTarget();
+            if (PlayerPrefs.HasKey("LockUI") == true && PlayerPrefs.GetInt("LockUI") == 0) {
+                uIManager.FocusUnitFrameController.ClearTarget(false);
+            } else {
+                uIManager.FocusUnitFrameController.ClearTarget();
+            }
             namePlateManager.ClearFocus();
             oldTarget?.UnitComponentController?.HighlightController?.HandleClearTarget();
         }
@@ -855,7 +1162,14 @@ namespace AnyRPG {
             //Debug.Log(gameObject.name + ".PlayerController.HandleUnitDestroy()");
             SystemEventManager.TriggerEvent("OnPlayerUnitDespawn", new EventParamProperties());
             UnsubscribeFromUnitEvents();
+            NotifyInteractablesOnDespawn();
             playerManager.SetUnitController(null);
+        }
+
+        public void NotifyInteractablesOnDespawn() {
+            foreach (Interactable interactable in interactables) {
+                interactable.RegisterDespawn(playerManager.ActiveUnitController.gameObject);
+            }
         }
 
         public void HandleMessageFeed(string message) {
@@ -984,6 +1298,10 @@ namespace AnyRPG {
                 }
                 SystemEventManager.TriggerEvent("OnEndAttacking", eventParam);
             }
+        }
+
+        public void OnSendObjectToPool() {
+            ClearInteractables();
         }
 
     }

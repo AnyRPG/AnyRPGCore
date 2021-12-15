@@ -30,11 +30,15 @@ namespace AnyRPG {
         public string DataCreatedOn;
         public string DataSavedOn;
         public string DataFileName;
+        public int GamepadActionButtonSet;
 
         public List<ResourcePowerSaveData> resourcePowerSaveData;
         public List<ActionBarSaveData> actionBarSaveData;
+        public List<ActionBarSaveData> gamepadActionBarSaveData;
         public List<InventorySlotSaveData> inventorySlotSaveData;
+        public List<InventorySlotSaveData> bankSlotSaveData;
         public List<EquippedBagSaveData> equippedBagSaveData;
+        public List<EquippedBagSaveData> equippedBankBagSaveData;
         public List<AbilitySaveData> abilitySaveData;
         public List<SkillSaveData> skillSaveData;
         public List<RecipeSaveData> recipeSaveData;
@@ -165,8 +169,6 @@ namespace AnyRPG {
 
         public string BagName;
         public int slotCount;
-        public bool isBankBag;
-
     }
 
     [Serializable]

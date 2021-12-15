@@ -15,7 +15,7 @@ namespace AnyRPG {
         private GameObject messagePrefab = null;
 
         [SerializeField]
-        private DraggableWindow messageFeedWindow = null;
+        private CloseableWindow messageFeedWindow = null;
 
         [SerializeField]
         private GraphicRaycaster raycaster = null;
@@ -24,7 +24,7 @@ namespace AnyRPG {
         private ObjectPooler objectPooler = null;
         private LogManager logManager = null;
 
-        public DraggableWindow MessageFeedWindow { get => messageFeedWindow; set => messageFeedWindow = value; }
+        public CloseableWindow MessageFeedWindow { get => messageFeedWindow; set => messageFeedWindow = value; }
 
         public override void Configure(SystemGameManager systemGameManager) {
             base.Configure(systemGameManager);

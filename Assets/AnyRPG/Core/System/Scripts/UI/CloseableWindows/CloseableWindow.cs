@@ -38,8 +38,12 @@ namespace AnyRPG {
         [SerializeField]
         protected Image backGroundImage = null;
 
+        [Tooltip("Used to save and load window positions")]
         [SerializeField]
         protected RectTransform rectTransform = null;
+
+        [SerializeField]
+        protected HintBarController hintBarController = null;
 
         // game manager references
         protected ObjectPooler objectPooler = null;
@@ -54,6 +58,7 @@ namespace AnyRPG {
         }
 
         public RectTransform RectTransform { get => rectTransform; }
+        public DraggableWindow DragHandle { get => dragHandle; }
 
         public override void Configure(SystemGameManager systemGameManager) {
             //Debug.Log(gameObject.name + ".CloseableWindow.Awake()");
@@ -61,13 +66,21 @@ namespace AnyRPG {
             if (dragHandle != null) {
                 dragHandle.Configure(systemGameManager);
             }
+            if (hintBarController != null) {
+                hintBarController.Configure(systemGameManager);
+            }
             InitializeWindow();
             RawCloseWindow();
+            HideControllerHints();
         }
 
         public override void SetGameManagerReferences() {
             base.SetGameManagerReferences();
             objectPooler = systemGameManager.ObjectPooler;
+        }
+
+        public void Init() {
+            windowContents.Init();
         }
 
         protected virtual void InitializeWindow() {
@@ -88,7 +101,12 @@ namespace AnyRPG {
                 //Debug.Log(gameObject.name + ".CloseableWindow.InitializeWindow(): Instanted; setting window Contents");
                 windowContents = contentGameObject.GetComponent<ICloseableWindowContents>();
                 windowContents.Configure(systemGameManager);
+                SetContentOwner();
             }
+        }
+
+        public virtual void SetContentOwner() {
+            windowContents.SetWindow(this);
         }
 
         public virtual void InitalizeWindowContents(GameObject contentPrefab, string title) {
@@ -148,10 +166,13 @@ namespace AnyRPG {
             //Debug.Log(gameObject.name + ".CloseableWindow.CloseWindow(): alpha should be set to zero: doing callbacks");
             OnCloseWindowCallback();
             if (windowContents != null) {
-                windowContents.RecieveClosedWindowNotification();
+                windowContents.ReceiveClosedWindowNotification();
             }
             if (windowText != null && windowTitle != null && windowTitle != string.Empty) {
                 windowText.text = windowTitle;
+            }
+            if (hintBarController != null) {
+                hintBarController.Hide();
             }
         }
 
@@ -166,7 +187,7 @@ namespace AnyRPG {
         }
 
         public void ToggleOpenClose() {
-            //Debug.Log("CloseableWindow.ToggleOpenClose()");
+            //Debug.Log(gameObject.name + ".CloseableWindow.ToggleOpenClose()");
             if (IsOpen) {
                 CloseWindow();
             } else {
@@ -183,6 +204,41 @@ namespace AnyRPG {
         public void SetWindowTitle(string newTitle) {
             windowText.text = newTitle;
         }
+
+        public void SetControllerHints(string aOption, string xOption, string yOption, string bOption, string dPadOption, string rDownOption) {
+            //Debug.Log(gameObject.name + ".CloseableWindow.SetControllerHints()");
+            if (hintBarController != null) {
+                hintBarController.SetOptions(aOption, xOption, yOption, bOption, dPadOption, rDownOption);
+            }
+        }
+
+        public void HideControllerHints() {
+            //Debug.Log(gameObject.name + ".CloseableWindow.HideControllerHints()");
+            if (hintBarController != null) {
+                hintBarController.Hide();
+            }
+        }
+
+        public void LockUI() {
+            if (dragHandle != null) {
+                dragHandle.LockUI();
+            }
+        }
+
+        public void LeftAnalog(float inputHorizontal, float inputVertical) {
+            //Debug.Log(gameObject.name + ".CloseableWindow.LeftAnalog()");
+
+            if (dragHandle != null) {
+                dragHandle.LeftAnalog(inputHorizontal, inputVertical);
+                return;
+            }
+        }
+
+        /*
+        public void OnDisable() {
+            Debug.Log(gameObject.name + ".CloseableWindow.OnDisable()");
+        }
+        */
 
     }
 

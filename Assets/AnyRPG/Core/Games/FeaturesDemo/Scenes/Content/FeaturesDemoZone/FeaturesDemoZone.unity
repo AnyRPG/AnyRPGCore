@@ -1649,6 +1649,108 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 39844962}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!1001 &40106805
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 1786036728}
+    m_Modifications:
+    - target: {fileID: 4653803682729839022, guid: 37f353160369b234b89e9214e5695cf7,
+        type: 3}
+      propertyPath: m_Size.x
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 4653803682729839022, guid: 37f353160369b234b89e9214e5695cf7,
+        type: 3}
+      propertyPath: m_Size.y
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 4653803682729839022, guid: 37f353160369b234b89e9214e5695cf7,
+        type: 3}
+      propertyPath: m_Size.z
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 4814946152404104989, guid: 37f353160369b234b89e9214e5695cf7,
+        type: 3}
+      propertyPath: m_Name
+      value: InteractableComponents
+      objectReference: {fileID: 0}
+    - target: {fileID: 8465681069618093373, guid: 37f353160369b234b89e9214e5695cf7,
+        type: 3}
+      propertyPath: m_RootOrder
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8465681069618093373, guid: 37f353160369b234b89e9214e5695cf7,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8465681069618093373, guid: 37f353160369b234b89e9214e5695cf7,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8465681069618093373, guid: 37f353160369b234b89e9214e5695cf7,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8465681069618093373, guid: 37f353160369b234b89e9214e5695cf7,
+        type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8465681069618093373, guid: 37f353160369b234b89e9214e5695cf7,
+        type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8465681069618093373, guid: 37f353160369b234b89e9214e5695cf7,
+        type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8465681069618093373, guid: 37f353160369b234b89e9214e5695cf7,
+        type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8465681069618093373, guid: 37f353160369b234b89e9214e5695cf7,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8465681069618093373, guid: 37f353160369b234b89e9214e5695cf7,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8465681069618093373, guid: 37f353160369b234b89e9214e5695cf7,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 37f353160369b234b89e9214e5695cf7, type: 3}
+--- !u!4 &40106806 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 8465681069618093373, guid: 37f353160369b234b89e9214e5695cf7,
+    type: 3}
+  m_PrefabInstance: {fileID: 40106805}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &40106807 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 5008980836957199679, guid: 37f353160369b234b89e9214e5695cf7,
+    type: 3}
+  m_PrefabInstance: {fileID: 40106805}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bbfd1210233fbdf4384ee537a76e5a2e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &47971273
 GameObject:
   m_ObjectHideFlags: 0
@@ -2808,6 +2910,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 80789d376f66361499b65db0e78ca67a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  rangeCollider: {fileID: 0}
 --- !u!135 &83250714
 SphereCollider:
   m_ObjectHideFlags: 0
@@ -5636,7 +5739,8 @@ Transform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 1.5, y: 0, z: 10.25}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
+  m_Children:
+  - {fileID: 1531610980}
   m_Father: {fileID: 791499017}
   m_RootOrder: 7
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -5748,6 +5852,7 @@ MonoBehaviour:
   glowMaxIntensity: 6
   glowColor: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
   temporaryMaterial: {fileID: 0}
+  interactionTooltipText: 
   notInteractable: 0
   interactWithAny: 0
   interactOnExit: 0
@@ -5757,6 +5862,7 @@ MonoBehaviour:
   checkOptionsToSpawn: 0
   spawnRequiresValidOption: 0
   despawnRequiresNoValidOption: 0
+  componentController: {fileID: 1531610981}
   unitComponentController: {fileID: 0}
 --- !u!1 &176477246
 GameObject:
@@ -10414,6 +10520,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 80789d376f66361499b65db0e78ca67a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  rangeCollider: {fileID: 0}
 --- !u!135 &290385508
 SphereCollider:
   m_ObjectHideFlags: 0
@@ -13335,6 +13442,7 @@ MonoBehaviour:
   glowMaxIntensity: 6
   glowColor: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
   temporaryMaterial: {fileID: 0}
+  interactionTooltipText: 
   notInteractable: 0
   interactWithAny: 1
   interactOnExit: 1
@@ -13344,6 +13452,7 @@ MonoBehaviour:
   checkOptionsToSpawn: 0
   spawnRequiresValidOption: 0
   despawnRequiresNoValidOption: 0
+  componentController: {fileID: 0}
   unitComponentController: {fileID: 0}
 --- !u!65 &380452922
 BoxCollider:
@@ -23881,6 +23990,7 @@ MonoBehaviour:
   glowMaxIntensity: 6
   glowColor: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
   temporaryMaterial: {fileID: 0}
+  interactionTooltipText: 
   notInteractable: 0
   interactWithAny: 0
   interactOnExit: 0
@@ -23890,6 +24000,7 @@ MonoBehaviour:
   checkOptionsToSpawn: 0
   spawnRequiresValidOption: 0
   despawnRequiresNoValidOption: 0
+  componentController: {fileID: 0}
   unitComponentController: {fileID: 0}
 --- !u!65 &696891891
 BoxCollider:
@@ -29309,6 +29420,7 @@ MonoBehaviour:
   glowMaxIntensity: 6
   glowColor: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
   temporaryMaterial: {fileID: 0}
+  interactionTooltipText: 
   notInteractable: 1
   interactWithAny: 0
   interactOnExit: 0
@@ -29318,6 +29430,7 @@ MonoBehaviour:
   checkOptionsToSpawn: 0
   spawnRequiresValidOption: 0
   despawnRequiresNoValidOption: 0
+  componentController: {fileID: 0}
   unitComponentController: {fileID: 0}
 --- !u!114 &858494856
 MonoBehaviour:
@@ -34593,6 +34706,7 @@ MonoBehaviour:
   glowMaxIntensity: 6
   glowColor: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
   temporaryMaterial: {fileID: 0}
+  interactionTooltipText: 
   notInteractable: 0
   interactWithAny: 0
   interactOnExit: 0
@@ -34602,6 +34716,7 @@ MonoBehaviour:
   checkOptionsToSpawn: 0
   spawnRequiresValidOption: 0
   despawnRequiresNoValidOption: 0
+  componentController: {fileID: 0}
   unitComponentController: {fileID: 2003560583}
   namePlateProps:
     displayName: Craft Anything
@@ -39680,6 +39795,7 @@ MonoBehaviour:
   glowMaxIntensity: 6
   glowColor: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
   temporaryMaterial: {fileID: 0}
+  interactionTooltipText: 
   notInteractable: 1
   interactWithAny: 0
   interactOnExit: 0
@@ -39689,6 +39805,7 @@ MonoBehaviour:
   checkOptionsToSpawn: 0
   spawnRequiresValidOption: 0
   despawnRequiresNoValidOption: 0
+  componentController: {fileID: 0}
   unitComponentController: {fileID: 0}
 --- !u!114 &1167479054
 MonoBehaviour:
@@ -51288,6 +51405,118 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1525588310}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!1001 &1531610979
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 173721730}
+    m_Modifications:
+    - target: {fileID: 4653803682729839022, guid: 37f353160369b234b89e9214e5695cf7,
+        type: 3}
+      propertyPath: m_Size.x
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 4653803682729839022, guid: 37f353160369b234b89e9214e5695cf7,
+        type: 3}
+      propertyPath: m_Size.y
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 4653803682729839022, guid: 37f353160369b234b89e9214e5695cf7,
+        type: 3}
+      propertyPath: m_Size.z
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 4653803682729839022, guid: 37f353160369b234b89e9214e5695cf7,
+        type: 3}
+      propertyPath: m_Center.x
+      value: -1.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 4653803682729839022, guid: 37f353160369b234b89e9214e5695cf7,
+        type: 3}
+      propertyPath: m_Center.y
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 4814946152404104989, guid: 37f353160369b234b89e9214e5695cf7,
+        type: 3}
+      propertyPath: m_Name
+      value: InteractableComponents
+      objectReference: {fileID: 0}
+    - target: {fileID: 8465681069618093373, guid: 37f353160369b234b89e9214e5695cf7,
+        type: 3}
+      propertyPath: m_RootOrder
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8465681069618093373, guid: 37f353160369b234b89e9214e5695cf7,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8465681069618093373, guid: 37f353160369b234b89e9214e5695cf7,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8465681069618093373, guid: 37f353160369b234b89e9214e5695cf7,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8465681069618093373, guid: 37f353160369b234b89e9214e5695cf7,
+        type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8465681069618093373, guid: 37f353160369b234b89e9214e5695cf7,
+        type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8465681069618093373, guid: 37f353160369b234b89e9214e5695cf7,
+        type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8465681069618093373, guid: 37f353160369b234b89e9214e5695cf7,
+        type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8465681069618093373, guid: 37f353160369b234b89e9214e5695cf7,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8465681069618093373, guid: 37f353160369b234b89e9214e5695cf7,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8465681069618093373, guid: 37f353160369b234b89e9214e5695cf7,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 37f353160369b234b89e9214e5695cf7, type: 3}
+--- !u!4 &1531610980 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 8465681069618093373, guid: 37f353160369b234b89e9214e5695cf7,
+    type: 3}
+  m_PrefabInstance: {fileID: 1531610979}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1531610981 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 5008980836957199679, guid: 37f353160369b234b89e9214e5695cf7,
+    type: 3}
+  m_PrefabInstance: {fileID: 1531610979}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bbfd1210233fbdf4384ee537a76e5a2e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1531882778
 GameObject:
   m_ObjectHideFlags: 0
@@ -54645,6 +54874,7 @@ MonoBehaviour:
   glowMaxIntensity: 6
   glowColor: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
   temporaryMaterial: {fileID: 0}
+  interactionTooltipText: 
   notInteractable: 1
   interactWithAny: 0
   interactOnExit: 0
@@ -54654,6 +54884,7 @@ MonoBehaviour:
   checkOptionsToSpawn: 0
   spawnRequiresValidOption: 0
   despawnRequiresNoValidOption: 0
+  componentController: {fileID: 0}
   unitComponentController: {fileID: 0}
 --- !u!1 &1625260587
 GameObject:
@@ -59424,6 +59655,7 @@ MonoBehaviour:
   glowMaxIntensity: 6
   glowColor: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
   temporaryMaterial: {fileID: 0}
+  interactionTooltipText: 
   notInteractable: 1
   interactWithAny: 0
   interactOnExit: 0
@@ -59433,6 +59665,7 @@ MonoBehaviour:
   checkOptionsToSpawn: 0
   spawnRequiresValidOption: 0
   despawnRequiresNoValidOption: 0
+  componentController: {fileID: 0}
   unitComponentController: {fileID: 0}
 --- !u!114 &1751132455
 MonoBehaviour:
@@ -59913,6 +60146,7 @@ MonoBehaviour:
   glowMaxIntensity: 6
   glowColor: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
   temporaryMaterial: {fileID: 0}
+  interactionTooltipText: 
   notInteractable: 0
   interactWithAny: 0
   interactOnExit: 0
@@ -59922,6 +60156,7 @@ MonoBehaviour:
   checkOptionsToSpawn: 0
   spawnRequiresValidOption: 0
   despawnRequiresNoValidOption: 0
+  componentController: {fileID: 0}
   unitComponentController: {fileID: 645912018}
   namePlateProps:
     displayName: Craft Equipment
@@ -60549,7 +60784,8 @@ Transform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 76.3097, y: 1.5, z: -9}
   m_LocalScale: {x: 1, y: 1, z: 2}
-  m_Children: []
+  m_Children:
+  - {fileID: 40106806}
   m_Father: {fileID: 1073962188}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -60601,6 +60837,7 @@ MonoBehaviour:
   glowMaxIntensity: 6
   glowColor: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
   temporaryMaterial: {fileID: 0}
+  interactionTooltipText: 
   notInteractable: 0
   interactWithAny: 0
   interactOnExit: 0
@@ -60610,6 +60847,7 @@ MonoBehaviour:
   checkOptionsToSpawn: 0
   spawnRequiresValidOption: 0
   despawnRequiresNoValidOption: 0
+  componentController: {fileID: 40106807}
   unitComponentController: {fileID: 0}
 --- !u!65 &1786036731
 BoxCollider:
@@ -67822,6 +68060,7 @@ MonoBehaviour:
   glowMaxIntensity: 6
   glowColor: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
   temporaryMaterial: {fileID: 0}
+  interactionTooltipText: 
   notInteractable: 0
   interactWithAny: 1
   interactOnExit: 1
@@ -67831,6 +68070,7 @@ MonoBehaviour:
   checkOptionsToSpawn: 0
   spawnRequiresValidOption: 0
   despawnRequiresNoValidOption: 0
+  componentController: {fileID: 0}
   unitComponentController: {fileID: 0}
 --- !u!65 &1964134521
 BoxCollider:
@@ -79054,6 +79294,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 80789d376f66361499b65db0e78ca67a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  rangeCollider: {fileID: 0}
 --- !u!4 &6140002070272531762
 Transform:
   m_ObjectHideFlags: 0
@@ -79205,6 +79446,7 @@ MonoBehaviour:
   glowMaxIntensity: 6
   glowColor: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
   temporaryMaterial: {fileID: 0}
+  interactionTooltipText: 
   notInteractable: 0
   interactWithAny: 0
   interactOnExit: 0
@@ -79214,6 +79456,7 @@ MonoBehaviour:
   checkOptionsToSpawn: 0
   spawnRequiresValidOption: 0
   despawnRequiresNoValidOption: 0
+  componentController: {fileID: 0}
   unitComponentController: {fileID: 3833523038943659883}
   namePlateProps:
     displayName: Craft Consumables

@@ -69,14 +69,23 @@ namespace AnyRPG {
             middleMouseButtonDown = false;
             middleMouseButtonUp = false;
             mouseScrolled = false;
+            ResetKeyBindNodes();
         }
 
-        void Update() {
+        public void ResetKeyBindNodes() {
+            foreach (KeyBindNode keyBindNode in keyBindManager.KeyBinds.Values) {
+                keyBindNode.UnRegisterKeyPress(true);
+                keyBindNode.UnRegisterKeyHeld();
+                keyBindNode.UnRegisterKeyUp();
+            }
+        }
+
+        public void RegisterInput() {
             if (keyBindManager.BindName != string.Empty) {
                 // we are binding a key.  discard all input
-                //Debug.Log("Key Binding in progress.  returning.");
+                Debug.Log("Key Binding in progress.  returning.");
                 foreach (KeyBindNode keyBindNode in keyBindManager.KeyBinds.Values) {
-                    keyBindNode.UnRegisterKeyPress();
+                    keyBindNode.UnRegisterKeyPress(true);
                     keyBindNode.UnRegisterKeyHeld();
                     keyBindNode.UnRegisterKeyUp();
                 }
@@ -91,14 +100,17 @@ namespace AnyRPG {
         public void RegisterKeyPresses() {
             if (lastRegisteredFrame >= Time.frameCount) {
                 // we have already registered keypresses this frame
+                Debug.Log("keypresses already registered this frame");
                 return;
             }
             lastRegisteredFrame = Time.frameCount;
 
+            /*
             if (uIManager.nameChangeWindow.IsOpen) {
                 //Debug.Log("Not allowing registration of keystrokes to keybinds during name change");
                 return;
             }
+            */
 
             bool control = false;
 
@@ -141,23 +153,25 @@ namespace AnyRPG {
             foreach (KeyBindNode keyBindNode in keyBindManager.KeyBinds.Values) {
                 // normal should eventually changed to movement, but there is only one other key (toggle run) that is normal for now, so normal is ok until more keys are added
                 // register key down
-                if (Input.GetKeyDown(keyBindNode.KeyboardKeyCode) && (keyBindNode.KeyBindType == KeyBindType.Normal || ((control == keyBindNode.Control) && (shift == keyBindNode.Shift)))) {
-                    //Debug.Log(keyBindNode.MyKeyCode + " pressed true!");
+                if ((Input.GetKeyDown(keyBindNode.KeyboardKeyCode) || Input.GetKeyDown(keyBindNode.JoystickKeyCode))
+                    && (keyBindNode.KeyBindType == KeyBindType.Normal || ((control == keyBindNode.Control) && (shift == keyBindNode.Shift)))) {
+                    //Debug.Log(keyBindNode.KeyboardKeyCode + " " + keyBindNode.JoystickKeyCode + " pressed true! " + keyBindNode.KeyBindID);
                     keyBindNode.RegisterKeyPress();
                 } else {
                     keyBindNode.UnRegisterKeyPress();
                 }
 
-                if (Input.GetKey(keyBindNode.KeyboardKeyCode) && (keyBindNode.KeyBindType == KeyBindType.Normal || (control == keyBindNode.Control) && (shift == keyBindNode.Shift))) {
-                    //Debug.Log(keyBindNode.MyKeyCode + " held true!");
+                if ((Input.GetKey(keyBindNode.KeyboardKeyCode) || Input.GetKey(keyBindNode.JoystickKeyCode))
+                    && (keyBindNode.KeyBindType == KeyBindType.Normal || (control == keyBindNode.Control) && (shift == keyBindNode.Shift))) {
+                    //Debug.Log(keyBindNode.KeyboardKeyCode + " " + keyBindNode.JoystickKeyCode + " held true!");
                     keyBindNode.RegisterKeyHeld();
                 } else {
                     keyBindNode.UnRegisterKeyHeld();
                 }
 
                 // register key up
-                if (Input.GetKeyUp(keyBindNode.KeyboardKeyCode)) {
-                    //Debug.Log(keyBindNode.MyKeyCode + " pressed true!");
+                if (Input.GetKeyUp(keyBindNode.KeyboardKeyCode) || Input.GetKeyUp(keyBindNode.JoystickKeyCode)) {
+                    //Debug.Log(keyBindNode.KeyboardKeyCode + " " + keyBindNode.JoystickKeyCode + " up true! " + keyBindNode.KeyBindID);
                     keyBindNode.RegisterKeyUp();
                 } else {
                     keyBindNode.UnRegisterKeyUp();
@@ -167,7 +181,6 @@ namespace AnyRPG {
         }
 
         public bool KeyBindWasPressedOrHeld(string keyBindID) {
-            RegisterKeyPresses();
             if (keyBindManager.KeyBinds.ContainsKey(keyBindID) &&
                 (keyBindManager.KeyBinds[keyBindID].KeyPressed == true || keyBindManager.KeyBinds[keyBindID].KeyHeld == true)) {
                 return true;
@@ -176,10 +189,10 @@ namespace AnyRPG {
         }
 
         public bool KeyBindWasPressed(string keyBindID) {
-            RegisterKeyPresses();
             if (keyBindManager.KeyBinds.ContainsKey(keyBindID) && keyBindManager.KeyBinds[keyBindID].KeyPressed == true) {
                 return true;
             }
+            //Debug.Log(keyBindID + " : False");
             return false;
         }
 

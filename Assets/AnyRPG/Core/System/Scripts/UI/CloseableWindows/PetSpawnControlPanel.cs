@@ -32,8 +32,10 @@ namespace AnyRPG {
         [SerializeField]
         private TextMeshProUGUI classText = null;
 
+        /*
         [SerializeField]
         private HighlightButton returnButton = null;
+        */
 
         [SerializeField]
         private HighlightButton spawnButton = null;
@@ -80,9 +82,11 @@ namespace AnyRPG {
 
         public override void Configure(SystemGameManager systemGameManager) {
             base.Configure(systemGameManager);
+            /*
             returnButton.Configure(systemGameManager);
             spawnButton.Configure(systemGameManager);
             despawnButton.Configure(systemGameManager);
+            */
             characterPreviewPanel.Configure(systemGameManager);
         }
 
@@ -107,6 +111,8 @@ namespace AnyRPG {
             UpdateUnitInformation();
 
             nameText.text = unitProfile.CharacterName;
+            petSpawnButton.HighlightBackground();
+            uINavigationControllers[0].UnHightlightButtons(petSpawnButton);
         }
    
         public void UpdateUnitInformation() {
@@ -129,6 +135,7 @@ namespace AnyRPG {
                     despawnButton.Button.interactable = false;
                 }
             }
+            uINavigationControllers[1].UpdateNavigationList();
         }
 
         public void ClearPanel() {
@@ -158,17 +165,17 @@ namespace AnyRPG {
         }
         */
 
-        public override void RecieveClosedWindowNotification() {
+        public override void ReceiveClosedWindowNotification() {
             //Debug.Log("LoadGamePanel.OnCloseWindow()");
-            base.RecieveClosedWindowNotification();
+            base.ReceiveClosedWindowNotification();
             //characterPreviewPanel.OnTargetReady -= HandleTargetReady;
-            characterPreviewPanel.RecieveClosedWindowNotification();
+            characterPreviewPanel.ReceiveClosedWindowNotification();
             OnCloseWindow(this);
         }
 
-        public override void ReceiveOpenWindowNotification() {
-            //Debug.Log("PetSpawnControlPanel.ReceiveOpenWindowNotification()");
-
+        public override void ProcessOpenWindowNotification() {
+            //Debug.Log("PetSpawnControlPanel.ProcessOpenWindowNotification()");
+            base.ProcessOpenWindowNotification();
             ClearPanel();
 
             if (playerManager.MyCharacter.CharacterPetManager != null) {
@@ -200,11 +207,14 @@ namespace AnyRPG {
                         petSpawnButton.PetSpawnControlPanel = this;
                         petSpawnButton.AddUnitProfile(unitProfile);
                         petSpawnButtons.Add(petSpawnButton);
+                        uINavigationControllers[0].AddActiveButton(petSpawnButton);
                     }
                 }
             }
             if (petSpawnButtons.Count > 0) {
-                petSpawnButtons[0].Select();
+                SetNavigationController(uINavigationControllers[0]);
+
+                //petSpawnButtons[0].Select();
             }
             //SetPreviewTarget();
         }
@@ -219,6 +229,7 @@ namespace AnyRPG {
                 }
             }
             petSpawnButtons.Clear();
+            uINavigationControllers[0].ClearActiveButtons();
             SelectedPetSpawnButton = null;
             nameText.text = "";
         }

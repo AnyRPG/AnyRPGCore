@@ -7,9 +7,11 @@ using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 namespace AnyRPG {
-    public class DescribableIcon : ConfiguredMonoBehaviour, IPointerEnterHandler, IPointerExitHandler {
+    public class DescribableIcon : HighlightButton {
 
         protected IDescribable describable = null;
+
+        [Header("Describable Icon")]
 
         [SerializeField]
         protected TextMeshProUGUI stackSize;
@@ -19,8 +21,13 @@ namespace AnyRPG {
 
         protected int count;
 
+        // the transform that will be used to calculate tooltip position
+        protected RectTransform toolTipTransform = null;
+
+        protected bool tooltipEnabled = true;
+
         // game manager references
-        protected UIManager uIManager = null;
+        //protected UIManager uIManager = null;
 
         public Image Icon { get => icon; set => icon = value; }
         public TextMeshProUGUI StackSizeText { get => stackSize; }
@@ -31,6 +38,14 @@ namespace AnyRPG {
             base.Configure(systemGameManager);
 
             uIManager = systemGameManager.UIManager;
+        }
+
+        public void DisableTooltip() {
+            tooltipEnabled = false;
+        }
+
+        public void SetToolTipTransform(RectTransform toolTipTransform) {
+            this.toolTipTransform = toolTipTransform;
         }
 
         /// <summary>
@@ -56,6 +71,7 @@ namespace AnyRPG {
 
         }
 
+        /*
         public static Rect RectTransformToScreenSpace(RectTransform transform) {
             Vector2 size = Vector2.Scale(transform.rect.size, transform.lossyScale);
             float x = transform.position.x + transform.anchoredPosition.x;
@@ -63,6 +79,7 @@ namespace AnyRPG {
 
             return new Rect(x, y, size.x, size.y);
         }
+        */
 
         public virtual void UpdateVisual(Item item) {
             UpdateVisual();
@@ -94,41 +111,56 @@ namespace AnyRPG {
             */
         }
 
-        public virtual void OnPointerEnter(PointerEventData eventData) {
+        public override void OnPointerEnter(PointerEventData eventData) {
             //Debug.Log("DescribableIcon.OnPointerEnter()");
+            base.OnPointerEnter(eventData);
             ProcessMouseEnter();
         }
 
         public virtual void ProcessMouseEnter() {
-            IDescribable tmp = null;
+            //IDescribable tmp = null;
 
+            /*
             if (Describable != null && Describable is IDescribable) {
                 tmp = (IDescribable)Describable;
                 //Debug.Log("DescribableIcon.OnPointerEnter(): describable is not null");
                 //uIManager.ShowToolTip(transform.position);
             }
-            if (tmp != null) {
+            */
+            if (describable != null) {
                 //Debug.Log("DescribableIcon.OnPointerEnter(): showing tooltip");
-                ShowToolTip(tmp);
+                ShowToolTip();
             } else {
                 uIManager.HideToolTip();
             }
 
         }
 
+        public virtual void ShowToolTip() {
+            if (tooltipEnabled == false) {
+                return;
+            }
+            uIManager.ShowGamepadTooltip(toolTipTransform, transform, describable, "");
+        }
+
+        /*
         public virtual void ShowToolTip(IDescribable describable) {
             uIManager.ShowToolTip(transform.position, describable);
         }
+        */
 
-        public virtual void OnPointerExit(PointerEventData eventData) {
+        public override void OnPointerExit(PointerEventData eventData) {
+            base.OnPointerExit(eventData);
             uIManager.HideToolTip();
         }
 
+        /*
         public virtual void CheckMouse() {
             if (UIManager.MouseInRect(Icon.rectTransform)) {
                 uIManager.HideToolTip();
             }
         }
+        */
 
         public virtual void OnDisable() {
             if (SystemGameManager.IsShuttingDown) {

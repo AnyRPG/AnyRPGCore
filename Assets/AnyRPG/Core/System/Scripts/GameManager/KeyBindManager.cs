@@ -19,6 +19,9 @@ namespace AnyRPG {
 
         public Dictionary<string, KeyBindNode> KeyBinds { get => keyBinds; set => keyBinds = value; }
 
+        private Dictionary<string, KeyCode> xBoxKeys = new Dictionary<string, KeyCode>();
+        private Dictionary<string, KeyCode> invectorKeys = new Dictionary<string, KeyCode>();
+
         public string BindName { get => bindName; set => bindName = value; }
 
         public override void Configure(SystemGameManager systemGameManager) {
@@ -34,21 +37,52 @@ namespace AnyRPG {
         private void InitializeKeys() {
             //Debug.Log("KeyBindManager.InitializeKeys()");
 
+            invectorKeys.Add("JUMP", KeyCode.X);
+            invectorKeys.Add("CROUCH", KeyCode.Y);
+
+            xBoxKeys.Add("CANCEL", KeyCode.JoystickButton1);
+            xBoxKeys.Add("ACCEPT", KeyCode.JoystickButton0);
+            xBoxKeys.Add("MAINMENU", KeyCode.JoystickButton7);
+            xBoxKeys.Add("JUMP", KeyCode.JoystickButton3);
+            xBoxKeys.Add("CROUCH", KeyCode.JoystickButton2);
+            xBoxKeys.Add("JOYSTICKBUTTON0", KeyCode.JoystickButton0); // A
+            xBoxKeys.Add("JOYSTICKBUTTON1", KeyCode.JoystickButton1); // B
+            xBoxKeys.Add("JOYSTICKBUTTON2", KeyCode.JoystickButton2); // X
+            xBoxKeys.Add("JOYSTICKBUTTON3", KeyCode.JoystickButton3); // Y
+            xBoxKeys.Add("JOYSTICKBUTTON4", KeyCode.JoystickButton4); // LB
+            xBoxKeys.Add("JOYSTICKBUTTON5", KeyCode.JoystickButton5); // RB
+            xBoxKeys.Add("JOYSTICKBUTTON6", KeyCode.JoystickButton6); // Window
+            xBoxKeys.Add("JOYSTICKBUTTON7", KeyCode.JoystickButton7); // Menu
+            xBoxKeys.Add("JOYSTICKBUTTON8", KeyCode.JoystickButton8); // Left Analog
+            xBoxKeys.Add("JOYSTICKBUTTON9", KeyCode.JoystickButton9); // Right Analog
+
             InitializeKey("FORWARD", KeyCode.W, KeyCode.W, KeyCode.W, "Forward", KeyBindType.Normal);
             InitializeKey("BACK", KeyCode.S, KeyCode.S, KeyCode.S, "Backward", KeyBindType.Normal);
             InitializeKey("STRAFELEFT", KeyCode.A, KeyCode.A, KeyCode.A, "Strafe Left", KeyBindType.Normal);
             InitializeKey("STRAFERIGHT", KeyCode.D, KeyCode.D, KeyCode.D, "Strafe Right", KeyBindType.Normal);
             InitializeKey("TURNLEFT", KeyCode.Q, KeyCode.Q, KeyCode.Q, "Turn Left", KeyBindType.Normal);
             InitializeKey("TURNRIGHT", KeyCode.E, KeyCode.E, KeyCode.E, "Turn Right", KeyBindType.Normal);
-            InitializeKey("JUMP", KeyCode.Space, KeyCode.X, KeyCode.X, "Jump", KeyBindType.Normal);
-            InitializeKey("CROUCH", KeyCode.X, KeyCode.Y, KeyCode.Y, "Crouch", KeyBindType.Normal);
+            InitializeKey("JUMP", KeyCode.Space, xBoxKeys["JUMP"], KeyCode.X, "Jump", KeyBindType.Normal);
+            InitializeKey("CROUCH", KeyCode.X, xBoxKeys["CROUCH"], KeyCode.Y, "Crouch", KeyBindType.Normal);
             InitializeKey("ROLL", KeyCode.R, KeyCode.B, KeyCode.B, "Roll", KeyBindType.Normal);
             InitializeKey("TOGGLERUN", KeyCode.KeypadDivide, KeyCode.None, KeyCode.None, "Toggle Run", KeyBindType.Normal);
             InitializeKey("TOGGLEAUTORUN", KeyCode.KeypadMultiply, KeyCode.None, KeyCode.None, "Toggle Autorun", KeyBindType.Normal);
             InitializeKey("TOGGLESTRAFE", KeyCode.T, KeyCode.JoystickButton9, KeyCode.JoystickButton9, "Toggle Strafe", KeyBindType.Normal);
 
-            InitializeKey("CANCEL", KeyCode.Escape, KeyCode.None, KeyCode.None, "Cancel", KeyBindType.Constant);
-            InitializeKey("MAINMENU", KeyCode.F12, KeyCode.None, KeyCode.None, "Main Menu", KeyBindType.Constant);
+            InitializeKey("ACCEPT", KeyCode.KeypadEnter, xBoxKeys["ACCEPT"], KeyCode.None, "Accept", KeyBindType.Constant);
+            InitializeKey("CANCEL", KeyCode.Backspace, KeyCode.None, KeyCode.None, "Cancel", KeyBindType.Constant);
+            InitializeKey("CANCELALL", KeyCode.Escape, KeyCode.None, KeyCode.None, "Cancel All", KeyBindType.Constant);
+            InitializeKey("MAINMENU", KeyCode.F12, xBoxKeys["MAINMENU"], KeyCode.None, "Main Menu", KeyBindType.Constant);
+            InitializeKey("JOYSTICKBUTTON0", KeyCode.None, xBoxKeys["JOYSTICKBUTTON0"], KeyCode.None, "Joystick Button 0", KeyBindType.Hidden);
+            InitializeKey("JOYSTICKBUTTON1", KeyCode.None, xBoxKeys["JOYSTICKBUTTON1"], KeyCode.None, "Joystick Button 1", KeyBindType.Hidden);
+            InitializeKey("JOYSTICKBUTTON2", KeyCode.None, xBoxKeys["JOYSTICKBUTTON2"], KeyCode.None, "Joystick Button 2", KeyBindType.Hidden);
+            InitializeKey("JOYSTICKBUTTON3", KeyCode.None, xBoxKeys["JOYSTICKBUTTON3"], KeyCode.None, "Joystick Button 3", KeyBindType.Hidden);
+            InitializeKey("JOYSTICKBUTTON4", KeyCode.None, xBoxKeys["JOYSTICKBUTTON4"], KeyCode.None, "Joystick Button 4", KeyBindType.Hidden);
+            InitializeKey("JOYSTICKBUTTON5", KeyCode.None, xBoxKeys["JOYSTICKBUTTON5"], KeyCode.None, "Joystick Button 5", KeyBindType.Hidden);
+            InitializeKey("JOYSTICKBUTTON6", KeyCode.None, xBoxKeys["JOYSTICKBUTTON6"], KeyCode.None, "Joystick Button 6", KeyBindType.Hidden);
+            InitializeKey("JOYSTICKBUTTON7", KeyCode.None, xBoxKeys["JOYSTICKBUTTON7"], KeyCode.None, "Joystick Button 7", KeyBindType.Hidden);
+            InitializeKey("JOYSTICKBUTTON8", KeyCode.None, xBoxKeys["JOYSTICKBUTTON8"], KeyCode.None, "Joystick Button 8", KeyBindType.Hidden);
+            InitializeKey("JOYSTICKBUTTON9", KeyCode.None, xBoxKeys["JOYSTICKBUTTON9"], KeyCode.None, "Joystick Button 9", KeyBindType.Hidden);
             InitializeKey("QUESTLOG", KeyCode.L, KeyCode.None, KeyCode.None, "Quest Log", KeyBindType.System);
             InitializeKey("CHARACTERPANEL", KeyCode.C, KeyCode.None, KeyCode.None, "Character Panel", KeyBindType.System);
             InitializeKey("CURRENCYPANEL", KeyCode.I, KeyCode.None, KeyCode.None, "Currency Panel", KeyBindType.System);
@@ -182,7 +216,7 @@ namespace AnyRPG {
                         keyBindNode.Control = false;
                         return;
                     }
-                } else if(inputDeviceType == InputDeviceType.Joystick) {
+                }/* else if(inputDeviceType == InputDeviceType.Joystick) {
                     if (keyBindNode.JoystickKeyCode == keyCode) {
                         keyBindNode.JoystickKeyCode = KeyCode.None;
                         return;
@@ -195,6 +229,7 @@ namespace AnyRPG {
                     }
 
                 }
+                */
             }
         }
 
@@ -231,7 +266,18 @@ namespace AnyRPG {
                 if (e.isKey && e.keyCode != KeyCode.LeftShift && e.keyCode != KeyCode.RightShift && e.keyCode != KeyCode.LeftControl && e.keyCode != KeyCode.RightControl) {
                     //Debug.Log("KeyBindManager.OnGUI(): the bind was a key");
                     BindKey(bindName, inputDeviceType, e.keyCode, e.control, e.shift);
+                    return;
                 }
+                /*
+                for (int i = 0; i < 20; i++) {
+                    if (Input.GetKey("joystick button " + i.ToString())) {
+                        //System.Enum.Parse(typeof(KeyCode), "JoystickButton" + i)
+                        Debug.Log("joystick button " + i);
+                        BindKey(bindName, inputDeviceType, (KeyCode)System.Enum.Parse(typeof(KeyCode), "JoystickButton" + i), false, false);
+                        return;
+                    }
+                }
+                */
             }
         }
 
@@ -243,5 +289,5 @@ namespace AnyRPG {
 
     }
 
-    public enum KeyBindType { Normal, Action, Constant, System }
+    public enum KeyBindType { Normal, Action, Constant, System, Hidden }
 }

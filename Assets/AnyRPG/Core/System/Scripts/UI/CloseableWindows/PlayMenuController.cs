@@ -7,6 +7,7 @@ using UnityEngine;
 namespace AnyRPG {
     public class PlayMenuController : WindowContentController {
 
+        /*
         [SerializeField]
         private HighlightButton continueButton = null;
 
@@ -15,16 +16,20 @@ namespace AnyRPG {
 
         [SerializeField]
         private HighlightButton loadGameButton = null;
+        */
 
         // game manager references
-        private UIManager uIManager = null;
-        private SaveManager saveManager = null;
+        protected UIManager uIManager = null;
+        protected SaveManager saveManager = null;
 
         public override void Configure(SystemGameManager systemGameManager) {
             base.Configure(systemGameManager);
+            
+            /*
             continueButton.Configure(systemGameManager);
             newGameButton.Configure(systemGameManager);
             loadGameButton.Configure(systemGameManager);
+            */
         }
 
         public override void SetGameManagerReferences() {
@@ -36,8 +41,8 @@ namespace AnyRPG {
         public void NewGame() {
             //Debug.Log("PlayMenuController.NewGame()");
             if (systemConfigurationManager.UseNewGameWindow == true) {
-                uIManager.newGameWindow.OpenWindow();
                 uIManager.playMenuWindow.CloseWindow();
+                uIManager.newGameWindow.OpenWindow();
             } else {
                 uIManager.confirmNewGameMenuWindow.OpenWindow();
             }
@@ -50,8 +55,8 @@ namespace AnyRPG {
 
         public void LoadGame() {
             //Debug.Log("PlayMenuController.LoadGame()");
-            uIManager.loadGameWindow.OpenWindow();
             uIManager.playMenuWindow.CloseWindow();
+            uIManager.loadGameWindow.OpenWindow();
         }
 
     }

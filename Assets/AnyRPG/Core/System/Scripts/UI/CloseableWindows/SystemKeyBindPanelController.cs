@@ -43,10 +43,6 @@ namespace AnyRPG {
         public override void Configure(SystemGameManager systemGameManager) {
             base.Configure(systemGameManager);
 
-            movementButton.Configure(systemGameManager);
-            actionBarsButton.Configure(systemGameManager);
-            systemButton.Configure(systemGameManager);
-
             InitializeKeys();
         }
 
@@ -56,26 +52,34 @@ namespace AnyRPG {
             objectPooler = systemGameManager.ObjectPooler;
         }
 
-
+        /*
         public void OnEnable() {
             ToggleMovementPanel();
         }
+        */
 
         private void InitializeKeys() {
             //Debug.Log("KeyBindMenuController.InitializeKeys()");
             foreach (KeyBindNode keyBindNode in keyBindManager.KeyBinds.Values) {
                 Transform nodeParent = null;
+                UINavigationController uINavigationController = null;
                 if (keyBindNode.KeyBindType == KeyBindType.Action) {
                     nodeParent = actionBarsKeyParent.transform;
+                    uINavigationController = uINavigationControllers[2];
                 } else if (keyBindNode.KeyBindType == KeyBindType.Normal) {
                     nodeParent = movementKeyParent.transform;
+                    uINavigationController = uINavigationControllers[1];
                 } else if (keyBindNode.KeyBindType == KeyBindType.Constant || keyBindNode.KeyBindType == KeyBindType.System) {
                     nodeParent = systemKeyParent.transform;
+                    uINavigationController = uINavigationControllers[3];
                 }
-                KeyBindSlotScript keyBindSlotScript = objectPooler.GetPooledObject(keyBindButtonPrefab, nodeParent).GetComponent<KeyBindSlotScript>();
-                keyBindSlotScript.Configure(systemGameManager);
-                keyBindSlotScript.Initialize(keyBindNode);
-                keyBindNode.SetSlotScript(keyBindSlotScript);
+                if (nodeParent != null) {
+                    KeyBindSlotScript keyBindSlotScript = objectPooler.GetPooledObject(keyBindButtonPrefab, nodeParent).GetComponent<KeyBindSlotScript>();
+                    keyBindSlotScript.Configure(systemGameManager);
+                    keyBindSlotScript.Initialize(keyBindNode);
+                    keyBindNode.SetSlotScript(keyBindSlotScript);
+                    uINavigationController.AddActiveButton(keyBindSlotScript.KeyboardAssignButton);
+                }
             }
         }
 
@@ -87,17 +91,22 @@ namespace AnyRPG {
 
         }
 
+        /*
         public void ResetButtons() {
             movementButton.DeSelect();
             actionBarsButton.DeSelect();
             systemButton.DeSelect();
         }
+        */
 
         public void ToggleMovementPanel() {
+            //Debug.Log("SystemKeyBindPanelController.ToggleMovementPanel()");
             ResetPanels();
             PanelMovement.gameObject.SetActive(true);
 
-            ResetButtons();
+            uINavigationControllers[0].UnHightlightButtons(movementButton);
+
+            movementButton.HighlightBackground();
             movementButton.Select();
         }
 
@@ -105,7 +114,9 @@ namespace AnyRPG {
             ResetPanels();
             PanelCombat.gameObject.SetActive(true);
 
-            ResetButtons();
+            uINavigationControllers[0].UnHightlightButtons(actionBarsButton);
+
+            actionBarsButton.HighlightBackground();
             actionBarsButton.Select();
         }
 
@@ -113,8 +124,21 @@ namespace AnyRPG {
             ResetPanels();
             PanelGeneral.gameObject.SetActive(true);
 
-            ResetButtons();
+            uINavigationControllers[0].UnHightlightButtons(systemButton);
+
+            systemButton.HighlightBackground();
             systemButton.Select();
+        }
+
+        public override void ProcessOpenWindowNotification() {
+            //Debug.Log("SystemKeyBindPanelController.ProcessOpenWindowNotification()");
+            base.ProcessOpenWindowNotification();
+            //currentNavigationController.Focus();
+            //uINavigationControllers[0].SetCurrentButton(movementButton);
+            
+            ToggleMovementPanel();
+            uINavigationControllers[0].UnFocus();
+
         }
 
 

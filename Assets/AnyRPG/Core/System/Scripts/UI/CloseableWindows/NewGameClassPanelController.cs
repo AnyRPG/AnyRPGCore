@@ -8,8 +8,6 @@ using UnityEngine.UI;
 namespace AnyRPG {
     public class NewGameClassPanelController : WindowContentController {
 
-        public override event Action<ICloseableWindowContents> OnCloseWindow = delegate { };
-
         [SerializeField]
         private GameObject buttonPrefab = null;
 
@@ -37,21 +35,26 @@ namespace AnyRPG {
 
         private NewGameCharacterClassButton selectedClassButton = null;
 
-        private CharacterClass characterClass;
+        //private CharacterClass characterClass;
 
         private List<NewGameCharacterClassButton> optionButtons = new List<NewGameCharacterClassButton>();
 
+        private NewGamePanel newGamePanel = null;
+
         // game manager references
         private ObjectPooler objectPooler = null;
-        private SystemDataFactory systemDataFactory = null;
         private NewGameManager newGameManager = null;
 
         public override void Configure(SystemGameManager systemGameManager) {
             base.Configure(systemGameManager);
 
             objectPooler = systemGameManager.ObjectPooler;
-            systemDataFactory = systemGameManager.SystemDataFactory;
             newGameManager = systemGameManager.NewGameManager;
+        }
+
+        public void SetNewGamePanel(NewGamePanel newGamePanel) {
+            this.newGamePanel = newGamePanel;
+            //parentPanel = newGamePanel;
         }
 
         public void ClearOptionButtons() {
@@ -63,37 +66,52 @@ namespace AnyRPG {
                     objectPooler.ReturnObjectToPool(optionButton.gameObject);
                 }
             }
+            uINavigationControllers[0].ClearActiveButtons();
             optionButtons.Clear();
         }
 
-        public void ShowOptionButtonsCommon() {
-            //Debug.Log("LoadGamePanel.ShowLoadButtonsCommon()");
+        public void ShowOptionButtons() {
+            //Debug.Log("NewGameClassPanelController.ShowOptionButtons()");
             ClearOptionButtons();
 
-            foreach (CharacterClass characterClass in systemDataFactory.GetResourceList<CharacterClass>()) {
-                if (characterClass.NewGameOption == true) {
-                    //Debug.Log("LoadGamePanel.ShowLoadButtonsCommon(): setting a button with saved game data");
-                    GameObject go = objectPooler.GetPooledObject(buttonPrefab, buttonArea.transform);
-                    NewGameCharacterClassButton optionButton = go.GetComponent<NewGameCharacterClassButton>();
-                    optionButton.Configure(systemGameManager);
-                    optionButton.AddCharacterClass(characterClass);
-                    optionButtons.Add(optionButton);
+            for (int i = 0; i < newGameManager.CharacterClassList.Count; i++) {
+                //Debug.Log("LoadGamePanel.ShowLoadButtonsCommon(): setting a button with saved game data");
+                GameObject go = objectPooler.GetPooledObject(buttonPrefab, buttonArea.transform);
+                NewGameCharacterClassButton optionButton = go.GetComponent<NewGameCharacterClassButton>();
+                optionButton.Configure(systemGameManager);
+                optionButton.AddCharacterClass(newGameManager.CharacterClassList[i]);
+                optionButtons.Add(optionButton);
+                uINavigationControllers[0].AddActiveButton(optionButton);
+                if (newGameManager.CharacterClassList[i] == newGameManager.CharacterClass) {
+                    uINavigationControllers[0].SetCurrentIndex(i);
                 }
             }
+            /*
             if (optionButtons.Count > 0) {
-                optionButtons[0].Select();
+                SetNavigationController(uINavigationControllers[0]);
             }
+            */
         }
 
-        public void ShowCharacterClass(NewGameCharacterClassButton classButton) {
-            //Debug.Log("LoadGamePanel.ShowSavedGame()");
+        public void SetCharacterClass(CharacterClass newCharacterClass) {
+            //Debug.Log("NewGameClassPanelController.SetCharacterClass()");
 
-            if (selectedClassButton != null && selectedClassButton != this) {
+            // deselect old button
+            if (selectedClassButton != null && newCharacterClass != selectedClassButton.CharacterClass) {
                 selectedClassButton.DeSelect();
+                selectedClassButton.UnHighlightBackground();
             }
 
-            selectedClassButton = classButton;
-            characterClass = classButton.CharacterClass;
+            // select new button
+            for (int i = 0; i < optionButtons.Count; i++) {
+                if (optionButtons[i].CharacterClass == newCharacterClass) {
+                    selectedClassButton = optionButtons[i];
+                    uINavigationControllers[0].SetCurrentIndex(i);
+                    optionButtons[uINavigationControllers[0].CurrentIndex].HighlightBackground();
+                }
+            }
+
+
             ShowAbilityRewards();
             ShowTraitRewards();
         }
@@ -116,8 +134,8 @@ namespace AnyRPG {
 
             ClearTraitRewardIcons();
             // show trait rewards
-            if (characterClass != null && characterClass.GetFilteredCapabilities(newGameManager).TraitList.Count > 0) {
-                CapabilityProps capabilityProps = characterClass.GetFilteredCapabilities(newGameManager);
+            if (newGameManager.CharacterClass != null && newGameManager.CharacterClass.GetFilteredCapabilities(newGameManager).TraitList.Count > 0) {
+                CapabilityProps capabilityProps = newGameManager.CharacterClass.GetFilteredCapabilities(newGameManager);
                 traitLabel.SetActive(true);
                 // move to bottom of list before putting traits below it
                 traitLabel.transform.SetAsLastSibling();
@@ -145,8 +163,8 @@ namespace AnyRPG {
 
             ClearRewardIcons();
             // show ability rewards
-            if (characterClass != null && characterClass.GetFilteredCapabilities(newGameManager).AbilityList.Count > 0) {
-                CapabilityProps capabilityProps = characterClass.GetFilteredCapabilities(newGameManager);
+            if (newGameManager.CharacterClass != null && newGameManager.CharacterClass.GetFilteredCapabilities(newGameManager).AbilityList.Count > 0) {
+                CapabilityProps capabilityProps = newGameManager.CharacterClass.GetFilteredCapabilities(newGameManager);
                 abilityLabel.SetActive(true);
                 abilityLabel.transform.SetAsFirstSibling();
                 for (int i = 0; i < capabilityProps.AbilityList.Count; i++) {
@@ -186,22 +204,26 @@ namespace AnyRPG {
             abilityRewardIcons.Clear();
         }
 
-        public override void ReceiveOpenWindowNotification() {
+        public override void ProcessOpenWindowNotification() {
             //Debug.Log("ClassChangePanelController.OnOpenWindow()");
-            base.ReceiveOpenWindowNotification();
+            base.ProcessOpenWindowNotification();
             abilityLabel.SetActive(false);
             traitLabel.SetActive(false);
             LayoutRebuilder.ForceRebuildLayoutImmediate(abilityButtonArea.GetComponent<RectTransform>());
 
-            ShowOptionButtonsCommon();
+            ShowOptionButtons();
 
         }
 
-        public override void RecieveClosedWindowNotification() {
-            //Debug.Log("ClassChangePanelController.OnCloseWindow()");
-            base.RecieveClosedWindowNotification();
-            OnCloseWindow(this);
+        /*
+        public override void Accept() {
+            base.Accept();
+            if (currentNavigationController == uINavigationControllers[0]) {
+                newGamePanel.OpenDetailsPanel();
+            }
         }
+        */
+
     }
 
 }

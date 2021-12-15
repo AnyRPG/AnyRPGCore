@@ -12,14 +12,14 @@ namespace AnyRPG {
 
         //private string questName;
 
-        private Quest quest = null;
+        protected Quest quest = null;
 
-        private bool markedComplete = false;
+        //protected bool markedComplete = false;
 
-        private QuestLogUI questLogUI = null;
+        protected QuestLogUI questLogUI = null;
 
         // game manager references
-        private PlayerManager playerManager = null;
+        protected PlayerManager playerManager = null;
 
         public Quest Quest { get => quest; }
 
@@ -33,7 +33,7 @@ namespace AnyRPG {
             this.questLogUI = questLogUI;
             if (newQuest != null) {
                 quest = newQuest;
-                Text.text = quest.DisplayName;
+                Text.text = "[" + quest.ExperienceLevel + "] " + quest.DisplayName;
                 IsComplete();
             }
         }
@@ -43,7 +43,7 @@ namespace AnyRPG {
 
             RawSelect();
 
-            questLogUI.MySelectedQuestScript = this;
+            questLogUI.SelectedQuestScript = this;
 
             questLogUI.ShowDescription(Quest);
         }
@@ -56,13 +56,15 @@ namespace AnyRPG {
         public void IsComplete() {
             //Debug.Log("Checking questscript iscomplete on myquest: " + MyQuest.MyTitle);
 
-            if (quest.IsComplete && !markedComplete) {
-                markedComplete = true;
+            //if (quest.IsComplete && !markedComplete) {
+            if (quest.IsComplete) {
+                //markedComplete = true;
                 //Debug.Log("the quest is complete");
-                Text.text = "[" + quest.ExperienceLevel + "] " + quest.DisplayName + " (Complete)";
+                //Text.text = "[" + quest.ExperienceLevel + "] " + quest.DisplayName + " (Complete)";
+                Text.text += " (Complete)";
             } else if (!quest.IsComplete) {
-                markedComplete = false;
-                Text.text = "[" + quest.ExperienceLevel + "] " + quest.DisplayName;
+                //markedComplete = false;
+                //Text.text = "[" + quest.ExperienceLevel + "] " + quest.DisplayName;
             }
             Text.color = LevelEquations.GetTargetColor(playerManager.MyCharacter.CharacterStats.Level, quest.ExperienceLevel);
         }

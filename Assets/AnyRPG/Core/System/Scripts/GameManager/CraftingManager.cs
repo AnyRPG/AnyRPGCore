@@ -27,7 +27,7 @@ namespace AnyRPG {
         // game manager references
         private UIManager uIManager = null;
         private PlayerManager playerManager = null;
-        private InventoryManager inventoryManager = null;
+        //private InventoryManager inventoryManager = null;
         private SystemItemManager systemItemManager = null;
 
         public List<Recipe> CraftingQueue { get => craftingQueue; set => craftingQueue = value; }
@@ -36,7 +36,7 @@ namespace AnyRPG {
             base.SetGameManagerReferences();
             uIManager = systemGameManager.UIManager;
             playerManager = systemGameManager.PlayerManager;
-            inventoryManager = systemGameManager.InventoryManager;
+            //inventoryManager = systemGameManager.InventoryManager;
             systemItemManager = systemGameManager.SystemItemManager;
         }
 
@@ -51,8 +51,10 @@ namespace AnyRPG {
         }
 
         public void SetSelectedRecipe(Recipe recipe) {
-            currentRecipe = recipe;
-            OnSelectRecipe(currentRecipe);
+            if (currentRecipe != recipe) {
+                currentRecipe = recipe;
+                OnSelectRecipe(currentRecipe);
+            }
         }
 
         public List<Recipe> GetRecipes() {
@@ -68,7 +70,7 @@ namespace AnyRPG {
 
         private bool CanCraft(Recipe recipe) {
             for (int i = 0; i < recipe.CraftingMaterials.Count; i++) {
-                if (inventoryManager.GetItemCount(recipe.CraftingMaterials[i].Item.DisplayName) < recipe.CraftingMaterials[i].Count) {
+                if (playerManager.MyCharacter.CharacterInventoryManager.GetItemCount(recipe.CraftingMaterials[i].Item.DisplayName) < recipe.CraftingMaterials[i].Count) {
                     return false;
                 }
             }
@@ -80,7 +82,7 @@ namespace AnyRPG {
 
             int maxAmount = -1;
             for (int i = 0; i < checkRecipe.CraftingMaterials.Count; i++) {
-                int possibleAmount = inventoryManager.GetItemCount(checkRecipe.CraftingMaterials[i].Item.DisplayName) / checkRecipe.CraftingMaterials[i].Count;
+                int possibleAmount = playerManager.MyCharacter.CharacterInventoryManager.GetItemCount(checkRecipe.CraftingMaterials[i].Item.DisplayName) / checkRecipe.CraftingMaterials[i].Count;
                 if (maxAmount == -1) {
                     maxAmount = possibleAmount;
                 }
@@ -130,13 +132,13 @@ namespace AnyRPG {
             if (GetMaxCraftAmount(craftingQueue[0]) > 0) {
                 Item tmpItem = systemItemManager.GetNewResource(craftingQueue[0].Output.DisplayName);
                 tmpItem.DropLevel = playerManager.MyCharacter.CharacterStats.Level;
-                if (inventoryManager.AddItem(tmpItem)) {
+                if (playerManager.MyCharacter.CharacterInventoryManager.AddItem(tmpItem, false)) {
                     //Debug.Log("CraftingUI.CraftNextItem(): got an item successfully");
                     foreach (CraftingMaterial craftingMaterial in craftingQueue[0].CraftingMaterials) {
                         //Debug.Log("CraftingUI.CraftNextItem(): looping through crafting materials");
                         for (int i = 0; i < craftingMaterial.Count; i++) {
                             //Debug.Log("CraftingUI.CraftNextItem(): about to remove item from inventory");
-                            inventoryManager.RemoveItem(inventoryManager.GetItems(craftingMaterial.Item.DisplayName, 1)[0]);
+                            playerManager.MyCharacter.CharacterInventoryManager.RemoveItem(playerManager.MyCharacter.CharacterInventoryManager.GetItems(craftingMaterial.Item.DisplayName, 1)[0]);
                         }
                     }
                     craftingQueue.RemoveAt(0);

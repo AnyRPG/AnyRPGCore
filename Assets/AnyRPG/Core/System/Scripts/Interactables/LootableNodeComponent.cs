@@ -108,7 +108,8 @@ namespace AnyRPG {
             foreach (LootTable lootTable in Props.LootTables) {
                 lootDrops.AddRange(lootTable.GetLoot(lootHolder.LootTableStates[lootTable]));
             }
-            lootManager.CreatePages(lootDrops);
+            //lootManager.CreatePages(lootDrops);
+            lootManager.AddLoot(lootDrops);
             lootDropped = true;
         }
 
@@ -140,12 +141,9 @@ namespace AnyRPG {
             }
         }
 
-        public override void CleanupEventSubscriptions() {
+        public override void ProcessCleanupEventSubscriptions() {
             //Debug.Log("GatheringNode.CleanupEventSubscriptions()");
-            if (!eventSubscriptionsInitialized) {
-                return;
-            }
-            base.CleanupEventSubscriptions();
+            base.ProcessCleanupEventSubscriptions();
             CleanupWindowEventSubscriptions();
         }
 
@@ -169,7 +167,8 @@ namespace AnyRPG {
 
                 lootDropped = false;
                 //if (lootTable.MyDroppedItems.Count == 0) {
-                playerManager.PlayerController.RemoveInteractable(interactable);
+                // TODO : monitor is this next line needed if the interactable will handle a generic status update?
+                //playerManager.PlayerController.RemoveInteractable(interactable);
                 interactable.DestroySpawn();
                 foreach (LootTable lootTable in Props.LootTables) {
                     lootHolder.LootTableStates[lootTable].Reset();

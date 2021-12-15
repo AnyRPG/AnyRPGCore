@@ -28,10 +28,16 @@ namespace AnyRPG {
         private GameObject itemIconsArea = null;
 
         [SerializeField]
+        private UINavigationGrid itemGrid = null;
+
+        [SerializeField]
         private GameObject factionsHeading = null;
 
         [SerializeField]
         private GameObject factionIconsArea = null;
+
+        [SerializeField]
+        private UINavigationGrid factionGrid = null;
 
         [SerializeField]
         private GameObject abilitiesHeading = null;
@@ -40,10 +46,16 @@ namespace AnyRPG {
         private GameObject abilityIconsArea = null;
 
         [SerializeField]
+        private UINavigationGrid abilityGrid = null;
+
+        [SerializeField]
         private GameObject skillHeading = null;
 
         [SerializeField]
         private GameObject skillIconsArea = null;
+
+        [SerializeField]
+        private UINavigationGrid skillGrid = null;
 
         [SerializeField]
         private LootButton currencyLootButton = null;
@@ -53,6 +65,8 @@ namespace AnyRPG {
 
         [SerializeField]
         private GameObject factionRewardIconPrefab = null;
+
+        protected CloseableWindowContents owner = null;
 
         private Quest quest = null;
 
@@ -80,13 +94,17 @@ namespace AnyRPG {
             currencyConverter = systemGameManager.CurrencyConverter;
         }
 
+        public void SetOwner(CloseableWindowContents closeableWindowContents) {
+            owner = closeableWindowContents;
+        }
+
 
         public List<RewardButton> GetHighlightedItemRewardIcons() {
             //Debug.Log("QuestDetailsArea.GetHighlightedItemRewardIcons()");
             List<RewardButton> returnList = new List<RewardButton>();
             foreach (RewardButton rewardButton in itemRewardIcons) {
                 //Debug.Log("QuestDetailsArea.GetHighlightedItemRewardIcons(): passing over rewardbutton");
-                if (rewardButton.isActiveAndEnabled == true && (rewardButton.Selected == true || quest.MaxItemRewards == 0)) {
+                if (rewardButton.isActiveAndEnabled == true && (rewardButton.Chosen == true || quest.MaxItemRewards == 0)) {
                     //Debug.Log("QuestDetailsArea.GetHighlightedItemRewardIcons(): adding button to the list");
                     returnList.Add(rewardButton);
                 }
@@ -99,7 +117,7 @@ namespace AnyRPG {
             List<RewardButton> returnList = new List<RewardButton>();
             foreach (RewardButton rewardButton in abilityRewardIcons) {
                 //Debug.Log("QuestDetailsArea.GetHighlightedAbilityRewardIcons(): passing over rewardbutton");
-                if (rewardButton.isActiveAndEnabled == true && (rewardButton.Selected == true || quest.MaxAbilityRewards == 0)) {
+                if (rewardButton.isActiveAndEnabled == true && (rewardButton.Chosen == true || quest.MaxAbilityRewards == 0)) {
                     //Debug.Log("QuestDetailsArea.GetHighlightedAbilityRewardIcons(): adding button to the list");
                     returnList.Add(rewardButton);
                 }
@@ -113,7 +131,7 @@ namespace AnyRPG {
             List<RewardButton> returnList = new List<RewardButton>();
             foreach (RewardButton rewardButton in skillRewardIcons) {
                 //Debug.Log("QuestDetailsArea.GetHighlightedSkillRewardIcons(): passing over rewardbutton");
-                if (rewardButton.isActiveAndEnabled == true && (rewardButton.Selected == true || quest.MaxSkillRewards == 0)) {
+                if (rewardButton.isActiveAndEnabled == true && (rewardButton.Chosen == true || quest.MaxSkillRewards == 0)) {
                     //Debug.Log("QuestDetailsArea.GetHighlightedSkillRewardIcons(): adding button to the list");
                     returnList.Add(rewardButton);
                 }
@@ -127,7 +145,7 @@ namespace AnyRPG {
             List<RewardButton> returnList = new List<RewardButton>();
             foreach (RewardButton rewardButton in factionRewardIcons) {
                 //Debug.Log("QuestDetailsArea.GetHighlightedFactionRewardIcons(): passing over rewardbutton");
-                if (rewardButton.isActiveAndEnabled == true && (rewardButton.Selected == true || quest.MaxFactionRewards == 0)) {
+                if (rewardButton.isActiveAndEnabled == true && (rewardButton.Chosen == true || quest.MaxFactionRewards == 0)) {
                     //Debug.Log("QuestDetailsArea.GetHighlightedFactionRewardIcons(): adding button to the list");
                     returnList.Add(rewardButton);
                 }
@@ -139,20 +157,33 @@ namespace AnyRPG {
             //Debug.Log("QuestDetailsArea.HandleAttemptSelect()");
             if (GetHighlightedItemRewardIcons().Contains(rewardButton)) {
                 //Debug.Log("QuestDetailsArea.HandleAttemptSelect(): it's an item reward; current count of highlighted icons: " + GetHighlightedItemRewardIcons().Count + "; max: " + quest.MyMaxItemRewards);
-                if (quest.MaxItemRewards > 0 && GetHighlightedItemRewardIcons().Count > quest.MaxItemRewards) {
+                if (quest.MaxItemRewards == 0
+                    || (quest.MaxItemRewards > 0 && GetHighlightedItemRewardIcons().Count > quest.MaxItemRewards)) {
                     rewardButton.Unselect();
                 }
             }
             if (GetHighlightedFactionRewardIcons().Contains(rewardButton)) {
                 //Debug.Log("QuestDetailsArea.HandleAttemptSelect(): it's an faction reward; current count of highlighted icons: " + GetHighlightedFactionRewardIcons().Count + "; max: " + quest.MyMaxFactionRewards);
-                if (quest.MaxFactionRewards > 0 && GetHighlightedFactionRewardIcons().Count > quest.MaxFactionRewards) {
+                if (quest.MaxFactionRewards == 0
+                    || (quest.MaxFactionRewards > 0 && GetHighlightedFactionRewardIcons().Count > quest.MaxFactionRewards)) {
                     rewardButton.Unselect();
                 }
             }
 
             if (GetHighlightedAbilityRewardIcons().Contains(rewardButton)) {
                 //Debug.Log("QuestDetailsArea.HandleAttemptSelect(): it's an ability reward; current count of highlighted icons: " + GetHighlightedAbilityRewardIcons().Count + "; max: " + quest.MyMaxAbilityRewards);
-                if (quest.MaxAbilityRewards > 0 && GetHighlightedAbilityRewardIcons().Count > quest.MaxAbilityRewards || playerManager.MyCharacter.CharacterAbilityManager.HasAbility(rewardButton.Describable as BaseAbility)) {
+                if (quest.MaxAbilityRewards == 0
+                    || (quest.MaxAbilityRewards > 0 && GetHighlightedAbilityRewardIcons().Count > quest.MaxAbilityRewards)
+                    || playerManager.MyCharacter.CharacterAbilityManager.HasAbility(rewardButton.Describable as BaseAbility)) {
+                    rewardButton.Unselect();
+                }
+            }
+
+            if (GetHighlightedSkillRewardIcons().Contains(rewardButton)) {
+                //Debug.Log("QuestDetailsArea.HandleAttemptSelect(): it's an ability reward; current count of highlighted icons: " + GetHighlightedAbilityRewardIcons().Count + "; max: " + quest.MyMaxAbilityRewards);
+                if (quest.MaxSkillRewards == 0
+                    || (quest.MaxSkillRewards > 0 && GetHighlightedSkillRewardIcons().Count > quest.MaxSkillRewards)
+                    || playerManager.MyCharacter.CharacterSkillManager.HasSkill(rewardButton.Describable as Skill)) {
                     rewardButton.Unselect();
                 }
             }
@@ -184,7 +215,7 @@ namespace AnyRPG {
                 if (currencyLootButton != null) {
                     KeyValuePair<Sprite, string> keyValuePair = currencyConverter.RecalculateValues(currencyNodes, true);
                     currencyLootButton.Icon.sprite = keyValuePair.Key;
-                    currencyLootButton.MyTitle.text = keyValuePair.Value;
+                    currencyLootButton.Title.text = keyValuePair.Value;
                 }
             } else {
                 currencyHeading.gameObject.SetActive(false);
@@ -204,10 +235,14 @@ namespace AnyRPG {
             for (int i = 0; i < quest.ItemRewards.Count; i++) {
                 RewardButton rewardIcon = objectPooler.GetPooledObject(rewardIconPrefab, itemIconsArea.transform).GetComponent<RewardButton>();
                 rewardIcon.Configure(systemGameManager);
+                rewardIcon.SetOptions(owner.RectTransform, quest.MaxItemRewards > 0);
                 rewardIcon.OnAttempSelect += HandleAttemptSelect;
                 //Debug.Log("QuestDetailsArea.ShowDescription(): setting describable (and attemptselect) for: " + quest.MyItemRewards[i]);
                 rewardIcon.SetDescribable(quest.ItemRewards[i]);
                 itemRewardIcons.Add(rewardIcon);
+                //if (quest.MaxItemRewards > 0) {
+                    itemGrid.AddActiveButton(rewardIcon);
+                //}
             }
 
             // show ability rewards
@@ -224,10 +259,14 @@ namespace AnyRPG {
             for (int i = 0; i < quest.AbilityRewards.Count; i++) {
                 RewardButton rewardIcon = objectPooler.GetPooledObject(rewardIconPrefab, abilityIconsArea.transform).GetComponent<RewardButton>();
                 rewardIcon.Configure(systemGameManager);
+                rewardIcon.SetOptions(owner.RectTransform, quest.MaxAbilityRewards > 0);
                 rewardIcon.OnAttempSelect += HandleAttemptSelect;
                 //Debug.Log("QuestDetailsArea.ShowDescription(): setting describable (and attemptselect) for: " + quest.MyAbilityRewards[i]);
                 rewardIcon.SetDescribable(quest.AbilityRewards[i]);
                 abilityRewardIcons.Add(rewardIcon);
+                //if (quest.MaxAbilityRewards > 0) {
+                    abilityGrid.AddActiveButton(rewardIcon);
+                //}
             }
 
             // show faction rewards
@@ -244,10 +283,14 @@ namespace AnyRPG {
             for (int i = 0; i < quest.FactionRewards.Count; i++) {
                 FactionRewardButton rewardIcon = objectPooler.GetPooledObject(factionRewardIconPrefab, factionIconsArea.transform).GetComponent<FactionRewardButton>();
                 rewardIcon.Configure(systemGameManager);
+                rewardIcon.SetOptions(owner.RectTransform, quest.MaxFactionRewards > 0);
                 rewardIcon.OnAttempSelect += HandleAttemptSelect;
                 //Debug.Log("QuestDetailsArea.ShowDescription(): setting describable (and attemptselect) for: " + quest.MyFactionRewards[i]);
                 rewardIcon.SetDescribable(quest.FactionRewards[i]);
                 factionRewardIcons.Add(rewardIcon);
+                //if (quest.MaxFactionRewards > 0) {
+                    factionGrid.AddActiveButton(rewardIcon);
+                //}
             }
 
             // show Skill rewards
@@ -264,8 +307,12 @@ namespace AnyRPG {
             for (int i = 0; i < quest.SkillRewards.Count; i++) {
                 RewardButton rewardIcon = objectPooler.GetPooledObject(rewardIconPrefab, skillIconsArea.transform).GetComponent<RewardButton>();
                 rewardIcon.Configure(systemGameManager);
+                rewardIcon.SetOptions(owner.RectTransform, quest.MaxSkillRewards > 0);
                 rewardIcon.SetDescribable(quest.SkillRewards[i]);
                 skillRewardIcons.Add(rewardIcon);
+                //if (quest.MaxSkillRewards > 0) {
+                    skillGrid.AddActiveButton(rewardIcon);
+                //}
             }
 
         }
@@ -291,6 +338,7 @@ namespace AnyRPG {
                 objectPooler.ReturnObjectToPool(rewardIcon.gameObject);
             }
             itemRewardIcons.Clear();
+            itemGrid.ClearActiveButtons();
 
             // abilties
             foreach (RewardButton rewardIcon in abilityRewardIcons) {
@@ -298,6 +346,7 @@ namespace AnyRPG {
                 objectPooler.ReturnObjectToPool(rewardIcon.gameObject);
             }
             abilityRewardIcons.Clear();
+            abilityGrid.ClearActiveButtons();
 
             // skills
             foreach (RewardButton rewardIcon in skillRewardIcons) {
@@ -305,6 +354,7 @@ namespace AnyRPG {
                 objectPooler.ReturnObjectToPool(rewardIcon.gameObject);
             }
             skillRewardIcons.Clear();
+            skillGrid.ClearActiveButtons();
 
             // factions
             foreach (RewardButton rewardIcon in factionRewardIcons) {
@@ -312,6 +362,7 @@ namespace AnyRPG {
                 objectPooler.ReturnObjectToPool(rewardIcon.gameObject);
             }
             factionRewardIcons.Clear();
+            factionGrid.ClearActiveButtons();
         }
 
     }

@@ -9,11 +9,13 @@ namespace AnyRPG {
 
         //public override event Action<ICloseableWindowContents> OnOpenWindow;
 
+        /*
         [SerializeField]
         private HighlightButton respawnButton = null;
 
         [SerializeField]
         private HighlightButton reviveButton = null;
+        */
 
         // game manager references
         private UIManager uIManager = null;
@@ -21,8 +23,8 @@ namespace AnyRPG {
 
         public override void Configure(SystemGameManager systemGameManager) {
             base.Configure(systemGameManager);
-            respawnButton.Configure(systemGameManager);
-            reviveButton.Configure(systemGameManager);
+            //respawnButton.Configure(systemGameManager);
+            //reviveButton.Configure(systemGameManager);
         }
 
         public override void SetGameManagerReferences() {

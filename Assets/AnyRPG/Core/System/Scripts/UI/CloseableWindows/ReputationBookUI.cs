@@ -56,10 +56,18 @@ namespace AnyRPG {
             }
         }
 
+        /*
         public override void LoadPage(int pageIndex) {
             base.LoadPage(pageIndex);
             AddReputations();
         }
+        */
+
+        public override void AddPageContent() {
+            base.AddPageContent();
+            AddReputations();
+        }
+
 
         public override void ClearButtons() {
             base.ClearButtons();

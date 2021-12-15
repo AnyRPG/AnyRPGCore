@@ -8,19 +8,20 @@ using UnityEngine.UI;
 namespace AnyRPG {
     // this is almost identical to questscript
 
-    public class QuestTrackerQuestScript : ConfiguredMonoBehaviour {
-        public Quest MyQuest { get; set; }
+    public class QuestTrackerQuestScript : NavigableElement {
+        
+        [Header("Quest Tracker")]
 
         [SerializeField]
-        private TextMeshProUGUI text = null;
-
-        //private bool markedComplete = false;
+        protected TextMeshProUGUI text = null;
 
         // game manager references
-        private UIManager uIManager = null;
-        private QuestLog questLog = null;
+        protected UIManager uIManager = null;
+        protected QuestLog questLog = null;
+        protected WindowManager windowManager = null;
 
-        public TextMeshProUGUI MyText {
+        public Quest Quest { get; set; }
+        public TextMeshProUGUI Text {
             get {
                 return text;
             }
@@ -28,20 +29,22 @@ namespace AnyRPG {
 
         public override void Configure(SystemGameManager systemGameManager) {
             base.Configure(systemGameManager);
+        }
 
+        public override void SetGameManagerReferences() {
+            base.SetGameManagerReferences();
             uIManager = systemGameManager.UIManager;
             questLog = systemGameManager.QuestLog;
+            windowManager = systemGameManager.WindowManager;
         }
 
-        public void Select() {
+        public override void Interact() {
             //Debug.Log("QuestTrackerQuestScript.Select()");
+            windowManager.EndNavigateInterface();
             uIManager.questLogWindow.OpenWindow();
-            questLog.ShowQuestLogDescription(MyQuest);
+            questLog.ShowQuestLogDescription(Quest);
         }
 
-        public void DeSelect() {
-            //Debug.Log("QuestTrackerQuestScript.DeSelect()");
-        }
 
         /*
         public void IsComplete() {

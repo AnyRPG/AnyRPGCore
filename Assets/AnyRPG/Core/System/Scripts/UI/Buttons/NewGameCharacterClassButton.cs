@@ -10,19 +10,19 @@ namespace AnyRPG {
     public class NewGameCharacterClassButton : HighlightButton {
 
         [SerializeField]
-        private CharacterClass characterClass = null;
+        protected CharacterClass characterClass = null;
 
         [SerializeField]
-        private Image icon = null;
+        protected Image icon = null;
 
         [SerializeField]
-        private TextMeshProUGUI characterClassName = null;
+        protected TextMeshProUGUI characterClassName = null;
 
         [SerializeField]
-        private TextMeshProUGUI description = null;
+        protected TextMeshProUGUI description = null;
 
         // game manager references
-        private NewGameManager newGameManager = null;
+        protected NewGameManager newGameManager = null;
 
         public CharacterClass CharacterClass { get => characterClass; set => characterClass = value; }
 
@@ -50,7 +50,7 @@ namespace AnyRPG {
         }
 
         public void CommonSelect() {
-            newGameManager.ShowCharacterClass(this);
+            newGameManager.SetCharacterClass(characterClass);
         }
 
         public void RawSelect() {

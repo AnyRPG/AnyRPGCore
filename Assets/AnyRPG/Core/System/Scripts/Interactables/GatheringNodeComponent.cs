@@ -22,22 +22,16 @@ namespace AnyRPG {
             }
         }
 
-        public override void CreateEventSubscriptions() {
+        public override void ProcessCreateEventSubscriptions() {
             //Debug.Log("GatheringNode.CreateEventSubscriptions()");
-            if (eventSubscriptionsInitialized) {
-                return;
-            }
-            base.CreateEventSubscriptions();
+            base.ProcessCreateEventSubscriptions();
 
             systemEventManager.OnAbilityListChanged += HandleAbilityListChange;
         }
 
-        public override void CleanupEventSubscriptions() {
+        public override void ProcessCleanupEventSubscriptions() {
             //Debug.Log("GatheringNode.CleanupEventSubscriptions()");
-            if (!eventSubscriptionsInitialized) {
-                return;
-            }
-            base.CleanupEventSubscriptions();
+            base.ProcessCleanupEventSubscriptions();
 
             if (systemEventManager != null) {
                 systemEventManager.OnAbilityListChanged -= HandleAbilityListChange;

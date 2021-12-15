@@ -9,19 +9,19 @@ namespace AnyRPG {
     public class NewGameUnitButton : HighlightButton {
 
         [SerializeField]
-        private Image icon = null;
+        protected Image icon = null;
 
         [SerializeField]
-        private TextMeshProUGUI unitName = null;
+        protected TextMeshProUGUI unitName = null;
 
         [SerializeField]
-        private TextMeshProUGUI description = null;
+        protected TextMeshProUGUI description = null;
 
         //[SerializeField]
-        private UnitProfile unitProfile = null;
+        protected UnitProfile unitProfile = null;
 
         // game manager references
-        private NewGameManager newGameManager = null;
+        protected NewGameManager newGameManager = null;
 
         public UnitProfile UnitProfile { get => unitProfile; set => unitProfile = value; }
 
@@ -54,19 +54,37 @@ namespace AnyRPG {
             description.text = descriptionText;
         }
 
+        /*
+        public override void Interact() {
+            Debug.Log(gameObject.name + ".NewGameUnitButton.Interact()");
 
-        public void CommonSelect() {
-            newGameManager.SetUnitProfile(this);
+            base.Interact();
+            newGameManager.SetUnitProfile(unitProfile);
+        }
+        */
+
+        public override void ButtonClickAction() {
+            //Debug.Log(gameObject.name + ".NewGameUnitButton.ButtonClickAction()");
+            base.ButtonClickAction();
+
+            newGameManager.SetUnitProfile(unitProfile);
         }
 
+        
+        public void CommonSelect() {
+            //Debug.Log(gameObject.name + ".NewGameUnitButton.CommonSelect()");
+            newGameManager.SetUnitProfile(unitProfile);
+        }
+        
         public void RawSelect() {
             CommonSelect();
         }
-
+        
         public override void Select() {
             CommonSelect();
             base.Select();
         }
+        
 
     }
 

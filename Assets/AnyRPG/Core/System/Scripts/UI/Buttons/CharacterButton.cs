@@ -6,40 +6,42 @@ using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 namespace AnyRPG {
-    public class CharacterButton : ConfiguredMonoBehaviour, IPointerClickHandler, IPointerEnterHandler, IPointerExitHandler, IDescribable {
+    public class CharacterButton : NavigableElement, IDescribable {
+
+        [Header("Character Button")]
 
         /// <summary>
         /// The equipment slot associated with this button.  Only items that match this slot can be equiped here.
         /// </summary>
         [SerializeField]
-        private string equipmentSlotProfileName = string.Empty;
+        protected string equipmentSlotProfileName = string.Empty;
 
-        private EquipmentSlotProfile equipmentSlotProfile = null;
+        protected EquipmentSlotProfile equipmentSlotProfile = null;
 
         /// <summary>
         /// A reference to the equipment that sits on this slot
         /// </summary>
-        private Equipment equippedEquipment = null;
+        protected Equipment equippedEquipment = null;
 
         [SerializeField]
-        private Image icon = null;
+        protected Image icon = null;
 
         [SerializeField]
-        private Image backGroundImage = null;
+        protected Image backGroundImage = null;
 
-        private Image emptySlotImage = null;
+        protected Image emptySlotImage = null;
 
-        private Color emptyBackGroundColor;
+        protected Color emptyBackGroundColor;
 
-        private Color fullBackGroundColor;
+        protected Color fullBackGroundColor;
 
-        private CharacterPanel characterPanel = null;
+        protected CharacterPanel characterPanel = null;
 
         // game manager references
-        private PlayerManager playerManager = null;
-        private UIManager uIManager = null;
-        private HandScript handScript = null;
-        private SystemDataFactory systemDataFactory = null;
+        protected PlayerManager playerManager = null;
+        protected UIManager uIManager = null;
+        protected HandScript handScript = null;
+        protected SystemDataFactory systemDataFactory = null;
 
         public Color EmptyBackGroundColor { get => emptyBackGroundColor; set => emptyBackGroundColor = value; }
         public Color FullBackGroundColor { get => fullBackGroundColor; set => fullBackGroundColor = value; }
@@ -79,7 +81,8 @@ namespace AnyRPG {
             }
         }
 
-        public void OnPointerClick(PointerEventData eventData) {
+        public override void OnPointerClick(PointerEventData eventData) {
+            base.OnPointerClick(eventData);
             if (eventData.button == PointerEventData.InputButton.Left) {
                 if (handScript.Moveable is Equipment) {
                     Equipment tmp = (Equipment)handScript.Moveable;
@@ -166,13 +169,20 @@ namespace AnyRPG {
                 // prevent unnecessary actions when window is not open
                 return;
             }
+
+            if (selected == true) {
+                ShowContextInfo();
+            }
         }
 
-        public void OnPointerEnter(PointerEventData eventData) {
-            uIManager.ShowToolTip(transform.position, this);
+        public override void OnPointerEnter(PointerEventData eventData) {
+            base.OnPointerEnter(eventData);
+            //uIManager.ShowToolTip(transform.position, this);
+            ShowContextInfo();
         }
 
-        public void OnPointerExit(PointerEventData eventData) {
+        public override void OnPointerExit(PointerEventData eventData) {
+            base.OnPointerExit(eventData);
             uIManager.HideToolTip();
         }
 
@@ -203,6 +213,42 @@ namespace AnyRPG {
             }
             CheckMouse();
         }
+
+        private void ShowContextInfo() {
+            if (equippedEquipment != null) {
+                uIManager.ShowGamepadTooltip(characterPanel.RectTransform, transform, this, "");
+                owner.SetControllerHints("Unequip", "", "", "", "", "");
+            } else {
+                uIManager.ShowGamepadTooltip(characterPanel.RectTransform, transform, this, "");
+                owner.HideControllerHints();
+            }
+        }
+
+        public override void Select() {
+            //Debug.Log("SlotScript.Select()");
+            base.Select();
+
+            ShowContextInfo();
+        }
+
+        public override void DeSelect() {
+            //Debug.Log("SlotScript.DeSelect()");
+            base.DeSelect();
+            if (owner != null) {
+                owner.HideControllerHints();
+            }
+            uIManager.HideToolTip();
+        }
+
+        public override void Accept() {
+            base.Accept();
+            if (equippedEquipment != null) {
+                playerManager.MyCharacter.CharacterEquipmentManager.Unequip(equipmentSlotProfile);
+                ShowContextInfo();
+            }
+        }
+
+
 
     }
 

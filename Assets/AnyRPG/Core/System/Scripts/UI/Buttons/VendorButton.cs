@@ -7,43 +7,45 @@ using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 namespace AnyRPG {
-    public class VendorButton : TransparencyButton, IPointerEnterHandler, IPointerExitHandler, IPointerClickHandler {
+    public class VendorButton : NavigableElement {
+
+        [Header("Vendor Button")]
 
         [SerializeField]
-        private Image icon = null;
+        protected Image backGroundImage = null;
 
         [SerializeField]
-        private TextMeshProUGUI title = null;
+        protected Image icon = null;
 
         [SerializeField]
-        private TextMeshProUGUI price = null;
+        protected TextMeshProUGUI title = null;
 
         [SerializeField]
-        private TextMeshProUGUI descriptionText = null;
+        protected TextMeshProUGUI price = null;
+
+        [SerializeField]
+        protected TextMeshProUGUI descriptionText = null;
 
         //[SerializeField]
         //private Outline qualityColorOutline = null;
 
         [SerializeField]
-        private TextMeshProUGUI quantity = null;
+        protected TextMeshProUGUI quantity = null;
 
         [SerializeField]
-        private CurrencyBarController currencyBarController = null;
+        protected CurrencyBarController currencyBarController = null;
 
-        [SerializeField]
-        private RectTransform rectTransform = null;
+        protected VendorItem vendorItem = null;
 
-        private VendorItem vendorItem = null;
-
-        private bool buyBackButton;
+        protected bool buyBackButton;
 
         // game manager references
-        private SystemItemManager systemItemManager = null;
-        private PlayerManager playerManager = null;
-        private InventoryManager inventoryManager = null;
-        private AudioManager audioManager = null;
-        private MessageFeedManager messageFeedManager = null;
-        private CurrencyConverter currencyConverter = null;
+        protected SystemItemManager systemItemManager = null;
+        protected PlayerManager playerManager = null;
+        //protected InventoryManager inventoryManager = null;
+        protected MessageFeedManager messageFeedManager = null;
+        protected CurrencyConverter currencyConverter = null;
+        protected UIManager uIManager = null;
 
         public bool BuyBackButton { get => buyBackButton; set => buyBackButton = value; }
 
@@ -57,11 +59,16 @@ namespace AnyRPG {
             base.SetGameManagerReferences();
             systemItemManager = systemGameManager.SystemItemManager;
             playerManager = systemGameManager.PlayerManager;
-            inventoryManager = systemGameManager.InventoryManager;
+            //inventoryManager = systemGameManager.InventoryManager;
             systemConfigurationManager = systemGameManager.SystemConfigurationManager;
-            audioManager = systemGameManager.AudioManager;
             messageFeedManager = systemGameManager.UIManager.MessageFeedManager;
             currencyConverter = systemGameManager.CurrencyConverter;
+            uIManager = systemGameManager.UIManager;
+        }
+
+        public override void SetController(UINavigationController uINavigationController) {
+            base.SetController(uINavigationController);
+            currencyBarController.SetToolTipTransform(owner.transform as RectTransform);
         }
 
         public void AddItem(VendorItem vendorItem, bool buyBackButton = false) {
@@ -113,7 +120,7 @@ namespace AnyRPG {
             }
         }
 
-        private bool CanAfford() {
+        protected bool CanAfford() {
             if (buyBackButton == false) {
                 if (currencyConverter.GetBaseCurrencyAmount(vendorItem.Item.Currency, vendorItem.BuyPrice()) <= playerManager.MyCharacter.CharacterCurrencyManager.GetBaseCurrencyValue(vendorItem.Item.Currency)) {
                     return true;
@@ -129,11 +136,21 @@ namespace AnyRPG {
         }
 
 
-        public void OnPointerClick(PointerEventData eventData) {
+        public override void OnPointerClick(PointerEventData eventData) {
+            base.OnPointerClick(eventData);
             //Debug.Log("VendorButton.OnPointerClick()");
+            ProcessMouseClick();
+        }
+
+        public override void Interact() {
+            base.Interact();
+            ProcessMouseClick();
+        }
+
+        public void ProcessMouseClick() {
             if (vendorItem.BuyPrice() == 0
-                || vendorItem.Item.Currency == null
-                || CanAfford()) {
+                            || vendorItem.Item.Currency == null
+                            || CanAfford()) {
                 Item tmpItem = null;
                 if (buyBackButton == true) {
                     // if this is a buyback, the item has already been instantiated so it is safe to reference it directly
@@ -144,7 +161,7 @@ namespace AnyRPG {
                     //Debug.Log("Instantiated an item with id: " + tmpItem.GetInstanceID().ToString());
                 }
 
-                if (inventoryManager.AddItem(tmpItem)) {
+                if (playerManager.MyCharacter.CharacterInventoryManager.AddItem(tmpItem, false)) {
                     if (buyBackButton == false) {
                         tmpItem.DropLevel = playerManager.MyCharacter.CharacterStats.Level;
                     }
@@ -153,18 +170,27 @@ namespace AnyRPG {
                         (tmpItem as CurrencyItem).Use();
                     }
                 }
+            } else {
+                messageFeedManager.WriteMessage("You cannot afford " + vendorItem.Item.DisplayName);
             }
         }
 
-        public void OnPointerEnter(PointerEventData eventData) {
+        public override void OnPointerEnter(PointerEventData eventData) {
+            base.OnPointerEnter(eventData);
             ProcessMouseEnter();
         }
 
         private void ProcessMouseEnter() {
-            uIManager.ShowToolTip(transform.position, vendorItem);
+            //uIManager.ShowToolTip(transform.position, vendorItem);
+            ShowGamepadTooltip();
         }
 
-        public void OnPointerExit(PointerEventData eventData) {
+        private void ShowGamepadTooltip() {
+            uIManager.ShowGamepadTooltip(owner.transform as RectTransform, transform, vendorItem, "Sell Price: ");
+        }
+
+        public override void OnPointerExit(PointerEventData eventData) {
+            base.OnPointerExit(eventData);
             uIManager.HideToolTip();
         }
 
@@ -173,6 +199,12 @@ namespace AnyRPG {
                 return;
             }
             CheckMouse();
+        }
+
+        public virtual void CheckMouse() {
+            if (UIManager.MouseInRect(transform as RectTransform)) {
+                uIManager.HideToolTip();
+            }
         }
 
         private void SellItem() {
@@ -205,6 +237,24 @@ namespace AnyRPG {
                     // if there is no longer anything in this slot, re-create the pages so there is no empty slot in the middle of the page
                     (uIManager.vendorWindow.CloseableWindowContents as VendorUI).RefreshPage();
                 }
+            }
+        }
+
+        public override void Select() {
+            //Debug.Log("VendorButton.Select()");
+            base.Select();
+            ShowGamepadTooltip();
+            if (owner != null) {
+                owner.SetControllerHints("Purchase", "", "", "", "", "");
+            }
+        }
+
+        public override void DeSelect() {
+            //Debug.Log("VendorButton.DeSelect()");
+            base.DeSelect();
+            uIManager.HideToolTip();
+            if (owner != null) {
+                owner.HideControllerHints();
             }
         }
 

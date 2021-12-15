@@ -7,36 +7,34 @@ using UnityEngine;
 using UnityEngine.UI;
 
 namespace AnyRPG {
-    public class VendorUI : WindowContentController, IPagedWindowContents {
+    public class VendorUI : PagedWindowContents {
 
-        public event System.Action<bool> OnPageCountUpdate = delegate { };
-
-        [SerializeField]
-        private List<VendorButton> vendorButtons = new List<VendorButton>();
+        public override event System.Action<bool> OnPageCountUpdate = delegate { };
 
         [SerializeField]
-        private TMP_Dropdown dropdown = null;
+        protected List<VendorButton> vendorButtons = new List<VendorButton>();
 
         [SerializeField]
-        private CurrencyBarController currencyBarController = null;
+        protected TMP_Dropdown dropdown = null;
 
-        private List<List<VendorItem>> pages = new List<List<VendorItem>>();
+        [SerializeField]
+        protected CurrencyBarController currencyBarController = null;
 
-        private List<VendorCollection> vendorCollections = new List<VendorCollection>();
+        //protected List<List<VendorItem>> pages = new List<List<VendorItem>>();
 
-        private int pageIndex = 0;
+        protected List<VendorCollection> vendorCollections = new List<VendorCollection>();
 
-        private int dropDownIndex = 0;
+        protected int dropDownIndex = 0;
 
         VendorCollection buyBackCollection = null;
 
         // game manager references
-        PlayerManager playerManager = null;
-        UIManager uIManager = null;
-        MessageFeedManager messageFeedManager = null;
-        private CurrencyConverter currencyConverter = null;
+        protected PlayerManager playerManager = null;
+        protected UIManager uIManager = null;
+        protected MessageFeedManager messageFeedManager = null;
+        protected CurrencyConverter currencyConverter = null;
 
-        private List<CurrencyAmountController> currencyAmountControllers = new List<CurrencyAmountController>();
+        //protected List<CurrencyAmountController> currencyAmountControllers = new List<CurrencyAmountController>();
 
         public override void Configure(SystemGameManager systemGameManager) {
             base.Configure(systemGameManager);
@@ -52,54 +50,49 @@ namespace AnyRPG {
             buyBackCollection = ScriptableObject.CreateInstance(typeof(VendorCollection)) as VendorCollection;
 
             currencyBarController.Configure(systemGameManager);
+            currencyBarController.SetToolTipTransform(rectTransform);
+
             foreach (VendorButton vendorButton in vendorButtons) {
                 vendorButton.Configure(systemGameManager);
             }
 
+            /*
             foreach (CurrencyAmountController currencyAmountController in currencyAmountControllers) {
                 currencyAmountController.Configure(systemGameManager);
             }
+            */
         }
 
-        protected override void CreateEventSubscriptions() {
+        protected override void ProcessCreateEventSubscriptions() {
             //Debug.Log("VendorUI.CreateEventSubscriptions()");
-            if (eventSubscriptionsInitialized) {
-                return;
-            }
+            base.ProcessCreateEventSubscriptions();
             SystemEventManager.StartListening("OnCurrencyChange", HandleCurrencyChange);
-            eventSubscriptionsInitialized = true;
         }
 
-        protected override void CleanupEventSubscriptions() {
+        protected override void ProcessCleanupEventSubscriptions() {
             //Debug.Log("UnitSpawnNode.CleanupEventSubscriptions()");
-            if (!eventSubscriptionsInitialized) {
-                return;
-            }
+            base.ProcessCleanupEventSubscriptions();
             SystemEventManager.StopListening("OnCurrencyChange", HandleCurrencyChange);
-            eventSubscriptionsInitialized = false;
         }
 
         public void HandleCurrencyChange(string eventName, EventParamProperties eventParamProperties) {
             UpdateCurrencyAmount();
         }
 
-        public int GetPageCount() {
-            return pages.Count;
-        }
-
         public void CreatePages(List<VendorItem> items, bool resetPageIndex = true) {
-            //Debug.Log("VendorUI.CreatePages(" + items.Count + ")");
+            //Debug.Log("VendorUI.CreatePages(" + items.Count + ", " + resetPageIndex + ")");
             ClearPages(resetPageIndex);
 
             // remove all items with a quanity of 0 from the list
             items.RemoveAll(item => (item.Unlimited == false && item.Quantity == 0));
 
-            List<VendorItem> page = new List<VendorItem>();
+            VendorItemContentList page = new VendorItemContentList();
+
             for (int i = 0; i < items.Count; i++) {
-                page.Add(items[i]);
-                if (page.Count == 10 || i == items.Count - 1) {
+                page.vendorItems.Add(items[i]);
+                if (page.vendorItems.Count == 10 || i == items.Count - 1) {
                     pages.Add(page);
-                    page = new List<VendorItem>();
+                    page = new VendorItemContentList();
                 }
             }
             if (pages.Count <= pageIndex) {
@@ -114,15 +107,20 @@ namespace AnyRPG {
         public void AddItems() {
             //Debug.Log("VendorUI.AddItems()");
             if (pages.Count > 0) {
-                for (int i = 0; i < pages[pageIndex].Count; i++) {
-                    if (pages[pageIndex][i] != null) {
-                        vendorButtons[i].AddItem(pages[pageIndex][i], (dropDownIndex == 0 ? true : false));
+                //for (int i = 0; i < (pages[pageIndex] as VendorItemContentList).vendorItems.Count; i++) {
+                for (int i = 0; i < (pages[pageIndex] as VendorItemContentList).vendorItems.Count; i++) {
+                    if ((pages[pageIndex] as VendorItemContentList).vendorItems[i] != null) {
+                        vendorButtons[i].AddItem((pages[pageIndex] as VendorItemContentList).vendorItems[i], (dropDownIndex == 0 ? true : false));
                     }
                 }
             }
-        }
+            //if (currentNavigationController != null) {
+                uINavigationControllers[1].UpdateNavigationList();
+            //}
+            //FocusCurrentButton();
+        }   
 
-        public void ClearButtons() {
+        public override void ClearButtons() {
             //Debug.Log("VendorUI.ClearButtons()");
             foreach (VendorButton btn in vendorButtons) {
                 //Debug.Log("VendorUI.ClearButtons() setting a button to not active");
@@ -130,27 +128,20 @@ namespace AnyRPG {
             }
         }
 
-        public void LoadPage(int pageIndex) {
-            //Debug.Log("VendorUI.LoadPage(" + pageIndex + ")");
-            ClearButtons();
-            this.pageIndex = pageIndex;
-            AddItems();
-        }
-
-        public override void RecieveClosedWindowNotification() {
+        public override void ReceiveClosedWindowNotification() {
             //Debug.Log("VendorUI.OnCloseWindow()");
-            base.RecieveClosedWindowNotification();
+            base.ReceiveClosedWindowNotification();
             ClearButtons();
             ClearPages();
             ClearVendorCollections();
         }
 
-        public override void ReceiveOpenWindowNotification() {
-            //Debug.Log("VendorUI.ReceiveOpenWindowNotification()");
-            SetBackGroundColor(new Color32(0, 0, 0, (byte)(int)(PlayerPrefs.GetFloat("PopupWindowOpacity") * 255)));
+        public override void ProcessOpenWindowNotification() {
+            //Debug.Log("VendorUI.ProcessOpenWindowNotification()");
+            //SetBackGroundColor(new Color32(0, 0, 0, (byte)(int)(PlayerPrefs.GetFloat("PopupWindowOpacity") * 255)));
             ClearButtons();
             ClearPages();
-            base.ReceiveOpenWindowNotification();
+            base.ProcessOpenWindowNotification();
             LoadPage(0);
             OnPageCountUpdate(false);
         }
@@ -181,7 +172,8 @@ namespace AnyRPG {
             }
             dropdown.AddOptions(vendorCollectionNames);
             dropdown.value = dropDownIndex;
-            CreatePages(this.vendorCollections[dropDownIndex].MyVendorItems);
+            // testing - does this get done automatically when the dropdown value is set?
+            //CreatePages(this.vendorCollections[dropDownIndex].MyVendorItems);
         }
 
         private void ClearVendorCollections() {
@@ -245,12 +237,21 @@ namespace AnyRPG {
         }
 
         public void RefreshPage() {
-            //Debug.Log("VendorUI.RefreshPage()");
+            Debug.Log("VendorUI.RefreshPage()");
             CreatePages(vendorCollections[dropDownIndex].MyVendorItems, false);
             //Debug.Log("VendorUI.RefreshPage() count: " + pages.Count + "; index: " + pageIndex);
             LoadPage(pageIndex);
             OnPageCountUpdate(false);
         }
 
+        public override void AddPageContent() {
+            base.AddPageContent();
+            AddItems();
+        }
+
+    }
+
+    public class VendorItemContentList : PagedContentList {
+        public List<VendorItem> vendorItems = new List<VendorItem>();
     }
 }

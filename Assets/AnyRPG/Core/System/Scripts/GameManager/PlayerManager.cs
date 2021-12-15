@@ -143,7 +143,7 @@ namespace AnyRPG {
             if (eventSubscriptionsInitialized) {
                 return;
             }
-            //SystemEventManager.StartListening("OnLevelUnload", HandleLevelUnload);
+            SystemEventManager.StartListening("OnLevelUnload", HandleLevelUnload);
             SystemEventManager.StartListening("OnLevelLoad", HandleLevelLoad);
             systemEventManager.OnLevelChanged += PlayLevelUpEffects;
             SystemEventManager.StartListening("OnPlayerDeath", HandlePlayerDeath);
@@ -155,7 +155,7 @@ namespace AnyRPG {
             if (!eventSubscriptionsInitialized) {
                 return;
             }
-            //SystemEventManager.StopListening("OnLevelUnload", HandleLevelUnload);
+            SystemEventManager.StopListening("OnLevelUnload", HandleLevelUnload);
             SystemEventManager.StopListening("OnLevelLoad", HandleLevelLoad);
             systemEventManager.OnLevelChanged -= PlayLevelUpEffects;
             SystemEventManager.StopListening("OnPlayerDeath", HandlePlayerDeath);
@@ -272,11 +272,12 @@ namespace AnyRPG {
         }
         */
 
-            /*
-        public void ProcessLevelUnload() {
-            DespawnPlayerUnit();
+        public void HandleLevelUnload(string eventName, EventParamProperties eventParamProperties) {
+            //DespawnPlayerUnit();
+            if (playerController != null) {
+                playerController.ProcessLevelUnload();
+            }
         }
-        */
 
         public void DespawnPlayerUnit() {
             //Debug.Log("PlayerManager.DespawnPlayerUnit()");
@@ -508,6 +509,7 @@ namespace AnyRPG {
 
             SystemEventManager.TriggerEvent("OnBeforePlayerConnectionSpawn", new EventParamProperties());
             activeCharacter.Init();
+            SubscribeToPlayerInventoryEvents();
             activeCharacter.Initialize(systemConfigurationManager.DefaultPlayerName, initialLevel);
             playerConnectionSpawned = true;
             SystemEventManager.TriggerEvent("OnPlayerConnectionSpawn", new EventParamProperties());
@@ -520,6 +522,7 @@ namespace AnyRPG {
                 //Debug.Log("PlayerManager.SpawnPlayerConnection(): The Player Connection is null.  exiting.");
                 return;
             }
+            UnsubscribeFromPlayerInventoryEvents();
             UnsubscribeFromPlayerEvents();
             SystemEventManager.TriggerEvent("OnPlayerConnectionDespawn", new EventParamProperties());
             objectPooler.ReturnObjectToPool(playerConnectionObject);
@@ -528,6 +531,24 @@ namespace AnyRPG {
             activeCharacter = null;
             playerUnitMovementController = null;
             playerConnectionSpawned = false;
+        }
+
+        public void SubscribeToPlayerInventoryEvents() {
+            activeCharacter.CharacterInventoryManager.OnAddInventoryBagNode += HandleAddInventoryBagNode;
+            activeCharacter.CharacterInventoryManager.OnAddBankBagNode += HandleAddBankBagNode;
+            activeCharacter.CharacterInventoryManager.OnAddInventorySlot += HandleAddInventorySlot;
+            activeCharacter.CharacterInventoryManager.OnAddBankSlot += HandleAddBankSlot;
+            activeCharacter.CharacterInventoryManager.OnRemoveInventorySlot += HandleRemoveInventorySlot;
+            activeCharacter.CharacterInventoryManager.OnRemoveBankSlot += HandleRemoveBankSlot;
+        }
+
+        public void UnsubscribeFromPlayerInventoryEvents() {
+            activeCharacter.CharacterInventoryManager.OnAddInventoryBagNode -= HandleAddInventoryBagNode;
+            activeCharacter.CharacterInventoryManager.OnAddBankBagNode -= HandleAddBankBagNode;
+            activeCharacter.CharacterInventoryManager.OnAddInventorySlot -= HandleAddInventorySlot;
+            activeCharacter.CharacterInventoryManager.OnAddBankSlot -= HandleAddBankSlot;
+            activeCharacter.CharacterInventoryManager.OnRemoveInventorySlot -= HandleRemoveInventorySlot;
+            activeCharacter.CharacterInventoryManager.OnRemoveBankSlot -= HandleRemoveBankSlot;
         }
 
         public void SubscribeToPlayerEvents() {
@@ -596,6 +617,30 @@ namespace AnyRPG {
             activeCharacter.CharacterAbilityManager.OnMessageFeedMessage -= HandleMessageFeedMessage;
         }
 
+        public void HandleAddInventoryBagNode(BagNode bagNode) {
+            inventoryManager.AddInventoryBagNode(bagNode);
+        }
+
+        public void HandleAddBankBagNode(BagNode bagNode) {
+            inventoryManager.AddBankBagNode(bagNode);
+        }
+
+        public void HandleAddInventorySlot(InventorySlot inventorySlot) {
+            inventoryManager.AddInventorySlot(inventorySlot);
+        }
+
+        public void HandleAddBankSlot(InventorySlot inventorySlot) {
+            inventoryManager.AddBankSlot(inventorySlot);
+        }
+
+        public void HandleRemoveInventorySlot(InventorySlot inventorySlot) {
+            inventoryManager.RemoveInventorySlot(inventorySlot);
+        }
+
+        public void HandleRemoveBankSlot(InventorySlot inventorySlot) {
+            inventoryManager.RemoveBankSlot(inventorySlot);
+        }
+
         public void HandleBeginAbilityCoolDown() {
             SystemEventManager.TriggerEvent("OnBeginAbilityCooldown", new EventParamProperties());
         }
@@ -629,7 +674,7 @@ namespace AnyRPG {
 
         public void HandleUnlearnAbility(bool updateActionBars) {
             if (updateActionBars) {
-                actionBarManager.UpdateVisuals(true);
+                actionBarManager.RemoveStaleActions();
             }
         }
 
@@ -679,15 +724,15 @@ namespace AnyRPG {
 
         public void HandleUnlearnClassAbilities() {
             // now perform a single action bar update
-            actionBarManager.UpdateVisuals(true);
+            actionBarManager.RemoveStaleActions();
         }
 
         public void HandleEquipmentChanged(Equipment newItem, Equipment oldItem, int slotIndex) {
             if (PlayerUnitSpawned) {
                 if (slotIndex != -1) {
-                    inventoryManager.AddItem(oldItem, slotIndex);
+                    MyCharacter.CharacterInventoryManager.AddInventoryItem(oldItem, slotIndex);
                 } else if (oldItem != null) {
-                    inventoryManager.AddItem(oldItem);
+                    MyCharacter.CharacterInventoryManager.AddItem(oldItem, false);
                 }
             }
             systemEventManager.NotifyOnEquipmentChanged(newItem, oldItem);

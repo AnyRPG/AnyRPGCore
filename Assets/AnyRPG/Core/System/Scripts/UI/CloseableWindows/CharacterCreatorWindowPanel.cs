@@ -7,7 +7,7 @@ using UnityEngine.UI;
 
 namespace AnyRPG {
 
-    public class CharacterCreatorWindowPanel : WindowContentController, ICapabilityConsumer {
+    public class CharacterCreatorWindowPanel : CloseableWindowContents, ICapabilityConsumer {
 
         public event System.Action OnConfirmAction = delegate { };
         public override event Action<ICloseableWindowContents> OnCloseWindow = delegate { };
@@ -17,7 +17,8 @@ namespace AnyRPG {
 
         [SerializeField]
         private UMACharacterEditorPanelController umaCharacterPanel = null;
-
+        
+        /*
         // appearance buttons
         [SerializeField]
         private HighlightButton faceButton = null;
@@ -46,11 +47,11 @@ namespace AnyRPG {
         // bottom row
         [SerializeField]
         private HighlightButton closeButton = null;
+        */
 
         [SerializeField]
         private HighlightButton saveButton = null;
 
-        //private string playerName = "Player Name";
         private UnitProfile unitProfile = null;
         private UnitType unitType = null;
         private CharacterRace characterRace = null;
@@ -80,19 +81,19 @@ namespace AnyRPG {
 
         public override void Configure(SystemGameManager systemGameManager) {
             base.Configure(systemGameManager);
-            faceButton.Configure(systemGameManager);
-            colorsButton.Configure(systemGameManager);
-            sexButton.Configure(systemGameManager);
-            maleButton.Configure(systemGameManager);
-            femaleButton.Configure(systemGameManager);
-            hairButton.Configure(systemGameManager);
-            skinButton.Configure(systemGameManager);
-            eyesButton.Configure(systemGameManager);
-            closeButton.Configure(systemGameManager);
-            saveButton.Configure(systemGameManager);
+            //faceButton.Configure(systemGameManager);
+            //colorsButton.Configure(systemGameManager);
+            //sexButton.Configure(systemGameManager);
+            //maleButton.Configure(systemGameManager);
+            //femaleButton.Configure(systemGameManager);
+            //hairButton.Configure(systemGameManager);
+            //skinButton.Configure(systemGameManager);
+            //eyesButton.Configure(systemGameManager);
+            //closeButton.Configure(systemGameManager);
+            //saveButton.Configure(systemGameManager);
 
             characterPreviewPanel.Configure(systemGameManager);
-            umaCharacterPanel.Configure(systemGameManager);
+            //umaCharacterPanel.Configure(systemGameManager);
         }
 
         public override void SetGameManagerReferences() {
@@ -104,24 +105,28 @@ namespace AnyRPG {
             levelManager = systemGameManager.LevelManager;
         }
 
-        public override void RecieveClosedWindowNotification() {
+        public override void ReceiveClosedWindowNotification() {
             //Debug.Log("CharacterCreatorPanel.OnCloseWindow()");
-            base.RecieveClosedWindowNotification();
+            base.ReceiveClosedWindowNotification();
             characterPreviewPanel.OnTargetCreated -= HandleTargetCreated;
             characterPreviewPanel.OnTargetReady -= HandleTargetReady;
-            characterPreviewPanel.RecieveClosedWindowNotification();
-            umaCharacterPanel.RecieveClosedWindowNotification();
+            characterPreviewPanel.ReceiveClosedWindowNotification();
+            umaCharacterPanel.ReceiveClosedWindowNotification();
             OnCloseWindow(this);
             // close interaction window too for smoother experience
             uIManager.interactionWindow.CloseWindow();
         }
 
-        public override void ReceiveOpenWindowNotification() {
-            //Debug.Log("LoadGamePanel.OnOpenWindow()");
-            base.ReceiveOpenWindowNotification();
+        public override void ProcessOpenWindowNotification() {
+            //Debug.Log("CharacterCreatorPanel.ProcessOpenWindowNotification()");
+            base.ProcessOpenWindowNotification();
             saveButton.Button.interactable = false;
+            uINavigationControllers[0].UpdateNavigationList();
+            uINavigationControllers[0].FocusCurrentButton();
             umaCharacterPanel.ReceiveOpenWindowNotification();
             umaCharacterPanel.ShowPanel();
+            //SetOpenSubPanel(umaCharacterPanel, true);
+            SetOpenSubPanel(umaCharacterPanel, false);
 
             // set unit profile to default
             if (systemConfigurationManager.UseFirstCreatorProfile) {
@@ -185,6 +190,12 @@ namespace AnyRPG {
             umaCharacterPanel.HandleTargetReady();
             if (umaCharacterPanel.MainNoOptionsArea.activeSelf == false) {
                 saveButton.Button.interactable = true;
+            } else {
+                openSubPanel = null;
+            }
+            uINavigationControllers[0].UpdateNavigationList();
+            if (activeSubPanel == null) {
+                uINavigationControllers[0].FocusCurrentButton();
             }
         }
 

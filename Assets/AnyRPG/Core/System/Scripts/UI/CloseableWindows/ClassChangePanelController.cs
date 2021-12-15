@@ -99,12 +99,14 @@ namespace AnyRPG {
                 if (traitList[i] != null) {
                     RewardButton rewardIcon = objectPooler.GetPooledObject(rewardIconPrefab, traitIconsArea.transform).GetComponent<RewardButton>();
                     rewardIcon.Configure(systemGameManager);
+                    rewardIcon.SetOptions(rectTransform, false);
                     rewardIcon.SetDescribable(traitList[i]);
                     traitRewardIcons.Add(rewardIcon);
                     if (traitList[i].RequiredLevel > playerManager.MyCharacter.CharacterStats.Level) {
                         rewardIcon.StackSizeText.text = "Level\n" + traitList[i].RequiredLevel;
                         rewardIcon.HighlightIcon.color = new Color32(255, 255, 255, 80);
                     }
+                    uINavigationControllers[1].AddActiveButton(rewardIcon);
                 }
             }
         }
@@ -132,12 +134,14 @@ namespace AnyRPG {
                 if (abilityList[i] != null) {
                     RewardButton rewardIcon = objectPooler.GetPooledObject(rewardIconPrefab, abilityIconsArea.transform).GetComponent<RewardButton>();
                     rewardIcon.Configure(systemGameManager);
+                    rewardIcon.SetOptions(rectTransform, false);
                     rewardIcon.SetDescribable(abilityList[i]);
                     abilityRewardIcons.Add(rewardIcon);
                     if (abilityList[i].RequiredLevel > playerManager.MyCharacter.CharacterStats.Level) {
                         rewardIcon.StackSizeText.text = "Level\n" + abilityList[i].RequiredLevel;
                         rewardIcon.HighlightIcon.color = new Color32(255, 255, 255, 80);
                     }
+                    uINavigationControllers[2].AddActiveButton(rewardIcon);
                 }
             }
         }
@@ -149,6 +153,7 @@ namespace AnyRPG {
                 objectPooler.ReturnObjectToPool(rewardIcon.gameObject);
             }
             traitRewardIcons.Clear();
+            uINavigationControllers[1].ClearActiveButtons();
         }
 
         private void ClearRewardIcons() {
@@ -158,6 +163,7 @@ namespace AnyRPG {
                 objectPooler.ReturnObjectToPool(rewardIcon.gameObject);
             }
             abilityRewardIcons.Clear();
+            uINavigationControllers[2].ClearActiveButtons();
         }
 
         public void CancelAction() {
@@ -172,17 +178,17 @@ namespace AnyRPG {
             uIManager.classChangeWindow.CloseWindow();
         }
 
-        public override void ReceiveOpenWindowNotification() {
+        public override void ProcessOpenWindowNotification() {
             //Debug.Log("ClassChangePanelController.OnOpenWindow()");
-            base.ReceiveOpenWindowNotification();
+            base.ProcessOpenWindowNotification();
             LayoutRebuilder.ForceRebuildLayoutImmediate(abilityIconsArea.GetComponent<RectTransform>());
             LayoutRebuilder.ForceRebuildLayoutImmediate(traitIconsArea.GetComponent<RectTransform>());
 
         }
 
-        public override void RecieveClosedWindowNotification() {
+        public override void ReceiveClosedWindowNotification() {
             //Debug.Log("ClassChangePanelController.OnCloseWindow()");
-            base.RecieveClosedWindowNotification();
+            base.ReceiveClosedWindowNotification();
             OnCloseWindow(this);
         }
     }

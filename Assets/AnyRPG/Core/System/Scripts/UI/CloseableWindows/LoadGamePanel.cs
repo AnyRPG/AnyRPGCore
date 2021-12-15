@@ -20,14 +20,18 @@ namespace AnyRPG {
         [SerializeField]
         private GameObject buttonArea = null;
 
+        /*
         [SerializeField]
         private HighlightButton returnButton = null;
+        */
 
         [SerializeField]
         private HighlightButton loadGameButton = null;
 
+        /*
         [SerializeField]
         private HighlightButton newGameButton = null;
+        */
 
         [SerializeField]
         private HighlightButton deleteGameButton = null;
@@ -49,7 +53,7 @@ namespace AnyRPG {
         private UIManager uIManager = null;
         private LoadGameManager loadGameManager = null;
 
-        public LoadGameButton SelectedLoadGameButton { get => selectedLoadGameButton; set => selectedLoadGameButton = value; }
+        public LoadGameButton SelectedLoadGameButton { get => selectedLoadGameButton; }
 
         public override void Configure(SystemGameManager systemGameManager) {
             base.Configure(systemGameManager);
@@ -57,12 +61,16 @@ namespace AnyRPG {
             loadGameManager.OnDeleteGame += HandleDeleteGame;
             loadGameManager.OnCopyGame += HandleCopyGame;
 
+            /*
             returnButton.Configure(systemGameManager);
             loadGameButton.Configure(systemGameManager);
             newGameButton.Configure(systemGameManager);
             deleteGameButton.Configure(systemGameManager);
             copyGameButton.Configure(systemGameManager);
+            */
+
             characterPreviewPanel.Configure(systemGameManager);
+            characterPreviewPanel.SetParentPanel(this);
         }
 
         public override void SetGameManagerReferences() {
@@ -75,24 +83,24 @@ namespace AnyRPG {
             loadGameManager = systemGameManager.LoadGameManager;
         }
 
-        public override void RecieveClosedWindowNotification() {
+        public override void ReceiveClosedWindowNotification() {
             //Debug.Log("LoadGamePanel.RecieveClosedWindowNotification()");
-            base.RecieveClosedWindowNotification();
             // testing - character will load its own equipment when it spawns
             //characterPreviewPanel.OnTargetReady -= HandleTargetReady;
             characterPreviewPanel.OnTargetCreated -= HandleTargetCreated;
             characterPreviewPanel.CapabilityConsumer = null;
-            characterPreviewPanel.RecieveClosedWindowNotification();
+            characterPreviewPanel.ReceiveClosedWindowNotification();
             //saveManager.ClearSharedData();
 
             ClearLoadButtons();
 
+            base.ReceiveClosedWindowNotification();
             OnCloseWindow(this);
         }
 
-        public override void ReceiveOpenWindowNotification() {
+        public override void ProcessOpenWindowNotification() {
             //Debug.Log("LoadGamePanel.OnOpenWindow()");
-            base.ReceiveOpenWindowNotification();
+            base.ProcessOpenWindowNotification();
 
             //ShowLoadButtonsCommon();
 
@@ -133,14 +141,16 @@ namespace AnyRPG {
             loadGameButton.Button.interactable = true;
             copyGameButton.Button.interactable = true;
             deleteGameButton.Button.interactable = true;
+            uINavigationControllers[1].UpdateNavigationList();
+            uINavigationControllers[0].UnHightlightButtons(loadButton);
 
             nameText.text = loadGameManager.AnyRPGSaveData.playerName;
         }
 
 
         public void ClearLoadButtons() {
-            // clear the quest list so any quests left over from a previous time opening the window aren't shown
             //Debug.Log("LoadGamePanel.ClearLoadButtons()");
+            // clear the quest list so any quests left over from a previous time opening the window aren't shown
             foreach (LoadGameButton loadGameButton in loadGameButtons) {
                 if (loadGameButton != null) {
                     loadGameButton.DeSelect();
@@ -148,6 +158,7 @@ namespace AnyRPG {
                 }
             }
             loadGameButtons.Clear();
+            uINavigationControllers[0].ClearActiveButtons();
             selectedLoadGameButton = null;
             loadGameButton.Button.interactable = false;
             copyGameButton.Button.interactable = false;
@@ -170,13 +181,17 @@ namespace AnyRPG {
                 loadGameButton.Configure(systemGameManager);
                 loadGameButton.AddSaveData(this, anyRPGSaveData);
                 loadGameButtons.Add(loadGameButton);
+                uINavigationControllers[0].AddActiveButton(loadGameButton);
                 if (anyRPGSaveData.DataFileName == fileName) {
                     selectedButton = count;
                 }
                 count++;
             }
             if (loadGameButtons.Count > 0) {
-                loadGameButtons[selectedButton].Select();
+                SetNavigationController(uINavigationControllers[0]);
+
+                // no longer necessary since setting the navigation controller will select the button
+                //loadGameButtons[selectedButton].Select();
             }
             //SetPreviewTarget();
         }
@@ -229,15 +244,12 @@ namespace AnyRPG {
             }
         }
 
-        public void UnHighlightAllButtons() {
-            //Debug.Log("CharacterCreatorPanel.UnHighlightAllButtons()");
-
-        }
-
+        /*
         public void ClosePanel() {
             //Debug.Log("LoadGamePanel.ClosePanel()");
             uIManager.loadGameWindow.CloseWindow();
         }
+        */
 
         /*
         public void RebuildUMA() {
@@ -251,14 +263,16 @@ namespace AnyRPG {
 
         public void LoadGame() {
             if (SelectedLoadGameButton != null) {
-                loadGameManager.LoadGame(SelectedLoadGameButton.SaveData);
+                AnyRPGSaveData saveData = SelectedLoadGameButton.SaveData;
+                Close();
+                loadGameManager.LoadGame(saveData);
             }
         }
 
         public void NewGame() {
             //Debug.Log("LoadGamePanel.NewGame()");
             if (systemConfigurationManager.UseNewGameWindow == true) {
-                ClosePanel();
+                Close();
                 uIManager.newGameWindow.OpenWindow();
             } else {
                 uIManager.confirmNewGameMenuWindow.OpenWindow();

@@ -6,22 +6,25 @@ using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 namespace AnyRPG {
-    public class RewardButton : DescribableIcon, IClickable, IPointerClickHandler {
+    public class RewardButton : DescribableIcon, IClickable {
 
         public event System.Action<RewardButton> OnAttempSelect = delegate { };
 
         [SerializeField]
         protected Image highlightIcon;
 
-        [SerializeField]
-        protected bool limitReached = false;
-
         // is this reward button currently highlighted
-        protected bool selected = false;
+        protected bool chosen = false;
 
-        public bool Selected { get => selected; set => selected = value; }
+        protected bool chooseable = false;
+
+        public bool Chosen { get => chosen; set => chosen = value; }
         public Image HighlightIcon { get => highlightIcon; set => highlightIcon = value; }
-        public bool LimitReached { get => limitReached; set => limitReached = value; }
+
+        public void SetOptions(RectTransform rectTransform, bool chooseable) {
+            SetToolTipTransform(rectTransform);
+            this.chooseable = chooseable;
+        }
 
         /// <summary>
         /// UPdates the visual representation of the describablebutton
@@ -31,7 +34,7 @@ namespace AnyRPG {
             base.UpdateVisual();
 
 
-            if (selected == true) {
+            if (chosen == true) {
                 highlightIcon.sprite = null;
                 highlightIcon.color = new Color32(255, 255, 255, 180);
             } else {
@@ -42,21 +45,59 @@ namespace AnyRPG {
 
         public void Unselect() {
             //Debug.Log("RewardButton: Unselect()");
-            selected = false;
+            chosen = false;
         }
 
-        public void OnPointerClick(PointerEventData eventData) {
-            //Debug.Log("RewardButton: OnPointerClick()");
+        public override void OnPointerClick(PointerEventData eventData) {
+            Debug.Log("RewardButton: OnPointerClick()");
+            base.OnPointerClick(eventData);
 
-            if (selected) {
-                selected = false;
+            ToggleChosen();
+        }
+
+        private void ToggleChosen() {
+            if (chosen) {
+                chosen = false;
                 //Debug.Log("RewardButton: OnPointerClick() set selected to false");
             } else {
-                selected = true;
+                chosen = true;
                 //Debug.Log("RewardButton: OnPointerClick() set selected to true");
             }
             OnAttempSelect(this);
             UpdateVisual();
+        }
+
+        
+        public override void Accept() {
+            base.Accept();
+            if (chooseable == true) {
+                ToggleChosen();
+            }
+        }
+
+        public override void Select() {
+            base.Select();
+            ShowContextInfo();
+        }
+
+        public override void DeSelect() {
+            base.DeSelect();
+            uIManager.HideToolTip();
+            if (owner != null) {
+                owner.HideControllerHints();
+            }
+        }
+
+        public void ShowContextInfo() {
+            ShowGamepadTooltip();
+            if (chooseable == true) {
+                owner.SetControllerHints("Choose", "", "", "", "", "");
+            }
+        }
+
+        public void ShowGamepadTooltip() {
+            //Rect panelRect = RectTransformToScreenSpace((BagPanel.ContentArea as RectTransform));
+            uIManager.ShowGamepadTooltip(toolTipTransform, transform, describable, "");
         }
 
     }

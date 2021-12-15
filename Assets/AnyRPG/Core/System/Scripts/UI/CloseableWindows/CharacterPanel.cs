@@ -16,6 +16,7 @@ namespace AnyRPG {
         [SerializeField]
         private List<CharacterButton> characterButtons = new List<CharacterButton>();
 
+        /*
         [SerializeField]
         private HighlightButton reputationButton = null;
 
@@ -27,6 +28,7 @@ namespace AnyRPG {
 
         [SerializeField]
         private HighlightButton currencyButton = null;
+        */
 
         [SerializeField]
         private HighlightButton petButton = null;
@@ -57,7 +59,7 @@ namespace AnyRPG {
             base.Configure(systemGameManager);
 
             foreach (CharacterButton characterButton in characterButtons) {
-                characterButton.Configure(systemGameManager);
+                //characterButton.Configure(systemGameManager);
                 characterButton.EmptyBackGroundColor = emptySlotColor;
                 characterButton.FullBackGroundColor = fullSlotColor;
                 characterButton.CharacterPanel = this;
@@ -70,10 +72,10 @@ namespace AnyRPG {
             }
 
             previewCameraController.Configure(systemGameManager);
-            reputationButton.Configure(systemGameManager);
-            achievementsButton.Configure(systemGameManager);
-            skillsButton.Configure(systemGameManager);
-            currencyButton.Configure(systemGameManager);
+            //reputationButton.Configure(systemGameManager);
+            //achievementsButton.Configure(systemGameManager);
+            //skillsButton.Configure(systemGameManager);
+            //currencyButton.Configure(systemGameManager);
             petButton.Configure(systemGameManager);
         }
 
@@ -88,21 +90,19 @@ namespace AnyRPG {
             characterPanelManager = systemGameManager.CharacterPanelManager;
         }
 
-        protected override void CreateEventSubscriptions() {
+        protected override void ProcessCreateEventSubscriptions() {
             //Debug.Log("CharacterPanel.CreateEventSubscriptions()");
-            if (eventSubscriptionsInitialized) {
-                return;
-            }
+            base.ProcessCreateEventSubscriptions();
             SystemEventManager.StartListening("OnPlayerUnitSpawn", HandlePlayerUnitSpawn);
             SystemEventManager.StartListening("OnPlayerUnitDespawn", HandlePlayerUnitDespawn);
             if (playerManager.PlayerUnitSpawned == true) {
                 ProcessPlayerUnitSpawn();
             }
-            eventSubscriptionsInitialized = true;
         }
 
-        protected override void CleanupEventSubscriptions() {
+        protected override void ProcessCleanupEventSubscriptions() {
             //Debug.Log("PlayerCombat.CleanupEventSubscriptions()");
+            base.ProcessCleanupEventSubscriptions();
             SystemEventManager.StopListening("OnPlayerUnitSpawn", HandlePlayerUnitSpawn);
             SystemEventManager.StopListening("OnPlayerUnitDespawn", HandlePlayerUnitDespawn);
         }
@@ -141,16 +141,16 @@ namespace AnyRPG {
             }
         }
 
-        public override void RecieveClosedWindowNotification() {
+        public override void ReceiveClosedWindowNotification() {
             //Debug.Log("CharacterPanel.RecieveClosedWindowNotification()");
-            base.RecieveClosedWindowNotification();
+            base.ReceiveClosedWindowNotification();
             //characterPreviewPanel.OnTargetReady -= HandleTargetReady;
             previewCameraController.ClearTarget();
         }
 
-        public override void ReceiveOpenWindowNotification() {
-            //Debug.Log("CharacterPanel.ReceiveOpenWindowNotification()");
-            base.ReceiveOpenWindowNotification();
+        public override void ProcessOpenWindowNotification() {
+            //Debug.Log("CharacterPanel.ProcessOpenWindowNotification()");
+            base.ProcessOpenWindowNotification();
             SetBackGroundColor(new Color32(0, 0, 0, (byte)(int)(PlayerPrefs.GetFloat("PopupWindowOpacity") * 255)));
             //SetPreviewTarget();
             UpdateStatsDescription();

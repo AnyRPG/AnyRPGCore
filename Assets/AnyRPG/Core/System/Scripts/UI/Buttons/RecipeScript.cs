@@ -5,14 +5,13 @@ using UnityEngine;
 using UnityEngine.UI;
 
 namespace AnyRPG {
-    // this is almost identical to questscript
 
     public class RecipeScript : HighlightButton {
 
-        private Recipe recipe;
+        protected Recipe recipe;
 
         // game manager references
-        private CraftingManager craftingManager = null;
+        protected CraftingManager craftingManager = null;
 
         public Recipe Recipe { get => recipe; set => recipe = value; }
 

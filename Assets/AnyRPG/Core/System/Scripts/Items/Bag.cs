@@ -14,12 +14,7 @@ namespace AnyRPG {
         [SerializeField]
         private GameObject bagPrefab;
 
-        /// <summary>
-        /// A reference to the bagScript, that this bag belongs to
-        /// </summary>
-        public BagPanel MyBagPanel { get; set; }
-
-        public BagNode MyBagNode { get; set; }
+        public BagNode BagNode { get; set; }
 
         /// <summary>
         /// Property for getting the slots
@@ -45,40 +40,12 @@ namespace AnyRPG {
             }
         }
 
-        public override bool Use() {
-            //Debug.Log("Bag.Use()");
-            bool returnValue = base.Use();
-            if (returnValue == false) {
-                return false;
-            }
-            AddToInventoryManager();
-            return true;
-        }
-
-        public void AddToInventoryManager() {
-            bool addToBank = false;
-            if (MyBagNode != null) {
-                addToBank = MyBagNode.IsBankNode;
-            }
-            if (inventoryManager.CanAddBag(addToBank)) {
-                //Debug.Log("Bag.Use(): we can add the bag");
-
-                if (MyBagNode == null) {
-                    inventoryManager.AddBag(this);
-                } else {
-                    //Debug.Log("Bag.Use(): i have a bagnode");
-                    inventoryManager.AddBag(this, MyBagNode);
-                }
-                Remove();
-            } else {
-                //Debug.Log("Bag.Use(): we can not add the bag!!!");
-            }
-
-        }
-
+        
         public override string GetSummary(ItemQuality usedItemQuality) {
-            return base.GetSummary(usedItemQuality) + string.Format("\n<color=green>Use: Equip</color>");
+            //return base.GetSummary(usedItemQuality) + string.Format("\n<color=green>Use: Equip</color>");
+            return base.GetSummary(usedItemQuality) + string.Format("\n{0} slots", slots);
         }
+        
 
     }
 

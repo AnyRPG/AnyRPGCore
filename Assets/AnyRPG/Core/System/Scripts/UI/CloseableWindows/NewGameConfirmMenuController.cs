@@ -13,11 +13,13 @@ namespace AnyRPG {
         [SerializeField]
         private ConfirmGameButton confirmGameButton = null;
 
+        /*
         [SerializeField]
         private HighlightButton confirmButton = null;
 
         [SerializeField]
         private HighlightButton cancelButton = null;
+        */
 
         // game manager references
         private UIManager uIManager = null;
@@ -26,8 +28,6 @@ namespace AnyRPG {
 
         public override void Configure(SystemGameManager systemGameManager) {
             base.Configure(systemGameManager);
-            cancelButton.Configure(systemGameManager);
-            confirmButton.Configure(systemGameManager);
             confirmGameButton.Configure(systemGameManager);
         }
 
@@ -38,8 +38,8 @@ namespace AnyRPG {
             newGameManager = systemGameManager.NewGameManager;
         }
 
-        public override void ReceiveOpenWindowNotification() {
-            base.ReceiveOpenWindowNotification();
+        public override void ProcessOpenWindowNotification() {
+            base.ProcessOpenWindowNotification();
             if (systemConfigurationManager.UseNewGameWindow == true) {
                 divider.SetActive(false);
                 confirmGameButton.gameObject.SetActive(true);
@@ -61,10 +61,7 @@ namespace AnyRPG {
             uIManager.loadGameWindow.CloseWindow();
             uIManager.newGameWindow.CloseWindow();
             if (systemConfigurationManager.UseNewGameWindow == true) {
-                saveManager.PerformInventorySetup();
-                saveManager.SaveEquippedBagData(newGameManager.SaveData);
-                saveManager.SaveInventorySlotData(newGameManager.SaveData);
-                saveManager.LoadGame(newGameManager.SaveData);
+                saveManager.NewGameFromSaveData(newGameManager.SaveData);
             } else {
                 saveManager.TryNewGame();
             }

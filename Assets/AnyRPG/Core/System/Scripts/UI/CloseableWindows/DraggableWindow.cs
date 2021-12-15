@@ -22,13 +22,16 @@ namespace AnyRPG {
         protected string dragString = string.Empty;
 
         [SerializeField]
+        protected string gamepadDragString = string.Empty;
+
+        [SerializeField]
         protected TextMeshProUGUI dragText = null;
 
         [SerializeField]
         protected bool alwaysDraggable = false;
 
         [SerializeField]
-        protected bool neverDraggable = false;
+        private bool neverDraggable = false;
 
         protected Vector2 startMousePosition, startWindowPosition;
 
@@ -37,8 +40,11 @@ namespace AnyRPG {
         // game manager references
         protected UIManager uIManager = null;
         protected SaveManager saveManager = null;
+        protected ControlsManager controlsManager = null;
 
         public RectTransform RectTransform { get => rectTransform; }
+        public bool UiLocked { get => uiLocked; }
+        public bool NeverDraggable { get => neverDraggable;  }
 
         public override void Configure(SystemGameManager systemGameManager) {
             base.Configure(systemGameManager);
@@ -52,7 +58,10 @@ namespace AnyRPG {
             base.SetGameManagerReferences();
             uIManager = systemGameManager.UIManager;
             saveManager = systemGameManager.SaveManager;
+            controlsManager = systemGameManager.ControlsManager;
         }
+
+
 
         public void OnBeginDrag(PointerEventData eventData) {
             //Debug.Log("FramedWindow.OnBeginDrag()");
@@ -89,7 +98,11 @@ namespace AnyRPG {
                 if (dragString != null && dragString != string.Empty && dragText != null) {
                     dragText.gameObject.SetActive(true);
                     dragText.raycastTarget = true;
-                    dragText.text = dragString;
+                    if (controlsManager.GamePadModeActive == true) {
+                        dragText.text = gamepadDragString;
+                    } else {
+                        dragText.text = dragString;
+                    }
                 }
             } else {
                 uiLocked = true;
@@ -132,6 +145,18 @@ namespace AnyRPG {
                 return;
             }
             uIManager.DragInProgress = false;
+        }
+
+        public void LeftAnalog(float inputHorizontal, float inputVertical) {
+            if (neverDraggable) {
+                return;
+            }
+            if (uiLocked == true && alwaysDraggable == false) {
+                return;
+            }
+            moveableTransform.position += new Vector3(inputHorizontal, inputVertical, 0f);
+            saveManager.SaveWindowPositions();
+            uIManager.RefreshGamepadToolTip();
         }
     }
 

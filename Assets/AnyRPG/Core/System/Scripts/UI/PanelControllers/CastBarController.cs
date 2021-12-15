@@ -6,28 +6,30 @@ using UnityEngine;
 using UnityEngine.UI;
 
 namespace AnyRPG {
-    public class CastBarController : DraggableWindow {
+    public class CastBarController : ConfiguredMonoBehaviour {
+
+        [Header("CastBar Controller")]
 
         [SerializeField]
-        private GameObject castBackground = null;
+        protected GameObject castBackground = null;
 
         [SerializeField]
-        private Image castSlider = null;
+        protected Image castSlider = null;
 
         [SerializeField]
-        private TextMeshProUGUI castText = null;
+        protected TextMeshProUGUI castText = null;
 
         [SerializeField]
-        private Image castIcon = null;
+        protected Image castIcon = null;
 
-        private UnitNamePlateController unitNamePlateController = null;
+        protected UnitNamePlateController unitNamePlateController = null;
 
-        private float originalCastSliderWidth = 0f;
+        protected float originalCastSliderWidth = 0f;
 
-        //private Transform followTransform = null;
+        protected CloseableWindow closeableWindow = null;
 
-        private bool controllerInitialized = false;
-        private bool targetInitialized = false;
+        protected bool controllerInitialized = false;
+        protected bool targetInitialized = false;
 
         public override void Configure(SystemGameManager systemGameManager) {
             base.Configure(systemGameManager);
@@ -38,9 +40,13 @@ namespace AnyRPG {
             }
         }
 
+        public void SetCloseableWindow(CloseableWindow closeableWindow) {
+            this.closeableWindow = closeableWindow;
+        }
+
         public void DisableCastBar() {
             //Debug.Log(gameObject.name + ".CastBarController.DisableCastBar()");
-            if (uiLocked == false && neverDraggable != true) {
+            if (closeableWindow?.DragHandle != null && closeableWindow.DragHandle.UiLocked == false && closeableWindow.DragHandle.NeverDraggable != true) {
                 //Debug.Log(gameObject.name + ".CastBarController.InitializeController(): ui is unlocked and neverdraggable is not set to true.  returning to avoid deactivating cast bar");
                 return;
             }
@@ -127,14 +133,6 @@ namespace AnyRPG {
                     castIcon.sprite = ability.Icon;
                 }
             }
-        }
-
-        public override void OnDisable() {
-            //Debug.Log(gameObject.name + ".CastBarController.OnDisable()");
-            if (SystemGameManager.IsShuttingDown) {
-                return;
-            }
-            base.OnDisable();
         }
 
     }

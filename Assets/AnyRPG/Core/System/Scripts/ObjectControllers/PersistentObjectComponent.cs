@@ -99,23 +99,31 @@ namespace AnyRPG {
             }
         }
 
-        public virtual void CreateEventSubscriptions() {
+        public void CreateEventSubscriptions() {
             //Debug.Log(gameObject.name + "CharacterAbilityManager.CreateEventSubscriptions()");
             if (eventSubscriptionsInitialized) {
                 return;
             }
-            SystemEventManager.StartListening("OnLevelUnload", HandleLevelUnload);
-            SystemEventManager.StartListening("OnSaveGame", HandleSaveGame);
+            ProcessCreateEventSubscriptions();
             eventSubscriptionsInitialized = true;
         }
 
-        public virtual void CleanupEventSubscriptions() {
+        public virtual void ProcessCreateEventSubscriptions() {
+            SystemEventManager.StartListening("OnLevelUnload", HandleLevelUnload);
+            SystemEventManager.StartListening("OnSaveGame", HandleSaveGame);
+        }
+
+        public void CleanupEventSubscriptions() {
             if (!eventSubscriptionsInitialized) {
                 return;
             }
+            ProcessCleanupEventSubscriptions();
+            eventSubscriptionsInitialized = false;
+        }
+
+        public virtual void ProcessCleanupEventSubscriptions() {
             SystemEventManager.StopListening("OnLevelUnload", HandleLevelUnload);
             SystemEventManager.StopListening("OnSaveGame", HandleSaveGame);
-            eventSubscriptionsInitialized = false;
         }
 
         public void HandleLevelUnload(string eventName, EventParamProperties eventParamProperties) {

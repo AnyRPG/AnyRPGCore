@@ -7,7 +7,10 @@ using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 namespace AnyRPG {
-    public class DescribableCraftingInputIcon : DescribableIcon {
+    public class DescribableCraftingInputIcon : DescribableCraftingIcon {
+        
+        [Header("Crafting Input")]
+
         [SerializeField]
         private TextMeshProUGUI description = null;
 
@@ -15,18 +18,20 @@ namespace AnyRPG {
         private GameObject materialSlot = null;
 
         // game manager references
-        private InventoryManager inventoryManager = null;
-        private CraftingManager craftingManager = null;
-        private SystemEventManager systemEventManager = null;
+        //private InventoryManager inventoryManager = null;
+        protected CraftingManager craftingManager = null;
+        protected SystemEventManager systemEventManager = null;
+        protected PlayerManager playerManager = null;
 
         public GameObject MaterialSlot { get => materialSlot; }
 
         public override void Configure(SystemGameManager systemGameManager) {
             base.Configure(systemGameManager);
 
-            inventoryManager = systemGameManager.InventoryManager;
+            //inventoryManager = systemGameManager.InventoryManager;
             craftingManager = systemGameManager.CraftingManager;
             systemEventManager = systemGameManager.SystemEventManager;
+            playerManager = systemGameManager.PlayerManager;
         }
 
         public override void UpdateVisual() {
@@ -35,12 +40,14 @@ namespace AnyRPG {
             description.text = Describable.DisplayName;
 
             //if (count > 1) {
-            stackSize.text = inventoryManager.GetItemCount(Describable.DisplayName) + " / " + count.ToString();
+            stackSize.text = playerManager.MyCharacter.CharacterInventoryManager.GetItemCount(Describable.DisplayName) + " / " + count.ToString();
             //} else {
             //stackSize.text = "";
             //}
             craftingManager.TriggerCraftAmountUpdated();
         }
+
+        
 
         protected override void SetDescribableCommon(IDescribable describable) {
             base.SetDescribableCommon(describable);
@@ -53,7 +60,7 @@ namespace AnyRPG {
                 return;
             }
             base.OnDisable();
-            if (inventoryManager != null) {
+            if (playerManager.MyCharacter.CharacterInventoryManager != null) {
                 systemEventManager.OnItemCountChanged -= UpdateVisual;
             }
 

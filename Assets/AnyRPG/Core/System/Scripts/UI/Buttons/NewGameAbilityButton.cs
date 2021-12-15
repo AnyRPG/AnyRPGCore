@@ -9,16 +9,16 @@ using UnityEngine.UI;
 namespace AnyRPG {
     public class NewGameAbilityButton : TransparencyButton {
 
-        private ILearnable ability = null;
+        protected ILearnable ability = null;
 
         [SerializeField]
-        private Image icon = null;
+        protected Image icon = null;
 
         [SerializeField]
-        private TextMeshProUGUI spellName = null;
+        protected TextMeshProUGUI spellName = null;
 
         [SerializeField]
-        private TextMeshProUGUI description = null;
+        protected TextMeshProUGUI description = null;
 
         public void AddAbility(ILearnable ability) {
             this.ability = ability;

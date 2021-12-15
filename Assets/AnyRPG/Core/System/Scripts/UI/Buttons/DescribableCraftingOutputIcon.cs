@@ -6,8 +6,7 @@ using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 namespace AnyRPG {
-    public class DescribableCraftingOutputIcon : DescribableIcon {
-
+    public class DescribableCraftingOutputIcon : DescribableCraftingIcon {
 
         public override void UpdateVisual() {
             //Debug.Log("DescribableCraftingOutputIcon.UpdateVisual()");

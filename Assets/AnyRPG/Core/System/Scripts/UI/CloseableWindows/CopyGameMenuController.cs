@@ -7,11 +7,13 @@ using UnityEngine;
 namespace AnyRPG {
     public class CopyGameMenuController : WindowContentController {
 
+        /*
         [SerializeField]
         private HighlightButton noButton = null;
 
         [SerializeField]
         private HighlightButton yesButton = null;
+        */
 
         // game manager references
         private UIManager uIManager = null;
@@ -21,8 +23,8 @@ namespace AnyRPG {
             //Debug.Log("CopyGameMenuController.Configure()");
             base.Configure(systemGameManager);
 
-            noButton.Configure(systemGameManager);
-            yesButton.Configure(systemGameManager);
+            //noButton.Configure(systemGameManager);
+            //yesButton.Configure(systemGameManager);
 
         }
 

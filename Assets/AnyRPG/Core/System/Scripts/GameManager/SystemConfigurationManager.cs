@@ -106,17 +106,42 @@ namespace AnyRPG {
 
         [Header("Inventory")]
 
+        /*
         [Tooltip("if false, default backpack goes in bank")]
         [SerializeField]
         private bool equipDefaultBackPack = true;
+        */
+
+        [Tooltip("The number of inventory slots a character has with no extra bags equipped")]
+        [SerializeField]
+        private int defaultInventorySlots = 0;
+
+        [Tooltip("The number of bank slots a character has with no extra bags equipped")]
+        [SerializeField]
+        private int defaultBankSlots = 0;
+
+        [Tooltip("The maximum number of bags a character can have equipped")]
+        [SerializeField]
+        private int maxInventoryBags = 5;
+
+        [Tooltip("The maximum number of bags a character can have equipped in their bank")]
+        [SerializeField]
+        private int maxBankBags = 8;
 
         [SerializeField]
         [ResourceSelector(resourceType = typeof(Bag))]
         private string defaultBackpackItem = "Backpack";
 
+        [Tooltip("Default items that will be in the player bank when a new player is created")]
+        [SerializeField]
+        [ResourceSelector(resourceType = typeof(Item))]
+        private List<string> defaultBankContents = new List<string>();
+
+        /*
         [SerializeField]
         [ResourceSelector(resourceType = typeof(Bag))]
         private string defaultBankBagItem = "Bank";
+        */
 
         [Header("CONTROLLER")]
 
@@ -125,6 +150,10 @@ namespace AnyRPG {
         [SerializeField]
         private bool allowClickToMove = false;
         */
+
+        [Tooltip("The controller configuration set on first game load")]
+        [SerializeField]
+        private DefaultControllerConfiguration defaultControllerConfiguration;
 
         [Tooltip("The maximum turn speed in degrees per second")]
         [SerializeField]
@@ -430,12 +459,44 @@ namespace AnyRPG {
         [SerializeField]
         private Color defaultUIColor;
 
+        /*
         [Tooltip("defaultUIColor with full opacity for button frames")]
         [SerializeField]
         private Color defaultUISolidColor;
+        */
 
+        [Tooltip("default UI color for background of UI sliders")]
         [SerializeField]
         private Color defaultUIFillColor;
+
+        [Tooltip("default UI color for outline image")]
+        [SerializeField]
+        private Color highlightOutlineColor;
+
+        [Tooltip("default UI color for background highlight image")]
+        [SerializeField]
+        private Color highlightImageColor;
+
+        [Tooltip("default UI color for the button image on highlight buttons")]
+        [SerializeField]
+        private Color highlightButtonColor;
+
+
+        [SerializeField]
+        private Color buttonNormalColor = new Color32(163, 163, 163, 82);
+
+        [SerializeField]
+        private Color buttonHighlightedColor = new Color32(165, 165, 165, 166);
+
+        [SerializeField]
+        private Color buttonPressedColor = new Color32(120, 120, 120, 71);
+
+        [SerializeField]
+        private Color buttonSelectedColor = new Color32(165, 165, 165, 166);
+
+        [SerializeField]
+        private Color buttonDisabledColor = new Color32(82, 82, 82, 17);
+
 
         [SerializeField]
         private Sprite defaultUIPanelFrame;
@@ -460,6 +521,21 @@ namespace AnyRPG {
 
         [SerializeField]
         private Sprite systemBarMap;
+
+        [SerializeField]
+        private Sprite systemBarSkills;
+
+        [SerializeField]
+        private Sprite systemBarReputations;
+
+        [SerializeField]
+        private Sprite systemBarCurrencies;
+
+        [SerializeField]
+        private Sprite systemBarAchievements;
+
+        [SerializeField]
+        private Sprite systemBarInventory;
 
         [Header("INTERACTABLE CONFIGURATION")]
 
@@ -611,6 +687,11 @@ namespace AnyRPG {
         public Sprite SystemBarCharacter { get => systemBarCharacter; set => systemBarCharacter = value; }
         public Sprite SystemBarQuestLog { get => systemBarQuestLog; set => systemBarQuestLog = value; }
         public Sprite SystemBarMap { get => systemBarMap; set => systemBarMap = value; }
+        public Sprite SystemBarSkills { get => systemBarSkills; set => systemBarSkills = value; }
+        public Sprite SystemBarReputations { get => systemBarReputations; set => systemBarReputations = value; }
+        public Sprite SystemBarCurrencies { get => systemBarCurrencies; set => systemBarCurrencies = value; }
+        public Sprite SystemBarAchievements { get => systemBarAchievements; set => systemBarAchievements = value; }
+        public Sprite SystemBarInventory { get => systemBarInventory; set => systemBarInventory = value; }
         public Sprite UnitSpawnControllerInteractionPanelImage { get => unitSpawnControllerInteractionPanelImage; set => unitSpawnControllerInteractionPanelImage = value; }
         public Sprite UnitSpawnControllerNamePlateImage { get => unitSpawnControllerNamePlateImage; set => unitSpawnControllerNamePlateImage = value; }
         public Sprite MusicPlayerInteractionPanelImage { get => musicPlayerInteractionPanelImage; set => musicPlayerInteractionPanelImage = value; }
@@ -620,7 +701,7 @@ namespace AnyRPG {
         public Material DefaultCastingLightProjector { get => defaultCastTargetCircle; set => defaultCastTargetCircle = value; }
         public Color DefaultUIColor { get => defaultUIColor; set => defaultUIColor = value; }
         public Color DefaultUIFillColor { get => defaultUIFillColor; set => defaultUIFillColor = value; }
-        public Color DefaultUISolidColor { get => defaultUISolidColor; set => defaultUISolidColor = value; }
+        //public Color DefaultUISolidColor { get => defaultUISolidColor; set => defaultUISolidColor = value; }
         public List<string> LoadResourcesFolders { get => loadResourcesFolders; set => loadResourcesFolders = value; }
         public int MaxLevel { get => maxLevel; set => maxLevel = value; }
         public float StatBudgetPerLevel { get => statBudgetPerLevel; set => statBudgetPerLevel = value; }
@@ -686,11 +767,11 @@ namespace AnyRPG {
         }
 
         public bool NewGameUMAAppearance { get => newGameUMAAppearance; set => newGameUMAAppearance = value; }
-        public bool EquipDefaultBackPack { get => equipDefaultBackPack; set => equipDefaultBackPack = value; }
+        //public bool EquipDefaultBackPack { get => equipDefaultBackPack; set => equipDefaultBackPack = value; }
         public string DefaultPlayerUnitLayer { get => defaultPlayerUnitLayer; set => defaultPlayerUnitLayer = value; }
         public GameObject ThirdPartyCamera { get => thirdPartyCamera; set => thirdPartyCamera = value; }
         public string DefaultBackpackItem { get => defaultBackpackItem; set => defaultBackpackItem = value; }
-        public string DefaultBankBagItem { get => defaultBankBagItem; set => defaultBankBagItem = value; }
+        //public string DefaultBankBagItem { get => defaultBankBagItem; set => defaultBankBagItem = value; }
         public bool AlwaysShowDefaultProfiles { get => alwaysShowDefaultProfiles; set => alwaysShowDefaultProfiles = value; }
         public string MainMenuScene { get => mainMenuScene; set => mainMenuScene = value; }
         public string InitializationScene { get => initializationScene; set => initializationScene = value; }
@@ -714,6 +795,21 @@ namespace AnyRPG {
         public float FallDamagePerMeter { get => fallDamagePerMeter; set => fallDamagePerMeter = value; }
         public float FallDamageMinDistance { get => fallDamageMinDistance; set => fallDamageMinDistance = value; }
         public AudioProfile FallDamageAudioProfile { get => fallDamageAudioProfile; set => fallDamageAudioProfile = value; }
+        public DefaultControllerConfiguration DefaultControllerConfiguration { get => defaultControllerConfiguration; set => defaultControllerConfiguration = value; }
+        public Color ButtonNormalColor { get => buttonNormalColor; set => buttonNormalColor = value; }
+        public Color ButtonHighlightedColor { get => buttonHighlightedColor; set => buttonHighlightedColor = value; }
+        public Color ButtonPressedColor { get => buttonPressedColor; set => buttonPressedColor = value; }
+        public Color ButtonSelectedColor { get => buttonSelectedColor; set => buttonSelectedColor = value; }
+        public Color ButtonDisabledColor { get => buttonDisabledColor; set => buttonDisabledColor = value; }
+        public Color HighlightOutlineColor { get => highlightOutlineColor; set => highlightOutlineColor = value; }
+        public Color HighlightImageColor { get => highlightImageColor; set => highlightImageColor = value; }
+        public Color HighlightButtonColor { get => highlightButtonColor; set => highlightButtonColor = value; }
+        public int DefaultInventorySlots { get => defaultInventorySlots; set => defaultInventorySlots = value; }
+        public int DefaultBankSlots { get => defaultBankSlots; set => defaultBankSlots = value; }
+        public int MaxInventoryBags { get => maxInventoryBags; set => maxInventoryBags = value; }
+        public int MaxBankBags { get => maxBankBags; set => maxBankBags = value; }
+        public List<string> DefaultBankContents { get => defaultBankContents; set => defaultBankContents = value; }
+
         //public bool AllowClickToMove { get => allowClickToMove; }
 
         public override void Configure(SystemGameManager systemGameManager) {
@@ -923,5 +1019,7 @@ namespace AnyRPG {
         }
 
     }
+
+    public enum DefaultControllerConfiguration { MouseAndKeyboard, GamePad }
 
 }

@@ -44,9 +44,9 @@ namespace AnyRPG {
             cameraManager = systemGameManager.CameraManager;
         }
 
-        public override void RecieveClosedWindowNotification() {
+        public override void ReceiveClosedWindowNotification() {
             //Debug.Log("CharacterPreviewPanelController.RecieveClosedWindowNotification()");
-            base.RecieveClosedWindowNotification();
+            base.ReceiveClosedWindowNotification();
             characterReady = false;
             characterCreatorManager.OnTargetCreated -= HandleTargetCreated;
             characterCreatorManager.HandleCloseWindow();
@@ -54,8 +54,9 @@ namespace AnyRPG {
             OnCloseWindow(this);
         }
 
-        public override void ReceiveOpenWindowNotification() {
-            //Debug.Log("CharacterPreviewPanelController.ReceiveOpenWindowNotification()");
+        public override void ProcessOpenWindowNotification() {
+            //Debug.Log("CharacterPreviewPanelController.ProcessOpenWindowNotification()");
+            base.ProcessOpenWindowNotification();
             windowOpened = true;
             characterReady = false;
             characterCreatorManager.OnTargetCreated += HandleTargetCreated;

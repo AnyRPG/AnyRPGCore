@@ -7,7 +7,7 @@ using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 namespace AnyRPG {
-    public class LootButton : TransparencyButton, IPointerEnterHandler, IPointerExitHandler, IPointerClickHandler {
+    public class LootButton : HighlightButton {
 
         [Header("Loot")]
 
@@ -15,37 +15,67 @@ namespace AnyRPG {
         protected Image lootBackGroundImage;
 
         [SerializeField]
-        private Image icon = null;
+        protected Image icon = null;
 
         [SerializeField]
-        private TextMeshProUGUI title = null;
+        protected TextMeshProUGUI title = null;
 
-        private LootUI lootWindow = null;
+        protected LootUI lootWindow = null;
 
-        public TextMeshProUGUI MyTitle { get => title; }
+        protected LootDrop lootDrop = null;
 
-        private LootDrop lootDrop = null;
-
+        public TextMeshProUGUI Title { get => title; }
         public Image Icon { get => icon; }
-        public LootDrop LootDrop {
-            get => lootDrop;
-            set {
-                lootDrop = value;
-                Icon.sprite = lootDrop.Icon;
-                lootDrop.SetBackgroundImage(lootBackGroundImage);
+        public LootDrop LootDrop { get => lootDrop; }
+
+        public void SetLootDrop(LootDrop lootDrop) {
+            this.lootDrop = lootDrop;
+            Icon.sprite = lootDrop.Icon;
+            lootDrop.SetBackgroundImage(lootBackGroundImage);
+
+            string colorString = "white";
+            if (lootDrop.ItemQuality != null) {
+                colorString = "#" + ColorUtility.ToHtmlStringRGB(lootDrop.ItemQuality.QualityColor);
             }
+            string title = string.Format("<color={0}>{1}</color>", colorString, lootDrop.DisplayName);
+            // set the title
+            Title.text = title;
         }
 
-        public override void Configure(SystemGameManager systemGameManager) {
-            //Debug.Log(gameObject.name + ".LootButton.Configure(): " + GetInstanceID());
-            base.Configure(systemGameManager);
+        public void ClearLootDrop() {
+            lootDrop = null;
+            icon.sprite = null;
+            lootBackGroundImage.sprite = null;
+            title.text = "";
         }
 
-        public void SetLootUI(LootUI lootUI) {
-            lootWindow = lootUI;
+        public void TakeLoot() {
+            //Debug.Log("LootButton.TakeLoot()");
+            if (LootDrop == null) {
+                return;
+            }
+
+            LootDrop.TakeLoot();
         }
 
-        public void OnPointerClick(PointerEventData eventData) {
+        public override void OnPointerEnter(PointerEventData eventData) {
+            //Debug.Log("LootButton.OnPointerEnter(): " + GetInstanceID());
+            base.OnPointerEnter(eventData);
+            if (LootDrop == null) {
+                return;
+            }
+
+            //uIManager.ShowToolTip(transform.position, LootDrop);
+            ShowGamepadTooltip();
+        }
+
+        public override void OnPointerExit(PointerEventData eventData) {
+            base.OnPointerExit(eventData);
+            uIManager.HideToolTip();
+        }
+
+        public override void OnPointerClick(PointerEventData eventData) {
+            base.OnPointerClick(eventData);
             if (LootDrop == null) {
                 return;
             }
@@ -54,36 +84,27 @@ namespace AnyRPG {
             TakeLoot();
         }
 
-        public bool TakeLoot() {
-            //Debug.Log("LootButton.TakeLoot()");
-            if (LootDrop == null) {
-                return false;
-            }
-
-            bool result = LootDrop.TakeLoot();
-            if (result) {
-                LootDrop.AfterLoot();
-
-                gameObject.SetActive(false);
-                lootWindow.TakeLoot(LootDrop);
-                uIManager.HideToolTip();
-                return true;
-            }
-            return false;
+        public override void Accept() {
+            base.Accept();
+            TakeLoot();
         }
 
-        public void OnPointerEnter(PointerEventData eventData) {
-            //Debug.Log("LootButton.OnPointerEnter(): " + GetInstanceID());
-            if (LootDrop == null) {
-                return;
-            }
-
-            uIManager.ShowToolTip(transform.position, LootDrop);
+        public void ShowGamepadTooltip() {
+            uIManager.ShowGamepadTooltip(owner.transform as RectTransform, transform, lootDrop, "");
         }
 
-        public void OnPointerExit(PointerEventData eventData) {
+        public override void Select() {
+            base.Select();
+
+            ShowGamepadTooltip();
+        }
+
+        public override void DeSelect() {
+            base.DeSelect();
+
             uIManager.HideToolTip();
         }
+
     }
 
 }
