@@ -195,7 +195,7 @@ namespace AnyRPG {
             } else {
                 //Debug.Log("DialogPanelController.OnOpenWindow(): ButtonText is null!!");
             }
-            currentNavigationController.UpdateNavigationList();
+            uINavigationControllers[0].UpdateNavigationList();
             if (controlsManager.GamePadInputActive) {
                 currentNavigationController.FocusFirstButton();
             }
@@ -212,6 +212,8 @@ namespace AnyRPG {
             continueButton.gameObject.SetActive(true);
             dialogIndex = 0;
             uIManager.dialogWindow.SetWindowTitle(interactable.DisplayName);
+
+            SetNavigationController(uINavigationControllers[0]);
 
             // this one last because it does a layout rebuild
             DisplayNodeText();
