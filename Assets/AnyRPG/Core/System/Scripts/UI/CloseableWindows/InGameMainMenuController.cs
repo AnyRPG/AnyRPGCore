@@ -81,6 +81,13 @@ namespace AnyRPG {
             uIManager.settingsMenuWindow.OpenWindow();
         }
 
+        public void HelpMenu() {
+            //Debug.Log("MainMenuController.SettingsMenu()");
+            currentNavigationController?.CurrentNavigableElement?.DeSelect();
+            uIManager.CloseAllSystemWindows();
+            uIManager.helpMenuWindow.OpenWindow();
+        }
+
 
         public void SaveGame() {
             //Debug.Log("MainMenuController.SaveGame()");

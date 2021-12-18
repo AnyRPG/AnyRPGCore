@@ -182,6 +182,7 @@ namespace AnyRPG {
         public CloseableWindow petSpawnWindow;
         public CloseableWindow playMenuWindow;
         public CloseableWindow settingsMenuWindow;
+        public CloseableWindow helpMenuWindow;
         public CloseableWindow creditsWindow;
         public CloseableWindow exitMenuWindow;
         public CloseableWindow deleteGameMenuWindow;
@@ -189,6 +190,7 @@ namespace AnyRPG {
         public CloseableWindow loadGameWindow;
         public CloseableWindow newGameWindow;
         public CloseableWindow confirmDestroyMenuWindow;
+        public CloseableWindow confirmCharacterStuckWindow;
         public CloseableWindow confirmCancelCutsceneMenuWindow;
         public CloseableWindow confirmSellItemMenuWindow;
         public CloseableWindow nameChangeWindow;
@@ -375,12 +377,14 @@ namespace AnyRPG {
             loadGameWindow.Configure(systemGameManager);
             newGameWindow.Configure(systemGameManager);
             confirmDestroyMenuWindow.Configure(systemGameManager);
+            confirmCharacterStuckWindow.Configure(systemGameManager);
             confirmCancelCutsceneMenuWindow.Configure(systemGameManager);
             confirmSellItemMenuWindow.Configure(systemGameManager);
             nameChangeWindow.Configure(systemGameManager);
             exitToMainMenuWindow.Configure(systemGameManager);
             confirmNewGameMenuWindow.Configure(systemGameManager);
             onScreenKeyboardWindow.Configure(systemGameManager);
+            helpMenuWindow.Configure(systemGameManager);
 
             // setting menu must go last because it checks all other windows opacity
             // which requires them to have configured their panels first
@@ -725,10 +729,12 @@ namespace AnyRPG {
                 deleteGameMenuWindow.CloseWindow();
                 copyGameMenuWindow.CloseWindow();
                 confirmDestroyMenuWindow.CloseWindow();
+                confirmCharacterStuckWindow.CloseWindow();
                 confirmSellItemMenuWindow.CloseWindow();
                 inGameMainMenuWindow.CloseWindow();
                 gamepadMainMenuWindow.CloseWindow();
                 petSpawnWindow.CloseWindow();
+                helpMenuWindow.CloseWindow();
 
                 // do not allow accidentally closing this while dead
                 if (playerManager.PlayerUnitSpawned == true && playerManager.MyCharacter.CharacterStats.IsAlive != false) {
@@ -785,6 +791,7 @@ namespace AnyRPG {
             deleteGameMenuWindow.CloseWindow();
             copyGameMenuWindow.CloseWindow();
             confirmDestroyMenuWindow.CloseWindow();
+            confirmCharacterStuckWindow.CloseWindow();
             confirmSellItemMenuWindow.CloseWindow();
         }
 
@@ -1371,6 +1378,7 @@ namespace AnyRPG {
             settingsMenuWindow.CloseableWindowContents.SetBackGroundColor(new Color32(0, 0, 0, (byte)opacityLevel));
             playerOptionsMenuWindow.CloseableWindowContents.SetBackGroundColor(new Color32(0, 0, 0, (byte)opacityLevel));
             onScreenKeyboardWindow.CloseableWindowContents.SetBackGroundColor(new Color32(0, 0, 0, (byte)opacityLevel));
+            helpMenuWindow.CloseableWindowContents.SetBackGroundColor(new Color32(0, 0, 0, (byte)opacityLevel));
         }
 
         public void SetLayerRecursive(GameObject objectName, int newLayer) {
