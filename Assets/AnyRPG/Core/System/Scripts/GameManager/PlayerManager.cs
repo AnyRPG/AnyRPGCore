@@ -411,6 +411,9 @@ namespace AnyRPG {
                 HandlePlayerUnitSpawn();
             }
             //activeUnitController.Init();
+            if (PlayerPrefs.HasKey("ShowNewPlayerHints") == false) {
+                uIManager.gamepadHintWindow.OpenWindow();
+            }
         }
 
         public void SetActiveUnitController(UnitController unitController) {

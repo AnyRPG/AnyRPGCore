@@ -38,7 +38,7 @@ namespace AnyRPG {
             //Debug.Log("MainMenuController.MainMenu()");
             currentNavigationController?.CurrentNavigableElement?.DeSelect();
             uIManager.CloseAllSystemWindows();
-            uIManager.exitToMainMenuWindow.OpenWindow();
+            uIManager.gamepadHintWindow.OpenWindow();
         }
 
         public void CharacterStuck() {

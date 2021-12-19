@@ -183,6 +183,7 @@ namespace AnyRPG {
         public CloseableWindow playMenuWindow;
         public CloseableWindow settingsMenuWindow;
         public CloseableWindow helpMenuWindow;
+        public CloseableWindow gamepadHintWindow;
         public CloseableWindow creditsWindow;
         public CloseableWindow exitMenuWindow;
         public CloseableWindow deleteGameMenuWindow;
@@ -385,6 +386,7 @@ namespace AnyRPG {
             confirmNewGameMenuWindow.Configure(systemGameManager);
             onScreenKeyboardWindow.Configure(systemGameManager);
             helpMenuWindow.Configure(systemGameManager);
+            gamepadHintWindow.Configure(systemGameManager);
 
             // setting menu must go last because it checks all other windows opacity
             // which requires them to have configured their panels first
@@ -735,6 +737,7 @@ namespace AnyRPG {
                 gamepadMainMenuWindow.CloseWindow();
                 petSpawnWindow.CloseWindow();
                 helpMenuWindow.CloseWindow();
+                gamepadHintWindow.CloseWindow();
 
                 // do not allow accidentally closing this while dead
                 if (playerManager.PlayerUnitSpawned == true && playerManager.MyCharacter.CharacterStats.IsAlive != false) {
