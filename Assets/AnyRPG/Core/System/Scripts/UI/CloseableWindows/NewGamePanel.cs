@@ -149,7 +149,7 @@ namespace AnyRPG {
         }
 
         public override void ProcessOpenWindowNotification() {
-            //Debug.Log("LoadGamePanel.OnOpenWindow()");
+            //Debug.Log("NewGamePanel.ProcessOpenWindowNotification()");
 
             base.ProcessOpenWindowNotification();
 
@@ -342,6 +342,7 @@ namespace AnyRPG {
         }
 
         public void HandleUpdateUnitProfileList() {
+            //Debug.Log("NameGamePanel.HandleUpdateUnitProfileList()");
             characterPanel.ShowOptionButtons();
         }
 

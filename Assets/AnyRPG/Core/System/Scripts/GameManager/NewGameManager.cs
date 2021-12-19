@@ -85,7 +85,7 @@ namespace AnyRPG {
         }
 
         public void SetupSaveData() {
-            //Debug.Log("NewGameManager.SetupSaveData()");
+            Debug.Log("NewGameManager.SetupSaveData()");
 
             saveData = new AnyRPGSaveData();
             saveData = saveManager.InitializeResourceLists(saveData, false);
@@ -168,7 +168,7 @@ namespace AnyRPG {
         }
 
         protected void UpdateUnitProfileList() {
-            
+            //Debug.Log("NewGameManager.UpdateUnitProfileList()");
             unitProfileList.Clear();
 
             if ((faction != null && faction.HideDefaultProfiles == false)
