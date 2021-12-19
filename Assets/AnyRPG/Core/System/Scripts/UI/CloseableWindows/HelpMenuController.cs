@@ -31,7 +31,7 @@ namespace AnyRPG {
             //Debug.Log("MainMenuController.ExitMenu()");
             currentNavigationController?.CurrentNavigableElement?.DeSelect();
             uIManager.CloseAllSystemWindows();
-            uIManager.exitMenuWindow.OpenWindow();
+            uIManager.keyboardHintWindow.OpenWindow();
         }
 
         public void GamepadHints() {
