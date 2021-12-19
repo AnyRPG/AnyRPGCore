@@ -149,12 +149,16 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   outlineImage: {fileID: 0}
   highlightOutlineColor: {r: 0.64705884, g: 0.64705884, b: 0.64705884, a: 0.6509804}
+  useSystemOutlineColor: 1
   highlightImage: {fileID: 1854822459358018990}
   highlightBackgroundOnSelect: 1
   highlightBackgroundOnInteract: 0
+  unHighlightBackgroundOnUnFocus: 1
+  unHighlightBackgroundOnLeave: 1
   highlightImageColor: {r: 0.64705884, g: 0.64705884, b: 0.64705884, a: 0.6509804}
   useUnfocusedColor: 1
   unFocusedColor: {r: 1, g: 1, b: 1, a: 0.15294118}
+  rectTransform: {fileID: 0}
   text: {fileID: 3214687621963727573}
   ignoreSystemImageTint: 0
   highlightButton: {fileID: 7805768700581976947}
@@ -170,6 +174,7 @@ MonoBehaviour:
   overrideDisabledColor: 0
   disabledColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 0.5019608}
   CapitalizeText: 0
+  mouseHoverSound: 1
 --- !u!1 &303762730594110332
 GameObject:
   m_ObjectHideFlags: 0
@@ -319,12 +324,16 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   outlineImage: {fileID: 0}
   highlightOutlineColor: {r: 0.64705884, g: 0.64705884, b: 0.64705884, a: 0.6509804}
+  useSystemOutlineColor: 1
   highlightImage: {fileID: 6869642734941557302}
   highlightBackgroundOnSelect: 1
   highlightBackgroundOnInteract: 0
+  unHighlightBackgroundOnUnFocus: 1
+  unHighlightBackgroundOnLeave: 1
   highlightImageColor: {r: 0.64705884, g: 0.64705884, b: 0.64705884, a: 0.6509804}
   useUnfocusedColor: 1
   unFocusedColor: {r: 1, g: 1, b: 1, a: 0.15294118}
+  rectTransform: {fileID: 0}
   text: {fileID: 8791068223435126557}
   ignoreSystemImageTint: 0
   highlightButton: {fileID: 303762730594110335}
@@ -340,6 +349,7 @@ MonoBehaviour:
   overrideDisabledColor: 0
   disabledColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 0.5019608}
   CapitalizeText: 0
+  mouseHoverSound: 1
 --- !u!1 &303762732064645360
 GameObject:
   m_ObjectHideFlags: 0
@@ -483,6 +493,149 @@ MonoBehaviour:
   m_hasFontAssetChanged: 0
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
+--- !u!1 &708315023344373520
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1036355865092283118}
+  - component: {fileID: 3877576992092264732}
+  - component: {fileID: 7134508661283691511}
+  - component: {fileID: 584247693145696712}
+  m_Layer: 0
+  m_Name: Text
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &1036355865092283118
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 708315023344373520}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 9130504177485588602}
+  m_RootOrder: 1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 1, y: 1}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 0, y: 0}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!33 &3877576992092264732
+MeshFilter:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 708315023344373520}
+  m_Mesh: {fileID: 0}
+--- !u!222 &7134508661283691511
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 708315023344373520}
+  m_CullTransparentMesh: 0
+--- !u!114 &584247693145696712
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 708315023344373520}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Material: {fileID: 0}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_RaycastTarget: 1
+  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
+  m_Maskable: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  m_text: HELP
+  m_isRightToLeft: 0
+  m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_fontSharedMaterials: []
+  m_fontMaterial: {fileID: 0}
+  m_fontMaterials: []
+  m_fontColor32:
+    serializedVersion: 2
+    rgba: 4294967295
+  m_fontColor: {r: 1, g: 1, b: 1, a: 1}
+  m_enableVertexGradient: 0
+  m_colorMode: 3
+  m_fontColorGradient:
+    topLeft: {r: 1, g: 1, b: 1, a: 1}
+    topRight: {r: 1, g: 1, b: 1, a: 1}
+    bottomLeft: {r: 1, g: 1, b: 1, a: 1}
+    bottomRight: {r: 1, g: 1, b: 1, a: 1}
+  m_fontColorGradientPreset: {fileID: 0}
+  m_spriteAsset: {fileID: 0}
+  m_tintAllSprites: 0
+  m_StyleSheet: {fileID: 0}
+  m_TextStyleHashCode: -1183493901
+  m_overrideHtmlColors: 0
+  m_faceColor:
+    serializedVersion: 2
+    rgba: 4294967295
+  m_fontSize: 40
+  m_fontSizeBase: 40
+  m_fontWeight: 400
+  m_enableAutoSizing: 0
+  m_fontSizeMin: 18
+  m_fontSizeMax: 72
+  m_fontStyle: 1
+  m_HorizontalAlignment: 2
+  m_VerticalAlignment: 512
+  m_textAlignment: 65535
+  m_characterSpacing: 0
+  m_wordSpacing: 0
+  m_lineSpacing: 0
+  m_lineSpacingMax: 0
+  m_paragraphSpacing: 0
+  m_charWidthMaxAdj: 0
+  m_enableWordWrapping: 1
+  m_wordWrappingRatios: 0.4
+  m_overflowMode: 0
+  m_linkedTextComponent: {fileID: 0}
+  parentLinkedComponent: {fileID: 0}
+  m_enableKerning: 1
+  m_enableExtraPadding: 0
+  checkPaddingRequired: 0
+  m_isRichText: 1
+  m_parseCtrlCharacters: 1
+  m_isOrthographic: 1
+  m_isCullingEnabled: 0
+  m_horizontalMapping: 0
+  m_verticalMapping: 0
+  m_uvLineOffset: 0
+  m_geometrySortingOrder: 0
+  m_IsTextObjectScaleStatic: 0
+  m_VertexBufferAutoSizeReduction: 1
+  m_useMaxVisibleDescender: 1
+  m_pageToDisplay: 1
+  m_margin: {x: 0, y: 0, z: 0, w: 0}
+  m_isUsingLegacyAnimationComponent: 0
+  m_isVolumetricText: 0
+  m_hasFontAssetChanged: 0
+  m_baseMaterial: {fileID: 0}
+  m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
 --- !u!1 &894920487387626026
 GameObject:
   m_ObjectHideFlags: 0
@@ -518,6 +671,7 @@ RectTransform:
   - {fileID: 4801597268921291658}
   - {fileID: 4279339243118316418}
   - {fileID: 4532857046383876245}
+  - {fileID: 9130504177485588602}
   - {fileID: 4738124247059918460}
   - {fileID: 1595193919759911716}
   m_Father: {fileID: 1577600902358939125}
@@ -595,6 +749,7 @@ MonoBehaviour:
   - {fileID: 3249158636845063192}
   - {fileID: 1597165892630499296}
   - {fileID: 1034197417366089657}
+  - {fileID: 2194566614338924057}
   - {fileID: 8596303712244432722}
   - {fileID: 7886698005782213368}
 --- !u!1 &1147847405789232523
@@ -889,12 +1044,16 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   outlineImage: {fileID: 0}
   highlightOutlineColor: {r: 0.64705884, g: 0.64705884, b: 0.64705884, a: 0.6509804}
+  useSystemOutlineColor: 1
   highlightImage: {fileID: 1291365079426810318}
   highlightBackgroundOnSelect: 1
   highlightBackgroundOnInteract: 0
+  unHighlightBackgroundOnUnFocus: 1
+  unHighlightBackgroundOnLeave: 1
   highlightImageColor: {r: 0.64705884, g: 0.64705884, b: 0.64705884, a: 0.6509804}
   useUnfocusedColor: 1
   unFocusedColor: {r: 1, g: 1, b: 1, a: 0.15294118}
+  rectTransform: {fileID: 0}
   text: {fileID: 2379604321078152282}
   ignoreSystemImageTint: 0
   highlightButton: {fileID: 1518235933303862991}
@@ -910,6 +1069,7 @@ MonoBehaviour:
   overrideDisabledColor: 0
   disabledColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 0.5019608}
   CapitalizeText: 0
+  mouseHoverSound: 1
 --- !u!1 &1518235934756756800
 GameObject:
   m_ObjectHideFlags: 0
@@ -1087,11 +1247,11 @@ RectTransform:
   - {fileID: 7653316972524606092}
   - {fileID: 1595193921225400488}
   m_Father: {fileID: 415243062334907028}
-  m_RootOrder: 6
+  m_RootOrder: 7
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 1}
   m_AnchorMax: {x: 0.5, y: 1}
-  m_AnchoredPosition: {x: 0, y: -365}
+  m_AnchoredPosition: {x: 0, y: -425}
   m_SizeDelta: {x: 457, y: 50}
   m_Pivot: {x: 0.5, y: 1}
 --- !u!222 &1595193919759911896
@@ -1202,12 +1362,16 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   outlineImage: {fileID: 0}
   highlightOutlineColor: {r: 0.64705884, g: 0.64705884, b: 0.64705884, a: 0.6509804}
+  useSystemOutlineColor: 1
   highlightImage: {fileID: 7578173384238773073}
   highlightBackgroundOnSelect: 1
   highlightBackgroundOnInteract: 0
+  unHighlightBackgroundOnUnFocus: 1
+  unHighlightBackgroundOnLeave: 1
   highlightImageColor: {r: 0.64705884, g: 0.64705884, b: 0.64705884, a: 0.6509804}
   useUnfocusedColor: 1
   unFocusedColor: {r: 1, g: 1, b: 1, a: 0.15294118}
+  rectTransform: {fileID: 0}
   text: {fileID: 4018803533102851719}
   ignoreSystemImageTint: 0
   highlightButton: {fileID: 1595193919759911718}
@@ -1223,6 +1387,7 @@ MonoBehaviour:
   overrideDisabledColor: 0
   disabledColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 0.5019608}
   CapitalizeText: 0
+  mouseHoverSound: 1
 --- !u!1 &1595193921225400489
 GameObject:
   m_ObjectHideFlags: 0
@@ -1734,12 +1899,16 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   outlineImage: {fileID: 0}
   highlightOutlineColor: {r: 0.64705884, g: 0.64705884, b: 0.64705884, a: 0.6509804}
+  useSystemOutlineColor: 1
   highlightImage: {fileID: 1747295781232742695}
   highlightBackgroundOnSelect: 1
   highlightBackgroundOnInteract: 0
+  unHighlightBackgroundOnUnFocus: 1
+  unHighlightBackgroundOnLeave: 1
   highlightImageColor: {r: 0.64705884, g: 0.64705884, b: 0.64705884, a: 0.6509804}
   useUnfocusedColor: 1
   unFocusedColor: {r: 1, g: 1, b: 1, a: 0.15294118}
+  rectTransform: {fileID: 0}
   text: {fileID: 4237779655763305723}
   ignoreSystemImageTint: 0
   highlightButton: {fileID: 1957221727824972122}
@@ -1755,6 +1924,7 @@ MonoBehaviour:
   overrideDisabledColor: 0
   disabledColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 0.5019608}
   CapitalizeText: 0
+  mouseHoverSound: 1
 --- !u!1 &1957221728468378325
 GameObject:
   m_ObjectHideFlags: 0
@@ -2272,12 +2442,16 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   outlineImage: {fileID: 0}
   highlightOutlineColor: {r: 0.64705884, g: 0.64705884, b: 0.64705884, a: 0.6509804}
+  useSystemOutlineColor: 1
   highlightImage: {fileID: 4909643919364876755}
   highlightBackgroundOnSelect: 1
   highlightBackgroundOnInteract: 0
+  unHighlightBackgroundOnUnFocus: 1
+  unHighlightBackgroundOnLeave: 1
   highlightImageColor: {r: 0.64705884, g: 0.64705884, b: 0.64705884, a: 0.6509804}
   useUnfocusedColor: 1
   unFocusedColor: {r: 1, g: 1, b: 1, a: 0.15294118}
+  rectTransform: {fileID: 0}
   text: {fileID: 657032775068857801}
   ignoreSystemImageTint: 0
   highlightButton: {fileID: 6136405515016680150}
@@ -2293,6 +2467,7 @@ MonoBehaviour:
   overrideDisabledColor: 0
   disabledColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 0.5019608}
   CapitalizeText: 0
+  mouseHoverSound: 1
 --- !u!1 &3378128579745239843
 GameObject:
   m_ObjectHideFlags: 0
@@ -2695,11 +2870,11 @@ RectTransform:
   - {fileID: 4325627793042643944}
   - {fileID: 6496074307349777344}
   m_Father: {fileID: 415243062334907028}
-  m_RootOrder: 5
+  m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 1}
   m_AnchorMax: {x: 0.5, y: 1}
-  m_AnchoredPosition: {x: 0, y: -305}
+  m_AnchoredPosition: {x: 0, y: -365}
   m_SizeDelta: {x: 457, y: 50}
   m_Pivot: {x: 0.5, y: 1}
 --- !u!222 &1192392643885372690
@@ -2810,12 +2985,16 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   outlineImage: {fileID: 0}
   highlightOutlineColor: {r: 0.64705884, g: 0.64705884, b: 0.64705884, a: 0.6509804}
+  useSystemOutlineColor: 1
   highlightImage: {fileID: 4697809851208284350}
   highlightBackgroundOnSelect: 1
   highlightBackgroundOnInteract: 0
+  unHighlightBackgroundOnUnFocus: 1
+  unHighlightBackgroundOnLeave: 1
   highlightImageColor: {r: 0.64705884, g: 0.64705884, b: 0.64705884, a: 0.6509804}
   useUnfocusedColor: 1
   unFocusedColor: {r: 1, g: 1, b: 1, a: 0.15294118}
+  rectTransform: {fileID: 0}
   text: {fileID: 9220440787269219937}
   ignoreSystemImageTint: 0
   highlightButton: {fileID: 145857101676289557}
@@ -2831,6 +3010,7 @@ MonoBehaviour:
   overrideDisabledColor: 0
   disabledColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 0.5019608}
   CapitalizeText: 0
+  mouseHoverSound: 1
 --- !u!1 &3983013924557802447
 GameObject:
   m_ObjectHideFlags: 0
@@ -2928,11 +3108,13 @@ MonoBehaviour:
   addToWindowStack: 1
   userCloseable: 1
   focusFirstButtonOnOpen: 1
+  focusCurrentButtonOnOpen: 0
   focusActiveSubPanel: 0
   uINavigationControllers:
   - {fileID: 5804230299135960909}
   - {fileID: 5279146297338950632}
   subPanels: []
+  hintBarController: {fileID: 0}
   mainMenuButton: {fileID: 8596303712244432722}
 --- !u!1 &4052153476606613030
 GameObject:
@@ -3301,12 +3483,16 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   outlineImage: {fileID: 0}
   highlightOutlineColor: {r: 0.64705884, g: 0.64705884, b: 0.64705884, a: 0.6509804}
+  useSystemOutlineColor: 1
   highlightImage: {fileID: 1140983949677199427}
   highlightBackgroundOnSelect: 1
   highlightBackgroundOnInteract: 0
+  unHighlightBackgroundOnUnFocus: 1
+  unHighlightBackgroundOnLeave: 1
   highlightImageColor: {r: 0.64705884, g: 0.64705884, b: 0.64705884, a: 0.6509804}
   useUnfocusedColor: 1
   unFocusedColor: {r: 1, g: 1, b: 1, a: 0.15294118}
+  rectTransform: {fileID: 0}
   text: {fileID: 4995705017193691106}
   ignoreSystemImageTint: 0
   highlightButton: {fileID: 4279339243118316416}
@@ -3322,6 +3508,182 @@ MonoBehaviour:
   overrideDisabledColor: 0
   disabledColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 0.5019608}
   CapitalizeText: 0
+  mouseHoverSound: 1
+--- !u!1 &4280030211053697191
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 9130504177485588602}
+  - component: {fileID: 1228008844437507983}
+  - component: {fileID: 7443628733384825870}
+  - component: {fileID: 6492645458283953758}
+  - component: {fileID: 2194566614338924057}
+  m_Layer: 5
+  m_Name: HelpButton
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &9130504177485588602
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4280030211053697191}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: -0.000017136334}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children:
+  - {fileID: 8392490192956182381}
+  - {fileID: 1036355865092283118}
+  m_Father: {fileID: 415243062334907028}
+  m_RootOrder: 5
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 1}
+  m_AnchorMax: {x: 0.5, y: 1}
+  m_AnchoredPosition: {x: 0, y: -305}
+  m_SizeDelta: {x: 457, y: 50}
+  m_Pivot: {x: 0.5, y: 1}
+--- !u!222 &1228008844437507983
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4280030211053697191}
+  m_CullTransparentMesh: 0
+--- !u!114 &7443628733384825870
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4280030211053697191}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Material: {fileID: 0}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_RaycastTarget: 1
+  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
+  m_Maskable: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  m_Sprite: {fileID: 21300000, guid: 8da48cffb618593408a2a254b1a9b78c, type: 3}
+  m_Type: 1
+  m_PreserveAspect: 0
+  m_FillCenter: 1
+  m_FillMethod: 4
+  m_FillAmount: 1
+  m_FillClockwise: 1
+  m_FillOrigin: 0
+  m_UseSpriteMesh: 0
+  m_PixelsPerUnitMultiplier: 1
+--- !u!114 &6492645458283953758
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4280030211053697191}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Navigation:
+    m_Mode: 0
+    m_WrapAround: 0
+    m_SelectOnUp: {fileID: 0}
+    m_SelectOnDown: {fileID: 0}
+    m_SelectOnLeft: {fileID: 0}
+    m_SelectOnRight: {fileID: 0}
+  m_Transition: 1
+  m_Colors:
+    m_NormalColor: {r: 0.6397059, g: 0.6397059, b: 0.6397059, a: 0.109}
+    m_HighlightedColor: {r: 0.64705884, g: 0.64705884, b: 0.64705884, a: 0.403}
+    m_PressedColor: {r: 0.4705882, g: 0.4705882, b: 0.4705882, a: 0.291}
+    m_SelectedColor: {r: 0.64705884, g: 0.64705884, b: 0.64705884, a: 0.403}
+    m_DisabledColor: {r: 0.6392157, g: 0.6392157, b: 0.6392157, a: 0.0627451}
+    m_ColorMultiplier: 1
+    m_FadeDuration: 0.05
+  m_SpriteState:
+    m_HighlightedSprite: {fileID: 0}
+    m_PressedSprite: {fileID: 0}
+    m_SelectedSprite: {fileID: 0}
+    m_DisabledSprite: {fileID: 0}
+  m_AnimationTriggers:
+    m_NormalTrigger: Normal
+    m_HighlightedTrigger: Highlighted
+    m_PressedTrigger: Pressed
+    m_SelectedTrigger: Highlighted
+    m_DisabledTrigger: Disabled
+  m_Interactable: 1
+  m_TargetGraphic: {fileID: 7443628733384825870}
+  m_OnClick:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 2682182123893273607}
+        m_TargetAssemblyTypeName: AnyRPG.InGameMainMenuController, Assembly-CSharp
+        m_MethodName: HelpMenu
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+--- !u!114 &2194566614338924057
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4280030211053697191}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7c3c5d4d28c73df48ad352b682a49e88, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  outlineImage: {fileID: 0}
+  highlightOutlineColor: {r: 0.64705884, g: 0.64705884, b: 0.64705884, a: 0.6509804}
+  useSystemOutlineColor: 1
+  highlightImage: {fileID: 2137804212063716453}
+  highlightBackgroundOnSelect: 1
+  highlightBackgroundOnInteract: 0
+  unHighlightBackgroundOnUnFocus: 1
+  unHighlightBackgroundOnLeave: 1
+  highlightImageColor: {r: 0.64705884, g: 0.64705884, b: 0.64705884, a: 0.6509804}
+  useUnfocusedColor: 1
+  unFocusedColor: {r: 1, g: 1, b: 1, a: 0.15294118}
+  rectTransform: {fileID: 0}
+  text: {fileID: 584247693145696712}
+  ignoreSystemImageTint: 0
+  highlightButton: {fileID: 6492645458283953758}
+  selectedButtonColor: {r: 0.64705884, g: 0.64705884, b: 0.64705884, a: 0.6509804}
+  overrideNormalColor: 0
+  normalColor: {r: 0.6392157, g: 0.6392157, b: 0.6392157, a: 0.10980392}
+  overrideHighlightedColor: 0
+  highlightedColor: {r: 0.64705884, g: 0.64705884, b: 0.64705884, a: 0.40392157}
+  overridePressedColor: 0
+  pressedColor: {r: 0.47058824, g: 0.47058824, b: 0.47058824, a: 0.2901961}
+  overrideSelectedColor: 0
+  selectedColor: {r: 0.64705884, g: 0.64705884, b: 0.64705884, a: 0.40392157}
+  overrideDisabledColor: 0
+  disabledColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 0.5019608}
+  CapitalizeText: 0
+  mouseHoverSound: 1
 --- !u!1 &4801597268921291659
 GameObject:
   m_ObjectHideFlags: 0
@@ -3471,12 +3833,16 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   outlineImage: {fileID: 0}
   highlightOutlineColor: {r: 0.64705884, g: 0.64705884, b: 0.64705884, a: 0.6509804}
+  useSystemOutlineColor: 1
   highlightImage: {fileID: 8347526057488654301}
   highlightBackgroundOnSelect: 1
   highlightBackgroundOnInteract: 0
+  unHighlightBackgroundOnUnFocus: 1
+  unHighlightBackgroundOnLeave: 1
   highlightImageColor: {r: 0.64705884, g: 0.64705884, b: 0.64705884, a: 0.6509804}
   useUnfocusedColor: 1
   unFocusedColor: {r: 1, g: 1, b: 1, a: 0.15294118}
+  rectTransform: {fileID: 0}
   text: {fileID: 8553854438288943389}
   ignoreSystemImageTint: 0
   highlightButton: {fileID: 4801597268921291656}
@@ -3492,6 +3858,7 @@ MonoBehaviour:
   overrideDisabledColor: 0
   disabledColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 0.5019608}
   CapitalizeText: 0
+  mouseHoverSound: 1
 --- !u!1 &4801597269334669319
 GameObject:
   m_ObjectHideFlags: 0
@@ -3784,12 +4151,16 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   outlineImage: {fileID: 0}
   highlightOutlineColor: {r: 0.64705884, g: 0.64705884, b: 0.64705884, a: 0.6509804}
+  useSystemOutlineColor: 1
   highlightImage: {fileID: 3695287449953490634}
   highlightBackgroundOnSelect: 1
   highlightBackgroundOnInteract: 0
+  unHighlightBackgroundOnUnFocus: 1
+  unHighlightBackgroundOnLeave: 1
   highlightImageColor: {r: 0.64705884, g: 0.64705884, b: 0.64705884, a: 0.6509804}
   useUnfocusedColor: 1
   unFocusedColor: {r: 1, g: 1, b: 1, a: 0.15294118}
+  rectTransform: {fileID: 0}
   text: {fileID: 8762991217651945348}
   ignoreSystemImageTint: 0
   highlightButton: {fileID: 1538603962128349894}
@@ -3805,6 +4176,7 @@ MonoBehaviour:
   overrideDisabledColor: 0
   disabledColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 0.5019608}
   CapitalizeText: 0
+  mouseHoverSound: 1
 --- !u!1 &5229943238558548493
 GameObject:
   m_ObjectHideFlags: 0
@@ -4104,12 +4476,16 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   outlineImage: {fileID: 0}
   highlightOutlineColor: {r: 0.64705884, g: 0.64705884, b: 0.64705884, a: 0.6509804}
+  useSystemOutlineColor: 1
   highlightImage: {fileID: 420833779034836968}
   highlightBackgroundOnSelect: 1
   highlightBackgroundOnInteract: 0
+  unHighlightBackgroundOnUnFocus: 1
+  unHighlightBackgroundOnLeave: 1
   highlightImageColor: {r: 0.64705884, g: 0.64705884, b: 0.64705884, a: 0.6509804}
   useUnfocusedColor: 1
   unFocusedColor: {r: 1, g: 1, b: 1, a: 0.15294118}
+  rectTransform: {fileID: 0}
   text: {fileID: 256255049884808386}
   ignoreSystemImageTint: 0
   highlightButton: {fileID: 3438737342337733737}
@@ -4125,6 +4501,82 @@ MonoBehaviour:
   overrideDisabledColor: 0
   disabledColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 0.5019608}
   CapitalizeText: 0
+  mouseHoverSound: 1
+--- !u!1 &6132706858959517462
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 8392490192956182381}
+  - component: {fileID: 8577580905240814355}
+  - component: {fileID: 2137804212063716453}
+  m_Layer: 5
+  m_Name: HighlightLine
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &8392490192956182381
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6132706858959517462}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0.00006482005}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 9130504177485588602}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 1, y: 1}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 0, y: 0}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!222 &8577580905240814355
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6132706858959517462}
+  m_CullTransparentMesh: 0
+--- !u!114 &2137804212063716453
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6132706858959517462}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Material: {fileID: 0}
+  m_Color: {r: 0.509434, g: 0.509434, b: 0.509434, a: 0}
+  m_RaycastTarget: 0
+  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
+  m_Maskable: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  m_Sprite: {fileID: 21300000, guid: b7facaf16fa121a4bae5604e0be72d81, type: 3}
+  m_Type: 0
+  m_PreserveAspect: 0
+  m_FillCenter: 1
+  m_FillMethod: 4
+  m_FillAmount: 1
+  m_FillClockwise: 1
+  m_FillOrigin: 0
+  m_UseSpriteMesh: 0
+  m_PixelsPerUnitMultiplier: 1
 --- !u!1 &6418962634863178782
 GameObject:
   m_ObjectHideFlags: 0
@@ -4635,12 +5087,16 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   outlineImage: {fileID: 0}
   highlightOutlineColor: {r: 0.64705884, g: 0.64705884, b: 0.64705884, a: 0.6509804}
+  useSystemOutlineColor: 1
   highlightImage: {fileID: 7407291422147363142}
   highlightBackgroundOnSelect: 1
   highlightBackgroundOnInteract: 0
+  unHighlightBackgroundOnUnFocus: 1
+  unHighlightBackgroundOnLeave: 1
   highlightImageColor: {r: 0.64705884, g: 0.64705884, b: 0.64705884, a: 0.6509804}
   useUnfocusedColor: 1
   unFocusedColor: {r: 1, g: 1, b: 1, a: 0.15294118}
+  rectTransform: {fileID: 0}
   text: {fileID: 1590385577631341602}
   ignoreSystemImageTint: 0
   highlightButton: {fileID: 7773645099980338262}
@@ -4656,6 +5112,7 @@ MonoBehaviour:
   overrideDisabledColor: 0
   disabledColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 0.5019608}
   CapitalizeText: 0
+  mouseHoverSound: 1
 --- !u!1 &6796241701993361765
 GameObject:
   m_ObjectHideFlags: 0
@@ -5166,12 +5623,16 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   outlineImage: {fileID: 0}
   highlightOutlineColor: {r: 0.64705884, g: 0.64705884, b: 0.64705884, a: 0.6509804}
+  useSystemOutlineColor: 1
   highlightImage: {fileID: 8095896946235388779}
   highlightBackgroundOnSelect: 1
   highlightBackgroundOnInteract: 0
+  unHighlightBackgroundOnUnFocus: 1
+  unHighlightBackgroundOnLeave: 1
   highlightImageColor: {r: 0.64705884, g: 0.64705884, b: 0.64705884, a: 0.6509804}
   useUnfocusedColor: 1
   unFocusedColor: {r: 1, g: 1, b: 1, a: 0.15294118}
+  rectTransform: {fileID: 0}
   text: {fileID: 3721881616377229762}
   ignoreSystemImageTint: 0
   highlightButton: {fileID: 2274450185559560553}
@@ -5187,6 +5648,7 @@ MonoBehaviour:
   overrideDisabledColor: 0
   disabledColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 0.5019608}
   CapitalizeText: 0
+  mouseHoverSound: 1
 --- !u!1 &7071435840246790137
 GameObject:
   m_ObjectHideFlags: 0
@@ -5773,12 +6235,16 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   outlineImage: {fileID: 0}
   highlightOutlineColor: {r: 0.64705884, g: 0.64705884, b: 0.64705884, a: 0.6509804}
+  useSystemOutlineColor: 1
   highlightImage: {fileID: 3428487328944313537}
   highlightBackgroundOnSelect: 1
   highlightBackgroundOnInteract: 0
+  unHighlightBackgroundOnUnFocus: 1
+  unHighlightBackgroundOnLeave: 1
   highlightImageColor: {r: 0.64705884, g: 0.64705884, b: 0.64705884, a: 0.6509804}
   useUnfocusedColor: 1
   unFocusedColor: {r: 1, g: 1, b: 1, a: 0.15294118}
+  rectTransform: {fileID: 0}
   text: {fileID: 2905411463877398306}
   ignoreSystemImageTint: 0
   highlightButton: {fileID: 5662704845966359029}
@@ -5794,6 +6260,7 @@ MonoBehaviour:
   overrideDisabledColor: 0
   disabledColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 0.5019608}
   CapitalizeText: 0
+  mouseHoverSound: 1
 --- !u!1 &7761823247503272473
 GameObject:
   m_ObjectHideFlags: 0
@@ -6328,6 +6795,12 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 7bcca545fc01aca41a28a47d6c48cc54, type: 3}
+--- !u!224 &6562936302325897049 stripped
+RectTransform:
+  m_CorrespondingSourceObject: {fileID: 348368129559192123, guid: 7bcca545fc01aca41a28a47d6c48cc54,
+    type: 3}
+  m_PrefabInstance: {fileID: 6899968986521793890}
+  m_PrefabAsset: {fileID: 0}
 --- !u!114 &3504448971236147736 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 8026488732843800442, guid: 7bcca545fc01aca41a28a47d6c48cc54,
@@ -6340,12 +6813,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6a1fa4f3d9f437a4398328dade060697, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!224 &6562936302325897049 stripped
-RectTransform:
-  m_CorrespondingSourceObject: {fileID: 348368129559192123, guid: 7bcca545fc01aca41a28a47d6c48cc54,
-    type: 3}
-  m_PrefabInstance: {fileID: 6899968986521793890}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &8693997955653080274
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -6465,6 +6932,12 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 7bcca545fc01aca41a28a47d6c48cc54, type: 3}
+--- !u!224 &8967493571214964457 stripped
+RectTransform:
+  m_CorrespondingSourceObject: {fileID: 348368129559192123, guid: 7bcca545fc01aca41a28a47d6c48cc54,
+    type: 3}
+  m_PrefabInstance: {fileID: 8693997955653080274}
+  m_PrefabAsset: {fileID: 0}
 --- !u!114 &1712662988650505128 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 8026488732843800442, guid: 7bcca545fc01aca41a28a47d6c48cc54,
@@ -6477,9 +6950,3 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6a1fa4f3d9f437a4398328dade060697, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!224 &8967493571214964457 stripped
-RectTransform:
-  m_CorrespondingSourceObject: {fileID: 348368129559192123, guid: 7bcca545fc01aca41a28a47d6c48cc54,
-    type: 3}
-  m_PrefabInstance: {fileID: 8693997955653080274}
-  m_PrefabAsset: {fileID: 0}

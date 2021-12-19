@@ -77,19 +77,20 @@ namespace AnyRPG {
         protected bool eventSubscriptionsInitialized = false;
 
         // game manager references
-        SaveManager saveManager = null;
-        SystemEventManager systemEventManager = null;
-        UIManager uIManager = null;
-        LevelManager levelManager = null;
-        CameraManager cameraManager = null;
-        SystemAbilityController systemAbilityController = null;
-        LogManager logManager = null;
-        CastTargettingManager castTargettingManager = null;
-        CombatTextManager combatTextManager = null;
-        InventoryManager inventoryManager = null;
-        ActionBarManager actionBarManager = null;
-        MessageFeedManager messageFeedManager = null;
-        ObjectPooler objectPooler = null;
+        protected SaveManager saveManager = null;
+        protected SystemEventManager systemEventManager = null;
+        protected UIManager uIManager = null;
+        protected LevelManager levelManager = null;
+        protected CameraManager cameraManager = null;
+        protected SystemAbilityController systemAbilityController = null;
+        protected LogManager logManager = null;
+        protected CastTargettingManager castTargettingManager = null;
+        protected CombatTextManager combatTextManager = null;
+        protected InventoryManager inventoryManager = null;
+        protected ActionBarManager actionBarManager = null;
+        protected MessageFeedManager messageFeedManager = null;
+        protected ObjectPooler objectPooler = null;
+        protected ControlsManager controlsManager = null;
 
         public BaseCharacter MyCharacter { get => character; set => character = value; }
 
@@ -124,6 +125,7 @@ namespace AnyRPG {
             castTargettingManager = systemGameManager.CastTargettingManager;
             inventoryManager = systemGameManager.InventoryManager;
             objectPooler = systemGameManager.ObjectPooler;
+            controlsManager = systemGameManager.ControlsManager;
 
             PerformRequiredPropertyChecks();
             CreateEventSubscriptions();
@@ -411,6 +413,13 @@ namespace AnyRPG {
                 HandlePlayerUnitSpawn();
             }
             //activeUnitController.Init();
+            if (PlayerPrefs.HasKey("ShowNewPlayerHints") == false) {
+                if (controlsManager.GamePadModeActive == true) {
+                    uIManager.gamepadHintWindow.OpenWindow();
+                } else {
+                    uIManager.keyboardHintWindow.OpenWindow();
+                }
+            }
         }
 
         public void SetActiveUnitController(UnitController unitController) {
