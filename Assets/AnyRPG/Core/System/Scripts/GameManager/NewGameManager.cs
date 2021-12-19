@@ -85,7 +85,7 @@ namespace AnyRPG {
         }
 
         public void SetupSaveData() {
-            Debug.Log("NewGameManager.SetupSaveData()");
+            //Debug.Log("NewGameManager.SetupSaveData()");
 
             saveData = new AnyRPGSaveData();
             saveData = saveManager.InitializeResourceLists(saveData, false);
