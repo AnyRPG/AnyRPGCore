@@ -6,8 +6,8 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/ALostSoul/Games/ALostSoul/Scenes/Game/ALostSoulGame/ALostSoulGame.unity
-    guid: 9ebe3041afae4124286a6eeaa941a5c8
+    path: Assets/ALostSoul/Games/ALostSoulStoryDemo/Scenes/Game/ALostSoulStoryDemoGame/ALostSoulStoryDemoGame.unity
+    guid: 0a6a387f1a640604ab86081d60dd1ead
   - enabled: 1
     path: Assets/ALostSoul/Games/ALostSoulCharacterDemo/Scenes/Game/ALostSoulCharacterDemoGame/ALostSoulCharacterDemoGame.unity
     guid: 4f5e18110aa706b49b11a4673427ebd3
@@ -23,36 +23,6 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/AnyRPG/Core/System/Scenes/MainMenu/MainMenu.unity
     guid: 796bbdccf792ca145a55c45c89ec7454
-  - enabled: 1
-    path: Assets/ALostSoul/Games/ALostSoul/Scenes/Content/BirchGrove/BirchGrove.unity
-    guid: a4e1d50e5189b67438879344cf2eab7a
-  - enabled: 1
-    path: Assets/ALostSoul/Games/ALostSoul/Scenes/Content/SunTemple/SunTemple.unity
-    guid: dbb1b5ef519de394989582f112444a32
-  - enabled: 1
-    path: Assets/ALostSoul/Games/ALostSoul/Scenes/Content/BirchGroveCutScene/BirchGroveCutScene.unity
-    guid: ed06c27521f1c4144a3985641b363b6f
-  - enabled: 1
-    path: Assets/ALostSoul/Games/ALostSoul/Scenes/Content/CrystalMine/CrystalMine.unity
-    guid: 571c1c435cccf0b4f8f1c8167b81198f
-  - enabled: 1
-    path: Assets/ALostSoul/Games/ALostSoul/Scenes/Content/LightfuryOutpost/LightfuryOutpost.unity
-    guid: be70a482f172d7748b2aac9f6d99bb99
-  - enabled: 1
-    path: Assets/ALostSoul/Games/ALostSoul/Scenes/Content/ManaSeal/ManaSeal.unity
-    guid: bb5fa340d9bd909488bb6e58f56736cb
-  - enabled: 1
-    path: Assets/ALostSoul/Games/ALostSoul/Scenes/Content/ManaSealCutScene/ManaSealCutScene.unity
-    guid: b3061a53fc08c504bbac1a3ce7884330
-  - enabled: 1
-    path: Assets/ALostSoul/Games/ALostSoul/Scenes/Content/HistoryOfMagicCutScene/HistoryOfMagicCutScene.unity
-    guid: b5b79bfee5e6dae4e94bc95069e0a9e4
-  - enabled: 1
-    path: Assets/ALostSoul/Games/ALostSoul/Scenes/Content/WarOfTheMagiCutScene/WarOfTheMagiCutScene.unity
-    guid: 5076096bb7ee6ba479b12e782cd91e7a
-  - enabled: 1
-    path: Assets/ALostSoul/Games/ALostSoul/Scenes/Content/TempleOfAncientEnergy/TempleOfAncientEnergy.unity
-    guid: d8d0b380591bfff4db2868019dddcbf9
   - enabled: 1
     path: Assets/ALostSoul/Content/ALostSoulDemoShared/Scenes/ExampleSoulForge/ExampleSoulForge.unity
     guid: e94e746e738fe2240bfc77cc3c5fad59
