@@ -176,13 +176,16 @@ namespace AnyRPG {
                 }
             }
 
-            uIManager.ProcessInput();
+            // only send input to the next block if the name change window is not open
+            if (uIManager.nameChangeWindow.IsOpen == false) {
+                uIManager.ProcessInput();
 
-            if (windowManager.NavigatingInterface && (inputManager.KeyBindWasPressed("CANCEL") || inputManager.KeyBindWasPressed("JOYSTICKBUTTON1"))) {
-                windowManager.EndNavigateInterface();
-            }
-            if (inputManager.KeyBindWasPressed("JOYSTICKBUTTON6")) {
-                windowManager.NavigateInterface();
+                if (windowManager.NavigatingInterface && (inputManager.KeyBindWasPressed("CANCEL") || inputManager.KeyBindWasPressed("JOYSTICKBUTTON1"))) {
+                    windowManager.EndNavigateInterface();
+                }
+                if (inputManager.KeyBindWasPressed("JOYSTICKBUTTON6")) {
+                    windowManager.NavigateInterface();
+                }
             }
 
             // if the window manager has open windows, allow it to process commands
@@ -192,6 +195,11 @@ namespace AnyRPG {
             windowStackCount = windowManager.WindowStack.Count;
             if (windowStackCount > 0) {
                 windowManager.Navigate();
+            }
+
+            if (uIManager.nameChangeWindow.IsOpen == true) {
+                //Debug.Log("Not allowing movement or attacks during name change");
+                return;
             }
 
             if (windowStackCount == 0 || gamePadInputActive == false) {

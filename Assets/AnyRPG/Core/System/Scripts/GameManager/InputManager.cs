@@ -106,7 +106,10 @@ namespace AnyRPG {
             lastRegisteredFrame = Time.frameCount;
 
             /*
-            if (uIManager.nameChangeWindow.IsOpen) {
+            // this block is commented out because the on screen keyboard needs the key presses to be registered
+            // instead of this, the controls manager will take care of ensuring that inputs are not sent to inappropriate systems
+            // when the name change window is open
+            if (uIManager.nameChangeWindow.IsOpen == true) {
                 //Debug.Log("Not allowing registration of keystrokes to keybinds during name change");
                 return;
             }
