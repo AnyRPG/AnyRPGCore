@@ -937,8 +937,7 @@ namespace AnyRPG {
 
         private void HandleCancelButtonPressed() {
             //Debug.Log("HandleCancelButtonPressed()");
-            if (inputManager.KeyBindWasPressed("CANCEL")
-                || inputManager.KeyBindWasPressed("CANCELALL")
+            if (inputManager.KeyBindWasPressed("CANCELALL")
                 || (inputManager.KeyBindWasPressed("JOYSTICKBUTTON1") && controlsManager.RightTriggerDown == false && controlsManager.LeftTriggerDown == false)) {
                 playerManager.UnitController.ClearTarget();
                 if (playerManager.ActiveCharacter.CharacterStats.IsAlive != false) {

@@ -141,7 +141,7 @@ namespace AnyRPG {
                     //Debug.Log("Accept");
                     windowStack[windowStack.Count - 1].Accept();
                 }
-                if (inputManager.KeyBindWasPressed("CANCEL") || inputManager.KeyBindWasPressed("JOYSTICKBUTTON1")) {
+                if (inputManager.KeyBindWasPressed("JOYSTICKBUTTON1")) {
                     windowStack[windowStack.Count - 1].Cancel();
                 }
                 if (inputManager.KeyBindWasPressed("JOYSTICKBUTTON2")) {

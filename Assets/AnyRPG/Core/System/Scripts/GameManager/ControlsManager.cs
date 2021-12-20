@@ -180,7 +180,7 @@ namespace AnyRPG {
             if (uIManager.nameChangeWindow.IsOpen == false) {
                 uIManager.ProcessInput();
 
-                if (windowManager.NavigatingInterface && (inputManager.KeyBindWasPressed("CANCEL") || inputManager.KeyBindWasPressed("JOYSTICKBUTTON1"))) {
+                if (windowManager.NavigatingInterface && inputManager.KeyBindWasPressed("JOYSTICKBUTTON1")) {
                     windowManager.EndNavigateInterface();
                 }
                 if (inputManager.KeyBindWasPressed("JOYSTICKBUTTON6")) {

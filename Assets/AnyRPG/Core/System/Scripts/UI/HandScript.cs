@@ -63,7 +63,7 @@ namespace AnyRPG {
                     }
                 }
             }
-            if (inputManager.KeyBindWasPressed("CANCEL") || inputManager.KeyBindWasPressed("CANCELALL")) {
+            if (inputManager.KeyBindWasPressed("CANCELALL")) {
                 Drop();
             }
         }
