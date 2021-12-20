@@ -120,11 +120,19 @@ namespace AnyRPG {
         }
 
         public void OnClickFromButton() {
+
+            // do not allow clicks to have any effect when gamepad mode is active to prevent pickup with hand script
+            if (controlsManager.GamePadModeActive == true) {
+                //Debug.Log("ActionButton.OnClickFromButton() gamepad mode active, returning");
+                return;
+            }
+
             OnClick();
         }
 
         public void OnClick(bool fromKeyBind = false) {
             // this may seem like duplicate with the next method, but right now it is used to simulate click events when keypresses happen
+            // it is also used when the player controller sends a click event from the gamepad
 
             if (!fromKeyBind) {
                 // if we did come from a keybind, we don't want to ignore left shift
@@ -143,6 +151,14 @@ namespace AnyRPG {
         }
 
         public override void OnPointerClick(PointerEventData eventData) {
+            //Debug.Log("ActionButton.OnPointerClick()");
+
+            // do not allow clicks to have any effect when gamepad mode is active to prevent pickup with hand script
+            if (controlsManager.GamePadModeActive == true) {
+                //Debug.Log("ActionButton.OnPointerClick() gamepad mode active, returning");
+                return;
+            }
+
             base.OnPointerClick(eventData);
             if (playerManager.ActiveUnitController != null) {
                 if (playerManager.ActiveUnitController.ControlLocked == true) {
