@@ -116,7 +116,8 @@ namespace AnyRPG {
         public void UpdateVisuals() {
             for (int i = 0; i < actionButtons.Count; i++) {
                 //Debug.Log(gameObject.name + ".ActionBarController.ClearActionBar(): clearing button: " + i);
-                actionButtons[i].UpdateVisual();
+                //actionButtons[i].UpdateVisual();
+                actionButtons[i].ChooseMonitorCoroutine();
             }
         }
 

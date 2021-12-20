@@ -108,6 +108,18 @@ namespace AnyRPG {
         }
         */
 
+        /*
+        public override void ProcessOpenWindowNotification() {
+            base.ProcessOpenWindowNotification();
+
+            // when activated, some buttons may be on cooldown
+            // ensure they are monitored
+            foreach (ActionButton actionButton in actionButtons) {
+                actionButton.ChooseMonitorCoroutine();
+            }
+        }
+        */
+
         public override void ReceiveClosedWindowNotification() {
             //Debug.Log("InteractionPanelUI.OnCloseWindow()");
             //ClearButtons();

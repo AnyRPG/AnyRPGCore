@@ -111,7 +111,7 @@ namespace AnyRPG {
         public void SetTooltipTransform(RectTransform rectTransform) {
             tooltipTransform = rectTransform;
         }
-        
+
 
         public void SetBackGroundColor(Color color) {
             if (backGroundImage != null) {
@@ -164,19 +164,21 @@ namespace AnyRPG {
                 } else {
                     // attempt to put down
                     if (handScript.Moveable != null && handScript.Moveable is IUseable) {
-                        if (actionBarManager.FromButton != null) {
-                            //Debug.Log("ActionButton: OnPointerClick(): FROMBUTTON IS NOT NULL, SWAPPING ACTIONBAR ITEMS");
-                            // this came from another action button slot.  now decide to swap (if we are not empty), or remove from original (if we are empty)
-                            if (Useable != null) {
-                                actionBarManager.FromButton.ClearUseable();
-                                actionBarManager.FromButton.SetUseable(Useable);
-                            } else {
-                                actionBarManager.FromButton.ClearUseable();
+                        if (actionBarManager.FromButton != this) {
+                            if (actionBarManager.FromButton != null) {
+                                //Debug.Log("ActionButton: OnPointerClick(): FROMBUTTON IS NOT NULL, SWAPPING ACTIONBAR ITEMS");
+                                // this came from another action button slot.  now decide to swap (if we are not empty), or remove from original (if we are empty)
+                                if (Useable != null) {
+                                    actionBarManager.FromButton.ClearUseable();
+                                    actionBarManager.FromButton.SetUseable(Useable);
+                                } else {
+                                    actionBarManager.FromButton.ClearUseable();
+                                }
                             }
+                            // no matter whether we sent our useable over or not, we can now clear our useable and set whatever is in the handscript
+                            ClearUseable();
+                            SetUseable(handScript.Moveable as IUseable);
                         }
-                        // no matter whether we sent our useable over or not, we can now clear our useable and set whatever is in the handscript
-                        ClearUseable();
-                        SetUseable(handScript.Moveable as IUseable);
 
                         handScript.Drop();
                     }
@@ -256,11 +258,17 @@ namespace AnyRPG {
             ChooseMonitorCoroutine();
         }
 
-        private void ChooseMonitorCoroutine() {
+        public void ChooseMonitorCoroutine() {
             // if this action button is empty, there is nothing to monitor
             if (useable == null) {
                 return;
             }
+
+            // if this object is disabled, then there is no reason to monitor
+            if (gameObject.activeInHierarchy == false) {
+                return;
+            }
+
             if (monitorCoroutine == null) {
                 monitorCoroutine = useable.ChooseMonitorCoroutine(this);
             }
@@ -327,9 +335,9 @@ namespace AnyRPG {
         public void RemoveStaleActions() {
             if (Useable != null && Useable.IsUseableStale()) {
                 //if (!playerManager.MyCharacter.CharacterAbilityManager.HasAbility(Useable as BaseAbility)) {
-                    savedUseable = Useable;
-                    useable = null;
-                    UpdateVisual();
+                savedUseable = Useable;
+                useable = null;
+                UpdateVisual();
                 //}
             }
         }
@@ -345,14 +353,14 @@ namespace AnyRPG {
 
             if (Useable == null) {
                 //Debug.Log("ActionButton.UpdateVisual(): useable is null. clearing stack count and setting icon to empty");
-                
+
                 // clear stack count
                 uIManager.ClearStackCount(this);
 
                 // clear icon
                 Icon.sprite = null;
                 Icon.color = icon.color = new Color32(0, 0, 0, 0);
-                
+
                 // clear background image
                 backgroundImage.color = new Color32(0, 0, 0, 0);
                 backgroundImage.sprite = null;
@@ -374,6 +382,11 @@ namespace AnyRPG {
             //Debug.Log("ActionButton.UpdateVisual(): about to get useable count");
             Useable.UpdateChargeCount(this);
             Useable.UpdateActionButtonVisual(this);
+
+            // if this object is disabled, then there is no reason to process pointer enter
+            if (gameObject.activeInHierarchy == false) {
+                return;
+            }
 
             if (UIManager.MouseInRect(Icon.rectTransform)) {
                 ProcessOnPointerEnter();
