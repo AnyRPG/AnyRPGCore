@@ -65,6 +65,8 @@ MonoBehaviour:
     autoSelfCast: 0
     useMeleeRange: 0
     maxRange: 0
+    requireFacingTarget: 1
+    maxAngle: 10
     requiresGroundTarget: 0
     groundTargetColor: {r: 1, g: 1, b: 1, a: 1}
     groundTargetRadius: 0

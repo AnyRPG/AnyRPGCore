@@ -23,20 +23,20 @@ MonoBehaviour:
     useRootMotion: 0
     suppressAdjustAnimatorSpeed: 0
     attackClips:
-    - {fileID: -1158726129008117130, guid: 2658eb5e1d5eb5444a5167c37973197f, type: 3}
+    - {fileID: 6720303635017113406, guid: 2e952da64afbbdd409ebe5dd14356653, type: 3}
     castClips: []
     takeDamageClips: []
-    idleClip: {fileID: -3100369314251171874, guid: 2658eb5e1d5eb5444a5167c37973197f,
+    idleClip: {fileID: -3100369314251171874, guid: 2e952da64afbbdd409ebe5dd14356653,
       type: 3}
-    jumpClip: {fileID: -5707210424019099851, guid: 2658eb5e1d5eb5444a5167c37973197f,
+    jumpClip: {fileID: 2667949614841947897, guid: 2e952da64afbbdd409ebe5dd14356653,
       type: 3}
-    fallClip: {fileID: -5707210424019099851, guid: 2658eb5e1d5eb5444a5167c37973197f,
+    fallClip: {fileID: 2667949614841947897, guid: 2e952da64afbbdd409ebe5dd14356653,
       type: 3}
-    landClip: {fileID: -5707210424019099851, guid: 2658eb5e1d5eb5444a5167c37973197f,
+    landClip: {fileID: 2667949614841947897, guid: 2e952da64afbbdd409ebe5dd14356653,
       type: 3}
-    moveForwardClip: {fileID: -5707210424019099851, guid: 2658eb5e1d5eb5444a5167c37973197f,
+    moveForwardClip: {fileID: 2667949614841947897, guid: 2e952da64afbbdd409ebe5dd14356653,
       type: 3}
-    moveForwardFastClip: {fileID: -5707210424019099851, guid: 2658eb5e1d5eb5444a5167c37973197f,
+    moveForwardFastClip: {fileID: 2667949614841947897, guid: 2e952da64afbbdd409ebe5dd14356653,
       type: 3}
     moveBackClip: {fileID: 0}
     moveBackFastClip: {fileID: 0}
@@ -102,15 +102,15 @@ MonoBehaviour:
     combatJogStrafeBackRightClip: {fileID: 0}
     combatStunnedMirror: 0
     combatStunnedClip: {fileID: 0}
-    deathClip: {fileID: -4630339522487117836, guid: 2658eb5e1d5eb5444a5167c37973197f,
+    deathClip: {fileID: -4630339522487117836, guid: 2e952da64afbbdd409ebe5dd14356653,
       type: 3}
     reviveClip: {fileID: 0}
     levitatedClip: {fileID: 0}
-    swimIdleClip: {fileID: -3100369314251171874, guid: 2658eb5e1d5eb5444a5167c37973197f,
+    swimIdleClip: {fileID: -3100369314251171874, guid: 2e952da64afbbdd409ebe5dd14356653,
       type: 3}
-    swimMoveClip: {fileID: -5707210424019099851, guid: 2658eb5e1d5eb5444a5167c37973197f,
+    swimMoveClip: {fileID: 2667949614841947897, guid: 2e952da64afbbdd409ebe5dd14356653,
       type: 3}
-    flyIdleClip: {fileID: -3100369314251171874, guid: 2658eb5e1d5eb5444a5167c37973197f,
+    flyIdleClip: {fileID: -3100369314251171874, guid: 2e952da64afbbdd409ebe5dd14356653,
       type: 3}
-    flyMoveClip: {fileID: -5707210424019099851, guid: 2658eb5e1d5eb5444a5167c37973197f,
+    flyMoveClip: {fileID: 2667949614841947897, guid: 2e952da64afbbdd409ebe5dd14356653,
       type: 3}
