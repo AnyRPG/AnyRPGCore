@@ -58,7 +58,7 @@ namespace AnyRPG {
         }
 
         public override void Select() {
-            Debug.Log("NewGameFactionButton.Select()");
+            //Debug.Log("NewGameFactionButton.Select()");
             CommonSelect();
             base.Select();
         }

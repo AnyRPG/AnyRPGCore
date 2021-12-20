@@ -78,7 +78,7 @@ namespace AnyRPG {
         }
 
         public void OpenFactionPanel() {
-            Debug.Log("NewGameDetailsPanelController.OpenfactionPanel()");
+            //Debug.Log("NewGameDetailsPanelController.OpenfactionPanel()");
             if (newGamePanel != null) {
                 newGamePanel.OpenFactionPanel(true);
                 //newGamePanel.SetNavigationControllerByIndex(0);
