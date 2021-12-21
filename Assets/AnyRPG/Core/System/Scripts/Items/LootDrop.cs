@@ -61,7 +61,7 @@ namespace AnyRPG {
 
         public virtual void Remove() {
             //Debug.Log("LootDrop.Remove()");
-            
+
         }
 
         public virtual string GetDescription() {
@@ -110,12 +110,18 @@ namespace AnyRPG {
             logManager = systemGameManager.LogManager;
         }
 
+        public override void SetBackgroundImage(Image backgroundImage) {
+            base.SetBackgroundImage(backgroundImage);
+            backgroundImage.sprite = null;
+            backgroundImage.color = new Color32(0, 0, 0, 255);
+        }
+
         public void AddCurrencyNode(LootableCharacterComponent lootableCharacter, CurrencyNode currencyNode) {
             //Debug.Log("LootableDrop.AddCurrencyNode(" + lootableCharacter.name + ", " + currencyNode.currency.DisplayName + " " + currencyNode.MyAmount +")");
 
             currencyNodes.Add(lootableCharacter, currencyNode);
 
-            List<CurrencyNode> usedCurrencyNodes  = new List<CurrencyNode>();
+            List<CurrencyNode> usedCurrencyNodes = new List<CurrencyNode>();
             foreach (CurrencyNode tmpCurrencyNode in currencyNodes.Values) {
                 usedCurrencyNodes.Add(tmpCurrencyNode);
             }
