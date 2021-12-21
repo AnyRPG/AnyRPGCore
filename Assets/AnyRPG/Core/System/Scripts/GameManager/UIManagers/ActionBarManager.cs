@@ -123,11 +123,14 @@ namespace AnyRPG {
         }
 
         public void StartUseableAssignment(IUseable useable, int moveIndex = -1) {
+            //Debug.Log("ActionBarManager.StartUseableAssignment(" + moveIndex + ")");
+
             this.moveIndex = moveIndex;
             assigningUseable = useable;
         }
 
         public void ClearUseableAssignment() {
+            moveIndex = -1;
             assigningUseable = null;
         }
 
@@ -145,6 +148,7 @@ namespace AnyRPG {
             gamepadActionBarControllers[controllerIndex].ActionButtons[buttonIndex].SetUseable(assigningUseable);
 
             if (moveIndex > -1) {
+                //Debug.Log("moveIndex : " + moveIndex);
                 if (oldUseable == null) {
                     // the spot where the useable was placed was empty, clear the original slot
                     ClearUseableByIndex(moveIndex);
@@ -155,7 +159,7 @@ namespace AnyRPG {
                     gamepadActionButtons[(currentActionBarSet * 16) + moveIndex].Useable = oldUseable;
                     gamepadActionBarControllers[controllerIndex].ActionButtons[buttonIndex].SetUseable(oldUseable);
                 }
-
+                moveIndex = -1;
             }
         }
 
@@ -184,7 +188,7 @@ namespace AnyRPG {
             if (inputManager.KeyBindWasPressed("JOYSTICKBUTTON4")) {
                 // LB
                 if (currentActionBarSet > 0) {
-                    SetGamepadActionButtonSet(currentActionBarSet -1);
+                    SetGamepadActionButtonSet(currentActionBarSet - 1);
                 }
             } else if (inputManager.KeyBindWasPressed("JOYSTICKBUTTON5")) {
                 // RB
@@ -393,7 +397,7 @@ namespace AnyRPG {
 
         public List<ActionButton> GetMouseActionButtons() {
             //Debug.Log("ActionBarManager.GetActionButtons()");
-            
+
             return GetActionButtons(actionBarControllers);
         }
 
@@ -443,7 +447,7 @@ namespace AnyRPG {
         }
 
         public bool AddGamepadNewAbility(BaseAbility newAbility) {
-            //Debug.Log("AbilityBarController.AddNewAbility(" + newAbility + ")");
+            //Debug.Log("ActionBarManager.AddGamepadNewAbility(" + newAbility + ")");
             for (int i = 0; i < 16; i++) {
                 if (gamepadActionButtons[i + (currentActionBarSet * 16)].Useable == null) {
                     //Debug.Log("Adding ability: " + newAbility + " to empty action button " + i);
@@ -460,7 +464,7 @@ namespace AnyRPG {
         }
 
         public bool AddNewAbility(BaseAbility newAbility) {
-            //Debug.Log("ActionBarManager.AddNewAbility()");
+            //Debug.Log("ActionBarManager.AddNewAbility(" + newAbility + ")");
             bool returnValue = false;
             bool foundSlot = false;
             if (AddGamepadSavedAbility(newAbility)) {
@@ -604,12 +608,12 @@ namespace AnyRPG {
 
             foreach (ActionButtonNode actionButtonNode in gamepadActionButtons) {
                 if (actionButtonNode.Useable != null && actionButtonNode.Useable.IsUseableStale()) {
-                        actionButtonNode.SavedUseable = actionButtonNode.Useable;
-                        actionButtonNode.Useable = null;
+                    actionButtonNode.SavedUseable = actionButtonNode.Useable;
+                    actionButtonNode.Useable = null;
                 }
             }
             UpdateGamepadActionButtons(currentActionBarSet, GetGamepadActionButtons());
-            
+
             /*
             foreach (ActionBarController actionBarController in gamepadActionBarControllers) {
                 //Debug.Log("ActionBarManager.AddNewAbility(): looping through a controller");
