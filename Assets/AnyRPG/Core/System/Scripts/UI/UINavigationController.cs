@@ -491,7 +491,7 @@ namespace AnyRPG {
 
         public virtual void ReceiveOpenWindowNotification() {
             //Debug.Log(gameObject.name + ".UINavigationController.ReceiveOpenWindowNotification()");
-            if (updateActiveListOnOpen) {
+            if (updateActiveListOnOpen == true) {
                 UpdateNavigationList();
                 SetCurrentIndex(0);
             }

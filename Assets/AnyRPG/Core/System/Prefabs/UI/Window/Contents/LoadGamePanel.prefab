@@ -64,6 +64,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   outlineImage: {fileID: 0}
   highlightOutlineColor: {r: 0.64705884, g: 0.64705884, b: 0.64705884, a: 0.6509804}
+  useSystemOutlineColor: 1
   highlightImage: {fileID: 0}
   highlightBackgroundOnSelect: 0
   highlightBackgroundOnInteract: 1
@@ -88,6 +89,7 @@ MonoBehaviour:
   overrideDisabledColor: 0
   disabledColor: {r: 0.32156864, g: 0.32156864, b: 0.32156864, a: 0.06666667}
   CapitalizeText: 0
+  mouseHoverSound: 1
 --- !u!114 &4165838856544347995
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -678,6 +680,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   outlineImage: {fileID: 0}
   highlightOutlineColor: {r: 0.64705884, g: 0.64705884, b: 0.64705884, a: 0.6509804}
+  useSystemOutlineColor: 1
   highlightImage: {fileID: 0}
   highlightBackgroundOnSelect: 0
   highlightBackgroundOnInteract: 1
@@ -702,6 +705,7 @@ MonoBehaviour:
   overrideDisabledColor: 0
   disabledColor: {r: 0.32156864, g: 0.32156864, b: 0.32156864, a: 0.06666667}
   CapitalizeText: 0
+  mouseHoverSound: 1
 --- !u!1 &1718596886538042180
 GameObject:
   m_ObjectHideFlags: 0
@@ -1391,6 +1395,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   outlineImage: {fileID: 0}
   highlightOutlineColor: {r: 0.64705884, g: 0.64705884, b: 0.64705884, a: 0.6509804}
+  useSystemOutlineColor: 1
   highlightImage: {fileID: 0}
   highlightBackgroundOnSelect: 0
   highlightBackgroundOnInteract: 1
@@ -1415,6 +1420,7 @@ MonoBehaviour:
   overrideDisabledColor: 0
   disabledColor: {r: 0.32156864, g: 0.32156864, b: 0.32156864, a: 0.06666667}
   CapitalizeText: 0
+  mouseHoverSound: 1
 --- !u!1 &4053518886800139577
 GameObject:
   m_ObjectHideFlags: 0
@@ -1742,6 +1748,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   outlineImage: {fileID: 0}
   highlightOutlineColor: {r: 0.64705884, g: 0.64705884, b: 0.64705884, a: 0.6509804}
+  useSystemOutlineColor: 1
   highlightImage: {fileID: 0}
   highlightBackgroundOnSelect: 0
   highlightBackgroundOnInteract: 1
@@ -1766,6 +1773,7 @@ MonoBehaviour:
   overrideDisabledColor: 0
   disabledColor: {r: 0.32156864, g: 0.32156864, b: 0.32156864, a: 0.06666667}
   CapitalizeText: 0
+  mouseHoverSound: 1
 --- !u!1 &4692299217823133985
 GameObject:
   m_ObjectHideFlags: 0
@@ -2416,8 +2424,7 @@ MonoBehaviour:
   leftPanel: {fileID: 0}
   leftControllers: []
   rightPanel: {fileID: 0}
-  rightControllers:
-  - {fileID: 1126385356333861572}
+  rightControllers: []
   upPanel: {fileID: 0}
   upControllers: []
   downPanel: {fileID: 0}
@@ -2501,7 +2508,7 @@ MonoBehaviour:
   downControllers: []
   acceptController: {fileID: 0}
   scrollRect: {fileID: 0}
-  updateActiveListOnOpen: 1
+  updateActiveListOnOpen: 0
   pruneInactiveElements: 1
   navigableButtons:
   - {fileID: 4670905920152662219}
@@ -3022,6 +3029,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   outlineImage: {fileID: 0}
   highlightOutlineColor: {r: 0.64705884, g: 0.64705884, b: 0.64705884, a: 0.6509804}
+  useSystemOutlineColor: 1
   highlightImage: {fileID: 0}
   highlightBackgroundOnSelect: 0
   highlightBackgroundOnInteract: 1
@@ -3046,6 +3054,7 @@ MonoBehaviour:
   overrideDisabledColor: 0
   disabledColor: {r: 0.32156864, g: 0.32156864, b: 0.32156864, a: 0.06666667}
   CapitalizeText: 0
+  mouseHoverSound: 1
 --- !u!1001 &931100666531183594
 PrefabInstance:
   m_ObjectHideFlags: 0

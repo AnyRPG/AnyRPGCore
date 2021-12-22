@@ -187,11 +187,11 @@ namespace AnyRPG {
                 }
                 count++;
             }
+            uINavigationControllers[1].UpdateNavigationList();
             if (loadGameButtons.Count > 0) {
                 SetNavigationController(uINavigationControllers[0]);
-
-                // no longer necessary since setting the navigation controller will select the button
-                //loadGameButtons[selectedButton].Select();
+            } else {
+                SetNavigationController(uINavigationControllers[1]);
             }
             //SetPreviewTarget();
         }

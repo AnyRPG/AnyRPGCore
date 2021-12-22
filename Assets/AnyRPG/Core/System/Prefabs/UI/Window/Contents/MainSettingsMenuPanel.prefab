@@ -83,6 +83,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   outlineImage: {fileID: 0}
   highlightOutlineColor: {r: 0.64705884, g: 0.64705884, b: 0.64705884, a: 0.6509804}
+  useSystemOutlineColor: 1
   highlightImage: {fileID: 0}
   highlightBackgroundOnSelect: 0
   highlightBackgroundOnInteract: 1
@@ -1169,6 +1170,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   outlineImage: {fileID: 7231277912237657888}
   highlightOutlineColor: {r: 0.64705884, g: 0.64705884, b: 0.64705884, a: 0.6509804}
+  useSystemOutlineColor: 1
   highlightImage: {fileID: 8965968881029408216}
   highlightBackgroundOnSelect: 0
   highlightBackgroundOnInteract: 0
@@ -1193,6 +1195,7 @@ MonoBehaviour:
   overrideDisabledColor: 0
   disabledColor: {r: 0.32156864, g: 0.32156864, b: 0.32156864, a: 0.06666667}
   CapitalizeText: 0
+  mouseHoverSound: 1
   slider: {fileID: 8974505639344350717}
   fill: {fileID: 5920018284126048420}
   handle: {fileID: 4963294785941635550}
@@ -1345,6 +1348,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   outlineImage: {fileID: 0}
   highlightOutlineColor: {r: 0.64705884, g: 0.64705884, b: 0.64705884, a: 0.6509804}
+  useSystemOutlineColor: 1
   highlightImage: {fileID: 0}
   highlightBackgroundOnSelect: 0
   highlightBackgroundOnInteract: 0
@@ -1369,6 +1373,7 @@ MonoBehaviour:
   overrideDisabledColor: 0
   disabledColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 0.5019608}
   CapitalizeText: 0
+  mouseHoverSound: 1
 --- !u!222 &3129406908942869655
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -2462,6 +2467,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   outlineImage: {fileID: 8615159425701172600}
   highlightOutlineColor: {r: 0.64705884, g: 0.64705884, b: 0.64705884, a: 0.6509804}
+  useSystemOutlineColor: 1
   highlightImage: {fileID: 9016089233938069406}
   highlightBackgroundOnSelect: 0
   highlightBackgroundOnInteract: 0
@@ -2486,6 +2492,7 @@ MonoBehaviour:
   overrideDisabledColor: 0
   disabledColor: {r: 0.32156864, g: 0.32156864, b: 0.32156864, a: 0.06666667}
   CapitalizeText: 0
+  mouseHoverSound: 1
   slider: {fileID: 783075649256835069}
   fill: {fileID: 3727113203109736237}
   handle: {fileID: 6570249934518964735}
@@ -2980,8 +2987,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 635, y: 0}
-  m_SizeDelta: {x: 1270, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &4523969442196390997
 MonoBehaviour:
@@ -3373,6 +3380,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   outlineImage: {fileID: 0}
   highlightOutlineColor: {r: 0.64705884, g: 0.64705884, b: 0.64705884, a: 0.6509804}
+  useSystemOutlineColor: 1
   highlightImage: {fileID: 0}
   highlightBackgroundOnSelect: 0
   highlightBackgroundOnInteract: 1
@@ -3397,6 +3405,7 @@ MonoBehaviour:
   overrideDisabledColor: 0
   disabledColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 0.5019608}
   CapitalizeText: 1
+  mouseHoverSound: 1
 --- !u!1 &868260936922847817
 GameObject:
   m_ObjectHideFlags: 0
@@ -4010,6 +4019,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   outlineImage: {fileID: 0}
   highlightOutlineColor: {r: 0.64705884, g: 0.64705884, b: 0.64705884, a: 0.6509804}
+  useSystemOutlineColor: 1
   highlightImage: {fileID: 0}
   highlightBackgroundOnSelect: 0
   highlightBackgroundOnInteract: 1
@@ -4034,6 +4044,7 @@ MonoBehaviour:
   overrideDisabledColor: 0
   disabledColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 0.5019608}
   CapitalizeText: 1
+  mouseHoverSound: 1
 --- !u!1 &1204666521237089087
 GameObject:
   m_ObjectHideFlags: 0
@@ -6081,6 +6092,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   outlineImage: {fileID: 0}
   highlightOutlineColor: {r: 0.64705884, g: 0.64705884, b: 0.64705884, a: 0.6509804}
+  useSystemOutlineColor: 1
   highlightImage: {fileID: 0}
   highlightBackgroundOnSelect: 0
   highlightBackgroundOnInteract: 1
@@ -6105,6 +6117,7 @@ MonoBehaviour:
   overrideDisabledColor: 0
   disabledColor: {r: 0.32156864, g: 0.32156864, b: 0.32156864, a: 0.06666667}
   CapitalizeText: 0
+  mouseHoverSound: 1
   dropDown: {fileID: 0}
 --- !u!1 &1688958377146397915
 GameObject:
@@ -6167,6 +6180,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   outlineImage: {fileID: 0}
   highlightOutlineColor: {r: 0.64705884, g: 0.64705884, b: 0.64705884, a: 0.6509804}
+  useSystemOutlineColor: 1
   highlightImage: {fileID: 4154079068755433442}
   highlightBackgroundOnSelect: 0
   highlightBackgroundOnInteract: 0
@@ -6191,6 +6205,7 @@ MonoBehaviour:
   overrideDisabledColor: 0
   disabledColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 0.5019608}
   CapitalizeText: 0
+  mouseHoverSound: 1
 --- !u!1 &1752186930742434411
 GameObject:
   m_ObjectHideFlags: 0
@@ -7048,6 +7063,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   outlineImage: {fileID: 0}
   highlightOutlineColor: {r: 0.64705884, g: 0.64705884, b: 0.64705884, a: 0.6509804}
+  useSystemOutlineColor: 1
   highlightImage: {fileID: 3865598502371328260}
   highlightBackgroundOnSelect: 0
   highlightBackgroundOnInteract: 0
@@ -7072,6 +7088,7 @@ MonoBehaviour:
   overrideDisabledColor: 0
   disabledColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 0.5019608}
   CapitalizeText: 0
+  mouseHoverSound: 1
 --- !u!1 &1983744959538355325
 GameObject:
   m_ObjectHideFlags: 0
@@ -7316,7 +7333,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 1270, y: 0}
+  m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 1}
 --- !u!114 &846639079678636528
 MonoBehaviour:
@@ -7574,6 +7591,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   outlineImage: {fileID: 0}
   highlightOutlineColor: {r: 0.64705884, g: 0.64705884, b: 0.64705884, a: 0.6509804}
+  useSystemOutlineColor: 1
   highlightImage: {fileID: 0}
   highlightBackgroundOnSelect: 0
   highlightBackgroundOnInteract: 0
@@ -7598,6 +7616,7 @@ MonoBehaviour:
   overrideDisabledColor: 0
   disabledColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 0.5019608}
   CapitalizeText: 0
+  mouseHoverSound: 1
 --- !u!222 &7907085459926502945
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -7967,6 +7986,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   outlineImage: {fileID: 6478996660691541387}
   highlightOutlineColor: {r: 0.64705884, g: 0.64705884, b: 0.64705884, a: 0.6509804}
+  useSystemOutlineColor: 1
   highlightImage: {fileID: 2084395799040994108}
   highlightBackgroundOnSelect: 0
   highlightBackgroundOnInteract: 0
@@ -7991,6 +8011,7 @@ MonoBehaviour:
   overrideDisabledColor: 0
   disabledColor: {r: 0.32156864, g: 0.32156864, b: 0.32156864, a: 0.06666667}
   CapitalizeText: 0
+  mouseHoverSound: 1
   slider: {fileID: 2822268277731286468}
   fill: {fileID: 8109638068547882656}
   handle: {fileID: 946099605019657825}
@@ -8396,7 +8417,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 1270, y: 0}
+  m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 1}
 --- !u!114 &5201321047701088788
 MonoBehaviour:
@@ -8488,6 +8509,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   outlineImage: {fileID: 2697013632931123490}
   highlightOutlineColor: {r: 0.64705884, g: 0.64705884, b: 0.64705884, a: 0.6509804}
+  useSystemOutlineColor: 1
   highlightImage: {fileID: 6150330037512813924}
   highlightBackgroundOnSelect: 0
   highlightBackgroundOnInteract: 0
@@ -8512,6 +8534,7 @@ MonoBehaviour:
   overrideDisabledColor: 0
   disabledColor: {r: 0.32156864, g: 0.32156864, b: 0.32156864, a: 0.06666667}
   CapitalizeText: 0
+  mouseHoverSound: 1
   slider: {fileID: 4885179207585878529}
   fill: {fileID: 5782226853450646747}
   handle: {fileID: 7423361147345331014}
@@ -8947,6 +8970,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   outlineImage: {fileID: 6582387337302464637}
   highlightOutlineColor: {r: 0.64705884, g: 0.64705884, b: 0.64705884, a: 0.6509804}
+  useSystemOutlineColor: 1
   highlightImage: {fileID: 6970763442754564240}
   highlightBackgroundOnSelect: 0
   highlightBackgroundOnInteract: 0
@@ -8971,6 +8995,7 @@ MonoBehaviour:
   overrideDisabledColor: 0
   disabledColor: {r: 0.32156864, g: 0.32156864, b: 0.32156864, a: 0.06666667}
   CapitalizeText: 0
+  mouseHoverSound: 1
   slider: {fileID: 4228421757963245481}
   fill: {fileID: 4393073319139152555}
   handle: {fileID: 6999132438592340719}
@@ -10430,6 +10455,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   outlineImage: {fileID: 0}
   highlightOutlineColor: {r: 0.64705884, g: 0.64705884, b: 0.64705884, a: 0.6509804}
+  useSystemOutlineColor: 1
   highlightImage: {fileID: 6875917003771046538}
   highlightBackgroundOnSelect: 0
   highlightBackgroundOnInteract: 0
@@ -10454,6 +10480,7 @@ MonoBehaviour:
   overrideDisabledColor: 0
   disabledColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 0.5019608}
   CapitalizeText: 0
+  mouseHoverSound: 1
 --- !u!222 &207022185159001623
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -10901,8 +10928,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 635, y: 0}
-  m_SizeDelta: {x: 1270, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &4373043248173017572
 MonoBehaviour:
@@ -13242,6 +13269,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   outlineImage: {fileID: 5531509249628476411}
   highlightOutlineColor: {r: 0.64705884, g: 0.64705884, b: 0.64705884, a: 0.6509804}
+  useSystemOutlineColor: 1
   highlightImage: {fileID: 9022065201620904376}
   highlightBackgroundOnSelect: 0
   highlightBackgroundOnInteract: 0
@@ -13266,6 +13294,7 @@ MonoBehaviour:
   overrideDisabledColor: 0
   disabledColor: {r: 0.32156864, g: 0.32156864, b: 0.32156864, a: 0.06666667}
   CapitalizeText: 0
+  mouseHoverSound: 1
   slider: {fileID: 4966686190576848365}
   fill: {fileID: 5152955386963770649}
   handle: {fileID: 5309930457444989362}
@@ -14395,6 +14424,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   outlineImage: {fileID: 0}
   highlightOutlineColor: {r: 0.64705884, g: 0.64705884, b: 0.64705884, a: 0.6509804}
+  useSystemOutlineColor: 1
   highlightImage: {fileID: 5508479075316727924}
   highlightBackgroundOnSelect: 0
   highlightBackgroundOnInteract: 0
@@ -14419,6 +14449,7 @@ MonoBehaviour:
   overrideDisabledColor: 0
   disabledColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 0.5019608}
   CapitalizeText: 0
+  mouseHoverSound: 1
 --- !u!222 &1279403865598160105
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -17460,6 +17491,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   outlineImage: {fileID: 7042258886687342944}
   highlightOutlineColor: {r: 0.64705884, g: 0.64705884, b: 0.64705884, a: 0.6509804}
+  useSystemOutlineColor: 1
   highlightImage: {fileID: 5741640103950208447}
   highlightBackgroundOnSelect: 0
   highlightBackgroundOnInteract: 0
@@ -17484,6 +17516,7 @@ MonoBehaviour:
   overrideDisabledColor: 0
   disabledColor: {r: 0.32156864, g: 0.32156864, b: 0.32156864, a: 0.06666667}
   CapitalizeText: 0
+  mouseHoverSound: 1
   slider: {fileID: 4154079068133184794}
   fill: {fileID: 6879560981524452536}
   handle: {fileID: 3615115713042684028}
@@ -18384,18 +18417,6 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 4154079069261091180}
         m_TargetAssemblyTypeName: 
-        m_MethodName: OnClickSound
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-      - m_Target: {fileID: 4154079069261091180}
-        m_TargetAssemblyTypeName: 
         m_MethodName: CloseMenu
         m_Mode: 1
         m_Arguments:
@@ -18420,6 +18441,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   outlineImage: {fileID: 0}
   highlightOutlineColor: {r: 0.64705884, g: 0.64705884, b: 0.64705884, a: 0.6509804}
+  useSystemOutlineColor: 1
   highlightImage: {fileID: 0}
   highlightBackgroundOnSelect: 0
   highlightBackgroundOnInteract: 0
@@ -18444,6 +18466,7 @@ MonoBehaviour:
   overrideDisabledColor: 0
   disabledColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 0.5019608}
   CapitalizeText: 0
+  mouseHoverSound: 1
 --- !u!1 &4154079068388130665
 GameObject:
   m_ObjectHideFlags: 0
@@ -21444,6 +21467,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   outlineImage: {fileID: 255232192752826095}
   highlightOutlineColor: {r: 0.64705884, g: 0.64705884, b: 0.64705884, a: 0.6509804}
+  useSystemOutlineColor: 1
   highlightImage: {fileID: 3954781284163381370}
   highlightBackgroundOnSelect: 0
   highlightBackgroundOnInteract: 0
@@ -21468,6 +21492,7 @@ MonoBehaviour:
   overrideDisabledColor: 0
   disabledColor: {r: 0.32156864, g: 0.32156864, b: 0.32156864, a: 0.06666667}
   CapitalizeText: 0
+  mouseHoverSound: 1
   slider: {fileID: 4295987386052226121}
   fill: {fileID: 5405363879640436481}
   handle: {fileID: 6752820491679114540}
@@ -22263,6 +22288,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   outlineImage: {fileID: 2309210567916695814}
   highlightOutlineColor: {r: 0.64705884, g: 0.64705884, b: 0.64705884, a: 0.6509804}
+  useSystemOutlineColor: 1
   highlightImage: {fileID: 1647208910284782094}
   highlightBackgroundOnSelect: 0
   highlightBackgroundOnInteract: 0
@@ -22287,6 +22313,7 @@ MonoBehaviour:
   overrideDisabledColor: 0
   disabledColor: {r: 0.32156864, g: 0.32156864, b: 0.32156864, a: 0.06666667}
   CapitalizeText: 0
+  mouseHoverSound: 1
   slider: {fileID: 8589740826889536483}
   fill: {fileID: 5341928346154442593}
   handle: {fileID: 43208450771028825}
@@ -22605,6 +22632,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   outlineImage: {fileID: 0}
   highlightOutlineColor: {r: 0.64705884, g: 0.64705884, b: 0.64705884, a: 0.6509804}
+  useSystemOutlineColor: 1
   highlightImage: {fileID: 4154079068565028205}
   highlightBackgroundOnSelect: 0
   highlightBackgroundOnInteract: 0
@@ -22629,6 +22657,7 @@ MonoBehaviour:
   overrideDisabledColor: 0
   disabledColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 0.5019608}
   CapitalizeText: 0
+  mouseHoverSound: 1
 --- !u!222 &7211696107295101424
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -23307,6 +23336,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   outlineImage: {fileID: 0}
   highlightOutlineColor: {r: 0.64705884, g: 0.64705884, b: 0.64705884, a: 0.6509804}
+  useSystemOutlineColor: 1
   highlightImage: {fileID: 0}
   highlightBackgroundOnSelect: 0
   highlightBackgroundOnInteract: 1
@@ -23539,6 +23569,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   outlineImage: {fileID: 2308914089257788012}
   highlightOutlineColor: {r: 0.64705884, g: 0.64705884, b: 0.64705884, a: 0.6509804}
+  useSystemOutlineColor: 1
   highlightImage: {fileID: 918076251734848481}
   highlightBackgroundOnSelect: 0
   highlightBackgroundOnInteract: 0
@@ -23563,6 +23594,7 @@ MonoBehaviour:
   overrideDisabledColor: 0
   disabledColor: {r: 0.32156864, g: 0.32156864, b: 0.32156864, a: 0.06666667}
   CapitalizeText: 0
+  mouseHoverSound: 1
   slider: {fileID: 74399695988439661}
   fill: {fileID: 1198004583758866269}
   handle: {fileID: 1468275678034759066}
@@ -24245,6 +24277,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   outlineImage: {fileID: 5045246885530821178}
   highlightOutlineColor: {r: 0.64705884, g: 0.64705884, b: 0.64705884, a: 0.6509804}
+  useSystemOutlineColor: 1
   highlightImage: {fileID: 6626233442791669799}
   highlightBackgroundOnSelect: 0
   highlightBackgroundOnInteract: 0
@@ -24269,6 +24302,7 @@ MonoBehaviour:
   overrideDisabledColor: 0
   disabledColor: {r: 0.32156864, g: 0.32156864, b: 0.32156864, a: 0.06666667}
   CapitalizeText: 0
+  mouseHoverSound: 1
   slider: {fileID: 8934009504361778304}
   fill: {fileID: 3450019805331934038}
   handle: {fileID: 9112301745937375720}
@@ -24749,6 +24783,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   outlineImage: {fileID: 7597969951236139111}
   highlightOutlineColor: {r: 0.64705884, g: 0.64705884, b: 0.64705884, a: 0.6509804}
+  useSystemOutlineColor: 1
   highlightImage: {fileID: 1594608913385630552}
   highlightBackgroundOnSelect: 0
   highlightBackgroundOnInteract: 0
@@ -24773,6 +24808,7 @@ MonoBehaviour:
   overrideDisabledColor: 0
   disabledColor: {r: 0.32156864, g: 0.32156864, b: 0.32156864, a: 0.06666667}
   CapitalizeText: 0
+  mouseHoverSound: 1
   slider: {fileID: 4497979498673447752}
   fill: {fileID: 6629437397784796764}
   handle: {fileID: 5302601849203753125}
@@ -26007,6 +26043,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   outlineImage: {fileID: 4878892813063923988}
   highlightOutlineColor: {r: 0.64705884, g: 0.64705884, b: 0.64705884, a: 0.6509804}
+  useSystemOutlineColor: 1
   highlightImage: {fileID: 2296954085367433572}
   highlightBackgroundOnSelect: 0
   highlightBackgroundOnInteract: 0
@@ -26031,6 +26068,7 @@ MonoBehaviour:
   overrideDisabledColor: 0
   disabledColor: {r: 0.32156864, g: 0.32156864, b: 0.32156864, a: 0.06666667}
   CapitalizeText: 0
+  mouseHoverSound: 1
   slider: {fileID: 8803180364375494938}
   fill: {fileID: 8226090614332125451}
   handle: {fileID: 7158010120676924645}
@@ -26678,8 +26716,8 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 5217802099105332083}
   m_HandleRect: {fileID: 8388112117785605359}
   m_Direction: 2
-  m_Value: 0
-  m_Size: 1
+  m_Value: 1
+  m_Size: 0.2
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -27459,6 +27497,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   outlineImage: {fileID: 5658742636769165276}
   highlightOutlineColor: {r: 0.64705884, g: 0.64705884, b: 0.64705884, a: 0.6509804}
+  useSystemOutlineColor: 1
   highlightImage: {fileID: 0}
   highlightBackgroundOnSelect: 0
   highlightBackgroundOnInteract: 1
@@ -27483,6 +27522,7 @@ MonoBehaviour:
   overrideDisabledColor: 0
   disabledColor: {r: 0.32156864, g: 0.32156864, b: 0.32156864, a: 0.06666667}
   CapitalizeText: 0
+  mouseHoverSound: 1
   dropDown: {fileID: 5932497959122472376}
 --- !u!1 &6026089994031010500
 GameObject:
@@ -28866,6 +28906,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   outlineImage: {fileID: 0}
   highlightOutlineColor: {r: 0.64705884, g: 0.64705884, b: 0.64705884, a: 0.6509804}
+  useSystemOutlineColor: 1
   highlightImage: {fileID: 3319664330089121282}
   highlightBackgroundOnSelect: 0
   highlightBackgroundOnInteract: 0
@@ -28890,6 +28931,7 @@ MonoBehaviour:
   overrideDisabledColor: 0
   disabledColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 0.5019608}
   CapitalizeText: 0
+  mouseHoverSound: 1
 --- !u!222 &8332370280692263583
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -29406,6 +29448,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   outlineImage: {fileID: 0}
   highlightOutlineColor: {r: 0.64705884, g: 0.64705884, b: 0.64705884, a: 0.6509804}
+  useSystemOutlineColor: 1
   highlightImage: {fileID: 0}
   highlightBackgroundOnSelect: 0
   highlightBackgroundOnInteract: 0
@@ -29430,6 +29473,7 @@ MonoBehaviour:
   overrideDisabledColor: 0
   disabledColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 0.5019608}
   CapitalizeText: 0
+  mouseHoverSound: 1
 --- !u!222 &3959732665520371918
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -29499,6 +29543,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   outlineImage: {fileID: 0}
   highlightOutlineColor: {r: 0.64705884, g: 0.64705884, b: 0.64705884, a: 0.6509804}
+  useSystemOutlineColor: 1
   highlightImage: {fileID: 0}
   highlightBackgroundOnSelect: 0
   highlightBackgroundOnInteract: 1
@@ -29523,6 +29568,7 @@ MonoBehaviour:
   overrideDisabledColor: 0
   disabledColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 0.5019608}
   CapitalizeText: 1
+  mouseHoverSound: 1
 --- !u!1 &6348871560589392910
 GameObject:
   m_ObjectHideFlags: 0
@@ -30660,6 +30706,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   outlineImage: {fileID: 0}
   highlightOutlineColor: {r: 0.64705884, g: 0.64705884, b: 0.64705884, a: 0.6509804}
+  useSystemOutlineColor: 1
   highlightImage: {fileID: 8255635686016720288}
   highlightBackgroundOnSelect: 0
   highlightBackgroundOnInteract: 0
@@ -30684,6 +30731,7 @@ MonoBehaviour:
   overrideDisabledColor: 0
   disabledColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 0.5019608}
   CapitalizeText: 0
+  mouseHoverSound: 1
 --- !u!1 &6656290971292520516
 GameObject:
   m_ObjectHideFlags: 0
@@ -31057,6 +31105,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   outlineImage: {fileID: 5126327093152524786}
   highlightOutlineColor: {r: 0.64705884, g: 0.64705884, b: 0.64705884, a: 0.6509804}
+  useSystemOutlineColor: 1
   highlightImage: {fileID: 9197394711630657090}
   highlightBackgroundOnSelect: 0
   highlightBackgroundOnInteract: 0
@@ -31081,6 +31130,7 @@ MonoBehaviour:
   overrideDisabledColor: 0
   disabledColor: {r: 0.32156864, g: 0.32156864, b: 0.32156864, a: 0.06666667}
   CapitalizeText: 0
+  mouseHoverSound: 1
   slider: {fileID: 194461038613932415}
   fill: {fileID: 728144864594735076}
   handle: {fileID: 1299398923923508167}
@@ -32960,6 +33010,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   outlineImage: {fileID: 6089955714972788676}
   highlightOutlineColor: {r: 0.64705884, g: 0.64705884, b: 0.64705884, a: 0.6509804}
+  useSystemOutlineColor: 1
   highlightImage: {fileID: 6114372471518981224}
   highlightBackgroundOnSelect: 0
   highlightBackgroundOnInteract: 0
@@ -32984,6 +33035,7 @@ MonoBehaviour:
   overrideDisabledColor: 0
   disabledColor: {r: 0.32156864, g: 0.32156864, b: 0.32156864, a: 0.06666667}
   CapitalizeText: 0
+  mouseHoverSound: 1
   slider: {fileID: 8246558239884787275}
   fill: {fileID: 7888291467142372239}
   handle: {fileID: 3925644477802968993}
@@ -34086,6 +34138,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   outlineImage: {fileID: 0}
   highlightOutlineColor: {r: 0.64705884, g: 0.64705884, b: 0.64705884, a: 0.6509804}
+  useSystemOutlineColor: 1
   highlightImage: {fileID: 0}
   highlightBackgroundOnSelect: 0
   highlightBackgroundOnInteract: 0
@@ -34110,6 +34163,7 @@ MonoBehaviour:
   overrideDisabledColor: 0
   disabledColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 0.5019608}
   CapitalizeText: 0
+  mouseHoverSound: 1
 --- !u!222 &8810216176862299409
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -34301,7 +34355,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 1270, y: 0}
+  m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 1}
 --- !u!114 &9023015037951105319
 MonoBehaviour:
@@ -36015,6 +36069,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   outlineImage: {fileID: 0}
   highlightOutlineColor: {r: 0.64705884, g: 0.64705884, b: 0.64705884, a: 0.6509804}
+  useSystemOutlineColor: 1
   highlightImage: {fileID: 0}
   highlightBackgroundOnSelect: 0
   highlightBackgroundOnInteract: 1
@@ -36039,6 +36094,7 @@ MonoBehaviour:
   overrideDisabledColor: 0
   disabledColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 0.5019608}
   CapitalizeText: 1
+  mouseHoverSound: 1
 --- !u!1 &8079904083524638941
 GameObject:
   m_ObjectHideFlags: 0
@@ -37593,6 +37649,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   outlineImage: {fileID: 0}
   highlightOutlineColor: {r: 0.64705884, g: 0.64705884, b: 0.64705884, a: 0.6509804}
+  useSystemOutlineColor: 1
   highlightImage: {fileID: 0}
   highlightBackgroundOnSelect: 0
   highlightBackgroundOnInteract: 1
@@ -37617,6 +37674,7 @@ MonoBehaviour:
   overrideDisabledColor: 0
   disabledColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 0.5019608}
   CapitalizeText: 1
+  mouseHoverSound: 1
 --- !u!1 &8384242660401569951
 GameObject:
   m_ObjectHideFlags: 0
@@ -37678,6 +37736,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   outlineImage: {fileID: 0}
   highlightOutlineColor: {r: 0.64705884, g: 0.64705884, b: 0.64705884, a: 0.6509804}
+  useSystemOutlineColor: 1
   highlightImage: {fileID: 0}
   highlightBackgroundOnSelect: 0
   highlightBackgroundOnInteract: 1
@@ -37702,6 +37761,7 @@ MonoBehaviour:
   overrideDisabledColor: 0
   disabledColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 0.5019608}
   CapitalizeText: 1
+  mouseHoverSound: 1
 --- !u!1 &8442581266347500021
 GameObject:
   m_ObjectHideFlags: 0
@@ -38368,6 +38428,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   outlineImage: {fileID: 9222351793862290359}
   highlightOutlineColor: {r: 0.64705884, g: 0.64705884, b: 0.64705884, a: 0.6509804}
+  useSystemOutlineColor: 1
   highlightImage: {fileID: 7737625868946801153}
   highlightBackgroundOnSelect: 0
   highlightBackgroundOnInteract: 0
@@ -38392,6 +38453,7 @@ MonoBehaviour:
   overrideDisabledColor: 0
   disabledColor: {r: 0.32156864, g: 0.32156864, b: 0.32156864, a: 0.06666667}
   CapitalizeText: 0
+  mouseHoverSound: 1
   slider: {fileID: 7870962911266042182}
   fill: {fileID: 3395663266920335524}
   handle: {fileID: 3598514900860650775}
@@ -38514,6 +38576,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   outlineImage: {fileID: 8001268542117070482}
   highlightOutlineColor: {r: 0.64705884, g: 0.64705884, b: 0.64705884, a: 0.6509804}
+  useSystemOutlineColor: 1
   highlightImage: {fileID: 3184594911211689520}
   highlightBackgroundOnSelect: 0
   highlightBackgroundOnInteract: 0
@@ -38538,6 +38601,7 @@ MonoBehaviour:
   overrideDisabledColor: 0
   disabledColor: {r: 0.32156864, g: 0.32156864, b: 0.32156864, a: 0.06666667}
   CapitalizeText: 0
+  mouseHoverSound: 1
   slider: {fileID: 1210336497368891177}
   fill: {fileID: 6655728220412846848}
   handle: {fileID: 7609420994551741001}
@@ -38641,7 +38705,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 1270, y: 0}
+  m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 1}
 --- !u!114 &5326264652401929413
 MonoBehaviour:
@@ -39016,6 +39080,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   outlineImage: {fileID: 926956224537149031}
   highlightOutlineColor: {r: 0.64705884, g: 0.64705884, b: 0.64705884, a: 0.6509804}
+  useSystemOutlineColor: 1
   highlightImage: {fileID: 0}
   highlightBackgroundOnSelect: 0
   highlightBackgroundOnInteract: 1
@@ -39040,6 +39105,7 @@ MonoBehaviour:
   overrideDisabledColor: 0
   disabledColor: {r: 0.32156864, g: 0.32156864, b: 0.32156864, a: 0.06666667}
   CapitalizeText: 0
+  mouseHoverSound: 1
   dropDown: {fileID: 6184442932560096647}
 --- !u!1 &8734856150806186610
 GameObject:
@@ -39914,6 +39980,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   outlineImage: {fileID: 0}
   highlightOutlineColor: {r: 0.64705884, g: 0.64705884, b: 0.64705884, a: 0.6509804}
+  useSystemOutlineColor: 1
   highlightImage: {fileID: 228466886511087177}
   highlightBackgroundOnSelect: 0
   highlightBackgroundOnInteract: 0
@@ -39938,6 +40005,7 @@ MonoBehaviour:
   overrideDisabledColor: 0
   disabledColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 0.5019608}
   CapitalizeText: 0
+  mouseHoverSound: 1
 --- !u!222 &6816473932120367828
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -40036,6 +40104,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   outlineImage: {fileID: 6144147583741880158}
   highlightOutlineColor: {r: 0.64705884, g: 0.64705884, b: 0.64705884, a: 0.6509804}
+  useSystemOutlineColor: 1
   highlightImage: {fileID: 492999370782149769}
   highlightBackgroundOnSelect: 0
   highlightBackgroundOnInteract: 0
@@ -40060,6 +40129,7 @@ MonoBehaviour:
   overrideDisabledColor: 0
   disabledColor: {r: 0.32156864, g: 0.32156864, b: 0.32156864, a: 0.06666667}
   CapitalizeText: 0
+  mouseHoverSound: 1
   slider: {fileID: 5214187788733172569}
   fill: {fileID: 2478095319002356223}
   handle: {fileID: 2980271982331350851}
@@ -40270,6 +40340,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   outlineImage: {fileID: 6965728099681263238}
   highlightOutlineColor: {r: 0.64705884, g: 0.64705884, b: 0.64705884, a: 0.6509804}
+  useSystemOutlineColor: 1
   highlightImage: {fileID: 1475842777475955615}
   highlightBackgroundOnSelect: 0
   highlightBackgroundOnInteract: 0
@@ -40294,6 +40365,7 @@ MonoBehaviour:
   overrideDisabledColor: 0
   disabledColor: {r: 0.32156864, g: 0.32156864, b: 0.32156864, a: 0.06666667}
   CapitalizeText: 0
+  mouseHoverSound: 1
   slider: {fileID: 8433637762003771934}
   fill: {fileID: 0}
   handle: {fileID: 0}
@@ -40624,8 +40696,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 635, y: 0}
-  m_SizeDelta: {x: 1270, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1870618882460978633
 MonoBehaviour:
