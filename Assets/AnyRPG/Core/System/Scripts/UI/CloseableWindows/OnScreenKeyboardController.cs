@@ -65,21 +65,22 @@ namespace AnyRPG {
 
 
         public void ToggleCaps() {
+            //Debug.Log("OnScreenKeyboardController.ToggleCaps()");
             if (capitalKeys.gameObject.activeSelf == true) {
                 capitalKeys.gameObject.SetActive(false);
                 lowercaseKeys.gameObject.SetActive(true);
                 if (currentNavigationController == capitalKeys) {
-                    SetNavigationController(lowercaseKeys);
                     lowercaseKeys.SetCurrentIndex(capitalKeys.CurrentIndex);
                     lowercaseKeys.FocusCurrentButton();
+                    SetNavigationController(lowercaseKeys);
                 }
             } else {
                 lowercaseKeys.gameObject.SetActive(false);
                 capitalKeys.gameObject.SetActive(true);
                 if (currentNavigationController == lowercaseKeys) {
-                    SetNavigationController(capitalKeys);
                     capitalKeys.SetCurrentIndex(lowercaseKeys.CurrentIndex);
                     capitalKeys.FocusCurrentButton();
+                    SetNavigationController(capitalKeys);
                 }
             }
         }
