@@ -101,7 +101,7 @@ namespace AnyRPG {
             // testing - not needed because updating character class list will result in class getting set, which will update the class specialization list
             //UpdateClassSpecializationList();
 
-            if (systemConfigurationManager.NewGameFaction == false) {
+            if (systemConfigurationManager.NewGameFaction == false || factionList.Count == 0) {
                 UpdateUnitProfileList();
             }
         }
