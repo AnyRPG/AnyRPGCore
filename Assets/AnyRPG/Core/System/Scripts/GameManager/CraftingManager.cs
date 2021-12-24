@@ -50,6 +50,10 @@ namespace AnyRPG {
             OnSetCraftAbility(this.craftAbility);
         }
 
+        public void ClearSelectedRecipe() {
+            currentRecipe = null;
+        }
+
         public void SetSelectedRecipe(Recipe recipe) {
             if (currentRecipe != recipe) {
                 currentRecipe = recipe;
