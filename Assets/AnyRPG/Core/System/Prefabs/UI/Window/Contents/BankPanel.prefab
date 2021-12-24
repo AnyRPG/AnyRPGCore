@@ -91,7 +91,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   outlineImage: {fileID: 6416170729597930402}
-  highlightOutlineColor: {r: 0.64705884, g: 0.64705884, b: 0.64705884, a: 0.6509804}
+  highlightOutlineColor: {r: 1, g: 1, b: 1, a: 1}
+  useSystemOutlineColor: 0
   highlightImage: {fileID: 0}
   highlightBackgroundOnSelect: 0
   highlightBackgroundOnInteract: 0
@@ -211,7 +212,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   outlineImage: {fileID: 4269287229517339204}
-  highlightOutlineColor: {r: 0.64705884, g: 0.64705884, b: 0.64705884, a: 0.6509804}
+  highlightOutlineColor: {r: 1, g: 1, b: 1, a: 1}
+  useSystemOutlineColor: 0
   highlightImage: {fileID: 0}
   highlightBackgroundOnSelect: 0
   highlightBackgroundOnInteract: 0
@@ -911,7 +913,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   outlineImage: {fileID: 3868827902292587016}
-  highlightOutlineColor: {r: 0.64705884, g: 0.64705884, b: 0.64705884, a: 0.6509804}
+  highlightOutlineColor: {r: 1, g: 1, b: 1, a: 1}
+  useSystemOutlineColor: 0
   highlightImage: {fileID: 0}
   highlightBackgroundOnSelect: 0
   highlightBackgroundOnInteract: 0
@@ -1256,7 +1259,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   outlineImage: {fileID: 8938093334481138523}
-  highlightOutlineColor: {r: 0.64705884, g: 0.64705884, b: 0.64705884, a: 0.6509804}
+  highlightOutlineColor: {r: 1, g: 1, b: 1, a: 1}
+  useSystemOutlineColor: 0
   highlightImage: {fileID: 0}
   highlightBackgroundOnSelect: 0
   highlightBackgroundOnInteract: 0
@@ -1376,7 +1380,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   outlineImage: {fileID: 1150235422352419289}
-  highlightOutlineColor: {r: 0.64705884, g: 0.64705884, b: 0.64705884, a: 0.6509804}
+  highlightOutlineColor: {r: 1, g: 1, b: 1, a: 1}
+  useSystemOutlineColor: 0
   highlightImage: {fileID: 0}
   highlightBackgroundOnSelect: 0
   highlightBackgroundOnInteract: 0
@@ -1892,7 +1897,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   outlineImage: {fileID: 538953918732580014}
-  highlightOutlineColor: {r: 0.64705884, g: 0.64705884, b: 0.64705884, a: 0.6509804}
+  highlightOutlineColor: {r: 1, g: 1, b: 1, a: 1}
+  useSystemOutlineColor: 0
   highlightImage: {fileID: 0}
   highlightBackgroundOnSelect: 0
   highlightBackgroundOnInteract: 0
@@ -2199,7 +2205,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   outlineImage: {fileID: 2137275375103211887}
-  highlightOutlineColor: {r: 0.64705884, g: 0.64705884, b: 0.64705884, a: 0.6509804}
+  highlightOutlineColor: {r: 1, g: 1, b: 1, a: 1}
+  useSystemOutlineColor: 0
   highlightImage: {fileID: 0}
   highlightBackgroundOnSelect: 0
   highlightBackgroundOnInteract: 0
@@ -2430,7 +2437,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   outlineImage: {fileID: 1126247365781811234}
-  highlightOutlineColor: {r: 0.64705884, g: 0.64705884, b: 0.64705884, a: 0.6509804}
+  highlightOutlineColor: {r: 1, g: 1, b: 1, a: 1}
+  useSystemOutlineColor: 0
   highlightImage: {fileID: 0}
   highlightBackgroundOnSelect: 0
   highlightBackgroundOnInteract: 0
