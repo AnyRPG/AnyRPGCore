@@ -169,7 +169,7 @@ namespace AnyRPG {
                     || dPadRightPressed) {
                     //ActivateGamepadMode();
                     ActivateGamepadInput();
-                    if (windowManager.WindowStack.Count > 0) {
+                    if (windowManager.CurrentWindow != null) {
                         windowManager.ActivateGamepadMode();
                         return;
                     }

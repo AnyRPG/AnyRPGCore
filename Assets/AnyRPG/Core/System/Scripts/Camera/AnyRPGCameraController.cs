@@ -190,8 +190,8 @@ namespace AnyRPG {
 
             // ====GAMEPAD ZOOM====
             if (playerManager.ActiveCharacter?.CharacterAbilityManager?.WaitingForTarget() == false) {
-                if (//windowManager.WindowStack.Count == 0 &&
-                    Input.GetAxis("RightAnalogVertical") != 0f
+                if ((windowManager.CurrentWindow == null || windowManager.CurrentWindow.CaptureCamera == false)
+                    && Input.GetAxis("RightAnalogVertical") != 0f
                     && inputManager.KeyBindWasPressedOrHeld("JOYSTICKBUTTON9")) {
 
                     //currentZoomDistance += (Input.GetAxis("RightAnalogVertical") * zoomSpeed * -1);
@@ -234,9 +234,9 @@ namespace AnyRPG {
             // ====GAMEPAD PAN====
             if (playerManager.ActiveCharacter?.CharacterAbilityManager?.WaitingForTarget() == false) {
 
-                if (//windowManager.WindowStack.Count == 0 &&
-                        inputManager.KeyBindWasPressedOrHeld("JOYSTICKBUTTON9") == false
-                    && (Input.GetAxis("RightAnalogHorizontal") != 0f || Input.GetAxis("RightAnalogVertical") != 0f)) {
+                if ((windowManager.CurrentWindow == null || windowManager.CurrentWindow.CaptureCamera == false)
+                && inputManager.KeyBindWasPressedOrHeld("JOYSTICKBUTTON9") == false
+                && (Input.GetAxis("RightAnalogHorizontal") != 0f || Input.GetAxis("RightAnalogVertical") != 0f)) {
 
 
                     //if (Input.GetAxis("RightAnalogHorizontal") != 0 && playerManager.PlayerController?.HasMoveInput() != true) {

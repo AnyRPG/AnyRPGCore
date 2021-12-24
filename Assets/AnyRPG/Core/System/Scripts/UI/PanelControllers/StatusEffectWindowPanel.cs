@@ -67,12 +67,12 @@ namespace AnyRPG {
             // only process active element code if actively browsing this panel
             // status effects can be removed when not browsing this window
             // check if this window is actively browsed, and if so, navigate to the next one instead
-            if (windowManager.WindowStack.Count > 0 && windowManager.WindowStack[windowManager.WindowStack.Count - 1] == this) {
+            if (windowManager.CurrentWindow != null && windowManager.CurrentWindow == this) {
                 if (uINavigationControllers[0].ActiveNavigableButtonCount > 0) {
                     uINavigationControllers[0].FocusCurrentButton();
                 } else {
-                    //if (windowManager.WindowStack[windowManager.WindowStack.Count - 1] == this) {
-                        windowManager.RemoveWindow(this);
+                    //if (windowManager.CurrentWindow == this) {
+                    windowManager.RemoveWindow(this);
                         UnFocus();
                         windowManager.NavigateInterface();
                     //}

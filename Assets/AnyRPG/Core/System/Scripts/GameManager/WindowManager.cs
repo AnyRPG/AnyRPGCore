@@ -21,6 +21,15 @@ namespace AnyRPG {
 
         public List<CloseableWindowContents> WindowStack { get => windowStack; }
         public bool NavigatingInterface { get => navigatingInterface; }
+        public CloseableWindowContents CurrentWindow {
+            get {
+                if (windowStack.Count > 0) {
+                    return windowStack[windowStack.Count - 1];
+                }
+                return null;
+            }
+        }
+
 
         public override void Configure(SystemGameManager systemGameManager) {
             base.Configure(systemGameManager);
@@ -57,7 +66,7 @@ namespace AnyRPG {
                 windowStack.Remove(closeableWindowContents);
             }
             if (windowStack.Count > 0) {
-                windowStack[windowStack.Count - 1].FocusCurrentButton();
+                CurrentWindow.FocusCurrentButton();
             }
         }
 
@@ -95,7 +104,7 @@ namespace AnyRPG {
 
         public void ActivateGamepadMode() {
             if (windowStack.Count != 0) {
-                windowStack[windowStack.Count - 1].FocusCurrentButton();
+                CurrentWindow.FocusCurrentButton();
             }
         }
 
@@ -109,55 +118,55 @@ namespace AnyRPG {
             //Debug.Log("WindowManager.Navigate()");
 
             if (windowStack.Count != 0) {
-                //Debug.Log("WindowManager.Navigate() : windowstack is not zero: " + windowStack[windowStack.Count - 1].gameObject.name);
+                //Debug.Log("WindowManager.Navigate() : windowstack is not zero: " + CurrentWindow.gameObject.name);
 
                 // joystick movement
                 if (controlsManager.InputHorizontal != 0f || controlsManager.InputVertical != 0f) {
-                    windowStack[windowStack.Count - 1].LeftAnalog(controlsManager.InputHorizontal, controlsManager.InputVertical);
+                    CurrentWindow.LeftAnalog(controlsManager.InputHorizontal, controlsManager.InputVertical);
                 }
 
                 // d pad navigation
                 if (controlsManager.DPadUpPressed) {
-                    windowStack[windowStack.Count - 1].UpButton();
+                    CurrentWindow.UpButton();
                 }
                 if (controlsManager.DPadDownPressed) {
-                    windowStack[windowStack.Count - 1].DownButton();
+                    CurrentWindow.DownButton();
                 }
                 if (controlsManager.DPadLeftPressed) {
-                    windowStack[windowStack.Count - 1].LeftButton();
+                    CurrentWindow.LeftButton();
                 }
                 if (controlsManager.DPadRightPressed) {
-                    windowStack[windowStack.Count - 1].RightButton();
+                    CurrentWindow.RightButton();
                 }
                 if (controlsManager.LeftTriggerPressed) {
-                    windowStack[windowStack.Count - 1].LeftTrigger();
+                    CurrentWindow.LeftTrigger();
                 }
                 if (controlsManager.RightTriggerPressed) {
-                    windowStack[windowStack.Count - 1].RightTrigger();
+                    CurrentWindow.RightTrigger();
                 }
 
                 // buttons
                 if (inputManager.KeyBindWasPressed("ACCEPT") || inputManager.KeyBindWasPressed("JOYSTICKBUTTON0")) {
                     //Debug.Log("Accept");
-                    windowStack[windowStack.Count - 1].Accept();
+                    CurrentWindow.Accept();
                 }
                 if (inputManager.KeyBindWasPressed("JOYSTICKBUTTON1")) {
-                    windowStack[windowStack.Count - 1].Cancel();
+                    CurrentWindow.Cancel();
                 }
                 if (inputManager.KeyBindWasPressed("JOYSTICKBUTTON2")) {
-                    windowStack[windowStack.Count - 1].JoystickButton2();
+                    CurrentWindow.JoystickButton2();
                 }
                 if (inputManager.KeyBindWasPressed("JOYSTICKBUTTON3")) {
-                    windowStack[windowStack.Count - 1].JoystickButton3();
+                    CurrentWindow.JoystickButton3();
                 }
                 if (inputManager.KeyBindWasPressed("JOYSTICKBUTTON4")) {
-                    windowStack[windowStack.Count - 1].JoystickButton4();
+                    CurrentWindow.JoystickButton4();
                 }
                 if (inputManager.KeyBindWasPressed("JOYSTICKBUTTON5")) {
-                    windowStack[windowStack.Count - 1].JoystickButton5();
+                    CurrentWindow.JoystickButton5();
                 }
                 if (inputManager.KeyBindWasPressed("JOYSTICKBUTTON9")) {
-                    windowStack[windowStack.Count - 1].JoystickButton9();
+                    CurrentWindow.JoystickButton9();
                 }
 
             }

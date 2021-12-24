@@ -498,7 +498,7 @@ namespace AnyRPG {
             //Debug.Log(gameObject.name + ".PlayerController.ProcessGamepadButtonClicks()");
 
             // if a window is open, all button clicks will be processed by that window instead of the player
-            if (windowManager.WindowStack.Count > 0) {
+            if (windowManager.CurrentWindow != null) {
                 return;
             }
 

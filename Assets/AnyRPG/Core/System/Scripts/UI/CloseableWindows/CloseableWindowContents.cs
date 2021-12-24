@@ -15,8 +15,13 @@ namespace AnyRPG {
         [SerializeField]
         protected Image backGroundImage;
 
+        [Tooltip("If true, the camera controls will not apply to the active character.  This is useful if the window contains a camera / unit preview.")]
+        [SerializeField]
+        protected bool captureCamera = false;
+
         [SerializeField]
         protected List<ColoredUIElement> coloredUIElements = new List<ColoredUIElement>();
+
 
         [Header("Navigation")]
 
@@ -80,6 +85,7 @@ namespace AnyRPG {
         public CloseableWindowContents ParentPanel { get => parentPanel; }
         public bool UserCloseable { get => userCloseable; }
         public RectTransform RectTransform { get => rectTransform; }
+        public bool CaptureCamera { get => captureCamera; }
 
         public override void Configure(SystemGameManager systemGameManager) {
             //Debug.Log(gameObject.name + ".CloseableWindowContents.Configure()");

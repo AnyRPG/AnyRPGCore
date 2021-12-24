@@ -348,7 +348,7 @@ namespace AnyRPG {
                     (inputManager.rightMouseButtonDown
                     && playerManager.ActiveUnitController.UnitProfile.UnitPrefabProps.RotateModel == false // account for rotate model mode when using keyboard
                     && (!inputManager.rightMouseButtonClickedOverUI || (namePlateManager != null ? namePlateManager.MouseOverNamePlate() : false)))
-                    || (controlsManager.GamePadModeActive == false && Input.GetAxis("RightAnalogHorizontal") != 0f && windowManager.WindowStack.Count == 0)
+                    || (controlsManager.GamePadModeActive == false && Input.GetAxis("RightAnalogHorizontal") != 0f && windowManager.CurrentWindow == null)
                     ) {
                     //Debug.Log(gameObject.name + ".PlayerUnitMovementController.LateGlobalSuperUpdate(): resetting playerManager.ActiveUnitController.transform.forward");
 
