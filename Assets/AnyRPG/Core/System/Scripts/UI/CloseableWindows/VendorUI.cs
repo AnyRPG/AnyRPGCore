@@ -141,9 +141,12 @@ namespace AnyRPG {
             //SetBackGroundColor(new Color32(0, 0, 0, (byte)(int)(PlayerPrefs.GetFloat("PopupWindowOpacity") * 255)));
             ClearButtons();
             ClearPages();
+            SetNavigationController(uINavigationControllers[0]);
             base.ProcessOpenWindowNotification();
             LoadPage(0);
             OnPageCountUpdate(false);
+
+
         }
 
         public void UpdateCurrencyAmount() {
