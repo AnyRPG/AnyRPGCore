@@ -80,8 +80,10 @@ namespace AnyRPG {
             
             if (controlsManager.GamePadModeActive == true) {
                 rectTransform.pivot = new Vector2(0, 1);
+            } else {
+                rectTransform.pivot = new Vector2(0.5f, 0.5f);
             }
-            
+
         }
 
         public IMoveable Put() {
