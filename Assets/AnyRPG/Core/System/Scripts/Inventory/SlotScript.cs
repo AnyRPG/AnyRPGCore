@@ -165,7 +165,7 @@ namespace AnyRPG {
                 return;
             }
 
-            // the 
+            // send items back and forth between bank and inventory if they are both open
             if (BagPanel is BankPanel) {
                 List<Item> moveList = new List<Item>();
                 //Debug.Log("SlotScript.InteractWithSlot(): interacting with item in bank");
@@ -173,7 +173,7 @@ namespace AnyRPG {
                     moveList.Add(item);
                 }
                 foreach (Item item in moveList) {
-                    if (playerManager.MyCharacter.CharacterInventoryManager.AddItem(item, false)) {
+                    if (playerManager.MyCharacter.CharacterInventoryManager.AddItem(item, false, false)) {
                         inventorySlot.RemoveItem(item);
                     }
                 }
@@ -194,7 +194,7 @@ namespace AnyRPG {
                         moveList.Add(item);
                     }
                     foreach (Item item in moveList) {
-                        if (playerManager.MyCharacter.CharacterInventoryManager.AddItem(item, true)) {
+                        if (playerManager.MyCharacter.CharacterInventoryManager.AddItem(item, true, false)) {
                             inventorySlot.RemoveItem(item);
                         }
                     }

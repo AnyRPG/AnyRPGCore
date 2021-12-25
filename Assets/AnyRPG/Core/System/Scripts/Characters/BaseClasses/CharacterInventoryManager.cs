@@ -361,12 +361,12 @@ namespace AnyRPG {
         /// Adds an item to the inventory
         /// </summary>
         /// <param name="item"></param>
-        public bool AddItem(Item item, bool addToBank) {
+        public bool AddItem(Item item, bool addToBank, bool performUniqueCheck = true) {
             //Debug.Log("CharacterInventoryManager.AddItem(" + (item == null ? "null" : item.DisplayName) + ", " + addToBank + ")");
             if (item == null) {
                 return false;
             }
-            if (item.UniqueItem == true && GetItemCount(item.DisplayName) > 0) {
+            if (performUniqueCheck == true && item.UniqueItem == true && GetItemCount(item.DisplayName) > 0) {
                 messageFeedManager.WriteMessage(item.DisplayName + " is unique.  You can only carry one at a time.");
                 return false;
             }
