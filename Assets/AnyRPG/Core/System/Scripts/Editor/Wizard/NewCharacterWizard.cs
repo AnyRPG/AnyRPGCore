@@ -93,6 +93,7 @@ namespace AnyRPG {
             EditorUtility.DisplayProgressBar("New Character Wizard", "Configuring Unit Profile...", 0.4f);
             // setup unit profile properties
             asset.ResourceName = characterName;
+            asset.CharacterName = characterName;
             asset.AutomaticPrefabProfile = false;
             asset.UseInlinePrefabProps = true;
 
