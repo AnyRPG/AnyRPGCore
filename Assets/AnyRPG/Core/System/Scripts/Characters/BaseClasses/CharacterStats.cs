@@ -1372,6 +1372,7 @@ namespace AnyRPG {
 
             float returnValue = 0f;
 
+            // add power resource from stats conversions
             foreach (StatScalingNode statScalingNode in statProvider.PrimaryStats) {
                 if (PrimaryStats.ContainsKey(statScalingNode.StatName)) {
                     foreach (CharacterStatToResourceNode characterStatToResourceNode in statScalingNode.PrimaryToResourceConversion) {
@@ -1389,6 +1390,13 @@ namespace AnyRPG {
             if (powerResourceDictionary.ContainsKey(powerResource)) {
                 if (baseCharacter != null) {
                     returnValue += powerResource.MaximumAmount;
+
+                    // add base power resource
+                    returnValue += powerResource.BaseAmount;
+
+                    // add level scaled amount
+                    returnValue += powerResource.AmountPerLevel * currentLevel;
+
                     foreach (IStatProvider statProvider in baseCharacter.StatProviders) {
                         if (statProvider != null) {
                             returnValue += GetResourceMaximum(powerResource, statProvider);

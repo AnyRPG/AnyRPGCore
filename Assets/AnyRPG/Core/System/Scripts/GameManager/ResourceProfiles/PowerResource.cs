@@ -18,6 +18,16 @@ namespace AnyRPG {
         [SerializeField]
         private Color displayColor;
 
+        [Header("Amounts")]
+
+        [Tooltip("A base amount that all characters with this resource will receive")]
+        [SerializeField]
+        private float baseAmount = 0f;
+
+        [Tooltip("Every character with this resource will receive this amount for every level")]
+        [SerializeField]
+        private float amountPerLevel = 0f;
+
         [Header("Regeneration")]
 
         [Tooltip("Every x seconds, perform the regeneration")]
@@ -68,6 +78,8 @@ namespace AnyRPG {
         public bool CombatRegenIsPercent { get => combatRegenIsPercent; set => combatRegenIsPercent = value; }
         public bool IsHealth { get => isHealth; set => isHealth = value; }
         public bool FillOnReset { get => fillOnReset; set => fillOnReset = value; }
+        public float BaseAmount { get => baseAmount; set => baseAmount = value; }
+        public float AmountPerLevel { get => amountPerLevel; set => amountPerLevel = value; }
     }
 
 }
