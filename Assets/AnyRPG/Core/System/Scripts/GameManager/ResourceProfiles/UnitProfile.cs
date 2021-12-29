@@ -381,6 +381,9 @@ namespace AnyRPG {
         public bool SaveOnGameSave { get => saveOnGameSave; set => saveOnGameSave = value; }
         public bool FlightCapable { get => flightCapable; }
         public bool GlideCapable { get => glideCapable; }
+        public bool UseInlinePrefabProps { get => useInlinePrefabProps; set => useInlinePrefabProps = value; }
+        public bool AutomaticPrefabProfile { get => automaticPrefabProfile; set => automaticPrefabProfile = value; }
+        public List<string> MovementAudioProfileNames { get => movementAudioProfileNames; set => movementAudioProfileNames = value; }
 
         public override void SetGameManagerReferences() {
             base.SetGameManagerReferences();

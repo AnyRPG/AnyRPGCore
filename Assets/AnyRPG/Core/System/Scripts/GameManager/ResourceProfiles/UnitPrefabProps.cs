@@ -115,11 +115,15 @@ namespace AnyRPG {
                 }
                 return null;
             }
+            set {
+                animationProps = value;
+            }
         }
 
         public string FloatTransform { get => floatTransform; }
         public float FloatHeight { get => floatHeight; }
         public bool AddFloatHeightToTransform { get => addFloatHeightToTransform; }
+        public bool UseInlineAnimationProps { get => useInlineAnimationProps; set => useInlineAnimationProps = value; }
 
         public void SetupScriptableObjects(SystemDataFactory systemDataFactory) {
 

@@ -45,7 +45,7 @@ namespace AnyRPG {
 
         [Tooltip("The position of the camera relative to the target")]
         [SerializeField]
-        private Vector3 unitFrameCameraPositionOffset = new Vector3(0f, 1f, 1f);
+        private Vector3 unitFrameCameraPositionOffset = new Vector3(0f, 0f, 0.66f);
 
         [Header("UNIT PREVIEW SETTINGS")]
 
