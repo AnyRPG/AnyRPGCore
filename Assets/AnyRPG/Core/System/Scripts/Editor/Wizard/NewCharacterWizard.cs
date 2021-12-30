@@ -110,13 +110,17 @@ namespace AnyRPG {
             asset.UnitPrefabProps.NamePlateProps.UnitFrameTarget = headBone;
             asset.UnitPrefabProps.NamePlateProps.OverrideNameplatePosition = true;
             asset.UnitPrefabProps.NamePlateProps.NameplatePosition = new Vector3(0f, highestYTransform + namePlateHeightAdd, 0f);
+            // set the look position at half the height
+            asset.UnitPrefabProps.NamePlateProps.UnitPreviewCameraLookOffset = new Vector3(0f, highestYTransform / 2f, 0f);
+            // zoom out to 1.25 times the height
+            asset.UnitPrefabProps.NamePlateProps.UnitPreviewCameraPositionOffset = new Vector3(0f, highestYTransform / 2f, highestYTransform * 1.25f);
 
             // setup foootstep properties
             asset.MovementAudioProfileNames.Add(defaultFootstepLoop);
 
             EditorUtility.DisplayProgressBar("New Character Wizard", "Saving Unit Profile...", 0.5f);
 
-            scriptableObjectPath = "Assets" + newGameParentFolder + fileSystemGameName + "/Resources/" + fileSystemGameName + "/UnitProfile/" + characterName + "Unit.asset";
+            scriptableObjectPath = "Assets" + newGameParentFolder + fileSystemGameName + "/Resources/" + fileSystemGameName + "/UnitProfile/" + GetFileSystemCharactername(characterName) + "Unit.asset";
             AssetDatabase.CreateAsset(asset, scriptableObjectPath);
 
             AssetDatabase.Refresh();
@@ -211,6 +215,10 @@ namespace AnyRPG {
 
         private void MakeFileSystemGameName() {
             fileSystemGameName = gameName.Replace(" ", "");
+        }
+
+        private string GetFileSystemCharactername(string characterName) {
+            return characterName.Replace(" ", "");
         }
 
         string GetNewGameFolder() {

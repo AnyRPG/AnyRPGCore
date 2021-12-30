@@ -112,7 +112,7 @@ MonoBehaviour:
       swimMoveClip: {fileID: 0}
       flyIdleClip: {fileID: 0}
       flyMoveClip: {fileID: 0}
-    rotateModel: 0
+    rotateModel: 1
     namePlateProps:
       displayName: 
       suppressNamePlate: 0
@@ -137,6 +137,7 @@ MonoBehaviour:
   isUMAUnit: 1
   isPet: 0
   flightCapable: 0
+  glideCapable: 0
   characterName: 
   title: 
   factionName: 

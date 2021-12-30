@@ -11,7 +11,38 @@ namespace AnyRPG {
     [System.Serializable]
     public class CharacterStat : DescribableResource {
 
-        // nothing here yet
+        [Header("Character Stat")]
+
+        [Tooltip("If true, all characters will receive this stat, using the budget and conversions below.")]
+        [SerializeField]
+        private bool globalStat = true;
+
+        [Tooltip("The amount of this stat that a character will receive for every level.")]
+        [SerializeField]
+        private float budgetPerLevel = 0;
+
+        [Tooltip("Convert primary stats to secondary stats")]
+        [SerializeField]
+        private List<PrimaryToSecondaryStatNode> primaryToSecondaryConversion = new List<PrimaryToSecondaryStatNode>();
+
+        [Tooltip("Convert primary stats to resources")]
+        [SerializeField]
+        private List<CharacterStatToResourceNode> primaryToResourceConversion = new List<CharacterStatToResourceNode>();
+
+        public string StatName { get => DisplayName; }
+        public float BudgetPerLevel { get => budgetPerLevel; set => budgetPerLevel = value; }
+        public List<PrimaryToSecondaryStatNode> PrimaryToSecondaryConversion { get => primaryToSecondaryConversion; set => primaryToSecondaryConversion = value; }
+        public List<CharacterStatToResourceNode> PrimaryToResourceConversion { get => primaryToResourceConversion; set => primaryToResourceConversion = value; }
+        public bool GlobalStat { get => globalStat; set => globalStat = value; }
+
+        public override void SetupScriptableObjects(SystemGameManager systemGameManager) {
+            base.SetupScriptableObjects(systemGameManager);
+
+            foreach (CharacterStatToResourceNode characterStatToResourceNode in primaryToResourceConversion) {
+                characterStatToResourceNode.SetupScriptableObjects(systemDataFactory);
+            }
+        }
+
     }
 
     [System.Serializable]

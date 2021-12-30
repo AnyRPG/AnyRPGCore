@@ -1,0 +1,30 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8f55a41c6972dd14cb4fc021f33e6099, type: 3}
+  m_Name: ManaPowerResourceTemplate
+  m_EditorClassIdentifier: 
+  resourceName: Mana
+  displayName: 
+  icon: {fileID: 0}
+  iconBackgroundImage: {fileID: 0}
+  description: Used by channelers
+  useRegionalDescription: 0
+  resourceDescriptionProfile: 
+  displayColor: {r: 0.38042897, g: 0.47091675, b: 0.9716981, a: 1}
+  tickRate: 1
+  regenPerTick: 1
+  regenIsPercent: 1
+  combatRegenPerTick: 0.5
+  combatRegenIsPercent: 1
+  maximumAmount: 0
+  isHealth: 0
+  fillOnReset: 1

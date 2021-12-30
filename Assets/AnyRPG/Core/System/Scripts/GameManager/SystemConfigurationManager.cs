@@ -350,10 +350,13 @@ namespace AnyRPG {
         [SerializeField]
         private float statBudgetPerLevel = 0f;
 
-        [Tooltip("Default stats that all characters will use, and their budgets per level")]
+        [Tooltip("Global Primary Stat properties have been moved to CharacterStat Scriptable Objects.")]
+        [FormerlySerializedAs("primaryStats")]
         [FormerlySerializedAs("statScaling")]
         [SerializeField]
-        private List<StatScalingNode> primaryStats = new List<StatScalingNode>();
+        private List<StatScalingNode> deprecatedPrimaryStats = new List<StatScalingNode>();
+
+        private List<StatScalingNode> statScalingNodes = new List<StatScalingNode>();
 
         [Header("Power Resources")]
 
@@ -724,7 +727,7 @@ namespace AnyRPG {
         public bool UseKillXPLevelMultiplierDemoninator { get => useKillXPLevelMultiplierDemoninator; set => useKillXPLevelMultiplierDemoninator = value; }
         public int KillXPMultiplierLevelCap { get => killXPMultiplierLevelCap; set => killXPMultiplierLevelCap = value; }
         public Sprite DefaultFactionIcon { get => defaultFactionIcon; set => defaultFactionIcon = value; }
-        public List<StatScalingNode> PrimaryStats { get => primaryStats; set => primaryStats = value; }
+        public List<StatScalingNode> PrimaryStats { get => statScalingNodes; set => statScalingNodes = value; }
         public List<string> PowerResources { get => powerResources; set => powerResources = value; }
         public List<PowerResource> PowerResourceList { get => powerResourceList; set => powerResourceList = value; }
         public string KillCurrencyName { get => killCurrencyName; set => killCurrencyName = value; }
@@ -930,8 +933,21 @@ namespace AnyRPG {
                 }
             }
 
+            /*
             foreach (StatScalingNode statScalingNode in primaryStats) {
                 statScalingNode.SetupScriptableObjects(systemDataFactory);
+            }
+            */
+            List<CharacterStat> characterStats = systemDataFactory.GetResourceList<CharacterStat>();
+            foreach (CharacterStat characterStat in characterStats) {
+                if (characterStat.GlobalStat == true) {
+                    StatScalingNode statScalingNode = new StatScalingNode();
+                    statScalingNode.StatName = characterStat.DisplayName;
+                    statScalingNode.BudgetPerLevel = characterStat.BudgetPerLevel;
+                    statScalingNode.PrimaryToSecondaryConversion = characterStat.PrimaryToSecondaryConversion;
+                    statScalingNode.PrimaryToResourceConversion = characterStat.PrimaryToResourceConversion;
+                    statScalingNodes.Add(statScalingNode);
+                }
             }
 
             capabilities.SetupScriptableObjects(systemDataFactory);

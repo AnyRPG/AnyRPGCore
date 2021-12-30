@@ -92,7 +92,7 @@ namespace AnyRPG {
                 string[] assetPathComponents = assetPath.Split('/');
                 int basePosition = 0;
                 for (int i = 0; i < assetPathComponents.Length; i++) {
-                    if (assetPathComponents[i] == "Resources") {
+                    if (assetPathComponents[i] == "TemplateResources") {
                         basePosition = i;
                         break;
                     }
@@ -101,7 +101,7 @@ namespace AnyRPG {
                 string basepath = "";
                 // start 2 folders above resources, and end at the folder below the filename
                 // eg Assets/AnyRPG/Core/Games/FeaturesDemo/Resources/FeaturesDemoGame/[AbilityEffect/Attack/]AttackEffect.asset
-                for (int i = basePosition + 2; i < assetPathComponents.Length -1; i++) {
+                for (int i = basePosition + 1; i < assetPathComponents.Length -1; i++) {
                     basepath += "/" + assetPathComponents[i];
                     string resourcesFolder = newGameFolder + "/Resources/" + fileSystemGameName + basepath;
 
@@ -112,9 +112,18 @@ namespace AnyRPG {
                 }
 
                 // copy the resource
-                string newAssetpath = "Assets/Games/" + fileSystemGameName + "/Resources/" + fileSystemGameName + basepath + "/" + assetPathComponents[assetPathComponents.Length - 1];
-                Debug.Log("Copying Resource from '" + assetPath + "' to '" + newAssetpath + "'");
-                AssetDatabase.CopyAsset(assetPath, newAssetpath);
+                string destinationPartialPath = "/Games/" + fileSystemGameName + "/Resources/" + fileSystemGameName + basepath + "/" + assetPathComponents[assetPathComponents.Length - 1].Replace("Template", "");
+                string destinationAssetpath = "Assets" + destinationPartialPath;
+                string destinationFilesystemPath = Application.dataPath + destinationPartialPath;
+                //Debug.Log(destinationFilesystemPath);
+                
+                if (System.IO.File.Exists(destinationFilesystemPath) == false) {
+                    Debug.Log("Copying Resource from '" + assetPath + "' to '" + destinationAssetpath + "'");
+                    AssetDatabase.CopyAsset(assetPath, destinationAssetpath);
+                } else {
+                    Debug.Log("Skipping copy. Resource '" + destinationAssetpath + "' already exists");
+                }
+                
             }
 
         }

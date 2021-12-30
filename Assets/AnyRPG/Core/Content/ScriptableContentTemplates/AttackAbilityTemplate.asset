@@ -20,9 +20,9 @@ MonoBehaviour:
   useRegionalDescription: 0
   resourceDescriptionProfile: 
   resources:
-  - {fileID: 11400000, guid: ff582678fdccd1e4b8dc25d8ad724aad, type: 2}
-  - {fileID: 11400000, guid: 69a09b79e5fe79d4389134720e8547d7, type: 2}
-  - {fileID: 11400000, guid: 9788fb28244cc8d4987523cfb3cf5bf7, type: 2}
-  - {fileID: 11400000, guid: 6b9dde9078ac1084a953c24d2d858138, type: 2}
+  - {fileID: 11400000, guid: d3f82c5aaf565f6498fc9978aac93dcc, type: 2}
+  - {fileID: 11400000, guid: 0a08bed2b9c305e49b9acbb4bd8cce72, type: 2}
+  - {fileID: 11400000, guid: f1fca5b0de2c53443b438f45a697254c, type: 2}
+  - {fileID: 11400000, guid: 7ccc384c958a4ce4299efe790cd50025, type: 2}
   dependencies:
-  - {fileID: 11400000, guid: 77043bfd381b5884ca7fd0c4da740df2, type: 2}
+  - {fileID: 11400000, guid: 05520683b4b81ec46abd7269cc40b846, type: 2}
