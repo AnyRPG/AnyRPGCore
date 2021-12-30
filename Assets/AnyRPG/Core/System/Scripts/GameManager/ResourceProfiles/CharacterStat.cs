@@ -50,6 +50,7 @@ namespace AnyRPG {
 
         [Tooltip("The stat")]
         [SerializeField]
+        [ResourceSelector(resourceType = typeof(CharacterStat))]
         private string statName = string.Empty;
 
         [Tooltip("The amount of this stat that a character will receive for every level.")]

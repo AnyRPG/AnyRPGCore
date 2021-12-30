@@ -1,0 +1,30 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6c9b51b8d3aa844448aaeab0a989e2fa, type: 3}
+  m_Name: RPGCharacterClassesTemplate
+  m_EditorClassIdentifier: 
+  resourceName: RPG Character Classes
+  displayName: 
+  icon: {fileID: 0}
+  iconBackgroundImage: {fileID: 0}
+  description: 
+  useRegionalDescription: 0
+  resourceDescriptionProfile: 
+  resources:
+  - {fileID: 11400000, guid: e9e468d87d555b94fa839a37700eedf7, type: 2}
+  - {fileID: 11400000, guid: 047a2dc00b209ef49b4fddc86b9484c7, type: 2}
+  - {fileID: 11400000, guid: 6bf56d2781d137647abebf5ec130d072, type: 2}
+  - {fileID: 11400000, guid: 7a0cfb16a61a86c47866133e556cbeb7, type: 2}
+  dependencies:
+  - {fileID: 11400000, guid: 77043bfd381b5884ca7fd0c4da740df2, type: 2}
+  - {fileID: 11400000, guid: b9edc061b7673b441a9e4c447989b9fd, type: 2}
+  - {fileID: 11400000, guid: 2236fdd1e83e58d4b8f9a533d9b5c1ac, type: 2}
