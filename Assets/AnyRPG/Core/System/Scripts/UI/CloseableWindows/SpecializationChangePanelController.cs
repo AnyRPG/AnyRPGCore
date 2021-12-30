@@ -85,6 +85,7 @@ namespace AnyRPG {
                 if (capabilityProps.TraitList[i] != null) {
                     RewardButton rewardIcon = objectPooler.GetPooledObject(rewardIconPrefab, traitIconsArea.transform).GetComponent<RewardButton>();
                     rewardIcon.Configure(systemGameManager);
+                    rewardIcon.SetOptions(rectTransform, false);
                     rewardIcon.SetDescribable(capabilityProps.TraitList[i]);
                     traitRewardIcons.Add(rewardIcon);
                     if ((capabilityProps.TraitList[i] as StatusEffect).RequiredLevel > playerManager.MyCharacter.CharacterStats.Level) {
@@ -111,6 +112,7 @@ namespace AnyRPG {
                 if (capabilityProps.AbilityList[i] != null) {
                     RewardButton rewardIcon = objectPooler.GetPooledObject(rewardIconPrefab, abilityIconsArea.transform).GetComponent<RewardButton>();
                     rewardIcon.Configure(systemGameManager);
+                    rewardIcon.SetOptions(rectTransform, false);
                     rewardIcon.SetDescribable(capabilityProps.AbilityList[i]);
                     abilityRewardIcons.Add(rewardIcon);
                     if (capabilityProps.AbilityList[i].RequiredLevel > playerManager.MyCharacter.CharacterStats.Level) {
