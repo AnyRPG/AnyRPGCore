@@ -20,6 +20,8 @@ MonoBehaviour:
   useRegionalDescription: 0
   resourceDescriptionProfile: 
   displayColor: {r: 0, g: 0.7254902, b: 0.09019608, a: 1}
+  baseAmount: 0
+  amountPerLevel: 100
   tickRate: 1
   regenPerTick: 1
   regenIsPercent: 1
