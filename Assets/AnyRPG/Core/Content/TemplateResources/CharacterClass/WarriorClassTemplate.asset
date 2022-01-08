@@ -44,7 +44,10 @@ MonoBehaviour:
   primaryStats:
   - statName: Strength
     budgetPerLevel: 5
-    primaryToSecondaryConversion: []
+    primaryToSecondaryConversion:
+    - secondaryStatType: 5
+      conversionRatio: 0.5
+      ratedConversion: 0
     primaryToResourceConversion: []
   powerResources: []
   validPetTypes: []
