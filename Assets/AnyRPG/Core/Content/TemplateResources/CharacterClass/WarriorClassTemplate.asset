@@ -34,7 +34,13 @@ MonoBehaviour:
     - One Hand Axe
     - Two Hand Axe
     - Shield
-  unitTypeCapabilities: []
+  unitTypeCapabilities:
+  - unitTypes: []
+    capabilities:
+      abilityNames: []
+      traitNames: []
+      armorClassList: []
+      weaponSkills: []
   primaryStats:
   - statName: Strength
     budgetPerLevel: 5

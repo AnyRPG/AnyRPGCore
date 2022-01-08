@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.IO;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEditor;
@@ -13,6 +14,7 @@ namespace AnyRPG {
         // Template path/scene that will be used to create the new game
         private const string templateName = "TemplateGame";
         private const string pathToNewGameTemplate = "/AnyRPG/Core/Templates/Game/" + templateName;
+        private const string firstSceneTemplateAssetpath = "Assets/AnyRPG/Core/Templates/Game/Scenes/FirstScene/FirstScene.unity";
 
         // for now this is necessary due to git not saving empty folders
         private const string pathToResourcesTemplateFolder = "/AnyRPG/Core/Games/FeaturesDemo/Resources/FeaturesDemoGame";
@@ -24,7 +26,7 @@ namespace AnyRPG {
         private const string newGameParentFolder = "/Games/";
 
         // compare the default first scene directory to any user picked scene name
-        private const string defaultFirstSceneName = "FirstScene";
+        //private const string templateFirstSceneName = "FirstScene";
 
         // the used file path name for the game
         private string fileSystemGameName = string.Empty;
@@ -33,9 +35,15 @@ namespace AnyRPG {
         // user modified variables
         public string gameName = "";
         public string gameVersion = "0.1a";
+        public bool copyExistingScene = false;
         public string firstSceneName = "FirstScene";
-        public bool addFirstSceneToBuild = true;
-        public string umaRoot = "Assets/UMA/";
+
+        [SerializeField]
+        //private SceneReference existingScene = null;
+        private SceneAsset existingScene = null;
+
+        //private bool addFirstSceneToBuild = true;
+        private string umaRoot = "Assets/UMA/";
 
         [Header("Third Party Controller")]
         public bool useThirdPartyController = false;
@@ -54,6 +62,7 @@ namespace AnyRPG {
 
         void OnEnable() {
             thirdPartyCharacterUnit = Selection.activeGameObject;
+            //existingScene = AssetDatabase.LoadAssetAtPath
         }
 
         void OnWizardCreate() {
@@ -84,11 +93,13 @@ namespace AnyRPG {
                 Debug.Log("Empty game version.  Defaulting to " + gameVersion);
             }
 
+            /*
             if (firstSceneName == null || firstSceneName.Trim() == "") {
                 firstSceneName = fileSystemGameName + "Scene";
                 fileSystemFirstSceneName = firstSceneName;
                 Debug.Log("Empty first scene name.  Defaulting to \"" + fileSystemFirstSceneName + "\"");
             }
+            */
 
             EditorUtility.DisplayProgressBar("New Game Wizard", "Creating Game Folder...", 0.2f);
             // Create root game folder
@@ -152,66 +163,47 @@ namespace AnyRPG {
 
 
             if (useThirdPartyController == true) {
-                EditorUtility.DisplayProgressBar("New Game Wizard", "Creating Third Party Prefabs and Resources...", 0.65f);
-
-                // copy unit profile
-                string unitProfileTemplatePath = "/AnyRPG/Core/Templates/Resource/UnitProfile/InvectorUMAPlayerUnitTemplate.asset";
-                FileUtil.CopyFileOrDirectory(Application.dataPath + unitProfileTemplatePath, resourcesFolder + "/UnitProfile/InvectorUMAPlayerUnit.asset");
-                //AssetDatabase.RenameAsset(resourcesFolder + "/UnitProfile/InvectorUMAPlayerUnitTemplate.asset", "InvectorUMAPlayerUnit.asset");
-                
-                // make prefab on disk
-                if (thirdPartyCharacterUnit != null) {
-                    string thirdpartyCharacterPrefabPath = FileUtil.GetProjectRelativePath(prefabFolder) + "/" + thirdPartyCharacterUnit.name + ".prefab";
-                    thirdPartyCharacterPrefab = PrefabUtility.SaveAsPrefabAsset(thirdPartyCharacterUnit, thirdpartyCharacterPrefabPath);
-
-                    AssetDatabase.Refresh();
-
-                    // link disk prefab into unit profile
-                    string unitProfilePath = fileSystemGameName + "/UnitProfile/InvectorUMAPlayerUnit";
-                    UnitProfile unitProfile = Resources.Load<UnitProfile>(unitProfilePath);
-                    if (unitProfile != null) {
-                        unitProfile.UnitPrefabProps.UnitPrefab = thirdPartyCharacterPrefab;
-                    } else {
-                        Debug.Log("Could not load resource at " + unitProfilePath);
-                    }
-                }
-
-                AssetDatabase.Refresh();
-
-                // load the invector basic locomotion demo scene and make a prefab out of the camera
-                
-                EditorSceneManager.OpenScene("Assets/Invector-3rdPersonController/Basic Locomotion/DemoScenes/Invector_BasicLocomotion.unity");
-                GameObject thirdPartyCameraGameObject = GameObject.Find("ThirdPersonCamera");
-                if (thirdPartyCameraGameObject != null) {
-                    string thirdpartyCameraPrefabPath = FileUtil.GetProjectRelativePath(prefabFolder) + "/" + thirdPartyCameraGameObject.name + ".prefab";
-                    thirdPartyCameraPrefab = PrefabUtility.SaveAsPrefabAsset(thirdPartyCameraGameObject, thirdpartyCameraPrefabPath);
-                }
-                
-
+                ConfigureThirdPartyController(resourcesFolder, prefabFolder);
             }
 
             // setup first scene paths
-            string existingFirstSceneFolder = FileUtil.GetProjectRelativePath(newGameFolder + "/Scenes/" + defaultFirstSceneName);
+            //string existingFirstSceneFolder = FileUtil.GetProjectRelativePath(newGameFolder + "/Scenes/" + defaultFirstSceneName);
             string newFirstSceneFolder = FileUtil.GetProjectRelativePath(newGameFolder + "/Scenes/" + fileSystemFirstSceneName);
             string newFirstSceneFileName = fileSystemFirstSceneName + ".unity";
-            string newFirstScenePath = newFirstSceneFolder + "/" + newFirstSceneFileName;
-            string existingFirstScenePath = existingFirstSceneFolder + "/" + defaultFirstSceneName + ".unity";
+            string newFirstSceneAssetPath = newFirstSceneFolder + "/" + newFirstSceneFileName;
+            //string existingFirstScenePath = existingFirstSceneFolder + "/" + defaultFirstSceneName + ".unity";
+
+            // create the first scene folder
+            CreateFolderIfNotExists(newGameFolder + "/Scenes/" + fileSystemFirstSceneName);
+
+            // if copying existing scene, use existing scene, otherwise use template first scene
+            if (copyExistingScene == true) {
+                //AssetDatabase.GetAssetPath(existingScene);
+                AssetDatabase.CopyAsset(AssetDatabase.GetAssetPath(existingScene), newFirstSceneAssetPath); 
+            } else {
+                AssetDatabase.CopyAsset(firstSceneTemplateAssetpath, newFirstSceneAssetPath);
+            }
+            AssetDatabase.Refresh();
+
 
             // Rename the first scene if necessary
-            if (fileSystemFirstSceneName != defaultFirstSceneName) {
+            /*
+            if (fileSystemFirstSceneName != templateFirstSceneName) {
                 EditorUtility.DisplayProgressBar("New Game Wizard", "Renaming First Scene...", 0.7f);
+
                 AssetDatabase.RenameAsset(existingFirstScenePath, newFirstSceneFileName);
                 AssetDatabase.RenameAsset(existingFirstSceneFolder, fileSystemFirstSceneName);
                 AssetDatabase.Refresh();
             }
+            */
 
             // add the first scene to the build if the option was chosen
-            if (addFirstSceneToBuild) {
-                EditorUtility.DisplayProgressBar("New Game Wizard", "Adding First Scene To Build Settings...", 0.75f);
+            //if (addFirstSceneToBuild) {
+            EditorUtility.DisplayProgressBar("New Game Wizard", "Adding First Scene To Build Settings...", 0.75f);
                 List<EditorBuildSettingsScene> currentSceneList = EditorBuildSettings.scenes.ToList();
-                currentSceneList.Add(new EditorBuildSettingsScene(newFirstScenePath, true));
+                currentSceneList.Add(new EditorBuildSettingsScene(newFirstSceneAssetPath, true));
                 EditorBuildSettings.scenes = currentSceneList.ToArray();
-            }
+            //}
 
             // Rename the game load scene
             EditorUtility.DisplayProgressBar("New Game Wizard", "Renaming Game Load Scene...", 0.8f);
@@ -243,6 +235,43 @@ namespace AnyRPG {
 
         }
 
+        private void ConfigureThirdPartyController(string resourcesFolder, string prefabFolder) {
+            EditorUtility.DisplayProgressBar("New Game Wizard", "Creating Third Party Prefabs and Resources...", 0.65f);
+
+            // copy unit profile
+            string unitProfileTemplatePath = "/AnyRPG/Core/Templates/Resource/UnitProfile/InvectorUMAPlayerUnitTemplate.asset";
+            FileUtil.CopyFileOrDirectory(Application.dataPath + unitProfileTemplatePath, resourcesFolder + "/UnitProfile/InvectorUMAPlayerUnit.asset");
+            //AssetDatabase.RenameAsset(resourcesFolder + "/UnitProfile/InvectorUMAPlayerUnitTemplate.asset", "InvectorUMAPlayerUnit.asset");
+
+            // make prefab on disk
+            if (thirdPartyCharacterUnit != null) {
+                string thirdpartyCharacterPrefabPath = FileUtil.GetProjectRelativePath(prefabFolder) + "/" + thirdPartyCharacterUnit.name + ".prefab";
+                thirdPartyCharacterPrefab = PrefabUtility.SaveAsPrefabAsset(thirdPartyCharacterUnit, thirdpartyCharacterPrefabPath);
+
+                AssetDatabase.Refresh();
+
+                // link disk prefab into unit profile
+                string unitProfilePath = fileSystemGameName + "/UnitProfile/InvectorUMAPlayerUnit";
+                UnitProfile unitProfile = Resources.Load<UnitProfile>(unitProfilePath);
+                if (unitProfile != null) {
+                    unitProfile.UnitPrefabProps.UnitPrefab = thirdPartyCharacterPrefab;
+                } else {
+                    Debug.Log("Could not load resource at " + unitProfilePath);
+                }
+            }
+
+            AssetDatabase.Refresh();
+
+            // load the invector basic locomotion demo scene and make a prefab out of the camera
+
+            EditorSceneManager.OpenScene("Assets/Invector-3rdPersonController/Basic Locomotion/DemoScenes/Invector_BasicLocomotion.unity");
+            GameObject thirdPartyCameraGameObject = GameObject.Find("ThirdPersonCamera");
+            if (thirdPartyCameraGameObject != null) {
+                string thirdpartyCameraPrefabPath = FileUtil.GetProjectRelativePath(prefabFolder) + "/" + thirdPartyCameraGameObject.name + ".prefab";
+                thirdPartyCameraPrefab = PrefabUtility.SaveAsPrefabAsset(thirdPartyCameraGameObject, thirdpartyCameraPrefabPath);
+            }
+        }
+
         void OnWizardUpdate() {
             helpString = "Creates a new game based on the AnyRPG template";
             MakeFileSystemGameName();
@@ -263,7 +292,9 @@ namespace AnyRPG {
         }
 
         string Validate() {
-            if (gameName == null || gameName.Trim() == "") {
+            MakeFileSystemGameName();
+
+            if (fileSystemGameName == "") {
                 return "Game name must not be empty";
             }
             if (umaRoot == null || umaRoot.Trim() == "") {
@@ -277,12 +308,41 @@ namespace AnyRPG {
                     return "UMA Root directory not found.  UMA must be installed.";
                 }
             }
+
+            // check that game with same name doesn't already exist
             string newGameFolder = GetNewGameFolder();
             if (System.IO.Directory.Exists(newGameFolder)) {
                 return "Folder " + newGameFolder + " already exists.  Please delete this directory or choose a new game name";
             }
 
+            // check that first scene name is not empty
+            string filesystemSceneName = GetFilesystemSceneName(firstSceneName);
+            if (filesystemSceneName == "") {
+                return "First Scene Name must not be empty";
+            }
+
+            // check that first scene name is different than game name
+            if (filesystemSceneName == fileSystemGameName) {
+                return "First Scene Name must be different than Game Name";
+            }
+
+            // check that scene with same name doesn't already exist in build settings
+            EditorBuildSettingsScene[] editorBuildSettingsScenes = EditorBuildSettings.scenes;
+            foreach (EditorBuildSettingsScene editorBuildSettingsScene in editorBuildSettingsScenes) {
+                //Debug.Log(Path.GetFileName(editorBuildSettingsScene.path).Replace(".unity", ""));
+                if (Path.GetFileName(editorBuildSettingsScene.path).Replace(".unity", "") == filesystemSceneName) {
+                    return "A scene with the name " + filesystemSceneName + " already exists in the build settings. Please choose a unique first scene name.";
+                }
+            }
+
             return null;
+        }
+
+        private string GetFilesystemSceneName(string sceneName) {
+            if (sceneName == null) {
+                return string.Empty;
+            }
+            return sceneName.Replace(" ", "");
         }
 
         private void ShowError(string message) {
@@ -365,6 +425,52 @@ namespace AnyRPG {
 
             AssetDatabase.Refresh();
         }
+
+        
+        protected override bool DrawWizardGUI() {
+            //return base.DrawWizardGUI();
+
+            //NewGameWizard myScript = target as NewGameWizard;
+
+            EditorGUILayout.LabelField("Game Options", EditorStyles.boldLabel);
+
+            gameName = EditorGUILayout.TextField("Game Name", gameName);
+            gameVersion = EditorGUILayout.TextField("Game Version", gameVersion);
+
+            EditorGUILayout.LabelField("First Scene Options", EditorStyles.boldLabel);
+
+            firstSceneName = EditorGUILayout.TextField("First Scene Name", firstSceneName);
+            copyExistingScene = EditorGUILayout.Toggle("Copy Existing Scene", copyExistingScene);
+
+            if (copyExistingScene) {
+                existingScene = EditorGUILayout.ObjectField("Existing Scene", existingScene, typeof(SceneAsset), false) as SceneAsset;
+            }
+
+            return true;
+        }
+        
     }
+
+    /*
+    [CustomEditor(typeof(NewGameWizard))]
+    public class NewGameWizardEditor : Editor {
+
+        public override void OnInspectorGUI() {
+            //base.OnInspectorGUI();
+
+            NewGameWizard myScript = target as NewGameWizard;
+
+            //DrawDefaultInspector();
+
+            myScript.createFirstScene = EditorGUILayout.Toggle("Create First Scene", myScript.createFirstScene);
+
+            if (myScript.createFirstScene) {
+                myScript.firstSceneName = EditorGUILayout.TextField("First Scene Name", myScript.firstSceneName);
+            }// else {
+               // myScript.firstSceneName = EditorGUILayout.field("First Scene Name", myScript.firstSceneName);
+            //}
+        }
+    }
+*/
 
 }
