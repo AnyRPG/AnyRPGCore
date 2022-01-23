@@ -19,6 +19,10 @@ namespace AnyRPG {
 
         protected ResourceDescription resourceDescription = null;
 
+        [Tooltip("If true, the regional override is optional, and will not cause an error if it doesn't exist.")]
+        [SerializeField]
+        protected bool optionalOverride = false;
+
         // game manager references
 
         protected SystemDataFactory systemDataFactory = null;
@@ -54,7 +58,9 @@ namespace AnyRPG {
                         description = tmpResourceDescription.Description;
                     }
                 } else {
-                    Debug.LogError("DescribableResource.SetupScriptableObjects(): Could Not Find " + resourceDescriptionProfile + " resource description while processing " + DisplayName + ". CHECK INSPECTOR!");
+                    if (optionalOverride == false) {
+                        Debug.LogError("DescribableResource.SetupScriptableObjects(): Could Not Find " + resourceDescriptionProfile + " resource description while processing " + DisplayName + ". CHECK INSPECTOR!");
+                    }
                 }
             }
         }
