@@ -71,4 +71,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/AnyRPG/Engine/Games/ContentDemo/Scenes/Content/ContentScene/ContentScene.unity
     guid: 79ec306d7083e084bb061eebd6e5f62f
+  - enabled: 1
+    path: Assets/Games/TestGame/Scenes/FirstScene/FirstScene.unity
+    guid: c5448959a7d351845969586d6f5ce056
   m_configObjects: {}
