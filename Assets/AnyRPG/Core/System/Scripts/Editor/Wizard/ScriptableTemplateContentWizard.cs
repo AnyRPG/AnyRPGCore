@@ -31,6 +31,9 @@ namespace AnyRPG {
 
         [Header("Content")]
 
+        [Tooltip("If true, replace any content that exists instead of skipping existing items")]
+        public bool replaceExisting = false;
+
         [Tooltip("The scriptable content to copy")]
         public List<ScriptableContentTemplate> scriptableContent = new List<ScriptableContentTemplate>();
 
@@ -117,7 +120,7 @@ namespace AnyRPG {
                 string destinationFilesystemPath = Application.dataPath + destinationPartialPath;
                 //Debug.Log(destinationFilesystemPath);
                 
-                if (System.IO.File.Exists(destinationFilesystemPath) == false) {
+                if (System.IO.File.Exists(destinationFilesystemPath) == false || replaceExisting == true) {
                     Debug.Log("Copying Resource from '" + assetPath + "' to '" + destinationAssetpath + "'");
                     AssetDatabase.CopyAsset(assetPath, destinationAssetpath);
                 } else {

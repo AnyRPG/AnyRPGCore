@@ -45,7 +45,7 @@ namespace AnyRPG {
         /// <param name="weapon"></param>
         /// <returns></returns>
         public bool IsWeaponSupported(Weapon weapon) {
-            if (weapon.WeaponSkill == null) {
+            if (weapon.WeaponSkill == null || weapon.RequireWeaponSkill == false) {
                 return true;
             }
             return IsWeaponSkillSupported(weapon.WeaponSkill);

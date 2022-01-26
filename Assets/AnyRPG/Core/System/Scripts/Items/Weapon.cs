@@ -10,6 +10,10 @@ namespace AnyRPG {
 
         [Header("Weapon Type")]
 
+        [Tooltip("If true, the character must have a weapon skill that matches the weapon type to equip or use this weapon")]
+        [SerializeField]
+        private bool requireWeaponSkill = false;
+
         [Tooltip("Weapon Type controls defaults for the weapon, and also the skill required to use this weapon")]
         [FormerlySerializedAs("weaponSkill")]
         [SerializeField]
@@ -129,6 +133,8 @@ namespace AnyRPG {
             }
         }
 
+        public bool RequireWeaponSkill { get => requireWeaponSkill; set => requireWeaponSkill = value; }
+
         public float GetDamagePerSecond(int characterLevel) {
             return GetDamagePerSecond(characterLevel, realItemQuality);
         }
@@ -162,7 +168,7 @@ namespace AnyRPG {
                 abilitiesString = "\n" + string.Join("\n", abilitiesList);
             }
 
-            if (weaponSkill != null) {
+            if (weaponSkill != null && requireWeaponSkill == true) {
                 string colorString = "white";
                 if (!CanEquip(playerManager.ActiveCharacter)) {
                     colorString = "red";
