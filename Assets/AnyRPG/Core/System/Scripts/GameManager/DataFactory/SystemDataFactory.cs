@@ -202,6 +202,10 @@ namespace AnyRPG {
             factoryDataAccess.Setup<StatusEffectGroup>("StatusEffectGroup", systemGameManager);
             dataDictionary.Add(typeof(StatusEffectGroup), factoryDataAccess);
 
+            factoryDataAccess = new FactoryDataAccess();
+            factoryDataAccess.Setup<AnimatedAction>("AnimatedAction", systemGameManager);
+            dataDictionary.Add(typeof(AnimatedAction), factoryDataAccess);
+
             //setup scriptable objects
             foreach (FactoryDataAccess dataAccess in dataDictionary.Values) {
                 dataAccess.SetupScriptableObjects(systemGameManager);
