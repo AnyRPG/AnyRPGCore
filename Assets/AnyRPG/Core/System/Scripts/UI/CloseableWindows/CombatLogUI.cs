@@ -2,6 +2,7 @@ using AnyRPG;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -21,6 +22,9 @@ namespace AnyRPG {
 
         [SerializeField]
         protected HighlightButton systemHighlightButton = null;
+
+        [SerializeField]
+        protected HighlightButton sendButton = null;
 
         [Header("Areas")]
 
@@ -59,6 +63,9 @@ namespace AnyRPG {
         [SerializeField]
         protected RectTransform systemRectTransform = null;
 
+        [SerializeField]
+        protected TMP_InputField textInput = null;
+
         //[SerializeField]
         //private Scrollbar systemScrollBar = null;
 
@@ -93,7 +100,9 @@ namespace AnyRPG {
 
         protected List<TextLogController> usedSystemLogControllers = new List<TextLogController>();
 
+        // game manager references
         protected LogManager logManager = null;
+        protected SystemDataFactory systemDataFactory = null;
 
         public override void Configure(SystemGameManager systemGameManager) {
             //Debug.Log("CombatLogUI.Awake()");
@@ -105,11 +114,14 @@ namespace AnyRPG {
 
             PopulateObjectPool();
             ClearLog();
+
+            textInput.onSubmit.AddListener(ProcessEnterKey);
         }
 
         public override void SetGameManagerReferences() {
             base.SetGameManagerReferences();
             logManager = systemGameManager.LogManager;
+            systemDataFactory = systemGameManager.SystemDataFactory;
         }
 
         private void ClearLog() {
@@ -273,6 +285,64 @@ namespace AnyRPG {
             //Debug.Log("CombatLogUI.ClearSystemMessages()");
             foreach (TextLogController textLogController in systemLogControllers) {
                 returnControllerToPool(textLogController, ref systemLogControllers, ref usedSystemLogControllers);
+            }
+        }
+
+        /// <summary>
+        /// respond to send key button clicked, sending message directly to parser
+        /// </summary>
+        public void ProcessSendKey() {
+            ParseChatMessage(textInput.text);
+        }
+
+        /// <summary>
+        /// respond to text input onSubmit() event and send to be parsed if escape key was not pressed
+        /// </summary>
+        /// <param name="ChatMessage"></param>
+        public void ProcessEnterKey(string ChatMessage) {
+            if (Input.GetKeyDown(KeyCode.Escape) || Input.GetKey(KeyCode.Escape)) {
+                return;
+            }
+            ParseChatMessage(ChatMessage);
+        }
+
+        public void ParseChatMessage(string chatMessage) {
+            textInput.text = "";
+            if (chatMessage.StartsWith("/") == true ) {
+                ParseChatCommand(chatMessage.Substring(1));
+                return;
+            }
+            HandleWriteChatMessage(chatMessage);
+        }
+
+        private void ParseChatCommand(string commandText) {
+
+            if (commandText == string.Empty) {
+                Debug.Log("Empty Chat Message");
+                return;
+            }
+
+            string chatCommandString = string.Empty;
+            string commandParameters = string.Empty;
+            if (commandText.Contains(" ")) {
+                int index = commandText.IndexOf(' ');
+                chatCommandString = commandText.Substring(0, index);
+                if (commandText.Length > index) {
+                    commandParameters = commandText.Substring(index + 1);
+                }
+            } else {
+                chatCommandString = commandText;
+            }
+
+            Dictionary<string, ChatCommand> commandDictionary = new Dictionary<string, ChatCommand>();
+            foreach (ChatCommand chatCommand in systemDataFactory.GetResourceList<ChatCommand>()) {
+                commandDictionary.Add(chatCommand.DisplayName.ToLower(), chatCommand);
+            }
+
+            if (commandDictionary.ContainsKey(chatCommandString)) {
+                commandDictionary[chatCommandString].ExecuteCommand(commandParameters);
+            } else {
+                HandleWriteChatMessage("Unknown command : " + chatCommandString);
             }
         }
 
