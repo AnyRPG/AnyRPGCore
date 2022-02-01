@@ -85,12 +85,12 @@ namespace AnyRPG {
         }
 
         public void ActivateTextInput() {
-            Debug.Log("ControlsManager.ActivateTextInput()");
+            //Debug.Log("ControlsManager.ActivateTextInput()");
             textInputActive = true;
         }
 
         public void DeactivateTextInput() {
-            Debug.Log("ControlsManager.DeactivateTextInput()");
+            //Debug.Log("ControlsManager.DeactivateTextInput()");
             textInputActive = false;
         }
 

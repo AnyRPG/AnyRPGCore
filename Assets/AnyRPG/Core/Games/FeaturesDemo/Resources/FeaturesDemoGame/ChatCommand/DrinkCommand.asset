@@ -26,6 +26,6 @@ MonoBehaviour:
     animationProfileName: 
     castingAudioProfileName: 
     holdableObjectList:
-    - holdableObjectName: Health Potion Fill
+    - holdableObjectName: Health Potion
       useUniversalAttachment: 1
       attachmentName: Right Hand
