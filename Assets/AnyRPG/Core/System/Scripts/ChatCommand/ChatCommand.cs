@@ -7,13 +7,15 @@ using UnityEngine.Serialization;
 using UnityEngine.UI;
 
 namespace AnyRPG {
-    [CreateAssetMenu(fileName = "New Chat Command", menuName = "AnyRPG/ChatCommand")]
-    public class ChatCommand : DescribableResource {
+    //[CreateAssetMenu(fileName = "New Chat Command", menuName = "AnyRPG/ChatCommand")]
+    public abstract class ChatCommand : DescribableResource {
 
-        [Header("Chat Command")]
+        //[Header("Chat Command")]
 
+        /*
         [SerializeField]
         private ChatCommandType commandType = ChatCommandType.Action;
+        */
 
         // game manager references
         protected PlayerManager playerManager = null;
@@ -23,8 +25,8 @@ namespace AnyRPG {
             playerManager = systemGameManager.PlayerManager;
         }
 
-        public void ExecuteCommand(string commandParameters) {
-            Debug.Log("Executing command " + DisplayName + " with parameters (" + commandParameters + ")");
+        public virtual void ExecuteCommand(string commandParameters) {
+            Debug.Log("ChatCommand.ExecuteCommand(): Executing command " + DisplayName + " with parameters (" + commandParameters + ")");
         }
 
     }

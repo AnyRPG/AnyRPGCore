@@ -285,9 +285,11 @@ namespace AnyRPG {
 
         public List<AbilityAttachmentNode> HoldableObjectList { get => holdableObjectList; set => holdableObjectList = value; }
 
+        /*
         public override void Configure(SystemGameManager systemGameManager) {
             base.Configure(systemGameManager);
         }
+        */
 
         public override void SetGameManagerReferences() {
             base.SetGameManagerReferences();
@@ -295,7 +297,7 @@ namespace AnyRPG {
         }
 
         public void SetupScriptableObjects(SystemGameManager systemGameManager, string ownerName) {
-            //base.SetupScriptableObjects(systemGameManager);
+            Configure(systemGameManager);
 
             displayName = ownerName;
        

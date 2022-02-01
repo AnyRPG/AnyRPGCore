@@ -71,6 +71,7 @@ namespace AnyRPG {
         private BehaviorController behaviorController = null;
         private UnitModelController unitModelController = null;
         private UnitMountManager unitMountManager = null;
+        private UnitActionManager unitActionManager = null;
         private UUID uuid = null;
 
         // control logic
@@ -294,6 +295,7 @@ namespace AnyRPG {
         }
 
         public UnitMountManager UnitMountManager { get => unitMountManager; set => unitMountManager = value; }
+        public UnitActionManager UnitActionManager { get => unitActionManager; set => unitActionManager = value; }
         public BehaviorController BehaviorController { get => behaviorController; set => behaviorController = value; }
 
         public override GameObject InteractableGameObject {
@@ -387,6 +389,7 @@ namespace AnyRPG {
             behaviorController = new BehaviorController(this, systemGameManager);
             unitModelController = new UnitModelController(this, systemGameManager);
             unitMountManager = new UnitMountManager(this, systemGameManager);
+            unitActionManager = new UnitActionManager(this, systemGameManager);
             persistentObjectComponent.Setup(this, systemGameManager);
 
             // allow the base character to initialize.
@@ -745,6 +748,7 @@ namespace AnyRPG {
             patrolController = null;
             behaviorController = null;
             unitModelController = null;
+            unitActionManager = null;
             unitMountManager = null;
             uuid = null;
 

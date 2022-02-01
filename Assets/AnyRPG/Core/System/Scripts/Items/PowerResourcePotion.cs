@@ -48,7 +48,7 @@ namespace AnyRPG {
                 if (tmpPowerResource != null) {
                     powerResource = tmpPowerResource;
                 } else {
-                    Debug.LogError("SystemAbilityManager.SetupScriptableObjects(): Could not find power resource : " + powerResourceName + " while inititalizing " + DisplayName + ".  CHECK INSPECTOR");
+                    Debug.LogError("PowerResourcePotion.SetupScriptableObjects(): Could not find power resource : " + powerResourceName + " while inititalizing " + DisplayName + ".  CHECK INSPECTOR");
                 }
             }
 

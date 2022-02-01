@@ -100,6 +100,8 @@ namespace AnyRPG {
 
         protected List<TextLogController> usedSystemLogControllers = new List<TextLogController>();
 
+        protected Dictionary<string, ChatCommand> commandDictionary = new Dictionary<string, ChatCommand>();
+
         // game manager references
         protected LogManager logManager = null;
         protected SystemDataFactory systemDataFactory = null;
@@ -116,6 +118,11 @@ namespace AnyRPG {
             ClearLog();
 
             textInput.onSubmit.AddListener(ProcessEnterKey);
+
+            // populate the dictionary
+            foreach (ChatCommand chatCommand in systemDataFactory.GetResourceList<ChatCommand>()) {
+                commandDictionary.Add(chatCommand.DisplayName.ToLower().Replace(" ", ""), chatCommand);
+            }
         }
 
         public override void SetGameManagerReferences() {
@@ -289,6 +296,18 @@ namespace AnyRPG {
         }
 
         /// <summary>
+        /// disable hotkeys and movement while text input is active
+        /// </summary>
+        public void ActivateTextInput() {
+            controlsManager.ActivateTextInput();
+        }
+
+
+        public void DeativateTextInput() {
+            controlsManager.DeactivateTextInput();
+        }
+
+        /// <summary>
         /// respond to send key button clicked, sending message directly to parser
         /// </summary>
         public void ProcessSendKey() {
@@ -332,11 +351,6 @@ namespace AnyRPG {
                 }
             } else {
                 chatCommandString = commandText;
-            }
-
-            Dictionary<string, ChatCommand> commandDictionary = new Dictionary<string, ChatCommand>();
-            foreach (ChatCommand chatCommand in systemDataFactory.GetResourceList<ChatCommand>()) {
-                commandDictionary.Add(chatCommand.DisplayName.ToLower(), chatCommand);
             }
 
             if (commandDictionary.ContainsKey(chatCommandString)) {

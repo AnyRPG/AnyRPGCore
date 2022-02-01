@@ -37,6 +37,10 @@ namespace AnyRPG {
 
         private int windowStackCount = 0;
 
+        // is text being entered in an input field ?
+        // used to disable keyboard shortcuts and movement
+        private bool textInputActive = false;
+
         // game manager references
         protected InputManager inputManager = null;
         protected UIManager uIManager = null;
@@ -80,6 +84,16 @@ namespace AnyRPG {
             cutSceneBarController = uIManager.CutSceneBarController;
         }
 
+        public void ActivateTextInput() {
+            Debug.Log("ControlsManager.ActivateTextInput()");
+            textInputActive = true;
+        }
+
+        public void DeactivateTextInput() {
+            Debug.Log("ControlsManager.DeactivateTextInput()");
+            textInputActive = false;
+        }
+
         public void ActivateGamepadMode(bool toggleUI) {
             //Debug.Log("ControlsManager.ActivateGamepadMode()");
             gamePadModeActive = true;
@@ -109,6 +123,13 @@ namespace AnyRPG {
 
         private void DeactivateGamepadInput() {
             //Debug.Log("ControlsManager.DeactivateGamepadInput()");
+
+            // this if condition was added because a mouse click in an input field was causing that inputfield
+            // to be deselected due to deactivating gamepadinput sending deselection events to another open window
+            if (gamePadInputActive == false) {
+                return;
+            }
+
             gamePadInputActive = false;
             windowManager.DeactivateGamepadInput();
         }
@@ -177,7 +198,7 @@ namespace AnyRPG {
             }
 
             // only send input to the next block if the name change window is not open
-            if (uIManager.nameChangeWindow.IsOpen == false) {
+            if (textInputActive == false) {
                 uIManager.ProcessInput();
 
                 if (windowManager.NavigatingInterface && inputManager.KeyBindWasPressed("JOYSTICKBUTTON1")) {
@@ -197,7 +218,7 @@ namespace AnyRPG {
                 windowManager.Navigate();
             }
 
-            if (uIManager.nameChangeWindow.IsOpen == true) {
+            if (textInputActive == true) {
                 //Debug.Log("Not allowing movement or attacks during name change");
                 return;
             }
