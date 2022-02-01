@@ -943,6 +943,7 @@ namespace AnyRPG {
                 if (playerManager.ActiveCharacter.CharacterStats.IsAlive != false) {
                     // prevent character from swapping to third party controller while dead
                     playerManager.ActiveCharacter.CharacterAbilityManager.StopCasting();
+                    playerManager.UnitController.UnitActionManager.StopAction();
                 }
                 playerManager.ActiveCharacter.CharacterAbilityManager.DeActivateTargettingMode();
             }

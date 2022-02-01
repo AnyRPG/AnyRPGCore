@@ -40,6 +40,17 @@ namespace AnyRPG {
             playerManager = systemGameManager.PlayerManager;
         }
 
+        /// <summary>
+        /// disable hotkeys and movement while text input is active
+        /// </summary>
+        public void ActivateTextInput() {
+            controlsManager.ActivateTextInput();
+        }
+
+        public void DeativateTextInput() {
+            controlsManager.DeactivateTextInput();
+        }
+
 
         public void CancelAction() {
             //Debug.Log("NameChangePanelController.CancelAction()");
@@ -70,11 +81,13 @@ namespace AnyRPG {
         public void HandlePointerClick() {
             EventParamProperties eventParam = new EventParamProperties();
             SystemEventManager.TriggerEvent("OnDisableMovement", eventParam);
+            controlsManager.ActivateTextInput();
         }
 
         public void HandleEndEdit() {
             EventParamProperties eventParam = new EventParamProperties();
             SystemEventManager.TriggerEvent("OnEnableMovement", eventParam);
+            controlsManager.DeactivateTextInput();
         }
 
     }

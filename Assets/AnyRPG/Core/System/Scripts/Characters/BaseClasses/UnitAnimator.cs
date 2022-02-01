@@ -537,6 +537,33 @@ namespace AnyRPG {
             // attackCoroutine = StartCoroutine(WaitForAnimation(baseAbility, animationLength, false, false, true));
         }
 
+        // non melee ability (spell) cast
+        public void HandleAction(AnimationClip animationClip, AnimatedActionProperties animatedActionProperties) {
+            //Debug.Log(gameObject.name + ".CharacterAnimator.HandleCastingAbility()");
+            if (animator == null) {
+                return;
+            }
+
+            if (systemConfigurationManager != null) {
+                // override the default cast animation
+
+                overrideController[systemConfigurationManager.SystemAnimationProfile.AnimationProps.CastClips[0].name] = animationClip;
+                //Debug.Log(gameObject.name + ".CharacterAnimator.HandleCastingAbility() current casting clip: " + overrideController[systemConfigurationManager.MySystemAnimationProfile.MyCastClips[0].name].name);
+                float animationLength = animationClip.length;
+                //Debug.Log(gameObject.name + ".CharacterAnimator.HandleCastingAbility() animationlength: " + animationLength);
+            }
+
+            /*
+            if (baseAbility.GetUnitAnimationProps(unitController.CharacterUnit.BaseCharacter).UseRootMotion == true) {
+                unitController.SetUseRootMotion(true);
+            } else {
+                unitController.SetUseRootMotion(false);
+            }
+            */
+
+            SetCasting(true, true);
+        }
+
         public bool WaitingForAnimation() {
             if (attackCoroutine != null) {
                 return true;
@@ -609,6 +636,16 @@ namespace AnyRPG {
             }
         }
 
+        public void CheckClearAction() {
+            if (unitController.UnitActionManager.CurrentActionCoroutine != null) {
+                unitController.UnitActionManager.StopAction();
+            }
+        }
+
+        public void ClearAction() {
+            SetCasting(false);
+        }
+
         public bool ClearCasting(bool stoppedCast = false) {
             //Debug.Log(gameObject.name + ".CharacterAnimator.ClearCasting()");
 
@@ -646,6 +683,9 @@ namespace AnyRPG {
                 attackCoroutine = null;
             }
             //Debug.Log(gameObject.name + ".CharacterAnimator.ClearAnimationBlockers(): setting speed to 1");
+
+            // clear any outstanding actions
+            CheckClearAction();
 
             // if the unit was doing an attack or cast animation, it was likely not moving
             // that means we can reset the animation speed to normal because it shouldn't interfere with the movement animation speed

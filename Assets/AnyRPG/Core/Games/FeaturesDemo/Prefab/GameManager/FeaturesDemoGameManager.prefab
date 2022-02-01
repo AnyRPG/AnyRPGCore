@@ -84,6 +84,12 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8448294747759913886, guid: 940327016906947448ca06fe7bf422fb,
         type: 3}
+      propertyPath: systemBarMap
+      value: 
+      objectReference: {fileID: 21300000, guid: 400a356f37ec3074c8e7dafed266bcba,
+        type: 3}
+    - target: {fileID: 8448294747759913886, guid: 940327016906947448ca06fe7bf422fb,
+        type: 3}
       propertyPath: mainMenuScene
       value: MainMenu
       objectReference: {fileID: 0}
@@ -107,6 +113,12 @@ PrefabInstance:
       propertyPath: fallDamageAudio
       value: Male Take Damage
       objectReference: {fileID: 0}
+    - target: {fileID: 8448294747759913886, guid: 940327016906947448ca06fe7bf422fb,
+        type: 3}
+      propertyPath: systemBarSkills
+      value: 
+      objectReference: {fileID: 21300000, guid: 8950106125fcc6549968cf0e98ea2377,
+        type: 3}
     - target: {fileID: 8448294747759913886, guid: 940327016906947448ca06fe7bf422fb,
         type: 3}
       propertyPath: deathAbilityName
@@ -139,6 +151,18 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8448294747759913886, guid: 940327016906947448ca06fe7bf422fb,
         type: 3}
+      propertyPath: systemBarMainMenu
+      value: 
+      objectReference: {fileID: 21300000, guid: 4dfa02c4f614b604f922c53bc3de0bd0,
+        type: 3}
+    - target: {fileID: 8448294747759913886, guid: 940327016906947448ca06fe7bf422fb,
+        type: 3}
+      propertyPath: systemBarQuestLog
+      value: 
+      objectReference: {fileID: 21300000, guid: 1a14fe939458e1a4685a614e66908ab4,
+        type: 3}
+    - target: {fileID: 8448294747759913886, guid: 940327016906947448ca06fe7bf422fb,
+        type: 3}
       propertyPath: defaultBankBagItem
       value: BankChest
       objectReference: {fileID: 0}
@@ -152,6 +176,18 @@ PrefabInstance:
       propertyPath: statBudgetPerLevel
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 8448294747759913886, guid: 940327016906947448ca06fe7bf422fb,
+        type: 3}
+      propertyPath: systemBarCharacter
+      value: 
+      objectReference: {fileID: 21300000, guid: c85756f6d654d3f45a59124373125f95,
+        type: 3}
+    - target: {fileID: 8448294747759913886, guid: 940327016906947448ca06fe7bf422fb,
+        type: 3}
+      propertyPath: systemBarInventory
+      value: 
+      objectReference: {fileID: 21300000, guid: 59fd07405d034f24f8735878f5f3636e,
+        type: 3}
     - target: {fileID: 8448294747759913886, guid: 940327016906947448ca06fe7bf422fb,
         type: 3}
       propertyPath: defaultBackpackItem
@@ -169,9 +205,27 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8448294747759913886, guid: 940327016906947448ca06fe7bf422fb,
         type: 3}
+      propertyPath: systemBarCurrencies
+      value: 
+      objectReference: {fileID: 21300000, guid: f6fbb6afc44bddf498b97c510742f5b1,
+        type: 3}
+    - target: {fileID: 8448294747759913886, guid: 940327016906947448ca06fe7bf422fb,
+        type: 3}
       propertyPath: equipDefaultBackPack
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 8448294747759913886, guid: 940327016906947448ca06fe7bf422fb,
+        type: 3}
+      propertyPath: systemBarAbilityBook
+      value: 
+      objectReference: {fileID: 21300000, guid: 28c685cdf1ca34f4b98801ac9cf978d3,
+        type: 3}
+    - target: {fileID: 8448294747759913886, guid: 940327016906947448ca06fe7bf422fb,
+        type: 3}
+      propertyPath: systemBarReputations
+      value: 
+      objectReference: {fileID: 21300000, guid: 9f2383ebb700b7b4abbb9b6de35299ef,
+        type: 3}
     - target: {fileID: 8448294747759913886, guid: 940327016906947448ca06fe7bf422fb,
         type: 3}
       propertyPath: lootSparkleEffectName
@@ -182,6 +236,12 @@ PrefabInstance:
       propertyPath: newGameSpecialization
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 8448294747759913886, guid: 940327016906947448ca06fe7bf422fb,
+        type: 3}
+      propertyPath: systemBarAchievements
+      value: 
+      objectReference: {fileID: 21300000, guid: e029593ae7518d743830eccfc3e4e2b7,
+        type: 3}
     - target: {fileID: 8448294747759913886, guid: 940327016906947448ca06fe7bf422fb,
         type: 3}
       propertyPath: lootSparkleAbilityName
@@ -231,6 +291,11 @@ PrefabInstance:
         type: 3}
       propertyPath: defaultBankContents.Array.data[1]
       value: Bag
+      objectReference: {fileID: 0}
+    - target: {fileID: 8448294747759913886, guid: 940327016906947448ca06fe7bf422fb,
+        type: 3}
+      propertyPath: deprecatedPrimaryStats.Array.size
+      value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 8448294747759913886, guid: 940327016906947448ca06fe7bf422fb,
         type: 3}
@@ -319,7 +384,52 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8448294747759913886, guid: 940327016906947448ca06fe7bf422fb,
         type: 3}
+      propertyPath: deprecatedPrimaryStats.Array.data[0].statName
+      value: Stamina
+      objectReference: {fileID: 0}
+    - target: {fileID: 8448294747759913886, guid: 940327016906947448ca06fe7bf422fb,
+        type: 3}
+      propertyPath: deprecatedPrimaryStats.Array.data[1].statName
+      value: Intellect
+      objectReference: {fileID: 0}
+    - target: {fileID: 8448294747759913886, guid: 940327016906947448ca06fe7bf422fb,
+        type: 3}
+      propertyPath: deprecatedPrimaryStats.Array.data[2].statName
+      value: Strength
+      objectReference: {fileID: 0}
+    - target: {fileID: 8448294747759913886, guid: 940327016906947448ca06fe7bf422fb,
+        type: 3}
+      propertyPath: deprecatedPrimaryStats.Array.data[3].statName
+      value: Agility
+      objectReference: {fileID: 0}
+    - target: {fileID: 8448294747759913886, guid: 940327016906947448ca06fe7bf422fb,
+        type: 3}
+      propertyPath: deprecatedPrimaryStats.Array.data[0].budgetPerLevel
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 8448294747759913886, guid: 940327016906947448ca06fe7bf422fb,
+        type: 3}
+      propertyPath: deprecatedPrimaryStats.Array.data[1].budgetPerLevel
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 8448294747759913886, guid: 940327016906947448ca06fe7bf422fb,
+        type: 3}
+      propertyPath: deprecatedPrimaryStats.Array.data[2].budgetPerLevel
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 8448294747759913886, guid: 940327016906947448ca06fe7bf422fb,
+        type: 3}
+      propertyPath: deprecatedPrimaryStats.Array.data[3].budgetPerLevel
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 8448294747759913886, guid: 940327016906947448ca06fe7bf422fb,
+        type: 3}
       propertyPath: primaryStats.Array.data[0].primaryToResourceConversion.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8448294747759913886, guid: 940327016906947448ca06fe7bf422fb,
+        type: 3}
+      propertyPath: deprecatedPrimaryStats.Array.data[0].primaryToResourceConversion.Array.size
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8448294747759913886, guid: 940327016906947448ca06fe7bf422fb,
@@ -330,6 +440,16 @@ PrefabInstance:
     - target: {fileID: 8448294747759913886, guid: 940327016906947448ca06fe7bf422fb,
         type: 3}
       propertyPath: primaryStats.Array.data[0].primaryToResourceConversion.Array.data[0].resourcePerPoint
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 8448294747759913886, guid: 940327016906947448ca06fe7bf422fb,
+        type: 3}
+      propertyPath: deprecatedPrimaryStats.Array.data[0].primaryToResourceConversion.Array.data[0].resourceName
+      value: Health
+      objectReference: {fileID: 0}
+    - target: {fileID: 8448294747759913886, guid: 940327016906947448ca06fe7bf422fb,
+        type: 3}
+      propertyPath: deprecatedPrimaryStats.Array.data[0].primaryToResourceConversion.Array.data[0].resourcePerPoint
       value: 10
       objectReference: {fileID: 0}
     m_RemovedComponents: []

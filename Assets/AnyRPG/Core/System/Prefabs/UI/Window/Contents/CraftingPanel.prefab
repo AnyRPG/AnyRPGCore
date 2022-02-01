@@ -93,6 +93,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   outlineImage: {fileID: 1119262491577164139}
   highlightOutlineColor: {r: 0.64705884, g: 0.64705884, b: 0.64705884, a: 0.6509804}
+  useSystemOutlineColor: 1
   highlightImage: {fileID: 0}
   highlightBackgroundOnSelect: 0
   highlightBackgroundOnInteract: 0
@@ -117,6 +118,7 @@ MonoBehaviour:
   overrideDisabledColor: 0
   disabledColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 0.5019608}
   CapitalizeText: 0
+  mouseHoverSound: 1
   stackSize: {fileID: 2717455508202886439}
   icon: {fileID: 5550807324144221448}
   backgroundImage: {fileID: 9110822842178044163}
@@ -1069,6 +1071,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   outlineImage: {fileID: 5396973663638855377}
   highlightOutlineColor: {r: 0.64705884, g: 0.64705884, b: 0.64705884, a: 0.6509804}
+  useSystemOutlineColor: 1
   highlightImage: {fileID: 0}
   highlightBackgroundOnSelect: 0
   highlightBackgroundOnInteract: 0
@@ -1093,6 +1096,7 @@ MonoBehaviour:
   overrideDisabledColor: 0
   disabledColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 0.5019608}
   CapitalizeText: 0
+  mouseHoverSound: 1
   stackSize: {fileID: 5743468381216608834}
   icon: {fileID: 1312252428901481798}
   backgroundImage: {fileID: 2988034097804816499}
@@ -1625,6 +1629,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   outlineImage: {fileID: 6761418803915986214}
   highlightOutlineColor: {r: 0.64705884, g: 0.64705884, b: 0.64705884, a: 0.6509804}
+  useSystemOutlineColor: 1
   highlightImage: {fileID: 0}
   highlightBackgroundOnSelect: 0
   highlightBackgroundOnInteract: 0
@@ -1649,6 +1654,7 @@ MonoBehaviour:
   overrideDisabledColor: 0
   disabledColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 0.5019608}
   CapitalizeText: 0
+  mouseHoverSound: 1
   stackSize: {fileID: 3306566266785085768}
   icon: {fileID: 4341226185058230858}
   backgroundImage: {fileID: 2235115983044110095}
@@ -2059,6 +2065,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   outlineImage: {fileID: 0}
   highlightOutlineColor: {r: 0.64705884, g: 0.64705884, b: 0.64705884, a: 0.6509804}
+  useSystemOutlineColor: 1
   highlightImage: {fileID: 0}
   highlightBackgroundOnSelect: 0
   highlightBackgroundOnInteract: 0
@@ -2083,6 +2090,7 @@ MonoBehaviour:
   overrideDisabledColor: 0
   disabledColor: {r: 0.32156864, g: 0.32156864, b: 0.32156864, a: 0.06666667}
   CapitalizeText: 0
+  mouseHoverSound: 1
 --- !u!114 &4763003353445243614
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2256,6 +2264,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   outlineImage: {fileID: 0}
   highlightOutlineColor: {r: 0.64705884, g: 0.64705884, b: 0.64705884, a: 0.6509804}
+  useSystemOutlineColor: 1
   highlightImage: {fileID: 0}
   highlightBackgroundOnSelect: 0
   highlightBackgroundOnInteract: 0
@@ -2280,6 +2289,7 @@ MonoBehaviour:
   overrideDisabledColor: 0
   disabledColor: {r: 0.32156864, g: 0.32156864, b: 0.32156864, a: 0.06666667}
   CapitalizeText: 0
+  mouseHoverSound: 1
 --- !u!114 &5563336254563770926
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3335,6 +3345,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   outlineImage: {fileID: 5768096874326216458}
   highlightOutlineColor: {r: 0.64705884, g: 0.64705884, b: 0.64705884, a: 0.6509804}
+  useSystemOutlineColor: 1
   highlightImage: {fileID: 0}
   highlightBackgroundOnSelect: 0
   highlightBackgroundOnInteract: 0
@@ -3359,6 +3370,7 @@ MonoBehaviour:
   overrideDisabledColor: 0
   disabledColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 0.5019608}
   CapitalizeText: 0
+  mouseHoverSound: 1
   stackSize: {fileID: 7802123609138631667}
   icon: {fileID: 8195315240208937836}
   backgroundImage: {fileID: 5883017338623180576}
@@ -3457,6 +3469,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   outlineImage: {fileID: 4600424181819581943}
   highlightOutlineColor: {r: 0.64705884, g: 0.64705884, b: 0.64705884, a: 0.6509804}
+  useSystemOutlineColor: 1
   highlightImage: {fileID: 0}
   highlightBackgroundOnSelect: 0
   highlightBackgroundOnInteract: 0
@@ -3481,6 +3494,7 @@ MonoBehaviour:
   overrideDisabledColor: 0
   disabledColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 0.5019608}
   CapitalizeText: 0
+  mouseHoverSound: 1
   stackSize: {fileID: 1522423326155098286}
   icon: {fileID: 2406404542484740606}
   backgroundImage: {fileID: 3968108252094359900}
@@ -4195,6 +4209,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   outlineImage: {fileID: 0}
   highlightOutlineColor: {r: 0.64705884, g: 0.64705884, b: 0.64705884, a: 0.6509804}
+  useSystemOutlineColor: 1
   highlightImage: {fileID: 0}
   highlightBackgroundOnSelect: 0
   highlightBackgroundOnInteract: 0
@@ -4219,6 +4234,7 @@ MonoBehaviour:
   overrideDisabledColor: 0
   disabledColor: {r: 0.32156864, g: 0.32156864, b: 0.32156864, a: 0.06666667}
   CapitalizeText: 0
+  mouseHoverSound: 1
 --- !u!114 &3368314523392097042
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4797,6 +4813,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   outlineImage: {fileID: 9174100278167594146}
   highlightOutlineColor: {r: 0.64705884, g: 0.64705884, b: 0.64705884, a: 0.6509804}
+  useSystemOutlineColor: 1
   highlightImage: {fileID: 0}
   highlightBackgroundOnSelect: 0
   highlightBackgroundOnInteract: 0
@@ -4821,6 +4838,7 @@ MonoBehaviour:
   overrideDisabledColor: 0
   disabledColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 0.5019608}
   CapitalizeText: 0
+  mouseHoverSound: 1
   stackSize: {fileID: 9220387102432119416}
   icon: {fileID: 550271643120248258}
   backgroundImage: {fileID: 2504958815745998785}
@@ -7076,14 +7094,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.509434, g: 0.509434, b: 0.509434, a: 0}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 0}
+  m_Sprite: {fileID: 21300000, guid: fdfd5ef046a99b743a78ce3661e9fea6, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -7711,6 +7729,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   backGroundImage: {fileID: 0}
+  captureCamera: 0
   coloredUIElements: []
   addToWindowStack: 1
   userCloseable: 1
