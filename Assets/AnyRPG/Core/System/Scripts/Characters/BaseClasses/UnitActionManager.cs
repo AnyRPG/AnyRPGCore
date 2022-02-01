@@ -8,25 +8,25 @@ namespace AnyRPG {
     public class UnitActionManager : ConfiguredClass {
 
         //public event System.Action<BaseCharacter> OnCastCancel = delegate { };
-        public event System.Action<AnimatedAction> OnCombatCheckFail = delegate { };
-        public event System.Action<AnimatedAbility> OnAnimatedAbilityCheckFail = delegate { };
+        //public event System.Action<AnimatedAction> OnCombatCheckFail = delegate { };
+        //public event System.Action<AnimatedAbility> OnAnimatedAbilityCheckFail = delegate { };
         public event System.Action<string> OnCombatMessage = delegate { };
 
         private UnitController unitController = null;
 
-        protected bool isPerformingAction = false;
+        //protected bool isPerformingAction = false;
 
         private Coroutine currentActionCoroutine = null;
 
-        private AnimatedActionProperties currentAction = null;
+        //private AnimatedActionProperties currentAction = null;
 
         // the holdable objects spawned during an ability cast and removed when the cast is complete
-        protected Dictionary<AbilityAttachmentNode, List<GameObject>> abilityObjects = new Dictionary<AbilityAttachmentNode, List<GameObject>>();
+        protected Dictionary<AbilityAttachmentNode, List<GameObject>> actionObjects = new Dictionary<AbilityAttachmentNode, List<GameObject>>();
 
         // game manager references
-        private SystemDataFactory systemDataFactory = null;
-        private PlayerManager playerManager = null;
-        private ObjectPooler objectPooler = null;
+        protected SystemDataFactory systemDataFactory = null;
+        //private PlayerManager playerManager = null;
+        protected ObjectPooler objectPooler = null;
 
         public bool ControlLocked {
             get {
@@ -46,6 +46,8 @@ namespace AnyRPG {
             }
         }
 
+        public Coroutine CurrentActionCoroutine { get => currentActionCoroutine; }
+
         public UnitActionManager(UnitController unitController, SystemGameManager systemGameManager) {
             this.unitController = unitController;
             Configure(systemGameManager);
@@ -54,7 +56,7 @@ namespace AnyRPG {
         public override void SetGameManagerReferences() {
             base.SetGameManagerReferences();
             systemDataFactory = systemGameManager.SystemDataFactory;
-            playerManager = systemGameManager.PlayerManager;
+            //playerManager = systemGameManager.PlayerManager;
             objectPooler = systemGameManager.ObjectPooler;
         }
 
@@ -110,11 +112,11 @@ namespace AnyRPG {
             }
         }
 
-        public void SpawnAbilityObjects(List<AbilityAttachmentNode> abilityAttachmentNodes) {
+        public void SpawnActionObjects(List<AbilityAttachmentNode> abilityAttachmentNodes) {
             //Debug.Log(baseCharacter.gameObject.name + ".CharacterAbilityManager.SpawnAbilityObjects()");
 
             // ensure that any current ability objects are cleared before spawning new ones
-            DespawnAbilityObjects();
+            DespawnActionObjects();
 
             Dictionary<AbilityAttachmentNode, GameObject> holdableObjects = new Dictionary<AbilityAttachmentNode, GameObject>();
             foreach (AbilityAttachmentNode abilityAttachmentNode in abilityAttachmentNodes) {
@@ -153,21 +155,21 @@ namespace AnyRPG {
         }
 
         public void AddAbilityObject(AbilityAttachmentNode abilityAttachmentNode, GameObject go) {
-            if (abilityObjects.ContainsKey(abilityAttachmentNode)) {
-                abilityObjects[abilityAttachmentNode].Add(go);
+            if (actionObjects.ContainsKey(abilityAttachmentNode)) {
+                actionObjects[abilityAttachmentNode].Add(go);
             } else {
-                abilityObjects.Add(abilityAttachmentNode, new List<GameObject>() { go });
+                actionObjects.Add(abilityAttachmentNode, new List<GameObject>() { go });
             }
         }
 
-        public void DespawnAbilityObjects() {
+        public void DespawnActionObjects() {
             //Debug.Log(gameObject.name + ".CharacterAbilityManager.DespawnAbilityObjects()");
 
-            if (abilityObjects == null || abilityObjects.Count == 0) {
+            if (actionObjects == null || actionObjects.Count == 0) {
                 return;
             }
 
-            foreach (List<GameObject> abilityObjectPrefabs in abilityObjects.Values) {
+            foreach (List<GameObject> abilityObjectPrefabs in actionObjects.Values) {
                 if (abilityObjectPrefabs != null) {
                     foreach (GameObject abilityObject in abilityObjectPrefabs) {
                         if (abilityObject != null) {
@@ -176,7 +178,7 @@ namespace AnyRPG {
                     }
                 }
             }
-            abilityObjects.Clear();
+            actionObjects.Clear();
         }
 
         public AnimationProps GetUnitAnimationProps() {
@@ -190,6 +192,7 @@ namespace AnyRPG {
             return null;
         }
 
+        /*
         public List<AnimationClip> GetUnitCastAnimations() {
             //Debug.Log(gameObject.name + ".GetDefaultAttackAnimations()");
             if (unitController?.UnitAnimator?.CurrentAnimations != null) {
@@ -197,18 +200,20 @@ namespace AnyRPG {
             }
             return new List<AnimationClip>();
         }
+        */
 
-        public void PerformActionAnimation(AnimationClip animationClip, BaseAbility baseAbility) {
+        public void PerformActionAnimation(AnimationClip animationClip, AnimatedActionProperties animatedActionProperties) {
             if (animationClip != null) {
-                unitController.UnitAnimator.HandleCastingAbility(animationClip, baseAbility);
+                unitController.UnitAnimator.HandleAction(animationClip, animatedActionProperties);
             }
         }
 
         public void CleanupCoroutines() {
             //Debug.Log(baseCharacter.gameObject.name + ".CharacterAbilitymanager.CleanupCoroutines()");
             if (currentActionCoroutine != null) {
-                unitController.StopCoroutine(currentActionCoroutine);
-                EndCastCleanup();
+                StopAction();
+                //unitController.StopCoroutine(currentActionCoroutine);
+                //EndActionCleanup();
             }
 
             //abilityCaster.StopAllCoroutines();
@@ -218,8 +223,9 @@ namespace AnyRPG {
         public void HandleDie(CharacterStats _characterStats) {
             //Debug.Log(baseCharacter.gameObject.name + ".HandleDie()");
 
-            // auto attacks will be separately cancelled by characterCombat
-            StopAction();
+            if (currentActionCoroutine != null) {
+                StopAction();
+            }
         }
 
 
@@ -229,50 +235,45 @@ namespace AnyRPG {
         /// <param name="animatedAction"></param>
         /// <param name="target"></param>
         /// <returns></returns>
-        public IEnumerator PerformActionCast(AnimatedActionProperties animatedAction, Interactable target) {
+        public IEnumerator PerformActionCast(AnimatedActionProperties animatedActionProperties, Interactable target) {
             float startTime = Time.time;
             //Debug.Log(baseCharacter.gameObject.name + "CharacterAbilitymanager.PerformAbilityCast(" + ability.DisplayName + ", " + (target == null ? "null" : target.name) + ") Enter Ienumerator with tag: " + startTime);
 
-            bool canCast = true;
+            PerformActionAnimation(animatedActionProperties.AnimationClip, animatedActionProperties);
 
-            if (canCast == true) {
+            float currentCastPercent = 0f;
+            //Debug.Log(baseCharacter.gameObject.name + ".CharacterAbilitymanager.PerformAbilityCast() currentCastPercent: " + currentCastPercent + "; MyAbilityCastingTime: " + ability.MyAbilityCastingTime);
 
-                float currentCastPercent = 0f;
-                //Debug.Log(baseCharacter.gameObject.name + ".CharacterAbilitymanager.PerformAbilityCast() currentCastPercent: " + currentCastPercent + "; MyAbilityCastingTime: " + ability.MyAbilityCastingTime);
-
-                if (animatedAction.HoldableObjectList.Count != 0) {
-                    //Debug.Log(baseCharacter.gameObject.name + ".CharacterAbilityManager.PerformAbilityCast(" + ability.DisplayName + "): spawning ability objects");
-                    //if (!animatedAction.AnimatorCreatePrefabs) {
-                        SpawnAbilityObjects(animatedAction.HoldableObjectList);
-                    //}
-                }
-                if (animatedAction.CastingAudioClip != null) {
-                    unitController.UnitComponentController.PlayCastSound(animatedAction.CastingAudioClip);
-                }
-
-                if (animatedAction.ActionCastingTime > 0f) {
-                    // added target condition to allow channeled spells to stop casting if target disappears
-                    while (currentCastPercent < 1f) {
-                        //Debug.Log(baseCharacter.gameObject.name + ".CharacterAbilitymanager.PerformAbilityCast(" + ability.DisplayName + "): currentCastPercent: " + currentCastPercent);
-
-                        yield return null;
-                        currentCastPercent += (Time.deltaTime / animatedAction.ActionCastingTime);
-                    }
-                }
-
+            if (animatedActionProperties.HoldableObjectList.Count != 0) {
+                //Debug.Log(baseCharacter.gameObject.name + ".CharacterAbilityManager.PerformAbilityCast(" + ability.DisplayName + "): spawning ability objects");
+                SpawnActionObjects(animatedActionProperties.HoldableObjectList);
+            }
+            if (animatedActionProperties.CastingAudioClip != null) {
+                unitController.UnitComponentController.PlayCastSound(animatedActionProperties.CastingAudioClip);
             }
 
+            if (animatedActionProperties.ActionCastingTime > 0f) {
+                while (currentCastPercent < 1f) {
+                    //Debug.Log(baseCharacter.gameObject.name + ".CharacterAbilitymanager.PerformAbilityCast(" + ability.DisplayName + "): currentCastPercent: " + currentCastPercent);
+
+                    yield return null;
+                    currentCastPercent += (Time.deltaTime / animatedActionProperties.ActionCastingTime);
+                }
+            }
+
+            /*
             //Debug.Log(baseCharacter.gameObject.name + ".CharacterAbilityManager.PerformAbilityCast(" + ability.DisplayName + "). nulling tag: " + startTime);
             // set currentCast to null because it isn't automatically null until the next frame and we are about to do stuff which requires it to be null immediately
-            EndCastCleanup();
+            EndActionCleanup();
 
-            if (canCast) {
-                //Debug.Log(baseCharacter.gameObject.name + ".CharacterAbilitymanager.PerformAbilityCast(): Cast Complete and can cast");
-                unitController.UnitAnimator.SetCasting(false);
-            }
+            //Debug.Log(baseCharacter.gameObject.name + ".CharacterAbilitymanager.PerformAbilityCast(): Cast Complete and can cast");
+            unitController.UnitAnimator.ClearAction();
+            */
+
+            StopAction();
         }
 
-        public void EndCastCleanup() {
+        public void EndActionCleanup() {
             //Debug.Log(abilityCaster.gameObject.name + ".CharacterAbilitymanager.EndCastCleanup()");
             if (unitController != null) {
                 unitController.UnitComponentController.StopCastSound();
@@ -283,22 +284,22 @@ namespace AnyRPG {
         /// This is the entrypoint for character behavior calls and should not be used for anything else due to the runtime ability lookup that happens
         /// </summary>
         /// <param name="actionName"></param>
-        public void BeginAction(string actionName) {
+        public bool BeginAction(string actionName) {
             //Debug.Log(baseCharacter.gameObject.name + "CharacterAbilitymanager.BeginAbility(" + (abilityName == null ? "null" : abilityName) + ")");
             AnimatedAction animatedAction = systemDataFactory.GetResource<AnimatedAction>(actionName);
             if (animatedAction != null) {
                 //return BeginAction(animatedAction);
-                BeginAction(animatedAction);
+                return BeginAction(animatedAction);
             }
-            //return false;
+            return false;
         }
 
         /// <summary>
         /// Call an action directly, checking if the action is known
         /// </summary>
         /// <returns></returns>
-        public void BeginAction(AnimatedAction animatedAction) {
-            BeginAction(animatedAction.ActionProperties);
+        public bool BeginAction(AnimatedAction animatedAction) {
+            return BeginAction(animatedAction.ActionProperties);
         }
 
         /// <summary>
@@ -319,7 +320,7 @@ namespace AnyRPG {
             return BeginActionCommon(animatedActionProperties, target);
         }
 
-        protected bool BeginActionCommon(AnimatedActionProperties animatedAction, Interactable target, bool playerInitiated = false) {
+        protected bool BeginActionCommon(AnimatedActionProperties animatedActionProperties, Interactable target, bool playerInitiated = false) {
             //Debug.Log(baseCharacter.gameObject.name + ".CharacterAbilityManager.BeginAbilityCommon(" + (ability == null ? "null" : ability.DisplayName) + ", " + (target == null ? "null" : target.gameObject.name) + ")");
 
             if (unitController != null) {
@@ -328,44 +329,37 @@ namespace AnyRPG {
                 }
             }
 
-            if (!CanPerformAction(animatedAction, playerInitiated)) {
+            if (!CanPerformAction(animatedActionProperties, playerInitiated)) {
                 if (playerInitiated) {
                     //Debug.Log(baseCharacter.gameObject.name + ".CharacterAbilityManager.BeginAbilityCommon(" + ability.DisplayName + ", " + (target != null ? target.name : "null") + ") cannot cast");
                 }
                 return false;
             }
 
-            // testing - if this was player initiated, the attack attempt came through right click or action button press
-            // those things attempted to interact with a characterUnit which passed a faction check.  assume target is valid and perform quick sanity check
-            // if it passes, attempt to enter combat so weapons can be unsheathed even if out of range
+            /*
             if (playerInitiated) {
                 CharacterUnit targetCharacterUnit = null;
                 if (target != null) {
                     targetCharacterUnit = CharacterUnit.GetCharacterUnit(target);
                 }
             }
+            */
 
-                //Debug.Log(baseCharacter.gameObject.name + ".CharacterAbilityManager.BeginAbilityCommon(): can't simultanous cast");
-                if (currentActionCoroutine == null) {
-                    //Debug.Log("Performing Ability " + ability.DisplayName + " at a cost of " + ability.MyAbilityManaCost.ToString() + ": ABOUT TO START COROUTINE");
+            // any action can interrupt any other action
+            if (currentActionCoroutine != null) {
+                StopAction();
+            }
 
-                    // we need to do this because we are allowed to stop an outstanding auto-attack to start this cast
-                    if (unitController != null && unitController.UnitAnimator != null) {
-                        unitController.UnitAnimator.ClearAnimationBlockers();
-                    }
+            if (currentActionCoroutine == null) {
+                //Debug.Log("Performing Ability " + ability.DisplayName + " at a cost of " + ability.MyAbilityManaCost.ToString() + ": ABOUT TO START COROUTINE");
 
-                    // start the cast (or cast targetting projector)
-                    //Debug.Log(baseCharacter.gameObject.name + ".CharacterAbilityManager.BeginAbilityCommon(" + usedAbility + "): setting currentCastAbility");
-                    // currentCastAbility must be set before starting the coroutine because for animated events, the cast time is zero and the variable will be cleared in the coroutine
-                    currentAction = animatedAction;
-                    currentActionCoroutine = unitController.StartCoroutine(PerformActionCast(animatedAction, target));
-                } else {
-                    // return false so that items in the inventory don't get used if this came from a castable item
-                    return false;
-                    //systemGameManager.LogManager.WriteCombatMessage("A cast was already in progress WE SHOULD NOT BE HERE BECAUSE WE CHECKED FIRST! iscasting: " + isCasting + "; currentcast==null? " + (currentCast == null));
-                    // unless.... we got here from the crafting queue, which launches the next item as the last step of the currently in progress cast
-                    //Debug.Log(baseCharacter.gameObject.name + ".CharacterAbilityManager.BeginAbilityCommon(): A cast was already in progress!");
-                }
+                // currentAction must be set before starting the coroutine because for animated events, the cast time is zero and the variable will be cleared in the coroutine
+                //currentAction = animatedAction;
+                currentActionCoroutine = unitController.StartCoroutine(PerformActionCast(animatedActionProperties, target));
+            } else {
+                // return false so that items in the inventory don't get used if this came from a castable item
+                return false;
+            }
 
             return true;
         }
@@ -375,7 +369,7 @@ namespace AnyRPG {
             //Debug.Log(gameObject.name + ".CharacterAbilityManager.CanCastAbility(" + ability.DisplayName + ")");
 
             /*
-            // check if the ability is learned yet
+            // check if the action is learned yet
             if (!PerformLearnedCheck(animatedAction)) {
                 //Debug.Log(baseCharacter.gameObject.name + ".CharacterAbilityManager.CanCastAbility(" + ability.DisplayName + "): Have not learned ability!");
                 if (playerInitiated) {
@@ -385,114 +379,125 @@ namespace AnyRPG {
             }
             */
 
+            // actions cannot be performed while mounted
+            if (!PerformMountedCheck()) {
+                return false;
+            }
+
+            // actions cannot be performed while any cast is in progress
+            if (!PerformCastingCheck()) {
+                return false;
+            }
+
+            // actions cannot be performed while dead
             if (!PerformLivenessCheck()) {
                 //Debug.Log(baseCharacter.gameObject.name + ".CharacterAbilityManager.CanCastAbility(" + ability.DisplayName + "): cannot cast while dead!");
                 if (playerInitiated) {
-                    OnCombatMessage("Cannot cast " + animatedAction.DisplayName + "): cannot cast while dead!");
+                    OnCombatMessage("Cannot perform action " + animatedAction.DisplayName + " while dead!");
                 }
                 return false;
             }
 
-            // for now require a player to perform movement check because an NPC will by default stop and go into attack mode to cast an ability
+            /*
             // this check is designed to prevent players from casting anything other than instant casts while running
             if (playerInitiated && !PerformMovementCheck(animatedAction)) {
                 //Debug.Log(baseCharacter.gameObject.name + ".CharacterAbilityManager.CanCastAbility(" + ability.DisplayName + "): velocity too high to cast!");
                 if (playerInitiated) {
-                    OnCombatMessage("Cannot cast " + animatedAction.DisplayName + "): cannot cast while moving!");
+                    OnCombatMessage("Cannot perform action " + animatedAction.DisplayName + " while moving!");
                 }
                 return false;
             }
+            */
 
             // default is true, nothing has stopped us so far
-            //Debug.Log(baseCharacter.gameObject.name + ".CharacterAbilityManager.CanCastAbility(" + ability.DisplayName + "): returning true");
             return true;
         }
 
-        public bool PerformLivenessCheck() {
+        private bool PerformMountedCheck() {
+            if (unitController.Mounted == true) {
+                return false;
+            }
+            return true;
+        }
+
+        private bool PerformCastingCheck() {
+            if (unitController.CharacterUnit.BaseCharacter.CharacterAbilityManager.WaitingForAnimatedAbility == true
+                || unitController.CharacterUnit.BaseCharacter.CharacterCombat.WaitingForAutoAttack == true
+                || unitController.CharacterUnit.BaseCharacter.CharacterAbilityManager.IsCasting) {
+                return false;
+            }
+            return true;
+        }
+
+        private bool PerformLivenessCheck() {
             if (!unitController.CharacterUnit.BaseCharacter.CharacterStats.IsAlive) {
                 return false;
             }
             return true;
         }
 
+        /*
         public bool PerformMovementCheck(AnimatedActionProperties animatedAction) {
-            /*
-            if (animatedAction.GetAbilityCastingTime(baseCharacter) == 0f) {
-                return true;
-            }
-            */
+            
+            //if (animatedAction.GetAbilityCastingTime(baseCharacter) == 0f) {
+              //  return true;
+            //}
+            
             return !(unitController.ApparentVelocity > 0.1f);
         }
-
-        public bool PerformLearnedCheck(AnimatedAction animatedAction) {
-
-            /*
-            string keyName = SystemDataFactory.PrepareStringForMatch(animatedAction.DisplayName);
-            
-            if (!animatedAction.UseableWithoutLearning && !AbilityList.ContainsKey(keyName)) {
-                OnLearnedCheckFail(animatedAction);
-                return false;
-            }
-            */
-            return true;
-        }
+    */
 
         /*
-        /// <summary>
-        /// Casts a spell.  Note that this does not do the actual damage yet since the ability may have a travel time
-        /// </summary>
-        /// <param name="ability"></param>
-        /// <param name="target"></param>
-        public void PerformAction(AnimatedAction animatedAction, Interactable target, AbilityEffectContext abilityEffectContext) {
-            //Debug.Log(baseCharacter.gameObject.name + ".CharacterAbilityManager.PerformAbility(" + ability.DisplayName + ", " + target.gameObject.name + ")");
-            Interactable finalTarget = target;
+        public bool PerformLearnedCheck(AnimatedAction animatedAction) {
 
-            // cast the system manager version so we can track globally the spell cooldown
-            animatedAction.Cast(baseCharacter, finalTarget, abilityEffectContext);
-            //ability.Cast(BaseCharacter.MyCharacterUnit.gameObject, finalTarget);
+            
+            //string keyName = SystemDataFactory.PrepareStringForMatch(animatedAction.DisplayName);
+            
+            //if (!animatedAction.UseableWithoutLearning && !AbilityList.ContainsKey(keyName)) {
+              //  OnLearnedCheckFail(animatedAction);
+               // return false;
+            //}
+            
+            return true;
         }
         */
-
 
         /// <summary>
         /// Stop casting if the character is manually moved with the movement keys
         /// </summary>
         public void HandleManualMovement() {
             //Debug.Log(baseCharacter.gameObject.name + ".CharacterAbilityManager.HandleManualMovement()");
-            // adding new code to require some movement distance to prevent gravity while standing still from triggering this
-            if (unitController.ApparentVelocity > 0.1f) {
+            
+            // require some movement distance to prevent gravity while standing still from triggering this
+            if (unitController.ApparentVelocity > 0.1f && currentActionCoroutine != null) {
                 StopAction();
             }
         }
 
         public void StopAction() {
-            //Debug.Log(baseCharacter.gameObject.name + ".CharacterAbilityManager.StopCasting(" + stopCast + ", " + stopAutoAttack + ", " + stopAnimatedAbility + ")");
+            //Debug.Log(unitController.gameObject.name + ".UnitActionManager.StopAction()");
             bool stoppedAction = false;
             if (currentActionCoroutine != null) {
-                // REMOVED ISCASTING == TRUE BECAUSE IT WAS PREVENTING THE CRAFTING QUEUE FROM WORKING.  TECHNICALLY THIS GOT CALLED RIGHT AFTER ISCASTING WAS SET TO FALSE, BUT BEFORE CURRENTCAST WAS NULLED
-                //if (currentCast != null && isCasting == true) {
-                //Debug.Log(baseCharacter.gameObject.name + ".CharacterAbilityManager.StopCasting(): currentCast is not null, stopping coroutine");
                 unitController.StopCoroutine(currentActionCoroutine);
-                EndCastCleanup();
+                currentActionCoroutine = null;
+                EndActionCleanup();
                 stoppedAction = true;
             }
             if (stoppedAction) {
                 if (unitController.CharacterUnit.BaseCharacter.CharacterEquipmentManager != null) {
-                    DespawnAbilityObjects();
+                    DespawnActionObjects();
                 }
-                // testing put below logic inside this condition
-                // it is causing unnecessary setting of animator speed in clearAnimationBlockers, which interferes with movement speed
                 if (unitController.UnitAnimator != null) {
-                    unitController.UnitAnimator.ClearAnimationBlockers(true, true, false);
+                    unitController.UnitAnimator.ClearAction();
                 }
             }
 
         }
 
-        //public void ProcessLevelUnload() {
         public void HandleCharacterUnitDespawn() {
-            // auto attacks will be separately cancelled by characterCombat
-            StopAction();
+            if (currentActionCoroutine != null) {
+                StopAction();
+            }
         }
 
 

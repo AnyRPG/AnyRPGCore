@@ -189,22 +189,6 @@ namespace AnyRPG {
     [System.Serializable]
     public class AnimatedActionProperties : ConfiguredClass {
 
-        [Header("Prefabs")]
-
-        [Tooltip("Physical prefabs to attach to bones on the character unit")]
-        [SerializeField]
-        private List<AbilityAttachmentNode> holdableObjectList = new List<AbilityAttachmentNode>();
-
-        /*
-        [Tooltip("holdable object prefabs are created by the animator from an animation event, not from the ability manager during cast start")]
-        [SerializeField]
-        protected bool animatorCreatePrefabs;
-        */
-
-        [Tooltip("Delay to destroy casting effect prefabs after casting completes")]
-        [SerializeField]
-        protected float prefabDestroyDelay = 0f;
-
         [Header("Animation")]
 
         [Tooltip("The animation clip the character will perform")]
@@ -227,6 +211,25 @@ namespace AnyRPG {
 
         protected AudioProfile castingAudioProfile;
 
+        [Header("Prefabs")]
+
+        [Tooltip("Physical prefabs to attach to bones on the character unit")]
+        [SerializeField]
+        private List<AbilityAttachmentNode> holdableObjectList = new List<AbilityAttachmentNode>();
+
+        /*
+        [Tooltip("holdable object prefabs are created by the animator from an animation event, not from the ability manager during cast start")]
+        [SerializeField]
+        protected bool animatorCreatePrefabs;
+        */
+
+        /*
+        [Tooltip("Delay to destroy casting effect prefabs after casting completes")]
+        [SerializeField]
+        protected float prefabDestroyDelay = 0f;
+        */
+
+        /*
         [Header("Learning")]
 
         [Tooltip("The minimum level a character must be to cast this ability")]
@@ -242,6 +245,7 @@ namespace AnyRPG {
         [Tooltip("This ability can be cast while moving.")]
         [SerializeField]
         protected bool canCastWhileMoving = false;
+        */
 
         private string displayName = string.Empty;
 
@@ -253,11 +257,11 @@ namespace AnyRPG {
         public List<AnimationClip> AttackClips { get => (animationProfile != null ? animationProfile.AnimationProps.AttackClips : null); }
         public List<AnimationClip> CastClips { get => (animationProfile != null ? animationProfile.AnimationProps.CastClips : new List<AnimationClip>()); }
         //public bool RequireOutOfCombat { get => requireOutOfCombat; set => requireOutOfCombat = value; }
-        public LineOfSightSourceLocation LineOfSightSourceLocation { get => LineOfSightSourceLocation.Caster; }
-        public TargetRangeSourceLocation TargetRangeSourceLocation { get => TargetRangeSourceLocation.Caster; }
-        public bool CanCastWhileMoving { get => canCastWhileMoving; set => canCastWhileMoving = value; }
-        public int RequiredLevel { get => requiredLevel; }
-        public bool UseableWithoutLearning { get => useableWithoutLearning; }
+        //public LineOfSightSourceLocation LineOfSightSourceLocation { get => LineOfSightSourceLocation.Caster; }
+        //public TargetRangeSourceLocation TargetRangeSourceLocation { get => TargetRangeSourceLocation.Caster; }
+        //public bool CanCastWhileMoving { get => canCastWhileMoving; set => canCastWhileMoving = value; }
+        //public int RequiredLevel { get => requiredLevel; }
+        //public bool UseableWithoutLearning { get => useableWithoutLearning; }
         public string DisplayName { get => displayName; }
         
         public AnimationClip AnimationClip {

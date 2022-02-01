@@ -702,6 +702,7 @@ namespace AnyRPG {
             CancelMountEffects();
             // this could be a mount which has no base character - check for nulls
             characterUnit?.BaseCharacter?.HandleCharacterUnitDespawn();
+            unitActionManager.HandleCharacterUnitDespawn();
 
 
             StopAllCoroutines();
@@ -1062,6 +1063,7 @@ namespace AnyRPG {
             if (ApparentVelocity > 0.1f) {
                 //Debug.Log(gameObject.name + ".UnitController.Update() : position: " + transform.position + "; apparentVelocity: " + apparentVelocity);
                 characterUnit?.BaseCharacter?.CharacterAbilityManager?.HandleManualMovement();
+                unitActionManager.HandleManualMovement();
             }
             HandleMovementAudio();
         }
@@ -1501,6 +1503,7 @@ namespace AnyRPG {
             if (characterUnit?.BaseCharacter?.CharacterAbilityManager != null) {
                 characterUnit.BaseCharacter.CharacterAbilityManager.StopCasting();
             }
+            unitActionManager.StopAction();
         }
 
         public void FreezeCharacter() {

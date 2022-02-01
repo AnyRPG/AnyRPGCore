@@ -42,7 +42,7 @@ namespace AnyRPG {
         }
 
         public override void ExecuteCommand(string commandParameters) {
-            Debug.Log("GainCurrencyCommand.ExecuteCommand() Executing command " + DisplayName + " with parameters (" + commandParameters + ")");
+            //Debug.Log("GainCurrencyCommand.ExecuteCommand() Executing command " + DisplayName + " with parameters (" + commandParameters + ")");
 
             // add a fixed item
             if (fixedCurrency == true && fixedAmount == true) {
@@ -99,7 +99,7 @@ namespace AnyRPG {
         }
 
         private void AddCurrency(Currency currency, int amount) {
-            Debug.Log("GainCurrencyCommand.AddCurrency(" + currency.DisplayName + ", " + amount + ")");
+            //Debug.Log("GainCurrencyCommand.AddCurrency(" + currency.DisplayName + ", " + amount + ")");
 
             playerManager.ActiveCharacter.CharacterCurrencyManager.AddCurrency(currency, amount);
         }

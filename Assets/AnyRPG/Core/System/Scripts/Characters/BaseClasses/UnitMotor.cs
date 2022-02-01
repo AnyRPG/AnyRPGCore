@@ -216,6 +216,7 @@ namespace AnyRPG {
                 && unitController.CharacterUnit.BaseCharacter != null
                 && unitController.CharacterUnit.BaseCharacter.CharacterAbilityManager != null) {
                 unitController.CharacterUnit.BaseCharacter.CharacterAbilityManager.HandleManualMovement();
+                unitController.UnitActionManager.HandleManualMovement();
             }
         }
 

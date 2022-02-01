@@ -17,7 +17,7 @@ namespace AnyRPG {
 
 
         public override void ExecuteCommand(string commandParameters) {
-            Debug.Log("ActionCommand.ExecuteCommand() Executing command " + DisplayName + " with parameters (" + commandParameters + ")");
+            //Debug.Log("ActionCommand.ExecuteCommand() Executing command " + DisplayName + " with parameters (" + commandParameters + ")");
 
             playerManager.UnitController.UnitActionManager.BeginAction(actionProperties);
         }

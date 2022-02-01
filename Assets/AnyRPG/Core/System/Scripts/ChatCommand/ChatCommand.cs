@@ -31,6 +31,6 @@ namespace AnyRPG {
 
     }
 
-    public enum ChatCommandType { Action, GainItem, GainCurrency }
+    //public enum ChatCommandType { Action, GainItem, GainCurrency }
 
 }
