@@ -13,9 +13,6 @@ namespace AnyRPG {
 
         private Faction faction;
 
-        // game manager references
-        private SystemDataFactory systemDataFactory = null;
-
         public int reputationAmount;
 
         public Sprite Icon { get => faction.Icon; }
@@ -28,11 +25,6 @@ namespace AnyRPG {
 
         public string GetSummary() {
             return faction.GetSummary();
-        }
-
-        public override void SetGameManagerReferences() {
-            base.SetGameManagerReferences();
-            systemDataFactory = systemGameManager.SystemDataFactory;
         }
 
         public void SetupScriptableObjects(SystemGameManager systemGamenManager) {

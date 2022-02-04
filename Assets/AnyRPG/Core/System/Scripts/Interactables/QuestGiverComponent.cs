@@ -13,7 +13,6 @@ namespace AnyRPG {
         private bool questGiverInitialized = false;
 
         // game manager references
-        private SystemDataFactory systemDataFactory = null;
         private QuestLog questLog = null;
 
         public QuestGiverProps Props { get => interactableOptionProps as QuestGiverProps; }
@@ -30,7 +29,6 @@ namespace AnyRPG {
 
         public override void SetGameManagerReferences() {
             base.SetGameManagerReferences();
-            systemDataFactory = systemGameManager.SystemDataFactory;
             questLog = systemGameManager.QuestLog;
         }
 

@@ -19,6 +19,7 @@ MonoBehaviour:
   description: Teleport to the Dungeon
   useRegionalDescription: 0
   resourceDescriptionProfile: 
+  optionalOverride: 0
   requireOutOfCombat: 0
   weaponAffinityNames: []
   holdableObjectList:
@@ -65,10 +66,15 @@ MonoBehaviour:
     autoSelfCast: 0
     useMeleeRange: 0
     maxRange: 0
+    requireFacingTarget: 0
+    maxAngle: 45
     requiresGroundTarget: 0
     groundTargetColor: {r: 1, g: 1, b: 1, a: 1}
     groundTargetRadius: 0
+  inlineAbilityEffects: []
   abilityEffectNames:
   - Teleport Dungeon Effect
   tickRate: 1
   channeledAbilityEffectnames: []
+  references:
+    version: 1

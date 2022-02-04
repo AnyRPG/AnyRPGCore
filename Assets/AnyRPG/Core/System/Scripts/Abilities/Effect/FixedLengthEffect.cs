@@ -9,7 +9,7 @@ namespace AnyRPG {
     //[CreateAssetMenu(fileName = "New Ability",menuName = "AnyRPG/Abilities/Effects/FixedLengthEffect")]
     // not using that for now as it will neither tick, nor complete.  that is done by directeffect/children or aoeEffect
     // MAKE ABSTRACT IN FUTURE?
-    public class FixedLengthEffect : LengthEffect {
+    public abstract class FixedLengthEffect : LengthEffect {
 
         /// <summary>
         /// the default amount of time after which we destroy any spawned prefab

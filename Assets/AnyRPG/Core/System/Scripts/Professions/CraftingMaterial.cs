@@ -20,13 +20,6 @@ namespace AnyRPG {
         public Item Item { get => item; }
         public int Count { get => count; }
 
-        // game manager references
-        private SystemDataFactory systemDataFactory = null;
-
-        public override void SetGameManagerReferences() {
-            base.SetGameManagerReferences();
-            systemDataFactory = systemGameManager.SystemDataFactory;
-        }
 
         public void SetupScriptableObjects(SystemGameManager systemGameManager) {
             Configure(systemGameManager);

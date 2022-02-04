@@ -57,7 +57,6 @@ namespace AnyRPG {
         private bool waitingForAnimatedAbility = false;
 
         // game manager references
-        private SystemDataFactory systemDataFactory = null;
         private PlayerManager playerManager = null;
         private CastTargettingManager castTargettingManager = null;
 
@@ -150,7 +149,6 @@ namespace AnyRPG {
 
         public override void SetGameManagerReferences() {
             base.SetGameManagerReferences();
-            systemDataFactory = systemGameManager.SystemDataFactory;
             playerManager = systemGameManager.PlayerManager;
             castTargettingManager = systemGameManager.CastTargettingManager;
         }

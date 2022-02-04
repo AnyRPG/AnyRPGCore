@@ -19,7 +19,6 @@ namespace AnyRPG {
 
         // game manager references
         private PlayerManager playerManager = null;
-        private SystemDataFactory systemDataFactory = null;
 
         public void HandleAbilityListChanged() {
             //Debug.Log("AbilityPrerequisite.HandleAbilityListChanged()");
@@ -47,7 +46,6 @@ namespace AnyRPG {
 
         public override void SetGameManagerReferences() {
             base.SetGameManagerReferences();
-            systemDataFactory = systemGameManager.SystemDataFactory;
             playerManager = systemGameManager.PlayerManager;
         }
 

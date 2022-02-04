@@ -14,9 +14,6 @@ namespace AnyRPG {
 
         private PatrolProps currentPatrolProps = null;
 
-        // game manager references
-        private SystemDataFactory systemDataFactory = null;
-
         public PatrolProps CurrentPatrol { get => currentPatrolProps; }
         public PatrolProps CurrentPatrolProps { get => currentPatrolProps; }
         public UnitController UnitController { get => unitController; }
@@ -32,11 +29,6 @@ namespace AnyRPG {
         public PatrolController(UnitController unitController, SystemGameManager systemGameManager) {
             this.unitController = unitController;
             Configure(systemGameManager);
-        }
-
-        public override void SetGameManagerReferences() {
-            base.SetGameManagerReferences();
-            systemDataFactory = systemGameManager.SystemDataFactory;
         }
 
         // this should be run after the unit profile is set

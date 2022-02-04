@@ -10,9 +10,6 @@ namespace AnyRPG {
 
         protected Dictionary<string, Recipe> recipeList = new Dictionary<string, Recipe>();
 
-        // game manager references
-        private SystemDataFactory systemDataFactory = null;
-
         public BaseCharacter BaseCharacter {
             get => baseCharacter;
             set => baseCharacter = value;
@@ -23,11 +20,6 @@ namespace AnyRPG {
         public CharacterRecipeManager(BaseCharacter baseCharacter, SystemGameManager systemGameManager) {
             this.baseCharacter = baseCharacter;
             Configure(systemGameManager);
-        }
-
-        public override void SetGameManagerReferences() {
-            base.SetGameManagerReferences();
-            systemDataFactory = systemGameManager.SystemDataFactory;
         }
 
         public void Init() {

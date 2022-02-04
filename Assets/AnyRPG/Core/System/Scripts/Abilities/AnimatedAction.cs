@@ -249,9 +249,6 @@ namespace AnyRPG {
 
         private string displayName = string.Empty;
 
-        // game manager references
-        protected SystemDataFactory systemDataFactory = null;
-
         public AudioClip CastingAudioClip { get => (castingAudioProfile == null ? null : castingAudioProfile.AudioClip); }
         //public bool AnimatorCreatePrefabs { get => animatorCreatePrefabs; set => animatorCreatePrefabs = value; }
         public List<AnimationClip> AttackClips { get => (animationProfile != null ? animationProfile.AnimationProps.AttackClips : null); }
@@ -294,11 +291,6 @@ namespace AnyRPG {
             base.Configure(systemGameManager);
         }
         */
-
-        public override void SetGameManagerReferences() {
-            base.SetGameManagerReferences();
-            systemDataFactory = systemGameManager.SystemDataFactory;
-        }
 
         public void SetupScriptableObjects(SystemGameManager systemGameManager, string ownerName) {
             Configure(systemGameManager);

@@ -55,9 +55,6 @@ namespace AnyRPG {
         [SerializeField]
         private List<AbilityAttachmentNode> abilityObjectList = new List<AbilityAttachmentNode>();
 
-        // game manager references
-        private SystemDataFactory systemDataFactory = null;
-
         // properties
         public bool DefaultWeaponSkill { get => defaultWeaponSkill; set => defaultWeaponSkill = value; }
         public List<AbilityEffect> DefaultHitEffectList { get => defaultHitEffectList; set => defaultHitEffectList = value; }
@@ -67,11 +64,6 @@ namespace AnyRPG {
         public List<AbilityAttachmentNode> AbilityObjectList { get => abilityObjectList; set => abilityObjectList = value; }
 
         // methods
-
-        public override void SetGameManagerReferences() {
-            base.SetGameManagerReferences();
-            systemDataFactory = systemGameManager.SystemDataFactory;
-        }
 
         public void SetupScriptableObjects(string ownerName, SystemGameManager systemGameManager) {
             Configure(systemGameManager);

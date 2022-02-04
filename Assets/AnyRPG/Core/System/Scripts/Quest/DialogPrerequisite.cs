@@ -19,9 +19,6 @@ namespace AnyRPG {
 
         private Dialog prerequisiteDialog = null;
 
-        // game manager references
-        private SystemDataFactory systemDataFactory = null;
-
         public void UpdateStatus(bool notify = true) {
             bool originalResult = prerequisiteMet;
             //bool checkResult = (prerequisiteDialog.TurnedIn == true);
@@ -43,11 +40,6 @@ namespace AnyRPG {
 
         public virtual bool IsMet(BaseCharacter baseCharacter) {
             return prerequisiteMet;
-        }
-
-        public override void SetGameManagerReferences() {
-            base.SetGameManagerReferences();
-            systemDataFactory = systemGameManager.SystemDataFactory;
         }
 
         public void SetupScriptableObjects(SystemGameManager systemGameManager) {

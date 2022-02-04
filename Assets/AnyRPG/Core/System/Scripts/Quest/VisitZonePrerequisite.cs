@@ -18,9 +18,6 @@ namespace AnyRPG {
 
         private SceneNode prerequisiteSceneNode = null;
 
-        // game manager references
-        private SystemDataFactory systemDataFactory = null;
-
         public void UpdateStatus(bool notify = true) {
             bool originalResult = prerequisiteMet;
             bool checkResult = (prerequisiteSceneNode.Visited == true);
@@ -40,11 +37,6 @@ namespace AnyRPG {
 
         public virtual bool IsMet(BaseCharacter baseCharacter) {
             return prerequisiteMet;
-        }
-
-        public override void SetGameManagerReferences() {
-            base.SetGameManagerReferences();
-            systemDataFactory = systemGameManager.SystemDataFactory;
         }
 
         public void SetupScriptableObjects(SystemGameManager systemGameManager) {

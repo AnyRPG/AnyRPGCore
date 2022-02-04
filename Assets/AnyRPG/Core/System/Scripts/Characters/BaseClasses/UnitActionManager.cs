@@ -24,7 +24,6 @@ namespace AnyRPG {
         protected Dictionary<AbilityAttachmentNode, List<GameObject>> actionObjects = new Dictionary<AbilityAttachmentNode, List<GameObject>>();
 
         // game manager references
-        protected SystemDataFactory systemDataFactory = null;
         //private PlayerManager playerManager = null;
         protected ObjectPooler objectPooler = null;
 
@@ -55,7 +54,6 @@ namespace AnyRPG {
 
         public override void SetGameManagerReferences() {
             base.SetGameManagerReferences();
-            systemDataFactory = systemGameManager.SystemDataFactory;
             //playerManager = systemGameManager.PlayerManager;
             objectPooler = systemGameManager.ObjectPooler;
         }

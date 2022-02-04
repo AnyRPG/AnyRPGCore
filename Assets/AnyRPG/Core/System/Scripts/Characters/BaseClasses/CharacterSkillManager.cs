@@ -11,7 +11,6 @@ namespace AnyRPG {
         private Dictionary<string, Skill> skillList = new Dictionary<string, Skill>();
 
         // game manager references
-        private SystemDataFactory systemDataFactory = null;
         protected PlayerManager playerManager = null;
         protected SystemEventManager systemEventManager = null;
 
@@ -25,7 +24,6 @@ namespace AnyRPG {
 
         public override void SetGameManagerReferences() {
             base.SetGameManagerReferences();
-            systemDataFactory = systemGameManager.SystemDataFactory;
             playerManager = systemGameManager.PlayerManager;
             systemEventManager = systemGameManager.SystemEventManager;
         }

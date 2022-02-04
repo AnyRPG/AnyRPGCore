@@ -22,9 +22,6 @@ namespace AnyRPG {
 
         private GameObject questObject;
 
-        // game manager references
-        private SystemDataFactory systemDataFactory = null;
-
         public bool StartQuest { get => startQuest; set => startQuest = value; }
         public bool EndQuest { get => endQuest; set => endQuest = value; }
         public Quest Quest { get => questTemplate; set => questTemplate = value; }
@@ -43,11 +40,6 @@ namespace AnyRPG {
             } else {
                 Debug.LogError("QuestNode.SetupScriptableObjects(): questName was null or empty while inititalizing a quest node.  CHECK INSPECTOR");
             }
-        }
-
-        public override void SetGameManagerReferences() {
-            base.SetGameManagerReferences();
-            systemDataFactory = systemGameManager.SystemDataFactory;
         }
 
     }

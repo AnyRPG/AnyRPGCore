@@ -32,9 +32,6 @@ namespace AnyRPG {
         [SerializeField]
         protected List<PrerequisiteConditions> prerequisiteConditions = new List<PrerequisiteConditions>();
 
-        // game manager references
-        private SystemDataFactory systemDataFactory = null;
-
         public Item Item { get => item; }
         public float DropChance { get => dropChance; }
         public int MinDrops { get => minDrops; set => minDrops = value; }
@@ -63,11 +60,6 @@ namespace AnyRPG {
                 //Debug.Log(itemName + ".MyPrerequisitesMet: nothing false");
                 return true;
             }
-        }
-
-        public override void SetGameManagerReferences() {
-            base.SetGameManagerReferences();
-            systemDataFactory = systemGameManager.SystemDataFactory;
         }
 
         public void SetupScriptableObjects(SystemGameManager systemGameManager) {

@@ -140,6 +140,4 @@ namespace AnyRPG {
 
     }
 
-    public enum KnockbackType { Knockback, Explosion };
-
 }

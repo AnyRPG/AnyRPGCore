@@ -19,7 +19,6 @@ namespace AnyRPG {
         private Coroutine dialogCoroutine = null;
 
         // game manager references
-        private SystemDataFactory systemDataFactory = null;
         private PlayerManager playerManager = null;
         private LogManager logManager = null;
 
@@ -32,7 +31,6 @@ namespace AnyRPG {
 
         public override void SetGameManagerReferences() {
             base.SetGameManagerReferences();
-            systemDataFactory = systemGameManager.SystemDataFactory;
             playerManager = systemGameManager.PlayerManager;
             logManager = systemGameManager.LogManager;
         }

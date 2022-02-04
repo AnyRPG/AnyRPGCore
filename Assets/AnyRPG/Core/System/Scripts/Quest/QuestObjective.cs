@@ -24,7 +24,6 @@ namespace AnyRPG {
 
         // game manager references
         protected SaveManager saveManager = null;
-        protected SystemDataFactory systemDataFactory = null;
         protected MessageFeedManager messageFeedManager = null;
         protected SystemEventManager systemEventManager = null;
         protected PlayerManager playerManager = null;
@@ -109,7 +108,6 @@ namespace AnyRPG {
         public override void SetGameManagerReferences() {
             base.SetGameManagerReferences();
             saveManager = systemGameManager.SaveManager;
-            systemDataFactory = systemGameManager.SystemDataFactory;
             messageFeedManager = systemGameManager.UIManager.MessageFeedManager;
             systemEventManager = systemGameManager.SystemEventManager;
             playerManager = systemGameManager.PlayerManager;

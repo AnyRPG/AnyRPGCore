@@ -186,6 +186,11 @@ namespace AnyRPG {
         [Header("Cast Complete Ability Effects")]
 
         [Tooltip("When casting is complete, these ability effects will be triggered.")]
+        [SerializeReference]
+        [SerializeReferenceButton]
+        protected List<AbilityEffectProperties> inlineAbilityEffects = new List<AbilityEffectProperties>();
+
+        [Tooltip("When casting is complete, these ability effects will be triggered.")]
         [SerializeField]
         [ResourceSelector(resourceType = typeof(AbilityEffect))]
         protected List<string> abilityEffectNames = new List<string>();

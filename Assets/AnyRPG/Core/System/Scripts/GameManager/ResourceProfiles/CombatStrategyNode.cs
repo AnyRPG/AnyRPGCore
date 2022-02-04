@@ -46,7 +46,6 @@ namespace AnyRPG {
 
         // game manager references
         private AudioManager audioManager = null;
-        private SystemDataFactory systemDataFactory = null;
 
         public int MaxHealthPercent { get => maxHealthPercent; set => maxHealthPercent = value; }
         public int MinHealthPercent { get => minHealthPercent; set => minHealthPercent = value; }
@@ -69,7 +68,6 @@ namespace AnyRPG {
         public override void SetGameManagerReferences() {
             base.SetGameManagerReferences();
             audioManager = systemGameManager.AudioManager;
-            systemDataFactory = systemGameManager.SystemDataFactory;
         }
 
         public void SetupScriptableObjects(SystemGameManager systemGameManager) {

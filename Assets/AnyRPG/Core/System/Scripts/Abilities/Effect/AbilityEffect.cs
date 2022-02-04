@@ -323,7 +323,7 @@ namespace AnyRPG {
 
     }
 
-    public enum LineOfSightSourceLocation { Caster, GroundTarget, OriginalTarget }
+    //public enum LineOfSightSourceLocation { Caster, GroundTarget, OriginalTarget }
 
-    public enum TargetRangeSourceLocation { Caster, GroundTarget, OriginalTarget }
+    //public enum TargetRangeSourceLocation { Caster, GroundTarget, OriginalTarget }
 }

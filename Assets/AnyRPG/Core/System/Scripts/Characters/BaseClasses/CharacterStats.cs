@@ -66,7 +66,6 @@ namespace AnyRPG {
         protected bool eventSubscriptionsInitialized = false;
 
         // game manager references
-        protected SystemDataFactory systemDataFactory = null;
         protected LevelManager levelManager = null;
         protected PlayerManager playerManager = null;
         protected CombatTextManager combatTextManager = null;
@@ -189,7 +188,6 @@ namespace AnyRPG {
 
         public override void SetGameManagerReferences() {
             base.SetGameManagerReferences();
-            systemDataFactory = systemGameManager.SystemDataFactory;
             levelManager = systemGameManager.LevelManager;
             playerManager = systemGameManager.PlayerManager;
             combatTextManager = systemGameManager.UIManager.CombatTextManager;

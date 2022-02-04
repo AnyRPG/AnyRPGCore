@@ -17,8 +17,6 @@ namespace AnyRPG {
 
         protected bool eventSubscriptionsInitialized = false;
 
-        private SystemDataFactory systemDataFactory = null;
-
         public BaseCharacter BaseCharacter {
             get => baseCharacter;
             set => baseCharacter = value;
@@ -32,10 +30,6 @@ namespace AnyRPG {
             Configure(systemGameManager);
         }
 
-        public override void SetGameManagerReferences() {
-            base.SetGameManagerReferences();
-            systemDataFactory = systemGameManager.SystemDataFactory;
-        }
 
         public void AddTemporaryPet(UnitProfile unitProfile, UnitController unitController) {
 
