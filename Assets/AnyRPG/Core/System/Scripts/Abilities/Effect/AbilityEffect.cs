@@ -4,7 +4,8 @@ using UnityEngine;
 
 namespace AnyRPG {
 
-    public abstract class AbilityEffect : DescribableResource, ITargetable {
+    [CreateAssetMenu(fileName = "New AbilityEffect", menuName = "AnyRPG/Abilities/Effects/AbilityEffect")]
+    public class AbilityEffect : DescribableResource, ITargetable {
 
         [Header("Effect Properties")]
 
