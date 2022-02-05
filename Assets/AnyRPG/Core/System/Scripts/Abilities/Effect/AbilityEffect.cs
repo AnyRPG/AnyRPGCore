@@ -6,6 +6,13 @@ namespace AnyRPG {
 
     public abstract class AbilityEffect : DescribableResource, ITargetable {
 
+        [Header("Effect Properties")]
+
+        [Tooltip("When casting is complete, these ability effects will be triggered.")]
+        [SerializeReference]
+        [SerializeReferenceButton]
+        protected AbilityEffectProperties effectProperties = null;
+
         [Header("Target Properties")]
 
         [SerializeField]
