@@ -9,7 +9,8 @@ using UnityEngine.UI;
 
 
 namespace AnyRPG {
-    [CreateAssetMenu(fileName = "New MountEffect", menuName = "AnyRPG/Abilities/Effects/MountEffect")]
+
+    [System.Serializable]
     public class MountEffect : StatusEffect {
 
         [Header("Mount")]

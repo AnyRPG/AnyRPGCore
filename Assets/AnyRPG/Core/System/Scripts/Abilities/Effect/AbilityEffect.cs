@@ -9,10 +9,12 @@ namespace AnyRPG {
 
         [Header("Effect Properties")]
 
+        
         [Tooltip("When casting is complete, these ability effects will be triggered.")]
         [SerializeReference]
         [SerializeReferenceButton]
         protected AbilityEffectProperties effectProperties = null;
+        
 
         [Header("Target Properties")]
 
@@ -140,7 +142,7 @@ namespace AnyRPG {
                     if (SystemDataFactory.MatchResource(abilityEffect.DisplayName, DisplayName)) {
                         Debug.LogError(DisplayName + ".PerformAbilityEffects(): circular reference detected.  Tried to cast self.  CHECK INSPECTOR AND FIX ABILITY EFFECT CONFIGURATION!!!");
                     } else {
-                        if (!(abilityEffect is AmountEffect)) {
+                        if (!(abilityEffect is AmountEffectOld)) {
                             abilityEffectOutput.spellDamageMultiplier = 1f;
                         }
                         Dictionary<PrefabProfile, GameObject> tmpObjects = PerformAbilityEffect(source, target, abilityEffectOutput, abilityEffect);

@@ -1018,7 +1018,7 @@ namespace AnyRPG {
 
                 foreach (StatusEffectNode statusEffectNode in characterUnit.BaseCharacter.CharacterStats.StatusEffects.Values) {
                     //Debug.Log(gameObject.name + ".CharacterAbilityManager.PerformAbilityCast(): looping through status effects");
-                    if (statusEffectNode.StatusEffect is MountEffect) {
+                    if (statusEffectNode.StatusEffect is MountEffectProperties) {
                         //Debug.Log(gameObject.name + ".CharacterAbilityManager.PerformAbilityCast(): looping through status effects: found a mount effect");
                         statusEffectNode.CancelStatusEffect();
                         break;

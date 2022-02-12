@@ -1,11 +1,12 @@
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace AnyRPG {
 
     [System.Serializable]
-    public abstract class AbilityEffectProperties : ConfiguredClass, ITargetable {
+    public abstract class AbilityEffectProperties : ConfiguredClass, ITargetable, IDescribable {
 
         [Header("Target Properties")]
 
@@ -61,11 +62,13 @@ namespace AnyRPG {
         // properties from resource description
         protected string displayName = string.Empty;
         protected string description = string.Empty;
+        protected Sprite icon = null;
 
         public List<AbilityEffect> MyHitAbilityEffectList { get => hitAbilityEffectList; set => hitAbilityEffectList = value; }
         public float ThreatMultiplier { get => threatMultiplier; set => threatMultiplier = value; }
         public float ChanceToCast { get => chanceToCast; set => chanceToCast = value; }
         public string DisplayName { get => displayName; set => displayName = value; }
+        public Sprite Icon { get => icon; set => icon = value; }
 
         public TargetProps GetTargetOptions(IAbilityCaster abilityCaster) {
             return targetOptions;
@@ -73,6 +76,18 @@ namespace AnyRPG {
 
         public string GetShortDescription() {
             return description;
+        }
+
+        public virtual string GetName() {
+            return string.Format("<color=yellow>{0}</color>", DisplayName);
+        }
+
+        public virtual string GetDescription() {
+            return string.Format("{0}\n{1}", GetName(), GetSummary());
+        }
+
+        public virtual string GetSummary() {
+            return string.Format("{0}", description);
         }
 
         public virtual bool CanUseOn(Interactable target, IAbilityCaster sourceCharacter, AbilityEffectContext abilityEffectContext = null, bool playerInitiated = false, bool performRangeCheck = true) {
@@ -138,7 +153,7 @@ namespace AnyRPG {
                     if (SystemDataFactory.MatchResource(abilityEffect.DisplayName, DisplayName)) {
                         Debug.LogError(DisplayName + ".PerformAbilityEffects(): circular reference detected.  Tried to cast self.  CHECK INSPECTOR AND FIX ABILITY EFFECT CONFIGURATION!!!");
                     } else {
-                        if (!(abilityEffect is AmountEffect)) {
+                        if (!(abilityEffect is AmountEffectOld)) {
                             abilityEffectOutput.spellDamageMultiplier = 1f;
                         }
                         Dictionary<PrefabProfile, GameObject> tmpObjects = PerformAbilityEffect(source, target, abilityEffectOutput, abilityEffect);
@@ -288,10 +303,11 @@ namespace AnyRPG {
             return abilityEffectContext;
         }
 
-        public virtual void SetupScriptableObjects(SystemGameManager systemGameManager, string displayName) {
+        public virtual void SetupScriptableObjects(SystemGameManager systemGameManager) {
+            //public virtual void SetupScriptableObjects(SystemGameManager systemGameManager, string displayName) {
             //Debug.Log(DisplayName + ".AbilityEffect.SetupscriptableObjects()");
 
-            this.displayName = displayName;
+            //this.displayName = displayName;
             Configure(systemGameManager);
 
             hitAbilityEffectList = new List<AbilityEffect>();

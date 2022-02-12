@@ -3,7 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 
 namespace AnyRPG {
-    [CreateAssetMenu(fileName = "New HealEffect", menuName = "AnyRPG/Abilities/Effects/HealEffect")]
+
+    [System.Serializable]
     public class HealEffect : AmountEffect {
 
         /// <summary>

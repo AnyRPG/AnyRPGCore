@@ -25,10 +25,32 @@ namespace AnyRPG {
 
         public UnitProfile UnitProfile { get => unitProfile; set => unitProfile = value; }
 
+        public override Dictionary<PrefabProfile, GameObject> Cast(IAbilityCaster source, Interactable target, Interactable originalTarget, AbilityEffectContext abilityEffectInput) {
+            //Debug.Log(DisplayName + ".SummonEffect.Cast()");
+            base.Cast(source, target, originalTarget, abilityEffectInput);
+            Dictionary<PrefabProfile, GameObject> returnObjects = base.Cast(source, target, originalTarget, abilityEffectInput);
+            (source.AbilityManager as CharacterAbilityManager).BaseCharacter.CharacterPetManager.SpawnPet(unitProfile);
+            return returnObjects;
+        }
+        /*
+        private void Spawn(BaseCharacter source) {
+            //Debug.Log(DisplayName + ".SummonEffect.Spawn(): prefabObjects.count: " + prefabObjects.Count);
 
-        public override void SetupScriptableObjects(SystemGameManager systemGameManager, string displayName) {
-            base.SetupScriptableObjects(systemGameManager, displayName);
+            UnitController unitController = unitProfile.SpawnUnitPrefab(source.UnitController.transform.parent);
+            if (unitController != null) {
+                petUnitController = unitController;
+                petUnitController.SetUnitControllerMode(UnitControllerMode.Pet);
+                source.MyCharacterPetManager.HandlePetSpawn(petUnitController);
+            }
+        }
+        */
 
+        protected override void CheckDestroyObjects(Dictionary<PrefabProfile, GameObject> abilityEffectObjects, IAbilityCaster source, Interactable target, AbilityEffectContext abilityEffectInput) {
+            // intentionally not calling base to avoid getting our pet destroyed
+        }
+
+        public override void SetupScriptableObjects(SystemGameManager systemGameManager) {
+            base.SetupScriptableObjects(systemGameManager);
             if (unitProfileName != null && unitProfileName != string.Empty) {
                 UnitProfile tmpUnitProfile = systemDataFactory.GetResource<UnitProfile>(unitProfileName);
                 if (tmpUnitProfile != null) {

@@ -8,7 +8,7 @@ using UnityEngine.UI;
 namespace AnyRPG {
 
     [System.Serializable]
-    public class StatusEffectProperties : LengthEffectProperties {
+    public class StatusEffectProperties : LengthEffectProperties, ILearnable {
 
         [Header("Status Effect")]
 
@@ -210,11 +210,246 @@ namespace AnyRPG {
         public bool CanGlide { get => canGlide; }
         public StatusEffectGroup StatusEffectGroup { get => statusEffectGroup; set => statusEffectGroup = value; }
 
-       
+        public override void SetGameManagerReferences() {
+            base.SetGameManagerReferences();
+            levelManager = systemGameManager.LevelManager;
+            playerManager = systemGameManager.PlayerManager;
+        }
 
-        public override void SetupScriptableObjects(SystemGameManager systemGameManager, string displayName) {
-            base.SetupScriptableObjects(systemGameManager, displayName);
+        public override void CancelEffect(BaseCharacter targetCharacter) {
+            base.CancelEffect(targetCharacter);
+            RemoveControlEffects(targetCharacter);
+        }
 
+        // bypass the creation of the status effect and just make its visual prefab
+        public Dictionary<PrefabProfile, GameObject> RawCast(IAbilityCaster source, Interactable target, Interactable originalTarget, AbilityEffectContext abilityEffectInput) {
+            //Debug.Log(DisplayName + ".StatusEffect.RawCast()");
+            return base.Cast(source, target, originalTarget, abilityEffectInput);
+        }
+
+        public override bool CanUseOn(Interactable target, IAbilityCaster sourceCharacter, AbilityEffectContext abilityEffectContext = null, bool playerInitiated = false, bool performRangeCheck = true) {
+            if (classTrait == true && sourceCharacter.AbilityManager.Level >= requiredLevel) {
+                return true;
+            }
+            if (!ZoneRequirementMet()) {
+                if (playerInitiated) {
+                    sourceCharacter.AbilityManager.ReceiveCombatMessage("Cannot cast " + DisplayName + ". You are in the wrong zone");
+                }
+                return false;
+            }
+            return base.CanUseOn(target, sourceCharacter, abilityEffectContext, playerInitiated, performRangeCheck);
+        }
+
+        public bool ZoneRequirementMet() {
+            if (SceneNames.Count > 0) {
+                bool sceneFound = false;
+                foreach (string sceneName in SceneNames) {
+                    if (SystemDataFactory.PrepareStringForMatch(sceneName) == SystemDataFactory.PrepareStringForMatch(levelManager.GetActiveSceneNode().SceneName)) {
+                        sceneFound = true;
+                    }
+                }
+                if (!sceneFound) {
+                    return false;
+                }
+            }
+            return true;
+        }
+
+
+        public override Dictionary<PrefabProfile, GameObject> Cast(IAbilityCaster source, Interactable target, Interactable originalTarget, AbilityEffectContext abilityEffectContext) {
+            //Debug.Log(DisplayName + ".StatusEffect.Cast(" + source.AbilityManager.Name + ", " + (target? target.name : "null") + ")");
+            if (abilityEffectContext.savedEffect == false && !CanUseOn(target, source)) {
+                return null;
+            }
+            Dictionary<PrefabProfile, GameObject> returnObjects = null;
+            CharacterStats targetCharacterStats = null;
+
+            if ((classTrait || abilityEffectContext.savedEffect) && (source as BaseCharacter) is BaseCharacter) {
+                targetCharacterStats = (source as BaseCharacter).CharacterStats;
+            } else {
+                if (target.CharacterUnit != null && target.CharacterUnit.BaseCharacter != null) {
+                    targetCharacterStats = target.CharacterUnit.BaseCharacter.CharacterStats;
+                }
+            }
+
+            // prevent status effect from sending scaled up damage to its ticks
+            abilityEffectContext.castTimeMultiplier = 1f;
+
+            StatusEffectNode _statusEffectNode = targetCharacterStats.ApplyStatusEffect(this, source, abilityEffectContext);
+            if (_statusEffectNode == null) {
+                //Debug.Log(DisplayName + ".StatusEffect.Cast(). statuseffect was null.  This could likely happen if the character already had the status effect max stack on them");
+            } else {
+                returnObjects = base.Cast(source, target, originalTarget, abilityEffectContext);
+                if (returnObjects != null) {
+                    // pass in the ability effect object so we can independently destroy it and let it last as long as the status effect (which could be refreshed).
+                    _statusEffectNode.PrefabObjects = returnObjects;
+                }
+                PerformAbilityHit(source, target, abilityEffectContext);
+
+            }
+            return returnObjects;
+        }
+
+        public override void PerformAbilityHit(IAbilityCaster source, Interactable target, AbilityEffectContext abilityEffectInput) {
+            //Debug.Log("DirectEffect.PerformAbilityEffect()");
+            base.PerformAbilityHit(source, target, abilityEffectInput);
+        }
+
+        // THESE TWO EXIST IN DIRECTEFFECT ALSO BUT I COULD NOT FIND A GOOD WAY TO SHARE THEM
+        public override void CastTick(IAbilityCaster source, Interactable target, AbilityEffectContext abilityEffectContext) {
+            //Debug.Log(abilityEffectName + ".StatusEffect.CastTick()");
+            abilityEffectContext.spellDamageMultiplier = tickRate / Duration;
+            base.CastTick(source, target, abilityEffectContext);
+            PerformAbilityTick(source, target, abilityEffectContext);
+        }
+
+        public override void CastComplete(IAbilityCaster source, Interactable target, AbilityEffectContext abilityEffectInput) {
+            //Debug.Log(abilityEffectName + ".StatusEffect.CastComplete()");
+            base.CastComplete(source, target, abilityEffectInput);
+            PerformAbilityComplete(source, target, abilityEffectInput);
+        }
+
+        public virtual void CastWeaponHit(IAbilityCaster source, Interactable target, AbilityEffectContext abilityEffectInput) {
+            //Debug.Log(abilityEffectName + ".AbilityEffect.CastComplete(" + source.name + ", " + (target ? target.name : "null") + ")");
+            PerformAbilityWeaponHit(source, target, abilityEffectInput);
+        }
+
+        public virtual void PerformAbilityWeaponHit(IAbilityCaster source, Interactable target, AbilityEffectContext abilityEffectInput) {
+            //Debug.Log(abilityEffectName + ".AbilityEffect.PerformAbilityTick(" + source.name + ", " + (target == null ? "null" : target.name) + ")");
+            PerformAbilityWeaponHitEffects(source, target, abilityEffectInput);
+        }
+
+        public virtual void PerformAbilityWeaponHitEffects(IAbilityCaster source, Interactable target, AbilityEffectContext effectOutput) {
+            PerformAbilityEffects(source, target, effectOutput, weaponHitAbilityEffectList);
+        }
+
+        public virtual void CastReflect(IAbilityCaster source, Interactable target, AbilityEffectContext abilityEffectContext) {
+            //Debug.Log(DisplayName + ".AbilityEffect.CastReflect(" + source.Name + ", " + (target ? target.name : "null") + ")");
+            PerformAbilityReflect(source, target, abilityEffectContext);
+        }
+
+        public virtual void PerformAbilityReflect(IAbilityCaster source, Interactable target, AbilityEffectContext abilityEffectContext) {
+            //Debug.Log(DisplayName + ".AbilityEffect.PerformAbilityReflect(" + source.Name + ", " + (target == null ? "null" : target.name) + ")");
+            PerformAbilityReflectEffects(source, target, abilityEffectContext);
+        }
+
+
+        public virtual void PerformAbilityReflectEffects(IAbilityCaster source, Interactable target, AbilityEffectContext abilityEffectContext) {
+            //Debug.Log(DisplayName + ".AbilityEffect.PerformAbilityReflectEffects(" + source.AbilityManager.UnitGameObject.name + ", " + (target == null ? "null" : target.gameObject.name) + ")");
+            abilityEffectContext.reflectDamage = true;
+            PerformAbilityEffects(source, target, abilityEffectContext, reflectAbilityEffectList);
+        }
+
+        public override string GetSummary() {
+            //Debug.Log("StatusEffect.GetSummary()");
+            string descriptionItem = string.Empty;
+            string descriptionFinal = string.Empty;
+            List<string> effectStrings = new List<string>();
+            if (statBuffTypeNames.Count > 0) {
+
+                foreach (string statBuffType in statBuffTypeNames) {
+                    if (StatAmount > 0) {
+                        descriptionItem = "Increases " + statBuffType + " by " + StatAmount;
+                        effectStrings.Add(descriptionItem);
+                    }
+                    if (StatMultiplier > 0 && StatMultiplier < 1) {
+                        descriptionItem = "Reduces " + statBuffType + " by " + ((1 - StatMultiplier) * 100) + "%";
+                        effectStrings.Add(descriptionItem);
+                    }
+                    if (StatMultiplier > 1) {
+                        descriptionItem = "Increases " + statBuffType + " by " + ((StatMultiplier - 1) * 100) + "%";
+                        effectStrings.Add(descriptionItem);
+                    }
+                }
+            }
+            if (incomingDamageMultiplier > 1) {
+                descriptionItem = "Multiplies all incoming damage by " + ((incomingDamageMultiplier - 1) * 100) + "%";
+                effectStrings.Add(descriptionItem);
+            } else if (incomingDamageMultiplier < 1) {
+                descriptionItem = "Reduces all incoming damage by " + ((1 - incomingDamageMultiplier) * 100) + "%";
+                effectStrings.Add(descriptionItem);
+            }
+            /*
+            if (reflectAbilityEffectList != null) {
+                description += "\nPerforms the following abilities "
+                foreach (AbilityEffect abilityEffect in reflectAbilityEffectList) {
+
+                }
+            }
+            */
+            descriptionFinal = string.Empty;
+            if (effectStrings.Count > 0) {
+                descriptionFinal = "\n" + string.Join("\n", effectStrings);
+            }
+            string durationLabel = string.Empty;
+            string statusText = string.Empty;
+            float printedDuration;
+            string durationString = string.Empty;
+
+            if (limitedDuration == true && classTrait == false) {
+                float remainingDuration = 0f;
+                if (playerManager.MyCharacter?.CharacterStats?.HasStatusEffect(this) == true) {
+                    remainingDuration = playerManager.MyCharacter.CharacterStats.GetStatusEffectNode(this).RemainingDuration;
+                }
+                if (remainingDuration != 0f) {
+                    durationLabel = "Remaining Duration: ";
+                    printedDuration = (int)remainingDuration;
+                } else {
+                    durationLabel = "Duration: ";
+                    printedDuration = (int)Duration;
+                }
+                statusText = SystemAbilityController.GetTimeText(printedDuration);
+                if (durationLabel != string.Empty) {
+                    durationString = "\n" + durationLabel + statusText;
+                }
+            }
+            return base.GetSummary() + string.Format("{0}{1}", descriptionFinal, durationString);
+        }
+
+        public void ApplyControlEffects(BaseCharacter targetCharacter) {
+            //Debug.Log(DisplayName + ".StatusEffect.ApplyControlEffects(" + (targetCharacter == null ? "null" : targetCharacter.CharacterName) + ")");
+            if (targetCharacter == null) {
+                //Debug.Log(DisplayName + ".StatusEffect.ApplyControlEffects() targetCharacter is null");
+                return;
+            }
+
+            if (DisableAnimator == true) {
+                //Debug.Log(abilityEffectName + ".StatusEffect.Tick() disabling animator and motor (freezing)");
+                targetCharacter.UnitController.FreezeCharacter();
+            }
+
+            if (Stun == true) {
+                targetCharacter.UnitController.StunCharacter();
+            }
+            if (Levitate == true) {
+                //Debug.Log(abilityEffectName + ".StatusEffect.Tick() levitating");
+                targetCharacter.UnitController.LevitateCharacter();
+            }
+            if (canFly == true && targetCharacter.UnitController != null) {
+                targetCharacter.UnitController.CanFlyOverride = true;
+            }
+            if (canGlide == true && targetCharacter.UnitController != null) {
+                targetCharacter.UnitController.CanGlideOverride = true;
+            }
+        }
+
+        public void RemoveControlEffects(BaseCharacter targetCharacter) {
+            if (targetCharacter == null) {
+                return;
+            }
+            if (DisableAnimator == true) {
+                targetCharacter.UnitController.UnFreezeCharacter();
+            }
+            if (Stun == true) {
+                targetCharacter.UnitController.UnStunCharacter();
+            }
+            if (Levitate == true) {
+                targetCharacter.UnitController.UnLevitateCharacter();
+            }
+        }
+
+        public override void SetupScriptableObjects(SystemGameManager systemGameManager) {
+            base.SetupScriptableObjects(systemGameManager);
             reflectAbilityEffectList = new List<AbilityEffect>();
             if (reflectAbilityEffectNames != null) {
                 foreach (string abilityEffectName in reflectAbilityEffectNames) {

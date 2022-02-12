@@ -5,7 +5,8 @@ using UnityEngine;
 using UnityEngine.UI;
 
 namespace AnyRPG {
-    [CreateAssetMenu(fileName = "New RemoveEffect", menuName = "AnyRPG/Abilities/Effects/RemoveEffect")]
+
+    [System.Serializable]
     public class RemoveEffect : InstantEffect {
 
         // 0 is unlimited

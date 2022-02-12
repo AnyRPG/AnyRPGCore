@@ -87,7 +87,7 @@ namespace AnyRPG {
                 capabilityProps = capabilityPropsFaction.Join(capabilityProps);
             }
 
-            List<StatusEffect> traitList = capabilityProps.TraitList.Distinct().ToList();
+            List<StatusEffectOld> traitList = capabilityProps.TraitList.Distinct().ToList();
 
             if (traitList.Count > 0) {
                 traitsArea.gameObject.SetActive(true);

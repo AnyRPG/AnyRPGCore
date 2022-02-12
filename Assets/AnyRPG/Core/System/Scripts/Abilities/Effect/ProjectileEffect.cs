@@ -5,7 +5,8 @@ using UnityEngine;
 using UnityEngine.UI;
 
 namespace AnyRPG {
-    [CreateAssetMenu(fileName = "New ProjectileEffect", menuName = "AnyRPG/Abilities/Effects/ProjectileEffect")]
+
+    [System.Serializable]
     public class ProjectileEffect : DirectEffect {
 
         [Header("Projectile")]

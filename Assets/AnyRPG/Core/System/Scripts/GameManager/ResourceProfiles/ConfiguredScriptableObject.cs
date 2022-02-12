@@ -6,6 +6,7 @@ namespace AnyRPG {
 
         protected SystemGameManager systemGameManager = null;
         protected SystemConfigurationManager systemConfigurationManager = null;
+        //protected SystemDataFactory systemDataFactory = null;
 
         public virtual void Configure(SystemGameManager systemGameManager) {
             this.systemGameManager = systemGameManager;
@@ -14,6 +15,7 @@ namespace AnyRPG {
 
         public virtual void SetGameManagerReferences() {
             systemConfigurationManager = systemGameManager.SystemConfigurationManager;
+            //systemDataFactory = systemGameManager.SystemDataFactory;
         }
 
     }

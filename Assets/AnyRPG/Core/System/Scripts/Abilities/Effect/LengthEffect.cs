@@ -7,8 +7,9 @@ using UnityEngine;
 using UnityEngine.UI;
 
 namespace AnyRPG {
-    [CreateAssetMenu(fileName = "New LengthEffect", menuName = "AnyRPG/Abilities/Effects/LengthEffect")]
-    public class LengthEffect : AbilityEffect {
+
+    [System.Serializable]
+    public class LengthEffect : AbilityEffectProperties {
 
         [Header("Prefab")]
 

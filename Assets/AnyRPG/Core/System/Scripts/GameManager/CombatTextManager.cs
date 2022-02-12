@@ -128,7 +128,7 @@ namespace AnyRPG {
             }
         }
 
-        public void SpawnCombatText(Interactable target, StatusEffect statusEffect, bool gainEffect) {
+        public void SpawnCombatText(Interactable target, StatusEffectProperties statusEffect, bool gainEffect) {
             if (PlayerPrefs.GetInt("UseFloatingCombatText") == 0) {
                 return;
             }

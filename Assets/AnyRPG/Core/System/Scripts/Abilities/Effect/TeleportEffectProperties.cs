@@ -37,8 +37,30 @@ namespace AnyRPG {
         protected LevelManager levelManager = null;
 
         public string LevelName { get => levelName; set => levelName = value; }
-        public bool OverrideSpawnLocation { get => overrideSpawnLocation; set => overrideSpawnLocation = value; }
-        public bool OverrideSpawnDirection { get => overrideSpawnDirection; set => overrideSpawnDirection = value; }
+
+        public override void SetGameManagerReferences() {
+            base.SetGameManagerReferences();
+            levelManager = systemGameManager.LevelManager;
+        }
+
+        public override Dictionary<PrefabProfile, GameObject> Cast(IAbilityCaster source, Interactable target, Interactable originalTarget, AbilityEffectContext abilityEffectInput) {
+            Dictionary<PrefabProfile, GameObject> returnObjects = base.Cast(source, target, originalTarget, abilityEffectInput);
+            if (levelName != null) {
+                if (overrideSpawnDirection == true) {
+                    levelManager.SetSpawnRotationOverride(spawnForwardDirection);
+                }
+                if (overrideSpawnLocation == true) {
+                    levelManager.LoadLevel(levelName, spawnLocation);
+                } else {
+                    if (locationTag != null && locationTag != string.Empty) {
+                        levelManager.OverrideSpawnLocationTag = locationTag;
+                    }
+                    levelManager.LoadLevel(levelName);
+                }
+            }
+            return returnObjects;
+        }
+
     }
 
 }

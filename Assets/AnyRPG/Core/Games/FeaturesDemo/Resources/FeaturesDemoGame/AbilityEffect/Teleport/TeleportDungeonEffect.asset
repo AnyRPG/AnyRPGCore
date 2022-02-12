@@ -9,20 +9,23 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e45f10c5832dd2e47906bd0fd07d276b, type: 3}
+  m_Script: {fileID: 11500000, guid: bdf96c14ab72d3f44be14d4355cb267f, type: 3}
   m_Name: TeleportDungeonEffect
   m_EditorClassIdentifier: 
-  resourceName: Teleport Dungeon Effect
+  resourceName: 
   displayName: 
-  icon: {fileID: 21300000, guid: 9da90319901fc0448b435999269058c9, type: 3}
+  icon: {fileID: 0}
   iconBackgroundImage: {fileID: 0}
   description: 
   useRegionalDescription: 0
   resourceDescriptionProfile: 
+  optionalOverride: 0
+  effectProperties:
+    id: 0
   targetOptions:
     requireTarget: 0
     requireLineOfSight: 0
-    requireLiveTarget: 0
+    requireLiveTarget: 1
     requireDeadTarget: 0
     canCastOnSelf: 0
     canCastOnOthers: 0
@@ -42,22 +45,7 @@ MonoBehaviour:
   hitAbilityEffectNames: []
   inputMultiplier: 0
   threatMultiplier: 1
-  abilityPrefabSource: 1
-  randomPrefabs: 0
-  abilityObjectList: []
-  prefabSpawnLocation: 0
-  prefabDestroyDelay: 0
-  destroyOnEndCast: 0
-  tickRate: 0
-  castZeroTick: 0
-  tickAbilityEffectNames: []
-  onTickAudioProfileNames: []
-  randomTickAudioProfiles: 0
-  completeAbilityEffectNames: []
-  defaultPrefabLifetime: 10
-  levelName: FeaturesDemoDungeon
-  locationTag: 
-  overrideSpawnLocation: 0
-  spawnLocation: {x: 0, y: 0, z: 0}
-  overrideSpawnDirection: 0
-  spawnForwardDirection: {x: 0, y: 0, z: 0}
+  references:
+    version: 1
+    00000000:
+      type: {class: , ns: , asm: }

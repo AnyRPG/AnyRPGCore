@@ -6,7 +6,8 @@ using UnityEngine;
 using UnityEngine.UI;
 
 namespace AnyRPG {
-    [CreateAssetMenu(fileName = "New StatusEffect", menuName = "AnyRPG/Abilities/Effects/StatusEffect")]
+
+    [System.Serializable]
     public class StatusEffect : LengthEffect, ILearnable {
 
         [Header("Status Effect")]
@@ -232,7 +233,7 @@ namespace AnyRPG {
             }
             if (!ZoneRequirementMet()) {
                 if (playerInitiated) {
-                    sourceCharacter.AbilityManager.ReceiveCombatMessage("Cannot cast " + resourceName + ". You are in the wrong zone");
+                    sourceCharacter.AbilityManager.ReceiveCombatMessage("Cannot cast " + DisplayName + ". You are in the wrong zone");
                 }
                 return false;
             }
@@ -274,7 +275,9 @@ namespace AnyRPG {
             // prevent status effect from sending scaled up damage to its ticks
             abilityEffectContext.castTimeMultiplier = 1f;
 
-            StatusEffectNode _statusEffectNode = targetCharacterStats.ApplyStatusEffect(this, source, abilityEffectContext);
+            // OLD
+            /*
+             StatusEffectNode _statusEffectNode = targetCharacterStats.ApplyStatusEffect(this, source, abilityEffectContext);
             if (_statusEffectNode == null) {
                 //Debug.Log(DisplayName + ".StatusEffect.Cast(). statuseffect was null.  This could likely happen if the character already had the status effect max stack on them");
             } else {
@@ -286,6 +289,7 @@ namespace AnyRPG {
                 PerformAbilityHit(source, target, abilityEffectContext);
 
             }
+            */
             return returnObjects;
         }
 
@@ -387,9 +391,12 @@ namespace AnyRPG {
 
             if (limitedDuration == true && classTrait == false) {
                 float remainingDuration = 0f;
+                // OLD
+                /*
                 if (playerManager.MyCharacter?.CharacterStats?.HasStatusEffect(this) == true) {
                     remainingDuration = playerManager.MyCharacter.CharacterStats.GetStatusEffectNode(this).RemainingDuration;
                 }
+                */
                 if (remainingDuration != 0f) {
                     durationLabel = "Remaining Duration: ";
                     printedDuration = (int)remainingDuration;
@@ -504,5 +511,11 @@ namespace AnyRPG {
         }
 
     }
+
+    /*
+    public enum SecondaryStatType { MovementSpeed, Accuracy, CriticalStrike, Speed, Damage, PhysicalDamage, SpellDamage, Armor }
+
+    public enum StatusEffectAlignment { None, Beneficial, Harmful }
+    */
 
 }

@@ -6,7 +6,8 @@ using UnityEngine.AI;
 using UnityEngine.UI;
 
 namespace AnyRPG {
-    [CreateAssetMenu(fileName = "New SummonEffect", menuName = "AnyRPG/Abilities/Effects/SummonEffect")]
+
+    [System.Serializable]
     public class SummonEffect : InstantEffect {
 
         [Header("Summon")]

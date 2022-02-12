@@ -5,7 +5,8 @@ using UnityEngine;
 using UnityEngine.UI;
 
 namespace AnyRPG {
-    [CreateAssetMenu(fileName = "New AttackEffect", menuName = "AnyRPG/Abilities/Effects/AttackEffect")]
+
+    [System.Serializable]
     public class AttackEffect : AmountEffect {
 
         /// <summary>
@@ -33,17 +34,24 @@ namespace AnyRPG {
             // on hit, burn effect, etc, which should not be multiplied by cast time
             abilityEffectContext.weaponHitHasCast = true;
 
+            // OLD
+            /*
             source.AbilityManager.ProcessWeaponHitEffects(this, target, abilityEffectContext);
+            */
 
             return abilityEffectContext;
         }
 
 
         public override bool ProcessAbilityHit(Interactable target, int finalAmount, IAbilityCaster source, CombatMagnitude combatMagnitude, AbilityEffect abilityEffect, AbilityEffectContext abilityEffectContext, PowerResource powerResource) {
+
+            // OLD
+            /*
             bool returnValue = CharacterUnit.GetCharacterUnit(target).BaseCharacter.CharacterCombat.TakeDamage(abilityEffectContext, powerResource, finalAmount, source, combatMagnitude, this);
             if (returnValue == false) {
                 return false;
             }
+            */
 
             return base.ProcessAbilityHit(target, finalAmount, source, combatMagnitude, abilityEffect, abilityEffectContext, powerResource);
         }

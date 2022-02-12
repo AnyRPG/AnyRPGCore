@@ -19,6 +19,7 @@ MonoBehaviour:
   description: Basic attack
   useRegionalDescription: 0
   resourceDescriptionProfile: 
+  optionalOverride: 0
   requireOutOfCombat: 0
   weaponAffinityNames: []
   holdableObjectList: []
@@ -62,9 +63,13 @@ MonoBehaviour:
     autoSelfCast: 0
     useMeleeRange: 1
     maxRange: 5
+    requireFacingTarget: 0
+    maxAngle: 45
     requiresGroundTarget: 0
     groundTargetColor: {r: 1, g: 1, b: 1, a: 1}
     groundTargetRadius: 0
+  inlineAbilityEffects:
+  - id: 0
   abilityEffectNames:
   - Attack
   tickRate: 1
@@ -73,3 +78,7 @@ MonoBehaviour:
   useUnitAttackAnimations: 1
   useAutoAttackAnimations: 0
   useWeaponHitSound: 1
+  references:
+    version: 1
+    00000000:
+      type: {class: , ns: , asm: }

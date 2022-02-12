@@ -6,7 +6,7 @@ using UnityEngine.UI;
 
 namespace AnyRPG {
     // base class to hold amounts and spellpower calculations for heal and damage effects
-    public abstract class AmountEffect : InstantEffect {
+    public abstract class AmountEffect : InstantEffectOld {
 
         [Header("Amounts")]
 
@@ -185,4 +185,6 @@ namespace AnyRPG {
     }
 
    
+
+
 }

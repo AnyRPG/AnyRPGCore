@@ -5,7 +5,8 @@ using UnityEngine;
 using UnityEngine.UI;
 
 namespace AnyRPG {
-    [CreateAssetMenu(fileName = "New RainEffect", menuName = "AnyRPG/Abilities/Effects/RainEffect")]
+
+    [System.Serializable]
     public class RainEffect : AOEEffect {
 
 

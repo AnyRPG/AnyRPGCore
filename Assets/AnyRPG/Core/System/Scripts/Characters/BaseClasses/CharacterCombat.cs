@@ -206,7 +206,7 @@ namespace AnyRPG {
             }
         }
 
-        public void ProcessTakeDamage(AbilityEffectContext abilityEffectContext, PowerResource powerResource, int damage, IAbilityCaster target, CombatMagnitude combatMagnitude, AbilityEffect abilityEffect) {
+        public void ProcessTakeDamage(AbilityEffectContext abilityEffectContext, PowerResource powerResource, int damage, IAbilityCaster target, CombatMagnitude combatMagnitude, AbilityEffectProperties abilityEffect) {
             //Debug.Log(baseCharacter.gameObject.name + ".CharacterCombat.ProcessTakeDamage(" + damage + ", " + (target == null ? "null" : target.AbilityManager.UnitGameObject.name) + ", " + combatMagnitude.ToString() + ", " + abilityEffect.DisplayName);
             /*
             if (abilityEffectContext == null) {
@@ -255,7 +255,7 @@ namespace AnyRPG {
                     //if ((abilityEffectContext.baseAbility is AnimatedAbility) && (abilityEffectContext.baseAbility as AnimatedAbility).IsAutoAttack) {
                     if ((abilityEffectContext.baseAbility is AnimatedAbility)
                         && (abilityEffectContext.baseAbility as AnimatedAbility).IsAutoAttack
-                        && (abilityEffect as AttackEffect).DamageType == DamageType.physical) {
+                        && (abilityEffect as AttackEffectProperties).DamageType == DamageType.physical) {
                         combatTextType = CombatTextType.normal;
                     } else {
                         combatTextType = CombatTextType.ability;
@@ -607,7 +607,7 @@ namespace AnyRPG {
         /// <param name="combatMagnitude"></param>
         /// <param name="abilityEffect"></param>
         /// <returns></returns>
-        private bool TakeDamageCommon(AbilityEffectContext abilityEffectContext, PowerResource powerResource, int damage, IAbilityCaster source, CombatMagnitude combatMagnitude, AbilityEffect abilityEffect) {
+        private bool TakeDamageCommon(AbilityEffectContext abilityEffectContext, PowerResource powerResource, int damage, IAbilityCaster source, CombatMagnitude combatMagnitude, AbilityEffectProperties abilityEffect) {
             //Debug.Log(gameObject.name + ".TakeDamageCommon(" + damage + ")");
 
             // perform check to see if this character has the resource to be reduced.  if not, it is immune to this type of damage
@@ -623,7 +623,7 @@ namespace AnyRPG {
             return true;
         }
 
-        public virtual bool TakeDamage(AbilityEffectContext abilityEffectContext, PowerResource powerResource, int damage, IAbilityCaster sourceCharacter, CombatMagnitude combatMagnitude, AbilityEffect abilityEffect) {
+        public virtual bool TakeDamage(AbilityEffectContext abilityEffectContext, PowerResource powerResource, int damage, IAbilityCaster sourceCharacter, CombatMagnitude combatMagnitude, AbilityEffectProperties abilityEffect) {
             //Debug.Log(gameObject.name + ".TakeDamage(" + damage + ", " + sourcePosition + ", " + source.name + ")");
             if (baseCharacter.UnitController.UnitControllerMode == UnitControllerMode.AI || baseCharacter.UnitController.UnitControllerMode == UnitControllerMode.Pet) {
                 if (baseCharacter.UnitController.CurrentState is EvadeState || baseCharacter.UnitController.CurrentState is DeathState) {
@@ -637,7 +637,7 @@ namespace AnyRPG {
                 //float distance = Vector3.Distance(transform.position, sourcePosition);
                 // replace with hitbox check
                 bool canPerformAbility = true;
-                if ((abilityEffect as AttackEffect).DamageType == DamageType.physical) {
+                if ((abilityEffect as AttackEffectProperties).DamageType == DamageType.physical) {
                     damage -= (int)baseCharacter.CharacterStats.SecondaryStats[SecondaryStatType.Armor].CurrentValue;
                     damage = Mathf.Clamp(damage, 0, int.MaxValue);
                 }

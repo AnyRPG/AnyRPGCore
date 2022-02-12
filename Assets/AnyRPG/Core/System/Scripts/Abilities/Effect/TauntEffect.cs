@@ -6,7 +6,8 @@ using UnityEngine;
 using UnityEngine.UI;
 
 namespace AnyRPG {
-    [CreateAssetMenu(fileName = "New Taunt Effect", menuName = "AnyRPG/Abilities/Effects/TauntEffect")]
+
+    [System.Serializable]
     public class TauntEffect : StatusEffect {
 
         // extra threat from the taunt

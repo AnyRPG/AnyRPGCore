@@ -22,11 +22,32 @@ namespace AnyRPG {
 
         private List<StatusEffectType> effectTypes = new List<StatusEffectType>();
 
-        public int MaxClearEffects { get => maxClearEffects; set => maxClearEffects = value; }
+        public override void PerformAbilityHit(IAbilityCaster source, Interactable target, AbilityEffectContext abilityEffectInput) {
+            base.PerformAbilityHit(source, target, abilityEffectInput);
 
-        public override void SetupScriptableObjects(SystemGameManager systemGameManager, string displayName) {
+            List<StatusEffectNode> removeEffects = new List<StatusEffectNode>();
 
-            base.SetupScriptableObjects(systemGameManager, displayName);
+            CharacterUnit targetCharacterUnit = CharacterUnit.GetCharacterUnit(target);
+            if (targetCharacterUnit != null && targetCharacterUnit.BaseCharacter != null && targetCharacterUnit.BaseCharacter.CharacterStats != null) {
+                foreach (StatusEffectNode statusEffectNode in targetCharacterUnit.BaseCharacter.CharacterStats.StatusEffects.Values) {
+                    if (statusEffectNode.StatusEffect.StatusEffectType != null && effectTypes.Contains(statusEffectNode.StatusEffect.StatusEffectType)) {
+                        removeEffects.Add(statusEffectNode);
+                    }
+                    if (maxClearEffects != 0 && removeEffects.Count >= maxClearEffects) {
+                        break;
+                    }
+                }
+
+                foreach (StatusEffectNode statusEffectNode in removeEffects) {
+                    statusEffectNode.CancelStatusEffect();
+                }
+            }
+        }
+
+
+        public override void SetupScriptableObjects(SystemGameManager systemGameManager) {
+
+            base.SetupScriptableObjects(systemGameManager);
 
             if (effectTypeNames != null) {
                 foreach (string statusEffectType in effectTypeNames) {

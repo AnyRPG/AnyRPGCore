@@ -775,7 +775,7 @@ namespace AnyRPG {
             }
 
             for (int i = 0; i < equipment.EquipmentSet.MyTraitList.Count; i++) {
-                StatusEffect statusEffect = equipment.EquipmentSet.MyTraitList[i];
+                StatusEffectOld statusEffect = equipment.EquipmentSet.MyTraitList[i];
                 if (statusEffect != null) {
                     if (equipmentCount > i) {
                         // we are allowed to have this buff
@@ -825,11 +825,11 @@ namespace AnyRPG {
             RemoveCapabilityProviderTraits(oldSnapshot.GetTraitsToRemove(newSnapshot));
         }
 
-        public void ApplyCapabilityProviderTraits(List<StatusEffect> statusEffects) {
+        public void ApplyCapabilityProviderTraits(List<StatusEffectOld> statusEffects) {
             if (statusEffects == null) {
                 return;
             }
-            foreach (StatusEffect statusEffect in statusEffects) {
+            foreach (StatusEffectOld statusEffect in statusEffects) {
                 ApplyStatusEffect(statusEffect);
             }
         }
@@ -879,11 +879,11 @@ namespace AnyRPG {
             ApplyStatusEffect(systemDataFactory.GetResource<AbilityEffect>(statusEffectSaveData.StatusEffectName), statusEffectSaveData.remainingSeconds);
         }
 
-        public void RemoveCapabilityProviderTraits(List<StatusEffect> statusEffects) {
+        public void RemoveCapabilityProviderTraits(List<StatusEffectOld> statusEffects) {
             if (statusEffects == null) {
                 return;
             }
-            foreach (StatusEffect statusEffect in statusEffects) {
+            foreach (StatusEffectOld statusEffect in statusEffects) {
                 if (baseCharacter.CharacterStats != null && baseCharacter.CharacterStats.StatusEffects.ContainsKey(SystemDataFactory.PrepareStringForMatch(statusEffect.DisplayName))) {
                     baseCharacter.CharacterStats.StatusEffects[SystemDataFactory.PrepareStringForMatch(statusEffect.DisplayName)].CancelStatusEffect();
                 }
@@ -1277,7 +1277,7 @@ namespace AnyRPG {
             return base.GetOutgoingDamageModifiers();
         }
 
-        public override void ProcessWeaponHitEffects(AttackEffect attackEffect, Interactable target, AbilityEffectContext abilityEffectContext) {
+        public override void ProcessWeaponHitEffects(AttackEffectProperties attackEffect, Interactable target, AbilityEffectContext abilityEffectContext) {
             //Debug.Log(baseCharacter.gameObject.name + ".CharacterAbilityManager.ProcessWeaponHitEffects(" + (abilityEffectContext == null ? "null" : "valid") + ")");
             base.ProcessWeaponHitEffects(attackEffect, target, abilityEffectContext);
             if (attackEffect.DamageType == DamageType.physical) {

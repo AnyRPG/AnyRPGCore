@@ -5,7 +5,8 @@ using UnityEngine;
 using UnityEngine.UI;
 
 namespace AnyRPG {
-    [CreateAssetMenu(fileName = "New ChanneledEffect",menuName = "AnyRPG/Abilities/Effects/ChanneledEffect")]
+
+    [System.Serializable]
     public class ChanneledEffect : DirectEffect {
 
         // the amount of time to delay damage after spawning the prefab
@@ -79,7 +80,12 @@ namespace AnyRPG {
 
                 // delayed damage
                 //source.StartCoroutine(PerformAbilityHitDelay(source, target, abilityEffectInput));
+                
+                // OLD
+                /*
                 source.AbilityManager.BeginPerformAbilityHitDelay(source, target, abilityEffectContext, this);
+                */
+
             } else {
                 //Debug.Log(DisplayName + ".ChanneledEffect.Cast(" + source + ", " + (target == null ? "null" : target.name) + ") PREFABOBJECTS WAS NULL");
 
@@ -91,7 +97,7 @@ namespace AnyRPG {
             if (target == null) {
                 // channeled effect always requires target because the prefab object must have a start and end point
                 if (playerInitiated) {
-                    sourceCharacter.AbilityManager.ReceiveCombatMessage("Cannot cast " + resourceName + ". Channneled abilities must always have a target");
+                    sourceCharacter.AbilityManager.ReceiveCombatMessage("Cannot cast " + DisplayName + ". Channneled abilities must always have a target");
                 }
                 return false;
             }

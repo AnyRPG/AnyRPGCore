@@ -24,12 +24,12 @@ namespace AnyRPG {
 
         [Tooltip("the name of the trait should be associated with the list spot that matches the number of gear pieces required")]
         [SerializeField]
-        [ResourceSelector(resourceType = typeof(StatusEffect))]
+        [ResourceSelector(resourceType = typeof(StatusEffectOld))]
         private List<string> traitNames = new List<string>();
 
-        private List<StatusEffect> traitList = new List<StatusEffect>();
+        private List<StatusEffectOld> traitList = new List<StatusEffectOld>();
 
-        public List<StatusEffect> MyTraitList { get => traitList; set => traitList = value; }
+        public List<StatusEffectOld> MyTraitList { get => traitList; set => traitList = value; }
         public List<Equipment> MyEquipmentList { get => equipmentList; set => equipmentList = value; }
 
         public override void SetupScriptableObjects(SystemGameManager systemGameManager) {
@@ -48,14 +48,14 @@ namespace AnyRPG {
                 }
             }
 
-            traitList = new List<StatusEffect>();
+            traitList = new List<StatusEffectOld>();
             if (traitNames != null) {
                 foreach (string traitName in traitNames) {
-                    StatusEffect tmpStatusEffect = null;
+                    StatusEffectOld tmpStatusEffect = null;
                     if (traitName == string.Empty) {
                         traitList.Add(null);
                     } else {
-                        tmpStatusEffect = systemDataFactory.GetResource<AbilityEffect>(traitName) as StatusEffect;
+                        tmpStatusEffect = systemDataFactory.GetResource<AbilityEffect>(traitName) as StatusEffectOld;
                         if (tmpStatusEffect != null) {
                             traitList.Add(tmpStatusEffect);
                         } else {
