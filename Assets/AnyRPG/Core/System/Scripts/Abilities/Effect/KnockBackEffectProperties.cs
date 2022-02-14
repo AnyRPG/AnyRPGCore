@@ -53,6 +53,7 @@ namespace AnyRPG {
         public float UpwardModifier { get => upwardModifier; set => upwardModifier = value; }
         public LayerMask ExplosionMask { get => explosionMask; set => explosionMask = value; }
 
+        /*
         public void GetKnockBackEffectProperties(KnockBackEffect effect) {
 
             knockbackType = effect.KnockbackType;
@@ -65,6 +66,7 @@ namespace AnyRPG {
 
             GetInstantEffectProperties(effect);
         }
+        */
 
         public override void SetGameManagerReferences() {
             base.SetGameManagerReferences();

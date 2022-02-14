@@ -253,7 +253,7 @@ namespace AnyRPG {
             if (newLevel == 0 || newLevel != 1) {
                 AbilityEffectContext abilityEffectContext = new AbilityEffectContext();
 
-                systemConfigurationManager.LevelUpEffect.Cast(systemAbilityController, unitController, unitController, abilityEffectContext);
+                systemConfigurationManager.LevelUpEffect.AbilityEffectProperties.Cast(systemAbilityController, unitController, unitController, abilityEffectContext);
             }
         }
 
@@ -263,7 +263,7 @@ namespace AnyRPG {
                 return;
             }
             AbilityEffectContext abilityEffectContext = new AbilityEffectContext();
-            systemConfigurationManager.DeathEffect.Cast(systemAbilityController, unitController, unitController, abilityEffectContext);
+            systemConfigurationManager.DeathEffect.AbilityEffectProperties.Cast(systemAbilityController, unitController, unitController, abilityEffectContext);
         }
 
         /*

@@ -57,7 +57,7 @@ namespace AnyRPG {
         protected List<string> tickAbilityEffectNames = new List<string>();
 
         //[SerializeField]
-        protected List<AbilityEffect> tickAbilityEffectList = new List<AbilityEffect>();
+        protected List<AbilityEffectProperties> tickAbilityEffectList = new List<AbilityEffectProperties>();
 
         [SerializeField]
         [ResourceSelector(resourceType = typeof(AudioProfile))]
@@ -78,18 +78,19 @@ namespace AnyRPG {
         protected List<string> completeAbilityEffectNames = new List<string>();
 
         //[SerializeField]
-        protected List<AbilityEffect> completeAbilityEffectList = new List<AbilityEffect>();
+        protected List<AbilityEffectProperties> completeAbilityEffectList = new List<AbilityEffectProperties>();
 
         // game manager references
         protected ObjectPooler objectPooler = null;
 
-        public List<AbilityEffect> MyTickAbilityEffectList { get => tickAbilityEffectList; set => tickAbilityEffectList = value; }
-        public List<AbilityEffect> MyCompleteAbilityEffectList { get => completeAbilityEffectList; set => completeAbilityEffectList = value; }
+        public List<AbilityEffectProperties> TickAbilityEffectList { get => tickAbilityEffectList; set => tickAbilityEffectList = value; }
+        public List<AbilityEffectProperties> CompleteAbilityEffectList { get => completeAbilityEffectList; set => completeAbilityEffectList = value; }
         public float TickRate { get => tickRate; set => tickRate = value; }
         public float PrefabDestroyDelay { get => prefabDestroyDelay; set => prefabDestroyDelay = value; }
         public PrefabSpawnLocation PrefabSpawnLocation { get => prefabSpawnLocation; set => prefabSpawnLocation = value; }
         public bool CastZeroTick { get => castZeroTick; set => castZeroTick = value; }
 
+        /*
         public void GetLengthEffectProperties(LengthEffect effect) {
 
             abilityPrefabSource = effect.AbilityPrefabSource;
@@ -107,6 +108,7 @@ namespace AnyRPG {
 
             GetAbilityEffectProperties(effect);
         }
+        */
 
         public override void SetGameManagerReferences() {
             base.SetGameManagerReferences();
@@ -273,24 +275,24 @@ namespace AnyRPG {
 
         public override void SetupScriptableObjects(SystemGameManager systemGameManager) {
             base.SetupScriptableObjects(systemGameManager);
-            tickAbilityEffectList = new List<AbilityEffect>();
+            tickAbilityEffectList = new List<AbilityEffectProperties>();
             if (tickAbilityEffectNames != null) {
                 foreach (string abilityEffectName in tickAbilityEffectNames) {
                     AbilityEffect abilityEffect = systemDataFactory.GetResource<AbilityEffect>(abilityEffectName);
                     if (abilityEffect != null) {
-                        tickAbilityEffectList.Add(abilityEffect);
+                        tickAbilityEffectList.Add(abilityEffect.AbilityEffectProperties);
                     } else {
                         Debug.LogError("LengthEffect.SetupScriptableObjects(): Could not find ability effect: " + abilityEffectName + " while inititalizing " + DisplayName + ".  CHECK INSPECTOR");
                     }
                 }
             }
 
-            completeAbilityEffectList = new List<AbilityEffect>();
+            completeAbilityEffectList = new List<AbilityEffectProperties>();
             if (completeAbilityEffectNames != null) {
                 foreach (string abilityEffectName in completeAbilityEffectNames) {
                     AbilityEffect abilityEffect = systemDataFactory.GetResource<AbilityEffect>(abilityEffectName);
                     if (abilityEffect != null) {
-                        completeAbilityEffectList.Add(abilityEffect);
+                        completeAbilityEffectList.Add(abilityEffect.AbilityEffectProperties);
                     } else {
                         Debug.LogError("LengthEffect.SetupScriptableObjects(): Could not find ability effect: " + abilityEffectName + " while inititalizing " + DisplayName + ".  CHECK INSPECTOR");
                     }

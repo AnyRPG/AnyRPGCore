@@ -22,6 +22,7 @@ namespace AnyRPG {
 
         private List<StatusEffectType> effectTypes = new List<StatusEffectType>();
 
+        /*
         public void GetRemoveEffectProperties(RemoveEffect effect) {
 
             maxClearEffects = effect.MaxClearEffects;
@@ -29,6 +30,7 @@ namespace AnyRPG {
 
             GetInstantEffectProperties(effect);
         }
+        */
 
         public override void PerformAbilityHit(IAbilityCaster source, Interactable target, AbilityEffectContext abilityEffectInput) {
             base.PerformAbilityHit(source, target, abilityEffectInput);

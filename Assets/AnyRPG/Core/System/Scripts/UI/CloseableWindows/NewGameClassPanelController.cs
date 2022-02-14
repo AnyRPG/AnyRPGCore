@@ -143,7 +143,7 @@ namespace AnyRPG {
                     if (capabilityProps.TraitList[i] != null) {
                         NewGameAbilityButton rewardIcon = objectPooler.GetPooledObject(rewardIconPrefab, abilityButtonArea.transform).GetComponent<NewGameAbilityButton>();
                         rewardIcon.Configure(systemGameManager);
-                        rewardIcon.AddAbility(capabilityProps.TraitList[i]);
+                        rewardIcon.AddAbility(capabilityProps.TraitList[i].AbilityEffectProperties as StatusEffectProperties);
                         traitRewardIcons.Add(rewardIcon);
                         /*
                         if ((characterClass.TraitList[i] as StatusEffect).MyRequiredLevel > 1) {

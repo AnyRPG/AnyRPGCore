@@ -24,14 +24,14 @@ namespace AnyRPG {
         [ResourceSelector(resourceType = typeof(AbilityEffect))]
         private List<string> defaultHitEffects = new List<string>();
 
-        private List<AbilityEffect> defaultHitEffectList = new List<AbilityEffect>();
+        private List<AbilityEffectProperties> defaultHitEffectList = new List<AbilityEffectProperties>();
 
         [Tooltip("Ability effects to cast on the target when the weapon does damage from any attack, including standard (auto) attacks")]
         [SerializeField]
         [ResourceSelector(resourceType = typeof(AbilityEffect))]
         private List<string> onHitEffects = new List<string>();
 
-        private List<AbilityEffect> onHitEffectList = new List<AbilityEffect>();
+        private List<AbilityEffectProperties> onHitEffectList = new List<AbilityEffectProperties>();
 
         [Header("Animation and Sound Defaults")]
 
@@ -57,8 +57,8 @@ namespace AnyRPG {
 
         // properties
         public bool DefaultWeaponSkill { get => defaultWeaponSkill; set => defaultWeaponSkill = value; }
-        public List<AbilityEffect> DefaultHitEffectList { get => defaultHitEffectList; set => defaultHitEffectList = value; }
-        public List<AbilityEffect> OnHitEffectList { get => onHitEffectList; set => onHitEffectList = value; }
+        public List<AbilityEffectProperties> DefaultHitEffectList { get => defaultHitEffectList; set => defaultHitEffectList = value; }
+        public List<AbilityEffectProperties> OnHitEffectList { get => onHitEffectList; set => onHitEffectList = value; }
         public AnimationProfile AnimationProfile { get => animationProfile; set => animationProfile = value; }
         public List<AudioClip> DefaultHitSoundEffects { get => onHitSoundEffects; set => onHitSoundEffects = value; }
         public List<AbilityAttachmentNode> AbilityObjectList { get => abilityObjectList; set => abilityObjectList = value; }
@@ -73,7 +73,7 @@ namespace AnyRPG {
                     if (onHitEffectName != null && onHitEffectName != string.Empty) {
                         AbilityEffect abilityEffect = systemDataFactory.GetResource<AbilityEffect>(onHitEffectName);
                         if (abilityEffect != null) {
-                            onHitEffectList.Add(abilityEffect);
+                            onHitEffectList.Add(abilityEffect.AbilityEffectProperties);
                         } else {
                             Debug.LogError("WeaponSkillProps.SetupScriptableObjects(): Could not find ability effect : " + onHitEffectName + " while inititalizing.  CHECK INSPECTOR");
                         }
@@ -88,7 +88,7 @@ namespace AnyRPG {
                     if (defaultHitEffectName != null && defaultHitEffectName != string.Empty) {
                         AbilityEffect abilityEffect = systemDataFactory.GetResource<AbilityEffect>(defaultHitEffectName);
                         if (abilityEffect != null) {
-                            defaultHitEffectList.Add(abilityEffect);
+                            defaultHitEffectList.Add(abilityEffect.AbilityEffectProperties);
                         } else {
                             Debug.LogError("WeaponSkillProps.SetupScriptableObjects(): Could not find ability effect : " + defaultHitEffectName + " while inititalizing.  CHECK INSPECTOR");
                         }

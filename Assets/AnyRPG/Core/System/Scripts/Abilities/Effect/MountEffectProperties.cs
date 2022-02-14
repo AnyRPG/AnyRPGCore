@@ -23,12 +23,14 @@ namespace AnyRPG {
         // reference to actual unitProfile
         private UnitProfile unitProfile = null;
 
+        /*
         public void GetMountEffectProperties(MountEffect effect) {
 
             unitProfileName = effect.UnitProfileName;
 
             GetStatusEffectProperties(effect);
         }
+        */
 
         public override void CancelEffect(BaseCharacter targetCharacter) {
             //Debug.Log(displayName +  ".MountEffect.CancelEffect(" + (targetCharacter != null ? targetCharacter.name : "null") + ")");

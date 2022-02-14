@@ -29,14 +29,14 @@ namespace AnyRPG {
         [ResourceSelector(resourceType = typeof(AbilityEffect))]
         private List<string> defaultHitEffects = new List<string>();
 
-        private List<AbilityEffect> defaultHitEffectList = new List<AbilityEffect>();
+        private List<AbilityEffectProperties> defaultHitEffectList = new List<AbilityEffectProperties>();
 
         [Tooltip("Ability effects to cast on the target when the weapon does damage from any attack, including standard (auto) attacks")]
         [SerializeField]
         [ResourceSelector(resourceType = typeof(AbilityEffect))]
         private List<string> onHitEffects = new List<string>();
 
-        private List<AbilityEffect> onHitEffectList = new List<AbilityEffect>();
+        private List<AbilityEffectProperties> onHitEffectList = new List<AbilityEffectProperties>();
 
         [Header("Animation and Sound Defaults")]
 
@@ -102,7 +102,7 @@ namespace AnyRPG {
 
         public WeaponSkill WeaponSkill { get => weaponSkill; set => weaponSkill = value; }
         public bool AddScaledDamagePerSecond { get => addScaledDamagePerSecond; set => addScaledDamagePerSecond = value; }
-        public List<AbilityEffect> DefaultHitEffectList {
+        public List<AbilityEffectProperties> DefaultHitEffectList {
             get {
                 if (defaultHitEffectList != null && defaultHitEffectList.Count > 0) {
                     return defaultHitEffectList;
@@ -110,10 +110,10 @@ namespace AnyRPG {
                 if (weaponSkill != null) {
                     return weaponSkill.WeaponSkillProps.DefaultHitEffectList;
                 }
-                return new List<AbilityEffect>();
+                return new List<AbilityEffectProperties>();
             }
         }
-        public List<AbilityEffect> OnHitEffectList {
+        public List<AbilityEffectProperties> OnHitEffectList {
             get {
                 if (onHitEffectList != null && onHitEffectList.Count > 0) {
                     return onHitEffectList;
@@ -121,7 +121,7 @@ namespace AnyRPG {
                 if (weaponSkill != null) {
                     return weaponSkill.WeaponSkillProps.OnHitEffectList;
                 }
-                return new List<AbilityEffect>();
+                return new List<AbilityEffectProperties>();
             }
         }
         public List<AbilityAttachmentNode> AbilityObjectList {
@@ -159,7 +159,7 @@ namespace AnyRPG {
                 abilitiesList.Add(string.Format("Damage Per Second: {0}", GetDamagePerSecond(playerManager.MyCharacter.CharacterStats.Level, usedItemQuality)));
             }
             if (onHitEffectList != null) {
-                foreach (AbilityEffect abilityEffect in onHitEffectList) {
+                foreach (AbilityEffectProperties abilityEffect in onHitEffectList) {
                     abilitiesList.Add(string.Format("<color=green>Cast On Hit: {0}</color>", abilityEffect.DisplayName));
                 }
             }
@@ -207,7 +207,7 @@ namespace AnyRPG {
                     if (onHitEffectName != null && onHitEffectName != string.Empty) {
                         AbilityEffect abilityEffect = systemDataFactory.GetResource<AbilityEffect>(onHitEffectName);
                         if (abilityEffect != null) {
-                            onHitEffectList.Add(abilityEffect);
+                            onHitEffectList.Add(abilityEffect.AbilityEffectProperties);
                         } else {
                             Debug.LogError("Weapon.SetupScriptableObjects(): Could not find ability effect : " + onHitEffectName + " while inititalizing " + DisplayName + ".  CHECK INSPECTOR");
                         }
@@ -222,7 +222,7 @@ namespace AnyRPG {
                     if (defaultHitEffectName != null && defaultHitEffectName != string.Empty) {
                         AbilityEffect abilityEffect = systemDataFactory.GetResource<AbilityEffect>(defaultHitEffectName);
                         if (abilityEffect != null) {
-                            defaultHitEffectList.Add(abilityEffect);
+                            defaultHitEffectList.Add(abilityEffect.AbilityEffectProperties);
                         } else {
                             Debug.LogError("Weapon.SetupScriptableObjects(): Could not find ability effect : " + defaultHitEffectName + " while inititalizing " + DisplayName + ".  CHECK INSPECTOR");
                         }

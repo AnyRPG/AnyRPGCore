@@ -30,6 +30,7 @@ namespace AnyRPG {
         // game manager references
         protected PlayerManager playerManager = null;
 
+        /*
         public void GetProjectileEffectProperties(ProjectileEffect effect) {
 
             projectileSpeed = effect.ProjectileSpeed;
@@ -38,6 +39,7 @@ namespace AnyRPG {
 
             GetDirectEffectProperties(effect);
         }
+        */
 
         public override void SetGameManagerReferences() {
             base.SetGameManagerReferences();

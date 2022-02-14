@@ -16,17 +16,14 @@ namespace AnyRPG {
 
         public AOEEffectPropertiesNode AoeProperties { get => aoeProperties; set => aoeProperties = value; }
 
+        /*
         public void GetAOEEffectProperties(AOEEffect effect) {
             aoeProperties = effect.AoeProperties;
 
             GetFixedLengthEffectProperties(effect);
         }
-
-        /*
-        public void GetProperties(AbilityEffect abilityEffect) {
-            aoeProperties = abilityEffect.aoe
-        }
         */
+
 
         /// <summary>
         /// Does the actual work of hitting the target with an ability
@@ -99,7 +96,7 @@ namespace AnyRPG {
             return validTargets.Count;
         }
 
-        protected virtual List<AOETargetNode> GetValidTargets(IAbilityCaster source, Interactable target, AbilityEffectContext abilityEffectContext, List<AbilityEffect> abilityEffectList) {
+        protected virtual List<AOETargetNode> GetValidTargets(IAbilityCaster source, Interactable target, AbilityEffectContext abilityEffectContext, List<AbilityEffectProperties> abilityEffectList) {
             //Debug.Log(DisplayName + ".AOEEffect.GetValidTargets()");
 
             Vector3 aoeSpawnCenter = Vector3.zero;
@@ -144,7 +141,7 @@ namespace AnyRPG {
                 if (targetInteractable == null) {
                     continue;
                 }
-                foreach (AbilityEffect abilityEffect in abilityEffectList) {
+                foreach (AbilityEffectProperties abilityEffect in abilityEffectList) {
                     if (abilityEffect.CanUseOn(targetInteractable, source, abilityEffectContext) == false) {
                         canAdd = false;
                     }

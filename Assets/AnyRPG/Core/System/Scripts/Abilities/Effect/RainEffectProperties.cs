@@ -9,13 +9,15 @@ namespace AnyRPG {
     [System.Serializable]
     public class RainEffectProperties : AOEEffectProperties {
 
+        /*
         public void GetRainEffectProperties(RainEffect effect) {
 
 
             GetAOEEffectProperties(effect);
         }
+        */
 
-        protected override List<AOETargetNode> GetValidTargets(IAbilityCaster source, Interactable target, AbilityEffectContext abilityEffectInput, List<AbilityEffect> abilityEffectList) {
+        protected override List<AOETargetNode> GetValidTargets(IAbilityCaster source, Interactable target, AbilityEffectContext abilityEffectInput, List<AbilityEffectProperties> abilityEffectList) {
             //Debug.Log(DisplayName + ".RainEffect.GetValidTargets()");
             // we are intentionally not calling the base class
 

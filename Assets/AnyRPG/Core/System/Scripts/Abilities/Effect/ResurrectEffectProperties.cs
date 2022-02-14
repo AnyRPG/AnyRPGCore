@@ -7,10 +7,12 @@ namespace AnyRPG {
     [System.Serializable]
     public class ResurrectEffectProperties : InstantEffectProperties {
 
+        /*
         public void GetResurrectEffectProperties(ResurrectEffect effect) {
 
             GetInstantEffectProperties(effect);
         }
+        */
 
         /// <summary>
         /// Does the actual work of hitting the target with an ability

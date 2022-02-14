@@ -88,8 +88,8 @@ namespace AnyRPG {
                     rewardIcon.SetOptions(rectTransform, false);
                     rewardIcon.SetDescribable(capabilityProps.TraitList[i]);
                     traitRewardIcons.Add(rewardIcon);
-                    if ((capabilityProps.TraitList[i] as StatusEffect).RequiredLevel > playerManager.MyCharacter.CharacterStats.Level) {
-                        rewardIcon.StackSizeText.text = "Level\n" + (capabilityProps.TraitList[i] as StatusEffect).RequiredLevel;
+                    if ((capabilityProps.TraitList[i].AbilityEffectProperties as StatusEffectProperties).RequiredLevel > playerManager.MyCharacter.CharacterStats.Level) {
+                        rewardIcon.StackSizeText.text = "Level\n" + (capabilityProps.TraitList[i].AbilityEffectProperties as StatusEffectProperties).RequiredLevel;
                         rewardIcon.HighlightIcon.color = new Color32(255, 255, 255, 80);
                     }
                 }

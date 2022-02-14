@@ -166,7 +166,7 @@ namespace AnyRPG {
             }
         }
 
-        public override List<AbilityEffect> GetDefaultHitEffects() {
+        public override List<AbilityEffectProperties> GetDefaultHitEffects() {
             if (baseCharacter.CharacterCombat.DefaultHitEffects.Count > 0) {
                 return baseCharacter.CharacterCombat.DefaultHitEffects;
             }
@@ -774,8 +774,8 @@ namespace AnyRPG {
                 equipmentCount = baseCharacter.CharacterEquipmentManager.GetEquipmentSetCount(equipment.EquipmentSet);
             }
 
-            for (int i = 0; i < equipment.EquipmentSet.MyTraitList.Count; i++) {
-                StatusEffect statusEffect = equipment.EquipmentSet.MyTraitList[i];
+            for (int i = 0; i < equipment.EquipmentSet.TraitList.Count; i++) {
+                StatusEffectProperties statusEffect = equipment.EquipmentSet.TraitList[i];
                 if (statusEffect != null) {
                     if (equipmentCount > i) {
                         // we are allowed to have this buff
@@ -830,11 +830,11 @@ namespace AnyRPG {
                 return;
             }
             foreach (StatusEffect statusEffect in statusEffects) {
-                ApplyStatusEffect(statusEffect);
+                ApplyStatusEffect(statusEffect.AbilityEffectProperties);
             }
         }
 
-        public void ApplyStatusEffect(AbilityEffect statusEffect, int overrideDuration = 0) {
+        public void ApplyStatusEffect(AbilityEffectProperties statusEffect, int overrideDuration = 0) {
             //Debug.Log(baseCharacter.gameObject.name + ".CharacterAbilityManager.ApplyStatusEffect(" + statusEffect.DisplayName + ")");
             if (baseCharacter.CharacterStats != null) {
                 AbilityEffectContext abilityEffectContext = new AbilityEffectContext(baseCharacter);
@@ -876,7 +876,7 @@ namespace AnyRPG {
             if (statusEffectSaveData.StatusEffectName == null || statusEffectSaveData.StatusEffectName == string.Empty) {
                 return;
             }
-            ApplyStatusEffect(systemDataFactory.GetResource<AbilityEffect>(statusEffectSaveData.StatusEffectName), statusEffectSaveData.remainingSeconds);
+            ApplyStatusEffect(systemDataFactory.GetResource<AbilityEffect>(statusEffectSaveData.StatusEffectName).AbilityEffectProperties, statusEffectSaveData.remainingSeconds);
         }
 
         public void RemoveCapabilityProviderTraits(List<StatusEffect> statusEffects) {
@@ -1292,8 +1292,8 @@ namespace AnyRPG {
 
                 if (baseCharacter?.CharacterCombat?.OnHitEffects != null) {
                     // handle weapon on hit effects
-                    List<AbilityEffect> onHitEffectList = new List<AbilityEffect>();
-                    foreach (AbilityEffect abilityEffect in baseCharacter.CharacterCombat.OnHitEffects) {
+                    List<AbilityEffectProperties> onHitEffectList = new List<AbilityEffectProperties>();
+                    foreach (AbilityEffectProperties abilityEffect in baseCharacter.CharacterCombat.OnHitEffects) {
                         // prevent accidental infinite recursion of ability effect
                         if (abilityEffect.DisplayName != attackEffect.DisplayName) {
                             onHitEffectList.Add(abilityEffect);

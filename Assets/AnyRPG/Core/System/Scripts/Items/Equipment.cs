@@ -295,8 +295,8 @@ namespace AnyRPG {
 
             if (equipmentSet != null) {
                 int equipmentCount = playerManager.MyCharacter.CharacterEquipmentManager.GetEquipmentSetCount(equipmentSet);
-                summaryLines.Add(string.Format("\n<color=yellow>{0} ({1}/{2})</color>", equipmentSet.DisplayName, equipmentCount, equipmentSet.MyEquipmentList.Count));
-                foreach (Equipment equipment in equipmentSet.MyEquipmentList) {
+                summaryLines.Add(string.Format("\n<color=yellow>{0} ({1}/{2})</color>", equipmentSet.DisplayName, equipmentCount, equipmentSet.EquipmentList.Count));
+                foreach (Equipment equipment in equipmentSet.EquipmentList) {
                     string colorName = "#888888";
                     if (playerManager.MyCharacter.CharacterEquipmentManager.HasEquipment(equipment.DisplayName)) {
                         colorName = "yellow";
@@ -304,16 +304,16 @@ namespace AnyRPG {
                     summaryLines.Add(string.Format("  <color={0}>{1}</color>", colorName, equipment.DisplayName));
                 }
                 summaryLines.Add(string.Format(""));
-                for (int i = 0; i < equipmentSet.MyTraitList.Count; i++) {
-                    if (equipmentSet.MyTraitList[i] != null) {
+                for (int i = 0; i < equipmentSet.TraitList.Count; i++) {
+                    if (equipmentSet.TraitList[i] != null) {
                         string colorName = "#888888";
                         if (equipmentCount > i) {
                             colorName = "green";
                         }
-                        summaryLines.Add(string.Format("<color={0}>({1}) {2}</color>", colorName, i+1, equipmentSet.MyTraitList[i].GetSummary()));
+                        summaryLines.Add(string.Format("<color={0}>({1}) {2}</color>", colorName, i+1, equipmentSet.TraitList[i].GetSummary()));
                     }
                 }
-                if (equipmentSet.MyTraitList.Count > 0) {
+                if (equipmentSet.TraitList.Count > 0) {
                     summaryLines.Add(string.Format(""));
                 }
             }

@@ -15,7 +15,7 @@ namespace AnyRPG {
 
         public List<AbilityEffect> abilityEffects = new List<AbilityEffect>();
 
-        [MenuItem("Tools/AnyRPG/Wizard/Convert Wizard")]
+        //[MenuItem("Tools/AnyRPG/Wizard/Convert Wizard")]
         public static void CreateWizard() {
             ScriptableWizard.DisplayWizard<ConvertAbilityEffectWizard>("New Convert Ability Effect Wizard", "Create");
         }
@@ -38,7 +38,8 @@ namespace AnyRPG {
                 i++;
                 EditorUtility.DisplayProgressBar("Convert Ability Effect Wizard", "Beginning Conversion...", (float)i / (float)abilityEffects.Count);
 
-                abilityEffect.Convert();
+
+                //abilityEffect.Convert();
 
                 EditorUtility.SetDirty(abilityEffect);
                 AssetDatabase.SaveAssets();

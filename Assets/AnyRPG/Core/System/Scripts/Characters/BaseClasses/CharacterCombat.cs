@@ -30,10 +30,10 @@ namespace AnyRPG {
         protected BaseCharacter baseCharacter;
 
         // list of on hit effects to cast on weapon hit if the weapon hit is an auto attack
-        private List<AbilityEffect> defaultHitEffects = new List<AbilityEffect>();
+        private List<AbilityEffectProperties> defaultHitEffects = new List<AbilityEffectProperties>();
 
         // list of on hit effects to cast on weapon hit from currently equipped weapons
-        protected List<AbilityEffect> onHitEffects = new List<AbilityEffect>();
+        protected List<AbilityEffectProperties> onHitEffects = new List<AbilityEffectProperties>();
 
         protected AggroTable aggroTable = null;
 
@@ -70,8 +70,8 @@ namespace AnyRPG {
         public List<AudioClip> DefaultHitSoundEffects { get => defaultHitSoundEffects; set => defaultHitSoundEffects = value; }
         public BaseCharacter SwingTarget { get => swingTarget; set => swingTarget = value; }
         public bool AutoAttackActive { get => autoAttackActive; set => autoAttackActive = value; }
-        public List<AbilityEffect> OnHitEffects { get => onHitEffects; set => onHitEffects = value; }
-        public List<AbilityEffect> DefaultHitEffects { get => defaultHitEffects; set => defaultHitEffects = value; }
+        public List<AbilityEffectProperties> OnHitEffects { get => onHitEffects; set => onHitEffects = value; }
+        public List<AbilityEffectProperties> DefaultHitEffects { get => defaultHitEffects; set => defaultHitEffects = value; }
 
         public CharacterCombat(BaseCharacter baseCharacter, SystemGameManager systemGameManager) {
             this.baseCharacter = baseCharacter;
@@ -700,7 +700,7 @@ namespace AnyRPG {
             if (oldItem != null && oldItem is Weapon) {
                 if ((oldItem as Weapon).OnHitEffectList != null && (oldItem as Weapon).OnHitEffectList.Count > 0) {
                     //onHitEffects.Clear();
-                    foreach (AbilityEffect abilityEffect in (oldItem as Weapon).OnHitEffectList) {
+                    foreach (AbilityEffectProperties abilityEffect in (oldItem as Weapon).OnHitEffectList) {
                         // TODO: fix this code. it would remove a sword hit if swords are dual wielded
                         // check all equipped weapons and compare similar to ability providers logic
                         if (defaultHitEffects.Contains(abilityEffect)) {
@@ -711,7 +711,7 @@ namespace AnyRPG {
                 }
                 if ((oldItem as Weapon).DefaultHitEffectList != null && (oldItem as Weapon).DefaultHitEffectList.Count > 0) {
                     //defaultHitEffects.Clear();
-                    foreach (AbilityEffect abilityEffect in (oldItem as Weapon).DefaultHitEffectList) {
+                    foreach (AbilityEffectProperties abilityEffect in (oldItem as Weapon).DefaultHitEffectList) {
                         // TODO: fix this code. it would remove a sword hit if swords are dual wielded
                         // check all equipped weapons and compare similar to ability providers logic
                         if (defaultHitEffects.Contains(abilityEffect)) {

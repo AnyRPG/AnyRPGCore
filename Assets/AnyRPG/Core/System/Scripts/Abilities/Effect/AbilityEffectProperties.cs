@@ -51,7 +51,7 @@ namespace AnyRPG {
         protected List<string> hitAbilityEffectNames = new List<string>();
 
         //[SerializeField]
-        protected List<AbilityEffect> hitAbilityEffectList = new List<AbilityEffect>();
+        protected List<AbilityEffectProperties> hitAbilityEffectList = new List<AbilityEffectProperties>();
 
         [Tooltip("amount to multiply inputs by when adding their amount to this effect")]
         public float inputMultiplier = 0f;
@@ -64,12 +64,13 @@ namespace AnyRPG {
         protected string description = string.Empty;
         protected Sprite icon = null;
 
-        public List<AbilityEffect> HitAbilityEffectList { get => hitAbilityEffectList; set => hitAbilityEffectList = value; }
+        public List<AbilityEffectProperties> HitAbilityEffectList { get => hitAbilityEffectList; set => hitAbilityEffectList = value; }
         public float ThreatMultiplier { get => threatMultiplier; set => threatMultiplier = value; }
         public float ChanceToCast { get => chanceToCast; set => chanceToCast = value; }
         public string DisplayName { get => displayName; set => displayName = value; }
         public Sprite Icon { get => icon; set => icon = value; }
 
+        /*
         public void GetAbilityEffectProperties(AbilityEffect effect) {
 
             targetOptions = effect.TargetOptions;
@@ -84,6 +85,7 @@ namespace AnyRPG {
 
             //GetInstantEffectProperties(effect);
         }
+        */
 
         public TargetProps GetTargetOptions(IAbilityCaster abilityCaster) {
             return targetOptions;
@@ -155,20 +157,20 @@ namespace AnyRPG {
         /// </summary>
         /// <param name="source"></param>
         /// <param name="target"></param>
-        public Dictionary<PrefabProfile, GameObject> PerformAbilityEffects(IAbilityCaster source, Interactable target, AbilityEffectContext abilityEffectContext, List<AbilityEffect> abilityEffectList) {
+        public Dictionary<PrefabProfile, GameObject> PerformAbilityEffects(IAbilityCaster source, Interactable target, AbilityEffectContext abilityEffectContext, List<AbilityEffectProperties> abilityEffectList) {
             //Debug.Log(DisplayName + ".AbilityEffect.PerformAbilityEffects(" + source.AbilityManager.Name + ", " + (target ? target.name : "null") + ")");
             Dictionary<PrefabProfile, GameObject> returnList = new Dictionary<PrefabProfile, GameObject>();
 
             AbilityEffectContext abilityEffectOutput = abilityEffectContext.GetCopy();
 
-            foreach (AbilityEffect abilityEffect in abilityEffectList) {
+            foreach (AbilityEffectProperties abilityEffect in abilityEffectList) {
                 if (abilityEffect != null
                     && (abilityEffect.ChanceToCast >= 100f || abilityEffect.ChanceToCast >= Random.Range(0f, 100f))) {
                     //Debug.Log(DisplayName + ".AbilityEffect.PerformAbilityEffects() found: " + (abilityEffect != null ? abilityEffect.DisplayName : "null"));
                     if (SystemDataFactory.MatchResource(abilityEffect.DisplayName, DisplayName)) {
                         Debug.LogError(DisplayName + ".PerformAbilityEffects(): circular reference detected.  Tried to cast self.  CHECK INSPECTOR AND FIX ABILITY EFFECT CONFIGURATION!!!");
                     } else {
-                        if (!(abilityEffect is AmountEffect)) {
+                        if (!(abilityEffect is AmountEffectProperties)) {
                             abilityEffectOutput.spellDamageMultiplier = 1f;
                         }
                         Dictionary<PrefabProfile, GameObject> tmpObjects = PerformAbilityEffect(source, target, abilityEffectOutput, abilityEffect);
@@ -196,7 +198,7 @@ namespace AnyRPG {
         /// <param name="abilityEffectContext"></param>
         /// <param name="abilityEffect"></param>
         /// <returns></returns>
-        protected Dictionary<PrefabProfile, GameObject> PerformAbilityEffect(IAbilityCaster source, Interactable target, AbilityEffectContext abilityEffectContext, AbilityEffect abilityEffect) {
+        protected Dictionary<PrefabProfile, GameObject> PerformAbilityEffect(IAbilityCaster source, Interactable target, AbilityEffectContext abilityEffectContext, AbilityEffectProperties abilityEffect) {
             //Debug.Log(DisplayName + ".AbilityEffect.PerformAbilityEffect(" + source.AbilityManager.Name + ", " + (target == null ? "null" : target.name) + ", " + abilityEffect.DisplayName + ")");
             Dictionary<PrefabProfile, GameObject> returnObjects = null;
             // give the ability a chance to auto-selfcast if the original target was null
@@ -325,12 +327,12 @@ namespace AnyRPG {
             //this.displayName = displayName;
             Configure(systemGameManager);
 
-            hitAbilityEffectList = new List<AbilityEffect>();
+            hitAbilityEffectList = new List<AbilityEffectProperties>();
             if (hitAbilityEffectNames != null) {
                 foreach (string abilityEffectName in hitAbilityEffectNames) {
                     AbilityEffect abilityEffect = systemDataFactory.GetResource<AbilityEffect>(abilityEffectName);
                     if (abilityEffect != null) {
-                        hitAbilityEffectList.Add(abilityEffect);
+                        hitAbilityEffectList.Add(abilityEffect.AbilityEffectProperties);
                     } else {
                         Debug.LogError("SystemAbilityManager.SetupScriptableObjects(): Could not find ability effect: " + abilityEffectName + " while inititalizing " + DisplayName + ".  CHECK INSPECTOR");
                     }

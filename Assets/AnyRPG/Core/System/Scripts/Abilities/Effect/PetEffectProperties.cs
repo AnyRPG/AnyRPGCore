@@ -11,10 +11,12 @@ namespace AnyRPG {
     [System.Serializable]
     public class PetEffectProperties : StatusEffectProperties {
 
+        /*
         public void GetPetEffectProperties(PetEffect effect) {
 
             GetStatusEffectProperties(effect);
         }
+        */
 
         public override bool CanUseOn(Interactable target, IAbilityCaster sourceCharacter, AbilityEffectContext abilityEffectContext = null, bool playerInitiated = false, bool performRangeCheck = true) {
             if (target == null) {

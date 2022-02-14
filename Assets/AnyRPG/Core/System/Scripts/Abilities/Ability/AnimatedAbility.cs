@@ -31,9 +31,9 @@ namespace AnyRPG {
         public bool IsAutoAttack { get => isAutoAttack; set => isAutoAttack = value; }
         public bool UseWeaponHitSound { get => useWeaponHitSound; set => useWeaponHitSound = value; }
 
-        public override List<AbilityEffect> GetAbilityEffects(IAbilityCaster abilityCaster) {
+        public override List<AbilityEffectProperties> GetAbilityEffects(IAbilityCaster abilityCaster) {
             if (isAutoAttack) {
-                List<AbilityEffect> weaponAbilityList = abilityCaster.AbilityManager.GetDefaultHitEffects();
+                List<AbilityEffectProperties> weaponAbilityList = abilityCaster.AbilityManager.GetDefaultHitEffects();
                 if (weaponAbilityList != null && weaponAbilityList.Count > 0) {
                     return weaponAbilityList;
                 }

@@ -156,7 +156,7 @@ namespace AnyRPG {
         [ResourceSelector(resourceType = typeof(AbilityEffect))]
         protected List<string> reflectAbilityEffectNames = new List<string>();
 
-        protected List<AbilityEffect> reflectAbilityEffectList = new List<AbilityEffect>();
+        protected List<AbilityEffectProperties> reflectAbilityEffectList = new List<AbilityEffectProperties>();
 
         [Header("Weapon Hit Effects")]
 
@@ -165,7 +165,7 @@ namespace AnyRPG {
         [ResourceSelector(resourceType = typeof(AbilityEffect))]
         protected List<string> weaponHitAbilityEffectNames = new List<string>();
 
-        protected List<AbilityEffect> weaponHitAbilityEffectList = new List<AbilityEffect>();
+        protected List<AbilityEffectProperties> weaponHitAbilityEffectList = new List<AbilityEffectProperties>();
 
         // game manager references
         protected LevelManager levelManager = null;
@@ -188,8 +188,8 @@ namespace AnyRPG {
             }
             set => duration = value;
         }
-        public List<AbilityEffect> ReflectAbilityEffectList { get => reflectAbilityEffectList; set => reflectAbilityEffectList = value; }
-        public List<AbilityEffect> WeaponHitAbilityEffectList { get => weaponHitAbilityEffectList; set => weaponHitAbilityEffectList = value; }
+        public List<AbilityEffectProperties> ReflectAbilityEffectList { get => reflectAbilityEffectList; set => reflectAbilityEffectList = value; }
+        public List<AbilityEffectProperties> WeaponHitAbilityEffectList { get => weaponHitAbilityEffectList; set => weaponHitAbilityEffectList = value; }
         public bool ClassTrait { get => classTrait; set => classTrait = value; }
         public bool LimitedDuration { get => limitedDuration; set => limitedDuration = value; }
         public int RequiredLevel { get => requiredLevel; set => requiredLevel = value; }
@@ -210,6 +210,7 @@ namespace AnyRPG {
         public bool CanGlide { get => canGlide; }
         public StatusEffectGroup StatusEffectGroup { get => statusEffectGroup; set => statusEffectGroup = value; }
 
+        /*
         public void GetStatusEffectProperties(StatusEffect effect) {
 
             statusEffectAlignment = effect.StatusEffectAlignment;
@@ -245,6 +246,8 @@ namespace AnyRPG {
 
             GetLengthEffectProperties(effect);
         }
+        */
+
         public override void SetGameManagerReferences() {
             base.SetGameManagerReferences();
             levelManager = systemGameManager.LevelManager;
@@ -485,24 +488,24 @@ namespace AnyRPG {
 
         public override void SetupScriptableObjects(SystemGameManager systemGameManager) {
             base.SetupScriptableObjects(systemGameManager);
-            reflectAbilityEffectList = new List<AbilityEffect>();
+            reflectAbilityEffectList = new List<AbilityEffectProperties>();
             if (reflectAbilityEffectNames != null) {
                 foreach (string abilityEffectName in reflectAbilityEffectNames) {
                     AbilityEffect abilityEffect = systemDataFactory.GetResource<AbilityEffect>(abilityEffectName);
                     if (abilityEffect != null) {
-                        reflectAbilityEffectList.Add(abilityEffect);
+                        reflectAbilityEffectList.Add(abilityEffect.AbilityEffectProperties);
                     } else {
                         Debug.LogError("SystemAbilityManager.SetupScriptableObjects(): Could not find ability effect: " + abilityEffectName + " while inititalizing " + DisplayName + ".  CHECK INSPECTOR");
                     }
                 }
             }
 
-            weaponHitAbilityEffectList = new List<AbilityEffect>();
+            weaponHitAbilityEffectList = new List<AbilityEffectProperties>();
             if (weaponHitAbilityEffectNames != null) {
                 foreach (string abilityEffectName in weaponHitAbilityEffectNames) {
                     AbilityEffect abilityEffect = systemDataFactory.GetResource<AbilityEffect>(abilityEffectName);
                     if (abilityEffect != null) {
-                        weaponHitAbilityEffectList.Add(abilityEffect);
+                        weaponHitAbilityEffectList.Add(abilityEffect.AbilityEffectProperties);
                     } else {
                         Debug.LogError("SystemAbilityManager.SetupScriptableObjects(): Could not find ability effect: " + abilityEffectName + " while inititalizing " + DisplayName + ".  CHECK INSPECTOR");
                     }

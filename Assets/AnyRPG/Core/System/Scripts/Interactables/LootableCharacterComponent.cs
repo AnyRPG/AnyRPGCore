@@ -134,7 +134,7 @@ namespace AnyRPG {
                 //Debug.Log(gameObject.name + "LootableCharacter.HandleDeath(): Loot count: " + MyLootTable.MyDroppedItems.Count + "; performing loot sparkle");
 
                 //systemAbilityController.BeginAbility(systemConfigurationManager.MyLootSparkleAbility as IAbility, gameObject);
-                systemConfigurationManager.LootSparkleEffect.Cast(systemAbilityController, interactable, interactable, new AbilityEffectContext());
+                systemConfigurationManager.LootSparkleEffect.AbilityEffectProperties.Cast(systemAbilityController, interactable, interactable, new AbilityEffectContext());
             }
             TryToDespawn();
         }

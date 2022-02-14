@@ -20,12 +20,14 @@ namespace AnyRPG {
 
         public float AbilityEffectObjectLifetime { get => defaultPrefabLifetime; set => defaultPrefabLifetime = value; }
 
+        /*
         public void GetFixedLengthEffectProperties(FixedLengthEffect effect) {
 
             defaultPrefabLifetime = effect.defaultPrefabLifetime;
 
             GetLengthEffectProperties(effect);
         }
+        */
 
         public override void SetGameManagerReferences() {
             base.SetGameManagerReferences();

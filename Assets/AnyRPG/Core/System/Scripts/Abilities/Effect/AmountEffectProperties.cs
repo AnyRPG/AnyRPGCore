@@ -29,6 +29,7 @@ namespace AnyRPG {
 
         public DamageType DamageType { get => damageType; set => damageType = value; }
 
+        /*
         public void GetAmountEffectProperties(AmountEffect effect) {
 
             allowCriticalStrike = effect.AllowCriticalStrike;
@@ -38,6 +39,7 @@ namespace AnyRPG {
 
             GetInstantEffectProperties(effect);
         }
+        */
 
         protected KeyValuePair<float, CombatMagnitude> CalculateAbilityAmount(float abilityBaseAmount, IAbilityCaster sourceCharacter, CharacterUnit target, AbilityEffectContext abilityEffectContext, ResourceAmountNode resourceAmountNode) {
             //Debug.Log(DisplayName + ".AmountEffect.CalculateAbilityAmount(" + abilityBaseAmount + ")");

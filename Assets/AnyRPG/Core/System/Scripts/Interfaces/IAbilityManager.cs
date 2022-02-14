@@ -52,7 +52,7 @@ namespace AnyRPG {
         /// return a list of auto-attack on hit effects for the currently equipped weapon
         /// </summary>
         /// <returns></returns>
-        List<AbilityEffect> GetDefaultHitEffects();
+        List<AbilityEffectProperties> GetDefaultHitEffects();
 
         /// <summary>
         /// return a list of auto-attack animations for the currently equipped weapon

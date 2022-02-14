@@ -15,26 +15,6 @@ namespace AnyRPG {
 
         public override AbilityEffectProperties AbilityEffectProperties { get => directEffectProperties; }
 
-        public override void Convert() {
-            directEffectProperties.GetDirectEffectProperties(this);
-        }
-
-        public override Dictionary<PrefabProfile, GameObject> Cast(IAbilityCaster source, Interactable target, Interactable originalTarget, AbilityEffectContext abilityEffectInput) {
-            //Debug.Log(DisplayName + ".DirectEffect.Cast()");
-            return base.Cast(source, target, originalTarget, abilityEffectInput);
-        }
-
-        public override void CastTick(IAbilityCaster source, Interactable target, AbilityEffectContext abilityEffectContext) {
-            //Debug.Log(abilityEffectName + ".DirectEffect.CastTick()");
-            base.CastTick(source, target, abilityEffectContext);
-            PerformAbilityTick(source, target, abilityEffectContext);
-        }
-
-        public override void CastComplete(IAbilityCaster source, Interactable target, AbilityEffectContext abilityEffectContext) {
-            //Debug.Log(abilityEffectName + ".DirectEffect.CastComplete()");
-            base.CastComplete(source, target, abilityEffectContext);
-            PerformAbilityComplete(source, target, abilityEffectContext);
-        }
 
     }
 

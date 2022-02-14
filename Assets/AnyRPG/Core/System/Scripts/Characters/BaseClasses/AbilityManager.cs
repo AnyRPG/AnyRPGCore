@@ -112,8 +112,8 @@ namespace AnyRPG {
             return null;
         }
 
-        public virtual List<AbilityEffect> GetDefaultHitEffects() {
-            return new List<AbilityEffect>();
+        public virtual List<AbilityEffectProperties> GetDefaultHitEffects() {
+            return new List<AbilityEffectProperties>();
         }
 
         public virtual List<AbilityAttachmentNode> GetWeaponAbilityObjectList() {

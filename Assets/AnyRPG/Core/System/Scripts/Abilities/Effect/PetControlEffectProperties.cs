@@ -15,14 +15,16 @@ namespace AnyRPG {
         [ResourceSelector(resourceType = typeof(SummonEffect))]
         private List<string> petEffectNames = new List<string>();
 
-        private List<SummonEffect> petEffectList = new List<SummonEffect>();
+        private List<SummonEffectProperties> petEffectList = new List<SummonEffectProperties>();
 
+        /*
         public void GetPetControlEffectProperties(PetControlEffect effect) {
 
             petEffectNames = effect.PetEffectNames;
 
             GetStatusEffectProperties(effect);
         }
+        */
 
         public override void CastTick(IAbilityCaster source, Interactable target, AbilityEffectContext abilityEffectContext) {
             //Debug.Log(DisplayName + ".PetControlEffect.CastTick()");
@@ -41,8 +43,8 @@ namespace AnyRPG {
                 return;
             }
 
-            List<AbilityEffect> castList = new List<AbilityEffect>();
-            foreach (SummonEffect petEffect in petEffectList) {
+            List<AbilityEffectProperties> castList = new List<AbilityEffectProperties>();
+            foreach (SummonEffectProperties petEffect in petEffectList) {
                 if (SystemDataFactory.MatchResource(petEffect.DisplayName, DisplayName)) {
                     Debug.LogError(DisplayName + ".PerformAbilityEffects(): circular reference detected.  Tried to cast self.  CHECK INSPECTOR AND FIX ABILITY EFFECT CONFIGURATION!!!");
                 } else {
@@ -64,7 +66,7 @@ namespace AnyRPG {
         public override void CancelEffect(BaseCharacter targetCharacter) {
             //Debug.Log("PetControlEffect.CancelEffect(" + (targetCharacter != null ? targetCharacter.name : "null") + ")");
 
-            foreach (SummonEffect petEffect in petEffectList) {
+            foreach (SummonEffectProperties petEffect in petEffectList) {
                 //Debug.Log(DisplayName + ".PetEffect.CheckPetSpawn(): adding to cast list");
                 if (petEffect.UnitProfile != null
                     && targetCharacter.CharacterPetManager.ActiveUnitProfiles.ContainsKey(petEffect.UnitProfile) == true) {
@@ -82,7 +84,7 @@ namespace AnyRPG {
                 foreach (string petEffectName in petEffectNames) {
                     AbilityEffect abilityEffect = systemDataFactory.GetResource<AbilityEffect>(petEffectName);
                     if (abilityEffect != null && ((abilityEffect as SummonEffect) is SummonEffect)) {
-                        petEffectList.Add(abilityEffect as SummonEffect);
+                        petEffectList.Add(abilityEffect.AbilityEffectProperties as SummonEffectProperties);
                     } else {
                         Debug.LogError("SystemAbilityManager.SetupScriptableObjects(): Could not find ability effect : " + petEffectName + " while inititalizing " + DisplayName + ".  CHECK INSPECTOR");
                     }

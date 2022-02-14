@@ -216,9 +216,9 @@ namespace AnyRPG {
         [ResourceSelector(resourceType = typeof(AbilityEffect))]
         protected List<string> channeledAbilityEffectnames = new List<string>();
 
-        protected List<AbilityEffect> channeledAbilityEffects = new List<AbilityEffect>();
+        protected List<AbilityEffectProperties> channeledAbilityEffects = new List<AbilityEffectProperties>();
 
-        private List<AbilityEffect> abilityEffects = new List<AbilityEffect>();
+        private List<AbilityEffectProperties> abilityEffects = new List<AbilityEffectProperties>();
 
         // game manager references
         protected PlayerManager playerManager = null;
@@ -400,7 +400,7 @@ namespace AnyRPG {
             return targetOptions;
         }
 
-        public virtual List<AbilityEffect> GetAbilityEffects(IAbilityCaster abilityCaster) {
+        public virtual List<AbilityEffectProperties> GetAbilityEffects(IAbilityCaster abilityCaster) {
             return abilityEffects;
         }
 
@@ -535,7 +535,7 @@ namespace AnyRPG {
 
         public virtual void PerformChanneledEffect(IAbilityCaster source, Interactable target, AbilityEffectContext abilityEffectContext) {
             //Debug.Log("BaseAbility.PerformChanneledEffect(" + DisplayName + ", " + (source == null ? "null" : source.AbilityManager.Name) + ", " + (target == null ? "null" : target.name) + ")");
-            foreach (AbilityEffect abilityEffect in channeledAbilityEffects) {
+            foreach (AbilityEffectProperties abilityEffect in channeledAbilityEffects) {
 
                 // channeled effects need to override the object lifetime so they get destroyed at the tickrate
                 if (abilityEffect.ChanceToCast >= 100f || abilityEffect.ChanceToCast >= UnityEngine.Random.Range(0f, 100f)) {
@@ -550,7 +550,7 @@ namespace AnyRPG {
                 return false;
             }
             if (useAbilityEffectTargetting) {
-                List<AbilityEffect> abilityEffects = GetAbilityEffects(sourceCharacter);
+                List<AbilityEffectProperties> abilityEffects = GetAbilityEffects(sourceCharacter);
                 if (abilityEffects != null && abilityEffects.Count > 0 && abilityEffects[0].CanCast() == false) {
                     return false;
                 }
@@ -653,7 +653,7 @@ namespace AnyRPG {
             // generate power resource
             source.AbilityManager.GeneratePower(this);
 
-            foreach (AbilityEffect abilityEffect in GetAbilityEffects(source)) {
+            foreach (AbilityEffectProperties abilityEffect in GetAbilityEffects(source)) {
                 if (abilityEffect == null) {
                     Debug.Log("Forgot to set ability affect in inspector?");
                 }
@@ -775,7 +775,7 @@ namespace AnyRPG {
                 foreach (string abilityEffectName in AbilityEffectNames) {
                     AbilityEffect abilityEffect = systemDataFactory.GetResource<AbilityEffect>(abilityEffectName);
                     if (abilityEffect != null) {
-                        abilityEffects.Add(abilityEffect);
+                        abilityEffects.Add(abilityEffect.AbilityEffectProperties);
                     } else {
                         Debug.LogError("BaseAbility.SetupScriptableObjects(): Could not find ability effect: " + abilityEffectName + " while inititalizing " + DisplayName + ".  CHECK INSPECTOR");
                     }
@@ -851,12 +851,12 @@ namespace AnyRPG {
             }
 
 
-            channeledAbilityEffects = new List<AbilityEffect>();
+            channeledAbilityEffects = new List<AbilityEffectProperties>();
             if (channeledAbilityEffectnames != null) {
                 foreach (string abilityEffectName in channeledAbilityEffectnames) {
                     AbilityEffect abilityEffect = systemDataFactory.GetResource<AbilityEffect>(abilityEffectName);
                     if (abilityEffect != null) {
-                        channeledAbilityEffects.Add(abilityEffect);
+                        channeledAbilityEffects.Add(abilityEffect.AbilityEffectProperties);
                     } else {
                         Debug.LogError("SystemAbilityManager.SetupScriptableObjects(): Could not find ability effect: " + abilityEffectName + " while inititalizing " + DisplayName + ".  CHECK INSPECTOR");
                     }

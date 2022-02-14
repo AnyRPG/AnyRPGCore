@@ -7,7 +7,7 @@ using UnityEngine.UI;
 namespace AnyRPG {
     [CreateAssetMenu(fileName = "New RemoveEffect", menuName = "AnyRPG/Abilities/Effects/RemoveEffect")]
     public class RemoveEffect : InstantEffect {
-
+        /*
         // 0 is unlimited
         [SerializeField]
         private int maxClearEffects = 0;
@@ -23,55 +23,13 @@ namespace AnyRPG {
 
         public int MaxClearEffects { get => maxClearEffects; set => maxClearEffects = value; }
         public List<string> EffectTypeNames { get => effectTypeNames; set => effectTypeNames = value; }
+        */
 
         [SerializeField]
         private RemoveEffectProperties removeEffectProperties = new RemoveEffectProperties();
 
         public override AbilityEffectProperties AbilityEffectProperties { get => removeEffectProperties; }
 
-        public override void Convert() {
-            removeEffectProperties.GetRemoveEffectProperties(this);
-        }
-
-        public override void PerformAbilityHit(IAbilityCaster source, Interactable target, AbilityEffectContext abilityEffectInput) {
-            base.PerformAbilityHit(source, target, abilityEffectInput);
-
-            List<StatusEffectNode> removeEffects = new List<StatusEffectNode>();
-
-            CharacterUnit targetCharacterUnit = CharacterUnit.GetCharacterUnit(target);
-            if (targetCharacterUnit != null && targetCharacterUnit.BaseCharacter != null && targetCharacterUnit.BaseCharacter.CharacterStats != null) {
-                foreach (StatusEffectNode statusEffectNode in targetCharacterUnit.BaseCharacter.CharacterStats.StatusEffects.Values) {
-                    if (statusEffectNode.StatusEffect.StatusEffectType != null && effectTypes.Contains(statusEffectNode.StatusEffect.StatusEffectType)) {
-                        removeEffects.Add(statusEffectNode);
-                    }
-                    if (maxClearEffects != 0 && removeEffects.Count >= maxClearEffects) {
-                        break;
-                    }
-                }
-
-                foreach (StatusEffectNode statusEffectNode in removeEffects) {
-                    statusEffectNode.CancelStatusEffect();
-                }
-            }
-        }
-
-
-        public override void SetupScriptableObjects(SystemGameManager systemGameManager) {
-
-            base.SetupScriptableObjects(systemGameManager);
-
-            if (effectTypeNames != null) {
-                foreach (string statusEffectType in effectTypeNames) {
-                    StatusEffectType tmpStatusEffectType = systemDataFactory.GetResource<StatusEffectType>(statusEffectType);
-                    if (tmpStatusEffectType != null) {
-                        effectTypes.Add(tmpStatusEffectType);
-                    } else {
-                        Debug.LogError("SystemAbilityManager.SetupScriptableObjects(): Could not find status effect type: " + statusEffectType + " while inititalizing " + DisplayName + ".  CHECK INSPECTOR");
-                    }
-                }
-            }
-
-        }
 
     }
 }
