@@ -6,12 +6,20 @@ using UnityEngine;
 using UnityEngine.UI;
 
 namespace AnyRPG {
-
-    [System.Serializable]
+    [CreateAssetMenu(fileName = "New Taunt Effect", menuName = "AnyRPG/Abilities/Effects/TauntEffect")]
     public class TauntEffect : StatusEffect {
 
         // extra threat from the taunt
         private float extraThreat = 100f;
+
+        [SerializeField]
+        private TauntEffectProperties tauntEffectProperties = new TauntEffectProperties();
+
+        public override AbilityEffectProperties AbilityEffectProperties { get => tauntEffectProperties; }
+
+        public override void Convert() {
+            tauntEffectProperties.GetTauntEffectProperties(this);
+        }
 
         public override void CancelEffect(BaseCharacter targetCharacter) {
             //Debug.Log("MountEffect.CancelEffect(" + (targetCharacter != null ? targetCharacter.name : "null") + ")");

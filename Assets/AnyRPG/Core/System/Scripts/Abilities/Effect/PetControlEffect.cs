@@ -7,15 +7,25 @@ using UnityEngine.AI;
 using UnityEngine.UI;
 
 namespace AnyRPG {
-
-    [System.Serializable]
+    [CreateAssetMenu(fileName = "New Pet Control Effect", menuName = "AnyRPG/Abilities/Effects/PetControlEffect")]
     public class PetControlEffect : StatusEffect {
 
         [SerializeField]
-        [ResourceSelector(resourceType = typeof(SummonEffectOld))]
+        [ResourceSelector(resourceType = typeof(SummonEffect))]
         private List<string> petEffectNames = new List<string>();
 
-        private List<SummonEffectOld> petEffectList = new List<SummonEffectOld>();
+        private List<SummonEffect> petEffectList = new List<SummonEffect>();
+
+        public List<string> PetEffectNames { get => petEffectNames; set => petEffectNames = value; }
+
+        [SerializeField]
+        private PetControlEffectProperties petControlEffectProperties = new PetControlEffectProperties();
+
+        public override AbilityEffectProperties AbilityEffectProperties { get => petControlEffectProperties; }
+
+        public override void Convert() {
+            petControlEffectProperties.GetPetControlEffectProperties(this);
+        }
 
         public override void CastTick(IAbilityCaster source, Interactable target, AbilityEffectContext abilityEffectContext) {
             //Debug.Log(DisplayName + ".PetControlEffect.CastTick()");
@@ -35,7 +45,7 @@ namespace AnyRPG {
             }
 
             List<AbilityEffect> castList = new List<AbilityEffect>();
-            foreach (SummonEffectOld petEffect in petEffectList) {
+            foreach (SummonEffect petEffect in petEffectList) {
                 if (SystemDataFactory.MatchResource(petEffect.DisplayName, DisplayName)) {
                     Debug.LogError(DisplayName + ".PerformAbilityEffects(): circular reference detected.  Tried to cast self.  CHECK INSPECTOR AND FIX ABILITY EFFECT CONFIGURATION!!!");
                 } else {
@@ -57,7 +67,7 @@ namespace AnyRPG {
         public override void CancelEffect(BaseCharacter targetCharacter) {
             //Debug.Log("PetControlEffect.CancelEffect(" + (targetCharacter != null ? targetCharacter.name : "null") + ")");
 
-            foreach (SummonEffectOld petEffect in petEffectList) {
+            foreach (SummonEffect petEffect in petEffectList) {
                 //Debug.Log(DisplayName + ".PetEffect.CheckPetSpawn(): adding to cast list");
                 if (petEffect.UnitProfile != null
                     && targetCharacter.CharacterPetManager.ActiveUnitProfiles.ContainsKey(petEffect.UnitProfile) == true) {
@@ -74,8 +84,8 @@ namespace AnyRPG {
             if (petEffectNames != null) {
                 foreach (string petEffectName in petEffectNames) {
                     AbilityEffect abilityEffect = systemDataFactory.GetResource<AbilityEffect>(petEffectName);
-                    if (abilityEffect != null && ((abilityEffect as SummonEffectOld) is SummonEffectOld)) {
-                        petEffectList.Add(abilityEffect as SummonEffectOld);
+                    if (abilityEffect != null && ((abilityEffect as SummonEffect) is SummonEffect)) {
+                        petEffectList.Add(abilityEffect as SummonEffect);
                     } else {
                         Debug.LogError("SystemAbilityManager.SetupScriptableObjects(): Could not find ability effect : " + petEffectName + " while inititalizing " + DisplayName + ".  CHECK INSPECTOR");
                     }

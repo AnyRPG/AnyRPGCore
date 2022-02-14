@@ -13,6 +13,13 @@ namespace AnyRPG {
         // extra threat from the taunt
         private float extraThreat = 100f;
 
+        public void GetTauntEffectProperties(TauntEffect effect) {
+
+            //extraThreat = effect.ExtraThreat;
+
+            GetStatusEffectProperties(effect);
+        }
+
         public override void CancelEffect(BaseCharacter targetCharacter) {
             //Debug.Log("MountEffect.CancelEffect(" + (targetCharacter != null ? targetCharacter.name : "null") + ")");
             if (targetCharacter != null && targetCharacter.CharacterCombat != null && targetCharacter.CharacterCombat.AggroTable != null) {

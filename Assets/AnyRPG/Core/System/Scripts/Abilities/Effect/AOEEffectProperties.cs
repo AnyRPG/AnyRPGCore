@@ -12,29 +12,21 @@ namespace AnyRPG {
         [Header("AOE")]
 
         [SerializeField]
-        protected float aoeRadius;
+        protected AOEEffectPropertiesNode aoeProperties = new AOEEffectPropertiesNode();
 
-        [SerializeField]
-        protected bool useRadius = true;
+        public AOEEffectPropertiesNode AoeProperties { get => aoeProperties; set => aoeProperties = value; }
 
-        [SerializeField]
-        protected bool useExtents = false;
+        public void GetAOEEffectProperties(AOEEffect effect) {
+            aoeProperties = effect.AoeProperties;
 
-        [SerializeField]
-        protected Vector3 aoeCenter;
+            GetFixedLengthEffectProperties(effect);
+        }
 
-        [SerializeField]
-        protected Vector3 aoeExtents;
-
-        [SerializeField]
-        protected float maxTargets = 0;
-
-        [SerializeField]
-        protected bool preferClosestTargets = false;
-
-        // delay between casting hit effect on each target
-        [SerializeField]
-        protected float interTargetDelay = 0f;
+        /*
+        public void GetProperties(AbilityEffect abilityEffect) {
+            aoeProperties = abilityEffect.aoe
+        }
+        */
 
         /// <summary>
         /// Does the actual work of hitting the target with an ability
@@ -77,7 +69,7 @@ namespace AnyRPG {
             float accumulatedDelay = 0f;
             foreach (AOETargetNode validTarget in validTargets) {
                 PerformAOEHit(source, validTarget.targetGameObject, 1f / validTargets.Count, validTarget.abilityEffectInput, accumulatedDelay);
-                accumulatedDelay += interTargetDelay;
+                accumulatedDelay += aoeProperties.InterTargetDelay;
             }
             return validTargets.Count;
         }
@@ -88,7 +80,7 @@ namespace AnyRPG {
             float accumulatedDelay = 0f;
             foreach (AOETargetNode validTarget in validTargets) {
                 PerformAOETick(source, validTarget.targetGameObject, 1f / validTargets.Count, validTarget.abilityEffectInput, accumulatedDelay);
-                accumulatedDelay += interTargetDelay;
+                accumulatedDelay += aoeProperties.InterTargetDelay;
             }
             return validTargets.Count;
         }
@@ -102,7 +94,7 @@ namespace AnyRPG {
             float accumulatedDelay = 0f;
             foreach (AOETargetNode validTarget in validTargets) {
                 PerformAOEComplete(source, validTarget.targetGameObject, 1f / validTargets.Count, validTarget.abilityEffectInput, accumulatedDelay);
-                accumulatedDelay += interTargetDelay;
+                accumulatedDelay += aoeProperties.InterTargetDelay;
             }
             return validTargets.Count;
         }
@@ -118,16 +110,16 @@ namespace AnyRPG {
             } else if (prefabSpawnLocation == PrefabSpawnLocation.Caster) {
                 //Debug.Log("AOEEffect.Cast(): Setting AOE center to caster");
                 aoeSpawnCenter = source.AbilityManager.UnitGameObject.transform.position;
-                aoeSpawnCenter += source.AbilityManager.UnitGameObject.transform.TransformDirection(aoeCenter);
+                aoeSpawnCenter += source.AbilityManager.UnitGameObject.transform.TransformDirection(aoeProperties.AoeCenter);
             } else if (prefabSpawnLocation == PrefabSpawnLocation.CasterPoint) {
                 //Debug.Log("AOEEffect.Cast(): Setting AOE center to caster");
                 aoeSpawnRotation = abilityEffectContext.AbilityCasterRotation;
                 aoeSpawnCenter = abilityEffectContext.AbilityCasterLocation;
-                aoeSpawnCenter += aoeSpawnRotation * aoeCenter;
+                aoeSpawnCenter += aoeSpawnRotation * aoeProperties.AoeCenter;
             } else if (prefabSpawnLocation == PrefabSpawnLocation.GroundTarget) {
                 //Debug.Log("AOEEffect.Cast(): Setting AOE center to groundTarget at: " + abilityEffectInput.prefabLocation);
                 aoeSpawnCenter = abilityEffectContext.groundTargetLocation;
-                aoeSpawnCenter += aoeCenter;
+                aoeSpawnCenter += aoeProperties.AoeCenter;
             } else {
                 //Debug.Log("AOEEffect.Cast(): Setting AOE center to vector3.zero!!! was prefab spawn location not set or target despawned?");
             }
@@ -136,12 +128,12 @@ namespace AnyRPG {
             int playerMask = 1 << LayerMask.NameToLayer("Player");
             int characterMask = 1 << LayerMask.NameToLayer("CharacterUnit");
             int validMask = (playerMask | characterMask);
-            if (useRadius) {
-                colliders = Physics.OverlapSphere(aoeSpawnCenter, aoeRadius, validMask);
+            if (aoeProperties.UseRadius) {
+                colliders = Physics.OverlapSphere(aoeSpawnCenter, aoeProperties.AoeRadius, validMask);
             }
-            if (useExtents) {
+            if (aoeProperties.UseExtents) {
                 //Debug.Log(DisplayName + ".AOEEffect.GetValidTargets(): using aoeSpawnCenter: " + aoeSpawnCenter + ", extents: " + aoeExtents);
-                colliders = Physics.OverlapBox(aoeSpawnCenter, aoeExtents / 2f, aoeSpawnRotation, validMask);
+                colliders = Physics.OverlapBox(aoeSpawnCenter, aoeProperties.AoeExtents / 2f, aoeSpawnRotation, validMask);
             }
             //Debug.Log("AOEEffect.Cast(): Casting OverlapSphere with radius: " + aoeRadius);
             List<AOETargetNode> validTargets = new List<AOETargetNode>();
@@ -164,11 +156,11 @@ namespace AnyRPG {
                     validTargets.Add(validTargetNode);
                 }
             }
-            if (maxTargets > 0) {
+            if (aoeProperties.MaxTargets > 0) {
                 //Debug.Log(DisplayName + "AOEEffect.GetValidTargets(). maxTargets: " + maxTargets + "; validTargets.Count: " + validTargets.Count);
-                while (validTargets.Count > maxTargets) {
+                while (validTargets.Count > aoeProperties.MaxTargets) {
                     int removeNumber = 0;
-                    if (preferClosestTargets == true) {
+                    if (aoeProperties.PreferClosestTargets == true) {
                         int counter = 0;
                         foreach (AOETargetNode validTarget in validTargets) {
                             if (Vector3.Distance(validTarget.targetGameObject.transform.position, source.AbilityManager.UnitGameObject.transform.position) > Vector3.Distance(validTargets[removeNumber].targetGameObject.transform.position, source.AbilityManager.UnitGameObject.transform.position)) {

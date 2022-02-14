@@ -6,17 +6,17 @@ using UnityEngine.UI;
 
 namespace AnyRPG {
     // base class to hold amounts and spellpower calculations for heal and damage effects
-    public abstract class AmountEffect : InstantEffectOld {
+    public abstract class AmountEffect : InstantEffect {
 
         [Header("Amounts")]
 
         [Tooltip("If true, this effect can do critical amounts")]
         [SerializeField]
-        private bool allowCriticalStrike = true;
+        protected bool allowCriticalStrike = true;
 
         [Tooltip("The resources to affect, and the amounts of the effects")]
         [SerializeField]
-        private List<ResourceAmountNode> resourceAmounts = new List<ResourceAmountNode>();
+        protected List<ResourceAmountNode> resourceAmounts = new List<ResourceAmountNode>();
 
         [SerializeField]
         protected DamageType damageType;
@@ -28,6 +28,9 @@ namespace AnyRPG {
         protected bool ignoreAccuracy = false;
 
         public DamageType DamageType { get => damageType; set => damageType = value; }
+        public bool AllowCriticalStrike { get => allowCriticalStrike; set => allowCriticalStrike = value; }
+        public List<ResourceAmountNode> ResourceAmounts { get => resourceAmounts; set => resourceAmounts = value; }
+        public bool IgnoreAccuracy { get => ignoreAccuracy; set => ignoreAccuracy = value; }
 
         protected KeyValuePair<float, CombatMagnitude> CalculateAbilityAmount(float abilityBaseAmount, IAbilityCaster sourceCharacter, CharacterUnit target, AbilityEffectContext abilityEffectContext, ResourceAmountNode resourceAmountNode) {
             //Debug.Log(DisplayName + ".AmountEffect.CalculateAbilityAmount(" + abilityBaseAmount + ")");

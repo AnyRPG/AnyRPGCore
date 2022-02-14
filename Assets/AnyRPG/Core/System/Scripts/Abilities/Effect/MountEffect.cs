@@ -9,8 +9,7 @@ using UnityEngine.UI;
 
 
 namespace AnyRPG {
-
-    [System.Serializable]
+    [CreateAssetMenu(fileName = "New MountEffect", menuName = "AnyRPG/Abilities/Effects/MountEffect")]
     public class MountEffect : StatusEffect {
 
         [Header("Mount")]
@@ -22,6 +21,17 @@ namespace AnyRPG {
 
         // reference to actual unitProfile
         private UnitProfile unitProfile = null;
+
+        public string UnitProfileName { get => unitProfileName; set => unitProfileName = value; }
+
+        [SerializeField]
+        private MountEffectProperties mountEffectProperties = new MountEffectProperties();
+
+        public override AbilityEffectProperties AbilityEffectProperties { get => mountEffectProperties; }
+
+        public override void Convert() {
+            mountEffectProperties.GetMountEffectProperties(this);
+        }
 
         public override void CancelEffect(BaseCharacter targetCharacter) {
             //Debug.Log(displayName +  ".MountEffect.CancelEffect(" + (targetCharacter != null ? targetCharacter.name : "null") + ")");

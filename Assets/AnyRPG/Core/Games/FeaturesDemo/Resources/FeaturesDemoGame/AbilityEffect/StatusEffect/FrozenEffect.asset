@@ -19,6 +19,7 @@ MonoBehaviour:
   description: 
   useRegionalDescription: 0
   resourceDescriptionProfile: 
+  optionalOverride: 0
   targetOptions:
     requireTarget: 1
     requireLineOfSight: 0
@@ -58,13 +59,49 @@ MonoBehaviour:
   onTickAudioProfileNames: []
   randomTickAudioProfiles: 0
   completeAbilityEffectNames: []
+  lengthEffectProperties:
+    targetOptions:
+      requireTarget: 0
+      requireLineOfSight: 0
+      requireLiveTarget: 1
+      requireDeadTarget: 0
+      canCastOnSelf: 0
+      canCastOnOthers: 0
+      canCastOnEnemy: 0
+      canCastOnNeutral: 0
+      canCastOnFriendly: 0
+      autoSelfCast: 0
+      useMeleeRange: 0
+      maxRange: 0
+      lineOfSightSourceLocation: 0
+      targetRangeSourceLocation: 0
+    chanceToCast: 100
+    effectMaterialName: 
+    materialChangeDuration: 2
+    onHitAudioProfileNames: []
+    randomAudioProfiles: 0
+    hitAbilityEffectNames: []
+    inputMultiplier: 0
+    threatMultiplier: 1
+    abilityPrefabSource: 1
+    randomPrefabs: 0
+    abilityObjectList: []
+    prefabSpawnLocation: 0
+    prefabDestroyDelay: 0
+    destroyOnEndCast: 0
+    tickRate: 0
+    castZeroTick: 0
+    tickAbilityEffectNames: []
+    onTickAudioProfileNames: []
+    randomTickAudioProfiles: 0
+    completeAbilityEffectNames: []
   statusEffectAlignment: 2
   statusEffectTypeName: 
+  statusEffectGroupName: 
   classTrait: 0
   requiredLevel: 1
   sceneNames: []
   limitedDuration: 1
-  refreshableDuration: 0
   duration: 2
   maxStacks: 1
   statBuffTypeNames: []
@@ -76,6 +113,8 @@ MonoBehaviour:
   outgoingDamageMultiplier: 1
   incomingDamageMultiplier: 1
   factionModifiers: []
+  canFly: 0
+  canGlide: 0
   disableAnimator: 1
   stun: 0
   levitate: 0
@@ -85,3 +124,72 @@ MonoBehaviour:
   controlTarget: 0
   reflectAbilityEffectNames: []
   weaponHitAbilityEffectNames: []
+  statusEffectProperties:
+    targetOptions:
+      requireTarget: 1
+      requireLineOfSight: 0
+      requireLiveTarget: 1
+      requireDeadTarget: 0
+      canCastOnSelf: 0
+      canCastOnOthers: 1
+      canCastOnEnemy: 1
+      canCastOnNeutral: 0
+      canCastOnFriendly: 0
+      autoSelfCast: 0
+      useMeleeRange: 0
+      maxRange: 0
+      lineOfSightSourceLocation: 0
+      targetRangeSourceLocation: 0
+    chanceToCast: 100
+    effectMaterialName: Ice
+    materialChangeDuration: 2
+    onHitAudioProfileNames:
+    - Ice Hit
+    randomAudioProfiles: 0
+    hitAbilityEffectNames: []
+    inputMultiplier: 0
+    threatMultiplier: 1
+    abilityPrefabSource: 1
+    randomPrefabs: 0
+    abilityObjectList:
+    - holdableObjectName: Ice Spikes
+      useUniversalAttachment: 0
+      attachmentName: 
+    prefabSpawnLocation: 2
+    prefabDestroyDelay: 0
+    destroyOnEndCast: 0
+    tickRate: 0
+    castZeroTick: 0
+    tickAbilityEffectNames: []
+    onTickAudioProfileNames: []
+    randomTickAudioProfiles: 0
+    completeAbilityEffectNames: []
+    statusEffectAlignment: 2
+    statusEffectTypeName: 
+    statusEffectGroupName: 
+    classTrait: 0
+    requiredLevel: 1
+    sceneNames: []
+    limitedDuration: 1
+    duration: 2
+    maxStacks: 1
+    statBuffTypeNames: []
+    statAmount: 0
+    statMultiplier: 0
+    secondaryStatBuffsTypes: 00000000
+    secondaryStatAmount: 0
+    secondaryStatMultiplier: 0
+    outgoingDamageMultiplier: 1
+    incomingDamageMultiplier: 1
+    factionModifiers: []
+    canFly: 0
+    canGlide: 0
+    disableAnimator: 1
+    stun: 0
+    levitate: 0
+    immuneDisableAnimator: 0
+    immuneStun: 0
+    immuneLevitate: 0
+    controlTarget: 0
+    reflectAbilityEffectNames: []
+    weaponHitAbilityEffectNames: []

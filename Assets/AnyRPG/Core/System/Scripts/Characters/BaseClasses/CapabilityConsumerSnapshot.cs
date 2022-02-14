@@ -64,8 +64,8 @@ namespace AnyRPG {
             //capabilityProviders.Add(systemConfigurationManager);
         }
 
-        public List<StatusEffectOld> GetTraitList() {
-            List<StatusEffectOld> returnList = new List<StatusEffectOld>();
+        public List<StatusEffect> GetTraitList() {
+            List<StatusEffect> returnList = new List<StatusEffect>();
 
             foreach (ICapabilityProvider capabilityProvider in capabilityProviders) {
                 if (capabilityProvider != null) {
@@ -81,10 +81,10 @@ namespace AnyRPG {
         /// </summary>
         /// <param name="capabilityConsumerSnapshot"></param>
         /// <returns></returns>
-        public List<StatusEffectOld> GetTraitsToRemove(CapabilityConsumerSnapshot capabilityConsumerSnapshot) {
-            List<StatusEffectOld> returnList = new List<StatusEffectOld>();
+        public List<StatusEffect> GetTraitsToRemove(CapabilityConsumerSnapshot capabilityConsumerSnapshot) {
+            List<StatusEffect> returnList = new List<StatusEffect>();
 
-            List<StatusEffectOld> currentList = GetTraitList();
+            List<StatusEffect> currentList = GetTraitList();
 
             returnList.AddRange(currentList.Except(capabilityConsumerSnapshot.GetTraitList()));
 
@@ -96,10 +96,10 @@ namespace AnyRPG {
         /// </summary>
         /// <param name="capabilityConsumerSnapshot"></param>
         /// <returns></returns>
-        public List<StatusEffectOld> GetTraitsToAdd(CapabilityConsumerSnapshot capabilityConsumerSnapshot) {
-            List<StatusEffectOld> returnList = new List<StatusEffectOld>();
+        public List<StatusEffect> GetTraitsToAdd(CapabilityConsumerSnapshot capabilityConsumerSnapshot) {
+            List<StatusEffect> returnList = new List<StatusEffect>();
 
-            List<StatusEffectOld> currentList = GetTraitList();
+            List<StatusEffect> currentList = GetTraitList();
 
             returnList.AddRange(capabilityConsumerSnapshot.GetTraitList().Except(currentList));
 

@@ -7,15 +7,6 @@ namespace AnyRPG {
     [CreateAssetMenu(fileName = "New AbilityEffect", menuName = "AnyRPG/Abilities/Effects/AbilityEffect")]
     public class AbilityEffect : DescribableResource, ITargetable {
 
-        [Header("Effect Properties")]
-
-        
-        [Tooltip("When casting is complete, these ability effects will be triggered.")]
-        [SerializeReference]
-        [SerializeReferenceButton]
-        protected AbilityEffectProperties effectProperties = null;
-        
-
         [Header("Target Properties")]
 
         [SerializeField]
@@ -43,11 +34,11 @@ namespace AnyRPG {
 
         [SerializeField]
         [ResourceSelector(resourceType = typeof(AudioProfile))]
-        protected List<string> onHitAudioProfileNames = new List<string>();
+        private List<string> onHitAudioProfileNames = new List<string>();
 
         [Tooltip("whether to play all audio profiles or just one random one")]
         [SerializeField]
-        protected bool randomAudioProfiles = false;
+        private bool randomAudioProfiles = false;
 
         //protected AudioProfile onHitAudioProfile;
         protected List<AudioProfile> onHitAudioProfiles = new List<AudioProfile>();
@@ -56,7 +47,7 @@ namespace AnyRPG {
         [Tooltip("any abilities to cast immediately on hit")]
         [SerializeField]
         [ResourceSelector(resourceType = typeof(AbilityEffect))]
-        protected List<string> hitAbilityEffectNames = new List<string>();
+        private List<string> hitAbilityEffectNames = new List<string>();
 
         //[SerializeField]
         protected List<AbilityEffect> hitAbilityEffectList = new List<AbilityEffect>();
@@ -67,9 +58,26 @@ namespace AnyRPG {
         [SerializeField]
         protected float threatMultiplier = 1f;
 
-        public List<AbilityEffect> MyHitAbilityEffectList { get => hitAbilityEffectList; set => hitAbilityEffectList = value; }
+        /*
+        [SerializeField]
+        protected AbilityEffectProperties abilityEffectProperties = new AbilityEffectProperties();
+        */
+
+        public List<AbilityEffect> HitAbilityEffectList { get => hitAbilityEffectList; set => hitAbilityEffectList = value; }
         public float ThreatMultiplier { get => threatMultiplier; set => threatMultiplier = value; }
         public float ChanceToCast { get => chanceToCast; set => chanceToCast = value; }
+        public AbilityEffectTargetProps TargetOptions { get => targetOptions; set => targetOptions = value; }
+        public string EffectMaterialName { get => effectMaterialName; set => effectMaterialName = value; }
+        public float MaterialChangeDuration { get => materialChangeDuration; set => materialChangeDuration = value; }
+        public List<string> OnHitAudioProfileNames { get => onHitAudioProfileNames; set => onHitAudioProfileNames = value; }
+        public bool RandomAudioProfiles { get => randomAudioProfiles; set => randomAudioProfiles = value; }
+        public List<string> HitAbilityEffectNames { get => hitAbilityEffectNames; set => hitAbilityEffectNames = value; }
+
+        public virtual AbilityEffectProperties AbilityEffectProperties { get => null; }
+
+        public virtual void Convert() {
+            //abilityEffectProperties.get
+        }
 
         public TargetProps GetTargetOptions(IAbilityCaster abilityCaster) {
             return targetOptions;
@@ -142,7 +150,7 @@ namespace AnyRPG {
                     if (SystemDataFactory.MatchResource(abilityEffect.DisplayName, DisplayName)) {
                         Debug.LogError(DisplayName + ".PerformAbilityEffects(): circular reference detected.  Tried to cast self.  CHECK INSPECTOR AND FIX ABILITY EFFECT CONFIGURATION!!!");
                     } else {
-                        if (!(abilityEffect is AmountEffectOld)) {
+                        if (!(abilityEffect is AmountEffect)) {
                             abilityEffectOutput.spellDamageMultiplier = 1f;
                         }
                         Dictionary<PrefabProfile, GameObject> tmpObjects = PerformAbilityEffect(source, target, abilityEffectOutput, abilityEffect);

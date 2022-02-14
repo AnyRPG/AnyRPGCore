@@ -8,7 +8,6 @@ using UnityEngine.UI;
 namespace AnyRPG {
     //[CreateAssetMenu(fileName = "New Ability",menuName = "AnyRPG/Abilities/Effects/FixedLengthEffect")]
     // not using that for now as it will neither tick, nor complete.  that is done by directeffect/children or aoeEffect
-    // MAKE ABSTRACT IN FUTURE?
     public abstract class FixedLengthEffect : LengthEffect {
 
         /// <summary>
@@ -38,9 +37,7 @@ namespace AnyRPG {
             //Debug.Log(DisplayName + ".FixedLengthEffect.CheckDestroyObjects(" + (abilityEffectObjects == null ? "null" : abilityEffectObjects.Count.ToString()) + ", " + (source == null ? "null" : source.AbilityManager.Name) + ", " + (target == null ? "null" : target.name) + ")");
             if (source != null) {
                 // OLD
-                /*
-                systemAbilityController.BeginDestroyAbilityEffectObject(abilityEffectObjects, source, target, defaultPrefabLifetime, abilityEffectInput, this);
-                */
+                //systemAbilityController.BeginDestroyAbilityEffectObject(abilityEffectObjects, source, target, defaultPrefabLifetime, abilityEffectInput, this);
             }
         }
 

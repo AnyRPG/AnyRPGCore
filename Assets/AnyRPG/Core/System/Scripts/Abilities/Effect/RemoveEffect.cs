@@ -5,8 +5,7 @@ using UnityEngine;
 using UnityEngine.UI;
 
 namespace AnyRPG {
-
-    [System.Serializable]
+    [CreateAssetMenu(fileName = "New RemoveEffect", menuName = "AnyRPG/Abilities/Effects/RemoveEffect")]
     public class RemoveEffect : InstantEffect {
 
         // 0 is unlimited
@@ -21,6 +20,18 @@ namespace AnyRPG {
         private List<string> effectTypeNames = new List<string>();
 
         private List<StatusEffectType> effectTypes = new List<StatusEffectType>();
+
+        public int MaxClearEffects { get => maxClearEffects; set => maxClearEffects = value; }
+        public List<string> EffectTypeNames { get => effectTypeNames; set => effectTypeNames = value; }
+
+        [SerializeField]
+        private RemoveEffectProperties removeEffectProperties = new RemoveEffectProperties();
+
+        public override AbilityEffectProperties AbilityEffectProperties { get => removeEffectProperties; }
+
+        public override void Convert() {
+            removeEffectProperties.GetRemoveEffectProperties(this);
+        }
 
         public override void PerformAbilityHit(IAbilityCaster source, Interactable target, AbilityEffectContext abilityEffectInput) {
             base.PerformAbilityHit(source, target, abilityEffectInput);

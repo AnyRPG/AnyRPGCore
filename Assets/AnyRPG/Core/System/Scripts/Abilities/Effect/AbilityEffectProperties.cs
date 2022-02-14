@@ -64,11 +64,26 @@ namespace AnyRPG {
         protected string description = string.Empty;
         protected Sprite icon = null;
 
-        public List<AbilityEffect> MyHitAbilityEffectList { get => hitAbilityEffectList; set => hitAbilityEffectList = value; }
+        public List<AbilityEffect> HitAbilityEffectList { get => hitAbilityEffectList; set => hitAbilityEffectList = value; }
         public float ThreatMultiplier { get => threatMultiplier; set => threatMultiplier = value; }
         public float ChanceToCast { get => chanceToCast; set => chanceToCast = value; }
         public string DisplayName { get => displayName; set => displayName = value; }
         public Sprite Icon { get => icon; set => icon = value; }
+
+        public void GetAbilityEffectProperties(AbilityEffect effect) {
+
+            targetOptions = effect.TargetOptions;
+            chanceToCast = effect.ChanceToCast;
+            effectMaterialName = effect.EffectMaterialName;
+            materialChangeDuration = effect.MaterialChangeDuration;
+            onHitAudioProfileNames = effect.OnHitAudioProfileNames;
+            randomAudioProfiles = effect.RandomAudioProfiles;
+            hitAbilityEffectNames = effect.HitAbilityEffectNames;
+            inputMultiplier = effect.inputMultiplier;
+            threatMultiplier = effect.ThreatMultiplier;
+
+            //GetInstantEffectProperties(effect);
+        }
 
         public TargetProps GetTargetOptions(IAbilityCaster abilityCaster) {
             return targetOptions;
@@ -153,7 +168,7 @@ namespace AnyRPG {
                     if (SystemDataFactory.MatchResource(abilityEffect.DisplayName, DisplayName)) {
                         Debug.LogError(DisplayName + ".PerformAbilityEffects(): circular reference detected.  Tried to cast self.  CHECK INSPECTOR AND FIX ABILITY EFFECT CONFIGURATION!!!");
                     } else {
-                        if (!(abilityEffect is AmountEffectOld)) {
+                        if (!(abilityEffect is AmountEffect)) {
                             abilityEffectOutput.spellDamageMultiplier = 1f;
                         }
                         Dictionary<PrefabProfile, GameObject> tmpObjects = PerformAbilityEffect(source, target, abilityEffectOutput, abilityEffect);

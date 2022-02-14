@@ -19,6 +19,7 @@ MonoBehaviour:
   description: 
   useRegionalDescription: 0
   resourceDescriptionProfile: 
+  optionalOverride: 0
   targetOptions:
     requireTarget: 1
     requireLineOfSight: 0
@@ -58,7 +59,124 @@ MonoBehaviour:
   onTickAudioProfileNames: []
   randomTickAudioProfiles: 0
   completeAbilityEffectNames: []
+  lengthEffectProperties:
+    targetOptions:
+      requireTarget: 0
+      requireLineOfSight: 0
+      requireLiveTarget: 1
+      requireDeadTarget: 0
+      canCastOnSelf: 0
+      canCastOnOthers: 0
+      canCastOnEnemy: 0
+      canCastOnNeutral: 0
+      canCastOnFriendly: 0
+      autoSelfCast: 0
+      useMeleeRange: 0
+      maxRange: 0
+      lineOfSightSourceLocation: 0
+      targetRangeSourceLocation: 0
+    chanceToCast: 100
+    effectMaterialName: 
+    materialChangeDuration: 2
+    onHitAudioProfileNames: []
+    randomAudioProfiles: 0
+    hitAbilityEffectNames: []
+    inputMultiplier: 0
+    threatMultiplier: 1
+    abilityPrefabSource: 1
+    randomPrefabs: 0
+    abilityObjectList: []
+    prefabSpawnLocation: 0
+    prefabDestroyDelay: 0
+    destroyOnEndCast: 0
+    tickRate: 0
+    castZeroTick: 0
+    tickAbilityEffectNames: []
+    onTickAudioProfileNames: []
+    randomTickAudioProfiles: 0
+    completeAbilityEffectNames: []
   defaultPrefabLifetime: 30
+  directEffectProperties:
+    targetOptions:
+      requireTarget: 0
+      requireLineOfSight: 0
+      requireLiveTarget: 1
+      requireDeadTarget: 0
+      canCastOnSelf: 0
+      canCastOnOthers: 0
+      canCastOnEnemy: 0
+      canCastOnNeutral: 0
+      canCastOnFriendly: 0
+      autoSelfCast: 0
+      useMeleeRange: 0
+      maxRange: 0
+      lineOfSightSourceLocation: 0
+      targetRangeSourceLocation: 0
+    chanceToCast: 100
+    effectMaterialName: 
+    materialChangeDuration: 2
+    onHitAudioProfileNames: []
+    randomAudioProfiles: 0
+    hitAbilityEffectNames: []
+    inputMultiplier: 0
+    threatMultiplier: 1
+    abilityPrefabSource: 1
+    randomPrefabs: 0
+    abilityObjectList: []
+    prefabSpawnLocation: 0
+    prefabDestroyDelay: 0
+    destroyOnEndCast: 0
+    tickRate: 0
+    castZeroTick: 0
+    tickAbilityEffectNames: []
+    onTickAudioProfileNames: []
+    randomTickAudioProfiles: 0
+    completeAbilityEffectNames: []
+    defaultPrefabLifetime: 10
   projectileSpeed: 5
   flightAudioProfileNames: []
   randomFlightAudioProfiles: 0
+  projectileEffectProperties:
+    targetOptions:
+      requireTarget: 1
+      requireLineOfSight: 0
+      requireLiveTarget: 1
+      requireDeadTarget: 0
+      canCastOnSelf: 0
+      canCastOnOthers: 1
+      canCastOnEnemy: 1
+      canCastOnNeutral: 0
+      canCastOnFriendly: 0
+      autoSelfCast: 0
+      useMeleeRange: 0
+      maxRange: 0
+      lineOfSightSourceLocation: 0
+      targetRangeSourceLocation: 0
+    chanceToCast: 100
+    effectMaterialName: 
+    materialChangeDuration: 2
+    onHitAudioProfileNames: []
+    randomAudioProfiles: 0
+    hitAbilityEffectNames:
+    - Levitated Tornado Effect
+    inputMultiplier: 0
+    threatMultiplier: 1
+    abilityPrefabSource: 1
+    randomPrefabs: 0
+    abilityObjectList:
+    - holdableObjectName: Tornado Projectile
+      useUniversalAttachment: 0
+      attachmentName: 
+    prefabSpawnLocation: 1
+    prefabDestroyDelay: 3
+    destroyOnEndCast: 0
+    tickRate: 0
+    castZeroTick: 0
+    tickAbilityEffectNames: []
+    onTickAudioProfileNames: []
+    randomTickAudioProfiles: 0
+    completeAbilityEffectNames: []
+    defaultPrefabLifetime: 30
+    projectileSpeed: 5
+    flightAudioProfileNames: []
+    randomFlightAudioProfiles: 0

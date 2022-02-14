@@ -19,6 +19,7 @@ MonoBehaviour:
   description: 
   useRegionalDescription: 0
   resourceDescriptionProfile: 
+  optionalOverride: 0
   targetOptions:
     requireTarget: 0
     requireLineOfSight: 0
@@ -55,12 +56,96 @@ MonoBehaviour:
   onTickAudioProfileNames: []
   randomTickAudioProfiles: 0
   completeAbilityEffectNames: []
+  lengthEffectProperties:
+    targetOptions:
+      requireTarget: 0
+      requireLineOfSight: 0
+      requireLiveTarget: 1
+      requireDeadTarget: 0
+      canCastOnSelf: 0
+      canCastOnOthers: 0
+      canCastOnEnemy: 0
+      canCastOnNeutral: 0
+      canCastOnFriendly: 0
+      autoSelfCast: 0
+      useMeleeRange: 0
+      maxRange: 0
+      lineOfSightSourceLocation: 0
+      targetRangeSourceLocation: 0
+    chanceToCast: 100
+    effectMaterialName: 
+    materialChangeDuration: 2
+    onHitAudioProfileNames: []
+    randomAudioProfiles: 0
+    hitAbilityEffectNames: []
+    inputMultiplier: 0
+    threatMultiplier: 1
+    abilityPrefabSource: 1
+    randomPrefabs: 0
+    abilityObjectList: []
+    prefabSpawnLocation: 0
+    prefabDestroyDelay: 0
+    destroyOnEndCast: 0
+    tickRate: 0
+    castZeroTick: 0
+    tickAbilityEffectNames: []
+    onTickAudioProfileNames: []
+    randomTickAudioProfiles: 0
+    completeAbilityEffectNames: []
   defaultPrefabLifetime: 1
-  aoeRadius: 5
-  useRadius: 0
-  useExtents: 1
-  aoeCenter: {x: 0, y: 1, z: 15}
-  aoeExtents: {x: 5, y: 2, z: 30}
-  maxTargets: 0
-  preferClosestTargets: 0
-  interTargetDelay: 0
+  aoeProperties:
+    aoeRadius: 5
+    useRadius: 0
+    useExtents: 1
+    aoeCenter: {x: 0, y: 1, z: 15}
+    aoeExtents: {x: 5, y: 2, z: 30}
+    maxTargets: 0
+    preferClosestTargets: 0
+    interTargetDelay: 0
+  aoeEffectProperties:
+    targetOptions:
+      requireTarget: 0
+      requireLineOfSight: 0
+      requireLiveTarget: 0
+      requireDeadTarget: 0
+      canCastOnSelf: 0
+      canCastOnOthers: 0
+      canCastOnEnemy: 1
+      canCastOnNeutral: 0
+      canCastOnFriendly: 0
+      autoSelfCast: 0
+      useMeleeRange: 0
+      maxRange: 0
+      lineOfSightSourceLocation: 0
+      targetRangeSourceLocation: 0
+    chanceToCast: 100
+    effectMaterialName: 
+    materialChangeDuration: 2
+    onHitAudioProfileNames: []
+    randomAudioProfiles: 0
+    hitAbilityEffectNames:
+    - Fire Projectile Attack
+    inputMultiplier: 0
+    threatMultiplier: 1
+    abilityPrefabSource: 1
+    randomPrefabs: 0
+    abilityObjectList: []
+    prefabSpawnLocation: 1
+    prefabDestroyDelay: 1
+    destroyOnEndCast: 0
+    tickRate: 0.25
+    castZeroTick: 0
+    tickAbilityEffectNames: []
+    onTickAudioProfileNames: []
+    randomTickAudioProfiles: 0
+    completeAbilityEffectNames: []
+    defaultPrefabLifetime: 1
+    aoeProperties:
+      aoeRadius: 5
+      useRadius: 0
+      useExtents: 1
+      aoeCenter: {x: 0, y: 1, z: 15}
+      aoeExtents: {x: 5, y: 2, z: 30}
+      maxTargets: 0
+      preferClosestTargets: 0
+      interTargetDelay: 0

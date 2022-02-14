@@ -210,6 +210,41 @@ namespace AnyRPG {
         public bool CanGlide { get => canGlide; }
         public StatusEffectGroup StatusEffectGroup { get => statusEffectGroup; set => statusEffectGroup = value; }
 
+        public void GetStatusEffectProperties(StatusEffect effect) {
+
+            statusEffectAlignment = effect.StatusEffectAlignment;
+            statusEffectTypeName = effect.StatusEffectTypeName;
+            statusEffectGroupName = effect.StatusEffectGroupName;
+            classTrait = effect.ClassTrait;
+            requiredLevel = effect.RequiredLevel;
+            sceneNames = effect.SceneNames;
+            limitedDuration = effect.LimitedDuration;
+            refreshableDuration = effect.RefreshableDuration;
+            duration = effect.Duration;
+            maxStacks = effect.MaxStacks;
+            statBuffTypeNames = effect.StatBuffTypeNames;
+            statAmount = effect.StatAmount;
+            statMultiplier = effect.StatMultiplier;
+            secondaryStatBuffsTypes = effect.SecondaryStatBuffsTypes;
+            secondaryStatAmount = effect.SecondaryStatAmount;
+            secondaryStatMultiplier = effect.SecondaryStatMultiplier;
+            outgoingDamageMultiplier = effect.OutgoingDamageMultiplier;
+            incomingDamageMultiplier = effect.IncomingDamageMultiplier;
+            factionModifiers = effect.FactionModifiers;
+            canFly = effect.CanFly;
+            canGlide = effect.CanGlide;
+            disableAnimator = effect.DisableAnimator;
+            stun = effect.Stun;
+            levitate = effect.Levitate;
+            immuneDisableAnimator = effect.ImmuneDisableAnimator;
+            immuneStun = effect.ImmuneStun;
+            immuneLevitate = effect.ImmuneLevitate;
+            controlTarget = effect.ControlTarget;
+            reflectAbilityEffectNames = effect.ReflectAbilityEffectNames;
+            weaponHitAbilityEffectNames = effect.WeaponHitAbilityEffectNames;
+
+            GetLengthEffectProperties(effect);
+        }
         public override void SetGameManagerReferences() {
             base.SetGameManagerReferences();
             levelManager = systemGameManager.LevelManager;

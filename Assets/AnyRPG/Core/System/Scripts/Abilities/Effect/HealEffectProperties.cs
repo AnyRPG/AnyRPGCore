@@ -7,6 +7,11 @@ namespace AnyRPG {
     [System.Serializable]
     public class HealEffectProperties : AmountEffectProperties {
 
+        public void GetHealEffectProperties(HealEffect effect) {
+
+            GetAmountEffectProperties(effect);
+        }
+
         /// <summary>
         /// Does the actual work of hitting the target with an ability
         /// </summary>

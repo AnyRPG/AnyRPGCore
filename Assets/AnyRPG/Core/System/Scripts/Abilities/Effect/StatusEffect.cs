@@ -6,8 +6,7 @@ using UnityEngine;
 using UnityEngine.UI;
 
 namespace AnyRPG {
-
-    [System.Serializable]
+    [CreateAssetMenu(fileName = "New StatusEffect", menuName = "AnyRPG/Abilities/Effects/StatusEffect")]
     public class StatusEffect : LengthEffect, ILearnable {
 
         [Header("Status Effect")]
@@ -209,6 +208,19 @@ namespace AnyRPG {
         public bool CanFly { get => canFly; }
         public bool CanGlide { get => canGlide; }
         public StatusEffectGroup StatusEffectGroup { get => statusEffectGroup; set => statusEffectGroup = value; }
+        public string StatusEffectTypeName { get => statusEffectTypeName; set => statusEffectTypeName = value; }
+        public string StatusEffectGroupName { get => statusEffectGroupName; set => statusEffectGroupName = value; }
+        public List<string> ReflectAbilityEffectNames { get => reflectAbilityEffectNames; set => reflectAbilityEffectNames = value; }
+        public List<string> WeaponHitAbilityEffectNames { get => weaponHitAbilityEffectNames; set => weaponHitAbilityEffectNames = value; }
+
+        [SerializeField]
+        private StatusEffectProperties statusEffectProperties = new StatusEffectProperties();
+
+        public override AbilityEffectProperties AbilityEffectProperties { get => statusEffectProperties; }
+
+        public override void Convert() {
+            statusEffectProperties.GetStatusEffectProperties(this);
+        }
 
         public override void SetGameManagerReferences() {
             base.SetGameManagerReferences();
@@ -233,7 +245,7 @@ namespace AnyRPG {
             }
             if (!ZoneRequirementMet()) {
                 if (playerInitiated) {
-                    sourceCharacter.AbilityManager.ReceiveCombatMessage("Cannot cast " + DisplayName + ". You are in the wrong zone");
+                    sourceCharacter.AbilityManager.ReceiveCombatMessage("Cannot cast " + resourceName + ". You are in the wrong zone");
                 }
                 return false;
             }
@@ -277,7 +289,7 @@ namespace AnyRPG {
 
             // OLD
             /*
-             StatusEffectNode _statusEffectNode = targetCharacterStats.ApplyStatusEffect(this, source, abilityEffectContext);
+            //StatusEffectNode _statusEffectNode = targetCharacterStats.ApplyStatusEffect(this, source, abilityEffectContext);
             if (_statusEffectNode == null) {
                 //Debug.Log(DisplayName + ".StatusEffect.Cast(). statuseffect was null.  This could likely happen if the character already had the status effect max stack on them");
             } else {

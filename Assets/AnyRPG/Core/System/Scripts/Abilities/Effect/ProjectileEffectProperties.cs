@@ -30,6 +30,15 @@ namespace AnyRPG {
         // game manager references
         protected PlayerManager playerManager = null;
 
+        public void GetProjectileEffectProperties(ProjectileEffect effect) {
+
+            projectileSpeed = effect.ProjectileSpeed;
+            flightAudioProfileNames = effect.FlightAudioProfileNames;
+            randomFlightAudioProfiles = effect.RandomFlightAudioProfiles;
+
+            GetDirectEffectProperties(effect);
+        }
+
         public override void SetGameManagerReferences() {
             base.SetGameManagerReferences();
             playerManager = systemGameManager.PlayerManager;

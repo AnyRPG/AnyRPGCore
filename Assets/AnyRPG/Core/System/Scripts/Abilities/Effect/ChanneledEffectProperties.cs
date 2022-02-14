@@ -15,6 +15,13 @@ namespace AnyRPG {
         // game manager references
         protected PlayerManager playerManager = null;
 
+        public void GetChanneledEffectProperties(ChanneledEffect effect) {
+
+            effectDelay = effect.effectDelay;
+
+            GetDirectEffectProperties(effect);
+        }
+
         public override void SetGameManagerReferences() {
             base.SetGameManagerReferences();
             playerManager = systemGameManager.PlayerManager;

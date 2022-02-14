@@ -79,47 +79,48 @@ MonoBehaviour:
   references:
     version: 1
     00000000:
-      type: {class: TeleportEffect, ns: AnyRPG, asm: Assembly-CSharp}
+      type: {class: TeleportEffectConfig, ns: AnyRPG, asm: Assembly-CSharp}
       data:
-        targetOptions:
-          requireTarget: 0
-          requireLineOfSight: 0
-          requireLiveTarget: 0
-          requireDeadTarget: 0
-          canCastOnSelf: 0
-          canCastOnOthers: 0
-          canCastOnEnemy: 0
-          canCastOnNeutral: 0
-          canCastOnFriendly: 0
-          autoSelfCast: 0
-          useMeleeRange: 0
-          maxRange: 0
-          lineOfSightSourceLocation: 0
-          targetRangeSourceLocation: 0
-        chanceToCast: 100
-        effectMaterialName: 
-        materialChangeDuration: 2
-        onHitAudioProfileNames: []
-        randomAudioProfiles: 0
-        hitAbilityEffectNames: []
-        inputMultiplier: 0
-        threatMultiplier: 1
-        abilityPrefabSource: 1
-        randomPrefabs: 0
-        abilityObjectList: []
-        prefabSpawnLocation: 0
-        prefabDestroyDelay: 0
-        destroyOnEndCast: 0
-        tickRate: 0
-        castZeroTick: 0
-        tickAbilityEffectNames: []
-        onTickAudioProfileNames: []
-        randomTickAudioProfiles: 0
-        completeAbilityEffectNames: []
-        defaultPrefabLifetime: 10
-        levelName: FeaturesDemoDungeon
-        locationTag: 
-        overrideSpawnLocation: 0
-        spawnLocation: {x: 0, y: 0, z: 0}
-        overrideSpawnDirection: 0
-        spawnForwardDirection: {x: 0, y: 0, z: 0}
+        effectProperties:
+          targetOptions:
+            requireTarget: 0
+            requireLineOfSight: 0
+            requireLiveTarget: 0
+            requireDeadTarget: 0
+            canCastOnSelf: 0
+            canCastOnOthers: 0
+            canCastOnEnemy: 0
+            canCastOnNeutral: 0
+            canCastOnFriendly: 0
+            autoSelfCast: 0
+            useMeleeRange: 0
+            maxRange: 0
+            lineOfSightSourceLocation: 0
+            targetRangeSourceLocation: 0
+          chanceToCast: 100
+          effectMaterialName: 
+          materialChangeDuration: 2
+          onHitAudioProfileNames: []
+          randomAudioProfiles: 0
+          hitAbilityEffectNames: []
+          inputMultiplier: 0
+          threatMultiplier: 1
+          abilityPrefabSource: 1
+          randomPrefabs: 0
+          abilityObjectList: []
+          prefabSpawnLocation: 0
+          prefabDestroyDelay: 0
+          destroyOnEndCast: 0
+          tickRate: 0
+          castZeroTick: 0
+          tickAbilityEffectNames: []
+          onTickAudioProfileNames: []
+          randomTickAudioProfiles: 0
+          completeAbilityEffectNames: []
+          defaultPrefabLifetime: 10
+          levelName: FeaturesDemoDungeon
+          locationTag: 
+          overrideSpawnLocation: 0
+          spawnLocation: {x: 0, y: 0, z: 0}
+          overrideSpawnDirection: 0
+          spawnForwardDirection: {x: 0, y: 0, z: 0}

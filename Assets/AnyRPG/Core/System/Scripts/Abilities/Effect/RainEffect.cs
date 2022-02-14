@@ -5,10 +5,19 @@ using UnityEngine;
 using UnityEngine.UI;
 
 namespace AnyRPG {
-
-    [System.Serializable]
+    [CreateAssetMenu(fileName = "New RainEffect", menuName = "AnyRPG/Abilities/Effects/RainEffect")]
     public class RainEffect : AOEEffect {
 
+        [SerializeField]
+        private RainEffectProperties rainEffectProperties = new RainEffectProperties();
+
+        public override AbilityEffectProperties EffectProperties { get => rainEffectProperties; }
+
+        public override void Convert() {
+            rainEffectProperties.GetRainEffectProperties(this);
+        }
+
+        /*
 
         protected override List<AOETargetNode> GetValidTargets(IAbilityCaster source, Interactable target, AbilityEffectContext abilityEffectInput, List<AbilityEffect> abilityEffectList) {
             //Debug.Log(DisplayName + ".RainEffect.GetValidTargets()");
@@ -54,6 +63,8 @@ namespace AnyRPG {
                 //validTargetNode.abilityEffectInput = abilityEffectInput;
                 validTargetNode.abilityEffectInput.groundTargetLocation = new Vector3(aoeSpawnCenter.x + Random.Range(-aoeRadius, aoeRadius), aoeSpawnCenter.y + aoeCenter.y, aoeSpawnCenter.z + Random.Range(-aoeRadius, aoeRadius));
                 */
+
+        /*
                 validTargetNode.abilityEffectInput.groundTargetLocation = new Vector3(aoeSpawnCenter.x + Random.Range(-aoeRadius, aoeRadius), aoeSpawnCenter.y + aoeCenter.y, aoeSpawnCenter.z + Random.Range(-aoeRadius, aoeRadius));
 
                 //Debug.Log(DisplayName + ".RainEffect.GetValidTargets(). prefabLocation: " + validTargetNode.abilityEffectInput.prefabLocation);
@@ -63,6 +74,8 @@ namespace AnyRPG {
             //Debug.Log(DisplayName + ".RainEffect.GetValidTargets(). Valid targets count: " + validTargets.Count);
             return validTargets;
         }
+
+*/
 
     }
 }

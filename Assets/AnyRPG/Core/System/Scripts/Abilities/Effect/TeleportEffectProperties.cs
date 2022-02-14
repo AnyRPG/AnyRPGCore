@@ -33,6 +33,18 @@ namespace AnyRPG {
         [SerializeField]
         private Vector3 spawnForwardDirection = Vector3.zero;
 
+        public void GetTeleportEffectProperties(TeleportEffect effect) {
+            /*
+            levelName = effect.LevelName;
+            locationTag = effect.LocationTag;
+            overrideSpawnLocation = effect.OverrideSpawnLocation;
+            spawnLocation = effect.SpawnLocation;
+            overrideSpawnDirection = effect.SpawnDirection;
+            spawnForwardDirection = effect.SpawnForwardDirection;
+            */
+            GetInstantEffectProperties(effect);
+        }
+
         // game manager references
         protected LevelManager levelManager = null;
 

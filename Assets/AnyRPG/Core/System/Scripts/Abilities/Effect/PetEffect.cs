@@ -7,9 +7,18 @@ using UnityEngine.AI;
 using UnityEngine.UI;
 
 namespace AnyRPG {
-
-    [System.Serializable]
+    [CreateAssetMenu(fileName = "New PetEffect", menuName = "AnyRPG/Abilities/Effects/PetEffect")]
     public class PetEffect : StatusEffect {
+
+        [SerializeField]
+        private PetEffectProperties petEffectProperties = new PetEffectProperties();
+
+        public override AbilityEffectProperties AbilityEffectProperties { get => petEffectProperties; }
+
+        public override void Convert() {
+            petEffectProperties.GetPetEffectProperties(this);
+        }
+
 
         public override bool CanUseOn(Interactable target, IAbilityCaster sourceCharacter, AbilityEffectContext abilityEffectContext = null, bool playerInitiated = false, bool performRangeCheck = true) {
             if (target == null) {
@@ -20,7 +29,7 @@ namespace AnyRPG {
                 // has to be the right unit type plus needs to be capturable specifically
                 //Debug.Log(DisplayName + ".CapturePetEffect.CanUseOn(): pet was not capturable ");
                 if (playerInitiated) {
-                    sourceCharacter.AbilityManager.ReceiveCombatMessage("Cannot cast " + DisplayName + ". Target must be a capturable pet");
+                    sourceCharacter.AbilityManager.ReceiveCombatMessage("Cannot cast " + resourceName + ". Target must be a capturable pet");
                 }
                 return false;
             }

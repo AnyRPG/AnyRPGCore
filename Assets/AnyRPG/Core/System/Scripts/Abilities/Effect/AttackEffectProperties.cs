@@ -9,6 +9,12 @@ namespace AnyRPG {
     [System.Serializable]
     public class AttackEffectProperties : AmountEffectProperties {
 
+        public void GetAttackEffectProperties(AttackEffect effect) {
+
+
+            GetAmountEffectProperties(effect);
+        }
+
         /// <summary>
         /// Does the actual work of hitting the target with an ability
         /// </summary>

@@ -7,9 +7,8 @@ using UnityEngine;
 using UnityEngine.UI;
 
 namespace AnyRPG {
-
-    [System.Serializable]
-    public class LengthEffect : AbilityEffectProperties {
+    [CreateAssetMenu(fileName = "New LengthEffect", menuName = "AnyRPG/Abilities/Effects/LengthEffect")]
+    public class LengthEffect : AbilityEffect {
 
         [Header("Prefab")]
 
@@ -83,12 +82,29 @@ namespace AnyRPG {
         // game manager references
         protected ObjectPooler objectPooler = null;
 
-        public List<AbilityEffect> MyTickAbilityEffectList { get => tickAbilityEffectList; set => tickAbilityEffectList = value; }
-        public List<AbilityEffect> MyCompleteAbilityEffectList { get => completeAbilityEffectList; set => completeAbilityEffectList = value; }
+        public List<AbilityEffect> TickAbilityEffectList { get => tickAbilityEffectList; set => tickAbilityEffectList = value; }
+        public List<AbilityEffect> CompleteAbilityEffectList { get => completeAbilityEffectList; set => completeAbilityEffectList = value; }
         public float TickRate { get => tickRate; set => tickRate = value; }
         public float PrefabDestroyDelay { get => prefabDestroyDelay; set => prefabDestroyDelay = value; }
         public PrefabSpawnLocation PrefabSpawnLocation { get => prefabSpawnLocation; set => prefabSpawnLocation = value; }
         public bool CastZeroTick { get => castZeroTick; set => castZeroTick = value; }
+        public AbilityPrefabSource AbilityPrefabSource { get => abilityPrefabSource; set => abilityPrefabSource = value; }
+        public bool RandomPrefabs { get => randomPrefabs; set => randomPrefabs = value; }
+        public List<AbilityAttachmentNode> AbilityObjectList { get => abilityObjectList; set => abilityObjectList = value; }
+        public bool DestroyOnEndCast { get => destroyOnEndCast; set => destroyOnEndCast = value; }
+        public List<string> TickAbilityEffectNames { get => tickAbilityEffectNames; set => tickAbilityEffectNames = value; }
+        public List<string> OnTickAudioProfileNames { get => onTickAudioProfileNames; set => onTickAudioProfileNames = value; }
+        public bool RandomTickAudioProfiles { get => randomTickAudioProfiles; set => randomTickAudioProfiles = value; }
+        public List<string> CompleteAbilityEffectNames { get => completeAbilityEffectNames; set => completeAbilityEffectNames = value; }
+
+        [SerializeField]
+        private LengthEffectProperties lengthEffectProperties = new LengthEffectProperties();
+
+        public override AbilityEffectProperties AbilityEffectProperties { get => lengthEffectProperties; }
+
+        public override void Convert() {
+            lengthEffectProperties.GetLengthEffectProperties(this);
+        }
 
         public override void SetGameManagerReferences() {
             base.SetGameManagerReferences();

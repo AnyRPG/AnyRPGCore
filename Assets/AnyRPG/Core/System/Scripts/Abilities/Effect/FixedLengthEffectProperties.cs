@@ -8,7 +8,6 @@ using UnityEngine.UI;
 namespace AnyRPG {
     //[CreateAssetMenu(fileName = "New Ability",menuName = "AnyRPG/Abilities/Effects/FixedLengthEffect")]
     // not using that for now as it will neither tick, nor complete.  that is done by directeffect/children or aoeEffect
-    // MAKE ABSTRACT IN FUTURE?
     public abstract class FixedLengthEffectProperties : LengthEffectProperties {
 
         /// <summary>
@@ -20,6 +19,13 @@ namespace AnyRPG {
         protected SystemAbilityController systemAbilityController = null;
 
         public float AbilityEffectObjectLifetime { get => defaultPrefabLifetime; set => defaultPrefabLifetime = value; }
+
+        public void GetFixedLengthEffectProperties(FixedLengthEffect effect) {
+
+            defaultPrefabLifetime = effect.defaultPrefabLifetime;
+
+            GetLengthEffectProperties(effect);
+        }
 
         public override void SetGameManagerReferences() {
             base.SetGameManagerReferences();

@@ -6,8 +6,7 @@ using UnityEngine.AI;
 using UnityEngine.UI;
 
 namespace AnyRPG {
-
-    [System.Serializable]
+    [CreateAssetMenu(fileName = "New SummonEffect", menuName = "AnyRPG/Abilities/Effects/SummonEffect")]
     public class SummonEffect : InstantEffect {
 
         [Header("Summon")]
@@ -24,6 +23,16 @@ namespace AnyRPG {
         private UnitController petUnitController;
 
         public UnitProfile UnitProfile { get => unitProfile; set => unitProfile = value; }
+        public string UnitProfileName { get => unitProfileName; set => unitProfileName = value; }
+
+        [SerializeField]
+        private SummonEffectProperties summonEffectProperties = new SummonEffectProperties();
+
+        public override AbilityEffectProperties AbilityEffectProperties { get => summonEffectProperties; }
+
+        public override void Convert() {
+            summonEffectProperties.GetSummonEffectProperties(this);
+        }
 
         public override Dictionary<PrefabProfile, GameObject> Cast(IAbilityCaster source, Interactable target, Interactable originalTarget, AbilityEffectContext abilityEffectInput) {
             //Debug.Log(DisplayName + ".SummonEffect.Cast()");

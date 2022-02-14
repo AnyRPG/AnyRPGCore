@@ -5,9 +5,17 @@ using UnityEngine;
 using UnityEngine.UI;
 
 namespace AnyRPG {
-
-    [System.Serializable]
+    [CreateAssetMenu(fileName = "New InstantEffect", menuName = "AnyRPG/Abilities/Effects/InstantEffect")]
     public class InstantEffect : DirectEffect {
+
+        [SerializeField]
+        private InstantEffectProperties instantEffectProperties = new InstantEffectProperties();
+
+        public override AbilityEffectProperties AbilityEffectProperties { get => instantEffectProperties; }
+
+        public override void Convert() {
+            instantEffectProperties.GetInstantEffectProperties(this);
+        }
 
         public override Dictionary<PrefabProfile, GameObject> Cast(IAbilityCaster source, Interactable target, Interactable originalTarget, AbilityEffectContext abilityEffectContext) {
             //Debug.Log(DisplayName + ".InstantEffect.Cast()");

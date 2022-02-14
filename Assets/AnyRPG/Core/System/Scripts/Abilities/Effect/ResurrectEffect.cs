@@ -3,9 +3,18 @@ using System.Collections.Generic;
 using UnityEngine;
 
 namespace AnyRPG {
-
-    [System.Serializable]
+    [CreateAssetMenu(fileName = "New ResurrectEffect", menuName = "AnyRPG/Abilities/Effects/ResurrectEffect")]
     public class ResurrectEffect : InstantEffect {
+
+
+        [SerializeField]
+        private ResurrectEffectProperties resurrectEffectProperties = new ResurrectEffectProperties();
+
+        public override AbilityEffectProperties AbilityEffectProperties { get => resurrectEffectProperties; }
+
+        public override void Convert() {
+            resurrectEffectProperties.GetResurrectEffectProperties(this);
+        }
 
         /// <summary>
         /// Does the actual work of hitting the target with an ability
@@ -50,12 +59,12 @@ namespace AnyRPG {
             }
             if (characterUnit.BaseCharacter.CharacterStats.IsAlive == true) {
                 if (playerInitiated) {
-                    source.AbilityManager.ReceiveCombatMessage("Cannot cast " + DisplayName + ". Target is already alive");
+                    source.AbilityManager.ReceiveCombatMessage("Cannot cast " + resourceName + ". Target is already alive");
                 }
             }
             if (characterUnit.BaseCharacter.CharacterStats.IsReviving == true) {
                 if (playerInitiated) {
-                    source.AbilityManager.ReceiveCombatMessage("Cannot cast " + DisplayName + ". Target is already reviving");
+                    source.AbilityManager.ReceiveCombatMessage("Cannot cast " + resourceName + ". Target is already reviving");
                 }
             }
             return false;

@@ -9,6 +9,11 @@ namespace AnyRPG {
     [System.Serializable]
     public class RainEffectProperties : AOEEffectProperties {
 
+        public void GetRainEffectProperties(RainEffect effect) {
+
+
+            GetAOEEffectProperties(effect);
+        }
 
         protected override List<AOETargetNode> GetValidTargets(IAbilityCaster source, Interactable target, AbilityEffectContext abilityEffectInput, List<AbilityEffect> abilityEffectList) {
             //Debug.Log(DisplayName + ".RainEffect.GetValidTargets()");
@@ -34,7 +39,7 @@ namespace AnyRPG {
             //Debug.Log("AOEEffect.Cast(): Casting OverlapSphere with radius: " + aoeRadius);
             List<AOETargetNode> validTargets = new List<AOETargetNode>();
             // for loop max targets 
-            for (int i = 0; i < maxTargets; i++) {
+            for (int i = 0; i < aoeProperties.MaxTargets; i++) {
                 AOETargetNode validTargetNode = new AOETargetNode();
                 validTargetNode.targetGameObject = null;
                 //abilityEffectInput.prefabLocation = new Vector3(aoeSpawnCenter.x + Random.Range(-aoeRadius, aoeRadius), aoeSpawnCenter.y + aoeCenter.y, aoeSpawnCenter.z + Random.Range(-aoeRadius, aoeRadius));
@@ -54,7 +59,7 @@ namespace AnyRPG {
                 //validTargetNode.abilityEffectInput = abilityEffectInput;
                 validTargetNode.abilityEffectInput.groundTargetLocation = new Vector3(aoeSpawnCenter.x + Random.Range(-aoeRadius, aoeRadius), aoeSpawnCenter.y + aoeCenter.y, aoeSpawnCenter.z + Random.Range(-aoeRadius, aoeRadius));
                 */
-                validTargetNode.abilityEffectInput.groundTargetLocation = new Vector3(aoeSpawnCenter.x + Random.Range(-aoeRadius, aoeRadius), aoeSpawnCenter.y + aoeCenter.y, aoeSpawnCenter.z + Random.Range(-aoeRadius, aoeRadius));
+                validTargetNode.abilityEffectInput.groundTargetLocation = new Vector3(aoeSpawnCenter.x + Random.Range(-aoeProperties.AoeRadius, aoeProperties.AoeRadius), aoeSpawnCenter.y + aoeProperties.AoeCenter.y, aoeSpawnCenter.z + Random.Range(-aoeProperties.AoeRadius, aoeProperties.AoeRadius));
 
                 //Debug.Log(DisplayName + ".RainEffect.GetValidTargets(). prefabLocation: " + validTargetNode.abilityEffectInput.prefabLocation);
                 validTargets.Add(validTargetNode);

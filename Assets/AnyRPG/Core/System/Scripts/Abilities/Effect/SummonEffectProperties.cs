@@ -20,10 +20,19 @@ namespace AnyRPG {
         // reference to actual unitProfile
         private UnitProfile unitProfile = null;
 
+        /*
         // reference to spawned object UnitController
         private UnitController petUnitController;
+        */
 
         public UnitProfile UnitProfile { get => unitProfile; set => unitProfile = value; }
+
+        public void GetSummonEffectProperties(SummonEffect effect) {
+
+            unitProfileName = effect.UnitProfileName;
+
+            GetInstantEffectProperties(effect);
+        }
 
         public override Dictionary<PrefabProfile, GameObject> Cast(IAbilityCaster source, Interactable target, Interactable originalTarget, AbilityEffectContext abilityEffectInput) {
             //Debug.Log(DisplayName + ".SummonEffect.Cast()");

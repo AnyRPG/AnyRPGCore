@@ -10,6 +10,11 @@ namespace AnyRPG {
     [System.Serializable]
     public class DirectEffectProperties : FixedLengthEffectProperties {
 
+        public void GetDirectEffectProperties(DirectEffect effect) {
+
+            GetFixedLengthEffectProperties(effect);
+        }
+
         public override Dictionary<PrefabProfile, GameObject> Cast(IAbilityCaster source, Interactable target, Interactable originalTarget, AbilityEffectContext abilityEffectInput) {
             //Debug.Log(DisplayName + ".DirectEffect.Cast()");
             return base.Cast(source, target, originalTarget, abilityEffectInput);

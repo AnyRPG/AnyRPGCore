@@ -775,7 +775,7 @@ namespace AnyRPG {
             }
 
             for (int i = 0; i < equipment.EquipmentSet.MyTraitList.Count; i++) {
-                StatusEffectOld statusEffect = equipment.EquipmentSet.MyTraitList[i];
+                StatusEffect statusEffect = equipment.EquipmentSet.MyTraitList[i];
                 if (statusEffect != null) {
                     if (equipmentCount > i) {
                         // we are allowed to have this buff
@@ -825,11 +825,11 @@ namespace AnyRPG {
             RemoveCapabilityProviderTraits(oldSnapshot.GetTraitsToRemove(newSnapshot));
         }
 
-        public void ApplyCapabilityProviderTraits(List<StatusEffectOld> statusEffects) {
+        public void ApplyCapabilityProviderTraits(List<StatusEffect> statusEffects) {
             if (statusEffects == null) {
                 return;
             }
-            foreach (StatusEffectOld statusEffect in statusEffects) {
+            foreach (StatusEffect statusEffect in statusEffects) {
                 ApplyStatusEffect(statusEffect);
             }
         }
@@ -879,11 +879,11 @@ namespace AnyRPG {
             ApplyStatusEffect(systemDataFactory.GetResource<AbilityEffect>(statusEffectSaveData.StatusEffectName), statusEffectSaveData.remainingSeconds);
         }
 
-        public void RemoveCapabilityProviderTraits(List<StatusEffectOld> statusEffects) {
+        public void RemoveCapabilityProviderTraits(List<StatusEffect> statusEffects) {
             if (statusEffects == null) {
                 return;
             }
-            foreach (StatusEffectOld statusEffect in statusEffects) {
+            foreach (StatusEffect statusEffect in statusEffects) {
                 if (baseCharacter.CharacterStats != null && baseCharacter.CharacterStats.StatusEffects.ContainsKey(SystemDataFactory.PrepareStringForMatch(statusEffect.DisplayName))) {
                     baseCharacter.CharacterStats.StatusEffects[SystemDataFactory.PrepareStringForMatch(statusEffect.DisplayName)].CancelStatusEffect();
                 }

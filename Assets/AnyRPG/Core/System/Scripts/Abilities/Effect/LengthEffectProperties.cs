@@ -90,6 +90,24 @@ namespace AnyRPG {
         public PrefabSpawnLocation PrefabSpawnLocation { get => prefabSpawnLocation; set => prefabSpawnLocation = value; }
         public bool CastZeroTick { get => castZeroTick; set => castZeroTick = value; }
 
+        public void GetLengthEffectProperties(LengthEffect effect) {
+
+            abilityPrefabSource = effect.AbilityPrefabSource;
+            randomPrefabs = effect.RandomPrefabs;
+            abilityObjectList = effect.AbilityObjectList;
+            prefabSpawnLocation = effect.PrefabSpawnLocation;
+            prefabDestroyDelay = effect.PrefabDestroyDelay;
+            destroyOnEndCast = effect.DestroyOnEndCast;
+            tickRate = effect.TickRate;
+            castZeroTick = effect.CastZeroTick;
+            tickAbilityEffectNames = effect.TickAbilityEffectNames;
+            onTickAudioProfileNames = effect.OnTickAudioProfileNames;
+            randomTickAudioProfiles = effect.RandomTickAudioProfiles;
+            completeAbilityEffectNames = effect.CompleteAbilityEffectNames;
+
+            GetAbilityEffectProperties(effect);
+        }
+
         public override void SetGameManagerReferences() {
             base.SetGameManagerReferences();
             objectPooler = systemGameManager.ObjectPooler;

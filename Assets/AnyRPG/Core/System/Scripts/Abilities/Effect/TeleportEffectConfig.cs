@@ -10,7 +10,10 @@ namespace AnyRPG {
     public class TeleportEffectConfig : AbilityEffectConfig {
 
 
+        [SerializeField]
+        private TeleportEffectProperties effectProperties = new TeleportEffectProperties();
 
+        public AbilityEffectProperties EffectProperties { get => effectProperties; }
     }
 
 }

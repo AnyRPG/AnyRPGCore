@@ -19,6 +19,7 @@ MonoBehaviour:
   description: 
   useRegionalDescription: 0
   resourceDescriptionProfile: 
+  optionalOverride: 0
   targetOptions:
     requireTarget: 0
     requireLineOfSight: 0
@@ -58,12 +59,99 @@ MonoBehaviour:
   onTickAudioProfileNames: []
   randomTickAudioProfiles: 0
   completeAbilityEffectNames: []
+  lengthEffectProperties:
+    targetOptions:
+      requireTarget: 0
+      requireLineOfSight: 0
+      requireLiveTarget: 1
+      requireDeadTarget: 0
+      canCastOnSelf: 0
+      canCastOnOthers: 0
+      canCastOnEnemy: 0
+      canCastOnNeutral: 0
+      canCastOnFriendly: 0
+      autoSelfCast: 0
+      useMeleeRange: 0
+      maxRange: 0
+      lineOfSightSourceLocation: 0
+      targetRangeSourceLocation: 0
+    chanceToCast: 100
+    effectMaterialName: 
+    materialChangeDuration: 2
+    onHitAudioProfileNames: []
+    randomAudioProfiles: 0
+    hitAbilityEffectNames: []
+    inputMultiplier: 0
+    threatMultiplier: 1
+    abilityPrefabSource: 1
+    randomPrefabs: 0
+    abilityObjectList: []
+    prefabSpawnLocation: 0
+    prefabDestroyDelay: 0
+    destroyOnEndCast: 0
+    tickRate: 0
+    castZeroTick: 0
+    tickAbilityEffectNames: []
+    onTickAudioProfileNames: []
+    randomTickAudioProfiles: 0
+    completeAbilityEffectNames: []
   defaultPrefabLifetime: 10
-  aoeRadius: 2
-  useRadius: 1
-  useExtents: 0
-  aoeCenter: {x: 0, y: 0, z: 0}
-  aoeExtents: {x: 0, y: 0, z: 0}
-  maxTargets: 0
-  preferClosestTargets: 0
-  interTargetDelay: 0
+  aoeProperties:
+    aoeRadius: 2
+    useRadius: 1
+    useExtents: 0
+    aoeCenter: {x: 0, y: 0, z: 0}
+    aoeExtents: {x: 0, y: 0, z: 0}
+    maxTargets: 0
+    preferClosestTargets: 0
+    interTargetDelay: 0
+  aoeEffectProperties:
+    targetOptions:
+      requireTarget: 0
+      requireLineOfSight: 0
+      requireLiveTarget: 0
+      requireDeadTarget: 0
+      canCastOnSelf: 0
+      canCastOnOthers: 0
+      canCastOnEnemy: 0
+      canCastOnNeutral: 0
+      canCastOnFriendly: 0
+      autoSelfCast: 0
+      useMeleeRange: 0
+      maxRange: 0
+      lineOfSightSourceLocation: 1
+      targetRangeSourceLocation: 1
+    chanceToCast: 100
+    effectMaterialName: 
+    materialChangeDuration: 2
+    onHitAudioProfileNames: []
+    randomAudioProfiles: 0
+    hitAbilityEffectNames: []
+    inputMultiplier: 0
+    threatMultiplier: 1
+    abilityPrefabSource: 1
+    randomPrefabs: 0
+    abilityObjectList:
+    - holdableObjectName: Green Magic Circle
+      useUniversalAttachment: 0
+      attachmentName: 
+    prefabSpawnLocation: 3
+    prefabDestroyDelay: 0
+    destroyOnEndCast: 0
+    tickRate: 2
+    castZeroTick: 0
+    tickAbilityEffectNames:
+    - Healing Circle Tick
+    onTickAudioProfileNames: []
+    randomTickAudioProfiles: 0
+    completeAbilityEffectNames: []
+    defaultPrefabLifetime: 10
+    aoeProperties:
+      aoeRadius: 2
+      useRadius: 1
+      useExtents: 0
+      aoeCenter: {x: 0, y: 0, z: 0}
+      aoeExtents: {x: 0, y: 0, z: 0}
+      maxTargets: 0
+      preferClosestTargets: 0
+      interTargetDelay: 0

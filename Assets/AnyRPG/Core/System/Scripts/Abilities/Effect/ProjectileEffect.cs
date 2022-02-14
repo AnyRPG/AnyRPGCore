@@ -5,14 +5,13 @@ using UnityEngine;
 using UnityEngine.UI;
 
 namespace AnyRPG {
-
-    [System.Serializable]
+    [CreateAssetMenu(fileName = "New ProjectileEffect", menuName = "AnyRPG/Abilities/Effects/ProjectileEffect")]
     public class ProjectileEffect : DirectEffect {
 
         [Header("Projectile")]
 
         [SerializeField]
-        private float projectileSpeed = 0;
+        protected float projectileSpeed = 0;
 
         [Header("Flight Audio")]
 
@@ -29,6 +28,19 @@ namespace AnyRPG {
 
         // game manager references
         protected PlayerManager playerManager = null;
+
+        public float ProjectileSpeed { get => projectileSpeed; set => projectileSpeed = value; }
+        public List<string> FlightAudioProfileNames { get => flightAudioProfileNames; set => flightAudioProfileNames = value; }
+        public bool RandomFlightAudioProfiles { get => randomFlightAudioProfiles; set => randomFlightAudioProfiles = value; }
+
+        [SerializeField]
+        private ProjectileEffectProperties projectileEffectProperties = new ProjectileEffectProperties();
+
+        public override AbilityEffectProperties AbilityEffectProperties { get => projectileEffectProperties; }
+
+        public override void Convert() {
+            projectileEffectProperties.GetProjectileEffectProperties(this);
+        }
 
         public override void SetGameManagerReferences() {
             base.SetGameManagerReferences();

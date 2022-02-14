@@ -3,9 +3,17 @@ using System.Collections.Generic;
 using UnityEngine;
 
 namespace AnyRPG {
-
-    [System.Serializable]
+    [CreateAssetMenu(fileName = "New HealEffect", menuName = "AnyRPG/Abilities/Effects/HealEffect")]
     public class HealEffect : AmountEffect {
+
+        [SerializeField]
+        private HealEffectProperties healEffectProperties = new HealEffectProperties();
+
+        public override AbilityEffectProperties AbilityEffectProperties { get => healEffectProperties; }
+
+        public override void Convert() {
+            healEffectProperties.GetHealEffectProperties(this);
+        }
 
         /// <summary>
         /// Does the actual work of hitting the target with an ability

@@ -5,9 +5,17 @@ using UnityEngine;
 using UnityEngine.UI;
 
 namespace AnyRPG {
-
-    [System.Serializable]
+    [CreateAssetMenu(fileName = "New AttackEffect", menuName = "AnyRPG/Abilities/Effects/AttackEffect")]
     public class AttackEffect : AmountEffect {
+
+        [SerializeField]
+        private AttackEffectProperties attackEffectProperties = new AttackEffectProperties();
+
+        public override AbilityEffectProperties AbilityEffectProperties { get => attackEffectProperties; }
+
+        public override void Convert() {
+            attackEffectProperties.GetAttackEffectProperties(this);
+        }
 
         /// <summary>
         /// Does the actual work of hitting the target with an ability
@@ -35,16 +43,13 @@ namespace AnyRPG {
             abilityEffectContext.weaponHitHasCast = true;
 
             // OLD
-            /*
-            source.AbilityManager.ProcessWeaponHitEffects(this, target, abilityEffectContext);
-            */
+            //source.AbilityManager.ProcessWeaponHitEffects(this, target, abilityEffectContext);
 
             return abilityEffectContext;
         }
 
 
         public override bool ProcessAbilityHit(Interactable target, int finalAmount, IAbilityCaster source, CombatMagnitude combatMagnitude, AbilityEffect abilityEffect, AbilityEffectContext abilityEffectContext, PowerResource powerResource) {
-
             // OLD
             /*
             bool returnValue = CharacterUnit.GetCharacterUnit(target).BaseCharacter.CharacterCombat.TakeDamage(abilityEffectContext, powerResource, finalAmount, source, combatMagnitude, this);

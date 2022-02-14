@@ -20,10 +20,10 @@ namespace AnyRPG {
 
         [Tooltip("Traits are status effects which are automatically active at all times if the level requirement is met.")]
         [SerializeField]
-        [ResourceSelector(resourceType = typeof(StatusEffectOld))]
+        [ResourceSelector(resourceType = typeof(StatusEffect))]
         protected List<string> traitNames = new List<string>();
 
-        protected List<StatusEffectOld> traitList = new List<StatusEffectOld>();
+        protected List<StatusEffect> traitList = new List<StatusEffect>();
 
         [Header("Equipment")]
 
@@ -42,7 +42,7 @@ namespace AnyRPG {
         private List<WeaponSkill> weaponSkillList = new List<WeaponSkill>();
 
         public List<BaseAbility> AbilityList { get => abilityList; set => abilityList = value; }
-        public List<StatusEffectOld> TraitList { get => traitList; set => traitList = value; }
+        public List<StatusEffect> TraitList { get => traitList; set => traitList = value; }
         public List<string> ArmorClassList { get => armorClassList; set => armorClassList = value; }
         public List<WeaponSkill> WeaponSkillList { get => weaponSkillList; set => weaponSkillList = value; }
 
@@ -79,7 +79,7 @@ namespace AnyRPG {
             if (traitNames != null) {
                 foreach (string traitName in traitNames) {
                     if (traitName != null && traitName != string.Empty) {
-                        StatusEffectOld statusEffect = systemDataFactory.GetResource<AbilityEffect>(traitName) as StatusEffectOld;
+                        StatusEffect statusEffect = systemDataFactory.GetResource<AbilityEffect>(traitName) as StatusEffect;
                         if (statusEffect != null) {
                             traitList.Add(statusEffect);
                         } else {

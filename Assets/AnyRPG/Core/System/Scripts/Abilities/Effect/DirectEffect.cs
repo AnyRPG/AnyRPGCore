@@ -7,8 +7,17 @@ using UnityEngine.UI;
 
 namespace AnyRPG {
     // NOTE: DIRECTEFFECT WILL CAST TICK AND COMPLETE, BUT NEVER HIT.  HIT MUST BE CAST BY PROJECTILE, AOE, OR CHANNELED
-    [System.Serializable]
+    [CreateAssetMenu(fileName = "New DirectEffect",menuName = "AnyRPG/Abilities/Effects/DirectEffect")]
     public class DirectEffect : FixedLengthEffect {
+
+        [SerializeField]
+        private DirectEffectProperties directEffectProperties = new DirectEffectProperties();
+
+        public override AbilityEffectProperties AbilityEffectProperties { get => directEffectProperties; }
+
+        public override void Convert() {
+            directEffectProperties.GetDirectEffectProperties(this);
+        }
 
         public override Dictionary<PrefabProfile, GameObject> Cast(IAbilityCaster source, Interactable target, Interactable originalTarget, AbilityEffectContext abilityEffectInput) {
             //Debug.Log(DisplayName + ".DirectEffect.Cast()");
