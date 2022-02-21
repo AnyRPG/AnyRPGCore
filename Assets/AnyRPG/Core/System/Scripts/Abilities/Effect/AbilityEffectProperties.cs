@@ -60,15 +60,20 @@ namespace AnyRPG {
         protected float threatMultiplier = 1f;
 
         // properties from resource description
+        /*
         protected string displayName = string.Empty;
         protected string description = string.Empty;
         protected Sprite icon = null;
+        */
+
+        protected IDescribable describableData = null;
 
         public List<AbilityEffectProperties> HitAbilityEffectList { get => hitAbilityEffectList; set => hitAbilityEffectList = value; }
         public float ThreatMultiplier { get => threatMultiplier; set => threatMultiplier = value; }
         public float ChanceToCast { get => chanceToCast; set => chanceToCast = value; }
-        public string DisplayName { get => displayName; set => displayName = value; }
-        public Sprite Icon { get => icon; set => icon = value; }
+        public string DisplayName { get => describableData.DisplayName; }
+        public Sprite Icon { get => describableData.Icon; }
+        public AbilityEffectTargetProps TargetOptions { get => targetOptions; }
 
         /*
         public void GetAbilityEffectProperties(AbilityEffect effect) {
@@ -92,7 +97,7 @@ namespace AnyRPG {
         }
 
         public string GetShortDescription() {
-            return description;
+            return describableData.GetDescription();
         }
 
         public virtual string GetName() {
@@ -104,7 +109,7 @@ namespace AnyRPG {
         }
 
         public virtual string GetSummary() {
-            return string.Format("{0}", description);
+            return string.Format("{0}", describableData.GetDescription());
         }
 
         public virtual bool CanUseOn(Interactable target, IAbilityCaster sourceCharacter, AbilityEffectContext abilityEffectContext = null, bool playerInitiated = false, bool performRangeCheck = true) {
@@ -320,11 +325,13 @@ namespace AnyRPG {
             return abilityEffectContext;
         }
 
-        public virtual void SetupScriptableObjects(SystemGameManager systemGameManager) {
+        public virtual void SetupScriptableObjects(SystemGameManager systemGameManager, IDescribable describable) {
             //public virtual void SetupScriptableObjects(SystemGameManager systemGameManager, string displayName) {
             //Debug.Log(DisplayName + ".AbilityEffect.SetupscriptableObjects()");
 
             //this.displayName = displayName;
+            describableData = describable;
+
             Configure(systemGameManager);
 
             hitAbilityEffectList = new List<AbilityEffectProperties>();

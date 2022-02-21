@@ -19,7 +19,7 @@ namespace AnyRPG {
         private List<ResourceAmountNode> resourceAmounts = new List<ResourceAmountNode>();
 
         [SerializeField]
-        protected DamageType damageType;
+        protected DamageType damageType = DamageType.ability;
 
         [Header("Accuracy")]
 
@@ -28,6 +28,8 @@ namespace AnyRPG {
         protected bool ignoreAccuracy = false;
 
         public DamageType DamageType { get => damageType; set => damageType = value; }
+        public List<ResourceAmountNode> ResourceAmounts { get => resourceAmounts; set => resourceAmounts = value; }
+        public bool AllowCriticalStrike { get => allowCriticalStrike; set => allowCriticalStrike = value; }
 
         /*
         public void GetAmountEffectProperties(AmountEffect effect) {
@@ -188,8 +190,9 @@ namespace AnyRPG {
             return true;
         }
 
-        public override void SetupScriptableObjects(SystemGameManager systemGameManager) {
-            base.SetupScriptableObjects(systemGameManager);
+        public override void SetupScriptableObjects(SystemGameManager systemGameManager, IDescribable describable) {
+            base.SetupScriptableObjects(systemGameManager, describable);
+
             foreach (ResourceAmountNode resourceAmountNode in resourceAmounts) {
                 resourceAmountNode.SetupScriptableObjects(systemDataFactory);
             }

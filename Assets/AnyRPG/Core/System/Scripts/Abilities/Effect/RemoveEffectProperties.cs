@@ -55,9 +55,9 @@ namespace AnyRPG {
         }
 
 
-        public override void SetupScriptableObjects(SystemGameManager systemGameManager) {
+        public override void SetupScriptableObjects(SystemGameManager systemGameManager, IDescribable describable) {
 
-            base.SetupScriptableObjects(systemGameManager);
+            base.SetupScriptableObjects(systemGameManager, describable);
 
             if (effectTypeNames != null) {
                 foreach (string statusEffectType in effectTypeNames) {

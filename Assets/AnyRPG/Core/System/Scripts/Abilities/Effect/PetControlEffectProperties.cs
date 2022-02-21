@@ -77,8 +77,8 @@ namespace AnyRPG {
             base.CancelEffect(targetCharacter);
         }
 
-        public override void SetupScriptableObjects(SystemGameManager systemGameManager) {
-            base.SetupScriptableObjects(systemGameManager);
+        public override void SetupScriptableObjects(SystemGameManager systemGameManager, IDescribable describable) {
+            base.SetupScriptableObjects(systemGameManager, describable);
 
             if (petEffectNames != null) {
                 foreach (string petEffectName in petEffectNames) {

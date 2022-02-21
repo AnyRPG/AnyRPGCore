@@ -6,7 +6,7 @@ using UnityEngine.UI;
 
 namespace AnyRPG {
     [CreateAssetMenu(fileName = "New AttackEffect", menuName = "AnyRPG/Abilities/Effects/AttackEffect")]
-    public class AttackEffect : AmountEffect {
+    public class AttackEffect : AbilityEffect {
 
         [SerializeField]
         private AttackEffectProperties attackEffectProperties = new AttackEffectProperties();

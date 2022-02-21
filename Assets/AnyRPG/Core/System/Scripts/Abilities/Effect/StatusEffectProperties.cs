@@ -486,8 +486,9 @@ namespace AnyRPG {
             }
         }
 
-        public override void SetupScriptableObjects(SystemGameManager systemGameManager) {
-            base.SetupScriptableObjects(systemGameManager);
+        public override void SetupScriptableObjects(SystemGameManager systemGameManager, IDescribable describable) {
+            base.SetupScriptableObjects(systemGameManager, describable);
+
             reflectAbilityEffectList = new List<AbilityEffectProperties>();
             if (reflectAbilityEffectNames != null) {
                 foreach (string abilityEffectName in reflectAbilityEffectNames) {

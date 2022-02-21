@@ -75,8 +75,9 @@ namespace AnyRPG {
             objectPooler.ReturnObjectToPool(_abilityEffectObject);
         }
 
-        public override void SetupScriptableObjects(SystemGameManager systemGameManager) {
-            base.SetupScriptableObjects(systemGameManager);
+        public override void SetupScriptableObjects(SystemGameManager systemGameManager, IDescribable describable) {
+            base.SetupScriptableObjects(systemGameManager, describable);
+
             if (flightAudioProfileNames != null) {
                 foreach (string audioProfileName in flightAudioProfileNames) {
                     AudioProfile audioProfile = systemDataFactory.GetResource<AudioProfile>(audioProfileName);

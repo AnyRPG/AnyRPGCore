@@ -281,7 +281,7 @@ namespace AnyRPG {
         public bool UseSpeedMultipliers { get => useSpeedMultipliers; set => useSpeedMultipliers = value; }
         public bool CanCastWhileMoving { get => canCastWhileMoving; set => canCastWhileMoving = value; }
         public bool CoolDownOnCast { get => coolDownOnCast; set => coolDownOnCast = value; }
-        public float AbilityCoolDown { get => abilityCoolDown; set => abilityCoolDown = value; }
+        public float CoolDown { get => abilityCoolDown; set => abilityCoolDown = value; }
 
         public override void SetGameManagerReferences() {
             base.SetGameManagerReferences();

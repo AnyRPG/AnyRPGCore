@@ -73,8 +73,9 @@ namespace AnyRPG {
             return returnObjects;
         }
 
-        public override void SetupScriptableObjects(SystemGameManager systemGameManager) {
-            base.SetupScriptableObjects(systemGameManager);
+        public override void SetupScriptableObjects(SystemGameManager systemGameManager, IDescribable describable) {
+            base.SetupScriptableObjects(systemGameManager, describable);
+
             if (unitProfileName != null && unitProfileName != string.Empty) {
                 UnitProfile tmpUnitProfile = systemDataFactory.GetResource<UnitProfile>(unitProfileName);
                 if (tmpUnitProfile != null) {

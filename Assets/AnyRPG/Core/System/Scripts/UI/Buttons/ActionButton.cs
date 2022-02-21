@@ -317,6 +317,22 @@ namespace AnyRPG {
             monitorCoroutine = null;
         }
 
+        public IEnumerator MonitorCooldown(IUseable useable) {
+            //Debug.Log("ActionButton.MonitorAbility(" + ability.DisplayName + ")");
+            while (Useable != null
+                && playerManager.MyCharacter.CharacterAbilityManager.MyAbilityCoolDownDictionary.ContainsKey(useable.DisplayName)) {
+                UpdateVisual();
+                yield return null;
+            }
+            //Debug.Log("ActionButton.MonitorAbility(" + ability.DisplayName + "): Done Monitoring; Useable: " + (Useable == null ? "null" : Useable.DisplayName));
+            if (Useable != null) {
+                // could switch buttons while an ability is on cooldown
+                UpdateVisual();
+            }
+            //abilityCoRoutine = null;
+            monitorCoroutine = null;
+        }
+
         public IEnumerator MonitorAbility(BaseAbility ability) {
             //Debug.Log("ActionButton.MonitorAbility(" + ability.DisplayName + ")");
             while (Useable != null

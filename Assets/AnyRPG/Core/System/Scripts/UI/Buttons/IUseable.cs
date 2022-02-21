@@ -10,6 +10,7 @@ namespace AnyRPG {
     public interface IUseable {
         Sprite Icon { get; }
         string DisplayName { get; }
+        float CoolDown { get; }
         bool Use();
         bool ActionButtonUse();
         Coroutine ChooseMonitorCoroutine(ActionButton actionButton);

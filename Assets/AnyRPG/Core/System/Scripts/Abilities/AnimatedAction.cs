@@ -25,6 +25,7 @@ namespace AnyRPG {
         protected SystemAbilityController systemAbilityController = null;
 
         public AnimatedActionProperties ActionProperties { get => actionProperties; }
+        public float CoolDown { get => 0f; }
 
         /// <summary>
         /// return the casting time of the ability without any speed modifiers applied

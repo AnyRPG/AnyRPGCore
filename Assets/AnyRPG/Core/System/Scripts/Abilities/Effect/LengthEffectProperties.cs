@@ -273,8 +273,8 @@ namespace AnyRPG {
             //Debug.Log(DisplayName + ".LengthEffect.CancelEffect(" + targetCharacter.DisplayName + ")");
         }
 
-        public override void SetupScriptableObjects(SystemGameManager systemGameManager) {
-            base.SetupScriptableObjects(systemGameManager);
+        public override void SetupScriptableObjects(SystemGameManager systemGameManager, IDescribable describable) {
+            base.SetupScriptableObjects(systemGameManager, describable);
             tickAbilityEffectList = new List<AbilityEffectProperties>();
             if (tickAbilityEffectNames != null) {
                 foreach (string abilityEffectName in tickAbilityEffectNames) {

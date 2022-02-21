@@ -215,6 +215,10 @@ namespace AnyRPG {
             // do nothing
         }
 
+        public virtual void BeginActionCoolDown(IUseable useable, float coolDownLength = -1f) {
+            // do nothing
+        }
+
         /// <summary>
         /// This is the entrypoint for character behavior calls and should not be used for anything else due to the runtime ability lookup that happens
         /// </summary>

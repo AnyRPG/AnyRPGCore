@@ -8,17 +8,7 @@ using UnityEngine.UI;
 
 namespace AnyRPG {
     [CreateAssetMenu(fileName = "New Pet Control Effect", menuName = "AnyRPG/Abilities/Effects/PetControlEffect")]
-    public class PetControlEffect : StatusEffect {
-
-        /*
-        [SerializeField]
-        [ResourceSelector(resourceType = typeof(SummonEffect))]
-        private List<string> petEffectNames = new List<string>();
-
-        private List<SummonEffect> petEffectList = new List<SummonEffect>();
-
-        public List<string> PetEffectNames { get => petEffectNames; set => petEffectNames = value; }
-        */
+    public class PetControlEffect : AbilityEffect {
 
         [SerializeField]
         private PetControlEffectProperties petControlEffectProperties = new PetControlEffectProperties();

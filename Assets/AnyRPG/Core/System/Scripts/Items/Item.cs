@@ -48,6 +48,10 @@ namespace AnyRPG {
         [SerializeField]
         private int itemLevel = 1;
 
+        [Tooltip("The level the character must be to use this item")]
+        [SerializeField]
+        private int useLevel = 1;
+
         [Header("Price")]
 
         [Tooltip("The currency used when buying or selling this item")]
@@ -98,6 +102,7 @@ namespace AnyRPG {
 
         public int MaximumStackSize { get => stackSize; set => stackSize = value; }
         public InventorySlot Slot { get => slot; set => slot = value; }
+        public virtual float CoolDown { get => 0f; }
         
         public int BuyPrice() {
             return BuyPrice(realItemQuality);
@@ -281,7 +286,8 @@ namespace AnyRPG {
                 messageFeedManager.WriteMessage("You are not the right character class to use " + DisplayName);
                 return false;
             }
-            if (GetItemLevel(playerManager.MyCharacter.CharacterStats.Level) > playerManager.MyCharacter.CharacterStats.Level) {
+            //if (GetItemLevel(playerManager.MyCharacter.CharacterStats.Level) > playerManager.MyCharacter.CharacterStats.Level) {
+            if (useLevel > playerManager.MyCharacter.CharacterStats.Level) {
                 messageFeedManager.WriteMessage("You are too low level use " + DisplayName);
                 return false;
             }

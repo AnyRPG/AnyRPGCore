@@ -7,12 +7,7 @@ using UnityEngine.UI;
 
 namespace AnyRPG {
     [CreateAssetMenu(fileName = "New Taunt Effect", menuName = "AnyRPG/Abilities/Effects/TauntEffect")]
-    public class TauntEffect : StatusEffect {
-
-        /*
-        // extra threat from the taunt
-        private float extraThreat = 100f;
-        */
+    public class TauntEffect : AbilityEffect {
 
         [SerializeField]
         private TauntEffectProperties tauntEffectProperties = new TauntEffectProperties();

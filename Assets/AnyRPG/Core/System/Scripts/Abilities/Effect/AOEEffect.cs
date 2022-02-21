@@ -7,23 +7,12 @@ using UnityEngine.UI;
 namespace AnyRPG {
 
     [CreateAssetMenu(fileName = "New AOEEffect", menuName = "AnyRPG/Abilities/Effects/AOEEffect")]
-    [System.Serializable]
-    public class AOEEffect : FixedLengthEffect {
-
-        /*
-        [Header("AOE")]
-
-
-        [SerializeField]
-        private AOEEffectPropertiesNode aoeProperties = new AOEEffectPropertiesNode();
-
-        public AOEEffectPropertiesNode AoeProperties { get => aoeProperties; set => aoeProperties = value; }
-        */
+    public class AOEEffect : AbilityEffect {
 
         [SerializeField]
         private AOEEffectProperties aoeEffectProperties = new AOEEffectProperties();
 
-        public virtual AbilityEffectProperties EffectProperties { get => aoeEffectProperties; }
+        public override AbilityEffectProperties AbilityEffectProperties { get => aoeEffectProperties; }
 
     }
 

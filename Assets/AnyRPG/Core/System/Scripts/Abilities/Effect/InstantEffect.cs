@@ -6,7 +6,7 @@ using UnityEngine.UI;
 
 namespace AnyRPG {
     [CreateAssetMenu(fileName = "New InstantEffect", menuName = "AnyRPG/Abilities/Effects/InstantEffect")]
-    public class InstantEffect : DirectEffect {
+    public class InstantEffect : AbilityEffect {
 
         [SerializeField]
         private InstantEffectProperties instantEffectProperties = new InstantEffectProperties();

@@ -6,12 +6,12 @@ using UnityEngine.UI;
 
 namespace AnyRPG {
     [CreateAssetMenu(fileName = "New RainEffect", menuName = "AnyRPG/Abilities/Effects/RainEffect")]
-    public class RainEffect : AOEEffect {
+    public class RainEffect : AbilityEffect {
 
         [SerializeField]
         private RainEffectProperties rainEffectProperties = new RainEffectProperties();
 
-        public override AbilityEffectProperties EffectProperties { get => rainEffectProperties; }
+        public override AbilityEffectProperties AbilityEffectProperties { get => rainEffectProperties; }
 
 
     }

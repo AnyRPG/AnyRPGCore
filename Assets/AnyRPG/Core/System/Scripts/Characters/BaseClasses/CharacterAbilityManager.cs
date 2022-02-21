@@ -695,7 +695,7 @@ namespace AnyRPG {
             float abilityCoolDown = 0f;
 
             if (coolDownLength == -1f) {
-                abilityCoolDown = baseAbility.AbilityCoolDown;
+                abilityCoolDown = baseAbility.CoolDown;
             } else {
                 abilityCoolDown = coolDownLength;
             }
@@ -728,6 +728,44 @@ namespace AnyRPG {
 
             // ordering important.  don't start till after its in the dictionary or it will fail to remove itself from the dictionary, then add it self
             Coroutine coroutine = abilityCaster.StartCoroutine(PerformAbilityCoolDown(baseAbility.DisplayName));
+            abilityCoolDownNode.Coroutine = coroutine;
+
+            OnBeginAbilityCoolDown();
+        }
+
+        public override void BeginActionCoolDown(IUseable useable, float coolDownLength = -1f) {
+
+            base.BeginActionCoolDown(useable, coolDownLength);
+
+            float coolDown = 0f;
+
+            if (coolDownLength == -1f) {
+                coolDown = useable.CoolDown;
+            } else {
+                coolDown = coolDownLength;
+            }
+
+            if (coolDown <= 0f) {
+                // if the ability had no cooldown, and wasn't ignoring global cooldown, it gets a global cooldown length cooldown as we shouldn't have 0 cooldown instant cast abilities
+                coolDown = Mathf.Clamp(coolDown, 1, Mathf.Infinity);
+            }
+
+            if (coolDown == 0f) {
+                // if the ability CoolDown is still zero (this was a useable that doesn't need a cooldown), don't start cooldown coroutine
+                return;
+            }
+
+            AbilityCoolDownNode abilityCoolDownNode = new AbilityCoolDownNode();
+            abilityCoolDownNode.AbilityName = useable.DisplayName;
+            abilityCoolDownNode.RemainingCoolDown = coolDown;
+            abilityCoolDownNode.InitialCoolDown = abilityCoolDownNode.RemainingCoolDown;
+
+            if (!abilityCoolDownDictionary.ContainsKey(useable.DisplayName)) {
+                abilityCoolDownDictionary[useable.DisplayName] = abilityCoolDownNode;
+            }
+
+            // ordering important.  don't start till after its in the dictionary or it will fail to remove itself from the dictionary, then add it self
+            Coroutine coroutine = abilityCaster.StartCoroutine(PerformAbilityCoolDown(useable.DisplayName));
             abilityCoolDownNode.Coroutine = coroutine;
 
             OnBeginAbilityCoolDown();

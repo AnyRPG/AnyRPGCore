@@ -19,6 +19,7 @@ MonoBehaviour:
   description: Restore 1000 health
   useRegionalDescription: 0
   resourceDescriptionProfile: 
+  optionalOverride: 0
   stackSize: 5
   itemQuality: Average
   randomItemQuality: 0
@@ -32,5 +33,10 @@ MonoBehaviour:
   basePrice: 0
   uniqueItem: 0
   characterClassRequirementList: []
-  abilityName: Restore 1000 Health
-  powerResourceName: Health
+  actionName: Drink
+  coolDown: 10
+  resourceAmounts:
+  - resourceName: Health
+    minAmount: 0
+    baseAmount: 1000
+    maxAmount: 0
