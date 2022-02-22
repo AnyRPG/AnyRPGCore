@@ -10,13 +10,13 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: fa745c0f0f8bb074e8a146840e7d2d24, type: 3}
-  m_Name: HealthPotionItem
+  m_Name: ManaPotionItem
   m_EditorClassIdentifier: 
-  resourceName: Health Potion
+  resourceName: Mana Potion
   displayName: 
   icon: {fileID: 21300000, guid: 753f7584cf233ff4186f953048bf35c9, type: 3}
   iconBackgroundImage: {fileID: 0}
-  description: Restore 1000 health
+  description: Restore 1000 mana
   useRegionalDescription: 0
   resourceDescriptionProfile: 
   optionalOverride: 0
@@ -34,10 +34,10 @@ MonoBehaviour:
   basePrice: 0
   uniqueItem: 0
   characterClassRequirementList: []
-  actionName: Drink Health Potion
+  actionName: Drink Mana Potion
   coolDown: 10
   resourceAmounts:
-  - resourceName: Health
+  - resourceName: Mana
     minAmount: 0
     baseAmount: 1000
     maxAmount: 0

@@ -19,22 +19,33 @@ MonoBehaviour:
   description: 
   useRegionalDescription: 0
   resourceDescriptionProfile: 
+  optionalOverride: 0
   vendorItems:
   - itemName: Bag
     quantity: 0
     unlimited: 1
+    itemQualityName: 
   - itemName: Health Potion
     quantity: 0
     unlimited: 1
+    itemQualityName: 
+  - itemName: Mana Potion
+    quantity: 0
+    unlimited: 1
+    itemQualityName: 
   - itemName: Bread
     quantity: 0
     unlimited: 1
+    itemQualityName: 
   - itemName: Scroll
     quantity: 0
     unlimited: 1
+    itemQualityName: 
   - itemName: Quest Start
     quantity: 0
     unlimited: 1
+    itemQualityName: 
   - itemName: Gain Currency
     quantity: 0
     unlimited: 1
+    itemQualityName: 
