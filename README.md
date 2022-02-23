@@ -40,6 +40,14 @@ https://wiki.anyrpg.org/
 
 https://trello.com/anyrpg/
 
+### Twitter
+
+https://twitter.com/AnyRPGEngine
+
+### Facebook / Meta
+
+https://www.facebook.com/AnyRPGEngine
+
 ## Setup
 
 ### Unity Package
