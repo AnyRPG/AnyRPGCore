@@ -1,0 +1,29 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6c9b51b8d3aa844448aaeab0a989e2fa, type: 3}
+  m_Name: LoggingSkillTemplatePackage
+  m_EditorClassIdentifier: 
+  resourceName: Logging Skill
+  displayName: 
+  icon: {fileID: 0}
+  iconBackgroundImage: {fileID: 0}
+  description: 
+  useRegionalDescription: 0
+  resourceDescriptionProfile: 
+  optionalOverride: 0
+  resources:
+  - {fileID: 11400000, guid: ed6ca0d4af43fdf4faf13f281aad415f, type: 2}
+  - {fileID: 11400000, guid: 0d10dccc046cf9643bd418118a2f3463, type: 2}
+  - {fileID: 11400000, guid: 65b27ef5aa01cb14fa08e6f405a1be54, type: 2}
+  - {fileID: 11400000, guid: f2f976ffd97387443923ad02a1f2a346, type: 2}
+  - {fileID: 11400000, guid: 8e81f3f7d3696f448bbfd478ba0cba70, type: 2}
+  dependencies: []

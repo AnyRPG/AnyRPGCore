@@ -1,0 +1,28 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6c9b51b8d3aa844448aaeab0a989e2fa, type: 3}
+  m_Name: CookingSkillTemplatePackage
+  m_EditorClassIdentifier: 
+  resourceName: Cooking Skill
+  displayName: 
+  icon: {fileID: 0}
+  iconBackgroundImage: {fileID: 0}
+  description: 
+  useRegionalDescription: 0
+  resourceDescriptionProfile: 
+  optionalOverride: 0
+  resources:
+  - {fileID: 11400000, guid: 493ae0ddd7cb0c3448991132df07298d, type: 2}
+  - {fileID: 11400000, guid: cc95b4e9c623c224f82349c7a9b2e68a, type: 2}
+  - {fileID: 11400000, guid: 70d49fedfefbca34781350eff64e9c6c, type: 2}
+  - {fileID: 11400000, guid: 47d00c1f7c43d674383346c510953f68, type: 2}
+  dependencies: []

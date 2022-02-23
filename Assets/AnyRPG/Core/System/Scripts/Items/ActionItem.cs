@@ -8,17 +8,29 @@ namespace AnyRPG {
     //[CreateAssetMenu(fileName = "New Scroll",menuName = "AnyRPG/Inventory/Items/Scroll", order = 1)]
     public abstract class ActionItem : Item, IUseable {
 
-        [Tooltip("The name of the action to perform")]
-        [SerializeField]
-        [ResourceSelector(resourceType = typeof(AnimatedAction))]
-        protected string actionName = string.Empty;
+        [Header("Action Item")]
 
         [Tooltip("Cooldown before this item can be used again")]
         [SerializeField]
         protected float coolDown = 0f;
 
+        [Header("Action")]
+
+        [Tooltip("Action Property Source")]
+        [SerializeField]
+        protected ResourcePropertyType actionType = ResourcePropertyType.None;
+
+        [Tooltip("If Action Type is named, the name of the action to perform")]
+        [SerializeField]
+        [ResourceSelector(resourceType = typeof(AnimatedAction))]
+        protected string actionName = string.Empty;
+
+        [Tooltip("If Action Type is inline, the action type properties")]
+        [SerializeField]
+        protected AnimatedActionProperties actionProperties = new AnimatedActionProperties();
+
         //[SerializeField]
-        protected AnimatedActionProperties actionProperties = null;
+        //protected AnimatedActionProperties actionProperties = null;
 
         // game manager references
         protected SystemAbilityController systemAbilityController = null;
@@ -47,7 +59,9 @@ namespace AnyRPG {
             }
 
             // perform action
-            playerManager.UnitController.UnitActionManager.BeginAction(actionProperties);
+            if (actionType != ResourcePropertyType.None) {
+                playerManager.UnitController.UnitActionManager.BeginAction(actionProperties);
+            }
 
             BeginAbilityCoolDown(playerManager.MyCharacter, coolDown);
             Remove();
@@ -151,7 +165,7 @@ namespace AnyRPG {
             base.SetupScriptableObjects(systemGameManager);
 
 
-            if (actionName != null) {
+            if (actionType == ResourcePropertyType.Named && actionName != null && actionName != string.Empty) {
                 AnimatedAction tmpAction = systemDataFactory.GetResource<AnimatedAction>(actionName);
                 if (tmpAction != null) {
                     actionProperties = tmpAction.ActionProperties;
