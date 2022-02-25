@@ -1,0 +1,27 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6c9b51b8d3aa844448aaeab0a989e2fa, type: 3}
+  m_Name: BasicClubWeaponTemplatePackage
+  m_EditorClassIdentifier: 
+  resourceName: Basic Club Weapon
+  displayName: 
+  icon: {fileID: 0}
+  iconBackgroundImage: {fileID: 0}
+  description: 
+  useRegionalDescription: 0
+  resourceDescriptionProfile: 
+  optionalOverride: 0
+  resources:
+  - {fileID: 11400000, guid: 2341318b0e58bbe4ebc899bf8a2ae32f, type: 2}
+  - {fileID: 11400000, guid: e1e3f649929e40e459f8c8419fa3cef2, type: 2}
+  dependencies:
+  - {fileID: 11400000, guid: d0a2f86926da0824989450d106d8df30, type: 2}

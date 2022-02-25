@@ -1,0 +1,33 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6c9b51b8d3aa844448aaeab0a989e2fa, type: 3}
+  m_Name: RPGPlateEquipmentSilverTemplatePackage
+  m_EditorClassIdentifier: 
+  resourceName: Silver Plate Equipment
+  displayName: 
+  icon: {fileID: 0}
+  iconBackgroundImage: {fileID: 0}
+  description: 
+  useRegionalDescription: 0
+  resourceDescriptionProfile: 
+  optionalOverride: 0
+  resources:
+  - {fileID: 11400000, guid: d89cd872edd01574fb0aca62bf2cb553, type: 2}
+  dependencies:
+  - {fileID: 11400000, guid: 0c4d82d4b67e78c4f9e8560531347784, type: 2}
+  - {fileID: 11400000, guid: 6c229c5dcbff28049823bcd303aab8e7, type: 2}
+  - {fileID: 11400000, guid: 3e928991fafcb644f956811b6c3112c1, type: 2}
+  - {fileID: 11400000, guid: 95e0cb2b71db79c449aee39d7e9f45f9, type: 2}
+  - {fileID: 11400000, guid: 30e941fc7212411489cadea32683eac3, type: 2}
+  - {fileID: 11400000, guid: ea93bee9c8f6a464f989ec282fb37291, type: 2}
+  - {fileID: 11400000, guid: 2591d30708e8abe4c9343ae3b8bf2ac3, type: 2}
+  - {fileID: 11400000, guid: f4c84b86a213e9e4eadb617cff9fad86, type: 2}

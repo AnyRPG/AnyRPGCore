@@ -1,0 +1,28 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6c9b51b8d3aa844448aaeab0a989e2fa, type: 3}
+  m_Name: RedLeatherGlovesTemplatePackage
+  m_EditorClassIdentifier: 
+  resourceName: Red Leather Gloves
+  displayName: 
+  icon: {fileID: 21300000, guid: a47ed320db9635049a3aecfb77e7bbb4, type: 3}
+  iconBackgroundImage: {fileID: 0}
+  description: 
+  useRegionalDescription: 0
+  resourceDescriptionProfile: 
+  optionalOverride: 0
+  resources:
+  - {fileID: 11400000, guid: 2b9e782270a3d5249b91e36c9c9deaae, type: 2}
+  - {fileID: 11400000, guid: 034681c60d27baf42a9a5919e7b17898, type: 2}
+  - {fileID: 11400000, guid: 9db718c5359ddb24bb390d548c4ea5cd, type: 2}
+  dependencies:
+  - {fileID: 11400000, guid: 9f6444816878bcb4caa1a1409675594e, type: 2}

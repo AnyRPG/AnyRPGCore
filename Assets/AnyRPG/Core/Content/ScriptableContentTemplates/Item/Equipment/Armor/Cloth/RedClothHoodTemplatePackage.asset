@@ -1,0 +1,28 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6c9b51b8d3aa844448aaeab0a989e2fa, type: 3}
+  m_Name: RedClothHoodTemplatePackage
+  m_EditorClassIdentifier: 
+  resourceName: Red Cloth Hood
+  displayName: 
+  icon: {fileID: 21300000, guid: ae85199aeda16134f8635cc51a8e2210, type: 3}
+  iconBackgroundImage: {fileID: 0}
+  description: 
+  useRegionalDescription: 0
+  resourceDescriptionProfile: 
+  optionalOverride: 0
+  resources:
+  - {fileID: 11400000, guid: d7d416b74797cb0468ab19b0d60c7e9c, type: 2}
+  - {fileID: 11400000, guid: bbc227cfc2026d74c8664b573a2c87b1, type: 2}
+  - {fileID: 11400000, guid: d84295d5ff2f02d448630024501f644a, type: 2}
+  dependencies:
+  - {fileID: 11400000, guid: 9f6444816878bcb4caa1a1409675594e, type: 2}

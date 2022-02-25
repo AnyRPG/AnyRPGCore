@@ -1,0 +1,28 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6c9b51b8d3aa844448aaeab0a989e2fa, type: 3}
+  m_Name: GrayClothMantleTemplatePackage
+  m_EditorClassIdentifier: 
+  resourceName: Gray Cloth Mantle
+  displayName: 
+  icon: {fileID: 21300000, guid: 9da4749dbfe5bc84c8fa506d1be7aca5, type: 3}
+  iconBackgroundImage: {fileID: 0}
+  description: 
+  useRegionalDescription: 0
+  resourceDescriptionProfile: 
+  optionalOverride: 0
+  resources:
+  - {fileID: 11400000, guid: f7cdd97c2eb9c7d48a1475f5e6c37bd3, type: 2}
+  - {fileID: 11400000, guid: 26501be690219e046b5b21aef39f48a0, type: 2}
+  - {fileID: 11400000, guid: d84295d5ff2f02d448630024501f644a, type: 2}
+  dependencies:
+  - {fileID: 11400000, guid: 9f6444816878bcb4caa1a1409675594e, type: 2}

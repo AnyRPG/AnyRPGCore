@@ -1,0 +1,31 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6c9b51b8d3aa844448aaeab0a989e2fa, type: 3}
+  m_Name: RPGItemQualitiesTemplatePackage
+  m_EditorClassIdentifier: 
+  resourceName: RPG Item Qualities
+  displayName: 
+  icon: {fileID: 0}
+  iconBackgroundImage: {fileID: 0}
+  description: 
+  useRegionalDescription: 0
+  resourceDescriptionProfile: 
+  optionalOverride: 0
+  resources:
+  - {fileID: 11400000, guid: 2f6ad82e922e5064fb0fad15e2088b1b, type: 2}
+  - {fileID: 11400000, guid: a29e3e7957fda9d4390ddeb5623d61d4, type: 2}
+  - {fileID: 11400000, guid: 8093ed024b3e85242942ae7eb8854d98, type: 2}
+  - {fileID: 11400000, guid: 926bc4f0a959db6479828b2437631de2, type: 2}
+  - {fileID: 11400000, guid: b81573a08f19af64ebb2e03f39001aa0, type: 2}
+  - {fileID: 11400000, guid: 15706f8ed7c5a374e9445f14993b7476, type: 2}
+  - {fileID: 11400000, guid: 3bb978e4dc74af347a513369bab4ea72, type: 2}
+  dependencies: []

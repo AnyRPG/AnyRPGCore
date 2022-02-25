@@ -1,0 +1,27 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0b4eca1291e60f148801568f2a83a06b, type: 3}
+  m_Name: YellowClothPantsUMARecipeTemplate
+  m_EditorClassIdentifier: 
+  resourceName: Yellow Cloth Pants
+  displayName: 
+  icon: {fileID: 0}
+  iconBackgroundImage: {fileID: 0}
+  description: 
+  useRegionalDescription: 0
+  resourceDescriptionProfile: 
+  uMARecipes:
+  - {fileID: 11400000, guid: 886fc6cffe41ad84d8b713365904b6b6, type: 2}
+  - {fileID: 11400000, guid: 0b73dd38891490b948cbe792a2361f56, type: 2}
+  sharedColors:
+  - sharedColorname: Leg Equipment Color 1
+    color: {r: 0.89411765, g: 0.83137256, b: 0.12156863, a: 1}

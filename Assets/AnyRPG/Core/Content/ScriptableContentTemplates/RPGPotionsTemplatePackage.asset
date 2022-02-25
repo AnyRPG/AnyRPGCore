@@ -20,7 +20,9 @@ MonoBehaviour:
   useRegionalDescription: 0
   resourceDescriptionProfile: 
   optionalOverride: 0
-  resources: []
+  resources:
+  - {fileID: 11400000, guid: 4ce5ebd4b5def284d88997008824fab5, type: 2}
+  - {fileID: 11400000, guid: 00db0362b7051604aa59bbce071a5b71, type: 2}
   dependencies:
   - {fileID: 11400000, guid: 6ccf832b747d79741a06d26dbc879eb5, type: 2}
   - {fileID: 11400000, guid: 579535dd10a1e3c4e8771026576c2d96, type: 2}
