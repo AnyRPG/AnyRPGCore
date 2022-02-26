@@ -1,0 +1,36 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7d23ab85f082d014aa83f7dcda2c5410, type: 3}
+  m_Name: NovicesNecklaceRecipe
+  m_EditorClassIdentifier: 
+  resourceName: Novices Necklace
+  displayName: 
+  icon: {fileID: 0}
+  iconBackgroundImage: {fileID: 0}
+  description: A necklace adorned with a purle gem from under the earth
+  useRegionalDescription: 0
+  resourceDescriptionProfile: 
+  autoLearn: 1
+  requiredLevel: 8
+  craftingMaterials:
+  - itemName: Bronze Ingot
+    count: 1
+  - itemName: Polished Purple Gem
+    count: 1
+  itemOutputName: Novices Necklace
+  outputCount: 1
+  craftAbilityName: Jewelry
+  holdableObjectNames: []
+  holdableObjectList:
+  - holdableObjectName: Polished Purple Gem
+    useUniversalAttachment: 0
+    attachmentName: 
