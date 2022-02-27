@@ -1,0 +1,36 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6c9b51b8d3aa844448aaeab0a989e2fa, type: 3}
+  m_Name: RPGBasicCopperWeaponRecipesTemplatePackage
+  m_EditorClassIdentifier: 
+  resourceName: Basic Copper Weapon Recipes
+  displayName: 
+  icon: {fileID: 0}
+  iconBackgroundImage: {fileID: 0}
+  description: 
+  useRegionalDescription: 0
+  resourceDescriptionProfile: 
+  optionalOverride: 0
+  resources:
+  - {fileID: 11400000, guid: 00b359f049cbae845b4442ca4917e850, type: 2}
+  - {fileID: 11400000, guid: 4faf4e0e58c1e49479271f53cce935e2, type: 2}
+  - {fileID: 11400000, guid: 565d46cd3fc9c6f45bf890b3af86ac82, type: 2}
+  - {fileID: 11400000, guid: a68c9026e89bfaf43b8e08b17e55fe34, type: 2}
+  - {fileID: 11400000, guid: 78ad5054153aca24b84575202b4c50eb, type: 2}
+  - {fileID: 11400000, guid: 0bc0ba76f5a913543831b8767b06b6d4, type: 2}
+  - {fileID: 11400000, guid: 0dd80b9a9c3144846b978b21fa23afc3, type: 2}
+  - {fileID: 11400000, guid: a49541f4667879b4398c7124e25b0d9b, type: 2}
+  - {fileID: 11400000, guid: 0aa488b7baa74584788b74a5dba1b0ef, type: 2}
+  - {fileID: 11400000, guid: 94f3484e9c261f54ebbbb646b83c8d34, type: 2}
+  - {fileID: 11400000, guid: 278cb90c015a6c54bbffe2c53d71b7b1, type: 2}
+  - {fileID: 11400000, guid: 473bd29fc7f7128459f66fe2399175cc, type: 2}
+  dependencies: []

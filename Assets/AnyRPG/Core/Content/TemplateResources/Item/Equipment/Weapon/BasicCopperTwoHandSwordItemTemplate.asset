@@ -10,13 +10,13 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: c6b2325cf322104478c3c6aa91e88306, type: 3}
-  m_Name: BasicMaceItemTemplate
+  m_Name: BasicCopperTwoHandSwordItemTemplate
   m_EditorClassIdentifier: 
-  resourceName: Basic Mace
+  resourceName: Basic Copper Two Hand Sword
   displayName: 
-  icon: {fileID: 21300000, guid: 68f46e52fe7671f4fa2816a688603980, type: 3}
+  icon: {fileID: 21300000, guid: 63598106fbabc074881acef5aec30954, type: 3}
   iconBackgroundImage: {fileID: 0}
-  description: 
+  description: a simple two hand sword
   useRegionalDescription: 0
   resourceDescriptionProfile: 
   optionalOverride: 0
@@ -41,21 +41,33 @@ MonoBehaviour:
   holdableObjectList:
   - attachmentNodes:
     - equipmentSlotProfileName: Main Hand
-      holdableObjectName: Basic Mace
+      holdableObjectName: Basic Copper Two Hand Sword
       useUniversalAttachment: 1
-      primaryAttachmentName: One Hand Mace Sheathed
+      primaryAttachmentName: Two Hand Sword Sheathed
       unsheathedAttachmentName: Right Hand
   useArmorModifier: 0
   useManualArmor: 0
   manualValueIsScale: 0
   armorModifier: 0
-  primaryStats: []
+  primaryStats:
+  - statName: Stamina
+    useManualValue: 0
+    manualModifierValue: 0
+  - statName: Strength
+    useManualValue: 0
+    manualModifierValue: 0
+  - statName: Intellect
+    useManualValue: 0
+    manualModifierValue: 0
+  - statName: Agility
+    useManualValue: 0
+    manualModifierValue: 0
   randomSecondaryStats: 0
   secondaryStats: []
   onEquipAbilityName: 
   learnedAbilityNames: []
   requireWeaponSkill: 0
-  weaponType: One Hand Mace
+  weaponType: Two Hand Sword
   defaultHitEffects: []
   onHitEffects: []
   animationProfileName: 

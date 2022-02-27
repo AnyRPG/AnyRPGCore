@@ -10,13 +10,13 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: c6b2325cf322104478c3c6aa91e88306, type: 3}
-  m_Name: BasicMaceItemTemplate
+  m_Name: BasicSilverStaffItemTemplate
   m_EditorClassIdentifier: 
-  resourceName: Basic Mace
+  resourceName: Basic Silver Staff
   displayName: 
-  icon: {fileID: 21300000, guid: 68f46e52fe7671f4fa2816a688603980, type: 3}
+  icon: {fileID: 21300000, guid: fc7242b17cfc2e7478aecc94bfbffbea, type: 3}
   iconBackgroundImage: {fileID: 0}
-  description: 
+  description: Basic Staff
   useRegionalDescription: 0
   resourceDescriptionProfile: 
   optionalOverride: 0
@@ -34,16 +34,16 @@ MonoBehaviour:
   basePrice: 0
   uniqueItem: 0
   characterClassRequirementList: []
-  equipmentSlotType: Main Hand
+  equipmentSlotType: Two Hand
   equipmentSetName: 
   useUMARecipe: 0
   umaRecipeProfileName: 
   holdableObjectList:
   - attachmentNodes:
     - equipmentSlotProfileName: Main Hand
-      holdableObjectName: Basic Mace
+      holdableObjectName: Basic Silver Staff
       useUniversalAttachment: 1
-      primaryAttachmentName: One Hand Mace Sheathed
+      primaryAttachmentName: Staff Sheathed
       unsheathedAttachmentName: Right Hand
   useArmorModifier: 0
   useManualArmor: 0
@@ -55,7 +55,7 @@ MonoBehaviour:
   onEquipAbilityName: 
   learnedAbilityNames: []
   requireWeaponSkill: 0
-  weaponType: One Hand Mace
+  weaponType: Staff
   defaultHitEffects: []
   onHitEffects: []
   animationProfileName: 

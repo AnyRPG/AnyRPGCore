@@ -10,9 +10,9 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: c6b2325cf322104478c3c6aa91e88306, type: 3}
-  m_Name: BasicMaceItemTemplate
+  m_Name: BasicCopperMaceItemTemplate
   m_EditorClassIdentifier: 
-  resourceName: Basic Mace
+  resourceName: Basic Copper Mace
   displayName: 
   icon: {fileID: 21300000, guid: 68f46e52fe7671f4fa2816a688603980, type: 3}
   iconBackgroundImage: {fileID: 0}
@@ -41,7 +41,7 @@ MonoBehaviour:
   holdableObjectList:
   - attachmentNodes:
     - equipmentSlotProfileName: Main Hand
-      holdableObjectName: Basic Mace
+      holdableObjectName: Basic Copper Mace
       useUniversalAttachment: 1
       primaryAttachmentName: One Hand Mace Sheathed
       unsheathedAttachmentName: Right Hand

@@ -1,0 +1,27 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6c9b51b8d3aa844448aaeab0a989e2fa, type: 3}
+  m_Name: BasicSilverSpearWeaponTemplatePackage
+  m_EditorClassIdentifier: 
+  resourceName: Basic Silver Spear Weapon
+  displayName: 
+  icon: {fileID: 0}
+  iconBackgroundImage: {fileID: 0}
+  description: 
+  useRegionalDescription: 0
+  resourceDescriptionProfile: 
+  optionalOverride: 0
+  resources:
+  - {fileID: 11400000, guid: 67b359db3211e744f9db6944ddfaff38, type: 2}
+  - {fileID: 11400000, guid: 5464d8da5b13205419da4f77b6c1a3d3, type: 2}
+  dependencies:
+  - {fileID: 11400000, guid: f7df1127818dd8c4fa4a2bcef0d7f3e1, type: 2}

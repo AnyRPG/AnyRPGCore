@@ -10,13 +10,13 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: c6b2325cf322104478c3c6aa91e88306, type: 3}
-  m_Name: BasicMaceItemTemplate
+  m_Name: BasicBronzeGreatAxeItemTemplate
   m_EditorClassIdentifier: 
-  resourceName: Basic Mace
+  resourceName: Basic Bronze Great Axe
   displayName: 
-  icon: {fileID: 21300000, guid: 68f46e52fe7671f4fa2816a688603980, type: 3}
+  icon: {fileID: 21300000, guid: 6909b685e2db15c4aa56504c1d083986, type: 3}
   iconBackgroundImage: {fileID: 0}
-  description: 
+  description: Basic great axe
   useRegionalDescription: 0
   resourceDescriptionProfile: 
   optionalOverride: 0
@@ -34,16 +34,16 @@ MonoBehaviour:
   basePrice: 0
   uniqueItem: 0
   characterClassRequirementList: []
-  equipmentSlotType: Main Hand
+  equipmentSlotType: Two Hand
   equipmentSetName: 
   useUMARecipe: 0
   umaRecipeProfileName: 
   holdableObjectList:
   - attachmentNodes:
     - equipmentSlotProfileName: Main Hand
-      holdableObjectName: Basic Mace
+      holdableObjectName: Basic Bronze Great Axe
       useUniversalAttachment: 1
-      primaryAttachmentName: One Hand Mace Sheathed
+      primaryAttachmentName: Two Hand Axe Sheathed
       unsheathedAttachmentName: Right Hand
   useArmorModifier: 0
   useManualArmor: 0
@@ -55,7 +55,7 @@ MonoBehaviour:
   onEquipAbilityName: 
   learnedAbilityNames: []
   requireWeaponSkill: 0
-  weaponType: One Hand Mace
+  weaponType: Two Hand Axe
   defaultHitEffects: []
   onHitEffects: []
   animationProfileName: 

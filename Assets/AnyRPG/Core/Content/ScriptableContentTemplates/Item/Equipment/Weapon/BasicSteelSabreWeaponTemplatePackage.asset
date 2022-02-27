@@ -1,0 +1,27 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6c9b51b8d3aa844448aaeab0a989e2fa, type: 3}
+  m_Name: BasicSteelSabreWeaponTemplatePackage
+  m_EditorClassIdentifier: 
+  resourceName: Basic Steel Sabre Weapon
+  displayName: 
+  icon: {fileID: 0}
+  iconBackgroundImage: {fileID: 0}
+  description: 
+  useRegionalDescription: 0
+  resourceDescriptionProfile: 
+  optionalOverride: 0
+  resources:
+  - {fileID: 11400000, guid: 3655830c8577df4438bb787ea4808800, type: 2}
+  - {fileID: 11400000, guid: 41a696f8f1e9f704d8288e951bb777ca, type: 2}
+  dependencies:
+  - {fileID: 11400000, guid: 456d0312a4440bf42bee4f2159d3be07, type: 2}
