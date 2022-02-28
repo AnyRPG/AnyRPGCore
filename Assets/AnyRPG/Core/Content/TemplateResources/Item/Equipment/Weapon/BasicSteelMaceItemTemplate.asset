@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   resourceName: Basic Steel Mace
   displayName: 
-  icon: {fileID: 21300000, guid: 68f46e52fe7671f4fa2816a688603980, type: 3}
+  icon: {fileID: 21300000, guid: 35b4178a2ab88d243a6f42e39c2a950b, type: 3}
   iconBackgroundImage: {fileID: 0}
   description: 
   useRegionalDescription: 0

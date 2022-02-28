@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   resourceName: Basic Copper One Hand Sword
   displayName: 
-  icon: {fileID: 21300000, guid: af8a74c0ea4f5b74781afebff7d60057, type: 3}
+  icon: {fileID: 21300000, guid: 83f5135b687bd184e9eedd0d4a1c892a, type: 3}
   iconBackgroundImage: {fileID: 0}
   description: Basic Sword
   useRegionalDescription: 0

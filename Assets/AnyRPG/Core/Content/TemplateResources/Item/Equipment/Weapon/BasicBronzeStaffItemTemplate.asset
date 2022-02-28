@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   resourceName: Basic Bronze Staff
   displayName: 
-  icon: {fileID: 21300000, guid: fc7242b17cfc2e7478aecc94bfbffbea, type: 3}
+  icon: {fileID: 21300000, guid: e950cc9d56498184d82f6da4bba74799, type: 3}
   iconBackgroundImage: {fileID: 0}
   description: Basic Staff
   useRegionalDescription: 0

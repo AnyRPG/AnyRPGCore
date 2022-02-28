@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   resourceName: Basic Copper Spear
   displayName: 
-  icon: {fileID: 21300000, guid: 97a336e356ace8544990262164c0de2c, type: 3}
+  icon: {fileID: 21300000, guid: 8e381fdd11b5a984f849897c2dfaf6e6, type: 3}
   iconBackgroundImage: {fileID: 0}
   description: Basic Spear
   useRegionalDescription: 0

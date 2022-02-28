@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   resourceName: Basic Iron Staff
   displayName: 
-  icon: {fileID: 21300000, guid: fc7242b17cfc2e7478aecc94bfbffbea, type: 3}
+  icon: {fileID: 21300000, guid: 46becc05b42bcc143a36d6841ec1a4b6, type: 3}
   iconBackgroundImage: {fileID: 0}
   description: Basic Staff
   useRegionalDescription: 0

@@ -64,6 +64,9 @@ namespace AnyRPG {
         }
 
         public override bool CapabilityConsumerSupported(ICapabilityConsumer capabilityConsumer) {
+            if (armorClass == null) {
+                return true;
+            }
             return capabilityConsumer.CapabilityConsumerProcessor.IsArmorSupported(this);
         }
 

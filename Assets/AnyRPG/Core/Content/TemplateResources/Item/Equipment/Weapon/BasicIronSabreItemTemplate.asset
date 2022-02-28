@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   resourceName: Basic Iron Sabre
   displayName: 
-  icon: {fileID: 21300000, guid: 71b5613b1a3e3294ab32aa060dfe2126, type: 3}
+  icon: {fileID: 21300000, guid: f9725b5f3af6d25499a05df68e0f0025, type: 3}
   iconBackgroundImage: {fileID: 0}
   description: Basic Sword
   useRegionalDescription: 0

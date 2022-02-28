@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   resourceName: Basic Bronze Mace
   displayName: 
-  icon: {fileID: 21300000, guid: 68f46e52fe7671f4fa2816a688603980, type: 3}
+  icon: {fileID: 21300000, guid: 511e57bc840c22a4cac532c6f996100d, type: 3}
   iconBackgroundImage: {fileID: 0}
   description: 
   useRegionalDescription: 0

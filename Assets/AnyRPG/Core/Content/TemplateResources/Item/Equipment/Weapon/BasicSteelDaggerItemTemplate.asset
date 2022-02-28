@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   resourceName: Basic Steel Dagger
   displayName: 
-  icon: {fileID: 21300000, guid: a2f64e5fec5821545825b52623e7d7cb, type: 3}
+  icon: {fileID: 21300000, guid: 594cb5c4baffbd74ab93b3c93c76cba2, type: 3}
   iconBackgroundImage: {fileID: 0}
   description: 
   useRegionalDescription: 0

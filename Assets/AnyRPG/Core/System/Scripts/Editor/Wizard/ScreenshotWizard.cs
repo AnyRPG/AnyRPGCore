@@ -65,6 +65,21 @@ namespace AnyRPG {
             if (PlayerPrefs.HasKey("ScreenshotWizardHeight")) {
                 height = PlayerPrefs.GetInt("ScreenshotWizardHeight");
             }
+            if (PlayerPrefs.HasKey("ScreenshotWizardLightIntensity")) {
+                lightIntensity = PlayerPrefs.GetFloat("ScreenshotWizardLightIntensity");
+            }
+            if (PlayerPrefs.HasKey("ScreenshotWizardLightColorR")) {
+                /*
+                lightColor = new Color32(PlayerPrefs.GetFloat("ScreenshotWizardLightColorR"),
+                    (byte)PlayerPrefs.GetFloat("ScreenshotWizardLightColorG"),
+                    (byte)PlayerPrefs.GetFloat("ScreenshotWizardLightColorB"),
+                    (byte)PlayerPrefs.GetFloat("ScreenshotWizardLightColorA"));
+                */
+                lightColor.r = PlayerPrefs.GetFloat("ScreenshotWizardLightColorR");
+                lightColor.g = PlayerPrefs.GetFloat("ScreenshotWizardLightColorG");
+                lightColor.b = PlayerPrefs.GetFloat("ScreenshotWizardLightColorB");
+                lightColor.a = PlayerPrefs.GetFloat("ScreenshotWizardLightColorA");
+            }
         }
 
         private void OnDisable() {
@@ -124,7 +139,11 @@ namespace AnyRPG {
 
             PlayerPrefs.SetInt("ScreenshotWizardWidth", width);
             PlayerPrefs.SetInt("ScreenshotWizardHeight", height);
-
+            PlayerPrefs.SetFloat("ScreenshotWizardLightIntensity", lightIntensity);
+            PlayerPrefs.SetFloat("ScreenshotWizardLightColorR", lightColor.r);
+            PlayerPrefs.SetFloat("ScreenshotWizardLightColorG", lightColor.g);
+            PlayerPrefs.SetFloat("ScreenshotWizardLightColorB", lightColor.b);
+            PlayerPrefs.SetFloat("ScreenshotWizardLightColorA", lightColor.a);
 
             EditorUtility.ClearProgressBar();
             EditorUtility.DisplayDialog(wizardTitle, wizardTitle + " Complete! The screenshot image can be found at " + filePath, "OK");

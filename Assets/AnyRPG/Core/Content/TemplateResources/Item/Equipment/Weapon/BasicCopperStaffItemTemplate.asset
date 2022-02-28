@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   resourceName: Basic Copper Staff
   displayName: 
-  icon: {fileID: 21300000, guid: fc7242b17cfc2e7478aecc94bfbffbea, type: 3}
+  icon: {fileID: 21300000, guid: 004f3c2521d98414aaf60b2bea4e5143, type: 3}
   iconBackgroundImage: {fileID: 0}
   description: Basic Staff
   useRegionalDescription: 0

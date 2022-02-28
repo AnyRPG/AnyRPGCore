@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   resourceName: Basic Iron Two Hand Sword
   displayName: 
-  icon: {fileID: 21300000, guid: 63598106fbabc074881acef5aec30954, type: 3}
+  icon: {fileID: 21300000, guid: 2e6ed9ab69bc1854da8db23274340fcb, type: 3}
   iconBackgroundImage: {fileID: 0}
   description: a simple two hand sword
   useRegionalDescription: 0

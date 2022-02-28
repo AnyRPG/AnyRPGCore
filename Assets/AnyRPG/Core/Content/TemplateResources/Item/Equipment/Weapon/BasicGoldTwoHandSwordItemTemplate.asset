@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   resourceName: Basic Gold Two Hand Sword
   displayName: 
-  icon: {fileID: 21300000, guid: 63598106fbabc074881acef5aec30954, type: 3}
+  icon: {fileID: 21300000, guid: aa088b379c076e84f927050084d4e118, type: 3}
   iconBackgroundImage: {fileID: 0}
   description: a simple two hand sword
   useRegionalDescription: 0

@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   resourceName: Basic Gold Spear
   displayName: 
-  icon: {fileID: 21300000, guid: 97a336e356ace8544990262164c0de2c, type: 3}
+  icon: {fileID: 21300000, guid: f42cbe7b211ad634fb3638a62ac4893a, type: 3}
   iconBackgroundImage: {fileID: 0}
   description: Basic Spear
   useRegionalDescription: 0

@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   resourceName: Basic Gold Sabre
   displayName: 
-  icon: {fileID: 21300000, guid: 71b5613b1a3e3294ab32aa060dfe2126, type: 3}
+  icon: {fileID: 21300000, guid: cb639b8db6a8c7d42975ccd98fe9f52e, type: 3}
   iconBackgroundImage: {fileID: 0}
   description: Basic Sword
   useRegionalDescription: 0

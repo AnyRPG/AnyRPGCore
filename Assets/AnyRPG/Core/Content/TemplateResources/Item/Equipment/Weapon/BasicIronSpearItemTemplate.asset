@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   resourceName: Basic Iron Spear
   displayName: 
-  icon: {fileID: 21300000, guid: 97a336e356ace8544990262164c0de2c, type: 3}
+  icon: {fileID: 21300000, guid: a4d0ba7b39b1b784684c56e492dc8f1e, type: 3}
   iconBackgroundImage: {fileID: 0}
   description: Basic Spear
   useRegionalDescription: 0

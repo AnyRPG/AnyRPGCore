@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   resourceName: Basic Gold Halberd
   displayName: 
-  icon: {fileID: 21300000, guid: f02955483588155468b83f8ee463f2b5, type: 3}
+  icon: {fileID: 21300000, guid: c1a50a39b1359ab499458cda7c93a6dd, type: 3}
   iconBackgroundImage: {fileID: 0}
   description: Basic Halberd
   useRegionalDescription: 0

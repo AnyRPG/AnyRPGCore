@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   resourceName: Basic Gold Dagger
   displayName: 
-  icon: {fileID: 21300000, guid: a2f64e5fec5821545825b52623e7d7cb, type: 3}
+  icon: {fileID: 21300000, guid: 02cf08bf4754b27418b2eb742844f11b, type: 3}
   iconBackgroundImage: {fileID: 0}
   description: 
   useRegionalDescription: 0

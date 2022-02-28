@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   resourceName: Basic Iron War Hammer
   displayName: 
-  icon: {fileID: 21300000, guid: 999443aee8aa98442a55778efca34b80, type: 3}
+  icon: {fileID: 21300000, guid: 5c522c72118ea5d4dbf82f4409c0a8de, type: 3}
   iconBackgroundImage: {fileID: 0}
   description: a simple war hammer
   useRegionalDescription: 0

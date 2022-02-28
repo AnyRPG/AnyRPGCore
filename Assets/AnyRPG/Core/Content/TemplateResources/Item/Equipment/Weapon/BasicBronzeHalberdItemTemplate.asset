@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   resourceName: Basic Bronze Halberd
   displayName: 
-  icon: {fileID: 21300000, guid: f02955483588155468b83f8ee463f2b5, type: 3}
+  icon: {fileID: 21300000, guid: 6c3eedcb41bdf7c47b0aa11a084ef139, type: 3}
   iconBackgroundImage: {fileID: 0}
   description: Basic Halberd
   useRegionalDescription: 0

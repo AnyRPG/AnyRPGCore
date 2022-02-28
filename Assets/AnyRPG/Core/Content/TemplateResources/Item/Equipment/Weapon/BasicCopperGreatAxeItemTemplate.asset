@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   resourceName: Basic Copper Great Axe
   displayName: 
-  icon: {fileID: 21300000, guid: 6909b685e2db15c4aa56504c1d083986, type: 3}
+  icon: {fileID: 21300000, guid: d80cd3c83a5f0d24287df953eee31e4a, type: 3}
   iconBackgroundImage: {fileID: 0}
   description: Basic great axe
   useRegionalDescription: 0

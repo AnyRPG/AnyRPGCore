@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   resourceName: Basic Silver Axe
   displayName: 
-  icon: {fileID: 21300000, guid: 444b086581778f841b04024222fefa9d, type: 3}
+  icon: {fileID: 21300000, guid: 0374940db1c3e8d4e81c8b2b90eaa64f, type: 3}
   iconBackgroundImage: {fileID: 0}
   description: Basic axe
   useRegionalDescription: 0

@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   resourceName: Basic Steel Halberd
   displayName: 
-  icon: {fileID: 21300000, guid: f02955483588155468b83f8ee463f2b5, type: 3}
+  icon: {fileID: 21300000, guid: 8fc659561a7b5384b85a12d94be3cf09, type: 3}
   iconBackgroundImage: {fileID: 0}
   description: Basic Halberd
   useRegionalDescription: 0

@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   resourceName: Basic Copper Dagger
   displayName: 
-  icon: {fileID: 21300000, guid: a2f64e5fec5821545825b52623e7d7cb, type: 3}
+  icon: {fileID: 21300000, guid: c4758c048f02eb34fb9f3366134fe44b, type: 3}
   iconBackgroundImage: {fileID: 0}
   description: 
   useRegionalDescription: 0

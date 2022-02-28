@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   resourceName: Basic Iron Halberd
   displayName: 
-  icon: {fileID: 21300000, guid: f02955483588155468b83f8ee463f2b5, type: 3}
+  icon: {fileID: 21300000, guid: 24dafd3ea1ca4fd4881371d4ad843143, type: 3}
   iconBackgroundImage: {fileID: 0}
   description: Basic Halberd
   useRegionalDescription: 0

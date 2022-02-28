@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   resourceName: Basic Iron Axe
   displayName: 
-  icon: {fileID: 21300000, guid: 444b086581778f841b04024222fefa9d, type: 3}
+  icon: {fileID: 21300000, guid: 6a53621dfa560874492918b01a6b0ed1, type: 3}
   iconBackgroundImage: {fileID: 0}
   description: Basic axe
   useRegionalDescription: 0

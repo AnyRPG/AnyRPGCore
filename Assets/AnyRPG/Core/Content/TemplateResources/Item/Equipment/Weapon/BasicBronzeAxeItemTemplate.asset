@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   resourceName: Basic Bronze Axe
   displayName: 
-  icon: {fileID: 21300000, guid: 444b086581778f841b04024222fefa9d, type: 3}
+  icon: {fileID: 21300000, guid: 6c811fa15c3b96843994d4edd99bbfcd, type: 3}
   iconBackgroundImage: {fileID: 0}
   description: Basic axe
   useRegionalDescription: 0
