@@ -25,6 +25,7 @@ namespace AnyRPG {
         public bool showSizeIndicator = true;
         public int width = 256;
         public int height = 256;
+        private const int borderWidth = 2;
 
         [Header("Camera")]
 
@@ -58,6 +59,12 @@ namespace AnyRPG {
             Selection.selectionChanged += SetSelection;
             SceneView.duringSceneGui += OnScene;
             frameTexture = AssetDatabase.LoadMainAssetAtPath(indicatorFrame) as Texture;
+            if (PlayerPrefs.HasKey("ScreenshotWizardWidth")) {
+                width = PlayerPrefs.GetInt("ScreenshotWizardWidth");
+            }
+            if (PlayerPrefs.HasKey("ScreenshotWizardHeight")) {
+                height = PlayerPrefs.GetInt("ScreenshotWizardHeight");
+            }
         }
 
         private void OnDisable() {
@@ -72,17 +79,17 @@ namespace AnyRPG {
 
                 Handles.BeginGUI();
 
-                int sourceX = (SceneView.currentDrawingSceneView.camera.pixelWidth / 2) - (width / 2);
-                int sourceY = (SceneView.currentDrawingSceneView.camera.pixelHeight / 2) - (height / 2);
+                int sourceX = (SceneView.currentDrawingSceneView.camera.pixelWidth / 2) - (width / 2) - borderWidth;
+                int sourceY = (SceneView.currentDrawingSceneView.camera.pixelHeight / 2) - (height / 2) - borderWidth;
                 //Debug.Log("sourceX: " + sourceX + " sourceY: " + sourceY + " screenWidth: " + Screen.width + " screenHeight: " + Screen.height + " pixelHeight: " + SceneView.currentDrawingSceneView.camera.pixelHeight + " pixelWidth: " + SceneView.currentDrawingSceneView.camera.pixelWidth);
-                GUILayout.BeginArea(new Rect(sourceX, sourceY, width, height), GUIStyle.none);
+                GUILayout.BeginArea(new Rect(sourceX, sourceY, width + (borderWidth * 2), height + (borderWidth * 2)), GUIStyle.none);
                 GUIStyle gUIStyle = new GUIStyle();
                 gUIStyle.normal.background = (Texture2D)frameTexture;
-                gUIStyle.border.left = 2;
-                gUIStyle.border.right = 2;
-                gUIStyle.border.top = 2;
-                gUIStyle.border.bottom = 2;
-                GUILayout.Box(GUIContent.none, gUIStyle, GUILayout.MinWidth(width), GUILayout.MinHeight(height));
+                gUIStyle.border.left = borderWidth;
+                gUIStyle.border.right = borderWidth;
+                gUIStyle.border.top = borderWidth;
+                gUIStyle.border.bottom = borderWidth;
+                GUILayout.Box(GUIContent.none, gUIStyle, GUILayout.MinWidth(width + (borderWidth * 2)), GUILayout.MinHeight(height + (borderWidth * 2)));
 
                 GUILayout.EndArea();
 
@@ -114,6 +121,10 @@ namespace AnyRPG {
             EditorUtility.DisplayProgressBar(wizardTitle, "Refreshing Asset Database...", 0.9f);
 
             AssetDatabase.Refresh();
+
+            PlayerPrefs.SetInt("ScreenshotWizardWidth", width);
+            PlayerPrefs.SetInt("ScreenshotWizardHeight", height);
+
 
             EditorUtility.ClearProgressBar();
             EditorUtility.DisplayDialog(wizardTitle, wizardTitle + " Complete! The screenshot image can be found at " + filePath, "OK");
