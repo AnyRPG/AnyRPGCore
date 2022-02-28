@@ -42,9 +42,15 @@ namespace AnyRPG {
 
         private bool originalSceneLighting = false;
 
+        private static ScreenshotWizard openWizard = null;
+
         [MenuItem("Tools/AnyRPG/Wizard/Screenshot Wizard")]
         static void CreateWizard() {
-            ScriptableWizard.DisplayWizard<ScreenshotWizard>(wizardTitle, "Create");
+            if (openWizard == null) {
+                openWizard = ScriptableWizard.DisplayWizard<ScreenshotWizard>(wizardTitle, "Create");
+            } else {
+                openWizard.Focus();
+            }
         }
 
         private void OnEnable() {
@@ -57,6 +63,7 @@ namespace AnyRPG {
         private void OnDisable() {
             Selection.selectionChanged -= SetSelection;
             SceneView.duringSceneGui -= OnScene;
+            openWizard = null;
         }
 
         private void OnScene(SceneView sceneview) {
@@ -260,92 +267,6 @@ namespace AnyRPG {
             EditorUtility.DisplayProgressBar(title, info, progress);
         }
 
-        /*
-        void OnGUI() {
-            Handles.BeginGUI();
-
-            GUILayout.BeginArea(new Rect(20, 20, 150, 60));
-
-            var rect = EditorGUILayout.BeginVertical();
-            GUI.color = Color.yellow;
-            GUI.Box(rect, GUIContent.none);
-
-            GUI.color = Color.white;
-
-            GUILayout.BeginHorizontal();
-            GUILayout.FlexibleSpace();
-            GUILayout.Label("Rotate");
-            GUILayout.FlexibleSpace();
-            GUILayout.EndHorizontal();
-
-            GUILayout.BeginHorizontal();
-            GUI.backgroundColor = Color.red;
-
-            if (GUILayout.Button("Left")) {
-                //RotateLeft();
-            }
-
-            if (GUILayout.Button("Right")) {
-                //RotateRight();
-            }
-
-            GUILayout.EndHorizontal();
-
-            EditorGUILayout.EndVertical();
-
-
-            GUILayout.EndArea();
-
-            Handles.EndGUI();
-        }
-        */
-        
-
     }
-
-    /*
-    [CustomEditor(typeof(ScreenshotWizard))]
-    public class ScreenshotWizardInspector : Editor {
-        void OnSceneGUI() {
-            Handles.BeginGUI();
-
-            GUILayout.BeginArea(new Rect(20, 20, 150, 60));
-
-            var rect = EditorGUILayout.BeginVertical();
-            GUI.color = Color.yellow;
-            GUI.Box(rect, GUIContent.none);
-
-            GUI.color = Color.white;
-
-            GUILayout.BeginHorizontal();
-            GUILayout.FlexibleSpace();
-            GUILayout.Label("Rotate");
-            GUILayout.FlexibleSpace();
-            GUILayout.EndHorizontal();
-
-            GUILayout.BeginHorizontal();
-            GUI.backgroundColor = Color.red;
-
-            if (GUILayout.Button("Left")) {
-                //RotateLeft();
-            }
-
-            if (GUILayout.Button("Right")) {
-                //RotateRight();
-            }
-
-            GUILayout.EndHorizontal();
-
-            EditorGUILayout.EndVertical();
-
-
-            GUILayout.EndArea();
-
-            Handles.EndGUI();
-        }
-    }
-    */
-    
-
 
 }
