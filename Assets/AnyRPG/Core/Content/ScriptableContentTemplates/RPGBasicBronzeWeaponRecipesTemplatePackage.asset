@@ -33,4 +33,5 @@ MonoBehaviour:
   - {fileID: 11400000, guid: f480c5013f86e814bbdd6bdd4fec1ffb, type: 2}
   - {fileID: 11400000, guid: 07d849db9cd17b24f86181bcd82a0056, type: 2}
   - {fileID: 11400000, guid: b9c3f423c38ddc74282c4f8995625e34, type: 2}
+  - {fileID: 11400000, guid: a4b6e99b4da8b04499286fbb9045a9e2, type: 2}
   dependencies: []
