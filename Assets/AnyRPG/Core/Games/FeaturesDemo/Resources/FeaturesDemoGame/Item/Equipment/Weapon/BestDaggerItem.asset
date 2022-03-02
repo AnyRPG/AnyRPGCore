@@ -19,6 +19,7 @@ MonoBehaviour:
   description: better than all the rest
   useRegionalDescription: 0
   resourceDescriptionProfile: 
+  optionalOverride: 0
   stackSize: 1
   itemQuality: Best
   randomItemQuality: 0
@@ -26,6 +27,7 @@ MonoBehaviour:
   freezeDropLevel: 0
   levelCap: 0
   itemLevel: 1
+  useLevel: 1
   currencyName: Gold
   dynamicCurrencyAmount: 1
   pricePerLevel: 1
@@ -46,7 +48,7 @@ MonoBehaviour:
     - equipmentSlotProfileName: Off Hand
       holdableObjectName: Best Dagger
       useUniversalAttachment: 1
-      primaryAttachmentName: One Hand Sword Sheathed
+      primaryAttachmentName: Off Hand Sword Sheathed
       unsheathedAttachmentName: Left Hand
   useArmorModifier: 0
   useManualArmor: 0
@@ -69,6 +71,7 @@ MonoBehaviour:
   secondaryStats: []
   onEquipAbilityName: 
   learnedAbilityNames: []
+  requireWeaponSkill: 0
   weaponType: Dagger
   defaultHitEffects: []
   onHitEffects: []
@@ -76,6 +79,5 @@ MonoBehaviour:
   defaultHitAudioProfile: 
   useWeaponTypeObjects: 1
   abilityObjectList: []
-  useDamagePerSecond: 1
-  useManualDamagePerSecond: 0
-  damagePerSecond: 0
+  addScaledDamagePerSecond: 1
+  baseDamagePerSecond: 0

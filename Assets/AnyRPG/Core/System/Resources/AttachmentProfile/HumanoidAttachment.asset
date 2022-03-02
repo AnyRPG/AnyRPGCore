@@ -19,6 +19,7 @@ MonoBehaviour:
   description: 
   useRegionalDescription: 0
   resourceDescriptionProfile: 
+  optionalOverride: 0
   attachmentPointNodes:
   - nodeName: Left Hand
     position: {x: 0, y: 0, z: 0}
@@ -86,6 +87,12 @@ MonoBehaviour:
     rotation: {x: 0, y: 0, z: 0}
     scale: {x: 1, y: 1, z: 1}
     targetBone: OneHandMaceSheathedAttachment
+  - nodeName: One Hand Axe Sheathed
+    position: {x: 0, y: 0, z: 0}
+    rotationIsGlobal: 0
+    rotation: {x: 0, y: 0, z: 0}
+    scale: {x: 1, y: 1, z: 1}
+    targetBone: OneHandAxeSheathedAttachment
   - nodeName: Two Hand Mace Sheathed
     position: {x: 0, y: 0, z: 0}
     rotationIsGlobal: 0

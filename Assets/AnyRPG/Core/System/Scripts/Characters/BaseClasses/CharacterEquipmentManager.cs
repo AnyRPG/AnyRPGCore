@@ -188,10 +188,14 @@ namespace AnyRPG {
                 //Debug.Log(baseCharacter.gameObject.name + "CharacterEquipmentManager.Equip(" + (newItem != null ? newItem.DisplayName : "null") + "; could not equip");
                 return false;
             }
-            
+
+
+            // unequip any item in an exclusive slot for this item
+            UnequipExclusiveSlots(newItem.EquipmentSlotType);
 
             // get list of compatible slots that can take this slot type
             List<EquipmentSlotProfile> slotProfileList = GetCompatibleSlotProfiles(newItem.EquipmentSlotType);
+
             // check if any are empty.  if not, unequip the first one
             EquipmentSlotProfile emptySlotProfile = equipmentSlotProfile;
             if (emptySlotProfile == null) {
@@ -209,8 +213,10 @@ namespace AnyRPG {
                 }
             }
 
+            // testing - moved to above empty slot determination because one hand items were going in offhand slot after unequipping two hand items
+            // when they should have gone in the now empty main hand slot
             // unequip any item in an exclusive slot for this item
-            UnequipExclusiveSlots(newItem.EquipmentSlotType);
+            //UnequipExclusiveSlots(newItem.EquipmentSlotType);
 
             //Debug.Log(gameObject.name + ".CharacterEquipmentManager.Equip(): equippping " + newItem.DisplayName + " in slot: " + emptySlotProfile + "; " + emptySlotProfile.GetInstanceID());
             currentEquipment[emptySlotProfile] = newItem;

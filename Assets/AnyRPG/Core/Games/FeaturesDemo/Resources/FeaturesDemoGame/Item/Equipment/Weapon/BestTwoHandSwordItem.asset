@@ -19,6 +19,7 @@ MonoBehaviour:
   description: better than all the rest
   useRegionalDescription: 0
   resourceDescriptionProfile: 
+  optionalOverride: 0
   stackSize: 0
   itemQuality: Best
   randomItemQuality: 0
@@ -26,13 +27,14 @@ MonoBehaviour:
   freezeDropLevel: 0
   levelCap: 0
   itemLevel: 1
+  useLevel: 1
   currencyName: Gold
   dynamicCurrencyAmount: 1
   pricePerLevel: 1
   basePrice: 0
   uniqueItem: 0
   characterClassRequirementList: []
-  equipmentSlotType: Main Hand
+  equipmentSlotType: Two Hand
   equipmentSetName: Best Gear
   useUMARecipe: 0
   umaRecipeProfileName: 
@@ -64,6 +66,7 @@ MonoBehaviour:
   secondaryStats: []
   onEquipAbilityName: 
   learnedAbilityNames: []
+  requireWeaponSkill: 0
   weaponType: Two Hand Sword
   defaultHitEffects: []
   onHitEffects: []
@@ -71,6 +74,5 @@ MonoBehaviour:
   defaultHitAudioProfile: 
   useWeaponTypeObjects: 1
   abilityObjectList: []
-  useDamagePerSecond: 1
-  useManualDamagePerSecond: 0
-  damagePerSecond: 0
+  addScaledDamagePerSecond: 1
+  baseDamagePerSecond: 0

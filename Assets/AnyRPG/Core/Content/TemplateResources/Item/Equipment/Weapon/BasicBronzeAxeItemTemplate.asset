@@ -34,7 +34,7 @@ MonoBehaviour:
   basePrice: 0
   uniqueItem: 0
   characterClassRequirementList: []
-  equipmentSlotType: One Hand
+  equipmentSlotType: Main Hand
   equipmentSetName: 
   useUMARecipe: 0
   umaRecipeProfileName: 

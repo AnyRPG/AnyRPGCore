@@ -48,7 +48,7 @@ MonoBehaviour:
     - equipmentSlotProfileName: Off Hand
       holdableObjectName: Basic Bronze Dagger
       useUniversalAttachment: 1
-      primaryAttachmentName: One Hand Sword Sheathed
+      primaryAttachmentName: Off Hand Sword Sheathed
       unsheathedAttachmentName: Left Hand
   useArmorModifier: 0
   useManualArmor: 0
