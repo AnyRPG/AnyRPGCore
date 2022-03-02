@@ -1,0 +1,28 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6c9b51b8d3aa844448aaeab0a989e2fa, type: 3}
+  m_Name: SilverIngotRecipeTemplatePackage
+  m_EditorClassIdentifier: 
+  resourceName: Silver Ingot Recipe
+  displayName: 
+  icon: {fileID: 0}
+  iconBackgroundImage: {fileID: 0}
+  description: 
+  useRegionalDescription: 0
+  resourceDescriptionProfile: 
+  optionalOverride: 0
+  resources:
+  - {fileID: 11400000, guid: 3397644993974984d8b9402c57463185, type: 2}
+  - {fileID: 11400000, guid: a222f1a1d4239e94a8ca10e311355ca7, type: 2}
+  - {fileID: 11400000, guid: c50c969b044de524584ad71539679f60, type: 2}
+  prefabs: []
+  dependencies: []

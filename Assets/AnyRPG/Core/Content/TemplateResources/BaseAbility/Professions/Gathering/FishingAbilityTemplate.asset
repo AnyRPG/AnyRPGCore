@@ -14,12 +14,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   resourceName: Fishing
   displayName: 
-  icon: {fileID: 0}
+  icon: {fileID: 21300000, guid: f2003424f8bc7ae41a617e80d5f46dec, type: 3}
   iconBackgroundImage: {fileID: 0}
   description: Fishing
   useRegionalDescription: 0
-  resourceDescriptionProfile: Fishing
-  optionalOverride: 1
+  resourceDescriptionProfile: 
+  optionalOverride: 0
   requireOutOfCombat: 0
   weaponAffinityNames: []
   holdableObjectList:

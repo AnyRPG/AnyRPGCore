@@ -14,12 +14,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   resourceName: Cooking
   displayName: 
-  icon: {fileID: 0}
+  icon: {fileID: 21300000, guid: 55a7d91dd3f9c4641814d49c55b5ebce, type: 3}
   iconBackgroundImage: {fileID: 0}
   description: Cooking
   useRegionalDescription: 0
-  resourceDescriptionProfile: Cooking
-  optionalOverride: 1
+  resourceDescriptionProfile: 
+  optionalOverride: 0
   requireOutOfCombat: 0
   weaponAffinityNames: []
   holdableObjectList: []

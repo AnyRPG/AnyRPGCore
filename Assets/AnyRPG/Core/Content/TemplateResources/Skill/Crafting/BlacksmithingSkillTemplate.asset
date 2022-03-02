@@ -13,9 +13,13 @@ MonoBehaviour:
   m_Name: BlacksmithingSkillTemplate
   m_EditorClassIdentifier: 
   resourceName: Blacksmithing
-  icon: {fileID: 0}
+  displayName: 
+  icon: {fileID: 21300000, guid: 957bbeabbf5f0d145a36adaf44bfa888, type: 3}
+  iconBackgroundImage: {fileID: 0}
   description: Create Weapons and Armor
-  resourceDescriptionProfile: Blacksmithing
+  useRegionalDescription: 0
+  resourceDescriptionProfile: 
+  optionalOverride: 0
   requiredLevel: 1
   autoLearn: 0
   abilityNames:

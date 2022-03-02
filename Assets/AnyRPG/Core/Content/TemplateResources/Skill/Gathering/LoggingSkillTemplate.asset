@@ -13,9 +13,13 @@ MonoBehaviour:
   m_Name: LoggingSkillTemplate
   m_EditorClassIdentifier: 
   resourceName: Logging
-  icon: {fileID: 0}
+  displayName: 
+  icon: {fileID: 21300000, guid: c29581dd72215de45a220d8bc131408a, type: 3}
+  iconBackgroundImage: {fileID: 0}
   description: Harvest trees for lumber
-  resourceDescriptionProfile: Logging
+  useRegionalDescription: 0
+  resourceDescriptionProfile: 
+  optionalOverride: 0
   requiredLevel: 1
   autoLearn: 0
   abilityNames:

@@ -14,12 +14,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   resourceName: Logging
   displayName: 
-  icon: {fileID: 0}
+  icon: {fileID: 21300000, guid: c29581dd72215de45a220d8bc131408a, type: 3}
   iconBackgroundImage: {fileID: 0}
   description: Harvest a tree for lumber
   useRegionalDescription: 0
-  resourceDescriptionProfile: Logging
-  optionalOverride: 1
+  resourceDescriptionProfile: 
+  optionalOverride: 0
   requireOutOfCombat: 0
   weaponAffinityNames: []
   holdableObjectList:

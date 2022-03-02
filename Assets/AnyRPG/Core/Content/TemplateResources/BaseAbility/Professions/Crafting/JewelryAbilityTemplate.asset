@@ -14,12 +14,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   resourceName: Jewelry
   displayName: 
-  icon: {fileID: 0}
+  icon: {fileID: 21300000, guid: ef47ebf7fabcbb04a9bd38e08e98bad1, type: 3}
   iconBackgroundImage: {fileID: 0}
   description: Create gems and jewelry
   useRegionalDescription: 0
-  resourceDescriptionProfile: Jewelry
-  optionalOverride: 1
+  resourceDescriptionProfile: 
+  optionalOverride: 0
   requireOutOfCombat: 0
   weaponAffinityNames: []
   holdableObjectList:

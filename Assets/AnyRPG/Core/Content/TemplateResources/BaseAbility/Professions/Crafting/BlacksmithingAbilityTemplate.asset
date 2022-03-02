@@ -14,12 +14,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   resourceName: Blacksmithing
   displayName: 
-  icon: {fileID: 0}
+  icon: {fileID: 21300000, guid: 957bbeabbf5f0d145a36adaf44bfa888, type: 3}
   iconBackgroundImage: {fileID: 0}
   description: BlackSmithing
   useRegionalDescription: 0
-  resourceDescriptionProfile: Blacksmithing
-  optionalOverride: 1
+  resourceDescriptionProfile: 
+  optionalOverride: 0
   requireOutOfCombat: 0
   weaponAffinityNames: []
   holdableObjectList:

@@ -13,9 +13,13 @@ MonoBehaviour:
   m_Name: JewelrySkillTemplate
   m_EditorClassIdentifier: 
   resourceName: Jewelry
-  icon: {fileID: 0}
+  displayName: 
+  icon: {fileID: 21300000, guid: ef47ebf7fabcbb04a9bd38e08e98bad1, type: 3}
+  iconBackgroundImage: {fileID: 0}
   description: Create gems and jewelry
-  resourceDescriptionProfile: Jewelry
+  useRegionalDescription: 0
+  resourceDescriptionProfile: 
+  optionalOverride: 0
   requiredLevel: 1
   autoLearn: 0
   abilityNames:

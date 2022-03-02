@@ -14,12 +14,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   resourceName: Alchemy
   displayName: 
-  icon: {fileID: 0}
+  icon: {fileID: 21300000, guid: 799e339a8eea16f4d805d555e6c32994, type: 3}
   iconBackgroundImage: {fileID: 0}
   description: Mix herbs to create potions that enhance abilities and restore energy
   useRegionalDescription: 0
-  resourceDescriptionProfile: Alchemy
-  optionalOverride: 1
+  resourceDescriptionProfile: 
+  optionalOverride: 0
   requireOutOfCombat: 0
   weaponAffinityNames: []
   holdableObjectList: []

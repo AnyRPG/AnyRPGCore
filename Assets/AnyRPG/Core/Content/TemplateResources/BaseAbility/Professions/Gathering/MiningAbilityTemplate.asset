@@ -14,12 +14,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   resourceName: Mining
   displayName: 
-  icon: {fileID: 0}
+  icon: {fileID: 21300000, guid: cb19cabc72859994b9ca4fce40b1abdd, type: 3}
   iconBackgroundImage: {fileID: 0}
   description: Mine something from the ground
   useRegionalDescription: 0
-  resourceDescriptionProfile: Mining
-  optionalOverride: 1
+  resourceDescriptionProfile: 
+  optionalOverride: 0
   requireOutOfCombat: 0
   weaponAffinityNames: []
   holdableObjectList:

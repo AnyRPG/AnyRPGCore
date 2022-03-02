@@ -13,9 +13,13 @@ MonoBehaviour:
   m_Name: TailoringSkillTemplate
   m_EditorClassIdentifier: 
   resourceName: Tailoring
-  icon: {fileID: 0}
+  displayName: 
+  icon: {fileID: 21300000, guid: 21cbbb12ac473dc4d96ec799d058714f, type: 3}
+  iconBackgroundImage: {fileID: 0}
   description: Create Cloth Armor
-  resourceDescriptionProfile: Tailoring
+  useRegionalDescription: 0
+  resourceDescriptionProfile: 
+  optionalOverride: 0
   requiredLevel: 1
   autoLearn: 0
   abilityNames:

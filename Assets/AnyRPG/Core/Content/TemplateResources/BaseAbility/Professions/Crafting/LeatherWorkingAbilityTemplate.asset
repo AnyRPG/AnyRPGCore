@@ -14,12 +14,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   resourceName: Leatherworking
   displayName: 
-  icon: {fileID: 0}
+  icon: {fileID: 21300000, guid: a706db2397c26634ba9e5470db43b3ac, type: 3}
   iconBackgroundImage: {fileID: 0}
   description: Create armor from leather
   useRegionalDescription: 0
-  resourceDescriptionProfile: Leatherworking
-  optionalOverride: 1
+  resourceDescriptionProfile: 
+  optionalOverride: 0
   requireOutOfCombat: 0
   weaponAffinityNames: []
   holdableObjectList:

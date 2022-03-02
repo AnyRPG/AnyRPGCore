@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4cd8632a7dd644c4fb9788820076220d, type: 3}
   m_Name: SilverIngotItemTemplate
   m_EditorClassIdentifier: 
-  resourceName: Iron Ingot
+  resourceName: Silver Ingot
   displayName: 
   icon: {fileID: 21300000, guid: 77a80f802238dca418a14e3a8d3db24c, type: 3}
   iconBackgroundImage: {fileID: 0}

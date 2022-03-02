@@ -14,12 +14,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   resourceName: Skinning
   displayName: 
-  icon: {fileID: 0}
+  icon: {fileID: 21300000, guid: ca92d9f43c64b96488f43a13a20cde84, type: 3}
   iconBackgroundImage: {fileID: 0}
   description: Skin hides from animals.
   useRegionalDescription: 0
-  resourceDescriptionProfile: Skinning
-  optionalOverride: 1
+  resourceDescriptionProfile: 
+  optionalOverride: 0
   requireOutOfCombat: 0
   weaponAffinityNames: []
   holdableObjectList: []

@@ -13,9 +13,13 @@ MonoBehaviour:
   m_Name: CookingSkillTemplate
   m_EditorClassIdentifier: 
   resourceName: Cooking
-  icon: {fileID: 0}
+  displayName: 
+  icon: {fileID: 21300000, guid: 55a7d91dd3f9c4641814d49c55b5ebce, type: 3}
+  iconBackgroundImage: {fileID: 0}
   description: Make food that's yummy for your tummy
-  resourceDescriptionProfile: Cooking
+  useRegionalDescription: 0
+  resourceDescriptionProfile: 
+  optionalOverride: 0
   requiredLevel: 1
   autoLearn: 0
   abilityNames:

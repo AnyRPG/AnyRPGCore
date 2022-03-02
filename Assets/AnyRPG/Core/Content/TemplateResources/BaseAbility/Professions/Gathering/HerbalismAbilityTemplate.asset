@@ -14,12 +14,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   resourceName: Herbalism
   displayName: 
-  icon: {fileID: 0}
+  icon: {fileID: 21300000, guid: 9270b5e6cc523534caada8a5243f15f7, type: 3}
   iconBackgroundImage: {fileID: 0}
   description: Herbalism
   useRegionalDescription: 0
-  resourceDescriptionProfile: Herbalism
-  optionalOverride: 1
+  resourceDescriptionProfile: 
+  optionalOverride: 0
   requireOutOfCombat: 0
   weaponAffinityNames: []
   holdableObjectList: []

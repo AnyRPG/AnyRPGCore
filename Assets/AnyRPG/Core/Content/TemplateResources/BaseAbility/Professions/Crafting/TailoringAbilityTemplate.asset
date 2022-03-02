@@ -14,12 +14,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   resourceName: Tailoring
   displayName: 
-  icon: {fileID: 0}
+  icon: {fileID: 21300000, guid: 21cbbb12ac473dc4d96ec799d058714f, type: 3}
   iconBackgroundImage: {fileID: 0}
   description: Create Cloth Armor
   useRegionalDescription: 0
-  resourceDescriptionProfile: Tailoring
-  optionalOverride: 1
+  resourceDescriptionProfile: 
+  optionalOverride: 0
   requireOutOfCombat: 0
   weaponAffinityNames: []
   holdableObjectList:
