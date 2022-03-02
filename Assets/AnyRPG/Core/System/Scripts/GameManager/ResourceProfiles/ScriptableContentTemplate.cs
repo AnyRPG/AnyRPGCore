@@ -13,9 +13,13 @@ namespace AnyRPG {
 
         [Header("Scriptable Content")]
 
-        [Tooltip("Resources to copy.")]
+        [Tooltip("Resources to copy")]
         [SerializeField]
         private List<DescribableResource> resources = new List<DescribableResource>();
+
+        [Tooltip("Resources to copy")]
+        [SerializeField]
+        private List<GameObject> prefabs = new List<GameObject>();
 
         [Header("Dependencies")]
 
@@ -25,6 +29,7 @@ namespace AnyRPG {
 
         public List<DescribableResource> Resources { get => resources; set => resources = value; }
         public List<ScriptableContentTemplate> Dependencies { get => dependencies; set => dependencies = value; }
+        public List<GameObject> Prefabs { get => prefabs; set => prefabs = value; }
     }
 
 }

@@ -44,6 +44,12 @@ namespace AnyRPG {
 
         void OnEnable() {
             systemConfigurationManager = GameObject.FindObjectOfType<SystemConfigurationManager>();
+            if (systemConfigurationManager == null) {
+                SceneConfig sceneConfig = GameObject.FindObjectOfType<SceneConfig>();
+                if (sceneConfig != null) {
+                    systemConfigurationManager = sceneConfig.systemConfigurationManager;
+                }
+            }
             if (systemConfigurationManager != null) {
                 gameName = systemConfigurationManager.GameName;
             }
@@ -60,9 +66,13 @@ namespace AnyRPG {
 
             List<DescribableResource> describableResources = GetDescribableResources(scriptableContentTemplates);
 
+            List<GameObject> gameObjects = GetGameObjects(scriptableContentTemplates);
+
             EditorUtility.DisplayProgressBar("Scriptable Template Content Wizard", "Copying Resources...", 0.3f);
 
-            CopyResources(describableResources);
+            CopyResources(describableResources, 0, describableResources.Count + gameObjects.Count);
+
+            CopyPrefabs(gameObjects, describableResources.Count, describableResources.Count + gameObjects.Count);
 
             AssetDatabase.Refresh();
 
@@ -81,10 +91,11 @@ namespace AnyRPG {
 
         }
 
-        private void CopyResources(List<DescribableResource> describableResources) {
+        private void CopyResources(List<DescribableResource> describableResources, int beginCount, int totalCount) {
 
             string newGameFolder = GetNewGameFolder();
 
+            int copyCount = 0;
             foreach (DescribableResource describableResource in describableResources) {
 
                 // get the existing path of the resource to copy
@@ -126,7 +137,65 @@ namespace AnyRPG {
                 } else {
                     Debug.Log("Skipping copy. Resource '" + destinationAssetpath + "' already exists");
                 }
-                
+
+                copyCount++;
+                EditorUtility.DisplayProgressBar("Scriptable Template Content Wizard", "Copying Resources...", 0.3f + ((float)beginCount + copyCount) / totalCount);
+
+            }
+
+        }
+
+        private void CopyPrefabs(List<GameObject> objectResources, int beginCount, int totalCount) {
+
+            string newGameFolder = GetNewGameFolder();
+
+            int copyCount = 0;
+
+            foreach (GameObject prefabObject in objectResources) {
+
+                // get the existing path of the resource to copy
+                string assetPath = AssetDatabase.GetAssetPath(prefabObject);
+                //Debug.Log("Copying Resource at path: " + assetPath);
+
+                // find the resources folder in the path
+                string[] assetPathComponents = assetPath.Split('/');
+                int basePosition = 0;
+                for (int i = 0; i < assetPathComponents.Length; i++) {
+                    if (assetPathComponents[i] == "TemplatePrefabs") {
+                        basePosition = i;
+                        break;
+                    }
+                }
+
+                string basepath = "";
+                // start 2 folders above resources, and end at the folder below the filename
+                // eg Assets/AnyRPG/Core/Games/FeaturesDemo/Resources/FeaturesDemoGame/[AbilityEffect/Attack/]AttackEffect.asset
+                for (int i = basePosition + 1; i < assetPathComponents.Length - 1; i++) {
+                    basepath += "/" + assetPathComponents[i];
+                    string resourcesFolder = newGameFolder + "/Prefab" + basepath;
+
+                    // create the resources folder
+                    //Debug.Log("Creating folder " + resourcesFolder);
+                    CreateFolderIfNotExists(resourcesFolder);
+
+                }
+
+                // copy the resource
+                string destinationPartialPath = "/Games/" + fileSystemGameName + "/Prefab" + basepath + "/" + assetPathComponents[assetPathComponents.Length - 1].Replace("Template", "");
+                string destinationAssetpath = "Assets" + destinationPartialPath;
+                string destinationFilesystemPath = Application.dataPath + destinationPartialPath;
+                //Debug.Log(destinationFilesystemPath);
+
+                if (System.IO.File.Exists(destinationFilesystemPath) == false || replaceExisting == true) {
+                    Debug.Log("Copying Resource from '" + assetPath + "' to '" + destinationAssetpath + "'");
+                    AssetDatabase.CopyAsset(assetPath, destinationAssetpath);
+                } else {
+                    Debug.Log("Skipping copy. Prefab '" + destinationAssetpath + "' already exists");
+                }
+
+                copyCount++;
+                EditorUtility.DisplayProgressBar("Scriptable Template Content Wizard", "Copying Resources...", 0.3f + ((float)beginCount + copyCount) / totalCount);
+
             }
 
         }
@@ -139,6 +208,21 @@ namespace AnyRPG {
                 foreach (DescribableResource describableResource in scriptableContentTemplate.Resources) {
                     if (returnList.Contains(describableResource) == false) {
                         returnList.Add(describableResource);
+                    }
+                }
+            }
+
+            return returnList;
+        }
+
+        private List<GameObject> GetGameObjects(List<ScriptableContentTemplate> scriptableContentTemplates) {
+            List<GameObject> returnList = new List<GameObject>();
+
+            // create a list of unique describable resources from the scriptable content templates
+            foreach (ScriptableContentTemplate scriptableContentTemplate in scriptableContentTemplates) {
+                foreach (GameObject gameObject in scriptableContentTemplate.Prefabs) {
+                    if (returnList.Contains(gameObject) == false) {
+                        returnList.Add(gameObject);
                     }
                 }
             }

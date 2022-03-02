@@ -267,7 +267,14 @@ namespace AnyRPG {
         [ResourceSelector(resourceType = typeof(InteractableOptionConfig))]
         private List<string> interactableOptions = new List<string>();
 
-        private List<InteractableOptionConfig> interactableOptionConfigs = new List<InteractableOptionConfig>();
+        [Header("Inline Interactables")]
+
+        [Tooltip("The configs of the interactable options available on this character")]
+        [SerializeReference]
+        [SerializeReferenceButton]
+        private List<InteractableOptionProps> inlineInteractableOptions = new List<InteractableOptionProps>();
+
+        private List<InteractableOptionProps> interactableOptionProps = new List<InteractableOptionProps>();
 
         [Header("Object Persistence")]
 
@@ -366,7 +373,7 @@ namespace AnyRPG {
 
         public CapabilityProps Capabilities { get => capabilities; set => capabilities = value; }
         public List<Equipment> EquipmentList { get => equipmentList; set => equipmentList = value; }
-        public List<InteractableOptionConfig> InteractableOptionConfigs { get => interactableOptionConfigs; set => interactableOptionConfigs = value; }
+        public List<InteractableOptionProps> InteractableOptionConfigs { get => interactableOptionProps; set => interactableOptionProps = value; }
         public bool IsAggressive { get => isAggressive; set => isAggressive = value; }
         public bool IsMobile { get => isMobile; set => isMobile = value; }
         public float InteractionMaxRange { get => interactionMaxRange; set => interactionMaxRange = value; }
@@ -590,12 +597,20 @@ namespace AnyRPG {
                 foreach (string interactableOptionName in interactableOptions) {
                     if (interactableOptionName != null && interactableOptionName != string.Empty) {
                         InteractableOptionConfig interactableOptionConfig = systemDataFactory.GetResource<InteractableOptionConfig>(interactableOptionName);
-                        if (interactableOptionConfig != null) {
-                            interactableOptionConfigs.Add(interactableOptionConfig);
+                        if (interactableOptionConfig != null && interactableOptionConfig.InteractableOptionProps != null) {
+                            interactableOptionProps.Add(interactableOptionConfig.InteractableOptionProps);
                         } else {
                             Debug.LogError("UnitProfile.SetupScriptableObjects(): Could not find interactableOptionConfig: " + interactableOptionName + " while inititalizing " + DisplayName + ".  CHECK INSPECTOR");
                         }
                     }
+                }
+            }
+
+            // inline interactables
+            foreach (InteractableOptionProps interactableOptionProp in inlineInteractableOptions) {
+                if (interactableOptionProp != null) {
+                    interactableOptionProp.SetupScriptableObjects(systemGameManager);
+                    interactableOptionProps.Add(interactableOptionProp);
                 }
             }
 

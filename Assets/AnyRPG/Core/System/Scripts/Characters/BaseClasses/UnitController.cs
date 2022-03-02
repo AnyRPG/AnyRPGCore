@@ -931,9 +931,9 @@ namespace AnyRPG {
             }
 
             // named interactable options
-            foreach (InteractableOptionConfig interactableOption in unitProfile.InteractableOptionConfigs) {
-                if (interactableOption.InteractableOptionProps != null) {
-                    InteractableOptionComponent interactableOptionComponent = interactableOption.InteractableOptionProps.GetInteractableOption(this);
+            foreach (InteractableOptionProps interactableOption in unitProfile.InteractableOptionConfigs) {
+                if (interactableOption != null) {
+                    InteractableOptionComponent interactableOptionComponent = interactableOption.GetInteractableOption(this);
                     interactables.Add(interactableOptionComponent);
                     //interactableOptionComponent.HandlePrerequisiteUpdates();
                 }
