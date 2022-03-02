@@ -20,18 +20,17 @@ MonoBehaviour:
   useRegionalDescription: 0
   resourceDescriptionProfile: 
   optionalOverride: 0
-  resources:
-  - {fileID: 11400000, guid: 00b359f049cbae845b4442ca4917e850, type: 2}
-  - {fileID: 11400000, guid: 4faf4e0e58c1e49479271f53cce935e2, type: 2}
-  - {fileID: 11400000, guid: 565d46cd3fc9c6f45bf890b3af86ac82, type: 2}
-  - {fileID: 11400000, guid: a68c9026e89bfaf43b8e08b17e55fe34, type: 2}
-  - {fileID: 11400000, guid: 78ad5054153aca24b84575202b4c50eb, type: 2}
-  - {fileID: 11400000, guid: 0bc0ba76f5a913543831b8767b06b6d4, type: 2}
-  - {fileID: 11400000, guid: 0dd80b9a9c3144846b978b21fa23afc3, type: 2}
-  - {fileID: 11400000, guid: a49541f4667879b4398c7124e25b0d9b, type: 2}
-  - {fileID: 11400000, guid: 0aa488b7baa74584788b74a5dba1b0ef, type: 2}
-  - {fileID: 11400000, guid: 94f3484e9c261f54ebbbb646b83c8d34, type: 2}
-  - {fileID: 11400000, guid: 278cb90c015a6c54bbffe2c53d71b7b1, type: 2}
-  - {fileID: 11400000, guid: 473bd29fc7f7128459f66fe2399175cc, type: 2}
-  - {fileID: 11400000, guid: 86d3e04a735138a4fb96f332ca707f6b, type: 2}
-  dependencies: []
+  resources: []
+  prefabs: []
+  dependencies:
+  - {fileID: 11400000, guid: 15043375e77c7914fb84db9d1203274c, type: 2}
+  - {fileID: 11400000, guid: aa8956b5395b52c4780804b77aaad033, type: 2}
+  - {fileID: 11400000, guid: 12ffa1ec7874ce6488ffae2b6e4d38cc, type: 2}
+  - {fileID: 11400000, guid: dd542010e94ea7340b3e8ff864a08bcd, type: 2}
+  - {fileID: 11400000, guid: 42b6ee03d3eebc543b6925ea8dead2f2, type: 2}
+  - {fileID: 11400000, guid: 15e9625ae3c8ea44aa4d7574c6e2e17c, type: 2}
+  - {fileID: 11400000, guid: 635ca7b2dadad6442a5996e88a8073fe, type: 2}
+  - {fileID: 11400000, guid: ab971412223753446b2f39c1e792d126, type: 2}
+  - {fileID: 11400000, guid: 8bb7dd8e203b2694287fd0bf063ff1bf, type: 2}
+  - {fileID: 11400000, guid: 5c1b86f222a0b7744be25896650bfe1c, type: 2}
+  - {fileID: 11400000, guid: edc1f1c2b522c114da7165765a55f71b, type: 2}

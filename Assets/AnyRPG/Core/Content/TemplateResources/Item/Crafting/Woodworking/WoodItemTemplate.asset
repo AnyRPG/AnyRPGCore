@@ -14,10 +14,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   resourceName: Wood
   displayName: 
-  icon: {fileID: 0}
+  icon: {fileID: 21300000, guid: 5397ebfa1cbe8c248b3779eb8161c43a, type: 3}
   iconBackgroundImage: {fileID: 0}
   description: Finished Wood
-  useRegionalDescription: 1
+  useRegionalDescription: 0
   resourceDescriptionProfile: 
   optionalOverride: 0
   stackSize: 5
