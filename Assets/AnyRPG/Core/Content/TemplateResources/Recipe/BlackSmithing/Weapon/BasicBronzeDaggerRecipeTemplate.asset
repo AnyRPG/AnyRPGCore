@@ -25,7 +25,7 @@ MonoBehaviour:
   craftingMaterials:
   - itemName: Bronze Ingot
     count: 1
-  - itemName: Wood
+  - itemName: Lumber
     count: 1
   itemOutputName: Basic Bronze Dagger
   outputCount: 1

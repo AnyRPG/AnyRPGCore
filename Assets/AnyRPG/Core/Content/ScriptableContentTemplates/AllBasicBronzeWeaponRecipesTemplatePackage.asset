@@ -1,0 +1,36 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6c9b51b8d3aa844448aaeab0a989e2fa, type: 3}
+  m_Name: AllBasicBronzeWeaponRecipesTemplatePackage
+  m_EditorClassIdentifier: 
+  resourceName: Basic Bronze Weapon Recipes
+  displayName: 
+  icon: {fileID: 0}
+  iconBackgroundImage: {fileID: 0}
+  description: 
+  useRegionalDescription: 0
+  resourceDescriptionProfile: 
+  optionalOverride: 0
+  resources: []
+  prefabs: []
+  dependencies:
+  - {fileID: 11400000, guid: 264945907ad398d469219f24ffef8a0a, type: 2}
+  - {fileID: 11400000, guid: d0538a75511fb5945a35fa9c03d1552b, type: 2}
+  - {fileID: 11400000, guid: b7b57ef7982fa5940a3501b1724c51dd, type: 2}
+  - {fileID: 11400000, guid: d924281d394b44a48b6eb8d93bfd16d3, type: 2}
+  - {fileID: 11400000, guid: f29064990bd93ea4d9c50434e9be2803, type: 2}
+  - {fileID: 11400000, guid: bdb30506f0dfe9644a64fb5992e4f3f6, type: 2}
+  - {fileID: 11400000, guid: cc13ffdcb8ab4ce48b216b9bff11eb91, type: 2}
+  - {fileID: 11400000, guid: b96568dddca4d2f40b94e3dc0c58664b, type: 2}
+  - {fileID: 11400000, guid: 25e4cac411a83c4479e0159f011ffcd9, type: 2}
+  - {fileID: 11400000, guid: 0d848ff8d512dad4189728bbcf2546f6, type: 2}
+  - {fileID: 11400000, guid: 216938d06055a6e429a8ff6b8840f328, type: 2}

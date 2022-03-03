@@ -139,7 +139,7 @@ namespace AnyRPG {
                 }
 
                 copyCount++;
-                EditorUtility.DisplayProgressBar("Scriptable Template Content Wizard", "Copying Resources...", 0.3f + ((float)beginCount + copyCount) / totalCount);
+                EditorUtility.DisplayProgressBar("Scriptable Template Content Wizard", "Copying Resources...", 0.3f + ((((float)beginCount + copyCount) / totalCount) * 0.7f));
 
             }
 
@@ -194,7 +194,7 @@ namespace AnyRPG {
                 }
 
                 copyCount++;
-                EditorUtility.DisplayProgressBar("Scriptable Template Content Wizard", "Copying Resources...", 0.3f + ((float)beginCount + copyCount) / totalCount);
+                EditorUtility.DisplayProgressBar("Scriptable Template Content Wizard", "Copying Resources...", 0.3f + ((((float)beginCount + copyCount) / totalCount) * 0.7f));
 
             }
 

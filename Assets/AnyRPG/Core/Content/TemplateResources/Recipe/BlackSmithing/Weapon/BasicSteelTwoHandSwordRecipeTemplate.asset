@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7d23ab85f082d014aa83f7dcda2c5410, type: 3}
   m_Name: BasicSteelTwoHandSwordRecipeTemplate
   m_EditorClassIdentifier: 
-  resourceName: Basic Silver Two Hand Sword
+  resourceName: Basic Steel Two Hand Sword
   displayName: 
   icon: {fileID: 0}
   iconBackgroundImage: {fileID: 0}
@@ -21,13 +21,13 @@ MonoBehaviour:
   resourceDescriptionProfile: 
   optionalOverride: 0
   autoLearn: 1
-  requiredLevel: 8
+  requiredLevel: 1
   craftingMaterials:
   - itemName: Steel Ingot
     count: 1
-  - itemName: Wood
+  - itemName: Lumber
     count: 1
-  itemOutputName: Basic Silver Two Hand Sword
+  itemOutputName: Basic Steel Two Hand Sword
   outputCount: 1
   craftAbilityName: Blacksmithing
   holdableObjectList:

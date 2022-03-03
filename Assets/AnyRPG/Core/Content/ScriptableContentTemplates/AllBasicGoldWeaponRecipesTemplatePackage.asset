@@ -1,0 +1,36 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6c9b51b8d3aa844448aaeab0a989e2fa, type: 3}
+  m_Name: AllBasicGoldWeaponRecipesTemplatePackage
+  m_EditorClassIdentifier: 
+  resourceName: Basic Gold Weapon Recipes
+  displayName: 
+  icon: {fileID: 0}
+  iconBackgroundImage: {fileID: 0}
+  description: 
+  useRegionalDescription: 0
+  resourceDescriptionProfile: 
+  optionalOverride: 0
+  resources: []
+  prefabs: []
+  dependencies:
+  - {fileID: 11400000, guid: 5298a784af3cdd2488c7aaf7ea90a59b, type: 2}
+  - {fileID: 11400000, guid: 0b72af411bede3b43b7fdba72b8ec25a, type: 2}
+  - {fileID: 11400000, guid: a7509a057a78f3e41b979eb1f13ff4dc, type: 2}
+  - {fileID: 11400000, guid: 2e4f4369271568e489d4d67b845225f9, type: 2}
+  - {fileID: 11400000, guid: 5153d41f4e9958244b77d7d92b0a6f4f, type: 2}
+  - {fileID: 11400000, guid: fcb874e38502a534ebe40a942479f1c7, type: 2}
+  - {fileID: 11400000, guid: d95a10eedefb3554684e689d949c1e46, type: 2}
+  - {fileID: 11400000, guid: 46c31628a773c554fbeddf7eb9edead4, type: 2}
+  - {fileID: 11400000, guid: 4465f4d3e2186004290726e494dd4e23, type: 2}
+  - {fileID: 11400000, guid: d9b1fb21f25b5b1488366381666ecddb, type: 2}
+  - {fileID: 11400000, guid: a8c8e853009d7a6469b5cfb76621f451, type: 2}

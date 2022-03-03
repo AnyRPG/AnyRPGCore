@@ -1,0 +1,36 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6c9b51b8d3aa844448aaeab0a989e2fa, type: 3}
+  m_Name: AllBasicIronWeaponRecipesTemplatePackage
+  m_EditorClassIdentifier: 
+  resourceName: Basic Iron Weapon Recipes
+  displayName: 
+  icon: {fileID: 0}
+  iconBackgroundImage: {fileID: 0}
+  description: 
+  useRegionalDescription: 0
+  resourceDescriptionProfile: 
+  optionalOverride: 0
+  resources: []
+  prefabs: []
+  dependencies:
+  - {fileID: 11400000, guid: 906e04ef04c250f409c1088f7324ca40, type: 2}
+  - {fileID: 11400000, guid: c650c873fd106fb429fe8c78b1bf34e6, type: 2}
+  - {fileID: 11400000, guid: 20fc4a8a30c677648a82fde44ca77492, type: 2}
+  - {fileID: 11400000, guid: 76c4156f1f6a8704e8a86fd528841173, type: 2}
+  - {fileID: 11400000, guid: c191844cfd3f42040976efdbffa2f5da, type: 2}
+  - {fileID: 11400000, guid: 784c7b49fca437b46969569586f3df79, type: 2}
+  - {fileID: 11400000, guid: db76a36234ca7174dbca16164b0c1a29, type: 2}
+  - {fileID: 11400000, guid: 8d89860385eaf43409b32cbc6c6ecbcf, type: 2}
+  - {fileID: 11400000, guid: 318493e13bcb35f45a533aaf53367052, type: 2}
+  - {fileID: 11400000, guid: 41ad00e2cf4bc75488aabd814f508c5d, type: 2}
+  - {fileID: 11400000, guid: 6b5880d77ec3fa04aa62aeb29b338da1, type: 2}

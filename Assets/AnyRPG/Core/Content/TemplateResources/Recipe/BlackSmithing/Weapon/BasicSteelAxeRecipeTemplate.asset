@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7d23ab85f082d014aa83f7dcda2c5410, type: 3}
   m_Name: BasicSteelAxeRecipeTemplate
   m_EditorClassIdentifier: 
-  resourceName: Basic Silver Axe
+  resourceName: Basic Steel Axe
   displayName: 
   icon: {fileID: 0}
   iconBackgroundImage: {fileID: 0}
@@ -25,9 +25,9 @@ MonoBehaviour:
   craftingMaterials:
   - itemName: Steel Ingot
     count: 1
-  - itemName: Wood
+  - itemName: Lumber
     count: 1
-  itemOutputName: Basic Silver Axe
+  itemOutputName: Basic Steel Axe
   outputCount: 1
   craftAbilityName: Blacksmithing
   holdableObjectList:

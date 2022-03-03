@@ -1,0 +1,30 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6c9b51b8d3aa844448aaeab0a989e2fa, type: 3}
+  m_Name: BasicBronzeSabreRecipeTemplatePackage
+  m_EditorClassIdentifier: 
+  resourceName: Basic Bronze Sabre Recipe
+  displayName: 
+  icon: {fileID: 0}
+  iconBackgroundImage: {fileID: 0}
+  description: 
+  useRegionalDescription: 0
+  resourceDescriptionProfile: 
+  optionalOverride: 0
+  resources:
+  - {fileID: 11400000, guid: fe4365878d2f756479ecde041fca5a2d, type: 2}
+  - {fileID: 11400000, guid: a4b6e99b4da8b04499286fbb9045a9e2, type: 2}
+  - {fileID: 11400000, guid: b9c3f423c38ddc74282c4f8995625e34, type: 2}
+  - {fileID: 11400000, guid: 98845f9dfca243b40b8d7b4281b4ddcb, type: 2}
+  prefabs: []
+  dependencies:
+  - {fileID: 11400000, guid: 7cfd8e779f0233348ad14f52ce660517, type: 2}

@@ -21,11 +21,11 @@ MonoBehaviour:
   resourceDescriptionProfile: 
   optionalOverride: 0
   autoLearn: 1
-  requiredLevel: 8
+  requiredLevel: 1
   craftingMaterials:
   - itemName: Silver Ingot
     count: 1
-  - itemName: Wood
+  - itemName: Lumber
     count: 1
   itemOutputName: Basic Silver Mace
   outputCount: 1
