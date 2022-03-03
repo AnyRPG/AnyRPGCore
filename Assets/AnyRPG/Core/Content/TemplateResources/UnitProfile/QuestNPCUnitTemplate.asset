@@ -19,6 +19,7 @@ MonoBehaviour:
   description: 
   useRegionalDescription: 0
   resourceDescriptionProfile: 
+  optionalOverride: 0
   automaticPrefabProfile: 0
   prefabProfileName: 
   useInlinePrefabProps: 1
@@ -253,8 +254,60 @@ MonoBehaviour:
     prerequisiteConditions: []
     vendorCollectionNames: []
   interactableOptions: []
+  inlineInteractableOptions:
+  - id: 0
   persistObjectPosition: 0
   saveOnLevelUnload: 0
   saveOnGameSave: 0
   overwriteUnitUUID: 0
   m_UUID: 9d890594-3306-4c08-baf1-7af8cccc05e5
+  references:
+    version: 1
+    00000000:
+      type: {class: QuestGiverProps, ns: AnyRPG, asm: Assembly-CSharp}
+      data:
+        interactionPanelTitle: 
+        interactionPanelImage: {fileID: 0}
+        namePlateImage: {fileID: 0}
+        prerequisiteConditions: []
+        quests:
+        - startQuest: 1
+          endQuest: 1
+          questName: Dialog Introduction
+        - startQuest: 1
+          endQuest: 1
+          questName: Collection
+        - startQuest: 1
+          endQuest: 1
+          questName: Finish Another Quest
+        - startQuest: 1
+          endQuest: 1
+          questName: Dialog Objective
+        - startQuest: 1
+          endQuest: 1
+          questName: Kill Things
+        - startQuest: 1
+          endQuest: 0
+          questName: Use Interactable
+        - startQuest: 1
+          endQuest: 1
+          questName: Visit Zone
+        - startQuest: 1
+          endQuest: 1
+          questName: Learn Trade Skill
+        - startQuest: 1
+          endQuest: 1
+          questName: Use Ability
+        - startQuest: 1
+          endQuest: 1
+          questName: Repeatable
+        - startQuest: 1
+          endQuest: 1
+          questName: Repeatable 2 Step
+        - startQuest: 1
+          endQuest: 1
+          questName: Repeatable 3 Step
+        - startQuest: 1
+          endQuest: 1
+          questName: Repeatable 5 Step
+        questGiverProfileNames: []

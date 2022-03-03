@@ -216,8 +216,21 @@ MonoBehaviour:
     vendorCollectionNames:
     - Items
   interactableOptions: []
+  inlineInteractableOptions:
+  - id: 0
   persistObjectPosition: 0
   saveOnLevelUnload: 0
   saveOnGameSave: 0
   overwriteUnitUUID: 0
   m_UUID: 9d890594-3306-4c08-baf1-7af8cccc05e5
+  references:
+    version: 1
+    00000000:
+      type: {class: VendorProps, ns: AnyRPG, asm: Assembly-CSharp}
+      data:
+        interactionPanelTitle: 
+        interactionPanelImage: {fileID: 0}
+        namePlateImage: {fileID: 0}
+        prerequisiteConditions: []
+        vendorCollectionNames:
+        - Items

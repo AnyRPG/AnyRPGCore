@@ -19,6 +19,7 @@ MonoBehaviour:
   description: 
   useRegionalDescription: 0
   resourceDescriptionProfile: 
+  optionalOverride: 0
   automaticPrefabProfile: 0
   prefabProfileName: 
   useInlinePrefabProps: 1
@@ -216,8 +217,24 @@ MonoBehaviour:
     prerequisiteConditions: []
     vendorCollectionNames: []
   interactableOptions: []
+  inlineInteractableOptions:
+  - id: 0
   persistObjectPosition: 0
   saveOnLevelUnload: 0
   saveOnGameSave: 0
   overwriteUnitUUID: 0
   m_UUID: 6f871381-f6c9-4e3e-bf2d-c2f97d764998
+  references:
+    version: 1
+    00000000:
+      type: {class: QuestGiverProps, ns: AnyRPG, asm: Assembly-CSharp}
+      data:
+        interactionPanelTitle: 
+        interactionPanelImage: {fileID: 0}
+        namePlateImage: {fileID: 0}
+        prerequisiteConditions: []
+        quests:
+        - startQuest: 0
+          endQuest: 1
+          questName: Use Interactable
+        questGiverProfileNames: []

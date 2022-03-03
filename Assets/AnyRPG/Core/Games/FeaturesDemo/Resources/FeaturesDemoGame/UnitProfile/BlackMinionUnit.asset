@@ -19,6 +19,7 @@ MonoBehaviour:
   description: 
   useRegionalDescription: 0
   resourceDescriptionProfile: 
+  optionalOverride: 0
   automaticPrefabProfile: 0
   prefabProfileName: 
   useInlinePrefabProps: 1
@@ -27,7 +28,7 @@ MonoBehaviour:
       type: 3}
     modelPrefab: {fileID: 7399373879578635251, guid: ad150098b85acf24e9822be064e5325a,
       type: 3}
-    animationProfile: {fileID: 0}
+    animationProfileName: 
     useInlineAnimationProps: 0
     animationProps:
       useRootMotion: 0
@@ -108,6 +109,10 @@ MonoBehaviour:
       deathClip: {fileID: 0}
       reviveClip: {fileID: 0}
       levitatedClip: {fileID: 0}
+      swimIdleClip: {fileID: 0}
+      swimMoveClip: {fileID: 0}
+      flyIdleClip: {fileID: 0}
+      flyMoveClip: {fileID: 0}
     rotateModel: 0
     namePlateProps:
       displayName: 
@@ -127,8 +132,13 @@ MonoBehaviour:
     scale: {x: 1, y: 1, z: 1}
     targetBone: 
     attachmentProfileName: Humanoid
+    floatHeight: 1.4
+    addFloatHeightToTransform: 0
+    floatTransform: Spine1
   isUMAUnit: 0
   isPet: 0
+  flightCapable: 0
+  glideCapable: 0
   characterName: Black Minion
   title: 
   factionName: Black
@@ -177,7 +187,6 @@ MonoBehaviour:
     namePlateImage: {fileID: 0}
     prerequisiteConditions: []
     behaviorNames: []
-    useBehaviorCopy: 0
   interactionMaxRange: 3
   lootableCharacter:
     interactionPanelTitle: 
@@ -207,8 +216,22 @@ MonoBehaviour:
     prerequisiteConditions: []
     vendorCollectionNames: []
   interactableOptions: []
+  inlineInteractableOptions:
+  - id: 0
   persistObjectPosition: 0
   saveOnLevelUnload: 0
   saveOnGameSave: 0
   overwriteUnitUUID: 0
   m_UUID: 2923cf3a-7711-4c11-a18a-0ad5ed51ee20
+  references:
+    version: 1
+    00000000:
+      type: {class: LootableCharacterProps, ns: AnyRPG, asm: Assembly-CSharp}
+      data:
+        interactionPanelTitle: 
+        interactionPanelImage: {fileID: 0}
+        namePlateImage: {fileID: 0}
+        prerequisiteConditions: []
+        automaticCurrency: 1
+        lootTableNames:
+        - Dungeon
