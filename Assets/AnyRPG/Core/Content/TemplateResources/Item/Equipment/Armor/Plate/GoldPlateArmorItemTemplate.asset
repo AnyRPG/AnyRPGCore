@@ -14,10 +14,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   resourceName: Gold Plate Armor
   displayName: 
-  icon: {fileID: 21300000, guid: 77271d6fb7eba33488018b083b69eef0, type: 3}
+  icon: {fileID: 21300000, guid: 9cfc09656796399449d5ef6ed7cb8edc, type: 3}
   iconBackgroundImage: {fileID: 0}
   description: very gold
-  useRegionalDescription: 1
+  useRegionalDescription: 0
   resourceDescriptionProfile: 
   optionalOverride: 0
   stackSize: 0
@@ -32,9 +32,8 @@ MonoBehaviour:
   dynamicCurrencyAmount: 1
   pricePerLevel: 10
   basePrice: 0
-  uniqueItem: 1
-  characterClassRequirementList:
-  - Warrior
+  uniqueItem: 0
+  characterClassRequirementList: []
   equipmentSlotType: Armor
   equipmentSetName: 
   useUMARecipe: 1
@@ -55,4 +54,5 @@ MonoBehaviour:
   secondaryStats: []
   onEquipAbilityName: 
   learnedAbilityNames: []
+  requireArmorClass: 0
   armorClassName: Plate

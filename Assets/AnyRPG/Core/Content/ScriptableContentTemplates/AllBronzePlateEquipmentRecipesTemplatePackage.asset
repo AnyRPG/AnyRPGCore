@@ -1,0 +1,33 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6c9b51b8d3aa844448aaeab0a989e2fa, type: 3}
+  m_Name: AllBronzePlateEquipmentRecipesTemplatePackage
+  m_EditorClassIdentifier: 
+  resourceName: Bronze Plate Equipment Recipes
+  displayName: 
+  icon: {fileID: 0}
+  iconBackgroundImage: {fileID: 0}
+  description: 
+  useRegionalDescription: 0
+  resourceDescriptionProfile: 
+  optionalOverride: 0
+  resources: []
+  prefabs: []
+  dependencies:
+  - {fileID: 11400000, guid: 0d36dc2805178754baff9bfb1cf538d1, type: 2}
+  - {fileID: 11400000, guid: a2c331449a85a684397d299ed99feb2e, type: 2}
+  - {fileID: 11400000, guid: 5fe46c9becd686c4d81227be7125f068, type: 2}
+  - {fileID: 11400000, guid: ce5125c954eaa60478d5680a4668d190, type: 2}
+  - {fileID: 11400000, guid: b85386d3d9fcb1a479d4cbfa58508159, type: 2}
+  - {fileID: 11400000, guid: 383d2468357da404f83b6845c67d4d78, type: 2}
+  - {fileID: 11400000, guid: 3de6ea9249889dd40ae2b535c555fa92, type: 2}
+  - {fileID: 11400000, guid: c1d9e6500ac7d334cb28e96fb4d512ac, type: 2}

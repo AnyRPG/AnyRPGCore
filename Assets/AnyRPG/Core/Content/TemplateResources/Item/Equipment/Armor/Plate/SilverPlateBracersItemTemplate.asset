@@ -14,10 +14,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   resourceName: Silver Plate Bracers
   displayName: 
-  icon: {fileID: 21300000, guid: f297003a045aaeb428351a259f536a18, type: 3}
+  icon: {fileID: 21300000, guid: b3a1b44059b277a48b3fb0fe122c3577, type: 3}
   iconBackgroundImage: {fileID: 0}
   description: very silver
-  useRegionalDescription: 1
+  useRegionalDescription: 0
   resourceDescriptionProfile: 
   optionalOverride: 0
   stackSize: 0
@@ -32,9 +32,8 @@ MonoBehaviour:
   dynamicCurrencyAmount: 1
   pricePerLevel: 10
   basePrice: 0
-  uniqueItem: 1
-  characterClassRequirementList:
-  - Warrior
+  uniqueItem: 0
+  characterClassRequirementList: []
   equipmentSlotType: Bracers
   equipmentSetName: 
   useUMARecipe: 1
@@ -55,4 +54,5 @@ MonoBehaviour:
   secondaryStats: []
   onEquipAbilityName: 
   learnedAbilityNames: []
+  requireArmorClass: 0
   armorClassName: Plate

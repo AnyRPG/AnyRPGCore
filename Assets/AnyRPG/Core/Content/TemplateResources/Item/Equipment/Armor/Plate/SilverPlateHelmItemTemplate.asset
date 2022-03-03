@@ -14,10 +14,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   resourceName: Silver Plate Helm
   displayName: 
-  icon: {fileID: 21300000, guid: c5532884a5236ce4bb79e9f90f30cd8c, type: 3}
+  icon: {fileID: 21300000, guid: 74b082eddd2f6c240aa6eeb234e0b146, type: 3}
   iconBackgroundImage: {fileID: 0}
   description: very silver
-  useRegionalDescription: 1
+  useRegionalDescription: 0
   resourceDescriptionProfile: 
   optionalOverride: 0
   stackSize: 0
@@ -32,9 +32,8 @@ MonoBehaviour:
   dynamicCurrencyAmount: 1
   pricePerLevel: 10
   basePrice: 0
-  uniqueItem: 1
-  characterClassRequirementList:
-  - Warrior
+  uniqueItem: 0
+  characterClassRequirementList: []
   equipmentSlotType: Helm
   equipmentSetName: 
   useUMARecipe: 1
@@ -55,4 +54,5 @@ MonoBehaviour:
   secondaryStats: []
   onEquipAbilityName: 
   learnedAbilityNames: []
+  requireArmorClass: 0
   armorClassName: Plate

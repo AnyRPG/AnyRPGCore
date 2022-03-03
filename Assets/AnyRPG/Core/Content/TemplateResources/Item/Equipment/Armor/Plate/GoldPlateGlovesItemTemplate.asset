@@ -14,10 +14,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   resourceName: Gold Plate Gloves
   displayName: 
-  icon: {fileID: 21300000, guid: b815ea97dd3713e4593fbd2d0bb25150, type: 3}
+  icon: {fileID: 21300000, guid: 5a304d8e58602154da75b6d926bf534b, type: 3}
   iconBackgroundImage: {fileID: 0}
   description: very gold
-  useRegionalDescription: 1
+  useRegionalDescription: 0
   resourceDescriptionProfile: 
   optionalOverride: 0
   stackSize: 0
@@ -32,9 +32,8 @@ MonoBehaviour:
   dynamicCurrencyAmount: 1
   pricePerLevel: 10
   basePrice: 0
-  uniqueItem: 1
-  characterClassRequirementList:
-  - Warrior
+  uniqueItem: 0
+  characterClassRequirementList: []
   equipmentSlotType: Gloves
   equipmentSetName: 
   useUMARecipe: 1
@@ -55,4 +54,5 @@ MonoBehaviour:
   secondaryStats: []
   onEquipAbilityName: 
   learnedAbilityNames: []
+  requireArmorClass: 0
   armorClassName: Plate

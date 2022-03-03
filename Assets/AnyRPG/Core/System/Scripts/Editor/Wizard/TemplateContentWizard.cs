@@ -8,7 +8,7 @@ using UnityEditor;
 using UnityEditor.SceneManagement;
 
 namespace AnyRPG {
-    public class ScriptableTemplateContentWizard : ScriptableWizard {
+    public class TemplateContentWizard : ScriptableWizard {
 
         private const string defaultUnitPrefabPath = "/AnyRPG/Core/System/Prefabs/Character/Unit/DefaultCharacterUnit.prefab";
 
@@ -25,6 +25,13 @@ namespace AnyRPG {
         // the used asset path for the Unit Profile
         private string scriptableObjectPath = string.Empty;
 
+        private int totalResourceCount = 0;
+        private int totalPrefabCount = 0;
+        private int copyResourceCount = 0;
+        private int copyPrefabCount = 0;
+        private int skipResourceCount = 0;
+        private int skipPrefabCount = 0;
+
         // user modified variables
         [Header("Game")]
         public string gameName = string.Empty;
@@ -37,9 +44,9 @@ namespace AnyRPG {
         [Tooltip("The scriptable content to copy")]
         public List<ScriptableContentTemplate> scriptableContent = new List<ScriptableContentTemplate>();
 
-        [MenuItem("Tools/AnyRPG/Wizard/Scriptable Template Content Wizard")]
+        [MenuItem("Tools/AnyRPG/Wizard/Template Content Wizard")]
         public static void CreateWizard() {
-            ScriptableWizard.DisplayWizard<ScriptableTemplateContentWizard>("Scriptable Template Content Wizard", "Create");
+            ScriptableWizard.DisplayWizard<TemplateContentWizard>("Template Content Wizard", "Install");
         }
 
         void OnEnable() {
@@ -57,22 +64,29 @@ namespace AnyRPG {
 
         void OnWizardCreate() {
 
-            EditorUtility.DisplayProgressBar("Scriptable Template Content Wizard", "Creating Dependency Closure...", 0.1f);
+            copyResourceCount = 0;
+            copyPrefabCount = 0;
+            skipResourceCount = 0;
+            skipPrefabCount = 0;
+
+            EditorUtility.DisplayProgressBar("Template Content Wizard", "Creating Dependency Closure...", 0.1f);
 
             // create a dependency closure of unique scriptable content templates
             List<ScriptableContentTemplate> scriptableContentTemplates = GetDependencyClosure(scriptableContent);
 
-            EditorUtility.DisplayProgressBar("Scriptable Template Content Wizard", "Getting Unique List of Resources...", 0.2f);
+            EditorUtility.DisplayProgressBar("Template Content Wizard", "Getting Unique List of Resources...", 0.2f);
 
             List<DescribableResource> describableResources = GetDescribableResources(scriptableContentTemplates);
+            totalResourceCount = describableResources.Count;
 
             List<GameObject> gameObjects = GetGameObjects(scriptableContentTemplates);
+            totalPrefabCount = gameObjects.Count;
 
-            EditorUtility.DisplayProgressBar("Scriptable Template Content Wizard", "Copying Resources...", 0.3f);
+            EditorUtility.DisplayProgressBar("Template Content Wizard", "Copying Resources...", 0.3f);
 
-            CopyResources(describableResources, 0, describableResources.Count + gameObjects.Count);
+            CopyResources(describableResources, 0, totalResourceCount + totalPrefabCount);
 
-            CopyPrefabs(gameObjects, describableResources.Count, describableResources.Count + gameObjects.Count);
+            CopyPrefabs(gameObjects, totalResourceCount, totalResourceCount + totalPrefabCount);
 
             AssetDatabase.Refresh();
 
@@ -87,7 +101,13 @@ namespace AnyRPG {
             AssetDatabase.Refresh();
 
             EditorUtility.ClearProgressBar();
-            EditorUtility.DisplayDialog("Scriptable Template Content Wizard", "Scriptable Template Content Wizard Complete!", "OK");
+            EditorUtility.DisplayDialog("Template Content Wizard",
+                "Template Content Wizard Complete!" +
+                "\nCopied " + copyResourceCount + " / " + totalResourceCount + " resources." +
+                "\nSkipped " + skipResourceCount + " existing resources." +
+                "\nCopied " + copyPrefabCount + " / " + totalPrefabCount + " prefabs." +
+                "\nSkipped " + skipPrefabCount + " existing prefabs.",
+                "OK");
 
         }
 
@@ -133,13 +153,16 @@ namespace AnyRPG {
                 
                 if (System.IO.File.Exists(destinationFilesystemPath) == false || replaceExisting == true) {
                     Debug.Log("Copying Resource from '" + assetPath + "' to '" + destinationAssetpath + "'");
-                    AssetDatabase.CopyAsset(assetPath, destinationAssetpath);
+                    if (AssetDatabase.CopyAsset(assetPath, destinationAssetpath)) {
+                        copyResourceCount++;
+                    }
                 } else {
                     Debug.Log("Skipping copy. Resource '" + destinationAssetpath + "' already exists");
+                    skipResourceCount++;
                 }
 
                 copyCount++;
-                EditorUtility.DisplayProgressBar("Scriptable Template Content Wizard", "Copying Resources...", 0.3f + ((((float)beginCount + copyCount) / totalCount) * 0.7f));
+                EditorUtility.DisplayProgressBar("Template Content Wizard", "Copying Resources...", 0.3f + ((((float)beginCount + copyCount) / totalCount) * 0.7f));
 
             }
 
@@ -188,13 +211,16 @@ namespace AnyRPG {
 
                 if (System.IO.File.Exists(destinationFilesystemPath) == false || replaceExisting == true) {
                     Debug.Log("Copying Resource from '" + assetPath + "' to '" + destinationAssetpath + "'");
-                    AssetDatabase.CopyAsset(assetPath, destinationAssetpath);
+                    if (AssetDatabase.CopyAsset(assetPath, destinationAssetpath)) {
+                        copyPrefabCount++;
+                    }
                 } else {
                     Debug.Log("Skipping copy. Prefab '" + destinationAssetpath + "' already exists");
+                    skipPrefabCount++;
                 }
 
                 copyCount++;
-                EditorUtility.DisplayProgressBar("Scriptable Template Content Wizard", "Copying Resources...", 0.3f + ((((float)beginCount + copyCount) / totalCount) * 0.7f));
+                EditorUtility.DisplayProgressBar("Template Content Wizard", "Copying Resources...", 0.3f + ((((float)beginCount + copyCount) / totalCount) * 0.7f));
 
             }
 

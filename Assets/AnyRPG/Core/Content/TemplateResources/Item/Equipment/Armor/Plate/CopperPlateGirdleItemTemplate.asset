@@ -17,7 +17,7 @@ MonoBehaviour:
   icon: {fileID: 21300000, guid: c53784182c6b340428efef92b00cbadb, type: 3}
   iconBackgroundImage: {fileID: 0}
   description: very copper
-  useRegionalDescription: 1
+  useRegionalDescription: 0
   resourceDescriptionProfile: 
   optionalOverride: 0
   stackSize: 0
@@ -32,9 +32,8 @@ MonoBehaviour:
   dynamicCurrencyAmount: 1
   pricePerLevel: 10
   basePrice: 0
-  uniqueItem: 1
-  characterClassRequirementList:
-  - Warrior
+  uniqueItem: 0
+  characterClassRequirementList: []
   equipmentSlotType: Belt
   equipmentSetName: 
   useUMARecipe: 1

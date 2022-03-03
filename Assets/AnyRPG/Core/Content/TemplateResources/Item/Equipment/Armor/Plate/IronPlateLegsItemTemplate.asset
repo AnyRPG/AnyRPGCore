@@ -14,10 +14,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   resourceName: Iron Plate Legs
   displayName: 
-  icon: {fileID: 21300000, guid: a189efb28b4c2694c8cae8d0bd23a01b, type: 3}
+  icon: {fileID: 21300000, guid: f6f81fdde035b7243802b828dc09a613, type: 3}
   iconBackgroundImage: {fileID: 0}
   description: very gold
-  useRegionalDescription: 1
+  useRegionalDescription: 0
   resourceDescriptionProfile: 
   optionalOverride: 0
   stackSize: 0
@@ -32,9 +32,8 @@ MonoBehaviour:
   dynamicCurrencyAmount: 1
   pricePerLevel: 10
   basePrice: 0
-  uniqueItem: 1
-  characterClassRequirementList:
-  - Warrior
+  uniqueItem: 0
+  characterClassRequirementList: []
   equipmentSlotType: Pants
   equipmentSetName: 
   useUMARecipe: 1
@@ -55,4 +54,5 @@ MonoBehaviour:
   secondaryStats: []
   onEquipAbilityName: 
   learnedAbilityNames: []
+  requireArmorClass: 0
   armorClassName: Plate

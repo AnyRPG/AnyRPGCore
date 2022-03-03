@@ -1,0 +1,33 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6c9b51b8d3aa844448aaeab0a989e2fa, type: 3}
+  m_Name: AllCopperPlateEquipmentRecipesTemplatePackage
+  m_EditorClassIdentifier: 
+  resourceName: Copper Plate Equipment Recipes
+  displayName: 
+  icon: {fileID: 0}
+  iconBackgroundImage: {fileID: 0}
+  description: 
+  useRegionalDescription: 0
+  resourceDescriptionProfile: 
+  optionalOverride: 0
+  resources: []
+  prefabs: []
+  dependencies:
+  - {fileID: 11400000, guid: 76e49d3a438dd764d9000f8142496a09, type: 2}
+  - {fileID: 11400000, guid: 079410f943277b141b6015904753ef00, type: 2}
+  - {fileID: 11400000, guid: b8636164171bc104d9391a2bd6cac5e9, type: 2}
+  - {fileID: 11400000, guid: ff4bd25c7487f3e4b86fb32d2ee08248, type: 2}
+  - {fileID: 11400000, guid: 9414da6c347f1da4686e5949a7cbda4f, type: 2}
+  - {fileID: 11400000, guid: 9fabaa6ebb42c0d46ad7f378cb8d61e5, type: 2}
+  - {fileID: 11400000, guid: 520e0bda3800fd24b97609bed925739c, type: 2}
+  - {fileID: 11400000, guid: 240833484c26f984b9af6d590218880a, type: 2}

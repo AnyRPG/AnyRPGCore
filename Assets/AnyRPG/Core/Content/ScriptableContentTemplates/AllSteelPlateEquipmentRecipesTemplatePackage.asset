@@ -1,0 +1,33 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6c9b51b8d3aa844448aaeab0a989e2fa, type: 3}
+  m_Name: AllSteelPlateEquipmentRecipesTemplatePackage
+  m_EditorClassIdentifier: 
+  resourceName: Steel Plate Equipment Recipes
+  displayName: 
+  icon: {fileID: 0}
+  iconBackgroundImage: {fileID: 0}
+  description: 
+  useRegionalDescription: 0
+  resourceDescriptionProfile: 
+  optionalOverride: 0
+  resources: []
+  prefabs: []
+  dependencies:
+  - {fileID: 11400000, guid: 22ab0d33daa80484b888ca916c48fd90, type: 2}
+  - {fileID: 11400000, guid: 5c076c6feae87c0489373375bfe46a5d, type: 2}
+  - {fileID: 11400000, guid: 1e5247ab75fdd0e48a53c034a1c1869d, type: 2}
+  - {fileID: 11400000, guid: 44ba80074fabbad4fb789ad021abe9ff, type: 2}
+  - {fileID: 11400000, guid: 6b1333c9f4093c242859f7f9e3b5f108, type: 2}
+  - {fileID: 11400000, guid: 976de263df91a0a4fab57597990ee026, type: 2}
+  - {fileID: 11400000, guid: 6911ffd7fe36ce14f88fdf8ee1330e01, type: 2}
+  - {fileID: 11400000, guid: 3163a0ca22df35342bf3d2cc095bd04f, type: 2}

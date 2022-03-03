@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 6c9b51b8d3aa844448aaeab0a989e2fa, type: 3}
-  m_Name: RPGPlateEquipmentSilverTemplatePackage
+  m_Name: AllSilverPlateEquipmentTemplatePackage
   m_EditorClassIdentifier: 
   resourceName: Silver Plate Equipment
   displayName: 

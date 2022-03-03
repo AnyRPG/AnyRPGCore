@@ -17,7 +17,7 @@ MonoBehaviour:
   icon: {fileID: 21300000, guid: bbc89d2a2ba1cb94b9af5c26da1a306f, type: 3}
   iconBackgroundImage: {fileID: 0}
   description: very blue
-  useRegionalDescription: 1
+  useRegionalDescription: 0
   resourceDescriptionProfile: 
   optionalOverride: 0
   stackSize: 0
@@ -32,9 +32,8 @@ MonoBehaviour:
   dynamicCurrencyAmount: 1
   pricePerLevel: 10
   basePrice: 0
-  uniqueItem: 1
-  characterClassRequirementList:
-  - Warrior
+  uniqueItem: 0
+  characterClassRequirementList: []
   equipmentSlotType: Armor
   equipmentSetName: 
   useUMARecipe: 1
