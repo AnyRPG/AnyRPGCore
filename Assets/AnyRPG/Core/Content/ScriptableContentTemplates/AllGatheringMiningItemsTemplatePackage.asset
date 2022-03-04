@@ -1,0 +1,49 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6c9b51b8d3aa844448aaeab0a989e2fa, type: 3}
+  m_Name: AllGatheringMiningItemsTemplatePackage
+  m_EditorClassIdentifier: 
+  resourceName: Gathering Mining Items
+  displayName: 
+  icon: {fileID: 0}
+  iconBackgroundImage: {fileID: 0}
+  description: 
+  useRegionalDescription: 0
+  resourceDescriptionProfile: 
+  optionalOverride: 0
+  resources:
+  - {fileID: 11400000, guid: def1e76c77035534aa0910e6fe203183, type: 2}
+  - {fileID: 11400000, guid: 5de4d5045e3f0fb47afc6a81f406a886, type: 2}
+  - {fileID: 11400000, guid: 8f8526b2bd6c5c143967279a6ec5c9de, type: 2}
+  - {fileID: 11400000, guid: 99028a6545a1834419714d0f7341cbce, type: 2}
+  - {fileID: 11400000, guid: 855b1e60899b86a46b45c88f022280b0, type: 2}
+  - {fileID: 11400000, guid: 41ac61bf24f4c5049ba1cd83c73c767a, type: 2}
+  - {fileID: 11400000, guid: ab28f8268baffb342b5f499fa4b8297d, type: 2}
+  - {fileID: 11400000, guid: d47cdf3c26671954c96dcedd9e3023c7, type: 2}
+  - {fileID: 11400000, guid: cea31ae5d4a81294cae84bca80a92dec, type: 2}
+  - {fileID: 11400000, guid: 8fd9fe0c2515b074b8a8f1c039fa34dd, type: 2}
+  - {fileID: 11400000, guid: 30309ce5d5336af49b0090f7d82c0d24, type: 2}
+  - {fileID: 11400000, guid: 912826b744ad9104fab8dfc0a3dbfffc, type: 2}
+  - {fileID: 11400000, guid: 8deaa7887a2611347add2eeda33a8837, type: 2}
+  - {fileID: 11400000, guid: c70012af4f8a3624986d845fbdad5b46, type: 2}
+  - {fileID: 11400000, guid: 4ec274c8643ba504d8659d8af0c0cd4b, type: 2}
+  - {fileID: 11400000, guid: 63537059d44cdab49a85dfde148c7e9d, type: 2}
+  - {fileID: 11400000, guid: 9f211ca89e005414aa55402396ce1f95, type: 2}
+  - {fileID: 11400000, guid: 535f65d7550090a4eb91e5202e761ae8, type: 2}
+  prefabs:
+  - {fileID: 591910601583303974, guid: 1c0ee4d9bcb9c9c4780606d5e85d1dfc, type: 3}
+  - {fileID: 591910601583303974, guid: 020ad50a62e8511469f786bb613958e1, type: 3}
+  - {fileID: 591910601583303974, guid: b24652f0b487a5d45b0f43b3c8953d85, type: 3}
+  - {fileID: 591910601583303974, guid: b9046a9b398d4394e88c119f482bf863, type: 3}
+  - {fileID: 591910601583303974, guid: 3a91fcce3f1cf48418239133282497d0, type: 3}
+  - {fileID: 591910601583303974, guid: 397e2ebdc5824694c8575028673257ac, type: 3}
+  dependencies: []

@@ -1,0 +1,35 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6c9b51b8d3aa844448aaeab0a989e2fa, type: 3}
+  m_Name: AllClothEquipmentCyanTemplatePackage
+  m_EditorClassIdentifier: 
+  resourceName: Cyan Cloth Equipment
+  displayName: 
+  icon: {fileID: 0}
+  iconBackgroundImage: {fileID: 0}
+  description: 
+  useRegionalDescription: 0
+  resourceDescriptionProfile: 
+  optionalOverride: 0
+  resources:
+  - {fileID: 11400000, guid: 29bd0b91f7d40014683cc92121bedbc4, type: 2}
+  - {fileID: 11400000, guid: 1730d826d389c3f409f68ece173bc210, type: 2}
+  prefabs: []
+  dependencies:
+  - {fileID: 11400000, guid: e9746cf55e5dc884eaa7bdbdeb63e499, type: 2}
+  - {fileID: 11400000, guid: 3909cdc2304d8d34aa21db9719a99762, type: 2}
+  - {fileID: 11400000, guid: 5237cf1ef3e32fc45b74eec8f4d817d7, type: 2}
+  - {fileID: 11400000, guid: c1133812d649c074a9fafeb084b14983, type: 2}
+  - {fileID: 11400000, guid: 8511bf0827a83454b928afabb7674594, type: 2}
+  - {fileID: 11400000, guid: 15a42309a9179264aaa37b8a6098814b, type: 2}
+  - {fileID: 11400000, guid: a5e3856c8af9f934b92c5ccd16c9254f, type: 2}
+  - {fileID: 11400000, guid: 068e2e052a113a645878e5fb5e72dfd8, type: 2}

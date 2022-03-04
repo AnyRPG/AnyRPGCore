@@ -1,0 +1,33 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6c9b51b8d3aa844448aaeab0a989e2fa, type: 3}
+  m_Name: AllClothEquipmentRedRecipesTemplatePackage
+  m_EditorClassIdentifier: 
+  resourceName: All Red Cloth Equipment Recipes
+  displayName: 
+  icon: {fileID: 0}
+  iconBackgroundImage: {fileID: 0}
+  description: 
+  useRegionalDescription: 0
+  resourceDescriptionProfile: 
+  optionalOverride: 0
+  resources: []
+  prefabs: []
+  dependencies:
+  - {fileID: 11400000, guid: 4be438b77c535244eafef5f9b31a5a85, type: 2}
+  - {fileID: 11400000, guid: 788377748ac79d443861330ca2949180, type: 2}
+  - {fileID: 11400000, guid: e86be487efde47447a56ce266992913b, type: 2}
+  - {fileID: 11400000, guid: 952492a6ffe697c4e9480743c56ea148, type: 2}
+  - {fileID: 11400000, guid: bc131a7b8af7bf043a12d8669a066841, type: 2}
+  - {fileID: 11400000, guid: e7f778deacda92340845a599df4025fa, type: 2}
+  - {fileID: 11400000, guid: c522b4028c27dd74997ea0b935cc0860, type: 2}
+  - {fileID: 11400000, guid: ea9622cca60129c4ab0e8dfbb6840c58, type: 2}
