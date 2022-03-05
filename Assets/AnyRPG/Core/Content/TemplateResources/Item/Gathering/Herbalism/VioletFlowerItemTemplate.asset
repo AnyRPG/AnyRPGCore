@@ -14,10 +14,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   resourceName: Violet Flower
   displayName: 
-  icon: {fileID: 21300000, guid: 3d2aa5754a7490d4780abe1e44f20c09, type: 3}
+  icon: {fileID: 21300000, guid: 697c05e36aec4f14aa2e3ea0671692d3, type: 3}
   iconBackgroundImage: {fileID: 0}
   description: very violet
-  useRegionalDescription: 1
+  useRegionalDescription: 0
   resourceDescriptionProfile: 
   optionalOverride: 0
   stackSize: 20

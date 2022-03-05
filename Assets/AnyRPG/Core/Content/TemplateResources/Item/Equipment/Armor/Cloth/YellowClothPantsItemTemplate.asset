@@ -17,7 +17,7 @@ MonoBehaviour:
   icon: {fileID: 21300000, guid: a324ddd8b4460464c8fc68cd7c31f63e, type: 3}
   iconBackgroundImage: {fileID: 0}
   description: very yellow
-  useRegionalDescription: 1
+  useRegionalDescription: 0
   resourceDescriptionProfile: 
   optionalOverride: 0
   stackSize: 0
@@ -32,9 +32,8 @@ MonoBehaviour:
   dynamicCurrencyAmount: 1
   pricePerLevel: 10
   basePrice: 0
-  uniqueItem: 1
-  characterClassRequirementList:
-  - Channeler
+  uniqueItem: 0
+  characterClassRequirementList: []
   equipmentSlotType: Pants
   equipmentSetName: 
   useUMARecipe: 1
@@ -55,4 +54,5 @@ MonoBehaviour:
   secondaryStats: []
   onEquipAbilityName: 
   learnedAbilityNames: []
+  requireArmorClass: 0
   armorClassName: Cloth

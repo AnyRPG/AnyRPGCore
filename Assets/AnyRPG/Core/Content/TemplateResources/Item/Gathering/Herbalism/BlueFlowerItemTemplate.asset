@@ -14,10 +14,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   resourceName: Blue Flower
   displayName: 
-  icon: {fileID: 21300000, guid: 5c5b04604e8855e418d74e2d84f7fadc, type: 3}
+  icon: {fileID: 21300000, guid: aaf9c4be47f12fc4ca8616e30cd0eb95, type: 3}
   iconBackgroundImage: {fileID: 0}
   description: very blue
-  useRegionalDescription: 1
+  useRegionalDescription: 0
   resourceDescriptionProfile: 
   optionalOverride: 0
   stackSize: 20

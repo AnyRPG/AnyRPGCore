@@ -17,7 +17,7 @@ MonoBehaviour:
   icon: {fileID: 21300000, guid: 84a3724368f6d2b4db1d16ca14322e4d, type: 3}
   iconBackgroundImage: {fileID: 0}
   description: very brown
-  useRegionalDescription: 1
+  useRegionalDescription: 0
   resourceDescriptionProfile: 
   optionalOverride: 0
   stackSize: 0
@@ -32,11 +32,10 @@ MonoBehaviour:
   dynamicCurrencyAmount: 1
   pricePerLevel: 10
   basePrice: 0
-  uniqueItem: 1
-  characterClassRequirementList:
-  - Channeler
+  uniqueItem: 0
+  characterClassRequirementList: []
   equipmentSlotType: Belt
-  equipmentSetName: Miners Cloth
+  equipmentSetName: 
   useUMARecipe: 0
   umaRecipeProfileName: Brown Cloth Sash
   holdableObjectList: []
@@ -55,4 +54,5 @@ MonoBehaviour:
   secondaryStats: []
   onEquipAbilityName: 
   learnedAbilityNames: []
+  requireArmorClass: 0
   armorClassName: Cloth

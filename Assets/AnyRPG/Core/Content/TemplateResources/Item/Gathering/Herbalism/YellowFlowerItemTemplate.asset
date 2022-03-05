@@ -14,10 +14,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   resourceName: Yellow Flower
   displayName: 
-  icon: {fileID: 21300000, guid: d900e8e08f5280f4ba2d34dc79202bbe, type: 3}
+  icon: {fileID: 21300000, guid: 09840d3ecf72d4945ab7efc6c3798214, type: 3}
   iconBackgroundImage: {fileID: 0}
   description: very yellow
-  useRegionalDescription: 1
+  useRegionalDescription: 0
   resourceDescriptionProfile: 
   optionalOverride: 0
   stackSize: 20
