@@ -1,0 +1,393 @@
+fileFormatVersion: 2
+guid: cf9427de149c8164396d0f1715363921
+ModelImporter:
+  serializedVersion: 20200
+  internalIDToNameTable:
+  - first:
+      74: -1695064449174705903
+    second: human_female|human_female_cast_dual_wield_melee
+  - first:
+      74: 282344266917466541
+    second: human_female|human_female_cast_dual_wield_melee_2
+  - first:
+      74: 2276998893402437368
+    second: human_female|human_female_cast_dual_wield_melee_3
+  - first:
+      74: -340237211748118704
+    second: human_female|human_female_cast_dual_wield_melee_4
+  - first:
+      74: -470776209331887071
+    second: human_female|human_female_cast_main_hand_melee
+  - first:
+      74: 1679337744948030625
+    second: human_female|human_female_cast_main_hand_melee_2
+  - first:
+      74: -2144338036126234527
+    second: human_female|human_female_cast_main_hand_melee_3
+  - first:
+      74: 6375701297714206322
+    second: human_female|human_female_cast_main_hand_wand
+  - first:
+      74: 8626250232258040878
+    second: human_female|human_female_cast_off_hand_shield
+  - first:
+      74: 7822469949204001915
+    second: human_female|human_female_cast_two_handed_bow
+  - first:
+      74: 6206147979976054963
+    second: human_female|human_female_cast_two_handed_bow_2
+  - first:
+      74: 2399198332449794977
+    second: human_female|human_female_cast_two_handed_crossbow
+  - first:
+      74: -5997431105542980527
+    second: human_female|human_female_cast_two_handed_melee
+  - first:
+      74: -1758880096423863942
+    second: human_female|human_female_cast_two_handed_melee_2
+  - first:
+      74: 5237104274183203053
+    second: human_female|human_female_cast_two_handed_melee_3
+  - first:
+      74: 3023001577938737798
+    second: human_female|human_female_cast_two_handed_melee_4
+  - first:
+      74: 2679253277041298564
+    second: human_female|human_female_cast_two_handed_melee_5
+  - first:
+      74: 7213399515249275358
+    second: human_female|human_female_cast_two_handed_staff
+  - first:
+      74: 2012160506232031736
+    second: human_female|human_female_cast_unarmed_magic
+  - first:
+      74: 8781504654210288960
+    second: human_female|human_female_cast_unarmed_magic_2
+  - first:
+      74: 5160750279940993704
+    second: human_female|human_female_channel_dual_wield_melee
+  - first:
+      74: -6749459476560802468
+    second: human_female|human_female_channel_main_hand_melee
+  - first:
+      74: 4745091339408547335
+    second: human_female|human_female_channel_main_hand_wand
+  - first:
+      74: 8638884841907148032
+    second: human_female|human_female_channel_two_handed_bow
+  - first:
+      74: -7342603858130444073
+    second: human_female|human_female_channel_two_handed_bow_2
+  - first:
+      74: -3485842249933386185
+    second: human_female|human_female_channel_two_handed_crossbow
+  - first:
+      74: 245693778744169089
+    second: human_female|human_female_channel_two_handed_melee
+  - first:
+      74: -3090926608174755241
+    second: human_female|human_female_channel_two_handed_staff
+  - first:
+      74: -468883571700645721
+    second: human_female|human_female_channel_unarmed_magic
+  - first:
+      74: 7118145512114502752
+    second: human_female|human_female_death
+  - first:
+      74: 1240244747686894889
+    second: human_female|human_female_drink_potion
+  - first:
+      74: -1194191835740723049
+    second: human_female|human_female_gathering
+  - first:
+      74: 5183865140160340972
+    second: human_female|human_female_idle
+  - first:
+      74: -6819832551180117645
+    second: human_female|human_female_idle_combat_dual_wield_melee
+  - first:
+      74: -6429102080796532080
+    second: human_female|human_female_idle_combat_main_hand_melee
+  - first:
+      74: -4242706258852079387
+    second: human_female|human_female_idle_combat_main_hand_wand
+  - first:
+      74: -4132075367723581016
+    second: human_female|human_female_idle_combat_two_handed_bow
+  - first:
+      74: 7619731692626360857
+    second: human_female|human_female_idle_combat_two_handed_crossbow
+  - first:
+      74: -4118538706788600204
+    second: human_female|human_female_idle_combat_two_handed_melee
+  - first:
+      74: 8636355763033161523
+    second: human_female|human_female_idle_combat_two_handed_staff
+  - first:
+      74: 5463392674495994847
+    second: human_female|human_female_idle_combat_unarmed
+  - first:
+      74: 7247676977421258744
+    second: human_female|human_female_jump
+  - first:
+      74: -4106757239551954567
+    second: human_female|human_female_power_up
+  - first:
+      74: -6265121276097583956
+    second: human_female|human_female_power_up_2
+  - first:
+      74: 7650703980522973837
+    second: human_female|human_female_power_up_3
+  - first:
+      74: -4223434809624662182
+    second: human_female|human_female_pray
+  - first:
+      74: 409213740232875249
+    second: human_female|human_female_run
+  externalObjects:
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: mat_human_female_body_1
+    second: {fileID: 2100000, guid: dc99dff806391e84fb4f483f99f34b78, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: mat_human_female_feet_1
+    second: {fileID: 2100000, guid: 0366293b86df4294faae7fc2b70355f9, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: mat_human_female_hair_1
+    second: {fileID: 2100000, guid: 9b4a9466f625e2d41a5903725e5f61a8, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: mat_human_female_hair_2
+    second: {fileID: 2100000, guid: dc391d3f9447deb4b8d65d40711bea45, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: mat_human_female_hair_3
+    second: {fileID: 2100000, guid: 2237ddfe4bcb88744b9c345fda525157, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: mat_human_female_hands_1
+    second: {fileID: 2100000, guid: 5ed6bbae1f98d9946a5a1aa68fc4260b, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: mat_human_female_head_1
+    second: {fileID: 2100000, guid: fe386d6bd0fb3694fa4fb03d8f87089a, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: mat_human_female_head_2
+    second: {fileID: 2100000, guid: 731a6e6aafdb1a14893967d5b73b9757, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: mat_human_female_head_3
+    second: {fileID: 2100000, guid: 8cdb0cc60aa79ef48bb1d956e68a0dc2, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: mat_human_female_heavy_armor
+    second: {fileID: 2100000, guid: 2944e4cbbf27dea4d836d318557206e7, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: mat_human_female_heavy_boots
+    second: {fileID: 2100000, guid: e01f56e4fd2ad0f4caa06aa0cc0a1009, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: mat_human_female_heavy_gloves
+    second: {fileID: 2100000, guid: ff8744fb0dc7a234892cece346f50272, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: mat_human_female_heavy_helmet
+    second: {fileID: 2100000, guid: 1513a81ab565af74cbb7eeb370e378fd, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: mat_human_female_light_armor
+    second: {fileID: 2100000, guid: 36ca31a18238b8e41b3aa4b9de2db3ca, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: mat_human_female_light_armor_2
+    second: {fileID: 2100000, guid: fc95f357985267c4094809098259b083, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: mat_human_female_light_armor_3
+    second: {fileID: 2100000, guid: bc8488f88720c5d43bd488974c9e79ed, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: mat_human_female_light_armor_3_skirt
+    second: {fileID: 2100000, guid: 8429df400b3a2c148a9542ce0cdda7f1, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: mat_human_female_light_armor_4
+    second: {fileID: 2100000, guid: 3eace06893440cf44aa89561fa93f676, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: mat_human_female_light_armor_4_skirt
+    second: {fileID: 2100000, guid: 942cd0ffc7e2a614e8eeb749a4264601, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: mat_human_female_light_armor_skirt
+    second: {fileID: 2100000, guid: 68865298fd869694eb6fcfe3a7e88cfa, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: mat_human_female_light_boots
+    second: {fileID: 2100000, guid: 724bd8f8beb55294f86b4a3b68569047, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: mat_human_female_light_boots_2
+    second: {fileID: 2100000, guid: 493e10e7320240e4299347962cc4ff16, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: mat_human_female_light_gloves
+    second: {fileID: 2100000, guid: 3bd39b2668f10ce418882f053007d7e6, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: mat_human_female_light_gloves_3
+    second: {fileID: 2100000, guid: 10543574947cbb0448e5d5448b07de71, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: mat_human_female_light_helmet
+    second: {fileID: 2100000, guid: 658e8f37fd77aa04b8c4a45e2a324400, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: mat_human_female_medium_armor
+    second: {fileID: 2100000, guid: 1e4d2dd29f306914580488ab32ca33be, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: mat_human_female_medium_armor_skirt
+    second: {fileID: 2100000, guid: d8838e04094960748a69dfff8d2140db, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: mat_human_female_medium_boots
+    second: {fileID: 2100000, guid: 89b8d7bf685e5384094bce7c5ead1215, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: mat_human_female_medium_gloves
+    second: {fileID: 2100000, guid: 413959280003ee24bb8a43b6ab8cef0f, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: mat_human_female_medium_helmet
+    second: {fileID: 2100000, guid: f6892f31abc5dd1468e79f068f12e44e, type: 2}
+  materials:
+    materialImportMode: 2
+    materialName: 0
+    materialSearch: 1
+    materialLocation: 1
+  animations:
+    legacyGenerateAnimations: 4
+    bakeSimulation: 0
+    resampleCurves: 1
+    optimizeGameObjects: 0
+    motionNodeName: 
+    rigImportErrors: 
+    rigImportWarnings: 
+    animationImportErrors: 
+    animationImportWarnings: 
+    animationRetargetingWarnings: 
+    animationDoRetargetingWarnings: 0
+    importAnimatedCustomProperties: 0
+    importConstraints: 0
+    animationCompression: 3
+    animationRotationError: 0.5
+    animationPositionError: 0.5
+    animationScaleError: 0.5
+    animationWrapMode: 0
+    extraExposedTransformPaths: []
+    extraUserProperties: []
+    clipAnimations: []
+    isReadable: 0
+  meshes:
+    lODScreenPercentages: []
+    globalScale: 0.5
+    meshCompression: 0
+    addColliders: 0
+    useSRGBMaterialColor: 1
+    sortHierarchyByName: 1
+    importVisibility: 1
+    importBlendShapes: 1
+    importCameras: 1
+    importLights: 1
+    fileIdsGeneration: 2
+    swapUVChannels: 0
+    generateSecondaryUV: 0
+    useFileUnits: 1
+    keepQuads: 0
+    weldVertices: 1
+    bakeAxisConversion: 0
+    preserveHierarchy: 0
+    skinWeightsMode: 0
+    maxBonesPerVertex: 4
+    minBoneWeight: 0.001
+    meshOptimizationFlags: -1
+    indexFormat: 0
+    secondaryUVAngleDistortion: 8
+    secondaryUVAreaDistortion: 15.000001
+    secondaryUVHardAngle: 88
+    secondaryUVMarginMethod: 1
+    secondaryUVMinLightmapResolution: 40
+    secondaryUVMinObjectScale: 1
+    secondaryUVPackMargin: 4
+    useFileScale: 1
+  tangentSpace:
+    normalSmoothAngle: 60
+    normalImportMode: 0
+    tangentImportMode: 3
+    normalCalculationMode: 4
+    legacyComputeAllNormalsFromSmoothingGroupsWhenMeshHasBlendShapes: 0
+    blendShapeNormalImportMode: 1
+    normalSmoothingSource: 0
+  referencedClips: []
+  importAnimation: 1
+  humanDescription:
+    serializedVersion: 3
+    human: []
+    skeleton: []
+    armTwist: 0.5
+    foreArmTwist: 0.5
+    upperLegTwist: 0.5
+    legTwist: 0.5
+    armStretch: 0.05
+    legStretch: 0.05
+    feetSpacing: 0
+    globalScale: 0.5
+    rootMotionBoneName: 
+    hasTranslationDoF: 0
+    hasExtraRoot: 1
+    skeletonHasParents: 1
+  lastHumanDescriptionAvatarSource: {instanceID: 0}
+  autoGenerateAvatarMappingIfUnspecified: 1
+  animationType: 3
+  humanoidOversampling: 1
+  avatarSetup: 1
+  addHumanoidExtraRootOnlyWhenUsingAvatar: 1
+  additionalBone: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
