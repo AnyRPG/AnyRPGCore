@@ -37,6 +37,7 @@ namespace AnyRPG {
                 foreach (string skillName in skillNames) {
                     Skill tmpSkill = systemDataFactory.GetResource<Skill>(skillName);
                     if (tmpSkill != null) {
+                        //Debug.Log("SkillTrainerProps.SetupScriptableObjects(): Added skill : " + skillName);
                         skills.Add(tmpSkill);
                     } else {
                         Debug.LogError("SkillTrainerProps.SetupScriptableObjects(): Could not find skill : " + skillName + " while inititalizing.  CHECK INSPECTOR");

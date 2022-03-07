@@ -1,8 +1,5 @@
 using AnyRPG;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
 
 namespace AnyRPG {
 
@@ -12,7 +9,7 @@ namespace AnyRPG {
         [SerializeField]
         private AOEEffectProperties effectProperties = new AOEEffectProperties();
 
-        public AbilityEffectProperties EffectProperties { get => effectProperties; }
-    }
+        public override AbilityEffectProperties AbilityEffectProperties { get => effectProperties; }
 
+    }
 }

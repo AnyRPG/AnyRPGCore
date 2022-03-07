@@ -1,5 +1,4 @@
 using AnyRPG;
-using System.Collections.Generic;
 using UnityEngine;
 
 namespace AnyRPG {
@@ -7,8 +6,10 @@ namespace AnyRPG {
     [System.Serializable]
     public class ResurrectEffectConfig : AbilityEffectConfig {
 
-       
+        [SerializeField]
+        private ResurrectEffectProperties effectProperties = new ResurrectEffectProperties();
 
+        public override AbilityEffectProperties AbilityEffectProperties { get => effectProperties; }
 
     }
 }

@@ -26,7 +26,7 @@ MonoBehaviour:
   unitPrefabProps:
     unitPrefab: {fileID: 2692339740015506113, guid: ba09f14eb0109ba459f4520b82c3fadc,
       type: 3}
-    modelPrefab: {fileID: 6307183516646880328, guid: 93e42dc3a149b49469518bf2009033f3,
+    modelPrefab: {fileID: 6307183516646880328, guid: 0aaf43820419a9a43b829b167f0a3370,
       type: 3}
     animationProfileName: 
     useInlineAnimationProps: 0
@@ -221,7 +221,7 @@ MonoBehaviour:
   saveOnLevelUnload: 0
   saveOnGameSave: 0
   overwriteUnitUUID: 0
-  m_UUID: aa4c3a99-3378-48c4-a280-8440166a2d3d
+  m_UUID: ab937366-6e8c-406b-b7d2-e43e57705e73
   references:
     version: 1
     00000000:

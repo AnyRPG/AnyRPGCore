@@ -14,21 +14,21 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   resourceName: Mana Potion
   displayName: 
-  icon: {fileID: 21300000, guid: 753f7584cf233ff4186f953048bf35c9, type: 3}
+  icon: {fileID: 21300000, guid: b6b03e9078f931e42b29350ef4a82837, type: 3}
   iconBackgroundImage: {fileID: 0}
   description: Restore 1000 mana
   useRegionalDescription: 0
   resourceDescriptionProfile: 
   optionalOverride: 0
   stackSize: 5
-  itemQuality: Average
+  itemQuality: 
   randomItemQuality: 0
   dynamicLevel: 0
   freezeDropLevel: 0
   levelCap: 0
-  itemLevel: 12
+  itemLevel: 1
   useLevel: 1
-  currencyName: Silver
+  currencyName: 
   dynamicCurrencyAmount: 1
   pricePerLevel: 5
   basePrice: 0

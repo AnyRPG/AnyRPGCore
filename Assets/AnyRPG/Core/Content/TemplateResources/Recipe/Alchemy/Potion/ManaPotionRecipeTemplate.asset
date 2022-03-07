@@ -30,4 +30,7 @@ MonoBehaviour:
   itemOutputName: Mana Potion
   outputCount: 1
   craftAbilityName: Alchemy
-  holdableObjectList: []
+  holdableObjectList:
+  - holdableObjectName: Fillable Blue Potion
+    useUniversalAttachment: 1
+    attachmentName: Left Hand

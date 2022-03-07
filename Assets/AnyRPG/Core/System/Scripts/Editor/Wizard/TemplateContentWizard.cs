@@ -38,8 +38,11 @@ namespace AnyRPG {
 
         [Header("Content")]
 
-        [Tooltip("If true, replace any content that exists instead of skipping existing items")]
-        public bool replaceExisting = false;
+        [Tooltip("If true, replace any content that exists instead of skipping existing scriptable objects")]
+        public bool replaceExistingResources = false;
+
+        [Tooltip("If true, replace any content that exists instead of skipping existing prefabs")]
+        public bool replaceExistingPrefabs = false;
 
         [Tooltip("The scriptable content to copy")]
         public List<ScriptableContentTemplate> scriptableContent = new List<ScriptableContentTemplate>();
@@ -151,7 +154,7 @@ namespace AnyRPG {
                 string destinationFilesystemPath = Application.dataPath + destinationPartialPath;
                 //Debug.Log(destinationFilesystemPath);
                 
-                if (System.IO.File.Exists(destinationFilesystemPath) == false || replaceExisting == true) {
+                if (System.IO.File.Exists(destinationFilesystemPath) == false || replaceExistingResources == true) {
                     Debug.Log("Copying Resource from '" + assetPath + "' to '" + destinationAssetpath + "'");
                     if (AssetDatabase.CopyAsset(assetPath, destinationAssetpath)) {
                         copyResourceCount++;
@@ -203,13 +206,13 @@ namespace AnyRPG {
 
                 }
 
-                // copy the resource
+                // copy the prefab
                 string destinationPartialPath = "/Games/" + fileSystemGameName + "/Prefab" + basepath + "/" + assetPathComponents[assetPathComponents.Length - 1].Replace("Template", "");
                 string destinationAssetpath = "Assets" + destinationPartialPath;
                 string destinationFilesystemPath = Application.dataPath + destinationPartialPath;
                 //Debug.Log(destinationFilesystemPath);
 
-                if (System.IO.File.Exists(destinationFilesystemPath) == false || replaceExisting == true) {
+                if (System.IO.File.Exists(destinationFilesystemPath) == false || replaceExistingPrefabs == true) {
                     Debug.Log("Copying Resource from '" + assetPath + "' to '" + destinationAssetpath + "'");
                     if (AssetDatabase.CopyAsset(assetPath, destinationAssetpath)) {
                         copyPrefabCount++;

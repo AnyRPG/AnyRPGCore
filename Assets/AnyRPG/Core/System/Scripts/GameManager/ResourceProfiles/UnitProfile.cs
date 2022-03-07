@@ -609,6 +609,7 @@ namespace AnyRPG {
             // inline interactables
             foreach (InteractableOptionProps interactableOptionProp in inlineInteractableOptions) {
                 if (interactableOptionProp != null) {
+                    //Debug.Log(resourceName + " adding interactable option " + interactableOptionProp.GetType().ToString());
                     interactableOptionProp.SetupScriptableObjects(systemGameManager);
                     interactableOptionProps.Add(interactableOptionProp);
                 }

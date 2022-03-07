@@ -26,7 +26,7 @@ MonoBehaviour:
   unitPrefabProps:
     unitPrefab: {fileID: 2692339740015506113, guid: ba09f14eb0109ba459f4520b82c3fadc,
       type: 3}
-    modelPrefab: {fileID: 6307183516646880328, guid: c63de68f7e3ff2a46b7e79d16974c3db,
+    modelPrefab: {fileID: 6307183516646880328, guid: 06fc2eae87c436f4b9cbdab3cb5dc5e5,
       type: 3}
     animationProfileName: 
     useInlineAnimationProps: 0

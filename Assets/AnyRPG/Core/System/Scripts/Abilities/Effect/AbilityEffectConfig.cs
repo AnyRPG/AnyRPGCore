@@ -1,8 +1,5 @@
 using AnyRPG;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
 
 namespace AnyRPG {
 
@@ -11,6 +8,12 @@ namespace AnyRPG {
 
         // this is a base class for all ability effect configs
 
-    }
+        public virtual AbilityEffectProperties AbilityEffectProperties { get => null; }
 
+        public void SetupScriptableObjects(SystemGameManager systemGameManager, IDescribable describable) {
+
+            AbilityEffectProperties.SetupScriptableObjects(systemGameManager, describable);
+        }
+
+    }
 }

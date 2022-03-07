@@ -1,14 +1,15 @@
 using AnyRPG;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
 
 namespace AnyRPG {
 
     [System.Serializable]
     public class AttackEffectConfig : AbilityEffectConfig {
 
-        
+        [SerializeField]
+        private AttackEffectProperties effectProperties = new AttackEffectProperties();
+
+        public override AbilityEffectProperties AbilityEffectProperties { get => effectProperties; }
+
     }
 }

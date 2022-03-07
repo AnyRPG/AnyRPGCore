@@ -19,6 +19,7 @@ MonoBehaviour:
   description: 
   useRegionalDescription: 0
   resourceDescriptionProfile: 
+  optionalOverride: 0
   prefab: {fileID: 5319069474142785129, guid: 0c067b34fc76c2d4cb8af7706c60750b, type: 3}
   position: {x: -0.1048, y: -0.0068, z: -0.0275}
   rotationIsGlobal: 0
@@ -26,8 +27,12 @@ MonoBehaviour:
   scale: {x: 1, y: 1, z: 1}
   targetBone: LeftHand
   unsheathAudioProfileName: 
-  sheathedPosition: {x: 0.02447121, y: -0.2165, z: -0.01038671}
-  sheathedRotation: {x: 4.278742, y: 81.55635, z: 92.4099}
+  sheathedPosition: {x: 0, y: 0, z: 0}
+  sheathedRotation: {x: 0, y: 0, z: 0}
   sheathedScale: {x: 1, y: 1, z: 1}
-  sheathedTargetBone: Hips
+  sheathedTargetBone: 
   sheathAudioProfileName: 
+  useItemPickup: 0
+  pickupPosition: {x: 0, y: 0, z: 0}
+  pickupRotation: {x: 0, y: 0, z: 0}
+  pickupScale: {x: 1, y: 1, z: 1}

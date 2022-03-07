@@ -25,6 +25,10 @@ MonoBehaviour:
     quantity: 0
     unlimited: 1
     itemQualityName: 
+  - itemName: Hemp
+    quantity: 0
+    unlimited: 1
+    itemQualityName: 
   - itemName: Blue Flower
     quantity: 0
     unlimited: 1

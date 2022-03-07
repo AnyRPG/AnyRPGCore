@@ -26,7 +26,7 @@ MonoBehaviour:
   unitPrefabProps:
     unitPrefab: {fileID: 2692339740015506113, guid: ba09f14eb0109ba459f4520b82c3fadc,
       type: 3}
-    modelPrefab: {fileID: 2692339740015506113, guid: 5e4110e291da71541bbc6aebc87266e3,
+    modelPrefab: {fileID: 6307183516646880328, guid: 430920f3b4fc88943a9308441bd87563,
       type: 3}
     animationProfileName: 
     useInlineAnimationProps: 0
@@ -120,7 +120,7 @@ MonoBehaviour:
       suppressFaction: 1
       overrideNameplatePosition: 0
       namePlatePosition: {x: 0, y: 0, z: 0}
-      unitFrameTarget: Head
+      unitFrameTarget: head
       unitFrameCameraLookOffset: {x: 0, y: 0, z: 0}
       unitFrameCameraPositionOffset: {x: 0, y: 0, z: 0.66}
       unitPreviewTarget: 

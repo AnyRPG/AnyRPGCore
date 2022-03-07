@@ -1,18 +1,15 @@
 using AnyRPG;
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
 
 namespace AnyRPG {
 
     [System.Serializable]
     public class StatusEffectConfig : AbilityEffectConfig {
 
-        
+        [SerializeField]
+        private StatusEffectProperties effectProperties = new StatusEffectProperties();
+
+        public override AbilityEffectProperties AbilityEffectProperties { get => effectProperties; }
 
     }
-
-
 }

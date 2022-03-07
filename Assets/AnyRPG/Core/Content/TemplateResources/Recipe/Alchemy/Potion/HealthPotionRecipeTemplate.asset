@@ -30,4 +30,7 @@ MonoBehaviour:
   itemOutputName: Health Potion
   outputCount: 1
   craftAbilityName: Alchemy
-  holdableObjectList: []
+  holdableObjectList:
+  - holdableObjectName: Fillable Red Potion
+    useUniversalAttachment: 1
+    attachmentName: Left Hand

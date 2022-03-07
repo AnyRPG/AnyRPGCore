@@ -14,21 +14,21 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   resourceName: Health Potion
   displayName: 
-  icon: {fileID: 21300000, guid: 753f7584cf233ff4186f953048bf35c9, type: 3}
+  icon: {fileID: 21300000, guid: f1fc90d7c9a2e4e4b9b01e8adf44a814, type: 3}
   iconBackgroundImage: {fileID: 0}
   description: Restore 1000 health
   useRegionalDescription: 0
   resourceDescriptionProfile: 
   optionalOverride: 0
   stackSize: 5
-  itemQuality: Average
+  itemQuality: 
   randomItemQuality: 0
   dynamicLevel: 0
   freezeDropLevel: 0
   levelCap: 0
-  itemLevel: 12
+  itemLevel: 1
   useLevel: 1
-  currencyName: Silver
+  currencyName: 
   dynamicCurrencyAmount: 1
   pricePerLevel: 5
   basePrice: 0

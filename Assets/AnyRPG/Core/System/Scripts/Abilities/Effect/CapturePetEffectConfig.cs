@@ -1,15 +1,15 @@
 using AnyRPG;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
 
 namespace AnyRPG {
 
     [System.Serializable]
     public class CapturePetEffectConfig : AbilityEffectConfig {
 
-        
+        [SerializeField]
+        private CapturePetEffectProperties effectProperties = new CapturePetEffectProperties();
+
+        public override AbilityEffectProperties AbilityEffectProperties { get => effectProperties; }
 
     }
 }
