@@ -1,0 +1,29 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6c9b51b8d3aa844448aaeab0a989e2fa, type: 3}
+  m_Name: HerbalismGrayFlowerNodeTemplatePackage
+  m_EditorClassIdentifier: 
+  resourceName: Herbalism Gray Flower Node
+  displayName: 
+  icon: {fileID: 0}
+  iconBackgroundImage: {fileID: 0}
+  description: 
+  useRegionalDescription: 0
+  resourceDescriptionProfile: 
+  optionalOverride: 0
+  resources:
+  - {fileID: 11400000, guid: f7d175a00377383448bad332766fccce, type: 2}
+  - {fileID: 11400000, guid: 3bdbd335954de7347bbdc9ae406a5b02, type: 2}
+  - {fileID: 11400000, guid: 6107bb2de6317334b91e9090bfeff24d, type: 2}
+  prefabs:
+  - {fileID: 5392010216800778309, guid: e695e59f03047d04d81d1b13fd3d7c11, type: 3}
+  dependencies: []

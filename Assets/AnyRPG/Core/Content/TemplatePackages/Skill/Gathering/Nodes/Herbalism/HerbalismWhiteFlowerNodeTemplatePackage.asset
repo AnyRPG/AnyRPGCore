@@ -1,0 +1,29 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6c9b51b8d3aa844448aaeab0a989e2fa, type: 3}
+  m_Name: HerbalismWhiteFlowerNodeTemplatePackage
+  m_EditorClassIdentifier: 
+  resourceName: Herbalism White Flower Node
+  displayName: 
+  icon: {fileID: 0}
+  iconBackgroundImage: {fileID: 0}
+  description: 
+  useRegionalDescription: 0
+  resourceDescriptionProfile: 
+  optionalOverride: 0
+  resources:
+  - {fileID: 11400000, guid: 9abbe702ef9cd4f43bf636746096d1e8, type: 2}
+  - {fileID: 11400000, guid: d45967db5fa554749bb3aa9b5e4e1484, type: 2}
+  - {fileID: 11400000, guid: 3231f17e01a316d46a77c70039f22723, type: 2}
+  prefabs:
+  - {fileID: 5392010216800778309, guid: 18b97297861875e4a9d9b7d9803d8077, type: 3}
+  dependencies: []

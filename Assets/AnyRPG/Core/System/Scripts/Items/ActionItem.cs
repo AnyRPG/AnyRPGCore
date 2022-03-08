@@ -165,7 +165,9 @@ namespace AnyRPG {
             base.SetupScriptableObjects(systemGameManager);
 
 
-            if (actionType == ResourcePropertyType.Named && actionName != null && actionName != string.Empty) {
+            if (actionType == ResourcePropertyType.Inline) {
+                actionProperties.SetupScriptableObjects(systemGameManager, DisplayName);
+            } else if (actionType == ResourcePropertyType.Named && actionName != null && actionName != string.Empty) {
                 AnimatedAction tmpAction = systemDataFactory.GetResource<AnimatedAction>(actionName);
                 if (tmpAction != null) {
                     actionProperties = tmpAction.ActionProperties;

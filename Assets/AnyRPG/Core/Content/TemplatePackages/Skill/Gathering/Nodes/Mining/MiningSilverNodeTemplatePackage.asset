@@ -1,0 +1,29 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6c9b51b8d3aa844448aaeab0a989e2fa, type: 3}
+  m_Name: MiningSilverNodeTemplatePackage
+  m_EditorClassIdentifier: 
+  resourceName: Mining Silver Node
+  displayName: 
+  icon: {fileID: 0}
+  iconBackgroundImage: {fileID: 0}
+  description: 
+  useRegionalDescription: 0
+  resourceDescriptionProfile: 
+  optionalOverride: 0
+  resources:
+  - {fileID: 11400000, guid: 855b1e60899b86a46b45c88f022280b0, type: 2}
+  - {fileID: 11400000, guid: 30309ce5d5336af49b0090f7d82c0d24, type: 2}
+  - {fileID: 11400000, guid: 9f211ca89e005414aa55402396ce1f95, type: 2}
+  prefabs:
+  - {fileID: 591910601583303974, guid: b9046a9b398d4394e88c119f482bf863, type: 3}
+  dependencies: []

@@ -1,0 +1,31 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6c9b51b8d3aa844448aaeab0a989e2fa, type: 3}
+  m_Name: AllCraftingJewelryNecklaceRecipesTemplatePackage
+  m_EditorClassIdentifier: 
+  resourceName: All Crafting Jewelry Necklace Recipes
+  displayName: 
+  icon: {fileID: 0}
+  iconBackgroundImage: {fileID: 0}
+  description: 
+  useRegionalDescription: 0
+  resourceDescriptionProfile: 
+  optionalOverride: 0
+  resources: []
+  prefabs: []
+  dependencies:
+  - {fileID: 11400000, guid: 10139bb8315ce0740a025dc95a157e62, type: 2}
+  - {fileID: 11400000, guid: 26ad73d6719c4684f9ed2b62ffa8cc8d, type: 2}
+  - {fileID: 11400000, guid: b682c45b77ee2854cb3cca5afe893e8e, type: 2}
+  - {fileID: 11400000, guid: 257025750ba5d9b4f93931fcdb835bbc, type: 2}
+  - {fileID: 11400000, guid: 7c99a4b8cc8520d4989732f8ed1f7290, type: 2}
+  - {fileID: 11400000, guid: f683750fdb8a6f1459e6d1e096cb7a65, type: 2}

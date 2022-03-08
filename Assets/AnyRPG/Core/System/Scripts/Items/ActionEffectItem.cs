@@ -56,7 +56,7 @@ namespace AnyRPG {
 
             if (useInlineEffect) {
                 abilityEffectProperties = inlineEffect.AbilityEffectProperties;
-                abilityEffectProperties.SetupScriptableObjects(systemGameManager, this);
+                abilityEffectProperties.SetupScriptableObjects(systemGameManager, new DescribableProperties(Icon, DisplayName));
             } else {
                 if (effectName != null && effectName != string.Empty) {
                     AbilityEffect tmpEffect = systemDataFactory.GetResource<AbilityEffect>(effectName);
