@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 6c9b51b8d3aa844448aaeab0a989e2fa, type: 3}
-  m_Name: BaseCraftingWoodworkingItemsTemplatePackage
+  m_Name: BaseCraftingWoodworkingRecipesTemplatePackage
   m_EditorClassIdentifier: 
   resourceName: Base Crafting Woodworking Items
   displayName: 
@@ -20,13 +20,9 @@ MonoBehaviour:
   useRegionalDescription: 0
   resourceDescriptionProfile: 
   optionalOverride: 0
-  resources:
-  - {fileID: 11400000, guid: 9fed6054995a91145a8f78ea83d6a53b, type: 2}
-  - {fileID: 11400000, guid: edf58f7cc6e9a9e469bbab0688719134, type: 2}
-  - {fileID: 11400000, guid: 9add2728a911c3744bea84b48e7bca47, type: 2}
-  - {fileID: 11400000, guid: 7f5b9931ae847224494dd756defdafe3, type: 2}
-  - {fileID: 11400000, guid: 0de2b3688010c7b4fa2207f29d8937f1, type: 2}
-  - {fileID: 11400000, guid: d9f14d0a8352d454d9f973737cc1bb89, type: 2}
-  - {fileID: 11400000, guid: 04afa2013be2c6246b43d98d31defc40, type: 2}
+  resources: []
   prefabs: []
-  dependencies: []
+  dependencies:
+  - {fileID: 11400000, guid: 21757da0940a82e4290de5819ddcbac9, type: 2}
+  - {fileID: 11400000, guid: ae59a9cd4beb99b4c8ca289ccd71b507, type: 2}
+  - {fileID: 11400000, guid: b571bd9ed3284d744b368339c9093ca6, type: 2}

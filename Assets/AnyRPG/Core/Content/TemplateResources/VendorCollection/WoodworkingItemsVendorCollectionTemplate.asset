@@ -21,7 +21,15 @@ MonoBehaviour:
   resourceDescriptionProfile: 
   optionalOverride: 0
   vendorItems:
-  - itemName: Lumber
+  - itemName: Ash Lumber
+    quantity: 0
+    unlimited: 1
+    itemQualityName: 
+  - itemName: Elm Lumber
+    quantity: 0
+    unlimited: 1
+    itemQualityName: 
+  - itemName: Spruce Lumber
     quantity: 0
     unlimited: 1
     itemQualityName: 
