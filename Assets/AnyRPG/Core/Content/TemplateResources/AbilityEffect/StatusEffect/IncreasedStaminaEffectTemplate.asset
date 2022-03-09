@@ -1,0 +1,88 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 499bdf3134e84df4c99414d0ac47ec01, type: 3}
+  m_Name: IncreasedStaminaEffectTemplate
+  m_EditorClassIdentifier: 
+  resourceName: Increased Agility
+  displayName: 
+  icon: {fileID: 21300000, guid: 4b2b9a0d854d0d14ba8da2ea08cabf9c, type: 3}
+  iconBackgroundImage: {fileID: 0}
+  description: 
+  useRegionalDescription: 0
+  resourceDescriptionProfile: 
+  optionalOverride: 0
+  statusEffectProperties:
+    targetOptions:
+      requireTarget: 1
+      requireLineOfSight: 0
+      requireLiveTarget: 1
+      requireDeadTarget: 0
+      canCastOnSelf: 1
+      canCastOnOthers: 0
+      canCastOnEnemy: 0
+      canCastOnNeutral: 0
+      canCastOnFriendly: 0
+      autoSelfCast: 1
+      useMeleeRange: 0
+      maxRange: 0
+      lineOfSightSourceLocation: 0
+      targetRangeSourceLocation: 0
+    chanceToCast: 100
+    effectMaterialName: 
+    materialChangeDuration: 2
+    onHitAudioProfileNames: []
+    randomAudioProfiles: 0
+    hitAbilityEffectNames: []
+    inputMultiplier: 0
+    threatMultiplier: 1
+    abilityPrefabSource: 1
+    randomPrefabs: 0
+    abilityObjectList: []
+    prefabSpawnLocation: 0
+    prefabDestroyDelay: 0
+    destroyOnEndCast: 0
+    tickRate: 0
+    castZeroTick: 0
+    tickAbilityEffectNames: []
+    onTickAudioProfileNames: []
+    randomTickAudioProfiles: 0
+    completeAbilityEffectNames: []
+    statusEffectAlignment: 0
+    statusEffectTypeName: 
+    statusEffectGroupName: 
+    classTrait: 0
+    requiredLevel: 1
+    sceneNames: []
+    limitedDuration: 1
+    duration: 600
+    maxStacks: 1
+    statBuffTypeNames:
+    - Stamina
+    statAmount: 10
+    statMultiplier: 1
+    secondaryStatBuffsTypes: 
+    secondaryStatAmount: 0
+    secondaryStatMultiplier: 1
+    outgoingDamageMultiplier: 1
+    incomingDamageMultiplier: 1
+    factionModifiers: []
+    canFly: 0
+    canGlide: 0
+    disableAnimator: 0
+    stun: 0
+    levitate: 0
+    immuneDisableAnimator: 0
+    immuneStun: 0
+    immuneLevitate: 0
+    controlTarget: 0
+    reflectAbilityEffectNames: []
+    weaponHitAbilityEffectNames: []
