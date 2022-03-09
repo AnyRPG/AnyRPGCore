@@ -10,9 +10,9 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 086cc19bb10d93146806ca499cfd21c7, type: 3}
-  m_Name: TreePrefabTemplate
+  m_Name: SpruceTreePrefabTemplate
   m_EditorClassIdentifier: 
-  resourceName: Tree
+  resourceName: Spruce Tree
   displayName: 
   icon: {fileID: 0}
   iconBackgroundImage: {fileID: 0}
@@ -20,7 +20,7 @@ MonoBehaviour:
   useRegionalDescription: 0
   resourceDescriptionProfile: 
   optionalOverride: 0
-  prefab: {fileID: 6543546370120829644, guid: ec4173a11b6ef7c46859b7959b086c52, type: 3}
+  prefab: {fileID: 1952742938381504616, guid: 3bff7b3f3f7c3f444acf9322988e786b, type: 3}
   position: {x: 0, y: 0, z: 0}
   rotationIsGlobal: 0
   rotation: {x: 0, y: 0, z: 0}

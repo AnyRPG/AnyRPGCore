@@ -10,9 +10,9 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 6c9b51b8d3aa844448aaeab0a989e2fa, type: 3}
-  m_Name: AllGatheringLoggingItemsTemplatePackage
+  m_Name: LoggingElmTreeNodeTemplatePackage
   m_EditorClassIdentifier: 
-  resourceName: All Gathering Logging Items
+  resourceName: Logging Elm Tree Node
   displayName: 
   icon: {fileID: 0}
   iconBackgroundImage: {fileID: 0}
@@ -20,9 +20,10 @@ MonoBehaviour:
   useRegionalDescription: 0
   resourceDescriptionProfile: 
   optionalOverride: 0
-  resources: []
-  prefabs: []
-  dependencies:
-  - {fileID: 11400000, guid: 19c18ab4b77f0d347b910ed989cb906c, type: 2}
-  - {fileID: 11400000, guid: 90d82979c5d35ee4682fda63b5738dab, type: 2}
-  - {fileID: 11400000, guid: a99daa467383aa443a5a24b916918de3, type: 2}
+  resources:
+  - {fileID: 11400000, guid: 9add2728a911c3744bea84b48e7bca47, type: 2}
+  - {fileID: 11400000, guid: 31e5404dfd48b274fa0d39485c569580, type: 2}
+  - {fileID: 11400000, guid: 4bffcaf2577ff8a4cbbe2e31ee5c0246, type: 2}
+  prefabs:
+  - {fileID: 1544912565699738728, guid: e14b081fb2c91b246824777afc8fac48, type: 3}
+  dependencies: []

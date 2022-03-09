@@ -914,7 +914,12 @@ namespace AnyRPG {
             if (statusEffectSaveData.StatusEffectName == null || statusEffectSaveData.StatusEffectName == string.Empty) {
                 return;
             }
-            ApplyStatusEffect(systemDataFactory.GetResource<AbilityEffect>(statusEffectSaveData.StatusEffectName).AbilityEffectProperties, statusEffectSaveData.remainingSeconds);
+            AbilityEffect savedEffect = systemDataFactory.GetResource<AbilityEffect>(statusEffectSaveData.StatusEffectName);
+            if (savedEffect != null) {
+                ApplyStatusEffect(savedEffect.AbilityEffectProperties, statusEffectSaveData.remainingSeconds);
+            } else {
+                Debug.LogWarning(baseCharacter.CharacterName + ".CharacterAbilityManager.ApplySavedStatusEffects() could not find effect in database with name " + statusEffectSaveData.StatusEffectName);
+            }
         }
 
         public void RemoveCapabilityProviderTraits(List<StatusEffect> statusEffects) {

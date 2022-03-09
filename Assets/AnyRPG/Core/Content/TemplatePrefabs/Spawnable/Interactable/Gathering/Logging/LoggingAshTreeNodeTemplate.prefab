@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 8851426205781705841}
   - component: {fileID: 8861613808716838764}
   m_Layer: 25
-  m_Name: LoggingTreeNodeTemplate
+  m_Name: LoggingAshTreeNodeTemplate
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -46,13 +46,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: df07de734135f834b9ba0098ec4ed914, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  prefabProfileName: Tree
+  prefabProfileName: Ash Tree
   spawnDelay: 0
   spawnReference: {fileID: 0}
   despawnObject: 1
   prerequisiteConditions: []
   showTooltip: 1
-  interactableName: Tree
+  interactableName: Ash Tree
   glowOnMouseOver: 1
   lightEmission: 0
   glowFlashSpeed: 1.5
@@ -90,7 +90,7 @@ MonoBehaviour:
     namePlateImage: {fileID: 0}
     prerequisiteConditions: []
     lootTableNames:
-    - Logging Tree Node
+    - Logging Ash Tree Node
     spawnTimer: 60
     abilityName: Logging
 --- !u!65 &8861613808716838764

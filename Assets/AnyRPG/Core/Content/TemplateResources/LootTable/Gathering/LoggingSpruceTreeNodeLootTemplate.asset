@@ -10,9 +10,9 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 4d27b95b419c1844fa9682cc3b78657b, type: 3}
-  m_Name: LoggingTreeNodeLootTemplate
+  m_Name: LoggingSpruceTreeNodeLootTemplate
   m_EditorClassIdentifier: 
-  resourceName: Logging Tree Node
+  resourceName: Logging Spruce Tree Node
   displayName: 
   icon: {fileID: 0}
   iconBackgroundImage: {fileID: 0}
@@ -29,7 +29,7 @@ MonoBehaviour:
     uniqueLimit: 0
     ignoreGlobalDropLimit: 0
     loot:
-    - itemName: Lumber
+    - itemName: Spruce Log
       dropChance: 100
       minDrops: 2
       maxDrops: 3
