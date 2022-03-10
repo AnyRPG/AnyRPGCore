@@ -14,15 +14,16 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   resourceName: Red Leather Boots
   displayName: 
-  icon: {fileID: 21300000, guid: f601144b399be694884fde01ae945f0a, type: 3}
+  icon: {fileID: 0}
   iconBackgroundImage: {fileID: 0}
   description: 
   useRegionalDescription: 0
   resourceDescriptionProfile: 
   optionalOverride: 0
   resources:
-  - {fileID: 11400000, guid: 706c6bc406d57344bb88233faa58739c, type: 2}
-  - {fileID: 11400000, guid: ecb92842932038d42b84c3b57fe2ead1, type: 2}
+  - {fileID: 11400000, guid: c88224a73e5661c4cb4959c84c44c916, type: 2}
+  - {fileID: 11400000, guid: e220446eb56e09c4daedfba1a07174cd, type: 2}
   - {fileID: 11400000, guid: 9db718c5359ddb24bb390d548c4ea5cd, type: 2}
+  prefabs: []
   dependencies:
   - {fileID: 11400000, guid: 9f6444816878bcb4caa1a1409675594e, type: 2}

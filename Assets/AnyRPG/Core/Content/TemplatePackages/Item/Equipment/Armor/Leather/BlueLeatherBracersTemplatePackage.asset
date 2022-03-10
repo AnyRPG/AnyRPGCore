@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   resourceName: Blue Leather Bracers
   displayName: 
-  icon: {fileID: 21300000, guid: 3584dece110f7314385ca31a3242ad72, type: 3}
+  icon: {fileID: 0}
   iconBackgroundImage: {fileID: 0}
   description: 
   useRegionalDescription: 0
@@ -24,5 +24,6 @@ MonoBehaviour:
   - {fileID: 11400000, guid: bc08625099d30b446b1471a26d923306, type: 2}
   - {fileID: 11400000, guid: 9205199fbc706a34baf4be8813620459, type: 2}
   - {fileID: 11400000, guid: 9db718c5359ddb24bb390d548c4ea5cd, type: 2}
+  prefabs: []
   dependencies:
   - {fileID: 11400000, guid: 9f6444816878bcb4caa1a1409675594e, type: 2}

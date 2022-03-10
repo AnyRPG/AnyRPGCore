@@ -17,7 +17,7 @@ MonoBehaviour:
   icon: {fileID: 21300000, guid: 07bfb4b3db0149643a3694a04706666f, type: 3}
   iconBackgroundImage: {fileID: 0}
   description: very red
-  useRegionalDescription: 1
+  useRegionalDescription: 0
   resourceDescriptionProfile: 
   optionalOverride: 0
   stackSize: 1
@@ -33,10 +33,7 @@ MonoBehaviour:
   pricePerLevel: 10
   basePrice: 0
   uniqueItem: 0
-  characterClassRequirementList:
-  - Fighter
-  - Ranger
-  - Warrior
+  characterClassRequirementList: []
   equipmentSlotType: Pauldrons
   equipmentSetName: 
   useUMARecipe: 1
@@ -57,4 +54,5 @@ MonoBehaviour:
   secondaryStats: []
   onEquipAbilityName: 
   learnedAbilityNames: []
+  requireArmorClass: 0
   armorClassName: Leather

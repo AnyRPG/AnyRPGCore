@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   resourceName: Gray Leather Gloves
   displayName: 
-  icon: {fileID: 21300000, guid: 9a60c4ad9fa902c4c90288084cd0dcf8, type: 3}
+  icon: {fileID: 0}
   iconBackgroundImage: {fileID: 0}
   description: 
   useRegionalDescription: 0
@@ -24,5 +24,6 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 743eb31593c70da4590ae1ce86e3d992, type: 2}
   - {fileID: 11400000, guid: b59efbbe88c6e2d40a848376dcef3ea3, type: 2}
   - {fileID: 11400000, guid: 9db718c5359ddb24bb390d548c4ea5cd, type: 2}
+  prefabs: []
   dependencies:
   - {fileID: 11400000, guid: 9f6444816878bcb4caa1a1409675594e, type: 2}

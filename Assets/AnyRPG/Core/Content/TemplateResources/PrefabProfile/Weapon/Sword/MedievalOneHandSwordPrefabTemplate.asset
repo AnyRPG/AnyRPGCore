@@ -12,13 +12,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 086cc19bb10d93146806ca499cfd21c7, type: 3}
   m_Name: MedievalOneHandSwordPrefabTemplate
   m_EditorClassIdentifier: 
-  resourceName: MedievalOneHandedSword
+  resourceName: MedievalOneHandSword
   displayName: 
   icon: {fileID: 0}
   iconBackgroundImage: {fileID: 0}
   description: 
   useRegionalDescription: 0
   resourceDescriptionProfile: 
+  optionalOverride: 0
   prefab: {fileID: 5319069474142785129, guid: 99a600b237664884a893d4e1d7506bc6, type: 3}
   position: {x: 0, y: 0, z: 0}
   rotationIsGlobal: 0
@@ -35,4 +36,3 @@ MonoBehaviour:
   pickupPosition: {x: 0, y: 0, z: 0}
   pickupRotation: {x: 0, y: 0, z: 0}
   pickupScale: {x: 1, y: 1, z: 1}
-  attachmentProfileName: 

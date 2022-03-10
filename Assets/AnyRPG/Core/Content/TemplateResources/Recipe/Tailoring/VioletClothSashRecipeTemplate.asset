@@ -25,6 +25,8 @@ MonoBehaviour:
   craftingMaterials:
   - itemName: Linen
     count: 1
+  - itemName: Violet Dye
+    count: 1
   itemOutputName: Violet Cloth Sash
   outputCount: 1
   craftAbilityName: Tailoring

@@ -1,0 +1,37 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6c9b51b8d3aa844448aaeab0a989e2fa, type: 3}
+  m_Name: AllBasicSteelWeaponItemsTemplatePackage
+  m_EditorClassIdentifier: 
+  resourceName: Basic Steel Weapons
+  displayName: 
+  icon: {fileID: 0}
+  iconBackgroundImage: {fileID: 0}
+  description: 
+  useRegionalDescription: 0
+  resourceDescriptionProfile: 
+  optionalOverride: 0
+  resources:
+  - {fileID: 11400000, guid: e04f685df1222704daed1c6eb3d61ea0, type: 2}
+  - {fileID: 11400000, guid: f26a1cdfb223eea458281f70eaea6040, type: 2}
+  dependencies:
+  - {fileID: 11400000, guid: ef71f3b81279eec4782470551e876848, type: 2}
+  - {fileID: 11400000, guid: 5e4da27d047e9254a822b4c7d2a11351, type: 2}
+  - {fileID: 11400000, guid: a4ab6ba220f07db4780a513e9942b565, type: 2}
+  - {fileID: 11400000, guid: e0a68ae4c1c06ab4ea088219c626cc96, type: 2}
+  - {fileID: 11400000, guid: 3a1e00bb42302a041bb6f76830fa8764, type: 2}
+  - {fileID: 11400000, guid: 9a0fddf5365d3d349b5fa70ef263e3d2, type: 2}
+  - {fileID: 11400000, guid: fa235eeee0678c34b83dee7537319199, type: 2}
+  - {fileID: 11400000, guid: a0a95e34311994f419a889c9a517e67c, type: 2}
+  - {fileID: 11400000, guid: 8c35d8821a7304a44ac5675133547143, type: 2}
+  - {fileID: 11400000, guid: 1afbf4a498bc0b34c8562bc52198f5e3, type: 2}
+  - {fileID: 11400000, guid: 26b21b7eb344f6e4f94608b716bf5047, type: 2}

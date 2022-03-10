@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 499bdf3134e84df4c99414d0ac47ec01, type: 3}
   m_Name: IncreasedStaminaEffectTemplate
   m_EditorClassIdentifier: 
-  resourceName: Increased Agility
+  resourceName: Increased Stamina
   displayName: 
   icon: {fileID: 21300000, guid: 4b2b9a0d854d0d14ba8da2ea08cabf9c, type: 3}
   iconBackgroundImage: {fileID: 0}

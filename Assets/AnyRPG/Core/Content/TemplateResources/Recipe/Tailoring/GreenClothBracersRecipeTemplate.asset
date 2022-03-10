@@ -25,6 +25,8 @@ MonoBehaviour:
   craftingMaterials:
   - itemName: Linen
     count: 1
+  - itemName: Green Dye
+    count: 1
   itemOutputName: Green Cloth Bracers
   outputCount: 1
   craftAbilityName: Tailoring

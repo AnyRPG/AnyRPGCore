@@ -25,6 +25,8 @@ MonoBehaviour:
   craftingMaterials:
   - itemName: Linen
     count: 1
+  - itemName: Blue Dye
+    count: 1
   itemOutputName: Blue Cloth Mantle
   outputCount: 1
   craftAbilityName: Tailoring

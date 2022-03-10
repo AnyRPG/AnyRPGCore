@@ -21,11 +21,11 @@ MonoBehaviour:
   resourceDescriptionProfile: 
   optionalOverride: 0
   autoLearn: 1
-  requiredLevel: 8
+  requiredLevel: 1
   craftingMaterials:
   - itemName: Leather
     count: 1
-  - itemName: Linen
+  - itemName: Blue Dye
     count: 1
   itemOutputName: Blue Leather Boots
   outputCount: 1

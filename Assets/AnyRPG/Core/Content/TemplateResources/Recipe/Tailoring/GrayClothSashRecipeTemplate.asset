@@ -25,6 +25,8 @@ MonoBehaviour:
   craftingMaterials:
   - itemName: Linen
     count: 1
+  - itemName: Gray Dye
+    count: 1
   itemOutputName: Gray Cloth Sash
   outputCount: 1
   craftAbilityName: Tailoring

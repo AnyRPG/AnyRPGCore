@@ -1,0 +1,33 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6c9b51b8d3aa844448aaeab0a989e2fa, type: 3}
+  m_Name: AllLeatherEquipmentBlueRecipesTemplatePackage
+  m_EditorClassIdentifier: 
+  resourceName: Blue Leather Equipment Recipes
+  displayName: 
+  icon: {fileID: 0}
+  iconBackgroundImage: {fileID: 0}
+  description: 
+  useRegionalDescription: 0
+  resourceDescriptionProfile: 
+  optionalOverride: 0
+  resources: []
+  prefabs: []
+  dependencies:
+  - {fileID: 11400000, guid: df7bc39756d7eec4db24d3a2ffc92eb9, type: 2}
+  - {fileID: 11400000, guid: 4b3801af66e586f48a0c4a64035b12b6, type: 2}
+  - {fileID: 11400000, guid: d7cc9ff8dbbf2ce4c8f083e3cf799cdc, type: 2}
+  - {fileID: 11400000, guid: e78564154fdb0814b861e23381b297c8, type: 2}
+  - {fileID: 11400000, guid: e1537cf678bb9464dabb7abbdce5a277, type: 2}
+  - {fileID: 11400000, guid: 1becd2de52bb38b4f8aa92a63c1a6760, type: 2}
+  - {fileID: 11400000, guid: 77e7c74e45ed4674eb042bbb891a49df, type: 2}
+  - {fileID: 11400000, guid: 688a2b765ed45754e8b601e9841f3262, type: 2}

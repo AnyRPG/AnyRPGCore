@@ -25,7 +25,7 @@ MonoBehaviour:
   craftingMaterials:
   - itemName: Leather
     count: 1
-  - itemName: Linen
+  - itemName: Gray Dye
     count: 1
   itemOutputName: Gray Leather Pants
   outputCount: 1

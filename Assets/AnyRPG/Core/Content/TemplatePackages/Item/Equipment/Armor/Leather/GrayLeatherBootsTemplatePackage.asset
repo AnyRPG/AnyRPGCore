@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   resourceName: Gray Leather Boots
   displayName: 
-  icon: {fileID: 21300000, guid: f8001225cce67d645a9af30848e1bbe8, type: 3}
+  icon: {fileID: 0}
   iconBackgroundImage: {fileID: 0}
   description: 
   useRegionalDescription: 0
@@ -24,5 +24,6 @@ MonoBehaviour:
   - {fileID: 11400000, guid: a281fa6c2ab493b4da86c6152576f6fc, type: 2}
   - {fileID: 11400000, guid: a73afe4aff8449d488f85469d7557b4b, type: 2}
   - {fileID: 11400000, guid: 9db718c5359ddb24bb390d548c4ea5cd, type: 2}
+  prefabs: []
   dependencies:
   - {fileID: 11400000, guid: 9f6444816878bcb4caa1a1409675594e, type: 2}

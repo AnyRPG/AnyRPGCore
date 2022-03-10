@@ -20,10 +20,12 @@ MonoBehaviour:
   useRegionalDescription: 0
   resourceDescriptionProfile: 
   optionalOverride: 0
-  autoLearn: 0
+  autoLearn: 1
   requiredLevel: 1
   craftingMaterials:
   - itemName: Leather
+    count: 1
+  - itemName: Yellow Dye
     count: 1
   itemOutputName: Yellow Leather Belt
   outputCount: 1

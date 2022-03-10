@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   resourceName: Yellow Leather Armor
   displayName: 
-  icon: {fileID: 21300000, guid: 51f5cc91783e3a147b528d36a0661690, type: 3}
+  icon: {fileID: 0}
   iconBackgroundImage: {fileID: 0}
   description: 
   useRegionalDescription: 0
@@ -24,5 +24,6 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 160d466a46f4a644eb2401b90cd6d9ff, type: 2}
   - {fileID: 11400000, guid: c54a3d48749ed104fbce9b2735152ec4, type: 2}
   - {fileID: 11400000, guid: 9db718c5359ddb24bb390d548c4ea5cd, type: 2}
+  prefabs: []
   dependencies:
   - {fileID: 11400000, guid: 9f6444816878bcb4caa1a1409675594e, type: 2}

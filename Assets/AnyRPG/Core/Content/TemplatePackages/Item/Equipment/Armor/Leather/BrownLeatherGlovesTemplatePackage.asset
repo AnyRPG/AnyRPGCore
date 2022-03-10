@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   resourceName: Brown Leather Gloves
   displayName: 
-  icon: {fileID: 21300000, guid: 9b978437626bdd84299ba4424355b689, type: 3}
+  icon: {fileID: 0}
   iconBackgroundImage: {fileID: 0}
   description: 
   useRegionalDescription: 0
@@ -22,7 +22,8 @@ MonoBehaviour:
   optionalOverride: 0
   resources:
   - {fileID: 11400000, guid: 0337a10369ab88f4483755c27889b4b1, type: 2}
-  - {fileID: 11400000, guid: 9656b47fcc6c7e943b9b0f6e2f509864, type: 2}
+  - {fileID: 11400000, guid: 62cdeb2efc8e2204ba0446eba0120a32, type: 2}
   - {fileID: 11400000, guid: 9db718c5359ddb24bb390d548c4ea5cd, type: 2}
+  prefabs: []
   dependencies:
   - {fileID: 11400000, guid: 9f6444816878bcb4caa1a1409675594e, type: 2}

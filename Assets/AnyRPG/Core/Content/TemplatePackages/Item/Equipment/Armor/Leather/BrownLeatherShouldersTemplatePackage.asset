@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   resourceName: Brown Leather Shoulders
   displayName: 
-  icon: {fileID: 21300000, guid: 2abfa4ab7184ca94b9812fe6cabeae8d, type: 3}
+  icon: {fileID: 0}
   iconBackgroundImage: {fileID: 0}
   description: 
   useRegionalDescription: 0
@@ -24,5 +24,6 @@ MonoBehaviour:
   - {fileID: 11400000, guid: cced4f4bf53fb334a84bb4cf47cfe20e, type: 2}
   - {fileID: 11400000, guid: 9f5df4a3ccd927142bc22ce86d6c4b05, type: 2}
   - {fileID: 11400000, guid: 9db718c5359ddb24bb390d548c4ea5cd, type: 2}
+  prefabs: []
   dependencies:
   - {fileID: 11400000, guid: 9f6444816878bcb4caa1a1409675594e, type: 2}

@@ -12,13 +12,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 086cc19bb10d93146806ca499cfd21c7, type: 3}
   m_Name: MedievalArrowPrefabTemplate
   m_EditorClassIdentifier: 
-  resourceName: AnyRPG Arrow
+  resourceName: Medieval Arrow
   displayName: 
   icon: {fileID: 0}
   iconBackgroundImage: {fileID: 0}
   description: 
   useRegionalDescription: 0
   resourceDescriptionProfile: 
+  optionalOverride: 0
   prefab: {fileID: 5319069474142785129, guid: fa46411f8e7293d468efd5b7759d3767, type: 3}
   position: {x: -0.0738, y: 0.0034, z: -0.0423}
   rotationIsGlobal: 0
@@ -31,3 +32,7 @@ MonoBehaviour:
   sheathedScale: {x: 1, y: 1, z: 1}
   sheathedTargetBone: 0
   sheathAudioProfileName: 
+  useItemPickup: 0
+  pickupPosition: {x: 0, y: 0, z: 0}
+  pickupRotation: {x: 0, y: 0, z: 0}
+  pickupScale: {x: 1, y: 1, z: 1}

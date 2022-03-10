@@ -1,0 +1,35 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6c9b51b8d3aa844448aaeab0a989e2fa, type: 3}
+  m_Name: AllMedievalWeaponRecipesTemplatePackage
+  m_EditorClassIdentifier: 
+  resourceName: Medieval Weapon Recipes
+  displayName: 
+  icon: {fileID: 0}
+  iconBackgroundImage: {fileID: 0}
+  description: 
+  useRegionalDescription: 0
+  resourceDescriptionProfile: 
+  optionalOverride: 0
+  resources: []
+  prefabs: []
+  dependencies:
+  - {fileID: 11400000, guid: 0b331daa66e97e74d9b6712ce45dfcb5, type: 2}
+  - {fileID: 11400000, guid: 26f80b94979d1fa4aa3bc36f608fc212, type: 2}
+  - {fileID: 11400000, guid: 8014b3afff1773643855af76b576c3f5, type: 2}
+  - {fileID: 11400000, guid: 658c35e414ae3374187004bcb5cb9ca5, type: 2}
+  - {fileID: 11400000, guid: ac768b9793008014fa287b338a8c06b9, type: 2}
+  - {fileID: 11400000, guid: 17286b2cefedb364393dbafdd9eb580a, type: 2}
+  - {fileID: 11400000, guid: b5d6f7851680ab74986b37542ef22d01, type: 2}
+  - {fileID: 11400000, guid: c482257d339566243b4c61e1d25ab4ab, type: 2}
+  - {fileID: 11400000, guid: 99821455558edbc45877feaed0b77347, type: 2}
+  - {fileID: 11400000, guid: 814e48bad7838544bab715f6878ecf5a, type: 2}

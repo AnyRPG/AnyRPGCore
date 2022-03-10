@@ -1,0 +1,35 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6c9b51b8d3aa844448aaeab0a989e2fa, type: 3}
+  m_Name: AllLeatherEquipmentYellowItemsTemplatePackage
+  m_EditorClassIdentifier: 
+  resourceName: Yellow Leather Equipment
+  displayName: 
+  icon: {fileID: 0}
+  iconBackgroundImage: {fileID: 0}
+  description: 
+  useRegionalDescription: 0
+  resourceDescriptionProfile: 
+  optionalOverride: 0
+  resources:
+  - {fileID: 11400000, guid: 6228f8f8328162449a91fa53a0fc6ec8, type: 2}
+  - {fileID: 11400000, guid: db406ec7aa4f1644baa4c681c62642f7, type: 2}
+  prefabs: []
+  dependencies:
+  - {fileID: 11400000, guid: c00438b03c57af3428d7a795aa7e0e06, type: 2}
+  - {fileID: 11400000, guid: f4b81360578d98042b1e20a946652cc1, type: 2}
+  - {fileID: 11400000, guid: d6ea68f2f12b4c34b9a6baad8a5f05e2, type: 2}
+  - {fileID: 11400000, guid: 46430e8a86720744d8592e038f898acb, type: 2}
+  - {fileID: 11400000, guid: aba34d8fd0f766140b9eee54b4c68a76, type: 2}
+  - {fileID: 11400000, guid: cda79c34a33e2d14382644b7b2100029, type: 2}
+  - {fileID: 11400000, guid: 5f0916a08c5791641b4892b98a8dbfe7, type: 2}
+  - {fileID: 11400000, guid: 76395e4f7b3616743868a763aee19744, type: 2}

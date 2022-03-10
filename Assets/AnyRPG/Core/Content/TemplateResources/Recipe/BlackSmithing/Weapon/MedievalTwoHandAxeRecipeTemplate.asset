@@ -23,14 +23,14 @@ MonoBehaviour:
   autoLearn: 1
   requiredLevel: 1
   craftingMaterials:
-  - itemName: Steel Ingot
+  - itemName: Iron Ingot
     count: 1
-  - itemName: Lumber
+  - itemName: Spruce Lumber
     count: 1
   itemOutputName: Medieval Two Hand Axe
   outputCount: 1
   craftAbilityName: Blacksmithing
   holdableObjectList:
-  - holdableObjectName: Steel Ingot
+  - holdableObjectName: Iron Ingot
     useUniversalAttachment: 0
     attachmentName: 

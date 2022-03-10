@@ -1,0 +1,37 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6c9b51b8d3aa844448aaeab0a989e2fa, type: 3}
+  m_Name: AllBasicIronWeaponItemsTemplatePackage
+  m_EditorClassIdentifier: 
+  resourceName: Basic Iron Weapons
+  displayName: 
+  icon: {fileID: 0}
+  iconBackgroundImage: {fileID: 0}
+  description: 
+  useRegionalDescription: 0
+  resourceDescriptionProfile: 
+  optionalOverride: 0
+  resources:
+  - {fileID: 11400000, guid: ea100bd44794fe1448cca0e30203b511, type: 2}
+  - {fileID: 11400000, guid: 55a2fbaa4a2f1d0498e8c6d085c02a68, type: 2}
+  dependencies:
+  - {fileID: 11400000, guid: 5b89c13037161664fa6aa89b73e2a728, type: 2}
+  - {fileID: 11400000, guid: 710bb136addd1b645895035e4f37d690, type: 2}
+  - {fileID: 11400000, guid: 5ca4ce544ea0bcf4bbb873310fa89074, type: 2}
+  - {fileID: 11400000, guid: f4b7632bb0f01d243981bc834e34e020, type: 2}
+  - {fileID: 11400000, guid: 521c4986301daac4894ed6c04ceef911, type: 2}
+  - {fileID: 11400000, guid: c504f751429b1eb4eb446682f97cc66c, type: 2}
+  - {fileID: 11400000, guid: 896e66606950308479b3760b484ed3a0, type: 2}
+  - {fileID: 11400000, guid: 5deb1f7087304394c9ceb694fab3dd08, type: 2}
+  - {fileID: 11400000, guid: 0ca1fe50bbacd5b41affb51082df0021, type: 2}
+  - {fileID: 11400000, guid: a381a541d1189764aa75b627b21d3dba, type: 2}
+  - {fileID: 11400000, guid: 6969efb7eb1a9584e8b8b892cd2a4b93, type: 2}

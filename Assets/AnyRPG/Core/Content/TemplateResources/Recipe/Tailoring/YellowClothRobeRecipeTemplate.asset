@@ -25,6 +25,8 @@ MonoBehaviour:
   craftingMaterials:
   - itemName: Linen
     count: 1
+  - itemName: Yellow Dye
+    count: 1
   itemOutputName: Yellow Cloth Robe
   outputCount: 1
   craftAbilityName: Tailoring

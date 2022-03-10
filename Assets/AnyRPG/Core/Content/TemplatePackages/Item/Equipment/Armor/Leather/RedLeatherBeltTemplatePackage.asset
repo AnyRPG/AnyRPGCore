@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   resourceName: Red Leather Belt
   displayName: 
-  icon: {fileID: 21300000, guid: e3ca75a2510e7454bae154647788cbed, type: 3}
+  icon: {fileID: 0}
   iconBackgroundImage: {fileID: 0}
   description: 
   useRegionalDescription: 0
@@ -24,5 +24,6 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 6c0ba2cf3c882e8478bfd5600249ba49, type: 2}
   - {fileID: 11400000, guid: b4fd7df5ca6314f4b9fc1d1ab386c112, type: 2}
   - {fileID: 11400000, guid: 9db718c5359ddb24bb390d548c4ea5cd, type: 2}
+  prefabs: []
   dependencies:
   - {fileID: 11400000, guid: 9f6444816878bcb4caa1a1409675594e, type: 2}

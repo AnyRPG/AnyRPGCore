@@ -25,6 +25,8 @@ MonoBehaviour:
   craftingMaterials:
   - itemName: Leather
     count: 1
+  - itemName: Gray Dye
+    count: 1
   itemOutputName: Gray Leather Bracers
   outputCount: 1
   craftAbilityName: LeatherWorking

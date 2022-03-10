@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   resourceName: Gray Leather Armor
   displayName: 
-  icon: {fileID: 21300000, guid: b3c9e35ebf50f5e4f828f89e6cdb1a90, type: 3}
+  icon: {fileID: 0}
   iconBackgroundImage: {fileID: 0}
   description: 
   useRegionalDescription: 0
@@ -24,5 +24,6 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 024dab3b422e61045a8e503b30a041a3, type: 2}
   - {fileID: 11400000, guid: 919726324b05430449cad2a37deb3f87, type: 2}
   - {fileID: 11400000, guid: 9db718c5359ddb24bb390d548c4ea5cd, type: 2}
+  prefabs: []
   dependencies:
   - {fileID: 11400000, guid: 9f6444816878bcb4caa1a1409675594e, type: 2}

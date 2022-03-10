@@ -19,6 +19,7 @@ MonoBehaviour:
   description: 
   useRegionalDescription: 0
   resourceDescriptionProfile: 
+  optionalOverride: 0
   weaponSkillProps:
     defaultWeaponSkill: 0
     defaultHitEffects:
@@ -28,6 +29,6 @@ MonoBehaviour:
     onHitAudioProfiles:
     - Arrow Hit
     abilityObjectList:
-    - holdableObjectName: Arrow
+    - holdableObjectName: Medieval Arrow
       useUniversalAttachment: 1
       attachmentName: Right Hand

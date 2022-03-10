@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   resourceName: Yellow Leather Bracers
   displayName: 
-  icon: {fileID: 21300000, guid: a846a5bde7c6abc44848ef8f3cb1471a, type: 3}
+  icon: {fileID: 0}
   iconBackgroundImage: {fileID: 0}
   description: 
   useRegionalDescription: 0
@@ -24,5 +24,6 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 95df5c3553693fc4e9b7769ffe73144b, type: 2}
   - {fileID: 11400000, guid: 38cfe2f8f5be6e54f9dd7589b96eff0c, type: 2}
   - {fileID: 11400000, guid: 9db718c5359ddb24bb390d548c4ea5cd, type: 2}
+  prefabs: []
   dependencies:
   - {fileID: 11400000, guid: 9f6444816878bcb4caa1a1409675594e, type: 2}

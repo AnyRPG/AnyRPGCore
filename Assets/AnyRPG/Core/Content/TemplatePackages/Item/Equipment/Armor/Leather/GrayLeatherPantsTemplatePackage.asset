@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   resourceName: Gray Leather Pants
   displayName: 
-  icon: {fileID: 21300000, guid: 7eb428d525f8cfb458e1615ac28899d9, type: 3}
+  icon: {fileID: 0}
   iconBackgroundImage: {fileID: 0}
   description: 
   useRegionalDescription: 0
@@ -24,5 +24,6 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 1e8e74dbceb605047bdc127e62fc4bef, type: 2}
   - {fileID: 11400000, guid: 10add62b6aec7794e951a3636f1e0fa2, type: 2}
   - {fileID: 11400000, guid: 9db718c5359ddb24bb390d548c4ea5cd, type: 2}
+  prefabs: []
   dependencies:
   - {fileID: 11400000, guid: 9f6444816878bcb4caa1a1409675594e, type: 2}

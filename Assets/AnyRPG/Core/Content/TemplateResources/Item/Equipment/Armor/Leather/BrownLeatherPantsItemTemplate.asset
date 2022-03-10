@@ -17,7 +17,7 @@ MonoBehaviour:
   icon: {fileID: 21300000, guid: 79d03be7db44c2c4a870db473747187b, type: 3}
   iconBackgroundImage: {fileID: 0}
   description: very brown
-  useRegionalDescription: 1
+  useRegionalDescription: 0
   resourceDescriptionProfile: 
   optionalOverride: 0
   stackSize: 1
@@ -32,10 +32,8 @@ MonoBehaviour:
   dynamicCurrencyAmount: 1
   pricePerLevel: 10
   basePrice: 0
-  uniqueItem: 1
-  characterClassRequirementList:
-  - Fighter
-  - Ranger
+  uniqueItem: 0
+  characterClassRequirementList: []
   equipmentSlotType: Pants
   equipmentSetName: 
   useUMARecipe: 0
@@ -56,4 +54,5 @@ MonoBehaviour:
   secondaryStats: []
   onEquipAbilityName: 
   learnedAbilityNames: []
+  requireArmorClass: 0
   armorClassName: Leather

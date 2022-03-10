@@ -20,7 +20,8 @@ MonoBehaviour:
   useRegionalDescription: 0
   resourceDescriptionProfile: 
   optionalOverride: 0
-  resources: []
+  resources:
+  - {fileID: 11400000, guid: 8c4ad60673cc00648a9a8578e6058540, type: 2}
   prefabs: []
   dependencies:
   - {fileID: 11400000, guid: 19c18ab4b77f0d347b910ed989cb906c, type: 2}

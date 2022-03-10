@@ -27,6 +27,8 @@ MonoBehaviour:
     count: 1
   - itemName: Leather
     count: 1
+  - itemName: Brown Dye
+    count: 1
   itemOutputName: Brown Cloth Shoes
   outputCount: 1
   craftAbilityName: Tailoring

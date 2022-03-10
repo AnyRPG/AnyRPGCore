@@ -25,6 +25,8 @@ MonoBehaviour:
   craftingMaterials:
   - itemName: Linen
     count: 1
+  - itemName: Cyan Dye
+    count: 1
   itemOutputName: Cyan Cloth Pants
   outputCount: 1
   craftAbilityName: Tailoring

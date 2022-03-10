@@ -20,12 +20,12 @@ MonoBehaviour:
   useRegionalDescription: 0
   resourceDescriptionProfile: 
   optionalOverride: 0
-  autoLearn: 0
+  autoLearn: 1
   requiredLevel: 1
   craftingMaterials:
   - itemName: Leather
     count: 1
-  - itemName: Linen
+  - itemName: Brown Dye
     count: 1
   itemOutputName: Brown Leather Boots
   outputCount: 1

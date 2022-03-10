@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   resourceName: Yellow Leather Belt
   displayName: 
-  icon: {fileID: 21300000, guid: 8ca738cdd619a624b8a71140c24a9756, type: 3}
+  icon: {fileID: 0}
   iconBackgroundImage: {fileID: 0}
   description: 
   useRegionalDescription: 0
@@ -24,5 +24,6 @@ MonoBehaviour:
   - {fileID: 11400000, guid: e080f86656d3ca9438b0fc1ab0cd4374, type: 2}
   - {fileID: 11400000, guid: ade06b246e50fd44db4b1c9d3452cd68, type: 2}
   - {fileID: 11400000, guid: 9db718c5359ddb24bb390d548c4ea5cd, type: 2}
+  prefabs: []
   dependencies:
   - {fileID: 11400000, guid: 9f6444816878bcb4caa1a1409675594e, type: 2}

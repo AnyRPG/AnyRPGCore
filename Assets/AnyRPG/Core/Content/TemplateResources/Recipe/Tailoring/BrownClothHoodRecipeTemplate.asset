@@ -25,6 +25,8 @@ MonoBehaviour:
   craftingMaterials:
   - itemName: Linen
     count: 1
+  - itemName: Brown Dye
+    count: 1
   itemOutputName: Brown Cloth Hood
   outputCount: 1
   craftAbilityName: Tailoring

@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   resourceName: Blue Leather Armor
   displayName: 
-  icon: {fileID: 21300000, guid: 9ede07e112d066f4d9ee2acc92451f16, type: 3}
+  icon: {fileID: 0}
   iconBackgroundImage: {fileID: 0}
   description: 
   useRegionalDescription: 0
@@ -24,5 +24,6 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 420b1fbe5d934044db76c98ae2935a44, type: 2}
   - {fileID: 11400000, guid: 89806218700bbaf44bc6a82120185628, type: 2}
   - {fileID: 11400000, guid: 9db718c5359ddb24bb390d548c4ea5cd, type: 2}
+  prefabs: []
   dependencies:
   - {fileID: 11400000, guid: 9f6444816878bcb4caa1a1409675594e, type: 2}
