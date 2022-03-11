@@ -14,6 +14,7 @@ namespace AnyRPG {
         public virtual Sprite Icon => null;
 
         public virtual string DisplayName => string.Empty;
+        public virtual string Description => string.Empty;
 
         public virtual ItemQuality ItemQuality {
             get {

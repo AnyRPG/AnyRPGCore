@@ -10,7 +10,7 @@ namespace AnyRPG {
         private static Dictionary<string, Action<string, EventParamProperties>> singleEventDictionary = new Dictionary<string, Action<string, EventParamProperties>>();
 
 
-        public event System.Action<BaseAbility> OnAbilityUsed = delegate { };
+        public event System.Action<BaseAbilityProperties> OnAbilityUsed = delegate { };
         public event System.Action<BaseAbility> OnAbilityListChanged = delegate { };
         public event System.Action<Skill> OnSkillListChanged = delegate { };
         public event System.Action<int> OnLevelChanged = delegate { };
@@ -115,7 +115,7 @@ namespace AnyRPG {
         }
         
 
-        public void NotifyOnAbilityUsed(BaseAbility ability) {
+        public void NotifyOnAbilityUsed(BaseAbilityProperties ability) {
             //Debug.Log("SystemEventManager.NotifyAbilityused(" + ability.DisplayName + ")");
             OnAbilityUsed(ability);
         }

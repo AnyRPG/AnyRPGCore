@@ -85,7 +85,7 @@ namespace AnyRPG {
             castTargetController.gameObject.SetActive(false);
         }
 
-        public void EnableProjector(BaseAbility baseAbility) {
+        public void EnableProjector(BaseAbilityProperties baseAbility) {
             //Debug.Log("CastTargettingmanager.EnableProjector()");
             castTargetController.gameObject.SetActive(true);
             castTargetController.SetCircleColor((baseAbility.GetTargetOptions(playerManager.MyCharacter) as AbilityTargetProps).GroundTargetColor);

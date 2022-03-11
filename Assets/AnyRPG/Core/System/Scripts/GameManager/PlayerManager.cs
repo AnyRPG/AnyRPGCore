@@ -666,11 +666,11 @@ namespace AnyRPG {
             combatTextManager.SpawnCombatText(targetObject, 0, CombatTextType.miss, CombatMagnitude.normal, abilityEffectContext);
         }
 
-        public void HandleActivateTargetingMode(BaseAbility baseAbility) {
+        public void HandleActivateTargetingMode(BaseAbilityProperties baseAbility) {
             castTargettingManager.EnableProjector(baseAbility);
         }
 
-        public void HandleAnimatedAbilityCheckFail(AnimatedAbility animatedAbility) {
+        public void HandleAnimatedAbilityCheckFail(AnimatedAbilityProperties animatedAbility) {
             if (PlayerUnitSpawned == true && logManager != null) {
                 logManager.WriteCombatMessage("Cannot use " + (animatedAbility.DisplayName == null ? "null" : animatedAbility.DisplayName) + ". Waiting for another ability to finish.");
             }
@@ -707,27 +707,27 @@ namespace AnyRPG {
             SystemEventManager.TriggerEvent("OnReputationChange", new EventParamProperties());
         }
 
-        public void HandleTargetInAbilityRangeFail(BaseAbility baseAbility, Interactable target) {
+        public void HandleTargetInAbilityRangeFail(BaseAbilityProperties baseAbility, Interactable target) {
             if (baseAbility != null && logManager != null) {
                 logManager.WriteCombatMessage(target.name + " is out of range of " + (baseAbility.DisplayName == null ? "null" : baseAbility.DisplayName));
             }
         }
 
-        public void HandlePerformAbility(BaseAbility ability) {
+        public void HandlePerformAbility(BaseAbilityProperties ability) {
             systemEventManager.NotifyOnAbilityUsed(ability);
             ability.NotifyOnAbilityUsed();
 
         }
 
-        public void HandleCombatCheckFail(BaseAbility ability) {
+        public void HandleCombatCheckFail(BaseAbilityProperties ability) {
             logManager.WriteCombatMessage("The ability " + ability.DisplayName + " can only be cast while out of combat");
         }
 
-        public void HandlePowerResourceCheckFail(BaseAbility ability, IAbilityCaster abilityCaster) {
+        public void HandlePowerResourceCheckFail(BaseAbilityProperties ability, IAbilityCaster abilityCaster) {
             logManager.WriteCombatMessage("Not enough " + ability.PowerResource.DisplayName + " to perform " + ability.DisplayName + " at a cost of " + ability.GetResourceCost(abilityCaster));
         }
 
-        public void HandleLearnedCheckFail(BaseAbility ability) {
+        public void HandleLearnedCheckFail(BaseAbilityProperties ability) {
             logManager.WriteCombatMessage("You have not learned the ability " + ability.DisplayName + " yet");
         }
 

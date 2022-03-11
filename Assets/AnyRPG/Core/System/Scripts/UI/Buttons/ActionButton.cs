@@ -264,7 +264,7 @@ namespace AnyRPG {
             }
         }
 
-        public void OnAttemptUseableUse(BaseAbility ability) {
+        public void OnAttemptUseableUse(BaseAbilityProperties ability) {
             //Debug.Log("ActionButton.OnUseableUse(" + ability.DisplayName + ")");
             ChooseMonitorCoroutine();
         }
@@ -293,12 +293,12 @@ namespace AnyRPG {
             }
         }
 
-        public void OnUseableUse(BaseAbility ability) {
+        public void OnUseableUse(BaseAbilityProperties ability) {
             //Debug.Log("ActionButton.OnUseableUse(" + ability.DisplayName + ")");
             ChooseMonitorCoroutine();
         }
 
-        public IEnumerator MonitorAutoAttack(BaseAbility ability) {
+        public IEnumerator MonitorAutoAttack(BaseAbilityProperties ability) {
             //Debug.Log("ActionButton.MonitorautoAttack(" + ability.DisplayName + ")");
             yield return null;
 
@@ -333,11 +333,12 @@ namespace AnyRPG {
             monitorCoroutine = null;
         }
 
-        public IEnumerator MonitorAbility(BaseAbility ability) {
+        //public IEnumerator MonitorAbility(BaseAbility ability) {
+        public IEnumerator MonitorAbility(string abilityName) {
             //Debug.Log("ActionButton.MonitorAbility(" + ability.DisplayName + ")");
             while (Useable != null
                 && (playerManager.MyCharacter.CharacterAbilityManager.RemainingGlobalCoolDown > 0f
-                || playerManager.MyCharacter.CharacterAbilityManager.MyAbilityCoolDownDictionary.ContainsKey(ability.DisplayName))) {
+                || playerManager.MyCharacter.CharacterAbilityManager.MyAbilityCoolDownDictionary.ContainsKey(abilityName))) {
                 UpdateVisual();
                 yield return null;
             }

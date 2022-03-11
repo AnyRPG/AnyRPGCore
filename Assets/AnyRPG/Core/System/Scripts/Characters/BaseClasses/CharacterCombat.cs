@@ -253,8 +253,8 @@ namespace AnyRPG {
                     // on-hit effects spawned by auto-attacks show wrong color
                     // testing - add physical requirement
                     //if ((abilityEffectContext.baseAbility is AnimatedAbility) && (abilityEffectContext.baseAbility as AnimatedAbility).IsAutoAttack) {
-                    if ((abilityEffectContext.baseAbility is AnimatedAbility)
-                        && (abilityEffectContext.baseAbility as AnimatedAbility).IsAutoAttack
+                    if ((abilityEffectContext.baseAbility is AnimatedAbilityProperties)
+                        && (abilityEffectContext.baseAbility as AnimatedAbilityProperties).IsAutoAttack
                         && (abilityEffect as AttackEffectProperties).DamageType == DamageType.physical) {
                         combatTextType = CombatTextType.normal;
                     } else {
@@ -448,7 +448,7 @@ namespace AnyRPG {
                 foreach (BaseAbility baseAbility in BaseCharacter.CharacterAbilityManager.AbilityList.Values) {
                     //Debug.Log(baseCharacter.gameObject.name + ".AICombat.GetValidAttackAbility(): Checking ability: " + baseAbility.DisplayName);
                     if (baseAbility.GetTargetOptions(baseCharacter).CanCastOnEnemy &&
-                        BaseCharacter.CharacterAbilityManager.CanCastAbility(baseAbility) &&
+                        BaseCharacter.CharacterAbilityManager.CanCastAbility(baseAbility.AbilityProperties) &&
                         baseAbility.CanUseOn(BaseCharacter.UnitController.Target, BaseCharacter) &&
                         baseCharacter.CharacterAbilityManager.PerformLOSCheck(baseCharacter.UnitController.Target, baseAbility)) {
                         //Debug.Log(baseCharacter.gameObject.name + ".AICombat.GetValidAttackAbility(): ADDING AN ABILITY TO LIST");
@@ -531,12 +531,12 @@ namespace AnyRPG {
 
             if (BaseCharacter.UnitController.Target != null && targetCharacterUnit != null) {
 
-                BaseAbility animatorCurrentAbility = null;
+                BaseAbilityProperties animatorCurrentAbility = null;
                 bool attackLanded = true;
                 if (usedAbilityEffectContext != null) {
                     animatorCurrentAbility = usedAbilityEffectContext.baseAbility;
-                    if (animatorCurrentAbility is AnimatedAbility) {
-                        attackLanded = (animatorCurrentAbility as AnimatedAbility).HandleAbilityHit(
+                    if (animatorCurrentAbility is AnimatedAbilityProperties) {
+                        attackLanded = (animatorCurrentAbility as AnimatedAbilityProperties).HandleAbilityHit(
                             BaseCharacter,
                             BaseCharacter.UnitController.Target,
                             usedAbilityEffectContext);

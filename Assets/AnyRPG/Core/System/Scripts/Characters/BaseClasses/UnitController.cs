@@ -24,7 +24,7 @@ namespace AnyRPG {
         public event System.Action<string> OnTitleChange = delegate { };
         public event System.Action<PowerResource, int, int> OnResourceAmountChanged = delegate { };
         public event System.Action<StatusEffectNode> OnStatusEffectAdd = delegate { };
-        public event System.Action<IAbilityCaster, BaseAbility, float> OnCastTimeChanged = delegate { };
+        public event System.Action<IAbilityCaster, BaseAbilityProperties, float> OnCastTimeChanged = delegate { };
         public event System.Action<BaseCharacter> OnCastComplete = delegate { };
         public event System.Action<BaseCharacter> OnCastCancel = delegate { };
         public event System.Action<UnitProfile> OnUnitDestroy = delegate { };
@@ -1718,14 +1718,14 @@ namespace AnyRPG {
                 // attempt to get a valid ability from combat strategy before defaulting to random attacks
                 BaseAbility validCombatStrategyAbility = CombatStrategy.GetValidAbility(CharacterUnit.BaseCharacter);
                 if (validCombatStrategyAbility != null) {
-                    characterUnit.BaseCharacter.CharacterAbilityManager.BeginAbility(validCombatStrategyAbility);
+                    characterUnit.BaseCharacter.CharacterAbilityManager.BeginAbility(validCombatStrategyAbility.AbilityProperties);
                     return true;
                 }
             } else {
                 // get random attack if no strategy exists
                 BaseAbility validAttackAbility = characterUnit.BaseCharacter.CharacterCombat.GetValidAttackAbility();
                 if (validAttackAbility != null) {
-                    characterUnit.BaseCharacter.CharacterAbilityManager.BeginAbility(validAttackAbility);
+                    characterUnit.BaseCharacter.CharacterAbilityManager.BeginAbility(validAttackAbility.AbilityProperties);
                     return true;
                 }
             }
@@ -1932,7 +1932,7 @@ namespace AnyRPG {
             //Debug.Log(gameObject.name + ".NotifyOnStatusEffectAdd()");
             OnStatusEffectAdd(statusEffectNode);
         }
-        public void NotifyOnCastTimeChanged(IAbilityCaster source, BaseAbility baseAbility, float castPercent) {
+        public void NotifyOnCastTimeChanged(IAbilityCaster source, BaseAbilityProperties baseAbility, float castPercent) {
             OnCastTimeChanged(source, baseAbility, castPercent);
         }
         public void NotifyOnCastComplete(BaseCharacter baseCharacter) {

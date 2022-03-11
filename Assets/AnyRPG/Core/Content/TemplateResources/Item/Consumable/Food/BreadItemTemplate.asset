@@ -1,0 +1,37 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: deb59b0d38ef17944b99d14b78863c72, type: 3}
+  m_Name: BreadItemTemplate
+  m_EditorClassIdentifier: 
+  resourceName: Bread
+  displayName: 
+  icon: {fileID: 21300000, guid: 207c15cfc07b8e8429d168df52e03877, type: 3}
+  iconBackgroundImage: {fileID: 0}
+  description: 
+  useRegionalDescription: 0
+  resourceDescriptionProfile: 
+  optionalOverride: 0
+  stackSize: 10
+  itemQuality: 
+  randomItemQuality: 0
+  dynamicLevel: 0
+  freezeDropLevel: 0
+  levelCap: 0
+  itemLevel: 1
+  useLevel: 1
+  currencyName: 
+  dynamicCurrencyAmount: 1
+  pricePerLevel: 1
+  basePrice: 0
+  uniqueItem: 0
+  characterClassRequirementList: []
+  abilityName: Eat Bread

@@ -118,7 +118,7 @@ namespace AnyRPG {
             }
 
             // check ability context ?  if base ability was animated, then no need to check because we already checked
-            if (ignoreAccuracy == false && !((abilityEffectContext.baseAbility as AnimatedAbility) is AnimatedAbility)) {
+            if (ignoreAccuracy == false && !((abilityEffectContext.baseAbility as AnimatedAbilityProperties) is AnimatedAbilityProperties)) {
                 if (!source.AbilityManager.AbilityHit(target, abilityEffectContext)) {
                     return;
                 }

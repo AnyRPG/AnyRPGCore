@@ -7,6 +7,15 @@ using UnityEngine.UI;
 namespace AnyRPG {
     public class InstantEffectAbility : BaseAbility {
 
+        [SerializeField]
+        private InstantEffectAbilityProperties instantEffectAbilityProperties = new InstantEffectAbilityProperties();
+
+        public override BaseAbilityProperties AbilityProperties { get => instantEffectAbilityProperties; }
+
+        public override void Convert() {
+            instantEffectAbilityProperties.GetBaseAbilityProperties(this);
+        }
+
         public override bool Cast(IAbilityCaster source, Interactable target, AbilityEffectContext abilityEffectContext) {
 
             // this code could lead to a situation where an instanteffect was allowed to perform its ability effects even if the wrong weapon was equipped.

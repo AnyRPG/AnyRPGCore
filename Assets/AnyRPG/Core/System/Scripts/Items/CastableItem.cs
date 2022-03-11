@@ -32,7 +32,7 @@ namespace AnyRPG {
             if (returnValue == false) {
                 return false;
             }
-            if (playerManager.MyCharacter.CharacterAbilityManager.BeginAbility(ability)) {
+            if (playerManager.MyCharacter.CharacterAbilityManager.BeginAbility(ability.AbilityProperties)) {
                 Remove();
             }
             return returnValue;
@@ -51,7 +51,7 @@ namespace AnyRPG {
             if (ability == null) {
                 return null;
             }
-            return systemAbilityController.StartCoroutine(actionButton.MonitorAbility(ability));
+            return systemAbilityController.StartCoroutine(actionButton.MonitorAbility(ability.DisplayName));
         }
 
         public override string GetSummary(ItemQuality usedItemQuality) {

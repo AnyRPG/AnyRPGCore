@@ -166,6 +166,12 @@ namespace AnyRPG {
                 interactableName = value;
             }
         }
+
+        // not used
+        public virtual string Description {
+            get => string.Empty;
+        }
+
         public bool NotInteractable { get => notInteractable; set => notInteractable = value; }
         public Collider Collider { get => myCollider; }
         public virtual float InteractionMaxRange { get => interactionMaxRange; set => interactionMaxRange = value; }

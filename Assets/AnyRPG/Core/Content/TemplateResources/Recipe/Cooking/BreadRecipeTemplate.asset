@@ -10,21 +10,24 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 7d23ab85f082d014aa83f7dcda2c5410, type: 3}
-  m_Name: CookedHamRecipe
+  m_Name: BreadRecipeTemplate
   m_EditorClassIdentifier: 
-  resourceName: Cooked Ham
+  resourceName: Bread
   displayName: 
   icon: {fileID: 0}
   iconBackgroundImage: {fileID: 0}
-  description: A yummy cooked ham
+  description: 
   useRegionalDescription: 0
   resourceDescriptionProfile: 
+  optionalOverride: 0
   autoLearn: 1
   requiredLevel: 1
   craftingMaterials:
-  - itemName: Uncooked Ham
+  - itemName: Flour
     count: 1
-  itemOutputName: Cooked Ham
+  - itemName: Vial Of Water
+    count: 1
+  itemOutputName: Bread
   outputCount: 1
   craftAbilityName: Cooking
-  holdableObjectNames: []
+  holdableObjectList: []

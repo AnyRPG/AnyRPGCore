@@ -54,6 +54,7 @@ namespace AnyRPG {
 
         public Sprite Icon { get => (BagNode.Bag != null ? BagNode.Bag.Icon : null); }
         public string DisplayName { get => (BagNode.Bag != null ? BagNode.Bag.DisplayName : null); }
+        public string Description { get => (BagNode.Bag != null ? BagNode.Bag.Description : null); }
 
         public override void Configure(SystemGameManager systemGameManager) {
             base.Configure(systemGameManager);

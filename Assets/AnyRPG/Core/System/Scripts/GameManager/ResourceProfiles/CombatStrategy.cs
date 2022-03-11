@@ -33,7 +33,7 @@ namespace AnyRPG {
                     foreach (BaseAbility baseAbility in validPhaseNode.MyMaintainBuffList) {
                         if (sourceCharacter.AbilityManager.HasAbility(baseAbility)) {
                             if (!sourceCharacter.CharacterStats.StatusEffects.ContainsKey(SystemDataFactory.PrepareStringForMatch(baseAbility.GetAbilityEffects(sourceCharacter)[0].DisplayName))
-                                && sourceCharacter.AbilityManager.CanCastAbility(baseAbility)
+                                && sourceCharacter.AbilityManager.CanCastAbility(baseAbility.AbilityProperties)
                                 && baseAbility.CanUseOn(sourceCharacter.UnitController, sourceCharacter)) {
                                 return baseAbility;
                             }
@@ -43,7 +43,7 @@ namespace AnyRPG {
                     // IF NO BUFF AVAILABLE, GET A LIST OF VALID ATTACKS
                     foreach (BaseAbility baseAbility in validPhaseNode.MyAttackAbilityList) {
                         if (sourceCharacter.AbilityManager.HasAbility(baseAbility)) {
-                            if (sourceCharacter.AbilityManager.CanCastAbility(baseAbility)
+                            if (sourceCharacter.AbilityManager.CanCastAbility(baseAbility.AbilityProperties)
                                 && baseAbility.CanUseOn(sourceCharacter.UnitController.Target, sourceCharacter)
                                 && sourceCharacter.AbilityManager.PerformLOSCheck(sourceCharacter.UnitController.Target, baseAbility)) {
                                 returnList.Add(baseAbility);

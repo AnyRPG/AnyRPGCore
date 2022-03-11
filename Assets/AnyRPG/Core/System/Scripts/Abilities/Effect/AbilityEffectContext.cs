@@ -23,7 +23,7 @@ namespace AnyRPG {
         public Interactable originalTarget;
 
         // track the ability that was originally cast that resulted in this effect
-        public BaseAbility baseAbility = null;
+        public BaseAbilityProperties baseAbility = null;
 
         // the last power resource affected
         public PowerResource powerResource = null;

@@ -8,6 +8,15 @@ namespace AnyRPG {
     [CreateAssetMenu(fileName = "New Craft Ability",menuName = "AnyRPG/Abilities/Effects/CraftAbility")]
     public class CraftAbility : DirectAbility {
 
+        [SerializeField]
+        private CraftAbilityProperties craftAbilityProperties = new CraftAbilityProperties();
+
+        public override BaseAbilityProperties AbilityProperties { get => craftAbilityProperties; }
+
+        public override void Convert() {
+            craftAbilityProperties.GetBaseAbilityProperties(this);
+        }
+
         // game manager references
         protected CraftingManager craftingManager = null;
 

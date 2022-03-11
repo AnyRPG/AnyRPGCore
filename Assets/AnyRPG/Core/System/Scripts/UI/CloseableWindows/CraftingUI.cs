@@ -337,7 +337,7 @@ namespace AnyRPG {
                 for (int i = 0; i < craftAmount; i++) {
                     craftingManager.CraftingQueue.Add(SelectedRecipeScript.Recipe);
                 }
-                playerManager.MyCharacter.CharacterAbilityManager.BeginAbility(craftAbility);
+                playerManager.MyCharacter.CharacterAbilityManager.BeginAbility(craftAbility.AbilityProperties);
             } else {
                 //Debug.Log("MySelectedRecipeScript is null!");
             }

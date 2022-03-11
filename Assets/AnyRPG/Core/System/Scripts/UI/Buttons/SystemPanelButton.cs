@@ -36,6 +36,7 @@ namespace AnyRPG {
         }
 
         public string DisplayName { get => optionName; }
+        public string Description { get => description; }
 
         public void SetTooltipTransform(RectTransform rectTransform) {
             tooltipTransform = rectTransform;

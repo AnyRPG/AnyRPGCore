@@ -118,7 +118,7 @@ namespace AnyRPG {
                 for (int i = 0; i < craftAmount; i++) {
                     craftingQueue.Add(currentRecipe);
                 }
-                playerManager.MyCharacter.CharacterAbilityManager.BeginAbility(craftAbility);
+                playerManager.MyCharacter.CharacterAbilityManager.BeginAbility(craftAbility.AbilityProperties);
             } else {
                 //Debug.Log("MySelectedRecipeScript is null!");
             }
@@ -152,7 +152,7 @@ namespace AnyRPG {
                         // because this gets called as the last part of the cast, which is still technically in progress, we have to stopcasting first or it will fail to start because the coroutine is not null
                         //SystemGameManager.Instance.PlayerManager.MyCharacter.MyCharacterAbilityManager.StopCasting();
 
-                        playerManager.MyCharacter.CharacterAbilityManager.BeginAbility(craftAbility);
+                        playerManager.MyCharacter.CharacterAbilityManager.BeginAbility(craftAbility.AbilityProperties);
                     }
                 }
             } else {

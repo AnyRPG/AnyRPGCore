@@ -57,7 +57,7 @@ namespace AnyRPG {
             }
             if (eventData.button == PointerEventData.InputButton.Right) {
                 //Debug.Log("AbilityButton.OnPointerClick(): right click");
-                playerManager.MyCharacter.CharacterAbilityManager.BeginAbility(ability);
+                playerManager.MyCharacter.CharacterAbilityManager.BeginAbility(ability.AbilityProperties);
             }
         }
 
@@ -81,7 +81,7 @@ namespace AnyRPG {
             //Debug.Log("AbilityButton.Accept()");
             base.Accept();
             if (ability.CanCast(playerManager.MyCharacter, true)) {
-                playerManager.MyCharacter.CharacterAbilityManager.BeginAbility(ability);
+                playerManager.MyCharacter.CharacterAbilityManager.BeginAbility(ability.AbilityProperties);
             }
         }
 

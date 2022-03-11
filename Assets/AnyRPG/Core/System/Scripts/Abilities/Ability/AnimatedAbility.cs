@@ -30,6 +30,19 @@ namespace AnyRPG {
 
         public bool IsAutoAttack { get => isAutoAttack; set => isAutoAttack = value; }
         public bool UseWeaponHitSound { get => useWeaponHitSound; set => useWeaponHitSound = value; }
+        public bool UseUnitAttackAnimations { get => useUnitAttackAnimations; set => useUnitAttackAnimations = value; }
+        public bool UseAutoAttackAnimations { get => useAutoAttackAnimations; set => useAutoAttackAnimations = value; }
+
+        [SerializeField]
+        private AnimatedAbilityProperties animatedAbilityProperties = new AnimatedAbilityProperties();
+
+        public override BaseAbilityProperties AbilityProperties { get => animatedAbilityProperties; }
+
+        public override void Convert() {
+            animatedAbilityProperties.GetAnimatedAbilityProperties(this);
+        }
+
+
 
         public override List<AbilityEffectProperties> GetAbilityEffects(IAbilityCaster abilityCaster) {
             if (isAutoAttack) {
@@ -100,10 +113,12 @@ namespace AnyRPG {
                 //Debug.Log("ActionButton.OnUseableUse(" + ability.DisplayName + "): WAS ANIMATED AUTO ATTACK");
                 //if (autoAttackCoRoutine == null) {
                 //if (monitorCoroutine == null) {
-                    return systemAbilityController.StartCoroutine(actionButton.MonitorAutoAttack(this));
+
+                    // OLD
+                    //return systemAbilityController.StartCoroutine(actionButton.MonitorAutoAttack(this));
                 //}
             }
-            return systemAbilityController.StartCoroutine(actionButton.MonitorAbility(this));
+            return systemAbilityController.StartCoroutine(actionButton.MonitorAbility(DisplayName));
         }
 
         public override List<AbilityAttachmentNode> GetHoldableObjectList(IAbilityCaster abilityCaster) {
@@ -168,9 +183,12 @@ namespace AnyRPG {
                     int attackIndex = UnityEngine.Random.Range(0, usedAnimationClips.Count);
                     if (usedAnimationClips[attackIndex] != null) {
                         // perform the actual animation
-                        float animationLength = sourceCharacter.AbilityManager.PerformAnimatedAbility(usedAnimationClips[attackIndex], this, targetBaseCharacter, abilityEffectContext);
+                        
+                        // OLD
+                        //float animationLength = sourceCharacter.AbilityManager.PerformAnimatedAbility(usedAnimationClips[attackIndex], this, targetBaseCharacter, abilityEffectContext);
 
-                        sourceCharacter.AbilityManager.ProcessAbilityCoolDowns(this, animationLength, abilityCoolDown);
+                        // OLD
+                        //sourceCharacter.AbilityManager.ProcessAbilityCoolDowns(this, animationLength, abilityCoolDown);
                     }
 
                 } else {
@@ -235,12 +253,17 @@ namespace AnyRPG {
 
         public override bool CanUseOn(Interactable target, IAbilityCaster source, bool performCooldownChecks = true, AbilityEffectContext abilityEffectContext = null, bool playerInitiated = false, bool performRangeCheck = true) {
             //Debug.Log(DisplayName + ".AnimatedAbility.CanUseOn(" + (target == null ? "null" : target.gameObject.name) + ", " + (source == null ? "null" : source.gameObject.name) + ")");
-            if (performCooldownChecks && !source.AbilityManager.PerformAnimatedAbilityCheck(this)) {
+            
+            // OLD
+            //if (performCooldownChecks && !source.AbilityManager.PerformAnimatedAbilityCheck(this)) {
                 return false;
-            }
+        // OLD    
+        //}
 
             //Debug.Log(DisplayName + ".AnimatedAbility.CanUseOn(" + (target == null ? "null" : target.gameObject.name) + ", " + (source == null ? "null" : source.gameObject.name) + "): returning base");
-            return base.CanUseOn(target, source, performCooldownChecks, abilityEffectContext, playerInitiated, performRangeCheck);
+            
+            // OLD
+            //return base.CanUseOn(target, source, performCooldownChecks, abilityEffectContext, playerInitiated, performRangeCheck);
         }
 
         public override void ProcessGCDAuto(IAbilityCaster sourceCharacter) {

@@ -71,15 +71,15 @@ namespace AnyRPG {
         [Tooltip("An audio profile to play while the ability is casting")]
         [SerializeField]
         [ResourceSelector(resourceType = typeof(AudioProfile))]
-        protected string castingAudioProfileName;
+        private string castingAudioProfileName;
 
-        protected AudioProfile castingAudioProfile;
+        private AudioProfile castingAudioProfile;
 
         [Header("Learning")]
 
         [Tooltip("The minimum level a character must be to cast this ability")]
         [SerializeField]
-        protected int requiredLevel = 1;
+        private int requiredLevel = 1;
 
         [Tooltip("If not empty, the character must be one of these classes to use this item.")]
         [SerializeField]
@@ -90,11 +90,11 @@ namespace AnyRPG {
 
         [Tooltip("If true, this ability does not have to be learned to cast. For abilities that anyone can use, like scrolls or crafting")]
         [SerializeField]
-        protected bool useableWithoutLearning = false;
+        private bool useableWithoutLearning = false;
 
         [Tooltip("When learned, should the ability be automatically placed on the player action bars in an available slot?")]
         [SerializeField]
-        protected bool autoAddToBars = true;
+        private bool autoAddToBars = true;
 
         [Header("Casting Restrictions")]
 
@@ -104,7 +104,7 @@ namespace AnyRPG {
 
         [Tooltip("This ability can be cast while moving.")]
         [SerializeField]
-        protected bool canCastWhileMoving = false;
+        private bool canCastWhileMoving = false;
 
         [Tooltip("This spell can be cast while the global cooldown is active. Use this option for things like system abilities (level up, achievement, take damage effect, etc) that should not be blocked by an active spell cast in progress.")]
         [SerializeField]
@@ -115,7 +115,7 @@ namespace AnyRPG {
         [Tooltip("The resource to use when casting this ability")]
         [SerializeField]
         [ResourceSelector(resourceType = typeof(PowerResource))]
-        protected string powerResourceName = string.Empty;
+        private string powerResourceName = string.Empty;
 
         /// <summary>
         /// the resource to spend when casting
@@ -124,55 +124,55 @@ namespace AnyRPG {
 
         [Tooltip("A fixed amount of the resource to use per cast")]
         [SerializeField]
-        protected int baseResourceCost = 0;
+        private int baseResourceCost = 0;
 
         [Tooltip("A fixed amount of the resource to use per cast")]
         [SerializeField]
-        protected int resourceCostPerLevel = 5;
+        private int resourceCostPerLevel = 5;
 
         [Tooltip("Delay the spending of the resource by this many seconds when the ability is cast.  Useful if the ability can kill the caster to give time to complete final cast.")]
         [SerializeField]
-        protected float spendDelay = 0f;
+        private float spendDelay = 0f;
 
         [Header("Power Generation")]
 
         [Tooltip("The resource to refill when this ability hits the target")]
         [SerializeField]
         [ResourceSelector(resourceType = typeof(PowerResource))]
-        protected string generatePowerResourceName = string.Empty;
+        private string generatePowerResourceName = string.Empty;
 
         protected PowerResource generatePowerResource = null;
 
         [Tooltip("A fixed amount of the resource to gain")]
         [SerializeField]
-        protected int baseResourceGain = 0;
+        private int baseResourceGain = 0;
 
         [Tooltip("An amount of the resource to gain that is multiplied by the caster level")]
         [SerializeField]
-        protected int resourceGainPerLevel = 0;
+        private int resourceGainPerLevel = 0;
 
 
         [Header("Cast Time")]
 
         [Tooltip("If true, after the cast time is calculated, it is affected by the Speed secondary stat.")]
         [SerializeField]
-        protected bool useSpeedMultipliers = true;
+        private bool useSpeedMultipliers = true;
 
         [Tooltip("If true, the cast time is based on the time of the animation played while casting.")]
         [SerializeField]
-        protected bool useAnimationCastTime = true;
+        private bool useAnimationCastTime = true;
 
         [Tooltip("If the animation cast time is not used, the number of seconds to spend casting")]
         [SerializeField]
-        protected float abilityCastingTime = 0f;
+        private float abilityCastingTime = 0f;
 
         [Tooltip("The cooldown in seconds before this ability can be cast again.  0 means no cooldown.")]
         [SerializeField]
-        protected float abilityCoolDown = 0f;
+        private float abilityCoolDown = 0f;
 
         [Tooltip("By default an ability cooldown is initiated once a cast is complete.  Check this option to start the cooldown at the beginning of the cast")]
         [SerializeField]
-        protected bool coolDownOnCast = false;
+        private bool coolDownOnCast = false;
 
         [Header("Target Properties")]
 
@@ -196,12 +196,12 @@ namespace AnyRPG {
         [Tooltip("When casting is complete, these ability effects will be triggered.")]
         [SerializeReference]
         [SerializeReferenceButton]
-        protected List<AbilityEffectConfig> inlineAbilityEffects = new List<AbilityEffectConfig>();
+        private List<AbilityEffectConfig> inlineAbilityEffects = new List<AbilityEffectConfig>();
 
         [Tooltip("When casting is complete, these ability effects will be triggered.")]
         [SerializeField]
         [ResourceSelector(resourceType = typeof(AbilityEffect))]
-        protected List<string> abilityEffectNames = new List<string>();
+        private List<string> abilityEffectNames = new List<string>();
 
         [Header("Channeling")]
 
@@ -214,7 +214,7 @@ namespace AnyRPG {
         [Tooltip("During casting, these ability effects will be triggered on every tick.")]
         [SerializeField]
         [ResourceSelector(resourceType = typeof(AbilityEffect))]
-        protected List<string> channeledAbilityEffectnames = new List<string>();
+        private List<string> channeledAbilityEffectnames = new List<string>();
 
         protected List<AbilityEffectProperties> channeledAbilityEffects = new List<AbilityEffectProperties>();
 
@@ -224,6 +224,12 @@ namespace AnyRPG {
         protected PlayerManager playerManager = null;
         protected UIManager uIManager = null;
         protected SystemAbilityController systemAbilityController = null;
+
+        public virtual BaseAbilityProperties AbilityProperties { get => null; }
+
+        public virtual void Convert() {
+
+        }
 
         public AnimationClip CastingAnimationClip {
             get {
@@ -282,6 +288,26 @@ namespace AnyRPG {
         public bool CanCastWhileMoving { get => canCastWhileMoving; set => canCastWhileMoving = value; }
         public bool CoolDownOnCast { get => coolDownOnCast; set => coolDownOnCast = value; }
         public float CoolDown { get => abilityCoolDown; set => abilityCoolDown = value; }
+        public AbilityTargetProps TargetOptions { get => targetOptions; set => targetOptions = value; }
+        public List<AbilityAttachmentNode> HoldableObjectList { get => holdableObjectList; set => holdableObjectList = value; }
+        public AbilityPrefabSource AbilityPrefabSource { get => abilityPrefabSource; set => abilityPrefabSource = value; }
+        public float PrefabDestroyDelay { get => prefabDestroyDelay; set => prefabDestroyDelay = value; }
+        public string AnimationProfileName { get => animationProfileName; set => animationProfileName = value; }
+        public bool UseUnitCastAnimations { get => useUnitCastAnimations; set => useUnitCastAnimations = value; }
+        public string AnimationHitAudioProfileName { get => animationHitAudioProfileName; set => animationHitAudioProfileName = value; }
+        public string CastingAudioProfileName { get => castingAudioProfileName; set => castingAudioProfileName = value; }
+        public List<string> CharacterClassRequirements { get => characterClassRequirements; set => characterClassRequirements = value; }
+        public string PowerResourceName { get => powerResourceName; set => powerResourceName = value; }
+        public int BaseResourceCost { get => baseResourceCost; set => baseResourceCost = value; }
+        public int ResourceCostPerLevel { get => resourceCostPerLevel; set => resourceCostPerLevel = value; }
+        public string GeneratePowerResourceName { get => generatePowerResourceName; set => generatePowerResourceName = value; }
+        public bool UseAnimationCastTime { get => useAnimationCastTime; set => useAnimationCastTime = value; }
+        public float AbilityCastingTime { get => abilityCastingTime; set => abilityCastingTime = value; }
+        public float AbilityCoolDown { get => abilityCoolDown; set => abilityCoolDown = value; }
+        public bool UseAbilityEffectTargetting { get => useAbilityEffectTargetting; set => useAbilityEffectTargetting = value; }
+        public List<AbilityEffectConfig> InlineAbilityEffects { get => inlineAbilityEffects; set => inlineAbilityEffects = value; }
+        public float TickRate { get => tickRate; set => tickRate = value; }
+        public List<string> ChanneledAbilityEffectnames { get => channeledAbilityEffectnames; set => channeledAbilityEffectnames = value; }
 
         public override void SetGameManagerReferences() {
             base.SetGameManagerReferences();
@@ -388,7 +414,7 @@ namespace AnyRPG {
                 //Debug.Log("ActionButton.OnUseableUse(" + ability.DisplayName + "): WAS NOT ANIMATED AUTO ATTACK");
                 //if (abilityCoRoutine == null) {
                 //if (monitorCoroutine == null) {
-                    return systemAbilityController.StartCoroutine(actionButton.MonitorAbility(this));
+                    return systemAbilityController.StartCoroutine(actionButton.MonitorAbility(DisplayName));
                 //}
             //return null;
         }
@@ -558,9 +584,12 @@ namespace AnyRPG {
             if (weaponAffinityNames.Count == 0) {
                 // no restrictions, automatically true
                 return true;
-            } else {
-                return sourceCharacter.AbilityManager.PerformWeaponAffinityCheck(this, playerInitiated);
-            }
+            }// OLD else {
+             // OLD return sourceCharacter.AbilityManager.PerformWeaponAffinityCheck(this, playerInitiated);
+             // OLD }
+
+            // OLD
+            return false;
         }
 
         public bool Use() {
@@ -568,7 +597,10 @@ namespace AnyRPG {
             // prevent casting any ability without the proper weapon affinity
             if (CanCast(playerManager.MyCharacter, true)) {
                 //Debug.Log(DisplayName + ".BaseAbility.Use(): cancast is true");
-                playerManager.MyCharacter.CharacterAbilityManager.BeginAbility(this, true);
+
+                // OLD
+                //playerManager.MyCharacter.CharacterAbilityManager.BeginAbility(this, true);
+
                 return true;
             }
             return false;
@@ -595,7 +627,8 @@ namespace AnyRPG {
 
         public virtual void BeginAbilityCoolDown(IAbilityCaster sourceCharacter, float animationLength = -1f) {
             if (sourceCharacter != null) {
-                sourceCharacter.AbilityManager.BeginAbilityCoolDown(this, animationLength);
+                // OLD
+                //sourceCharacter.AbilityManager.BeginAbilityCoolDown(this, animationLength);
             }
         }
 
@@ -651,7 +684,8 @@ namespace AnyRPG {
             }
 
             // generate power resource
-            source.AbilityManager.GeneratePower(this);
+            // OLD
+            //source.AbilityManager.GeneratePower(this);
 
             foreach (AbilityEffectProperties abilityEffect in GetAbilityEffects(source)) {
                 if (abilityEffect == null) {
@@ -710,7 +744,9 @@ namespace AnyRPG {
                 int clipIndex = UnityEngine.Random.Range(0, usedCastAnimationClips.Count);
                 if (usedCastAnimationClips[clipIndex] != null) {
                     // perform the actual animation
-                    source.AbilityManager.PerformCastingAnimation(usedCastAnimationClips[clipIndex], this);
+
+                    // OLD
+                    //source.AbilityManager.PerformCastingAnimation(usedCastAnimationClips[clipIndex], this);
                 }
 
             }
@@ -880,7 +916,7 @@ namespace AnyRPG {
 
     }
 
-    public enum PrefabSpawnLocation { None, Caster, Target, GroundTarget, OriginalTarget, TargetPoint, CasterPoint }
-    public enum AbilityPrefabSource { Both, Ability, Weapon }
+    //public enum PrefabSpawnLocation { None, Caster, Target, GroundTarget, OriginalTarget, TargetPoint, CasterPoint }
+    //public enum AbilityPrefabSource { Both, Ability, Weapon }
 
 }

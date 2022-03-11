@@ -8,6 +8,15 @@ namespace AnyRPG {
     [CreateAssetMenu(fileName = "New Gather Ability",menuName = "AnyRPG/Abilities/Effects/GatherAbility")]
     public class GatherAbility : DirectAbility {
 
+        [SerializeField]
+        private GatherAbilityProperties gatherAbilityProperties = new GatherAbilityProperties();
+
+        public override BaseAbilityProperties AbilityProperties { get => gatherAbilityProperties; }
+
+        public override void Convert() {
+            gatherAbilityProperties.GetBaseAbilityProperties(this);
+        }
+
         public override bool Cast(IAbilityCaster source, Interactable target, AbilityEffectContext abilityEffectContext) {
             if (target == null) {
                 return false;

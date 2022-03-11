@@ -73,7 +73,7 @@ namespace AnyRPG {
                 // this call is safe, it will internally check if loot is already dropped and just pickup instead
                 Gather(optionIndex);
             } else {
-                source.BaseCharacter.CharacterAbilityManager.BeginAbility(GatheringNodeProps.BaseAbility, interactable);
+                source.BaseCharacter.CharacterAbilityManager.BeginAbility(GatheringNodeProps.BaseAbility.AbilityProperties, interactable);
             }
             uIManager.interactionWindow.CloseWindow();
             return true;

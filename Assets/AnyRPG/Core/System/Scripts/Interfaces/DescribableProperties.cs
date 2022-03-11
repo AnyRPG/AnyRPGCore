@@ -16,6 +16,11 @@ namespace AnyRPG {
             set => displayName = value;
         }
 
+        public string Description {
+            get => description;
+            set => description = value;
+        }
+
         private Sprite icon = null;
         private string displayName = string.Empty;
         private string description = string.Empty;

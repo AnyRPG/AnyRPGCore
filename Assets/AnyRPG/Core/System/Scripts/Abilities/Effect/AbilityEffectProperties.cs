@@ -73,6 +73,7 @@ namespace AnyRPG {
         public float ChanceToCast { get => chanceToCast; set => chanceToCast = value; }
         public string DisplayName { get => describableData.DisplayName; }
         public Sprite Icon { get => describableData.Icon; }
+        public string Description { get => describableData.Description; }
         public AbilityEffectTargetProps TargetOptions { get => targetOptions; }
 
         /*

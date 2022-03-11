@@ -56,6 +56,8 @@ namespace AnyRPG {
 
         string IDescribable.DisplayName => item.DisplayName;
 
+        string IDescribable.Description => item.Description;
+
         public ItemQuality GetItemQuality() {
             if (itemQuality != null) {
                 return itemQuality;

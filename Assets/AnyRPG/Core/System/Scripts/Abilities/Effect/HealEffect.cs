@@ -11,8 +11,5 @@ namespace AnyRPG {
 
         public override AbilityEffectProperties AbilityEffectProperties { get => healEffectProperties; }
 
-        
-
-
     }
 }

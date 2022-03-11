@@ -58,6 +58,16 @@ namespace AnyRPG {
             }
         }
 
+        public string Description {
+            get {
+                if (equippedEquipment != null) {
+                    return equippedEquipment.Description;
+                }
+                // cyan
+                return (equipmentSlotProfile?.Description == null ? "" : equipmentSlotProfile?.Description);
+            }
+        }
+
         public string EquipmentSlotProfileName { get => equipmentSlotProfileName; set => equipmentSlotProfileName = value; }
         public EquipmentSlotProfile EquipmentSlotProfile { get => equipmentSlotProfile; }
         public CharacterPanel CharacterPanel { get => characterPanel; set => characterPanel = value; }
