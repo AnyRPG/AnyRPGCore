@@ -19,6 +19,7 @@ MonoBehaviour:
   description: Use your knowledge of creatures to tame a beast.
   useRegionalDescription: 0
   resourceDescriptionProfile: 
+  optionalOverride: 0
   requireOutOfCombat: 0
   weaponAffinityNames: []
   holdableObjectList: []
@@ -62,11 +63,71 @@ MonoBehaviour:
     autoSelfCast: 0
     useMeleeRange: 0
     maxRange: 20
+    requireFacingTarget: 0
+    maxAngle: 45
     requiresGroundTarget: 0
     groundTargetColor: {r: 1, g: 1, b: 1, a: 1}
     groundTargetRadius: 0
+  inlineAbilityEffects: []
   abilityEffectNames:
   - Charmed Pet
   tickRate: 1
   channeledAbilityEffectnames:
   - Charm Pet Tick
+  channeledAbilityProperties:
+    requireOutOfCombat: 0
+    weaponAffinityNames: []
+    holdableObjectList: []
+    abilityPrefabSource: 0
+    animatorCreatePrefabs: 0
+    prefabDestroyDelay: 0
+    animationProfileName: Cast 2H Forward
+    useUnitCastAnimations: 0
+    animationHitAudioProfileName: 
+    castingAudioProfileName: Possession Spell
+    requiredLevel: 1
+    characterClassRequirements: []
+    useableWithoutLearning: 0
+    autoAddToBars: 1
+    canSimultaneousCast: 0
+    canCastWhileMoving: 0
+    ignoreGlobalCoolDown: 0
+    powerResourceName: 
+    baseResourceCost: 0
+    resourceCostPerLevel: 5
+    spendDelay: 0
+    generatePowerResourceName: 
+    baseResourceGain: 0
+    resourceGainPerLevel: 0
+    useSpeedMultipliers: 1
+    useAnimationCastTime: 1
+    abilityCastingTime: 15
+    abilityCoolDown: 0
+    coolDownOnCast: 0
+    useAbilityEffectTargetting: 1
+    targetOptions:
+      requireTarget: 1
+      requireLineOfSight: 0
+      requireLiveTarget: 1
+      requireDeadTarget: 0
+      canCastOnSelf: 0
+      canCastOnOthers: 1
+      canCastOnEnemy: 1
+      canCastOnNeutral: 1
+      canCastOnFriendly: 0
+      autoSelfCast: 0
+      useMeleeRange: 0
+      maxRange: 20
+      requireFacingTarget: 0
+      maxAngle: 45
+      requiresGroundTarget: 0
+      groundTargetColor: {r: 1, g: 1, b: 1, a: 1}
+      groundTargetRadius: 0
+    inlineAbilityEffects: []
+    abilityEffectNames:
+    - Charmed Pet
+    tickRate: 1
+    channeledAbilityEffectnames:
+    - Charm Pet Tick
+  references:
+    version: 1

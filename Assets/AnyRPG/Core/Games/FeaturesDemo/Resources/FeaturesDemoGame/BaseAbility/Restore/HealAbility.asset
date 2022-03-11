@@ -19,6 +19,7 @@ MonoBehaviour:
   description: heal instantly
   useRegionalDescription: 0
   resourceDescriptionProfile: 
+  optionalOverride: 0
   requireOutOfCombat: 0
   weaponAffinityNames: []
   holdableObjectList:
@@ -65,10 +66,72 @@ MonoBehaviour:
     autoSelfCast: 1
     useMeleeRange: 0
     maxRange: 40
+    requireFacingTarget: 0
+    maxAngle: 45
     requiresGroundTarget: 0
     groundTargetColor: {r: 1, g: 1, b: 1, a: 1}
     groundTargetRadius: 0
+  inlineAbilityEffects: []
   abilityEffectNames:
   - Heal
   tickRate: 1
   channeledAbilityEffectnames: []
+  directAbilityProperties:
+    requireOutOfCombat: 0
+    weaponAffinityNames: []
+    holdableObjectList:
+    - holdableObjectName: Green Casting Circle
+      useUniversalAttachment: 0
+      attachmentName: 
+    abilityPrefabSource: 0
+    animatorCreatePrefabs: 0
+    prefabDestroyDelay: 0
+    animationProfileName: Cast 2H Up
+    useUnitCastAnimations: 0
+    animationHitAudioProfileName: 
+    castingAudioProfileName: Restore Spell
+    requiredLevel: 1
+    characterClassRequirements: []
+    useableWithoutLearning: 0
+    autoAddToBars: 1
+    canSimultaneousCast: 0
+    canCastWhileMoving: 0
+    ignoreGlobalCoolDown: 0
+    powerResourceName: Mana
+    baseResourceCost: 0
+    resourceCostPerLevel: 10
+    spendDelay: 0
+    generatePowerResourceName: 
+    baseResourceGain: 0
+    resourceGainPerLevel: 5
+    useSpeedMultipliers: 1
+    useAnimationCastTime: 1
+    abilityCastingTime: 1.5
+    abilityCoolDown: 0
+    coolDownOnCast: 0
+    useAbilityEffectTargetting: 0
+    targetOptions:
+      requireTarget: 1
+      requireLineOfSight: 0
+      requireLiveTarget: 1
+      requireDeadTarget: 0
+      canCastOnSelf: 1
+      canCastOnOthers: 1
+      canCastOnEnemy: 0
+      canCastOnNeutral: 0
+      canCastOnFriendly: 1
+      autoSelfCast: 1
+      useMeleeRange: 0
+      maxRange: 40
+      requireFacingTarget: 0
+      maxAngle: 45
+      requiresGroundTarget: 0
+      groundTargetColor: {r: 1, g: 1, b: 1, a: 1}
+      groundTargetRadius: 0
+    inlineAbilityEffects: []
+    abilityEffectNames:
+    - Heal
+    tickRate: 1
+    channeledAbilityEffectnames: []
+  references:
+    version: 1

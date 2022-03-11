@@ -821,8 +821,10 @@ namespace AnyRPG {
         }
 
 
-        public void SetupScriptableObjects(SystemGameManager systemGameManager) {
+        public void SetupScriptableObjects(SystemGameManager systemGameManager, IDescribable describable) {
             //base.SetupScriptableObjects(systemGameManager);
+            describableData = describable;
+
             Configure(systemGameManager);
 
             if (AbilityEffectNames != null) {
