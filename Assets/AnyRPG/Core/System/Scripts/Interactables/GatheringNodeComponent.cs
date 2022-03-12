@@ -15,7 +15,7 @@ namespace AnyRPG {
 
         public override bool PrerequisitesMet {
             get {
-                if (playerManager.MyCharacter.CharacterAbilityManager.HasAbility(GatheringNodeProps.BaseAbility) == false) {
+                if (playerManager.MyCharacter.CharacterAbilityManager.HasAbility(GatheringNodeProps.BaseAbility.AbilityProperties) == false) {
                     return false;
                 }
                 return base.PrerequisitesMet;
@@ -38,7 +38,7 @@ namespace AnyRPG {
             }
         }
 
-        public void HandleAbilityListChange(BaseAbility baseAbility) {
+        public void HandleAbilityListChange(BaseAbilityProperties baseAbility) {
             //Debug.Log(gameObject.name + ".GatheringNode.HandleAbilityListChange(" + baseAbility.DisplayName + ")");
             HandlePrerequisiteUpdates();
         }
@@ -98,7 +98,7 @@ namespace AnyRPG {
 
         public override int GetCurrentOptionCount() {
             //Debug.Log(gameObject.name + ".GatheringNode.GetCurrentOptionCount()");
-            return ((playerManager.MyCharacter.CharacterAbilityManager.HasAbility(GatheringNodeProps.BaseAbility) == true
+            return ((playerManager.MyCharacter.CharacterAbilityManager.HasAbility(GatheringNodeProps.BaseAbility.AbilityProperties) == true
                 && interactable.SpawnReference != null
                 && currentTimer <= 0f) ? 1 : 0);
         }

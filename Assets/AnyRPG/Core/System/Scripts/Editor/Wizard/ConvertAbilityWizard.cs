@@ -35,7 +35,7 @@ namespace AnyRPG {
                 EditorUtility.DisplayProgressBar("Convert Ability Effect Wizard", "Beginning Conversion...", (float)i / (float)baseAbilities.Count);
 
 
-                baseAbility.Convert();
+                //baseAbility.Convert();
 
                 EditorUtility.SetDirty(baseAbility);
                 AssetDatabase.SaveAssets();

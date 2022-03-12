@@ -29,7 +29,7 @@ namespace AnyRPG {
         protected override void PopulatePages() {
             //Debug.Log("AbilityBookUI.CreatePages()");
             BaseAbilityContentList page = new BaseAbilityContentList();
-            foreach (BaseAbility newAbility in playerManager.MyCharacter.CharacterAbilityManager.AbilityList.Values) {
+            foreach (BaseAbilityProperties newAbility in playerManager.MyCharacter.CharacterAbilityManager.AbilityList.Values) {
                 if (newAbility.RequirementsAreMet()) {
                     page.baseAbilities.Add(newAbility);
                     if (page.baseAbilities.Count == pageSize) {
@@ -92,7 +92,7 @@ namespace AnyRPG {
     }
 
     public class BaseAbilityContentList : PagedContentList {
-        public List<BaseAbility> baseAbilities = new List<BaseAbility>();
+        public List<BaseAbilityProperties> baseAbilities = new List<BaseAbilityProperties>();
     }
 
 }

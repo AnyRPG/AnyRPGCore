@@ -676,7 +676,7 @@ namespace AnyRPG {
             }
         }
 
-        public void HandleLearnAbility(BaseAbility baseAbility) {
+        public void HandleLearnAbility(BaseAbilityProperties baseAbility) {
             systemEventManager.NotifyOnAbilityListChanged(baseAbility);
             baseAbility.NotifyOnLearn();
         }

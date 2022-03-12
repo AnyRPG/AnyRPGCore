@@ -993,7 +993,7 @@ namespace AnyRPG {
             miniMapController.ClearTarget();
         }
 
-        public void HandleAbilityListChanged(BaseAbility newAbility) {
+        public void HandleAbilityListChanged(BaseAbilityProperties newAbility) {
             //Debug.Log("UIManager.HandleAbilityListChanged(" + (newAbility == null ? "null" : newAbility.DisplayName) + ")");
             // loop through ability bars and try to add ability
             if (actionBarManager != null) {

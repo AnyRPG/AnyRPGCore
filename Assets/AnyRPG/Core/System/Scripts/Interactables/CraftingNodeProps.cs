@@ -16,7 +16,7 @@ namespace AnyRPG {
         [ResourceSelector(resourceType = typeof(BaseAbility))]
         private string abilityName = string.Empty;
 
-        private BaseAbility ability;
+        private CraftAbilityProperties ability;
 
 
         // crafting nodes are special.  The image is based on what ability it supports
@@ -36,7 +36,7 @@ namespace AnyRPG {
             return (Ability != null ? Ability.DisplayName : base.GetInteractionPanelTitle(optionIndex));
         }
 
-        public BaseAbility Ability { get => ability; set => ability = value; }
+        public CraftAbilityProperties Ability { get => ability; set => ability = value; }
 
         public override InteractableOptionComponent GetInteractableOption(Interactable interactable, InteractableOption interactableOption = null) {
             return new CraftingNodeComponent(interactable, this, systemGameManager);
@@ -46,8 +46,8 @@ namespace AnyRPG {
             base.SetupScriptableObjects(systemGameManager);
             if (abilityName != null && abilityName != string.Empty) {
                 BaseAbility baseAbility = systemDataFactory.GetResource<BaseAbility>(abilityName);
-                if (baseAbility != null) {
-                    ability = baseAbility;
+                if (baseAbility != null && (baseAbility.AbilityProperties is CraftAbilityProperties)) {
+                    ability = baseAbility.AbilityProperties as CraftAbilityProperties;
                 } else {
                     Debug.LogError("CraftingNodeComponent.SetupScriptableObjects(): COULD NOT FIND ABILITY " + abilityName + " while initializing ");
                 }

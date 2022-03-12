@@ -1320,13 +1320,13 @@ namespace AnyRPG {
 
             if (CombatStrategy != null) {
                 // attempt to get a valid ability from combat strategy before defaulting to random attacks
-                BaseAbility meleeAbility = CombatStrategy.GetMeleeAbility(characterUnit.BaseCharacter);
+                BaseAbilityProperties meleeAbility = CombatStrategy.GetMeleeAbility(characterUnit.BaseCharacter);
                 if (meleeAbility != null) {
                     return true;
                 }
             } else {
                 // get random attack if no strategy exists
-                BaseAbility validAttackAbility = characterUnit.BaseCharacter.CharacterCombat.GetMeleeAbility();
+                BaseAbilityProperties validAttackAbility = characterUnit.BaseCharacter.CharacterCombat.GetMeleeAbility();
                 if (validAttackAbility != null) {
                     return true;
                 }
@@ -1716,16 +1716,16 @@ namespace AnyRPG {
             //Debug.Log(gameObject.name + ".UnitController.CanGetValidAttack(" + beginAttack + ")");
             if (CombatStrategy != null) {
                 // attempt to get a valid ability from combat strategy before defaulting to random attacks
-                BaseAbility validCombatStrategyAbility = CombatStrategy.GetValidAbility(CharacterUnit.BaseCharacter);
+                BaseAbilityProperties validCombatStrategyAbility = CombatStrategy.GetValidAbility(CharacterUnit.BaseCharacter);
                 if (validCombatStrategyAbility != null) {
-                    characterUnit.BaseCharacter.CharacterAbilityManager.BeginAbility(validCombatStrategyAbility.AbilityProperties);
+                    characterUnit.BaseCharacter.CharacterAbilityManager.BeginAbility(validCombatStrategyAbility);
                     return true;
                 }
             } else {
                 // get random attack if no strategy exists
-                BaseAbility validAttackAbility = characterUnit.BaseCharacter.CharacterCombat.GetValidAttackAbility();
+                BaseAbilityProperties validAttackAbility = characterUnit.BaseCharacter.CharacterCombat.GetValidAttackAbility();
                 if (validAttackAbility != null) {
-                    characterUnit.BaseCharacter.CharacterAbilityManager.BeginAbility(validAttackAbility.AbilityProperties);
+                    characterUnit.BaseCharacter.CharacterAbilityManager.BeginAbility(validAttackAbility);
                     return true;
                 }
             }

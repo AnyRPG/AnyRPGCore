@@ -32,6 +32,7 @@ namespace AnyRPG {
         public bool IsAutoAttack { get => isAutoAttack; set => isAutoAttack = value; }
         public bool UseWeaponHitSound { get => useWeaponHitSound; set => useWeaponHitSound = value; }
 
+        /*
         public void GetAnimatedAbilityProperties(AnimatedAbility effect) {
 
             isAutoAttack = effect.IsAutoAttack;
@@ -41,6 +42,7 @@ namespace AnyRPG {
 
             GetBaseAbilityProperties(effect);
         }
+        */
 
         public override List<AbilityEffectProperties> GetAbilityEffects(IAbilityCaster abilityCaster) {
             if (isAutoAttack) {
@@ -54,6 +56,44 @@ namespace AnyRPG {
 
         public override float GetAbilityCastingTime(IAbilityCaster abilityCaster) {
             return 0f;
+        }
+
+        public override bool CanLearnAbility(CharacterAbilityManager characterAbilityManager) {
+            bool returnResult = base.CanLearnAbility(characterAbilityManager);
+            if (returnResult == false) {
+                return false;
+            }
+            if (isAutoAttack == true && characterAbilityManager.AutoAttackAbility != null) {
+                return false;
+            }
+            return true;
+        }
+
+        public override void ProcessLoadAbility(CharacterAbilityManager abilityManager) {
+            base.ProcessLoadAbility(abilityManager);
+            if (isAutoAttack == true) {
+                abilityManager.LearnAutoAttack(this);
+            }
+        }
+
+        public override void PrepareToLearnAbility(CharacterAbilityManager abilityManager) {
+            base.PrepareToLearnAbility(abilityManager);
+            if (IsAutoAttack == true) {
+                abilityManager.UnLearnDefaultAutoAttackAbility();
+            }
+        }
+
+        public override void ProcessLearnAbility(CharacterAbilityManager abilityManager) {
+            base.ProcessLearnAbility(abilityManager);
+            if (isAutoAttack) {
+                abilityManager.SetAutoAttackAbility(this);
+            }
+
+        }
+
+        public override void ProcessUnLearnAbility(CharacterAbilityManager abilityManager) {
+            base.ProcessUnLearnAbility(abilityManager);
+            abilityManager.UnsetAutoAttackAbility();
         }
 
         public override bool HadSpecialIcon(ActionButton actionButton) {

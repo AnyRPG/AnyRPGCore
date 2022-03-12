@@ -22,11 +22,11 @@ namespace AnyRPG {
         [ResourceSelector(resourceType = typeof(BaseAbility))]
         private List<string> abilityNames = new List<string>();
 
-        private List<BaseAbility> abilityList = new List<BaseAbility>();
+        private List<BaseAbilityProperties> abilityList = new List<BaseAbilityProperties>();
 
         public int RequiredLevel { get => requiredLevel; }
         public bool AutoLearn { get => autoLearn; }
-        public List<BaseAbility> MyAbilityList { get => abilityList; set => abilityList = value; }
+        public List<BaseAbilityProperties> AbilityList { get => abilityList; set => abilityList = value; }
 
         public override string GetDescription() {
             return string.Format("<color=#ffff00ff>{0}</color>\n\n{1}", resourceName, GetSummary());
@@ -34,12 +34,12 @@ namespace AnyRPG {
 
         public override void SetupScriptableObjects(SystemGameManager systemGameManager) {
             base.SetupScriptableObjects(systemGameManager);
-            abilityList = new List<BaseAbility>();
+            abilityList = new List<BaseAbilityProperties>();
             if (abilityNames != null) {
                 foreach (string abilityName in abilityNames) {
                     BaseAbility baseAbility = systemDataFactory.GetResource<BaseAbility>(abilityName);
                     if (baseAbility != null) {
-                        abilityList.Add(baseAbility);
+                        abilityList.Add(baseAbility.AbilityProperties);
                     } else {
                         Debug.LogError("SystemSkillManager.SetupScriptableObjects(): Could not find ability : " + abilityName + " while inititalizing " + DisplayName + ".  CHECK INSPECTOR");
                     }

@@ -437,18 +437,18 @@ namespace AnyRPG {
             return aggroTable.AddToAggroTable(CharacterUnit.GetCharacterUnit(target), 0);
         }
 
-        public BaseAbility GetValidAttackAbility() {
+        public BaseAbilityProperties GetValidAttackAbility() {
             //Debug.Log(baseCharacter.gameObject.name + ".CharacterCombat.GetValidAttackAbility()");
 
-            List<BaseAbility> returnList = new List<BaseAbility>();
+            List<BaseAbilityProperties> returnList = new List<BaseAbilityProperties>();
 
             if (BaseCharacter != null && BaseCharacter.CharacterAbilityManager != null) {
                 //Debug.Log(gameObject.name + ".AICombat.GetValidAttackAbility(): CHARACTER HAS ABILITY MANAGER");
 
-                foreach (BaseAbility baseAbility in BaseCharacter.CharacterAbilityManager.AbilityList.Values) {
+                foreach (BaseAbilityProperties baseAbility in BaseCharacter.CharacterAbilityManager.AbilityList.Values) {
                     //Debug.Log(baseCharacter.gameObject.name + ".AICombat.GetValidAttackAbility(): Checking ability: " + baseAbility.DisplayName);
                     if (baseAbility.GetTargetOptions(baseCharacter).CanCastOnEnemy &&
-                        BaseCharacter.CharacterAbilityManager.CanCastAbility(baseAbility.AbilityProperties) &&
+                        BaseCharacter.CharacterAbilityManager.CanCastAbility(baseAbility) &&
                         baseAbility.CanUseOn(BaseCharacter.UnitController.Target, BaseCharacter) &&
                         baseCharacter.CharacterAbilityManager.PerformLOSCheck(baseCharacter.UnitController.Target, baseAbility)) {
                         //Debug.Log(baseCharacter.gameObject.name + ".AICombat.GetValidAttackAbility(): ADDING AN ABILITY TO LIST");
@@ -465,9 +465,9 @@ namespace AnyRPG {
             return null;
         }
 
-        public BaseAbility GetMeleeAbility() {
+        public BaseAbilityProperties GetMeleeAbility() {
             if (BaseCharacter != null && BaseCharacter.CharacterAbilityManager != null) {
-                foreach (BaseAbility baseAbility in BaseCharacter.CharacterAbilityManager.AbilityList.Values) {
+                foreach (BaseAbilityProperties baseAbility in BaseCharacter.CharacterAbilityManager.AbilityList.Values) {
                     if (baseAbility.GetTargetOptions(baseCharacter).CanCastOnEnemy && baseAbility.GetTargetOptions(baseCharacter).UseMeleeRange == true) {
                         return baseAbility;
                     }
@@ -476,21 +476,21 @@ namespace AnyRPG {
             return null;
         }
 
-        public List<BaseAbility> GetAttackRangeAbilityList() {
-            List<BaseAbility> returnList = new List<BaseAbility>();
+        public List<BaseAbilityProperties> GetAttackRangeAbilityList() {
+            List<BaseAbilityProperties> returnList = new List<BaseAbilityProperties>();
             if (BaseCharacter != null && BaseCharacter.CharacterAbilityManager != null) {
-                foreach (BaseAbility baseAbility in BaseCharacter.CharacterAbilityManager.AbilityList.Values) {
+                foreach (BaseAbilityProperties baseAbility in BaseCharacter.CharacterAbilityManager.AbilityList.Values) {
                     returnList.Add(baseAbility);
                 }
             }
             return returnList;
         }
 
-        public float GetMinAttackRange(List<BaseAbility> baseAbilityList) {
+        public float GetMinAttackRange(List<BaseAbilityProperties> baseAbilityList) {
             float returnValue = 0f;
 
             if (BaseCharacter != null && BaseCharacter.CharacterAbilityManager != null) {
-                foreach (BaseAbility baseAbility in baseAbilityList) {
+                foreach (BaseAbilityProperties baseAbility in baseAbilityList) {
                     if (baseAbility.GetTargetOptions(baseCharacter).CanCastOnEnemy
                         && baseAbility.GetTargetOptions(baseCharacter).UseMeleeRange == false
                         && baseAbility.GetTargetOptions(baseCharacter).MaxRange > 0f) {

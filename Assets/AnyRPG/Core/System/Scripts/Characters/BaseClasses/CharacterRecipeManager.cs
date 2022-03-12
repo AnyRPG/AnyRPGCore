@@ -29,7 +29,7 @@ namespace AnyRPG {
         public virtual void UpdateRecipeList(int newLevel) {
             foreach (Recipe recipe in systemDataFactory.GetResourceList<Recipe>()) {
                 foreach (Skill skill in baseCharacter.CharacterSkillManager.MySkillList.Values) {
-                    if (!HasRecipe(recipe) && recipe.RequiredLevel <= newLevel && recipe.AutoLearn == true && skill.MyAbilityList.Contains(recipe.CraftAbility)) {
+                    if (!HasRecipe(recipe) && recipe.RequiredLevel <= newLevel && recipe.AutoLearn == true && skill.AbilityList.Contains(recipe.CraftAbility)) {
                         LearnRecipe(recipe);
                     }
                 }

@@ -174,7 +174,7 @@ namespace AnyRPG {
                 //Debug.Log("QuestDetailsArea.HandleAttemptSelect(): it's an ability reward; current count of highlighted icons: " + GetHighlightedAbilityRewardIcons().Count + "; max: " + quest.MyMaxAbilityRewards);
                 if (quest.MaxAbilityRewards == 0
                     || (quest.MaxAbilityRewards > 0 && GetHighlightedAbilityRewardIcons().Count > quest.MaxAbilityRewards)
-                    || playerManager.MyCharacter.CharacterAbilityManager.HasAbility(rewardButton.Describable as BaseAbility)) {
+                    || playerManager.MyCharacter.CharacterAbilityManager.HasAbility(rewardButton.Describable as BaseAbilityProperties)) {
                     rewardButton.Unselect();
                 }
             }

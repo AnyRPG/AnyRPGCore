@@ -26,6 +26,7 @@ namespace AnyRPG {
 
         public AnimatedActionProperties ActionProperties { get => actionProperties; }
         public float CoolDown { get => 0f; }
+        public virtual bool RequireOutOfCombat { get => false; }
 
         /// <summary>
         /// return the casting time of the ability without any speed modifiers applied
@@ -45,6 +46,10 @@ namespace AnyRPG {
             systemAbilityController = systemGameManager.SystemAbilityController;
         }
 
+        public void UpdateTargetRange(ActionBarManager actionBarManager, ActionButton actionButton) {
+            // do nothing
+        }
+
         public virtual bool IsUseableStale() {
             return false;
         }
@@ -62,7 +67,7 @@ namespace AnyRPG {
         }
 
         public IUseable GetFactoryUseable() {
-            return systemDataFactory.GetResource<BaseAbility>(DisplayName);
+            return systemDataFactory.GetResource<BaseAbility>(DisplayName).AbilityProperties;
         }
 
         public virtual void UpdateChargeCount(ActionButton actionButton) {

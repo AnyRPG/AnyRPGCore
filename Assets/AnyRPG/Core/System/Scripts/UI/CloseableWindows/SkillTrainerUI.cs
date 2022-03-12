@@ -181,9 +181,9 @@ namespace AnyRPG {
             skillDescription.text += "\n\n<size=20><b>Abilities Learned:</b></size>\n\n";
 
             // show abilities learned
-            for (int i = 0; i < currentSkill.MyAbilityList.Count; i++) {
+            for (int i = 0; i < currentSkill.AbilityList.Count; i++) {
                 rewardButtons[i].gameObject.SetActive(true);
-                rewardButtons[i].SetDescribable(currentSkill.MyAbilityList[i]);
+                rewardButtons[i].SetDescribable(currentSkill.AbilityList[i]);
             }
         }
 

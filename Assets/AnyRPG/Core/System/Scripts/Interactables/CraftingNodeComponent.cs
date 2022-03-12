@@ -53,7 +53,7 @@ namespace AnyRPG {
             return searchInteractable.GetInteractableOptionList(typeof(CraftingNodeComponent)).Cast<CraftingNodeComponent>().ToList();
         }
 
-        public void HandleAbilityListChange(BaseAbility baseAbility) {
+        public void HandleAbilityListChange(BaseAbilityProperties baseAbility) {
             //Debug.Log(gameObject.name + ".GatheringNode.HandleAbilityListChange(" + baseAbility.DisplayName + ")");
             HandlePrerequisiteUpdates();
         }
@@ -69,7 +69,7 @@ namespace AnyRPG {
             if (Props == null || Props.Ability == null) {
                 Debug.Log("Props is null");
             }
-            craftingManager.SetAbility(Props.Ability as CraftAbility);
+            craftingManager.SetAbility(Props.Ability);
             //source.MyCharacter.MyCharacterAbilityManager.BeginAbility(ability);
             return true;
             //return PickUp();

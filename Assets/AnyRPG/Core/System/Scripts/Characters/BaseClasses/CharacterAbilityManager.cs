@@ -20,7 +20,7 @@ namespace AnyRPG {
         public event System.Action<BaseAbilityProperties, IAbilityCaster> OnPowerResourceCheckFail = delegate { };
         public event System.Action<BaseAbilityProperties, Interactable> OnTargetInAbilityRangeFail = delegate { };
         public event System.Action<bool> OnUnlearnAbility = delegate { };
-        public event System.Action<BaseAbility> OnLearnAbility = delegate { };
+        public event System.Action<BaseAbilityProperties> OnLearnAbility = delegate { };
         public event System.Action<BaseAbilityProperties> OnActivateTargetingMode = delegate { };
         public event System.Action<string> OnCombatMessage = delegate { };
         public event System.Action<string> OnMessageFeedMessage = delegate { };
@@ -28,7 +28,7 @@ namespace AnyRPG {
 
         protected BaseCharacter baseCharacter;
 
-        protected Dictionary<string, BaseAbility> abilityList = new Dictionary<string, BaseAbility>();
+        protected Dictionary<string, BaseAbilityProperties> abilityList = new Dictionary<string, BaseAbilityProperties>();
 
         protected bool isCasting = false;
 
@@ -45,7 +45,7 @@ namespace AnyRPG {
         // we need a reference to the total length of the current global cooldown to properly calculate radial fill on the action buttons
         protected float initialGlobalCoolDown;
 
-        protected BaseAbility autoAttackAbility = null;
+        protected BaseAbilityProperties autoAttackAbility = null;
 
         // the holdable objects spawned during an ability cast and removed when the cast is complete
         protected Dictionary<AbilityAttachmentNode, List<GameObject>> abilityObjects = new Dictionary<AbilityAttachmentNode, List<GameObject>>();
@@ -122,9 +122,9 @@ namespace AnyRPG {
             }
         }
 
-        public Dictionary<string, BaseAbility> AbilityList {
+        public Dictionary<string, BaseAbilityProperties> AbilityList {
             get {
-                Dictionary<string, BaseAbility> returnAbilityList = new Dictionary<string, BaseAbility>();
+                Dictionary<string, BaseAbilityProperties> returnAbilityList = new Dictionary<string, BaseAbilityProperties>();
                 foreach (string abilityName in abilityList.Keys) {
                     if (abilityList[abilityName].CharacterClassRequirementList == null || abilityList[abilityName].CharacterClassRequirementList.Count == 0 || abilityList[abilityName].CharacterClassRequirementList.Contains(baseCharacter.CharacterClass)) {
                         returnAbilityList.Add(abilityName, abilityList[abilityName]);
@@ -138,10 +138,10 @@ namespace AnyRPG {
         public bool IsCasting { get => isCasting; set => isCasting = value; }
         public Dictionary<string, AbilityCoolDownNode> MyAbilityCoolDownDictionary { get => abilityCoolDownDictionary; set => abilityCoolDownDictionary = value; }
         public Coroutine MyCurrentCastCoroutine { get => currentCastCoroutine; }
-        public BaseAbility AutoAttackAbility { get => autoAttackAbility; set => autoAttackAbility = value; }
+        public BaseAbilityProperties AutoAttackAbility { get => autoAttackAbility; set => autoAttackAbility = value; }
 
         // direct access for save manager so we don't miss saving abilities we know but belong to another class
-        public override Dictionary<string, BaseAbility> RawAbilityList { get => abilityList; }
+        public override Dictionary<string, BaseAbilityProperties> RawAbilityList { get => abilityList; }
 
         public CharacterAbilityManager(BaseCharacter baseCharacter, SystemGameManager systemGameManager) : base(baseCharacter, systemGameManager) {
             this.baseCharacter = baseCharacter;
@@ -178,33 +178,6 @@ namespace AnyRPG {
                 return baseCharacter.CharacterEquipmentManager.WeaponHoldableObjects;
             }
             return base.GetWeaponAbilityObjectList();
-        }
-
-        public void LoadAbility(string abilityName) {
-            //Debug.Log(gameObject.name + ".PlayerAbilityManager.LoadAbility(" + abilityName + ")");
-            BaseAbility ability = systemDataFactory.GetResource<BaseAbility>(abilityName);
-            if (ability != null) {
-                // if we renamed an ability, old save data could load a null.  prevent invalid abilities from loading.
-                bool isAutoAttack = false;
-                if (ability is AnimatedAbility && (ability as AnimatedAbility).IsAutoAttack) {
-                    isAutoAttack = true;
-                }
-                if (isAutoAttack && autoAttackAbility != null) {
-                    // can't learn 2 auto-attacks
-                    return;
-                }
-
-                string keyName = SystemDataFactory.PrepareStringForMatch(abilityName);
-                if (!abilityList.ContainsKey(keyName)) {
-                    //Debug.Log("PlayerAbilityManager.LoadAbility(" + abilityName + "): found it!");
-                    if (ability is AnimatedAbility && (ability as AnimatedAbility).IsAutoAttack == true) {
-                        UnLearnDefaultAutoAttackAbility();
-                        //Debug.Log(gameObject.name + ".PlayerAbilityManager.LoadAbility(" + abilityName + "): is auto-attack!");
-                        autoAttackAbility = ability;
-                    }
-                    abilityList[keyName] = ability;
-                }
-            }
         }
 
         public override AttachmentPointNode GetHeldAttachmentPointNode(AbilityAttachmentNode attachmentNode) {
@@ -774,7 +747,7 @@ namespace AnyRPG {
         public void HandleEquipmentChanged(Equipment newItem, Equipment oldItem, int slotIndex) {
             //Debug.Log(gameObject.name + ".CharacterAbilityManager.HandleEquipmentChanged(" + (newItem != null ? newItem.DisplayName : "null") + ", " + (oldItem != null ? oldItem.DisplayName : "null") + ")");
             if (oldItem != null) {
-                foreach (BaseAbility baseAbility in oldItem.LearnedAbilities) {
+                foreach (BaseAbilityProperties baseAbility in oldItem.LearnedAbilities) {
                     UnlearnAbility(baseAbility);
                 }
             }
@@ -786,13 +759,13 @@ namespace AnyRPG {
                         BeginAbility(newItem.OnEquipAbility.AbilityProperties);
                     }
                 }
-                foreach (BaseAbility baseAbility in newItem.LearnedAbilities) {
-                    if (baseAbility is AnimatedAbility && (baseAbility as AnimatedAbility).IsAutoAttack == true) {
-                        UnLearnDefaultAutoAttackAbility();
-                    }
+                foreach (BaseAbilityProperties baseAbility in newItem.LearnedAbilities) {
+                    baseAbility.PrepareToLearnAbility(this);
                     LearnAbility(baseAbility);
                 }
             }
+
+            // give a chance to learn default auto attack ability in case no other known ability is an auto-attack
             LearnDefaultAutoAttackAbility();
 
             // after equipment change, check all equipment sets and bonuses
@@ -833,7 +806,7 @@ namespace AnyRPG {
 
 
         public void UnLearnDefaultAutoAttackAbility() {
-            if (baseCharacter != null && baseCharacter.UnitProfile != null && baseCharacter.UnitProfile.DefaultAutoAttackAbility != null) {
+            if (baseCharacter?.UnitProfile?.DefaultAutoAttackAbility != null) {
                 UnlearnAbility(baseCharacter.UnitProfile.DefaultAutoAttackAbility);
             }
         }
@@ -933,27 +906,25 @@ namespace AnyRPG {
             }
         }
 
-        public void LearnCapabilityProviderAbilities(List<BaseAbility> abilities) {
+        public void LearnCapabilityProviderAbilities(List<BaseAbilityProperties> abilities) {
             if (abilities == null) {
                 //Debug.Log(baseCharacter.gameObject.name + ".CharacterAbilityManager.LearnCapabilityProviderAbilities(): abilities is null");
                 return;
             }
-            foreach (BaseAbility baseAbility in abilities) {
+            foreach (BaseAbilityProperties baseAbility in abilities) {
                 //Debug.Log(baseCharacter.gameObject.name + ".CharacterAbilityManager.LearnCapabilityProviderAbilities(): process: " + baseAbility.DisplayName);
                 if (baseAbility.RequiredLevel <= baseCharacter.CharacterStats.Level && baseCharacter.CharacterAbilityManager.HasAbility(baseAbility) == false) {
-                    if (baseAbility is AnimatedAbility && (baseAbility.AbilityProperties as AnimatedAbilityProperties).IsAutoAttack == true) {
-                        UnLearnDefaultAutoAttackAbility();
-                    }
+                    baseAbility.PrepareToLearnAbility(this);
                     LearnAbility(baseAbility);
                 }
             }
         }
 
-        public void UnLearnCapabilityProviderAbilities(List<BaseAbility> abilities, bool updateActionBars = false) {
+        public void UnLearnCapabilityProviderAbilities(List<BaseAbilityProperties> abilities, bool updateActionBars = false) {
             if (abilities == null) {
                 return;
             }
-            foreach (BaseAbility oldAbility in abilities) {
+            foreach (BaseAbilityProperties oldAbility in abilities) {
                 UnlearnAbility(oldAbility, updateActionBars);
             }
             OnUnlearnAbilities();
@@ -1014,7 +985,7 @@ namespace AnyRPG {
             return base.HasAbility(abilityName);
         }
 
-        public override bool HasAbility(BaseAbility baseAbility) {
+        public override bool HasAbility(BaseAbilityProperties baseAbility) {
             //Debug.Log(gameObject.name + ".CharacterAbilitymanager.HasAbility(" + abilityName + ")");
             //string keyName = SystemDataFactory.PrepareStringForMatch(baseAbility);
             //Debug.Log(gameObject.name + ".CharacterAbilitymanager.HasAbility(" + abilityName + "): keyname: " + keyName);
@@ -1070,45 +1041,75 @@ namespace AnyRPG {
             LearnCapabilityProviderAbilities(capabilityConsumerSnapshot.GetAbilityList());
         }
 
-        public bool LearnAbility(BaseAbility newAbility) {
+        public void LoadAbility(string abilityName) {
+            //Debug.Log(gameObject.name + ".PlayerAbilityManager.LoadAbility(" + abilityName + ")");
+            BaseAbilityProperties ability = systemDataFactory.GetResource<BaseAbility>(abilityName).AbilityProperties;
+            if (ability == null) {
+                // if we renamed an ability, old save data could load a null.  prevent invalid abilities from loading.
+                return;
+            }
+
+            string keyName = SystemDataFactory.PrepareStringForMatch(ability.DisplayName);
+            if (abilityList.ContainsKey(keyName)) {
+                // ability is already known, exit
+                return;
+            }
+            if (ability.CanLearnAbility(this) == false) {
+                return;
+            }
+            ability.ProcessLoadAbility(this);
+
+            abilityList[keyName] = ability;
+        }
+
+        public void LearnAutoAttack(BaseAbilityProperties baseAbilityProperties) {
+            UnLearnDefaultAutoAttackAbility();
+            //Debug.Log(gameObject.name + ".PlayerAbilityManager.LoadAbility(" + abilityName + "): is auto-attack!");
+            autoAttackAbility = baseAbilityProperties;
+        }
+
+        public bool LearnAbility(BaseAbilityProperties newAbility) {
             //Debug.Log(baseCharacter.gameObject.name + ".CharacterAbilityManager.LearnAbility(" + (newAbility == null ? "null" : newAbility.DisplayName) + ")");
             if (newAbility == null) {
                 //Debug.Log(gameObject.name + ".CharacterAbilityManager.LearnAbility(): baseAbility is null");
                 // can't learn a nonexistent ability
                 return false;
             }
-            bool isAutoAttack = false;
-            if (newAbility is AnimatedAbility && (newAbility as AnimatedAbility).IsAutoAttack) {
-                isAutoAttack = true;
-            }
-            if (isAutoAttack && autoAttackAbility != null) {
-                // can't learn 2 auto-attacks
+            if (HasAbility(newAbility)) {
                 return false;
             }
-            if (!HasAbility(newAbility) && newAbility.RequiredLevel <= BaseCharacter.CharacterStats.Level) {
-                abilityList[SystemDataFactory.PrepareStringForMatch(newAbility.DisplayName)] = newAbility;
-                if (isAutoAttack) {
-                    autoAttackAbility = newAbility;
-                }
-                OnLearnAbility(newAbility);
-                return true;
+            if (newAbility.RequiredLevel >= BaseCharacter.CharacterStats.Level) {
+                return false;
             }
-            return false;
+
+            if (newAbility.CanLearnAbility(this) == false) {
+                return false;
+            }
+
+            // if we made it this far, there is no reason to not learn the ability
+            abilityList[SystemDataFactory.PrepareStringForMatch(newAbility.DisplayName)] = newAbility;
+
+            newAbility.ProcessLearnAbility(this);
+
+            OnLearnAbility(newAbility);
+            return true;
         }
 
-        public void UnlearnAbility(BaseAbility oldAbility, bool updateActionBars = true) {
+        public void SetAutoAttackAbility(BaseAbilityProperties baseAbilityProperties) {
+            autoAttackAbility = baseAbilityProperties;
+        }
+
+        public void UnlearnAbility(BaseAbilityProperties oldAbility, bool updateActionBars = true) {
             string keyName = SystemDataFactory.PrepareStringForMatch(oldAbility.DisplayName);
             if (abilityList.ContainsKey(keyName)) {
-                bool isAutoAttack = false;
-                if (oldAbility is AnimatedAbility && (oldAbility as AnimatedAbility).IsAutoAttack) {
-                    isAutoAttack = true;
-                }
-                if (isAutoAttack) {
-                    autoAttackAbility = null;
-                }
+                oldAbility.ProcessUnLearnAbility(this);
                 abilityList.Remove(keyName);
             }
             OnUnlearnAbility(updateActionBars);
+        }
+
+        public void UnsetAutoAttackAbility() {
+            autoAttackAbility = null;
         }
 
         /// <summary>
@@ -1278,7 +1279,7 @@ namespace AnyRPG {
             //Debug.Log(baseCharacter.gameObject.name + ".CharacterAbilitymanager.AttemtpAutoAttack()");
 
             if (autoAttackAbility != null) {
-                BeginAbility(autoAttackAbility.AbilityProperties, playerInitiated);
+                BeginAbility(autoAttackAbility, playerInitiated);
             }
         }
 
@@ -1681,8 +1682,10 @@ namespace AnyRPG {
             }
 
             // cast the system manager version so we can track globally the spell cooldown
-            systemDataFactory.GetResource<BaseAbility>(ability.DisplayName).Cast(baseCharacter, finalTarget, abilityEffectContext);
+            // FIX ME ? - THIS NEXT LINE WAS COMMENTED BECAUSE THERE SHOULD BE NO CASE WHERE THE ABILITY IS NOT ALREADY THE SYSTEM VERSION
+            //systemDataFactory.GetResource<BaseAbility>(ability.DisplayName).Cast(baseCharacter, finalTarget, abilityEffectContext);
             //ability.Cast(BaseCharacter.MyCharacterUnit.gameObject, finalTarget);
+            ability.Cast(baseCharacter, finalTarget, abilityEffectContext);
             OnPerformAbility(ability);
         }
 

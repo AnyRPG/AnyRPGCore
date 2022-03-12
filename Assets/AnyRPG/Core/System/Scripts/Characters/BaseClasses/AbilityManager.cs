@@ -67,8 +67,8 @@ namespace AnyRPG {
             }
         }
 
-        public virtual Dictionary<string, BaseAbility> RawAbilityList {
-            get => new Dictionary<string, BaseAbility>();
+        public virtual Dictionary<string, BaseAbilityProperties> RawAbilityList {
+            get => new Dictionary<string, BaseAbilityProperties>();
         }
 
         public List<GameObject> AbilityEffectGameObjects { get => abilityEffectGameObjects; set => abilityEffectGameObjects = value; }
@@ -155,7 +155,7 @@ namespace AnyRPG {
             return true;
         }
 
-        public virtual bool HasAbility(BaseAbility baseAbility) {
+        public virtual bool HasAbility(BaseAbilityProperties baseAbility) {
             
             return false;
         }

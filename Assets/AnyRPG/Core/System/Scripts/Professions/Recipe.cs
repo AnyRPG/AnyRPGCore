@@ -43,12 +43,12 @@ namespace AnyRPG {
         private List<AbilityAttachmentNode> holdableObjectList = new List<AbilityAttachmentNode>();
 
         // a reference to the actual craft ability
-        private CraftAbility craftAbility;
+        private CraftAbilityProperties craftAbility;
 
         public Item Output { get => output; set => output = value; }
         public List<CraftingMaterial> CraftingMaterials { get => craftingMaterials; set => craftingMaterials = value; }
         public int OutputCount { get => outputCount; set => outputCount = value; }
-        public CraftAbility CraftAbility { get => craftAbility; set => craftAbility = value; }
+        public CraftAbilityProperties CraftAbility { get => craftAbility; set => craftAbility = value; }
         public bool AutoLearn { get => autoLearn; set => autoLearn = value; }
         public int RequiredLevel { get => requiredLevel; set => requiredLevel = value; }
         public List<AbilityAttachmentNode> HoldableObjectList { get => holdableObjectList; set => holdableObjectList = value; }
@@ -59,7 +59,7 @@ namespace AnyRPG {
             if (craftAbilityName != null) {
                 BaseAbility baseAbility = systemDataFactory.GetResource<BaseAbility>(craftAbilityName);
                 if (baseAbility != null) {
-                    craftAbility = baseAbility as CraftAbility;
+                    craftAbility = baseAbility.AbilityProperties as CraftAbilityProperties;
                 } else {
                     Debug.LogError("Recipe.SetupScriptableObjects(): Could not find ability : " + craftAbilityName + " while inititalizing " + DisplayName + ".  CHECK INSPECTOR");
                 }

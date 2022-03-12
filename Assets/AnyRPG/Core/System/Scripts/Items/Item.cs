@@ -103,7 +103,9 @@ namespace AnyRPG {
         public int MaximumStackSize { get => stackSize; set => stackSize = value; }
         public InventorySlot Slot { get => slot; set => slot = value; }
         public virtual float CoolDown { get => 0f; }
-        
+        public virtual bool RequireOutOfCombat { get => false; }
+
+
         public int BuyPrice() {
             return BuyPrice(realItemQuality);
         }
@@ -156,6 +158,10 @@ namespace AnyRPG {
             //Debug.Log(DisplayName + ".Item.UpdateChargeCount()");
             int chargeCount = playerManager.MyCharacter.CharacterInventoryManager.GetUseableCount(this);
             uIManager.UpdateStackSize(actionButton, chargeCount, true);
+        }
+
+        public void UpdateTargetRange(ActionBarManager actionBarManager, ActionButton actionButton) {
+            // do nothing
         }
 
         public void AssignToActionButton(ActionButton actionButton) {

@@ -60,7 +60,7 @@ namespace AnyRPG {
             }
 
             foreach (CraftingNodeComponent craftingNodeComponent in craftingNodeComponents) {
-                if (craftingNodeComponent.Props.Ability.AbilityProperties == this) {
+                if (craftingNodeComponent.Props.Ability == this) {
                     return true;
                 }
             }

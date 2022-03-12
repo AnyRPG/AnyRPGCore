@@ -290,7 +290,7 @@ namespace AnyRPG {
         public bool CoolDownOnCast { get => coolDownOnCast; set => coolDownOnCast = value; }
         public float CoolDown { get => abilityCoolDown; set => abilityCoolDown = value; }
 
-
+        /*
         public void GetBaseAbilityProperties(BaseAbility effect) {
 
             requireOutOfCombat = effect.RequireOutOfCombat;
@@ -329,6 +329,7 @@ namespace AnyRPG {
             tickRate = effect.TickRate;
             channeledAbilityEffectnames = effect.ChanneledAbilityEffectnames;
         }
+        */
 
         public override void SetGameManagerReferences() {
             base.SetGameManagerReferences();
@@ -357,15 +358,39 @@ namespace AnyRPG {
         }
 
         public IUseable GetFactoryUseable() {
-            return systemDataFactory.GetResource<BaseAbility>(DisplayName);
+            return systemDataFactory.GetResource<BaseAbility>(DisplayName).AbilityProperties;
         }
 
         public virtual void UpdateChargeCount(ActionButton actionButton) {
             uIManager.UpdateStackSize(actionButton, 0, false);
         }
 
+        public virtual void ProcessUnLearnAbility(CharacterAbilityManager abilityManager) {
+            // do nothing here
+        }
+
+        public virtual void PrepareToLearnAbility(CharacterAbilityManager abilityManager) {
+            // do nothing here
+        }
+
+        public virtual void ProcessLearnAbility(CharacterAbilityManager abilityManager) {
+            // do nothing here
+        }
+
+        public virtual bool CanLearnAbility(CharacterAbilityManager characterAbilityManager) {
+            return true;
+        }
+
+        public virtual void ProcessLoadAbility(CharacterAbilityManager abilityManager) {
+            // do nothing here
+        }
+
         public virtual bool HadSpecialIcon(ActionButton actionButton) {
             return false;
+        }
+
+        public void UpdateTargetRange(ActionBarManager actionBarManager, ActionButton actionButton) {
+            actionBarManager.UpdateAbilityTargetRange(this, actionButton);
         }
 
         public virtual void UpdateActionButtonVisual(ActionButton actionButton) {

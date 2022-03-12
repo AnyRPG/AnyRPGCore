@@ -98,7 +98,7 @@ namespace AnyRPG {
         private List<ItemSecondaryStatNode> chosenSecondaryStats = new List<ItemSecondaryStatNode>();
 
         //[SerializeField]
-        private List<BaseAbility> learnedAbilities = new List<BaseAbility>();
+        private List<BaseAbilityProperties> learnedAbilities = new List<BaseAbilityProperties>();
 
         public float GetArmorModifier(int characterLevel) {
             return GetArmorModifier(characterLevel, realItemQuality);
@@ -161,7 +161,7 @@ namespace AnyRPG {
         }
 
         public BaseAbility OnEquipAbility { get => onEquipAbility; set => onEquipAbility = value; }
-        public List<BaseAbility> LearnedAbilities { get => learnedAbilities; set => learnedAbilities = value; }
+        public List<BaseAbilityProperties> LearnedAbilities { get => learnedAbilities; set => learnedAbilities = value; }
         public bool ManualValueIsScale { get => manualValueIsScale; set => manualValueIsScale = value; }
         public EquipmentSlotType EquipmentSlotType { get => realEquipmentSlotType; set => realEquipmentSlotType = value; }
         public List<HoldableObjectAttachment> HoldableObjectList { get => holdableObjectList; set => holdableObjectList = value; }
@@ -289,7 +289,7 @@ namespace AnyRPG {
             if (onEquipAbility != null) {
                 summaryLines.Add(string.Format("<color=green>Cast On Equip: {0}</color>", onEquipAbility.DisplayName));
             }
-            foreach (BaseAbility learnedAbility in LearnedAbilities) {
+            foreach (BaseAbilityProperties learnedAbility in LearnedAbilities) {
                 summaryLines.Add(string.Format("<color=green>Learn On Equip: {0}</color>", learnedAbility.DisplayName));
             }
 
@@ -333,12 +333,12 @@ namespace AnyRPG {
                 }
             }
 
-            learnedAbilities = new List<BaseAbility>();
+            learnedAbilities = new List<BaseAbilityProperties>();
             if (learnedAbilityNames != null) {
                 foreach (string baseAbilityName in learnedAbilityNames) {
                     BaseAbility baseAbility = systemDataFactory.GetResource<BaseAbility>(baseAbilityName);
                     if (baseAbility != null) {
-                        learnedAbilities.Add(baseAbility);
+                        learnedAbilities.Add(baseAbility.AbilityProperties);
                     } else {
                         Debug.LogError("SystemAbilityManager.SetupScriptableObjects(): Could not find ability : " + baseAbilityName + " while inititalizing " + DisplayName + ".  CHECK INSPECTOR");
                     }

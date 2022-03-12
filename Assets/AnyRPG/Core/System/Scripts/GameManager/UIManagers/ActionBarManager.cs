@@ -312,48 +312,15 @@ namespace AnyRPG {
         public IEnumerator UpdateTargetRange() {
             //Debug.Log("ActionBarmanager.UpdateTargetRange()");
             //float distanceToTarget = 0f;
-            bool inRange = false;
             while (HasTarget()) {
                 if (playerManager.MyCharacter == null || playerManager.ActiveUnitController == null) {
                     break;
                 }
                 //Debug.Log("ActionBarmanager.UpdateTargetRange(): still have target at distance: " + distanceToTarget);
                 foreach (ActionButton actionButton in GetCurrentActionButtons()) {
-                    if ((actionButton.Useable as BaseAbility) is BaseAbility) {
-                        BaseAbility baseAbility = actionButton.Useable as BaseAbility;
-
-                        Interactable finalTarget = baseAbility.ReturnTarget(playerManager.MyCharacter, target, false);
-
-                        inRange = false;
-                        if (finalTarget != null) {
-                            inRange = playerManager.MyCharacter.CharacterAbilityManager.IsTargetInRange(finalTarget, baseAbility);
-                        }
-                        if (inRange) {
-                            /*
-                            if (actionButton.KeyBindText.color != Color.white) {
-                                actionButton.KeyBindText.color = Color.white;
-                            }
-                            */
-                            /*
-                            if (actionButton.RangeIndicator.color != Color.white && actionButton.Useable != null) {
-                                actionButton.RangeIndicator.color = Color.white;
-                            }
-                            */
-                            if (actionButton.RangeIndicator.color != hiddenColor) {
-                                //actionButton.RangeIndicator.color = hiddenColor;
-                                actionButton.HideRangeIndicator();
-                            }
-                        } else {
-                            /*
-                            if (actionButton.KeyBindText.color != Color.red) {
-                                actionButton.KeyBindText.color = Color.red;
-                            }
-                            */
-                            if (actionButton.RangeIndicator.color != Color.red && actionButton.Useable != null) {
-                                actionButton.RangeIndicator.color = Color.red;
-                            }
-                        }
-                    } else {
+                    actionButton.Useable.UpdateTargetRange(this, actionButton);
+                    //if ((actionButton.Useable as BaseAbility) is BaseAbility) {
+                    //} else {
                         /*
                         if (actionButton.KeyBindText.color != Color.white) {
                             actionButton.KeyBindText.color = Color.white;
@@ -364,12 +331,46 @@ namespace AnyRPG {
                             actionButton.RangeIndicator.color = Color.white;
                         }
                         */
-                    }
+                    //}
                 }
                 yield return null;
             }
 
             targetRangeRoutine = null;
+        }
+
+        public void UpdateAbilityTargetRange(BaseAbilityProperties baseAbilityProperties, ActionButton actionButton) {
+
+            Interactable finalTarget = baseAbilityProperties.ReturnTarget(playerManager.MyCharacter, target, false);
+
+            if (finalTarget == null || playerManager.MyCharacter.CharacterAbilityManager.IsTargetInRange(finalTarget, baseAbilityProperties) == false) {
+                /*
+                if (actionButton.KeyBindText.color != Color.red) {
+                    actionButton.KeyBindText.color = Color.red;
+                }
+                */
+                if (actionButton.RangeIndicator.color != Color.red && actionButton.Useable != null) {
+                    actionButton.RangeIndicator.color = Color.red;
+                }
+
+            } else {
+                /*
+                if (actionButton.KeyBindText.color != Color.white) {
+                    actionButton.KeyBindText.color = Color.white;
+                }
+                */
+                /*
+                if (actionButton.RangeIndicator.color != Color.white && actionButton.Useable != null) {
+                    actionButton.RangeIndicator.color = Color.white;
+                }
+                */
+                if (actionButton.RangeIndicator.color != hiddenColor) {
+                    //actionButton.RangeIndicator.color = hiddenColor;
+                    actionButton.HideRangeIndicator();
+                }
+
+            }
+
         }
 
         public List<ActionButton> GetCurrentActionButtons() {
@@ -427,7 +428,7 @@ namespace AnyRPG {
             }
         }
 
-        public bool AddGamepadSavedAbility(BaseAbility newAbility) {
+        public bool AddGamepadSavedAbility(BaseAbilityProperties newAbility) {
             //Debug.Log("AbilityBarController.AddNewAbility(" + newAbility + ")");
             for (int i = 0; i < 16; i++) {
                 if (gamepadActionButtons[i + (currentActionBarSet * 16)].Useable == null
@@ -446,7 +447,7 @@ namespace AnyRPG {
             return false;
         }
 
-        public bool AddGamepadNewAbility(BaseAbility newAbility) {
+        public bool AddGamepadNewAbility(BaseAbilityProperties newAbility) {
             //Debug.Log("ActionBarManager.AddGamepadNewAbility(" + newAbility + ")");
             for (int i = 0; i < 16; i++) {
                 if (gamepadActionButtons[i + (currentActionBarSet * 16)].Useable == null) {
@@ -463,7 +464,7 @@ namespace AnyRPG {
             return false;
         }
 
-        public bool AddNewAbility(BaseAbility newAbility) {
+        public bool AddNewAbility(BaseAbilityProperties newAbility) {
             //Debug.Log("ActionBarManager.AddNewAbility(" + newAbility + ")");
             bool returnValue = false;
             bool foundSlot = false;
@@ -561,7 +562,7 @@ namespace AnyRPG {
             // TODO: set maximum size of loop to less of abilitylist count or button count
             int abilityListCount = playerManager.MyCharacter.CharacterAbilityManager.AbilityList.Count;
             //Debug.Log("Updating ability bar with " + abilityListCount.ToString() + " abilities");
-            foreach (BaseAbility newAbility in playerManager.MyCharacter.CharacterAbilityManager.AbilityList.Values) {
+            foreach (BaseAbilityProperties newAbility in playerManager.MyCharacter.CharacterAbilityManager.AbilityList.Values) {
                 AddNewAbility(newAbility);
             }
             abilityBarsPopulated = true;

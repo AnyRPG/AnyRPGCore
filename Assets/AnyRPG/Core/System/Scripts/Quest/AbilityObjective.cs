@@ -25,7 +25,7 @@ namespace AnyRPG {
         [SerializeField]
         private bool requireUse = false;
 
-        private BaseAbility baseAbility;
+        private BaseAbilityProperties baseAbility;
 
         // for learning
         public void UpdateCompletionCount() {
@@ -110,7 +110,7 @@ namespace AnyRPG {
             base.SetupScriptableObjects(systemGameManager);
             baseAbility = null;
             if (abilityName != null && abilityName != string.Empty) {
-                baseAbility = systemDataFactory.GetResource<BaseAbility>(abilityName);
+                baseAbility = systemDataFactory.GetResource<BaseAbility>(abilityName).AbilityProperties;
             } else {
                 Debug.LogError("SystemAbilityManager.SetupScriptableObjects(): Could not find ability : " + abilityName + " while inititalizing an ability objective.  CHECK INSPECTOR");
             }

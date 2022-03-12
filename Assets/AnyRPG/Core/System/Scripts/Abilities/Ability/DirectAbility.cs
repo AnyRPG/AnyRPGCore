@@ -13,19 +13,12 @@ namespace AnyRPG {
 
         public override BaseAbilityProperties AbilityProperties { get => directAbilityProperties; }
 
+        /*
         public override void Convert() {
             directAbilityProperties.GetBaseAbilityProperties(this);
         }
+        */
 
-        public override bool PerformAbilityEffects(IAbilityCaster source, Interactable target, AbilityEffectContext abilityEffectContext) {
-
-            //float abilityCastingTime = GetAbilityCastingTime(source);
-            float abilityCastingTime = GetBaseAbilityCastingTime(source);
-            //if (abilityCastingTime > 1) {
-                abilityEffectContext.castTimeMultiplier = abilityCastingTime;
-            //}
-            return base.PerformAbilityEffects(source, target, abilityEffectContext);
-        }
 
     }
 }

@@ -14,10 +14,11 @@ namespace AnyRPG {
 
         public override BaseAbilityProperties AbilityProperties { get => channeledAbilityProperties; }
 
+        /*
         public override void Convert() {
             channeledAbilityProperties.GetBaseAbilityProperties(this);
         }
-
+        */
 
     }
 

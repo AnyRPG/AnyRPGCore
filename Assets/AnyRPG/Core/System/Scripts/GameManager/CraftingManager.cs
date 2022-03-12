@@ -10,10 +10,10 @@ namespace AnyRPG {
     public class CraftingManager : ConfiguredMonoBehaviour {
 
         public event System.Action OnCraftAmountUpdated = delegate { };
-        public event System.Action<CraftAbility> OnSetCraftAbility = delegate { };
+        public event System.Action<CraftAbilityProperties> OnSetCraftAbility = delegate { };
         public event System.Action<Recipe> OnSelectRecipe = delegate { };
 
-        private CraftAbility craftAbility = null;
+        private CraftAbilityProperties craftAbility = null;
 
         // the number of items to craft
         private int craftAmount = 1;
@@ -44,7 +44,7 @@ namespace AnyRPG {
             OnCraftAmountUpdated();
         }
 
-        public void SetAbility(CraftAbility craftAbility) {
+        public void SetAbility(CraftAbilityProperties craftAbility) {
             this.craftAbility = craftAbility;
             uIManager.craftingWindow.OpenWindow();
             OnSetCraftAbility(this.craftAbility);
@@ -118,7 +118,7 @@ namespace AnyRPG {
                 for (int i = 0; i < craftAmount; i++) {
                     craftingQueue.Add(currentRecipe);
                 }
-                playerManager.MyCharacter.CharacterAbilityManager.BeginAbility(craftAbility.AbilityProperties);
+                playerManager.MyCharacter.CharacterAbilityManager.BeginAbility(craftAbility);
             } else {
                 //Debug.Log("MySelectedRecipeScript is null!");
             }
@@ -152,7 +152,7 @@ namespace AnyRPG {
                         // because this gets called as the last part of the cast, which is still technically in progress, we have to stopcasting first or it will fail to start because the coroutine is not null
                         //SystemGameManager.Instance.PlayerManager.MyCharacter.MyCharacterAbilityManager.StopCasting();
 
-                        playerManager.MyCharacter.CharacterAbilityManager.BeginAbility(craftAbility.AbilityProperties);
+                        playerManager.MyCharacter.CharacterAbilityManager.BeginAbility(craftAbility);
                     }
                 }
             } else {

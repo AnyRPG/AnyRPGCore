@@ -12,7 +12,7 @@ namespace AnyRPG {
         protected string abilityName = string.Empty;
 
         //[SerializeField]
-        protected BaseAbility ability = null;
+        protected BaseAbilityProperties ability = null;
 
         // game manager references
         protected SystemAbilityController systemAbilityController = null;
@@ -32,7 +32,7 @@ namespace AnyRPG {
             if (returnValue == false) {
                 return false;
             }
-            if (playerManager.MyCharacter.CharacterAbilityManager.BeginAbility(ability.AbilityProperties)) {
+            if (playerManager.MyCharacter.CharacterAbilityManager.BeginAbility(ability)) {
                 Remove();
             }
             return returnValue;
@@ -77,7 +77,7 @@ namespace AnyRPG {
             if (abilityName != null) {
                 BaseAbility baseAbility = systemDataFactory.GetResource<BaseAbility>(abilityName);
                 if (baseAbility != null) {
-                    ability = baseAbility;
+                    ability = baseAbility.AbilityProperties;
                 } else {
                     Debug.LogError("CastableItem.SetupScriptableObjects(): Could not find ability : " + abilityName + " while inititalizing " + DisplayName + ".  CHECK INSPECTOR");
                 }

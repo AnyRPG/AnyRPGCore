@@ -501,7 +501,7 @@ namespace AnyRPG {
                 //Debug.Log("QuestGiverUI.CompleteQuest(): Giving Ability Rewards");
                 foreach (RewardButton rewardButton in questDetailsArea.GetHighlightedAbilityRewardIcons()) {
                     if (rewardButton.Describable != null && rewardButton.Describable.DisplayName != null && rewardButton.Describable.DisplayName != string.Empty) {
-                        playerManager.MyCharacter.CharacterAbilityManager.LearnAbility(rewardButton.Describable as BaseAbility);
+                        playerManager.MyCharacter.CharacterAbilityManager.LearnAbility(rewardButton.Describable as BaseAbilityProperties);
                     }
                 }
             }

@@ -9,16 +9,16 @@ using UnityEngine.UI;
 namespace AnyRPG {
     public class AbilityButton : TransparencyButton {
 
-        [SerializeField]
-        protected BaseAbility ability = null;
+        //[SerializeField]
+        protected BaseAbilityProperties ability = null;
 
-        [SerializeField]
+        //[SerializeField]
         protected Image icon = null;
 
-        [SerializeField]
+        //[SerializeField]
         protected TextMeshProUGUI spellName = null;
 
-        [SerializeField]
+        //[SerializeField]
         protected TextMeshProUGUI description = null;
 
         // game manager references
@@ -32,7 +32,7 @@ namespace AnyRPG {
             actionBarManager = systemGameManager.UIManager.ActionBarManager;
         }
 
-        public void AddAbility(BaseAbility ability) {
+        public void AddAbility(BaseAbilityProperties ability) {
             this.ability = ability;
             icon.sprite = this.ability.Icon;
             icon.color = Color.white;
@@ -57,7 +57,7 @@ namespace AnyRPG {
             }
             if (eventData.button == PointerEventData.InputButton.Right) {
                 //Debug.Log("AbilityButton.OnPointerClick(): right click");
-                playerManager.MyCharacter.CharacterAbilityManager.BeginAbility(ability.AbilityProperties);
+                playerManager.MyCharacter.CharacterAbilityManager.BeginAbility(ability);
             }
         }
 
@@ -81,7 +81,7 @@ namespace AnyRPG {
             //Debug.Log("AbilityButton.Accept()");
             base.Accept();
             if (ability.CanCast(playerManager.MyCharacter, true)) {
-                playerManager.MyCharacter.CharacterAbilityManager.BeginAbility(ability.AbilityProperties);
+                playerManager.MyCharacter.CharacterAbilityManager.BeginAbility(ability);
             }
         }
 

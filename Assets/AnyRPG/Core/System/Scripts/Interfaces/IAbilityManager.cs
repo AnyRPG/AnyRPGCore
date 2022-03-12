@@ -29,7 +29,7 @@ namespace AnyRPG {
 
         bool CanCastAbility(BaseAbilityProperties ability, bool playerInitiated = false);
 
-        Dictionary<string, BaseAbility> RawAbilityList { get; }
+        Dictionary<string, BaseAbilityProperties> RawAbilityList { get; }
 
         AudioClip GetAnimatedAbilityHitSound();
 
@@ -83,7 +83,7 @@ namespace AnyRPG {
         /// </summary>
         /// <param name="baseAbility"></param>
         /// <returns></returns>
-        bool HasAbility(BaseAbility baseAbility);
+        bool HasAbility(BaseAbilityProperties baseAbility);
 
         /// <summary>
         /// True if the target is in line of sight of the caster

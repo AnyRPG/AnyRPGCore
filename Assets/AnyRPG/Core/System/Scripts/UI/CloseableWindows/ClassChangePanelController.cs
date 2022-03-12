@@ -123,7 +123,7 @@ namespace AnyRPG {
                 CapabilityProps capabilityPropsFaction = playerManager.MyCharacter.Faction.GetFilteredCapabilities(capabilityConsumerSnapshot, false);
                 capabilityProps = capabilityPropsFaction.Join(capabilityProps);
             }
-            List<BaseAbility> abilityList = capabilityProps.AbilityList.Distinct().ToList();
+            List<BaseAbilityProperties> abilityList = capabilityProps.AbilityList.Distinct().ToList();
             if (abilityList.Count > 0) {
                 abilitiesArea.gameObject.SetActive(true);
             } else {

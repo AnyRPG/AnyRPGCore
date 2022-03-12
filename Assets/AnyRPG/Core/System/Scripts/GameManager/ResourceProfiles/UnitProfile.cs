@@ -117,7 +117,7 @@ namespace AnyRPG {
         [SerializeField]
         private CapabilityProps capabilities = new CapabilityProps();
 
-        private BaseAbility defaultAutoAttackAbility = null;
+        private BaseAbilityProperties defaultAutoAttackAbility = null;
 
         [Header("Control")]
 
@@ -334,7 +334,7 @@ namespace AnyRPG {
         }
 
         public UnitToughness DefaultToughness { get => unitToughness; set => unitToughness = value; }
-        public BaseAbility DefaultAutoAttackAbility { get => defaultAutoAttackAbility; set => defaultAutoAttackAbility = value; }
+        public BaseAbilityProperties DefaultAutoAttackAbility { get => defaultAutoAttackAbility; set => defaultAutoAttackAbility = value; }
         public bool IsUMAUnit { get => isUMAUnit; set => isUMAUnit = value; }
         public bool IsPet { get => isPet; set => isPet = value; }
         public bool PlayOnFootstep { get => playOnFootstep; set => playOnFootstep = value; }
