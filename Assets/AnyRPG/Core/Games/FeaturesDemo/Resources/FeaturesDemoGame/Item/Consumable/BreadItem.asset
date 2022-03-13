@@ -19,6 +19,7 @@ MonoBehaviour:
   description: Bread
   useRegionalDescription: 0
   resourceDescriptionProfile: 
+  optionalOverride: 0
   stackSize: 10
   itemQuality: Average
   randomItemQuality: 0
@@ -26,6 +27,7 @@ MonoBehaviour:
   freezeDropLevel: 0
   levelCap: 0
   itemLevel: 1
+  useLevel: 1
   currencyName: Silver
   dynamicCurrencyAmount: 1
   pricePerLevel: 1
@@ -33,3 +35,17 @@ MonoBehaviour:
   uniqueItem: 0
   characterClassRequirementList: []
   abilityName: Eat Bread
+  consumptionVerb: 0
+  holdableObjectList:
+  - holdableObjectName: Edible Bread
+    useUniversalAttachment: 1
+    attachmentName: Right Hand
+  animationProfileName: Sit
+  castingAudioProfileName: Zombie Eat 001
+  tickRate: 1
+  resourceAmounts:
+  - resourceName: Health
+    minAmount: 0
+    baseAmount: 125
+    maxAmount: 0
+  statusEffect: Full Of Food

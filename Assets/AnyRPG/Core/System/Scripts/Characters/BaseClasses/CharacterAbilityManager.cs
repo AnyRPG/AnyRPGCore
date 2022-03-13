@@ -1415,8 +1415,11 @@ namespace AnyRPG {
 
         protected bool BeginAbilityCommon(BaseAbilityProperties ability, Interactable target, bool playerInitiated = false) {
             //Debug.Log(baseCharacter.gameObject.name + ".CharacterAbilityManager.BeginAbilityCommon(" + (ability == null ? "null" : ability.DisplayName) + ", " + (target == null ? "null" : target.gameObject.name) + ")");
-            BaseAbilityProperties usedAbility = systemDataFactory.GetResource<BaseAbility>(ability.DisplayName).AbilityProperties;
-            if (usedAbility == null) {
+            
+            // OLD
+            //BaseAbilityProperties usedAbility = systemDataFactory.GetResource<BaseAbility>(ability.DisplayName).AbilityProperties;
+
+            if (ability == null) {
                 Debug.LogError("CharacterAbilityManager.BeginAbilityCommon(" + (ability == null ? "null" : ability.DisplayName) + ", " + (target == null ? "null" : target.name) + ") NO ABILITY FOUND");
                 return false;
             }
@@ -1426,7 +1429,7 @@ namespace AnyRPG {
                 }
             }
 
-            if (!CanCastAbility(usedAbility, playerInitiated)) {
+            if (!CanCastAbility(ability, playerInitiated)) {
                 if (playerInitiated) {
                     //Debug.Log(baseCharacter.gameObject.name + ".CharacterAbilityManager.BeginAbilityCommon(" + ability.DisplayName + ", " + (target != null ? target.name : "null") + ") cannot cast");
                 }
@@ -1447,7 +1450,7 @@ namespace AnyRPG {
                 if (targetCharacterUnit != null && targetCharacterUnit.BaseCharacter != null) {
                     if (Faction.RelationWith(targetCharacterUnit.BaseCharacter, baseCharacter) <= -1) {
                         if (targetCharacterUnit.BaseCharacter.CharacterCombat != null
-                            && usedAbility.GetTargetOptions(baseCharacter).CanCastOnEnemy == true
+                            && ability.GetTargetOptions(baseCharacter).CanCastOnEnemy == true
                             && targetCharacterUnit.BaseCharacter.CharacterStats.IsAlive == true) {
 
                             // disable this for now.  npc should pull character into combat when he enters their agro range.  character should pull npc into combat when status effect is applied or ability lands
@@ -1465,18 +1468,18 @@ namespace AnyRPG {
             }
 
             // get final target before beginning casting
-            Interactable finalTarget = usedAbility.ReturnTarget(baseCharacter, target, true, abilityEffectContext, playerInitiated);
+            Interactable finalTarget = ability.ReturnTarget(baseCharacter, target, true, abilityEffectContext, playerInitiated);
             //Debug.Log(baseCharacter.gameObject.name + ".CharacterAbilityManager.BeginAbilityCommon(" + ability.DisplayName + ") finalTarget: " + (finalTarget == null ? "null" : finalTarget.DisplayName));
 
             OnAttemptPerformAbility(ability);
 
-            if (finalTarget == null && usedAbility.GetTargetOptions(baseCharacter).RequireTarget == true) {
+            if (finalTarget == null && ability.GetTargetOptions(baseCharacter).RequireTarget == true) {
                 if (playerInitiated) {
                     //Debug.Log(baseCharacter.gameObject.name + ".CharacterAbilityManager.BeginAbilityCommon(): finalTarget is null. exiting");
                 }
                 return false;
             }
-            if (finalTarget != null && PerformLOSCheck(finalTarget, usedAbility as ITargetable) == false) {
+            if (finalTarget != null && PerformLOSCheck(finalTarget, ability) == false) {
                 if (playerInitiated) {
                     ReceiveCombatMessage("Target is not in line of sight");
                 }
@@ -1485,12 +1488,12 @@ namespace AnyRPG {
 
             baseCharacter.UnitController.CancelMountEffects();
 
-            if (usedAbility.CanSimultaneousCast) {
+            if (ability.CanSimultaneousCast) {
                 // directly performing to avoid interference with other abilities being casted
                 //Debug.Log(gameObject.name + ".CharacterAbilityManager.BeginAbilityCommon(): can simultaneous cast");
 
                 // there is no ground target yet because that is handled in performabilitycast below
-                PerformAbility(usedAbility, finalTarget, abilityEffectContext);
+                PerformAbility(ability, finalTarget, abilityEffectContext);
             } else {
                 //Debug.Log(baseCharacter.gameObject.name + ".CharacterAbilityManager.BeginAbilityCommon(): can't simultanous cast");
                 if (currentCastCoroutine == null) {
@@ -1504,8 +1507,8 @@ namespace AnyRPG {
                     // start the cast (or cast targetting projector)
                     //Debug.Log(baseCharacter.gameObject.name + ".CharacterAbilityManager.BeginAbilityCommon(" + usedAbility + "): setting currentCastAbility");
                     // currentCastAbility must be set before starting the coroutine because for animated events, the cast time is zero and the variable will be cleared in the coroutine
-                    currentCastAbility = usedAbility;
-                    currentCastCoroutine = abilityCaster.StartCoroutine(PerformAbilityCast(usedAbility, finalTarget, abilityEffectContext));
+                    currentCastAbility = ability;
+                    currentCastCoroutine = abilityCaster.StartCoroutine(PerformAbilityCast(ability, finalTarget, abilityEffectContext));
                 } else {
                     // return false so that items in the inventory don't get used if this came from a castable item
                     return false;

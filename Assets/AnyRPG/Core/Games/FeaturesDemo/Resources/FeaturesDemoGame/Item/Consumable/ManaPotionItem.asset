@@ -34,8 +34,17 @@ MonoBehaviour:
   basePrice: 0
   uniqueItem: 0
   characterClassRequirementList: []
-  actionName: Drink Mana Potion
   coolDown: 10
+  actionType: 2
+  actionName: Drink Mana Potion
+  actionProperties:
+    animationClip: {fileID: 0}
+    animationProfileName: Drink
+    castingAudioProfileName: 
+    holdableObjectList:
+    - holdableObjectName: Drinkable Blue Potion
+      useUniversalAttachment: 1
+      attachmentName: Right Hand
   resourceAmounts:
   - resourceName: Mana
     minAmount: 0

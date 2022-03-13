@@ -34,8 +34,17 @@ MonoBehaviour:
   basePrice: 0
   uniqueItem: 0
   characterClassRequirementList: []
-  actionName: Drink Health Potion
   coolDown: 10
+  actionType: 2
+  actionName: Drink Health Potion
+  actionProperties:
+    animationClip: {fileID: 0}
+    animationProfileName: Drink
+    castingAudioProfileName: 
+    holdableObjectList:
+    - holdableObjectName: Drinkable Red Potion
+      useUniversalAttachment: 1
+      attachmentName: Right Hand
   resourceAmounts:
   - resourceName: Health
     minAmount: 0

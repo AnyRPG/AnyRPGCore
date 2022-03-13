@@ -16,7 +16,7 @@ MonoBehaviour:
   displayName: 
   icon: {fileID: 21300000, guid: 207c15cfc07b8e8429d168df52e03877, type: 3}
   iconBackgroundImage: {fileID: 0}
-  description: 
+  description: restore 125 health per second for 6 seconds
   useRegionalDescription: 0
   resourceDescriptionProfile: 
   optionalOverride: 0
@@ -34,4 +34,20 @@ MonoBehaviour:
   basePrice: 0
   uniqueItem: 0
   characterClassRequirementList: []
-  abilityName: Eat Bread
+  consumptionVerb: 0
+  holdableObjectList:
+  - holdableObjectName: Edible Bread
+    useUniversalAttachment: 1
+    attachmentName: Right Hand
+  animationClip: {fileID: -9041575014022231517, guid: 003bf02e12734e24eab414935705c101,
+    type: 3}
+  animationProfileName: 
+  castingAudioClip: {fileID: 8300000, guid: 8534e705f3997f34abeef573b6d39551, type: 3}
+  castingAudioProfileName: 
+  tickRate: 1
+  resourceAmounts:
+  - resourceName: Health
+    minAmount: 0
+    baseAmount: 125
+    maxAmount: 0
+  statusEffect: Full Of Food

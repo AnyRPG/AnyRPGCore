@@ -26,6 +26,12 @@ namespace AnyRPG {
         private string description = string.Empty;
         private string summary = string.Empty;
 
+        public DescribableProperties(IDescribable describable) {
+            this.icon = describable.Icon;
+            this.displayName = describable.DisplayName;
+            this.description = describable.Description;
+        }
+
         public DescribableProperties(Sprite icon, string displayName) {
             this.icon = icon;
             this.displayName = displayName;

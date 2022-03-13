@@ -11,8 +11,8 @@ namespace AnyRPG {
     //[CreateAssetMenu(fileName = "NewAbility",menuName = "AnyRPG/Abilities/Ability")]
     public abstract class BaseAbility : DescribableResource /*, IUseable, IMoveable, ILearnable*/ {
 
-        public event System.Action OnAbilityLearn = delegate { };
-        public event System.Action OnAbilityUsed = delegate { };
+        //public event System.Action OnAbilityLearn = delegate { };
+        //public event System.Action OnAbilityUsed = delegate { };
 
 
         public virtual BaseAbilityProperties AbilityProperties { get => null; }

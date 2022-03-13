@@ -49,6 +49,10 @@ namespace AnyRPG {
 
         [Header("Animation")]
 
+        [Tooltip("The animation clip the character will perform")]
+        [SerializeField]
+        protected AnimationClip animationClip = null;
+
         [Tooltip("The name of an animation profile to get animations for the character to perform while casting this ability")]
         [SerializeField]
         [ResourceSelector(resourceType = typeof(AnimationProfile))]
@@ -69,10 +73,14 @@ namespace AnyRPG {
 
         protected AudioProfile animationHitAudioProfile;
 
+        [Tooltip("An audio clip to play while the ability is casting")]
+        [SerializeField]
+        protected AudioClip castingAudioClip = null;
+
         [Tooltip("An audio profile to play while the ability is casting")]
         [SerializeField]
         [ResourceSelector(resourceType = typeof(AudioProfile))]
-        protected string castingAudioProfileName;
+        protected string castingAudioProfileName = string.Empty;
 
         protected AudioProfile castingAudioProfile;
 
@@ -118,9 +126,6 @@ namespace AnyRPG {
         [ResourceSelector(resourceType = typeof(PowerResource))]
         protected string powerResourceName = string.Empty;
 
-        /// <summary>
-        /// the resource to spend when casting
-        /// </summary>
         protected PowerResource powerResource = null;
 
         [Tooltip("A fixed amount of the resource to use per cast")]
@@ -186,14 +191,6 @@ namespace AnyRPG {
 
         [Header("Cast Complete Ability Effects")]
 
-        /*
-        [Tooltip("When casting is complete, these ability effects will be triggered.")]
-        [FormerlySerializedAs("inlineAbilityEffects")]
-        [SerializeReference]
-        [SerializeReferenceButton]
-        protected List<AbilityEffectProperties> oldInlineAbilityEffects = new List<AbilityEffectProperties>();
-        */
-
         [Tooltip("When casting is complete, these ability effects will be triggered.")]
         [SerializeReference]
         [SerializeReferenceButton]
@@ -211,6 +208,11 @@ namespace AnyRPG {
         private float tickRate = 1f;
 
         [Header("Chanelling Effects")]
+
+        [Tooltip("During casting, these ability effects will be triggered on every tick.")]
+        [SerializeReference]
+        [SerializeReferenceButton]
+        protected List<AbilityEffectConfig> inlineChannelingEffects = new List<AbilityEffectConfig>();
 
         [Tooltip("During casting, these ability effects will be triggered on every tick.")]
         [SerializeField]
@@ -232,18 +234,27 @@ namespace AnyRPG {
         public Sprite Icon { get => describableData.Icon; }
         public string Description { get => describableData.Description; }
 
+
         public AnimationClip CastingAnimationClip {
+            /*
             get {
+                if (animationClip != null) {
+                    return animationClip;
+                }
                 if (animationProfile?.AnimationProps?.CastClips != null
                     && animationProfile.AnimationProps.CastClips.Count > 0) {
                     return animationProfile.AnimationProps.CastClips[0];
                 }
                 return null;
             }
+            */
+            set {
+                animationClip = value;
+            }
         }
         public int RequiredLevel { get => requiredLevel; }
         public bool AutoAddToBars { get => autoAddToBars; }
-        public bool UseableWithoutLearning { get => useableWithoutLearning; }
+        public bool UseableWithoutLearning { get => useableWithoutLearning; set => useableWithoutLearning = value; }
 
         /// <summary>
         /// return the casting time of the ability without any speed modifiers applied
@@ -260,11 +271,36 @@ namespace AnyRPG {
         }
         public bool CanSimultaneousCast { get => canSimultaneousCast; set => canSimultaneousCast = value; }
         public bool IgnoreGlobalCoolDown { get => ignoreGlobalCoolDown; set => ignoreGlobalCoolDown = value; }
-        public AudioClip CastingAudioClip { get => (castingAudioProfile == null ? null : castingAudioProfile.AudioClip); }
+        public AudioClip CastingAudioClip {
+            get {
+                if (castingAudioClip != null) {
+                    return castingAudioClip;
+                }
+                if (castingAudioProfile != null) {
+                    return castingAudioProfile.AudioClip;
+                }
+                return null;
+            }
+            set {
+                castingAudioClip = value;
+            }
+        }
         public AudioClip AnimationHitAudioClip { get => (animationHitAudioProfile == null ? null : animationHitAudioProfile.AudioClip); }
         public bool AnimatorCreatePrefabs { get => animatorCreatePrefabs; set => animatorCreatePrefabs = value; }
         public List<AnimationClip> AttackClips { get => (animationProfile != null ? animationProfile.AnimationProps.AttackClips : null); }
-        public List<AnimationClip> CastClips { get => (animationProfile != null ? animationProfile.AnimationProps.CastClips : new List<AnimationClip>()); }
+        
+        public List<AnimationClip> CastClips {
+            get {
+                if (animationClip != null) {
+                    return new List<AnimationClip>() { animationClip };
+                }
+                if (animationProfile != null) {
+                    return animationProfile.AnimationProps.CastClips;
+                }
+                return new List<AnimationClip>();
+            }
+        }
+        
         public List<string> WeaponAffinityNames { get => weaponAffinityNames; set => weaponAffinityNames = value; }
         public bool RequireOutOfCombat { get => requireOutOfCombat; set => requireOutOfCombat = value; }
         public List<string> AbilityEffectNames { get => abilityEffectNames; set => abilityEffectNames = value; }
@@ -289,6 +325,14 @@ namespace AnyRPG {
         public bool CanCastWhileMoving { get => canCastWhileMoving; set => canCastWhileMoving = value; }
         public bool CoolDownOnCast { get => coolDownOnCast; set => coolDownOnCast = value; }
         public float CoolDown { get => abilityCoolDown; set => abilityCoolDown = value; }
+        public AbilityPrefabSource AbilityPrefabSource { get => abilityPrefabSource; set => abilityPrefabSource = value; }
+        public string AnimationProfileName { get => animationProfileName; set => animationProfileName = value; }
+        public List<AbilityAttachmentNode> HoldableObjectList { set => holdableObjectList = value; }
+        public float TickRate { get => tickRate; set => tickRate = value; }
+        public AbilityTargetProps TargetOptions { set => targetOptions = value; }
+        public List<AbilityEffectProperties> ChanneledAbilityEffects { get => channeledAbilityEffects; set => channeledAbilityEffects = value; }
+        public string CastingAudioProfileName { get => castingAudioProfileName; set => castingAudioProfileName = value; }
+        public bool UseAnimationCastTime { get => useAnimationCastTime; set => useAnimationCastTime = value; }
 
         /*
         public void GetBaseAbilityProperties(BaseAbility effect) {
@@ -501,7 +545,7 @@ namespace AnyRPG {
             if (useUnitCastAnimations == true) {
                 return sourceCharacter.AbilityManager.GetUnitAnimationProps();
             } else {
-                return animationProfile.AnimationProps;
+                return animationProfile?.AnimationProps;
             }
         }
 
@@ -852,6 +896,13 @@ namespace AnyRPG {
 
             Configure(systemGameManager);
 
+            // add inline effects
+            foreach (AbilityEffectConfig abilityEffectConfig in inlineAbilityEffects) {
+                abilityEffectConfig.SetupScriptableObjects(systemGameManager, this);
+                abilityEffects.Add(abilityEffectConfig.AbilityEffectProperties);
+            }
+
+            // add named effects
             if (AbilityEffectNames != null) {
                 foreach (string abilityEffectName in AbilityEffectNames) {
                     AbilityEffect abilityEffect = systemDataFactory.GetResource<AbilityEffect>(abilityEffectName);
@@ -933,6 +984,14 @@ namespace AnyRPG {
 
 
             channeledAbilityEffects = new List<AbilityEffectProperties>();
+            
+            // add inline effects
+            foreach (AbilityEffectConfig abilityEffectConfig in inlineChannelingEffects) {
+                abilityEffectConfig.SetupScriptableObjects(systemGameManager, this);
+                channeledAbilityEffects.Add(abilityEffectConfig.AbilityEffectProperties);
+            }
+
+            // add named effects
             if (channeledAbilityEffectnames != null) {
                 foreach (string abilityEffectName in channeledAbilityEffectnames) {
                     AbilityEffect abilityEffect = systemDataFactory.GetResource<AbilityEffect>(abilityEffectName);

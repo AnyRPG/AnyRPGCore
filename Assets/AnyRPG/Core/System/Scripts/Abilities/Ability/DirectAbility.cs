@@ -6,7 +6,7 @@ using UnityEngine.UI;
 
 namespace AnyRPG {
     [CreateAssetMenu(fileName = "New Direct Ability", menuName = "AnyRPG/Abilities/DirectAbility")]
-    public class DirectAbility : InstantEffectAbility {
+    public class DirectAbility : BaseAbility {
 
         [SerializeField]
         private DirectAbilityProperties directAbilityProperties = new DirectAbilityProperties();

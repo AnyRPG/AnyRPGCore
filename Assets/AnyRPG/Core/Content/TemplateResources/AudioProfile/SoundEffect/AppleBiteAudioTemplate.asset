@@ -9,10 +9,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6c9b51b8d3aa844448aaeab0a989e2fa, type: 3}
-  m_Name: BreadTemplatePackage
+  m_Script: {fileID: 11500000, guid: 3fd73ebc5463ba94cb6ff99164c9641a, type: 3}
+  m_Name: AppleBiteAudioTemplate
   m_EditorClassIdentifier: 
-  resourceName: Bread
+  resourceName: Apple Bite
   displayName: 
   icon: {fileID: 0}
   iconBackgroundImage: {fileID: 0}
@@ -20,10 +20,6 @@ MonoBehaviour:
   useRegionalDescription: 0
   resourceDescriptionProfile: 
   optionalOverride: 0
-  resources:
-  - {fileID: 11400000, guid: fcda29bcf1e744849ad0928dddc837e3, type: 2}
-  - {fileID: 11400000, guid: 755515f9ce269b342a8b5544cb5a66ab, type: 2}
-  - {fileID: 11400000, guid: db49888a1c542604b945fac977634a48, type: 2}
-  prefabs: []
-  dependencies:
-  - {fileID: 11400000, guid: 05520683b4b81ec46abd7269cc40b846, type: 2}
+  artistName: 
+  audioClips:
+  - {fileID: 8300000, guid: 8534e705f3997f34abeef573b6d39551, type: 3}

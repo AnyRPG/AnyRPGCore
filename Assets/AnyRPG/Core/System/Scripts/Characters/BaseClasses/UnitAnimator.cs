@@ -520,7 +520,7 @@ namespace AnyRPG {
                 //lastAnimationLength = animationLength;
 
             }
-            if (baseAbility.GetUnitAnimationProps(unitController.CharacterUnit.BaseCharacter).UseRootMotion == true) {
+            if (baseAbility.GetUnitAnimationProps(unitController.CharacterUnit.BaseCharacter)?.UseRootMotion == true) {
                 unitController.SetUseRootMotion(true);
             } else {
                 unitController.SetUseRootMotion(false);

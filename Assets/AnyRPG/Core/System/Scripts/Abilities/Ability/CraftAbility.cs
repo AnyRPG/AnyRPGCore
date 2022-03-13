@@ -6,7 +6,7 @@ using UnityEngine.UI;
 
 namespace AnyRPG {
     [CreateAssetMenu(fileName = "New Craft Ability",menuName = "AnyRPG/Abilities/Effects/CraftAbility")]
-    public class CraftAbility : DirectAbility {
+    public class CraftAbility : BaseAbility {
 
         [SerializeField]
         private CraftAbilityProperties craftAbilityProperties = new CraftAbilityProperties();

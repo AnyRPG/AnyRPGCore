@@ -318,7 +318,7 @@ namespace AnyRPG {
                 }
                 //Debug.Log("ActionBarmanager.UpdateTargetRange(): still have target at distance: " + distanceToTarget);
                 foreach (ActionButton actionButton in GetCurrentActionButtons()) {
-                    actionButton.Useable.UpdateTargetRange(this, actionButton);
+                    actionButton.Useable?.UpdateTargetRange(this, actionButton);
                     //if ((actionButton.Useable as BaseAbility) is BaseAbility) {
                     //} else {
                         /*

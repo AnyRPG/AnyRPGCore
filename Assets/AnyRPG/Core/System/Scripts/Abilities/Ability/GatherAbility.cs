@@ -6,7 +6,7 @@ using UnityEngine.UI;
 
 namespace AnyRPG {
     [CreateAssetMenu(fileName = "New Gather Ability",menuName = "AnyRPG/Abilities/Effects/GatherAbility")]
-    public class GatherAbility : DirectAbility {
+    public class GatherAbility : BaseAbility {
 
         [SerializeField]
         private GatherAbilityProperties gatherAbilityProperties = new GatherAbilityProperties();

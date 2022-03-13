@@ -5,6 +5,7 @@ using UnityEngine;
 using UnityEngine.UI;
 
 namespace AnyRPG {
+
     public class InstantEffectAbilityProperties : BaseAbilityProperties {
 
         /*
