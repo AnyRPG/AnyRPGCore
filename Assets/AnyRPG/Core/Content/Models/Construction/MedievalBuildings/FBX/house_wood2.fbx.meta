@@ -1,17 +1,11 @@
 fileFormatVersion: 2
-guid: dae56f6e89b44894f84a708da66b0d87
+guid: 10ad99dffac935a428c54ac2551f4176
 ModelImporter:
   serializedVersion: 20200
   internalIDToNameTable:
   - first:
       74: -8091027984389603180
     second: anim_gate_open
-  - first:
-      74: 1739914108710071672
-    second: house_wood_2_door_rig|anim_gate_open
-  - first:
-      74: -1772049697431640748
-    second: house_wood_2_door_rig|anim_gate_open.001
   externalObjects:
   - first:
       type: UnityEngine:Material
@@ -99,14 +93,14 @@ ModelImporter:
     armStretch: 0.05
     legStretch: 0.05
     feetSpacing: 0
-    globalScale: 0.005
+    globalScale: 0.5
     rootMotionBoneName: 
     hasTranslationDoF: 0
-    hasExtraRoot: 0
+    hasExtraRoot: 1
     skeletonHasParents: 1
   lastHumanDescriptionAvatarSource: {instanceID: 0}
   autoGenerateAvatarMappingIfUnspecified: 1
-  animationType: 2
+  animationType: 1
   humanoidOversampling: 1
   avatarSetup: 0
   addHumanoidExtraRootOnlyWhenUsingAvatar: 1

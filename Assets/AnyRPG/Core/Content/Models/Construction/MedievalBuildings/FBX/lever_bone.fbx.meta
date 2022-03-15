@@ -1,14 +1,11 @@
 fileFormatVersion: 2
-guid: ef97c93b24830884b9aa07767ce79e09
+guid: c3c6560e2380eec44ada53b1efe1412b
 ModelImporter:
   serializedVersion: 20200
   internalIDToNameTable:
   - first:
       74: -862385965564717406
     second: leverAction
-  - first:
-      74: 1487363572116119017
-    second: lever_bone|anim_lever
   externalObjects:
   - first:
       type: UnityEngine:Material
@@ -45,7 +42,7 @@ ModelImporter:
     isReadable: 0
   meshes:
     lODScreenPercentages: []
-    globalScale: 0.5
+    globalScale: 0.25
     meshCompression: 0
     addColliders: 0
     useSRGBMaterialColor: 1
@@ -96,14 +93,14 @@ ModelImporter:
     armStretch: 0.05
     legStretch: 0.05
     feetSpacing: 0
-    globalScale: 0.005
+    globalScale: 0.25
     rootMotionBoneName: 
     hasTranslationDoF: 0
-    hasExtraRoot: 0
+    hasExtraRoot: 1
     skeletonHasParents: 1
   lastHumanDescriptionAvatarSource: {instanceID: 0}
   autoGenerateAvatarMappingIfUnspecified: 1
-  animationType: 2
+  animationType: 1
   humanoidOversampling: 1
   avatarSetup: 0
   addHumanoidExtraRootOnlyWhenUsingAvatar: 1
