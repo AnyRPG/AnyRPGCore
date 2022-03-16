@@ -44,10 +44,6 @@ https://trello.com/anyrpg/
 
 https://twitter.com/AnyRPGEngine
 
-### Facebook / Meta
-
-https://www.facebook.com/AnyRPGEngine
-
 ## Setup
 
 ### Unity Package
