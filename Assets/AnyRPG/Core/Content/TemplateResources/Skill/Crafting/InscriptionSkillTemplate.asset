@@ -16,7 +16,7 @@ MonoBehaviour:
   displayName: 
   icon: {fileID: 21300000, guid: f01d75ea9ee724d42a175ad8015743ce, type: 3}
   iconBackgroundImage: {fileID: 0}
-  description: Create powerfull scrolls that enhance abilities.
+  description: Create powerful scrolls that enhance abilities.
   useRegionalDescription: 0
   resourceDescriptionProfile: 
   optionalOverride: 0

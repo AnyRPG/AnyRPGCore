@@ -50,7 +50,7 @@ namespace AnyRPG {
         }
 
         public void HandlePlayerConnectionDespawn(string eventName, EventParamProperties eventParamProperties) {
-            //Debug.Log("InventoryPanel.ProcessClearData()");
+            Debug.Log("InventoryPanel.HandlePlayerConnectionDespawn()");
 
             ClearSlots();
             bagBarController.ClearBagButtons();

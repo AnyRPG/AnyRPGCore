@@ -1158,6 +1158,7 @@ namespace AnyRPG {
         }
 
         public void NewGameFromSaveData(AnyRPGSaveData anyRPGSaveData) {
+            Debug.Log("Savemanager.NewGameFromSaveData()");
 
             anyRPGSaveData = InitalizeNewGameSettings(anyRPGSaveData);
 
@@ -1165,7 +1166,7 @@ namespace AnyRPG {
         }
 
         public void NewGame() {
-            //Debug.Log("Savemanager.NewGame()");
+            Debug.Log("Savemanager.NewGame()");
 
             uIManager.loadGameWindow.CloseWindow();
             uIManager.newGameWindow.CloseWindow();

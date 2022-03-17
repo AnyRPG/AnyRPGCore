@@ -29,7 +29,14 @@ namespace AnyRPG {
 
         public InventorySlot InventorySlot { get => inventorySlot; }
 
-        public override int Count => inventorySlot.Count;
+        public override int Count {
+            get {
+                if (inventorySlot != null) {
+                    return inventorySlot.Count;
+                }
+                return 0;
+            }
+        }
 
         public override bool CaptureCancelButton {
             get {
@@ -53,6 +60,16 @@ namespace AnyRPG {
         public void SetInventorySlot(InventorySlot inventorySlot) {
             this.inventorySlot = inventorySlot;
             inventorySlot.OnUpdateSlot += UpdateSlot;
+        }
+
+        
+        public void ClearInventorySlot() {
+            //Debug.Log("SlotScript.ClearInventorySlot()");
+
+            if (inventorySlot != null) {
+                inventorySlot.OnUpdateSlot -= UpdateSlot;
+                ClearSlot();
+            }
         }
 
         public override void OnPointerClick(PointerEventData eventData) {
@@ -507,9 +524,16 @@ namespace AnyRPG {
             }
         }
 
+        private void ClearSlot() {
+            inventorySlot = null;
+            SetDescribable(null, 0);
+            uIManager.UpdateStackSize(this, Count);
+            SetBackGroundColor();
+        }
+
         public void SetBackGroundColor() {
             Color finalColor;
-            if (inventorySlot.Item == null) {
+            if (inventorySlot?.Item == null) {
                 int slotOpacityLevel = (int)(PlayerPrefs.GetFloat("InventorySlotOpacity") * 255);
                 finalColor = new Color32(0, 0, 0, (byte)slotOpacityLevel);
                 backGroundImage.sprite = null;
@@ -540,10 +564,12 @@ namespace AnyRPG {
         }
 
         public override void OnSendObjectToPool() {
+            //Debug.Log("SlotScript.OnSendObjectToPool()");
+            // this is being called manually for now because if the bag is closed, the message will not be received
+
             base.OnSendObjectToPool();
-            if (inventorySlot != null) {
-                inventorySlot.OnUpdateSlot -= UpdateSlot;
-            }
+
+            ClearInventorySlot();
         }
     }
 

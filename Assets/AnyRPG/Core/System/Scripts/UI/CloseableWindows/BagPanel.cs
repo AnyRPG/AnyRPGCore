@@ -139,15 +139,19 @@ namespace AnyRPG {
         */
 
         public virtual void ClearSlots() {
-            //Debug.Log(gameObject.name + gameObject.GetInstanceID() + ".BagPanel.ClearSlots()");
+            Debug.Log(gameObject.name + gameObject.GetInstanceID() + ".BagPanel.ClearSlots()");
+
             List<SlotScript> removeList = new List<SlotScript>();
             foreach (SlotScript slot in slots) {
                 // clearing the slot should not be necessary any more because the inventory slot exists on the character, which got despawned
+                // above line is incorrect.  must give slot chance to clear icons because of object pooling
                 //slot.InventorySlot.Clear();
-                //Debug.Log("BagPanel.Clear(): cleared slot");
+                slot.OnSendObjectToPool();
+                //Debug.Log(gameObject.name + gameObject.GetInstanceID() + ".BagPanel.ClearSlots() adding slot to clear list");
                 removeList.Add(slot);
             }
             foreach (SlotScript slot in removeList) {
+                //Debug.Log(gameObject.name + gameObject.GetInstanceID() + ".BagPanel.ClearSlots() sending slot to object pool");
                 objectPooler.ReturnObjectToPool(slot.gameObject);
                 //Debug.Log("BagPanel.Clear(): destroyed slot");
             }
