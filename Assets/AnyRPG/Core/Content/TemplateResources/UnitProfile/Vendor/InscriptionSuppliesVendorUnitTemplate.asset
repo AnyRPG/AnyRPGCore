@@ -139,7 +139,7 @@ MonoBehaviour:
   isPet: 0
   flightCapable: 0
   glideCapable: 0
-  characterName: Tailoring Supplies
+  characterName: Inscription Supplies
   title: 
   factionName: 
   unitTypeName: 
@@ -213,8 +213,7 @@ MonoBehaviour:
     interactionPanelImage: {fileID: 0}
     namePlateImage: {fileID: 0}
     prerequisiteConditions: []
-    vendorCollectionNames:
-    - Items
+    vendorCollectionNames: []
   interactableOptions: []
   inlineInteractableOptions:
   - id: 0

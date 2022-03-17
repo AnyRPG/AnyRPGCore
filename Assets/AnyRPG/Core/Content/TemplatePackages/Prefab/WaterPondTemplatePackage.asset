@@ -10,9 +10,9 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 6c9b51b8d3aa844448aaeab0a989e2fa, type: 3}
-  m_Name: FishingSkillTemplatePackage
+  m_Name: WaterPondTemplatePackage
   m_EditorClassIdentifier: 
-  resourceName: Fishing Skill
+  resourceName: Water Pond
   displayName: 
   icon: {fileID: 0}
   iconBackgroundImage: {fileID: 0}
@@ -21,12 +21,7 @@ MonoBehaviour:
   resourceDescriptionProfile: 
   optionalOverride: 0
   resources:
-  - {fileID: 11400000, guid: e938e6dbeea1b8144b7bf42f9a2aed5b, type: 2}
-  - {fileID: 11400000, guid: be0570725e6426c47a89648d6d7ea57c, type: 2}
-  - {fileID: 11400000, guid: 51f6e04af8a5a2c40a5abd2f2efaff0a, type: 2}
-  - {fileID: 11400000, guid: ab26808c46d3a1b4ca700f5c29ad1c39, type: 2}
-  - {fileID: 11400000, guid: 2e3b2dc2c0b02cd4da30168cfad45405, type: 2}
-  - {fileID: 11400000, guid: ac80b097d289a71429deb8314abea4af, type: 2}
+  - {fileID: 11400000, guid: 9c23363aee859b14eaa48e9efb2e1ee1, type: 2}
   prefabs:
-  - {fileID: 6390993854296471015, guid: e5f9173d1c7667e40a29754804389f8a, type: 3}
+  - {fileID: 4425564410796740103, guid: 042c844da450d494ba4fe57c29638bbf, type: 3}
   dependencies: []

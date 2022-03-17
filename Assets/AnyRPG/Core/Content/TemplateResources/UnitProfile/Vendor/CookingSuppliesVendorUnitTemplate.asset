@@ -213,8 +213,7 @@ MonoBehaviour:
     interactionPanelImage: {fileID: 0}
     namePlateImage: {fileID: 0}
     prerequisiteConditions: []
-    vendorCollectionNames:
-    - Items
+    vendorCollectionNames: []
   interactableOptions: []
   inlineInteractableOptions:
   - id: 0

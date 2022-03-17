@@ -34,9 +34,15 @@ namespace AnyRPG {
         public override event System.Action OnCameraTargetReady = delegate { };
         //public event System.Action OnDespawn = delegate { };
 
+        [Header("Unit Controller")]
+
         // by default, a unit will enter AI mode if no mode is set before Init()
         [SerializeField]
         private UnitControllerMode unitControllerMode = UnitControllerMode.AI;
+
+        [Tooltip("If true, this unit will turn to face any target that interacts with it")]
+        [SerializeField]
+        private bool faceInteractionTarget = false;
 
         [Header("Patrol")]
 
@@ -444,6 +450,16 @@ namespace AnyRPG {
             if (unitControllerMode != UnitControllerMode.Mount && unitControllerMode != UnitControllerMode.Preview) {
                 base.InitializeNamePlateController();
             }
+        }
+
+        public override bool Interact(CharacterUnit source, bool processRangeCheck = false) {
+            bool returnValue = base.Interact(source, processRangeCheck);
+
+            if (returnValue == true && source == playerManager.UnitController.CharacterUnit && unitControllerMode == UnitControllerMode.AI) {
+                unitMotor.FaceTarget(source.Interactable);
+            }
+
+            return returnValue;
         }
 
         public void HandleReputationChange(string eventName, EventParamProperties eventParamProperties) {
@@ -894,34 +910,6 @@ namespace AnyRPG {
             // mounts, pets, players, and preview units should not create interaction options or subscribe to prerequisite updates
             if (unitControllerMode != UnitControllerMode.AI) {
                 return;
-            }
-
-            // built-in interactable options
-            if (unitProfile.LootableCharacterProps.AutomaticCurrency == true || unitProfile.LootableCharacterProps.LootTableNames.Count > 0) {
-                InteractableOptionComponent interactableOptionComponent = unitProfile.LootableCharacterProps.GetInteractableOption(this);
-                interactables.Add(interactableOptionComponent);
-                if (lootableCharacter == null) {
-                    lootableCharacter = interactableOptionComponent as LootableCharacterComponent;
-                }
-                //interactableOptionComponent.HandlePrerequisiteUpdates();
-            }
-
-            if (unitProfile.DialogProps.DialogList.Count > 0) {
-                InteractableOptionComponent interactableOptionComponent = unitProfile.DialogProps.GetInteractableOption(this);
-                interactables.Add(interactableOptionComponent);
-                //interactableOptionComponent.HandlePrerequisiteUpdates();
-            }
-
-            if (unitProfile.QuestGiverProps.Quests.Count > 0) {
-                InteractableOptionComponent interactableOptionComponent = unitProfile.QuestGiverProps.GetInteractableOption(this);
-                interactables.Add(interactableOptionComponent);
-                //interactableOptionComponent.HandlePrerequisiteUpdates();
-            }
-
-            if (unitProfile.VendorProps.VendorCollections.Count > 0) {
-                InteractableOptionComponent interactableOptionComponent = unitProfile.VendorProps.GetInteractableOption(this);
-                interactables.Add(interactableOptionComponent);
-                //interactableOptionComponent.HandlePrerequisiteUpdates();
             }
 
             if (unitProfile.BehaviorProps.BehaviorNames.Count > 0) {

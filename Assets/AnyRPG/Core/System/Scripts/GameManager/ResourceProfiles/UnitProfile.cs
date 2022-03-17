@@ -218,43 +218,19 @@ namespace AnyRPG {
         [SerializeField]
         private float interactionMaxRange = 3f;
 
-        [Header("Builtin Interactables")]
-
-        /*
-        [Tooltip("If true, a lootable character component will be created with the below settings.")]
-        [SerializeField]
-        private bool useLootableCharacter = false;
-        */
+        [Header("Deprecated Builtin Interactables")]
 
         [Tooltip("Inline loot configuration.  Useful if no other unit will need to re-use this configuration.")]
         [SerializeField]
         private LootableCharacterProps lootableCharacter = new LootableCharacterProps();
 
-        /*
-        [Tooltip("If true, a dialog component will be created with the below settings.")]
-        [SerializeField]
-        private bool useDialog = false;
-        */
-
         [Tooltip("Inline dialog configuration.  Useful if no other unit will need to re-use this configuration.")]
         [SerializeField]
         private DialogProps dialogConfig = new DialogProps();
 
-        /*
-        [Tooltip("If true, a quest giver component will be created with the below settings.")]
-        [SerializeField]
-        private bool useQuestGiver = false;
-        */
-
         [Tooltip("Inline questGiver configuration.  Useful if no other unit will need to re-use this configuration.")]
         [SerializeField]
         private QuestGiverProps questGiverConfig = new QuestGiverProps();
-
-        /*
-        [Tooltip("If true, a vendor component will be created with the below settings.")]
-        [SerializeField]
-        private bool useVendor = false;
-        */
 
         [Tooltip("Inline vendor configuration.  Useful if no other unit will need to re-use this configuration.")]
         [SerializeField]
@@ -353,11 +329,7 @@ namespace AnyRPG {
         public bool PreventAutoDespawn { get => preventAutoDespawn; set => preventAutoDespawn = value; }
         public List<string> PatrolNames { get => patrolNames; set => patrolNames = value; }
         public float AggroRadius { get => aggroRadius; set => aggroRadius = value; }
-        public LootableCharacterProps LootableCharacterProps { get => lootableCharacter; set => lootableCharacter = value; }
         public BehaviorProps BehaviorProps { get => behaviorConfig; set => behaviorConfig = value; }
-        public DialogProps DialogProps { get => dialogConfig; set => dialogConfig = value; }
-        public QuestGiverProps QuestGiverProps { get => questGiverConfig; set => questGiverConfig = value; }
-        public VendorProps VendorProps { get => vendorConfig; set => vendorConfig = value; }
         public UnitPrefabProps UnitPrefabProps {
             get {
                 if (useInlinePrefabProps) {
@@ -622,13 +594,6 @@ namespace AnyRPG {
             // controller configs
             // patrolConfig doesn't need setup ?
             behaviorConfig.SetupScriptableObjects(systemGameManager);
-
-            // built-in interactables
-            LootableCharacterProps.SetupScriptableObjects(systemGameManager);
-            DialogProps.SetupScriptableObjects(systemGameManager);
-            QuestGiverProps.SetupScriptableObjects(systemGameManager);
-            VendorProps.SetupScriptableObjects(systemGameManager);
-
 
         }
 

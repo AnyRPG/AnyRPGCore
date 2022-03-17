@@ -10,22 +10,21 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 086cc19bb10d93146806ca499cfd21c7, type: 3}
-  m_Name: FishingPolePrefabTemplate
+  m_Name: FireHitPrefabTemplate
   m_EditorClassIdentifier: 
-  resourceName: Fishing Pole
+  resourceName: Fire Hit
   displayName: 
   icon: {fileID: 0}
   iconBackgroundImage: {fileID: 0}
   description: 
   useRegionalDescription: 0
   resourceDescriptionProfile: 
-  optionalOverride: 0
-  prefab: {fileID: 5319069474142785129, guid: 1e78175a5a17d054b9717ebc1752ae82, type: 3}
-  position: {x: -0.0738, y: 0.0034, z: -0.0423}
+  prefab: {fileID: 6760841765996351095, guid: 4122430482e831b4a974eb7c00464e2f, type: 3}
+  position: {x: 0, y: 1, z: 0}
   rotationIsGlobal: 0
-  rotation: {x: 7.168463, y: 256.2952, z: 2.792886}
+  rotation: {x: 0, y: 0, z: 0}
   scale: {x: 1, y: 1, z: 1}
-  targetBone: RightHand
+  targetBone: 
   unsheathAudioProfileName: 
   sheathedPosition: {x: 0, y: 0, z: 0}
   sheathedRotation: {x: 0, y: 0, z: 0}

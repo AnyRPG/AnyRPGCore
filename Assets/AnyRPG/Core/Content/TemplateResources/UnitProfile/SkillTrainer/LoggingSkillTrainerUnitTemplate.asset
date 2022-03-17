@@ -10,9 +10,9 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 4e31818c35d6ab14fbf88410e7e18453, type: 3}
-  m_Name: TailoringSuppliesVendorUnitTemplate
+  m_Name: LoggingSkillTrainerUnitTemplate
   m_EditorClassIdentifier: 
-  resourceName: Tailoring Supplies Vendor
+  resourceName: Logging Skill Trainer
   displayName: 
   icon: {fileID: 21300000, guid: 9176b48a2857c364280b4f5b9d620852, type: 3}
   iconBackgroundImage: {fileID: 0}
@@ -26,7 +26,7 @@ MonoBehaviour:
   unitPrefabProps:
     unitPrefab: {fileID: 2692339740015506113, guid: ba09f14eb0109ba459f4520b82c3fadc,
       type: 3}
-    modelPrefab: {fileID: 6954704190252621995, guid: 7248a5fc088036242b8ffe7c20d0622b,
+    modelPrefab: {fileID: 6307183516646880328, guid: 430920f3b4fc88943a9308441bd87563,
       type: 3}
     animationProfileName: 
     useInlineAnimationProps: 0
@@ -134,12 +134,12 @@ MonoBehaviour:
     attachmentProfileName: Humanoid
     floatHeight: 1.4
     addFloatHeightToTransform: 0
-    floatTransform: Spine1
+    floatTransform: 
   isUMAUnit: 0
   isPet: 0
   flightCapable: 0
   glideCapable: 0
-  characterName: Tailoring Supplies
+  characterName: Logging Trainer
   title: 
   factionName: 
   unitTypeName: 
@@ -221,15 +221,15 @@ MonoBehaviour:
   saveOnLevelUnload: 0
   saveOnGameSave: 0
   overwriteUnitUUID: 0
-  m_UUID: 36593cef-c7cd-4cf6-b486-5aa2fc16971f
+  m_UUID: 8bd76eb9-1c14-4c32-a3d6-66d86c759245
   references:
     version: 1
     00000000:
-      type: {class: VendorProps, ns: AnyRPG, asm: Assembly-CSharp}
+      type: {class: SkillTrainerProps, ns: AnyRPG, asm: Assembly-CSharp}
       data:
         interactionPanelTitle: 
         interactionPanelImage: {fileID: 0}
         namePlateImage: {fileID: 0}
         prerequisiteConditions: []
-        vendorCollectionNames:
-        - Tailoring Supplies
+        skillNames:
+        - Logging
