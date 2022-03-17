@@ -124,7 +124,9 @@ namespace AnyRPG {
             channeledAbility.UseableWithoutLearning = true;
             channeledAbility.UseSpeedMultipliers = false;
             channeledAbility.TickRate = tickRate;
-            channeledAbility.AbilityEffectNames = new List<string>() { statusEffect };
+            if (statusEffect != string.Empty) {
+                channeledAbility.AbilityEffectNames = new List<string>() { statusEffect };
+            }
             //channeledAbility.AbilityEffectNames.Add(statusEffect);
             channeledAbility.ChanneledAbilityEffects.Add(healEffect);
 

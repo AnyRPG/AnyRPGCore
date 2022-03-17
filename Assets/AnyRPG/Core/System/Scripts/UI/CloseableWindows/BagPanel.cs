@@ -139,7 +139,7 @@ namespace AnyRPG {
         */
 
         public virtual void ClearSlots() {
-            Debug.Log(gameObject.name + gameObject.GetInstanceID() + ".BagPanel.ClearSlots()");
+            //Debug.Log(gameObject.name + gameObject.GetInstanceID() + ".BagPanel.ClearSlots()");
 
             List<SlotScript> removeList = new List<SlotScript>();
             foreach (SlotScript slot in slots) {
