@@ -50,7 +50,8 @@ namespace AnyRPG {
         }
 
         public void LearnSkill(Skill newSkill) {
-            //Debug.Log("CharacterSkillManager.LearnSkill(" + skill.name + ")");
+            //Debug.Log("CharacterSkillManager.LearnSkill(" + newSkill.DisplayName + ")");
+
             if (!skillList.ContainsValue(newSkill)) {
                 skillList[SystemDataFactory.PrepareStringForMatch(newSkill.DisplayName)] = newSkill;
                 foreach (BaseAbilityProperties ability in newSkill.AbilityList) {

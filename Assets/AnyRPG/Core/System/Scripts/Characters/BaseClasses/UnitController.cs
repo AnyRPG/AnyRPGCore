@@ -455,7 +455,10 @@ namespace AnyRPG {
         public override bool Interact(CharacterUnit source, bool processRangeCheck = false) {
             bool returnValue = base.Interact(source, processRangeCheck);
 
-            if (returnValue == true && source == playerManager.UnitController.CharacterUnit && unitControllerMode == UnitControllerMode.AI) {
+            if (returnValue == true
+                && faceInteractionTarget == true
+                && source == playerManager.UnitController.CharacterUnit
+                && unitControllerMode == UnitControllerMode.AI) {
                 unitMotor.FaceTarget(source.Interactable);
             }
 

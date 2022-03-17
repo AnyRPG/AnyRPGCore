@@ -1070,19 +1070,23 @@ namespace AnyRPG {
 
         public bool LearnAbility(BaseAbilityProperties newAbility) {
             //Debug.Log(baseCharacter.gameObject.name + ".CharacterAbilityManager.LearnAbility(" + (newAbility == null ? "null" : newAbility.DisplayName) + ")");
+
             if (newAbility == null) {
-                //Debug.Log(gameObject.name + ".CharacterAbilityManager.LearnAbility(): baseAbility is null");
+                //Debug.Log(baseCharacter.gameObject.name + ".CharacterAbilityManager.LearnAbility(): baseAbility is null");
                 // can't learn a nonexistent ability
                 return false;
             }
             if (HasAbility(newAbility)) {
+                //Debug.Log(baseCharacter.gameObject.name + ".CharacterAbilityManager.LearnAbility(" + (newAbility == null ? "null" : newAbility.DisplayName) + "): already known");
                 return false;
             }
-            if (newAbility.RequiredLevel >= BaseCharacter.CharacterStats.Level) {
+            if (newAbility.RequiredLevel > BaseCharacter.CharacterStats.Level) {
+                //Debug.Log(baseCharacter.gameObject.name + ".CharacterAbilityManager.LearnAbility(" + (newAbility == null ? "null" : newAbility.DisplayName) + "): level too low");
                 return false;
             }
 
             if (newAbility.CanLearnAbility(this) == false) {
+                //Debug.Log(baseCharacter.gameObject.name + ".CharacterAbilityManager.LearnAbility(" + (newAbility == null ? "null" : newAbility.DisplayName) + "): cannot learn ability");
                 return false;
             }
 
