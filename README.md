@@ -32,10 +32,6 @@ https://www.youtube.com/channel/UC-SiqAyRXR6eijPggFhFG2g
 
 https://discord.gg/huSAuqk
 
-### Wiki
-
-https://wiki.anyrpg.org/
-
 ### Trello
 
 https://trello.com/anyrpg/
