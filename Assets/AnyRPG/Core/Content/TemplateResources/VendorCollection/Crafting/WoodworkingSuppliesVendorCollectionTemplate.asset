@@ -21,6 +21,18 @@ MonoBehaviour:
   resourceDescriptionProfile: 
   optionalOverride: 0
   vendorItems:
+  - itemName: Ash Log
+    quantity: 0
+    unlimited: 1
+    itemQualityName: 
+  - itemName: Elm Log
+    quantity: 0
+    unlimited: 1
+    itemQualityName: 
+  - itemName: Spruce Log
+    quantity: 0
+    unlimited: 1
+    itemQualityName: 
   - itemName: Ash Lumber
     quantity: 0
     unlimited: 1

@@ -287,6 +287,7 @@ namespace AnyRPG {
 
         public virtual void DestroySpawn() {
             //Debug.Log(gameObject.name + ".Spawnable.DestroySpawn()");
+
             if (spawnReference != null) {
                 //Debug.Log(gameObject.name + ".Spawnable.DestroySpawn(): destroying spawn");
                 objectPooler.ReturnObjectToPool(spawnReference);

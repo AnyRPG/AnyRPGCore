@@ -10,44 +10,37 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: d67e3801170622341be03526c0ae62e0, type: 3}
-  m_Name: WarriorClassTemplate
+  m_Name: ThiefCharacterClassTemplate
   m_EditorClassIdentifier: 
-  resourceName: Warrior
+  resourceName: Thief
   displayName: 
-  icon: {fileID: 21300000, guid: 068618f626fbf69448d14da271218015, type: 3}
+  icon: {fileID: 21300000, guid: 263cbe8a4d2bfd3428641051879e3f9a, type: 3}
   iconBackgroundImage: {fileID: 0}
   description: 
   useRegionalDescription: 0
   resourceDescriptionProfile: 
+  optionalOverride: 0
   newGameOption: 0
   equipmentNames: []
   capabilities:
     abilityNames: []
     traitNames: []
     armorClassList:
-    - Plate
+    - Leather
     weaponSkills:
-    - One Hand Sword
-    - Two Hand Sword
-    - One Hand Mace
-    - Two Hand Mace
-    - One Hand Axe
-    - Two Hand Axe
-    - Shield
-  unitTypeCapabilities:
-  - unitTypes: []
-    capabilities:
-      abilityNames: []
-      traitNames: []
-      armorClassList: []
-      weaponSkills: []
+    - Dagger
+  unitTypeCapabilities: []
   primaryStats:
-  - statName: Strength
+  - statName: Agility
     budgetPerLevel: 5
     primaryToSecondaryConversion:
-    - secondaryStatType: 5
+    - secondaryStatType: 4
       conversionRatio: 0.5
       ratedConversion: 0
+    - secondaryStatType: 2
+      conversionRatio: 0.5
+      ratedConversion: 1
     primaryToResourceConversion: []
-  powerResources: []
+  powerResources:
+  - Energy
   validPetTypes: []

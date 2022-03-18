@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 7024224366970924017}
   - component: {fileID: 6256860312268366932}
   - component: {fileID: 8156056326480203934}
+  - component: {fileID: 183640839270824194}
   m_Layer: 0
   m_Name: soul_shrine
   m_TagString: Untagged
@@ -81,3 +82,17 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!64 &183640839270824194
+MeshCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7651860357190889803}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 4
+  m_Convex: 0
+  m_CookingOptions: 30
+  m_Mesh: {fileID: -6769956087912454169, guid: b672a2226ae3c8d4e9ce165fc35af89f, type: 3}

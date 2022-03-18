@@ -10,9 +10,9 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 4e31818c35d6ab14fbf88410e7e18453, type: 3}
-  m_Name: LeatherworkingSuppliesVendorUnitTemplate
+  m_Name: MageClassTrainerUnitTemplate
   m_EditorClassIdentifier: 
-  resourceName: Leatherworking Supplies Vendor
+  resourceName: Mage Class Trainer
   displayName: 
   icon: {fileID: 21300000, guid: 9176b48a2857c364280b4f5b9d620852, type: 3}
   iconBackgroundImage: {fileID: 0}
@@ -26,7 +26,7 @@ MonoBehaviour:
   unitPrefabProps:
     unitPrefab: {fileID: 2692339740015506113, guid: ba09f14eb0109ba459f4520b82c3fadc,
       type: 3}
-    modelPrefab: {fileID: 6954704190252621995, guid: b50f0a866945a66428c3794bd6eba9b0,
+    modelPrefab: {fileID: 6307183516646880328, guid: a08198b12b6a5504d81d0fb9bc96e49c,
       type: 3}
     animationProfileName: 
     useInlineAnimationProps: 0
@@ -134,12 +134,12 @@ MonoBehaviour:
     attachmentProfileName: Humanoid
     floatHeight: 1.4
     addFloatHeightToTransform: 0
-    floatTransform: Spine1
+    floatTransform: 
   isUMAUnit: 0
   isPet: 0
   flightCapable: 0
   glideCapable: 0
-  characterName: Leatherworking Supplies
+  characterName: Mage Trainer
   title: 
   factionName: 
   unitTypeName: 
@@ -154,7 +154,7 @@ MonoBehaviour:
     traitNames: []
     armorClassList: []
     weaponSkills: []
-  isAggressive: 1
+  isAggressive: 0
   aggroRadius: 20
   automaticCombatStrategy: 0
   combatStrategyName: 
@@ -221,15 +221,14 @@ MonoBehaviour:
   saveOnLevelUnload: 0
   saveOnGameSave: 0
   overwriteUnitUUID: 0
-  m_UUID: 6c7ad14f-fda9-418e-ba18-1121a25f141b
+  m_UUID: 7a8ce08f-46a8-4811-ba68-a5cf17ed723e
   references:
     version: 1
     00000000:
-      type: {class: VendorProps, ns: AnyRPG, asm: Assembly-CSharp}
+      type: {class: ClassChangeProps, ns: AnyRPG, asm: Assembly-CSharp}
       data:
         interactionPanelTitle: 
         interactionPanelImage: {fileID: 0}
         namePlateImage: {fileID: 0}
         prerequisiteConditions: []
-        vendorCollectionNames:
-        - Leatherworking Supplies
+        className: Mage

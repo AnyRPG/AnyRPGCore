@@ -10,11 +10,11 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: d67e3801170622341be03526c0ae62e0, type: 3}
-  m_Name: WizardClassTemplate
+  m_Name: PriestCharacterClassTemplate
   m_EditorClassIdentifier: 
-  resourceName: Wizard
+  resourceName: Priest
   displayName: 
-  icon: {fileID: 21300000, guid: 8b04cac8505abbb47bd5c91db3229c44, type: 3}
+  icon: {fileID: 21300000, guid: bff1d48731685ec428be2663a3abfd54, type: 3}
   iconBackgroundImage: {fileID: 0}
   description: 
   useRegionalDescription: 0

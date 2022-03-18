@@ -15,9 +15,12 @@ namespace AnyRPG {
 
         public override bool PrerequisitesMet {
             get {
+                /*
+                 * moved this option to getValidOptions because this should spawn even if the character doesn't have the ability
                 if (playerManager.MyCharacter.CharacterAbilityManager.HasAbility(GatheringNodeProps.BaseAbility.AbilityProperties) == false) {
                     return false;
                 }
+                */
                 return base.PrerequisitesMet;
             }
         }

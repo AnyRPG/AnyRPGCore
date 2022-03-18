@@ -1,0 +1,34 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6c9b51b8d3aa844448aaeab0a989e2fa, type: 3}
+  m_Name: MageCharacterClassTemplatePackage
+  m_EditorClassIdentifier: 
+  resourceName: Mage Character Class
+  displayName: 
+  icon: {fileID: 0}
+  iconBackgroundImage: {fileID: 0}
+  description: 
+  useRegionalDescription: 0
+  resourceDescriptionProfile: 
+  optionalOverride: 0
+  resources:
+  - {fileID: 11400000, guid: 7a0cfb16a61a86c47866133e556cbeb7, type: 2}
+  - {fileID: 11400000, guid: a49e4d90681cd1446947c5d50c0aac1f, type: 2}
+  - {fileID: 11400000, guid: 83eb4e089c8161d47aa0a4a29cec4fc6, type: 2}
+  - {fileID: 11400000, guid: 3a4cc7069cc040c47bcccb85c2c04877, type: 2}
+  - {fileID: 11400000, guid: 776dde35bcccdb24098286ca6447a5d7, type: 2}
+  - {fileID: 11400000, guid: d84295d5ff2f02d448630024501f644a, type: 2}
+  - {fileID: 11400000, guid: 5c097fe124f85404fb566b4e7953d08b, type: 2}
+  prefabs:
+  - {fileID: 6390993854296471015, guid: 135b910511b147e46b7b1340922a4ba4, type: 3}
+  dependencies:
+  - {fileID: 11400000, guid: f79d90c3c7a2fc54a8a285d798fb1bb1, type: 2}

@@ -1,0 +1,34 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6c9b51b8d3aa844448aaeab0a989e2fa, type: 3}
+  m_Name: PriestCharacterClassTemplatePackage
+  m_EditorClassIdentifier: 
+  resourceName: Warrior Character Class
+  displayName: 
+  icon: {fileID: 0}
+  iconBackgroundImage: {fileID: 0}
+  description: 
+  useRegionalDescription: 0
+  resourceDescriptionProfile: 
+  optionalOverride: 0
+  resources:
+  - {fileID: 11400000, guid: 6bf56d2781d137647abebf5ec130d072, type: 2}
+  - {fileID: 11400000, guid: 6bf56d2781d137647abebf5ec130d072, type: 2}
+  prefabs: []
+  dependencies:
+  - {fileID: 11400000, guid: a9553be6ef0b0db41b652a68923aaebc, type: 2}
+  - {fileID: 11400000, guid: 1bca0fa95db3df3498b779d4e55b7e29, type: 2}
+  - {fileID: 11400000, guid: e400d17e27240644ea598a36d04f27ab, type: 2}
+  - {fileID: 11400000, guid: 8994140f718d31348b62c0848cf392ce, type: 2}
+  - {fileID: 11400000, guid: 426feba4f55c6db43b617eb4a1a8b745, type: 2}
+  - {fileID: 11400000, guid: c525417ff82ed574182ac444740219c1, type: 2}
+  - {fileID: 11400000, guid: ee32b27cc4229214eacaf2eff6b870d3, type: 2}
