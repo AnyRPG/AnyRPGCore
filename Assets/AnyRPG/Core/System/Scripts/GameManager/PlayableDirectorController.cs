@@ -32,11 +32,13 @@ namespace AnyRPG {
             if (SystemGameManager.IsShuttingDown) {
                 return;
             }
-            /*
+            
+
             if (systemPlayableDirectorManager == null || playableDirector == null) {
+                // this could be the case if we are using the SceneConfig to load the game directly from a level
                 return;
             }
-            */
+            
             if (systemPlayableDirectorManager.PlayableDirectorDictionary.ContainsKey(playableDirector.playableAsset.name)) {
                 systemPlayableDirectorManager.PlayableDirectorDictionary.Remove(playableDirector.playableAsset.name);
             }
