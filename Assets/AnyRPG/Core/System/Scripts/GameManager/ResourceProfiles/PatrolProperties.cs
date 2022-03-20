@@ -5,7 +5,7 @@ using UnityEngine.AI;
 
 namespace AnyRPG {
     [System.Serializable]
-    public class PatrolProps  {
+    public class PatrolProperties  {
 
         [Header("Patrol")]
 

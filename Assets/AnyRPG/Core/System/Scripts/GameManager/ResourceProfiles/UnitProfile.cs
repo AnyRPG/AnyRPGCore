@@ -199,7 +199,7 @@ namespace AnyRPG {
 
         [Tooltip("Inline patrol configuration.  Useful if no other unit will need to re-use this configuration.")]
         [SerializeField]
-        private PatrolProps patrolConfig = new PatrolProps();
+        private PatrolProperties patrolConfig = new PatrolProperties();
 
         [Tooltip("Lookup and use these named patrols that can be shared among units")]
         [SerializeField]
@@ -209,8 +209,9 @@ namespace AnyRPG {
         [Header("Behavior")]
 
         [Tooltip("Inline behavior configuration.  Useful if no other unit will need to re-use this configuration.")]
+        [FormerlySerializedAs("behaviorConfig")]
         [SerializeField]
-        private BehaviorProps behaviorConfig = new BehaviorProps();
+        private BehaviorProps deprecatedBehaviorConfig = new BehaviorProps();
 
         [Header("Interaction")]
 
@@ -329,7 +330,7 @@ namespace AnyRPG {
         public bool PreventAutoDespawn { get => preventAutoDespawn; set => preventAutoDespawn = value; }
         public List<string> PatrolNames { get => patrolNames; set => patrolNames = value; }
         public float AggroRadius { get => aggroRadius; set => aggroRadius = value; }
-        public BehaviorProps BehaviorProps { get => behaviorConfig; set => behaviorConfig = value; }
+        //public BehaviorProps BehaviorProps { get => behaviorConfig; set => behaviorConfig = value; }
         public UnitPrefabProps UnitPrefabProps {
             get {
                 if (useInlinePrefabProps) {
@@ -353,7 +354,7 @@ namespace AnyRPG {
         public bool OverwriteUnitUUID { get => overwriteUnitUUID; set => overwriteUnitUUID = value; }
         public bool IgnoreDuplicateUUID { get => ignoreDuplicateUUID; set => ignoreDuplicateUUID = value; }
         public bool UseInlinePatrol { get => useInlinePatrol; set => useInlinePatrol = value; }
-        public PatrolProps PatrolConfig { get => patrolConfig; set => patrolConfig = value; }
+        public PatrolProperties PatrolConfig { get => patrolConfig; set => patrolConfig = value; }
         public bool UseProviderEquipment { get => useProviderEquipment; set => useProviderEquipment = value; }
         public bool PersistObjectPosition { get => persistObjectPosition; set => persistObjectPosition = value; }
         public bool SaveOnLevelUnload { get => saveOnLevelUnload; set => saveOnLevelUnload = value; }
@@ -593,7 +594,7 @@ namespace AnyRPG {
 
             // controller configs
             // patrolConfig doesn't need setup ?
-            behaviorConfig.SetupScriptableObjects(systemGameManager);
+            //behaviorConfig.SetupScriptableObjects(systemGameManager);
 
         }
 

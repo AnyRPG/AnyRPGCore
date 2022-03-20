@@ -19,6 +19,7 @@ MonoBehaviour:
   description: 
   useRegionalDescription: 0
   resourceDescriptionProfile: 
+  optionalOverride: 0
   ignoreGlobalDropLimit: 0
   dropLimit: 0
   lootGroups:
@@ -180,12 +181,6 @@ MonoBehaviour:
       prerequisiteConditions: []
     - itemName: Bag
       dropChance: 25
-      minDrops: 1
-      maxDrops: 1
-      matchItemRestrictions: 0
-      prerequisiteConditions: []
-    - itemName: Scroll
-      dropChance: 20
       minDrops: 1
       maxDrops: 1
       matchItemRestrictions: 0

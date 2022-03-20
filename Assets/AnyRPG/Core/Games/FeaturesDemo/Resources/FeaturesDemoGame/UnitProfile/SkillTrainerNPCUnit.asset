@@ -19,6 +19,7 @@ MonoBehaviour:
   description: 
   useRegionalDescription: 0
   resourceDescriptionProfile: 
+  optionalOverride: 0
   automaticPrefabProfile: 0
   prefabProfileName: 
   useInlinePrefabProps: 1
@@ -27,7 +28,7 @@ MonoBehaviour:
       type: 3}
     modelPrefab: {fileID: 2692339740015506113, guid: 5e4110e291da71541bbc6aebc87266e3,
       type: 3}
-    animationProfile: {fileID: 0}
+    animationProfileName: 
     useInlineAnimationProps: 0
     animationProps:
       useRootMotion: 0
@@ -108,6 +109,10 @@ MonoBehaviour:
       deathClip: {fileID: 0}
       reviveClip: {fileID: 0}
       levitatedClip: {fileID: 0}
+      swimIdleClip: {fileID: 0}
+      swimMoveClip: {fileID: 0}
+      flyIdleClip: {fileID: 0}
+      flyMoveClip: {fileID: 0}
     rotateModel: 0
     namePlateProps:
       displayName: 
@@ -127,8 +132,13 @@ MonoBehaviour:
     scale: {x: 1, y: 1, z: 1}
     targetBone: 
     attachmentProfileName: Humanoid
+    floatHeight: 1.4
+    addFloatHeightToTransform: 0
+    floatTransform: Spine1
   isUMAUnit: 0
   isPet: 0
+  flightCapable: 0
+  glideCapable: 0
   characterName: Skill Trainer
   title: 
   factionName: 
@@ -171,13 +181,12 @@ MonoBehaviour:
     movementSpeed: 0
     savePositionAtDestination: 0
   patrolNames: []
-  behaviorConfig:
+  deprecatedBehaviorConfig:
     interactionPanelTitle: 
     interactionPanelImage: {fileID: 0}
     namePlateImage: {fileID: 0}
     prerequisiteConditions: []
     behaviorNames: []
-    useBehaviorCopy: 0
   interactionMaxRange: 3
   lootableCharacter:
     interactionPanelTitle: 
@@ -207,8 +216,11 @@ MonoBehaviour:
     vendorCollectionNames: []
   interactableOptions:
   - Skill Trainer
+  inlineInteractableOptions: []
   persistObjectPosition: 0
   saveOnLevelUnload: 0
   saveOnGameSave: 0
   overwriteUnitUUID: 0
   m_UUID: 96823906-0ece-484a-a9db-886bada0a72b
+  references:
+    version: 1

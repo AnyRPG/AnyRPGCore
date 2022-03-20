@@ -1,0 +1,229 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4e31818c35d6ab14fbf88410e7e18453, type: 3}
+  m_Name: LoopPatrolNPCUnitTemplate
+  m_EditorClassIdentifier: 
+  resourceName: Loop Patrol NPC
+  displayName: 
+  icon: {fileID: 21300000, guid: 9176b48a2857c364280b4f5b9d620852, type: 3}
+  iconBackgroundImage: {fileID: 0}
+  description: 
+  useRegionalDescription: 0
+  resourceDescriptionProfile: 
+  optionalOverride: 0
+  automaticPrefabProfile: 0
+  prefabProfileName: 
+  useInlinePrefabProps: 1
+  unitPrefabProps:
+    unitPrefab: {fileID: 2692339740015506113, guid: ba09f14eb0109ba459f4520b82c3fadc,
+      type: 3}
+    modelPrefab: {fileID: 6307183516646880328, guid: d000c5c25fdbc114696a5e9443f6ac45,
+      type: 3}
+    animationProfileName: 
+    useInlineAnimationProps: 0
+    animationProps:
+      useRootMotion: 0
+      suppressAdjustAnimatorSpeed: 0
+      attackClips: []
+      castClips: []
+      takeDamageClips: []
+      idleClip: {fileID: 0}
+      jumpClip: {fileID: 0}
+      fallClip: {fileID: 0}
+      landClip: {fileID: 0}
+      moveForwardClip: {fileID: 0}
+      moveForwardFastClip: {fileID: 0}
+      moveBackClip: {fileID: 0}
+      moveBackFastClip: {fileID: 0}
+      turnLeftClip: {fileID: 0}
+      turnRightClip: {fileID: 0}
+      strafeLeftClip: {fileID: 0}
+      jogStrafeLeftClip: {fileID: 0}
+      strafeRightClip: {fileID: 0}
+      jogStrafeRightClip: {fileID: 0}
+      strafeForwardLeftClip: {fileID: 0}
+      jogStrafeForwardLeftClip: {fileID: 0}
+      strafeForwardRightClip: {fileID: 0}
+      jogStrafeForwardRightClip: {fileID: 0}
+      strafeBackLeftClip: {fileID: 0}
+      jogStrafeBackLeftClip: {fileID: 0}
+      strafeBackRightClip: {fileID: 0}
+      jogStrafeBackRightClip: {fileID: 0}
+      stunnedClip: {fileID: 0}
+      fullCombatMirror: 0
+      combatIdleMirror: 0
+      combatIdleClip: {fileID: 0}
+      combatJumpMirror: 0
+      combatJumpClip: {fileID: 0}
+      combatFallMirror: 0
+      combatFallClip: {fileID: 0}
+      combatLandMirror: 0
+      combatLandClip: {fileID: 0}
+      combatMoveForwardMirror: 0
+      combatMoveForwardClip: {fileID: 0}
+      combatMoveForwardFastMirror: 0
+      combatMoveForwardFastClip: {fileID: 0}
+      combatMoveBackMirror: 0
+      combatMoveBackClip: {fileID: 0}
+      combatMoveBackFastMirror: 0
+      combatMoveBackFastClip: {fileID: 0}
+      combatTurnLeftMirror: 0
+      combatTurnLeftClip: {fileID: 0}
+      combatTurnRightMirror: 0
+      combatTurnRightClip: {fileID: 0}
+      combatStrafeLeftMirror: 0
+      combatStrafeLeftClip: {fileID: 0}
+      combatJogStrafeLeftMirror: 0
+      combatJogStrafeLeftClip: {fileID: 0}
+      combatStrafeRightMirror: 0
+      combatStrafeRightClip: {fileID: 0}
+      combatJogStrafeRightMirror: 0
+      combatJogStrafeRightClip: {fileID: 0}
+      combatStrafeForwardLeftMirror: 0
+      combatStrafeForwardLeftClip: {fileID: 0}
+      combatJogStrafeForwardLeftMirror: 0
+      combatJogStrafeForwardLeftClip: {fileID: 0}
+      combatStrafeForwardRightMirror: 0
+      combatStrafeForwardRightClip: {fileID: 0}
+      combatJogStrafeForwardRightMirror: 0
+      combatJogStrafeForwardRightClip: {fileID: 0}
+      combatStrafeBackLeftMirror: 0
+      combatStrafeBackLeftClip: {fileID: 0}
+      combatJogStrafeBackLeftMirror: 0
+      combatJogStrafeBackLeftClip: {fileID: 0}
+      combatStrafeBackRightMirror: 0
+      combatStrafeBackRightClip: {fileID: 0}
+      combatJogStrafeBackRightMirror: 0
+      combatJogStrafeBackRightClip: {fileID: 0}
+      combatStunnedMirror: 0
+      combatStunnedClip: {fileID: 0}
+      deathClip: {fileID: 0}
+      reviveClip: {fileID: 0}
+      levitatedClip: {fileID: 0}
+      swimIdleClip: {fileID: 0}
+      swimMoveClip: {fileID: 0}
+      flyIdleClip: {fileID: 0}
+      flyMoveClip: {fileID: 0}
+    rotateModel: 0
+    namePlateProps:
+      displayName: 
+      suppressNamePlate: 0
+      suppressFaction: 1
+      overrideNameplatePosition: 0
+      namePlatePosition: {x: 0, y: 0, z: 0}
+      unitFrameTarget: head
+      unitFrameCameraLookOffset: {x: 0, y: 0, z: 0}
+      unitFrameCameraPositionOffset: {x: 0, y: 0, z: 0.66}
+      unitPreviewTarget: 
+      unitPreviewCameraLookOffset: {x: 0, y: 1, z: 0}
+      unitPreviewCameraPositionOffset: {x: 0, y: 1, z: 2.5}
+    position: {x: 0, y: 0, z: 0}
+    rotationIsGlobal: 0
+    rotation: {x: 0, y: 0, z: 0}
+    scale: {x: 1, y: 1, z: 1}
+    targetBone: 
+    attachmentProfileName: Humanoid
+    floatHeight: 1.4
+    addFloatHeightToTransform: 0
+    floatTransform: Spine1
+  isUMAUnit: 0
+  isPet: 0
+  flightCapable: 0
+  glideCapable: 0
+  characterName: Loop Patrol
+  title: 
+  factionName: 
+  unitTypeName: 
+  characterRaceName: 
+  characterClassName: 
+  classSpecializationName: 
+  spawnDead: 0
+  preventAutoDespawn: 0
+  defaultToughness: 
+  capabilities:
+    abilityNames: []
+    traitNames: []
+    armorClassList: []
+    weaponSkills: []
+  isAggressive: 1
+  aggroRadius: 20
+  automaticCombatStrategy: 0
+  combatStrategyName: 
+  primaryStats: []
+  powerResources: []
+  useProviderEquipment: 0
+  equipmentNameList: []
+  isMobile: 1
+  playOnFootstep: 1
+  movementAudioProfileNames:
+  - Footstep Hits
+  useInlinePatrol: 1
+  patrolConfig:
+    autoStart: 1
+    destinationList: []
+    useTags: 1
+    destinationTagList:
+    - Patrol2_1
+    - Patrol2_2
+    - Patrol2_3
+    - Patrol2_4
+    randomDestinations: 0
+    loopDestinations: 1
+    despawnOnCompletion: 0
+    maxDestinations: 0
+    maxDistanceFromSpawnPoint: 15
+    destinationPauseTime: 0
+    movementSpeed: 2
+    savePositionAtDestination: 0
+  patrolNames: []
+  deprecatedBehaviorConfig:
+    interactionPanelTitle: 
+    interactionPanelImage: {fileID: 0}
+    namePlateImage: {fileID: 0}
+    prerequisiteConditions: []
+    behaviorNames: []
+  interactionMaxRange: 3
+  lootableCharacter:
+    interactionPanelTitle: 
+    interactionPanelImage: {fileID: 0}
+    namePlateImage: {fileID: 0}
+    prerequisiteConditions: []
+    automaticCurrency: 0
+    lootTableNames: []
+  dialogConfig:
+    interactionPanelTitle: 
+    interactionPanelImage: {fileID: 0}
+    namePlateImage: {fileID: 0}
+    prerequisiteConditions: []
+    dialogNames: []
+  questGiverConfig:
+    interactionPanelTitle: 
+    interactionPanelImage: {fileID: 0}
+    namePlateImage: {fileID: 0}
+    prerequisiteConditions: []
+    quests: []
+    questGiverProfileNames: []
+  vendorConfig:
+    interactionPanelTitle: 
+    interactionPanelImage: {fileID: 0}
+    namePlateImage: {fileID: 0}
+    prerequisiteConditions: []
+    vendorCollectionNames: []
+  interactableOptions: []
+  inlineInteractableOptions: []
+  persistObjectPosition: 0
+  saveOnLevelUnload: 0
+  saveOnGameSave: 0
+  overwriteUnitUUID: 0
+  m_UUID: a42da302-4e7a-46fe-bc74-20d9dd277050
+  references:
+    version: 1

@@ -33,14 +33,6 @@ MonoBehaviour:
     quantity: 0
     unlimited: 1
     itemQualityName: 
-  - itemName: Bread
-    quantity: 0
-    unlimited: 1
-    itemQualityName: 
-  - itemName: Scroll
-    quantity: 0
-    unlimited: 1
-    itemQualityName: 
   - itemName: Quest Start
     quantity: 0
     unlimited: 1

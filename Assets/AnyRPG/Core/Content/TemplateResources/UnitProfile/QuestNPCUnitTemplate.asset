@@ -181,7 +181,7 @@ MonoBehaviour:
     movementSpeed: 0
     savePositionAtDestination: 0
   patrolNames: []
-  behaviorConfig:
+  deprecatedBehaviorConfig:
     interactionPanelTitle: 
     interactionPanelImage: {fileID: 0}
     namePlateImage: {fileID: 0}
@@ -260,7 +260,7 @@ MonoBehaviour:
   saveOnLevelUnload: 0
   saveOnGameSave: 0
   overwriteUnitUUID: 0
-  m_UUID: 9d890594-3306-4c08-baf1-7af8cccc05e5
+  m_UUID: d24e97c3-84ac-4ba7-9e8a-7c9a0df3f60c
   references:
     version: 1
     00000000:

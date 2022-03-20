@@ -19,6 +19,7 @@ MonoBehaviour:
   description: 
   useRegionalDescription: 0
   resourceDescriptionProfile: 
+  optionalOverride: 0
   automaticPrefabProfile: 0
   prefabProfileName: 
   useInlinePrefabProps: 1
@@ -180,7 +181,7 @@ MonoBehaviour:
     movementSpeed: 0
     savePositionAtDestination: 0
   patrolNames: []
-  behaviorConfig:
+  deprecatedBehaviorConfig:
     interactionPanelTitle: 
     interactionPanelImage: {fileID: 0}
     namePlateImage: {fileID: 0}
@@ -214,8 +215,11 @@ MonoBehaviour:
     prerequisiteConditions: []
     vendorCollectionNames: []
   interactableOptions: []
+  inlineInteractableOptions: []
   persistObjectPosition: 0
   saveOnLevelUnload: 0
   saveOnGameSave: 0
   overwriteUnitUUID: 0
-  m_UUID: 51297176-badf-420a-8542-af7f785efb34
+  m_UUID: c6b68014-c7a1-465a-b5fd-5ec2a26486f2
+  references:
+    version: 1

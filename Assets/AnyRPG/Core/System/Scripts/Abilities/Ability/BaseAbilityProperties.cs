@@ -898,8 +898,12 @@ namespace AnyRPG {
 
             // add inline effects
             foreach (AbilityEffectConfig abilityEffectConfig in inlineAbilityEffects) {
-                abilityEffectConfig.SetupScriptableObjects(systemGameManager, this);
-                abilityEffects.Add(abilityEffectConfig.AbilityEffectProperties);
+                if (abilityEffectConfig != null) {
+                    abilityEffectConfig.SetupScriptableObjects(systemGameManager, this);
+                    abilityEffects.Add(abilityEffectConfig.AbilityEffectProperties);
+                } else {
+                    Debug.LogWarning("Null inline AbilityEffect detected while initializing BaseAbility Properties for " + describable.DisplayName);
+                }
             }
 
             // add named effects

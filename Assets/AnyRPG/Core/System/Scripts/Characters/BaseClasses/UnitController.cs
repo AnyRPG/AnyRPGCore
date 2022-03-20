@@ -915,12 +915,6 @@ namespace AnyRPG {
                 return;
             }
 
-            if (unitProfile.BehaviorProps.BehaviorNames.Count > 0) {
-                InteractableOptionComponent interactableOptionComponent = unitProfile.BehaviorProps.GetInteractableOption(this);
-                interactables.Add(interactableOptionComponent);
-                //interactableOptionComponent.HandlePrerequisiteUpdates();
-            }
-
             // named interactable options
             foreach (InteractableOptionProps interactableOption in unitProfile.InteractableOptionConfigs) {
                 if (interactableOption != null) {
