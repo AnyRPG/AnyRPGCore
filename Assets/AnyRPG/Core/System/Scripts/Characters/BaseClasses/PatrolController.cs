@@ -64,18 +64,30 @@ namespace AnyRPG {
 
         public void BeginPatrol(PatrolProperties patrolProps) {
             //Debug.Log(unitController.gameObject.name + ".PatrolController.BeginPatrol(" + (patrolProps == null ? "null" : "valid patrolProps") + ")");
-                SetCurrentPatrol(patrolProps);
-                unitController.ChangeState(new PatrolState());
-                return;
-        }
 
-        private void AddPatrolState(PatrolProperties patrolProps) {
-            patrolPropsList.Add(patrolProps);
+            // testing - monitor if putting this here instead of in AddPatrolState() breaks anything
             if (patrolSaveStates.ContainsKey(patrolProps)) {
                 patrolSaveStates[patrolProps] = new PatrolSaveState(this, patrolProps);
             } else {
                 patrolSaveStates.Add(patrolProps, new PatrolSaveState(this, patrolProps));
             }
+
+            SetCurrentPatrol(patrolProps);
+            unitController.ChangeState(new PatrolState());
+            return;
+        }
+
+        private void AddPatrolState(PatrolProperties patrolProps) {
+            if (patrolPropsList.Contains(patrolProps) == false) {
+                patrolPropsList.Add(patrolProps);
+            }
+            /*
+            if (patrolSaveStates.ContainsKey(patrolProps)) {
+                patrolSaveStates[patrolProps] = new PatrolSaveState(this, patrolProps);
+            } else {
+                patrolSaveStates.Add(patrolProps, new PatrolSaveState(this, patrolProps));
+            }
+            */
         }
 
 

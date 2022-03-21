@@ -27,6 +27,7 @@ namespace AnyRPG {
 
         public override Sprite Icon { get => (systemConfigurationManager.DialogInteractionPanelImage != null ? systemConfigurationManager.DialogInteractionPanelImage : base.Icon); }
         public override Sprite NamePlateImage { get => (systemConfigurationManager.DialogNamePlateImage != null ? systemConfigurationManager.DialogNamePlateImage : base.NamePlateImage); }
+        public PatrolProperties PatrolProperties { get => patrolProperties; set => patrolProperties = value; }
 
         //public bool UseBehaviorCopy { get => useBehaviorCopy; }
         //public List<string> BehaviorNames { get => behaviorNames; }

@@ -75,7 +75,56 @@ PrefabInstance:
     - target: {fileID: 6541387636808619407, guid: 84795616a4ed3404cbf6220d6f9091ff,
         type: 3}
       propertyPath: m_UUID
-      value: 67ae0a1c-5788-4a97-b0e2-a10e6f1b6345
+      value: ae2e865b-0d9d-45a8-8511-82f2efd03c38
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 84795616a4ed3404cbf6220d6f9091ff, type: 3}
+--- !u!1 &3544550570938047708 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 1244625267202862565, guid: 84795616a4ed3404cbf6220d6f9091ff,
+    type: 3}
+  m_PrefabInstance: {fileID: 2338786443313393977}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &5234544855241686849
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3544550570938047708}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f00b6a5c735e85446b7d8812092b0c50, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  unitSpawnControllerProps:
+    interactionPanelTitle: 
+    interactionPanelImage: {fileID: 0}
+    namePlateImage: {fileID: 0}
+    prerequisiteConditions: []
+    unitProfileNames:
+    - Blue Boss
+    - Blue Melee
+    - Blue Magic
+    - Blue Ranged
+    - Blue Tank
+    - Blue Berserker
+    - Blue Fighter
+    - Blue Healer
+    - Blue Wizard
+    - Blue Archer
+    - Blue PetTamer
+    - Red Boss
+    - Red Melee
+    - Red Magic
+    - Red Ranged
+    - Red Tank
+    - Red Berserker
+    - Red Fighter
+    - Red Healer
+    - Red Wizard
+    - Red Archer
+    - Red PetTamer
+    - Dragon
+    unitSpawnNodeList:
+    - {fileID: 0}

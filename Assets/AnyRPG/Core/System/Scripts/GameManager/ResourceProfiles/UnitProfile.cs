@@ -206,13 +206,6 @@ namespace AnyRPG {
         [ResourceSelector(resourceType = typeof(PatrolProfile))]
         private List<string> patrolNames = new List<string>();
 
-        [Header("Behavior")]
-
-        [Tooltip("Inline behavior configuration.  Useful if no other unit will need to re-use this configuration.")]
-        [FormerlySerializedAs("behaviorConfig")]
-        [SerializeField]
-        private BehaviorProps deprecatedBehaviorConfig = new BehaviorProps();
-
         [Header("Interaction")]
 
         [Tooltip("The maximum range at which interacables on this unit can be interacted with")]
@@ -221,21 +214,30 @@ namespace AnyRPG {
 
         [Header("Deprecated Builtin Interactables")]
 
-        [Tooltip("Inline loot configuration.  Useful if no other unit will need to re-use this configuration.")]
+        [Tooltip("Inline behavior configuration.  Useful if no other unit will need to re-use this configuration.")]
+        [FormerlySerializedAs("behaviorConfig")]
         [SerializeField]
-        private LootableCharacterProps lootableCharacter = new LootableCharacterProps();
+        private BehaviorProps deprecatedBehaviorConfig = new BehaviorProps();
+
+        [Tooltip("Inline loot configuration.  Useful if no other unit will need to re-use this configuration.")]
+        [FormerlySerializedAs("lootableCharacter")]
+        [SerializeField]
+        private LootableCharacterProps deprecatedLootableCharacter = new LootableCharacterProps();
 
         [Tooltip("Inline dialog configuration.  Useful if no other unit will need to re-use this configuration.")]
+        [FormerlySerializedAs("dialogConfig")]
         [SerializeField]
-        private DialogProps dialogConfig = new DialogProps();
+        private DialogProps deprecatedDialogConfig = new DialogProps();
 
         [Tooltip("Inline questGiver configuration.  Useful if no other unit will need to re-use this configuration.")]
+        [FormerlySerializedAs("questGiverConfig")]
         [SerializeField]
-        private QuestGiverProps questGiverConfig = new QuestGiverProps();
+        private QuestGiverProps deprecatedQuestGiverConfig = new QuestGiverProps();
 
         [Tooltip("Inline vendor configuration.  Useful if no other unit will need to re-use this configuration.")]
+        [FormerlySerializedAs("vendorConfig")]
         [SerializeField]
-        private VendorProps vendorConfig = new VendorProps();
+        private VendorProps deprecatedVendorConfig = new VendorProps();
 
         [Header("Named Interactables")]
 

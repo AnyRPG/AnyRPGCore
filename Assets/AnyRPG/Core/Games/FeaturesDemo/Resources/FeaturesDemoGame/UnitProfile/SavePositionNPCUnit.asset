@@ -181,34 +181,34 @@ MonoBehaviour:
     movementSpeed: 1
     savePositionAtDestination: 0
   patrolNames: []
+  interactionMaxRange: 3
   deprecatedBehaviorConfig:
     interactionPanelTitle: 
     interactionPanelImage: {fileID: 0}
     namePlateImage: {fileID: 0}
     prerequisiteConditions: []
     behaviorNames: []
-  interactionMaxRange: 3
-  lootableCharacter:
+  deprecatedLootableCharacter:
     interactionPanelTitle: 
     interactionPanelImage: {fileID: 0}
     namePlateImage: {fileID: 0}
     prerequisiteConditions: []
     automaticCurrency: 0
     lootTableNames: []
-  dialogConfig:
+  deprecatedDialogConfig:
     interactionPanelTitle: 
     interactionPanelImage: {fileID: 0}
     namePlateImage: {fileID: 0}
     prerequisiteConditions: []
     dialogNames: []
-  questGiverConfig:
+  deprecatedQuestGiverConfig:
     interactionPanelTitle: 
     interactionPanelImage: {fileID: 0}
     namePlateImage: {fileID: 0}
     prerequisiteConditions: []
     quests: []
     questGiverProfileNames: []
-  vendorConfig:
+  deprecatedVendorConfig:
     interactionPanelTitle: 
     interactionPanelImage: {fileID: 0}
     namePlateImage: {fileID: 0}
@@ -226,32 +226,44 @@ MonoBehaviour:
   references:
     version: 1
     00000000:
-      type: {class: BehaviorProps, ns: AnyRPG, asm: Assembly-CSharp}
+      type: {class: PatrolProps, ns: AnyRPG, asm: Assembly-CSharp}
       data:
-        interactionPanelTitle: 
+        interactionPanelTitle: Go To Position 1
         interactionPanelImage: {fileID: 0}
         namePlateImage: {fileID: 0}
         prerequisiteConditions: []
-        behaviorNames:
-        - Go To The Green Pole
-        - Go To The Red Pole
-    00000001:
-      type: {class: PatrolProperties, ns: AnyRPG, asm: Assembly-CSharp}
-      data:
-        interactionPanelTitle: 
-        interactionPanelImage: {fileID: 0}
-        namePlateImage: {fileID: 0}
-        prerequisiteConditions: []
-        patrolProps:
+        patrolProperties:
           autoStart: 0
           destinationList: []
-          useTags: 0
-          destinationTagList: []
+          useTags: 1
+          destinationTagList:
+          - Patrol3_1
           randomDestinations: 0
-          loopDestinations: 1
+          loopDestinations: 0
           despawnOnCompletion: 0
           maxDestinations: 0
           maxDistanceFromSpawnPoint: 1
           destinationPauseTime: 0
           movementSpeed: 0
-          savePositionAtDestination: 0
+          savePositionAtDestination: 1
+    00000001:
+      type: {class: PatrolProps, ns: AnyRPG, asm: Assembly-CSharp}
+      data:
+        interactionPanelTitle: Go To Position 2
+        interactionPanelImage: {fileID: 0}
+        namePlateImage: {fileID: 0}
+        prerequisiteConditions: []
+        patrolProperties:
+          autoStart: 0
+          destinationList: []
+          useTags: 1
+          destinationTagList:
+          - Patrol3_2
+          randomDestinations: 0
+          loopDestinations: 0
+          despawnOnCompletion: 0
+          maxDestinations: 0
+          maxDistanceFromSpawnPoint: 1
+          destinationPauseTime: 0
+          movementSpeed: 0
+          savePositionAtDestination: 1
