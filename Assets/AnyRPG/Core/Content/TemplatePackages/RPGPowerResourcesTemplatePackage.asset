@@ -19,7 +19,11 @@ MonoBehaviour:
   description: 
   useRegionalDescription: 0
   resourceDescriptionProfile: 
-  resources: []
-  dependencies:
-  - {fileID: 11400000, guid: 05520683b4b81ec46abd7269cc40b846, type: 2}
-  - {fileID: 11400000, guid: 376c9d92b0f0ad64c943c42286701a28, type: 2}
+  optionalOverride: 0
+  resources:
+  - {fileID: 11400000, guid: a49e4d90681cd1446947c5d50c0aac1f, type: 2}
+  - {fileID: 11400000, guid: 83eb4e089c8161d47aa0a4a29cec4fc6, type: 2}
+  - {fileID: 11400000, guid: cca295d874f871f44a042595df2cd0e2, type: 2}
+  - {fileID: 11400000, guid: a145a04324ffbf14295f591fce63a6a1, type: 2}
+  prefabs: []
+  dependencies: []

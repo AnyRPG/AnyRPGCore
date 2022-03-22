@@ -28,7 +28,7 @@ MonoBehaviour:
     animatorCreatePrefabs: 0
     prefabDestroyDelay: 0
     animationClip: {fileID: 0}
-    animationProfileName: Right Straight Kick
+    animationProfileName: Shield Slam
     useUnitCastAnimations: 0
     animationHitAudioProfileName: 
     castingAudioClip: {fileID: 0}

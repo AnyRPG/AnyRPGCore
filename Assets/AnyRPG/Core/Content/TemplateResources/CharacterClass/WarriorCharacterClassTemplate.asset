@@ -21,11 +21,22 @@ MonoBehaviour:
   resourceDescriptionProfile: 
   optionalOverride: 0
   newGameOption: 0
-  equipmentNames: []
+  equipmentNames:
+  - Medieval Two Hand Axe
+  - Copper Plate Armor
+  - Copper Plate Boots
+  - Copper Plate Bracers
+  - Copper Plate Girdle
+  - Copper Plate Gloves
+  - Copper Plate Helm
+  - Copper Plate Legs
+  - Copper Plate Pauldrons
   capabilities:
     abilityNames:
     - Double Attack
     - Threatening Strike
+    - Reflect Damage
+    - Ground Slam
     traitNames:
     - Soul Of The Warrior
     armorClassList:

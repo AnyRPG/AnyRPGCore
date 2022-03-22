@@ -73,35 +73,41 @@ namespace AnyRPG {
             skipPrefabCount = 0;
 
             EditorUtility.DisplayProgressBar("Template Content Wizard", "Creating Dependency Closure...", 0.1f);
+            try {
 
-            // create a dependency closure of unique scriptable content templates
-            List<ScriptableContentTemplate> scriptableContentTemplates = GetDependencyClosure(scriptableContent);
+                // create a dependency closure of unique scriptable content templates
+                List<ScriptableContentTemplate> scriptableContentTemplates = GetDependencyClosure(scriptableContent);
 
-            EditorUtility.DisplayProgressBar("Template Content Wizard", "Getting Unique List of Resources...", 0.2f);
+                EditorUtility.DisplayProgressBar("Template Content Wizard", "Getting Unique List of Resources...", 0.2f);
 
-            List<DescribableResource> describableResources = GetDescribableResources(scriptableContentTemplates);
-            totalResourceCount = describableResources.Count;
+                List<DescribableResource> describableResources = GetDescribableResources(scriptableContentTemplates);
+                totalResourceCount = describableResources.Count;
 
-            List<GameObject> gameObjects = GetGameObjects(scriptableContentTemplates);
-            totalPrefabCount = gameObjects.Count;
+                List<GameObject> gameObjects = GetGameObjects(scriptableContentTemplates);
+                totalPrefabCount = gameObjects.Count;
 
-            EditorUtility.DisplayProgressBar("Template Content Wizard", "Copying Resources...", 0.3f);
+                EditorUtility.DisplayProgressBar("Template Content Wizard", "Copying Resources...", 0.3f);
 
-            CopyResources(describableResources, 0, totalResourceCount + totalPrefabCount);
+                CopyResources(describableResources, 0, totalResourceCount + totalPrefabCount);
 
-            CopyPrefabs(gameObjects, totalResourceCount, totalResourceCount + totalPrefabCount);
+                CopyPrefabs(gameObjects, totalResourceCount, totalResourceCount + totalPrefabCount);
 
-            AssetDatabase.Refresh();
+                AssetDatabase.Refresh();
 
-            //EditorUtility.DisplayProgressBar("New Character Wizard", "Creating Unit Profile...", 0.3f);
-            //UnitProfile asset = ScriptableObject.CreateInstance("UnitProfile") as UnitProfile;
+                //EditorUtility.DisplayProgressBar("New Character Wizard", "Creating Unit Profile...", 0.3f);
+                //UnitProfile asset = ScriptableObject.CreateInstance("UnitProfile") as UnitProfile;
 
-            //EditorUtility.DisplayProgressBar("New Character Wizard", "Saving Unit Profile...", 0.5f);
+                //EditorUtility.DisplayProgressBar("New Character Wizard", "Saving Unit Profile...", 0.5f);
 
-            //scriptableObjectPath = "Assets" + newGameParentFolder + fileSystemGameName + "/Resources/" + fileSystemGameName + "/UnitProfile/" + characterName + "Unit.asset";
-            //AssetDatabase.CreateAsset(asset, scriptableObjectPath);
+                //scriptableObjectPath = "Assets" + newGameParentFolder + fileSystemGameName + "/Resources/" + fileSystemGameName + "/UnitProfile/" + characterName + "Unit.asset";
+                //AssetDatabase.CreateAsset(asset, scriptableObjectPath);
 
-            AssetDatabase.Refresh();
+                AssetDatabase.Refresh();
+            } catch (System.NullReferenceException) {
+                // do nothing
+                //throw;
+                Debug.LogWarning("Null reference detected while running wizard");
+            }
 
             EditorUtility.ClearProgressBar();
             EditorUtility.DisplayDialog("Template Content Wizard",
@@ -272,7 +278,11 @@ namespace AnyRPG {
                 List<ScriptableContentTemplate> crawlList = new List<ScriptableContentTemplate>();
                 foreach (ScriptableContentTemplate scriptableContentTemplate in dependency.Dependencies) {
                     if (returnList.Contains(scriptableContentTemplate) == false) {
-                        crawlList.Add(scriptableContentTemplate);
+                        if (scriptableContentTemplate == null) {
+                            Debug.LogWarning("Null dependency found in list for " + dependency.ResourceName);
+                        } else {
+                            crawlList.Add(scriptableContentTemplate);
+                        }
                     }
                 }
 

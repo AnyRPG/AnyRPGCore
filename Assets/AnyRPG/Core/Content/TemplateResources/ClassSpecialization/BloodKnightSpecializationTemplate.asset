@@ -17,17 +17,20 @@ MonoBehaviour:
   icon: {fileID: 21300000, guid: 67872ab9101490546bda902e9e89c7ee, type: 3}
   iconBackgroundImage: {fileID: 0}
   description: Blood Knights drain the life of their enemies with physical attacks
-  useRegionalDescription: 1
+  useRegionalDescription: 0
   resourceDescriptionProfile: 
   optionalOverride: 0
   newGameOption: 1
   equipmentNames:
-  - Paladin Bastard Sword
-  - Red Leather Armor
-  - Red Leather Boots
-  - Red Leather Pants
-  - Red Leather Shoulders
-  - Red Leather Gloves
+  - Medieval Two Hand Sword
+  - Red Plate Armor
+  - Red Plate Boots
+  - Red Plate Bracers
+  - Red Plate Girdle
+  - Red Plate Gloves
+  - Red Plate Helm
+  - Red Plate Legs
+  - Red Plate Pauldrons
   classNames:
   - Warrior
   capabilities:
@@ -35,7 +38,7 @@ MonoBehaviour:
     - Berserker Strikes
     - Blood Shield
     traitNames:
-    - Blood Strike
+    - Soul Of The Blood Knight
     armorClassList: []
     weaponSkills: []
   primaryStats: []

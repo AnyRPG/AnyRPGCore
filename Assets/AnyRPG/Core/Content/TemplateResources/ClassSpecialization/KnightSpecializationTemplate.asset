@@ -22,14 +22,23 @@ MonoBehaviour:
   optionalOverride: 0
   newGameOption: 0
   equipmentNames:
-  - One Hand Sword
-  - Shield
+  - Medieval One Hand Sword
+  - Medieval Shield
+  - Steel Plate Armor
+  - Steel Plate Boots
+  - Steel Plate Bracers
+  - Steel Plate Girdle
+  - Steel Plate Gloves
+  - Steel Plate Helm
+  - Steel Plate Legs
+  - Steel Plate Pauldrons
   classNames:
   - Warrior
   capabilities:
     abilityNames:
     - Taunt
-    - Reflect Damage
+    - Shield Wall
+    - Shield Slam
     traitNames:
     - Soul Of The Knight
     armorClassList: []

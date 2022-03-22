@@ -1,0 +1,35 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6c9b51b8d3aa844448aaeab0a989e2fa, type: 3}
+  m_Name: GroundSlamAbilityTemplatePackage
+  m_EditorClassIdentifier: 
+  resourceName: Ground Slam Ability
+  displayName: 
+  icon: {fileID: 0}
+  iconBackgroundImage: {fileID: 0}
+  description: 
+  useRegionalDescription: 0
+  resourceDescriptionProfile: 
+  optionalOverride: 0
+  resources:
+  - {fileID: 11400000, guid: 0f06a8b6f46b74949bd9cfd366001abb, type: 2}
+  - {fileID: 11400000, guid: 2be4dff4135c2b247afef27e768797ff, type: 2}
+  - {fileID: 11400000, guid: 5493b58404295bd4396253ffef5eadb7, type: 2}
+  - {fileID: 11400000, guid: d14bd58ae1098c14f96544050fcb6375, type: 2}
+  - {fileID: 11400000, guid: 0e202216df3681e4fb8725d259f9f765, type: 2}
+  - {fileID: 11400000, guid: 57d78f36b8eba2a4286e4438b4a3a669, type: 2}
+  - {fileID: 11400000, guid: 236d24e3840e63e499ac1c5eed45e3e0, type: 2}
+  - {fileID: 11400000, guid: bdbaecace731f2c4281806eece68835e, type: 2}
+  - {fileID: 11400000, guid: 6bb0192ae505fef43a1f332e4dfcb166, type: 2}
+  - {fileID: 11400000, guid: 58aeacd6cbc414b46b1cef89cbf1d6c7, type: 2}
+  prefabs: []
+  dependencies: []
