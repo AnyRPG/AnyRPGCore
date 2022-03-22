@@ -19,11 +19,15 @@ MonoBehaviour:
   description: 
   useRegionalDescription: 0
   resourceDescriptionProfile: 
+  optionalOverride: 0
   newGameOption: 0
   equipmentNames: []
   capabilities:
-    abilityNames: []
-    traitNames: []
+    abilityNames:
+    - Double Attack
+    - Threatening Strike
+    traitNames:
+    - Soul Of The Warrior
     armorClassList:
     - Plate
     weaponSkills:
@@ -48,6 +52,17 @@ MonoBehaviour:
     - secondaryStatType: 5
       conversionRatio: 0.5
       ratedConversion: 0
+    - secondaryStatType: 6
+      conversionRatio: 1
+      ratedConversion: 0
     primaryToResourceConversion: []
-  powerResources: []
+  - statName: Agility
+    budgetPerLevel: 0
+    primaryToSecondaryConversion:
+    - secondaryStatType: 2
+      conversionRatio: 0.5
+      ratedConversion: 1
+    primaryToResourceConversion: []
+  powerResources:
+  - Rage
   validPetTypes: []

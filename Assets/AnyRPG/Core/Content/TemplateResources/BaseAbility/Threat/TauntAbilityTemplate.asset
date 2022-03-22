@@ -1,0 +1,149 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c80d744dccc642148ab1014a88212085, type: 3}
+  m_Name: TauntAbilityTemplate
+  m_EditorClassIdentifier: 
+  resourceName: Taunt
+  displayName: 
+  icon: {fileID: 21300000, guid: f628827764ea9d147a6d68fc62c826e2, type: 3}
+  iconBackgroundImage: {fileID: 0}
+  description: Threaten an enemy, causing them to attack you
+  useRegionalDescription: 0
+  resourceDescriptionProfile: 
+  optionalOverride: 0
+  directAbilityProperties:
+    requireOutOfCombat: 0
+    weaponAffinityNames: []
+    holdableObjectList: []
+    abilityPrefabSource: 0
+    animatorCreatePrefabs: 0
+    prefabDestroyDelay: 0
+    animationClip: {fileID: 0}
+    animationProfileName: 
+    useUnitCastAnimations: 0
+    animationHitAudioProfileName: 
+    castingAudioClip: {fileID: 0}
+    castingAudioProfileName: 
+    requiredLevel: 1
+    characterClassRequirements: []
+    useableWithoutLearning: 0
+    autoAddToBars: 1
+    canSimultaneousCast: 0
+    canCastWhileMoving: 0
+    ignoreGlobalCoolDown: 0
+    powerResourceName: 
+    baseResourceCost: 0
+    resourceCostPerLevel: 5
+    spendDelay: 0
+    generatePowerResourceName: 
+    baseResourceGain: 0
+    resourceGainPerLevel: 0
+    useSpeedMultipliers: 1
+    useAnimationCastTime: 0
+    abilityCastingTime: 0
+    abilityCoolDown: 10
+    coolDownOnCast: 0
+    useAbilityEffectTargetting: 0
+    targetOptions:
+      requireTarget: 1
+      requireLineOfSight: 0
+      requireLiveTarget: 1
+      requireDeadTarget: 0
+      canCastOnSelf: 0
+      canCastOnOthers: 1
+      canCastOnEnemy: 1
+      canCastOnNeutral: 0
+      canCastOnFriendly: 0
+      autoSelfCast: 0
+      useMeleeRange: 0
+      maxRange: 30
+      requireFacingTarget: 0
+      maxAngle: 45
+      requiresGroundTarget: 0
+      groundTargetColor: {r: 1, g: 1, b: 1, a: 1}
+      groundTargetRadius: 0
+    inlineAbilityEffects:
+    - id: 0
+    abilityEffectNames: []
+    tickRate: 1
+    inlineChannelingEffects: []
+    channeledAbilityEffectnames: []
+  references:
+    version: 1
+    00000000:
+      type: {class: TauntEffectConfig, ns: AnyRPG, asm: Assembly-CSharp}
+      data:
+        effectProperties:
+          targetOptions:
+            requireTarget: 1
+            requireLineOfSight: 0
+            requireLiveTarget: 1
+            requireDeadTarget: 0
+            canCastOnSelf: 0
+            canCastOnOthers: 1
+            canCastOnEnemy: 1
+            canCastOnNeutral: 0
+            canCastOnFriendly: 0
+            autoSelfCast: 0
+            useMeleeRange: 0
+            maxRange: 30
+            lineOfSightSourceLocation: 0
+            targetRangeSourceLocation: 0
+          chanceToCast: 100
+          effectMaterialName: 
+          materialChangeDuration: 2
+          onHitAudioProfileNames: []
+          randomAudioProfiles: 0
+          hitAbilityEffectNames: []
+          inputMultiplier: 0
+          threatMultiplier: 1
+          abilityPrefabSource: 1
+          randomPrefabs: 0
+          abilityObjectList: []
+          prefabSpawnLocation: 0
+          prefabDestroyDelay: 0
+          destroyOnEndCast: 0
+          tickRate: 0
+          castZeroTick: 0
+          tickAbilityEffectNames: []
+          onTickAudioProfileNames: []
+          randomTickAudioProfiles: 0
+          completeAbilityEffectNames: []
+          statusEffectAlignment: 2
+          statusEffectTypeName: 
+          statusEffectGroupName: 
+          classTrait: 0
+          requiredLevel: 1
+          sceneNames: []
+          limitedDuration: 1
+          duration: 5
+          maxStacks: 1
+          statBuffTypeNames: []
+          statAmount: 0
+          statMultiplier: 1
+          secondaryStatBuffsTypes: 
+          secondaryStatAmount: 0
+          secondaryStatMultiplier: 1
+          outgoingDamageMultiplier: 1
+          incomingDamageMultiplier: 1
+          factionModifiers: []
+          canFly: 0
+          canGlide: 0
+          disableAnimator: 0
+          stun: 0
+          levitate: 0
+          immuneDisableAnimator: 0
+          immuneStun: 0
+          immuneLevitate: 0
+          controlTarget: 0
+          reflectAbilityEffectNames: []
+          weaponHitAbilityEffectNames: []

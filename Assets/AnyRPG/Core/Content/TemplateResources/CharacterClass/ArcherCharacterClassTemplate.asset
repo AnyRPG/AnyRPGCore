@@ -10,15 +10,16 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: d67e3801170622341be03526c0ae62e0, type: 3}
-  m_Name: RangerCharacterClassTemplate
+  m_Name: ArcherCharacterClassTemplate
   m_EditorClassIdentifier: 
-  resourceName: Ranger
+  resourceName: Archer
   displayName: 
-  icon: {fileID: 21300000, guid: 85c1dd9f802166240ae6b7da8067caab, type: 3}
+  icon: {fileID: 21300000, guid: 516a52e57f8332e41bad60138e812dfb, type: 3}
   iconBackgroundImage: {fileID: 0}
   description: 
   useRegionalDescription: 0
   resourceDescriptionProfile: 
+  optionalOverride: 0
   newGameOption: 0
   equipmentNames: []
   capabilities:
@@ -32,7 +33,20 @@ MonoBehaviour:
   primaryStats:
   - statName: Agility
     budgetPerLevel: 5
-    primaryToSecondaryConversion: []
+    primaryToSecondaryConversion:
+    - secondaryStatType: 4
+      conversionRatio: 0.5
+      ratedConversion: 0
+    - secondaryStatType: 2
+      conversionRatio: 0.5
+      ratedConversion: 1
     primaryToResourceConversion: []
-  powerResources: []
+  - statName: Intellect
+    budgetPerLevel: 0
+    primaryToSecondaryConversion: []
+    primaryToResourceConversion:
+    - resourceName: Mana
+      resourcePerPoint: 10
+  powerResources:
+  - Mana
   validPetTypes: []
