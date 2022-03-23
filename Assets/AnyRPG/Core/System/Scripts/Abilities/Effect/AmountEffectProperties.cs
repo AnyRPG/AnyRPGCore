@@ -55,7 +55,7 @@ namespace AnyRPG {
 
             // physical / spell power
             if (resourceAmountNode.AddPower) {
-                Debug.Log(DisplayName + ".AmountEffect.CalculateAbilityAmount(" + abilityBaseAmount + "): addPower is true");
+                //Debug.Log(DisplayName + ".AmountEffect.CalculateAbilityAmount(" + abilityBaseAmount + "): addPower is true");
                 if (damageType == DamageType.physical) {
                     amountAddModifier = sourceCharacter.AbilityManager.GetPhysicalPower();
                 } else if (damageType == DamageType.ability) {

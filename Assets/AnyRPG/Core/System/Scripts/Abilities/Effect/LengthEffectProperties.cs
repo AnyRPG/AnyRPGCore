@@ -176,13 +176,15 @@ namespace AnyRPG {
                             //Debug.Log(DisplayName + ".LengthEffect.Cast(): PrefabSpawnLocation is Caster");
                             //spawnLocation =source.AbilityManager.GetComponent<Collider>().bounds.center;
                             AttachmentPointNode attachmentPointNode = source.AbilityManager.GetHeldAttachmentPointNode(abilityAttachmentNode);
-                            nodePosition = attachmentPointNode.Position;
                             nodeRotation = attachmentPointNode.Rotation;
                             nodeScale = attachmentPointNode.Scale;
                             spawnLocation = source.AbilityManager.UnitGameObject.transform.position;
                             if (prefabSpawnLocation == PrefabSpawnLocation.CasterPoint) {
+                                // transform node position here to ensure that the position is not calculated later on with world coordinates
+                                nodePosition = source.AbilityManager.UnitGameObject.transform.TransformDirection(attachmentPointNode.Position);
                                 prefabParent = null;
                             } else {
+                                nodePosition = attachmentPointNode.Position;
                                 prefabParent = source.AbilityManager.UnitGameObject.transform;
                                 Transform usedPrefabSourceBone = null;
                                 if (attachmentPointNode.TargetBone != null && attachmentPointNode.TargetBone != string.Empty) {
