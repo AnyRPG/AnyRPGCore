@@ -1,0 +1,29 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6c9b51b8d3aa844448aaeab0a989e2fa, type: 3}
+  m_Name: WhiteWingsAbilityTemplatePackage
+  m_EditorClassIdentifier: 
+  resourceName: White Wings Ability
+  displayName: 
+  icon: {fileID: 0}
+  iconBackgroundImage: {fileID: 0}
+  description: 
+  useRegionalDescription: 0
+  resourceDescriptionProfile: 
+  optionalOverride: 0
+  resources:
+  - {fileID: 11400000, guid: 98a6b6c34caa6224993e8c6061e6d92a, type: 2}
+  - {fileID: 11400000, guid: bdb57feab160b614984090314fb84389, type: 2}
+  - {fileID: 11400000, guid: ab9e80a778592e24e8924e6fd3742205, type: 2}
+  - {fileID: 11400000, guid: 6c8e806d013424e4686099c55a883d60, type: 2}
+  prefabs: []
+  dependencies: []

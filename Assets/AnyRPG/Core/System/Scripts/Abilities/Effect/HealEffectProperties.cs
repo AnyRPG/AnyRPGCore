@@ -26,6 +26,10 @@ namespace AnyRPG {
             base.PerformAbilityHit(source, target, abilityEffectInput);
         }
 
+        public override float GetAmountMultiplyModifier(IAbilityCaster sourceCharacter) {
+            return 1f;
+        }
+
         public override bool ProcessAbilityHit(Interactable target, int finalAmount, IAbilityCaster source, CombatMagnitude combatMagnitude, AbilityEffectProperties abilityEffect, AbilityEffectContext abilityEffectContext, PowerResource powerResource) {
             //Debug.Log(DisplayName + ".HealEffect.ProcessAbilityHit(" + (target == null ? "null" : target.gameObject.name) + ", " + finalAmount + ", " + source.AbilityManager.UnitGameObject.name + ")");
 

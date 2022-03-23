@@ -30,6 +30,10 @@ namespace AnyRPG {
             base.PerformAbilityHit(source, target, abilityEffectContext);
         }
 
+        public override float GetAmountMultiplyModifier(IAbilityCaster sourceCharacter) {
+            return sourceCharacter.AbilityManager.GetOutgoingDamageModifiers();
+        }
+
         public override AbilityEffectContext ProcessAbilityEffectContext(IAbilityCaster source, Interactable target, AbilityEffectContext abilityEffectContext) {
 
             if (abilityEffectContext.weaponHitHasCast == true) {

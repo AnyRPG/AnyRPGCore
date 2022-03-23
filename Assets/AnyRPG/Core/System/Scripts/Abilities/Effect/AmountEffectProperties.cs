@@ -55,7 +55,7 @@ namespace AnyRPG {
 
             // physical / spell power
             if (resourceAmountNode.AddPower) {
-                //Debug.Log(DisplayName + ".AmountEffect.CalculateAbilityAmount(" + abilityBaseAmount + "): addPower is true");
+                Debug.Log(DisplayName + ".AmountEffect.CalculateAbilityAmount(" + abilityBaseAmount + "): addPower is true");
                 if (damageType == DamageType.physical) {
                     amountAddModifier = sourceCharacter.AbilityManager.GetPhysicalPower();
                 } else if (damageType == DamageType.ability) {
@@ -102,13 +102,15 @@ namespace AnyRPG {
                     }
                 }
                 // multiplicative damage modifiers
-                amountMultiplyModifier *= sourceCharacter.AbilityManager.GetOutgoingDamageModifiers();
+                amountMultiplyModifier *= GetAmountMultiplyModifier(sourceCharacter);
             }
             
             //Debug.Log(DisplayName + ".AmountEffect.CalculateAbilityAmount(): amountMultiplyModifier: " + amountMultiplyModifier + "; critDamageModifier: " + critDamageModifier + "; amountAddModifier: " + amountAddModifier + "; abilityBaseAmount: " + abilityBaseAmount + "; source: " + sourceCharacter.AbilityManager.UnitGameObject.name + "; target: " + target.BaseCharacter.UnitController.gameObject.name + "; castTimeMultiplier: " + abilityEffectContext.castTimeMultiplier);
 
             return new KeyValuePair<float, CombatMagnitude>(((abilityBaseAmount + amountAddModifier) * amountMultiplyModifier * critDamageModifier), (critDamageModifier == 1f ? CombatMagnitude.normal : CombatMagnitude.critical));
         }
+
+        public abstract float GetAmountMultiplyModifier(IAbilityCaster sourceCharacter);
 
         public override void PerformAbilityHit(IAbilityCaster source, Interactable target, AbilityEffectContext abilityEffectContext) {
             //Debug.Log(DisplayName + ".AmountEffect.PerformAbilityHit(" + (source == null ? "null" : source.AbilityManager.UnitGameObject.name) + ", " + (target == null ? "null" : target.gameObject.name) + ")");

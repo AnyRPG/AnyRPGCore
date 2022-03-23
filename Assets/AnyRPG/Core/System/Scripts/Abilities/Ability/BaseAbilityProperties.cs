@@ -987,7 +987,7 @@ namespace AnyRPG {
             }
 
 
-            channeledAbilityEffects = new List<AbilityEffectProperties>();
+            //channeledAbilityEffects = new List<AbilityEffectProperties>();
             
             // add inline effects
             foreach (AbilityEffectConfig abilityEffectConfig in inlineChannelingEffects) {
