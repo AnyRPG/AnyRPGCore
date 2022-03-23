@@ -21,10 +21,23 @@ MonoBehaviour:
   resourceDescriptionProfile: 
   optionalOverride: 0
   newGameOption: 0
-  equipmentNames: []
+  equipmentNames:
+  - Medieval Dagger
+  - Medieval Dagger
+  - Brown Leather Armor
+  - Brown Leather Belt
+  - Brown Leather Boots
+  - Brown Leather Bracers
+  - Brown Leather Gloves
+  - Brown Leather Headband
+  - Brown Leather Pants
+  - Brown Leather Shoulders
   capabilities:
-    abilityNames: []
-    traitNames: []
+    abilityNames:
+    - Stun Kick
+    - Poison Weapons
+    traitNames:
+    - Soul Of The Thief
     armorClassList:
     - Leather
     weaponSkills:

@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 499bdf3134e84df4c99414d0ac47ec01, type: 3}
-  m_Name: PoisonWeaponsStatusEffect
+  m_Name: PoisonWeaponsStatusEffectTemplate
   m_EditorClassIdentifier: 
   resourceName: Poison Weapons
   displayName: 

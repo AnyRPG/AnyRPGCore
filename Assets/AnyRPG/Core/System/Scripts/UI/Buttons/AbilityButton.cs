@@ -9,16 +9,18 @@ using UnityEngine.UI;
 namespace AnyRPG {
     public class AbilityButton : TransparencyButton {
 
+        [Header("Ability Button")]
+
         //[SerializeField]
         protected BaseAbilityProperties ability = null;
 
-        //[SerializeField]
+        [SerializeField]
         protected Image icon = null;
 
-        //[SerializeField]
+        [SerializeField]
         protected TextMeshProUGUI spellName = null;
 
-        //[SerializeField]
+        [SerializeField]
         protected TextMeshProUGUI description = null;
 
         // game manager references
@@ -34,7 +36,7 @@ namespace AnyRPG {
 
         public void AddAbility(BaseAbilityProperties ability) {
             this.ability = ability;
-            icon.sprite = this.ability.Icon;
+            icon.sprite = ability.Icon;
             icon.color = Color.white;
             spellName.text = ability.DisplayName;
             description.text = ability.GetSummary();
