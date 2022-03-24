@@ -529,14 +529,14 @@ namespace AnyRPG {
                 usedAbilityEffectContext = BaseCharacter?.UnitController?.UnitAnimator?.CurrentAbilityEffectContext.GetCopy();
             }
 
-            if (BaseCharacter.UnitController.Target != null && targetCharacterUnit != null) {
+            //BaseAbilityProperties animatorCurrentAbility = null;
+            if ((BaseCharacter.UnitController.Target != null && targetCharacterUnit != null) || usedAbilityEffectContext.baseAbility.GetTargetOptions(baseCharacter).RequireTarget == false) {
 
-                BaseAbilityProperties animatorCurrentAbility = null;
-                bool attackLanded = true;
+                //bool attackLanded = true;
                 if (usedAbilityEffectContext != null) {
-                    animatorCurrentAbility = usedAbilityEffectContext.baseAbility;
-                    if (animatorCurrentAbility is AnimatedAbilityProperties) {
-                        attackLanded = (animatorCurrentAbility as AnimatedAbilityProperties).HandleAbilityHit(
+                    //animatorCurrentAbility = usedAbilityEffectContext.baseAbility;
+                    if (usedAbilityEffectContext.baseAbility is AnimatedAbilityProperties) {
+                        /*attackLanded =*/ (usedAbilityEffectContext.baseAbility as AnimatedAbilityProperties).HandleAbilityHit(
                             BaseCharacter,
                             BaseCharacter.UnitController.Target,
                             usedAbilityEffectContext);
@@ -544,9 +544,11 @@ namespace AnyRPG {
                 }
 
                 // onHitAbility is only for weapons, not for special moves
+                /*
                 if (!attackLanded) {
                     return false;
                 }
+                */
 
                 // moved to attack effect for archer compatibility (not doing hit sound when arrow launches)
                 /*
@@ -561,6 +563,8 @@ namespace AnyRPG {
 
                 return true;
             } else {
+                // this appears to be some old code since nothing is subscribed to OnHitEvent() !
+                //Debug.Log("Processing hit on null target");
                 // OnHitEvent is responsible for performing ability effects for animated abilities, and needs to fire no matter what because those effects may not require targets
                 if (usedAbilityEffectContext != null) {
                     if (usedAbilityEffectContext.baseAbility.GetTargetOptions(baseCharacter).RequireTarget == false) {

@@ -239,14 +239,17 @@ namespace AnyRPG {
             //Debug.Log(DisplayName + ".AbilityEffect.PlayAudioEffects(" + (target == null ? "null" : target.name) + ")");
             if (audioProfiles != null) {
                 AudioSource audioSource = null;
-                if (target == null || target.UnitComponentController == null) {
+                if (target?.UnitComponentController == null) {
 
                     if (abilityEffectContext.PrefabObjects != null && abilityEffectContext.PrefabObjects.Count > 0) {
                         //prefabObjects.First();
                         audioSource = abilityEffectContext.PrefabObjects.First().Value.GetComponent<AudioSource>();
+                        if (audioSource != null) {
+                            Debug.Log("Found Audio Source on " + abilityEffectContext.PrefabObjects.First().Value.name);
+                        }
                     }
                 }
-                if (audioSource != null || (target != null && target.UnitComponentController != null)) {
+                if (audioSource != null || target?.UnitComponentController != null) {
                     List<AudioProfile> usedAudioProfiles = new List<AudioProfile>();
                     if (randomAudioProfiles == true) {
                         usedAudioProfiles.Add(audioProfiles[UnityEngine.Random.Range(0, audioProfiles.Count)]);
@@ -255,7 +258,7 @@ namespace AnyRPG {
                     }
                     foreach (AudioProfile audioProfile in usedAudioProfiles) {
                         if (audioProfile.AudioClip != null) {
-                            //Debug.Log(DisplayName + ".AbilityEffect.PerformAbilityHit(): playing audio clip: " + audioProfile.MyAudioClip.name);
+                            //Debug.Log(DisplayName + ".AbilityEffect.PerformAbilityHit(): playing audio clip: " + audioProfile.AudioClip.name);
                             if (target != null && target.UnitComponentController != null) {
                                 target.UnitComponentController.PlayEffectSound(audioProfile.AudioClip);
                             } else {

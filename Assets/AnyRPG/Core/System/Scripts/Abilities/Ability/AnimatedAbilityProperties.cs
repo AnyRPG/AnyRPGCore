@@ -250,7 +250,7 @@ namespace AnyRPG {
         }
 
         public bool HandleAbilityHit(IAbilityCaster source, Interactable target, AbilityEffectContext abilityEffectContext) {
-            //Debug.Log(DisplayName + ".AnimatedAbility.HandleAbilityHit()");
+            //Debug.Log(DisplayName + ".AnimatedAbilityProperties.HandleAbilityHit()");
             bool returnResult = true;
             // perform a check that includes range to target
             bool rangeResult = base.CanUseOn(target, source);
@@ -267,7 +267,7 @@ namespace AnyRPG {
 
             // since ability and effects can have their own individual range and LOS requirements, check if the effects are allowed to hit
             // as long as only the LOS and range check failed from the ability (meaning no faction, liveness etc violations)
-            if (deactivateAutoAttack == false) {
+            if (deactivateAutoAttack == false || abilityEffectContext.baseAbility.GetTargetOptions(source).RequireTarget == false) {
                 bool missResult = PerformAbilityEffects(source, target, abilityEffectContext);
                 if (!missResult) {
                     returnResult = false;

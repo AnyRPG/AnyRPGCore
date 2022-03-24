@@ -40,7 +40,7 @@ namespace AnyRPG {
             TargetAOEHit(source, target, abilityEffectContext);
 
             // ground targeted spells should play the audio on the prefab object, not the character
-            if (prefabSpawnLocation == PrefabSpawnLocation.GroundTarget) {
+            if (prefabSpawnLocation == PrefabSpawnLocation.GroundTarget || target == null) {
                 base.PlayAudioEffects(onHitAudioProfiles, null, abilityEffectContext);
             } else {
                 base.PlayAudioEffects(onHitAudioProfiles, target, abilityEffectContext);

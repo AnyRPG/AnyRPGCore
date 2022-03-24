@@ -142,7 +142,7 @@ namespace AnyRPG {
         }
 
         public override Dictionary<PrefabProfile, GameObject> Cast(IAbilityCaster source, Interactable target, Interactable originalTarget, AbilityEffectContext abilityEffectInput) {
-            //Debug.Log(DisplayName + ".LengthEffect.Cast(" + (source == null ? "null" :source.AbilityManager.Name) + ", " + (target == null ? "null" : target.gameObject.name) + ", " + (originalTarget == null ? "null" : originalTarget.name) + ")");
+            //Debug.Log(DisplayName + ".LengthEffect.Cast(" + (source == null ? "null" : source.AbilityManager.Name) + ", " + (target == null ? "null" : target.gameObject.name) + ", " + (originalTarget == null ? "null" : originalTarget.name) + ")");
 
             Dictionary<PrefabProfile, GameObject> prefabObjects = base.Cast(source, target, originalTarget, abilityEffectInput);
             if (GetPrefabProfileList(source) != null) {
@@ -172,7 +172,7 @@ namespace AnyRPG {
                             spawnLocation = target.transform.position;
                             prefabParent = null;
                         }
-                        if ((prefabSpawnLocation == PrefabSpawnLocation.Caster || prefabSpawnLocation == PrefabSpawnLocation.CasterPoint) && target != null) {
+                        if ((prefabSpawnLocation == PrefabSpawnLocation.Caster || prefabSpawnLocation == PrefabSpawnLocation.CasterPoint) && (target != null || GetTargetOptions(source).RequireTarget == false)) {
                             //Debug.Log(DisplayName + ".LengthEffect.Cast(): PrefabSpawnLocation is Caster");
                             //spawnLocation =source.AbilityManager.GetComponent<Collider>().bounds.center;
                             AttachmentPointNode attachmentPointNode = source.AbilityManager.GetHeldAttachmentPointNode(abilityAttachmentNode);
