@@ -9,31 +9,33 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d7f20dbf54d5643499578902863f014d, type: 3}
-  m_Name: ShieldSlamAbilityTemplate
+  m_Script: {fileID: 11500000, guid: 66414ec95fa1fc84bac2299ba70c520c, type: 3}
+  m_Name: RestoreManaAbilityTemplate
   m_EditorClassIdentifier: 
-  resourceName: Shield Slam
+  resourceName: Restore Mana
   displayName: 
-  icon: {fileID: 21300000, guid: 068618f626fbf69448d14da271218015, type: 3}
+  icon: {fileID: 21300000, guid: 355bb54616ae2474a8039f7a6416f65d, type: 3}
   iconBackgroundImage: {fileID: 0}
-  description: Slam your target with a shield, stunning them for 3 seconds
+  description: Restore mana over time
   useRegionalDescription: 0
   resourceDescriptionProfile: 
   optionalOverride: 0
-  animatedAbilityProperties:
+  channeledAbilityProperties:
     requireOutOfCombat: 0
-    weaponAffinityNames:
-    - Shield
-    holdableObjectList: []
+    weaponAffinityNames: []
+    holdableObjectList:
+    - holdableObjectName: Blue Casting Circle
+      useUniversalAttachment: 0
+      attachmentName: 
     abilityPrefabSource: 0
     animatorCreatePrefabs: 0
     prefabDestroyDelay: 0
     animationClip: {fileID: 0}
-    animationProfileName: Shield Slam
-    useUnitCastAnimations: 0
+    animationProfileName: 
+    useUnitCastAnimations: 1
     animationHitAudioProfileName: 
     castingAudioClip: {fileID: 0}
-    castingAudioProfileName: 
+    castingAudioProfileName: Scry Sight Spell
     requiredLevel: 1
     characterClassRequirements: []
     useableWithoutLearning: 0
@@ -43,15 +45,15 @@ MonoBehaviour:
     ignoreGlobalCoolDown: 0
     powerResourceName: 
     baseResourceCost: 0
-    resourceCostPerLevel: 0
+    resourceCostPerLevel: 5
     spendDelay: 0
     generatePowerResourceName: 
     baseResourceGain: 0
     resourceGainPerLevel: 0
     useSpeedMultipliers: 1
     useAnimationCastTime: 1
-    abilityCastingTime: 0
-    abilityCoolDown: 30
+    abilityCastingTime: 15
+    abilityCoolDown: 0
     coolDownOnCast: 0
     useAbilityEffectTargetting: 0
     targetOptions:
@@ -59,33 +61,29 @@ MonoBehaviour:
       requireLineOfSight: 0
       requireLiveTarget: 1
       requireDeadTarget: 0
-      canCastOnSelf: 0
-      canCastOnOthers: 1
-      canCastOnEnemy: 1
+      canCastOnSelf: 1
+      canCastOnOthers: 0
+      canCastOnEnemy: 0
       canCastOnNeutral: 0
       canCastOnFriendly: 0
-      autoSelfCast: 0
-      useMeleeRange: 1
-      maxRange: 5
+      autoSelfCast: 1
+      useMeleeRange: 0
+      maxRange: 10
       requireFacingTarget: 0
       maxAngle: 45
       requiresGroundTarget: 0
       groundTargetColor: {r: 1, g: 1, b: 1, a: 1}
       groundTargetRadius: 0
-    inlineAbilityEffects:
-    - id: 0
+    inlineAbilityEffects: []
     abilityEffectNames: []
-    tickRate: 1
-    inlineChannelingEffects: []
+    tickRate: 2
+    inlineChannelingEffects:
+    - id: 0
     channeledAbilityEffectnames: []
-    isAutoAttack: 0
-    useUnitAttackAnimations: 0
-    useAutoAttackAnimations: 0
-    useWeaponHitSound: 0
   references:
     version: 1
     00000000:
-      type: {class: AttackEffectConfig, ns: AnyRPG, asm: Assembly-CSharp}
+      type: {class: HealEffectConfig, ns: AnyRPG, asm: Assembly-CSharp}
       data:
         effectProperties:
           targetOptions:
@@ -93,30 +91,28 @@ MonoBehaviour:
             requireLineOfSight: 0
             requireLiveTarget: 1
             requireDeadTarget: 0
-            canCastOnSelf: 0
+            canCastOnSelf: 1
             canCastOnOthers: 1
-            canCastOnEnemy: 1
+            canCastOnEnemy: 0
             canCastOnNeutral: 0
-            canCastOnFriendly: 0
-            autoSelfCast: 0
-            useMeleeRange: 1
+            canCastOnFriendly: 1
+            autoSelfCast: 1
+            useMeleeRange: 0
             maxRange: 0
             lineOfSightSourceLocation: 0
             targetRangeSourceLocation: 0
           chanceToCast: 100
           effectMaterialName: 
           materialChangeDuration: 2
-          onHitAudioProfileNames:
-          - Chop
+          onHitAudioProfileNames: []
           randomAudioProfiles: 0
-          hitAbilityEffectNames:
-          - Stunned
+          hitAbilityEffectNames: []
           inputMultiplier: 0
           threatMultiplier: 1
           abilityPrefabSource: 1
           randomPrefabs: 0
           abilityObjectList:
-          - holdableObjectName: White Hit
+          - holdableObjectName: Blue Energy Pulse
             useUniversalAttachment: 0
             attachmentName: 
           prefabSpawnLocation: 2
@@ -128,15 +124,15 @@ MonoBehaviour:
           onTickAudioProfileNames: []
           randomTickAudioProfiles: 0
           completeAbilityEffectNames: []
-          defaultPrefabLifetime: 10
+          defaultPrefabLifetime: 2
           allowCriticalStrike: 1
           resourceAmounts:
-          - resourceName: Health
+          - resourceName: Mana
             inputRemap: 
             addPower: 1
             minAmount: 0
             baseAmount: 0
-            amountPerLevel: 0
+            amountPerLevel: 5
             maxAmount: 0
-          damageType: 1
+          damageType: 0
           ignoreAccuracy: 0

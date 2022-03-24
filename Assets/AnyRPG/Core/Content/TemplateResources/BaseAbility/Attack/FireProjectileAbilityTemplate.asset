@@ -9,31 +9,33 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d7f20dbf54d5643499578902863f014d, type: 3}
-  m_Name: ShieldSlamAbilityTemplate
+  m_Script: {fileID: 11500000, guid: c80d744dccc642148ab1014a88212085, type: 3}
+  m_Name: FireProjectileAbilityTemplate
   m_EditorClassIdentifier: 
-  resourceName: Shield Slam
+  resourceName: Fire Projectile
   displayName: 
-  icon: {fileID: 21300000, guid: 068618f626fbf69448d14da271218015, type: 3}
+  icon: {fileID: 21300000, guid: 46552b92847675944b9e69621e19461b, type: 3}
   iconBackgroundImage: {fileID: 0}
-  description: Slam your target with a shield, stunning them for 3 seconds
+  description: a projectile of fire
   useRegionalDescription: 0
   resourceDescriptionProfile: 
   optionalOverride: 0
-  animatedAbilityProperties:
+  directAbilityProperties:
     requireOutOfCombat: 0
-    weaponAffinityNames:
-    - Shield
-    holdableObjectList: []
+    weaponAffinityNames: []
+    holdableObjectList:
+    - holdableObjectName: Red Casting Circle
+      useUniversalAttachment: 0
+      attachmentName: 
     abilityPrefabSource: 0
     animatorCreatePrefabs: 0
     prefabDestroyDelay: 0
     animationClip: {fileID: 0}
-    animationProfileName: Shield Slam
+    animationProfileName: Cast 1H Forward
     useUnitCastAnimations: 0
     animationHitAudioProfileName: 
     castingAudioClip: {fileID: 0}
-    castingAudioProfileName: 
+    castingAudioProfileName: Fire Spell
     requiredLevel: 1
     characterClassRequirements: []
     useableWithoutLearning: 0
@@ -41,17 +43,17 @@ MonoBehaviour:
     canSimultaneousCast: 0
     canCastWhileMoving: 0
     ignoreGlobalCoolDown: 0
-    powerResourceName: 
+    powerResourceName: Mana
     baseResourceCost: 0
-    resourceCostPerLevel: 0
+    resourceCostPerLevel: 10
     spendDelay: 0
     generatePowerResourceName: 
     baseResourceGain: 0
     resourceGainPerLevel: 0
     useSpeedMultipliers: 1
     useAnimationCastTime: 1
-    abilityCastingTime: 0
-    abilityCoolDown: 30
+    abilityCastingTime: 1.5
+    abilityCoolDown: 1.5
     coolDownOnCast: 0
     useAbilityEffectTargetting: 0
     targetOptions:
@@ -65,8 +67,8 @@ MonoBehaviour:
       canCastOnNeutral: 0
       canCastOnFriendly: 0
       autoSelfCast: 0
-      useMeleeRange: 1
-      maxRange: 5
+      useMeleeRange: 0
+      maxRange: 40
       requireFacingTarget: 0
       maxAngle: 45
       requiresGroundTarget: 0
@@ -78,14 +80,10 @@ MonoBehaviour:
     tickRate: 1
     inlineChannelingEffects: []
     channeledAbilityEffectnames: []
-    isAutoAttack: 0
-    useUnitAttackAnimations: 0
-    useAutoAttackAnimations: 0
-    useWeaponHitSound: 0
   references:
     version: 1
     00000000:
-      type: {class: AttackEffectConfig, ns: AnyRPG, asm: Assembly-CSharp}
+      type: {class: ProjectileEffectConfig, ns: AnyRPG, asm: Assembly-CSharp}
       data:
         effectProperties:
           targetOptions:
@@ -99,27 +97,26 @@ MonoBehaviour:
             canCastOnNeutral: 0
             canCastOnFriendly: 0
             autoSelfCast: 0
-            useMeleeRange: 1
-            maxRange: 0
+            useMeleeRange: 0
+            maxRange: 40
             lineOfSightSourceLocation: 0
             targetRangeSourceLocation: 0
           chanceToCast: 100
           effectMaterialName: 
           materialChangeDuration: 2
-          onHitAudioProfileNames:
-          - Chop
+          onHitAudioProfileNames: []
           randomAudioProfiles: 0
           hitAbilityEffectNames:
-          - Stunned
+          - Fire Projectile Attack
           inputMultiplier: 0
           threatMultiplier: 1
           abilityPrefabSource: 1
           randomPrefabs: 0
           abilityObjectList:
-          - holdableObjectName: White Hit
+          - holdableObjectName: Fire Projectile
             useUniversalAttachment: 0
             attachmentName: 
-          prefabSpawnLocation: 2
+          prefabSpawnLocation: 1
           prefabDestroyDelay: 0
           destroyOnEndCast: 0
           tickRate: 0
@@ -129,14 +126,6 @@ MonoBehaviour:
           randomTickAudioProfiles: 0
           completeAbilityEffectNames: []
           defaultPrefabLifetime: 10
-          allowCriticalStrike: 1
-          resourceAmounts:
-          - resourceName: Health
-            inputRemap: 
-            addPower: 1
-            minAmount: 0
-            baseAmount: 0
-            amountPerLevel: 0
-            maxAmount: 0
-          damageType: 1
-          ignoreAccuracy: 0
+          projectileSpeed: 25
+          flightAudioProfileNames: []
+          randomFlightAudioProfiles: 0
