@@ -9,10 +9,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9606a6bfb8cdb204fa16126081317938, type: 3}
-  m_Name: LifeDrainChannelEffect
+  m_Script: {fileID: 11500000, guid: 64ae32e0f65707642b93e38c0d965969, type: 3}
+  m_Name: LifeDrainAttackEffectTemplate
   m_EditorClassIdentifier: 
-  resourceName: Life Drain Channel
+  resourceName: Life Drain Attack
   displayName: 
   icon: {fileID: 21300000, guid: b768a1f4121f78743909c86aaeb8dde7, type: 3}
   iconBackgroundImage: {fileID: 0}
@@ -41,18 +41,15 @@ MonoBehaviour:
   onHitAudioProfileNames: []
   randomAudioProfiles: 0
   hitAbilityEffectNames:
-  - Life Drain Attack
-  inputMultiplier: 1
+  - Life Drain AOE Heal Effect
+  inputMultiplier: 0
   threatMultiplier: 1
   abilityPrefabSource: 1
   randomPrefabs: 0
-  abilityObjectList:
-  - holdableObjectName: Violet Laser
-    useUniversalAttachment: 1
-    attachmentName: Right Hand
-  prefabSpawnLocation: 1
+  abilityObjectList: []
+  prefabSpawnLocation: 0
   prefabDestroyDelay: 0
-  destroyOnEndCast: 1
+  destroyOnEndCast: 0
   tickRate: 0
   castZeroTick: 0
   tickAbilityEffectNames: []
@@ -95,7 +92,7 @@ MonoBehaviour:
     onTickAudioProfileNames: []
     randomTickAudioProfiles: 0
     completeAbilityEffectNames: []
-  defaultPrefabLifetime: 1
+  defaultPrefabLifetime: 10
   directEffectProperties:
     targetOptions:
       requireTarget: 0
@@ -133,8 +130,55 @@ MonoBehaviour:
     randomTickAudioProfiles: 0
     completeAbilityEffectNames: []
     defaultPrefabLifetime: 10
-  effectDelay: 0
-  channeledEffectProperties:
+  instantEffectProperties:
+    targetOptions:
+      requireTarget: 0
+      requireLineOfSight: 0
+      requireLiveTarget: 1
+      requireDeadTarget: 0
+      canCastOnSelf: 0
+      canCastOnOthers: 0
+      canCastOnEnemy: 0
+      canCastOnNeutral: 0
+      canCastOnFriendly: 0
+      autoSelfCast: 0
+      useMeleeRange: 0
+      maxRange: 0
+      lineOfSightSourceLocation: 0
+      targetRangeSourceLocation: 0
+    chanceToCast: 100
+    effectMaterialName: 
+    materialChangeDuration: 2
+    onHitAudioProfileNames: []
+    randomAudioProfiles: 0
+    hitAbilityEffectNames: []
+    inputMultiplier: 0
+    threatMultiplier: 1
+    abilityPrefabSource: 1
+    randomPrefabs: 0
+    abilityObjectList: []
+    prefabSpawnLocation: 0
+    prefabDestroyDelay: 0
+    destroyOnEndCast: 0
+    tickRate: 0
+    castZeroTick: 0
+    tickAbilityEffectNames: []
+    onTickAudioProfileNames: []
+    randomTickAudioProfiles: 0
+    completeAbilityEffectNames: []
+    defaultPrefabLifetime: 10
+  allowCriticalStrike: 1
+  resourceAmounts:
+  - resourceName: Health
+    inputRemap: 
+    addPower: 1
+    minAmount: 0
+    baseAmount: 0
+    amountPerLevel: 5
+    maxAmount: 0
+  damageType: 0
+  ignoreAccuracy: 0
+  attackEffectProperties:
     targetOptions:
       requireTarget: 1
       requireLineOfSight: 0
@@ -156,23 +200,30 @@ MonoBehaviour:
     onHitAudioProfileNames: []
     randomAudioProfiles: 0
     hitAbilityEffectNames:
-    - Life Drain Attack
-    inputMultiplier: 1
+    - Life Drain AOE Heal Effect
+    inputMultiplier: 0
     threatMultiplier: 1
     abilityPrefabSource: 1
     randomPrefabs: 0
-    abilityObjectList:
-    - holdableObjectName: Violet Laser
-      useUniversalAttachment: 1
-      attachmentName: Right Hand
-    prefabSpawnLocation: 1
+    abilityObjectList: []
+    prefabSpawnLocation: 0
     prefabDestroyDelay: 0
-    destroyOnEndCast: 1
+    destroyOnEndCast: 0
     tickRate: 0
     castZeroTick: 0
     tickAbilityEffectNames: []
     onTickAudioProfileNames: []
     randomTickAudioProfiles: 0
     completeAbilityEffectNames: []
-    defaultPrefabLifetime: 1
-    effectDelay: 0
+    defaultPrefabLifetime: 10
+    allowCriticalStrike: 1
+    resourceAmounts:
+    - resourceName: Health
+      inputRemap: 
+      addPower: 1
+      minAmount: 0
+      baseAmount: 0
+      amountPerLevel: 5
+      maxAmount: 0
+    damageType: 0
+    ignoreAccuracy: 0

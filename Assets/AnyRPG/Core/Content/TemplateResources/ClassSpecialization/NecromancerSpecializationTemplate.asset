@@ -10,23 +10,32 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: c7f2ef4c68ea0a9458250ff77379cc9e, type: 3}
-  m_Name: WizardSpecialization
+  m_Name: NecromancerSpecializationTemplate
   m_EditorClassIdentifier: 
-  resourceName: Wizard
+  resourceName: Necromancer
   displayName: 
-  icon: {fileID: 21300000, guid: 8b04cac8505abbb47bd5c91db3229c44, type: 3}
+  icon: {fileID: 21300000, guid: 438e8e2beb078f749905581c494769f3, type: 3}
   iconBackgroundImage: {fileID: 0}
   description: 
   useRegionalDescription: 0
   resourceDescriptionProfile: 
   optionalOverride: 0
   newGameOption: 0
-  equipmentNames: []
+  equipmentNames:
+  - Violet Cloth Bracers
+  - Violet Cloth Gloves
+  - Violet Cloth Hood
+  - Violet Cloth Mantle
+  - Violet Cloth Pants
+  - Violet Cloth Robe
+  - Violet Cloth Sash
+  - Violet Cloth Shoes
   classNames:
-  - Magic
+  - Mage
   capabilities:
     abilityNames:
-    - Tornado
+    - Life Drain
+    - Revive Enemy
     traitNames: []
     armorClassList: []
     weaponSkills: []
