@@ -10,11 +10,11 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 7125135849d1ec246959764160358164, type: 3}
-  m_Name: IceShardsDirectionalEffect
+  m_Name: BlizzardAOEEffectTemplate
   m_EditorClassIdentifier: 
-  resourceName: Ice Shards Directional
+  resourceName: Blizzard AOE
   displayName: 
-  icon: {fileID: 21300000, guid: 36dccc72c89e61b48958ecb60b28abed, type: 3}
+  icon: {fileID: 0}
   iconBackgroundImage: {fileID: 0}
   description: 
   useRegionalDescription: 0
@@ -26,8 +26,8 @@ MonoBehaviour:
     requireLiveTarget: 0
     requireDeadTarget: 0
     canCastOnSelf: 0
-    canCastOnOthers: 1
-    canCastOnEnemy: 1
+    canCastOnOthers: 0
+    canCastOnEnemy: 0
     canCastOnNeutral: 0
     canCastOnFriendly: 0
     autoSelfCast: 0
@@ -40,19 +40,19 @@ MonoBehaviour:
   materialChangeDuration: 2
   onHitAudioProfileNames: []
   randomAudioProfiles: 0
-  hitAbilityEffectNames:
-  - Ice Attack
+  hitAbilityEffectNames: []
   inputMultiplier: 0
   threatMultiplier: 1
   abilityPrefabSource: 1
   randomPrefabs: 0
   abilityObjectList: []
-  prefabSpawnLocation: 1
-  prefabDestroyDelay: 1
+  prefabSpawnLocation: 3
+  prefabDestroyDelay: 0
   destroyOnEndCast: 0
   tickRate: 0.25
   castZeroTick: 0
-  tickAbilityEffectNames: []
+  tickAbilityEffectNames:
+  - Ice Attack
   onTickAudioProfileNames: []
   randomTickAudioProfiles: 0
   completeAbilityEffectNames: []
@@ -92,13 +92,13 @@ MonoBehaviour:
     onTickAudioProfileNames: []
     randomTickAudioProfiles: 0
     completeAbilityEffectNames: []
-  defaultPrefabLifetime: 1
+  defaultPrefabLifetime: 10
   aoeProperties:
-    aoeRadius: 5
+    aoeRadius: 0
     useRadius: 0
     useExtents: 1
-    aoeCenter: {x: 0, y: 1, z: 5}
-    aoeExtents: {x: 2, y: 2, z: 10}
+    aoeCenter: {x: 0, y: 2.5, z: 0}
+    aoeExtents: {x: 5, y: 5, z: 5}
     maxTargets: 0
     preferClosestTargets: 0
     interTargetDelay: 0
@@ -109,8 +109,8 @@ MonoBehaviour:
       requireLiveTarget: 0
       requireDeadTarget: 0
       canCastOnSelf: 0
-      canCastOnOthers: 1
-      canCastOnEnemy: 1
+      canCastOnOthers: 0
+      canCastOnEnemy: 0
       canCastOnNeutral: 0
       canCastOnFriendly: 0
       autoSelfCast: 0
@@ -123,29 +123,29 @@ MonoBehaviour:
     materialChangeDuration: 2
     onHitAudioProfileNames: []
     randomAudioProfiles: 0
-    hitAbilityEffectNames:
-    - Ice Attack
+    hitAbilityEffectNames: []
     inputMultiplier: 0
     threatMultiplier: 1
     abilityPrefabSource: 1
     randomPrefabs: 0
     abilityObjectList: []
-    prefabSpawnLocation: 1
-    prefabDestroyDelay: 1
+    prefabSpawnLocation: 3
+    prefabDestroyDelay: 0
     destroyOnEndCast: 0
     tickRate: 0.25
     castZeroTick: 0
-    tickAbilityEffectNames: []
+    tickAbilityEffectNames:
+    - Ice Attack
     onTickAudioProfileNames: []
     randomTickAudioProfiles: 0
     completeAbilityEffectNames: []
-    defaultPrefabLifetime: 1
+    defaultPrefabLifetime: 10
     aoeProperties:
-      aoeRadius: 5
+      aoeRadius: 0
       useRadius: 0
       useExtents: 1
-      aoeCenter: {x: 0, y: 1, z: 5}
-      aoeExtents: {x: 2, y: 2, z: 10}
+      aoeCenter: {x: 0, y: 2.5, z: 0}
+      aoeExtents: {x: 5, y: 5, z: 5}
       maxTargets: 0
       preferClosestTargets: 0
       interTargetDelay: 0

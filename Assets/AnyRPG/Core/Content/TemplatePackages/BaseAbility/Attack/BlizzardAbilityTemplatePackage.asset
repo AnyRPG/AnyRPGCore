@@ -1,0 +1,41 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6c9b51b8d3aa844448aaeab0a989e2fa, type: 3}
+  m_Name: BlizzardAbilityTemplatePackage
+  m_EditorClassIdentifier: 
+  resourceName: Blizzard Ability
+  displayName: 
+  icon: {fileID: 0}
+  iconBackgroundImage: {fileID: 0}
+  description: 
+  useRegionalDescription: 0
+  resourceDescriptionProfile: 
+  optionalOverride: 0
+  resources:
+  - {fileID: 11400000, guid: 8a17394418932ed41a8878efc3bcc69a, type: 2}
+  - {fileID: 11400000, guid: 5a8a824a24a33cc4e9edbfaa67888c64, type: 2}
+  - {fileID: 11400000, guid: ac4a4eeba273bb245ab8297881d92f8a, type: 2}
+  - {fileID: 11400000, guid: a49e4d90681cd1446947c5d50c0aac1f, type: 2}
+  - {fileID: 11400000, guid: 83eb4e089c8161d47aa0a4a29cec4fc6, type: 2}
+  - {fileID: 11400000, guid: 1972220a61813564e962e3cdd9815ad8, type: 2}
+  - {fileID: 11400000, guid: 99ead1a8b02c7e041a013c0e1ffacc28, type: 2}
+  - {fileID: 11400000, guid: e720d13c2151ca34da8a5293b7dec06a, type: 2}
+  - {fileID: 11400000, guid: e83f4f05dc77af24aa509fad02de9b75, type: 2}
+  - {fileID: 11400000, guid: 14eeb05fc8b3ef34699c351d755fff9a, type: 2}
+  - {fileID: 11400000, guid: fe70b0918e08ae24e8aed8842d272228, type: 2}
+  - {fileID: 11400000, guid: 521959017951b5140980edca617ec900, type: 2}
+  - {fileID: 11400000, guid: 205a75829b7dd4a4780f2f94e81d4cc8, type: 2}
+  - {fileID: 11400000, guid: 43f280924743a174da99f04e6c551dc6, type: 2}
+  - {fileID: 11400000, guid: 522ae112fc962ab4b977912fa9cb82ba, type: 2}
+  - {fileID: 11400000, guid: 78b994317a4b8464c92a73a373df637c, type: 2}
+  prefabs: []
+  dependencies: []

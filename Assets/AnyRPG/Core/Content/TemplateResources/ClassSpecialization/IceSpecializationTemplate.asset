@@ -10,30 +10,33 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: c7f2ef4c68ea0a9458250ff77379cc9e, type: 3}
-  m_Name: WizardSpecialization
+  m_Name: IceSpecializationTemplate
   m_EditorClassIdentifier: 
-  resourceName: Wizard
+  resourceName: Ice
   displayName: 
-  icon: {fileID: 21300000, guid: 8b04cac8505abbb47bd5c91db3229c44, type: 3}
+  icon: {fileID: 21300000, guid: 36dccc72c89e61b48958ecb60b28abed, type: 3}
   iconBackgroundImage: {fileID: 0}
   description: 
   useRegionalDescription: 0
   resourceDescriptionProfile: 
   optionalOverride: 0
   newGameOption: 0
-  equipmentNames: []
+  equipmentNames:
+  - Blue Cloth Bracers
+  - Blue Cloth Gloves
+  - Blue Cloth Hood
+  - Blue Cloth Mantle
+  - Blue Cloth Pants
+  - Blue Cloth Robe
+  - Blue Cloth Sash
+  - Blue Cloth Shoes
   classNames:
-  - Magic
+  - Mage
   capabilities:
     abilityNames:
     - Ice Projectile
     - Ice Shards
     - Blizzard
-    - Tornado
-    - Life Drain
-    - Revive Enemy
-    - Glide
-    - Magenta Wings
     traitNames: []
     armorClassList: []
     weaponSkills: []

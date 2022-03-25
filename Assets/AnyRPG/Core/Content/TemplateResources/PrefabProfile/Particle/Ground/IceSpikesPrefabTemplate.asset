@@ -10,19 +10,19 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 086cc19bb10d93146806ca499cfd21c7, type: 3}
-  m_Name: GroundShockPrefab
+  m_Name: IceSpikesPrefabTemplate
   m_EditorClassIdentifier: 
-  resourceName: Ground Shock
+  resourceName: Ice Spikes
   displayName: 
   icon: {fileID: 0}
   iconBackgroundImage: {fileID: 0}
   description: 
   useRegionalDescription: 0
   resourceDescriptionProfile: 
-  prefab: {fileID: 6760841765996351095, guid: 8032b5a9175dc5e4cb753df3b3340657, type: 3}
-  position: {x: 0, y: 0.1, z: 1}
+  prefab: {fileID: 115684, guid: 1c9a34a0d75303f4391dac772713fe0f, type: 3}
+  position: {x: 0, y: 0.1, z: 0}
   rotationIsGlobal: 0
-  rotation: {x: 0, y: 0, z: 0}
+  rotation: {x: -90, y: 0, z: 0}
   scale: {x: 1, y: 1, z: 1}
   targetBone: 
   unsheathAudioProfileName: 

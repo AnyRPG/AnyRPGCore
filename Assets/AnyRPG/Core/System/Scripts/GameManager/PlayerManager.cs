@@ -692,7 +692,7 @@ namespace AnyRPG {
         }
 
         public void HandleDropCombat() {
-            Debug.Log("PlayerManager.HandleDropCombat()");
+            //Debug.Log("PlayerManager.HandleDropCombat()");
 
             if (logManager != null) {
                 logManager.WriteCombatMessage("Left combat");

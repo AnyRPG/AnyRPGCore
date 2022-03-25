@@ -10,19 +10,19 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 086cc19bb10d93146806ca499cfd21c7, type: 3}
-  m_Name: IceSpikesPrefab
+  m_Name: BlizzardShardsPrefabTemplate
   m_EditorClassIdentifier: 
-  resourceName: Ice Spikes
+  resourceName: Blizzard Shards
   displayName: 
   icon: {fileID: 0}
   iconBackgroundImage: {fileID: 0}
   description: 
   useRegionalDescription: 0
   resourceDescriptionProfile: 
-  prefab: {fileID: 115684, guid: 1c9a34a0d75303f4391dac772713fe0f, type: 3}
-  position: {x: 0, y: 0.1, z: 0}
-  rotationIsGlobal: 0
-  rotation: {x: -90, y: 0, z: 0}
+  prefab: {fileID: 192572, guid: c98d38204e63a534e801bd16c4a2a22b, type: 3}
+  position: {x: 0, y: 1, z: 0.5}
+  rotationIsGlobal: 1
+  rotation: {x: 90, y: 0, z: 0}
   scale: {x: 1, y: 1, z: 1}
   targetBone: 
   unsheathAudioProfileName: 

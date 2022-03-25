@@ -244,9 +244,11 @@ namespace AnyRPG {
                     if (abilityEffectContext.PrefabObjects != null && abilityEffectContext.PrefabObjects.Count > 0) {
                         //prefabObjects.First();
                         audioSource = abilityEffectContext.PrefabObjects.First().Value.GetComponent<AudioSource>();
+                        /*
                         if (audioSource != null) {
                             Debug.Log("Found Audio Source on " + abilityEffectContext.PrefabObjects.First().Value.name);
                         }
+                        */
                     }
                 }
                 if (audioSource != null || target?.UnitComponentController != null) {
