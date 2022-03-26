@@ -1,0 +1,31 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6c9b51b8d3aa844448aaeab0a989e2fa, type: 3}
+  m_Name: CharmPetAbilityTemplatePackage
+  m_EditorClassIdentifier: 
+  resourceName: Charm Pet Ability
+  displayName: 
+  icon: {fileID: 0}
+  iconBackgroundImage: {fileID: 0}
+  description: 
+  useRegionalDescription: 0
+  resourceDescriptionProfile: 
+  optionalOverride: 0
+  resources:
+  - {fileID: 11400000, guid: ddb3ec8920c41884fa880744e5b1c6e8, type: 2}
+  - {fileID: 11400000, guid: 83eb4e089c8161d47aa0a4a29cec4fc6, type: 2}
+  - {fileID: 11400000, guid: 091e78bbb5912e74f9bee518e0f30c87, type: 2}
+  - {fileID: 11400000, guid: 7733932720b8c8a43af55fb9a3d9b507, type: 2}
+  - {fileID: 11400000, guid: c8b8ed492a2d76041be393353eee3d2c, type: 2}
+  - {fileID: 11400000, guid: e2b4c91e114e6b44892beaf9940af02c, type: 2}
+  prefabs: []
+  dependencies: []
