@@ -1,0 +1,34 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6c9b51b8d3aa844448aaeab0a989e2fa, type: 3}
+  m_Name: DragonBreathAbilityTemplatePackage
+  m_EditorClassIdentifier: 
+  resourceName: Dragon Breath Ability
+  displayName: 
+  icon: {fileID: 0}
+  iconBackgroundImage: {fileID: 0}
+  description: 
+  useRegionalDescription: 0
+  resourceDescriptionProfile: 
+  optionalOverride: 0
+  resources:
+  - {fileID: 11400000, guid: ae784c5a1db1ff34c9463332f2230395, type: 2}
+  - {fileID: 11400000, guid: 9448951419f2e2a4c9db638ace73c65e, type: 2}
+  - {fileID: 11400000, guid: c8c6a1b475fed21429456cbf1b356b97, type: 2}
+  - {fileID: 11400000, guid: 7f777c7eb311a0448948359e04a2a647, type: 2}
+  - {fileID: 11400000, guid: d14bd58ae1098c14f96544050fcb6375, type: 2}
+  - {fileID: 11400000, guid: b2d29aad362f9a04d86d1118d1a5920b, type: 2}
+  - {fileID: 11400000, guid: 1c753d05a55968f4f974a1c4b09eada0, type: 2}
+  - {fileID: 11400000, guid: 53afe1dcf6516f244a214862e8b6027a, type: 2}
+  - {fileID: 11400000, guid: 1cd6cdf0fa656494f9b010e237697318, type: 2}
+  prefabs: []
+  dependencies: []

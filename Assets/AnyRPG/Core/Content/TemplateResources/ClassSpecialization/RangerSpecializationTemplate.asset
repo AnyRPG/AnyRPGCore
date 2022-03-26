@@ -34,3 +34,5 @@ MonoBehaviour:
   primaryStats: []
   powerResources: []
   powerEnhancerStats: []
+  validPetTypes:
+  - Beast
