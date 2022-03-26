@@ -9,19 +9,19 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7125135849d1ec246959764160358164, type: 3}
-  m_Name: ArrowAOEEffect
+  m_Script: {fileID: 11500000, guid: 499bdf3134e84df4c99414d0ac47ec01, type: 3}
+  m_Name: LevitatedTornadoEffectTemplate
   m_EditorClassIdentifier: 
-  resourceName: Arrow AOE
+  resourceName: Levitated Tornado Effect
   displayName: 
-  icon: {fileID: 21300000, guid: e9a62806b9320ab4a97531cc547ba269, type: 3}
+  icon: {fileID: 21300000, guid: 255ba50e13773c34d9711f2f1971debd, type: 3}
   iconBackgroundImage: {fileID: 0}
   description: 
   useRegionalDescription: 0
   resourceDescriptionProfile: 
   optionalOverride: 0
   targetOptions:
-    requireTarget: 0
+    requireTarget: 1
     requireLineOfSight: 0
     requireLiveTarget: 1
     requireDeadTarget: 0
@@ -40,14 +40,16 @@ MonoBehaviour:
   materialChangeDuration: 2
   onHitAudioProfileNames: []
   randomAudioProfiles: 0
-  hitAbilityEffectNames:
-  - Arrow Projectile
+  hitAbilityEffectNames: []
   inputMultiplier: 0
   threatMultiplier: 1
   abilityPrefabSource: 1
   randomPrefabs: 0
-  abilityObjectList: []
-  prefabSpawnLocation: 1
+  abilityObjectList:
+  - holdableObjectName: Tornado Smoke
+    useUniversalAttachment: 0
+    attachmentName: 
+  prefabSpawnLocation: 2
   prefabDestroyDelay: 0
   destroyOnEndCast: 0
   tickRate: 0
@@ -92,19 +94,38 @@ MonoBehaviour:
     onTickAudioProfileNames: []
     randomTickAudioProfiles: 0
     completeAbilityEffectNames: []
-  defaultPrefabLifetime: 10
-  aoeProperties:
-    aoeRadius: 30
-    useRadius: 1
-    useExtents: 0
-    aoeCenter: {x: 0, y: 0, z: 0}
-    aoeExtents: {x: 0, y: 0, z: 0}
-    maxTargets: 0
-    preferClosestTargets: 0
-    interTargetDelay: 0
-  aoeEffectProperties:
+  statusEffectAlignment: 2
+  statusEffectTypeName: 
+  statusEffectGroupName: 
+  classTrait: 0
+  requiredLevel: 1
+  sceneNames: []
+  limitedDuration: 1
+  duration: 5
+  maxStacks: 1
+  statBuffTypeNames: []
+  statAmount: 0
+  statMultiplier: 1
+  secondaryStatBuffsTypes: 
+  secondaryStatAmount: 0
+  secondaryStatMultiplier: 1
+  outgoingDamageMultiplier: 1
+  incomingDamageMultiplier: 1
+  factionModifiers: []
+  canFly: 0
+  canGlide: 0
+  disableAnimator: 0
+  stun: 0
+  levitate: 1
+  immuneDisableAnimator: 0
+  immuneStun: 0
+  immuneLevitate: 0
+  controlTarget: 0
+  reflectAbilityEffectNames: []
+  weaponHitAbilityEffectNames: []
+  statusEffectProperties:
     targetOptions:
-      requireTarget: 0
+      requireTarget: 1
       requireLineOfSight: 0
       requireLiveTarget: 1
       requireDeadTarget: 0
@@ -123,14 +144,16 @@ MonoBehaviour:
     materialChangeDuration: 2
     onHitAudioProfileNames: []
     randomAudioProfiles: 0
-    hitAbilityEffectNames:
-    - Arrow Projectile
+    hitAbilityEffectNames: []
     inputMultiplier: 0
     threatMultiplier: 1
     abilityPrefabSource: 1
     randomPrefabs: 0
-    abilityObjectList: []
-    prefabSpawnLocation: 1
+    abilityObjectList:
+    - holdableObjectName: Tornado Smoke
+      useUniversalAttachment: 0
+      attachmentName: 
+    prefabSpawnLocation: 2
     prefabDestroyDelay: 0
     destroyOnEndCast: 0
     tickRate: 0
@@ -139,13 +162,32 @@ MonoBehaviour:
     onTickAudioProfileNames: []
     randomTickAudioProfiles: 0
     completeAbilityEffectNames: []
-    defaultPrefabLifetime: 10
-    aoeProperties:
-      aoeRadius: 30
-      useRadius: 1
-      useExtents: 0
-      aoeCenter: {x: 0, y: 0, z: 0}
-      aoeExtents: {x: 0, y: 0, z: 0}
-      maxTargets: 0
-      preferClosestTargets: 0
-      interTargetDelay: 0
+    statusEffectAlignment: 2
+    statusEffectTypeName: 
+    statusEffectGroupName: 
+    classTrait: 0
+    requiredLevel: 1
+    sceneNames: []
+    limitedDuration: 1
+    duration: 5
+    maxStacks: 1
+    statBuffTypeNames: []
+    statAmount: 0
+    statMultiplier: 1
+    secondaryStatBuffsTypes: 
+    secondaryStatAmount: 0
+    secondaryStatMultiplier: 1
+    outgoingDamageMultiplier: 1
+    incomingDamageMultiplier: 1
+    factionModifiers: []
+    canFly: 0
+    canGlide: 0
+    disableAnimator: 0
+    stun: 0
+    levitate: 1
+    immuneDisableAnimator: 0
+    immuneStun: 0
+    immuneLevitate: 0
+    controlTarget: 0
+    reflectAbilityEffectNames: []
+    weaponHitAbilityEffectNames: []

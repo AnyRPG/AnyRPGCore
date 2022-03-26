@@ -9,14 +9,14 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a308e09b3c44cce4f80ee0eb116ff1d0, type: 3}
-  m_Name: SlowingShotProjectileEffect
+  m_Script: {fileID: 11500000, guid: 499bdf3134e84df4c99414d0ac47ec01, type: 3}
+  m_Name: SlowingShotEffectTemplate
   m_EditorClassIdentifier: 
-  resourceName: Slowing Shot Projectile
+  resourceName: Slowing Shot
   displayName: 
-  icon: {fileID: 0}
+  icon: {fileID: 21300000, guid: fa0fd327c59910a4abfdb8c0e63e18af, type: 3}
   iconBackgroundImage: {fileID: 0}
-  description: 
+  description: slowed movement
   useRegionalDescription: 0
   resourceDescriptionProfile: 
   optionalOverride: 0
@@ -32,26 +32,21 @@ MonoBehaviour:
     canCastOnFriendly: 0
     autoSelfCast: 0
     useMeleeRange: 0
-    maxRange: 40
+    maxRange: 0
     lineOfSightSourceLocation: 0
     targetRangeSourceLocation: 0
   chanceToCast: 100
   effectMaterialName: 
-  materialChangeDuration: 0
+  materialChangeDuration: 2
   onHitAudioProfileNames: []
   randomAudioProfiles: 0
-  hitAbilityEffectNames:
-  - Slowing Shot
-  - Slowing Shot Attack
+  hitAbilityEffectNames: []
   inputMultiplier: 0
   threatMultiplier: 1
   abilityPrefabSource: 1
   randomPrefabs: 0
-  abilityObjectList:
-  - holdableObjectName: Arrow
-    useUniversalAttachment: 0
-    attachmentName: 
-  prefabSpawnLocation: 1
+  abilityObjectList: []
+  prefabSpawnLocation: 0
   prefabDestroyDelay: 0
   destroyOnEndCast: 0
   tickRate: 0
@@ -96,16 +91,44 @@ MonoBehaviour:
     onTickAudioProfileNames: []
     randomTickAudioProfiles: 0
     completeAbilityEffectNames: []
-  defaultPrefabLifetime: 10
-  directEffectProperties:
+  statusEffectAlignment: 2
+  statusEffectTypeName: 
+  statusEffectGroupName: 
+  classTrait: 0
+  requiredLevel: 1
+  sceneNames: []
+  limitedDuration: 1
+  duration: 10
+  maxStacks: 1
+  statBuffTypeNames: []
+  statAmount: 0
+  statMultiplier: 0.5
+  secondaryStatBuffsTypes: 00000000
+  secondaryStatAmount: 0
+  secondaryStatMultiplier: 0.5
+  outgoingDamageMultiplier: 1
+  incomingDamageMultiplier: 1
+  factionModifiers: []
+  canFly: 0
+  canGlide: 0
+  disableAnimator: 0
+  stun: 0
+  levitate: 0
+  immuneDisableAnimator: 0
+  immuneStun: 0
+  immuneLevitate: 0
+  controlTarget: 0
+  reflectAbilityEffectNames: []
+  weaponHitAbilityEffectNames: []
+  statusEffectProperties:
     targetOptions:
-      requireTarget: 0
+      requireTarget: 1
       requireLineOfSight: 0
       requireLiveTarget: 1
       requireDeadTarget: 0
       canCastOnSelf: 0
-      canCastOnOthers: 0
-      canCastOnEnemy: 0
+      canCastOnOthers: 1
+      canCastOnEnemy: 1
       canCastOnNeutral: 0
       canCastOnFriendly: 0
       autoSelfCast: 0
@@ -133,54 +156,32 @@ MonoBehaviour:
     onTickAudioProfileNames: []
     randomTickAudioProfiles: 0
     completeAbilityEffectNames: []
-    defaultPrefabLifetime: 10
-  projectileSpeed: 40
-  flightAudioProfileNames:
-  - Trap Arrow
-  randomFlightAudioProfiles: 0
-  projectileEffectProperties:
-    targetOptions:
-      requireTarget: 1
-      requireLineOfSight: 0
-      requireLiveTarget: 1
-      requireDeadTarget: 0
-      canCastOnSelf: 0
-      canCastOnOthers: 1
-      canCastOnEnemy: 1
-      canCastOnNeutral: 0
-      canCastOnFriendly: 0
-      autoSelfCast: 0
-      useMeleeRange: 0
-      maxRange: 40
-      lineOfSightSourceLocation: 0
-      targetRangeSourceLocation: 0
-    chanceToCast: 100
-    effectMaterialName: 
-    materialChangeDuration: 0
-    onHitAudioProfileNames: []
-    randomAudioProfiles: 0
-    hitAbilityEffectNames:
-    - Slowing Shot
-    - Slowing Shot Attack
-    inputMultiplier: 0
-    threatMultiplier: 1
-    abilityPrefabSource: 1
-    randomPrefabs: 0
-    abilityObjectList:
-    - holdableObjectName: Arrow
-      useUniversalAttachment: 0
-      attachmentName: 
-    prefabSpawnLocation: 1
-    prefabDestroyDelay: 0
-    destroyOnEndCast: 0
-    tickRate: 0
-    castZeroTick: 0
-    tickAbilityEffectNames: []
-    onTickAudioProfileNames: []
-    randomTickAudioProfiles: 0
-    completeAbilityEffectNames: []
-    defaultPrefabLifetime: 10
-    projectileSpeed: 40
-    flightAudioProfileNames:
-    - Trap Arrow
-    randomFlightAudioProfiles: 0
+    statusEffectAlignment: 2
+    statusEffectTypeName: 
+    statusEffectGroupName: 
+    classTrait: 0
+    requiredLevel: 1
+    sceneNames: []
+    limitedDuration: 1
+    duration: 10
+    maxStacks: 1
+    statBuffTypeNames: []
+    statAmount: 0
+    statMultiplier: 0.5
+    secondaryStatBuffsTypes: 00000000
+    secondaryStatAmount: 0
+    secondaryStatMultiplier: 0.5
+    outgoingDamageMultiplier: 1
+    incomingDamageMultiplier: 1
+    factionModifiers: []
+    canFly: 0
+    canGlide: 0
+    disableAnimator: 0
+    stun: 0
+    levitate: 0
+    immuneDisableAnimator: 0
+    immuneStun: 0
+    immuneLevitate: 0
+    controlTarget: 0
+    reflectAbilityEffectNames: []
+    weaponHitAbilityEffectNames: []

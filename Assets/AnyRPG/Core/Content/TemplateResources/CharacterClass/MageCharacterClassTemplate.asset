@@ -27,6 +27,7 @@ MonoBehaviour:
     abilityNames:
     - Restore Mana
     - Life Exchange
+    - Tornado
     - Glide
     traitNames:
     - Soul Of The Mage

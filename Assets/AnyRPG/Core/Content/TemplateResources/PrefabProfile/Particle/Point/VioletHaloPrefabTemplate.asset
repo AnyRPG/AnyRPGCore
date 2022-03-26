@@ -10,17 +10,17 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 086cc19bb10d93146806ca499cfd21c7, type: 3}
-  m_Name: TornadoProjectilePrefab
+  m_Name: VioletHaloPrefabTemplate
   m_EditorClassIdentifier: 
-  resourceName: Tornado Projectile
+  resourceName: Violet Halo
   displayName: 
   icon: {fileID: 0}
   iconBackgroundImage: {fileID: 0}
   description: 
   useRegionalDescription: 0
   resourceDescriptionProfile: 
-  prefab: {fileID: 197712, guid: f462582613911dc4297ea22a5212be7f, type: 3}
-  position: {x: 0, y: 0, z: 0}
+  prefab: {fileID: 197712, guid: 1ea042942d4d5844ca8e8e6d4797c79c, type: 3}
+  position: {x: 0, y: 2, z: 0}
   rotationIsGlobal: 0
   rotation: {x: 0, y: 0, z: 0}
   scale: {x: 1, y: 1, z: 1}

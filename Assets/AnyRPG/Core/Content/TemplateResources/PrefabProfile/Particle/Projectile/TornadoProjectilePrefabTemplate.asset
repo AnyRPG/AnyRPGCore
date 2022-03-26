@@ -10,16 +10,16 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 086cc19bb10d93146806ca499cfd21c7, type: 3}
-  m_Name: TornadoSmokePrefab
+  m_Name: TornadoProjectilePrefabTemplate
   m_EditorClassIdentifier: 
-  resourceName: Tornado Smoke
+  resourceName: Tornado Projectile
   displayName: 
   icon: {fileID: 0}
   iconBackgroundImage: {fileID: 0}
   description: 
   useRegionalDescription: 0
   resourceDescriptionProfile: 
-  prefab: {fileID: 197712, guid: d3c1a68db5ec9bc4285a699aaf01a9a9, type: 3}
+  prefab: {fileID: 197712, guid: f462582613911dc4297ea22a5212be7f, type: 3}
   position: {x: 0, y: 0, z: 0}
   rotationIsGlobal: 0
   rotation: {x: 0, y: 0, z: 0}

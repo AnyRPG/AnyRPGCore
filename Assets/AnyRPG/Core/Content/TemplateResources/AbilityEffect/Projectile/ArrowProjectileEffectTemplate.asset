@@ -47,10 +47,7 @@ MonoBehaviour:
     threatMultiplier: 1
     abilityPrefabSource: 2
     randomPrefabs: 0
-    abilityObjectList:
-    - holdableObjectName: Medieval Arrow
-      useUniversalAttachment: 0
-      attachmentName: 
+    abilityObjectList: []
     prefabSpawnLocation: 1
     prefabDestroyDelay: 0
     destroyOnEndCast: 0

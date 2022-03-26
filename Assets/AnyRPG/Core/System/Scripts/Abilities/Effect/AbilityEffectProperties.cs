@@ -173,7 +173,10 @@ namespace AnyRPG {
                 if (abilityEffect != null
                     && (abilityEffect.ChanceToCast >= 100f || abilityEffect.ChanceToCast >= Random.Range(0f, 100f))) {
                     //Debug.Log(DisplayName + ".AbilityEffect.PerformAbilityEffects() found: " + (abilityEffect != null ? abilityEffect.DisplayName : "null"));
-                    if (SystemDataFactory.MatchResource(abilityEffect.DisplayName, DisplayName)) {
+
+                    // updated circular reference detection because inline ability effects will have the same name as the ability
+                    //if (SystemDataFactory.MatchResource(abilityEffect.DisplayName, DisplayName)) {
+                    if (abilityEffect == this) {
                         Debug.LogError(DisplayName + ".PerformAbilityEffects(): circular reference detected.  Tried to cast self.  CHECK INSPECTOR AND FIX ABILITY EFFECT CONFIGURATION!!!");
                     } else {
                         if (!(abilityEffect is AmountEffectProperties)) {

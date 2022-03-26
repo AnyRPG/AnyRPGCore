@@ -23,7 +23,10 @@ MonoBehaviour:
   newGameOption: 0
   equipmentNames: []
   capabilities:
-    abilityNames: []
+    abilityNames:
+    - Arrow AOE
+    - Slowing Shot
+    - Piercing Shot
     traitNames: []
     armorClassList:
     - Leather

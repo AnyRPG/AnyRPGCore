@@ -10,17 +10,17 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 086cc19bb10d93146806ca499cfd21c7, type: 3}
-  m_Name: VioletHaloPrefab
+  m_Name: GrayCastingCirclePrefabTemplate
   m_EditorClassIdentifier: 
-  resourceName: Violet Halo
+  resourceName: Gray Casting Circle
   displayName: 
   icon: {fileID: 0}
   iconBackgroundImage: {fileID: 0}
   description: 
   useRegionalDescription: 0
   resourceDescriptionProfile: 
-  prefab: {fileID: 197712, guid: 1ea042942d4d5844ca8e8e6d4797c79c, type: 3}
-  position: {x: 0, y: 2, z: 0}
+  prefab: {fileID: 197712, guid: 8f2768508d741ea4692e77203a27cba4, type: 3}
+  position: {x: 0, y: 0, z: 0}
   rotationIsGlobal: 0
   rotation: {x: 0, y: 0, z: 0}
   scale: {x: 1, y: 1, z: 1}
