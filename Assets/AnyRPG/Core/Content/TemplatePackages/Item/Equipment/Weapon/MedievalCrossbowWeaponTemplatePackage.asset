@@ -1,0 +1,30 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6c9b51b8d3aa844448aaeab0a989e2fa, type: 3}
+  m_Name: MedievalCrossbowWeaponTemplatePackage
+  m_EditorClassIdentifier: 
+  resourceName: Medieval Crossbow Weapon
+  displayName: 
+  icon: {fileID: 0}
+  iconBackgroundImage: {fileID: 0}
+  description: 
+  useRegionalDescription: 0
+  resourceDescriptionProfile: 
+  optionalOverride: 0
+  resources:
+  - {fileID: 11400000, guid: dde69a7bcb0468843967e2e23e6a459c, type: 2}
+  - {fileID: 11400000, guid: ec505b20559196742b74496db5ed39b1, type: 2}
+  - {fileID: 11400000, guid: 878b99730c9785d4298533f9255a008a, type: 2}
+  - {fileID: 11400000, guid: 058634f61ca9cf444bb7080fc6c16e45, type: 2}
+  prefabs: []
+  dependencies:
+  - {fileID: 11400000, guid: 33c40366fdc4a3c4bbf81e7cf2bb5e02, type: 2}

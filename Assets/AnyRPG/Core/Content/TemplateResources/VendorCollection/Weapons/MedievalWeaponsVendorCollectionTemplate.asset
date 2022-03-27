@@ -25,6 +25,10 @@ MonoBehaviour:
     quantity: 0
     unlimited: 1
     itemQualityName: 
+  - itemName: Medieval Crossbow
+    quantity: 0
+    unlimited: 1
+    itemQualityName: 
   - itemName: Medieval Dagger
     quantity: 0
     unlimited: 1

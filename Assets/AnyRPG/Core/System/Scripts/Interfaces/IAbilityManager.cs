@@ -46,6 +46,12 @@ namespace AnyRPG {
         /// return a list of weapon ability objects
         /// </summary>
         /// <returns></returns>
+        List<AbilityAttachmentNode> GetWeaponAbilityAnimationObjectList();
+
+        /// <summary>
+        /// return a list of weapon ability objects
+        /// </summary>
+        /// <returns></returns>
         List<AbilityAttachmentNode> GetWeaponAbilityObjectList();
 
         /// <summary>

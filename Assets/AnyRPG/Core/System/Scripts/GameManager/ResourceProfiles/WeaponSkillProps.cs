@@ -51,9 +51,14 @@ namespace AnyRPG {
 
         [Header("Ability Prefab Defaults")]
 
-        [Tooltip("Physical prefabs to attach to bones on the character unit when this weapon is being used during an attack.  This could be arrows, special spell or glow effects, etc")]
+        [Tooltip("Physical prefabs to attach to bones on the character unit when this weapon is being animated during an attack.  This could be arrows, special spell or glow effects, etc")]
+        [SerializeField]
+        private List<AbilityAttachmentNode> abilityAnimationObjectList = new List<AbilityAttachmentNode>();
+
+        [Tooltip("Physical prefabs to use after the animation phase when this weapon is being used during an attack.  This could be arrows, special spell or glow effects, etc")]
         [SerializeField]
         private List<AbilityAttachmentNode> abilityObjectList = new List<AbilityAttachmentNode>();
+
 
         // properties
         public bool DefaultWeaponSkill { get => defaultWeaponSkill; set => defaultWeaponSkill = value; }
@@ -61,6 +66,7 @@ namespace AnyRPG {
         public List<AbilityEffectProperties> OnHitEffectList { get => onHitEffectList; set => onHitEffectList = value; }
         public AnimationProfile AnimationProfile { get => animationProfile; set => animationProfile = value; }
         public List<AudioClip> DefaultHitSoundEffects { get => onHitSoundEffects; set => onHitSoundEffects = value; }
+        public List<AbilityAttachmentNode> AbilityAnimationObjectList { get => abilityAnimationObjectList; set => abilityAnimationObjectList = value; }
         public List<AbilityAttachmentNode> AbilityObjectList { get => abilityObjectList; set => abilityObjectList = value; }
 
         // methods
@@ -121,15 +127,22 @@ namespace AnyRPG {
                     }
                 }
             }
-            if (abilityObjectList != null) {
-                foreach (AbilityAttachmentNode abilityAttachmentNode in abilityObjectList) {
-                    if (abilityAttachmentNode != null) {
 
+            if (abilityAnimationObjectList != null) {
+                foreach (AbilityAttachmentNode abilityAttachmentNode in abilityAnimationObjectList) {
+                    if (abilityAttachmentNode != null) {
                         abilityAttachmentNode.SetupScriptableObjects(ownerName, systemGameManager);
                     }
                 }
             }
 
+            if (abilityObjectList != null) {
+                foreach (AbilityAttachmentNode abilityAttachmentNode in abilityObjectList) {
+                    if (abilityAttachmentNode != null) {
+                        abilityAttachmentNode.SetupScriptableObjects(ownerName, systemGameManager);
+                    }
+                }
+            }
 
         }
     }

@@ -35,6 +35,12 @@ MonoBehaviour:
       maxDrops: 1
       matchItemRestrictions: 1
       prerequisiteConditions: []
+    - itemName: Medieval Crossbow
+      dropChance: 20
+      minDrops: 1
+      maxDrops: 1
+      matchItemRestrictions: 1
+      prerequisiteConditions: []
     - itemName: Medieval Dagger
       dropChance: 20
       minDrops: 1

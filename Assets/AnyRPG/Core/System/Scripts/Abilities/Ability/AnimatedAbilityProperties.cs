@@ -161,11 +161,11 @@ namespace AnyRPG {
             if (abilityPrefabSource == AbilityPrefabSource.Both) {
                 List<AbilityAttachmentNode> returnList = new List<AbilityAttachmentNode>();
                 returnList.AddRange(base.GetHoldableObjectList(abilityCaster));
-                returnList.AddRange(abilityCaster.AbilityManager.GetWeaponAbilityObjectList());
+                returnList.AddRange(abilityCaster.AbilityManager.GetWeaponAbilityAnimationObjectList());
                 return returnList;
             }
             if (abilityPrefabSource == AbilityPrefabSource.Weapon) {
-                return abilityCaster.AbilityManager.GetWeaponAbilityObjectList();
+                return abilityCaster.AbilityManager.GetWeaponAbilityAnimationObjectList();
             }
 
             // abilityPrefabSource is AbilityPrefabSource.Ability since there are only 3 options

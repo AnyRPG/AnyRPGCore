@@ -116,9 +116,14 @@ namespace AnyRPG {
             return new List<AbilityEffectProperties>();
         }
 
+        public virtual List<AbilityAttachmentNode> GetWeaponAbilityAnimationObjectList() {
+            return null;
+        }
+
         public virtual List<AbilityAttachmentNode> GetWeaponAbilityObjectList() {
             return null;
         }
+
 
         // this only checks if the ability is able to be cast based on character state.  It does not check validity of target or ability specific requirements
         public virtual bool CanCastAbility(BaseAbilityProperties ability, bool playerInitiated = false) {

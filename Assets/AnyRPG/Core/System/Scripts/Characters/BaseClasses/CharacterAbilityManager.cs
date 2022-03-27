@@ -173,9 +173,16 @@ namespace AnyRPG {
             return base.GetDefaultHitEffects();
         }
 
+        public override List<AbilityAttachmentNode> GetWeaponAbilityAnimationObjectList() {
+            if (baseCharacter.CharacterEquipmentManager != null) {
+                return baseCharacter.CharacterEquipmentManager.WeaponAbilityAnimationObjects;
+            }
+            return base.GetWeaponAbilityAnimationObjectList();
+        }
+
         public override List<AbilityAttachmentNode> GetWeaponAbilityObjectList() {
             if (baseCharacter.CharacterEquipmentManager != null) {
-                return baseCharacter.CharacterEquipmentManager.WeaponHoldableObjects;
+                return baseCharacter.CharacterEquipmentManager.WeaponAbilityObjects;
             }
             return base.GetWeaponAbilityObjectList();
         }

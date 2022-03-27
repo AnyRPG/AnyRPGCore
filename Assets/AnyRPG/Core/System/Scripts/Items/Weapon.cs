@@ -61,7 +61,11 @@ namespace AnyRPG {
         [SerializeField]
         protected bool useWeaponTypeObjects = true;
 
-        [Tooltip("Physical prefabs to attach to bones on the character unit when this weapon is being used during an attack.  This could be arrows, special spell or glow effects, etc")]
+        [Tooltip("Physical prefabs to attach to bones on the character unit when this weapon is being animated during an attack.  This could be arrows, special spell or glow effects, etc")]
+        [SerializeField]
+        private List<AbilityAttachmentNode> abilityAnimationObjectList = new List<AbilityAttachmentNode>();
+
+        [Tooltip("Physical prefabs to use when this weapon is being used after the animation phase during an attack.  This could be arrows, special spell or glow effects, etc")]
         [SerializeField]
         private List<AbilityAttachmentNode> abilityObjectList = new List<AbilityAttachmentNode>();
 
@@ -124,6 +128,15 @@ namespace AnyRPG {
                 return new List<AbilityEffectProperties>();
             }
         }
+        public List<AbilityAttachmentNode> AbilityAnimationObjectList {
+            get {
+                if (useWeaponTypeObjects == true && weaponSkill != null) {
+                    return weaponSkill.WeaponSkillProps.AbilityAnimationObjectList;
+                }
+                return abilityAnimationObjectList;
+            }
+        }
+
         public List<AbilityAttachmentNode> AbilityObjectList {
             get {
                 if (useWeaponTypeObjects && weaponSkill != null) {

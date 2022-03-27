@@ -14,11 +14,17 @@ namespace AnyRPG {
 
         protected Dictionary<EquipmentSlotProfile, Equipment> currentEquipment = new Dictionary<EquipmentSlotProfile, Equipment>();
 
+
+        // keep track of holdable objects to be used during weapon attack animations such as arrows, glowing hand effects, weapon trails, etc
+        private List<AbilityAttachmentNode> weaponAbilityAnimationObjects = new List<AbilityAttachmentNode>();
+
         // keep track of holdable objects to be used during weapon attacks such as arrows, glowing hand effects, weapon trails, etc
-        private List<AbilityAttachmentNode> weaponHoldableObjects = new List<AbilityAttachmentNode>();
+        private List<AbilityAttachmentNode> weaponAbilityObjects = new List<AbilityAttachmentNode>();
+
 
         public Dictionary<EquipmentSlotProfile, Equipment> CurrentEquipment { get => currentEquipment; set => currentEquipment = value; }
-        public List<AbilityAttachmentNode> WeaponHoldableObjects { get => weaponHoldableObjects; }
+        public List<AbilityAttachmentNode> WeaponAbilityAnimationObjects { get => weaponAbilityAnimationObjects; }
+        public List<AbilityAttachmentNode> WeaponAbilityObjects { get => weaponAbilityObjects; }
 
         public CharacterEquipmentManager (BaseCharacter baseCharacter, SystemGameManager systemGameManager) {
             this.baseCharacter = baseCharacter;
@@ -236,18 +242,37 @@ namespace AnyRPG {
 
         public void HandleWeaponHoldableObjects(Equipment newItem, Equipment oldItem) {
             //Debug.Log(gameObject.name + ".CharacterAbilityManager.HandleEquipmentChanged(" + (newItem != null ? newItem.DisplayName : "null") + ", " + (oldItem != null ? oldItem.DisplayName : "null") + ")");
+            
+            // animation phase objects
+            if (oldItem != null && (oldItem is Weapon) && (oldItem as Weapon).AbilityAnimationObjectList != null && (oldItem as Weapon).AbilityAnimationObjectList.Count > 0) {
+                foreach (AbilityAttachmentNode abilityAttachmentNode in (oldItem as Weapon).AbilityAnimationObjectList) {
+                    if (weaponAbilityAnimationObjects.Contains(abilityAttachmentNode)) {
+                        weaponAbilityAnimationObjects.Remove(abilityAttachmentNode);
+                    }
+                }
+            }
+
+            if (newItem != null && (newItem is Weapon) && (newItem as Weapon).AbilityAnimationObjectList != null && (newItem as Weapon).AbilityAnimationObjectList.Count > 0) {
+                foreach (AbilityAttachmentNode abilityAttachmentNode in (newItem as Weapon).AbilityAnimationObjectList) {
+                    if (!weaponAbilityAnimationObjects.Contains(abilityAttachmentNode)) {
+                        weaponAbilityAnimationObjects.Add(abilityAttachmentNode);
+                    }
+                }
+            }
+
+            // attack phase objects
             if (oldItem != null && (oldItem is Weapon) && (oldItem as Weapon).AbilityObjectList != null && (oldItem as Weapon).AbilityObjectList.Count > 0) {
                 foreach (AbilityAttachmentNode abilityAttachmentNode in (oldItem as Weapon).AbilityObjectList) {
-                    if (weaponHoldableObjects.Contains(abilityAttachmentNode)) {
-                        weaponHoldableObjects.Remove(abilityAttachmentNode);
+                    if (weaponAbilityObjects.Contains(abilityAttachmentNode)) {
+                        weaponAbilityObjects.Remove(abilityAttachmentNode);
                     }
                 }
             }
 
             if (newItem != null && (newItem is Weapon) && (newItem as Weapon).AbilityObjectList != null && (newItem as Weapon).AbilityObjectList.Count > 0) {
                 foreach (AbilityAttachmentNode abilityAttachmentNode in (newItem as Weapon).AbilityObjectList) {
-                    if (!weaponHoldableObjects.Contains(abilityAttachmentNode)) {
-                        weaponHoldableObjects.Add(abilityAttachmentNode);
+                    if (!weaponAbilityObjects.Contains(abilityAttachmentNode)) {
+                        weaponAbilityObjects.Add(abilityAttachmentNode);
                     }
                 }
             }
