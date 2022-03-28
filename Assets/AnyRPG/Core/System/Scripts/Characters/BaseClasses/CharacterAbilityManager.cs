@@ -1337,7 +1337,10 @@ namespace AnyRPG {
 
         public override float GetAnimationLengthMultiplier() {
             if (baseCharacter?.UnitController?.UnitAnimator != null) {
-                return (baseCharacter.UnitController.UnitAnimator.LastAnimationLength / (float)baseCharacter.UnitController.UnitAnimator.LastAnimationHits);
+
+                // ensure minimum length is the minimum attack speed
+                //return (baseCharacter.UnitController.UnitAnimator.LastAnimationLength / (float)baseCharacter.UnitController.UnitAnimator.LastAnimationHits);
+                return (Mathf.Clamp(baseCharacter.UnitController.UnitAnimator.LastAnimationLength, baseCharacter.CharacterCombat.AttackSpeed, Mathf.Infinity) / (float)baseCharacter.UnitController.UnitAnimator.LastAnimationHits);
             }
             return base.GetAnimationLengthMultiplier();
         }
@@ -1578,6 +1581,11 @@ namespace AnyRPG {
                 if (playerInitiated) {
                     OnCombatMessage("Cannot cast " + ability.DisplayName + "): ability is on cooldown!");
                 }
+                return false;
+            }
+
+            // check if auto-attack cooldown based on attack speed applies
+            if (ability.ReadyToCast(baseCharacter.CharacterCombat) == false) {
                 return false;
             }
 

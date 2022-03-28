@@ -79,6 +79,7 @@ namespace AnyRPG {
         public List<AbilityEffectProperties> OnHitEffects { get => onHitEffects; set => onHitEffects = value; }
         public List<AbilityEffectProperties> DefaultHitEffects { get => defaultHitEffects; set => defaultHitEffects = value; }
         public float AttackSpeed { get => attackSpeed; set => attackSpeed = value; }
+        public float LastAttackBegin { get => lastAttackBegin; }
 
         public CharacterCombat(BaseCharacter baseCharacter, SystemGameManager systemGameManager) {
             this.baseCharacter = baseCharacter;
@@ -110,7 +111,7 @@ namespace AnyRPG {
                 return;
             }
 
-            if (Time.time - lastAttackBegin < attackSpeed) {
+            if (OnAutoAttackCooldown()) {
                 // ensure attacks aren't happening too fast
                 return;
             } else {
@@ -425,6 +426,10 @@ namespace AnyRPG {
             return false;
         }
 
+        public bool OnAutoAttackCooldown() {
+            return (Time.time - lastAttackBegin < attackSpeed);
+        }
+
         /// <summary>
         /// Adds the target to the aggro table with 0 agro to ensure you have something to send a drop combat message to if you did 0 damage to them during combat.
         /// Set inCombat to true.
@@ -470,6 +475,7 @@ namespace AnyRPG {
                         baseAbility.CanUseOn(BaseCharacter.UnitController.Target, BaseCharacter) &&
                         baseCharacter.CharacterAbilityManager.PerformLOSCheck(baseCharacter.UnitController.Target, baseAbility)) {
                         //Debug.Log(baseCharacter.gameObject.name + ".AICombat.GetValidAttackAbility(): ADDING AN ABILITY TO LIST");
+
                         returnList.Add(baseAbility);
                     }
                 }

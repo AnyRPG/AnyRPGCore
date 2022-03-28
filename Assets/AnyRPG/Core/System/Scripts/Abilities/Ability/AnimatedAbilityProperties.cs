@@ -126,6 +126,13 @@ namespace AnyRPG {
             return base.HadSpecialIcon(actionButton);
         }
 
+        public override bool ReadyToCast(CharacterCombat characterCombat) {
+            if (isAutoAttack == true && characterCombat.OnAutoAttackCooldown() == true) {
+                return false;
+            }
+            return base.ReadyToCast(characterCombat);
+        }
+
         public override void UpdateActionButtonVisual(ActionButton actionButton) {
             // this must happen first because it's an image update that doesn't rely on cooldowns
             // auto-attack buttons are special and display the current weapon of the character

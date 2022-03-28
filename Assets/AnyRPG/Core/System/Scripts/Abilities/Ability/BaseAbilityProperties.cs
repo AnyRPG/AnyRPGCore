@@ -433,6 +433,15 @@ namespace AnyRPG {
             return false;
         }
 
+        /// <summary>
+        /// determine if an ability is on an animation length cooldown
+        /// </summary>
+        /// <param name="characterCombat"></param>
+        /// <returns></returns>
+        public virtual bool ReadyToCast(CharacterCombat characterCombat) {
+            return true;
+        }
+
         public void UpdateTargetRange(ActionBarManager actionBarManager, ActionButton actionButton) {
             actionBarManager.UpdateAbilityTargetRange(this, actionButton);
         }
