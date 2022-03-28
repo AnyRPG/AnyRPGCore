@@ -45,6 +45,12 @@ MonoBehaviour:
     rotation: {x: 304.1215, y: 295.9537, z: 169.7565}
     scale: {x: 1, y: 1, z: 1}
     targetBone: Spine1
+  - nodeName: Crossbow Sheathed
+    position: {x: 0.325, y: 0.0432, z: -0.1853}
+    rotationIsGlobal: 0
+    rotation: {x: 23.00236, y: 335.0564, z: 120.1031}
+    scale: {x: 1, y: 1, z: 1}
+    targetBone: Spine1
   - nodeName: Bow
     position: {x: -0.091, y: -0.03, z: -0.04}
     rotationIsGlobal: 0

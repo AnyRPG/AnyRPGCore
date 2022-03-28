@@ -43,7 +43,7 @@ MonoBehaviour:
     - equipmentSlotProfileName: Main Hand
       holdableObjectName: Medieval Crossbow
       useUniversalAttachment: 1
-      primaryAttachmentName: Bow Sheathed
+      primaryAttachmentName: Crossbow Sheathed
       unsheathedAttachmentName: Right Hand
     - equipmentSlotProfileName: Main Hand
       holdableObjectName: Medieval Quiver

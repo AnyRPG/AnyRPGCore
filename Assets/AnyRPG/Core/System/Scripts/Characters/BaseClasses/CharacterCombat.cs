@@ -114,9 +114,9 @@ namespace AnyRPG {
             if (OnAutoAttackCooldown()) {
                 // ensure attacks aren't happening too fast
                 return;
-            } else {
+            }/* else {
                 Debug.Log(baseCharacter.gameObject.name + ".CharacterCombat.HandleAutoAttack() time is " + (Time.time - lastAttackBegin));
-            }
+            }*/
 
 
             if (AutoAttackActive == true && baseCharacter.UnitController.Target != null) {
