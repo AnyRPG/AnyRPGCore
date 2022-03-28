@@ -21,10 +21,16 @@ namespace AnyRPG {
         //[Tooltip("The amount of seconds after the last combat event to wait before dropping combat")]
         protected float combatCooldown = 10f;
 
+        // the time at which the last attack was given or received
         protected float lastCombatEvent;
+
+        // the time at which the last animated attack began
+        protected float lastAttackBegin;
 
         //public bool isAttacking { get; private set; }
         protected bool inCombat = false;
+
+        protected float attackSpeed = 1f;
 
         // components
         protected BaseCharacter baseCharacter;
@@ -72,6 +78,7 @@ namespace AnyRPG {
         public bool AutoAttackActive { get => autoAttackActive; set => autoAttackActive = value; }
         public List<AbilityEffectProperties> OnHitEffects { get => onHitEffects; set => onHitEffects = value; }
         public List<AbilityEffectProperties> DefaultHitEffects { get => defaultHitEffects; set => defaultHitEffects = value; }
+        public float AttackSpeed { get => attackSpeed; set => attackSpeed = value; }
 
         public CharacterCombat(BaseCharacter baseCharacter, SystemGameManager systemGameManager) {
             this.baseCharacter = baseCharacter;
@@ -98,9 +105,16 @@ namespace AnyRPG {
                 DeActivateAutoAttack();
                 return;
             }
-            if (baseCharacter.CharacterAbilityManager.WaitingForAnimatedAbility == true || baseCharacter.CharacterCombat.WaitingForAutoAttack == true || baseCharacter.CharacterAbilityManager.IsCasting) {
+            if (WaitingForAction() == true) {
                 // can't auto-attack during auto-attack, animated attack, or cast
                 return;
+            }
+
+            if (Time.time - lastAttackBegin < attackSpeed) {
+                // ensure attacks aren't happening too fast
+                return;
+            } else {
+                Debug.Log(baseCharacter.gameObject.name + ".CharacterCombat.HandleAutoAttack() time is " + (Time.time - lastAttackBegin));
             }
 
 
@@ -160,7 +174,7 @@ namespace AnyRPG {
         }
 
         public bool WaitingForAction() {
-            if (baseCharacter.CharacterAbilityManager.WaitingForAnimatedAbility == true || baseCharacter.CharacterCombat.WaitingForAutoAttack == true || baseCharacter.CharacterAbilityManager.IsCasting) {
+            if (baseCharacter.CharacterAbilityManager.WaitingForAnimatedAbility == true || baseCharacter.CharacterCombat.WaitingForAutoAttack == true || baseCharacter.CharacterAbilityManager.IsCasting == true) {
                 // can't auto-attack during auto-attack, animated attack, or cast
                 return true;
             }
@@ -178,6 +192,10 @@ namespace AnyRPG {
                 return;
             }
 
+        }
+
+        public void RegisterAnimatedAbilityBegin() {
+            lastAttackBegin = Time.time;
         }
 
         public void SetWaitingForAutoAttack(bool newValue) {
@@ -627,7 +645,8 @@ namespace AnyRPG {
             return true;
         }
 
-        public virtual bool TakeDamage(AbilityEffectContext abilityEffectContext, PowerResource powerResource, int damage, IAbilityCaster sourceCharacter, CombatMagnitude combatMagnitude, AbilityEffectProperties abilityEffect) {
+        public virtual bool TakeDamage(AbilityEffectContext abilityEffectContext, PowerResource powerResource, int damage, IAbilityCaster sourceCharacter, CombatMagnitude combatMagnitude, AttackEffectProperties abilityEffect) {
+            //public virtual bool TakeDamage(AbilityEffectContext abilityEffectContext, PowerResource powerResource, int damage, IAbilityCaster sourceCharacter, CombatMagnitude combatMagnitude, AbilityEffectProperties abilityEffect) {
             //Debug.Log(gameObject.name + ".TakeDamage(" + damage + ", " + sourcePosition + ", " + source.name + ")");
             if (baseCharacter.UnitController.UnitControllerMode == UnitControllerMode.AI || baseCharacter.UnitController.UnitControllerMode == UnitControllerMode.Pet) {
                 if (baseCharacter.UnitController.CurrentState is EvadeState || baseCharacter.UnitController.CurrentState is DeathState) {
@@ -641,8 +660,8 @@ namespace AnyRPG {
                 //float distance = Vector3.Distance(transform.position, sourcePosition);
                 // replace with hitbox check
                 bool canPerformAbility = true;
-                if ((abilityEffect as AttackEffectProperties).DamageType == DamageType.physical) {
-                    damage -= (int)baseCharacter.CharacterStats.SecondaryStats[SecondaryStatType.Armor].CurrentValue;
+                if (abilityEffect.DamageType == DamageType.physical) {
+                    damage -= (int)baseCharacter.CharacterStats.SecondaryStats[SecondaryStatType.Armor].CurrentValue - (int)(baseCharacter.CharacterStats.SecondaryStats[SecondaryStatType.Armor].CurrentValue * Mathf.Clamp(abilityEffect.IgnoreArmorPercent / 100f, 0f, 1f));
                     damage = Mathf.Clamp(damage, 0, int.MaxValue);
                 }
                 if (abilityEffect.GetTargetOptions(sourceCharacter).UseMeleeRange) {
@@ -730,6 +749,10 @@ namespace AnyRPG {
                 }
             }
 
+            if ((newItem != null  && newItem is Weapon ) || (oldItem != null && oldItem is Weapon)) {
+                SetAttackSpeed();
+            }
+
             if (newItem != null) {
                 if (newItem is Weapon) {
                     if ((newItem as Weapon).OnHitEffectList != null && (newItem as Weapon).OnHitEffectList.Count > 0) {
@@ -745,6 +768,16 @@ namespace AnyRPG {
                     }
                 }
             }
+        }
+
+        public virtual void SetAttackSpeed() {
+            float maxAttackSpeed = 0f;
+            foreach (Equipment equipment in baseCharacter.CharacterEquipmentManager.CurrentEquipment.Values) {
+                if ((equipment is Weapon) && (equipment as Weapon).WeaponSkill != null && (equipment as Weapon).WeaponSkill.WeaponSkillProps.AttackSpeed > maxAttackSpeed) {
+                    maxAttackSpeed = (equipment as Weapon).WeaponSkill.WeaponSkillProps.AttackSpeed;
+                }
+            }
+            attackSpeed = maxAttackSpeed;
         }
 
     }

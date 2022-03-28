@@ -10,20 +10,19 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: d7f20dbf54d5643499578902863f014d, type: 3}
-  m_Name: ArrowAOEAbilityTemplate
+  m_Name: PenetratingShotAbilityTemplate
   m_EditorClassIdentifier: 
-  resourceName: Arrow AOE
+  resourceName: Penetrating Shot
   displayName: 
-  icon: {fileID: 21300000, guid: e9a62806b9320ab4a97531cc547ba269, type: 3}
+  icon: {fileID: 21300000, guid: 5e53deef888741e44a83f5c789e2039d, type: 3}
   iconBackgroundImage: {fileID: 0}
-  description: Send arrows at all opponents nearby
+  description: A powerful shot that ignores armor
   useRegionalDescription: 0
   resourceDescriptionProfile: 
   optionalOverride: 0
   animatedAbilityProperties:
     requireOutOfCombat: 0
     weaponAffinityNames:
-    - Bow
     - Crossbow
     holdableObjectList: []
     abilityPrefabSource: 2
@@ -52,7 +51,7 @@ MonoBehaviour:
     useSpeedMultipliers: 1
     useAnimationCastTime: 1
     abilityCastingTime: 0
-    abilityCoolDown: 5
+    abilityCoolDown: 15
     coolDownOnCast: 0
     useAbilityEffectTargetting: 0
     targetOptions:
@@ -86,11 +85,11 @@ MonoBehaviour:
   references:
     version: 1
     00000000:
-      type: {class: AOEEffectConfig, ns: AnyRPG, asm: Assembly-CSharp}
+      type: {class: ProjectileEffectConfig, ns: AnyRPG, asm: Assembly-CSharp}
       data:
         effectProperties:
           targetOptions:
-            requireTarget: 0
+            requireTarget: 1
             requireLineOfSight: 0
             requireLiveTarget: 1
             requireDeadTarget: 0
@@ -101,19 +100,19 @@ MonoBehaviour:
             canCastOnFriendly: 0
             autoSelfCast: 0
             useMeleeRange: 0
-            maxRange: 0
+            maxRange: 40
             lineOfSightSourceLocation: 0
             targetRangeSourceLocation: 0
           chanceToCast: 100
           effectMaterialName: 
-          materialChangeDuration: 2
+          materialChangeDuration: 0
           onHitAudioProfileNames: []
           randomAudioProfiles: 0
           hitAbilityEffectNames:
-          - Arrow Projectile
+          - Penetrating Shot
           inputMultiplier: 0
           threatMultiplier: 1
-          abilityPrefabSource: 1
+          abilityPrefabSource: 2
           randomPrefabs: 0
           abilityObjectList: []
           prefabSpawnLocation: 1
@@ -126,12 +125,7 @@ MonoBehaviour:
           randomTickAudioProfiles: 0
           completeAbilityEffectNames: []
           defaultPrefabLifetime: 10
-          aoeProperties:
-            aoeRadius: 30
-            useRadius: 1
-            useExtents: 0
-            aoeCenter: {x: 0, y: 0, z: 0}
-            aoeExtents: {x: 0, y: 0, z: 0}
-            maxTargets: 0
-            preferClosestTargets: 0
-            interTargetDelay: 0
+          projectileSpeed: 40
+          flightAudioProfileNames:
+          - Trap Arrow
+          randomFlightAudioProfiles: 0

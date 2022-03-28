@@ -34,7 +34,7 @@ MonoBehaviour:
   basePrice: 0
   uniqueItem: 0
   characterClassRequirementList: []
-  equipmentSlotType: Main Hand
+  equipmentSlotType: Two Hand
   equipmentSetName: 
   useUMARecipe: 0
   umaRecipeProfileName: 
@@ -44,7 +44,7 @@ MonoBehaviour:
       holdableObjectName: Medieval Crossbow
       useUniversalAttachment: 1
       primaryAttachmentName: Bow Sheathed
-      unsheathedAttachmentName: Left Hand
+      unsheathedAttachmentName: Right Hand
     - equipmentSlotProfileName: Main Hand
       holdableObjectName: Medieval Quiver
       useUniversalAttachment: 1
@@ -60,7 +60,7 @@ MonoBehaviour:
   onEquipAbilityName: 
   learnedAbilityNames: []
   requireWeaponSkill: 0
-  weaponType: Bow
+  weaponType: Crossbow
   defaultHitEffects: []
   onHitEffects: []
   animationProfileName: 

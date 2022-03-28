@@ -17,6 +17,14 @@ namespace AnyRPG {
         }
         */
 
+        [Header("Attack")]
+
+        [Tooltip("The percentage of the target armor to ignore when dealing damage")]
+        [SerializeField]
+        private float ignoreArmorPercent = 0f;
+
+        public float IgnoreArmorPercent { get => ignoreArmorPercent; set => ignoreArmorPercent = value; }
+
         /// <summary>
         /// Does the actual work of hitting the target with an ability
         /// </summary>
@@ -51,14 +59,15 @@ namespace AnyRPG {
             return abilityEffectContext;
         }
 
-
-        public override bool ProcessAbilityHit(Interactable target, int finalAmount, IAbilityCaster source, CombatMagnitude combatMagnitude, AbilityEffectProperties abilityEffect, AbilityEffectContext abilityEffectContext, PowerResource powerResource) {
+        public override bool ProcessAbilityHit(Interactable target, int finalAmount, IAbilityCaster source, CombatMagnitude combatMagnitude, AbilityEffectContext abilityEffectContext, PowerResource powerResource) {
+            //public override bool ProcessAbilityHit(Interactable target, int finalAmount, IAbilityCaster source, CombatMagnitude combatMagnitude, AbilityEffectProperties abilityEffect, AbilityEffectContext abilityEffectContext, PowerResource powerResource) {
             bool returnValue = CharacterUnit.GetCharacterUnit(target).BaseCharacter.CharacterCombat.TakeDamage(abilityEffectContext, powerResource, finalAmount, source, combatMagnitude, this);
             if (returnValue == false) {
                 return false;
             }
 
-            return base.ProcessAbilityHit(target, finalAmount, source, combatMagnitude, abilityEffect, abilityEffectContext, powerResource);
+            //return base.ProcessAbilityHit(target, finalAmount, source, combatMagnitude, abilityEffect, abilityEffectContext, powerResource);
+            return base.ProcessAbilityHit(target, finalAmount, source, combatMagnitude, abilityEffectContext, powerResource);
         }
 
         /*

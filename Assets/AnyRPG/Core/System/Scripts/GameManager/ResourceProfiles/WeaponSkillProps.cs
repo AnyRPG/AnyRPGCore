@@ -17,6 +17,10 @@ namespace AnyRPG {
         [SerializeField]
         private bool defaultWeaponSkill = false;
 
+        [Tooltip("Attacks with animations shorter than this value (in seconds) will be calculated to have taken this long.  Auto-attacks cannot happen more often than this number of seconds.")]
+        [SerializeField]
+        private float attackSpeed = 2f;
+
         [Header("Weapon Effect Defaults")]
 
         [Tooltip("Ability effects to cast on the target when the weapon does damage from a standard (auto) attack")]
@@ -68,6 +72,7 @@ namespace AnyRPG {
         public List<AudioClip> DefaultHitSoundEffects { get => onHitSoundEffects; set => onHitSoundEffects = value; }
         public List<AbilityAttachmentNode> AbilityAnimationObjectList { get => abilityAnimationObjectList; set => abilityAnimationObjectList = value; }
         public List<AbilityAttachmentNode> AbilityObjectList { get => abilityObjectList; set => abilityObjectList = value; }
+        public float AttackSpeed { get => attackSpeed; set => attackSpeed = value; }
 
         // methods
 

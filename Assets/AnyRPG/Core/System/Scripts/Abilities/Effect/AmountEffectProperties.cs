@@ -88,6 +88,9 @@ namespace AnyRPG {
                     if (abilityEffectContext.weaponHitHasCast == false) {
                         // the first attack effect cast from an ability is considered the primary hit
                         // everything after is an onHit effect and should not be multiplied by animation time
+
+                        // now clamping primary attacks to weapon speed  
+                        //amountMultiplyModifier *= Mathf.Clamp(sourceCharacter.AbilityManager.GetAnimationLengthMultiplier(), 1, Mathf.Infinity);
                         amountMultiplyModifier *= Mathf.Clamp(sourceCharacter.AbilityManager.GetAnimationLengthMultiplier(), 1, Mathf.Infinity);
                     }
 
@@ -162,9 +165,10 @@ namespace AnyRPG {
                 if (effectTotalAmount > 0) {
                     // this effect may not have any damage and only be here for spawning a prefab or making a sound
                     // ^ is that comment valid?  spawning a prefab can be done with instantEffect and doesn't require amount effects
-                    if (!ProcessAbilityHit(target, (int)effectTotalAmount, source, combatMagnitude, this, abilityEffectOutput, resourceAmountNode.PowerResource)) {
-                        // if we didn't successfully hit, we can't continue on 
-                        return;
+                    if (!ProcessAbilityHit(target, (int)effectTotalAmount, source, combatMagnitude, abilityEffectOutput, resourceAmountNode.PowerResource)) {
+                        //if (!ProcessAbilityHit(target, (int)effectTotalAmount, source, combatMagnitude, this, abilityEffectOutput, resourceAmountNode.PowerResource)) {
+                            // if we didn't successfully hit, we can't continue on 
+                            return;
                     }
                 }
             }
@@ -186,8 +190,9 @@ namespace AnyRPG {
         public virtual AbilityEffectContext ProcessAbilityEffectContext(IAbilityCaster source, Interactable target, AbilityEffectContext abilityEffectContext) {
             return abilityEffectContext;
         }
-
-        public virtual bool ProcessAbilityHit(Interactable target, int finalAmount, IAbilityCaster source, CombatMagnitude combatMagnitude, AbilityEffectProperties abilityEffect, AbilityEffectContext abilityEffectInput, PowerResource powerResource) {
+        
+        public virtual bool ProcessAbilityHit(Interactable target, int finalAmount, IAbilityCaster source, CombatMagnitude combatMagnitude, AbilityEffectContext abilityEffectInput, PowerResource powerResource) {
+            //public virtual bool ProcessAbilityHit(Interactable target, int finalAmount, IAbilityCaster source, CombatMagnitude combatMagnitude, AbilityEffectProperties abilityEffect, AbilityEffectContext abilityEffectInput, PowerResource powerResource) {
             // nothing here for now, override by heal or attack
             return true;
         }

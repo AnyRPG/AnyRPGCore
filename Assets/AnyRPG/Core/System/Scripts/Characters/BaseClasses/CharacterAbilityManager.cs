@@ -558,6 +558,10 @@ namespace AnyRPG {
             } else {
                 baseCharacter.CharacterCombat.SetWaitingForAutoAttack(true);
             }
+
+            // reset animated ability timer
+            baseCharacter.CharacterCombat.RegisterAnimatedAbilityBegin();
+
             return baseCharacter.UnitController.UnitAnimator.HandleAbility(animationClip, animatedAbility, targetBaseCharacter, abilityEffectContext);
         }
 
@@ -1332,7 +1336,7 @@ namespace AnyRPG {
         }
 
         public override float GetAnimationLengthMultiplier() {
-            if (baseCharacter != null && baseCharacter.UnitController != null && baseCharacter.UnitController.UnitAnimator != null) {
+            if (baseCharacter?.UnitController?.UnitAnimator != null) {
                 return (baseCharacter.UnitController.UnitAnimator.LastAnimationLength / (float)baseCharacter.UnitController.UnitAnimator.LastAnimationHits);
             }
             return base.GetAnimationLengthMultiplier();

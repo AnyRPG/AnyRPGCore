@@ -24,6 +24,7 @@ MonoBehaviour:
     requireOutOfCombat: 0
     weaponAffinityNames:
     - Bow
+    - Crossbow
     holdableObjectList: []
     abilityPrefabSource: 2
     animatorCreatePrefabs: 1
