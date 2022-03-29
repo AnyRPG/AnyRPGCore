@@ -127,7 +127,8 @@ namespace AnyRPG {
             get {
                 Dictionary<string, BaseAbilityProperties> returnAbilityList = new Dictionary<string, BaseAbilityProperties>();
                 foreach (string abilityName in abilityList.Keys) {
-                    if (abilityList[abilityName].CharacterClassRequirementList == null || abilityList[abilityName].CharacterClassRequirementList.Count == 0 || abilityList[abilityName].CharacterClassRequirementList.Contains(baseCharacter.CharacterClass)) {
+                    if ((abilityList[abilityName].CharacterClassRequirementList == null || abilityList[abilityName].CharacterClassRequirementList.Count == 0 || abilityList[abilityName].CharacterClassRequirementList.Contains(baseCharacter.CharacterClass))
+                        && (abilityList[abilityName].ClassSpecializationRequirementList == null || abilityList[abilityName].ClassSpecializationRequirementList.Count == 0 || abilityList[abilityName].ClassSpecializationRequirementList.Contains(baseCharacter.ClassSpecialization))) {
                         returnAbilityList.Add(abilityName, abilityList[abilityName]);
                     }
                 }

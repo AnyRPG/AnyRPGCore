@@ -38,6 +38,7 @@ MonoBehaviour:
     - Poison Weapons
     - Stealth
     - Sneak Attack
+    - Back Stab
     traitNames:
     - Soul Of The Thief
     armorClassList:

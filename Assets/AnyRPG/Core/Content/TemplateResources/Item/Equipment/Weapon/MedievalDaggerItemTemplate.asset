@@ -48,7 +48,7 @@ MonoBehaviour:
     - equipmentSlotProfileName: Off Hand
       holdableObjectName: Medieval Dagger
       useUniversalAttachment: 1
-      primaryAttachmentName: One Hand Sword Sheathed
+      primaryAttachmentName: Off Hand Dagger Sheathed
       unsheathedAttachmentName: Left Hand
   useArmorModifier: 0
   useManualArmor: 0
@@ -66,6 +66,7 @@ MonoBehaviour:
   animationProfileName: 
   defaultHitAudioProfile: 
   useWeaponTypeObjects: 1
+  abilityAnimationObjectList: []
   abilityObjectList: []
   addScaledDamagePerSecond: 1
   baseDamagePerSecond: 0

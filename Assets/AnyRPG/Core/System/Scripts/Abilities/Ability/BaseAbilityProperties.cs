@@ -94,12 +94,19 @@ namespace AnyRPG {
         [SerializeField]
         protected int requiredLevel = 1;
 
-        [Tooltip("If not empty, the character must be one of these classes to use this item.")]
+        [Tooltip("If not empty, the character must be one of these classes to cast this ability.")]
         [SerializeField]
         [ResourceSelector(resourceType = typeof(CharacterClass))]
         private List<string> characterClassRequirements = new List<string>();
 
         private List<CharacterClass> characterClassRequirementList = new List<CharacterClass>();
+
+        [Tooltip("If not empty, the character must be one of these class specializations to cast this ability.")]
+        [SerializeField]
+        [ResourceSelector(resourceType = typeof(ClassSpecialization))]
+        private List<string> classSpecializationRequirements = new List<string>();
+
+        private List<ClassSpecialization> classSpecializationRequirementList = new List<ClassSpecialization>();
 
         [Tooltip("If true, this ability does not have to be learned to cast. For abilities that anyone can use, like scrolls or crafting")]
         [SerializeField]
@@ -318,6 +325,7 @@ namespace AnyRPG {
         //public AnimationProfile AnimationProfile { get => animationProfile; set => animationProfile = value; }
         public List<WeaponSkill> WeaponAffinityList { get => weaponAffinityList; set => weaponAffinityList = value; }
         public List<CharacterClass> CharacterClassRequirementList { get => characterClassRequirementList; set => characterClassRequirementList = value; }
+        public List<ClassSpecialization> ClassSpecializationRequirementList { get => classSpecializationRequirementList; set => classSpecializationRequirementList = value; }
         public PowerResource PowerResource { get => powerResource; set => powerResource = value; }
         public PowerResource GeneratePowerResource { get => generatePowerResource; set => generatePowerResource = value; }
         public int BaseResourceGain { get => baseResourceGain; set => baseResourceGain = value; }
@@ -905,11 +913,28 @@ namespace AnyRPG {
         }
 
         /// <summary>
+        /// are the class specialization requirements met to learn or use this ability
+        /// </summary>
+        /// <returns></returns>
+        public bool ClassSpecializationRequirementIsMet() {
+            // only used when changing class or for action bars, so hard coding player character is ok for now
+            if (ClassSpecializationRequirementList != null && ClassSpecializationRequirementList.Count > 0) {
+                if (!ClassSpecializationRequirementList.Contains(playerManager.MyCharacter.ClassSpecialization)) {
+                    return false;
+                }
+            }
+            return true;
+        }
+
+        /// <summary>
         /// are all requirements met to learn or use this ability
         /// </summary>
         /// <returns></returns>
         public virtual bool RequirementsAreMet() {
             if (!CharacterClassRequirementIsMet()) {
+                return false;
+            }
+            if (!ClassSpecializationRequirementIsMet()) {
                 return false;
             }
 
@@ -1035,7 +1060,7 @@ namespace AnyRPG {
             }
 
             characterClassRequirementList = new List<CharacterClass>();
-            if (characterClassRequirementList != null) {
+            if (characterClassRequirements != null) {
                 foreach (string characterClassName in characterClassRequirements) {
                     CharacterClass tmpCharacterClass = systemDataFactory.GetResource<CharacterClass>(characterClassName);
                     if (tmpCharacterClass != null) {
@@ -1045,6 +1070,18 @@ namespace AnyRPG {
                     }
                 }
             }
+
+            if (classSpecializationRequirements != null) {
+                foreach (string classSpecializationName in classSpecializationRequirements) {
+                    ClassSpecialization tmpClassSpecialization = systemDataFactory.GetResource<ClassSpecialization>(classSpecializationName);
+                    if (tmpClassSpecialization != null) {
+                        classSpecializationRequirementList.Add(tmpClassSpecialization);
+                    } else {
+                        Debug.LogError("SystemAbilityManager.SetupScriptableObjects(): Could not find class specialization : " + classSpecializationName + " while inititalizing " + DisplayName + ".  CHECK INSPECTOR");
+                    }
+                }
+            }
+
 
 
         }
