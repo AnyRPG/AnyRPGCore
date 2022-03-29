@@ -653,6 +653,7 @@ namespace AnyRPG {
 
             foreach (StatusEffectNode statusEffectNode in playerManager.MyCharacter.CharacterStats.StatusEffects.Values) {
                 if (statusEffectNode.StatusEffect.ClassTrait == false
+                    && statusEffectNode.StatusEffect.SaveEffect == true
                     && statusEffectNode.AbilityEffectContext.AbilityCaster == (playerManager.MyCharacter as IAbilityCaster)) {
                     StatusEffectSaveData statusEffectSaveData = new StatusEffectSaveData();
                     statusEffectSaveData.StatusEffectName = statusEffectNode.StatusEffect.DisplayName;

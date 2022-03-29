@@ -77,6 +77,7 @@ namespace AnyRPG {
         private BehaviorController behaviorController = null;
         private UnitModelController unitModelController = null;
         private UnitMountManager unitMountManager = null;
+        private UnitMaterialController unitMaterialController = null;
         private UnitActionManager unitActionManager = null;
         private UUID uuid = null;
 
@@ -301,6 +302,7 @@ namespace AnyRPG {
         }
 
         public UnitMountManager UnitMountManager { get => unitMountManager; set => unitMountManager = value; }
+        public UnitMaterialController UnitMaterialController { get => unitMaterialController; set => unitMaterialController = value; }
         public UnitActionManager UnitActionManager { get => unitActionManager; set => unitActionManager = value; }
         public BehaviorController BehaviorController { get => behaviorController; set => behaviorController = value; }
 
@@ -394,6 +396,7 @@ namespace AnyRPG {
             patrolController = new PatrolController(this, systemGameManager);
             behaviorController = new BehaviorController(this, systemGameManager);
             unitModelController = new UnitModelController(this, systemGameManager);
+            unitMaterialController = new UnitMaterialController(this, systemGameManager);
             unitMountManager = new UnitMountManager(this, systemGameManager);
             unitActionManager = new UnitActionManager(this, systemGameManager);
             persistentObjectComponent.Setup(this, systemGameManager);
@@ -967,6 +970,7 @@ namespace AnyRPG {
 
         public void SetModelReady() {
             //Debug.Log(gameObject.name + ".UnitController.SetModelReady()");
+            unitMaterialController.SetupMaterialArrays();
             OnCameraTargetReady();
         }
 

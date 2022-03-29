@@ -1,0 +1,142 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d7f20dbf54d5643499578902863f014d, type: 3}
+  m_Name: StunKickAbilityTemplate
+  m_EditorClassIdentifier: 
+  resourceName: Stun Kick
+  displayName: 
+  icon: {fileID: 21300000, guid: b77bb144b3238f044959422960aeae09, type: 3}
+  iconBackgroundImage: {fileID: 0}
+  description: Kick your enemy so hard they are stunned for 3 seconds
+  useRegionalDescription: 0
+  resourceDescriptionProfile: 
+  optionalOverride: 0
+  animatedAbilityProperties:
+    requireOutOfCombat: 0
+    weaponAffinityNames: []
+    holdableObjectList: []
+    abilityPrefabSource: 0
+    animatorCreatePrefabs: 0
+    prefabDestroyDelay: 0
+    animationClip: {fileID: 0}
+    animationProfileName: Right Straight Kick
+    useUnitCastAnimations: 0
+    animationHitAudioProfileName: 
+    castingAudioClip: {fileID: 0}
+    castingAudioProfileName: 
+    requiredLevel: 1
+    characterClassRequirements: []
+    useableWithoutLearning: 0
+    autoAddToBars: 1
+    canSimultaneousCast: 0
+    canCastWhileMoving: 0
+    ignoreGlobalCoolDown: 0
+    powerResourceName: Energy
+    baseResourceCost: 20
+    resourceCostPerLevel: 0
+    spendDelay: 0
+    generatePowerResourceName: 
+    baseResourceGain: 0
+    resourceGainPerLevel: 0
+    useSpeedMultipliers: 1
+    useAnimationCastTime: 1
+    abilityCastingTime: 0
+    abilityCoolDown: 30
+    coolDownOnCast: 0
+    useAbilityEffectTargetting: 0
+    targetOptions:
+      requireTarget: 1
+      requireLineOfSight: 0
+      requireLiveTarget: 1
+      requireDeadTarget: 0
+      canCastOnSelf: 0
+      canCastOnOthers: 1
+      canCastOnEnemy: 1
+      canCastOnNeutral: 0
+      canCastOnFriendly: 0
+      autoSelfCast: 0
+      useMeleeRange: 1
+      maxRange: 5
+      requireFacingTarget: 0
+      maxAngle: 45
+      requiresGroundTarget: 0
+      groundTargetColor: {r: 1, g: 1, b: 1, a: 1}
+      groundTargetRadius: 0
+    inlineAbilityEffects:
+    - id: 0
+    abilityEffectNames: []
+    tickRate: 1
+    inlineChannelingEffects: []
+    channeledAbilityEffectnames: []
+    isAutoAttack: 0
+    useUnitAttackAnimations: 0
+    useAutoAttackAnimations: 0
+    useWeaponHitSound: 0
+  references:
+    version: 1
+    00000000:
+      type: {class: AttackEffectConfig, ns: AnyRPG, asm: Assembly-CSharp}
+      data:
+        effectProperties:
+          targetOptions:
+            requireTarget: 1
+            requireLineOfSight: 0
+            requireLiveTarget: 1
+            requireDeadTarget: 0
+            canCastOnSelf: 0
+            canCastOnOthers: 1
+            canCastOnEnemy: 1
+            canCastOnNeutral: 0
+            canCastOnFriendly: 0
+            autoSelfCast: 0
+            useMeleeRange: 1
+            maxRange: 0
+            lineOfSightSourceLocation: 0
+            targetRangeSourceLocation: 0
+          chanceToCast: 100
+          effectMaterialName: 
+          materialChangeDuration: 2
+          onHitAudioProfileNames:
+          - Chop
+          randomAudioProfiles: 0
+          hitAbilityEffectNames:
+          - Stunned
+          inputMultiplier: 0
+          threatMultiplier: 1
+          abilityPrefabSource: 1
+          randomPrefabs: 0
+          abilityObjectList:
+          - holdableObjectName: White Hit
+            useUniversalAttachment: 0
+            attachmentName: 
+          prefabSpawnLocation: 2
+          prefabDestroyDelay: 0
+          destroyOnEndCast: 0
+          tickRate: 0
+          castZeroTick: 0
+          tickAbilityEffectNames: []
+          onTickAudioProfileNames: []
+          randomTickAudioProfiles: 0
+          completeAbilityEffectNames: []
+          defaultPrefabLifetime: 10
+          allowCriticalStrike: 1
+          resourceAmounts:
+          - resourceName: Health
+            inputRemap: 
+            addPower: 1
+            minAmount: 0
+            baseAmount: 0
+            amountPerLevel: 0
+            maxAmount: 0
+          damageType: 1
+          ignoreAccuracy: 0
+          ignoreArmorPercent: 0

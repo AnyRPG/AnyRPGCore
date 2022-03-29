@@ -78,7 +78,7 @@ namespace AnyRPG {
         [SerializeField]
         protected float statMultiplier = 1f;
 
-        [Header("Primary Stat Buffs and Debuffs")]
+        [Header("Secondary Stat Buffs and Debuffs")]
 
         [Tooltip("The values in this section will be applied to all of the following stats")]
         [SerializeField]
@@ -109,6 +109,10 @@ namespace AnyRPG {
         protected List<FactionDisposition> factionModifiers = new List<FactionDisposition>();
 
         [Header("Status Effects")]
+
+        [Tooltip("If true, the character is stealthed")]
+        [SerializeField]
+        protected bool stealth = false;
 
         [Tooltip("If true, the character can fly")]
         [SerializeField]
@@ -167,6 +171,13 @@ namespace AnyRPG {
 
         protected List<AbilityEffectProperties> weaponHitAbilityEffectList = new List<AbilityEffectProperties>();
 
+        [Header("Save Options")]
+
+        [Tooltip("If true, the status effect will be saved with the character is saved")]
+        [SerializeField]
+        protected bool saveEffect = true;
+
+
         // game manager references
         protected LevelManager levelManager = null;
         protected PlayerManager playerManager = null;
@@ -206,9 +217,11 @@ namespace AnyRPG {
         public List<string> SceneNames { get => sceneNames; set => sceneNames = value; }
         public bool RefreshableDuration { get => refreshableDuration; set => refreshableDuration = value; }
         public int MaxStacks { get => maxStacks; set => maxStacks = value; }
+        public bool Stealth { get => stealth; }
         public bool CanFly { get => canFly; }
         public bool CanGlide { get => canGlide; }
         public StatusEffectGroup StatusEffectGroup { get => statusEffectGroup; set => statusEffectGroup = value; }
+        public bool SaveEffect { get => saveEffect; set => saveEffect = value; }
 
         /*
         public void GetStatusEffectProperties(StatusEffect effect) {
@@ -474,6 +487,9 @@ namespace AnyRPG {
             if (canGlide == true && targetCharacter.UnitController != null) {
                 targetCharacter.UnitController.CanGlideOverride = true;
             }
+            if (stealth == true && targetCharacter.UnitController != null) {
+                targetCharacter.UnitController.UnitMaterialController.ActivateStealth();
+            }
         }
 
         public void RemoveControlEffects(BaseCharacter targetCharacter) {
@@ -489,6 +505,10 @@ namespace AnyRPG {
             if (Levitate == true) {
                 targetCharacter.UnitController.UnLevitateCharacter();
             }
+            if (stealth == true) {
+                targetCharacter.UnitController.UnitMaterialController.DeactivateStealth();
+            }
+
         }
 
         public override void SetupScriptableObjects(SystemGameManager systemGameManager, IDescribable describable) {

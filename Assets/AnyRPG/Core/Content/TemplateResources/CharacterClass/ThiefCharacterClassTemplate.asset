@@ -36,6 +36,7 @@ MonoBehaviour:
     abilityNames:
     - Stun Kick
     - Poison Weapons
+    - Stealth
     traitNames:
     - Soul Of The Thief
     armorClassList:

@@ -1,0 +1,34 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6c9b51b8d3aa844448aaeab0a989e2fa, type: 3}
+  m_Name: PoisonWeaponsAbilityTemplatePackage
+  m_EditorClassIdentifier: 
+  resourceName: Poison Weapons Ability
+  displayName: 
+  icon: {fileID: 0}
+  iconBackgroundImage: {fileID: 0}
+  description: 
+  useRegionalDescription: 0
+  resourceDescriptionProfile: 
+  optionalOverride: 0
+  resources:
+  - {fileID: 11400000, guid: a94c5fcc6845fca428c645ff9c4b49e4, type: 2}
+  - {fileID: 11400000, guid: 43c8302049544414a8e33574fa73da9e, type: 2}
+  - {fileID: 11400000, guid: 58ed9108555966b4e9aaf6c2215d07d7, type: 2}
+  - {fileID: 11400000, guid: 3ba615f0b0537454997001dd177af31a, type: 2}
+  - {fileID: 11400000, guid: 4324d8661dc917047b70ad343c018e4c, type: 2}
+  - {fileID: 11400000, guid: 69ac6d1b091f65141b1a695247a2af98, type: 2}
+  - {fileID: 11400000, guid: 6b39533d0ee7bbc4fb050eb6d48bc520, type: 2}
+  - {fileID: 11400000, guid: fae113fd61cc30c45a73b12d13f9d425, type: 2}
+  - {fileID: 11400000, guid: a49e4d90681cd1446947c5d50c0aac1f, type: 2}
+  prefabs: []
+  dependencies: []
