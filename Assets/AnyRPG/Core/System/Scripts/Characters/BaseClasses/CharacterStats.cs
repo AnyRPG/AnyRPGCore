@@ -1208,6 +1208,10 @@ namespace AnyRPG {
         public void DeactivateStealth() {
             baseCharacter.UnitController.UnitMaterialController.DeactivateStealth();
             OnLeaveStealth();
+
+            // to ensure the character gets agrod if close to enemies, the collider must be cycled
+            baseCharacter.UnitController.CharacterUnit.DisableCollider();
+            baseCharacter.UnitController.CharacterUnit.EnableCollider();
         }
 
         public void StatChangedNotificationHandler() {
