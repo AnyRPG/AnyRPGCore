@@ -163,6 +163,16 @@ namespace AnyRPG {
             }
         }
         public bool IsReviving { get => isReviving; set => isReviving = value; }
+        public bool IsStealthed {
+            get {
+                foreach (StatusEffectNode statusEffectNode in statusEffects.Values) {
+                    if (statusEffectNode.StatusEffect.Stealth == true) {
+                        return true;
+                    }
+                }
+                return false;
+            }
+        }
         public Dictionary<PowerResource, PowerResourceNode> PowerResourceDictionary { get => powerResourceDictionary; set => powerResourceDictionary = value; }
         public Dictionary<string, Stat> PrimaryStats { get => primaryStats; set => primaryStats = value; }
         public Dictionary<SecondaryStatType, Stat> SecondaryStats { get => secondaryStats; set => secondaryStats = value; }
@@ -245,6 +255,22 @@ namespace AnyRPG {
                         }
                     }
                 }
+            }
+
+        }
+
+        public void CancelNonCombatEffects() {
+
+            List<StatusEffectNode> cancelEffects = new List<StatusEffectNode>();
+
+            foreach (StatusEffectNode statusEffectNode in statusEffects.Values) {
+                if (statusEffectNode.StatusEffect.RequireOutOfCombat == true) {
+                    cancelEffects.Add(statusEffectNode);
+                }
+            }
+
+            foreach (StatusEffectNode statusEffectNode in cancelEffects) {
+                statusEffectNode.CancelStatusEffect();
             }
 
         }

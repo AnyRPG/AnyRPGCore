@@ -452,6 +452,9 @@ namespace AnyRPG {
             if (baseCharacter != null && baseCharacter.UnitController != null && baseCharacter.UnitController.UnitAnimator != null) {
                 baseCharacter.UnitController.UnitAnimator.SetBool("InCombat", true);
             }
+            if (inCombat == false) {
+                baseCharacter?.CharacterStats.CancelNonCombatEffects();
+            }
             inCombat = true;
             if (!aggroTable.AggroTableContains(CharacterUnit.GetCharacterUnit(target))) {
                 OnEnterCombat(target);

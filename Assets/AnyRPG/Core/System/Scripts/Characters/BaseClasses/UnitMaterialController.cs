@@ -26,7 +26,7 @@ namespace AnyRPG {
         }
 
         public void SetupMaterialArrays() {
-            Debug.Log(unitController.gameObject.name + ".UnitMaterialController.SetupMaterialArrays()");
+            //Debug.Log(unitController.gameObject.name + ".UnitMaterialController.SetupMaterialArrays()");
 
             // reset original materials
             originalMaterials = new Dictionary<Renderer, Material[]>();
@@ -74,7 +74,7 @@ namespace AnyRPG {
         }
 
         public void ActivateStealth() {
-            Debug.Log(unitController.gameObject.name + ".UnitMaterialController.ActivateStealth()");
+            //Debug.Log(unitController.gameObject.name + ".UnitMaterialController.ActivateStealth()");
 
             if (meshRenderers == null) {
                 //Debug.Log(gameObject.name + ".MaterialChangeController.PerformMaterialChange(): meshRender is null.  This shouldn't happen because we checked before instantiating this!");
@@ -101,7 +101,7 @@ namespace AnyRPG {
         }
 
         public void DeactivateStealth() {
-            Debug.Log(unitController.gameObject.name + ".UnitMaterialController.DeactivateStealth()");
+            //Debug.Log(unitController.gameObject.name + ".UnitMaterialController.DeactivateStealth()");
 
             RevertMaterialChange();
         }

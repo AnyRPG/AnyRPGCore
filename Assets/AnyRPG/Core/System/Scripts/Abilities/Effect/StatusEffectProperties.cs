@@ -45,6 +45,11 @@ namespace AnyRPG {
         [SerializeField]
         protected List<string> sceneNames = new List<string>();
 
+        [Tooltip("If true, this effect will be cancelled on entering combat")]
+        [SerializeField]
+        protected bool requireOutOfCombat = false;
+
+
         [Header("Duration")]
 
         [Tooltip("by default all status effects are infinite duration")]
@@ -222,6 +227,7 @@ namespace AnyRPG {
         public bool CanGlide { get => canGlide; }
         public StatusEffectGroup StatusEffectGroup { get => statusEffectGroup; set => statusEffectGroup = value; }
         public bool SaveEffect { get => saveEffect; set => saveEffect = value; }
+        public bool RequireOutOfCombat { get => requireOutOfCombat; set => requireOutOfCombat = value; }
 
         /*
         public void GetStatusEffectProperties(StatusEffect effect) {

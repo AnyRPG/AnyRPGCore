@@ -82,10 +82,18 @@ namespace AnyRPG {
                 // this was not a character that entered, and therefore we cannot agro it
                 return;
             }
+
+            // cannot agro characters that are stealthed
+            if (_characterUnit.BaseCharacter.CharacterStats.IsStealthed == true) {
+                return;
+            }
+
             BaseCharacter otherBaseCharacter = _characterUnit.BaseCharacter;
             // remove requirement for other character to have faction because a neutral character would not get attacked by hostile factions
             //if (otherBaseCharacter != null && otherBaseCharacter.CharacterCombat != null && otherBaseCharacter.CharacterStats.IsAlive == true && otherBaseCharacter.Faction != null && baseCharacter != null && baseCharacter.Faction != null) {
-            if (otherBaseCharacter != null && otherBaseCharacter.CharacterCombat != null && otherBaseCharacter.CharacterStats.IsAlive == true && baseCharacter != null && baseCharacter.Faction != null) {
+            if (otherBaseCharacter != null && otherBaseCharacter.CharacterCombat != null
+                && otherBaseCharacter.CharacterStats.IsAlive == true
+                && baseCharacter?.Faction != null) {
                 if (Faction.RelationWith(otherBaseCharacter, BaseCharacter) <= -1) {
                     //baseCharacter.CharacterCombat.MyAggroTable.AddToAggroTable(_characterUnit, -1);
                     baseCharacter.CharacterCombat.EnterCombat(targetInteractable);
