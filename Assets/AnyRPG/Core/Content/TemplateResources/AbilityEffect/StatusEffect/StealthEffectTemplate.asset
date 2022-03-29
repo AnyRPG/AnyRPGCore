@@ -62,6 +62,7 @@ MonoBehaviour:
     classTrait: 0
     requiredLevel: 1
     sceneNames: []
+    requireOutOfCombat: 1
     limitedDuration: 0
     duration: 0
     maxStacks: 1

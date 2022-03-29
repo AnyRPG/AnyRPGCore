@@ -581,6 +581,7 @@ namespace AnyRPG {
             activeCharacter.CharacterAbilityManager.OnLearnedCheckFail += HandleLearnedCheckFail;
             activeCharacter.CharacterAbilityManager.OnPowerResourceCheckFail += HandlePowerResourceCheckFail;
             activeCharacter.CharacterAbilityManager.OnCombatCheckFail += HandleCombatCheckFail;
+            activeCharacter.CharacterAbilityManager.OnStealthCheckFail += HandleStealthCheckFail;
             activeCharacter.CharacterAbilityManager.OnAnimatedAbilityCheckFail += HandleAnimatedAbilityCheckFail;
             activeCharacter.CharacterAbilityManager.OnPerformAbility += HandlePerformAbility;
             activeCharacter.CharacterAbilityManager.OnBeginAbilityCoolDown += HandleBeginAbilityCoolDown;
@@ -614,6 +615,7 @@ namespace AnyRPG {
             activeCharacter.CharacterAbilityManager.OnLearnedCheckFail -= HandleLearnedCheckFail;
             activeCharacter.CharacterAbilityManager.OnPowerResourceCheckFail -= HandlePowerResourceCheckFail;
             activeCharacter.CharacterAbilityManager.OnCombatCheckFail -= HandleCombatCheckFail;
+            activeCharacter.CharacterAbilityManager.OnStealthCheckFail -= HandleStealthCheckFail;
             activeCharacter.CharacterAbilityManager.OnAnimatedAbilityCheckFail -= HandleAnimatedAbilityCheckFail;
             activeCharacter.CharacterAbilityManager.OnPerformAbility -= HandlePerformAbility;
             activeCharacter.CharacterAbilityManager.OnBeginAbilityCoolDown -= HandleBeginAbilityCoolDown;
@@ -723,6 +725,10 @@ namespace AnyRPG {
 
         public void HandleCombatCheckFail(BaseAbilityProperties ability) {
             logManager.WriteCombatMessage("The ability " + ability.DisplayName + " can only be cast while out of combat");
+        }
+
+        public void HandleStealthCheckFail(BaseAbilityProperties ability) {
+            logManager.WriteCombatMessage("The ability " + ability.DisplayName + " can only be cast while while stealthed");
         }
 
         public void HandlePowerResourceCheckFail(BaseAbilityProperties ability, IAbilityCaster abilityCaster) {

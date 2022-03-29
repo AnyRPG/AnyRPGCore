@@ -21,7 +21,7 @@ MonoBehaviour:
   resourceDescriptionProfile: 
   optionalOverride: 0
   directAbilityProperties:
-    requireOutOfCombat: 0
+    requireOutOfCombat: 1
     weaponAffinityNames: []
     holdableObjectList: []
     abilityPrefabSource: 0

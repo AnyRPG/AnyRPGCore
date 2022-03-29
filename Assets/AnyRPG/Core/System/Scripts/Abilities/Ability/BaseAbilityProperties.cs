@@ -20,6 +20,10 @@ namespace AnyRPG {
         [SerializeField]
         protected bool requireOutOfCombat = false;
 
+        [Tooltip("If true, the caster must be stealthed to perform this ability.")]
+        [SerializeField]
+        protected bool requireStealth = false;
+
         [Tooltip("If this list is not empty, this ability will require the character to have the following weapons equipped to use it.")]
         [SerializeField]
         [ResourceSelector(resourceType = typeof(WeaponSkill))]
@@ -333,6 +337,7 @@ namespace AnyRPG {
         public List<AbilityEffectProperties> ChanneledAbilityEffects { get => channeledAbilityEffects; set => channeledAbilityEffects = value; }
         public string CastingAudioProfileName { get => castingAudioProfileName; set => castingAudioProfileName = value; }
         public bool UseAnimationCastTime { get => useAnimationCastTime; set => useAnimationCastTime = value; }
+        public bool RequireStealth { get => requireStealth; set => requireStealth = value; }
 
         /*
         public void GetBaseAbilityProperties(BaseAbility effect) {
@@ -468,6 +473,14 @@ namespace AnyRPG {
                 }
             }
 
+            if (RequireStealth) {
+                if (playerManager.MyCharacter.CharacterStats.IsStealthed == false) {
+                    //Debug.Log("ActionButton.UpdateVisual(): can't cast due to not being stealthed");
+                    actionButton.EnableFullCoolDownIcon();
+                    return;
+                }
+            }
+
             if (!CanCast(playerManager.MyCharacter)) {
                 //Debug.Log(DisplayName + ".BaseAbility.UpdateActionButtonVisual(): can't cast due to spell restrictions");
                 actionButton.EnableFullCoolDownIcon();
@@ -571,6 +584,11 @@ namespace AnyRPG {
             bool affinityMet = false;
             string colorString = string.Empty;
             string addString = string.Empty;
+            if (requireStealth == true) {
+                if (playerManager.MyCharacter.CharacterStats.IsStealthed == false) {
+                    addString = string.Format("\n<color={0}>Requires Stealth</color>", "#ff0000ff");
+                }
+            }
             if (weaponAffinityNames.Count == 0) {
                 // no restrictions, automatically true
                 affinityMet = true;
@@ -588,7 +606,7 @@ namespace AnyRPG {
                 } else {
                     colorString = "#ff0000ff";
                 }
-                addString = string.Format("\n<color={0}>Requires: {1}</color>", colorString, string.Join(",", requireWeaponSkills));
+                addString += string.Format("\n<color={0}>Requires: {1}</color>", colorString, string.Join(",", requireWeaponSkills));
             }
 
             string abilityRange = (GetTargetOptions(playerManager.MyCharacter).UseMeleeRange == true ? "melee" : GetTargetOptions(playerManager.MyCharacter).MaxRange + " meters");

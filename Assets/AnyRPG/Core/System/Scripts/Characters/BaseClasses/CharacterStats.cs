@@ -15,6 +15,8 @@ namespace AnyRPG {
         public event System.Action OnReviveComplete = delegate { };
         public event System.Action<StatusEffectNode> OnStatusEffectAdd = delegate { };
         public event System.Action OnStatChanged = delegate { };
+        public event System.Action OnEnterStealth = delegate { };
+        public event System.Action OnLeaveStealth = delegate { };
         public event System.Action<int> OnLevelChanged = delegate { };
         public event System.Action<AbilityEffectContext> OnImmuneToEffect = delegate { };
         public event System.Action<int> OnGainXP = delegate { };
@@ -952,6 +954,12 @@ namespace AnyRPG {
                 }
             }
 
+            if (statusEffect.Stealth == true) {
+                if (IsStealthed == false) {
+                    DeactivateStealth();
+                }
+            }
+
 
             if (statusEffect.FactionModifiers.Count > 0) {
                 SystemEventManager.TriggerEvent("OnReputationChange", new EventParamProperties());
@@ -1190,6 +1198,16 @@ namespace AnyRPG {
                 powerResourceDictionary[PrimaryResource].currentValue = Mathf.Clamp(powerResourceDictionary[PrimaryResource].currentValue, 0, MaxPrimaryResource);
                 OnPrimaryResourceAmountChanged(MaxPrimaryResource, CurrentPrimaryResource);
             }
+        }
+
+        public void ActivateStealth() {
+            baseCharacter.UnitController.UnitMaterialController.ActivateStealth();
+            OnEnterStealth();
+        }
+
+        public void DeactivateStealth() {
+            baseCharacter.UnitController.UnitMaterialController.DeactivateStealth();
+            OnLeaveStealth();
         }
 
         public void StatChangedNotificationHandler() {

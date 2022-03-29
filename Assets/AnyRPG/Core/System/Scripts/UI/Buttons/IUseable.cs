@@ -12,6 +12,7 @@ namespace AnyRPG {
         string DisplayName { get; }
         float CoolDown { get; }
         bool RequireOutOfCombat { get; }
+        bool RequireStealth { get; }
         bool Use();
         bool ActionButtonUse();
         Coroutine ChooseMonitorCoroutine(ActionButton actionButton);

@@ -493,8 +493,8 @@ namespace AnyRPG {
             if (canGlide == true && targetCharacter.UnitController != null) {
                 targetCharacter.UnitController.CanGlideOverride = true;
             }
-            if (stealth == true && targetCharacter.UnitController != null) {
-                targetCharacter.UnitController.UnitMaterialController.ActivateStealth();
+            if (stealth == true) {
+                targetCharacter.CharacterStats.ActivateStealth();
             }
         }
 
@@ -511,9 +511,11 @@ namespace AnyRPG {
             if (Levitate == true) {
                 targetCharacter.UnitController.UnLevitateCharacter();
             }
+            /*
             if (stealth == true) {
-                targetCharacter.UnitController.UnitMaterialController.DeactivateStealth();
+                targetCharacter.CharacterStats.DeactivateStealth();
             }
+            */
 
         }
 

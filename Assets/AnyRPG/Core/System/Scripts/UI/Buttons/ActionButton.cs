@@ -210,6 +210,14 @@ namespace AnyRPG {
             UpdateVisual();
         }
 
+        public void HandleLeaveStealth() {
+            UpdateVisual();
+        }
+
+        public void HandleEnterStealth() {
+            UpdateVisual();
+        }
+
         public void LoadUseable(IUseable newUseable) {
             useable = newUseable.GetFactoryUseable();
         }
@@ -239,6 +247,7 @@ namespace AnyRPG {
             playerManager.MyCharacter.CharacterAbilityManager.OnBeginAbilityCoolDown += HandleBeginAbilityCooldown;
 
             SubscribeToCombatEvents();
+            SubscribeToStealthEvents();
 
             // there may be a global cooldown in progress.  if not, this call will still update the visual
             if (monitor == true) {
@@ -261,6 +270,13 @@ namespace AnyRPG {
             if (Useable != null && Useable.RequireOutOfCombat == true) {
                 playerManager.MyCharacter.CharacterCombat.OnEnterCombat += HandleEnterCombat;
                 playerManager.MyCharacter.CharacterCombat.OnDropCombat += HandleDropCombat;
+            }
+        }
+
+        public void SubscribeToStealthEvents() {
+            if (Useable != null && Useable.RequireStealth == true) {
+                playerManager.MyCharacter.CharacterStats.OnEnterStealth += HandleEnterStealth;
+                playerManager.MyCharacter.CharacterStats.OnLeaveStealth += HandleLeaveStealth;
             }
         }
 
@@ -483,6 +499,14 @@ namespace AnyRPG {
                 playerManager.MyCharacter.CharacterCombat.OnDropCombat -= HandleDropCombat;
             }
         }
+
+        public void UnsubscribeFromStealthEvents() {
+            if (Useable != null && Useable.RequireStealth == true) {
+                playerManager.MyCharacter.CharacterStats.OnEnterStealth -= HandleEnterStealth;
+                playerManager.MyCharacter.CharacterStats.OnLeaveStealth -= HandleLeaveStealth;
+            }
+        }
+
 
         public void ClearUseable() {
             //Debug.Log("ActionButton.ClearUseable()");

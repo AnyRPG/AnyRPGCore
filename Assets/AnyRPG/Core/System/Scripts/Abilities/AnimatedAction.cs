@@ -27,6 +27,7 @@ namespace AnyRPG {
         public AnimatedActionProperties ActionProperties { get => actionProperties; }
         public float CoolDown { get => 0f; }
         public virtual bool RequireOutOfCombat { get => false; }
+        public virtual bool RequireStealth { get => false; }
 
         /// <summary>
         /// return the casting time of the ability without any speed modifiers applied

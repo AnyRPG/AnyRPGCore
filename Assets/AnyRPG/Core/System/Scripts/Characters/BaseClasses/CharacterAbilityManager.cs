@@ -16,6 +16,7 @@ namespace AnyRPG {
         public event System.Action OnUnlearnAbilities = delegate { };
         public event System.Action<BaseAbilityProperties> OnLearnedCheckFail = delegate { };
         public event System.Action<BaseAbilityProperties> OnCombatCheckFail = delegate { };
+        public event System.Action<BaseAbilityProperties> OnStealthCheckFail = delegate { };
         public event System.Action<AnimatedAbilityProperties> OnAnimatedAbilityCheckFail = delegate { };
         public event System.Action<BaseAbilityProperties, IAbilityCaster> OnPowerResourceCheckFail = delegate { };
         public event System.Action<BaseAbilityProperties, Interactable> OnTargetInAbilityRangeFail = delegate { };
@@ -1603,6 +1604,15 @@ namespace AnyRPG {
                 return false;
             }
 
+            if (!PerformStealthCheck(ability)) {
+                //Debug.Log(baseCharacter.gameObject.name + ".CharacterAbilityManager.CanCastAbility(" + ability.DisplayName + "): cannot cast ability in combat!");
+                if (playerInitiated) {
+                    OnCombatMessage("Cannot cast " + ability.DisplayName + "): cannot cast ability unless stealthed!");
+                }
+                return false;
+            }
+
+
             if (!PerformLivenessCheck(ability)) {
                 //Debug.Log(baseCharacter.gameObject.name + ".CharacterAbilityManager.CanCastAbility(" + ability.DisplayName + "): cannot cast while dead!");
                 if (playerInitiated) {
@@ -1667,6 +1677,15 @@ namespace AnyRPG {
             }
             return true;
         }
+
+        public bool PerformStealthCheck(BaseAbilityProperties ability) {
+            if (ability.RequireStealth == true && BaseCharacter.CharacterStats.IsStealthed == false) {
+                OnStealthCheckFail(ability);
+                return false;
+            }
+            return true;
+        }
+
 
         /// <summary>
         /// Check if the caster has the required amount of the power resource to cast the ability

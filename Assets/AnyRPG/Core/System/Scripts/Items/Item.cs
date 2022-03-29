@@ -104,6 +104,7 @@ namespace AnyRPG {
         public InventorySlot Slot { get => slot; set => slot = value; }
         public virtual float CoolDown { get => 0f; }
         public virtual bool RequireOutOfCombat { get => false; }
+        public virtual bool RequireStealth { get => false; }
 
 
         public int BuyPrice() {
