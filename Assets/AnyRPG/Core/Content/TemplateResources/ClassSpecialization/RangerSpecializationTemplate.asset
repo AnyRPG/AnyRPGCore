@@ -28,7 +28,8 @@ MonoBehaviour:
     abilityNames:
     - Capture Beast
     - Charm Pet
-    traitNames: []
+    traitNames:
+    - Soul Of The Ranger
     armorClassList: []
     weaponSkills: []
   primaryStats: []

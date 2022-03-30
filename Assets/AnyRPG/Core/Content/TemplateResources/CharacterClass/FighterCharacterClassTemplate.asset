@@ -10,47 +10,46 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: d67e3801170622341be03526c0ae62e0, type: 3}
-  m_Name: PriestCharacterClassTemplate
+  m_Name: FighterCharacterClassTemplate
   m_EditorClassIdentifier: 
-  resourceName: Priest
+  resourceName: Fighter
   displayName: 
-  icon: {fileID: 21300000, guid: bff1d48731685ec428be2663a3abfd54, type: 3}
+  icon: {fileID: 21300000, guid: 653bc5e3dee54474ebb38d07ce7fc1eb, type: 3}
   iconBackgroundImage: {fileID: 0}
   description: 
   useRegionalDescription: 0
   resourceDescriptionProfile: 
   optionalOverride: 0
   newGameOption: 0
-  equipmentNames: []
+  equipmentNames:
+  - Brown Leather Armor
+  - Brown Leather Belt
+  - Brown Leather Boots
+  - Brown Leather Bracers
+  - Brown Leather Gloves
+  - Brown Leather Headband
+  - Brown Leather Pants
+  - Brown Leather Shoulders
   capabilities:
     abilityNames:
-    - Heal
-    - Heal Over Time
-    - Healing Projectile
-    - Healing Channel
-    - Healing Circle
-    - Healing Explosion
-    - Revive Ally
-    - Cure Poison
+    - Punch Combo
     traitNames: []
     armorClassList:
-    - Cloth
+    - Leather
     weaponSkills:
-    - Staff
+    - Fist
   unitTypeCapabilities: []
   primaryStats:
-  - statName: Intellect
+  - statName: Agility
     budgetPerLevel: 5
     primaryToSecondaryConversion:
-    - secondaryStatType: 6
-      conversionRatio: 1
+    - secondaryStatType: 4
+      conversionRatio: 0.5
       ratedConversion: 0
     - secondaryStatType: 2
       conversionRatio: 0.5
       ratedConversion: 1
-    primaryToResourceConversion:
-    - resourceName: Mana
-      resourcePerPoint: 10
+    primaryToResourceConversion: []
   powerResources:
-  - Mana
+  - Energy
   validPetTypes: []

@@ -1,0 +1,132 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c80d744dccc642148ab1014a88212085, type: 3}
+  m_Name: HealingExplosionAbilityTemplate
+  m_EditorClassIdentifier: 
+  resourceName: Healing Explosion
+  displayName: 
+  icon: {fileID: 21300000, guid: d816099ac60642e42ad491a31f38ea8b, type: 3}
+  iconBackgroundImage: {fileID: 0}
+  description: A powerful blast of light eminates from the caster, causing damage
+    to all nearby enemies and healing all nearby allies for the damage done
+  useRegionalDescription: 0
+  resourceDescriptionProfile: 
+  optionalOverride: 0
+  requireOutOfCombat: 0
+  weaponAffinityNames: []
+  holdableObjectList: []
+  abilityPrefabSource: 0
+  animatorCreatePrefabs: 0
+  prefabDestroyDelay: 1
+  animationProfileName: 
+  useUnitCastAnimations: 0
+  animationHitAudioProfileName: 
+  castingAudioProfileName: 
+  requiredLevel: 1
+  characterClassRequirements: []
+  useableWithoutLearning: 0
+  autoAddToBars: 1
+  canSimultaneousCast: 0
+  canCastWhileMoving: 0
+  ignoreGlobalCoolDown: 0
+  powerResourceName: Mana
+  baseResourceCost: 0
+  resourceCostPerLevel: 10
+  spendDelay: 0
+  generatePowerResourceName: 
+  baseResourceGain: 0
+  resourceGainPerLevel: 0
+  useSpeedMultipliers: 1
+  useAnimationCastTime: 0
+  abilityCastingTime: 0
+  abilityCoolDown: 5
+  coolDownOnCast: 0
+  useAbilityEffectTargetting: 0
+  targetOptions:
+    requireTarget: 0
+    requireLineOfSight: 0
+    requireLiveTarget: 0
+    requireDeadTarget: 0
+    canCastOnSelf: 0
+    canCastOnOthers: 0
+    canCastOnEnemy: 0
+    canCastOnNeutral: 0
+    canCastOnFriendly: 0
+    autoSelfCast: 0
+    useMeleeRange: 0
+    maxRange: 15
+    requireFacingTarget: 0
+    maxAngle: 45
+    requiresGroundTarget: 0
+    groundTargetColor: {r: 1, g: 1, b: 1, a: 1}
+    groundTargetRadius: 0
+  inlineAbilityEffects: []
+  abilityEffectNames:
+  - Healing Explosion AOE
+  tickRate: 1
+  channeledAbilityEffectnames: []
+  directAbilityProperties:
+    requireOutOfCombat: 0
+    weaponAffinityNames: []
+    holdableObjectList: []
+    abilityPrefabSource: 0
+    animatorCreatePrefabs: 0
+    prefabDestroyDelay: 1
+    animationProfileName: 
+    useUnitCastAnimations: 0
+    animationHitAudioProfileName: 
+    castingAudioProfileName: 
+    requiredLevel: 1
+    characterClassRequirements: []
+    useableWithoutLearning: 0
+    autoAddToBars: 1
+    canSimultaneousCast: 0
+    canCastWhileMoving: 0
+    ignoreGlobalCoolDown: 0
+    powerResourceName: Mana
+    baseResourceCost: 0
+    resourceCostPerLevel: 10
+    spendDelay: 0
+    generatePowerResourceName: 
+    baseResourceGain: 0
+    resourceGainPerLevel: 0
+    useSpeedMultipliers: 1
+    useAnimationCastTime: 0
+    abilityCastingTime: 0
+    abilityCoolDown: 5
+    coolDownOnCast: 0
+    useAbilityEffectTargetting: 0
+    targetOptions:
+      requireTarget: 0
+      requireLineOfSight: 0
+      requireLiveTarget: 0
+      requireDeadTarget: 0
+      canCastOnSelf: 0
+      canCastOnOthers: 0
+      canCastOnEnemy: 0
+      canCastOnNeutral: 0
+      canCastOnFriendly: 0
+      autoSelfCast: 0
+      useMeleeRange: 0
+      maxRange: 15
+      requireFacingTarget: 0
+      maxAngle: 45
+      requiresGroundTarget: 0
+      groundTargetColor: {r: 1, g: 1, b: 1, a: 1}
+      groundTargetRadius: 0
+    inlineAbilityEffects: []
+    abilityEffectNames:
+    - Healing Explosion AOE
+    tickRate: 1
+    channeledAbilityEffectnames: []
+  references:
+    version: 1

@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6c9b51b8d3aa844448aaeab0a989e2fa, type: 3}
   m_Name: PriestCharacterClassTemplatePackage
   m_EditorClassIdentifier: 
-  resourceName: Warrior Character Class
+  resourceName: Priest Character Class
   displayName: 
   icon: {fileID: 0}
   iconBackgroundImage: {fileID: 0}
@@ -21,14 +21,22 @@ MonoBehaviour:
   resourceDescriptionProfile: 
   optionalOverride: 0
   resources:
-  - {fileID: 11400000, guid: 6bf56d2781d137647abebf5ec130d072, type: 2}
-  - {fileID: 11400000, guid: 6bf56d2781d137647abebf5ec130d072, type: 2}
-  prefabs: []
+  - {fileID: 11400000, guid: e9e468d87d555b94fa839a37700eedf7, type: 2}
+  - {fileID: 11400000, guid: a49e4d90681cd1446947c5d50c0aac1f, type: 2}
+  - {fileID: 11400000, guid: 83eb4e089c8161d47aa0a4a29cec4fc6, type: 2}
+  - {fileID: 11400000, guid: 3a4cc7069cc040c47bcccb85c2c04877, type: 2}
+  - {fileID: 11400000, guid: 776dde35bcccdb24098286ca6447a5d7, type: 2}
+  - {fileID: 11400000, guid: d84295d5ff2f02d448630024501f644a, type: 2}
+  - {fileID: 11400000, guid: d9fb92c45d4de194aa5b3d6e4c0051de, type: 2}
+  prefabs:
+  - {fileID: 6390993854296471015, guid: cf404bce9ddc35441895c6dc3ef7bca2, type: 3}
   dependencies:
-  - {fileID: 11400000, guid: a9553be6ef0b0db41b652a68923aaebc, type: 2}
-  - {fileID: 11400000, guid: 1bca0fa95db3df3498b779d4e55b7e29, type: 2}
-  - {fileID: 11400000, guid: e400d17e27240644ea598a36d04f27ab, type: 2}
-  - {fileID: 11400000, guid: 8994140f718d31348b62c0848cf392ce, type: 2}
-  - {fileID: 11400000, guid: 426feba4f55c6db43b617eb4a1a8b745, type: 2}
-  - {fileID: 11400000, guid: c525417ff82ed574182ac444740219c1, type: 2}
-  - {fileID: 11400000, guid: ee32b27cc4229214eacaf2eff6b870d3, type: 2}
+  - {fileID: 11400000, guid: f79d90c3c7a2fc54a8a285d798fb1bb1, type: 2}
+  - {fileID: 11400000, guid: 412cf62630cd762408a6e8e980a8eb60, type: 2}
+  - {fileID: 11400000, guid: 944c174d90b9f564a8a292367b31bd6f, type: 2}
+  - {fileID: 11400000, guid: 7b27aa17d221246409720dee51279e34, type: 2}
+  - {fileID: 11400000, guid: 0c8551739e73f7f43820319a0ba1c010, type: 2}
+  - {fileID: 11400000, guid: 676e6fce8d555ad498f59d86278f54d5, type: 2}
+  - {fileID: 11400000, guid: ccdd184598be09b458e34f6735e1406b, type: 2}
+  - {fileID: 11400000, guid: 946598c6372fe5e41ae3045dec200149, type: 2}
+  - {fileID: 11400000, guid: 7db817ba943b7b644871ca37baa89911, type: 2}
