@@ -1,0 +1,39 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6c9b51b8d3aa844448aaeab0a989e2fa, type: 3}
+  m_Name: AllRandomMedievalWeaponItemsTemplatePackage
+  m_EditorClassIdentifier: 
+  resourceName: Random Medieval Weapon Items
+  displayName: 
+  icon: {fileID: 0}
+  iconBackgroundImage: {fileID: 0}
+  description: 
+  useRegionalDescription: 0
+  resourceDescriptionProfile: 
+  optionalOverride: 0
+  resources:
+  - {fileID: 11400000, guid: a5e4324dbd2991c499bae252a6e9274d, type: 2}
+  - {fileID: 11400000, guid: 89b2cc975601233438984cdd88046c5d, type: 2}
+  prefabs: []
+  dependencies:
+  - {fileID: 11400000, guid: 252ca395929968e43820806aecfe6a2d, type: 2}
+  - {fileID: 11400000, guid: 5b4783ed40040c44b8b444660c359379, type: 2}
+  - {fileID: 11400000, guid: 61229b70436018848b46d07b3072aeb0, type: 2}
+  - {fileID: 11400000, guid: 3776090062e66bb48a150fc95f53b842, type: 2}
+  - {fileID: 11400000, guid: 29ac1bd25e5db684b9c3f60fe4ce13fc, type: 2}
+  - {fileID: 11400000, guid: d82c39641f536034da4ff467ee5c308d, type: 2}
+  - {fileID: 11400000, guid: 5e55c6a25aa37344f944976c52798644, type: 2}
+  - {fileID: 11400000, guid: 6b3c681239ef9a941b8465007ae719bb, type: 2}
+  - {fileID: 11400000, guid: 34f5617b3dd92cd4ab790523041fb155, type: 2}
+  - {fileID: 11400000, guid: e91882fd2028aee4c906fbce6a60d11c, type: 2}
+  - {fileID: 11400000, guid: 32e591ebaf701dd4ab86debe86c9f2ef, type: 2}
+  - {fileID: 11400000, guid: 8c81f436a3dfd9a4eafad67497339cb5, type: 2}

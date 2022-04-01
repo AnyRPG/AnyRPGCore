@@ -1,0 +1,31 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6c9b51b8d3aa844448aaeab0a989e2fa, type: 3}
+  m_Name: AllBagItemsTemplatePackage
+  m_EditorClassIdentifier: 
+  resourceName: All Bag Items
+  displayName: 
+  icon: {fileID: 0}
+  iconBackgroundImage: {fileID: 0}
+  description: 
+  useRegionalDescription: 0
+  resourceDescriptionProfile: 
+  optionalOverride: 0
+  resources:
+  - {fileID: 11400000, guid: d3b2179bab12721488917d8414098c6d, type: 2}
+  - {fileID: 11400000, guid: 34e2bb848e6738a4abc799a2fb6cc193, type: 2}
+  prefabs: []
+  dependencies:
+  - {fileID: 11400000, guid: 3faf8a7cab6631744b60736fe7210296, type: 2}
+  - {fileID: 11400000, guid: 77a4a2a1881a7a144ac4742e9453189d, type: 2}
+  - {fileID: 11400000, guid: 1f15fde44ad93dd45b7e2cbc1888a2b0, type: 2}
+  - {fileID: 11400000, guid: 1adf2ef1f81c93e43b772ede85d85aac, type: 2}

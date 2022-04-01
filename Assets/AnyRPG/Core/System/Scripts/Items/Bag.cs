@@ -11,9 +11,6 @@ namespace AnyRPG {
         [SerializeField]
         private int slots;
 
-        [SerializeField]
-        private GameObject bagPrefab;
-
         public BagNode BagNode { get; set; }
 
         /// <summary>

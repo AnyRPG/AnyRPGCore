@@ -1,0 +1,37 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 112a0f309fc47294794c542a6daef708, type: 3}
+  m_Name: EpicMedievalStaffRecipeItemTemplate
+  m_EditorClassIdentifier: 
+  resourceName: Epic Medieval Staff Recipe
+  displayName: 
+  icon: {fileID: 21300000, guid: 842bb693f9459e4489f0b1a4b1e34c72, type: 3}
+  iconBackgroundImage: {fileID: 0}
+  description: 
+  useRegionalDescription: 0
+  resourceDescriptionProfile: 
+  optionalOverride: 0
+  stackSize: 1
+  itemQuality: Epic
+  randomItemQuality: 0
+  dynamicLevel: 0
+  freezeDropLevel: 0
+  levelCap: 0
+  itemLevel: 1
+  useLevel: 1
+  currencyName: Gold
+  dynamicCurrencyAmount: 1
+  pricePerLevel: 1
+  basePrice: 0
+  uniqueItem: 0
+  characterClassRequirementList: []
+  recipeName: Epic Medieval Staff

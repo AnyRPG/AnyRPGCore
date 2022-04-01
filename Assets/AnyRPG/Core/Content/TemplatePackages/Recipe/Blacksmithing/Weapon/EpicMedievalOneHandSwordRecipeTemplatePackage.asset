@@ -1,0 +1,30 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6c9b51b8d3aa844448aaeab0a989e2fa, type: 3}
+  m_Name: EpicMedievalOneHandSwordRecipeTemplatePackage
+  m_EditorClassIdentifier: 
+  resourceName: Epic Medieval One Hand Sword Recipe
+  displayName: 
+  icon: {fileID: 0}
+  iconBackgroundImage: {fileID: 0}
+  description: 
+  useRegionalDescription: 0
+  resourceDescriptionProfile: 
+  optionalOverride: 0
+  resources:
+  - {fileID: 11400000, guid: cb3bfc4804a466d4e89ec68f7f33535d, type: 2}
+  - {fileID: 11400000, guid: bfe2e6c5d1643624f8dff335aa12e818, type: 2}
+  - {fileID: 11400000, guid: da1fee1fad634d5468f914211e976b27, type: 2}
+  - {fileID: 11400000, guid: 396ac7bda1911f64eaf99d8fc4d28842, type: 2}
+  prefabs: []
+  dependencies:
+  - {fileID: 11400000, guid: 7def07719cd64e443978a48f547c8cd9, type: 2}

@@ -23,7 +23,7 @@ MonoBehaviour:
   stackSize: 1
   itemQuality: 
   randomItemQuality: 0
-  dynamicLevel: 0
+  dynamicLevel: 1
   freezeDropLevel: 0
   levelCap: 0
   itemLevel: 1

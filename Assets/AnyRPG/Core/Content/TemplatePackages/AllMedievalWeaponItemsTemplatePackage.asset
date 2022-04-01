@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6c9b51b8d3aa844448aaeab0a989e2fa, type: 3}
   m_Name: AllMedievalWeaponItemsTemplatePackage
   m_EditorClassIdentifier: 
-  resourceName: Medieval Weapon Items
+  resourceName: Epic Medieval Weapon Items
   displayName: 
   icon: {fileID: 0}
   iconBackgroundImage: {fileID: 0}

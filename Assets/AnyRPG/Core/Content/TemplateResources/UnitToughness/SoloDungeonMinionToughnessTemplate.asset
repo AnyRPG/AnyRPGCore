@@ -12,13 +12,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f3f308c368d511643b1e61b7e87170c1, type: 3}
   m_Name: SoloDungeonMinionToughnessTemplate
   m_EditorClassIdentifier: 
-  resourceName: Minion
+  resourceName: Solo Dungeon Minion
   displayName: 
   icon: {fileID: 0}
   iconBackgroundImage: {fileID: 0}
   description: 
   useRegionalDescription: 0
   resourceDescriptionProfile: 
+  optionalOverride: 0
   focusProjectorOverrideMap: []
   currencyMultiplier: 1.5
   experienceMultiplier: 1.5
