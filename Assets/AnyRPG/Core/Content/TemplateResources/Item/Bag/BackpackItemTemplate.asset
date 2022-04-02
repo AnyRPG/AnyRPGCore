@@ -21,14 +21,14 @@ MonoBehaviour:
   resourceDescriptionProfile: 
   optionalOverride: 0
   stackSize: 0
-  itemQuality: Better
+  itemQuality: 
   randomItemQuality: 0
   dynamicLevel: 0
   freezeDropLevel: 0
   levelCap: 0
   itemLevel: 1
   useLevel: 1
-  currencyName: Silver
+  currencyName: 
   dynamicCurrencyAmount: 1
   pricePerLevel: 10
   basePrice: 0

@@ -1953,6 +1953,10 @@ namespace AnyRPG {
             patrolController.BeginPatrol(patrolName);
         }
 
+        public void BeginAction(string actionName) {
+            unitActionManager.BeginAction(actionName);
+        }
+
         public void BeginAbility(string abilityName) {
             //Debug.Log(gameObject.name + ".UnitController.BeginAbility(" + abilityName + ")");
             characterUnit.BaseCharacter.AbilityManager.BeginAbility(abilityName);

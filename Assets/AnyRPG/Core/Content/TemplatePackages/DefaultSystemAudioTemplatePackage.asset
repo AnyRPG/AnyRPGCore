@@ -9,10 +9,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1e8493bf790139948a093ffd2829757c, type: 3}
-  m_Name: LegendaryClothEquipmentSetTemplate
+  m_Script: {fileID: 11500000, guid: 6c9b51b8d3aa844448aaeab0a989e2fa, type: 3}
+  m_Name: DefaultSystemAudioTemplatePackage
   m_EditorClassIdentifier: 
-  resourceName: Legendary Cloth
+  resourceName: Default System Effects
   displayName: 
   icon: {fileID: 0}
   iconBackgroundImage: {fileID: 0}
@@ -20,18 +20,8 @@ MonoBehaviour:
   useRegionalDescription: 0
   resourceDescriptionProfile: 
   optionalOverride: 0
-  equipmentNames:
-  - Legendary Cloth Bracers
-  - Legendary Cloth Gloves
-  - Legendary Cloth Hood
-  - Legendary Cloth Mantle
-  - Legendary Cloth Pants
-  - Legendary Cloth Robe
-  - Legendary Cloth Sash
-  - Legendary Cloth Shoes
-  traitNames:
-  - 
-  - Legendary Immunity
-  - 
-  - 
-  - Legendary Movement Speed
+  resources:
+  - {fileID: 11400000, guid: 09623c658bfbe4f489d251bd2713b439, type: 2}
+  - {fileID: 11400000, guid: e74b5791feac7be4784086ed8fbe1577, type: 2}
+  prefabs: []
+  dependencies: []

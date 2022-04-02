@@ -21,17 +21,17 @@ MonoBehaviour:
   resourceDescriptionProfile: 
   optionalOverride: 0
   equipmentNames:
-  - Legendary Plate
-  - Legendary Plate
-  - Legendary Plate
-  - Legendary Plate
-  - Legendary Plate
-  - Legendary Plate
-  - Legendary Plate
-  - Legendary Plate
+  - Legendary Plate Armor
+  - Legendary Plate Boots
+  - Legendary Plate Bracers
+  - Legendary Plate Girdle
+  - Legendary Plate Gloves
+  - Legendary Plate Helm
+  - Legendary Plate Legs
+  - Legendary Plate Pauldrons
   traitNames:
   - 
-  - Immunity Buff
+  - Legendary Immunity
   - 
   - 
-  - Immunity Buff
+  - Legendary Movement Speed

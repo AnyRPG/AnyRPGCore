@@ -21,17 +21,17 @@ MonoBehaviour:
   resourceDescriptionProfile: 
   optionalOverride: 0
   equipmentNames:
-  - Legendary Leather
-  - Legendary Leather
-  - Legendary Leather
-  - Legendary Leather
-  - Legendary Leather
-  - Legendary Leather
-  - Legendary Leather
-  - Legendary Leather
+  - Legendary Leather Armor
+  - Legendary Leather Belt
+  - Legendary Leather Boots
+  - Legendary Leather Bracers
+  - Legendary Leather Gloves
+  - Legendary Leather Headband
+  - Legendary Leather Pants
+  - Legendary Leather Shoulders
   traitNames:
   - 
-  - Immunity Buff
+  - Legendary Immunity
   - 
   - 
-  - Immunity Buff
+  - Legendary Movement Speed
