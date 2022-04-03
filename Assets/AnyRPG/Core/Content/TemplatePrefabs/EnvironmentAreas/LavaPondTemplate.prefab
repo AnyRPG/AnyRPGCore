@@ -294,4 +294,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   tickRate: 2
   abilityEffectNames:
-  - Fire
+  - Lava
