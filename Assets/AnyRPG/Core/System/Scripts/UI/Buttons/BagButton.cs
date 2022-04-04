@@ -129,15 +129,28 @@ namespace AnyRPG {
 
             if (eventData.button == PointerEventData.InputButton.Left) {
                 //Debug.Log("BagButton.OnPointerClick() LEFT CLICK DETECTED");
-                if (playerManager.MyCharacter.CharacterInventoryManager.FromSlot != null && handScript.Moveable != null && handScript.Moveable is Bag) {
+                if (handScript.Moveable != null && handScript.Moveable is Bag && (playerManager.MyCharacter.CharacterInventoryManager.FromSlot != null || (handScript.Moveable as Bag).BagNode != null)) {
                     if (bagNode.Bag != null) {
+                        // bag was moved from a bag bar slot to another bag bar slot with a bag in it, swap bags
                         playerManager.MyCharacter.CharacterInventoryManager.SwapBags(BagNode.Bag, handScript.Moveable as Bag);
                     } else {
                         Bag tmp = (Bag)handScript.Moveable;
-                        playerManager.MyCharacter.CharacterInventoryManager.AddBag(tmp, bagNode);
-                        tmp.Remove();
-                        handScript.Drop();
-                        playerManager.MyCharacter.CharacterInventoryManager.FromSlot = null;
+                        if (tmp.BagNode != null) {
+                            // bag was moved from a bag bar slot, to an empty bag bar slot, ensure there is enough space to remove bag from old slot before dropping in this slot
+                            if (playerManager.MyCharacter.CharacterInventoryManager.EmptySlotCount(tmp.BagNode.IsBankNode) - tmp.Slots >= 0) {
+                                playerManager.MyCharacter.CharacterInventoryManager.RemoveBag(tmp);
+                                playerManager.MyCharacter.CharacterInventoryManager.AddBag(tmp, bagNode);
+                                handScript.Drop();
+                            }
+                        } else {
+                            // bag came from an inventory slot
+                            playerManager.MyCharacter.CharacterInventoryManager.AddBag(tmp, bagNode);
+                            tmp.Remove();
+                            handScript.Drop();
+                            playerManager.MyCharacter.CharacterInventoryManager.FromSlot = null;
+
+                        }
+
 
                     }
                 } else if (Input.GetKey(KeyCode.LeftShift)) {
@@ -150,7 +163,7 @@ namespace AnyRPG {
 
         public string GetDescription() {
             if (BagNode?.Bag != null) {
-                return BagNode.Bag.GetDescription() + "\n<color=#00FFFF>Shift + click to remove</color>";
+                return BagNode.Bag.GetDescription() + "\n\n<color=#00FFFF>Shift + click to remove</color>";
             }
             // cyan
             return string.Format("<color=#00FFFF>Empty Bag Slot</color>\n{0}", GetSummary());

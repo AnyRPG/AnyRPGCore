@@ -149,7 +149,8 @@ namespace AnyRPG {
                     //Debug.Log("SlotScript.HandleLeftClick(): We are trying to drop a bag into the inventory.");
                     // the handscript had a bag in it, and therefore we are trying to unequip a bag
                     Bag bag = (Bag)handScript.Moveable;
-                    if (playerManager.MyCharacter.CharacterInventoryManager.EmptySlotCount() - bag.Slots > 0) {
+                    if (playerManager.MyCharacter.CharacterInventoryManager.EmptySlotCount(bag.BagNode.IsBankNode) - bag.Slots > 0) {
+                        //if (playerManager.MyCharacter.CharacterInventoryManager.EmptySlotCount() - bag.Slots > 0) {
                         //Debug.Log("SlotScript.HandleLeftClick(): We are trying to drop a bag into the inventory. There is enough empty space.");
                         inventorySlot.AddItem(bag);
                         playerManager.MyCharacter.CharacterInventoryManager.RemoveBag(bag);
