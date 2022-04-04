@@ -228,6 +228,7 @@ namespace AnyRPG {
         /// <param name="useable"></param>
         public void SetUseable(IUseable useable, bool monitor = true) {
             //Debug.Log(gameObject.name + ".ActionButton.SetUsable(" + (useable == null ? "null" : useable.DisplayName) + ")");
+
             playerManager.MyCharacter.CharacterAbilityManager.OnAttemptPerformAbility -= OnAttemptUseableUse;
             playerManager.MyCharacter.CharacterAbilityManager.OnPerformAbility -= OnUseableUse;
             playerManager.MyCharacter.CharacterAbilityManager.OnBeginAbilityCoolDown -= HandleBeginAbilityCooldown;
@@ -382,12 +383,10 @@ namespace AnyRPG {
         /// attempt to remove unlearned spells from the button
         /// </summary>
         public void RemoveStaleActions() {
-            if (Useable != null && Useable.IsUseableStale()) {
-                //if (!playerManager.MyCharacter.CharacterAbilityManager.HasAbility(Useable as BaseAbility)) {
+            if (Useable != null && Useable.IsUseableStale() == true) {
                 savedUseable = Useable;
                 useable = null;
                 UpdateVisual();
-                //}
             }
         }
 

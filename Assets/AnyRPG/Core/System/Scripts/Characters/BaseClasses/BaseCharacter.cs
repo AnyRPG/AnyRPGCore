@@ -187,20 +187,22 @@ namespace AnyRPG {
         }
 
         // currently this is only used for load game panel and loading game, so it's always a player
-        public void ApplyCapabilityConsumerSnapshot(CapabilityConsumerSnapshot capabilityConsumerSnapshot) {
+        public void ApplyCapabilityConsumerSnapshot(CapabilityConsumerSnapshot newCapabilityConsumerSnapshot) {
             //Debug.Log(gameObject.name + ".ApplyCapabilityConsumerSnapshot()");
 
             // get initial snapshot
-            CapabilityConsumerSnapshot oldSnapshot = new CapabilityConsumerSnapshot(this, systemGameManager);
+            //CapabilityConsumerSnapshot oldSnapshot = new CapabilityConsumerSnapshot(this, systemGameManager);
+            // testing - create snapshot without system abilities so they will be learned in the snapshot below
+            CapabilityConsumerSnapshot oldSnapshot = new CapabilityConsumerSnapshot(systemGameManager);
 
             // there is no need to perform notifications since the level is not loaded and the player isn't physically spawned yet
             // do not let unit profile load provider equipment.  player equipment was decided by the new game panel or saved equipment if loaded from save file
-            SetUnitProfile(capabilityConsumerSnapshot.UnitProfile, false, -1, false);
+            SetUnitProfile(newCapabilityConsumerSnapshot.UnitProfile, false, -1, false);
 
-            SetCharacterRace(capabilityConsumerSnapshot.CharacterRace, false, false);
-            SetCharacterFaction(capabilityConsumerSnapshot.Faction, false, false);
-            SetCharacterClass(capabilityConsumerSnapshot.CharacterClass, false, false);
-            SetClassSpecialization(capabilityConsumerSnapshot.ClassSpecialization, false, false);
+            SetCharacterRace(newCapabilityConsumerSnapshot.CharacterRace, false, false);
+            SetCharacterFaction(newCapabilityConsumerSnapshot.Faction, false, false);
+            SetCharacterClass(newCapabilityConsumerSnapshot.CharacterClass, false, false);
+            SetClassSpecialization(newCapabilityConsumerSnapshot.ClassSpecialization, false, false);
 
             UpdateStatProviderList();
             CapabilityConsumerProcessor.UpdateCapabilityProviderList();

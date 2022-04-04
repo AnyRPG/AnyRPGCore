@@ -22,6 +22,7 @@ MonoBehaviour:
     override from another profile.
   useRegionalDescription: 0
   resourceDescriptionProfile: 
+  optionalOverride: 0
   animationProps:
     useRootMotion: 0
     suppressAdjustAnimatorSpeed: 0

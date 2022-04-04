@@ -840,13 +840,23 @@ namespace AnyRPG {
         public void HandleCapabilityProviderChange(CapabilityConsumerSnapshot oldSnapshot, CapabilityConsumerSnapshot newSnapshot) {
             //Debug.Log(baseCharacter.gameObject.name + ".CharacterAbilityManager.HandleCapabilityProviderChange()");
 
-            ApplyCapabilityProviderTraits(oldSnapshot.GetTraitsToAdd(newSnapshot));
-            // doing abilities to add first because we have to learn some abilities before we check the removed list for system abilities to work
-            LearnCapabilityProviderAbilities(oldSnapshot.GetAbilitiesToAdd(newSnapshot, this));
 
             // now its safe to remove old ones
             UnLearnCapabilityProviderAbilities(oldSnapshot.GetAbilitiesToRemove(newSnapshot));
             RemoveCapabilityProviderTraits(oldSnapshot.GetTraitsToRemove(newSnapshot));
+
+
+            // updated to allow system configuration manager traits to apply properly
+            //ApplyCapabilityProviderTraits(oldSnapshot.GetTraitsToAdd(newSnapshot));
+            ApplyCapabilityProviderTraits(newSnapshot.GetTraitList());
+
+            // doing abilities to add first because we have to learn some abilities before we check the removed list for system abilities to work
+            // ^ this wass leading to strange action bar issues where you end up with too much empty space
+            // find better way to deal with the above (which means what?)
+            //LearnCapabilityProviderAbilities(oldSnapshot.GetAbilitiesToAdd(newSnapshot, this));
+            // this should be better, since it checks internally if the ability is known or not anyway
+            LearnCapabilityProviderAbilities(newSnapshot.GetAbilityList());
+
         }
 
         public void ApplyCapabilityProviderTraits(List<StatusEffect> statusEffects) {
@@ -854,7 +864,9 @@ namespace AnyRPG {
                 return;
             }
             foreach (StatusEffect statusEffect in statusEffects) {
-                ApplyStatusEffect(statusEffect.AbilityEffectProperties);
+                if (baseCharacter.CharacterStats.HasStatusEffect(statusEffect.AbilityEffectProperties.DisplayName) == false) {
+                    ApplyStatusEffect(statusEffect.AbilityEffectProperties);
+                }
             }
         }
 
@@ -920,6 +932,8 @@ namespace AnyRPG {
         }
 
         public void LearnCapabilityProviderAbilities(List<BaseAbilityProperties> abilities) {
+            //Debug.Log(baseCharacter.gameObject.name + ".CharacterAbilityManager.LearnCapabilityProviderAbilities()");
+
             if (abilities == null) {
                 //Debug.Log(baseCharacter.gameObject.name + ".CharacterAbilityManager.LearnCapabilityProviderAbilities(): abilities is null");
                 return;
@@ -934,6 +948,7 @@ namespace AnyRPG {
         }
 
         public void UnLearnCapabilityProviderAbilities(List<BaseAbilityProperties> abilities, bool updateActionBars = false) {
+            //Debug.Log(baseCharacter.gameObject.name + ".CharacterAbilityManager.UnLearnCapabilityProviderAbilities(" + updateActionBars + ")");
             if (abilities == null) {
                 return;
             }
@@ -1117,6 +1132,8 @@ namespace AnyRPG {
         }
 
         public void UnlearnAbility(BaseAbilityProperties oldAbility, bool updateActionBars = true) {
+            //Debug.Log(baseCharacter.gameObject.name + ".CharacterAbilityManager.UnleanAbility(" + oldAbility.DisplayName + ", " + updateActionBars + ")");
+            
             string keyName = SystemDataFactory.PrepareStringForMatch(oldAbility.DisplayName);
             if (abilityList.ContainsKey(keyName)) {
                 oldAbility.ProcessUnLearnAbility(this);
@@ -1126,6 +1143,7 @@ namespace AnyRPG {
         }
 
         public void UnsetAutoAttackAbility() {
+            //Debug.Log(baseCharacter.gameObject.name + ".CharacterAbilityManager.UnsetAutoAttackAbility()");
             autoAttackAbility = null;
         }
 
@@ -1297,7 +1315,9 @@ namespace AnyRPG {
 
             if (autoAttackAbility != null) {
                 BeginAbility(autoAttackAbility, playerInitiated);
-            }
+            }/* else {
+                Debug.Log(baseCharacter.gameObject.name + ".CharacterAbilitymanager.AttemtpAutoAttack() no autoAttackAbility found!");
+            }*/
         }
 
         /// <summary>
@@ -1319,6 +1339,7 @@ namespace AnyRPG {
         /// <param name="ability"></param>
         public bool BeginAbility(BaseAbilityProperties ability, bool playerInitiated = false) {
             //Debug.Log(baseCharacter.gameObject.name + "CharacterAbilitymanager.BeginAbility(" + (ability == null ? "null" : ability.DisplayName) + ")");
+
             if (ability == null) {
                 //Debug.Log("CharacterAbilityManager.BeginAbility(): ability is null! Exiting!");
                 return false;

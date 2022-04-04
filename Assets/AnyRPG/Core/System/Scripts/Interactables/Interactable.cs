@@ -578,6 +578,7 @@ namespace AnyRPG {
         /// <returns></returns>
         public virtual bool Interact(CharacterUnit source, bool processRangeCheck = false) {
             //Debug.Log(gameObject.name + ".Interactable.Interact(" + source.DisplayName + ", " + processRangeCheck + ")");
+
             if (notInteractable == true) {
                 return false;
             }

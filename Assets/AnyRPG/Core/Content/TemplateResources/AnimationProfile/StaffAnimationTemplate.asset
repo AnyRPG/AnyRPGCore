@@ -10,9 +10,9 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 621a5f1f29fd4ac41a1db478d5473374, type: 3}
-  m_Name: BowAnimationTemplate
+  m_Name: StaffAnimationTemplate
   m_EditorClassIdentifier: 
-  resourceName: Bow
+  resourceName: Staff
   displayName: 
   icon: {fileID: 0}
   iconBackgroundImage: {fileID: 0}
@@ -24,7 +24,7 @@ MonoBehaviour:
     useRootMotion: 0
     suppressAdjustAnimatorSpeed: 0
     attackClips:
-    - {fileID: 8165832905065568797, guid: e5da1b166870eb24ea6acea13ed8606f, type: 3}
+    - {fileID: 6563458118615698855, guid: 8fe4014374dd9c649b7bd54007382188, type: 3}
     castClips: []
     takeDamageClips: []
     idleClip: {fileID: 0}
@@ -52,7 +52,7 @@ MonoBehaviour:
     stunnedClip: {fileID: 0}
     fullCombatMirror: 0
     combatIdleMirror: 0
-    combatIdleClip: {fileID: -7850565254900480357, guid: 6397dc4217362a642821d38659e201d8,
+    combatIdleClip: {fileID: 2217236397397110431, guid: 6397dc4217362a642821d38659e201d8,
       type: 3}
     combatJumpMirror: 0
     combatJumpClip: {fileID: 0}

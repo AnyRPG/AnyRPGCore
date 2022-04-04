@@ -896,7 +896,11 @@ namespace AnyRPG {
         }
 
         public bool HasStatusEffect(StatusEffectProperties statusEffect) {
-            if (statusEffects.ContainsKey(SystemDataFactory.PrepareStringForMatch(statusEffect.DisplayName))) {
+            return HasStatusEffect(statusEffect.DisplayName);
+        }
+
+        public bool HasStatusEffect(string statusEffectName) {
+            if (statusEffects.ContainsKey(SystemDataFactory.PrepareStringForMatch(statusEffectName))) {
                 return true;
             }
             return false;

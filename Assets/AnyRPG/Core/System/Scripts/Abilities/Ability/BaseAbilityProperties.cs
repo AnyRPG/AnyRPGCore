@@ -397,8 +397,10 @@ namespace AnyRPG {
 
         public virtual bool IsUseableStale() {
             if (playerManager.MyCharacter.CharacterAbilityManager.HasAbility(DisplayName)) {
+                //Debug.Log(DisplayName + " is not stale");
                 return false;
             }
+            //Debug.Log(DisplayName + " is stale");
             return true;
         }
 

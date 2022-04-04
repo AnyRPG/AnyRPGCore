@@ -31,7 +31,9 @@ namespace AnyRPG {
         public CapabilityConsumerProcessor CapabilityConsumerProcessor { get => capabilityConsumerProcessor; }
 
         public CapabilityConsumerSnapshot(ICapabilityConsumer capabilityConsumer, SystemGameManager systemGameManager) {
+            // configured class initialization
             Configure(systemGameManager);
+
             capabilityProviders.Add(systemConfigurationManager);
             if (capabilityConsumer.UnitProfile != null) {
                 unitProfile = capabilityConsumer.UnitProfile;
@@ -60,6 +62,7 @@ namespace AnyRPG {
         }
 
         public CapabilityConsumerSnapshot(SystemGameManager systemGameManager) {
+            //Debug.Log("CapabilityConsumerSnapshot()");
             Configure(systemGameManager);
             //capabilityProviders.Add(systemConfigurationManager);
         }
@@ -123,14 +126,14 @@ namespace AnyRPG {
         /// <summary>
         /// return a list of abilities to remove when provided with an incoming capability consumer
         /// </summary>
-        /// <param name="capabilityConsumerSnapshot"></param>
+        /// <param name="newCapabilityConsumerSnapshot"></param>
         /// <returns></returns>
-        public List<BaseAbilityProperties> GetAbilitiesToRemove(CapabilityConsumerSnapshot capabilityConsumerSnapshot) {
+        public List<BaseAbilityProperties> GetAbilitiesToRemove(CapabilityConsumerSnapshot newCapabilityConsumerSnapshot) {
             List<BaseAbilityProperties> returnList = new List<BaseAbilityProperties>();
 
             List<BaseAbilityProperties> currentList = GetAbilityList();
 
-            returnList.AddRange(currentList.Except(capabilityConsumerSnapshot.GetAbilityList()));
+            returnList.AddRange(currentList.Except(newCapabilityConsumerSnapshot.GetAbilityList()));
 
             return returnList;
         }
@@ -138,19 +141,24 @@ namespace AnyRPG {
         /// <summary>
         /// return a list of abilities to add when provided with an incoming capability consumer
         /// </summary>
-        /// <param name="capabilityConsumerSnapshot"></param>
+        /// <param name="newCapabilityConsumerSnapshot"></param>
         /// <returns></returns>
-        public List<BaseAbilityProperties> GetAbilitiesToAdd(CapabilityConsumerSnapshot capabilityConsumerSnapshot, CharacterAbilityManager sourceAbilityManager) {
+        public List<BaseAbilityProperties> GetAbilitiesToAdd(CapabilityConsumerSnapshot newCapabilityConsumerSnapshot, CharacterAbilityManager sourceAbilityManager) {
             List<BaseAbilityProperties> returnList = new List<BaseAbilityProperties>();
 
             List<BaseAbilityProperties> currentList = GetAbilityList();
 
-            returnList.AddRange(capabilityConsumerSnapshot.GetAbilityList().Except(currentList));
+            returnList.AddRange(newCapabilityConsumerSnapshot.GetAbilityList().Except(currentList));
+
+            /*
+             // commented out because it was causing abilities to be re-learned immediately after unlearning
+            // why was it querying the rawability list anyway?  that's only for save manager
             foreach (BaseAbilityProperties baseAbility in GetAbilityList()) {
                 if (sourceAbilityManager.RawAbilityList.ContainsValue(baseAbility) == false) {
                     sourceAbilityManager.LearnAbility(baseAbility);
                 }
             }
+            */
 
             return returnList;
         }

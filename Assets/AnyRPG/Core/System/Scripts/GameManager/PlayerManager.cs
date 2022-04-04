@@ -740,6 +740,7 @@ namespace AnyRPG {
         }
 
         public void HandleUnlearnClassAbilities() {
+            //Debug.Log("PlayerManager.HandleUnlearnClassAbilities()");
             // now perform a single action bar update
             actionBarManager.RemoveStaleActions();
         }

@@ -210,6 +210,7 @@ namespace AnyRPG {
         /// <param name="characterTarget"></param>
         public void Attack(BaseCharacter characterTarget, bool playerInitiated = false) {
             //Debug.Log(baseCharacter.gameObject.name + ".CharacterCombat.Attack(" + characterTarget.name + ")");
+
             if (characterTarget == null) {
                 //Debug.Log("You must have a target to attack");
                 //logManager.WriteCombatMessage("You must have a target to attack");
@@ -399,7 +400,8 @@ namespace AnyRPG {
         }
 
         public void ActivateAutoAttack() {
-            //Debug.Log(gameObject.name + ".CharacterCombat.ActivateAutoAttack()");
+            //Debug.Log(baseCharacter.gameObject.name + ".CharacterCombat.ActivateAutoAttack()");
+
             if (systemConfigurationManager.AllowAutoAttack == true) {
                 autoAttackActive = true;
             }
@@ -407,6 +409,7 @@ namespace AnyRPG {
 
         public void DeActivateAutoAttack() {
             //Debug.Log(baseCharacter.gameObject.name + ".CharacterCombat.DeActivateAutoAttack()");
+
             autoAttackActive = false;
         }
 
@@ -472,10 +475,12 @@ namespace AnyRPG {
                 //Debug.Log(gameObject.name + ".AICombat.GetValidAttackAbility(): CHARACTER HAS ABILITY MANAGER");
 
                 foreach (BaseAbilityProperties baseAbility in BaseCharacter.CharacterAbilityManager.AbilityList.Values) {
-                    //Debug.Log(baseCharacter.gameObject.name + ".AICombat.GetValidAttackAbility(): Checking ability: " + baseAbility.DisplayName);
+                    //Debug.Log(baseCharacter.gameObject.name + ".CharacterCombat.GetValidAttackAbility(): Checking ability: " + baseAbility.DisplayName);
                     if (baseAbility.GetTargetOptions(baseCharacter).CanCastOnEnemy &&
                         BaseCharacter.CharacterAbilityManager.CanCastAbility(baseAbility) &&
                         baseAbility.CanUseOn(BaseCharacter.UnitController.Target, BaseCharacter) &&
+                        // check weapon affinity
+                        baseAbility.CanCast(baseCharacter) &&
                         baseCharacter.CharacterAbilityManager.PerformLOSCheck(baseCharacter.UnitController.Target, baseAbility)) {
                         //Debug.Log(baseCharacter.gameObject.name + ".AICombat.GetValidAttackAbility(): ADDING AN ABILITY TO LIST");
 

@@ -103,17 +103,14 @@ namespace AnyRPG {
 
         public override bool Interact(CharacterUnit source, int optionIndex = 0) {
             //Debug.Log(interactable.gameObject.name + ".CharacterUnit.Interact(" + source.DisplayName + ")");
+
             float relationValue = interactable.PerformFactionCheck(playerManager.MyCharacter);
             if (CanInteract(false, false, relationValue)) {
                 base.Interact(source, optionIndex);
 
-                //source.MyCharacter.MyCharacterCombat.Attack(baseCharacter);
                 // attempt to put the caster in combat so it can unsheath bows, wands, etc
-                // disabled for now since this is re-enabled inside ability cast
-                // this isn't processed from an action button click so the code made more sense in a common pathway
-                //source.baseCharacter.CharacterCombat.EnterCombat(baseCharacter.UnitController);
-
                 source.BaseCharacter.CharacterCombat.Attack(baseCharacter, true);
+
                 uIManager.interactionWindow.CloseWindow();
                 return true;
             }

@@ -624,6 +624,7 @@ namespace AnyRPG {
         }
 
         public void RemoveStaleActions() {
+            //Debug.Log("ActionBarManager.RemoveStaleActions()");
 
             RemoveStaleGamepadActions();
             foreach (ActionBarController actionBarController in actionBarControllers) {

@@ -456,6 +456,8 @@ namespace AnyRPG {
         }
 
         public override bool Interact(CharacterUnit source, bool processRangeCheck = false) {
+            //Debug.Log(gameObject.name + ".UnitController.Interact(" + processRangeCheck + ")");
+
             bool returnValue = base.Interact(source, processRangeCheck);
 
             if (returnValue == true

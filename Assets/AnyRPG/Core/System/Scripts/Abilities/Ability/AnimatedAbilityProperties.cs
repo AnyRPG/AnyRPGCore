@@ -92,8 +92,11 @@ namespace AnyRPG {
         }
 
         public override void ProcessUnLearnAbility(CharacterAbilityManager abilityManager) {
+            //Debug.Log(DisplayName + ".ProcessUnLearnAbility()");
             base.ProcessUnLearnAbility(abilityManager);
-            abilityManager.UnsetAutoAttackAbility();
+            if (isAutoAttack) {
+                abilityManager.UnsetAutoAttackAbility();
+            }
         }
 
         public override bool HadSpecialIcon(ActionButton actionButton) {
