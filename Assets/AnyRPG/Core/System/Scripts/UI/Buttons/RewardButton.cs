@@ -18,12 +18,20 @@ namespace AnyRPG {
 
         protected bool chooseable = false;
 
+        protected IRewardable rewardable;
+
         public bool Chosen { get => chosen; set => chosen = value; }
         public Image HighlightIcon { get => highlightIcon; set => highlightIcon = value; }
+        public IRewardable Rewardable { get => rewardable; }
 
         public void SetOptions(RectTransform rectTransform, bool chooseable) {
             SetToolTipTransform(rectTransform);
             this.chooseable = chooseable;
+        }
+
+        public void SetReward(IRewardable rewardable) {
+            SetDescribable(rewardable);
+            this.rewardable = rewardable;
         }
 
         /// <summary>

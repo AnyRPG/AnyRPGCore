@@ -9,7 +9,7 @@ using UnityEngine.UI;
 namespace AnyRPG {
 
     [Serializable]
-    public abstract class BaseAbilityProperties : ConfiguredClass, IDescribable, IUseable, IMoveable, ITargetable, ILearnable {
+    public abstract class BaseAbilityProperties : ConfiguredClass, IRewardable, IDescribable, IUseable, IMoveable, ITargetable, ILearnable {
 
         public event System.Action OnAbilityLearn = delegate { };
         public event System.Action OnAbilityUsed = delegate { };
@@ -393,6 +393,14 @@ namespace AnyRPG {
             playerManager = systemGameManager.PlayerManager;
             uIManager = systemGameManager.UIManager;
             systemAbilityController = systemGameManager.SystemAbilityController;
+        }
+
+        public void GiveReward() {
+            playerManager.MyCharacter.CharacterAbilityManager.LearnAbility(this);
+        }
+
+        public bool HasReward() {
+            return playerManager.MyCharacter.CharacterAbilityManager.HasAbility(this);
         }
 
         public virtual bool IsUseableStale() {

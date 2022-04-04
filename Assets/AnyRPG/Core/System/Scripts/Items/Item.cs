@@ -11,7 +11,7 @@ namespace AnyRPG {
     /// Superclass for all items
     /// </summary>
     [CreateAssetMenu(fileName = "New Item", menuName = "AnyRPG/Inventory/Item")]
-    public class Item : DescribableResource, IMoveable, IUseable {
+    public class Item : DescribableResource, IRewardable, IMoveable, IUseable {
 
         [Header("Item")]
 
@@ -99,6 +99,7 @@ namespace AnyRPG {
         protected MessageFeedManager messageFeedManager = null;
         protected UIManager uIManager = null;
         protected PlayerManager playerManager = null;
+        protected SystemItemManager systemItemManager = null;
 
         public int MaximumStackSize { get => stackSize; set => stackSize = value; }
         public InventorySlot Slot { get => slot; set => slot = value; }
@@ -153,6 +154,22 @@ namespace AnyRPG {
             uIManager = systemGameManager.UIManager;
             messageFeedManager = uIManager.MessageFeedManager;
             playerManager = systemGameManager.PlayerManager;
+            systemItemManager = systemGameManager.SystemItemManager;
+        }
+
+        public void GiveReward() {
+            Item newItem = systemItemManager.GetNewResource(DisplayName);
+            if (newItem != null) {
+                //Debug.Log("RewardButton.CompleteQuest(): newItem is not null, adding to inventory");
+                newItem.DropLevel = playerManager.MyCharacter.CharacterStats.Level;
+                playerManager.MyCharacter.CharacterInventoryManager.AddItem(newItem, false);
+            }
+        }
+
+        public bool HasReward() {
+            // this is not actually checked anywhere, but may need to be changed in the future
+            // if anything actually needs to query through IRewardable to see if the character has the item
+            return false;
         }
 
         public virtual void UpdateChargeCount(ActionButton actionButton) {

@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace AnyRPG {
     [System.Serializable]
-    public class FactionNode : ConfiguredClass, IDescribable {
+    public class FactionNode : ConfiguredClass, IRewardable, IDescribable {
 
         [SerializeField]
         [ResourceSelector(resourceType = typeof(Faction))]
@@ -20,12 +20,29 @@ namespace AnyRPG {
         public string Description { get => faction.Description; }
         public Faction Faction { get => faction; }
 
+        // game manager references
+        protected PlayerManager playerManager = null;
+
+        public override void SetGameManagerReferences() {
+            base.SetGameManagerReferences();
+
+            playerManager = systemGameManager.PlayerManager;
+        }
+
         public string GetDescription() {
             return faction.GetDescription(); ;
         }
 
         public string GetSummary() {
             return faction.GetSummary();
+        }
+
+        public void GiveReward() {
+            playerManager.MyCharacter.CharacterFactionManager.AddReputation(Faction, reputationAmount);
+        }
+
+        public bool HasReward() {
+            return false;
         }
 
         public void SetupScriptableObjects(SystemGameManager systemGamenManager) {

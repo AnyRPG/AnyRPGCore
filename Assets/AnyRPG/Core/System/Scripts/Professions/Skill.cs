@@ -7,7 +7,7 @@ using UnityEngine.UI;
 
 namespace AnyRPG {
     [CreateAssetMenu(fileName = "New Skill", menuName = "AnyRPG/Skills/Skill")]
-    public class Skill : DescribableResource {
+    public class Skill : DescribableResource, IRewardable {
 
         [Header("Skill")]
 
@@ -28,8 +28,25 @@ namespace AnyRPG {
         public bool AutoLearn { get => autoLearn; }
         public List<BaseAbilityProperties> AbilityList { get => abilityList; set => abilityList = value; }
 
+        // game manager references
+        protected PlayerManager playerManager = null;
+
+        public override void SetGameManagerReferences() {
+            base.SetGameManagerReferences();
+
+            playerManager = systemGameManager.PlayerManager;
+        }
+
         public override string GetDescription() {
             return string.Format("<color=#ffff00ff>{0}</color>\n\n{1}", resourceName, GetSummary());
+        }
+
+        public void GiveReward() {
+            playerManager.MyCharacter.CharacterSkillManager.LearnSkill(this);
+        }
+
+        public bool HasReward() {
+            return playerManager.MyCharacter.CharacterSkillManager.HasSkill(this);
         }
 
         public override void SetupScriptableObjects(SystemGameManager systemGameManager) {
