@@ -267,8 +267,9 @@ namespace AnyRPG {
             }
 
             // ==== MOUSE PAN ====
-            if (!mouseOutsideWindow
-                && (rightMouseClickedOverThisWindow || leftMouseClickedOverThisWindow)
+            // disabling mouseOutsideWindow so character doesn't stop rotating as soon as you get to another part of the panel
+            if (//!mouseOutsideWindow &&
+                (rightMouseClickedOverThisWindow || leftMouseClickedOverThisWindow)
                 && (inputManager.rightMouseButtonDown || inputManager.leftMouseButtonDown)) {
                 float xInput = Input.GetAxis("Mouse X") * yawSpeed;
                 currentXDegrees += xInput;
