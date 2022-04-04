@@ -163,6 +163,7 @@ namespace AnyRPG {
 
         public override void DeSelect() {
             //Debug.Log(gameObject.name + ".HightlightButton.DeSelect()");
+
             base.DeSelect();
             if (highlightButton != null) {
                 ColorBlock colorBlock = highlightButton.colors;

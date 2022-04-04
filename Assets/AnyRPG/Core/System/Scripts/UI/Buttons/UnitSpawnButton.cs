@@ -52,15 +52,19 @@ namespace AnyRPG {
 
 
         public void CommonSelect() {
+            //Debug.Log("UnitSpawnButton.CommonSelect() " + unitProfile.DisplayName);
+
             if (unitSpawnControlPanel.SelectedUnitSpawnButton != null && unitSpawnControlPanel.SelectedUnitSpawnButton != this) {
                 unitSpawnControlPanel.SelectedUnitSpawnButton.DeSelect();
             }
             unitSpawnControlPanel.ShowUnit(this);
         }
 
+        /*
         public void RawSelect() {
             CommonSelect();
         }
+        */
 
         public override void Select() {
             CommonSelect();
