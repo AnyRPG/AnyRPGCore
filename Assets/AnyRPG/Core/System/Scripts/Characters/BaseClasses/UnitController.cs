@@ -463,6 +463,8 @@ namespace AnyRPG {
             if (returnValue == true
                 && faceInteractionTarget == true
                 && source == playerManager.UnitController.CharacterUnit
+                && characterUnit.BaseCharacter.CharacterStats.IsAlive == true
+                && Faction.RelationWith(source.BaseCharacter, characterUnit.BaseCharacter) >= 0
                 && unitControllerMode == UnitControllerMode.AI) {
                 unitMotor.FaceTarget(source.Interactable);
             }
