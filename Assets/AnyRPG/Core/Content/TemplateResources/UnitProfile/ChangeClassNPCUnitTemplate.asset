@@ -19,15 +19,16 @@ MonoBehaviour:
   description: 
   useRegionalDescription: 0
   resourceDescriptionProfile: 
+  optionalOverride: 0
   automaticPrefabProfile: 0
   prefabProfileName: 
   useInlinePrefabProps: 1
   unitPrefabProps:
     unitPrefab: {fileID: 2692339740015506113, guid: ba09f14eb0109ba459f4520b82c3fadc,
       type: 3}
-    modelPrefab: {fileID: 2692339740015506113, guid: 5e4110e291da71541bbc6aebc87266e3,
+    modelPrefab: {fileID: 6307183516646880328, guid: d46b6b5df6312ea4ba9a077c173ec3c0,
       type: 3}
-    animationProfile: {fileID: 0}
+    animationProfileName: 
     useInlineAnimationProps: 0
     animationProps:
       useRootMotion: 0
@@ -108,6 +109,10 @@ MonoBehaviour:
       deathClip: {fileID: 0}
       reviveClip: {fileID: 0}
       levitatedClip: {fileID: 0}
+      swimIdleClip: {fileID: 0}
+      swimMoveClip: {fileID: 0}
+      flyIdleClip: {fileID: 0}
+      flyMoveClip: {fileID: 0}
     rotateModel: 0
     namePlateProps:
       displayName: 
@@ -127,14 +132,19 @@ MonoBehaviour:
     scale: {x: 1, y: 1, z: 1}
     targetBone: 
     attachmentProfileName: Humanoid
+    floatHeight: 1.4
+    addFloatHeightToTransform: 0
+    floatTransform: Spine1
   isUMAUnit: 0
   isPet: 0
+  flightCapable: 0
+  glideCapable: 0
   characterName: Change Class All
-  factionName: 
   title: 
-  characterClassName: 
+  factionName: 
   unitTypeName: 
   characterRaceName: 
+  characterClassName: 
   classSpecializationName: 
   spawnDead: 0
   preventAutoDespawn: 0
@@ -150,6 +160,7 @@ MonoBehaviour:
   combatStrategyName: 
   primaryStats: []
   powerResources: []
+  useProviderEquipment: 0
   equipmentNameList: []
   isMobile: 1
   playOnFootstep: 0
@@ -170,34 +181,34 @@ MonoBehaviour:
     movementSpeed: 0
     savePositionAtDestination: 0
   patrolNames: []
-  behaviorConfig:
+  interactionMaxRange: 3
+  deprecatedBehaviorConfig:
     interactionPanelTitle: 
     interactionPanelImage: {fileID: 0}
     namePlateImage: {fileID: 0}
     prerequisiteConditions: []
     behaviorNames: []
-    useBehaviorCopy: 0
-  interactionMaxRange: 3
-  lootableCharacter:
+  deprecatedLootableCharacter:
     interactionPanelTitle: 
     interactionPanelImage: {fileID: 0}
     namePlateImage: {fileID: 0}
     prerequisiteConditions: []
     automaticCurrency: 0
     lootTableNames: []
-  dialogConfig:
+  deprecatedDialogConfig:
     interactionPanelTitle: 
     interactionPanelImage: {fileID: 0}
     namePlateImage: {fileID: 0}
     prerequisiteConditions: []
     dialogNames: []
-  questGiverConfig:
+  deprecatedQuestGiverConfig:
     interactionPanelTitle: 
     interactionPanelImage: {fileID: 0}
     namePlateImage: {fileID: 0}
     prerequisiteConditions: []
+    quests: []
     questGiverProfileNames: []
-  vendorConfig:
+  deprecatedVendorConfig:
     interactionPanelTitle: 
     interactionPanelImage: {fileID: 0}
     namePlateImage: {fileID: 0}
@@ -207,5 +218,11 @@ MonoBehaviour:
   - Change Class Magic
   - Change Class Melee
   - Change Class Ranged
+  inlineInteractableOptions: []
+  persistObjectPosition: 0
+  saveOnLevelUnload: 0
+  saveOnGameSave: 0
   overwriteUnitUUID: 0
   m_UUID: 9d890594-3306-4c08-baf1-7af8cccc05e5
+  references:
+    version: 1
