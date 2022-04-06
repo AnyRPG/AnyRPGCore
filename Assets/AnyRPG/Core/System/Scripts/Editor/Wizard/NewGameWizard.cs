@@ -20,7 +20,12 @@ namespace AnyRPG {
         private const string pathToResourcesTemplateFolder = "/AnyRPG/Core/Games/FeaturesDemo/Resources/FeaturesDemoGame";
 
         private const string pathToGameManagerPrefab = "Assets/AnyRPG/Core/System/Prefabs/GameManager/GameManager.prefab";
+        private const string pathToSceneConfigPrefab = "Assets/AnyRPG/Core/System/Prefabs/GameManager/SceneConfig.prefab";
         private const string pathToUMADCSPrefab = "Getting Started/UMA_GLIB.prefab";
+
+        private const string pathToSystemAbilitiesTemplate = "Assets/AnyRPG/Core/Content/TemplatePackages/DefaultSystemEffectsTemplatePackage.asset";
+        private const string pathToGoldCurrencyGroupTemplate = "Assets/AnyRPG/Core/Content/TemplatePackages/GoldCurrencyGroupTemplatePackage.asset";
+
 
         // Will be a subfolder of Application.dataPath and should start with "/"
         private const string newGameParentFolder = "/Games/";
@@ -35,12 +40,24 @@ namespace AnyRPG {
         // user modified variables
         public string gameName = "";
         public string gameVersion = "0.1a";
+
+        // main menu options
+        public AudioClip mainMenuMusic = null;
+
+        public AudioClip newGameMusic = null;
+
+        // first scene options
         public bool copyExistingScene = false;
         public string firstSceneName = "FirstScene";
 
-        [SerializeField]
-        //private SceneReference existingScene = null;
-        private SceneAsset existingScene = null;
+        public SceneAsset existingScene = null;
+
+        public AudioClip firstSceneAmbientSounds = null;
+
+        public AudioClip firstSceneMusic = null;
+
+        // game options
+        public bool installGoldCurrencyGroup = true;
 
         //private bool addFirstSceneToBuild = true;
         private string umaRoot = "Assets/UMA/";
@@ -78,6 +95,25 @@ namespace AnyRPG {
                 ShowError("Missing GameManager prefab at " + pathToGameManagerPrefab + ".  Aborting...");
                 return;
             }
+
+            GameObject sceneConfigGameObject = (GameObject)AssetDatabase.LoadMainAssetAtPath(pathToSceneConfigPrefab);
+            if (sceneConfigGameObject == null) {
+                ShowError("Missing SceneConfig prefab at " + pathToSceneConfigPrefab + ".  Aborting...");
+                return;
+            }
+
+            ScriptableContentTemplate defaultEffectsTemplate = (ScriptableContentTemplate)AssetDatabase.LoadMainAssetAtPath(pathToSystemAbilitiesTemplate);
+            if (defaultEffectsTemplate == null) {
+                ShowError("Missing Default System Effects Content Template at " + pathToSystemAbilitiesTemplate + ".  Aborting...");
+                return;
+            }
+
+            ScriptableContentTemplate goldCurrencyGroupTemplate = (ScriptableContentTemplate)AssetDatabase.LoadMainAssetAtPath(pathToGoldCurrencyGroupTemplate);
+            if (goldCurrencyGroupTemplate == null) {
+                ShowError("Missing Gold Currency Group Content Template at " + pathToGoldCurrencyGroupTemplate + ".  Aborting...");
+                return;
+            }
+
 
             string umaPrefabPath = umaRoot + pathToUMADCSPrefab;
             GameObject umaGameObject = (GameObject)AssetDatabase.LoadMainAssetAtPath(umaPrefabPath);
@@ -160,6 +196,7 @@ namespace AnyRPG {
             string prefabFolder = newGameFolder + "/Prefab";
             string prefabPath = FileUtil.GetProjectRelativePath(prefabFolder);
             CreateFolderIfNotExists(prefabFolder);
+            CreateFolderIfNotExists(prefabFolder + "/GameManager");
 
 
             if (useThirdPartyController == true) {
@@ -199,14 +236,16 @@ namespace AnyRPG {
 
             // add the first scene to the build if the option was chosen
             //if (addFirstSceneToBuild) {
+            /*
             EditorUtility.DisplayProgressBar("New Game Wizard", "Adding First Scene To Build Settings...", 0.75f);
-                List<EditorBuildSettingsScene> currentSceneList = EditorBuildSettings.scenes.ToList();
-                currentSceneList.Add(new EditorBuildSettingsScene(newFirstSceneAssetPath, true));
-                EditorBuildSettings.scenes = currentSceneList.ToArray();
+            List<EditorBuildSettingsScene> currentSceneList = EditorBuildSettings.scenes.ToList();
+            currentSceneList.Add(new EditorBuildSettingsScene(newFirstSceneAssetPath, true));
+            EditorBuildSettings.scenes = currentSceneList.ToArray();
+            */
             //}
 
             // Rename the game load scene
-            EditorUtility.DisplayProgressBar("New Game Wizard", "Renaming Game Load Scene...", 0.8f);
+            EditorUtility.DisplayProgressBar("New Game Wizard", "Renaming Game Load Scene...", 0.75f);
             string gameLoadSceneFolder = FileUtil.GetProjectRelativePath(newGameFolder + "/Scenes/" + fileSystemGameName);
             string newGameLoadSceneFileName = fileSystemGameName + ".unity";
             string newGameLoadScenePath = gameLoadSceneFolder + "/" + newGameLoadSceneFileName;
@@ -216,22 +255,137 @@ namespace AnyRPG {
             AssetDatabase.RenameAsset(existingGameLoadScenePath, newGameLoadSceneFileName);
             AssetDatabase.Refresh();
 
-            EditorUtility.DisplayProgressBar("New Game Wizard", "Modifying scene...", 0.85f);
+            EditorUtility.DisplayProgressBar("New Game Wizard", "Adding Scenes To Build Settings...", 0.8f);
+            List<EditorBuildSettingsScene> currentSceneList = EditorBuildSettings.scenes.ToList();
+            Debug.Log("Adding " + newFirstSceneAssetPath + " to build settings");
+            currentSceneList.Add(new EditorBuildSettingsScene(newFirstSceneAssetPath, true));
+            Debug.Log("Adding " + newGameLoadScenePath + " to build settings");
+            currentSceneList.Add(new EditorBuildSettingsScene(newGameLoadScenePath, true));
+            EditorBuildSettings.scenes = currentSceneList.ToArray();
+
+
             // Open the scene to add the necessary elements
+            EditorUtility.DisplayProgressBar("New Game Wizard", "Modifying loading scene...", 0.85f);
             Debug.Log("Loading Scene at " + newGameLoadScenePath);
             Scene newScene = EditorSceneManager.OpenScene(newGameLoadScenePath);
 
+            // install gold currency group
+            if (installGoldCurrencyGroup) {
+                EditorUtility.DisplayProgressBar("New Game Wizard", "Installing Gold Currency Group...", 0.89f);
+                TemplateContentWizard.RunWizard(fileSystemGameName, new List<ScriptableContentTemplate>() { goldCurrencyGroupTemplate }, true, true);
+            }
+
             // Create a variant of the GameManager & UMA prefabs
             EditorUtility.DisplayProgressBar("New Game Wizard", "Making prefab variants...", 0.9f);
-            MakeGameManagerPrefabVariant(gameManagerGameObject, prefabPath + "/GameManager.prefab");
-            MakeUMAPrefabVariant(umaGameObject, prefabPath + "/UMA_GLIB.prefab", fileSystemGameName);
+            GameObject gameManagerVariant = MakeGameManagerPrefabVariant(gameManagerGameObject, prefabPath + "/GameManager/" + fileSystemGameName + "GameManager.prefab");
+            MakeUMAPrefabVariant(umaGameObject, prefabPath + "/GameManager/UMA_GLIB.prefab", fileSystemGameName);
+            GameObject sceneConfigVariant = MakeSceneConfigPrefabVariant(gameManagerVariant, sceneConfigGameObject, prefabPath + "/GameManager/" + fileSystemGameName + "SceneConfig.prefab");
 
-            EditorUtility.DisplayProgressBar("New Game Wizard", "Saving scene...", 0.95f);
-            // Save changes to the scene
+            // Save changes to the load game scene
+            EditorUtility.DisplayProgressBar("New Game Wizard", "Saving Load Game Scene...", 0.95f);
             EditorSceneManager.SaveScene(newScene);
+
+            // install system default effects
+            EditorUtility.DisplayProgressBar("New Game Wizard", "Installing System Default Effects...", 0.96f);
+            TemplateContentWizard.RunWizard(fileSystemGameName, new List<ScriptableContentTemplate>() { defaultEffectsTemplate }, true, true);
+
+            // add sceneconfig to first scene
+            EditorUtility.DisplayProgressBar("New Game Wizard", "Adding SceneConfig to First Scene...", 0.97f);
+            Scene firstScene = EditorSceneManager.OpenScene(newFirstSceneAssetPath);
+            GameObject instantiatedGO = (GameObject)PrefabUtility.InstantiatePrefab(sceneConfigVariant);
+            instantiatedGO.transform.SetAsFirstSibling();
+            EditorSceneManager.SaveScene(firstScene);
+
+            // load loading scene
+            //EditorSceneManager.OpenScene(newGameLoadScenePath);
+
+            // make audio profiles and scene nodes
+            EditorUtility.DisplayProgressBar("New Game Wizard", "Configuring Main Menu...", 0.98f);
+            ConfigureMainMenuScriptableObjects();
+
+            EditorUtility.DisplayProgressBar("New Game Wizard", "Configuring First Scene...", 0.99f);
+            ConfigureFirstSceneScriptableObjects();
+
+            AssetDatabase.Refresh();
 
             EditorUtility.ClearProgressBar();
             EditorUtility.DisplayDialog("New Game Wizard", "New Game Wizard Complete! The game loading scene can be found at " + newGameLoadScenePath, "OK");
+
+        }
+
+        private void ConfigureMainMenuScriptableObjects() {
+
+            // create audio profile
+            if (mainMenuMusic != null) {
+                AudioProfile audioProfile = ScriptableObject.CreateInstance("AudioProfile") as AudioProfile;
+                audioProfile.ResourceName = "Main Menu";
+                audioProfile.AudioClips = new List<AudioClip>() { mainMenuMusic };
+
+                string scriptableObjectPath = "Assets" + newGameParentFolder + fileSystemGameName + "/Resources/" + fileSystemGameName + "/AudioProfile/MainMenuAudio.asset";
+                AssetDatabase.CreateAsset(audioProfile, scriptableObjectPath);
+            }
+
+            if (newGameMusic != null) {
+                AudioProfile audioProfile = ScriptableObject.CreateInstance("AudioProfile") as AudioProfile;
+                audioProfile.ResourceName = "New Game";
+                audioProfile.AudioClips = new List<AudioClip>() { newGameMusic };
+
+                string scriptableObjectPath = "Assets" + newGameParentFolder + fileSystemGameName + "/Resources/" + fileSystemGameName + "/AudioProfile/NewGameAudio.asset";
+                AssetDatabase.CreateAsset(audioProfile, scriptableObjectPath);
+            }
+
+            // create scene node
+            SceneNode sceneNode = ScriptableObject.CreateInstance("SceneNode") as SceneNode;
+            sceneNode.ResourceName = "Main Menu";
+            sceneNode.SceneFile = "MainMenu";
+            sceneNode.AllowMount = false;
+            sceneNode.SuppressCharacterSpawn = true;
+            if (mainMenuMusic != null) {
+                sceneNode.BackgroundMusicProfileName = "Main Menu";
+            }
+
+            string sceneNodeObjectPath = "Assets" + newGameParentFolder + fileSystemGameName + "/Resources/" + fileSystemGameName + "/SceneNode/MainMenuSceneNode.asset";
+            AssetDatabase.CreateAsset(sceneNode, sceneNodeObjectPath);
+
+        }
+
+        private void ConfigureFirstSceneScriptableObjects() {
+
+            // create ambient audio profile
+            if (firstSceneAmbientSounds != null) {
+                AudioProfile audioProfile = ScriptableObject.CreateInstance("AudioProfile") as AudioProfile;
+                audioProfile.ResourceName = firstSceneName + " Ambient";
+                audioProfile.AudioClips = new List<AudioClip>() { firstSceneAmbientSounds };
+
+                string scriptableObjectPath = "Assets" + newGameParentFolder + fileSystemGameName + "/Resources/" + fileSystemGameName + "/AudioProfile/" + fileSystemFirstSceneName + "Ambient.asset";
+                AssetDatabase.CreateAsset(audioProfile, scriptableObjectPath);
+            }
+
+            // create background music profile
+            if (firstSceneMusic != null) {
+                AudioProfile audioProfile = ScriptableObject.CreateInstance("AudioProfile") as AudioProfile;
+                audioProfile.ResourceName = firstSceneName + " Music";
+                audioProfile.AudioClips = new List<AudioClip>() { firstSceneMusic };
+
+                string scriptableObjectPath = "Assets" + newGameParentFolder + fileSystemGameName + "/Resources/" + fileSystemGameName + "/AudioProfile/" + fileSystemFirstSceneName + "Music.asset";
+                AssetDatabase.CreateAsset(audioProfile, scriptableObjectPath);
+            }
+
+            // create scene node
+            SceneNode sceneNode = ScriptableObject.CreateInstance("SceneNode") as SceneNode;
+            sceneNode.ResourceName = firstSceneName;
+            sceneNode.SuppressCharacterSpawn = false;
+            sceneNode.SuppressMainCamera = false;
+            sceneNode.SceneFile = fileSystemFirstSceneName;
+            if (firstSceneAmbientSounds != null) {
+                sceneNode.AmbientMusicProfileName = firstSceneName + " Ambient";
+            }
+            if (firstSceneMusic != null) {
+                sceneNode.BackgroundMusicProfileName = firstSceneName + " Music";
+            }
+
+            string sceneNodeObjectPath = "Assets" + newGameParentFolder + fileSystemGameName + "/Resources/" + fileSystemGameName + "/SceneNode/" + fileSystemFirstSceneName + "SceneNode.asset";
+            AssetDatabase.CreateAsset(sceneNode, sceneNodeObjectPath);
 
         }
 
@@ -349,7 +503,11 @@ namespace AnyRPG {
             EditorUtility.DisplayDialog("Error", message, "OK");
         }
 
-        private void MakeGameManagerPrefabVariant(GameObject goToMakeVariantOf, string newPath) {
+        private GameObject MakeGameManagerPrefabVariant(GameObject goToMakeVariantOf, string newPath) {
+            Debug.Log("NewGameWizard.MakeGameManagerPrefabVariant(" + goToMakeVariantOf.name + ", " + newPath + ")");
+
+            // make prefab variant of game manager
+            //GameObject instantiatedGO = (GameObject)PrefabUtility.InstantiatePrefab(goToMakeVariantOf);
 
             // instantiate original
             GameObject instantiatedGO = (GameObject)PrefabUtility.InstantiatePrefab(goToMakeVariantOf);
@@ -360,9 +518,28 @@ namespace AnyRPG {
             SystemConfigurationManager systemConfigurationManager = instantiatedGO.GetComponent<SystemConfigurationManager>();
             systemConfigurationManager.GameName = gameName;
             systemConfigurationManager.GameVersion = gameVersion;
+
+            // scene configuration
             systemConfigurationManager.InitializationScene = fileSystemGameName;
-            systemConfigurationManager.MainMenuScene = "MainMenu";
-            systemConfigurationManager.DefaultStartingZone = fileSystemFirstSceneName;
+            systemConfigurationManager.MainMenuScene = "Main Menu";
+            systemConfigurationManager.DefaultStartingZone = firstSceneName;
+
+            // default system effects
+            systemConfigurationManager.LevelUpEffectName = "Level Up";
+            systemConfigurationManager.DeathEffectName = "Death";
+            systemConfigurationManager.LootSparkleEffectName = "Loot Sparkle";
+
+            // gold currency group
+            if (installGoldCurrencyGroup) {
+                systemConfigurationManager.CurrencyGroupName = "Gold";
+                systemConfigurationManager.KillCurrencyName = "Silver";
+                systemConfigurationManager.QuestCurrencyName = "Gold";
+            }
+
+            // name game music
+            if (newGameMusic != null) {
+                systemConfigurationManager.NewGameAudio = "New Game";
+            }
 
             if (useThirdPartyController == true) {
                 systemConfigurationManager.UseThirdPartyMovementControl = true;
@@ -394,7 +571,31 @@ namespace AnyRPG {
             // instantiate new variant in scene
             //PrefabUtility.InstantiatePrefab(variant);
             GameObject sceneVariant = (GameObject)PrefabUtility.InstantiatePrefab(variant);
-            sceneVariant.name = goToMakeVariantOf.name;
+            //sceneVariant.name = goToMakeVariantOf.name;
+
+            return variant;
+        }
+
+        private GameObject MakeSceneConfigPrefabVariant(GameObject gameManagerVariant, GameObject goToMakeVariantOf, string newPath) {
+            
+            // instantiate original
+            GameObject instantiatedGO = (GameObject)PrefabUtility.InstantiatePrefab(goToMakeVariantOf);
+            instantiatedGO.name = fileSystemGameName + instantiatedGO.name;
+
+            // Set the properties of the SceneConfig for this game
+            EditorUtility.DisplayProgressBar("New Game Wizard", "Configuration SceneConfig Settings...", 0.91f);
+            SceneConfig sceneConfig = instantiatedGO.GetComponent<SceneConfig>();
+            sceneConfig.systemConfigurationManager = gameManagerVariant.GetComponent<SystemConfigurationManager>();
+            sceneConfig.loadGameOnPlay = true;
+
+            // save as prefab variant
+            Debug.Log("saving " + newPath);
+            GameObject variant = PrefabUtility.SaveAsPrefabAsset(instantiatedGO, newPath);
+
+            // remove original from scene
+            GameObject.DestroyImmediate(instantiatedGO);
+
+            return variant;
         }
 
         private GameObject MakeUMAPrefabVariant(GameObject goToMakeVariantOf, string newPath, string gameName) {
@@ -437,6 +638,12 @@ namespace AnyRPG {
             gameName = EditorGUILayout.TextField("Game Name", gameName);
             gameVersion = EditorGUILayout.TextField("Game Version", gameVersion);
 
+            EditorGUILayout.LabelField("Main Menu Options", EditorStyles.boldLabel);
+
+            mainMenuMusic = EditorGUILayout.ObjectField("Main Menu Music", mainMenuMusic, typeof(AudioClip), false) as AudioClip;
+
+            newGameMusic = EditorGUILayout.ObjectField("New Game Music", newGameMusic, typeof(AudioClip), false) as AudioClip;
+
             EditorGUILayout.LabelField("First Scene Options", EditorStyles.boldLabel);
 
             firstSceneName = EditorGUILayout.TextField("First Scene Name", firstSceneName);
@@ -445,6 +652,13 @@ namespace AnyRPG {
             if (copyExistingScene) {
                 existingScene = EditorGUILayout.ObjectField("Existing Scene", existingScene, typeof(SceneAsset), false) as SceneAsset;
             }
+
+            firstSceneAmbientSounds = EditorGUILayout.ObjectField("First Scene Ambient Sounds", firstSceneAmbientSounds, typeof(AudioClip), false) as AudioClip;
+            firstSceneMusic = EditorGUILayout.ObjectField("First Scene Music", firstSceneMusic, typeof(AudioClip), false) as AudioClip;
+
+            EditorGUILayout.LabelField("Common Options", EditorStyles.boldLabel);
+
+            installGoldCurrencyGroup = EditorGUILayout.Toggle("Install Gold Currency Group", installGoldCurrencyGroup);
 
             return true;
         }

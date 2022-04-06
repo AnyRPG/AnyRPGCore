@@ -30,7 +30,7 @@ namespace AnyRPG {
             }
         }
 
-        public List<AudioClip> AudioClips { get => audioClips; }
+        public List<AudioClip> AudioClips { get => audioClips; set => audioClips = value; }
     }
 
 }

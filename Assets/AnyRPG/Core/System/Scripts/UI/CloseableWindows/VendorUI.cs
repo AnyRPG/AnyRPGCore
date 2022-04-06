@@ -221,8 +221,8 @@ namespace AnyRPG {
             AddToBuyBackCollection(item);
             item.Slot.RemoveItem(item);
 
-            if (systemConfigurationManager.VendorAudioProfile?.AudioClip != null) {
-                audioManager.PlayEffect(systemConfigurationManager.VendorAudioProfile.AudioClip);
+            if (systemConfigurationManager.VendorAudioClip != null) {
+                audioManager.PlayEffect(systemConfigurationManager.VendorAudioClip);
             }
             string priceString = currencyConverter.GetCombinedPriceString(sellAmount.Key, sellAmount.Value);
             messageFeedManager.WriteMessage("Sold " + item.DisplayName + " for " + priceString);

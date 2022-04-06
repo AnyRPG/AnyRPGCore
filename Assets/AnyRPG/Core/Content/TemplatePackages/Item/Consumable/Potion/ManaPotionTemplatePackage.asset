@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6c9b51b8d3aa844448aaeab0a989e2fa, type: 3}
   m_Name: ManaPotionTemplatePackage
   m_EditorClassIdentifier: 
-  resourceName: Health Potion
+  resourceName: Mana Potion
   displayName: 
   icon: {fileID: 0}
   iconBackgroundImage: {fileID: 0}
@@ -23,6 +23,6 @@ MonoBehaviour:
   resources:
   - {fileID: 11400000, guid: e472a3044e45c27428f590d8339e242f, type: 2}
   - {fileID: 11400000, guid: 76e4fc3b94edd7b45820d06819ff84fa, type: 2}
+  - {fileID: 11400000, guid: 83eb4e089c8161d47aa0a4a29cec4fc6, type: 2}
   prefabs: []
-  dependencies:
-  - {fileID: 11400000, guid: 376c9d92b0f0ad64c943c42286701a28, type: 2}
+  dependencies: []

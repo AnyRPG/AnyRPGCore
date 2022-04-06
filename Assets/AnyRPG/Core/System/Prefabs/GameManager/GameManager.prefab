@@ -6006,8 +6006,8 @@ MonoBehaviour:
   alwaysShowDefaultProfiles: 0
   characterCreatorProfileNames: []
   useFirstCreatorProfile: 0
-  defaultInventorySlots: 0
-  defaultBankSlots: 0
+  defaultInventorySlots: 20
+  defaultBankSlots: 48
   maxInventoryBags: 5
   maxBankBags: 8
   defaultBackpackItem: 
@@ -6023,6 +6023,7 @@ MonoBehaviour:
   useFallDamage: 0
   fallDamagePerMeter: 2
   fallDamageMinDistance: 10
+  fallDamageAudioClip: {fileID: 8300000, guid: 6a538d21a7a8ec04ea0328b0c9310067, type: 3}
   fallDamageAudio: 
   useThirdPartyMovementControl: 0
   allowAutoAttack: 1
@@ -6063,6 +6064,7 @@ MonoBehaviour:
   levelUpEffectName: 
   deathEffectName: 
   lootSparkleEffectName: 
+  vendorAudioClip: {fileID: 8300000, guid: bc929a28bb601b242b58a3581dfcc667, type: 3}
   vendorAudioProfileName: 
   maxChatTextDistance: 25
   autoPixelsPerMeter: 10

@@ -20,17 +20,17 @@ namespace AnyRPG {
         private const string newGameParentFolder = "/Games/";
 
         // the used file path name for the game
-        private string fileSystemGameName = string.Empty;
+        //private string fileSystemGameName = string.Empty;
 
         // the used asset path for the Unit Profile
         private string scriptableObjectPath = string.Empty;
 
-        private int totalResourceCount = 0;
-        private int totalPrefabCount = 0;
-        private int copyResourceCount = 0;
-        private int copyPrefabCount = 0;
-        private int skipResourceCount = 0;
-        private int skipPrefabCount = 0;
+        private static int totalResourceCount = 0;
+        private static int totalPrefabCount = 0;
+        private static int copyResourceCount = 0;
+        private static int copyPrefabCount = 0;
+        private static int skipResourceCount = 0;
+        private static int skipPrefabCount = 0;
 
         // user modified variables
         [Header("Game")]
@@ -67,42 +67,11 @@ namespace AnyRPG {
 
         void OnWizardCreate() {
 
-            copyResourceCount = 0;
-            copyPrefabCount = 0;
-            skipResourceCount = 0;
-            skipPrefabCount = 0;
-
             EditorUtility.DisplayProgressBar("Template Content Wizard", "Creating Dependency Closure...", 0.1f);
             try {
+                string fileSystemGameName = MakeFileSystemGameName();
+                RunWizard(fileSystemGameName, scriptableContent, replaceExistingResources, replaceExistingPrefabs);
 
-                // create a dependency closure of unique scriptable content templates
-                List<ScriptableContentTemplate> scriptableContentTemplates = GetDependencyClosure(scriptableContent);
-
-                EditorUtility.DisplayProgressBar("Template Content Wizard", "Getting Unique List of Resources...", 0.2f);
-
-                List<DescribableResource> describableResources = GetDescribableResources(scriptableContentTemplates);
-                totalResourceCount = describableResources.Count;
-
-                List<GameObject> gameObjects = GetGameObjects(scriptableContentTemplates);
-                totalPrefabCount = gameObjects.Count;
-
-                EditorUtility.DisplayProgressBar("Template Content Wizard", "Copying Resources...", 0.3f);
-
-                CopyResources(describableResources, 0, totalResourceCount + totalPrefabCount);
-
-                CopyPrefabs(gameObjects, totalResourceCount, totalResourceCount + totalPrefabCount);
-
-                AssetDatabase.Refresh();
-
-                //EditorUtility.DisplayProgressBar("New Character Wizard", "Creating Unit Profile...", 0.3f);
-                //UnitProfile asset = ScriptableObject.CreateInstance("UnitProfile") as UnitProfile;
-
-                //EditorUtility.DisplayProgressBar("New Character Wizard", "Saving Unit Profile...", 0.5f);
-
-                //scriptableObjectPath = "Assets" + newGameParentFolder + fileSystemGameName + "/Resources/" + fileSystemGameName + "/UnitProfile/" + characterName + "Unit.asset";
-                //AssetDatabase.CreateAsset(asset, scriptableObjectPath);
-
-                AssetDatabase.Refresh();
             } catch (System.NullReferenceException) {
                 // do nothing
                 //throw;
@@ -120,9 +89,36 @@ namespace AnyRPG {
 
         }
 
-        private void CopyResources(List<DescribableResource> describableResources, int beginCount, int totalCount) {
+        public static void RunWizard(string fileSystemGameName, List<ScriptableContentTemplate> scriptableContent, bool replaceExistingResources, bool replaceExistingPrefabs) {
+            copyResourceCount = 0;
+            copyPrefabCount = 0;
+            skipResourceCount = 0;
+            skipPrefabCount = 0;
 
-            string newGameFolder = GetNewGameFolder();
+            // create a dependency closure of unique scriptable content templates
+            List<ScriptableContentTemplate> scriptableContentTemplates = GetDependencyClosure(scriptableContent);
+
+            EditorUtility.DisplayProgressBar("Template Content Wizard", "Getting Unique List of Resources...", 0.2f);
+
+            List<DescribableResource> describableResources = GetDescribableResources(scriptableContentTemplates);
+            totalResourceCount = describableResources.Count;
+
+            List<GameObject> gameObjects = GetGameObjects(scriptableContentTemplates);
+            totalPrefabCount = gameObjects.Count;
+
+            EditorUtility.DisplayProgressBar("Template Content Wizard", "Copying Resources...", 0.3f);
+
+            CopyResources(fileSystemGameName, describableResources, replaceExistingResources, 0, totalResourceCount + totalPrefabCount);
+
+            CopyPrefabs(fileSystemGameName, gameObjects, replaceExistingPrefabs, totalResourceCount, totalResourceCount + totalPrefabCount);
+
+            AssetDatabase.Refresh();
+
+        }
+
+        public static void CopyResources(string fileSystemGameName, List<DescribableResource> describableResources, bool replaceExistingResources, int beginCount, int totalCount) {
+
+            string newGameFolder = GetNewGameFolder(fileSystemGameName);
 
             int copyCount = 0;
             foreach (DescribableResource describableResource in describableResources) {
@@ -177,9 +173,9 @@ namespace AnyRPG {
 
         }
 
-        private void CopyPrefabs(List<GameObject> objectResources, int beginCount, int totalCount) {
+        private static void CopyPrefabs(string fileSystemGameName, List<GameObject> objectResources, bool replaceExistingPrefabs, int beginCount, int totalCount) {
 
-            string newGameFolder = GetNewGameFolder();
+            string newGameFolder = GetNewGameFolder(fileSystemGameName);
 
             int copyCount = 0;
 
@@ -235,7 +231,7 @@ namespace AnyRPG {
 
         }
 
-        private List<DescribableResource> GetDescribableResources(List<ScriptableContentTemplate> scriptableContentTemplates) {
+        private static List<DescribableResource> GetDescribableResources(List<ScriptableContentTemplate> scriptableContentTemplates) {
             List<DescribableResource> returnList = new List<DescribableResource>();
 
             // create a list of unique describable resources from the scriptable content templates
@@ -250,7 +246,7 @@ namespace AnyRPG {
             return returnList;
         }
 
-        private List<GameObject> GetGameObjects(List<ScriptableContentTemplate> scriptableContentTemplates) {
+        private static List<GameObject> GetGameObjects(List<ScriptableContentTemplate> scriptableContentTemplates) {
             List<GameObject> returnList = new List<GameObject>();
 
             // create a list of unique describable resources from the scriptable content templates
@@ -265,7 +261,7 @@ namespace AnyRPG {
             return returnList;
         }
 
-        private List<ScriptableContentTemplate> GetDependencyClosure(List<ScriptableContentTemplate> dependencyMaster) {
+        private static List<ScriptableContentTemplate> GetDependencyClosure(List<ScriptableContentTemplate> dependencyMaster) {
 
             // assumption here that the initial list is already unique
             List<ScriptableContentTemplate> returnList = new List<ScriptableContentTemplate>();
@@ -296,22 +292,22 @@ namespace AnyRPG {
         void OnWizardUpdate() {
             helpString = "Copies Scriptable Objects and their dependencies to a game";
 
-            MakeFileSystemGameName();
+            string fileSystemGameName = MakeFileSystemGameName();
 
-            errorString = Validate();
+            errorString = Validate(fileSystemGameName);
             isValid = (errorString == null || errorString == "");
         }
 
 
-        private void MakeFileSystemGameName() {
-            fileSystemGameName = gameName.Replace(" ", "");
+        private string MakeFileSystemGameName() {
+            return gameName.Replace(" ", "");
         }
 
-        string GetNewGameFolder() {
+        private static string GetNewGameFolder(string fileSystemGameName) {
             return Application.dataPath + newGameParentFolder + fileSystemGameName;
         }
 
-        string Validate() {
+        string Validate(string fileSystemGameName) {
 
             // check for empty game name
             if (gameName == null || gameName.Trim() == "") {
@@ -319,7 +315,7 @@ namespace AnyRPG {
             }
            
             // check for game folder existing
-            string newGameFolder = GetNewGameFolder();
+            string newGameFolder = GetNewGameFolder(fileSystemGameName);
             if (System.IO.Directory.Exists(newGameFolder) == false) {
                 return "The folder " + newGameFolder + "does not exist.  Please run the new game wizard first to create the game folder structure";
             }
@@ -334,7 +330,7 @@ namespace AnyRPG {
         }
 
 
-        private void CreateFolderIfNotExists(string folderName) {
+        private static void CreateFolderIfNotExists(string folderName) {
             if (!System.IO.Directory.Exists(folderName)) {
                 Debug.Log("Create folder " + folderName);
                 System.IO.Directory.CreateDirectory(folderName);

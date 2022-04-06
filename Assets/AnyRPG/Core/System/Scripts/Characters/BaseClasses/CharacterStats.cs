@@ -1085,8 +1085,8 @@ namespace AnyRPG {
                     ReducePowerResource(powerResource, (int)((damagePercent / 100f) * GetPowerResourceMaxAmount(powerResource)));
                 }
             }
-            if (systemConfigurationManager.FallDamageAudioProfile?.AudioClip != null) {
-                baseCharacter.UnitController.UnitComponentController.PlayEffectSound(systemConfigurationManager.FallDamageAudioProfile.AudioClip);
+            if (systemConfigurationManager.FallDamageAudioClip != null) {
+                baseCharacter.UnitController.UnitComponentController.PlayEffectSound(systemConfigurationManager.FallDamageAudioClip);
             }
         }
 

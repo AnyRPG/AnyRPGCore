@@ -15,9 +15,6 @@ EditorBuildSettings:
     path: Assets/AnyRPG/Engine/Games/ContentDemo/Scenes/Game/ContentDemoGame/ContentDemoGame.unity
     guid: ba8bd3a60f57ab64388665a58ea7f4bc
   - enabled: 1
-    path: Assets/AnyRPG/Core/Games/FeaturesDemo/Scenes/Game/FeaturesDemoGame/FeaturesDemoGame.unity
-    guid: a6d195ea807f74f4cb08c65ff65b1e52
-  - enabled: 1
     path: Assets/AnyRPG/Core/Games/EmptyGame/Scenes/EmptyGame/EmptyGame.unity
     guid: 7f52814d565a8844ba1d58d1b9dc3001
   - enabled: 1
@@ -77,4 +74,46 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Games/FeaturesDemoGame/Scenes/Game/FeaturesDemoGame/FeaturesDemoGame.unity
     guid: a98b1f451adf75f4899466b9a4746144
+  - enabled: 0
+    path: Assets/Games/TestGame2/Scenes/FirstScene/FirstScene.unity
+    guid: 859432a894ac38848a55574929e0844e
+  - enabled: 0
+    path: Assets/Games/TestGame3/Scenes/FirstScene2/FirstScene2.unity
+    guid: b834a055c0b16014aa316e8f4dfec60c
+  - enabled: 0
+    path: Assets/Games/TestGame4/Scenes/FirstScene4/FirstScene4.unity
+    guid: 574003835df9344459651768080fb581
+  - enabled: 1
+    path: Assets/Games/TestGame5/Scenes/FirstScene5/FirstScene5.unity
+    guid: 179cd09f26d23624cbaff7e639a94d3b
+  - enabled: 1
+    path: Assets/Games/TestGame6/Scenes/FirstScene6/FirstScene6.unity
+    guid: b6d0596817005e6428b05f4efd2d0872
+  - enabled: 1
+    path: Assets/Games/TestGame7/Scenes/FirstScene7/FirstScene7.unity
+    guid: c6819718dfa9c404ea054cfdd7ada0ed
+  - enabled: 1
+    path: Assets/Games/TestGame8/Scenes/FirstScene8/FirstScene8.unity
+    guid: 559a652a5d4a35b4c947fe00705b2f0d
+  - enabled: 1
+    path: Assets/Games/TestGame8/Scenes/TestGame8/TestGame8.unity
+    guid: d01f9cc44c098e8468799a7bf4dba741
+  - enabled: 1
+    path: Assets/Games/TestGame9/Scenes/Scene9/Scene9.unity
+    guid: 9fcd7f7512b20654e8052e3d5e6d43b2
+  - enabled: 1
+    path: Assets/Games/TestGame9/Scenes/TestGame9/TestGame9.unity
+    guid: 3c21e134b486b014baa685f264bfa3c2
+  - enabled: 1
+    path: Assets/Games/TestGame10/Scenes/Scene10/Scene10.unity
+    guid: 0b7b70c619fb941489d5d37cb207e18d
+  - enabled: 1
+    path: Assets/Games/TestGame10/Scenes/TestGame10/TestGame10.unity
+    guid: e20e8fb29328c96409e0e2bdf2505b78
+  - enabled: 1
+    path: Assets/Games/TestGame11/Scenes/Scene11/Scene11.unity
+    guid: 7ff1ef36447c93644bd5af3a33f91e0a
+  - enabled: 1
+    path: Assets/Games/TestGame11/Scenes/TestGame11/TestGame11.unity
+    guid: 4d67e70e28e2fef408045a65dd935747
   m_configObjects: {}

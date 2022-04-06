@@ -114,11 +114,11 @@ namespace AnyRPG {
 
         [Tooltip("The number of inventory slots a character has with no extra bags equipped")]
         [SerializeField]
-        private int defaultInventorySlots = 0;
+        private int defaultInventorySlots = 20;
 
         [Tooltip("The number of bank slots a character has with no extra bags equipped")]
         [SerializeField]
-        private int defaultBankSlots = 0;
+        private int defaultBankSlots = 48;
 
         [Tooltip("The maximum number of bags a character can have equipped")]
         [SerializeField]
@@ -195,7 +195,11 @@ namespace AnyRPG {
         [SerializeField]
         private float fallDamageMinDistance = 10f;
 
-        [Tooltip("The audio profile to play when fall damage is taken")]
+        [Tooltip("The audio clip to play when fall damage is taken")]
+        [SerializeField]
+        private AudioClip fallDamageAudioClip = null;
+
+        [Tooltip("The audio profile to play when fall damage is taken.  If this value is set, it will override the audio clip above.")]
         [SerializeField]
         [ResourceSelector(resourceType = typeof(AudioProfile))]
         private string fallDamageAudio = string.Empty;
@@ -414,14 +418,19 @@ namespace AnyRPG {
 
         [Tooltip("This audio will play whenever buying from or selling to a vendor")]
         [SerializeField]
+        private AudioClip vendorAudioClip = null;
+
+
+        [Tooltip("This audio will play whenever buying from or selling to a vendor.  If this value is set, it will override the audio clip above.")]
+        [SerializeField]
         [ResourceSelector(resourceType = typeof(AudioProfile))]
         private string vendorAudioProfileName = string.Empty;
+
+        private AudioProfile vendorAudioProfile = null;
 
         [Tooltip("The maximum distance at which chat in dialogs above characters will also appear in the player chat log.  Prevents distant conversations from spamming logs.")]
         [SerializeField]
         private float maxChatTextDistance = 25f;
-
-        private AudioProfile vendorAudioProfile = null;
 
         [Header("MINI MAP")]
         /*
@@ -736,7 +745,15 @@ namespace AnyRPG {
         public int QuestCurrencyAmountPerLevel { get => questCurrencyAmountPerLevel; set => questCurrencyAmountPerLevel = value; }
         public Currency KillCurrency { get => killCurrency; set => killCurrency = value; }
         public Currency QuestCurrency { get => questCurrency; set => questCurrency = value; }
-        public AudioProfile VendorAudioProfile { get => vendorAudioProfile; set => vendorAudioProfile = value; }
+        public AudioClip VendorAudioClip {
+            get {
+                if (vendorAudioProfile != null) {
+                    return vendorAudioProfile.AudioClip;
+                }
+                return vendorAudioClip;
+            }
+            set => vendorAudioClip = value;
+        }
         public float MaxChatTextDistance { get => maxChatTextDistance; set => maxChatTextDistance = value; }
         public bool UseNewGameWindow { get => useNewGameWindow; set => useNewGameWindow = value; }
         public bool NewGameAppearance { get => newGameAppearance; set => newGameAppearance = value; }
@@ -797,7 +814,15 @@ namespace AnyRPG {
         public bool UseFallDamage { get => useFallDamage; set => useFallDamage = value; }
         public float FallDamagePerMeter { get => fallDamagePerMeter; set => fallDamagePerMeter = value; }
         public float FallDamageMinDistance { get => fallDamageMinDistance; set => fallDamageMinDistance = value; }
-        public AudioProfile FallDamageAudioProfile { get => fallDamageAudioProfile; set => fallDamageAudioProfile = value; }
+        public AudioClip FallDamageAudioClip {
+            get {
+                if (fallDamageAudioProfile != null) {
+                    return fallDamageAudioProfile.AudioClip;
+                }
+                return fallDamageAudioClip;
+            }
+            set => fallDamageAudioClip = value;
+        }
         public DefaultControllerConfiguration DefaultControllerConfiguration { get => defaultControllerConfiguration; set => defaultControllerConfiguration = value; }
         public Color ButtonNormalColor { get => buttonNormalColor; set => buttonNormalColor = value; }
         public Color ButtonHighlightedColor { get => buttonHighlightedColor; set => buttonHighlightedColor = value; }
@@ -812,6 +837,11 @@ namespace AnyRPG {
         public int MaxInventoryBags { get => maxInventoryBags; set => maxInventoryBags = value; }
         public int MaxBankBags { get => maxBankBags; set => maxBankBags = value; }
         public List<string> DefaultBankContents { get => defaultBankContents; set => defaultBankContents = value; }
+        public string NewGameAudio { get => newGameAudio; set => newGameAudio = value; }
+        public string LevelUpEffectName { get => levelUpEffectName; set => levelUpEffectName = value; }
+        public string DeathEffectName { get => deathEffectName; set => deathEffectName = value; }
+        public string LootSparkleEffectName { get => lootSparkleEffectName; set => lootSparkleEffectName = value; }
+        public string CurrencyGroupName { get => currencyGroupName; set => currencyGroupName = value; }
 
         //public bool AllowClickToMove { get => allowClickToMove; }
 
