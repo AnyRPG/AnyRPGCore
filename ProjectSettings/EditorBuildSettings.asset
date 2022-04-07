@@ -57,22 +57,22 @@ EditorBuildSettings:
     path: Assets/ALostSoul/Content/ALostSoulDemoShared/Scenes/ExampleTempleOfAncientEnergy/ExampleTempleOfAncientEnergy.unity
     guid: a5845d23eec8aad47a9774f4bc7e8311
   - enabled: 1
-    path: Assets/Games/FeaturesDemoGame/Scenes/Content/FeaturesDemoDungeon/FeaturesDemoDungeon.unity
+    path: Assets/AnyRPG/Core/Games/FeaturesDemo/Scenes/Content/FeaturesDemoDungeon/FeaturesDemoDungeon.unity
     guid: c094c26c9175d674fafcb14b9282a864
   - enabled: 1
-    path: Assets/Games/FeaturesDemoGame/Scenes/Content/FeaturesDemoCutsceneZone/FeaturesDemoCutsceneZone.unity
+    path: Assets/AnyRPG/Core/Games/FeaturesDemo/Scenes/Content/FeaturesDemoCutsceneZone/FeaturesDemoCutsceneZone.unity
     guid: b9ce6cec24f88e343bdd24c31d295b8a
   - enabled: 1
-    path: Assets/Games/FeaturesDemoGame/Scenes/Content/FeaturesDemoMovementTest/FeaturesDemoMovementTest.unity
+    path: Assets/AnyRPG/Core/Games/FeaturesDemo/Scenes/Content/FeaturesDemoMovementTest/FeaturesDemoMovementTest.unity
     guid: a847437ee17c7aa4f98c2d363f671f1d
   - enabled: 1
     path: Assets/AnyRPG/Engine/Games/ContentDemo/Scenes/Content/ContentScene/ContentScene.unity
     guid: 79ec306d7083e084bb061eebd6e5f62f
   - enabled: 1
-    path: Assets/Games/FeaturesDemoGame/Scenes/Content/FeaturesDemoZone/FeaturesDemoZone.unity
+    path: Assets/AnyRPG/Core/Games/FeaturesDemo/Scenes/Content/FeaturesDemoZone/FeaturesDemoZone.unity
     guid: c5448959a7d351845969586d6f5ce056
   - enabled: 1
-    path: Assets/Games/FeaturesDemoGame/Scenes/Game/FeaturesDemoGame/FeaturesDemoGame.unity
+    path: Assets/AnyRPG/Core/Games/FeaturesDemo/Scenes/Game/FeaturesDemoGame/FeaturesDemoGame.unity
     guid: a98b1f451adf75f4899466b9a4746144
   - enabled: 0
     path: 

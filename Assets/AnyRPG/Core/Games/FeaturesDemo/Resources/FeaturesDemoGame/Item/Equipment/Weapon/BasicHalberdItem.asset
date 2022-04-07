@@ -21,12 +21,13 @@ MonoBehaviour:
   resourceDescriptionProfile: 
   optionalOverride: 0
   stackSize: 1
-  itemQuality: 
+  itemQuality: Common
   randomItemQuality: 0
   dynamicLevel: 0
   freezeDropLevel: 0
   levelCap: 0
   itemLevel: 1
+  useLevel: 1
   currencyName: 
   dynamicCurrencyAmount: 1
   pricePerLevel: 10
@@ -53,12 +54,14 @@ MonoBehaviour:
   secondaryStats: []
   onEquipAbilityName: 
   learnedAbilityNames: []
+  requireWeaponSkill: 0
   weaponType: Polearm
   defaultHitEffects: []
   onHitEffects: []
   animationProfileName: 
   defaultHitAudioProfile: 
   useWeaponTypeObjects: 1
+  abilityAnimationObjectList: []
   abilityObjectList: []
   addScaledDamagePerSecond: 1
   baseDamagePerSecond: 0

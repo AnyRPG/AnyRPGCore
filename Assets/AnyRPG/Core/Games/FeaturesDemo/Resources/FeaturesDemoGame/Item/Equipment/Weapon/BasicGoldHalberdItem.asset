@@ -21,7 +21,7 @@ MonoBehaviour:
   resourceDescriptionProfile: 
   optionalOverride: 0
   stackSize: 1
-  itemQuality: 
+  itemQuality: Common
   randomItemQuality: 0
   dynamicLevel: 0
   freezeDropLevel: 0
@@ -61,6 +61,7 @@ MonoBehaviour:
   animationProfileName: 
   defaultHitAudioProfile: 
   useWeaponTypeObjects: 1
+  abilityAnimationObjectList: []
   abilityObjectList: []
   addScaledDamagePerSecond: 1
   baseDamagePerSecond: 0

@@ -14,14 +14,14 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   resourceName: 10 Slot Bag
   displayName: 
-  icon: {fileID: 21300000, guid: 229b21505cd8e9345b3ec15b2e692bdd, type: 3}
+  icon: {fileID: 21300000, guid: 59fd07405d034f24f8735878f5f3636e, type: 3}
   iconBackgroundImage: {fileID: 0}
   description: not quite as big as a backpack
   useRegionalDescription: 0
   resourceDescriptionProfile: 
   optionalOverride: 0
   stackSize: 0
-  itemQuality: 
+  itemQuality: Common
   randomItemQuality: 0
   dynamicLevel: 0
   freezeDropLevel: 0
