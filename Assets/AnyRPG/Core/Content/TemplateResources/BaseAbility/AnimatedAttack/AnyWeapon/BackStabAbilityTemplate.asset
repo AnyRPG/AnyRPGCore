@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   resourceName: Back Stab
   displayName: 
-  icon: {fileID: 21300000, guid: 82f73f504b37bd04cae5bd4094cba669, type: 3}
+  icon: {fileID: 21300000, guid: a62df40e42a422744baeaf8f26e1fb2c, type: 3}
   iconBackgroundImage: {fileID: 0}
   description: Attack from behind, causing massive damage
   useRegionalDescription: 0

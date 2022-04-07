@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   resourceName: Life Drain
   displayName: 
-  icon: {fileID: 21300000, guid: b768a1f4121f78743909c86aaeb8dde7, type: 3}
+  icon: {fileID: 21300000, guid: 4f4da131e9e4bd64184f00c9f4c7ffa4, type: 3}
   iconBackgroundImage: {fileID: 0}
   description: transfers life to the caster
   useRegionalDescription: 0
@@ -22,6 +22,7 @@ MonoBehaviour:
   optionalOverride: 0
   channeledAbilityProperties:
     requireOutOfCombat: 0
+    requireStealth: 0
     weaponAffinityNames: []
     holdableObjectList:
     - holdableObjectName: Black Casting Circle
@@ -38,6 +39,7 @@ MonoBehaviour:
     castingAudioProfileName: Age Spell
     requiredLevel: 1
     characterClassRequirements: []
+    classSpecializationRequirements: []
     useableWithoutLearning: 0
     autoAddToBars: 1
     canSimultaneousCast: 0
@@ -71,6 +73,7 @@ MonoBehaviour:
       maxRange: 40
       requireFacingTarget: 0
       maxAngle: 45
+      requireBehindTarget: 0
       requiresGroundTarget: 0
       groundTargetColor: {r: 1, g: 1, b: 1, a: 1}
       groundTargetRadius: 0

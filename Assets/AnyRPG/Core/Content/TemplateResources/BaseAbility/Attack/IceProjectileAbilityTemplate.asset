@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   resourceName: Ice Projectile
   displayName: 
-  icon: {fileID: 21300000, guid: 36dccc72c89e61b48958ecb60b28abed, type: 3}
+  icon: {fileID: 21300000, guid: 299526415c2c352429cde5f2b07aebf8, type: 3}
   iconBackgroundImage: {fileID: 0}
   description: A projectile of ice
   useRegionalDescription: 0
@@ -22,6 +22,7 @@ MonoBehaviour:
   optionalOverride: 0
   directAbilityProperties:
     requireOutOfCombat: 0
+    requireStealth: 0
     weaponAffinityNames: []
     holdableObjectList:
     - holdableObjectName: Blue Casting Circle
@@ -38,6 +39,7 @@ MonoBehaviour:
     castingAudioProfileName: Ice Spell
     requiredLevel: 1
     characterClassRequirements: []
+    classSpecializationRequirements: []
     useableWithoutLearning: 0
     autoAddToBars: 1
     canSimultaneousCast: 0
@@ -71,6 +73,7 @@ MonoBehaviour:
       maxRange: 40
       requireFacingTarget: 0
       maxAngle: 45
+      requireBehindTarget: 0
       requiresGroundTarget: 0
       groundTargetColor: {r: 1, g: 1, b: 1, a: 1}
       groundTargetRadius: 0

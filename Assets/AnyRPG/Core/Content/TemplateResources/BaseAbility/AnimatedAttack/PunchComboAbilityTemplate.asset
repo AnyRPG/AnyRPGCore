@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   resourceName: Punch Combo
   displayName: 
-  icon: {fileID: 21300000, guid: 59463d1e84bc03a44b4f4c81002123a1, type: 3}
+  icon: {fileID: 21300000, guid: b37873eea38e0a84aab9c69ab5ec6dc2, type: 3}
   iconBackgroundImage: {fileID: 0}
   description: Hit the target 3 times
   useRegionalDescription: 0

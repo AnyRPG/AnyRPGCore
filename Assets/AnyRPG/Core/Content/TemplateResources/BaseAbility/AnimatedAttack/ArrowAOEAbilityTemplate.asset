@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   resourceName: Arrow AOE
   displayName: 
-  icon: {fileID: 21300000, guid: e9a62806b9320ab4a97531cc547ba269, type: 3}
+  icon: {fileID: 21300000, guid: 2eb4c250d71860e44b6f26819fc1e39c, type: 3}
   iconBackgroundImage: {fileID: 0}
   description: Send arrows at all opponents nearby
   useRegionalDescription: 0
@@ -22,6 +22,7 @@ MonoBehaviour:
   optionalOverride: 0
   animatedAbilityProperties:
     requireOutOfCombat: 0
+    requireStealth: 0
     weaponAffinityNames:
     - Bow
     - Crossbow
@@ -37,6 +38,7 @@ MonoBehaviour:
     castingAudioProfileName: 
     requiredLevel: 1
     characterClassRequirements: []
+    classSpecializationRequirements: []
     useableWithoutLearning: 0
     autoAddToBars: 1
     canSimultaneousCast: 0
@@ -70,6 +72,7 @@ MonoBehaviour:
       maxRange: 30
       requireFacingTarget: 0
       maxAngle: 45
+      requireBehindTarget: 0
       requiresGroundTarget: 0
       groundTargetColor: {r: 1, g: 1, b: 1, a: 1}
       groundTargetRadius: 0

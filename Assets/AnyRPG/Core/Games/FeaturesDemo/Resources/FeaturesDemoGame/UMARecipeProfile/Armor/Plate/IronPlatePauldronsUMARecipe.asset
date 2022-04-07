@@ -1,0 +1,30 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0b4eca1291e60f148801568f2a83a06b, type: 3}
+  m_Name: IronPlatePauldronsUMARecipe
+  m_EditorClassIdentifier: 
+  resourceName: Iron Plate Pauldrons
+  displayName: 
+  icon: {fileID: 0}
+  iconBackgroundImage: {fileID: 0}
+  description: 
+  useRegionalDescription: 0
+  resourceDescriptionProfile: 
+  optionalOverride: 0
+  uMARecipes:
+  - {fileID: 11400000, guid: c07eccd290eb2f32fae733325b07305d, type: 2}
+  - {fileID: 11400000, guid: 93f180a648440a778b07b8a2cbe3a887, type: 2}
+  sharedColors:
+  - sharedColorname: Shoulder Equipment Color 1
+    color: {r: 0.6313726, g: 0.6156863, b: 0.5803922, a: 1}
+  - sharedColorname: Shoulder Equipment Color 2
+    color: {r: 1, g: 1, b: 1, a: 1}

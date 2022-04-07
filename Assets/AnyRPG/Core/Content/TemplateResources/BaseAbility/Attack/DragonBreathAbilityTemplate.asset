@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   resourceName: Dragon Breath
   displayName: 
-  icon: {fileID: 21300000, guid: 46552b92847675944b9e69621e19461b, type: 3}
+  icon: {fileID: 21300000, guid: b031b2f450159ba41967d6d8d82d108c, type: 3}
   iconBackgroundImage: {fileID: 0}
   description: Engulf your enemy in fire
   useRegionalDescription: 0
@@ -22,6 +22,7 @@ MonoBehaviour:
   optionalOverride: 0
   channeledAbilityProperties:
     requireOutOfCombat: 0
+    requireStealth: 0
     weaponAffinityNames: []
     holdableObjectList:
     - holdableObjectName: Dragon Flame
@@ -38,6 +39,7 @@ MonoBehaviour:
     castingAudioProfileName: Fire Spell
     requiredLevel: 1
     characterClassRequirements: []
+    classSpecializationRequirements: []
     useableWithoutLearning: 0
     autoAddToBars: 1
     canSimultaneousCast: 0
@@ -71,6 +73,7 @@ MonoBehaviour:
       maxRange: 0
       requireFacingTarget: 1
       maxAngle: 10
+      requireBehindTarget: 0
       requiresGroundTarget: 0
       groundTargetColor: {r: 1, g: 1, b: 1, a: 1}
       groundTargetRadius: 0

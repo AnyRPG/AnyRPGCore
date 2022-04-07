@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   resourceName: Laser Explosion
   displayName: 
-  icon: {fileID: 21300000, guid: 27cb25610e743d04ba2b90a25c80259a, type: 3}
+  icon: {fileID: 21300000, guid: 7e770bd8d18958d40a450177334ff1fc, type: 3}
   iconBackgroundImage: {fileID: 0}
   description: Laser Explosion
   useRegionalDescription: 0

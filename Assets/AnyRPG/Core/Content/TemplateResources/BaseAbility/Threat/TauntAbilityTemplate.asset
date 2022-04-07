@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   resourceName: Taunt
   displayName: 
-  icon: {fileID: 21300000, guid: f628827764ea9d147a6d68fc62c826e2, type: 3}
+  icon: {fileID: 21300000, guid: 95084955b996b334f80bee9d1244d896, type: 3}
   iconBackgroundImage: {fileID: 0}
   description: Threaten an enemy, causing them to attack you
   useRegionalDescription: 0
@@ -22,6 +22,7 @@ MonoBehaviour:
   optionalOverride: 0
   directAbilityProperties:
     requireOutOfCombat: 0
+    requireStealth: 0
     weaponAffinityNames: []
     holdableObjectList: []
     abilityPrefabSource: 0
@@ -35,6 +36,7 @@ MonoBehaviour:
     castingAudioProfileName: 
     requiredLevel: 1
     characterClassRequirements: []
+    classSpecializationRequirements: []
     useableWithoutLearning: 0
     autoAddToBars: 1
     canSimultaneousCast: 0
@@ -68,6 +70,7 @@ MonoBehaviour:
       maxRange: 30
       requireFacingTarget: 0
       maxAngle: 45
+      requireBehindTarget: 0
       requiresGroundTarget: 0
       groundTargetColor: {r: 1, g: 1, b: 1, a: 1}
       groundTargetRadius: 0
@@ -124,6 +127,7 @@ MonoBehaviour:
           classTrait: 0
           requiredLevel: 1
           sceneNames: []
+          requireOutOfCombat: 0
           limitedDuration: 1
           duration: 5
           maxStacks: 1
@@ -136,6 +140,7 @@ MonoBehaviour:
           outgoingDamageMultiplier: 1
           incomingDamageMultiplier: 1
           factionModifiers: []
+          stealth: 0
           canFly: 0
           canGlide: 0
           disableAnimator: 0
@@ -147,3 +152,4 @@ MonoBehaviour:
           controlTarget: 0
           reflectAbilityEffectNames: []
           weaponHitAbilityEffectNames: []
+          saveEffect: 1

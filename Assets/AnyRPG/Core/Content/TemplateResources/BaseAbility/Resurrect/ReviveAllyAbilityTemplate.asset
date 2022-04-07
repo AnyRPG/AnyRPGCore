@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   resourceName: Revive Ally
   displayName: 
-  icon: {fileID: 21300000, guid: d816099ac60642e42ad491a31f38ea8b, type: 3}
+  icon: {fileID: 21300000, guid: 3db45d2f7dcfeab4388a6f4af1a1a210, type: 3}
   iconBackgroundImage: {fileID: 0}
   description: A well of trapped sunlight springs forth from underground, reviving
     its target.

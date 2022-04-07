@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   resourceName: Fire Projectile
   displayName: 
-  icon: {fileID: 21300000, guid: 46552b92847675944b9e69621e19461b, type: 3}
+  icon: {fileID: 21300000, guid: a3e5a9705df8e6740b9eec7e3d37706b, type: 3}
   iconBackgroundImage: {fileID: 0}
   description: a projectile of fire
   useRegionalDescription: 0
@@ -22,6 +22,7 @@ MonoBehaviour:
   optionalOverride: 0
   directAbilityProperties:
     requireOutOfCombat: 0
+    requireStealth: 0
     weaponAffinityNames: []
     holdableObjectList:
     - holdableObjectName: Red Casting Circle
@@ -38,6 +39,7 @@ MonoBehaviour:
     castingAudioProfileName: Fire Spell
     requiredLevel: 1
     characterClassRequirements: []
+    classSpecializationRequirements: []
     useableWithoutLearning: 0
     autoAddToBars: 1
     canSimultaneousCast: 0
@@ -71,6 +73,7 @@ MonoBehaviour:
       maxRange: 40
       requireFacingTarget: 0
       maxAngle: 45
+      requireBehindTarget: 0
       requiresGroundTarget: 0
       groundTargetColor: {r: 1, g: 1, b: 1, a: 1}
       groundTargetRadius: 0

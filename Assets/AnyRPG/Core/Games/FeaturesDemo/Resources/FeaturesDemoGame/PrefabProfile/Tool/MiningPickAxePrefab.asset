@@ -1,0 +1,33 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 086cc19bb10d93146806ca499cfd21c7, type: 3}
+  m_Name: MiningPickAxePrefab
+  m_EditorClassIdentifier: 
+  resourceName: Mining PickAxe
+  displayName: 
+  icon: {fileID: 0}
+  iconBackgroundImage: {fileID: 0}
+  description: 
+  useRegionalDescription: 0
+  resourceDescriptionProfile: 
+  prefab: {fileID: 5319069474142785129, guid: ef2c215992f9a22408c0e2eae0d2ddf6, type: 3}
+  position: {x: -0.0738, y: 0.0034, z: -0.0423}
+  rotationIsGlobal: 0
+  rotation: {x: 7.168463, y: 256.2952, z: 2.792886}
+  scale: {x: 1, y: 1, z: 1}
+  targetBone: RightHand
+  unsheathAudioProfileName: 
+  sheathedPosition: {x: -0.3725, y: -0.2437, z: -0.1502}
+  sheathedRotation: {x: 51.09494, y: 104.9947, z: 10.42791}
+  sheathedScale: {x: 1, y: 1, z: 1}
+  sheathedTargetBone: Spine1
+  sheathAudioProfileName: 

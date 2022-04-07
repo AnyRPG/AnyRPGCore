@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   resourceName: Restore Mana
   displayName: 
-  icon: {fileID: 21300000, guid: 355bb54616ae2474a8039f7a6416f65d, type: 3}
+  icon: {fileID: 21300000, guid: da9695f095eb12143a601785777f06b5, type: 3}
   iconBackgroundImage: {fileID: 0}
   description: Restore mana over time
   useRegionalDescription: 0
@@ -22,6 +22,7 @@ MonoBehaviour:
   optionalOverride: 0
   channeledAbilityProperties:
     requireOutOfCombat: 0
+    requireStealth: 0
     weaponAffinityNames: []
     holdableObjectList:
     - holdableObjectName: Blue Casting Circle
@@ -38,6 +39,7 @@ MonoBehaviour:
     castingAudioProfileName: Scry Sight Spell
     requiredLevel: 1
     characterClassRequirements: []
+    classSpecializationRequirements: []
     useableWithoutLearning: 0
     autoAddToBars: 1
     canSimultaneousCast: 0
@@ -71,6 +73,7 @@ MonoBehaviour:
       maxRange: 10
       requireFacingTarget: 0
       maxAngle: 45
+      requireBehindTarget: 0
       requiresGroundTarget: 0
       groundTargetColor: {r: 1, g: 1, b: 1, a: 1}
       groundTargetRadius: 0

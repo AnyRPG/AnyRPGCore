@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   resourceName: Piercing Shot
   displayName: 
-  icon: {fileID: 21300000, guid: 27cb25610e743d04ba2b90a25c80259a, type: 3}
+  icon: {fileID: 21300000, guid: 8da1cad54df0ad34e98da24421fe78de, type: 3}
   iconBackgroundImage: {fileID: 0}
   description: A deep piercing wound that reduces all stats
   useRegionalDescription: 0
@@ -22,6 +22,7 @@ MonoBehaviour:
   optionalOverride: 0
   animatedAbilityProperties:
     requireOutOfCombat: 0
+    requireStealth: 0
     weaponAffinityNames:
     - Bow
     - Crossbow
@@ -37,6 +38,7 @@ MonoBehaviour:
     castingAudioProfileName: 
     requiredLevel: 1
     characterClassRequirements: []
+    classSpecializationRequirements: []
     useableWithoutLearning: 0
     autoAddToBars: 1
     canSimultaneousCast: 0
@@ -70,6 +72,7 @@ MonoBehaviour:
       maxRange: 30
       requireFacingTarget: 0
       maxAngle: 45
+      requireBehindTarget: 0
       requiresGroundTarget: 0
       groundTargetColor: {r: 1, g: 1, b: 1, a: 1}
       groundTargetRadius: 0

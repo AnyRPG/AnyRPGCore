@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   resourceName: Cure Poison
   displayName: 
-  icon: {fileID: 21300000, guid: 4934638cea763774484de4256678d5df, type: 3}
+  icon: {fileID: 21300000, guid: ecbfc6b4547a7524abd14ace3835e081, type: 3}
   iconBackgroundImage: {fileID: 0}
   description: Cure poison
   useRegionalDescription: 0

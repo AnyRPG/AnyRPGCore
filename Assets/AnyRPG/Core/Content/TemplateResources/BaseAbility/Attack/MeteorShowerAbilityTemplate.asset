@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   resourceName: Meteor Shower
   displayName: 
-  icon: {fileID: 21300000, guid: 46552b92847675944b9e69621e19461b, type: 3}
+  icon: {fileID: 21300000, guid: 6cf6caa8cb0fea9428179bf08e0255ee, type: 3}
   iconBackgroundImage: {fileID: 0}
   description: a meteor shower
   useRegionalDescription: 0
@@ -22,6 +22,7 @@ MonoBehaviour:
   optionalOverride: 0
   directAbilityProperties:
     requireOutOfCombat: 0
+    requireStealth: 0
     weaponAffinityNames: []
     holdableObjectList:
     - holdableObjectName: Red Casting Circle
@@ -38,6 +39,7 @@ MonoBehaviour:
     castingAudioProfileName: Fire Spell
     requiredLevel: 1
     characterClassRequirements: []
+    classSpecializationRequirements: []
     useableWithoutLearning: 0
     autoAddToBars: 1
     canSimultaneousCast: 0
@@ -71,6 +73,7 @@ MonoBehaviour:
       maxRange: 0
       requireFacingTarget: 0
       maxAngle: 45
+      requireBehindTarget: 0
       requiresGroundTarget: 1
       groundTargetColor: {r: 1, g: 0.16509432, b: 0.16509432, a: 1}
       groundTargetRadius: 5

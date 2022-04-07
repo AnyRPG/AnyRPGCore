@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   resourceName: Sneak Attack
   displayName: 
-  icon: {fileID: 21300000, guid: 263cbe8a4d2bfd3428641051879e3f9a, type: 3}
+  icon: {fileID: 21300000, guid: 70df9027276b6114880cbf6aa6189939, type: 3}
   iconBackgroundImage: {fileID: 0}
   description: Attack while stealthed, causing extra damage
   useRegionalDescription: 0
@@ -37,6 +37,7 @@ MonoBehaviour:
     castingAudioProfileName: 
     requiredLevel: 1
     characterClassRequirements: []
+    classSpecializationRequirements: []
     useableWithoutLearning: 0
     autoAddToBars: 1
     canSimultaneousCast: 0
@@ -70,6 +71,7 @@ MonoBehaviour:
       maxRange: 5
       requireFacingTarget: 0
       maxAngle: 45
+      requireBehindTarget: 0
       requiresGroundTarget: 0
       groundTargetColor: {r: 1, g: 1, b: 1, a: 1}
       groundTargetRadius: 0

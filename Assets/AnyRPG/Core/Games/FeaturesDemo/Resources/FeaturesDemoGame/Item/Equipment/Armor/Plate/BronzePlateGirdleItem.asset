@@ -1,0 +1,57 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cce50b319fd34a546b9c9beccdc4da3c, type: 3}
+  m_Name: BronzePlateGirdleItem
+  m_EditorClassIdentifier: 
+  resourceName: Bronze Plate Girdle
+  displayName: 
+  icon: {fileID: 21300000, guid: 1395b941a7cfab5419666db448cc367d, type: 3}
+  iconBackgroundImage: {fileID: 0}
+  description: very bronze
+  useRegionalDescription: 0
+  resourceDescriptionProfile: 
+  optionalOverride: 0
+  stackSize: 0
+  itemQuality: 
+  randomItemQuality: 0
+  dynamicLevel: 1
+  freezeDropLevel: 0
+  levelCap: 0
+  itemLevel: 0
+  useLevel: 1
+  currencyName: 
+  dynamicCurrencyAmount: 1
+  pricePerLevel: 10
+  basePrice: 0
+  uniqueItem: 0
+  characterClassRequirementList: []
+  equipmentSlotType: Belt
+  equipmentSetName: 
+  useUMARecipe: 1
+  umaRecipeProfileName: 
+  holdableObjectList: []
+  useArmorModifier: 1
+  useManualArmor: 0
+  manualValueIsScale: 0
+  armorModifier: 5
+  primaryStats:
+  - statName: Stamina
+    useManualValue: 0
+    manualModifierValue: 0
+  - statName: Strength
+    useManualValue: 0
+    manualModifierValue: 0
+  randomSecondaryStats: 0
+  secondaryStats: []
+  onEquipAbilityName: 
+  learnedAbilityNames: []
+  armorClassName: Plate

@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   resourceName: Ground Slam
   displayName: 
-  icon: {fileID: 21300000, guid: afb80656e2525e64c972a922e0664689, type: 3}
+  icon: {fileID: 21300000, guid: d34e7697a381af94189a9642fd625caf, type: 3}
   iconBackgroundImage: {fileID: 0}
   description: Slam the Ground
   useRegionalDescription: 0
@@ -22,6 +22,7 @@ MonoBehaviour:
   optionalOverride: 0
   animatedAbilityProperties:
     requireOutOfCombat: 0
+    requireStealth: 0
     weaponAffinityNames: []
     holdableObjectList: []
     abilityPrefabSource: 0
@@ -35,6 +36,7 @@ MonoBehaviour:
     castingAudioProfileName: 
     requiredLevel: 1
     characterClassRequirements: []
+    classSpecializationRequirements: []
     useableWithoutLearning: 0
     autoAddToBars: 1
     canSimultaneousCast: 0
@@ -68,6 +70,7 @@ MonoBehaviour:
       maxRange: 5
       requireFacingTarget: 0
       maxAngle: 45
+      requireBehindTarget: 0
       requiresGroundTarget: 0
       groundTargetColor: {r: 1, g: 1, b: 1, a: 1}
       groundTargetRadius: 0

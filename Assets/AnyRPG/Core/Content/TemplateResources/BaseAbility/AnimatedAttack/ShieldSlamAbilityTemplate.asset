@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   resourceName: Shield Slam
   displayName: 
-  icon: {fileID: 21300000, guid: 068618f626fbf69448d14da271218015, type: 3}
+  icon: {fileID: 21300000, guid: 52df6ca7314170b40a048803bad931c2, type: 3}
   iconBackgroundImage: {fileID: 0}
   description: Slam your target with a shield, stunning them for 3 seconds
   useRegionalDescription: 0
@@ -22,6 +22,7 @@ MonoBehaviour:
   optionalOverride: 0
   animatedAbilityProperties:
     requireOutOfCombat: 0
+    requireStealth: 0
     weaponAffinityNames:
     - Shield
     holdableObjectList: []
@@ -36,6 +37,7 @@ MonoBehaviour:
     castingAudioProfileName: 
     requiredLevel: 1
     characterClassRequirements: []
+    classSpecializationRequirements: []
     useableWithoutLearning: 0
     autoAddToBars: 1
     canSimultaneousCast: 0
@@ -69,6 +71,7 @@ MonoBehaviour:
       maxRange: 5
       requireFacingTarget: 0
       maxAngle: 45
+      requireBehindTarget: 0
       requiresGroundTarget: 0
       groundTargetColor: {r: 1, g: 1, b: 1, a: 1}
       groundTargetRadius: 0
@@ -140,3 +143,4 @@ MonoBehaviour:
             maxAmount: 0
           damageType: 1
           ignoreAccuracy: 0
+          ignoreArmorPercent: 0

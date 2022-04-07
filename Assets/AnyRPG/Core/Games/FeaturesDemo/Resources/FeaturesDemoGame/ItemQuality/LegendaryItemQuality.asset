@@ -1,0 +1,31 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c444289f4352a104da57db341cb4df63, type: 3}
+  m_Name: LegendaryItemQuality
+  m_EditorClassIdentifier: 
+  resourceName: Legendary
+  icon: {fileID: 0}
+  iconBackgroundImage: {fileID: 21300000, guid: 03760cb19b6818b4ba3213d19fd9e9ea,
+    type: 3}
+  description: 
+  useRegionalDescription: 0
+  resourceDescriptionProfile: 
+  statMultiplier: 2
+  allowRandomItems: 1
+  randomQualityPrefix: God Like
+  randomStatCount: 4
+  dynamicItemLevel: 0
+  buyPriceMultiplier: 50
+  sellPriceMultiplier: 10
+  requireSellConfirmation: 1
+  qualityColor: {r: 1, g: 0.5019608, b: 0, a: 1}
+  tintBackgroundImage: 1

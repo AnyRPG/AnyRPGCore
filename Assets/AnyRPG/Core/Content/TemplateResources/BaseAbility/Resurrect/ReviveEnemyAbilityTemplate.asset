@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   resourceName: Revive Enemy
   displayName: 
-  icon: {fileID: 21300000, guid: 438e8e2beb078f749905581c494769f3, type: 3}
+  icon: {fileID: 21300000, guid: d19ebdb652186e545ad72b977d82c426, type: 3}
   iconBackgroundImage: {fileID: 0}
   description: Fill your dead target with dark energy, reanimating it's body and
     binding it's soul to your will
@@ -23,6 +23,7 @@ MonoBehaviour:
   optionalOverride: 0
   directAbilityProperties:
     requireOutOfCombat: 0
+    requireStealth: 0
     weaponAffinityNames: []
     holdableObjectList:
     - holdableObjectName: Black Casting Circle
@@ -39,6 +40,7 @@ MonoBehaviour:
     castingAudioProfileName: Summon Spell
     requiredLevel: 1
     characterClassRequirements: []
+    classSpecializationRequirements: []
     useableWithoutLearning: 0
     autoAddToBars: 1
     canSimultaneousCast: 0
@@ -72,6 +74,7 @@ MonoBehaviour:
       maxRange: 40
       requireFacingTarget: 0
       maxAngle: 45
+      requireBehindTarget: 0
       requiresGroundTarget: 0
       groundTargetColor: {r: 1, g: 1, b: 1, a: 1}
       groundTargetRadius: 0
