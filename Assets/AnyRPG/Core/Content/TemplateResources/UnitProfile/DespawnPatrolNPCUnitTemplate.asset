@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   resourceName: Despawn Patrol NPC
   displayName: 
-  icon: {fileID: 21300000, guid: 9176b48a2857c364280b4f5b9d620852, type: 3}
+  icon: {fileID: 21300000, guid: 7ef0ad7a9479f7041afaf88b46f9a9d8, type: 3}
   iconBackgroundImage: {fileID: 0}
   description: 
   useRegionalDescription: 0
@@ -182,34 +182,34 @@ MonoBehaviour:
     movementSpeed: 2
     savePositionAtDestination: 0
   patrolNames: []
-  behaviorConfig:
+  interactionMaxRange: 3
+  deprecatedBehaviorConfig:
     interactionPanelTitle: 
     interactionPanelImage: {fileID: 0}
     namePlateImage: {fileID: 0}
     prerequisiteConditions: []
     behaviorNames: []
-  interactionMaxRange: 3
-  lootableCharacter:
+  deprecatedLootableCharacter:
     interactionPanelTitle: 
     interactionPanelImage: {fileID: 0}
     namePlateImage: {fileID: 0}
     prerequisiteConditions: []
     automaticCurrency: 0
     lootTableNames: []
-  dialogConfig:
+  deprecatedDialogConfig:
     interactionPanelTitle: 
     interactionPanelImage: {fileID: 0}
     namePlateImage: {fileID: 0}
     prerequisiteConditions: []
     dialogNames: []
-  questGiverConfig:
+  deprecatedQuestGiverConfig:
     interactionPanelTitle: 
     interactionPanelImage: {fileID: 0}
     namePlateImage: {fileID: 0}
     prerequisiteConditions: []
     quests: []
     questGiverProfileNames: []
-  vendorConfig:
+  deprecatedVendorConfig:
     interactionPanelTitle: 
     interactionPanelImage: {fileID: 0}
     namePlateImage: {fileID: 0}
@@ -221,6 +221,6 @@ MonoBehaviour:
   saveOnLevelUnload: 0
   saveOnGameSave: 0
   overwriteUnitUUID: 0
-  m_UUID: b14fa4be-991b-4406-824b-7952a246a03b
+  m_UUID: 61235742-f07a-4a89-861e-9f9cf161f679
   references:
     version: 1

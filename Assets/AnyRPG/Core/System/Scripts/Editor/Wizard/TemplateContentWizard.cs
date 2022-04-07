@@ -19,12 +19,6 @@ namespace AnyRPG {
         // Will be a subfolder of Application.dataPath and should start with "/"
         private const string newGameParentFolder = "/Games/";
 
-        // the used file path name for the game
-        //private string fileSystemGameName = string.Empty;
-
-        // the used asset path for the Unit Profile
-        private string scriptableObjectPath = string.Empty;
-
         private static int totalResourceCount = 0;
         private static int totalPrefabCount = 0;
         private static int copyResourceCount = 0;
@@ -69,8 +63,8 @@ namespace AnyRPG {
 
             EditorUtility.DisplayProgressBar("Template Content Wizard", "Creating Dependency Closure...", 0.1f);
             try {
-                string fileSystemGameName = MakeFileSystemGameName();
-                RunWizard(fileSystemGameName, scriptableContent, replaceExistingResources, replaceExistingPrefabs);
+                string fileSystemGameName = WizardUtilities.GetFileSystemGameName(gameName);
+                RunWizard(fileSystemGameName, newGameParentFolder, scriptableContent, replaceExistingResources, replaceExistingPrefabs);
 
             } catch (System.NullReferenceException) {
                 // do nothing
@@ -89,7 +83,7 @@ namespace AnyRPG {
 
         }
 
-        public static void RunWizard(string fileSystemGameName, List<ScriptableContentTemplate> scriptableContent, bool replaceExistingResources, bool replaceExistingPrefabs) {
+        public static void RunWizard(string fileSystemGameName, string gameParentFolder, List<ScriptableContentTemplate> scriptableContent, bool replaceExistingResources, bool replaceExistingPrefabs) {
             copyResourceCount = 0;
             copyPrefabCount = 0;
             skipResourceCount = 0;
@@ -108,17 +102,17 @@ namespace AnyRPG {
 
             EditorUtility.DisplayProgressBar("Template Content Wizard", "Copying Resources...", 0.3f);
 
-            CopyResources(fileSystemGameName, describableResources, replaceExistingResources, 0, totalResourceCount + totalPrefabCount);
+            CopyResources(fileSystemGameName, gameParentFolder, describableResources, replaceExistingResources, 0, totalResourceCount + totalPrefabCount);
 
-            CopyPrefabs(fileSystemGameName, gameObjects, replaceExistingPrefabs, totalResourceCount, totalResourceCount + totalPrefabCount);
+            CopyPrefabs(fileSystemGameName, gameParentFolder, gameObjects, replaceExistingPrefabs, totalResourceCount, totalResourceCount + totalPrefabCount);
 
             AssetDatabase.Refresh();
 
         }
 
-        public static void CopyResources(string fileSystemGameName, List<DescribableResource> describableResources, bool replaceExistingResources, int beginCount, int totalCount) {
+        public static void CopyResources(string fileSystemGameName, string gameParentFolder, List<DescribableResource> describableResources, bool replaceExistingResources, int beginCount, int totalCount) {
 
-            string newGameFolder = GetNewGameFolder(fileSystemGameName);
+            string newGameFolder = WizardUtilities.GetGameFolder(gameParentFolder, fileSystemGameName);
 
             int copyCount = 0;
             foreach (DescribableResource describableResource in describableResources) {
@@ -146,7 +140,7 @@ namespace AnyRPG {
 
                     // create the resources folder
                     //Debug.Log("Creating folder " + resourcesFolder);
-                    CreateFolderIfNotExists(resourcesFolder);
+                    WizardUtilities.CreateFolderIfNotExists(resourcesFolder);
 
                 }
 
@@ -173,9 +167,9 @@ namespace AnyRPG {
 
         }
 
-        private static void CopyPrefabs(string fileSystemGameName, List<GameObject> objectResources, bool replaceExistingPrefabs, int beginCount, int totalCount) {
+        private static void CopyPrefabs(string fileSystemGameName, string gameParentFolder, List<GameObject> objectResources, bool replaceExistingPrefabs, int beginCount, int totalCount) {
 
-            string newGameFolder = GetNewGameFolder(fileSystemGameName);
+            string newGameFolder = WizardUtilities.GetGameFolder(gameParentFolder, fileSystemGameName);
 
             int copyCount = 0;
 
@@ -204,7 +198,7 @@ namespace AnyRPG {
 
                     // create the resources folder
                     //Debug.Log("Creating folder " + resourcesFolder);
-                    CreateFolderIfNotExists(resourcesFolder);
+                    WizardUtilities.CreateFolderIfNotExists(resourcesFolder);
 
                 }
 
@@ -292,20 +286,13 @@ namespace AnyRPG {
         void OnWizardUpdate() {
             helpString = "Copies Scriptable Objects and their dependencies to a game";
 
-            string fileSystemGameName = MakeFileSystemGameName();
+            string fileSystemGameName = WizardUtilities.GetFileSystemGameName(gameName);
 
             errorString = Validate(fileSystemGameName);
             isValid = (errorString == null || errorString == "");
         }
 
-
-        private string MakeFileSystemGameName() {
-            return gameName.Replace(" ", "");
-        }
-
-        private static string GetNewGameFolder(string fileSystemGameName) {
-            return Application.dataPath + newGameParentFolder + fileSystemGameName;
-        }
+        
 
         string Validate(string fileSystemGameName) {
 
@@ -315,12 +302,10 @@ namespace AnyRPG {
             }
            
             // check for game folder existing
-            string newGameFolder = GetNewGameFolder(fileSystemGameName);
+            string newGameFolder = WizardUtilities.GetGameFolder(newGameParentFolder, fileSystemGameName);
             if (System.IO.Directory.Exists(newGameFolder) == false) {
                 return "The folder " + newGameFolder + "does not exist.  Please run the new game wizard first to create the game folder structure";
             }
-
-            
 
             return null;
         }
@@ -329,15 +314,6 @@ namespace AnyRPG {
             EditorUtility.DisplayDialog("Error", message, "OK");
         }
 
-
-        private static void CreateFolderIfNotExists(string folderName) {
-            if (!System.IO.Directory.Exists(folderName)) {
-                Debug.Log("Create folder " + folderName);
-                System.IO.Directory.CreateDirectory(folderName);
-            }
-
-            AssetDatabase.Refresh();
-        }
     }
 
 }

@@ -143,7 +143,7 @@ namespace AnyRPG {
             string resourcesFolder = newGameFolder + "/Resources/" + fileSystemGameName;
 
             // create base games folder
-            CreateFolderIfNotExists(Application.dataPath + newGameParentFolder);
+            WizardUtilities.CreateFolderIfNotExists(Application.dataPath + newGameParentFolder);
 
             EditorUtility.DisplayProgressBar("New Game Wizard", "Copying Game Template Directory...", 0.3f);
 
@@ -171,7 +171,7 @@ namespace AnyRPG {
             EditorUtility.DisplayProgressBar("New Game Wizard", "Create Resource Folder If Necessary...", 0.5f);
 
             // create resources folder if one didn't already get created by the copy operation
-            CreateFolderIfNotExists(resourcesFolder);
+            WizardUtilities.CreateFolderIfNotExists(resourcesFolder);
 
             EditorUtility.DisplayProgressBar("New Game Wizard", "Making resource folder structure...", 0.6f);
             // Copy over all folders because git won't commit empty folders
@@ -195,8 +195,8 @@ namespace AnyRPG {
             // create prefab folder
             string prefabFolder = newGameFolder + "/Prefab";
             string prefabPath = FileUtil.GetProjectRelativePath(prefabFolder);
-            CreateFolderIfNotExists(prefabFolder);
-            CreateFolderIfNotExists(prefabFolder + "/GameManager");
+            WizardUtilities.CreateFolderIfNotExists(prefabFolder);
+            WizardUtilities.CreateFolderIfNotExists(prefabFolder + "/GameManager");
 
 
             if (useThirdPartyController == true) {
@@ -211,7 +211,7 @@ namespace AnyRPG {
             //string existingFirstScenePath = existingFirstSceneFolder + "/" + defaultFirstSceneName + ".unity";
 
             // create the first scene folder
-            CreateFolderIfNotExists(newGameFolder + "/Scenes/" + fileSystemFirstSceneName);
+            WizardUtilities.CreateFolderIfNotExists(newGameFolder + "/Scenes/" + fileSystemFirstSceneName);
 
             // if copying existing scene, use existing scene, otherwise use template first scene
             if (copyExistingScene == true) {
@@ -222,27 +222,6 @@ namespace AnyRPG {
             }
             AssetDatabase.Refresh();
 
-
-            // Rename the first scene if necessary
-            /*
-            if (fileSystemFirstSceneName != templateFirstSceneName) {
-                EditorUtility.DisplayProgressBar("New Game Wizard", "Renaming First Scene...", 0.7f);
-
-                AssetDatabase.RenameAsset(existingFirstScenePath, newFirstSceneFileName);
-                AssetDatabase.RenameAsset(existingFirstSceneFolder, fileSystemFirstSceneName);
-                AssetDatabase.Refresh();
-            }
-            */
-
-            // add the first scene to the build if the option was chosen
-            //if (addFirstSceneToBuild) {
-            /*
-            EditorUtility.DisplayProgressBar("New Game Wizard", "Adding First Scene To Build Settings...", 0.75f);
-            List<EditorBuildSettingsScene> currentSceneList = EditorBuildSettings.scenes.ToList();
-            currentSceneList.Add(new EditorBuildSettingsScene(newFirstSceneAssetPath, true));
-            EditorBuildSettings.scenes = currentSceneList.ToArray();
-            */
-            //}
 
             // Rename the game load scene
             EditorUtility.DisplayProgressBar("New Game Wizard", "Renaming Game Load Scene...", 0.75f);
@@ -272,7 +251,7 @@ namespace AnyRPG {
             // install gold currency group
             if (installGoldCurrencyGroup) {
                 EditorUtility.DisplayProgressBar("New Game Wizard", "Installing Gold Currency Group...", 0.89f);
-                TemplateContentWizard.RunWizard(fileSystemGameName, new List<ScriptableContentTemplate>() { goldCurrencyGroupTemplate }, true, true);
+                TemplateContentWizard.RunWizard(fileSystemGameName, newGameParentFolder, new List<ScriptableContentTemplate>() { goldCurrencyGroupTemplate }, true, true);
             }
 
             // Create a variant of the GameManager & UMA prefabs
@@ -287,7 +266,7 @@ namespace AnyRPG {
 
             // install system default effects
             EditorUtility.DisplayProgressBar("New Game Wizard", "Installing System Default Effects...", 0.96f);
-            TemplateContentWizard.RunWizard(fileSystemGameName, new List<ScriptableContentTemplate>() { defaultEffectsTemplate }, true, true);
+            TemplateContentWizard.RunWizard(fileSystemGameName, newGameParentFolder, new List<ScriptableContentTemplate>() { defaultEffectsTemplate }, true, true);
 
             // add sceneconfig to first scene
             EditorUtility.DisplayProgressBar("New Game Wizard", "Adding SceneConfig to First Scene...", 0.97f);
@@ -298,6 +277,9 @@ namespace AnyRPG {
 
             // load loading scene
             //EditorSceneManager.OpenScene(newGameLoadScenePath);
+
+            EditorUtility.DisplayProgressBar("New Game Wizard", "Creating Portal For First Scene...", 0.975f);
+            NewSceneWizard.CreatePortal(gameName, firstSceneName, fileSystemGameName, fileSystemFirstSceneName);
 
             // make audio profiles and scene nodes
             EditorUtility.DisplayProgressBar("New Game Wizard", "Configuring Main Menu...", 0.98f);
@@ -618,16 +600,6 @@ namespace AnyRPG {
             return variant;
         }
 
-        private void CreateFolderIfNotExists(string folderName) {
-            if (!System.IO.Directory.Exists(folderName)) {
-                Debug.Log("Create folder " + folderName);
-                System.IO.Directory.CreateDirectory(folderName);
-            }
-
-            AssetDatabase.Refresh();
-        }
-
-        
         protected override bool DrawWizardGUI() {
             //return base.DrawWizardGUI();
 

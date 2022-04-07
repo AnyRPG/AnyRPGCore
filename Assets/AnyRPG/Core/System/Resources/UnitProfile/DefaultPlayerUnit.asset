@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   resourceName: Default Player
   displayName: 
-  icon: {fileID: 21300000, guid: bcb11102af22c504988ceba5811bbda9, type: 3}
+  icon: {fileID: 21300000, guid: 4ce9927e29c4e67439b2afb877749f1b, type: 3}
   iconBackgroundImage: {fileID: 0}
   description: The default mechanim humanoid player unit configured in the engine.
   useRegionalDescription: 0

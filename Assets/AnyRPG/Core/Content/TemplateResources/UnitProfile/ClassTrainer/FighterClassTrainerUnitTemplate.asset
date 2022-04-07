@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   resourceName: Fighter Class Trainer
   displayName: 
-  icon: {fileID: 21300000, guid: 9176b48a2857c364280b4f5b9d620852, type: 3}
+  icon: {fileID: 21300000, guid: ca11e665135265746b7f06103090df62, type: 3}
   iconBackgroundImage: {fileID: 0}
   description: 
   useRegionalDescription: 0
@@ -221,7 +221,7 @@ MonoBehaviour:
   saveOnLevelUnload: 0
   saveOnGameSave: 0
   overwriteUnitUUID: 0
-  m_UUID: f5394f0d-0c70-456b-824d-dbd16e68c8cf
+  m_UUID: e4f275b1-9de4-44bc-95b8-eb4114c03c39
   references:
     version: 1
     00000000:

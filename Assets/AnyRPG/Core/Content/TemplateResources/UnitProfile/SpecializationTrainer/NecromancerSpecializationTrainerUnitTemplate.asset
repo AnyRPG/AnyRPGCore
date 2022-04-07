@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   resourceName: Necromancer Specialization Trainer
   displayName: 
-  icon: {fileID: 21300000, guid: 9176b48a2857c364280b4f5b9d620852, type: 3}
+  icon: {fileID: 21300000, guid: 3fe8d957725f36c45892c3b66afed644, type: 3}
   iconBackgroundImage: {fileID: 0}
   description: 
   useRegionalDescription: 0
@@ -221,7 +221,7 @@ MonoBehaviour:
   saveOnLevelUnload: 0
   saveOnGameSave: 0
   overwriteUnitUUID: 0
-  m_UUID: d85d8f92-ca80-48d2-8482-c2c63e24e1fe
+  m_UUID: ea89bf80-f9f8-4d28-b48b-f00bebfd895a
   references:
     version: 1
     00000000:

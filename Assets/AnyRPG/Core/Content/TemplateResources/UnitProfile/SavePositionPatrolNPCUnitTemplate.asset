@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   resourceName: Save Position Patrol NPC
   displayName: 
-  icon: {fileID: 21300000, guid: 9176b48a2857c364280b4f5b9d620852, type: 3}
+  icon: {fileID: 21300000, guid: ddc11cfd0bc3b22489ffaba76d4aaa30, type: 3}
   iconBackgroundImage: {fileID: 0}
   description: 
   useRegionalDescription: 0
@@ -222,7 +222,7 @@ MonoBehaviour:
   saveOnLevelUnload: 1
   saveOnGameSave: 1
   overwriteUnitUUID: 1
-  m_UUID: 6c744236-df97-48c7-936e-b510aedfc63e
+  m_UUID: d34a0b50-1d94-4820-839c-6f736858a78f
   references:
     version: 1
     00000000:
