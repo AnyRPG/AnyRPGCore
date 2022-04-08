@@ -83,7 +83,7 @@ namespace AnyRPG {
             string resourcesFolder = newGameFolder + "/Resources/" + fileSystemGameName + "/UnitProfile";
 
             // create resources folder
-            CreateFolderIfNotExists(resourcesFolder);
+            WizardUtilities.CreateFolderIfNotExists(resourcesFolder);
 
             AssetDatabase.Refresh();
 
@@ -278,19 +278,6 @@ namespace AnyRPG {
             return null;
         }
 
-        private void ShowError(string message) {
-            EditorUtility.DisplayDialog("Error", message, "OK");
-        }
-
-
-        private void CreateFolderIfNotExists(string folderName) {
-            if (!System.IO.Directory.Exists(folderName)) {
-                Debug.Log("Create folder " + folderName);
-                System.IO.Directory.CreateDirectory(folderName);
-            }
-
-            AssetDatabase.Refresh();
-        }
     }
 
 }

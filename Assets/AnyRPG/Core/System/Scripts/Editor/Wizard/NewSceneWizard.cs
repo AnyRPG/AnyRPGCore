@@ -22,12 +22,12 @@ namespace AnyRPG {
         [Header("Game")]
         public string gameName = string.Empty;
 
-        private const string firstSceneTemplateAssetpath = "Assets/AnyRPG/Core/Templates/Game/Scenes/FirstScene/FirstScene.unity";
-        private const string portalAssetPath = "Assets/AnyRPG/Core/Templates/Prefabs/Portal/StonePortal.prefab";
+        private const string sceneTemplatePath = "/AnyRPG/Core/Templates/Game/Scenes/FirstScene/FirstScene.unity";
+        private const string portalTemplatePath = "/AnyRPG/Core/Templates/Prefabs/Portal/StonePortal.prefab";
 
         // first scene options
         public bool copyExistingScene = false;
-        public string newSceneName = "New Scene";
+        public string sceneName = "New Scene";
 
         public SceneAsset existingScene = null;
 
@@ -58,23 +58,89 @@ namespace AnyRPG {
             EditorUtility.DisplayProgressBar("New Scene Wizard", "Checking parameters...", 0.1f);
 
             string fileSystemGameName = WizardUtilities.GetFileSystemGameName(gameName);
-            string fileSystemSceneName = WizardUtilities.GetFilesystemSceneName(newSceneName);
 
-            // Check for presence of sceneconfig prefab
-            string pathToSceneConfigPrefab = "Assets" + gameParentFolder + fileSystemGameName + "/Prefab/GameManager/" + fileSystemGameName + "SceneConfig.prefab";
-            GameObject sceneConfigGameObject = (GameObject)AssetDatabase.LoadMainAssetAtPath(pathToSceneConfigPrefab);
-            if (sceneConfigGameObject == null) {
-                ShowError("Missing SceneConfig prefab at " + pathToSceneConfigPrefab + ".  Aborting...");
+            // check that templates exist
+            if (CheckRequiredTemplatesExist(fileSystemGameName) == false) {
                 return;
             }
 
+            // Check for presence of sceneconfig prefab
+            if (CheckSceneConfigPrefabExists(fileSystemGameName) == false) {
+                return;
+            }
+
+
+            string newSceneAssetPath = CreateScene(gameName, sceneName, copyExistingScene, existingScene, newSceneAmbientSounds, newSceneMusic);
+
+            EditorUtility.ClearProgressBar();
+            EditorUtility.DisplayDialog("New Scene Wizard", "New Scene Wizard Complete! The scene can be found at " + newSceneAssetPath, "OK");
+
+        }
+
+        public static bool CheckRequiredTemplatesExist(string fileSystemGameName) {
+
+            // Check for presence of scene template
+            if (CheckSceneTemplateExists() == false) {
+                return false;
+            }
+
+            // Check for presence of portal template
+            if (CheckPortalTemplateExists() == false) {
+                return false;
+            }
+
+            return true;
+        }
+
+        private static bool CheckSceneConfigPrefabExists(string fileSystemGameName) {
+
+            string sceneConfigPrefabAssetPath = "Assets" + gameParentFolder + fileSystemGameName + "/Prefab/GameManager/" + fileSystemGameName + "SceneConfig.prefab";
+            string scenConfigPrefabFileSystemPath = Application.dataPath + gameParentFolder + fileSystemGameName + "/Prefab/GameManager/" + fileSystemGameName + "SceneConfig.prefab";
+            if (System.IO.File.Exists(scenConfigPrefabFileSystemPath) == false) {
+                WizardUtilities.ShowError("Missing SceneConfig prefab at " + sceneConfigPrefabAssetPath + ".  Aborting...");
+                return false;
+            }
+
+            return true;
+        }
+
+        private static bool CheckSceneTemplateExists() {
+
+            string sceneTemplateAssetPath = "Assets" + sceneTemplatePath;
+            string sceneTemplateFileSystemPath = Application.dataPath + sceneTemplatePath;
+
+            if (System.IO.File.Exists(sceneTemplateFileSystemPath) == false) {
+                WizardUtilities.ShowError("Missing scene template at " + sceneTemplateAssetPath + ".  Aborting...");
+                return false;
+            }
+            return true;
+        }
+
+        private static bool CheckPortalTemplateExists() {
+
+            string portalTemplateAssetPath = "Assets" + portalTemplatePath;
+            string portalTemplateFileSystemPath = Application.dataPath + portalTemplatePath;
+
+            if (System.IO.File.Exists(portalTemplateFileSystemPath) == false) {
+                WizardUtilities.ShowError("Missing portal template at " + portalTemplateAssetPath + ".  Aborting...");
+                return false;
+            }
+
+            return true;
+        }
+
+
+        public static string CreateScene(string gameName, string sceneName, bool copyExistingScene, SceneAsset existingScene, AudioClip newSceneAmbientSounds, AudioClip newSceneMusic) {
+
+            string fileSystemGameName = WizardUtilities.GetFileSystemGameName(gameName);
+            string fileSystemSceneName = WizardUtilities.GetFilesystemSceneName(sceneName);
+
             // Determine root game folder
             string gameFileSystemFolder = WizardUtilities.GetGameFolder(gameParentFolder, fileSystemGameName);
-            string resourcesFileSystemFolder = gameFileSystemFolder + "/Resources/" + fileSystemGameName;
 
             // create resources folder if one doesn't already exist
-            EditorUtility.DisplayProgressBar("New Game Wizard", "Create Resource Folder If Necessary...", 0.5f);
-            WizardUtilities.CreateFolderIfNotExists(resourcesFileSystemFolder);
+            EditorUtility.DisplayProgressBar("New Scene Wizard", "Create Resource Folder If Necessary...", 0.5f);
+            WizardUtilities.CreateFolderIfNotExists(gameFileSystemFolder + "/Resources/" + fileSystemGameName);
 
             // create prefab folder
             string prefabFolder = gameFileSystemFolder + "/Prefab";
@@ -94,14 +160,14 @@ namespace AnyRPG {
             // if copying existing scene, use existing scene, otherwise use template first scene
             if (copyExistingScene == true) {
                 //AssetDatabase.GetAssetPath(existingScene);
-                AssetDatabase.CopyAsset(AssetDatabase.GetAssetPath(existingScene), newSceneAssetPath); 
+                AssetDatabase.CopyAsset(AssetDatabase.GetAssetPath(existingScene), newSceneAssetPath);
             } else {
-                AssetDatabase.CopyAsset(firstSceneTemplateAssetpath, newSceneAssetPath);
+                AssetDatabase.CopyAsset("Assets" + sceneTemplatePath, newSceneAssetPath);
             }
             AssetDatabase.Refresh();
 
             // add scene to build settings
-            EditorUtility.DisplayProgressBar("New Game Wizard", "Adding Scene To Build Settings...", 0.8f);
+            EditorUtility.DisplayProgressBar("New Scene Wizard", "Adding Scene To Build Settings...", 0.8f);
             List<EditorBuildSettingsScene> currentSceneList = EditorBuildSettings.scenes.ToList();
             Debug.Log("Adding " + newSceneAssetPath + " to build settings");
             currentSceneList.Add(new EditorBuildSettingsScene(newSceneAssetPath, true));
@@ -109,6 +175,8 @@ namespace AnyRPG {
 
             // add sceneconfig to scene
             EditorUtility.DisplayProgressBar("New Scene Wizard", "Adding SceneConfig to Scene...", 0.97f);
+            string sceneConfigPrefabAssetPath = "Assets" + gameParentFolder + fileSystemGameName + "/Prefab/GameManager/" + fileSystemGameName + "SceneConfig.prefab";
+            GameObject sceneConfigGameObject = (GameObject)AssetDatabase.LoadMainAssetAtPath(sceneConfigPrefabAssetPath);
             Scene firstScene = EditorSceneManager.OpenScene(newSceneAssetPath);
             GameObject instantiatedGO = (GameObject)PrefabUtility.InstantiatePrefab(sceneConfigGameObject);
             instantiatedGO.transform.SetAsFirstSibling();
@@ -116,28 +184,27 @@ namespace AnyRPG {
 
             // creating portal
             EditorUtility.DisplayProgressBar("New Scene Wizard", "Creating Portal...", 0.98f);
-            CreatePortal(gameName, newSceneName, fileSystemGameName, fileSystemSceneName);
+            CreatePortal(gameName, sceneName, fileSystemGameName, fileSystemSceneName);
 
             // create scenenode and audio profiles
             EditorUtility.DisplayProgressBar("New Scene Wizard", "Configuring Scene...", 0.99f);
-            ConfigureSceneScriptableObjects(fileSystemGameName, fileSystemSceneName);
+            ConfigureSceneScriptableObjects(sceneName, fileSystemGameName, fileSystemSceneName, newSceneAmbientSounds, newSceneMusic);
 
             AssetDatabase.Refresh();
 
-            EditorUtility.ClearProgressBar();
-            EditorUtility.DisplayDialog("New Scene Wizard", "New Scene Wizard Complete! The scene can be found at " + newSceneAssetPath, "OK");
-
+            return newSceneAssetPath;
         }
 
         public static void CreatePortal(string gameName, string sceneName, string fileSystemGameName, string fileSystemSceneName) {
+            
             string destinationPartialPath = gameParentFolder + fileSystemGameName + "/Prefab/Portal/" + fileSystemSceneName + "StonePortal.prefab";
             string destinationAssetpath = "Assets" + destinationPartialPath;
             string destinationFilesystemPath = Application.dataPath + destinationPartialPath;
 
             WizardUtilities.CreateFolderIfNotExists(Application.dataPath + gameParentFolder + fileSystemGameName + "/Prefab/Portal");
             if (System.IO.File.Exists(destinationFilesystemPath) == false) {
-                Debug.Log("Copying Resource from '" + portalAssetPath + "' to '" + destinationAssetpath + "'");
-                if (AssetDatabase.CopyAsset(portalAssetPath, destinationAssetpath)) {
+                Debug.Log("Copying Resource from '" + portalTemplatePath + "' to '" + destinationAssetpath + "'");
+                if (AssetDatabase.CopyAsset("Assets" + portalTemplatePath, destinationAssetpath)) {
                 }
             } else {
                 Debug.Log("Skipping copy. Prefab '" + destinationAssetpath + "' already exists");
@@ -162,12 +229,12 @@ namespace AnyRPG {
 
         }
 
-        private void ConfigureSceneScriptableObjects(string fileSystemGameName, string fileSystemSceneName) {
+        private static void ConfigureSceneScriptableObjects(string sceneName, string fileSystemGameName, string fileSystemSceneName, AudioClip newSceneAmbientSounds, AudioClip newSceneMusic) {
 
             // create ambient audio profile
             if (newSceneAmbientSounds != null) {
                 AudioProfile audioProfile = ScriptableObject.CreateInstance("AudioProfile") as AudioProfile;
-                audioProfile.ResourceName = newSceneName + " Ambient";
+                audioProfile.ResourceName = sceneName + " Ambient";
                 audioProfile.AudioClips = new List<AudioClip>() { newSceneAmbientSounds };
 
                 string scriptableObjectPath = "Assets" + gameParentFolder + fileSystemGameName + "/Resources/" + fileSystemGameName + "/AudioProfile/" + fileSystemSceneName + "Ambient.asset";
@@ -177,7 +244,7 @@ namespace AnyRPG {
             // create background music profile
             if (newSceneMusic != null) {
                 AudioProfile audioProfile = ScriptableObject.CreateInstance("AudioProfile") as AudioProfile;
-                audioProfile.ResourceName = newSceneName + " Music";
+                audioProfile.ResourceName = sceneName + " Music";
                 audioProfile.AudioClips = new List<AudioClip>() { newSceneMusic };
 
                 string scriptableObjectPath = "Assets" + gameParentFolder + fileSystemGameName + "/Resources/" + fileSystemGameName + "/AudioProfile/" + fileSystemSceneName + "Music.asset";
@@ -186,19 +253,19 @@ namespace AnyRPG {
 
             // create scene node
             SceneNode sceneNode = ScriptableObject.CreateInstance("SceneNode") as SceneNode;
-            sceneNode.ResourceName = newSceneName;
+            sceneNode.ResourceName = sceneName;
             sceneNode.SuppressCharacterSpawn = false;
             sceneNode.SuppressMainCamera = false;
             sceneNode.SceneFile = fileSystemSceneName;
             if (newSceneAmbientSounds != null) {
-                sceneNode.AmbientMusicProfileName = newSceneName + " Ambient";
+                sceneNode.AmbientMusicProfileName = sceneName + " Ambient";
             }
             if (newSceneMusic != null) {
-                sceneNode.BackgroundMusicProfileName = newSceneName + " Music";
+                sceneNode.BackgroundMusicProfileName = sceneName + " Music";
             }
 
-            string sceneNodeObjectPath = "Assets" + gameParentFolder + fileSystemGameName + "/Resources/" + fileSystemGameName + "/SceneNode/" + fileSystemSceneName + "SceneNode.asset";
-            AssetDatabase.CreateAsset(sceneNode, sceneNodeObjectPath);
+            string sceneNodeAssetPath = "Assets" + gameParentFolder + fileSystemGameName + "/Resources/" + fileSystemGameName + "/SceneNode/" + fileSystemSceneName + "SceneNode.asset";
+            AssetDatabase.CreateAsset(sceneNode, sceneNodeAssetPath);
 
         }
 
@@ -222,7 +289,7 @@ namespace AnyRPG {
             }
 
             // check that scene name is not empty
-            string filesystemSceneName = WizardUtilities.GetFilesystemSceneName(newSceneName);
+            string filesystemSceneName = WizardUtilities.GetFilesystemSceneName(sceneName);
             if (filesystemSceneName == "") {
                 return "Scene Name must not be empty";
             }
@@ -244,9 +311,6 @@ namespace AnyRPG {
             return null;
         }
 
-        private void ShowError(string message) {
-            EditorUtility.DisplayDialog("Error", message, "OK");
-        }
 
         
         protected override bool DrawWizardGUI() {
@@ -260,7 +324,7 @@ namespace AnyRPG {
 
             EditorGUILayout.LabelField("Scene Options", EditorStyles.boldLabel);
 
-            newSceneName = EditorGUILayout.TextField("Scene Name", newSceneName);
+            sceneName = EditorGUILayout.TextField("Scene Name", sceneName);
             copyExistingScene = EditorGUILayout.Toggle("Copy Existing Scene", copyExistingScene);
 
             if (copyExistingScene) {

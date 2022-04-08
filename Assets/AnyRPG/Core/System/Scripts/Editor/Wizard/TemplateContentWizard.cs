@@ -310,10 +310,6 @@ namespace AnyRPG {
             return null;
         }
 
-        private void ShowError(string message) {
-            EditorUtility.DisplayDialog("Error", message, "OK");
-        }
-
     }
 
 }

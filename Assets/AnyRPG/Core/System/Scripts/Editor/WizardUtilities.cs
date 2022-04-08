@@ -29,5 +29,10 @@ namespace AnyRPG {
             AssetDatabase.Refresh();
         }
 
+        public static void ShowError(string message) {
+            EditorUtility.DisplayDialog("Error", message, "OK");
+        }
+
+
     }
 }
