@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   resourceName: Warrior
   displayName: 
-  icon: {fileID: 21300000, guid: 068618f626fbf69448d14da271218015, type: 3}
+  icon: {fileID: 21300000, guid: d27a2139b4dd9d24ca4eac37a5ffd7c4, type: 3}
   iconBackgroundImage: {fileID: 0}
   description: 
   useRegionalDescription: 0

@@ -11,10 +11,6 @@ using UnityEditor.SceneManagement;
 namespace AnyRPG {
     public class NewSceneWizard : ScriptableWizard {
 
-        // a reference to the systemConfigurationManager found in the currently open scene, for automatic determination of the game name
-        // and setting the newly created unit profile as the default if necessary
-        private SystemConfigurationManager systemConfigurationManager = null;
-
         // Will be a subfolder of Application.dataPath and should start with "/"
         private const string gameParentFolder = "/Games/";
 
@@ -41,16 +37,9 @@ namespace AnyRPG {
         }
 
         void OnEnable() {
-            systemConfigurationManager = GameObject.FindObjectOfType<SystemConfigurationManager>();
-            if (systemConfigurationManager == null) {
-                SceneConfig sceneConfig = GameObject.FindObjectOfType<SceneConfig>();
-                if (sceneConfig != null) {
-                    systemConfigurationManager = sceneConfig.systemConfigurationManager;
-                }
-            }
-            if (systemConfigurationManager != null) {
-                gameName = systemConfigurationManager.GameName;
-            }
+            SystemConfigurationManager systemConfigurationManager = WizardUtilities.GetSystemConfigurationManager();
+            gameName = WizardUtilities.GetGameName(systemConfigurationManager);
+
         }
 
         void OnWizardCreate() {
@@ -145,7 +134,6 @@ namespace AnyRPG {
             // create prefab folder
             string prefabFolder = gameFileSystemFolder + "/Prefab";
             //string prefabPath = FileUtil.GetProjectRelativePath(prefabFolder);
-            WizardUtilities.CreateFolderIfNotExists(prefabFolder);
             WizardUtilities.CreateFolderIfNotExists(prefabFolder + "/Portal");
 
 

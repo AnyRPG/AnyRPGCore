@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   resourceName: Blood Knight
   displayName: 
-  icon: {fileID: 21300000, guid: 67872ab9101490546bda902e9e89c7ee, type: 3}
+  icon: {fileID: 21300000, guid: c01e7fa649a19614eac6a70f9ebedac8, type: 3}
   iconBackgroundImage: {fileID: 0}
   description: Blood Knights drain the life of their enemies with physical attacks
   useRegionalDescription: 0
@@ -44,3 +44,4 @@ MonoBehaviour:
   primaryStats: []
   powerResources: []
   powerEnhancerStats: []
+  validPetTypes: []

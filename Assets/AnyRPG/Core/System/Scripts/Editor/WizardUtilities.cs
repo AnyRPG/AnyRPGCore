@@ -20,6 +20,14 @@ namespace AnyRPG {
             return sceneName.Replace(" ", "");
         }
 
+        public static string GetScriptableObjectFileSystemName(string itemName) {
+            if (itemName == null) {
+                return string.Empty;
+            }
+            return itemName.Replace(" ", "");
+        }
+
+
         public static void CreateFolderIfNotExists(string folderName) {
             if (!System.IO.Directory.Exists(folderName)) {
                 Debug.Log("Create folder " + folderName);
@@ -31,6 +39,27 @@ namespace AnyRPG {
 
         public static void ShowError(string message) {
             EditorUtility.DisplayDialog("Error", message, "OK");
+        }
+
+        public static string GetGameName(SystemConfigurationManager systemConfigurationManager) {
+            if (systemConfigurationManager != null) {
+                return systemConfigurationManager.GameName;
+            }
+
+            // SceneConfig or SystemConfigurationManager not found.  Return empty string
+            return string.Empty;
+        }
+
+        public static SystemConfigurationManager GetSystemConfigurationManager() {
+            SystemConfigurationManager systemConfigurationManager = GameObject.FindObjectOfType<SystemConfigurationManager>();
+            if (systemConfigurationManager == null) {
+                SceneConfig sceneConfig = GameObject.FindObjectOfType<SceneConfig>();
+                if (sceneConfig != null) {
+                    systemConfigurationManager = sceneConfig.systemConfigurationManager;
+                }
+            }
+
+            return systemConfigurationManager;
         }
 
 

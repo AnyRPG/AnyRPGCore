@@ -163,6 +163,7 @@ namespace AnyRPG {
         public BaseAbility OnEquipAbility { get => onEquipAbility; set => onEquipAbility = value; }
         public List<BaseAbilityProperties> LearnedAbilities { get => learnedAbilities; set => learnedAbilities = value; }
         public bool ManualValueIsScale { get => manualValueIsScale; set => manualValueIsScale = value; }
+        public string EquipmentSlotTypeName { get => equipmentSlotType; set => equipmentSlotType = value; }
         public EquipmentSlotType EquipmentSlotType { get => realEquipmentSlotType; set => realEquipmentSlotType = value; }
         public List<HoldableObjectAttachment> HoldableObjectList { get => holdableObjectList; set => holdableObjectList = value; }
         public EquipmentSet EquipmentSet { get => equipmentSet; set => equipmentSet = value; }

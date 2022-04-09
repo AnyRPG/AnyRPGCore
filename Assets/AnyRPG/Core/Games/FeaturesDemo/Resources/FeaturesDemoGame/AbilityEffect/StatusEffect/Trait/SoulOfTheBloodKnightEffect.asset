@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   resourceName: Soul Of The Blood Knight
   displayName: 
-  icon: {fileID: 21300000, guid: 67872ab9101490546bda902e9e89c7ee, type: 3}
+  icon: {fileID: 21300000, guid: c01e7fa649a19614eac6a70f9ebedac8, type: 3}
   iconBackgroundImage: {fileID: 0}
   description: Drain life from attackers
   useRegionalDescription: 0
@@ -62,6 +62,7 @@ MonoBehaviour:
     classTrait: 1
     requiredLevel: 1
     sceneNames: []
+    requireOutOfCombat: 0
     limitedDuration: 0
     duration: 0
     maxStacks: 1
@@ -74,6 +75,7 @@ MonoBehaviour:
     outgoingDamageMultiplier: 1
     incomingDamageMultiplier: 1
     factionModifiers: []
+    stealth: 0
     canFly: 0
     canGlide: 0
     disableAnimator: 0
@@ -86,3 +88,4 @@ MonoBehaviour:
     reflectAbilityEffectNames: []
     weaponHitAbilityEffectNames:
     - Blood Heal
+    saveEffect: 1

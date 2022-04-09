@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   resourceName: Soul Of The Thief
   displayName: 
-  icon: {fileID: 21300000, guid: 6a48a0fc986173a499a1d943f9d46924, type: 3}
+  icon: {fileID: 21300000, guid: 263cbe8a4d2bfd3428641051879e3f9a, type: 3}
   iconBackgroundImage: {fileID: 0}
   description: attack speed is increased by 10%
   useRegionalDescription: 0
@@ -62,6 +62,7 @@ MonoBehaviour:
     classTrait: 1
     requiredLevel: 1
     sceneNames: []
+    requireOutOfCombat: 0
     limitedDuration: 0
     duration: 0
     maxStacks: 1
@@ -74,6 +75,7 @@ MonoBehaviour:
     outgoingDamageMultiplier: 1
     incomingDamageMultiplier: 1
     factionModifiers: []
+    stealth: 0
     canFly: 0
     canGlide: 0
     disableAnimator: 0
@@ -85,3 +87,4 @@ MonoBehaviour:
     controlTarget: 0
     reflectAbilityEffectNames: []
     weaponHitAbilityEffectNames: []
+    saveEffect: 1

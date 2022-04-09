@@ -30,6 +30,12 @@ namespace AnyRPG {
             ScriptableWizard.DisplayWizard<MiniMapWizard>(wizardTitle, "Create");
         }
 
+        void OnEnable() {
+
+            SystemConfigurationManager systemConfigurationManager = WizardUtilities.GetSystemConfigurationManager();
+            gameName = WizardUtilities.GetGameName(systemConfigurationManager);
+        }
+
         void OnWizardCreate() {
 
             EditorUtility.DisplayProgressBar(wizardTitle, "Checking parameters...", 0.1f);

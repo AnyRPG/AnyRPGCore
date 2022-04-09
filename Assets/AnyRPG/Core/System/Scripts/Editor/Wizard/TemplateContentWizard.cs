@@ -10,12 +10,6 @@ using UnityEditor.SceneManagement;
 namespace AnyRPG {
     public class TemplateContentWizard : ScriptableWizard {
 
-        private const string defaultUnitPrefabPath = "/AnyRPG/Core/System/Prefabs/Character/Unit/DefaultCharacterUnit.prefab";
-
-        // a reference to the systemConfigurationManager found in the currently open scene, for automatic determination of the game name
-        // and setting the newly created unit profile as the default if necessary
-        private SystemConfigurationManager systemConfigurationManager = null;
-
         // Will be a subfolder of Application.dataPath and should start with "/"
         private const string newGameParentFolder = "/Games/";
 
@@ -47,16 +41,9 @@ namespace AnyRPG {
         }
 
         void OnEnable() {
-            systemConfigurationManager = GameObject.FindObjectOfType<SystemConfigurationManager>();
-            if (systemConfigurationManager == null) {
-                SceneConfig sceneConfig = GameObject.FindObjectOfType<SceneConfig>();
-                if (sceneConfig != null) {
-                    systemConfigurationManager = sceneConfig.systemConfigurationManager;
-                }
-            }
-            if (systemConfigurationManager != null) {
-                gameName = systemConfigurationManager.GameName;
-            }
+            SystemConfigurationManager systemConfigurationManager = WizardUtilities.GetSystemConfigurationManager();
+            gameName = WizardUtilities.GetGameName(systemConfigurationManager);
+
         }
 
         void OnWizardCreate() {

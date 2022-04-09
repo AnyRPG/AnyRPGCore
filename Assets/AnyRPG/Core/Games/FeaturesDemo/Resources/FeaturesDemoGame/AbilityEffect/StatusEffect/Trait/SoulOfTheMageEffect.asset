@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   resourceName: Soul Of The Mage
   displayName: 
-  icon: {fileID: 21300000, guid: fbedc634ef531d44bafeba71b8b3acf0, type: 3}
+  icon: {fileID: 21300000, guid: 8b04cac8505abbb47bd5c91db3229c44, type: 3}
   iconBackgroundImage: {fileID: 0}
   description: critical strike is increased by 10%
   useRegionalDescription: 0
@@ -62,6 +62,7 @@ MonoBehaviour:
     classTrait: 1
     requiredLevel: 1
     sceneNames: []
+    requireOutOfCombat: 0
     limitedDuration: 0
     duration: 0
     maxStacks: 1
@@ -74,6 +75,7 @@ MonoBehaviour:
     outgoingDamageMultiplier: 1
     incomingDamageMultiplier: 1
     factionModifiers: []
+    stealth: 0
     canFly: 0
     canGlide: 0
     disableAnimator: 0
@@ -85,3 +87,4 @@ MonoBehaviour:
     controlTarget: 0
     reflectAbilityEffectNames: []
     weaponHitAbilityEffectNames: []
+    saveEffect: 1
