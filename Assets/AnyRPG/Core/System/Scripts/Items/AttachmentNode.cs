@@ -38,6 +38,7 @@ namespace AnyRPG {
         public bool UseUniversalAttachment { get => useUniversalAttachment; set => useUniversalAttachment = value; }
         public string PrimaryAttachmentName { get => primaryAttachmentName; set => primaryAttachmentName = value; }
         public string UnsheathedAttachmentName { get => unsheathedAttachmentName; set => unsheathedAttachmentName = value; }
+        public string HoldableObjectName { get => holdableObjectName; set => holdableObjectName = value; }
 
         public void SetupScriptableObjects(SystemGameManager systemGameManager) {
             Configure(systemGameManager);

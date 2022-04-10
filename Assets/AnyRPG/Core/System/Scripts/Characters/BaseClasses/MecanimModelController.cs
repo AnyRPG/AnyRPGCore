@@ -59,8 +59,8 @@ namespace AnyRPG {
             //Dictionary<PrefabProfile, GameObject> holdableObjects = new Dictionary<PrefabProfile, GameObject>();
             Dictionary<AttachmentNode, GameObject> holdableObjects = new Dictionary<AttachmentNode, GameObject>();
             foreach (HoldableObjectAttachment holdableObjectAttachment in newEquipment.HoldableObjectList) {
-                if (holdableObjectAttachment != null && holdableObjectAttachment.MyAttachmentNodes != null) {
-                    foreach (AttachmentNode attachmentNode in holdableObjectAttachment.MyAttachmentNodes) {
+                if (holdableObjectAttachment != null && holdableObjectAttachment.AttachmentNodes != null) {
+                    foreach (AttachmentNode attachmentNode in holdableObjectAttachment.AttachmentNodes) {
                         if (attachmentNode != null && attachmentNode.MyEquipmentSlotProfile != null && equipmentSlotProfile == attachmentNode.MyEquipmentSlotProfile) {
                             //CreateComponentReferences();
                             if (attachmentNode.HoldableObject != null && attachmentNode.HoldableObject.Prefab != null) {

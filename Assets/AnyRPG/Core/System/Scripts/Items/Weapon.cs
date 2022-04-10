@@ -147,6 +147,7 @@ namespace AnyRPG {
         }
 
         public bool RequireWeaponSkill { get => requireWeaponSkill; set => requireWeaponSkill = value; }
+        public string WeaponType { get => weaponType; set => weaponType = value; }
 
         public float GetDamagePerSecond(int characterLevel) {
             return GetDamagePerSecond(characterLevel, realItemQuality);

@@ -1,12 +1,9 @@
 ﻿using AnyRPG;
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 using System.IO;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 using UnityEditor;
-using UnityEditor.SceneManagement;
 
 namespace AnyRPG {
     public class NewWeaponWizard : ScriptableWizard {
@@ -15,6 +12,9 @@ namespace AnyRPG {
 
         // Will be a subfolder of Application.dataPath and should start with "/"
         private const string gameParentFolder = "/Games/";
+
+        // path to weapon handle prefab template
+        private const string weaponHandleTemplatePath = "/AnyRPG/Core/Templates/Prefabs/WeaponHandle/WeaponHandleTemplate.prefab";
 
         // user modified variables
         [Header("Game")]
@@ -27,9 +27,7 @@ namespace AnyRPG {
         public string weaponName = "";
         public Sprite icon = null;
         public WeaponSlotType weaponSlotType = WeaponSlotType.MainHandOnly;
-
-        private const string weaponHandleTemplatePath = "/AnyRPG/Core/Templates/Prefabs/WeaponHandle/WeaponHandleTemplate.prefab";
-        //private const string portalTemplatePath = "/AnyRPG/Core/Templates/Prefabs/Portal/StonePortal.prefab";
+        public WeaponTypeConfigTemplate weaponType = null;
 
 
         [MenuItem("Tools/AnyRPG/Wizard/New Weapon Wizard")]
@@ -83,6 +81,7 @@ namespace AnyRPG {
             // create resources folders if they doesn't already exist
             EditorUtility.DisplayProgressBar("New Weapon Wizard", "Create Resources Folders If Necessary...", 0.2f);
             WizardUtilities.CreateFolderIfNotExists(gameFileSystemFolder + "/Resources/" + fileSystemGameName + "/Item/Equipment/Weapon");
+            WizardUtilities.CreateFolderIfNotExists(gameFileSystemFolder + "/Resources/" + fileSystemGameName + "/PrefabProfile/Weapon");
 
             // create prefab folder
             EditorUtility.DisplayProgressBar("New Weapon Wizard", "Create Prefab Folders If Necessary...", 0.3f);
@@ -108,30 +107,18 @@ namespace AnyRPG {
                 PrefabUtility.SaveAsPrefabAsset(weaponHandleObject, newWeaponHandleAssetPath);
 
                 // clean up
-                //PrefabUtility.UnloadPrefabContents(weaponHandleObject);
+                PrefabUtility.UnloadPrefabContents(weaponHandleObject);
 
-                //EditorUtility.SetDirty(weaponHandleObject);
-                //AssetDatabase.SaveAssets();
                 AssetDatabase.Refresh();
             }
 
-            //string path = "Assets/Prefabs/A.prefab";
-
-            //var goB = (GameObject)AssetDatabase.LoadMainAssetAtPath("Assets/Prefabs/B.prefab");
-            //var instanceB = (GameObject)PrefabUtility.InstantiatePrefab(goB);
-
-            //var root = PrefabUtility.LoadPrefabContents(path);
-
-            //instanceB.GetComponent<Transform>().parent = root.GetComponent<Transform>();
-            //PrefabUtility.RecordPrefabInstancePropertyModifications(instanceB.GetComponent<Transform>());
-            //PrefabUtility.SaveAsPrefabAsset(root, path);
-
-            // Clean up
-            //PrefabUtility.UnloadPrefabContents(root);
-
             // create item Scriptable Object
             EditorUtility.DisplayProgressBar("New Weapon Wizard", "Configuring Weapon Item...", 0.6f);
-            CreateWeaponScriptableObject(fileSystemGameName, weaponName, icon);
+            CreateWeaponScriptableObjects(fileSystemGameName, weaponName, icon, newWeaponHandleAssetPath, weaponSlotType, weaponType);
+
+            // install weapon skill
+            EditorUtility.DisplayProgressBar("New Weapon Wizard", "Installing Weapon Skill...", 0.7f);
+            TemplateContentWizard.RunWizard(fileSystemGameName, gameParentFolder, new List<ScriptableContentTemplate>() { weaponType.WeaponSkillContentTemplate }, false, false);
 
             AssetDatabase.Refresh();
 
@@ -139,12 +126,24 @@ namespace AnyRPG {
         }
 
 
-        private void CreateWeaponScriptableObject(string fileSystemGameName, string weaponName, Sprite icon) {
+        private void CreateWeaponScriptableObjects(string fileSystemGameName, string weaponName, Sprite icon, string weaponHandleAssetPath, WeaponSlotType weaponSlotType, WeaponTypeConfigTemplate weaponType) {
+
+            string weaponFileSystemName = WizardUtilities.GetScriptableObjectFileSystemName(weaponName);
+            GameObject weaponHandleObject = (GameObject)AssetDatabase.LoadMainAssetAtPath(weaponHandleAssetPath);
+
+            // create weapon handle prefab profile
+            PrefabProfile prefabProfile = ScriptableObject.CreateInstance("PrefabProfile") as PrefabProfile;
+            prefabProfile.ResourceName = weaponName;
+            prefabProfile.Prefab = weaponHandleObject;
+            
+            string scriptableObjectPath = "Assets" + gameParentFolder + fileSystemGameName + "/Resources/" + fileSystemGameName + "/PrefabProfile/Weapon/" + weaponFileSystemName + "Prefab.asset";
+            AssetDatabase.CreateAsset(prefabProfile, scriptableObjectPath);
 
             // create weapon item
             Weapon weaponItem = ScriptableObject.CreateInstance("Weapon") as Weapon;
             weaponItem.ResourceName = weaponName;
             weaponItem.Icon = icon;
+            weaponItem.WeaponType = weaponType.WeaponType;
             switch (weaponSlotType) {
                 case WeaponSlotType.MainHandOnly:
                     weaponItem.EquipmentSlotTypeName = "Main Hand";
@@ -162,9 +161,23 @@ namespace AnyRPG {
                     break;
             }
 
-            string weaponFileSystemName = WizardUtilities.GetScriptableObjectFileSystemName(weaponName);
-            string scriptableObjectPath = "Assets" + gameParentFolder + fileSystemGameName + "/Resources/" + fileSystemGameName + "/Item/Equipment/Weapon/" + weaponFileSystemName + "Item.asset";
+            foreach (WeaponSlotConfig weaponSlotConfig in weaponType.WeaponSlotConfigs) {
+                if (weaponSlotConfig.weaponSlotType == weaponSlotType) {
+                    weaponItem.HoldableObjectList = weaponSlotConfig.holdableObjectList;
+                    //foreach (HoldableObjectAttachment holdableObjectAttachment in weaponItem.HoldableObjectList) {
+                        foreach (AttachmentNode attachmentNode in weaponItem.HoldableObjectList[0].AttachmentNodes) {
+                            //foreach (AttachmentNode attachmentNode in holdableObjectAttachment.AttachmentNodes) {
+                            attachmentNode.HoldableObjectName = weaponName;
+                        }
+                        // this is where you would do a quiver/ammo pouch as [1]
+                    //}
+                    break;
+                }
+            }
+
+            scriptableObjectPath = "Assets" + gameParentFolder + fileSystemGameName + "/Resources/" + fileSystemGameName + "/Item/Equipment/Weapon/" + weaponFileSystemName + "Item.asset";
             AssetDatabase.CreateAsset(weaponItem, scriptableObjectPath);
+
 
         }
 
@@ -204,6 +217,10 @@ namespace AnyRPG {
                 return "Weapon Prefab must be assigned";
             }
 
+            if (weaponType == null) {
+                return "Weapon Type must be assigned";
+            }
+
             return null;
         }
 
@@ -236,7 +253,7 @@ namespace AnyRPG {
         
     }
 
-    public enum WeaponSlotType { MainHandOnly, OffHandOnly, AnyHand, TwoHand }
+   
 
 
 }

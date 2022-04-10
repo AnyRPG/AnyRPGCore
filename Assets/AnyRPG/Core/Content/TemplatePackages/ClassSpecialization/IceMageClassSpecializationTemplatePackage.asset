@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 6c9b51b8d3aa844448aaeab0a989e2fa, type: 3}
-  m_Name: IceClassSpecializationTemplatePackage
+  m_Name: IceMageClassSpecializationTemplatePackage
   m_EditorClassIdentifier: 
   resourceName: Ice Class Specialization
   displayName: 
@@ -23,8 +23,10 @@ MonoBehaviour:
   resources:
   - {fileID: 11400000, guid: aca15b10fc7fc214aa84de4c0faf3c72, type: 2}
   - {fileID: 11400000, guid: aa3ee72ff02b08141ad3bf6986dbb2d5, type: 2}
+  - {fileID: 11400000, guid: 03582c9144526274e834790e09af56ef, type: 2}
   prefabs:
   - {fileID: 6390993854296471015, guid: bf397971d2853d749a3f0119506b05aa, type: 3}
+  - {fileID: 6390993854296471015, guid: 86b4a0a3bec8293449b1ab49fee0d202, type: 3}
   dependencies:
   - {fileID: 11400000, guid: dd66908c7d20b9a41b755a5bd894863b, type: 2}
   - {fileID: 11400000, guid: b46789efdb684b4469f51af538a0f050, type: 2}

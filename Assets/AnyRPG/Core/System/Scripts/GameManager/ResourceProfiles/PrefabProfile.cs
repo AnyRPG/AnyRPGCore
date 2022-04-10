@@ -101,7 +101,7 @@ namespace AnyRPG {
         [SerializeField]
         private Vector3 pickupScale = Vector3.one;
 
-        public GameObject Prefab { get => prefab; }
+        public GameObject Prefab { get => prefab; set => prefab = value; }
         public Vector3 Position { get => position; }
         public Vector3 Rotation { get => rotation; }
         public Vector3 Scale { get => scale; }
