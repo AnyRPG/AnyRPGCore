@@ -10,9 +10,9 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 4e31818c35d6ab14fbf88410e7e18453, type: 3}
-  m_Name: WarriorUnitTemplate
+  m_Name: UMAWarriorUnitTemplate
   m_EditorClassIdentifier: 
-  resourceName: Warrior
+  resourceName: UMA Warrior
   displayName: 
   icon: {fileID: 21300000, guid: 7ef0ad7a9479f7041afaf88b46f9a9d8, type: 3}
   iconBackgroundImage: {fileID: 0}
@@ -26,7 +26,7 @@ MonoBehaviour:
   unitPrefabProps:
     unitPrefab: {fileID: 2692339740015506113, guid: ba09f14eb0109ba459f4520b82c3fadc,
       type: 3}
-    modelPrefab: {fileID: 6307183516646880328, guid: d000c5c25fdbc114696a5e9443f6ac45,
+    modelPrefab: {fileID: 2692339740015506113, guid: 9396e25e38decac4b8b80eb1f92213e2,
       type: 3}
     animationProfileName: 
     useInlineAnimationProps: 0
