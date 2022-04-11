@@ -32,3 +32,4 @@ MonoBehaviour:
   dependencies:
   - {fileID: 11400000, guid: 85b9c1f59e80b4c41b619ee015c1b93c, type: 2}
   - {fileID: 11400000, guid: 3d01d02a58e55434e81e2c744455b319, type: 2}
+  - {fileID: 11400000, guid: d130737f1b6986a488a69e7ef01f8dce, type: 2}

@@ -22,12 +22,17 @@ MonoBehaviour:
   optionalOverride: 0
   weaponSkillProps:
     defaultWeaponSkill: 0
+    attackSpeed: 2
     defaultHitEffects:
     - Arrow Projectile
     onHitEffects: []
     animationProfileName: Bow
     onHitAudioProfiles:
     - Arrow Hit
+    abilityAnimationObjectList:
+    - holdableObjectName: Medieval Arrow
+      useUniversalAttachment: 1
+      attachmentName: Right Hand
     abilityObjectList:
     - holdableObjectName: Medieval Arrow
       useUniversalAttachment: 1

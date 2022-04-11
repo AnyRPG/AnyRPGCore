@@ -154,7 +154,7 @@ MonoBehaviour:
     traitNames: []
     armorClassList: []
     weaponSkills: []
-  isAggressive: 0
+  isAggressive: 1
   aggroRadius: 20
   automaticCombatStrategy: 0
   combatStrategyName: 

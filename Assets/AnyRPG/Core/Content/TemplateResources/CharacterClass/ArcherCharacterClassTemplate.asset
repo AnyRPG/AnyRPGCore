@@ -21,7 +21,16 @@ MonoBehaviour:
   resourceDescriptionProfile: 
   optionalOverride: 0
   newGameOption: 1
-  equipmentNames: []
+  equipmentNames:
+  - Medieval Bow
+  - Brown Leather Armor
+  - Brown Leather Belt
+  - Brown Leather Boots
+  - Brown Leather Bracers
+  - Brown Leather Gloves
+  - Brown Leather Headband
+  - Brown Leather Pants
+  - Brown Leather Shoulders
   capabilities:
     abilityNames:
     - Arrow AOE

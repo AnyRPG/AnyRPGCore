@@ -20,7 +20,7 @@ MonoBehaviour:
   useRegionalDescription: 0
   resourceDescriptionProfile: 
   optionalOverride: 0
-  newGameOption: 1
+  newGameOption: 0
   equipmentNames:
   - Medieval Two Hand Sword
   - Red Plate Armor

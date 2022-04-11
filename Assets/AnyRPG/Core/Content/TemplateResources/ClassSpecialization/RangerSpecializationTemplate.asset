@@ -21,7 +21,15 @@ MonoBehaviour:
   resourceDescriptionProfile: 
   optionalOverride: 0
   newGameOption: 0
-  equipmentNames: []
+  equipmentNames:
+  - Green Leather Armor
+  - Green Leather Belt
+  - Green Leather Boots
+  - Green Leather Bracers
+  - Green Leather Gloves
+  - Green Leather Headband
+  - GreenLeather Pants
+  - Green Leather Shoulders
   classNames:
   - Archer
   capabilities:
