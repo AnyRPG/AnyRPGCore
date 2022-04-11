@@ -31,5 +31,6 @@ MonoBehaviour:
   - {fileID: 6390993854296471015, guid: 2109e8d957fa607419c4053041cb2a26, type: 3}
   dependencies:
   - {fileID: 11400000, guid: dd66908c7d20b9a41b755a5bd894863b, type: 2}
+  - {fileID: 11400000, guid: d0eddecc32d7bf74b9509487aeb8aa12, type: 2}
   - {fileID: 11400000, guid: 3a1e2c2b6ab87b049968244d58899cdc, type: 2}
   - {fileID: 11400000, guid: fb11cc120d689ae428911e1b2eb94b28, type: 2}

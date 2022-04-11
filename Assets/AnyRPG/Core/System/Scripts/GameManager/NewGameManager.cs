@@ -233,13 +233,14 @@ namespace AnyRPG {
 
                 UpdateClassSpecializationList();
 
-                /*
+                
                 // not all classes have specializations
                 // update equipment list manually in that case
+                // FIX - THIS WAS COMMENTED OUT FOR SOME REASON - MONITOR FOR BREAKAGE
                 if (classSpecializationList.Count == 0) {
                     UpdateEquipmentList();
                 }
-                */
+                
             }
         }
 

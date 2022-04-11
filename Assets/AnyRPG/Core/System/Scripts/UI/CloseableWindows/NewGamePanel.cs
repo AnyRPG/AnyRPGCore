@@ -275,7 +275,13 @@ namespace AnyRPG {
             // disable specialization button if option not allowed or class button disabled (specializations do not have a specific new game option)
             if (systemConfigurationManager.NewGameSpecialization == true) {
                 if (classButton.gameObject.activeSelf == true) {
-                    specializationButton.gameObject.SetActive(true);
+                    specializationButton.gameObject.SetActive(false);
+                    foreach (ClassSpecialization classSpecialization in systemDataFactory.GetResourceList<ClassSpecialization>()) {
+                        if (classSpecialization.NewGameOption == true) {
+                            specializationButton.gameObject.SetActive(true);
+                            break;
+                        }
+                    }
                 } else {
                     specializationButton.gameObject.SetActive(false);
                 }

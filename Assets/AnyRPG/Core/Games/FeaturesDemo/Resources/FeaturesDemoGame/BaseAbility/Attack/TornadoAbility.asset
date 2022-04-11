@@ -55,7 +55,7 @@ MonoBehaviour:
     useSpeedMultipliers: 1
     useAnimationCastTime: 1
     abilityCastingTime: 1.5
-    abilityCoolDown: 1.5
+    abilityCoolDown: 10
     coolDownOnCast: 0
     useAbilityEffectTargetting: 0
     targetOptions:
