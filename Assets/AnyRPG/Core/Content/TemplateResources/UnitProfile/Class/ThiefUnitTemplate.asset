@@ -215,20 +215,11 @@ MonoBehaviour:
     prerequisiteConditions: []
     vendorCollectionNames: []
   interactableOptions: []
-  inlineInteractableOptions:
-  - id: 0
+  inlineInteractableOptions: []
   persistObjectPosition: 0
   saveOnLevelUnload: 0
   saveOnGameSave: 0
   overwriteUnitUUID: 0
-  m_UUID: 7d15acf0-50d0-4263-a575-4a71d81e8f11
+  m_UUID: 7cf5a310-4af0-4591-9f38-a9482986246a
   references:
     version: 1
-    00000000:
-      type: {class: ClassChangeProps, ns: AnyRPG, asm: Assembly-CSharp}
-      data:
-        interactionPanelTitle: 
-        interactionPanelImage: {fileID: 0}
-        namePlateImage: {fileID: 0}
-        prerequisiteConditions: []
-        className: Thief

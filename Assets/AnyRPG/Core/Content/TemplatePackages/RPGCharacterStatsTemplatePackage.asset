@@ -10,9 +10,9 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 6c9b51b8d3aa844448aaeab0a989e2fa, type: 3}
-  m_Name: ManaPowerResourceTemplatePackage
+  m_Name: RPGCharacterStatsTemplatePackage
   m_EditorClassIdentifier: 
-  resourceName: Mana Power Resource
+  resourceName: RPG Chraracter Stats
   displayName: 
   icon: {fileID: 0}
   iconBackgroundImage: {fileID: 0}
@@ -21,6 +21,10 @@ MonoBehaviour:
   resourceDescriptionProfile: 
   optionalOverride: 0
   resources:
-  - {fileID: 11400000, guid: 83eb4e089c8161d47aa0a4a29cec4fc6, type: 2}
+  - {fileID: 11400000, guid: 6936af85d7ab1c74787b585183e46a9e, type: 2}
+  - {fileID: 11400000, guid: 776dde35bcccdb24098286ca6447a5d7, type: 2}
+  - {fileID: 11400000, guid: 3a4cc7069cc040c47bcccb85c2c04877, type: 2}
+  - {fileID: 11400000, guid: f5e7db1810f830e45a3ccd9b0658dfb3, type: 2}
   prefabs: []
-  dependencies: []
+  dependencies:
+  - {fileID: 11400000, guid: 77043bfd381b5884ca7fd0c4da740df2, type: 2}

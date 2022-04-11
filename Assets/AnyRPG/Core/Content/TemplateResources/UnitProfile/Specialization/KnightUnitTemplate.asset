@@ -215,20 +215,11 @@ MonoBehaviour:
     prerequisiteConditions: []
     vendorCollectionNames: []
   interactableOptions: []
-  inlineInteractableOptions:
-  - id: 0
+  inlineInteractableOptions: []
   persistObjectPosition: 0
   saveOnLevelUnload: 0
   saveOnGameSave: 0
   overwriteUnitUUID: 0
-  m_UUID: de9ef255-1bf6-4166-9b8b-e7e0dba24060
+  m_UUID: 5885dbe3-e619-4363-99a2-464014e458f7
   references:
     version: 1
-    00000000:
-      type: {class: SpecializationChangeProps, ns: AnyRPG, asm: Assembly-CSharp}
-      data:
-        interactionPanelTitle: 
-        interactionPanelImage: {fileID: 0}
-        namePlateImage: {fileID: 0}
-        prerequisiteConditions: []
-        specializationName: Knight

@@ -237,4 +237,8 @@ MonoBehaviour:
         prerequisiteConditions: []
         automaticCurrency: 1
         lootTableNames:
-        - Dungeon
+        - Bags
+        - Scrolls
+        - Potions
+        - Random Medieval Weapons
+        - Epic Medieval Weapon Recipes

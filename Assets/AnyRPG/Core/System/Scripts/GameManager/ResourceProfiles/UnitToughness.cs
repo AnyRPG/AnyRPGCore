@@ -64,6 +64,7 @@ namespace AnyRPG {
 
         [Tooltip("The name of the stat to multiply")]
         [SerializeField]
+        [ResourceSelector(resourceType = typeof(CharacterStat))]
         private string statName = string.Empty;
 
         [Tooltip("The value to multiply the stat by.  A value of 1 will result in the stat staying the same.")]
@@ -79,6 +80,7 @@ namespace AnyRPG {
 
         [Tooltip("The name of the resource to multiply")]
         [SerializeField]
+        [ResourceSelector(resourceType = typeof(PowerResource))]
         private string resourceName = string.Empty;
 
         [Tooltip("The value to multiply the resource by.  A value of 1 will result in the stat staying the same.")]

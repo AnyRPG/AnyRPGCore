@@ -215,20 +215,11 @@ MonoBehaviour:
     prerequisiteConditions: []
     vendorCollectionNames: []
   interactableOptions: []
-  inlineInteractableOptions:
-  - id: 0
+  inlineInteractableOptions: []
   persistObjectPosition: 0
   saveOnLevelUnload: 0
   saveOnGameSave: 0
   overwriteUnitUUID: 0
-  m_UUID: b93beed2-d4da-4d62-be24-226760cd5e4c
+  m_UUID: 6e76d085-bb3a-4a6e-b6a4-67b4fc224e1f
   references:
     version: 1
-    00000000:
-      type: {class: ClassChangeProps, ns: AnyRPG, asm: Assembly-CSharp}
-      data:
-        interactionPanelTitle: 
-        interactionPanelImage: {fileID: 0}
-        namePlateImage: {fileID: 0}
-        prerequisiteConditions: []
-        className: Fighter

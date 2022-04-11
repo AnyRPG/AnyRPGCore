@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6c9b51b8d3aa844448aaeab0a989e2fa, type: 3}
   m_Name: EnergyPowerResourceTemplatePackage
   m_EditorClassIdentifier: 
-  resourceName: Health Power Resource
+  resourceName: Energy Power Resource
   displayName: 
   icon: {fileID: 0}
   iconBackgroundImage: {fileID: 0}
@@ -21,6 +21,6 @@ MonoBehaviour:
   resourceDescriptionProfile: 
   optionalOverride: 0
   resources:
-  - {fileID: 11400000, guid: a49e4d90681cd1446947c5d50c0aac1f, type: 2}
+  - {fileID: 11400000, guid: a145a04324ffbf14295f591fce63a6a1, type: 2}
   prefabs: []
   dependencies: []

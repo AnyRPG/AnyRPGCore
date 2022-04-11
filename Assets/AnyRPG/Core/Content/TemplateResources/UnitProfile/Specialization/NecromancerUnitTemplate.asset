@@ -215,20 +215,11 @@ MonoBehaviour:
     prerequisiteConditions: []
     vendorCollectionNames: []
   interactableOptions: []
-  inlineInteractableOptions:
-  - id: 0
+  inlineInteractableOptions: []
   persistObjectPosition: 0
   saveOnLevelUnload: 0
   saveOnGameSave: 0
   overwriteUnitUUID: 0
-  m_UUID: 524c99d7-b0b6-46d0-bd25-581e6d81896b
+  m_UUID: c6beada3-1f0a-4945-a94f-a69faf411240
   references:
     version: 1
-    00000000:
-      type: {class: SpecializationChangeProps, ns: AnyRPG, asm: Assembly-CSharp}
-      data:
-        interactionPanelTitle: 
-        interactionPanelImage: {fileID: 0}
-        namePlateImage: {fileID: 0}
-        prerequisiteConditions: []
-        specializationName: Necromancer

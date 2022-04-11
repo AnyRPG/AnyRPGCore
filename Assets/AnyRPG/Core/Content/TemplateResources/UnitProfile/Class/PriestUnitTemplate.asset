@@ -215,20 +215,11 @@ MonoBehaviour:
     prerequisiteConditions: []
     vendorCollectionNames: []
   interactableOptions: []
-  inlineInteractableOptions:
-  - id: 0
+  inlineInteractableOptions: []
   persistObjectPosition: 0
   saveOnLevelUnload: 0
   saveOnGameSave: 0
   overwriteUnitUUID: 0
-  m_UUID: f4e8e03c-d7b2-46cd-90b8-dd6d2f6c11e2
+  m_UUID: 03a7dd4a-3f8e-419c-8b57-8b28e54e3b01
   references:
     version: 1
-    00000000:
-      type: {class: ClassChangeProps, ns: AnyRPG, asm: Assembly-CSharp}
-      data:
-        interactionPanelTitle: 
-        interactionPanelImage: {fileID: 0}
-        namePlateImage: {fileID: 0}
-        prerequisiteConditions: []
-        className: Priest

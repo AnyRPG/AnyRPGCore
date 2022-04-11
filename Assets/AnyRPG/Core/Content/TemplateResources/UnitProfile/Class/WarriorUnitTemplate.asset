@@ -215,8 +215,7 @@ MonoBehaviour:
     prerequisiteConditions: []
     vendorCollectionNames: []
   interactableOptions: []
-  inlineInteractableOptions:
-  - id: 0
+  inlineInteractableOptions: []
   persistObjectPosition: 0
   saveOnLevelUnload: 0
   saveOnGameSave: 0
@@ -224,11 +223,3 @@ MonoBehaviour:
   m_UUID: 31d53928-b6d5-41bb-b501-9b821eed8b64
   references:
     version: 1
-    00000000:
-      type: {class: ClassChangeProps, ns: AnyRPG, asm: Assembly-CSharp}
-      data:
-        interactionPanelTitle: 
-        interactionPanelImage: {fileID: 0}
-        namePlateImage: {fileID: 0}
-        prerequisiteConditions: []
-        className: Warrior

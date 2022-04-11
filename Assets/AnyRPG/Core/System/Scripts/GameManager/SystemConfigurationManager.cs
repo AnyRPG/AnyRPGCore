@@ -842,6 +842,7 @@ namespace AnyRPG {
         public string DeathEffectName { get => deathEffectName; set => deathEffectName = value; }
         public string LootSparkleEffectName { get => lootSparkleEffectName; set => lootSparkleEffectName = value; }
         public string CurrencyGroupName { get => currencyGroupName; set => currencyGroupName = value; }
+        public CapabilityProps Capabilities { get => capabilities; }
 
         //public bool AllowClickToMove { get => allowClickToMove; }
 

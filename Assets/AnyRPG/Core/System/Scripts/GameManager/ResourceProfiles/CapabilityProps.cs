@@ -41,6 +41,7 @@ namespace AnyRPG {
         // reference to the actual weapon skills
         private List<WeaponSkill> weaponSkillList = new List<WeaponSkill>();
 
+        public List<string> AbilityNames { get => abilityNames; set => abilityNames = value; }
         public List<BaseAbilityProperties> AbilityList { get => abilityList; set => abilityList = value; }
         public List<StatusEffect> TraitList { get => traitList; set => traitList = value; }
         public List<string> ArmorClassList { get => armorClassList; set => armorClassList = value; }

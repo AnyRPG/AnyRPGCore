@@ -120,7 +120,7 @@ MonoBehaviour:
       suppressFaction: 1
       overrideNameplatePosition: 0
       namePlatePosition: {x: 0, y: 0, z: 0}
-      unitFrameTarget: head
+      unitFrameTarget: Head
       unitFrameCameraLookOffset: {x: 0, y: 0, z: 0}
       unitFrameCameraPositionOffset: {x: 0, y: 0, z: 0.66}
       unitPreviewTarget: 
@@ -131,7 +131,7 @@ MonoBehaviour:
     rotation: {x: 0, y: 0, z: 0}
     scale: {x: 1, y: 1, z: 1}
     targetBone: 
-    attachmentProfileName: Humanoid
+    attachmentProfileName: UMA
     floatHeight: 1.4
     addFloatHeightToTransform: 0
     floatTransform: Spine1
@@ -215,8 +215,7 @@ MonoBehaviour:
     prerequisiteConditions: []
     vendorCollectionNames: []
   interactableOptions: []
-  inlineInteractableOptions:
-  - id: 0
+  inlineInteractableOptions: []
   persistObjectPosition: 0
   saveOnLevelUnload: 0
   saveOnGameSave: 0
@@ -224,11 +223,3 @@ MonoBehaviour:
   m_UUID: 9b7d1d7d-e744-4ca9-be51-a58c8ea1533f
   references:
     version: 1
-    00000000:
-      type: {class: SpecializationChangeProps, ns: AnyRPG, asm: Assembly-CSharp}
-      data:
-        interactionPanelTitle: 
-        interactionPanelImage: {fileID: 0}
-        namePlateImage: {fileID: 0}
-        prerequisiteConditions: []
-        specializationName: Ice

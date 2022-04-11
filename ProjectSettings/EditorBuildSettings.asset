@@ -93,46 +93,46 @@ EditorBuildSettings:
     path: 
     guid: c6819718dfa9c404ea054cfdd7ada0ed
   - enabled: 1
-    path: Assets/Games/TestGame8/Scenes/FirstScene8/FirstScene8.unity
+    path: 
     guid: 559a652a5d4a35b4c947fe00705b2f0d
   - enabled: 1
-    path: Assets/Games/TestGame8/Scenes/TestGame8/TestGame8.unity
+    path: 
     guid: d01f9cc44c098e8468799a7bf4dba741
   - enabled: 1
-    path: Assets/Games/TestGame9/Scenes/Scene9/Scene9.unity
+    path: 
     guid: 9fcd7f7512b20654e8052e3d5e6d43b2
   - enabled: 1
-    path: Assets/Games/TestGame9/Scenes/TestGame9/TestGame9.unity
+    path: 
     guid: 3c21e134b486b014baa685f264bfa3c2
   - enabled: 1
-    path: Assets/Games/TestGame10/Scenes/Scene10/Scene10.unity
+    path: 
     guid: 0b7b70c619fb941489d5d37cb207e18d
   - enabled: 1
-    path: Assets/Games/TestGame10/Scenes/TestGame10/TestGame10.unity
+    path: 
     guid: e20e8fb29328c96409e0e2bdf2505b78
   - enabled: 1
-    path: Assets/Games/TestGame11/Scenes/Scene11/Scene11.unity
+    path: 
     guid: 7ff1ef36447c93644bd5af3a33f91e0a
   - enabled: 1
-    path: Assets/Games/TestGame11/Scenes/TestGame11/TestGame11.unity
+    path: 
     guid: 4d67e70e28e2fef408045a65dd935747
   - enabled: 1
-    path: Assets/Games/TestGame11/Scenes/NewScene/NewScene.unity
+    path: 
     guid: 4ed363f1f8ddbfc458e13a2d4e9d2ee1
   - enabled: 1
-    path: Assets/Games/TestGame11/Scenes/NewScene2/NewScene2.unity
+    path: 
     guid: 1eebe1669f3870e44af5032368d02f86
   - enabled: 1
-    path: Assets/Games/TestGame12/Scenes/FirstScene/FirstScene.unity
+    path: 
     guid: c66d8ee524d154e40aeb09a0561f922e
   - enabled: 1
-    path: Assets/Games/TestGame12/Scenes/TestGame12/TestGame12.unity
+    path: 
     guid: 5f9f03cc2aac78c439c8ff67c8c3e95c
   - enabled: 1
-    path: Assets/Games/TestGame13/Scenes/FirstScene13/FirstScene13.unity
+    path: 
     guid: 99c84d01d8c91d148bd5c026e3753185
   - enabled: 1
-    path: Assets/Games/TestGame13/Scenes/TestGame13/TestGame13.unity
+    path: 
     guid: b16761ffdd01ab5458d44f4cb99906fe
   - enabled: 1
     path: Assets/Games/TestGame14/Scenes/FirstScene14/FirstScene14.unity
@@ -143,4 +143,10 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Games/TestGame14/Scenes/SecondScene14/SecondScene14.unity
     guid: 5b8c649bbd35c834e827b471c71573da
+  - enabled: 1
+    path: Assets/Games/TestGame/Scenes/TestGame/TestGame.unity
+    guid: 33006e5dfc48b964ba9e8cec487eba3d
+  - enabled: 1
+    path: Assets/Games/TestGame/Scenes/FirstScene/FirstScene.unity
+    guid: e2e8592b9dedd5d4b8809ffd0f7654e1
   m_configObjects: {}

@@ -20,10 +20,10 @@ MonoBehaviour:
   useRegionalDescription: 0
   resourceDescriptionProfile: 
   optionalOverride: 0
-  resources:
-  - {fileID: 11400000, guid: a49e4d90681cd1446947c5d50c0aac1f, type: 2}
-  - {fileID: 11400000, guid: 83eb4e089c8161d47aa0a4a29cec4fc6, type: 2}
-  - {fileID: 11400000, guid: cca295d874f871f44a042595df2cd0e2, type: 2}
-  - {fileID: 11400000, guid: a145a04324ffbf14295f591fce63a6a1, type: 2}
+  resources: []
   prefabs: []
-  dependencies: []
+  dependencies:
+  - {fileID: 11400000, guid: 376d2eb3e9ae6f54eb04400791a3b94a, type: 2}
+  - {fileID: 11400000, guid: ecc6d818469315a4f9823f0c97ccbf24, type: 2}
+  - {fileID: 11400000, guid: 53056916ab95db54a90ab636f26e04ec, type: 2}
+  - {fileID: 11400000, guid: 253e217cade5a544287d1d4db4d42597, type: 2}

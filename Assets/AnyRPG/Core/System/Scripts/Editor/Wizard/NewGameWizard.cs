@@ -19,14 +19,24 @@ namespace AnyRPG {
         // for now this is necessary due to git not saving empty folders
         private const string pathToResourcesTemplateFolder = "/AnyRPG/Core/Games/FeaturesDemo/Resources/FeaturesDemoGame";
 
-        // template prefabs
+        // required template prefabs
         private const string pathToGameManagerPrefab = "/AnyRPG/Core/System/Prefabs/GameManager/GameManager.prefab";
         private const string pathToSceneConfigPrefab = "/AnyRPG/Core/System/Prefabs/GameManager/SceneConfig.prefab";
         private const string pathToUMAGLIBPrefab = "/UMA/Getting Started/UMA_GLIB.prefab";
 
         private const string pathToSystemAbilitiesTemplate = "/AnyRPG/Core/Content/TemplatePackages/DefaultSystemEffectsTemplatePackage.asset";
         private const string pathToHealthPowerResourceTemplate = "/AnyRPG/Core/Content/TemplatePackages/PowerResource/HealthPowerResourceTemplatePackage.asset";
+        private const string pathToAttackAbilityTemplate = "/AnyRPG/Core/Content/TemplatePackages/AttackAbilityTemplatePackage.asset";
+        private const string pathToPlayerUnitsTemplate = "/AnyRPG/Core/Content/TemplatePackages/DefaultPlayerUnitsTemplatePackage.asset";
+
+        // optional template prefabs
         private const string pathToGoldCurrencyGroupTemplate = "/AnyRPG/Core/Content/TemplatePackages/GoldCurrencyGroupTemplatePackage.asset";
+        private const string pathToArmorClassesTemplate = "/AnyRPG/Core/Content/TemplatePackages/RPGArmorClassesTemplatePackage.asset";
+        private const string pathToItemQualitiesTemplate = "/AnyRPG/Core/Content/TemplatePackages/RPGItemQualitiesTemplatePackage.asset";
+        private const string pathToPowerResourcesTemplate = "/AnyRPG/Core/Content/TemplatePackages/RPGPowerResourcesTemplatePackage.asset";
+        private const string pathToCharacterStatsTemplate = "/AnyRPG/Core/Content/TemplatePackages/RPGCharacterStatsTemplatePackage.asset";
+        private const string pathToUnitToughnessesTemplate = "/AnyRPG/Core/Content/TemplatePackages/RPGUnitToughnessesTemplatePackage.asset";
+        private const string pathToWeaponSkillsTemplate = "/AnyRPG/Core/Content/TemplatePackages/RPGWeaponSkillsTemplatePackage.asset";
 
         // sill be a subfolder of Application.dataPath and should start with "/"
         private const string newGameParentFolder = "/Games/";
@@ -35,7 +45,7 @@ namespace AnyRPG {
         //private const string templateFirstSceneName = "FirstScene";
 
         // the used file path name for the game
-        private string fileSystemGameName = string.Empty;
+        //private string fileSystemGameName = string.Empty;
         //private string fileSystemFirstSceneName = string.Empty;
 
         // USER MODIFIED VARIABLES
@@ -57,8 +67,17 @@ namespace AnyRPG {
 
         public AudioClip firstSceneMusic = null;
 
-        // game options
+        // player type
+        public DefaultPlayerUnitType defaultPlayerUnitType = DefaultPlayerUnitType.UMA;
+
+        // rpg building blocks
         public bool installGoldCurrencyGroup = true;
+        public bool installArmorClasses = true;
+        public bool installCharacterStats = true;
+        public bool installItemQualities = true;
+        public bool installPowerResources = true;
+        public bool installUnitToughnesses = true;
+        public bool installWeaponSkills = true;
 
         //private bool addFirstSceneToBuild = true;
         //private string umaRoot = "Assets/UMA/";
@@ -86,36 +105,11 @@ namespace AnyRPG {
 
             EditorUtility.DisplayProgressBar("New Game Wizard", "Checking parameters...", 0.1f);
 
-            fileSystemGameName = WizardUtilities.GetFileSystemGameName(gameName);
+            string fileSystemGameName = WizardUtilities.GetFileSystemGameName(gameName);
             //fileSystemFirstSceneName = WizardUtilities.GetFilesystemSceneName(firstSceneName);
 
-            // Check for presence of GameManager prefab
-            if (CheckGameManagerPrefabExists() == false) {
-                return;
-            }
-
-            // Check for presence of SceneConfig prefab
-            if (CheckSceneConfigPrefabExists() == false) {
-                return;
-            }
-
-            // check for presence of the UMA GLIB prefab
-            if (CheckUMAGLIBPrefabExists() == false) {
-                return;
-            }
-
-            // check for presence of default effects template
-            if (CheckDefaultEffectsTemplateExists() == false) {
-                return;
-            }
-
-            // check for presence of default effects template
-            if (CheckHealthPowerResourceTemplateExists() == false) {
-                return;
-            }
-
-            // check for presence of the gold currency group template
-            if (CheckGoldCurrencyGroupTemplateExists() == false) {
+            // check for presence of template prefabs and resources
+            if (CheckFilesExist() == false) {
                 return;
             }
 
@@ -132,7 +126,7 @@ namespace AnyRPG {
 
             EditorUtility.DisplayProgressBar("New Game Wizard", "Creating Game Folder...", 0.2f);
             // Create root game folder
-            string fileSystemNewGameFolder = GetFileSystemNewGameFolder();
+            string fileSystemNewGameFolder = GetFileSystemNewGameFolder(fileSystemGameName);
             string fileSystemResourcesFolder = fileSystemNewGameFolder + "/Resources/" + fileSystemGameName;
 
             // create base games folder
@@ -192,7 +186,7 @@ namespace AnyRPG {
             WizardUtilities.CreateFolderIfNotExists(fileSystemPrefabFolder + "/GameManager");
 
             if (useThirdPartyController == true) {
-                ConfigureThirdPartyController(fileSystemResourcesFolder, fileSystemPrefabFolder);
+                ConfigureThirdPartyController(fileSystemGameName, fileSystemResourcesFolder, fileSystemPrefabFolder);
             }
 
             // Rename the game load scene
@@ -220,38 +214,29 @@ namespace AnyRPG {
             // Create a variant of the GameManager
             EditorUtility.DisplayProgressBar("New Game Wizard", "Making prefab variants...", 0.9f);
             GameObject gameManagerGameObject = (GameObject)AssetDatabase.LoadMainAssetAtPath("Assets" + pathToGameManagerPrefab);
-            GameObject gameManagerVariant = MakeGameManagerPrefabVariant(gameManagerGameObject, prefabPath + "/GameManager/" + fileSystemGameName + "GameManager.prefab");
+            GameObject gameManagerVariant = MakeGameManagerPrefabVariant(fileSystemGameName, gameManagerGameObject, prefabPath + "/GameManager/" + fileSystemGameName + "GameManager.prefab");
             
             // create a variant of the UMA GLIB prefab
             MakeUMAPrefabVariant(prefabPath + "/GameManager/UMA_GLIB.prefab", fileSystemGameName);
 
             // create a variant of the SceneConfig prefab
-            MakeSceneConfigPrefabVariant(gameManagerVariant, prefabPath + "/GameManager/" + fileSystemGameName + "SceneConfig.prefab");
+            MakeSceneConfigPrefabVariant(fileSystemGameName, gameManagerVariant, prefabPath + "/GameManager/" + fileSystemGameName + "SceneConfig.prefab");
 
             // Save changes to the load game scene
             EditorUtility.DisplayProgressBar("New Game Wizard", "Saving Load Game Scene...", 0.95f);
             EditorSceneManager.SaveScene(loadGameScene);
 
-            // install system default effects
-            EditorUtility.DisplayProgressBar("New Game Wizard", "Installing System Default Effects...", 0.96f);
-            ScriptableContentTemplate defaultEffectsTemplate = (ScriptableContentTemplate)AssetDatabase.LoadMainAssetAtPath("Assets" + pathToSystemAbilitiesTemplate);
-            TemplateContentWizard.RunWizard(fileSystemGameName, newGameParentFolder, new List<ScriptableContentTemplate>() { defaultEffectsTemplate }, true, true);
+            // install default templates
+            EditorUtility.DisplayProgressBar("New Game Wizard", "Installing Default Templates...", 0.96f);
+            InstallDefaultTemplateContent(fileSystemGameName, newGameParentFolder);
 
-            // install health power resource
-            EditorUtility.DisplayProgressBar("New Game Wizard", "Installing Health Power Resource...", 0.96f);
-            ScriptableContentTemplate healthPowerResourceTemplate = (ScriptableContentTemplate)AssetDatabase.LoadMainAssetAtPath("Assets" + pathToHealthPowerResourceTemplate);
-            TemplateContentWizard.RunWizard(fileSystemGameName, newGameParentFolder, new List<ScriptableContentTemplate>() { healthPowerResourceTemplate }, true, true);
-
-            // install gold currency group
-            if (installGoldCurrencyGroup) {
-                EditorUtility.DisplayProgressBar("New Game Wizard", "Installing Gold Currency Group...", 0.97f);
-                ScriptableContentTemplate goldCurrencyGroupTemplate = (ScriptableContentTemplate)AssetDatabase.LoadMainAssetAtPath("Assets" + pathToGoldCurrencyGroupTemplate);
-                TemplateContentWizard.RunWizard(fileSystemGameName, newGameParentFolder, new List<ScriptableContentTemplate>() { goldCurrencyGroupTemplate }, true, true);
-            }
+            // install optional templates
+            EditorUtility.DisplayProgressBar("New Game Wizard", "Installing Optional Templates...", 0.97f);
+            InstallOptionalTemplateContent(fileSystemGameName, newGameParentFolder);
 
             // make audio profiles and scene nodes for main menu
             EditorUtility.DisplayProgressBar("New Game Wizard", "Configuring Main Menu...", 0.98f);
-            ConfigureMainMenuScriptableObjects();
+            ConfigureMainMenuScriptableObjects(fileSystemGameName);
 
             // create first scene
             NewSceneWizard.CreateScene(gameName, firstSceneName, copyExistingScene, existingScene, firstSceneAmbientSounds, firstSceneMusic);
@@ -263,86 +248,151 @@ namespace AnyRPG {
 
         }
 
-        private bool CheckGameManagerPrefabExists() {
+        private void InstallDefaultTemplateContent(string fileSystemGameName, string newGameParentFolder) {
 
-            string templateAssetPath = "Assets" + pathToGameManagerPrefab;
-            string templateFileSystemPath = Application.dataPath + pathToGameManagerPrefab;
+            List<ScriptableContentTemplate> contentTemplates = new List<ScriptableContentTemplate>();
 
-            if (System.IO.File.Exists(templateFileSystemPath) == false) {
-                WizardUtilities.ShowError("Missing GameManager prefab at " + templateAssetPath + ".  Aborting...");
+            contentTemplates.Add((ScriptableContentTemplate)AssetDatabase.LoadMainAssetAtPath("Assets" + pathToSystemAbilitiesTemplate));
+            contentTemplates.Add((ScriptableContentTemplate)AssetDatabase.LoadMainAssetAtPath("Assets" + pathToHealthPowerResourceTemplate));
+            contentTemplates.Add((ScriptableContentTemplate)AssetDatabase.LoadMainAssetAtPath("Assets" + pathToAttackAbilityTemplate));
+            contentTemplates.Add((ScriptableContentTemplate)AssetDatabase.LoadMainAssetAtPath("Assets" + pathToPlayerUnitsTemplate));
+
+            if (contentTemplates.Count > 0) {
+                TemplateContentWizard.RunWizard(fileSystemGameName, newGameParentFolder, contentTemplates, true, true);
+            }
+
+        }
+
+        private void InstallOptionalTemplateContent(string fileSystemGameName, string newGameParentFolder) {
+
+            List<ScriptableContentTemplate> contentTemplates = new List<ScriptableContentTemplate>();
+
+            if (installGoldCurrencyGroup) {
+                //ScriptableContentTemplate goldCurrencyGroupTemplate = (ScriptableContentTemplate)AssetDatabase.LoadMainAssetAtPath("Assets" + pathToGoldCurrencyGroupTemplate);
+                contentTemplates.Add((ScriptableContentTemplate)AssetDatabase.LoadMainAssetAtPath("Assets" + pathToGoldCurrencyGroupTemplate));
+            }
+
+            if (installArmorClasses) {
+                //ScriptableContentTemplate goldCurrencyGroupTemplate = (ScriptableContentTemplate)AssetDatabase.LoadMainAssetAtPath("Assets" + pathToGoldCurrencyGroupTemplate);
+                contentTemplates.Add((ScriptableContentTemplate)AssetDatabase.LoadMainAssetAtPath("Assets" + pathToArmorClassesTemplate));
+            }
+
+            if (installCharacterStats) {
+                contentTemplates.Add((ScriptableContentTemplate)AssetDatabase.LoadMainAssetAtPath("Assets" + pathToCharacterStatsTemplate));
+            }
+
+            if (installItemQualities) {
+                contentTemplates.Add((ScriptableContentTemplate)AssetDatabase.LoadMainAssetAtPath("Assets" + pathToItemQualitiesTemplate));
+            }
+
+            if (installPowerResources) {
+                contentTemplates.Add((ScriptableContentTemplate)AssetDatabase.LoadMainAssetAtPath("Assets" + pathToPowerResourcesTemplate));
+            }
+
+            if (installUnitToughnesses) {
+                contentTemplates.Add((ScriptableContentTemplate)AssetDatabase.LoadMainAssetAtPath("Assets" + pathToUnitToughnessesTemplate));
+            }
+
+            if (installWeaponSkills) {
+                contentTemplates.Add((ScriptableContentTemplate)AssetDatabase.LoadMainAssetAtPath("Assets" + pathToWeaponSkillsTemplate));
+            }
+
+            if (contentTemplates.Count > 0) {
+                TemplateContentWizard.RunWizard(fileSystemGameName, newGameParentFolder, contentTemplates, true, true);
+            }
+
+        }
+
+        private bool CheckFilesExist() {
+
+            // Check for presence of GameManager prefab
+            if (CheckFileExists(pathToGameManagerPrefab, "GameManager prefab") == false) {
+                return false;
+            }
+
+            // Check for presence of SceneConfig prefab
+            if (CheckFileExists(pathToSceneConfigPrefab, "SceneConfig prefab") == false) {
+                return false;
+            }
+
+            // check for presence of the UMA GLIB prefab
+            if (CheckFileExists(pathToUMAGLIBPrefab, "UMA GLIB Prefab") == false) {
+                return false;
+            }
+
+            // check for presence of default effects template
+            if (CheckFileExists(pathToSystemAbilitiesTemplate, "Default System Effects Template") == false) {
+                return false;
+            }
+
+            // check for presence of health power resource template
+            if (CheckFileExists(pathToHealthPowerResourceTemplate, "Health Power Resource Template") == false) {
+                return false;
+            }
+
+            // check for presence of health power resource template
+            if (CheckFileExists(pathToAttackAbilityTemplate, "Attack Ability Template") == false) {
+                return false;
+            }
+
+            // check for presence of default player units template
+            if (CheckFileExists(pathToPlayerUnitsTemplate, "Default Player Units Template") == false) {
+                return false;
+            }
+
+            // check for presence of the gold currency group template
+            if (CheckFileExists(pathToGoldCurrencyGroupTemplate, "Gold Currency Group Template") == false) {
+                return false;
+            }
+
+            // check for presence of the armor classes template
+            if (CheckFileExists(pathToArmorClassesTemplate, "Armor Classes Template") == false) {
+                return false;
+            }
+
+            // check for presence of the item qualities template
+            if (CheckFileExists(pathToItemQualitiesTemplate, "Item Qualities Template") == false) {
+                return false;
+            }
+
+            // check for presence of the power resources template
+            if (CheckFileExists(pathToPowerResourcesTemplate, "Power Resources Template") == false) {
+                return false;
+            }
+
+            // check for presence of the character stats template
+            if (CheckFileExists(pathToCharacterStatsTemplate, "Character Stats Template") == false) {
+                return false;
+            }
+
+            // check for presence of the unit toughnesses template
+            if (CheckFileExists(pathToUnitToughnessesTemplate, "Unit Toughnesses Template") == false) {
+                return false;
+            }
+
+            // check for presence of the weapon skills template
+            if (CheckFileExists(pathToWeaponSkillsTemplate, "Weapon Skills Template") == false) {
                 return false;
             }
 
             return true;
         }
 
-        private bool CheckSceneConfigPrefabExists() {
+        private bool CheckFileExists(string partialFilePath, string messageString) {
 
-            string templateAssetPath = "Assets" + pathToSceneConfigPrefab;
-            string templateFileSystemPath = Application.dataPath + pathToSceneConfigPrefab;
+            string templateAssetPath = "Assets" + partialFilePath;
+            string templateFileSystemPath = Application.dataPath + partialFilePath;
 
             if (System.IO.File.Exists(templateFileSystemPath) == false) {
-                WizardUtilities.ShowError("Missing SceneConfig prefab at " + templateAssetPath + ".  Aborting...");
+                WizardUtilities.ShowError("Missing " + messageString + " at " + templateAssetPath + ".  Aborting...");
                 return false;
             }
 
             return true;
+
         }
 
-        private bool CheckDefaultEffectsTemplateExists() {
-
-            string templateAssetPath = "Assets" + pathToSystemAbilitiesTemplate;
-            string templateFileSystemPath = Application.dataPath + pathToSystemAbilitiesTemplate;
-
-            if (System.IO.File.Exists(templateFileSystemPath) == false) {
-                WizardUtilities.ShowError("Missing Default System Effects Template at " + templateAssetPath + ".  Aborting...");
-                return false;
-            }
-
-            return true;
-        }
-
-        private bool CheckHealthPowerResourceTemplateExists() {
-
-            string templateAssetPath = "Assets" + pathToHealthPowerResourceTemplate;
-            string templateFileSystemPath = Application.dataPath + pathToHealthPowerResourceTemplate;
-
-            if (System.IO.File.Exists(templateFileSystemPath) == false) {
-                WizardUtilities.ShowError("Missing Health Power Resource Template at " + templateAssetPath + ".  Aborting...");
-                return false;
-            }
-
-            return true;
-        }
-
-
-        private bool CheckGoldCurrencyGroupTemplateExists() {
-
-            string templateAssetPath = "Assets" + pathToGoldCurrencyGroupTemplate;
-            string templateFileSystemPath = Application.dataPath + pathToGoldCurrencyGroupTemplate;
-
-            if (System.IO.File.Exists(templateFileSystemPath) == false) {
-                WizardUtilities.ShowError("Missing Gold Currency Group Template at " + templateAssetPath + ".  Aborting...");
-                return false;
-            }
-
-            return true;
-        }
-
-        private bool CheckUMAGLIBPrefabExists() {
-
-            string templateAssetPath = "Assets" + pathToUMAGLIBPrefab;
-            string templateFileSystemPath = Application.dataPath + pathToUMAGLIBPrefab;
-
-            if (System.IO.File.Exists(templateFileSystemPath) == false) {
-                WizardUtilities.ShowError("Missing UMA GLIB Prefab at " + templateAssetPath + ".  Aborting...");
-                return false;
-            }
-
-            return true;
-        }
-
-        private void ConfigureMainMenuScriptableObjects() {
+        private void ConfigureMainMenuScriptableObjects(string fileSystemGameName) {
 
             // create audio profile
             if (mainMenuMusic != null) {
@@ -378,49 +428,7 @@ namespace AnyRPG {
 
         }
 
-        /*
-        private void ConfigureFirstSceneScriptableObjects() {
-
-            // create ambient audio profile
-            if (firstSceneAmbientSounds != null) {
-                AudioProfile audioProfile = ScriptableObject.CreateInstance("AudioProfile") as AudioProfile;
-                audioProfile.ResourceName = firstSceneName + " Ambient";
-                audioProfile.AudioClips = new List<AudioClip>() { firstSceneAmbientSounds };
-
-                string scriptableObjectPath = "Assets" + newGameParentFolder + fileSystemGameName + "/Resources/" + fileSystemGameName + "/AudioProfile/" + fileSystemFirstSceneName + "Ambient.asset";
-                AssetDatabase.CreateAsset(audioProfile, scriptableObjectPath);
-            }
-
-            // create background music profile
-            if (firstSceneMusic != null) {
-                AudioProfile audioProfile = ScriptableObject.CreateInstance("AudioProfile") as AudioProfile;
-                audioProfile.ResourceName = firstSceneName + " Music";
-                audioProfile.AudioClips = new List<AudioClip>() { firstSceneMusic };
-
-                string scriptableObjectPath = "Assets" + newGameParentFolder + fileSystemGameName + "/Resources/" + fileSystemGameName + "/AudioProfile/" + fileSystemFirstSceneName + "Music.asset";
-                AssetDatabase.CreateAsset(audioProfile, scriptableObjectPath);
-            }
-
-            // create scene node
-            SceneNode sceneNode = ScriptableObject.CreateInstance("SceneNode") as SceneNode;
-            sceneNode.ResourceName = firstSceneName;
-            sceneNode.SuppressCharacterSpawn = false;
-            sceneNode.SuppressMainCamera = false;
-            sceneNode.SceneFile = fileSystemFirstSceneName;
-            if (firstSceneAmbientSounds != null) {
-                sceneNode.AmbientMusicProfileName = firstSceneName + " Ambient";
-            }
-            if (firstSceneMusic != null) {
-                sceneNode.BackgroundMusicProfileName = firstSceneName + " Music";
-            }
-
-            string sceneNodeObjectPath = "Assets" + newGameParentFolder + fileSystemGameName + "/Resources/" + fileSystemGameName + "/SceneNode/" + fileSystemFirstSceneName + "SceneNode.asset";
-            AssetDatabase.CreateAsset(sceneNode, sceneNodeObjectPath);
-
-        }
-        */
-
-        private void ConfigureThirdPartyController(string resourcesFolder, string prefabFolder) {
+        private void ConfigureThirdPartyController(string fileSystemGameName, string resourcesFolder, string prefabFolder) {
             EditorUtility.DisplayProgressBar("New Game Wizard", "Creating Third Party Prefabs and Resources...", 0.65f);
 
             // copy unit profile
@@ -457,7 +465,7 @@ namespace AnyRPG {
             }
         }
 
-        private GameObject MakeGameManagerPrefabVariant(GameObject goToMakeVariantOf, string newPath) {
+        private GameObject MakeGameManagerPrefabVariant(string fileSystemGameName, GameObject goToMakeVariantOf, string newPath) {
             Debug.Log("NewGameWizard.MakeGameManagerPrefabVariant(" + goToMakeVariantOf.name + ", " + newPath + ")");
 
             // make prefab variant of game manager
@@ -485,6 +493,17 @@ namespace AnyRPG {
 
             // health power resource
             systemConfigurationManager.PowerResources = new List<string>() { "Health" };
+
+            // attack ability
+            systemConfigurationManager.Capabilities.AbilityNames = new List<string>() { "Attack" };
+
+            // player unit
+            if (defaultPlayerUnitType == DefaultPlayerUnitType.Mecanim) {
+                systemConfigurationManager.DefaultPlayerUnitProfileName = "Mecanim Player";
+            } else {
+                systemConfigurationManager.DefaultPlayerUnitProfileName = "UMA Player";
+            }
+
 
             // gold currency group
             if (installGoldCurrencyGroup) {
@@ -533,7 +552,7 @@ namespace AnyRPG {
             return variant;
         }
 
-        private GameObject MakeSceneConfigPrefabVariant(GameObject gameManagerVariant, string newPath) {
+        private GameObject MakeSceneConfigPrefabVariant(string fileSystemGameName, GameObject gameManagerVariant, string newPath) {
 
             GameObject sceneConfigGameObject = (GameObject)AssetDatabase.LoadMainAssetAtPath("Assets" + pathToSceneConfigPrefab);
 
@@ -579,7 +598,7 @@ namespace AnyRPG {
             return variant;
         }
 
-        private string GetFileSystemNewGameFolder() {
+        private string GetFileSystemNewGameFolder(string fileSystemGameName) {
             return Application.dataPath + newGameParentFolder + fileSystemGameName;
         }
 
@@ -610,7 +629,7 @@ namespace AnyRPG {
             */
 
             // check that game with same name doesn't already exist
-            string newGameFolder = GetFileSystemNewGameFolder();
+            string newGameFolder = GetFileSystemNewGameFolder(fileSystemGameName);
             if (System.IO.Directory.Exists(newGameFolder)) {
                 return "Folder " + newGameFolder + " already exists.  Please delete this directory or choose a new game name";
             }
@@ -650,6 +669,10 @@ namespace AnyRPG {
             gameName = EditorGUILayout.TextField("Game Name", gameName);
             gameVersion = EditorGUILayout.TextField("Game Version", gameVersion);
 
+            EditorGUILayout.LabelField("Player Options", EditorStyles.boldLabel);
+
+            defaultPlayerUnitType = (DefaultPlayerUnitType)EditorGUILayout.EnumPopup("Default Player Type", defaultPlayerUnitType);
+
             EditorGUILayout.LabelField("Main Menu Options", EditorStyles.boldLabel);
 
             mainMenuMusic = EditorGUILayout.ObjectField("Main Menu Music", mainMenuMusic, typeof(AudioClip), false) as AudioClip;
@@ -668,14 +691,22 @@ namespace AnyRPG {
             firstSceneAmbientSounds = EditorGUILayout.ObjectField("First Scene Ambient Sounds", firstSceneAmbientSounds, typeof(AudioClip), false) as AudioClip;
             firstSceneMusic = EditorGUILayout.ObjectField("First Scene Music", firstSceneMusic, typeof(AudioClip), false) as AudioClip;
 
-            EditorGUILayout.LabelField("Common Options", EditorStyles.boldLabel);
+            EditorGUILayout.LabelField("Common RPG Building Blocks", EditorStyles.boldLabel);
 
-            installGoldCurrencyGroup = EditorGUILayout.Toggle("Install Gold Currency Group", installGoldCurrencyGroup);
+            installGoldCurrencyGroup = EditorGUILayout.Toggle(new GUIContent("Install Gold Currency Group", "Includes Gold, Silver, and Copper currencies"), installGoldCurrencyGroup);
+            installArmorClasses = EditorGUILayout.Toggle(new GUIContent("Install Armor Classes", "Includes Plate, Leather, and Cloth armor classes"), installArmorClasses);
+            installCharacterStats = EditorGUILayout.Toggle(new GUIContent("Install Character Stats", "Includes Stamina, Intellect, Strength, and Agility stats"), installCharacterStats);
+            installItemQualities = EditorGUILayout.Toggle(new GUIContent("Install Item Qualities", "Includes Poor, Common, Uncommon, Rare, Epic, and Legendary Item Qualities"), installItemQualities);
+            installPowerResources = EditorGUILayout.Toggle(new GUIContent("Install Power Resources", "Includes Health, Mana, Rage, and Energy resources"), installPowerResources);
+            installUnitToughnesses = EditorGUILayout.Toggle(new GUIContent("Install Unit Toughnesses", "Includes 2/5/10/25 man group toughnesses, and minion/boss solo toughnesses"), installUnitToughnesses);
+            installWeaponSkills = EditorGUILayout.Toggle(new GUIContent("Install Weapon Skills", "Includes animations, sounds, and hit effects for all included weapon types such as bow, sword, etc"), installWeaponSkills);
 
             return true;
         }
         
     }
+
+    public enum DefaultPlayerUnitType { Mecanim, UMA }
 
     
 
