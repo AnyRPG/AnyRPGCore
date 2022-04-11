@@ -143,6 +143,7 @@ namespace AnyRPG {
         }
 
         protected void UpdateClassSpecializationList() {
+            //Debug.Log("NewGameManager.UpdateClassSpecializationList()");
 
             classSpecializationList.Clear();
 
@@ -237,16 +238,21 @@ namespace AnyRPG {
                 // not all classes have specializations
                 // update equipment list manually in that case
                 // FIX - THIS WAS COMMENTED OUT FOR SOME REASON - MONITOR FOR BREAKAGE
+                // it needed to be re-enabled because character doens't get equipment if they have no spec
+                // re-commented out because class specialization is always set now, even if its set to null because there are no specs
+                /*
                 if (classSpecializationList.Count == 0) {
                     UpdateEquipmentList();
                 }
+                */
                 
             }
         }
 
         public void SetClassSpecialization(ClassSpecialization newClassSpecialization) {
+            //Debug.Log("NewGamePanel.SetClassSpecialization(" + (newClassSpecialization == null ? "null" : newClassSpecialization.DisplayName) + ")");
 
-            if (classSpecialization !=  newClassSpecialization) {
+            if (classSpecialization !=  newClassSpecialization || newClassSpecialization == null) {
                 classSpecialization = newClassSpecialization;
                 if (classSpecialization != null) {
                     saveData.classSpecialization = classSpecialization.DisplayName;
@@ -260,6 +266,8 @@ namespace AnyRPG {
                 OnSetClassSpecialization(newClassSpecialization);
 
             }
+
+
         }
 
         public void SetFaction(Faction newFaction) {

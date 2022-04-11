@@ -316,6 +316,8 @@ namespace AnyRPG {
         }
 
         public void HandleSetClassSpecialization(ClassSpecialization newClassSpecialization) {
+            //Debug.Log("NewGamePanel.HandleSetClassSpecialization(" + (newClassSpecialization == null ? "null" : newClassSpecialization.DisplayName) + ")");
+
             detailsPanel.SetClassSpecialization(newGameManager.ClassSpecialization);
 
             specializationPanel.SetClassSpecialization(newClassSpecialization);

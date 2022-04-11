@@ -209,6 +209,8 @@ namespace AnyRPG {
         }
 
         public void SetClassSpecialization(ClassSpecialization newClassSpecialization) {
+            //Debug.Log("NewGameDetailsPanelController.SetClassSpecialization(" + (newClassSpecialization == null ? "null" : newClassSpecialization.DisplayName) + ")");
+
             //if (newClassSpecialization != null && systemConfigurationManager.NewGameSpecialization == true) {
             if (systemConfigurationManager.NewGameSpecialization == true) {
                 classSpecializationLabel.SetActive(true);
