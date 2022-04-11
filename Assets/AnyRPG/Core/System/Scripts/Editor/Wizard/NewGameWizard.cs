@@ -25,6 +25,7 @@ namespace AnyRPG {
         private const string pathToUMAGLIBPrefab = "/UMA/Getting Started/UMA_GLIB.prefab";
 
         private const string pathToSystemAbilitiesTemplate = "/AnyRPG/Core/Content/TemplatePackages/DefaultSystemEffectsTemplatePackage.asset";
+        private const string pathToHealthPowerResourceTemplate = "/AnyRPG/Core/Content/TemplatePackages/PowerResource/HealthPowerResourceTemplatePackage.asset";
         private const string pathToGoldCurrencyGroupTemplate = "/AnyRPG/Core/Content/TemplatePackages/GoldCurrencyGroupTemplatePackage.asset";
 
         // sill be a subfolder of Application.dataPath and should start with "/"
@@ -105,6 +106,11 @@ namespace AnyRPG {
 
             // check for presence of default effects template
             if (CheckDefaultEffectsTemplateExists() == false) {
+                return;
+            }
+
+            // check for presence of default effects template
+            if (CheckHealthPowerResourceTemplateExists() == false) {
                 return;
             }
 
@@ -189,27 +195,6 @@ namespace AnyRPG {
                 ConfigureThirdPartyController(fileSystemResourcesFolder, fileSystemPrefabFolder);
             }
 
-            /*
-            // setup first scene paths
-            //string existingFirstSceneFolder = FileUtil.GetProjectRelativePath(newGameFolder + "/Scenes/" + defaultFirstSceneName);
-            string newFirstSceneFolder = FileUtil.GetProjectRelativePath(newGameFolder + "/Scenes/" + fileSystemFirstSceneName);
-            string newFirstSceneFileName = fileSystemFirstSceneName + ".unity";
-            string newFirstSceneAssetPath = newFirstSceneFolder + "/" + newFirstSceneFileName;
-            //string existingFirstScenePath = existingFirstSceneFolder + "/" + defaultFirstSceneName + ".unity";
-
-            // create the first scene folder
-            WizardUtilities.CreateFolderIfNotExists(newGameFolder + "/Scenes/" + fileSystemFirstSceneName);
-
-            // if copying existing scene, use existing scene, otherwise use template first scene
-            if (copyExistingScene == true) {
-                //AssetDatabase.GetAssetPath(existingScene);
-                AssetDatabase.CopyAsset(AssetDatabase.GetAssetPath(existingScene), newFirstSceneAssetPath); 
-            } else {
-                AssetDatabase.CopyAsset(firstSceneTemplateAssetpath, newFirstSceneAssetPath);
-            }
-            AssetDatabase.Refresh();
-            */
-
             // Rename the game load scene
             EditorUtility.DisplayProgressBar("New Game Wizard", "Renaming Game Load Scene...", 0.7f);
             string gameLoadSceneFolder = FileUtil.GetProjectRelativePath(fileSystemNewGameFolder + "/Scenes/" + fileSystemGameName);
@@ -223,10 +208,6 @@ namespace AnyRPG {
             // add game load scene to build settings
             EditorUtility.DisplayProgressBar("New Game Wizard", "Adding Game Load Scene To Build Settings...", 0.8f);
             List<EditorBuildSettingsScene> currentSceneList = EditorBuildSettings.scenes.ToList();
-            /*
-            Debug.Log("Adding " + newFirstSceneAssetPath + " to build settings");
-            currentSceneList.Add(new EditorBuildSettingsScene(newFirstSceneAssetPath, true));
-            */
             Debug.Log("Adding " + newGameLoadScenePath + " to build settings");
             currentSceneList.Add(new EditorBuildSettingsScene(newGameLoadScenePath, true));
             EditorBuildSettings.scenes = currentSceneList.ToArray();
@@ -245,8 +226,6 @@ namespace AnyRPG {
             MakeUMAPrefabVariant(prefabPath + "/GameManager/UMA_GLIB.prefab", fileSystemGameName);
 
             // create a variant of the SceneConfig prefab
-            //GameObject sceneConfigGameObject = (GameObject)AssetDatabase.LoadMainAssetAtPath("Assets" + pathToSceneConfigPrefab);
-            //GameObject sceneConfigVariant = MakeSceneConfigPrefabVariant(gameManagerVariant, sceneConfigGameObject, prefabPath + "/GameManager/" + fileSystemGameName + "SceneConfig.prefab");
             MakeSceneConfigPrefabVariant(gameManagerVariant, prefabPath + "/GameManager/" + fileSystemGameName + "SceneConfig.prefab");
 
             // Save changes to the load game scene
@@ -257,6 +236,11 @@ namespace AnyRPG {
             EditorUtility.DisplayProgressBar("New Game Wizard", "Installing System Default Effects...", 0.96f);
             ScriptableContentTemplate defaultEffectsTemplate = (ScriptableContentTemplate)AssetDatabase.LoadMainAssetAtPath("Assets" + pathToSystemAbilitiesTemplate);
             TemplateContentWizard.RunWizard(fileSystemGameName, newGameParentFolder, new List<ScriptableContentTemplate>() { defaultEffectsTemplate }, true, true);
+
+            // install health power resource
+            EditorUtility.DisplayProgressBar("New Game Wizard", "Installing Health Power Resource...", 0.96f);
+            ScriptableContentTemplate healthPowerResourceTemplate = (ScriptableContentTemplate)AssetDatabase.LoadMainAssetAtPath("Assets" + pathToHealthPowerResourceTemplate);
+            TemplateContentWizard.RunWizard(fileSystemGameName, newGameParentFolder, new List<ScriptableContentTemplate>() { healthPowerResourceTemplate }, true, true);
 
             // install gold currency group
             if (installGoldCurrencyGroup) {
@@ -269,26 +253,8 @@ namespace AnyRPG {
             EditorUtility.DisplayProgressBar("New Game Wizard", "Configuring Main Menu...", 0.98f);
             ConfigureMainMenuScriptableObjects();
 
-            /*
-            // add sceneconfig to first scene
-            EditorUtility.DisplayProgressBar("New Game Wizard", "Adding SceneConfig to First Scene...", 0.97f);
-            Scene firstScene = EditorSceneManager.OpenScene(newFirstSceneAssetPath);
-            GameObject instantiatedGO = (GameObject)PrefabUtility.InstantiatePrefab(sceneConfigVariant);
-            instantiatedGO.transform.SetAsFirstSibling();
-            EditorSceneManager.SaveScene(firstScene);
-
-
-            EditorUtility.DisplayProgressBar("New Game Wizard", "Creating Portal For First Scene...", 0.975f);
-            NewSceneWizard.CreatePortal(gameName, firstSceneName, fileSystemGameName, fileSystemFirstSceneName);
-            */
-
             // create first scene
             NewSceneWizard.CreateScene(gameName, firstSceneName, copyExistingScene, existingScene, firstSceneAmbientSounds, firstSceneMusic);
-
-            /*
-            EditorUtility.DisplayProgressBar("New Game Wizard", "Configuring First Scene...", 0.99f);
-            ConfigureFirstSceneScriptableObjects();
-            */
 
             AssetDatabase.Refresh();
 
@@ -335,6 +301,20 @@ namespace AnyRPG {
 
             return true;
         }
+
+        private bool CheckHealthPowerResourceTemplateExists() {
+
+            string templateAssetPath = "Assets" + pathToHealthPowerResourceTemplate;
+            string templateFileSystemPath = Application.dataPath + pathToHealthPowerResourceTemplate;
+
+            if (System.IO.File.Exists(templateFileSystemPath) == false) {
+                WizardUtilities.ShowError("Missing Health Power Resource Template at " + templateAssetPath + ".  Aborting...");
+                return false;
+            }
+
+            return true;
+        }
+
 
         private bool CheckGoldCurrencyGroupTemplateExists() {
 
@@ -502,6 +482,9 @@ namespace AnyRPG {
             systemConfigurationManager.LevelUpEffectName = "Level Up";
             systemConfigurationManager.DeathEffectName = "Death";
             systemConfigurationManager.LootSparkleEffectName = "Loot Sparkle";
+
+            // health power resource
+            systemConfigurationManager.PowerResources = new List<string>() { "Health" };
 
             // gold currency group
             if (installGoldCurrencyGroup) {
