@@ -66,6 +66,7 @@ MonoBehaviour:
       canCastOnNeutral: 1
       canCastOnFriendly: 0
       autoSelfCast: 0
+      unitTypeRestrictions: []
       useMeleeRange: 0
       maxRange: 20
       requireFacingTarget: 0
@@ -98,6 +99,7 @@ MonoBehaviour:
             canCastOnNeutral: 0
             canCastOnFriendly: 0
             autoSelfCast: 0
+            unitTypeRestrictions: []
             useMeleeRange: 0
             maxRange: 0
             lineOfSightSourceLocation: 0

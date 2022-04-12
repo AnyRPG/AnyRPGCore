@@ -1,4 +1,5 @@
 using AnyRPG;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Serialization;
 
@@ -50,6 +51,13 @@ namespace AnyRPG {
         [Tooltip("If no target is given, automatically cast on the caster")]
         [SerializeField]
         private bool autoSelfCast = false;
+
+        [SerializeField]
+        [ResourceSelector(resourceType = typeof(UnitType))]
+        protected List<string> unitTypeRestrictions = new List<string>();
+
+        //protected List<UnitType> unitTypeRestrictionList = new List<UnitType>();
+
 
         [Header("Range")]
 
@@ -159,6 +167,17 @@ namespace AnyRPG {
                     return false;
                 }
 
+                // check unit type restrictions
+                if (unitTypeRestrictions.Count > 0) {
+                    if (targetCharacterUnit.BaseCharacter.UnitType == null || !unitTypeRestrictions.Contains(targetCharacterUnit.BaseCharacter.UnitType.DisplayName)) {
+                        //Debug.Log(MyDisplayName + ".CapturePetEffect.CanUseOn(): pet was not allowed by your restrictions ");
+                        if (playerInitiated) {
+                            sourceCharacter.AbilityManager.ReceiveCombatMessage("Cannot cast " + targetable.DisplayName + " on target. Pet type was not allowed");
+                        }
+                        return false;
+                    }
+                }
+
             } else {
                 if (targetable.GetTargetOptions(sourceCharacter).RequireLiveTarget == true || targetable.GetTargetOptions(sourceCharacter).RequireDeadTarget == true) {
                     // something that is not a character unit cannot satisfy the alive or dead conditions because it is inanimate
@@ -172,6 +191,10 @@ namespace AnyRPG {
                     if (playerInitiated && !targetable.GetTargetOptions(sourceCharacter).CanCastOnSelf && !targetable.GetTargetOptions(sourceCharacter).AutoSelfCast) {
                         sourceCharacter.AbilityManager.ReceiveCombatMessage(targetable.DisplayName + " requires an animate target!");
                     }
+                    return false;
+                }
+                if (unitTypeRestrictions.Count != 0) {
+                    // something that is not a character unit cannot have a unit type
                     return false;
                 }
             }

@@ -32,6 +32,8 @@ MonoBehaviour:
       canCastOnNeutral: 1
       canCastOnFriendly: 0
       autoSelfCast: 0
+      unitTypeRestrictions:
+      - Beast
       useMeleeRange: 0
       maxRange: 20
       lineOfSightSourceLocation: 0
