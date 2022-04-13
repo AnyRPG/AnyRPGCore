@@ -25,7 +25,7 @@ MonoBehaviour:
   craftingMaterials:
   - itemName: Copper Ingot
     count: 1
-  - itemName: Lumber
+  - itemName: Ash Lumber
     count: 1
   itemOutputName: Basic Copper Spear
   outputCount: 1

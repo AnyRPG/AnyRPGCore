@@ -10,24 +10,29 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 086cc19bb10d93146806ca499cfd21c7, type: 3}
-  m_Name: AnyRPGClawMainHandPrefab
+  m_Name: BasicSteelClawMainHandPrefabTemplate
   m_EditorClassIdentifier: 
-  resourceName: AnyRPG Claw Main Hand
+  resourceName: Basic Steel Claw Main Hand
   displayName: 
   icon: {fileID: 0}
   iconBackgroundImage: {fileID: 0}
   description: 
   useRegionalDescription: 0
   resourceDescriptionProfile: 
-  prefab: {fileID: 5319069474142785129, guid: d32ec0c3148a7cf45b436192f4873409, type: 3}
-  position: {x: -0.0738, y: 0.0034, z: -0.0423}
+  optionalOverride: 0
+  prefab: {fileID: 5319069474142785129, guid: eb09d51994d901b4c851b4d44d21955a, type: 3}
+  position: {x: 0, y: 0, z: 0}
   rotationIsGlobal: 0
-  rotation: {x: 7.168463, y: 256.2952, z: 2.792886}
+  rotation: {x: 0, y: 0, z: 0}
   scale: {x: 1, y: 1, z: 1}
-  targetBone: RightHand
+  targetBone: 
   unsheathAudioProfileName: 
-  sheathedPosition: {x: 0.0232, y: 0.2165, z: 0.0011}
-  sheathedRotation: {x: 2.680203, y: 86.7485, z: 272.7257}
+  sheathedPosition: {x: 0, y: 0, z: 0}
+  sheathedRotation: {x: 0, y: 0, z: 0}
   sheathedScale: {x: 1, y: 1, z: 1}
-  sheathedTargetBone: Hips
+  sheathedTargetBone: 
   sheathAudioProfileName: 
+  useItemPickup: 0
+  pickupPosition: {x: 0, y: 0, z: 0}
+  pickupRotation: {x: 0, y: 0, z: 0}
+  pickupScale: {x: 1, y: 1, z: 1}

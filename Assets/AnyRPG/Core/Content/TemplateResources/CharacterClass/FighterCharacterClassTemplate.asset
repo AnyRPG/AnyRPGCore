@@ -22,6 +22,7 @@ MonoBehaviour:
   optionalOverride: 0
   newGameOption: 1
   equipmentNames:
+  - Basic Claw
   - Brown Leather Armor
   - Brown Leather Belt
   - Brown Leather Boots

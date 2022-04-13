@@ -69,13 +69,13 @@ MonoBehaviour:
     rotation: {x: 0, y: 0, z: 0}
     scale: {x: 1, y: 1, z: 1}
     targetBone: ShieldSheathedAttachment
-  - nodeName: Fist Main Hand Sheathed
+  - nodeName: Main Hand Fist Sheathed
     position: {x: 0, y: 0, z: 0}
     rotationIsGlobal: 0
     rotation: {x: 0, y: 0, z: 0}
     scale: {x: 1, y: 1, z: 1}
     targetBone: MainHandFistSheathedAttachment
-  - nodeName: Fist Off Hand Sheathed
+  - nodeName: Off Hand Fist Sheathed
     position: {x: 0, y: 0, z: 0}
     rotationIsGlobal: 0
     rotation: {x: 0, y: 0, z: 0}

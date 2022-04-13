@@ -75,13 +75,13 @@ MonoBehaviour:
     rotation: {x: 82.3067, y: 94.62885, z: 190.6111}
     scale: {x: 1, y: 1, z: 1}
     targetBone: Spine1
-  - nodeName: Fist Main Hand Sheathed
+  - nodeName: Main Hand Fist Sheathed
     position: {x: 0.0232, y: 0.2165, z: 0.0011}
     rotationIsGlobal: 0
     rotation: {x: 4.278742, y: 81.55635, z: 92.4099}
     scale: {x: 1, y: 1, z: 1}
     targetBone: Hips
-  - nodeName: Fist Off Hand Sheathed
+  - nodeName: Off Hand Fist Sheathed
     position: {x: 0.02447121, y: -0.2165, z: -0.01038671}
     rotationIsGlobal: 0
     rotation: {x: 4.278742, y: 81.55635, z: 92.4099}

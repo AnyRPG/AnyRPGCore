@@ -25,6 +25,10 @@ MonoBehaviour:
     quantity: 0
     unlimited: 1
     itemQualityName: 
+  - itemName: Basic Iron Claw
+    quantity: 0
+    unlimited: 1
+    itemQualityName: 
   - itemName: Basic Iron Dagger
     quantity: 0
     unlimited: 1

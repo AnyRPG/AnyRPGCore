@@ -25,6 +25,10 @@ MonoBehaviour:
     quantity: 0
     unlimited: 1
     itemQualityName: 
+  - itemName: Basic Bronze Claw
+    quantity: 0
+    unlimited: 1
+    itemQualityName: 
   - itemName: Basic Bronze Dagger
     quantity: 0
     unlimited: 1

@@ -25,6 +25,10 @@ MonoBehaviour:
     quantity: 0
     unlimited: 1
     itemQualityName: 
+  - itemName: Basic Claw
+    quantity: 0
+    unlimited: 1
+    itemQualityName: 
   - itemName: Basic Club
     quantity: 0
     unlimited: 1

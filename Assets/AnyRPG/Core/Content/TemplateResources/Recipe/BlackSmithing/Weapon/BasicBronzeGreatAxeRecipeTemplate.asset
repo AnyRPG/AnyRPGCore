@@ -25,7 +25,7 @@ MonoBehaviour:
   craftingMaterials:
   - itemName: Bronze Ingot
     count: 1
-  - itemName: Lumber
+  - itemName: Ash Lumber
     count: 1
   itemOutputName: Basic Bronze Great Axe
   outputCount: 1

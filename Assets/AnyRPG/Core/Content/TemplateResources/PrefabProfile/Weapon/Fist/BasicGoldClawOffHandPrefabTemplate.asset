@@ -10,24 +10,29 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 086cc19bb10d93146806ca499cfd21c7, type: 3}
-  m_Name: AnyRPGClawOffHandPrefab
+  m_Name: BasicGoldClawOffHandPrefabTemplate
   m_EditorClassIdentifier: 
-  resourceName: AnyRPG Claw Off Hand
+  resourceName: Basic Gold Claw Off Hand
   displayName: 
   icon: {fileID: 0}
   iconBackgroundImage: {fileID: 0}
   description: 
   useRegionalDescription: 0
   resourceDescriptionProfile: 
-  prefab: {fileID: 5319069474142785129, guid: d32ec0c3148a7cf45b436192f4873409, type: 3}
-  position: {x: -0.1048, y: -0.0068, z: -0.0275}
+  optionalOverride: 0
+  prefab: {fileID: 5319069474142785129, guid: 3aca9b6f453c7de4d83b260737abc4b0, type: 3}
+  position: {x: 0, y: 0, z: 0}
   rotationIsGlobal: 0
-  rotation: {x: 356.0335, y: 261.4799, z: 176.2771}
+  rotation: {x: 0, y: 0, z: 0}
   scale: {x: 1, y: 1, z: 1}
-  targetBone: LeftHand
+  targetBone: 
   unsheathAudioProfileName: 
-  sheathedPosition: {x: 0.02447121, y: -0.2165, z: -0.01038671}
-  sheathedRotation: {x: 4.278742, y: 81.55635, z: 92.4099}
+  sheathedPosition: {x: 0, y: 0, z: 0}
+  sheathedRotation: {x: 0, y: 0, z: 0}
   sheathedScale: {x: 1, y: 1, z: 1}
-  sheathedTargetBone: Hips
+  sheathedTargetBone: 
   sheathAudioProfileName: 
+  useItemPickup: 0
+  pickupPosition: {x: 0, y: 0, z: 0}
+  pickupRotation: {x: 0, y: 0, z: 0}
+  pickupScale: {x: 1, y: 1, z: 1}

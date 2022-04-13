@@ -25,7 +25,7 @@ MonoBehaviour:
   craftingMaterials:
   - itemName: Silver Ingot
     count: 1
-  - itemName: Lumber
+  - itemName: Ash Lumber
     count: 1
   itemOutputName: Basic Silver Sabre
   outputCount: 1

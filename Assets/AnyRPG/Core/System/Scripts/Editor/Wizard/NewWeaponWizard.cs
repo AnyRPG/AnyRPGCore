@@ -29,6 +29,9 @@ namespace AnyRPG {
         public WeaponSlotType weaponSlotType = WeaponSlotType.MainHandOnly;
         public WeaponTypeConfigTemplate weaponType = null;
 
+        [Tooltip("If the weapon is not symmetrical, a separate prefab will be made for the left and right hands if AnyHand is selected")]
+        public bool asymmetricalWeapon = false;
+
 
         [MenuItem("Tools/AnyRPG/Wizard/New Weapon Wizard")]
         public static void CreateWizard() {
@@ -87,21 +90,48 @@ namespace AnyRPG {
             EditorUtility.DisplayProgressBar("New Weapon Wizard", "Create Prefab Folders If Necessary...", 0.3f);
             WizardUtilities.CreateFolderIfNotExists(gameFileSystemFolder + "/Prefab/Handle/Weapon");
 
-            // copy the weapon handle prefab template
+            // create the weapon handle prefab
             EditorUtility.DisplayProgressBar("New Weapon Wizard", "Create Weapon Handle Prefab Template...", 0.4f);
+            List<string> newWeaponHandleAssetPaths = new List<string>();
+            string weaponFileSystemName = WizardUtilities.GetScriptableObjectFileSystemName(weaponName);
+
+            if (weaponSlotType == WeaponSlotType.AnyHand && asymmetricalWeapon == true) {
+                newWeaponHandleAssetPaths.Add(CreateWeaponHandleObjects(fileSystemGameName, weaponFileSystemName, "Main Hand"));
+                newWeaponHandleAssetPaths.Add(CreateWeaponHandleObjects(fileSystemGameName, weaponFileSystemName, "Off Hand"));
+            } else {
+                newWeaponHandleAssetPaths.Add(CreateWeaponHandleObjects(fileSystemGameName, weaponFileSystemName, ""));
+            }
+
+            // create item Scriptable Object
+            EditorUtility.DisplayProgressBar("New Weapon Wizard", "Configuring Weapon Item...", 0.5f);
+            CreateWeaponScriptableObjects(fileSystemGameName, weaponName, icon, newWeaponHandleAssetPaths, weaponSlotType, weaponType);
+
+            // install weapon skill
+            EditorUtility.DisplayProgressBar("New Weapon Wizard", "Installing Weapon Skill...", 0.6f);
+            TemplateContentWizard.RunWizard(fileSystemGameName, gameParentFolder, new List<ScriptableContentTemplate>() { weaponType.WeaponSkillContentTemplate }, false, false);
+
+            AssetDatabase.Refresh();
+
+            return newWeaponHandleAssetPaths[0];
+        }
+
+        public string CreateWeaponHandleObjects(string fileSystemGameName, string weaponFileSystemName, string suffix) {
+            // copy the weapon handle prefab template
+            //EditorUtility.DisplayProgressBar("New Weapon Wizard", "Create Weapon Handle Prefab Template...", 0.4f);
             string weaponHandleTemplateAssetPath = "Assets" + weaponHandleTemplatePath;
-            string newWeaponHandleAssetPath = "Assets" + gameParentFolder + fileSystemGameName + "/Prefab/Handle/Weapon/" + WizardUtilities.GetScriptableObjectFileSystemName(weaponName) + "Handle.prefab";
+            string newWeaponHandleAssetPath = "Assets" + gameParentFolder + fileSystemGameName + "/Prefab/Handle/Weapon/" + WizardUtilities.GetScriptableObjectFileSystemName(weaponName) + WizardUtilities.GetScriptableObjectFileSystemName(suffix) + "Handle.prefab";
             Debug.Log("Copying Resource from '" + weaponHandleTemplateAssetPath + "' to '" + newWeaponHandleAssetPath + "'");
             AssetDatabase.CopyAsset(weaponHandleTemplateAssetPath, newWeaponHandleAssetPath);
             AssetDatabase.Refresh();
 
 
             // add weapon to weapon handle
-            EditorUtility.DisplayProgressBar("New Weapon Wizard", "Nest Weapon Prefab in Handle Prefab...", 0.5f);
+            //EditorUtility.DisplayProgressBar("New Weapon Wizard", "Nest Weapon Prefab in Handle Prefab...", 0.5f);
             GameObject weaponHandleObject = PrefabUtility.LoadPrefabContents(newWeaponHandleAssetPath);
             if (weaponHandleObject != null) {
                 GameObject weaponObject = PrefabUtility.InstantiatePrefab(weaponPrefab) as GameObject;
                 weaponObject.transform.SetParent(weaponHandleObject.transform);
+                weaponObject.layer = LayerMask.NameToLayer("Equipment");
 
                 PrefabUtility.RecordPrefabInstancePropertyModifications(weaponObject.GetComponent<Transform>());
                 PrefabUtility.SaveAsPrefabAsset(weaponHandleObject, newWeaponHandleAssetPath);
@@ -112,32 +142,38 @@ namespace AnyRPG {
                 AssetDatabase.Refresh();
             }
 
-            // create item Scriptable Object
-            EditorUtility.DisplayProgressBar("New Weapon Wizard", "Configuring Weapon Item...", 0.6f);
-            CreateWeaponScriptableObjects(fileSystemGameName, weaponName, icon, newWeaponHandleAssetPath, weaponSlotType, weaponType);
-
-            // install weapon skill
-            EditorUtility.DisplayProgressBar("New Weapon Wizard", "Installing Weapon Skill...", 0.7f);
-            TemplateContentWizard.RunWizard(fileSystemGameName, gameParentFolder, new List<ScriptableContentTemplate>() { weaponType.WeaponSkillContentTemplate }, false, false);
-
-            AssetDatabase.Refresh();
+            // create the prefab profile for the newly created handle
+            CreatePrefabProfile(fileSystemGameName, newWeaponHandleAssetPath, weaponFileSystemName, suffix);
 
             return newWeaponHandleAssetPath;
         }
 
-
-        private void CreateWeaponScriptableObjects(string fileSystemGameName, string weaponName, Sprite icon, string weaponHandleAssetPath, WeaponSlotType weaponSlotType, WeaponTypeConfigTemplate weaponType) {
-
-            string weaponFileSystemName = WizardUtilities.GetScriptableObjectFileSystemName(weaponName);
+        private void CreatePrefabProfile(string fileSystemGameName, string weaponHandleAssetPath, string weaponFileSystemName, string suffix) {
+            
             GameObject weaponHandleObject = (GameObject)AssetDatabase.LoadMainAssetAtPath(weaponHandleAssetPath);
 
             // create weapon handle prefab profile
             PrefabProfile prefabProfile = ScriptableObject.CreateInstance("PrefabProfile") as PrefabProfile;
-            prefabProfile.ResourceName = weaponName;
+            prefabProfile.ResourceName = weaponName + (suffix == "" ? suffix : " " + suffix);
             prefabProfile.Prefab = weaponHandleObject;
-            
-            string scriptableObjectPath = "Assets" + gameParentFolder + fileSystemGameName + "/Resources/" + fileSystemGameName + "/PrefabProfile/Weapon/" + weaponFileSystemName + "Prefab.asset";
+
+            string scriptableObjectPath = "Assets" + gameParentFolder + fileSystemGameName + "/Resources/" + fileSystemGameName + "/PrefabProfile/Weapon/" + weaponFileSystemName + WizardUtilities.GetScriptableObjectFileSystemName(suffix) + "Prefab.asset";
             AssetDatabase.CreateAsset(prefabProfile, scriptableObjectPath);
+        }
+
+        private void CreateWeaponScriptableObjects(string fileSystemGameName, string weaponName, Sprite icon, List<string> weaponHandleAssetPaths, WeaponSlotType weaponSlotType, WeaponTypeConfigTemplate weaponType) {
+
+            string weaponFileSystemName = WizardUtilities.GetScriptableObjectFileSystemName(weaponName);
+
+            /*
+            if (weaponSlotType == WeaponSlotType.AnyHand && asymmetricalWeapon == true) {
+                CreatePrefabProfile(fileSystemGameName, weaponHandleAssetPaths[0], weaponFileSystemName);
+                CreatePrefabProfile(fileSystemGameName, weaponHandleAssetPaths[1], weaponFileSystemName);
+            } else {
+                CreatePrefabProfile(fileSystemGameName, weaponHandleAssetPaths[0], weaponFileSystemName);
+            }
+            */
+
 
             // create weapon item
             Weapon weaponItem = ScriptableObject.CreateInstance("Weapon") as Weapon;
@@ -165,20 +201,23 @@ namespace AnyRPG {
                 if (weaponSlotConfig.weaponSlotType == weaponSlotType) {
                     weaponItem.HoldableObjectList = weaponSlotConfig.holdableObjectList;
                     //foreach (HoldableObjectAttachment holdableObjectAttachment in weaponItem.HoldableObjectList) {
+                    if (weaponSlotType == WeaponSlotType.AnyHand && asymmetricalWeapon == true) {
+                        weaponItem.HoldableObjectList[0].AttachmentNodes[0].HoldableObjectName = weaponName + " Main Hand";
+                        weaponItem.HoldableObjectList[0].AttachmentNodes[1].HoldableObjectName = weaponName + " Off Hand";
+                    } else {
                         foreach (AttachmentNode attachmentNode in weaponItem.HoldableObjectList[0].AttachmentNodes) {
                             //foreach (AttachmentNode attachmentNode in holdableObjectAttachment.AttachmentNodes) {
                             attachmentNode.HoldableObjectName = weaponName;
                         }
-                        // this is where you would do a quiver/ammo pouch as [1]
+                    }
+                    // this is where you would do a quiver/ammo pouch as [1]
                     //}
                     break;
                 }
             }
 
-            scriptableObjectPath = "Assets" + gameParentFolder + fileSystemGameName + "/Resources/" + fileSystemGameName + "/Item/Equipment/Weapon/" + weaponFileSystemName + "Item.asset";
+            string scriptableObjectPath = "Assets" + gameParentFolder + fileSystemGameName + "/Resources/" + fileSystemGameName + "/Item/Equipment/Weapon/" + weaponFileSystemName + "Item.asset";
             AssetDatabase.CreateAsset(weaponItem, scriptableObjectPath);
-
-
         }
 
         void OnWizardUpdate() {

@@ -35,6 +35,12 @@ MonoBehaviour:
       maxDrops: 1
       matchItemRestrictions: 1
       prerequisiteConditions: []
+    - itemName: Basic Copper Claw
+      dropChance: 20
+      minDrops: 1
+      maxDrops: 1
+      matchItemRestrictions: 1
+      prerequisiteConditions: []
     - itemName: Basic Copper Dagger
       dropChance: 20
       minDrops: 1

@@ -1,0 +1,30 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6c9b51b8d3aa844448aaeab0a989e2fa, type: 3}
+  m_Name: BasicSteelClawWeaponTemplatePackage
+  m_EditorClassIdentifier: 
+  resourceName: Basic Steel Claw Weapon
+  displayName: 
+  icon: {fileID: 0}
+  iconBackgroundImage: {fileID: 0}
+  description: 
+  useRegionalDescription: 0
+  resourceDescriptionProfile: 
+  optionalOverride: 0
+  resources:
+  - {fileID: 11400000, guid: 41d65a72e6c8c9c4cb83ac7f4cd39f4b, type: 2}
+  - {fileID: 11400000, guid: 0a86fa03450c5044687da56a1c2069b4, type: 2}
+  - {fileID: 11400000, guid: ce5f93705d007c4409cb22eb3b7c877e, type: 2}
+  prefabs: []
+  dependencies:
+  - {fileID: 11400000, guid: b1e7b619c8bef9a49b5b246e50993369, type: 2}
+  - {fileID: 11400000, guid: 252ca395929968e43820806aecfe6a2d, type: 2}

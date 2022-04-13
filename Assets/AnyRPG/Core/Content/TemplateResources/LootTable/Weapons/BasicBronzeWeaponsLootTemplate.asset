@@ -35,6 +35,12 @@ MonoBehaviour:
       maxDrops: 1
       matchItemRestrictions: 1
       prerequisiteConditions: []
+    - itemName: Basic Bronze Claw
+      dropChance: 20
+      minDrops: 1
+      maxDrops: 1
+      matchItemRestrictions: 1
+      prerequisiteConditions: []
     - itemName: Basic Bronze Dagger
       dropChance: 20
       minDrops: 1

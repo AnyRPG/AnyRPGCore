@@ -25,6 +25,10 @@ MonoBehaviour:
     quantity: 0
     unlimited: 1
     itemQualityName: 
+  - itemName: Basic Copper Claw
+    quantity: 0
+    unlimited: 1
+    itemQualityName: 
   - itemName: Basic Copper Dagger
     quantity: 0
     unlimited: 1
