@@ -1210,7 +1210,7 @@ namespace AnyRPG {
         }
 
         public void DeactivateStealth() {
-            Debug.Log(baseCharacter.gameObject.name + "CharacterStats.DeactivateStealth()");
+            //Debug.Log(baseCharacter.gameObject.name + "CharacterStats.DeactivateStealth()");
 
             baseCharacter.UnitController.UnitMaterialController.DeactivateStealth();
             OnLeaveStealth();
