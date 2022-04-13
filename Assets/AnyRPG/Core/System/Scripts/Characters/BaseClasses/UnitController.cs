@@ -1484,8 +1484,8 @@ namespace AnyRPG {
                     // like inanimate units
                 } else {
                     // moved liveness check into EnterCombat to centralize logic because there are multiple entry points to EnterCombat
-                    agroTarget.BaseCharacter.CharacterCombat.EnterCombat(characterUnit.BaseCharacter);
-                    characterUnit.BaseCharacter.CharacterCombat.EnterCombat(agroTarget.BaseCharacter);
+                    agroTarget.BaseCharacter.CharacterCombat.PullIntoCombat(characterUnit.BaseCharacter);
+                    characterUnit.BaseCharacter.CharacterCombat.PullIntoCombat(agroTarget.BaseCharacter);
                 }
                 //Debug.Log("combat is " + combat.ToString());
                 //Debug.Log("mytarget is " + MyTarget.ToString());

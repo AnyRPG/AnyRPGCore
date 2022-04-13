@@ -23,6 +23,8 @@ namespace AnyRPG {
 
         bool IsDead { get; }
 
+        CharacterUnit GetCharacterUnit();
+
         void GeneratePower(BaseAbilityProperties ability);
 
         bool BeginAbility(string abilityName);

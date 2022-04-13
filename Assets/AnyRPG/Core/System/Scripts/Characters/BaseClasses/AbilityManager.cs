@@ -86,6 +86,10 @@ namespace AnyRPG {
             objectPooler = systemGameManager.ObjectPooler;
         }
 
+        public virtual CharacterUnit GetCharacterUnit() {
+            return null;
+        }
+
         public virtual void SetMountedState(UnitController mountUnitController, UnitProfile mountUnitProfile) {
             // nothing here for now
         }

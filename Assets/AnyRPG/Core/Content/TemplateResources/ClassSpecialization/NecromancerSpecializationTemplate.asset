@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   resourceName: Necromancer
   displayName: 
-  icon: {fileID: 21300000, guid: 438e8e2beb078f749905581c494769f3, type: 3}
+  icon: {fileID: 21300000, guid: 8b04cac8505abbb47bd5c91db3229c44, type: 3}
   iconBackgroundImage: {fileID: 0}
   description: 
   useRegionalDescription: 0
@@ -42,3 +42,4 @@ MonoBehaviour:
   primaryStats: []
   powerResources: []
   powerEnhancerStats: []
+  validPetTypes: []

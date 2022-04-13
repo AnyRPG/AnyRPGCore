@@ -287,14 +287,13 @@ namespace AnyRPG {
                 float totalThreat = damage;
                 totalThreat *= abilityEffect.ThreatMultiplier * target.AbilityManager.GetThreatModifiers();
 
+
                 // determine if this target is capable of fighting (ie, not environmental effect), and if so, enter combat
-                Interactable _interactable = target.AbilityManager.UnitGameObject.GetComponent<Interactable>();
-                if (_interactable != null) {
-                    CharacterUnit _characterUnit = CharacterUnit.GetCharacterUnit(_interactable);
-                    if (_characterUnit != null) {
-                        AggroTable.AddToAggroTable(_characterUnit, (int)totalThreat);
-                        EnterCombat(_interactable);
-                    }
+                CharacterUnit _characterUnit = target.AbilityManager.GetCharacterUnit();
+                if (_characterUnit != null) {
+                    AggroTable.AddToAggroTable(_characterUnit, (int)totalThreat);
+                    // commented out and moved to TakeDamage
+                    //EnterCombat(_interactable);
                 }
             }
 
@@ -417,21 +416,41 @@ namespace AnyRPG {
             return inCombat;
         }
 
-        public bool EnterCombat(IAbilityCaster target) {
+        /*
+        public bool EnterCombat(CharacterUnit _characterUnit) {
             //Debug.Log(baseCharacter.gameObject.name + ".CharacterCombat.EnterCombat(" + (target == null ? "null" : target.AbilityManager.Name) + ")");
-            Interactable _interactable = target.AbilityManager.UnitGameObject.GetComponent<Interactable>();
-            if (_interactable != null) {
-                CharacterUnit _characterUnit = CharacterUnit.GetCharacterUnit(_interactable);
+            //Interactable _interactable = target.AbilityManager.UnitGameObject.GetComponent<Interactable>();
+            //if (_interactable != null) {
+                //CharacterUnit _characterUnit =  CharacterUnit.GetCharacterUnit(_interactable);
                 if (_characterUnit != null) {
-                    return EnterCombat(_interactable);
+                    return EnterCombat(_characterUnit.Interactable);
                 }
-            }
+            //}
             return false;
         }
+        */
 
         public bool OnAutoAttackCooldown() {
             return (Time.time - lastAttackBegin < attackSpeed);
         }
+
+        public virtual bool PullIntoCombat(BaseCharacter baseCharacter) {
+            //return PullIntoCombat(baseCharacter.UnitController);
+
+            // cancel things like stealth
+            if (inCombat == false) {
+                baseCharacter?.CharacterStats.CancelNonCombatEffects();
+            }
+
+            return EnterCombat(baseCharacter.UnitController);
+        }
+
+        /*
+        public virtual bool PullIntoCombat(Interactable target) {
+            
+            return EnterCombat(target);
+        }
+        */
 
         /// <summary>
         /// Adds the target to the aggro table with 0 agro to ensure you have something to send a drop combat message to if you did 0 damage to them during combat.
@@ -452,12 +471,17 @@ namespace AnyRPG {
 
             lastCombatEvent = Time.time;
             // maybe do this in update?
-            if (baseCharacter != null && baseCharacter.UnitController != null && baseCharacter.UnitController.UnitAnimator != null) {
+            if (baseCharacter?.UnitController?.UnitAnimator != null) {
                 baseCharacter.UnitController.UnitAnimator.SetBool("InCombat", true);
             }
+
+            // moved to PullIntoCombat so that stealth doesn't get canceled the minute an attack is started, causing things like backstab to fail
+            /*
             if (inCombat == false) {
                 baseCharacter?.CharacterStats.CancelNonCombatEffects();
             }
+            */
+
             inCombat = true;
             if (!aggroTable.AggroTableContains(CharacterUnit.GetCharacterUnit(target))) {
                 OnEnterCombat(target);
@@ -669,7 +693,11 @@ namespace AnyRPG {
             }
 
             if (baseCharacter.CharacterStats.IsAlive) {
-                EnterCombat(sourceCharacter);
+
+                CharacterUnit _characterUnit = sourceCharacter.AbilityManager.GetCharacterUnit();
+                if (_characterUnit != null) {
+                    baseCharacter.UnitController.Agro(_characterUnit);
+                }
                 //Debug.Log(gameObject.name + " about to take " + damage.ToString() + " damage. Character is alive");
                 //float distance = Vector3.Distance(transform.position, sourcePosition);
                 // replace with hitbox check

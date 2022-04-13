@@ -161,6 +161,10 @@ namespace AnyRPG {
             LearnDefaultAutoAttackAbility();
         }
 
+        public override CharacterUnit GetCharacterUnit() {
+            return baseCharacter?.UnitController?.CharacterUnit;
+        }
+
         public override void SetMountedState(UnitController mountUnitController, UnitProfile mountUnitProfile) {
             base.SetMountedState(mountUnitController, mountUnitProfile);
             if (baseCharacter != null && baseCharacter.UnitController != null) {
@@ -1498,7 +1502,7 @@ namespace AnyRPG {
                             // agro includes a liveness check, so casting necromancy on a dead enemy unit should not pull it into combat with us if we haven't applied a faction or master control buff yet
                             // ...re-enable this because rangers need to pull out their weapons when doing their animation when clicking on action bar
                             if (baseCharacter.CharacterCombat.GetInCombat() == false) {
-                                baseCharacter.CharacterCombat.EnterCombat(targetCharacterUnit.BaseCharacter);
+                                baseCharacter.CharacterCombat.EnterCombat(target);
                             }
 
                             baseCharacter.CharacterCombat.ActivateAutoAttack();

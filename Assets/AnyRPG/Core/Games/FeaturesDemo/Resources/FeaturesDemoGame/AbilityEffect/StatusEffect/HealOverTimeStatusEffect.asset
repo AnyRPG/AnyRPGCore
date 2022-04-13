@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   resourceName: Heal Over Time
   displayName: 
-  icon: {fileID: 21300000, guid: 28d53e5cb2cd3744f949033ecc413657, type: 3}
+  icon: {fileID: 21300000, guid: 1d6f1363575a54945810c2f5f13e1462, type: 3}
   iconBackgroundImage: {fileID: 0}
   description: restore life over time
   useRegionalDescription: 0
@@ -32,6 +32,7 @@ MonoBehaviour:
       canCastOnNeutral: 0
       canCastOnFriendly: 1
       autoSelfCast: 1
+      unitTypeRestrictions: []
       useMeleeRange: 0
       maxRange: 0
       lineOfSightSourceLocation: 0

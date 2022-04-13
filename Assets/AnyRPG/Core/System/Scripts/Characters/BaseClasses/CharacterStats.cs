@@ -726,7 +726,7 @@ namespace AnyRPG {
         /// <param name="target"></param>
         public void AttemptAgro(IAbilityCaster sourceCharacter, CharacterUnit target) {
             if (target != null && (sourceCharacter.AbilityManager as CharacterAbilityManager) is CharacterAbilityManager) {
-                if (target != null && target.BaseCharacter != null) {
+                if (target.BaseCharacter != null) {
                     if (Faction.RelationWith(target.BaseCharacter, (sourceCharacter.AbilityManager as CharacterAbilityManager).BaseCharacter) <= -1) {
                         if (target.BaseCharacter.CharacterCombat != null) {
                             // agro includes a liveness check, so casting necromancy on a dead enemy unit should not pull it into combat with us if we haven't applied a faction or master control buff yet
@@ -1210,6 +1210,8 @@ namespace AnyRPG {
         }
 
         public void DeactivateStealth() {
+            Debug.Log(baseCharacter.gameObject.name + "CharacterStats.DeactivateStealth()");
+
             baseCharacter.UnitController.UnitMaterialController.DeactivateStealth();
             OnLeaveStealth();
 
