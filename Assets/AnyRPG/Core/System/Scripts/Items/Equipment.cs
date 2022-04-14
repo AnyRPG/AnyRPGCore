@@ -235,6 +235,22 @@ namespace AnyRPG {
             return true;
         }
 
+        public virtual void HandleEquip(CharacterCombat characterCombat, EquipmentSlotProfile equipmentSlotProfile) {
+            // nothing here yet
+        }
+
+        public virtual void HandleUnequip(CharacterCombat characterCombat, EquipmentSlotProfile equipmentSlotProfile) {
+            // nothing here yet
+        }
+
+        public virtual void HandleEquip(CharacterEquipmentManager characterEquipmentManager) {
+            // nothing here yet
+        }
+
+        public virtual void HandleUnequip(CharacterEquipmentManager characterEquipmentManager) {
+            // nothing here yet
+        }
+
         /// <summary>
         /// meant to be overwritten by specific equipment types
         /// </summary>

@@ -759,56 +759,50 @@ namespace AnyRPG {
             }
         }
 
+        public virtual void AddOnHitEffects(List<AbilityEffectProperties> abilityEffectProperties) {
+            onHitEffects.AddRange(abilityEffectProperties);
+        }
+
+        public virtual void RemoveOnHitEffect(AbilityEffectProperties abilityEffect) {
+            if (onHitEffects.Contains(abilityEffect)) {
+                //Debug.Log(baseCharacter.gameObject.name + ".CharacterCombat.HandleEquipmentChanged(): olditem (" + oldItem.DisplayName + ") was weapon and removing hit effect: " + abilityEffect.DisplayName);
+                onHitEffects.Remove(abilityEffect);
+            }
+        }
+
+        public virtual void AddDefaultHitEffects(List<AbilityEffectProperties> abilityEffectProperties) {
+            defaultHitEffects.AddRange(abilityEffectProperties);
+        }
+
+        public virtual void RemoveDefaultHitEffect(AbilityEffectProperties abilityEffect) {
+            if (defaultHitEffects.Contains(abilityEffect)) {
+                //Debug.Log(baseCharacter.gameObject.name + ".CharacterCombat.HandleEquipmentChanged(): olditem (" + oldItem.DisplayName + ") was weapon and removing hit effect: " + abilityEffect.DisplayName);
+                defaultHitEffects.Remove(abilityEffect);
+            }
+        }
+
+        public virtual void AddDefaultHitSoundEffects(List<AudioClip> audioClips) {
+            defaultHitSoundEffects.AddRange(audioClips);
+        }
+
+        public virtual void ClearDefaultHitSoundEffects() {
+            defaultHitSoundEffects.Clear();
+        }
+
         public virtual void HandleEquipmentChanged(Equipment newItem, Equipment oldItem, int slotIndex, EquipmentSlotProfile equipmentSlotProfile) {
             //Debug.Log(baseCharacter.gameObject.name + ".CharacterCombat.HandleEquipmentChanged(" + (newItem == null ? "null" : newItem.DisplayName) + ", " + (oldItem == null ? "null" : oldItem.DisplayName) + ", " + slotIndex + ")");
 
-            if (oldItem != null && oldItem is Weapon) {
-                if ((oldItem as Weapon).OnHitEffectList != null && (oldItem as Weapon).OnHitEffectList.Count > 0) {
-                    //onHitEffects.Clear();
-                    foreach (AbilityEffectProperties abilityEffect in (oldItem as Weapon).OnHitEffectList) {
-                        // TODO: fix this code. it would remove a sword hit if swords are dual wielded
-                        // check all equipped weapons and compare similar to ability providers logic
-                        if (defaultHitEffects.Contains(abilityEffect)) {
-                            //Debug.Log(baseCharacter.gameObject.name + ".CharacterCombat.HandleEquipmentChanged(): olditem (" + oldItem.DisplayName + ") was weapon and removing hit effect: " + abilityEffect.DisplayName);
-                            onHitEffects.Remove(abilityEffect);
-                        }
-                    }
-                }
-                if ((oldItem as Weapon).DefaultHitEffectList != null && (oldItem as Weapon).DefaultHitEffectList.Count > 0) {
-                    //defaultHitEffects.Clear();
-                    foreach (AbilityEffectProperties abilityEffect in (oldItem as Weapon).DefaultHitEffectList) {
-                        // TODO: fix this code. it would remove a sword hit if swords are dual wielded
-                        // check all equipped weapons and compare similar to ability providers logic
-                        if (defaultHitEffects.Contains(abilityEffect)) {
-                            //Debug.Log(baseCharacter.gameObject.name + ".CharacterCombat.HandleEquipmentChanged(): olditem (" + oldItem.DisplayName + ") was weapon and removing hit effect: " + abilityEffect.DisplayName);
-                            defaultHitEffects.Remove(abilityEffect);
-                        }
-                    }
-                }
-                if (equipmentSlotProfile != null && equipmentSlotProfile.SetOnHitAudio == true) {
-                    //Debug.Log(baseCharacter.gameObject.name + ".CharacterCombat.HandleEquipmentChanged(): clearing default hit effects");
-                    defaultHitSoundEffects.Clear();
-                }
+            if (equipmentSlotProfile.MainWeaponSlot == false) {
+                // to avoid hitting twice with each attack, only main hand weapons are counted for on hit effects
+                return;
             }
 
-            if ((newItem != null  && newItem is Weapon ) || (oldItem != null && oldItem is Weapon)) {
-                SetAttackSpeed();
+            if (oldItem != null) {
+                oldItem.HandleUnequip(this, equipmentSlotProfile);
             }
 
             if (newItem != null) {
-                if (newItem is Weapon) {
-                    if ((newItem as Weapon).OnHitEffectList != null && (newItem as Weapon).OnHitEffectList.Count > 0) {
-                        onHitEffects.AddRange((newItem as Weapon).OnHitEffectList);
-                    }
-                    if ((newItem as Weapon).DefaultHitEffectList != null && (newItem as Weapon).DefaultHitEffectList.Count > 0) {
-                        defaultHitEffects.AddRange((newItem as Weapon).DefaultHitEffectList);
-                    }
-                    if (equipmentSlotProfile != null && equipmentSlotProfile.SetOnHitAudio == true) {
-                        if ((newItem as Weapon).DefaultHitSoundEffects != null) {
-                            defaultHitSoundEffects.AddRange((newItem as Weapon).DefaultHitSoundEffects);
-                        }
-                    }
-                }
+                newItem.HandleEquip(this, equipmentSlotProfile);
             }
         }
 

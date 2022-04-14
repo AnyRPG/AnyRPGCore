@@ -207,6 +207,82 @@ namespace AnyRPG {
         }
         */
 
+        public override void HandleEquip(CharacterCombat characterCombat, EquipmentSlotProfile equipmentSlotProfile) {
+            base.HandleEquip(characterCombat, equipmentSlotProfile);
+
+            if (OnHitEffectList != null && OnHitEffectList.Count > 0) {
+                characterCombat.AddOnHitEffects(OnHitEffectList);
+            }
+            if (DefaultHitEffectList != null && DefaultHitEffectList.Count > 0) {
+                characterCombat.AddDefaultHitEffects(DefaultHitEffectList);
+            }
+            if (equipmentSlotProfile != null && equipmentSlotProfile.SetOnHitAudio == true) {
+                if (DefaultHitSoundEffects != null) {
+                    characterCombat.AddDefaultHitSoundEffects(DefaultHitSoundEffects);
+                }
+            }
+
+            characterCombat.SetAttackSpeed();
+        }
+
+        public override void HandleUnequip(CharacterCombat characterCombat, EquipmentSlotProfile equipmentSlotProfile) {
+            base.HandleUnequip(characterCombat, equipmentSlotProfile);
+
+            if (OnHitEffectList != null && OnHitEffectList.Count > 0) {
+                foreach (AbilityEffectProperties abilityEffect in OnHitEffectList) {
+                    characterCombat.RemoveOnHitEffect(abilityEffect);
+                }
+            }
+            if (DefaultHitEffectList != null && DefaultHitEffectList.Count > 0) {
+                foreach (AbilityEffectProperties abilityEffect in DefaultHitEffectList) {
+                    characterCombat.RemoveDefaultHitEffect(abilityEffect);
+                }
+            }
+            if (equipmentSlotProfile != null && equipmentSlotProfile.SetOnHitAudio == true) {
+                //Debug.Log(baseCharacter.gameObject.name + ".CharacterCombat.HandleEquipmentChanged(): clearing default hit effects");
+                characterCombat.ClearDefaultHitSoundEffects();
+            }
+            characterCombat.SetAttackSpeed();
+        }
+
+        public override void HandleEquip(CharacterEquipmentManager characterEquipmentManager) {
+            base.HandleEquip(characterEquipmentManager);
+
+            // animation phase objects
+            if (AbilityAnimationObjectList != null && AbilityAnimationObjectList.Count > 0) {
+                foreach (AbilityAttachmentNode abilityAttachmentNode in AbilityAnimationObjectList) {
+                    characterEquipmentManager.AddWeaponAbilityAnimationObjects(abilityAttachmentNode);
+                }
+            }
+
+            // attack phase objects
+            if (AbilityObjectList != null && AbilityObjectList.Count > 0) {
+                foreach (AbilityAttachmentNode abilityAttachmentNode in AbilityObjectList) {
+                    characterEquipmentManager.AddWeaponAbilityObjects(abilityAttachmentNode);
+                }
+            }
+
+        }
+
+        public override void HandleUnequip(CharacterEquipmentManager characterEquipmentManager) {
+            base.HandleUnequip(characterEquipmentManager);
+
+            // animation phase objects
+            if (AbilityAnimationObjectList != null && AbilityAnimationObjectList.Count > 0) {
+                foreach (AbilityAttachmentNode abilityAttachmentNode in AbilityAnimationObjectList) {
+                    characterEquipmentManager.RemoveWeaponAbilityAnimationObjects(abilityAttachmentNode);
+                }
+            }
+
+            // attack phase objects
+            if (AbilityObjectList != null && AbilityObjectList.Count > 0) {
+                foreach (AbilityAttachmentNode abilityAttachmentNode in AbilityObjectList) {
+                    characterEquipmentManager.RemoveWeaponAbilityObjects(abilityAttachmentNode);
+                }
+            }
+
+        }
+
         public override bool CapabilityConsumerSupported(ICapabilityConsumer capabilityConsumer) {
             //Debug.Log(DisplayName + ".Weapon.CapabilityConsumerSupported");
             return capabilityConsumer.CapabilityConsumerProcessor.IsWeaponSupported(this);

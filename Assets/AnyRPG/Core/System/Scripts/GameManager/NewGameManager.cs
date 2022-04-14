@@ -32,7 +32,8 @@ namespace AnyRPG {
 
         private AnyRPGSaveData saveData;
 
-        private Dictionary<EquipmentSlotType, Equipment> equipmentList = new Dictionary<EquipmentSlotType, Equipment>();
+        //private Dictionary<EquipmentSlotType, Equipment> equipmentList = new Dictionary<EquipmentSlotType, Equipment>();
+        private EquipmentManager equipmentManager = null;
 
         // valid choices for new game
         private List<Faction> factionList = new List<Faction>();
@@ -52,7 +53,7 @@ namespace AnyRPG {
         public Faction Faction { get => faction; }
         public UnitProfile UnitProfile { get => unitProfile; set => unitProfile = value; }
         public AnyRPGSaveData SaveData { get => saveData; set => saveData = value; }
-        public Dictionary<EquipmentSlotType, Equipment> EquipmentList { get => equipmentList; set => equipmentList = value; }
+        public Dictionary<EquipmentSlotProfile, Equipment> EquipmentList { get => equipmentManager.CurrentEquipment; }
         public UnitType UnitType { get => unitType; set => unitType = value; }
         public CharacterRace CharacterRace { get => characterRace; set => characterRace = value; }
         public CapabilityConsumerProcessor CapabilityConsumerProcessor { get => capabilityConsumerProcessor; }
@@ -70,6 +71,8 @@ namespace AnyRPG {
             characterCreatorManager = systemGameManager.CharacterCreatorManager;
             uIManager = systemGameManager.UIManager;
             levelManager = systemGameManager.LevelManager;
+
+            equipmentManager = new EquipmentManager(systemGameManager);
         }
 
         public void ClearData() {
@@ -296,7 +299,7 @@ namespace AnyRPG {
         public void UpdateEquipmentList() {
             //Debug.Log("NameGameManager.UpdateEquipmentList()");
 
-            equipmentList.Clear();
+            equipmentManager.ClearEquipmentList();
 
             // testing - the new game manager should ignore special UnitProfile equipment that is only meant for NPCs
             // commented out the following code : 
@@ -314,40 +317,52 @@ namespace AnyRPG {
 
             if (characterRace != null) {
                 foreach (Equipment equipment in characterRace.EquipmentList) {
+                    /*
                     if (equipmentList.ContainsKey(equipment.EquipmentSlotType)) {
                         equipmentList[equipment.EquipmentSlotType] = equipment;
                     } else {
                         equipmentList.Add(equipment.EquipmentSlotType, equipment);
                     }
+                    */
+                    equipmentManager.EquipEquipment(equipment);
                 }
             }
 
             if (systemConfigurationManager.NewGameClass == true && characterClass != null) {
                 foreach (Equipment equipment in characterClass.EquipmentList) {
+                    /*
                     if (equipmentList.ContainsKey(equipment.EquipmentSlotType)) {
                         equipmentList[equipment.EquipmentSlotType] = equipment;
                     } else {
                         equipmentList.Add(equipment.EquipmentSlotType, equipment);
                     }
+                    */
+                    equipmentManager.EquipEquipment(equipment);
                 }
                 if (systemConfigurationManager.NewGameSpecialization == true && classSpecialization != null) {
                     foreach (Equipment equipment in classSpecialization.EquipmentList) {
+                        /*
                         if (equipmentList.ContainsKey(equipment.EquipmentSlotType)) {
                             equipmentList[equipment.EquipmentSlotType] = equipment;
                         } else {
                             equipmentList.Add(equipment.EquipmentSlotType, equipment);
                         }
+                        */
+                        equipmentManager.EquipEquipment(equipment);
                     }
                 }
             }
 
             if (systemConfigurationManager.NewGameFaction == true && faction != null) {
                 foreach (Equipment equipment in faction.EquipmentList) {
+                    /*
                     if (equipmentList.ContainsKey(equipment.EquipmentSlotType)) {
                         equipmentList[equipment.EquipmentSlotType] = equipment;
                     } else {
                         equipmentList.Add(equipment.EquipmentSlotType, equipment);
                     }
+                    */
+                    equipmentManager.EquipEquipment(equipment);
                 }
             }
 
@@ -371,12 +386,12 @@ namespace AnyRPG {
         }
 
         public void SaveEquipmentData() {
-            if (equipmentList == null) {
+            if (equipmentManager.CurrentEquipment == null) {
                 // nothing to save
                 return;
             }
             saveData.equipmentSaveData = new List<EquipmentSaveData>();
-            foreach (Equipment equipment in equipmentList.Values) {
+            foreach (Equipment equipment in equipmentManager.CurrentEquipment.Values) {
                 EquipmentSaveData tmpSaveData = new EquipmentSaveData();
                 tmpSaveData.EquipmentName = (equipment == null ? string.Empty : equipment.ResourceName);
                 tmpSaveData.DisplayName = (equipment == null ? string.Empty : equipment.DisplayName);

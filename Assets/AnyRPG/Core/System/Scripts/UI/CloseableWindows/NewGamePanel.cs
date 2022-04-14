@@ -536,10 +536,12 @@ namespace AnyRPG {
                 // equip equipment in list but not yet equipped
                 if (newGameManager.EquipmentList != null) {
                     //Debug.Log("NewGameCharacterPanelController.EquipCharacter(): equipment list is not null");
-                    foreach (Equipment equipment in newGameManager.EquipmentList.Values) {
+                    foreach (EquipmentSlotProfile equipmentSlotProfile in newGameManager.EquipmentList.Keys) {
                         //Debug.Log("NewGameCharacterPanelController.EquipCharacter(): ask to equip: " + equipment.DisplayName);
-                        if (!characterEquipmentManager.CurrentEquipment.ContainsValue(equipment)) {
-                            characterEquipmentManager.Equip(equipment, null, false, false, false);
+                        if (characterEquipmentManager.CurrentEquipment.ContainsKey(equipmentSlotProfile) == false
+                            || characterEquipmentManager.CurrentEquipment[equipmentSlotProfile] == null
+                            || characterEquipmentManager.CurrentEquipment[equipmentSlotProfile] != newGameManager.EquipmentList[equipmentSlotProfile]) {
+                            characterEquipmentManager.Equip(newGameManager.EquipmentList[equipmentSlotProfile], equipmentSlotProfile, false, false, false);
                             changes++;
                         }
                     }
