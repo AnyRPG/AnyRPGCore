@@ -11,7 +11,7 @@ namespace AnyRPG {
 
         public List<BaseAbility> baseAbilities = new List<BaseAbility>();
 
-        [MenuItem("Tools/AnyRPG/Wizard/Convert Ability Wizard")]
+        //[MenuItem("Tools/AnyRPG/Wizard/Convert Ability Wizard")]
         public static void CreateWizard() {
             ScriptableWizard.DisplayWizard<ConvertAbilityWizard>("New Convert Ability Wizard", "Convert");
         }
