@@ -65,10 +65,9 @@ namespace AnyRPG {
         }
 
         void OnEnable() {
-            systemConfigurationManager = GameObject.FindObjectOfType<SystemConfigurationManager>();
-            if (systemConfigurationManager != null) {
-                gameName = systemConfigurationManager.GameName;
-            }
+
+            systemConfigurationManager = WizardUtilities.GetSystemConfigurationManager();
+            gameName = WizardUtilities.GetGameName(systemConfigurationManager);
         }
 
         void OnWizardCreate() {
