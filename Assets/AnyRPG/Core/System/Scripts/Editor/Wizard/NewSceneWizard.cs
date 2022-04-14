@@ -319,8 +319,8 @@ namespace AnyRPG {
                 existingScene = EditorGUILayout.ObjectField("Existing Scene", existingScene, typeof(SceneAsset), false) as SceneAsset;
             }
 
-            newSceneAmbientSounds = EditorGUILayout.ObjectField("First Scene Ambient Sounds", newSceneAmbientSounds, typeof(AudioClip), false) as AudioClip;
-            newSceneMusic = EditorGUILayout.ObjectField("First Scene Music", newSceneMusic, typeof(AudioClip), false) as AudioClip;
+            newSceneAmbientSounds = EditorGUILayout.ObjectField("New Scene Ambient Sounds", newSceneAmbientSounds, typeof(AudioClip), false) as AudioClip;
+            newSceneMusic = EditorGUILayout.ObjectField("New Scene Music", newSceneMusic, typeof(AudioClip), false) as AudioClip;
 
             return true;
         }
