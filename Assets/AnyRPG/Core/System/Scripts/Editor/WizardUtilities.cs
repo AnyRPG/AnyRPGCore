@@ -51,12 +51,22 @@ namespace AnyRPG {
         }
 
         public static SystemConfigurationManager GetSystemConfigurationManager() {
+
             SystemConfigurationManager systemConfigurationManager = GetSceneSystemConfigurationManager();
+
+            // this next check is to ensure we don't accidentally edit the base game manager prefab and affect all games in this Unity project
+            // we only want to edit the game manager prefab variant for the current game
             if (systemConfigurationManager == null) {
                 SceneConfig sceneConfig = GameObject.FindObjectOfType<SceneConfig>();
                 if (sceneConfig != null) {
+                    // if no system configuration manager was in the scene, but we did find a sceneConfig, then we already have a direct reference to the
+                    // correct prefab variant on disk through the sceneConfig.  In this case, we can return it directly
                     systemConfigurationManager = sceneConfig.systemConfigurationManager;
                 }
+            } else {
+                // if we did find a system configuration manager in the scene, we have a reference to the scene version of it, not the prefab variant on disk
+                // in this case we need to get the prefab variant on disk
+                systemConfigurationManager = PrefabUtility.GetCorrespondingObjectFromSource<SystemConfigurationManager>(systemConfigurationManager);
             }
 
             return systemConfigurationManager;
@@ -64,6 +74,20 @@ namespace AnyRPG {
 
         public static SystemConfigurationManager GetSceneSystemConfigurationManager() {
             return GameObject.FindObjectOfType<SystemConfigurationManager>();
+        }
+
+        public static bool CheckFileExists(string partialFilePath, string messageString) {
+
+            string templateAssetPath = "Assets" + partialFilePath;
+            string templateFileSystemPath = Application.dataPath + partialFilePath;
+
+            if (System.IO.File.Exists(templateFileSystemPath) == false) {
+                WizardUtilities.ShowError("Missing " + messageString + " at " + templateAssetPath + ".  Aborting...");
+                return false;
+            }
+
+            return true;
+
         }
 
 

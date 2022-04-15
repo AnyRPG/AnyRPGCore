@@ -10,7 +10,8 @@ using UnityEditor.SceneManagement;
 namespace AnyRPG {
     public class NewCharacterWizard : ScriptableWizard {
 
-        private const string defaultUnitPrefabPath = "/AnyRPG/Core/System/Prefabs/Character/Unit/DefaultCharacterUnit.prefab";
+        private const string pathToDefaultCharacterUnitPrefab = "/AnyRPG/Core/System/Prefabs/Character/Unit/DefaultCharacterUnit.prefab";
+        private const string pathToUnitSpawnNodeTemplate = "/AnyRPG/Core/Templates/Prefabs/UnitSpawner/UnitSpawnNode.prefab";
         private const string defaultFootstepLoop = "Default Footstep Loop";
         
         // the height above the highest transform in the unit the nameplate will be set to
@@ -24,7 +25,7 @@ namespace AnyRPG {
         private SystemConfigurationManager systemConfigurationManager = null;
 
         // Will be a subfolder of Application.dataPath and should start with "/"
-        private const string newGameParentFolder = "/Games/";
+        private const string gameParentFolder = "/Games/";
 
         // the character model will be searched for bones with this name to try to auto-configure the head bone
         private string[] defaultHeadBones = { "Head", "head" };
@@ -33,14 +34,19 @@ namespace AnyRPG {
         private string fileSystemGameName = string.Empty;
 
         // the used asset path for the Unit Profile
-        private string scriptableObjectPath = string.Empty;
+        private string scriptableObjectAssetPath = string.Empty;
 
         // the unit prefab to be used
-        private GameObject unitPrefab = null;
+        //private GameObject unitPrefab = null;
 
         // user modified variables
         [Header("Game")]
         public string gameName = string.Empty;
+
+        [Header("Spawn")]
+
+        [Tooltip("Create a unit spawn node that can be placed in a scene to spawn this character.  Useful for NPCs")]
+        public bool createUnitSpawnNode = false;
 
         [Header("Character")]
 
@@ -74,12 +80,15 @@ namespace AnyRPG {
 
             EditorUtility.DisplayProgressBar("New Character Wizard", "Checking parameters...", 0.1f);
 
-            SetUnitPrefab();
+            // check for presence of template prefabs and resources
+            if (CheckFilesExist() == false) {
+                return;
+            }
 
             EditorUtility.DisplayProgressBar("New Character Wizard", "Creating Resources Subfolder...", 0.2f);
             // Create root game folder
-            string newGameFolder = GetNewGameFolder();
-            string resourcesFolder = newGameFolder + "/Resources/" + fileSystemGameName + "/UnitProfile";
+            string gameFileSystemFolder = GetGameFileSystemFolder();
+            string resourcesFolder = gameFileSystemFolder + "/Resources/" + fileSystemGameName + "/UnitProfile";
 
             // create resources folder
             WizardUtilities.CreateFolderIfNotExists(resourcesFolder);
@@ -97,6 +106,7 @@ namespace AnyRPG {
             asset.UseInlinePrefabProps = true;
 
             // setup unit prefab properties
+            GameObject unitPrefab = AssetDatabase.LoadAssetAtPath<GameObject>("Assets" + pathToDefaultCharacterUnitPrefab);
             asset.UnitPrefabProps.UnitPrefab = unitPrefab;
             asset.UnitPrefabProps.ModelPrefab = characterModel;
             asset.UnitPrefabProps.RotateModel = true;
@@ -119,40 +129,63 @@ namespace AnyRPG {
 
             EditorUtility.DisplayProgressBar("New Character Wizard", "Saving Unit Profile...", 0.5f);
 
-            scriptableObjectPath = "Assets" + newGameParentFolder + fileSystemGameName + "/Resources/" + fileSystemGameName + "/UnitProfile/" + GetFileSystemCharactername(characterName) + "Unit.asset";
-            AssetDatabase.CreateAsset(asset, scriptableObjectPath);
+            scriptableObjectAssetPath = "Assets" + gameParentFolder + fileSystemGameName + "/Resources/" + fileSystemGameName + "/UnitProfile/" + WizardUtilities.GetScriptableObjectFileSystemName(characterName) + "Unit.asset";
+            AssetDatabase.CreateAsset(asset, scriptableObjectAssetPath);
 
             AssetDatabase.Refresh();
 
+            // set default player in SystemConfigurationManager
             EditorUtility.DisplayProgressBar("New Character Wizard", "Checking Default Player Unit Setting...", 0.6f);
             if (setAsDefaultPlayerCharacter == true && systemConfigurationManager != null) {
-                
-                // this next check is to ensure we don't accidentally edit the base game manager prefab and affect all games in this Unity project
-                // we only want to edit the game manager prefab variant for the current game
-                // if this is required in more than one wizard, it would be better to move this to the WizardUtilities.GetSystemConfigurationManager() call
-                if (WizardUtilities.GetSceneSystemConfigurationManager() == null) {
-                    // if no system configuration manager was in the scene, then we already have a direct reference to the
-                    // correct prefab variant on disk through the sceneConfig.  In this case, we can edit it directly
-                    systemConfigurationManager.DefaultPlayerUnitProfileName = characterName;
-                    EditorUtility.SetDirty(systemConfigurationManager);
-                    AssetDatabase.SaveAssets();
-                    AssetDatabase.Refresh();
-                } else {
-                    // if we did find a system configuration manager in the scene, we have a reference to the scene version of it, not the prefab variant on disk
-                    // in this case we need to get the prefab variant on disk
-                    SystemConfigurationManager diskSystemConfigurationManager = PrefabUtility.GetCorrespondingObjectFromSource<SystemConfigurationManager>(systemConfigurationManager);
-                    if (diskSystemConfigurationManager != null) {
-                        diskSystemConfigurationManager.DefaultPlayerUnitProfileName = characterName;
-                        EditorUtility.SetDirty(diskSystemConfigurationManager);
+
+                systemConfigurationManager.DefaultPlayerUnitProfileName = characterName;
+                EditorUtility.SetDirty(systemConfigurationManager);
+                AssetDatabase.SaveAssets();
+                AssetDatabase.Refresh();
+            }
+
+            // create unit spawn node
+            EditorUtility.DisplayProgressBar("New Character Wizard", "Optionally creating unit spawn node...", 0.7f);
+            if (createUnitSpawnNode == true) {
+                // create unit spawn node prefab folder
+                string unitSpawnNodeFileSystemFolder = gameFileSystemFolder + "/Prefab/UnitSpawnNode";
+                WizardUtilities.CreateFolderIfNotExists(unitSpawnNodeFileSystemFolder);
+
+                string unitSpawnNodeAssetPath = "Assets" + gameParentFolder + fileSystemGameName + "/Prefab/UnitSpawnNode/" + WizardUtilities.GetScriptableObjectFileSystemName(characterName) + "UnitSpawnNode.prefab";
+                AssetDatabase.CopyAsset("Assets" + pathToUnitSpawnNodeTemplate, unitSpawnNodeAssetPath);
+                GameObject unitSpawnNodePrefab = (GameObject)AssetDatabase.LoadMainAssetAtPath(unitSpawnNodeAssetPath);
+                if (unitSpawnNodePrefab != null) {
+                    UnitSpawnNode unitSpawnNode = unitSpawnNodePrefab.GetComponent<UnitSpawnNode>();
+                    if (unitSpawnNode != null) {
+                        unitSpawnNode.UnitProfileNames = new List<string>() { characterName };
+                        
+                        EditorUtility.SetDirty(unitSpawnNode);
                         AssetDatabase.SaveAssets();
                         AssetDatabase.Refresh();
                     }
                 }
             }
 
-            EditorUtility.ClearProgressBar();
-            EditorUtility.DisplayDialog("New Character Wizard", "New Character Wizard Complete! The character UnitProfile can be found at " + scriptableObjectPath, "OK");
 
+
+            EditorUtility.ClearProgressBar();
+            EditorUtility.DisplayDialog("New Character Wizard", "New Character Wizard Complete! The character UnitProfile can be found at " + scriptableObjectAssetPath, "OK");
+
+        }
+
+        private bool CheckFilesExist() {
+
+            // Check for presence of unit spawn node template
+            if (WizardUtilities.CheckFileExists(pathToUnitSpawnNodeTemplate, "Unit Spawn Node Template") == false) {
+                return false;
+            }
+
+            // Check for presence of default character unit prefab
+            if (WizardUtilities.CheckFileExists(pathToDefaultCharacterUnitPrefab, "Default Character Unit Prefab") == false) {
+                return false;
+            }
+
+            return true;
         }
 
         void OnWizardUpdate() {
@@ -161,7 +194,6 @@ namespace AnyRPG {
             MakeFileSystemGameName();
             SetDefaultCharacterName();
             SetDefaultHeadBone();
-            SetUnitPrefab();
             CheckHighestPoint();
 
             errorString = Validate();
@@ -178,20 +210,8 @@ namespace AnyRPG {
                         highestY = childTransforms[i].position.y - characterModel.transform.position.y;
                     }
                 }
-                Debug.Log("Highest transform Y value in model : " + highestY);
+                //Debug.Log("Highest transform Y value in model : " + highestY);
                 highestYTransform = highestY;
-            }
-        }
-
-        private void SetUnitPrefab() {
-            //Debug.Log("NewCharacterWizard.SetUnitPrefab()");
-            if (unitPrefab == null) {
-                string unitPrefabFilePath = Application.dataPath + defaultUnitPrefabPath;
-                if (System.IO.File.Exists(unitPrefabFilePath)) {
-                    unitPrefab = AssetDatabase.LoadAssetAtPath<GameObject>("Assets" + defaultUnitPrefabPath);
-                } else {
-                    Debug.Log("Could not find unit prefab at " + unitPrefabFilePath);
-                }
             }
         }
 
@@ -215,15 +235,12 @@ namespace AnyRPG {
         }
 
         private void MakeFileSystemGameName() {
-            fileSystemGameName = gameName.Replace(" ", "");
+            fileSystemGameName = WizardUtilities.GetFileSystemGameName(gameName);
         }
 
-        private string GetFileSystemCharactername(string characterName) {
-            return characterName.Replace(" ", "");
-        }
 
-        string GetNewGameFolder() {
-            return Application.dataPath + newGameParentFolder + fileSystemGameName;
+        string GetGameFileSystemFolder() {
+            return Application.dataPath + gameParentFolder + fileSystemGameName;
         }
 
         string Validate() {
@@ -234,9 +251,9 @@ namespace AnyRPG {
             }
            
             // check for game folder existing
-            string newGameFolder = GetNewGameFolder();
-            if (System.IO.Directory.Exists(newGameFolder) == false) {
-                return "The folder " + newGameFolder + "does not exist.  Please run the new game wizard first to create the game folder structure";
+            string gameFileSystemFolder = GetGameFileSystemFolder();
+            if (System.IO.Directory.Exists(gameFileSystemFolder) == false) {
+                return "The folder " + gameFileSystemFolder + "does not exist.  Please run the new game wizard first to create the game folder structure";
             }
 
             // check for animator on model

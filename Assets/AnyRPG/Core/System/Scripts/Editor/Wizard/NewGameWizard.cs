@@ -114,7 +114,7 @@ namespace AnyRPG {
             }
 
             // check that the templates used by the new scene wizard exist
-            if (NewSceneWizard.CheckRequiredTemplatesExist(fileSystemGameName) == false) {
+            if (NewSceneWizard.CheckRequiredTemplatesExist() == false) {
                 return;
             }
 
@@ -306,90 +306,76 @@ namespace AnyRPG {
         private bool CheckFilesExist() {
 
             // Check for presence of GameManager prefab
-            if (CheckFileExists(pathToGameManagerPrefab, "GameManager prefab") == false) {
+            if (WizardUtilities.CheckFileExists(pathToGameManagerPrefab, "GameManager prefab") == false) {
                 return false;
             }
 
             // Check for presence of SceneConfig prefab
-            if (CheckFileExists(pathToSceneConfigPrefab, "SceneConfig prefab") == false) {
+            if (WizardUtilities.CheckFileExists(pathToSceneConfigPrefab, "SceneConfig prefab") == false) {
                 return false;
             }
 
             // check for presence of the UMA GLIB prefab
-            if (CheckFileExists(pathToUMAGLIBPrefab, "UMA GLIB Prefab") == false) {
+            if (WizardUtilities.CheckFileExists(pathToUMAGLIBPrefab, "UMA GLIB Prefab") == false) {
                 return false;
             }
 
             // check for presence of default effects template
-            if (CheckFileExists(pathToSystemAbilitiesTemplate, "Default System Effects Template") == false) {
+            if (WizardUtilities.CheckFileExists(pathToSystemAbilitiesTemplate, "Default System Effects Template") == false) {
                 return false;
             }
 
             // check for presence of health power resource template
-            if (CheckFileExists(pathToHealthPowerResourceTemplate, "Health Power Resource Template") == false) {
+            if (WizardUtilities.CheckFileExists(pathToHealthPowerResourceTemplate, "Health Power Resource Template") == false) {
                 return false;
             }
 
             // check for presence of health power resource template
-            if (CheckFileExists(pathToAttackAbilityTemplate, "Attack Ability Template") == false) {
+            if (WizardUtilities.CheckFileExists(pathToAttackAbilityTemplate, "Attack Ability Template") == false) {
                 return false;
             }
 
             // check for presence of default player units template
-            if (CheckFileExists(pathToPlayerUnitsTemplate, "Default Player Units Template") == false) {
+            if (WizardUtilities.CheckFileExists(pathToPlayerUnitsTemplate, "Default Player Units Template") == false) {
                 return false;
             }
 
             // check for presence of the gold currency group template
-            if (CheckFileExists(pathToGoldCurrencyGroupTemplate, "Gold Currency Group Template") == false) {
+            if (WizardUtilities.CheckFileExists(pathToGoldCurrencyGroupTemplate, "Gold Currency Group Template") == false) {
                 return false;
             }
 
             // check for presence of the armor classes template
-            if (CheckFileExists(pathToArmorClassesTemplate, "Armor Classes Template") == false) {
+            if (WizardUtilities.CheckFileExists(pathToArmorClassesTemplate, "Armor Classes Template") == false) {
                 return false;
             }
 
             // check for presence of the item qualities template
-            if (CheckFileExists(pathToItemQualitiesTemplate, "Item Qualities Template") == false) {
+            if (WizardUtilities.CheckFileExists(pathToItemQualitiesTemplate, "Item Qualities Template") == false) {
                 return false;
             }
 
             // check for presence of the power resources template
-            if (CheckFileExists(pathToPowerResourcesTemplate, "Power Resources Template") == false) {
+            if (WizardUtilities.CheckFileExists(pathToPowerResourcesTemplate, "Power Resources Template") == false) {
                 return false;
             }
 
             // check for presence of the character stats template
-            if (CheckFileExists(pathToCharacterStatsTemplate, "Character Stats Template") == false) {
+            if (WizardUtilities.CheckFileExists(pathToCharacterStatsTemplate, "Character Stats Template") == false) {
                 return false;
             }
 
             // check for presence of the unit toughnesses template
-            if (CheckFileExists(pathToUnitToughnessesTemplate, "Unit Toughnesses Template") == false) {
+            if (WizardUtilities.CheckFileExists(pathToUnitToughnessesTemplate, "Unit Toughnesses Template") == false) {
                 return false;
             }
 
             // check for presence of the weapon skills template
-            if (CheckFileExists(pathToWeaponSkillsTemplate, "Weapon Skills Template") == false) {
+            if (WizardUtilities.CheckFileExists(pathToWeaponSkillsTemplate, "Weapon Skills Template") == false) {
                 return false;
             }
 
             return true;
-        }
-
-        private bool CheckFileExists(string partialFilePath, string messageString) {
-
-            string templateAssetPath = "Assets" + partialFilePath;
-            string templateFileSystemPath = Application.dataPath + partialFilePath;
-
-            if (System.IO.File.Exists(templateFileSystemPath) == false) {
-                WizardUtilities.ShowError("Missing " + messageString + " at " + templateAssetPath + ".  Aborting...");
-                return false;
-            }
-
-            return true;
-
         }
 
         private void ConfigureMainMenuScriptableObjects(string fileSystemGameName) {

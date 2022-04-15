@@ -51,7 +51,7 @@ namespace AnyRPG {
             string fileSystemGameName = WizardUtilities.GetFileSystemGameName(gameName);
 
             // Check for presence of weapon handle prefab template
-            if (CheckWeaponHandlePrefabTemplateExists(fileSystemGameName) == false) {
+            if (WizardUtilities.CheckFileExists(weaponHandleTemplatePath, "Weapon Handle Prefab Template") == false) {
                 return;
             }
 
@@ -60,18 +60,6 @@ namespace AnyRPG {
             EditorUtility.ClearProgressBar();
             EditorUtility.DisplayDialog("New Weapon Wizard", "New Weapon Wizard Complete! The handle prefab can be found at " + newWeaponHandleAssetPath, "OK");
 
-        }
-
-        private static bool CheckWeaponHandlePrefabTemplateExists(string fileSystemGameName) {
-
-            string templateAssetPath = "Assets" + weaponHandleTemplatePath;
-            string templateFileSystemPath = Application.dataPath + weaponHandleTemplatePath;
-            if (System.IO.File.Exists(templateFileSystemPath) == false) {
-                WizardUtilities.ShowError("Missing Weapon Handle Prefab Template at " + templateAssetPath + ".  Aborting...");
-                return false;
-            }
-
-            return true;
         }
 
         public string CreateWeaponHandle(string gameName, string weaponName, GameObject weaponPrefab, Sprite icon) {

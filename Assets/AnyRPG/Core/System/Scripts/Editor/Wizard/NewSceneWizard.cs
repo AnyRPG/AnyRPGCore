@@ -49,15 +49,14 @@ namespace AnyRPG {
             string fileSystemGameName = WizardUtilities.GetFileSystemGameName(gameName);
 
             // check that templates exist
-            if (CheckRequiredTemplatesExist(fileSystemGameName) == false) {
+            if (CheckRequiredTemplatesExist() == false) {
                 return;
             }
 
             // Check for presence of sceneconfig prefab
-            if (CheckSceneConfigPrefabExists(fileSystemGameName) == false) {
+            if (WizardUtilities.CheckFileExists(gameParentFolder + fileSystemGameName + "/Prefab/GameManager/" + fileSystemGameName + "SceneConfig.prefab", "SceneConfig prefab") == false) {
                 return;
             }
-
 
             string newSceneAssetPath = CreateScene(gameName, sceneName, copyExistingScene, existingScene, newSceneAmbientSounds, newSceneMusic);
 
@@ -66,58 +65,20 @@ namespace AnyRPG {
 
         }
 
-        public static bool CheckRequiredTemplatesExist(string fileSystemGameName) {
+        public static bool CheckRequiredTemplatesExist() {
 
             // Check for presence of scene template
-            if (CheckSceneTemplateExists() == false) {
+            if (WizardUtilities.CheckFileExists(sceneTemplatePath, "scene template") == false) {
                 return false;
             }
 
             // Check for presence of portal template
-            if (CheckPortalTemplateExists() == false) {
+            if (WizardUtilities.CheckFileExists(portalTemplatePath, "portal template") == false) {
                 return false;
             }
 
             return true;
         }
-
-        private static bool CheckSceneConfigPrefabExists(string fileSystemGameName) {
-
-            string sceneConfigPrefabAssetPath = "Assets" + gameParentFolder + fileSystemGameName + "/Prefab/GameManager/" + fileSystemGameName + "SceneConfig.prefab";
-            string scenConfigPrefabFileSystemPath = Application.dataPath + gameParentFolder + fileSystemGameName + "/Prefab/GameManager/" + fileSystemGameName + "SceneConfig.prefab";
-            if (System.IO.File.Exists(scenConfigPrefabFileSystemPath) == false) {
-                WizardUtilities.ShowError("Missing SceneConfig prefab at " + sceneConfigPrefabAssetPath + ".  Aborting...");
-                return false;
-            }
-
-            return true;
-        }
-
-        private static bool CheckSceneTemplateExists() {
-
-            string sceneTemplateAssetPath = "Assets" + sceneTemplatePath;
-            string sceneTemplateFileSystemPath = Application.dataPath + sceneTemplatePath;
-
-            if (System.IO.File.Exists(sceneTemplateFileSystemPath) == false) {
-                WizardUtilities.ShowError("Missing scene template at " + sceneTemplateAssetPath + ".  Aborting...");
-                return false;
-            }
-            return true;
-        }
-
-        private static bool CheckPortalTemplateExists() {
-
-            string portalTemplateAssetPath = "Assets" + portalTemplatePath;
-            string portalTemplateFileSystemPath = Application.dataPath + portalTemplatePath;
-
-            if (System.IO.File.Exists(portalTemplateFileSystemPath) == false) {
-                WizardUtilities.ShowError("Missing portal template at " + portalTemplateAssetPath + ".  Aborting...");
-                return false;
-            }
-
-            return true;
-        }
-
 
         public static string CreateScene(string gameName, string sceneName, bool copyExistingScene, SceneAsset existingScene, AudioClip newSceneAmbientSounds, AudioClip newSceneMusic) {
 
