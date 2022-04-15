@@ -34,6 +34,6 @@ MonoBehaviour:
       useUniversalAttachment: 1
       attachmentName: Right Hand
     abilityObjectList:
-    - holdableObjectName: Medieval Arrow
+    - holdableObjectName: Medieval Arrow Projectile
       useUniversalAttachment: 1
       attachmentName: Right Hand

@@ -22,6 +22,7 @@ MonoBehaviour:
   optionalOverride: 0
   weaponSkillProps:
     defaultWeaponSkill: 0
+    attackSpeed: 2
     defaultHitEffects:
     - Arrow Projectile
     onHitEffects: []
@@ -30,6 +31,6 @@ MonoBehaviour:
     - Arrow Hit
     abilityAnimationObjectList: []
     abilityObjectList:
-    - holdableObjectName: Medieval Arrow
+    - holdableObjectName: Medieval Arrow Projectile
       useUniversalAttachment: 1
       attachmentName: Right Hand
