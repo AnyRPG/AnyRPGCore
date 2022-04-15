@@ -1,4 +1,7 @@
 ﻿using AnyRPG;
+using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
 using UnityEditor;
 using UnityEngine;
 
@@ -9,7 +12,7 @@ namespace AnyRPG {
             return gameName.Replace(" ", "");
         }
 
-        public static string GetGameFolder(string gameParentFolder, string fileSystemGameName) {
+        public static string GetGameFileSystemFolder(string gameParentFolder, string fileSystemGameName) {
             return Application.dataPath + gameParentFolder + fileSystemGameName;
         }
 
@@ -39,6 +42,44 @@ namespace AnyRPG {
 
         public static void ShowError(string message) {
             EditorUtility.DisplayDialog("Error", message, "OK");
+        }
+
+        public static string GetGameParentFolder(SystemConfigurationManager systemConfigurationManager, string gameName) {
+            string gameParentFolder = "/Games/";
+            string fileSystemGameName = GetFileSystemGameName(gameName);
+            string assetPath = AssetDatabase.GetAssetPath(systemConfigurationManager);
+
+            Debug.Log("SystemConfigurationManager path is " + assetPath);
+
+            string[] pathParts = assetPath.Split('/');
+            bool foundGameFolder = false;
+            int gameFolderIndex = 0;
+
+            // remove Assets from beginning of path
+            if (pathParts[0] == "Assets") {
+                pathParts = pathParts.Skip(1).ToArray();
+            }
+
+            // start at the end of the path and work downward until the game name is found
+            for (int i = pathParts.Length - 1; i > 0; i--) {
+                if (pathParts[i] == fileSystemGameName) {
+                    gameFolderIndex = i;
+                    foundGameFolder = true;
+                    break;
+                }
+            }
+
+            // if the game name was found, reconstruct the path with the parent folder of the game name being the final element
+            if (foundGameFolder == true) {
+                gameParentFolder = "/";
+                for (int i = 0; i < gameFolderIndex; i++) {
+                    gameParentFolder = gameParentFolder + pathParts[i] + "/";
+                }
+            }
+
+            Debug.Log("Game parent folder is " + gameParentFolder);
+
+            return gameParentFolder;
         }
 
         public static string GetGameName(SystemConfigurationManager systemConfigurationManager) {

@@ -11,7 +11,7 @@ namespace AnyRPG {
         SystemConfigurationManager systemConfigurationManager = null;
 
         // Will be a subfolder of Application.dataPath and should start with "/"
-        private const string gameParentFolder = "/Games/";
+        private string gameParentFolder = "/Games/";
 
         // path to weapon handle prefab template
         private const string weaponHandleTemplatePath = "/AnyRPG/Core/Templates/Prefabs/WeaponHandle/WeaponHandleTemplate.prefab";
@@ -42,6 +42,7 @@ namespace AnyRPG {
 
             systemConfigurationManager = WizardUtilities.GetSystemConfigurationManager();
             gameName = WizardUtilities.GetGameName(systemConfigurationManager);
+            gameParentFolder = WizardUtilities.GetGameParentFolder(systemConfigurationManager, gameName);
         }
 
         void OnWizardCreate() {
@@ -67,7 +68,7 @@ namespace AnyRPG {
             string fileSystemGameName = WizardUtilities.GetFileSystemGameName(gameName);
 
             // Determine root game folder
-            string gameFileSystemFolder = WizardUtilities.GetGameFolder(gameParentFolder, fileSystemGameName);
+            string gameFileSystemFolder = WizardUtilities.GetGameFileSystemFolder(gameParentFolder, fileSystemGameName);
 
             // create resources folders if they doesn't already exist
             EditorUtility.DisplayProgressBar("New Weapon Wizard", "Create Resources Folders If Necessary...", 0.2f);
@@ -229,7 +230,7 @@ namespace AnyRPG {
             }
 
             // check for game folder existing
-            string newGameFolder = WizardUtilities.GetGameFolder(gameParentFolder, fileSystemGameName);
+            string newGameFolder = WizardUtilities.GetGameFileSystemFolder(gameParentFolder, fileSystemGameName);
             if (System.IO.Directory.Exists(newGameFolder) == false) {
                 return "The folder " + newGameFolder + "does not exist.  Please run the new game wizard first to create the game folder structure";
             }

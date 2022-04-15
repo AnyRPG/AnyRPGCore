@@ -25,7 +25,7 @@ namespace AnyRPG {
         private SystemConfigurationManager systemConfigurationManager = null;
 
         // Will be a subfolder of Application.dataPath and should start with "/"
-        private const string gameParentFolder = "/Games/";
+        private string gameParentFolder = "/Games/";
 
         // the character model will be searched for bones with this name to try to auto-configure the head bone
         private string[] defaultHeadBones = { "Head", "head" };
@@ -85,6 +85,7 @@ namespace AnyRPG {
 
             systemConfigurationManager = WizardUtilities.GetSystemConfigurationManager();
             gameName = WizardUtilities.GetGameName(systemConfigurationManager);
+            gameParentFolder = WizardUtilities.GetGameParentFolder(systemConfigurationManager, gameName);
         }
 
         void OnWizardCreate() {
@@ -98,7 +99,7 @@ namespace AnyRPG {
 
             EditorUtility.DisplayProgressBar("New Character Wizard", "Creating Resources Subfolder...", 0.2f);
             // Create root game folder
-            string gameFileSystemFolder = GetGameFileSystemFolder();
+            string gameFileSystemFolder = WizardUtilities.GetGameFileSystemFolder(gameParentFolder, fileSystemGameName);
             string resourcesFolder = gameFileSystemFolder + "/Resources/" + fileSystemGameName + "/UnitProfile";
 
             // create resources folder
@@ -204,7 +205,7 @@ namespace AnyRPG {
         void OnWizardUpdate() {
             helpString = "Creates a new character unit profile";
 
-            MakeFileSystemGameName();
+            fileSystemGameName = WizardUtilities.GetFileSystemGameName(gameName);
             SetDefaultCharacterName();
             SetDefaultHeadBone();
             CheckHighestPoint();
@@ -247,15 +248,6 @@ namespace AnyRPG {
             
         }
 
-        private void MakeFileSystemGameName() {
-            fileSystemGameName = WizardUtilities.GetFileSystemGameName(gameName);
-        }
-
-
-        string GetGameFileSystemFolder() {
-            return Application.dataPath + gameParentFolder + fileSystemGameName;
-        }
-
         string Validate() {
 
             // check for empty game name
@@ -264,7 +256,7 @@ namespace AnyRPG {
             }
            
             // check for game folder existing
-            string gameFileSystemFolder = GetGameFileSystemFolder();
+            string gameFileSystemFolder = WizardUtilities.GetGameFileSystemFolder(gameParentFolder, fileSystemGameName);
             if (System.IO.Directory.Exists(gameFileSystemFolder) == false) {
                 return "The folder " + gameFileSystemFolder + "does not exist.  Please run the new game wizard first to create the game folder structure";
             }

@@ -239,7 +239,7 @@ namespace AnyRPG {
             ConfigureMainMenuScriptableObjects(fileSystemGameName);
 
             // create first scene
-            NewSceneWizard.CreateScene(gameName, firstSceneName, copyExistingScene, existingScene, firstSceneAmbientSounds, firstSceneMusic);
+            NewSceneWizard.CreateScene(newGameParentFolder, gameName, firstSceneName, copyExistingScene, existingScene, firstSceneAmbientSounds, firstSceneMusic);
 
             AssetDatabase.Refresh();
 

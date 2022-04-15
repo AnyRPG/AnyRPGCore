@@ -11,7 +11,7 @@ namespace AnyRPG {
     public class MiniMapWizard : ScriptableWizard {
 
         // Will be a subfolder of Application.dataPath and should start with "/"
-        private const string newGameParentFolder = "/Games/";
+        private string gameParentFolder = "/Games/";
         private const string imagesFolder = "Images/MiniMap";
 
         private const string wizardTitle = "Minimap Wizard";
@@ -34,6 +34,7 @@ namespace AnyRPG {
 
             SystemConfigurationManager systemConfigurationManager = WizardUtilities.GetSystemConfigurationManager();
             gameName = WizardUtilities.GetGameName(systemConfigurationManager);
+            gameParentFolder = WizardUtilities.GetGameParentFolder(systemConfigurationManager, gameName);
         }
 
         void OnWizardCreate() {
@@ -45,13 +46,13 @@ namespace AnyRPG {
             EditorUtility.DisplayProgressBar(wizardTitle, "Creating folders...", 0.2f);
 
             // Setup folder locations
-            string newGameFolder = GetNewGameFolder();
-            string newGameImagesFolder = newGameFolder + "/" + imagesFolder;
+            string fileSystemGameFolder = WizardUtilities.GetGameFileSystemFolder(gameParentFolder, fileSystemGameName);
+            string gameImagesFolder = fileSystemGameFolder + "/" + imagesFolder;
 
             // create missing folders
-            WizardUtilities.CreateFolderIfNotExists(Application.dataPath + newGameParentFolder);
-            WizardUtilities.CreateFolderIfNotExists(newGameFolder);
-            WizardUtilities.CreateFolderIfNotExists(newGameImagesFolder);
+            WizardUtilities.CreateFolderIfNotExists(Application.dataPath + gameParentFolder);
+            WizardUtilities.CreateFolderIfNotExists(fileSystemGameFolder);
+            WizardUtilities.CreateFolderIfNotExists(gameImagesFolder);
 
             AssetDatabase.Refresh();
 
@@ -66,7 +67,7 @@ namespace AnyRPG {
             camera.clearFlags = cameraClearFlags;
             camera.backgroundColor = backgroundColor;
             miniMapGeneratorController.mapCamera = camera;
-            miniMapGeneratorController.minimapTextureFolder = newGameImagesFolder;
+            miniMapGeneratorController.minimapTextureFolder = gameImagesFolder;
             miniMapGeneratorController.pixelsPerMeter = pixelsPerMeter;
             CreateMiniMapTextures(miniMapGeneratorController);
 
@@ -77,7 +78,7 @@ namespace AnyRPG {
             UnityEngine.Object.DestroyImmediate(minimapGenerator);
 
             EditorUtility.ClearProgressBar();
-            EditorUtility.DisplayDialog(wizardTitle, wizardTitle +" Complete! The minimap image can be found at " + newGameImagesFolder, "OK");
+            EditorUtility.DisplayDialog(wizardTitle, wizardTitle +" Complete! The minimap image can be found at " + gameImagesFolder, "OK");
 
         }
 
@@ -101,10 +102,6 @@ namespace AnyRPG {
             fileSystemGameName = WizardUtilities.GetFileSystemGameName(gameName);
             errorString = Validate();
             isValid = (errorString == null || errorString == "");
-        }
-
-        string GetNewGameFolder() {
-            return Application.dataPath + newGameParentFolder + fileSystemGameName;
         }
 
         string Validate() {

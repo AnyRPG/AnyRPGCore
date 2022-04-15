@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 465101417523237418}
   - component: {fileID: 3592611170303860111}
   - component: {fileID: 1603127100919720261}
+  - component: {fileID: -1737284459100886736}
   m_Layer: 0
   m_Name: trough_wood
   m_TagString: Untagged
@@ -81,3 +82,16 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!65 &-1737284459100886736
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 954639885282609296}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 3.6, y: 0.41185725, z: 0.7999991}
+  m_Center: {x: 0.000000059604645, y: 0.20592862, z: 0}

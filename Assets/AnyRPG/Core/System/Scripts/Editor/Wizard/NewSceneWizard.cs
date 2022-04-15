@@ -12,7 +12,7 @@ namespace AnyRPG {
     public class NewSceneWizard : ScriptableWizard {
 
         // Will be a subfolder of Application.dataPath and should start with "/"
-        private const string gameParentFolder = "/Games/";
+        private string gameParentFolder = "/Games/";
 
         // user modified variables
         [Header("Game")]
@@ -39,7 +39,7 @@ namespace AnyRPG {
         void OnEnable() {
             SystemConfigurationManager systemConfigurationManager = WizardUtilities.GetSystemConfigurationManager();
             gameName = WizardUtilities.GetGameName(systemConfigurationManager);
-
+            gameParentFolder = WizardUtilities.GetGameParentFolder(systemConfigurationManager, gameName);
         }
 
         void OnWizardCreate() {
@@ -58,7 +58,7 @@ namespace AnyRPG {
                 return;
             }
 
-            string newSceneAssetPath = CreateScene(gameName, sceneName, copyExistingScene, existingScene, newSceneAmbientSounds, newSceneMusic);
+            string newSceneAssetPath = CreateScene(gameParentFolder, gameName, sceneName, copyExistingScene, existingScene, newSceneAmbientSounds, newSceneMusic);
 
             EditorUtility.ClearProgressBar();
             EditorUtility.DisplayDialog("New Scene Wizard", "New Scene Wizard Complete! The scene can be found at " + newSceneAssetPath, "OK");
@@ -80,13 +80,13 @@ namespace AnyRPG {
             return true;
         }
 
-        public static string CreateScene(string gameName, string sceneName, bool copyExistingScene, SceneAsset existingScene, AudioClip newSceneAmbientSounds, AudioClip newSceneMusic) {
+        public static string CreateScene(string gameParentFolder, string gameName, string sceneName, bool copyExistingScene, SceneAsset existingScene, AudioClip newSceneAmbientSounds, AudioClip newSceneMusic) {
 
             string fileSystemGameName = WizardUtilities.GetFileSystemGameName(gameName);
             string fileSystemSceneName = WizardUtilities.GetFilesystemSceneName(sceneName);
 
             // Determine root game folder
-            string gameFileSystemFolder = WizardUtilities.GetGameFolder(gameParentFolder, fileSystemGameName);
+            string gameFileSystemFolder = WizardUtilities.GetGameFileSystemFolder(gameParentFolder, fileSystemGameName);
 
             // create resources folder if one doesn't already exist
             EditorUtility.DisplayProgressBar("New Scene Wizard", "Create Resource Folder If Necessary...", 0.5f);
@@ -133,18 +133,18 @@ namespace AnyRPG {
 
             // creating portal
             EditorUtility.DisplayProgressBar("New Scene Wizard", "Creating Portal...", 0.98f);
-            CreatePortal(gameName, sceneName, fileSystemGameName, fileSystemSceneName);
+            CreatePortal(gameParentFolder, gameName, sceneName, fileSystemGameName, fileSystemSceneName);
 
             // create scenenode and audio profiles
             EditorUtility.DisplayProgressBar("New Scene Wizard", "Configuring Scene...", 0.99f);
-            ConfigureSceneScriptableObjects(sceneName, fileSystemGameName, fileSystemSceneName, newSceneAmbientSounds, newSceneMusic);
+            ConfigureSceneScriptableObjects(gameParentFolder, sceneName, fileSystemGameName, fileSystemSceneName, newSceneAmbientSounds, newSceneMusic);
 
             AssetDatabase.Refresh();
 
             return newSceneAssetPath;
         }
 
-        public static void CreatePortal(string gameName, string sceneName, string fileSystemGameName, string fileSystemSceneName) {
+        public static void CreatePortal(string gameParentFolder, string gameName, string sceneName, string fileSystemGameName, string fileSystemSceneName) {
             
             string destinationPartialPath = gameParentFolder + fileSystemGameName + "/Prefab/Portal/" + fileSystemSceneName + "StonePortal.prefab";
             string destinationAssetpath = "Assets" + destinationPartialPath;
@@ -178,7 +178,7 @@ namespace AnyRPG {
 
         }
 
-        private static void ConfigureSceneScriptableObjects(string sceneName, string fileSystemGameName, string fileSystemSceneName, AudioClip newSceneAmbientSounds, AudioClip newSceneMusic) {
+        private static void ConfigureSceneScriptableObjects(string gameParentFolder, string sceneName, string fileSystemGameName, string fileSystemSceneName, AudioClip newSceneAmbientSounds, AudioClip newSceneMusic) {
 
             // create ambient audio profile
             if (newSceneAmbientSounds != null) {
@@ -232,7 +232,7 @@ namespace AnyRPG {
             }
 
             // check for game folder existing
-            string newGameFolder = WizardUtilities.GetGameFolder(gameParentFolder, fileSystemGameName);
+            string newGameFolder = WizardUtilities.GetGameFileSystemFolder(gameParentFolder, fileSystemGameName);
             if (System.IO.Directory.Exists(newGameFolder) == false) {
                 return "The folder " + newGameFolder + "does not exist.  Please run the new game wizard first to create the game folder structure";
             }
