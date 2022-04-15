@@ -51,7 +51,7 @@ namespace AnyRPG {
         }
 
         public static SystemConfigurationManager GetSystemConfigurationManager() {
-            SystemConfigurationManager systemConfigurationManager = GameObject.FindObjectOfType<SystemConfigurationManager>();
+            SystemConfigurationManager systemConfigurationManager = GetSceneSystemConfigurationManager();
             if (systemConfigurationManager == null) {
                 SceneConfig sceneConfig = GameObject.FindObjectOfType<SceneConfig>();
                 if (sceneConfig != null) {
@@ -60,6 +60,10 @@ namespace AnyRPG {
             }
 
             return systemConfigurationManager;
+        }
+
+        public static SystemConfigurationManager GetSceneSystemConfigurationManager() {
+            return GameObject.FindObjectOfType<SystemConfigurationManager>();
         }
 
 

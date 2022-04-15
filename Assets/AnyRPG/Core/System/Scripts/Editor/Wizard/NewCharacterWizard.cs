@@ -126,25 +126,27 @@ namespace AnyRPG {
 
             EditorUtility.DisplayProgressBar("New Character Wizard", "Checking Default Player Unit Setting...", 0.6f);
             if (setAsDefaultPlayerCharacter == true && systemConfigurationManager != null) {
-                SystemConfigurationManager diskSystemConfigurationManager = PrefabUtility.GetCorrespondingObjectFromSource<SystemConfigurationManager>(systemConfigurationManager);
-                if (diskSystemConfigurationManager != null) {
-                    diskSystemConfigurationManager.DefaultPlayerUnitProfileName = characterName;
-                    EditorUtility.SetDirty(diskSystemConfigurationManager);
+                
+                // this next check is to ensure we don't accidentally edit the base game manager prefab and affect all games in this Unity project
+                // we only want to edit the game manager prefab variant for the current game
+                // if this is required in more than one wizard, it would be better to move this to the WizardUtilities.GetSystemConfigurationManager() call
+                if (WizardUtilities.GetSceneSystemConfigurationManager() == null) {
+                    // if no system configuration manager was in the scene, then we already have a direct reference to the
+                    // correct prefab variant on disk through the sceneConfig.  In this case, we can edit it directly
+                    systemConfigurationManager.DefaultPlayerUnitProfileName = characterName;
+                    EditorUtility.SetDirty(systemConfigurationManager);
                     AssetDatabase.SaveAssets();
                     AssetDatabase.Refresh();
-
-                    // this next bit is due to a unity bug? where scene objects are not reimported when modified through script
-                    /*
-                    Object realGO = PrefabUtility.GetCorrespondingObjectFromSource(systemConfigurationManager);
-                    string selectedPath = AssetDatabase.GetAssetPath(realGO);
-                    Debug.Log(selectedPath);
-                    AssetDatabase.ImportAsset(selectedPath);
-                    */
-
-                    //EditorApplication.RepaintHierarchyWindow();
-                    //SceneManager.UnloadSceneAsync(SceneManager.GetActiveScene().buildIndex);
-                    //Resources.UnloadUnusedAssets();
-                    //SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex, LoadSceneMode.Single);
+                } else {
+                    // if we did find a system configuration manager in the scene, we have a reference to the scene version of it, not the prefab variant on disk
+                    // in this case we need to get the prefab variant on disk
+                    SystemConfigurationManager diskSystemConfigurationManager = PrefabUtility.GetCorrespondingObjectFromSource<SystemConfigurationManager>(systemConfigurationManager);
+                    if (diskSystemConfigurationManager != null) {
+                        diskSystemConfigurationManager.DefaultPlayerUnitProfileName = characterName;
+                        EditorUtility.SetDirty(diskSystemConfigurationManager);
+                        AssetDatabase.SaveAssets();
+                        AssetDatabase.Refresh();
+                    }
                 }
             }
 
