@@ -43,24 +43,35 @@ namespace AnyRPG {
         [Header("Game")]
         public string gameName = string.Empty;
 
-        [Header("Spawn")]
+        [Header("Options")]
 
         [Tooltip("Create a unit spawn node that can be placed in a scene to spawn this character.  Useful for NPCs")]
         public bool createUnitSpawnNode = false;
 
-        [Header("Character")]
-
         [Tooltip("If true, this character will be the default player character for the specified game")]
         public bool setAsDefaultPlayerCharacter = false;
 
-        [Tooltip("Separate from the player name, this is the name of the unit profile that will be shown in lists of unit profiles the player can choose from")]
-        public string characterName = string.Empty;
+        [Header("Prefab")]
 
         [Tooltip("The prefab with an animator attached that will be used as the character model")]
         public GameObject characterModel = null;
 
         [Tooltip("The head bone to be used for unit frame snapshots")]
         public string headBone = string.Empty;
+
+        [Tooltip("Defines the attachment points for weapons. For non UMA characters, manually ensure that the HipAttachments, SpineAttachments, etc prefabs have been attached to the bones of the model.")]
+        [ResourceSelector(resourceType = typeof(AttachmentProfile))]
+        public string attachmentProfile = string.Empty;
+
+        [Header("Details")]
+
+        [Tooltip("Separate from the player name, this is the name of the unit profile that will be shown in lists of unit profiles the player can choose from")]
+        public string characterName = string.Empty;
+
+        [Tooltip("The image shown on the character button when selecting this character from the new game menu")]
+        public Sprite portraitImage = null;
+
+        [Header("Animation")]
 
         [Tooltip("If the character is not a humanoid, animations should be set here")]
         public AnimationProps animations = new AnimationProps();
@@ -101,6 +112,7 @@ namespace AnyRPG {
             EditorUtility.DisplayProgressBar("New Character Wizard", "Configuring Unit Profile...", 0.4f);
             // setup unit profile properties
             asset.ResourceName = characterName;
+            asset.Icon = portraitImage;
             asset.CharacterName = characterName;
             asset.AutomaticPrefabProfile = false;
             asset.UseInlinePrefabProps = true;
@@ -111,6 +123,7 @@ namespace AnyRPG {
             asset.UnitPrefabProps.ModelPrefab = characterModel;
             asset.UnitPrefabProps.RotateModel = true;
             asset.UnitPrefabProps.UseInlineAnimationProps = true;
+            asset.UnitPrefabProps.AttachmentProfileName = attachmentProfile;
 
             // setup animation properties
             asset.UnitPrefabProps.AnimationProps = animations;

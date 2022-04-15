@@ -43,7 +43,7 @@ MonoBehaviour:
     - equipmentSlotProfileName: Main Hand
       holdableObjectName: Basic Silver Axe
       useUniversalAttachment: 1
-      primaryAttachmentName: One Hand Axe Sheathed
+      primaryAttachmentName: Main Hand Axe Sheathed
       unsheathedAttachmentName: Right Hand
   useArmorModifier: 0
   useManualArmor: 0

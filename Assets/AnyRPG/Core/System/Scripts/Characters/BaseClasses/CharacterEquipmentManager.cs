@@ -65,7 +65,7 @@ namespace AnyRPG {
         /// meant to be called by SetUnitProfile since it relies on that for the equipment list
         /// </summary>
         public void LoadDefaultEquipment(bool loadProviderEquipment) {
-            //Debug.Log(baseCharacter.gameObject.name + ".CharacterEquipmentManager.LoadDefaultEquipment(" + loadProviderEquipment + ")");
+            Debug.Log(baseCharacter.gameObject.name + ".CharacterEquipmentManager.LoadDefaultEquipment(" + loadProviderEquipment + ")");
 
             if (baseCharacter?.UnitProfile?.EquipmentList == null) {
                 return;
@@ -74,14 +74,14 @@ namespace AnyRPG {
             // testing skip this if loadProviderEquipment is set to false to allow new game panel to work
             // since new game panel already sets up the equipment
             // monitor to see if it breaks anything else
-            if (loadProviderEquipment == true) {
+            //if (loadProviderEquipment == true) {
                 // load the unit profile equipment
                 foreach (Equipment equipment in baseCharacter.UnitProfile.EquipmentList) {
                     if (equipment != null) {
                         Equip(equipment, null, false, false, false);
                     }
                 }
-            }
+            //}
 
             if (loadProviderEquipment == false || baseCharacter.UnitProfile.UseProviderEquipment == false) {
                 return;

@@ -43,7 +43,7 @@ MonoBehaviour:
     - equipmentSlotProfileName: Main Hand
       holdableObjectName: Basic Gold Mace
       useUniversalAttachment: 1
-      primaryAttachmentName: One Hand Mace Sheathed
+      primaryAttachmentName: Main Hand Mace Sheathed
       unsheathedAttachmentName: Right Hand
   useArmorModifier: 0
   useManualArmor: 0

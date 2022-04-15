@@ -43,7 +43,7 @@ MonoBehaviour:
     - equipmentSlotProfileName: Main Hand
       holdableObjectName: Basic Silver Sabre
       useUniversalAttachment: 1
-      primaryAttachmentName: One Hand Sword Sheathed
+      primaryAttachmentName: Main Hand Sword Sheathed
       unsheathedAttachmentName: Right Hand
   useArmorModifier: 0
   useManualArmor: 0
