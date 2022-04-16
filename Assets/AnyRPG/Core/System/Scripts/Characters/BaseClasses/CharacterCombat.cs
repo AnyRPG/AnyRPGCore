@@ -583,6 +583,8 @@ namespace AnyRPG {
             AbilityEffectContext usedAbilityEffectContext = null;
             if (BaseCharacter?.UnitController?.UnitAnimator?.CurrentAbilityEffectContext != null) {
                 usedAbilityEffectContext = BaseCharacter?.UnitController?.UnitAnimator?.CurrentAbilityEffectContext.GetCopy();
+            } else {
+                return false;
             }
 
             //BaseAbilityProperties animatorCurrentAbility = null;
@@ -603,17 +605,6 @@ namespace AnyRPG {
                 /*
                 if (!attackLanded) {
                     return false;
-                }
-                */
-
-                // moved to attack effect for archer compatibility (not doing hit sound when arrow launches)
-                /*
-                if (animatorCurrentAbility != null) {
-                    AudioClip audioClip = animatorCurrentAbility.GetHitSound(baseCharacter);
-                    if (audioClip != null) {
-                        baseCharacter.UnitController.UnitComponentController.PlayEffect(audioClip);
-                    }
-                    //audioManager.PlayEffect(overrideHitSoundEffect);
                 }
                 */
 
