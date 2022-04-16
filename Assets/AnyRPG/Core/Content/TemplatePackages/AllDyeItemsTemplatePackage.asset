@@ -1,0 +1,36 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6c9b51b8d3aa844448aaeab0a989e2fa, type: 3}
+  m_Name: AllDyeItemsTemplatePackage
+  m_EditorClassIdentifier: 
+  resourceName: All Dye Items
+  displayName: 
+  icon: {fileID: 0}
+  iconBackgroundImage: {fileID: 0}
+  description: 
+  useRegionalDescription: 0
+  resourceDescriptionProfile: 
+  optionalOverride: 0
+  resources:
+  - {fileID: 11400000, guid: caf5a605059188b4b834201c7679468e, type: 2}
+  prefabs: []
+  dependencies:
+  - {fileID: 11400000, guid: ea759c7a28e0af34f939c90ec401d5d9, type: 2}
+  - {fileID: 11400000, guid: 10cd6e1a47d1a3f42b412425ddfcea1e, type: 2}
+  - {fileID: 11400000, guid: b59b438fe53468b48ad45c10442a1b9e, type: 2}
+  - {fileID: 11400000, guid: 400d437691fdfd648ab09f84c7c50f58, type: 2}
+  - {fileID: 11400000, guid: 7fc31cc2f4a2be147a5bd6ea66bf47af, type: 2}
+  - {fileID: 11400000, guid: f821d3a0ff81b2543a11c93883f82758, type: 2}
+  - {fileID: 11400000, guid: 8cad5645ce34b82449ae87c1dc7258f6, type: 2}
+  - {fileID: 11400000, guid: f2488ee9ecbba2c4b90ccc36e80be7b2, type: 2}
+  - {fileID: 11400000, guid: efc7fe0210cfd8240a14f72c7eab9dc2, type: 2}
+  - {fileID: 11400000, guid: 380aaec6737bfd84989876eba76e813c, type: 2}

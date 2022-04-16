@@ -176,6 +176,10 @@ namespace AnyRPG {
 
         [Header("Movement")]
 
+        [Tooltip("If true, this unit will turn to face any target that interacts with it")]
+        [SerializeField]
+        private bool faceInteractionTarget = true;
+
         [Tooltip("If false, the unit will not have the Nav Mesh Agent enabled, and gravity will be disabled.")]
         [SerializeField]
         private bool isMobile = true;
@@ -366,6 +370,7 @@ namespace AnyRPG {
         public bool UseInlinePrefabProps { get => useInlinePrefabProps; set => useInlinePrefabProps = value; }
         public bool AutomaticPrefabProfile { get => automaticPrefabProfile; set => automaticPrefabProfile = value; }
         public List<string> MovementAudioProfileNames { get => movementAudioProfileNames; set => movementAudioProfileNames = value; }
+        public bool FaceInteractionTarget { get => faceInteractionTarget; set => faceInteractionTarget = value; }
 
         public override void SetGameManagerReferences() {
             base.SetGameManagerReferences();

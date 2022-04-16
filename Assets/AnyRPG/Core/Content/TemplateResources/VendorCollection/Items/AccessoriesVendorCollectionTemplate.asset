@@ -25,27 +25,3 @@ MonoBehaviour:
     quantity: 0
     unlimited: 1
     itemQualityName: 
-  - itemName: Blue Necklace
-    quantity: 0
-    unlimited: 1
-    itemQualityName: 
-  - itemName: Cyan Necklace
-    quantity: 0
-    unlimited: 1
-    itemQualityName: 
-  - itemName: Green Necklace
-    quantity: 0
-    unlimited: 1
-    itemQualityName: 
-  - itemName: Red Necklace
-    quantity: 0
-    unlimited: 1
-    itemQualityName: 
-  - itemName: Violet Necklace
-    quantity: 0
-    unlimited: 1
-    itemQualityName: 
-  - itemName: Yellow Necklace
-    quantity: 0
-    unlimited: 1
-    itemQualityName: 

@@ -10,9 +10,9 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: a03ad32ca7dbbb749878a79ae4cb1937, type: 3}
-  m_Name: AlchemyItemsVendorCollection
+  m_Name: NecklacesVendorCollectionTemplate
   m_EditorClassIdentifier: 
-  resourceName: Alchemy Items
+  resourceName: Necklaces
   displayName: 
   icon: {fileID: 0}
   iconBackgroundImage: {fileID: 0}
@@ -21,43 +21,27 @@ MonoBehaviour:
   resourceDescriptionProfile: 
   optionalOverride: 0
   vendorItems:
-  - itemName: Blue Dye
+  - itemName: Blue Necklace
     quantity: 0
     unlimited: 1
     itemQualityName: 
-  - itemName: Brown Dye
+  - itemName: Cyan Necklace
     quantity: 0
     unlimited: 1
     itemQualityName: 
-  - itemName: Cyan Dye
+  - itemName: Green Necklace
     quantity: 0
     unlimited: 1
     itemQualityName: 
-  - itemName: Gray Dye
+  - itemName: Red Necklace
     quantity: 0
     unlimited: 1
     itemQualityName: 
-  - itemName: Green Dye
+  - itemName: Violet Necklace
     quantity: 0
     unlimited: 1
     itemQualityName: 
-  - itemName: Orange Dye
-    quantity: 0
-    unlimited: 1
-    itemQualityName: 
-  - itemName: Red Dye
-    quantity: 0
-    unlimited: 1
-    itemQualityName: 
-  - itemName: Violet Dye
-    quantity: 0
-    unlimited: 1
-    itemQualityName: 
-  - itemName: White Dye
-    quantity: 0
-    unlimited: 1
-    itemQualityName: 
-  - itemName: Yellow Dye
+  - itemName: Yellow Necklace
     quantity: 0
     unlimited: 1
     itemQualityName: 

@@ -40,9 +40,11 @@ namespace AnyRPG {
         [SerializeField]
         private UnitControllerMode unitControllerMode = UnitControllerMode.AI;
 
+        /*
         [Tooltip("If true, this unit will turn to face any target that interacts with it")]
         [SerializeField]
-        private bool faceInteractionTarget = false;
+        private bool faceInteractionTarget = true;
+        */
 
         [Header("Patrol")]
 
@@ -461,10 +463,10 @@ namespace AnyRPG {
             bool returnValue = base.Interact(source, processRangeCheck);
 
             if (returnValue == true
-                && faceInteractionTarget == true
+                && unitProfile?.FaceInteractionTarget == true
                 && source == playerManager.UnitController.CharacterUnit
                 && characterUnit.BaseCharacter.CharacterStats.IsAlive == true
-                && Faction.RelationWith(source.BaseCharacter, characterUnit.BaseCharacter) >= 0
+                && Faction.RelationWith(source.BaseCharacter, characterUnit.BaseCharacter) >= 0f
                 && unitControllerMode == UnitControllerMode.AI) {
                 unitMotor.FaceTarget(source.Interactable);
             }

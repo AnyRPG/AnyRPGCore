@@ -234,5 +234,5 @@ MonoBehaviour:
         prerequisiteConditions: []
         vendorCollectionNames:
         - Alchemy Supplies
-        - Alchemy Items
+        - Dyes
         - Potions

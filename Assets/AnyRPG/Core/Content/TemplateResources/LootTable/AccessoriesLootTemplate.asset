@@ -29,12 +29,6 @@ MonoBehaviour:
     uniqueLimit: 0
     ignoreGlobalDropLimit: 0
     loot:
-    - itemName: Leather Necklace
-      dropChance: 10
-      minDrops: 1
-      maxDrops: 1
-      matchItemRestrictions: 0
-      prerequisiteConditions: []
     - itemName: Cape
       dropChance: 10
       minDrops: 1

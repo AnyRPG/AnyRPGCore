@@ -162,6 +162,7 @@ MonoBehaviour:
   powerResources: []
   useProviderEquipment: 0
   equipmentNameList: []
+  faceInteractionTarget: 1
   isMobile: 1
   playOnFootstep: 0
   movementAudioProfileNames:
@@ -244,4 +245,3 @@ MonoBehaviour:
         - Herbalism Items
         - Medieval Weapons
         - Special Items
-        - Legendary Plate Armor

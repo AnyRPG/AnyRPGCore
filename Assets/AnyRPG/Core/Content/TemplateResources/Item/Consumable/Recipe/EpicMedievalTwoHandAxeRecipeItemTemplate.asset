@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   resourceName: Epic Medieval Two Hand Axe Recipe
   displayName: 
-  icon: {fileID: 21300000, guid: 842bb693f9459e4489f0b1a4b1e34c72, type: 3}
+  icon: {fileID: 21300000, guid: 66b1ec3cf546e7c4cbc5ba00e5493024, type: 3}
   iconBackgroundImage: {fileID: 0}
   description: 
   useRegionalDescription: 0
