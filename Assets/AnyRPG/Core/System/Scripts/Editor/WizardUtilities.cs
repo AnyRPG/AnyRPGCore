@@ -49,7 +49,7 @@ namespace AnyRPG {
             string fileSystemGameName = GetFileSystemGameName(gameName);
             string assetPath = AssetDatabase.GetAssetPath(systemConfigurationManager);
 
-            Debug.Log("SystemConfigurationManager path is " + assetPath);
+            //Debug.Log("SystemConfigurationManager path is " + assetPath);
 
             string[] pathParts = assetPath.Split('/');
             bool foundGameFolder = false;
@@ -77,7 +77,7 @@ namespace AnyRPG {
                 }
             }
 
-            Debug.Log("Game parent folder is " + gameParentFolder);
+            //Debug.Log("Game parent folder is " + gameParentFolder);
 
             return gameParentFolder;
         }
