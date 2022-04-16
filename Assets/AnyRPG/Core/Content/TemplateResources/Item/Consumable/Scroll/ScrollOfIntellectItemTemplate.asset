@@ -16,7 +16,7 @@ MonoBehaviour:
   displayName: 
   icon: {fileID: 21300000, guid: 8e49062596d58c248b0983541939fbc8, type: 3}
   iconBackgroundImage: {fileID: 0}
-  description: Increase intellect
+  description: 
   useRegionalDescription: 0
   resourceDescriptionProfile: 
   optionalOverride: 0
@@ -34,6 +34,7 @@ MonoBehaviour:
   basePrice: 0
   uniqueItem: 0
   characterClassRequirementList: []
+  toolTip: Increase intellect
   coolDown: 10
   actionType: 2
   actionName: 

@@ -16,7 +16,7 @@ MonoBehaviour:
   displayName: 
   icon: {fileID: 21300000, guid: b9b073dfd483381479642a8b1f8e17a1, type: 3}
   iconBackgroundImage: {fileID: 0}
-  description: Increase strength
+  description: 
   useRegionalDescription: 0
   resourceDescriptionProfile: 
   optionalOverride: 0
@@ -34,6 +34,7 @@ MonoBehaviour:
   basePrice: 0
   uniqueItem: 0
   characterClassRequirementList: []
+  toolTip: Increase strength
   coolDown: 10
   actionType: 2
   actionName: 

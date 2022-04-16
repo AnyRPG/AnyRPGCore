@@ -16,7 +16,7 @@ MonoBehaviour:
   displayName: 
   icon: {fileID: 21300000, guid: 6cc22b95065a0ff42bd0684cf540ae62, type: 3}
   iconBackgroundImage: {fileID: 0}
-  description: A raw fish
+  description: smells fishy
   useRegionalDescription: 0
   resourceDescriptionProfile: 
   optionalOverride: 0
@@ -34,6 +34,7 @@ MonoBehaviour:
   basePrice: 0
   uniqueItem: 0
   characterClassRequirementList: []
+  toolTip: Restore 125 health per second
   consumptionVerb: 0
   holdableObjectList:
   - holdableObjectName: Edible Fish

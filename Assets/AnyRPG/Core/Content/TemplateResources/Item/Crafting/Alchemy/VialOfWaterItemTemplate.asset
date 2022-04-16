@@ -16,7 +16,7 @@ MonoBehaviour:
   displayName: 
   icon: {fileID: 21300000, guid: e7fca717212056143ad0369d4a7f5653, type: 3}
   iconBackgroundImage: {fileID: 0}
-  description: A vial of distilled spring water.
+  description: A vial of distilled spring water
   useRegionalDescription: 0
   resourceDescriptionProfile: 
   optionalOverride: 0

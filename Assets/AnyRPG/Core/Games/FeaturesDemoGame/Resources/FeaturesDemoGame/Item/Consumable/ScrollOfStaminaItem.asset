@@ -16,7 +16,7 @@ MonoBehaviour:
   displayName: 
   icon: {fileID: 21300000, guid: 4b2b9a0d854d0d14ba8da2ea08cabf9c, type: 3}
   iconBackgroundImage: {fileID: 0}
-  description: Increase stamina
+  description: 
   useRegionalDescription: 0
   resourceDescriptionProfile: 
   optionalOverride: 0
@@ -34,6 +34,7 @@ MonoBehaviour:
   basePrice: 0
   uniqueItem: 0
   characterClassRequirementList: []
+  toolTip: Increase stamina
   coolDown: 10
   actionType: 2
   actionName: 

@@ -335,7 +335,7 @@ namespace AnyRPG {
                 }
             }
 
-            return base.GetDescription(usedItemQuality) + "\n" + string.Join("\n", summaryLines);
+            return base.GetDescription(usedItemQuality) + "\n\n" + string.Join("\n", summaryLines);
         }
 
         public override void SetupScriptableObjects(SystemGameManager systemGameManager) {

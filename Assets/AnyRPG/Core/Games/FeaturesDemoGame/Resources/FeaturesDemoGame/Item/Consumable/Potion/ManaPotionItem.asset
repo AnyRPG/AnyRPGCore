@@ -16,7 +16,7 @@ MonoBehaviour:
   displayName: 
   icon: {fileID: 21300000, guid: b6b03e9078f931e42b29350ef4a82837, type: 3}
   iconBackgroundImage: {fileID: 0}
-  description: Restore 1000 mana
+  description: drink me
   useRegionalDescription: 0
   resourceDescriptionProfile: 
   optionalOverride: 0
@@ -34,6 +34,7 @@ MonoBehaviour:
   basePrice: 0
   uniqueItem: 0
   characterClassRequirementList: []
+  toolTip: Restore 1000 mana
   coolDown: 10
   actionType: 2
   actionName: 

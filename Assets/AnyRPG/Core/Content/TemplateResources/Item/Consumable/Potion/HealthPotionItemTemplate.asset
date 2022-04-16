@@ -16,7 +16,7 @@ MonoBehaviour:
   displayName: 
   icon: {fileID: 21300000, guid: f1fc90d7c9a2e4e4b9b01e8adf44a814, type: 3}
   iconBackgroundImage: {fileID: 0}
-  description: Restore 1000 health
+  description: drink me
   useRegionalDescription: 0
   resourceDescriptionProfile: 
   optionalOverride: 0
@@ -34,6 +34,7 @@ MonoBehaviour:
   basePrice: 0
   uniqueItem: 0
   characterClassRequirementList: []
+  toolTip: Restore 1000 health
   coolDown: 10
   actionType: 2
   actionName: 

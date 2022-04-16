@@ -16,7 +16,7 @@ MonoBehaviour:
   displayName: 
   icon: {fileID: 21300000, guid: b41e4a6b8071ba44db4afc9f3fba11b4, type: 3}
   iconBackgroundImage: {fileID: 0}
-  description: restore 125 health per second for 6 seconds
+  description: fully cooked
   useRegionalDescription: 0
   resourceDescriptionProfile: 
   optionalOverride: 0
@@ -34,6 +34,7 @@ MonoBehaviour:
   basePrice: 0
   uniqueItem: 0
   characterClassRequirementList: []
+  toolTip: Restore 125 health per second for 6 seconds
   consumptionVerb: 0
   holdableObjectList:
   - holdableObjectName: Edible Sausage
