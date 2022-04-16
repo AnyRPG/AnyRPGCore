@@ -98,18 +98,20 @@ namespace AnyRPG {
         }
 
         public string GetShortDescription() {
-            return describableData.GetDescription();
+            return describableData.GetSummary();
         }
 
+        /*
         public virtual string GetName() {
             return string.Format("<color=yellow>{0}</color>", DisplayName);
         }
-
-        public virtual string GetDescription() {
-            return string.Format("{0}\n{1}", GetName(), GetSummary());
-        }
+        */
 
         public virtual string GetSummary() {
+            return string.Format("{0}", describableData.GetSummary());
+        }
+
+        public virtual string GetDescription() {
             return string.Format("{0}", describableData.GetDescription());
         }
 

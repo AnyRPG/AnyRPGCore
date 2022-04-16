@@ -47,12 +47,12 @@ namespace AnyRPG {
             uIManager = systemGameManager.UIManager;
         }
 
-        public string GetDescription() {
+        public string GetSummary() {
             // cyan
-            return string.Format("<color=#00FFFF>{0}</color>\n{1}", optionName, GetSummary());
+            return string.Format("<color=#00FFFF>{0}</color>\n{1}", optionName, GetDescription());
         }
 
-        public string GetSummary() {
+        public string GetDescription() {
             return description;
         }
 

@@ -118,7 +118,7 @@ namespace AnyRPG {
             }
 
             // show new price
-            toolTipText.text = describable.GetDescription();
+            toolTipText.text = describable.GetSummary();
             if (toolTipCurrencyBarController != null) {
                 toolTipCurrencyBarController.ClearCurrencyAmounts();
                 if (describable is Item && showSellPrice != string.Empty) {

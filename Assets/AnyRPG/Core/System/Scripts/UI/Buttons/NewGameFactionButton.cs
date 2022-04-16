@@ -38,7 +38,7 @@ namespace AnyRPG {
             icon.color = Color.white;
             factionName.text = faction.DisplayName;
             //description.text = this.faction.GetSummary();
-            description.text = faction.GetSummary();
+            description.text = faction.GetDescription();
 
         }
 

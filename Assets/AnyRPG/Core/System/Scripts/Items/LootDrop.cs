@@ -65,11 +65,11 @@ namespace AnyRPG {
 
         }
 
-        public virtual string GetDescription() {
+        public virtual string GetSummary() {
             return string.Empty;
         }
 
-        public virtual string GetSummary() {
+        public virtual string GetDescription() {
             return string.Empty;
         }
     }
@@ -88,7 +88,7 @@ namespace AnyRPG {
 
         public override string DisplayName {
             get {
-                return GetDescription();
+                return GetSummary();
             }
         }
 
@@ -131,9 +131,9 @@ namespace AnyRPG {
             summary = keyValuePair.Value;
         }
 
-        public override string GetDescription() {
+        public override string GetSummary() {
             //Debug.Log("LootableDrop.GetDescription()");
-            return GetSummary();
+            return GetDescription();
         }
 
         protected override bool ProcessTakeLoot() {
@@ -150,7 +150,7 @@ namespace AnyRPG {
             return true;
         }
 
-        public override string GetSummary() {
+        public override string GetDescription() {
             //Debug.Log("LootableDrop.GetSummary()");
             return summary;
         }
@@ -238,18 +238,18 @@ namespace AnyRPG {
             }
         }
 
-        public override string GetDescription() {
-            if (Item != null) {
-                return Item.GetDescription();
-            }
-            return base.GetDescription();
-        }
-
         public override string GetSummary() {
             if (Item != null) {
                 return Item.GetSummary();
             }
             return base.GetSummary();
+        }
+
+        public override string GetDescription() {
+            if (Item != null) {
+                return Item.GetDescription();
+            }
+            return base.GetDescription();
         }
     }
 

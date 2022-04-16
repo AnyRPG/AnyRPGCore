@@ -406,7 +406,7 @@ namespace AnyRPG {
             return "unavailable";
         }
 
-        public override string GetSummary() {
+        public override string GetDescription() {
             //return string.Format("{0}\n{1} Points", description, baseExperienceReward);
             return string.Format("{0}", description);
         }

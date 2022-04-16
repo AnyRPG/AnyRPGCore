@@ -288,8 +288,8 @@ namespace AnyRPG {
 
         }
 
-        public override string GetSummary() {
-            string returnString = base.GetSummary();
+        public override string GetDescription() {
+            string returnString = base.GetDescription();
             return returnString;
 
         }

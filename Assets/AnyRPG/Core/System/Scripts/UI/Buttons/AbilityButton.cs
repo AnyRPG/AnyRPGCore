@@ -39,7 +39,7 @@ namespace AnyRPG {
             icon.sprite = ability.Icon;
             icon.color = Color.white;
             spellName.text = ability.DisplayName;
-            description.text = ability.GetSummary();
+            description.text = ability.GetDescription();
             description.text = ability.GetShortDescription();
         }
 

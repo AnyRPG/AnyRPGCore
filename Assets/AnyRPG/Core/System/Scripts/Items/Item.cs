@@ -369,7 +369,7 @@ namespace AnyRPG {
             return string.Format("<color={0}>{1}</color>\n{2}", QualityColor.GetQualityColorString(usedItemQuality), DisplayName, GetSummary(usedItemQuality));
         }
 
-        public override string GetDescription() {
+        public override string GetSummary() {
             //Debug.Log(DisplayName + ".Item.GetDescription()");
             return GetDescription(realItemQuality);
         }
@@ -391,7 +391,7 @@ namespace AnyRPG {
             return string.Format("{0}", summaryString);
         }
 
-        public override string GetSummary() {
+        public override string GetDescription() {
             //Debug.Log(MyDisplayName + ".Item.GetSummary()");
             return GetSummary(realItemQuality);
         }

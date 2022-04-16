@@ -16,7 +16,7 @@ namespace AnyRPG {
             playerManager = systemGameManager.PlayerManager;
         }
 
-        public override string GetSummary() {
+        public override string GetDescription() {
             return string.Format("Current Amount: {0}", playerManager.MyCharacter.CharacterCurrencyManager.GetCurrencyAmount(this));
             //return string.Format("{0}\nCurrent Amount: {1}", description, playerManager.MyCharacter.CharacterCurrencyManager.GetCurrencyAmount(this));
             //return string.Format("{0}", description);

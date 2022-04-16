@@ -327,7 +327,7 @@ namespace AnyRPG {
                         if (equipmentCount > i) {
                             colorName = "green";
                         }
-                        summaryLines.Add(string.Format("<color={0}>({1}) {2}</color>", colorName, i+1, equipmentSet.TraitList[i].GetSummary()));
+                        summaryLines.Add(string.Format("<color={0}>({1}) {2}</color>", colorName, i+1, equipmentSet.TraitList[i].GetDescription()));
                     }
                 }
                 if (equipmentSet.TraitList.Count > 0) {

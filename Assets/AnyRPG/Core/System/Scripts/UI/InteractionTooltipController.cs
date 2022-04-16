@@ -36,7 +36,7 @@ namespace AnyRPG {
             gameObject.SetActive(true);
 
             transform.position = uIManager.MouseOverWindow.transform.position;
-            descriptionText.text = interactable.GetDescription();
+            descriptionText.text = interactable.GetSummary();
 
             if (interactable.InteractionTooltipText != null && interactable.InteractionTooltipText != string.Empty) {
                 interactionText.text = interactable.InteractionTooltipText;

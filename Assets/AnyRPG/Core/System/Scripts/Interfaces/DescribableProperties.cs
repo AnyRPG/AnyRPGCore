@@ -37,12 +37,12 @@ namespace AnyRPG {
             this.displayName = displayName;
         }
 
-        public string GetDescription() {
-            return description;
+        public string GetSummary() {
+            return string.Format("{0}\n{1}", DisplayName, GetDescription());
         }
 
-        public string GetSummary() {
-            return summary;
+        public string GetDescription() {
+            return description;
         }
     }
 

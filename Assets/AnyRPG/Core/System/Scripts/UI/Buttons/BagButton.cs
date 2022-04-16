@@ -161,17 +161,17 @@ namespace AnyRPG {
             }
         }
 
-        public string GetDescription() {
-            if (BagNode?.Bag != null) {
-                return BagNode.Bag.GetDescription() + "\n\n<color=#00FFFF>Shift + click to remove</color>";
-            }
-            // cyan
-            return string.Format("<color=#00FFFF>Empty Bag Slot</color>\n{0}", GetSummary());
-        }
-
         public string GetSummary() {
             if (BagNode?.Bag != null) {
-                return BagNode.Bag.GetSummary();
+                return BagNode.Bag.GetSummary() + "\n\n<color=#00FFFF>Shift + click to remove</color>";
+            }
+            // cyan
+            return string.Format("<color=#00FFFF>Empty Bag Slot</color>\n{0}", GetDescription());
+        }
+
+        public string GetDescription() {
+            if (BagNode?.Bag != null) {
+                return BagNode.Bag.GetDescription();
             }
             return "Place a bag in this slot to expand your storage";
         }

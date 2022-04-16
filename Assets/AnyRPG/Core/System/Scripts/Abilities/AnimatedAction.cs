@@ -141,7 +141,7 @@ namespace AnyRPG {
     */
 
 
-        public override string GetSummary() {
+        public override string GetDescription() {
             string requireString = string.Empty;
             string colorString = string.Empty;
 

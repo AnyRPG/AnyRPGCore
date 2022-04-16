@@ -29,12 +29,12 @@ namespace AnyRPG {
             playerManager = systemGameManager.PlayerManager;
         }
 
-        public string GetDescription() {
-            return faction.GetDescription(); ;
+        public string GetSummary() {
+            return faction.GetSummary(); ;
         }
 
-        public string GetSummary() {
-            return faction.GetSummary();
+        public string GetDescription() {
+            return faction.GetDescription();
         }
 
         public void GiveReward() {

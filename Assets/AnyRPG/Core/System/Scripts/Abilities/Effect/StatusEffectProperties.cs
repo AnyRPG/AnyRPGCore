@@ -402,8 +402,9 @@ namespace AnyRPG {
             PerformAbilityEffects(source, target, abilityEffectContext, reflectAbilityEffectList);
         }
 
-        public override string GetSummary() {
-            //Debug.Log("StatusEffect.GetSummary()");
+        public override string GetDescription() {
+            //Debug.Log("StatusEffectProperties.GetDescription()");
+
             string descriptionItem = string.Empty;
             string descriptionFinal = string.Empty;
             List<string> effectStrings = new List<string>();
@@ -465,7 +466,7 @@ namespace AnyRPG {
                     durationString = "\n" + durationLabel + statusText;
                 }
             }
-            return base.GetSummary() + string.Format("{0}{1}", descriptionFinal, durationString);
+            return base.GetDescription() + string.Format("{0}{1}", descriptionFinal, durationString);
         }
 
         public void ApplyControlEffects(BaseCharacter targetCharacter) {

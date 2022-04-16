@@ -26,7 +26,7 @@ namespace AnyRPG {
             icon.sprite = this.rawResource.Icon;
             icon.color = Color.white;
             resourceNameField.text = this.rawResource.DisplayName;
-            descriptionField.text = this.rawResource.GetSummary();
+            descriptionField.text = this.rawResource.GetDescription();
         }
 
         public void ClearResource() {

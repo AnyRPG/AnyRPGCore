@@ -8,8 +8,8 @@ namespace AnyRPG {
         Sprite Icon { get; }
         string DisplayName { get; }
         string Description { get; }
-        string GetDescription();
         string GetSummary();
+        string GetDescription();
     }
 
 }

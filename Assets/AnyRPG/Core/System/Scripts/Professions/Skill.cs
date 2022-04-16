@@ -37,8 +37,8 @@ namespace AnyRPG {
             playerManager = systemGameManager.PlayerManager;
         }
 
-        public override string GetDescription() {
-            return string.Format("<color=#ffff00ff>{0}</color>\n\n{1}", resourceName, GetSummary());
+        public override string GetSummary() {
+            return string.Format("<color=#ffff00ff>{0}</color>\n\n{1}", resourceName, GetDescription());
         }
 
         public void GiveReward() {

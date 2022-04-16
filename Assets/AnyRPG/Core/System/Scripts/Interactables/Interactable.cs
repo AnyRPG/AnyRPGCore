@@ -936,7 +936,7 @@ namespace AnyRPG {
             }
         }
 
-        public virtual string GetDescription() {
+        public virtual string GetSummary() {
             //Debug.Log(gameObject.name + ".Interactable.GetDescription()");
 
             string nameString = DisplayName;
@@ -948,7 +948,7 @@ namespace AnyRPG {
             }
             Color textColor = GetDescriptionColor();
             string titleString = GetTitleString();
-            return string.Format("<color=#{0}>{1}{2}</color>\n{3}", ColorUtility.ToHtmlStringRGB(textColor), nameString, titleString, GetSummary());
+            return string.Format("<color=#{0}>{1}{2}</color>\n{3}", ColorUtility.ToHtmlStringRGB(textColor), nameString, titleString, GetDescription());
             // this would be where quest tracker info goes if we want to add that in the future -eg: Kill 5 skeletons : 1/5
         }
 
@@ -960,7 +960,7 @@ namespace AnyRPG {
             return string.Empty;
         }
 
-        public virtual string GetSummary() {
+        public virtual string GetDescription() {
             //Debug.Log(gameObject.name + ".Interactable.GetSummary()");
 
             string returnString = string.Empty;
