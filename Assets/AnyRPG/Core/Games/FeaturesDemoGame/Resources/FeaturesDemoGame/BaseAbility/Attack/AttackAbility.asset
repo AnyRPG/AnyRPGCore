@@ -14,82 +14,29 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   resourceName: Attack
   displayName: 
-  icon: {fileID: 21300000, guid: fbedc634ef531d44bafeba71b8b3acf0, type: 3}
+  icon: {fileID: 21300000, guid: 9a290edb16284e64a996559964af43aa, type: 3}
   iconBackgroundImage: {fileID: 0}
   description: Basic attack
   useRegionalDescription: 0
   resourceDescriptionProfile: 
   optionalOverride: 0
-  requireOutOfCombat: 0
-  weaponAffinityNames: []
-  holdableObjectList: []
-  abilityPrefabSource: 0
-  animatorCreatePrefabs: 1
-  prefabDestroyDelay: 0
-  animationProfileName: 
-  useUnitCastAnimations: 0
-  animationHitAudioProfileName: 
-  castingAudioProfileName: 
-  requiredLevel: 1
-  characterClassRequirements: []
-  useableWithoutLearning: 0
-  autoAddToBars: 1
-  canSimultaneousCast: 0
-  canCastWhileMoving: 0
-  ignoreGlobalCoolDown: 0
-  powerResourceName: 
-  baseResourceCost: 0
-  resourceCostPerLevel: 5
-  spendDelay: 0
-  generatePowerResourceName: 
-  baseResourceGain: 0
-  resourceGainPerLevel: 0
-  useSpeedMultipliers: 1
-  useAnimationCastTime: 1
-  abilityCastingTime: 0
-  abilityCoolDown: 0
-  coolDownOnCast: 0
-  useAbilityEffectTargetting: 1
-  targetOptions:
-    requireTarget: 1
-    requireLineOfSight: 0
-    requireLiveTarget: 1
-    requireDeadTarget: 0
-    canCastOnSelf: 0
-    canCastOnOthers: 1
-    canCastOnEnemy: 1
-    canCastOnNeutral: 0
-    canCastOnFriendly: 0
-    autoSelfCast: 0
-    useMeleeRange: 1
-    maxRange: 5
-    requireFacingTarget: 0
-    maxAngle: 45
-    requiresGroundTarget: 0
-    groundTargetColor: {r: 1, g: 1, b: 1, a: 1}
-    groundTargetRadius: 0
-  inlineAbilityEffects: []
-  abilityEffectNames:
-  - Attack
-  tickRate: 1
-  channeledAbilityEffectnames: []
-  isAutoAttack: 1
-  useUnitAttackAnimations: 1
-  useAutoAttackAnimations: 0
-  useWeaponHitSound: 1
   animatedAbilityProperties:
     requireOutOfCombat: 0
+    requireStealth: 0
     weaponAffinityNames: []
     holdableObjectList: []
     abilityPrefabSource: 0
     animatorCreatePrefabs: 1
     prefabDestroyDelay: 0
+    animationClip: {fileID: 0}
     animationProfileName: 
     useUnitCastAnimations: 0
     animationHitAudioProfileName: 
+    castingAudioClip: {fileID: 0}
     castingAudioProfileName: 
     requiredLevel: 1
     characterClassRequirements: []
+    classSpecializationRequirements: []
     useableWithoutLearning: 0
     autoAddToBars: 1
     canSimultaneousCast: 0
@@ -119,10 +66,12 @@ MonoBehaviour:
       canCastOnNeutral: 0
       canCastOnFriendly: 0
       autoSelfCast: 0
+      unitTypeRestrictions: []
       useMeleeRange: 1
       maxRange: 5
       requireFacingTarget: 0
       maxAngle: 45
+      requireBehindTarget: 0
       requiresGroundTarget: 0
       groundTargetColor: {r: 1, g: 1, b: 1, a: 1}
       groundTargetRadius: 0
@@ -130,6 +79,7 @@ MonoBehaviour:
     abilityEffectNames:
     - Attack
     tickRate: 1
+    inlineChannelingEffects: []
     channeledAbilityEffectnames: []
     isAutoAttack: 1
     useUnitAttackAnimations: 1
