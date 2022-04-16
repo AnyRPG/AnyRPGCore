@@ -262,7 +262,7 @@ namespace AnyRPG {
             return true;
         }
 
-        public override string GetSummary(ItemQuality usedItemQuality) {
+        public override string GetDescription(ItemQuality usedItemQuality) {
             //Debug.Log(DisplayName + ".Equipment.GetSummary()");
             //string stats = string.Empty;
             List<string> summaryLines = new List<string>();
@@ -335,7 +335,7 @@ namespace AnyRPG {
                 }
             }
 
-            return base.GetSummary(usedItemQuality) + "\n" + string.Join("\n", summaryLines);
+            return base.GetDescription(usedItemQuality) + "\n" + string.Join("\n", summaryLines);
         }
 
         public override void SetupScriptableObjects(SystemGameManager systemGameManager) {

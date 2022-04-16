@@ -66,13 +66,15 @@ namespace AnyRPG {
             }
         }
 
+        /*
         public override string GetCastableInformation() {
             string returnString = string.Empty;
             if (Ability != null) {
-                returnString += string.Format("\n<color=green>Use: {0}</color>", Ability.Description);
+                returnString += string.Format("<color=green>Use: {0}</color>", Ability.Description);
             }
             return returnString;
         }
+        */
 
         public override void SetupScriptableObjects(SystemGameManager systemGameManager) {
             base.SetupScriptableObjects(systemGameManager);

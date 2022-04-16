@@ -39,8 +39,8 @@ namespace AnyRPG {
             }
         }
 
-        public override string GetSummary(ItemQuality usedItemQuality) {
-            string returnString = base.GetSummary(usedItemQuality);
+        public override string GetDescription(ItemQuality usedItemQuality) {
+            string returnString = base.GetDescription(usedItemQuality);
             if (recipe != null) {
                 string alreadyKnownString = string.Empty;
                 if (playerManager.MyCharacter.CharacterRecipeManager.RecipeList.ContainsValue(recipe)) {

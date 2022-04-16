@@ -285,7 +285,7 @@ namespace AnyRPG {
         public float ActionCastingTime {
             get {
                 if (AnimationClip != null) {
-                    return animationClip.length;
+                    return AnimationClip.length;
                 }
                 return 0f;
             }

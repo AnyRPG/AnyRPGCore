@@ -165,7 +165,7 @@ namespace AnyRPG {
             return baseDamagePerSecond;
         }
 
-        public override string GetSummary(ItemQuality usedItemQuality) {
+        public override string GetDescription(ItemQuality usedItemQuality) {
 
             List<string> abilitiesList = new List<string>();
 
@@ -189,7 +189,7 @@ namespace AnyRPG {
                 }
                 abilitiesString += string.Format("\n<color={0}>Required Skill: {1}</color>", colorString, weaponSkill.DisplayName);
             }
-            return base.GetSummary(usedItemQuality) + abilitiesString;
+            return base.GetDescription(usedItemQuality) + abilitiesString;
         }
 
         /*

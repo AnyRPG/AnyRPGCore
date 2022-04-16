@@ -47,6 +47,7 @@ namespace AnyRPG {
 
         }
 
+        /*
         public override string GetCastableInformation() {
             //Debug.Log(DisplayName + ".PowerResourcePotion.GetCastableInformation()");
             string returnString = string.Empty;
@@ -55,6 +56,7 @@ namespace AnyRPG {
             //}
             return returnString;
         }
+        */
 
         public override void SetupScriptableObjects(SystemGameManager systemGameManager) {
             base.SetupScriptableObjects(systemGameManager);

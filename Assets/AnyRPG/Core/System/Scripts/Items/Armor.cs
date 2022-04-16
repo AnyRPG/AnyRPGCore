@@ -36,7 +36,7 @@ namespace AnyRPG {
             return returnValue;
         }
 
-        public override string GetSummary(ItemQuality usedItemQuality) {
+        public override string GetDescription(ItemQuality usedItemQuality) {
             //Debug.Log(DisplayName + ".Armor.GetSummary()");
 
             List<string> abilitiesList = new List<string>();
@@ -65,7 +65,7 @@ namespace AnyRPG {
                 abilitiesString += string.Format("\n<color={0}>{1}</color>", colorString, armorClassName);
             }
 
-            return base.GetSummary(usedItemQuality) + abilitiesString;
+            return base.GetDescription(usedItemQuality) + abilitiesString;
         }
 
         public override bool CapabilityConsumerSupported(ICapabilityConsumer capabilityConsumer) {

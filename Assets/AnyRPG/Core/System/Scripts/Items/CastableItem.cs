@@ -13,6 +13,13 @@ namespace AnyRPG {
         protected string abilityName = string.Empty;
         */
 
+        [Header("Castable item")]
+
+        [Tooltip("The Use: hint that will appear in the tooltip")]
+        [TextArea(5, 10)]
+        [SerializeField]
+        private string toolTip = string.Empty;
+
         public abstract BaseAbilityProperties Ability { get; }
 
         // game manager references
@@ -55,13 +62,17 @@ namespace AnyRPG {
             return systemAbilityController.StartCoroutine(actionButton.MonitorAbility(Ability.DisplayName));
         }
 
-        public override string GetSummary(ItemQuality usedItemQuality) {
+        public override string GetDescription(ItemQuality usedItemQuality) {
             //Debug.Log(DisplayName + ".CastableItem.GetSummary()");
-            return base.GetSummary(usedItemQuality) + GetCastableInformation() + GetCooldownString();
+            return base.GetDescription(usedItemQuality) + GetCastableInformation() + GetCooldownString();
         }
 
         public virtual string GetCastableInformation() {
-            return string.Empty;
+            string returnString = string.Empty;
+            if (Ability != null) {
+                returnString += string.Format("\n\n<color=green>Use: {0}</color>", toolTip);
+            }
+            return returnString;
         }
 
         public string GetCooldownString() {

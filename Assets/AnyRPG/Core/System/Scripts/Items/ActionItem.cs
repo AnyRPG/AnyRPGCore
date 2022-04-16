@@ -10,6 +10,11 @@ namespace AnyRPG {
 
         [Header("Action Item")]
 
+        [Tooltip("The Use: hint that will appear in the tooltip")]
+        [TextArea(5, 10)]
+        [SerializeField]
+        private string toolTip = string.Empty;
+
         [Tooltip("Cooldown before this item can be used again")]
         [SerializeField]
         protected float coolDown = 0f;
@@ -91,13 +96,17 @@ namespace AnyRPG {
             return systemAbilityController.StartCoroutine(actionButton.MonitorCooldown(this));
         }
 
-        public override string GetSummary(ItemQuality usedItemQuality) {
+        public override string GetDescription(ItemQuality usedItemQuality) {
             //Debug.Log(DisplayName + ".CastableItem.GetSummary()");
-            return base.GetSummary(usedItemQuality) + GetCastableInformation() + GetCooldownString();
+            return base.GetDescription(usedItemQuality) + GetCastableInformation() + GetCooldownString();
         }
 
         public virtual string GetCastableInformation() {
-            return string.Empty;
+            string returnString = string.Empty;
+            if (toolTip != string.Empty) {
+                returnString += string.Format("\n\n<color=green>Use: {0}</color>", toolTip);
+            }
+            return returnString;
         }
 
         public string GetCooldownString() {

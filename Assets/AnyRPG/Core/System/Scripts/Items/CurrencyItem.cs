@@ -32,13 +32,13 @@ namespace AnyRPG {
             return true;
         }
 
-        public override string GetSummary(ItemQuality usedItemQuality) {
+        public override string GetDescription(ItemQuality usedItemQuality) {
             //Debug.Log(DisplayName + ".CurrencyItem.GetSummary();");
             string tmpCurrencyName = string.Empty;
             if (currencyNode.currency != null) {
                 tmpCurrencyName = currencyNode.currency.DisplayName;
             }
-            return base.GetSummary(usedItemQuality) + string.Format("\n<color=green>Use: Gain {0} {1}</color>", tmpCurrencyName, currencyNode.Amount);
+            return base.GetDescription(usedItemQuality) + string.Format("\n<color=green>Use: Gain {0} {1}</color>", tmpCurrencyName, currencyNode.Amount);
         }
 
         public override void SetupScriptableObjects(SystemGameManager systemGameManager) {
