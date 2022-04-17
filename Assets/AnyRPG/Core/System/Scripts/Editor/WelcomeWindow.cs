@@ -48,6 +48,12 @@ namespace AnyRPG {
 
         public const string _projectSettingsPath = "Assets/AnyRPG/Basic Locomotion/Resources/ProjectSettings.unitypackage";
 
+        private const string storyDemoGameScenePath = "/ALostSoul/Games/ALostSoulStoryDemo/Scenes/Game/ALostSoulStoryDemoGame/ALostSoulStoryDemoGame.unity";
+        private const string characterDemoGameScenePath = "/ALostSoul/Games/ALostSoulCharacterDemo/Scenes/Game/ALostSoulCharacterDemoGame/ALostSoulCharacterDemoGame.unity";
+        private const string contentDemoGameScenePath = "/AnyRPG/Engine/Games/ContentDemo/Scenes/Game/ContentDemoGame/ContentDemoGame.unity";
+        private const string featuresDemoGameScenePath = "/AnyRPG/Core/Games/FeaturesDemoGame/Scenes/Game/FeaturesDemoGame/FeaturesDemoGame.unity";
+        private const string zeroConfigModeGameScenePath = "/AnyRPG/Core/Games/EmptyGame/Scenes/EmptyGame/EmptyGame.unity";
+
         public static Texture2D welcomeBanner = null;
 
         public static Vector2 scrollPosition;
@@ -137,47 +143,57 @@ namespace AnyRPG {
             GUILayout.BeginVertical("window");
 
 #if ANYRPG_ENGINE
-            GUILayout.BeginVertical("box");
-            if (GUILayout.Button("A Lost Soul Story Demo Game")) {
-                EditorSceneManager.OpenScene("Assets/ALostSoul/Games/ALostSoulStoryDemo/Scenes/Game/ALostSoulStoryDemoGame/ALostSoulStoryDemoGame.unity");
+            if (System.IO.File.Exists(Application.dataPath + storyDemoGameScenePath)) {
+                GUILayout.BeginVertical("box");
+                if (GUILayout.Button("A Lost Soul Story Demo Game")) {
+                    EditorSceneManager.OpenScene("Assets" + storyDemoGameScenePath);
+                }
+                EditorGUILayout.HelpBox("The first 2 chapters of the game, 'A Lost Soul', re-created using the open source assets included in AnyRPG", MessageType.None);
+                GUILayout.EndVertical();
+                GUILayout.Space(10);
             }
-            EditorGUILayout.HelpBox("The first 2 chapters of the game, 'A Lost Soul', re-created using the open source assets included in AnyRPG", MessageType.None);
-            GUILayout.EndVertical();
-            GUILayout.Space(10);
 
-            GUILayout.BeginVertical("box");
-            if (GUILayout.Button("A Lost Soul Character Demo Game")) {
-                EditorSceneManager.OpenScene("Assets/ALostSoul/Games/ALostSoulCharacterDemo/Scenes/Game/ALostSoulCharacterDemoGame/ALostSoulCharacterDemoGame.unity");
+            if (System.IO.File.Exists(Application.dataPath + characterDemoGameScenePath)) {
+                GUILayout.BeginVertical("box");
+                if (GUILayout.Button("A Lost Soul Character Demo Game")) {
+                    EditorSceneManager.OpenScene("Assets" + characterDemoGameScenePath);
+                }
+                EditorGUILayout.HelpBox("Explore the game world of A Lost Soul by starting as any character model and faction included in the game", MessageType.None);
+                GUILayout.EndVertical();
+                GUILayout.Space(10);
             }
-            EditorGUILayout.HelpBox("Explore the game world of A Lost Soul by starting as any character model and faction included in the game", MessageType.None);
-            GUILayout.EndVertical();
-            GUILayout.Space(10);
 
-            GUILayout.BeginVertical("box");
-            if (GUILayout.Button("Content Demo Game")) {
-                EditorSceneManager.OpenScene("Assets/AnyRPG/Engine/Games/ContentDemo/Scenes/Game/ContentDemoGame/ContentDemoGame.unity");
+            if (System.IO.File.Exists(Application.dataPath + contentDemoGameScenePath)) {
+                GUILayout.BeginVertical("box");
+                if (GUILayout.Button("Content Demo Game")) {
+                    EditorSceneManager.OpenScene("Assets" + contentDemoGameScenePath);
+                }
+                EditorGUILayout.HelpBox("A simple demo of all 3d and audio content including\n -Music\n -Clothing\n -Characters\n -Buildings\n -Props\n -Weapons", MessageType.None);
+                GUILayout.EndVertical();
+                GUILayout.Space(10);
             }
-            EditorGUILayout.HelpBox("A simple demo of all 3d and audio content including\n -Music\n -Clothing\n -Characters\n -Buildings\n -Props\n -Weapons", MessageType.None);
-            GUILayout.EndVertical();
-            GUILayout.Space(10);
+
 #endif
-
-            GUILayout.BeginVertical("box");
-            if (GUILayout.Button("Features Demo Game")) {
-                EditorSceneManager.OpenScene("Assets/AnyRPG/Core/Games/FeaturesDemo/Scenes/Game/FeaturesDemoGame/FeaturesDemoGame.unity");
+            if (System.IO.File.Exists(Application.dataPath + featuresDemoGameScenePath)) {
+                GUILayout.BeginVertical("box");
+                if (GUILayout.Button("Features Demo Game")) {
+                    EditorSceneManager.OpenScene("Assets" + featuresDemoGameScenePath);
+                }
+                EditorGUILayout.HelpBox("A simple 2 level game that provides examples of the most common features and interactables included in AnyRPG for quick reference when implementing them in your own game", MessageType.None);
+                GUILayout.EndVertical();
+                GUILayout.Space(10);
             }
-            EditorGUILayout.HelpBox("A simple 2 level game that provides examples of the most common features and interactables included in AnyRPG for quick reference when implementing them in your own game", MessageType.None);
-            GUILayout.EndVertical();
-            GUILayout.Space(10);
 
-            GUILayout.BeginVertical("box");
-            if (GUILayout.Button("Empty (Zero Config Mode) Game")) {
-                EditorSceneManager.OpenScene("Assets/AnyRPG/Core/Games/EmptyGame/Scenes/EmptyGame/EmptyGame.unity");
+            if (System.IO.File.Exists(Application.dataPath + zeroConfigModeGameScenePath)) {
+                GUILayout.BeginVertical("box");
+                if (GUILayout.Button("Empty (Zero Config Mode) Game")) {
+                    EditorSceneManager.OpenScene("Assets" + zeroConfigModeGameScenePath);
+                }
+                EditorGUILayout.HelpBox("A bare bones single scene with no main menu that demonstrates how to use AnyRPG in Zero Config (Controller Only) mode by including an unconfigured " +
+                    "GameManager into any scene", MessageType.None);
+                GUILayout.EndVertical();
+                GUILayout.Space(10);
             }
-            EditorGUILayout.HelpBox("A bare bones single scene with no main menu that demonstrates how to use AnyRPG in Zero Config (Controller Only) mode by including an unconfigured " +
-                "GameManager into any scene", MessageType.None);
-            GUILayout.EndVertical();
-            GUILayout.Space(10);
 
 
             GUILayout.FlexibleSpace();
