@@ -229,7 +229,7 @@ namespace AnyRPG {
                 return false;
             }
             if (GetItemLevel(baseCharacter.CharacterStats.Level) > baseCharacter.CharacterStats.Level) {
-                //Debug.Log(baseCharacter.gameObject.name + "." + DisplayName + ".Equipment.CanEquip(): character level too low");
+                //Debug.Log(baseCharacter.gameObject.name + "." + DisplayName + ".Equipment.CanEquip(): character level too low (" + baseCharacter.CharacterStats.Level + ")");
                 return false;
             }
             return true;

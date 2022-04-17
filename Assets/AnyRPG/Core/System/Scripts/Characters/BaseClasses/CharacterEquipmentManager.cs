@@ -114,6 +114,7 @@ namespace AnyRPG {
 
         public bool Equip(Equipment newItem, EquipmentSlotProfile equipmentSlotProfile = null, bool equipModels = true, bool setAppearance = true, bool rebuildAppearance = true) {
             //Debug.Log(baseCharacter.gameObject.name + ".CharacterEquipmentManager.Equip(" + (newItem != null ? newItem.DisplayName : "null") + ", " + (equipmentSlotProfile == null ? "null" : equipmentSlotProfile.DisplayName) + ", " + equipModels + ", " + setAppearance + ", " + rebuildAppearance + ")");
+
             //Debug.Break();
             if (newItem == null) {
                 Debug.Log("Instructed to Equip a null item!");
@@ -282,6 +283,7 @@ namespace AnyRPG {
 
         public Equipment Unequip(EquipmentSlotProfile equipmentSlot, int slotIndex = -1, bool unequipModels = true, bool unequipAppearance = true, bool rebuildAppearance = true) {
             //Debug.Log(baseCharacter.gameObject.name + ".CharacterEquipmentManager.Unequip(" + equipmentSlot.ToString() + ", " + slotIndex + ", " + unequipModels + ", " + unequipAppearance + ", " + rebuildAppearance + ")");
+            
             if (CurrentEquipment.ContainsKey(equipmentSlot) && CurrentEquipment[equipmentSlot] != null) {
                 //Debug.Log("equipment manager trying to unequip item in slot " + equipmentSlot.ToString() + "; currentEquipment has this slot key");
 
