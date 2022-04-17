@@ -95,7 +95,9 @@ namespace AnyRPG {
             Renderer[] renderers;
             TerrainCollider[] terrainColliders;
             Bounds sceneBounds = new Bounds();
-            renderers = GameObject.FindObjectsOfType<Renderer>();
+
+            // only grab mesh renderers because skinned mesh renderers get strange angles when their bones are rotated
+            renderers = GameObject.FindObjectsOfType<MeshRenderer>();
             terrainColliders = GameObject.FindObjectsOfType<TerrainCollider>();
 
             // add bounds of renderers in case there are structures higher or lower than terrain bounds
@@ -103,7 +105,7 @@ namespace AnyRPG {
                 for (int i = 0; i < renderers.Length; i++) {
                     if (renderers[i].enabled == true && renderers[i].gameObject.layer == LayerMask.NameToLayer("Default")) {
                         sceneBounds.Encapsulate(renderers[i].bounds);
-                        //Debug.Log("MainMapController.SetSceneBounds(). Encapsulating: " + renderers[i].bounds);
+                        //Debug.Log("MainMapController.SetSceneBounds(). Encapsulating gameobject: " + renderers[i].gameObject.name + " with bounds " + renderers[i].bounds);
                     }
                 }
             }
