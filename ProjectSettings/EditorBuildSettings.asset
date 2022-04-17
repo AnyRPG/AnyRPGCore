@@ -63,7 +63,7 @@ EditorBuildSettings:
     path: Assets/AnyRPG/Core/Games/FeaturesDemoGame/Scenes/Content/FeaturesDemoCutsceneZone/FeaturesDemoCutsceneZone.unity
     guid: b9ce6cec24f88e343bdd24c31d295b8a
   - enabled: 1
-    path: Assets/AnyRPG/Core/Games/FeaturesDemoGame/Scenes/Content/FeaturesDemoMovementTest/FeaturesDemoMovementTest.unity
+    path: Assets/AnyRPG/Core/Games/MovementTestGame/Scenes/Content/MovementTestZone/MovementTestZone.unity
     guid: a847437ee17c7aa4f98c2d363f671f1d
   - enabled: 1
     path: Assets/AnyRPG/Engine/Games/ContentDemo/Scenes/Content/ContentScene/ContentScene.unity
@@ -74,4 +74,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/AnyRPG/Core/Games/FeaturesDemoGame/Scenes/Game/FeaturesDemoGame/FeaturesDemoGame.unity
     guid: a98b1f451adf75f4899466b9a4746144
+  - enabled: 1
+    path: Assets/AnyRPG/Core/Games/MovementTestGame/Scenes/Game/MovementTestGame/MovementTestGame.unity
+    guid: 677b052e3cf6eba4a87f60626ff3a923
   m_configObjects: {}

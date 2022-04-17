@@ -10,13 +10,13 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 4e31818c35d6ab14fbf88410e7e18453, type: 3}
-  m_Name: MecanimPlayerUnitTemplate
+  m_Name: DragonUnit
   m_EditorClassIdentifier: 
-  resourceName: Mecanim Player
+  resourceName: Dragon
   displayName: 
-  icon: {fileID: 21300000, guid: 4ce9927e29c4e67439b2afb877749f1b, type: 3}
+  icon: {fileID: 21300000, guid: ccab25b46d3775445a1820d216903970, type: 3}
   iconBackgroundImage: {fileID: 0}
-  description: The default mechanim humanoid player unit configured in the engine.
+  description: A fire breathing dragon
   useRegionalDescription: 0
   resourceDescriptionProfile: 
   optionalOverride: 0
@@ -26,9 +26,9 @@ MonoBehaviour:
   unitPrefabProps:
     unitPrefab: {fileID: 2692339740015506113, guid: ba09f14eb0109ba459f4520b82c3fadc,
       type: 3}
-    modelPrefab: {fileID: 6307183516646880328, guid: d46b6b5df6312ea4ba9a077c173ec3c0,
+    modelPrefab: {fileID: 943068409625311753, guid: 022ab4d98a489344283da6d08ddec94c,
       type: 3}
-    animationProfileName: 
+    animationProfileName: Dragon
     useInlineAnimationProps: 0
     animationProps:
       useRootMotion: 0
@@ -118,31 +118,31 @@ MonoBehaviour:
       displayName: 
       suppressNamePlate: 0
       suppressFaction: 1
-      overrideNameplatePosition: 0
-      namePlatePosition: {x: 0, y: 0, z: 0}
-      unitFrameTarget: head
+      overrideNameplatePosition: 1
+      namePlatePosition: {x: 0, y: 6, z: 0}
+      unitFrameTarget: jaw_upper_end
       unitFrameCameraLookOffset: {x: 0, y: 0, z: 0}
-      unitFrameCameraPositionOffset: {x: 0, y: 0, z: 0.66}
+      unitFrameCameraPositionOffset: {x: 0, y: 1.5, z: 0}
       unitPreviewTarget: 
-      unitPreviewCameraLookOffset: {x: 0, y: 1, z: 0}
-      unitPreviewCameraPositionOffset: {x: 0, y: 1, z: 2.5}
+      unitPreviewCameraLookOffset: {x: 0, y: 3.5, z: 0}
+      unitPreviewCameraPositionOffset: {x: 0, y: 3.5, z: 10}
     position: {x: 0, y: 0, z: 0}
     rotationIsGlobal: 0
     rotation: {x: 0, y: 0, z: 0}
     scale: {x: 1, y: 1, z: 1}
-    targetBone: 
-    attachmentProfileName: Humanoid
-    floatHeight: 0.3
-    addFloatHeightToTransform: 1
-    floatTransform: torso
+    targetBone: MountPoint
+    attachmentProfileName: 
+    floatHeight: 1.4
+    addFloatHeightToTransform: 0
+    floatTransform: back1
   isUMAUnit: 0
-  isPet: 0
-  flightCapable: 0
+  isPet: 1
+  flightCapable: 1
   glideCapable: 0
-  characterName: 
+  characterName: Dragon
   title: 
-  factionName: 
-  unitTypeName: 
+  factionName: Enemy
+  unitTypeName: Beast
   characterRaceName: 
   characterClassName: 
   classSpecializationName: 
@@ -150,7 +150,8 @@ MonoBehaviour:
   preventAutoDespawn: 0
   defaultToughness: 
   capabilities:
-    abilityNames: []
+    abilityNames:
+    - Dragon Breath
     traitNames: []
     armorClassList: []
     weaponSkills: []
@@ -162,11 +163,10 @@ MonoBehaviour:
   powerResources: []
   useProviderEquipment: 0
   equipmentNameList: []
-  faceInteractionTarget: 1
   isMobile: 1
   playOnFootstep: 0
   movementAudioProfileNames:
-  - Default Footstep Loop
+  - Creature Footsteps 2
   useInlinePatrol: 0
   patrolConfig:
     autoStart: 0
@@ -221,6 +221,6 @@ MonoBehaviour:
   saveOnLevelUnload: 0
   saveOnGameSave: 0
   overwriteUnitUUID: 0
-  m_UUID: 0dac5dde-ae08-4387-9ad2-d541d9013058
+  m_UUID: 0c4469aa-ec9f-491c-bdc8-68d3586271dc
   references:
     version: 1

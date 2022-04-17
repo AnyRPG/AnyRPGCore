@@ -132,9 +132,9 @@ MonoBehaviour:
     scale: {x: 1, y: 1, z: 1}
     targetBone: 
     attachmentProfileName: Humanoid
-    floatHeight: 1.4
-    addFloatHeightToTransform: 0
-    floatTransform: Spine1
+    floatHeight: 0.3
+    addFloatHeightToTransform: 1
+    floatTransform: torso
   isUMAUnit: 0
   isPet: 0
   flightCapable: 0
@@ -162,6 +162,7 @@ MonoBehaviour:
   powerResources: []
   useProviderEquipment: 0
   equipmentNameList: []
+  faceInteractionTarget: 1
   isMobile: 1
   playOnFootstep: 0
   movementAudioProfileNames:
