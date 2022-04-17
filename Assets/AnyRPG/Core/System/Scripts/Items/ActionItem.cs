@@ -48,7 +48,8 @@ namespace AnyRPG {
         }
 
         public override bool Use() {
-            //Debug.Log("CastableItem.Use()");
+            //Debug.Log(DisplayName + ".ActionItem.Use()");
+
             /*
             if (ability == null) {
                 Debug.LogError(DisplayName + ".CastableItem.Use(): ability is null.  Please set it in the inspector!");
@@ -90,9 +91,13 @@ namespace AnyRPG {
 
         public override Coroutine ChooseMonitorCoroutine(ActionButton actionButton) {
             //Debug.Log(DisplayName + ".CastableItem.ChooseMonitorCoroutine()");
+
+            /*
+            // testing - disable this and always monitor because of the inherent 1 second cooldown to prevent accidental spamming of action items
             if (coolDown == 0f) {
                 return null;
             }
+            */
             return systemAbilityController.StartCoroutine(actionButton.MonitorCooldown(this));
         }
 
@@ -131,7 +136,8 @@ namespace AnyRPG {
         }
 
         public override void UpdateActionButtonVisual(ActionButton actionButton) {
-            //Debug.Log(DisplayName + ".BaseAbility.UpdateActionButtonVisual()");
+            //Debug.Log(DisplayName + ".ActionItem.UpdateActionButtonVisual()");
+
             // set cooldown icon on abilities that don't have enough resources to cast
             base.UpdateActionButtonVisual(actionButton);
 
