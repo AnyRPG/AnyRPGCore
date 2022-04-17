@@ -9,16 +9,13 @@ namespace AnyRPG {
         // references
         private UnitController unitController;
 
-        private List<PatrolProps> patrolPropsList = new List<PatrolProps>();
-        private Dictionary<PatrolProps, PatrolSaveState> patrolSaveStates = new Dictionary<PatrolProps, PatrolSaveState>();
+        private List<PatrolProperties> patrolPropsList = new List<PatrolProperties>();
+        private Dictionary<PatrolProperties, PatrolSaveState> patrolSaveStates = new Dictionary<PatrolProperties, PatrolSaveState>();
 
-        private PatrolProps currentPatrolProps = null;
+        private PatrolProperties currentPatrolProps = null;
 
-        // game manager references
-        private SystemDataFactory systemDataFactory = null;
-
-        public PatrolProps CurrentPatrol { get => currentPatrolProps; }
-        public PatrolProps CurrentPatrolProps { get => currentPatrolProps; }
+        public PatrolProperties CurrentPatrol { get => currentPatrolProps; }
+        public PatrolProperties CurrentPatrolProps { get => currentPatrolProps; }
         public UnitController UnitController { get => unitController; }
         public PatrolSaveState CurrentPatrolSaveState {
             get {
@@ -32,11 +29,6 @@ namespace AnyRPG {
         public PatrolController(UnitController unitController, SystemGameManager systemGameManager) {
             this.unitController = unitController;
             Configure(systemGameManager);
-        }
-
-        public override void SetGameManagerReferences() {
-            base.SetGameManagerReferences();
-            systemDataFactory = systemGameManager.SystemDataFactory;
         }
 
         // this should be run after the unit profile is set
@@ -70,24 +62,36 @@ namespace AnyRPG {
             }
         }
 
-        public void BeginPatrol(PatrolProps patrolProps) {
+        public void BeginPatrol(PatrolProperties patrolProps) {
             //Debug.Log(unitController.gameObject.name + ".PatrolController.BeginPatrol(" + (patrolProps == null ? "null" : "valid patrolProps") + ")");
-                SetCurrentPatrol(patrolProps);
-                unitController.ChangeState(new PatrolState());
-                return;
-        }
 
-        private void AddPatrolState(PatrolProps patrolProps) {
-            patrolPropsList.Add(patrolProps);
+            // testing - monitor if putting this here instead of in AddPatrolState() breaks anything
             if (patrolSaveStates.ContainsKey(patrolProps)) {
                 patrolSaveStates[patrolProps] = new PatrolSaveState(this, patrolProps);
             } else {
                 patrolSaveStates.Add(patrolProps, new PatrolSaveState(this, patrolProps));
             }
+
+            SetCurrentPatrol(patrolProps);
+            unitController.ChangeState(new PatrolState());
+            return;
+        }
+
+        private void AddPatrolState(PatrolProperties patrolProps) {
+            if (patrolPropsList.Contains(patrolProps) == false) {
+                patrolPropsList.Add(patrolProps);
+            }
+            /*
+            if (patrolSaveStates.ContainsKey(patrolProps)) {
+                patrolSaveStates[patrolProps] = new PatrolSaveState(this, patrolProps);
+            } else {
+                patrolSaveStates.Add(patrolProps, new PatrolSaveState(this, patrolProps));
+            }
+            */
         }
 
 
-        public void SetCurrentPatrol(PatrolProps newPatrolProps) {
+        public void SetCurrentPatrol(PatrolProperties newPatrolProps) {
             currentPatrolProps = newPatrolProps;
         }
 
@@ -97,7 +101,7 @@ namespace AnyRPG {
                 return;
             }
 
-            foreach (PatrolProps patrolProps in patrolPropsList) {
+            foreach (PatrolProperties patrolProps in patrolPropsList) {
                 //Debug.Log(unitController.gameObject.name + ".patrolController.FindAutomaticPatrol(): found patrol profile: " + patrolProfile.DisplayName);
                 if (patrolProps.AutoStart == true) {
                     //Debug.Log(unitController.gameObject.name + ".patrolController.FindAutomaticPatrol(): found autostart profile");

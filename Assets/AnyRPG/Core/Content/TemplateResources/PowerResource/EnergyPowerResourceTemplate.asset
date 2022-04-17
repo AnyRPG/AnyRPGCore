@@ -1,0 +1,33 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8f55a41c6972dd14cb4fc021f33e6099, type: 3}
+  m_Name: EnergyPowerResourceTemplate
+  m_EditorClassIdentifier: 
+  resourceName: Energy
+  displayName: 
+  icon: {fileID: 0}
+  iconBackgroundImage: {fileID: 0}
+  description: Used by thiefs
+  useRegionalDescription: 0
+  resourceDescriptionProfile: 
+  optionalOverride: 0
+  displayColor: {r: 0.9198533, g: 0.9245283, b: 0.2921858, a: 1}
+  baseAmount: 0
+  amountPerLevel: 0
+  tickRate: 2
+  regenPerTick: 10
+  regenIsPercent: 0
+  combatRegenPerTick: 5
+  combatRegenIsPercent: 0
+  maximumAmount: 100
+  isHealth: 0
+  fillOnReset: 0

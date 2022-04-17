@@ -1,0 +1,32 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6c9b51b8d3aa844448aaeab0a989e2fa, type: 3}
+  m_Name: SlowingShotAbilityTemplatePackage
+  m_EditorClassIdentifier: 
+  resourceName: Slowing Shot Ability
+  displayName: 
+  icon: {fileID: 0}
+  iconBackgroundImage: {fileID: 0}
+  description: 
+  useRegionalDescription: 0
+  resourceDescriptionProfile: 
+  optionalOverride: 0
+  resources:
+  - {fileID: 11400000, guid: 8f9f17370b7c82042be2f6638ce95a01, type: 2}
+  - {fileID: 11400000, guid: 83eb4e089c8161d47aa0a4a29cec4fc6, type: 2}
+  - {fileID: 11400000, guid: a49e4d90681cd1446947c5d50c0aac1f, type: 2}
+  - {fileID: 11400000, guid: b262d5c2336c7374ca400f87e75f4915, type: 2}
+  - {fileID: 11400000, guid: cde7104622de62f47a0c79b7a1d5ac9c, type: 2}
+  - {fileID: 11400000, guid: da3bb2c475855aa4981f149cf4ad4eba, type: 2}
+  - {fileID: 11400000, guid: 63db892cc349c134ea7df1544be90022, type: 2}
+  prefabs: []
+  dependencies: []

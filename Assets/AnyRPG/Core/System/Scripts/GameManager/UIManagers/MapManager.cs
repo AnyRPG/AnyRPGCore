@@ -48,6 +48,12 @@ namespace AnyRPG {
             //Debug.Log("MapManager.ProcessLevelLoad()");
             //Debug.Log("MapManager.ProcessLevelLoad(): creating Texture2D with size : " + (int)levelManager.SceneBounds.size.x + ", " + (int)levelManager.SceneBounds.size.z);
             UpdateCameraSize();
+
+            if (cameraSize == 0f) {
+                // something went wrong and there is nothing in the level
+                return;
+            }
+
             //mapTexture = new Texture2D((int)levelManager.SceneBounds.size.x, (int)levelManager.SceneBounds.size.z);
             string textureFilePath = mapTextureFolder + GetScreenshotFilename();
             if (System.IO.File.Exists(textureFilePath)) {

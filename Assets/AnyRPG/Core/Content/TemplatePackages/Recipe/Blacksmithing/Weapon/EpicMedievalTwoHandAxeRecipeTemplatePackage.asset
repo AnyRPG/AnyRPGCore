@@ -1,0 +1,31 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6c9b51b8d3aa844448aaeab0a989e2fa, type: 3}
+  m_Name: EpicMedievalTwoHandAxeRecipeTemplatePackage
+  m_EditorClassIdentifier: 
+  resourceName: Epic Medieval Two Hand Axe Recipe
+  displayName: 
+  icon: {fileID: 0}
+  iconBackgroundImage: {fileID: 0}
+  description: 
+  useRegionalDescription: 0
+  resourceDescriptionProfile: 
+  optionalOverride: 0
+  resources:
+  - {fileID: 11400000, guid: 00291c151ff0a324f9ac11e25a905c95, type: 2}
+  - {fileID: 11400000, guid: ab37d26485e563d41aa0ad5b74e87f9c, type: 2}
+  - {fileID: 11400000, guid: da1fee1fad634d5468f914211e976b27, type: 2}
+  - {fileID: 11400000, guid: 396ac7bda1911f64eaf99d8fc4d28842, type: 2}
+  - {fileID: 11400000, guid: d9f14d0a8352d454d9f973737cc1bb89, type: 2}
+  prefabs: []
+  dependencies:
+  - {fileID: 11400000, guid: 1c16d0b0976d46642b84fd145b45cb7c, type: 2}

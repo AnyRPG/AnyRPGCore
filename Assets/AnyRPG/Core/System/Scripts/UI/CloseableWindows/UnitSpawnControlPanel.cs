@@ -147,7 +147,7 @@ namespace AnyRPG {
         }
 
         public void ShowUnit(UnitSpawnButton unitSpawnButton) {
-            //Debug.Log("LoadGamePanel.ShowSavedGame()");
+            //Debug.Log("UnitSpawnControlPanel.ShowUnit(" + unitSpawnButton.UnitProfile.DisplayName + ")");
 
             selectedUnitSpawnButton = unitSpawnButton;
 
@@ -168,6 +168,7 @@ namespace AnyRPG {
             }
 
             nameText.text = unitSpawnButton.UnitProfile.CharacterName;
+            uINavigationControllers[0].UnHightlightButtons(unitSpawnButton);
         }
 
         public void ClearPreviewTarget() {

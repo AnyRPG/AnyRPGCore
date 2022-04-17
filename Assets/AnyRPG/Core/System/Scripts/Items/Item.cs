@@ -11,7 +11,7 @@ namespace AnyRPG {
     /// Superclass for all items
     /// </summary>
     [CreateAssetMenu(fileName = "New Item", menuName = "AnyRPG/Inventory/Item")]
-    public class Item : DescribableResource, IMoveable, IUseable {
+    public class Item : DescribableResource, IRewardable, IMoveable, IUseable {
 
         [Header("Item")]
 
@@ -47,6 +47,10 @@ namespace AnyRPG {
         [Tooltip("If dynamic level is not true, this value will be used for the static level")]
         [SerializeField]
         private int itemLevel = 1;
+
+        [Tooltip("The level the character must be to use this item")]
+        [SerializeField]
+        private int useLevel = 1;
 
         [Header("Price")]
 
@@ -95,10 +99,15 @@ namespace AnyRPG {
         protected MessageFeedManager messageFeedManager = null;
         protected UIManager uIManager = null;
         protected PlayerManager playerManager = null;
+        protected SystemItemManager systemItemManager = null;
 
         public int MaximumStackSize { get => stackSize; set => stackSize = value; }
         public InventorySlot Slot { get => slot; set => slot = value; }
-        
+        public virtual float CoolDown { get => 0f; }
+        public virtual bool RequireOutOfCombat { get => false; }
+        public virtual bool RequireStealth { get => false; }
+
+
         public int BuyPrice() {
             return BuyPrice(realItemQuality);
         }
@@ -145,12 +154,32 @@ namespace AnyRPG {
             uIManager = systemGameManager.UIManager;
             messageFeedManager = uIManager.MessageFeedManager;
             playerManager = systemGameManager.PlayerManager;
+            systemItemManager = systemGameManager.SystemItemManager;
+        }
+
+        public void GiveReward() {
+            Item newItem = systemItemManager.GetNewResource(DisplayName);
+            if (newItem != null) {
+                //Debug.Log("RewardButton.CompleteQuest(): newItem is not null, adding to inventory");
+                newItem.DropLevel = playerManager.MyCharacter.CharacterStats.Level;
+                playerManager.MyCharacter.CharacterInventoryManager.AddItem(newItem, false);
+            }
+        }
+
+        public bool HasReward() {
+            // this is not actually checked anywhere, but may need to be changed in the future
+            // if anything actually needs to query through IRewardable to see if the character has the item
+            return false;
         }
 
         public virtual void UpdateChargeCount(ActionButton actionButton) {
             //Debug.Log(DisplayName + ".Item.UpdateChargeCount()");
             int chargeCount = playerManager.MyCharacter.CharacterInventoryManager.GetUseableCount(this);
             uIManager.UpdateStackSize(actionButton, chargeCount, true);
+        }
+
+        public void UpdateTargetRange(ActionBarManager actionBarManager, ActionButton actionButton) {
+            // do nothing
         }
 
         public void AssignToActionButton(ActionButton actionButton) {
@@ -197,46 +226,80 @@ namespace AnyRPG {
         public virtual bool HadSpecialIcon(ActionButton actionButton) {
             return false;
         }
-
+        /*
         private int SellPrice() {
             return SellPrice(realItemQuality);
         }
 
         private int SellPrice(ItemQuality usedItemQuality) {
-            //get {
 
-                if (dynamicCurrencyAmount) {
-                    if (realItemQuality == null) {
-                        //Debug.Log("realItemQuality was null");
-                    }
-                    return (int)(((pricePerLevel * GetItemLevel(playerManager.MyCharacter.CharacterStats.Level)) + basePrice) * (usedItemQuality == null ? 1 : usedItemQuality.SellPriceMultiplier));
-                }
-                return (int)(basePrice * (usedItemQuality == null ? 1 : usedItemQuality.SellPriceMultiplier));
-            //}
-            //set => basePrice = value;
+            if (Currency == null) {
+                // there was no sell currency so this item cannot be sold
+                return 0;
+            }
+
+            int sellPrice = 0;
+
+            if (dynamicCurrencyAmount) {
+                sellPrice = (pricePerLevel * GetItemLevel(playerManager.MyCharacter.CharacterStats.Level)) + basePrice;
+            } else {
+                sellPrice = basePrice;
+            }
+
+            if (sellPrice == 0) {
+                // the item had a currency, but no sell price was set so it cannot be sold
+                return 0;
+            }
+
+            // convert currency to base currency to prevent higher level currencies with a value of 1 from being divided
+            Currency currency = Currency;
+            CurrencyGroup currencyGroup = currencyConverter.FindCurrencyGroup(currency);
+            if (currencyGroup != null) {
+                sellPrice = currencyConverter.GetBaseCurrencyAmount(currency, sellPrice);
+                currency = currencyGroup.MyBaseCurrency;
+            }
+
+            sellPrice = (int)Mathf.Clamp(sellPrice * (usedItemQuality == null ? 1f : usedItemQuality.SellPriceMultiplier) * systemConfigurationManager.VendorPriceMultiplier, 1f, Mathf.Infinity);
+
+            return sellPrice;
         }
+        */
 
         /// <summary>
         /// return the sell price in the base currency
         /// </summary>
         /// <returns></returns>
         public KeyValuePair<Currency, int> GetSellPrice() {
-            //get {
-                //Debug.Log(DisplayName + ".Item.MySellPrice()");
-                int sellAmount = SellPrice();
-                Currency currency = Currency;
-                if (currency != null) {
-                    CurrencyGroup currencyGroup = currencyConverter.FindCurrencyGroup(currency);
-                    if (currencyGroup != null) {
-                        int convertedSellAmount = currencyConverter.GetBaseCurrencyAmount(currency, sellAmount);
-                        currency = currencyGroup.MyBaseCurrency;
-                        sellAmount = (int)Mathf.Ceil((float)convertedSellAmount * systemConfigurationManager.VendorPriceMultiplier);
-                    } else {
-                        sellAmount = (int)Mathf.Ceil((float)sellAmount * systemConfigurationManager.VendorPriceMultiplier);
-                    }
-                }
-                return new KeyValuePair<Currency, int>(currency, sellAmount);
-            //}
+            Currency currency = Currency;
+
+            if (currency == null) {
+                // there was no sell currency so this item cannot be sold
+                return new KeyValuePair<Currency, int>(currency, 0);
+            }
+
+            int sellPrice = 0;
+
+            if (dynamicCurrencyAmount) {
+                sellPrice = (pricePerLevel * GetItemLevel(playerManager.MyCharacter.CharacterStats.Level)) + basePrice;
+            } else {
+                sellPrice = basePrice;
+            }
+
+            if (sellPrice == 0) {
+                // the item had a currency, but no sell price was set so it cannot be sold
+                return new KeyValuePair<Currency, int>(currency, 0);
+            }
+
+            // convert currency to base currency to prevent higher level currencies with a value of 1 from not being divided
+            CurrencyGroup currencyGroup = currencyConverter.FindCurrencyGroup(currency);
+            if (currencyGroup != null) {
+                sellPrice = currencyConverter.GetBaseCurrencyAmount(currency, sellPrice);
+                currency = currencyGroup.MyBaseCurrency;
+            }
+
+            sellPrice = (int)Mathf.Clamp(sellPrice * (realItemQuality == null ? 1f : realItemQuality.SellPriceMultiplier) * systemConfigurationManager.VendorPriceMultiplier, 1f, Mathf.Infinity);
+            
+            return new KeyValuePair<Currency, int>(currency, sellPrice);
         }
 
         public List<CharacterClass> CharacterClassRequirementList { get => realCharacterClassRequirementList; set => realCharacterClassRequirementList = value; }
@@ -281,7 +344,8 @@ namespace AnyRPG {
                 messageFeedManager.WriteMessage("You are not the right character class to use " + DisplayName);
                 return false;
             }
-            if (GetItemLevel(playerManager.MyCharacter.CharacterStats.Level) > playerManager.MyCharacter.CharacterStats.Level) {
+            //if (GetItemLevel(playerManager.MyCharacter.CharacterStats.Level) > playerManager.MyCharacter.CharacterStats.Level) {
+            if (useLevel > playerManager.MyCharacter.CharacterStats.Level) {
                 messageFeedManager.WriteMessage("You are too low level use " + DisplayName);
                 return false;
             }
@@ -334,9 +398,33 @@ namespace AnyRPG {
             }
         }
 
-        public virtual string GetDescription(ItemQuality usedItemQuality) {
+        public virtual string GetSummary(ItemQuality usedItemQuality) {
 
-            return string.Format("<color={0}>{1}</color>\n{2}", QualityColor.GetQualityColorString(usedItemQuality), DisplayName, GetSummary(usedItemQuality));
+            return string.Format("<color={0}>{1}</color>{2}", QualityColor.GetQualityColorString(usedItemQuality), DisplayName, GetDescription(usedItemQuality));
+        }
+
+        public override string GetSummary() {
+            //Debug.Log(DisplayName + ".Item.GetDescription()");
+            return GetSummary(realItemQuality);
+        }
+
+        public virtual string GetDescription(ItemQuality usedItemQuality) {
+            string descriptionString = base.GetDescription();
+            if (descriptionString != string.Empty) {
+                descriptionString = string.Format("\n\n<color=yellow><size=14>{0}</size></color>", descriptionString);
+            }
+            if (characterClassRequirementList.Count > 0) {
+                string colorString = "red";
+                if (realCharacterClassRequirementList.Contains(playerManager.MyCharacter.CharacterClass)) {
+                    colorString = "white";
+                }
+                descriptionString += string.Format("\n\n<color={0}>Required Classes: {1}</color>", colorString, string.Join(",", characterClassRequirementList));
+            }
+            if (Currency == null) {
+                descriptionString += "\n\nNo Sell Price";
+            }
+
+            return string.Format("{0}", descriptionString);
         }
 
         public override string GetDescription() {
@@ -344,30 +432,8 @@ namespace AnyRPG {
             return GetDescription(realItemQuality);
         }
 
-        public virtual string GetSummary(ItemQuality usedItemQuality) {
-            string summaryString = string.Empty;
-            if (characterClassRequirementList.Count > 0) {
-                string colorString = "red";
-                if (realCharacterClassRequirementList.Contains(playerManager.MyCharacter.CharacterClass)) {
-                    colorString = "white";
-                }
-                summaryString += string.Format("\n<color={0}>Required Classes: {1}</color>", colorString, string.Join(",", characterClassRequirementList));
-            }
-            if (Currency == null) {
-                summaryString += "\nNo Sell Price";
-            }
-
-
-            return string.Format("{0}", summaryString);
-        }
-
-        public override string GetSummary() {
-            //Debug.Log(MyDisplayName + ".Item.GetSummary()");
-            return GetSummary(realItemQuality);
-        }
-
         public virtual void InitializeNewItem(ItemQuality usedItemQuality = null) {
-            //Debug.Log(MyDisplayName + ".Item.InitializeNewItem()");
+            //Debug.Log(DisplayName + ".Item.InitializeNewItem()");
 
             // for now items that have item quality set by non random means (vendor overrides) will not change their display name
             if (usedItemQuality != null) {
@@ -414,9 +480,9 @@ namespace AnyRPG {
                     realItemQuality = validItemQualities[usedIndex];
 
                     if (realItemQuality.RandomQualityPrefix != null && realItemQuality.RandomQualityPrefix != string.Empty) {
-                        //Debug.Log(MyDisplayName + ".Item.InitializeNewItem() setting displayName: " + realItemQuality.RandomQualityPrefix + " " + MyDisplayName);
+                        //Debug.Log(DisplayName + ".Item.InitializeNewItem() setting displayName: " + realItemQuality.RandomQualityPrefix + " " + DisplayName);
                         displayName = realItemQuality.RandomQualityPrefix + " " + DisplayName;
-                        //Debug.Log(MyDisplayName + ".Item.InitializeNewItem() setting displayName: " + displayName);
+                        //Debug.Log(DisplayName + ".Item.InitializeNewItem() setting displayName: " + displayName);
                     }
                 }
             }

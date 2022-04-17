@@ -1,0 +1,30 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6c9b51b8d3aa844448aaeab0a989e2fa, type: 3}
+  m_Name: MiningCoalNodeTemplatePackage
+  m_EditorClassIdentifier: 
+  resourceName: Mining Coal Node
+  displayName: 
+  icon: {fileID: 0}
+  iconBackgroundImage: {fileID: 0}
+  description: 
+  useRegionalDescription: 0
+  resourceDescriptionProfile: 
+  optionalOverride: 0
+  resources:
+  - {fileID: 11400000, guid: def1e76c77035534aa0910e6fe203183, type: 2}
+  - {fileID: 11400000, guid: ab28f8268baffb342b5f499fa4b8297d, type: 2}
+  - {fileID: 11400000, guid: 8deaa7887a2611347add2eeda33a8837, type: 2}
+  prefabs:
+  - {fileID: 591910601583303974, guid: 3a91fcce3f1cf48418239133282497d0, type: 3}
+  dependencies:
+  - {fileID: 11400000, guid: 252ca395929968e43820806aecfe6a2d, type: 2}

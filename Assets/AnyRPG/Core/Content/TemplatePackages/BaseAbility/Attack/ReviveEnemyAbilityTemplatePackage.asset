@@ -1,0 +1,32 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6c9b51b8d3aa844448aaeab0a989e2fa, type: 3}
+  m_Name: ReviveEnemyAbilityTemplatePackage
+  m_EditorClassIdentifier: 
+  resourceName: Life Drain Ability
+  displayName: 
+  icon: {fileID: 0}
+  iconBackgroundImage: {fileID: 0}
+  description: 
+  useRegionalDescription: 0
+  resourceDescriptionProfile: 
+  optionalOverride: 0
+  resources:
+  - {fileID: 11400000, guid: b9c139fdf5a0cbc4cb7ef0b2c3d77a6b, type: 2}
+  - {fileID: 11400000, guid: 2b66ab846d613eb41bb76129a029ab45, type: 2}
+  - {fileID: 11400000, guid: 5a8a824a24a33cc4e9edbfaa67888c64, type: 2}
+  - {fileID: 11400000, guid: 0c35b96e0963a0046bb45831e2677f0e, type: 2}
+  - {fileID: 11400000, guid: a9393a313693f3644838672fec5260c5, type: 2}
+  - {fileID: 11400000, guid: c873d3f44dd2aed4f8859f3d447932be, type: 2}
+  - {fileID: 11400000, guid: 4667448d0a5d7c544bf7d2989dd853b5, type: 2}
+  prefabs: []
+  dependencies: []

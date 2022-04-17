@@ -1,0 +1,54 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d67e3801170622341be03526c0ae62e0, type: 3}
+  m_Name: MageCharacterClass
+  m_EditorClassIdentifier: 
+  resourceName: Mage
+  displayName: 
+  icon: {fileID: 21300000, guid: 8b04cac8505abbb47bd5c91db3229c44, type: 3}
+  iconBackgroundImage: {fileID: 0}
+  description: 
+  useRegionalDescription: 0
+  resourceDescriptionProfile: 
+  optionalOverride: 0
+  newGameOption: 0
+  equipmentNames:
+  - Medieval Staff
+  capabilities:
+    abilityNames:
+    - Restore Mana
+    - Life Exchange
+    - Tornado
+    - Glide
+    traitNames:
+    - Soul Of The Mage
+    armorClassList:
+    - Cloth
+    weaponSkills:
+    - Staff
+  unitTypeCapabilities: []
+  primaryStats:
+  - statName: Intellect
+    budgetPerLevel: 5
+    primaryToSecondaryConversion:
+    - secondaryStatType: 6
+      conversionRatio: 1
+      ratedConversion: 0
+    - secondaryStatType: 2
+      conversionRatio: 0.5
+      ratedConversion: 1
+    primaryToResourceConversion:
+    - resourceName: Mana
+      resourcePerPoint: 10
+  powerResources:
+  - Mana
+  validPetTypes: []

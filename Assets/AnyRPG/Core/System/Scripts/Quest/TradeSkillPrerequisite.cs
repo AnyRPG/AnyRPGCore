@@ -17,7 +17,6 @@ namespace AnyRPG {
         private Skill prerequisiteSkill = null;
 
         // game manager references
-        private SystemDataFactory systemDataFactory = null;
         private PlayerManager playerManager = null;
         private SystemEventManager systemEventManager = null;
 
@@ -42,7 +41,6 @@ namespace AnyRPG {
 
         public override void SetGameManagerReferences() {
             base.SetGameManagerReferences();
-            systemDataFactory = systemGameManager.SystemDataFactory;
             playerManager = systemGameManager.PlayerManager;
             systemEventManager = systemGameManager.SystemEventManager;
         }

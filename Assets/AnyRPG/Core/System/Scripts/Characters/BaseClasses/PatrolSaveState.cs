@@ -6,7 +6,7 @@ using UnityEngine.AI;
 namespace AnyRPG {
     public class PatrolSaveState {
 
-        private PatrolProps patrolProperties = null;
+        private PatrolProperties patrolProperties = null;
         private PatrolController patrolController = null;
 
         // the current count of destinations reached
@@ -21,7 +21,7 @@ namespace AnyRPG {
         // keep track of the current destination
         private Vector3 currentDestination = Vector3.zero;
 
-        public PatrolSaveState(PatrolController patrolController, PatrolProps patrolProps) {
+        public PatrolSaveState(PatrolController patrolController, PatrolProperties patrolProps) {
             this.patrolController = patrolController;
             this.patrolProperties = patrolProps;
         }

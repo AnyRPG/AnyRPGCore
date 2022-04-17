@@ -16,7 +16,7 @@ namespace AnyRPG {
         [ResourceSelector(resourceType = typeof(BaseAbility))]
         protected List<string> abilityNames = new List<string>();
 
-        protected List<BaseAbility> abilityList = new List<BaseAbility>();
+        protected List<BaseAbilityProperties> abilityList = new List<BaseAbilityProperties>();
 
         [Tooltip("Traits are status effects which are automatically active at all times if the level requirement is met.")]
         [SerializeField]
@@ -41,7 +41,8 @@ namespace AnyRPG {
         // reference to the actual weapon skills
         private List<WeaponSkill> weaponSkillList = new List<WeaponSkill>();
 
-        public List<BaseAbility> AbilityList { get => abilityList; set => abilityList = value; }
+        public List<string> AbilityNames { get => abilityNames; set => abilityNames = value; }
+        public List<BaseAbilityProperties> AbilityList { get => abilityList; set => abilityList = value; }
         public List<StatusEffect> TraitList { get => traitList; set => traitList = value; }
         public List<string> ArmorClassList { get => armorClassList; set => armorClassList = value; }
         public List<WeaponSkill> WeaponSkillList { get => weaponSkillList; set => weaponSkillList = value; }
@@ -66,7 +67,7 @@ namespace AnyRPG {
                     if (baseAbilityName != null && baseAbilityName != string.Empty) {
                         BaseAbility baseAbility = systemDataFactory.GetResource<BaseAbility>(baseAbilityName);
                         if (baseAbility != null) {
-                            abilityList.Add(baseAbility);
+                            abilityList.Add(baseAbility.AbilityProperties);
                         } else {
                             Debug.LogError("CapabilityProps.SetupScriptableObjects(): Could not find ability : " + baseAbilityName + " while inititalizing capabilityProps.  CHECK INSPECTOR");
                         }

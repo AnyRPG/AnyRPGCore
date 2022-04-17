@@ -15,9 +15,12 @@ namespace AnyRPG {
 
         public override bool PrerequisitesMet {
             get {
-                if (playerManager.MyCharacter.CharacterAbilityManager.HasAbility(GatheringNodeProps.BaseAbility) == false) {
+                /*
+                 * moved this option to getValidOptions because this should spawn even if the character doesn't have the ability
+                if (playerManager.MyCharacter.CharacterAbilityManager.HasAbility(GatheringNodeProps.BaseAbility.AbilityProperties) == false) {
                     return false;
                 }
+                */
                 return base.PrerequisitesMet;
             }
         }
@@ -38,7 +41,7 @@ namespace AnyRPG {
             }
         }
 
-        public void HandleAbilityListChange(BaseAbility baseAbility) {
+        public void HandleAbilityListChange(BaseAbilityProperties baseAbility) {
             //Debug.Log(gameObject.name + ".GatheringNode.HandleAbilityListChange(" + baseAbility.DisplayName + ")");
             HandlePrerequisiteUpdates();
         }
@@ -73,7 +76,7 @@ namespace AnyRPG {
                 // this call is safe, it will internally check if loot is already dropped and just pickup instead
                 Gather(optionIndex);
             } else {
-                source.BaseCharacter.CharacterAbilityManager.BeginAbility(GatheringNodeProps.BaseAbility, interactable);
+                source.BaseCharacter.CharacterAbilityManager.BeginAbility(GatheringNodeProps.BaseAbility.AbilityProperties, interactable);
             }
             uIManager.interactionWindow.CloseWindow();
             return true;
@@ -98,7 +101,7 @@ namespace AnyRPG {
 
         public override int GetCurrentOptionCount() {
             //Debug.Log(gameObject.name + ".GatheringNode.GetCurrentOptionCount()");
-            return ((playerManager.MyCharacter.CharacterAbilityManager.HasAbility(GatheringNodeProps.BaseAbility) == true
+            return ((playerManager.MyCharacter.CharacterAbilityManager.HasAbility(GatheringNodeProps.BaseAbility.AbilityProperties) == true
                 && interactable.SpawnReference != null
                 && currentTimer <= 0f) ? 1 : 0);
         }

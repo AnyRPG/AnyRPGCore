@@ -32,7 +32,6 @@ namespace AnyRPG {
         private bool requireTurnedIn = true;
 
         // game manager references
-        private SystemDataFactory systemDataFactory = null;
         private QuestLog questLog = null;
 
         public void HandleQuestStatusUpdated() {
@@ -72,7 +71,6 @@ namespace AnyRPG {
 
         public override void SetGameManagerReferences() {
             base.SetGameManagerReferences();
-            systemDataFactory = systemGameManager.SystemDataFactory;
             questLog = systemGameManager.QuestLog;
         }
 

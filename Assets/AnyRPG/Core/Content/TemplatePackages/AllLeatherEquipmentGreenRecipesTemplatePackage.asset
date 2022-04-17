@@ -1,0 +1,33 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6c9b51b8d3aa844448aaeab0a989e2fa, type: 3}
+  m_Name: AllLeatherEquipmentGreenRecipesTemplatePackage
+  m_EditorClassIdentifier: 
+  resourceName: Green Leather Equipment Recipes
+  displayName: 
+  icon: {fileID: 0}
+  iconBackgroundImage: {fileID: 0}
+  description: 
+  useRegionalDescription: 0
+  resourceDescriptionProfile: 
+  optionalOverride: 0
+  resources: []
+  prefabs: []
+  dependencies:
+  - {fileID: 11400000, guid: e6d9a969c351c1f4ab25bee054486dcc, type: 2}
+  - {fileID: 11400000, guid: c154c72c3b525c84c8e54acf360ebdd5, type: 2}
+  - {fileID: 11400000, guid: 5891322b7ae851843a201033322fcf98, type: 2}
+  - {fileID: 11400000, guid: 63c60fe969040f24ea739c902336ffaf, type: 2}
+  - {fileID: 11400000, guid: 0a8afd4684a500b46b26875b0a17e10a, type: 2}
+  - {fileID: 11400000, guid: 23dbae550a0be9d43ac775bb08fd80aa, type: 2}
+  - {fileID: 11400000, guid: d912907d53bb040439228054674032e0, type: 2}
+  - {fileID: 11400000, guid: e0c7b98d2e893aa4c9adecd60122716c, type: 2}

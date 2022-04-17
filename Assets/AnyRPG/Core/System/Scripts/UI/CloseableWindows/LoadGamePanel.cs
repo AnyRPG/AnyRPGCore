@@ -202,6 +202,9 @@ namespace AnyRPG {
             if (characterCreatorManager.PreviewUnitController?.UnitModelController != null) {
                 characterCreatorManager.PreviewUnitController?.UnitModelController.SetInitialSavedAppearance();
             }
+
+            // set level before attempting to load equipment in case equipment has level restrictions
+            characterCreatorManager.PreviewUnitController.CharacterUnit.BaseCharacter.Initialize(loadGameManager.AnyRPGSaveData.playerName, loadGameManager.AnyRPGSaveData.PlayerLevel);
             LoadEquipmentData();
         }
 

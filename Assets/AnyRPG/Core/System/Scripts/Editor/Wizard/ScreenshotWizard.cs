@@ -18,13 +18,15 @@ namespace AnyRPG {
         //private const string imagesFolder = "Images/Screenshot";
 
         private const string wizardTitle = "Screenshot Wizard";
+        private const string indicatorFrame = "Assets/AnyRPG/Core/System/Images/UI/Window/Frame2px.png";
+        private Texture frameTexture = null;
 
-        // the used file path name for the game
-        //private string fileSystemGameName = string.Empty;
+        [Header("Size")]
+        public bool showSizeIndicator = true;
+        public int width = 256;
+        public int height = 256;
+        private const int borderWidth = 2;
 
-        // user modified variables
-        //public string gameName = "";
-        //public int pixelsPerMeter = 10;
         [Header("Camera")]
 
         [Tooltip("Set to Depth for images with a transparent background")]
@@ -41,18 +43,73 @@ namespace AnyRPG {
 
         private bool originalSceneLighting = false;
 
+        private static ScreenshotWizard openWizard = null;
+
         [MenuItem("Tools/AnyRPG/Wizard/Screenshot Wizard")]
         static void CreateWizard() {
-            ScriptableWizard.DisplayWizard<ScreenshotWizard>(wizardTitle, "Create");
+            if (openWizard == null) {
+                openWizard = ScriptableWizard.DisplayWizard<ScreenshotWizard>(wizardTitle, "Create");
+            } else {
+                openWizard.Focus();
+            }
         }
 
         private void OnEnable() {
             SetSelection();
             Selection.selectionChanged += SetSelection;
+            SceneView.duringSceneGui += OnScene;
+            frameTexture = AssetDatabase.LoadMainAssetAtPath(indicatorFrame) as Texture;
+            if (PlayerPrefs.HasKey("ScreenshotWizardWidth")) {
+                width = PlayerPrefs.GetInt("ScreenshotWizardWidth");
+            }
+            if (PlayerPrefs.HasKey("ScreenshotWizardHeight")) {
+                height = PlayerPrefs.GetInt("ScreenshotWizardHeight");
+            }
+            if (PlayerPrefs.HasKey("ScreenshotWizardLightIntensity")) {
+                lightIntensity = PlayerPrefs.GetFloat("ScreenshotWizardLightIntensity");
+            }
+            if (PlayerPrefs.HasKey("ScreenshotWizardLightColorR")) {
+                /*
+                lightColor = new Color32(PlayerPrefs.GetFloat("ScreenshotWizardLightColorR"),
+                    (byte)PlayerPrefs.GetFloat("ScreenshotWizardLightColorG"),
+                    (byte)PlayerPrefs.GetFloat("ScreenshotWizardLightColorB"),
+                    (byte)PlayerPrefs.GetFloat("ScreenshotWizardLightColorA"));
+                */
+                lightColor.r = PlayerPrefs.GetFloat("ScreenshotWizardLightColorR");
+                lightColor.g = PlayerPrefs.GetFloat("ScreenshotWizardLightColorG");
+                lightColor.b = PlayerPrefs.GetFloat("ScreenshotWizardLightColorB");
+                lightColor.a = PlayerPrefs.GetFloat("ScreenshotWizardLightColorA");
+            }
         }
 
         private void OnDisable() {
             Selection.selectionChanged -= SetSelection;
+            SceneView.duringSceneGui -= OnScene;
+            openWizard = null;
+        }
+
+        private void OnScene(SceneView sceneview) {
+
+            if (showSizeIndicator) {
+
+                Handles.BeginGUI();
+
+                int sourceX = (SceneView.currentDrawingSceneView.camera.pixelWidth / 2) - (width / 2) - borderWidth;
+                int sourceY = (SceneView.currentDrawingSceneView.camera.pixelHeight / 2) - (height / 2) - borderWidth;
+                //Debug.Log("sourceX: " + sourceX + " sourceY: " + sourceY + " screenWidth: " + Screen.width + " screenHeight: " + Screen.height + " pixelHeight: " + SceneView.currentDrawingSceneView.camera.pixelHeight + " pixelWidth: " + SceneView.currentDrawingSceneView.camera.pixelWidth);
+                GUILayout.BeginArea(new Rect(sourceX, sourceY, width + (borderWidth * 2), height + (borderWidth * 2)), GUIStyle.none);
+                GUIStyle gUIStyle = new GUIStyle();
+                gUIStyle.normal.background = (Texture2D)frameTexture;
+                gUIStyle.border.left = borderWidth;
+                gUIStyle.border.right = borderWidth;
+                gUIStyle.border.top = borderWidth;
+                gUIStyle.border.bottom = borderWidth;
+                GUILayout.Box(GUIContent.none, gUIStyle, GUILayout.MinWidth(width + (borderWidth * 2)), GUILayout.MinHeight(height + (borderWidth * 2)));
+
+                GUILayout.EndArea();
+
+                Handles.EndGUI();
+            }
         }
 
         public void SetSelection() {
@@ -80,8 +137,16 @@ namespace AnyRPG {
 
             AssetDatabase.Refresh();
 
+            PlayerPrefs.SetInt("ScreenshotWizardWidth", width);
+            PlayerPrefs.SetInt("ScreenshotWizardHeight", height);
+            PlayerPrefs.SetFloat("ScreenshotWizardLightIntensity", lightIntensity);
+            PlayerPrefs.SetFloat("ScreenshotWizardLightColorR", lightColor.r);
+            PlayerPrefs.SetFloat("ScreenshotWizardLightColorG", lightColor.g);
+            PlayerPrefs.SetFloat("ScreenshotWizardLightColorB", lightColor.b);
+            PlayerPrefs.SetFloat("ScreenshotWizardLightColorA", lightColor.a);
+
             EditorUtility.ClearProgressBar();
-            EditorUtility.DisplayDialog(wizardTitle, wizardTitle +" Complete! The screenshot image can be found at " + filePath, "OK");
+            EditorUtility.DisplayDialog(wizardTitle, wizardTitle + " Complete! The screenshot image can be found at " + filePath, "OK");
 
         }
 
@@ -146,13 +211,24 @@ namespace AnyRPG {
             // render texture active and then read the pixels
             RenderTexture.active = renderTexture;
             Texture2D screenShot;
-            screenShot = new Texture2D(captureWidth, captureHeight, TextureFormat.ARGB32, false);
-            screenShot.ReadPixels(new Rect(0, 0, captureWidth, captureHeight), 0, 0);
+
+            // original
+            //screenShot = new Texture2D(captureWidth, captureHeight, TextureFormat.ARGB32, false);
+            // modified
+            screenShot = new Texture2D(width, height, TextureFormat.ARGB32, false);
+
+            // original
+            //screenShot.ReadPixels(new Rect(0, 0, captureWidth, captureHeight), 0, 0);
+            //modified
+            int sourceX = (captureWidth / 2) - (width / 2);
+            int sourceY = (captureHeight / 2) - (width / 2);
+            screenShot.ReadPixels(new Rect(sourceX, sourceY, width, height), 0, 0);
+
             screenShot.Apply();
 
             string screenshotFilename = GetFinalFileName(folderName);
             byte[] screenshotData = screenShot.EncodeToPNG();
-            Debug.Log("Capturing screenshot to file " + screenshotFilename + ". width: " + captureWidth + " Height: " + captureHeight);
+            Debug.Log("Capturing screenshot to file " + screenshotFilename + ". width: " + captureWidth + " Height: " + captureHeight + " sourceX: " + sourceX + " sourceY: " + sourceY);
 
             System.IO.FileStream fStream = System.IO.File.Create(screenshotFilename);
             fStream.Write(screenshotData, 0, screenshotData.Length);
@@ -163,7 +239,7 @@ namespace AnyRPG {
                 view.sceneLighting = originalSceneLighting;
                 Undo.PerformUndo();
             }
-            
+
 
             // clean up screenshot
             if (Application.isPlaying) {
@@ -188,7 +264,14 @@ namespace AnyRPG {
         void OnWizardUpdate() {
             helpString = "Creates a screenshot image of the currently loaded scene";
             errorString = Validate();
+            SetFileName();
             isValid = (errorString == null || errorString == "");
+        }
+
+        void SetFileName() {
+            if (objectToScreenShot != null && fileName == string.Empty) {
+                fileName = objectToScreenShot.name;
+            }
         }
 
         string GetFolder() {
@@ -204,10 +287,6 @@ namespace AnyRPG {
             }
 
             return null;
-        }
-
-        private void ShowError(string message) {
-            EditorUtility.DisplayDialog("Error", message, "OK");
         }
 
         public static void DisplayProgressBar(string title, string info, float progress) {

@@ -6,18 +6,12 @@ using UnityEngine.UI;
 
 namespace AnyRPG {
     [CreateAssetMenu(fileName = "New InstantEffect", menuName = "AnyRPG/Abilities/Effects/InstantEffect")]
-    public class InstantEffect : DirectEffect {
+    public class InstantEffect : AbilityEffect {
 
-        public override Dictionary<PrefabProfile, GameObject> Cast(IAbilityCaster source, Interactable target, Interactable originalTarget, AbilityEffectContext abilityEffectContext) {
-            //Debug.Log(DisplayName + ".InstantEffect.Cast()");
-            if (abilityEffectContext == null) {
-                abilityEffectContext = new AbilityEffectContext(source);
-            }
-            Dictionary<PrefabProfile, GameObject> returnObjects = base.Cast(source, target, originalTarget, abilityEffectContext);
+        [SerializeField]
+        private InstantEffectProperties instantEffectProperties = new InstantEffectProperties();
 
-            PerformAbilityHit(source, target, abilityEffectContext);
-            return returnObjects;
-        }
+        public override AbilityEffectProperties AbilityEffectProperties { get => instantEffectProperties; }
 
     }
 }

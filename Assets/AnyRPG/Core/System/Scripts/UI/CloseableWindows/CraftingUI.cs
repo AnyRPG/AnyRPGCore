@@ -60,7 +60,7 @@ namespace AnyRPG {
         private List<DescribableCraftingInputIcon> inputIcons = new List<DescribableCraftingInputIcon>();
 
         // holds all the recipes
-        private CraftAbility craftAbility = null;
+        private CraftAbilityProperties craftAbility = null;
 
 
         // the number of items to craft
@@ -142,7 +142,7 @@ namespace AnyRPG {
         }
 
         // meant to be called externally from craftingNode
-        public void ViewRecipes(CraftAbility craftAbility) {
+        public void ViewRecipes(CraftAbilityProperties craftAbility) {
             this.craftAbility = craftAbility;
             ResetWindow();
             ShowRecipes(craftAbility);
@@ -159,7 +159,7 @@ namespace AnyRPG {
             return returnList;
         }
 
-        public void ShowRecipesCommon(CraftAbility craftAbility) {
+        public void ShowRecipesCommon(CraftAbilityProperties craftAbility) {
             //Debug.Log("craftingUI.ShowRecipesCommon(" + craftAbility.name + ")");
             Clearrecipes();
             RecipeScript firstScript = null;
@@ -200,7 +200,7 @@ namespace AnyRPG {
             ShowRecipesCommon(craftAbility);
         }
 
-        public void ShowRecipes(CraftAbility craftAbility) {
+        public void ShowRecipes(CraftAbilityProperties craftAbility) {
             //Debug.Log("craftingUI.Showrecipes(" + craftAbility.name + ")");
             this.craftAbility = craftAbility;
             ShowRecipesCommon(this.craftAbility);

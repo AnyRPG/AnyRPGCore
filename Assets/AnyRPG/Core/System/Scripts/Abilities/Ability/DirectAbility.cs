@@ -6,17 +6,19 @@ using UnityEngine.UI;
 
 namespace AnyRPG {
     [CreateAssetMenu(fileName = "New Direct Ability", menuName = "AnyRPG/Abilities/DirectAbility")]
-    public class DirectAbility : InstantEffectAbility {
+    public class DirectAbility : BaseAbility {
 
-        public override bool PerformAbilityEffects(IAbilityCaster source, Interactable target, AbilityEffectContext abilityEffectContext) {
+        [SerializeField]
+        private DirectAbilityProperties directAbilityProperties = new DirectAbilityProperties();
 
-            //float abilityCastingTime = GetAbilityCastingTime(source);
-            float abilityCastingTime = GetBaseAbilityCastingTime(source);
-            //if (abilityCastingTime > 1) {
-                abilityEffectContext.castTimeMultiplier = abilityCastingTime;
-            //}
-            return base.PerformAbilityEffects(source, target, abilityEffectContext);
+        public override BaseAbilityProperties AbilityProperties { get => directAbilityProperties; }
+
+        /*
+        public override void Convert() {
+            directAbilityProperties.GetBaseAbilityProperties(this);
         }
+        */
+
 
     }
 }

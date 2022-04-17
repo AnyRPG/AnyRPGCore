@@ -1,0 +1,35 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6c9b51b8d3aa844448aaeab0a989e2fa, type: 3}
+  m_Name: BaseCraftingAlchemyRecipesTemplatePackage
+  m_EditorClassIdentifier: 
+  resourceName: Base Crafting Alchemy Recipes
+  displayName: 
+  icon: {fileID: 0}
+  iconBackgroundImage: {fileID: 0}
+  description: 
+  useRegionalDescription: 0
+  resourceDescriptionProfile: 
+  optionalOverride: 0
+  resources: []
+  prefabs: []
+  dependencies:
+  - {fileID: 11400000, guid: 56a5cc8b3359eaa4a90c54fe0d5df001, type: 2}
+  - {fileID: 11400000, guid: 24f2832c587497645a042a462f4f24d3, type: 2}
+  - {fileID: 11400000, guid: 8207e2df54fa064439ab7e830302636f, type: 2}
+  - {fileID: 11400000, guid: 0df65819835eb2245973972237f1ed88, type: 2}
+  - {fileID: 11400000, guid: a82e1a0a7366b2a4aac89c2fa152dfae, type: 2}
+  - {fileID: 11400000, guid: 8328d80e6638c1c4cbc3539019d8eb96, type: 2}
+  - {fileID: 11400000, guid: aedbfa4e6003ecd4996da9b86d4ab903, type: 2}
+  - {fileID: 11400000, guid: 9ed8d7bd2eebcc148a5c48932cdf1e0b, type: 2}
+  - {fileID: 11400000, guid: e61493b3b8ae3714a992cbad105dcd2e, type: 2}
+  - {fileID: 11400000, guid: e3f97e2c1ea595d4d9e0f92fde1e66b2, type: 2}

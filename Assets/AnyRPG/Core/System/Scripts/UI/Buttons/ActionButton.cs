@@ -210,6 +210,14 @@ namespace AnyRPG {
             UpdateVisual();
         }
 
+        public void HandleLeaveStealth() {
+            UpdateVisual();
+        }
+
+        public void HandleEnterStealth() {
+            UpdateVisual();
+        }
+
         public void LoadUseable(IUseable newUseable) {
             useable = newUseable.GetFactoryUseable();
         }
@@ -220,6 +228,7 @@ namespace AnyRPG {
         /// <param name="useable"></param>
         public void SetUseable(IUseable useable, bool monitor = true) {
             //Debug.Log(gameObject.name + ".ActionButton.SetUsable(" + (useable == null ? "null" : useable.DisplayName) + ")");
+
             playerManager.MyCharacter.CharacterAbilityManager.OnAttemptPerformAbility -= OnAttemptUseableUse;
             playerManager.MyCharacter.CharacterAbilityManager.OnPerformAbility -= OnUseableUse;
             playerManager.MyCharacter.CharacterAbilityManager.OnBeginAbilityCoolDown -= HandleBeginAbilityCooldown;
@@ -239,6 +248,7 @@ namespace AnyRPG {
             playerManager.MyCharacter.CharacterAbilityManager.OnBeginAbilityCoolDown += HandleBeginAbilityCooldown;
 
             SubscribeToCombatEvents();
+            SubscribeToStealthEvents();
 
             // there may be a global cooldown in progress.  if not, this call will still update the visual
             if (monitor == true) {
@@ -258,13 +268,20 @@ namespace AnyRPG {
         }
 
         public void SubscribeToCombatEvents() {
-            if (Useable != null && Useable is BaseAbility && (Useable as BaseAbility).RequireOutOfCombat == true) {
+            if (Useable != null && Useable.RequireOutOfCombat == true) {
                 playerManager.MyCharacter.CharacterCombat.OnEnterCombat += HandleEnterCombat;
                 playerManager.MyCharacter.CharacterCombat.OnDropCombat += HandleDropCombat;
             }
         }
 
-        public void OnAttemptUseableUse(BaseAbility ability) {
+        public void SubscribeToStealthEvents() {
+            if (Useable != null && Useable.RequireStealth == true) {
+                playerManager.MyCharacter.CharacterStats.OnEnterStealth += HandleEnterStealth;
+                playerManager.MyCharacter.CharacterStats.OnLeaveStealth += HandleLeaveStealth;
+            }
+        }
+
+        public void OnAttemptUseableUse(BaseAbilityProperties ability) {
             //Debug.Log("ActionButton.OnUseableUse(" + ability.DisplayName + ")");
             ChooseMonitorCoroutine();
         }
@@ -293,12 +310,12 @@ namespace AnyRPG {
             }
         }
 
-        public void OnUseableUse(BaseAbility ability) {
+        public void OnUseableUse(BaseAbilityProperties ability) {
             //Debug.Log("ActionButton.OnUseableUse(" + ability.DisplayName + ")");
             ChooseMonitorCoroutine();
         }
 
-        public IEnumerator MonitorAutoAttack(BaseAbility ability) {
+        public IEnumerator MonitorAutoAttack(BaseAbilityProperties ability) {
             //Debug.Log("ActionButton.MonitorautoAttack(" + ability.DisplayName + ")");
             yield return null;
 
@@ -317,11 +334,28 @@ namespace AnyRPG {
             monitorCoroutine = null;
         }
 
-        public IEnumerator MonitorAbility(BaseAbility ability) {
+        public IEnumerator MonitorCooldown(IUseable useable) {
+            //Debug.Log("ActionButton.MonitorAbility(" + ability.DisplayName + ")");
+            while (Useable != null
+                && playerManager.MyCharacter.CharacterAbilityManager.MyAbilityCoolDownDictionary.ContainsKey(useable.DisplayName)) {
+                UpdateVisual();
+                yield return null;
+            }
+            //Debug.Log("ActionButton.MonitorAbility(" + ability.DisplayName + "): Done Monitoring; Useable: " + (Useable == null ? "null" : Useable.DisplayName));
+            if (Useable != null) {
+                // could switch buttons while an ability is on cooldown
+                UpdateVisual();
+            }
+            //abilityCoRoutine = null;
+            monitorCoroutine = null;
+        }
+
+        //public IEnumerator MonitorAbility(BaseAbility ability) {
+        public IEnumerator MonitorAbility(string abilityName) {
             //Debug.Log("ActionButton.MonitorAbility(" + ability.DisplayName + ")");
             while (Useable != null
                 && (playerManager.MyCharacter.CharacterAbilityManager.RemainingGlobalCoolDown > 0f
-                || playerManager.MyCharacter.CharacterAbilityManager.MyAbilityCoolDownDictionary.ContainsKey(ability.DisplayName))) {
+                || playerManager.MyCharacter.CharacterAbilityManager.MyAbilityCoolDownDictionary.ContainsKey(abilityName))) {
                 UpdateVisual();
                 yield return null;
             }
@@ -349,12 +383,10 @@ namespace AnyRPG {
         /// attempt to remove unlearned spells from the button
         /// </summary>
         public void RemoveStaleActions() {
-            if (Useable != null && Useable.IsUseableStale()) {
-                //if (!playerManager.MyCharacter.CharacterAbilityManager.HasAbility(Useable as BaseAbility)) {
+            if (Useable != null && Useable.IsUseableStale() == true) {
                 savedUseable = Useable;
                 useable = null;
                 UpdateVisual();
-                //}
             }
         }
 
@@ -461,11 +493,19 @@ namespace AnyRPG {
         }
 
         public void UnsubscribeFromCombatEvents() {
-            if (Useable != null && Useable is BaseAbility && (Useable as BaseAbility).RequireOutOfCombat == true) {
+            if (Useable != null && Useable.RequireOutOfCombat == true) {
                 playerManager.MyCharacter.CharacterCombat.OnEnterCombat -= HandleEnterCombat;
                 playerManager.MyCharacter.CharacterCombat.OnDropCombat -= HandleDropCombat;
             }
         }
+
+        public void UnsubscribeFromStealthEvents() {
+            if (Useable != null && Useable.RequireStealth == true) {
+                playerManager.MyCharacter.CharacterStats.OnEnterStealth -= HandleEnterStealth;
+                playerManager.MyCharacter.CharacterStats.OnLeaveStealth -= HandleLeaveStealth;
+            }
+        }
+
 
         public void ClearUseable() {
             //Debug.Log("ActionButton.ClearUseable()");

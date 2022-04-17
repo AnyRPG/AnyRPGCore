@@ -460,7 +460,7 @@ namespace AnyRPG {
         }
 
         // special melee attack
-        public float HandleAbility(AnimationClip animationClip, BaseAbility baseAbility, BaseCharacter targetCharacterUnit, AbilityEffectContext abilityEffectContext) {
+        public float HandleAbility(AnimationClip animationClip, BaseAbilityProperties baseAbility, BaseCharacter targetCharacterUnit, AbilityEffectContext abilityEffectContext) {
             //Debug.Log(unitController.gameObject.name + ".CharacterAnimator.HandleAbility(" + baseAbility.DisplayName + ")");
             if (animator == null) {
                 return 0f;
@@ -489,7 +489,7 @@ namespace AnyRPG {
             SetAnimationSpeed(unitController.CharacterUnit.BaseCharacter.CharacterStats.GetSpeedModifiers() / 100f);
 
             // wait for the animation to play before allowing the character to attack again
-            attackCoroutine = unitController.StartCoroutine(WaitForAnimation(baseAbility, speedNormalizedAnimationLength, (baseAbility as AnimatedAbility).IsAutoAttack, !(baseAbility as AnimatedAbility).IsAutoAttack, false));
+            attackCoroutine = unitController.StartCoroutine(WaitForAnimation(baseAbility, speedNormalizedAnimationLength, (baseAbility as AnimatedAbilityProperties).IsAutoAttack, !(baseAbility as AnimatedAbilityProperties).IsAutoAttack, false));
 
             // tell the animator to play the animation
             SetAttacking(true);
@@ -498,7 +498,7 @@ namespace AnyRPG {
         }
 
         // non melee ability (spell) cast
-        public void HandleCastingAbility(AnimationClip animationClip, BaseAbility baseAbility) {
+        public void HandleCastingAbility(AnimationClip animationClip, BaseAbilityProperties baseAbility) {
             //Debug.Log(gameObject.name + ".CharacterAnimator.HandleCastingAbility()");
             if (animator == null) {
                 return;
@@ -520,7 +520,7 @@ namespace AnyRPG {
                 //lastAnimationLength = animationLength;
 
             }
-            if (baseAbility.GetUnitAnimationProps(unitController.CharacterUnit.BaseCharacter).UseRootMotion == true) {
+            if (baseAbility.GetUnitAnimationProps(unitController.CharacterUnit.BaseCharacter)?.UseRootMotion == true) {
                 unitController.SetUseRootMotion(true);
             } else {
                 unitController.SetUseRootMotion(false);
@@ -571,7 +571,7 @@ namespace AnyRPG {
             return false;
         }
 
-        public IEnumerator WaitForAnimation(BaseAbility baseAbility, float animationLength, bool clearAutoAttack, bool clearAnimatedAttack, bool clearCasting) {
+        public IEnumerator WaitForAnimation(BaseAbilityProperties baseAbility, float animationLength, bool clearAutoAttack, bool clearAnimatedAttack, bool clearCasting) {
             //Debug.Log(unitController.gameObject.name + ".WaitForAnimation(" + baseAbility + ", " + animationLength + ", " + clearAutoAttack + ", " + clearAnimatedAttack + ", " + clearCasting + ")");
             float remainingTime = animationLength;
             //Debug.Log(gameObject.name + "waitforanimation remainingtime: " + remainingTime + "; MyWaitingForHits: " + unitController.BaseCharacter.MyCharacterCombat.MyWaitingForAutoAttack + "; myWaitingForAnimatedAbility: " + unitController.BaseCharacter.MyCharacterAbilityManager.MyWaitingForAnimatedAbility + "; iscasting: " + unitController.BaseCharacter.MyCharacterAbilityManager.MyIsCasting);
@@ -617,11 +617,11 @@ namespace AnyRPG {
         /// </summary>
         /// <param name="baseAbility"></param>
         /// <returns></returns>
-        public bool ClearAnimatedAttack(BaseAbility baseAbility) {
+        public bool ClearAnimatedAttack(BaseAbilityProperties baseAbility) {
             //Debug.Log(unitController.gameObject.name + ".CharacterAnimator.ClearAnimatedAttack()");
             if (unitController?.CharacterUnit?.BaseCharacter != null && unitController.CharacterUnit.BaseCharacter.CharacterAbilityManager.WaitingForAnimatedAbility == true) {
                 unitController.CharacterUnit.BaseCharacter.CharacterAbilityManager.WaitingForAnimatedAbility = false;
-                (baseAbility as AnimatedAbility).CleanupEventSubscriptions(unitController.CharacterUnit.BaseCharacter);
+                (baseAbility as AnimatedAbilityProperties).CleanupEventSubscriptions(unitController.CharacterUnit.BaseCharacter);
                 ClearAttackCommon();
                 return true;
             }
@@ -665,7 +665,7 @@ namespace AnyRPG {
         public void ClearAnimationBlockers(bool clearAnimatedAbility = true, bool clearAutoAttack = true, bool stoppedCast = false) {
             //Debug.Log(unitController.gameObject.name + ".UnitAnimator.ClearAnimationBlockers()");
             bool clearedAnimation = false;
-            if (clearAnimatedAbility && currentAbilityEffectContext != null && currentAbilityEffectContext.baseAbility is AnimatedAbility) {
+            if (clearAnimatedAbility && currentAbilityEffectContext != null && currentAbilityEffectContext.baseAbility is AnimatedAbilityProperties) {
                 //Debug.Log(gameObject.name + ".CharacterAnimator.ClearAnimationBlockers() WE HAVE AN ANIMATED ABILITY");
                 if (ClearAnimatedAttack(currentAbilityEffectContext.baseAbility)) {
                     clearedAnimation = true;
@@ -708,8 +708,8 @@ namespace AnyRPG {
 
             OnDeath();
 
-            if (currentAbilityEffectContext != null && currentAbilityEffectContext.baseAbility is AnimatedAbility) {
-                (currentAbilityEffectContext.baseAbility as AnimatedAbility).CleanupEventSubscriptions(unitController.CharacterUnit.BaseCharacter);
+            if (currentAbilityEffectContext != null && currentAbilityEffectContext.baseAbility is AnimatedAbilityProperties) {
+                (currentAbilityEffectContext.baseAbility as AnimatedAbilityProperties).CleanupEventSubscriptions(unitController.CharacterUnit.BaseCharacter);
             }
 
             // add these to prevent characters from dying floating or upright

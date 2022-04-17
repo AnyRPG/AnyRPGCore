@@ -82,6 +82,12 @@ namespace AnyRPG {
         void GenericLoadList<T>(string folder) where T: ResourceProfile {
             masterList.Add(Resources.LoadAll<T>(folder));
             SystemConfigurationManager systemConfigurationManager = GameObject.FindObjectOfType<SystemConfigurationManager>();
+            if (systemConfigurationManager == null) {
+                SceneConfig sceneConfig = GameObject.FindObjectOfType<SceneConfig>();
+                if (sceneConfig != null) {
+                    systemConfigurationManager = sceneConfig.systemConfigurationManager;
+                }
+            }
             if (systemConfigurationManager != null) {
                 foreach (string resourceFolderName in systemConfigurationManager.LoadResourcesFolders) {
                     masterList.Add(Resources.LoadAll<T>(resourceFolderName + "/" + folder));

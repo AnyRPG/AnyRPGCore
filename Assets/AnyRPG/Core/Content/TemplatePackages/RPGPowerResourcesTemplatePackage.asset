@@ -1,0 +1,29 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6c9b51b8d3aa844448aaeab0a989e2fa, type: 3}
+  m_Name: RPGPowerResourcesTemplatePackage
+  m_EditorClassIdentifier: 
+  resourceName: RPG Power Resources
+  displayName: 
+  icon: {fileID: 0}
+  iconBackgroundImage: {fileID: 0}
+  description: 
+  useRegionalDescription: 0
+  resourceDescriptionProfile: 
+  optionalOverride: 0
+  resources: []
+  prefabs: []
+  dependencies:
+  - {fileID: 11400000, guid: 376d2eb3e9ae6f54eb04400791a3b94a, type: 2}
+  - {fileID: 11400000, guid: ecc6d818469315a4f9823f0c97ccbf24, type: 2}
+  - {fileID: 11400000, guid: 53056916ab95db54a90ab636f26e04ec, type: 2}
+  - {fileID: 11400000, guid: 253e217cade5a544287d1d4db4d42597, type: 2}

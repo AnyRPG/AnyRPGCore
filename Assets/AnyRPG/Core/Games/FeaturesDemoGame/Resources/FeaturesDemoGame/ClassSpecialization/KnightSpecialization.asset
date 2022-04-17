@@ -1,0 +1,48 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c7f2ef4c68ea0a9458250ff77379cc9e, type: 3}
+  m_Name: KnightSpecialization
+  m_EditorClassIdentifier: 
+  resourceName: Knight
+  displayName: 
+  icon: {fileID: 21300000, guid: 068618f626fbf69448d14da271218015, type: 3}
+  iconBackgroundImage: {fileID: 0}
+  description: 
+  useRegionalDescription: 0
+  resourceDescriptionProfile: 
+  optionalOverride: 0
+  newGameOption: 0
+  equipmentNames:
+  - Medieval One Hand Sword
+  - Medieval Shield
+  - Steel Plate Armor
+  - Steel Plate Boots
+  - Steel Plate Bracers
+  - Steel Plate Girdle
+  - Steel Plate Gloves
+  - Steel Plate Helm
+  - Steel Plate Legs
+  - Steel Plate Pauldrons
+  classNames:
+  - Warrior
+  capabilities:
+    abilityNames:
+    - Taunt
+    - Shield Wall
+    - Shield Slam
+    traitNames:
+    - Soul Of The Knight
+    armorClassList: []
+    weaponSkills: []
+  primaryStats: []
+  powerResources: []
+  powerEnhancerStats: []

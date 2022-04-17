@@ -78,7 +78,7 @@ namespace AnyRPG {
         /// Show the tooltip
         /// </summary>
         public void ShowToolTip(Vector2 pivot, Vector3 position, IDescribable describable, string showSellPrice) {
-            //Debug.Log("UIManager.ShowToolTip(" + pivot + ", " + position + ", " + (describable == null ? "null" : describable.DisplayName) + ", " + showSellPrice + ")");
+            //Debug.Log("TooltipController.ShowToolTip(" + pivot + ", " + position + ", " + (describable == null ? "null" : describable.DisplayName) + ", " + showSellPrice + ")");
             if (describable == null) {
                 HideToolTip();
                 return;
@@ -118,7 +118,7 @@ namespace AnyRPG {
             }
 
             // show new price
-            toolTipText.text = describable.GetDescription();
+            toolTipText.text = describable.GetSummary();
             if (toolTipCurrencyBarController != null) {
                 toolTipCurrencyBarController.ClearCurrencyAmounts();
                 if (describable is Item && showSellPrice != string.Empty) {

@@ -194,6 +194,7 @@ MonoBehaviour:
   overrideDisabledColor: 0
   disabledColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 0.5019608}
   CapitalizeText: 0
+  mouseClickSound: 0
   mouseHoverSound: 0
   stackSize: {fileID: 2187069144266771125}
   icon: {fileID: 6963809137653114519}

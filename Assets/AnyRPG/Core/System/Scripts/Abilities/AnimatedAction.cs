@@ -25,6 +25,9 @@ namespace AnyRPG {
         protected SystemAbilityController systemAbilityController = null;
 
         public AnimatedActionProperties ActionProperties { get => actionProperties; }
+        public float CoolDown { get => 0f; }
+        public virtual bool RequireOutOfCombat { get => false; }
+        public virtual bool RequireStealth { get => false; }
 
         /// <summary>
         /// return the casting time of the ability without any speed modifiers applied
@@ -44,6 +47,10 @@ namespace AnyRPG {
             systemAbilityController = systemGameManager.SystemAbilityController;
         }
 
+        public void UpdateTargetRange(ActionBarManager actionBarManager, ActionButton actionButton) {
+            // do nothing
+        }
+
         public virtual bool IsUseableStale() {
             return false;
         }
@@ -61,7 +68,7 @@ namespace AnyRPG {
         }
 
         public IUseable GetFactoryUseable() {
-            return systemDataFactory.GetResource<BaseAbility>(DisplayName);
+            return systemDataFactory.GetResource<BaseAbility>(DisplayName).AbilityProperties;
         }
 
         public virtual void UpdateChargeCount(ActionButton actionButton) {
@@ -134,7 +141,7 @@ namespace AnyRPG {
     */
 
 
-        public override string GetSummary() {
+        public override string GetDescription() {
             string requireString = string.Empty;
             string colorString = string.Empty;
 
@@ -249,9 +256,6 @@ namespace AnyRPG {
 
         private string displayName = string.Empty;
 
-        // game manager references
-        protected SystemDataFactory systemDataFactory = null;
-
         public AudioClip CastingAudioClip { get => (castingAudioProfile == null ? null : castingAudioProfile.AudioClip); }
         //public bool AnimatorCreatePrefabs { get => animatorCreatePrefabs; set => animatorCreatePrefabs = value; }
         public List<AnimationClip> AttackClips { get => (animationProfile != null ? animationProfile.AnimationProps.AttackClips : null); }
@@ -281,7 +285,7 @@ namespace AnyRPG {
         public float ActionCastingTime {
             get {
                 if (AnimationClip != null) {
-                    return animationClip.length;
+                    return AnimationClip.length;
                 }
                 return 0f;
             }
@@ -294,11 +298,6 @@ namespace AnyRPG {
             base.Configure(systemGameManager);
         }
         */
-
-        public override void SetGameManagerReferences() {
-            base.SetGameManagerReferences();
-            systemDataFactory = systemGameManager.SystemDataFactory;
-        }
 
         public void SetupScriptableObjects(SystemGameManager systemGameManager, string ownerName) {
             Configure(systemGameManager);

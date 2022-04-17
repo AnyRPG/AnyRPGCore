@@ -472,13 +472,8 @@ namespace AnyRPG {
                     return;
                 }
                 foreach (RewardButton rewardButton in questDetailsArea.GetHighlightedItemRewardIcons()) {
-                    if (rewardButton.Describable != null && rewardButton.Describable.DisplayName != null && rewardButton.Describable.DisplayName != string.Empty) {
-                        Item newItem = systemItemManager.GetNewResource(rewardButton.Describable.DisplayName);
-                        if (newItem != null) {
-                            //Debug.Log("RewardButton.CompleteQuest(): newItem is not null, adding to inventory");
-                            newItem.DropLevel = playerManager.MyCharacter.CharacterStats.Level;
-                            playerManager.MyCharacter.CharacterInventoryManager.AddItem(newItem, false);
-                        }
+                    if (rewardButton.Rewardable != null) {
+                        rewardButton.Rewardable.GiveReward();
                     }
                 }
             }
@@ -490,8 +485,8 @@ namespace AnyRPG {
                 //Debug.Log("QuestGiverUI.CompleteQuest(): Giving Faction Rewards");
                 foreach (RewardButton rewardButton in questDetailsArea.GetHighlightedFactionRewardIcons()) {
                     //Debug.Log("QuestGiverUI.CompleteQuest(): Giving Faction Rewards: got a reward button!");
-                    if (rewardButton.Describable != null && rewardButton.Describable.DisplayName != null && rewardButton.Describable.DisplayName != string.Empty) {
-                        playerManager.MyCharacter.CharacterFactionManager.AddReputation((rewardButton.Describable as FactionNode).Faction, (rewardButton.Describable as FactionNode).reputationAmount);
+                    if (rewardButton.Rewardable != null) {
+                        rewardButton.Rewardable.GiveReward();
                     }
                 }
             }
@@ -500,8 +495,8 @@ namespace AnyRPG {
             if (currentQuest.AbilityRewards.Count > 0) {
                 //Debug.Log("QuestGiverUI.CompleteQuest(): Giving Ability Rewards");
                 foreach (RewardButton rewardButton in questDetailsArea.GetHighlightedAbilityRewardIcons()) {
-                    if (rewardButton.Describable != null && rewardButton.Describable.DisplayName != null && rewardButton.Describable.DisplayName != string.Empty) {
-                        playerManager.MyCharacter.CharacterAbilityManager.LearnAbility(rewardButton.Describable as BaseAbility);
+                    if (rewardButton.Rewardable != null) {
+                        rewardButton.Rewardable.GiveReward();
                     }
                 }
             }
@@ -510,8 +505,8 @@ namespace AnyRPG {
             if (currentQuest.SkillRewards.Count > 0) {
                 //Debug.Log("QuestGiverUI.CompleteQuest(): Giving Skill Rewards");
                 foreach (RewardButton rewardButton in questDetailsArea.GetHighlightedSkillRewardIcons()) {
-                    if (rewardButton.Describable != null && rewardButton.Describable.DisplayName != null && rewardButton.Describable.DisplayName != string.Empty) {
-                        playerManager.MyCharacter.CharacterSkillManager.LearnSkill(rewardButton.Describable as Skill);
+                    if (rewardButton.Rewardable != null) {
+                        rewardButton.Rewardable.GiveReward();
                     }
                 }
             }

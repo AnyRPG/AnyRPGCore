@@ -24,7 +24,6 @@ namespace AnyRPG {
         protected Dictionary<AbilityAttachmentNode, List<GameObject>> actionObjects = new Dictionary<AbilityAttachmentNode, List<GameObject>>();
 
         // game manager references
-        protected SystemDataFactory systemDataFactory = null;
         //private PlayerManager playerManager = null;
         protected ObjectPooler objectPooler = null;
 
@@ -55,7 +54,6 @@ namespace AnyRPG {
 
         public override void SetGameManagerReferences() {
             base.SetGameManagerReferences();
-            systemDataFactory = systemGameManager.SystemDataFactory;
             //playerManager = systemGameManager.PlayerManager;
             objectPooler = systemGameManager.ObjectPooler;
         }
@@ -82,7 +80,7 @@ namespace AnyRPG {
         }
 
         public void HoldObject(GameObject go, AbilityAttachmentNode attachmentNode, GameObject searchObject) {
-            //Debug.Log(baseCharacter.gameObject.name + ".CharacterAbilityManager.HoldObject(" + go.name + ", " + searchObject.name + ")");
+            //Debug.Log(unitController.gameObject.name + ".UnitActionManager.HoldObject(" + go.name + ", " + searchObject.name + ")");
             if (attachmentNode == null || attachmentNode.HoldableObject == null || go == null || searchObject == null) {
                 //Debug.Log(gameObject + ".CharacterEquipmentManager.HoldObject(): MyHoldableObjectName is empty");
                 return;
@@ -113,7 +111,7 @@ namespace AnyRPG {
         }
 
         public void SpawnActionObjects(List<AbilityAttachmentNode> abilityAttachmentNodes) {
-            //Debug.Log(baseCharacter.gameObject.name + ".CharacterAbilityManager.SpawnAbilityObjects()");
+            //Debug.Log(unitController.gameObject.name + ".UnitActionManager.SpawnActionObjects(" + abilityAttachmentNodes.Count + ")");
 
             // ensure that any current ability objects are cleared before spawning new ones
             DespawnActionObjects();
@@ -122,7 +120,7 @@ namespace AnyRPG {
             foreach (AbilityAttachmentNode abilityAttachmentNode in abilityAttachmentNodes) {
                 if (abilityAttachmentNode != null) {
                     if (abilityAttachmentNode.HoldableObject != null && abilityAttachmentNode.HoldableObject.Prefab != null) {
-                        //Debug.Log("EquipmentManager.HandleWeaponSlot(): " + newItem.name + " has a physical prefab");
+                        //Debug.Log("UnitActionManager.SpawnActionObjects(): attachment node has a physical prefab");
                         // attach a mesh to a bone for weapons
 
                         AttachmentPointNode attachmentPointNode = GetHeldAttachmentPointNode(abilityAttachmentNode);
@@ -130,7 +128,7 @@ namespace AnyRPG {
                             Transform targetBone = unitController.transform.FindChildByRecursive(attachmentPointNode.TargetBone);
 
                             if (targetBone != null) {
-                                //Debug.Log("CharacterAbilityManager.SpawnAbilityObjects(): targetbone (" + attachmentPointNode.TargetBone + ") is " + targetBone.gameObject.name);
+                                //Debug.Log("UnitActionManager.SpawnActionObjects(): targetbone (" + attachmentPointNode.TargetBone + ") is " + targetBone.gameObject.name);
                                 GameObject newEquipmentPrefab = objectPooler.GetPooledObject(abilityAttachmentNode.HoldableObject.Prefab, targetBone);
                                 //holdableObjects.Add(attachmentNode.MyHoldableObject, newEquipmentPrefab);
                                 holdableObjects.Add(abilityAttachmentNode, newEquipmentPrefab);

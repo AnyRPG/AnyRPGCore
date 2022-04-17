@@ -58,7 +58,7 @@ namespace AnyRPG {
             }
         }
 
-        public bool AddSavedAbility(BaseAbility newAbility) {
+        public bool AddSavedAbility(BaseAbilityProperties newAbility) {
             //Debug.Log("AbilityBarController.AddNewAbility(" + newAbility + ")");
             for (int i = 0; i < actionButtons.Count; i++) {
                 if (actionButtons[i].Useable == null && actionButtons[i].SavedUseable != null && actionButtons[i].SavedUseable.DisplayName == newAbility.DisplayName) {
@@ -73,7 +73,7 @@ namespace AnyRPG {
             return false;
         }
 
-        public bool AddNewAbility(BaseAbility newAbility) {
+        public bool AddNewAbility(BaseAbilityProperties newAbility) {
             //Debug.Log("AbilityBarController.AddNewAbility(" + newAbility + ")");
             for (int i = 0; i < actionButtons.Count; i++) {
                 if (actionButtons[i].Useable == null) {

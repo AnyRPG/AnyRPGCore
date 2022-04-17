@@ -27,10 +27,10 @@ namespace AnyRPG {
         [ResourceSelector(resourceType = typeof(StatusEffect))]
         private List<string> traitNames = new List<string>();
 
-        private List<StatusEffect> traitList = new List<StatusEffect>();
+        private List<StatusEffectProperties> traitList = new List<StatusEffectProperties>();
 
-        public List<StatusEffect> MyTraitList { get => traitList; set => traitList = value; }
-        public List<Equipment> MyEquipmentList { get => equipmentList; set => equipmentList = value; }
+        public List<StatusEffectProperties> TraitList { get => traitList; set => traitList = value; }
+        public List<Equipment> EquipmentList { get => equipmentList; set => equipmentList = value; }
 
         public override void SetupScriptableObjects(SystemGameManager systemGameManager) {
             base.SetupScriptableObjects(systemGameManager);
@@ -48,7 +48,7 @@ namespace AnyRPG {
                 }
             }
 
-            traitList = new List<StatusEffect>();
+            traitList = new List<StatusEffectProperties>();
             if (traitNames != null) {
                 foreach (string traitName in traitNames) {
                     StatusEffect tmpStatusEffect = null;
@@ -57,7 +57,7 @@ namespace AnyRPG {
                     } else {
                         tmpStatusEffect = systemDataFactory.GetResource<AbilityEffect>(traitName) as StatusEffect;
                         if (tmpStatusEffect != null) {
-                            traitList.Add(tmpStatusEffect);
+                            traitList.Add(tmpStatusEffect.AbilityEffectProperties as StatusEffectProperties);
                         } else {
                             Debug.LogError("SystemAbilityManager.SetupScriptableObjects(): Could not find status effect : " + traitName + " while inititalizing " + DisplayName + ".  CHECK INSPECTOR");
                         }

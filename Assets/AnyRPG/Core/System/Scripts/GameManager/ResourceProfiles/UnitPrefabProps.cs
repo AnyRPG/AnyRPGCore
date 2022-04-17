@@ -124,6 +124,7 @@ namespace AnyRPG {
         public float FloatHeight { get => floatHeight; }
         public bool AddFloatHeightToTransform { get => addFloatHeightToTransform; }
         public bool UseInlineAnimationProps { get => useInlineAnimationProps; set => useInlineAnimationProps = value; }
+        public string AttachmentProfileName { get => attachmentProfileName; set => attachmentProfileName = value; }
 
         public void SetupScriptableObjects(SystemDataFactory systemDataFactory) {
 

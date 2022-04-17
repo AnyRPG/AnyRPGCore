@@ -1,0 +1,37 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6c9b51b8d3aa844448aaeab0a989e2fa, type: 3}
+  m_Name: AllBasicSilverWeaponRecipesTemplatePackage
+  m_EditorClassIdentifier: 
+  resourceName: Basic Silver Weapon Recipes
+  displayName: 
+  icon: {fileID: 0}
+  iconBackgroundImage: {fileID: 0}
+  description: 
+  useRegionalDescription: 0
+  resourceDescriptionProfile: 
+  optionalOverride: 0
+  resources: []
+  prefabs: []
+  dependencies:
+  - {fileID: 11400000, guid: cb6227f9e3a6fe74191ab8c5209f4058, type: 2}
+  - {fileID: 11400000, guid: 3f31a7a31c19d3444a2bdf4241c16202, type: 2}
+  - {fileID: 11400000, guid: ba872a025da5fe64398c4898ab46c891, type: 2}
+  - {fileID: 11400000, guid: 12280d9d0cd6ce942a5058b5499e350f, type: 2}
+  - {fileID: 11400000, guid: b62bba47695a4c449b3e3f5ff437efa6, type: 2}
+  - {fileID: 11400000, guid: b11152bbc5f619842bf71247659a83d1, type: 2}
+  - {fileID: 11400000, guid: d565fc94ff527fb4fb0b646911a0f001, type: 2}
+  - {fileID: 11400000, guid: 919b83b64144304428f34554a221a934, type: 2}
+  - {fileID: 11400000, guid: 450f66b23344760468af2a0a6c91754f, type: 2}
+  - {fileID: 11400000, guid: e9b274c4770d932479e8632756814ea8, type: 2}
+  - {fileID: 11400000, guid: 38cc3ae0b285add469568131f7fab6f2, type: 2}
+  - {fileID: 11400000, guid: 9861dfcb008062245b052aebcd681705, type: 2}

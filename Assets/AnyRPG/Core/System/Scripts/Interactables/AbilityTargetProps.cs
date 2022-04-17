@@ -16,6 +16,18 @@ namespace AnyRPG {
         [SerializeField]
         private float maxAngle = 45f;
 
+        [Header("Position")]
+
+        [Tooltip("If true, the caster must be behind the target to cast this ability")]
+        [SerializeField]
+        private bool requireBehindTarget = false;
+
+        /*
+        [Tooltip("If Require Facing Target is true, the maximum angle allowed to be turned from straight")]
+        [SerializeField]
+        private float maxBehindAngle = 45f;
+        */
+
         [Header("Ground Target")]
 
         [Tooltip("If true, casting this spell will require choosing a target point on the ground, instead of a target character or object.")]
@@ -38,6 +50,7 @@ namespace AnyRPG {
         public Color GroundTargetColor { get => groundTargetColor; }
         public float GroundTargetRadius { get => groundTargetRadius; }
         public bool RequireFacingTarget { get => requireFacingTarget; }
+        public bool RequireBehindTarget { get => requireBehindTarget; }
 
         public override bool CanUseOn(ITargetable targetable, Interactable target, IAbilityCaster sourceCharacter, AbilityEffectContext abilityEffectContext = null, bool playerInitiated = false, bool performRangeCheck = true) {
             //Debug.Log("AbilityTargetProps.CanUseOn()");
@@ -56,6 +69,18 @@ namespace AnyRPG {
                 if (localTargetPosition.z < 0f || localtargetAngle > maxAngle) {
                     if (playerInitiated) {
                         sourceCharacter.AbilityManager.ReceiveMessageFeedMessage("You must be facing your target to cast " + targetable.DisplayName);
+                    }
+                    return false;
+                }
+            }
+
+            if (requireBehindTarget) {
+                if (target == null) {
+                    return false;
+                }
+                if (target.transform.InverseTransformPoint(sourceCharacter.AbilityManager.UnitGameObject.transform.position).z >= 0f) {
+                    if (playerInitiated) {
+                        sourceCharacter.AbilityManager.ReceiveMessageFeedMessage("You must be behind your target to cast " + targetable.DisplayName);
                     }
                     return false;
                 }

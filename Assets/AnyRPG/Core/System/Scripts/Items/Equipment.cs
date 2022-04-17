@@ -98,7 +98,7 @@ namespace AnyRPG {
         private List<ItemSecondaryStatNode> chosenSecondaryStats = new List<ItemSecondaryStatNode>();
 
         //[SerializeField]
-        private List<BaseAbility> learnedAbilities = new List<BaseAbility>();
+        private List<BaseAbilityProperties> learnedAbilities = new List<BaseAbilityProperties>();
 
         public float GetArmorModifier(int characterLevel) {
             return GetArmorModifier(characterLevel, realItemQuality);
@@ -161,8 +161,9 @@ namespace AnyRPG {
         }
 
         public BaseAbility OnEquipAbility { get => onEquipAbility; set => onEquipAbility = value; }
-        public List<BaseAbility> LearnedAbilities { get => learnedAbilities; set => learnedAbilities = value; }
+        public List<BaseAbilityProperties> LearnedAbilities { get => learnedAbilities; set => learnedAbilities = value; }
         public bool ManualValueIsScale { get => manualValueIsScale; set => manualValueIsScale = value; }
+        public string EquipmentSlotTypeName { get => equipmentSlotType; set => equipmentSlotType = value; }
         public EquipmentSlotType EquipmentSlotType { get => realEquipmentSlotType; set => realEquipmentSlotType = value; }
         public List<HoldableObjectAttachment> HoldableObjectList { get => holdableObjectList; set => holdableObjectList = value; }
         public EquipmentSet EquipmentSet { get => equipmentSet; set => equipmentSet = value; }
@@ -228,10 +229,26 @@ namespace AnyRPG {
                 return false;
             }
             if (GetItemLevel(baseCharacter.CharacterStats.Level) > baseCharacter.CharacterStats.Level) {
-                //Debug.Log(baseCharacter.gameObject.name + "." + DisplayName + ".Equipment.CanEquip(): character level too low");
+                //Debug.Log(baseCharacter.gameObject.name + "." + DisplayName + ".Equipment.CanEquip(): character level too low (" + baseCharacter.CharacterStats.Level + ")");
                 return false;
             }
             return true;
+        }
+
+        public virtual void HandleEquip(CharacterCombat characterCombat, EquipmentSlotProfile equipmentSlotProfile) {
+            // nothing here yet
+        }
+
+        public virtual void HandleUnequip(CharacterCombat characterCombat, EquipmentSlotProfile equipmentSlotProfile) {
+            // nothing here yet
+        }
+
+        public virtual void HandleEquip(CharacterEquipmentManager characterEquipmentManager) {
+            // nothing here yet
+        }
+
+        public virtual void HandleUnequip(CharacterEquipmentManager characterEquipmentManager) {
+            // nothing here yet
         }
 
         /// <summary>
@@ -245,7 +262,7 @@ namespace AnyRPG {
             return true;
         }
 
-        public override string GetSummary(ItemQuality usedItemQuality) {
+        public override string GetDescription(ItemQuality usedItemQuality) {
             //Debug.Log(DisplayName + ".Equipment.GetSummary()");
             //string stats = string.Empty;
             List<string> summaryLines = new List<string>();
@@ -289,14 +306,14 @@ namespace AnyRPG {
             if (onEquipAbility != null) {
                 summaryLines.Add(string.Format("<color=green>Cast On Equip: {0}</color>", onEquipAbility.DisplayName));
             }
-            foreach (BaseAbility learnedAbility in LearnedAbilities) {
+            foreach (BaseAbilityProperties learnedAbility in LearnedAbilities) {
                 summaryLines.Add(string.Format("<color=green>Learn On Equip: {0}</color>", learnedAbility.DisplayName));
             }
 
             if (equipmentSet != null) {
                 int equipmentCount = playerManager.MyCharacter.CharacterEquipmentManager.GetEquipmentSetCount(equipmentSet);
-                summaryLines.Add(string.Format("\n<color=yellow>{0} ({1}/{2})</color>", equipmentSet.DisplayName, equipmentCount, equipmentSet.MyEquipmentList.Count));
-                foreach (Equipment equipment in equipmentSet.MyEquipmentList) {
+                summaryLines.Add(string.Format("\n<color=yellow>{0} ({1}/{2})</color>", equipmentSet.DisplayName, equipmentCount, equipmentSet.EquipmentList.Count));
+                foreach (Equipment equipment in equipmentSet.EquipmentList) {
                     string colorName = "#888888";
                     if (playerManager.MyCharacter.CharacterEquipmentManager.HasEquipment(equipment.DisplayName)) {
                         colorName = "yellow";
@@ -304,21 +321,21 @@ namespace AnyRPG {
                     summaryLines.Add(string.Format("  <color={0}>{1}</color>", colorName, equipment.DisplayName));
                 }
                 summaryLines.Add(string.Format(""));
-                for (int i = 0; i < equipmentSet.MyTraitList.Count; i++) {
-                    if (equipmentSet.MyTraitList[i] != null) {
+                for (int i = 0; i < equipmentSet.TraitList.Count; i++) {
+                    if (equipmentSet.TraitList[i] != null) {
                         string colorName = "#888888";
                         if (equipmentCount > i) {
                             colorName = "green";
                         }
-                        summaryLines.Add(string.Format("<color={0}>({1}) {2}</color>", colorName, i+1, equipmentSet.MyTraitList[i].GetSummary()));
+                        summaryLines.Add(string.Format("<color={0}>({1}) {2}</color>", colorName, i+1, equipmentSet.TraitList[i].GetDescription()));
                     }
                 }
-                if (equipmentSet.MyTraitList.Count > 0) {
+                if (equipmentSet.TraitList.Count > 0) {
                     summaryLines.Add(string.Format(""));
                 }
             }
 
-            return base.GetSummary(usedItemQuality) + "\n" + string.Join("\n", summaryLines);
+            return base.GetDescription(usedItemQuality) + "\n\n" + string.Join("\n", summaryLines);
         }
 
         public override void SetupScriptableObjects(SystemGameManager systemGameManager) {
@@ -333,12 +350,12 @@ namespace AnyRPG {
                 }
             }
 
-            learnedAbilities = new List<BaseAbility>();
+            learnedAbilities = new List<BaseAbilityProperties>();
             if (learnedAbilityNames != null) {
                 foreach (string baseAbilityName in learnedAbilityNames) {
                     BaseAbility baseAbility = systemDataFactory.GetResource<BaseAbility>(baseAbilityName);
                     if (baseAbility != null) {
-                        learnedAbilities.Add(baseAbility);
+                        learnedAbilities.Add(baseAbility.AbilityProperties);
                     } else {
                         Debug.LogError("SystemAbilityManager.SetupScriptableObjects(): Could not find ability : " + baseAbilityName + " while inititalizing " + DisplayName + ".  CHECK INSPECTOR");
                     }

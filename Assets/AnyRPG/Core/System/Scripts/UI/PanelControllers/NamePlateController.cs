@@ -501,7 +501,8 @@ namespace AnyRPG {
         }
 
         private void HandleRightClick() {
-            //Debug.Log("NamePlateController: HandleRightClick(): " + namePlateUnit.DisplayName);
+            //Debug.Log("NamePlateController: HandleRightClick()");
+
             if (playerManager.UnitController == null) {
                 return;
             }

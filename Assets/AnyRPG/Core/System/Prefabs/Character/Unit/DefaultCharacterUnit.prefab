@@ -114,6 +114,7 @@ MonoBehaviour:
   glowMaxIntensity: 6
   glowColor: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
   temporaryMaterial: {fileID: 0}
+  interactionTooltipText: 
   notInteractable: 0
   interactWithAny: 0
   interactOnExit: 0
@@ -123,6 +124,7 @@ MonoBehaviour:
   checkOptionsToSpawn: 0
   spawnRequiresValidOption: 0
   despawnRequiresNoValidOption: 0
+  componentController: {fileID: 0}
   unitComponentController: {fileID: 8257430763179704801}
   namePlateProps:
     displayName: 
@@ -137,6 +139,7 @@ MonoBehaviour:
     unitPreviewCameraLookOffset: {x: 0, y: 1, z: 0}
     unitPreviewCameraPositionOffset: {x: 0, y: 1, z: 2.5}
   unitControllerMode: 2
+  faceInteractionTarget: 1
   patrolNames: []
   behaviorNames: []
   useBehaviorCopy: 0
@@ -156,7 +159,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 49ff920aaeff32c47b919cdd7f10e67d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_UUID: 25f4d875-75ac-413e-b2a9-eee57658c6f1
+  m_UUID: 5262e776-ce46-4e3a-ada8-b17f780135a4
   forceUpdateUUID: 0
 --- !u!136 &581519027303314695
 CapsuleCollider:

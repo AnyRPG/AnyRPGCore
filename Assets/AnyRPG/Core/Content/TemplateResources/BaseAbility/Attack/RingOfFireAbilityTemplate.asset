@@ -1,0 +1,140 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c80d744dccc642148ab1014a88212085, type: 3}
+  m_Name: RingOfFireAbilityTemplate
+  m_EditorClassIdentifier: 
+  resourceName: Ring Of Fire
+  displayName: 
+  icon: {fileID: 21300000, guid: 65adface515819341aad0e7d5d96e45a, type: 3}
+  iconBackgroundImage: {fileID: 0}
+  description: a ring of fire on the ground
+  useRegionalDescription: 0
+  resourceDescriptionProfile: 
+  optionalOverride: 0
+  directAbilityProperties:
+    requireOutOfCombat: 0
+    requireStealth: 0
+    weaponAffinityNames: []
+    holdableObjectList:
+    - holdableObjectName: Red Casting Circle
+      useUniversalAttachment: 0
+      attachmentName: 
+    abilityPrefabSource: 0
+    animatorCreatePrefabs: 0
+    prefabDestroyDelay: 0
+    animationClip: {fileID: 0}
+    animationProfileName: Cast 2H Up
+    useUnitCastAnimations: 0
+    animationHitAudioProfileName: 
+    castingAudioClip: {fileID: 0}
+    castingAudioProfileName: Fire Spell
+    requiredLevel: 1
+    characterClassRequirements: []
+    classSpecializationRequirements: []
+    useableWithoutLearning: 0
+    autoAddToBars: 1
+    canSimultaneousCast: 0
+    canCastWhileMoving: 0
+    ignoreGlobalCoolDown: 0
+    powerResourceName: Mana
+    baseResourceCost: 0
+    resourceCostPerLevel: 10
+    spendDelay: 0
+    generatePowerResourceName: 
+    baseResourceGain: 0
+    resourceGainPerLevel: 0
+    useSpeedMultipliers: 1
+    useAnimationCastTime: 1
+    abilityCastingTime: 1.5
+    abilityCoolDown: 0
+    coolDownOnCast: 0
+    useAbilityEffectTargetting: 0
+    targetOptions:
+      requireTarget: 0
+      requireLineOfSight: 0
+      requireLiveTarget: 0
+      requireDeadTarget: 0
+      canCastOnSelf: 0
+      canCastOnOthers: 0
+      canCastOnEnemy: 0
+      canCastOnNeutral: 0
+      canCastOnFriendly: 0
+      autoSelfCast: 0
+      useMeleeRange: 0
+      maxRange: 0
+      requireFacingTarget: 0
+      maxAngle: 45
+      requireBehindTarget: 0
+      requiresGroundTarget: 1
+      groundTargetColor: {r: 1, g: 0.16509432, b: 0.16509432, a: 1}
+      groundTargetRadius: 5
+    inlineAbilityEffects:
+    - id: 0
+    abilityEffectNames: []
+    tickRate: 1
+    inlineChannelingEffects: []
+    channeledAbilityEffectnames: []
+  references:
+    version: 1
+    00000000:
+      type: {class: AOEEffectConfig, ns: AnyRPG, asm: Assembly-CSharp}
+      data:
+        effectProperties:
+          targetOptions:
+            requireTarget: 0
+            requireLineOfSight: 0
+            requireLiveTarget: 0
+            requireDeadTarget: 0
+            canCastOnSelf: 0
+            canCastOnOthers: 0
+            canCastOnEnemy: 0
+            canCastOnNeutral: 0
+            canCastOnFriendly: 0
+            autoSelfCast: 0
+            useMeleeRange: 0
+            maxRange: 0
+            lineOfSightSourceLocation: 0
+            targetRangeSourceLocation: 0
+          chanceToCast: 100
+          effectMaterialName: 
+          materialChangeDuration: 2
+          onHitAudioProfileNames: []
+          randomAudioProfiles: 0
+          hitAbilityEffectNames: []
+          inputMultiplier: 0
+          threatMultiplier: 1
+          abilityPrefabSource: 1
+          randomPrefabs: 0
+          abilityObjectList:
+          - holdableObjectName: Ring Of Fire
+            useUniversalAttachment: 0
+            attachmentName: 
+          prefabSpawnLocation: 3
+          prefabDestroyDelay: 0
+          destroyOnEndCast: 0
+          tickRate: 1
+          castZeroTick: 0
+          tickAbilityEffectNames:
+          - Fire DOT
+          onTickAudioProfileNames: []
+          randomTickAudioProfiles: 0
+          completeAbilityEffectNames: []
+          defaultPrefabLifetime: 10
+          aoeProperties:
+            aoeRadius: 5
+            useRadius: 1
+            useExtents: 0
+            aoeCenter: {x: 0, y: 0, z: 0}
+            aoeExtents: {x: 0, y: 0, z: 0}
+            maxTargets: 0
+            preferClosestTargets: 0
+            interTargetDelay: 0

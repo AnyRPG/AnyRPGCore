@@ -1,0 +1,33 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6c9b51b8d3aa844448aaeab0a989e2fa, type: 3}
+  m_Name: AllClothEquipmentGreenRecipesTemplatePackage
+  m_EditorClassIdentifier: 
+  resourceName: All Green Cloth Equipment Recipes
+  displayName: 
+  icon: {fileID: 0}
+  iconBackgroundImage: {fileID: 0}
+  description: 
+  useRegionalDescription: 0
+  resourceDescriptionProfile: 
+  optionalOverride: 0
+  resources: []
+  prefabs: []
+  dependencies:
+  - {fileID: 11400000, guid: eef3749bc37364b439cd0c6b64b0a3f8, type: 2}
+  - {fileID: 11400000, guid: 6a4ba9032636c1c48b2e45c5909b2316, type: 2}
+  - {fileID: 11400000, guid: b4b37f9383d224540be5679d267bc4fb, type: 2}
+  - {fileID: 11400000, guid: d5d8552c9119ff44b89a5f8832045f9f, type: 2}
+  - {fileID: 11400000, guid: 155c5e03027e50742ad591b6a66588a3, type: 2}
+  - {fileID: 11400000, guid: 729ae6199f9a9e748835b0ee609b4a6f, type: 2}
+  - {fileID: 11400000, guid: 40f84fadc05ea55438d294cd3a62bbf3, type: 2}
+  - {fileID: 11400000, guid: e41865abbe82571408d194566996c046, type: 2}

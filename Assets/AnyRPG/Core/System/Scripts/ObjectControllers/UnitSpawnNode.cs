@@ -138,6 +138,8 @@ namespace AnyRPG {
             }
         }
 
+        public List<string> UnitProfileNames { get => unitProfileNames; set => unitProfileNames = value; }
+
         public override void Configure(SystemGameManager systemGameManager) {
             //Debug.Log(gameObject.name + ".UnitSpawnNode.Configure()");
             base.Configure(systemGameManager);
@@ -609,7 +611,7 @@ namespace AnyRPG {
                         if (unitProfile != null) {
                             unitProfiles.Add(unitProfile);
                         } else {
-                            Debug.LogError(gameObject.name + ": Unit Profile: " + unitProfileName + " not found while initializing Unit Unit Spawn Node.  Check Inspector!");
+                            Debug.LogError(gameObject.name + ": Unit Profile: " + unitProfileName + " not found while initializing Unit Spawn Node.  Check Inspector!");
                         }
                     }
                 }

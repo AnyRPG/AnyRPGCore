@@ -10,10 +10,10 @@ namespace AnyRPG {
     public class CraftingManager : ConfiguredMonoBehaviour {
 
         public event System.Action OnCraftAmountUpdated = delegate { };
-        public event System.Action<CraftAbility> OnSetCraftAbility = delegate { };
+        public event System.Action<CraftAbilityProperties> OnSetCraftAbility = delegate { };
         public event System.Action<Recipe> OnSelectRecipe = delegate { };
 
-        private CraftAbility craftAbility = null;
+        private CraftAbilityProperties craftAbility = null;
 
         // the number of items to craft
         private int craftAmount = 1;
@@ -44,7 +44,7 @@ namespace AnyRPG {
             OnCraftAmountUpdated();
         }
 
-        public void SetAbility(CraftAbility craftAbility) {
+        public void SetAbility(CraftAbilityProperties craftAbility) {
             this.craftAbility = craftAbility;
             uIManager.craftingWindow.OpenWindow();
             OnSetCraftAbility(this.craftAbility);

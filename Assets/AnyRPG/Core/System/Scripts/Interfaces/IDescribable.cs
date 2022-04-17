@@ -7,8 +7,9 @@ namespace AnyRPG {
     public interface IDescribable {
         Sprite Icon { get; }
         string DisplayName { get; }
-        string GetDescription();
+        string Description { get; }
         string GetSummary();
+        string GetDescription();
     }
 
 }

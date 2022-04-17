@@ -102,8 +102,8 @@ namespace AnyRPG {
                     rewardIcon.SetOptions(rectTransform, false);
                     rewardIcon.SetDescribable(traitList[i]);
                     traitRewardIcons.Add(rewardIcon);
-                    if (traitList[i].RequiredLevel > playerManager.MyCharacter.CharacterStats.Level) {
-                        rewardIcon.StackSizeText.text = "Level\n" + traitList[i].RequiredLevel;
+                    if ((traitList[i].AbilityEffectProperties as StatusEffectProperties).RequiredLevel > playerManager.MyCharacter.CharacterStats.Level) {
+                        rewardIcon.StackSizeText.text = "Level\n" + (traitList[i].AbilityEffectProperties as StatusEffectProperties).RequiredLevel;
                         rewardIcon.HighlightIcon.color = new Color32(255, 255, 255, 80);
                     }
                     uINavigationControllers[1].AddActiveButton(rewardIcon);
@@ -123,7 +123,7 @@ namespace AnyRPG {
                 CapabilityProps capabilityPropsFaction = playerManager.MyCharacter.Faction.GetFilteredCapabilities(capabilityConsumerSnapshot, false);
                 capabilityProps = capabilityPropsFaction.Join(capabilityProps);
             }
-            List<BaseAbility> abilityList = capabilityProps.AbilityList.Distinct().ToList();
+            List<BaseAbilityProperties> abilityList = capabilityProps.AbilityList.Distinct().ToList();
             if (abilityList.Count > 0) {
                 abilitiesArea.gameObject.SetActive(true);
             } else {

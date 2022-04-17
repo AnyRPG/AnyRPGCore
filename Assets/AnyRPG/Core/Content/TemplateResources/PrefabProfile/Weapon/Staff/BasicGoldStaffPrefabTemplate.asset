@@ -1,0 +1,38 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 086cc19bb10d93146806ca499cfd21c7, type: 3}
+  m_Name: BasicGoldStaffPrefabTemplate
+  m_EditorClassIdentifier: 
+  resourceName: Basic Gold Staff
+  displayName: 
+  icon: {fileID: 0}
+  iconBackgroundImage: {fileID: 0}
+  description: 
+  useRegionalDescription: 0
+  resourceDescriptionProfile: 
+  optionalOverride: 0
+  prefab: {fileID: 5319069474142785129, guid: c9c99f14eefdc0f47bab5c6b7cf1f047, type: 3}
+  position: {x: 0, y: 0, z: 0}
+  rotationIsGlobal: 0
+  rotation: {x: 0, y: 0, z: 0}
+  scale: {x: 1, y: 1, z: 1}
+  targetBone: 
+  unsheathAudioProfileName: 
+  sheathedPosition: {x: 0, y: 0, z: 0}
+  sheathedRotation: {x: 0, y: 0, z: 0}
+  sheathedScale: {x: 1, y: 1, z: 1}
+  sheathedTargetBone: 
+  sheathAudioProfileName: 
+  useItemPickup: 0
+  pickupPosition: {x: 0, y: 0, z: 0}
+  pickupRotation: {x: 0, y: 0, z: 0}
+  pickupScale: {x: 1, y: 1, z: 1}

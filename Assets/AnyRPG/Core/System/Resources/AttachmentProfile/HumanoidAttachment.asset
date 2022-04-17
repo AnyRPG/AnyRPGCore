@@ -19,6 +19,7 @@ MonoBehaviour:
   description: 
   useRegionalDescription: 0
   resourceDescriptionProfile: 
+  optionalOverride: 0
   attachmentPointNodes:
   - nodeName: Left Hand
     position: {x: 0, y: 0, z: 0}
@@ -32,18 +33,18 @@ MonoBehaviour:
     rotation: {x: 0, y: 0, z: 0}
     scale: {x: 1, y: 1, z: 1}
     targetBone: RightHandAttachment
-  - nodeName: One Hand Sword Sheathed
-    position: {x: 0, y: 0, z: 0}
-    rotationIsGlobal: 0
-    rotation: {x: 0, y: 0, z: 0}
-    scale: {x: 1, y: 1, z: 1}
-    targetBone: OneHandSwordSheathedAttachment
   - nodeName: Bow Sheathed
     position: {x: 0, y: 0, z: 0}
     rotationIsGlobal: 0
     rotation: {x: 0, y: 0, z: 0}
     scale: {x: 1, y: 1, z: 1}
     targetBone: BowSheathedAttachment
+  - nodeName: Crossbow Sheathed
+    position: {x: 0, y: 0, z: 0}
+    rotationIsGlobal: 0
+    rotation: {x: 0, y: 0, z: 0}
+    scale: {x: 1, y: 1, z: 1}
+    targetBone: CrossbowSheathedAttachment
   - nodeName: Bow
     position: {x: 0, y: 0, z: 0}
     rotationIsGlobal: 0
@@ -68,30 +69,54 @@ MonoBehaviour:
     rotation: {x: 0, y: 0, z: 0}
     scale: {x: 1, y: 1, z: 1}
     targetBone: ShieldSheathedAttachment
-  - nodeName: Fist Main Hand Sheathed
+  - nodeName: Main Hand Axe Sheathed
+    position: {x: 0, y: 0, z: 0}
+    rotationIsGlobal: 0
+    rotation: {x: 0, y: 0, z: 0}
+    scale: {x: 1, y: 1, z: 1}
+    targetBone: MainHandAxeSheathedAttachment
+  - nodeName: Off Hand Axe Sheathed
+    position: {x: 0, y: 0, z: 0}
+    rotationIsGlobal: 0
+    rotation: {x: 0, y: 0, z: 0}
+    scale: {x: 1, y: 1, z: 1}
+    targetBone: OffHandAxeSheathedAttachment
+  - nodeName: Main Hand Dagger Sheathed
+    position: {x: 0, y: 0, z: 0}
+    rotationIsGlobal: 0
+    rotation: {x: 0, y: 0, z: 0}
+    scale: {x: 1, y: 1, z: 1}
+    targetBone: MainHandDaggerSheathedAttachment
+  - nodeName: Off Hand Dagger Sheathed
+    position: {x: 0, y: 0, z: 0}
+    rotationIsGlobal: 0
+    rotation: {x: 0, y: 0, z: 0}
+    scale: {x: 1, y: 1, z: 1}
+    targetBone: OffHandDaggerSheathedAttachment
+  - nodeName: Main Hand Fist Sheathed
     position: {x: 0, y: 0, z: 0}
     rotationIsGlobal: 0
     rotation: {x: 0, y: 0, z: 0}
     scale: {x: 1, y: 1, z: 1}
     targetBone: MainHandFistSheathedAttachment
-  - nodeName: Fist Off Hand Sheathed
+  - nodeName: Off Hand Fist Sheathed
     position: {x: 0, y: 0, z: 0}
     rotationIsGlobal: 0
     rotation: {x: 0, y: 0, z: 0}
     scale: {x: 1, y: 1, z: 1}
     targetBone: OffHandFistSheathedAttachment
-  - nodeName: One Hand Mace Sheathed
+  - nodeName: Main Hand Mace Sheathed
     position: {x: 0, y: 0, z: 0}
     rotationIsGlobal: 0
     rotation: {x: 0, y: 0, z: 0}
     scale: {x: 1, y: 1, z: 1}
-    targetBone: OneHandMaceSheathedAttachment
-  - nodeName: Two Hand Mace Sheathed
+    targetBone: MainHandMaceSheathedAttachment
+  - nodeName: Off Hand Mace Sheathed
     position: {x: 0, y: 0, z: 0}
     rotationIsGlobal: 0
     rotation: {x: 0, y: 0, z: 0}
     scale: {x: 1, y: 1, z: 1}
-    targetBone: TwoHandMaceSheathedAttachment
+    targetBone: OffHandMaceSheathedAttachment
   - nodeName: Main Hand Sword Sheathed
     position: {x: 0, y: 0, z: 0}
     rotationIsGlobal: 0
@@ -104,18 +129,24 @@ MonoBehaviour:
     rotation: {x: 0, y: 0, z: 0}
     scale: {x: 1, y: 1, z: 1}
     targetBone: OffHandSwordSheathedAttachment
+  - nodeName: One Hand Sword Sheathed
+    position: {x: 0, y: 0, z: 0}
+    rotationIsGlobal: 0
+    rotation: {x: 0, y: 0, z: 0}
+    scale: {x: 1, y: 1, z: 1}
+    targetBone: OneHandSwordSheathedAttachment
+  - nodeName: Two Hand Mace Sheathed
+    position: {x: 0, y: 0, z: 0}
+    rotationIsGlobal: 0
+    rotation: {x: 0, y: 0, z: 0}
+    scale: {x: 1, y: 1, z: 1}
+    targetBone: TwoHandMaceSheathedAttachment
   - nodeName: Two Hand Sword Sheathed
     position: {x: 0, y: 0, z: 0}
     rotationIsGlobal: 0
     rotation: {x: 0, y: 0, z: 0}
     scale: {x: 1, y: 1, z: 1}
     targetBone: TwoHandSwordSheathedAttachment
-  - nodeName: Main Hand Dagger Sheathed
-    position: {x: 0, y: 0, z: 0}
-    rotationIsGlobal: 0
-    rotation: {x: 0, y: 0, z: 0}
-    scale: {x: 1, y: 1, z: 1}
-    targetBone: MainHandDaggerSheathedAttachment
   - nodeName: Two Hand Axe Sheathed
     position: {x: 0, y: 0, z: 0}
     rotationIsGlobal: 0
@@ -141,8 +172,8 @@ MonoBehaviour:
     scale: {x: 1, y: 1, z: 1}
     targetBone: Head
   - nodeName: Wings
-    position: {x: -0.274, y: 0, z: -0.155}
+    position: {x: 0, y: 0, z: 0}
     rotationIsGlobal: 0
     rotation: {x: 0, y: 0, z: 0}
     scale: {x: 1, y: 1, z: 1}
-    targetBone: Spine1
+    targetBone: WingsAttachment

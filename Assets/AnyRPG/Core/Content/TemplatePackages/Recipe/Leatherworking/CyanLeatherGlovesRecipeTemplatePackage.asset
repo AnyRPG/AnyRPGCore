@@ -1,0 +1,29 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6c9b51b8d3aa844448aaeab0a989e2fa, type: 3}
+  m_Name: CyanLeatherGlovesRecipeTemplatePackage
+  m_EditorClassIdentifier: 
+  resourceName: Cyan Leather Gloves Recipe
+  displayName: 
+  icon: {fileID: 0}
+  iconBackgroundImage: {fileID: 0}
+  description: 
+  useRegionalDescription: 0
+  resourceDescriptionProfile: 
+  optionalOverride: 0
+  resources:
+  - {fileID: 11400000, guid: ba3e4ee262069a24692c414899f955a9, type: 2}
+  - {fileID: 11400000, guid: 3f8768e27f4d12741bd5614c133de649, type: 2}
+  - {fileID: 11400000, guid: 1d9062a42d7d5a147b16fc649cfb61c5, type: 2}
+  prefabs: []
+  dependencies:
+  - {fileID: 11400000, guid: 7b5fd01c2f677c0409cba886a3f07833, type: 2}

@@ -76,7 +76,7 @@ namespace AnyRPG {
             if (audioClip == null) {
                 return;
             }
-            //Debug.Log(gameObject.name + "UnitAudio.PlayEffect(" + audioClip.name + ")");
+            //Debug.Log(gameObject.name + "UnitComponentController.PlayEffectSound(" + audioClip.name + ")");
 
             if (unitAudioEmitter != null) {
                 unitAudioEmitter.PlayEffect(audioClip);

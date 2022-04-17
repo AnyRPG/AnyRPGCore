@@ -6,9 +6,20 @@ using UnityEngine.UI;
 
 namespace AnyRPG {
     [CreateAssetMenu(fileName = "NewChanneledAbility", menuName = "AnyRPG/Abilities/ChanneledAbility")]
-    public class ChanneledAbility : InstantEffectAbility {
+    public class ChanneledAbility : BaseAbility {
 
         // this class may no longer be necessary as all the functionality was moved to baseability, but destroying it would mean reconfiguring all the scriptableobjects that use it.
+
+        [SerializeField]
+        private ChanneledAbilityProperties channeledAbilityProperties = new ChanneledAbilityProperties();
+
+        public override BaseAbilityProperties AbilityProperties { get => channeledAbilityProperties; }
+
+        /*
+        public override void Convert() {
+            channeledAbilityProperties.GetBaseAbilityProperties(this);
+        }
+        */
 
     }
 

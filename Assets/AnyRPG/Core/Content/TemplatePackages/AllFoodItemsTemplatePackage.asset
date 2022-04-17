@@ -1,0 +1,29 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6c9b51b8d3aa844448aaeab0a989e2fa, type: 3}
+  m_Name: AllFoodItemsTemplatePackage
+  m_EditorClassIdentifier: 
+  resourceName: All Food Items
+  displayName: 
+  icon: {fileID: 0}
+  iconBackgroundImage: {fileID: 0}
+  description: 
+  useRegionalDescription: 0
+  resourceDescriptionProfile: 
+  optionalOverride: 0
+  resources:
+  - {fileID: 11400000, guid: 281466bcd58dccd43a7f85c9d77b8ad2, type: 2}
+  prefabs: []
+  dependencies:
+  - {fileID: 11400000, guid: 12c3475dd977e7543bedf53200715dbc, type: 2}
+  - {fileID: 11400000, guid: 3b6894891aee70847b52c500a07b5b59, type: 2}
+  - {fileID: 11400000, guid: dba6c3c8da9dd1b459c9224bfd8897b1, type: 2}

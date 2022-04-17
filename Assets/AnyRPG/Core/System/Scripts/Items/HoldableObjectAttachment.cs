@@ -10,7 +10,7 @@ namespace AnyRPG {
         [SerializeField]
         private List<AttachmentNode> attachmentNodes = new List<AttachmentNode>();
 
-        public List<AttachmentNode> MyAttachmentNodes { get => attachmentNodes; set => attachmentNodes = value; }
+        public List<AttachmentNode> AttachmentNodes { get => attachmentNodes; set => attachmentNodes = value; }
 
         public void SetupScriptableObjects(SystemGameManager systemGameManager) {
             Configure(systemGameManager);

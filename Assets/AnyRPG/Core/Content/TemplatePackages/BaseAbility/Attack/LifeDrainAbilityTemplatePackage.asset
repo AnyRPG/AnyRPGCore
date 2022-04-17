@@ -1,0 +1,35 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6c9b51b8d3aa844448aaeab0a989e2fa, type: 3}
+  m_Name: LifeDrainAbilityTemplatePackage
+  m_EditorClassIdentifier: 
+  resourceName: Life Drain Ability
+  displayName: 
+  icon: {fileID: 0}
+  iconBackgroundImage: {fileID: 0}
+  description: 
+  useRegionalDescription: 0
+  resourceDescriptionProfile: 
+  optionalOverride: 0
+  resources:
+  - {fileID: 11400000, guid: ef6428f067d48a4428aff978e53720d0, type: 2}
+  - {fileID: 11400000, guid: 2b66ab846d613eb41bb76129a029ab45, type: 2}
+  - {fileID: 11400000, guid: a49e4d90681cd1446947c5d50c0aac1f, type: 2}
+  - {fileID: 11400000, guid: 83eb4e089c8161d47aa0a4a29cec4fc6, type: 2}
+  - {fileID: 11400000, guid: 091e78bbb5912e74f9bee518e0f30c87, type: 2}
+  - {fileID: 11400000, guid: 219b5833ff1385a4d8681b3621076606, type: 2}
+  - {fileID: 11400000, guid: f9bc5a82c4af0434991e37573bde6a22, type: 2}
+  - {fileID: 11400000, guid: 337dd39943846c04bb7c7351f85b118c, type: 2}
+  - {fileID: 11400000, guid: 9e533c89c85462d4fa627e45fbe4dea0, type: 2}
+  - {fileID: 11400000, guid: a4211f561733a4e429e532a332ba6c8d, type: 2}
+  prefabs: []
+  dependencies: []

@@ -174,7 +174,7 @@ namespace AnyRPG {
                 //Debug.Log("QuestDetailsArea.HandleAttemptSelect(): it's an ability reward; current count of highlighted icons: " + GetHighlightedAbilityRewardIcons().Count + "; max: " + quest.MyMaxAbilityRewards);
                 if (quest.MaxAbilityRewards == 0
                     || (quest.MaxAbilityRewards > 0 && GetHighlightedAbilityRewardIcons().Count > quest.MaxAbilityRewards)
-                    || playerManager.MyCharacter.CharacterAbilityManager.HasAbility(rewardButton.Describable as BaseAbility)) {
+                    || rewardButton.Rewardable.HasReward() == true) {
                     rewardButton.Unselect();
                 }
             }
@@ -183,7 +183,7 @@ namespace AnyRPG {
                 //Debug.Log("QuestDetailsArea.HandleAttemptSelect(): it's an ability reward; current count of highlighted icons: " + GetHighlightedAbilityRewardIcons().Count + "; max: " + quest.MyMaxAbilityRewards);
                 if (quest.MaxSkillRewards == 0
                     || (quest.MaxSkillRewards > 0 && GetHighlightedSkillRewardIcons().Count > quest.MaxSkillRewards)
-                    || playerManager.MyCharacter.CharacterSkillManager.HasSkill(rewardButton.Describable as Skill)) {
+                    || rewardButton.Rewardable.HasReward() == true) {
                     rewardButton.Unselect();
                 }
             }
@@ -238,7 +238,7 @@ namespace AnyRPG {
                 rewardIcon.SetOptions(owner.RectTransform, quest.MaxItemRewards > 0);
                 rewardIcon.OnAttempSelect += HandleAttemptSelect;
                 //Debug.Log("QuestDetailsArea.ShowDescription(): setting describable (and attemptselect) for: " + quest.MyItemRewards[i]);
-                rewardIcon.SetDescribable(quest.ItemRewards[i]);
+                rewardIcon.SetReward(quest.ItemRewards[i]);
                 itemRewardIcons.Add(rewardIcon);
                 //if (quest.MaxItemRewards > 0) {
                     itemGrid.AddActiveButton(rewardIcon);
@@ -262,7 +262,7 @@ namespace AnyRPG {
                 rewardIcon.SetOptions(owner.RectTransform, quest.MaxAbilityRewards > 0);
                 rewardIcon.OnAttempSelect += HandleAttemptSelect;
                 //Debug.Log("QuestDetailsArea.ShowDescription(): setting describable (and attemptselect) for: " + quest.MyAbilityRewards[i]);
-                rewardIcon.SetDescribable(quest.AbilityRewards[i]);
+                rewardIcon.SetReward(quest.AbilityRewards[i].AbilityProperties);
                 abilityRewardIcons.Add(rewardIcon);
                 //if (quest.MaxAbilityRewards > 0) {
                     abilityGrid.AddActiveButton(rewardIcon);
@@ -286,7 +286,7 @@ namespace AnyRPG {
                 rewardIcon.SetOptions(owner.RectTransform, quest.MaxFactionRewards > 0);
                 rewardIcon.OnAttempSelect += HandleAttemptSelect;
                 //Debug.Log("QuestDetailsArea.ShowDescription(): setting describable (and attemptselect) for: " + quest.MyFactionRewards[i]);
-                rewardIcon.SetDescribable(quest.FactionRewards[i]);
+                rewardIcon.SetReward(quest.FactionRewards[i]);
                 factionRewardIcons.Add(rewardIcon);
                 //if (quest.MaxFactionRewards > 0) {
                     factionGrid.AddActiveButton(rewardIcon);
@@ -308,7 +308,7 @@ namespace AnyRPG {
                 RewardButton rewardIcon = objectPooler.GetPooledObject(rewardIconPrefab, skillIconsArea.transform).GetComponent<RewardButton>();
                 rewardIcon.Configure(systemGameManager);
                 rewardIcon.SetOptions(owner.RectTransform, quest.MaxSkillRewards > 0);
-                rewardIcon.SetDescribable(quest.SkillRewards[i]);
+                rewardIcon.SetReward(quest.SkillRewards[i]);
                 skillRewardIcons.Add(rewardIcon);
                 //if (quest.MaxSkillRewards > 0) {
                     skillGrid.AddActiveButton(rewardIcon);

@@ -308,6 +308,7 @@ namespace AnyRPG {
         }
 
         public virtual void OnSendObjectToPool() {
+            //Debug.Log(gameObject.name + ".navigableElement.OnSendObjectToPool()");
             UnHighlightOutline();
             UnHighlightBackground();
         }

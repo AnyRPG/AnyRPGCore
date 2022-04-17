@@ -78,6 +78,12 @@ namespace AnyRPG {
         [SerializeField]
         protected bool CapitalizeText = false;
 
+        [Header("Sounds")]
+
+        [Tooltip("If true, the click sound is played when the mouse clicks this button")]
+        [SerializeField]
+        protected bool mouseClickSound = true;
+
         [Tooltip("If true, the hover sound is played when the mouse moves over this button")]
         [SerializeField]
         protected bool mouseHoverSound = true;
@@ -163,6 +169,7 @@ namespace AnyRPG {
 
         public override void DeSelect() {
             //Debug.Log(gameObject.name + ".HightlightButton.DeSelect()");
+
             base.DeSelect();
             if (highlightButton != null) {
                 ColorBlock colorBlock = highlightButton.colors;
@@ -197,7 +204,10 @@ namespace AnyRPG {
         public override void OnPointerClick(PointerEventData eventData) {
             //Debug.Log(gameObject.name + ".HighlightButton.OnPointerClick()");
             base.OnPointerClick(eventData);
-            OnClickSound();
+
+            if (mouseClickSound == true) {
+                OnClickSound();
+            }
 
             Interact();
         }

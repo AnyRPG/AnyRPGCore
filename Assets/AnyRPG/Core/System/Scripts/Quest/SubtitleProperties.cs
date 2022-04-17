@@ -20,16 +20,8 @@ namespace AnyRPG {
         [SerializeField]
         private List<SubtitleNode> subtitleNodes = new List<SubtitleNode>();
 
-        // game manager references
-        private SystemDataFactory systemDataFactory = null;
-
         public List<SubtitleNode> SubtitleNodes { get => subtitleNodes; set => subtitleNodes = value; }
         public AudioProfile AudioProfile { get => audioProfile; set => audioProfile = value; }
-
-        public override void SetGameManagerReferences() {
-            base.SetGameManagerReferences();
-            systemDataFactory = systemGameManager.SystemDataFactory;
-        }
 
         public void SetupScriptableObjects(SystemGameManager systemGameManager) {
             Configure(systemGameManager);

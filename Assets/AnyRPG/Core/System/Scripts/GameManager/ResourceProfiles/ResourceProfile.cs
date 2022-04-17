@@ -67,11 +67,11 @@ namespace AnyRPG {
             return string.Format("<color=yellow>{0}</color>", DisplayName);
         }
 
-        public virtual string GetDescription() {
-            return string.Format("{0}\n{1}", GetName(), GetSummary());
+        public virtual string GetSummary() {
+            return string.Format("{0}\n{1}", GetName(), GetDescription());
         }
 
-        public virtual string GetSummary() {
+        public virtual string GetDescription() {
             return string.Format("{0}", description);
         }
 

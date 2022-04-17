@@ -10,7 +10,11 @@ namespace AnyRPG {
 
         [Header("Armor")]
 
-        [Tooltip("the armor class required to wear this item")]
+        [Tooltip("If true, the character must have the armor class below in order to equip this item")]
+        [SerializeField]
+        private bool requireArmorClass = false;
+
+        [Tooltip("the armor class this item gets its armor value from")]
         [SerializeField]
         [ResourceSelector(resourceType = typeof(ArmorClass))]
         private string armorClassName = string.Empty;
@@ -18,6 +22,7 @@ namespace AnyRPG {
         private ArmorClass armorClass = null;
 
         public ArmorClass ArmorClass { get => armorClass; set => armorClass = value; }
+        public bool RequireArmorClass { get => requireArmorClass; set => requireArmorClass = value; }
 
         public override float GetArmorModifier(int characterLevel, ItemQuality usedItemQuality) {
             float returnValue = base.GetArmorModifier(characterLevel, usedItemQuality);
@@ -31,7 +36,7 @@ namespace AnyRPG {
             return returnValue;
         }
 
-        public override string GetSummary(ItemQuality usedItemQuality) {
+        public override string GetDescription(ItemQuality usedItemQuality) {
             //Debug.Log(DisplayName + ".Armor.GetSummary()");
 
             List<string> abilitiesList = new List<string>();
@@ -60,10 +65,13 @@ namespace AnyRPG {
                 abilitiesString += string.Format("\n<color={0}>{1}</color>", colorString, armorClassName);
             }
 
-            return base.GetSummary(usedItemQuality) + abilitiesString;
+            return base.GetDescription(usedItemQuality) + abilitiesString;
         }
 
         public override bool CapabilityConsumerSupported(ICapabilityConsumer capabilityConsumer) {
+            if (armorClass == null || requireArmorClass == false) {
+                return true;
+            }
             return capabilityConsumer.CapabilityConsumerProcessor.IsArmorSupported(this);
         }
 

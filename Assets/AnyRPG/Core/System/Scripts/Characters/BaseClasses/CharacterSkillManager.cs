@@ -11,7 +11,6 @@ namespace AnyRPG {
         private Dictionary<string, Skill> skillList = new Dictionary<string, Skill>();
 
         // game manager references
-        private SystemDataFactory systemDataFactory = null;
         protected PlayerManager playerManager = null;
         protected SystemEventManager systemEventManager = null;
 
@@ -25,7 +24,6 @@ namespace AnyRPG {
 
         public override void SetGameManagerReferences() {
             base.SetGameManagerReferences();
-            systemDataFactory = systemGameManager.SystemDataFactory;
             playerManager = systemGameManager.PlayerManager;
             systemEventManager = systemGameManager.SystemEventManager;
         }
@@ -52,14 +50,15 @@ namespace AnyRPG {
         }
 
         public void LearnSkill(Skill newSkill) {
-            //Debug.Log("CharacterSkillManager.LearnSkill(" + skill.name + ")");
+            //Debug.Log("CharacterSkillManager.LearnSkill(" + newSkill.DisplayName + ")");
+
             if (!skillList.ContainsValue(newSkill)) {
                 skillList[SystemDataFactory.PrepareStringForMatch(newSkill.DisplayName)] = newSkill;
-                foreach (BaseAbility ability in newSkill.MyAbilityList) {
+                foreach (BaseAbilityProperties ability in newSkill.AbilityList) {
                     baseCharacter.CharacterAbilityManager.LearnAbility(ability);
                 }
                 foreach (Recipe recipe in systemDataFactory.GetResourceList<Recipe>()) {
-                    if (baseCharacter.CharacterStats.Level >= recipe.RequiredLevel && recipe.AutoLearn == true && newSkill.MyAbilityList.Contains(recipe.CraftAbility)) {
+                    if (baseCharacter.CharacterStats.Level >= recipe.RequiredLevel && recipe.AutoLearn == true && newSkill.AbilityList.Contains(recipe.CraftAbility)) {
                         playerManager.MyCharacter.CharacterRecipeManager.LearnRecipe(recipe);
                     }
                 }
@@ -85,7 +84,7 @@ namespace AnyRPG {
         public void UnlearnSkill(Skill oldSkill) {
             if (skillList.ContainsValue(oldSkill)) {
                 skillList.Remove(SystemDataFactory.PrepareStringForMatch(oldSkill.DisplayName));
-                foreach (BaseAbility ability in oldSkill.MyAbilityList) {
+                foreach (BaseAbilityProperties ability in oldSkill.AbilityList) {
                     baseCharacter.CharacterAbilityManager.UnlearnAbility(ability);
                 }
             }

@@ -1,0 +1,27 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0b4eca1291e60f148801568f2a83a06b, type: 3}
+  m_Name: CyanClothHoodUMARecipeTemplate
+  m_EditorClassIdentifier: 
+  resourceName: Cyan Cloth Hood
+  displayName: 
+  icon: {fileID: 0}
+  iconBackgroundImage: {fileID: 0}
+  description: 
+  useRegionalDescription: 0
+  resourceDescriptionProfile: 
+  uMARecipes:
+  - {fileID: 11400000, guid: f4b3917d42b0c544c9934a421bb172bb, type: 2}
+  - {fileID: 11400000, guid: 99d69a03a013108d4994ce6539d255c2, type: 2}
+  sharedColors:
+  - sharedColorname: Head Equipment Color 1
+    color: {r: 0, g: 0.8301887, b: 0.8301887, a: 1}

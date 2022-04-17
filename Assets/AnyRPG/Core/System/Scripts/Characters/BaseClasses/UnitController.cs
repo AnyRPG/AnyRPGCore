@@ -24,7 +24,7 @@ namespace AnyRPG {
         public event System.Action<string> OnTitleChange = delegate { };
         public event System.Action<PowerResource, int, int> OnResourceAmountChanged = delegate { };
         public event System.Action<StatusEffectNode> OnStatusEffectAdd = delegate { };
-        public event System.Action<IAbilityCaster, BaseAbility, float> OnCastTimeChanged = delegate { };
+        public event System.Action<IAbilityCaster, BaseAbilityProperties, float> OnCastTimeChanged = delegate { };
         public event System.Action<BaseCharacter> OnCastComplete = delegate { };
         public event System.Action<BaseCharacter> OnCastCancel = delegate { };
         public event System.Action<UnitProfile> OnUnitDestroy = delegate { };
@@ -34,9 +34,17 @@ namespace AnyRPG {
         public override event System.Action OnCameraTargetReady = delegate { };
         //public event System.Action OnDespawn = delegate { };
 
+        [Header("Unit Controller")]
+
         // by default, a unit will enter AI mode if no mode is set before Init()
         [SerializeField]
         private UnitControllerMode unitControllerMode = UnitControllerMode.AI;
+
+        /*
+        [Tooltip("If true, this unit will turn to face any target that interacts with it")]
+        [SerializeField]
+        private bool faceInteractionTarget = true;
+        */
 
         [Header("Patrol")]
 
@@ -71,6 +79,7 @@ namespace AnyRPG {
         private BehaviorController behaviorController = null;
         private UnitModelController unitModelController = null;
         private UnitMountManager unitMountManager = null;
+        private UnitMaterialController unitMaterialController = null;
         private UnitActionManager unitActionManager = null;
         private UUID uuid = null;
 
@@ -295,6 +304,7 @@ namespace AnyRPG {
         }
 
         public UnitMountManager UnitMountManager { get => unitMountManager; set => unitMountManager = value; }
+        public UnitMaterialController UnitMaterialController { get => unitMaterialController; set => unitMaterialController = value; }
         public UnitActionManager UnitActionManager { get => unitActionManager; set => unitActionManager = value; }
         public BehaviorController BehaviorController { get => behaviorController; set => behaviorController = value; }
 
@@ -388,6 +398,7 @@ namespace AnyRPG {
             patrolController = new PatrolController(this, systemGameManager);
             behaviorController = new BehaviorController(this, systemGameManager);
             unitModelController = new UnitModelController(this, systemGameManager);
+            unitMaterialController = new UnitMaterialController(this, systemGameManager);
             unitMountManager = new UnitMountManager(this, systemGameManager);
             unitActionManager = new UnitActionManager(this, systemGameManager);
             persistentObjectComponent.Setup(this, systemGameManager);
@@ -444,6 +455,23 @@ namespace AnyRPG {
             if (unitControllerMode != UnitControllerMode.Mount && unitControllerMode != UnitControllerMode.Preview) {
                 base.InitializeNamePlateController();
             }
+        }
+
+        public override bool Interact(CharacterUnit source, bool processRangeCheck = false) {
+            //Debug.Log(gameObject.name + ".UnitController.Interact(" + processRangeCheck + ")");
+
+            bool returnValue = base.Interact(source, processRangeCheck);
+
+            if (returnValue == true
+                && unitProfile?.FaceInteractionTarget == true
+                && source == playerManager.UnitController.CharacterUnit
+                && characterUnit.BaseCharacter.CharacterStats.IsAlive == true
+                && Faction.RelationWith(source.BaseCharacter, characterUnit.BaseCharacter) >= 0f
+                && unitControllerMode == UnitControllerMode.AI) {
+                unitMotor.FaceTarget(source.Interactable);
+            }
+
+            return returnValue;
         }
 
         public void HandleReputationChange(string eventName, EventParamProperties eventParamProperties) {
@@ -896,44 +924,10 @@ namespace AnyRPG {
                 return;
             }
 
-            // built-in interactable options
-            if (unitProfile.LootableCharacterProps.AutomaticCurrency == true || unitProfile.LootableCharacterProps.LootTableNames.Count > 0) {
-                InteractableOptionComponent interactableOptionComponent = unitProfile.LootableCharacterProps.GetInteractableOption(this);
-                interactables.Add(interactableOptionComponent);
-                if (lootableCharacter == null) {
-                    lootableCharacter = interactableOptionComponent as LootableCharacterComponent;
-                }
-                //interactableOptionComponent.HandlePrerequisiteUpdates();
-            }
-
-            if (unitProfile.DialogProps.DialogList.Count > 0) {
-                InteractableOptionComponent interactableOptionComponent = unitProfile.DialogProps.GetInteractableOption(this);
-                interactables.Add(interactableOptionComponent);
-                //interactableOptionComponent.HandlePrerequisiteUpdates();
-            }
-
-            if (unitProfile.QuestGiverProps.Quests.Count > 0) {
-                InteractableOptionComponent interactableOptionComponent = unitProfile.QuestGiverProps.GetInteractableOption(this);
-                interactables.Add(interactableOptionComponent);
-                //interactableOptionComponent.HandlePrerequisiteUpdates();
-            }
-
-            if (unitProfile.VendorProps.VendorCollections.Count > 0) {
-                InteractableOptionComponent interactableOptionComponent = unitProfile.VendorProps.GetInteractableOption(this);
-                interactables.Add(interactableOptionComponent);
-                //interactableOptionComponent.HandlePrerequisiteUpdates();
-            }
-
-            if (unitProfile.BehaviorProps.BehaviorNames.Count > 0) {
-                InteractableOptionComponent interactableOptionComponent = unitProfile.BehaviorProps.GetInteractableOption(this);
-                interactables.Add(interactableOptionComponent);
-                //interactableOptionComponent.HandlePrerequisiteUpdates();
-            }
-
             // named interactable options
-            foreach (InteractableOptionConfig interactableOption in unitProfile.InteractableOptionConfigs) {
-                if (interactableOption.InteractableOptionProps != null) {
-                    InteractableOptionComponent interactableOptionComponent = interactableOption.InteractableOptionProps.GetInteractableOption(this);
+            foreach (InteractableOptionProps interactableOption in unitProfile.InteractableOptionConfigs) {
+                if (interactableOption != null) {
+                    InteractableOptionComponent interactableOptionComponent = interactableOption.GetInteractableOption(this);
                     interactables.Add(interactableOptionComponent);
                     //interactableOptionComponent.HandlePrerequisiteUpdates();
                 }
@@ -982,6 +976,7 @@ namespace AnyRPG {
 
         public void SetModelReady() {
             //Debug.Log(gameObject.name + ".UnitController.SetModelReady()");
+            unitMaterialController.SetupMaterialArrays();
             OnCameraTargetReady();
         }
 
@@ -1018,7 +1013,7 @@ namespace AnyRPG {
 
                 foreach (StatusEffectNode statusEffectNode in characterUnit.BaseCharacter.CharacterStats.StatusEffects.Values) {
                     //Debug.Log(gameObject.name + ".CharacterAbilityManager.PerformAbilityCast(): looping through status effects");
-                    if (statusEffectNode.StatusEffect is MountEffect) {
+                    if (statusEffectNode.StatusEffect is MountEffectProperties) {
                         //Debug.Log(gameObject.name + ".CharacterAbilityManager.PerformAbilityCast(): looping through status effects: found a mount effect");
                         statusEffectNode.CancelStatusEffect();
                         break;
@@ -1320,13 +1315,13 @@ namespace AnyRPG {
 
             if (CombatStrategy != null) {
                 // attempt to get a valid ability from combat strategy before defaulting to random attacks
-                BaseAbility meleeAbility = CombatStrategy.GetMeleeAbility(characterUnit.BaseCharacter);
+                BaseAbilityProperties meleeAbility = CombatStrategy.GetMeleeAbility(characterUnit.BaseCharacter);
                 if (meleeAbility != null) {
                     return true;
                 }
             } else {
                 // get random attack if no strategy exists
-                BaseAbility validAttackAbility = characterUnit.BaseCharacter.CharacterCombat.GetMeleeAbility();
+                BaseAbilityProperties validAttackAbility = characterUnit.BaseCharacter.CharacterCombat.GetMeleeAbility();
                 if (validAttackAbility != null) {
                     return true;
                 }
@@ -1491,8 +1486,8 @@ namespace AnyRPG {
                     // like inanimate units
                 } else {
                     // moved liveness check into EnterCombat to centralize logic because there are multiple entry points to EnterCombat
-                    agroTarget.BaseCharacter.CharacterCombat.EnterCombat(characterUnit.BaseCharacter);
-                    characterUnit.BaseCharacter.CharacterCombat.EnterCombat(agroTarget.BaseCharacter);
+                    agroTarget.BaseCharacter.CharacterCombat.PullIntoCombat(characterUnit.BaseCharacter);
+                    characterUnit.BaseCharacter.CharacterCombat.PullIntoCombat(agroTarget.BaseCharacter);
                 }
                 //Debug.Log("combat is " + combat.ToString());
                 //Debug.Log("mytarget is " + MyTarget.ToString());
@@ -1716,14 +1711,14 @@ namespace AnyRPG {
             //Debug.Log(gameObject.name + ".UnitController.CanGetValidAttack(" + beginAttack + ")");
             if (CombatStrategy != null) {
                 // attempt to get a valid ability from combat strategy before defaulting to random attacks
-                BaseAbility validCombatStrategyAbility = CombatStrategy.GetValidAbility(CharacterUnit.BaseCharacter);
+                BaseAbilityProperties validCombatStrategyAbility = CombatStrategy.GetValidAbility(CharacterUnit.BaseCharacter);
                 if (validCombatStrategyAbility != null) {
                     characterUnit.BaseCharacter.CharacterAbilityManager.BeginAbility(validCombatStrategyAbility);
                     return true;
                 }
             } else {
                 // get random attack if no strategy exists
-                BaseAbility validAttackAbility = characterUnit.BaseCharacter.CharacterCombat.GetValidAttackAbility();
+                BaseAbilityProperties validAttackAbility = characterUnit.BaseCharacter.CharacterCombat.GetValidAttackAbility();
                 if (validAttackAbility != null) {
                     characterUnit.BaseCharacter.CharacterAbilityManager.BeginAbility(validAttackAbility);
                     return true;
@@ -1932,7 +1927,7 @@ namespace AnyRPG {
             //Debug.Log(gameObject.name + ".NotifyOnStatusEffectAdd()");
             OnStatusEffectAdd(statusEffectNode);
         }
-        public void NotifyOnCastTimeChanged(IAbilityCaster source, BaseAbility baseAbility, float castPercent) {
+        public void NotifyOnCastTimeChanged(IAbilityCaster source, BaseAbilityProperties baseAbility, float castPercent) {
             OnCastTimeChanged(source, baseAbility, castPercent);
         }
         public void NotifyOnCastComplete(BaseCharacter baseCharacter) {
@@ -1962,6 +1957,10 @@ namespace AnyRPG {
 
         public void BeginPatrol(string patrolName) {
             patrolController.BeginPatrol(patrolName);
+        }
+
+        public void BeginAction(string actionName) {
+            unitActionManager.BeginAction(actionName);
         }
 
         public void BeginAbility(string abilityName) {

@@ -1,0 +1,33 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6c9b51b8d3aa844448aaeab0a989e2fa, type: 3}
+  m_Name: PiercingShotAbilityTemplatePackage
+  m_EditorClassIdentifier: 
+  resourceName: Piercing Shot Ability
+  displayName: 
+  icon: {fileID: 0}
+  iconBackgroundImage: {fileID: 0}
+  description: 
+  useRegionalDescription: 0
+  resourceDescriptionProfile: 
+  optionalOverride: 0
+  resources:
+  - {fileID: 11400000, guid: 8964235308eb71943abf57bb2e218cc3, type: 2}
+  - {fileID: 11400000, guid: 83eb4e089c8161d47aa0a4a29cec4fc6, type: 2}
+  - {fileID: 11400000, guid: a49e4d90681cd1446947c5d50c0aac1f, type: 2}
+  - {fileID: 11400000, guid: dac854f3781fea94885b67d68471a6c2, type: 2}
+  - {fileID: 11400000, guid: 32fe8923815ba0c4b86c93aad33c4e95, type: 2}
+  - {fileID: 11400000, guid: da3bb2c475855aa4981f149cf4ad4eba, type: 2}
+  - {fileID: 11400000, guid: 63db892cc349c134ea7df1544be90022, type: 2}
+  - {fileID: 11400000, guid: 0352124b46091904f90eab5d118b50af, type: 2}
+  prefabs: []
+  dependencies: []

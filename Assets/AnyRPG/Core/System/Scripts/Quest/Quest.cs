@@ -128,40 +128,6 @@ namespace AnyRPG {
         [SerializeField]
         protected List<QuestStep> steps = new List<QuestStep>();
 
-        [Header("Deprecated Objectives")]
-
-        [SerializeField]
-        [FormerlySerializedAs("collectObjectives")]
-        protected CollectObjective[] deprecatedCollectObjectives;
-
-        [SerializeField]
-        [FormerlySerializedAs("killObjectives")]
-        protected KillObjective[] deprecatedKillObjectives;
-
-        [SerializeField]
-        [FormerlySerializedAs("tradeSkillObjectives")]
-        protected TradeSkillObjective[] deprecatedTradeSkillObjectives;
-
-        [SerializeField]
-        [FormerlySerializedAs("abilityObjectives")]
-        protected AbilityObjective[] deprecatedAbilityObjectives;
-
-        [SerializeField]
-        [FormerlySerializedAs("useInteractableObjectives")]
-        protected UseInteractableObjective[] deprecatedUseInteractableObjectives;
-
-        [SerializeField]
-        [FormerlySerializedAs("questQuestObjectives")]
-        protected QuestQuestObjective[] deprecatedQuestQuestObjectives;
-
-        [SerializeField]
-        [FormerlySerializedAs("dialogObjectives")]
-        protected DialogObjective[] deprecatedDialogObjectives;
-
-        [SerializeField]
-        [FormerlySerializedAs("visitZoneObjectives")]
-        protected VisitZoneObjective[] deprecatedVisitZoneObjectives;
-
         [Header("Prerequisites")]
 
         [SerializeField]
@@ -440,7 +406,7 @@ namespace AnyRPG {
             return "unavailable";
         }
 
-        public override string GetSummary() {
+        public override string GetDescription() {
             //return string.Format("{0}\n{1} Points", description, baseExperienceReward);
             return string.Format("{0}", description);
         }

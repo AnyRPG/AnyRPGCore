@@ -15,11 +15,10 @@ namespace AnyRPG {
 
         private bool prerequisiteMet = false;
 
-        private BaseAbility prerequisiteAbility = null;
+        private BaseAbilityProperties prerequisiteAbility = null;
 
         // game manager references
         private PlayerManager playerManager = null;
-        private SystemDataFactory systemDataFactory = null;
 
         public void HandleAbilityListChanged() {
             //Debug.Log("AbilityPrerequisite.HandleAbilityListChanged()");
@@ -47,7 +46,6 @@ namespace AnyRPG {
 
         public override void SetGameManagerReferences() {
             base.SetGameManagerReferences();
-            systemDataFactory = systemGameManager.SystemDataFactory;
             playerManager = systemGameManager.PlayerManager;
         }
 
@@ -55,7 +53,7 @@ namespace AnyRPG {
             Configure(systemGameManager);
             prerequisiteAbility = null;
             if (prerequisiteName != null && prerequisiteName != string.Empty) {
-                prerequisiteAbility = systemDataFactory.GetResource<BaseAbility>(prerequisiteName);
+                prerequisiteAbility = systemDataFactory.GetResource<BaseAbility>(prerequisiteName).AbilityProperties;
                 if (prerequisiteAbility != null) {
                     prerequisiteAbility.OnAbilityLearn += HandleAbilityListChanged;
                 }

@@ -1,0 +1,30 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6c9b51b8d3aa844448aaeab0a989e2fa, type: 3}
+  m_Name: CopperPlateHelmRecipeTemplatePackage
+  m_EditorClassIdentifier: 
+  resourceName: Copper Plate Helm Recipe
+  displayName: 
+  icon: {fileID: 0}
+  iconBackgroundImage: {fileID: 0}
+  description: 
+  useRegionalDescription: 0
+  resourceDescriptionProfile: 
+  optionalOverride: 0
+  resources:
+  - {fileID: 11400000, guid: ba3e4ee262069a24692c414899f955a9, type: 2}
+  - {fileID: 11400000, guid: 86d3e04a735138a4fb96f332ca707f6b, type: 2}
+  - {fileID: 11400000, guid: 473bd29fc7f7128459f66fe2399175cc, type: 2}
+  - {fileID: 11400000, guid: 1e15e3cfdd74e2f43b8cca55f0a538b1, type: 2}
+  prefabs: []
+  dependencies:
+  - {fileID: 11400000, guid: 7334f9942052f4a4e9d54645dbf78024, type: 2}

@@ -39,8 +39,8 @@ namespace AnyRPG {
             }
         }
 
-        public override string GetSummary(ItemQuality usedItemQuality) {
-            string returnString = base.GetSummary(usedItemQuality);
+        public override string GetDescription(ItemQuality usedItemQuality) {
+            string returnString = base.GetDescription(usedItemQuality);
             if (recipe != null) {
                 string alreadyKnownString = string.Empty;
                 if (playerManager.MyCharacter.CharacterRecipeManager.RecipeList.ContainsValue(recipe)) {
@@ -52,7 +52,7 @@ namespace AnyRPG {
                 } else {
                     abilityKnownString = "<color=red>Requires: " + recipe.CraftAbility.DisplayName + "</color>\n";
                 }
-                returnString += string.Format("\n<color=green>Recipe</color>\n{0}{1}{2}", alreadyKnownString, abilityKnownString, recipe.Output.GetSummary());
+                returnString += string.Format("\n<color=green>Recipe</color>\n{0}{1}{2}", alreadyKnownString, abilityKnownString, recipe.Output.GetDescription());
             }
             return returnString;
         }

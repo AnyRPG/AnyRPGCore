@@ -19,7 +19,6 @@ namespace AnyRPG {
         private CharacterClass prerequisiteCharacterClass = null;
 
         // game manager references
-        private SystemDataFactory systemDataFactory = null;
         private PlayerManager playerManager = null;
         private SystemEventManager systemEventManager = null;
 
@@ -49,7 +48,6 @@ namespace AnyRPG {
         public override void SetGameManagerReferences() {
             //Debug.Log("CharacterClassPrerequisite.SetGameManagerReferences()");
             base.SetGameManagerReferences();
-            systemDataFactory = systemGameManager.SystemDataFactory;
             playerManager = systemGameManager.PlayerManager;
             systemEventManager = systemGameManager.SystemEventManager;
         }

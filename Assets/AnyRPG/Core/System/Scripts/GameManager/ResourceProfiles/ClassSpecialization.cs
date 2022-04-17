@@ -62,12 +62,23 @@ namespace AnyRPG {
         [SerializeField]
         private List<PowerEnhancerNode> powerEnhancerStats = new List<PowerEnhancerNode>();
 
+        [Header("Pet Management")]
+
+        [Tooltip("The names of the equipment that will be worn by this class when a new game is started")]
+        [SerializeField]
+        [ResourceSelector(resourceType = typeof(UnitType))]
+        private List<string> validPetTypes = new List<string>();
+
+        private List<UnitType> validPetTypeList = new List<UnitType>();
+
+
         public List<PowerResource> PowerResourceList { get => powerResourceList; set => powerResourceList = value; }
         public List<StatScalingNode> PrimaryStats { get => primaryStats; set => primaryStats = value; }
         public List<PowerEnhancerNode> PowerEnhancerStats { get => powerEnhancerStats; set => powerEnhancerStats = value; }
         public bool NewGameOption { get => newGameOption; set => newGameOption = value; }
         public List<CharacterClass> CharacterClasses { get => characterClasses; set => characterClasses = value; }
         public List<Equipment> EquipmentList { get => equipmentList; set => equipmentList = value; }
+        public List<UnitType> ValidPetTypeList { get => validPetTypeList; set => validPetTypeList = value; }
 
         public CapabilityProps GetFilteredCapabilities(ICapabilityConsumer capabilityConsumer, bool returnAll = true) {
             return capabilities;
@@ -107,6 +118,17 @@ namespace AnyRPG {
                         powerResourceList.Add(tmpPowerResource);
                     } else {
                         Debug.LogError("CharacterClass.SetupScriptableObjects(): Could not find power resource : " + powerResourcename + " while inititalizing " + DisplayName + ".  CHECK INSPECTOR");
+                    }
+                }
+            }
+
+            if (validPetTypes != null) {
+                foreach (string petType in validPetTypes) {
+                    UnitType tmpUnitType = systemDataFactory.GetResource<UnitType>(petType);
+                    if (tmpUnitType != null) {
+                        validPetTypeList.Add(tmpUnitType);
+                    } else {
+                        Debug.LogError("CharacterClass.SetupScriptableObjects(): Could not find pet type : " + petType + " while inititalizing " + DisplayName + ".  CHECK INSPECTOR");
                     }
                 }
             }

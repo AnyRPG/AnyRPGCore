@@ -5989,7 +5989,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameName: AnyRPG Engine
-  gameVersion: v0.13a
+  gameVersion: v0.14a
   loadResourcesFolders: []
   initializationScene: 
   mainMenuScene: 
@@ -6006,8 +6006,8 @@ MonoBehaviour:
   alwaysShowDefaultProfiles: 0
   characterCreatorProfileNames: []
   useFirstCreatorProfile: 0
-  defaultInventorySlots: 0
-  defaultBankSlots: 0
+  defaultInventorySlots: 20
+  defaultBankSlots: 48
   maxInventoryBags: 5
   maxBankBags: 8
   defaultBackpackItem: 
@@ -6023,6 +6023,7 @@ MonoBehaviour:
   useFallDamage: 0
   fallDamagePerMeter: 2
   fallDamageMinDistance: 10
+  fallDamageAudioClip: {fileID: 8300000, guid: 6a538d21a7a8ec04ea0328b0c9310067, type: 3}
   fallDamageAudio: 
   useThirdPartyMovementControl: 0
   allowAutoAttack: 1
@@ -6051,7 +6052,7 @@ MonoBehaviour:
   killXPMultiplierLevelCap: 20
   weaponDPSBudgetPerLevel: 2.5
   statBudgetPerLevel: 0
-  primaryStats: []
+  deprecatedPrimaryStats: []
   powerResources: []
   capabilities:
     abilityNames: []
@@ -6063,6 +6064,7 @@ MonoBehaviour:
   levelUpEffectName: 
   deathEffectName: 
   lootSparkleEffectName: 
+  vendorAudioClip: {fileID: 8300000, guid: bc929a28bb601b242b58a3581dfcc667, type: 3}
   vendorAudioProfileName: 
   maxChatTextDistance: 25
   autoPixelsPerMeter: 10
@@ -6100,20 +6102,20 @@ MonoBehaviour:
   defaultUIPanelFrame: {fileID: 21300000, guid: 0281ba7261dc9534981ec2c944a817d9,
     type: 3}
   defaultFactionIcon: {fileID: 21300000, guid: a5049d8fafbe58a47989c22139dbbe65, type: 3}
-  systemBarMainMenu: {fileID: 21300000, guid: 1ea4d08ccd2c0714c97384ae4a49668b, type: 3}
-  systemBarAbilityBook: {fileID: 21300000, guid: abed47c01cc09b34590ac7c32bb8fb5c,
+  systemBarMainMenu: {fileID: 21300000, guid: f8b72f19fa8e9a34582ad11cf8021993, type: 3}
+  systemBarAbilityBook: {fileID: 21300000, guid: 28c685cdf1ca34f4b98801ac9cf978d3,
     type: 3}
-  systemBarCharacter: {fileID: 21300000, guid: cd7ceadb20d51b24493744dc9b9039d0, type: 3}
-  systemBarQuestLog: {fileID: 21300000, guid: f59d9e6e0cdb2b1469bd9eacf47a8fda, type: 3}
-  systemBarMap: {fileID: 21300000, guid: 32c21f6777b4c754f80bee0b05d1986f, type: 3}
-  systemBarSkills: {fileID: 21300000, guid: f6be84cbe9207d24184a8c145e7d01d7, type: 3}
-  systemBarReputations: {fileID: 21300000, guid: b73b395da57a61c49be20ce07e80e647,
+  systemBarCharacter: {fileID: 21300000, guid: c85756f6d654d3f45a59124373125f95, type: 3}
+  systemBarQuestLog: {fileID: 21300000, guid: 8a3cfed780d321a4eaea04e0fea812a4, type: 3}
+  systemBarMap: {fileID: 21300000, guid: 48d83bb455903964fae131e2a99b3f7a, type: 3}
+  systemBarSkills: {fileID: 21300000, guid: 8950106125fcc6549968cf0e98ea2377, type: 3}
+  systemBarReputations: {fileID: 21300000, guid: 9f2383ebb700b7b4abbb9b6de35299ef,
     type: 3}
-  systemBarCurrencies: {fileID: 21300000, guid: 984479b8c770f6e4c91569e28bcd2832,
+  systemBarCurrencies: {fileID: 21300000, guid: ade2bc5614baa0e4bb264e68f613cf21,
     type: 3}
-  systemBarAchievements: {fileID: 21300000, guid: 3bf430a228332f045915bb67d0fd57e4,
+  systemBarAchievements: {fileID: 21300000, guid: e029593ae7518d743830eccfc3e4e2b7,
     type: 3}
-  systemBarInventory: {fileID: 21300000, guid: 45ca158daa82b924db1bc873944e51e3, type: 3}
+  systemBarInventory: {fileID: 21300000, guid: 63cb0d21d60422d4882b978378a7c4ce, type: 3}
   temporaryMaterial: {fileID: 2100000, guid: 41a797d66a16d984e9d7de6fc6b78a57, type: 2}
   multipleInteractionNamePlateImage: {fileID: 21300000, guid: cd62bacdc6666fa4c88ff42d8cb179fa,
     type: 3}

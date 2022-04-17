@@ -1,0 +1,40 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6c9b51b8d3aa844448aaeab0a989e2fa, type: 3}
+  m_Name: KnightClassSpecializationTemplatePackage
+  m_EditorClassIdentifier: 
+  resourceName: Knight Class Specialization
+  displayName: 
+  icon: {fileID: 0}
+  iconBackgroundImage: {fileID: 0}
+  description: 
+  useRegionalDescription: 0
+  resourceDescriptionProfile: 
+  optionalOverride: 0
+  resources:
+  - {fileID: 11400000, guid: 0cda044c57ac52c4b8b1fa78e8362258, type: 2}
+  - {fileID: 11400000, guid: 3670a1b70fa740a499b39b4537b850c5, type: 2}
+  - {fileID: 11400000, guid: db7d15f2329bd8846871c1ecc98565bb, type: 2}
+  - {fileID: 11400000, guid: c466d850b3af32e4c8e4b0fadfa6a533, type: 2}
+  - {fileID: 11400000, guid: b75893ac08ced364d953eb103874bece, type: 2}
+  prefabs:
+  - {fileID: 6390993854296471015, guid: 2c8b2a928e71a654d81661e545590b9c, type: 3}
+  - {fileID: 6390993854296471015, guid: 0aedce4faf62d9842a3804a7b9e6f787, type: 3}
+  - {fileID: 6390993854296471015, guid: 2981af110ec092143b96cf79d48c1bd9, type: 3}
+  dependencies:
+  - {fileID: 11400000, guid: 1c9d0a13cad39f6439baacd710df2c34, type: 2}
+  - {fileID: 11400000, guid: 676afca08e6543d46bc1a2df8693d5a7, type: 2}
+  - {fileID: 11400000, guid: 923858ffc640ec644818365de434b405, type: 2}
+  - {fileID: 11400000, guid: dcf3d8d81428af3438d59af8463df56a, type: 2}
+  - {fileID: 11400000, guid: e67520ce9a39e2d4894c8c8e3b04ec76, type: 2}
+  - {fileID: 11400000, guid: a95c1f8aeabe9ab46876b593482e2a07, type: 2}
+  - {fileID: 11400000, guid: a62df64f431369a4ab02e7113b37a37a, type: 2}

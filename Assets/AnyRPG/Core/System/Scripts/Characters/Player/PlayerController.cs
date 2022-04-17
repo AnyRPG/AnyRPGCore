@@ -883,6 +883,7 @@ namespace AnyRPG {
 
         public void InterActWithTarget(Interactable interactable) {
             //Debug.Log(gameObject.name + ".InterActWithTarget(" + interactable.gameObject.name + ")");
+
             if (playerManager.UnitController.Target != interactable) {
                 playerManager.UnitController.ClearTarget();
                 playerManager.UnitController.SetTarget(interactable);

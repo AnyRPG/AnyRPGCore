@@ -1,0 +1,35 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6c9b51b8d3aa844448aaeab0a989e2fa, type: 3}
+  m_Name: AllClothEquipmentBlueItemsTemplatePackage
+  m_EditorClassIdentifier: 
+  resourceName: Blue Cloth Equipment
+  displayName: 
+  icon: {fileID: 0}
+  iconBackgroundImage: {fileID: 0}
+  description: 
+  useRegionalDescription: 0
+  resourceDescriptionProfile: 
+  optionalOverride: 0
+  resources:
+  - {fileID: 11400000, guid: 3b73be37d3ba6ce478c7ff506b0f6fe2, type: 2}
+  - {fileID: 11400000, guid: f194bda3369bab643ad64f3cb5543717, type: 2}
+  prefabs: []
+  dependencies:
+  - {fileID: 11400000, guid: 317e1bd7caa9fcf4e8b7735fd234dbbc, type: 2}
+  - {fileID: 11400000, guid: a3c909e3486045946b187f3e98d34d93, type: 2}
+  - {fileID: 11400000, guid: 6f8b59fbf83005b4793b27c796dff2c6, type: 2}
+  - {fileID: 11400000, guid: c880bbef5cae70541a0e92906e074bae, type: 2}
+  - {fileID: 11400000, guid: 36c3ae27258f17044bd9cf2eb60c9d47, type: 2}
+  - {fileID: 11400000, guid: 0135bc5ed45c5c9489e39d28e303140d, type: 2}
+  - {fileID: 11400000, guid: 28822725a363f414e87e765234bc1030, type: 2}
+  - {fileID: 11400000, guid: ac2f18393d04fb94681f9a739541c56c, type: 2}

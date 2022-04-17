@@ -119,6 +119,8 @@ namespace AnyRPG {
         }
 
         public bool AllowMount { get => allowMount; set => allowMount = value; }
+        public string BackgroundMusicProfileName { set => backgroundMusicProfile = value; }
+        public string AmbientMusicProfileName { set => ambientMusicProfile = value; }
 
         public override void SetGameManagerReferences() {
             base.SetGameManagerReferences();

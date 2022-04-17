@@ -26,7 +26,6 @@ namespace AnyRPG {
         private BehaviorComponent behaviorComponent = null;
 
         // game manager references
-        private SystemDataFactory systemDataFactory = null;
         private AudioManager audioManager = null;
         private LevelManager levelManager = null;
 

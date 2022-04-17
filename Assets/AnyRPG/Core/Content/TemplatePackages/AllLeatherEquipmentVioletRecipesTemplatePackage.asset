@@ -1,0 +1,33 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6c9b51b8d3aa844448aaeab0a989e2fa, type: 3}
+  m_Name: AllLeatherEquipmentVioletRecipesTemplatePackage
+  m_EditorClassIdentifier: 
+  resourceName: Violet Leather Equipment Recipes
+  displayName: 
+  icon: {fileID: 0}
+  iconBackgroundImage: {fileID: 0}
+  description: 
+  useRegionalDescription: 0
+  resourceDescriptionProfile: 
+  optionalOverride: 0
+  resources: []
+  prefabs: []
+  dependencies:
+  - {fileID: 11400000, guid: 5b76035503ccaa5459b2965cbdaa376f, type: 2}
+  - {fileID: 11400000, guid: 31ee579ec45aefb47ac469091fb2bb2a, type: 2}
+  - {fileID: 11400000, guid: e080f59a02dd1db44b0a1dfe5812ab0e, type: 2}
+  - {fileID: 11400000, guid: 48d9443916197814aa43ded6aaeb3113, type: 2}
+  - {fileID: 11400000, guid: 4bb848245c455d946bbf2c48c8285cff, type: 2}
+  - {fileID: 11400000, guid: f234e0f94f9b6b34bb4fbe65bb49c1bd, type: 2}
+  - {fileID: 11400000, guid: 87d26c450aee50b4695b27093aa41714, type: 2}
+  - {fileID: 11400000, guid: a5d619417e20d8e49a20a530ab43aca3, type: 2}

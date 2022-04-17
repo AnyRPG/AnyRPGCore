@@ -14,18 +14,19 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   resourceName: Quest NPC
   displayName: 
-  icon: {fileID: 21300000, guid: 9176b48a2857c364280b4f5b9d620852, type: 3}
+  icon: {fileID: 21300000, guid: 4ce9927e29c4e67439b2afb877749f1b, type: 3}
   iconBackgroundImage: {fileID: 0}
   description: 
   useRegionalDescription: 0
   resourceDescriptionProfile: 
+  optionalOverride: 0
   automaticPrefabProfile: 0
   prefabProfileName: 
   useInlinePrefabProps: 1
   unitPrefabProps:
     unitPrefab: {fileID: 2692339740015506113, guid: ba09f14eb0109ba459f4520b82c3fadc,
       type: 3}
-    modelPrefab: {fileID: 2692339740015506113, guid: 5e4110e291da71541bbc6aebc87266e3,
+    modelPrefab: {fileID: 6307183516646880328, guid: d46b6b5df6312ea4ba9a077c173ec3c0,
       type: 3}
     animationProfileName: 
     useInlineAnimationProps: 0
@@ -180,27 +181,27 @@ MonoBehaviour:
     movementSpeed: 0
     savePositionAtDestination: 0
   patrolNames: []
-  behaviorConfig:
+  interactionMaxRange: 3
+  deprecatedBehaviorConfig:
     interactionPanelTitle: 
     interactionPanelImage: {fileID: 0}
     namePlateImage: {fileID: 0}
     prerequisiteConditions: []
     behaviorNames: []
-  interactionMaxRange: 3
-  lootableCharacter:
+  deprecatedLootableCharacter:
     interactionPanelTitle: 
     interactionPanelImage: {fileID: 0}
     namePlateImage: {fileID: 0}
     prerequisiteConditions: []
     automaticCurrency: 0
     lootTableNames: []
-  dialogConfig:
+  deprecatedDialogConfig:
     interactionPanelTitle: 
     interactionPanelImage: {fileID: 0}
     namePlateImage: {fileID: 0}
     prerequisiteConditions: []
     dialogNames: []
-  questGiverConfig:
+  deprecatedQuestGiverConfig:
     interactionPanelTitle: 
     interactionPanelImage: {fileID: 0}
     namePlateImage: {fileID: 0}
@@ -246,15 +247,67 @@ MonoBehaviour:
       endQuest: 1
       questName: Repeatable 5 Step
     questGiverProfileNames: []
-  vendorConfig:
+  deprecatedVendorConfig:
     interactionPanelTitle: 
     interactionPanelImage: {fileID: 0}
     namePlateImage: {fileID: 0}
     prerequisiteConditions: []
     vendorCollectionNames: []
   interactableOptions: []
+  inlineInteractableOptions:
+  - id: 0
   persistObjectPosition: 0
   saveOnLevelUnload: 0
   saveOnGameSave: 0
   overwriteUnitUUID: 0
-  m_UUID: 9d890594-3306-4c08-baf1-7af8cccc05e5
+  m_UUID: d24e97c3-84ac-4ba7-9e8a-7c9a0df3f60c
+  references:
+    version: 1
+    00000000:
+      type: {class: QuestGiverProps, ns: AnyRPG, asm: Assembly-CSharp}
+      data:
+        interactionPanelTitle: 
+        interactionPanelImage: {fileID: 0}
+        namePlateImage: {fileID: 0}
+        prerequisiteConditions: []
+        quests:
+        - startQuest: 1
+          endQuest: 1
+          questName: Dialog Introduction
+        - startQuest: 1
+          endQuest: 1
+          questName: Collection
+        - startQuest: 1
+          endQuest: 1
+          questName: Finish Another Quest
+        - startQuest: 1
+          endQuest: 1
+          questName: Dialog Objective
+        - startQuest: 1
+          endQuest: 1
+          questName: Kill Things
+        - startQuest: 1
+          endQuest: 0
+          questName: Use Interactable
+        - startQuest: 1
+          endQuest: 1
+          questName: Visit Zone
+        - startQuest: 1
+          endQuest: 1
+          questName: Learn Trade Skill
+        - startQuest: 1
+          endQuest: 1
+          questName: Use Ability
+        - startQuest: 1
+          endQuest: 1
+          questName: Repeatable
+        - startQuest: 1
+          endQuest: 1
+          questName: Repeatable 2 Step
+        - startQuest: 1
+          endQuest: 1
+          questName: Repeatable 3 Step
+        - startQuest: 1
+          endQuest: 1
+          questName: Repeatable 5 Step
+        questGiverProfileNames: []

@@ -8,9 +8,9 @@ namespace AnyRPG {
     public class PatrolProfile : DescribableResource {
 
         [SerializeField]
-        private PatrolProps patrolProperties = new PatrolProps();
+        private PatrolProperties patrolProperties = new PatrolProperties();
 
-        public PatrolProps PatrolProperties { get => patrolProperties; set => patrolProperties = value; }
+        public PatrolProperties PatrolProperties { get => patrolProperties; set => patrolProperties = value; }
 
     }
 

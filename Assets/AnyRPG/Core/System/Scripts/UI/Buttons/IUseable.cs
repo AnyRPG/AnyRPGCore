@@ -10,6 +10,9 @@ namespace AnyRPG {
     public interface IUseable {
         Sprite Icon { get; }
         string DisplayName { get; }
+        float CoolDown { get; }
+        bool RequireOutOfCombat { get; }
+        bool RequireStealth { get; }
         bool Use();
         bool ActionButtonUse();
         Coroutine ChooseMonitorCoroutine(ActionButton actionButton);
@@ -18,5 +21,6 @@ namespace AnyRPG {
         void UpdateChargeCount(ActionButton actionButton);
         IUseable GetFactoryUseable();
         void AssignToActionButton(ActionButton actionButton);
+        void UpdateTargetRange(ActionBarManager actionBarManager, ActionButton actionButton);
     }
 }

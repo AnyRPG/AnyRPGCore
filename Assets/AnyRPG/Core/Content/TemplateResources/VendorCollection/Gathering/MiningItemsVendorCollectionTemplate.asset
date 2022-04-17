@@ -1,0 +1,71 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a03ad32ca7dbbb749878a79ae4cb1937, type: 3}
+  m_Name: MiningItemsVendorCollectionTemplate
+  m_EditorClassIdentifier: 
+  resourceName: Mining Items
+  displayName: 
+  icon: {fileID: 0}
+  iconBackgroundImage: {fileID: 0}
+  description: 
+  useRegionalDescription: 0
+  resourceDescriptionProfile: 
+  optionalOverride: 0
+  vendorItems:
+  - itemName: Coal
+    quantity: 0
+    unlimited: 1
+    itemQualityName: 
+  - itemName: Copper Ore
+    quantity: 0
+    unlimited: 1
+    itemQualityName: 
+  - itemName: Tin Ore
+    quantity: 0
+    unlimited: 1
+    itemQualityName: 
+  - itemName: Iron Ore
+    quantity: 0
+    unlimited: 1
+    itemQualityName: 
+  - itemName: Silver Ore
+    quantity: 0
+    unlimited: 1
+    itemQualityName: 
+  - itemName: Gold Ore
+    quantity: 0
+    unlimited: 1
+    itemQualityName: 
+  - itemName: Blue Crystal
+    quantity: 0
+    unlimited: 1
+    itemQualityName: 
+  - itemName: Violet Crystal
+    quantity: 0
+    unlimited: 1
+    itemQualityName: 
+  - itemName: Red Crystal
+    quantity: 0
+    unlimited: 1
+    itemQualityName: 
+  - itemName: Yellow Crystal
+    quantity: 0
+    unlimited: 1
+    itemQualityName: 
+  - itemName: Green Crystal
+    quantity: 0
+    unlimited: 1
+    itemQualityName: 
+  - itemName: Cyan Crystal
+    quantity: 0
+    unlimited: 1
+    itemQualityName: 

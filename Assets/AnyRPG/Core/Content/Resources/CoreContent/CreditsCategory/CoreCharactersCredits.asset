@@ -19,6 +19,7 @@ MonoBehaviour:
   description: 
   useRegionalDescription: 0
   resourceDescriptionProfile: 
+  optionalOverride: 0
   categoryName: Characters
   creditsNodes:
   - creditName: Cethiel's Dragon
@@ -26,3 +27,8 @@ MonoBehaviour:
     email: 
     userUrl: https://opengameart.org/users/drummyfish
     downloadUrl: 
+  - creditName: Modular RPG Characters
+    creditAttribution: System G6
+    email: 
+    userUrl: https://opengameart.org/users/system-g6
+    downloadUrl: https://opengameart.org/content/modular-rpg-characters

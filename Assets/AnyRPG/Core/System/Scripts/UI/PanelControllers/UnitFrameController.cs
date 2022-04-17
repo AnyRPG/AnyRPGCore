@@ -316,6 +316,7 @@ namespace AnyRPG {
                 //Debug.Log(gameObject.name + ".UnitFrameController.WaitForCamera(): a new wait was started. initial frame: " + frameNumber +  "; current wait: " + lastWaitFrame);
             } else {
                 //Debug.Log(gameObject.name + ".UnitFrameController.WaitForCamera(): rendering");
+                UpdateCameraPosition();
                 previewCamera.Render();
                 waitForCameraCoroutine = null;
                 namePlateController?.Interactable.ClearSnapshotRequest();

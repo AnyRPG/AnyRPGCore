@@ -29,14 +29,14 @@ namespace AnyRPG {
         [ResourceSelector(resourceType = typeof(AbilityEffect))]
         private List<string> defaultHitEffects = new List<string>();
 
-        private List<AbilityEffect> defaultHitEffectList = new List<AbilityEffect>();
+        private List<AbilityEffectProperties> defaultHitEffectList = new List<AbilityEffectProperties>();
 
         [Tooltip("Ability effects to cast on the target when the weapon does damage from any attack, including standard (auto) attacks")]
         [SerializeField]
         [ResourceSelector(resourceType = typeof(AbilityEffect))]
         private List<string> onHitEffects = new List<string>();
 
-        private List<AbilityEffect> onHitEffectList = new List<AbilityEffect>();
+        private List<AbilityEffectProperties> onHitEffectList = new List<AbilityEffectProperties>();
 
         [Header("Animation and Sound Defaults")]
 
@@ -61,7 +61,11 @@ namespace AnyRPG {
         [SerializeField]
         protected bool useWeaponTypeObjects = true;
 
-        [Tooltip("Physical prefabs to attach to bones on the character unit when this weapon is being used during an attack.  This could be arrows, special spell or glow effects, etc")]
+        [Tooltip("Physical prefabs to attach to bones on the character unit when this weapon is being animated during an attack.  This could be arrows, special spell or glow effects, etc")]
+        [SerializeField]
+        private List<AbilityAttachmentNode> abilityAnimationObjectList = new List<AbilityAttachmentNode>();
+
+        [Tooltip("Physical prefabs to use when this weapon is being used after the animation phase during an attack.  This could be arrows, special spell or glow effects, etc")]
         [SerializeField]
         private List<AbilityAttachmentNode> abilityObjectList = new List<AbilityAttachmentNode>();
 
@@ -102,7 +106,7 @@ namespace AnyRPG {
 
         public WeaponSkill WeaponSkill { get => weaponSkill; set => weaponSkill = value; }
         public bool AddScaledDamagePerSecond { get => addScaledDamagePerSecond; set => addScaledDamagePerSecond = value; }
-        public List<AbilityEffect> DefaultHitEffectList {
+        public List<AbilityEffectProperties> DefaultHitEffectList {
             get {
                 if (defaultHitEffectList != null && defaultHitEffectList.Count > 0) {
                     return defaultHitEffectList;
@@ -110,10 +114,10 @@ namespace AnyRPG {
                 if (weaponSkill != null) {
                     return weaponSkill.WeaponSkillProps.DefaultHitEffectList;
                 }
-                return new List<AbilityEffect>();
+                return new List<AbilityEffectProperties>();
             }
         }
-        public List<AbilityEffect> OnHitEffectList {
+        public List<AbilityEffectProperties> OnHitEffectList {
             get {
                 if (onHitEffectList != null && onHitEffectList.Count > 0) {
                     return onHitEffectList;
@@ -121,9 +125,18 @@ namespace AnyRPG {
                 if (weaponSkill != null) {
                     return weaponSkill.WeaponSkillProps.OnHitEffectList;
                 }
-                return new List<AbilityEffect>();
+                return new List<AbilityEffectProperties>();
             }
         }
+        public List<AbilityAttachmentNode> AbilityAnimationObjectList {
+            get {
+                if (useWeaponTypeObjects == true && weaponSkill != null) {
+                    return weaponSkill.WeaponSkillProps.AbilityAnimationObjectList;
+                }
+                return abilityAnimationObjectList;
+            }
+        }
+
         public List<AbilityAttachmentNode> AbilityObjectList {
             get {
                 if (useWeaponTypeObjects && weaponSkill != null) {
@@ -134,6 +147,7 @@ namespace AnyRPG {
         }
 
         public bool RequireWeaponSkill { get => requireWeaponSkill; set => requireWeaponSkill = value; }
+        public string WeaponType { get => weaponType; set => weaponType = value; }
 
         public float GetDamagePerSecond(int characterLevel) {
             return GetDamagePerSecond(characterLevel, realItemQuality);
@@ -151,7 +165,7 @@ namespace AnyRPG {
             return baseDamagePerSecond;
         }
 
-        public override string GetSummary(ItemQuality usedItemQuality) {
+        public override string GetDescription(ItemQuality usedItemQuality) {
 
             List<string> abilitiesList = new List<string>();
 
@@ -159,7 +173,7 @@ namespace AnyRPG {
                 abilitiesList.Add(string.Format("Damage Per Second: {0}", GetDamagePerSecond(playerManager.MyCharacter.CharacterStats.Level, usedItemQuality)));
             }
             if (onHitEffectList != null) {
-                foreach (AbilityEffect abilityEffect in onHitEffectList) {
+                foreach (AbilityEffectProperties abilityEffect in onHitEffectList) {
                     abilitiesList.Add(string.Format("<color=green>Cast On Hit: {0}</color>", abilityEffect.DisplayName));
                 }
             }
@@ -175,7 +189,7 @@ namespace AnyRPG {
                 }
                 abilitiesString += string.Format("\n<color={0}>Required Skill: {1}</color>", colorString, weaponSkill.DisplayName);
             }
-            return base.GetSummary(usedItemQuality) + abilitiesString;
+            return base.GetDescription(usedItemQuality) + abilitiesString;
         }
 
         /*
@@ -193,6 +207,82 @@ namespace AnyRPG {
         }
         */
 
+        public override void HandleEquip(CharacterCombat characterCombat, EquipmentSlotProfile equipmentSlotProfile) {
+            base.HandleEquip(characterCombat, equipmentSlotProfile);
+
+            if (OnHitEffectList != null && OnHitEffectList.Count > 0) {
+                characterCombat.AddOnHitEffects(OnHitEffectList);
+            }
+            if (DefaultHitEffectList != null && DefaultHitEffectList.Count > 0) {
+                characterCombat.AddDefaultHitEffects(DefaultHitEffectList);
+            }
+            if (equipmentSlotProfile != null && equipmentSlotProfile.SetOnHitAudio == true) {
+                if (DefaultHitSoundEffects != null) {
+                    characterCombat.AddDefaultHitSoundEffects(DefaultHitSoundEffects);
+                }
+            }
+
+            characterCombat.SetAttackSpeed();
+        }
+
+        public override void HandleUnequip(CharacterCombat characterCombat, EquipmentSlotProfile equipmentSlotProfile) {
+            base.HandleUnequip(characterCombat, equipmentSlotProfile);
+
+            if (OnHitEffectList != null && OnHitEffectList.Count > 0) {
+                foreach (AbilityEffectProperties abilityEffect in OnHitEffectList) {
+                    characterCombat.RemoveOnHitEffect(abilityEffect);
+                }
+            }
+            if (DefaultHitEffectList != null && DefaultHitEffectList.Count > 0) {
+                foreach (AbilityEffectProperties abilityEffect in DefaultHitEffectList) {
+                    characterCombat.RemoveDefaultHitEffect(abilityEffect);
+                }
+            }
+            if (equipmentSlotProfile != null && equipmentSlotProfile.SetOnHitAudio == true) {
+                //Debug.Log(baseCharacter.gameObject.name + ".CharacterCombat.HandleEquipmentChanged(): clearing default hit effects");
+                characterCombat.ClearDefaultHitSoundEffects();
+            }
+            characterCombat.SetAttackSpeed();
+        }
+
+        public override void HandleEquip(CharacterEquipmentManager characterEquipmentManager) {
+            base.HandleEquip(characterEquipmentManager);
+
+            // animation phase objects
+            if (AbilityAnimationObjectList != null && AbilityAnimationObjectList.Count > 0) {
+                foreach (AbilityAttachmentNode abilityAttachmentNode in AbilityAnimationObjectList) {
+                    characterEquipmentManager.AddWeaponAbilityAnimationObjects(abilityAttachmentNode);
+                }
+            }
+
+            // attack phase objects
+            if (AbilityObjectList != null && AbilityObjectList.Count > 0) {
+                foreach (AbilityAttachmentNode abilityAttachmentNode in AbilityObjectList) {
+                    characterEquipmentManager.AddWeaponAbilityObjects(abilityAttachmentNode);
+                }
+            }
+
+        }
+
+        public override void HandleUnequip(CharacterEquipmentManager characterEquipmentManager) {
+            base.HandleUnequip(characterEquipmentManager);
+
+            // animation phase objects
+            if (AbilityAnimationObjectList != null && AbilityAnimationObjectList.Count > 0) {
+                foreach (AbilityAttachmentNode abilityAttachmentNode in AbilityAnimationObjectList) {
+                    characterEquipmentManager.RemoveWeaponAbilityAnimationObjects(abilityAttachmentNode);
+                }
+            }
+
+            // attack phase objects
+            if (AbilityObjectList != null && AbilityObjectList.Count > 0) {
+                foreach (AbilityAttachmentNode abilityAttachmentNode in AbilityObjectList) {
+                    characterEquipmentManager.RemoveWeaponAbilityObjects(abilityAttachmentNode);
+                }
+            }
+
+        }
+
         public override bool CapabilityConsumerSupported(ICapabilityConsumer capabilityConsumer) {
             //Debug.Log(DisplayName + ".Weapon.CapabilityConsumerSupported");
             return capabilityConsumer.CapabilityConsumerProcessor.IsWeaponSupported(this);
@@ -207,7 +297,7 @@ namespace AnyRPG {
                     if (onHitEffectName != null && onHitEffectName != string.Empty) {
                         AbilityEffect abilityEffect = systemDataFactory.GetResource<AbilityEffect>(onHitEffectName);
                         if (abilityEffect != null) {
-                            onHitEffectList.Add(abilityEffect);
+                            onHitEffectList.Add(abilityEffect.AbilityEffectProperties);
                         } else {
                             Debug.LogError("Weapon.SetupScriptableObjects(): Could not find ability effect : " + onHitEffectName + " while inititalizing " + DisplayName + ".  CHECK INSPECTOR");
                         }
@@ -222,7 +312,7 @@ namespace AnyRPG {
                     if (defaultHitEffectName != null && defaultHitEffectName != string.Empty) {
                         AbilityEffect abilityEffect = systemDataFactory.GetResource<AbilityEffect>(defaultHitEffectName);
                         if (abilityEffect != null) {
-                            defaultHitEffectList.Add(abilityEffect);
+                            defaultHitEffectList.Add(abilityEffect.AbilityEffectProperties);
                         } else {
                             Debug.LogError("Weapon.SetupScriptableObjects(): Could not find ability effect : " + defaultHitEffectName + " while inititalizing " + DisplayName + ".  CHECK INSPECTOR");
                         }

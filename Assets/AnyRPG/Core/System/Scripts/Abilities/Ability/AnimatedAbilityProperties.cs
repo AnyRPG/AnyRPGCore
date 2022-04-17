@@ -1,0 +1,315 @@
+using AnyRPG;
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.UI;
+
+namespace AnyRPG {
+
+    [System.Serializable]
+    public class AnimatedAbilityProperties : BaseAbilityProperties {
+
+
+        [Header("Animated Ability")]
+
+        [Tooltip("Is this an auto attack ability")]
+        [SerializeField]
+        private bool isAutoAttack = false;
+
+        [Tooltip("If true, a random animation from the unit attack animations will be used")]
+        [SerializeField]
+        private bool useUnitAttackAnimations = true;
+
+        [Tooltip("This option is only valid if this is not an auto attack ability.  If true, it will use the current auto-attack animations so it looks good with any weapon.")]
+        [SerializeField]
+        private bool useAutoAttackAnimations = false;
+
+        [Tooltip("If true, the current weapon default hit sound will be played when this ability hits an enemy.")]
+        [SerializeField]
+        private bool useWeaponHitSound = false;
+
+
+        public bool IsAutoAttack { get => isAutoAttack; set => isAutoAttack = value; }
+        public bool UseWeaponHitSound { get => useWeaponHitSound; set => useWeaponHitSound = value; }
+
+        /*
+        public void GetAnimatedAbilityProperties(AnimatedAbility effect) {
+
+            isAutoAttack = effect.IsAutoAttack;
+            useUnitAttackAnimations = effect.UseUnitAttackAnimations;
+            useAutoAttackAnimations = effect.UseAutoAttackAnimations;
+            useWeaponHitSound = effect.UseWeaponHitSound;
+
+            GetBaseAbilityProperties(effect);
+        }
+        */
+
+        public override List<AbilityEffectProperties> GetAbilityEffects(IAbilityCaster abilityCaster) {
+            if (isAutoAttack) {
+                List<AbilityEffectProperties> weaponAbilityList = abilityCaster.AbilityManager.GetDefaultHitEffects();
+                if (weaponAbilityList != null && weaponAbilityList.Count > 0) {
+                    return weaponAbilityList;
+                }
+            }
+            return base.GetAbilityEffects(abilityCaster);
+        }
+
+        public override float GetAbilityCastingTime(IAbilityCaster abilityCaster) {
+            return 0f;
+        }
+
+        public override bool CanLearnAbility(CharacterAbilityManager characterAbilityManager) {
+            bool returnResult = base.CanLearnAbility(characterAbilityManager);
+            if (returnResult == false) {
+                return false;
+            }
+            if (isAutoAttack == true && characterAbilityManager.AutoAttackAbility != null) {
+                return false;
+            }
+            return true;
+        }
+
+        public override void ProcessLoadAbility(CharacterAbilityManager abilityManager) {
+            base.ProcessLoadAbility(abilityManager);
+            if (isAutoAttack == true) {
+                abilityManager.LearnAutoAttack(this);
+            }
+        }
+
+        public override void PrepareToLearnAbility(CharacterAbilityManager abilityManager) {
+            base.PrepareToLearnAbility(abilityManager);
+            if (IsAutoAttack == true) {
+                abilityManager.UnLearnDefaultAutoAttackAbility();
+            }
+        }
+
+        public override void ProcessLearnAbility(CharacterAbilityManager abilityManager) {
+            base.ProcessLearnAbility(abilityManager);
+            if (isAutoAttack) {
+                abilityManager.SetAutoAttackAbility(this);
+            }
+
+        }
+
+        public override void ProcessUnLearnAbility(CharacterAbilityManager abilityManager) {
+            //Debug.Log(DisplayName + ".ProcessUnLearnAbility()");
+            base.ProcessUnLearnAbility(abilityManager);
+            if (isAutoAttack) {
+                abilityManager.UnsetAutoAttackAbility();
+            }
+        }
+
+        public override bool HadSpecialIcon(ActionButton actionButton) {
+            if (systemConfigurationManager.AllowAutoAttack == true && IsAutoAttack == true) {
+
+                if (playerManager.MyCharacter.CharacterCombat.GetInCombat() == true
+                    && playerManager.MyCharacter.CharacterCombat.AutoAttackActive == true) {
+                    if (actionButton.CoolDownIcon.isActiveAndEnabled == false) {
+                        actionButton.CoolDownIcon.enabled = true;
+                    }
+                    if (actionButton.CoolDownIcon.color == new Color32(255, 0, 0, 155)) {
+                        actionButton.CoolDownIcon.color = new Color32(255, 146, 146, 155);
+                    } else {
+                        actionButton.CoolDownIcon.color = new Color32(255, 0, 0, 155);
+                    }
+
+                    if (actionButton.CoolDownIcon.fillMethod != Image.FillMethod.Radial360) {
+                        actionButton.CoolDownIcon.fillMethod = Image.FillMethod.Radial360;
+                    }
+                    if (actionButton.CoolDownIcon.fillAmount != 1f) {
+                        actionButton.CoolDownIcon.fillAmount = 1f;
+                    }
+                } else {
+                    //Debug.Log("ActionButton.UpdateVisual(): Player is not in combat");
+                    actionButton.DisableCoolDownIcon();
+                }
+                // don't need to continue on and do radial fill on auto-attack icons
+                return true;
+            }
+            return base.HadSpecialIcon(actionButton);
+        }
+
+        public override bool ReadyToCast(CharacterCombat characterCombat) {
+            if (isAutoAttack == true && characterCombat.OnAutoAttackCooldown() == true) {
+                return false;
+            }
+            return base.ReadyToCast(characterCombat);
+        }
+
+        public override void UpdateActionButtonVisual(ActionButton actionButton) {
+            // this must happen first because it's an image update that doesn't rely on cooldowns
+            // auto-attack buttons are special and display the current weapon of the character
+            if (IsAutoAttack == true) {
+                //Debug.Log("ActionButton.UpdateVisual(): updating auto-attack ability");
+                foreach (EquipmentSlotProfile equipmentSlotProfile in playerManager.MyCharacter.CharacterEquipmentManager.CurrentEquipment.Keys) {
+                    //Debug.Log("ActionButton.UpdateVisual(): updating auto-attack ability");
+                    if (equipmentSlotProfile.MainWeaponSlot == true
+                        && playerManager.MyCharacter.CharacterEquipmentManager.CurrentEquipment[equipmentSlotProfile] != null
+                        && playerManager.MyCharacter.CharacterEquipmentManager.CurrentEquipment[equipmentSlotProfile] is Weapon) {
+                        if (actionButton.Icon.sprite != playerManager.MyCharacter.CharacterEquipmentManager.CurrentEquipment[equipmentSlotProfile].Icon) {
+                            actionButton.Icon.sprite = playerManager.MyCharacter.CharacterEquipmentManager.CurrentEquipment[equipmentSlotProfile].Icon;
+                            break;
+                        }
+                    }
+                }
+            }
+            base.UpdateActionButtonVisual(actionButton);
+        }
+
+        public override Coroutine ChooseMonitorCoroutine(ActionButton actionButton) {
+            if (systemConfigurationManager.AllowAutoAttack == true && IsAutoAttack == true) {
+                //Debug.Log("ActionButton.OnUseableUse(" + ability.DisplayName + "): WAS ANIMATED AUTO ATTACK");
+                //if (autoAttackCoRoutine == null) {
+                //if (monitorCoroutine == null) {
+                    return systemAbilityController.StartCoroutine(actionButton.MonitorAutoAttack(this));
+                //}
+            }
+            return systemAbilityController.StartCoroutine(actionButton.MonitorAbility(DisplayName));
+        }
+
+        public override List<AbilityAttachmentNode> GetHoldableObjectList(IAbilityCaster abilityCaster) {
+            if (abilityPrefabSource == AbilityPrefabSource.Both) {
+                List<AbilityAttachmentNode> returnList = new List<AbilityAttachmentNode>();
+                returnList.AddRange(base.GetHoldableObjectList(abilityCaster));
+                returnList.AddRange(abilityCaster.AbilityManager.GetWeaponAbilityAnimationObjectList());
+                return returnList;
+            }
+            if (abilityPrefabSource == AbilityPrefabSource.Weapon) {
+                return abilityCaster.AbilityManager.GetWeaponAbilityAnimationObjectList();
+            }
+
+            // abilityPrefabSource is AbilityPrefabSource.Ability since there are only 3 options
+            return base.GetHoldableObjectList(abilityCaster);
+        }
+
+
+        /// <summary>
+        /// weapon hit sound
+        /// </summary>
+        /// <param name="abilityCaster"></param>
+        /// <returns></returns>
+        public override AudioClip GetHitSound(IAbilityCaster abilityCaster) {
+            //Debug.Log(DisplayName + ".AnimatedAbility.GetHitSound(" + abilityCaster.Name + ")");
+            if (useWeaponHitSound == true) {
+                //Debug.Log(DisplayName + ".AnimatedAbility.GetHitSound(" + abilityCaster.Name + "): using weapon hit sound");
+                return abilityCaster.AbilityManager.GetAnimatedAbilityHitSound();
+            }
+            //Debug.Log(DisplayName + ".AnimatedAbility.GetHitSound(" + abilityCaster.Name + "): not using weapon hit sound");
+            return base.GetHitSound(abilityCaster);
+        }
+
+        public List<AnimationClip> GetAnimationClips(IAbilityCaster sourceCharacter) {
+            List<AnimationClip> animationClips = new List<AnimationClip>();
+            if (useUnitAttackAnimations == true) {
+                animationClips = sourceCharacter.AbilityManager.GetUnitAttackAnimations();
+            } else if (useAutoAttackAnimations == true) {
+                animationClips = sourceCharacter.AbilityManager.GetDefaultAttackAnimations();
+            } else {
+                animationClips = AttackClips;
+            }
+            return animationClips;
+        }
+
+        public override bool Cast(IAbilityCaster sourceCharacter, Interactable target, AbilityEffectContext abilityEffectContext) {
+            //Debug.Log(DisplayName + ".AnimatedAbility.Cast(" + sourceCharacter.AbilityManager.Name + ")");
+            if (base.Cast(sourceCharacter, target, abilityEffectContext)) {
+                List<AnimationClip> usedAnimationClips = GetAnimationClips(sourceCharacter);
+                if (usedAnimationClips != null && usedAnimationClips.Count > 0) {
+                    //Debug.Log("AnimatedAbility.Cast(): animationClip is not null, setting animator");
+
+                    CharacterUnit targetCharacterUnit = null;
+                    if (target != null) {
+                        targetCharacterUnit =  CharacterUnit.GetCharacterUnit(target);
+                    }
+                    BaseCharacter targetBaseCharacter = null;
+                    if (targetCharacterUnit != null) {
+                        targetBaseCharacter = targetCharacterUnit.BaseCharacter;
+                    }
+
+                    int attackIndex = UnityEngine.Random.Range(0, usedAnimationClips.Count);
+                    if (usedAnimationClips[attackIndex] != null) {
+                        // perform the actual animation
+                        float animationLength = sourceCharacter.AbilityManager.PerformAnimatedAbility(usedAnimationClips[attackIndex], this, targetBaseCharacter, abilityEffectContext);
+
+                        sourceCharacter.AbilityManager.ProcessAbilityCoolDowns(this, animationLength, abilityCoolDown);
+                    }
+
+                } else {
+                    Debug.LogError(DisplayName + "AnimatedAbility.Cast(): no animation clips returned");
+                }
+                return true;
+            } else {
+                //Debug.Log(DisplayName + ".AnimatedAbility.Cast(): COULD NOT CAST ABILITY: sourceCharacter: " + sourceCharacter);
+            }
+            //Debug.Log(DisplayName + ".AnimatedAbility.Cast(): COULD NOT CAST ABILITY (RETURN FALSE): sourceCharacter: " + sourceCharacter);
+            return false;
+        }
+
+        public override void BeginAbilityCoolDown(IAbilityCaster sourceCharacter, float animationLength = -1) {
+            // intentionally do nothing, we will call this method manually here and pass in a time
+            //base.BeginAbilityCoolDown(sourceCharacter);
+        }
+
+        public override void ProcessAbilityPrefabs(IAbilityCaster sourceCharacter) {
+            //Debug.Log(DisplayName + ".AnimatedAbility.ProcessAbilityPrefabs()");
+            //base.ProcessAbilityPrefabs(sourceCharacter);
+            // do nothing intentionally, we will clean these up at the end of the ability
+        }
+
+        public void CleanupEventSubscriptions(BaseCharacter source) {
+        }
+
+        public bool HandleAbilityHit(IAbilityCaster source, Interactable target, AbilityEffectContext abilityEffectContext) {
+            //Debug.Log(DisplayName + ".AnimatedAbilityProperties.HandleAbilityHit()");
+            bool returnResult = true;
+            // perform a check that includes range to target
+            bool rangeResult = base.CanUseOn(target, source);
+            bool deactivateAutoAttack = false;
+            if (rangeResult == false) {
+                returnResult = false;
+                // if the range to target check failed, perform another check without range
+                // if that passes, do not deactivate auto-attack.  target just moved away mid swing and didn't die/change faction etc
+                if (!base.CanUseOn(target, source, true, null, false, false)) {
+                    deactivateAutoAttack = true;
+                }
+            }
+            source.AbilityManager.ProcessAnimatedAbilityHit(target, deactivateAutoAttack);
+
+            // since ability and effects can have their own individual range and LOS requirements, check if the effects are allowed to hit
+            // as long as only the LOS and range check failed from the ability (meaning no faction, liveness etc violations)
+            if (deactivateAutoAttack == false || abilityEffectContext.baseAbility.GetTargetOptions(source).RequireTarget == false) {
+                bool missResult = PerformAbilityEffects(source, target, abilityEffectContext);
+                if (!missResult) {
+                    returnResult = false;
+                }
+            }
+
+            return returnResult;
+
+        }
+
+        public override string GetDescription() {
+            string returnString = base.GetDescription();
+            return returnString;
+
+        }
+
+        public override bool CanUseOn(Interactable target, IAbilityCaster source, bool performCooldownChecks = true, AbilityEffectContext abilityEffectContext = null, bool playerInitiated = false, bool performRangeCheck = true) {
+            //Debug.Log(DisplayName + ".AnimatedAbility.CanUseOn(" + (target == null ? "null" : target.gameObject.name) + ", " + (source == null ? "null" : source.gameObject.name) + ")");
+            if (performCooldownChecks && !source.AbilityManager.PerformAnimatedAbilityCheck(this)) {
+                return false;
+            }
+
+            //Debug.Log(DisplayName + ".AnimatedAbility.CanUseOn(" + (target == null ? "null" : target.gameObject.name) + ", " + (source == null ? "null" : source.gameObject.name) + "): returning base");
+            return base.CanUseOn(target, source, performCooldownChecks, abilityEffectContext, playerInitiated, performRangeCheck);
+        }
+
+        public override void ProcessGCDAuto(IAbilityCaster sourceCharacter) {
+            //Debug.Log(DisplayName + "AnimatedAbility.ProcessGCDAuto()");
+            //intentionally do nothing
+        }
+
+
+    }
+
+}

@@ -275,7 +275,13 @@ namespace AnyRPG {
             // disable specialization button if option not allowed or class button disabled (specializations do not have a specific new game option)
             if (systemConfigurationManager.NewGameSpecialization == true) {
                 if (classButton.gameObject.activeSelf == true) {
-                    specializationButton.gameObject.SetActive(true);
+                    specializationButton.gameObject.SetActive(false);
+                    foreach (ClassSpecialization classSpecialization in systemDataFactory.GetResourceList<ClassSpecialization>()) {
+                        if (classSpecialization.NewGameOption == true) {
+                            specializationButton.gameObject.SetActive(true);
+                            break;
+                        }
+                    }
                 } else {
                     specializationButton.gameObject.SetActive(false);
                 }
@@ -310,6 +316,8 @@ namespace AnyRPG {
         }
 
         public void HandleSetClassSpecialization(ClassSpecialization newClassSpecialization) {
+            //Debug.Log("NewGamePanel.HandleSetClassSpecialization(" + (newClassSpecialization == null ? "null" : newClassSpecialization.DisplayName) + ")");
+
             detailsPanel.SetClassSpecialization(newGameManager.ClassSpecialization);
 
             specializationPanel.SetClassSpecialization(newClassSpecialization);
@@ -528,10 +536,12 @@ namespace AnyRPG {
                 // equip equipment in list but not yet equipped
                 if (newGameManager.EquipmentList != null) {
                     //Debug.Log("NewGameCharacterPanelController.EquipCharacter(): equipment list is not null");
-                    foreach (Equipment equipment in newGameManager.EquipmentList.Values) {
+                    foreach (EquipmentSlotProfile equipmentSlotProfile in newGameManager.EquipmentList.Keys) {
                         //Debug.Log("NewGameCharacterPanelController.EquipCharacter(): ask to equip: " + equipment.DisplayName);
-                        if (!characterEquipmentManager.CurrentEquipment.ContainsValue(equipment)) {
-                            characterEquipmentManager.Equip(equipment, null, false, false, false);
+                        if (characterEquipmentManager.CurrentEquipment.ContainsKey(equipmentSlotProfile) == false
+                            || characterEquipmentManager.CurrentEquipment[equipmentSlotProfile] == null
+                            || characterEquipmentManager.CurrentEquipment[equipmentSlotProfile] != newGameManager.EquipmentList[equipmentSlotProfile]) {
+                            characterEquipmentManager.Equip(newGameManager.EquipmentList[equipmentSlotProfile], equipmentSlotProfile, false, false, false);
                             changes++;
                         }
                     }

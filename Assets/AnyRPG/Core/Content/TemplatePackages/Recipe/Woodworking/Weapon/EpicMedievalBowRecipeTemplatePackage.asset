@@ -1,0 +1,31 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6c9b51b8d3aa844448aaeab0a989e2fa, type: 3}
+  m_Name: EpicMedievalBowRecipeTemplatePackage
+  m_EditorClassIdentifier: 
+  resourceName: Epic Medieval Bow Recipe
+  displayName: 
+  icon: {fileID: 0}
+  iconBackgroundImage: {fileID: 0}
+  description: 
+  useRegionalDescription: 0
+  resourceDescriptionProfile: 
+  optionalOverride: 0
+  resources:
+  - {fileID: 11400000, guid: 6f84ea3536fd5b947b3cf10893426b7a, type: 2}
+  - {fileID: 11400000, guid: 04ba2ff7e44089349b59d52de69c948e, type: 2}
+  - {fileID: 11400000, guid: d9f14d0a8352d454d9f973737cc1bb89, type: 2}
+  - {fileID: 11400000, guid: 05380df89f30f5b4984b9fba8a7dab35, type: 2}
+  - {fileID: 11400000, guid: e643ac9e80ed41542af49c349280e540, type: 2}
+  prefabs: []
+  dependencies:
+  - {fileID: 11400000, guid: 7eb41be6c1456f14589330047613579a, type: 2}

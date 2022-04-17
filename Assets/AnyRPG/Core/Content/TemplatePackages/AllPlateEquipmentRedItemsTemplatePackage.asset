@@ -1,0 +1,35 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6c9b51b8d3aa844448aaeab0a989e2fa, type: 3}
+  m_Name: AllPlateEquipmentRedItemsTemplatePackage
+  m_EditorClassIdentifier: 
+  resourceName: All Red Plate Equipment Items
+  displayName: 
+  icon: {fileID: 0}
+  iconBackgroundImage: {fileID: 0}
+  description: 
+  useRegionalDescription: 0
+  resourceDescriptionProfile: 
+  optionalOverride: 0
+  resources:
+  - {fileID: 11400000, guid: b7f9055e183fcc549b7a85cbf5f78903, type: 2}
+  - {fileID: 11400000, guid: ea6a04b49d7b70b49a6ab2018eecef5b, type: 2}
+  prefabs: []
+  dependencies:
+  - {fileID: 11400000, guid: 331cd774b4f73414ab9658abce76ee30, type: 2}
+  - {fileID: 11400000, guid: 358f547f963fd6241903b9fbc3cc9552, type: 2}
+  - {fileID: 11400000, guid: 1d769324290ca1444b3a0f88f11028d2, type: 2}
+  - {fileID: 11400000, guid: d2c1aea4aa5c8a34080d6c18ac94ef8a, type: 2}
+  - {fileID: 11400000, guid: 3641c734e1f37fe44a9ad55830bcb48a, type: 2}
+  - {fileID: 11400000, guid: 3baa257800246574598b16faa53d11c4, type: 2}
+  - {fileID: 11400000, guid: d1cafd8f037e4064c8215d4ee9f5c083, type: 2}
+  - {fileID: 11400000, guid: 512551300e3583944a4ec6017fb2de5b, type: 2}

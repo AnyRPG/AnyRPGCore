@@ -1,0 +1,33 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6c9b51b8d3aa844448aaeab0a989e2fa, type: 3}
+  m_Name: AllClothEquipmentVioletRecipesTemplatePackage
+  m_EditorClassIdentifier: 
+  resourceName: All Violet Cloth Equipment Recipes
+  displayName: 
+  icon: {fileID: 0}
+  iconBackgroundImage: {fileID: 0}
+  description: 
+  useRegionalDescription: 0
+  resourceDescriptionProfile: 
+  optionalOverride: 0
+  resources: []
+  prefabs: []
+  dependencies:
+  - {fileID: 11400000, guid: c4eba9147ee448a449532a9ecf05ca6a, type: 2}
+  - {fileID: 11400000, guid: c7c2ed3a98583c44297115d059d97580, type: 2}
+  - {fileID: 11400000, guid: 8f82f48b92c0e384dbd07e8313410d08, type: 2}
+  - {fileID: 11400000, guid: 39729f7518e681142a347e987b2d1113, type: 2}
+  - {fileID: 11400000, guid: 7cecedeaa7ba2c34dbea9798b025bbb4, type: 2}
+  - {fileID: 11400000, guid: ccba323f8119ff04a97f264ce6cecad9, type: 2}
+  - {fileID: 11400000, guid: 15f094f84bdee664baa7d2538aecf145, type: 2}
+  - {fileID: 11400000, guid: e0a8e377e8df77d4aae2333a58ab77b5, type: 2}

@@ -1,0 +1,29 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6c9b51b8d3aa844448aaeab0a989e2fa, type: 3}
+  m_Name: CyanWingsAbilityTemplatePackage
+  m_EditorClassIdentifier: 
+  resourceName: Cyan Wings Ability
+  displayName: 
+  icon: {fileID: 0}
+  iconBackgroundImage: {fileID: 0}
+  description: 
+  useRegionalDescription: 0
+  resourceDescriptionProfile: 
+  optionalOverride: 0
+  resources:
+  - {fileID: 11400000, guid: 2826270bda2d102479322d9289bdd35b, type: 2}
+  - {fileID: 11400000, guid: b2e67a9d095a4a649bf45f668e8bc297, type: 2}
+  - {fileID: 11400000, guid: 58026eac91df5ce4397f81bcad7b284a, type: 2}
+  - {fileID: 11400000, guid: 6c8e806d013424e4686099c55a883d60, type: 2}
+  prefabs: []
+  dependencies: []

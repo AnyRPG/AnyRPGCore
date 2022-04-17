@@ -28,7 +28,6 @@ namespace AnyRPG {
         private LootHolder lootHolder = new LootHolder();
 
         // game manager references
-        private SystemDataFactory systemDataFactory = null;
         private SystemAbilityController systemAbilityController = null;
         private LootManager lootManager = null;
 
@@ -47,7 +46,6 @@ namespace AnyRPG {
 
         public override void SetGameManagerReferences() {
             base.SetGameManagerReferences();
-            systemDataFactory = systemGameManager.SystemDataFactory;
             systemAbilityController = systemGameManager.SystemAbilityController;
             lootManager = systemGameManager.LootManager;
         }
@@ -136,7 +134,7 @@ namespace AnyRPG {
                 //Debug.Log(gameObject.name + "LootableCharacter.HandleDeath(): Loot count: " + MyLootTable.MyDroppedItems.Count + "; performing loot sparkle");
 
                 //systemAbilityController.BeginAbility(systemConfigurationManager.MyLootSparkleAbility as IAbility, gameObject);
-                systemConfigurationManager.LootSparkleEffect.Cast(systemAbilityController, interactable, interactable, new AbilityEffectContext());
+                systemConfigurationManager.LootSparkleEffect.AbilityEffectProperties.Cast(systemAbilityController, interactable, interactable, new AbilityEffectContext());
             }
             TryToDespawn();
         }

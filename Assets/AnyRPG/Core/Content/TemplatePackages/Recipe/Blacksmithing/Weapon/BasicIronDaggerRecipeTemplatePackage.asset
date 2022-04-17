@@ -1,0 +1,30 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6c9b51b8d3aa844448aaeab0a989e2fa, type: 3}
+  m_Name: BasicIronDaggerRecipeTemplatePackage
+  m_EditorClassIdentifier: 
+  resourceName: Basic Iron Dagger Recipe
+  displayName: 
+  icon: {fileID: 0}
+  iconBackgroundImage: {fileID: 0}
+  description: 
+  useRegionalDescription: 0
+  resourceDescriptionProfile: 
+  optionalOverride: 0
+  resources:
+  - {fileID: 11400000, guid: 0de2b3688010c7b4fa2207f29d8937f1, type: 2}
+  - {fileID: 11400000, guid: 9e797f171ab54f64c84fad98e499a17d, type: 2}
+  - {fileID: 11400000, guid: a641eee6230c5d84cbe279912c491c58, type: 2}
+  - {fileID: 11400000, guid: cc0b49a4e307f1b4ca25f5b8131ddcda, type: 2}
+  prefabs: []
+  dependencies:
+  - {fileID: 11400000, guid: 710bb136addd1b645895035e4f37d690, type: 2}

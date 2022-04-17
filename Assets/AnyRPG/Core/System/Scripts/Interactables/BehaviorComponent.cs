@@ -15,19 +15,11 @@ namespace AnyRPG {
 
         private List<BehaviorProfile> behaviorList = new List<BehaviorProfile>();
 
-        // game manager references
-        private SystemDataFactory systemDataFactory = null;
-
         public BehaviorComponent(Interactable interactable, BehaviorProps interactableOptionProps, SystemGameManager systemGameManager) : base(interactable, interactableOptionProps, systemGameManager) {
             if ((interactable as UnitController) is UnitController) {
                 unitController = (interactable as UnitController);
             }
             InitBehaviors();
-        }
-
-        public override void SetGameManagerReferences() {
-            base.SetGameManagerReferences();
-            systemDataFactory = systemGameManager.SystemDataFactory;
         }
 
         public static BehaviorComponent GetBehaviorComponent(Interactable searchInteractable) {

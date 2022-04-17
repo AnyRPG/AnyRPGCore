@@ -1,0 +1,33 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 086cc19bb10d93146806ca499cfd21c7, type: 3}
+  m_Name: MedievalCrossbowPrefabTemplate
+  m_EditorClassIdentifier: 
+  resourceName: Medieval Crossbow
+  displayName: 
+  icon: {fileID: 0}
+  iconBackgroundImage: {fileID: 0}
+  description: 
+  useRegionalDescription: 0
+  resourceDescriptionProfile: 
+  prefab: {fileID: 5319069474142785129, guid: f4c32d3e399edbc43b3e7a08ba34f4d9, type: 3}
+  position: {x: -0.091, y: -0.03, z: -0.04}
+  rotationIsGlobal: 0
+  rotation: {x: 331.1704, y: 286.8566, z: 176.9492}
+  scale: {x: 1, y: 1, z: 1}
+  targetBone: LeftHand
+  unsheathAudioProfileName: 
+  sheathedPosition: {x: -0.171, y: 0.015, z: -0.129}
+  sheathedRotation: {x: 304.1215, y: 295.9537, z: 169.7565}
+  sheathedScale: {x: 1, y: 1, z: 1}
+  sheathedTargetBone: Spine1
+  sheathAudioProfileName: 

@@ -15,6 +15,8 @@ namespace AnyRPG {
         public event System.Action OnReviveComplete = delegate { };
         public event System.Action<StatusEffectNode> OnStatusEffectAdd = delegate { };
         public event System.Action OnStatChanged = delegate { };
+        public event System.Action OnEnterStealth = delegate { };
+        public event System.Action OnLeaveStealth = delegate { };
         public event System.Action<int> OnLevelChanged = delegate { };
         public event System.Action<AbilityEffectContext> OnImmuneToEffect = delegate { };
         public event System.Action<int> OnGainXP = delegate { };
@@ -66,7 +68,6 @@ namespace AnyRPG {
         protected bool eventSubscriptionsInitialized = false;
 
         // game manager references
-        protected SystemDataFactory systemDataFactory = null;
         protected LevelManager levelManager = null;
         protected PlayerManager playerManager = null;
         protected CombatTextManager combatTextManager = null;
@@ -164,6 +165,16 @@ namespace AnyRPG {
             }
         }
         public bool IsReviving { get => isReviving; set => isReviving = value; }
+        public bool IsStealthed {
+            get {
+                foreach (StatusEffectNode statusEffectNode in statusEffects.Values) {
+                    if (statusEffectNode.StatusEffect.Stealth == true) {
+                        return true;
+                    }
+                }
+                return false;
+            }
+        }
         public Dictionary<PowerResource, PowerResourceNode> PowerResourceDictionary { get => powerResourceDictionary; set => powerResourceDictionary = value; }
         public Dictionary<string, Stat> PrimaryStats { get => primaryStats; set => primaryStats = value; }
         public Dictionary<SecondaryStatType, Stat> SecondaryStats { get => secondaryStats; set => secondaryStats = value; }
@@ -189,7 +200,6 @@ namespace AnyRPG {
 
         public override void SetGameManagerReferences() {
             base.SetGameManagerReferences();
-            systemDataFactory = systemGameManager.SystemDataFactory;
             levelManager = systemGameManager.LevelManager;
             playerManager = systemGameManager.PlayerManager;
             combatTextManager = systemGameManager.UIManager.CombatTextManager;
@@ -251,6 +261,22 @@ namespace AnyRPG {
 
         }
 
+        public void CancelNonCombatEffects() {
+
+            List<StatusEffectNode> cancelEffects = new List<StatusEffectNode>();
+
+            foreach (StatusEffectNode statusEffectNode in statusEffects.Values) {
+                if (statusEffectNode.StatusEffect.RequireOutOfCombat == true) {
+                    cancelEffects.Add(statusEffectNode);
+                }
+            }
+
+            foreach (StatusEffectNode statusEffectNode in cancelEffects) {
+                statusEffectNode.CancelStatusEffect();
+            }
+
+        }
+
         public void CalculatePrimaryStats() {
             CalculateRunSpeed();
             foreach (string statName in primaryStats.Keys) {
@@ -273,7 +299,7 @@ namespace AnyRPG {
             }
         }
 
-        public bool PerformPowerResourceCheck(BaseAbility ability, float resourceCost) {
+        public bool PerformPowerResourceCheck(BaseAbilityProperties ability, float resourceCost) {
             //Debug.Log(gameObject.name + ".CharacterStats.PerformPowerResourceCheck(" + (ability == null ? "null" : ability.DisplayName) + ", " + resourceCost + ")");
             if (resourceCost == 0f || (ability != null & ability.PowerResource == null)) {
                 return true;
@@ -700,7 +726,7 @@ namespace AnyRPG {
         /// <param name="target"></param>
         public void AttemptAgro(IAbilityCaster sourceCharacter, CharacterUnit target) {
             if (target != null && (sourceCharacter.AbilityManager as CharacterAbilityManager) is CharacterAbilityManager) {
-                if (target != null && target.BaseCharacter != null) {
+                if (target.BaseCharacter != null) {
                     if (Faction.RelationWith(target.BaseCharacter, (sourceCharacter.AbilityManager as CharacterAbilityManager).BaseCharacter) <= -1) {
                         if (target.BaseCharacter.CharacterCombat != null) {
                             // agro includes a liveness check, so casting necromancy on a dead enemy unit should not pull it into combat with us if we haven't applied a faction or master control buff yet
@@ -722,7 +748,7 @@ namespace AnyRPG {
             return false;
         }
 
-        public bool WasImmuneToFreeze(StatusEffect statusEffect, IAbilityCaster sourceCharacter, AbilityEffectContext abilityEffectContext) {
+        public bool WasImmuneToFreeze(StatusEffectProperties statusEffect, IAbilityCaster sourceCharacter, AbilityEffectContext abilityEffectContext) {
             if (statusEffect.DisableAnimator == true && baseCharacter.CharacterStats.HasFreezeImmunity()) {
                 if (sourceCharacter == (playerManager.MyCharacter as IAbilityCaster)) {
                     combatTextManager.SpawnCombatText(baseCharacter.UnitController, 0, CombatTextType.immune, CombatMagnitude.normal, abilityEffectContext);
@@ -733,7 +759,7 @@ namespace AnyRPG {
             return false;
         }
 
-        public bool WasImmuneToStun(StatusEffect statusEffect, IAbilityCaster sourceCharacter, AbilityEffectContext abilityEffectContext) {
+        public bool WasImmuneToStun(StatusEffectProperties statusEffect, IAbilityCaster sourceCharacter, AbilityEffectContext abilityEffectContext) {
             // check for stun
             if (statusEffect.Stun == true && baseCharacter.CharacterStats.HasStunImmunity()) {
                 if (sourceCharacter == (playerManager.MyCharacter as IAbilityCaster)) {
@@ -745,7 +771,7 @@ namespace AnyRPG {
             return false;
         }
 
-        public bool WasImmuneToLevitate(StatusEffect statusEffect, IAbilityCaster sourceCharacter, AbilityEffectContext abilityEffectContext) {
+        public bool WasImmuneToLevitate(StatusEffectProperties statusEffect, IAbilityCaster sourceCharacter, AbilityEffectContext abilityEffectContext) {
             // check for levitate
             if (statusEffect.Levitate == true && baseCharacter.CharacterStats.HasLevitateImmunity()) {
                 if (sourceCharacter == (playerManager.MyCharacter as IAbilityCaster)) {
@@ -757,7 +783,7 @@ namespace AnyRPG {
             return false;
         }
 
-        public StatusEffectNode ApplyStatusEffect(StatusEffect statusEffect, IAbilityCaster sourceCharacter, AbilityEffectContext abilityEffectContext) {
+        public StatusEffectNode ApplyStatusEffect(StatusEffectProperties statusEffect, IAbilityCaster sourceCharacter, AbilityEffectContext abilityEffectContext) {
             //Debug.Log(baseCharacter.gameObject.name + ".CharacterStats.ApplyStatusEffect(" + statusEffect.DisplayName + ", " + sourceCharacter.AbilityManager.Name + ")");
             if (IsAlive == false && statusEffect.GetTargetOptions(sourceCharacter).RequireLiveTarget == true && statusEffect.GetTargetOptions(sourceCharacter).RequireDeadTarget == false) {
                 //Debug.Log("Cannot apply status effect to dead character. return null.");
@@ -818,7 +844,7 @@ namespace AnyRPG {
 
 
             // check if status effect already exists on target
-            StatusEffect comparedStatusEffect = null;
+            StatusEffectProperties comparedStatusEffect = null;
             string peparedString = SystemDataFactory.PrepareStringForMatch(statusEffect.DisplayName);
             if (statusEffects.ContainsKey(peparedString)) {
                 comparedStatusEffect = statusEffects[peparedString].StatusEffect;
@@ -869,14 +895,18 @@ namespace AnyRPG {
             }
         }
 
-        public bool HasStatusEffect(StatusEffect statusEffect) {
-            if (statusEffects.ContainsKey(SystemDataFactory.PrepareStringForMatch(statusEffect.DisplayName))) {
+        public bool HasStatusEffect(StatusEffectProperties statusEffect) {
+            return HasStatusEffect(statusEffect.DisplayName);
+        }
+
+        public bool HasStatusEffect(string statusEffectName) {
+            if (statusEffects.ContainsKey(SystemDataFactory.PrepareStringForMatch(statusEffectName))) {
                 return true;
             }
             return false;
         }
 
-        public StatusEffectNode GetStatusEffectNode(StatusEffect statusEffect) {
+        public StatusEffectNode GetStatusEffectNode(StatusEffectProperties statusEffect) {
             if (statusEffects.ContainsKey(SystemDataFactory.PrepareStringForMatch(statusEffect.DisplayName))) {
                 return StatusEffects[SystemDataFactory.PrepareStringForMatch(statusEffect.DisplayName)];
             }
@@ -892,7 +922,7 @@ namespace AnyRPG {
             }
         }
 
-        public void HandleChangedNotifications(StatusEffect statusEffect) {
+        public void HandleChangedNotifications(StatusEffectProperties statusEffect) {
             //Debug.Log(baseCharacter.gameObject.name + ".CharacterStats.HandleChangedNotifications(" + (statusEffect == null ? "null" : statusEffect.DisplayName) + ")");
 
             //statusEffect.StatBuffTypeNames
@@ -928,13 +958,19 @@ namespace AnyRPG {
                 }
             }
 
+            if (statusEffect.Stealth == true) {
+                if (IsStealthed == false) {
+                    DeactivateStealth();
+                }
+            }
+
 
             if (statusEffect.FactionModifiers.Count > 0) {
                 SystemEventManager.TriggerEvent("OnReputationChange", new EventParamProperties());
             }
         }
 
-        public void HandleStatusEffectRemoval(StatusEffect statusEffect) {
+        public void HandleStatusEffectRemoval(StatusEffectProperties statusEffect) {
             //Debug.Log("CharacterStats.HandleStatusEffectRemoval(" + statusEffect.name + ")");
             string preparedString = SystemDataFactory.PrepareStringForMatch(statusEffect.DisplayName);
             if (statusEffects.ContainsKey(preparedString)) {
@@ -1049,8 +1085,8 @@ namespace AnyRPG {
                     ReducePowerResource(powerResource, (int)((damagePercent / 100f) * GetPowerResourceMaxAmount(powerResource)));
                 }
             }
-            if (systemConfigurationManager.FallDamageAudioProfile?.AudioClip != null) {
-                baseCharacter.UnitController.UnitComponentController.PlayEffectSound(systemConfigurationManager.FallDamageAudioProfile.AudioClip);
+            if (systemConfigurationManager.FallDamageAudioClip != null) {
+                baseCharacter.UnitController.UnitComponentController.PlayEffectSound(systemConfigurationManager.FallDamageAudioClip);
             }
         }
 
@@ -1166,6 +1202,22 @@ namespace AnyRPG {
                 powerResourceDictionary[PrimaryResource].currentValue = Mathf.Clamp(powerResourceDictionary[PrimaryResource].currentValue, 0, MaxPrimaryResource);
                 OnPrimaryResourceAmountChanged(MaxPrimaryResource, CurrentPrimaryResource);
             }
+        }
+
+        public void ActivateStealth() {
+            baseCharacter.UnitController.UnitMaterialController.ActivateStealth();
+            OnEnterStealth();
+        }
+
+        public void DeactivateStealth() {
+            //Debug.Log(baseCharacter.gameObject.name + "CharacterStats.DeactivateStealth()");
+
+            baseCharacter.UnitController.UnitMaterialController.DeactivateStealth();
+            OnLeaveStealth();
+
+            // to ensure the character gets agrod if close to enemies, the collider must be cycled
+            baseCharacter.UnitController.CharacterUnit.DisableCollider();
+            baseCharacter.UnitController.CharacterUnit.EnableCollider();
         }
 
         public void StatChangedNotificationHandler() {
@@ -1310,7 +1362,7 @@ namespace AnyRPG {
 
         }
 
-        public IEnumerator Tick(IAbilityCaster characterSource, AbilityEffectContext abilityEffectContext, StatusEffect statusEffect, StatusEffectNode statusEffectNode) {
+        public IEnumerator Tick(IAbilityCaster characterSource, AbilityEffectContext abilityEffectContext, StatusEffectProperties statusEffect, StatusEffectNode statusEffectNode) {
             //Debug.Log(gameObject.name + ".StatusEffect.Tick() start");
             float elapsedTime = 0f;
 

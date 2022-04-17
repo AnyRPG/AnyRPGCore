@@ -1,0 +1,35 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6c9b51b8d3aa844448aaeab0a989e2fa, type: 3}
+  m_Name: AllLeatherEquipmentBrownItemsTemplatePackage
+  m_EditorClassIdentifier: 
+  resourceName: Brown Leather Equipment
+  displayName: 
+  icon: {fileID: 0}
+  iconBackgroundImage: {fileID: 0}
+  description: 
+  useRegionalDescription: 0
+  resourceDescriptionProfile: 
+  optionalOverride: 0
+  resources:
+  - {fileID: 11400000, guid: 63eb14989515b0a4a85c733d1975003a, type: 2}
+  - {fileID: 11400000, guid: 301703d8dc4cfca4a984eee5c7a435fb, type: 2}
+  prefabs: []
+  dependencies:
+  - {fileID: 11400000, guid: 93bfa08df4506bc438db9521128e48d6, type: 2}
+  - {fileID: 11400000, guid: c1965f0832e78144d936d8d9f3dbd8ad, type: 2}
+  - {fileID: 11400000, guid: ea0d61ad7e5a7a042b6b06da5d97792a, type: 2}
+  - {fileID: 11400000, guid: 50979673225a0914b91d487209f1ddaa, type: 2}
+  - {fileID: 11400000, guid: 2c7c239444e3fba4881a1bb735fa3d74, type: 2}
+  - {fileID: 11400000, guid: 444b71dd75632b141a62dd9fa720dd63, type: 2}
+  - {fileID: 11400000, guid: 72e4e2d557342f0449953a587de854f5, type: 2}
+  - {fileID: 11400000, guid: c2fbf219ef3182a4d93aad493f0af41e, type: 2}

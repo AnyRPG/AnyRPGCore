@@ -56,6 +56,8 @@ namespace AnyRPG {
 
         string IDescribable.DisplayName => item.DisplayName;
 
+        string IDescribable.Description => item.Description;
+
         public ItemQuality GetItemQuality() {
             if (itemQuality != null) {
                 return itemQuality;
@@ -93,12 +95,12 @@ namespace AnyRPG {
             }
         }
 
-        string IDescribable.GetDescription() {
-            return item.GetDescription(GetItemQuality());
-        }
-
         string IDescribable.GetSummary() {
             return item.GetSummary(GetItemQuality());
+        }
+
+        string IDescribable.GetDescription() {
+            return item.GetDescription(GetItemQuality());
         }
     }
 

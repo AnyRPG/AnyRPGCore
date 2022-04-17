@@ -8,7 +8,7 @@ using UnityEngine.UI;
 namespace AnyRPG {
     public class StatusEffectNode : ConfiguredClass {
 
-        private StatusEffect statusEffect = null;
+        private StatusEffectProperties statusEffect = null;
 
         private Coroutine monitorCoroutine = null;
 
@@ -30,7 +30,7 @@ namespace AnyRPG {
         // game manager references
         private ObjectPooler objectPooler = null;
 
-        public StatusEffect StatusEffect { get => statusEffect; set => statusEffect = value; }
+        public StatusEffectProperties StatusEffect { get => statusEffect; set => statusEffect = value; }
         public Coroutine MyMonitorCoroutine { get => monitorCoroutine; set => monitorCoroutine = value; }
         public AbilityEffectContext AbilityEffectContext { get => abilityEffectContext; set => abilityEffectContext = value; }
         public Dictionary<PrefabProfile, GameObject> PrefabObjects { get => prefabObjects; set => prefabObjects = value; }
@@ -47,7 +47,7 @@ namespace AnyRPG {
         }
 
         //public void Setup(CharacterStats characterStats, StatusEffect _statusEffect, Coroutine newCoroutine) {
-        public void Setup(CharacterStats characterStats, StatusEffect statusEffect, AbilityEffectContext abilityEffectContext) {
+        public void Setup(CharacterStats characterStats, StatusEffectProperties statusEffect, AbilityEffectContext abilityEffectContext) {
             this.characterStats = characterStats;
             this.statusEffect = statusEffect;
             this.abilityEffectContext = abilityEffectContext;

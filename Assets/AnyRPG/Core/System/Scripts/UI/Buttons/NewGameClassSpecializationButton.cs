@@ -40,7 +40,7 @@ namespace AnyRPG {
                 icon.color = Color.white;
                 characterClassName.text = classSpecialization.DisplayName;
                 //description.text = this.faction.GetSummary();
-                description.text = classSpecialization.GetSummary();
+                description.text = classSpecialization.GetDescription();
             } else {
                 icon.sprite = systemConfigurationManager.DefaultFactionIcon;
                 icon.color = Color.white;

@@ -31,7 +31,7 @@ namespace AnyRPG {
         private List<string> maintainBuffs = new List<string>();
         */
 
-        private List<BaseAbility> maintainBuffList = new List<BaseAbility>();
+        private List<BaseAbilityProperties> maintainBuffList = new List<BaseAbilityProperties>();
 
         [SerializeField]
         [ResourceSelector(resourceType = typeof(BaseAbility))]
@@ -42,11 +42,10 @@ namespace AnyRPG {
         private List<string> attackAbilities = new List<string>();
         */
 
-        private List<BaseAbility> attackAbilityList = new List<BaseAbility>();
+        private List<BaseAbilityProperties> attackAbilityList = new List<BaseAbilityProperties>();
 
         // game manager references
         private AudioManager audioManager = null;
-        private SystemDataFactory systemDataFactory = null;
 
         public int MaxHealthPercent { get => maxHealthPercent; set => maxHealthPercent = value; }
         public int MinHealthPercent { get => minHealthPercent; set => minHealthPercent = value; }
@@ -55,8 +54,8 @@ namespace AnyRPG {
         public List<string> MyMaintainBuffs { get => maintainBuffs; set => maintainBuffs = value; }
         public List<string> MyAttackAbilities { get => attackAbilities; set => attackAbilities = value; }
         */
-        public List<BaseAbility> MyAttackAbilityList { get => attackAbilityList; set => attackAbilityList = value; }
-        public List<BaseAbility> MyMaintainBuffList { get => maintainBuffList; set => maintainBuffList = value; }
+        public List<BaseAbilityProperties> AttackAbilityList { get => attackAbilityList; set => attackAbilityList = value; }
+        public List<BaseAbilityProperties> MaintainBuffList { get => maintainBuffList; set => maintainBuffList = value; }
 
         public void StartPhase() {
             if (phaseMusicProfile != null) {
@@ -69,31 +68,30 @@ namespace AnyRPG {
         public override void SetGameManagerReferences() {
             base.SetGameManagerReferences();
             audioManager = systemGameManager.AudioManager;
-            systemDataFactory = systemGameManager.SystemDataFactory;
         }
 
         public void SetupScriptableObjects(SystemGameManager systemGameManager) {
 
             Configure(systemGameManager);
 
-            attackAbilityList = new List<BaseAbility>();
+            attackAbilityList = new List<BaseAbilityProperties>();
             if (attackAbilityNames != null) {
                 foreach (string baseAbilityName in attackAbilityNames) {
                     BaseAbility baseAbility = systemDataFactory.GetResource<BaseAbility>(baseAbilityName);
                     if (baseAbility != null) {
-                        attackAbilityList.Add(baseAbility);
+                        attackAbilityList.Add(baseAbility.AbilityProperties);
                     } else {
                         Debug.LogError("SystemAbilityManager.SetupScriptableObjects(): Could not find attack ability : " + baseAbilityName + " while inititalizing a combat strategy node.  CHECK INSPECTOR");
                     }
                 }
             }
 
-            maintainBuffList = new List<BaseAbility>();
+            maintainBuffList = new List<BaseAbilityProperties>();
             if (maintainBuffNames != null) {
                 foreach (string baseAbilityName in maintainBuffNames) {
                     BaseAbility baseAbility = systemDataFactory.GetResource<BaseAbility>(baseAbilityName);
                     if (baseAbility != null) {
-                        maintainBuffList.Add(baseAbility);
+                        maintainBuffList.Add(baseAbility.AbilityProperties);
                     } else {
                         Debug.LogError("SystemAbilityManager.SetupScriptableObjects(): Could not find buff ability : " + baseAbilityName + " while inititalizing a combat strategy node.  CHECK INSPECTOR");
                     }

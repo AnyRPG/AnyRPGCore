@@ -117,7 +117,7 @@ namespace AnyRPG {
         [SerializeField]
         private CapabilityProps capabilities = new CapabilityProps();
 
-        private BaseAbility defaultAutoAttackAbility = null;
+        private BaseAbilityProperties defaultAutoAttackAbility = null;
 
         [Header("Control")]
 
@@ -176,6 +176,10 @@ namespace AnyRPG {
 
         [Header("Movement")]
 
+        [Tooltip("If true, this unit will turn to face any target that interacts with it")]
+        [SerializeField]
+        private bool faceInteractionTarget = true;
+
         [Tooltip("If false, the unit will not have the Nav Mesh Agent enabled, and gravity will be disabled.")]
         [SerializeField]
         private bool isMobile = true;
@@ -199,18 +203,12 @@ namespace AnyRPG {
 
         [Tooltip("Inline patrol configuration.  Useful if no other unit will need to re-use this configuration.")]
         [SerializeField]
-        private PatrolProps patrolConfig = new PatrolProps();
+        private PatrolProperties patrolConfig = new PatrolProperties();
 
         [Tooltip("Lookup and use these named patrols that can be shared among units")]
         [SerializeField]
         [ResourceSelector(resourceType = typeof(PatrolProfile))]
         private List<string> patrolNames = new List<string>();
-
-        [Header("Behavior")]
-
-        [Tooltip("Inline behavior configuration.  Useful if no other unit will need to re-use this configuration.")]
-        [SerializeField]
-        private BehaviorProps behaviorConfig = new BehaviorProps();
 
         [Header("Interaction")]
 
@@ -218,47 +216,32 @@ namespace AnyRPG {
         [SerializeField]
         private float interactionMaxRange = 3f;
 
-        [Header("Builtin Interactables")]
+        [Header("Deprecated Builtin Interactables")]
 
-        /*
-        [Tooltip("If true, a lootable character component will be created with the below settings.")]
+        [Tooltip("Inline behavior configuration.  Useful if no other unit will need to re-use this configuration.")]
+        [FormerlySerializedAs("behaviorConfig")]
         [SerializeField]
-        private bool useLootableCharacter = false;
-        */
+        private BehaviorProps deprecatedBehaviorConfig = new BehaviorProps();
 
         [Tooltip("Inline loot configuration.  Useful if no other unit will need to re-use this configuration.")]
+        [FormerlySerializedAs("lootableCharacter")]
         [SerializeField]
-        private LootableCharacterProps lootableCharacter = new LootableCharacterProps();
-
-        /*
-        [Tooltip("If true, a dialog component will be created with the below settings.")]
-        [SerializeField]
-        private bool useDialog = false;
-        */
+        private LootableCharacterProps deprecatedLootableCharacter = new LootableCharacterProps();
 
         [Tooltip("Inline dialog configuration.  Useful if no other unit will need to re-use this configuration.")]
+        [FormerlySerializedAs("dialogConfig")]
         [SerializeField]
-        private DialogProps dialogConfig = new DialogProps();
-
-        /*
-        [Tooltip("If true, a quest giver component will be created with the below settings.")]
-        [SerializeField]
-        private bool useQuestGiver = false;
-        */
+        private DialogProps deprecatedDialogConfig = new DialogProps();
 
         [Tooltip("Inline questGiver configuration.  Useful if no other unit will need to re-use this configuration.")]
+        [FormerlySerializedAs("questGiverConfig")]
         [SerializeField]
-        private QuestGiverProps questGiverConfig = new QuestGiverProps();
-
-        /*
-        [Tooltip("If true, a vendor component will be created with the below settings.")]
-        [SerializeField]
-        private bool useVendor = false;
-        */
+        private QuestGiverProps deprecatedQuestGiverConfig = new QuestGiverProps();
 
         [Tooltip("Inline vendor configuration.  Useful if no other unit will need to re-use this configuration.")]
+        [FormerlySerializedAs("vendorConfig")]
         [SerializeField]
-        private VendorProps vendorConfig = new VendorProps();
+        private VendorProps deprecatedVendorConfig = new VendorProps();
 
         [Header("Named Interactables")]
 
@@ -267,7 +250,14 @@ namespace AnyRPG {
         [ResourceSelector(resourceType = typeof(InteractableOptionConfig))]
         private List<string> interactableOptions = new List<string>();
 
-        private List<InteractableOptionConfig> interactableOptionConfigs = new List<InteractableOptionConfig>();
+        [Header("Inline Interactables")]
+
+        [Tooltip("The configs of the interactable options available on this character")]
+        [SerializeReference]
+        [SerializeReferenceButton]
+        private List<InteractableOptionProps> inlineInteractableOptions = new List<InteractableOptionProps>();
+
+        private List<InteractableOptionProps> interactableOptionProps = new List<InteractableOptionProps>();
 
         [Header("Object Persistence")]
 
@@ -327,7 +317,7 @@ namespace AnyRPG {
         }
 
         public UnitToughness DefaultToughness { get => unitToughness; set => unitToughness = value; }
-        public BaseAbility DefaultAutoAttackAbility { get => defaultAutoAttackAbility; set => defaultAutoAttackAbility = value; }
+        public BaseAbilityProperties DefaultAutoAttackAbility { get => defaultAutoAttackAbility; set => defaultAutoAttackAbility = value; }
         public bool IsUMAUnit { get => isUMAUnit; set => isUMAUnit = value; }
         public bool IsPet { get => isPet; set => isPet = value; }
         public bool PlayOnFootstep { get => playOnFootstep; set => playOnFootstep = value; }
@@ -346,11 +336,7 @@ namespace AnyRPG {
         public bool PreventAutoDespawn { get => preventAutoDespawn; set => preventAutoDespawn = value; }
         public List<string> PatrolNames { get => patrolNames; set => patrolNames = value; }
         public float AggroRadius { get => aggroRadius; set => aggroRadius = value; }
-        public LootableCharacterProps LootableCharacterProps { get => lootableCharacter; set => lootableCharacter = value; }
-        public BehaviorProps BehaviorProps { get => behaviorConfig; set => behaviorConfig = value; }
-        public DialogProps DialogProps { get => dialogConfig; set => dialogConfig = value; }
-        public QuestGiverProps QuestGiverProps { get => questGiverConfig; set => questGiverConfig = value; }
-        public VendorProps VendorProps { get => vendorConfig; set => vendorConfig = value; }
+        //public BehaviorProps BehaviorProps { get => behaviorConfig; set => behaviorConfig = value; }
         public UnitPrefabProps UnitPrefabProps {
             get {
                 if (useInlinePrefabProps) {
@@ -366,7 +352,7 @@ namespace AnyRPG {
 
         public CapabilityProps Capabilities { get => capabilities; set => capabilities = value; }
         public List<Equipment> EquipmentList { get => equipmentList; set => equipmentList = value; }
-        public List<InteractableOptionConfig> InteractableOptionConfigs { get => interactableOptionConfigs; set => interactableOptionConfigs = value; }
+        public List<InteractableOptionProps> InteractableOptionConfigs { get => interactableOptionProps; set => interactableOptionProps = value; }
         public bool IsAggressive { get => isAggressive; set => isAggressive = value; }
         public bool IsMobile { get => isMobile; set => isMobile = value; }
         public float InteractionMaxRange { get => interactionMaxRange; set => interactionMaxRange = value; }
@@ -374,7 +360,7 @@ namespace AnyRPG {
         public bool OverwriteUnitUUID { get => overwriteUnitUUID; set => overwriteUnitUUID = value; }
         public bool IgnoreDuplicateUUID { get => ignoreDuplicateUUID; set => ignoreDuplicateUUID = value; }
         public bool UseInlinePatrol { get => useInlinePatrol; set => useInlinePatrol = value; }
-        public PatrolProps PatrolConfig { get => patrolConfig; set => patrolConfig = value; }
+        public PatrolProperties PatrolConfig { get => patrolConfig; set => patrolConfig = value; }
         public bool UseProviderEquipment { get => useProviderEquipment; set => useProviderEquipment = value; }
         public bool PersistObjectPosition { get => persistObjectPosition; set => persistObjectPosition = value; }
         public bool SaveOnLevelUnload { get => saveOnLevelUnload; set => saveOnLevelUnload = value; }
@@ -384,6 +370,7 @@ namespace AnyRPG {
         public bool UseInlinePrefabProps { get => useInlinePrefabProps; set => useInlinePrefabProps = value; }
         public bool AutomaticPrefabProfile { get => automaticPrefabProfile; set => automaticPrefabProfile = value; }
         public List<string> MovementAudioProfileNames { get => movementAudioProfileNames; set => movementAudioProfileNames = value; }
+        public bool FaceInteractionTarget { get => faceInteractionTarget; set => faceInteractionTarget = value; }
 
         public override void SetGameManagerReferences() {
             base.SetGameManagerReferences();
@@ -590,12 +577,21 @@ namespace AnyRPG {
                 foreach (string interactableOptionName in interactableOptions) {
                     if (interactableOptionName != null && interactableOptionName != string.Empty) {
                         InteractableOptionConfig interactableOptionConfig = systemDataFactory.GetResource<InteractableOptionConfig>(interactableOptionName);
-                        if (interactableOptionConfig != null) {
-                            interactableOptionConfigs.Add(interactableOptionConfig);
+                        if (interactableOptionConfig != null && interactableOptionConfig.InteractableOptionProps != null) {
+                            interactableOptionProps.Add(interactableOptionConfig.InteractableOptionProps);
                         } else {
                             Debug.LogError("UnitProfile.SetupScriptableObjects(): Could not find interactableOptionConfig: " + interactableOptionName + " while inititalizing " + DisplayName + ".  CHECK INSPECTOR");
                         }
                     }
+                }
+            }
+
+            // inline interactables
+            foreach (InteractableOptionProps interactableOptionProp in inlineInteractableOptions) {
+                if (interactableOptionProp != null) {
+                    //Debug.Log(resourceName + " adding interactable option " + interactableOptionProp.GetType().ToString());
+                    interactableOptionProp.SetupScriptableObjects(systemGameManager);
+                    interactableOptionProps.Add(interactableOptionProp);
                 }
             }
 
@@ -605,14 +601,7 @@ namespace AnyRPG {
 
             // controller configs
             // patrolConfig doesn't need setup ?
-            behaviorConfig.SetupScriptableObjects(systemGameManager);
-
-            // built-in interactables
-            LootableCharacterProps.SetupScriptableObjects(systemGameManager);
-            DialogProps.SetupScriptableObjects(systemGameManager);
-            QuestGiverProps.SetupScriptableObjects(systemGameManager);
-            VendorProps.SetupScriptableObjects(systemGameManager);
-
+            //behaviorConfig.SetupScriptableObjects(systemGameManager);
 
         }
 

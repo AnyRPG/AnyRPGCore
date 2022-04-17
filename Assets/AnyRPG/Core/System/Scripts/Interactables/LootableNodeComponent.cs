@@ -34,6 +34,9 @@ namespace AnyRPG {
                 if (spawnCoroutine != null) {
                     return false;
                 }
+                if (Props.SpawnTimer == -1 && pickupCount > 0) {
+                    return false;
+                }
                 return returnResult;
             }
         }
@@ -75,7 +78,8 @@ namespace AnyRPG {
             //Debug.Log(gameObject.name + ".LootableNode.StartSpawnCountdown()");
 
             // DISABLE MINIMAP ICON WHILE ITEM IS NOT SPAWNED
-            HandlePrerequisiteUpdates();
+            // this next line is already done outside the loop so should not be needed here ?
+            //HandlePrerequisiteUpdates();
 
             currentTimer = Props.SpawnTimer;
             while (currentTimer > 0) {
@@ -169,7 +173,12 @@ namespace AnyRPG {
                 //if (lootTable.MyDroppedItems.Count == 0) {
                 // TODO : monitor is this next line needed if the interactable will handle a generic status update?
                 //playerManager.PlayerController.RemoveInteractable(interactable);
-                interactable.DestroySpawn();
+
+
+                // testing : monitor if this affects pickup nodes.  Theoretically the HandlePrerequisiteUpdates() call should trigger a despawn anyway
+                //interactable.DestroySpawn();
+
+
                 foreach (LootTable lootTable in Props.LootTables) {
                     lootHolder.LootTableStates[lootTable].Reset();
                 }
@@ -181,6 +190,8 @@ namespace AnyRPG {
                 }
 
                 // loot being gone is a type of prerequisite for a lootable node
+                // DISABLE MINIMAP ICON WHILE ITEM IS NOT SPAWNED
+
                 HandlePrerequisiteUpdates();
             }
         }

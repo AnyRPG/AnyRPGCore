@@ -223,8 +223,8 @@ namespace AnyRPG {
                 }
                 playerManager.MyCharacter.CharacterCurrencyManager.SpendCurrency(usedSellPrice.Key, usedSellPrice.Value);
             }
-            if (systemConfigurationManager.VendorAudioProfile?.AudioClip != null) {
-                audioManager.PlayEffect(systemConfigurationManager.VendorAudioProfile.AudioClip);
+            if (systemConfigurationManager.VendorAudioClip != null) {
+                audioManager.PlayEffect(systemConfigurationManager.VendorAudioClip);
             }
             messageFeedManager.WriteMessage("Purchased " + vendorItem.Item.DisplayName + " for " + priceString);
 

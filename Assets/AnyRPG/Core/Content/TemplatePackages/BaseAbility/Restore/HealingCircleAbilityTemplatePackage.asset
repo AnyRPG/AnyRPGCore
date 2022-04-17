@@ -1,0 +1,36 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6c9b51b8d3aa844448aaeab0a989e2fa, type: 3}
+  m_Name: HealingCircleAbilityTemplatePackage
+  m_EditorClassIdentifier: 
+  resourceName: Healing Circle Ability
+  displayName: 
+  icon: {fileID: 0}
+  iconBackgroundImage: {fileID: 0}
+  description: 
+  useRegionalDescription: 0
+  resourceDescriptionProfile: 
+  optionalOverride: 0
+  resources:
+  - {fileID: 11400000, guid: 2576f0b553f4ce44a8d9a471e5a27209, type: 2}
+  - {fileID: 11400000, guid: 30d509f4f82b4174a8e619f1a095099b, type: 2}
+  - {fileID: 11400000, guid: 5a8a824a24a33cc4e9edbfaa67888c64, type: 2}
+  - {fileID: 11400000, guid: 36642c8a388e4d14a8d56e7809b8b266, type: 2}
+  - {fileID: 11400000, guid: 6d58a7914d3cc3642984752c62542fb7, type: 2}
+  - {fileID: 11400000, guid: a49e4d90681cd1446947c5d50c0aac1f, type: 2}
+  - {fileID: 11400000, guid: 83eb4e089c8161d47aa0a4a29cec4fc6, type: 2}
+  - {fileID: 11400000, guid: 137e39e07e173e049a4cc6bcd702c97b, type: 2}
+  - {fileID: 11400000, guid: 6ee7985fdc7d6214aa8b86aa18b81fbb, type: 2}
+  - {fileID: 11400000, guid: f7aeed2baaf647846ac432bc8cb6ab44, type: 2}
+  - {fileID: 11400000, guid: db4d650d0fdc39a40ad0f287bbb4033c, type: 2}
+  prefabs: []
+  dependencies: []

@@ -45,6 +45,8 @@ namespace AnyRPG {
         private Vector3 lastTargetForward;
         private Vector3 targetPosition;
         private Vector3 initialCameraOffset;
+        // needed to prevent annoying debug messages in console log
+        private Vector3 cameraTransformForward;
 
         // needed in case player is holding right mouse down while camera is moving around to avoid obstacles, which can cause the forward direction of movement to get skewed
         private Vector3 wantedDirection;
@@ -332,7 +334,10 @@ namespace AnyRPG {
 
         private void LookAtTargetPosition() {
             //Debug.Log("AnyRPGCameraController.LookAtTargetPosition()");
-            transform.forward = new Vector3(targetPosition.x, 0f, targetPosition.z) - new Vector3(transform.position.x, 0f, transform.position.z);
+            cameraTransformForward = new Vector3(targetPosition.x, 0f, targetPosition.z) - new Vector3(transform.position.x, 0f, transform.position.z);
+            if (cameraTransformForward != Vector3.zero) {
+                transform.forward = cameraTransformForward;
+            }
             cameraTransform.LookAt(targetPosition);
         }
 

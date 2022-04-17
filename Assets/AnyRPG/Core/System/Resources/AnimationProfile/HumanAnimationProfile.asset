@@ -19,6 +19,7 @@ MonoBehaviour:
   description: 
   useRegionalDescription: 0
   resourceDescriptionProfile: 
+  optionalOverride: 0
   animationProps:
     useRootMotion: 0
     suppressAdjustAnimatorSpeed: 0
@@ -70,7 +71,7 @@ MonoBehaviour:
       type: 3}
     fullCombatMirror: 0
     combatIdleMirror: 0
-    combatIdleClip: {fileID: -8858722988403419511, guid: cfa4975c24eb41649b8d95e1620cf3d9,
+    combatIdleClip: {fileID: -5580852460829405635, guid: 6397dc4217362a642821d38659e201d8,
       type: 3}
     combatJumpMirror: 0
     combatJumpClip: {fileID: 2333413601598592880, guid: d4eca31749363e44da997a0b48022861,
@@ -142,3 +143,7 @@ MonoBehaviour:
       type: 3}
     reviveClip: {fileID: 0}
     levitatedClip: {fileID: 0}
+    swimIdleClip: {fileID: 0}
+    swimMoveClip: {fileID: 0}
+    flyIdleClip: {fileID: 0}
+    flyMoveClip: {fileID: 0}

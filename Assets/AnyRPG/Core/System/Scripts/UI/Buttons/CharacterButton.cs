@@ -58,6 +58,16 @@ namespace AnyRPG {
             }
         }
 
+        public string Description {
+            get {
+                if (equippedEquipment != null) {
+                    return equippedEquipment.Description;
+                }
+                // cyan
+                return (equipmentSlotProfile?.Description == null ? "" : equipmentSlotProfile?.Description);
+            }
+        }
+
         public string EquipmentSlotProfileName { get => equipmentSlotProfileName; set => equipmentSlotProfileName = value; }
         public EquipmentSlotProfile EquipmentSlotProfile { get => equipmentSlotProfile; }
         public CharacterPanel CharacterPanel { get => characterPanel; set => characterPanel = value; }
@@ -186,17 +196,17 @@ namespace AnyRPG {
             uIManager.HideToolTip();
         }
 
-        public string GetDescription() {
-            if (equippedEquipment != null) {
-                return equippedEquipment.GetDescription();
-            }
-            // cyan
-            return string.Format("<color=#00FFFF>Empty Equipment Slot</color>\n{0}\n{1}", (equipmentSlotProfile?.DisplayName == null ? "" : equipmentSlotProfile?.DisplayName), GetSummary());
-        }
-
         public string GetSummary() {
             if (equippedEquipment != null) {
                 return equippedEquipment.GetSummary();
+            }
+            // cyan
+            return string.Format("<color=#00FFFF>Empty Equipment Slot</color>\n{0}\n{1}", (equipmentSlotProfile?.DisplayName == null ? "" : equipmentSlotProfile?.DisplayName), GetDescription());
+        }
+
+        public string GetDescription() {
+            if (equippedEquipment != null) {
+                return equippedEquipment.GetDescription();
             }
             return "Drag equipment here to equip it";
         }

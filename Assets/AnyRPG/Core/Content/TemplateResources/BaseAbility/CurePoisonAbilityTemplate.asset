@@ -1,0 +1,134 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c80d744dccc642148ab1014a88212085, type: 3}
+  m_Name: CurePoisonAbilityTemplate
+  m_EditorClassIdentifier: 
+  resourceName: Cure Poison
+  displayName: 
+  icon: {fileID: 21300000, guid: ecbfc6b4547a7524abd14ace3835e081, type: 3}
+  iconBackgroundImage: {fileID: 0}
+  description: Cure poison
+  useRegionalDescription: 0
+  resourceDescriptionProfile: 
+  optionalOverride: 0
+  directAbilityProperties:
+    requireOutOfCombat: 0
+    requireStealth: 0
+    weaponAffinityNames: []
+    holdableObjectList:
+    - holdableObjectName: Yellow Casting Circle
+      useUniversalAttachment: 0
+      attachmentName: 
+    abilityPrefabSource: 0
+    animatorCreatePrefabs: 0
+    prefabDestroyDelay: 0
+    animationClip: {fileID: 0}
+    animationProfileName: 
+    useUnitCastAnimations: 1
+    animationHitAudioProfileName: 
+    castingAudioClip: {fileID: 0}
+    castingAudioProfileName: Restore Spell
+    requiredLevel: 1
+    characterClassRequirements: []
+    classSpecializationRequirements: []
+    useableWithoutLearning: 0
+    autoAddToBars: 1
+    canSimultaneousCast: 0
+    canCastWhileMoving: 0
+    ignoreGlobalCoolDown: 0
+    powerResourceName: Mana
+    baseResourceCost: 0
+    resourceCostPerLevel: 5
+    spendDelay: 0
+    generatePowerResourceName: 
+    baseResourceGain: 0
+    resourceGainPerLevel: 0
+    useSpeedMultipliers: 1
+    useAnimationCastTime: 1
+    abilityCastingTime: 0
+    abilityCoolDown: 0
+    coolDownOnCast: 0
+    useAbilityEffectTargetting: 0
+    targetOptions:
+      requireTarget: 1
+      requireLineOfSight: 0
+      requireLiveTarget: 1
+      requireDeadTarget: 0
+      canCastOnSelf: 1
+      canCastOnOthers: 1
+      canCastOnEnemy: 0
+      canCastOnNeutral: 0
+      canCastOnFriendly: 1
+      autoSelfCast: 1
+      useMeleeRange: 0
+      maxRange: 40
+      requireFacingTarget: 0
+      maxAngle: 45
+      requireBehindTarget: 0
+      requiresGroundTarget: 0
+      groundTargetColor: {r: 1, g: 1, b: 1, a: 1}
+      groundTargetRadius: 0
+    inlineAbilityEffects:
+    - id: 0
+    abilityEffectNames: []
+    tickRate: 1
+    inlineChannelingEffects: []
+    channeledAbilityEffectnames: []
+  references:
+    version: 1
+    00000000:
+      type: {class: RemoveEffectConfig, ns: AnyRPG, asm: Assembly-CSharp}
+      data:
+        effectProperties:
+          targetOptions:
+            requireTarget: 1
+            requireLineOfSight: 0
+            requireLiveTarget: 1
+            requireDeadTarget: 0
+            canCastOnSelf: 1
+            canCastOnOthers: 0
+            canCastOnEnemy: 0
+            canCastOnNeutral: 0
+            canCastOnFriendly: 0
+            autoSelfCast: 1
+            useMeleeRange: 0
+            maxRange: 0
+            lineOfSightSourceLocation: 0
+            targetRangeSourceLocation: 0
+          chanceToCast: 100
+          effectMaterialName: 
+          materialChangeDuration: 2
+          onHitAudioProfileNames:
+          - Cure Spell
+          randomAudioProfiles: 0
+          hitAbilityEffectNames: []
+          inputMultiplier: 0
+          threatMultiplier: 1
+          abilityPrefabSource: 1
+          randomPrefabs: 0
+          abilityObjectList:
+          - holdableObjectName: Yellow Energy Pulse
+            useUniversalAttachment: 0
+            attachmentName: 
+          prefabSpawnLocation: 2
+          prefabDestroyDelay: 0
+          destroyOnEndCast: 0
+          tickRate: 0
+          castZeroTick: 0
+          tickAbilityEffectNames: []
+          onTickAudioProfileNames: []
+          randomTickAudioProfiles: 0
+          completeAbilityEffectNames: []
+          defaultPrefabLifetime: 10
+          maxClearEffects: 0
+          effectTypeNames:
+          - Poison

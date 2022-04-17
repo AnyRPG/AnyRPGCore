@@ -17,6 +17,10 @@ namespace AnyRPG {
         [SerializeField]
         private bool defaultWeaponSkill = false;
 
+        [Tooltip("Attacks with animations shorter than this value (in seconds) will be calculated to have taken this long.  Auto-attacks cannot happen more often than this number of seconds.")]
+        [SerializeField]
+        private float attackSpeed = 2f;
+
         [Header("Weapon Effect Defaults")]
 
         [Tooltip("Ability effects to cast on the target when the weapon does damage from a standard (auto) attack")]
@@ -24,14 +28,14 @@ namespace AnyRPG {
         [ResourceSelector(resourceType = typeof(AbilityEffect))]
         private List<string> defaultHitEffects = new List<string>();
 
-        private List<AbilityEffect> defaultHitEffectList = new List<AbilityEffect>();
+        private List<AbilityEffectProperties> defaultHitEffectList = new List<AbilityEffectProperties>();
 
         [Tooltip("Ability effects to cast on the target when the weapon does damage from any attack, including standard (auto) attacks")]
         [SerializeField]
         [ResourceSelector(resourceType = typeof(AbilityEffect))]
         private List<string> onHitEffects = new List<string>();
 
-        private List<AbilityEffect> onHitEffectList = new List<AbilityEffect>();
+        private List<AbilityEffectProperties> onHitEffectList = new List<AbilityEffectProperties>();
 
         [Header("Animation and Sound Defaults")]
 
@@ -51,27 +55,26 @@ namespace AnyRPG {
 
         [Header("Ability Prefab Defaults")]
 
-        [Tooltip("Physical prefabs to attach to bones on the character unit when this weapon is being used during an attack.  This could be arrows, special spell or glow effects, etc")]
+        [Tooltip("Physical prefabs to attach to bones on the character unit when this weapon is being animated during an attack.  This could be arrows, special spell or glow effects, etc")]
+        [SerializeField]
+        private List<AbilityAttachmentNode> abilityAnimationObjectList = new List<AbilityAttachmentNode>();
+
+        [Tooltip("Physical prefabs to use after the animation phase when this weapon is being used during an attack.  This could be arrows, special spell or glow effects, etc")]
         [SerializeField]
         private List<AbilityAttachmentNode> abilityObjectList = new List<AbilityAttachmentNode>();
 
-        // game manager references
-        private SystemDataFactory systemDataFactory = null;
 
         // properties
         public bool DefaultWeaponSkill { get => defaultWeaponSkill; set => defaultWeaponSkill = value; }
-        public List<AbilityEffect> DefaultHitEffectList { get => defaultHitEffectList; set => defaultHitEffectList = value; }
-        public List<AbilityEffect> OnHitEffectList { get => onHitEffectList; set => onHitEffectList = value; }
+        public List<AbilityEffectProperties> DefaultHitEffectList { get => defaultHitEffectList; set => defaultHitEffectList = value; }
+        public List<AbilityEffectProperties> OnHitEffectList { get => onHitEffectList; set => onHitEffectList = value; }
         public AnimationProfile AnimationProfile { get => animationProfile; set => animationProfile = value; }
         public List<AudioClip> DefaultHitSoundEffects { get => onHitSoundEffects; set => onHitSoundEffects = value; }
+        public List<AbilityAttachmentNode> AbilityAnimationObjectList { get => abilityAnimationObjectList; set => abilityAnimationObjectList = value; }
         public List<AbilityAttachmentNode> AbilityObjectList { get => abilityObjectList; set => abilityObjectList = value; }
+        public float AttackSpeed { get => attackSpeed; set => attackSpeed = value; }
 
         // methods
-
-        public override void SetGameManagerReferences() {
-            base.SetGameManagerReferences();
-            systemDataFactory = systemGameManager.SystemDataFactory;
-        }
 
         public void SetupScriptableObjects(string ownerName, SystemGameManager systemGameManager) {
             Configure(systemGameManager);
@@ -81,7 +84,7 @@ namespace AnyRPG {
                     if (onHitEffectName != null && onHitEffectName != string.Empty) {
                         AbilityEffect abilityEffect = systemDataFactory.GetResource<AbilityEffect>(onHitEffectName);
                         if (abilityEffect != null) {
-                            onHitEffectList.Add(abilityEffect);
+                            onHitEffectList.Add(abilityEffect.AbilityEffectProperties);
                         } else {
                             Debug.LogError("WeaponSkillProps.SetupScriptableObjects(): Could not find ability effect : " + onHitEffectName + " while inititalizing.  CHECK INSPECTOR");
                         }
@@ -96,7 +99,7 @@ namespace AnyRPG {
                     if (defaultHitEffectName != null && defaultHitEffectName != string.Empty) {
                         AbilityEffect abilityEffect = systemDataFactory.GetResource<AbilityEffect>(defaultHitEffectName);
                         if (abilityEffect != null) {
-                            defaultHitEffectList.Add(abilityEffect);
+                            defaultHitEffectList.Add(abilityEffect.AbilityEffectProperties);
                         } else {
                             Debug.LogError("WeaponSkillProps.SetupScriptableObjects(): Could not find ability effect : " + defaultHitEffectName + " while inititalizing.  CHECK INSPECTOR");
                         }
@@ -129,15 +132,22 @@ namespace AnyRPG {
                     }
                 }
             }
-            if (abilityObjectList != null) {
-                foreach (AbilityAttachmentNode abilityAttachmentNode in abilityObjectList) {
-                    if (abilityAttachmentNode != null) {
 
+            if (abilityAnimationObjectList != null) {
+                foreach (AbilityAttachmentNode abilityAttachmentNode in abilityAnimationObjectList) {
+                    if (abilityAttachmentNode != null) {
                         abilityAttachmentNode.SetupScriptableObjects(ownerName, systemGameManager);
                     }
                 }
             }
 
+            if (abilityObjectList != null) {
+                foreach (AbilityAttachmentNode abilityAttachmentNode in abilityObjectList) {
+                    if (abilityAttachmentNode != null) {
+                        abilityAttachmentNode.SetupScriptableObjects(ownerName, systemGameManager);
+                    }
+                }
+            }
 
         }
     }
