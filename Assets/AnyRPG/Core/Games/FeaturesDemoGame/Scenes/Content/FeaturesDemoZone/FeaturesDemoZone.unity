@@ -3087,7 +3087,7 @@ MonoBehaviour:
   m_OverrideVoxelSize: 0
   m_VoxelSize: 0.16666667
   m_BuildHeightMesh: 0
-  m_NavMeshData: {fileID: 23800000, guid: 356de7095d4fc894fbcb89403d949f0f, type: 2}
+  m_NavMeshData: {fileID: 23800000, guid: fa69d99f0bcad0f47b577354462c675e, type: 2}
 --- !u!54 &107301295
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -12060,10 +12060,6 @@ PlayableDirector:
   m_DirectorUpdateMode: 1
   m_InitialTime: 0
   m_SceneBindings:
-  - key: {fileID: 2313845119044685411, guid: 8a8fc6b0a12f85b46ba957a7b9057328, type: 2}
-    value: {fileID: 0}
-  - key: {fileID: 1711971018927338779, guid: 8a8fc6b0a12f85b46ba957a7b9057328, type: 2}
-    value: {fileID: 0}
   - key: {fileID: 2313845119044685411, guid: 9339c4e5e4b8c4447929b6fb86c7b29f, type: 2}
     value: {fileID: 977488456}
   - key: {fileID: 1711971018927338779, guid: 9339c4e5e4b8c4447929b6fb86c7b29f, type: 2}
@@ -49352,7 +49348,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 49ff920aaeff32c47b919cdd7f10e67d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_UUID: 98e4c31d-cb35-487c-8d25-3762de59645d
+  m_UUID: 197b150b-0060-4722-b0ef-297edba00094
   forceUpdateUUID: 0
 --- !u!54 &1448223535
 Rigidbody:
@@ -61450,7 +61446,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 49ff920aaeff32c47b919cdd7f10e67d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_UUID: bda0856d-a73d-4587-b072-8f1d6eaaed55
+  m_UUID: f761df94-a865-431f-995b-20c1ca9c0eca
   forceUpdateUUID: 0
 --- !u!54 &1813795260
 Rigidbody:
