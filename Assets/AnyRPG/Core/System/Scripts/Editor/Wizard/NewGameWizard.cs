@@ -11,13 +11,8 @@ using UnityEditor.SceneManagement;
 namespace AnyRPG {
     public class NewGameWizard : ScriptableWizard {
 
-        // Template path/scene that will be used to create the new game
-        private const string templateName = "TemplateGame";
-        private const string pathToNewGameTemplate = "/AnyRPG/Core/Templates/Game/" + templateName;
-        //private const string firstSceneTemplateAssetpath = "Assets/AnyRPG/Core/Templates/Game/Scenes/FirstScene/FirstScene.unity";
-
-        // for now this is necessary due to git not saving empty folders
-        private const string pathToResourcesTemplateFolder = "/AnyRPG/Core/Games/FeaturesDemo/Resources/FeaturesDemoGame";
+        // Template scene that will be used to create the new game load scene
+        private const string pathToLoadSceneTemplate = "/AnyRPG/Core/Templates/Game/Scenes/LoadScene/LoadScene.unity";
 
         // required template prefabs
         private const string pathToGameManagerPrefab = "/AnyRPG/Core/System/Prefabs/GameManager/GameManager.prefab";
@@ -39,7 +34,50 @@ namespace AnyRPG {
         private const string pathToWeaponSkillsTemplate = "/AnyRPG/Core/Content/TemplatePackages/RPGWeaponSkillsTemplatePackage.asset";
 
         // sill be a subfolder of Application.dataPath and should start with "/"
-        private const string newGameParentFolder = "/Games/";
+        private const string gameParentFolder = "/Games/";
+
+        private List<string> resourceFolders = new List<string>() {
+            "AbilityEffect",
+            "AnimatedAction",
+            "AnimationProfile",
+            "ArmorClass",
+            "AudioProfile",
+            "BaseAbility",
+            "BehaviorProfile",
+            "CharacterClass",
+            "CharacterRace",
+            "CharacterStat",
+            "ChatCommand",
+            "ClassSpecialization",
+            "CombatStrategy",
+            "Currency",
+            "CurrencyGroup",
+            "Cutscene",
+            "Dialog",
+            "EnvironmentStateProfile",
+            "EquipmentSet",
+            "Faction",
+            "InteractableOptionConfig",
+            "Item",
+            "ItemQuality",
+            "LootTable",
+            "MaterialProfile",
+            "PatrolProfile",
+            "PowerResource",
+            "PrefabProfile",
+            "Quest",
+            "Recipe",
+            "SceneNode",
+            "Skill",
+            "StatusEffectGroup",
+            "StatusEffectType",
+            "UMARecipeProfile",
+            "UnitProfile",
+            "UnitToughness",
+            "UnitType",
+            "VendorCollection",
+            "WeaponSkill"
+        };
 
         // compare the default first scene directory to any user picked scene name
         //private const string templateFirstSceneName = "FirstScene";
@@ -48,7 +86,10 @@ namespace AnyRPG {
         //private string fileSystemGameName = string.Empty;
         //private string fileSystemFirstSceneName = string.Empty;
 
+        // #######################
         // USER MODIFIED VARIABLES
+        // #######################
+
         public string gameName = "";
         public string gameVersion = "0.1a";
 
@@ -103,6 +144,25 @@ namespace AnyRPG {
 
         void OnWizardCreate() {
 
+            string gameLoadScenePath = string.Empty;
+
+            try {
+                gameLoadScenePath = CreateNewGame();
+            } catch {
+                Debug.LogWarning("Error detected while running wizard");
+
+                EditorUtility.ClearProgressBar();
+                EditorUtility.DisplayDialog("New Game Wizard", "New Game Wizard encountered an error.  Check the console log for details.", "OK");
+                return;
+            }
+
+            EditorUtility.ClearProgressBar();
+            EditorUtility.DisplayDialog("New Game Wizard", "New Game Wizard Complete! The game loading scene can be found at " + gameLoadScenePath, "OK");
+
+        }
+
+        private string CreateNewGame() {
+
             EditorUtility.DisplayProgressBar("New Game Wizard", "Checking parameters...", 0.1f);
 
             string fileSystemGameName = WizardUtilities.GetFileSystemGameName(gameName);
@@ -110,12 +170,12 @@ namespace AnyRPG {
 
             // check for presence of template prefabs and resources
             if (CheckFilesExist() == false) {
-                return;
+                return string.Empty;
             }
 
             // check that the templates used by the new scene wizard exist
             if (NewSceneWizard.CheckRequiredTemplatesExist() == false) {
-                return;
+                return string.Empty;
             }
 
             // Set default values of game properties just in case they are somehow missing
@@ -124,98 +184,54 @@ namespace AnyRPG {
                 Debug.Log("Empty game version.  Defaulting to " + gameVersion);
             }
 
-            EditorUtility.DisplayProgressBar("New Game Wizard", "Creating Game Folder...", 0.2f);
             // Create root game folder
-            string fileSystemNewGameFolder = GetFileSystemNewGameFolder(fileSystemGameName);
+            EditorUtility.DisplayProgressBar("New Game Wizard", "Creating Game Folder...", 0.2f);
+            string fileSystemNewGameFolder = WizardUtilities.GetGameFileSystemFolder(gameParentFolder, fileSystemGameName);
+            WizardUtilities.CreateFolderIfNotExists(fileSystemNewGameFolder);
+
+            // create resources folders
+            EditorUtility.DisplayProgressBar("New Game Wizard", "Creating Resources Folders...", 0.3f);
             string fileSystemResourcesFolder = fileSystemNewGameFolder + "/Resources/" + fileSystemGameName;
-
-            // create base games folder
-            WizardUtilities.CreateFolderIfNotExists(Application.dataPath + newGameParentFolder);
-
-            EditorUtility.DisplayProgressBar("New Game Wizard", "Copying Game Template Directory...", 0.3f);
-
-            // create game folder structure
-            FileUtil.CopyFileOrDirectory(Application.dataPath + pathToNewGameTemplate, fileSystemNewGameFolder);
-
-            AssetDatabase.Refresh();
-
-            EditorUtility.DisplayProgressBar("New Game Wizard", "Renaming Template Folders...", 0.4f);
-
-            // Find every folder with the name of the new game template "TemplateGame" and rename it as necessary
-            // This assumes that all folders that have the template name should have their name changed and that only 
-            // folders will have their name changed
-            string[] templateNamedAssets = AssetDatabase.FindAssets(templateName, new string[] { FileUtil.GetProjectRelativePath(fileSystemNewGameFolder) });
-            foreach (string templateNamedAssetGuid in templateNamedAssets) {
-                string namedAssetPath = AssetDatabase.GUIDToAssetPath(templateNamedAssetGuid);
-                if (System.IO.Directory.Exists(namedAssetPath)) {
-                    string assetName = System.IO.Path.GetFileName(namedAssetPath);
-                    string newAssetName = namedAssetPath.Replace(templateName, fileSystemGameName);
-                    AssetDatabase.RenameAsset(namedAssetPath, fileSystemGameName);
-                }
-            }
-            AssetDatabase.Refresh();
-
-            EditorUtility.DisplayProgressBar("New Game Wizard", "Create Resource Folder If Necessary...", 0.5f);
-
-            // create resources folder if one didn't already get created by the copy operation
             WizardUtilities.CreateFolderIfNotExists(fileSystemResourcesFolder);
-
-            EditorUtility.DisplayProgressBar("New Game Wizard", "Making resource folder structure...", 0.6f);
-            // Copy over all folders because git won't commit empty folders
-            if (System.IO.Directory.Exists(Application.dataPath + pathToResourcesTemplateFolder)) {
-                string[] resourceAssets = AssetDatabase.FindAssets("*", new string[] { "Assets" + pathToResourcesTemplateFolder });
-                foreach (string resourceAssetGuid in resourceAssets) {
-                    string resourceAssetPath = AssetDatabase.GUIDToAssetPath(resourceAssetGuid);
-                    string resourceAssetPathRoot = pathToResourcesTemplateFolder;
-                    string relativeAssetPath = resourceAssetPath.Replace("Assets" + resourceAssetPathRoot + "/", "");
-                    // Only directories!
-                    //Debug.Log("Checking for " + Application.dataPath + resourceAssetPathRoot + "/" + relativeAssetPath);
-                    if (System.IO.Directory.Exists(Application.dataPath + resourceAssetPathRoot + "/" + relativeAssetPath)) {
-                        System.IO.Directory.CreateDirectory(fileSystemResourcesFolder + "/" + relativeAssetPath);
-                    }
-                }
-                AssetDatabase.Refresh();
-            } else {
-                Debug.LogWarning(pathToResourcesTemplateFolder + " was not found.  Resources folder will be empty.");
+            foreach (string resourceFolder in resourceFolders) {
+                WizardUtilities.CreateFolderIfNotExists(fileSystemResourcesFolder + "/" + resourceFolder);
             }
+
+            AssetDatabase.Refresh();
+
+            // copy game load scene
+            EditorUtility.DisplayProgressBar("New Game Wizard", "Copying Load Scene...", 0.4f);
+            string loadSceneFolder = gameParentFolder + fileSystemGameName + "/Scenes/" + fileSystemGameName;
+            string loadSceneAssetPath = "Assets" + loadSceneFolder + "/" + fileSystemGameName + ".unity";
+            WizardUtilities.CreateFolderIfNotExists(Application.dataPath + loadSceneFolder);
+            AssetDatabase.CopyAsset("Assets" + pathToLoadSceneTemplate, loadSceneAssetPath);
+
+            // add game load scene to build settings
+            EditorUtility.DisplayProgressBar("New Game Wizard", "Adding Game Load Scene To Build Settings...", 0.5f);
+            List<EditorBuildSettingsScene> currentSceneList = EditorBuildSettings.scenes.ToList();
+            Debug.Log("Adding " + loadSceneAssetPath + " to build settings");
+            currentSceneList.Add(new EditorBuildSettingsScene(loadSceneAssetPath, true));
+            EditorBuildSettings.scenes = currentSceneList.ToArray();
+
+            // Open the scene to add the necessary elements
+            EditorUtility.DisplayProgressBar("New Game Wizard", "Modifying loading scene...", 0.6f);
+            Debug.Log("Loading Scene at " + loadSceneAssetPath);
+            Scene loadGameScene = EditorSceneManager.OpenScene(loadSceneAssetPath);
 
             // create prefab folder
             string fileSystemPrefabFolder = fileSystemNewGameFolder + "/Prefab";
             string prefabPath = FileUtil.GetProjectRelativePath(fileSystemPrefabFolder);
-            WizardUtilities.CreateFolderIfNotExists(fileSystemPrefabFolder);
             WizardUtilities.CreateFolderIfNotExists(fileSystemPrefabFolder + "/GameManager");
 
             if (useThirdPartyController == true) {
                 ConfigureThirdPartyController(fileSystemGameName, fileSystemResourcesFolder, fileSystemPrefabFolder);
             }
 
-            // Rename the game load scene
-            EditorUtility.DisplayProgressBar("New Game Wizard", "Renaming Game Load Scene...", 0.7f);
-            string gameLoadSceneFolder = FileUtil.GetProjectRelativePath(fileSystemNewGameFolder + "/Scenes/" + fileSystemGameName);
-            string newGameLoadSceneFileName = fileSystemGameName + ".unity";
-            string newGameLoadScenePath = gameLoadSceneFolder + "/" + newGameLoadSceneFileName;
-            string existingGameLoadScenePath = gameLoadSceneFolder + "/" + templateName + ".unity";
-
-            AssetDatabase.RenameAsset(existingGameLoadScenePath, newGameLoadSceneFileName);
-            AssetDatabase.Refresh();
-
-            // add game load scene to build settings
-            EditorUtility.DisplayProgressBar("New Game Wizard", "Adding Game Load Scene To Build Settings...", 0.8f);
-            List<EditorBuildSettingsScene> currentSceneList = EditorBuildSettings.scenes.ToList();
-            Debug.Log("Adding " + newGameLoadScenePath + " to build settings");
-            currentSceneList.Add(new EditorBuildSettingsScene(newGameLoadScenePath, true));
-            EditorBuildSettings.scenes = currentSceneList.ToArray();
-
-            // Open the scene to add the necessary elements
-            EditorUtility.DisplayProgressBar("New Game Wizard", "Modifying loading scene...", 0.85f);
-            Debug.Log("Loading Scene at " + newGameLoadScenePath);
-            Scene loadGameScene = EditorSceneManager.OpenScene(newGameLoadScenePath);
-
             // Create a variant of the GameManager
-            EditorUtility.DisplayProgressBar("New Game Wizard", "Making prefab variants...", 0.9f);
+            EditorUtility.DisplayProgressBar("New Game Wizard", "Making prefab variants...", 0.7f);
             GameObject gameManagerGameObject = (GameObject)AssetDatabase.LoadMainAssetAtPath("Assets" + pathToGameManagerPrefab);
             GameObject gameManagerVariant = MakeGameManagerPrefabVariant(fileSystemGameName, gameManagerGameObject, prefabPath + "/GameManager/" + fileSystemGameName + "GameManager.prefab");
-            
+
             // create a variant of the UMA GLIB prefab
             MakeUMAPrefabVariant(prefabPath + "/GameManager/UMA_GLIB.prefab", fileSystemGameName);
 
@@ -223,29 +239,27 @@ namespace AnyRPG {
             MakeSceneConfigPrefabVariant(fileSystemGameName, gameManagerVariant, prefabPath + "/GameManager/" + fileSystemGameName + "SceneConfig.prefab");
 
             // Save changes to the load game scene
-            EditorUtility.DisplayProgressBar("New Game Wizard", "Saving Load Game Scene...", 0.95f);
+            EditorUtility.DisplayProgressBar("New Game Wizard", "Saving Load Game Scene...", 0.8f);
             EditorSceneManager.SaveScene(loadGameScene);
 
             // install default templates
-            EditorUtility.DisplayProgressBar("New Game Wizard", "Installing Default Templates...", 0.96f);
-            InstallDefaultTemplateContent(fileSystemGameName, newGameParentFolder);
+            EditorUtility.DisplayProgressBar("New Game Wizard", "Installing Default Templates...", 0.9f);
+            InstallDefaultTemplateContent(fileSystemGameName, gameParentFolder);
 
             // install optional templates
-            EditorUtility.DisplayProgressBar("New Game Wizard", "Installing Optional Templates...", 0.97f);
-            InstallOptionalTemplateContent(fileSystemGameName, newGameParentFolder);
+            EditorUtility.DisplayProgressBar("New Game Wizard", "Installing Optional Templates...", 0.95f);
+            InstallOptionalTemplateContent(fileSystemGameName, gameParentFolder);
 
             // make audio profiles and scene nodes for main menu
-            EditorUtility.DisplayProgressBar("New Game Wizard", "Configuring Main Menu...", 0.98f);
+            EditorUtility.DisplayProgressBar("New Game Wizard", "Configuring Main Menu...", 0.99f);
             ConfigureMainMenuScriptableObjects(fileSystemGameName);
 
             // create first scene
-            NewSceneWizard.CreateScene(newGameParentFolder, gameName, firstSceneName, copyExistingScene, existingScene, firstSceneAmbientSounds, firstSceneMusic);
+            NewSceneWizard.CreateScene(gameParentFolder, gameName, firstSceneName, copyExistingScene, existingScene, firstSceneAmbientSounds, firstSceneMusic);
 
             AssetDatabase.Refresh();
 
-            EditorUtility.ClearProgressBar();
-            EditorUtility.DisplayDialog("New Game Wizard", "New Game Wizard Complete! The game loading scene can be found at " + newGameLoadScenePath, "OK");
-
+            return loadSceneAssetPath;
         }
 
         private void InstallDefaultTemplateContent(string fileSystemGameName, string newGameParentFolder) {
@@ -304,6 +318,11 @@ namespace AnyRPG {
         }
 
         private bool CheckFilesExist() {
+
+            // Check for presence of Load Scene template
+            if (WizardUtilities.CheckFileExists(pathToLoadSceneTemplate, "Load Scene Template") == false) {
+                return false;
+            }
 
             // Check for presence of GameManager prefab
             if (WizardUtilities.CheckFileExists(pathToGameManagerPrefab, "GameManager prefab") == false) {
@@ -386,7 +405,7 @@ namespace AnyRPG {
                 audioProfile.ResourceName = "Main Menu";
                 audioProfile.AudioClips = new List<AudioClip>() { mainMenuMusic };
 
-                string scriptableObjectPath = "Assets" + newGameParentFolder + fileSystemGameName + "/Resources/" + fileSystemGameName + "/AudioProfile/MainMenuAudio.asset";
+                string scriptableObjectPath = "Assets" + gameParentFolder + fileSystemGameName + "/Resources/" + fileSystemGameName + "/AudioProfile/MainMenuAudio.asset";
                 AssetDatabase.CreateAsset(audioProfile, scriptableObjectPath);
             }
 
@@ -395,7 +414,7 @@ namespace AnyRPG {
                 audioProfile.ResourceName = "New Game";
                 audioProfile.AudioClips = new List<AudioClip>() { newGameMusic };
 
-                string scriptableObjectPath = "Assets" + newGameParentFolder + fileSystemGameName + "/Resources/" + fileSystemGameName + "/AudioProfile/NewGameAudio.asset";
+                string scriptableObjectPath = "Assets" + gameParentFolder + fileSystemGameName + "/Resources/" + fileSystemGameName + "/AudioProfile/NewGameAudio.asset";
                 AssetDatabase.CreateAsset(audioProfile, scriptableObjectPath);
             }
 
@@ -409,7 +428,7 @@ namespace AnyRPG {
                 sceneNode.BackgroundMusicProfileName = "Main Menu";
             }
 
-            string sceneNodeObjectPath = "Assets" + newGameParentFolder + fileSystemGameName + "/Resources/" + fileSystemGameName + "/SceneNode/MainMenuSceneNode.asset";
+            string sceneNodeObjectPath = "Assets" + gameParentFolder + fileSystemGameName + "/Resources/" + fileSystemGameName + "/SceneNode/MainMenuSceneNode.asset";
             AssetDatabase.CreateAsset(sceneNode, sceneNodeObjectPath);
 
         }
@@ -584,10 +603,6 @@ namespace AnyRPG {
             return variant;
         }
 
-        private string GetFileSystemNewGameFolder(string fileSystemGameName) {
-            return Application.dataPath + newGameParentFolder + fileSystemGameName;
-        }
-
         void OnWizardUpdate() {
             helpString = "Creates a new game based on the AnyRPG template";
             errorString = Validate(WizardUtilities.GetFileSystemGameName(gameName));
@@ -615,7 +630,7 @@ namespace AnyRPG {
             */
 
             // check that game with same name doesn't already exist
-            string newGameFolder = GetFileSystemNewGameFolder(fileSystemGameName);
+            string newGameFolder = WizardUtilities.GetGameFileSystemFolder(gameParentFolder, fileSystemGameName);
             if (System.IO.Directory.Exists(newGameFolder)) {
                 return "Folder " + newGameFolder + " already exists.  Please delete this directory or choose a new game name";
             }

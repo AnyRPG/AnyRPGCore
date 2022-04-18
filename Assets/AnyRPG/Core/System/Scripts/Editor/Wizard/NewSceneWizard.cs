@@ -19,6 +19,7 @@ namespace AnyRPG {
         public string gameName = string.Empty;
 
         private const string sceneTemplatePath = "/AnyRPG/Core/Templates/Game/Scenes/FirstScene/FirstScene.unity";
+        private const string lightingSettingsTemplatePath = "/AnyRPG/Core/Templates/Game/Scenes/FirstScene/FirstSceneSettings.lighting";
         private const string portalTemplatePath = "/AnyRPG/Core/Templates/Prefabs/Portal/StonePortal.prefab";
 
         // first scene options
@@ -72,6 +73,11 @@ namespace AnyRPG {
                 return false;
             }
 
+            // Check for presence of lighting template
+            if (WizardUtilities.CheckFileExists(lightingSettingsTemplatePath, "lighting settings template") == false) {
+                return false;
+            }
+
             // Check for presence of portal template
             if (WizardUtilities.CheckFileExists(portalTemplatePath, "portal template") == false) {
                 return false;
@@ -102,6 +108,8 @@ namespace AnyRPG {
             string newSceneFolder = FileUtil.GetProjectRelativePath(gameFileSystemFolder + "/Scenes/" + fileSystemSceneName);
             string newSceneFileName = fileSystemSceneName + ".unity";
             string newSceneAssetPath = newSceneFolder + "/" + newSceneFileName;
+            string newLightingSettingsFileName = fileSystemSceneName + "LightingSettings.lighting";
+            string newLightingSettingsAssetPath = newSceneFolder + "/" + newLightingSettingsFileName;
 
             // create the first scene folder
             WizardUtilities.CreateFolderIfNotExists(gameFileSystemFolder + "/Scenes/" + fileSystemSceneName);
@@ -113,6 +121,7 @@ namespace AnyRPG {
             } else {
                 AssetDatabase.CopyAsset("Assets" + sceneTemplatePath, newSceneAssetPath);
             }
+            AssetDatabase.CopyAsset("Assets" + lightingSettingsTemplatePath, newLightingSettingsAssetPath);
             AssetDatabase.Refresh();
 
             // add scene to build settings
@@ -129,6 +138,11 @@ namespace AnyRPG {
             Scene firstScene = EditorSceneManager.OpenScene(newSceneAssetPath);
             GameObject instantiatedGO = (GameObject)PrefabUtility.InstantiatePrefab(sceneConfigGameObject);
             instantiatedGO.transform.SetAsFirstSibling();
+
+            // assign lighting settings
+            LightingSettings lightingSettings = (LightingSettings)AssetDatabase.LoadMainAssetAtPath(newLightingSettingsAssetPath);
+            Lightmapping.lightingSettings = lightingSettings;
+
             EditorSceneManager.SaveScene(firstScene);
 
             // creating portal
