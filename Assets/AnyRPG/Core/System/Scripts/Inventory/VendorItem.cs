@@ -18,7 +18,7 @@ namespace AnyRPG {
         private int quantity = 1;
 
         [SerializeField]
-        private bool unlimited = false;
+        private bool unlimited = true;
 
         [Tooltip("The name of the item quality to use.  Leave blank to use the items default item quality")]
         [SerializeField]
