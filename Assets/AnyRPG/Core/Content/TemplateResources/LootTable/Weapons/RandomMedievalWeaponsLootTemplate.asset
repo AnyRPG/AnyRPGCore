@@ -95,3 +95,9 @@ MonoBehaviour:
       maxDrops: 1
       matchItemRestrictions: 1
       prerequisiteConditions: []
+    - itemName: Random Medieval Wand
+      dropChance: 20
+      minDrops: 1
+      maxDrops: 1
+      matchItemRestrictions: 1
+      prerequisiteConditions: []

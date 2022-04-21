@@ -65,3 +65,7 @@ MonoBehaviour:
     quantity: 0
     unlimited: 1
     itemQualityName: 
+  - itemName: Medieval Wand
+    quantity: 0
+    unlimited: 1
+    itemQualityName: 

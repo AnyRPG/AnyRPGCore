@@ -1,0 +1,34 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6c9b51b8d3aa844448aaeab0a989e2fa, type: 3}
+  m_Name: WandWeaponSkillTemplatePackage
+  m_EditorClassIdentifier: 
+  resourceName: Wand Weapon Skill
+  displayName: 
+  icon: {fileID: 0}
+  iconBackgroundImage: {fileID: 0}
+  description: 
+  useRegionalDescription: 0
+  resourceDescriptionProfile: 
+  optionalOverride: 0
+  resources:
+  - {fileID: 11400000, guid: 9f5582a0f8588c3418918cdcec7b751e, type: 2}
+  - {fileID: 11400000, guid: 5d831f6498a32ec498fe67b65bf7c9f8, type: 2}
+  - {fileID: 11400000, guid: 773fd44dac4157f4c8c931bfd9b3fa33, type: 2}
+  - {fileID: 11400000, guid: 1192fc4050cde7641b944375e1f5ec9c, type: 2}
+  - {fileID: 11400000, guid: cf5d4b7b4d0a9924d9f218990f917967, type: 2}
+  - {fileID: 11400000, guid: ddde9e308c41a994ba714ebeb735cfbd, type: 2}
+  - {fileID: 11400000, guid: a49e4d90681cd1446947c5d50c0aac1f, type: 2}
+  - {fileID: 11400000, guid: 63db892cc349c134ea7df1544be90022, type: 2}
+  - {fileID: 11400000, guid: 7bca4879d3b88ca4ea48167a4f3084d7, type: 2}
+  prefabs: []
+  dependencies: []
