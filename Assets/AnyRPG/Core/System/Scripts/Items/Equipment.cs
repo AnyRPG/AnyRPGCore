@@ -446,6 +446,7 @@ namespace AnyRPG {
 
         [Tooltip("The primary stat to increase when this item is equipped.  By default, this stat will be automatically set based on the item level")]
         [SerializeField]
+        [ResourceSelector(resourceType = typeof(CharacterStat))]
         private string statName = string.Empty;
 
         [Tooltip("If true, the stat value entered in the manual modifier value field will be used instead of the automatically scaled value")]
