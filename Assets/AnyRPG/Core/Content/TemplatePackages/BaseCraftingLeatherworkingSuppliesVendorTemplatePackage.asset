@@ -10,9 +10,9 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 6c9b51b8d3aa844448aaeab0a989e2fa, type: 3}
-  m_Name: BaseCraftingInscriptionItemsTemplatePackage
+  m_Name: BaseCraftingLeatherworkingSuppliesVendorTemplatePackage
   m_EditorClassIdentifier: 
-  resourceName: Base Crafting Inscription Items
+  resourceName: Base Crafting Leatherworking Items
   displayName: 
   icon: {fileID: 0}
   iconBackgroundImage: {fileID: 0}
@@ -21,11 +21,11 @@ MonoBehaviour:
   resourceDescriptionProfile: 
   optionalOverride: 0
   resources:
-  - {fileID: 11400000, guid: 5417fe2c03fa49546a17d433e1deede8, type: 2}
-  - {fileID: 11400000, guid: 0ce5dd6bd71adaf4faad8b777c49e709, type: 2}
-  - {fileID: 11400000, guid: d981cb6ecbcff1747890cc04fd34fb10, type: 2}
-  - {fileID: 11400000, guid: f2a35e9c8bbecab4cbbff13444dc6355, type: 2}
+  - {fileID: 11400000, guid: 060be4ec467f65f4983f7046b8bdb2e7, type: 2}
+  - {fileID: 11400000, guid: 520807bbf17a21c4e93d3ff564b5bf61, type: 2}
+  - {fileID: 11400000, guid: fc9b498615003da4189fda4059b15206, type: 2}
+  - {fileID: 11400000, guid: ba3e4ee262069a24692c414899f955a9, type: 2}
   prefabs:
-  - {fileID: 6390993854296471015, guid: a153a9ce9e4e4474586e9b53c51fd2f1, type: 3}
+  - {fileID: 6390993854296471015, guid: b332aa2b72ba0a34a839a12e1f715c12, type: 3}
   dependencies:
   - {fileID: 11400000, guid: 252ca395929968e43820806aecfe6a2d, type: 2}

@@ -10,9 +10,9 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 6c9b51b8d3aa844448aaeab0a989e2fa, type: 3}
-  m_Name: BaseCraftingTailoringItemsTemplatePackage
+  m_Name: BaseCraftingInscriptionSuppliesVendorTemplatePackage
   m_EditorClassIdentifier: 
-  resourceName: Base Crafting Tailoring Items
+  resourceName: Base Crafting Inscription Items
   displayName: 
   icon: {fileID: 0}
   iconBackgroundImage: {fileID: 0}
@@ -21,11 +21,11 @@ MonoBehaviour:
   resourceDescriptionProfile: 
   optionalOverride: 0
   resources:
-  - {fileID: 11400000, guid: ce6b6380148b2744c855b7205d577783, type: 2}
-  - {fileID: 11400000, guid: 2b8a94777dd35b74286b68fd74974660, type: 2}
-  - {fileID: 11400000, guid: c3cc21fa064689042ac298b0b571a799, type: 2}
-  - {fileID: 11400000, guid: e643ac9e80ed41542af49c349280e540, type: 2}
+  - {fileID: 11400000, guid: 5417fe2c03fa49546a17d433e1deede8, type: 2}
+  - {fileID: 11400000, guid: 0ce5dd6bd71adaf4faad8b777c49e709, type: 2}
+  - {fileID: 11400000, guid: d981cb6ecbcff1747890cc04fd34fb10, type: 2}
+  - {fileID: 11400000, guid: f2a35e9c8bbecab4cbbff13444dc6355, type: 2}
   prefabs:
-  - {fileID: 6390993854296471015, guid: 9607bfd2cd020e34cb936d502d743f78, type: 3}
+  - {fileID: 6390993854296471015, guid: a153a9ce9e4e4474586e9b53c51fd2f1, type: 3}
   dependencies:
   - {fileID: 11400000, guid: 252ca395929968e43820806aecfe6a2d, type: 2}
