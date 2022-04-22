@@ -70,6 +70,6 @@ MonoBehaviour:
       baseAmount: 0
       amountPerLevel: 0
       maxAmount: 0
-    damageType: 1
+    damageType: 0
     ignoreAccuracy: 0
     ignoreArmorPercent: 0
