@@ -33,6 +33,8 @@ namespace AnyRPG {
         [SerializeField]
         private string unsheathedAttachmentName = string.Empty;
 
+        private IDescribable describable;
+
         public EquipmentSlotProfile MyEquipmentSlotProfile { get => equipmentSlotProfile; set => equipmentSlotProfile = value; }
         public PrefabProfile HoldableObject { get => holdableObject; set => holdableObject = value; }
         public bool UseUniversalAttachment { get => useUniversalAttachment; set => useUniversalAttachment = value; }
@@ -40,7 +42,8 @@ namespace AnyRPG {
         public string UnsheathedAttachmentName { get => unsheathedAttachmentName; set => unsheathedAttachmentName = value; }
         public string HoldableObjectName { get => holdableObjectName; set => holdableObjectName = value; }
 
-        public void SetupScriptableObjects(SystemGameManager systemGameManager) {
+        public void SetupScriptableObjects(SystemGameManager systemGameManager, IDescribable describable) {
+            this.describable = describable;
             Configure(systemGameManager);
             holdableObject = null;
             if (holdableObjectName != null && holdableObjectName != string.Empty) {
@@ -48,7 +51,7 @@ namespace AnyRPG {
                 if (tmpHoldableObject != null) {
                     holdableObject = tmpHoldableObject;
                 } else {
-                    Debug.LogError("SystemAbilityManager.SetupScriptableObjects(): Could not find holdable object : " + holdableObjectName + " while inititalizing an attachment node.  CHECK INSPECTOR");
+                    Debug.LogError("SystemAbilityManager.SetupScriptableObjects(): Could not find holdable object : " + holdableObjectName + " while inititalizing an attachment node for " + describable.DisplayName + ".  CHECK INSPECTOR");
                 }
             } else {
                 Debug.LogError("SystemAbilityManager.SetupScriptableObjects(): holdable object name blank while inititalizing an attachment node.  CHECK INSPECTOR");
@@ -59,7 +62,7 @@ namespace AnyRPG {
                 if (tmpEquipmentSlotProfile != null) {
                     equipmentSlotProfile = tmpEquipmentSlotProfile;
                 } else {
-                    Debug.LogError("SystemAbilityManager.SetupScriptableObjects(): Could not find equipmentSlotProfile : " + equipmentSlotProfileName + " while inititalizing an attachment node.  CHECK INSPECTOR");
+                    Debug.LogError("SystemAbilityManager.SetupScriptableObjects(): Could not find equipmentSlotProfile : " + equipmentSlotProfileName + " while inititalizing an attachment node for " + describable.DisplayName + ".  CHECK INSPECTOR");
                 }
             } else {
                 Debug.LogError("SystemAbilityManager.SetupScriptableObjects(): equipmentSlotProfile name blank while inititalizing an attachment node.  CHECK INSPECTOR");

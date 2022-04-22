@@ -389,7 +389,7 @@ namespace AnyRPG {
             if (holdableObjectList != null) {
                 foreach (HoldableObjectAttachment holdableObjectAttachment in holdableObjectList) {
                     if (holdableObjectAttachment != null) {
-                        holdableObjectAttachment.SetupScriptableObjects(systemGameManager);
+                        holdableObjectAttachment.SetupScriptableObjects(systemGameManager, this);
                     }
                 }
             }
