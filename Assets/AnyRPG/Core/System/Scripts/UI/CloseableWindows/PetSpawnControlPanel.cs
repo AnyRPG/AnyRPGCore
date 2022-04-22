@@ -10,7 +10,8 @@ namespace AnyRPG {
     public class PetSpawnControlPanel : WindowContentController, ICapabilityConsumer {
 
         public event System.Action OnConfirmAction = delegate { };
-        public override event Action<ICloseableWindowContents> OnCloseWindow = delegate { };
+        //public override event Action<ICloseableWindowContents> OnCloseWindow = delegate { };
+        public override event Action<CloseableWindowContents> OnCloseWindow = delegate { };
 
         private PetSpawnButton selectedPetSpawnButton;
 

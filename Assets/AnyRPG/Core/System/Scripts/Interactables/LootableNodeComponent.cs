@@ -127,7 +127,8 @@ namespace AnyRPG {
             uIManager.lootWindow.OpenWindow();
         }
 
-        public void ClearTakeLootHandler(ICloseableWindowContents windowContents) {
+        //public void ClearTakeLootHandler(ICloseableWindowContents windowContents) {
+        public void ClearTakeLootHandler(CloseableWindowContents windowContents) {
             //Debug.Log(gameObject.name + ".LootableNode.ClearTakeLootHandler()");
             CleanupWindowEventSubscriptions();
         }

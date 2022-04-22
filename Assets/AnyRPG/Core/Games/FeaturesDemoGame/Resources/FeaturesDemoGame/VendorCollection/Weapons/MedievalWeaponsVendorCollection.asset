@@ -69,3 +69,7 @@ MonoBehaviour:
     quantity: 0
     unlimited: 1
     itemQualityName: 
+  - itemName: Medieval Grimoire
+    quantity: 0
+    unlimited: 1
+    itemQualityName: 

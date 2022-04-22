@@ -15,7 +15,8 @@ namespace AnyRPG {
         public NameChangeComponent(Interactable interactable, NameChangeProps interactableOptionProps, SystemGameManager systemGameManager) : base(interactable, interactableOptionProps, systemGameManager) {
         }
 
-        public void CleanupEventSubscriptions(ICloseableWindowContents windowContents) {
+        //public void CleanupEventSubscriptions(ICloseableWindowContents windowContents) {
+        public void CleanupEventSubscriptions(CloseableWindowContents windowContents) {
             //Debug.Log(gameObject.name + ".NameChangeInteractable.CleanupEventSubscriptions(ICloseableWindowContents)");
             CleanupWindowEventSubscriptions();
         }

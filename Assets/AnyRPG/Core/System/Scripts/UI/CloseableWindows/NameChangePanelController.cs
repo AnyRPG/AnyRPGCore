@@ -11,7 +11,8 @@ namespace AnyRPG {
     public class NameChangePanelController : WindowContentController {
 
         public event System.Action OnConfirmAction = delegate { };
-        public override event Action<ICloseableWindowContents> OnCloseWindow = delegate { };
+        //public override event Action<ICloseableWindowContents> OnCloseWindow = delegate { };
+        public override event Action<CloseableWindowContents> OnCloseWindow = delegate { };
 
         [SerializeField]
         private TMP_InputField textInput = null;

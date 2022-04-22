@@ -95,6 +95,12 @@ MonoBehaviour:
       maxDrops: 1
       matchItemRestrictions: 1
       prerequisiteConditions: []
+    - itemName: Epic Medieval Grimoire
+      dropChance: 20
+      minDrops: 1
+      maxDrops: 1
+      matchItemRestrictions: 1
+      prerequisiteConditions: []
     - itemName: Epic Medieval Wand
       dropChance: 20
       minDrops: 1

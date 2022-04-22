@@ -13,7 +13,8 @@ namespace AnyRPG {
 
     public class CharacterAppearancePanel : WindowContentController {
 
-        public override event Action<ICloseableWindowContents> OnCloseWindow = delegate { };
+        //public override event Action<ICloseableWindowContents> OnCloseWindow = delegate { };
+        public override event Action<CloseableWindowContents> OnCloseWindow = delegate { };
 
         [Header("Appearance")]
 

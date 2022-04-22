@@ -101,3 +101,9 @@ MonoBehaviour:
       maxDrops: 1
       matchItemRestrictions: 1
       prerequisiteConditions: []
+    - itemName: Random Medieval Grimoire
+      dropChance: 20
+      minDrops: 1
+      maxDrops: 1
+      matchItemRestrictions: 1
+      prerequisiteConditions: []

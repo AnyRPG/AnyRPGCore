@@ -8,7 +8,8 @@ using UnityEngine.UI;
 namespace AnyRPG {
     public class NewGameSpecializationPanelController : WindowContentController {
 
-        public override event Action<ICloseableWindowContents> OnCloseWindow = delegate { };
+        //public override event Action<ICloseableWindowContents> OnCloseWindow = delegate { };
+        public override event Action<CloseableWindowContents> OnCloseWindow = delegate { };
 
         [SerializeField]
         private GameObject buttonPrefab = null;

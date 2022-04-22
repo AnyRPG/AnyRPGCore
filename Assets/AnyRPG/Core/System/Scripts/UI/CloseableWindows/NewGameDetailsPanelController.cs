@@ -10,7 +10,8 @@ namespace AnyRPG {
 
     public class NewGameDetailsPanelController : WindowContentController {
 
-        public override event Action<ICloseableWindowContents> OnCloseWindow = delegate { };
+        //public override event Action<ICloseableWindowContents> OnCloseWindow = delegate { };
+        public override event Action<CloseableWindowContents> OnCloseWindow = delegate { };
 
         [Header("Name")]
         public TMP_InputField textInput;

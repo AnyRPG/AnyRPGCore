@@ -17,7 +17,8 @@ namespace AnyRPG {
             }
         }
 
-        public void CleanupEventSubscriptions(ICloseableWindowContents windowContents) {
+        //public void CleanupEventSubscriptions(ICloseableWindowContents windowContents) {
+        public void CleanupEventSubscriptions(CloseableWindowContents windowContents) {
             CleanupWindowEventSubscriptions();
         }
 

@@ -9,7 +9,8 @@ namespace AnyRPG {
     public class LootUI : PagedWindowContents {
 
         public override event System.Action<bool> OnPageCountUpdate = delegate { };
-        public override event Action<ICloseableWindowContents> OnCloseWindow = delegate { };
+        //public override event Action<ICloseableWindowContents> OnCloseWindow = delegate { };
+        public override event Action<CloseableWindowContents> OnCloseWindow = delegate { };
 
         [Header("Loot UI")]
 

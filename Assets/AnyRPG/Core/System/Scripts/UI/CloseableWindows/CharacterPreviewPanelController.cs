@@ -12,7 +12,8 @@ namespace AnyRPG {
 
         public event Action OnTargetReady = delegate { };
         public event Action OnTargetCreated = delegate { };
-        public override event Action<ICloseableWindowContents> OnCloseWindow = delegate { };
+        //public override event Action<ICloseableWindowContents> OnCloseWindow = delegate { };
+        public override event Action<CloseableWindowContents> OnCloseWindow = delegate { };
 
         [SerializeField]
         private CharacterPreviewCameraController previewCameraController = null;

@@ -10,7 +10,8 @@ namespace AnyRPG {
     public class DialogPanelController : WindowContentController {
 
         public event System.Action OnConfirmAction = delegate { };
-        public override event Action<ICloseableWindowContents> OnCloseWindow = delegate { };
+        //public override event Action<ICloseableWindowContents> OnCloseWindow = delegate { };
+        public override event Action<CloseableWindowContents> OnCloseWindow = delegate { };
 
         [Tooltip("If no next text is provided for a dialog, this text will be used")]
         [SerializeField]

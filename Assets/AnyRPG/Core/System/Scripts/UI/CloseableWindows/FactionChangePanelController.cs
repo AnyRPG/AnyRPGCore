@@ -9,7 +9,8 @@ namespace AnyRPG {
     public class FactionChangePanelController : WindowContentController {
 
         public event System.Action OnConfirmAction = delegate { };
-        public override event Action<ICloseableWindowContents> OnCloseWindow = delegate { };
+        //public override event Action<ICloseableWindowContents> OnCloseWindow = delegate { };
+        public override event Action<CloseableWindowContents> OnCloseWindow = delegate { };
 
         [Header("Faction Change Panel")]
 

@@ -55,8 +55,9 @@ namespace AnyRPG {
             }
         }
 
-        public void CleanupConfirm(ICloseableWindowContents contents) {
-            CleanupConfirm();
+        //public void CleanupConfirm(ICloseableWindowContents contents) {
+        public void CleanupConfirm(CloseableWindowContents contents) {
+                CleanupConfirm();
         }
 
         public List<Dialog> GetCurrentOptionList() {

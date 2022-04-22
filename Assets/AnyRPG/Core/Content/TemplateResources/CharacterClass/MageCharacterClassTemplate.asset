@@ -43,6 +43,7 @@ MonoBehaviour:
     - Cloth
     weaponSkills:
     - Staff
+    - Wand
   unitTypeCapabilities: []
   primaryStats:
   - statName: Intellect

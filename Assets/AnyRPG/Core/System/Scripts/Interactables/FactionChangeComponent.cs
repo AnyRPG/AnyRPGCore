@@ -25,7 +25,8 @@ namespace AnyRPG {
             SystemEventManager.StartListening("OnFactionChange", HandleFactionChange);
         }
 
-        public void CleanupEventSubscriptions(ICloseableWindowContents windowContents) {
+        //public void CleanupEventSubscriptions(ICloseableWindowContents windowContents) {
+        public void CleanupEventSubscriptions(CloseableWindowContents windowContents) {
             //Debug.Log(gameObject.name + ".FactionChangeInteractable.CleanupEventSubscriptions(ICloseableWindowContents)");
             CleanupWindowEventSubscriptions();
         }

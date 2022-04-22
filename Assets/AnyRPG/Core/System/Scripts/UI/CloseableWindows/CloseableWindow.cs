@@ -11,7 +11,8 @@ namespace AnyRPG {
         public event System.Action OnOpenWindowCallback = delegate { };
         public event System.Action OnCloseWindowCallback = delegate { };
 
-        protected ICloseableWindowContents windowContents;
+        //protected ICloseableWindowContents windowContents;
+        protected CloseableWindowContents windowContents;
 
         [Header("Closeable Window")]
 
@@ -48,7 +49,8 @@ namespace AnyRPG {
         // game manager references
         protected ObjectPooler objectPooler = null;
 
-        public ICloseableWindowContents CloseableWindowContents { get => windowContents; set => windowContents = value; }
+        //public ICloseableWindowContents CloseableWindowContents { get => windowContents; set => windowContents = value; }
+        public CloseableWindowContents CloseableWindowContents { get => windowContents; set => windowContents = value; }
 
         public bool IsOpen {
             get {
@@ -99,10 +101,15 @@ namespace AnyRPG {
             }
             if (contentGameObject != null) {
                 //Debug.Log(gameObject.name + ".CloseableWindow.InitializeWindow(): Instanted; setting window Contents");
-                windowContents = contentGameObject.GetComponent<ICloseableWindowContents>();
+                //windowContents = contentGameObject.GetComponent<ICloseableWindowContents>();
+                GetWindowContents();
                 windowContents.Configure(systemGameManager);
                 SetContentOwner();
             }
+        }
+
+        public virtual void GetWindowContents() {
+            windowContents = contentGameObject.GetComponent<CloseableWindowContents>();
         }
 
         public virtual void SetContentOwner() {

@@ -6,9 +6,10 @@ using UnityEngine;
 using UnityEngine.UI;
 
 namespace AnyRPG {
-    public class CloseableWindowContents : ConfiguredMonoBehaviour, ICloseableWindowContents {
+    public class CloseableWindowContents : ConfiguredMonoBehaviour/*, ICloseableWindowContents*/ {
 
-        public virtual event Action<ICloseableWindowContents> OnCloseWindow = delegate { };
+        //public virtual event Action<ICloseableWindowContents> OnCloseWindow = delegate { };
+        public virtual event Action<CloseableWindowContents> OnCloseWindow = delegate { };
 
         [Header("Closeable Window")]
 

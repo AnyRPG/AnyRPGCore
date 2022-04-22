@@ -26,16 +26,27 @@ namespace AnyRPG {
         [SerializeField]
         protected GameObject rightTriggerHint = null;
 
-        private int pageIndex = 0;
+        protected PagedWindowContents pagedWindowContents = null;
+
+        //private int pageIndex = 0;
 
         // game manager references
 
         protected ControlsManager controlsManager = null;
 
+        public int PageIndex {
+            get {
+                if (pagedWindowContents != null) {
+                    return pagedWindowContents.PageIndex;
+                }
+                return 0;
+            }
+        }
+
         public override void Configure(SystemGameManager systemGameManager) {
             base.Configure(systemGameManager);
             if (windowContents != null) {
-                (windowContents as PagedWindowContents).OnPageCountUpdate += UpdateNavigationArea;
+                pagedWindowContents.OnPageCountUpdate += UpdateNavigationArea;
             } else {
                 Debug.Log(gameObject.name + ".PagedWindow.Awake(): Could not find window contents.  Check inspector.");
             }
@@ -46,10 +57,15 @@ namespace AnyRPG {
             controlsManager = systemGameManager.ControlsManager;
         }
 
+        public override void GetWindowContents() {
+            base.GetWindowContents();
+            pagedWindowContents = contentGameObject.GetComponent<PagedWindowContents>();
+        }
+
         public override void SetContentOwner() {
             //Debug.Log(gameObject.name + ".PagedWindow.SetContentOwner()");
-            if (windowContents != null) {
-                (windowContents as PagedWindowContents).SetPagedWindow(this);
+            if (pagedWindowContents != null) {
+                pagedWindowContents.SetPagedWindow(this);
             }
             base.SetContentOwner();
         }
@@ -57,7 +73,7 @@ namespace AnyRPG {
         public override void OpenWindow() {
             //Debug.Log("PagedWindow.OpenWindow()");
             // do this first because openwindow will update the page count
-            pageIndex = 0;
+            //pageIndex = 0;
 
             if (controlsManager.GamePadModeActive == true) {
                 leftTriggerHint.SetActive(true);
@@ -74,9 +90,9 @@ namespace AnyRPG {
             //Debug.Log("PagedWindow.NextPage()");
 
             // ensure we are not on the last page
-            if (pageIndex < (windowContents as PagedWindowContents).GetPageCount() - 1) {
-                pageIndex++;
-                (windowContents as PagedWindowContents).LoadPage(pageIndex);
+            if (PageIndex < pagedWindowContents.GetPageCount() - 1) {
+                //pageIndex++;
+                pagedWindowContents.LoadPage(PageIndex + 1);
             }
             UpdateNavigationArea();
         }
@@ -85,9 +101,9 @@ namespace AnyRPG {
             //Debug.Log("PagedWindow.PreviousPage()");
 
             // ensure we are not on the first page
-            if (pageIndex > 0) {
-                pageIndex--;
-                (windowContents as PagedWindowContents).LoadPage(pageIndex);
+            if (PageIndex > 0) {
+                //pageIndex--;
+                pagedWindowContents.LoadPage(PageIndex - 1);
             }
             UpdateNavigationArea();
         }
@@ -100,29 +116,31 @@ namespace AnyRPG {
 
         private void UpdateNavigationArea(bool closeEmptyWindow = false) {
             //Debug.Log("PagedWindow.UpdateNavigationArea()");
-            if ((windowContents as PagedWindowContents).GetPageCount() == 0 && closeEmptyWindow == true) {
+            if (pagedWindowContents.GetPageCount() == 0 && closeEmptyWindow == true) {
                 CloseWindow();
             }
 
-            if ((windowContents as PagedWindowContents).GetPageCount() <= pageIndex) {
+            /*
+            if ((windowContents as PagedWindowContents).GetPageCount() <= PageIndex) {
                 // set the page index to the last page
-                pageIndex = Mathf.Clamp((windowContents as PagedWindowContents).GetPageCount() - 1, 0, int.MaxValue);
+                pageIndex = Mathf.Clamp(pagedWindowContents.GetPageCount() - 1, 0, int.MaxValue);
             }
+            */
 
-            previousBtn.GetComponent<Button>().interactable = (pageIndex > 0);
-            nextBtn.GetComponent<Button>().interactable = ((windowContents as PagedWindowContents).GetPageCount() > 1 && pageIndex < (windowContents as PagedWindowContents).GetPageCount() - 1);
+            previousBtn.GetComponent<Button>().interactable = (PageIndex > 0);
+            nextBtn.GetComponent<Button>().interactable = (pagedWindowContents.GetPageCount() > 1 && PageIndex < pagedWindowContents.GetPageCount() - 1);
 
-            pageNumber.text = pageIndex + 1 + "/" + Mathf.Clamp((windowContents as PagedWindowContents).GetPageCount(), 1, int.MaxValue);
+            pageNumber.text = PageIndex + 1 + "/" + Mathf.Clamp(pagedWindowContents.GetPageCount(), 1, int.MaxValue);
         }
 
         public void OnScroll(PointerEventData eventData) {
             //Debug.Log(eventData.scrollDelta + ", " + eventData.IsScrolling());
             if (eventData.scrollDelta.y < 0 && eventData.IsScrolling()) {
-                if ((windowContents as PagedWindowContents).GetPageCount() > 1) {
+                if (pagedWindowContents.GetPageCount() > 1) {
                     NextPage();
                 }
             } else if (eventData.scrollDelta.y > 0 && eventData.IsScrolling()) {
-                if ((windowContents as PagedWindowContents).GetPageCount() > 1) {
+                if (pagedWindowContents.GetPageCount() > 1) {
                     PreviousPage();
                 }
             }

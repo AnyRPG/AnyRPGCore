@@ -28,7 +28,8 @@ namespace AnyRPG {
 
         }
 
-        public void CleanupEventSubscriptions(ICloseableWindowContents windowContents) {
+        //public void CleanupEventSubscriptions(ICloseableWindowContents windowContents) {
+        public void CleanupEventSubscriptions(CloseableWindowContents windowContents) {
             //Debug.Log(gameObject.name + ".ClassChangeInteractable.CleanupEventSubscriptions(ICloseableWindowContents)");
             CleanupWindowEventSubscriptions();
         }

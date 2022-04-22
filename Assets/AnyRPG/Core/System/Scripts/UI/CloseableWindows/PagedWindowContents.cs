@@ -8,7 +8,8 @@ namespace AnyRPG {
     public class PagedWindowContents : CloseableWindowContents {
 
         public virtual event System.Action<bool> OnPageCountUpdate = delegate { };
-        public override event System.Action<ICloseableWindowContents> OnCloseWindow = delegate { };
+        //public override event System.Action<ICloseableWindowContents> OnCloseWindow = delegate { };
+        public override event System.Action<CloseableWindowContents> OnCloseWindow = delegate { };
 
         protected PagedWindow pagedWindow = null;
 
@@ -17,6 +18,8 @@ namespace AnyRPG {
         protected int pageSize = 10;
 
         protected int pageIndex = 0;
+
+        public int PageIndex { get => pageIndex; set => pageIndex = value; }
 
         public void SetPagedWindow(PagedWindow pagedWindow) {
             this.pagedWindow = pagedWindow;
