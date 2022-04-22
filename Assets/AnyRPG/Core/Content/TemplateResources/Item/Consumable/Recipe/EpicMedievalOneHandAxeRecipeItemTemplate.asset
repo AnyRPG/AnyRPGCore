@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 112a0f309fc47294794c542a6daef708, type: 3}
   m_Name: EpicMedievalOneHandAxeRecipeItemTemplate
   m_EditorClassIdentifier: 
-  resourceName: Epic Medieval One Hand Mace Recipe
+  resourceName: Epic Medieval One Hand Axe Recipe
   displayName: 
   icon: {fileID: 21300000, guid: 66b1ec3cf546e7c4cbc5ba00e5493024, type: 3}
   iconBackgroundImage: {fileID: 0}

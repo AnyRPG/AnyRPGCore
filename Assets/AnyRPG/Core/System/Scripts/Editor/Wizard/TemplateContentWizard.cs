@@ -219,8 +219,12 @@ namespace AnyRPG {
             // create a list of unique describable resources from the scriptable content templates
             foreach (ScriptableContentTemplate scriptableContentTemplate in scriptableContentTemplates) {
                 foreach (DescribableResource describableResource in scriptableContentTemplate.Resources) {
-                    if (returnList.Contains(describableResource) == false) {
-                        returnList.Add(describableResource);
+                    if (describableResource != null) {
+                        if (returnList.Contains(describableResource) == false) {
+                            returnList.Add(describableResource);
+                        }
+                    } else {
+                        Debug.LogWarning("Null resource found in list for " + scriptableContentTemplate.ResourceName);
                     }
                 }
             }

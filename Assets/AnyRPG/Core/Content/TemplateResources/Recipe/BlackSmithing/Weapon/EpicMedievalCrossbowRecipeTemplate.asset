@@ -25,7 +25,7 @@ MonoBehaviour:
   craftingMaterials:
   - itemName: Spruce Lumber
     count: 1
-  - itemName: Iron Ingot
+  - itemName: Steel Ingot
     count: 1
   - itemName: Linen
     count: 1

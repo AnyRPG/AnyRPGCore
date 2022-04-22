@@ -20,7 +20,7 @@ MonoBehaviour:
   useRegionalDescription: 0
   resourceDescriptionProfile: 
   optionalOverride: 0
-  autoLearn: 0
+  autoLearn: 1
   requiredLevel: 1
   craftingMaterials:
   - itemName: Spruce Lumber

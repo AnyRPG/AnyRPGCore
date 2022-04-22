@@ -23,7 +23,7 @@ MonoBehaviour:
   autoLearn: 0
   requiredLevel: 1
   craftingMaterials:
-  - itemName: Iron Ingot
+  - itemName: Steel Ingot
     count: 1
   itemOutputName: Epic Medieval One Hand Sword
   outputCount: 1

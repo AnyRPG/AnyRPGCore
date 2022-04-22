@@ -48,7 +48,7 @@ MonoBehaviour:
     abilityPrefabSource: 1
     randomPrefabs: 0
     abilityObjectList:
-    - holdableObjectName: Yellow Hit
+    - holdableObjectName: White Hit
       useUniversalAttachment: 0
       attachmentName: 
     prefabSpawnLocation: 5
