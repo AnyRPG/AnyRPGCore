@@ -54,10 +54,14 @@ namespace AnyRPG {
                 string fileSystemGameName = WizardUtilities.GetFileSystemGameName(gameName);
                 RunWizard(fileSystemGameName, gameParentFolder, scriptableContent, replaceExistingResources, replaceExistingPrefabs);
 
-            } catch (System.NullReferenceException) {
+            } catch {
                 // do nothing
-                //throw;
-                Debug.LogWarning("Null reference detected while running wizard");
+                Debug.LogWarning("An error was detected while running wizard.  See console log for details");
+                EditorUtility.ClearProgressBar();
+                EditorUtility.DisplayDialog("Template Content Wizard",
+                    "Error!  See console log for details",
+                    "OK");
+                throw;
             }
 
             EditorUtility.ClearProgressBar();
@@ -247,7 +251,7 @@ namespace AnyRPG {
             return returnList;
         }
 
-        private static List<ScriptableContentTemplate> GetDependencyClosure(List<ScriptableContentTemplate> dependencyMaster) {
+        private static List<ScriptableContentTemplate> GetDependencyClosure(List<ScriptableContentTemplate> dependencyMaster, List<ScriptableContentTemplate> crawledList = null) {
 
             // assumption here that the initial list is already unique
             List<ScriptableContentTemplate> returnList = new List<ScriptableContentTemplate>();
@@ -259,7 +263,8 @@ namespace AnyRPG {
                 // create a list of items that is not already in the return list, and crawl them for more dependencies
                 List<ScriptableContentTemplate> crawlList = new List<ScriptableContentTemplate>();
                 foreach (ScriptableContentTemplate scriptableContentTemplate in dependency.Dependencies) {
-                    if (returnList.Contains(scriptableContentTemplate) == false) {
+                    if (returnList.Contains(scriptableContentTemplate) == false &&
+                        (crawledList == null || crawledList.Contains(scriptableContentTemplate) == false)) {
                         if (scriptableContentTemplate == null) {
                             Debug.LogWarning("Null dependency found in list for " + dependency.ResourceName);
                         } else {
@@ -267,9 +272,15 @@ namespace AnyRPG {
                         }
                     }
                 }
+                List<ScriptableContentTemplate> crawlListResults = GetDependencyClosure(crawlList, returnList);
 
+                foreach (ScriptableContentTemplate scriptableContentTemplate in crawlListResults) {
+                    if (returnList.Contains(scriptableContentTemplate) == false) {
+                        returnList.Add(scriptableContentTemplate);
+                    }
+                }
                 // crawl the unique list and add it to the return list
-                returnList.AddRange(GetDependencyClosure(crawlList));
+                //returnList.AddRange(GetDependencyClosure(crawlList));
             }
 
             return returnList;
