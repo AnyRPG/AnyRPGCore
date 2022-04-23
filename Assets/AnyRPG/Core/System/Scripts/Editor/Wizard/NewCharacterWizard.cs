@@ -28,7 +28,7 @@ namespace AnyRPG {
         private string gameParentFolder = "/Games/";
 
         // the character model will be searched for bones with this name to try to auto-configure the head bone
-        private string[] defaultHeadBones = { "Head", "head" };
+        private string[] defaultHeadBones = { "Head" };
 
         // the used file path name for the game
         private string fileSystemGameName = string.Empty;
@@ -238,7 +238,7 @@ namespace AnyRPG {
         private void SetDefaultHeadBone() {
             if (headBone == string.Empty && characterModel != null) {
                 for (int i = 0; i < defaultHeadBones.Length; i++) {
-                    Transform headBoneTransform = characterModel.transform.FindChildByRecursive(defaultHeadBones[i]);
+                    Transform headBoneTransform = characterModel.transform.FindChildByRecursive(defaultHeadBones[i], true, true);
                     if (headBoneTransform != null) {
                         headBone = headBoneTransform.name;
                         break;

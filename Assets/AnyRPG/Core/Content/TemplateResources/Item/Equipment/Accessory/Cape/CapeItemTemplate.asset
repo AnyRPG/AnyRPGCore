@@ -25,14 +25,14 @@ MonoBehaviour:
   randomItemQuality: 0
   dynamicLevel: 1
   freezeDropLevel: 0
-  levelCap: 20
+  levelCap: 0
   itemLevel: 1
   useLevel: 1
   currencyName: 
   dynamicCurrencyAmount: 1
   pricePerLevel: 10
   basePrice: 0
-  uniqueItem: 1
+  uniqueItem: 0
   characterClassRequirementList: []
   equipmentSlotType: Cape
   equipmentSetName: 
