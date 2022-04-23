@@ -25,7 +25,9 @@ MonoBehaviour:
     requireStealth: 0
     weaponAffinityNames:
     - One Hand Sword
+    - Two Hand Sword
     - One Hand Mace
+    - Two Hand Mace
     holdableObjectList: []
     abilityPrefabSource: 0
     animatorCreatePrefabs: 0
@@ -68,6 +70,7 @@ MonoBehaviour:
       canCastOnNeutral: 0
       canCastOnFriendly: 0
       autoSelfCast: 0
+      unitTypeRestrictions: []
       useMeleeRange: 1
       maxRange: 5
       requireFacingTarget: 0
@@ -103,6 +106,7 @@ MonoBehaviour:
             canCastOnNeutral: 0
             canCastOnFriendly: 0
             autoSelfCast: 0
+            unitTypeRestrictions: []
             useMeleeRange: 1
             maxRange: 0
             lineOfSightSourceLocation: 0
