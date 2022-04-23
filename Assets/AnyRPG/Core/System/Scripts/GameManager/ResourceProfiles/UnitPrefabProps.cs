@@ -120,7 +120,7 @@ namespace AnyRPG {
             }
         }
 
-        public string FloatTransform { get => floatTransform; }
+        public string FloatTransform { get => floatTransform; set => floatTransform = value; }
         public float FloatHeight { get => floatHeight; }
         public bool AddFloatHeightToTransform { get => addFloatHeightToTransform; }
         public bool UseInlineAnimationProps { get => useInlineAnimationProps; set => useInlineAnimationProps = value; }

@@ -36,11 +36,14 @@ namespace AnyRPG {
 
         // the character model will be searched for bones with these names to try to auto-configure the bones
         private string[] defaultHeadBones = { "Head" };
-        private string[] defaultLeftHandBones = { "LeftHand", "palm_L" };
-        private string[] defaultRightHandBones = { "RightHand", "palm_R" };
-        private string[] defaultLeftArmBones = { "arm_lower_L", "LeftForeArm" };
-        private string[] defaultHipBones = { "Hips", "Pelvis" };
-        private string[] defaultSpineBones = { "Spine1", "Spine", "Torso" };
+        private string[] defaultLeftHandBones = { "LeftHand", "palm_L", "Hand_L", "Hand.L", "LPalm", "Right wrist" };
+        private string[] defaultRightHandBones = { "RightHand", "palm_R", "Hand_R", "Hand.R", "RPalm", "Left wrist" };
+        private string[] defaultLeftArmBones = { "arm_lower_L", "LeftForeArm", "ForeArm_L", "Forearm.L", "LlowArm", "LeftRadius", "Left elbow" };
+        private string[] defaultHipBones = { "Hips", "LowerSpine", "LowerBack", "spine1", "Pelvis" };
+        private string[] defaultSpineBones = { "chest", "UpperSpine", "Spine4", "Spine3", "Spine2", "Spine1", "Spine", "Torso2", "Torso", "UpperBack" };
+
+        // bone prefixes to ignore when searching rig - these usually indicate IK bones, and not real bones
+        private List<string> ignoreBones = new List<string>() { "IK", "LD", "DEF" };
 
         // the used file path name for the game
         private string fileSystemGameName = string.Empty;
@@ -181,6 +184,9 @@ namespace AnyRPG {
             asset.UnitPrefabProps.RotateModel = true;
             asset.UnitPrefabProps.UseInlineAnimationProps = true;
             asset.UnitPrefabProps.AttachmentProfileName = attachmentProfile;
+            if (spineBone != string.Empty) {
+                asset.UnitPrefabProps.FloatTransform = spineBone;
+            }
 
             // setup animation properties
             asset.UnitPrefabProps.AnimationProps = animations;
@@ -380,6 +386,7 @@ namespace AnyRPG {
             SetDefaultHipBone();
             SetDefaultSpineBone();
             DetermineModelScale();
+            SetAttachmentProfileName();
             CheckHighestPoint();
 
             errorString = Validate();
@@ -410,7 +417,7 @@ namespace AnyRPG {
         private void SetDefaultHeadBone() {
             if (headBone == string.Empty && characterModel != null) {
                 for (int i = 0; i < defaultHeadBones.Length; i++) {
-                    Transform headBoneTransform = characterModel.transform.FindChildByRecursive(defaultHeadBones[i], true, true);
+                    Transform headBoneTransform = characterModel.transform.FindChildByRecursive(defaultHeadBones[i], true, true, ignoreBones);
                     if (headBoneTransform != null) {
                         headBone = headBoneTransform.name;
                         break;
@@ -422,7 +429,7 @@ namespace AnyRPG {
         private void SetDefaultLeftHandBone() {
             if (leftHandBone == string.Empty && characterModel != null) {
                 for (int i = 0; i < defaultLeftHandBones.Length; i++) {
-                    Transform boneTransform = characterModel.transform.FindChildByRecursive(defaultLeftHandBones[i], true, true);
+                    Transform boneTransform = characterModel.transform.FindChildByRecursive(defaultLeftHandBones[i], true, true, ignoreBones);
                     if (boneTransform != null) {
                         leftHandBone = boneTransform.name;
                         break;
@@ -434,7 +441,7 @@ namespace AnyRPG {
         private void SetDefaultRightHandBone() {
             if (rightHandBone == string.Empty && characterModel != null) {
                 for (int i = 0; i < defaultRightHandBones.Length; i++) {
-                    Transform boneTransform = characterModel.transform.FindChildByRecursive(defaultRightHandBones[i], true, true);
+                    Transform boneTransform = characterModel.transform.FindChildByRecursive(defaultRightHandBones[i], true, true, ignoreBones);
                     if (boneTransform != null) {
                         rightHandBone = boneTransform.name;
                         break;
@@ -446,7 +453,7 @@ namespace AnyRPG {
         private void SetDefaultLeftArmBone() {
             if (leftArmBone == string.Empty && characterModel != null) {
                 for (int i = 0; i < defaultLeftArmBones.Length; i++) {
-                    Transform boneTransform = characterModel.transform.FindChildByRecursive(defaultLeftArmBones[i], true, true);
+                    Transform boneTransform = characterModel.transform.FindChildByRecursive(defaultLeftArmBones[i], true, true, ignoreBones);
                     if (boneTransform != null) {
                         leftArmBone = boneTransform.name;
                         break;
@@ -458,7 +465,7 @@ namespace AnyRPG {
         private void SetDefaultHipBone() {
             if (hipBone == string.Empty && characterModel != null) {
                 for (int i = 0; i < defaultHipBones.Length; i++) {
-                    Transform boneTransform = characterModel.transform.FindChildByRecursive(defaultHipBones[i], true, true);
+                    Transform boneTransform = characterModel.transform.FindChildByRecursive(defaultHipBones[i], true, true, ignoreBones);
                     if (boneTransform != null) {
                         hipBone = boneTransform.name;
                         break;
@@ -470,7 +477,7 @@ namespace AnyRPG {
         private void SetDefaultSpineBone() {
             if (spineBone == string.Empty && characterModel != null) {
                 for (int i = 0; i < defaultSpineBones.Length; i++) {
-                    Transform boneTransform = characterModel.transform.FindChildByRecursive(defaultSpineBones[i], true, true);
+                    Transform boneTransform = characterModel.transform.FindChildByRecursive(defaultSpineBones[i], true, true, ignoreBones);
                     if (boneTransform != null) {
                         spineBone = boneTransform.name;
                         break;
@@ -482,6 +489,12 @@ namespace AnyRPG {
         private void DetermineModelScale() {
             if (modelScale == 0f && characterModel != null) {
                 modelScale = FindScaleByRecursive(characterModel.transform, modelScale);
+            }
+        }
+
+        private void SetAttachmentProfileName () {
+            if (attachmentProfile == string.Empty && addWeaponAttachments == true) {
+                attachmentProfile = "Humanoid";
             }
         }
 
