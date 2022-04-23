@@ -245,7 +245,7 @@ namespace AnyRPG {
 
             // copy existing model to new path
             string pathToModelPrefab = AssetDatabase.GetAssetPath(characterModel);
-            string pathToModelCopy = "Assets" + newModelFolder + "/" + WizardUtilities.GetScriptableObjectFileSystemName(characterModel.name) + ".prefab";
+            string pathToModelCopy = "Assets" + newModelFolder + "/" + WizardUtilities.GetScriptableObjectFileSystemName(characterName) + ".prefab";
             //Debug.Log("Copy " + pathToModelPrefab + " to " + pathToModelCopy);
             //AssetDatabase.CopyAsset(pathToModelPrefab, pathToModelCopy);
             //AssetDatabase.Refresh();
@@ -330,6 +330,8 @@ namespace AnyRPG {
 
                 AssetDatabase.Refresh();
             }
+
+            modelCopyObject = (GameObject)AssetDatabase.LoadMainAssetAtPath(pathToModelCopy);
 
             return modelCopyObject;
         }
