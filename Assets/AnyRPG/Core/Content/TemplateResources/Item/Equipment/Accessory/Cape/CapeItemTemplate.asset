@@ -17,7 +17,7 @@ MonoBehaviour:
   icon: {fileID: 21300000, guid: 66e41679530aa4e4e8544c77c655f511, type: 3}
   iconBackgroundImage: {fileID: 0}
   description: very cape
-  useRegionalDescription: 1
+  useRegionalDescription: 0
   resourceDescriptionProfile: 
   optionalOverride: 0
   stackSize: 0
@@ -37,7 +37,7 @@ MonoBehaviour:
   equipmentSlotType: Cape
   equipmentSetName: 
   useUMARecipe: 0
-  umaRecipeProfileName: Cape
+  umaRecipeProfileName: 
   holdableObjectList: []
   useArmorModifier: 0
   useManualArmor: 0
