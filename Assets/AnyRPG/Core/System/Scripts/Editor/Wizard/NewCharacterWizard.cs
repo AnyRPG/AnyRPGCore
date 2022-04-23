@@ -36,10 +36,10 @@ namespace AnyRPG {
 
         // the character model will be searched for bones with these names to try to auto-configure the bones
         private string[] defaultHeadBones = { "Head" };
-        private string[] defaultLeftHandBones = { "LeftHand" };
-        private string[] defaultRightHandBones = { "RightHand" };
+        private string[] defaultLeftHandBones = { "LeftHand", "palm_L" };
+        private string[] defaultRightHandBones = { "RightHand", "palm_R" };
         private string[] defaultLeftArmBones = { "arm_lower_L", "LeftForeArm" };
-        private string[] defaultHipBones = { "Hips" };
+        private string[] defaultHipBones = { "Hips", "Pelvis" };
         private string[] defaultSpineBones = { "Spine1", "Spine", "Torso" };
 
         // the used file path name for the game
