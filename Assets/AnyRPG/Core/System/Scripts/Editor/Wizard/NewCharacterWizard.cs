@@ -12,13 +12,20 @@ namespace AnyRPG {
 
         private const string pathToDefaultCharacterUnitPrefab = "/AnyRPG/Core/System/Prefabs/Character/Unit/DefaultCharacterUnit.prefab";
         private const string pathToUnitSpawnNodeTemplate = "/AnyRPG/Core/Templates/Prefabs/UnitSpawner/UnitSpawnNode.prefab";
+        private const string pathToLeftHandAttachment = "/AnyRPG/Core/Templates/Prefabs/Attachments/LeftHandAttachment.prefab";
+        private const string pathToRightHandAttachment = "/AnyRPG/Core/Templates/Prefabs/Attachments/RightHandAttachment.prefab";
+        private const string pathToLeftArmAttachment = "/AnyRPG/Core/Templates/Prefabs/Attachments/ShieldAttachment.prefab";
+        private const string pathToHipAttachments = "/AnyRPG/Core/Templates/Prefabs/Attachments/HipAttachments.prefab";
+        private const string pathToSpineAttachments = "/AnyRPG/Core/Templates/Prefabs/Attachments/SpineAttachments.prefab";
         private const string defaultFootstepLoop = "Default Footstep Loop";
-        
+
         // the height above the highest transform in the unit the nameplate will be set to
         private const float namePlateHeightAdd = 0.2f;
 
         // the highest y value of any transform found in the model, for the purposes of determining nameplate height
         private float highestYTransform = 0f;
+
+        private float modelScale = 0f;
 
         // a reference to the systemConfigurationManager found in the currently open scene, for automatic determination of the game name
         // and setting the newly created unit profile as the default if necessary
@@ -27,8 +34,13 @@ namespace AnyRPG {
         // Will be a subfolder of Application.dataPath and should start with "/"
         private string gameParentFolder = "/Games/";
 
-        // the character model will be searched for bones with this name to try to auto-configure the head bone
+        // the character model will be searched for bones with these names to try to auto-configure the bones
         private string[] defaultHeadBones = { "Head" };
+        private string[] defaultLeftHandBones = { "LeftHand" };
+        private string[] defaultRightHandBones = { "RightHand" };
+        private string[] defaultLeftArmBones = { "arm_lower_L", "LeftForeArm" };
+        private string[] defaultHipBones = { "Hips" };
+        private string[] defaultSpineBones = { "Spine1", "Spine", "Torso" };
 
         // the used file path name for the game
         private string fileSystemGameName = string.Empty;
@@ -56,12 +68,34 @@ namespace AnyRPG {
         [Tooltip("The prefab with an animator attached that will be used as the character model")]
         public GameObject characterModel = null;
 
+        [Header("Unit Frame")]
+
         [Tooltip("The head bone to be used for unit frame snapshots")]
         public string headBone = string.Empty;
+
+        [Header("Weapon Attachments")]
 
         [Tooltip("Defines the attachment points for weapons. For non UMA characters, manually ensure that the HipAttachments, SpineAttachments, etc prefabs have been attached to the bones of the model.")]
         [ResourceSelector(resourceType = typeof(AttachmentProfile))]
         public string attachmentProfile = string.Empty;
+
+        [Tooltip("If true, attachment points will be added to the model to allow it to equip weapon models.")]
+        public bool addWeaponAttachments = false;
+
+        [Tooltip("The left hand bone for holding off hand weapons")]
+        public string leftHandBone = string.Empty;
+
+        [Tooltip("The right hand bone for holding main hand weapons")]
+        public string rightHandBone = string.Empty;
+
+        [Tooltip("The left forearm bone for holding shields")]
+        public string leftArmBone = string.Empty;
+
+        [Tooltip("The hip bone for sheathed weapons that hang off the hips")]
+        public string hipBone = string.Empty;
+
+        [Tooltip("The spine bone for sheathed weapons that hang off the back")]
+        public string spineBone = string.Empty;
 
         [Header("Details")]
 
@@ -90,6 +124,22 @@ namespace AnyRPG {
 
         void OnWizardCreate() {
 
+            try {
+                CreateCharacter();
+            } catch {
+                Debug.LogWarning("Error detected while running wizard");
+
+                EditorUtility.ClearProgressBar();
+                EditorUtility.DisplayDialog("New Character Wizard", "New Character Wizard encountered an error.  Check the console log for details.", "OK");
+                throw;
+            }
+
+            EditorUtility.ClearProgressBar();
+            EditorUtility.DisplayDialog("New Character Wizard", "New Character Wizard Complete! The character UnitProfile can be found at " + scriptableObjectAssetPath, "OK");
+
+        }
+
+        private void CreateCharacter() {
             EditorUtility.DisplayProgressBar("New Character Wizard", "Checking parameters...", 0.1f);
 
             // check for presence of template prefabs and resources
@@ -106,6 +156,12 @@ namespace AnyRPG {
             WizardUtilities.CreateFolderIfNotExists(resourcesFolder);
 
             AssetDatabase.Refresh();
+
+            // create model copy with attachments
+            if (addWeaponAttachments == true) {
+                EditorUtility.DisplayProgressBar("New Character Wizard", "Adding Attachments To Model...", 0.25f);
+                characterModel = AddAttachmentsToModel();
+            }
 
             EditorUtility.DisplayProgressBar("New Character Wizard", "Creating Unit Profile...", 0.3f);
             UnitProfile asset = ScriptableObject.CreateInstance("UnitProfile") as UnitProfile;
@@ -172,19 +228,110 @@ namespace AnyRPG {
                     UnitSpawnNode unitSpawnNode = unitSpawnNodePrefab.GetComponent<UnitSpawnNode>();
                     if (unitSpawnNode != null) {
                         unitSpawnNode.UnitProfileNames = new List<string>() { characterName };
-                        
+
                         EditorUtility.SetDirty(unitSpawnNode);
                         AssetDatabase.SaveAssets();
                         AssetDatabase.Refresh();
                     }
                 }
             }
+        }
 
+        private GameObject AddAttachmentsToModel() {
 
+            // create new model folder if it does not exist
+            string newModelFolder = gameParentFolder + fileSystemGameName + "/Prefab/Character";
+            WizardUtilities.CreateFolderIfNotExists(Application.dataPath + newModelFolder);
 
-            EditorUtility.ClearProgressBar();
-            EditorUtility.DisplayDialog("New Character Wizard", "New Character Wizard Complete! The character UnitProfile can be found at " + scriptableObjectAssetPath, "OK");
+            // copy existing model to new path
+            string pathToModelPrefab = AssetDatabase.GetAssetPath(characterModel);
+            string pathToModelCopy = "Assets" + newModelFolder + "/" + WizardUtilities.GetScriptableObjectFileSystemName(characterModel.name) + ".prefab";
+            //Debug.Log("Copy " + pathToModelPrefab + " to " + pathToModelCopy);
+            //AssetDatabase.CopyAsset(pathToModelPrefab, pathToModelCopy);
+            //AssetDatabase.Refresh();
 
+            // this next bit kind of sucks.  Unity does not seem to have a way to load an FBX directly the way that a 
+            // prefab can be loaded, so in case an FBX is provided, it must first be turned into a prefab.
+            // this leaves behind the original object in the scene, and to get rid of it, the easiest way seems to be to
+            // perform an undo, which means any user changes that happened before the instantiation will be lost
+            GameObject modelOriginal = (GameObject)AssetDatabase.LoadMainAssetAtPath(pathToModelPrefab);
+            GameObject modelCopyObject = (GameObject)PrefabUtility.InstantiatePrefab(modelOriginal);
+            PrefabUtility.UnpackPrefabInstance(modelCopyObject, PrefabUnpackMode.Completely, InteractionMode.AutomatedAction);
+            PrefabUtility.SaveAsPrefabAsset(modelCopyObject, pathToModelCopy);
+            GameObject.DestroyImmediate(modelCopyObject);
+
+            modelCopyObject = PrefabUtility.LoadPrefabContents(pathToModelCopy);
+            if (modelCopyObject != null) {
+                if (leftHandBone != string.Empty) {
+                    Transform parentTransform = modelCopyObject.transform.FindChildByRecursive(leftHandBone);
+                    if (parentTransform != null) {
+                        GameObject attachmentTemplate = (GameObject)AssetDatabase.LoadMainAssetAtPath("Assets" + pathToLeftHandAttachment);
+                        GameObject attachmentObject = PrefabUtility.InstantiatePrefab(attachmentTemplate) as GameObject;
+                        attachmentObject.transform.SetParent(parentTransform);
+                        attachmentObject.transform.localScale = new Vector3(1f / modelScale, 1f / modelScale, 1f / modelScale);
+                        attachmentObject.transform.localPosition = Vector3.zero;
+                        attachmentObject.transform.localEulerAngles = Vector3.zero;
+                        PrefabUtility.RecordPrefabInstancePropertyModifications(attachmentObject.GetComponent<Transform>());
+                    }
+                }
+                if (rightHandBone != string.Empty) {
+                    Transform parentTransform = modelCopyObject.transform.FindChildByRecursive(rightHandBone);
+                    if (parentTransform != null) {
+                        GameObject attachmentTemplate = (GameObject)AssetDatabase.LoadMainAssetAtPath("Assets" + pathToRightHandAttachment);
+                        GameObject attachmentObject = PrefabUtility.InstantiatePrefab(attachmentTemplate) as GameObject;
+                        attachmentObject.transform.SetParent(parentTransform);
+                        attachmentObject.transform.localScale = new Vector3(1f / modelScale, 1f / modelScale, 1f / modelScale);
+                        attachmentObject.transform.localPosition = Vector3.zero;
+                        attachmentObject.transform.localEulerAngles = Vector3.zero;
+                        PrefabUtility.RecordPrefabInstancePropertyModifications(attachmentObject.GetComponent<Transform>());
+                    }
+                }
+                if (leftArmBone != string.Empty) {
+                    Transform parentTransform = modelCopyObject.transform.FindChildByRecursive(leftArmBone);
+                    if (parentTransform != null) {
+                        GameObject attachmentTemplate = (GameObject)AssetDatabase.LoadMainAssetAtPath("Assets" + pathToLeftArmAttachment);
+                        GameObject attachmentObject = PrefabUtility.InstantiatePrefab(attachmentTemplate) as GameObject;
+                        attachmentObject.transform.SetParent(parentTransform);
+                        attachmentObject.transform.localScale = new Vector3(1f / modelScale, 1f / modelScale, 1f / modelScale);
+                        attachmentObject.transform.localPosition = Vector3.zero;
+                        attachmentObject.transform.localEulerAngles = Vector3.zero;
+                        PrefabUtility.RecordPrefabInstancePropertyModifications(attachmentObject.GetComponent<Transform>());
+                    }
+                }
+                if (hipBone != string.Empty) {
+                    Transform parentTransform = modelCopyObject.transform.FindChildByRecursive(hipBone);
+                    if (parentTransform != null) {
+                        GameObject attachmentTemplate = (GameObject)AssetDatabase.LoadMainAssetAtPath("Assets" + pathToHipAttachments);
+                        GameObject attachmentObject = PrefabUtility.InstantiatePrefab(attachmentTemplate) as GameObject;
+                        attachmentObject.transform.SetParent(parentTransform);
+                        attachmentObject.transform.localScale = new Vector3(1f / modelScale, 1f / modelScale, 1f / modelScale);
+                        attachmentObject.transform.localPosition = Vector3.zero;
+                        attachmentObject.transform.localEulerAngles = Vector3.zero;
+                        PrefabUtility.RecordPrefabInstancePropertyModifications(attachmentObject.GetComponent<Transform>());
+                    }
+                }
+                if (spineBone != string.Empty) {
+                    Transform parentTransform = modelCopyObject.transform.FindChildByRecursive(spineBone);
+                    if (parentTransform != null) {
+                        GameObject attachmentTemplate = (GameObject)AssetDatabase.LoadMainAssetAtPath("Assets" + pathToSpineAttachments);
+                        GameObject attachmentObject = PrefabUtility.InstantiatePrefab(attachmentTemplate) as GameObject;
+                        attachmentObject.transform.SetParent(parentTransform);
+                        attachmentObject.transform.localScale = new Vector3(1f / modelScale, 1f / modelScale, 1f / modelScale);
+                        attachmentObject.transform.localPosition = Vector3.zero;
+                        attachmentObject.transform.localEulerAngles = Vector3.zero;
+                        PrefabUtility.RecordPrefabInstancePropertyModifications(attachmentObject.GetComponent<Transform>());
+                    }
+                }
+
+                PrefabUtility.SaveAsPrefabAsset(modelCopyObject, pathToModelCopy);
+
+                // clean up
+                PrefabUtility.UnloadPrefabContents(modelCopyObject);
+
+                AssetDatabase.Refresh();
+            }
+
+            return modelCopyObject;
         }
 
         private bool CheckFilesExist() {
@@ -199,6 +346,23 @@ namespace AnyRPG {
                 return false;
             }
 
+            // Check for presence of attachments
+            if (WizardUtilities.CheckFileExists(pathToLeftHandAttachment, "Left Hand Attachment Prefab") == false) {
+                return false;
+            }
+            if (WizardUtilities.CheckFileExists(pathToRightHandAttachment, "Right Hand Attachment Prefab") == false) {
+                return false;
+            }
+            if (WizardUtilities.CheckFileExists(pathToLeftArmAttachment, "Left Arm Attachment Prefab") == false) {
+                return false;
+            }
+            if (WizardUtilities.CheckFileExists(pathToHipAttachments, "Hip Attachments Prefab") == false) {
+                return false;
+            }
+            if (WizardUtilities.CheckFileExists(pathToSpineAttachments, "Spine Attachments Prefab") == false) {
+                return false;
+            }
+
             return true;
         }
 
@@ -208,6 +372,12 @@ namespace AnyRPG {
             fileSystemGameName = WizardUtilities.GetFileSystemGameName(gameName);
             SetDefaultCharacterName();
             SetDefaultHeadBone();
+            SetDefaultLeftHandBone();
+            SetDefaultRightHandBone();
+            SetDefaultLeftArmBone();
+            SetDefaultHipBone();
+            SetDefaultSpineBone();
+            DetermineModelScale();
             CheckHighestPoint();
 
             errorString = Validate();
@@ -245,8 +415,93 @@ namespace AnyRPG {
                     }
                 }
             }
-            
         }
+
+        private void SetDefaultLeftHandBone() {
+            if (leftHandBone == string.Empty && characterModel != null) {
+                for (int i = 0; i < defaultLeftHandBones.Length; i++) {
+                    Transform boneTransform = characterModel.transform.FindChildByRecursive(defaultLeftHandBones[i], true, true);
+                    if (boneTransform != null) {
+                        leftHandBone = boneTransform.name;
+                        break;
+                    }
+                }
+            }
+        }
+
+        private void SetDefaultRightHandBone() {
+            if (rightHandBone == string.Empty && characterModel != null) {
+                for (int i = 0; i < defaultRightHandBones.Length; i++) {
+                    Transform boneTransform = characterModel.transform.FindChildByRecursive(defaultRightHandBones[i], true, true);
+                    if (boneTransform != null) {
+                        rightHandBone = boneTransform.name;
+                        break;
+                    }
+                }
+            }
+        }
+
+        private void SetDefaultLeftArmBone() {
+            if (leftArmBone == string.Empty && characterModel != null) {
+                for (int i = 0; i < defaultLeftArmBones.Length; i++) {
+                    Transform boneTransform = characterModel.transform.FindChildByRecursive(defaultLeftArmBones[i], true, true);
+                    if (boneTransform != null) {
+                        leftArmBone = boneTransform.name;
+                        break;
+                    }
+                }
+            }
+        }
+
+        private void SetDefaultHipBone() {
+            if (hipBone == string.Empty && characterModel != null) {
+                for (int i = 0; i < defaultHipBones.Length; i++) {
+                    Transform boneTransform = characterModel.transform.FindChildByRecursive(defaultHipBones[i], true, true);
+                    if (boneTransform != null) {
+                        hipBone = boneTransform.name;
+                        break;
+                    }
+                }
+            }
+        }
+
+        private void SetDefaultSpineBone() {
+            if (spineBone == string.Empty && characterModel != null) {
+                for (int i = 0; i < defaultSpineBones.Length; i++) {
+                    Transform boneTransform = characterModel.transform.FindChildByRecursive(defaultSpineBones[i], true, true);
+                    if (boneTransform != null) {
+                        spineBone = boneTransform.name;
+                        break;
+                    }
+                }
+            }
+        }
+
+        private void DetermineModelScale() {
+            if (modelScale == 0f && characterModel != null) {
+                modelScale = FindScaleByRecursive(characterModel.transform, modelScale);
+            }
+        }
+
+        private static float FindScaleByRecursive(Transform aParent, float initialScale) {
+            //Debug.Log("FindScaleByRecursive(" + aParent.name + ", " + initialScale + ")");
+            float result = initialScale;
+            if (aParent.localScale.x > initialScale) {
+                result = aParent.localScale.x;
+            }
+            foreach (Transform child in aParent) {
+                //Debug.Log("searching " + child.name + " for " + aName);
+
+                float recursiveResult = FindScaleByRecursive(child, result);
+                if (recursiveResult > result) {
+                    result = recursiveResult;
+                }
+            }
+
+            //Debug.Log("FindScaleByRecursive(" + aParent.name + ", " + initialScale + ") largest scale was " + result);
+            return result;
+        }
+
 
         string Validate() {
 
@@ -254,7 +509,7 @@ namespace AnyRPG {
             if (gameName == null || gameName.Trim() == "") {
                 return "Game name must not be empty";
             }
-           
+
             // check for game folder existing
             string gameFileSystemFolder = WizardUtilities.GetGameFileSystemFolder(gameParentFolder, fileSystemGameName);
             if (System.IO.Directory.Exists(gameFileSystemFolder) == false) {
