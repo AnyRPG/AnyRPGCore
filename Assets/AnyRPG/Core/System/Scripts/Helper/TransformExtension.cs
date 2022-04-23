@@ -6,6 +6,7 @@ namespace AnyRPG {
     public static class TransformExtension {
 
         public static Transform FindChildByRecursive(this Transform aParent, string aName, bool partialMatch = false, bool caseInsensitive = false) {
+            //Debug.Log("FindChildByRecursive(" + aParent.name + ", " + aName + ", " + partialMatch + ", " + caseInsensitive + ")");
             /*
             var result = aParent.Find(aName);
             if (result != null)
@@ -33,7 +34,7 @@ namespace AnyRPG {
                         return child;
                     }
                 }
-                result = child.FindChildByRecursive(aName, partialMatch);
+                result = child.FindChildByRecursive(aName, partialMatch, caseInsensitive);
                 if (result != null) {
                     return result;
                 }
