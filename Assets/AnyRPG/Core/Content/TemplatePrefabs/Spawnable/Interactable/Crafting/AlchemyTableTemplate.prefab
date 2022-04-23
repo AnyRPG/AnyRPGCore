@@ -679,7 +679,7 @@ MonoBehaviour:
   componentController: {fileID: 5893705775157587616}
   unitComponentController: {fileID: 2232754342328210934}
   namePlateProps:
-    displayName: Alchemy Table
+    displayName: Alchemy Workbench
     suppressNamePlate: 0
     suppressFaction: 1
     overrideNameplatePosition: 0

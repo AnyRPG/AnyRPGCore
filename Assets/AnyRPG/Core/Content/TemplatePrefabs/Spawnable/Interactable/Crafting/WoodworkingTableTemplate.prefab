@@ -679,7 +679,7 @@ MonoBehaviour:
   componentController: {fileID: 8745737819654526987}
   unitComponentController: {fileID: 2232754342328210934}
   namePlateProps:
-    displayName: Crafting Table
+    displayName: Woodworking Table
     suppressNamePlate: 0
     suppressFaction: 1
     overrideNameplatePosition: 0
