@@ -18,16 +18,12 @@ namespace AnyRPG {
         [SerializeField]
         private List<ResourceAmountNode> resourceAmounts = new List<ResourceAmountNode>();
 
-        [SerializeField]
-        protected DamageType damageType = DamageType.ability;
-
         [Header("Accuracy")]
 
         [Tooltip("If true, this effect will always hit regardless of current accuracy")]
         [SerializeField]
         protected bool ignoreAccuracy = false;
 
-        public DamageType DamageType { get => damageType; set => damageType = value; }
         public List<ResourceAmountNode> ResourceAmounts { get => resourceAmounts; set => resourceAmounts = value; }
         public bool AllowCriticalStrike { get => allowCriticalStrike; set => allowCriticalStrike = value; }
 
@@ -43,6 +39,26 @@ namespace AnyRPG {
         }
         */
 
+        protected abstract float GetPower(IAbilityCaster sourceCharacter, AbilityEffectContext abilityEffectContext);
+
+        protected float GetAbilityPower(IAbilityCaster sourceCharacter, AbilityEffectContext abilityEffectContext) {
+            return sourceCharacter.AbilityManager.GetSpellPower() * abilityEffectContext.spellDamageMultiplier;
+        }
+
+        protected virtual float GetBaseAmount(IAbilityCaster sourceCharacter) {
+            // this function is meant to return weapon damage for attacks, so for this base class (and heal effects), it's always zero
+            return 0f;
+        }
+
+        private float GetTimeMultiplier(IAbilityCaster sourceCharacter, AbilityEffectContext abilityEffectContext) {
+            if (abilityEffectContext.baseAbility != null) {
+                return abilityEffectContext.baseAbility.GetTimeMultiplier(sourceCharacter, abilityEffectContext);
+            }
+
+            // this amount effect could have been triggered by a status effect, in which case there should be no base ability
+            return 1f;
+        }
+
         protected KeyValuePair<float, CombatMagnitude> CalculateAbilityAmount(float abilityBaseAmount, IAbilityCaster sourceCharacter, CharacterUnit target, AbilityEffectContext abilityEffectContext, ResourceAmountNode resourceAmountNode) {
             //Debug.Log(DisplayName + ".AmountEffect.CalculateAbilityAmount(" + abilityBaseAmount + ")");
 
@@ -56,14 +72,7 @@ namespace AnyRPG {
             // physical / spell power
             if (resourceAmountNode.AddPower) {
                 //Debug.Log(DisplayName + ".AmountEffect.CalculateAbilityAmount(" + abilityBaseAmount + "): addPower is true");
-                if (damageType == DamageType.physical) {
-                    amountAddModifier = sourceCharacter.AbilityManager.GetPhysicalPower();
-                } else if (damageType == DamageType.ability) {
-                    //spells can tick so a spell damage multiplier is additionally calculated for the tick share of damage based on tick rate
-                    amountAddModifier = sourceCharacter.AbilityManager.GetSpellPower() * abilityEffectContext.spellDamageMultiplier;
-                }
-            } else {
-                //Debug.Log(DisplayName + ".AmountEffect.CalculateAbilityAmount(" + abilityBaseAmount + "): addPower is false");
+                amountAddModifier = GetPower(sourceCharacter, abilityEffectContext);
             }
 
             if (allowCriticalStrike == true) {
@@ -78,32 +87,18 @@ namespace AnyRPG {
 
             // reflected damage can only have critical strike and base power added. It should not be getting a boost from weapon damage, status effects, cast time multipliers etc
             if (abilityEffectContext.reflectDamage == false) {
-                if (damageType == DamageType.physical) {
-
-                    // additive damage from weapons
-                    amountAddModifier += sourceCharacter.AbilityManager.GetPhysicalDamage();
+                amountAddModifier += GetBaseAmount(sourceCharacter);
+                if (abilityEffectContext.weaponHitHasCast == false) {
+                    // the first attack effect cast from an ability is considered the primary hit
+                    // everything after is an onHit effect and should not be multiplied by animation time
 
                     // since all damage so far is DPS, we need to multiply it by the attack length.
                     // Since global cooldown is 1 second, all abilities less than one second should have their damage increased to one second worth of damage to prevent dps loss
-                    if (abilityEffectContext.weaponHitHasCast == false) {
-                        // the first attack effect cast from an ability is considered the primary hit
-                        // everything after is an onHit effect and should not be multiplied by animation time
 
-                        // now clamping primary attacks to weapon speed  
-                        //amountMultiplyModifier *= Mathf.Clamp(sourceCharacter.AbilityManager.GetAnimationLengthMultiplier(), 1, Mathf.Infinity);
-                        amountMultiplyModifier *= Mathf.Clamp(sourceCharacter.AbilityManager.GetAnimationLengthMultiplier(), 1, Mathf.Infinity);
-                    }
-
-                } else if (damageType == DamageType.ability) {
-                    if (abilityEffectContext.weaponHitHasCast == false) {
-                        // the first attack effect cast from an ability is considered the primary hit
-                        // everything after is an onHit effect and should not be multiplied by animation time
-                        amountMultiplyModifier *= Mathf.Clamp(abilityEffectContext.castTimeMultiplier, 1, Mathf.Infinity);
-                        //Debug.Log(DisplayName + ".AmountEffect.CalculateAbilityAmount() weapon hit has not cast yet target: " + target.BaseCharacter.UnitController.gameObject.name + "; cast: " + abilityEffectContext.castTimeMultiplier);
-                    } else {
-                        //Debug.Log(DisplayName + ".AmountEffect.CalculateAbilityAmount(): weaponHit has cast.  not multiplying ability damage");
-                    }
+                    // now clamping primary attacks to weapon speed  
+                    amountMultiplyModifier *= GetTimeMultiplier(sourceCharacter, abilityEffectContext);
                 }
+                
                 // multiplicative damage modifiers
                 amountMultiplyModifier *= GetAmountMultiplyModifier(sourceCharacter);
             }

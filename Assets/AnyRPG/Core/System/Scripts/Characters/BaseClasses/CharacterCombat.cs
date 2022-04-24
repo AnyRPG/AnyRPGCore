@@ -773,10 +773,12 @@ namespace AnyRPG {
         }
 
         public virtual void AddDefaultHitSoundEffects(List<AudioClip> audioClips) {
+            //Debug.Log(baseCharacter.gameObject.name + ".CharacterCombat.AddDefaultHitSoundEffects(" + audioClips.Count + ")");
             defaultHitSoundEffects.AddRange(audioClips);
         }
 
         public virtual void ClearDefaultHitSoundEffects() {
+            //Debug.Log(baseCharacter.gameObject.name + ".CharacterCombat.ClearDefaultHitSoundEffects()");
             defaultHitSoundEffects.Clear();
         }
 

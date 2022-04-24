@@ -395,6 +395,10 @@ namespace AnyRPG {
             systemAbilityController = systemGameManager.SystemAbilityController;
         }
 
+        public virtual float GetTimeMultiplier(IAbilityCaster sourceCharacter, AbilityEffectContext abilityEffectContext) {
+            return Mathf.Clamp(abilityEffectContext.castTimeMultiplier, 1f, Mathf.Infinity);
+        }
+
         public void GiveReward() {
             playerManager.MyCharacter.CharacterAbilityManager.LearnAbility(this);
         }

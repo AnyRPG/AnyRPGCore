@@ -19,11 +19,21 @@ namespace AnyRPG {
 
         [Header("Attack")]
 
-        [Tooltip("The percentage of the target armor to ignore when dealing damage")]
+        [Tooltip("Weapon attacks are considered to have been landed by the equipped weapon, and will play weapon sounds, as well as trigger weapon or status-based on-hit effects")]
+        [SerializeField]
+        private bool weaponAttack = false;
+
+        [Tooltip("Physical damage will add weapon damage and physical power.  Ability damage will add spell power.")]
+        [SerializeField]
+        protected DamageType damageType = DamageType.ability;
+
+        [Tooltip("The percentage of the target armor to ignore when dealing damage.  This only applies to physical attacks.")]
         [SerializeField]
         private float ignoreArmorPercent = 0f;
 
         public float IgnoreArmorPercent { get => ignoreArmorPercent; set => ignoreArmorPercent = value; }
+        public bool WeaponAttack { get => weaponAttack; set => weaponAttack = value; }
+        public DamageType DamageType { get => damageType; set => damageType = value; }
 
         /// <summary>
         /// Does the actual work of hitting the target with an ability
@@ -54,7 +64,9 @@ namespace AnyRPG {
             // on hit, burn effect, etc, which should not be multiplied by cast time
             abilityEffectContext.weaponHitHasCast = true;
 
-            source.AbilityManager.ProcessWeaponHitEffects(this, target, abilityEffectContext);
+            if (weaponAttack == true) {
+                source.AbilityManager.ProcessWeaponHitEffects(this, target, abilityEffectContext);
+            }
 
             return abilityEffectContext;
         }
@@ -68,6 +80,28 @@ namespace AnyRPG {
 
             //return base.ProcessAbilityHit(target, finalAmount, source, combatMagnitude, abilityEffect, abilityEffectContext, powerResource);
             return base.ProcessAbilityHit(target, finalAmount, source, combatMagnitude, abilityEffectContext, powerResource);
+        }
+
+        protected override float GetPower(IAbilityCaster sourceCharacter, AbilityEffectContext abilityEffectContext) {
+            if (damageType == DamageType.physical) {
+                return sourceCharacter.AbilityManager.GetPhysicalPower();
+            } else if (damageType == DamageType.ability) {
+                //spells can tick so a spell damage multiplier is additionally calculated for the tick share of damage based on tick rate
+                return GetAbilityPower(sourceCharacter, abilityEffectContext);
+            }
+
+            // this should never be reached, since ability and physical are the only 2 options
+            return 0f;
+        }
+
+        protected override float GetBaseAmount(IAbilityCaster sourceCharacter) {
+            if (damageType == DamageType.physical) {
+
+                // additive damage from weapons
+                return sourceCharacter.AbilityManager.GetPhysicalDamage();
+
+            }
+            return base.GetBaseAmount(sourceCharacter);
         }
 
         /*

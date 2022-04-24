@@ -58,6 +58,10 @@ namespace AnyRPG {
             return 0f;
         }
 
+        public override float GetTimeMultiplier(IAbilityCaster sourceCharacter, AbilityEffectContext abilityEffectContext) {
+            return Mathf.Clamp(sourceCharacter.AbilityManager.GetAnimationLengthMultiplier(), 1f, Mathf.Infinity);
+        }
+
         public override bool CanLearnAbility(CharacterAbilityManager characterAbilityManager) {
             bool returnResult = base.CanLearnAbility(characterAbilityManager);
             if (returnResult == false) {
@@ -189,7 +193,7 @@ namespace AnyRPG {
         /// <param name="abilityCaster"></param>
         /// <returns></returns>
         public override AudioClip GetHitSound(IAbilityCaster abilityCaster) {
-            //Debug.Log(DisplayName + ".AnimatedAbility.GetHitSound(" + abilityCaster.Name + ")");
+            //Debug.Log(DisplayName + ".AnimatedAbility.GetHitSound(" + abilityCaster.AbilityManager.Name + ")");
             if (useWeaponHitSound == true) {
                 //Debug.Log(DisplayName + ".AnimatedAbility.GetHitSound(" + abilityCaster.Name + "): using weapon hit sound");
                 return abilityCaster.AbilityManager.GetAnimatedAbilityHitSound();

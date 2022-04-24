@@ -14,6 +14,10 @@ namespace AnyRPG {
         }
         */
 
+        protected override float GetPower(IAbilityCaster sourceCharacter, AbilityEffectContext abilityEffectContext) {
+            return GetAbilityPower(sourceCharacter, abilityEffectContext);
+        }
+
         /// <summary>
         /// Does the actual work of hitting the target with an ability
         /// </summary>

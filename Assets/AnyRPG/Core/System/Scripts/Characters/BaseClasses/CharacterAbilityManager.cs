@@ -1382,34 +1382,32 @@ namespace AnyRPG {
         public override void ProcessWeaponHitEffects(AttackEffectProperties attackEffect, Interactable target, AbilityEffectContext abilityEffectContext) {
             //Debug.Log(baseCharacter.gameObject.name + ".CharacterAbilityManager.ProcessWeaponHitEffects(" + (abilityEffectContext == null ? "null" : "valid") + ")");
             base.ProcessWeaponHitEffects(attackEffect, target, abilityEffectContext);
-            if (attackEffect.DamageType == DamageType.physical) {
 
-                // perform default weapon hit sound
-                if (abilityEffectContext.baseAbility != null) {
-                    AudioClip audioClip = abilityEffectContext.baseAbility.GetHitSound(baseCharacter);
-                    if (audioClip != null) {
-                        baseCharacter.UnitController.UnitComponentController.PlayEffectSound(audioClip);
+            // perform default weapon hit sound
+            if (abilityEffectContext.baseAbility != null) {
+                AudioClip audioClip = abilityEffectContext.baseAbility.GetHitSound(baseCharacter);
+                if (audioClip != null) {
+                    baseCharacter.UnitController.UnitComponentController.PlayEffectSound(audioClip);
+                }
+            }
+
+            if (baseCharacter?.CharacterCombat?.OnHitEffects != null) {
+                // handle weapon on hit effects
+                List<AbilityEffectProperties> onHitEffectList = new List<AbilityEffectProperties>();
+                foreach (AbilityEffectProperties abilityEffect in baseCharacter.CharacterCombat.OnHitEffects) {
+                    // prevent accidental infinite recursion of ability effect
+                    if (abilityEffect.DisplayName != attackEffect.DisplayName) {
+                        onHitEffectList.Add(abilityEffect);
                     }
                 }
+                attackEffect.PerformAbilityEffects(baseCharacter, target, abilityEffectContext, onHitEffectList);
+            }
 
-                if (baseCharacter?.CharacterCombat?.OnHitEffects != null) {
-                    // handle weapon on hit effects
-                    List<AbilityEffectProperties> onHitEffectList = new List<AbilityEffectProperties>();
-                    foreach (AbilityEffectProperties abilityEffect in baseCharacter.CharacterCombat.OnHitEffects) {
-                        // prevent accidental infinite recursion of ability effect
-                        if (abilityEffect.DisplayName != attackEffect.DisplayName) {
-                            onHitEffectList.Add(abilityEffect);
-                        }
-                    }
-                    attackEffect.PerformAbilityEffects(baseCharacter, target, abilityEffectContext, onHitEffectList);
-                }
-
-                foreach (StatusEffectNode statusEffectNode in BaseCharacter.CharacterStats.StatusEffects.Values) {
-                    //Debug.Log(gameObject.name + ".CharacterCombat.AttackHit_AnimationEvent(): Casting OnHit Ability On Take Damage");
-                    // this could maybe be done better through an event subscription
-                    if (statusEffectNode.StatusEffect.WeaponHitAbilityEffectList.Count > 0) {
-                        statusEffectNode.StatusEffect.CastWeaponHit(BaseCharacter, target, abilityEffectContext);
-                    }
+            foreach (StatusEffectNode statusEffectNode in BaseCharacter.CharacterStats.StatusEffects.Values) {
+                //Debug.Log(gameObject.name + ".CharacterCombat.AttackHit_AnimationEvent(): Casting OnHit Ability On Take Damage");
+                // this could maybe be done better through an event subscription
+                if (statusEffectNode.StatusEffect.WeaponHitAbilityEffectList.Count > 0) {
+                    statusEffectNode.StatusEffect.CastWeaponHit(BaseCharacter, target, abilityEffectContext);
                 }
             }
         }
