@@ -71,11 +71,8 @@ MonoBehaviour:
   onHitEffects: []
   animationProfileName: 
   defaultHitAudioProfile: 
-  useWeaponTypeObjects: 0
+  useWeaponTypeObjects: 1
   abilityAnimationObjectList: []
-  abilityObjectList:
-  - holdableObjectName: Medieval Arrow
-    useUniversalAttachment: 0
-    attachmentName: 
+  abilityObjectList: []
   addScaledDamagePerSecond: 1
   baseDamagePerSecond: 0

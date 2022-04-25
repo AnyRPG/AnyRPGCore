@@ -916,10 +916,10 @@ namespace AnyRPG {
         /// are the character class requirements met to learn or use this ability
         /// </summary>
         /// <returns></returns>
-        public bool CharacterClassRequirementIsMet() {
+        public bool CharacterClassRequirementIsMet(CharacterClass characterClass) {
             // only used when changing class or for action bars, so hard coding player character is ok for now
             if (CharacterClassRequirementList != null && CharacterClassRequirementList.Count > 0) {
-                if (!CharacterClassRequirementList.Contains(playerManager.MyCharacter.CharacterClass)) {
+                if (!CharacterClassRequirementList.Contains(characterClass)) {
                     return false;
                 }
             }
@@ -930,10 +930,10 @@ namespace AnyRPG {
         /// are the class specialization requirements met to learn or use this ability
         /// </summary>
         /// <returns></returns>
-        public bool ClassSpecializationRequirementIsMet() {
+        public bool ClassSpecializationRequirementIsMet(ClassSpecialization classSpecialization) {
             // only used when changing class or for action bars, so hard coding player character is ok for now
             if (ClassSpecializationRequirementList != null && ClassSpecializationRequirementList.Count > 0) {
-                if (!ClassSpecializationRequirementList.Contains(playerManager.MyCharacter.ClassSpecialization)) {
+                if (!ClassSpecializationRequirementList.Contains(classSpecialization)) {
                     return false;
                 }
             }
@@ -944,11 +944,11 @@ namespace AnyRPG {
         /// are all requirements met to learn or use this ability
         /// </summary>
         /// <returns></returns>
-        public virtual bool RequirementsAreMet() {
-            if (!CharacterClassRequirementIsMet()) {
+        public virtual bool RequirementsAreMet(BaseCharacter baseCharacter) {
+            if (!CharacterClassRequirementIsMet(baseCharacter.CharacterClass)) {
                 return false;
             }
-            if (!ClassSpecializationRequirementIsMet()) {
+            if (!ClassSpecializationRequirementIsMet(baseCharacter.ClassSpecialization)) {
                 return false;
             }
 

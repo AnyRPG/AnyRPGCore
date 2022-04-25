@@ -160,6 +160,23 @@ namespace AnyRPG {
             }
             */
 
+            // add abilities learning from items that won't show up in the main snapshot
+            // testing : re-doing the above code to hopefully work better
+            // this is not necessary because the abilities that are not from a provider are never unlearned, they just become hidden
+            // because the ability list is always filtered
+            // the side effect of this is that they become available again and show up back in the spellbook, but must be manually re-added to the bars
+            // after a class switch
+            /*
+            foreach (BaseAbilityProperties baseAbilityProperties in sourceAbilityManager.RawAbilityList.Values) {
+                if (returnList.Contains(baseAbilityProperties) == false
+                    && baseAbilityProperties.CanLearnAbility(sourceAbilityManager) == true
+                    //&& baseAbilityProperties.CharacterClassRequirementIsMet
+                    ) {
+                    returnList.Add(baseAbilityProperties);
+                }
+            }
+            */
+
             return returnList;
         }
 

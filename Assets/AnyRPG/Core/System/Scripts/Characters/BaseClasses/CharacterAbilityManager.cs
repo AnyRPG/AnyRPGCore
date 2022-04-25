@@ -848,20 +848,13 @@ namespace AnyRPG {
             //Debug.Log(baseCharacter.gameObject.name + ".CharacterAbilityManager.HandleCapabilityProviderChange()");
 
 
-            // now its safe to remove old ones
+            // remove old abilities, making space on action bars
             UnLearnCapabilityProviderAbilities(oldSnapshot.GetAbilitiesToRemove(newSnapshot));
             RemoveCapabilityProviderTraits(oldSnapshot.GetTraitsToRemove(newSnapshot));
 
 
-            // updated to allow system configuration manager traits to apply properly
-            //ApplyCapabilityProviderTraits(oldSnapshot.GetTraitsToAdd(newSnapshot));
+            // learn new abilites, now that there is space on the action bars
             ApplyCapabilityProviderTraits(newSnapshot.GetTraitList());
-
-            // doing abilities to add first because we have to learn some abilities before we check the removed list for system abilities to work
-            // ^ this wass leading to strange action bar issues where you end up with too much empty space
-            // find better way to deal with the above (which means what?)
-            //LearnCapabilityProviderAbilities(oldSnapshot.GetAbilitiesToAdd(newSnapshot, this));
-            // this should be better, since it checks internally if the ability is known or not anyway
             LearnCapabilityProviderAbilities(newSnapshot.GetAbilityList());
 
         }
