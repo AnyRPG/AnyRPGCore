@@ -404,7 +404,7 @@ namespace AnyRPG {
         public void HandleModelReady() {
             //Debug.Log("PreviewCameraController.HandleModelReady()");
             UnsubscribeFromModelReady();
-            if (initialTargetString != string.Empty) {
+            if (initialTargetString != null && initialTargetString != string.Empty) {
                 Transform targetBone = unitController.transform.FindChildByRecursive(initialTargetString);
                 if (targetBone == null) {
                     Debug.LogWarning("AnyRPGCharacterPreviewCameraController.HandleCharacterCreated(): UMA is ready and could not find target bone: " + initialTargetString);
@@ -445,7 +445,7 @@ namespace AnyRPG {
             } else {
                 //Debug.Log("PreviewCameraController.FindFollowTarget(): unitController is not null");
                 initialTargetString = unitController.NamePlateController.UnitPreviewTarget;
-                if (initialTargetString != string.Empty) {
+                if (initialTargetString != null && initialTargetString != string.Empty) {
                     targetBone = unitController.transform.FindChildByRecursive(initialTargetString);
                 }
                 unitTargetOffset = unitController.NamePlateController.UnitPreviewCameraLookOffset;

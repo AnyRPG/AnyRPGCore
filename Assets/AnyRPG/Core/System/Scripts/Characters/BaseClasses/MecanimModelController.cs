@@ -195,7 +195,7 @@ namespace AnyRPG {
                         go.transform.localEulerAngles = attachmentPointNode.Rotation;
                     }
                 } else {
-                    Debug.Log("CharacterEquipmentManager.HoldObject(): Unable to find target bone : " + attachmentPointNode.TargetBone);
+                    Debug.Log("CharacterEquipmentManager.HoldObject(): Unable to find target bone : " + attachmentPointNode.TargetBone + " while holding " + attachmentNode.HoldableObject.DisplayName);
                 }
             } else {
                 // disabled message because some equipment (like quivers) does not have held attachment points intentionally because it should stay in the same place in combat

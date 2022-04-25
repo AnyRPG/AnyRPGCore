@@ -260,7 +260,10 @@ namespace AnyRPG {
 
                         AttachmentPointNode attachmentPointNode = GetHeldAttachmentPointNode(abilityAttachmentNode);
                         if (attachmentPointNode != null) {
-                            Transform targetBone = baseCharacter.UnitController.transform.FindChildByRecursive(attachmentPointNode.TargetBone);
+                            Transform targetBone = baseCharacter.UnitController.transform;
+                            if (attachmentPointNode.TargetBone != null && attachmentPointNode.TargetBone != string.Empty) {
+                                targetBone = baseCharacter.UnitController.transform.FindChildByRecursive(attachmentPointNode.TargetBone);
+                            }
 
                             if (targetBone != null) {
                                 //Debug.Log("CharacterAbilityManager.SpawnAbilityObjects(): targetbone (" + attachmentPointNode.TargetBone + ") is " + targetBone.gameObject.name);
