@@ -270,7 +270,7 @@ namespace AnyRPG {
         }
 
         public void AddBag(Bag bag, BagNode bagNode) {
-            //Debug.Log("InventoryManager.AddBag(Bag, BagNode)");
+            //Debug.Log("CharacterInventoryManager.AddBag(Bag, BagNode)");
             PopulateBagNode(bagNode, bag);
         }
 

@@ -37,6 +37,7 @@ namespace AnyRPG {
             }
 
             set {
+                //Debug.Log("BagButton.SetBagNode(" + (value == null ? "null" : "valid bagNode") + ")");
                 if (value != null) {
                     value.OnAddBag += HandleAddBag;
                     value.OnRemoveBag += HandleRemoveBag;
@@ -78,14 +79,14 @@ namespace AnyRPG {
         }
 
         public void HandleAddBag(Bag bag) {
-            //Debug.Log(gameObject.name + ".BagButton.OnAddBag()");
+            //Debug.Log(gameObject.name + ".BagButton.HandleAddBag()");
             icon.sprite = bag.Icon;
             icon.color = Color.white;
             SetBackGroundColor();
         }
 
         public void HandleRemoveBag() {
-            //Debug.Log("BagButton.OnRemoveBag(): setting icon to null");
+            //Debug.Log("BagButton.HandleRemoveBag(): setting icon to null");
             /*
             icon.GetComponent<Image>().sprite = null;
             icon.GetComponent<Image>().color = new Color32(0, 0, 0, 0);
@@ -232,9 +233,12 @@ namespace AnyRPG {
             }
         }
 
+        /*
+        // this call never happens so is useless
         public void OnDestroy() {
             BagNode = null;
         }
+        */
 
         public void SetBackGroundColor() {
             //GetLocalComponents();

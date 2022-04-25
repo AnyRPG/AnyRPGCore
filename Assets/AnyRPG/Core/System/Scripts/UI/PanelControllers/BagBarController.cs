@@ -113,6 +113,7 @@ namespace AnyRPG {
         }
 
         public void ClearBagButtons() {
+            //Debug.Log(gameObject.name + "BagBarController.ClearBagButtons()");
             foreach (BagButton _bagButton in bagButtons) {
                 if (_bagButton.BagNode != null) {
                     if (_bagButton.BagNode.Bag != null) {
@@ -120,6 +121,12 @@ namespace AnyRPG {
                         _bagButton.BagNode.RemoveBag();
                     }
                 }
+                // fix me
+                // should the bagnode be set to null here ?
+                // then should the bagbutton be sent back to the object pooler?
+
+                // setting to null to deal with above issue
+                _bagButton.BagNode = null;
             }
         }
 
