@@ -32,6 +32,7 @@ MonoBehaviour:
       canCastOnNeutral: 0
       canCastOnFriendly: 0
       autoSelfCast: 0
+      unitTypeRestrictions: []
       useMeleeRange: 0
       maxRange: 0
       lineOfSightSourceLocation: 0
@@ -70,6 +71,7 @@ MonoBehaviour:
       baseAmount: 0
       amountPerLevel: 0
       maxAmount: 0
-    damageType: 1
     ignoreAccuracy: 0
+    weaponAttack: 1
+    damageType: 1
     ignoreArmorPercent: 100
