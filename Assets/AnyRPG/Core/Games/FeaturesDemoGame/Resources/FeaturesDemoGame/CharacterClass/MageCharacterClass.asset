@@ -23,6 +23,14 @@ MonoBehaviour:
   newGameOption: 0
   equipmentNames:
   - Medieval Staff
+  - Gray Cloth Bracers
+  - Gray Cloth Gloves
+  - Gray Cloth Hood
+  - Gray Cloth Mantle
+  - Gray Cloth Pants
+  - Gray Cloth Robe
+  - Gray Cloth Sash
+  - Gray Cloth Shoes
   capabilities:
     abilityNames:
     - Restore Mana

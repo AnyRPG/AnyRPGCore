@@ -314,6 +314,7 @@ namespace AnyRPG {
         }
 
         public void ManualSpawn(int unitLevel, int extraLevels, bool dynamicLevel, UnitProfile unitProfile, UnitToughness toughness) {
+            //Debug.Log("UnitSpawnNode.ManualSpawn(" + unitLevel + ", " + extraLevels + ", " + dynamicLevel + ", " + unitProfile.DisplayName + ", " + (toughness == null ? "null" : toughness.DisplayName) + ")");
             CommonSpawn(unitLevel, extraLevels, dynamicLevel, unitProfile, toughness);
         }
 

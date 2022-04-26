@@ -103,6 +103,7 @@ namespace AnyRPG {
         */
 
         public void PopulateDropDownValues() {
+            //Debug.Log("UnitSpawnControlPanel.PopulateDropDownValues()");
 
             levelDropdown.ClearOptions();
             extraLevelsDropdown.ClearOptions();
@@ -130,12 +131,6 @@ namespace AnyRPG {
             options.Clear();
 
             // TOUGHNESS
-            /*
-            for (int i = 1; i <= 5; i++) {
-                options.Add(i.ToString());
-            }
-            */
-
             options.Add("Default");
             foreach (UnitToughness unitToughness in systemDataFactory.GetResourceList<UnitToughness>()) {
                 options.Add(unitToughness.DisplayName);
@@ -167,6 +162,14 @@ namespace AnyRPG {
             } else {
                 toughnessDropdown.value = 0;
             }
+
+            // have to set toughness manually because updating the value through script doesn't trigger value update in this panel
+            /*
+            SetToughness(toughnessDropdown.value);
+            SetLevel(levelDropdown.value);
+            SetExtraLevels(extraLevelsDropdown.value);
+            SetLevelType(levelTypeDropdown.value);
+            */
 
             nameText.text = unitSpawnButton.UnitProfile.CharacterName;
             uINavigationControllers[0].UnHightlightButtons(unitSpawnButton);
@@ -226,8 +229,11 @@ namespace AnyRPG {
             base.ProcessOpenWindowNotification();
             PopulateDropDownValues();
             ShowPreviewButtonsCommon();
-            SetLevelType(0);
-
+            //SetLevelType(0);
+            SetToughness(toughnessDropdown.value);
+            SetLevel(levelDropdown.value);
+            SetExtraLevels(extraLevelsDropdown.value);
+            SetLevelType(levelTypeDropdown.value);
         }
 
         public void ShowPreviewButtonsCommon() {
@@ -310,12 +316,12 @@ namespace AnyRPG {
         }
 
         public void SetLevel(int dropdownIndex) {
-            //Debug.Log("CharacterCreatorPanel.SetLevel(" + dropdownIndex + ")");
+            //Debug.Log("UnitSpawnControlPanel.SetLevel(" + dropdownIndex + ")");
             unitLevel = levelDropdown.value + 1;
         }
 
         public void SetToughness(int dropdownIndex) {
-            //Debug.Log("CharacterCreatorPanel.SetEyebrows(" + dropdownIndex + "): " + eyebrowsAppearanceDropdown.options[eyebrowsAppearanceDropdown.value].text);
+            //Debug.Log("UnitSpawnControlPanel.SetToughness(" + dropdownIndex + ")");
             if (dropdownIndex == 0) {
                 unitToughness = null;
             } else {
@@ -327,8 +333,8 @@ namespace AnyRPG {
         }
 
         public void SetExtraLevels(int dropdownIndex) {
-            //Debug.Log("CharacterCreatorPanel.SetBeard(" + dropdownIndex + "): " + beardAppearanceDropdown.options[beardAppearanceDropdown.value].text);
-            extraLevels = levelDropdown.value;
+            //Debug.Log("UnitSpawnControlPanel.SetExtraLevels(" + dropdownIndex + "): " + extraLevelsDropdown.value);
+            extraLevels = extraLevelsDropdown.value;
         }
 
         public void SpawnUnit() {
