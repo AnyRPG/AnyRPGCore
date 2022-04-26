@@ -38,6 +38,10 @@ namespace AnyRPG {
         [SerializeField]
         private int maxAmount = 0;
 
+        [Tooltip("By default, all amounts of the first effect to land are considered to be per second (DPS/HPS), and multiplied by animation/cast time.  If Ignore Cast Time is set to true, the amount will not be normalized to the cast time.")]
+        [SerializeField]
+        private bool ignoreCastTime = false;
+
         public string ResourceName { get => resourceName; set => resourceName = value; }
         public int MinAmount { get => minAmount; set => minAmount = value; }
         public int BaseAmount { get => baseAmount; set => baseAmount = value; }
@@ -46,6 +50,7 @@ namespace AnyRPG {
         public PowerResource PowerResource { get => powerResource; }
         public bool AddPower { get => addPower; set => addPower = value; }
         public string InputRemap { get => inputRemap; set => inputRemap = value; }
+        public bool IgnoreCastTime { get => ignoreCastTime; set => ignoreCastTime = value; }
 
         public void SetupScriptableObjects(SystemDataFactory systemDataFactory) {
 

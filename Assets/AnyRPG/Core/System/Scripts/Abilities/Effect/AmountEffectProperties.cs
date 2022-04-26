@@ -88,7 +88,7 @@ namespace AnyRPG {
             // reflected damage can only have critical strike and base power added. It should not be getting a boost from weapon damage, status effects, cast time multipliers etc
             if (abilityEffectContext.reflectDamage == false) {
                 amountAddModifier += GetBaseAmount(sourceCharacter);
-                if (abilityEffectContext.weaponHitHasCast == false) {
+                if (abilityEffectContext.weaponHitHasCast == false && resourceAmountNode.IgnoreCastTime == false) {
                     // the first attack effect cast from an ability is considered the primary hit
                     // everything after is an onHit effect and should not be multiplied by animation time
 
