@@ -726,21 +726,7 @@ namespace AnyRPG {
             }
 
             if (inputManager.KeyBindWasPressed("CANCELALL")) {
-                settingsMenuWindow.CloseWindow();
-                creditsWindow.CloseWindow();
-                exitMenuWindow.CloseWindow();
-                playMenuWindow.CloseWindow();
-                deleteGameMenuWindow.CloseWindow();
-                copyGameMenuWindow.CloseWindow();
-                confirmDestroyMenuWindow.CloseWindow();
-                confirmCharacterStuckWindow.CloseWindow();
-                confirmSellItemMenuWindow.CloseWindow();
-                inGameMainMenuWindow.CloseWindow();
-                gamepadMainMenuWindow.CloseWindow();
-                petSpawnWindow.CloseWindow();
-                helpMenuWindow.CloseWindow();
-                gamepadHintWindow.CloseWindow();
-                keyboardHintWindow.CloseWindow();
+                CloseSystemPopupWindows();
 
                 // do not allow accidentally closing this while dead
                 if (playerManager.PlayerUnitSpawned == true && playerManager.MyCharacter.CharacterStats.IsAlive != false) {
@@ -761,44 +747,58 @@ namespace AnyRPG {
         public void CloseAllPopupWindows() {
             //Debug.Log("CloseAllWindows()");
             abilityBookWindow.CloseWindow();
-            skillBookWindow.CloseWindow();
             achievementListWindow.CloseWindow();
-            reputationBookWindow.CloseWindow();
-            currencyListWindow.CloseWindow();
-            characterPanelWindow.CloseWindow();
-            lootWindow.CloseWindow();
-            vendorWindow.CloseWindow();
-            //chestWindow.CloseWindow();
+            assignToActionBarsWindow.CloseWindow();
             bankWindow.CloseWindow();
-            inventoryWindow.CloseWindow();
-            questLogWindow.CloseWindow();
-            questGiverWindow.CloseWindow();
-            skillTrainerWindow.CloseWindow();
-            musicPlayerWindow.CloseWindow();
-            interactionWindow.CloseWindow();
+            characterPanelWindow.CloseWindow();
+            //chestWindow.CloseWindow();
+            classChangeWindow.CloseWindow();
             craftingWindow.CloseWindow();
-            mainMapWindow.CloseWindow();
+            currencyListWindow.CloseWindow();
             dialogWindow.CloseWindow();
             factionChangeWindow.CloseWindow();
-            classChangeWindow.CloseWindow();
+            interactionWindow.CloseWindow();
+            inventoryWindow.CloseWindow();
+            lootWindow.CloseWindow();
+            mainMapWindow.CloseWindow();
+            musicPlayerWindow.CloseWindow();
+            onScreenKeyboardWindow.CloseWindow();
+            questLogWindow.CloseWindow();
+            questGiverWindow.CloseWindow();
+            reputationBookWindow.CloseWindow();
+            skillTrainerWindow.CloseWindow();
+            skillBookWindow.CloseWindow();
             specializationChangeWindow.CloseWindow();
-            assignToActionBarsWindow.CloseWindow();
+            vendorWindow.CloseWindow();
         }
 
         public void CloseAllSystemWindows() {
-            //Debug.Log("SystemWindowManager.CloseAllWindows()");
+            //Debug.Log("SystemWindowManager.CloseAllSystemWindows()");
+
+            CloseSystemPopupWindows();
+
             mainMenuWindow.CloseWindow();
-            inGameMainMenuWindow.CloseWindow();
-            gamepadMainMenuWindow.CloseWindow();
-            settingsMenuWindow.CloseWindow();
-            creditsWindow.CloseWindow();
-            exitMenuWindow.CloseWindow();
-            playMenuWindow.CloseWindow();
-            deleteGameMenuWindow.CloseWindow();
-            copyGameMenuWindow.CloseWindow();
+            playerOptionsMenuWindow.CloseWindow();
+        }
+
+        public void CloseSystemPopupWindows() {
+            //Debug.Log("SystemWindowManager.CloseSystemPopupWindows()");
+
             confirmDestroyMenuWindow.CloseWindow();
             confirmCharacterStuckWindow.CloseWindow();
             confirmSellItemMenuWindow.CloseWindow();
+            copyGameMenuWindow.CloseWindow();
+            creditsWindow.CloseWindow();
+            deleteGameMenuWindow.CloseWindow();
+            exitMenuWindow.CloseWindow();
+            gamepadHintWindow.CloseWindow();
+            gamepadMainMenuWindow.CloseWindow();
+            helpMenuWindow.CloseWindow();
+            inGameMainMenuWindow.CloseWindow();
+            keyboardHintWindow.CloseWindow();
+            petSpawnWindow.CloseWindow();
+            playMenuWindow.CloseWindow();
+            settingsMenuWindow.CloseWindow();
         }
 
         public void DeactivateInGameUI() {

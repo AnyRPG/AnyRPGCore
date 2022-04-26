@@ -30,21 +30,21 @@ namespace AnyRPG {
         public void KeyboardHints() {
             //Debug.Log("MainMenuController.ExitMenu()");
             currentNavigationController?.CurrentNavigableElement?.DeSelect();
-            uIManager.CloseAllSystemWindows();
+            uIManager.CloseSystemPopupWindows();
             uIManager.keyboardHintWindow.OpenWindow();
         }
 
         public void GamepadHints() {
             //Debug.Log("MainMenuController.MainMenu()");
             currentNavigationController?.CurrentNavigableElement?.DeSelect();
-            uIManager.CloseAllSystemWindows();
+            uIManager.CloseSystemPopupWindows();
             uIManager.gamepadHintWindow.OpenWindow();
         }
 
         public void CharacterStuck() {
             //Debug.Log("MainMenuController.SettingsMenu()");
             currentNavigationController?.CurrentNavigableElement?.DeSelect();
-            uIManager.CloseAllSystemWindows();
+            uIManager.CloseSystemPopupWindows();
             uIManager.confirmCharacterStuckWindow.OpenWindow();
         }
 

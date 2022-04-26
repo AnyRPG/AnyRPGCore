@@ -35,6 +35,15 @@ namespace AnyRPG {
         }
 
         public override void Interact() {
+            //Debug.Log("NavigableInputField.Interact()");
+
+            // navigableInputField is a container to allow gamepad interaction with an actual input field
+            // therefore, mouse clicks (which cause Interact) should not activate it
+            // cancel this interaction if gamepad input is not active
+            if (controlsManager.GamePadInputActive == false) {
+                return;
+            }
+
             base.Interact();
             interacting = true;
             //inputField.ActivateInputField();

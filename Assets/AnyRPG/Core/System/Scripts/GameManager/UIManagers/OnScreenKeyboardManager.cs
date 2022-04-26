@@ -23,6 +23,8 @@ namespace AnyRPG {
         }
 
         public void ActivateKeyboard(TMP_InputField inputField) {
+            //Debug.Log("OnScreenKeyboardManager.ActivateKeyboard()");
+
             OnActivateKeyboard(inputField);
             uIManager.onScreenKeyboardWindow.OpenWindow();
         }

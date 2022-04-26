@@ -341,6 +341,10 @@ namespace AnyRPG {
                 return;
             }
 
+            // all dictionaries used for commands, items, resources, etc have lowercase keys
+            // convert incoming command to lowercase for compatibility
+            commandText = commandText.ToLower();
+
             string chatCommandString = string.Empty;
             string commandParameters = string.Empty;
             if (commandText.Contains(" ")) {
