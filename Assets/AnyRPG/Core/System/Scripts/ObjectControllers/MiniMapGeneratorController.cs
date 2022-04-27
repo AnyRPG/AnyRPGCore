@@ -64,7 +64,7 @@ namespace AnyRPG
         public void CreateFolder() {
 
             // Set the far clip to reach all the way to the Y bottom of the map so that is captured
-            mapCamera.farClipPlane = ySize + 1f;
+            mapCamera.farClipPlane = ySize + 1.1f;
             Debug.Log("Setting far clip plane to " + mapCamera.farClipPlane);
             //yield return new WaitForSeconds(snapDelay);
 
