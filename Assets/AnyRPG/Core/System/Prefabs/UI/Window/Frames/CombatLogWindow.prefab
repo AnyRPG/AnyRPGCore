@@ -662,6 +662,7 @@ MonoBehaviour:
   overrideDisabledColor: 0
   disabledColor: {r: 0.32156864, g: 0.32156864, b: 0.32156864, a: 0.06666667}
   CapitalizeText: 0
+  mouseClickSound: 1
   mouseHoverSound: 1
 --- !u!114 &4229379614324453385
 MonoBehaviour:
@@ -1145,6 +1146,7 @@ MonoBehaviour:
   overrideDisabledColor: 0
   disabledColor: {r: 0.32156864, g: 0.32156864, b: 0.32156864, a: 0.06666667}
   CapitalizeText: 0
+  mouseClickSound: 1
   mouseHoverSound: 1
 --- !u!114 &5137833109790580881
 MonoBehaviour:
@@ -2328,7 +2330,7 @@ MonoBehaviour:
   m_GlobalFontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_OnFocusSelectAll: 1
   m_ResetOnDeActivation: 1
-  m_RestoreOriginalTextOnEscape: 1
+  m_RestoreOriginalTextOnEscape: 0
   m_isRichTextEditingAllowed: 0
   m_LineLimit: 0
   m_InputValidator: {fileID: 0}
@@ -3539,6 +3541,7 @@ MonoBehaviour:
   overrideDisabledColor: 0
   disabledColor: {r: 0.32156864, g: 0.32156864, b: 0.32156864, a: 0.06666667}
   CapitalizeText: 0
+  mouseClickSound: 1
   mouseHoverSound: 1
 --- !u!114 &2520742360854924465
 MonoBehaviour:
@@ -3693,6 +3696,7 @@ MonoBehaviour:
   overrideDisabledColor: 0
   disabledColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 0.5019608}
   CapitalizeText: 0
+  mouseClickSound: 1
   mouseHoverSound: 1
   inputField: {fileID: 2390800021452360315}
 --- !u!114 &3349504764363959455
@@ -5114,6 +5118,7 @@ MonoBehaviour:
   overrideDisabledColor: 0
   disabledColor: {r: 0.32156864, g: 0.32156864, b: 0.32156864, a: 0.06666667}
   CapitalizeText: 0
+  mouseClickSound: 1
   mouseHoverSound: 1
 --- !u!114 &4149637610906039978
 MonoBehaviour:
