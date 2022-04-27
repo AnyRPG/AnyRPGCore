@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace AnyRPG {
     public class StatusEffectPanelController : ConfiguredMonoBehaviour {
-        
+
         [SerializeField]
         protected GameObject statusNodePrefab = null;
 
@@ -14,6 +14,8 @@ namespace AnyRPG {
         protected int effectLimit = 0;
 
         protected UnitController targetUnitController = null;
+
+        private bool targetSubscriptionActive = false;
 
         protected Dictionary<StatusEffectNode, StatusEffectNodeScript> statusEffectNodes = new Dictionary<StatusEffectNode, StatusEffectNodeScript>();
 
@@ -62,24 +64,31 @@ namespace AnyRPG {
         }
 
         public void HandleStatusEffectAdd(StatusEffectNode statusEffectNode) {
-            //Debug.Log(gameObject.name + ".StatusEffectPanelController.HandleStatusEffectAdd(): character: " + (targetUnitController == null ? "null" : targetUnitController.DisplayName));
-            
+            Debug.Log(gameObject.name + ".StatusEffectPanelController.HandleStatusEffectAdd(" + statusEffectNode.StatusEffect.DisplayName + "): character: " + (targetUnitController == null ? "null" : targetUnitController.DisplayName));
+
             AddStatusNode(statusEffectNode);
         }
 
         public void CreateEventSubscriptions() {
-            //Debug.Log("StatusEffectPanelController.CreateEventSubscriptions(): character: " + (targetCharacterUnit == null ? "null" : targetCharacterUnit.MyDisplayName));
-            if (targetUnitController != null) {
+            Debug.Log("StatusEffectPanelController.CreateEventSubscriptions(): character: " + (targetUnitController == null ? "null" : targetUnitController.name));
+            if (isActiveAndEnabled == false) {
+                // this can get called if an npc takes damage from the player while a cutscene is active
+                // don't make subscription in that case, since the OnEnable call when the player UI is turned on will make the subscription
+                return;
+            }
+            if (targetUnitController != null && targetSubscriptionActive == false) {
                 //Debug.Log("StatusEffectPanelController.CreateEventSubscriptions(): characterStats is not null.");
                 targetUnitController.OnStatusEffectAdd += HandleStatusEffectAdd;
+                targetSubscriptionActive = true;
             }
         }
 
         public void CleanupEventSubscriptions() {
-            //Debug.Log(gameObject.name + ".StatusEffectPanelController.CleanupEventSubscriptions()");
+            Debug.Log(gameObject.name + ".StatusEffectPanelController.CleanupEventSubscriptions()");
             if (targetUnitController != null) {
                 targetUnitController.OnStatusEffectAdd -= HandleStatusEffectAdd;
             }
+            targetSubscriptionActive = false;
         }
 
         public virtual StatusEffectNodeScript ClearStatusEffectNode(StatusEffectNode statusEffectNode) {
@@ -144,7 +153,7 @@ namespace AnyRPG {
             */
 
             // prevent status effect bars on unit frames from printing too many effects
-            
+
             if (effectLimit > 0 && GetStatusEffectNodeScriptCount() >= effectLimit) {
                 //Debug.Log(gameObject.name + ".StatusEffectPanelController.SpawnStatusNode() Too many nodes(" + statusEffectNodes.Count + "), can't spawn");
                 statusEffectNode.AddStatusTracker(this, null);
@@ -158,7 +167,7 @@ namespace AnyRPG {
                 statusEffectNodes[statusEffectNode] = statusEffectNodeScript;
                 statusEffectNodeScript.Initialize(statusEffectNode, targetUnitController.CharacterUnit, systemGameManager);
                 statusEffectNode.AddStatusTracker(this, statusEffectNodeScript);
-                
+
             } else {
                 //Debug.Log("StatusEffectPanelController.SpawnStatusNode(): statusEffectNodeScript is null!");
             }
@@ -178,7 +187,7 @@ namespace AnyRPG {
         }
 
         public void OnDisable() {
-            //Debug.Log(gameObject.name + ".StatusEffectPanelController.OnDisable()");
+            Debug.Log(gameObject.name + ".StatusEffectPanelController.OnDisable()");
             if (SystemGameManager.IsShuttingDown) {
                 return;
             }
@@ -186,7 +195,7 @@ namespace AnyRPG {
         }
 
         public void OnEnable() {
-            //Debug.Log(gameObject.name + ".StatusEffectPanelController.OnEnable()");
+            Debug.Log(gameObject.name + ".StatusEffectPanelController.OnEnable()");
             CreateEventSubscriptions();
         }
     }
