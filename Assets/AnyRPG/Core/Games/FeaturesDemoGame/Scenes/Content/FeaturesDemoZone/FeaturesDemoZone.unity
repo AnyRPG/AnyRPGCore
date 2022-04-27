@@ -27007,6 +27007,25 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 743064179}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &743064181 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 4007616867448248508, guid: 8e6bcf987965bd042ab5d79b9096945c,
+    type: 3}
+  m_PrefabInstance: {fileID: 743064179}
+  m_PrefabAsset: {fileID: 0}
+--- !u!65 &743064182
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 743064181}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 0.5706339, y: 0.6000001, z: 3.0000005}
+  m_Center: {x: -0.000000014901161, y: 0, z: 0}
 --- !u!1001 &750060954
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -29712,6 +29731,25 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 829203138}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &829203140 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 4007616867448248508, guid: 8e6bcf987965bd042ab5d79b9096945c,
+    type: 3}
+  m_PrefabInstance: {fileID: 829203138}
+  m_PrefabAsset: {fileID: 0}
+--- !u!65 &829203141
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 829203140}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 0.5706339, y: 0.6000001, z: 3.0000005}
+  m_Center: {x: -0.000000014901161, y: 0, z: 0}
 --- !u!1001 &830547509
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -49348,7 +49386,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 49ff920aaeff32c47b919cdd7f10e67d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_UUID: 197b150b-0060-4722-b0ef-297edba00094
+  m_UUID: dfaa3da9-8b46-4367-b115-1e53b32bc94a
   forceUpdateUUID: 0
 --- !u!54 &1448223535
 Rigidbody:
@@ -61446,7 +61484,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 49ff920aaeff32c47b919cdd7f10e67d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_UUID: f761df94-a865-431f-995b-20c1ca9c0eca
+  m_UUID: eccb4104-4588-4d02-8b32-5390bc144312
   forceUpdateUUID: 0
 --- !u!54 &1813795260
 Rigidbody:

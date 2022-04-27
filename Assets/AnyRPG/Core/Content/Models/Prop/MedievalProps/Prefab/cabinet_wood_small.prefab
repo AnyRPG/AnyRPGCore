@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 7952904424815366053}
   - component: {fileID: 6481172330705813504}
   - component: {fileID: 9085247729174541514}
+  - component: {fileID: -3783210530631618568}
   m_Layer: 0
   m_Name: cabinet_wood_small
   m_TagString: Untagged
@@ -81,3 +82,16 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!65 &-3783210530631618568
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7283926832539292959}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 0.77000004, y: 1.042295, z: 0.7455}
+  m_Center: {x: 0, y: 0.5211475, z: 0.012250006}

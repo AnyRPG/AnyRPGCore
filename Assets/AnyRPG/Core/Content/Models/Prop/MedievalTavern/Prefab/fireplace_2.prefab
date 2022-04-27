@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 5587638178982969019}
   - component: {fileID: 8801331941472186654}
   - component: {fileID: 6755517694854776276}
+  - component: {fileID: 2947754529475676151}
   m_Layer: 0
   m_Name: fireplace_2
   m_TagString: Untagged
@@ -81,3 +82,16 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!65 &2947754529475676151
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5098241891820954625}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 2.4000006, y: 6.708069, z: 2.2535996}
+  m_Center: {x: 0, y: 3.274766, z: 0.023199975}

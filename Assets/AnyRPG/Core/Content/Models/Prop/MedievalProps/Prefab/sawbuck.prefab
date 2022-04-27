@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 2427540830954686704}
   - component: {fileID: 1594133614029735765}
   - component: {fileID: 3601603557705413535}
+  - component: {fileID: -1209973993481553475}
   m_Layer: 0
   m_Name: sawbuck
   m_TagString: Untagged
@@ -81,3 +82,16 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!65 &-1209973993481553475
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3097222184213402186}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 1.2300766, y: 1.3661425, z: 2.0821443}
+  m_Center: {x: 0, y: 0.68307066, z: 0.00000011920929}

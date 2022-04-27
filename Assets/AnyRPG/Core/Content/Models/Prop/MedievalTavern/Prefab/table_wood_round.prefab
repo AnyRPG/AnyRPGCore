@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 4285169114608481835}
   - component: {fileID: 925526068926462350}
   - component: {fileID: 3115600645662002500}
+  - component: {fileID: 6958611356028048166}
   m_Layer: 0
   m_Name: table_wood_round
   m_TagString: Untagged
@@ -81,3 +82,17 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!64 &6958611356028048166
+MeshCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3475699430349794449}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 4
+  m_Convex: 0
+  m_CookingOptions: 30
+  m_Mesh: {fileID: 6728262666234435125, guid: 256c8c693ed656144b88851cfb50888c, type: 3}

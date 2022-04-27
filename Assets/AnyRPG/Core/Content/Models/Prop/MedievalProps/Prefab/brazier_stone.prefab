@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 8013878855188213990}
   - component: {fileID: 6384098527295766339}
   - component: {fileID: 9186261872978824073}
+  - component: {fileID: 2476939819261261246}
   m_Layer: 0
   m_Name: brazier_stone
   m_TagString: Untagged
@@ -81,3 +82,16 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!65 &2476939819261261246
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7240896430816209500}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 1.0542845, y: 0.67728984, z: 1.0542846}
+  m_Center: {x: 0, y: 0.2886449, z: -0.000000029802322}

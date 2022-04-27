@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 399825119082543985}
   - component: {fileID: 3612921844744484052}
   - component: {fileID: 1569322017766670366}
+  - component: {fileID: 5773121946312148703}
   m_Layer: 0
   m_Name: campfire
   m_TagString: Untagged
@@ -81,3 +82,16 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!65 &5773121946312148703
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1065002902520668619}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 1.188083, y: 1.1182499, z: 1.15385}
+  m_Center: {x: 0, y: 0.4275, z: 0}
