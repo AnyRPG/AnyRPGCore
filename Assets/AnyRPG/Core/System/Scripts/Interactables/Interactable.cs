@@ -897,7 +897,9 @@ namespace AnyRPG {
                 // ensure ai don't accidentally trigger interactions
                 if (unitController != null && unitController == playerManager.ActiveUnitController) {
                     //Debug.Log(gameObject.name + ".Interactable.OnTriggerEnter(): triggered by player");
-                    playerManager.PlayerController.InterActWithTarget(this);
+                    
+                    // don't clear target on interaction with trigger since it could be a door switch or cutscene switch
+                    playerManager.PlayerController.InterActWithTarget(this, false);
                     //Interact(otherCharacterUnit);
                 } else if (interactWithAny && playerManager.ActiveUnitController.CharacterUnit != null) {
                     Interact(playerManager.ActiveUnitController.CharacterUnit);
@@ -915,7 +917,8 @@ namespace AnyRPG {
                 // ensure ai don't accidentally trigger interactions
                 if (unitController != null && unitController == playerManager.ActiveUnitController) {
                     //Debug.Log(gameObject.name + ".Interactable.OnTriggerEnter(): triggered by player");
-                    playerManager.PlayerController.InterActWithTarget(this);
+                    // don't clear target on interaction with trigger since it could be a door switch or cutscene switch
+                    playerManager.PlayerController.InterActWithTarget(this, false);
                     //Interact(otherCharacterUnit);
                 } else if (interactWithAny && playerManager.ActiveUnitController.CharacterUnit != null) {
                     Interact(playerManager.ActiveUnitController.CharacterUnit);

@@ -616,27 +616,29 @@ namespace AnyRPG {
             if (playerManager.UnitController.Target == null) {
                 return;
             }
-            if (InteractionSucceeded()) {
+            if (InteractionSucceeded(playerManager.UnitController.Target)) {
                 if (playerManager.ActiveUnitController != null && playerManager.ActiveUnitController.UnitMotor != null) {
                     playerManager.ActiveUnitController.UnitMotor.StopFollowingTarget();
                 }
             }
         }
 
-        private bool InteractionSucceeded() {
+        private bool InteractionSucceeded(Interactable target) {
             //Debug.Log(gameObject.name + ".PlayerController.InteractionSucceeded()");
 
             if (playerManager.UnitController == null) {
                 return false;
             }
-            if (playerManager.UnitController.Target == null) {
+
+            //if (playerManager.UnitController.Target == null) {
+            if (target == null) {
                 //Debug.Log(gameObject.name + ".PlayerController.InteractionSucceeded(): target is null. return false.");
                 return false;
             }
             //if (IsTargetInHitBox(target)) {
             // get reference to name now since interactable could change scene and then target reference is lost
-            string targetDisplayName = playerManager.UnitController.Target.DisplayName;
-            if (playerManager.UnitController.Target.Interact(playerManager.ActiveUnitController.CharacterUnit, true)) {
+            string targetDisplayName = target.DisplayName;
+            if (target.Interact(playerManager.ActiveUnitController.CharacterUnit, true)) {
                 //Debug.Log(gameObject.name + ".PlayerController.InteractionSucceeded(): Interaction Succeeded.  Setting interactable to null");
                 systemEventManager.NotifyOnInteractionStarted(targetDisplayName);
                 return true;
@@ -881,17 +883,19 @@ namespace AnyRPG {
             }
         }
 
-        public void InterActWithTarget(Interactable interactable) {
+        public void InterActWithTarget(Interactable interactable, bool resetTarget = true) {
             //Debug.Log(gameObject.name + ".InterActWithTarget(" + interactable.gameObject.name + ")");
 
-            if (playerManager.UnitController.Target != interactable) {
+            if (playerManager.UnitController.Target != interactable && resetTarget == true) {
                 playerManager.UnitController.ClearTarget();
                 playerManager.UnitController.SetTarget(interactable);
             }
-            if (InteractionSucceeded()) {
+            if (InteractionSucceeded(interactable)) {
                 //Debug.Log("We were able to interact with the target");
-                // not actually stopping interacting.  just clearing target if this was a trigger interaction and we are not interacting with a focus
-                StopInteract();
+                if (resetTarget == true) {
+                    // not actually stopping interacting.  just clearing target if this was a trigger interaction and we are not interacting with a focus
+                    StopInteract();
+                }
             } else {
                 //Debug.Log("we were out of range and must move toward the target to be able to interact with it");
                 if (playerManager.PlayerUnitMovementController.useMeshNav) {
