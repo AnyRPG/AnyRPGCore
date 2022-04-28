@@ -1071,23 +1071,23 @@ namespace AnyRPG {
 
         public void LoadAbility(string abilityName) {
             //Debug.Log(gameObject.name + ".PlayerAbilityManager.LoadAbility(" + abilityName + ")");
-            BaseAbilityProperties ability = systemDataFactory.GetResource<BaseAbility>(abilityName).AbilityProperties;
-            if (ability == null) {
+            BaseAbilityProperties abilityProperties = systemDataFactory.GetResource<BaseAbility>(abilityName)?.AbilityProperties;
+            if (abilityProperties == null) {
                 // if we renamed an ability, old save data could load a null.  prevent invalid abilities from loading.
                 return;
             }
 
-            string keyName = SystemDataFactory.PrepareStringForMatch(ability.DisplayName);
+            string keyName = SystemDataFactory.PrepareStringForMatch(abilityProperties.DisplayName);
             if (abilityList.ContainsKey(keyName)) {
                 // ability is already known, exit
                 return;
             }
-            if (ability.CanLearnAbility(this) == false) {
+            if (abilityProperties.CanLearnAbility(this) == false) {
                 return;
             }
-            ability.ProcessLoadAbility(this);
+            abilityProperties.ProcessLoadAbility(this);
 
-            abilityList[keyName] = ability;
+            abilityList[keyName] = abilityProperties;
         }
 
         public void LearnAutoAttack(BaseAbilityProperties baseAbilityProperties) {
