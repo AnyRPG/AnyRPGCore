@@ -346,6 +346,7 @@ namespace AnyRPG {
                 // if (inputManager.rightMouseButtonDown && playerManager.PlayerController.HasMoveInput()
                 if (
                     (inputManager.rightMouseButtonDown
+                    && inputManager.rightMouseButtonDownPosition != Input.mousePosition
                     && playerManager.ActiveUnitController.UnitProfile.UnitPrefabProps.RotateModel == false // account for rotate model mode when using keyboard
                     && (!inputManager.rightMouseButtonClickedOverUI || (namePlateManager != null ? namePlateManager.MouseOverNamePlate() : false)))
                     || (controlsManager.GamePadModeActive == false && Input.GetAxis("RightAnalogHorizontal") != 0f && windowManager.CurrentWindow == null)
