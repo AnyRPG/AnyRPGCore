@@ -166,7 +166,7 @@ MonoBehaviour:
   isMobile: 1
   playOnFootstep: 0
   movementAudioProfileNames:
-  - Footsteps
+  - Default Footstep Loop
   useInlinePatrol: 0
   patrolConfig:
     autoStart: 0

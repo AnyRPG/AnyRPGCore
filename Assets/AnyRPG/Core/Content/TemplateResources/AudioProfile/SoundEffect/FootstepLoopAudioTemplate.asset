@@ -12,13 +12,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3fd73ebc5463ba94cb6ff99164c9641a, type: 3}
   m_Name: FootstepLoopAudioTemplate
   m_EditorClassIdentifier: 
-  resourceName: Footsteps
+  resourceName: Footstep Loop
   displayName: 
   icon: {fileID: 0}
   iconBackgroundImage: {fileID: 0}
   description: 
   useRegionalDescription: 0
   resourceDescriptionProfile: 
+  optionalOverride: 0
   artistName: 
   audioClips:
   - {fileID: 8300000, guid: 351e30237eaeb924ca74b412dac5ed40, type: 3}
